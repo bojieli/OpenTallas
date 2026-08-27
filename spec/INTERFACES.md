@@ -194,7 +194,9 @@ acknowledgement and never assumes a write completed a transition synchronously.
 Requests are 128 bits. Operation is `00` read, `01` write, `10` atomic prepare
 metadata, and `11` illegal in the public baseline. Size denotes bytes per beat and
 must equal 64 for the 512-bit data interface. Burst length is 1..65536 beats and
-must remain inside the checked session aperture without 64-bit address wrap.
+must remain inside the checked session aperture without 64-bit address wrap. The
+16-bit field is a minus-one encoding, so every implementation counter and comparison
+on the decoded length is at least 17 bits; `16'hffff` decodes to 65,536, never zero.
 
 Responses are 608 bits. A read carries 512 data bits, one valid bit per byte, tag,
 last, error, and CRC. A write acknowledgement carries zero byte-valid bits and
@@ -204,7 +206,8 @@ protocol, or reserved. Reserved errors are treated as uncorrectable.
 Responses may reorder between tags but beat sequence is in order within a tag.
 There is exactly one terminal `last` per accepted request. The core holds response
 ready low only at the async-FIFO boundary; tag/result capacity is reserved before
-request issue.
+request issue. A terminal response and a different-tag admission may occur in the
+same cycle and must compose to zero net change in outstanding reservations.
 
 ### ICD-4.2 Macro boundary
 

@@ -24,11 +24,14 @@ module ot_bist_controller #(
     output reg                          owner_test_mode
 );
     localparam [1:0] S_IDLE=2'd0, S_RUN=2'd1, S_DONE=2'd2;
+    localparam integer LAST_ADDRESS_INT = DEPTH-1;
+    localparam [ADDR_W-1:0] LAST_ADDRESS =
+        LAST_ADDRESS_INT[ADDR_W-1:0];
     reg [1:0] state;
     reg [ADDR_W-1:0] address;
     reg [31:0] timer;
     reg [31:0] lfsr;
-    wire last_address = (address == DEPTH-1);
+    wire last_address = (address == LAST_ADDRESS);
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

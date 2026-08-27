@@ -1,4 +1,4 @@
-.PHONY: profile simulate routing noc sensitivity spec-check formal rtl-sim rtl-static rtl spice test verify clean-results
+.PHONY: profile simulate routing noc sensitivity spec-check formal rtl-sim fault-sim fault-campaign rtl-static rtl spice test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -24,6 +24,9 @@ formal:
 
 rtl-sim:
 	python3 tools/rtl_sim_campaign.py
+
+fault-sim fault-campaign:
+	python3 tools/rtl_fault_campaign.py
 
 rtl-static:
 	python3 tools/rtl_static.py

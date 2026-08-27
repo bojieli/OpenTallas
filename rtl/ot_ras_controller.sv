@@ -57,6 +57,16 @@ module ot_ras_controller #(
     reg [15:0] event_crc;
     wire telem_push = event_valid && (telem_count < DEPTH_COUNT);
     wire telem_pop_fire = telemetry_valid && (telemetry_ready || telemetry_pop);
+    wire fatal_event_now = event_valid && (event_severity == 2'd3);
+    wire watchdog_expire_now = watchdog_enable && !watchdog_kick &&
+                               (watchdog_limit != 0) &&
+                               (watchdog_count >= watchdog_limit);
+    wire telemetry_blocks_next =
+        (telem_push && !telem_pop_fire) ?
+            ((telem_count + 1'b1) >= ADMISSION_THRESHOLD) :
+        (!telem_push && telem_pop_fire) ?
+            ((telem_count - 1'b1) >= ADMISSION_THRESHOLD) :
+            (telem_count >= ADMISSION_THRESHOLD);
 
     function automatic [15:0] crc16_112;
         input [111:0] d;
@@ -114,15 +124,24 @@ module ot_ras_controller #(
             watchdog_timeout <= 1'b0;
         end else begin
             timestamp <= timestamp + 1'b1;
+            // Poison is monotonic only for the lifetime of the active
+            // architectural transaction.  An idle boundary starts the next
+            // transaction clean; sticky error history remains in telemetry.
+            if (!transaction_active)
+                transaction_poison <= 1'b0;
             if (event_clear_first)
                 first_error_valid <= 1'b0;
             if (event_valid) begin
-                if (event_severity == 2'd1)
-                    correctable_count <= correctable_count + 1'b1;
-                else if (event_severity == 2'd2)
-                    uncorrectable_count <= uncorrectable_count + 1'b1;
-                else if (event_severity == 2'd3)
-                    fatal_count <= fatal_count + 1'b1;
+                if (event_severity == 2'd1) begin
+                    if (~&correctable_count)
+                        correctable_count <= correctable_count + 1'b1;
+                end else if (event_severity == 2'd2) begin
+                    if (~&uncorrectable_count)
+                        uncorrectable_count <= uncorrectable_count + 1'b1;
+                end else if (event_severity == 2'd3) begin
+                    if (~&fatal_count)
+                        fatal_count <= fatal_count + 1'b1;
+                end
                 if (!first_error_valid && !event_clear_first) begin
                     first_error_valid <= 1'b1;
                     first_error_severity <= event_severity;
@@ -131,7 +150,7 @@ module ot_ras_controller #(
                     first_error_transaction <= event_transaction;
                     first_error_syndrome <= event_syndrome;
                 end
-                if (event_severity >= 2'd2)
+                if ((event_severity >= 2'd2) && transaction_active)
                     transaction_poison <= 1'b1;
                 if (event_severity == 2'd3)
                     safe_request <= 1'b1;
@@ -154,7 +173,8 @@ module ot_ras_controller #(
             endcase
             // Once the lossless telemetry queue is full, stop new admission;
             // existing work may drain and free the reserved entries.
-            admission_block <= (telem_count >= ADMISSION_THRESHOLD) || safe_request;
+            admission_block <= telemetry_blocks_next || safe_request ||
+                               fatal_event_now || watchdog_expire_now;
             if (!watchdog_enable || watchdog_kick) begin
                 watchdog_count <= 0;
                 watchdog_timeout <= 1'b0;
@@ -162,7 +182,6 @@ module ot_ras_controller #(
                 if (watchdog_count >= watchdog_limit) begin
                     watchdog_timeout <= 1'b1;
                     safe_request <= 1'b1;
-                    admission_block <= 1'b1;
                 end else begin
                     watchdog_count <= watchdog_count + 1'b1;
                 end

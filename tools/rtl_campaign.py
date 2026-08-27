@@ -34,6 +34,7 @@ class FormalCase:
     cover_depth: int
     induction_depth: int | None = None
     timeout_seconds: int = 150
+    cvc4_bmc_noincr: bool = False
 
 
 FORMAL_CASES = (
@@ -106,6 +107,7 @@ FORMAL_CASES = (
         12,
         18,
         timeout_seconds=360,
+        cvc4_bmc_noincr=True,
     ),
 )
 
@@ -234,18 +236,25 @@ def run_formal_case(case: FormalCase) -> dict[str, Any]:
     )
     if phases[-1]["status"] == "pass" and smt_path.exists():
         smt_hash = sha256_file(smt_path)
+        cvc4_bmc_command = [
+            "yosys-smtbmc",
+            "-s",
+            "cvc4",
+        ]
+        if case.cvc4_bmc_noincr:
+            cvc4_bmc_command.append("--noincr")
+        cvc4_bmc_command.extend(
+            [
+                "-t",
+                str(case.cvc4_depth),
+                str(smt_path.relative_to(ROOT)),
+            ]
+        )
         phases.append(
             run_phase(
                 case,
                 "cvc4_bmc",
-                [
-                    "yosys-smtbmc",
-                    "-s",
-                    "cvc4",
-                    "-t",
-                    str(case.cvc4_depth),
-                    str(smt_path.relative_to(ROOT)),
-                ],
+                cvc4_bmc_command,
                 timeout=case.timeout_seconds,
                 required_text="Status: PASSED",
             )
@@ -299,6 +308,7 @@ def run_formal_case(case: FormalCase) -> dict[str, Any]:
             "cvc4_cover": case.cover_depth,
             "cvc4_induction": case.induction_depth,
         },
+        "cvc4_bmc_mode": "non_incremental" if case.cvc4_bmc_noincr else "incremental",
         "sources": list(case.sources),
         "smt2_sha256": smt_hash,
         "phases": phases,
@@ -315,15 +325,16 @@ def render_report(summary: dict[str, Any]) -> str:
         "product signoff, macro qualification, or proof beyond each recorded bound. CVC4 "
         "induction is claimed only where the table explicitly lists a depth.",
         "",
-        "| Harness | Yosys SAT BMC | CVC4 BMC | Covers | Induction | Result |",
-        "|---|---:|---:|---:|---:|---|",
+        "| Harness | Yosys SAT BMC | CVC4 BMC | CVC4 mode | Covers | Induction | Result |",
+        "|---|---:|---:|---|---:|---:|---|",
     ]
     for case in summary["cases"]:
         bounds = case["bounds"]
         induction = bounds["cvc4_induction"]
         lines.append(
             f"| `{case['name']}` | {bounds['yosys_sat_bmc']} | {bounds['cvc4_bmc']} | "
-            f"{bounds['cvc4_cover']} | {induction if induction is not None else 'bounded only'} | "
+            f"{case['cvc4_bmc_mode']} | {bounds['cvc4_cover']} | "
+            f"{induction if induction is not None else 'bounded only'} | "
             f"{case['status'].upper()} |"
         )
     lines.extend(
@@ -332,6 +343,9 @@ def render_report(summary: dict[str, Any]) -> str:
             "## Solver qualification notes",
             "",
             "- The independent configurations are Yosys internal SAT and Yosys SMT2 with CVC4 1.8.",
+            "- The stage-controller CVC4 BMC uses non-incremental solver processes at the same "
+            "depth and with the same formula because CVC4 1.8's incremental mode has a severe "
+            "local performance cliff on that model; this changes solver scheduling, not proof scope.",
             "- Z3 4.8.12 was locally non-terminating at useful bounds for these generated models; "
             "Ubuntu Boolector 1.5.118 is too old for the interaction. Neither is counted as pass evidence.",
             "- Some CVC4 bounds are intentionally lower than SAT because solver cost "

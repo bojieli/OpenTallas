@@ -36,3 +36,16 @@ def test_qwen_dense_control_is_in_frozen_manifest() -> None:
     assert qwen["role"] == "dense_control"
     assert qwen["stages_midpoint"] == 1
     assert qwen["study_context_tokens"] == [8192]
+
+
+def test_fault_campaign_is_source_complete() -> None:
+    import json
+
+    campaign = json.loads(
+        (ROOT / "spec" / "fault_campaign.json").read_text(encoding="utf-8")
+    )
+    assert campaign["planned_site_count"] == 87
+    assert len(campaign["sites"]) == 87
+    assert len({site["id"] for site in campaign["sites"]}) == 87
+    assert len(campaign["required_simulators"]) == 2
+    assert campaign["external_gates"]

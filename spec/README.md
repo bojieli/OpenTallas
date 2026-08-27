@@ -42,6 +42,7 @@ commit.
 - `FIRMWARE_COMPILER.md` — image, schedule, ABI, boot, and reproducibility contract
 - `FLOORPLAN_PPA.md` — explicit product hypotheses and public-proxy budgets
 - `VERIFICATION_PLAN.md` — environments, methods, coverage, and closure criteria
+- `fault_campaign.json` — exact public RTL fault sites, expected containment, recovery, and external gates
 - `CHANGE_CONTROL.md` — freeze, waiver, and compatibility policy
 - `ARCHITECTURE_REVIEW.md` — gate disposition and open external risks
 

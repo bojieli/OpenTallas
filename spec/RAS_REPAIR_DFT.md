@@ -331,3 +331,12 @@ latency, containment, recovery, final session state, credits, and expected telem
 Closure requires 100% activation and specified detection/containment for planned
 sites, no silent state commit, and reviewed exclusions. Statistical random injection
 supplements but does not replace deterministic site coverage.
+
+The source-controlled public subset is enumerated in `fault_campaign.json`. Its 87
+sites are required to appear exactly once in their declared timed benches and to pass
+under both Icarus/vvp and the pinned public Verilator 5.050 source build. The campaign
+records expected observation, containment, recovery, commands, tool/executable
+hashes, source hashes, logs, and explicit external gates. This closes deterministic
+logical behavior only for those sites. It does not qualify foundry macro ECC/BIST,
+HBM or link PHYs, scan insertion/compression, ATPG, delay/bridging/open faults,
+physical layout, manufacturing/yield, or target-node signoff.

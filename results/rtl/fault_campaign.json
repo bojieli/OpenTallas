@@ -1,0 +1,2052 @@
+{
+  "bench_site_counts": {
+    "rtl/test/tb_fault_control.sv": 28,
+    "rtl/test/tb_fault_data.sv": 18,
+    "rtl/test/tb_fault_link.sv": 15,
+    "rtl/test/tb_fault_ras_dft.sv": 26
+  },
+  "campaign": "FC-PUBLIC-RTL-1",
+  "canonical_timestamp_policy": "no timestamp in canonical artifact",
+  "cases": [
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "compile": {
+        "command": "'<IVERILOG>' -g2012 -Wall -Wno-sensitivity-entire-array -s tb_fault_data -o rtl/build/fault_campaign/iverilog/fault_data/tb_fault_data rtl/ot_route_mask.sv rtl/ot_rom_wrapper.sv rtl/ot_hbm_frontend.sv rtl/test/tb_fault_data.sv",
+        "log": "rtl/build/fault_campaign/iverilog/fault_data/compile.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 120,
+        "warnings": []
+      },
+      "simulation": {
+        "command": "'<VVP>' rtl/build/fault_campaign/iverilog/fault_data/tb_fault_data",
+        "log": "rtl/build/fault_campaign/iverilog/fault_data/simulation.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 60,
+        "warnings": []
+      },
+      "simulator": "iverilog_vvp",
+      "sites": {
+        "duplicate_sites": [],
+        "expected_site_count": 18,
+        "failed_sites": [],
+        "missing_sites": [],
+        "observed_pass_sites": [
+          "FC-HBM-CRC",
+          "FC-HBM-EARLY-LAST",
+          "FC-HBM-ERROR-STATUS",
+          "FC-HBM-LATE-LAST",
+          "FC-HBM-MAX-BURST",
+          "FC-HBM-RECOVERY",
+          "FC-HBM-SAME-CYCLE-RECYCLE",
+          "FC-HBM-WRONG-TAG",
+          "FC-ROM-ADDRESS-RANGE",
+          "FC-ROM-MULTI-BIT",
+          "FC-ROM-REPAIR-RANGE",
+          "FC-ROM-REPAIR-VALID",
+          "FC-ROM-SINGLE-BIT",
+          "FC-ROUTE-CRC",
+          "FC-ROUTE-DUPLICATE",
+          "FC-ROUTE-RANGE",
+          "FC-ROUTE-RESERVED",
+          "FC-ROUTE-TOPK"
+        ],
+        "observed_site_count": 18,
+        "semantic_output_sha256": "f21dd362c038e2970e930c3a562d96ae9cac1f7357512d0984a1494d036ce660",
+        "status": "pass",
+        "unexpected_sites": []
+      },
+      "status": "pass",
+      "top": "tb_fault_data"
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "compile": {
+        "command": "'<VERILATOR_5_050>' --binary --timing -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_fault_data --Mdir rtl/build/fault_campaign/verilator/fault_data rtl/ot_route_mask.sv rtl/ot_rom_wrapper.sv rtl/ot_hbm_frontend.sv rtl/test/tb_fault_data.sv",
+        "log": "rtl/build/fault_campaign/verilator/fault_data/compile.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "warnings": []
+      },
+      "simulation": {
+        "command": "rtl/build/fault_campaign/verilator/fault_data/Vtb_fault_data",
+        "log": "rtl/build/fault_campaign/verilator/fault_data/simulation.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 60,
+        "warnings": []
+      },
+      "simulator": "verilator_5_050_timed_binary",
+      "sites": {
+        "duplicate_sites": [],
+        "expected_site_count": 18,
+        "failed_sites": [],
+        "missing_sites": [],
+        "observed_pass_sites": [
+          "FC-HBM-CRC",
+          "FC-HBM-EARLY-LAST",
+          "FC-HBM-ERROR-STATUS",
+          "FC-HBM-LATE-LAST",
+          "FC-HBM-MAX-BURST",
+          "FC-HBM-RECOVERY",
+          "FC-HBM-SAME-CYCLE-RECYCLE",
+          "FC-HBM-WRONG-TAG",
+          "FC-ROM-ADDRESS-RANGE",
+          "FC-ROM-MULTI-BIT",
+          "FC-ROM-REPAIR-RANGE",
+          "FC-ROM-REPAIR-VALID",
+          "FC-ROM-SINGLE-BIT",
+          "FC-ROUTE-CRC",
+          "FC-ROUTE-DUPLICATE",
+          "FC-ROUTE-RANGE",
+          "FC-ROUTE-RESERVED",
+          "FC-ROUTE-TOPK"
+        ],
+        "observed_site_count": 18,
+        "semantic_output_sha256": "f21dd362c038e2970e930c3a562d96ae9cac1f7357512d0984a1494d036ce660",
+        "status": "pass",
+        "unexpected_sites": []
+      },
+      "status": "pass",
+      "top": "tb_fault_data"
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "compile": {
+        "command": "'<IVERILOG>' -g2012 -Wall -Wno-sensitivity-entire-array -s tb_fault_link -o rtl/build/fault_campaign/iverilog/fault_link/tb_fault_link rtl/ot_stage_link_rx.sv rtl/ot_stage_link_tx.sv rtl/test/tb_fault_link.sv",
+        "log": "rtl/build/fault_campaign/iverilog/fault_link/compile.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 120,
+        "warnings": []
+      },
+      "simulation": {
+        "command": "'<VVP>' rtl/build/fault_campaign/iverilog/fault_link/tb_fault_link",
+        "log": "rtl/build/fault_campaign/iverilog/fault_link/simulation.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 60,
+        "warnings": []
+      },
+      "simulator": "iverilog_vvp",
+      "sites": {
+        "duplicate_sites": [],
+        "expected_site_count": 15,
+        "failed_sites": [],
+        "missing_sites": [],
+        "observed_pass_sites": [
+          "FC-LINK-RX-DUPLICATE",
+          "FC-LINK-RX-FLIT-CRC",
+          "FC-LINK-RX-GOOD",
+          "FC-LINK-RX-MIXED-SEQUENCE",
+          "FC-LINK-RX-NO-PARTIAL",
+          "FC-LINK-RX-OUT-OF-ORDER",
+          "FC-LINK-RX-PACKET-CRC",
+          "FC-LINK-RX-RECOVERY",
+          "FC-LINK-TX-ACK-WAIT-ABORT",
+          "FC-LINK-TX-CREDIT-GUARD",
+          "FC-LINK-TX-CREDIT-ONCE",
+          "FC-LINK-TX-NAK-RETRY",
+          "FC-LINK-TX-RETRY-EXHAUST",
+          "FC-LINK-TX-TIMEOUT-RETRY",
+          "FC-LINK-TX-WRONG-ACK"
+        ],
+        "observed_site_count": 15,
+        "semantic_output_sha256": "837e6e4e1cb334c49950569df75844c1e11c5ec2e612717443d372d82ded0db0",
+        "status": "pass",
+        "unexpected_sites": []
+      },
+      "status": "pass",
+      "top": "tb_fault_link"
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "compile": {
+        "command": "'<VERILATOR_5_050>' --binary --timing -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_fault_link --Mdir rtl/build/fault_campaign/verilator/fault_link rtl/ot_stage_link_rx.sv rtl/ot_stage_link_tx.sv rtl/test/tb_fault_link.sv",
+        "log": "rtl/build/fault_campaign/verilator/fault_link/compile.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "warnings": []
+      },
+      "simulation": {
+        "command": "rtl/build/fault_campaign/verilator/fault_link/Vtb_fault_link",
+        "log": "rtl/build/fault_campaign/verilator/fault_link/simulation.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 60,
+        "warnings": []
+      },
+      "simulator": "verilator_5_050_timed_binary",
+      "sites": {
+        "duplicate_sites": [],
+        "expected_site_count": 15,
+        "failed_sites": [],
+        "missing_sites": [],
+        "observed_pass_sites": [
+          "FC-LINK-RX-DUPLICATE",
+          "FC-LINK-RX-FLIT-CRC",
+          "FC-LINK-RX-GOOD",
+          "FC-LINK-RX-MIXED-SEQUENCE",
+          "FC-LINK-RX-NO-PARTIAL",
+          "FC-LINK-RX-OUT-OF-ORDER",
+          "FC-LINK-RX-PACKET-CRC",
+          "FC-LINK-RX-RECOVERY",
+          "FC-LINK-TX-ACK-WAIT-ABORT",
+          "FC-LINK-TX-CREDIT-GUARD",
+          "FC-LINK-TX-CREDIT-ONCE",
+          "FC-LINK-TX-NAK-RETRY",
+          "FC-LINK-TX-RETRY-EXHAUST",
+          "FC-LINK-TX-TIMEOUT-RETRY",
+          "FC-LINK-TX-WRONG-ACK"
+        ],
+        "observed_site_count": 15,
+        "semantic_output_sha256": "837e6e4e1cb334c49950569df75844c1e11c5ec2e612717443d372d82ded0db0",
+        "status": "pass",
+        "unexpected_sites": []
+      },
+      "status": "pass",
+      "top": "tb_fault_link"
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "compile": {
+        "command": "'<IVERILOG>' -g2012 -Wall -Wno-sensitivity-entire-array -s tb_fault_ras_dft -o rtl/build/fault_campaign/iverilog/fault_ras_dft/tb_fault_ras_dft rtl/ot_ras_controller.sv rtl/ot_bist_controller.sv rtl/ot_dft_controller.sv rtl/test/tb_fault_ras_dft.sv",
+        "log": "rtl/build/fault_campaign/iverilog/fault_ras_dft/compile.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 120,
+        "warnings": []
+      },
+      "simulation": {
+        "command": "'<VVP>' rtl/build/fault_campaign/iverilog/fault_ras_dft/tb_fault_ras_dft",
+        "log": "rtl/build/fault_campaign/iverilog/fault_ras_dft/simulation.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 60,
+        "warnings": []
+      },
+      "simulator": "iverilog_vvp",
+      "sites": {
+        "duplicate_sites": [],
+        "expected_site_count": 26,
+        "failed_sites": [],
+        "missing_sites": [],
+        "observed_pass_sites": [
+          "FC-BIST-ABORT",
+          "FC-BIST-INJECT",
+          "FC-BIST-MISMATCH",
+          "FC-BIST-OWNERSHIP",
+          "FC-BIST-PASS",
+          "FC-BIST-TIMEOUT",
+          "FC-DFT-ARM-RACE",
+          "FC-DFT-BIST-OWNERSHIP",
+          "FC-DFT-BIST-START",
+          "FC-DFT-IDCODE-BYPASS",
+          "FC-DFT-QUIESCENT-GRANT",
+          "FC-DFT-SCAN-ISOLATION",
+          "FC-DFT-SERVICE-INTERLOCK",
+          "FC-DFT-TEST-EXIT",
+          "FC-RAS-CORRECTABLE",
+          "FC-RAS-COUNTER-SATURATION",
+          "FC-RAS-EXTERNAL-POISON",
+          "FC-RAS-FATAL",
+          "FC-RAS-FIRST-CLEAR",
+          "FC-RAS-FIRST-STICKY",
+          "FC-RAS-POISON-LIFETIME",
+          "FC-RAS-TELEMETRY-FULL",
+          "FC-RAS-TELEMETRY-INTEGRITY",
+          "FC-RAS-TELEMETRY-RESERVE",
+          "FC-RAS-UNCORRECTABLE",
+          "FC-RAS-WATCHDOG"
+        ],
+        "observed_site_count": 26,
+        "semantic_output_sha256": "f6a2b55121d1d572464480ba453c36f2f7335497ae2c80f0d41cc2d585cdbfc1",
+        "status": "pass",
+        "unexpected_sites": []
+      },
+      "status": "pass",
+      "top": "tb_fault_ras_dft"
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "compile": {
+        "command": "'<VERILATOR_5_050>' --binary --timing -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_fault_ras_dft --Mdir rtl/build/fault_campaign/verilator/fault_ras_dft rtl/ot_ras_controller.sv rtl/ot_bist_controller.sv rtl/ot_dft_controller.sv rtl/test/tb_fault_ras_dft.sv",
+        "log": "rtl/build/fault_campaign/verilator/fault_ras_dft/compile.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "warnings": []
+      },
+      "simulation": {
+        "command": "rtl/build/fault_campaign/verilator/fault_ras_dft/Vtb_fault_ras_dft",
+        "log": "rtl/build/fault_campaign/verilator/fault_ras_dft/simulation.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 60,
+        "warnings": []
+      },
+      "simulator": "verilator_5_050_timed_binary",
+      "sites": {
+        "duplicate_sites": [],
+        "expected_site_count": 26,
+        "failed_sites": [],
+        "missing_sites": [],
+        "observed_pass_sites": [
+          "FC-BIST-ABORT",
+          "FC-BIST-INJECT",
+          "FC-BIST-MISMATCH",
+          "FC-BIST-OWNERSHIP",
+          "FC-BIST-PASS",
+          "FC-BIST-TIMEOUT",
+          "FC-DFT-ARM-RACE",
+          "FC-DFT-BIST-OWNERSHIP",
+          "FC-DFT-BIST-START",
+          "FC-DFT-IDCODE-BYPASS",
+          "FC-DFT-QUIESCENT-GRANT",
+          "FC-DFT-SCAN-ISOLATION",
+          "FC-DFT-SERVICE-INTERLOCK",
+          "FC-DFT-TEST-EXIT",
+          "FC-RAS-CORRECTABLE",
+          "FC-RAS-COUNTER-SATURATION",
+          "FC-RAS-EXTERNAL-POISON",
+          "FC-RAS-FATAL",
+          "FC-RAS-FIRST-CLEAR",
+          "FC-RAS-FIRST-STICKY",
+          "FC-RAS-POISON-LIFETIME",
+          "FC-RAS-TELEMETRY-FULL",
+          "FC-RAS-TELEMETRY-INTEGRITY",
+          "FC-RAS-TELEMETRY-RESERVE",
+          "FC-RAS-UNCORRECTABLE",
+          "FC-RAS-WATCHDOG"
+        ],
+        "observed_site_count": 26,
+        "semantic_output_sha256": "f6a2b55121d1d572464480ba453c36f2f7335497ae2c80f0d41cc2d585cdbfc1",
+        "status": "pass",
+        "unexpected_sites": []
+      },
+      "status": "pass",
+      "top": "tb_fault_ras_dft"
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "compile": {
+        "command": "'<IVERILOG>' -g2012 -Wall -Wno-sensitivity-entire-array -s tb_fault_control -o rtl/build/fault_campaign/iverilog/fault_control/tb_fault_control rtl/ot_power_reset_controller.sv rtl/ot_schedule_controller.sv rtl/ot_session_table.sv rtl/ot_stage_controller.sv rtl/test/tb_fault_control.sv",
+        "log": "rtl/build/fault_campaign/iverilog/fault_control/compile.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 120,
+        "warnings": []
+      },
+      "simulation": {
+        "command": "'<VVP>' rtl/build/fault_campaign/iverilog/fault_control/tb_fault_control",
+        "log": "rtl/build/fault_campaign/iverilog/fault_control/simulation.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 60,
+        "warnings": []
+      },
+      "simulator": "iverilog_vvp",
+      "sites": {
+        "duplicate_sites": [],
+        "expected_site_count": 28,
+        "failed_sites": [],
+        "missing_sites": [],
+        "observed_pass_sites": [
+          "FC-POWER-BOOT-QUALIFICATION",
+          "FC-POWER-CLOCK-LOSS",
+          "FC-POWER-QUIESCE",
+          "FC-POWER-REQUALIFY",
+          "FC-POWER-SERVICE-ENABLE",
+          "FC-POWER-TEST-INTERLOCK",
+          "FC-POWER-THERMAL-FATAL",
+          "FC-POWER-THERMAL-THROTTLE",
+          "FC-POWER-THROTTLE-RECOVERY",
+          "FC-SCHEDULE-BAD-MANIFEST",
+          "FC-SCHEDULE-IDENTITY",
+          "FC-SCHEDULE-ILLEGAL-SOURCE",
+          "FC-SCHEDULE-LEGAL-SOURCE",
+          "FC-SCHEDULE-PARTIAL",
+          "FC-SCHEDULE-QUIESCENCE",
+          "FC-SESSION-CAPACITY",
+          "FC-SESSION-CONFIGURE",
+          "FC-SESSION-DUPLICATE",
+          "FC-SESSION-EPOCH",
+          "FC-SESSION-LATE-TRANSACTION",
+          "FC-SESSION-LOOKUP",
+          "FC-SESSION-POISON",
+          "FC-SESSION-POISON-OBSERVED",
+          "FC-SESSION-REUSE-GENERATION",
+          "FC-STAGE-HOST-ABORT",
+          "FC-STAGE-NO-CREDIT",
+          "FC-STAGE-SERVICE-ERROR",
+          "FC-STAGE-WATCHDOG"
+        ],
+        "observed_site_count": 28,
+        "semantic_output_sha256": "76f9d7e8a618cf2e795a4bcf8fb331fa70f296adfadfb7f7c51856a6bb201391",
+        "status": "pass",
+        "unexpected_sites": []
+      },
+      "status": "pass",
+      "top": "tb_fault_control"
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "compile": {
+        "command": "'<VERILATOR_5_050>' --binary --timing -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_fault_control --Mdir rtl/build/fault_campaign/verilator/fault_control rtl/ot_power_reset_controller.sv rtl/ot_schedule_controller.sv rtl/ot_session_table.sv rtl/ot_stage_controller.sv rtl/test/tb_fault_control.sv",
+        "log": "rtl/build/fault_campaign/verilator/fault_control/compile.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 300,
+        "warnings": []
+      },
+      "simulation": {
+        "command": "rtl/build/fault_campaign/verilator/fault_control/Vtb_fault_control",
+        "log": "rtl/build/fault_campaign/verilator/fault_control/simulation.log",
+        "returncode": 0,
+        "timed_out": false,
+        "timeout_seconds": 60,
+        "warnings": []
+      },
+      "simulator": "verilator_5_050_timed_binary",
+      "sites": {
+        "duplicate_sites": [],
+        "expected_site_count": 28,
+        "failed_sites": [],
+        "missing_sites": [],
+        "observed_pass_sites": [
+          "FC-POWER-BOOT-QUALIFICATION",
+          "FC-POWER-CLOCK-LOSS",
+          "FC-POWER-QUIESCE",
+          "FC-POWER-REQUALIFY",
+          "FC-POWER-SERVICE-ENABLE",
+          "FC-POWER-TEST-INTERLOCK",
+          "FC-POWER-THERMAL-FATAL",
+          "FC-POWER-THERMAL-THROTTLE",
+          "FC-POWER-THROTTLE-RECOVERY",
+          "FC-SCHEDULE-BAD-MANIFEST",
+          "FC-SCHEDULE-IDENTITY",
+          "FC-SCHEDULE-ILLEGAL-SOURCE",
+          "FC-SCHEDULE-LEGAL-SOURCE",
+          "FC-SCHEDULE-PARTIAL",
+          "FC-SCHEDULE-QUIESCENCE",
+          "FC-SESSION-CAPACITY",
+          "FC-SESSION-CONFIGURE",
+          "FC-SESSION-DUPLICATE",
+          "FC-SESSION-EPOCH",
+          "FC-SESSION-LATE-TRANSACTION",
+          "FC-SESSION-LOOKUP",
+          "FC-SESSION-POISON",
+          "FC-SESSION-POISON-OBSERVED",
+          "FC-SESSION-REUSE-GENERATION",
+          "FC-STAGE-HOST-ABORT",
+          "FC-STAGE-NO-CREDIT",
+          "FC-STAGE-SERVICE-ERROR",
+          "FC-STAGE-WATCHDOG"
+        ],
+        "observed_site_count": 28,
+        "semantic_output_sha256": "76f9d7e8a618cf2e795a4bcf8fb331fa70f296adfadfb7f7c51856a6bb201391",
+        "status": "pass",
+        "unexpected_sites": []
+      },
+      "status": "pass",
+      "top": "tb_fault_control"
+    }
+  ],
+  "claim_scope": "Deterministic activation, observation, containment, and stated recovery for the enumerated public behavioral RTL sites only.",
+  "evidence_class": "public_open_tool_directed_rtl_simulation",
+  "external_gates": [
+    {
+      "id": "EXT-MACRO-ECC",
+      "scope": "Foundry ROM/SRAM ECC implementation, sense margin, retention, coupling, aging, and repair qualification.",
+      "status": "external_not_modeled"
+    },
+    {
+      "id": "EXT-HBM-PHY",
+      "scope": "HBM controller/PHY vendor behavior, lane repair, calibration, analog timing, and macro ECC qualification.",
+      "status": "external_not_modeled"
+    },
+    {
+      "id": "EXT-LINK-PHY",
+      "scope": "Stage-link SerDes/PHY BER, equalization, clock recovery, lane repair, and package channel behavior.",
+      "status": "external_not_modeled"
+    },
+    {
+      "id": "EXT-ATPG",
+      "scope": "Target scan insertion, compression, stuck-at/transition ATPG coverage, diagnosis, and tester correlation.",
+      "status": "external_not_modeled"
+    },
+    {
+      "id": "EXT-PHYSICAL-FAULTS",
+      "scope": "Delay, bridging, open, crosstalk, power-integrity, thermal, radiation, and physical-layout fault coverage.",
+      "status": "external_not_modeled"
+    },
+    {
+      "id": "EXT-PDK-SIGNOFF",
+      "scope": "Target PDK timing/power/noise/reliability models and commercial signoff-tool qualification.",
+      "status": "external_not_modeled"
+    },
+    {
+      "id": "EXT-MANUFACTURING",
+      "scope": "Defect density, yield, wafer probe, burn-in, repair exhaustion, package test, and production quality limits.",
+      "status": "external_not_modeled"
+    },
+    {
+      "id": "EXT-MODEL-QUALITY",
+      "scope": "Target numerical-format qualification and end-to-end model quality under production workloads.",
+      "status": "external_not_modeled"
+    }
+  ],
+  "limitations": [
+    "100% means activation and specified observation/containment for these enumerated public RTL sites only.",
+    "The directed benches use reduced parameters and behavioral macro boundaries; they do not establish architectural-maxima timing or physical behavior.",
+    "No target ATPG, foundry ROM/SRAM ECC or BIST qualification, HBM/PHY behavior, physical fault coverage, manufacturing/yield, numerical quality, PDK closure, or product signoff is claimed.",
+    "Statistical random fault injection, stage/reticle/pipeline degradation, reset-phase campaigns, and code/functional coverage closure remain separate verification gates."
+  ],
+  "schema_version": 1,
+  "simulator_site_observations": 174,
+  "simulators_counted": [
+    "iverilog_vvp",
+    "verilator_5_050_timed_binary"
+  ],
+  "site_count": 87,
+  "sites": [
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "The decoded mask cannot be consumed as an unpoisoned context.",
+      "expected_observation": "Corrupt route-record CRC sets poison and the sticky CRC diagnostic.",
+      "fault_class": "transient_data_integrity",
+      "id": "FC-ROUTE-CRC",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Discard the poisoned context; a later legal record remains independently decodable.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-TILE-001",
+        "DV-RAS-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "No out-of-range wordline or expert enable is asserted.",
+      "expected_observation": "An expert ID outside the configured population sets bad-field, poison, and no enable bit.",
+      "fault_class": "configuration_range",
+      "id": "FC-ROUTE-RANGE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Discard the record and accept a subsequent legal record after normal queue drain.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-TILE-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "Only one wordline enable is produced for the repeated expert.",
+      "expected_observation": "A repeated expert ID is reported in the duplicate-slot bitmap while the first occurrence is retained.",
+      "fault_class": "duplicate_record",
+      "id": "FC-ROUTE-DUPLICATE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "The deduplicated legal route proceeds without transaction poison.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-TILE-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "Reserved encodings cannot alter the decoded service mask silently.",
+      "expected_observation": "A nonzero reserved field sets bad-field and poisons the context.",
+      "fault_class": "configuration_identity",
+      "id": "FC-ROUTE-RESERVED",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Discard the poisoned record; later legal records are unaffected.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-TILE-001",
+        "DV-RAS-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "No service launch is authorized from the malformed count.",
+      "expected_observation": "An illegal top-k count is classified as bad-field and poisoned.",
+      "fault_class": "configuration_range",
+      "id": "FC-ROUTE-TOPK",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Discard the record and continue with a legal route record.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-TILE-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "Corrupt injected data is never exposed at the architectural response.",
+      "expected_observation": "A single-bit injected event returns the original architectural word with correctable syndrome and no poison.",
+      "fault_class": "transient_data_integrity",
+      "id": "FC-ROM-SINGLE-BIT",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Consume corrected data and record/scrub through the external macro policy.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-TILE-002",
+        "DV-RAS-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "The affected read is prevented from committing as valid data.",
+      "expected_observation": "A representative multi-bit injection returns an uncorrectable syndrome with poison.",
+      "fault_class": "uncorrectable_data_integrity",
+      "id": "FC-ROM-MULTI-BIT",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Abort/poison the owning transaction; macro repair or quarantine is an external gate.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-TILE-002",
+        "DV-RAS-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "The defective logical row is bypassed without changing logical content semantics.",
+      "expected_observation": "A legal logical-to-spare remap returns the spare-row word without poison.",
+      "fault_class": "permanent_data_repair",
+      "id": "FC-ROM-REPAIR-VALID",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Continue service using the frozen repair map.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-TILE-002",
+        "DV-REPAIR-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "No out-of-range physical array access can become architectural data.",
+      "expected_observation": "A repair target outside physical depth produces a poisoned response.",
+      "fault_class": "repair_map_integrity",
+      "id": "FC-ROM-REPAIR-RANGE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Reject the repair/read; load a valid quiescent repair map before service.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-REPAIR-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "No physical word is aliased into the illegal logical address.",
+      "expected_observation": "An out-of-range logical address returns zero data with poison.",
+      "fault_class": "address_protocol",
+      "id": "FC-ROM-ADDRESS-RANGE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Abort the request; valid later addresses remain usable.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-TILE-002",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "Only the matching tag/session is terminated and its outstanding reservation is released.",
+      "expected_observation": "A response CRC error completes the matching tag with integrity error and poison.",
+      "fault_class": "transient_data_integrity",
+      "id": "FC-HBM-CRC",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Retry or abort by policy; unrelated tags remain serviceable.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "Historical sticky protocol evidence does not poison a later unrelated tag.",
+      "expected_observation": "A legal response after a prior CRC failure completes cleanly for its own session.",
+      "fault_class": "fault_recovery",
+      "id": "FC-HBM-RECOVERY",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Continue normal service on the healthy tag/channel.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "No active request reservation or session state is consumed by the unexpected response.",
+      "expected_observation": "A response for an inactive/unallocated tag is reported as a poisoned protocol completion.",
+      "fault_class": "control_protocol",
+      "id": "FC-HBM-WRONG-TAG",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Drop the response, retain active tags, and escalate repeated channel protocol faults.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "Partial burst data cannot commit as a successful request.",
+      "expected_observation": "A terminal beat before the declared count poisons the same completion and sets protocol error.",
+      "fault_class": "framing_protocol",
+      "id": "FC-HBM-EARLY-LAST",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Release the tag and retry/abort the owning transaction.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "The overlong burst cannot overwrite or remain attached to the completed tag.",
+      "expected_observation": "A missing terminal marker at the declared final beat poisons the same completion and sets protocol error.",
+      "fault_class": "framing_protocol",
+      "id": "FC-HBM-LATE-LAST",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Release the tag and retry/abort; a late extra beat is treated as unexpected.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "The error is contained to the owning tag/session with no successful commit.",
+      "expected_observation": "A nonzero vendor-normalized response status is returned on the matching poisoned completion.",
+      "fault_class": "external_macro_status",
+      "id": "FC-HBM-ERROR-STATUS",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Apply corrected/retry/abort/channel-recovery policy for the classified status.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "The architectural maximum cannot wrap to zero and terminate or recycle the tag prematurely.",
+      "expected_observation": "The all-ones 16-bit minus-one encoding reserves exactly 65,536 beats in a 17-bit internal count.",
+      "fault_class": "capacity_boundary",
+      "id": "FC-HBM-MAX-BURST",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Complete or explicitly abort the full request under the normal tag lifecycle.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-STATIC-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "containment": "Neither the increment nor decrement is lost, and tag ownership cannot underflow, leak, or cross sessions.",
+      "expected_observation": "A different-tag admission concurrent with a terminal response preserves one outstanding reservation and both completions retain their sessions.",
+      "fault_class": "reservation_conservation",
+      "id": "FC-HBM-SAME-CYCLE-RECYCLE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "The newly admitted tag completes normally and returns the outstanding count to zero.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-HBM-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "No corrupt flit escapes the complete-packet receive buffer.",
+      "expected_observation": "A bad flit CRC produces one negative acknowledgement, protocol error, and no delivery.",
+      "fault_class": "transient_link_integrity",
+      "id": "FC-LINK-RX-FLIT-CRC",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Sender retries the retained packet or aborts after the retry limit.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "No packet with inconsistent accumulated CRC reaches the service plane.",
+      "expected_observation": "A bad terminal packet CRC produces one negative acknowledgement and no delivery.",
+      "fault_class": "transient_link_integrity",
+      "id": "FC-LINK-RX-PACKET-CRC",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Sender retries the complete retained packet.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "Complete-packet buffering prevents partial architectural delivery.",
+      "expected_observation": "A later corrupt flit rejects the packet without exposing its earlier valid flit.",
+      "fault_class": "partial_packet_integrity",
+      "id": "FC-LINK-RX-NO-PARTIAL",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Discard the receive buffer and accept a clean retry.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "Delivery and acknowledgement refer to the same complete packet sequence.",
+      "expected_observation": "A valid packet is delivered once and positively acknowledged without poison.",
+      "fault_class": "fault_free_control",
+      "id": "FC-LINK-RX-GOOD",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Advance the expected sequence and continue.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "Idempotence prevents duplicate state commit.",
+      "expected_observation": "A replay of the last accepted sequence is positively acknowledged but not redelivered.",
+      "fault_class": "duplicate_packet",
+      "id": "FC-LINK-RX-DUPLICATE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Sender treats the acknowledgement as terminal and advances.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "The out-of-order packet cannot alter service state.",
+      "expected_observation": "An unexpected first-flit sequence is negatively acknowledged with no delivery.",
+      "fault_class": "sequence_protocol",
+      "id": "FC-LINK-RX-OUT-OF-ORDER",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Discard and retry the required sequence or abort.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "All flits in the receive buffer remain uncommitted.",
+      "expected_observation": "A packet whose flits carry different sequence IDs is negatively acknowledged with no delivery.",
+      "fault_class": "sequence_protocol",
+      "id": "FC-LINK-RX-MIXED-SEQUENCE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Discard the mixed packet and accept a clean retransmission.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "Prior CRC/sequence state does not contaminate the new packet.",
+      "expected_observation": "A legal packet following rejected sequence traffic is delivered and acknowledged once.",
+      "fault_class": "fault_recovery",
+      "id": "FC-LINK-RX-RECOVERY",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Advance expected sequence and resume service.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "The sender retains packet bits and sequence until terminal acknowledgement.",
+      "expected_observation": "A matching negative acknowledgement causes exactly one complete-packet retransmission and increments retry count.",
+      "fault_class": "retry_protocol",
+      "id": "FC-LINK-TX-NAK-RETRY",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Await a positive acknowledgement or exhaust the bounded retry policy.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "Retries cannot leak receive-buffer credits.",
+      "expected_observation": "The original packet consumes one remote packet credit and its retry consumes none.",
+      "fault_class": "credit_conservation",
+      "id": "FC-LINK-TX-CREDIT-ONCE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Credit is returned only by the endpoint-level completion policy.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "The retained packet is replayed without a second credit debit or partial replacement.",
+      "expected_observation": "Acknowledgement timeout emits a timeout indication and retransmits once.",
+      "fault_class": "watchdog_timeout",
+      "id": "FC-LINK-TX-TIMEOUT-RETRY",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Accept a later matching ACK or terminally abort at the retry bound.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "No additional unbounded transmission or successful completion occurs.",
+      "expected_observation": "A further NAK after the allowed retry sets terminal error, preserves retry diagnostics, and clears busy.",
+      "fault_class": "retry_exhaustion",
+      "id": "FC-LINK-TX-RETRY-EXHAUST",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Abort/poison the transaction and requalify the link before reuse if policy requires.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "The wrong ACK cannot retire or mutate the retained packet.",
+      "expected_observation": "An acknowledgement for another sequence is ignored while the sender remains busy.",
+      "fault_class": "sequence_protocol",
+      "id": "FC-LINK-TX-WRONG-ACK",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Continue waiting for the matching ACK or timeout.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "No packet state or credit counter changes without admission.",
+      "expected_observation": "A packet cannot be accepted when no remote complete-packet credit is available.",
+      "fault_class": "credit_conservation",
+      "id": "FC-LINK-TX-CREDIT-GUARD",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Retry admission after credit is advertised.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "containment": "The packet cannot later complete successfully from a stale ACK.",
+      "expected_observation": "Host/control abort while waiting for ACK terminates the sender with error and no busy state.",
+      "fault_class": "abort_protocol",
+      "id": "FC-LINK-TX-ACK-WAIT-ABORT",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Poison/abort owning state and start a new packet only after abort deasserts.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-LINK-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "The active transaction remains usable because the event is classified correctable.",
+      "expected_observation": "A correctable event increments its saturating counter and captures first error without transaction poison or SAFE.",
+      "fault_class": "correctable_event",
+      "id": "FC-RAS-CORRECTABLE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Continue with corrected data and service policy.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Diagnostic evidence is bound to one lossless record.",
+      "expected_observation": "Telemetry fields and CRC16 reproduce the injected source, severity, epoch, transaction, and syndrome.",
+      "fault_class": "telemetry_integrity",
+      "id": "FC-RAS-TELEMETRY-INTEGRITY",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Drain/acknowledge the record through the telemetry interface.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "No successful commit is allowed for the affected transaction.",
+      "expected_observation": "An uncorrectable event increments its counter and poisons the active transaction without forcing global SAFE.",
+      "fault_class": "uncorrectable_event",
+      "id": "FC-RAS-UNCORRECTABLE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Abort the affected transaction while unrelated service may continue.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Root-cause evidence survives subsequent faults.",
+      "expected_observation": "A later event does not overwrite the captured first-error severity, source, or transaction.",
+      "fault_class": "diagnostic_state",
+      "id": "FC-RAS-FIRST-STICKY",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Software explicitly clears first-error state after collection.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Only the defined clear control can release the sticky record.",
+      "expected_observation": "The explicit clear operation removes first-error valid state.",
+      "fault_class": "diagnostic_state",
+      "id": "FC-RAS-FIRST-CLEAR",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "The next event becomes the new first error.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Poison cannot leak into an unrelated later transaction.",
+      "expected_observation": "Transaction poison clears at an idle transaction boundary while sticky diagnostic history remains separate.",
+      "fault_class": "transaction_isolation",
+      "id": "FC-RAS-POISON-LIFETIME",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Admit a new clean transaction after the boundary.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "No one-cycle post-fatal admission leak or successful affected commit is allowed.",
+      "expected_observation": "A fatal event increments the fatal counter, poisons active work, asserts SAFE request, and blocks admission immediately.",
+      "fault_class": "fatal_event",
+      "id": "FC-RAS-FATAL",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Drain/isolate and require explicit platform requalification.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-POWER-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Downstream logic cannot silently clear the propagated error during the transaction.",
+      "expected_observation": "An asserted upstream poison input becomes monotonic poison for the active transaction.",
+      "fault_class": "poison_propagation",
+      "id": "FC-RAS-EXTERNAL-POISON",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Clear only at the idle transaction boundary after abort/retire.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Diagnostic counts never wrap to a misleading low value.",
+      "expected_observation": "A counter at all ones remains saturated after another matching event.",
+      "fault_class": "counter_overflow",
+      "id": "FC-RAS-COUNTER-SATURATION",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Retain saturation indication and service according to policy.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Capacity is preserved for a terminal/fatal event instead of being consumed by new work.",
+      "expected_observation": "Admission blocks at the reserved-entry threshold while queued telemetry remains valid.",
+      "fault_class": "telemetry_capacity",
+      "id": "FC-RAS-TELEMETRY-RESERVE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Drain telemetry below threshold before reopening admission.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Lossless terminal evidence is retained and no further work is admitted.",
+      "expected_observation": "The reserved fatal event fills the queue and asserts SAFE/admission block.",
+      "fault_class": "telemetry_capacity",
+      "id": "FC-RAS-TELEMETRY-FULL",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Drain records under SAFE control and requalify.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Hung work cannot admit successors or remain silently active.",
+      "expected_observation": "Watchdog expiry asserts timeout, SAFE request, and admission block in the expiry cycle.",
+      "fault_class": "watchdog_timeout",
+      "id": "FC-RAS-WATCHDOG",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Abort/drain and require watchdog/platform recovery.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-RAS-002",
+        "DV-POWER-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Functional service cannot overlap BIST ownership.",
+      "expected_observation": "A complete legal BIST run returns pass, a nonzero signature, done state, and releases ownership.",
+      "fault_class": "fault_free_control",
+      "id": "FC-BIST-PASS",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Publish the pass signature and return the resource to service.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "The tested resource remains owned until the failure result is finalized.",
+      "expected_observation": "A data mismatch returns fail and captures the first reduced-test failing address.",
+      "fault_class": "bist_compare_failure",
+      "id": "FC-BIST-MISMATCH",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Repair/quarantine and rerun BIST before service.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "The failure cannot be reported as a passing signature.",
+      "expected_observation": "The explicit BIST injection hook forces a failing result without timeout.",
+      "fault_class": "bist_fault_injection",
+      "id": "FC-BIST-INJECT",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Use the injected result to qualify the diagnostic path; clear before real BIST.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "No partial test is promoted to a pass.",
+      "expected_observation": "Abort terminates a running BIST as non-pass, non-timeout, and releases busy ownership.",
+      "fault_class": "bist_abort",
+      "id": "FC-BIST-ABORT",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Restart a complete test before enabling the resource.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "BIST cannot contend with active functional ownership.",
+      "expected_observation": "Start is ignored while the resource is unavailable; busy, done, and test ownership remain deasserted.",
+      "fault_class": "test_ownership",
+      "id": "FC-BIST-OWNERSHIP",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Quiesce the resource and issue a new start.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "A hung macro/test callback cannot hold ownership indefinitely or report pass.",
+      "expected_observation": "A deliberately short timeout returns done, timeout, fail, and no busy state.",
+      "fault_class": "bist_timeout",
+      "id": "FC-BIST-TIMEOUT",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Quarantine or reset the resource and rerun diagnostics.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Identity/bypass access does not isolate live service by itself.",
+      "expected_observation": "Reset functional state exposes the configured IDCODE and legal BYPASS without entering test mode.",
+      "fault_class": "test_access_identity",
+      "id": "FC-DFT-IDCODE-BYPASS",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Continue functional operation or request controlled test entry.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Test clocks/scan cannot seize a nonquiescent service resource.",
+      "expected_observation": "A test request during active service receives no grant, no test mode, and no isolation.",
+      "fault_class": "test_ownership",
+      "id": "FC-DFT-SERVICE-INTERLOCK",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Quiesce service before reissuing the request.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Functional traffic is blocked before test controls become active.",
+      "expected_observation": "After quiescence, the armed request grants test mode and asserts service isolation.",
+      "fault_class": "test_ownership",
+      "id": "FC-DFT-QUIESCENT-GRANT",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Complete diagnostics and follow the controlled exit sequence.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Shift/capture activity cannot reach an unisolated service interface.",
+      "expected_observation": "Scan enable is asserted only with test grant and functional isolation.",
+      "fault_class": "scan_isolation",
+      "id": "FC-DFT-SCAN-ISOLATION",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Drop scan request before exiting test mode.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "BIST start cannot occur in functional ownership.",
+      "expected_observation": "A BIST request in granted test mode emits the bounded BIST start pulse.",
+      "fault_class": "bist_ownership",
+      "id": "FC-DFT-BIST-START",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Hold isolation until BIST completion.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "Functional service cannot race a still-running BIST.",
+      "expected_observation": "Test grant and isolation remain asserted while BIST reports busy even after requests drop.",
+      "fault_class": "bist_ownership",
+      "id": "FC-DFT-BIST-OWNERSHIP",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Release test mode only after BIST done and not busy.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "No stale test ownership remains after the controlled exit.",
+      "expected_observation": "After BIST completion and request release, test mode, grant, and isolation deassert.",
+      "fault_class": "test_exit",
+      "id": "FC-DFT-TEST-EXIT",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Requalify and return the resource to functional service.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "containment": "A quiescence race fails closed to functional ownership without mixed mode.",
+      "expected_observation": "Service becoming active while test entry is armed cancels grant and test mode.",
+      "fault_class": "test_ownership",
+      "id": "FC-DFT-ARM-RACE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Quiesce again and issue a fresh test request.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Inference cannot begin before explicit service request and qualification.",
+      "expected_observation": "Qualified reset/power inputs reach standby with core reset released but service disabled.",
+      "fault_class": "reset_power_sequence",
+      "id": "FC-POWER-BOOT-QUALIFICATION",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Request service only after boot diagnostics complete.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-RESET-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Service enable is coupled to the legal state and qualified supplies/clocks.",
+      "expected_observation": "A legal service request enters active service with isolation removed.",
+      "fault_class": "power_state_control",
+      "id": "FC-POWER-SERVICE-ENABLE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Continue service until throttle, quiesce, or fault.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-POWER-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "The response reduces service without corrupting protocol state.",
+      "expected_observation": "Thermal warning enters throttled state while preserving qualified service.",
+      "fault_class": "thermal_warning",
+      "id": "FC-POWER-THERMAL-THROTTLE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Return to active state after the warning clears.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Recovery does not bypass qualification or isolation guards.",
+      "expected_observation": "Clearing thermal warning removes throttle and restores active service.",
+      "fault_class": "fault_recovery",
+      "id": "FC-POWER-THROTTLE-RECOVERY",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Continue at the unthrottled operating point.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-POWER-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Functional and test modes cannot overlap.",
+      "expected_observation": "Asserting test enable during service forces SAFE, isolation, service disable, and a classified reset cause.",
+      "fault_class": "test_power_interlock",
+      "id": "FC-POWER-TEST-INTERLOCK",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Drop service/test requests and execute explicit requalification.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-DFT-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Service remains disabled until separately requested.",
+      "expected_observation": "Explicit requalification after the interlock returns to standby and clears SAFE.",
+      "fault_class": "fault_recovery",
+      "id": "FC-POWER-REQUALIFY",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Rerun required diagnostics, then request service.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-POWER-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "No new or continuing functional service is exposed through the fatal condition.",
+      "expected_observation": "Fatal thermal input enters SAFE, records the thermal cause, and asserts core reset.",
+      "fault_class": "fatal_thermal",
+      "id": "FC-POWER-THERMAL-FATAL",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Cool/isolate, diagnose, and explicitly requalify.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "State cannot continue under an unqualified clock.",
+      "expected_observation": "Clock qualification loss enters SAFE, records the clock cause, and asserts core reset.",
+      "fault_class": "clock_failure",
+      "id": "FC-POWER-CLOCK-LOSS",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Restore/qualify the clock and explicitly requalify.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-RESET-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "No new work enters while the state drains.",
+      "expected_observation": "Once the core reports quiescent, the controller acknowledges quiesce, returns to standby, and disables service.",
+      "fault_class": "quiesce_protocol",
+      "id": "FC-POWER-QUIESCE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Remove quiesce or power-transition according to policy.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-POWER-001",
+        "DV-CMD-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "A partial schedule never reaches the service datapath.",
+      "expected_observation": "Commit of an incompletely loaded schedule bank is rejected without valid activation.",
+      "fault_class": "schedule_integrity",
+      "id": "FC-SCHEDULE-PARTIAL",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Finish all required entries and recommit.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-NOC-001",
+        "DV-FW-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "No invalid route source can become active.",
+      "expected_observation": "A slot encoding an illegal source produces an error and no commit-pending state.",
+      "fault_class": "schedule_integrity",
+      "id": "FC-SCHEDULE-ILLEGAL-SOURCE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Correct the shadow entry and rerun schedule validation.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-NOC-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Schedule data cannot be paired with the wrong image/manifest.",
+      "expected_observation": "A schedule commit with bad manifest identity is rejected without activation.",
+      "fault_class": "configuration_identity",
+      "id": "FC-SCHEDULE-BAD-MANIFEST",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Supply the matching identity and recommit.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-NOC-001",
+        "DV-FW-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "The active bank cannot change under in-flight traffic.",
+      "expected_observation": "A valid commit remains pending while traffic is not quiescent and no epoch changes.",
+      "fault_class": "schedule_epoch_control",
+      "id": "FC-SCHEDULE-QUIESCENCE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Reach quiescent epoch boundary to activate atomically.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-NOC-001",
+        "DV-CMD-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "All consumers observe one coherent bank/identity/epoch transition.",
+      "expected_observation": "At the legal boundary, commit acknowledges, publishes the requested ID, marks valid, and increments epoch.",
+      "fault_class": "schedule_epoch_control",
+      "id": "FC-SCHEDULE-IDENTITY",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Use the new bank for subsequent admitted work.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-NOC-001",
+        "DV-FW-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Only the committed bank drives service selection.",
+      "expected_observation": "An active legal slot exposes the validated source and expected-valid metadata.",
+      "fault_class": "fault_free_control",
+      "id": "FC-SCHEDULE-LEGAL-SOURCE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Advance through the deterministic schedule.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-NOC-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "The entry is uniquely owned by its session and generation.",
+      "expected_observation": "A legal configure allocates the session, returns success/hit, and assigns a nonzero generation.",
+      "fault_class": "fault_free_control",
+      "id": "FC-SESSION-CONFIGURE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Proceed to ordered lookup/retire operations.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-SESSION-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "The original session allocation is not overwritten.",
+      "expected_observation": "A duplicate configure of an existing session is rejected as busy.",
+      "fault_class": "duplicate_record",
+      "id": "FC-SESSION-DUPLICATE",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Use the existing session or free it before reconfiguration.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "No existing session is evicted or aliased silently.",
+      "expected_observation": "Configuration beyond table capacity returns capacity error without corrupting busy state or integrity.",
+      "fault_class": "capacity_exhaustion",
+      "id": "FC-SESSION-CAPACITY",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Free capacity or reject admission upstream.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Stale work cannot attach to current session state.",
+      "expected_observation": "Lookup with the wrong epoch returns epoch error and does not set busy.",
+      "fault_class": "stale_epoch",
+      "id": "FC-SESSION-EPOCH",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Issue work with the active epoch or reconfigure.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "One transaction owns the session mutation window.",
+      "expected_observation": "A legal lookup succeeds, hits the expected entry, and marks it busy.",
+      "fault_class": "fault_free_control",
+      "id": "FC-SESSION-LOOKUP",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Retire or abort with the matching transaction.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-SESSION-001"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Late traffic cannot mutate the current owner.",
+      "expected_observation": "A nonmatching retire/operation returns an epoch/transaction error and preserves current position/busy ownership.",
+      "fault_class": "stale_transaction",
+      "id": "FC-SESSION-LATE-TRANSACTION",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Discard the stale operation and complete the matching transaction.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Failed work cannot advance position or remain busy.",
+      "expected_observation": "Matching abort records session poison, succeeds, and releases busy ownership.",
+      "fault_class": "poison_propagation",
+      "id": "FC-SESSION-POISON",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Future lookup observes poison until explicit session free/reconfigure policy.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Downstream control cannot mistake a poisoned session for clean state.",
+      "expected_observation": "A later legal lookup reports the sticky session poison state.",
+      "fault_class": "poison_propagation",
+      "id": "FC-SESSION-POISON-OBSERVED",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Abort/free the poisoned session before reuse.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Late traffic from the prior allocation cannot match the reused slot.",
+      "expected_observation": "After free and reallocation, the entry receives a generation different from its earlier owner.",
+      "fault_class": "allocation_generation",
+      "id": "FC-SESSION-REUSE-GENERATION",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Use the new generation in all downstream ownership records.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-SESSION-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "The busy session and any partial reservation cannot leak or retire successfully.",
+      "expected_observation": "Post-lookup credit denial produces no-credit completion through session abort, with no service start/commit and with cleanup.",
+      "fault_class": "credit_conservation",
+      "id": "FC-STAGE-NO-CREDIT",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Release cleanup ownership and allow a later command after terminal response.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-STAGE-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "No failed service result can reach the commit path or leave reserved capacity.",
+      "expected_observation": "Service error returns internal status/source/syndrome, poison, session abort, no commit, and credit release.",
+      "fault_class": "service_error",
+      "id": "FC-STAGE-SERVICE-ERROR",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Complete poisoned terminal cleanup; unrelated sessions remain serviceable.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-STAGE-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "Hung service cannot retain session/credit ownership or commit later.",
+      "expected_observation": "Stage watchdog produces timeout completion, poison, session abort, no commit, and credit release.",
+      "fault_class": "watchdog_timeout",
+      "id": "FC-STAGE-WATCHDOG",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Abort the transaction and requalify the failing service path.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-STAGE-001",
+        "DV-RAS-002"
+      ]
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "containment": "No post-abort service completion can commit architectural state.",
+      "expected_observation": "Matching host abort produces aborted completion, poison, session abort, no commit, and credit release.",
+      "fault_class": "abort_protocol",
+      "id": "FC-STAGE-HOST-ABORT",
+      "observed": {
+        "iverilog_vvp": "pass",
+        "verilator_5_050_timed_binary": "pass"
+      },
+      "recovery": "Finish common abort cleanup and admit new work after terminal response.",
+      "status": "pass",
+      "verification_requirements": [
+        "DV-STAGE-001",
+        "DV-CMD-002"
+      ]
+    }
+  ],
+  "source_sha256": {
+    "rtl/ot_bist_controller.sv": "3fa9513a494171c7f5971c41d7cf292a022e97e87fa90a6e3437e8b7d1627b9f",
+    "rtl/ot_dft_controller.sv": "338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225",
+    "rtl/ot_hbm_frontend.sv": "47b8f1def0c75d5cfaf1716f18f07f1f1a9ea4adcfcef214fc483996fd227287",
+    "rtl/ot_power_reset_controller.sv": "1c7b187ad1ada1797d66776383270b2017b2625607594eba7013b8ac53627594",
+    "rtl/ot_ras_controller.sv": "388d796e7b3f134728d06366982c67bd65ccf1afef96c0a011b253c53fc6f588",
+    "rtl/ot_rom_wrapper.sv": "8c11e112e4cb4a906c6ed11dc708ba2e37cf3aa8cd3afd90a9246179d5930584",
+    "rtl/ot_route_mask.sv": "4bdf835a9c072bc8d1f13b7de50370ae3b7e1c928f8bb9d6a55a70c64950db0a",
+    "rtl/ot_schedule_controller.sv": "07301550750eeaedceb8116ba9b97bd95fe0c17e84b536020bd0470e3029d826",
+    "rtl/ot_session_table.sv": "f21be6574e78e5e2204bdcea9494458615ac6863c0b2e08c0760d502c245361f",
+    "rtl/ot_stage_controller.sv": "9578fdb621b2e50bba4be5ecc7aa4f691e3fc91c214d01c30c1f39c615cee152",
+    "rtl/ot_stage_link_rx.sv": "5e50965d50807c8956f7e814656dafff4fca76f9a5bedbb1bc50b7165daec36a",
+    "rtl/ot_stage_link_tx.sv": "fe26c3b031dfc5eeda5073e22ce81f9dd6b2838a3be0b7c0b56c5352d7a12c90",
+    "rtl/test/tb_fault_control.sv": "967db7cb91f018453745e8216243c1c800aa09bcbb21cf815c171e3701045db0",
+    "rtl/test/tb_fault_data.sv": "8af249456d78a8852f4d56fff36033178addeb2b36d9ecdb505c02b93d8cce2b",
+    "rtl/test/tb_fault_link.sv": "a0b67dfc6714e1f1f4ae8b1f04de2b63dcaacb62c184581c1f71e81d9d6e5f6f",
+    "rtl/test/tb_fault_ras_dft.sv": "625af29bb602cace9d032a1607ed37dff5f3b6ff3c8d4915052e55bbd971bf7b",
+    "spec/RAS_REPAIR_DFT.md": "06af2ee5d266ff142cd5f2ec994cc83ddf4dbdcc4ad8cfaef1f8640406c79d9e",
+    "spec/VERIFICATION_PLAN.md": "9cb5453543182c2cfe5a15359e183c670b204f85e25dcf430e3d72a9a97792d8",
+    "spec/fault_campaign.json": "f332e7c6257a39d316b5a7035b86f73fb2c098340248516ef50bf7a7076c161a",
+    "spec/verification.json": "1ef9077d39db2f5306ba1e56c19fcb8d83babaa3bfebdc8e0f87e359562a3c86",
+    "tools/bootstrap_verilator_5_050.sh": "4881b6cbb7232feab9ef3773b7d0054ca8b29033d5c1b41cbcba4b9ff329e676",
+    "tools/rtl_fault_campaign.py": "d7c520de238be8d0230a4aeaa4600ebf66985b3c18be9597194cb36a363e7a48"
+  },
+  "status": "pass",
+  "tools": {
+    "compiler": {
+      "executable": "/usr/bin/x86_64-linux-gnu-g++-11",
+      "executable_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+      "version": "x86_64-linux-gnu-g++-11 (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+    },
+    "iverilog": {
+      "executable": "/usr/bin/iverilog",
+      "executable_sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "executable": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "executable_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "executable": "/usr/bin/vvp",
+      "executable_sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d",
+      "version": "Icarus Verilog runtime version 11.0 (stable) ()"
+    }
+  },
+  "verilator_source": {
+    "bootstrap": "tools/bootstrap_verilator_5_050.sh",
+    "commit": "848d926ebd4addacacd294dc84e35d9d4ae8078c",
+    "repository": "https://github.com/verilator/verilator.git"
+  },
+  "warning_policy": {
+    "iverilog_suppressions": [
+      {
+        "rationale": "The entire array is intentionally in the combinational sensitivity set; simulation behavior is required and cross-checked by Verilator.",
+        "scope": "Icarus elaboration diagnostic for IEEE always-@* dynamic array sensitivity",
+        "warning_class": "sensitivity-entire-array"
+      }
+    ],
+    "unexpected_warnings_are_fatal": true,
+    "verilator_suppressions": [
+      {
+        "rationale": "Bench stimulus variables use declaration initialization and procedural assignment.",
+        "scope": "timed verification benches only",
+        "warning_class": "PROCASSINIT"
+      },
+      {
+        "rationale": "Directed benches expose diagnostic pins that are intentionally not sampled at every site.",
+        "scope": "timed verification benches only",
+        "warning_class": "UNUSEDSIGNAL"
+      },
+      {
+        "rationale": "Reduced harness instances intentionally leave unrelated observation-only pins open.",
+        "scope": "timed verification benches only",
+        "warning_class": "PINCONNECTEMPTY"
+      }
+    ]
+  }
+}

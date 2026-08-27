@@ -34,6 +34,8 @@ module ot_rom_wrapper #(
     output wire                              rsp_poison
 );
     localparam integer LAT = (READ_LATENCY < 1) ? 1 : READ_LATENCY;
+    localparam [ADDR_W:0] LOGICAL_DEPTH_LIMIT = LOGICAL_DEPTH[ADDR_W:0];
+    localparam [PHYS_ADDR_W:0] PHYS_DEPTH_LIMIT = PHYS_DEPTH[PHYS_ADDR_W:0];
     reg [DATA_W-1:0] mem [0:PHYS_DEPTH-1];
     reg valid_pipe [0:LAT-1];
     reg [DATA_W-1:0] data_pipe [0:LAT-1];
@@ -42,7 +44,7 @@ module ot_rom_wrapper #(
     reg [1:0] syndrome_pipe [0:LAT-1];
     reg poison_pipe [0:LAT-1];
     integer i;
-    integer physical_index;
+    reg [PHYS_ADDR_W-1:0] physical_index;
     reg address_bad;
     reg repair_bad;
     reg [PHYS_ADDR_W-1:0] translated_addr;
@@ -68,15 +70,15 @@ module ot_rom_wrapper #(
     assign rsp_poison = poison_pipe[LAT-1];
 
     always @* begin
-        address_bad = (logical_addr >= LOGICAL_DEPTH);
+        address_bad = ({1'b0,logical_addr} >= LOGICAL_DEPTH_LIMIT);
         repair_bad = 1'b0;
-        translated_addr = logical_addr;
+        translated_addr = {{(PHYS_ADDR_W-ADDR_W){1'b0}},logical_addr};
         if (!address_bad && repair_valid[logical_addr]) begin
             translated_addr = repair_map[logical_addr*PHYS_ADDR_W +: PHYS_ADDR_W];
-            if (translated_addr >= PHYS_DEPTH)
+            if ({1'b0,translated_addr} >= PHYS_DEPTH_LIMIT)
                 repair_bad = 1'b1;
         end
-        if (translated_addr >= PHYS_DEPTH)
+        if ({1'b0,translated_addr} >= PHYS_DEPTH_LIMIT)
             address_bad = 1'b1;
         physical_index = translated_addr;
         read_word = {DATA_W{1'b0}};
@@ -85,12 +87,13 @@ module ot_rom_wrapper #(
         if (!read_poison) begin
             read_word = mem[physical_index];
             if (inject_fault && (translated_addr == inject_fault_addr)) begin
-                read_word = read_word ^ inject_fault_mask;
                 read_syndrome = (inject_fault_mask == {DATA_W{1'b0}}) ? 2'b00 : 2'b01;
                 // A macro ECC would classify the number of flipped bits.  The
-                // behavioral hook conservatively marks a nonzero mask as
-                // correctable only when exactly one bit is set.
+                // behavioral hook models corrected data for a single-bit
+                // event.  Multi-bit injection exposes the corrupted sample
+                // only with uncorrectable syndrome and poison asserted.
                 if (!onehot(inject_fault_mask)) begin
+                    read_word = read_word ^ inject_fault_mask;
                     read_syndrome = 2'b10;
                     read_poison = 1'b1;
                 end

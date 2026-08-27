@@ -30,21 +30,27 @@ module ot_stage_link_rx #(
 );
     localparam integer IDX_W = (MAX_FLITS <= 2) ? 1 : $clog2(MAX_FLITS);
     localparam integer CNT_W = $clog2(MAX_FLITS+1);
+    localparam [CNT_W-1:0] MAX_FLITS_COUNT = MAX_FLITS[CNT_W-1:0];
     localparam [1:0] ST_IDLE=2'd0, ST_COLLECT=2'd1, ST_DELIVER=2'd2;
     reg [1:0] state;
     reg [FLIT_W-1:0] packet_mem [0:MAX_FLITS-1];
     reg [CNT_W-1:0] packet_count;
-    reg [CNT_W-1:0] deliver_index;
+    reg [IDX_W-1:0] deliver_index;
     reg [SEQ_W-1:0] packet_seq;
     reg [SEQ_W-1:0] expected_seq;
     reg have_sequence;
     reg packet_bad;
     reg [31:0] packet_crc_state;
     reg [31:0] next_packet_crc;
+    reg [31:0] first_packet_crc;
     reg [31:0] calculated_flit_crc;
     reg flit_bad;
+    reg first_sequence_bad;
     wire link_fire = link_valid && link_ready;
     wire out_fire = out_valid && out_ready;
+    wire [IDX_W-1:0] packet_write_index = packet_count[IDX_W-1:0];
+    wire [IDX_W-1:0] last_packet_index =
+        packet_count[IDX_W-1:0] - 1'b1;
 
     function automatic [31:0] crc32c_flit;
         input [FLIT_W-1:0] d;
@@ -87,12 +93,18 @@ module ot_stage_link_rx #(
         calculated_flit_crc = crc32c_flit(link_flit);
         flit_bad = (calculated_flit_crc != link_flit_crc);
         next_packet_crc = crc32c_extend(packet_crc_state, link_flit);
+        first_packet_crc = crc32c_extend(32'hffffffff, link_flit);
+        first_sequence_bad = have_sequence &&
+                             (link_packet_seq != expected_seq) &&
+                             (link_packet_seq != expected_seq - 1'b1);
     end
 
-    assign link_ready = (state == ST_IDLE) || (state == ST_COLLECT && packet_count < MAX_FLITS);
+    assign link_ready = (state == ST_IDLE) ||
+                        (state == ST_COLLECT && packet_count < MAX_FLITS_COUNT);
     assign out_valid = (state == ST_DELIVER);
     assign out_flit = (state == ST_DELIVER) ? packet_mem[deliver_index] : {FLIT_W{1'b0}};
-    assign out_last = (state == ST_DELIVER) && (deliver_index == packet_count-1'b1);
+    assign out_last = (state == ST_DELIVER) &&
+                      (deliver_index == last_packet_index);
     assign out_packet_seq = packet_seq;
     assign out_poison = 1'b0;
 
@@ -118,10 +130,9 @@ module ot_stage_link_rx #(
                     packet_count <= 1;
                     deliver_index <= 0;
                     packet_seq <= link_packet_seq;
-                    packet_crc_state <= next_packet_crc;
-                    packet_bad <= flit_bad;
-                    if (have_sequence && (link_packet_seq != expected_seq) &&
-                        (link_packet_seq != expected_seq - 1'b1)) begin
+                    packet_crc_state <= first_packet_crc;
+                    packet_bad <= flit_bad || first_sequence_bad;
+                    if (first_sequence_bad) begin
                         packet_bad <= 1'b1;
                         protocol_error <= 1'b1;
                     end
@@ -136,12 +147,14 @@ module ot_stage_link_rx #(
                     end else begin
                         packet_mem[0] <= link_flit;
                         if (link_last) begin
-                            if (flit_bad || ((next_packet_crc ^ 32'hffffffff) != link_packet_crc)) begin
+                            if (flit_bad || first_sequence_bad ||
+                                ((first_packet_crc ^ 32'hffffffff) != link_packet_crc)) begin
                                 ack_valid <= 1'b1;
                                 ack_seq <= link_packet_seq;
                                 ack_ok <= 1'b0;
                                 protocol_error <= 1'b1;
                                 state <= ST_IDLE;
+                                packet_crc_state <= 32'hffffffff;
                             end else begin
                                 state <= ST_DELIVER;
                             end
@@ -150,7 +163,7 @@ module ot_stage_link_rx #(
                         end
                     end
                 end else begin // ST_COLLECT
-                    packet_mem[packet_count] <= link_flit;
+                    packet_mem[packet_write_index] <= link_flit;
                     packet_count <= packet_count + 1'b1;
                     packet_crc_state <= next_packet_crc;
                     if (flit_bad)
@@ -160,13 +173,16 @@ module ot_stage_link_rx #(
                         protocol_error <= 1'b1;
                     end
                     if (link_last) begin
-                        if (packet_bad || flit_bad || ((next_packet_crc ^ 32'hffffffff) != link_packet_crc)) begin
+                        if (packet_bad || flit_bad ||
+                            (link_packet_seq != packet_seq) ||
+                            ((next_packet_crc ^ 32'hffffffff) != link_packet_crc)) begin
                             ack_valid <= 1'b1;
                             ack_seq <= packet_seq;
                             ack_ok <= 1'b0;
                             protocol_error <= 1'b1;
                             state <= ST_IDLE;
                             packet_count <= 0;
+                            packet_crc_state <= 32'hffffffff;
                         end else begin
                             deliver_index <= 0;
                             state <= ST_DELIVER;
@@ -182,6 +198,7 @@ module ot_stage_link_rx #(
                 have_sequence <= 1'b1;
                 state <= ST_IDLE;
                 packet_count <= 0;
+                packet_crc_state <= 32'hffffffff;
             end else if (out_fire) begin
                 deliver_index <= deliver_index + 1'b1;
             end

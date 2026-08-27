@@ -36,11 +36,13 @@ inappropriately large cluster.
 
 The architecture/specification gate has passed for public-reference RTL only. The
 checked `ot_*` hierarchy is now a controlled implementation baseline with strict
-static/CDC/RDC, formal, dual-simulator, and source-hashed evidence. The small legacy
-tile and open-PDK SPICE remain feasibility proxies. Neither baseline authorizes
-product silicon: target numerical qualification, full fault/RAS/repair/DFT and
-coverage closure, verified-baseline synthesis, target macros/PDK, package, and
-foundry signoff remain mandatory gates.
+static/CDC/RDC, formal, dual-simulator, and source-hashed evidence. A warning-clean,
+source-checked campaign also closes 87 enumerated public RTL fault/containment sites
+under both Icarus and pinned Verilator 5.050; this is not physical or ATPG coverage.
+The small legacy tile and open-PDK SPICE remain feasibility proxies. Neither baseline
+authorizes product silicon: target numerical qualification, stage/reticle/pipeline
+fault and degradation coverage, code/functional coverage closure, verified-baseline
+synthesis, target macros/PDK, package, and foundry signoff remain mandatory gates.
 
 ## Quick start
 
@@ -50,8 +52,16 @@ python3 tools/profile_hf.py --all
 python3 run.py --standard
 python3 decide.py results/standard/analytical.json
 python3 tornado.py --standard
+make fault-campaign
 make verify
 ```
+
+The fault plan is machine-readable in
+[`spec/fault_campaign.json`](spec/fault_campaign.json); canonical evidence is in
+[`results/rtl/FAULT_REPORT.md`](results/rtl/FAULT_REPORT.md). Rebuild the pinned
+timed-bench simulator with `tools/bootstrap_verilator_5_050.sh` when it is absent.
+The controlled source and bench inventory is documented in
+[`rtl/README.md`](rtl/README.md).
 
 No model checkpoint is downloaded. The profiler uses small HTTP range requests
 to read safetensors metadata. A full standard run is intended to fit on a CPU

@@ -28,6 +28,11 @@ module ot_route_mask #(
     output reg                                   bad_field_seen
 );
     localparam integer CNT_W = (FIFO_DEPTH < 2) ? 1 : $clog2(FIFO_DEPTH+1);
+    localparam integer EXPERT_INDEX_W =
+        (NUM_EXPERTS <= 2) ? 1 : $clog2(NUM_EXPERTS);
+    localparam [4:0] TOP_K_COUNT = TOP_K[4:0];
+    localparam [10:0] NUM_EXPERTS_LIMIT = NUM_EXPERTS[10:0];
+    localparam [CNT_W-1:0] FIFO_DEPTH_COUNT = FIFO_DEPTH[CNT_W-1:0];
     reg [NUM_EXPERTS-1:0] mask_mem [0:FIFO_DEPTH-1];
     reg [15:0] txn_mem [0:FIFO_DEPTH-1];
     reg [7:0] epoch_mem [0:FIFO_DEPTH-1];
@@ -39,7 +44,7 @@ module ot_route_mask #(
     integer wr_ptr;
     integer rd_ptr;
     integer slot;
-    integer selected;
+    reg [EXPERT_INDEX_W-1:0] selected;
     reg [NUM_EXPERTS-1:0] decoded_mask;
     reg [15:0] decoded_dup;
     reg decoded_poison;
@@ -65,7 +70,7 @@ module ot_route_mask #(
         // A local implementation avoids package-width casts in synthesis
         // frontends that do not support unsized function arguments.
         calculated_crc = crc16_record(route_record[207:0]);
-        if (CHECK_CRC && (supplied_crc != calculated_crc)) begin
+        if ((CHECK_CRC != 0) && (supplied_crc != calculated_crc)) begin
             crc_bad = 1'b1;
             decoded_poison = 1'b1;
         end else begin
@@ -75,8 +80,8 @@ module ot_route_mask #(
             field_bad = 1'b1;
             decoded_poison = 1'b1;
         end
-        if ((route_topk == 0) || (route_topk > TOP_K) ||
-            (route_topk > 16) || (TOP_K > NUM_EXPERTS)) begin
+        if ((route_topk == 0) || (route_topk > TOP_K_COUNT) ||
+            (route_topk > 5'd16) || (TOP_K > NUM_EXPERTS)) begin
             field_bad = 1'b1;
             decoded_poison = 1'b1;
         end
@@ -86,9 +91,9 @@ module ot_route_mask #(
         // needless compare/select hardware in reduced configurations.
         for (slot = 0; slot < TOP_K; slot = slot + 1) begin
             route_id = route_record[slot*EXPERT_ID_W +: EXPERT_ID_W];
-            selected = route_id;
+            selected = route_id[EXPERT_INDEX_W-1:0];
             if (slot < route_topk) begin
-                if (selected >= NUM_EXPERTS) begin
+                if ({1'b0,route_id} >= NUM_EXPERTS_LIMIT) begin
                     field_bad = 1'b1;
                     decoded_poison = 1'b1;
                 end else if (decoded_mask[selected]) begin
@@ -128,7 +133,7 @@ module ot_route_mask #(
     assign ctx_top_k_count = topk_mem[rd_ptr];
     assign ctx_poison = poison_mem[rd_ptr];
     assign ctx_duplicate_slots = dup_mem[rd_ptr];
-    assign route_ready = (count < FIFO_DEPTH) || (ctx_valid && ctx_ready);
+    assign route_ready = (count < FIFO_DEPTH_COUNT) || (ctx_valid && ctx_ready);
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

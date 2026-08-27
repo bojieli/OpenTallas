@@ -87,3 +87,19 @@ Owner: digital control/RAS/DV. Review gates: DV-CMD-001/002, DV-SESSION-001,
 DV-NOC-001, DV-RAS-001, DV-RESET-001, and DV-STATIC-001. Any later edit to these
 paths reopens strict lint, static CDC/RDC, formal, both simulators, fault injection,
 and source-hash consistency.
+
+### CC-4.3 Directed fault-containment baseline
+
+The first source-controlled fault baseline adds 87 deterministic logical sites for
+route/ROM/HBM, stage links, RAS/BIST/DFT, power/schedule/session control, and common
+stage abort cleanup. The HBM implementation now decodes the frozen 16-bit minus-one
+burst field into a 17-bit count and composes concurrent admit/complete reservation
+updates; this corrects implementation behavior without changing the ICD field width
+or meaning. ROM injection distinguishes corrected single-bit data from poisoned
+multi-bit data, framing faults poison the current HBM completion, stage-link CRC/
+sequence state recovers packet-locally, RAS counters saturate, and all post-lookup
+stage failures use abort cleanup. Owner: digital control/RAS/DV. Review gates:
+DV-HBM-001, DV-LINK-001, DV-RAS-001/002, DV-REPAIR-001, DV-DFT-001,
+DV-POWER-001, DV-SESSION-001, DV-STAGE-001, and DV-STATIC-001. Any affected edit
+reopens both timed simulators, strict warnings, formal/static checks, and the exact
+site/source manifest.

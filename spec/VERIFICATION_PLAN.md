@@ -1,7 +1,7 @@
 # Verification and signoff plan
 
 **Document:** SPEC-DV 1.0  
-**Status:** frozen campaign plan; implementation evidence pending
+**Status:** frozen campaign plan; implementation evidence partial and source-current
 
 Verification is the long pole. The plan below is a campaign contract, not a claim
 that the current disposable RTL has already passed it. `verification.json` is the
@@ -118,6 +118,15 @@ wrong/dropped/duplicate/reordered records, schedule violations, credit faults,
 ROM/mask/repair faults, HBM errors, link retries, clock/reset loss, sensor alarms,
 watchdogs, BIST outcomes, clustered defects, and exhaustion. Record detection,
 classification, containment, retries, recovery, final state, credits, and telemetry.
+
+The canonical deterministic public-RTL subset is `fault_campaign.json`, executed by
+`tools/rtl_fault_campaign.py`. It rejects duplicate, missing, stale, or bench-moved
+site IDs, treats unexpected warnings as fatal, and requires exactly one PASS line per
+planned site from both Icarus/vvp and pinned Verilator 5.050. The current subset has
+87 sites spanning route/ROM/HBM integrity, stage links, RAS telemetry, BIST/DFT,
+power, schedules, sessions, and stage abort cleanup. A 100% result applies only to
+that enumerated site set. Statistical injection, all reset phases, stage/reticle/
+pipeline degradation, target macro fault grading, and physical faults remain open.
 
 ### DV-7.2 DFT and degraded operation
 

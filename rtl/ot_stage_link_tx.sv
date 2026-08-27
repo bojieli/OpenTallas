@@ -36,6 +36,8 @@ module ot_stage_link_tx #(
 );
     localparam integer IDX_W = (MAX_FLITS <= 2) ? 1 : $clog2(MAX_FLITS);
     localparam integer CNT_W = $clog2(MAX_FLITS+1);
+    localparam [CNT_W-1:0] MAX_FLITS_COUNT = MAX_FLITS[CNT_W-1:0];
+    localparam [1:0] RETRY_MAX_COUNT = RETRY_MAX[1:0];
     localparam [2:0] ST_IDLE=3'd0, ST_COLLECT=3'd1, ST_SEND=3'd2,
                      ST_WAIT_ACK=3'd3, ST_ABORT=3'd4;
     reg [2:0] state;
@@ -48,7 +50,10 @@ module ot_stage_link_tx #(
     integer i;
     wire in_fire = in_valid && in_ready;
     wire link_fire = link_valid && link_ready;
-    wire packet_full = (packet_count >= MAX_FLITS);
+    wire packet_full = (packet_count >= MAX_FLITS_COUNT);
+    wire [IDX_W-1:0] packet_write_index = packet_count[IDX_W-1:0];
+    wire [IDX_W-1:0] last_packet_index =
+        packet_count[IDX_W-1:0] - 1'b1;
 
     function automatic [31:0] crc32c_flit;
         input [FLIT_W-1:0] d;
@@ -93,7 +98,7 @@ module ot_stage_link_tx #(
     assign link_flit = (state == ST_SEND) ? packet_mem[send_index] : {FLIT_W{1'b0}};
     assign link_flit_crc = (state == ST_SEND) ? crc32c_flit(packet_mem[send_index]) : 32'b0;
     assign link_packet_crc = packet_crc;
-    assign link_last = (state == ST_SEND) && (send_index == packet_count-1'b1);
+    assign link_last = (state == ST_SEND) && (send_index == last_packet_index);
     assign link_packet_seq = packet_seq;
 
     always @(posedge clk or negedge rst_n) begin
@@ -115,8 +120,8 @@ module ot_stage_link_tx #(
             case (state)
                 ST_IDLE: begin
                     busy <= 1'b0;
-                    retry_count <= 0;
                     if (in_fire) begin
+                        retry_count <= 0;
                         packet_mem[0] <= in_flit;
                         packet_count <= 1;
                         packet_seq <= in_packet_seq;
@@ -139,7 +144,7 @@ module ot_stage_link_tx #(
                         error <= 1'b1;
                         state <= ST_ABORT;
                     end else if (in_fire) begin
-                        packet_mem[packet_count] <= in_flit;
+                        packet_mem[packet_write_index] <= in_flit;
                         packet_count <= packet_count + 1'b1;
                         packet_crc <= in_last ?
                                       (crc32c_extend(packet_crc, in_flit) ^ 32'hffffffff) :
@@ -159,7 +164,7 @@ module ot_stage_link_tx #(
                         error <= 1'b1;
                         state <= ST_ABORT;
                     end else if (link_fire) begin
-                        if (send_index == packet_count-1'b1) begin
+                        if (send_index == last_packet_index) begin
                             ack_timer <= 0;
                             state <= ST_WAIT_ACK;
                         end else begin
@@ -169,11 +174,14 @@ module ot_stage_link_tx #(
                 end
                 ST_WAIT_ACK: begin
                     busy <= 1'b1;
-                    if (ack_valid && (ack_seq == packet_seq)) begin
+                    if (abort) begin
+                        error <= 1'b1;
+                        state <= ST_ABORT;
+                    end else if (ack_valid && (ack_seq == packet_seq)) begin
                         if (ack_ok) begin
                             state <= ST_IDLE;
                             busy <= 1'b0;
-                        end else if (retry_count < RETRY_MAX) begin
+                        end else if (retry_count < RETRY_MAX_COUNT) begin
                             retry_count <= retry_count + 1'b1;
                             send_index <= 0;
                             state <= ST_SEND;
@@ -183,7 +191,7 @@ module ot_stage_link_tx #(
                         end
                     end else if (ACK_TIMEOUT != 0 && ack_timer >= ACK_TIMEOUT) begin
                         timeout <= 1'b1;
-                        if (retry_count < RETRY_MAX) begin
+                        if (retry_count < RETRY_MAX_COUNT) begin
                             retry_count <= retry_count + 1'b1;
                             send_index <= 0;
                             state <= ST_SEND;

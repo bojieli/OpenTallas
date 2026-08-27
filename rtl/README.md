@@ -1,44 +1,51 @@
-# Technology-independent RTL
+# Public-reference RTL inventory
 
-This directory is an executable contract for the architecture, not a taped-out
-macro or a claim about density/timing.
+This directory is the technology-independent digital reference for the frozen
+OpenTallas architecture. It is suitable for public-tool lint, simulation, formal
+checks, synthesis, and methodology proxies. It is not target-node RTL signoff and
+does not implement foundry ROM/SRAM, HBM/PHY, SerDes, PLL, sensor, eFuse/OTP, scan
+compression, package, power-delivery, or thermal macros.
 
-- `via_mask_rom.sv` has no write path and implements interleaved expert storage
-  with a wordline mask. A physical implementation replaces its behavioral memory
-  with a via-programmed macro.
-- `expert_mask_controller.sv` maps dynamic top-k expert IDs to static ROM
-  wordlines, testing the central claim that MoE selection need not become dynamic
-  packet routing.
-- `rom_mac_tile.sv` performs signed parallel MAC/reduction.
-- `static_timeslot_switch.sv` is a stateless compile-time-scheduled local switch.
-- `opentallas_tile.sv` composes the mask, ROM read, and MAC into a two-stage
-  pipeline.
+## Controlled hierarchy
 
-The repository now contains both the original inspectable tile demo and a
-requirement-traceable public-reference hierarchy.  The `ot_*` blocks implement
-the digital contracts in `spec/MICROARCHITECTURE.md`: integrity, CDC buffering,
-route/context validation, immutable-ROM repair translation, deterministic
-integer-DV arithmetic, schedule epochs, credits, sessions, host commands, HBM
-tags, stage-link retry, RAS/telemetry, and power/reset sequencing.  They are
-deliberately parameterized so unit proofs can use tiny instances while the
-architectural limits remain explicit.
+| Area | Sources |
+|---|---|
+| stage integration | `ot_stage_top.sv`, `ot_stage_controller.sv`, `ot_tile.sv` |
+| command/session/control | `ot_cmd_frontend.sv`, `ot_session_table.sv`, `ot_schedule_controller.sv`, `ot_credit_manager.sv`, `ot_csr_block.sv` |
+| data and numeric path | `ot_route_mask.sv`, `ot_rom_wrapper.sv`, `via_mask_rom.sv`, `ot_format_decode.sv`, `ot_numeric_dot.sv`, `ot_reduction_tree.sv` |
+| HBM and stage protocol | `ot_hbm_frontend.sv`, `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` |
+| RAS, power, and test | `ot_ras_controller.sv`, `ot_power_reset_controller.sv`, `ot_bist_controller.sv`, `ot_dft_controller.sv` |
+| CDC/protocol primitives | `lib/ot_reset_sync.sv`, `lib/ot_skid_buffer.sv`, `lib/ot_async_fifo.sv`, `lib/ot_cdc_mailbox.sv`, `lib/ot_sync_level.sv`, `lib/ot_sync_bits.sv`, and CRC helpers |
+| legacy feasibility tile | `expert_mask_controller.sv`, `rom_mac_tile.sv`, `opentallas_tile.sv`, `static_timeslot_switch.sv` |
 
-`make verify` runs the legacy tile test, reference-unit and asynchronous-clock
-integration tests, independent Verilator executable coverage, strict multi-
-frontend static/CDC/RDC closure, formal, and Yosys technology-independent
-synthesis/check.  The serious verification
-campaign is driven by `tools/rtl_campaign.py` and records tool versions, source
-hashes, seeds, logs, and evidence class under `results/rtl/`; it is a public
-proxy and does not claim qualified ROM/HBM/PHY silicon behavior.
+The legacy tile is retained for small synthesis/SPICE feasibility comparisons; it
+is not a substitute for the controlled `ot_*` stage hierarchy.
 
-The public CDC wrappers are executable contracts, not generic multi-clock RTL:
-asynchronous FIFOs couple either-side reset into a two-pointer flush, condition
-reset release per clock, and rendezvous before reopening; stable-payload
-mailboxes use closed-loop request/acknowledge levels and typed return data;
-qualified synchronizers are restricted to low-rate single-bit status. The stage
-integration test exercises these rules with unrelated clocks and reset phases.
+## Fault and containment benches
 
-Scaling results require target-node SRAM/ROM macros, standard cells, timing
-constraints, and physical design.  Behavioral macro initialization is allowed
-only in DV; product-like builds must select an explicitly declared black-box
-macro configuration.
+| Bench | Planned sites | Scope |
+|---|---:|---|
+| `test/tb_fault_data.sv` | 18 | route records, immutable ROM correction/repair, tagged HBM framing/integrity/conservation |
+| `test/tb_fault_link.sv` | 15 | complete-packet receive containment, sequence/idempotence, credit, retry, timeout, abort |
+| `test/tb_fault_ras_dft.sv` | 26 | RAS telemetry/poison/counters, BIST outcomes/ownership, DFT isolation and races |
+| `test/tb_fault_control.sv` | 28 | power/thermal/clock response, schedule identity, session ownership, stage abort cleanup |
+
+`../spec/fault_campaign.json` is authoritative for the exact 87 IDs, expected
+observation, containment, recovery, and external gates. Run either:
+
+```bash
+make -C rtl fault-campaign
+make fault-campaign
+```
+
+The runner requires Icarus/vvp and the public pinned Verilator 5.050 source build.
+`../tools/bootstrap_verilator_5_050.sh` reproduces the latter. Unexpected warnings
+are fatal; no width-warning or nonfatal-warning blanket suppression is used.
+
+## Evidence boundary
+
+Passing directed sites establishes the declared logical behavior only at the bench
+parameters. Stage/reticle/pipeline constrained-random faults, reset at every phase,
+functional/code/toggle/FSM coverage, target macro fault grading, scan/ATPG, physical
+faults, PDK timing/power, numerical quality, and manufacturing/yield remain separate
+gates in `../spec/VERIFICATION_PLAN.md`.

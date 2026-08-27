@@ -372,7 +372,7 @@
         "resets": [
           "rst_n"
         ],
-        "sha256": "364b3f867eeab129c54452bd46a4cf17a2e254ad452088b97848d8db69833b9e"
+        "sha256": "3fa9513a494171c7f5971c41d7cf292a022e97e87fa90a6e3437e8b7d1627b9f"
       },
       {
         "clocks": [
@@ -452,7 +452,7 @@
         "resets": [
           "rst_n"
         ],
-        "sha256": "fd32a301bee0a5a5d379014fcf9c97a54500183217ff7290e5c7a4b4f706c153"
+        "sha256": "47b8f1def0c75d5cfaf1716f18f07f1f1a9ea4adcfcef214fc483996fd227287"
       },
       {
         "clocks": [
@@ -497,7 +497,7 @@
         "resets": [
           "rst_n"
         ],
-        "sha256": "74c38119a23689cc24ccb76a0921a97be3844590d30e944f9b325ba3f84c5914"
+        "sha256": "388d796e7b3f134728d06366982c67bd65ccf1afef96c0a011b253c53fc6f588"
       },
       {
         "clocks": [
@@ -526,7 +526,7 @@
         "resets": [
           "rst_n"
         ],
-        "sha256": "6a7b73f1877693b7dbd93e610fd5dd55f70415e395c5691724656024c175d11b"
+        "sha256": "8c11e112e4cb4a906c6ed11dc708ba2e37cf3aa8cd3afd90a9246179d5930584"
       },
       {
         "clocks": [
@@ -540,7 +540,7 @@
         "resets": [
           "rst_n"
         ],
-        "sha256": "9da491e18f276a5d6be5c3cf07288bc78d2c75d57d3e4e830b3ea7ce967c4542"
+        "sha256": "4bdf835a9c072bc8d1f13b7de50370ae3b7e1c928f8bb9d6a55a70c64950db0a"
       },
       {
         "clocks": [
@@ -582,7 +582,7 @@
         "resets": [
           "rst_n"
         ],
-        "sha256": "8a0eb66a48c8198211a34b04c465a715bfb9fc072854a4f70e27cfa4e3c11fef"
+        "sha256": "9578fdb621b2e50bba4be5ecc7aa4f691e3fc91c214d01c30c1f39c615cee152"
       },
       {
         "clocks": [
@@ -610,7 +610,7 @@
         "resets": [
           "rst_n"
         ],
-        "sha256": "07c3f90ef5dbac2b9b703d6cc2e24e972d73999833511be3e399ebc6ec01cbc7"
+        "sha256": "5e50965d50807c8956f7e814656dafff4fca76f9a5bedbb1bc50b7165daec36a"
       },
       {
         "clocks": [
@@ -624,7 +624,7 @@
         "resets": [
           "rst_n"
         ],
-        "sha256": "264edfe8dce50f79bee74aedc851adf32d65a0056299fbaebb8a32272eb46e45"
+        "sha256": "fe26c3b031dfc5eeda5073e22ce81f9dd6b2838a3be0b7c0b56c5352d7a12c90"
       },
       {
         "clocks": [
@@ -778,33 +778,33 @@
     "rtl/lib/ot_sync_bits.sv": "66f4c78a2fda107046c08c66acd17ed390ee8b884b6e27090db0ecfeae5d2b9f",
     "rtl/lib/ot_sync_level.sv": "e474cac6feeb0402ac7a4794cfc7e73508b5ef0254c991204b8946b92cd08fd6",
     "rtl/opentallas_tile.sv": "4980d62d193e1ea44353967b2eace8423d0024562d7f5e40e0d1eec24d6d3bb2",
-    "rtl/ot_bist_controller.sv": "364b3f867eeab129c54452bd46a4cf17a2e254ad452088b97848d8db69833b9e",
+    "rtl/ot_bist_controller.sv": "3fa9513a494171c7f5971c41d7cf292a022e97e87fa90a6e3437e8b7d1627b9f",
     "rtl/ot_cmd_frontend.sv": "c380640877ff163d160e08534b7cbfbbd0e2fcc7601d1d46e59ce0544d722eeb",
     "rtl/ot_credit_manager.sv": "4d61c6121b85f599fecd891ac5b4faf234df55e065e17eb28f619968e8720449",
     "rtl/ot_csr_block.sv": "02fd9176782ca64533809dac4fc565e3c3708ce7e4977fa3896636e162d7a60a",
     "rtl/ot_dft_controller.sv": "338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225",
     "rtl/ot_format_decode.sv": "0c309df0061f2270bb4a67157399ef00efb6563d8e64aa7a9abf41727301b847",
-    "rtl/ot_hbm_frontend.sv": "fd32a301bee0a5a5d379014fcf9c97a54500183217ff7290e5c7a4b4f706c153",
+    "rtl/ot_hbm_frontend.sv": "47b8f1def0c75d5cfaf1716f18f07f1f1a9ea4adcfcef214fc483996fd227287",
     "rtl/ot_numeric_dot.sv": "355292201f4686aa1bae65ca62e8fbdf44a22d06b722ef0559d6143d79f7a773",
     "rtl/ot_power_reset_controller.sv": "1c7b187ad1ada1797d66776383270b2017b2625607594eba7013b8ac53627594",
-    "rtl/ot_ras_controller.sv": "74c38119a23689cc24ccb76a0921a97be3844590d30e944f9b325ba3f84c5914",
+    "rtl/ot_ras_controller.sv": "388d796e7b3f134728d06366982c67bd65ccf1afef96c0a011b253c53fc6f588",
     "rtl/ot_reduction_tree.sv": "d8b28fb2f84cb7d0f53fd7c4ae42294d11d48cd92e15d3e2584c8b763a286962",
-    "rtl/ot_rom_wrapper.sv": "6a7b73f1877693b7dbd93e610fd5dd55f70415e395c5691724656024c175d11b",
-    "rtl/ot_route_mask.sv": "9da491e18f276a5d6be5c3cf07288bc78d2c75d57d3e4e830b3ea7ce967c4542",
+    "rtl/ot_rom_wrapper.sv": "8c11e112e4cb4a906c6ed11dc708ba2e37cf3aa8cd3afd90a9246179d5930584",
+    "rtl/ot_route_mask.sv": "4bdf835a9c072bc8d1f13b7de50370ae3b7e1c928f8bb9d6a55a70c64950db0a",
     "rtl/ot_schedule_controller.sv": "07301550750eeaedceb8116ba9b97bd95fe0c17e84b536020bd0470e3029d826",
     "rtl/ot_session_table.sv": "f21be6574e78e5e2204bdcea9494458615ac6863c0b2e08c0760d502c245361f",
-    "rtl/ot_stage_controller.sv": "8a0eb66a48c8198211a34b04c465a715bfb9fc072854a4f70e27cfa4e3c11fef",
+    "rtl/ot_stage_controller.sv": "9578fdb621b2e50bba4be5ecc7aa4f691e3fc91c214d01c30c1f39c615cee152",
     "rtl/ot_stage_link_endpoint.sv": "a6c7540911fde5b4a8e542883077973e254b0f13b570b47f0e83d37e3ac21d50",
-    "rtl/ot_stage_link_rx.sv": "07c3f90ef5dbac2b9b703d6cc2e24e972d73999833511be3e399ebc6ec01cbc7",
-    "rtl/ot_stage_link_tx.sv": "264edfe8dce50f79bee74aedc851adf32d65a0056299fbaebb8a32272eb46e45",
+    "rtl/ot_stage_link_rx.sv": "5e50965d50807c8956f7e814656dafff4fca76f9a5bedbb1bc50b7165daec36a",
+    "rtl/ot_stage_link_tx.sv": "fe26c3b031dfc5eeda5073e22ce81f9dd6b2838a3be0b7c0b56c5352d7a12c90",
     "rtl/ot_stage_top.sv": "c9e0619c962d1e024bebb9a61a3a78d31566d1cc514bf40ca3b3d5bd130088ec",
     "rtl/ot_tile.sv": "6af21d4151ddff242b43aacf7f41af1ec191fdbc215162acd99dcabf9a8a793d",
     "rtl/rom_mac_tile.sv": "841d5e9ab4c8278c1e7fc7f3f598c5e962041df3d94aa9e0ffb82c6d4f3e5e00",
     "rtl/static_timeslot_switch.sv": "7ccc523874a1074f17a7ee53a496400574b99c3e2831f04c3bf9b688354fb619",
     "rtl/via_mask_rom.sv": "203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141",
     "spec/CLOCK_RESET_POWER.md": "64e9e13e2be44325f62cb2cdf64a26cd806990903a92808d2707c7b45e44d100",
-    "spec/INTERFACES.md": "c1d2e15b5f2209c788cb08894cd1ff576a543aada79107b04ede50a3ea3bb79e",
-    "spec/VERIFICATION_PLAN.md": "f6f0cec6430c70b4b61d7cfe14c070212de0bd48bfa99fe6de691568ddd1d208",
+    "spec/INTERFACES.md": "09ab47051bbb2bb4492d5a378a2a208291c7a19ceb3501ae968a0c287dd8471e",
+    "spec/VERIFICATION_PLAN.md": "9cb5453543182c2cfe5a15359e183c670b204f85e25dcf430e3d72a9a97792d8",
     "spec/clock_reset_crossings.json": "445055e40c862c3bf3439e11c8ddf1dc3b50f4cd964b1729b456283e58cd16cd",
     "spec/rtl_waivers.json": "56f3aa73a1007f297c5aaaa81fa8cbf6afafb09b5e1c2f13afd1f11af6997c68",
     "tools/rtl_static.py": "16012d7b377df9cc6e3a8533876476c6301c3c1310f8621251b0786df5f1cc8e"
@@ -1025,12 +1025,12 @@
     "WVR-YOSYS09-PACKAGE-001"
   ],
   "yosys_memory_lowering_observations": [
-    "Warning: Replacing memory \\active with list of registers. See rtl/ot_hbm_frontend.sv:120, rtl/ot_hbm_frontend.sv:98",
+    "Warning: Replacing memory \\active with list of registers. See rtl/ot_hbm_frontend.sv:124",
     "Warning: Replacing memory \\active_crc with list of registers. See rtl/ot_schedule_controller.sv:115",
-    "Warning: Replacing memory \\address_mem with list of registers. See rtl/ot_hbm_frontend.sv:103",
+    "Warning: Replacing memory \\address_mem with list of registers. See rtl/ot_hbm_frontend.sv:129",
     "Warning: Replacing memory \\data_mem with list of registers. See rtl/ot_reduction_tree.sv:138",
-    "Warning: Replacing memory \\data_pipe with list of registers. See rtl/ot_rom_wrapper.sv:117",
-    "Warning: Replacing memory \\dup_mem with list of registers. See rtl/ot_route_mask.sv:148",
+    "Warning: Replacing memory \\data_pipe with list of registers. See rtl/ot_rom_wrapper.sv:120",
+    "Warning: Replacing memory \\dup_mem with list of registers. See rtl/ot_route_mask.sv:153",
     "Warning: Replacing memory \\entry_context with list of registers. See rtl/ot_session_table.sv:118",
     "Warning: Replacing memory \\entry_epoch with list of registers. See rtl/ot_session_table.sv:120",
     "Warning: Replacing memory \\entry_generation with list of registers. See rtl/ot_session_table.sv:128",
@@ -1038,36 +1038,36 @@
     "Warning: Replacing memory \\entry_position with list of registers. See rtl/ot_session_table.sv:119",
     "Warning: Replacing memory \\entry_session with list of registers. See rtl/ot_session_table.sv:116",
     "Warning: Replacing memory \\entry_transaction with list of registers. See rtl/ot_session_table.sv:121",
-    "Warning: Replacing memory \\epoch_mem with list of registers. See rtl/ot_route_mask.sv:144",
+    "Warning: Replacing memory \\epoch_mem with list of registers. See rtl/ot_route_mask.sv:149",
     "Warning: Replacing memory \\expected with list of registers. See rtl/ot_reduction_tree.sv:107",
-    "Warning: Replacing memory \\expected_beats with list of registers. See rtl/ot_hbm_frontend.sv:132, rtl/ot_hbm_frontend.sv:99",
+    "Warning: Replacing memory \\expected_beats with list of registers. See rtl/ot_hbm_frontend.sv:125",
     "Warning: Replacing memory \\free with list of registers. See rtl/ot_credit_manager.sv:83",
     "Warning: Replacing memory \\free_next with list of registers. See rtl/ot_credit_manager.sv:73",
     "Warning: Replacing memory \\group_tag with list of registers. See rtl/ot_reduction_tree.sv:105",
     "Warning: Replacing memory \\group_valid with list of registers. See rtl/ot_reduction_tree.sv:104",
     "Warning: Replacing memory \\last_mem with list of registers. See rtl/ot_reduction_tree.sv:109",
-    "Warning: Replacing memory \\layer_mem with list of registers. See rtl/ot_route_mask.sv:145",
-    "Warning: Replacing memory \\mask_mem with list of registers. See rtl/ot_route_mask.sv:142",
+    "Warning: Replacing memory \\layer_mem with list of registers. See rtl/ot_route_mask.sv:150",
+    "Warning: Replacing memory \\mask_mem with list of registers. See rtl/ot_route_mask.sv:147",
     "Warning: Replacing memory \\mem with list of registers. See rtl/lib/ot_async_fifo.sv:91",
     "Warning: Replacing memory \\mem with list of registers. See rtl/lib/ot_skid_buffer.sv:64",
-    "Warning: Replacing memory \\operation_mem with list of registers. See rtl/ot_hbm_frontend.sv:102",
-    "Warning: Replacing memory \\packet_mem with list of registers. See rtl/ot_stage_link_rx.sv:137",
-    "Warning: Replacing memory \\packet_mem with list of registers. See rtl/ot_stage_link_tx.sv:120",
-    "Warning: Replacing memory \\poison_mem with list of registers. See rtl/ot_hbm_frontend.sv:143, rtl/ot_hbm_frontend.sv:104",
+    "Warning: Replacing memory \\operation_mem with list of registers. See rtl/ot_hbm_frontend.sv:128",
+    "Warning: Replacing memory \\packet_mem with list of registers. See rtl/ot_stage_link_rx.sv:148",
+    "Warning: Replacing memory \\packet_mem with list of registers. See rtl/ot_stage_link_tx.sv:125",
+    "Warning: Replacing memory \\poison_mem with list of registers. See rtl/ot_hbm_frontend.sv:130",
     "Warning: Replacing memory \\poison_mem with list of registers. See rtl/ot_reduction_tree.sv:108",
-    "Warning: Replacing memory \\poison_mem with list of registers. See rtl/ot_route_mask.sv:147",
-    "Warning: Replacing memory \\poison_pipe with list of registers. See rtl/ot_rom_wrapper.sv:121",
-    "Warning: Replacing memory \\received_beats with list of registers. See rtl/ot_hbm_frontend.sv:132, rtl/ot_hbm_frontend.sv:100",
+    "Warning: Replacing memory \\poison_mem with list of registers. See rtl/ot_route_mask.sv:152",
+    "Warning: Replacing memory \\poison_pipe with list of registers. See rtl/ot_rom_wrapper.sv:124",
+    "Warning: Replacing memory \\received_beats with list of registers. See rtl/ot_hbm_frontend.sv:126",
     "Warning: Replacing memory \\rsp_mem with list of registers. See rtl/ot_cmd_frontend.sv:317",
     "Warning: Replacing memory \\schedule_mem with list of registers. See rtl/ot_schedule_controller.sv:126",
     "Warning: Replacing memory \\seen with list of registers. See rtl/ot_reduction_tree.sv:106",
-    "Warning: Replacing memory \\seq_pipe with list of registers. See rtl/ot_rom_wrapper.sv:119",
-    "Warning: Replacing memory \\session_mem with list of registers. See rtl/ot_hbm_frontend.sv:142, rtl/ot_hbm_frontend.sv:101",
-    "Warning: Replacing memory \\syndrome_pipe with list of registers. See rtl/ot_rom_wrapper.sv:120",
-    "Warning: Replacing memory \\tag_pipe with list of registers. See rtl/ot_rom_wrapper.sv:118",
-    "Warning: Replacing memory \\telemetry_mem with list of registers. See rtl/ot_ras_controller.sv:142",
-    "Warning: Replacing memory \\topk_mem with list of registers. See rtl/ot_route_mask.sv:146",
-    "Warning: Replacing memory \\txn_mem with list of registers. See rtl/ot_route_mask.sv:143",
-    "Warning: Replacing memory \\valid_pipe with list of registers. See rtl/ot_rom_wrapper.sv:116"
+    "Warning: Replacing memory \\seq_pipe with list of registers. See rtl/ot_rom_wrapper.sv:122",
+    "Warning: Replacing memory \\session_mem with list of registers. See rtl/ot_hbm_frontend.sv:127",
+    "Warning: Replacing memory \\syndrome_pipe with list of registers. See rtl/ot_rom_wrapper.sv:123",
+    "Warning: Replacing memory \\tag_pipe with list of registers. See rtl/ot_rom_wrapper.sv:121",
+    "Warning: Replacing memory \\telemetry_mem with list of registers. See rtl/ot_ras_controller.sv:161",
+    "Warning: Replacing memory \\topk_mem with list of registers. See rtl/ot_route_mask.sv:151",
+    "Warning: Replacing memory \\txn_mem with list of registers. See rtl/ot_route_mask.sv:148",
+    "Warning: Replacing memory \\valid_pipe with list of registers. See rtl/ot_rom_wrapper.sv:119"
   ]
 }

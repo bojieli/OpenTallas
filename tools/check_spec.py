@@ -28,6 +28,7 @@ EVIDENCE_CLASSES = {
 }
 PLACEHOLDER_RE = re.compile(r"\b(?:TODO|TBD|FIXME|XXX)\b", re.IGNORECASE)
 REF_RE = re.compile(r"\b(?:ARCH|MICRO|ICD|NUM|CRP|RAS|FW|PPA|DV|CC)-\d+(?:\.\d+)?\b")
+FAULT_SITE_RE = re.compile(r'check_site\s*\(\s*"(FC-[A-Z0-9-]+)"')
 
 
 class SpecError(RuntimeError):
@@ -180,6 +181,86 @@ def _validate_budgets(data: dict[str, Any], errors: list[str]) -> None:
     frac = capacity.get("hbm_usable_fraction")
     if not isinstance(hbm, (int, float)) or not isinstance(frac, (int, float)) or not 0 < frac <= 1:
         errors.append("HBM capacity/fraction values are invalid")
+
+
+def _validate_fault_campaign(
+    data: dict[str, Any], check_ids: set[str], errors: list[str]
+) -> None:
+    sites = data.get("sites")
+    if not isinstance(sites, list) or not sites:
+        errors.append("fault_campaign.sites must be a non-empty list")
+        return
+    if data.get("planned_site_count") != len(sites):
+        errors.append("fault_campaign planned_site_count does not match sites")
+    simulators = data.get("required_simulators")
+    if not isinstance(simulators, list) or len(set(simulators)) < 2:
+        errors.append("fault_campaign requires at least two distinct simulators")
+    required_fields = {
+        "id",
+        "bench",
+        "fault_class",
+        "verification_requirements",
+        "expected_observation",
+        "containment",
+        "recovery",
+    }
+    planned_ids: list[str] = []
+    planned_by_bench: dict[str, set[str]] = {}
+    for index, site in enumerate(sites):
+        if not isinstance(site, dict):
+            errors.append(f"fault_campaign site {index} is not an object")
+            continue
+        missing = sorted(required_fields - set(site))
+        if missing:
+            errors.append(f"fault_campaign site {index} missing {', '.join(missing)}")
+            continue
+        site_id = site["id"]
+        if not isinstance(site_id, str) or re.fullmatch(r"FC-[A-Z0-9-]+", site_id) is None:
+            errors.append(f"fault_campaign site {index} has invalid id {site_id!r}")
+            continue
+        planned_ids.append(site_id)
+        bench = site["bench"]
+        if not isinstance(bench, str) or not (ROOT / bench).is_file():
+            errors.append(f"{site_id}: missing bench {bench!r}")
+        else:
+            planned_by_bench.setdefault(bench, set()).add(site_id)
+        requirements = site["verification_requirements"]
+        if not isinstance(requirements, list) or not requirements:
+            errors.append(f"{site_id}: verification_requirements must be non-empty")
+        else:
+            for requirement in requirements:
+                if requirement not in check_ids:
+                    errors.append(f"{site_id}: unknown verification check {requirement}")
+        for field in ("fault_class", "expected_observation", "containment", "recovery"):
+            if not isinstance(site[field], str) or not site[field].strip():
+                errors.append(f"{site_id}: {field} must be non-empty")
+    if len(set(planned_ids)) != len(planned_ids):
+        duplicates = sorted(
+            site_id for site_id in set(planned_ids) if planned_ids.count(site_id) != 1
+        )
+        errors.append(f"fault_campaign duplicate site IDs: {duplicates}")
+
+    declared_ids: list[str] = []
+    for bench, planned in sorted(planned_by_bench.items()):
+        declared = FAULT_SITE_RE.findall((ROOT / bench).read_text(encoding="utf-8"))
+        declared_ids.extend(declared)
+        if set(declared) != planned:
+            errors.append(f"fault_campaign/source site mismatch in {bench}")
+    if len(set(declared_ids)) != len(declared_ids):
+        errors.append("fault_campaign source declares a duplicate site ID")
+    if set(declared_ids) != set(planned_ids):
+        errors.append("fault_campaign has missing or stale source site IDs")
+    gates = data.get("external_gates")
+    if not isinstance(gates, list) or not gates:
+        errors.append("fault_campaign must enumerate external non-modeled gates")
+    elif any(
+        not isinstance(gate, dict)
+        or gate.get("status") != "external_not_modeled"
+        or not gate.get("id")
+        or not gate.get("scope")
+        for gate in gates
+    ):
+        errors.append("fault_campaign external gates require id/scope/external_not_modeled")
 
 
 def _validate_models(
@@ -356,6 +437,7 @@ def validate(*, write_traceability: bool = False) -> str:
     interfaces = _strict_load(SPEC / "interfaces.json")
     requirements_data = _strict_load(SPEC / "requirements.json")
     verification_data = _strict_load(SPEC / "verification.json")
+    fault_campaign = _strict_load(SPEC / "fault_campaign.json")
     errors: list[str] = []
     for path, data in (
         ("manifest.json", manifest),
@@ -364,6 +446,7 @@ def validate(*, write_traceability: bool = False) -> str:
         ("interfaces.json", interfaces),
         ("requirements.json", requirements_data),
         ("verification.json", verification_data),
+        ("fault_campaign.json", fault_campaign),
     ):
         if not isinstance(data, dict) or not isinstance(data.get("schema_version"), int):
             errors.append(f"{path}: missing integer schema_version")
@@ -401,6 +484,7 @@ def validate(*, write_traceability: bool = False) -> str:
         for env in item.get("environments", []):
             if env not in env_ids:
                 errors.append(f"{cid}: unknown environment {env}")
+    _validate_fault_campaign(fault_campaign, check_ids, errors)
     _validate_budgets(budgets, errors)
     _validate_models(manifest, parameters, errors)
     normative_paths = [

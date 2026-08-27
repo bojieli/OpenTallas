@@ -19,9 +19,9 @@ The decision is intentionally limited to public tools and non-NDA evidence.
 | workload/KV accounting | pass for analysis | equations, tests, and explicit BF16 Qwen GQA assumption; no production quality claim |
 | B200/B300 comparison | pass for conditional simulation | published system values normalized with explicit x1/x2 assumptions; no SKU claim for fractional configurations |
 | target ordering | pass | Flash primary proof; Pro stretch; Qwen dense control; Kimi stress control |
-| interfaces/numeric/RAS/DFT | pass for specification entry | exact records and planned checks exist; public RTL formal/simulation/static evidence is partial and passing, while the full fault/numeric/DFT gate remains pending |
+| interfaces/numeric/RAS/DFT | pass for specification entry | exact records and planned checks exist; the 87-site dual-simulator logical fault subset passes, while macro/physical faults, numerical qualification, and full DFT closure remain pending |
 | floorplan/PPA | conditional | budgets are hypotheses and proxy methodology, not characterized silicon |
-| verification | conditional | bounded formal, two-simulator unit/integration, unit coverage, and strict static/CDC/RDC artifacts exist; full stage coverage, fault/repair/DFT, numerical differential, and synthesis-entry closure remain open |
+| verification | conditional | bounded formal, two-simulator unit/integration, 87-site directed fault, unit coverage, and strict static/CDC/RDC artifacts exist; full stage/reticle/pipeline coverage, random fault/degradation, numerical differential, and synthesis-entry closure remain open |
 | product authorization | hold | ROM density/bandwidth, HBM/package, PPA, yield, traces, security, and commercial gates remain open |
 
 ## Decisions frozen

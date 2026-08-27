@@ -312,7 +312,10 @@ The HBM frontend has a 4,096-entry architectural tag namespace and a configurabl
 smaller physical outstanding table. A tag entry records operation, session and
 allocation generations, address range, expected beats, received bitmap/count,
 prepared-state destination, and poison/error state. Beats are in order within one
-tag; different tags may interleave.
+tag; different tags may interleave. Expected/received beat counters carry 17 bits
+for the full 1..65,536-beat ICD range. Outstanding-count update is a two-event
+conservation operation so concurrent different-tag admit and complete neither leak
+nor double-release a reservation.
 
 Address-plus-length overflow, session-limit violation, misalignment, duplicate
 beat, early/late `last`, bad CRC, or memory error terminates the tag as poisoned.

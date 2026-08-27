@@ -88,7 +88,7 @@ module ot_stage_controller #(
     , output wire                       formal_terminate_now
 `endif
 );
-    localparam [7:0] ST_SUCCESS=8'h00, ST_BAD_FIELD=8'h03, ST_BUSY=8'h05,
+    localparam [7:0] ST_SUCCESS=8'h00, ST_BAD_FIELD=8'h03,
                      ST_NO_CREDIT=8'h06, ST_EPOCH=8'h07, ST_CAPACITY=8'h09,
                      ST_TIMEOUT=8'h0b, ST_ABORTED=8'h0e, ST_INTERNAL=8'h0f;
     localparam [3:0] S_IDLE=4'd0, S_SESSION=4'd1, S_RESERVE=4'd2,
@@ -277,7 +277,13 @@ module ot_stage_controller #(
                         state <= S_START;
                     end else if (credit_reserve_valid && !credit_reserve_ready) begin
                         terminal_status <= ST_NO_CREDIT;
-                        state <= S_COMPLETE;
+                        // Lookup has already marked the session busy.  Route
+                        // every post-lookup failure through the common abort
+                        // owner so capacity cannot leak on admission failure.
+                        abort_pending <= 1'b1;
+                        stage_poison <= 1'b1;
+                        session_issued <= 1'b0;
+                        state <= S_ABORT;
                     end
                 end
                 S_START: if (service_fire) begin service_started <= 1'b1; state <= S_EXEC; end
@@ -289,7 +295,9 @@ module ot_stage_controller #(
                             terminal_source <= service_done_error_source;
                             terminal_syndrome <= service_done_syndrome;
                             stage_poison <= 1'b1;
-                            state <= S_RELEASE;
+                            abort_pending <= 1'b1;
+                            session_issued <= 1'b0;
+                            state <= S_ABORT;
                         end else begin
                             state <= S_COMMIT;
                         end
@@ -305,8 +313,12 @@ module ot_stage_controller #(
                         if (session_rsp_poison)
                             terminal_status <= ST_INTERNAL;
                         stage_poison <= 1'b1;
+                        abort_pending <= 1'b1;
+                        session_issued <= 1'b0;
+                        state <= S_ABORT;
+                    end else begin
+                        state <= S_RELEASE;
                     end
-                    state <= S_RELEASE;
                     end
                 end
                 S_RELEASE: begin
@@ -345,4 +357,11 @@ module ot_stage_controller #(
             endcase
         end
     end
+
+`ifndef SYNTHESIS
+    initial begin
+        if (STAGE_ID < 0 || STAGE_ID > 255)
+            $error("ot_stage_controller STAGE_ID outside architectural limit");
+    end
+`endif
 endmodule
