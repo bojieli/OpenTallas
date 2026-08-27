@@ -29,6 +29,11 @@ module ot_schedule_controller #(
     output wire                          active_idle,
     output wire [31:0]                   active_schedule_crc,
     output wire                          commit_pending
+`ifdef FORMAL
+    , output wire                        formal_active_bank
+    , output wire                        formal_pending
+    , output wire                        formal_shadow_invalid
+`endif
 );
     reg [ENTRY_W-1:0] schedule_mem [0:1][0:SLOTS-1];
     reg active_bank;
@@ -53,6 +58,11 @@ module ot_schedule_controller #(
     assign active_expect_valid = schedule_mem[active_bank][active_slot][PORT_ID_W];
     assign active_idle = schedule_mem[active_bank][active_slot][ENTRY_W-1];
     assign active_schedule_crc = active_crc[active_bank];
+`ifdef FORMAL
+    assign formal_active_bank = active_bank;
+    assign formal_pending = pending;
+    assign formal_shadow_invalid = shadow_invalid;
+`endif
 
     // Deterministic CRC over the exact entry bytes (low-order byte first).
     function automatic [31:0] crc32_entries;

@@ -1,4 +1,4 @@
-.PHONY: sim unit-sim integration-sim lint synth synth-reference verify clean
+.PHONY: sim unit-sim integration-sim lint formal synth synth-reference verify clean
 
 SOURCES = expert_mask_controller.sv via_mask_rom.sv rom_mac_tile.sv opentallas_tile.sv
 LIB_SOURCES = lib/ot_skid_buffer.sv lib/ot_async_fifo.sv lib/ot_crc_pkg.sv \
@@ -32,6 +32,9 @@ lint:
 	verilator --lint-only -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-WIDTH -Wno-MULTITOP \
 		--top-module ot_tile $(SOURCES) static_timeslot_switch.sv $(LINT_REFERENCE_SOURCES)
 
+formal:
+	python3 ../tools/rtl_campaign.py --formal
+
 synth: build
 	yosys -q -l build/synth.log synth.ys
 	grep -A24 '=== opentallas_tile ===' build/synth.log
@@ -40,7 +43,7 @@ synth-reference: build
 	yosys -q -l build/synth_reference.log synth_reference.ys
 	grep -A24 '=== ot_stage_top ===' build/synth_reference.log
 
-verify: sim unit-sim integration-sim lint synth synth-reference
+verify: sim unit-sim integration-sim lint formal synth synth-reference
 
 clean:
 	rm -rf build

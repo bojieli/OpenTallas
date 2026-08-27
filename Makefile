@@ -1,4 +1,4 @@
-.PHONY: profile simulate routing noc sensitivity spec-check rtl spice test verify clean-results
+.PHONY: profile simulate routing noc sensitivity spec-check formal rtl spice test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -18,6 +18,9 @@ sensitivity:
 
 spec-check:
 	python3 tools/check_spec.py
+
+formal:
+	python3 tools/rtl_campaign.py --formal
 
 rtl:
 	$(MAKE) -C rtl verify

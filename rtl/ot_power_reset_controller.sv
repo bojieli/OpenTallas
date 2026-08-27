@@ -48,7 +48,8 @@ module ot_power_reset_controller (
         resources_ready = power_good && clock_stable && core_ready && hbm_ready &&
                           link_ready && bist_done && bist_pass;
         next_state = state;
-        if (!power_good || !clock_stable || thermal_fatal || fatal_error) begin
+        if (!power_good || !clock_stable || thermal_fatal || fatal_error ||
+            (test_enable && ((state == ST_ACTIVE) || (state == ST_THROTTLED)))) begin
             next_state = ST_SAFE;
         end else begin
             case (state)

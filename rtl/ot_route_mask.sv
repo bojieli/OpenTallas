@@ -80,7 +80,11 @@ module ot_route_mask #(
             field_bad = 1'b1;
             decoded_poison = 1'b1;
         end
-        for (slot = 0; slot < 16; slot = slot + 1) begin
+        // Slots above the configured TOP_K can never be active in a legal
+        // record.  An oversized count is already poisoned above, so decoding
+        // only the implemented selection width preserves behavior and avoids
+        // needless compare/select hardware in reduced configurations.
+        for (slot = 0; slot < TOP_K; slot = slot + 1) begin
             route_id = route_record[slot*EXPERT_ID_W +: EXPERT_ID_W];
             selected = route_id;
             if (slot < route_topk) begin
@@ -116,7 +120,6 @@ module ot_route_mask #(
         end
     endfunction
 
-    assign route_ready = (count < FIFO_DEPTH);
     assign ctx_valid = (count != 0);
     assign ctx_mask = mask_mem[rd_ptr];
     assign ctx_transaction_id = txn_mem[rd_ptr];
@@ -125,6 +128,7 @@ module ot_route_mask #(
     assign ctx_top_k_count = topk_mem[rd_ptr];
     assign ctx_poison = poison_mem[rd_ptr];
     assign ctx_duplicate_slots = dup_mem[rd_ptr];
+    assign route_ready = (count < FIFO_DEPTH) || (ctx_valid && ctx_ready);
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

@@ -63,8 +63,7 @@ module ot_async_fifo #(
         end else begin
             rd_gray_w1 <= rd_gray;
             rd_gray_w2 <= rd_gray_w1;
-            if (wr_valid && !wr_ready)
-                wr_overflow <= 1'b1;
+            // Valid may legally remain asserted while ready is low.
             if (wr_fire)
                 mem[wr_bin[ADDR_W-1:0]] <= wr_data;
             wr_bin <= wr_bin_next;
@@ -84,8 +83,7 @@ module ot_async_fifo #(
         end else begin
             wr_gray_r1 <= wr_gray;
             wr_gray_r2 <= wr_gray_r1;
-            if (rd_ready && !rd_valid)
-                rd_underflow <= 1'b1;
+            // Ready may legally remain asserted while valid is low.
             rd_bin <= rd_bin_next;
             rd_gray <= rd_gray_next;
             rd_empty <= rd_empty_next;

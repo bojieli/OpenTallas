@@ -31,7 +31,10 @@ module ot_credit_manager #(
     always @* begin
         all_available = 1'b1;
         for (i = 0; i < SINKS; i = i + 1)
-            if (reserve_mask[i] && (free[i] == 0))
+            // A terminal release in this cycle can fund the atomic replacement
+            // reservation, avoiding a bubble at full occupancy.
+            if (reserve_mask[i] && (free[i] == 0) &&
+                !(release_valid && release_mask[i]))
                 all_available = 1'b0;
     end
     assign reserve_ready = all_available;

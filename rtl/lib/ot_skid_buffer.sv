@@ -16,6 +16,9 @@ module ot_skid_buffer #(
     output wire [WIDTH-1:0]     out_data,
     output reg                  overflow,
     output reg                  underflow
+`ifdef FORMAL
+    , output wire [$clog2(DEPTH+1)-1:0] formal_count
+`endif
 );
     localparam integer PTR_W = (DEPTH <= 2) ? 1 : $clog2(DEPTH);
     localparam integer CNT_W = $clog2(DEPTH + 1);
@@ -26,9 +29,15 @@ module ot_skid_buffer #(
     wire push = in_valid && in_ready;
     wire pop  = out_valid && out_ready;
 
-    assign in_ready = (count < DEPTH);
     assign out_valid = (count != 0);
     assign out_data = mem[rd_ptr];
+    // A full buffer may accept a replacement item when the head transfers in
+    // the same cycle.  This keeps one-item-per-cycle throughput without
+    // changing occupancy or exposing an overwrite to the consumer.
+    assign in_ready = (count < DEPTH) || (out_valid && out_ready);
+`ifdef FORMAL
+    assign formal_count = count;
+`endif
 
     function automatic [PTR_W-1:0] ptr_inc(input [PTR_W-1:0] p);
         begin
@@ -47,10 +56,10 @@ module ot_skid_buffer #(
             overflow <= 1'b0;
             underflow <= 1'b0;
         end else begin
-            if (in_valid && !in_ready)
-                overflow <= 1'b1;
-            if (out_ready && !out_valid)
-                underflow <= 1'b1;
+            // Ready/valid permits a producer to hold valid while full and a
+            // consumer to hold ready while empty; neither is an error.  These
+            // compatibility diagnostics therefore remain clear for every
+            // protocol-legal execution; conservation is checked independently.
             if (push) begin
                 mem[wr_ptr] <= in_data;
                 wr_ptr <= ptr_inc(wr_ptr);

@@ -75,6 +75,12 @@ module ot_stage_controller #(
     output reg [31:0]                  completion_cookie,
     output wire                         stage_idle,
     output reg                          stage_poison
+`ifdef FORMAL
+    , output wire [3:0]                 formal_state
+    , output wire                       formal_credits_held
+    , output wire                       formal_service_started
+    , output wire                       formal_terminate_now
+`endif
 );
     localparam [7:0] ST_SUCCESS=8'h00, ST_BAD_FIELD=8'h03, ST_BUSY=8'h05,
                      ST_NO_CREDIT=8'h06, ST_EPOCH=8'h07, ST_CAPACITY=8'h09,
@@ -100,14 +106,21 @@ module ot_stage_controller #(
     reg abort_pending;
     reg session_issued;
     wire cmd_fire = cmd_valid && cmd_ready;
+    wire abort_match = abort_valid && (abort_transaction_id == txn_d);
+    wire interruptible = (state != S_IDLE) && (state != S_ABORT) &&
+                         (state != S_RELEASE) && (state != S_COMPLETE);
+    wire terminate_now = interruptible && (watchdog_timeout || abort_match);
     wire session_fire = session_req_valid && session_req_ready;
     wire credit_fire = credit_reserve_valid && credit_reserve_ready;
     wire service_fire = service_start_valid && service_start_ready;
 
     assign stage_idle = (state == S_IDLE);
     assign cmd_ready = (state == S_IDLE) && !quiesce && !admission_block;
-    assign session_req_valid = ((state == S_SESSION) || (state == S_COMMIT) || (state == S_ABORT)) &&
-                               !session_issued;
+    // A same-cycle abort/watchdog must suppress every new architectural side
+    // effect.  S_ABORT itself remains able to issue the poison request.
+    assign session_req_valid = ((state == S_SESSION) || (state == S_COMMIT) ||
+                                ((state == S_ABORT) && !service_started)) && !session_issued &&
+                               (!terminate_now || (state == S_ABORT));
     assign session_req_op = (state == S_COMMIT) ? 3'd3 :
                             ((state == S_ABORT) ? 3'd4 :
                              ((opcode_d == 8'h01) ? 3'd0 :
@@ -119,11 +132,11 @@ module ot_stage_controller #(
     assign session_req_epoch = epoch_d;
     assign session_req_transaction = txn_d;
     assign session_req_force = (flags_d[5] || opcode_d == 8'h7f);
-    assign credit_reserve_valid = (state == S_RESERVE) && !credits_held;
+    assign credit_reserve_valid = (state == S_RESERVE) && !credits_held && !terminate_now;
     assign credit_reserve_mask = {SINKS{1'b1}};
     assign credit_release_valid = (state == S_RELEASE) && credits_held;
     assign credit_release_mask = {SINKS{1'b1}};
-    assign service_start_valid = (state == S_START) && !service_started;
+    assign service_start_valid = (state == S_START) && !service_started && !terminate_now;
     assign service_transaction_id = txn_d;
     assign service_session_id = session_d;
     assign service_first_layer = first_layer_d;
@@ -131,6 +144,12 @@ module ot_stage_controller #(
     assign service_batch_minus_one = batch_d;
     assign service_draft_tokens = draft_d;
     assign service_poison = stage_poison || abort_pending;
+`ifdef FORMAL
+    assign formal_state = state;
+    assign formal_credits_held = credits_held;
+    assign formal_service_started = service_started;
+    assign formal_terminate_now = terminate_now;
+`endif
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -158,6 +177,9 @@ module ot_stage_controller #(
                 cookie_d <= cmd_cookie; stage_poison <= 1'b0; abort_pending <= 1'b0;
                 service_started <= 1'b0; credits_held <= 1'b0;
                 session_issued <= 1'b0;
+                terminal_status <= ST_SUCCESS;
+                terminal_source <= 8'h00;
+                terminal_syndrome <= 4'h0;
                 if (cmd_opcode == 8'h00) begin
                     terminal_status <= ST_SUCCESS; state <= S_COMPLETE;
                 end else if (cmd_opcode == 8'h01 || cmd_opcode == 8'h02 ||
@@ -167,6 +189,7 @@ module ot_stage_controller #(
                         (cmd_first_layer < OWNED_FIRST_LAYER || cmd_last_layer > OWNED_LAST_LAYER)) begin
                         terminal_status <= ST_BAD_FIELD; state <= S_COMPLETE;
                     end else if (cmd_opcode == 8'h7f) begin
+                        terminal_status <= ST_ABORTED;
                         state <= S_ABORT;
                         session_issued <= 1'b0;
                     end else begin
@@ -176,19 +199,24 @@ module ot_stage_controller #(
                     terminal_status <= ST_BAD_FIELD; state <= S_COMPLETE;
                 end
             end
-            if (abort_valid && (abort_transaction_id == txn_d) && state != S_IDLE && state != S_COMPLETE) begin
+            if (interruptible && watchdog_timeout) begin
+                stage_poison <= 1'b1;
+                abort_pending <= 1'b1;
+                terminal_status <= ST_TIMEOUT;
+                terminal_source <= 8'hfe;
+                session_issued <= 1'b0;
+                if (service_started && service_done_valid)
+                    service_started <= 1'b0;
+                state <= S_ABORT;
+            end else if (interruptible && abort_match) begin
                 abort_pending <= 1'b1;
                 stage_poison <= 1'b1;
                 terminal_status <= ST_ABORTED;
+                session_issued <= 1'b0;
+                if (service_started && service_done_valid)
+                    service_started <= 1'b0;
                 state <= S_ABORT;
-            end
-            if (watchdog_timeout && state != S_IDLE && state != S_COMPLETE) begin
-                stage_poison <= 1'b1;
-                terminal_status <= ST_TIMEOUT;
-                terminal_source <= 8'hfe;
-                state <= S_ABORT;
-            end
-            case (state)
+            end else case (state)
                 S_IDLE: begin
                     // Command capture above owns the transition out of idle.
                 end
@@ -222,8 +250,10 @@ module ot_stage_controller #(
                 S_START: if (service_fire) begin service_started <= 1'b1; state <= S_EXEC; end
                 S_EXEC: begin
                     if (service_done_valid) begin
+                        service_started <= 1'b0;
                         if (service_done_status != ST_SUCCESS || service_done_error_source != 0) begin
                             terminal_status <= service_done_status == ST_SUCCESS ? ST_INTERNAL : service_done_status;
+                            terminal_source <= service_done_error_source;
                             terminal_syndrome <= service_done_syndrome;
                             stage_poison <= 1'b1;
                             state <= S_RELEASE;
@@ -250,12 +280,19 @@ module ot_stage_controller #(
                 end
                 S_ABORT: begin
                     // An abort is allowed to poison/release a configured
-                    // session, but never reaches COMMIT.
-                    if (session_fire)
-                        session_issued <= 1'b1;
-                    if (session_rsp_valid) begin
-                        session_issued <= 1'b0;
-                        state <= credits_held ? S_RELEASE : S_COMPLETE;
+                    // session, but never reaches COMMIT.  If service already
+                    // launched, service_poison first requests deterministic
+                    // drain and credits remain held until its terminal result.
+                    if (service_started) begin
+                        if (service_done_valid)
+                            service_started <= 1'b0;
+                    end else begin
+                        if (session_fire)
+                            session_issued <= 1'b1;
+                        if (session_rsp_valid) begin
+                            session_issued <= 1'b0;
+                            state <= credits_held ? S_RELEASE : S_COMPLETE;
+                        end
                     end
                 end
                 S_COMPLETE: begin
