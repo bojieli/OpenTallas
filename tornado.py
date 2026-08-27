@@ -55,6 +55,28 @@ def _replace_kv(model: ModelProfile, mode: str, value: float) -> ModelProfile:
 
 def _uniform_mxfp4(model: ModelProfile) -> ModelProfile:
     bytes_per_parameter = 0.5 + 1 / 32
+    if model.metadata.get("adapter") == "qwen3":
+        # Every released Qwen3-8B tensor is BF16, so all storage categories can
+        # be scaled exactly for this encoding sensitivity without guessing the
+        # parameter distribution among embeddings, layers, and the LM head.
+        scale = bytes_per_parameter / 2
+        return replace(
+            model,
+            checkpoint_bytes=model.checkpoint_bytes * scale,
+            dense_weight_bytes=model.dense_weight_bytes * scale,
+            routed_weight_bytes=0,
+            draft_dense_weight_bytes=0,
+            draft_routed_weight_bytes=0,
+            resident_only_weight_bytes=model.resident_only_weight_bytes * scale,
+            layer_dense_weight_bytes=tuple(
+                value * scale for value in model.layer_dense_weight_bytes
+            ),
+            layer_routed_weight_bytes=tuple(0 for _ in model.layer_routed_weight_bytes),
+            metadata={
+                **model.metadata,
+                "weight_encoding_sensitivity": "uniform MXFP4 + E8M0/32",
+            },
+        )
     dense_params = model.dense_parameters
     routed_params = model.routed_parameters
     dense = dense_params * bytes_per_parameter
@@ -144,8 +166,20 @@ def main() -> int:
         "load-balance efficiency": (0.60, 0.96, lambda x, v: replace(x, load_balance_efficiency=v)),
     }
     rows = []
-    anchors = [(200_000, 1), (200_000, 8), (200_000, 32), (200_000, 64), (1_000_000, 1), (1_000_000, 8), (1_000_000, 64)]
     for model in models:
+        anchors = (
+            [(8_192, batch) for batch in (1, 8, 32, 64, 128)]
+            if model.metadata.get("adapter") == "qwen3"
+            else [
+                (200_000, 1),
+                (200_000, 8),
+                (200_000, 32),
+                (200_000, 64),
+                (1_000_000, 1),
+                (1_000_000, 8),
+                (1_000_000, 64),
+            ]
+        )
         model_variants: list[tuple[str, ModelProfile, ModelProfile]] = [
             ("weight encoding: released vs uniform MXFP4", model, _uniform_mxfp4(model)),
         ]
@@ -154,11 +188,21 @@ def main() -> int:
                 ("index-cache bytes: FP4 to BF16", _replace_kv(model, "index_multiplier", 0.75), _replace_kv(model, "index_multiplier", 256 / 68)),
                 ("main-KV bytes: production to BF16", model, _replace_kv(model, "main_multiplier", 1024 / 583)),
             ])
-        else:
+        elif model.metadata.get("adapter") == "kimi_k3":
             model_variants.extend([
                 ("MLA cache: FP8 to BF16", model, _replace_kv(model, "main_multiplier", 2.0)),
                 ("KDA recurrent-state traffic", _replace_kv(model, "recurrent_multiplier", 0.5), _replace_kv(model, "recurrent_multiplier", 2.0)),
             ])
+        elif model.metadata.get("adapter") == "qwen3":
+            model_variants.append(
+                (
+                    "Qwen GQA cache precision: assumed FP8 to BF16 baseline",
+                    _replace_kv(model, "main_multiplier", 0.5),
+                    model,
+                )
+            )
+        else:  # pragma: no cover - generated profiles use a known adapter
+            raise ValueError(f"unsupported adapter for sensitivity: {model.metadata}")
         for context, batch in anchors:
             baseline = evaluate(simulator, model, gpus, rom, context, batch)
             for factor, (low, high, transform) in rom_factors.items():

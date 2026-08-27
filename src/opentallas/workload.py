@@ -151,7 +151,7 @@ def _group_traffic(group: AttentionGroup, context_tokens: int) -> tuple[float, f
         detail["main_entries_read_per_layer"] = float(window + main_entries)
         detail["compressed_entries_stored_per_layer"] = float(compressed_entries)
 
-    elif group.kind == "dense_mla":
+    elif group.kind in {"dense_mla", "dense_kv"}:
         read = count * context_tokens * group.entry_bytes
         write = count * group.entry_bytes
         storage = count * context_tokens * group.entry_bytes

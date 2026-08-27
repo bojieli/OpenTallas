@@ -21,19 +21,22 @@ def setup():
 
 
 @pytest.mark.parametrize(
-    ("slug", "stages"),
+    ("slug", "stages", "context"),
     [
-        ("deepseek-v4-flash-0731", 2),
-        ("deepseek-v4-pro-0813", 6),
+        ("deepseek-v4-flash-0731", 2, 200_000),
+        ("deepseek-v4-pro-0813", 6, 200_000),
         # Ten wafers have enough aggregate bytes, but Kimi's indivisible ~17 GB
         # transformer layers cannot be packed into ten 160 GB contiguous stages.
-        ("kimi-k3", 11),
+        ("kimi-k3", 11, 200_000),
+        ("qwen3-8b", 1, 8_192),
     ],
 )
-def test_released_checkpoint_stage_count(setup, slug: str, stages: int) -> None:
+def test_released_checkpoint_stage_count(
+    setup, slug: str, stages: int, context: int
+) -> None:
     _, rom, sim = setup
     model = ModelProfile.load(ROOT / "configs" / "models" / f"{slug}.json")
-    point = sim.simulate(model, rom, SimulationRequest(context_tokens=200_000, batch_size=1))
+    point = sim.simulate(model, rom, SimulationRequest(context_tokens=context, batch_size=1))
     assert point.stages == stages
     assert point.metrics["C10_per_user_pipeline_multiplier"] == stages
 
@@ -90,12 +93,18 @@ def test_rom_layout_is_fixed_across_context_and_batch(setup) -> None:
 
 def test_each_rom_stage_respects_local_weight_capacity(setup) -> None:
     _, rom, sim = setup
-    for slug in ("deepseek-v4-flash-0731", "deepseek-v4-pro-0813", "kimi-k3"):
+    for slug in (
+        "deepseek-v4-flash-0731",
+        "deepseek-v4-pro-0813",
+        "kimi-k3",
+        "qwen3-8b",
+    ):
         model = ModelProfile.load(ROOT / "configs" / "models" / f"{slug}.json")
+        context = 8_192 if slug == "qwen3-8b" else 200_000
         point = sim.simulate(
             model,
             rom,
-            SimulationRequest(context_tokens=200_000, batch_size=1),
+            SimulationRequest(context_tokens=context, batch_size=1),
         )
         # Stored as a tuple string in the compact scalar metrics map.
         import ast
@@ -152,6 +161,20 @@ def test_b300_uses_published_device_capacity(setup) -> None:
         2.304e12
     )
     assert b300_x8.hbm_capacity_utilization == pytest.approx(0.9)
+
+
+def test_small_gpu_profiles_cover_dense_control_fairly(setup) -> None:
+    gpus, _, _ = setup
+    assert {gpu.name for gpu in gpus} >= {
+        "NVIDIA-B200-x1",
+        "NVIDIA-B200-x2",
+        "NVIDIA-B300-x1",
+        "NVIDIA-B300-x2",
+    }
+    for family, capacity in (("B200", 180e9), ("B300", 288e9)):
+        one = next(gpu for gpu in gpus if gpu.name == f"NVIDIA-{family}-x1")
+        assert one.weight_capacity_bytes_per_device == capacity
+        assert one.collective_latency_s_per_layer == 0
 
 
 def test_partial_tco_exposes_capex_and_electricity(setup) -> None:

@@ -1,6 +1,6 @@
 # Analytical assumptions and interpretation contract
 
-**Baseline:** released-checkpoint midpoint, schema version 2
+**Baseline:** released-checkpoint midpoint, schema version 3
 
 **Last reviewed:** 2026-08-27 UTC
 **Authority:** `configs/`, executable equations in `src/opentallas/`, and the
@@ -14,9 +14,12 @@ product-silicon commitment.
 ## Study matrix and comparison rules
 
 - Targets are DeepSeek-V4-Flash-0731 and DeepSeek-V4-Pro-0813. Kimi-K3 is a
-  stress/control case, not a recommended target.
-- Context lengths are 200,000 and 1,000,000 resident tokens. The standard run is
-  single-token autoregressive decode with a fully populated cache at that length.
+  long-context/MoE stress control. Qwen3-8B is a small dense control; neither
+  control is a recommended product target.
+- DeepSeek/Kimi contexts are 200,000 and 1,000,000 resident tokens. Qwen3-8B is
+  evaluated at the requested 8,192 tokens, within its published 32,768-token
+  native context. The standard run is single-token autoregressive decode with a
+  fully populated cache at the stated length.
 - Batch 1, 8, and 64 are mandatory user points. Batch 32 and 128 are retained to
   audit provisional brief tiers and capacity cliffs. A dense batch sweep from 1
   through 256 selects latency and balanced knees and maps the superiority band;
@@ -26,9 +29,10 @@ product-silicon commitment.
 - A ROM batch is **per pipeline stage**. Resident sessions equal `batch × stages`.
   GPU comparisons are reported both at the same active microbatch and at matched
   total resident concurrency; these answer different service questions.
-- GPU candidates are B200 and B300 at analytical x4, x8, and x16 normalization.
+- GPU candidates are B200 and B300 at analytical x1, x2, x4, x8, and x16 normalization.
   The fastest and cheapest feasible configurations are selected independently.
-  x4 is a pro-rata half-system construct, not a purchasable DGX claim.
+  x1/x2/x4 are pro-rata sub-system constructs and x16 is a two-system construct,
+  not purchasable DGX configuration claims.
 - TPU is outside scope. No TPU number or conclusion is used.
 - A ratio above 1 favors ROM. Speed compares ROM user tokens/s with the fastest
   feasible same-batch GPU. Cost compares ROM with the cheapest feasible
@@ -44,12 +48,19 @@ is not reconstructed from rounded parameter counts.
 | DeepSeek-V4-Flash-0731 | 166,878,536,440 | 7,768,281,308 | 147,169,738,752 | 10,862,838,300 | 1,077,678,080 |
 | DeepSeek-V4-Pro-0813 | 892,727,580,904 | 26,822,006,732 | 822,054,223,872 | 41,979,375,900 | 1,871,974,400 |
 | Kimi-K3 | 1,560,860,324,864 | 111,160,730,624 | 1,446,456,066,048 | 0 | 3,243,528,192 |
+| Qwen3-8B | 16,381,470,720 | 15,136,811,008 | 0 | 0 | 1,244,659,712 |
 
 Ordinary non-speculative decode does not stream DeepSeek DSpark/MTP tensors. A
 speculative step charges their traffic explicitly. Embeddings, hash lookup tables,
 and Kimi's vision/front-end tensors remain capacity-resident but are not treated as
 full decode-array reads. Prefill and multimodal execution are not part of the
 standard decode result.
+
+Qwen3-8B is all BF16 in the pinned release and has untied embeddings. Its input
+embedding table is lookup-resident, while the separate LM head remains ordinary
+full-matrix decode traffic. The derived 7,568,405,504 decode-active parameters
+equal ordinary-decode bytes divided by two; the released total remains the exact
+8,190,735,360 parameters.
 
 ## KV and workload derivations
 
@@ -61,9 +72,11 @@ standard decode result.
 | A-KV-004 | Kimi KDA retains FP32 recurrent matrix state plus BF16 short-convolution history and performs one read plus one write per token. | State shape is derived from config; precision/traffic are assumed from the public reference-kernel style. | Production KDA kernel counters and retained-state precision. |
 | A-KV-005 | Kimi gated MLA uses an absorbed latent cache in FP8, 576 bytes per token per layer. | Optimized implementation assumption. | Production serving layout and numerical validation. |
 | A-KV-006 | `kv_read_amplification = 1.0` for the midpoint. | Ideal assumed lower bound. | Kernel measurement; sweep upward for rereads/cache-line amplification. |
+| A-KV-007 | Qwen3-8B uses a BF16 full GQA cache: K plus V for 8 KV heads × 128 dimensions = 4,096 bytes/token/layer, or 1,207,959,552 bytes/session at 8,192 tokens across 36 layers. | Topology published; BF16 cache precision is a conservative assumption derived from the released dtype, not a serving measurement. | Production cache dtype/layout, allocator overhead, and HBM read counters; FP8 is retained as sensitivity only. |
 | A-MOE-001 | Routed expert coverage is `1-(1-k/N)^B` under independent uniform routing. | Derived baseline. | Production per-layer router traces; synthetic Zipf/persistence traces are stress only. |
 | A-OPS-001 | One decode position costs two operations per active parameter. | First-order assumed convention. | Operator-level FLOP/operation inventory for each released checkpoint. |
 | A-OPS-002 | Active parameters are split algebraically into always-active dense/shared parameters and top-k routed parameters from published total/active/expert counts. Dense/shared operations use the FP8-or-higher roof; routed operations use the FP4-class roof. | Derived topology plus format-class assumption. | Per-operator precision and FLOP traces, including non-matmul work. |
+| A-OPS-003 | Dense Qwen3-8B charges two operations per ordinary-decode parameter, including its untied LM head and excluding the input embedding lookup. | Derived first-order convention. | Operator-level FLOP and profiler trace. |
 
 `rho_one` is ordinary target-decode weight bytes at batch 1 divided by KV **read**
 bytes for one user token. It is a model-architecture screen, not a hardware
@@ -81,16 +94,16 @@ total label is documented but is not divided into fictitious 262.5 GB devices.
 
 The following are assumptions, not NVIDIA measurements of these models:
 
-| Parameter | B200 x4/x8 | B200 x16 | B300 x4/x8 | B300 x16 |
+| Parameter | B200 x1/x2/x4/x8 | B200 x16 | B300 x1/x2/x4/x8 | B300 x16 |
 |---|---:|---:|---:|---:|
 | Weight-bandwidth efficiency | 0.70 | 0.65 | 0.72 | 0.67 |
 | KV-bandwidth efficiency | 0.65 | 0.60 | 0.67 | 0.62 |
 | Compute efficiency (both format roofs) | 0.45 | 0.42 | 0.48 | 0.45 |
 | MoE load-balance efficiency | 0.78 | 0.72 | 0.80 | 0.74 |
 | Clock efficiency | 0.95 | 0.95 | 0.95 | 0.95 |
-| Synchronization efficiency | 0.85 | 0.80 | 0.86 | 0.81 |
-| Per-layer collective latency | 3/4.5 µs for x4/x8 | 8 µs | 3/4.5 µs for x4/x8 | 8 µs |
-| Effective collective payload bandwidth | 1 TB/s | 0.5 TB/s | 1 TB/s | 0.5 TB/s |
+| Synchronization efficiency | 1.00/0.85/0.85/0.85 | 0.80 | 1.00/0.86/0.86/0.86 | 0.81 |
+| Per-layer collective latency | 0/2/3/4.5 µs | 8 µs | 0/2/3/4.5 µs | 8 µs |
+| Effective collective payload bandwidth | none/1/1/1 TB/s | 0.5 TB/s | none/1/1/1 TB/s | 0.5 TB/s |
 | Acquisition proxy per GPU-equivalent | $25,000 | $25,000 | $32,000 | $32,000 |
 
 Only 90% of published physical HBM capacity is available to checkpoint plus KV;
@@ -104,6 +117,11 @@ placement/runtime hypothesis. Actual expert placement, EP/TP/DP topology, kernel
 fusion, scheduling, collective overlap, and software overhead require measured
 B200/B300 runs.
 
+The x1 profile has no inter-GPU collective. The 2 µs x2 floor and all other
+runtime efficiencies/collective parameters are assumptions. System power and
+acquisition inputs remain pro-rata per-GPU equivalents rather than single- or
+dual-GPU server measurements.
+
 ## ROM-wafer midpoint hypothesis
 
 Every value in this table is assumed unless labeled simulated. A “wafer” is the
@@ -111,7 +129,7 @@ architecture model's stage unit, not a manufacturable declaration.
 
 | ID | Midpoint | Meaning |
 |---|---:|---|
-| A-ROM-CAP | 160 GB released checkpoint bytes/wafer | Via-ROM capacity hypothesis; sets 2 Flash and 6 Pro stages. Kimi requires 11, not the aggregate-byte lower bound of 10, because its ~17 GB main layers are not split across pipeline stages. |
+| A-ROM-CAP | 160 GB released checkpoint bytes/wafer | Via-ROM capacity hypothesis; sets 2 Flash and 6 Pro stages. Kimi requires 11, not the aggregate-byte lower bound of 10, because its ~17 GB main layers are not split across pipeline stages. Qwen occupies one stage but uses only about 10.2% of its encoded-weight capacity. |
 | A-ROM-READ | 100 TB/s/wafer | Full interleaved-array encoded-weight read bandwidth. |
 | A-ROM-KV-CAP | 384 GB physical HBM/wafer, 90% usable | Perimeter-attached KV capacity after the same explicit runtime/workspace reserve. |
 | A-ROM-KV-BW | 8 TB/s/wafer | Perimeter-attached KV bandwidth. |
@@ -135,7 +153,7 @@ wafer boundaries. At the midpoint this lowers Kimi 1M's maximum batch/stage to 1
 
 ## Speculation
 
-The standard report has two scenarios:
+The long-context models have two standard-report scenarios:
 
 - no speculation;
 - an explicitly provisional midpoint with 5 draft candidates, independent
@@ -148,6 +166,10 @@ are assumed, not measured on production traces. The midpoint is not evidence tha
 ROM or GPU will achieve the resulting speed. Both architectures receive the same
 algorithmic speculation parameters, but their target/draft service times remain
 architecture-specific.
+
+Qwen3-8B runs only the no-speculation scenario. Its pinned checkpoint has no
+attached draft module, and an external draft would be a separately specified
+system whose acceptance, storage, traffic, and service cost cannot be inferred.
 
 ## Power and partial-TCO scope
 

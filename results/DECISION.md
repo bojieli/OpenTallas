@@ -33,7 +33,8 @@ next measurement phase, not the brief's product-level performance claims.
 
 1. **DeepSeek V4 Flash** as the primary proof target: smallest measured image and strongest low-batch margin, while the speculative result makes clear that the margin still needs trace validation.
 2. **DeepSeek V4 Pro** as a stretch architecture target, not a current product-performance claim: it requires six released-format midpoint stages, loses at B8, and loses even at B1 under the assumed speculative midpoint.
-3. **Kimi K3** as a negative/stress control: its dense MLA traffic makes 1M context beachfront-bound and it does not show a robust speed case here.
+3. **Qwen3-8B** as a small dense control, not a mask-ROM product target: it checks single-stage dense/GQA behavior and x1/x2 GPU normalization at 8K without importing an unsupported draft model.
+4. **Kimi K3** as a negative/stress control: its dense MLA traffic makes 1M context beachfront-bound and it does not show a robust speed case here.
 
 ## Next pass criteria
 

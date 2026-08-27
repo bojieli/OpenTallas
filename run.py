@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the reproducible three-model, two-context operating-point study."""
+"""Run the reproducible mixed-model, per-model-context operating-point study."""
 
 from __future__ import annotations
 
@@ -18,10 +18,11 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from opentallas.analytical import AnalyticalSimulator, OperatingPoint
 from opentallas.config import load_architectures, load_model_dir
-from opentallas.schema import HardwareProfile, SimulationRequest, SpeculationProfile
+from opentallas.schema import HardwareProfile, ModelProfile, SimulationRequest, SpeculationProfile
 
 
-CONTEXTS = (200_000, 1_000_000)
+LONG_CONTEXTS = (200_000, 1_000_000)
+QWEN_CONTROL_CONTEXTS = (8_192,)
 REQUIRED_BATCHES = (1, 8, 32, 64, 128)
 SWEEP_BATCHES = tuple(range(1, 257))
 SCENARIOS = {
@@ -34,6 +35,21 @@ SCENARIOS = {
         draft_cost_fraction=0.08,
     ),
 }
+
+
+def _contexts_for(model: ModelProfile) -> tuple[int, ...]:
+    if model.metadata.get("adapter") == "qwen3":
+        return QWEN_CONTROL_CONTEXTS
+    return LONG_CONTEXTS
+
+
+def _scenarios_for(model: ModelProfile) -> dict[str, SpeculationProfile]:
+    # The pinned Qwen checkpoint has no attached draft module. An external
+    # draft would be a different system and requires its own evidence-backed
+    # profile, so only ordinary decode is reported for this control workload.
+    if model.metadata.get("adapter") == "qwen3":
+        return {"no_speculation": SCENARIOS["no_speculation"]}
+    return SCENARIOS
 
 
 def _sha256(path: Path) -> str:
@@ -168,7 +184,7 @@ def render_report(result: dict[str, Any]) -> str:
         "## Same-microbatch B200 versus B300 family view",
         "",
         "This isolates GPU generation from cluster-size selection. Each family column is",
-        "the fastest feasible x4/x8/x16 point at the same active microbatch. Ratios above",
+        "the fastest feasible x1/x2/x4/x8/x16 point at the same active microbatch. Ratios above",
         "1 favor ROM; this view does not match the ROM pipeline's larger resident population.",
         "",
         "| Model | Context | Batch/stage | ROM user tok/s | Best B200 user tok/s | ROM/B200 | Best B300 user tok/s | ROM/B300 |",
@@ -199,6 +215,8 @@ def render_report(result: dict[str, Any]) -> str:
         "to 8% of one target-decode compute pass are assumed for both ROM and GPU. Gain is speculative/no-speculation",
         "per-user throughput at the same batch. The GPU column uses the fastest feasible",
         "B200/B300 configuration in each scenario; ratios above 1 favor ROM.",
+        "Qwen3-8B is omitted because its pinned checkpoint has no attached draft module;",
+        "no external-draft performance is assumed.",
         "",
         "| Model | Context | Batch/stage | ROM no-spec | ROM speculative | ROM gain | GPU no-spec | GPU speculative | GPU gain | Speculative ROM/GPU |",
         "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
@@ -217,7 +235,9 @@ def render_report(result: dict[str, Any]) -> str:
             for batch in (1, 8, 64):
                 key = (model["model"], context["context_tokens"], batch)
                 baseline = comparison_index[(*key, "no_speculation")]
-                speculative = comparison_index[(*key, "speculative_midpoint")]
+                speculative = comparison_index.get((*key, "speculative_midpoint"))
+                if speculative is None:
+                    continue
                 rom_baseline = baseline.get("rom_per_user_tokens_s")
                 rom_speculative = speculative.get("rom_per_user_tokens_s")
                 gpu_baseline = baseline.get("gpu_per_user_tokens_s")
@@ -250,7 +270,7 @@ def render_report(result: dict[str, Any]) -> str:
         "## Resident-concurrency-matched B200/B300 comparison",
         "",
         "A ROM pipeline holds one microbatch at every stage. Here each GPU is simulated",
-        "at the resulting total resident-session count, and the smallest feasible 4/8/16",
+        "at the resulting total resident-session count, and the smallest feasible 1/2/4/8/16",
         "configuration is shown. This is the capacity-matched service comparison.",
         "",
         "| Model | Context | ROM B/stage | Resident sessions | ROM user tok/s | Smallest B200 | user tok/s | Smallest B300 | user tok/s | Partial-TCO ratio vs cheapest GPU |",
@@ -309,8 +329,87 @@ def render_report(result: dict[str, Any]) -> str:
         "  replace engaged-bandwidth, collective, and speculative-acceptance assumptions.",
         "- Kimi K3 uses an optimized FP8 latent MLA cache. The reference BF16 expanded cache",
         "  is a pessimistic sensitivity case, not silently mixed into this table.",
+        "- Qwen3-8B uses a conservative assumed BF16 full-GQA KV cache at 8K and no",
+        "  speculative scenario. It is a dense control, not an additional product target.",
         "",
     ])
+    return "\n".join(lines)
+
+
+def render_qwen_addendum(result: dict[str, Any]) -> str:
+    summary = next(
+        model for model in result["model_summaries"] if model["model"] == "Qwen3-8B"
+    )
+    rows = [
+        row
+        for row in result["comparisons"]
+        if row["model"] == "Qwen3-8B" and row["scenario"] == "no_speculation"
+    ]
+    optimum = next(
+        row
+        for row in result["optima"]
+        if row["model"] == "Qwen3-8B" and row["scenario"] == "no_speculation"
+    )
+    context = summary["contexts"][0]
+    lines = [
+        "# Qwen3-8B / 8K analytical addendum",
+        "",
+        "> Generated from the same equations and hardware assumptions as `REPORT.md`.",
+        "> It is a dense control result, not a recommendation to make Qwen3-8B a product target.",
+        "",
+        "## Evidence and workload contract",
+        "",
+        f"- Official checkpoint: `{summary['source_repo']}@{summary['source_revision']}`.",
+        f"- Measured all-BF16 storage: {summary['checkpoint_bytes']:,} bytes; ordinary decode",
+        f"  streams {summary['dense_weight_bytes']:,} bytes and keeps the",
+        f"  {summary['resident_only_weight_bytes']:,}-byte input embedding as a lookup-resident table.",
+        f"- Derived decode-active parameter count: {summary['active_parameters']:,}; the untied LM head",
+        "  remains ordinary full-matrix decode traffic.",
+        f"- Published topology: 36 dense layers, 32 query heads, 8 KV heads, 128 head dimension.",
+        f"- Study context: {context['context_tokens']:,} tokens. The conservative assumed BF16 GQA",
+        f"  cache reads/stores {context['kv_storage_bytes_per_user']:,.0f} bytes per resident session.",
+        "- No speculative scenario is applied because the pinned checkpoint has no attached draft module.",
+        "- B200/B300 x1 and x2 analytical profiles are included alongside x4/x8/x16; only x8 is",
+        "  a published DGX device count, and every non-x8 cluster is a stated normalization.",
+        "",
+        "## Required operating points",
+        "",
+        "Ratios above 1 favor ROM. Speed uses the fastest feasible same-batch GPU; partial TCO",
+        "uses the cheapest feasible same-batch GPU and remains an incomplete cost proxy.",
+        "",
+        "| Batch | ROM user tok/s | Fastest GPU | GPU user tok/s | ROM/GPU speed | Cheapest GPU | GPU/ROM partial TCO | ROM bind |",
+        "|---:|---:|---|---:|---:|---|---:|---|",
+    ]
+    for row in rows:
+        lines.append(
+            f"| {row['batch_size']} | {row['rom_per_user_tokens_s']:,.1f} | "
+            f"{row['gpu_arch']} | {row['gpu_per_user_tokens_s']:,.1f} | "
+            f"{row['speed_ratio']:.2f}× | {row['cheapest_gpu_arch']} | "
+            f"{row['partial_tco_ratio_vs_cheapest_gpu']:.2f}× | "
+            f"{row['rom_binding_constraint']} |"
+        )
+    lines.extend(
+        [
+            "",
+            "## Capacity-bound optima and conclusion",
+            "",
+            f"- ROM latency/balanced optimum: B{optimum['rom_latency_optimal_batch']}/"
+            f"B{optimum['rom_balanced_optimal_batch']}; ROM aggregate-throughput optimum: "
+            f"B{optimum['rom_throughput_optimal_batch']}; ROM partial-TCO optimum: "
+            f"B{optimum['rom_partial_tco_optimal_batch']}.",
+            f"- GPU latency optimum: {optimum['gpu_latency_optimum_label']}; balanced: "
+            f"{optimum['gpu_balanced_optimum_label']}; aggregate throughput: "
+            f"{optimum['gpu_throughput_optimum_label']}; partial TCO: "
+            f"{optimum['gpu_partial_tco_optimum_label']}.",
+            f"- ROM exceeds the fastest GPU's global per-user-speed optimum only at batch "
+            f"{optimum['rom_speed_superiority_band']}. At B8 and above, the modeled ROM HBM "
+            "beachfront binds and both speed and partial TCO favor GPU.",
+            f"- One {summary['checkpoint_bytes'] / 160e9 * 100:.2f}%-occupied ROM stage is a useful "
+            "dense/GQA verification control, but poor fixed-weight capacity utilization and the "
+            "single-batch speed island do not support elevating Qwen3-8B into the target list.",
+            "",
+        ]
+    )
     return "\n".join(lines)
 
 
@@ -324,8 +423,8 @@ def run_standard(output_dir: Path) -> dict[str, Any]:
     points: dict[tuple[str, int, str, int, str], OperatingPoint] = {}
     csv_rows: list[dict[str, Any]] = []
     for model in models:
-        for context in CONTEXTS:
-            for scenario_name, speculation in SCENARIOS.items():
+        for context in _contexts_for(model):
+            for scenario_name, speculation in _scenarios_for(model).items():
                 for batch in SWEEP_BATCHES:
                     request = SimulationRequest(
                         context_tokens=context,
@@ -345,8 +444,8 @@ def run_standard(output_dir: Path) -> dict[str, Any]:
         tuple[str, int, str, str], list[OperatingPoint]
     ] = {}
     for model in models:
-        for context in CONTEXTS:
-            for scenario_name, speculation in SCENARIOS.items():
+        for context in _contexts_for(model):
+            for scenario_name, speculation in _scenarios_for(model).items():
                 for arch in all_arches:
                     candidates = [
                         points[(model.name, context, scenario_name, batch, arch.name)]
@@ -383,8 +482,8 @@ def run_standard(output_dir: Path) -> dict[str, Any]:
     comparisons: list[dict[str, Any]] = []
     optima: list[dict[str, Any]] = []
     for model in models:
-        for context in CONTEXTS:
-            for scenario_name in SCENARIOS:
+        for context in _contexts_for(model):
+            for scenario_name in _scenarios_for(model):
                 rom_points = optimization_points[
                     (model.name, context, scenario_name, rom.name)
                 ]
@@ -555,7 +654,7 @@ def run_standard(output_dir: Path) -> dict[str, Any]:
     # Capacity-match the service population, not merely the active microbatch.
     concurrency_matches: list[dict[str, Any]] = []
     for model in models:
-        for context in CONTEXTS:
+        for context in _contexts_for(model):
             for batch in (1, 8, 64):
                 rom_point = points[(model.name, context, "no_speculation", batch, rom.name)]
                 resident = int(rom_point.metrics["C7_C8_resident_users_required"])
@@ -602,7 +701,7 @@ def run_standard(output_dir: Path) -> dict[str, Any]:
             0.0, min(model.active_parameters, model.dense_parameters)
         )
         contexts = []
-        for context in CONTEXTS:
+        for context in _contexts_for(model):
             point = points[(model.name, context, "no_speculation", 1, rom.name)]
             contexts.append({
                 "context_tokens": context,
@@ -630,9 +729,11 @@ def run_standard(output_dir: Path) -> dict[str, Any]:
             "contexts": contexts,
         })
     result = {
-        "schema_version": 2,
+        "schema_version": 3,
         "inputs": {
-            "contexts": list(CONTEXTS),
+            "contexts_by_model": {
+                model.name: list(_contexts_for(model)) for model in models
+            },
             "required_batches": list(REQUIRED_BATCHES),
             "sweep_batches": [min(SWEEP_BATCHES), max(SWEEP_BATCHES)],
             "optimization_policy": (
@@ -640,6 +741,9 @@ def run_standard(output_dir: Path) -> dict[str, Any]:
                 "sweep_csv_retains_dense_1_through_256_plus_capacity_endpoints"
             ),
             "scenarios": {name: asdict(spec) for name, spec in SCENARIOS.items()},
+            "scenarios_by_model": {
+                model.name: list(_scenarios_for(model)) for model in models
+            },
             "hardware_sha256": _sha256(hardware_path),
             "model_sha256": {path.name: _sha256(path) for path in sorted(model_dir.glob("*.json"))},
             "hardware_metadata": hardware_metadata,
@@ -662,6 +766,9 @@ def run_standard(output_dir: Path) -> dict[str, Any]:
         writer.writeheader()
         writer.writerows(csv_rows)
     (output_dir / "REPORT.md").write_text(render_report(result), encoding="utf-8")
+    (output_dir / "QWEN3_8B_ADDENDUM.md").write_text(
+        render_qwen_addendum(result), encoding="utf-8"
+    )
     return result
 
 
@@ -676,6 +783,7 @@ def main() -> int:
     print(f"wrote {args.output / 'analytical.json'}")
     print(f"wrote {args.output / 'sweep.csv'}")
     print(f"wrote {args.output / 'REPORT.md'}")
+    print(f"wrote {args.output / 'QWEN3_8B_ADDENDUM.md'}")
     print(f"evaluated {len(result['required_points'])} required architecture points")
     return 0
 

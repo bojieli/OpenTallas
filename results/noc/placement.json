@@ -28,7 +28,8 @@
         "weight_stream_cycles": 460011
       }
     ],
-    "trace_p05_efficiency": 1.0
+    "trace_p05_efficiency": 1.0,
+    "trace_status": "synthetic correlated router p05"
   },
   {
     "batch_size": 8,
@@ -59,7 +60,8 @@
         "weight_stream_cycles": 1361551
       }
     ],
-    "trace_p05_efficiency": 0.23645320197044334
+    "trace_p05_efficiency": 0.23645320197044334,
+    "trace_status": "synthetic correlated router p05"
   },
   {
     "batch_size": 64,
@@ -90,7 +92,8 @@
         "weight_stream_cycles": 5030911
       }
     ],
-    "trace_p05_efficiency": 0.07882426232935917
+    "trace_p05_efficiency": 0.07882426232935917,
+    "trace_status": "synthetic correlated router p05"
   },
   {
     "batch_size": 1,
@@ -121,7 +124,8 @@
         "weight_stream_cycles": 2307571
       }
     ],
-    "trace_p05_efficiency": 1.0
+    "trace_p05_efficiency": 1.0,
+    "trace_status": "synthetic correlated router p05"
   },
   {
     "batch_size": 8,
@@ -152,7 +156,8 @@
         "weight_stream_cycles": 7221243
       }
     ],
-    "trace_p05_efficiency": 0.23593161402492033
+    "trace_p05_efficiency": 0.23593161402492033,
+    "trace_status": "synthetic correlated router p05"
   },
   {
     "batch_size": 64,
@@ -183,7 +188,8 @@
         "weight_stream_cycles": 31928147
       }
     ],
-    "trace_p05_efficiency": 0.07575458670349182
+    "trace_p05_efficiency": 0.07575458670349182,
+    "trace_status": "synthetic correlated router p05"
   },
   {
     "batch_size": 1,
@@ -214,7 +220,8 @@
         "weight_stream_cycles": 12149905
       }
     ],
-    "trace_p05_efficiency": 1.0
+    "trace_p05_efficiency": 1.0,
+    "trace_status": "synthetic correlated router p05"
   },
   {
     "batch_size": 8,
@@ -245,7 +252,8 @@
         "weight_stream_cycles": 27080562
       }
     ],
-    "trace_p05_efficiency": 0.21018062397372742
+    "trace_p05_efficiency": 0.21018062397372742,
+    "trace_status": "synthetic correlated router p05"
   },
   {
     "batch_size": 64,
@@ -276,6 +284,79 @@
         "weight_stream_cycles": 97655937
       }
     ],
-    "trace_p05_efficiency": 0.05571800369923164
+    "trace_p05_efficiency": 0.05571800369923164,
+    "trace_status": "synthetic correlated router p05"
+  },
+  {
+    "batch_size": 1,
+    "model": "Qwen3-8B",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 903,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 14436,
+        "weight_stream_cycles": 14436
+      },
+      {
+        "active_tile_fraction": 0.027777777777777776,
+        "compute_cycles": 32481,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 519682,
+        "weight_stream_cycles": 519682
+      }
+    ],
+    "trace_p05_efficiency": 1.0,
+    "trace_status": "not applicable: dense model"
+  },
+  {
+    "batch_size": 8,
+    "model": "Qwen3-8B",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 7218,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 14436,
+        "weight_stream_cycles": 14436
+      },
+      {
+        "active_tile_fraction": 0.027777777777777776,
+        "compute_cycles": 259841,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 519682,
+        "weight_stream_cycles": 519682
+      }
+    ],
+    "trace_p05_efficiency": 1.0,
+    "trace_status": "not applicable: dense model"
+  },
+  {
+    "batch_size": 64,
+    "model": "Qwen3-8B",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 57743,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 57743,
+        "weight_stream_cycles": 14436
+      },
+      {
+        "active_tile_fraction": 0.027777777777777776,
+        "compute_cycles": 2078725,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 2078725,
+        "weight_stream_cycles": 519682
+      }
+    ],
+    "trace_p05_efficiency": 1.0,
+    "trace_status": "not applicable: dense model"
   }
 ]

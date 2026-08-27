@@ -39,6 +39,7 @@ class AttentionGroup:
     * ``compressed_sparse``: full scan of a compact index plus a top-k KV gather;
     * ``compressed_dense``: dense read of a temporally compressed KV cache;
     * ``dense_mla``: context-linear latent KV cache;
+    * ``dense_kv``: context-linear full K/V cache, including GQA;
     * ``recurrent``: context-independent state read/modify/write.
     """
 
@@ -60,6 +61,7 @@ class AttentionGroup:
             "compressed_sparse",
             "compressed_dense",
             "dense_mla",
+            "dense_kv",
             "recurrent",
         }
         if self.kind not in allowed:
@@ -172,16 +174,25 @@ class ModelProfile:
 
     @property
     def routed_fraction_per_token(self) -> float:
+        # Dense checkpoints retain a one-expert/one-selected schema sentinel so
+        # the rest of the simulator need not special-case missing positive
+        # topology fields. Zero routed storage is the unambiguous discriminator.
+        if self.routed_weight_bytes == 0:
+            return 0.0
         return self.experts_per_token / self.num_experts
 
     @property
     def dense_parameters(self) -> float:
         """Infer the non-routed parameter count from total and active counts."""
         frac = self.routed_fraction_per_token
+        if frac == 0:
+            return self.active_parameters
         return (self.active_parameters - frac * self.total_parameters) / (1.0 - frac)
 
     @property
     def routed_parameters(self) -> float:
+        if self.routed_fraction_per_token == 0:
+            return 0.0
         return self.total_parameters - self.dense_parameters
 
     @classmethod

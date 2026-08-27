@@ -28,4 +28,4 @@ test:
 verify: test rtl spice simulate noc sensitivity
 
 clean-results:
-	find results -type f \( -name '*.csv' -o -name '*.json' -o -name 'REPORT.md' \) -delete
+	find results -type f \( -name '*.csv' -o -name '*.json' -o -name 'REPORT.md' -o -name 'QWEN3_8B_ADDENDUM.md' \) -delete

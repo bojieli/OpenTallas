@@ -40,6 +40,9 @@ model card, checkpoint, report, or vendor datasheet is available.
 | SRC-K3-CARD | [Kimi-K3 model card](https://huggingface.co/moonshotai/Kimi-K3/blob/a590ce090cb049c93a33dfe8c208ec652aa20503/README.md) | `a590ce090cb049c93a33dfe8c208ec652aa20503` | 2.8T total/104B active, 93 layers, 69 KDA + 24 gated MLA, 896 experts/top-16, and 1,048,576-token context. |
 | SRC-K3-CONFIG | [Kimi-K3 config](https://huggingface.co/moonshotai/Kimi-K3/blob/a590ce090cb049c93a33dfe8c208ec652aa20503/config.json) | same revision; local SHA-256 `9710e121a58d03ac92c8d6da287a19541994319afbbe6d6202af001ffd379213` | Exact layer IDs, KDA state dimensions, latent dimensions, hidden size, experts, and context limit used by the profiler. |
 | SRC-K3-INDEX | [Kimi-K3 safetensors index](https://huggingface.co/moonshotai/Kimi-K3/blob/a590ce090cb049c93a33dfe8c208ec652aa20503/model.safetensors.index.json) and pinned shard headers | same revision; index SHA-256 `a1c5210650ce71d2d3ae9ec5a101ac4afd3cf4b10091be589853437eb967febd` | Exact released-format inventory and text-decode versus multimodal/resident-only split. |
+| SRC-QWEN3-8B-CARD | [Qwen3-8B model card](https://huggingface.co/Qwen/Qwen3-8B/blob/b968826d9c46dd6066d109eabc6255188de91218/README.md) | `b968826d9c46dd6066d109eabc6255188de91218` | Official dense-model identity; 8.2B total, 6.95B non-embedding, 36 layers, GQA with 32 query/8 KV heads, 32,768 native context, and no attached draft module. |
+| SRC-QWEN3-8B-CONFIG | [Qwen3-8B config](https://huggingface.co/Qwen/Qwen3-8B/blob/b968826d9c46dd6066d109eabc6255188de91218/config.json) | same revision; local SHA-256 `f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30` | 36 layers, 4,096 hidden size, 32 query/8 KV heads, 128 head dimension, BF16 storage declaration, untied embeddings, and 40,960 configured position allocation. |
+| SRC-QWEN3-8B-INDEX | [Qwen3-8B safetensors index](https://huggingface.co/Qwen/Qwen3-8B/blob/b968826d9c46dd6066d109eabc6255188de91218/model.safetensors.index.json) and pinned shard headers | same revision; index SHA-256 `f9fdbcb91c23971c13ec5d5f2573d2349e8f61f2f049371ec699281748fdb1bc` | 399 all-BF16 tensors, exactly 8,190,735,360 parameters/16,381,470,720 bytes; exact layer, input-embedding, and untied output-head accounting. |
 
 The generated inventories are committed under `data/inventory/`. The profiler
 reads only `config.json`, the safetensors index, and HTTP byte ranges covering
@@ -66,8 +69,10 @@ accounting. The datasheet's `2.1 TB` label is retained as published provenance b
 is not interpreted as eight 262.5 GB devices. A separate 90% usable-HBM assumption
 provides the runtime/workspace reserve.
 
-The x4 and x16 profiles are analytical half-node/two-node normalizations. NVIDIA
-does not publish them as DGX SKUs. Peak arithmetic is not measured application
+The x1, x2, x4, and x16 profiles are analytical fractional/two-node normalizations;
+NVIDIA does not publish them as DGX B200/B300 SKUs. They are included so model
+size and feasible cluster size are not confounded, particularly for Qwen3-8B.
+Peak arithmetic is not measured application
 performance; the simulator applies explicit assumed compute, bandwidth,
 load-balance, clock, and synchronization efficiencies. Published 14.4 TB/s NVLink
 is retained as a source fact but is **not** substituted directly for the assumed
@@ -78,7 +83,7 @@ effective collective payload bandwidth or per-layer latency.
 | ID | Artifact | Class | Boundary |
 |---|---|---|---|
 | GEN-INVENTORY | `data/inventory/*.json` | measured from pinned public metadata | Exact encoded storage only; no model execution. |
-| GEN-ANALYTICAL | `results/standard/analytical.json` and `sweep.csv` | simulated/derived | Conditional on every hardware and runtime assumption in `docs/ASSUMPTIONS.md`. |
+| GEN-ANALYTICAL | `results/standard/analytical.json`, `sweep.csv`, `REPORT.md`, and `QWEN3_8B_ADDENDUM.md` | simulated/derived | Conditional on every hardware and runtime assumption in `docs/ASSUMPTIONS.md`. |
 | GEN-ROUTING | `results/routing/*.json` | synthetic/simulated | Uniform and correlated stress routing; not production activation traces. |
 | GEN-NOC | `results/noc/*` | simulated | Purpose-built topology/serialization model; not placed-and-routed timing. |
 | GEN-SENSITIVITY | `results/sensitivity/*` | simulated/derived | One-factor and bounded-grid results, not probability distributions. |
@@ -88,6 +93,7 @@ effective collective payload bandwidth or per-layer latency.
 No public source currently establishes the target-node via-ROM density, full-array
 read bandwidth, sense margin, yield, repair overhead, MAC density, wafer HBM
 beachfront, stitched-wafer timing, power delivery, cooling, unit cost, NRE, or
-production DeepSeek/Kimi router and KV traces. Those inputs remain assumptions or
+production DeepSeek/Kimi router traces or any model's production KV traces. Those
+inputs remain assumptions or
 open gates. Open-PDK work can test methodology and topology but cannot promote any
 of them to leading-node measured evidence.

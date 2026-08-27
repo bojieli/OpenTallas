@@ -29,6 +29,22 @@ def main() -> int:
     args.output.mkdir(parents=True, exist_ok=True)
     for source in SOURCES:
         model = ModelProfile.load(ROOT / "configs" / "models" / f"{source.slug}.json")
+        if model.routed_weight_bytes == 0:
+            output = {
+                "model": model.name,
+                "source_repo": model.source_repo,
+                "source_revision": model.source_revision,
+                "status": "not applicable: dense model has no expert router",
+                "synthetic_scenarios": {},
+                "checkpoint_router_sample": None,
+            }
+            target = args.output / f"{source.slug}.json"
+            target.write_text(
+                json.dumps(output, indent=2, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            print(f"wrote {target}")
+            continue
         scenarios = {}
         for name, alpha, persistence in (
             ("uniform", 0.0, 0.0),

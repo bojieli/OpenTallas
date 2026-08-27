@@ -54,15 +54,28 @@ def main() -> int:
                                 **result.to_dict(),
                             }
                             rows.append(row)
-            # Placement comparison uses the midpoint network and the pessimistic
-            # p05 correlated-trace efficiency observed in the generated traces.
-            routing = json.loads(
-                (ROOT / "results" / "routing" / model_path.name).read_text(encoding="utf-8")
-            )
-            batch_stats = routing["synthetic_scenarios"]["zipf_correlated"]["batches"]
-            efficiency = next(
-                item["p05_load_balance_efficiency"] for item in batch_stats if item["batch_size"] == batch
-            )
+            # MoE placement uses the pessimistic p05 correlated-trace
+            # efficiency. Dense controls have no router or expert-local case.
+            if model.routed_weight_bytes:
+                routing = json.loads(
+                    (ROOT / "results" / "routing" / model_path.name).read_text(
+                        encoding="utf-8"
+                    )
+                )
+                batch_stats = routing["synthetic_scenarios"]["zipf_correlated"][
+                    "batches"
+                ]
+                efficiency = next(
+                    item["p05_load_balance_efficiency"]
+                    for item in batch_stats
+                    if item["batch_size"] == batch
+                )
+                placement_names = ("interleaved", "layer_local", "expert_local")
+                trace_status = "synthetic correlated router p05"
+            else:
+                efficiency = 1.0
+                placement_names = ("interleaved", "layer_local")
+                trace_status = "not applicable: dense model"
             weights = weight_traffic(model, batch)
             operations = model.operations_per_active_parameter * model.active_parameters * batch
             config = NoCConfig(tiles_per_reticle=64, local_topology="exchange")
@@ -77,12 +90,13 @@ def main() -> int:
                     ops_per_tile_cycle=4096.0,
                     trace_load_balance_efficiency=efficiency,
                 ).to_dict()
-                for placement in ("interleaved", "layer_local", "expert_local")
+                for placement in placement_names
             ]
             summaries.append({
                 "model": model.name,
                 "batch_size": batch,
                 "trace_p05_efficiency": efficiency,
+                "trace_status": trace_status,
                 "placements": placements,
             })
 
@@ -117,9 +131,9 @@ def main() -> int:
         )
     lines.extend([
         "",
-        "Placement results in `placement.json` use identical per-tile service and the p05",
-        "correlated router stress trace. They isolate the engagement/imbalance penalty; they",
-        "are not throughput predictions.",
+        "Placement results in `placement.json` use identical per-tile service. MoE cases",
+        "apply the p05 correlated-router stress trace; dense controls omit expert-local",
+        "placement. They isolate engagement/imbalance penalties, not throughput predictions.",
         "",
     ])
     (args.output / "REPORT.md").write_text("\n".join(lines), encoding="utf-8")

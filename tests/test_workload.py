@@ -28,6 +28,7 @@ def test_expected_coverage_has_correct_limits() -> None:
         ("deepseek-v4-flash-0731", 43, 256, 6),
         ("deepseek-v4-pro-0813", 61, 384, 6),
         ("kimi-k3", 93, 896, 16),
+        ("qwen3-8b", 36, 1, 1),
     ],
 )
 def test_measured_profiles_load(slug: str, layers: int, experts: int, top_k: int) -> None:
@@ -75,3 +76,17 @@ def test_target_decode_traffic_excludes_resident_draft_and_lookup_weights() -> N
     assert pro.draft_dense_weight_bytes + pro.draft_routed_weight_bytes > 0
     assert pro.resident_only_weight_bytes > 0
     assert streamed < pro.checkpoint_bytes
+
+
+def test_qwen_dense_gqa_bf16_traffic_is_exact() -> None:
+    qwen = model("qwen3-8b")
+    traffic = kv_traffic(qwen, 8_192)
+    expected_entry_bytes = 2 * 8 * 128 * 2
+    expected_cache_bytes = 36 * 8_192 * expected_entry_bytes
+    assert traffic.read_bytes == expected_cache_bytes
+    assert traffic.write_bytes == 36 * expected_entry_bytes
+    assert traffic.storage_bytes_per_user == expected_cache_bytes
+    assert qwen.dense_parameters == qwen.dense_weight_bytes / 2
+    assert qwen.routed_parameters == 0
+    assert qwen.routed_weight_bytes == 0
+    assert qwen.metadata["tie_word_embeddings"] is False

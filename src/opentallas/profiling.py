@@ -64,6 +64,18 @@ SOURCES: tuple[SourceSpec, ...] = (
         total_parameters=2.8e12,
         active_parameters=104e9,
     ),
+    SourceSpec(
+        slug="qwen3-8b",
+        repo="Qwen/Qwen3-8B",
+        revision="b968826d9c46dd6066d109eabc6255188de91218",
+        adapter="qwen3",
+        # Exact BF16 tensor count published by the official Hugging Face API;
+        # the header inventory independently checks bytes == 2 * parameters.
+        total_parameters=8_190_735_360,
+        # Ordinary decode streams every BF16 tensor except the input embedding
+        # lookup: 15,136,811,008 bytes / 2 bytes per parameter.
+        active_parameters=7_568_405_504,
+    ),
 )
 
 
@@ -177,6 +189,11 @@ def _weight_role(adapter: str, name: str) -> str:
             or name.startswith("vision_tower.")
             or name.startswith("mm_projector.")
         ):
+            return "resident_only"
+    elif adapter == "qwen3":
+        # The input embedding is a lookup, while the checkpoint has a separate,
+        # untied LM head that is a full ordinary-decode projection.
+        if name == "model.embed_tokens.weight":
             return "resident_only"
     return "decode_routed" if _is_routed(name) else "decode_dense"
 
@@ -468,11 +485,87 @@ def _kimi_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Model
     )
 
 
+def _qwen3_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> ModelProfile:
+    layers = int(config["num_hidden_layers"])
+    kv_heads = int(config["num_key_value_heads"])
+    head_dim = int(config["head_dim"])
+    if config.get("torch_dtype") != "bfloat16" or set(inventory.dtype_bytes) != {"BF16"}:
+        raise ValueError("Qwen3-8B baseline requires an all-BF16 released checkpoint")
+    if bool(config.get("tie_word_embeddings")):
+        raise ValueError("Qwen3-8B profile expects the published untied LM head")
+    if inventory.checkpoint_bytes != int(spec.total_parameters) * 2:
+        raise ValueError("Qwen3-8B BF16 storage does not match the pinned parameter count")
+    if inventory.decode_dense_bytes != int(spec.active_parameters) * 2:
+        raise ValueError("Qwen3-8B decode bytes do not match active parameter accounting")
+
+    # One K vector plus one V vector for each KV head. BF16 is the explicit,
+    # conservative baseline; FP8 remains a sensitivity case, not an official
+    # serving claim for this workload.
+    entry_bytes = 2 * kv_heads * head_dim * 2
+    group = AttentionGroup(
+        kind="dense_kv",
+        count=layers,
+        entry_bytes=entry_bytes,
+        label="full-gqa",
+        evidence="published GQA topology; BF16 KV precision assumed",
+    )
+    return ModelProfile(
+        name="Qwen3-8B",
+        source_repo=spec.repo,
+        source_revision=spec.revision,
+        total_parameters=spec.total_parameters,
+        active_parameters=spec.active_parameters,
+        checkpoint_bytes=inventory.checkpoint_bytes,
+        dense_weight_bytes=inventory.decode_dense_bytes,
+        routed_weight_bytes=0,
+        draft_dense_weight_bytes=0,
+        draft_routed_weight_bytes=0,
+        resident_only_weight_bytes=inventory.resident_only_bytes,
+        num_layers=layers,
+        # Positive sentinels represent a dense model; routed_weight_bytes == 0
+        # is the schema-level discriminator used by operation accounting.
+        num_experts=1,
+        experts_per_token=1,
+        hidden_size=int(config["hidden_size"]),
+        max_context_tokens=int(config["max_position_embeddings"]),
+        attention_groups=(group,),
+        layer_dense_weight_bytes=tuple(
+            inventory.decode_layer_dense_bytes.get(str(layer), 0)
+            for layer in range(layers)
+        ),
+        layer_routed_weight_bytes=tuple(0 for _ in range(layers)),
+        router_trace_status="not applicable: dense model",
+        metadata={
+            "adapter": "qwen3",
+            "attention_sequence": ["full-gqa"] * layers,
+            "checkpoint_inventory": f"data/inventory/{spec.slug}.json",
+            "checkpoint_storage_dtype": "BF16",
+            "decode_active_parameter_derivation": (
+                "all ordinary-decode BF16 tensors divided by two bytes; input embedding excluded"
+            ),
+            "kv_cache_policy": "BF16 full GQA K/V",
+            "kv_cache_policy_status": "precision assumed; topology published",
+            "native_context_tokens_published": 32_768,
+            "study_context_tokens": 8_192,
+            "num_attention_heads": int(config["num_attention_heads"]),
+            "num_key_value_heads": kv_heads,
+            "head_dim": head_dim,
+            "tie_word_embeddings": False,
+            "weight_traffic_policy": (
+                "decoder and untied LM head streamed; input embedding lookup resident-only"
+            ),
+            "speculation_policy": "none; no attached draft module in pinned checkpoint",
+        },
+    )
+
+
 def build_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> ModelProfile:
     if spec.adapter == "deepseek_v4":
         return _deepseek_profile(spec, config, inventory)
     if spec.adapter == "kimi_k3":
         return _kimi_profile(spec, config, inventory)
+    if spec.adapter == "qwen3":
+        return _qwen3_profile(spec, config, inventory)
     raise ValueError(f"unknown source adapter {spec.adapter!r}")
 
 
