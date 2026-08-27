@@ -19,8 +19,11 @@ module static_timeslot_switch #(
 );
     reg [SLOT_W-1:0] slot;
     reg [PORTS*PORT_ID_W-1:0] schedule [0:SLOTS-1];
+    localparam integer LAST_SLOT_INT = SLOTS-1;
+    localparam [SLOT_W-1:0] LAST_SLOT = LAST_SLOT_INT[SLOT_W-1:0];
+    localparam [PORT_ID_W:0] PORTS_VALUE = PORTS[PORT_ID_W:0];
     integer output_port;
-    integer input_port;
+    reg [PORT_ID_W-1:0] input_port;
 
     initial begin
         if (SCHEDULE_FILE != "")
@@ -36,7 +39,7 @@ module static_timeslot_switch #(
             /* verilator lint_off BLKSEQ */
             for (output_port = 0; output_port < PORTS; output_port = output_port + 1) begin
                 input_port = schedule[slot][output_port*PORT_ID_W +: PORT_ID_W];
-                if (input_port < PORTS) begin
+                if ({1'b0,input_port} < PORTS_VALUE) begin
                     out_valid[output_port] <= in_valid[input_port];
                     out_flit[output_port*FLIT_W +: FLIT_W]
                         <= in_flit[input_port*FLIT_W +: FLIT_W];
@@ -46,7 +49,7 @@ module static_timeslot_switch #(
                 end
             end
             /* verilator lint_on BLKSEQ */
-            if (slot == SLOTS-1)
+            if (slot == LAST_SLOT)
                 slot <= {SLOT_W{1'b0}};
             else
                 slot <= slot + 1'b1;

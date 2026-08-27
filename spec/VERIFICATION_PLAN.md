@@ -1,7 +1,8 @@
 # Verification and signoff plan
 
 **Document:** SPEC-DV 1.0  
-**Status:** frozen campaign plan; implementation evidence partial and source-current
+**Status:** frozen campaign plan; canonical RTL coverage and complete
+pre-synthesis public-tool re-entry closed
 
 Verification is the long pole. The plan below is a campaign contract, not a claim
 that the current disposable RTL has already passed it. `verification.json` is the
@@ -140,8 +141,9 @@ external until qualified cells/macros and ATPG are available.
 ### DV-8.1 Coverage thresholds
 
 Closure targets are 95% line, 90% branch, 85% toggle, 100% must-bin functional,
-100% planned formal, 100% planned fault-site activation/containment, and 100%
-requirement-to-pass-evidence mapping. Exclusions require a review record and owner.
+100% planned FSM-state bins, 100% planned formal, 100% planned fault-site
+activation/containment, and 100% requirement-to-pass-evidence mapping. Exclusions
+require a review record and owner.
 
 ### DV-8.2 Coverage quality
 
@@ -149,6 +151,22 @@ Coverage is merged across unit, tile, reticle, stage, and pipeline environments.
 Cross coverage includes numeric mode × error × backpressure × reset × repair ×
 power state. Dead code, unreachable bins, vacuous assertions, and unhit error paths
 are reviewed rather than hidden by broad exclusions.
+
+The canonical public-reference campaign is `coverage_plan.json`, executed by
+`tools/rtl_coverage_campaign.py`. It runs five deterministic coverage-focused
+benches and four supplemental directed-fault benches under Icarus/vvp and pinned
+Verilator 5.050. Every mandatory bin must appear exactly once in both engines, the
+semantic PASS stream must match, and every unexpected warning is fatal. Native
+Verilator line, branch, and toggle points are merged across cases and hierarchy by
+the exact source key `{file,line,column,class,type,description,source-span}`; a
+repeated parameter instance cannot inflate a hit.
+
+The source-current closed result is 96.512% line, 94.662% branch, 85.210% toggle,
+89/89 mandatory bins, and 28/28 FSM-state bins. `coverage_waivers.json` contains
+zero exclusions. Four fault supplements contribute control-path coverage but do
+not replace the separate exact 87-site fault-campaign gate. The result is logical
+RTL evidence on reduced public configurations only; it is not ATPG, target-node,
+macro/PHY, numerical-quality, manufacturing, or product-silicon signoff.
 
 ## DV-9 Reproducibility and review
 

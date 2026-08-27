@@ -92,7 +92,8 @@ module ot_rom_wrapper #(
                 // behavioral hook models corrected data for a single-bit
                 // event.  Multi-bit injection exposes the corrupted sample
                 // only with uncorrectable syndrome and poison asserted.
-                if (!onehot(inject_fault_mask)) begin
+                if ((inject_fault_mask != {DATA_W{1'b0}}) &&
+                    !onehot(inject_fault_mask)) begin
                     read_word = read_word ^ inject_fault_mask;
                     read_syndrome = 2'b10;
                     read_poison = 1'b1;

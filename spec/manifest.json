@@ -13,6 +13,8 @@
     {"id": "SPEC-PPA", "normative": true, "path": "spec/FLOORPLAN_PPA.md"},
     {"id": "SPEC-DV", "normative": true, "path": "spec/VERIFICATION_PLAN.md"},
     {"id": "SPEC-DV-FAULT", "normative": true, "path": "spec/fault_campaign.json"},
+    {"id": "SPEC-DV-COVERAGE", "normative": true, "path": "spec/coverage_plan.json"},
+    {"id": "SPEC-DV-COVERAGE-WAIVERS", "normative": false, "path": "spec/coverage_waivers.json"},
     {"id": "SPEC-CC", "normative": true, "path": "spec/CHANGE_CONTROL.md"},
     {"id": "SPEC-CRP-MACHINE", "normative": true, "path": "spec/clock_reset_crossings.json"},
     {"id": "SPEC-WAIVER", "normative": false, "path": "spec/rtl_waivers.json"},
@@ -48,6 +50,8 @@
     "spec/budgets.json",
     "spec/verification.json",
     "spec/fault_campaign.json",
+    "spec/coverage_plan.json",
+    "spec/coverage_waivers.json",
     "spec/clock_reset_crossings.json",
     "spec/rtl_waivers.json"
   ],

@@ -1,0 +1,2637 @@
+{
+  "campaign": "public_reference_rtl_coverage",
+  "canonical_timestamp_policy": "no timestamp in canonical artifact",
+  "cases": [
+    {
+      "bench": "rtl/test/tb_coverage_units.sv",
+      "iverilog": {
+        "compile": {
+          "allowed_warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_reduction_tree.sv:87: warning: @* is sensitive to all 2 words in array 'group_valid'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_reduction_tree.sv:87: warning: @* is sensitive to all 2 words in array 'group_tag'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_reduction_tree.sv:94: warning: @* is sensitive to all 2 words in array 'group_valid'."
+          ],
+          "command": "/usr/bin/iverilog -g2012 -Wall -s tb_coverage_units -o '<ROOT>/rtl/build/coverage_campaign/coverage_units/iverilog/tb_coverage_units.vvp' '<ROOT>/rtl/lib/ot_crc16_ccitt.sv' '<ROOT>/rtl/lib/ot_crc32c.sv' '<ROOT>/rtl/ot_format_decode.sv' '<ROOT>/rtl/ot_reduction_tree.sv' '<ROOT>/rtl/static_timeslot_switch.sv' '<ROOT>/rtl/ot_stage_link_tx.sv' '<ROOT>/rtl/ot_stage_link_rx.sv' '<ROOT>/rtl/ot_stage_link_endpoint.sv' '<ROOT>/rtl/ot_route_mask.sv' '<ROOT>/rtl/via_mask_rom.sv' '<ROOT>/rtl/ot_numeric_dot.sv' '<ROOT>/rtl/ot_tile.sv' '<ROOT>/rtl/test/tb_coverage_units.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_units/iverilog/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 180,
+          "unexpected_warnings": [],
+          "warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_reduction_tree.sv:87: warning: @* is sensitive to all 2 words in array 'group_valid'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_reduction_tree.sv:87: warning: @* is sensitive to all 2 words in array 'group_tag'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_reduction_tree.sv:94: warning: @* is sensitive to all 2 words in array 'group_valid'."
+          ]
+        },
+        "image": "rtl/build/coverage_campaign/coverage_units/iverilog/tb_coverage_units.vvp",
+        "image_sha256": "397eb9bab374e903330cea09bf5e193970b42c8011d69652358706464709c01d",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 29,
+          "passed_ids": [
+            "COV-UNIT-CRC16-SINGLE",
+            "COV-UNIT-CRC16-MULTIBEAT",
+            "COV-UNIT-CRC32C-SINGLE",
+            "COV-UNIT-CRC32C-MULTIBEAT",
+            "COV-UNIT-FORMAT-INT-EXHAUSTIVE",
+            "COV-UNIT-FORMAT-MXFP4-EXHAUSTIVE",
+            "COV-UNIT-FORMAT-FP8-EXHAUSTIVE",
+            "COV-UNIT-FORMAT-BF16-EXHAUSTIVE",
+            "COV-UNIT-FORMAT-RESERVED",
+            "COV-UNIT-REDUCTION-RANDOM",
+            "COV-UNIT-REDUCTION-OOO-STALL",
+            "COV-UNIT-REDUCTION-NO-DUPLICATE",
+            "COV-UNIT-REDUCTION-DUPLICATE-POISON",
+            "COV-UNIT-REDUCTION-ILLEGAL-SOURCE",
+            "COV-UNIT-STATIC-SWITCH-LEGAL",
+            "COV-UNIT-STATIC-SWITCH-ILLEGAL-IDLE",
+            "COV-UNIT-STATIC-SWITCH-WRAP",
+            "COV-UNIT-LINK-ENDPOINT-MULTIFLIT",
+            "COV-UNIT-LINK-ENDPOINT-RANDOM",
+            "COV-FSM-LINK-TX-IDLE",
+            "COV-FSM-LINK-TX-COLLECT",
+            "COV-FSM-LINK-TX-SEND",
+            "COV-FSM-LINK-TX-WAIT-ACK",
+            "COV-FSM-LINK-TX-ABORT",
+            "COV-FSM-LINK-RX-IDLE",
+            "COV-FSM-LINK-RX-COLLECT",
+            "COV-FSM-LINK-RX-DELIVER",
+            "COV-UNIT-TILE-RANDOM-BACKPRESSURE",
+            "COV-UNIT-TILE-POISON-BOUNDARY"
+          ],
+          "planned_count": 29,
+          "required_marker": "PASS: coverage units seed=0x4356554e",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/vvp -n '<ROOT>/rtl/build/coverage_campaign/coverage_units/iverilog/tb_coverage_units.vvp'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_units/iverilog/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "3c70272744c05cab9708c9c4471602e7c0f13b984cb471f16cb80d3e1f4e2a03",
+        "status": "pass"
+      },
+      "name": "coverage_units",
+      "planned_bins": [
+        "COV-UNIT-CRC16-SINGLE",
+        "COV-UNIT-CRC16-MULTIBEAT",
+        "COV-UNIT-CRC32C-SINGLE",
+        "COV-UNIT-CRC32C-MULTIBEAT",
+        "COV-UNIT-FORMAT-INT-EXHAUSTIVE",
+        "COV-UNIT-FORMAT-MXFP4-EXHAUSTIVE",
+        "COV-UNIT-FORMAT-FP8-EXHAUSTIVE",
+        "COV-UNIT-FORMAT-BF16-EXHAUSTIVE",
+        "COV-UNIT-FORMAT-RESERVED",
+        "COV-UNIT-REDUCTION-RANDOM",
+        "COV-UNIT-REDUCTION-OOO-STALL",
+        "COV-UNIT-REDUCTION-NO-DUPLICATE",
+        "COV-UNIT-REDUCTION-DUPLICATE-POISON",
+        "COV-UNIT-REDUCTION-ILLEGAL-SOURCE",
+        "COV-UNIT-STATIC-SWITCH-LEGAL",
+        "COV-UNIT-STATIC-SWITCH-ILLEGAL-IDLE",
+        "COV-UNIT-STATIC-SWITCH-WRAP",
+        "COV-UNIT-LINK-ENDPOINT-MULTIFLIT",
+        "COV-UNIT-LINK-ENDPOINT-RANDOM",
+        "COV-FSM-LINK-TX-IDLE",
+        "COV-FSM-LINK-TX-COLLECT",
+        "COV-FSM-LINK-TX-SEND",
+        "COV-FSM-LINK-TX-WAIT-ACK",
+        "COV-FSM-LINK-TX-ABORT",
+        "COV-FSM-LINK-RX-IDLE",
+        "COV-FSM-LINK-RX-COLLECT",
+        "COV-FSM-LINK-RX-DELIVER",
+        "COV-UNIT-TILE-RANDOM-BACKPRESSURE",
+        "COV-UNIT-TILE-POISON-BOUNDARY"
+      ],
+      "requirements": [
+        "DV-NUM-001",
+        "DV-NUM-002",
+        "DV-NOC-001",
+        "DV-LINK-001",
+        "DV-TILE-001",
+        "DV-TILE-002",
+        "DV-TILE-003",
+        "DV-TILE-004",
+        "DV-RAS-001"
+      ],
+      "seed_hex": "4356554e",
+      "semantic_outputs_match": true,
+      "source_sha256": {
+        "rtl/lib/ot_crc16_ccitt.sv": "bc70fe269d5736df24a90e738a41ceb6dd833e161b7f7121161090cf43071f3c",
+        "rtl/lib/ot_crc32c.sv": "8cd8dda8419a9268c91ea4fbf0ef76d09e8a18362912728bdf7889b4ac487d09",
+        "rtl/ot_format_decode.sv": "e225c7d15151bee4e61725c41326f24504e385f1bf6fdd05bdc265f404d2cc98",
+        "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c",
+        "rtl/ot_reduction_tree.sv": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5",
+        "rtl/ot_route_mask.sv": "4bdf835a9c072bc8d1f13b7de50370ae3b7e1c928f8bb9d6a55a70c64950db0a",
+        "rtl/ot_stage_link_endpoint.sv": "a6c7540911fde5b4a8e542883077973e254b0f13b570b47f0e83d37e3ac21d50",
+        "rtl/ot_stage_link_rx.sv": "5e50965d50807c8956f7e814656dafff4fca76f9a5bedbb1bc50b7165daec36a",
+        "rtl/ot_stage_link_tx.sv": "fe26c3b031dfc5eeda5073e22ce81f9dd6b2838a3be0b7c0b56c5352d7a12c90",
+        "rtl/ot_tile.sv": "92f0248dc5f46e94011be658202eb0c7497d28a90cb4906414d0b449829f9f9f",
+        "rtl/static_timeslot_switch.sv": "04f1de6146d694bce80c7fea65e43d73d0a2cb11b7e37f43cbf3e1bab4d574fe",
+        "rtl/test/tb_coverage_units.sv": "43d8c81aa2705a6bca6fc149323c769d3bfa5a997bc0c967a326960c637adaec",
+        "rtl/via_mask_rom.sv": "203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141"
+      },
+      "status": "pass",
+      "top": "tb_coverage_units",
+      "verilator": {
+        "compile": {
+          "command": "'<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator' --binary --timing --coverage -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_coverage_units --Mdir '<ROOT>/rtl/build/coverage_campaign/coverage_units/verilator' '<ROOT>/rtl/lib/ot_crc16_ccitt.sv' '<ROOT>/rtl/lib/ot_crc32c.sv' '<ROOT>/rtl/ot_format_decode.sv' '<ROOT>/rtl/ot_reduction_tree.sv' '<ROOT>/rtl/static_timeslot_switch.sv' '<ROOT>/rtl/ot_stage_link_tx.sv' '<ROOT>/rtl/ot_stage_link_rx.sv' '<ROOT>/rtl/ot_stage_link_endpoint.sv' '<ROOT>/rtl/ot_route_mask.sv' '<ROOT>/rtl/via_mask_rom.sv' '<ROOT>/rtl/ot_numeric_dot.sv' '<ROOT>/rtl/ot_tile.sv' '<ROOT>/rtl/test/tb_coverage_units.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_units/verilator/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 900,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "coverage_data": "rtl/build/coverage_campaign/coverage_units/verilator/coverage.dat",
+        "coverage_data_sha256": "abc40ef0e27406b1963baf37b580425dc25d2ddc2b66b12ed564e880362d4946",
+        "executable": "rtl/build/coverage_campaign/coverage_units/verilator/Vtb_coverage_units",
+        "executable_sha256": "a32d6b03bc719425f0035cc643b7e41280809fcea7ce3cfb8463612d93203bfc",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 29,
+          "passed_ids": [
+            "COV-UNIT-CRC16-SINGLE",
+            "COV-UNIT-CRC16-MULTIBEAT",
+            "COV-UNIT-CRC32C-SINGLE",
+            "COV-UNIT-CRC32C-MULTIBEAT",
+            "COV-UNIT-FORMAT-INT-EXHAUSTIVE",
+            "COV-UNIT-FORMAT-MXFP4-EXHAUSTIVE",
+            "COV-UNIT-FORMAT-FP8-EXHAUSTIVE",
+            "COV-UNIT-FORMAT-BF16-EXHAUSTIVE",
+            "COV-UNIT-FORMAT-RESERVED",
+            "COV-UNIT-REDUCTION-RANDOM",
+            "COV-UNIT-REDUCTION-OOO-STALL",
+            "COV-UNIT-REDUCTION-NO-DUPLICATE",
+            "COV-UNIT-REDUCTION-DUPLICATE-POISON",
+            "COV-UNIT-REDUCTION-ILLEGAL-SOURCE",
+            "COV-UNIT-STATIC-SWITCH-LEGAL",
+            "COV-UNIT-STATIC-SWITCH-ILLEGAL-IDLE",
+            "COV-UNIT-STATIC-SWITCH-WRAP",
+            "COV-UNIT-LINK-ENDPOINT-MULTIFLIT",
+            "COV-UNIT-LINK-ENDPOINT-RANDOM",
+            "COV-FSM-LINK-TX-IDLE",
+            "COV-FSM-LINK-TX-COLLECT",
+            "COV-FSM-LINK-TX-SEND",
+            "COV-FSM-LINK-TX-WAIT-ACK",
+            "COV-FSM-LINK-TX-ABORT",
+            "COV-FSM-LINK-RX-IDLE",
+            "COV-FSM-LINK-RX-COLLECT",
+            "COV-FSM-LINK-RX-DELIVER",
+            "COV-UNIT-TILE-RANDOM-BACKPRESSURE",
+            "COV-UNIT-TILE-POISON-BOUNDARY"
+          ],
+          "planned_count": 29,
+          "required_marker": "PASS: coverage units seed=0x4356554e",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "command": "'<ROOT>/rtl/build/coverage_campaign/coverage_units/verilator/Vtb_coverage_units'",
+          "cwd": "<ROOT>/rtl/build/coverage_campaign/coverage_units/verilator",
+          "log": "rtl/build/coverage_campaign/coverage_units/verilator/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "3c70272744c05cab9708c9c4471602e7c0f13b984cb471f16cb80d3e1f4e2a03",
+        "status": "pass",
+        "warning_suppressions": [
+          "PROCASSINIT",
+          "UNUSEDSIGNAL",
+          "PINCONNECTEMPTY"
+        ]
+      }
+    },
+    {
+      "bench": "rtl/test/tb_coverage_control.sv",
+      "iverilog": {
+        "compile": {
+          "allowed_warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_session_table.sv:66: warning: @* is sensitive to all 4 words in array 'entry_session'."
+          ],
+          "command": "/usr/bin/iverilog -g2012 -Wall -s tb_coverage_control -o '<ROOT>/rtl/build/coverage_campaign/coverage_control/iverilog/tb_coverage_control.vvp' '<ROOT>/rtl/ot_cmd_frontend.sv' '<ROOT>/rtl/ot_csr_block.sv' '<ROOT>/rtl/ot_session_table.sv' '<ROOT>/rtl/test/tb_coverage_control.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_control/iverilog/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 180,
+          "unexpected_warnings": [],
+          "warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_session_table.sv:66: warning: @* is sensitive to all 4 words in array 'entry_session'."
+          ]
+        },
+        "image": "rtl/build/coverage_campaign/coverage_control/iverilog/tb_coverage_control.vvp",
+        "image_sha256": "4f94aa6153c3ceb1636bd8c6accc9e624e729baa57a6a7b5e622db8184a5574e",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 15,
+          "passed_ids": [
+            "COV-CTRL-CMD-BAD-CRC",
+            "COV-CTRL-CMD-BAD-VERSION",
+            "COV-CTRL-CMD-BAD-OPCODE",
+            "COV-CTRL-CMD-BAD-FIELD",
+            "COV-CTRL-CMD-IMAGE-REJECT",
+            "COV-CTRL-CMD-EPOCH-SCHEDULE",
+            "COV-CTRL-CMD-STATE-REJECT",
+            "COV-CTRL-CMD-LEGAL-WRAP",
+            "COV-CTRL-CSR-READ-MAP",
+            "COV-CTRL-CSR-WRITE-WINDOWS",
+            "COV-CTRL-SESSION-MISS-ILLEGAL",
+            "COV-CTRL-SESSION-BUSY-POISON-FORCE",
+            "COV-CTRL-SESSION-GENERATION-WRAP",
+            "COV-CTRL-SESSION-ALL-ENTRY-DATA",
+            "COV-CTRL-SESSION-CAPACITY"
+          ],
+          "planned_count": 15,
+          "required_marker": "PASS: coverage control seed=0x43564354",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/vvp -n '<ROOT>/rtl/build/coverage_campaign/coverage_control/iverilog/tb_coverage_control.vvp'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_control/iverilog/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "75c2eaa9d1ba076486d3a2f0938948057059b1001bc75b4a3c5db8f2f2ce5729",
+        "status": "pass"
+      },
+      "name": "coverage_control",
+      "planned_bins": [
+        "COV-CTRL-CMD-BAD-CRC",
+        "COV-CTRL-CMD-BAD-VERSION",
+        "COV-CTRL-CMD-BAD-OPCODE",
+        "COV-CTRL-CMD-BAD-FIELD",
+        "COV-CTRL-CMD-IMAGE-REJECT",
+        "COV-CTRL-CMD-EPOCH-SCHEDULE",
+        "COV-CTRL-CMD-STATE-REJECT",
+        "COV-CTRL-CMD-LEGAL-WRAP",
+        "COV-CTRL-CSR-READ-MAP",
+        "COV-CTRL-CSR-WRITE-WINDOWS",
+        "COV-CTRL-SESSION-MISS-ILLEGAL",
+        "COV-CTRL-SESSION-BUSY-POISON-FORCE",
+        "COV-CTRL-SESSION-GENERATION-WRAP",
+        "COV-CTRL-SESSION-ALL-ENTRY-DATA",
+        "COV-CTRL-SESSION-CAPACITY"
+      ],
+      "requirements": [
+        "DV-CMD-001",
+        "DV-CMD-002",
+        "DV-SESSION-001",
+        "DV-FW-001",
+        "DV-RAS-001"
+      ],
+      "seed_hex": "43564354",
+      "semantic_outputs_match": true,
+      "source_sha256": {
+        "rtl/ot_cmd_frontend.sv": "7bab8bfc6e769a6c9ffd80817cab25fb24e31c642fb4210f2ad1f30bca58aaad",
+        "rtl/ot_csr_block.sv": "107553401553638187b4d609f2b8739ca96624af93f11b832f5ebed1f5ba83a9",
+        "rtl/ot_session_table.sv": "f21be6574e78e5e2204bdcea9494458615ac6863c0b2e08c0760d502c245361f",
+        "rtl/test/tb_coverage_control.sv": "214b0f53b27ad253438844f5b44f81e1c0302550dbefab29182426143a55ab57"
+      },
+      "status": "pass",
+      "top": "tb_coverage_control",
+      "verilator": {
+        "compile": {
+          "command": "'<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator' --binary --timing --coverage -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_coverage_control --Mdir '<ROOT>/rtl/build/coverage_campaign/coverage_control/verilator' '<ROOT>/rtl/ot_cmd_frontend.sv' '<ROOT>/rtl/ot_csr_block.sv' '<ROOT>/rtl/ot_session_table.sv' '<ROOT>/rtl/test/tb_coverage_control.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_control/verilator/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 900,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "coverage_data": "rtl/build/coverage_campaign/coverage_control/verilator/coverage.dat",
+        "coverage_data_sha256": "bd1f503410da063d26031cb44194494fb059f4d816e04b64f7ed86c3b8e3d353",
+        "executable": "rtl/build/coverage_campaign/coverage_control/verilator/Vtb_coverage_control",
+        "executable_sha256": "d7679971c2280d32a05b92f704bd527a36dd56d377debca1e1765da427134ee2",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 15,
+          "passed_ids": [
+            "COV-CTRL-CMD-BAD-CRC",
+            "COV-CTRL-CMD-BAD-VERSION",
+            "COV-CTRL-CMD-BAD-OPCODE",
+            "COV-CTRL-CMD-BAD-FIELD",
+            "COV-CTRL-CMD-IMAGE-REJECT",
+            "COV-CTRL-CMD-EPOCH-SCHEDULE",
+            "COV-CTRL-CMD-STATE-REJECT",
+            "COV-CTRL-CMD-LEGAL-WRAP",
+            "COV-CTRL-CSR-READ-MAP",
+            "COV-CTRL-CSR-WRITE-WINDOWS",
+            "COV-CTRL-SESSION-MISS-ILLEGAL",
+            "COV-CTRL-SESSION-BUSY-POISON-FORCE",
+            "COV-CTRL-SESSION-GENERATION-WRAP",
+            "COV-CTRL-SESSION-ALL-ENTRY-DATA",
+            "COV-CTRL-SESSION-CAPACITY"
+          ],
+          "planned_count": 15,
+          "required_marker": "PASS: coverage control seed=0x43564354",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "command": "'<ROOT>/rtl/build/coverage_campaign/coverage_control/verilator/Vtb_coverage_control'",
+          "cwd": "<ROOT>/rtl/build/coverage_campaign/coverage_control/verilator",
+          "log": "rtl/build/coverage_campaign/coverage_control/verilator/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "75c2eaa9d1ba076486d3a2f0938948057059b1001bc75b4a3c5db8f2f2ce5729",
+        "status": "pass",
+        "warning_suppressions": [
+          "PROCASSINIT",
+          "UNUSEDSIGNAL",
+          "PINCONNECTEMPTY"
+        ]
+      }
+    },
+    {
+      "bench": "rtl/test/tb_coverage_stage_controller.sv",
+      "iverilog": {
+        "compile": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/iverilog -g2012 -Wall -s tb_coverage_stage_controller -o '<ROOT>/rtl/build/coverage_campaign/coverage_stage_controller/iverilog/tb_coverage_stage_controller.vvp' '<ROOT>/rtl/ot_stage_controller.sv' '<ROOT>/rtl/test/tb_coverage_stage_controller.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_stage_controller/iverilog/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 180,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "image": "rtl/build/coverage_campaign/coverage_stage_controller/iverilog/tb_coverage_stage_controller.vvp",
+        "image_sha256": "8bdf2d0862256a4b5762dd9c1484425078e6afdd5ca3a7ae6234325c5502db87",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 19,
+          "passed_ids": [
+            "COV-STAGECTRL-NOOP-ILLEGAL",
+            "COV-STAGECTRL-LAYER-BOUNDS",
+            "COV-STAGECTRL-CONFIG-RELEASE",
+            "COV-STAGECTRL-SESSION-REJECTS",
+            "COV-STAGECTRL-NO-CREDIT",
+            "COV-STAGECTRL-SERVICE-COMMIT",
+            "COV-STAGECTRL-COMMIT-FAIL",
+            "COV-STAGECTRL-SERVICE-ERROR",
+            "COV-STAGECTRL-WATCHDOG-DRAIN",
+            "COV-STAGECTRL-ABORT-FORCE",
+            "COV-FSM-STAGE-IDLE",
+            "COV-FSM-STAGE-SESSION",
+            "COV-FSM-STAGE-RESERVE",
+            "COV-FSM-STAGE-START",
+            "COV-FSM-STAGE-EXEC",
+            "COV-FSM-STAGE-COMMIT",
+            "COV-FSM-STAGE-RELEASE",
+            "COV-FSM-STAGE-COMPLETE",
+            "COV-FSM-STAGE-ABORT"
+          ],
+          "planned_count": 19,
+          "required_marker": "PASS: coverage stage controller seed=0x5354434f",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/vvp -n '<ROOT>/rtl/build/coverage_campaign/coverage_stage_controller/iverilog/tb_coverage_stage_controller.vvp'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_stage_controller/iverilog/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "24848c427b9a952cd74fac79e63ae6c74f05aa3cc8b1122c33274015d4b1afee",
+        "status": "pass"
+      },
+      "name": "coverage_stage_controller",
+      "planned_bins": [
+        "COV-STAGECTRL-NOOP-ILLEGAL",
+        "COV-STAGECTRL-LAYER-BOUNDS",
+        "COV-STAGECTRL-CONFIG-RELEASE",
+        "COV-STAGECTRL-SESSION-REJECTS",
+        "COV-STAGECTRL-NO-CREDIT",
+        "COV-STAGECTRL-SERVICE-COMMIT",
+        "COV-STAGECTRL-COMMIT-FAIL",
+        "COV-STAGECTRL-SERVICE-ERROR",
+        "COV-STAGECTRL-WATCHDOG-DRAIN",
+        "COV-STAGECTRL-ABORT-FORCE",
+        "COV-FSM-STAGE-IDLE",
+        "COV-FSM-STAGE-SESSION",
+        "COV-FSM-STAGE-RESERVE",
+        "COV-FSM-STAGE-START",
+        "COV-FSM-STAGE-EXEC",
+        "COV-FSM-STAGE-COMMIT",
+        "COV-FSM-STAGE-RELEASE",
+        "COV-FSM-STAGE-COMPLETE",
+        "COV-FSM-STAGE-ABORT"
+      ],
+      "requirements": [
+        "DV-CMD-002",
+        "DV-SESSION-001",
+        "DV-STAGE-001",
+        "DV-RAS-001",
+        "DV-POWER-001"
+      ],
+      "seed_hex": "5354434f",
+      "semantic_outputs_match": true,
+      "source_sha256": {
+        "rtl/ot_stage_controller.sv": "04f23234bb07f79a86d9d71efabcb0acb7d9e033192515b9029e0c9f161856f4",
+        "rtl/test/tb_coverage_stage_controller.sv": "b85609c2c8d5563c188ca1a26db70a51279c6102ca0c438a9f90a3552bcee07d"
+      },
+      "status": "pass",
+      "top": "tb_coverage_stage_controller",
+      "verilator": {
+        "compile": {
+          "command": "'<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator' --binary --timing --coverage -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL --top-module tb_coverage_stage_controller --Mdir '<ROOT>/rtl/build/coverage_campaign/coverage_stage_controller/verilator' '<ROOT>/rtl/ot_stage_controller.sv' '<ROOT>/rtl/test/tb_coverage_stage_controller.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_stage_controller/verilator/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 900,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "coverage_data": "rtl/build/coverage_campaign/coverage_stage_controller/verilator/coverage.dat",
+        "coverage_data_sha256": "90d17b0e1d5ee0a1e5dd07d10125efece538be2ecb2b86621b2d8a95027d3926",
+        "executable": "rtl/build/coverage_campaign/coverage_stage_controller/verilator/Vtb_coverage_stage_controller",
+        "executable_sha256": "a51f1bd25a20e34d1a87dd913a968b32645c36a9b6e2d85a073d2786a4dd73fd",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 19,
+          "passed_ids": [
+            "COV-STAGECTRL-NOOP-ILLEGAL",
+            "COV-STAGECTRL-LAYER-BOUNDS",
+            "COV-STAGECTRL-CONFIG-RELEASE",
+            "COV-STAGECTRL-SESSION-REJECTS",
+            "COV-STAGECTRL-NO-CREDIT",
+            "COV-STAGECTRL-SERVICE-COMMIT",
+            "COV-STAGECTRL-COMMIT-FAIL",
+            "COV-STAGECTRL-SERVICE-ERROR",
+            "COV-STAGECTRL-WATCHDOG-DRAIN",
+            "COV-STAGECTRL-ABORT-FORCE",
+            "COV-FSM-STAGE-IDLE",
+            "COV-FSM-STAGE-SESSION",
+            "COV-FSM-STAGE-RESERVE",
+            "COV-FSM-STAGE-START",
+            "COV-FSM-STAGE-EXEC",
+            "COV-FSM-STAGE-COMMIT",
+            "COV-FSM-STAGE-RELEASE",
+            "COV-FSM-STAGE-COMPLETE",
+            "COV-FSM-STAGE-ABORT"
+          ],
+          "planned_count": 19,
+          "required_marker": "PASS: coverage stage controller seed=0x5354434f",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "command": "'<ROOT>/rtl/build/coverage_campaign/coverage_stage_controller/verilator/Vtb_coverage_stage_controller'",
+          "cwd": "<ROOT>/rtl/build/coverage_campaign/coverage_stage_controller/verilator",
+          "log": "rtl/build/coverage_campaign/coverage_stage_controller/verilator/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "24848c427b9a952cd74fac79e63ae6c74f05aa3cc8b1122c33274015d4b1afee",
+        "status": "pass",
+        "warning_suppressions": [
+          "PROCASSINIT",
+          "UNUSEDSIGNAL"
+        ]
+      }
+    },
+    {
+      "bench": "rtl/test/tb_coverage_data_boundary.sv",
+      "iverilog": {
+        "compile": {
+          "allowed_warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:103: warning: @* is sensitive to all 8 words in array 'active'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:105: warning: @* is sensitive to all 8 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:105: warning: @* is sensitive to all 8 words in array 'expected_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:107: warning: @* is sensitive to all 8 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:107: warning: @* is sensitive to all 8 words in array 'expected_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:109: warning: @* is sensitive to all 8 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:109: warning: @* is sensitive to all 8 words in array 'expected_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_rom_wrapper.sv:88: warning: @* is sensitive to all 12 words in array 'mem'."
+          ],
+          "command": "/usr/bin/iverilog -g2012 -Wall -s tb_coverage_data_boundary -o '<ROOT>/rtl/build/coverage_campaign/coverage_data_boundary/iverilog/tb_coverage_data_boundary.vvp' '<ROOT>/rtl/ot_hbm_frontend.sv' '<ROOT>/rtl/ot_rom_wrapper.sv' '<ROOT>/rtl/ot_bist_controller.sv' '<ROOT>/rtl/ot_dft_controller.sv' '<ROOT>/rtl/expert_mask_controller.sv' '<ROOT>/rtl/via_mask_rom.sv' '<ROOT>/rtl/rom_mac_tile.sv' '<ROOT>/rtl/opentallas_tile.sv' '<ROOT>/rtl/test/tb_coverage_data_boundary.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_data_boundary/iverilog/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 180,
+          "unexpected_warnings": [],
+          "warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:103: warning: @* is sensitive to all 8 words in array 'active'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:105: warning: @* is sensitive to all 8 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:105: warning: @* is sensitive to all 8 words in array 'expected_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:107: warning: @* is sensitive to all 8 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:107: warning: @* is sensitive to all 8 words in array 'expected_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:109: warning: @* is sensitive to all 8 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:109: warning: @* is sensitive to all 8 words in array 'expected_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_rom_wrapper.sv:88: warning: @* is sensitive to all 12 words in array 'mem'."
+          ]
+        },
+        "image": "rtl/build/coverage_campaign/coverage_data_boundary/iverilog/tb_coverage_data_boundary.vvp",
+        "image_sha256": "001bacfe27a04af33507f2deb9c0c8c0a182631310907591e777a80e68de5290",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 15,
+          "passed_ids": [
+            "COV-DATA-HBM-LEGAL-RANDOM",
+            "COV-DATA-HBM-INTERLEAVE",
+            "COV-DATA-HBM-ERRORS",
+            "COV-DATA-ROM-RANDOM-REPAIR",
+            "COV-DATA-ROM-ECC",
+            "COV-DATA-BIST-FULL",
+            "COV-DATA-BIST-FAIL-ABORT-TIMEOUT",
+            "COV-FSM-BIST-IDLE",
+            "COV-FSM-BIST-RUN",
+            "COV-FSM-BIST-DONE",
+            "COV-DATA-DFT-OWNERSHIP",
+            "COV-FSM-DFT-FUNC",
+            "COV-FSM-DFT-ARM",
+            "COV-FSM-DFT-TEST",
+            "COV-DATA-LEGACY-RANDOM"
+          ],
+          "planned_count": 15,
+          "required_marker": "PASS: coverage data boundary seed=0x44415441",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/vvp -n '<ROOT>/rtl/build/coverage_campaign/coverage_data_boundary/iverilog/tb_coverage_data_boundary.vvp'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_data_boundary/iverilog/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "635ca64976a1f30aa93156265b6188a52909094218049de35984637877ebd8e3",
+        "status": "pass"
+      },
+      "name": "coverage_data_boundary",
+      "planned_bins": [
+        "COV-DATA-HBM-LEGAL-RANDOM",
+        "COV-DATA-HBM-INTERLEAVE",
+        "COV-DATA-HBM-ERRORS",
+        "COV-DATA-ROM-RANDOM-REPAIR",
+        "COV-DATA-ROM-ECC",
+        "COV-DATA-BIST-FULL",
+        "COV-DATA-BIST-FAIL-ABORT-TIMEOUT",
+        "COV-FSM-BIST-IDLE",
+        "COV-FSM-BIST-RUN",
+        "COV-FSM-BIST-DONE",
+        "COV-DATA-DFT-OWNERSHIP",
+        "COV-FSM-DFT-FUNC",
+        "COV-FSM-DFT-ARM",
+        "COV-FSM-DFT-TEST",
+        "COV-DATA-LEGACY-RANDOM"
+      ],
+      "requirements": [
+        "DV-HBM-001",
+        "DV-TILE-001",
+        "DV-TILE-002",
+        "DV-TILE-003",
+        "DV-REPAIR-001",
+        "DV-RAS-001",
+        "DV-DFT-001"
+      ],
+      "seed_hex": "44415441",
+      "semantic_outputs_match": true,
+      "source_sha256": {
+        "rtl/expert_mask_controller.sv": "a565b4506035093960577415ed9d2b26224a9e49650c4fe7e78b070d7b2b4a57",
+        "rtl/opentallas_tile.sv": "4980d62d193e1ea44353967b2eace8423d0024562d7f5e40e0d1eec24d6d3bb2",
+        "rtl/ot_bist_controller.sv": "3fa9513a494171c7f5971c41d7cf292a022e97e87fa90a6e3437e8b7d1627b9f",
+        "rtl/ot_dft_controller.sv": "338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225",
+        "rtl/ot_hbm_frontend.sv": "47b8f1def0c75d5cfaf1716f18f07f1f1a9ea4adcfcef214fc483996fd227287",
+        "rtl/ot_rom_wrapper.sv": "dae5ba91f70ea61f3351eb407728e84862b050bfaf936a397534ccc154d7b126",
+        "rtl/rom_mac_tile.sv": "841d5e9ab4c8278c1e7fc7f3f598c5e962041df3d94aa9e0ffb82c6d4f3e5e00",
+        "rtl/test/tb_coverage_data_boundary.sv": "d73f8b98357c0af7d29949955e096ddd257d61f859ddd8035a967e62c1e1ec62",
+        "rtl/via_mask_rom.sv": "203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141"
+      },
+      "status": "pass",
+      "top": "tb_coverage_data_boundary",
+      "verilator": {
+        "compile": {
+          "command": "'<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator' --binary --timing --coverage -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_coverage_data_boundary --Mdir '<ROOT>/rtl/build/coverage_campaign/coverage_data_boundary/verilator' '<ROOT>/rtl/ot_hbm_frontend.sv' '<ROOT>/rtl/ot_rom_wrapper.sv' '<ROOT>/rtl/ot_bist_controller.sv' '<ROOT>/rtl/ot_dft_controller.sv' '<ROOT>/rtl/expert_mask_controller.sv' '<ROOT>/rtl/via_mask_rom.sv' '<ROOT>/rtl/rom_mac_tile.sv' '<ROOT>/rtl/opentallas_tile.sv' '<ROOT>/rtl/test/tb_coverage_data_boundary.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_data_boundary/verilator/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 900,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "coverage_data": "rtl/build/coverage_campaign/coverage_data_boundary/verilator/coverage.dat",
+        "coverage_data_sha256": "bae501e40a27aadc57a34850477707cb4799806e7866f0345ac87262f0a681ac",
+        "executable": "rtl/build/coverage_campaign/coverage_data_boundary/verilator/Vtb_coverage_data_boundary",
+        "executable_sha256": "69c184dfd90cf93cf27421b6e1f8c62690ea220b7faa3a7a237e487d9ee01db6",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 15,
+          "passed_ids": [
+            "COV-DATA-HBM-LEGAL-RANDOM",
+            "COV-DATA-HBM-INTERLEAVE",
+            "COV-DATA-HBM-ERRORS",
+            "COV-DATA-ROM-RANDOM-REPAIR",
+            "COV-DATA-ROM-ECC",
+            "COV-DATA-BIST-FULL",
+            "COV-DATA-BIST-FAIL-ABORT-TIMEOUT",
+            "COV-FSM-BIST-IDLE",
+            "COV-FSM-BIST-RUN",
+            "COV-FSM-BIST-DONE",
+            "COV-DATA-DFT-OWNERSHIP",
+            "COV-FSM-DFT-FUNC",
+            "COV-FSM-DFT-ARM",
+            "COV-FSM-DFT-TEST",
+            "COV-DATA-LEGACY-RANDOM"
+          ],
+          "planned_count": 15,
+          "required_marker": "PASS: coverage data boundary seed=0x44415441",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "command": "'<ROOT>/rtl/build/coverage_campaign/coverage_data_boundary/verilator/Vtb_coverage_data_boundary'",
+          "cwd": "<ROOT>/rtl/build/coverage_campaign/coverage_data_boundary/verilator",
+          "log": "rtl/build/coverage_campaign/coverage_data_boundary/verilator/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "635ca64976a1f30aa93156265b6188a52909094218049de35984637877ebd8e3",
+        "status": "pass",
+        "warning_suppressions": [
+          "PROCASSINIT",
+          "UNUSEDSIGNAL",
+          "PINCONNECTEMPTY"
+        ]
+      }
+    },
+    {
+      "bench": "rtl/test/tb_coverage_stage_random.sv",
+      "iverilog": {
+        "compile": {
+          "allowed_warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_session_table.sv:66: warning: @* is sensitive to all 4 words in array 'entry_session'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_credit_manager.sv:41: warning: @* is sensitive to all 2 words in array 'free'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_credit_manager.sv:60: warning: @* is sensitive to all 2 words in array 'free'."
+          ],
+          "command": "/usr/bin/iverilog -g2012 -Wall -s tb_coverage_stage_random -o '<ROOT>/rtl/build/coverage_campaign/coverage_stage_random/iverilog/tb_coverage_stage_random.vvp' '<ROOT>/rtl/lib/ot_reset_sync.sv' '<ROOT>/rtl/lib/ot_skid_buffer.sv' '<ROOT>/rtl/lib/ot_async_fifo.sv' '<ROOT>/rtl/lib/ot_crc_pkg.sv' '<ROOT>/rtl/lib/ot_crc16_ccitt.sv' '<ROOT>/rtl/lib/ot_crc32c.sv' '<ROOT>/rtl/lib/ot_cdc_mailbox.sv' '<ROOT>/rtl/lib/ot_sync_level.sv' '<ROOT>/rtl/via_mask_rom.sv' '<ROOT>/rtl/ot_route_mask.sv' '<ROOT>/rtl/ot_rom_wrapper.sv' '<ROOT>/rtl/ot_format_decode.sv' '<ROOT>/rtl/ot_numeric_dot.sv' '<ROOT>/rtl/ot_reduction_tree.sv' '<ROOT>/rtl/ot_schedule_controller.sv' '<ROOT>/rtl/ot_credit_manager.sv' '<ROOT>/rtl/ot_session_table.sv' '<ROOT>/rtl/ot_cmd_frontend.sv' '<ROOT>/rtl/ot_hbm_frontend.sv' '<ROOT>/rtl/ot_stage_link_tx.sv' '<ROOT>/rtl/ot_stage_link_rx.sv' '<ROOT>/rtl/ot_stage_link_endpoint.sv' '<ROOT>/rtl/ot_ras_controller.sv' '<ROOT>/rtl/ot_power_reset_controller.sv' '<ROOT>/rtl/ot_csr_block.sv' '<ROOT>/rtl/ot_stage_controller.sv' '<ROOT>/rtl/ot_bist_controller.sv' '<ROOT>/rtl/ot_dft_controller.sv' '<ROOT>/rtl/ot_stage_top.sv' '<ROOT>/rtl/ot_tile.sv' '<ROOT>/rtl/lib/ot_sync_bits.sv' '<ROOT>/rtl/test/tb_coverage_stage_random.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_stage_random/iverilog/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 180,
+          "unexpected_warnings": [],
+          "warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_session_table.sv:66: warning: @* is sensitive to all 4 words in array 'entry_session'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_credit_manager.sv:41: warning: @* is sensitive to all 2 words in array 'free'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_credit_manager.sv:60: warning: @* is sensitive to all 2 words in array 'free'."
+          ]
+        },
+        "image": "rtl/build/coverage_campaign/coverage_stage_random/iverilog/tb_coverage_stage_random.vvp",
+        "image_sha256": "96e453cd9c8c715168f1370280d77d823f30425d65843d3a2f5572fa86c7ccab",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 11,
+          "passed_ids": [
+            "COV-STAGE-CSR-WINDOWS",
+            "COV-STAGE-DIRECTED-SERVICE",
+            "COV-STAGE-RANDOM-BACKPRESSURE",
+            "COV-STAGE-POWER-FAULT-STATES",
+            "COV-STAGE-ASYNC-RESET-RECOVERY",
+            "COV-STAGE-RANDOM-RESPONSES",
+            "COV-FSM-POWER-STANDBY",
+            "COV-FSM-POWER-IDLE",
+            "COV-FSM-POWER-ACTIVE",
+            "COV-FSM-POWER-THROTTLED",
+            "COV-FSM-POWER-SAFE"
+          ],
+          "planned_count": 11,
+          "required_marker": "PASS: stage random seed=0x53544752 cycles=8192",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/vvp -n '<ROOT>/rtl/build/coverage_campaign/coverage_stage_random/iverilog/tb_coverage_stage_random.vvp'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_stage_random/iverilog/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "26945525d5f44b5b8facad0627bb445ebb0ee5f74a8c03bb225769d85d3eb7f5",
+        "status": "pass"
+      },
+      "name": "coverage_stage_random",
+      "planned_bins": [
+        "COV-STAGE-CSR-WINDOWS",
+        "COV-STAGE-DIRECTED-SERVICE",
+        "COV-STAGE-RANDOM-BACKPRESSURE",
+        "COV-STAGE-POWER-FAULT-STATES",
+        "COV-STAGE-ASYNC-RESET-RECOVERY",
+        "COV-STAGE-RANDOM-RESPONSES",
+        "COV-FSM-POWER-STANDBY",
+        "COV-FSM-POWER-IDLE",
+        "COV-FSM-POWER-ACTIVE",
+        "COV-FSM-POWER-THROTTLED",
+        "COV-FSM-POWER-SAFE"
+      ],
+      "requirements": [
+        "DV-CMD-001",
+        "DV-CMD-002",
+        "DV-SESSION-001",
+        "DV-STAGE-001",
+        "DV-NOC-002",
+        "DV-RESET-001",
+        "DV-POWER-001",
+        "DV-RAS-001",
+        "DV-FW-001"
+      ],
+      "seed_hex": "53544752",
+      "semantic_outputs_match": true,
+      "source_sha256": {
+        "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+        "rtl/lib/ot_cdc_mailbox.sv": "f3fecaea6089477d6349144d76406e5dbd90740e127067301c352c3ebdbe2e76",
+        "rtl/lib/ot_crc16_ccitt.sv": "bc70fe269d5736df24a90e738a41ceb6dd833e161b7f7121161090cf43071f3c",
+        "rtl/lib/ot_crc32c.sv": "8cd8dda8419a9268c91ea4fbf0ef76d09e8a18362912728bdf7889b4ac487d09",
+        "rtl/lib/ot_crc_pkg.sv": "49b31710d955827b5beabc9fd63930f1d53c566f925985f16715835ae1ff7d3b",
+        "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+        "rtl/lib/ot_skid_buffer.sv": "4837dc61b4a89a53e68b05f16b46e1717e79f4817bf5b812afba0dc3cd32008a",
+        "rtl/lib/ot_sync_bits.sv": "66f4c78a2fda107046c08c66acd17ed390ee8b884b6e27090db0ecfeae5d2b9f",
+        "rtl/lib/ot_sync_level.sv": "e474cac6feeb0402ac7a4794cfc7e73508b5ef0254c991204b8946b92cd08fd6",
+        "rtl/ot_bist_controller.sv": "3fa9513a494171c7f5971c41d7cf292a022e97e87fa90a6e3437e8b7d1627b9f",
+        "rtl/ot_cmd_frontend.sv": "7bab8bfc6e769a6c9ffd80817cab25fb24e31c642fb4210f2ad1f30bca58aaad",
+        "rtl/ot_credit_manager.sv": "4d61c6121b85f599fecd891ac5b4faf234df55e065e17eb28f619968e8720449",
+        "rtl/ot_csr_block.sv": "107553401553638187b4d609f2b8739ca96624af93f11b832f5ebed1f5ba83a9",
+        "rtl/ot_dft_controller.sv": "338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225",
+        "rtl/ot_format_decode.sv": "e225c7d15151bee4e61725c41326f24504e385f1bf6fdd05bdc265f404d2cc98",
+        "rtl/ot_hbm_frontend.sv": "47b8f1def0c75d5cfaf1716f18f07f1f1a9ea4adcfcef214fc483996fd227287",
+        "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c",
+        "rtl/ot_power_reset_controller.sv": "1c7b187ad1ada1797d66776383270b2017b2625607594eba7013b8ac53627594",
+        "rtl/ot_ras_controller.sv": "388d796e7b3f134728d06366982c67bd65ccf1afef96c0a011b253c53fc6f588",
+        "rtl/ot_reduction_tree.sv": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5",
+        "rtl/ot_rom_wrapper.sv": "dae5ba91f70ea61f3351eb407728e84862b050bfaf936a397534ccc154d7b126",
+        "rtl/ot_route_mask.sv": "4bdf835a9c072bc8d1f13b7de50370ae3b7e1c928f8bb9d6a55a70c64950db0a",
+        "rtl/ot_schedule_controller.sv": "07301550750eeaedceb8116ba9b97bd95fe0c17e84b536020bd0470e3029d826",
+        "rtl/ot_session_table.sv": "f21be6574e78e5e2204bdcea9494458615ac6863c0b2e08c0760d502c245361f",
+        "rtl/ot_stage_controller.sv": "04f23234bb07f79a86d9d71efabcb0acb7d9e033192515b9029e0c9f161856f4",
+        "rtl/ot_stage_link_endpoint.sv": "a6c7540911fde5b4a8e542883077973e254b0f13b570b47f0e83d37e3ac21d50",
+        "rtl/ot_stage_link_rx.sv": "5e50965d50807c8956f7e814656dafff4fca76f9a5bedbb1bc50b7165daec36a",
+        "rtl/ot_stage_link_tx.sv": "fe26c3b031dfc5eeda5073e22ce81f9dd6b2838a3be0b7c0b56c5352d7a12c90",
+        "rtl/ot_stage_top.sv": "c9e0619c962d1e024bebb9a61a3a78d31566d1cc514bf40ca3b3d5bd130088ec",
+        "rtl/ot_tile.sv": "92f0248dc5f46e94011be658202eb0c7497d28a90cb4906414d0b449829f9f9f",
+        "rtl/test/tb_coverage_stage_random.sv": "c1de7e21f2b82b5d9fea4ed15649e831d6ad58ae7fa4e2e599e757475fa28f1a",
+        "rtl/via_mask_rom.sv": "203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141"
+      },
+      "status": "pass",
+      "top": "tb_coverage_stage_random",
+      "verilator": {
+        "compile": {
+          "command": "'<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator' --binary --timing --coverage -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY -Wno-SYNCASYNCNET --top-module tb_coverage_stage_random --Mdir '<ROOT>/rtl/build/coverage_campaign/coverage_stage_random/verilator' '<ROOT>/rtl/lib/ot_reset_sync.sv' '<ROOT>/rtl/lib/ot_skid_buffer.sv' '<ROOT>/rtl/lib/ot_async_fifo.sv' '<ROOT>/rtl/lib/ot_crc_pkg.sv' '<ROOT>/rtl/lib/ot_crc16_ccitt.sv' '<ROOT>/rtl/lib/ot_crc32c.sv' '<ROOT>/rtl/lib/ot_cdc_mailbox.sv' '<ROOT>/rtl/lib/ot_sync_level.sv' '<ROOT>/rtl/via_mask_rom.sv' '<ROOT>/rtl/ot_route_mask.sv' '<ROOT>/rtl/ot_rom_wrapper.sv' '<ROOT>/rtl/ot_format_decode.sv' '<ROOT>/rtl/ot_numeric_dot.sv' '<ROOT>/rtl/ot_reduction_tree.sv' '<ROOT>/rtl/ot_schedule_controller.sv' '<ROOT>/rtl/ot_credit_manager.sv' '<ROOT>/rtl/ot_session_table.sv' '<ROOT>/rtl/ot_cmd_frontend.sv' '<ROOT>/rtl/ot_hbm_frontend.sv' '<ROOT>/rtl/ot_stage_link_tx.sv' '<ROOT>/rtl/ot_stage_link_rx.sv' '<ROOT>/rtl/ot_stage_link_endpoint.sv' '<ROOT>/rtl/ot_ras_controller.sv' '<ROOT>/rtl/ot_power_reset_controller.sv' '<ROOT>/rtl/ot_csr_block.sv' '<ROOT>/rtl/ot_stage_controller.sv' '<ROOT>/rtl/ot_bist_controller.sv' '<ROOT>/rtl/ot_dft_controller.sv' '<ROOT>/rtl/ot_stage_top.sv' '<ROOT>/rtl/ot_tile.sv' '<ROOT>/rtl/lib/ot_sync_bits.sv' '<ROOT>/rtl/test/tb_coverage_stage_random.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/coverage_stage_random/verilator/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 900,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "coverage_data": "rtl/build/coverage_campaign/coverage_stage_random/verilator/coverage.dat",
+        "coverage_data_sha256": "bb946da99e5d8d58c66fb35efd213ba4e9ba3472e7702477221789a1606de78d",
+        "executable": "rtl/build/coverage_campaign/coverage_stage_random/verilator/Vtb_coverage_stage_random",
+        "executable_sha256": "5cfbe8cdfd72046e8465264a4b52c0ac75233567a16399ea888b41c283980415",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 11,
+          "passed_ids": [
+            "COV-STAGE-CSR-WINDOWS",
+            "COV-STAGE-DIRECTED-SERVICE",
+            "COV-STAGE-RANDOM-BACKPRESSURE",
+            "COV-STAGE-POWER-FAULT-STATES",
+            "COV-STAGE-ASYNC-RESET-RECOVERY",
+            "COV-STAGE-RANDOM-RESPONSES",
+            "COV-FSM-POWER-STANDBY",
+            "COV-FSM-POWER-IDLE",
+            "COV-FSM-POWER-ACTIVE",
+            "COV-FSM-POWER-THROTTLED",
+            "COV-FSM-POWER-SAFE"
+          ],
+          "planned_count": 11,
+          "required_marker": "PASS: stage random seed=0x53544752 cycles=8192",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "command": "'<ROOT>/rtl/build/coverage_campaign/coverage_stage_random/verilator/Vtb_coverage_stage_random'",
+          "cwd": "<ROOT>/rtl/build/coverage_campaign/coverage_stage_random/verilator",
+          "log": "rtl/build/coverage_campaign/coverage_stage_random/verilator/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "26945525d5f44b5b8facad0627bb445ebb0ee5f74a8c03bb225769d85d3eb7f5",
+        "status": "pass",
+        "warning_suppressions": [
+          "PROCASSINIT",
+          "UNUSEDSIGNAL",
+          "PINCONNECTEMPTY",
+          "SYNCASYNCNET"
+        ]
+      }
+    },
+    {
+      "bench": "rtl/test/tb_fault_data.sv",
+      "iverilog": {
+        "compile": {
+          "allowed_warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_rom_wrapper.sv:88: warning: @* is sensitive to all 3 words in array 'mem'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:103: warning: @* is sensitive to all 3 words in array 'active'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:105: warning: @* is sensitive to all 3 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:105: warning: @* is sensitive to all 3 words in array 'expected_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:107: warning: @* is sensitive to all 3 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:107: warning: @* is sensitive to all 3 words in array 'expected_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:109: warning: @* is sensitive to all 3 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:109: warning: @* is sensitive to all 3 words in array 'expected_beats'."
+          ],
+          "command": "/usr/bin/iverilog -g2012 -Wall -s tb_fault_data -o '<ROOT>/rtl/build/coverage_campaign/fault_data_supplement/iverilog/tb_fault_data.vvp' '<ROOT>/rtl/ot_route_mask.sv' '<ROOT>/rtl/ot_rom_wrapper.sv' '<ROOT>/rtl/ot_hbm_frontend.sv' '<ROOT>/rtl/test/tb_fault_data.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_data_supplement/iverilog/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 180,
+          "unexpected_warnings": [],
+          "warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_rom_wrapper.sv:88: warning: @* is sensitive to all 3 words in array 'mem'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:103: warning: @* is sensitive to all 3 words in array 'active'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:105: warning: @* is sensitive to all 3 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:105: warning: @* is sensitive to all 3 words in array 'expected_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:107: warning: @* is sensitive to all 3 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:107: warning: @* is sensitive to all 3 words in array 'expected_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:109: warning: @* is sensitive to all 3 words in array 'received_beats'.",
+            "/home/ubuntu/OpenTallas/rtl/ot_hbm_frontend.sv:109: warning: @* is sensitive to all 3 words in array 'expected_beats'."
+          ]
+        },
+        "image": "rtl/build/coverage_campaign/fault_data_supplement/iverilog/tb_fault_data.vvp",
+        "image_sha256": "763fb7c69df91e9457fbcdd6c6123c6f60609ff7a6e54f1b4321298c88392675",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 0,
+          "passed_ids": [],
+          "planned_count": 0,
+          "required_marker": "PASS: directed route ROM and HBM fault sites",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/vvp -n '<ROOT>/rtl/build/coverage_campaign/fault_data_supplement/iverilog/tb_fault_data.vvp'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_data_supplement/iverilog/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "0d2527ccaf5f4edb912c487c4d9d2cea0f1d5faa48aa83e18f03be36b7055d17",
+        "status": "pass"
+      },
+      "name": "fault_data_supplement",
+      "planned_bins": [],
+      "requirements": [
+        "DV-HBM-001",
+        "DV-NOC-001",
+        "DV-REPAIR-001",
+        "DV-RAS-001"
+      ],
+      "seed_hex": "46444154",
+      "semantic_outputs_match": true,
+      "source_sha256": {
+        "rtl/ot_hbm_frontend.sv": "47b8f1def0c75d5cfaf1716f18f07f1f1a9ea4adcfcef214fc483996fd227287",
+        "rtl/ot_rom_wrapper.sv": "dae5ba91f70ea61f3351eb407728e84862b050bfaf936a397534ccc154d7b126",
+        "rtl/ot_route_mask.sv": "4bdf835a9c072bc8d1f13b7de50370ae3b7e1c928f8bb9d6a55a70c64950db0a",
+        "rtl/test/tb_fault_data.sv": "8eb8a4eea57d445d0b6b58d1c04d31d48a540b84244f1c0e460610b3b14bbdba"
+      },
+      "status": "pass",
+      "top": "tb_fault_data",
+      "verilator": {
+        "compile": {
+          "command": "'<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator' --binary --timing --coverage -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_fault_data --Mdir '<ROOT>/rtl/build/coverage_campaign/fault_data_supplement/verilator' '<ROOT>/rtl/ot_route_mask.sv' '<ROOT>/rtl/ot_rom_wrapper.sv' '<ROOT>/rtl/ot_hbm_frontend.sv' '<ROOT>/rtl/test/tb_fault_data.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_data_supplement/verilator/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 900,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "coverage_data": "rtl/build/coverage_campaign/fault_data_supplement/verilator/coverage.dat",
+        "coverage_data_sha256": "1b754147076d0bf1e70aea8315a536414c0457c01d0e7708c831e96dc13804fa",
+        "executable": "rtl/build/coverage_campaign/fault_data_supplement/verilator/Vtb_fault_data",
+        "executable_sha256": "39737c7032395c2a23bbc22bd4420a1f9392f70b659179214c37c9c7ea76e16e",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 0,
+          "passed_ids": [],
+          "planned_count": 0,
+          "required_marker": "PASS: directed route ROM and HBM fault sites",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "command": "'<ROOT>/rtl/build/coverage_campaign/fault_data_supplement/verilator/Vtb_fault_data'",
+          "cwd": "<ROOT>/rtl/build/coverage_campaign/fault_data_supplement/verilator",
+          "log": "rtl/build/coverage_campaign/fault_data_supplement/verilator/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "0d2527ccaf5f4edb912c487c4d9d2cea0f1d5faa48aa83e18f03be36b7055d17",
+        "status": "pass",
+        "warning_suppressions": [
+          "PROCASSINIT",
+          "UNUSEDSIGNAL",
+          "PINCONNECTEMPTY"
+        ]
+      }
+    },
+    {
+      "bench": "rtl/test/tb_fault_link.sv",
+      "iverilog": {
+        "compile": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/iverilog -g2012 -Wall -s tb_fault_link -o '<ROOT>/rtl/build/coverage_campaign/fault_link_supplement/iverilog/tb_fault_link.vvp' '<ROOT>/rtl/ot_stage_link_rx.sv' '<ROOT>/rtl/ot_stage_link_tx.sv' '<ROOT>/rtl/test/tb_fault_link.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_link_supplement/iverilog/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 180,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "image": "rtl/build/coverage_campaign/fault_link_supplement/iverilog/tb_fault_link.vvp",
+        "image_sha256": "76e6c646594e0969d7aed14a3d70bcfc148d6dd269036260518af68ff11945fd",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 0,
+          "passed_ids": [],
+          "planned_count": 0,
+          "required_marker": "PASS: directed stage-link fault sites",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/vvp -n '<ROOT>/rtl/build/coverage_campaign/fault_link_supplement/iverilog/tb_fault_link.vvp'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_link_supplement/iverilog/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "77840021c8f7176867c5cef78a9260a89bec48321413ff7195195302ae074af5",
+        "status": "pass"
+      },
+      "name": "fault_link_supplement",
+      "planned_bins": [],
+      "requirements": [
+        "DV-LINK-001",
+        "DV-NOC-002",
+        "DV-RAS-001"
+      ],
+      "seed_hex": "464c4e4b",
+      "semantic_outputs_match": true,
+      "source_sha256": {
+        "rtl/ot_stage_link_rx.sv": "5e50965d50807c8956f7e814656dafff4fca76f9a5bedbb1bc50b7165daec36a",
+        "rtl/ot_stage_link_tx.sv": "fe26c3b031dfc5eeda5073e22ce81f9dd6b2838a3be0b7c0b56c5352d7a12c90",
+        "rtl/test/tb_fault_link.sv": "b3c767a3a93de59026ab3b27ab8dbf149eec6b2726d3ac2dcb39445cabc22827"
+      },
+      "status": "pass",
+      "top": "tb_fault_link",
+      "verilator": {
+        "compile": {
+          "command": "'<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator' --binary --timing --coverage -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_fault_link --Mdir '<ROOT>/rtl/build/coverage_campaign/fault_link_supplement/verilator' '<ROOT>/rtl/ot_stage_link_rx.sv' '<ROOT>/rtl/ot_stage_link_tx.sv' '<ROOT>/rtl/test/tb_fault_link.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_link_supplement/verilator/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 900,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "coverage_data": "rtl/build/coverage_campaign/fault_link_supplement/verilator/coverage.dat",
+        "coverage_data_sha256": "596ae45eaf39aa020aabfed678b7dc82167078a6228d1bef24fb086aa4335d68",
+        "executable": "rtl/build/coverage_campaign/fault_link_supplement/verilator/Vtb_fault_link",
+        "executable_sha256": "596eedeb4168db2bd0d31e934c5165637e92b0e5dddb4bc69e9a81bb3b5cd161",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 0,
+          "passed_ids": [],
+          "planned_count": 0,
+          "required_marker": "PASS: directed stage-link fault sites",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "command": "'<ROOT>/rtl/build/coverage_campaign/fault_link_supplement/verilator/Vtb_fault_link'",
+          "cwd": "<ROOT>/rtl/build/coverage_campaign/fault_link_supplement/verilator",
+          "log": "rtl/build/coverage_campaign/fault_link_supplement/verilator/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "77840021c8f7176867c5cef78a9260a89bec48321413ff7195195302ae074af5",
+        "status": "pass",
+        "warning_suppressions": [
+          "PROCASSINIT",
+          "UNUSEDSIGNAL",
+          "PINCONNECTEMPTY"
+        ]
+      }
+    },
+    {
+      "bench": "rtl/test/tb_fault_ras_dft.sv",
+      "iverilog": {
+        "compile": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/iverilog -g2012 -Wall -s tb_fault_ras_dft -o '<ROOT>/rtl/build/coverage_campaign/fault_ras_dft_supplement/iverilog/tb_fault_ras_dft.vvp' '<ROOT>/rtl/ot_ras_controller.sv' '<ROOT>/rtl/ot_bist_controller.sv' '<ROOT>/rtl/ot_dft_controller.sv' '<ROOT>/rtl/test/tb_fault_ras_dft.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_ras_dft_supplement/iverilog/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 180,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "image": "rtl/build/coverage_campaign/fault_ras_dft_supplement/iverilog/tb_fault_ras_dft.vvp",
+        "image_sha256": "c2ea50821761c591923fc406c2487e6aac1c809a5f0761eb142cbe225a3fa30d",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 0,
+          "passed_ids": [],
+          "planned_count": 0,
+          "required_marker": "PASS: directed RAS BIST and DFT fault sites",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/vvp -n '<ROOT>/rtl/build/coverage_campaign/fault_ras_dft_supplement/iverilog/tb_fault_ras_dft.vvp'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_ras_dft_supplement/iverilog/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "bbbbcbed367e0c7b80056f1ccd735395d7e523b25f6499b018230ed91d21f3f4",
+        "status": "pass"
+      },
+      "name": "fault_ras_dft_supplement",
+      "planned_bins": [],
+      "requirements": [
+        "DV-RAS-001",
+        "DV-DFT-001"
+      ],
+      "seed_hex": "46524153",
+      "semantic_outputs_match": true,
+      "source_sha256": {
+        "rtl/ot_bist_controller.sv": "3fa9513a494171c7f5971c41d7cf292a022e97e87fa90a6e3437e8b7d1627b9f",
+        "rtl/ot_dft_controller.sv": "338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225",
+        "rtl/ot_ras_controller.sv": "388d796e7b3f134728d06366982c67bd65ccf1afef96c0a011b253c53fc6f588",
+        "rtl/test/tb_fault_ras_dft.sv": "926ad9aaecfea4db3d7baf5b0c43ad96b9cf997311e049b12f40dea4e339a049"
+      },
+      "status": "pass",
+      "top": "tb_fault_ras_dft",
+      "verilator": {
+        "compile": {
+          "command": "'<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator' --binary --timing --coverage -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_fault_ras_dft --Mdir '<ROOT>/rtl/build/coverage_campaign/fault_ras_dft_supplement/verilator' '<ROOT>/rtl/ot_ras_controller.sv' '<ROOT>/rtl/ot_bist_controller.sv' '<ROOT>/rtl/ot_dft_controller.sv' '<ROOT>/rtl/test/tb_fault_ras_dft.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_ras_dft_supplement/verilator/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 900,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "coverage_data": "rtl/build/coverage_campaign/fault_ras_dft_supplement/verilator/coverage.dat",
+        "coverage_data_sha256": "47b6ab9c07cf6c9bb801274c21250a2304a319ff603f759c9381af2eaf6416da",
+        "executable": "rtl/build/coverage_campaign/fault_ras_dft_supplement/verilator/Vtb_fault_ras_dft",
+        "executable_sha256": "29e8606453234edbd6a042e402341a8e234cab51a70a16536380c8a24e15a835",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 0,
+          "passed_ids": [],
+          "planned_count": 0,
+          "required_marker": "PASS: directed RAS BIST and DFT fault sites",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "command": "'<ROOT>/rtl/build/coverage_campaign/fault_ras_dft_supplement/verilator/Vtb_fault_ras_dft'",
+          "cwd": "<ROOT>/rtl/build/coverage_campaign/fault_ras_dft_supplement/verilator",
+          "log": "rtl/build/coverage_campaign/fault_ras_dft_supplement/verilator/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "bbbbcbed367e0c7b80056f1ccd735395d7e523b25f6499b018230ed91d21f3f4",
+        "status": "pass",
+        "warning_suppressions": [
+          "PROCASSINIT",
+          "UNUSEDSIGNAL",
+          "PINCONNECTEMPTY"
+        ]
+      }
+    },
+    {
+      "bench": "rtl/test/tb_fault_control.sv",
+      "iverilog": {
+        "compile": {
+          "allowed_warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_session_table.sv:66: warning: @* is sensitive to all 2 words in array 'entry_session'."
+          ],
+          "command": "/usr/bin/iverilog -g2012 -Wall -s tb_fault_control -o '<ROOT>/rtl/build/coverage_campaign/fault_control_supplement/iverilog/tb_fault_control.vvp' '<ROOT>/rtl/ot_power_reset_controller.sv' '<ROOT>/rtl/ot_schedule_controller.sv' '<ROOT>/rtl/ot_session_table.sv' '<ROOT>/rtl/ot_stage_controller.sv' '<ROOT>/rtl/test/tb_fault_control.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_control_supplement/iverilog/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 180,
+          "unexpected_warnings": [],
+          "warnings": [
+            "/home/ubuntu/OpenTallas/rtl/ot_session_table.sv:66: warning: @* is sensitive to all 2 words in array 'entry_session'."
+          ]
+        },
+        "image": "rtl/build/coverage_campaign/fault_control_supplement/iverilog/tb_fault_control.vvp",
+        "image_sha256": "27f66e2e873e68c1eeaab26f7995707e38a9ec465df857fdb67ddb5574d7152b",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 0,
+          "passed_ids": [],
+          "planned_count": 0,
+          "required_marker": "PASS: directed control-plane fault sites",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "allowed_warnings": [],
+          "command": "/usr/bin/vvp -n '<ROOT>/rtl/build/coverage_campaign/fault_control_supplement/iverilog/tb_fault_control.vvp'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_control_supplement/iverilog/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "2319e821bb44fbf96776168150470d78bee0f350394eed8bb74502106f73b660",
+        "status": "pass"
+      },
+      "name": "fault_control_supplement",
+      "planned_bins": [],
+      "requirements": [
+        "DV-SESSION-001",
+        "DV-STAGE-001",
+        "DV-POWER-001",
+        "DV-FW-001"
+      ],
+      "seed_hex": "4643544c",
+      "semantic_outputs_match": true,
+      "source_sha256": {
+        "rtl/ot_power_reset_controller.sv": "1c7b187ad1ada1797d66776383270b2017b2625607594eba7013b8ac53627594",
+        "rtl/ot_schedule_controller.sv": "07301550750eeaedceb8116ba9b97bd95fe0c17e84b536020bd0470e3029d826",
+        "rtl/ot_session_table.sv": "f21be6574e78e5e2204bdcea9494458615ac6863c0b2e08c0760d502c245361f",
+        "rtl/ot_stage_controller.sv": "04f23234bb07f79a86d9d71efabcb0acb7d9e033192515b9029e0c9f161856f4",
+        "rtl/test/tb_fault_control.sv": "fbf7a5509ffa47ae81c2c1555c56d85c0a854caab88d82fd765c6116098091f6"
+      },
+      "status": "pass",
+      "top": "tb_fault_control",
+      "verilator": {
+        "compile": {
+          "command": "'<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator' --binary --timing --coverage -Wall -Wno-PROCASSINIT -Wno-UNUSEDSIGNAL -Wno-PINCONNECTEMPTY --top-module tb_fault_control --Mdir '<ROOT>/rtl/build/coverage_campaign/fault_control_supplement/verilator' '<ROOT>/rtl/ot_power_reset_controller.sv' '<ROOT>/rtl/ot_schedule_controller.sv' '<ROOT>/rtl/ot_session_table.sv' '<ROOT>/rtl/ot_stage_controller.sv' '<ROOT>/rtl/test/tb_fault_control.sv'",
+          "cwd": "<ROOT>",
+          "log": "rtl/build/coverage_campaign/fault_control_supplement/verilator/compile.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 900,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "coverage_data": "rtl/build/coverage_campaign/fault_control_supplement/verilator/coverage.dat",
+        "coverage_data_sha256": "88a87bfb381ea5354f83eede3149a79943682fd0f1cb519a41237f9fb0e1a02f",
+        "executable": "rtl/build/coverage_campaign/fault_control_supplement/verilator/Vtb_fault_control",
+        "executable_sha256": "5f21d1df484a6529104e90f6f09b55ca729158b35a34d00cd4605bb4f61a624e",
+        "observations": {
+          "duplicate_ids": [],
+          "failed_ids": [],
+          "fatal_text": [],
+          "missing_ids": [],
+          "passed_count": 0,
+          "passed_ids": [],
+          "planned_count": 0,
+          "required_marker": "PASS: directed control-plane fault sites",
+          "required_marker_seen": true,
+          "unexpected_ids": []
+        },
+        "run": {
+          "command": "'<ROOT>/rtl/build/coverage_campaign/fault_control_supplement/verilator/Vtb_fault_control'",
+          "cwd": "<ROOT>/rtl/build/coverage_campaign/fault_control_supplement/verilator",
+          "log": "rtl/build/coverage_campaign/fault_control_supplement/verilator/run.log",
+          "returncode": 0,
+          "timed_out": false,
+          "timeout_seconds": 240,
+          "unexpected_warnings": [],
+          "warnings": []
+        },
+        "semantic_output_sha256": "2319e821bb44fbf96776168150470d78bee0f350394eed8bb74502106f73b660",
+        "status": "pass",
+        "warning_suppressions": [
+          "PROCASSINIT",
+          "UNUSEDSIGNAL",
+          "PINCONNECTEMPTY"
+        ]
+      }
+    }
+  ],
+  "coverage": {
+    "deduplication_key": [
+      "file",
+      "line",
+      "column",
+      "point_class",
+      "point_type",
+      "description",
+      "source_span"
+    ],
+    "native_format": "Verilator SystemC::Coverage-3",
+    "per_file_post_exclusions": {
+      "rtl/expert_mask_controller.sv": {
+        "branch": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "line": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "toggle": {
+          "hit": 24,
+          "percent": 100.0,
+          "total": 24
+        }
+      },
+      "rtl/lib/ot_async_fifo.sv": {
+        "branch": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 8,
+          "percent": 100.0,
+          "total": 8
+        },
+        "toggle": {
+          "hit": 1171,
+          "percent": 98.238,
+          "total": 1192
+        }
+      },
+      "rtl/lib/ot_cdc_mailbox.sv": {
+        "branch": {
+          "hit": 12,
+          "percent": 100.0,
+          "total": 12
+        },
+        "line": {
+          "hit": 6,
+          "percent": 100.0,
+          "total": 6
+        },
+        "toggle": {
+          "hit": 330,
+          "percent": 100.0,
+          "total": 330
+        }
+      },
+      "rtl/lib/ot_crc16_ccitt.sv": {
+        "branch": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "toggle": {
+          "hit": 237,
+          "percent": 99.58,
+          "total": 238
+        }
+      },
+      "rtl/lib/ot_crc32c.sv": {
+        "branch": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "toggle": {
+          "hit": 397,
+          "percent": 99.749,
+          "total": 398
+        }
+      },
+      "rtl/lib/ot_reset_sync.sv": {
+        "branch": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "line": {
+          "hit": 3,
+          "percent": 100.0,
+          "total": 3
+        },
+        "toggle": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        }
+      },
+      "rtl/lib/ot_sync_bits.sv": {
+        "branch": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "line": {
+          "hit": 1,
+          "percent": 100.0,
+          "total": 1
+        },
+        "toggle": {
+          "hit": 12,
+          "percent": 100.0,
+          "total": 12
+        }
+      },
+      "rtl/lib/ot_sync_level.sv": {
+        "branch": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "line": {
+          "hit": 6,
+          "percent": 100.0,
+          "total": 6
+        },
+        "toggle": {
+          "hit": 18,
+          "percent": 100.0,
+          "total": 18
+        }
+      },
+      "rtl/opentallas_tile.sv": {
+        "branch": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "line": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "toggle": {
+          "hit": 474,
+          "percent": 98.34,
+          "total": 482
+        }
+      },
+      "rtl/ot_bist_controller.sv": {
+        "branch": {
+          "hit": 9,
+          "percent": 90.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 7,
+          "percent": 87.5,
+          "total": 8
+        },
+        "toggle": {
+          "hit": 280,
+          "percent": 76.923,
+          "total": 364
+        }
+      },
+      "rtl/ot_cmd_frontend.sv": {
+        "branch": {
+          "hit": 26,
+          "percent": 100.0,
+          "total": 26
+        },
+        "line": {
+          "hit": 23,
+          "percent": 100.0,
+          "total": 23
+        },
+        "toggle": {
+          "hit": 2751,
+          "percent": 91.093,
+          "total": 3020
+        }
+      },
+      "rtl/ot_credit_manager.sv": {
+        "branch": {
+          "hit": 11,
+          "percent": 78.571,
+          "total": 14
+        },
+        "line": {
+          "hit": 9,
+          "percent": 100.0,
+          "total": 9
+        },
+        "toggle": {
+          "hit": 60,
+          "percent": 78.947,
+          "total": 76
+        }
+      },
+      "rtl/ot_csr_block.sv": {
+        "branch": {
+          "hit": 23,
+          "percent": 95.833,
+          "total": 24
+        },
+        "line": {
+          "hit": 32,
+          "percent": 100.0,
+          "total": 32
+        },
+        "toggle": {
+          "hit": 3520,
+          "percent": 95.548,
+          "total": 3684
+        }
+      },
+      "rtl/ot_dft_controller.sv": {
+        "branch": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 4,
+          "percent": 80.0,
+          "total": 5
+        },
+        "toggle": {
+          "hit": 61,
+          "percent": 61.0,
+          "total": 100
+        }
+      },
+      "rtl/ot_format_decode.sv": {
+        "branch": {
+          "hit": 16,
+          "percent": 100.0,
+          "total": 16
+        },
+        "line": {
+          "hit": 17,
+          "percent": 100.0,
+          "total": 17
+        },
+        "toggle": {
+          "hit": 187,
+          "percent": 82.743,
+          "total": 226
+        }
+      },
+      "rtl/ot_hbm_frontend.sv": {
+        "branch": {
+          "hit": 22,
+          "percent": 100.0,
+          "total": 22
+        },
+        "line": {
+          "hit": 13,
+          "percent": 100.0,
+          "total": 13
+        },
+        "toggle": {
+          "hit": 1598,
+          "percent": 78.719,
+          "total": 2030
+        }
+      },
+      "rtl/ot_numeric_dot.sv": {
+        "branch": {
+          "hit": 9,
+          "percent": 90.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 7,
+          "percent": 77.778,
+          "total": 9
+        },
+        "toggle": {
+          "hit": 331,
+          "percent": 79.952,
+          "total": 414
+        }
+      },
+      "rtl/ot_power_reset_controller.sv": {
+        "branch": {
+          "hit": 23,
+          "percent": 88.462,
+          "total": 26
+        },
+        "line": {
+          "hit": 14,
+          "percent": 87.5,
+          "total": 16
+        },
+        "toggle": {
+          "hit": 71,
+          "percent": 82.558,
+          "total": 86
+        }
+      },
+      "rtl/ot_ras_controller.sv": {
+        "branch": {
+          "hit": 39,
+          "percent": 92.857,
+          "total": 42
+        },
+        "line": {
+          "hit": 13,
+          "percent": 100.0,
+          "total": 13
+        },
+        "toggle": {
+          "hit": 1275,
+          "percent": 87.81,
+          "total": 1452
+        }
+      },
+      "rtl/ot_reduction_tree.sv": {
+        "branch": {
+          "hit": 29,
+          "percent": 96.667,
+          "total": 30
+        },
+        "line": {
+          "hit": 12,
+          "percent": 92.308,
+          "total": 13
+        },
+        "toggle": {
+          "hit": 546,
+          "percent": 97.153,
+          "total": 562
+        }
+      },
+      "rtl/ot_rom_wrapper.sv": {
+        "branch": {
+          "hit": 30,
+          "percent": 93.75,
+          "total": 32
+        },
+        "line": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        },
+        "toggle": {
+          "hit": 1019,
+          "percent": 80.49,
+          "total": 1266
+        }
+      },
+      "rtl/ot_route_mask.sv": {
+        "branch": {
+          "hit": 24,
+          "percent": 100.0,
+          "total": 24
+        },
+        "line": {
+          "hit": 16,
+          "percent": 100.0,
+          "total": 16
+        },
+        "toggle": {
+          "hit": 762,
+          "percent": 76.815,
+          "total": 992
+        }
+      },
+      "rtl/ot_schedule_controller.sv": {
+        "branch": {
+          "hit": 22,
+          "percent": 100.0,
+          "total": 22
+        },
+        "line": {
+          "hit": 7,
+          "percent": 100.0,
+          "total": 7
+        },
+        "toggle": {
+          "hit": 384,
+          "percent": 86.486,
+          "total": 444
+        }
+      },
+      "rtl/ot_session_table.sv": {
+        "branch": {
+          "hit": 23,
+          "percent": 95.833,
+          "total": 24
+        },
+        "line": {
+          "hit": 28,
+          "percent": 96.552,
+          "total": 29
+        },
+        "toggle": {
+          "hit": 1108,
+          "percent": 93.739,
+          "total": 1182
+        }
+      },
+      "rtl/ot_stage_controller.sv": {
+        "branch": {
+          "hit": 48,
+          "percent": 88.889,
+          "total": 54
+        },
+        "line": {
+          "hit": 26,
+          "percent": 96.296,
+          "total": 27
+        },
+        "toggle": {
+          "hit": 1873,
+          "percent": 96.15,
+          "total": 1948
+        }
+      },
+      "rtl/ot_stage_link_endpoint.sv": {
+        "branch": {
+          "hit": 0,
+          "percent": null,
+          "total": 0
+        },
+        "line": {
+          "hit": 0,
+          "percent": null,
+          "total": 0
+        },
+        "toggle": {
+          "hit": 628,
+          "percent": 94.578,
+          "total": 664
+        }
+      },
+      "rtl/ot_stage_link_rx.sv": {
+        "branch": {
+          "hit": 30,
+          "percent": 100.0,
+          "total": 30
+        },
+        "line": {
+          "hit": 11,
+          "percent": 100.0,
+          "total": 11
+        },
+        "toggle": {
+          "hit": 891,
+          "percent": 98.128,
+          "total": 908
+        }
+      },
+      "rtl/ot_stage_link_tx.sv": {
+        "branch": {
+          "hit": 27,
+          "percent": 90.0,
+          "total": 30
+        },
+        "line": {
+          "hit": 22,
+          "percent": 88.0,
+          "total": 25
+        },
+        "toggle": {
+          "hit": 701,
+          "percent": 91.039,
+          "total": 770
+        }
+      },
+      "rtl/ot_stage_top.sv": {
+        "branch": {
+          "hit": 28,
+          "percent": 93.333,
+          "total": 30
+        },
+        "line": {
+          "hit": 11,
+          "percent": 100.0,
+          "total": 11
+        },
+        "toggle": {
+          "hit": 5560,
+          "percent": 69.797,
+          "total": 7966
+        }
+      },
+      "rtl/ot_tile.sv": {
+        "branch": {
+          "hit": 11,
+          "percent": 91.667,
+          "total": 12
+        },
+        "line": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "toggle": {
+          "hit": 1047,
+          "percent": 91.043,
+          "total": 1150
+        }
+      },
+      "rtl/rom_mac_tile.sv": {
+        "branch": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "line": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "toggle": {
+          "hit": 478,
+          "percent": 97.951,
+          "total": 488
+        }
+      },
+      "rtl/static_timeslot_switch.sv": {
+        "branch": {
+          "hit": 7,
+          "percent": 87.5,
+          "total": 8
+        },
+        "line": {
+          "hit": 3,
+          "percent": 100.0,
+          "total": 3
+        },
+        "toggle": {
+          "hit": 224,
+          "percent": 84.848,
+          "total": 264
+        }
+      },
+      "rtl/via_mask_rom.sv": {
+        "branch": {
+          "hit": 7,
+          "percent": 87.5,
+          "total": 8
+        },
+        "line": {
+          "hit": 3,
+          "percent": 100.0,
+          "total": 3
+        },
+        "toggle": {
+          "hit": 340,
+          "percent": 63.91,
+          "total": 532
+        }
+      }
+    },
+    "per_file_raw": {
+      "rtl/expert_mask_controller.sv": {
+        "branch": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "line": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "toggle": {
+          "hit": 24,
+          "percent": 100.0,
+          "total": 24
+        }
+      },
+      "rtl/lib/ot_async_fifo.sv": {
+        "branch": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 8,
+          "percent": 100.0,
+          "total": 8
+        },
+        "toggle": {
+          "hit": 1171,
+          "percent": 98.238,
+          "total": 1192
+        }
+      },
+      "rtl/lib/ot_cdc_mailbox.sv": {
+        "branch": {
+          "hit": 12,
+          "percent": 100.0,
+          "total": 12
+        },
+        "line": {
+          "hit": 6,
+          "percent": 100.0,
+          "total": 6
+        },
+        "toggle": {
+          "hit": 330,
+          "percent": 100.0,
+          "total": 330
+        }
+      },
+      "rtl/lib/ot_crc16_ccitt.sv": {
+        "branch": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "toggle": {
+          "hit": 237,
+          "percent": 99.58,
+          "total": 238
+        }
+      },
+      "rtl/lib/ot_crc32c.sv": {
+        "branch": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "toggle": {
+          "hit": 397,
+          "percent": 99.749,
+          "total": 398
+        }
+      },
+      "rtl/lib/ot_reset_sync.sv": {
+        "branch": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "line": {
+          "hit": 3,
+          "percent": 100.0,
+          "total": 3
+        },
+        "toggle": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        }
+      },
+      "rtl/lib/ot_sync_bits.sv": {
+        "branch": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "line": {
+          "hit": 1,
+          "percent": 100.0,
+          "total": 1
+        },
+        "toggle": {
+          "hit": 12,
+          "percent": 100.0,
+          "total": 12
+        }
+      },
+      "rtl/lib/ot_sync_level.sv": {
+        "branch": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "line": {
+          "hit": 6,
+          "percent": 100.0,
+          "total": 6
+        },
+        "toggle": {
+          "hit": 18,
+          "percent": 100.0,
+          "total": 18
+        }
+      },
+      "rtl/opentallas_tile.sv": {
+        "branch": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "line": {
+          "hit": 2,
+          "percent": 100.0,
+          "total": 2
+        },
+        "toggle": {
+          "hit": 474,
+          "percent": 98.34,
+          "total": 482
+        }
+      },
+      "rtl/ot_bist_controller.sv": {
+        "branch": {
+          "hit": 9,
+          "percent": 90.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 7,
+          "percent": 87.5,
+          "total": 8
+        },
+        "toggle": {
+          "hit": 280,
+          "percent": 76.923,
+          "total": 364
+        }
+      },
+      "rtl/ot_cmd_frontend.sv": {
+        "branch": {
+          "hit": 26,
+          "percent": 100.0,
+          "total": 26
+        },
+        "line": {
+          "hit": 23,
+          "percent": 100.0,
+          "total": 23
+        },
+        "toggle": {
+          "hit": 2751,
+          "percent": 91.093,
+          "total": 3020
+        }
+      },
+      "rtl/ot_credit_manager.sv": {
+        "branch": {
+          "hit": 11,
+          "percent": 78.571,
+          "total": 14
+        },
+        "line": {
+          "hit": 9,
+          "percent": 100.0,
+          "total": 9
+        },
+        "toggle": {
+          "hit": 60,
+          "percent": 78.947,
+          "total": 76
+        }
+      },
+      "rtl/ot_csr_block.sv": {
+        "branch": {
+          "hit": 23,
+          "percent": 95.833,
+          "total": 24
+        },
+        "line": {
+          "hit": 32,
+          "percent": 100.0,
+          "total": 32
+        },
+        "toggle": {
+          "hit": 3520,
+          "percent": 95.548,
+          "total": 3684
+        }
+      },
+      "rtl/ot_dft_controller.sv": {
+        "branch": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 4,
+          "percent": 80.0,
+          "total": 5
+        },
+        "toggle": {
+          "hit": 61,
+          "percent": 61.0,
+          "total": 100
+        }
+      },
+      "rtl/ot_format_decode.sv": {
+        "branch": {
+          "hit": 16,
+          "percent": 100.0,
+          "total": 16
+        },
+        "line": {
+          "hit": 17,
+          "percent": 100.0,
+          "total": 17
+        },
+        "toggle": {
+          "hit": 187,
+          "percent": 82.743,
+          "total": 226
+        }
+      },
+      "rtl/ot_hbm_frontend.sv": {
+        "branch": {
+          "hit": 22,
+          "percent": 100.0,
+          "total": 22
+        },
+        "line": {
+          "hit": 13,
+          "percent": 100.0,
+          "total": 13
+        },
+        "toggle": {
+          "hit": 1598,
+          "percent": 78.719,
+          "total": 2030
+        }
+      },
+      "rtl/ot_numeric_dot.sv": {
+        "branch": {
+          "hit": 9,
+          "percent": 90.0,
+          "total": 10
+        },
+        "line": {
+          "hit": 7,
+          "percent": 77.778,
+          "total": 9
+        },
+        "toggle": {
+          "hit": 331,
+          "percent": 79.952,
+          "total": 414
+        }
+      },
+      "rtl/ot_power_reset_controller.sv": {
+        "branch": {
+          "hit": 23,
+          "percent": 88.462,
+          "total": 26
+        },
+        "line": {
+          "hit": 14,
+          "percent": 87.5,
+          "total": 16
+        },
+        "toggle": {
+          "hit": 71,
+          "percent": 82.558,
+          "total": 86
+        }
+      },
+      "rtl/ot_ras_controller.sv": {
+        "branch": {
+          "hit": 39,
+          "percent": 92.857,
+          "total": 42
+        },
+        "line": {
+          "hit": 13,
+          "percent": 100.0,
+          "total": 13
+        },
+        "toggle": {
+          "hit": 1275,
+          "percent": 87.81,
+          "total": 1452
+        }
+      },
+      "rtl/ot_reduction_tree.sv": {
+        "branch": {
+          "hit": 29,
+          "percent": 96.667,
+          "total": 30
+        },
+        "line": {
+          "hit": 12,
+          "percent": 92.308,
+          "total": 13
+        },
+        "toggle": {
+          "hit": 546,
+          "percent": 97.153,
+          "total": 562
+        }
+      },
+      "rtl/ot_rom_wrapper.sv": {
+        "branch": {
+          "hit": 30,
+          "percent": 93.75,
+          "total": 32
+        },
+        "line": {
+          "hit": 10,
+          "percent": 100.0,
+          "total": 10
+        },
+        "toggle": {
+          "hit": 1019,
+          "percent": 80.49,
+          "total": 1266
+        }
+      },
+      "rtl/ot_route_mask.sv": {
+        "branch": {
+          "hit": 24,
+          "percent": 100.0,
+          "total": 24
+        },
+        "line": {
+          "hit": 16,
+          "percent": 100.0,
+          "total": 16
+        },
+        "toggle": {
+          "hit": 762,
+          "percent": 76.815,
+          "total": 992
+        }
+      },
+      "rtl/ot_schedule_controller.sv": {
+        "branch": {
+          "hit": 22,
+          "percent": 100.0,
+          "total": 22
+        },
+        "line": {
+          "hit": 7,
+          "percent": 100.0,
+          "total": 7
+        },
+        "toggle": {
+          "hit": 384,
+          "percent": 86.486,
+          "total": 444
+        }
+      },
+      "rtl/ot_session_table.sv": {
+        "branch": {
+          "hit": 23,
+          "percent": 95.833,
+          "total": 24
+        },
+        "line": {
+          "hit": 28,
+          "percent": 96.552,
+          "total": 29
+        },
+        "toggle": {
+          "hit": 1108,
+          "percent": 93.739,
+          "total": 1182
+        }
+      },
+      "rtl/ot_stage_controller.sv": {
+        "branch": {
+          "hit": 48,
+          "percent": 88.889,
+          "total": 54
+        },
+        "line": {
+          "hit": 26,
+          "percent": 96.296,
+          "total": 27
+        },
+        "toggle": {
+          "hit": 1873,
+          "percent": 96.15,
+          "total": 1948
+        }
+      },
+      "rtl/ot_stage_link_endpoint.sv": {
+        "branch": {
+          "hit": 0,
+          "percent": null,
+          "total": 0
+        },
+        "line": {
+          "hit": 0,
+          "percent": null,
+          "total": 0
+        },
+        "toggle": {
+          "hit": 628,
+          "percent": 94.578,
+          "total": 664
+        }
+      },
+      "rtl/ot_stage_link_rx.sv": {
+        "branch": {
+          "hit": 30,
+          "percent": 100.0,
+          "total": 30
+        },
+        "line": {
+          "hit": 11,
+          "percent": 100.0,
+          "total": 11
+        },
+        "toggle": {
+          "hit": 891,
+          "percent": 98.128,
+          "total": 908
+        }
+      },
+      "rtl/ot_stage_link_tx.sv": {
+        "branch": {
+          "hit": 27,
+          "percent": 90.0,
+          "total": 30
+        },
+        "line": {
+          "hit": 22,
+          "percent": 88.0,
+          "total": 25
+        },
+        "toggle": {
+          "hit": 701,
+          "percent": 91.039,
+          "total": 770
+        }
+      },
+      "rtl/ot_stage_top.sv": {
+        "branch": {
+          "hit": 28,
+          "percent": 93.333,
+          "total": 30
+        },
+        "line": {
+          "hit": 11,
+          "percent": 100.0,
+          "total": 11
+        },
+        "toggle": {
+          "hit": 5560,
+          "percent": 69.797,
+          "total": 7966
+        }
+      },
+      "rtl/ot_tile.sv": {
+        "branch": {
+          "hit": 11,
+          "percent": 91.667,
+          "total": 12
+        },
+        "line": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "toggle": {
+          "hit": 1047,
+          "percent": 91.043,
+          "total": 1150
+        }
+      },
+      "rtl/rom_mac_tile.sv": {
+        "branch": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "line": {
+          "hit": 4,
+          "percent": 100.0,
+          "total": 4
+        },
+        "toggle": {
+          "hit": 478,
+          "percent": 97.951,
+          "total": 488
+        }
+      },
+      "rtl/static_timeslot_switch.sv": {
+        "branch": {
+          "hit": 7,
+          "percent": 87.5,
+          "total": 8
+        },
+        "line": {
+          "hit": 3,
+          "percent": 100.0,
+          "total": 3
+        },
+        "toggle": {
+          "hit": 224,
+          "percent": 84.848,
+          "total": 264
+        }
+      },
+      "rtl/via_mask_rom.sv": {
+        "branch": {
+          "hit": 7,
+          "percent": 87.5,
+          "total": 8
+        },
+        "line": {
+          "hit": 3,
+          "percent": 100.0,
+          "total": 3
+        },
+        "toggle": {
+          "hit": 340,
+          "percent": 63.91,
+          "total": 532
+        }
+      }
+    },
+    "post_reviewed_exclusions": {
+      "branch": {
+        "hit": 532,
+        "percent": 94.662,
+        "total": 562
+      },
+      "line": {
+        "hit": 332,
+        "percent": 96.512,
+        "total": 344
+      },
+      "toggle": {
+        "hit": 28368,
+        "percent": 85.21,
+        "total": 33292
+      }
+    },
+    "raw": {
+      "branch": {
+        "hit": 532,
+        "percent": 94.662,
+        "total": 562
+      },
+      "line": {
+        "hit": 332,
+        "percent": 96.512,
+        "total": 344
+      },
+      "toggle": {
+        "hit": 28368,
+        "percent": 85.21,
+        "total": 33292
+      }
+    },
+    "raw_point_count": 35252,
+    "reviewed_exclusions": [],
+    "uncovered_point_count": 5133,
+    "uncovered_points_audit": "rtl/build/coverage_campaign/uncovered_points.json",
+    "uncovered_points_sha256": "57ccf63183448b3c2e3c22f05c374a0fa3db03cfb227eb8cdcd6ab41f63ccf4d",
+    "waiver_validation_errors": []
+  },
+  "evidence_boundary": "Logical source RTL coverage on reduced public-reference configurations. This is not ATPG, target-node, macro, PHY, PDK, manufacturing, numerical-quality, or product-silicon signoff.",
+  "evidence_class": "public_open_tool_rtl_simulation",
+  "fsm_state_coverage": {
+    "hit": 28,
+    "missing_ids": [],
+    "percent": 100.0,
+    "status": "pass",
+    "total": 28
+  },
+  "functional_coverage": {
+    "criterion": "each planned bin appears exactly once under both simulators",
+    "hit": 89,
+    "missing_ids": [],
+    "percent": 100.0,
+    "status": "pass",
+    "total": 89
+  },
+  "gates": {
+    "all_simulator_cases_pass": true,
+    "code_coverage_thresholds_pass": true,
+    "coverage_waivers_valid": true,
+    "fsm_state_bins_pass": true,
+    "must_bins_pass": true
+  },
+  "limitations": [
+    "coverage is source-deduplicated across reduced public-reference configurations",
+    "reviewed exclusions, if any, are exact source points and are never file-wide",
+    "public/open tools do not establish target-node or product signoff"
+  ],
+  "schema_version": 1,
+  "source_sha256": {
+    "rtl/expert_mask_controller.sv": "a565b4506035093960577415ed9d2b26224a9e49650c4fe7e78b070d7b2b4a57",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_cdc_mailbox.sv": "f3fecaea6089477d6349144d76406e5dbd90740e127067301c352c3ebdbe2e76",
+    "rtl/lib/ot_crc16_ccitt.sv": "bc70fe269d5736df24a90e738a41ceb6dd833e161b7f7121161090cf43071f3c",
+    "rtl/lib/ot_crc32c.sv": "8cd8dda8419a9268c91ea4fbf0ef76d09e8a18362912728bdf7889b4ac487d09",
+    "rtl/lib/ot_crc_pkg.sv": "49b31710d955827b5beabc9fd63930f1d53c566f925985f16715835ae1ff7d3b",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/lib/ot_skid_buffer.sv": "4837dc61b4a89a53e68b05f16b46e1717e79f4817bf5b812afba0dc3cd32008a",
+    "rtl/lib/ot_sync_bits.sv": "66f4c78a2fda107046c08c66acd17ed390ee8b884b6e27090db0ecfeae5d2b9f",
+    "rtl/lib/ot_sync_level.sv": "e474cac6feeb0402ac7a4794cfc7e73508b5ef0254c991204b8946b92cd08fd6",
+    "rtl/opentallas_tile.sv": "4980d62d193e1ea44353967b2eace8423d0024562d7f5e40e0d1eec24d6d3bb2",
+    "rtl/ot_bist_controller.sv": "3fa9513a494171c7f5971c41d7cf292a022e97e87fa90a6e3437e8b7d1627b9f",
+    "rtl/ot_cmd_frontend.sv": "7bab8bfc6e769a6c9ffd80817cab25fb24e31c642fb4210f2ad1f30bca58aaad",
+    "rtl/ot_credit_manager.sv": "4d61c6121b85f599fecd891ac5b4faf234df55e065e17eb28f619968e8720449",
+    "rtl/ot_csr_block.sv": "107553401553638187b4d609f2b8739ca96624af93f11b832f5ebed1f5ba83a9",
+    "rtl/ot_dft_controller.sv": "338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225",
+    "rtl/ot_format_decode.sv": "e225c7d15151bee4e61725c41326f24504e385f1bf6fdd05bdc265f404d2cc98",
+    "rtl/ot_hbm_frontend.sv": "47b8f1def0c75d5cfaf1716f18f07f1f1a9ea4adcfcef214fc483996fd227287",
+    "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c",
+    "rtl/ot_power_reset_controller.sv": "1c7b187ad1ada1797d66776383270b2017b2625607594eba7013b8ac53627594",
+    "rtl/ot_ras_controller.sv": "388d796e7b3f134728d06366982c67bd65ccf1afef96c0a011b253c53fc6f588",
+    "rtl/ot_reduction_tree.sv": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5",
+    "rtl/ot_rom_wrapper.sv": "dae5ba91f70ea61f3351eb407728e84862b050bfaf936a397534ccc154d7b126",
+    "rtl/ot_route_mask.sv": "4bdf835a9c072bc8d1f13b7de50370ae3b7e1c928f8bb9d6a55a70c64950db0a",
+    "rtl/ot_schedule_controller.sv": "07301550750eeaedceb8116ba9b97bd95fe0c17e84b536020bd0470e3029d826",
+    "rtl/ot_session_table.sv": "f21be6574e78e5e2204bdcea9494458615ac6863c0b2e08c0760d502c245361f",
+    "rtl/ot_stage_controller.sv": "04f23234bb07f79a86d9d71efabcb0acb7d9e033192515b9029e0c9f161856f4",
+    "rtl/ot_stage_link_endpoint.sv": "a6c7540911fde5b4a8e542883077973e254b0f13b570b47f0e83d37e3ac21d50",
+    "rtl/ot_stage_link_rx.sv": "5e50965d50807c8956f7e814656dafff4fca76f9a5bedbb1bc50b7165daec36a",
+    "rtl/ot_stage_link_tx.sv": "fe26c3b031dfc5eeda5073e22ce81f9dd6b2838a3be0b7c0b56c5352d7a12c90",
+    "rtl/ot_stage_top.sv": "c9e0619c962d1e024bebb9a61a3a78d31566d1cc514bf40ca3b3d5bd130088ec",
+    "rtl/ot_tile.sv": "92f0248dc5f46e94011be658202eb0c7497d28a90cb4906414d0b449829f9f9f",
+    "rtl/rom_mac_tile.sv": "841d5e9ab4c8278c1e7fc7f3f598c5e962041df3d94aa9e0ffb82c6d4f3e5e00",
+    "rtl/static_timeslot_switch.sv": "04f1de6146d694bce80c7fea65e43d73d0a2cb11b7e37f43cbf3e1bab4d574fe",
+    "rtl/test/tb_coverage_control.sv": "214b0f53b27ad253438844f5b44f81e1c0302550dbefab29182426143a55ab57",
+    "rtl/test/tb_coverage_data_boundary.sv": "d73f8b98357c0af7d29949955e096ddd257d61f859ddd8035a967e62c1e1ec62",
+    "rtl/test/tb_coverage_stage_controller.sv": "b85609c2c8d5563c188ca1a26db70a51279c6102ca0c438a9f90a3552bcee07d",
+    "rtl/test/tb_coverage_stage_random.sv": "c1de7e21f2b82b5d9fea4ed15649e831d6ad58ae7fa4e2e599e757475fa28f1a",
+    "rtl/test/tb_coverage_units.sv": "43d8c81aa2705a6bca6fc149323c769d3bfa5a997bc0c967a326960c637adaec",
+    "rtl/test/tb_fault_control.sv": "fbf7a5509ffa47ae81c2c1555c56d85c0a854caab88d82fd765c6116098091f6",
+    "rtl/test/tb_fault_data.sv": "8eb8a4eea57d445d0b6b58d1c04d31d48a540b84244f1c0e460610b3b14bbdba",
+    "rtl/test/tb_fault_link.sv": "b3c767a3a93de59026ab3b27ab8dbf149eec6b2726d3ac2dcb39445cabc22827",
+    "rtl/test/tb_fault_ras_dft.sv": "926ad9aaecfea4db3d7baf5b0c43ad96b9cf997311e049b12f40dea4e339a049",
+    "rtl/via_mask_rom.sv": "203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141",
+    "spec/coverage_plan.json": "7778b5d128a26ca78f61b1af73e9078c20c483ba6fabc824e9b21ba605b134b5",
+    "spec/coverage_waivers.json": "28b01488d550d4e38cb63b2bfa3740c710580a9b787c2e6581b3b729125851ae",
+    "spec/verification.json": "d94e21eda4f07edeb00e31024beaa7ba2b2d6b40b658f498c7e8fec729f5f55e",
+    "tools/rtl_coverage_campaign.py": "66723c35efc204c751e20bca52943547d55f1d1561ac4a51a23ff7b3f5d0ab00"
+  },
+  "status": "pass",
+  "thresholds": {
+    "branch_percent": 90.0,
+    "fsm_state_bin_percent": 100.0,
+    "line_percent": 95.0,
+    "must_bin_percent": 100.0,
+    "toggle_percent": 85.0
+  },
+  "tools": {
+    "iverilog": {
+      "executable": "/usr/bin/iverilog",
+      "executable_sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "executable": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "executable_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "executable": "/usr/bin/vvp",
+      "executable_sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d",
+      "version": "Icarus Verilog runtime version 11.0 (stable) ()"
+    }
+  }
+}

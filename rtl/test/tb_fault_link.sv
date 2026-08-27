@@ -3,6 +3,7 @@
 // public model; this bench closes packet CRC, sequence, replay, retry, timeout,
 // credit, and abort containment at the architectural packet boundary.
 module tb_fault_link;
+    // Canonical coverage-merge stimulus identifier: 0x464c4e4b ("FLNK").
     reg clk = 1'b0;
     reg rst_n = 1'b0;
     always #5 clk = ~clk;

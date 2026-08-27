@@ -241,6 +241,11 @@ different manifest/numeric mode IDs. Pipeline latency is a parameter exported in
 capabilities; throughput is one admitted word per cycle after fill when no macro
 or result-buffer constraint stalls admission.
 
+All format-decode, product, accumulator, and saturation boundaries carry explicit
+signed widths. A reduction accumulator is widened before addition, overflow is
+classified against the sign extension of the architectural result, and exactly one
+output is retired for each completed group.
+
 ### MICRO-4.4 Tile buffering and backpressure
 
 Route, activation, and result boundaries use two-entry skid/elastic buffers. The
@@ -299,6 +304,12 @@ and numeric mode. It accepts each expected source exactly once, rejects unexpect
 or duplicate sources, and reduces in ascending certified source order even when
 physical arrival is earlier. Completion requires the expected-source bitmap and
 terminal marker. Any poisoned/missing/bad-CRC source poisons the group.
+
+Allocation captures the first source atomically with the new tag, expected bitmap,
+data, poison, and terminal state. It must not clear and bit-set the received bitmap
+through competing sequential updates, and it must not consult stale duplicate state
+from a retired slot. Two simultaneously occupied group slots may complete in either
+physical order while preserving the certified per-group arithmetic order.
 
 Reduced configurations implement the bitmap directly. Product-scale implementations
 may use hierarchical bitmaps, but the proof-visible expected count and duplicate
@@ -410,6 +421,11 @@ little-endian bit traversal as defined by the ICD. They support known-answer tes
 mode and have no hidden reflection option. CRC state is reset at record start and
 latched with the same transaction tag; an interrupted record cannot reuse prior
 state.
+
+For CRC32C the retained multi-beat state is the unfinalized reflected recurrence.
+The final XOR is applied only to the reported terminal value; it is never fed back
+as the starting state of a later beat. Consequently, a record CRC is invariant to
+legal beat partitioning.
 
 ## MICRO-9 Macro wrappers and synthesis configurations
 

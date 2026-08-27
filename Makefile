@@ -1,4 +1,4 @@
-.PHONY: profile simulate routing noc sensitivity spec-check formal rtl-sim fault-sim fault-campaign rtl-static rtl spice test verify clean-results
+.PHONY: profile simulate routing noc sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -28,6 +28,9 @@ rtl-sim:
 fault-sim fault-campaign:
 	python3 tools/rtl_fault_campaign.py
 
+coverage:
+	python3 tools/rtl_coverage_campaign.py
+
 rtl-static:
 	python3 tools/rtl_static.py
 
@@ -38,9 +41,24 @@ spice:
 	$(MAKE) -C spice verify
 
 test:
-	PYTHONPATH=src pytest
+	PYTHONPATH=src pytest -q
 
-verify: spec-check test rtl spice simulate noc sensitivity
+pre-synth-verify:
+	$(MAKE) spec-check
+	$(MAKE) test
+	$(MAKE) -C rtl pre-synth-verify
+
+synth-public:
+	$(MAKE) -C rtl synth
+	$(MAKE) -C rtl synth-reference
+
+verify:
+	$(MAKE) pre-synth-verify
+	$(MAKE) synth-public
+	$(MAKE) spice
+	$(MAKE) simulate
+	$(MAKE) noc
+	$(MAKE) sensitivity
 
 clean-results:
 	find results -type f \( -name '*.csv' -o -name '*.json' -o -name 'REPORT.md' -o -name 'QWEN3_8B_ADDENDUM.md' \) -delete

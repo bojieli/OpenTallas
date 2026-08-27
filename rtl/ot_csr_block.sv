@@ -38,7 +38,6 @@ module ot_csr_block #(
     localparam [7:0] ST_SUCCESS = 8'h00;
     localparam [7:0] ST_BAD_FIELD = 8'h03;
     localparam [7:0] ST_BAD_CRC = 8'h04;
-    localparam [7:0] ST_BUSY = 8'h05;
     reg rsp_pending;
     reg [127:0] rsp_reg;
     reg [111:0] req_body;

@@ -103,3 +103,23 @@ DV-HBM-001, DV-LINK-001, DV-RAS-001/002, DV-REPAIR-001, DV-DFT-001,
 DV-POWER-001, DV-SESSION-001, DV-STAGE-001, and DV-STATIC-001. Any affected edit
 reopens both timed simulators, strict warnings, formal/static checks, and the exact
 site/source manifest.
+
+### CC-4.4 Source-coverage closure and arithmetic integrity baseline
+
+The first canonical source-coverage baseline adds a machine-readable plan, an exact
+waiver ledger, five coverage-focused benches, and four directed-fault supplements.
+Nine cases must agree under Icarus/vvp and pinned Verilator 5.050; native source
+points are hierarchy/instance deduplicated and unexpected warnings are fatal. The
+closed baseline records 96.512 percent line, 94.662 percent branch, 85.210 percent
+toggle, 89/89 mandatory bins, 28/28 FSM-state bins, and zero exclusions.
+
+Coverage-driven checking corrected implementation defects without changing a frozen
+record encoding or host ABI: CRC32C retains unfinalized state between beats; signed
+decode/dot/reduction widths are explicit; reduction accumulation and overflow are
+widened; a completed reduction is emitted once; group allocation captures its first
+source atomically instead of racing whole-vector and bit-select updates; a zero ROM
+injection mask is a no-op; and non-default layer bounds use typed widths. Owner:
+digital datapath/control/DV. Review gates: DV-NUM-001/002, DV-TILE-003/004,
+DV-RAS-001, DV-STAGE-001, DV-COVERAGE-001, and DV-STATIC-001. Any affected edit
+reopens both simulators, strict static checks, formal properties, fault injection,
+and the complete source-coverage merge before synthesis evidence remains valid.

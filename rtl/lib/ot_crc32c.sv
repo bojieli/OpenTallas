@@ -16,11 +16,15 @@ module ot_crc32c #(
     integer byte_i;
     integer bit_i;
     reg [31:0] work_crc;
+    reg [31:0] state_crc;
     reg [31:0] next_crc;
     reg fb;
 
     always @* begin
-        work_crc = start ? 32'hffffffff : crc;
+        // Keep the reflected running remainder separate from the externally
+        // visible, XOR-finalized result.  Feeding the finalized result back
+        // into a later beat would make the CRC depend on beat boundaries.
+        work_crc = start ? 32'hffffffff : state_crc;
         for (byte_i = 0; byte_i < DATA_W/8; byte_i = byte_i + 1) begin
             for (bit_i = 0; bit_i < 8; bit_i = bit_i + 1) begin
                 fb = work_crc[0] ^ data[byte_i*8 + bit_i];
@@ -29,19 +33,22 @@ module ot_crc32c #(
                     work_crc = work_crc ^ 32'h82f63b78;
             end
         end
-        next_crc = work_crc ^ 32'hffffffff;
+        next_crc = work_crc;
     end
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
+            state_crc <= 32'hffffffff;
             crc <= 32'hffffffff;
             out_valid <= 1'b0;
         end else begin
             out_valid <= 1'b0;
             if (in_valid) begin
-                crc <= next_crc;
-                if (last)
+                state_crc <= next_crc;
+                if (last) begin
+                    crc <= next_crc ^ 32'hffffffff;
                     out_valid <= 1'b1;
+                end
             end
         end
     end

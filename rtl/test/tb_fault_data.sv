@@ -3,11 +3,25 @@
 // and the tagged HBM abstraction.  Every check emits a stable site identifier
 // consumed by tools/rtl_fault_campaign.py; an overall PASS alone is insufficient.
 module tb_fault_data;
+    // Canonical coverage-merge stimulus identifier: 0x46444154 ("FDAT").
     reg clk = 1'b0;
     reg rst_n = 1'b0;
     always #5 clk = ~clk;
 
     integer failures = 0;
+    reg [31:0] coverage_rng = 32'h4644_4154;
+
+    function automatic [31:0] random32;
+        reg [31:0] x;
+        begin
+            x = coverage_rng;
+            x = x ^ (x << 13);
+            x = x ^ (x >> 17);
+            x = x ^ (x << 5);
+            coverage_rng = x;
+            random32 = x;
+        end
+    endfunction
 
     task automatic check_site;
         input [8*64-1:0] site_id;
@@ -237,12 +251,17 @@ module tb_fault_data;
         input [11:0] tag;
         input [15:0] beats_minus_one;
         input [23:0] session;
+        reg [31:0] address_low;
+        reg [31:0] address_high;
         begin
             @(negedge clk);
             hbm_req_tag = tag;
             hbm_req_beats_minus_one = beats_minus_one;
             hbm_req_session = session;
-            hbm_req_address = {48'b0,tag,4'b0};
+            address_low = random32();
+            address_high = random32();
+            hbm_req_address = {address_high,address_low};
+            hbm_req_operation = address_low[1:0];
             hbm_req_valid = 1'b1;
             if (!hbm_req_ready) begin
                 $display("HBM request unexpectedly blocked tag=%0d", tag);
@@ -286,6 +305,11 @@ module tb_fault_data;
     endtask
 
     reg [207:0] route_body;
+    integer coverage_sample;
+    reg [31:0] coverage_word0;
+    reg [31:0] coverage_word1;
+    reg [31:0] coverage_word2;
+    reg [11:0] coverage_tag;
     initial begin
         // Initialize immutable model contents as a macro-load fixture, never
         // through a functional or test write interface.
@@ -453,6 +477,26 @@ module tb_fault_data;
         check_site("FC-HBM-SAME-CYCLE-RECYCLE", recycle_conserved &&
                    captured_complete && !captured_poison &&
                    captured_session == 24'h303003 && hbm_outstanding == 0);
+
+        // Retain the directed fault semantics above, then vary every retained
+        // per-tag request field.  Early terminal responses intentionally make
+        // arbitrary burst lengths finite in simulation; framing classification
+        // is already checked independently by FC-HBM-EARLY-LAST.
+        reset_duts();
+        for (coverage_sample = 0; coverage_sample < 96;
+             coverage_sample = coverage_sample + 1) begin
+            coverage_word0 = random32();
+            coverage_word1 = random32();
+            coverage_word2 = random32();
+            case (coverage_sample % 3)
+                0: coverage_tag = 12'd0;
+                1: coverage_tag = 12'd1;
+                default: coverage_tag = 12'd2;
+            endcase
+            hbm_issue(coverage_tag,coverage_word0[15:0],coverage_word1[23:0]);
+            hbm_response(coverage_tag,1'b1,
+                         coverage_word2[2:0],1'b0);
+        end
 
         if (failures == 0) begin
             $display("PASS: directed route ROM and HBM fault sites");

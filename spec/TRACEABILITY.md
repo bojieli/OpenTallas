@@ -105,7 +105,7 @@
 |---|---|---|---|
 | DV-CMD-001 | ENV-FORMAL, ENV-STAGE, ENV-UNIT | directed, constrained_random, assertion, formal | host command field, CRC, version, and legality checking |
 | DV-CMD-002 | ENV-FORMAL, ENV-PIPE, ENV-STAGE | constrained_random, assertion, formal | command ordering, backpressure, quiesce, and abort |
-| DV-COVERAGE-001 | ENV-PIPE, ENV-RETICLE, ENV-STAGE, ENV-TILE, ENV-UNIT | functional, assertion, line, branch, toggle, FSM, cross | coverage merge, exclusions, and closure review |
+| DV-COVERAGE-001 | ENV-PIPE, ENV-RETICLE, ENV-STAGE, ENV-TILE, ENV-UNIT | functional, assertion, line, branch, toggle, FSM, cross, dual_simulator, source_deduplicated_merge, exact_waiver_review | coverage merge, exclusions, and closure review |
 | DV-DFT-001 | ENV-RETICLE, ENV-STAGE, ENV-TILE, ENV-UNIT | BIST_fault_injection, scan_structure, diagnostic_signature | ROM-BIST, SRAM-BIST, link-BIST, scan, and diagnostic access |
 | DV-FORMAL-001 | ENV-FORMAL | bounded_model_check, induction, cover_nonvacuity | formal safety, conservation, ordering, and progress suite |
 | DV-FW-001 | ENV-STAGE, ENV-STATIC | manifest_checker, schedule_checker, boot_emulation | deterministic image, manifest, schedule, repair, and boot contract |

@@ -248,7 +248,11 @@ module tb_stage_top;
                      schedule_wr_acks,schedule_wr_errors,schedule_commit_acks,schedule_commit_errors);
             failures=failures+1;
         end
-        if(failures==0) begin $display("PASS: stage top command/session/service and schedule CDC integration"); $finish; end
-        $fatal(1,"%0d failures",failures);
+        if(failures==0) begin
+            $display("PASS: stage top command/session/service and schedule CDC integration");
+            $finish;
+        end else begin
+            $fatal(1,"%0d failures",failures);
+        end
     end
 endmodule

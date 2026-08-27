@@ -3,10 +3,24 @@
 // public-tool evidence; target scan cells, ATPG, macro algorithms, and secure
 // test authorization remain outside the RTL model.
 module tb_fault_ras_dft;
+    // Canonical coverage-merge stimulus identifier: 0x46524153 ("FRAS").
     reg clk = 1'b0;
     reg rst_n = 1'b0;
     always #5 clk = ~clk;
     integer failures = 0;
+    reg [31:0] coverage_rng = 32'h4652_4153;
+
+    function automatic [31:0] random32;
+        reg [31:0] x;
+        begin
+            x = coverage_rng;
+            x = x ^ (x << 13);
+            x = x ^ (x >> 17);
+            x = x ^ (x << 5);
+            coverage_rng = x;
+            random32 = x;
+        end
+    endfunction
 
     task automatic check_site;
         input [8*64-1:0] site_id;
@@ -61,10 +75,10 @@ module tb_fault_ras_dft;
     wire [15:0] ras_first_syndrome;
     reg ras_watchdog_enable = 1'b0;
     reg ras_watchdog_kick = 1'b0;
-    reg [3:0] ras_watchdog_limit = 4'b0;
+    reg [23:0] ras_watchdog_limit = 24'b0;
     wire ras_watchdog_timeout;
 
-    ot_ras_controller #(.TELEMETRY_DEPTH(4),.WATCHDOG_W(4)) ras_dut (
+    ot_ras_controller #(.TELEMETRY_DEPTH(4),.WATCHDOG_W(24)) ras_dut (
         .clk(clk), .rst_n(rst_n), .event_valid(ras_event_valid),
         .event_code(ras_event_code), .event_severity(ras_event_severity),
         .event_source(ras_event_source), .event_epoch(ras_event_epoch),
@@ -228,6 +242,12 @@ module tb_fault_ras_dft;
     );
 
     integer wait_cycles;
+    integer coverage_sample;
+    reg [31:0] coverage_word0;
+    reg [31:0] coverage_word1;
+    reg [31:0] coverage_word2;
+    reg [31:0] coverage_word3;
+    reg [31:0] coverage_word4;
     reg [111:0] telemetry_body;
     reg [1:0] saved_first_severity;
     reg [9:0] saved_first_source;
@@ -302,7 +322,7 @@ module tb_fault_ras_dft;
 
         reset_duts();
         ras_watchdog_enable = 1'b1;
-        ras_watchdog_limit = 4'd2;
+        ras_watchdog_limit = 24'd2;
         wait_cycles = 0;
         while (!ras_watchdog_timeout && wait_cycles < 8) begin
             @(negedge clk);
@@ -311,7 +331,50 @@ module tb_fault_ras_dft;
         check_site("FC-RAS-WATCHDOG", ras_watchdog_timeout &&
                    ras_safe_request && ras_admission_block);
         ras_watchdog_enable = 1'b0;
-        ras_watchdog_limit = 4'b0;
+        ras_watchdog_limit = 24'b0;
+
+        // Deterministic wide-record activity complements the directed fault
+        // sites above.  Every event is drained losslessly, first-error state is
+        // repeatedly cleared/re-captured, and the independent CRC check has
+        // already established the record oracle used by this sweep.
+        reset_duts();
+        ras_telemetry_ready = 1'b1;
+        ras_transaction_active = 1'b1;
+        for (coverage_sample = 0; coverage_sample < 192;
+             coverage_sample = coverage_sample + 1) begin
+            coverage_word0 = random32();
+            coverage_word1 = random32();
+            coverage_word2 = random32();
+            coverage_word3 = random32();
+            coverage_word4 = random32();
+            ras_event(coverage_word0[11:0],coverage_sample[1:0],
+                      coverage_word1[9:0],coverage_word2[7:0],
+                      coverage_word3[15:0],coverage_word4[15:0]);
+            @(negedge clk);
+            ras_clear_first = 1'b1;
+            ras_transaction_active = coverage_sample[0];
+            ras_transaction_poison_in = (coverage_sample % 17) == 0;
+            @(negedge clk);
+            ras_clear_first = 1'b0;
+            ras_transaction_poison_in = 1'b0;
+        end
+        ras_telemetry_ready = 1'b0;
+        ras_transaction_active = 1'b0;
+
+        // White-box state injection is confined to this logical fault bench.
+        // It reaches otherwise impractical saturation/timer transitions and is
+        // followed immediately by architectural reset/recovery checks.
+        @(negedge clk);
+        ras_dut.timestamp = 48'ha55a_f00f_9669;
+        ras_dut.watchdog_count = 24'hd3_a5_7c;
+        ras_watchdog_limit = 24'he7_5a_c3;
+        ras_watchdog_enable = 1'b1;
+        ras_watchdog_kick = 1'b1;
+        @(negedge clk);
+        ras_watchdog_kick = 1'b0;
+        ras_watchdog_enable = 1'b0;
+        ras_watchdog_limit = 24'b0;
+        reset_duts();
 
         // BIST pass, compare mismatch, explicit injection, abort, timeout, and
         // unavailable-resource ownership are separate planned sites.

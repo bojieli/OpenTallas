@@ -344,7 +344,8 @@ module tb_cdc_primitives;
         if (failures == 0) begin
             $display("PASS: CDC mailbox, qualified level, and reset-rendezvous FIFO");
             $finish;
+        end else begin
+            $fatal(1,"%0d CDC primitive failures",failures);
         end
-        $fatal(1,"%0d CDC primitive failures",failures);
     end
 endmodule

@@ -1,4 +1,4 @@
-.PHONY: sim unit-sim cdc-sim integration-sim verilator-sim sim-campaign fault-sim fault-campaign lint static formal synth synth-reference verify clean
+.PHONY: sim unit-sim cdc-sim integration-sim verilator-sim sim-campaign fault-sim fault-campaign coverage coverage-campaign lint static formal pre-synth-verify synth synth-reference verify clean
 
 SOURCES = expert_mask_controller.sv via_mask_rom.sv rom_mac_tile.sv opentallas_tile.sv
 LIB_SOURCES = lib/ot_reset_sync.sv lib/ot_skid_buffer.sv lib/ot_async_fifo.sv lib/ot_crc_pkg.sv \
@@ -51,6 +51,9 @@ sim-campaign:
 fault-sim fault-campaign:
 	python3 ../tools/rtl_fault_campaign.py
 
+coverage coverage-campaign:
+	python3 ../tools/rtl_coverage_campaign.py
+
 lint:
 	verilator --lint-only -Wall -Wno-fatal \
 		--top-module ot_tile $(SOURCES) static_timeslot_switch.sv $(LINT_REFERENCE_SOURCES)
@@ -69,7 +72,23 @@ synth-reference: build
 	yosys -q -l build/synth_reference.log synth_reference.ys
 	grep -A24 '=== ot_stage_top ===' build/synth_reference.log
 
-verify: sim unit-sim cdc-sim integration-sim verilator-sim sim-campaign fault-campaign lint static formal synth synth-reference
+pre-synth-verify:
+	$(MAKE) sim
+	$(MAKE) unit-sim
+	$(MAKE) cdc-sim
+	$(MAKE) integration-sim
+	$(MAKE) verilator-sim
+	$(MAKE) sim-campaign
+	$(MAKE) fault-campaign
+	$(MAKE) coverage-campaign
+	$(MAKE) lint
+	$(MAKE) static
+	$(MAKE) formal
+
+verify:
+	$(MAKE) pre-synth-verify
+	$(MAKE) synth
+	$(MAKE) synth-reference
 
 clean:
 	rm -rf build

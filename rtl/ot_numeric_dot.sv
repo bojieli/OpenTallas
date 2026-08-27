@@ -50,7 +50,9 @@ module ot_numeric_dot #(
                 w = $signed(weights[(e*LANES+l)*WEIGHT_W +: WEIGHT_W]);
                 product = a * w;
                 if (expert_enable[e])
-                    sum_comb = sum_comb + product;
+                    sum_comb = sum_comb +
+                               {{(SUM_W-(ACT_W+WEIGHT_W)){product[ACT_W+WEIGHT_W-1]}},
+                                product};
             end
         end
         max_acc = ACC_MAX;
@@ -90,7 +92,7 @@ module ot_numeric_dot #(
     initial begin
         if (NUM_EXPERTS < 1 || LANES < 1 || ACT_W < 1 || WEIGHT_W < 1)
             $error("ot_numeric_dot has an illegal zero dimension");
-        if (REPORT_SATURATION_RISK &&
+        if ((REPORT_SATURATION_RISK != 0) &&
             ACC_W < ACT_W + WEIGHT_W + $clog2(NUM_EXPERTS*LANES+1))
             $warning("ot_numeric_dot ACC_W may saturate configured term bound");
     end

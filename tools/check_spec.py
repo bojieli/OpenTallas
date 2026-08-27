@@ -29,6 +29,7 @@ EVIDENCE_CLASSES = {
 PLACEHOLDER_RE = re.compile(r"\b(?:TODO|TBD|FIXME|XXX)\b", re.IGNORECASE)
 REF_RE = re.compile(r"\b(?:ARCH|MICRO|ICD|NUM|CRP|RAS|FW|PPA|DV|CC)-\d+(?:\.\d+)?\b")
 FAULT_SITE_RE = re.compile(r'check_site\s*\(\s*"(FC-[A-Z0-9-]+)"')
+COVER_BIN_DECL_RE = re.compile(r'pass_bin\s*\(\s*"(COV-[A-Z0-9-]+)"')
 
 
 class SpecError(RuntimeError):
@@ -263,6 +264,192 @@ def _validate_fault_campaign(
         errors.append("fault_campaign external gates require id/scope/external_not_modeled")
 
 
+def _validate_coverage_campaign(
+    plan: dict[str, Any],
+    waivers: dict[str, Any],
+    verification: dict[str, Any],
+    check_ids: set[str],
+    errors: list[str],
+) -> None:
+    campaign = verification.get("coverage_campaign")
+    if not isinstance(campaign, dict):
+        errors.append("verification.coverage_campaign must be an object")
+        return
+    expected_paths = {
+        "plan_path": "spec/coverage_plan.json",
+        "runner_path": "tools/rtl_coverage_campaign.py",
+        "waiver_path": "spec/coverage_waivers.json",
+    }
+    for field, expected in expected_paths.items():
+        if campaign.get(field) != expected:
+            errors.append(f"verification.coverage_campaign.{field} must be {expected}")
+        elif not (ROOT / expected).is_file():
+            errors.append(f"coverage campaign path is missing: {expected}")
+    result_paths = campaign.get("result_paths")
+    if not isinstance(result_paths, list) or not result_paths:
+        errors.append("verification.coverage_campaign.result_paths must be non-empty")
+    elif any(not isinstance(path, str) or not (ROOT / path).is_file() for path in result_paths):
+        errors.append("verification.coverage_campaign result artifact is missing")
+    simulators = campaign.get("required_simulators")
+    minimum = verification.get("tool_independence", {}).get("simulators_minimum")
+    if (
+        not isinstance(simulators, list)
+        or not isinstance(minimum, int)
+        or len(set(simulators)) < minimum
+    ):
+        errors.append("coverage campaign does not meet simulator independence minimum")
+    if campaign.get("unexpected_warnings_are_fatal") is not True:
+        errors.append("coverage campaign must treat unexpected warnings as fatal")
+    if not isinstance(campaign.get("evidence_boundary"), str) or not campaign["evidence_boundary"].strip():
+        errors.append("coverage campaign must state its evidence boundary")
+
+    closure = verification.get("closure", {})
+    expected_thresholds = {
+        "line_percent": float(closure.get("line_coverage_percent", -1)),
+        "branch_percent": float(closure.get("branch_coverage_percent", -1)),
+        "toggle_percent": float(closure.get("toggle_coverage_percent", -1)),
+        "must_bin_percent": float(
+            closure.get("functional_coverage_must_bins_percent", -1)
+        ),
+        "fsm_state_bin_percent": float(closure.get("fsm_state_bins_percent", -1)),
+    }
+    if plan.get("thresholds") != expected_thresholds:
+        errors.append("coverage plan thresholds disagree with verification closure")
+    deduplication = plan.get("point_accounting", {}).get("source_deduplication_key")
+    if deduplication != campaign.get("source_deduplication_key"):
+        errors.append("coverage source-deduplication key disagrees with verification")
+    if plan.get("waiver_file") != campaign.get("waiver_path"):
+        errors.append("coverage waiver path disagrees with verification")
+    warning_policy = plan.get("warning_policy", {})
+    if warning_policy.get("unexpected_warning_is_failure") is not True:
+        errors.append("coverage plan must fail unexpected warnings")
+
+    cases = plan.get("cases")
+    if not isinstance(cases, list) or not cases:
+        errors.append("coverage plan cases must be a non-empty list")
+        cases = []
+    case_names: list[str] = []
+    benches: list[str] = []
+    planned_bins: list[str] = []
+    required_case_fields = {
+        "name",
+        "top",
+        "bench",
+        "seed_hex",
+        "pass_marker",
+        "verilator_suppressions",
+        "requirements",
+        "sources",
+        "bins",
+    }
+    for index, case in enumerate(cases):
+        if not isinstance(case, dict):
+            errors.append(f"coverage case {index} is not an object")
+            continue
+        missing = sorted(required_case_fields - set(case))
+        if missing:
+            errors.append(f"coverage case {index} missing {', '.join(missing)}")
+            continue
+        name = case["name"]
+        bench = case["bench"]
+        case_names.append(name)
+        benches.append(bench)
+        if not isinstance(name, str) or re.fullmatch(r"[a-z0-9_]+", name) is None:
+            errors.append(f"coverage case {index} has invalid name")
+        if not isinstance(case["seed_hex"], str) or re.fullmatch(
+            r"[0-9a-f]{8}", case["seed_hex"]
+        ) is None:
+            errors.append(f"coverage case {name} has invalid seed_hex")
+        requirements = case["requirements"]
+        if not isinstance(requirements, list) or not requirements:
+            errors.append(f"coverage case {name} has no requirements")
+        else:
+            for requirement in requirements:
+                if requirement not in check_ids:
+                    errors.append(f"coverage case {name} has unknown check {requirement}")
+        sources = case["sources"]
+        if not isinstance(sources, list) or bench not in sources:
+            errors.append(f"coverage case {name} source inventory omits its bench")
+            sources = []
+        for source in sources:
+            if not isinstance(source, str) or not (ROOT / source).is_file():
+                errors.append(f"coverage case {name} has missing source {source!r}")
+        bench_path = ROOT / bench if isinstance(bench, str) else ROOT / "<invalid>"
+        if bench_path.is_file():
+            text = bench_path.read_text(encoding="utf-8")
+            if f"module {case['top']}" not in text:
+                errors.append(f"coverage case {name} top is absent from its bench")
+            if case["seed_hex"] not in text.lower().replace("_", ""):
+                errors.append(f"coverage case {name} seed/ID is absent from its bench")
+        bins = case["bins"]
+        if not isinstance(bins, list):
+            errors.append(f"coverage case {name} bins must be a list")
+        else:
+            for bin_id in bins:
+                if not isinstance(bin_id, str) or re.fullmatch(
+                    r"COV-[A-Z0-9-]+", bin_id
+                ) is None:
+                    errors.append(f"coverage case {name} has invalid bin {bin_id!r}")
+                else:
+                    planned_bins.append(bin_id)
+    for label, values in (("case", case_names), ("bench", benches), ("bin", planned_bins)):
+        duplicates = sorted(value for value in set(values) if values.count(value) != 1)
+        if duplicates:
+            errors.append(f"coverage plan has duplicate {label}s: {duplicates}")
+    declared_bins: list[str] = []
+    for bench in benches:
+        path = ROOT / bench
+        if path.is_file():
+            declared_bins.extend(COVER_BIN_DECL_RE.findall(path.read_text(encoding="utf-8")))
+    if sorted(declared_bins) != sorted(planned_bins):
+        errors.append("coverage plan/source mandatory-bin inventory mismatch")
+    fsm_bins = plan.get("fsm_state_bins")
+    expected_fsm = {item for item in planned_bins if item.startswith("COV-FSM-")}
+    if not isinstance(fsm_bins, list) or set(fsm_bins) != expected_fsm:
+        errors.append("coverage FSM bins do not exactly match planned COV-FSM bins")
+
+    if waivers.get("campaign") != plan.get("campaign"):
+        errors.append("coverage waiver campaign name disagrees with plan")
+    entries = waivers.get("waivers")
+    if not isinstance(entries, list):
+        errors.append("coverage waivers must be a list")
+        entries = []
+    required_waiver_fields = {
+        "id",
+        "owner",
+        "reason",
+        "review_disposition",
+        "requirement_impact",
+        "revalidate_on",
+        "point",
+    }
+    exact_point_fields = {
+        "file",
+        "line",
+        "column",
+        "point_class",
+        "point_type",
+        "description",
+        "source_span",
+    }
+    waiver_ids: list[str] = []
+    for index, waiver in enumerate(entries):
+        if not isinstance(waiver, dict) or set(waiver) != required_waiver_fields:
+            errors.append(f"coverage waiver {index} does not use the exact schema")
+            continue
+        waiver_ids.append(waiver["id"])
+        point = waiver["point"]
+        if not isinstance(point, dict) or set(point) != exact_point_fields:
+            errors.append(f"coverage waiver {waiver['id']} does not identify an exact point")
+        elif not isinstance(point["file"], str) or not (ROOT / point["file"]).is_file():
+            errors.append(f"coverage waiver {waiver['id']} names a missing source")
+        for field in required_waiver_fields - {"point"}:
+            if not isinstance(waiver[field], str) or not waiver[field].strip():
+                errors.append(f"coverage waiver {index} has empty {field}")
+    if len(waiver_ids) != len(set(waiver_ids)):
+        errors.append("coverage waiver IDs are not unique")
+
+
 def _validate_models(
     manifest: dict[str, Any], parameters: dict[str, Any], errors: list[str]
 ) -> None:
@@ -438,6 +625,8 @@ def validate(*, write_traceability: bool = False) -> str:
     requirements_data = _strict_load(SPEC / "requirements.json")
     verification_data = _strict_load(SPEC / "verification.json")
     fault_campaign = _strict_load(SPEC / "fault_campaign.json")
+    coverage_plan = _strict_load(SPEC / "coverage_plan.json")
+    coverage_waivers = _strict_load(SPEC / "coverage_waivers.json")
     errors: list[str] = []
     for path, data in (
         ("manifest.json", manifest),
@@ -447,6 +636,8 @@ def validate(*, write_traceability: bool = False) -> str:
         ("requirements.json", requirements_data),
         ("verification.json", verification_data),
         ("fault_campaign.json", fault_campaign),
+        ("coverage_plan.json", coverage_plan),
+        ("coverage_waivers.json", coverage_waivers),
     ):
         if not isinstance(data, dict) or not isinstance(data.get("schema_version"), int):
             errors.append(f"{path}: missing integer schema_version")
@@ -485,6 +676,9 @@ def validate(*, write_traceability: bool = False) -> str:
             if env not in env_ids:
                 errors.append(f"{cid}: unknown environment {env}")
     _validate_fault_campaign(fault_campaign, check_ids, errors)
+    _validate_coverage_campaign(
+        coverage_plan, coverage_waivers, verification_data, check_ids, errors
+    )
     _validate_budgets(budgets, errors)
     _validate_models(manifest, parameters, errors)
     normative_paths = [

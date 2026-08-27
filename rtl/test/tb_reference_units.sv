@@ -109,7 +109,11 @@ module tb_reference_units;
         if((!sched_ack && !sched_valid) || sched_active_id!==8'h34) begin
             $display("FAIL schedule commit/id"); failures=failures+1;
         end
-        if(failures==0) begin $display("PASS: reference unit blocks"); $finish; end
-        $fatal(1,"%0d failures",failures);
+        if(failures==0) begin
+            $display("PASS: reference unit blocks");
+            $finish;
+        end else begin
+            $fatal(1,"%0d failures",failures);
+        end
     end
 endmodule

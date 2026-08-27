@@ -4,6 +4,7 @@
     "branch_coverage_percent": 90,
     "code_coverage_exclusions_require_waiver": true,
     "formal_properties_pass_percent": 100,
+    "fsm_state_bins_percent": 100,
     "functional_coverage_must_bins_percent": 100,
     "line_coverage_percent": 95,
     "open_severity_1_or_2_bugs": 0,
@@ -11,6 +12,24 @@
     "requirements_with_pass_evidence_percent": 100,
     "toggle_coverage_percent": 85,
     "unowned_waivers": 0
+  },
+  "coverage_campaign": {
+    "evidence_boundary": "Logical source RTL coverage on reduced public-reference configurations; not ATPG, target-node, macro, PHY, PDK, manufacturing, numerical-quality, or product-silicon signoff.",
+    "plan_path": "spec/coverage_plan.json",
+    "required_simulators": ["iverilog/vvp", "verilator-5.050"],
+    "result_paths": ["results/rtl/coverage_campaign.json", "results/rtl/COVERAGE_REPORT.md"],
+    "runner_path": "tools/rtl_coverage_campaign.py",
+    "source_deduplication_key": [
+      "file",
+      "line",
+      "column",
+      "point_class",
+      "point_type",
+      "description",
+      "source_span"
+    ],
+    "unexpected_warnings_are_fatal": true,
+    "waiver_path": "spec/coverage_waivers.json"
   },
   "environments": [
     {"id": "ENV-UNIT", "scope": "format, CRC/ECC, FIFO, mask, ROM, MAC, repair, and switch units"},
@@ -187,7 +206,7 @@
     {
       "environments": ["ENV-UNIT", "ENV-TILE", "ENV-RETICLE", "ENV-STAGE", "ENV-PIPE"],
       "id": "DV-COVERAGE-001",
-      "methods": ["functional", "assertion", "line", "branch", "toggle", "FSM", "cross"],
+      "methods": ["functional", "assertion", "line", "branch", "toggle", "FSM", "cross", "dual_simulator", "source_deduplicated_merge", "exact_waiver_review"],
       "name": "coverage merge, exclusions, and closure review"
     },
     {

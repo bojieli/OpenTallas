@@ -126,13 +126,13 @@ module ot_stage_controller #(
         if (OWNED_FIRST_LAYER <= 0) begin : GEN_FIRST_LAYER_ZERO
             assign first_layer_out_of_range = 1'b0;
         end else begin : GEN_FIRST_LAYER_BOUND
-            localparam [6:0] OWNED_FIRST_VALUE = OWNED_FIRST_LAYER;
+            localparam [6:0] OWNED_FIRST_VALUE = OWNED_FIRST_LAYER[6:0];
             assign first_layer_out_of_range = (cmd_first_layer < OWNED_FIRST_VALUE);
         end
         if (OWNED_LAST_LAYER >= 127) begin : GEN_LAST_LAYER_MAX
             assign last_layer_out_of_range = 1'b0;
         end else begin : GEN_LAST_LAYER_BOUND
-            localparam [6:0] OWNED_LAST_VALUE = OWNED_LAST_LAYER;
+            localparam [6:0] OWNED_LAST_VALUE = OWNED_LAST_LAYER[6:0];
             assign last_layer_out_of_range = (cmd_last_layer > OWNED_LAST_VALUE);
         end
     endgenerate

@@ -37,7 +37,6 @@ module ot_tile #(
     output wire                                  route_bad_crc,
     output wire                                  route_bad_field
 );
-    localparam integer WORD_W = LANES * WEIGHT_W;
     localparam integer WORD_INDEX_W = (WORDS_PER_EXPERT <= 2) ? 1 : $clog2(WORDS_PER_EXPERT);
     wire ctx_valid;
     reg ctx_ready;

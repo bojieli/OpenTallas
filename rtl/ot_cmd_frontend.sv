@@ -54,10 +54,8 @@ module ot_cmd_frontend #(
     localparam [7:0] ST_BAD_VERSION = 8'h02;
     localparam [7:0] ST_BAD_FIELD = 8'h03;
     localparam [7:0] ST_BAD_CRC = 8'h04;
-    localparam [7:0] ST_BUSY = 8'h05;
     localparam [7:0] ST_IMAGE = 8'h08;
     localparam [7:0] ST_THERMAL = 8'h0c;
-    localparam [7:0] ST_INTERNAL = 8'h0f;
     localparam integer RSP_PTR_W = $clog2(RSP_DEPTH);
     localparam integer RSP_CNT_W = $clog2(RSP_DEPTH+1);
     localparam integer RSP_LAST_INT = RSP_DEPTH-1;
@@ -119,19 +117,19 @@ module ot_cmd_frontend #(
         if (MAX_CONTEXT >= 1048576) begin : GEN_FULL_CONTEXT_FIELD
             assign context_limit_bad = 1'b0;
         end else begin : GEN_LIMITED_CONTEXT_FIELD
-            localparam [19:0] MAX_CONTEXT_VALUE = MAX_CONTEXT;
+            localparam [19:0] MAX_CONTEXT_VALUE = MAX_CONTEXT[19:0];
             assign context_limit_bad = (context_m1 >= MAX_CONTEXT_VALUE);
         end
         if (MAX_BATCH >= 65536) begin : GEN_FULL_BATCH_FIELD
             assign batch_limit_bad = 1'b0;
         end else begin : GEN_LIMITED_BATCH_FIELD
-            localparam [15:0] MAX_BATCH_VALUE = MAX_BATCH;
+            localparam [15:0] MAX_BATCH_VALUE = MAX_BATCH[15:0];
             assign batch_limit_bad = (cmd_record[127:112] >= MAX_BATCH_VALUE);
         end
         if (MAX_LAYERS >= 128) begin : GEN_FULL_LAYER_FIELD
             assign layer_limit_bad = 1'b0;
         end else begin : GEN_LIMITED_LAYER_FIELD
-            localparam [6:0] MAX_LAYERS_VALUE = MAX_LAYERS;
+            localparam [6:0] MAX_LAYERS_VALUE = MAX_LAYERS[6:0];
             assign layer_limit_bad = (last_layer >= MAX_LAYERS_VALUE);
         end
     endgenerate

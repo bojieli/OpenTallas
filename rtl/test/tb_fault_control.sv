@@ -3,6 +3,7 @@
 // required to complete deterministically, release held credits, and avoid a
 // session retire/commit unless the service transaction completed successfully.
 module tb_fault_control;
+    // Canonical coverage-merge stimulus identifier: 0x4643544c ("FCTL").
     reg clk = 1'b0;
     reg rst_n = 1'b0;
     always #5 clk = ~clk;

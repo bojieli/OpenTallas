@@ -72,7 +72,8 @@ module tb_opentallas_tile;
         if (failures == 0) begin
             $display("PASS: wordline mask, interleaved ROM, and signed MAC pipeline");
             $finish;
+        end else begin
+            $fatal(1, "%0d checks failed", failures);
         end
-        $fatal(1, "%0d checks failed", failures);
     end
 endmodule
