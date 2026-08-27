@@ -21,20 +21,23 @@ module ot_credit_manager #(
     output reg                          conservation_error
 );
     reg [CREDIT_W-1:0] free [0:SINKS-1];
-    integer i;
+    reg [CREDIT_W-1:0] free_next [0:SINKS-1];
+    integer avail_i;
+    integer next_i;
+    integer seq_i;
     reg all_available;
     reg [CREDIT_W:0] next_count;
-    reg [CREDIT_W-1:0] free_value;
+    reg overflow_event;
     wire reserve_fire;
     wire release_fire = release_valid;
 
     always @* begin
         all_available = 1'b1;
-        for (i = 0; i < SINKS; i = i + 1)
+        for (avail_i = 0; avail_i < SINKS; avail_i = avail_i + 1)
             // A terminal release in this cycle can fund the atomic replacement
             // reservation, avoiding a bubble at full occupancy.
-            if (reserve_mask[i] && (free[i] == 0) &&
-                !(release_valid && release_mask[i]))
+            if (reserve_mask[avail_i] && (free[avail_i] == 0) &&
+                !(release_valid && release_mask[avail_i]))
                 all_available = 1'b0;
     end
     assign reserve_ready = all_available;
@@ -46,34 +49,43 @@ module ot_credit_manager #(
         end
     endgenerate
 
+    // Compute all counters and diagnostic events outside the sequential block.
+    // This makes the widened arithmetic explicit and leaves the state block with
+    // nonblocking assignments only.
+    always @* begin
+        overflow_event = 1'b0;
+        for (next_i = 0; next_i < SINKS; next_i = next_i + 1) begin
+            next_count = {1'b0,free[next_i]};
+            if (release_fire && release_mask[next_i]) begin
+                if (next_count >= DEPTH) begin
+                    overflow_event = 1'b1;
+                end else begin
+                    next_count = next_count + 1'b1;
+                end
+            end
+            // reserve_fire is atomic and implies every selected next_count is
+            // nonzero (including same-cycle recycle).  A valid held while
+            // ready is low is backpressure, not an underflow attempt.
+            if (reserve_fire && reserve_mask[next_i])
+                next_count = next_count - 1'b1;
+            free_next[next_i] = next_count[CREDIT_W-1:0];
+        end
+    end
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             overflow_error <= 1'b0;
             underflow_error <= 1'b0;
             conservation_error <= 1'b0;
-            for (i = 0; i < SINKS; i = i + 1)
-                free[i] <= DEPTH;
+            for (seq_i = 0; seq_i < SINKS; seq_i = seq_i + 1)
+                free[seq_i] <= DEPTH;
         end else begin
-            for (i = 0; i < SINKS; i = i + 1) begin
-                next_count = free[i];
-                if (release_fire && release_mask[i]) begin
-                    if (next_count >= DEPTH) begin
-                        overflow_error <= 1'b1;
-                        conservation_error <= 1'b1;
-                    end else begin
-                        next_count = next_count + 1'b1;
-                    end
-                end
-                if (reserve_fire && reserve_mask[i]) begin
-                    if (next_count == 0) begin
-                        underflow_error <= 1'b1;
-                        conservation_error <= 1'b1;
-                    end else begin
-                        next_count = next_count - 1'b1;
-                    end
-                end
-                free[i] <= next_count[CREDIT_W-1:0];
-            end
+            for (seq_i = 0; seq_i < SINKS; seq_i = seq_i + 1)
+                free[seq_i] <= free_next[seq_i];
+            if (overflow_event)
+                overflow_error <= 1'b1;
+            if (overflow_event)
+                conservation_error <= 1'b1;
         end
     end
 

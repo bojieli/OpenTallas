@@ -38,9 +38,9 @@ after their local stop acknowledgements and isolation conditions are satisfied.
 
 | Source → destination | Data | Mechanism | Reset/recovery rule |
 |---|---|---|---|
-| AON → core | accepted host commands | dual-clock asynchronous FIFO | either reset flushes; host gets reset-abort for accepted work |
-| core → AON | command responses | dual-clock asynchronous FIFO | response reservation prevents loss; fatal reset cause logged in AON |
-| AON → core | schedule/repair commit, power request | acknowledged toggle with stable payload mailbox | source holds payload through returned acknowledgement |
+| AON → core | accepted host commands | dual-clock asynchronous FIFO | either reset flushes both pointer domains; interfaces remain closed until a two-domain reset rendezvous |
+| core → AON | command responses | dual-clock asynchronous FIFO | response reservation prevents loss; either reset flushes both pointer domains and fatal reset cause is logged in AON |
+| AON → core | schedule/repair commit, power request | closed-loop four-phase mailbox with stable payload and response | source holds payload through returned acknowledgement; destination reset replays an outstanding request only into state sharing that reset |
 | core → AON | status/counter snapshot | request/acknowledge snapshot mailbox | coherent snapshot captured in core before acknowledgement |
 | core → AON | telemetry/fatal events | asynchronous FIFO, depth at least 16 | exhaustion blocks admission; AON survives core reset |
 | core → HBM[i] | `IF-HBM-REQ` | asynchronous FIFO | reset withdraws tags/credits and requires channel resync |
@@ -53,6 +53,25 @@ after their local stop acknowledgements and isolation conditions are satisfied.
 No multi-bit bus is sampled through independent bit synchronizers. Gray pointers
 are used only inside reviewed asynchronous FIFOs. A synchronized status that fans
 into reconvergent logic is latched once in the destination domain before use.
+
+The public-reference asynchronous FIFO couples assertion of the two interface
+resets inside the wrapper: assertion of either reset asynchronously flushes both
+pointer domains, while release is synchronized independently to each local clock.
+Each side then advertises an online generation and keeps `ready`/`valid` closed
+until the remote online indication has traversed two synchronizer stages. This is
+the executable public-tool realization of "either reset flushes"; a target macro
+may instead exchange explicit monotonically protected reset generations if it
+preserves the same externally visible flush and rendezvous behavior.
+
+The public-reference mailbox uses request/acknowledge levels rather than an
+open-loop pulse. Request payload and response payload are each held stable while
+their associated level crosses two synchronizer stages. Source and destination
+online levels prevent a reset value from being mistaken for a transaction. A
+destination reset while a request is outstanding may replay that request after
+the rendezvous, so the mailbox may drive only destination state that shares the
+destination reset or an explicitly idempotent operation. A source reset cancels
+its local completion obligation; warm reset therefore quiesces mailbox traffic
+before reset, as required by CRP-3.3.
 
 ## CRP-3 Reset architecture
 
@@ -85,7 +104,8 @@ X-propagation containment; verification must not depend on their value.
    STANDBY with service disabled.
 4. Requested core/HBM/link clocks and power-good qualify independently; each local
    reset deasserts synchronously.
-5. CDC FIFOs exchange reset generations and advertise empty/ready; no credit exists
+5. CDC wrappers flush or exchange reset generations and complete their two-domain
+   online rendezvous; no interface advertises ready/valid and no credit exists
    before both sides agree.
 6. Boot firmware loads repair/schedule shadow data and runs mandatory BIST.
 7. Hardware publishes degraded capacities and identities, commits a checked epoch,

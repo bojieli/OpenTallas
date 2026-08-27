@@ -32,25 +32,20 @@ module ot_schedule_controller #(
 `ifdef FORMAL
     , output wire                        formal_active_bank
     , output wire                        formal_pending
-    , output wire                        formal_shadow_invalid
 `endif
 );
     reg [ENTRY_W-1:0] schedule_mem [0:1][0:SLOTS-1];
     reg active_bank;
     reg pending;
-    reg shadow_invalid;
     reg [31:0] shadow_crc;
     reg [31:0] active_crc [0:1];
     integer i;
-    integer source_int;
-    reg [PORT_ID_W-1:0] source_field;
-    reg idle_field;
-    reg expect_field;
-    reg [31:0] crc_work;
-    integer b;
-    integer bit_i;
+    wire shadow_idle = shadow_wr_data[ENTRY_W-1];
+    wire [PORT_ID_W-1:0] shadow_source = shadow_wr_data[PORT_ID_W-1:0];
+    wire shadow_write_illegal = (shadow_wr_slot >= SLOTS) ||
+                                (!shadow_idle && (shadow_source >= PORTS));
 
-    assign shadow_wr_ready = !pending && !schedule_valid ? 1'b1 : !pending;
+    assign shadow_wr_ready = !pending;
     assign commit_pending = pending;
     assign active_slot_valid = schedule_valid && (active_slot < SLOTS) &&
                                !schedule_mem[active_bank][active_slot][ENTRY_W-1];
@@ -61,7 +56,6 @@ module ot_schedule_controller #(
 `ifdef FORMAL
     assign formal_active_bank = active_bank;
     assign formal_pending = pending;
-    assign formal_shadow_invalid = shadow_invalid;
 `endif
 
     // Deterministic CRC over the exact entry bytes (low-order byte first).
@@ -99,31 +93,25 @@ module ot_schedule_controller #(
             epoch_id <= 8'h00;
             commit_ack <= 1'b0;
             commit_error <= 1'b0;
-            shadow_invalid <= 1'b0;
             shadow_crc <= 32'h0;
             active_crc[0] <= 32'h0;
             active_crc[1] <= 32'h0;
             for (i = 0; i < SLOTS; i = i + 1) begin
-                schedule_mem[0][i] = {ENTRY_W{1'b1}}; // idle after reset
-                schedule_mem[1][i] = {ENTRY_W{1'b1}};
+                schedule_mem[0][i] <= {ENTRY_W{1'b1}}; // idle after reset
+                schedule_mem[1][i] <= {ENTRY_W{1'b1}};
             end
         end else begin
             commit_ack <= 1'b0;
+            commit_error <= 1'b0;
             if (shadow_wr_valid && shadow_wr_ready) begin
-                source_field = shadow_wr_data[PORT_ID_W-1:0];
-                expect_field = shadow_wr_data[PORT_ID_W];
-                idle_field = shadow_wr_data[ENTRY_W-1];
-                source_int = source_field;
-                if (shadow_wr_slot >= SLOTS ||
-                    (!idle_field && source_int >= PORTS)) begin
-                    shadow_invalid <= 1'b1;
+                if (shadow_write_illegal) begin
                     commit_error <= 1'b1;
                 end else begin
                     schedule_mem[~active_bank][shadow_wr_slot] <= shadow_wr_data;
                 end
             end
             if (commit_req && !pending) begin
-                if (shadow_invalid || !manifest_crc_ok) begin
+                if (!manifest_crc_ok) begin
                     commit_error <= 1'b1;
                 end else begin
                     pending <= 1'b1;
@@ -139,7 +127,6 @@ module ot_schedule_controller #(
                 epoch_id <= epoch_id + 1'b1;
                 pending <= 1'b0;
                 commit_ack <= 1'b1;
-                shadow_invalid <= 1'b0;
             end
         end
     end

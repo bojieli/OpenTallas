@@ -1,8 +1,9 @@
-.PHONY: sim unit-sim integration-sim verilator-sim sim-campaign lint formal synth synth-reference verify clean
+.PHONY: sim unit-sim cdc-sim integration-sim verilator-sim sim-campaign lint formal synth synth-reference verify clean
 
 SOURCES = expert_mask_controller.sv via_mask_rom.sv rom_mac_tile.sv opentallas_tile.sv
-LIB_SOURCES = lib/ot_skid_buffer.sv lib/ot_async_fifo.sv lib/ot_crc_pkg.sv \
-	lib/ot_crc16_ccitt.sv lib/ot_crc32c.sv
+LIB_SOURCES = lib/ot_reset_sync.sv lib/ot_skid_buffer.sv lib/ot_async_fifo.sv lib/ot_crc_pkg.sv \
+	lib/ot_crc16_ccitt.sv lib/ot_crc32c.sv lib/ot_cdc_mailbox.sv \
+	lib/ot_sync_level.sv
 REFERENCE_SOURCES = $(LIB_SOURCES) via_mask_rom.sv ot_route_mask.sv ot_rom_wrapper.sv \
 	ot_format_decode.sv ot_numeric_dot.sv ot_reduction_tree.sv \
 	ot_schedule_controller.sv ot_credit_manager.sv ot_session_table.sv \
@@ -23,6 +24,12 @@ sim: build
 unit-sim: build
 	iverilog -g2012 -Wall -s tb_reference_units -o build/tb_units $(REFERENCE_SOURCES) test/tb_reference_units.sv
 	vvp build/tb_units
+
+cdc-sim: build
+	iverilog -g2012 -Wall -s tb_cdc_primitives -o build/tb_cdc \
+		lib/ot_reset_sync.sv lib/ot_async_fifo.sv lib/ot_cdc_mailbox.sv \
+		lib/ot_sync_level.sv test/tb_cdc_primitives.sv
+	vvp build/tb_cdc
 
 integration-sim: build
 	iverilog -g2012 -Wall -s tb_stage_top -o build/tb_stage_top $(REFERENCE_SOURCES) test/tb_stage_top.sv
@@ -56,7 +63,7 @@ synth-reference: build
 	yosys -q -l build/synth_reference.log synth_reference.ys
 	grep -A24 '=== ot_stage_top ===' build/synth_reference.log
 
-verify: sim unit-sim integration-sim verilator-sim lint formal synth synth-reference
+verify: sim unit-sim cdc-sim integration-sim verilator-sim lint formal synth synth-reference
 
 clean:
 	rm -rf build

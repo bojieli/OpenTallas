@@ -342,6 +342,14 @@ Schedule and repair windows target shadow state. Writes are rejected while commi
 is pending or test/service ownership conflicts. Image identity registers are tied
 to mask/macro identity inputs and cannot be overridden by configuration.
 
+The AON-to-core schedule adapter permits one outstanding operation. It transfers
+the complete write/commit record through a stable-payload acknowledged mailbox,
+emits a single-cycle core request exactly once, waits through a blocked quiescent
+commit, and returns a typed acknowledgement or error. An invalid write is rejected
+without mutating or permanently poisoning the shadow bank, so corrected firmware
+may retry. Commit error is a per-request response pulse; sticky diagnostic history
+is maintained by RAS/CSR state rather than overloaded onto the transaction signal.
+
 ### MICRO-7.2 Error and telemetry queues
 
 First error captures atomically on the earliest event by core timestamp; ties use

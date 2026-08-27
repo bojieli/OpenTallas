@@ -1,7 +1,9 @@
 `timescale 1ns/1ps
-// Dual-clock Gray-pointer FIFO.  DEPTH must be a power of two and at least
-// four; this is checked at elaboration.  Data memory is intentionally not
-// reset, because validity is carried solely by synchronized pointers.
+// Dual-clock Gray-pointer FIFO.  Assertion of either interface reset flushes
+// both pointer domains.  Deassertion is conditioned independently on each
+// clock, followed by an online rendezvous before either interface reopens.
+// DEPTH must be a power of two and at least four.  Data memory is intentionally
+// not reset, because validity is carried solely by synchronized pointers.
 module ot_async_fifo #(
     parameter integer WIDTH = 32,
     parameter integer DEPTH = 4
@@ -26,11 +28,24 @@ module ot_async_fifo #(
 
     localparam integer ADDR_W = $clog2(DEPTH);
     localparam integer PTR_W = ADDR_W + 1;
+    wire fifo_async_rst_n = wr_rst_n && rd_rst_n;
+    wire wr_domain_rst_n;
+    wire rd_domain_rst_n;
+    ot_reset_sync wr_reset_conditioner (
+        .clk(wr_clk), .async_rst_n(fifo_async_rst_n),
+        .sync_rst_n(wr_domain_rst_n));
+    ot_reset_sync rd_reset_conditioner (
+        .clk(rd_clk), .async_rst_n(fifo_async_rst_n),
+        .sync_rst_n(rd_domain_rst_n));
+
     reg [WIDTH-1:0] mem [0:DEPTH-1];
     reg [PTR_W-1:0] wr_bin, wr_gray;
     reg [PTR_W-1:0] rd_bin, rd_gray;
     (* async_reg = "true" *) reg [PTR_W-1:0] rd_gray_w1, rd_gray_w2;
     (* async_reg = "true" *) reg [PTR_W-1:0] wr_gray_r1, wr_gray_r2;
+    reg wr_online, rd_online;
+    (* async_reg = "true" *) reg rd_online_w1, rd_online_w2;
+    (* async_reg = "true" *) reg wr_online_r1, wr_online_r2;
     reg wr_full, rd_empty;
     wire wr_fire = wr_valid && wr_ready;
     wire rd_fire = rd_valid && rd_ready;
@@ -48,19 +63,25 @@ module ot_async_fifo #(
                            {~rd_gray_w2[PTR_W-1:PTR_W-2],
                             rd_gray_w2[PTR_W-3:0]});
     assign rd_empty_next = (rd_gray_next == wr_gray_r2);
-    assign wr_ready = !wr_full;
-    assign rd_valid = !rd_empty;
+    assign wr_ready = wr_domain_rst_n && rd_online_w2 && !wr_full;
+    assign rd_valid = rd_domain_rst_n && wr_online_r2 && !rd_empty;
     assign rd_data = mem[rd_bin[ADDR_W-1:0]];
 
-    always @(posedge wr_clk or negedge wr_rst_n) begin
-        if (!wr_rst_n) begin
+    always @(posedge wr_clk or negedge wr_domain_rst_n) begin
+        if (!wr_domain_rst_n) begin
             rd_gray_w1 <= {PTR_W{1'b0}};
             rd_gray_w2 <= {PTR_W{1'b0}};
+            rd_online_w1 <= 1'b0;
+            rd_online_w2 <= 1'b0;
+            wr_online <= 1'b0;
             wr_bin <= {PTR_W{1'b0}};
             wr_gray <= {PTR_W{1'b0}};
             wr_full <= 1'b0;
             wr_overflow <= 1'b0;
         end else begin
+            wr_online <= 1'b1;
+            rd_online_w1 <= rd_online;
+            rd_online_w2 <= rd_online_w1;
             rd_gray_w1 <= rd_gray;
             rd_gray_w2 <= rd_gray_w1;
             // Valid may legally remain asserted while ready is low.
@@ -72,15 +93,21 @@ module ot_async_fifo #(
         end
     end
 
-    always @(posedge rd_clk or negedge rd_rst_n) begin
-        if (!rd_rst_n) begin
+    always @(posedge rd_clk or negedge rd_domain_rst_n) begin
+        if (!rd_domain_rst_n) begin
             wr_gray_r1 <= {PTR_W{1'b0}};
             wr_gray_r2 <= {PTR_W{1'b0}};
+            wr_online_r1 <= 1'b0;
+            wr_online_r2 <= 1'b0;
+            rd_online <= 1'b0;
             rd_bin <= {PTR_W{1'b0}};
             rd_gray <= {PTR_W{1'b0}};
             rd_empty <= 1'b1;
             rd_underflow <= 1'b0;
         end else begin
+            rd_online <= 1'b1;
+            wr_online_r1 <= wr_online;
+            wr_online_r2 <= wr_online_r1;
             wr_gray_r1 <= wr_gray;
             wr_gray_r2 <= wr_gray_r1;
             // Ready may legally remain asserted while valid is low.
@@ -95,8 +122,8 @@ module ot_async_fifo #(
     reg [PTR_W-1:0] wr_gray_prev, rd_gray_prev;
     integer bit_count;
     reg [PTR_W-1:0] gray_delta;
-    always @(posedge wr_clk or negedge wr_rst_n) begin
-        if (!wr_rst_n)
+    always @(posedge wr_clk or negedge wr_domain_rst_n) begin
+        if (!wr_domain_rst_n)
             wr_gray_prev <= {PTR_W{1'b0}};
         else begin
             gray_delta = wr_gray ^ wr_gray_prev;
@@ -110,8 +137,8 @@ module ot_async_fifo #(
             wr_gray_prev <= wr_gray;
         end
     end
-    always @(posedge rd_clk or negedge rd_rst_n) begin
-        if (!rd_rst_n)
+    always @(posedge rd_clk or negedge rd_domain_rst_n) begin
+        if (!rd_domain_rst_n)
             rd_gray_prev <= {PTR_W{1'b0}};
         else begin
             gray_delta = rd_gray ^ rd_gray_prev;

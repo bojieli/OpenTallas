@@ -46,10 +46,28 @@ FORMAL_CASES = (
     ),
     FormalCase(
         "f_async_fifo",
-        ("rtl/lib/ot_async_fifo.sv", "rtl/formal/f_async_fifo.sv"),
+        (
+            "rtl/lib/ot_reset_sync.sv",
+            "rtl/lib/ot_async_fifo.sv",
+            "rtl/formal/f_async_fifo.sv",
+        ),
         24,
         12,
         14,
+    ),
+    FormalCase(
+        "f_cdc_mailbox",
+        ("rtl/lib/ot_cdc_mailbox.sv", "rtl/formal/f_cdc_mailbox.sv"),
+        32,
+        16,
+        28,
+    ),
+    FormalCase(
+        "f_sync_level",
+        ("rtl/lib/ot_sync_level.sv", "rtl/formal/f_sync_level.sv"),
+        24,
+        12,
+        12,
     ),
     FormalCase(
         "f_credit_manager",
@@ -311,7 +329,7 @@ def render_report(summary: dict[str, Any]) -> str:
             "- The independent configurations are Yosys internal SAT and Yosys SMT2 with CVC4 1.8.",
             "- Z3 4.8.12 was locally non-terminating at useful bounds for these generated models; "
             "Ubuntu Boolector 1.5.118 is too old for the interaction. Neither is counted as pass evidence.",
-            "- The credit and route CVC4 bounds are intentionally lower than SAT because solver cost "
+            "- Some CVC4 bounds are intentionally lower than SAT because solver cost "
             "rises sharply; the exact depths are part of the claim, not hidden campaign metadata.",
             "",
             "## Source manifest",
@@ -376,7 +394,7 @@ def main() -> int:
         "limitations": [
             "bounded results claim only the recorded depth and harness assumptions",
             "induction is counted only for credit and power harnesses",
-            "formal clocks are abstract global clocks; asynchronous FIFO CDC structure is checked separately",
+            "formal clocks are abstract global clocks; independent clock ratios and reset phase are exercised in simulation and CDC structure is checked separately",
             "no result qualifies target ROM, HBM, PHY, package, standard-cell, or PDK behavior",
         ],
     }

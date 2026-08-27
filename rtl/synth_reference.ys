@@ -3,7 +3,8 @@
 # synthesize a 4,096-tile, 100-TB/s product hierarchy.  ROM/HBM/PHY macros are
 # represented by the technology-independent behavioral contracts.
 read_verilog -sv \
-  lib/ot_sync_bits.sv lib/ot_skid_buffer.sv lib/ot_async_fifo.sv \
+  lib/ot_reset_sync.sv lib/ot_sync_bits.sv lib/ot_sync_level.sv lib/ot_cdc_mailbox.sv \
+  lib/ot_skid_buffer.sv lib/ot_async_fifo.sv \
   lib/ot_crc16_ccitt.sv lib/ot_crc32c.sv \
   expert_mask_controller.sv via_mask_rom.sv rom_mac_tile.sv \
   opentallas_tile.sv static_timeslot_switch.sv ot_route_mask.sv \

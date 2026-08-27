@@ -13,7 +13,7 @@ module f_schedule_controller;
     wire active_slot_valid, active_expect_valid, active_idle, commit_pending;
     wire [1:0] active_source_port;
     wire [31:0] active_schedule_crc;
-    wire formal_active_bank, formal_pending, formal_shadow_invalid;
+    wire formal_active_bank, formal_pending;
 
     ot_schedule_controller #(
         .PORTS(3), .SLOTS(3), .PORT_ID_W(2), .SLOT_W(2), .ENTRY_W(4)
@@ -28,8 +28,7 @@ module f_schedule_controller;
         .active_slot_valid(active_slot_valid), .active_source_port(active_source_port),
         .active_expect_valid(active_expect_valid), .active_idle(active_idle),
         .active_schedule_crc(active_schedule_crc), .commit_pending(commit_pending),
-        .formal_active_bank(formal_active_bank), .formal_pending(formal_pending),
-        .formal_shadow_invalid(formal_shadow_invalid)
+        .formal_active_bank(formal_active_bank), .formal_pending(formal_pending)
     );
 
     always @(posedge clk) begin
@@ -57,17 +56,17 @@ module f_schedule_controller;
                 end
                 if ($past(commit_req && !commit_pending && !manifest_crc_ok))
                     assert(!commit_pending);
-                if ($past(shadow_wr_valid && shadow_wr_ready &&
-                          ((shadow_wr_slot >= 3) ||
-                           (!shadow_wr_data[3] && (shadow_wr_data[1:0] >= 3))))) begin
+                if ($past((shadow_wr_valid && shadow_wr_ready &&
+                           ((shadow_wr_slot >= 3) ||
+                            (!shadow_wr_data[3] && (shadow_wr_data[1:0] >= 3)))) ||
+                          (commit_req && !commit_pending && !manifest_crc_ok))) begin
                     assert(commit_error);
-                    assert(formal_shadow_invalid);
+                end else begin
+                    assert(!commit_error);
                 end
-                if ($past(commit_error))
-                    assert(commit_error);
             end
             cover(commit_ack && schedule_valid);
-            cover(commit_error && formal_shadow_invalid);
+            cover(commit_error);
             cover(active_slot_valid && active_expect_valid);
         end
     end

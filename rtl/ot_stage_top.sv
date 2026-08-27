@@ -12,6 +12,8 @@ module ot_stage_top #(
     parameter integer SCHEDULE_SLOTS = 256,
     parameter integer SCHEDULE_PORTS = 8,
     parameter integer SCHEDULE_SLOT_W = (SCHEDULE_SLOTS <= 2) ? 1 : $clog2(SCHEDULE_SLOTS),
+    parameter integer SCHEDULE_PORT_ID_W = (SCHEDULE_PORTS <= 2) ? 1 : $clog2(SCHEDULE_PORTS),
+    parameter integer SCHEDULE_ENTRY_W = SCHEDULE_PORT_ID_W + 2,
     parameter integer STAGE_ID = 0,
     parameter integer OWNED_FIRST_LAYER = 0,
     parameter integer OWNED_LAST_LAYER = 127,
@@ -36,8 +38,9 @@ module ot_stage_top #(
     output wire                         csr_rsp_valid,
     input  wire                         csr_rsp_ready,
     output wire [127:0]                 csr_rsp_record,
+    // Core-domain qualified availability state, static while service is enabled.
     input  wire [255:0]                 image_slot_valid,
-    // Abstract qualified service boundary (tile/HBM/link model).
+    // Core-domain abstract qualified service boundary (tile/HBM/link model).
     output wire                         service_start_valid,
     input  wire                         service_start_ready,
     output wire [15:0]                  service_transaction_id,
@@ -63,6 +66,7 @@ module ot_stage_top #(
     input  wire                         fatal_error,
     input  wire                         requalify,
     input  wire                         test_enable,
+    // Core-domain abort request.
     input  wire                         abort_valid,
     input  wire [15:0]                  abort_transaction_id,
     output wire [3:0]                   power_state,
@@ -73,9 +77,14 @@ module ot_stage_top #(
     input  wire                         schedule_wr_valid,
     input  wire [7:0]                   schedule_wr_slot,
     input  wire [15:0]                  schedule_wr_data,
+    output wire                         schedule_wr_ready,
+    output wire                         schedule_wr_ack,
+    output wire                         schedule_wr_error,
     input  wire                         schedule_commit_req,
+    output wire                         schedule_commit_ready,
     input  wire                         schedule_manifest_crc_ok,
     output wire                         schedule_commit_ack,
+    output wire                         schedule_commit_error,
     output wire                         schedule_valid
 );
     // AON -> core command FIFO.
@@ -94,10 +103,16 @@ module ot_stage_top #(
     wire power_stop_ack;
     wire [7:0] power_reset_cause;
     wire core_reset_n_qualified;
+    wire core_domain_rst_n;
+    wire stage_idle_aon;
+    ot_reset_sync core_reset_conditioner (
+        .clk(core_clk),
+        .async_rst_n(core_rst_n && core_reset_n_qualified),
+        .sync_rst_n(core_domain_rst_n));
     ot_async_fifo #(.WIDTH(256),.DEPTH(CMD_FIFO_DEPTH)) cmd_cdc (
         .wr_clk(aon_clk), .wr_rst_n(aon_rst_n), .wr_valid(host_cmd_valid),
         .wr_ready(cmd_fifo_wr_ready), .wr_data(host_cmd_record),
-        .wr_overflow(cmd_fifo_overflow), .rd_clk(core_clk), .rd_rst_n(core_rst_n),
+        .wr_overflow(cmd_fifo_overflow), .rd_clk(core_clk), .rd_rst_n(core_domain_rst_n),
         .rd_valid(cmd_fifo_rd_valid), .rd_ready(cmd_fifo_rd_ready),
         .rd_data(cmd_fifo_rd_data), .rd_underflow(cmd_fifo_underflow));
     assign host_cmd_ready = cmd_fifo_wr_ready;
@@ -108,7 +123,7 @@ module ot_stage_top #(
     wire rsp_fifo_rd_valid, rsp_fifo_rd_ready;
     wire [127:0] rsp_fifo_rd_data;
     ot_async_fifo #(.WIDTH(128),.DEPTH(RSP_FIFO_DEPTH)) rsp_cdc (
-        .wr_clk(core_clk), .wr_rst_n(core_rst_n), .wr_valid(rsp_fifo_wr_valid),
+        .wr_clk(core_clk), .wr_rst_n(core_domain_rst_n), .wr_valid(rsp_fifo_wr_valid),
         .wr_ready(rsp_fifo_wr_ready), .wr_data(rsp_fifo_wr_data), .wr_overflow(),
         .rd_clk(aon_clk), .rd_rst_n(aon_rst_n), .rd_valid(rsp_fifo_rd_valid),
         .rd_ready(rsp_fifo_rd_ready), .rd_data(rsp_fifo_rd_data), .rd_underflow());
@@ -121,7 +136,7 @@ module ot_stage_top #(
     wire [127:0] telem_fifo_rd_data;
     wire telem_fifo_underflow;
     ot_async_fifo #(.WIDTH(128),.DEPTH(TELEM_FIFO_DEPTH)) telemetry_cdc (
-        .wr_clk(core_clk), .wr_rst_n(core_rst_n), .wr_valid(ras_telem_valid),
+        .wr_clk(core_clk), .wr_rst_n(core_domain_rst_n), .wr_valid(ras_telem_valid),
         .wr_ready(telem_fifo_wr_ready), .wr_data(ras_telem_record), .wr_overflow(),
         .rd_clk(aon_clk), .rd_rst_n(aon_rst_n), .rd_valid(telem_fifo_rd_valid),
         .rd_ready(telem_fifo_rd_ready), .rd_data(telem_fifo_rd_data),
@@ -149,7 +164,7 @@ module ot_stage_top #(
         .clk(aon_clk), .rst_n(aon_rst_n), .req_valid(csr_req_valid), .req_ready(csr_req_ready_int),
         .req_record(csr_req_record), .rsp_valid(csr_rsp_valid_int), .rsp_ready(csr_rsp_ready),
         .rsp_record(csr_rsp_record_int), .capabilities(64'h0001_0004_0000_0010),
-        .status_in({58'b0,stage_idle,safe_state,power_state}), .heartbeat(heartbeat),
+        .status_in({58'b0,stage_idle_aon,safe_state,power_state}), .heartbeat(heartbeat),
         .power_thermal_state({60'b0,thermal_fatal,thermal_warning,2'b0}),
         .image_identity(IMAGE_IDENTITY), .first_error(ras_first_error),
         .error_status_in({32'b0,ras_fatal_count}), .ras_dft_status(64'b0),
@@ -165,38 +180,121 @@ module ot_stage_top #(
 
     wire core_ready = 1'b1;
     wire service_enable_aon;
+    wire ras_safe_request_core;
+    wire ras_safe_request_aon;
+    wire ras_watchdog_timeout;
+    ot_sync_bits #(.WIDTH(1)) ras_safe_sync (
+        .clk(aon_clk), .rst_n(aon_rst_n), .async_in(ras_safe_request_core),
+        .sync_out(ras_safe_request_aon));
     ot_power_reset_controller power (
         .aon_clk(aon_clk), .aon_rst_n(aon_rst_n), .power_good(power_good),
         .clock_stable(clock_stable), .core_ready(core_ready), .hbm_ready(hbm_ready),
         .link_ready(link_ready), .bist_done(bist_done), .bist_pass(bist_pass),
         .service_request(csr_control[0]), .quiesce_request(csr_control[1]),
-        .core_quiescent(stage_idle), .thermal_warning(thermal_warning),
-        .thermal_fatal(thermal_fatal), .fatal_error(fatal_error), .requalify(requalify),
+        .core_quiescent(stage_idle_aon), .thermal_warning(thermal_warning),
+        .thermal_fatal(thermal_fatal), .fatal_error(fatal_error || ras_safe_request_aon),
+        .requalify(requalify),
         .test_enable(test_enable), .state(power_state), .core_reset_n(core_reset_n_qualified),
         .service_enable(service_enable_aon), .isolation_enable(power_isolation), .throttle_enable(power_throttle),
         .safe(power_safe_request), .quiesce_ack(power_quiesce_ack), .stop_ack(power_stop_ack), .reset_cause(power_reset_cause));
     wire service_enable_core;
     ot_sync_bits #(.WIDTH(1)) service_sync (
-        .clk(core_clk), .rst_n(core_rst_n), .async_in(service_enable_aon),
+        .clk(core_clk), .rst_n(core_domain_rst_n), .async_in(service_enable_aon),
         .sync_out(service_enable_core));
+    wire power_safe_core;
+    ot_sync_bits #(.WIDTH(1)) power_safe_sync (
+        .clk(core_clk), .rst_n(core_domain_rst_n), .async_in(power_safe_request),
+        .sync_out(power_safe_core));
+    ot_sync_level #(.WIDTH(1),.QUAL_CYCLES(3),.RESET_VALUE(1'b1)) idle_sync (
+        .clk(aon_clk), .rst_n(aon_rst_n), .async_in(stage_idle),
+        .sync_out(stage_idle_aon));
     assign safe_state = (power_state == 4'd4);
 
     // Epoch/schedule owner.
     wire [7:0] active_epoch;
     wire active_slot_valid;
-    wire [2:0] active_source_port;
+    wire [SCHEDULE_PORT_ID_W-1:0] active_source_port;
     wire active_expect_valid, active_idle;
+    wire schedule_shadow_ready_core;
+    wire schedule_commit_ack_core, schedule_commit_error_core;
+    wire schedule_valid_core;
+    wire schedule_mail_src_ready, schedule_mail_src_done;
+    wire [1:0] schedule_mail_src_response;
+    wire schedule_mail_dst_valid, schedule_mail_dst_ready;
+    wire [25:0] schedule_mail_dst_data;
+    reg schedule_commit_dispatched;
+    wire schedule_mail_kind = schedule_mail_dst_data[25];
+    wire schedule_mail_crc_ok = schedule_mail_dst_data[24];
+    wire [7:0] schedule_mail_slot = schedule_mail_dst_data[23:16];
+    wire [15:0] schedule_mail_data = schedule_mail_dst_data[15:0];
+    wire schedule_write_illegal = (schedule_mail_slot >= SCHEDULE_SLOTS) ||
+                                  (!schedule_mail_data[SCHEDULE_ENTRY_W-1] &&
+                                   (schedule_mail_data[SCHEDULE_PORT_ID_W-1:0] >= SCHEDULE_PORTS));
+    wire [1:0] schedule_mail_dst_response = {
+        schedule_mail_kind,
+        schedule_mail_kind ? (schedule_commit_error_core && !schedule_commit_ack_core) :
+                             schedule_write_illegal
+    };
+    assign schedule_commit_ready = schedule_mail_src_ready;
+    assign schedule_wr_ready = schedule_mail_src_ready && !schedule_commit_req;
+    assign schedule_wr_ack = schedule_mail_src_done &&
+                             !schedule_mail_src_response[1] &&
+                             !schedule_mail_src_response[0];
+    assign schedule_wr_error = schedule_mail_src_done &&
+                               !schedule_mail_src_response[1] &&
+                               schedule_mail_src_response[0];
+    assign schedule_commit_ack = schedule_mail_src_done &&
+                                 schedule_mail_src_response[1] &&
+                                 !schedule_mail_src_response[0];
+    assign schedule_commit_error = schedule_mail_src_done &&
+                                   schedule_mail_src_response[1] &&
+                                   schedule_mail_src_response[0];
+    ot_cdc_mailbox #(.WIDTH(26),.RESPONSE_W(2)) schedule_cdc (
+        .src_clk(aon_clk), .src_rst_n(aon_rst_n),
+        .src_valid(schedule_commit_req || schedule_wr_valid),
+        .src_ready(schedule_mail_src_ready),
+        .src_data({schedule_commit_req,schedule_manifest_crc_ok,
+                   schedule_wr_slot,schedule_wr_data}),
+        .src_done(schedule_mail_src_done),
+        .src_response(schedule_mail_src_response),
+        .dst_clk(core_clk), .dst_rst_n(core_domain_rst_n),
+        .dst_valid(schedule_mail_dst_valid),
+        .dst_ready(schedule_mail_dst_ready),
+        .dst_data(schedule_mail_dst_data),
+        .dst_response(schedule_mail_dst_response));
+    wire schedule_commit_pulse = schedule_mail_dst_valid && schedule_mail_kind &&
+                                 !schedule_commit_dispatched;
+    always @(posedge core_clk or negedge core_domain_rst_n) begin
+        if (!core_domain_rst_n)
+            schedule_commit_dispatched <= 1'b0;
+        else if (!schedule_mail_dst_valid || !schedule_mail_kind)
+            schedule_commit_dispatched <= 1'b0;
+        else if (!schedule_commit_dispatched)
+            schedule_commit_dispatched <= 1'b1;
+    end
+    assign schedule_mail_dst_ready = schedule_mail_kind ?
+                                     (schedule_commit_dispatched &&
+                                      (schedule_commit_ack_core || schedule_commit_error_core)) :
+                                     schedule_shadow_ready_core;
     ot_schedule_controller #(.PORTS(SCHEDULE_PORTS),.SLOTS(SCHEDULE_SLOTS),
-                              .PORT_ID_W((SCHEDULE_PORTS <= 2) ? 1 : $clog2(SCHEDULE_PORTS)),
-                              .SLOT_W((SCHEDULE_SLOTS <= 2) ? 1 : $clog2(SCHEDULE_SLOTS))) schedule (
-        .clk(core_clk), .rst_n(core_rst_n), .shadow_wr_valid(schedule_wr_valid),
-        .shadow_wr_ready(), .shadow_wr_slot(schedule_wr_slot[SCHEDULE_SLOT_W-1:0]), .shadow_wr_data(schedule_wr_data[4:0]),
-        .commit_req(schedule_commit_req), .quiescent(stage_idle), .epoch_boundary(1'b1),
-        .manifest_crc_ok(schedule_manifest_crc_ok), .commit_ack(schedule_commit_ack),
-        .commit_error(), .schedule_valid(schedule_valid), .epoch_id(active_epoch),
+                              .PORT_ID_W(SCHEDULE_PORT_ID_W),
+                              .SLOT_W(SCHEDULE_SLOT_W),.ENTRY_W(SCHEDULE_ENTRY_W)) schedule (
+        .clk(core_clk), .rst_n(core_domain_rst_n),
+        .shadow_wr_valid(schedule_mail_dst_valid && !schedule_mail_kind),
+        .shadow_wr_ready(schedule_shadow_ready_core),
+        .shadow_wr_slot(schedule_mail_slot[SCHEDULE_SLOT_W-1:0]),
+        .shadow_wr_data(schedule_mail_data[SCHEDULE_ENTRY_W-1:0]),
+        .commit_req(schedule_commit_pulse),
+        .quiescent(stage_idle), .epoch_boundary(1'b1),
+        .manifest_crc_ok(schedule_mail_crc_ok), .commit_ack(schedule_commit_ack_core),
+        .commit_error(schedule_commit_error_core), .schedule_valid(schedule_valid_core),
+        .epoch_id(active_epoch),
         .active_slot({SCHEDULE_SLOT_W{1'b0}}), .active_slot_valid(active_slot_valid),
         .active_source_port(active_source_port), .active_expect_valid(active_expect_valid),
         .active_idle(active_idle), .active_schedule_crc(), .commit_pending());
+    ot_sync_level #(.WIDTH(1),.QUAL_CYCLES(3)) schedule_valid_sync (
+        .clk(aon_clk), .rst_n(aon_rst_n), .async_in(schedule_valid_core),
+        .sync_out(schedule_valid));
 
     // Command frontend and stage controller.
     wire dispatch_valid, dispatch_ready;
@@ -213,7 +311,7 @@ module ot_stage_top #(
     wire [7:0] completion_status, completion_source;
     wire [3:0] completion_syndrome;
     ot_cmd_frontend frontend (
-        .clk(core_clk), .rst_n(core_rst_n), .cmd_valid(cmd_fifo_rd_valid),
+        .clk(core_clk), .rst_n(core_domain_rst_n), .cmd_valid(cmd_fifo_rd_valid),
         .cmd_ready(cmd_fifo_rd_ready), .cmd_record(cmd_fifo_rd_data),
         .dispatch_valid(dispatch_valid), .dispatch_ready(dispatch_ready),
         .dispatch_opcode(dispatch_opcode), .dispatch_flags(dispatch_flags),
@@ -242,7 +340,7 @@ module ot_stage_top #(
     wire [7:0] session_rsp_status;
     wire [19:0] session_rsp_expected;
     ot_session_table #(.ENTRIES(SESSION_ENTRIES)) sessions (
-        .clk(core_clk), .rst_n(core_rst_n), .req_valid(session_req_valid),
+        .clk(core_clk), .rst_n(core_domain_rst_n), .req_valid(session_req_valid),
         .req_ready(session_req_ready), .req_op(session_req_op), .req_session_id(session_req_session),
         .req_image_slot(session_req_image), .req_context_minus_one(session_req_context),
         .req_position(session_req_position), .req_epoch_id(session_req_epoch),
@@ -254,13 +352,13 @@ module ot_stage_top #(
     wire credit_reserve_valid, credit_reserve_ready, credit_release_valid;
     wire [CREDIT_SINKS-1:0] credit_reserve_mask, credit_release_mask;
     ot_credit_manager #(.SINKS(CREDIT_SINKS),.DEPTH(CREDIT_DEPTH)) credits (
-        .clk(core_clk), .rst_n(core_rst_n), .reserve_valid(credit_reserve_valid),
+        .clk(core_clk), .rst_n(core_domain_rst_n), .reserve_valid(credit_reserve_valid),
         .reserve_ready(credit_reserve_ready), .reserve_mask(credit_reserve_mask),
         .release_valid(credit_release_valid), .release_mask(credit_release_mask),
         .free_count(), .overflow_error(), .underflow_error(), .conservation_error());
 
     ot_ras_controller ras (
-        .clk(core_clk), .rst_n(core_rst_n),
+        .clk(core_clk), .rst_n(core_domain_rst_n),
         .event_valid(service_done_valid && (service_done_status != 0 || service_done_error_source != 0)),
         .event_code(12'h201),
         .event_severity((service_done_status != 0) ? 2'd2 : 2'd1),
@@ -269,18 +367,19 @@ module ot_stage_top #(
         .event_clear_first(1'b0), .telemetry_ready(telem_fifo_wr_ready),
         .telemetry_valid(ras_telem_valid), .telemetry_record(ras_telem_record),
         .telemetry_pop(1'b0), .transaction_active(!stage_idle),
-        .transaction_poison_in(service_poison), .transaction_poison(), .safe_request(),
+        .transaction_poison_in(service_poison), .transaction_poison(),
+        .safe_request(ras_safe_request_core),
         .admission_block(ras_admission_block), .correctable_count(), .uncorrectable_count(),
         .fatal_count(ras_fatal_count), .first_error_valid(), .first_error_severity(),
         .first_error_source(), .first_error_epoch(), .first_error_transaction(),
         .first_error_syndrome(), .watchdog_enable(!stage_idle), .watchdog_kick(service_done_valid),
-        .watchdog_limit(24'd100000), .watchdog_timeout());
+        .watchdog_limit(24'd100000), .watchdog_timeout(ras_watchdog_timeout));
     assign ras_first_error = {16'b0,ras_fatal_count,16'b0};
-    assign admission_block = ras_admission_block || power_safe_request || !service_enable_core;
+    assign admission_block = ras_admission_block || power_safe_core || !service_enable_core;
 
     ot_stage_controller #(.SINKS(CREDIT_SINKS),.STAGE_ID(STAGE_ID),
                            .OWNED_FIRST_LAYER(OWNED_FIRST_LAYER),.OWNED_LAST_LAYER(OWNED_LAST_LAYER)) controller (
-        .clk(core_clk), .rst_n(core_rst_n), .cmd_valid(dispatch_valid), .cmd_ready(dispatch_ready),
+        .clk(core_clk), .rst_n(core_domain_rst_n), .cmd_valid(dispatch_valid), .cmd_ready(dispatch_ready),
         .cmd_opcode(dispatch_opcode), .cmd_flags(dispatch_flags), .cmd_epoch(dispatch_epoch),
         .cmd_schedule(dispatch_schedule), .cmd_session(dispatch_session), .cmd_position(dispatch_position),
         .cmd_context_minus_one(dispatch_context), .cmd_batch_minus_one(dispatch_batch),
@@ -304,7 +403,7 @@ module ot_stage_top #(
         .service_batch_minus_one(service_batch_minus_one), .service_draft_tokens(service_draft_tokens),
         .service_poison(service_poison), .service_done_valid(service_done_valid),
         .service_done_status(service_done_status), .service_done_error_source(service_done_error_source),
-        .service_done_syndrome(service_done_syndrome), .watchdog_timeout(1'b0),
+        .service_done_syndrome(service_done_syndrome), .watchdog_timeout(ras_watchdog_timeout),
         .completion_valid(completion_valid), .completion_status(completion_status),
         .completion_error_source(completion_source), .completion_syndrome(completion_syndrome),
         .completion_transaction_id(), .completion_session_id(), .completion_position(),

@@ -263,6 +263,25 @@ void test_credits(Vot_verilator_unit_top& dut) {
     }
     require(saw_exhaustion, "credit exhaustion not exercised");
     require(saw_atomic_recycle, "credit atomic recycle not exercised");
+
+    // release_valid has no ready return; releasing an already-free sink is a
+    // protocol violation and must be detected without wrapping the counter.
+    reset(dut);
+    dut.credit_reserve_valid = 0;
+    dut.credit_reserve_mask = 0;
+    dut.credit_release_valid = 1;
+    dut.credit_release_mask = 1;
+    eval_low(dut);
+    require(free_lane(dut.credit_free_count, 0) == 4U,
+            "credit overflow precondition mismatch");
+    rise(dut);
+    require(dut.credit_overflow_error && dut.credit_conservation_error,
+            "credit illegal release was not diagnosed");
+    require(!dut.credit_underflow_error,
+            "credit ready/valid stall was misclassified as underflow");
+    require(free_lane(dut.credit_free_count, 0) == 4U,
+            "credit illegal release wrapped free count");
+    fall(dut);
 }
 
 }  // namespace

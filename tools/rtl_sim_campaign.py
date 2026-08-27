@@ -21,6 +21,11 @@ RESULTS = ROOT / "results" / "rtl"
 CASES = (
     ("iverilog_tile", ["make", "-C", "rtl", "sim"], "PASS: wordline mask"),
     ("iverilog_reference_units", ["make", "-C", "rtl", "unit-sim"], "PASS: reference unit blocks"),
+    (
+        "iverilog_cdc_reset",
+        ["make", "-C", "rtl", "cdc-sim"],
+        "PASS: CDC mailbox, qualified level, and reset-rendezvous FIFO",
+    ),
     ("iverilog_stage_integration", ["make", "-C", "rtl", "integration-sim"], "PASS: stage top"),
     (
         "verilator_randomized_units",
@@ -29,27 +34,22 @@ CASES = (
     ),
 )
 
-SOURCES = (
-    "rtl/Makefile",
-    "rtl/expert_mask_controller.sv",
-    "rtl/via_mask_rom.sv",
-    "rtl/rom_mac_tile.sv",
-    "rtl/opentallas_tile.sv",
-    "rtl/lib/ot_async_fifo.sv",
-    "rtl/lib/ot_skid_buffer.sv",
-    "rtl/ot_credit_manager.sv",
-    "rtl/ot_numeric_dot.sv",
-    "rtl/ot_route_mask.sv",
-    "rtl/ot_stage_controller.sv",
-    "rtl/ot_stage_top.sv",
-    "rtl/test/tb_opentallas_tile.sv",
-    "rtl/test/tb_reference_units.sv",
-    "rtl/test/tb_stage_top.sv",
-    "rtl/test/ot_verilator_unit_top.sv",
-    "rtl/test/verilator_unit.cpp",
-    "tools/rtl_sim_campaign.py",
-    "spec/VERIFICATION_PLAN.md",
-    "spec/verification.json",
+SOURCES = tuple(
+    sorted(
+        {
+            "rtl/Makefile",
+            "tools/rtl_sim_campaign.py",
+            "spec/CLOCK_RESET_POWER.md",
+            "spec/INTERFACES.md",
+            "spec/VERIFICATION_PLAN.md",
+            "spec/verification.json",
+        }
+        | {
+            str(path.relative_to(ROOT))
+            for pattern in ("*.sv", "lib/*.sv", "test/*.sv", "test/*.cpp")
+            for path in (ROOT / "rtl").glob(pattern)
+        }
+    )
 )
 
 

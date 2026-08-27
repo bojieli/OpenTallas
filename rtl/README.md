@@ -29,6 +29,13 @@ campaign is driven by `tools/rtl_campaign.py` and records tool versions, source
 hashes, seeds, logs, and evidence class under `results/rtl/`; it is a public
 proxy and does not claim qualified ROM/HBM/PHY silicon behavior.
 
+The public CDC wrappers are executable contracts, not generic multi-clock RTL:
+asynchronous FIFOs couple either-side reset into a two-pointer flush, condition
+reset release per clock, and rendezvous before reopening; stable-payload
+mailboxes use closed-loop request/acknowledge levels and typed return data;
+qualified synchronizers are restricted to low-rate single-bit status. The stage
+integration test exercises these rules with unrelated clocks and reset phases.
+
 Scaling results require target-node SRAM/ROM macros, standard cells, timing
 constraints, and physical design.  Behavioral macro initialization is allowed
 only in DV; product-like builds must select an explicitly declared black-box

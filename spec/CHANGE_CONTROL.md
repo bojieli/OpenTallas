@@ -57,3 +57,17 @@ Two independent clean builds must agree on canonical generated outputs. Timestam
 hostnames, absolute paths, credentials, and nondeterministic seeds are excluded
 from image identity. Source artifacts and their hashes are retained even when a
 large payload or licensed macro cannot be redistributed.
+
+## CC-4 Public-reference implementation deltas
+
+### CC-4.1 CDC/reset protocol clarification
+
+The first CDC-closure implementation refines the abstract "acknowledged toggle"
+wording into a closed-loop four-phase mailbox and defines the async-FIFO coupled
+flush/online rendezvous. This does not change any architectural record encoding or
+host ABI. It does make the local stage integration contract explicit by adding
+write ready/ack/error and commit ready/error indications. Firmware and compiler
+records are unaffected because they use the protected CSR/boot transaction layer;
+stage RTL, reset/static checks, formal harnesses, and asynchronous-clock tests must
+be regenerated together. Owner: digital control/CDC. Review gate: DV-RESET-001 and
+DV-STATIC-001; re-entry is required after any reset or handshake change.

@@ -300,9 +300,26 @@ test mode with inference disabled and is governed by the DFT specification.
 
 The clock on each interface is listed in `interfaces.json`. Cross-domain HBM and
 stage-link records pass through async FIFOs; configuration commands/state changes
-use async FIFOs or acknowledged toggles. No valid/ready assumption crosses a clock
-domain directly. Reset of either side withdraws credits and causes a defined
-resynchronization before new transfers.
+use async FIFOs or closed-loop acknowledged mailboxes. No valid/ready assumption
+crosses a clock domain directly. Reset of either side withdraws credits and causes
+a defined resynchronization before new transfers.
+
+The stage integration schedule port is AON-clocked. `schedule_wr_valid` and
+`schedule_commit_req` are independent request valids and must remain asserted with
+their payload stable until the corresponding `*_ready` is observed. Commit has
+priority if both are asserted. A transferred shadow write returns exactly one
+one-cycle `schedule_wr_ack` or `schedule_wr_error` pulse after core-domain
+validation. A transferred commit returns exactly one one-cycle
+`schedule_commit_ack` or `schedule_commit_error` pulse; a legal commit may remain
+pending until core quiescence and an epoch boundary. Reset can terminate an
+in-flight local integration request; architectural firmware reaches this port
+through the protected CSR/boot transaction layer, which reports reset-abort.
+
+`image_slot_valid`, `abort_valid`/`abort_transaction_id`, service start/done, and
+their payloads are core-domain stage-boundary signals. The 256-bit image-valid
+bitmap is coherent core-domain state and is static while service is enabled; it is
+not sampled through per-bit synchronizers. `stage_idle` is a core-domain output.
+Only its separately qualified internal copy may control AON power/CSR logic.
 
 ### ICD-8.2 Test access pins
 
