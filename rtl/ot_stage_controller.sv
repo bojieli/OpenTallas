@@ -45,7 +45,9 @@ module ot_stage_controller #(
     input  wire                         session_rsp_valid,
     input  wire [7:0]                   session_rsp_status,
     input  wire                         session_rsp_hit,
+    input  wire [7:0]                   session_rsp_generation,
     input  wire [19:0]                  session_rsp_expected_position,
+    input  wire                         session_rsp_poison,
     output wire                         credit_reserve_valid,
     input  wire                         credit_reserve_ready,
     output wire [SINKS-1:0]             credit_reserve_mask,
@@ -55,10 +57,14 @@ module ot_stage_controller #(
     input  wire                         service_start_ready,
     output wire [15:0]                  service_transaction_id,
     output wire [23:0]                  service_session_id,
+    output wire [7:0]                   service_session_generation,
     output wire [6:0]                   service_first_layer,
     output wire [6:0]                   service_last_layer,
     output wire [15:0]                  service_batch_minus_one,
     output wire [3:0]                   service_draft_tokens,
+    output wire [7:0]                   service_schedule_id,
+    output wire [7:0]                   service_flags,
+    output wire [47:0]                  service_activation_address,
     output wire                         service_poison,
     input  wire                         service_done_valid,
     input  wire [7:0]                   service_done_status,
@@ -89,9 +95,10 @@ module ot_stage_controller #(
                      S_START=4'd3, S_EXEC=4'd4, S_COMMIT=4'd5,
                      S_RELEASE=4'd6, S_COMPLETE=4'd7, S_ABORT=4'd8;
     reg [3:0] state;
-    reg [7:0] opcode_d, flags_d;
+    reg [7:0] opcode_d, flags_d, schedule_d;
     reg [7:0] epoch_d, image_slot_d;
     reg [23:0] session_d;
+    reg [7:0] session_generation_d;
     reg [19:0] position_d, context_d;
     reg [15:0] batch_d, txn_d;
     reg [6:0] first_layer_d, last_layer_d;
@@ -113,6 +120,22 @@ module ot_stage_controller #(
     wire session_fire = session_req_valid && session_req_ready;
     wire credit_fire = credit_reserve_valid && credit_reserve_ready;
     wire service_fire = service_start_valid && service_start_ready;
+    wire first_layer_out_of_range;
+    wire last_layer_out_of_range;
+    generate
+        if (OWNED_FIRST_LAYER <= 0) begin : GEN_FIRST_LAYER_ZERO
+            assign first_layer_out_of_range = 1'b0;
+        end else begin : GEN_FIRST_LAYER_BOUND
+            localparam [6:0] OWNED_FIRST_VALUE = OWNED_FIRST_LAYER;
+            assign first_layer_out_of_range = (cmd_first_layer < OWNED_FIRST_VALUE);
+        end
+        if (OWNED_LAST_LAYER >= 127) begin : GEN_LAST_LAYER_MAX
+            assign last_layer_out_of_range = 1'b0;
+        end else begin : GEN_LAST_LAYER_BOUND
+            localparam [6:0] OWNED_LAST_VALUE = OWNED_LAST_LAYER;
+            assign last_layer_out_of_range = (cmd_last_layer > OWNED_LAST_VALUE);
+        end
+    endgenerate
 
     assign stage_idle = (state == S_IDLE);
     assign cmd_ready = (state == S_IDLE) && !quiesce && !admission_block;
@@ -139,10 +162,14 @@ module ot_stage_controller #(
     assign service_start_valid = (state == S_START) && !service_started && !terminate_now;
     assign service_transaction_id = txn_d;
     assign service_session_id = session_d;
+    assign service_session_generation = session_generation_d;
     assign service_first_layer = first_layer_d;
     assign service_last_layer = last_layer_d;
     assign service_batch_minus_one = batch_d;
     assign service_draft_tokens = draft_d;
+    assign service_schedule_id = schedule_d;
+    assign service_flags = flags_d;
+    assign service_activation_address = activation_d;
     assign service_poison = stage_poison || abort_pending;
 `ifdef FORMAL
     assign formal_state = state;
@@ -154,8 +181,8 @@ module ot_stage_controller #(
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             state <= S_IDLE;
-            opcode_d <= 0; flags_d <= 0; epoch_d <= 0; image_slot_d <= 0;
-            session_d <= 0; position_d <= 0; context_d <= 0; batch_d <= 0;
+            opcode_d <= 0; flags_d <= 0; schedule_d <= 0; epoch_d <= 0; image_slot_d <= 0;
+            session_d <= 0; session_generation_d <= 0; position_d <= 0; context_d <= 0; batch_d <= 0;
             txn_d <= 0; first_layer_d <= 0; last_layer_d <= 0; draft_d <= 0;
             activation_d <= 0; cookie_d <= 0;
             terminal_status <= ST_SUCCESS; terminal_source <= 0; terminal_syndrome <= 0;
@@ -169,6 +196,7 @@ module ot_stage_controller #(
             completion_valid <= 1'b0;
             if (cmd_fire) begin
                 opcode_d <= cmd_opcode; flags_d <= cmd_flags; epoch_d <= cmd_epoch;
+                schedule_d <= cmd_schedule;
                 image_slot_d <= cmd_image_slot; session_d <= cmd_session;
                 position_d <= cmd_position; context_d <= cmd_context_minus_one;
                 batch_d <= cmd_batch_minus_one; txn_d <= cmd_transaction_id;
@@ -186,7 +214,7 @@ module ot_stage_controller #(
                              cmd_opcode == 8'h10 || cmd_opcode == 8'h11 ||
                              cmd_opcode == 8'h7f) begin
                     if ((cmd_opcode == 8'h10 || cmd_opcode == 8'h11) &&
-                        (cmd_first_layer < OWNED_FIRST_LAYER || cmd_last_layer > OWNED_LAST_LAYER)) begin
+                        (first_layer_out_of_range || last_layer_out_of_range)) begin
                         terminal_status <= ST_BAD_FIELD; state <= S_COMPLETE;
                     end else if (cmd_opcode == 8'h7f) begin
                         terminal_status <= ST_ABORTED;
@@ -225,8 +253,12 @@ module ot_stage_controller #(
                         session_issued <= 1'b1;
                     if (session_rsp_valid) begin
                         session_issued <= 1'b0;
-                        if (session_rsp_status != ST_SUCCESS || !session_rsp_hit) begin
+                        if (session_rsp_status != ST_SUCCESS || !session_rsp_hit || session_rsp_poison) begin
                             terminal_status <= session_rsp_status == ST_SUCCESS ? ST_CAPACITY : session_rsp_status;
+                            if (session_rsp_poison) begin
+                                terminal_status <= ST_INTERNAL;
+                                stage_poison <= 1'b1;
+                            end
                             state <= S_COMPLETE;
                         end else if (opcode_d == 8'h01 || opcode_d == 8'h02) begin
                             state <= S_COMPLETE;
@@ -234,6 +266,7 @@ module ot_stage_controller #(
                             terminal_status <= ST_EPOCH;
                             state <= S_COMPLETE;
                         end else begin
+                            session_generation_d <= session_rsp_generation;
                             state <= S_RESERVE;
                         end
                     end
@@ -267,8 +300,10 @@ module ot_stage_controller #(
                         session_issued <= 1'b1;
                     if (session_rsp_valid) begin
                         session_issued <= 1'b0;
-                    if (session_rsp_status != ST_SUCCESS) begin
+                    if (session_rsp_status != ST_SUCCESS || session_rsp_poison) begin
                         terminal_status <= session_rsp_status;
+                        if (session_rsp_poison)
+                            terminal_status <= ST_INTERNAL;
                         stage_poison <= 1'b1;
                     end
                     state <= S_RELEASE;

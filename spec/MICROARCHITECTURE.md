@@ -64,10 +64,14 @@ not rely on unused binary encodings wrapping into valid storage.
 
 ### MICRO-1.3 Coding semantics
 
-Synthesizable state uses `always_ff`; combinational decode uses `always_comb` with
-complete assignment. Sequential pipelines use nonblocking assignment. Every module
-declares time unit/precision for simulation, though synthesizable behavior is
-cycle based. Signedness is explicit at module boundaries and before arithmetic.
+Synthesizable state uses edge-triggered sequential processes; combinational decode
+uses complete sensitivity and complete assignment. The product coding baseline
+prefers `always_ff`/`always_comb`. The public proxy may use semantically equivalent
+`always @(posedge ...)` and `always @*` for the installed open frontends, provided
+strict multi-frontend and single-driver checks pass. Sequential pipelines use
+nonblocking assignment. Every module declares time unit/precision for simulation,
+though synthesizable behavior is cycle based. Signedness is explicit at module
+boundaries and before arithmetic.
 
 There are no inferred latches, implicit nets, unsized arithmetic constants in
 width-sensitive expressions, combinational ready-to-valid paths across module
@@ -349,6 +353,18 @@ commit, and returns a typed acknowledgement or error. An invalid write is reject
 without mutating or permanently poisoning the shadow bank, so corrected firmware
 may retry. Commit error is a per-request response pulse; sticky diagnostic history
 is maintained by RAS/CSR state rather than overloaded onto the transaction signal.
+Every slot of the inactive bank must be written after reset or after that bank
+becomes shadow; a partial bank is rejected even when the external manifest check
+passes. Schedule payload arrays need not reset because an incomplete bank can
+never become active.
+
+The commit record also carries the requested schedule ID. The controller latches
+it with a pending commit and atomically publishes it with the new active bank and
+epoch; command admission rejects a non-NOP whose schedule ID differs. The public
+CSR block exposes accepted schedule/repair window records and upper control
+requests as AON integration sidebands. The direct schedule adapter is executable;
+platform connection of those CSR window sidebands to the protected boot/repair
+owner remains a separately checked integration responsibility.
 
 ### MICRO-7.2 Error and telemetry queues
 
@@ -360,6 +376,13 @@ existing events are never overwritten.
 
 Interrupts are level sensitive summaries of unmasked sticky classes. Masking an
 interrupt does not suppress capture, counters, poison, or safe-state behavior.
+
+Core diagnostics are assembled into one 512-bit image containing first error,
+saturating RAS counters, active epoch/schedule/CRC, frontend counters, session and
+credit summary, core fault levels, watchdog/poison state, and last completion
+metadata. A closed-loop mailbox transfers a coherent image to AON; a second
+mailbox carries the idempotent RW1C clear back to core. Direct multi-bit sampling
+or an asynchronous clear pulse is forbidden.
 
 ## MICRO-8 Integrity storage
 

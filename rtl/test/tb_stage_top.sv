@@ -11,15 +11,17 @@ module tb_stage_top;
     wire telemetry_valid; wire [127:0] telemetry_record; reg telemetry_ready=1;
     wire service_start_valid; reg service_start_ready=0;
     wire [15:0] service_transaction_id; wire [23:0] service_session_id;
+    wire [7:0] service_session_generation;
     wire [6:0] service_first_layer, service_last_layer; wire [15:0] service_batch_minus_one;
-    wire [3:0] service_draft_tokens; wire service_poison;
+    wire [3:0] service_draft_tokens; wire [7:0] service_schedule_id,service_flags;
+    wire [47:0] service_activation_address; wire service_poison;
     reg service_done_valid=0; reg [7:0] service_done_status=0, service_done_error_source=0; reg [3:0] service_done_syndrome=0;
     reg power_good=1, clock_stable=1, hbm_ready=1, link_ready=1, bist_done=1, bist_pass=1;
     reg thermal_warning=0, thermal_fatal=0, fatal_error=0, requalify=0, test_enable=0;
     reg abort_valid=0; reg [15:0] abort_transaction_id=0;
     wire [3:0] power_state; wire safe_state, stage_idle, admission_block;
     reg schedule_wr_valid=0; reg [7:0] schedule_wr_slot=0; reg [15:0] schedule_wr_data=0;
-    reg schedule_commit_req=0, schedule_manifest_crc_ok=1;
+    reg schedule_commit_req=0, schedule_manifest_crc_ok=1; reg [7:0] schedule_commit_id=0;
     wire schedule_wr_ready, schedule_wr_ack, schedule_wr_error;
     wire schedule_commit_ready, schedule_commit_ack, schedule_commit_error, schedule_valid;
 
@@ -33,8 +35,11 @@ module tb_stage_top;
         .csr_rsp_valid(csr_rsp_valid),.csr_rsp_ready(csr_rsp_ready),.csr_rsp_record(csr_rsp_record),
         .image_slot_valid(256'b1),.service_start_valid(service_start_valid),.service_start_ready(service_start_ready),
         .service_transaction_id(service_transaction_id),.service_session_id(service_session_id),
+        .service_session_generation(service_session_generation),
         .service_first_layer(service_first_layer),.service_last_layer(service_last_layer),
         .service_batch_minus_one(service_batch_minus_one),.service_draft_tokens(service_draft_tokens),
+        .service_schedule_id(service_schedule_id),.service_flags(service_flags),
+        .service_activation_address(service_activation_address),
         .service_poison(service_poison),.service_done_valid(service_done_valid),.service_done_status(service_done_status),
         .service_done_error_source(service_done_error_source),.service_done_syndrome(service_done_syndrome),
         .power_good(power_good),.clock_stable(clock_stable),.hbm_ready(hbm_ready),.link_ready(link_ready),
@@ -46,7 +51,8 @@ module tb_stage_top;
         .schedule_wr_ready(schedule_wr_ready),.schedule_wr_ack(schedule_wr_ack),
         .schedule_wr_error(schedule_wr_error),.schedule_commit_req(schedule_commit_req),
         .schedule_commit_ready(schedule_commit_ready),
-        .schedule_manifest_crc_ok(schedule_manifest_crc_ok),.schedule_commit_ack(schedule_commit_ack),
+        .schedule_manifest_crc_ok(schedule_manifest_crc_ok),.schedule_commit_id(schedule_commit_id),
+        .schedule_commit_ack(schedule_commit_ack),
         .schedule_commit_error(schedule_commit_error),.schedule_valid(schedule_valid));
 
     function automatic [15:0] crc16_112;
@@ -71,13 +77,13 @@ module tb_stage_top;
         end
     endtask
 
-    reg [7:0] command_epoch=0;
+    reg [7:0] command_epoch=0, command_schedule=0;
     task automatic send_cmd;
         input [7:0] op; input [23:0] sid; input [31:0] ck;
         reg [239:0] b;
         begin
             b=240'b0; b[7:0]=op; b[15:8]=8'h04; b[23:16]=8'h01; b[31:24]=0; b[39:32]=command_epoch;
-            b[47:40]=0; b[71:48]=sid; b[91:72]=0; b[111:92]=20'd8191; b[127:112]=0;
+            b[47:40]=command_schedule; b[71:48]=sid; b[91:72]=0; b[111:92]=20'd8191; b[127:112]=0;
             b[134:128]=0; b[141:135]=0; b[145:142]=0; b[153:146]=0; b[201:154]=0; b[233:202]=ck;
             host_cmd_record={crc16_240(b),b};
             @(negedge aon_clk); host_cmd_valid=1;
@@ -154,17 +160,30 @@ module tb_stage_top;
         end
     endtask
 
-    integer responses=0; reg service_pending=0; reg allow_service_done=1;
+    integer responses=0; reg [7:0] expected_response_status=0;
+    reg service_pending=0; reg allow_service_done=1;
     always @(posedge core_clk) begin
         service_start_ready <= service_start_valid;
-        if(service_start_valid) service_pending <= 1;
+        if(service_start_valid) begin
+            service_pending <= 1;
+            if(service_session_id!==24'h1 || service_session_generation==0 ||
+               service_schedule_id!==command_schedule || service_flags!==8'h04 ||
+               service_activation_address!==48'b0 || service_batch_minus_one!==16'b0 ||
+               service_first_layer!==7'b0 || service_last_layer!==7'b0 ||
+               service_draft_tokens!==4'b0 || service_poison!==1'b0) begin
+                $display("FAIL service metadata sid=%h gen=%h sched=%h flags=%h addr=%h poison=%b",
+                         service_session_id,service_session_generation,service_schedule_id,
+                         service_flags,service_activation_address,service_poison);
+                failures=failures+1;
+            end
+        end
         if(service_pending && allow_service_done) begin
             service_done_valid <= 1; service_done_status<=0; service_done_error_source<=0; service_done_syndrome<=0; service_pending<=0;
         end else service_done_valid<=0;
     end
     always @(posedge aon_clk) if(host_rsp_valid && host_rsp_ready) begin
         responses=responses+1; $display("host response %0d status=%h opcode=%h cookie=%h",responses,host_rsp_record[7:0],host_rsp_record[15:8],host_rsp_record[107:76]);
-        if(host_rsp_record[7:0]!==8'h00) failures=failures+1;
+        if(host_rsp_record[7:0]!==expected_response_status) failures=failures+1;
     end
 
     initial begin
@@ -174,6 +193,10 @@ module tb_stage_top;
         // An out-of-range write returns an error but does not poison the bank.
         schedule_write(8'd7,16'h0009,1'b1);
         schedule_write(8'd0,16'h0009,1'b0);
+        schedule_write(8'd1,16'h0010,1'b0);
+        schedule_write(8'd2,16'h0010,1'b0);
+        schedule_write(8'd3,16'h0010,1'b0);
+        schedule_commit_id=8'h21;
         schedule_commit(1'b0,1'b1);
         if(schedule_valid) begin
             $display("FAIL bad-manifest commit made schedule valid"); failures=failures+1;
@@ -185,14 +208,22 @@ module tb_stage_top;
             failures=failures+1;
         end
 
-        command_epoch=8'd1;
+        command_epoch=8'd1; command_schedule=8'h20; expected_response_status=8'h07;
+        send_cmd(8'h01,24'h2,32'hbad50001);
+        while(responses<1) @(negedge aon_clk);
+
+        command_schedule=8'h21; expected_response_status=8'h00;
         csr_write_control();
         repeat(12) @(negedge aon_clk); send_cmd(8'h01,24'h1,32'hcafe0001);
-        while(responses<1) @(negedge aon_clk);
+        while(responses<2) @(negedge aon_clk);
 
         // Prepare the next shadow bank, then issue its commit while a real
         // service transaction holds the stage non-quiescent.
+        schedule_write(8'd0,16'h0010,1'b0);
         schedule_write(8'd1,16'h000a,1'b0);
+        schedule_write(8'd2,16'h0010,1'b0);
+        schedule_write(8'd3,16'h0010,1'b0);
+        schedule_commit_id=8'h22;
         allow_service_done=0;
         send_cmd(8'h10,24'h1,32'hcafe0002);
         while(!service_pending || stage_idle) @(negedge core_clk);
@@ -204,14 +235,15 @@ module tb_stage_top;
         end
         allow_service_done=1;
         while(schedule_commit_acks<2) @(negedge aon_clk);
-        while(responses<2) @(negedge aon_clk);
+        while(responses<3) @(negedge aon_clk);
         repeat(20) @(negedge aon_clk);
-        if(dut.active_epoch!==8'd2 || schedule_commit_acks!=2) begin
-            $display("FAIL commit duplicated or epoch mismatch epoch=%0d acks=%0d",dut.active_epoch,schedule_commit_acks);
+        if(dut.active_epoch!==8'd2 || dut.active_schedule_id!==8'h22 || schedule_commit_acks!=2) begin
+            $display("FAIL commit duplicated or identity mismatch epoch=%0d schedule=%h acks=%0d",
+                     dut.active_epoch,dut.active_schedule_id,schedule_commit_acks);
             failures=failures+1;
         end
-        if(responses<2) begin $display("FAIL expected responses got %0d",responses); failures=failures+1; end
-        if(schedule_wr_acks!=2 || schedule_wr_errors!=1 || schedule_commit_errors!=1) begin
+        if(responses<3) begin $display("FAIL expected responses got %0d",responses); failures=failures+1; end
+        if(schedule_wr_acks!=8 || schedule_wr_errors!=1 || schedule_commit_errors!=1) begin
             $display("FAIL schedule response accounting wa=%0d we=%0d ca=%0d ce=%0d",
                      schedule_wr_acks,schedule_wr_errors,schedule_commit_acks,schedule_commit_errors);
             failures=failures+1;

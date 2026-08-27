@@ -45,6 +45,7 @@ module ot_stage_link_endpoint #(
     output wire                         rx_ack_ok,
     output wire                         tx_busy,
     output wire [1:0]                   tx_retry_count,
+    output wire                         tx_credit_consumed,
     output wire                         tx_timeout,
     output wire                         tx_error,
     output wire                         rx_protocol_error,
@@ -56,7 +57,7 @@ module ot_stage_link_endpoint #(
     ) tx (
         .clk(clk), .rst_n(rst_n), .in_valid(tx_in_valid), .in_ready(tx_in_ready),
         .in_flit(tx_in_flit), .in_last(tx_in_last), .in_packet_seq(tx_in_packet_seq),
-        .remote_credit(tx_remote_credit), .credit_consumed(),
+        .remote_credit(tx_remote_credit), .credit_consumed(tx_credit_consumed),
         .link_valid(tx_link_valid), .link_ready(tx_link_ready), .link_flit(tx_link_flit),
         .link_flit_crc(tx_link_flit_crc), .link_packet_crc(tx_link_packet_crc),
         .link_last(tx_link_last), .link_packet_seq(tx_link_packet_seq),

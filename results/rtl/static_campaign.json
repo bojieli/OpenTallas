@@ -1,0 +1,1073 @@
+{
+  "campaign": "rtl_static_cdc_rdc",
+  "canonical_timestamp_policy": "no timestamp in canonical artifact",
+  "crossings": [
+    {
+      "destination_domain": "core",
+      "destination_reset": "core_domain_rst_n",
+      "id": "CDC-CMD-001",
+      "instance": "cmd_cdc",
+      "mechanism": "gray_pointer_dual_clock_fifo",
+      "module": "ot_async_fifo",
+      "payload": "host_cmd_record plus ready/valid",
+      "reset_recovery": "coupled_flush_and_online_rendezvous",
+      "source_domain": "aon_cfg",
+      "source_reset": "aon_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "aon_cfg",
+      "destination_reset": "aon_rst_n",
+      "id": "CDC-RSP-001",
+      "instance": "rsp_cdc",
+      "mechanism": "gray_pointer_dual_clock_fifo",
+      "module": "ot_async_fifo",
+      "payload": "host_rsp_record plus ready/valid",
+      "reset_recovery": "coupled_flush_and_online_rendezvous",
+      "source_domain": "core",
+      "source_reset": "core_domain_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "aon_cfg",
+      "destination_reset": "aon_rst_n",
+      "id": "CDC-TELEM-001",
+      "instance": "telemetry_cdc",
+      "mechanism": "gray_pointer_dual_clock_fifo",
+      "module": "ot_async_fifo",
+      "payload": "128-bit RAS telemetry record",
+      "reset_recovery": "coupled_flush_and_online_rendezvous",
+      "source_domain": "core",
+      "source_reset": "core_domain_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "core",
+      "destination_reset": "core_domain_rst_n",
+      "id": "CDC-SCHED-001",
+      "instance": "schedule_cdc",
+      "mechanism": "closed_loop_four_phase_mailbox",
+      "module": "ot_cdc_mailbox",
+      "payload": "write_or_commit, manifest result, schedule ID, slot, entry",
+      "reset_recovery": "destination_replay_into_destination_reset_state",
+      "source_domain": "aon_cfg",
+      "source_reset": "aon_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "aon_cfg",
+      "destination_reset": "aon_rst_n",
+      "id": "CDC-STATUS-001",
+      "instance": "status_snapshot_cdc",
+      "mechanism": "closed_loop_four_phase_snapshot_mailbox",
+      "module": "ot_cdc_mailbox",
+      "payload": "512-bit coherent diagnostic snapshot",
+      "reset_recovery": "replay_is_idempotent_snapshot_replacement",
+      "source_domain": "core",
+      "source_reset": "core_domain_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "core",
+      "destination_reset": "core_domain_rst_n",
+      "id": "CDC-RAS-CLEAR-001",
+      "instance": "ras_clear_cdc",
+      "mechanism": "closed_loop_four_phase_mailbox",
+      "module": "ot_cdc_mailbox",
+      "payload": "RW1C first-error clear request",
+      "reset_recovery": "replay_is_idempotent_clear",
+      "source_domain": "aon_cfg",
+      "source_reset": "aon_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "aon_cfg",
+      "destination_reset": "aon_rst_n",
+      "id": "CDC-RAS-SAFE-001",
+      "instance": "ras_safe_sync",
+      "mechanism": "two_flop_level_synchronizer",
+      "module": "ot_sync_bits",
+      "payload": "sticky fail-safe level",
+      "reset_recovery": "destination_defaults_safe_request_low_then_RAS_requalifies",
+      "source_domain": "core",
+      "source_reset": "core_domain_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "core",
+      "destination_reset": "core_domain_rst_n",
+      "id": "CDC-SERVICE-ENABLE-001",
+      "instance": "service_sync",
+      "mechanism": "two_flop_level_synchronizer",
+      "module": "ot_sync_bits",
+      "payload": "service-enable level",
+      "reset_recovery": "destination_defaults_disabled",
+      "source_domain": "aon_cfg",
+      "source_reset": "aon_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "core",
+      "destination_reset": "core_domain_rst_n",
+      "id": "CDC-POWER-SAFE-001",
+      "instance": "power_safe_sync",
+      "mechanism": "two_flop_level_synchronizer",
+      "module": "ot_sync_bits",
+      "payload": "power-safe level",
+      "reset_recovery": "core_reset_and_admission_interlock_cover_release",
+      "source_domain": "aon_cfg",
+      "source_reset": "aon_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "aon_cfg",
+      "destination_reset": "aon_rst_n",
+      "id": "CDC-IDLE-001",
+      "instance": "idle_sync",
+      "mechanism": "two_flop_plus_three_cycle_stable_qualification",
+      "module": "ot_sync_level",
+      "payload": "stage-idle level",
+      "reset_recovery": "destination_defaults_idle_for_power_sequence",
+      "source_domain": "core",
+      "source_reset": "core_domain_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "aon_cfg",
+      "destination_reset": "aon_rst_n",
+      "id": "CDC-SCHEDULE-VALID-001",
+      "instance": "schedule_valid_sync",
+      "mechanism": "two_flop_plus_three_cycle_stable_qualification",
+      "module": "ot_sync_level",
+      "payload": "schedule-valid level",
+      "reset_recovery": "destination_defaults_invalid",
+      "source_domain": "core",
+      "source_reset": "core_domain_rst_n",
+      "spec_ref": "CRP-2.2"
+    },
+    {
+      "destination_domain": "core",
+      "destination_reset": "core_domain_rst_n",
+      "id": "RDC-CORE-RESET-001",
+      "instance": "core_reset_conditioner",
+      "mechanism": "asynchronous_assert_synchronous_release_reset_conditioner",
+      "module": "ot_reset_sync",
+      "payload": "core reset qualification",
+      "reset_recovery": "minimum_two_core_clock_release_stages",
+      "source_domain": "aon_cfg_and_external_reset",
+      "source_reset": "core_rst_n_and_core_reset_n_qualified",
+      "spec_ref": "CRP-3.1"
+    }
+  ],
+  "errors": [],
+  "evidence_class": "public_open_tool_structural_proxy",
+  "findings": [
+    {
+      "case": "iverilog_stage_elaboration",
+      "category": "array_sensitivity",
+      "disposition": "waived",
+      "line": 66,
+      "match_text": "rtl/ot_session_table.sv:66: warning: @* is sensitive to all 16 words in array 'entry_session'.",
+      "message": "@* is sensitive to all 16 words in array 'entry_session'.",
+      "path": "rtl/ot_session_table.sv",
+      "tool": "iverilog",
+      "waiver_id": "WVR-IVERILOG-SESSION-ARRAY-001"
+    },
+    {
+      "case": "iverilog_stage_elaboration",
+      "category": "array_sensitivity",
+      "disposition": "waived",
+      "line": 41,
+      "match_text": "rtl/ot_credit_manager.sv:41: warning: @* is sensitive to all 4 words in array 'free'.",
+      "message": "@* is sensitive to all 4 words in array 'free'.",
+      "path": "rtl/ot_credit_manager.sv",
+      "tool": "iverilog",
+      "waiver_id": "WVR-IVERILOG-CREDIT-ARRAY-001"
+    },
+    {
+      "case": "iverilog_stage_elaboration",
+      "category": "array_sensitivity",
+      "disposition": "waived",
+      "line": 60,
+      "match_text": "rtl/ot_credit_manager.sv:60: warning: @* is sensitive to all 4 words in array 'free'.",
+      "message": "@* is sensitive to all 4 words in array 'free'.",
+      "path": "rtl/ot_credit_manager.sv",
+      "tool": "iverilog",
+      "waiver_id": "WVR-IVERILOG-CREDIT-ARRAY-001"
+    },
+    {
+      "case": "yosys_stage_check",
+      "category": "frontend_exclusion",
+      "disposition": "waived",
+      "line": null,
+      "match_text": "rtl/lib/ot_crc_pkg.sv: excluded from Yosys 0.9 structural elaboration because that frontend cannot parse SystemVerilog package functions",
+      "message": "excluded from Yosys 0.9 structural elaboration because that frontend cannot parse SystemVerilog package functions",
+      "path": "rtl/lib/ot_crc_pkg.sv",
+      "tool": "yosys",
+      "waiver_id": "WVR-YOSYS09-PACKAGE-001"
+    }
+  ],
+  "inventory": {
+    "module_count": 35,
+    "source_count": 35,
+    "sources": [
+      {
+        "clocks": [],
+        "kind": "module",
+        "modules": [
+          "expert_mask_controller"
+        ],
+        "path": "rtl/expert_mask_controller.sv",
+        "resets": [],
+        "sha256": "a565b4506035093960577415ed9d2b26224a9e49650c4fe7e78b070d7b2b4a57"
+      },
+      {
+        "clocks": [
+          "rd_clk",
+          "wr_clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_async_fifo"
+        ],
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "resets": [
+          "rd_rst_n",
+          "wr_rst_n"
+        ],
+        "sha256": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5"
+      },
+      {
+        "clocks": [
+          "dst_clk",
+          "src_clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_cdc_mailbox"
+        ],
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "resets": [
+          "dst_rst_n",
+          "src_rst_n"
+        ],
+        "sha256": "f3fecaea6089477d6349144d76406e5dbd90740e127067301c352c3ebdbe2e76"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_crc16_ccitt"
+        ],
+        "path": "rtl/lib/ot_crc16_ccitt.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "bc70fe269d5736df24a90e738a41ceb6dd833e161b7f7121161090cf43071f3c"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_crc32c"
+        ],
+        "path": "rtl/lib/ot_crc32c.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "b564fc88e04d4e0629c8836bb610f06d652a3d029140df634bc64e130fdd36d5"
+      },
+      {
+        "clocks": [],
+        "kind": "package",
+        "modules": [],
+        "path": "rtl/lib/ot_crc_pkg.sv",
+        "resets": [],
+        "sha256": "49b31710d955827b5beabc9fd63930f1d53c566f925985f16715835ae1ff7d3b"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_reset_sync"
+        ],
+        "path": "rtl/lib/ot_reset_sync.sv",
+        "resets": [
+          "async_rst_n",
+          "sync_rst_n"
+        ],
+        "sha256": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_skid_buffer"
+        ],
+        "path": "rtl/lib/ot_skid_buffer.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "4837dc61b4a89a53e68b05f16b46e1717e79f4817bf5b812afba0dc3cd32008a"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_sync_bits"
+        ],
+        "path": "rtl/lib/ot_sync_bits.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "66f4c78a2fda107046c08c66acd17ed390ee8b884b6e27090db0ecfeae5d2b9f"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_sync_level"
+        ],
+        "path": "rtl/lib/ot_sync_level.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "e474cac6feeb0402ac7a4794cfc7e73508b5ef0254c991204b8946b92cd08fd6"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "opentallas_tile"
+        ],
+        "path": "rtl/opentallas_tile.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "4980d62d193e1ea44353967b2eace8423d0024562d7f5e40e0d1eec24d6d3bb2"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_bist_controller"
+        ],
+        "path": "rtl/ot_bist_controller.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "364b3f867eeab129c54452bd46a4cf17a2e254ad452088b97848d8db69833b9e"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_cmd_frontend"
+        ],
+        "path": "rtl/ot_cmd_frontend.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "c380640877ff163d160e08534b7cbfbbd0e2fcc7601d1d46e59ce0544d722eeb"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_credit_manager"
+        ],
+        "path": "rtl/ot_credit_manager.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "4d61c6121b85f599fecd891ac5b4faf234df55e065e17eb28f619968e8720449"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_csr_block"
+        ],
+        "path": "rtl/ot_csr_block.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "02fd9176782ca64533809dac4fc565e3c3708ce7e4977fa3896636e162d7a60a"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_dft_controller"
+        ],
+        "path": "rtl/ot_dft_controller.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225"
+      },
+      {
+        "clocks": [],
+        "kind": "module",
+        "modules": [
+          "ot_format_decode"
+        ],
+        "path": "rtl/ot_format_decode.sv",
+        "resets": [],
+        "sha256": "0c309df0061f2270bb4a67157399ef00efb6563d8e64aa7a9abf41727301b847"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_hbm_frontend"
+        ],
+        "path": "rtl/ot_hbm_frontend.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "fd32a301bee0a5a5d379014fcf9c97a54500183217ff7290e5c7a4b4f706c153"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_numeric_dot"
+        ],
+        "path": "rtl/ot_numeric_dot.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "355292201f4686aa1bae65ca62e8fbdf44a22d06b722ef0559d6143d79f7a773"
+      },
+      {
+        "clocks": [
+          "aon_clk",
+          "clock_stable"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_power_reset_controller"
+        ],
+        "path": "rtl/ot_power_reset_controller.sv",
+        "resets": [
+          "aon_rst_n",
+          "core_reset_n",
+          "reset_cause"
+        ],
+        "sha256": "1c7b187ad1ada1797d66776383270b2017b2625607594eba7013b8ac53627594"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_ras_controller"
+        ],
+        "path": "rtl/ot_ras_controller.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "74c38119a23689cc24ccb76a0921a97be3844590d30e944f9b325ba3f84c5914"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_reduction_tree",
+          "ot_reduction_endpoint"
+        ],
+        "path": "rtl/ot_reduction_tree.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "d8b28fb2f84cb7d0f53fd7c4ae42294d11d48cd92e15d3e2584c8b763a286962"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_rom_wrapper"
+        ],
+        "path": "rtl/ot_rom_wrapper.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "6a7b73f1877693b7dbd93e610fd5dd55f70415e395c5691724656024c175d11b"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_route_mask"
+        ],
+        "path": "rtl/ot_route_mask.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "9da491e18f276a5d6be5c3cf07288bc78d2c75d57d3e4e830b3ea7ce967c4542"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_schedule_controller"
+        ],
+        "path": "rtl/ot_schedule_controller.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "07301550750eeaedceb8116ba9b97bd95fe0c17e84b536020bd0470e3029d826"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_session_table"
+        ],
+        "path": "rtl/ot_session_table.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "f21be6574e78e5e2204bdcea9494458615ac6863c0b2e08c0760d502c245361f"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_stage_controller"
+        ],
+        "path": "rtl/ot_stage_controller.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "8a0eb66a48c8198211a34b04c465a715bfb9fc072854a4f70e27cfa4e3c11fef"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_stage_link_endpoint"
+        ],
+        "path": "rtl/ot_stage_link_endpoint.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "a6c7540911fde5b4a8e542883077973e254b0f13b570b47f0e83d37e3ac21d50"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_stage_link_rx"
+        ],
+        "path": "rtl/ot_stage_link_rx.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "07c3f90ef5dbac2b9b703d6cc2e24e972d73999833511be3e399ebc6ec01cbc7"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_stage_link_tx"
+        ],
+        "path": "rtl/ot_stage_link_tx.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "264edfe8dce50f79bee74aedc851adf32d65a0056299fbaebb8a32272eb46e45"
+      },
+      {
+        "clocks": [
+          "aon_clk",
+          "clock_stable",
+          "core_clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_stage_top"
+        ],
+        "path": "rtl/ot_stage_top.sv",
+        "resets": [
+          "aon_rst_n",
+          "core_rst_n"
+        ],
+        "sha256": "c9e0619c962d1e024bebb9a61a3a78d31566d1cc514bf40ca3b3d5bd130088ec"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "ot_tile"
+        ],
+        "path": "rtl/ot_tile.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "6af21d4151ddff242b43aacf7f41af1ec191fdbc215162acd99dcabf9a8a793d"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "rom_mac_tile"
+        ],
+        "path": "rtl/rom_mac_tile.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "841d5e9ab4c8278c1e7fc7f3f598c5e962041df3d94aa9e0ffb82c6d4f3e5e00"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "static_timeslot_switch"
+        ],
+        "path": "rtl/static_timeslot_switch.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "7ccc523874a1074f17a7ee53a496400574b99c3e2831f04c3bf9b688354fb619"
+      },
+      {
+        "clocks": [
+          "clk"
+        ],
+        "kind": "module",
+        "modules": [
+          "via_mask_rom"
+        ],
+        "path": "rtl/via_mask_rom.sv",
+        "resets": [
+          "rst_n"
+        ],
+        "sha256": "203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141"
+      }
+    ]
+  },
+  "limitations": [
+    "public structural CDC/RDC checks are not target-qualified signoff",
+    "Yosys stage structural elaboration uses explicitly recorded reduced parameters",
+    "Yosys 0.9 package-function parsing is covered by an expiring exact waiver",
+    "physical synchronizer placement, MTBF, UPF, and PDK timing remain external"
+  ],
+  "manifest": {
+    "classified_port_count": 76,
+    "crossing_count": 12,
+    "reset_contract_count": 3,
+    "top_port_count": 76
+  },
+  "resets": [
+    {
+      "assertion": "asynchronous",
+      "domain": "aon_cfg",
+      "id": "RST-AON-001",
+      "owner": "platform_aon_reset_controller",
+      "release": "qualified_synchronous_upstream",
+      "signal": "aon_rst_n",
+      "spec_ref": "CRP-3.1"
+    },
+    {
+      "assertion": "asynchronous_from_core_rst_n_and_core_reset_n_qualified",
+      "domain": "core",
+      "id": "RST-CORE-001",
+      "owner": "core_reset_conditioner",
+      "release": "two_core_clk_cycles_minimum",
+      "signal": "core_domain_rst_n",
+      "spec_ref": "CRP-3.1"
+    },
+    {
+      "assertion": "either_interface_reset_flushes_both_domains",
+      "domain": "dual_clock_primitive",
+      "id": "RST-FIFO-001",
+      "owner": "ot_async_fifo",
+      "release": "per_domain_synchronous_then_online_rendezvous",
+      "signal": "fifo_async_rst_n",
+      "spec_ref": "CRP-2.2"
+    }
+  ],
+  "rom_read_only": {
+    "checks": [
+      {
+        "path": "rtl/via_mask_rom.sv",
+        "procedural_memory_writes": 0,
+        "status": "pass",
+        "write_ports": []
+      },
+      {
+        "path": "rtl/ot_rom_wrapper.sv",
+        "procedural_memory_writes": 0,
+        "status": "pass",
+        "write_ports": []
+      },
+      {
+        "path": "rtl/lib/ot_crc_pkg.sv",
+        "status": "pass",
+        "synthesizable_importers": []
+      }
+    ],
+    "passed": 3,
+    "total": 3
+  },
+  "schema_version": 1,
+  "source_sha256": {
+    "rtl/expert_mask_controller.sv": "a565b4506035093960577415ed9d2b26224a9e49650c4fe7e78b070d7b2b4a57",
+    "rtl/lib/ot_async_fifo.sv": "18704d1313cc07a04642412e544da5dba26cd5bff349d75a479d64e8d02cdcb5",
+    "rtl/lib/ot_cdc_mailbox.sv": "f3fecaea6089477d6349144d76406e5dbd90740e127067301c352c3ebdbe2e76",
+    "rtl/lib/ot_crc16_ccitt.sv": "bc70fe269d5736df24a90e738a41ceb6dd833e161b7f7121161090cf43071f3c",
+    "rtl/lib/ot_crc32c.sv": "b564fc88e04d4e0629c8836bb610f06d652a3d029140df634bc64e130fdd36d5",
+    "rtl/lib/ot_crc_pkg.sv": "49b31710d955827b5beabc9fd63930f1d53c566f925985f16715835ae1ff7d3b",
+    "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+    "rtl/lib/ot_skid_buffer.sv": "4837dc61b4a89a53e68b05f16b46e1717e79f4817bf5b812afba0dc3cd32008a",
+    "rtl/lib/ot_sync_bits.sv": "66f4c78a2fda107046c08c66acd17ed390ee8b884b6e27090db0ecfeae5d2b9f",
+    "rtl/lib/ot_sync_level.sv": "e474cac6feeb0402ac7a4794cfc7e73508b5ef0254c991204b8946b92cd08fd6",
+    "rtl/opentallas_tile.sv": "4980d62d193e1ea44353967b2eace8423d0024562d7f5e40e0d1eec24d6d3bb2",
+    "rtl/ot_bist_controller.sv": "364b3f867eeab129c54452bd46a4cf17a2e254ad452088b97848d8db69833b9e",
+    "rtl/ot_cmd_frontend.sv": "c380640877ff163d160e08534b7cbfbbd0e2fcc7601d1d46e59ce0544d722eeb",
+    "rtl/ot_credit_manager.sv": "4d61c6121b85f599fecd891ac5b4faf234df55e065e17eb28f619968e8720449",
+    "rtl/ot_csr_block.sv": "02fd9176782ca64533809dac4fc565e3c3708ce7e4977fa3896636e162d7a60a",
+    "rtl/ot_dft_controller.sv": "338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225",
+    "rtl/ot_format_decode.sv": "0c309df0061f2270bb4a67157399ef00efb6563d8e64aa7a9abf41727301b847",
+    "rtl/ot_hbm_frontend.sv": "fd32a301bee0a5a5d379014fcf9c97a54500183217ff7290e5c7a4b4f706c153",
+    "rtl/ot_numeric_dot.sv": "355292201f4686aa1bae65ca62e8fbdf44a22d06b722ef0559d6143d79f7a773",
+    "rtl/ot_power_reset_controller.sv": "1c7b187ad1ada1797d66776383270b2017b2625607594eba7013b8ac53627594",
+    "rtl/ot_ras_controller.sv": "74c38119a23689cc24ccb76a0921a97be3844590d30e944f9b325ba3f84c5914",
+    "rtl/ot_reduction_tree.sv": "d8b28fb2f84cb7d0f53fd7c4ae42294d11d48cd92e15d3e2584c8b763a286962",
+    "rtl/ot_rom_wrapper.sv": "6a7b73f1877693b7dbd93e610fd5dd55f70415e395c5691724656024c175d11b",
+    "rtl/ot_route_mask.sv": "9da491e18f276a5d6be5c3cf07288bc78d2c75d57d3e4e830b3ea7ce967c4542",
+    "rtl/ot_schedule_controller.sv": "07301550750eeaedceb8116ba9b97bd95fe0c17e84b536020bd0470e3029d826",
+    "rtl/ot_session_table.sv": "f21be6574e78e5e2204bdcea9494458615ac6863c0b2e08c0760d502c245361f",
+    "rtl/ot_stage_controller.sv": "8a0eb66a48c8198211a34b04c465a715bfb9fc072854a4f70e27cfa4e3c11fef",
+    "rtl/ot_stage_link_endpoint.sv": "a6c7540911fde5b4a8e542883077973e254b0f13b570b47f0e83d37e3ac21d50",
+    "rtl/ot_stage_link_rx.sv": "07c3f90ef5dbac2b9b703d6cc2e24e972d73999833511be3e399ebc6ec01cbc7",
+    "rtl/ot_stage_link_tx.sv": "264edfe8dce50f79bee74aedc851adf32d65a0056299fbaebb8a32272eb46e45",
+    "rtl/ot_stage_top.sv": "c9e0619c962d1e024bebb9a61a3a78d31566d1cc514bf40ca3b3d5bd130088ec",
+    "rtl/ot_tile.sv": "6af21d4151ddff242b43aacf7f41af1ec191fdbc215162acd99dcabf9a8a793d",
+    "rtl/rom_mac_tile.sv": "841d5e9ab4c8278c1e7fc7f3f598c5e962041df3d94aa9e0ffb82c6d4f3e5e00",
+    "rtl/static_timeslot_switch.sv": "7ccc523874a1074f17a7ee53a496400574b99c3e2831f04c3bf9b688354fb619",
+    "rtl/via_mask_rom.sv": "203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141",
+    "spec/CLOCK_RESET_POWER.md": "64e9e13e2be44325f62cb2cdf64a26cd806990903a92808d2707c7b45e44d100",
+    "spec/INTERFACES.md": "c1d2e15b5f2209c788cb08894cd1ff576a543aada79107b04ede50a3ea3bb79e",
+    "spec/VERIFICATION_PLAN.md": "f6f0cec6430c70b4b61d7cfe14c070212de0bd48bfa99fe6de691568ddd1d208",
+    "spec/clock_reset_crossings.json": "445055e40c862c3bf3439e11c8ddf1dc3b50f4cd964b1729b456283e58cd16cd",
+    "spec/rtl_waivers.json": "56f3aa73a1007f297c5aaaa81fa8cbf6afafb09b5e1c2f13afd1f11af6997c68",
+    "tools/rtl_static.py": "16012d7b377df9cc6e3a8533876476c6301c3c1310f8621251b0786df5f1cc8e"
+  },
+  "status": "pass",
+  "structural": {
+    "checks": [
+      {
+        "id": "ATTR-FIFO-GRAY-W",
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-FIFO-GRAY-R",
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-FIFO-ONLINE-W",
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-FIFO-ONLINE-R",
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "status": "pass"
+      },
+      {
+        "id": "GRAY-WR-EQUATION",
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "status": "pass"
+      },
+      {
+        "id": "GRAY-RD-EQUATION",
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "status": "pass"
+      },
+      {
+        "id": "FIFO-COUPLED-RESET",
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "status": "pass"
+      },
+      {
+        "id": "FIFO-WR-RENDEZVOUS",
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "status": "pass"
+      },
+      {
+        "id": "FIFO-RD-RENDEZVOUS",
+        "path": "rtl/lib/ot_async_fifo.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-MAILBOX-ACK",
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-MAILBOX-REQUEST",
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-MAILBOX-DST-ONLINE",
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-MAILBOX-SRC-ONLINE",
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "status": "pass"
+      },
+      {
+        "id": "MAILBOX-SRC-ONLINE-GATE",
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "status": "pass"
+      },
+      {
+        "id": "MAILBOX-DST-ONLINE-GATE",
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "status": "pass"
+      },
+      {
+        "id": "MAILBOX-REQUEST-CAPTURE",
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "status": "pass"
+      },
+      {
+        "id": "MAILBOX-RESPONSE-CAPTURE",
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-SYNC-BITS-1",
+        "path": "rtl/lib/ot_sync_bits.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-SYNC-BITS-2",
+        "path": "rtl/lib/ot_sync_bits.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-SYNC-LEVEL-1",
+        "path": "rtl/lib/ot_sync_level.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-SYNC-LEVEL-2",
+        "path": "rtl/lib/ot_sync_level.sv",
+        "status": "pass"
+      },
+      {
+        "id": "ATTR-RESET-PIPE",
+        "path": "rtl/lib/ot_reset_sync.sv",
+        "status": "pass"
+      },
+      {
+        "id": "RESET-ASYNC-ASSERT",
+        "path": "rtl/lib/ot_reset_sync.sv",
+        "status": "pass"
+      },
+      {
+        "id": "RESET-SYNC-RELEASE",
+        "path": "rtl/lib/ot_reset_sync.sv",
+        "status": "pass"
+      },
+      {
+        "id": "MAILBOX-PAYLOAD_HOLD-ASSIGNMENT-COUNT",
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "status": "pass"
+      },
+      {
+        "id": "MAILBOX-RESPONSE_HOLD-ASSIGNMENT-COUNT",
+        "path": "rtl/lib/ot_cdc_mailbox.sv",
+        "status": "pass"
+      }
+    ],
+    "passed": 26,
+    "total": 26
+  },
+  "tool_cases": [
+    {
+      "command": "verilator --lint-only -Wall -Wno-fatal --top-module ot_stage_top rtl/expert_mask_controller.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_cdc_mailbox.sv rtl/lib/ot_crc16_ccitt.sv rtl/lib/ot_crc32c.sv rtl/lib/ot_crc_pkg.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_skid_buffer.sv rtl/lib/ot_sync_bits.sv rtl/lib/ot_sync_level.sv rtl/opentallas_tile.sv rtl/ot_bist_controller.sv rtl/ot_cmd_frontend.sv rtl/ot_credit_manager.sv rtl/ot_csr_block.sv rtl/ot_dft_controller.sv rtl/ot_format_decode.sv rtl/ot_hbm_frontend.sv rtl/ot_numeric_dot.sv rtl/ot_power_reset_controller.sv rtl/ot_ras_controller.sv rtl/ot_reduction_tree.sv rtl/ot_rom_wrapper.sv rtl/ot_route_mask.sv rtl/ot_schedule_controller.sv rtl/ot_session_table.sv rtl/ot_stage_controller.sv rtl/ot_stage_link_endpoint.sv rtl/ot_stage_link_rx.sv rtl/ot_stage_link_tx.sv rtl/ot_stage_top.sv rtl/ot_tile.sv rtl/rom_mac_tile.sv rtl/static_timeslot_switch.sv rtl/via_mask_rom.sv",
+      "log": "rtl/build/static/verilator_stage_strict.log",
+      "name": "verilator_stage_strict",
+      "returncode": 0,
+      "status": "pass",
+      "timeout_seconds": 180
+    },
+    {
+      "command": "verilator --lint-only -Wall -Wno-fatal --top-module opentallas_tile rtl/expert_mask_controller.sv rtl/via_mask_rom.sv rtl/rom_mac_tile.sv rtl/opentallas_tile.sv",
+      "log": "rtl/build/static/verilator_legacy_strict.log",
+      "name": "verilator_legacy_strict",
+      "returncode": 0,
+      "status": "pass",
+      "timeout_seconds": 180
+    },
+    {
+      "command": "iverilog -g2012 -Wall -t null -s ot_stage_top rtl/expert_mask_controller.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_cdc_mailbox.sv rtl/lib/ot_crc16_ccitt.sv rtl/lib/ot_crc32c.sv rtl/lib/ot_crc_pkg.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_skid_buffer.sv rtl/lib/ot_sync_bits.sv rtl/lib/ot_sync_level.sv rtl/opentallas_tile.sv rtl/ot_bist_controller.sv rtl/ot_cmd_frontend.sv rtl/ot_credit_manager.sv rtl/ot_csr_block.sv rtl/ot_dft_controller.sv rtl/ot_format_decode.sv rtl/ot_hbm_frontend.sv rtl/ot_numeric_dot.sv rtl/ot_power_reset_controller.sv rtl/ot_ras_controller.sv rtl/ot_reduction_tree.sv rtl/ot_rom_wrapper.sv rtl/ot_route_mask.sv rtl/ot_schedule_controller.sv rtl/ot_session_table.sv rtl/ot_stage_controller.sv rtl/ot_stage_link_endpoint.sv rtl/ot_stage_link_rx.sv rtl/ot_stage_link_tx.sv rtl/ot_stage_top.sv rtl/ot_tile.sv rtl/rom_mac_tile.sv rtl/static_timeslot_switch.sv rtl/via_mask_rom.sv",
+      "log": "rtl/build/static/iverilog_stage_elaboration.log",
+      "name": "iverilog_stage_elaboration",
+      "returncode": 0,
+      "status": "pass",
+      "timeout_seconds": 180
+    },
+    {
+      "command": "iverilog -g2012 -Wall -t null -s opentallas_tile rtl/expert_mask_controller.sv rtl/via_mask_rom.sv rtl/rom_mac_tile.sv rtl/opentallas_tile.sv",
+      "log": "rtl/build/static/iverilog_legacy_elaboration.log",
+      "name": "iverilog_legacy_elaboration",
+      "returncode": 0,
+      "status": "pass",
+      "timeout_seconds": 180
+    },
+    {
+      "command": "yosys -q -p 'read_verilog -sv rtl/expert_mask_controller.sv rtl/lib/ot_async_fifo.sv rtl/lib/ot_cdc_mailbox.sv rtl/lib/ot_crc16_ccitt.sv rtl/lib/ot_crc32c.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_skid_buffer.sv rtl/lib/ot_sync_bits.sv rtl/lib/ot_sync_level.sv rtl/opentallas_tile.sv rtl/ot_bist_controller.sv rtl/ot_cmd_frontend.sv rtl/ot_credit_manager.sv rtl/ot_csr_block.sv rtl/ot_dft_controller.sv rtl/ot_format_decode.sv rtl/ot_hbm_frontend.sv rtl/ot_numeric_dot.sv rtl/ot_power_reset_controller.sv rtl/ot_ras_controller.sv rtl/ot_reduction_tree.sv rtl/ot_rom_wrapper.sv rtl/ot_route_mask.sv rtl/ot_schedule_controller.sv rtl/ot_session_table.sv rtl/ot_stage_controller.sv rtl/ot_stage_link_endpoint.sv rtl/ot_stage_link_rx.sv rtl/ot_stage_link_tx.sv rtl/ot_stage_top.sv rtl/ot_tile.sv rtl/rom_mac_tile.sv rtl/static_timeslot_switch.sv rtl/via_mask_rom.sv; hierarchy -check -top ot_stage_top -chparam SESSION_ENTRIES 4 -chparam CREDIT_SINKS 2 -chparam CREDIT_DEPTH 2 -chparam CMD_FIFO_DEPTH 4 -chparam RSP_FIFO_DEPTH 4 -chparam TELEM_FIFO_DEPTH 4 -chparam SCHEDULE_SLOTS 4; proc; opt; memory_dff; memory_collect; check -assert'",
+      "log": "rtl/build/static/yosys_stage_check.log",
+      "name": "yosys_stage_check",
+      "returncode": 0,
+      "status": "pass",
+      "timeout_seconds": 300
+    },
+    {
+      "command": "yosys -q -p 'read_verilog -sv rtl/expert_mask_controller.sv rtl/via_mask_rom.sv rtl/rom_mac_tile.sv rtl/opentallas_tile.sv; hierarchy -check -top opentallas_tile; proc; opt; memory_dff; memory_collect; check -assert'",
+      "log": "rtl/build/static/yosys_legacy_check.log",
+      "name": "yosys_legacy_check",
+      "returncode": 0,
+      "status": "pass",
+      "timeout_seconds": 180
+    }
+  ],
+  "tools": {
+    "iverilog": {
+      "available": true,
+      "command": "iverilog -V",
+      "executable": "/usr/bin/iverilog",
+      "executable_sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "available": true,
+      "command": "verilator --version",
+      "executable": "/usr/bin/verilator",
+      "executable_sha256": "ebe0a4ad8d1995ffcf1f9972f2e2614998ffc73f3fc94003ec7b689d5432f463",
+      "version": "Verilator 4.038 2020-07-11 rev v4.036-114-g0cd4a57ad"
+    },
+    "yosys": {
+      "available": true,
+      "command": "yosys -V",
+      "executable": "/usr/bin/yosys",
+      "executable_sha256": "dab84e88b53146fe22d675a142de32b1e545ee9b7fe1054238f6220245b24c8d",
+      "version": "Yosys 0.9 (git sha1 1979e0b)"
+    }
+  },
+  "used_waivers": [
+    "WVR-IVERILOG-CREDIT-ARRAY-001",
+    "WVR-IVERILOG-SESSION-ARRAY-001",
+    "WVR-YOSYS09-PACKAGE-001"
+  ],
+  "yosys_memory_lowering_observations": [
+    "Warning: Replacing memory \\active with list of registers. See rtl/ot_hbm_frontend.sv:120, rtl/ot_hbm_frontend.sv:98",
+    "Warning: Replacing memory \\active_crc with list of registers. See rtl/ot_schedule_controller.sv:115",
+    "Warning: Replacing memory \\address_mem with list of registers. See rtl/ot_hbm_frontend.sv:103",
+    "Warning: Replacing memory \\data_mem with list of registers. See rtl/ot_reduction_tree.sv:138",
+    "Warning: Replacing memory \\data_pipe with list of registers. See rtl/ot_rom_wrapper.sv:117",
+    "Warning: Replacing memory \\dup_mem with list of registers. See rtl/ot_route_mask.sv:148",
+    "Warning: Replacing memory \\entry_context with list of registers. See rtl/ot_session_table.sv:118",
+    "Warning: Replacing memory \\entry_epoch with list of registers. See rtl/ot_session_table.sv:120",
+    "Warning: Replacing memory \\entry_generation with list of registers. See rtl/ot_session_table.sv:128",
+    "Warning: Replacing memory \\entry_image with list of registers. See rtl/ot_session_table.sv:117",
+    "Warning: Replacing memory \\entry_position with list of registers. See rtl/ot_session_table.sv:119",
+    "Warning: Replacing memory \\entry_session with list of registers. See rtl/ot_session_table.sv:116",
+    "Warning: Replacing memory \\entry_transaction with list of registers. See rtl/ot_session_table.sv:121",
+    "Warning: Replacing memory \\epoch_mem with list of registers. See rtl/ot_route_mask.sv:144",
+    "Warning: Replacing memory \\expected with list of registers. See rtl/ot_reduction_tree.sv:107",
+    "Warning: Replacing memory \\expected_beats with list of registers. See rtl/ot_hbm_frontend.sv:132, rtl/ot_hbm_frontend.sv:99",
+    "Warning: Replacing memory \\free with list of registers. See rtl/ot_credit_manager.sv:83",
+    "Warning: Replacing memory \\free_next with list of registers. See rtl/ot_credit_manager.sv:73",
+    "Warning: Replacing memory \\group_tag with list of registers. See rtl/ot_reduction_tree.sv:105",
+    "Warning: Replacing memory \\group_valid with list of registers. See rtl/ot_reduction_tree.sv:104",
+    "Warning: Replacing memory \\last_mem with list of registers. See rtl/ot_reduction_tree.sv:109",
+    "Warning: Replacing memory \\layer_mem with list of registers. See rtl/ot_route_mask.sv:145",
+    "Warning: Replacing memory \\mask_mem with list of registers. See rtl/ot_route_mask.sv:142",
+    "Warning: Replacing memory \\mem with list of registers. See rtl/lib/ot_async_fifo.sv:91",
+    "Warning: Replacing memory \\mem with list of registers. See rtl/lib/ot_skid_buffer.sv:64",
+    "Warning: Replacing memory \\operation_mem with list of registers. See rtl/ot_hbm_frontend.sv:102",
+    "Warning: Replacing memory \\packet_mem with list of registers. See rtl/ot_stage_link_rx.sv:137",
+    "Warning: Replacing memory \\packet_mem with list of registers. See rtl/ot_stage_link_tx.sv:120",
+    "Warning: Replacing memory \\poison_mem with list of registers. See rtl/ot_hbm_frontend.sv:143, rtl/ot_hbm_frontend.sv:104",
+    "Warning: Replacing memory \\poison_mem with list of registers. See rtl/ot_reduction_tree.sv:108",
+    "Warning: Replacing memory \\poison_mem with list of registers. See rtl/ot_route_mask.sv:147",
+    "Warning: Replacing memory \\poison_pipe with list of registers. See rtl/ot_rom_wrapper.sv:121",
+    "Warning: Replacing memory \\received_beats with list of registers. See rtl/ot_hbm_frontend.sv:132, rtl/ot_hbm_frontend.sv:100",
+    "Warning: Replacing memory \\rsp_mem with list of registers. See rtl/ot_cmd_frontend.sv:317",
+    "Warning: Replacing memory \\schedule_mem with list of registers. See rtl/ot_schedule_controller.sv:126",
+    "Warning: Replacing memory \\seen with list of registers. See rtl/ot_reduction_tree.sv:106",
+    "Warning: Replacing memory \\seq_pipe with list of registers. See rtl/ot_rom_wrapper.sv:119",
+    "Warning: Replacing memory \\session_mem with list of registers. See rtl/ot_hbm_frontend.sv:142, rtl/ot_hbm_frontend.sv:101",
+    "Warning: Replacing memory \\syndrome_pipe with list of registers. See rtl/ot_rom_wrapper.sv:120",
+    "Warning: Replacing memory \\tag_pipe with list of registers. See rtl/ot_rom_wrapper.sv:118",
+    "Warning: Replacing memory \\telemetry_mem with list of registers. See rtl/ot_ras_controller.sv:142",
+    "Warning: Replacing memory \\topk_mem with list of registers. See rtl/ot_route_mask.sv:146",
+    "Warning: Replacing memory \\txn_mem with list of registers. See rtl/ot_route_mask.sv:143",
+    "Warning: Replacing memory \\valid_pipe with list of registers. See rtl/ot_rom_wrapper.sv:116"
+  ]
+}

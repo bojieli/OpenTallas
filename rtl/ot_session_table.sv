@@ -35,49 +35,44 @@ module ot_session_table #(
     localparam [7:0] ST_EPOCH = 8'h07;
     localparam [7:0] ST_CAPACITY = 8'h09;
     localparam [7:0] ST_INTERNAL = 8'h0f;
-    reg entry_valid [0:ENTRIES-1];
-    reg entry_busy [0:ENTRIES-1];
-    reg entry_poison [0:ENTRIES-1];
+    localparam integer INDEX_W = (ENTRIES <= 2) ? 1 : $clog2(ENTRIES);
+    reg [ENTRIES-1:0] entry_valid;
+    reg [ENTRIES-1:0] entry_busy;
+    reg [ENTRIES-1:0] entry_poison;
     reg [SESSION_W-1:0] entry_session [0:ENTRIES-1];
     reg [7:0] entry_image [0:ENTRIES-1];
     reg [CONTEXT_W-1:0] entry_context [0:ENTRIES-1];
     reg [POSITION_W-1:0] entry_position [0:ENTRIES-1];
     reg [GENERATION_W-1:0] entry_generation [0:ENTRIES-1];
+    reg [GENERATION_W-1:0] allocation_generation;
     reg [7:0] entry_epoch [0:ENTRIES-1];
     reg [15:0] entry_transaction [0:ENTRIES-1];
-    integer i;
-    integer match_idx;
-    integer free_idx;
+    integer scan_i;
+    reg [INDEX_W-1:0] match_idx;
+    reg [INDEX_W-1:0] free_idx;
     reg found_match;
     reg found_free;
     reg op_legal;
-    reg field_legal;
 
     assign req_ready = 1'b1;
-    genvar bi;
-    generate
-        for (bi = 0; bi < ENTRIES; bi = bi + 1) begin : GEN_BUSY
-            assign busy_bitmap[bi] = entry_valid[bi] && entry_busy[bi];
-        end
-    endgenerate
+    assign busy_bitmap = entry_valid & entry_busy;
 
     always @* begin
         found_match = 1'b0;
         found_free = 1'b0;
         match_idx = 0;
         free_idx = 0;
-        for (i = 0; i < ENTRIES; i = i + 1) begin
-            if (entry_valid[i] && entry_session[i] == req_session_id && !found_match) begin
+        for (scan_i = 0; scan_i < ENTRIES; scan_i = scan_i + 1) begin
+            if (entry_valid[scan_i] && entry_session[scan_i] == req_session_id && !found_match) begin
                 found_match = 1'b1;
-                match_idx = i;
+                match_idx = scan_i[INDEX_W-1:0];
             end
-            if (!entry_valid[i] && !found_free) begin
+            if (!entry_valid[scan_i] && !found_free) begin
                 found_free = 1'b1;
-                free_idx = i;
+                free_idx = scan_i[INDEX_W-1:0];
             end
         end
         op_legal = (req_op <= 3'd4);
-        field_legal = (req_context_minus_one <= 20'hfffff);
     end
 
     always @(posedge clk or negedge rst_n) begin
@@ -89,20 +84,14 @@ module ot_session_table #(
             rsp_expected_position <= {POSITION_W{1'b0}};
             rsp_poison <= 1'b0;
             integrity_error <= 1'b0;
-            for (i = 0; i < ENTRIES; i = i + 1) begin
-                entry_valid[i] = 1'b0;
-                entry_busy[i] = 1'b0;
-                entry_poison[i] = 1'b0;
-                entry_session[i] = {SESSION_W{1'b0}};
-                entry_image[i] = 8'b0;
-                entry_context[i] = {CONTEXT_W{1'b0}};
-                entry_position[i] = {POSITION_W{1'b0}};
-                entry_generation[i] = {GENERATION_W{1'b0}};
-                entry_epoch[i] = 8'b0;
-                entry_transaction[i] = 16'b0;
-            end
+            entry_valid <= {ENTRIES{1'b0}};
+            entry_busy <= {ENTRIES{1'b0}};
+            entry_poison <= {ENTRIES{1'b0}};
+            allocation_generation <= {GENERATION_W{1'b0}};
         end else begin
             rsp_valid <= 1'b0;
+            if (|(entry_busy & ~entry_valid))
+                integrity_error <= 1'b1;
             if (req_valid && req_ready) begin
                 rsp_valid <= 1'b1;
                 rsp_status <= ST_SUCCESS;
@@ -110,7 +99,7 @@ module ot_session_table #(
                 rsp_generation <= found_match ? entry_generation[match_idx] : {GENERATION_W{1'b0}};
                 rsp_expected_position <= found_match ? entry_position[match_idx] : {POSITION_W{1'b0}};
                 rsp_poison <= found_match ? entry_poison[match_idx] : 1'b0;
-                if (!op_legal || !field_legal) begin
+                if (!op_legal) begin
                     rsp_status <= ST_BAD_FIELD;
                     rsp_hit <= 1'b0;
                 end else begin
@@ -122,7 +111,7 @@ module ot_session_table #(
                                 rsp_status <= ST_CAPACITY;
                             end else begin
                                 entry_valid[free_idx] <= 1'b1;
-                                entry_busy[free_idx] <= 1'b1;
+                                entry_busy[free_idx] <= 1'b0;
                                 entry_poison[free_idx] <= 1'b0;
                                 entry_session[free_idx] <= req_session_id;
                                 entry_image[free_idx] <= req_image_slot;
@@ -130,14 +119,17 @@ module ot_session_table #(
                                 entry_position[free_idx] <= req_position;
                                 entry_epoch[free_idx] <= req_epoch_id;
                                 entry_transaction[free_idx] <= req_transaction_id;
-                                if (entry_generation[free_idx] == 0)
-                                    entry_generation[free_idx] <= {{(GENERATION_W-1){1'b0}},1'b1};
+                                if (&allocation_generation)
+                                    allocation_generation <= {{(GENERATION_W-1){1'b0}},1'b1};
                                 else
-                                    entry_generation[free_idx] <= entry_generation[free_idx] + 1'b1;
+                                    allocation_generation <= allocation_generation + 1'b1;
+                                entry_generation[free_idx] <= (&allocation_generation) ?
+                                    {{(GENERATION_W-1){1'b0}},1'b1} :
+                                    allocation_generation + 1'b1;
                                 rsp_hit <= 1'b1;
-                                rsp_generation <= (entry_generation[free_idx] == 0) ?
-                                                   {{(GENERATION_W-1){1'b0}},1'b1} :
-                                                   entry_generation[free_idx] + 1'b1;
+                                rsp_generation <= (&allocation_generation) ?
+                                    {{(GENERATION_W-1){1'b0}},1'b1} :
+                                    allocation_generation + 1'b1;
                             end
                         end
                         3'd1: begin // release
@@ -156,12 +148,27 @@ module ot_session_table #(
                         3'd2: begin // lookup
                             if (!found_match)
                                 rsp_status <= ST_BAD_FIELD;
+                            else if (entry_image[match_idx] != req_image_slot ||
+                                     entry_context[match_idx] != req_context_minus_one ||
+                                     entry_position[match_idx] != req_position ||
+                                     entry_epoch[match_idx] != req_epoch_id)
+                                rsp_status <= ST_EPOCH;
+                            else if (entry_busy[match_idx])
+                                rsp_status <= ST_BUSY;
+                            else begin
+                                entry_busy[match_idx] <= 1'b1;
+                                entry_transaction[match_idx] <= req_transaction_id;
+                                rsp_hit <= 1'b1;
+                            end
                         end
                         3'd3: begin // retire one ordered position
                             if (!found_match)
                                 rsp_status <= ST_BAD_FIELD;
                             else if (entry_poison[match_idx])
                                 rsp_status <= ST_INTERNAL;
+                            else if (!entry_busy[match_idx] ||
+                                     entry_transaction[match_idx] != req_transaction_id)
+                                rsp_status <= ST_EPOCH;
                             else if (req_position != entry_position[match_idx] ||
                                      req_epoch_id != entry_epoch[match_idx])
                                 rsp_status <= ST_EPOCH;
@@ -177,6 +184,10 @@ module ot_session_table #(
                         3'd4: begin // abort/poison
                             if (!found_match)
                                 rsp_status <= ST_BAD_FIELD;
+                            else if (entry_busy[match_idx] &&
+                                     entry_transaction[match_idx] != req_transaction_id &&
+                                     !req_force)
+                                rsp_status <= ST_EPOCH;
                             else begin
                                 entry_poison[match_idx] <= 1'b1;
                                 entry_busy[match_idx] <= 1'b0;

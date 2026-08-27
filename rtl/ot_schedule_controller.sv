@@ -18,10 +18,12 @@ module ot_schedule_controller #(
     input  wire                         quiescent,
     input  wire                         epoch_boundary,
     input  wire                         manifest_crc_ok,
+    input  wire [7:0]                   commit_schedule_id,
     output reg                          commit_ack,
     output reg                          commit_error,
     output reg                          schedule_valid,
     output reg [7:0]                    epoch_id,
+    output reg [7:0]                    active_schedule_id,
     input  wire [SLOT_W-1:0]             active_slot,
     output wire                          active_slot_valid,
     output wire [PORT_ID_W-1:0]          active_source_port,
@@ -32,22 +34,35 @@ module ot_schedule_controller #(
 `ifdef FORMAL
     , output wire                        formal_active_bank
     , output wire                        formal_pending
+    , output wire                        formal_shadow_complete
+    , output wire [7:0]                  formal_pending_schedule_id
 `endif
 );
     reg [ENTRY_W-1:0] schedule_mem [0:1][0:SLOTS-1];
     reg active_bank;
     reg pending;
-    reg [31:0] shadow_crc;
+    reg [7:0] pending_schedule_id;
     reg [31:0] active_crc [0:1];
-    integer i;
+    reg [SLOTS-1:0] written_bank0;
+    reg [SLOTS-1:0] written_bank1;
+    // Keep the inactive-bank selector explicitly one bit wide.  A bitwise
+    // complement used directly as an unpacked-array index is widened by some
+    // synthesis frontends, which can address beyond the two-bank store.
+    wire shadow_bank = !active_bank;
     wire shadow_idle = shadow_wr_data[ENTRY_W-1];
     wire [PORT_ID_W-1:0] shadow_source = shadow_wr_data[PORT_ID_W-1:0];
-    wire shadow_write_illegal = (shadow_wr_slot >= SLOTS) ||
-                                (!shadow_idle && (shadow_source >= PORTS));
+    wire [SLOT_W:0] shadow_slot_ext = {1'b0,shadow_wr_slot};
+    wire [SLOT_W:0] active_slot_ext = {1'b0,active_slot};
+    wire [PORT_ID_W:0] shadow_source_ext = {1'b0,shadow_source};
+    localparam [SLOT_W:0] SLOTS_VALUE = SLOTS[SLOT_W:0];
+    localparam [PORT_ID_W:0] PORTS_VALUE = PORTS[PORT_ID_W:0];
+    wire shadow_write_illegal = (shadow_slot_ext >= SLOTS_VALUE) ||
+                                (!shadow_idle && (shadow_source_ext >= PORTS_VALUE));
+    wire shadow_complete = active_bank ? &written_bank0 : &written_bank1;
 
     assign shadow_wr_ready = !pending;
     assign commit_pending = pending;
-    assign active_slot_valid = schedule_valid && (active_slot < SLOTS) &&
+    assign active_slot_valid = schedule_valid && (active_slot_ext < SLOTS_VALUE) &&
                                !schedule_mem[active_bank][active_slot][ENTRY_W-1];
     assign active_source_port = schedule_mem[active_bank][active_slot][PORT_ID_W-1:0];
     assign active_expect_valid = schedule_mem[active_bank][active_slot][PORT_ID_W];
@@ -56,11 +71,13 @@ module ot_schedule_controller #(
 `ifdef FORMAL
     assign formal_active_bank = active_bank;
     assign formal_pending = pending;
+    assign formal_shadow_complete = shadow_complete;
+    assign formal_pending_schedule_id = pending_schedule_id;
 `endif
 
     // Deterministic CRC over the exact entry bytes (low-order byte first).
     function automatic [31:0] crc32_entries;
-        input integer bank;
+        input bank;
         integer slot_i;
         integer byte_i;
         integer bit_j;
@@ -91,15 +108,14 @@ module ot_schedule_controller #(
             pending <= 1'b0;
             schedule_valid <= 1'b0;
             epoch_id <= 8'h00;
+            active_schedule_id <= 8'h00;
+            pending_schedule_id <= 8'h00;
             commit_ack <= 1'b0;
             commit_error <= 1'b0;
-            shadow_crc <= 32'h0;
             active_crc[0] <= 32'h0;
             active_crc[1] <= 32'h0;
-            for (i = 0; i < SLOTS; i = i + 1) begin
-                schedule_mem[0][i] <= {ENTRY_W{1'b1}}; // idle after reset
-                schedule_mem[1][i] <= {ENTRY_W{1'b1}};
-            end
+            written_bank0 <= {SLOTS{1'b0}};
+            written_bank1 <= {SLOTS{1'b0}};
         end else begin
             commit_ack <= 1'b0;
             commit_error <= 1'b0;
@@ -107,24 +123,36 @@ module ot_schedule_controller #(
                 if (shadow_write_illegal) begin
                     commit_error <= 1'b1;
                 end else begin
-                    schedule_mem[~active_bank][shadow_wr_slot] <= shadow_wr_data;
+                    schedule_mem[shadow_bank][shadow_wr_slot] <= shadow_wr_data;
+                    if (active_bank)
+                        written_bank0[shadow_wr_slot] <= 1'b1;
+                    else
+                        written_bank1[shadow_wr_slot] <= 1'b1;
                 end
             end
             if (commit_req && !pending) begin
-                if (!manifest_crc_ok) begin
+                if (!shadow_complete || !manifest_crc_ok) begin
                     commit_error <= 1'b1;
                 end else begin
                     pending <= 1'b1;
+                    pending_schedule_id <= commit_schedule_id;
                 end
             end
             if (pending && quiescent && epoch_boundary) begin
                 // Capture CRC before changing the bank; software can compare
                 // this value with its certificate on the acknowledgement.
-                shadow_crc <= crc32_entries(~active_bank);
-                active_crc[~active_bank] <= crc32_entries(~active_bank);
-                active_bank <= ~active_bank;
+                active_crc[shadow_bank] <= crc32_entries(shadow_bank);
+                // The old active bank becomes shadow and must be completely
+                // reloaded before a later commit; stale entries cannot leak
+                // into a partially updated epoch.
+                if (active_bank)
+                    written_bank1 <= {SLOTS{1'b0}};
+                else
+                    written_bank0 <= {SLOTS{1'b0}};
+                active_bank <= shadow_bank;
                 schedule_valid <= 1'b1;
                 epoch_id <= epoch_id + 1'b1;
+                active_schedule_id <= pending_schedule_id;
                 pending <= 1'b0;
                 commit_ack <= 1'b1;
             end

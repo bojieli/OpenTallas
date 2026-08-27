@@ -49,9 +49,11 @@ module ot_async_fifo #(
     reg wr_full, rd_empty;
     wire wr_fire = wr_valid && wr_ready;
     wire rd_fire = rd_valid && rd_ready;
-    wire [PTR_W-1:0] wr_bin_next = wr_bin + wr_fire;
+    wire [PTR_W-1:0] wr_increment = {{(PTR_W-1){1'b0}},wr_fire};
+    wire [PTR_W-1:0] wr_bin_next = wr_bin + wr_increment;
     wire [PTR_W-1:0] wr_gray_next = (wr_bin_next >> 1) ^ wr_bin_next;
-    wire [PTR_W-1:0] rd_bin_next = rd_bin + rd_fire;
+    wire [PTR_W-1:0] rd_increment = {{(PTR_W-1){1'b0}},rd_fire};
+    wire [PTR_W-1:0] rd_bin_next = rd_bin + rd_increment;
     wire [PTR_W-1:0] rd_gray_next = (rd_bin_next >> 1) ^ rd_bin_next;
     wire wr_full_next;
     wire rd_empty_next;
@@ -120,19 +122,16 @@ module ot_async_fifo #(
 `ifndef SYNTHESIS
     // Gray pointers may only change one bit per local write/read event.
     reg [PTR_W-1:0] wr_gray_prev, rd_gray_prev;
-    integer bit_count;
-    reg [PTR_W-1:0] gray_delta;
+    wire [PTR_W-1:0] wr_gray_delta = wr_gray ^ wr_gray_prev;
+    wire [PTR_W-1:0] rd_gray_delta = rd_gray ^ rd_gray_prev;
+    wire [PTR_W-1:0] gray_one = {{(PTR_W-1){1'b0}},1'b1};
+    wire wr_gray_multi = |(wr_gray_delta & (wr_gray_delta - gray_one));
+    wire rd_gray_multi = |(rd_gray_delta & (rd_gray_delta - gray_one));
     always @(posedge wr_clk or negedge wr_domain_rst_n) begin
         if (!wr_domain_rst_n)
             wr_gray_prev <= {PTR_W{1'b0}};
         else begin
-            gray_delta = wr_gray ^ wr_gray_prev;
-            bit_count = 0;
-            while (gray_delta != 0) begin
-                bit_count = bit_count + (gray_delta[0] ? 1 : 0);
-                gray_delta = gray_delta >> 1;
-            end
-            if (bit_count > 1)
+            if (wr_gray_multi)
                 $error("ot_async_fifo write Gray pointer changed multiple bits");
             wr_gray_prev <= wr_gray;
         end
@@ -141,13 +140,7 @@ module ot_async_fifo #(
         if (!rd_domain_rst_n)
             rd_gray_prev <= {PTR_W{1'b0}};
         else begin
-            gray_delta = rd_gray ^ rd_gray_prev;
-            bit_count = 0;
-            while (gray_delta != 0) begin
-                bit_count = bit_count + (gray_delta[0] ? 1 : 0);
-                gray_delta = gray_delta >> 1;
-            end
-            if (bit_count > 1)
+            if (rd_gray_multi)
                 $error("ot_async_fifo read Gray pointer changed multiple bits");
             rd_gray_prev <= rd_gray;
         end

@@ -13,10 +13,10 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Immutable ROM | `ot_rom_wrapper.sv`, `via_mask_rom.sv` | no write path, fixed latency, repair/fault status | DV-TILE-002 |
 | Numeric/DV | `ot_format_decode.sv`, `ot_numeric_dot.sv`, `ot_reduction_tree.sv` | classification, signed exact order, deterministic reduction | DV-NUM-001/002 |
 | Tile | `ot_tile.sv`, `opentallas_tile.sv` | route-before-activation and result alignment | DV-TILE-004 |
-| Static schedule | `ot_schedule_controller.sv`, `static_timeslot_switch.sv` | shadow/active epoch commit and slot transport | DV-NOC-001 |
+| Static schedule | `ot_schedule_controller.sv`, `static_timeslot_switch.sv` | fully rewritten shadow bank, typed schedule-ID/epoch atomic commit, and slot transport | DV-NOC-001 |
 | Credits | `ot_credit_manager.sv` | atomic reservation and conservation | DV-NOC-004 |
-| Sessions/commands | `ot_session_table.sv`, `ot_cmd_frontend.sv` | generation isolation, CRC/version/field legality | DV-CMD-001/002 |
-| Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, single-dispatch schedule CDC, watchdog escalation, and exact CSR access | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
+| Sessions/commands | `ot_session_table.sv`, `ot_cmd_frontend.sv` | generation/transaction ownership, position/image/context/epoch/schedule validation, CRC/version/field legality | DV-CMD-001/002, DV-SESSION-001 |
+| Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
 | RAS/telemetry | `ot_ras_controller.sv` | first error, sticky poison, lossless event queue, watchdog | DV-RAS-001/002 |
@@ -27,3 +27,8 @@ The inventory is a public implementation baseline, not a claim that the
 4,096-tile product hierarchy, ROM density, HBM beachfront, package, or PHY has
 been physically realized.  Those remain the external gates listed in the
 architecture review.
+
+`spec/clock_reset_crossings.json` classifies all 76 `ot_stage_top` ports and maps
+all 12 current CDC/RDC instances. `spec/rtl_waivers.json` is the only accepted
+static-waiver source; the campaign fails an unowned, ambiguous, stale, or expired
+entry.

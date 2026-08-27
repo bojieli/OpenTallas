@@ -36,13 +36,23 @@ after their local stop acknowledgements and isolation conditions are satisfied.
 
 ### CRP-2.2 Crossing inventory
 
+`clock_reset_crossings.json` is the machine-readable instance and stage-top-port
+inventory. Its 12 public stage crossings are normative for the checked RTL and
+must remain one-to-one with the table below; adding a clock, reset, top-level port,
+or crossing without updating that record fails the static campaign.
+
 | Source → destination | Data | Mechanism | Reset/recovery rule |
 |---|---|---|---|
 | AON → core | accepted host commands | dual-clock asynchronous FIFO | either reset flushes both pointer domains; interfaces remain closed until a two-domain reset rendezvous |
 | core → AON | command responses | dual-clock asynchronous FIFO | response reservation prevents loss; either reset flushes both pointer domains and fatal reset cause is logged in AON |
-| AON → core | schedule/repair commit, power request | closed-loop four-phase mailbox with stable payload and response | source holds payload through returned acknowledgement; destination reset replays an outstanding request only into state sharing that reset |
-| core → AON | status/counter snapshot | request/acknowledge snapshot mailbox | coherent snapshot captured in core before acknowledgement |
+| AON → core | schedule shadow write or commit, including schedule ID | `schedule_cdc`, closed-loop four-phase mailbox with stable payload and typed response | source holds payload through returned acknowledgement; destination reset replays only into schedule state sharing that reset |
+| core → AON | coherent status/counter/first-error snapshot | `status_snapshot_cdc`, 512-bit request/acknowledge snapshot mailbox | one complete core image is latched and held through acknowledgement; a changed live image schedules a follow-up transfer |
+| AON → core | ERROR_STATUS RW1C first-error clear | `ras_clear_cdc`, closed-loop one-bit mailbox | requests may coalesce because clear is idempotent; no asynchronous pulse is sampled in core |
 | core → AON | telemetry/fatal events | asynchronous FIFO, depth at least 16 | exhaustion blocks admission; AON survives core reset |
+| AON → core | service-enable and power-safe levels | independent `ot_sync_bits` instances | destination defaults to admission disabled/reset-interlocked state |
+| core → AON | RAS SAFE request | `ot_sync_bits` sticky-level synchronizer | source holds the request until reset/requalification |
+| core → AON | stage idle and schedule valid | `ot_sync_level` with three-cycle destination qualification | destination reset values are explicitly idle and invalid, respectively |
+| AON/external → core | qualified core reset | `ot_reset_sync` | assertion is asynchronous; release takes at least two qualified `core_clk` edges |
 | core → HBM[i] | `IF-HBM-REQ` | asynchronous FIFO | reset withdraws tags/credits and requires channel resync |
 | HBM[i] → core | `IF-HBM-RSP` | asynchronous FIFO | late pre-reset generations are discarded and counted |
 | core → link[i] | stage packets/control | asynchronous packet FIFO | reset withdraws packet credit and forces link handshake |
@@ -72,6 +82,14 @@ the rendezvous, so the mailbox may drive only destination state that shares the
 destination reset or an explicitly idempotent operation. A source reset cancels
 its local completion obligation; warm reset therefore quiesces mailbox traffic
 before reset, as required by CRP-3.3.
+
+The 512-bit diagnostic snapshot is the only path by which changing core-domain
+counters, completion metadata, schedule identity, session generation/poison,
+credit summary, or first-error state reach AON CSRs. AON never samples those
+multi-bit buses directly. ERROR_STATUS clearing travels in the reverse direction
+through its own acknowledged mailbox. CSR schedule/repair window outputs and
+upper boot-control requests remain AON-domain platform integration boundaries;
+they do not create a crossing until the platform owner consumes them.
 
 ## CRP-3 Reset architecture
 

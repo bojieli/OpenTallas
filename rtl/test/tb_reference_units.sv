@@ -69,16 +69,19 @@ module tb_reference_units;
 
     // Schedule controller smoke: shadow write, blocked commit, then boundary.
     reg sched_wr_valid=0, sched_commit=0, sched_quiescent=0, sched_boundary=0, sched_crc_ok=1;
+    reg [7:0] sched_commit_id=8'h34;
     reg [1:0] sched_slot=0; reg [4:0] sched_data=0;
     wire sched_wr_ready,sched_ack,sched_err,sched_valid;
     wire [7:0] sched_epoch;
+    wire [7:0] sched_active_id;
     wire [2:0] sched_src; wire sched_expect,sched_idle;
     wire [31:0] sched_crc;
     ot_schedule_controller #(.PORTS(8),.SLOTS(4)) sched (
         .clk(clk),.rst_n(rst_n),.shadow_wr_valid(sched_wr_valid),.shadow_wr_ready(sched_wr_ready),
         .shadow_wr_slot(sched_slot),.shadow_wr_data(sched_data),.commit_req(sched_commit),
         .quiescent(sched_quiescent),.epoch_boundary(sched_boundary),.manifest_crc_ok(sched_crc_ok),
-        .commit_ack(sched_ack),.commit_error(sched_err),.schedule_valid(sched_valid),.epoch_id(sched_epoch),
+        .commit_schedule_id(sched_commit_id),.commit_ack(sched_ack),.commit_error(sched_err),
+        .schedule_valid(sched_valid),.epoch_id(sched_epoch),.active_schedule_id(sched_active_id),
         .active_slot(2'd0),.active_slot_valid(),.active_source_port(sched_src),.active_expect_valid(sched_expect),
         .active_idle(sched_idle),.active_schedule_crc(sched_crc),.commit_pending());
 
@@ -95,12 +98,17 @@ module tb_reference_units;
             $display("FAIL route mask=%h dup=%h poison=%b",ctx_mask,ctx_dup,ctx_poison); failures=failures+1;
         end
         @(negedge clk); ctx_ready=1; @(negedge clk); ctx_ready=0;
-        // Schedule entry source 2, expect-valid, then commit only at boundary.
+        // Load every shadow slot; partial banks are never activatable.
         @(negedge clk); sched_slot=0; sched_data={1'b0,1'b1,3'd2}; sched_wr_valid=1;
+        @(negedge clk); sched_slot=1; sched_data={1'b1,1'b0,3'd0};
+        @(negedge clk); sched_slot=2; sched_data={1'b1,1'b0,3'd0};
+        @(negedge clk); sched_slot=3; sched_data={1'b1,1'b0,3'd0};
         @(negedge clk); sched_wr_valid=0; sched_commit=1;
         @(negedge clk); sched_commit=0; sched_quiescent=1; sched_boundary=1;
         @(negedge clk); sched_quiescent=0; sched_boundary=0;
-        if(!sched_ack && !sched_valid) begin $display("FAIL schedule commit"); failures=failures+1; end
+        if((!sched_ack && !sched_valid) || sched_active_id!==8'h34) begin
+            $display("FAIL schedule commit/id"); failures=failures+1;
+        end
         if(failures==0) begin $display("PASS: reference unit blocks"); $finish; end
         $fatal(1,"%0d failures",failures);
     end

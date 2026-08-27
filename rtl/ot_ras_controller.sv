@@ -42,6 +42,10 @@ module ot_ras_controller #(
 );
     localparam integer PTR_W = (TELEMETRY_DEPTH <= 2) ? 1 : $clog2(TELEMETRY_DEPTH);
     localparam integer CNT_W = $clog2(TELEMETRY_DEPTH+1);
+    localparam integer PTR_LAST_INT = TELEMETRY_DEPTH-1;
+    localparam [PTR_W-1:0] PTR_LAST = PTR_LAST_INT[PTR_W-1:0];
+    localparam [CNT_W-1:0] DEPTH_COUNT = TELEMETRY_DEPTH[CNT_W-1:0];
+    localparam [CNT_W-1:0] ADMISSION_THRESHOLD = PTR_LAST_INT[CNT_W-1:0];
     reg [127:0] telemetry_mem [0:TELEMETRY_DEPTH-1];
     reg [PTR_W-1:0] wr_ptr;
     reg [PTR_W-1:0] rd_ptr;
@@ -51,7 +55,7 @@ module ot_ras_controller #(
     reg [127:0] event_record;
     reg [111:0] event_body;
     reg [15:0] event_crc;
-    wire telem_push = event_valid && (telem_count < TELEMETRY_DEPTH);
+    wire telem_push = event_valid && (telem_count < DEPTH_COUNT);
     wire telem_pop_fire = telemetry_valid && (telemetry_ready || telemetry_pop);
 
     function automatic [15:0] crc16_112;
@@ -136,11 +140,11 @@ module ot_ras_controller #(
                 transaction_poison <= 1'b1;
             if (telem_push) begin
                 telemetry_mem[wr_ptr] <= event_record;
-                if (wr_ptr == TELEMETRY_DEPTH-1) wr_ptr <= 0;
+                if (wr_ptr == PTR_LAST) wr_ptr <= 0;
                 else wr_ptr <= wr_ptr + 1'b1;
             end
             if (telem_pop_fire) begin
-                if (rd_ptr == TELEMETRY_DEPTH-1) rd_ptr <= 0;
+                if (rd_ptr == PTR_LAST) rd_ptr <= 0;
                 else rd_ptr <= rd_ptr + 1'b1;
             end
             case ({telem_push,telem_pop_fire})
@@ -150,7 +154,7 @@ module ot_ras_controller #(
             endcase
             // Once the lossless telemetry queue is full, stop new admission;
             // existing work may drain and free the reserved entries.
-            admission_block <= (telem_count >= TELEMETRY_DEPTH-1) || safe_request;
+            admission_block <= (telem_count >= ADMISSION_THRESHOLD) || safe_request;
             if (!watchdog_enable || watchdog_kick) begin
                 watchdog_count <= 0;
                 watchdog_timeout <= 1'b0;

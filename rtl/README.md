@@ -23,8 +23,10 @@ tags, stage-link retry, RAS/telemetry, and power/reset sequencing.  They are
 deliberately parameterized so unit proofs can use tiny instances while the
 architectural limits remain explicit.
 
-`make verify` runs the legacy tile test, reference-unit tests, Verilator lint,
-and a Yosys technology-independent synthesis/check.  The serious verification
+`make verify` runs the legacy tile test, reference-unit and asynchronous-clock
+integration tests, independent Verilator executable coverage, strict multi-
+frontend static/CDC/RDC closure, formal, and Yosys technology-independent
+synthesis/check.  The serious verification
 campaign is driven by `tools/rtl_campaign.py` and records tool versions, source
 hashes, seeds, logs, and evidence class under `results/rtl/`; it is a public
 proxy and does not claim qualified ROM/HBM/PHY silicon behavior.

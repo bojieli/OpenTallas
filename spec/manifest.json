@@ -13,6 +13,8 @@
     {"id": "SPEC-PPA", "normative": true, "path": "spec/FLOORPLAN_PPA.md"},
     {"id": "SPEC-DV", "normative": true, "path": "spec/VERIFICATION_PLAN.md"},
     {"id": "SPEC-CC", "normative": true, "path": "spec/CHANGE_CONTROL.md"},
+    {"id": "SPEC-CRP-MACHINE", "normative": true, "path": "spec/clock_reset_crossings.json"},
+    {"id": "SPEC-WAIVER", "normative": false, "path": "spec/rtl_waivers.json"},
     {"id": "SPEC-REVIEW", "normative": false, "path": "spec/ARCHITECTURE_REVIEW.md"},
     {"id": "SPEC-TRACE", "generated": true, "normative": false, "path": "spec/TRACEABILITY.md"}
   ],
@@ -43,7 +45,9 @@
     "spec/parameters.json",
     "spec/interfaces.json",
     "spec/budgets.json",
-    "spec/verification.json"
+    "spec/verification.json",
+    "spec/clock_reset_crossings.json",
+    "spec/rtl_waivers.json"
   ],
   "models": [
     {

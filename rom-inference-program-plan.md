@@ -1,6 +1,7 @@
 # Model-Specific ROM Inference Silicon — Program Plan
 
-**Status:** pre-architecture, pre-NDA program. Nothing here authorizes product silicon.
+**Status:** public-reference architecture frozen and implementation/verification in
+progress; product silicon remains on hold. Nothing here authorizes product silicon.
 **Purpose:** define a serious chip-development program that can validate, refute, or refine the thesis with traceable evidence, then carry the design as far as public tools and open PDKs allow before foundry engagement.
 **Companion artifacts:** `infersim.py` (analytical model), `run.py`, `decide.py`, `tornado.py` (drivers).
 
@@ -248,6 +249,11 @@ This is a chip program, not a collection of demos. The following rules are manda
   updated requirements, verification, performance, power, area, and schedule records.
 - Generated results are reproducible from pinned inputs and tool versions. Waivers
   are explicit, owned, justified, and time-bounded; “tool limitation” is not a silent pass.
+- Significant passing gates are committed and pushed when they close: analysis,
+  specification, CDC/reset, formal, simulation/coverage, static closure, fault/RAS/
+  DFT closure, and synthesis/physical-proxy evidence are separate milestones. Work
+  is never accumulated into one end-of-project commit, and a failing or source-stale
+  generated report is never pushed as a passing gate.
 - Public-tool results are pre-NDA evidence only. They do not substitute for target-
   foundry libraries, ROM/HBM macros, extracted timing, commercial DFT/ATPG, signoff
   STA, EM/IR, SI, reliability, package, or foundry DRC/LVS.

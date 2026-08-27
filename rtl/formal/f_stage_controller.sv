@@ -18,7 +18,9 @@ module f_stage_controller;
     (* anyseq *) reg [15:0] abort_transaction_id;
     (* anyseq *) reg session_req_ready, session_rsp_valid, session_rsp_hit;
     (* anyseq *) reg [7:0] session_rsp_status;
+    (* anyseq *) reg [7:0] session_rsp_generation;
     (* anyseq *) reg [19:0] session_rsp_expected_position;
+    (* anyseq *) reg session_rsp_poison;
     (* anyseq *) reg credit_reserve_ready, service_start_ready;
     (* anyseq *) reg service_done_valid;
     (* anyseq *) reg [7:0] service_done_status, service_done_error_source;
@@ -36,8 +38,11 @@ module f_stage_controller;
     wire service_start_valid, service_poison;
     wire [15:0] service_transaction_id, service_batch_minus_one;
     wire [23:0] service_session_id;
+    wire [7:0] service_session_generation;
     wire [6:0] service_first_layer, service_last_layer;
     wire [3:0] service_draft_tokens;
+    wire [7:0] service_schedule_id, service_flags;
+    wire [47:0] service_activation_address;
     wire completion_valid, stage_idle, stage_poison;
     wire [7:0] completion_status, completion_error_source;
     wire [3:0] completion_syndrome;
@@ -82,14 +87,20 @@ module f_stage_controller;
         .session_req_transaction(session_req_transaction), .session_req_force(session_req_force),
         .session_rsp_valid(session_rsp_valid), .session_rsp_status(session_rsp_status),
         .session_rsp_hit(session_rsp_hit),
+        .session_rsp_generation(session_rsp_generation),
         .session_rsp_expected_position(session_rsp_expected_position),
+        .session_rsp_poison(session_rsp_poison),
         .credit_reserve_valid(credit_reserve_valid), .credit_reserve_ready(credit_reserve_ready),
         .credit_reserve_mask(credit_reserve_mask), .credit_release_valid(credit_release_valid),
         .credit_release_mask(credit_release_mask), .service_start_valid(service_start_valid),
         .service_start_ready(service_start_ready), .service_transaction_id(service_transaction_id),
-        .service_session_id(service_session_id), .service_first_layer(service_first_layer),
+        .service_session_id(service_session_id),
+        .service_session_generation(service_session_generation),
+        .service_first_layer(service_first_layer),
         .service_last_layer(service_last_layer), .service_batch_minus_one(service_batch_minus_one),
-        .service_draft_tokens(service_draft_tokens), .service_poison(service_poison),
+        .service_draft_tokens(service_draft_tokens), .service_schedule_id(service_schedule_id),
+        .service_flags(service_flags), .service_activation_address(service_activation_address),
+        .service_poison(service_poison),
         .service_done_valid(service_done_valid), .service_done_status(service_done_status),
         .service_done_error_source(service_done_error_source),
         .service_done_syndrome(service_done_syndrome), .watchdog_timeout(watchdog_timeout),

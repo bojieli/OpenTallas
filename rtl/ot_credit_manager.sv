@@ -28,6 +28,8 @@ module ot_credit_manager #(
     reg all_available;
     reg [CREDIT_W:0] next_count;
     reg overflow_event;
+    localparam [CREDIT_W:0] DEPTH_EXT = DEPTH[CREDIT_W:0];
+    localparam [CREDIT_W-1:0] DEPTH_VALUE = DEPTH[CREDIT_W-1:0];
     wire reserve_fire;
     wire release_fire = release_valid;
 
@@ -57,7 +59,7 @@ module ot_credit_manager #(
         for (next_i = 0; next_i < SINKS; next_i = next_i + 1) begin
             next_count = {1'b0,free[next_i]};
             if (release_fire && release_mask[next_i]) begin
-                if (next_count >= DEPTH) begin
+                if (next_count >= DEPTH_EXT) begin
                     overflow_event = 1'b1;
                 end else begin
                     next_count = next_count + 1'b1;
@@ -78,7 +80,7 @@ module ot_credit_manager #(
             underflow_error <= 1'b0;
             conservation_error <= 1'b0;
             for (seq_i = 0; seq_i < SINKS; seq_i = seq_i + 1)
-                free[seq_i] <= DEPTH;
+                free[seq_i] <= DEPTH_VALUE;
         end else begin
             for (seq_i = 0; seq_i < SINKS; seq_i = seq_i + 1)
                 free[seq_i] <= free_next[seq_i];

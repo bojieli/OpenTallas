@@ -21,6 +21,9 @@ module ot_sync_level #(
     (* async_reg = "true" *) reg [WIDTH-1:0] sync_ff2;
     reg [WIDTH-1:0] candidate;
     reg [COUNT_W-1:0] stable_count;
+    localparam integer QUAL_LAST_INT = QUAL_CYCLES-1;
+    localparam [COUNT_W-1:0] QUAL_VALUE = QUAL_CYCLES[COUNT_W-1:0];
+    localparam [COUNT_W-1:0] QUAL_LAST = QUAL_LAST_INT[COUNT_W-1:0];
 `ifdef FORMAL
     assign formal_sync_ff2 = sync_ff2;
     assign formal_candidate = candidate;
@@ -40,8 +43,8 @@ module ot_sync_level #(
             if (sync_ff2 != candidate) begin
                 candidate <= sync_ff2;
                 stable_count <= {{(COUNT_W-1){1'b0}},1'b1};
-            end else if (stable_count < QUAL_CYCLES) begin
-                if (stable_count == QUAL_CYCLES-1)
+            end else if (stable_count < QUAL_VALUE) begin
+                if (stable_count == QUAL_LAST)
                     sync_out <= candidate;
                 stable_count <= stable_count + 1'b1;
             end else begin

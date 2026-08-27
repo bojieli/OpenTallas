@@ -34,10 +34,13 @@ and partial-TCO operating points. GPU candidates span B200/B300 x1, x2, x4, x8,
 and x16 analytical configurations so the dense control is not forced onto an
 inappropriately large cluster.
 
-The checked-in RTL and SPICE are disposable feasibility scaffolding. They are
-not an implementation baseline and must not grow into one until the architecture,
-interfaces, numerical contract, RAS/repair/DFT plan, and verification closure
-criteria pass the specification gate in the program plan.
+The architecture/specification gate has passed for public-reference RTL only. The
+checked `ot_*` hierarchy is now a controlled implementation baseline with strict
+static/CDC/RDC, formal, dual-simulator, and source-hashed evidence. The small legacy
+tile and open-PDK SPICE remain feasibility proxies. Neither baseline authorizes
+product silicon: target numerical qualification, full fault/RAS/repair/DFT and
+coverage closure, verified-baseline synthesis, target macros/PDK, package, and
+foundry signoff remain mandatory gates.
 
 ## Quick start
 

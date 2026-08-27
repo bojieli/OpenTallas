@@ -68,7 +68,7 @@ When multiple checks fail on one accepted record, status precedence is:
 3. `BAD_OPCODE`;
 4. `BAD_FIELD`;
 5. `IMAGE_MISMATCH`;
-6. `EPOCH_MISMATCH`;
+6. `EPOCH_MISMATCH` (including active schedule-ID mismatch);
 7. `CAPACITY_ERROR` or `NO_CREDIT`;
 8. operating-state errors.
 
@@ -110,6 +110,12 @@ Flag allocation is:
 
 The public numeric mode is stored in the configured image/session slot, not a
 command flag, preventing an in-flight reinterpretation of data.
+
+For every non-NOP command, `schedule_id` must equal the active schedule identity
+published by the schedule controller as well as `epoch_id` matching the active
+epoch. Either mismatch returns `EPOCH_MISMATCH` before session lookup, credit
+reservation, or service launch. A schedule commit latches its requested ID and
+publishes that exact value atomically with the active-bank/epoch change.
 
 ### ICD-2.2 IF-HOST-RSP
 
@@ -314,12 +320,37 @@ validation. A transferred commit returns exactly one one-cycle
 pending until core quiescence and an epoch boundary. Reset can terminate an
 in-flight local integration request; architectural firmware reaches this port
 through the protected CSR/boot transaction layer, which reports reset-abort.
+Every inactive-bank slot must have been written since reset or since that bank
+last became shadow. `schedule_manifest_crc_ok` cannot override this completeness
+check. `schedule_commit_id` is stable with the request and becomes the active
+schedule identity only on the acknowledged atomic commit.
 
 `image_slot_valid`, `abort_valid`/`abort_transaction_id`, service start/done, and
 their payloads are core-domain stage-boundary signals. The 256-bit image-valid
 bitmap is coherent core-domain state and is static while service is enabled; it is
 not sampled through per-bit synchronizers. `stage_idle` is a core-domain output.
 Only its separately qualified internal copy may control AON power/CSR logic.
+
+The service-start payload contains transaction ID, full session ID, allocation
+generation, owned layer interval, batch-minus-one, draft-token count, schedule ID,
+command flags, and activation address. It remains stable while start valid is
+stalled. The allocation generation accompanies all downstream HBM/link ownership
+so a late response cannot alias a recycled session. `service_poison` is the OR of
+transaction-controller poison and RAS poison and is monotonic for the active
+transaction. Service completion is accepted only for the transaction whose
+session table entry is busy under the matching generation/transaction ownership.
+
+`boot_control_requests` and the `csr_schedule_window_*`/`csr_repair_window_*`
+signals are AON-domain integration boundaries. Bits 0 and 1 of the control word
+are consumed locally as service and quiesce requests; the platform boot/DFT owner
+must qualify and consume any other implemented request. Window outputs are
+accepted CSR transactions, not direct ROM writes. Leaving a platform-side owner
+unconnected is an integration gap and cannot be promoted to product closure.
+
+Changing core diagnostics reach AON registers only as one coherent 512-bit
+mailbox snapshot. ERROR_STATUS RW1C is converted into an acknowledged AON-to-core
+clear transaction; no unqualified clear pulse or independently synchronized
+counter bits cross the boundary.
 
 ### ICD-8.2 Test access pins
 

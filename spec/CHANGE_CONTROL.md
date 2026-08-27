@@ -71,3 +71,19 @@ records are unaffected because they use the protected CSR/boot transaction layer
 stage RTL, reset/static checks, formal harnesses, and asynchronous-clock tests must
 be regenerated together. Owner: digital control/CDC. Review gate: DV-RESET-001 and
 DV-STATIC-001; re-entry is required after any reset or handshake change.
+
+### CC-4.2 Static-closure interface refinement
+
+The static-closure baseline consumes the existing host `schedule_id` field end to
+end, rejects partial inactive schedule banks, carries session allocation generation
+and complete command/service metadata to the abstract service boundary, and makes
+session lookup/retire/abort ownership checks functional. Changing core diagnostic
+state reaches AON only through a coherent 512-bit mailbox; RW1C clear uses a
+separate lossless mailbox. Accepted CSR window/control requests that belong to the
+platform boot/repair/DFT owner are explicit AON top-level sidebands rather than
+unconnected internal pins. These changes do not alter frozen record bit positions,
+but they do strengthen previously specified legality, ownership, and CDC behavior.
+Owner: digital control/RAS/DV. Review gates: DV-CMD-001/002, DV-SESSION-001,
+DV-NOC-001, DV-RAS-001, DV-RESET-001, and DV-STATIC-001. Any later edit to these
+paths reopens strict lint, static CDC/RDC, formal, both simulators, fault injection,
+and source-hash consistency.

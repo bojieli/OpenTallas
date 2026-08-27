@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "policy": {
+    "today_source": "campaign_host_UTC_date",
+    "fail_on_expired": true,
+    "fail_on_unowned": true,
+    "fail_on_ambiguous_match": true
+  },
+  "waivers": [
+    {
+      "id": "WVR-IVERILOG-SESSION-ARRAY-001",
+      "tool": "iverilog",
+      "category": "array_sensitivity",
+      "match_regex": "^rtl/ot_session_table\\.sv:[0-9]+: warning: @\\* is sensitive to all [0-9]+ words in array 'entry_session'\\.$",
+      "scope": "ot_session_table combinational associative scan",
+      "owner": "RTL/DV",
+      "risk": "An incomplete inferred sensitivity set could make simulation diverge from synthesized combinational lookup behavior.",
+      "rationale": "Icarus 11 emits an informational expansion notice for an always-at-star block that reads every word of an unpacked array; it is not reporting an omitted element.",
+      "compensating_check": "Strict Verilator lint is clean, Yosys check reports no structural problem, and stage integration plus session directed tests execute configure/lookup/retire behavior.",
+      "requirements": ["SYS-IMP-002", "SYS-VER-001"],
+      "review_date": "2026-09-30",
+      "expires": "2026-12-31",
+      "reentry_condition": "Remove when the Icarus frontend no longer emits the expansion notice or the table implementation changes."
+    },
+    {
+      "id": "WVR-IVERILOG-CREDIT-ARRAY-001",
+      "tool": "iverilog",
+      "category": "array_sensitivity",
+      "match_regex": "^rtl/ot_credit_manager\\.sv:[0-9]+: warning: @\\* is sensitive to all [0-9]+ words in array 'free'\\.$",
+      "scope": "ot_credit_manager reserve/release combinational scans",
+      "owner": "RTL/DV",
+      "risk": "An incomplete inferred sensitivity set could hide a credit update in simulation.",
+      "rationale": "Icarus 11 is enumerating the unpacked-array sensitivity it did include; the message is not an omitted-sensitivity warning.",
+      "compensating_check": "The credit manager passes Yosys SAT, CVC4 bounded proof and induction, independent Verilator randomized scoreboarding, and Yosys structural check.",
+      "requirements": ["SYS-NOC-004", "SYS-VER-001"],
+      "review_date": "2026-09-30",
+      "expires": "2026-12-31",
+      "reentry_condition": "Remove when the Icarus frontend no longer emits the expansion notice or the credit storage representation changes."
+    },
+    {
+      "id": "WVR-YOSYS09-PACKAGE-001",
+      "tool": "yosys",
+      "category": "frontend_exclusion",
+      "match_regex": "^rtl/lib/ot_crc_pkg\\.sv: excluded from Yosys 0\\.9 structural elaboration because that frontend cannot parse SystemVerilog package functions$",
+      "scope": "unused shared CRC package declaration only",
+      "owner": "RTL/DV",
+      "risk": "Yosys does not independently parse this helper package in the installed legacy release.",
+      "rationale": "No synthesizable module imports the package; active CRC implementations are local functions/modules included in Yosys elaboration. Icarus and Verilator both parse the package.",
+      "compensating_check": "Two independent language frontends parse the file, known-answer CRC tests cover the active implementations, and source scanning rejects package imports that would make the exclusion functional.",
+      "requirements": ["SYS-RAS-001", "SYS-IMP-002"],
+      "review_date": "2026-09-30",
+      "expires": "2026-12-31",
+      "reentry_condition": "Remove when Yosys is upgraded to a release that parses the package or when any synthesizable module imports ot_crc_pkg."
+    }
+  ]
+}

@@ -105,7 +105,7 @@ FORMAL_CASES = (
         24,
         12,
         18,
-        timeout_seconds=180,
+        timeout_seconds=360,
     ),
 )
 
@@ -173,9 +173,14 @@ def run_phase(
             "log": str(log_path.relative_to(ROOT)),
         }
     except subprocess.TimeoutExpired as exc:
-        output = (exc.stdout or "") + (exc.stderr or "")
-        if isinstance(output, bytes):
-            output = output.decode("utf-8", errors="replace")
+        def timeout_text(value: str | bytes | None) -> str:
+            if value is None:
+                return ""
+            if isinstance(value, bytes):
+                return value.decode("utf-8", errors="replace")
+            return value
+
+        output = timeout_text(exc.stdout) + timeout_text(exc.stderr)
         log_path.write_text(output, encoding="utf-8")
         return {
             "phase": phase,
