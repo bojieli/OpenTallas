@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Signed dot-product reduction for all wordline-selected expert words.
 module rom_mac_tile #(
     parameter integer NUM_EXPERTS = 4,

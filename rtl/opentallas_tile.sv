@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Two-stage ROM-read/MAC pipeline demonstrating wordline-masked MoE execution.
 module opentallas_tile #(
     parameter integer NUM_EXPERTS = 4,

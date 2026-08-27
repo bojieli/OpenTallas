@@ -14,7 +14,22 @@ macro or a claim about density/timing.
 - `opentallas_tile.sv` composes the mask, ROM read, and MAC into a two-stage
   pipeline.
 
-`make verify` runs a self-checking Icarus simulation, Verilator lint, and a Yosys
-technology-independent synthesis/check. The tiny test configuration is chosen so
-the behavior is inspectable. Scaling results require target-node SRAM/ROM macros,
-standard cells, timing constraints, and physical design.
+The repository now contains both the original inspectable tile demo and a
+requirement-traceable public-reference hierarchy.  The `ot_*` blocks implement
+the digital contracts in `spec/MICROARCHITECTURE.md`: integrity, CDC buffering,
+route/context validation, immutable-ROM repair translation, deterministic
+integer-DV arithmetic, schedule epochs, credits, sessions, host commands, HBM
+tags, stage-link retry, RAS/telemetry, and power/reset sequencing.  They are
+deliberately parameterized so unit proofs can use tiny instances while the
+architectural limits remain explicit.
+
+`make verify` runs the legacy tile test, reference-unit tests, Verilator lint,
+and a Yosys technology-independent synthesis/check.  The serious verification
+campaign is driven by `tools/rtl_campaign.py` and records tool versions, source
+hashes, seeds, logs, and evidence class under `results/rtl/`; it is a public
+proxy and does not claim qualified ROM/HBM/PHY silicon behavior.
+
+Scaling results require target-node SRAM/ROM macros, standard cells, timing
+constraints, and physical design.  Behavioral macro initialization is allowed
+only in DV; product-like builds must select an explicitly declared black-box
+macro configuration.

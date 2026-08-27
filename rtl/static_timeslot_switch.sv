@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Stateless, compile-time scheduled switch used inside a reticle field.
 // Each output port selects one input per slot. Schedules are generated offline;
 // there is no arbitration, tag lookup, or dynamic routing state in the datapath.

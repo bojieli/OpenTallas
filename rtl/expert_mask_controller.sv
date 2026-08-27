@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Converts top-k router IDs into wordline enables. Duplicate IDs are harmless.
 module expert_mask_controller #(
     parameter integer NUM_EXPERTS = 4,

@@ -1,3 +1,4 @@
+`timescale 1ns/1ps
 // Technology-independent behavioral contract for the via-programmed ROM macro.
 //
 // Physical implementation note: `mem` is replaced by a foundry ROM macro whose
