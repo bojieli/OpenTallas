@@ -1,7 +1,7 @@
 # Model-Specific ROM Inference Silicon — Program Plan
 
-**Status:** pre-decision. Nothing here is committed engineering.
-**Purpose:** hand off to an execution team so they can validate, refute, or refine the thesis with measurement rather than argument.
+**Status:** pre-architecture, pre-NDA program. Nothing here authorizes product silicon.
+**Purpose:** define a serious chip-development program that can validate, refute, or refine the thesis with traceable evidence, then carry the design as far as public tools and open PDKs allow before foundry engagement.
 **Companion artifacts:** `infersim.py` (analytical model), `run.py`, `decide.py`, `tornado.py` (drivers).
 
 A note on numbers. This document deliberately avoids quoting specific throughput, cost, or density figures. Every such number in the exploratory work behind it was produced by hand and several were wrong — that is precisely why the analytical model exists. **All quantitative claims must be regenerated from `infersim.py` with measured inputs.** Where this document states a direction ("advantage falls with batch"), that direction is a structural property of the equations and can be relied on; where it would state a magnitude, it points to the model instead.
@@ -225,7 +225,37 @@ Two observations from the sensitivity run that reorder intuition:
 
 ## 8. Execution plan
 
-Gated. Each phase produces a go/no-go with explicit criteria.
+Gated. Each phase produces reviewed artifacts, a requirements-traceability update,
+and a go/no-go with explicit criteria. Architecture and specification precede
+implementation RTL. Verification starts with the requirements and runs throughout
+the program; it is not a testbench task appended after coding.
+
+### 8.0 Engineering discipline and artifact control
+
+This is a chip program, not a collection of demos. The following rules are mandatory:
+
+- Every requirement receives a stable identifier and is traced to an architecture
+  mechanism, implementation block, verification method, result, and any waiver.
+- Every number is tagged `measured`, `published`, `derived`, `assumed`, or
+  `synthetic`. A result cannot silently promote an assumption into evidence.
+- Architecture models are executable golden references. RTL must match their
+  externally visible behavior; performance models must consume measured RTL/NoC/
+  circuit results as those become available.
+- Interfaces, data formats, ordering, flow control, clocks, resets, power states,
+  error behavior, repair behavior, debug, DFT, and observability are specified
+  before implementation RTL is accepted.
+- Changes after an architecture or interface freeze require an impact analysis and
+  updated requirements, verification, performance, power, area, and schedule records.
+- Generated results are reproducible from pinned inputs and tool versions. Waivers
+  are explicit, owned, justified, and time-bounded; “tool limitation” is not a silent pass.
+- Public-tool results are pre-NDA evidence only. They do not substitute for target-
+  foundry libraries, ROM/HBM macros, extracted timing, commercial DFT/ATPG, signoff
+  STA, EM/IR, SI, reliability, package, or foundry DRC/LVS.
+
+The existing small RTL/circuit examples, if present before the architecture freeze,
+are classified as **disposable feasibility scaffolds**. They may test a semantic idea
+but are not an implementation baseline, do not satisfy a requirement by themselves,
+and must not drive the architecture merely because code already exists.
 
 ### Phase 0 — Measure the target model
 *Weeks. Trivial cost. No NDA. Start immediately.*
@@ -243,43 +273,192 @@ Deliverable: measured inputs replacing estimates in `infersim.py`, plus trace fi
 
 **Gate:** both answers are yes, or a viable alternative party exists.
 
-### Phase 2 — Architecture simulation
-*~6 weeks with an experienced NoC engineer and Phase 0 traces in hand. One workstation plus a modest cloud box. No NDA, no GPUs.*
+### Phase 2 — Requirements, architecture, and specification freeze
+*Several months with system, architecture, circuit, NoC, physical-design, package,
+DFT, DV, firmware, compiler, reliability, and operations owners participating. No NDA
+is required for the first pass.*
 
-Cycle-approximate NoC simulation (BookSim2 or Garnet class) of the hierarchical fabric, swept over tile granularity, topology, and a bounded wire-delay range taken from open predictive PDKs and published measurements. Trace-driven load-imbalance and stage-balance analysis. Feed results back as measured values for the derate and collective terms.
+No implementation RTL begins in this phase. Produce and review:
 
-**Gate:** collective and derate terms, at their simulated values, leave the advantage above threshold across the plausible wire-delay range.
+1. A system requirements specification covering Flash proof-vehicle and Pro product-
+   target workloads at 200K/1M context, required batches, service-level latency,
+   throughput, availability, power, cooling, cost, lifetime, and model-freeze policy.
+2. An architecture specification defining tile/reticle/wafer/stage hierarchy; ROM,
+   MAC, activation SRAM, KV/HBM and host memory responsibilities; interleaved weight
+   layout; scheduling; collective algorithms; pipeline semantics; capacity accounting;
+   and scale-up/scale-out boundaries.
+3. Interface-control specifications for host, HBM, chiplet/wafer links, tile links,
+   clocks, resets, interrupts, telemetry, debug, boot, configuration, and test access.
+4. Exact numeric formats, quantization/scaling rules, accumulator widths, rounding,
+   saturation, determinism, ordering, backpressure, deadlock freedom, and exception
+   behavior.
+5. RAS and repair specifications: ECC/parity boundaries, malformed-route handling,
+   timeout/replay policy, spare rows/columns/tiles/links, defect maps, degradation,
+   checkpoint identity/authentication, observability, and field diagnostics.
+6. DFT requirements before floorplanning: scan domains and compression assumptions,
+   memory/ROM BIST, JTAG/IJTAG access, at-speed test boundaries, repair loading,
+   wafer probe, known-good-reticle strategy, burn-in, and package test.
+7. Clock/reset/power intent: domain ownership, legal crossings, reset sequencing,
+   clock gating, power gating if any, isolation/retention intent, DVFS states, safe
+   shutdown, and thermal-throttle behavior.
+8. A floorplan and budget specification with ROM/MAC/SRAM/NoC/repair/clock/power area,
+   bandwidth, latency, frequency, power, thermal, HBM beachfront, bump, and package-
+   escape budgets. Every budget carries optimistic/nominal/pessimistic values.
+9. A firmware/compiler execution contract: model image identity, static schedule and
+   timeslot generation, placement, routing masks, repair remapping, command queues,
+   completion/error records, versioning, and reproducibility.
+10. A verification plan and requirements-to-test matrix written with the architecture,
+    including reference models, assertions, formal properties, constrained-random
+    spaces, fault injection, performance tests, coverage closure, regressions, and
+    acceptance thresholds.
 
-### Phase 2b — ROM circuit validation on an open PDK
-*3–6 months, runs in parallel with Phase 2. Open shuttle. No NDA.*
+**Gate:** a cross-discipline architecture review closes all blocking issues; every
+must-have requirement is testable; interfaces and externally visible behavior are
+frozen; performance/power/area budgets close at nominal and retain an explicit
+contingency; no safety-, deadlock-, data-integrity-, DFT-, repair-, or package-critical
+mechanism is left as “to be decided in RTL.”
 
-Design the via-programmed bitcell and read path on an open PDK and tape out on an open shuttle. Validate the *circuit topology and read-path architecture* — port width, sense timing, decoder structure, wordline masking for expert selection.
+### Phase 3 — Architecture risk retirement and open-PDK circuit work
+*Runs in parallel workstreams after the Phase 2 architecture is coherent. No target-
+foundry NDA is required.*
 
-This does **not** validate density, which does not scale reliably from an old node. It validates that the circuit works, which is the item most likely to fail silently. Confirm early that the chosen open PDK's metal stack supports via programming as intended; if not, evaluate alternates — a one-week check, not a project.
+- Run cycle-approximate hierarchical NoC simulation (BookSim2/Garnet class or a
+  validated purpose-built model), sweeping topology, tile granularity, link width,
+  frequency, wire delay, arbitration, faults, repair detours, congestion, and tail
+  latency with both synthetic and production traces when available.
+- Perform trace-driven MoE load/stage balance and adversarial hotspot/deadlock tests.
+- Design the via-programmed bitcell, decoder, wordline-mask path, sense path, repair
+  indirection, and representative port on a legally compatible open PDK. Run extracted
+  corners and Monte Carlo where the PDK/models support them; otherwise label the gap.
+- Use OpenROAD/OpenLane-class flows and open standard-cell libraries for proxy PPA,
+  congestion, clocking, power-grid, and timing experiments. These establish topology
+  and methodology only, not target-node density or frequency.
+- Build package/thermal/power-delivery spreadsheets or finite-element proxies with
+  explicit boundary conditions; obtain an OSAT review before treating beachfront or
+  cooling as feasible.
 
-Also start technology-independent RTL and its verification environment here. RTL verification is the longest pole in any chip program and is not PDK-gated, so pulling it forward typically saves six to nine months of calendar.
+Exploratory synthesis may be used here to challenge architecture budgets, but it is
+not implementation synthesis and cannot bless premature RTL.
 
-**Gate:** read path meets required port width and timing at the array size implied by the floorplan.
+**Gate:** the simulated fabric, circuit topology, repair scheme, package budgets, and
+compound pessimistic sensitivity retain the required product margin. Any open-PDK
+test macro has a documented mapping—and documented non-mapping—to the target node.
 
-### Phase 3 — Foundry engagement
-*3–4 months after NDA.*
+### Phase 4 — Implementation RTL and continuous verification
+*Begins only after the Phase 2 specification gate. Verification is expected to be a
+long pole and must be staffed accordingly.*
 
-Port the validated bitcell to the target node. SPICE for real read bandwidth and power. Synthesis for MAC density. Defect density and repair strategy. Stitching rules. Personalization flow compatibility, including whether direct-write is available for the programming layers as an alternative to per-SKU masks.
+Implement bottom-up with versioned interface packages and machine-readable parameters.
+For each block, the order is specification and reference model, assertions and test
+plan, RTL, static checks, formal/unit verification, integration, then closure. Required
+public-tool work includes, where supported:
 
-Arrive with a working test chip and specific questions, not a slide deck.
+- formatting and language-lawyer lint (Verible/Slang-class) plus Verilator warning-
+  clean lint with reviewed, local waivers;
+- independent elaboration/simulation with at least two engines (for example Verilator
+  and Icarus) to catch tool-specific behavior;
+- Yosys structural checks for undriven nets, latches, combinational loops, width/sign
+  errors, inferred memories, multiply/accumulate structure, and parameter variants;
+- assertion-based verification of protocols, ordering, masks, bounds, progress,
+  credit conservation, pipeline alignment, repair remaps, and error containment;
+- bounded/unbounded formal proofs with Yosys-SMTBMC/SymbiYosys and open SMT solvers for
+  tractable blocks, plus cover properties that prevent vacuous proofs;
+- constrained-random and directed tests against the executable golden model,
+  including all legal numeric corner cases, reset at every pipeline phase,
+  backpressure, simultaneous events, malformed commands, injected bit/link/tile
+  faults, repair maps, and long-running liveness stress;
+- functional, assertion, line, branch, toggle, FSM, and cross coverage where public
+  tools support them; unsupported coverage is recorded as a gap, not reported as zero
+  risk;
+- structural CDC/RDC analysis supplemented by protocol assertions and deliberate
+  metastability models. Public checks do not replace commercial signoff CDC/RDC;
+- deterministic regressions with captured seeds, tool versions, logs, waveforms on
+  failure, resource limits, and a triaged bug/waiver ledger.
 
-**Gate:** measured density and bandwidth leave the advantage above threshold; personalization flow is supportable.
+Block, tile, reticle, pipeline-stage, and multi-stage verification environments are
+separate closure levels. Performance tests check not only average throughput but
+queue bounds, backpressure, head-of-line blocking, p95/p99 latency, hotspot traffic,
+and degradation under repaired faults.
 
-### Phase 4 — Single-reticle shuttle
-*12–18 months.*
+**RTL verification gate before implementation synthesis:** all must-have requirements
+are traced to passing tests/proofs; zero unexplained lint/elaboration/structural errors;
+all planned formal properties pass without vacuity; all planned functional bins close;
+code/toggle/branch goals are met or individually justified; CDC/RDC crossings match the
+frozen inventory; regressions pass across supported parameter sets and randomized
+seeds; the reference-model equivalence suite is clean; no open severity-1/2 defect and
+no unowned waiver remains.
 
-One reticle field on the target node, not a wafer. Validates density, bandwidth, personalization, and yield at a fraction of the scale and cost.
+### Phase 5 — Reproducible synthesis and open-PDK physical proxy
+*After the Phase 4 RTL verification gate for the candidate baseline.*
 
-**Gate:** silicon matches simulation within the tolerance assumed in the sensitivity analysis.
+Run reproducible technology-independent and open-library synthesis across parameter,
+frequency, voltage/corner, and constraint sweeps. Check pre/post-synthesis equivalence
+where public tooling supports the design. Preserve hierarchy and publish area/timing/
+power contributors, inferred macro inventory, unconstrained paths, exceptions, and
+constraint coverage. Then perform an open-PDK place/route proxy with floorplan,
+congestion, CTS, extracted timing, antenna/density/DRC/LVS checks, and coarse IR-drop/
+thermal experiments using only legally redistributable decks.
+
+Do not scale one open-node result to a leading node with a single factor. Report it as
+a methodology and topology check. ROM, HBM PHY, high-speed links, PLLs, sensors, ESD,
+power delivery, scan compression, and other unavailable macros remain black-box risks
+with explicit interface and budget models.
+
+**Gate:** the verified RTL meets proxy constraints with contingency, synthesis and
+simulation agree, no unconstrained or unreviewed exception remains, and all proxy-to-
+target extrapolations are ranges with named evidence—not point claims.
+
+### Phase 6 — Foundry/OSAT engagement and target-node re-baseline
+*Begins after NDA; typically several months before a target-node RTL freeze.*
+
+Replace every proxy library and macro with target collateral. Port and re-characterize
+the ROM; obtain real SRAM/PLL/PHY/IO/DFT/package models; run target synthesis and
+floorplanning; establish defect density and repair, reticle-stitching, mask-
+personalization, direct-write, wafer probe, assembly, cooling, and reliability rules.
+Re-run architecture and sensitivity gates with foundry/OSAT values before committing
+to implementation scale.
+
+Commercial signoff flows still required include target-qualified lint/CDC/RDC,
+formal equivalence, DFT rule checking and ATPG/fault coverage, multi-mode multi-corner
+STA with OCV, SI/crosstalk, extraction, EM/IR and power integrity, thermal/package co-
+simulation, DRC/LVS/ERC/antenna/density/fill, reliability/aging/ESD/latch-up, and final
+waiver review. Public tools cannot sign these off.
+
+**Gate:** target-node PPA and physical closure retain product margin; test coverage,
+yield/repair, personalization, package, power, cooling, reliability, schedule, and cost
+are supportable; the model owner has made the checkpoint-freeze commitment.
+
+### Phase 7 — Single-reticle target-node shuttle
+*Typically 12–18 months after target engagement, depending on node and access.*
+
+Build one reticle field before a stitched wafer. Include ROM characterization arrays,
+mask variants, wordline masking, repair structures, clock/power monitors, representative
+MAC/NoC paths, scan/MBIST/ROM-BIST, high-observability debug, and process monitors.
+Pre-silicon verification, production test content, bring-up firmware, lab automation,
+and correlation plans must be ready before tapeout.
+
+**Gate:** silicon correlation closes against circuit, timing, power, thermal, repair,
+test, and performance models within predeclared tolerances. Deviations are fed back
+through the architecture model before any wafer-scale decision.
+
+### Phase 8 — Wafer-scale product only after correlation
+
+Reticle stitching, full-wafer repair, power delivery, cooling, HBM/package integration,
+system firmware, compiler, production test, fleet RAS, security, and service operations
+each receive independent qualification plans. A successful reticle is necessary but
+not sufficient. Product authorization requires the complete foundry signoff record,
+silicon-correlation report, manufacturing/yield plan, checkpoint commitment, business
+case, and an independent design-readiness review.
 
 ### Sequencing rationale
 
-Simulate before engaging deeply with foundries, because four of the top five unknowns are ours, because arriving with precise questions produces far better answers, because an NDA costs calendar and signals intent to a party that talks to competitors, and because commercial position with the model owner is stronger with a validated model. But hold the two Phase 1 conversations immediately, because they are free and either could end the program.
+Measure and architect before implementation RTL; verify before accepting an RTL
+baseline; synthesize and physically probe the verified baseline before claiming PPA;
+correlate a reticle before a wafer. Simulate before engaging deeply with foundries,
+because four of the top five uncertainties are ours and precise questions produce much
+better answers. Hold the two Phase 1 conversations immediately, because they are free
+and either could end the program. Architecture, verification, and foundry conversations
+overlap where they can, but their gates do not disappear merely to shorten the calendar.
 
 ---
 
@@ -340,16 +519,37 @@ The advantage against *GPU cost* (not list price), at the intended operating bat
 
 ## 11. Deliverables
 
-**From this work:** `infersim.py` and its drivers, with all constraints, assumptions, and known limitations documented above.
+**From the public pre-NDA work:**
 
-**Expected from the execution team, in order:**
-1. Measured model parameters replacing every estimate, plus router traces
-2. Simulated collective latency and derate, replacing the current constants
-3. Regenerated sensitivity ranking with measured inputs
-4. Open-PDK ROM test chip results: read path validated or refuted
-5. Technology-independent RTL with verification environment
-6. Foundry-measured density and bandwidth
-7. Regenerated advantage curves at every stage, with the binding constraint reported
+1. Pinned model/hardware evidence inventories, executable analytical models, and
+   regenerated advantage/cost/capacity curves with binding constraints.
+2. System requirements, architecture, microarchitecture, interface-control, numeric-
+   format, clock/reset/power, RAS/repair, DFT, firmware/compiler, floorplan-budget,
+   verification, synthesis, and physical-proxy specifications.
+3. A bidirectional requirements-traceability matrix linking requirements to evidence,
+   architecture, RTL blocks, assertions/tests/proofs, coverage, results, bugs, and waivers.
+4. CPU-capable routing/load-balance, stage-balance, NoC, fault/degradation, and
+   sensitivity simulations, with synthetic and real traces never conflated.
+5. Open-PDK ROM/read-path experiments and a documented target-node correlation gap.
+6. Technology-independent implementation RTL only after architecture freeze, with
+   golden models, assertions, formal harnesses, directed/constrained-random tests,
+   coverage reports, CDC/RDC inventory, fault injection, deterministic regressions,
+   and a bug/waiver ledger.
+7. Reproducible verified-baseline synthesis and open-PDK physical proxies with complete
+   constraints, reports, logs, tool versions, and explicit black boxes.
+8. A pre-NDA readiness report that says which gates passed, failed, or remain impossible
+   without a model owner, production traces, foundry/OSAT data, licensed IP, or a PDK.
+
+**Expected after external engagement, in order:**
+
+1. Production router/KV/runtime traces and measured GPU baselines.
+2. Foundry/OSAT ROM, standard-cell, macro, link, HBM, package, thermal, defect, repair,
+   test, yield, cost, and schedule inputs replacing every proxy.
+3. Target-node re-synthesis, floorplan/implementation, DFT/ATPG, full commercial
+   verification/signoff, and regenerated architecture/economic gates.
+4. Single-reticle tapeout, production-test content, bring-up, characterization, and
+   predeclared correlation report.
+5. Only after correlation, a separately reviewed wafer-scale product plan.
 
 **The model is the deliverable that matters.** Every number in the exploratory work should be regarded as provisional until regenerated from measured inputs. The value of what precedes this document is the structure — which constraints exist, which were forgotten, which direction each pushes, and which unknowns actually move the answer — not any specific figure.
 
