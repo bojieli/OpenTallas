@@ -1,0 +1,23 @@
+# Public open-tool synthesis proxy.  Parameters are intentionally reduced so
+# this run proves elaboration/structural connectivity without pretending to
+# synthesize a 4,096-tile, 100-TB/s product hierarchy.  ROM/HBM/PHY macros are
+# represented by the technology-independent behavioral contracts.
+read_verilog -sv \
+  lib/ot_sync_bits.sv lib/ot_skid_buffer.sv lib/ot_async_fifo.sv \
+  lib/ot_crc16_ccitt.sv lib/ot_crc32c.sv \
+  expert_mask_controller.sv via_mask_rom.sv rom_mac_tile.sv \
+  opentallas_tile.sv static_timeslot_switch.sv ot_route_mask.sv \
+  ot_rom_wrapper.sv ot_format_decode.sv ot_numeric_dot.sv \
+  ot_reduction_tree.sv ot_schedule_controller.sv ot_credit_manager.sv \
+  ot_session_table.sv ot_cmd_frontend.sv ot_hbm_frontend.sv \
+  ot_stage_link_tx.sv ot_stage_link_rx.sv ot_stage_link_endpoint.sv \
+  ot_ras_controller.sv ot_power_reset_controller.sv ot_csr_block.sv \
+  ot_stage_controller.sv ot_bist_controller.sv ot_dft_controller.sv \
+  ot_stage_top.sv
+hierarchy -check -top ot_stage_top -chparam SESSION_ENTRIES 2 -chparam CREDIT_SINKS 2 -chparam CREDIT_DEPTH 2 -chparam CMD_FIFO_DEPTH 4 -chparam RSP_FIFO_DEPTH 4 -chparam TELEM_FIFO_DEPTH 4 -chparam SCHEDULE_SLOTS 4
+proc
+opt
+memory_dff
+memory_collect
+check
+stat

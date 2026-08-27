@@ -16,10 +16,12 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Static schedule | `ot_schedule_controller.sv`, `static_timeslot_switch.sv` | shadow/active epoch commit and slot transport | DV-NOC-001 |
 | Credits | `ot_credit_manager.sv` | atomic reservation and conservation | DV-NOC-004 |
 | Sessions/commands | `ot_session_table.sv`, `ot_cmd_frontend.sv` | generation isolation, CRC/version/field legality | DV-CMD-001/002 |
+| Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire and exact CSR access | DV-STAGE-001/DV-FW-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
 | RAS/telemetry | `ot_ras_controller.sv` | first error, sticky poison, lossless event queue, watchdog | DV-RAS-001/002 |
 | Power/reset | `ot_power_reset_controller.sv` | legal state transitions, isolation, safe shutdown | DV-POWER-001 |
+| DFT/BIST | `ot_dft_controller.sv`, `ot_bist_controller.sv` | quiescent test ownership, bounded signatures and fail-closed result | DV-DFT-001 |
 
 The inventory is a public implementation baseline, not a claim that the
 4,096-tile product hierarchy, ROM density, HBM beachfront, package, or PHY has

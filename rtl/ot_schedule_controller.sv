@@ -94,8 +94,8 @@ module ot_schedule_controller #(
             active_crc[0] <= 32'h0;
             active_crc[1] <= 32'h0;
             for (i = 0; i < SLOTS; i = i + 1) begin
-                schedule_mem[0][i] <= {ENTRY_W{1'b1}}; // idle after reset
-                schedule_mem[1][i] <= {ENTRY_W{1'b1}};
+                schedule_mem[0][i] = {ENTRY_W{1'b1}}; // idle after reset
+                schedule_mem[1][i] = {ENTRY_W{1'b1}};
             end
         end else begin
             commit_ack <= 1'b0;
