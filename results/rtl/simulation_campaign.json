@@ -1,0 +1,191 @@
+{
+  "campaign": "two_simulator",
+  "canonical_timestamp_policy": "no timestamp in canonical artifact",
+  "cases": [
+    {
+      "command": "make -C rtl sim",
+      "log": "rtl/build/sim_campaign/iverilog_tile.log",
+      "name": "iverilog_tile",
+      "required_marker": "PASS: wordline mask",
+      "returncode": 0,
+      "status": "pass"
+    },
+    {
+      "command": "make -C rtl unit-sim",
+      "log": "rtl/build/sim_campaign/iverilog_reference_units.log",
+      "name": "iverilog_reference_units",
+      "required_marker": "PASS: reference unit blocks",
+      "returncode": 0,
+      "status": "pass"
+    },
+    {
+      "command": "make -C rtl integration-sim",
+      "log": "rtl/build/sim_campaign/iverilog_stage_integration.log",
+      "name": "iverilog_stage_integration",
+      "required_marker": "PASS: stage top",
+      "returncode": 0,
+      "status": "pass"
+    },
+    {
+      "command": "make -C rtl verilator-sim",
+      "cycles": 20497,
+      "log": "rtl/build/sim_campaign/verilator_randomized_units.log",
+      "name": "verilator_randomized_units",
+      "required_marker": "PASS: independent Verilator randomized scoreboard",
+      "returncode": 0,
+      "scoreboard_checks": 131720,
+      "seed_hex": "4f54564c",
+      "status": "pass"
+    }
+  ],
+  "coverage": {
+    "dut": {
+      "branch": {
+        "hit": 30,
+        "percent": 93.75,
+        "total": 32
+      },
+      "line": {
+        "hit": 23,
+        "percent": 100.0,
+        "total": 23
+      },
+      "toggle": {
+        "hit": 293,
+        "percent": 90.154,
+        "total": 325
+      }
+    },
+    "exclusions": [
+      "test/ot_verilator_unit_top.sv wrapper toggle points are not DUT coverage",
+      "static legal-traffic error flags do not toggle; they remain included in DUT toggle denominator"
+    ],
+    "per_file": {
+      "lib/ot_skid_buffer.sv": {
+        "branch": {
+          "hit": 11,
+          "total": 12
+        },
+        "line": {
+          "hit": 7,
+          "total": 7
+        },
+        "toggle": {
+          "hit": 93,
+          "total": 95
+        }
+      },
+      "ot_credit_manager.sv": {
+        "branch": {
+          "hit": 12,
+          "total": 12
+        },
+        "line": {
+          "hit": 7,
+          "total": 7
+        },
+        "toggle": {
+          "hit": 35,
+          "total": 42
+        }
+      },
+      "ot_numeric_dot.sv": {
+        "branch": {
+          "hit": 7,
+          "total": 8
+        },
+        "line": {
+          "hit": 9,
+          "total": 9
+        },
+        "toggle": {
+          "hit": 165,
+          "total": 188
+        }
+      },
+      "test/ot_verilator_unit_top.sv": {
+        "branch": {
+          "hit": 0,
+          "total": 0
+        },
+        "line": {
+          "hit": 0,
+          "total": 0
+        },
+        "toggle": {
+          "hit": 128,
+          "total": 135
+        }
+      }
+    },
+    "scope": "ot_numeric_dot + ot_skid_buffer + ot_credit_manager; wrapper excluded"
+  },
+  "evidence_class": "public_open_tool_rtl_simulation",
+  "limitations": [
+    "coverage closure applies only to the three-block Verilator executable scope",
+    "Icarus and Verilator share RTL sources but use independent elaboration and simulation engines",
+    "target numeric formats and physical macros remain outside this campaign"
+  ],
+  "schema_version": 1,
+  "simulators_counted": [
+    "iverilog_vvp",
+    "verilator_cpp_executable"
+  ],
+  "source_sha256": {
+    "rtl/Makefile": "9bfd8c7069f5cebcda454049dcdb8df9f71276730ae9d9514b7d45248202721b",
+    "rtl/expert_mask_controller.sv": "4328649fcb09b05922b21b433f861579cc5720418717b6c984bd4622bf38bd57",
+    "rtl/lib/ot_async_fifo.sv": "20d5573aa491e83921f7d6ac9a76961a2b5425b4a710a4364f8f0a326549893e",
+    "rtl/lib/ot_skid_buffer.sv": "4837dc61b4a89a53e68b05f16b46e1717e79f4817bf5b812afba0dc3cd32008a",
+    "rtl/opentallas_tile.sv": "4980d62d193e1ea44353967b2eace8423d0024562d7f5e40e0d1eec24d6d3bb2",
+    "rtl/ot_credit_manager.sv": "70ed9c8b70e3658d02b2b9440d2aebb889e9bbdd6d83a7408b6b2bfe951e54fc",
+    "rtl/ot_numeric_dot.sv": "355292201f4686aa1bae65ca62e8fbdf44a22d06b722ef0559d6143d79f7a773",
+    "rtl/ot_route_mask.sv": "9da491e18f276a5d6be5c3cf07288bc78d2c75d57d3e4e830b3ea7ce967c4542",
+    "rtl/ot_stage_controller.sv": "3247c350d23c22fa6bf038c0a13a34bc64fc2050fb3417a7758b729b7afcc0b0",
+    "rtl/ot_stage_top.sv": "655f2a1d37a7f4a6690c6a614a123b85e180ae11a61d19ac503ec3236f4396a6",
+    "rtl/rom_mac_tile.sv": "841d5e9ab4c8278c1e7fc7f3f598c5e962041df3d94aa9e0ffb82c6d4f3e5e00",
+    "rtl/test/ot_verilator_unit_top.sv": "23675d862e8dd972a3fe4683fedc28fb7d8062fb549719b93c7bc55541f4efbf",
+    "rtl/test/tb_opentallas_tile.sv": "0934d4d196629d8f369f9f535687760b5c4c783e6d48ad98939081946c759e78",
+    "rtl/test/tb_reference_units.sv": "586061dd56aa2249affd3ce73064d237697a673bee3496f6686bfd3cfc20c7e6",
+    "rtl/test/tb_stage_top.sv": "8c86e94891f050cf740cb4cda725249131b634d83fc80cb4d69ae07b8e76d283",
+    "rtl/test/verilator_unit.cpp": "ad37b4ada78e391d5fb1bcbbb50d7faac346286ee2f003602d097f760086a0ae",
+    "rtl/via_mask_rom.sv": "203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141",
+    "spec/VERIFICATION_PLAN.md": "f6f0cec6430c70b4b61d7cfe14c070212de0bd48bfa99fe6de691568ddd1d208",
+    "spec/verification.json": "1ef9077d39db2f5306ba1e56c19fcb8d83babaa3bfebdc8e0f87e359562a3c86",
+    "tools/rtl_sim_campaign.py": "0ab6548ca93acf50663edeb12935396f4b051a2d34753d1494b275cb3f86f5ce"
+  },
+  "status": "pass",
+  "tools": {
+    "compiler": {
+      "available": true,
+      "command": "g++ --version",
+      "executable": "/usr/bin/g++",
+      "executable_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+      "version": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+    },
+    "iverilog": {
+      "available": true,
+      "command": "iverilog -V",
+      "executable": "/usr/bin/iverilog",
+      "executable_sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "available": true,
+      "command": "verilator --version",
+      "executable": "/usr/bin/verilator",
+      "executable_sha256": "ebe0a4ad8d1995ffcf1f9972f2e2614998ffc73f3fc94003ec7b689d5432f463",
+      "version": "Verilator 4.038 2020-07-11 rev v4.036-114-g0cd4a57ad"
+    }
+  },
+  "unit_scope_coverage_status": "pass",
+  "unit_scope_coverage_targets": {
+    "branch": 90,
+    "line": 95,
+    "toggle": 85
+  },
+  "verilator": {
+    "cycles": 20497,
+    "scoreboard_checks": 131720,
+    "seed_hex": "4f54564c"
+  }
+}

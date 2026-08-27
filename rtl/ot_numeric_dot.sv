@@ -8,7 +8,8 @@ module ot_numeric_dot #(
     parameter integer LANES = 16,
     parameter integer ACT_W = 8,
     parameter integer WEIGHT_W = 4,
-    parameter integer ACC_W = 32
+    parameter integer ACC_W = 32,
+    parameter integer REPORT_SATURATION_RISK = 1
 ) (
     input  wire                                  clk,
     input  wire                                  rst_n,
@@ -89,7 +90,8 @@ module ot_numeric_dot #(
     initial begin
         if (NUM_EXPERTS < 1 || LANES < 1 || ACT_W < 1 || WEIGHT_W < 1)
             $error("ot_numeric_dot has an illegal zero dimension");
-        if (ACC_W < ACT_W + WEIGHT_W + $clog2(NUM_EXPERTS*LANES+1))
+        if (REPORT_SATURATION_RISK &&
+            ACC_W < ACT_W + WEIGHT_W + $clog2(NUM_EXPERTS*LANES+1))
             $warning("ot_numeric_dot ACC_W may saturate configured term bound");
     end
 `endif

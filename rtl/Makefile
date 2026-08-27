@@ -1,4 +1,4 @@
-.PHONY: sim unit-sim integration-sim lint formal synth synth-reference verify clean
+.PHONY: sim unit-sim integration-sim verilator-sim sim-campaign lint formal synth synth-reference verify clean
 
 SOURCES = expert_mask_controller.sv via_mask_rom.sv rom_mac_tile.sv opentallas_tile.sv
 LIB_SOURCES = lib/ot_skid_buffer.sv lib/ot_async_fifo.sv lib/ot_crc_pkg.sv \
@@ -28,6 +28,19 @@ integration-sim: build
 	iverilog -g2012 -Wall -s tb_stage_top -o build/tb_stage_top $(REFERENCE_SOURCES) test/tb_stage_top.sv
 	vvp build/tb_stage_top
 
+verilator-sim: build
+	verilator --cc --exe --build --coverage -Wall -Wno-fatal -Wno-DECLFILENAME \
+		-Wno-WIDTH --top-module ot_verilator_unit_top --Mdir build/verilator_unit \
+		lib/ot_skid_buffer.sv ot_credit_manager.sv ot_numeric_dot.sv \
+		test/ot_verilator_unit_top.sv $(CURDIR)/test/verilator_unit.cpp \
+		-CFLAGS "-std=c++17"
+	./build/verilator_unit/Vot_verilator_unit_top
+	verilator_coverage --write-info build/verilator_unit/coverage.info \
+		build/verilator_unit/coverage.dat
+
+sim-campaign:
+	python3 ../tools/rtl_sim_campaign.py
+
 lint:
 	verilator --lint-only -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-WIDTH -Wno-MULTITOP \
 		--top-module ot_tile $(SOURCES) static_timeslot_switch.sv $(LINT_REFERENCE_SOURCES)
@@ -43,7 +56,7 @@ synth-reference: build
 	yosys -q -l build/synth_reference.log synth_reference.ys
 	grep -A24 '=== ot_stage_top ===' build/synth_reference.log
 
-verify: sim unit-sim integration-sim lint formal synth synth-reference
+verify: sim unit-sim integration-sim verilator-sim lint formal synth synth-reference
 
 clean:
 	rm -rf build
