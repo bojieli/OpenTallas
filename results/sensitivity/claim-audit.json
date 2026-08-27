@@ -1,0 +1,212 @@
+[
+  {
+    "batch_size": 1,
+    "binding_constraint_at_grid_maximum": "compute_C5",
+    "brief_target_per_user_tokens_s": 7000.0,
+    "collective_and_pipeline_ceiling_tokens_s": 26843.026648511768,
+    "context_tokens": 200000,
+    "grid_maximum_peak_ops_s_per_wafer": 1e+17,
+    "grid_maximum_rom_bandwidth_bytes_s_per_wafer": 2000000000000000.0,
+    "maximum_achieved_per_user_tokens_s_on_grid": 8537.639943457778,
+    "model": "DeepSeek-V4-Pro-0813",
+    "reachable_before_service_limits": true,
+    "resource_grid": [
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "rom_full_array_read_C4",
+        "maximum_achieved_per_user_tokens_s_on_grid": 1193.8283528580248,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 100000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "rom_full_array_read_C4",
+        "maximum_achieved_per_user_tokens_s_on_grid": 2285.9886594235495,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 200000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "rom_full_array_read_C4",
+        "maximum_achieved_per_user_tokens_s_on_grid": 5067.623130873146,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 500000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": 8525.701838545556,
+        "binding_constraint_at_maximum": "rom_full_array_read_C4",
+        "maximum_achieved_per_user_tokens_s_on_grid": 8525.701838545556,
+        "minimum_peak_ops_s_per_wafer_on_grid": 5000000000000000.0,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 1000000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": 8537.639943457778,
+        "binding_constraint_at_maximum": "compute_C5",
+        "maximum_achieved_per_user_tokens_s_on_grid": 8537.639943457778,
+        "minimum_peak_ops_s_per_wafer_on_grid": 5000000000000000.0,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 2000000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": 8537.639943457778,
+        "binding_constraint_at_maximum": "compute_C5",
+        "maximum_achieved_per_user_tokens_s_on_grid": 8537.639943457778,
+        "minimum_peak_ops_s_per_wafer_on_grid": 5000000000000000.0,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 5000000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": 8537.639943457778,
+        "binding_constraint_at_maximum": "compute_C5",
+        "maximum_achieved_per_user_tokens_s_on_grid": 8537.639943457778,
+        "minimum_peak_ops_s_per_wafer_on_grid": 5000000000000000.0,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 1e+16
+      }
+    ]
+  },
+  {
+    "batch_size": 8,
+    "binding_constraint_at_grid_maximum": "kv_beachfront_C8",
+    "brief_target_per_user_tokens_s": 5500.0,
+    "collective_and_pipeline_ceiling_tokens_s": 4449.746880340459,
+    "context_tokens": 200000,
+    "grid_maximum_peak_ops_s_per_wafer": 1e+17,
+    "grid_maximum_rom_bandwidth_bytes_s_per_wafer": 1000000000000000.0,
+    "maximum_achieved_per_user_tokens_s_on_grid": 1921.4394314580131,
+    "model": "DeepSeek-V4-Pro-0813",
+    "reachable_before_service_limits": false,
+    "resource_grid": [
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "rom_full_array_read_C4",
+        "maximum_achieved_per_user_tokens_s_on_grid": 365.10010745870716,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 100000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "rom_full_array_read_C4",
+        "maximum_achieved_per_user_tokens_s_on_grid": 674.8306096925189,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 200000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "rom_full_array_read_C4",
+        "maximum_achieved_per_user_tokens_s_on_grid": 1374.4184187924825,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 500000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "kv_beachfront_C8",
+        "maximum_achieved_per_user_tokens_s_on_grid": 1921.4394314580131,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 1000000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "kv_beachfront_C8",
+        "maximum_achieved_per_user_tokens_s_on_grid": 1921.4394314580131,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 2000000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "kv_beachfront_C8",
+        "maximum_achieved_per_user_tokens_s_on_grid": 1921.4394314580131,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 5000000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "kv_beachfront_C8",
+        "maximum_achieved_per_user_tokens_s_on_grid": 1921.4394314580131,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 1e+16
+      }
+    ]
+  },
+  {
+    "batch_size": 32,
+    "binding_constraint_at_grid_maximum": "kv_beachfront_C8",
+    "brief_target_per_user_tokens_s": 2250.0,
+    "collective_and_pipeline_ceiling_tokens_s": 1152.7184944493981,
+    "context_tokens": 200000,
+    "grid_maximum_peak_ops_s_per_wafer": 1e+17,
+    "grid_maximum_rom_bandwidth_bytes_s_per_wafer": 1000000000000000.0,
+    "maximum_achieved_per_user_tokens_s_on_grid": 487.7193304520384,
+    "model": "DeepSeek-V4-Pro-0813",
+    "reachable_before_service_limits": false,
+    "resource_grid": [
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "rom_full_array_read_C4",
+        "maximum_achieved_per_user_tokens_s_on_grid": 124.8402556260955,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 100000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "rom_full_array_read_C4",
+        "maximum_achieved_per_user_tokens_s_on_grid": 225.28227606517086,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 200000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "rom_full_array_read_C4",
+        "maximum_achieved_per_user_tokens_s_on_grid": 435.5288896061571,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 500000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "kv_beachfront_C8",
+        "maximum_achieved_per_user_tokens_s_on_grid": 487.7193304520384,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 1000000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "kv_beachfront_C8",
+        "maximum_achieved_per_user_tokens_s_on_grid": 487.7193304520384,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 2000000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "kv_beachfront_C8",
+        "maximum_achieved_per_user_tokens_s_on_grid": 487.7193304520384,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 5000000000000000.0
+      },
+      {
+        "achieved_per_user_tokens_s": null,
+        "binding_constraint_at_maximum": "kv_beachfront_C8",
+        "maximum_achieved_per_user_tokens_s_on_grid": 487.7193304520384,
+        "minimum_peak_ops_s_per_wafer_on_grid": null,
+        "peak_ops_s_per_wafer_at_maximum": 1e+17,
+        "rom_bandwidth_bytes_s_per_wafer": 1e+16
+      }
+    ]
+  }
+]

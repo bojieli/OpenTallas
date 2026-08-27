@@ -468,7 +468,7 @@ overlap where they can, but their gates do not disappear merely to shorten the c
 
 | Metric | Definition | Why |
 |---|---|---|
-| **Advantage curve** | Cost per million output tokens, ROM vs GPU, **swept across batch** | Single-point comparisons mislead in both directions |
+| **Advantage curve** | Partial TCO per million output tokens (hardware/NRE amortization plus active electricity), ROM vs GPU, **swept across batch**; full TCO gaps remain explicit | Single-point comparisons and capex-only labels mislead in both directions |
 | **Speed-superiority band** | Range of batch sizes where ROM per-user throughput exceeds the *best achievable* GPU per-user throughput at any batch | If ROM is only cheaper, a price cut erases the advantage. If it is faster than any GPU configuration, that is a defensible product |
 | **ρ₁ at target context** | Active weight bytes ÷ measured KV read per token | Target-selection screen; computable before any hardware work |
 | **Binding constraint** | Which of C1–C11 sets the step time at each operating point | Tells you what to fix; a design bound by the wrong thing is mis-floorplanned |

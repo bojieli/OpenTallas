@@ -1,0 +1,371 @@
+"""Strict, dependency-light schemas used by every simulator component.
+
+The schema keeps model and hardware details outside the equations.  JSON input
+is intentionally boring: it is inspectable, diffable, and can be generated from
+checkpoint metadata without importing a model implementation.
+"""
+
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass, field
+import json
+from pathlib import Path
+from typing import Any, Iterable
+
+
+class ValidationError(ValueError):
+    """Raised when a profile would make a simulation ambiguous or invalid."""
+
+
+def _positive(name: str, value: float) -> None:
+    if value <= 0:
+        raise ValidationError(f"{name} must be > 0, got {value!r}")
+
+
+def _fraction(name: str, value: float, *, allow_zero: bool = False) -> None:
+    lower_ok = value >= 0 if allow_zero else value > 0
+    if not lower_ok or value > 1:
+        op = "[0, 1]" if allow_zero else "(0, 1]"
+        raise ValidationError(f"{name} must be in {op}, got {value!r}")
+
+
+@dataclass(frozen=True)
+class AttentionGroup:
+    """A group of layers sharing one KV traffic mechanism.
+
+    Supported kinds are deliberately architectural rather than model-named:
+
+    * ``window``: a bounded sliding-window cache;
+    * ``compressed_sparse``: full scan of a compact index plus a top-k KV gather;
+    * ``compressed_dense``: dense read of a temporally compressed KV cache;
+    * ``dense_mla``: context-linear latent KV cache;
+    * ``recurrent``: context-independent state read/modify/write.
+    """
+
+    kind: str
+    count: int
+    entry_bytes: float = 0.0
+    window_tokens: int = 0
+    compression_ratio: int = 1
+    top_k: int = 0
+    index_entry_bytes: float = 0.0
+    recurrent_state_bytes: float = 0.0
+    recurrent_write_bytes: float | None = None
+    label: str = ""
+    evidence: str = "assumed"
+
+    def __post_init__(self) -> None:
+        allowed = {
+            "window",
+            "compressed_sparse",
+            "compressed_dense",
+            "dense_mla",
+            "recurrent",
+        }
+        if self.kind not in allowed:
+            raise ValidationError(f"unsupported attention kind {self.kind!r}")
+        if self.count <= 0:
+            raise ValidationError("attention group count must be positive")
+        if self.kind != "recurrent" and self.entry_bytes <= 0:
+            raise ValidationError(f"{self.kind} requires positive entry_bytes")
+        if self.kind == "recurrent" and self.recurrent_state_bytes <= 0:
+            raise ValidationError("recurrent attention requires state bytes")
+        if self.kind.startswith("compressed") and self.compression_ratio <= 1:
+            raise ValidationError("compressed attention requires ratio > 1")
+        if self.kind == "compressed_sparse":
+            if self.top_k <= 0 or self.index_entry_bytes <= 0:
+                raise ValidationError("compressed_sparse requires top_k and index_entry_bytes")
+
+
+@dataclass(frozen=True)
+class ModelProfile:
+    name: str
+    source_repo: str
+    source_revision: str
+    total_parameters: float
+    active_parameters: float
+    checkpoint_bytes: float
+    dense_weight_bytes: float
+    routed_weight_bytes: float
+    num_layers: int
+    num_experts: int
+    experts_per_token: int
+    hidden_size: int
+    max_context_tokens: int
+    attention_groups: tuple[AttentionGroup, ...]
+    # Exact ordinary-decode storage assigned to each ordered transformer layer.
+    # Non-layer tensors, draft modules, and resident-only tensors are kept in the
+    # top-level categories and may fill otherwise unused stage ROM capacity.
+    layer_dense_weight_bytes: tuple[float, ...] = ()
+    layer_routed_weight_bytes: tuple[float, ...] = ()
+    # Released checkpoints can contain weights that are resident for capacity
+    # purposes but are not streamed by an ordinary one-token decode pass.  The
+    # draft categories are read only when speculative decoding is enabled;
+    # ``resident_only`` covers lookup tables and modality/prefill-only weights.
+    draft_dense_weight_bytes: float = 0.0
+    draft_routed_weight_bytes: float = 0.0
+    resident_only_weight_bytes: float = 0.0
+    operations_per_active_parameter: float = 2.0
+    router_trace_status: str = "synthetic"
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        for name in (
+            "total_parameters",
+            "active_parameters",
+            "checkpoint_bytes",
+            "num_layers",
+            "num_experts",
+            "experts_per_token",
+            "hidden_size",
+            "max_context_tokens",
+        ):
+            _positive(name, float(getattr(self, name)))
+        if self.active_parameters > self.total_parameters:
+            raise ValidationError("active parameters cannot exceed total parameters")
+        if self.experts_per_token > self.num_experts:
+            raise ValidationError("experts_per_token cannot exceed num_experts")
+        if any(
+            value < 0
+            for value in (
+                self.dense_weight_bytes,
+                self.routed_weight_bytes,
+                self.draft_dense_weight_bytes,
+                self.draft_routed_weight_bytes,
+                self.resident_only_weight_bytes,
+            )
+        ):
+            raise ValidationError("weight byte categories cannot be negative")
+        categorized = (
+            self.dense_weight_bytes
+            + self.routed_weight_bytes
+            + self.draft_dense_weight_bytes
+            + self.draft_routed_weight_bytes
+            + self.resident_only_weight_bytes
+        )
+        if categorized <= 0:
+            raise ValidationError("at least one weight byte category is required")
+        if abs(categorized - self.checkpoint_bytes) > max(1.0, self.checkpoint_bytes * 0.02):
+            raise ValidationError(
+                "all weight byte categories must match checkpoint_bytes within 2%"
+            )
+        layer_count = sum(group.count for group in self.attention_groups)
+        if layer_count != self.num_layers:
+            raise ValidationError(
+                f"attention groups cover {layer_count} layers, expected {self.num_layers}"
+            )
+        if bool(self.layer_dense_weight_bytes) != bool(self.layer_routed_weight_bytes):
+            raise ValidationError("both per-layer weight vectors must be present together")
+        if self.layer_dense_weight_bytes:
+            if len(self.layer_dense_weight_bytes) != self.num_layers:
+                raise ValidationError("layer_dense_weight_bytes length must equal num_layers")
+            if len(self.layer_routed_weight_bytes) != self.num_layers:
+                raise ValidationError("layer_routed_weight_bytes length must equal num_layers")
+            if any(value < 0 for value in self.layer_dense_weight_bytes):
+                raise ValidationError("per-layer dense weight bytes cannot be negative")
+            if any(value < 0 for value in self.layer_routed_weight_bytes):
+                raise ValidationError("per-layer routed weight bytes cannot be negative")
+            if sum(self.layer_dense_weight_bytes) > self.dense_weight_bytes + 1:
+                raise ValidationError("per-layer dense bytes exceed decode-dense total")
+            if sum(self.layer_routed_weight_bytes) > self.routed_weight_bytes + 1:
+                raise ValidationError("per-layer routed bytes exceed decode-routed total")
+
+    @property
+    def routed_fraction_per_token(self) -> float:
+        return self.experts_per_token / self.num_experts
+
+    @property
+    def dense_parameters(self) -> float:
+        """Infer the non-routed parameter count from total and active counts."""
+        frac = self.routed_fraction_per_token
+        return (self.active_parameters - frac * self.total_parameters) / (1.0 - frac)
+
+    @property
+    def routed_parameters(self) -> float:
+        return self.total_parameters - self.dense_parameters
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ModelProfile":
+        copied = dict(data)
+        copied["attention_groups"] = tuple(
+            AttentionGroup(**group) for group in copied.get("attention_groups", ())
+        )
+        copied["layer_dense_weight_bytes"] = tuple(
+            copied.get("layer_dense_weight_bytes", ())
+        )
+        copied["layer_routed_weight_bytes"] = tuple(
+            copied.get("layer_routed_weight_bytes", ())
+        )
+        return cls(**copied)
+
+    @classmethod
+    def load(cls, path: str | Path) -> "ModelProfile":
+        with Path(path).open(encoding="utf-8") as handle:
+            return cls.from_dict(json.load(handle))
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class ArchitectureProfile:
+    """One implementation architecture (GPU cluster or ROM wafer pipeline)."""
+
+    name: str
+    kind: str
+    device_count: int
+    weight_capacity_bytes_per_device: float
+    kv_capacity_bytes_per_device: float
+    weight_bandwidth_bytes_s_per_device: float
+    kv_bandwidth_bytes_s_per_device: float
+    peak_ops_s_per_device: float
+    higher_precision_peak_ops_s_per_device: float
+    collective_latency_s_per_layer: float
+    cost_per_device: float
+    power_w_per_device: float
+    cooling_limit_w_per_device: float
+    collective_bandwidth_bytes_s: float = 1.0e30
+    # Algorithmic KV accounting assumes each shared latent/index vector is
+    # fetched once.  Real kernels may reread it; keep that implementation
+    # effect explicit and architecture-specific.
+    kv_read_amplification: float = 1.0
+    # Fraction of physical HBM capacity available to checkpoint/KV after runtime
+    # workspace, allocator, communication, and safety reserve.
+    hbm_capacity_utilization: float = 0.90
+    lifetime_years: float = 4.0
+    utilization: float = 0.70
+    weight_bandwidth_efficiency: float = 0.75
+    kv_bandwidth_efficiency: float = 0.75
+    compute_efficiency: float = 0.55
+    load_balance_efficiency: float = 0.85
+    defect_repair_efficiency: float = 1.0
+    clock_efficiency: float = 0.90
+    sync_efficiency: float = 0.90
+    pipeline_efficiency: float = 0.90
+    hbm_energy_j_per_byte: float = 4.0e-12
+    weight_read_energy_j_per_byte: float = 0.5e-12
+    mac_energy_j_per_op: float = 0.2e-12
+    # Cost reporting is a deliberately incomplete, but explicit, partial TCO:
+    # hardware/NRE amortization plus electricity while serving.  Facility PUE
+    # and electricity price remain sweepable assumptions; staffing, financing,
+    # networking, floor space, maintenance, and replacement inventory are not
+    # silently estimated.
+    electricity_cost_per_kwh: float = 0.08
+    facility_pue: float = 1.15
+    nre_cost: float = 0.0
+    production_units: int = 1
+    cross_stage_latency_s: float = 0.0
+    evidence: dict[str, str] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        if self.kind not in {"gpu", "rom"}:
+            raise ValidationError("architecture kind must be 'gpu' or 'rom'")
+        for name in (
+            "device_count",
+            "weight_capacity_bytes_per_device",
+            "kv_capacity_bytes_per_device",
+            "weight_bandwidth_bytes_s_per_device",
+            "kv_bandwidth_bytes_s_per_device",
+            "peak_ops_s_per_device",
+            "higher_precision_peak_ops_s_per_device",
+            "collective_bandwidth_bytes_s",
+            "kv_read_amplification",
+            "cost_per_device",
+            "power_w_per_device",
+            "cooling_limit_w_per_device",
+            "lifetime_years",
+            "production_units",
+            "electricity_cost_per_kwh",
+            "facility_pue",
+        ):
+            _positive(name, float(getattr(self, name)))
+        if self.power_w_per_device > self.cooling_limit_w_per_device:
+            raise ValidationError(
+                "power_w_per_device cannot exceed cooling_limit_w_per_device"
+            )
+        for name in (
+            "utilization",
+            "weight_bandwidth_efficiency",
+            "kv_bandwidth_efficiency",
+            "compute_efficiency",
+            "load_balance_efficiency",
+            "defect_repair_efficiency",
+            "clock_efficiency",
+            "sync_efficiency",
+            "pipeline_efficiency",
+            "hbm_capacity_utilization",
+        ):
+            _fraction(name, float(getattr(self, name)))
+
+
+@dataclass(frozen=True)
+class HardwareProfile:
+    gpu: ArchitectureProfile
+    rom: ArchitectureProfile
+
+    def __post_init__(self) -> None:
+        if self.gpu.kind != "gpu" or self.rom.kind != "rom":
+            raise ValidationError("HardwareProfile requires gpu and rom architectures")
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "HardwareProfile":
+        return cls(
+            gpu=ArchitectureProfile(**data["gpu"]),
+            rom=ArchitectureProfile(**data["rom"]),
+        )
+
+    @classmethod
+    def load(cls, path: str | Path) -> "HardwareProfile":
+        with Path(path).open(encoding="utf-8") as handle:
+            return cls.from_dict(json.load(handle))
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
+class SpeculationProfile:
+    draft_tokens: int = 0
+    acceptance_probability: float = 0.0
+    draft_cost_fraction: float = 0.0
+
+    def __post_init__(self) -> None:
+        if self.draft_tokens < 0:
+            raise ValidationError("draft_tokens cannot be negative")
+        if self.draft_tokens:
+            _fraction("acceptance_probability", self.acceptance_probability, allow_zero=True)
+            if self.draft_cost_fraction < 0:
+                raise ValidationError("draft_cost_fraction cannot be negative")
+
+    @property
+    def expected_output_tokens(self) -> float:
+        if self.draft_tokens == 0:
+            return 1.0
+        p = self.acceptance_probability
+        if p == 1.0:
+            return float(self.draft_tokens + 1)
+        return (1.0 - p ** (self.draft_tokens + 1)) / (1.0 - p)
+
+
+@dataclass(frozen=True)
+class SimulationRequest:
+    context_tokens: int
+    batch_size: int
+    output_tokens: int = 1024
+    prompt_tokens: int = 0
+    prefix_cache_hit_rate: float = 0.0
+    disaggregated_prefill: bool = False
+    kv_handoff_bandwidth_bytes_s: float = 100e9
+    speculation: SpeculationProfile = field(default_factory=SpeculationProfile)
+
+    def __post_init__(self) -> None:
+        for name in ("context_tokens", "batch_size", "output_tokens"):
+            _positive(name, float(getattr(self, name)))
+        if self.prompt_tokens < 0:
+            raise ValidationError("prompt_tokens cannot be negative")
+        _fraction("prefix_cache_hit_rate", self.prefix_cache_hit_rate, allow_zero=True)
+        _positive("kv_handoff_bandwidth_bytes_s", self.kv_handoff_bandwidth_bytes_s)
+
+
+def load_models(paths: Iterable[str | Path]) -> list[ModelProfile]:
+    return [ModelProfile.load(path) for path in paths]

@@ -1,0 +1,281 @@
+[
+  {
+    "batch_size": 1,
+    "model": "DeepSeek-V4-Flash-0731",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 1550,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 10698,
+        "weight_stream_cycles": 10698
+      },
+      {
+        "active_tile_fraction": 0.023255813953488372,
+        "compute_cycles": 66638,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 460011,
+        "weight_stream_cycles": 460011
+      },
+      {
+        "active_tile_fraction": 0.023255813953488372,
+        "compute_cycles": 66638,
+        "imbalance_multiplier": 1.0,
+        "placement": "expert_local",
+        "service_cycles": 460011,
+        "weight_stream_cycles": 460011
+      }
+    ],
+    "trace_p05_efficiency": 1.0
+  },
+  {
+    "batch_size": 8,
+    "model": "DeepSeek-V4-Flash-0731",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 12398,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 31664,
+        "weight_stream_cycles": 31664
+      },
+      {
+        "active_tile_fraction": 0.023255813953488372,
+        "compute_cycles": 533104,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 1361551,
+        "weight_stream_cycles": 1361551
+      },
+      {
+        "active_tile_fraction": 0.023255813953488372,
+        "compute_cycles": 533104,
+        "imbalance_multiplier": 4.229166666666667,
+        "placement": "expert_local",
+        "service_cycles": 5758227,
+        "weight_stream_cycles": 1361551
+      }
+    ],
+    "trace_p05_efficiency": 0.23645320197044334
+  },
+  {
+    "batch_size": 64,
+    "model": "DeepSeek-V4-Flash-0731",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 99183,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 116998,
+        "weight_stream_cycles": 116998
+      },
+      {
+        "active_tile_fraction": 0.023255813953488372,
+        "compute_cycles": 4264832,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 5030911,
+        "weight_stream_cycles": 5030911
+      },
+      {
+        "active_tile_fraction": 0.023255813953488372,
+        "compute_cycles": 4264832,
+        "imbalance_multiplier": 12.68644920293198,
+        "placement": "expert_local",
+        "service_cycles": 63824397,
+        "weight_stream_cycles": 5030911
+      }
+    ],
+    "trace_p05_efficiency": 0.07882426232935917
+  },
+  {
+    "batch_size": 1,
+    "model": "DeepSeek-V4-Pro-0813",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 5842,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 37830,
+        "weight_stream_cycles": 37830
+      },
+      {
+        "active_tile_fraction": 0.01639344262295082,
+        "compute_cycles": 356317,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 2307571,
+        "weight_stream_cycles": 2307571
+      },
+      {
+        "active_tile_fraction": 0.01639344262295082,
+        "compute_cycles": 356317,
+        "imbalance_multiplier": 1.0,
+        "placement": "expert_local",
+        "service_cycles": 2307571,
+        "weight_stream_cycles": 2307571
+      }
+    ],
+    "trace_p05_efficiency": 1.0
+  },
+  {
+    "batch_size": 8,
+    "model": "DeepSeek-V4-Pro-0813",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 46731,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 118382,
+        "weight_stream_cycles": 118382
+      },
+      {
+        "active_tile_fraction": 0.01639344262295082,
+        "compute_cycles": 2850533,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 7221243,
+        "weight_stream_cycles": 7221243
+      },
+      {
+        "active_tile_fraction": 0.01639344262295082,
+        "compute_cycles": 2850533,
+        "imbalance_multiplier": 4.238516335052812,
+        "placement": "expert_local",
+        "service_cycles": 30607357,
+        "weight_stream_cycles": 7221243
+      }
+    ],
+    "trace_p05_efficiency": 0.23593161402492033
+  },
+  {
+    "batch_size": 64,
+    "model": "DeepSeek-V4-Pro-0813",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 373841,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 523413,
+        "weight_stream_cycles": 523413
+      },
+      {
+        "active_tile_fraction": 0.01639344262295082,
+        "compute_cycles": 22804261,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 31928147,
+        "weight_stream_cycles": 31928147
+      },
+      {
+        "active_tile_fraction": 0.01639344262295082,
+        "compute_cycles": 22804261,
+        "imbalance_multiplier": 13.200520833333332,
+        "placement": "expert_local",
+        "service_cycles": 421468170,
+        "weight_stream_cycles": 31928147
+      }
+    ],
+    "trace_p05_efficiency": 0.07575458670349182
+  },
+  {
+    "batch_size": 1,
+    "model": "Kimi-K3",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 12398,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 130645,
+        "weight_stream_cycles": 130645
+      },
+      {
+        "active_tile_fraction": 0.010752688172043012,
+        "compute_cycles": 1152993,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 12149905,
+        "weight_stream_cycles": 12149905
+      },
+      {
+        "active_tile_fraction": 0.010752688172043012,
+        "compute_cycles": 1152993,
+        "imbalance_multiplier": 1.0,
+        "placement": "expert_local",
+        "service_cycles": 12149905,
+        "weight_stream_cycles": 12149905
+      }
+    ],
+    "trace_p05_efficiency": 1.0
+  },
+  {
+    "batch_size": 8,
+    "model": "Kimi-K3",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 99183,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 291189,
+        "weight_stream_cycles": 291189
+      },
+      {
+        "active_tile_fraction": 0.010752688172043012,
+        "compute_cycles": 9223938,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 27080562,
+        "weight_stream_cycles": 27080562
+      },
+      {
+        "active_tile_fraction": 0.010752688172043012,
+        "compute_cycles": 9223938,
+        "imbalance_multiplier": 4.7578125,
+        "placement": "expert_local",
+        "service_cycles": 128844237,
+        "weight_stream_cycles": 27080562
+      }
+    ],
+    "trace_p05_efficiency": 0.21018062397372742
+  },
+  {
+    "batch_size": 64,
+    "model": "Kimi-K3",
+    "placements": [
+      {
+        "active_tile_fraction": 1.0,
+        "compute_cycles": 793458,
+        "imbalance_multiplier": 1.0,
+        "placement": "interleaved",
+        "service_cycles": 1050064,
+        "weight_stream_cycles": 1050064
+      },
+      {
+        "active_tile_fraction": 0.010752688172043012,
+        "compute_cycles": 73791504,
+        "imbalance_multiplier": 1.0,
+        "placement": "layer_local",
+        "service_cycles": 97655937,
+        "weight_stream_cycles": 97655937
+      },
+      {
+        "active_tile_fraction": 0.010752688172043012,
+        "compute_cycles": 73791504,
+        "imbalance_multiplier": 17.947520255715663,
+        "placement": "expert_local",
+        "service_cycles": 1752681908,
+        "weight_stream_cycles": 97655937
+      }
+    ],
+    "trace_p05_efficiency": 0.05571800369923164
+  }
+]

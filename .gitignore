@@ -1,0 +1,13 @@
+.cache/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.swp
+.venv/
+build/
+dist/
+rtl/build/
+spice/*.raw
+spice/*.log
