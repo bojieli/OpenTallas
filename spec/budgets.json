@@ -1,0 +1,65 @@
+{
+  "area": {
+    "allocation_percent": {
+      "clock_power_thermal": 5,
+      "contingency": 8,
+      "hbm_stage_io": 4,
+      "mac_vector": 10,
+      "noc_links": 6,
+      "ras_dft_control": 2,
+      "rom_arrays_sense": 60,
+      "sram_buffers": 5
+    },
+    "evidence": "assumed",
+    "reticle_fields": 64,
+    "reticle_gross_mm2": 718.75,
+    "stage_stitched_silicon_mm2": 46000,
+    "tile_gross_mm2": 11.23046875,
+    "tiles_per_stage": 4096
+  },
+  "capacity": {
+    "hbm_physical_bytes_per_stage": 384000000000,
+    "hbm_usable_fraction": 0.9,
+    "rom_raw_bytes_per_stage": 184000000000,
+    "rom_repair_and_layout_reserve_fraction": 0.13043478260869565,
+    "rom_usable_bytes_per_stage": 160000000000
+  },
+  "clock": {
+    "architectural_core_hz": 1000000000,
+    "architectural_high_hz": 1200000000,
+    "architectural_low_hz": 800000000,
+    "public_open_pdk_proxy_hz": 100000000
+  },
+  "compute": {
+    "dense_higher_precision_ops_s_per_stage": 500000000000000,
+    "low_precision_mac_lanes_per_tile": 128,
+    "routed_low_precision_ops_s_per_stage": 1000000000000000
+  },
+  "evidence": "assumed_unless_field_says_simulated",
+  "interconnect": {
+    "cross_stage_one_way_latency_s": 5e-7,
+    "cross_stage_payload_bytes_s": 128000000000,
+    "noc_collective_floor_s_per_layer": 1e-7,
+    "noc_payload_bytes_s": 128000000000,
+    "noc_source": "simulated floor plus assumed implementation derates"
+  },
+  "memory_bandwidth": {
+    "hbm_bytes_s_per_stage": 8000000000000,
+    "rom_exposed_bytes_s_per_stage": 100000000000000,
+    "rom_exposed_bytes_per_tile_cycle": 24.4140625,
+    "rom_physical_interface_bits_per_tile_cycle": 256
+  },
+  "power": {
+    "allocation_w": {
+      "clock_control": 800,
+      "contingency": 700,
+      "hbm_phy_stage_io": 2200,
+      "mac_vector": 5000,
+      "noc_sram_movement": 3300,
+      "rom_sense": 3000
+    },
+    "cooling_limit_w_per_stage": 20000,
+    "operating_w_per_stage": 15000
+  },
+  "schema_version": 1
+}

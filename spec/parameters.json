@@ -1,0 +1,90 @@
+{
+  "architectural_limits": {
+    "batch_per_stage_max_field": 65536,
+    "context_tokens_max": 1048576,
+    "experts_max": 1024,
+    "layers_max": 128,
+    "pipeline_stages_max": 16,
+    "sessions_max": 16777216,
+    "speculative_candidates_max": 15,
+    "top_k_max": 16
+  },
+  "identifiers": {
+    "epoch_id_bits": 8,
+    "expert_id_bits": 10,
+    "layer_id_bits": 7,
+    "position_bits": 20,
+    "schedule_id_bits": 8,
+    "session_id_bits": 24,
+    "stage_id_bits": 4,
+    "transaction_id_bits": 16
+  },
+  "model_profiles": {
+    "DeepSeek-V4-Flash-0731": {
+      "context_tokens": [200000, 1000000],
+      "experts": 256,
+      "hidden_size": 4096,
+      "layers": 43,
+      "required_batches": [1, 8, 64],
+      "stages": 2,
+      "top_k": 6
+    },
+    "DeepSeek-V4-Pro-0813": {
+      "context_tokens": [200000, 1000000],
+      "experts": 384,
+      "hidden_size": 7168,
+      "layers": 61,
+      "required_batches": [1, 8, 64],
+      "stages": 6,
+      "top_k": 6
+    },
+    "Kimi-K3": {
+      "context_tokens": [200000, 1000000],
+      "experts": 896,
+      "hidden_size": 7168,
+      "layers": 93,
+      "required_batches": [1, 8, 64],
+      "stages": 11,
+      "top_k": 16
+    },
+    "Qwen3-8B": {
+      "context_tokens": [8192],
+      "experts": 1,
+      "hidden_size": 4096,
+      "layers": 36,
+      "required_batches": [1, 8, 64],
+      "stages": 1,
+      "top_k": 1,
+      "dense": true,
+      "num_attention_heads": 32,
+      "num_key_value_heads": 8,
+      "head_dim": 128,
+      "storage_dtype": "BF16",
+      "native_context_tokens": 32768,
+      "checkpoint_bytes": 16381470720,
+      "decode_weight_bytes": 15136811008,
+      "resident_only_bytes": 1244659712
+    }
+  },
+  "noc": {
+    "core_flit_bits": 256,
+    "epoch_slots": 256,
+    "local_link_bytes_per_cycle": 128,
+    "mesh_link_bytes_per_cycle": 256,
+    "reticle_cols": 8,
+    "reticle_rows": 8,
+    "schedule_banks": 2,
+    "sink_transaction_credits": 16,
+    "tiles_per_reticle": 64
+  },
+  "public_rtl_defaults": {
+    "accumulator_bits": 32,
+    "activation_bits": 8,
+    "experts": 16,
+    "lanes": 16,
+    "rom_words_per_expert": 64,
+    "top_k": 6,
+    "weight_bits": 4
+  },
+  "schema_version": 1
+}

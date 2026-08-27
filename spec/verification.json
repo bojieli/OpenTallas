@@ -1,0 +1,206 @@
+{
+  "closure": {
+    "assertion_failures": 0,
+    "branch_coverage_percent": 90,
+    "code_coverage_exclusions_require_waiver": true,
+    "formal_properties_pass_percent": 100,
+    "functional_coverage_must_bins_percent": 100,
+    "line_coverage_percent": 95,
+    "open_severity_1_or_2_bugs": 0,
+    "planned_fault_sites_detected_or_contained_percent": 100,
+    "requirements_with_pass_evidence_percent": 100,
+    "toggle_coverage_percent": 85,
+    "unowned_waivers": 0
+  },
+  "environments": [
+    {"id": "ENV-UNIT", "scope": "format, CRC/ECC, FIFO, mask, ROM, MAC, repair, and switch units"},
+    {"id": "ENV-TILE", "scope": "one complete tile with ROM and SRAM behavioral macros"},
+    {"id": "ENV-RETICLE", "scope": "reduced and full-parameter reticle fabrics with static schedules"},
+    {"id": "ENV-STAGE", "scope": "stage controller, NoC, HBM models, RAS, and host interfaces"},
+    {"id": "ENV-PIPE", "scope": "two-, six-, and eleven-stage abstract pipelines"},
+    {"id": "ENV-FORMAL", "scope": "bounded and inductive block/protocol proofs"},
+    {"id": "ENV-STATIC", "scope": "lint, elaboration, structural, CDC, RDC, and synthesis checks"}
+  ],
+  "planned_checks": [
+    {
+      "environments": ["ENV-STATIC"],
+      "id": "DV-REQ-001",
+      "methods": ["inspection", "schema_validation", "reproducibility"],
+      "name": "specification completeness and traceability"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-STAGE", "ENV-FORMAL"],
+      "id": "DV-CMD-001",
+      "methods": ["directed", "constrained_random", "assertion", "formal"],
+      "name": "host command field, CRC, version, and legality checking"
+    },
+    {
+      "environments": ["ENV-STAGE", "ENV-PIPE", "ENV-FORMAL"],
+      "id": "DV-CMD-002",
+      "methods": ["constrained_random", "assertion", "formal"],
+      "name": "command ordering, backpressure, quiesce, and abort"
+    },
+    {
+      "environments": ["ENV-STAGE", "ENV-PIPE"],
+      "id": "DV-SESSION-001",
+      "methods": ["reference_model", "boundary", "constrained_random"],
+      "name": "session allocation, capacity, position, and isolation"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-TILE", "ENV-FORMAL"],
+      "id": "DV-TILE-001",
+      "methods": ["exhaustive_small_parameter", "assertion", "formal"],
+      "name": "expert-ID validation, duplicate suppression, and wordline mask"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-TILE", "ENV-FORMAL"],
+      "id": "DV-TILE-002",
+      "methods": ["reference_model", "assertion", "formal"],
+      "name": "immutable interleaved ROM addressing and read alignment"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-TILE"],
+      "id": "DV-TILE-003",
+      "methods": ["bit_exact_reference", "directed_corner", "random"],
+      "name": "tile multiply, accumulation, rounding, saturation, and reduction"
+    },
+    {
+      "environments": ["ENV-TILE", "ENV-FORMAL"],
+      "id": "DV-TILE-004",
+      "methods": ["assertion", "random_backpressure", "formal"],
+      "name": "tile pipeline transaction and data alignment"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-RETICLE", "ENV-FORMAL"],
+      "id": "DV-NOC-001",
+      "methods": ["schedule_checker", "assertion", "formal"],
+      "name": "static schedule conflict freedom, legal source, and bounded occupancy"
+    },
+    {
+      "environments": ["ENV-RETICLE", "ENV-STAGE"],
+      "id": "DV-NOC-002",
+      "methods": ["scoreboard", "stress", "latency_histogram"],
+      "name": "NoC no-loss, no-duplication, ordering, and latency"
+    },
+    {
+      "environments": ["ENV-RETICLE", "ENV-STAGE"],
+      "id": "DV-NOC-003",
+      "methods": ["fault_injection", "schedule_recompile", "degradation"],
+      "name": "tile/link quarantine and repaired schedule behavior"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-STAGE"],
+      "id": "DV-HBM-001",
+      "methods": ["protocol_checker", "memory_model", "error_injection"],
+      "name": "HBM abstraction tags, bursts, capacity, ECC status, and ordering"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-PIPE"],
+      "id": "DV-LINK-001",
+      "methods": ["protocol_checker", "CRC_injection", "retry_timeout"],
+      "name": "cross-stage packet credit, CRC, retry, and abort"
+    },
+    {
+      "environments": ["ENV-STAGE", "ENV-FORMAL"],
+      "id": "DV-STAGE-001",
+      "methods": ["reference_model", "assertion", "formal"],
+      "name": "layer progression, stage ownership, and completion semantics"
+    },
+    {
+      "environments": ["ENV-PIPE"],
+      "id": "DV-PIPE-001",
+      "methods": ["end_to_end_scoreboard", "stress", "capacity_boundary"],
+      "name": "multi-stage resident-session and pipeline semantics"
+    },
+    {
+      "environments": ["ENV-UNIT"],
+      "id": "DV-NUM-001",
+      "methods": ["exhaustive_encoding", "known_answer"],
+      "name": "MXFP4, FP8, E8M0, BF16, integer-surrogate, and exception decoding"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-TILE"],
+      "id": "DV-NUM-002",
+      "methods": ["differential_random", "metamorphic", "boundary"],
+      "name": "dot-product and reduction bit-exactness"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-STAGE", "ENV-FORMAL"],
+      "id": "DV-RAS-001",
+      "methods": ["exhaustive_syndrome", "fault_injection", "formal"],
+      "name": "CRC, parity, SECDED, poison, and first-error behavior"
+    },
+    {
+      "environments": ["ENV-TILE", "ENV-RETICLE", "ENV-STAGE", "ENV-PIPE"],
+      "id": "DV-RAS-002",
+      "methods": ["fault_campaign", "containment_scoreboard", "recovery"],
+      "name": "planned transient and permanent fault campaign"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-RETICLE", "ENV-FORMAL"],
+      "id": "DV-REPAIR-001",
+      "methods": ["exhaustive_small_parameter", "random_map", "formal"],
+      "name": "row, column, tile, and link repair-map legality"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-TILE", "ENV-STAGE", "ENV-STATIC"],
+      "id": "DV-RESET-001",
+      "methods": ["reset_phase_random", "CDC", "RDC", "assertion"],
+      "name": "clock crossings, reset sequencing, and in-flight reset"
+    },
+    {
+      "environments": ["ENV-STAGE", "ENV-FORMAL"],
+      "id": "DV-POWER-001",
+      "methods": ["state_transition", "assertion", "formal"],
+      "name": "power-state, clock-gate, throttle, isolation, and safe shutdown"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-TILE", "ENV-RETICLE", "ENV-STAGE"],
+      "id": "DV-DFT-001",
+      "methods": ["BIST_fault_injection", "scan_structure", "diagnostic_signature"],
+      "name": "ROM-BIST, SRAM-BIST, link-BIST, scan, and diagnostic access"
+    },
+    {
+      "environments": ["ENV-STATIC", "ENV-STAGE"],
+      "id": "DV-FW-001",
+      "methods": ["manifest_checker", "schedule_checker", "boot_emulation"],
+      "name": "deterministic image, manifest, schedule, repair, and boot contract"
+    },
+    {
+      "environments": ["ENV-TILE", "ENV-RETICLE", "ENV-STAGE", "ENV-PIPE"],
+      "id": "DV-PERF-001",
+      "methods": ["cycle_counter", "queue_bound", "p50_p95_p99", "stress"],
+      "name": "latency, throughput, occupancy, and degradation budgets"
+    },
+    {
+      "environments": ["ENV-FORMAL"],
+      "id": "DV-FORMAL-001",
+      "methods": ["bounded_model_check", "induction", "cover_nonvacuity"],
+      "name": "formal safety, conservation, ordering, and progress suite"
+    },
+    {
+      "environments": ["ENV-STATIC"],
+      "id": "DV-STATIC-001",
+      "methods": ["format", "lint", "elaboration", "structural", "CDC", "RDC"],
+      "name": "warning-clean static and multi-tool elaboration closure"
+    },
+    {
+      "environments": ["ENV-UNIT", "ENV-TILE", "ENV-RETICLE", "ENV-STAGE", "ENV-PIPE"],
+      "id": "DV-COVERAGE-001",
+      "methods": ["functional", "assertion", "line", "branch", "toggle", "FSM", "cross"],
+      "name": "coverage merge, exclusions, and closure review"
+    },
+    {
+      "environments": ["ENV-STATIC"],
+      "id": "DV-SYNTH-001",
+      "methods": ["synthesis", "equivalence", "STA", "constraint_coverage"],
+      "name": "verified-baseline synthesis entry and consistency"
+    }
+  ],
+  "schema_version": 1,
+  "tool_independence": {
+    "formal_solvers_minimum": 2,
+    "lint_or_parser_frontends_minimum": 2,
+    "simulators_minimum": 2
+  }
+}

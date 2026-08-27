@@ -1,0 +1,79 @@
+{
+  "architecture_name": "OpenTallas public-reference ROM inference architecture",
+  "baseline_parent_commit": "82a2a23",
+  "documents": [
+    {"id": "SPEC-REQ", "normative": true, "path": "spec/SYSTEM_REQUIREMENTS.md"},
+    {"id": "SPEC-ARCH", "normative": true, "path": "spec/ARCHITECTURE.md"},
+    {"id": "SPEC-MICRO", "normative": true, "path": "spec/MICROARCHITECTURE.md"},
+    {"id": "SPEC-ICD", "normative": true, "path": "spec/INTERFACES.md"},
+    {"id": "SPEC-NUM", "normative": true, "path": "spec/NUMERICS.md"},
+    {"id": "SPEC-CRP", "normative": true, "path": "spec/CLOCK_RESET_POWER.md"},
+    {"id": "SPEC-RAS", "normative": true, "path": "spec/RAS_REPAIR_DFT.md"},
+    {"id": "SPEC-FW", "normative": true, "path": "spec/FIRMWARE_COMPILER.md"},
+    {"id": "SPEC-PPA", "normative": true, "path": "spec/FLOORPLAN_PPA.md"},
+    {"id": "SPEC-DV", "normative": true, "path": "spec/VERIFICATION_PLAN.md"},
+    {"id": "SPEC-CC", "normative": true, "path": "spec/CHANGE_CONTROL.md"},
+    {"id": "SPEC-REVIEW", "normative": false, "path": "spec/ARCHITECTURE_REVIEW.md"},
+    {"id": "SPEC-TRACE", "generated": true, "normative": false, "path": "spec/TRACEABILITY.md"}
+  ],
+  "evidence_classes": [
+    "assumed",
+    "derived",
+    "measured",
+    "published",
+    "simulated",
+    "synthetic"
+  ],
+  "freeze": {
+    "decision": "pass_public_reference_only",
+    "product_silicon_authorized": false,
+    "rtl_entry_authorized_after_push": true,
+    "status": "frozen_for_public_reference_rtl",
+    "unresolved_external_gates": [
+      "model-owner checkpoint lifetime commitment",
+      "production B200/B300 traces and serving measurements",
+      "target-node ROM density, bandwidth, sense margin, and repair characterization",
+      "target-node standard-cell, SRAM, PLL, PHY, IO, DFT, and reliability collateral",
+      "HBM beachfront and package/power/thermal feasibility",
+      "commercial PPA, yield, cost, schedule, and signoff"
+    ]
+  },
+  "machine_readable": [
+    "spec/requirements.json",
+    "spec/parameters.json",
+    "spec/interfaces.json",
+    "spec/budgets.json",
+    "spec/verification.json"
+  ],
+  "models": [
+    {
+      "name": "DeepSeek-V4-Flash-0731",
+      "role": "primary_proof_target",
+      "revision": "7872f01b1d1fe23eabc4c98b48bffcef5a386062",
+      "stages_midpoint": 2
+    },
+    {
+      "name": "DeepSeek-V4-Pro-0813",
+      "role": "stretch_architecture_target",
+      "revision": "72e1d3230f6c080a530b0a1d46f8eb4602340597",
+      "stages_midpoint": 6
+    },
+    {
+      "name": "Kimi-K3",
+      "role": "negative_stress_control",
+      "revision": "a590ce090cb049c93a33dfe8c208ec652aa20503",
+      "stages_midpoint": 11
+    },
+    {
+      "name": "Qwen3-8B",
+      "role": "dense_control",
+      "revision": "b968826d9c46dd6066d109eabc6255188de91218",
+      "stages_midpoint": 1,
+      "study_context_tokens": [8192],
+      "numeric_profile": "BF16_VECTOR",
+      "speculation": "none_without_external_draft"
+    }
+  ],
+  "schema_version": 1,
+  "spec_version": "1.0.0"
+}

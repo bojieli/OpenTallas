@@ -1,4 +1,4 @@
-.PHONY: profile simulate routing noc sensitivity rtl spice test verify clean-results
+.PHONY: profile simulate routing noc sensitivity spec-check rtl spice test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -16,6 +16,9 @@ sensitivity:
 	python3 tornado.py --standard
 	python3 decide.py results/standard/analytical.json
 
+spec-check:
+	python3 tools/check_spec.py
+
 rtl:
 	$(MAKE) -C rtl verify
 
@@ -25,7 +28,7 @@ spice:
 test:
 	PYTHONPATH=src pytest
 
-verify: test rtl spice simulate noc sensitivity
+verify: spec-check test rtl spice simulate noc sensitivity
 
 clean-results:
 	find results -type f \( -name '*.csv' -o -name '*.json' -o -name 'REPORT.md' -o -name 'QWEN3_8B_ADDENDUM.md' \) -delete

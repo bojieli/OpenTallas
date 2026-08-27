@@ -1,0 +1,885 @@
+{
+  "requirements": [
+    {
+      "allocations": ["weight_rom", "image_identity"],
+      "architecture_refs": ["ARCH-4.1", "RAS-6.1"],
+      "basis": "derived",
+      "id": "SYS-FUNC-001",
+      "priority": "must",
+      "statement": "Target-model weight storage shall have no functional write path after manufacture; test and repair controls shall not alter logical weight values.",
+      "status": "specified",
+      "verification_refs": ["DV-TILE-002", "DV-RAS-001"]
+    },
+    {
+      "allocations": ["image_identity", "stage_controller"],
+      "architecture_refs": ["ARCH-3.1", "FW-2.1"],
+      "basis": "derived",
+      "id": "SYS-FUNC-002",
+      "priority": "must",
+      "statement": "Every accepted inference command shall be bound to the mask-programmed 256-bit image identity and compatible ABI major version.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-001", "DV-FW-001"]
+    },
+    {
+      "allocations": ["stage_controller", "tile_array", "hbm_frontend"],
+      "architecture_refs": ["ARCH-3.2", "MICRO-2.1"],
+      "basis": "derived",
+      "id": "SYS-FUNC-003",
+      "priority": "must",
+      "statement": "The architecture shall execute ordered single-token autoregressive decode over the stage-owned contiguous layer interval and return exactly one completion or error per accepted command.",
+      "status": "specified",
+      "verification_refs": ["DV-STAGE-001", "DV-PIPE-001"]
+    },
+    {
+      "allocations": ["stage_controller", "tile_array"],
+      "architecture_refs": ["ARCH-3.3", "NUM-7.1"],
+      "basis": "assumed",
+      "id": "SYS-FUNC-004",
+      "priority": "must",
+      "statement": "The architecture shall support target verification for 1 through 15 speculative candidates and shall charge draft traffic and work separately from target verification.",
+      "status": "specified",
+      "verification_refs": ["DV-STAGE-001", "DV-NUM-002"]
+    },
+    {
+      "allocations": ["compiler", "stage_pipeline"],
+      "architecture_refs": ["ARCH-2.2", "FW-3.1"],
+      "basis": "measured",
+      "id": "SYS-FUNC-005",
+      "priority": "must",
+      "statement": "The primary proof configuration shall represent pinned DeepSeek-V4-Flash-0731 with 43 layers, 256 experts, top-6 routing, 4096 hidden size, and two midpoint stages.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-PIPE-001"]
+    },
+    {
+      "allocations": ["compiler", "stage_pipeline"],
+      "architecture_refs": ["ARCH-2.2", "FW-3.1"],
+      "basis": "measured",
+      "id": "SYS-FUNC-006",
+      "priority": "must",
+      "statement": "The stretch configuration shall represent pinned DeepSeek-V4-Pro-0813 with 61 layers, 384 experts, top-6 routing, 7168 hidden size, and six midpoint stages.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-PIPE-001"]
+    },
+    {
+      "allocations": ["compiler", "stage_pipeline"],
+      "architecture_refs": ["ARCH-2.2", "FW-3.1"],
+      "basis": "measured",
+      "id": "SYS-FUNC-007",
+      "priority": "should",
+      "statement": "The stress configuration shall represent pinned Kimi-K3 with 93 layers, 896 experts, top-16 routing, 7168 hidden size, and eleven midpoint stages without being promoted to a product target.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-PIPE-001"]
+    },
+    {
+      "allocations": ["session_table", "stage_controller"],
+      "architecture_refs": ["ARCH-3.4", "ICD-2.1"],
+      "basis": "derived",
+      "id": "SYS-FUNC-008",
+      "priority": "must",
+      "statement": "The command and session model shall represent 200000- and 1000000-token DeepSeek/Kimi contexts and the 8192-token Qwen3-8B control context, plus mandatory batch-per-stage points 1, 8, and 64, without encoding model-specific constants in datapath logic.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-001", "DV-SESSION-001"]
+    },
+    {
+      "allocations": ["session_table", "stage_controller"],
+      "architecture_refs": ["ARCH-3.4", "MICRO-3.2"],
+      "basis": "derived",
+      "id": "SYS-FUNC-009",
+      "priority": "must",
+      "statement": "Commands within one session shall retire in position order; data, errors, and completions shall not cross session or epoch boundaries.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-002", "DV-SESSION-001"]
+    },
+    {
+      "allocations": ["stage_pipeline", "session_table"],
+      "architecture_refs": ["ARCH-7.1", "ARCH-7.2"],
+      "basis": "derived",
+      "id": "SYS-FUNC-010",
+      "priority": "must",
+      "statement": "A pipeline of S stages shall reserve S times the batch-per-stage resident sessions and shall reject admission before mutating state when local stage capacity is insufficient.",
+      "status": "specified",
+      "verification_refs": ["DV-SESSION-001", "DV-PIPE-001"]
+    },
+    {
+      "allocations": ["stage_controller", "host_interface"],
+      "architecture_refs": ["ARCH-8.2", "MICRO-3.3"],
+      "basis": "derived",
+      "id": "SYS-FUNC-011",
+      "priority": "must",
+      "statement": "QUIESCE shall stop new admission and drain accepted work; ABORT shall produce an ordered terminal response and prevent further architectural state updates for the transaction.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-002", "DV-STAGE-001"]
+    },
+    {
+      "allocations": ["stage_controller", "telemetry"],
+      "architecture_refs": ["ARCH-8.3", "RAS-4.2"],
+      "basis": "derived",
+      "id": "SYS-FUNC-012",
+      "priority": "must",
+      "statement": "Unsupported opcodes, fields, versions, schedules, image identities, and reserved-bit values shall be rejected without partial execution and with a classified response.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-001", "DV-RAS-001"]
+    },
+    {
+      "allocations": ["compiler", "stage_pipeline", "format_decode"],
+      "architecture_refs": ["ARCH-2.2", "NUM-1.1", "FW-3.1"],
+      "basis": "measured",
+      "id": "SYS-FUNC-013",
+      "priority": "must",
+      "statement": "The dense-control configuration shall represent pinned Qwen3-8B with 36 layers, 4096 hidden size, 32 query heads, 8 KV heads, BF16 storage, an untied output head, one midpoint stage, and an 8192-token study context without an implicit speculative draft.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-PIPE-001", "DV-NUM-001"]
+    },
+    {
+      "allocations": ["weight_rom", "tile_array"],
+      "architecture_refs": ["ARCH-4.2", "PPA-4.1"],
+      "basis": "assumed",
+      "id": "SYS-PERF-001",
+      "priority": "must",
+      "statement": "The product hypothesis shall budget 100 TB/s exposed ROM read bandwidth per stage before separately declared efficiency, repair, clock, and synchronization derates.",
+      "status": "specified",
+      "verification_refs": ["DV-PERF-001", "DV-SYNTH-001"]
+    },
+    {
+      "allocations": ["mac_array", "tile_array"],
+      "architecture_refs": ["ARCH-4.3", "PPA-4.2"],
+      "basis": "assumed",
+      "id": "SYS-PERF-002",
+      "priority": "must",
+      "statement": "The product hypothesis shall budget 1 POP/s routed low-precision and 0.5 POP/s dense higher-precision peak arithmetic per stage before derates.",
+      "status": "specified",
+      "verification_refs": ["DV-PERF-001", "DV-SYNTH-001"]
+    },
+    {
+      "allocations": ["hbm_frontend"],
+      "architecture_refs": ["ARCH-6.2", "PPA-4.3"],
+      "basis": "assumed",
+      "id": "SYS-PERF-003",
+      "priority": "must",
+      "statement": "The product hypothesis shall budget 8 TB/s bidirectional HBM payload bandwidth per stage and shall account for weight-independent KV reads and writes.",
+      "status": "specified",
+      "verification_refs": ["DV-HBM-001", "DV-PERF-001"]
+    },
+    {
+      "allocations": ["static_noc"],
+      "architecture_refs": ["ARCH-5.3", "PPA-4.4"],
+      "basis": "simulated",
+      "id": "SYS-PERF-004",
+      "priority": "must",
+      "statement": "The NoC contract shall expose a 100 ns per-layer fixed floor plus payload serialization at 128 GB/s before the independent synchronization derate.",
+      "status": "specified",
+      "verification_refs": ["DV-NOC-002", "DV-PERF-001"]
+    },
+    {
+      "allocations": ["stage_link"],
+      "architecture_refs": ["ARCH-7.3", "PPA-4.5"],
+      "basis": "assumed",
+      "id": "SYS-PERF-005",
+      "priority": "must",
+      "statement": "The cross-stage contract shall budget 128 GB/s payload bandwidth and 0.5 microsecond one-way fixed latency per boundary before retries.",
+      "status": "specified",
+      "verification_refs": ["DV-LINK-001", "DV-PERF-001"]
+    },
+    {
+      "allocations": ["performance_counters", "telemetry"],
+      "architecture_refs": ["ARCH-8.3", "ICD-7.1"],
+      "basis": "derived",
+      "id": "SYS-PERF-006",
+      "priority": "must",
+      "statement": "The digital implementation shall count accepted commands, active cycles, stalls by cause, ROM/HBM/NoC service, retries, throttling, and latency histograms without changing functional results.",
+      "status": "specified",
+      "verification_refs": ["DV-PERF-001", "DV-RAS-001"]
+    },
+    {
+      "allocations": ["reports"],
+      "architecture_refs": ["PPA-1.2", "DV-1.2"],
+      "basis": "derived",
+      "id": "SYS-PERF-007",
+      "priority": "must",
+      "statement": "No analytical peak, open-PDK proxy, or synthetic trace shall be labeled as measured product throughput, power, area, latency, or GPU superiority.",
+      "status": "specified",
+      "verification_refs": ["DV-REQ-001", "DV-SYNTH-001"]
+    },
+    {
+      "allocations": ["weight_rom", "compiler"],
+      "architecture_refs": ["ARCH-6.1", "PPA-3.1"],
+      "basis": "assumed",
+      "id": "SYS-CAP-001",
+      "priority": "must",
+      "statement": "Each product-hypothesis stage shall expose 160 GB usable immutable weight capacity after a separately visible raw-capacity repair/layout reserve.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-PERF-001"]
+    },
+    {
+      "allocations": ["hbm_frontend", "session_table"],
+      "architecture_refs": ["ARCH-6.2", "PPA-3.2"],
+      "basis": "assumed",
+      "id": "SYS-CAP-002",
+      "priority": "must",
+      "statement": "Each product-hypothesis stage shall expose 384 GB physical HBM with at most 90 percent available to checkpoint-adjacent state and KV after runtime reserve.",
+      "status": "specified",
+      "verification_refs": ["DV-HBM-001", "DV-SESSION-001"]
+    },
+    {
+      "allocations": ["session_table", "compiler"],
+      "architecture_refs": ["ARCH-6.3", "ARCH-7.2"],
+      "basis": "derived",
+      "id": "SYS-CAP-003",
+      "priority": "must",
+      "statement": "ROM and HBM legality shall be checked per physical stage and per contiguous layer partition; capacity shall not be pooled across stages.",
+      "status": "specified",
+      "verification_refs": ["DV-SESSION-001", "DV-FW-001"]
+    },
+    {
+      "allocations": ["stage_controller", "compiler"],
+      "architecture_refs": ["ARCH-2.1", "ICD-2.1"],
+      "basis": "derived",
+      "id": "SYS-CAP-004",
+      "priority": "must",
+      "statement": "Architectural encodings shall support up to 16 stages, 128 layers, 1024 experts, top-16 routing, 2^24 sessions, and 1048576 context tokens.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-001", "DV-STATIC-001"]
+    },
+    {
+      "allocations": ["compiler", "stage_controller"],
+      "architecture_refs": ["FW-3.2", "MICRO-3.1"],
+      "basis": "derived",
+      "id": "SYS-CAP-005",
+      "priority": "must",
+      "statement": "The compiler shall reject an image or schedule exceeding any local ROM, HBM, identifier, table, buffer, or schedule-epoch bound before it can be activated.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-NOC-001"]
+    },
+    {
+      "allocations": ["compiler", "weight_rom", "tile_array"],
+      "architecture_refs": ["ARCH-4.1", "FW-3.3"],
+      "basis": "derived",
+      "id": "SYS-NOC-001",
+      "priority": "must",
+      "statement": "Every routed expert matrix shall be striped across the service tile population so data-dependent routing changes local wordline masks, not physical NoC routes.",
+      "status": "specified",
+      "verification_refs": ["DV-TILE-001", "DV-NOC-002"]
+    },
+    {
+      "allocations": ["static_noc", "schedule_store"],
+      "architecture_refs": ["ARCH-5.1", "MICRO-5.1"],
+      "basis": "derived",
+      "id": "SYS-NOC-002",
+      "priority": "must",
+      "statement": "Activation broadcast and partial-sum reduction shall use compile-time schedules with no dynamic route or arbitration decision in the service datapath.",
+      "status": "specified",
+      "verification_refs": ["DV-NOC-001", "DV-FORMAL-001"]
+    },
+    {
+      "allocations": ["schedule_store", "stage_controller"],
+      "architecture_refs": ["ARCH-5.2", "MICRO-5.2"],
+      "basis": "derived",
+      "id": "SYS-NOC-003",
+      "priority": "must",
+      "statement": "Two schedule banks shall support checked shadow loading and atomic epoch-boundary activation only while the affected traffic class is quiescent.",
+      "status": "specified",
+      "verification_refs": ["DV-NOC-001", "DV-CMD-002"]
+    },
+    {
+      "allocations": ["admission_controller", "static_noc"],
+      "architecture_refs": ["ARCH-5.4", "MICRO-5.3"],
+      "basis": "derived",
+      "id": "SYS-NOC-004",
+      "priority": "must",
+      "statement": "Transaction-level sink credit shall be reserved before launch; an admitted static-NoC packet shall never wait for link-level ready and shall be delivered or poison-aborted exactly once.",
+      "status": "specified",
+      "verification_refs": ["DV-NOC-002", "DV-FORMAL-001"]
+    },
+    {
+      "allocations": ["compiler", "static_noc"],
+      "architecture_refs": ["ARCH-5.5", "FW-4.1"],
+      "basis": "derived",
+      "id": "SYS-NOC-005",
+      "priority": "must",
+      "statement": "Schedule activation shall require machine-checked output-conflict freedom, source legality, route termination, sequence continuity, and buffer occupancy within the frozen bound.",
+      "status": "specified",
+      "verification_refs": ["DV-NOC-001", "DV-FW-001"]
+    },
+    {
+      "allocations": ["static_noc"],
+      "architecture_refs": ["ARCH-5.6", "NUM-6.1"],
+      "basis": "derived",
+      "id": "SYS-NOC-006",
+      "priority": "must",
+      "statement": "For a fixed image, schedule, repair map, command stream, and error-free initial state, NoC delivery and reduction order shall be cycle deterministic.",
+      "status": "specified",
+      "verification_refs": ["DV-NOC-002", "DV-NUM-002"]
+    },
+    {
+      "allocations": ["compiler", "static_noc", "repair_controller"],
+      "architecture_refs": ["ARCH-5.7", "RAS-6.3"],
+      "basis": "assumed",
+      "id": "SYS-NOC-007",
+      "priority": "must",
+      "statement": "Permanent tile or link faults shall be handled by offline quarantine and a revalidated schedule; dynamic best-effort detours are prohibited in deterministic service mode.",
+      "status": "specified",
+      "verification_refs": ["DV-NOC-003", "DV-REPAIR-001"]
+    },
+    {
+      "allocations": ["host_interface"],
+      "architecture_refs": ["ICD-2.1", "ICD-2.2"],
+      "basis": "derived",
+      "id": "SYS-IF-001",
+      "priority": "must",
+      "statement": "The host command and response interfaces shall implement the exact ready/valid widths, fields, CRCs, status codes, and ordering in interfaces.json.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-001", "DV-CMD-002"]
+    },
+    {
+      "allocations": ["csr_block"],
+      "architecture_refs": ["ICD-3.1", "ICD-3.2"],
+      "basis": "derived",
+      "id": "SYS-IF-002",
+      "priority": "must",
+      "statement": "The CSR interface and address map shall implement interfaces.json, including write-one-to-clear errors, first-error capture, image identity, and protected schedule/repair windows.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-001", "DV-RAS-001"]
+    },
+    {
+      "allocations": ["hbm_frontend"],
+      "architecture_refs": ["ICD-4.1", "ARCH-6.2"],
+      "basis": "derived",
+      "id": "SYS-IF-003",
+      "priority": "must",
+      "statement": "The public HBM abstraction shall implement tagged requests and responses, in-order beats within a tag, declared error status, and no assumption about licensed PHY timing.",
+      "status": "specified",
+      "verification_refs": ["DV-HBM-001", "DV-RESET-001"]
+    },
+    {
+      "allocations": ["stage_link"],
+      "architecture_refs": ["ICD-5.1", "ARCH-7.3"],
+      "basis": "derived",
+      "id": "SYS-IF-004",
+      "priority": "must",
+      "statement": "The stage-link abstraction shall preserve NoC flit content, add packet CRC32C, use packet credits, and retry at most twice before deterministic abort.",
+      "status": "specified",
+      "verification_refs": ["DV-LINK-001", "DV-RAS-001"]
+    },
+    {
+      "allocations": ["telemetry", "interrupt_controller"],
+      "architecture_refs": ["ICD-7.1", "RAS-4.1"],
+      "basis": "derived",
+      "id": "SYS-IF-005",
+      "priority": "must",
+      "statement": "Fatal and uncorrectable telemetry shall be lossless until acknowledged; correctable informational events may be counted and coalesced without losing first-error evidence.",
+      "status": "specified",
+      "verification_refs": ["DV-RAS-001", "DV-RAS-002"]
+    },
+    {
+      "allocations": ["all_interfaces"],
+      "architecture_refs": ["ICD-1.2", "ICD-8.1"],
+      "basis": "derived",
+      "id": "SYS-IF-006",
+      "priority": "must",
+      "statement": "A producer shall hold valid payload stable while stalled on any ready/valid interface, and no combinational path shall run from a downstream ready input to an upstream valid output across a module boundary.",
+      "status": "specified",
+      "verification_refs": ["DV-TILE-004", "DV-STATIC-001"]
+    },
+    {
+      "allocations": ["host_interface", "csr_block"],
+      "architecture_refs": ["ICD-2.3", "FW-6.1"],
+      "basis": "derived",
+      "id": "SYS-IF-007",
+      "priority": "must",
+      "statement": "Reserved command and register bits shall read as zero and be written as zero; incompatible ABI major versions shall be rejected and minor versions shall preserve prior field meanings.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-001", "DV-FW-001"]
+    },
+    {
+      "allocations": ["format_decode", "mac_array", "compiler"],
+      "architecture_refs": ["NUM-2.1", "NUM-3.1"],
+      "basis": "published",
+      "id": "SYS-NUM-001",
+      "priority": "must",
+      "statement": "The target numerical profile shall support packed MXFP4 E2M1 routed weights with E8M0 block scales, FP8 E4M3FN dense weights, BF16 architectural activations, and FP32 partial accumulation as normatively encoded.",
+      "status": "specified",
+      "verification_refs": ["DV-NUM-001", "DV-NUM-002"]
+    },
+    {
+      "allocations": ["mac_array", "reduction_tree"],
+      "architecture_refs": ["NUM-4.1", "NUM-6.1"],
+      "basis": "derived",
+      "id": "SYS-NUM-002",
+      "priority": "must",
+      "statement": "Conversions and architectural results shall use round-to-nearest ties-to-even, defined saturation/NaN rules, and the fixed ascending lane/tile reduction order.",
+      "status": "specified",
+      "verification_refs": ["DV-NUM-001", "DV-NUM-002"]
+    },
+    {
+      "allocations": ["format_decode", "stage_controller"],
+      "architecture_refs": ["NUM-5.1", "RAS-4.2"],
+      "basis": "derived",
+      "id": "SYS-NUM-003",
+      "priority": "must",
+      "statement": "Reserved E8M0, malformed packed data, detected ROM corruption, and unsupported numeric modes shall poison and abort the affected transaction rather than silently substitute a value.",
+      "status": "specified",
+      "verification_refs": ["DV-NUM-001", "DV-RAS-001"]
+    },
+    {
+      "allocations": ["public_rtl", "reports"],
+      "architecture_refs": ["NUM-8.1", "PPA-1.2"],
+      "basis": "derived",
+      "id": "SYS-NUM-004",
+      "priority": "must",
+      "statement": "An integer-surrogate DV mode may reduce public-tool cost but shall use a distinct mode ID and shall not count as target-format numerical closure.",
+      "status": "specified",
+      "verification_refs": ["DV-NUM-001", "DV-REQ-001"]
+    },
+    {
+      "allocations": ["compiler", "format_decode"],
+      "architecture_refs": ["NUM-2.2", "FW-3.3"],
+      "basis": "derived",
+      "id": "SYS-NUM-005",
+      "priority": "must",
+      "statement": "The image compiler shall canonicalize checkpoint-specific tensor order and nibble packing into the internal layout before mask data and expected signatures are emitted.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-NUM-001"]
+    },
+    {
+      "allocations": ["mac_array", "reduction_tree"],
+      "architecture_refs": ["NUM-6.2", "MICRO-4.3"],
+      "basis": "derived",
+      "id": "SYS-NUM-006",
+      "priority": "must",
+      "statement": "Backpressure, repaired routing, and legal clock throttling shall not change numerical ordering or bits for an error-free transaction.",
+      "status": "specified",
+      "verification_refs": ["DV-NUM-002", "DV-POWER-001"]
+    },
+    {
+      "allocations": ["host_interface", "static_noc", "tile_interfaces", "telemetry"],
+      "architecture_refs": ["RAS-2.1", "ICD-1.3"],
+      "basis": "derived",
+      "id": "SYS-RAS-001",
+      "priority": "must",
+      "statement": "Host, CSR, NoC, tile, and telemetry records shall use CRC16-CCITT with the frozen initialization, reflection, and coverage rules; stage packets shall additionally use CRC32C.",
+      "status": "specified",
+      "verification_refs": ["DV-RAS-001", "DV-LINK-001"]
+    },
+    {
+      "allocations": ["sram_macros", "fifo_memories"],
+      "architecture_refs": ["RAS-2.2", "MICRO-8.1"],
+      "basis": "assumed",
+      "id": "SYS-RAS-002",
+      "priority": "must",
+      "statement": "Architectural SRAM and FIFO storage shall use SECDED per 64 data bits or an equally strong documented code, correct single-bit errors, and poison on detected uncorrectable errors.",
+      "status": "specified",
+      "verification_refs": ["DV-RAS-001", "DV-RAS-002"]
+    },
+    {
+      "allocations": ["weight_rom", "rom_bist"],
+      "architecture_refs": ["RAS-2.3", "RAS-7.2"],
+      "basis": "assumed",
+      "id": "SYS-RAS-003",
+      "priority": "must",
+      "statement": "ROM content shall be checked by per-block CRC32C during service and by full-address signature/BIST before enable; a mismatch shall prevent or abort inference.",
+      "status": "specified",
+      "verification_refs": ["DV-RAS-001", "DV-DFT-001"]
+    },
+    {
+      "allocations": ["stage_controller", "poison_network"],
+      "architecture_refs": ["RAS-4.2", "MICRO-3.4"],
+      "basis": "derived",
+      "id": "SYS-RAS-004",
+      "priority": "must",
+      "statement": "A detected uncorrectable data-path error shall contain updates to the affected transaction, propagate poison, emit one terminal error, and leave unrelated sessions serviceable when isolation permits.",
+      "status": "specified",
+      "verification_refs": ["DV-RAS-002", "DV-STAGE-001"]
+    },
+    {
+      "allocations": ["watchdog", "stage_controller"],
+      "architecture_refs": ["RAS-4.3", "CRP-5.2"],
+      "basis": "assumed",
+      "id": "SYS-RAS-005",
+      "priority": "must",
+      "statement": "Programmable watchdogs shall detect bounded command, NoC, HBM, link, BIST, and quiesce timeouts and transition through abort to SAFE when recovery fails.",
+      "status": "specified",
+      "verification_refs": ["DV-RAS-002", "DV-POWER-001"]
+    },
+    {
+      "allocations": ["repair_controller", "compiler"],
+      "architecture_refs": ["RAS-6.1", "RAS-6.3"],
+      "basis": "assumed",
+      "id": "SYS-RAS-006",
+      "priority": "must",
+      "statement": "ROM row/column remaps and tile/link quarantine maps shall be range checked, CRC protected, immutable while active, and reflected in image/schedule compatibility checks.",
+      "status": "specified",
+      "verification_refs": ["DV-REPAIR-001", "DV-FW-001"]
+    },
+    {
+      "allocations": ["image_identity", "host_interface"],
+      "architecture_refs": ["RAS-5.1", "FW-2.1"],
+      "basis": "derived",
+      "id": "SYS-RAS-007",
+      "priority": "must",
+      "statement": "The complete SHA-256 image identity and active schedule/repair epoch shall be software readable and included in diagnostic capture.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-RAS-001"]
+    },
+    {
+      "allocations": ["telemetry", "csr_block"],
+      "architecture_refs": ["RAS-4.1", "ICD-7.1"],
+      "basis": "derived",
+      "id": "SYS-RAS-008",
+      "priority": "must",
+      "statement": "First-error state shall be sticky until explicit clear and shall capture severity, source, epoch, transaction, timestamp, and syndrome without being overwritten by later errors.",
+      "status": "specified",
+      "verification_refs": ["DV-RAS-001", "DV-CMD-001"]
+    },
+    {
+      "allocations": ["repair_controller", "telemetry"],
+      "architecture_refs": ["RAS-6.4", "PPA-5.2"],
+      "basis": "assumed",
+      "id": "SYS-RAS-009",
+      "priority": "must",
+      "statement": "The system shall expose degraded capacity, bandwidth, disabled resources, and repair exhaustion; it shall never present nominal capacity after repair makes it unavailable.",
+      "status": "specified",
+      "verification_refs": ["DV-NOC-003", "DV-SESSION-001"]
+    },
+    {
+      "allocations": ["diagnostic_controller"],
+      "architecture_refs": ["RAS-7.1", "ICD-7.2"],
+      "basis": "derived",
+      "id": "SYS-RAS-010",
+      "priority": "must",
+      "statement": "Diagnostics shall provide non-destructive heartbeat, counter, loopback, BIST signature, repair-map, and error-log access without exposing a weight-write mechanism.",
+      "status": "specified",
+      "verification_refs": ["DV-DFT-001", "DV-RAS-001"]
+    },
+    {
+      "allocations": ["clock_reset_controller"],
+      "architecture_refs": ["CRP-2.1", "CRP-3.1"],
+      "basis": "derived",
+      "id": "SYS-PWR-001",
+      "priority": "must",
+      "statement": "The design shall implement distinct always-on configuration, core, HBM, stage-link, and test clock domains with only inventoried crossings.",
+      "status": "specified",
+      "verification_refs": ["DV-RESET-001", "DV-STATIC-001"]
+    },
+    {
+      "allocations": ["clock_reset_controller", "all_domains"],
+      "architecture_refs": ["CRP-3.2", "CRP-3.3"],
+      "basis": "derived",
+      "id": "SYS-PWR-002",
+      "priority": "must",
+      "statement": "Power-on reset shall assert asynchronously and deassert synchronously in every domain; warm reset shall quiesce or terminally abort in-flight work before architectural state is cleared.",
+      "status": "specified",
+      "verification_refs": ["DV-RESET-001", "DV-CMD-002"]
+    },
+    {
+      "allocations": ["power_controller"],
+      "architecture_refs": ["CRP-4.1", "CRP-4.2"],
+      "basis": "derived",
+      "id": "SYS-PWR-003",
+      "priority": "must",
+      "statement": "The architectural power FSM shall implement OFF, STANDBY, IDLE, ACTIVE, THROTTLED, and SAFE with legal transition guards, isolation, and visible state.",
+      "status": "specified",
+      "verification_refs": ["DV-POWER-001", "DV-FORMAL-001"]
+    },
+    {
+      "allocations": ["power_controller", "thermal_monitor", "stage_controller"],
+      "architecture_refs": ["CRP-5.1", "CRP-5.2"],
+      "basis": "assumed",
+      "id": "SYS-PWR-004",
+      "priority": "must",
+      "statement": "Clock throttling shall preserve protocol and numerical behavior; an over-limit or invalid sensor condition shall quiesce, abort if required, and enter SAFE.",
+      "status": "specified",
+      "verification_refs": ["DV-POWER-001", "DV-NUM-002"]
+    },
+    {
+      "allocations": ["cdc_wrappers"],
+      "architecture_refs": ["CRP-2.2", "CRP-6.1"],
+      "basis": "derived",
+      "id": "SYS-PWR-005",
+      "priority": "must",
+      "statement": "Multi-bit asynchronous traffic shall cross through asynchronous FIFOs or closed-loop handshakes; single-bit status shall use qualified synchronizers and reconvergence shall be reviewed.",
+      "status": "specified",
+      "verification_refs": ["DV-RESET-001", "DV-STATIC-001"]
+    },
+    {
+      "allocations": ["clock_gates", "power_controller"],
+      "architecture_refs": ["CRP-4.3", "PPA-6.1"],
+      "basis": "assumed",
+      "id": "SYS-PWR-006",
+      "priority": "must",
+      "statement": "Clock gating shall use integrated-gate semantics with test override and no data-dependent glitch; the public reference shall not infer unmodeled power-gated retention behavior.",
+      "status": "specified",
+      "verification_refs": ["DV-POWER-001", "DV-STATIC-001"]
+    },
+    {
+      "allocations": ["dft_controller", "scan_wrappers"],
+      "architecture_refs": ["RAS-8.1", "RAS-8.2"],
+      "basis": "assumed",
+      "id": "SYS-DFT-001",
+      "priority": "must",
+      "statement": "Every scannable digital sequential element shall belong to a declared scan domain or an individually justified exclusion; clock and reset controls shall support safe shift and capture.",
+      "status": "specified",
+      "verification_refs": ["DV-DFT-001", "DV-STATIC-001"]
+    },
+    {
+      "allocations": ["rom_bist", "sram_bist", "link_bist"],
+      "architecture_refs": ["RAS-7.2", "RAS-8.3"],
+      "basis": "assumed",
+      "id": "SYS-DFT-002",
+      "priority": "must",
+      "statement": "ROM, SRAM/FIFO, NoC links, and stage links shall have independently invocable BIST with bounded completion, signatures, fault status, and diagnostic localization.",
+      "status": "specified",
+      "verification_refs": ["DV-DFT-001", "DV-RAS-002"]
+    },
+    {
+      "allocations": ["test_access_port", "instrument_network"],
+      "architecture_refs": ["RAS-8.4", "ICD-8.2"],
+      "basis": "published",
+      "id": "SYS-DFT-003",
+      "priority": "must",
+      "statement": "The product boundary shall reserve IEEE 1149.1-compatible JTAG and IEEE 1687-compatible instrument access; the public proxy shall model their register-level behavior without claiming licensed insertion closure.",
+      "status": "specified",
+      "verification_refs": ["DV-DFT-001", "DV-REQ-001"]
+    },
+    {
+      "allocations": ["dft_flow"],
+      "architecture_refs": ["RAS-8.5", "DV-8.1"],
+      "basis": "assumed",
+      "id": "SYS-DFT-004",
+      "priority": "must",
+      "statement": "Target-node signoff goals shall be at least 99 percent stuck-at and 95 percent transition fault coverage after reviewed exclusions; public tools shall report this as an external gap when ATPG cannot establish it.",
+      "status": "specified",
+      "verification_refs": ["DV-DFT-001", "DV-COVERAGE-001"]
+    },
+    {
+      "allocations": ["dft_controller", "boot_controller"],
+      "architecture_refs": ["RAS-8.6", "FW-5.1"],
+      "basis": "derived",
+      "id": "SYS-DFT-005",
+      "priority": "must",
+      "statement": "Inference enable shall remain blocked until mandatory boot BIST and repair loading complete successfully; test mode shall force inference interfaces inactive.",
+      "status": "specified",
+      "verification_refs": ["DV-DFT-001", "DV-FW-001"]
+    },
+    {
+      "allocations": ["image_compiler"],
+      "architecture_refs": ["FW-2.1", "FW-3.1"],
+      "basis": "derived",
+      "id": "SYS-FW-001",
+      "priority": "must",
+      "statement": "Given identical pinned checkpoint metadata, compiler version, parameters, and defect map, the image compiler shall emit byte-identical manifests, canonical layouts, schedules, and expected signatures.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-REQ-001"]
+    },
+    {
+      "allocations": ["image_manifest", "boot_controller"],
+      "architecture_refs": ["FW-2.2", "FW-5.1"],
+      "basis": "derived",
+      "id": "SYS-FW-002",
+      "priority": "must",
+      "statement": "The manifest shall bind source revision, tensor inventory hashes, numeric profile, layer partition, ROM regions, schedules, repair compatibility, ABI, tool version, and SHA-256 image identity.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-CMD-001"]
+    },
+    {
+      "allocations": ["schedule_compiler"],
+      "architecture_refs": ["FW-4.1", "ARCH-5.5"],
+      "basis": "derived",
+      "id": "SYS-FW-003",
+      "priority": "must",
+      "statement": "The schedule compiler shall emit a proof certificate covering route endpoints, output conflicts, per-slot sources, sequence continuity, maximum occupancy, quarantined resources, and schedule CRC.",
+      "status": "specified",
+      "verification_refs": ["DV-NOC-001", "DV-FW-001"]
+    },
+    {
+      "allocations": ["repair_compiler", "boot_controller"],
+      "architecture_refs": ["FW-4.2", "RAS-6.2"],
+      "basis": "derived",
+      "id": "SYS-FW-004",
+      "priority": "must",
+      "statement": "A repair map shall include device identity, monotonic generation, resource remaps, quarantine set, capacity impact, CRC, and compatibility hash before activation.",
+      "status": "specified",
+      "verification_refs": ["DV-REPAIR-001", "DV-FW-001"]
+    },
+    {
+      "allocations": ["boot_controller", "firmware"],
+      "architecture_refs": ["FW-5.1", "FW-5.2"],
+      "basis": "derived",
+      "id": "SYS-FW-005",
+      "priority": "must",
+      "statement": "Boot shall sequence identity discovery, clock/reset qualification, defect-map load, schedule validation, memory/link/ROM BIST, capacity publication, and queue enable, failing closed into diagnostic SAFE.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-POWER-001"]
+    },
+    {
+      "allocations": ["firmware", "host_interface"],
+      "architecture_refs": ["FW-6.1", "ICD-2.3"],
+      "basis": "derived",
+      "id": "SYS-FW-006",
+      "priority": "must",
+      "statement": "Firmware and host software shall negotiate ABI major/minor, discover capabilities and degraded resources, and preserve deterministic command semantics across compatible minor revisions.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-001", "DV-FW-001"]
+    },
+    {
+      "allocations": ["weight_rom", "test_controls"],
+      "architecture_refs": ["RAS-5.2", "FW-2.3"],
+      "basis": "derived",
+      "id": "SYS-SEC-001",
+      "priority": "must",
+      "statement": "No host, debug, test, repair, or firmware transaction shall provide an architectural path to modify logical mask-ROM contents.",
+      "status": "specified",
+      "verification_refs": ["DV-TILE-002", "DV-DFT-001"]
+    },
+    {
+      "allocations": ["firmware", "boot_controller"],
+      "architecture_refs": ["FW-2.2", "RAS-5.1"],
+      "basis": "derived",
+      "id": "SYS-SEC-002",
+      "priority": "must",
+      "statement": "Public artifacts shall use SHA-256 for identity and integrity binding; authenticity and secure-boot roots are external macros and shall not be claimed by an unsigned public manifest.",
+      "status": "specified",
+      "verification_refs": ["DV-FW-001", "DV-REQ-001"]
+    },
+    {
+      "allocations": ["host_security_boundary"],
+      "architecture_refs": ["ARCH-9.2", "ICD-2.4"],
+      "basis": "assumed",
+      "id": "SYS-SEC-003",
+      "priority": "must",
+      "statement": "The public-reference interface assumes a trusted host and does not claim tenant confidentiality, side-channel resistance, secure key storage, or hostile DMA isolation.",
+      "status": "specified",
+      "verification_refs": ["DV-REQ-001"]
+    },
+    {
+      "allocations": ["diagnostic_controller", "csr_block"],
+      "architecture_refs": ["RAS-5.3", "ICD-7.2"],
+      "basis": "derived",
+      "id": "SYS-SEC-004",
+      "priority": "must",
+      "statement": "Diagnostic access shall expose signatures, syndromes, counters, and repair metadata but shall not expose arbitrary resident session payloads through the normal CSR space.",
+      "status": "specified",
+      "verification_refs": ["DV-CMD-001", "DV-RAS-001"]
+    },
+    {
+      "allocations": ["public_rtl"],
+      "architecture_refs": ["MICRO-1.2", "PPA-1.2"],
+      "basis": "derived",
+      "id": "SYS-IMP-001",
+      "priority": "must",
+      "statement": "The public RTL shall be parameterized and shall elaborate legal reduced DV configurations and architectural maxima where resource limits permit, with compile-time rejection of illegal combinations.",
+      "status": "specified",
+      "verification_refs": ["DV-STATIC-001", "DV-COVERAGE-001"]
+    },
+    {
+      "allocations": ["rtl_process"],
+      "architecture_refs": ["CC-2.1", "DV-2.1"],
+      "basis": "derived",
+      "id": "SYS-IMP-002",
+      "priority": "must",
+      "statement": "Each implementation block shall be preceded by a requirement allocation, interface contract, reference model, assertions, and planned verification entry.",
+      "status": "specified",
+      "verification_refs": ["DV-REQ-001", "DV-STATIC-001"]
+    },
+    {
+      "allocations": ["macro_wrappers"],
+      "architecture_refs": ["ARCH-9.1", "MICRO-9.1"],
+      "basis": "derived",
+      "id": "SYS-IMP-003",
+      "priority": "must",
+      "statement": "ROM, SRAM, HBM, PLL, PHY, sensor, eFuse/OTP, security-root, and scan-compression dependencies shall be isolated behind behavioral wrappers with explicit timing, integrity, reset, and error contracts.",
+      "status": "specified",
+      "verification_refs": ["DV-STATIC-001", "DV-SYNTH-001"]
+    },
+    {
+      "allocations": ["public_rtl"],
+      "architecture_refs": ["MICRO-1.3", "DV-3.1"],
+      "basis": "derived",
+      "id": "SYS-IMP-004",
+      "priority": "must",
+      "statement": "Synthesizable RTL shall contain no unexplained latch, combinational loop, undriven net, multiply driven net, width/sign truncation, or simulation/synthesis semantic divergence.",
+      "status": "specified",
+      "verification_refs": ["DV-STATIC-001", "DV-SYNTH-001"]
+    },
+    {
+      "allocations": ["build_system"],
+      "architecture_refs": ["CC-3.1", "DV-9.1"],
+      "basis": "derived",
+      "id": "SYS-IMP-005",
+      "priority": "must",
+      "statement": "Builds and regressions shall capture tool versions, parameters, seeds, commands, input hashes, logs, and failure artifacts and shall not depend on NDA or non-redistributable PDK collateral.",
+      "status": "specified",
+      "verification_refs": ["DV-REQ-001", "DV-STATIC-001"]
+    },
+    {
+      "allocations": ["verification"],
+      "architecture_refs": ["DV-2.1", "CC-2.2"],
+      "basis": "derived",
+      "id": "SYS-VER-001",
+      "priority": "must",
+      "statement": "Every must-have requirement shall trace to architecture allocation, implementation allocation, and at least one planned check, then to passing evidence before verification closure.",
+      "status": "specified",
+      "verification_refs": ["DV-REQ-001", "DV-COVERAGE-001"]
+    },
+    {
+      "allocations": ["verification"],
+      "architecture_refs": ["DV-3.1", "DV-4.1"],
+      "basis": "derived",
+      "id": "SYS-VER-002",
+      "priority": "must",
+      "statement": "RTL shall pass at least two independent parser/lint frontends and two simulators; tractable control and protocol blocks shall have formal safety and non-vacuous cover checks with two solver configurations.",
+      "status": "specified",
+      "verification_refs": ["DV-STATIC-001", "DV-FORMAL-001"]
+    },
+    {
+      "allocations": ["verification"],
+      "architecture_refs": ["DV-5.1", "DV-6.1"],
+      "basis": "derived",
+      "id": "SYS-VER-003",
+      "priority": "must",
+      "statement": "Directed, constrained-random, differential, reset, backpressure, malformed-input, long-running, parameter, and numerical-corner tests shall compare against executable reference models.",
+      "status": "specified",
+      "verification_refs": ["DV-TILE-003", "DV-PIPE-001", "DV-RESET-001"]
+    },
+    {
+      "allocations": ["verification"],
+      "architecture_refs": ["DV-7.1", "RAS-9.1"],
+      "basis": "derived",
+      "id": "SYS-VER-004",
+      "priority": "must",
+      "statement": "The verification campaign shall inject every planned transient and permanent fault class and demonstrate detection, correction, containment, retry, degradation, or safe terminal failure as specified.",
+      "status": "specified",
+      "verification_refs": ["DV-RAS-002", "DV-REPAIR-001"]
+    },
+    {
+      "allocations": ["verification"],
+      "architecture_refs": ["DV-8.1", "DV-8.2"],
+      "basis": "assumed",
+      "id": "SYS-VER-005",
+      "priority": "must",
+      "statement": "Verification closure shall meet 95 percent line, 90 percent branch, 85 percent toggle, 100 percent must-bin functional, 100 percent planned formal, and 100 percent requirement-evidence targets or carry individually owned reviewed exclusions.",
+      "status": "specified",
+      "verification_refs": ["DV-COVERAGE-001", "DV-FORMAL-001"]
+    },
+    {
+      "allocations": ["verification", "synthesis"],
+      "architecture_refs": ["DV-10.1", "CC-2.3"],
+      "basis": "derived",
+      "id": "SYS-VER-006",
+      "priority": "must",
+      "statement": "Implementation synthesis shall begin only after zero open severity-1/2 bugs, zero unexplained static errors, passing regressions and proofs, reviewed CDC/RDC, closed must bins, and an owned waiver ledger for the frozen RTL baseline.",
+      "status": "specified",
+      "verification_refs": ["DV-COVERAGE-001", "DV-SYNTH-001"]
+    },
+    {
+      "allocations": ["all_artifacts"],
+      "architecture_refs": ["ARCH-1.2", "PPA-1.2"],
+      "basis": "derived",
+      "id": "SYS-EVD-001",
+      "priority": "must",
+      "statement": "Every quantitative or factual claim shall retain one of measured, published, derived, assumed, simulated, or synthetic evidence classes and shall name the replacement evidence needed for product use.",
+      "status": "specified",
+      "verification_refs": ["DV-REQ-001"]
+    }
+  ],
+  "schema_version": 1
+}
