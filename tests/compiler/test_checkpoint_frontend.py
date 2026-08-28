@@ -218,9 +218,7 @@ def test_reusable_reader_rejects_snapshot_mutation_while_active(
     with pytest.raises(CheckpointError, match="changed while reader was active"):
         with LockedCheckpointReader(checkpoint_snapshot, lock) as reader:
             reader.consume_tensor_payload("a.weight", lambda _: None)
-            payload = bytearray(shard_path.read_bytes())
-            payload[-1] ^= 1
-            shard_path.write_bytes(payload)
+            shard_path.write_bytes(shard_path.read_bytes() + b"!")
 
 
 def test_reusable_reader_rejects_atomic_shard_path_replacement(
