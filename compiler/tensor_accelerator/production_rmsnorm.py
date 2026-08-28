@@ -34,10 +34,10 @@ from .production_capability import (
     load_production_capability,
 )
 from .production_command import (
-    ABI_MINOR,
     Engine,
     Opcode,
     ProductionCommand,
+    RMSNORM_ABI_MINOR,
     disassemble,
     encode,
 )
@@ -241,7 +241,7 @@ def _problem(
     if qualification["weight"]["shape"] != [width]:
         raise ProductionRMSNormBuildError("qualification RMSNorm width differs")
     if (
-        capability.command_abi_minor != ABI_MINOR
+        capability.command_abi_minor != RMSNORM_ABI_MINOR
         or capability.vector_engine is None
         or capability.vector_engine.max_rows < 1
         or capability.vector_engine.max_width < width

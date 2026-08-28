@@ -1,0 +1,108 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qkv_independent_check_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "check_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "command_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "expected_counters": {
+      "$ref": "qkv_expectations_v1.schema.json#/$defs/counters"
+    },
+    "graph_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "hbm_image_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "hbm_image_size_bytes": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "kernel_ir_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "physical_plan_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "qualification_report_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "reconstructed_sources": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "payload_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "role": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "size_bytes": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "source_tensor": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "payload_sha256",
+          "role",
+          "size_bytes",
+          "source_tensor"
+        ],
+        "type": "object"
+      },
+      "maxItems": 8,
+      "minItems": 8,
+      "type": "array"
+    },
+    "request_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qkv_independent_check.v1"
+    },
+    "source_lock_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "pass"
+    }
+  },
+  "required": [
+    "capability_id",
+    "check_id",
+    "command_count",
+    "expected_counters",
+    "graph_id",
+    "hbm_image_sha256",
+    "hbm_image_size_bytes",
+    "kernel_ir_id",
+    "physical_plan_id",
+    "qualification_report_id",
+    "reconstructed_sources",
+    "request_id",
+    "schema",
+    "source_lock_id",
+    "status"
+  ],
+  "title": "Independent Q/K/V deployment check v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

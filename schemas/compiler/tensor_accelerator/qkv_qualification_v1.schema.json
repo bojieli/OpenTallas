@@ -1,0 +1,582 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qkv_qualification_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accounting": {
+      "additionalProperties": false,
+      "properties": {
+        "coefficient_table_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "epsilon_additions": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "final_weight_multiplications": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "input_square_multiplications": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "mean_divisions": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "normalization_multiplications": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "projection_accumulation_additions": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "projection_multiplications": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "reciprocal_square_roots": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "reduction_additions": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "rope_additions": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "rope_multiplications": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "coefficient_table_bytes",
+        "epsilon_additions",
+        "final_weight_multiplications",
+        "input_square_multiplications",
+        "mean_divisions",
+        "normalization_multiplications",
+        "projection_accumulation_additions",
+        "projection_multiplications",
+        "reciprocal_square_roots",
+        "reduction_additions",
+        "rope_additions",
+        "rope_multiplications"
+      ],
+      "type": "object"
+    },
+    "checkpoint_lock_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "embedding_row_payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "position_id": {
+          "maximum": 7999,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "token_id": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "embedding_row_payload_sha256",
+        "position_id",
+        "token_id"
+      ],
+      "type": "object"
+    },
+    "intermediates": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_norm": {
+          "$ref": "#/$defs/rms_payload"
+        },
+        "k_norm": {
+          "$ref": "#/$defs/rms_payload"
+        },
+        "k_raw": {
+          "$ref": "#/$defs/payload"
+        },
+        "q_norm": {
+          "$ref": "#/$defs/rms_payload"
+        },
+        "q_raw": {
+          "$ref": "#/$defs/payload"
+        }
+      },
+      "required": [
+        "attention_norm",
+        "k_norm",
+        "k_raw",
+        "q_norm",
+        "q_raw"
+      ],
+      "type": "object"
+    },
+    "numeric_contracts": {
+      "const": [
+        "bf16_payload_lookup_v1",
+        "bf16_bf16_fp32_sequential_rne_v1",
+        "qwen3_rmsnorm_fp32_bf16_v1",
+        "qwen3_rope_fp32_bf16_v1"
+      ]
+    },
+    "official_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "implementation": {
+          "const": "pinned_transformers_qwen3_cpu_bf16"
+        },
+        "known_answer_payload_sha256": {
+          "additionalProperties": false,
+          "properties": {
+            "attention_norm": {
+              "$ref": "#/$defs/sha256"
+            },
+            "k_norm": {
+              "$ref": "#/$defs/sha256"
+            },
+            "k_raw": {
+              "$ref": "#/$defs/sha256"
+            },
+            "k_rotary": {
+              "$ref": "#/$defs/sha256"
+            },
+            "q_norm": {
+              "$ref": "#/$defs/sha256"
+            },
+            "q_raw": {
+              "$ref": "#/$defs/sha256"
+            },
+            "q_rotary": {
+              "$ref": "#/$defs/sha256"
+            },
+            "v": {
+              "$ref": "#/$defs/sha256"
+            }
+          },
+          "required": [
+            "attention_norm",
+            "k_norm",
+            "k_raw",
+            "k_rotary",
+            "q_norm",
+            "q_raw",
+            "q_rotary",
+            "v"
+          ],
+          "type": "object"
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "status": {
+          "const": "exact_match"
+        }
+      },
+      "required": [
+        "implementation",
+        "known_answer_payload_sha256",
+        "source_sha256",
+        "status"
+      ],
+      "type": "object"
+    },
+    "outputs": {
+      "additionalProperties": false,
+      "properties": {
+        "k_rotary": {
+          "$ref": "#/$defs/payload"
+        },
+        "q_rotary": {
+          "$ref": "#/$defs/payload"
+        },
+        "v": {
+          "$ref": "#/$defs/payload"
+        }
+      },
+      "required": [
+        "k_rotary",
+        "q_rotary",
+        "v"
+      ],
+      "type": "object"
+    },
+    "projection_saturated_element_count": {
+      "$ref": "#/$defs/qkv_counts"
+    },
+    "report_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "rmsnorm_saturated_element_count": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_norm_normalized": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "attention_norm_output": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "k_normalized": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "k_output": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "q_normalized": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "q_output": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "attention_norm_normalized",
+        "attention_norm_output",
+        "k_normalized",
+        "k_output",
+        "q_normalized",
+        "q_output"
+      ],
+      "type": "object"
+    },
+    "rope": {
+      "additionalProperties": false,
+      "properties": {
+        "addition_saturated_element_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "coefficient_row_payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "coefficient_table_payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "coefficient_table_shape": {
+          "items": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "inverse_frequency_binary32_payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "multiplication_saturated_element_count": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "addition_saturated_element_count",
+        "coefficient_row_payload_sha256",
+        "coefficient_table_payload_sha256",
+        "coefficient_table_shape",
+        "inverse_frequency_binary32_payload_sha256",
+        "multiplication_saturated_element_count"
+      ],
+      "type": "object"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qkv_qualification.v1"
+    },
+    "selected_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "output": {
+          "$ref": "#/$defs/qkv_samples"
+        },
+        "projection": {
+          "$ref": "#/$defs/qkv_projection_samples"
+        },
+        "status": {
+          "const": "exact_match"
+        }
+      },
+      "required": [
+        "output",
+        "projection",
+        "status"
+      ],
+      "type": "object"
+    },
+    "sources": {
+      "additionalProperties": false,
+      "properties": {
+        "embedding": {
+          "$ref": "#/$defs/source"
+        },
+        "input_norm_weight": {
+          "$ref": "#/$defs/source"
+        },
+        "k_norm_weight": {
+          "$ref": "#/$defs/source"
+        },
+        "k_projection_weight": {
+          "$ref": "#/$defs/source"
+        },
+        "q_norm_weight": {
+          "$ref": "#/$defs/source"
+        },
+        "q_projection_weight": {
+          "$ref": "#/$defs/source"
+        },
+        "v_projection_weight": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "required": [
+        "embedding",
+        "input_norm_weight",
+        "k_norm_weight",
+        "k_projection_weight",
+        "q_norm_weight",
+        "q_projection_weight",
+        "v_projection_weight"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "const": "pass"
+    }
+  },
+  "required": [
+    "accounting",
+    "checkpoint_lock_id",
+    "input",
+    "intermediates",
+    "numeric_contracts",
+    "official_reference",
+    "outputs",
+    "projection_saturated_element_count",
+    "report_id",
+    "rmsnorm_saturated_element_count",
+    "rope",
+    "schema",
+    "selected_reference",
+    "sources",
+    "status"
+  ],
+  "title": "Real-checkpoint Q/K/V qualification v1",
+  "type": "object",
+  "$defs": {
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "$ref": "#/$defs/shape"
+        }
+      },
+      "required": [
+        "payload_sha256",
+        "shape"
+      ],
+      "type": "object"
+    },
+    "qkv_counts": {
+      "additionalProperties": false,
+      "properties": {
+        "k": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "q": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "v": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "k",
+        "q",
+        "v"
+      ],
+      "type": "object"
+    },
+    "qkv_projection_samples": {
+      "additionalProperties": false,
+      "properties": {
+        "k": {
+          "$ref": "#/$defs/projection_sample"
+        },
+        "q": {
+          "$ref": "#/$defs/projection_sample"
+        },
+        "v": {
+          "$ref": "#/$defs/projection_sample"
+        }
+      },
+      "required": [
+        "k",
+        "q",
+        "v"
+      ],
+      "type": "object"
+    },
+    "qkv_samples": {
+      "additionalProperties": false,
+      "properties": {
+        "k": {
+          "$ref": "#/$defs/sample"
+        },
+        "q": {
+          "$ref": "#/$defs/sample"
+        },
+        "v": {
+          "$ref": "#/$defs/sample"
+        }
+      },
+      "required": [
+        "k",
+        "q",
+        "v"
+      ],
+      "type": "object"
+    },
+    "projection_sample": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {
+          "items": {
+            "maximum": 65535,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "rows": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "codes",
+        "rows"
+      ],
+      "type": "object"
+    },
+    "rms_payload": {
+      "additionalProperties": false,
+      "properties": {
+        "inverse_rms_binary32_codes_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "mean_square_binary32_codes_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "normalized_payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "$ref": "#/$defs/shape"
+        }
+      },
+      "required": [
+        "inverse_rms_binary32_codes_sha256",
+        "mean_square_binary32_codes_sha256",
+        "normalized_payload_sha256",
+        "payload_sha256",
+        "shape"
+      ],
+      "type": "object"
+    },
+    "sample": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {
+          "items": {
+            "maximum": 65535,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "element_indices": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "codes",
+        "element_indices"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "shape": {
+      "items": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "maxItems": 2,
+      "minItems": 1,
+      "type": "array"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "$ref": "#/$defs/shape"
+        },
+        "tensor": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "payload_sha256",
+        "shape",
+        "tensor"
+      ],
+      "type": "object"
+    }
+  }
+}

@@ -13,7 +13,7 @@
       "additionalProperties": false,
       "properties": {
         "major": {"const": 2},
-        "minor": {"enum": [0, 1]}
+        "minor": {"enum": [0, 1, 2]}
       },
       "required": ["major", "minor"],
       "type": "object"
@@ -137,11 +137,12 @@
       "items": {
         "enum": [
           "bf16_bf16_fp32_sequential_rne_v1",
-          "qwen3_rmsnorm_fp32_bf16_v1"
+          "qwen3_rmsnorm_fp32_bf16_v1",
+          "qwen3_rope_fp32_bf16_v1"
         ]
       },
       "minItems": 1,
-      "maxItems": 2,
+      "maxItems": 3,
       "type": "array",
       "uniqueItems": true
     },
@@ -181,8 +182,34 @@
     "vector_engine": {
       "additionalProperties": false,
       "properties": {
+        "max_key_value_heads": {"minimum": 1, "type": "integer"},
+        "max_query_heads": {"minimum": 1, "type": "integer"},
+        "max_rope_positions": {"minimum": 1, "type": "integer"},
         "max_rows": {"minimum": 1, "type": "integer"},
-        "max_width": {"minimum": 4096, "type": "integer"}
+        "max_width": {"minimum": 4096, "type": "integer"},
+        "rope_head_dim": {"minimum": 2, "type": "integer"}
+      },
+      "dependentRequired": {
+        "max_key_value_heads": [
+          "max_query_heads",
+          "max_rope_positions",
+          "rope_head_dim"
+        ],
+        "max_query_heads": [
+          "max_key_value_heads",
+          "max_rope_positions",
+          "rope_head_dim"
+        ],
+        "max_rope_positions": [
+          "max_key_value_heads",
+          "max_query_heads",
+          "rope_head_dim"
+        ],
+        "rope_head_dim": [
+          "max_key_value_heads",
+          "max_query_heads",
+          "max_rope_positions"
+        ]
       },
       "required": ["max_rows", "max_width"],
       "type": "object"
@@ -224,18 +251,63 @@
         "not": {"required": ["vector_engine"]}
       },
       "else": {
-        "properties": {
-          "qualified_execution_modes": {
-            "const": ["bf16_tensor", "vector_fp32"]
-          },
-          "qualified_numeric_contracts": {
-            "const": [
-              "bf16_bf16_fp32_sequential_rne_v1",
-              "qwen3_rmsnorm_fp32_bf16_v1"
-            ]
+        "if": {
+          "properties": {
+            "command_abi": {
+              "properties": {"minor": {"const": 1}},
+              "required": ["minor"]
+            }
           }
         },
-        "required": ["vector_engine"]
+        "then": {
+          "properties": {
+            "qualified_execution_modes": {
+              "const": ["bf16_tensor", "vector_fp32"]
+            },
+            "qualified_numeric_contracts": {
+              "const": [
+                "bf16_bf16_fp32_sequential_rne_v1",
+                "qwen3_rmsnorm_fp32_bf16_v1"
+              ]
+            },
+            "vector_engine": {
+              "not": {
+                "anyOf": [
+                  {"required": ["max_key_value_heads"]},
+                  {"required": ["max_query_heads"]},
+                  {"required": ["max_rope_positions"]},
+                  {"required": ["rope_head_dim"]}
+                ]
+              }
+            }
+          },
+          "required": ["vector_engine"]
+        },
+        "else": {
+          "properties": {
+            "qualified_execution_modes": {
+              "const": ["bf16_tensor", "vector_fp32"]
+            },
+            "qualified_numeric_contracts": {
+              "const": [
+                "bf16_bf16_fp32_sequential_rne_v1",
+                "qwen3_rmsnorm_fp32_bf16_v1",
+                "qwen3_rope_fp32_bf16_v1"
+              ]
+            },
+            "vector_engine": {
+              "required": [
+                "max_key_value_heads",
+                "max_query_heads",
+                "max_rope_positions",
+                "max_rows",
+                "max_width",
+                "rope_head_dim"
+              ]
+            }
+          },
+          "required": ["vector_engine"]
+        }
       }
     }
   ],

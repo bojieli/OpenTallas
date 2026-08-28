@@ -76,7 +76,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 31
+    assert len(schemas) == 39
     by_name = {
         schema["$id"].rsplit("/", 1)[-1]: schema
         for schema in schemas
@@ -103,6 +103,14 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "physical_plan_v1.schema.json",
         "production_tensor_kernel_ir_v1.schema.json",
         "production_capability_v1.schema.json",
+        "qkv_deployment_v1.schema.json",
+        "qkv_execution_v1.schema.json",
+        "qkv_expectations_v1.schema.json",
+        "qkv_independent_check_v1.schema.json",
+        "qkv_physical_plan_v1.schema.json",
+        "qkv_qualification_v1.schema.json",
+        "qkv_request_v1.schema.json",
+        "qkv_source_lock_v1.schema.json",
         "rmsnorm_deployment_v1.schema.json",
         "rmsnorm_execution_v1.schema.json",
         "rmsnorm_expectations_v1.schema.json",
@@ -178,6 +186,14 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     } - {
         "production_capability_v1.schema.json",
         "production_tensor_kernel_ir_v1.schema.json",
+        "qkv_deployment_v1.schema.json",
+        "qkv_execution_v1.schema.json",
+        "qkv_expectations_v1.schema.json",
+        "qkv_independent_check_v1.schema.json",
+        "qkv_physical_plan_v1.schema.json",
+        "qkv_qualification_v1.schema.json",
+        "qkv_request_v1.schema.json",
+        "qkv_source_lock_v1.schema.json",
         "rmsnorm_deployment_v1.schema.json",
         "rmsnorm_execution_v1.schema.json",
         "rmsnorm_expectations_v1.schema.json",

@@ -34,6 +34,11 @@ from .production_projection_checking import (
     ProductionProjectionCheckError,
     check_projection_candidate,
 )
+from .production_qkv import ProductionQKVBuildError, build_qkv_deployment
+from .production_qkv_checking import (
+    ProductionQKVCheckError,
+    check_qkv_candidate,
+)
 from .production_rmsnorm import (
     ProductionRMSNormBuildError,
     build_rmsnorm_deployment,
@@ -46,6 +51,13 @@ from .qwen3_adapter import (
     Qwen3ProductionAdapterError,
     export_qwen3_production_graph,
     publish_qwen3_production_graph,
+)
+from .qkv_qualification import (
+    QKVQualificationError,
+    load_qkv_qualification,
+    publish_qkv_qualification,
+    qualify_locked_qkv,
+    qualify_qkv_payloads,
 )
 from .rmsnorm_qualification import (
     RMSNormQualificationError,
@@ -67,15 +79,20 @@ __all__ = [
     "ProductionCapabilityError",
     "ProductionProjectionBuildError",
     "ProductionProjectionCheckError",
+    "ProductionQKVBuildError",
+    "ProductionQKVCheckError",
     "ProductionRMSNormBuildError",
     "ProductionRMSNormCheckError",
     "Qwen3ProductionAdapterError",
+    "QKVQualificationError",
     "RMSNormQualificationError",
     "TensorAcceleratorBuildError",
     "build_deployment",
     "build_projection_deployment",
+    "build_qkv_deployment",
     "build_rmsnorm_deployment",
     "check_projection_candidate",
+    "check_qkv_candidate",
     "check_rmsnorm_candidate",
     "export_qwen3_production_graph",
     "load_capability",
@@ -83,13 +100,17 @@ __all__ = [
     "load_production_capability",
     "load_production_model_graph",
     "load_qualification_report",
+    "load_qkv_qualification",
     "load_rmsnorm_qualification",
     "parse_production_model_graph",
     "publish_qualification_report",
     "publish_qwen3_production_graph",
+    "publish_qkv_qualification",
     "publish_rmsnorm_qualification",
     "qualify_bf16_projection_payloads",
     "qualify_locked_bf16_projection",
+    "qualify_locked_qkv",
     "qualify_locked_rmsnorm",
     "qualify_rmsnorm_payloads",
+    "qualify_qkv_payloads",
 ]

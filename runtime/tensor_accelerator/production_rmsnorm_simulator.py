@@ -29,9 +29,9 @@ from compiler.tensor_accelerator.production_capability import (
 )
 from compiler.tensor_accelerator.production_command import (
     ABI_MAJOR,
-    ABI_MINOR,
     Opcode,
     ProductionCommandError,
+    RMSNORM_ABI_MINOR,
     command_abi,
     decode,
 )
@@ -210,7 +210,10 @@ def _manifest(root: Path) -> dict[str, Any]:
         require_sha256(value[field], f"manifest.{field}")
     if value["claim_boundary"] != EXPECTED_CLAIM_BOUNDARY:
         raise ProductionRMSNormSimulationError("manifest claim boundary differs")
-    if value["command_abi"] != {"major": ABI_MAJOR, "minor": ABI_MINOR}:
+    if value["command_abi"] != {
+        "major": ABI_MAJOR,
+        "minor": RMSNORM_ABI_MINOR,
+    }:
         raise ProductionRMSNormSimulationError("manifest command ABI differs")
     if value["compiler"] != {
         "deterministic": True,
@@ -562,7 +565,7 @@ class ProductionRMSNormSimulator:
         if (
             capability.capability_id != manifest["capability_id"]
             or (capability.command_abi_major, capability.command_abi_minor)
-            != (ABI_MAJOR, ABI_MINOR)
+            != (ABI_MAJOR, RMSNORM_ABI_MINOR)
         ):
             raise ProductionRMSNormSimulationError("manifest capability identity differs")
         plan, _, records, image, hbm_regions, commands = _plan(
