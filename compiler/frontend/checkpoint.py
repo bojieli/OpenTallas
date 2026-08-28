@@ -894,9 +894,11 @@ class LockedCheckpointReader:
 
     The reader validates the complete lock once, verifies each accessed shard
     header once, hashes every consumed tensor payload, and rejects a snapshot
-    file whose inode, size, or modification time changes while the reader is
-    active. It is intentionally single-threaded; callbacks are completed before
-    another tensor may be consumed.
+    file whose device, inode, size, modification time, or metadata-change time
+    changes while the reader is active. Both the open descriptor and its live
+    snapshot path are checked so atomic path replacement cannot evade the guard.
+    It is intentionally single-threaded; callbacks are completed before another
+    tensor may be consumed.
     """
 
     def __init__(self, snapshot: Path, lock: dict[str, Any]):
@@ -919,7 +921,7 @@ class LockedCheckpointReader:
             for tensor in shard["tensors"]:
                 self._tensors[tensor["name"]] = (shard, tensor)
         self._handles: dict[
-            str, tuple[BinaryIO, tuple[int, int, int, int]]
+            str, tuple[BinaryIO, tuple[int, int, int, int, int]]
         ] = {}
         self._accessed_tensors: set[str] = set()
         self._closed = False
@@ -948,12 +950,15 @@ class LockedCheckpointReader:
             raise CheckpointError("locked checkpoint reader is closed")
 
     @staticmethod
-    def _fingerprint(stat_result: os.stat_result) -> tuple[int, int, int, int]:
+    def _fingerprint(
+        stat_result: os.stat_result,
+    ) -> tuple[int, int, int, int, int]:
         return (
             stat_result.st_dev,
             stat_result.st_ino,
             stat_result.st_size,
             stat_result.st_mtime_ns,
+            stat_result.st_ctime_ns,
         )
 
     def _open_shard(self, shard: dict[str, Any]) -> BinaryIO:
@@ -1064,14 +1069,21 @@ class LockedCheckpointReader:
         if verify_unchanged:
             for logical_path, (handle, fingerprint) in self._handles.items():
                 try:
-                    observed = self._fingerprint(os.fstat(handle.fileno()))
+                    observed_handle = self._fingerprint(os.fstat(handle.fileno()))
+                    observed_path = self._fingerprint(
+                        (self._snapshot / logical_path).stat()
+                    )
                 except OSError as exc:
                     if first_error is None:
                         first_error = CheckpointError(
-                            f"cannot restat locked shard {logical_path!r}: {exc}"
+                            f"locked shard {logical_path!r} changed while reader was "
+                            f"active: cannot restat descriptor and snapshot path: {exc}"
                         )
                     continue
-                if observed != fingerprint and first_error is None:
+                if (
+                    observed_handle != fingerprint
+                    or observed_path != fingerprint
+                ) and first_error is None:
                     first_error = CheckpointError(
                         f"locked shard {logical_path!r} changed while reader was active"
                     )

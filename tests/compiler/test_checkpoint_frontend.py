@@ -223,6 +223,21 @@ def test_reusable_reader_rejects_snapshot_mutation_while_active(
             shard_path.write_bytes(payload)
 
 
+def test_reusable_reader_rejects_atomic_shard_path_replacement(
+    checkpoint_snapshot: Path, tmp_path: Path
+) -> None:
+    lock = build_checkpoint_lock(
+        checkpoint_snapshot, load_checkpoint_source(FIXTURE_SOURCE)
+    )
+    shard_path = checkpoint_snapshot / "model-00001-of-00002.safetensors"
+    replacement = tmp_path / "same-content-replacement.safetensors"
+    replacement.write_bytes(shard_path.read_bytes())
+    with pytest.raises(CheckpointError, match="changed while reader was active"):
+        with LockedCheckpointReader(checkpoint_snapshot, lock) as reader:
+            reader.consume_tensor_payload("a.weight", lambda _: None)
+            replacement.replace(shard_path)
+
+
 def test_source_identity_and_payload_tampering_fail_closed(
     checkpoint_snapshot: Path,
 ) -> None:
