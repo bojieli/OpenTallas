@@ -1,0 +1,198 @@
+{
+  "schema_version": 1,
+  "campaign_id": "opentallas-asap7-predictive-physical-v1",
+  "evidence_class": "predictive 7 nm FinFET research implementation; not a foundry PDK, manufacturing signoff, ROM macro, or N4 scaling result",
+  "as_of_utc": "2026-08-28",
+  "toolchain": {
+    "container": {
+      "repository": "openroad/orfs",
+      "amd64_digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+      "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34"
+    },
+    "openroad": {
+      "version": "26Q3-1510-g6cb3f2b704",
+      "executable": "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+      "sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846"
+    },
+    "yosys": {
+      "version": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)",
+      "executable": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys",
+      "sha256": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92"
+    },
+    "abc": {
+      "version": "UC Berkeley, ABC 1.01 (compiled 0 0)",
+      "executable": "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys-abc",
+      "sha256": "aab92e379150754859c4e25041b010f75b7cced1bc61806f217f81632e44aece"
+    },
+    "orfs_public_reference_revision": "be0dca0b1fd41df54792b3012350cd52bccd99bb",
+    "orfs_revision_note": "The immutable image digest is authoritative because the image does not retain a usable Git checkout identity. The reference revision records public ORFS master at acquisition.",
+    "asap7": {
+      "version": "1.7",
+      "license": "BSD-3-Clause",
+      "sdc_time_unit_ps": 1,
+      "upstream_revision": "d24f8b857ff74cf5b21ab18a7e1b11a3954c449b",
+      "pdk_upstream_revision": "58d72c9d291e186a77468586ab0c43d8a21eda6a",
+      "platform_root": "/OpenROAD-flow-scripts/flow/platforms/asap7",
+      "files": {
+        "README.md": "2d4ccc26693e0109bc7038f6765c3c3b4363ad52904ad31c712bde7a7eb3212c",
+        "config.mk": "c5c868f35c7c04365a074aef2d81c72641441a8070a117bcb1a35b696942507c",
+        "lef/asap7_tech_1x_201209.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41",
+        "lef/asap7sc7p5t_28_R_1x_220121a.lef": "4eb73f825720d95eba4da455c7b2e7a28e444e88e9d8595d13492cf5eecfc0d1",
+        "gds/asap7sc7p5t_28_R_220121a.gds": "f43d5b33df635cf9e66cbca66b6bdd05364f824d8040cd21528b9e12808b9263",
+        "rcx_patterns.rules": "32a117e5e866d3de1406e8f18d65b6f1857781f156638941a4769e25ef5252cc",
+        "drc/asap7.lydrc": "dc78ccd8b2b30498f25ef885c2c28a9c2a565c38cb30a87460282c8a36c7765d",
+        "KLayout/asap7.lyt": "c0d9587a636ca54246cdbdbded3919a7e49efcf50904700335432017a6d8fba2",
+        "lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz": "fe9f1c18e88ab129d63ad82adc256f3a85c7e38e47dabbe0a96749b41087dea1",
+        "lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz": "8d6db2c2f83c3c162be54a5e102b2d379fcaaaef2db5f0b1d4152c395d01fea1",
+        "lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz": "bbe6d904d58c7367de1ed7639e4eae386c65fa0a5af26ae62dc5e4e2ec52b08b",
+        "lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e"
+      }
+    }
+  },
+  "cases": [
+    {
+      "name": "numeric_e1_l16_tc",
+      "description": "One-expert, 16-lane signed integer-DV dot product; control and physical-scaling representative, not an FP8/MXFP4 implementation.",
+      "top": "ot_numeric_dot",
+      "sources": {
+        "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c"
+      },
+      "parameters": {
+        "ACC_W": 32,
+        "ACT_W": 8,
+        "LANES": 16,
+        "NUM_EXPERTS": 1,
+        "REPORT_SATURATION_RISK": 1,
+        "WEIGHT_W": 4
+      },
+      "clock_port": "clk",
+      "async_reset_ports": ["rst_n"],
+      "clock_period_ns": 4.25,
+      "corner": "TC",
+      "voltage_v": 0.7,
+      "temperature_c": 0,
+      "primary_vt": "RVT",
+      "core_utilization_percent": 35,
+      "place_density": 0.6,
+      "equivalence_method": "feedforward_output_register_next_state_cec"
+    },
+    {
+      "name": "numeric_e4_l16_tc",
+      "description": "Four-expert, 16-lane signed integer-DV scaling point with 64 multipliers; not an FP8/MXFP4 implementation.",
+      "top": "ot_numeric_dot",
+      "sources": {
+        "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c"
+      },
+      "parameters": {
+        "ACC_W": 32,
+        "ACT_W": 8,
+        "LANES": 16,
+        "NUM_EXPERTS": 4,
+        "REPORT_SATURATION_RISK": 1,
+        "WEIGHT_W": 4
+      },
+      "clock_port": "clk",
+      "async_reset_ports": ["rst_n"],
+      "clock_period_ns": 2.0,
+      "corner": "TC",
+      "voltage_v": 0.7,
+      "temperature_c": 0,
+      "primary_vt": "RVT",
+      "core_utilization_percent": 35,
+      "place_density": 0.6,
+      "equivalence_method": "feedforward_output_register_next_state_cec"
+    },
+    {
+      "name": "reduction_s8_g2_tc",
+      "description": "Eight-source, two-group tagged deterministic reduction endpoint used as a local NoC/reduction representative.",
+      "top": "ot_reduction_endpoint",
+      "sources": {
+        "rtl/ot_reduction_tree.sv": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5"
+      },
+      "parameters": {
+        "DATA_W": 32,
+        "GROUPS": 2,
+        "SOURCES": 8,
+        "TAG_W": 16
+      },
+      "clock_port": "clk",
+      "async_reset_ports": ["rst_n"],
+      "clock_period_ns": 1.25,
+      "corner": "TC",
+      "voltage_v": 0.7,
+      "temperature_c": 0,
+      "primary_vt": "RVT",
+      "core_utilization_percent": 35,
+      "place_density": 0.6,
+      "equivalence_method": "state_relation_transition_cec",
+      "state_aliases": {
+        "expected[0][1]": "expected[0][0]",
+        "expected[0][2]": "expected[0][0]",
+        "expected[0][3]": "expected[0][0]",
+        "expected[0][4]": "expected[0][0]",
+        "expected[0][5]": "expected[0][0]",
+        "expected[0][6]": "expected[0][0]",
+        "expected[0][7]": "expected[0][0]",
+        "expected[1][1]": "expected[1][0]",
+        "expected[1][2]": "expected[1][0]",
+        "expected[1][3]": "expected[1][0]",
+        "expected[1][4]": "expected[1][0]",
+        "expected[1][5]": "expected[1][0]",
+        "expected[1][6]": "expected[1][0]",
+        "expected[1][7]": "expected[1][0]"
+      }
+    }
+  ],
+  "constraints": {
+    "input_delay_fraction": 0.2,
+    "output_delay_fraction": 0.2,
+    "output_load_ff": 3.898,
+    "max_fanout": 32,
+    "tns_end_percent": 100,
+    "hold_slack_margin_ns": 0.0,
+    "setup_slack_margin_ns": 0.0
+  },
+  "acceptance": {
+    "required_cases": [
+      "numeric_e1_l16_tc",
+      "numeric_e4_l16_tc",
+      "reduction_s8_g2_tc"
+    ],
+    "setup_wns_ns_min": 0.0,
+    "setup_tns_ns_min": 0.0,
+    "setup_violations_max": 0,
+    "hold_wns_ns_min": 0.0,
+    "hold_tns_ns_min": 0.0,
+    "hold_violations_max": 0,
+    "drc_errors_max": 0,
+    "antenna_violating_nets_max": 0,
+    "antenna_violating_pins_max": 0,
+    "flow_errors_max": 0,
+    "unconstrained_endpoints_max": 0,
+    "mapped_equivalence_unproven_max": 0,
+    "postroute_equivalence_unproven_max": 0,
+    "forbidden_memory_name_patterns": [
+      "fakeram",
+      "fake_ram",
+      "sram",
+      "openram"
+    ],
+    "required_final_artifacts": [
+      "1_2_yosys.v",
+      "6_final.def",
+      "6_final.gds",
+      "6_final.odb",
+      "6_final.sdc",
+      "6_final.spef",
+      "6_final.v"
+    ]
+  },
+  "claim_boundary": [
+    "ASAP7 is a predictive research PDK and is not tied to a foundry.",
+    "The three cases contain no ROM or SRAM macro; bundled ASAP7 FakeRAM collateral is forbidden and unused.",
+    "The numeric cases implement signed integer DV only, not OpenTallas target MXFP4 x FP8, FP8 x FP8, BF16, or FP32 arithmetic.",
+    "Passing results constrain public digital-cell and routed-wire plausibility only; they do not validate target ROM density, energy, sense margin, power delivery, package, HBM, yield, or manufacturability.",
+    "The reported TC model is the ASAP7 library's nominal model condition and has no calibrated error bar against TSMC N7 or N4."
+  ]
+}
