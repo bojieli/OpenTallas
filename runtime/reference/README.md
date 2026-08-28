@@ -39,3 +39,11 @@ circular-window order, compression-completion boundary, offsets, padding, and
 DSpark history/draft address split. Inputs and signed-int32 output bounds fail
 closed. These structural references do not implement learned index scoring,
 top-k tie order, KV mutation, sparse attention, or any service-engine lowering.
+
+`lookup.py` implements the two pinned pure-gather paths. `TOKEN_EMBED` selects
+global embedding rows while carrying BF16 as exact 16-bit encodings; this is
+equivalent to the source vocabulary-shard masking and all-reduce because one
+and only one shard owns a valid token. `HASH_ROUTE` selects the checkpoint's
+ordered expert-ID row for each flattened token ID and intentionally preserves
+duplicates. It does not implement router scoring, selected-weight gathering, or
+expert dispatch.
