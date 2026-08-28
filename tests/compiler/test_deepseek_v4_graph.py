@@ -56,7 +56,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "d1dac1263ae41bbdd09c8d9764cd660333f7841ef7078518bbf0797e868cb575"
+        "2918ad848439ce8f0df8a0fb9ddc11d0e65d139f216ffb64dadc269f2322052b"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -66,7 +66,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 43,
+        "pending_reference_kind_count": 37,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -118,14 +118,28 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert counts["COMPRESSED_DENSE_INDEX"] == 20
     assert counts["DSPARK_PREFILL_KV"] == 3
     assert counts["MARKOV_AUTOREGRESSIVE_LOOP"] == 1
-    for requirement in catalog.values():
+    qualified_references = {
+        "COMPRESSED_DENSE_INDEX": (
+            "runtime.reference.indexing.compressed_dense_indices"
+        ),
+        "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
+        "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
+        "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
+        "TOKEN_EMBED": "runtime.reference.lookup.bf16_token_embedding",
+        "WINDOW_INDEX": "runtime.reference.indexing.window_indices",
+    }
+    for kind, requirement in catalog.items():
         assert requirement["cost_class"]
         assert not requirement["cost_class"].startswith("zero")
         assert requirement["lowering_class"]
-        assert requirement["reference_owner"].startswith(
-            "compiler.reference.deepseek_v4."
-        )
-        assert requirement["reference_status"] == "pending_implementation"
+        if kind in qualified_references:
+            assert requirement["reference_owner"] == qualified_references[kind]
+            assert requirement["reference_status"] == "implemented_unit_qualified"
+        else:
+            assert requirement["reference_owner"].startswith(
+                "compiler.reference.deepseek_v4."
+            )
+            assert requirement["reference_status"] == "pending_implementation"
         assert requirement["service_engine_status"] == "pending_implementation"
         assert requirement["rtl_status"] == "pending_implementation"
 
@@ -184,6 +198,9 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
+    assert "six complete pure structural/index/lookup" in (
+        issues["DSV4-SEM-005"]["issue"]
+    )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
     assert "atomic hash-locked applicator" in issues["DSV4-SEM-007"]["issue"]
     assert graph_contract["system_scope"]["request_boundary"] == (
@@ -199,6 +216,9 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         graph_contract["system_scope"]["covered"]
     )
     assert "atomic hash-locked canonical application" in " ".join(
+        graph_contract["system_scope"]["covered"]
+    )
+    assert "unit-qualified HC expansion, token embedding" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
     assert "DSpark target verification and speculative acceptance" in (
@@ -244,7 +264,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "d1dac1263ae41bbdd09c8d9764cd660333f7841ef7078518bbf0797e868cb575"
+        "2918ad848439ce8f0df8a0fb9ddc11d0e65d139f216ffb64dadc269f2322052b"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

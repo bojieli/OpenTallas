@@ -3,8 +3,9 @@
 This module turns the pinned official topology into an ordered graph contract.
 It deliberately stops short of calling that graph executable: every operator is
 owned, source-anchored, assigned a lowering and cost class, and connected to its
-checkpoint tensor roles, while reference/service-engine/RTL implementations stay
-explicitly pending.
+checkpoint tensor roles.  Qualified reference slices are named individually;
+the remaining reference, service-engine, and RTL implementations stay explicitly
+pending.
 """
 
 from __future__ import annotations
@@ -58,6 +59,15 @@ DEFAULT_INFERENCE_CONFIG = (
     / "models/deepseek-v4-flash-0731/inference_config.json"
 )
 
+_QUALIFIED_REFERENCE_OWNERS = {
+    "COMPRESSED_DENSE_INDEX": "runtime.reference.indexing.compressed_dense_indices",
+    "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
+    "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
+    "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
+    "TOKEN_EMBED": "runtime.reference.lookup.bf16_token_embedding",
+    "WINDOW_INDEX": "runtime.reference.indexing.window_indices",
+}
+
 
 class DeepSeekV4GraphError(RuntimeError):
     """Raised when graph coverage is incomplete or source-inconsistent."""
@@ -73,12 +83,19 @@ class OperatorRequirement:
     state_class: str
 
     def to_dict(self) -> dict[str, Any]:
+        reference_owner = _QUALIFIED_REFERENCE_OWNERS.get(
+            self.kind, f"compiler.reference.deepseek_v4.{self.kind.lower()}"
+        )
         return {
             "cost_class": self.cost_class,
             "kind": self.kind,
             "lowering_class": self.lowering_class,
-            "reference_owner": f"compiler.reference.deepseek_v4.{self.kind.lower()}",
-            "reference_status": "pending_implementation",
+            "reference_owner": reference_owner,
+            "reference_status": (
+                "implemented_unit_qualified"
+                if self.kind in _QUALIFIED_REFERENCE_OWNERS
+                else "pending_implementation"
+            ),
             "rtl_status": "pending_implementation",
             "semantic_spec_status": "mapped_to_pinned_official_source",
             "semantic_summary": self.semantic_summary,
@@ -1294,6 +1311,9 @@ def build_official_graph_contract() -> dict[str, Any]:
         )
     if any(requirement.cost_class.startswith("zero") for requirement in _OPERATORS):
         raise DeepSeekV4GraphError("operator catalog contains a zero-cost class")
+    operator_catalog = [
+        OPERATOR_CATALOG[kind].to_dict() for kind in sorted(OPERATOR_CATALOG)
+    ]
     body: dict[str, Any] = {
         "adaptations": [
             {
@@ -1312,7 +1332,10 @@ def build_official_graph_contract() -> dict[str, Any]:
             "missing_lowering_count": 0,
             "missing_reference_owner_count": 0,
             "node_count": len(graph.nodes),
-            "pending_reference_kind_count": len(OPERATOR_CATALOG),
+            "pending_reference_kind_count": sum(
+                record["reference_status"] == "pending_implementation"
+                for record in operator_catalog
+            ),
             "pending_rtl_kind_count": len(OPERATOR_CATALOG),
             "pending_service_engine_kind_count": len(OPERATOR_CATALOG),
             "unknown_kind_count": 0,
@@ -1353,7 +1376,7 @@ def build_official_graph_contract() -> dict[str, Any]:
             },
             {
                 "id": "DSV4-SEM-005",
-                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, and official 32-value routed and 128-value dense block dots. Full matrix/tile reduction, vector paths, and per-operator conversion boundaries remain pending.",
+                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, and six complete pure structural/index/lookup operator kinds. Full matrix/tile reduction, vector paths beyond HC expansion, stateful attention, routing beyond hash lookup, and per-operator conversion boundaries remain pending.",
                 "required_resolution": "Implement and qualify complete target-precision semantics for each graph operator before marking that operator executable; scalar and block-dot primitives alone do not close matrix or layer lowering.",
                 "severity": "blocking",
                 "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;runtime/reference/formats.py",
@@ -1373,9 +1396,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "source_anchor": "inference/convert.py:main;compiler/canonical/deepseek_v4.py;compiler/canonical/plan.py;compiler/checking/deepseek_v4_transforms.py",
             },
         ],
-        "operator_catalog": [
-            OPERATOR_CATALOG[kind].to_dict() for kind in sorted(OPERATOR_CATALOG)
-        ],
+        "operator_catalog": operator_catalog,
         "operator_counts": [
             {"kind": kind, "node_count": kind_counts[kind]}
             for kind in sorted(kind_counts)
@@ -1403,6 +1424,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "hash-verified local tokenizer encode and decode behavior",
                 "target-only prefill/decode, EOS, and executor-commit control with synthetic transcripts",
                 "scalar target formats, activation microscaling, ordered accumulation, and official block-dot primitives",
+                "unit-qualified HC expansion, token embedding, hash-route, window, compressed-dense, and DSpark index references",
                 "complete official-tensor canonical transform plan and independently checked transform primitives",
                 "atomic hash-locked canonical application and replay on an adversarial development fixture",
             ],
@@ -1412,7 +1434,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "exact stochastic replay for the unpinned Torch/CUDA RNG stack",
                 "DSpark target verification and speculative acceptance",
                 "full official-payload transform application and canonical output hashes",
-                "operator-complete target-precision references beyond scalar and block-dot primitives",
+                "operator-complete target-precision references beyond scalar/block-dot primitives and six pure structural/index/lookup kinds",
                 "transactional KV/compressor execution, service-engine operators, and microcode",
                 "physical placement, HBM/KV allocation, and static schedule",
             ],

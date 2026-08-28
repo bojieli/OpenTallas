@@ -278,7 +278,10 @@
           "type": "string"
         },
         "reference_status": {
-          "const": "pending_implementation"
+          "enum": [
+            "implemented_unit_qualified",
+            "pending_implementation"
+          ]
         },
         "rtl_status": {
           "const": "pending_implementation"

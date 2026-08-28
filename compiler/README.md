@@ -117,8 +117,14 @@ python3 -m compiler.cli describe-deepseek-v4-graph \
 This expands 1,924 ordered prefill/decode nodes across the 43 main and three
 DSpark stages, assigns every checkpoint tensor to a layer-correct consumer, and
 gives all 43 operator kinds an explicit source anchor, lowering, state class,
-cost class, and implementation owner. All 43 reference/service-engine/RTL
-statuses remain pending. The contract also records that the pinned local
+cost class, and implementation owner. Six pure operator references—HC
+expansion, token embedding, hash-route lookup, ordinary window indices,
+compressed-dense indices, and DSpark window indices—are implemented and
+unit-qualified; the other 37 reference kinds and all 43 service-engine/RTL
+kinds remain pending. The DSpark noise-token constructor is also implemented,
+but its combined embed/expand graph operator remains pending integration.
+Scalar and block-dot numeric primitives are tracked separately and do not make
+a matrix operator complete. The contract also records that the pinned local
 `generate.py` does not invoke DSpark and that speculative target verification
 and acceptance live outside the pinned local reference; this is a blocking
 system-semantic gap, not silently treated as implemented behavior.
