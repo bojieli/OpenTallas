@@ -45,7 +45,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 11
+    assert len(schemas) == 12
     by_name = {
         schema["$id"].rsplit("/", 1)[-1]: schema
         for schema in schemas
@@ -58,6 +58,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "execution_request_v1.schema.json",
         "independent_check_v1.schema.json",
         "model_graph_v1.schema.json",
+        "model_graph_v2.schema.json",
         "operator_coverage_v1.schema.json",
         "physical_plan_v1.schema.json",
         "source_lock_v1.schema.json",
@@ -99,6 +100,9 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "model_graph_v1.schema.json": [
             load_strict_json(FIXTURE / "model_graph.json"),
             load_strict_json(output / "ir/model_graph.json"),
+        ],
+        "model_graph_v2.schema.json": [
+            load_strict_json(FIXTURE / "production_model_graph.json")
         ],
         "operator_coverage_v1.schema.json": [
             load_strict_json(output / "ir/operator_coverage.json")
