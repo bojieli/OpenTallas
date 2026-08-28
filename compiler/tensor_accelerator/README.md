@@ -107,11 +107,56 @@ python tools/run_qwen3_hbm_sram_projection.py \
   --report /path/to/new/execution-report.json
 ~~~
 
+The next vertical slice now executes the actual embedding-to-layer-0-RMSNorm
+path rather than another disconnected matrix. The production-neutral Tensor
+Kernel IR contains an `EMBEDDING_LOOKUP` kernel followed by `RMS_NORM`; it has no
+HBM address or SRAM-bank field. ABI 2.1 adds a bounded runtime-indexed HBM DMA
+and a bounded BF16 RMSNorm command while retaining strict ABI 2.0 decoding for
+the projection evidence.
+
+The frozen `qwen3_rmsnorm_fp32_bf16_v1` contract widens BF16 inputs to binary32,
+rounds each square, reduces with the canonical balanced binary32 tree, performs
+explicit binary32 mean and epsilon addition, uses correctly rounded binary32
+reciprocal square root, rounds the normalized activation to BF16, multiplies by
+the BF16 weight, and rounds the output to BF16. Its scalar oracle imports no
+compiler, simulator, NumPy, PyTorch, or model code. A separate data-bearing
+implementation matches it across known answers, exceptional cases, randomized
+vectors, and the complete 4,096-element checkpoint row.
+
+The real deployment performs one runtime token-index read, an indexed HBM row
+transfer, an HBM-to-SRAM normalization-weight transfer, the RMSNorm command, and
+terminal completion. The compiler-managed SRAM regions occupy separate banks.
+The independent checker authenticates the complete source tensors, reconstructs
+the selected row and weight from the emitted HBM image, derives the neutral
+kernels and command sequence independently, and reconciles all counters. The
+artifact-only simulator then reads the runtime token ID from SRAM and executes
+all four commands causally.
+
+The canonical build ID is
+`4cdd371c63dda8db64f0fe101777de1f0de0043ca8c01474f4b554cfefe65ba6`.
+The output hash is
+`976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58`,
+and the canonical execution report is retained at
+`results/tensor_accelerator/qwen3_hbm_sram_rmsnorm_execution.json`.
+
+Reproduce it with:
+
+~~~bash
+python tools/run_qwen3_hbm_sram_rmsnorm.py \
+  --snapshot /path/to/pinned/qwen3-8b/snapshot \
+  --checkpoint-lock /path/to/qwen3-8b/checkpoint.lock.json \
+  --model-graph build/tensor-accelerator/qwen3-8b/model_graph.v2.json \
+  --capability configs/hardware/tensor_accelerator_development_v2.json \
+  --qualification results/tensor_accelerator/qwen3_rmsnorm_qualification.json \
+  --deployment /path/to/new/rmsnorm-deployment \
+  --report /path/to/new/rmsnorm-execution-report.json
+~~~
+
 The development capability deliberately contains no clock, latency, bandwidth,
-or energy values. It declares the model/format union required by Qwen3-8B and
-ordinary target-only DeepSeek-V4 Flash, but only the BF16 tensor mode is marked
-qualified. Consequently this slice is functional compiler/simulator evidence,
-not 130-nm characterization or performance evidence.
+or energy values. Version 1 qualifies only BF16 tensor execution. Version 2
+additively qualifies the bounded vector/RMSNorm path while continuing to declare
+the complete Qwen3-8B and ordinary target-only DeepSeek-V4 Flash model/format
+union. Neither version provides 130-nm characterization or performance evidence.
 
 This is executable compiler/simulator evidence for one real Qwen operation and
 the production artifact boundaries. It is not a complete Qwen layer, complete

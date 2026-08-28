@@ -1,0 +1,81 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/production_tensor_kernel_ir_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "kernels": {
+      "items": {"oneOf": [{"$ref": "#/$defs/lookup"}, {"$ref": "#/$defs/rmsnorm"}]},
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.production_tensor_kernel_ir.v1"}
+  },
+  "required": ["graph_id", "kernel_ir_id", "kernels", "qualification_report_id", "schema"],
+  "title": "OpenTallas production-neutral Tensor Kernel IR v1",
+  "type": "object",
+  "$defs": {
+    "identifier": {"minLength": 1, "type": "string"},
+    "lookup": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": false,
+          "properties": {
+            "index_dtype": {"const": "u32"},
+            "output_dtype": {"const": "bf16"},
+            "source_index_max_exclusive": {"minimum": 1, "type": "integer"},
+            "source_index_min": {"const": 0}
+          },
+          "required": ["index_dtype", "output_dtype", "source_index_max_exclusive", "source_index_min"],
+          "type": "object"
+        },
+        "index": {"const": 0},
+        "inputs": {"items": {"$ref": "#/$defs/identifier"}, "minItems": 2, "maxItems": 2, "type": "array"},
+        "kind": {"const": "EMBEDDING_LOOKUP"},
+        "numeric_contract": {"const": "bf16_payload_lookup_v1"},
+        "outputs": {"items": {"$ref": "#/$defs/identifier"}, "minItems": 1, "maxItems": 1, "type": "array"},
+        "shape": {"$ref": "#/$defs/shape"},
+        "source_operation_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
+      "type": "object"
+    },
+    "rmsnorm": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": false,
+          "properties": {
+            "epsilon_binary32_code": {"const": 897988541},
+            "final_weight_product": {"const": "bf16_multiply_then_bf16_rne"},
+            "normalized_boundary": {"const": "bf16_rne_before_weight"},
+            "reduction_order": {"const": "canonical_balanced_binary32_tree"},
+            "rsqrt": {"const": "correctly_rounded_binary32_rne"}
+          },
+          "required": ["epsilon_binary32_code", "final_weight_product", "normalized_boundary", "reduction_order", "rsqrt"],
+          "type": "object"
+        },
+        "index": {"const": 1},
+        "inputs": {"items": {"$ref": "#/$defs/identifier"}, "minItems": 2, "maxItems": 2, "type": "array"},
+        "kind": {"const": "RMS_NORM"},
+        "numeric_contract": {"const": "qwen3_rmsnorm_fp32_bf16_v1"},
+        "outputs": {"items": {"$ref": "#/$defs/identifier"}, "minItems": 1, "maxItems": 1, "type": "array"},
+        "shape": {"$ref": "#/$defs/shape"},
+        "source_operation_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "shape": {
+      "additionalProperties": false,
+      "properties": {"rows": {"minimum": 1, "type": "integer"}, "width": {"minimum": 1, "type": "integer"}},
+      "required": ["rows", "width"],
+      "type": "object"
+    }
+  }
+}

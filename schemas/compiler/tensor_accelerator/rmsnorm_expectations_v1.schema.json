@@ -1,0 +1,47 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/rmsnorm_expectations_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "check_id": {"$ref": "#/$defs/sha256"},
+    "counters": {"$ref": "#/$defs/counters"},
+    "expectations_id": {"$ref": "#/$defs/sha256"},
+    "normalized_payload_sha256": {"$ref": "#/$defs/sha256"},
+    "output_payload_sha256": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.rmsnorm_expectations.v1"}
+  },
+  "required": ["check_id", "counters", "expectations_id", "normalized_payload_sha256", "output_payload_sha256", "qualification_report_id", "schema"],
+  "title": "Embedding-to-RMSNorm execution expectations v1",
+  "type": "object",
+  "$defs": {
+    "counters": {
+      "additionalProperties": false,
+      "properties": {
+        "command_count": {"minimum": 1, "type": "integer"},
+        "complete_command_count": {"minimum": 1, "type": "integer"},
+        "direct_dma_command_count": {"minimum": 0, "type": "integer"},
+        "dma_command_count": {"minimum": 1, "type": "integer"},
+        "dma_sram_bytes_written": {"minimum": 1, "type": "integer"},
+        "epsilon_additions": {"minimum": 1, "type": "integer"},
+        "final_weight_multiplications": {"minimum": 1, "type": "integer"},
+        "hbm_transferred_bytes_read": {"minimum": 1, "type": "integer"},
+        "hbm_useful_bytes_read": {"minimum": 1, "type": "integer"},
+        "indexed_dma_command_count": {"minimum": 1, "type": "integer"},
+        "input_square_multiplications": {"minimum": 1, "type": "integer"},
+        "input_sram_bytes_read": {"minimum": 1, "type": "integer"},
+        "mean_divisions": {"minimum": 1, "type": "integer"},
+        "normalization_multiplications": {"minimum": 1, "type": "integer"},
+        "output_sram_bytes_written": {"minimum": 1, "type": "integer"},
+        "reciprocal_square_roots": {"minimum": 1, "type": "integer"},
+        "reduction_additions": {"minimum": 0, "type": "integer"},
+        "rmsnorm_command_count": {"minimum": 1, "type": "integer"},
+        "runtime_request_sram_bytes_written": {"minimum": 1, "type": "integer"},
+        "weight_sram_bytes_read": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["command_count", "complete_command_count", "direct_dma_command_count", "dma_command_count", "dma_sram_bytes_written", "epsilon_additions", "final_weight_multiplications", "hbm_transferred_bytes_read", "hbm_useful_bytes_read", "indexed_dma_command_count", "input_square_multiplications", "input_sram_bytes_read", "mean_divisions", "normalization_multiplications", "output_sram_bytes_written", "reciprocal_square_roots", "reduction_additions", "rmsnorm_command_count", "runtime_request_sram_bytes_written", "weight_sram_bytes_read"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

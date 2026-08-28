@@ -16,7 +16,7 @@ from .common import (
     require_sha256,
     sha256_bytes,
 )
-from .production_command import ABI_MAJOR, ABI_MINOR
+from .production_command import ABI_MAJOR, ABI_MINOR, LEGACY_ABI_MINOR
 
 
 SCHEMA = "opentallas.tensor_accelerator.production_capability.v1"
@@ -89,9 +89,17 @@ class ProductionTensorEngine:
 
 
 @dataclass(frozen=True)
+class ProductionVectorEngine:
+    max_rows: int
+    max_width: int
+
+
+@dataclass(frozen=True)
 class ProductionCapability:
     capability_id: str
     architecture: str
+    command_abi_major: int
+    command_abi_minor: int
     declared_model_profiles: tuple[str, ...]
     formats: tuple[str, ...]
     declared_execution_modes: tuple[str, ...]
@@ -100,6 +108,7 @@ class ProductionCapability:
     hbm: ProductionHBM
     sram: ProductionSRAM
     tensor_engine: ProductionTensorEngine
+    vector_engine: ProductionVectorEngine | None
     limits: Mapping[str, int]
     raw: Mapping[str, Any]
 
@@ -246,6 +255,17 @@ def _parse_tensor_engine(raw: Any) -> ProductionTensorEngine:
     )
 
 
+def _parse_vector_engine(raw: Any) -> ProductionVectorEngine:
+    value = _object(raw, "vector_engine")
+    exact_keys(value, {"max_rows", "max_width"}, set(), "vector_engine")
+    return ProductionVectorEngine(
+        max_rows=require_int(value["max_rows"], "vector_engine.max_rows", minimum=1),
+        max_width=require_int(
+            value["max_width"], "vector_engine.max_width", minimum=1
+        ),
+    )
+
+
 def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
     """Parse a canonical development capability and reject performance claims."""
 
@@ -268,7 +288,7 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
                 "sram",
                 "tensor_engine",
             },
-            set(),
+            {"vector_engine"},
             "production capability",
         )
         if raw["schema"] != SCHEMA:
@@ -284,10 +304,12 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
             raise ProductionCapabilityError("architecture identity differs")
         command_abi = _object(raw["command_abi"], "command_abi")
         exact_keys(command_abi, {"major", "minor"}, set(), "command_abi")
-        if (command_abi["major"], command_abi["minor"]) != (
-            ABI_MAJOR,
+        command_major = command_abi["major"]
+        command_minor = command_abi["minor"]
+        if command_major != ABI_MAJOR or command_minor not in {
+            LEGACY_ABI_MINOR,
             ABI_MINOR,
-        ):
+        }:
             raise ProductionCapabilityError("command ABI differs from the implementation")
         evidence = _object(raw["evidence"], "evidence")
         exact_keys(
@@ -342,10 +364,33 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
         numeric_contracts = _sorted_strings(
             raw["qualified_numeric_contracts"], "qualified_numeric_contracts"
         )
-        if numeric_contracts != ("bf16_bf16_fp32_sequential_rne_v1",):
-            raise ProductionCapabilityError(
-                "qualified numeric contracts differ from current evidence"
-            )
+        matrix_contract = "bf16_bf16_fp32_sequential_rne_v1"
+        rmsnorm_contract = "qwen3_rmsnorm_fp32_bf16_v1"
+        vector_raw = raw.get("vector_engine")
+        if command_minor == LEGACY_ABI_MINOR:
+            if (
+                qualified_modes != ("bf16_tensor",)
+                or numeric_contracts != (matrix_contract,)
+                or vector_raw is not None
+            ):
+                raise ProductionCapabilityError(
+                    "ABI 2.0 qualification must remain the BF16 projection profile"
+                )
+            vector = None
+        else:
+            if (
+                qualified_modes != ("bf16_tensor", "vector_fp32")
+                or numeric_contracts != (matrix_contract, rmsnorm_contract)
+                or vector_raw is None
+            ):
+                raise ProductionCapabilityError(
+                    "ABI 2.1 qualification must include the bounded RMSNorm profile"
+                )
+            vector = _parse_vector_engine(vector_raw)
+            if vector.max_width < 4096:
+                raise ProductionCapabilityError(
+                    "RMSNorm-qualified vector width must cover Qwen hidden width"
+                )
         hbm = _parse_hbm(raw["hbm"])
         sram = _parse_sram(raw["sram"])
         tensor = _parse_tensor_engine(raw["tensor_engine"])
@@ -384,6 +429,8 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
         return ProductionCapability(
             capability_id=capability_id,
             architecture=raw["architecture"],
+            command_abi_major=command_major,
+            command_abi_minor=command_minor,
             declared_model_profiles=models,
             formats=formats,
             declared_execution_modes=declared_modes,
@@ -392,6 +439,7 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
             hbm=hbm,
             sram=sram,
             tensor_engine=tensor,
+            vector_engine=vector,
             limits=limits,
             raw=raw,
         )
@@ -420,6 +468,7 @@ __all__ = [
     "ProductionHBM",
     "ProductionSRAM",
     "ProductionTensorEngine",
+    "ProductionVectorEngine",
     "SCHEMA",
     "UNCHARACTERIZED",
     "load_production_capability",

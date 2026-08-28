@@ -1,4 +1,9 @@
-"""Production command ABI v2 for tiled HBM/SRAM execution."""
+"""Production command ABI v2 for causal HBM/SRAM execution.
+
+ABI 2.1 additively introduces bounded indexed HBM transfer and BF16 RMSNorm.
+The decoder retains strict ABI 2.0 support so the qualified projection artifacts
+remain executable and reproducible.
+"""
 
 from __future__ import annotations
 
@@ -10,7 +15,9 @@ from typing import Iterable
 
 
 ABI_MAJOR = 2
-ABI_MINOR = 0
+ABI_MINOR = 1
+LEGACY_ABI_MINOR = 0
+SUPPORTED_ABI_MINORS = frozenset({LEGACY_ABI_MINOR, ABI_MINOR})
 MAGIC = b"OTTAISA2"
 HEADER = struct.Struct("<8sHHII12s")
 COMMAND_WITH_CRC = struct.Struct("<BBHIIQQQQIIIII")
@@ -29,7 +36,9 @@ class ProductionCommandError(ValueError):
 
 class Opcode(IntEnum):
     DMA_HBM_TO_SRAM = 0x01
+    DMA_HBM_INDEXED_TO_SRAM = 0x02
     MATMUL_BF16_TILE = 0x10
+    RMSNORM_BF16 = 0x20
     COMPLETE = 0xFF
 
 
@@ -37,12 +46,23 @@ class Engine(IntEnum):
     CONTROL = 0
     DMA = 1
     TENSOR = 2
+    VECTOR = 3
 
 
 EXPECTED_ENGINE = {
     Opcode.DMA_HBM_TO_SRAM: Engine.DMA,
+    Opcode.DMA_HBM_INDEXED_TO_SRAM: Engine.DMA,
     Opcode.MATMUL_BF16_TILE: Engine.TENSOR,
+    Opcode.RMSNORM_BF16: Engine.VECTOR,
     Opcode.COMPLETE: Engine.CONTROL,
+}
+
+OPCODE_MIN_MINOR = {
+    Opcode.DMA_HBM_TO_SRAM: LEGACY_ABI_MINOR,
+    Opcode.DMA_HBM_INDEXED_TO_SRAM: ABI_MINOR,
+    Opcode.MATMUL_BF16_TILE: LEGACY_ABI_MINOR,
+    Opcode.RMSNORM_BF16: ABI_MINOR,
+    Opcode.COMPLETE: LEGACY_ABI_MINOR,
 }
 
 
@@ -97,7 +117,24 @@ def _all_zero(command: ProductionCommand) -> bool:
     )
 
 
-def _validate_command(command: ProductionCommand, expected_index: int) -> None:
+def _validate_minor(abi_minor: int) -> int:
+    if (
+        isinstance(abi_minor, bool)
+        or not isinstance(abi_minor, int)
+        or abi_minor not in SUPPORTED_ABI_MINORS
+    ):
+        raise ProductionCommandError(
+            f"unsupported production command ABI {ABI_MAJOR}.{abi_minor}"
+        )
+    return abi_minor
+
+
+def _validate_command(
+    command: ProductionCommand,
+    expected_index: int,
+    *,
+    abi_minor: int,
+) -> None:
     if not isinstance(command, ProductionCommand):
         raise ProductionCommandError("command stream contains a non-command value")
     if not isinstance(command.opcode, Opcode) or not isinstance(command.engine, Engine):
@@ -109,6 +146,11 @@ def _validate_command(command: ProductionCommand, expected_index: int) -> None:
     if command.engine != EXPECTED_ENGINE.get(command.opcode):
         raise ProductionCommandError(
             f"command {command.index} engine differs from {command.opcode.name}"
+        )
+    if OPCODE_MIN_MINOR[command.opcode] > abi_minor:
+        raise ProductionCommandError(
+            f"command {command.index} opcode {command.opcode.name} requires "
+            f"ABI {ABI_MAJOR}.{OPCODE_MIN_MINOR[command.opcode]}"
         )
     named_fields = (
         ("flags", command.flags, 0xFFFF),
@@ -147,6 +189,18 @@ def _validate_command(command: ProductionCommand, expected_index: int) -> None:
             raise ProductionCommandError(
                 f"command {command.index} has illegal DMA fields"
             )
+    elif command.opcode == Opcode.DMA_HBM_INDEXED_TO_SRAM:
+        if (
+            command.flags
+            or command.kernel_index == NO_KERNEL
+            or not command.size0
+            or not command.size1
+            or not command.size2
+            or command.size3 != 4
+        ):
+            raise ProductionCommandError(
+                f"command {command.index} has illegal indexed DMA fields"
+            )
     elif command.opcode == Opcode.MATMUL_BF16_TILE:
         if (
             command.flags & ~(MATMUL_INIT | MATMUL_FINAL)
@@ -159,6 +213,19 @@ def _validate_command(command: ProductionCommand, expected_index: int) -> None:
             raise ProductionCommandError(
                 f"command {command.index} has illegal BF16 MATMUL fields"
             )
+    elif command.opcode == Opcode.RMSNORM_BF16:
+        if (
+            command.flags
+            or command.kernel_index == NO_KERNEL
+            or not command.size0
+            or not command.size1
+            or not command.size2
+            or command.size3
+            or command.auxiliary
+        ):
+            raise ProductionCommandError(
+                f"command {command.index} has illegal BF16 RMSNorm fields"
+            )
     elif command.opcode == Opcode.COMPLETE:
         if command.kernel_index != NO_KERNEL or not _all_zero(command):
             raise ProductionCommandError(
@@ -166,22 +233,32 @@ def _validate_command(command: ProductionCommand, expected_index: int) -> None:
             )
 
 
-def _validate_stream(commands: tuple[ProductionCommand, ...]) -> None:
+def _validate_stream(
+    commands: tuple[ProductionCommand, ...],
+    *,
+    abi_minor: int,
+) -> None:
+    _validate_minor(abi_minor)
     if not commands:
         raise ProductionCommandError("command stream must be nonempty")
     if len(commands) > 0xFFFFFFFF:
         raise ProductionCommandError("command stream exceeds the ABI count field")
     for expected_index, command in enumerate(commands):
-        _validate_command(command, expected_index)
+        _validate_command(command, expected_index, abi_minor=abi_minor)
     if commands[-1].opcode != Opcode.COMPLETE or any(
         command.opcode == Opcode.COMPLETE for command in commands[:-1]
     ):
         raise ProductionCommandError("COMPLETE must appear exactly once at the end")
 
 
-def encode(commands: Iterable[ProductionCommand]) -> bytes:
+def encode(
+    commands: Iterable[ProductionCommand],
+    *,
+    abi_minor: int = ABI_MINOR,
+) -> bytes:
+    abi_minor = _validate_minor(abi_minor)
     parsed = tuple(commands)
-    _validate_stream(parsed)
+    _validate_stream(parsed, abi_minor=abi_minor)
     records: list[bytes] = []
     for command in parsed:
         prefix = COMMAND_PREFIX.pack(
@@ -204,7 +281,7 @@ def encode(commands: Iterable[ProductionCommand]) -> bytes:
     return HEADER.pack(
         MAGIC,
         ABI_MAJOR,
-        ABI_MINOR,
+        abi_minor,
         len(parsed),
         zlib.crc32(body) & 0xFFFFFFFF,
         bytes(12),
@@ -217,7 +294,7 @@ def decode(payload: bytes) -> tuple[ProductionCommand, ...]:
     if len(payload) < HEADER.size:
         raise ProductionCommandError("command stream is shorter than its header")
     magic, major, minor, count, expected_crc, reserved = HEADER.unpack_from(payload)
-    if magic != MAGIC or (major, minor) != (ABI_MAJOR, ABI_MINOR):
+    if magic != MAGIC or major != ABI_MAJOR or minor not in SUPPORTED_ABI_MINORS:
         raise ProductionCommandError("command stream magic or ABI differs")
     if reserved != bytes(12) or not count:
         raise ProductionCommandError("command header reserved bits/count differ")
@@ -256,19 +333,34 @@ def decode(payload: bytes) -> tuple[ProductionCommand, ...]:
             size2=fields[11],
             size3=fields[12],
         )
-        _validate_command(command, index)
+        _validate_command(command, index, abi_minor=minor)
         result.append(command)
     parsed = tuple(result)
-    _validate_stream(parsed)
+    _validate_stream(parsed, abi_minor=minor)
     return parsed
 
 
-def disassemble(commands: Iterable[ProductionCommand]) -> str:
+def command_abi(payload: bytes) -> tuple[int, int]:
+    """Return the ABI identity after validating the complete command stream."""
+
+    decode(payload)
+    _, major, minor, _, _, _ = HEADER.unpack_from(payload)
+    return major, minor
+
+
+def disassemble(
+    commands: Iterable[ProductionCommand],
+    *,
+    abi_minor: int = ABI_MINOR,
+) -> str:
+    abi_minor = _validate_minor(abi_minor)
+    parsed = tuple(commands)
+    _validate_stream(parsed, abi_minor=abi_minor)
     lines = [
-        f"OTTA-ISA {ABI_MAJOR}.{ABI_MINOR}",
+        f"OTTA-ISA {ABI_MAJOR}.{abi_minor}",
         "# index opcode engine flags kernel src0 src1 dst aux size0 size1 size2 size3",
     ]
-    for command in commands:
+    for command in parsed:
         lines.append(
             f"{command.index:05d} {command.opcode.name} {command.engine.name} "
             f"0x{command.flags:04x} {command.kernel_index} "
@@ -283,12 +375,15 @@ __all__ = [
     "ABI_MAJOR",
     "ABI_MINOR",
     "Engine",
+    "LEGACY_ABI_MINOR",
     "MATMUL_FINAL",
     "MATMUL_INIT",
     "NO_KERNEL",
     "Opcode",
     "ProductionCommand",
     "ProductionCommandError",
+    "SUPPORTED_ABI_MINORS",
+    "command_abi",
     "decode",
     "disassemble",
     "encode",

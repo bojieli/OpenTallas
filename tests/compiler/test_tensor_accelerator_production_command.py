@@ -9,11 +9,13 @@ import pytest
 from compiler.tensor_accelerator import production_command as command_abi
 from compiler.tensor_accelerator.production_command import (
     Engine,
+    LEGACY_ABI_MINOR,
     MATMUL_FINAL,
     MATMUL_INIT,
     Opcode,
     ProductionCommand,
     ProductionCommandError,
+    command_abi as read_command_abi,
     decode,
     disassemble,
     encode,
@@ -61,7 +63,7 @@ def _repair_crcs(payload: bytearray, command_index: int) -> None:
     struct.pack_into("<I", payload, 16, zlib.crc32(body) & 0xFFFFFFFF)
 
 
-def test_v2_command_stream_has_frozen_widths_and_exact_round_trip() -> None:
+def test_v21_command_stream_has_frozen_widths_and_exact_round_trip() -> None:
     commands = _commands()
     payload = encode(commands)
     assert command_abi.HEADER.size == 32
@@ -70,7 +72,7 @@ def test_v2_command_stream_has_frozen_widths_and_exact_round_trip() -> None:
     assert decode(payload) == commands
     assert encode(decode(payload)) == payload
     assert disassemble(commands).splitlines() == [
-        "OTTA-ISA 2.0",
+        "OTTA-ISA 2.1",
         "# index opcode engine flags kernel src0 src1 dst aux size0 size1 size2 size3",
         "00000 DMA_HBM_TO_SRAM DMA 0x0000 7 0x0000000000001000 "
         "0x0000000000000000 0x0000000000002000 0x0000000000000000 "
@@ -82,6 +84,53 @@ def test_v2_command_stream_has_frozen_widths_and_exact_round_trip() -> None:
         "0x0000000000000000 0x0000000000000000 0x0000000000000000 "
         "0 0 0 0",
     ]
+
+
+def test_v21_adds_bounded_indexed_dma_and_rmsnorm_without_breaking_v20() -> None:
+    commands = (
+        ProductionCommand(
+            index=0,
+            opcode=Opcode.DMA_HBM_INDEXED_TO_SRAM,
+            engine=Engine.DMA,
+            kernel_index=0,
+            source0=0x1000,
+            source1=0x2000,
+            destination=0x3000,
+            size0=8192,
+            size1=8192,
+            size2=151936,
+            size3=4,
+        ),
+        ProductionCommand(
+            index=1,
+            opcode=Opcode.RMSNORM_BF16,
+            engine=Engine.VECTOR,
+            kernel_index=1,
+            source0=0x3000,
+            source1=0x4000,
+            destination=0x5000,
+            size0=1,
+            size1=4096,
+            size2=0x358637BD,
+        ),
+        ProductionCommand(
+            index=2,
+            opcode=Opcode.COMPLETE,
+            engine=Engine.CONTROL,
+        ),
+    )
+    payload = encode(commands)
+    assert read_command_abi(payload) == (2, 1)
+    assert decode(payload) == commands
+    with pytest.raises(ProductionCommandError, match="requires ABI 2.1"):
+        encode(commands, abi_minor=LEGACY_ABI_MINOR)
+
+    legacy = encode(_commands(), abi_minor=LEGACY_ABI_MINOR)
+    assert read_command_abi(legacy) == (2, 0)
+    assert decode(legacy) == _commands()
+    assert disassemble(_commands(), abi_minor=LEGACY_ABI_MINOR).startswith(
+        "OTTA-ISA 2.0\n"
+    )
 
 
 def test_encoder_rejects_nonterminal_duplicate_and_malformed_commands() -> None:
@@ -100,6 +149,29 @@ def test_encoder_rejects_nonterminal_duplicate_and_malformed_commands() -> None:
         encode((replace(dma, size1=1), replace(complete, index=1)))
     with pytest.raises(ProductionCommandError, match="illegal BF16 MATMUL"):
         encode((dma, replace(matmul, flags=4), complete))
+    indexed = ProductionCommand(
+        index=0,
+        opcode=Opcode.DMA_HBM_INDEXED_TO_SRAM,
+        engine=Engine.DMA,
+        kernel_index=0,
+        size0=2,
+        size1=2,
+        size2=1,
+        size3=4,
+    )
+    with pytest.raises(ProductionCommandError, match="illegal indexed DMA"):
+        encode((replace(indexed, size3=8), replace(complete, index=1)))
+    rmsnorm = ProductionCommand(
+        index=0,
+        opcode=Opcode.RMSNORM_BF16,
+        engine=Engine.VECTOR,
+        kernel_index=0,
+        size0=1,
+        size1=4096,
+        size2=0x358637BD,
+    )
+    with pytest.raises(ProductionCommandError, match="illegal BF16 RMSNorm"):
+        encode((replace(rmsnorm, size2=0), replace(complete, index=1)))
     with pytest.raises(ProductionCommandError, match="outside its ABI width"):
         encode((replace(dma, size0=1 << 32), replace(complete, index=1)))
     with pytest.raises(ProductionCommandError, match="outside its ABI width"):

@@ -76,7 +76,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 22
+    assert len(schemas) == 31
     by_name = {
         schema["$id"].rsplit("/", 1)[-1]: schema
         for schema in schemas
@@ -101,7 +101,16 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "model_graph_v2.schema.json",
         "operator_coverage_v1.schema.json",
         "physical_plan_v1.schema.json",
+        "production_tensor_kernel_ir_v1.schema.json",
         "production_capability_v1.schema.json",
+        "rmsnorm_deployment_v1.schema.json",
+        "rmsnorm_execution_v1.schema.json",
+        "rmsnorm_expectations_v1.schema.json",
+        "rmsnorm_independent_check_v1.schema.json",
+        "rmsnorm_physical_plan_v1.schema.json",
+        "rmsnorm_qualification_v1.schema.json",
+        "rmsnorm_request_v1.schema.json",
+        "rmsnorm_source_lock_v1.schema.json",
         "source_lock_v1.schema.json",
         "tensor_kernel_ir_v1.schema.json",
     }
@@ -166,7 +175,18 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         for name in by_name
         if not name.startswith("bf16_projection_")
         or name == "bf16_projection_qualification_v1.schema.json"
-    } - {"production_capability_v1.schema.json"}
+    } - {
+        "production_capability_v1.schema.json",
+        "production_tensor_kernel_ir_v1.schema.json",
+        "rmsnorm_deployment_v1.schema.json",
+        "rmsnorm_execution_v1.schema.json",
+        "rmsnorm_expectations_v1.schema.json",
+        "rmsnorm_independent_check_v1.schema.json",
+        "rmsnorm_physical_plan_v1.schema.json",
+        "rmsnorm_qualification_v1.schema.json",
+        "rmsnorm_request_v1.schema.json",
+        "rmsnorm_source_lock_v1.schema.json",
+    }
     for schema_name, values in instances.items():
         for value in values:
             _validate(value, by_name[schema_name], registry)
