@@ -1,0 +1,62 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/bf16_projection_kernel_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "input_fixture": {
+      "additionalProperties": false,
+      "properties": {
+        "row": {"minimum": 0, "type": "integer"},
+        "row_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "tensor_id": {"minLength": 1, "type": "string"}
+      },
+      "required": ["row", "row_payload_sha256", "tensor_id"],
+      "type": "object"
+    },
+    "kernel_index": {"const": 0},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "numeric_contract": {"const": "bf16_bf16_fp32_sequential_rne_v1"},
+    "operation": {"const": "MATMUL_BF16_TILE"},
+    "problem": {"$ref": "#/$defs/problem"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "reduction_order": {"const": "strictly_increasing_k"},
+    "schema": {"const": "opentallas.tensor_accelerator.bf16_projection_kernel.v1"},
+    "source_operation_id": {"minLength": 1, "type": "string"},
+    "weight_tensor_id": {"minLength": 1, "type": "string"}
+  },
+  "required": [
+    "graph_id",
+    "input_fixture",
+    "kernel_index",
+    "kernel_ir_id",
+    "numeric_contract",
+    "operation",
+    "problem",
+    "qualification_report_id",
+    "reduction_order",
+    "schema",
+    "source_operation_id",
+    "weight_tensor_id"
+  ],
+  "title": "OpenTallas BF16 projection Tensor Kernel IR v1",
+  "type": "object",
+  "$defs": {
+    "problem": {
+      "additionalProperties": false,
+      "properties": {
+        "k": {"minimum": 1, "type": "integer"},
+        "k_tile": {"minimum": 1, "type": "integer"},
+        "k_tiles": {"minimum": 1, "type": "integer"},
+        "m": {"minimum": 1, "type": "integer"},
+        "n": {"minimum": 1, "type": "integer"},
+        "n_tile": {"minimum": 1, "type": "integer"},
+        "n_tiles": {"minimum": 1, "type": "integer"},
+        "tile_count": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["k", "k_tile", "k_tiles", "m", "n", "n_tile", "n_tiles", "tile_count"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

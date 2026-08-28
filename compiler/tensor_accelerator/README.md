@@ -75,8 +75,46 @@ The canonical report is retained at
 `results/tensor_accelerator/qwen3_bf16_projection.json`. This remains one matrix
 operation; it does not close the full-layer, compiled-HBM, or end-to-end gates.
 
-This is executable compiler/simulator evidence for the artifact boundaries only.
-It is not Qwen3-8B or DeepSeek-V4 execution, target floating-point qualification,
-RTL correlation, 130-nm physical evidence, HBM PHY evidence, or a production
-performance result. Those gates remain open and must use the same artifact path
-without framework fallbacks.
+That numerical result now also passes the first production HBM/SRAM deployment
+slice. The compiler reads the locked checkpoint without copying it, transforms
+the 4096-by-4096 layer-0 Q-projection weight into 64 output tiles by 16 ordered
+reduction tiles, emits 1,024 HBM-to-SRAM DMA commands, 1,024 BF16 matrix-tile
+commands, and one terminal completion command, and assigns distinct SRAM banks
+to the input, weight staging tile, FP32 accumulator, and BF16 output.
+
+An independent module rereads the locked tensor, inverse-reconstructs every
+row-major source byte from the HBM image, proves tile and command coverage,
+checks SRAM ranges and `INIT`/`FINAL` ordering, and independently derives all
+counters. The artifact-only simulator then executes every DMA and segmented
+matrix command causally; it does not invoke the whole-matrix kernel. The real
+deployment has build ID
+`23e937621f93a01802884afea4be503719080a1fad9aec11afbc159ae689d8c1`.
+Its 4,096-element output hash is exactly
+`b8ee116d31d645204b14b342db84d2f200e8c300f6dc17bb472d0cf3e1b42012`,
+and its canonical execution report is retained at
+`results/tensor_accelerator/qwen3_hbm_sram_projection_execution.json`.
+
+Reproduce the governed slice from locally pinned artifacts with:
+
+~~~bash
+python tools/run_qwen3_hbm_sram_projection.py \
+  --snapshot /path/to/pinned/qwen3-8b/snapshot \
+  --checkpoint-lock /path/to/qwen3-8b/checkpoint.lock.json \
+  --model-graph build/tensor-accelerator/qwen3-8b/model_graph.v2.json \
+  --capability configs/hardware/tensor_accelerator_development_v1.json \
+  --qualification results/tensor_accelerator/qwen3_bf16_projection.json \
+  --deployment /path/to/new/projection-deployment \
+  --report /path/to/new/execution-report.json
+~~~
+
+The development capability deliberately contains no clock, latency, bandwidth,
+or energy values. It declares the model/format union required by Qwen3-8B and
+ordinary target-only DeepSeek-V4 Flash, but only the BF16 tensor mode is marked
+qualified. Consequently this slice is functional compiler/simulator evidence,
+not 130-nm characterization or performance evidence.
+
+This is executable compiler/simulator evidence for one real Qwen operation and
+the production artifact boundaries. It is not a complete Qwen layer, complete
+Qwen or DeepSeek model execution, RTL correlation, 130-nm physical evidence,
+HBM PHY evidence, or a production performance result. Those gates remain open
+and must use the same artifact path without framework fallbacks.

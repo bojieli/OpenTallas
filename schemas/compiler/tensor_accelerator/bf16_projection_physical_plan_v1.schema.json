@@ -1,0 +1,161 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/bf16_projection_physical_plan_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "expected_counters": {"$ref": "#/$defs/counters"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "hbm": {
+      "additionalProperties": false,
+      "properties": {
+        "image": {
+          "additionalProperties": false,
+          "properties": {
+            "base_address": {"minimum": 0, "type": "integer"},
+            "path": {"const": "memory/hbm_weights_tiled.bin"},
+            "sha256": {"$ref": "#/$defs/sha256"},
+            "size_bytes": {"minimum": 1, "type": "integer"}
+          },
+          "required": ["base_address", "path", "sha256", "size_bytes"],
+          "type": "object"
+        },
+        "source_weight": {
+          "additionalProperties": false,
+          "properties": {
+            "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+            "dtype": {"const": "bf16"},
+            "payload_sha256": {"$ref": "#/$defs/sha256"},
+            "shape": {
+              "items": {"minimum": 1, "type": "integer"},
+              "maxItems": 2,
+              "minItems": 2,
+              "type": "array"
+            },
+            "tensor_name": {"minLength": 1, "type": "string"}
+          },
+          "required": ["checkpoint_lock_id", "dtype", "payload_sha256", "shape", "tensor_name"],
+          "type": "object"
+        },
+        "tile_layout": {"const": "row_major_nk"},
+        "tile_order": {"const": "n_major_k_minor"},
+        "tiles": {
+          "items": {"$ref": "#/$defs/tile"},
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": ["image", "source_weight", "tile_layout", "tile_order", "tiles"],
+      "type": "object"
+    },
+    "numeric_contract": {"const": "bf16_bf16_fp32_sequential_rne_v1"},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "problem": {"$ref": "#/$defs/problem"},
+    "program": {
+      "additionalProperties": false,
+      "properties": {
+        "command_count": {"minimum": 1, "type": "integer"},
+        "path": {"const": "program/commands.bin"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["command_count", "path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.bf16_projection_physical_plan.v1"},
+    "source_operation_id": {"minLength": 1, "type": "string"},
+    "sram": {
+      "additionalProperties": false,
+      "properties": {
+        "addressing": {"const": "bank_base_plus_byte_offset"},
+        "regions": {
+          "items": {"$ref": "#/$defs/region"},
+          "maxItems": 4,
+          "minItems": 4,
+          "type": "array"
+        }
+      },
+      "required": ["addressing", "regions"],
+      "type": "object"
+    }
+  },
+  "required": ["capability_id", "expected_counters", "graph_id", "hbm", "numeric_contract", "physical_plan_id", "problem", "program", "qualification_report_id", "schema", "source_operation_id", "sram"],
+  "title": "OpenTallas BF16 projection HBM/SRAM physical plan v1",
+  "type": "object",
+  "$defs": {
+    "counters": {
+      "additionalProperties": false,
+      "properties": {
+        "accumulator_sram_bytes_read": {"minimum": 0, "type": "integer"},
+        "accumulator_sram_bytes_written": {"minimum": 0, "type": "integer"},
+        "command_count": {"minimum": 1, "type": "integer"},
+        "complete_command_count": {"const": 1},
+        "dma_command_count": {"minimum": 1, "type": "integer"},
+        "dma_sram_bytes_written": {"minimum": 1, "type": "integer"},
+        "hbm_transferred_bytes_read": {"minimum": 1, "type": "integer"},
+        "hbm_useful_bytes_read": {"minimum": 1, "type": "integer"},
+        "input_sram_bytes_read": {"minimum": 1, "type": "integer"},
+        "matmul_command_count": {"minimum": 1, "type": "integer"},
+        "output_sram_bytes_written": {"minimum": 1, "type": "integer"},
+        "runtime_input_sram_bytes_written": {"minimum": 1, "type": "integer"},
+        "scalar_accumulation_additions": {"minimum": 1, "type": "integer"},
+        "scalar_multiplications": {"minimum": 1, "type": "integer"},
+        "weight_sram_bytes_read": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["accumulator_sram_bytes_read", "accumulator_sram_bytes_written", "command_count", "complete_command_count", "dma_command_count", "dma_sram_bytes_written", "hbm_transferred_bytes_read", "hbm_useful_bytes_read", "input_sram_bytes_read", "matmul_command_count", "output_sram_bytes_written", "runtime_input_sram_bytes_written", "scalar_accumulation_additions", "scalar_multiplications", "weight_sram_bytes_read"],
+      "type": "object"
+    },
+    "problem": {
+      "additionalProperties": false,
+      "properties": {
+        "k": {"minimum": 1, "type": "integer"},
+        "k_tile": {"minimum": 1, "type": "integer"},
+        "k_tiles": {"minimum": 1, "type": "integer"},
+        "m": {"minimum": 1, "type": "integer"},
+        "n": {"minimum": 1, "type": "integer"},
+        "n_tile": {"minimum": 1, "type": "integer"},
+        "n_tiles": {"minimum": 1, "type": "integer"},
+        "tile_count": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["k", "k_tile", "k_tiles", "m", "n", "n_tile", "n_tiles", "tile_count"],
+      "type": "object"
+    },
+    "region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "allocated_bytes": {"minimum": 1, "type": "integer"},
+        "bank": {"minimum": 0, "type": "integer"},
+        "dtype": {"enum": ["bf16", "fp32"]},
+        "id": {"enum": ["input", "weight_tile", "accumulator_tile", "output"]},
+        "logical_bytes": {"minimum": 1, "type": "integer"},
+        "shape": {
+          "items": {"minimum": 1, "type": "integer"},
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        }
+      },
+      "required": ["address", "allocated_bytes", "bank", "dtype", "id", "logical_bytes", "shape"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "tile": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "k_count": {"minimum": 1, "type": "integer"},
+        "k_start": {"minimum": 0, "type": "integer"},
+        "n_count": {"minimum": 1, "type": "integer"},
+        "n_start": {"minimum": 0, "type": "integer"},
+        "offset_bytes": {"minimum": 0, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"},
+        "tile_index": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["address", "k_count", "k_start", "n_count", "n_start", "offset_bytes", "payload_sha256", "size_bytes", "tile_index"],
+      "type": "object"
+    }
+  }
+}

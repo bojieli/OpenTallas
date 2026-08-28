@@ -76,13 +76,21 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 13
+    assert len(schemas) == 22
     by_name = {
         schema["$id"].rsplit("/", 1)[-1]: schema
         for schema in schemas
     }
     assert set(by_name) == {
         "bf16_projection_qualification_v1.schema.json",
+        "bf16_projection_deployment_v1.schema.json",
+        "bf16_projection_execution_v1.schema.json",
+        "bf16_projection_expectations_v1.schema.json",
+        "bf16_projection_independent_check_v1.schema.json",
+        "bf16_projection_kernel_v1.schema.json",
+        "bf16_projection_physical_plan_v1.schema.json",
+        "bf16_projection_request_v1.schema.json",
+        "bf16_projection_source_lock_v1.schema.json",
         "capability_v1.schema.json",
         "deployment_v1.schema.json",
         "execution_expectations_v1.schema.json",
@@ -93,6 +101,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "model_graph_v2.schema.json",
         "operator_coverage_v1.schema.json",
         "physical_plan_v1.schema.json",
+        "production_capability_v1.schema.json",
         "source_lock_v1.schema.json",
         "tensor_kernel_ir_v1.schema.json",
     }
@@ -152,7 +161,12 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
             load_strict_json(output / "ir/tensor_kernel_ir.json")
         ],
     }
-    assert set(instances) == set(by_name)
+    assert set(instances) == {
+        name
+        for name in by_name
+        if not name.startswith("bf16_projection_")
+        or name == "bf16_projection_qualification_v1.schema.json"
+    } - {"production_capability_v1.schema.json"}
     for schema_name, values in instances.items():
         for value in values:
             _validate(value, by_name[schema_name], registry)

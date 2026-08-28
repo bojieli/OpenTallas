@@ -8,6 +8,7 @@ used by the planned Qwen3 and DeepSeek frontends.
 from .build import TensorAcceleratorBuildError, build_deployment
 from .bf16_qualification import (
     BF16QualificationError,
+    load_qualification_report,
     publish_qualification_report,
     qualify_bf16_projection_payloads,
     qualify_locked_bf16_projection,
@@ -19,6 +20,19 @@ from .production_model import (
     ProductionModelGraphError,
     load_production_model_graph,
     parse_production_model_graph,
+)
+from .production_capability import (
+    ProductionCapability,
+    ProductionCapabilityError,
+    load_production_capability,
+)
+from .production_projection import (
+    ProductionProjectionBuildError,
+    build_projection_deployment,
+)
+from .production_projection_checking import (
+    ProductionProjectionCheckError,
+    check_projection_candidate,
 )
 from .qwen3_adapter import (
     Qwen3ProductionAdapterError,
@@ -34,13 +48,21 @@ __all__ = [
     "ModelGraphError",
     "ProductionModelGraph",
     "ProductionModelGraphError",
+    "ProductionCapability",
+    "ProductionCapabilityError",
+    "ProductionProjectionBuildError",
+    "ProductionProjectionCheckError",
     "Qwen3ProductionAdapterError",
     "TensorAcceleratorBuildError",
     "build_deployment",
+    "build_projection_deployment",
+    "check_projection_candidate",
     "export_qwen3_production_graph",
     "load_capability",
     "load_model_graph",
+    "load_production_capability",
     "load_production_model_graph",
+    "load_qualification_report",
     "parse_production_model_graph",
     "publish_qualification_report",
     "publish_qwen3_production_graph",
