@@ -1,5 +1,32 @@
 # OpenTallas
 
+![Conceptual OpenTallas fixed-model decode architecture](docs/assets/architecture-overview.svg)
+
+> **Research status:** OpenTallas has checked analytical studies, synthesizable
+> public-reference RTL, open-tool verification, local open-PDK ROM methodology
+> slices, and a partial predictive-PDK digital physical proxy. It does **not**
+> have a target-node ROM macro, a full placed-and-routed chip or wafer, or
+> fabricated OpenTallas silicon.
+
+## Start here
+
+- **New to the project?** Read
+  [`docs/OVERVIEW.md`](docs/OVERVIEW.md) for the plain-language rationale, a
+  one-token walkthrough, architecture and layout views, simulation results, the
+  exact 9,399-tokens/s derivation, and a clear “built versus not built” boundary.
+- **Using a figure?** Read the
+  [`visual asset provenance contract`](docs/assets/README.md). It labels each
+  image as conceptual, simulation-derived, or rendered from archived physical
+  geometry and records the forbidden interpretations.
+- **Reviewing the headline studies?** Use the N7/HBM2e/A100
+  [`architecture-attribution report`](results/iso-node/n7_architecture_attribution/REPORT.md)
+  and the N4-class/HBM3e/B300
+  [`market report`](results/iso-node/leading_node_market/REPORT.md).
+- **Implementing or auditing the design?** Start at the governed
+  [`specification index`](spec/README.md), then consult the
+  [`methodology`](docs/METHODOLOGY.md), [`sources`](docs/SOURCES.md), and
+  [`assumptions`](docs/ASSUMPTIONS.md).
+
 OpenTallas is a reproducible, CPU-capable evaluation of model-specific inference
 silicon whose weights live in mask ROM.  It implements the analytical and
 architecture-simulation work described in
