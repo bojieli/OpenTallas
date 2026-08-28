@@ -154,6 +154,8 @@ def test_compiler_schemas_are_strict_draft_2020_documents() -> None:
     schema_dir = ROOT / "schemas/compiler"
     schemas = sorted(schema_dir.glob("*.schema.json"))
     assert {path.name for path in schemas} == {
+        "checkpoint_lock_v1.schema.json",
+        "checkpoint_source_v1.schema.json",
         "deployment_manifest_v1.schema.json",
         "execution_request_v1.schema.json",
         "semantic_ir_v1.schema.json",
