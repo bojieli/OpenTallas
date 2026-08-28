@@ -264,7 +264,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 55
+    assert len(schemas) == 62
     by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
     assert set(by_name) == {
         "attention_deployment_v1.schema.json",
@@ -285,6 +285,13 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "bf16_projection_request_v1.schema.json",
         "bf16_projection_source_lock_v1.schema.json",
         "capability_v1.schema.json",
+        "connected_layer_deployment_v1.schema.json",
+        "connected_layer_execution_v1.schema.json",
+        "connected_layer_expectations_v1.schema.json",
+        "connected_layer_independent_check_v1.schema.json",
+        "connected_layer_physical_plan_v1.schema.json",
+        "connected_layer_request_v1.schema.json",
+        "connected_layer_source_lock_v1.schema.json",
         "deployment_v1.schema.json",
         "execution_expectations_v1.schema.json",
         "execution_report_v1.schema.json",
@@ -400,6 +407,13 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "attention_qualification_v1.schema.json",
         "attention_request_v1.schema.json",
         "attention_source_lock_v1.schema.json",
+        "connected_layer_deployment_v1.schema.json",
+        "connected_layer_execution_v1.schema.json",
+        "connected_layer_expectations_v1.schema.json",
+        "connected_layer_independent_check_v1.schema.json",
+        "connected_layer_physical_plan_v1.schema.json",
+        "connected_layer_request_v1.schema.json",
+        "connected_layer_source_lock_v1.schema.json",
         "layer_downstream_deployment_v1.schema.json",
         "layer_downstream_execution_v1.schema.json",
         "layer_downstream_expectations_v1.schema.json",
