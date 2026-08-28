@@ -1,0 +1,191 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/bf16_projection_qualification_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accounting": {
+      "additionalProperties": false,
+      "properties": {
+        "accumulation_additions": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "input_payload_bytes": {
+          "minimum": 2,
+          "type": "integer"
+        },
+        "scalar_multiplications": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "weight_payload_bytes": {
+          "minimum": 2,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "accumulation_additions",
+        "input_payload_bytes",
+        "scalar_multiplications",
+        "weight_payload_bytes"
+      ],
+      "type": "object"
+    },
+    "checkpoint_lock_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "row": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "row_payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_shape": {
+          "$ref": "#/$defs/matrix_shape"
+        },
+        "tensor": {
+          "$ref": "#/$defs/tensor_name"
+        }
+      },
+      "required": [
+        "row",
+        "row_payload_sha256",
+        "source_payload_sha256",
+        "source_shape",
+        "tensor"
+      ],
+      "type": "object"
+    },
+    "numeric_contract": {
+      "const": "bf16_bf16_fp32_sequential_rne_v1"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "saturated_element_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "shape": {
+          "$ref": "#/$defs/matrix_shape"
+        }
+      },
+      "required": [
+        "payload_sha256",
+        "saturated_element_count",
+        "shape"
+      ],
+      "type": "object"
+    },
+    "report_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.bf16_projection_qualification.v1"
+    },
+    "selected_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "output_codes": {
+          "items": {
+            "maximum": 65535,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "output_rows": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "saturated_element_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "status": {
+          "const": "exact_match"
+        }
+      },
+      "required": [
+        "output_codes",
+        "output_rows",
+        "saturated_element_count",
+        "status"
+      ],
+      "type": "object"
+    },
+    "status": {
+      "const": "pass"
+    },
+    "weight": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "$ref": "#/$defs/matrix_shape"
+        },
+        "tensor": {
+          "$ref": "#/$defs/tensor_name"
+        }
+      },
+      "required": [
+        "payload_sha256",
+        "shape",
+        "tensor"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "accounting",
+    "checkpoint_lock_id",
+    "input",
+    "numeric_contract",
+    "output",
+    "report_id",
+    "schema",
+    "selected_reference",
+    "status",
+    "weight"
+  ],
+  "title": "OpenTallas BF16 projection qualification report v1",
+  "type": "object",
+  "$defs": {
+    "matrix_shape": {
+      "items": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "tensor_name": {
+      "maxLength": 4096,
+      "minLength": 1,
+      "type": "string"
+    }
+  }
+}
