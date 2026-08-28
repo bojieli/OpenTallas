@@ -149,6 +149,51 @@ def _attention_state_kernel_ir() -> dict[str, object]:
     }
 
 
+def _elementwise_kernel_ir() -> dict[str, object]:
+    return {
+        "graph_id": "a" * 64,
+        "kernel_ir_id": "b" * 64,
+        "kernels": [
+            {
+                "attributes": {
+                    "addition": "binary32_rne",
+                    "input_dtype": "bf16",
+                    "output_dtype": "bf16",
+                    "output_rounding": "rne",
+                    "zero_canonicalization": "positive",
+                },
+                "index": 0,
+                "inputs": ["hidden.0", "layer.0.attention_projected"],
+                "kind": "ADD",
+                "numeric_contract": "bf16_add_rne_v1",
+                "outputs": ["layer.0.post_attention"],
+                "shape": {"rows": 1, "width": 4096},
+                "source_operation_id": "node.0011",
+            },
+            {
+                "attributes": {
+                    "activation_boundary": "bf16_rne_before_up_multiply",
+                    "exponential": "correctly_rounded_binary32_rne",
+                    "input_dtype": "bf16",
+                    "output_dtype": "bf16",
+                    "output_rounding": "rne",
+                    "sigmoid": "stable_sign_selected_binary32",
+                    "zero_canonicalization": "positive",
+                },
+                "index": 1,
+                "inputs": ["layer.0.mlp.gate", "layer.0.mlp.up"],
+                "kind": "SILU_MUL",
+                "numeric_contract": "qwen3_silu_mul_bf16_v1",
+                "outputs": ["layer.0.mlp.gated"],
+                "shape": {"rows": 1, "width": 12288},
+                "source_operation_id": "node.0015",
+            },
+        ],
+        "qualification_report_id": "c" * 64,
+        "schema": "opentallas.production_tensor_kernel_ir.v1",
+    }
+
+
 def test_production_kernel_ir_admits_neutral_attention_and_state_only() -> None:
     schemas = _schemas()
     by_name = {
@@ -164,6 +209,30 @@ def test_production_kernel_ir_admits_neutral_attention_and_state_only() -> None:
     physical_leak["kernels"][1]["hbm_address"] = 0x1000
     with pytest.raises(ValidationError):
         _validate(physical_leak, schema, registry)
+
+
+def test_production_kernel_ir_admits_bounded_neutral_add_and_silu_only() -> None:
+    schemas = _schemas()
+    by_name = {
+        schema["$id"].rsplit("/", 1)[-1]: schema
+        for schema in schemas
+    }
+    registry = _registry(schemas)
+    schema = by_name["production_tensor_kernel_ir_v1.schema.json"]
+    value = _elementwise_kernel_ir()
+    _validate(value, schema, registry)
+
+    physical_leak = copy.deepcopy(value)
+    physical_leak["kernels"][0]["sram_bank"] = 3
+    with pytest.raises(ValidationError):
+        _validate(physical_leak, schema, registry)
+
+    fused_boundary = copy.deepcopy(value)
+    fused_boundary["kernels"][1]["attributes"]["activation_boundary"] = (
+        "unrounded_host_expression"
+    )
+    with pytest.raises(ValidationError):
+        _validate(fused_boundary, schema, registry)
 
 
 def test_layer_qualification_schema_rejects_incomplete_or_forged_evidence() -> None:
@@ -314,6 +383,12 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "physical_plan_v1.schema.json": [
             load_strict_json(output / "physical/physical_plan.json")
         ],
+        "production_capability_v1.schema.json": [
+            load_strict_json(
+                ROOT / f"configs/hardware/tensor_accelerator_development_v{minor}.json"
+            )
+            for minor in range(1, 6)
+        ],
         "source_lock_v1.schema.json": [
             load_strict_json(output / "source.lock.json")
         ],
@@ -335,7 +410,6 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "attention_qualification_v1.schema.json",
         "attention_request_v1.schema.json",
         "attention_source_lock_v1.schema.json",
-        "production_capability_v1.schema.json",
         "production_tensor_kernel_ir_v1.schema.json",
         "qkv_deployment_v1.schema.json",
         "qkv_execution_v1.schema.json",

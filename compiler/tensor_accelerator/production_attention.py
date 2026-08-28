@@ -44,7 +44,7 @@ from .production_capability import (
     load_production_capability,
 )
 from .production_command import (
-    ABI_MINOR,
+    ATTENTION_ABI_MINOR,
     Engine,
     NO_KERNEL,
     Opcode,
@@ -222,7 +222,7 @@ def _problem(capability: ProductionCapability) -> dict[str, Any]:
     vector = capability.vector_engine
     state = capability.state_engine
     if (
-        capability.command_abi_minor != ABI_MINOR
+        capability.command_abi_minor != ATTENTION_ABI_MINOR
         or vector is None
         or state is None
         or vector.max_attention_context_tokens is None
@@ -757,7 +757,10 @@ def _build_into(
     (root / HBM_IMAGE_PATH).write_bytes(image)
     write_canonical_json(root / PHYSICAL_PLAN_PATH, plan)
     (root / COMMAND_PATH).write_bytes(command_payload)
-    _write_text(root / "program/commands.disasm", disassemble(commands, abi_minor=ABI_MINOR))
+    _write_text(
+        root / "program/commands.disasm",
+        disassemble(commands, abi_minor=ATTENTION_ABI_MINOR),
+    )
     write_canonical_json(root / REQUEST_PATH, request)
     write_canonical_json(root / "source.lock.json", source_lock)
     _copy_canonical(model_graph_path, root / "source/model_graph.v2.json")

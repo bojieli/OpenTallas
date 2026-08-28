@@ -2,9 +2,9 @@
 
 ABI 2.1 additively introduces bounded indexed HBM transfer and BF16 RMSNorm.
 ABI 2.2 adds bounded BF16 rotary-position execution.  ABI 2.3 adds causal GQA
-and transactional KV prepare/commit.  The decoder retains strict support for
-all older minor versions so qualified artifacts remain
-executable and reproducible.
+and transactional KV prepare/commit.  ABI 2.4 adds bounded BF16 residual-add
+and materialized-SiLU multiply.  The decoder retains strict support for all
+older minor versions so qualified artifacts remain executable and reproducible.
 """
 
 from __future__ import annotations
@@ -17,12 +17,20 @@ from typing import Iterable
 
 
 ABI_MAJOR = 2
-ABI_MINOR = 3
 LEGACY_ABI_MINOR = 0
 RMSNORM_ABI_MINOR = 1
 ROPE_ABI_MINOR = 2
+ATTENTION_ABI_MINOR = 3
+ELEMENTWISE_ABI_MINOR = 4
+ABI_MINOR = ELEMENTWISE_ABI_MINOR
 SUPPORTED_ABI_MINORS = frozenset(
-    {LEGACY_ABI_MINOR, RMSNORM_ABI_MINOR, ROPE_ABI_MINOR, ABI_MINOR}
+    {
+        LEGACY_ABI_MINOR,
+        RMSNORM_ABI_MINOR,
+        ROPE_ABI_MINOR,
+        ATTENTION_ABI_MINOR,
+        ELEMENTWISE_ABI_MINOR,
+    }
 )
 MAGIC = b"OTTAISA2"
 HEADER = struct.Struct("<8sHHII12s")
@@ -46,6 +54,8 @@ class Opcode(IntEnum):
     MATMUL_BF16_TILE = 0x10
     RMSNORM_BF16 = 0x20
     ROPE_BF16 = 0x21
+    ADD_BF16 = 0x22
+    SILU_MUL_BF16 = 0x23
     KV_PREPARE_BF16 = 0x30
     GQA_ATTENTION_BF16 = 0x31
     STATE_COMMIT = 0x32
@@ -66,6 +76,8 @@ EXPECTED_ENGINE = {
     Opcode.MATMUL_BF16_TILE: Engine.TENSOR,
     Opcode.RMSNORM_BF16: Engine.VECTOR,
     Opcode.ROPE_BF16: Engine.VECTOR,
+    Opcode.ADD_BF16: Engine.VECTOR,
+    Opcode.SILU_MUL_BF16: Engine.VECTOR,
     Opcode.KV_PREPARE_BF16: Engine.STATE,
     Opcode.GQA_ATTENTION_BF16: Engine.VECTOR,
     Opcode.STATE_COMMIT: Engine.STATE,
@@ -78,9 +90,11 @@ OPCODE_MIN_MINOR = {
     Opcode.MATMUL_BF16_TILE: LEGACY_ABI_MINOR,
     Opcode.RMSNORM_BF16: RMSNORM_ABI_MINOR,
     Opcode.ROPE_BF16: ROPE_ABI_MINOR,
-    Opcode.KV_PREPARE_BF16: ABI_MINOR,
-    Opcode.GQA_ATTENTION_BF16: ABI_MINOR,
-    Opcode.STATE_COMMIT: ABI_MINOR,
+    Opcode.ADD_BF16: ELEMENTWISE_ABI_MINOR,
+    Opcode.SILU_MUL_BF16: ELEMENTWISE_ABI_MINOR,
+    Opcode.KV_PREPARE_BF16: ATTENTION_ABI_MINOR,
+    Opcode.GQA_ATTENTION_BF16: ATTENTION_ABI_MINOR,
+    Opcode.STATE_COMMIT: ATTENTION_ABI_MINOR,
     Opcode.COMPLETE: LEGACY_ABI_MINOR,
 }
 
@@ -256,6 +270,19 @@ def _validate_command(
         ):
             raise ProductionCommandError(
                 f"command {command.index} has illegal BF16 RoPE fields"
+            )
+    elif command.opcode in {Opcode.ADD_BF16, Opcode.SILU_MUL_BF16}:
+        if (
+            command.flags
+            or command.kernel_index == NO_KERNEL
+            or command.auxiliary
+            or not command.size0
+            or not command.size1
+            or command.size2
+            or command.size3
+        ):
+            raise ProductionCommandError(
+                f"command {command.index} has illegal {command.opcode.name} fields"
             )
     elif command.opcode == Opcode.KV_PREPARE_BF16:
         if (
@@ -451,7 +478,9 @@ def disassemble(
 __all__ = [
     "ABI_MAJOR",
     "ABI_MINOR",
+    "ATTENTION_ABI_MINOR",
     "Engine",
+    "ELEMENTWISE_ABI_MINOR",
     "LEGACY_ABI_MINOR",
     "RMSNORM_ABI_MINOR",
     "ROPE_ABI_MINOR",

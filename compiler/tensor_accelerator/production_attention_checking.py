@@ -38,7 +38,7 @@ from .production_capability import (
 )
 from .production_command import (
     ABI_MAJOR,
-    ABI_MINOR,
+    ATTENTION_ABI_MINOR,
     Engine,
     NO_KERNEL,
     Opcode,
@@ -220,7 +220,8 @@ def _problem(capability: ProductionCapability) -> dict[str, Any]:
     vector = capability.vector_engine
     state = capability.state_engine
     if (
-        (capability.command_abi_major, capability.command_abi_minor) != (ABI_MAJOR, ABI_MINOR)
+        (capability.command_abi_major, capability.command_abi_minor)
+        != (ABI_MAJOR, ATTENTION_ABI_MINOR)
         or vector is None
         or state is None
         or vector.max_attention_context_tokens is None
@@ -491,13 +492,18 @@ def check_attention_candidate(
         decoded = decode(command_payload)
     except (OSError, ProductionCommandError) as exc:
         raise ProductionAttentionCheckError(f"cannot decode command program: {exc}") from exc
-    if decoded != commands or command_abi(command_payload) != (ABI_MAJOR, ABI_MINOR):
+    if decoded != commands or command_abi(command_payload) != (
+        ABI_MAJOR,
+        ATTENTION_ABI_MINOR,
+    ):
         raise ProductionAttentionCheckError("command program differs from independent schedule")
     try:
         emitted_disassembly = (root / "program/commands.disasm").read_text(encoding="utf-8")
     except (OSError, UnicodeError) as exc:
         raise ProductionAttentionCheckError(f"cannot read command disassembly: {exc}") from exc
-    if emitted_disassembly != disassemble(commands, abi_minor=ABI_MINOR):
+    if emitted_disassembly != disassemble(
+        commands, abi_minor=ATTENTION_ABI_MINOR
+    ):
         raise ProductionAttentionCheckError("command disassembly differs")
     kernel, _ = _load_canonical(root / "ir/tensor_kernel_ir.json", "kernel IR")
     _identity(kernel, "kernel_ir_id", "kernel IR")

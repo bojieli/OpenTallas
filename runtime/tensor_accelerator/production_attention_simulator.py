@@ -26,7 +26,7 @@ from compiler.tensor_accelerator.production_capability import (
 )
 from compiler.tensor_accelerator.production_command import (
     ABI_MAJOR,
-    ABI_MINOR,
+    ATTENTION_ABI_MINOR,
     Opcode,
     ProductionCommand,
     ProductionCommandError,
@@ -164,7 +164,10 @@ def _manifest(root: Path) -> dict[str, Any]:
         raise ProductionAttentionSimulationError(str(exc)) from exc
     if value["schema"] != MANIFEST_SCHEMA:
         raise ProductionAttentionSimulationError("manifest schema differs")
-    if value["command_abi"] != {"major": ABI_MAJOR, "minor": ABI_MINOR}:
+    if value["command_abi"] != {
+        "major": ABI_MAJOR,
+        "minor": ATTENTION_ABI_MINOR,
+    }:
         raise ProductionAttentionSimulationError("manifest command ABI differs")
     if value["qualification_report_id"] != QUALIFICATION_ID:
         raise ProductionAttentionSimulationError("manifest qualification differs")
@@ -294,7 +297,8 @@ class ProductionAttentionSimulator:
             raise ProductionAttentionSimulationError(f"capability load failed: {exc}") from exc
         if (
             capability.capability_id != manifest["capability_id"]
-            or (capability.command_abi_major, capability.command_abi_minor) != (ABI_MAJOR, ABI_MINOR)
+            or (capability.command_abi_major, capability.command_abi_minor)
+            != (ABI_MAJOR, ATTENTION_ABI_MINOR)
         ):
             raise ProductionAttentionSimulationError("capability identity or ABI differs")
         plan, _ = _load_canonical(deployment / PLAN_PATH, "physical plan")
@@ -325,7 +329,7 @@ class ProductionAttentionSimulator:
             raise ProductionAttentionSimulationError(f"command program load failed: {exc}") from exc
         program = plan.get("program")
         if (
-            command_abi(command_payload) != (ABI_MAJOR, ABI_MINOR)
+            command_abi(command_payload) != (ABI_MAJOR, ATTENTION_ABI_MINOR)
             or not isinstance(program, Mapping)
             or program.get("path") != COMMAND_PATH
             or program.get("command_count") != len(commands)

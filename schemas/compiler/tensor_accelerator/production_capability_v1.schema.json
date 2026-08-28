@@ -13,7 +13,7 @@
       "additionalProperties": false,
       "properties": {
         "major": {"const": 2},
-        "minor": {"enum": [0, 1, 2, 3]}
+        "minor": {"enum": [0, 1, 2, 3, 4]}
       },
       "required": ["major", "minor"],
       "type": "object"
@@ -139,15 +139,17 @@
     "qualified_numeric_contracts": {
       "items": {
         "enum": [
+          "bf16_add_rne_v1",
           "bf16_bf16_fp32_sequential_rne_v1",
           "bf16_byte_preserving_state_v1",
           "qwen3_gqa_fp32_softmax_bf16_v1",
           "qwen3_rmsnorm_fp32_bf16_v1",
-          "qwen3_rope_fp32_bf16_v1"
+          "qwen3_rope_fp32_bf16_v1",
+          "qwen3_silu_mul_bf16_v1"
         ]
       },
       "minItems": 1,
-      "maxItems": 5,
+      "maxItems": 7,
       "type": "array",
       "uniqueItems": true
     },
@@ -365,38 +367,87 @@
             "required": ["vector_engine"]
           },
           "else": {
-            "properties": {
-              "qualified_execution_modes": {
-                "const": [
-                  "bf16_tensor",
-                  "transactional_state",
-                  "vector_fp32"
-                ]
-              },
-              "qualified_numeric_contracts": {
-                "const": [
-                  "bf16_bf16_fp32_sequential_rne_v1",
-                  "bf16_byte_preserving_state_v1",
-                  "qwen3_gqa_fp32_softmax_bf16_v1",
-                  "qwen3_rmsnorm_fp32_bf16_v1",
-                  "qwen3_rope_fp32_bf16_v1"
-                ]
-              },
-              "vector_engine": {
-                "required": [
-                  "attention_head_dim",
-                  "max_attention_context_tokens",
-                  "max_key_value_heads",
-                  "max_query_heads",
-                  "max_rope_positions",
-                  "max_rows",
-                  "max_width",
-                  "rope_head_dim",
-                  "softmax_reduction_lanes"
-                ]
+            "if": {
+              "properties": {
+                "command_abi": {
+                  "properties": {"minor": {"const": 3}},
+                  "required": ["minor"]
+                }
               }
             },
-            "required": ["state_engine", "vector_engine"]
+            "then": {
+              "properties": {
+                "qualified_execution_modes": {
+                  "const": [
+                    "bf16_tensor",
+                    "transactional_state",
+                    "vector_fp32"
+                  ]
+                },
+                "qualified_numeric_contracts": {
+                  "const": [
+                    "bf16_bf16_fp32_sequential_rne_v1",
+                    "bf16_byte_preserving_state_v1",
+                    "qwen3_gqa_fp32_softmax_bf16_v1",
+                    "qwen3_rmsnorm_fp32_bf16_v1",
+                    "qwen3_rope_fp32_bf16_v1"
+                  ]
+                },
+                "vector_engine": {
+                  "required": [
+                    "attention_head_dim",
+                    "max_attention_context_tokens",
+                    "max_key_value_heads",
+                    "max_query_heads",
+                    "max_rope_positions",
+                    "max_rows",
+                    "max_width",
+                    "rope_head_dim",
+                    "softmax_reduction_lanes"
+                  ]
+                }
+              },
+              "required": ["state_engine", "vector_engine"]
+            },
+            "else": {
+              "properties": {
+                "qualified_execution_modes": {
+                  "const": [
+                    "bf16_tensor",
+                    "transactional_state",
+                    "vector_fp32"
+                  ]
+                },
+                "qualified_numeric_contracts": {
+                  "const": [
+                    "bf16_add_rne_v1",
+                    "bf16_bf16_fp32_sequential_rne_v1",
+                    "bf16_byte_preserving_state_v1",
+                    "qwen3_gqa_fp32_softmax_bf16_v1",
+                    "qwen3_rmsnorm_fp32_bf16_v1",
+                    "qwen3_rope_fp32_bf16_v1",
+                    "qwen3_silu_mul_bf16_v1"
+                  ]
+                },
+                "vector_engine": {
+                  "properties": {
+                    "max_width": {"minimum": 12288}
+                  },
+                  "required": [
+                    "attention_head_dim",
+                    "max_attention_context_tokens",
+                    "max_key_value_heads",
+                    "max_query_heads",
+                    "max_rope_positions",
+                    "max_rows",
+                    "max_width",
+                    "rope_head_dim",
+                    "softmax_reduction_lanes"
+                  ]
+                }
+              },
+              "required": ["state_engine", "vector_engine"]
+            }
           }
         }
       }
@@ -405,7 +456,7 @@
       "if": {
         "properties": {
           "command_abi": {
-            "properties": {"minor": {"const": 3}},
+            "properties": {"minor": {"enum": [3, 4]}},
             "required": ["minor"]
           }
         }
