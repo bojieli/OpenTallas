@@ -12,6 +12,14 @@ payload bindings, and explicit prepare/commit state effects. A Qwen or DeepSeek
 adapter is not considered production-neutral merely because its operation names
 can be copied into a generic list; it must satisfy the complete v2 contract.
 
+The pinned Qwen semantic graph and checkpoint lock now have a thin v2 adapter.
+It independently reconstructs tensor/dataflow shapes, binds every one of the 399
+checkpoint payloads, converts per-layer KV writes into prepare/read-prepared and
+one terminal atomic commit, and adds prefill/decode affine request guards. The
+current real handoff exports 1,053 tensors, 617 operations, and 36 KV resources.
+This is graph admission evidence, not a claim that the remaining Qwen kernels or
+the common tensor-accelerator simulator execute the complete graph yet.
+
 The current qualified slice implements this complete chain:
 
 ~~~text

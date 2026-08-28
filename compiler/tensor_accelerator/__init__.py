@@ -14,6 +14,11 @@ from .production_model import (
     load_production_model_graph,
     parse_production_model_graph,
 )
+from .qwen3_adapter import (
+    Qwen3ProductionAdapterError,
+    export_qwen3_production_graph,
+    publish_qwen3_production_graph,
+)
 
 __all__ = [
     "Capability",
@@ -22,10 +27,13 @@ __all__ = [
     "ModelGraphError",
     "ProductionModelGraph",
     "ProductionModelGraphError",
+    "Qwen3ProductionAdapterError",
     "TensorAcceleratorBuildError",
     "build_deployment",
+    "export_qwen3_production_graph",
     "load_capability",
     "load_model_graph",
     "load_production_model_graph",
     "parse_production_model_graph",
+    "publish_qwen3_production_graph",
 ]

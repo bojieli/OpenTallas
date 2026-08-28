@@ -8,6 +8,9 @@
         "output.hidden"
       ],
       "phase": "prefill",
+      "predicate": {
+        "kind": "always"
+      },
       "states": [
         "state.kv"
       ]
@@ -20,12 +23,15 @@
         "output.hidden"
       ],
       "phase": "decode",
+      "predicate": {
+        "kind": "always"
+      },
       "states": [
         "state.kv"
       ]
     }
   ],
-  "graph_id": "3d7159fb95f94922137c2d21acaff0e4b3ee11494965af68a229ccaf05b7ef0b",
+  "graph_id": "3730811dde70c7b1d17eb614497250de2f2f8d5f01fbde53915bf73d5e656b38",
   "model_id": "production-graph-fixture",
   "numeric_profile": "bf16_fixture_v1",
   "operations": [
@@ -99,6 +105,10 @@
     {
       "attributes": {},
       "effects": [
+        {
+          "action": "read_prepared",
+          "state": "state.kv"
+        },
         {
           "action": "commit",
           "state": "state.kv"

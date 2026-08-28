@@ -48,7 +48,9 @@ DTYPE_BITS = {
 TENSOR_ROLES = frozenset({"input", "weight", "constant", "activation", "output"})
 STATE_INITIALIZATIONS = frozenset({"zero", "request", "checkpoint"})
 STATE_TRANSACTION = "prepare_commit"
-STATE_ACTIONS = frozenset({"read_committed", "prepare", "commit", "discard"})
+STATE_ACTIONS = frozenset(
+    {"read_committed", "read_prepared", "prepare", "commit", "discard"}
+)
 COMPARISONS = frozenset({"eq", "ne", "lt", "le", "gt", "ge"})
 
 
@@ -215,12 +217,14 @@ class Entrypoint:
     inputs: tuple[str, ...]
     outputs: tuple[str, ...]
     states: tuple[str, ...]
+    predicate: Mapping[str, Any]
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "inputs": list(self.inputs),
             "outputs": list(self.outputs),
             "phase": self.phase,
+            "predicate": _copy_json(self.predicate),
             "states": list(self.states),
         }
 
@@ -337,7 +341,12 @@ def _shape(
                 dimension, item_label, minimum=1, maximum=1 << 40
             )
             maximum_elements *= parsed
-        elif not static and isinstance(dimension, str) and dimension in symbols:
+        elif (
+            not static
+            and isinstance(dimension, str)
+            and dimension in symbols
+            and symbols[dimension].minimum >= 1
+        ):
             parsed = dimension
             maximum_elements *= symbols[dimension].maximum
         else:
@@ -383,7 +392,7 @@ def _parse_symbols(raw: Any) -> tuple[RuntimeSymbol, ...]:
         if symbol_id in seen:
             raise ProductionModelGraphError(f"duplicate symbol id {symbol_id!r}")
         seen.add(symbol_id)
-        minimum = require_int(item["minimum"], f"symbol {symbol_id}.minimum", minimum=1)
+        minimum = require_int(item["minimum"], f"symbol {symbol_id}.minimum", minimum=0)
         maximum = require_int(
             item["maximum"],
             f"symbol {symbol_id}.maximum",
@@ -684,6 +693,53 @@ def _parse_predicate(
             raw["value"], f"{label}.value", minimum=-(1 << 63), maximum=(1 << 63) - 1
         )
         return {"kind": "compare", "operator": operator, "symbol": symbol, "value": value}
+    if kind == "affine":
+        exact_keys(raw, {"kind", "operator", "terms", "value"}, set(), label)
+        operator = raw["operator"]
+        if operator not in COMPARISONS:
+            raise ProductionModelGraphError(f"{label} has unknown comparison {operator!r}")
+        raw_terms = raw["terms"]
+        if not isinstance(raw_terms, list) or not 1 <= len(raw_terms) <= 16:
+            raise ProductionModelGraphError(
+                f"{label}.terms must contain 1 through 16 affine terms"
+            )
+        terms: list[dict[str, Any]] = []
+        for index, term in enumerate(raw_terms):
+            term_label = f"{label}.terms[{index}]"
+            if not isinstance(term, dict):
+                raise ProductionModelGraphError(f"{term_label} must be an object")
+            exact_keys(term, {"coefficient", "symbol"}, set(), term_label)
+            coefficient = require_int(
+                term["coefficient"],
+                f"{term_label}.coefficient",
+                minimum=-(1 << 31),
+                maximum=(1 << 31) - 1,
+            )
+            if coefficient == 0:
+                raise ProductionModelGraphError(
+                    f"{term_label}.coefficient must be nonzero"
+                )
+            term_symbol = require_identifier(term["symbol"], f"{term_label}.symbol")
+            if term_symbol not in symbols:
+                raise ProductionModelGraphError(
+                    f"{term_label} references unknown runtime symbol {term_symbol!r}"
+                )
+            terms.append({"coefficient": coefficient, "symbol": term_symbol})
+        if len({term["symbol"] for term in terms}) != len(terms):
+            raise ProductionModelGraphError(f"{label}.terms contains duplicate symbols")
+        if terms != sorted(terms, key=lambda term: term["symbol"]):
+            raise ProductionModelGraphError(
+                f"{label}.terms is not in canonical symbol order"
+            )
+        value = require_int(
+            raw["value"], f"{label}.value", minimum=-(1 << 63), maximum=(1 << 63) - 1
+        )
+        return {
+            "kind": "affine",
+            "operator": operator,
+            "terms": terms,
+            "value": value,
+        }
     if kind in {"all", "any"}:
         exact_keys(raw, {"kind", "terms"}, set(), label)
         terms = raw["terms"]
@@ -818,7 +874,10 @@ def _identifier_array(raw: Any, label: str, *, nonempty: bool) -> tuple[str, ...
     return values
 
 
-def _parse_entrypoints(raw: Any) -> tuple[Entrypoint, ...]:
+def _parse_entrypoints(
+    raw: Any,
+    symbols: Mapping[str, RuntimeSymbol],
+) -> tuple[Entrypoint, ...]:
     if not isinstance(raw, list) or len(raw) != len(PHASES):
         raise ProductionModelGraphError(
             "entrypoints must contain exactly prefill and decode"
@@ -828,7 +887,12 @@ def _parse_entrypoints(raw: Any) -> tuple[Entrypoint, ...]:
         label = f"entrypoint {index}"
         if not isinstance(item, dict):
             raise ProductionModelGraphError(f"{label} must be an object")
-        exact_keys(item, {"phase", "inputs", "outputs", "states"}, set(), label)
+        exact_keys(
+            item,
+            {"phase", "inputs", "outputs", "predicate", "states"},
+            set(),
+            label,
+        )
         phase = item["phase"]
         if phase != PHASES[index]:
             raise ProductionModelGraphError(
@@ -839,6 +903,9 @@ def _parse_entrypoints(raw: Any) -> tuple[Entrypoint, ...]:
                 phase=phase,
                 inputs=_identifier_array(item["inputs"], f"{label}.inputs", nonempty=True),
                 outputs=_identifier_array(item["outputs"], f"{label}.outputs", nonempty=True),
+                predicate=_parse_predicate(
+                    item["predicate"], symbols, f"{label}.predicate"
+                ),
                 states=_identifier_array(item["states"], f"{label}.states", nonempty=False),
             )
         )
@@ -952,6 +1019,12 @@ def _validate_graph(model: ProductionModelGraph) -> None:
                             f"operation {operation.operation_id!r} reads committed state "
                             f"{state_id!r} while a prepare is open in {phase}"
                         )
+                elif effect.action == "read_prepared":
+                    if state_id not in prepared:
+                        raise ProductionModelGraphError(
+                            f"operation {operation.operation_id!r} reads prepared state "
+                            f"{state_id!r} before a prepare in {phase}"
+                        )
                 elif effect.action == "prepare":
                     if state_id in prepared:
                         raise ProductionModelGraphError(
@@ -1021,7 +1094,7 @@ def parse_production_model_graph(raw: dict[str, Any]) -> ProductionModelGraph:
             operations=_parse_operations(
                 raw["operations"], symbol_by_id, state_by_id
             ),
-            entrypoints=_parse_entrypoints(raw["entrypoints"]),
+            entrypoints=_parse_entrypoints(raw["entrypoints"], symbol_by_id),
         )
         _validate_graph(model)
         if model.to_dict() != raw:
