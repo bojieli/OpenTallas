@@ -345,11 +345,22 @@ def verify_toolchain(lock: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def git_state(case: dict[str, Any]) -> dict[str, Any]:
-    head = run_command(["git", "rev-parse", "HEAD"], cwd=ROOT).stdout.strip()
-    status = run_command(
+def git_worktree_status() -> list[str]:
+    """Return the campaign-entry worktree status used for provenance."""
+    return run_command(
         ["git", "status", "--short", "--untracked-files=all"], cwd=ROOT
     ).stdout.splitlines()
+
+
+def git_state(
+    case: dict[str, Any], *, campaign_status: list[str] | None = None
+) -> dict[str, Any]:
+    head = run_command(["git", "rev-parse", "HEAD"], cwd=ROOT).stdout.strip()
+    status = (
+        git_worktree_status()
+        if campaign_status is None
+        else list(campaign_status)
+    )
     source_paths = sorted(case["sources"])
     source_diff = run_command(
         ["git", "diff", "--", *source_paths], cwd=ROOT
@@ -1821,10 +1832,14 @@ def write_failed_physical_evidence(
 
 
 def run_case(
-    case: dict[str, Any], lock: dict[str, Any], *, allow_dirty: bool
+    case: dict[str, Any],
+    lock: dict[str, Any],
+    *,
+    allow_dirty: bool,
+    campaign_status: list[str] | None = None,
 ) -> dict[str, Any]:
     source_inventory = verify_source_hashes(case)
-    state = git_state(case)
+    state = git_state(case, campaign_status=campaign_status)
     if not state["selected_sources_match_index"]:
         raise CampaignError(f"{case['name']}: selected RTL sources have unstaged changes")
     if not state["worktree_clean"] and not allow_dirty:
@@ -2089,9 +2104,15 @@ def main(argv: list[str] | None = None) -> int:
     )
     if args.check_only:
         return 0
+    campaign_status = git_worktree_status()
     for name in selected:
         print(f"[{name}] starting governed ASAP7 flow", flush=True)
-        run_case(case_by_name(lock, name), lock, allow_dirty=args.allow_dirty)
+        run_case(
+            case_by_name(lock, name),
+            lock,
+            allow_dirty=args.allow_dirty,
+            campaign_status=campaign_status,
+        )
         write_aggregate(lock)
         print(f"[{name}] PASS", flush=True)
     write_aggregate(lock)

@@ -1,6 +1,7 @@
 import importlib.util
 import json
 from pathlib import Path
+import subprocess
 
 import pytest
 
@@ -69,6 +70,36 @@ def test_asap7_report_does_not_promote_missing_cases():
     assert "0/3" in report
     assert report.count("NOT RUN") == 3
     assert "not foundry signoff" in report
+
+
+def test_campaign_git_status_is_snapshotted_across_cases(monkeypatch):
+    runner = load_runner()
+    calls = []
+
+    def fake_run(command, *, cwd, log=None, timeout_seconds=None):
+        calls.append(command)
+        if command == ["git", "rev-parse", "HEAD"]:
+            return subprocess.CompletedProcess(command, 0, "deadbeef\n", "")
+        if command[:2] == ["git", "diff"]:
+            return subprocess.CompletedProcess(command, 0, "", "")
+        raise AssertionError(f"unexpected command: {command}")
+
+    monkeypatch.setattr(runner, "run_command", fake_run)
+    state = runner.git_state(
+        {"sources": {"rtl/example.sv": "unused"}}, campaign_status=[]
+    )
+    assert state["worktree_clean"] is True
+    assert state["dirty_paths"] == []
+    assert ["git", "status", "--short", "--untracked-files=all"] not in calls
+
+    generated = runner.git_state(
+        {"sources": {"rtl/example.sv": "unused"}},
+        campaign_status=["?? results/asap7_physical/physical.json"],
+    )
+    assert generated["worktree_clean"] is False
+    assert generated["dirty_paths"] == [
+        "?? results/asap7_physical/physical.json"
+    ]
 
 
 def test_asap7_lock_rejects_incomplete_or_unhashed_abc_identity():
