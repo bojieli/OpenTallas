@@ -64,5 +64,13 @@ encodings; learned index scores use raw BF16 encodings. Both are compared as
 exact rationals and NaNs fail closed. `BIASED_TOPK_ROUTE` performs one
 binary32-rounded selection-bias add before this ordering; `INDEX_TOPK` applies
 the BF16 causal completion mask, deterministic top-k, `-1` padding, and the
-compressed-cache offset. Routing-weight normalization and learned index scoring
-remain separate pending operators.
+compressed-cache offset. Learned index scoring remains a separate pending
+operator.
+
+`routing.py` implements `ROUTER_WEIGHT_NORMALIZE` over raw FP32 encodings. It
+gathers unbiased scores in selected slot order, retains duplicate selection
+slots, reduces the denominator with the NUM-6.1 canonical balanced tree, rounds
+each division once, and rounds the subsequent route-scale multiplication once.
+Zero denominators, negative scores, nonfinite values, malformed indices, and
+overflow fail closed. This fixes a deterministic accelerator tree rather than
+claiming that all PyTorch backends use one reduction order.

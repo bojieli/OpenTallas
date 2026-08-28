@@ -263,6 +263,61 @@ def encode_binary32_rne(value: Fraction | int) -> int:
     return sign | ((exponent + 127) << 23) | (significand - (1 << 23))
 
 
+def _finite_binary32_value(code: int, label: str) -> Fraction:
+    decoded = decode_binary32(code)
+    if not decoded.finite or decoded.value is None:
+        raise NumericReferenceError(f"{label} is binary32 NaN or infinity")
+    return decoded.value
+
+
+def binary32_add(left_code: int, right_code: int) -> int:
+    """Add two finite binary32 encodings with one RNE rounding."""
+
+    left = _finite_binary32_value(left_code, "binary32 left addend")
+    right = _finite_binary32_value(right_code, "binary32 right addend")
+    return encode_binary32_rne(left + right)
+
+
+def binary32_multiply(left_code: int, right_code: int) -> int:
+    """Multiply two finite binary32 encodings with one RNE rounding."""
+
+    left = _finite_binary32_value(left_code, "binary32 left factor")
+    right = _finite_binary32_value(right_code, "binary32 right factor")
+    return encode_binary32_rne(left * right)
+
+
+def binary32_divide(numerator_code: int, denominator_code: int) -> int:
+    """Divide finite binary32 encodings with one RNE rounding."""
+
+    numerator = _finite_binary32_value(
+        numerator_code, "binary32 division numerator"
+    )
+    denominator = _finite_binary32_value(
+        denominator_code, "binary32 division denominator"
+    )
+    if denominator == 0:
+        raise NumericReferenceError("binary32 division denominator is zero")
+    return encode_binary32_rne(numerator / denominator)
+
+
+def binary32_balanced_sum(codes: Iterable[int]) -> int:
+    """Reduce finite encodings with the canonical NUM-6.1 balanced tree."""
+
+    level = tuple(codes)
+    if not level:
+        raise NumericReferenceError("binary32 balanced sum must not be empty")
+    for index, code in enumerate(level):
+        _finite_binary32_value(code, f"binary32 balanced-sum input {index}")
+    while len(level) > 1:
+        if len(level) & 1:
+            level += (0,)
+        level = tuple(
+            binary32_add(level[index], level[index + 1])
+            for index in range(0, len(level), 2)
+        )
+    return level[0]
+
+
 def binary32_product_add(
     accumulator_code: int,
     left: Fraction | int,

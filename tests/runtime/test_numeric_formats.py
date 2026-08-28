@@ -9,6 +9,10 @@ import pytest
 
 from runtime.reference.formats import (
     NumericReferenceError,
+    binary32_add,
+    binary32_balanced_sum,
+    binary32_divide,
+    binary32_multiply,
     binary32_ordered_dot,
     binary32_product_add,
     binary32_bits_to_bf16_rne,
@@ -271,6 +275,49 @@ def test_binary32_product_add_rounds_after_each_logical_add() -> None:
     )
     assert result == 0
     assert decode_binary32(result).value == 0
+
+
+def test_binary32_scalar_arithmetic_rounds_each_declared_operation() -> None:
+    one = encode_binary32_rne(1)
+    three = encode_binary32_rne(3)
+    one_third = binary32_divide(one, three)
+    assert one_third == 0x3EAAAAAB
+    assert binary32_multiply(one_third, three) == one
+    assert binary32_add(one, one_third) == 0x3FAAAAAB
+
+
+def test_binary32_balanced_sum_uses_canonical_tree_not_linear_accumulation() -> None:
+    values = (
+        0x3F015F4A,
+        0x3F3B3BC5,
+        0x3E4B0FA0,
+        0x3F410971,
+        0x3F21E97E,
+        0x3F30590C,
+    )
+    assert binary32_balanced_sum(values) == 0x4060AABC
+    linear = values[0]
+    for code in values[1:]:
+        linear = binary32_add(linear, code)
+    assert linear == 0x4060AABD
+    assert binary32_balanced_sum((0x80000000,)) == 0x80000000
+
+
+@pytest.mark.parametrize(
+    ("function", "arguments", "match"),
+    [
+        (binary32_add, (0x7F800000, 0), "NaN or infinity"),
+        (binary32_multiply, (0, 0x7FC00000), "NaN or infinity"),
+        (binary32_divide, (0x3F800000, 0), "denominator is zero"),
+        (binary32_balanced_sum, ((),), "must not be empty"),
+        (binary32_balanced_sum, ((0xFF800000,),), "NaN or infinity"),
+    ],
+)
+def test_binary32_scalar_arithmetic_fails_closed(
+    function, arguments: tuple, match: str
+) -> None:
+    with pytest.raises(NumericReferenceError, match=match):
+        function(*arguments)
 
 
 def test_official_routed_mxfp4_fp8_block_dot() -> None:

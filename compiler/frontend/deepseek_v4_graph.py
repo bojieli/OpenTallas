@@ -67,6 +67,9 @@ _QUALIFIED_REFERENCE_OWNERS = {
     "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
     "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
     "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
+    "ROUTER_WEIGHT_NORMALIZE": (
+        "runtime.reference.routing.normalize_routed_weight_codes"
+    ),
     "TOKEN_EMBED": "runtime.reference.lookup.bf16_token_embedding",
     "WINDOW_INDEX": "runtime.reference.indexing.window_indices",
 }
@@ -322,7 +325,7 @@ _OPERATORS = (
     _op(
         "ROUTER_WEIGHT_NORMALIZE",
         "inference/model.py:Gate.forward",
-        "Gather unbiased scores, normalize selected weights, and apply routed scaling factor.",
+        "Gather unbiased FP32 scores, normalize with the canonical selected-slot tree, and apply the FP32 route scale.",
         "EXPERT_WEIGHT",
         "routing.weight_normalize",
     ),
@@ -1372,7 +1375,7 @@ def build_official_graph_contract() -> dict[str, Any]:
             },
             {
                 "id": "DSV4-SEM-005",
-                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, and nine complete structural/index/lookup/selection operator kinds. Full matrix/tile reduction, vector paths beyond HC expansion, stateful attention, routing beyond qualified selection, and per-operator conversion boundaries remain pending.",
+                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, and ten complete structural/index/lookup/selection/routing operator kinds. Full matrix/tile reduction, vector paths beyond HC expansion, stateful attention, routing beyond qualified selection and weight normalization, and per-operator conversion boundaries remain pending.",
                 "required_resolution": "Implement and qualify complete target-precision semantics for each graph operator before marking that operator executable; scalar and block-dot primitives alone do not close matrix or layer lowering.",
                 "severity": "blocking",
                 "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;runtime/reference/formats.py",
@@ -1420,7 +1423,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "hash-verified local tokenizer encode and decode behavior",
                 "target-only prefill/decode, EOS, and executor-commit control with synthetic transcripts",
                 "scalar target formats, activation microscaling, ordered accumulation, and official block-dot primitives",
-                "unit-qualified HC expansion, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, and learned-index top-k references",
+                "unit-qualified HC expansion, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, learned-index top-k, and routed-weight normalization references",
                 "complete official-tensor canonical transform plan and independently checked transform primitives",
                 "atomic hash-locked canonical application and replay on an adversarial development fixture",
             ],
@@ -1430,7 +1433,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "exact stochastic replay for the unpinned Torch/CUDA RNG stack",
                 "DSpark target verification and speculative acceptance",
                 "full official-payload transform application and canonical output hashes",
-                "operator-complete target-precision references beyond scalar/block-dot primitives and nine structural/index/lookup/selection kinds",
+                "operator-complete target-precision references beyond scalar/block-dot primitives and ten structural/index/lookup/selection/routing kinds",
                 "transactional KV/compressor execution, service-engine operators, and microcode",
                 "physical placement, HBM/KV allocation, and static schedule",
             ],

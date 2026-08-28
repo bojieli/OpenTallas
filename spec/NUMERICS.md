@@ -205,10 +205,12 @@ added left operand first. At each next level, adjacent prior results are paired 
 ascending range order. A missing source in a non-power-of-two final group is exact
 positive zero. Each binary32 addition rounds once under NUM-4.1.
 
-Duplicate routed expert IDs are removed before arithmetic, so an expert contributes
-once. Selected distinct experts contribute in ascending logical expert ID, not
-router arrival order. The compiler maps physical repaired sources back to logical
-source IDs before the canonical tree.
+For routed expert-output reduction, duplicate routed expert IDs are coalesced so
+an expert executes once without discarding any repeated slot contribution.
+Selected distinct experts contribute in ascending logical expert ID, not router
+arrival order. The compiler maps physical repaired sources back to logical source
+IDs before the canonical tree. The earlier router-weight denominator is the
+source-slot-axis reduction defined separately by NUM-6.4.
 
 ### NUM-6.2 Timing independence
 
@@ -241,6 +243,26 @@ ordering. The pinned release requires `torch>=2.10.0`, and the official PyTorch
 2.10 `torch.topk` contract states that indices of tied elements are not guaranteed
 stable. A deterministic accelerator therefore cannot inherit that unspecified
 behavior.
+
+### NUM-6.4 Routed-weight normalization
+
+`ROUTER_WEIGHT_NORMALIZE` gathers original unbiased IEEE binary32 scores in the
+selected slot order. Duplicate expert IDs remain duplicate source slots at this
+boundary, matching `Gate.forward`; later execution may coalesce an expert only if
+it preserves the combined contribution of every slot. All source scores are
+finite and nonnegative. The manifest route scale is finite and greater than zero.
+
+The denominator reduces the selected slot axis with the NUM-6.1 canonical
+balanced tree, preserving slot order. A zero or nonfinite denominator poisons.
+Each gathered score is divided by that binary32 denominator with one
+round-to-nearest-ties-to-even binary32 rounding, then multiplied by the binary32
+route scale with one further rounding. There is no fused divide-scale operation
+and no final renormalization.
+
+The pinned source spells this as `weights.sum(dim=-1)`, in-place division, and
+in-place multiplication, but does not specify one cross-backend reduction tree.
+The canonical tree is therefore an explicit deterministic target adaptation; it
+does not claim bit identity with every incidental PyTorch CPU or CUDA reduction.
 
 ## NUM-7 Speculative decoding
 

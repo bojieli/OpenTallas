@@ -9,6 +9,10 @@ from .formats import (
     QuantizedActivationBlock,
     QuantizedBF16,
     QuantizedE4M3FN,
+    binary32_add,
+    binary32_balanced_sum,
+    binary32_divide,
+    binary32_multiply,
     binary32_ordered_dot,
     binary32_product_add,
     binary32_bits_to_bf16_rne,
@@ -69,6 +73,10 @@ from .selection import (
     stable_topk_bf16,
     stable_topk_binary32,
 )
+from .routing import (
+    RoutingReferenceError,
+    normalize_routed_weight_codes,
+)
 
 __all__ = [
     "BF16_MAX_ENCODING",
@@ -99,10 +107,15 @@ __all__ = [
     "ReferenceError",
     "REQUIREMENTS_SOURCE_SHA256",
     "RouteTable",
+    "RoutingReferenceError",
     "StructuralReferenceError",
     "SelectionReferenceError",
     "TIE_POLICY",
     "TokenMatrix",
+    "binary32_add",
+    "binary32_balanced_sum",
+    "binary32_divide",
+    "binary32_multiply",
     "binary32_ordered_dot",
     "binary32_product_add",
     "binary32_bits_to_bf16_rne",
@@ -127,6 +140,7 @@ __all__ = [
     "hc_expand_bf16",
     "index_topk_indices",
     "mxfp4_fp8_block_dot",
+    "normalize_routed_weight_codes",
     "quantize_bf16_activation_block",
     "stable_topk_bf16",
     "stable_topk_binary32",
