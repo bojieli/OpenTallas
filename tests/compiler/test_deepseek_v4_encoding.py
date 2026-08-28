@@ -108,6 +108,24 @@ def test_official_tool_and_final_completions_parse_exactly() -> None:
     }
 
 
+def test_official_plain_thinking_completion_parses_exactly() -> None:
+    _, prompt = _official_case(2)
+    marker = "<｜Assistant｜><think>"
+    last_start = prompt.rfind(marker) + len(marker)
+    parsed = parse_message_from_completion_text(
+        prompt[last_start:], thinking_mode="thinking"
+    )
+    assert parsed == {
+        "role": "assistant",
+        "content": "The capital of France is Paris.",
+        "reasoning_content": (
+            "The user asks about the capital of France. It is Paris."
+        ),
+        "tool_calls": [],
+    }
+    assert "The user said hello" not in prompt
+
+
 def test_tool_results_are_sorted_by_preceding_call_order() -> None:
     messages = [
         {"role": "user", "content": "run both"},
@@ -155,6 +173,126 @@ def test_reasoning_effort_and_incremental_context_have_exact_boundaries() -> Non
         reasoning_effort="max",
     )
     assert suffix == "<｜User｜>question<｜Assistant｜><think>"
+
+
+@pytest.mark.parametrize("response_format", [None, {}, [], "", 0, False])
+def test_falsey_optional_sections_match_official_omission(
+    response_format: object,
+) -> None:
+    messages = [
+        {
+            "role": "system",
+            "content": "system",
+            "tools": [],
+            "response_format": response_format,
+        },
+        {"role": "user", "content": "question"},
+    ]
+    assert encode_messages(messages, thinking_mode="chat") == (
+        BOS_TOKEN + "system<｜User｜>question<｜Assistant｜></think>"
+    )
+
+
+def test_tool_result_suffix_binds_to_call_at_end_of_context() -> None:
+    context = [
+        {"role": "user", "content": "run it"},
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "call-1",
+                    "type": "function",
+                    "function": {"name": "lookup", "arguments": "{}"},
+                }
+            ],
+        },
+    ]
+    messages = [
+        {"role": "tool", "tool_call_id": "call-1", "content": "result"}
+    ]
+    assert encode_messages(
+        messages,
+        thinking_mode="thinking",
+        context=context,
+    ) == "<｜User｜><tool_result>result</tool_result><｜Assistant｜><think>"
+
+
+def test_multiple_tool_result_suffixes_follow_context_call_order() -> None:
+    context = [
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "id": "first",
+                    "type": "function",
+                    "function": {"name": "one", "arguments": "{}"},
+                },
+                {
+                    "id": "second",
+                    "type": "function",
+                    "function": {"name": "two", "arguments": "{}"},
+                },
+            ],
+        }
+    ]
+    messages = [
+        {"role": "tool", "tool_call_id": "second", "content": "result two"},
+        {"role": "tool", "tool_call_id": "first", "content": "result one"},
+    ]
+    prompt = encode_messages(messages, thinking_mode="chat", context=context)
+    assert prompt.index("<tool_result>result one</tool_result>") < prompt.index(
+        "<tool_result>result two</tool_result>"
+    )
+
+
+def test_duplicate_tool_result_across_context_boundary_fails_closed() -> None:
+    call = {
+        "role": "assistant",
+        "tool_calls": [
+            {
+                "id": "call-1",
+                "type": "function",
+                "function": {"name": "lookup", "arguments": "{}"},
+            }
+        ],
+    }
+    context = [
+        call,
+        {"role": "tool", "tool_call_id": "call-1", "content": "first"},
+    ]
+    messages = [
+        {"role": "tool", "tool_call_id": "call-1", "content": "duplicate"}
+    ]
+    with pytest.raises(DeepSeekV4EncodingError, match="duplicates a result"):
+        encode_messages(messages, thinking_mode="chat", context=context)
+
+
+def test_repeated_idless_result_for_one_call_fails_closed() -> None:
+    messages = [
+        {
+            "role": "assistant",
+            "tool_calls": [
+                {
+                    "type": "function",
+                    "function": {"name": "lookup", "arguments": "{}"},
+                }
+            ],
+        },
+        {"role": "tool", "content": "first"},
+        {"role": "tool", "content": "duplicate"},
+    ]
+    with pytest.raises(DeepSeekV4EncodingError, match="duplicates a result"):
+        encode_messages(messages, thinking_mode="chat")
+
+
+@pytest.mark.parametrize("context", [{}, "", 0, False])
+def test_falsey_non_list_context_fails_closed(context: object) -> None:
+    with pytest.raises(DeepSeekV4EncodingError, match="context: must be a list"):
+        encode_messages(
+            [{"role": "user", "content": "question"}],
+            thinking_mode="chat",
+            context=context,  # type: ignore[arg-type]
+        )
 
 
 @pytest.mark.parametrize(

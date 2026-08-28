@@ -235,8 +235,6 @@ def _normalize_tools(value: Any, path: str) -> list[dict[str, Any]]:
         function["name"] = _name(function["name"], f"{item_path}.function.name")
         _json_text(function, f"{item_path}.function")
         result.append({"type": "function", "function": function})
-    if not result:
-        raise _error(path, "must contain at least one tool")
     return result
 
 
@@ -364,23 +362,30 @@ def _tool_call_id(call: Mapping[str, Any]) -> str:
     return value if isinstance(value, str) else ""
 
 
-def _merge_tool_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
+def _merge_tool_messages(
+    messages: list[dict[str, Any]],
+    *,
+    path: str,
+    preceding_calls: list[dict[str, Any]] | None = None,
+    preceding_result_slots: set[int] | None = None,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]] | None, set[int]]:
     merged: list[dict[str, Any]] = []
-    active_calls: list[dict[str, Any]] | None = None
-    result_ids: set[str] = set()
+    active_calls = copy.deepcopy(preceding_calls)
+    result_slots = set(preceding_result_slots or ())
 
     for index, original in enumerate(messages):
         message = copy.deepcopy(original)
         role = message["role"]
         if role == "assistant":
             active_calls = message.get("tool_calls")
-            result_ids = set()
+            result_slots = set()
             merged.append(message)
             continue
         if role == "tool":
             if not active_calls:
                 raise _error(
-                    f"messages[{index}]", "tool result has no preceding assistant tool call"
+                    f"{path}[{index}]",
+                    "tool result has no preceding assistant tool call",
                 )
             call_ids = [_tool_call_id(call) for call in active_calls]
             result_id = message.get("tool_call_id", "")
@@ -388,20 +393,23 @@ def _merge_tool_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]
             if result_id:
                 if result_id not in nonempty_call_ids:
                     raise _error(
-                        f"messages[{index}].tool_call_id",
+                        f"{path}[{index}].tool_call_id",
                         f"does not match preceding tool calls: {result_id!r}",
                     )
-                if result_id in result_ids:
-                    raise _error(
-                        f"messages[{index}].tool_call_id",
-                        f"duplicates tool result {result_id!r}",
-                    )
-                result_ids.add(result_id)
+                result_slot = call_ids.index(result_id)
             elif len(active_calls) > 1:
                 raise _error(
-                    f"messages[{index}].tool_call_id",
+                    f"{path}[{index}].tool_call_id",
                     "is required when the preceding assistant made multiple calls",
                 )
+            else:
+                result_slot = 0
+            if result_slot in result_slots:
+                raise _error(
+                    f"{path}[{index}].tool_call_id",
+                    "duplicates a result for the preceding tool call",
+                )
+            result_slots.add(result_slot)
             block = {
                 "type": "tool_result",
                 "tool_use_id": result_id,
@@ -436,10 +444,12 @@ def _merge_tool_messages(messages: list[dict[str, Any]]) -> list[dict[str, Any]]
                         new_message[key] = message[key]
                 merged.append(new_message)
             active_calls = None
+            result_slots = set()
             continue
         merged.append(message)
         active_calls = None
-    return merged
+        result_slots = set()
+    return merged, active_calls, result_slots
 
 
 def _sort_tool_results(messages: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -543,7 +553,7 @@ def _render_message(
         prompt += message["content"]
         if message.get("tools"):
             prompt += "\n\n" + _render_tools(message["tools"])
-        if "response_format" in message:
+        if message.get("response_format"):
             prompt += "\n\n" + _RESPONSE_FORMAT_TEMPLATE.format(
                 schema=_json_text(message["response_format"], "response_format")
             )
@@ -551,7 +561,7 @@ def _render_message(
         prompt += USER_TOKEN + message["content"]
         if message.get("tools"):
             prompt += "\n\n" + _render_tools(message["tools"])
-        if "response_format" in message:
+        if message.get("response_format"):
             prompt += "\n\n" + _RESPONSE_FORMAT_TEMPLATE.format(
                 schema=_json_text(message["response_format"], "response_format")
             )
@@ -652,10 +662,20 @@ def encode_messages(
             f"must be one of {sorted(REASONING_EFFORT_PROMPTS)!r}",
         )
 
-    normalized_context = _normalize_messages(context or [], "context")
+    context_value: Any = [] if context is None else context
+    normalized_context = _normalize_messages(context_value, "context")
     normalized_messages = _normalize_messages(messages, "messages")
-    merged_context = _merge_tool_messages(normalized_context)
-    merged_messages = _merge_tool_messages(normalized_messages)
+    (
+        merged_context,
+        pending_context_calls,
+        pending_context_result_slots,
+    ) = _merge_tool_messages(normalized_context, path="context")
+    merged_messages, _, _ = _merge_tool_messages(
+        normalized_messages,
+        path="messages",
+        preceding_calls=pending_context_calls,
+        preceding_result_slots=pending_context_result_slots,
+    )
     full_messages = _sort_tool_results(merged_context + merged_messages)
 
     effective_drop = drop_thinking
