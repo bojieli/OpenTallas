@@ -28,11 +28,11 @@ and the explicit pre-NDA external-gate report.
 | Area | Disposition | Rationale |
 |---|---|---|
 | Model identity/storage | pass for analysis | Pinned official revisions; safetensors headers fully classified; decode/draft/resident roles separated. |
-| Numerical/operator accounting | pass for analysis | Official FP8/MXFP4/BF16/FP32 roles and exact operator shapes; no `2 × active parameter` proxy. |
+| Numerical/operator accounting | conditional for analysis | Official FP8/MXFP4/BF16/FP32 tensor roles and contraction shapes; no `2 × active parameter` proxy. Selected auxiliary paths expose count-derived break-even rates, but have no service time/energy and the semantic ledger is not operator-complete. |
 | Weight/KV accounting | pass for analysis | Immutable and mutable tiers are separate; batch/context traffic matrices and capacity identities are executable. |
 | Iso-technology comparison | pass for conditional simulation | N7/A100 and N4/B300 do not mix node or HBM generation; ROM values remain extrapolated envelopes. |
 | Communication/pipeline arithmetic | pass for conditional simulation | Two all-reduces/layer, topology/payload service, local capacity, batch×stage residence, and cross-stage terms are explicit. |
-| Mechanical consistency | pass | 6,565 N7 and 3,921 leading-node checks close generated identities/ceilings only. |
+| Mechanical consistency | pass | 12,091 N7 and 7,881 leading-node checks close generated identities, configured tensor ceilings, and auxiliary break-even identities only. |
 | GPU application baseline | open external gate | Exact A100/B300 production runs, placement, collectives, KV counters, and acquisition economics are absent. |
 | ROM/compute/NoC target PPA | open external gate | No target macro, simultaneous full-array power, format-specific P&R, or wafer NoC timing. |
 | Package/power/yield/economics | open external gate | Stack pitch is only a first-order check; OSAT, SI/PI, thermal, repair, yield, and quotes are absent. |

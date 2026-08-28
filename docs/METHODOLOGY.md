@@ -109,6 +109,24 @@ FP8×FP8, MXFP4×FP8, BF16×BF16, FP4×FP4 index scans, and FP32×FP32 mHC work.
 hardware profile must provide a native path or an explicit emulation path for
 every bucket.  Packed four-bit storage does not turn all computation into FP4.
 
+Those buckets price tensor contractions only. The pinned implementation also
+requires normalization, nonlinear activation, attention-softmax score handling,
+index-score reduction, compressor pooling, top-k selection, and iterative
+Sinkhorn work. The simulator preserves those as separate source-derived count
+categories because an exponential, divide/rsqrt, comparison candidate, and
+matrix element update do not have one defensible common "FLOP" cost. It emits,
+for every operating point, the category service rate required to fit the
+unmodified baseline interval and the 10× rate that would limit that category
+alone to 10% serialized overhead.
+
+No GPU or wafer vector/top-k roof is inferred from a tensor-core peak. These
+break-even rates are requirements, not achieved service, and they do not enter
+the reported interval, power, or utilization. The current auxiliary ledger is
+also not operator-complete: activation quantization and scale handling, RoPE,
+residual/hyper-connection elementwise work, dispatch, and other source paths
+remain under `COMP-01`. Therefore every token rate and ROM/GPU ratio remains
+conditional until executable operator service and counters replace this gate.
+
 ## 6. Communication is derived, not entered as ns/layer
 
 The official DeepSeek tensor-parallel block performs two FP32 all-reduces per

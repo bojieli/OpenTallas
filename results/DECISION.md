@@ -21,16 +21,18 @@ packaging, power, and yield that no public artifact establishes.
 - DeepSeek's official numerical roles are retained: routed MXFP4×FP8, dense
   FP8×FP8, BF16 paths, FP4 index work, and FP32 mHC work. Pure-FP4 marketing
   peaks are not used for mixed expert GEMMs.
-- Decode work is counted from exact operator shapes. At 200K it is 49.965 Gop/token
-  for Flash and 145.068 Gop/token for Pro; the old `2 × active parameters` proxy
-  is no longer used.
+- Decode tensor contractions are counted from exact operator shapes. At 200K they
+  are 49.965 Gop/token for Flash and 145.068 Gop/token for Pro; the old `2 ×
+  active parameters` proxy is no longer used. Selected auxiliary categories are
+  counted and emit break-even rate requirements, but are not service-priced.
 - Immutable weights and mutable KV are physically separate on the proposed ROM
   architecture. GPU HBM charges both streams; ROM never stores KV.
 - Two DeepSeek all-reduces per layer, topology-derived wafer communication,
   pipeline residence (`batch × stages`), local capacity, cross-stage links, and
   thermal scaling are explicit.
-- Both generated arithmetic audits pass: 6,565 checks for N7 and 3,921 for the
-  leading-node study. This closes identities and configured ceilings only.
+- Both generated arithmetic audits pass: 12,091 checks for N7 and 7,881 for the
+  leading-node study. This closes identities, configured tensor ceilings, and
+  auxiliary break-even arithmetic only.
 
 ## Conditional 200K result
 
@@ -49,6 +51,14 @@ performance. The deterministic envelope ranges remain wide. In the N7 study the
 conservative envelope falls below parity for Flash at B32/B64 and Pro at B8/B32/
 B64. The leading-node conservative envelope stays near or above parity at 200K,
 but it still relies on unmeasured target ROM, NoC, package, and power assumptions.
+
+The headline ratios are additionally conditional on auxiliary execution. The
+reports now expose the normalization, nonlinear, attention/index-score, top-k,
+compressor, and Sinkhorn rates required to fit each baseline interval, rather
+than inventing a vector roof. Those paths do not yet extend modeled time or
+energy, and activation quantization/scaling, RoPE, hyper-connection elementwise
+work, and dispatch are not yet an operator-complete ledger. `COMP-01` must price
+them from executable artifacts before performance can be promoted.
 
 The B300 full-FP32 roof is not published in the checked official artifacts. A
 19.5/45/90/180-TOP/s per-GPU sweep leaves every reported fastest-B300 200K rate
@@ -86,7 +96,7 @@ repair, test, and packaging.
 | GPU baseline | Exact A100 and B300 serving traces across the required batch/context matrix | Runtime/GPU lab | Open |
 | ROM density/timing | Target-node bitcell/macro density, access time, sense margin, corners, ECC/repair | Foundry/memory IP | Open |
 | Full-array activity | Simultaneous read current, energy, IR drop, noise, thermal map, duty cycle | Foundry/implementation | Open |
-| Numeric compute | MXFP4×FP8, FP8×FP8, BF16, FP4, and FP32 synthesis/P&R, power, and accuracy | Digital/PDK/model owner | Open |
+| Numeric compute | MXFP4×FP8, FP8×FP8, BF16, FP4, FP32, vector/normalization, softmax, top-k, Sinkhorn, quantization, and dispatch synthesis/P&R, power, and accuracy | Digital/PDK/model owner | Open — tensor contractions are scenario-priced; auxiliary paths expose only count-derived break-even requirements |
 | Wafer NoC | Placed floorplan, wire/repeater/clock/skew timing, bisection and contention | Physical design | Open |
 | HBM package | Stack count, beachfront escape, SI/PI, interposer/substrate, known-good-stack flow | OSAT/HBM vendor | Open |
 | Power/cooling | PDN, EM/IR, transient load, junction temperature, cooling and facility envelope | Package/system | Open |

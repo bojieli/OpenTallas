@@ -119,6 +119,13 @@ pipeline, capacity, and thermal terms. Kimi K3 and Qwen3-8B remain useful contro
 in the legacy/general simulator but are not part of the two current comparator
 matrices.
 
+The reported compute interval prices format-specific tensor contractions only.
+Selected normalization, nonlinear, softmax/index-score, compressor, top-k, and
+Sinkhorn work is now stage-partitioned and reported as break-even service-rate
+requirements without inventing a vector roof. Those paths—and the still-incomplete
+auxiliary operator ledger—do not yet contribute modeled time or energy, so all
+token rates and ROM/GPU ratios remain conditional under `COMP-01`.
+
 The architecture/specification gate has passed for public-reference RTL only. The
 checked `ot_*` hierarchy is now a controlled implementation baseline with strict
 static/CDC/RDC, formal, dual-simulator, and source-hashed evidence. A warning-clean,

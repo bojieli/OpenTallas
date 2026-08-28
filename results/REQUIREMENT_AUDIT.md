@@ -35,7 +35,7 @@ of the product.
 
 | Deliverable | Status | Implemented artifacts/checks | Gap or qualification |
 |---|---|---|---|
-| 1. Pinned evidence inventories, executable analytical models, regenerated curves, and binding constraints | **Pass** | `data/inventory/`, `configs/`, `src/opentallas/`, `tools/run_iso_node_studies.py`, `tools/run_model_traffic_screen.py`, `results/iso-node/`, and `results/model-traffic/`; generated arithmetic audits pass 6,565 N7 and 3,921 leading-node checks. Here “executable analytical models” means reproducible equations and study generators, not an executable accelerator. | Audits close arithmetic identities/configured ceilings, not model execution, architecture correctness, or physical truth; those remain under `COMP-01` and the external gates. |
+| 1. Pinned evidence inventories, executable analytical models, regenerated curves, and binding constraints | **Pass** | `data/inventory/`, `configs/`, `src/opentallas/`, `tools/run_iso_node_studies.py`, `tools/run_model_traffic_screen.py`, `results/iso-node/`, and `results/model-traffic/`; generated arithmetic audits pass 12,091 N7 and 7,881 leading-node checks. Here “executable analytical models” means reproducible equations and study generators, not an executable accelerator. | Audits close arithmetic identities, configured tensor ceilings, and auxiliary break-even identities. Auxiliary/vector/top-k service time and energy remain unpriced, the auxiliary ledger is not operator-complete, and model execution, architecture correctness, and physical truth remain under `COMP-01` and the external gates. |
 | 2. Complete system, architecture, numeric, interface, power, RAS/DFT, firmware, floorplan, verification, synthesis, and physical-proxy specifications | **Pass** | `spec/SYSTEM_REQUIREMENTS.md` through `spec/VERIFICATION_PLAN.md`, machine-readable contracts under `spec/*.json`, and `python3 tools/check_spec.py`. | Product budgets remain hypotheses until external target-node evidence replaces them. |
 | 3. Bidirectional requirements traceability | **Pass** | `spec/requirements.json`, `spec/verification.json`, `spec/manifest.json`, generated `spec/TRACEABILITY.md`, tests, assertions, formal/coverage/fault artifacts, and bug/waiver ledgers. | Traceability demonstrates allocation/evidence linkage; it does not promote proxy evidence to silicon signoff. |
 | 4. CPU routing, balance, NoC, fault/degradation, and sensitivity simulations with real/synthetic separation | **Conditional** | `tools/router_traces.py`, `tools/noc_sweep.py`, `src/opentallas/routing.py`, `src/opentallas/noc.py`, `results/routing/`, `results/noc/`, and fault/sensitivity campaigns. | Released/synthetic inputs are available; representative production router/KV/runtime traces are not. |
@@ -43,6 +43,37 @@ of the product.
 | 6. Technology-independent RTL with golden models, assertions/formal, tests, coverage, CDC/RDC, fault injection, and ledgers | **Conditional** | RTL under `rtl/`; formal, simulation, static, coverage, and fault runners under `tools/`; reports and machine-readable evidence under `results/rtl/`. | This is a public-reference digital proxy. ROM/SRAM/HBM/PHY/analog macros and product numerical quality are external. |
 | 7. Reproducible synthesis and open-library physical proxies with constraints, reports, logs, tool versions, and black-box boundaries | **Pass** | `spec/implementation_proxy.json`, `tools/rtl_implementation_campaign.py`, and canonical fingerprint `87e057764094b9ed` close 7/7 cases, 2/2 generic proofs, 1/1 actual mapped proof, 2/2 physical proxies, and 2/2 post-route proofs. `tools/run_clean_rtl_implementation_replay.py` reproduced the exact source/tool fingerprint from deterministic clean commit `34a0d2ec…` and hash-verified 386 referenced artifacts. Reports are `results/rtl/IMPLEMENTATION_REPORT.md`, `IMPLEMENTATION_STATUS.md`, and `CLEAN_BASELINE_REPLAY.md`; `spec/verification.json` is `closed`. | The exact `numeric_e16_l16` scaling point uses a bounded structural Liberty mapping profile whose QoR is not directly comparable with default-profile cases. All results remain Nangate45 methodology/scaling proxies; target macros, numerical PPA, full-chip/wafer implementation, package, manufacturing, and signoff remain external. |
 | 8. Pre-NDA pass/fail/open readiness report | **Pass** | `results/PRE_NDA_READINESS.md` and `results/DECISION.md` enumerate completed public gates, external evidence requests, owners, pass criteria, and phase-transition rules. | Product architecture freeze, test chip, tapeout, and production claims remain unauthorized. |
+
+## Nine-phase program position
+
+The program plan has nine numbered phases, `0` through `8`. Public proxy work
+was intentionally performed in parallel, so the existence of a Phase 5 proxy
+artifact does not imply that the product gates in Phases 0–2 have been passed or
+that Phase 6 has begun.
+
+| Phase | Current status | Evidence already obtained | Gate still required |
+|---|---|---|---|
+| 0. Measure the target model | **Conditional** | Pinned configs, exact released tensor inventories, operator-shape accounting, and hardware-independent traffic matrices. | Production router traces, allocator/KV counters, reread/cache behavior, and model-owner quality evidence remain external. |
+| 1. Model-owner and foundry conversations | **Open; packages ready** | The exact questions and pass criteria are in `results/PRE_NDA_READINESS.md`. | Checkpoint-lifetime commitment and viable foundry ROM/stitching path have not been obtained. |
+| 2. Requirements, architecture, and specification freeze | **Public reference pass; product gate open** | Complete public-reference specifications and traceability pass `tools/check_spec.py`. | `COMP-01`, measured GPU/runtime evidence, target macro data, package evidence, and cross-discipline product-budget closure are required before a product freeze. |
+| 3. Architecture-risk retirement and open-PDK work | **Conditional** | NoC/routing/fault simulations plus independent SKY130A and IHP SG13G2 topology, DRC/LVS, PEX, PVT, and detailed-RC methodology chains. | Production traces, compact/full-array characterization, target-node correlation, package/thermal review, and silicon remain open. |
+| 4. Implementation RTL and continuous verification | **Conditional public proxy** | Static, dual-simulator, formal, coverage, fault, CDC/RDC, and requirements-trace campaigns close their declared proxy cases. | Operator-complete target-format execution and generated-artifact RTL/co-simulation remain open under `COMP-01`; commercial signoff remains external. |
+| 5. Reproducible synthesis and open-library physical proxy | **Pass at proxy boundary** | The clean seven-case Nangate45 campaign and 386 referenced artifacts are reproducible and re-verifiable. | This is not target-node numerical PPA, a ROM macro, a full chip/wafer, or manufacturing signoff. |
+| 6. Foundry/OSAT target-node re-baseline | **Not entered** | Partner evidence packages and entry criteria exist. | NDA collateral, target macros, exact GPU baselines, package/power/yield ownership, and a passing real-model `COMP-01` slice are prerequisites. |
+| 7. Single-reticle target-node shuttle | **Not entered** | Test-vehicle requirements are defined at program level. | Phase 6 closure, tapeout authority, fabricated reticle silicon, and correlation evidence are absent. |
+| 8. Wafer-scale product | **Not entered** | Wafer feasibility anchors and qualification requirements are documented. | Correlated reticle silicon, full `COMP-01`, manufacturing/yield/package/thermal closure, checkpoint commitment, business case, and independent readiness review are all required. |
+
+## Executable-system frontier
+
+`COMP-01` has ten milestones (`M0`–`M9`) and six validation levels (`A`–`F`).
+The first deterministic exact-integer fixture closes only the Level A plumbing
+slice. It exercises schemas, ROM-image generation, inverse checking, microcode,
+artifact-only interpretation, known-answer comparison, and exact functional
+counters. It does not close a real-model milestone. The next hard frontier is
+the official DeepSeek semantic/operator ledger and complete checkpoint front end
+(`M1`/`M2`), followed by real placement/images, execution, certified schedules,
+a full-dimension vertical slice, RTL integration, complete-model execution, and
+implementation-derived performance revalidation (`M3`–`M9`).
 
 ## Current disposition
 

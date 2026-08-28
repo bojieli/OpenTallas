@@ -26,6 +26,21 @@ earlier generated report.
 The repository does not use secondary press reports for a value when an official
 model card, checkpoint, report, or vendor datasheet is available.
 
+## 2026-08-28 online identity and reachability recheck
+
+Fresh downloads of the pinned DeepSeek Flash and Pro `config.json` and
+`model.safetensors.index.json` files produced the four SHA-256 values recorded
+below exactly. The DeepSeek report, NVIDIA A100 page, NVIDIA B300 datasheet and
+system guide, NVIDIA Blackwell page, Cerebras chip page, and Graphcore IPU page
+all returned successful public responses after redirects. The fabricated 28-nm
+ROM paper's IEEE DOI resolver also responded and resolved to IEEE Xplore.
+
+The YOLoC and 3D-METRO DOI resolvers reached their ACM Digital Library landing
+pages, but those pages returned HTTP 403 to the automated recheck. Their DOI
+identities remain pinned citations; this run does **not** claim fresh access to
+or content validation of the ACM papers. Reachability never upgrades a
+published or simulated result to measured product evidence.
+
 ## Model primary sources
 
 | ID | Primary artifact | Immutable pin | Evidence used |
@@ -33,9 +48,13 @@ model card, checkpoint, report, or vendor datasheet is available.
 | SRC-DSV4-REPORT | [DeepSeek-V4 technical report, arXiv:2606.19348v1](https://arxiv.org/abs/2606.19348v1) | arXiv v1, published 2026-04-26 | Flash 284B total/13B active; Pro 1.6T total/49B active; one-million-token context; CSA/HCA architecture; routed experts use MXFP4 weights with FP8 activations; dense/shared matrices remain FP8-class; the report explicitly says current hardware executes FP4×FP8 at the FP8×FP8 peak, while a future native implementation could theoretically be one-third more efficient. |
 | SRC-DSV4-FLASH-CARD | [DeepSeek-V4-Flash-0731 model card](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/README.md) | `7872f01b1d1fe23eabc4c98b48bffcef5a386062` | Official release identity; attached DSpark module; serving recipe uses FP8 KV and FP4 indexer cache; target and draft are in the same checkpoint. |
 | SRC-DSV4-FLASH-CONFIG | [DeepSeek-V4-Flash-0731 config](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/config.json) | same revision; local SHA-256 `6c8f3d2d3b48707541b88f32f22ef3f0f8a6b57d8523281e2b8d3cdb0ae9a023` | 43-layer compression sequence, hidden dimensions, expert count/top-k, index dimensions/top-k, context limit, and sliding window. |
+| SRC-DSV4-FLASH-MODEL | [DeepSeek-V4-Flash-0731 inference model](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/inference/model.py) | same revision; local SHA-256 `c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f` | Official decode graph and tensor/operator ordering, including normalization, compressor pooling, index scoring/top-k, routing, SwiGLU, RoPE, hyper-connections, and logits. It defines source work; it does not provide a custom-wafer service roof. |
+| SRC-DSV4-FLASH-KERNEL | [DeepSeek-V4-Flash-0731 inference kernels](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/inference/kernel.py) | same revision; local SHA-256 `59b325083d7103975cba025bd0d60ea343bb82d8fff53088afb7c04bd380c0c2` | Official sparse-attention online-softmax and `hc_split_sinkhorn` structure. The two block calls and 20 configured Sinkhorn iterations support count derivation; GPU kernel code is not ported into an assumed ROM-wafer throughput. |
 | SRC-DSV4-FLASH-INDEX | [DeepSeek-V4-Flash-0731 safetensors index](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/model.safetensors.index.json) and pinned shard headers | same revision; index SHA-256 `98efab455cf08dfbbbaaba6f570e1bf10bf927d2b4c3c453a59c2f6f0e3be92b` | Exact released storage, dtype, tensor-role, per-layer, dense/routed, draft-only, and resident-only inventory. |
 | SRC-DSV4-PRO-CARD | [DeepSeek-V4-Pro-0813 model card](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813/blob/72e1d3230f6c080a530b0a1d46f8eb4602340597/README.md) | `72e1d3230f6c080a530b0a1d46f8eb4602340597` | Official release identity; attached DSpark module; FP8 KV/FP4 indexer serving recipe; shared target/draft checkpoint. |
 | SRC-DSV4-PRO-CONFIG | [DeepSeek-V4-Pro-0813 config](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813/blob/72e1d3230f6c080a530b0a1d46f8eb4602340597/config.json) | same revision; local SHA-256 `9dd2a89255469e120b333668ef5a169b7ae46c00f6bbab786bf0be457546aec0` | 61-layer compression sequence, hidden dimensions, 384 experts/top-6, index dimensions/top-1024, and context limit. |
+| SRC-DSV4-PRO-MODEL | [DeepSeek-V4-Pro-0813 inference model](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813/blob/72e1d3230f6c080a530b0a1d46f8eb4602340597/inference/model.py) | same revision; local SHA-256 `c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`; byte-identical to the pinned Flash file | Official Pro decode graph and tensor/operator ordering. The identical source hash permits the same source-level operator derivation with Pro's independently pinned configuration and tensor inventory. |
+| SRC-DSV4-PRO-KERNEL | [DeepSeek-V4-Pro-0813 inference kernels](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813/blob/72e1d3230f6c080a530b0a1d46f8eb4602340597/inference/kernel.py) | same revision; local SHA-256 `59b325083d7103975cba025bd0d60ea343bb82d8fff53088afb7c04bd380c0c2`; byte-identical to the pinned Flash file | Official Pro sparse-attention online-softmax and `hc_split_sinkhorn` structure. The source identity does not imply identical dimensions; those remain configuration- and checkpoint-derived. |
 | SRC-DSV4-PRO-INDEX | [DeepSeek-V4-Pro-0813 safetensors index](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813/blob/72e1d3230f6c080a530b0a1d46f8eb4602340597/model.safetensors.index.json) and pinned shard headers | same revision; index SHA-256 `2de2ac1e43134f8b03bf6156067715b7c3c73b1a507329e606023c601a56d30a` | Exact released-format inventory and decode-role split. |
 | SRC-K3-CARD | [Kimi-K3 model card](https://huggingface.co/moonshotai/Kimi-K3/blob/a590ce090cb049c93a33dfe8c208ec652aa20503/README.md) | `a590ce090cb049c93a33dfe8c208ec652aa20503` | 2.8T total/104B active, 93 layers, 69 KDA + 24 gated MLA, 896 experts/top-16, and 1,048,576-token context. |
 | SRC-K3-CONFIG | [Kimi-K3 config](https://huggingface.co/moonshotai/Kimi-K3/blob/a590ce090cb049c93a33dfe8c208ec652aa20503/config.json) | same revision; local SHA-256 `9710e121a58d03ac92c8d6da287a19541994319afbbe6d6202af001ffd379213` | Exact layer IDs, KDA state dimensions, latent dimensions, hidden size, experts, and context limit used by the profiler. |

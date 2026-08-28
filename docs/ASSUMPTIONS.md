@@ -68,10 +68,10 @@ The second case is a ceiling, not a demonstrated A100 serving implementation.
 
 ## 3. Operator and traffic accounting
 
-One multiply plus one add is two operations. DeepSeek decode uses exact operator
-shapes from the pinned implementation, including sparse-index scan/gather,
-context-linear attention, vector work, mHC work, and vocabulary projection. The
-current studies do not use `2 × active_parameters`.
+One multiply plus one add is two operations. DeepSeek tensor-contraction work
+uses exact operator shapes from the pinned implementation, including sparse-index
+scan/gather, context-linear attention, mHC projections, and vocabulary
+projection. The current studies do not use `2 × active_parameters`.
 
 At 200K context the exact totals are:
 
@@ -79,6 +79,17 @@ At 200K context the exact totals are:
 |---|---:|---:|
 | Flash | 49.965 Gop | 0.136% |
 | Pro | 145.068 Gop | 0.116% |
+
+These totals are tensor operations, not an operator-complete execution count.
+Normalization, nonlinear, attention-score/softmax, index-score, compressor-pool,
+top-k, and Sinkhorn categories are counted separately. Each generated operating
+point reports the category rate required to fit the baseline interval and a
+10%-serialized-overhead threshold; no vector/top-k service roof is assumed.
+Consequently those paths contribute no modeled time or energy yet, and all token
+rates remain conditional. Activation quantization/scaling, RoPE,
+residual/hyper-connection elementwise work, dispatch, and remaining official
+source operations still require the `COMP-01` semantic ledger and executable
+service measurements.
 
 For a decode step:
 
@@ -218,6 +229,9 @@ thermal scale explicitly.
   authoritative iso-node studies;
 - measured production router distributions, expert placement, KV rereads, kernel
   utilization, collective overlap, or latency tails;
+- executed service time, energy, and shared-resource contention for vector,
+  softmax, top-k, Sinkhorn, quantization, RoPE, residual, and dispatch paths; the
+  reports expose only selected count-derived break-even requirements;
 - target-node ROM timing/sense margin, simultaneous read power, detailed PDN and
   thermal fields, package SI/PI, yield/repair correlation, or failure domains;
 - logits, benchmark quality, or numerical qualification of a manufactured

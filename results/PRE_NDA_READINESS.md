@@ -95,12 +95,12 @@ target-foundry correlation, EXT-06/07/14, or any N7/N4 or product claim.
 |---|---|---|---|
 | ANA-01 | Pinned Flash/Pro configs, model cards, safetensors indices, and exact tensor-role inventories | measured/published | Metadata integrity and storage only; no checkpoint execution or quality claim. |
 | ANA-02 | Official DeepSeek numerical roles retained tensor/operator-wise | published/derived | Hardware accuracy and achievable kernel rate remain unmeasured. |
-| ANA-03 | Exact operator-shape inventory including sparse indexing, attention, mHC, vector paths, and LM head | derived | Counts operations; does not establish utilization. |
+| ANA-03 | Exact tensor-contraction shape inventory plus selected source-derived auxiliary counts for sparse indexing, attention, mHC, normalization, nonlinear, top-k, Sinkhorn, and LM head paths | derived | Tensor buckets receive format roofs; auxiliary categories receive break-even rate requirements only. The auxiliary ledger is not operator-complete and contributes no modeled service time or energy. |
 | ANA-04 | Immutable weight versus mutable KV/state separation and no capacity double counting | architectural/derived | Assumes the proposed physical tiering can be implemented. |
 | ANA-05 | N7/HBM2e/A100 and N4/HBM3e/B300 studies generated independently | derived/simulated | ROM target values remain extrapolated envelopes. |
 | ANA-06 | Exact local stage packing, batch×stage residence, pipeline interval/latency identities, and capacity endpoints | derived/simulated | No measured pipeline imbalance or failure-domain behavior. |
 | ANA-07 | Two all-reduces/layer and topology/payload-derived wafer service | derived/simulated | No placed-and-routed target NoC timing. |
-| ANA-08 | Mechanical audit: 6,565 N7 checks and 3,921 leading-node checks pass | generated | Arithmetic identities and configured ceilings only. |
+| ANA-08 | Mechanical audit: 12,091 N7 checks and 7,881 leading-node checks pass | generated | Arithmetic identities, configured tensor ceilings, and auxiliary break-even identities only; auxiliary service remains unpriced. |
 | ANA-09 | B300 undisclosed FP32 roof swept from 19.5 to 180 TOP/s | assumed sensitivity | No headline 200K change; this does not validate other B300 runtime inputs. |
 | ANA-10 | Hardware-independent Flash/Pro/Kimi weight/KV matrices across context and batch | derived | Traffic screen only, not a speedup claim. |
 | ANA-11 | Huawei Tau/韬 and vertical-integration boundary documented | published/derived | No generic Tau or 1.4-nm-equivalent multiplier is used. |

@@ -85,6 +85,20 @@ def _json_metric(point: OperatingPoint, key: str) -> dict[str, Any]:
     return decoded
 
 
+def _json_object_list_metric(
+    point: OperatingPoint, key: str
+) -> list[dict[str, Any]]:
+    raw = point.metrics[key]
+    if not isinstance(raw, str):
+        raise TypeError(f"metric {key} is not JSON text")
+    decoded = json.loads(raw)
+    if not isinstance(decoded, list) or any(
+        not isinstance(item, dict) for item in decoded
+    ):
+        raise TypeError(f"metric {key} did not decode to an object list")
+    return decoded
+
+
 def _traffic(point: OperatingPoint) -> dict[str, float]:
     if not point.feasible or point.aggregate_tokens_s <= 0:
         return {
@@ -175,6 +189,22 @@ def _compact(
             point, "C5_operations_per_user_position_by_format"
         ),
         "compute_paths": _json_metric(point, "C5_compute_paths"),
+        "auxiliary_pricing_status": point.metrics["C5_auxiliary_pricing_status"],
+        "auxiliary_count_scope": point.metrics["C5_auxiliary_count_scope"],
+        "auxiliary_counts_per_user_token": _json_metric(
+            point, "C5_auxiliary_counts_per_user_position"
+        ),
+        "auxiliary_stage_or_cluster_service_units": _json_object_list_metric(
+            point, "C5_auxiliary_stage_or_cluster_service_units"
+        ),
+        "auxiliary_required_rates_per_s_to_fit_baseline_interval": _json_metric(
+            point,
+            "C5_auxiliary_required_rates_per_s_to_fit_baseline_interval",
+        ),
+        "auxiliary_required_rates_per_s_for_10pct_serial_overhead": _json_metric(
+            point,
+            "C5_auxiliary_required_rates_per_s_for_10pct_serial_overhead",
+        ),
         "step_interval_s": _finite(point.step_interval_s),
         "per_user_token_latency_s": _finite(point.per_user_token_latency_s),
         "aggregate_tokens_s": point.aggregate_tokens_s,
@@ -414,6 +444,30 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
             ),
             f"operation-rate identity {key}",
         )
+        check(
+            point["auxiliary_pricing_status"]
+            == "unpriced_break_even_requirements_only_pending_COMP-01",
+            f"auxiliary pricing status {key}",
+        )
+        auxiliary_rates = point[
+            "auxiliary_required_rates_per_s_to_fit_baseline_interval"
+        ]
+        auxiliary_10pct = point[
+            "auxiliary_required_rates_per_s_for_10pct_serial_overhead"
+        ]
+        check(
+            set(auxiliary_rates) == set(auxiliary_10pct),
+            f"auxiliary rate category mismatch {key}",
+        )
+        for category, rate in auxiliary_rates.items():
+            check(
+                math.isfinite(rate) and rate >= 0,
+                f"invalid auxiliary rate {category} {key}",
+            )
+            check(
+                close(auxiliary_10pct[category], 10.0 * rate),
+                f"auxiliary 10-percent threshold {category} {key}",
+            )
         utilization = _resource_utilizations(
             point, architectures[point["architecture"]], models[point["model"]]
         )
@@ -439,6 +493,7 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
         "maximum_observed_resource_utilization": maxima,
         "scope": [
             "Generated arithmetic identities and loose published/configured ceilings only.",
+            "Auxiliary vector/softmax/top-k/Sinkhorn rates are break-even requirements, not configured or measured service ceilings, and are excluded from the utilization maxima.",
             "A passing audit is not evidence for ROM macro timing, simultaneous full-array activity, NoC timing, power delivery, package, yield, or model accuracy.",
         ],
     }
@@ -864,6 +919,8 @@ def _simulate_study(study_id: str, config_path: Path) -> dict[str, Any]:
             "No target-node ROM macro, full-wafer read path, package, power, yield, or model throughput has been measured.",
             "A100 is bounded by two explicit deployments: exact offline BF16-resident expansion and a GPU-favorable packed-HBM/on-consumption-BF16 ceiling whose unpack cost is unmeasured and omitted. Neither receives native FP8/MXFP4 execution.",
             "B300 uses official packed checkpoint storage and public low-precision arithmetic roofs; its undisclosed full-FP32 roof is explicitly assumed and swept.",
+            "Normalization, nonlinear, softmax-score, top-k, compressor-pool, and Sinkhorn categories are counted and assigned break-even rate requirements, but no vector/top-k service roof or time is assumed; reported token rates remain conditional on those paths fitting the baseline interval.",
+            "The auxiliary ledger is not yet operator-complete: activation quantization/scaling, RoPE, residual/hyper-connection elementwise work, dispatch, and other source operations remain under COMP-01.",
             "Same-batch and resident-session-matched comparisons are both emitted because a wafer pipeline has batch times stages resident sessions.",
         ],
     }
@@ -906,6 +963,20 @@ def _fmt_ms(value: float | None) -> str:
 
 def _fmt_percent(value: float | None) -> str:
     return "—" if value is None else f"{value * 100:,.1f}%"
+
+
+def _fmt_service_rate(value: float | None) -> str:
+    if value is None:
+        return "—"
+    for scale, suffix in (
+        (1e15, "Pitem/s"),
+        (1e12, "Titem/s"),
+        (1e9, "Gitem/s"),
+        (1e6, "Mitem/s"),
+    ):
+        if value >= scale:
+            return f"{value / scale:,.2f} {suffix}"
+    return f"{value:,.1f} item/s"
 
 
 def _central_name(study_id: str) -> str:
@@ -1034,6 +1105,63 @@ def render_report(result: dict[str, Any]) -> str:
             f"{_fmt_tco(row['wafer_partial_tco_per_million_tokens'])} | "
             f"{row['wafer_binding_constraint']} |"
         )
+
+    central_points_by_key = {
+        (
+            point["model"],
+            point["context_tokens"],
+            point["batch_size"],
+            point["architecture"],
+        ): point
+        for point in result["points"]
+    }
+    lines.extend(
+        [
+            "",
+            "## Unpriced auxiliary-path break-even requirements at 200K",
+            "",
+            "The tensor-rate results above do not price normalization, nonlinear,",
+            "attention-softmax score handling, index-score reduction, top-k selection,",
+            "compressor pooling, or Sinkhorn execution. The table therefore reports",
+            "a requirement, not an achieved hardware rate: each value is the aggregate",
+            "category service needed by the bottleneck wafer stage or complete GPU",
+            "cluster to fit inside the already reported initiation interval. Categories",
+            "have different operation costs and cannot be summed. Dependencies, shared",
+            "resources, activation quantization/scaling, RoPE, hyper-connection",
+            "elementwise work, and dispatch can require additional time. The generated",
+            "JSON also emits the 10× rate that would limit each category alone to 10%",
+            "serialized overhead. Until `COMP-01` supplies executable service times, all",
+            "token rates and ROM/GPU ratios remain conditional on this gate.",
+            "",
+            "| Model | B | Architecture | Attention scores | Index scores | Normalization | Nonlinear | Top-k candidates | Sinkhorn element-iterations |",
+            "|---|---:|---|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for comparison in central_rows:
+        architectures = [central]
+        if comparison["fastest_same_batch_gpu"] is not None:
+            architectures.append(comparison["fastest_same_batch_gpu"])
+        for architecture in architectures:
+            point = central_points_by_key[
+                (
+                    comparison["model"],
+                    comparison["context_tokens"],
+                    comparison["batch_per_stage"],
+                    architecture,
+                )
+            ]
+            rates = point[
+                "auxiliary_required_rates_per_s_to_fit_baseline_interval"
+            ]
+            lines.append(
+                f"| {point['model']} | {point['batch_size']} | {architecture} | "
+                f"{_fmt_service_rate(rates.get('attention_score_elements'))} | "
+                f"{_fmt_service_rate(rates.get('index_score_elements'))} | "
+                f"{_fmt_service_rate(rates.get('normalization_elements'))} | "
+                f"{_fmt_service_rate(rates.get('nonlinear_elements'))} | "
+                f"{_fmt_service_rate(rates.get('topk_candidates'))} | "
+                f"{_fmt_service_rate(rates.get('sinkhorn_matrix_element_iterations'))} |"
+            )
 
     component_architectures = (central, _aggressive_name(study_id))
     component_rows = [

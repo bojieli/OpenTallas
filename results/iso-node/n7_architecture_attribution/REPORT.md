@@ -48,12 +48,13 @@ separate. The SRAM-rich control uses a static 70% weight / 30% KV split.
 
 | Status | Checks | Max weight/shared-HBM service | Max KV service | Max compute service | Max cooling |
 |---|---:|---:|---:|---:|---:|
-| PASS | 6,565 | 97.5% | 90.4% | 88.4% | 100.0% |
+| PASS | 12,091 | 97.5% | 90.4% | 88.4% | 100.0% |
 
 The service columns are component-time occupancy divided by the final
 thermal-adjusted interval. GPU weight and KV time are added because
 they share HBM; ROM/SRAM weight and KV services remain separate.
 - Generated arithmetic identities and loose published/configured ceilings only.
+- Auxiliary vector/softmax/top-k/Sinkhorn rates are break-even requirements, not configured or measured service ceilings, and are excluded from the utilization maxima.
 - A passing audit is not evidence for ROM macro timing, simultaneous full-array activity, NoC timing, power delivery, package, yield, or model accuracy.
 
 ## Central-envelope 200K results
@@ -75,6 +76,40 @@ arithmetic, but it is not a measured vendor-cost or profitability result.
 | DeepSeek-V4-Pro-0813 | 8 | 6 | 48 | 1,001.4 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x64 | 184.9 | 5.42× | 12.78× | 0.2121 | compute_C5 |
 | DeepSeek-V4-Pro-0813 | 32 | 6 | 192 | 271.8 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x64 | 100.4 | 2.71× | 8.25× | 0.1957 | compute_C5 |
 | DeepSeek-V4-Pro-0813 | 64 | 6 | 384 | 137.9 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x64 | 65.3 | 2.11× | 6.62× | 0.1930 | compute_C5 |
+
+## Unpriced auxiliary-path break-even requirements at 200K
+
+The tensor-rate results above do not price normalization, nonlinear,
+attention-softmax score handling, index-score reduction, top-k selection,
+compressor pooling, or Sinkhorn execution. The table therefore reports
+a requirement, not an achieved hardware rate: each value is the aggregate
+category service needed by the bottleneck wafer stage or complete GPU
+cluster to fit inside the already reported initiation interval. Categories
+have different operation costs and cannot be summed. Dependencies, shared
+resources, activation quantization/scaling, RoPE, hyper-connection
+elementwise work, and dispatch can require additional time. The generated
+JSON also emits the 10× rate that would limit each category alone to 10%
+serialized overhead. Until `COMP-01` supplies executable service times, all
+token rates and ROM/GPU ratios remain conditional on this gate.
+
+| Model | B | Architecture | Attention scores | Index scores | Normalization | Nonlinear | Top-k candidates | Sinkhorn element-iterations |
+|---|---:|---|---:|---:|---:|---:|---:|---:|
+| DeepSeek-V4-Flash-0731 | 1 | ROM-wafer-N7-HBM2e-central | 28.57 Gitem/s | 631.62 Gitem/s | 17.21 Gitem/s | 5.90 Gitem/s | 9.87 Gitem/s | 258.67 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 1 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x16 | 1.88 Gitem/s | 41.54 Gitem/s | 1.13 Gitem/s | 387.89 Mitem/s | 649.10 Mitem/s | 17.01 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 8 | ROM-wafer-N7-HBM2e-central | 72.15 Gitem/s | 1.60 Titem/s | 43.47 Gitem/s | 14.89 Gitem/s | 24.92 Gitem/s | 653.21 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 8 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x64 | 10.65 Gitem/s | 235.39 Gitem/s | 6.42 Gitem/s | 2.20 Gitem/s | 3.68 Gitem/s | 96.40 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 32 | ROM-wafer-N7-HBM2e-central | 86.24 Gitem/s | 1.91 Titem/s | 51.96 Gitem/s | 17.80 Gitem/s | 29.79 Gitem/s | 780.80 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 32 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x64 | 26.28 Gitem/s | 581.00 Gitem/s | 15.83 Gitem/s | 5.42 Gitem/s | 9.08 Gitem/s | 237.93 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 64 | ROM-wafer-N7-HBM2e-central | 89.15 Gitem/s | 1.97 Titem/s | 53.71 Gitem/s | 18.40 Gitem/s | 30.79 Gitem/s | 807.09 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 64 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x64 | 36.60 Gitem/s | 809.12 Gitem/s | 22.05 Gitem/s | 7.55 Gitem/s | 12.64 Gitem/s | 331.35 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 1 | ROM-wafer-N7-HBM2e-central | 55.70 Gitem/s | 437.87 Gitem/s | 24.66 Gitem/s | 6.59 Gitem/s | 6.84 Gitem/s | 192.66 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 1 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x32 | 2.77 Gitem/s | 23.93 Gitem/s | 1.25 Gitem/s | 332.81 Mitem/s | 373.89 Mitem/s | 9.73 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 8 | ROM-wafer-N7-HBM2e-central | 98.09 Gitem/s | 771.13 Gitem/s | 43.43 Gitem/s | 11.60 Gitem/s | 12.05 Gitem/s | 339.30 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 8 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x64 | 16.46 Gitem/s | 141.98 Gitem/s | 7.40 Gitem/s | 1.97 Gitem/s | 2.22 Gitem/s | 57.74 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 32 | ROM-wafer-N7-HBM2e-central | 106.28 Gitem/s | 835.54 Gitem/s | 47.06 Gitem/s | 12.57 Gitem/s | 13.06 Gitem/s | 367.64 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 32 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x64 | 35.77 Gitem/s | 308.56 Gitem/s | 16.08 Gitem/s | 4.29 Gitem/s | 4.82 Gitem/s | 125.48 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 64 | ROM-wafer-N7-HBM2e-central | 107.78 Gitem/s | 847.33 Gitem/s | 47.72 Gitem/s | 12.75 Gitem/s | 13.24 Gitem/s | 372.83 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 64 | NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x64 | 46.48 Gitem/s | 400.90 Gitem/s | 20.90 Gitem/s | 5.58 Gitem/s | 6.26 Gitem/s | 163.03 Mitem/s |
 
 ## ROM component timing and occupancy at 200K
 
@@ -193,6 +228,8 @@ writable on-wafer SRAM while holding the general spatial model similar.
 - No target-node ROM macro, full-wafer read path, package, power, yield, or model throughput has been measured.
 - A100 is bounded by two explicit deployments: exact offline BF16-resident expansion and a GPU-favorable packed-HBM/on-consumption-BF16 ceiling whose unpack cost is unmeasured and omitted. Neither receives native FP8/MXFP4 execution.
 - B300 uses official packed checkpoint storage and public low-precision arithmetic roofs; its undisclosed full-FP32 roof is explicitly assumed and swept.
+- Normalization, nonlinear, softmax-score, top-k, compressor-pool, and Sinkhorn categories are counted and assigned break-even rate requirements, but no vector/top-k service roof or time is assumed; reported token rates remain conditional on those paths fitting the baseline interval.
+- The auxiliary ledger is not yet operator-complete: activation quantization/scaling, RoPE, residual/hyper-connection elementwise work, dispatch, and other source operations remain under COMP-01.
 - Same-batch and resident-session-matched comparisons are both emitted because a wafer pipeline has batch times stages resident sessions.
 - Partial TCO is not a vendor-price or profitability claim. It excludes
   staffing, financing, networking, facilities, maintenance, and spares.

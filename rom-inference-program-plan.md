@@ -171,7 +171,7 @@ The exploratory work produced repeated errors by omitting terms. Every one of th
 | C2 | KV bytes per token, attention-type dependent | Conflated "stored" with "read per token" — a large error source |
 | C3 | **GPU engaged bandwidth at low batch.** Experts are placed on specific GPUs; at low batch only a few hold a selected expert and the rest contribute zero bandwidth | Naturally invisible if you divide by aggregate bandwidth |
 | C4 | ROM full-array bandwidth (interleaved placement engages all lanes regardless of which experts are selected) | Asymmetry with C3 is the real low-batch advantage and is easy to miss |
-| C5 | Compute (FLOPs) on both sides | Binds for high-active-parameter models |
+| C5 | Tensor compute on both sides, with auxiliary vector/softmax/top-k/Sinkhorn paths separately gated | Tensor contractions bind for high-active-parameter models; assigning every operation a Tensor Core roof hides a separate service requirement |
 | C6 | **Collective latency floor × n_layers.** Batch-independent, so it dominates at low batch | Repeatedly omitted; a collective is not one hop, it is O(log N) or O(N) serialized hops |
 | C7 | HBM capacity → max concurrent users | |
 | C8 | **ROM wafer HBM beachfront limit.** HBM attaches at the wafer edge; capacity scales with perimeter, not area. A GPU cluster's HBM scales with GPU count. This is a genuine structural disadvantage of wafer-scale | Entirely omitted initially |
@@ -183,6 +183,12 @@ The exploratory work produced repeated errors by omitting terms. Every one of th
 
 The execution team should fix these before trusting outputs:
 
+- **Auxiliary execution is not service-priced.** Normalization, nonlinear,
+  attention/index-score, compressor, top-k, and Sinkhorn categories now emit
+  stage-local break-even rates, but no vector/top-k roof or time is assumed.
+  Activation quantization/scaling, RoPE, hyper-connection elementwise work,
+  dispatch, and remaining source operations still need the operator-complete
+  `COMP-01` path. All token rates are conditional on this gate.
 - **Speculative decoding is a pure multiplier.** Draft-generation cost is not modelled, so speculative results are optimistic — badly so at high acceptance rates where implied step times fall below the collective floor. This matters because speculative decoding is the primary competing approach.
 - **No prefill.** Prefill is compute-bound and parallelizes across the sequence within a single request, so it behaves completely differently from decode. Prefill throughput is also strongly regime-dependent: at short prompts it is weight-load-bound (a fixed cost that does not shrink with prompt length), at long prompts compute-bound. Add both regimes.
 - **No prefill/decode disaggregation**, including the KV handoff cost, which is small per step (delta only) but large for cold sessions and migration.

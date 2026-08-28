@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import replace
+import json
 from pathlib import Path
 
 import pytest
@@ -95,6 +96,46 @@ def test_rom_layout_is_fixed_across_context_and_batch(setup) -> None:
     ]
     assert len({point.metrics["stage_partitions"] for point in points}) == 1
     assert all(point.metrics["C9_exact_layer_weight_inventory"] for point in points)
+
+
+def test_auxiliary_paths_emit_break_even_rates_without_inventing_service_time(
+    setup,
+) -> None:
+    _, rom, sim = setup
+    model = ModelProfile.load(
+        ROOT / "configs" / "models" / "deepseek-v4-flash-0731.json"
+    )
+    point = sim.simulate(
+        model,
+        rom,
+        SimulationRequest(context_tokens=200_000, batch_size=8),
+    )
+    stage_units = json.loads(
+        point.metrics["C5_auxiliary_stage_or_cluster_service_units"]
+    )
+    required = json.loads(
+        point.metrics[
+            "C5_auxiliary_required_rates_per_s_to_fit_baseline_interval"
+        ]
+    )
+    serial_10pct = json.loads(
+        point.metrics[
+            "C5_auxiliary_required_rates_per_s_for_10pct_serial_overhead"
+        ]
+    )
+
+    assert point.metrics["C5_auxiliary_pricing_status"] == (
+        "unpriced_break_even_requirements_only_pending_COMP-01"
+    )
+    assert len(stage_units) == point.stages
+    assert "auxiliary" not in point.component_times_s
+    assert set(required) == set(serial_10pct)
+    for name, rate in required.items():
+        assert rate == pytest.approx(
+            max(stage.get(name, 0.0) for stage in stage_units)
+            / point.step_interval_s
+        )
+        assert serial_10pct[name] == pytest.approx(10 * rate)
 
 
 def test_each_rom_stage_respects_local_weight_capacity(setup) -> None:

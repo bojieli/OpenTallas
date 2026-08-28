@@ -53,6 +53,8 @@ class OperationInventory:
     per_layer_operations_by_format: tuple[dict[str, float], ...]
     unlayered_operations_by_format: dict[str, float]
     auxiliary_counts: dict[str, float]
+    per_layer_auxiliary_counts: tuple[dict[str, float], ...]
+    unlayered_auxiliary_counts: dict[str, float]
     evidence: tuple[str, ...]
 
     @property
@@ -65,7 +67,9 @@ class OperationInventory:
     def named_operations(self) -> dict[str, float]:
         totals: dict[str, float] = {}
         for component in self.components:
-            totals[component.name] = totals.get(component.name, 0.0) + component.operations
+            totals[component.name] = (
+                totals.get(component.name, 0.0) + component.operations
+            )
         return totals
 
 
@@ -81,7 +85,9 @@ def _required_int(config: dict[str, Any], key: str) -> int:
     try:
         value = int(config[key])
     except (KeyError, TypeError, ValueError) as exc:
-        raise ValidationError(f"DeepSeek operator_config requires integer {key!r}") from exc
+        raise ValidationError(
+            f"DeepSeek operator_config requires integer {key!r}"
+        ) from exc
     if value <= 0:
         raise ValidationError(f"DeepSeek operator_config[{key!r}] must be positive")
     return value
@@ -124,19 +130,29 @@ def _deepseek_v4_inventory(
     if any(value < 0 for value in ratios):
         raise ValidationError("compression ratios cannot be negative")
     if dim != model.hidden_size or experts != model.num_experts:
-        raise ValidationError("operator_config conflicts with top-level model dimensions")
+        raise ValidationError(
+            "operator_config conflicts with top-level model dimensions"
+        )
     if experts_per_token != model.experts_per_token:
-        raise ValidationError("operator_config conflicts with top-level routing dimensions")
+        raise ValidationError(
+            "operator_config conflicts with top-level routing dimensions"
+        )
     if rope_dim >= head_dim:
         raise ValidationError("rope_head_dim must be smaller than head_dim")
     if heads % output_groups:
         raise ValidationError("attention heads must divide evenly into output groups")
     if shared_experts != 1:
-        raise ValidationError("the released DeepSeek V4 implementation requires one shared expert")
+        raise ValidationError(
+            "the released DeepSeek V4 implementation requires one shared expert"
+        )
 
     components: list[OperationComponent] = []
     per_layer: list[dict[str, float]] = [dict() for _ in range(model.num_layers)]
     unlayered: dict[str, float] = {}
+    per_layer_auxiliary: list[dict[str, float]] = [
+        dict() for _ in range(model.num_layers)
+    ]
+    unlayered_auxiliary: dict[str, float] = {}
     auxiliary: dict[str, float] = {
         "attention_score_elements": 0.0,
         "compressor_pool_elements": 0.0,
@@ -172,10 +188,28 @@ def _deepseek_v4_inventory(
         target = unlayered if layer_index is None else per_layer[layer_index]
         target[numeric_format] = target.get(numeric_format, 0.0) + operations
 
+    def add_auxiliary(
+        name: str,
+        elements: float,
+        layer_index: int | None,
+    ) -> None:
+        """Record source-derived work without assigning a hardware service roof."""
+
+        if elements < 0 or not math.isfinite(elements):
+            raise ValidationError(f"invalid auxiliary count for {name}: {elements}")
+        if elements == 0:
+            return
+        auxiliary[name] = auxiliary.get(name, 0.0) + elements
+        target = (
+            unlayered_auxiliary
+            if layer_index is None
+            else per_layer_auxiliary[layer_index]
+        )
+        target[name] = target.get(name, 0.0) + elements
+
     official_shapes = (
         "official config and pinned checkpoint tensor shapes; multiply-add = 2 ops"
     )
-    official_code = "pinned DeepSeek inference/model.py decode path"
 
     # These matrices are present in every attention block.  The grouped wo_a
     # contraction covers each head dimension exactly once; it is not multiplied
@@ -273,7 +307,11 @@ def _deepseek_v4_inventory(
             "4*n_heads*rope_dim*attended_entries",
             "DeepSeek mixed FP8/BF16 KV policy and sparse_attn QK+AV contractions",
         )
-        auxiliary["attention_score_elements"] += heads * attention_entries
+        add_auxiliary(
+            "attention_score_elements",
+            heads * attention_entries,
+            layer,
+        )
 
         if ratio:
             overlap_factor = 2 if ratio == 4 else 1
@@ -286,8 +324,10 @@ def _deepseek_v4_inventory(
                 "pinned BF16 compressor wkv/wgate tensors and official decode path",
             )
             pool_width = ratio * overlap_factor
-            auxiliary["compressor_pool_elements"] += (
-                pool_width * head_dim / ratio
+            add_auxiliary(
+                "compressor_pool_elements",
+                pool_width * head_dim / ratio,
+                layer,
             )
 
         if ratio == 4:
@@ -324,22 +364,40 @@ def _deepseek_v4_inventory(
                 "2*index_heads*index_head_dim*floor((context+1)/4)",
                 "DeepSeek report: indexer QK cached, loaded, and multiplied entirely in FP4",
             )
-            auxiliary["index_score_elements"] += index_heads * index_entries
-            auxiliary["topk_candidates"] += index_entries
-            auxiliary["topk_selected"] += min(index_topk, index_entries)
-            auxiliary["compressor_pool_elements"] += (
-                2 * ratio * index_dim / ratio
+            add_auxiliary(
+                "index_score_elements",
+                index_heads * index_entries,
+                layer,
+            )
+            add_auxiliary("topk_candidates", index_entries, layer)
+            add_auxiliary(
+                "topk_selected",
+                min(index_topk, index_entries),
+                layer,
+            )
+            add_auxiliary(
+                "compressor_pool_elements",
+                2 * ratio * index_dim / ratio,
+                layer,
             )
 
         # Vector work is reported as element counts because divides, rsqrt,
         # sigmoid, exp, and comparisons do not share one defensible "FLOP" cost.
-        auxiliary["normalization_elements"] += (
-            2 * dim + q_rank + heads * head_dim + head_dim
+        add_auxiliary(
+            "normalization_elements",
+            2 * dim + q_rank + heads * head_dim + head_dim,
+            layer,
         )
-        auxiliary["nonlinear_elements"] += (
-            (experts_per_token + shared_experts) * moe_dim + experts
+        add_auxiliary(
+            "nonlinear_elements",
+            (experts_per_token + shared_experts) * moe_dim + experts,
+            layer,
         )
-        auxiliary["sinkhorn_matrix_elements_per_iteration"] += hc_mult * hc_mult
+        add_auxiliary(
+            "sinkhorn_matrix_elements_per_iteration",
+            2 * hc_mult * hc_mult,
+            layer,
+        )
 
     add(
         "final_vocabulary_head",
@@ -357,7 +415,7 @@ def _deepseek_v4_inventory(
         "2*(hc_mult*d)*hc_mult",
         "pinned FP32 hc_head_fn tensor shape",
     )
-    auxiliary["normalization_elements"] += dim
+    add_auxiliary("normalization_elements", dim, None)
     auxiliary["sinkhorn_iterations"] = float(sinkhorn_iterations)
 
     operations_by_format = _sum_formats(per_layer + [unlayered])
@@ -374,9 +432,24 @@ def _deepseek_v4_inventory(
         unlayered_operations_by_format={
             key: value for key, value in sorted(unlayered.items()) if value > 0
         },
-        auxiliary_counts={key: float(value) for key, value in sorted(auxiliary.items())},
+        auxiliary_counts={
+            key: float(value) for key, value in sorted(auxiliary.items())
+        },
+        per_layer_auxiliary_counts=tuple(
+            {key: float(value) for key, value in sorted(item.items()) if value > 0}
+            for item in per_layer_auxiliary
+        ),
+        unlayered_auxiliary_counts={
+            key: float(value)
+            for key, value in sorted(unlayered_auxiliary.items())
+            if value > 0
+        },
         evidence=(
-            str(model.metadata.get("operator_accounting_source", "official DeepSeek sources")),
+            str(
+                model.metadata.get(
+                    "operator_accounting_source", "official DeepSeek sources"
+                )
+            ),
             "DeepSeek-V4 technical report arithmetic/storage precision policy",
             "no calibration to the report FLOP curve",
         ),
@@ -435,6 +508,8 @@ def _active_parameter_fallback(
         per_layer_operations_by_format=per_layer,
         unlayered_operations_by_format={},
         auxiliary_counts={},
+        per_layer_auxiliary_counts=tuple({} for _ in range(model.num_layers)),
+        unlayered_auxiliary_counts={},
         evidence=("exact public operator inventory unavailable",),
     )
 

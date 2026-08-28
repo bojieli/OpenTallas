@@ -132,6 +132,7 @@ def test_report_exposes_audit_and_central_aggressive_component_times(
         report = runner.render_report(result)
         audit = result["consistency_audit"]
         assert "## Mechanical consistency audit" in report
+        assert "## Unpriced auxiliary-path break-even requirements at 200K" in report
         assert f"| {audit['status'].upper()} | {audit['checks_evaluated']:,} |" in report
         section = report.split(
             "## ROM component timing and occupancy at 200K", 1
@@ -161,6 +162,12 @@ def test_report_exposes_audit_and_central_aggressive_component_times(
                 "cooling",
             }
             assert point["thermal_scale"] >= 1.0
+            assert point["auxiliary_pricing_status"] == (
+                "unpriced_break_even_requirements_only_pending_COMP-01"
+            )
+            assert point[
+                "auxiliary_required_rates_per_s_to_fit_baseline_interval"
+            ]
         if study_id == "leading_node_market":
             sensitivity = result["b300_fp32_roof_sensitivity"]
             assert len(sensitivity) == 2 * 4 * 4

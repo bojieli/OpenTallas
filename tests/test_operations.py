@@ -66,6 +66,32 @@ def test_context_dependent_attention_is_not_hidden_in_active_parameters() -> Non
     assert long.auxiliary_counts["topk_selected"] == 21 * 512
 
 
+def test_auxiliary_counts_preserve_exact_layer_placement_without_a_fake_roof() -> None:
+    flash = model("deepseek-v4-flash-0731")
+    inventory = operation_inventory(flash, 200_000)
+
+    assert len(inventory.per_layer_auxiliary_counts) == flash.num_layers
+    reconstructed: dict[str, float] = {}
+    for counts in (
+        *inventory.per_layer_auxiliary_counts,
+        inventory.unlayered_auxiliary_counts,
+    ):
+        for name, count in counts.items():
+            reconstructed[name] = reconstructed.get(name, 0.0) + count
+
+    counted = {
+        name: count
+        for name, count in inventory.auxiliary_counts.items()
+        if name != "sinkhorn_iterations"
+    }
+    assert reconstructed == counted
+    # The official block invokes hc_split_sinkhorn twice: attention and FFN.
+    assert inventory.auxiliary_counts[
+        "sinkhorn_matrix_elements_per_iteration"
+    ] == 2 * flash.num_layers * 4 * 4
+    assert inventory.auxiliary_counts["sinkhorn_iterations"] == 20
+
+
 def test_non_deepseek_model_is_explicitly_fallback() -> None:
     qwen = model("qwen3-8b")
     inventory = operation_inventory(qwen, 8_192)
