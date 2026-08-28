@@ -4,6 +4,14 @@ This package is the additive production-path foundation for the programmable
 HBM-plus-SRAM tensor accelerator. It does not modify or generalize the older
 ROM-bound exact-integer fixture.
 
+The backend-neutral graph contracts are intentionally versioned. Model Graph v1
+is the executable exact-integer fixture contract. Production Model Graph v2 is
+the admission boundary for real model adapters. V2 requires phase-specific
+entrypoints, structured runtime predicates, source anchors, exact checkpoint
+payload bindings, and explicit prepare/commit state effects. A Qwen or DeepSeek
+adapter is not considered production-neutral merely because its operation names
+can be copied into a generic list; it must satisfy the complete v2 contract.
+
 The current qualified slice implements this complete chain:
 
 ~~~text

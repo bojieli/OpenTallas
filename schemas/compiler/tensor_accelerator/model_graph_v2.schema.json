@@ -1,0 +1,695 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/model_graph_v2.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "entrypoints": {
+      "items": {
+        "$ref": "#/$defs/entrypoint"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "graph_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "numeric_profile": {
+      "$ref": "#/$defs/identifier"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/operation"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema": {
+      "const": "opentallas.model_graph.v2"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "state_resources": {
+      "items": {
+        "$ref": "#/$defs/state_resource"
+      },
+      "type": "array"
+    },
+    "symbols": {
+      "items": {
+        "$ref": "#/$defs/symbol"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "tensors": {
+      "items": {
+        "$ref": "#/$defs/tensor"
+      },
+      "minItems": 1,
+      "type": "array"
+    }
+  },
+  "required": [
+    "entrypoints",
+    "graph_id",
+    "model_id",
+    "numeric_profile",
+    "operations",
+    "schema",
+    "source",
+    "state_resources",
+    "symbols",
+    "tensors"
+  ],
+  "title": "OpenTallas production backend-neutral Model Graph IR v2",
+  "type": "object",
+  "$defs": {
+    "checkpoint_binding": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_lock_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "kind": {
+          "const": "checkpoint"
+        },
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "sources": {
+          "items": {
+            "$ref": "#/$defs/checkpoint_source"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "transform": {
+          "$ref": "#/$defs/transform"
+        }
+      },
+      "required": [
+        "checkpoint_lock_id",
+        "kind",
+        "payload_sha256",
+        "sources",
+        "transform"
+      ],
+      "type": "object"
+    },
+    "checkpoint_source": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "$ref": "#/$defs/dtype"
+        },
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "items": {
+            "$ref": "#/$defs/static_dimension"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "type": "array"
+        },
+        "tensor_name": {
+          "maxLength": 512,
+          "minLength": 1,
+          "pattern": "^[ -~]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "dtype",
+        "payload_sha256",
+        "shape",
+        "tensor_name"
+      ],
+      "type": "object"
+    },
+    "dimension": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/static_dimension"
+        },
+        {
+          "$ref": "#/$defs/identifier"
+        }
+      ]
+    },
+    "dtype": {
+      "enum": [
+        "bf16",
+        "bool",
+        "e8m0",
+        "fp32",
+        "fp4_e2m1",
+        "fp8_e4m3fn",
+        "i16",
+        "i32",
+        "i64",
+        "i8",
+        "mxfp4_e2m1",
+        "u16",
+        "u32",
+        "u64",
+        "u8"
+      ]
+    },
+    "effect": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "enum": [
+            "commit",
+            "discard",
+            "prepare",
+            "read_committed"
+          ]
+        },
+        "state": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": [
+        "action",
+        "state"
+      ],
+      "type": "object"
+    },
+    "entrypoint": {
+      "additionalProperties": false,
+      "properties": {
+        "inputs": {
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "outputs": {
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "phase": {
+          "$ref": "#/$defs/phase"
+        },
+        "states": {
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": [
+        "inputs",
+        "outputs",
+        "phase",
+        "states"
+      ],
+      "type": "object"
+    },
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    },
+    "json_value": {
+      "oneOf": [
+        {
+          "type": [
+            "boolean",
+            "integer",
+            "null",
+            "number",
+            "string"
+          ]
+        },
+        {
+          "items": {
+            "$ref": "#/$defs/json_value"
+          },
+          "type": "array"
+        },
+        {
+          "additionalProperties": {
+            "$ref": "#/$defs/json_value"
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "operation": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": {
+            "$ref": "#/$defs/json_value"
+          },
+          "type": "object"
+        },
+        "effects": {
+          "items": {
+            "$ref": "#/$defs/effect"
+          },
+          "type": "array"
+        },
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "kind": {
+          "$ref": "#/$defs/identifier"
+        },
+        "numeric_contract": {
+          "$ref": "#/$defs/identifier"
+        },
+        "outputs": {
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "phases": {
+          "items": {
+            "$ref": "#/$defs/phase"
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "predicate": {
+          "$ref": "#/$defs/predicate"
+        },
+        "source_anchor": {
+          "$ref": "#/$defs/source_anchor"
+        }
+      },
+      "required": [
+        "attributes",
+        "effects",
+        "id",
+        "inputs",
+        "kind",
+        "numeric_contract",
+        "outputs",
+        "phases",
+        "predicate",
+        "source_anchor"
+      ],
+      "type": "object"
+    },
+    "phase": {
+      "enum": [
+        "prefill",
+        "decode"
+      ]
+    },
+    "predicate": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "always"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "compare"
+            },
+            "operator": {
+              "enum": [
+                "eq",
+                "ge",
+                "gt",
+                "le",
+                "lt",
+                "ne"
+              ]
+            },
+            "symbol": {
+              "$ref": "#/$defs/identifier"
+            },
+            "value": {
+              "maximum": 9223372036854775807,
+              "minimum": -9223372036854775808,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "kind",
+            "operator",
+            "symbol",
+            "value"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "all",
+                "any"
+              ]
+            },
+            "terms": {
+              "items": {
+                "$ref": "#/$defs/predicate"
+              },
+              "maxItems": 16,
+              "minItems": 1,
+              "type": "array"
+            }
+          },
+          "required": [
+            "kind",
+            "terms"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "not"
+            },
+            "term": {
+              "$ref": "#/$defs/predicate"
+            }
+          },
+          "required": [
+            "kind",
+            "term"
+          ],
+          "type": "object"
+        }
+      ]
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "repository": {
+          "maxLength": 512,
+          "minLength": 1,
+          "pattern": "^[ -~]+$",
+          "type": "string"
+        },
+        "revision": {
+          "maxLength": 512,
+          "minLength": 1,
+          "pattern": "^[ -~]+$",
+          "type": "string"
+        },
+        "source_lock_id": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "repository",
+        "revision",
+        "source_lock_id"
+      ],
+      "type": "object"
+    },
+    "source_anchor": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^[A-Za-z0-9_.-]+(?:/[A-Za-z0-9_.-]+)*$",
+          "type": "string"
+        },
+        "source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "symbol": {
+          "maxLength": 256,
+          "minLength": 1,
+          "pattern": "^[ -~]+$",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "source_sha256",
+        "symbol"
+      ],
+      "type": "object"
+    },
+    "state_resource": {
+      "additionalProperties": false,
+      "properties": {
+        "class": {
+          "$ref": "#/$defs/identifier"
+        },
+        "dtype": {
+          "$ref": "#/$defs/dtype"
+        },
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "initialization": {
+          "enum": [
+            "checkpoint",
+            "request",
+            "zero"
+          ]
+        },
+        "layout": {
+          "$ref": "#/$defs/identifier"
+        },
+        "shape": {
+          "items": {
+            "$ref": "#/$defs/dimension"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "type": "array"
+        },
+        "transaction": {
+          "const": "prepare_commit"
+        }
+      },
+      "required": [
+        "class",
+        "dtype",
+        "id",
+        "initialization",
+        "layout",
+        "shape",
+        "transaction"
+      ],
+      "type": "object"
+    },
+    "static_dimension": {
+      "maximum": 1099511627776,
+      "minimum": 1,
+      "type": "integer"
+    },
+    "symbol": {
+      "additionalProperties": false,
+      "properties": {
+        "binding": {
+          "oneOf": [
+            {
+              "additionalProperties": false,
+              "properties": {
+                "field": {
+                  "$ref": "#/$defs/identifier"
+                },
+                "kind": {
+                  "const": "request"
+                }
+              },
+              "required": [
+                "field",
+                "kind"
+              ],
+              "type": "object"
+            },
+            {
+              "additionalProperties": false,
+              "properties": {
+                "kind": {
+                  "const": "compile_time"
+                }
+              },
+              "required": [
+                "kind"
+              ],
+              "type": "object"
+            }
+          ]
+        },
+        "default": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "maximum": {
+          "maximum": 1099511627776,
+          "minimum": 1,
+          "type": "integer"
+        },
+        "minimum": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "multiple_of": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "binding",
+        "default",
+        "id",
+        "maximum",
+        "minimum",
+        "multiple_of"
+      ],
+      "type": "object"
+    },
+    "tensor": {
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "role": {
+                "enum": [
+                  "constant",
+                  "weight"
+                ]
+              }
+            },
+            "required": [
+              "role"
+            ]
+          },
+          "then": {
+            "required": [
+              "binding"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "binding"
+              ]
+            }
+          }
+        }
+      ],
+      "properties": {
+        "binding": {
+          "$ref": "#/$defs/checkpoint_binding"
+        },
+        "dtype": {
+          "$ref": "#/$defs/dtype"
+        },
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "layout": {
+          "$ref": "#/$defs/identifier"
+        },
+        "role": {
+          "enum": [
+            "activation",
+            "constant",
+            "input",
+            "output",
+            "weight"
+          ]
+        },
+        "shape": {
+          "items": {
+            "$ref": "#/$defs/dimension"
+          },
+          "maxItems": 8,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "dtype",
+        "id",
+        "layout",
+        "role",
+        "shape"
+      ],
+      "type": "object"
+    },
+    "transform": {
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "identity"
+            }
+          },
+          "required": [
+            "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "certificate_id": {
+              "$ref": "#/$defs/sha256"
+            },
+            "kind": {
+              "const": "canonical"
+            }
+          },
+          "required": [
+            "certificate_id",
+            "kind"
+          ],
+          "type": "object"
+        }
+      ]
+    }
+  }
+}

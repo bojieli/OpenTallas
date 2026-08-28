@@ -1,0 +1,261 @@
+{
+  "entrypoints": [
+    {
+      "inputs": [
+        "input.hidden"
+      ],
+      "outputs": [
+        "output.hidden"
+      ],
+      "phase": "prefill",
+      "states": [
+        "state.kv"
+      ]
+    },
+    {
+      "inputs": [
+        "input.hidden"
+      ],
+      "outputs": [
+        "output.hidden"
+      ],
+      "phase": "decode",
+      "states": [
+        "state.kv"
+      ]
+    }
+  ],
+  "graph_id": "3d7159fb95f94922137c2d21acaff0e4b3ee11494965af68a229ccaf05b7ef0b",
+  "model_id": "production-graph-fixture",
+  "numeric_profile": "bf16_fixture_v1",
+  "operations": [
+    {
+      "attributes": {
+        "transpose_weight": true
+      },
+      "effects": [],
+      "id": "linear",
+      "inputs": [
+        "input.hidden",
+        "weight.linear"
+      ],
+      "kind": "MATMUL",
+      "numeric_contract": "bf16_fp32_accum_rne_v1",
+      "outputs": [
+        "activation.projected"
+      ],
+      "phases": [
+        "prefill",
+        "decode"
+      ],
+      "predicate": {
+        "kind": "always"
+      },
+      "source_anchor": {
+        "path": "modeling/model.py",
+        "source_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "symbol": "DecoderLayer.linear"
+      }
+    },
+    {
+      "attributes": {
+        "axis": 1
+      },
+      "effects": [
+        {
+          "action": "read_committed",
+          "state": "state.kv"
+        },
+        {
+          "action": "prepare",
+          "state": "state.kv"
+        }
+      ],
+      "id": "kv.prepare",
+      "inputs": [
+        "activation.projected"
+      ],
+      "kind": "KV_PREPARE",
+      "numeric_contract": "bf16_byte_preserving_state_v1",
+      "outputs": [
+        "activation.prepared"
+      ],
+      "phases": [
+        "prefill",
+        "decode"
+      ],
+      "predicate": {
+        "kind": "compare",
+        "operator": "le",
+        "symbol": "position_end",
+        "value": 8000
+      },
+      "source_anchor": {
+        "path": "modeling/model.py",
+        "source_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "symbol": "Attention.update_cache"
+      }
+    },
+    {
+      "attributes": {},
+      "effects": [
+        {
+          "action": "commit",
+          "state": "state.kv"
+        }
+      ],
+      "id": "kv.commit",
+      "inputs": [
+        "activation.prepared"
+      ],
+      "kind": "KV_COMMIT",
+      "numeric_contract": "bf16_byte_preserving_state_v1",
+      "outputs": [
+        "output.hidden"
+      ],
+      "phases": [
+        "prefill",
+        "decode"
+      ],
+      "predicate": {
+        "kind": "always"
+      },
+      "source_anchor": {
+        "path": "modeling/model.py",
+        "source_sha256": "3333333333333333333333333333333333333333333333333333333333333333",
+        "symbol": "Attention.update_cache"
+      }
+    }
+  ],
+  "schema": "opentallas.model_graph.v2",
+  "source": {
+    "repository": "example/production-model",
+    "revision": "0123456789abcdef",
+    "source_lock_id": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "state_resources": [
+    {
+      "class": "kv_cache",
+      "dtype": "bf16",
+      "id": "state.kv",
+      "initialization": "zero",
+      "layout": "bhsd",
+      "shape": [
+        1,
+        8,
+        "context_tokens",
+        128
+      ],
+      "transaction": "prepare_commit"
+    }
+  ],
+  "symbols": [
+    {
+      "binding": {
+        "field": "context_tokens",
+        "kind": "request"
+      },
+      "default": 8000,
+      "id": "context_tokens",
+      "maximum": 8192,
+      "minimum": 1,
+      "multiple_of": 1
+    },
+    {
+      "binding": {
+        "field": "position_end",
+        "kind": "request"
+      },
+      "default": 8000,
+      "id": "position_end",
+      "maximum": 8192,
+      "minimum": 1,
+      "multiple_of": 1
+    },
+    {
+      "binding": {
+        "kind": "compile_time"
+      },
+      "default": 4096,
+      "id": "hidden_size",
+      "maximum": 4096,
+      "minimum": 4096,
+      "multiple_of": 4096
+    }
+  ],
+  "tensors": [
+    {
+      "dtype": "bf16",
+      "id": "input.hidden",
+      "layout": "bsh",
+      "role": "input",
+      "shape": [
+        1,
+        "context_tokens",
+        "hidden_size"
+      ]
+    },
+    {
+      "binding": {
+        "checkpoint_lock_id": "0000000000000000000000000000000000000000000000000000000000000000",
+        "kind": "checkpoint",
+        "payload_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+        "sources": [
+          {
+            "dtype": "bf16",
+            "payload_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+            "shape": [
+              4096,
+              4096
+            ],
+            "tensor_name": "model.layers.0.linear.weight"
+          }
+        ],
+        "transform": {
+          "kind": "identity"
+        }
+      },
+      "dtype": "bf16",
+      "id": "weight.linear",
+      "layout": "row_major",
+      "role": "weight",
+      "shape": [
+        4096,
+        4096
+      ]
+    },
+    {
+      "dtype": "bf16",
+      "id": "activation.projected",
+      "layout": "bsh",
+      "role": "activation",
+      "shape": [
+        1,
+        "context_tokens",
+        "hidden_size"
+      ]
+    },
+    {
+      "dtype": "bf16",
+      "id": "activation.prepared",
+      "layout": "bsh",
+      "role": "activation",
+      "shape": [
+        1,
+        "context_tokens",
+        "hidden_size"
+      ]
+    },
+    {
+      "dtype": "bf16",
+      "id": "output.hidden",
+      "layout": "bsh",
+      "role": "output",
+      "shape": [
+        1,
+        "context_tokens",
+        "hidden_size"
+      ]
+    }
+  ]
+}
