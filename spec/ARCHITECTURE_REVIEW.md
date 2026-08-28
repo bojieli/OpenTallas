@@ -1,58 +1,76 @@
 # Architecture review and gate disposition
 
-**Review record:** AR-1.0  
-**Review date:** 2026-08-27 UTC  
-**Disposition:** PASS for public-reference RTL entry; HOLD for product silicon
+**Review record:** AR-1.1
+
+**Review date:** 2026-08-28 UTC
+
+**Disposition:** PASS for the public-reference RTL/proxy scope; CONTINUE public
+evidence acquisition; HOLD for selected product architecture and silicon.
 
 ## Scope reviewed
 
-The review covers the analytical baseline through commit `82a2a23`, the pinned
-DeepSeek/Kimi profiles, the Qwen3-8B 8K dense-control addendum, the B200/B300 x1,
-x2, x4, x8, and x16 comparison normalization, and this specification package.
-The decision is intentionally limited to public tools and non-NDA evidence.
+This review distinguishes three baselines that must not be conflated:
+
+1. The authoritative product-comparison studies are N6/N7 ROM plus HBM2e-era
+   interfaces versus A100 80 GB, and N4-class ROM plus HBM3e versus B300.
+2. The fixed 160-GB/100-TB/s specification is a stable public-reference RTL,
+   firmware, counter, fault, and verification proxy only.
+3. Open-PDK implementation results validate methodology and digital structure;
+   they cannot establish target ROM, HBM, NoC, clock, power, yield, or package PPA.
+
+The review covers the pinned Flash/Pro model inventories and exact operator
+accounting, `docs/METHODOLOGY.md`, both generated iso-node studies, the
+hardware-independent Flash/Pro/Kimi traffic screen, this specification package,
+and the explicit pre-NDA external-gate report.
 
 ## Evidence disposition
 
 | Area | Disposition | Rationale |
 |---|---|---|
-| model identity/storage | pass for analysis | pinned revisions; safetensors headers fully classified; Qwen all-BF16 inventory independently checked |
-| workload/KV accounting | pass for analysis | equations, tests, and explicit BF16 Qwen GQA assumption; no production quality claim |
-| B200/B300 comparison | pass for conditional simulation | published system values normalized with explicit x1/x2 assumptions; no SKU claim for fractional configurations |
-| target ordering | pass | Flash primary proof; Pro stretch; Qwen dense control; Kimi stress control |
-| interfaces/numeric/RAS/DFT | pass for specification entry | exact records and planned checks exist; the 87-site dual-simulator logical fault subset passes, while macro/physical faults, numerical qualification, and full DFT closure remain pending |
-| floorplan/PPA | conditional | budgets are hypotheses and proxy methodology, not characterized silicon |
-| verification | conditional | bounded formal, two-simulator unit/integration, 87-site directed fault, unit coverage, and strict static/CDC/RDC artifacts exist; full stage/reticle/pipeline coverage, random fault/degradation, numerical differential, and synthesis-entry closure remain open |
-| product authorization | hold | ROM density/bandwidth, HBM/package, PPA, yield, traces, security, and commercial gates remain open |
+| Model identity/storage | pass for analysis | Pinned official revisions; safetensors headers fully classified; decode/draft/resident roles separated. |
+| Numerical/operator accounting | pass for analysis | Official FP8/MXFP4/BF16/FP32 roles and exact operator shapes; no `2 × active parameter` proxy. |
+| Weight/KV accounting | pass for analysis | Immutable and mutable tiers are separate; batch/context traffic matrices and capacity identities are executable. |
+| Iso-technology comparison | pass for conditional simulation | N7/A100 and N4/B300 do not mix node or HBM generation; ROM values remain extrapolated envelopes. |
+| Communication/pipeline arithmetic | pass for conditional simulation | Two all-reduces/layer, topology/payload service, local capacity, batch×stage residence, and cross-stage terms are explicit. |
+| Mechanical consistency | pass | 6,565 N7 and 3,921 leading-node checks close generated identities/ceilings only. |
+| GPU application baseline | open external gate | Exact A100/B300 production runs, placement, collectives, KV counters, and acquisition economics are absent. |
+| ROM/compute/NoC target PPA | open external gate | No target macro, simultaneous full-array power, format-specific P&R, or wafer NoC timing. |
+| Package/power/yield/economics | open external gate | Stack pitch is only a first-order check; OSAT, SI/PI, thermal, repair, yield, and quotes are absent. |
+| Public RTL interfaces/numeric/RAS/DFT | pass for continued public-reference work | Frozen behavioral contracts and planned checks exist; target macros and production signoff remain external. |
+| Product authorization | hold | No deterministic envelope is selected or qualified as manufacturable silicon. |
 
 ## Decisions frozen
 
-1. Serious RTL may begin only from this reviewed package and its generated
-   traceability record.
-2. Qwen3-8B remains a dense control at 8,192 context tokens, with BF16 full-GQA
-   cache and no speculative scenario; it is not promoted to a product target.
-3. DeepSeek V4 Flash is the primary proof target. Pro is a stretch architecture
-   target and Kimi is a negative/stress control.
-4. TPU is outside scope. GPU comparisons are B200/B300 only.
-5. Open-PDK synthesis/physical work is proxy methodology and is forbidden as a
-   substitute for target-node signoff.
+1. `docs/METHODOLOGY.md` and `results/iso-node/` control product comparisons.
+2. The numeric values in `spec/budgets.json` control only stable public-proxy
+   interface and verification behavior.
+3. DeepSeek V4 Flash remains the smallest proof vehicle; Pro remains a capacity
+   and pipeline stretch. This ordering is a measurement priority, not a product
+   performance promise.
+4. A100 is the N7 attribution comparator. B300 is the leading-node comparator.
+   B200/B300-versus-N7 figures in legacy outputs are superseded.
+5. DeepSeek routed work is MXFP4×FP8, not pure FP4. Exact operator formats remain
+   mandatory through analysis, RTL interfaces, DV, and target qualification.
+6. Mutable KV/state stays in SRAM/HBM. No ROM capacity or service claim includes
+   KV.
+7. Huawei Tau/韬 scaling is a co-design framework, not a numerical multiplier. Any
+   vertical-ROM study is separate and must close links, power, thermals, yield,
+   repair, and test.
+8. Open-PDK and public RTL evidence cannot substitute for target-node signoff.
 
-## Entry criteria for RTL
+## Authorized work
 
-The machine checker must pass; all manifest documents and generated traceability
-must be present; Qwen fields and partitions must match the analytical profile; no
-normative TODO/TBD placeholders may remain; and the review commit must be pushed.
+Public interface/RTL/verification work, exact model/runtime profiling, reproducible
+A100/B300 benchmarking, foundry/OSAT question preparation, macro/test-vehicle
+planning, and bounded topology/PPA exploration may continue. No work product may
+claim selected wafer capacity, frequency, power, yield, price, production token
+rate, or quality until the corresponding external gate closes.
 
-## Exit criteria before synthesis
+## External gates and phase transition
 
-The verification plan's DV-10.1 gate is mandatory: static/lint, two simulators,
-formal, CDC/RDC, coverage, numerical differential tests, RAS/repair/DFT fault
-campaign, deterministic build, and requirement evidence must close first. Product
-silicon remains blocked even after public-reference closure.
-
-## Open external gates
-
-Model-owner checkpoint lifetime and quality agreement; production B200/B300 kernel
-and router/KV traces; target-node ROM/standard-cell/macro characterization; HBM
-beachfront and package/PI/SI/thermal/reliability; secure boot/DFT/ATPG; yield,
-repair, cost, schedule, and commercial review. These are tracked as external
-evidence requirements, not hidden assumptions.
+The owned gate list, minimum entry artifacts, and pass criteria are normative in
+`results/PRE_NDA_READINESS.md`. Product architecture freeze requires a model-owner
+checkpoint commitment, production router/KV/GPU evidence, target ROM and numeric
+PPA, extracted NoC, feasible HBM package/PDN/cooling, yield/repair/test plans, and
+regenerated conservative results. Reticle test silicon must correlate these models
+before any wafer-scale product authorization.

@@ -80,11 +80,12 @@ that succeeds only because valid is constrained false is rejected.
 
 ### DV-5.1 Directed matrix
 
-Run all required model profiles: DeepSeek Flash/Pro at 200K and 1M, Kimi at 200K
-and 1M, and Qwen3-8B at 8K. Exercise batches 1, 8, 32, 64, and 128 plus capacity
-endpoints and integer optimum points. Include one- and multi-stage pipeline
-configurations, dense and routed numeric modes, and the no-speculation boundary for
-Qwen.
+Run the product-analysis profiles for DeepSeek Flash/Pro at 8K, 32K, 200K, and
+1M with batches 1, 8, 32, and 64. The broader public-reference suite also retains
+Kimi at 200K/1M, Qwen3-8B at 8K, batch 128 stress, and capacity endpoints. Include
+one- and multi-stage pipeline configurations, dense and routed numeric modes, and
+the no-speculation boundary for Qwen. A legacy fixed proxy partition tests the
+interface; technology-envelope stage counts test analytical packing separately.
 
 ### DV-5.2 Constrained-random stress
 
@@ -109,6 +110,25 @@ Use pinned public model implementations and canonical tensor slices to compare
 layer outputs, KV/state transitions, accepted speculative prefixes, and terminal
 errors. Full quality/production serving qualification is an external gate, but the
 public test must expose exactly which layer, format, or macro remains unqualified.
+
+### DV-6.3 Executable mapping gate
+
+`COMP-01` is a separate hard gate above the existing protocol-shell campaigns.
+The compiler shall ingest complete pinned checkpoint payloads and emit legal ROM,
+scale, integrity, microcode, schedule, KV-layout, known-answer, and deployment
+artifacts. An independent image checker shall reconstruct canonical tensor hashes;
+an independently implemented schedule checker shall reconstruct conflicts, paths,
+and occupancy. The software service engine and representative RTL/co-simulation
+shall consume the generated artifacts and compare operator outputs, layer
+boundaries, router and sparse-attention selections, prepared/committed KV state,
+and final logits against independent references. Operation, ROM/HBM byte, flit,
+stall, and cycle counters shall reconcile without an unpriced functional black
+box. The complete closure contract and milestone order are in
+`../docs/EXECUTABLE_SYSTEM_RECOVERY_PLAN.md`.
+
+Until this gate passes, successful stage completion tests establish only the
+abstract service-boundary behavior exercised by their test doubles. They do not
+establish that a transformer layer or complete model executed.
 
 ## DV-7 Fault, RAS, repair, and DFT
 
@@ -186,3 +206,49 @@ unexplained static findings, passing two-simulator and two-frontend checks,
 reviewed CDC/RDC, passing formal safety/progress/non-vacuity, closed must bins,
 complete fault/repair evidence, and an owned waiver ledger. Open-PDK synthesis and
 physical proxy runs then report methodology only; they do not close product PPA.
+
+### DV-10.2 Implementation and physical-proxy closure
+
+The canonical post-entry campaign is governed by `implementation_proxy.json` and
+`tools/rtl_implementation_campaign.py`. Its complete seven-case selection is the
+only canonical run; CLI-selected or equivalence/physical-skipped runs are labeled
+partial and cannot close this gate. A run admitted with `--allow-dirty` also remains
+`partial_noncanonical` even if its technical gates pass. The governed evidence
+state is `pending_governed_run` while result paths must be absent, then changes to
+`closed` only after a clean-baseline, full-selection `pass` JSON and matching report
+exist. The run fingerprints the runner, specification, CDC/RDC constraint inventory,
+RTL sources, tool executables, library collateral, and immutable OpenROAD image.
+Unexpected synthesis or OpenROAD warning codes fail.
+
+The closed public baseline has fingerprint `87e057764094b9ed`. Its exact source
+inventory was copied into an isolated deterministic git commit and the full
+campaign reran without any dirty-tree or skip option; source inventory, pinned
+tool identities, technical closure signatures, and 386 referenced artifact
+hashes pass the replay audit. The displaced dirty-tree run remains explicitly
+archived rather than promoted or deleted. The large `numeric_e16_l16`
+scaling-only point alone uses the reviewed bounded structural Liberty recipe
+`strash; &get -n; &nf; &put` with a 300-second outer timeout. It retains all
+structural and STA-coverage gates, but its QoR is not compared directly with the
+default delay-oriented cases.
+
+Every mapped case must contain zero internal cells, latches, blackboxes, structural
+errors, and unconstrained endpoints. Representative generic equivalence is required
+for arithmetic and stage control; the arithmetic representative also proves the
+actual ABC-mapped netlist. Required physical representatives must close final setup,
+hold, electrical limits, placement legality, antenna checks, detailed-route DRC,
+and zero flow errors. A separate final-netlist connectivity audit proves the
+max-fanout-32 contract and permits a one-pin net only when it is exactly one unused
+cell output with no load or top-level connection. Exact ORFS synthesized-to-final
+equivalence replaces the disabled host-incompatible optional Kepler helper. That
+gate expands both cell netlists through the pinned Liberty library, normalizes them
+to AIG with arbitrary common initial state, audits public IO and every state index,
+then requires warning-free inductive ABC `dsec` closure. Private autogenerated state
+symbol alignment is bounded and recorded; public state-name mismatches fail. Power
+and IR-drop fields are retained as non-gating diagnostics under PPA-6.3's evidence
+limits.
+
+Any RTL, implementation constraint, warning disposition, tool/library identity, or
+runner change invalidates the fingerprint and reopens the affected synthesis, STA,
+equivalence, physical, and source-current pre-synthesis gates. Nangate45 results are
+methodology/scaling proxies only; product synthesis, STA, LEC, DRC/LVS, SI/PI,
+reliability, DFT, and target-node macro closure remain external.

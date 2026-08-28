@@ -1,47 +1,121 @@
 # Technical gate decision
 
-**Decision: CONDITIONAL CONTINUE for simulation/test-chip work; no evidence-based
-authorization for product silicon.**
+**Decision: continue the public pre-NDA characterization program; hold product
+architecture freeze, tapeout, price, and production-throughput claims.**
 
-The released-format midpoint has some DeepSeek low-batch speed and cost wins, but
-the result changes sign by batch and depends on unmeasured ROM bandwidth, compute
-density, HBM beachfront, and physical collective timing. It therefore supports the
-next measurement phase, not the brief's product-level performance claims.
+The re-baseline is complete enough to justify targeted measurements. It is not
+complete enough to validate an executable accelerator or choose a manufacturable
+wafer. The repository does not yet compile complete checkpoint payloads into
+physical images, execute generated microcode through an operator-complete service
+engine, or match model state and logits end to end. The apparent advantage also
+depends on target-node ROM service, format-specific compute, physical NoC, HBM
+packaging, power, and yield that no public artifact establishes.
 
-## Evidence currently passed
+## What is now analytically closed
 
-- Without speculation, 6 of 20 required DeepSeek points beat the fastest same-batch GPU configuration under midpoint assumptions.
-- With the assumed five-candidate/70%-acceptance speculative midpoint enabled on both sides, only 2 of 20 required DeepSeek points retain a same-batch speed win; acceptance and draft cost are not measured.
-- 11 of 20 required DeepSeek points beat the cheapest feasible same-batch GPU on modeled partial TCO (hardware/NRE amortization plus active electricity).
-- Flash B8 no-speculation ROM/GPU ratios are 1.14× at 200K and 1.08× at 1M; Pro B8 ratios are 0.81× and 0.83×, respectively.
-- 4 of 4 DeepSeek B64 points are feasible and lose on same-batch speed; no DeepSeek B64 speed case survives the midpoint.
-- Exact checkpoint manifests/configs are pinned and fully accounted without full payload downloads; main-decode, draft-only, and resident-only bytes are separated.
-- Closed-form MoE coverage matches uniform trace simulation; correlated stress traces expose the load-balance tail.
-- Hierarchical collective and placement sweeps execute on CPU and report their own lower bounds.
-- Pipeline capacity charges batch × stages resident sessions, so infeasible high-context points are no longer reported as throughput wins.
+- The comparison is split into N7/HBM2e versus A100 and N4-class/HBM3e versus
+  B300. WSE-2/WSE-3 are physical-feasibility anchors only.
+- Flash and Pro checkpoint capacity is measured tensor by tensor from pinned
+  released headers. Ordinary decode, draft-only, and resident-only bytes are
+  separate.
+- DeepSeek's official numerical roles are retained: routed MXFP4×FP8, dense
+  FP8×FP8, BF16 paths, FP4 index work, and FP32 mHC work. Pure-FP4 marketing
+  peaks are not used for mixed expert GEMMs.
+- Decode work is counted from exact operator shapes. At 200K it is 49.965 Gop/token
+  for Flash and 145.068 Gop/token for Pro; the old `2 × active parameters` proxy
+  is no longer used.
+- Immutable weights and mutable KV are physically separate on the proposed ROM
+  architecture. GPU HBM charges both streams; ROM never stores KV.
+- Two DeepSeek all-reduces per layer, topology-derived wafer communication,
+  pipeline residence (`batch × stages`), local capacity, cross-stage links, and
+  thermal scaling are explicit.
+- Both generated arithmetic audits pass: 6,565 checks for N7 and 3,921 for the
+  leading-node study. This closes identities and configured ceilings only.
 
-## Gates not passed
+## Conditional 200K result
 
-- No foundry measurement establishes ROM bit density or PB/s-class full-array read bandwidth.
-- No synthesis result establishes the multi-POP/s per-wafer compute density needed by the provisional ultra tiers.
-- No production router or GPU profiler trace establishes engaged bandwidth, tail imbalance, or actual KV HBM reads.
-- The model owner/checkpoint-freeze commitment has not occurred.
-- Packaging, beachfront HBM, yield/repair, clock/power delivery, cooling, NRE, and unit cost remain assumptions.
-- Partial TCO excludes staffing, financing, networking, floor space, maintenance, replacement inventory, and idle-period electricity.
+Central-envelope per-user speed ratios versus the fastest feasible same-batch GPU
+are:
 
-## Target ordering
+| Study/model | B1 | B8 | B32 | B64 |
+|---|---:|---:|---:|---:|
+| N7 ROM / A100 — Flash | 15.20× | 6.78× | 3.28× | 2.44× |
+| N7 ROM / A100 — Pro | 18.08× | 5.42× | 2.71× | 2.11× |
+| N4 ROM / B300 — Flash | 8.67× | 7.69× | 5.79× | 4.46× |
+| N4 ROM / B300 — Pro | 12.68× | 11.12× | 9.55× | 7.93× |
 
-1. **DeepSeek V4 Flash** as the primary proof target: smallest measured image and strongest low-batch margin, while the speculative result makes clear that the margin still needs trace validation.
-2. **DeepSeek V4 Pro** as a stretch architecture target, not a current product-performance claim: it requires six released-format midpoint stages, loses at B8, and loses even at B1 under the assumed speculative midpoint.
-3. **Qwen3-8B** as a small dense control, not a mask-ROM product target: it checks single-stage dense/GQA behavior and x1/x2 GPU normalization at 8K without importing an unsupported draft model.
-4. **Kimi K3** as a negative/stress control: its dense MLA traffic makes 1M context beachfront-bound and it does not show a robust speed case here.
+These are simulation results under central assumptions, not expected silicon
+performance. The deterministic envelope ranges remain wide. In the N7 study the
+conservative envelope falls below parity for Flash at B32/B64 and Pro at B8/B32/
+B64. The leading-node conservative envelope stays near or above parity at 200K,
+but it still relies on unmeasured target ROM, NoC, package, and power assumptions.
 
-## Next pass criteria
+The B300 full-FP32 roof is not published in the checked official artifacts. A
+19.5/45/90/180-TOP/s per-GPU sweep leaves every reported fastest-B300 200K rate
+unchanged because those points are weight-memory-bound and FP32 is only
+0.116–0.136% of counted operations. This removes that specific unknown from the
+headline sensitivity; it does not validate the other B300 runtime assumptions.
 
-Continue only if circuit simulation/test macro and synthesis put the required read/compute point inside a power/cooling envelope, and if measured V4 router/KV traces leave ROM faster than the best B300 production point at the intended batch. A checkpoint-freeze commitment remains an independent mandatory gate.
+## Architectural interpretation
 
-## Provisional tier audit
+The core thesis survives the accounting correction: immutable ROM can provide
+much more local weight capacity per area than SRAM and can remove weight traffic
+from HBM. The benefit is governed by the active weight-read/KV-service ratio and
+shrinks as batch amortizes GPU weight reads or context increases mutable KV work.
+ROM does not eliminate arithmetic, reductions, HBM KV service, or cooling.
 
-- B=1: brief target 7,000 tok/s; collective/pipeline-only ceiling 26,843 tok/s; grid maximum 8,538 tok/s (compute_C5).
-- B=8: brief target 5,500 tok/s; collective/pipeline-only ceiling 4,450 tok/s; grid maximum 1,921 tok/s (kv_beachfront_C8).
-- B=32: brief target 2,250 tok/s; collective/pipeline-only ceiling 1,153 tok/s; grid maximum 488 tok/s (kv_beachfront_C8).
+The Graphcore-style SRAM control tests the same broad spatial-compute idea with a
+writable storage tier. It can be fast where capacity fits, but its lower bytes/mm²
+forces more stages and reaches KV/capacity cliffs sooner. Cerebras establishes
+wafer-scale construction and mesh feasibility, not this design's ROM throughput.
+
+Huawei Tau/韬 scaling is relevant as a co-design checklist for reducing device,
+circuit, chip, and system delay. Public Huawei material does not disclose a
+physical 3-D stack contract, so Tau and the projected 1.4-nm-equivalent density
+are not applied to either result. A vertical-ROM scenario must separately model
+tier count, bonds, vertical links, periphery, power, thermal resistance, yield,
+repair, test, and packaging.
+
+## Open gates that block product authorization
+
+| Gate | Required evidence | Owner/dependency | Status |
+|---|---|---|---|
+| `COMP-01` executable mapping | Complete checkpoint payloads compiled into legal ROM/HBM images, microcode, and independently certified schedules; artifact-driven service-engine and representative RTL execution matching operators, routes, KV state, and logits with reconciled counters | Compiler/runtime/RTL/model verification | Open — a deterministic exact-integer fixture now compiles, inverse-checks, and executes generated artifacts with exact semantic counters, but it has no real checkpoint, target numeric formats, placement/schedule proof, DeepSeek operator coverage, or RTL execution |
+| Checkpoint lifetime | Frozen model/image and multi-year service/change agreement | DeepSeek/model owner | Open |
+| Router and KV traffic | Production per-layer routing, HBM reads/writes, rereads, allocator and tail traces | Model owner/runtime team | Open |
+| GPU baseline | Exact A100 and B300 serving traces across the required batch/context matrix | Runtime/GPU lab | Open |
+| ROM density/timing | Target-node bitcell/macro density, access time, sense margin, corners, ECC/repair | Foundry/memory IP | Open |
+| Full-array activity | Simultaneous read current, energy, IR drop, noise, thermal map, duty cycle | Foundry/implementation | Open |
+| Numeric compute | MXFP4×FP8, FP8×FP8, BF16, FP4, and FP32 synthesis/P&R, power, and accuracy | Digital/PDK/model owner | Open |
+| Wafer NoC | Placed floorplan, wire/repeater/clock/skew timing, bisection and contention | Physical design | Open |
+| HBM package | Stack count, beachfront escape, SI/PI, interposer/substrate, known-good-stack flow | OSAT/HBM vendor | Open |
+| Power/cooling | PDN, EM/IR, transient load, junction temperature, cooling and facility envelope | Package/system | Open |
+| Yield/repair/test | Reticle yield correlation, stitching, repair coverage, spares, DFT and failure domains | Foundry/DFT | Open |
+| Economics | Foundry/OSAT/HBM quotes, NRE, volume/yield, spares and full TCO | Supply chain/finance | Open |
+
+## Authorized next steps
+
+1. Implement the governed executable path in
+   `docs/EXECUTABLE_SYSTEM_RECOVERY_PLAN.md`: semantic IR, complete checkpoint
+   ingestion, physical image compiler, software service engine, independent
+   checkers, and a real-model vertical slice. No headline performance result is
+   promoted before `COMP-01` closes.
+2. Obtain model-owner checkpoint-lifetime and trace access commitments. A negative
+   answer can terminate product work before expensive silicon activity.
+3. Run production A100/B300 baselines and collect router/KV/kernel/collective
+   counters using the exact released checkpoint and required operating matrix.
+4. Request foundry ROM feasibility under NDA and build a small target-node macro
+   characterization plan covering density, timing, sense margin, energy, repair,
+   and simultaneous activity.
+5. Synthesize and place the exact format buckets and a representative hierarchical
+   NoC at N7 and the intended leading node. Replace WSE/GC200 fraction ceilings.
+6. Start OSAT/HBM beachfront and power/thermal studies using the explicit stack
+   matrices, including a separately labelled vertical-integration option if useful.
+7. Regenerate both studies with measurement distributions and production traces.
+   Compare binding constraints before considering headline ratios.
+8. Freeze a product architecture only if a conservative, measured scenario clears
+   latency, throughput, capacity, power, yield, quality, and full-TCO gates.
+
+The public RTL and open-PDK work may continue as interface/methodology preparation.
+It cannot close any target-silicon gate or select one of the current deterministic
+envelopes as a product specification.

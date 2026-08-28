@@ -7,6 +7,40 @@ progress; product silicon remains on hold. Nothing here authorizes product silic
 
 A note on numbers. This document deliberately avoids quoting specific throughput, cost, or density figures. Every such number in the exploratory work behind it was produced by hand and several were wrong — that is precisely why the analytical model exists. **All quantitative claims must be regenerated from `infersim.py` with measured inputs.** Where this document states a direction ("advantage falls with batch"), that direction is a structural property of the equations and can be relied on; where it would state a magnitude, it points to the model instead.
 
+## Execution-status addendum — 2026-08-28
+
+The status paragraph and companion-artifact framing above record the historical
+program starting point. They do not identify the current quantitative authority.
+For all present product comparisons, use:
+
+- `docs/METHODOLOGY.md` for comparison rules, evidence classes, immutable-weight
+  versus mutable-state accounting, and the separate Huawei Tau/3-D scenario gate;
+- `configs/hardware/technology_inputs.json`,
+  `tools/build_iso_node_studies.py`, and `tools/run_iso_node_studies.py` for the
+  independently generated N7/HBM2e/A100 and N4-class/HBM3e/B300 studies;
+- `tools/run_model_traffic_screen.py` and `results/model-traffic/` for the
+  hardware-independent weight/KV traffic ratios; and
+- `results/iso-node/`, `results/DECISION.md`, and
+  `results/PRE_NDA_READINESS.md` for generated results and their authorization
+  boundary.
+
+The legacy `infersim.py`, `run.py`, `decide.py`, and `tornado.py` framing and the
+limitations embedded later in this document are historical. They must not
+override or be averaged with the iso-node studies. The current model uses exact
+released tensor inventories and operator shapes, retains DeepSeek's official
+MXFP4×FP8, FP8×FP8, BF16, FP4, and FP32 roles, separates ROM weight service from
+HBM/SRAM KV and state service, and accounts explicitly for pipeline residence,
+collectives, cross-stage service, power ceilings, and thermal scaling.
+
+The public RTL and open-library implementation work is an interface,
+microarchitecture, verification, and methodology proxy. It is not an implemented
+target-node ROM macro or wafer product. Product architecture freeze remains held
+pending model-owner traces and checkpoint commitment; measured A100/B300 runtime
+baselines; foundry ROM/compute/NoC data; and OSAT/HBM, package, power, thermal,
+yield, repair, test, and cost evidence. WSE-2 and WSE-3 remain wafer-construction
+feasibility anchors only. Huawei Tau is not used as a performance or density
+multiplier, and any vertical-ROM option must be a separately parameterized study.
+
 ---
 
 ## 1. The decision

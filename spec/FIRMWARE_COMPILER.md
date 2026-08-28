@@ -106,7 +106,7 @@ Compilation stages are deterministic:
    metadata, and manifest;
 9. independently reread emitted artifacts and reproduce every hash/check.
 
-Frozen midpoint partitions are Flash `[0,22),[22,43)`; Pro `[0,11)` followed by
+Frozen public-reference proxy partitions are Flash `[0,22),[22,43)`; Pro `[0,11)` followed by
 ten-layer intervals through `[51,61)`; the eleven Kimi intervals recorded in the
 architecture spec; and Qwen3-8B `[0,36)` on one stage. A partition change is an
 image-version change even if logical logits remain equivalent.

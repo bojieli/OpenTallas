@@ -1,5 +1,11 @@
 {
   "architecture_name": "OpenTallas public-reference ROM inference architecture",
+  "analytical_authority": {
+    "methodology": "docs/METHODOLOGY.md",
+    "n7_study": "results/iso-node/n7_architecture_attribution/analytical.json",
+    "leading_node_study": "results/iso-node/leading_node_market/analytical.json",
+    "public_reference_proxy_is_product_envelope": false
+  },
   "baseline_parent_commit": "82a2a23",
   "documents": [
     {"id": "SPEC-REQ", "normative": true, "path": "spec/SYSTEM_REQUIREMENTS.md"},
@@ -15,6 +21,7 @@
     {"id": "SPEC-DV-FAULT", "normative": true, "path": "spec/fault_campaign.json"},
     {"id": "SPEC-DV-COVERAGE", "normative": true, "path": "spec/coverage_plan.json"},
     {"id": "SPEC-DV-COVERAGE-WAIVERS", "normative": false, "path": "spec/coverage_waivers.json"},
+    {"id": "SPEC-IMPL-PROXY", "normative": true, "path": "spec/implementation_proxy.json"},
     {"id": "SPEC-CC", "normative": true, "path": "spec/CHANGE_CONTROL.md"},
     {"id": "SPEC-CRP-MACHINE", "normative": true, "path": "spec/clock_reset_crossings.json"},
     {"id": "SPEC-WAIVER", "normative": false, "path": "spec/rtl_waivers.json"},
@@ -36,7 +43,7 @@
     "status": "frozen_for_public_reference_rtl",
     "unresolved_external_gates": [
       "model-owner checkpoint lifetime commitment",
-      "production B200/B300 traces and serving measurements",
+      "production A100/B300 traces and serving measurements",
       "target-node ROM density, bandwidth, sense margin, and repair characterization",
       "target-node standard-cell, SRAM, PLL, PHY, IO, DFT, and reliability collateral",
       "HBM beachfront and package/power/thermal feasibility",
@@ -52,6 +59,7 @@
     "spec/fault_campaign.json",
     "spec/coverage_plan.json",
     "spec/coverage_waivers.json",
+    "spec/implementation_proxy.json",
     "spec/clock_reset_crossings.json",
     "spec/rtl_waivers.json"
   ],

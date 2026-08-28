@@ -1,12 +1,18 @@
 # Floorplan, PPA, and proxy methodology
 
 **Document:** SPEC-PPA 1.0  
-**Status:** frozen hypothesis and measurement plan; no target-node signoff
+**Status:** frozen public-reference proxy and measurement plan; no target-node signoff
 
-This document turns the analytical midpoint into explicit physical-design
-budgets. Values marked `assumed` are design-entry constraints, not evidence that a
-wafer, package, or product can meet them. Open tools and an open PDK may be used
-to test methodology and scaling behavior, but cannot close the external gates.
+This document turns the legacy public-reference interface proxy into explicit
+physical-design budgets. It does not define the current N7 or N4 product envelope.
+Values marked `assumed` are proxy design-entry constraints, not evidence that a
+wafer, package, or product can meet them. Open tools and an open PDK may test
+methodology and scaling behavior, but cannot close the external gates.
+
+Current comparison inputs and derivations are controlled by
+`configs/hardware/technology_inputs.json`, `docs/METHODOLOGY.md`, and
+`results/iso-node/`. The numbers below must never be averaged with those envelopes
+or quoted as selected product targets.
 
 ## PPA-1 Scope and accounting
 
@@ -29,7 +35,7 @@ leading-node wafer claim without a stated scaling model and uncertainty.
 
 ## PPA-2 Floorplan contract
 
-| Item | Midpoint | Class | Acceptance artifact |
+| Item | Public proxy | Class | Acceptance artifact |
 |---|---:|---|---|
 | reticle fields/stage | 64 | assumed architectural limit | floorplan database and connectivity check |
 | service tiles/stage | 4,096 | derived from hierarchy | elaboration and placement inventory |
@@ -49,7 +55,7 @@ overheads in the tile line.
 
 ### PPA-3.1 Immutable ROM capacity
 
-The 184 GB raw hypothesis is partitioned into 160 GB logical image capacity plus a
+The public proxy's 184 GB raw hypothesis is partitioned into 160 GB logical image capacity plus a
 13.0435% visible reserve for row/column repair, CRC/signature regions, alignment,
 fragmentation, and service metadata. Capacity is checked per indivisible tensor and
 layer partition. The compiler emits raw, reserve, logical, and free-byte totals for
@@ -57,7 +63,7 @@ every stage; aggregate bytes alone are insufficient.
 
 ### PPA-3.2 HBM and beachfront
 
-The 384 GB HBM number is a per-stage physical hypothesis. At most 90% is available
+The 384 GB HBM number is a public-proxy per-stage physical hypothesis. At most 90% is available
 to session/KV state; the remainder is reserved for runtime, queues, communication,
 ECC, diagnostics, and safety. The physical plan must show stack count, channels,
 PHY/IO area, thermal path, power delivery, and usable capacity after package
@@ -65,10 +71,10 @@ constraints. The analytical capacity result is not a beachfront measurement.
 
 ## PPA-4 Service budgets
 
-| ID | Budget | Midpoint | Class | Required proof |
+| ID | Budget | Public proxy | Class | Required proof |
 |---|---|---:|---|---|
 | PPA-4.1 | exposed ROM read bandwidth/stage | 100 TB/s | assumed | ROM macro/sense characterization plus sustained traffic test |
-| PPA-4.2 | routed low-precision / dense high-precision arithmetic | 1 / 0.5 POP/s | assumed | post-synthesis/placement throughput and power |
+| PPA-4.2 | MXFP4-weight × FP8-activation / FP8×FP8 / BF16×BF16 arithmetic | 0.5 / 0.5 / 0.25 POP/s | assumed | format-specific post-synthesis/placement throughput and power |
 | PPA-4.3 | bidirectional HBM payload bandwidth/stage | 8 TB/s | assumed | PHY/controller traffic and thermal test |
 | PPA-4.4 | NoC floor plus payload | 100 ns/layer + 128 GB/s | simulated/assumed | cycle model, RTL timing, and post-layout network analysis |
 | PPA-4.5 | stage-link payload / one-way latency | 128 GB/s / 0.5 µs | assumed | link wrapper timing and package SI/latency study |
@@ -81,7 +87,7 @@ replace a binding physical constraint with a peak arithmetic number.
 
 ### PPA-5.1 Allocation
 
-The stage operating hypothesis is 15 kW with a 20 kW cooling limit. The initial
+The public-proxy stage operating hypothesis is 15 kW with a 20 kW cooling limit. The initial
 allocation is: ROM/sense 3.0 kW, MAC/vector 5.0 kW, HBM/PHY 2.2 kW, NoC/SRAM
 movement 3.3 kW, clock/control 0.8 kW, and 0.7 kW contingency. These are budget
 partitions, not measured rail power. Dynamic estimates must include clock,
@@ -114,10 +120,101 @@ run records tool versions, library/PDK identity, parameters, constraints, seeds,
 and input hashes. Results are compared at equal architectural work, not merely
 equal RTL line count. No public-PDK result is promoted to a target-node claim.
 
+### PPA-6.3 Governed public implementation proxy
+
+`implementation_proxy.json` and `tools/rtl_implementation_campaign.py` define the
+canonical implementation-methodology campaign. Four arithmetic points vary one to
+sixteen experts and four to sixteen lanes; three stage-control points vary reduced,
+midpoint, and default control storage. Every point receives generic and Nangate45
+mapped synthesis, structural checks, complete 100 MHz proxy constraints, a 1 GHz
+core-frequency diagnostic, minimum-delay/reset audit, and exact warning review.
+The reduced arithmetic and stage-control representatives additionally run immutable-
+digest OpenROAD/ORFS placement, CTS, detailed route, extraction, final reporting,
+and GDS generation.
+
+The exact 16-expert × 16-lane arithmetic endpoint is retained rather than
+resized. Because the pinned default delay-oriented ABC recipe previously ran for
+more than 64 minutes without emitting a mapped netlist, that scaling-only,
+non-equivalence, non-physical point uses the separately identified bounded
+structural Liberty profile `strash; &get -n; &nf; &put` with a 300-second outer
+timeout. It must still produce only pinned-Liberty cells, no latches, blackboxes,
+internal cells, or structural errors, and complete STA constraint coverage. Its
+cell count, area, and timing are not directly QoR-comparable to default-profile
+rows.
+
+A required physical proxy passes only with nonnegative final setup and hold slack,
+zero setup/hold, max-slew, max-fanout, max-capacitance, placement, antenna, flow, and
+final DRC violations, an exact max-fanout-32 structural audit, zero unexplained
+drivers or loads, and independent equivalence from the exact ORFS synthesized
+netlist to the final physical netlist. Every final artifact is hashed. The pinned
+ORFS image's optional Kepler LEC helper is explicitly disabled because its Naja
+Python library raised an illegal-instruction exception on this host; that helper is
+not reported as passing. The replacement public gate uses pinned Yosys to expand
+Liberty semantics, normalize both netlists to arbitrary-initial-state AIGs, and
+audit identical public IO plus latch-index state pairing before pinned ABC `dsec`
+inductively proves the sequential networks equivalent. Only a bounded number of
+autogenerated private state symbols may be aligned; public state-name differences
+are fatal. Qualified diverse product LEC remains external.
+
+OpenSTA and OpenROAD vectorless power have no workload activity, characterized
+macros, package loss, calibrated target voltage/frequency, or thermal feedback.
+Default-grid IR drop likewise lacks a product floorplan and PDN. Both are retained
+as visibly non-gating diagnostics; neither may be used as product power, energy, or
+power-integrity evidence. Inferred memories remain flop-mapped and are reported
+separately from qualified SRAM/ROM macros.
+
+### PPA-6.4 Governed custom-transistor ROM methodology slice
+
+The selected public custom-circuit vehicle is SKY130A, with IHP SG13G2 reserved
+for independent replication. This selection is based on foundry provenance,
+primitive models, DRC/LVS/extraction, PVT/statistical collateral, reproducible
+releases, and open-tool maturity—not nominal feature size. See
+`docs/OPEN_PDK_SELECTION.md` and `configs/pdk/sky130_physical_lock.json`.
+
+`tools/run_sky130_physical.py` now closes zero-error Magic DRC, unique Netgen LVS
+including all ten ports, the ten-device/fifteen-net schematic contract, exactly
+one physical via1 programming delta, and base capacitance extraction for a
+deliberately roomy two-column slice. `tools/run_sky130_extracted_pvt.py` closes
+33/33 deterministic extracted-layout process/voltage/temperature/output-load
+cases. `tools/run_sky130_extracted_mismatch.py` additionally closes 256/256
+fixed-seed, mismatch-only nominal-TT local cases, exact same-seed replay, and
+cross-seed variation detection. Exact artifacts and hashes are under
+`results/spice/sky130_physical/`, `results/spice/sky130_extracted_pvt.json`, and
+`results/spice/sky130_extracted_mismatch.json`. A complementary integrated
+detailed-resistance campaign closes five semantic extraction replays and
+165/165 deterministic cases over five RC styles; its governed result is
+`results/spice/sky130_resistance/resistance.json`.
+
+The independent IHP chain is also governed. The exact public SG13G2 `v0.3.0`
+checkout and submodules are recursively content-locked; all four official
+Verilog-A/OSDI models compile twice byte-identically for a generic CPU target;
+and the official 1.2-V NMOS/PMOS wrappers pass a deterministic TT DC/transient
+smoke deck. An independently generated controlled-via slice then closes zero-
+error full DRC, unique ten-port LVS, the ten-device/fifteen-net topology, the
+exact six-versus-five via1 invariant, base capacitance extraction, and 33/33
+official-PSP103 PVT/load cases. A complementary five-style detailed-RC campaign
+closes 5/5 semantic extraction replays, preserves 10 MOS/41 resistor/68
+capacitor elements and all six NMOS body-resistance paths per style, and passes
+165/165 electrical cases. The governed records are under
+`results/spice/ihp_device_smoke/`, `results/spice/ihp_sg13g2_physical/`,
+`results/spice/ihp_sg13g2_extracted_pvt.json`, and
+`results/spice/ihp_sg13g2_resistance/`.
+
+This gate tests local topology and methodology only. Its 373.75-µm² footprint
+is not a ROM-bit density; its delay and energy are not array or product values.
+No SKY130 or IHP result may be feature-size-scaled into N7/N4. Distributed wire
+resistance for a compact/full array, full decoder/row/column organization,
+silicon mismatch/sense yield, simultaneous activity, repair, target-foundry
+macro characterization, and reticle-silicon correlation remain required.
+
 ## PPA-7 Entry and exit criteria
 
 Physical proxy work begins only after RTL static and functional verification for the
-selected baseline. A proxy result is acceptable for methodology when constraints
-are covered, no black box is silently inferred, and area/timing/power uncertainty
-is reported. Product PPA remains blocked until characterized ROM/HBM/PHY/package,
-yield/repair, SI/PI, thermal, reliability, and commercial evidence are available.
+selected baseline. A proxy result is acceptable for methodology only when the
+machine-readable PPA-6.3 gates pass, all warnings have exact dispositions, no black
+box is silently inferred, and area/timing/power uncertainty is reported. Raw
+prelayout stage timing is diagnostic because inferred memories and high-fanout
+controls lack product macros and trees; required stage timing closes only on the
+buffered postroute proxy. Product PPA remains blocked until characterized
+ROM/HBM/PHY/package, reset/clock trees, yield/repair, SI/PI, thermal, reliability,
+and commercial evidence are available.

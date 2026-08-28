@@ -9,6 +9,7 @@ CDC/RDC, or target-node signoff.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -576,6 +577,226 @@ def _validate_manifest(
             errors.append(f"manifest machine-readable file missing: {path}")
 
 
+def _validate_implementation_campaign(
+    implementation: dict[str, Any],
+    verification: dict[str, Any],
+    manifest: dict[str, Any],
+    errors: list[str],
+) -> None:
+    try:
+        try:
+            from tools.rtl_implementation_campaign import (
+                CampaignError,
+                validate_spec as validate_implementation_spec,
+            )
+        except ModuleNotFoundError:
+            from rtl_implementation_campaign import (  # type: ignore[no-redef]
+                CampaignError,
+                validate_spec as validate_implementation_spec,
+            )
+
+        validate_implementation_spec(implementation)
+    except (CampaignError, KeyError, TypeError, ValueError) as exc:
+        errors.append(f"implementation_proxy.json: {exc}")
+        return
+
+    campaign = verification.get("implementation_campaign")
+    if not isinstance(campaign, dict):
+        errors.append("verification.implementation_campaign must be an object")
+        return
+    expected_paths = {
+        "spec_path": "spec/implementation_proxy.json",
+        "runner_path": implementation.get("reports", {}).get("runner"),
+    }
+    for field, expected in expected_paths.items():
+        if campaign.get(field) != expected:
+            errors.append(
+                f"verification.implementation_campaign.{field} must be {expected}"
+            )
+        elif not isinstance(expected, str) or not (ROOT / expected).is_file():
+            errors.append(f"implementation campaign path is missing: {expected}")
+    result_paths = campaign.get("result_paths")
+    expected_results = [
+        implementation.get("reports", {}).get("json"),
+        implementation.get("reports", {}).get("markdown"),
+    ]
+    if result_paths != expected_results:
+        errors.append("implementation campaign result paths disagree with proxy spec")
+    result_status = campaign.get("result_status")
+    if result_status not in {"pending_governed_run", "closed"}:
+        errors.append(
+            "verification.implementation_campaign.result_status must be "
+            "pending_governed_run or closed"
+        )
+    elif result_paths == expected_results and all(
+        isinstance(path, str) for path in result_paths
+    ):
+        result_files = [ROOT / path for path in result_paths]
+        if result_status == "pending_governed_run":
+            present = [str(path.relative_to(ROOT)) for path in result_files if path.exists()]
+            if present:
+                errors.append(
+                    "pending implementation campaign must not retain provisional result "
+                    f"artifacts: {present}"
+                )
+        else:
+            missing = [
+                str(path.relative_to(ROOT))
+                for path in result_files
+                if not path.is_file()
+            ]
+            if missing:
+                errors.append(
+                    f"closed implementation campaign result artifact is missing: {missing}"
+                )
+            else:
+                try:
+                    closed_result = _strict_load(result_files[0])
+                except SpecError as exc:
+                    errors.append(f"cannot load closed implementation result: {exc}")
+                else:
+                    if closed_result.get("status") != "pass":
+                        errors.append("closed implementation campaign must report pass")
+                    if closed_result.get("campaign_id") != implementation.get("campaign_id"):
+                        errors.append("closed implementation campaign_id disagrees with spec")
+                    baseline = closed_result.get("baseline", {})
+                    if baseline.get("dirty_paths") != []:
+                        errors.append("closed implementation campaign baseline must be clean")
+                    closed_cases = {
+                        case.get("name")
+                        for case in closed_result.get("cases", [])
+                        if isinstance(case, dict)
+                    }
+                    if closed_cases != set(implementation["acceptance"]["required_cases"]):
+                        errors.append("closed implementation result case inventory is incomplete")
+                    for entry in closed_result.get("source_inventory", []):
+                        if not isinstance(entry, dict):
+                            errors.append("closed implementation source inventory is malformed")
+                            break
+                        source = entry.get("path")
+                        digest = entry.get("sha256")
+                        source_path = ROOT / source if isinstance(source, str) else None
+                        if (
+                            source_path is None
+                            or not source_path.is_file()
+                            or not isinstance(digest, str)
+                            or hashlib.sha256(source_path.read_bytes()).hexdigest() != digest
+                        ):
+                            errors.append(
+                                f"closed implementation source inventory is stale: {source!r}"
+                            )
+                            break
+                    report_text = result_files[1].read_text(
+                        encoding="utf-8", errors="replace"
+                    )
+                    fingerprint = closed_result.get("run_fingerprint")
+                    if (
+                        "**Status:** PASS" not in report_text
+                        or not isinstance(fingerprint, str)
+                        or fingerprint not in report_text
+                    ):
+                        errors.append(
+                            "closed implementation Markdown report disagrees with JSON result"
+                        )
+                    replay = campaign.get("clean_replay")
+                    if not isinstance(replay, dict) or replay.get("required") is not True:
+                        errors.append(
+                            "closed implementation campaign requires a clean-replay contract"
+                        )
+                    else:
+                        replay_runner = replay.get("runner_path")
+                        replay_paths = replay.get("result_paths")
+                        if (
+                            replay_runner != "tools/run_clean_rtl_implementation_replay.py"
+                            or not (ROOT / replay_runner).is_file()
+                        ):
+                            errors.append(
+                                "closed implementation clean-replay runner is missing"
+                            )
+                        if replay_paths != [
+                            "results/rtl/clean_baseline_replay.json",
+                            "results/rtl/CLEAN_BASELINE_REPLAY.md",
+                        ]:
+                            errors.append(
+                                "closed implementation clean-replay paths are invalid"
+                            )
+                        elif not all((ROOT / path).is_file() for path in replay_paths):
+                            errors.append(
+                                "closed implementation clean-replay evidence is missing"
+                            )
+                        else:
+                            try:
+                                replay_result = _strict_load(ROOT / replay_paths[0])
+                            except SpecError as exc:
+                                errors.append(
+                                    f"cannot load clean implementation replay: {exc}"
+                                )
+                            else:
+                                comparisons = replay_result.get("comparisons", {})
+                                eligibility = replay_result.get(
+                                    "canonical_eligibility", {}
+                                )
+                                if (
+                                    replay_result.get("status") != "pass"
+                                    or replay_result.get("run_fingerprint") != fingerprint
+                                    or replay_result.get("summary")
+                                    != closed_result.get("summary")
+                                    or not all(comparisons.get(field) is True for field in (
+                                        "run_fingerprint_equal",
+                                        "source_inventory_equal",
+                                        "technical_closure_signature_equal",
+                                        "toolchain_identity_equal",
+                                    ))
+                                    or not all(eligibility.get(field) is True for field in (
+                                        "clean_source_tree",
+                                        "complete_case_selection",
+                                        "equivalence_enabled",
+                                        "physical_flow_enabled",
+                                        "technical_gates_pass",
+                                    ))
+                                    or not isinstance(
+                                        replay_result.get("verified_case_artifacts"), int
+                                    )
+                                    or replay_result["verified_case_artifacts"] < 1
+                                ):
+                                    errors.append(
+                                        "clean implementation replay does not prove canonical closure"
+                                    )
+    acceptance = implementation["acceptance"]
+    list_fields = (
+        "required_cases",
+        "equivalence_required_cases",
+        "mapped_equivalence_required_cases",
+        "physical_proxy_required_cases",
+        "postroute_equivalence_required_cases",
+    )
+    verification_names = {
+        "equivalence_required_cases": "generic_equivalence_required_cases",
+        **{field: field for field in list_fields if field != "equivalence_required_cases"},
+    }
+    for spec_field, verification_field in verification_names.items():
+        if campaign.get(verification_field) != acceptance.get(spec_field):
+            errors.append(
+                "implementation campaign case inventory disagrees for "
+                f"{verification_field}"
+            )
+    if campaign.get("unexpected_warnings_are_fatal") is not True:
+        errors.append("implementation campaign must fail unexpected warnings")
+    if not isinstance(campaign.get("evidence_boundary"), str) or not campaign[
+        "evidence_boundary"
+    ].strip():
+        errors.append("implementation campaign must state its evidence boundary")
+    if "spec/implementation_proxy.json" not in manifest.get("machine_readable", []):
+        errors.append("manifest machine_readable omits implementation proxy")
+    document_paths = {
+        item.get("path")
+        for item in manifest.get("documents", [])
+        if isinstance(item, dict)
+    }
+    if "spec/implementation_proxy.json" not in document_paths:
+        errors.append("manifest documents omit implementation proxy")
+
+
 def generate_traceability(requirements: list[dict[str, Any]], checks: list[dict[str, Any]]) -> str:
     reqs = sorted(requirements, key=lambda item: item["id"])
     dvs = sorted(checks, key=lambda item: item["id"])
@@ -627,6 +848,7 @@ def validate(*, write_traceability: bool = False) -> str:
     fault_campaign = _strict_load(SPEC / "fault_campaign.json")
     coverage_plan = _strict_load(SPEC / "coverage_plan.json")
     coverage_waivers = _strict_load(SPEC / "coverage_waivers.json")
+    implementation_proxy = _strict_load(SPEC / "implementation_proxy.json")
     errors: list[str] = []
     for path, data in (
         ("manifest.json", manifest),
@@ -638,6 +860,7 @@ def validate(*, write_traceability: bool = False) -> str:
         ("fault_campaign.json", fault_campaign),
         ("coverage_plan.json", coverage_plan),
         ("coverage_waivers.json", coverage_waivers),
+        ("implementation_proxy.json", implementation_proxy),
     ):
         if not isinstance(data, dict) or not isinstance(data.get("schema_version"), int):
             errors.append(f"{path}: missing integer schema_version")
@@ -678,6 +901,9 @@ def validate(*, write_traceability: bool = False) -> str:
     _validate_fault_campaign(fault_campaign, check_ids, errors)
     _validate_coverage_campaign(
         coverage_plan, coverage_waivers, verification_data, check_ids, errors
+    )
+    _validate_implementation_campaign(
+        implementation_proxy, verification_data, manifest, errors
     )
     _validate_budgets(budgets, errors)
     _validate_models(manifest, parameters, errors)

@@ -31,10 +31,12 @@
     "public_open_pdk_proxy_hz": 100000000
   },
   "compute": {
-    "dense_higher_precision_ops_s_per_stage": 500000000000000,
-    "low_precision_mac_lanes_per_tile": 128,
-    "routed_low_precision_ops_s_per_stage": 1000000000000000
+    "bf16_weight_bf16_activation_ops_s_per_stage": 250000000000000,
+    "deepseek_mxfp4_weight_fp8_activation_ops_s_per_stage": 500000000000000,
+    "fp8_weight_fp8_activation_ops_s_per_stage": 500000000000000,
+    "mixed_precision_mac_lanes_per_tile": 128
   },
+  "authority": "public_reference_interface_proxy_only; product comparison is controlled by docs/METHODOLOGY.md and results/iso-node",
   "evidence": "assumed_unless_field_says_simulated",
   "interconnect": {
     "cross_stage_one_way_latency_s": 5e-7,
@@ -61,5 +63,6 @@
     "cooling_limit_w_per_stage": 20000,
     "operating_w_per_stage": 15000
   },
-  "schema_version": 1
+  "schema_version": 1,
+  "selected_product_envelope": false
 }

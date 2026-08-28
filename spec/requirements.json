@@ -46,7 +46,7 @@
       "basis": "measured",
       "id": "SYS-FUNC-005",
       "priority": "must",
-      "statement": "The primary proof configuration shall represent pinned DeepSeek-V4-Flash-0731 with 43 layers, 256 experts, top-6 routing, 4096 hidden size, and two midpoint stages.",
+      "statement": "The primary public-reference proxy configuration shall represent pinned DeepSeek-V4-Flash-0731 with 43 layers, 256 experts, top-6 routing, 4096 hidden size, and two legacy proxy stages without fixing the product-analysis stage count.",
       "status": "specified",
       "verification_refs": ["DV-FW-001", "DV-PIPE-001"]
     },
@@ -56,7 +56,7 @@
       "basis": "measured",
       "id": "SYS-FUNC-006",
       "priority": "must",
-      "statement": "The stretch configuration shall represent pinned DeepSeek-V4-Pro-0813 with 61 layers, 384 experts, top-6 routing, 7168 hidden size, and six midpoint stages.",
+      "statement": "The stretch public-reference proxy configuration shall represent pinned DeepSeek-V4-Pro-0813 with 61 layers, 384 experts, top-6 routing, 7168 hidden size, and six legacy proxy stages without fixing the product-analysis stage count.",
       "status": "specified",
       "verification_refs": ["DV-FW-001", "DV-PIPE-001"]
     },
@@ -66,7 +66,7 @@
       "basis": "measured",
       "id": "SYS-FUNC-007",
       "priority": "should",
-      "statement": "The stress configuration shall represent pinned Kimi-K3 with 93 layers, 896 experts, top-16 routing, 7168 hidden size, and eleven midpoint stages without being promoted to a product target.",
+      "statement": "The public-reference stress configuration shall represent pinned Kimi-K3 with 93 layers, 896 experts, top-16 routing, 7168 hidden size, and eleven legacy proxy stages without being promoted to a product target.",
       "status": "specified",
       "verification_refs": ["DV-FW-001", "DV-PIPE-001"]
     },
@@ -126,9 +126,19 @@
       "basis": "measured",
       "id": "SYS-FUNC-013",
       "priority": "must",
-      "statement": "The dense-control configuration shall represent pinned Qwen3-8B with 36 layers, 4096 hidden size, 32 query heads, 8 KV heads, BF16 storage, an untied output head, one midpoint stage, and an 8192-token study context without an implicit speculative draft.",
+      "statement": "The public-reference dense-control configuration shall represent pinned Qwen3-8B with 36 layers, 4096 hidden size, 32 query heads, 8 KV heads, BF16 storage, an untied output head, one legacy proxy stage, and an 8192-token study context without an implicit speculative draft.",
       "status": "specified",
       "verification_refs": ["DV-FW-001", "DV-PIPE-001", "DV-NUM-001"]
+    },
+    {
+      "allocations": ["compiler", "reference_model", "service_engine", "stage_pipeline"],
+      "architecture_refs": ["FW-3.1", "MICRO-2.1", "NUM-8.1"],
+      "basis": "derived",
+      "id": "SYS-FUNC-014",
+      "priority": "must",
+      "statement": "The architecture shall not be considered executable until complete pinned checkpoint payloads are compiled into legal image, microprogram, schedule, and KV artifacts that drive a service engine and representative RTL execution matching independent operator, layer, routing, state-transition, and logits references with reconciled operation, byte, flit, stall, and cycle counters.",
+      "status": "specified",
+      "verification_refs": ["DV-EXEC-001", "DV-NUM-002", "DV-PIPE-001"]
     },
     {
       "allocations": ["weight_rom", "tile_array"],
@@ -136,7 +146,7 @@
       "basis": "assumed",
       "id": "SYS-PERF-001",
       "priority": "must",
-      "statement": "The product hypothesis shall budget 100 TB/s exposed ROM read bandwidth per stage before separately declared efficiency, repair, clock, and synchronization derates.",
+      "statement": "The public-reference proxy shall expose a 100 TB/s ROM service-counter budget per stage for interface and throttling verification; it shall not be reported as a selected product target or measured silicon bandwidth.",
       "status": "specified",
       "verification_refs": ["DV-PERF-001", "DV-SYNTH-001"]
     },
@@ -146,7 +156,7 @@
       "basis": "assumed",
       "id": "SYS-PERF-002",
       "priority": "must",
-      "statement": "The product hypothesis shall budget 1 POP/s routed low-precision and 0.5 POP/s dense higher-precision peak arithmetic per stage before derates.",
+      "statement": "The public-reference proxy shall expose 0.5 POP/s budgets for DeepSeek MXFP4-weight x FP8-activation and FP8-weight x FP8-activation work plus 0.25 POP/s for BF16-weight x BF16-activation work for counter/throttle verification; these are not product PPA claims, and a pure-FP4 peak shall not substitute for mixed-precision work.",
       "status": "specified",
       "verification_refs": ["DV-PERF-001", "DV-SYNTH-001"]
     },
@@ -156,7 +166,7 @@
       "basis": "assumed",
       "id": "SYS-PERF-003",
       "priority": "must",
-      "statement": "The product hypothesis shall budget 8 TB/s bidirectional HBM payload bandwidth per stage and shall account for weight-independent KV reads and writes.",
+      "statement": "The public-reference proxy shall expose an 8 TB/s bidirectional HBM service-counter budget per stage and shall account for mutable KV reads and writes independently of immutable weights; technology-envelope HBM service remains a separate analytical input.",
       "status": "specified",
       "verification_refs": ["DV-HBM-001", "DV-PERF-001"]
     },
@@ -166,7 +176,7 @@
       "basis": "simulated",
       "id": "SYS-PERF-004",
       "priority": "must",
-      "statement": "The NoC contract shall expose a 100 ns per-layer fixed floor plus payload serialization at 128 GB/s before the independent synchronization derate.",
+      "statement": "The public-reference NoC proxy shall expose a 100 ns per-layer fixed floor plus payload serialization at 128 GB/s before synchronization derate; product studies shall use topology-derived communication and shall not treat this proxy as placed timing.",
       "status": "specified",
       "verification_refs": ["DV-NOC-002", "DV-PERF-001"]
     },
@@ -176,7 +186,7 @@
       "basis": "assumed",
       "id": "SYS-PERF-005",
       "priority": "must",
-      "statement": "The cross-stage contract shall budget 128 GB/s payload bandwidth and 0.5 microsecond one-way fixed latency per boundary before retries.",
+      "statement": "The public-reference cross-stage contract shall budget 128 GB/s payload bandwidth and 0.5 microsecond one-way fixed latency per boundary before retries; product-link values remain technology/package inputs.",
       "status": "specified",
       "verification_refs": ["DV-LINK-001", "DV-PERF-001"]
     },
@@ -206,7 +216,7 @@
       "basis": "assumed",
       "id": "SYS-CAP-001",
       "priority": "must",
-      "statement": "Each product-hypothesis stage shall expose 160 GB usable immutable weight capacity after a separately visible raw-capacity repair/layout reserve.",
+      "statement": "Each public-reference proxy stage shall expose a 160 GB usable immutable-weight address contract after a separately visible raw-capacity repair/layout reserve; this shall not be reported as selected product density or capacity.",
       "status": "specified",
       "verification_refs": ["DV-FW-001", "DV-PERF-001"]
     },
@@ -216,7 +226,7 @@
       "basis": "assumed",
       "id": "SYS-CAP-002",
       "priority": "must",
-      "statement": "Each product-hypothesis stage shall expose 384 GB physical HBM with at most 90 percent available to checkpoint-adjacent state and KV after runtime reserve.",
+      "statement": "Each public-reference proxy stage shall expose a 384 GB physical-HBM address contract with at most 90 percent available to mutable state and KV after runtime reserve; product HBM capacity shall come from the applicable iso-technology package study.",
       "status": "specified",
       "verification_refs": ["DV-HBM-001", "DV-SESSION-001"]
     },

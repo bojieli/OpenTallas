@@ -123,3 +123,35 @@ digital datapath/control/DV. Review gates: DV-NUM-001/002, DV-TILE-003/004,
 DV-RAS-001, DV-STAGE-001, DV-COVERAGE-001, and DV-STATIC-001. Any affected edit
 reopens both simulators, strict static checks, formal properties, fault injection,
 and the complete source-coverage merge before synthesis evidence remains valid.
+
+### CC-4.5 Public implementation-proxy baseline
+
+The first governed implementation campaign pins public Yosys, ABC, OpenSTA,
+Nangate45 Liberty/LEF/license collateral, and an immutable OpenROAD/ORFS image. It
+defines four arithmetic scaling points, three stage-control scaling points,
+representative generic and mapped equivalence, complete proxy/diagnostic STA, and
+two place/CTS/route/extraction/GDS representatives. Physical completion alone is
+not closure: final setup/hold, electrical, fanout, connectivity, antenna, DRC, flow-
+error, warning-code, artifact-hash, and synthesized-to-final equivalence gates are
+mandatory. The optional ORFS Kepler helper's host SIGILL is recorded as disabled
+and replaced, never waived into a pass. The replacement gate is pinned Yosys AIG
+normalization, explicit IO/state-map auditing, and warning-free ABC `dsec` inductive
+closure under arbitrary common initial state. Vectorless power and default-PDN IR
+drop remain non-gating diagnostics.
+
+Owner: digital implementation/DV. Review gates: DV-STATIC-001, DV-COVERAGE-001,
+DV-SYNTH-001, PPA-6.3, and PPA-7. Any RTL change reopens the source-current static,
+formal, simulation, fault, coverage, synthesis, STA, equivalence, and affected
+physical campaigns. Any constraint, tool, library, warning policy, or campaign-
+runner change invalidates the implementation fingerprint and requires a clean
+rerun. Pending evidence cannot coexist with provisional result artifacts, and the
+evidence state may close only on a full campaign captured from a clean baseline;
+dirty-source runs remain explicitly noncanonical. Open-PDK evidence remains a
+methodology proxy and cannot authorize product silicon.
+
+The first closed baseline is fingerprint `87e057764094b9ed`: 7/7 cases, 2/2
+generic proofs, 1/1 actual mapped proof, 2/2 physical representatives, and 2/2
+post-route proofs pass from deterministic clean commit `34a0d2ec…`. The replay
+also rechecked 386 referenced artifacts after archival and retained the prior
+dirty-tree run separately. Any change to a fingerprinted RTL source, CDC
+inventory, implementation contract, or campaign runner invalidates that result.

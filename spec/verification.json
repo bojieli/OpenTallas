@@ -32,6 +32,7 @@
     "waiver_path": "spec/coverage_waivers.json"
   },
   "environments": [
+    {"id": "ENV-COMPILER", "scope": "checkpoint ingestion, semantic IR, physical images, microcode, schedules, independent checkers, and artifact-driven service execution"},
     {"id": "ENV-UNIT", "scope": "format, CRC/ECC, FIFO, mask, ROM, MAC, repair, and switch units"},
     {"id": "ENV-TILE", "scope": "one complete tile with ROM and SRAM behavioral macros"},
     {"id": "ENV-RETICLE", "scope": "reduced and full-parameter reticle fabrics with static schedules"},
@@ -40,6 +41,38 @@
     {"id": "ENV-FORMAL", "scope": "bounded and inductive block/protocol proofs"},
     {"id": "ENV-STATIC", "scope": "lint, elaboration, structural, CDC, RDC, and synthesis checks"}
   ],
+  "implementation_campaign": {
+    "clean_replay": {
+      "required": true,
+      "result_paths": [
+        "results/rtl/clean_baseline_replay.json",
+        "results/rtl/CLEAN_BASELINE_REPLAY.md"
+      ],
+      "runner_path": "tools/run_clean_rtl_implementation_replay.py"
+    },
+    "evidence_boundary": "Pinned public Yosys/OpenSTA/OpenROAD and Nangate45 methodology/scaling proxy only; not target-node, macro, package, product-PPA, or silicon signoff.",
+    "generic_equivalence_required_cases": ["numeric_e1_l4", "stage_reduced"],
+    "mapped_equivalence_required_cases": ["numeric_e1_l4"],
+    "physical_proxy_required_cases": ["numeric_e1_l4", "stage_reduced"],
+    "postroute_equivalence_required_cases": ["numeric_e1_l4", "stage_reduced"],
+    "required_cases": [
+      "numeric_e1_l4",
+      "numeric_e1_l16",
+      "numeric_e4_l16",
+      "numeric_e16_l16",
+      "stage_reduced",
+      "stage_midpoint",
+      "stage_default"
+    ],
+    "result_paths": [
+      "results/rtl/implementation_campaign.json",
+      "results/rtl/IMPLEMENTATION_REPORT.md"
+    ],
+    "result_status": "closed",
+    "runner_path": "tools/rtl_implementation_campaign.py",
+    "spec_path": "spec/implementation_proxy.json",
+    "unexpected_warnings_are_fatal": true
+  },
   "planned_checks": [
     {
       "environments": ["ENV-STATIC"],
@@ -132,6 +165,12 @@
       "name": "multi-stage resident-session and pipeline semantics"
     },
     {
+      "environments": ["ENV-COMPILER", "ENV-UNIT", "ENV-STAGE", "ENV-PIPE"],
+      "id": "DV-EXEC-001",
+      "methods": ["payload_roundtrip", "independent_image_check", "independent_schedule_check", "artifact_driven_execution", "official_model_differential", "counter_reconciliation"],
+      "name": "complete checkpoint-to-executable mapping and model differential"
+    },
+    {
       "environments": ["ENV-UNIT"],
       "id": "DV-NUM-001",
       "methods": ["exhaustive_encoding", "known_answer"],
@@ -212,7 +251,7 @@
     {
       "environments": ["ENV-STATIC"],
       "id": "DV-SYNTH-001",
-      "methods": ["synthesis", "equivalence", "STA", "constraint_coverage"],
+      "methods": ["synthesis", "equivalence", "STA", "constraint_coverage", "place", "CTS", "route", "postroute_equivalence", "DRC", "electrical_checks"],
       "name": "verified-baseline synthesis entry and consistency"
     }
   ],

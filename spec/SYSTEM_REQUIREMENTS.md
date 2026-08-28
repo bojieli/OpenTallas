@@ -36,22 +36,30 @@ does not verify the physical assumption. For example, RTL can prove that its
 counter model accepts a 100 TB/s service budget, but only target-node silicon can
 establish that bandwidth.
 
+The 160-GB/100-TB/s/8-TB/s values in the machine-readable specification are
+public-reference proxy requirements. They are not the product-comparison
+baseline. `docs/METHODOLOGY.md` and `results/iso-node/` control analytical product
+questions; this package controls stable public RTL behavior.
+
 ## REQ-2.1 Program objective
 
 The public program shall determine whether model-specific immutable-weight
-silicon can retain a defensible latency, capacity, power, and partial-TCO case
- against NVIDIA B200/B300 systems for DeepSeek V4 Flash and Pro at 200K and 1M
- context. Kimi K3 remains a negative/stress control and Qwen3-8B is a dense 8K
- control. The architecture shall remain
+silicon can retain a defensible latency, capacity, power, and partial-TCO case in
+two non-mixed studies: N6/N7 ROM plus HBM2e-era interfaces versus A100 80 GB, and
+N4-class ROM plus HBM3e versus B300. DeepSeek V4 Flash and Pro are evaluated at
+8K, 32K, 200K, and 1M context. Kimi K3 remains a negative/stress control and
+Qwen3-8B is a dense 8K control for the model-general/public-reference path. The
+architecture shall remain
 model-general within its declared limits; target profiles are compiler/image
 inputs rather than hard-coded control decisions.
 
-The independent analytical result controls target ordering:
+The independent iso-node analytical result controls product prioritization:
 
 1. DeepSeek V4 Flash is the primary proof target.
-2. DeepSeek V4 Pro is a six-stage stretch target, not a validated product claim.
-3. Kimi K3 is an eleven-stage stress configuration.
-4. Qwen3-8B is a one-stage dense/GQA control at 8,192 context tokens; it is not a
+2. DeepSeek V4 Pro is a capacity/pipeline stretch target; its stage count varies
+   by technology envelope and is not fixed at six for product analysis.
+3. Kimi K3 is a model-general traffic/stress configuration.
+4. Qwen3-8B is a public-reference dense/GQA control at 8,192 context tokens; it is not a
    product target and has no attached speculative draft scenario.
 
 The old brief's Pro B8 and B32 throughput claims are not requirements. They exceed
@@ -59,14 +67,14 @@ the current modeled resource ceilings and are retained only as audited hypothese
 
 ## REQ-2.2 Required operating matrix
 
-The architecture, compiler, capacity checks, and verification environments shall
-cover both 200,000 and 1,000,000 resident context tokens for DeepSeek/Kimi and
-8,192 resident context tokens for Qwen3-8B. Every profile covers batch per stage
-1, 8, and 64; batch 32 and 128 remain analytical audit points. Integer batch
-optima are selected by the analytical tool through each architecture's local
-capacity; they are not fixed hardware modes.
+The product-analysis matrix shall cover 8,192, 32,768, 200,000, and 1,000,000
+resident context tokens for DeepSeek and batch per stage 1, 8, 32, and 64. The
+model-general/public-reference verification matrix additionally retains Kimi at
+200K/1M, Qwen3-8B at 8K, batch 128 stress, and capacity endpoints. These are
+verification stimuli, not fixed product modes.
 
-Ordinary decode and the assumed speculative midpoint are distinct scenarios.
+Ordinary decode and the legacy/public-reference assumed speculative midpoint are
+distinct scenarios. The authoritative iso-node studies are ordinary decode only.
 Speculative acceptance and draft cost remain assumed until production traces
 replace them. The architecture supports up to fifteen candidates but does not
 promise that speculation improves either ROM or GPU throughput.
@@ -143,7 +151,7 @@ The following remain mandatory before product silicon even if every public
 requirement passes:
 
 - checkpoint lifetime commitment and change-control agreement with the model owner;
-- measured production router, KV, speculative-acceptance, and B200/B300 serving traces;
+- measured production router, KV, speculative-acceptance, and A100/B300 serving traces;
 - target-node ROM and standard-cell/macro characterization under NDA;
 - OSAT HBM beachfront, stitched-wafer, power-delivery, cooling, test, and repair review;
 - target-qualified security, DFT/ATPG, CDC/RDC, STA, SI, EM/IR, DRC/LVS/ERC,

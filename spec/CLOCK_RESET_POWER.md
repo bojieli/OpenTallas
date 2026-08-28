@@ -21,7 +21,7 @@ switches, level shifters, retention cells, PLLs, and sensors are external macros
 
 ### CRP-2.1 Domain inventory
 
-| Domain | Nominal/product hypothesis | Ownership | Reset |
+| Domain | Public-reference proxy | Ownership | Reset |
 |---|---:|---|---|
 | `aon_cfg_clk` | 250 MHz | CSRs, boot, RAS log, telemetry, power FSM, JTAG bridge | `aon_rst_n` |
 | `core_clk` | 1.0 GHz; legal 0.8–1.2 GHz operating hypotheses | stage controller, tiles, static NoC, service counters | `core_rst_n` |
@@ -214,7 +214,7 @@ and thermal emergency.
 
 ### CRP-5.2 Limits and SAFE
 
-The product hypothesis budgets 15 kW operating and 20 kW cooling limit per stage;
+The public-reference proxy budgets 15 kW operating and 20 kW cooling limit per stage;
 these are assumed, not sensor trip settings. Target trip points and hysteresis come
 from qualified package/silicon data. Until then, the public reference uses normalized
 warning and fatal threshold inputs with programmable test values.

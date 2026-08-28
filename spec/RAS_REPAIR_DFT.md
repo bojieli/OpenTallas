@@ -169,7 +169,7 @@ in range, injective within a repair class, target characterized spares, and neve
 map two live logical locations to one physical location. Active maps are immutable
 until quiescent shadow commit.
 
-The stage raw-capacity budget is 184 GB for 160 GB usable. This 13.04% reserve is
+The public-reference stage raw-capacity proxy is 184 GB for 160 GB usable. This 13.04% reserve is
 shared by row/column spares, fragmentation, integrity metadata, disabled tiles,
 and service margin; it is not permission to consume each component's worst case
 independently. Target macro spare counts and defect distributions require foundry

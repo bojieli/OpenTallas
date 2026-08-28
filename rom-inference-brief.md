@@ -1,6 +1,15 @@
 # ROM Inference Silicon — Brief
 
-Companion to the full program plan. All figures are outputs of `infersim.py` with **estimated** inputs, not measurements. Treat as provisional.
+> **Superseded exploratory brief.** The figures below came from the original
+> single-midpoint `infersim.py` hypothesis and are retained only for provenance.
+> They mix an old ROM envelope with contemporary GPUs, reconstruct model storage
+> from rounded parameter counts, and use assumptions that the evidence-first
+> studies have replaced. Do not use these figures for design or investment
+> decisions. The current method is [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md);
+> current results are under [`results/iso-node/`](results/iso-node/).
+
+Companion to the original program plan. All figures below were estimated model
+outputs, not measurements.
 
 ---
 

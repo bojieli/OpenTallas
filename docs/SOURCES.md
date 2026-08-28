@@ -2,7 +2,7 @@
 
 **Status:** analytical-baseline source register
 
-**Last checked:** 2026-08-27 UTC
+**Last checked:** 2026-08-28 UTC
 **Scope:** public, non-NDA evidence only
 
 This register records the primary evidence used by the executable analytical
@@ -30,7 +30,7 @@ model card, checkpoint, report, or vendor datasheet is available.
 
 | ID | Primary artifact | Immutable pin | Evidence used |
 |---|---|---|---|
-| SRC-DSV4-REPORT | [DeepSeek-V4 technical report, arXiv:2606.19348v1](https://arxiv.org/abs/2606.19348v1) | arXiv v1, published 2026-04-26 | Flash 284B total/13B active; Pro 1.6T total/49B active; one-million-token context; CSA/HCA architecture. |
+| SRC-DSV4-REPORT | [DeepSeek-V4 technical report, arXiv:2606.19348v1](https://arxiv.org/abs/2606.19348v1) | arXiv v1, published 2026-04-26 | Flash 284B total/13B active; Pro 1.6T total/49B active; one-million-token context; CSA/HCA architecture; routed experts use MXFP4 weights with FP8 activations; dense/shared matrices remain FP8-class; the report explicitly says current hardware executes FP4×FP8 at the FP8×FP8 peak, while a future native implementation could theoretically be one-third more efficient. |
 | SRC-DSV4-FLASH-CARD | [DeepSeek-V4-Flash-0731 model card](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/README.md) | `7872f01b1d1fe23eabc4c98b48bffcef5a386062` | Official release identity; attached DSpark module; serving recipe uses FP8 KV and FP4 indexer cache; target and draft are in the same checkpoint. |
 | SRC-DSV4-FLASH-CONFIG | [DeepSeek-V4-Flash-0731 config](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/config.json) | same revision; local SHA-256 `6c8f3d2d3b48707541b88f32f22ef3f0f8a6b57d8523281e2b8d3cdb0ae9a023` | 43-layer compression sequence, hidden dimensions, expert count/top-k, index dimensions/top-k, context limit, and sliding window. |
 | SRC-DSV4-FLASH-INDEX | [DeepSeek-V4-Flash-0731 safetensors index](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/model.safetensors.index.json) and pinned shard headers | same revision; index SHA-256 `98efab455cf08dfbbbaaba6f570e1bf10bf927d2b4c3c453a59c2f6f0e3be92b` | Exact released storage, dtype, tensor-role, per-layer, dense/routed, draft-only, and resident-only inventory. |
@@ -56,12 +56,18 @@ or production-throughput claim.
 
 | ID | Primary artifact | Published system values used | Derived per-GPU-equivalent values |
 |---|---|---|---|
-| SRC-NV-B200 | [NVIDIA DGX B200 product specifications](https://www.nvidia.com/en-us/data-center/dgx-b200/) | 8 Blackwell GPUs; 1,440 GB total HBM; 64 TB/s aggregate HBM3e; 72 dense FP4 PFLOPS (144 sparse); 72 sparse FP8 PFLOPS, hence 36 dense by NVIDIA's half-sparse footnote; approximately 14.3 kW maximum system power; 14.4 TB/s aggregate NVLink. | 180 GB capacity, 8 TB/s HBM, 9 dense FP4 POP/s, 4.5 dense FP8 POP/s, and 1,787.5 W allocated system-power envelope per GPU-equivalent. |
-| SRC-NV-B300 | [NVIDIA DGX B300 February 2026 datasheet](https://dam-cdn.nvd.orangelogic.com/AssetLink/625w0j7hnw6f07ui7fo63211mti2v08o.pdf) and [NVIDIA DGX B300 system guide](https://docs.nvidia.com/dgx/dgxb300-user-guide/introduction-to-dgxb300.html) | Datasheet: 2.1 TB total label, 62 TB/s aggregate HBM3e, 108 dense FP4 PFLOPS (144 sparse), 72 sparse / 36 dense FP8 PFLOPS, 14.4 TB/s aggregate NVLink, and 14.5 kW busbar / 15.1 kW PSU. System guide: exact **8 × 288 GB = 2.3 TB total** population. | **288 GB** physical capacity, 7.75 TB/s HBM, 13.5 dense FP4 POP/s, 4.5 dense FP8 POP/s, and 1,812.5 W busbar envelope per GPU-equivalent. |
+| SRC-NV-B200 | [NVIDIA DGX B200 product specifications](https://www.nvidia.com/en-us/data-center/dgx-b200/) | 8 Blackwell GPUs; 1,440 GB total HBM; 64 TB/s aggregate HBM3e; 72 dense FP4 PFLOPS (144 sparse); 72 sparse FP8 PFLOPS, hence 36 dense by NVIDIA's half-sparse footnote; approximately 14.3 kW maximum system power; 14.4 TB/s aggregate NVLink. | 180 GB capacity, 8 TB/s HBM, 9 pure-FP4 POP/s, 4.5 dense FP8 POP/s, 2.25 derived dense BF16 POP/s, and 1,787.5 W allocated system-power envelope per GPU-equivalent. The 9 POP/s pure-FP4 peak is retained as a source fact but is not used for DeepSeek's FP4-weight×FP8-activation experts. |
+| SRC-NV-B300 | [NVIDIA DGX B300 February 2026 datasheet](https://dam-cdn.nvd.orangelogic.com/AssetLink/625w0j7hnw6f07ui7fo63211mti2v08o.pdf) and [NVIDIA DGX B300 system guide](https://docs.nvidia.com/dgx/dgxb300-user-guide/introduction-to-dgxb300.html) | Datasheet: 2.1 TB total label, 62 TB/s aggregate HBM3e, 108 dense FP4 PFLOPS (144 sparse), 72 sparse / 36 dense FP8 PFLOPS, 14.4 TB/s aggregate NVLink, and 14.5 kW busbar / 15.1 kW PSU. System guide: exact **8 × 288 GB = 2.3 TB total** population. | **288 GB** physical capacity, 7.75 TB/s HBM, 13.5 pure-FP4 POP/s, 4.5 dense FP8 POP/s, 2.25 derived dense BF16 POP/s, and 1,812.5 W busbar envelope per GPU-equivalent. The 13.5 POP/s pure-FP4 peak is not used for DeepSeek's mixed expert GEMMs. |
 
 The checked B300 PDF identifies itself as document `4868000`, `Feb26`; its
 downloaded SHA-256 was
 `bf7b1cac562749d5d6f486a817130b24e13f0f3ff8a2989049aefd966f9afee0`.
+
+Neither checked official B300 artifact states a full-FP32 throughput roof. The
+configured 90 TOP/s per GPU value is therefore `assumed`, not published. The
+leading-node report executes a 19.5/45/90/180-TOP/s sweep; 19.5 TOP/s is the
+published A100 value used only as a deliberately low stress endpoint, not an
+estimate of B300 performance.
 
 The two official B300 documents use different total-memory labels. The system
 guide is device-explicit (`8 × 288 GB = 2.3 TB`) and therefore controls capacity
@@ -78,22 +84,116 @@ load-balance, clock, and synchronization efficiencies. Published 14.4 TB/s NVLin
 is retained as a source fact but is **not** substituted directly for the assumed
 effective collective payload bandwidth or per-layer latency.
 
+Model storage dtype and matrix operand dtype are kept separate. In particular,
+DeepSeek's routed weights occupy MXFP4 storage, but their GEMMs consume FP8
+activations. Following the DeepSeek report, B200/B300 therefore apply the dense
+FP8 roof to both `mxfp4_e2m1_x_fp8_e4m3` and `fp8_e4m3_x_fp8_e4m3`; the larger
+pure-FP4 marketing peak is not a compatible roof for this workload.
+
+## Iso-node architecture-attribution sources
+
+The architecture-attribution study is intentionally restricted to N7 and
+HBM2e-era technology. Its executable hardware file is
+`configs/hardware/n7_architecture_attribution.json`; it is derived from
+`configs/hardware/technology_inputs.json`, not copied from the exploratory ROM
+brief.
+
+| ID | Primary artifact | Published fact used | Simulation boundary |
+|---|---|---|---|
+| SRC-NV-A100 | [NVIDIA A100 product page](https://www.nvidia.com/en-us/data-center/a100/) and [NVIDIA Ampere Architecture whitepaper](https://images.nvidia.com/aem-dam/en-zz/Solutions/data-center/nvidia-ampere-architecture-whitepaper.pdf) | A100 uses TSMC N7; the 80-GB SXM part provides 2,039 GB/s HBM2e, 312 dense BF16 Tensor-Core TFLOP/s, 19.5 FP32 TFLOP/s, 600 GB/s NVLink, and 400 W TDP. The published Tensor Core formats do not include floating FP8 or FP4. | DeepSeek FP8/MXFP4/FP4 tensors are expanded offline to BF16; cluster collective efficiency and acquisition cost remain assumptions. The exact expanded bytes are generated tensor-role by tensor-role. |
+| SRC-CEREBRAS-NODE | Cerebras Systems Form S-1 filed 2026-04-17, `cerebras-sx1april2026.htm` | WSE-2 was manufactured on TSMC 7 nm; WSE-3 on TSMC 5 nm. | Establishes wafer-scale fabrication by node only. It does not establish this project's ROM density, HBM integration, or inference throughput. |
+| SRC-CEREBRAS-WSE2 | Cerebras WSE-2 public product disclosures | 46,225-mm² wafer-scale silicon, 850,000 cores, 40 GB on-wafer SRAM, and 20 PB/s advertised local memory bandwidth. | Used as an N7 physical-feasibility/storage-tier anchor. The proposed ROM design does not inherit WSE-2 bandwidth, compute, topology efficiency, yield, or power. |
+| SRC-GC200 | [Graphcore GC200 product page](https://www.graphcore.ai/products/ipu) | TSMC 7 nm, 900 MB in-processor SRAM, 1,472 cores, and 250 FP16 TFLOP/s. Public GC200 architecture disclosures give an approximately 823-mm² die and 47.5 TB/s aggregate local-memory bandwidth. | Product values are area-scaled at fixed composition solely to create an iso-node SRAM-rich storage control. The resulting wafer is not a Graphcore product or measured Graphcore performance. |
+
+The A100 deployment is not a lossy re-quantization. It expands the released
+quantized values and scale tensors into BF16 storage ahead of service, then maps
+logical FP8/MXFP4 operations to A100's native BF16 Tensor Core roof. This is the
+primary compatibility case because it does not assume free just-in-time unpacking.
+
+## Wafer-scale and leading-node anchors
+
+| ID | Primary artifact | Published fact used | Simulation boundary |
+|---|---|---|---|
+| SRC-NV-BLACKWELL-NODE | [NVIDIA Blackwell architecture page](https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/) | NVIDIA states that Blackwell products use custom TSMC 4NP. B200/B300 product specifications use HBM3e, not HBM4. | The commercial study pairs an N4-class ROM hypothesis and HBM3e with B300. It does not compare an N7 ROM wafer with Blackwell. |
+| SRC-CEREBRAS-WSE3 | [Cerebras WSE-3 product page](https://www.cerebras.ai/product-chip) and *The Cerebras Wafer-Scale Architecture for Deep Learning* public architecture paper | 46,225 mm², TSMC 5 nm, over four trillion transistors, 900,000 cores, 44 GB SRAM, 21 PB/s memory bandwidth, 214 Pb/s (26.75 PB/s) fabric bandwidth, 125 advertised peak PFLOP/s, a 2-D mesh, and one-clock nearest-neighbour routing. | Node, area, SRAM, fabric, and peak compute are feasibility ceilings. The 125-PFLOP/s precision/utilization contract is not sufficiently specific to calibrate DeepSeek format roofs, so the study uses explicit bounded fractions and labels them assumed. |
+
+## Tau scaling and vertical-integration boundary
+
+| ID | Primary artifact | Published fact used | Simulation boundary |
+|---|---|---|---|
+| SRC-HUAWEI-TAU | Huawei, [*HUAWEI Presents the Tau (τ) Scaling Law*](https://www.huawei.com/en/news/2026/5/ieee-iscas-tau-scaling), ISCAS 2026 keynote release, 2026-05-25; [official Chinese release](https://www.huawei.com/cn/news/2026/5/ieee-iscas-tau-scaling) | Huawei defines Tau/韬 scaling as reducing delay at the device, circuit, chip, and system levels. It names LogicFolding, full-stack workload co-design, and UnifiedBus; says LogicFolding breaks conventional planar-layout boundaries; and projects 14 Å/1.4-nm-equivalent transistor density by 2031. | The release does not specify a physical 3-D integration method, tier count, bond pitch, vertical-link characteristics, thermal behavior, yield, or a fabricated 1.4-nm-equivalent part. Tau is an optimization framework, not a density/performance multiplier. The 2031 claim is retained as a vendor projection and is not an input to the iso-node studies. |
+
+## ROM and compute-in-memory primary evidence
+
+No public fabricated N7 or N4 mask-ROM macro matching this product was found.
+Consequently, every target-node ROM number is a deterministic extrapolation band,
+not a target-node measurement.
+
+| ID | Artifact | Evidence class | Value used and boundary |
+|---|---|---|---|
+| SRC-ROM-65 | [JSSC DOI 10.1109/JSSC.2023.3326955](https://doi.org/10.1109/JSSC.2023.3326955) | fabricated silicon | 65-nm 2-Mb custom ROM-CIM, 3.984 Mb/mm². Retained as a cross-check; it is not the density anchor selected for the study. |
+| SRC-ROM-28 | [JSSC DOI 10.1109/JSSC.2025.3556008](https://doi.org/10.1109/JSSC.2025.3556008) | fabricated silicon | 28-nm hybrid SRAM/ROM-CIM with 22 Mb ROM and 8.928 Mb/mm². This is the planar capacity-density anchor. Target-node cases explicitly use linear, intermediate, or ideal-area scaling and preserve the label `derived`. |
+| SRC-YOLOC | [YOLoC, DAC 2022, DOI 10.1145/3489517.3530576](https://doi.org/10.1145/3489517.3530576) | circuit/architecture simulation, not fabrication | 28-nm, 1.2-Mb/0.24-mm² ROM-CIM, 5 Mb/mm², 8.9 ns, 28.8 GOPS, and 8-bit × 8-bit operands. The operation rate converts to 60 GB/s/mm² of encoded 8-bit weight service using two operations per weight. It is the bandwidth-density anchor only; whole-wafer scaling receives separate array, clock, repair, power, and communication derates. |
+| SRC-3DMETRO | [3D-METRO, ASP-DAC 2025, DOI 10.1145/3658617.3697570](https://doi.org/10.1145/3658617.3697570) | architecture/evaluation, not fabrication | Transistorless 3-D-metal ROM evaluation at 165.6 Mb/mm² = 20.7 MB/mm². Used only as the leading-node aggressive density ceiling; it is never called measured silicon. |
+| SRC-SRAM7-CIM | [ISSCC 2020 DOI 10.1109/ISSCC19947.2020.9062985](https://doi.org/10.1109/ISSCC19947.2020.9062985) | fabricated 7-nm SRAM-CIM macro | 372.4 GOPS and 351 TOPS/W headline macro result. Retained as a compute-in-memory plausibility cross-check, not used to assign ROM capacity or a full-wafer application roof. |
+
+The derivation script `tools/build_iso_node_studies.py` recomputes capacity,
+local read service, HBM stack totals, perimeter pitch usage, and the SRAM-rich
+control. Committed study files include the input SHA-256 and all intermediate
+values so a source or scaling-rule change is diffable.
+
+## Open-PDK and physical-methodology primary evidence
+
+The public PDK is selected for a reproducible legal-layout, DRC, LVS,
+capacitance-extraction, and circuit-methodology experiment—not because its node
+name predicts the proposed product. The selection and its hard claim boundary
+are in `docs/OPEN_PDK_SELECTION.md`.
+
+| ID | Primary artifact | Published fact used | Role and boundary |
+|---|---|---|---|
+| SRC-PDK-SKY130 | SkyWater/Google, [SKY130 open-PDK repository and status statement](https://github.com/google/skywater-pdk) | The PDK is a Google/SkyWater collaboration intended to create designs manufacturable at SkyWater; the public release is an experimental preview derived from a process used for commercially manufactured designs. The documented stack includes 1.8-V internal devices, local interconnect, and five metal levels. | Primary physical-methodology PDK. A passing public-deck experiment is not production signoff and says nothing about N7/N4 PPA or late-via mask economics. |
+| SRC-PDK-IHP | IHP, [IHP Open Source PDK repository](https://github.com/IHP-GmbH/IHP-Open-PDK) | SG13G2 is a foundry-backed 0.13-µm BiCMOS process with 1.2-V thin-oxide and 3.3-V thick-oxide CMOS. The preview PDK publishes primitive/device models plus KLayout/Magic DRC, LVS, and extraction collateral and ngspice/Xyce support. | Selected independent replication after the primary SKY130 topology is stable. It is not an N7/N4 proxy. |
+| SRC-PDK-IHP-LOCK | IHP, [Open PDK release `v0.3.0`](https://github.com/IHP-GmbH/IHP-Open-PDK/releases/tag/v0.3.0) and [exact source commit](https://github.com/IHP-GmbH/IHP-Open-PDK/tree/5cccb161f7492697cfa52eb14dc03beb00bdca9e) | Release `v0.3.0` was published 2026-03-11. The exact root commit, five gitlinks, all recursively tracked files, the tracked symlink, Git modes, sizes and hashes are locked by `configs/pdk/ihp_sg13g2_physical_lock.json`. | Establishes reproducible public-PDK identity only. The 5,121-entry/812,058,771-byte semantic payload is not target-node or silicon evidence. |
+| SRC-PDK-IHP-OSDI | IHP, [official Verilog-A compile script](https://github.com/IHP-GmbH/IHP-Open-PDK/blob/5cccb161f7492697cfa52eb14dc03beb00bdca9e/ihp-sg13g2/libs.tech/verilog-a/openvaf-compile-va.sh) and [ngspice flow notes](https://github.com/IHP-GmbH/IHP-Open-PDK/blob/5cccb161f7492697cfa52eb14dc03beb00bdca9e/ihp-sg13g2/libs.tech/xschem/README.md) | The public PDK compiles `psp103`, `psp103_nqs`, `r3_cmc`, and `mosvar` for ngspice OSDI and requires ngspice 40+ built with OSDI support. | Governs the official-device prerequisite; generated modules stay outside the immutable PDK checkout. |
+| SRC-PDK-OPENVAF | OpenVAF, [release 23.5.0](https://github.com/pascalkuthe/OpenVAF/releases/tag/OpenVAF-v23.5.0), [build instructions](https://github.com/pascalkuthe/OpenVAF/tree/d4079e776f4b54b23e158b7857c4e238e5cacd05), and [official binary download](https://openvaf.semimod.de/download/) | OpenVAF 23.5.0 implements the OSDI compiler path and documents LLVM 15.0.7. Its documented `--target_cpu generic` path has a one-line Clap type mismatch in this release; the exact source-only fix is stored and hashed. | The patch changes CLI String borrowing only, not model equations or compiler backend semantics. The governed compiler and each generated module are hash-recorded. |
+| SRC-PDK-NGSPICE43 | ngspice, [release archive 43](https://sourceforge.net/projects/ngspice/files/ng-spice-rework/old-releases/43/) and [OSDI documentation](https://ngspice.sourceforge.io/osdi.html) | ngspice 43 can be configured with `--enable-osdi`; the exact source archive, configure flags and installed executable are locked. | Official IHP device simulation tool. A passing smoke test is not production compact-model or silicon qualification. |
+| SRC-PDK-GF180 | GlobalFoundries/Google, [GF180MCU open-PDK repository](https://github.com/google/gf180mcu-pdk) | The kit targets designs manufacturable on GlobalFoundries' 0.18-µm 3.3/6-V MCU process and is explicitly an experimental preview. | Secondary older/high-voltage topology-portability check; its device regime is a weaker first analogue for the compact low-voltage read path. |
+| SRC-PDK-ASAP7 | Clark et al., [*ASAP: A 7-nm FinFET Predictive Process Design Kit*](https://doi.org/10.1016/j.mejo.2016.04.006), and the [public ASAP7 repository](https://github.com/The-OpenROAD-Project/asap7) | ASAP7 identifies itself as a predictive 7-nm FinFET PDK and research cell-library environment. | Useful only for explicitly predictive digital experiments; it is not foundry manufacturing evidence for a custom ROM read path. |
+| SRC-PDK-FREE45 | NC State, [FreePDK45 manual and release page](https://eda.ncsu.edu/freepdk/freepdk45/) | The manual calls the process generic, says the technology was compiled from published papers, predictive models, and rule scaling, and documents non-comprehensive research rules. Nangate45 is a standard-cell library built on this environment. | Existing digital synthesis/place-route work remains a methodology proxy, not transistor or manufacturability evidence. |
+| SRC-PDK-INSTALL | FOSSi Foundation, [Ciel SKY130 release `sky130-f6eeac7…`](https://github.com/fossi-foundation/ciel-releases/releases/tag/sky130-f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7), and open_pdks [tag `1.0.605`](https://github.com/RTimothyEdwards/open_pdks/tree/1.0.605) | The enabled custom-transistor payload is generated from open_pdks commit/tag `f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7`. | The exact archives, SHA-256 values, 3,204-file/104,965,496-byte tree identity, and forbidden inferences are locked in `configs/pdk/sky130_physical_lock.json`. |
+| SRC-PDK-TOOLS | Magic [8.3.674](https://github.com/RTimothyEdwards/magic/tree/8.3.674), Netgen [1.5.322](https://github.com/RTimothyEdwards/netgen/tree/1.5.322), and [ngspice](https://ngspice.sourceforge.io/) | Public layout, extraction, LVS, and BSIM simulation engines. | The governed physical result records and hashes the exact installed launchers/engines. Magic commit `17ac06a24a952380ade3a7d33cd2f0c3943dfc12`, Netgen peeled commit `5e48c4e8762d7b58e296b59392572633ba9b184d`, and the canonical ngspice executable are checked rather than relying on command names. |
+| SRC-PDK-NGSEED | ngspice, [statistical-analysis and seed documentation](https://ngspice.sourceforge.io/docs/ngspice-manual.pdf) and [ngspice-36 input implementation](https://sourceforge.net/p/ngspice/ngspice/ci/ngspice-36/tree/src/frontend/inp.c) | Random `.param` functions including `AGAUSS` are evaluated during input/model expansion. A netlist `.option seed=<positive integer>` is processed before that expansion and resets the generator; this is distinct from an interactive `setseed` issued before this build's later Wallace initialization. | The mismatch runner puts the seed in every generated netlist and proves control with an exact same-seed replay plus cross-seed variation. This establishes reproducibility only, not statistical correctness or silicon yield. |
+
 ## Internally generated evidence
 
 | ID | Artifact | Class | Boundary |
 |---|---|---|---|
 | GEN-INVENTORY | `data/inventory/*.json` | measured from pinned public metadata | Exact encoded storage only; no model execution. |
-| GEN-ANALYTICAL | `results/standard/analytical.json`, `sweep.csv`, `REPORT.md`, and `QWEN3_8B_ADDENDUM.md` | simulated/derived | Conditional on every hardware and runtime assumption in `docs/ASSUMPTIONS.md`. |
+| GEN-ANALYTICAL-LEGACY | `results/standard/analytical.json`, `sweep.csv`, `REPORT.md`, and `QWEN3_8B_ADDENDUM.md` | simulated/derived | Superseded single-midpoint exploration. Retained for provenance and control behavior; not an authoritative technology comparison. |
 | GEN-ROUTING | `results/routing/*.json` | synthetic/simulated | Uniform and correlated stress routing; not production activation traces. |
 | GEN-NOC | `results/noc/*` | simulated | Purpose-built topology/serialization model; not placed-and-routed timing. |
+| GEN-ISO-NODE | `configs/hardware/n7_architecture_attribution.json` and `leading_node_market.json` | derived/assumed envelopes | Exact arithmetic from cited macro/product facts plus visible scaling and floorplan inputs. No target-node ROM measurement. |
+| GEN-MODEL-TRAFFIC | `results/model-traffic/` | derived | Hardware-independent active-weight/KV traffic matrices for Flash, Pro, and Kimi; not a speedup prediction. |
 | GEN-SENSITIVITY | `results/sensitivity/*` | simulated/derived | One-factor and bounded-grid results, not probability distributions. |
+| GEN-SKY130-TOPOLOGY | `results/spice/sky130_rom_read.json` and `ROM_READ_REPORT.md` | simulated | 51/51 deterministic BSIM cases over declared PVT and synthetic bitline/load envelopes. Array rows alter a declared lumped capacitance only; this is not extracted array geometry. |
+| GEN-SKY130-PHYSICAL | `results/spice/sky130_physical/physical.json`, `REPORT.md`, and hashed artifacts | open-PDK DRC/LVS/extraction | Exact installed SKY130A tree and pinned tools; zero Magic DRC errors; unique Netgen LVS match for 10 MOS devices, 15 nets, and 10 ports; one physical via1 programming delta; 59 extracted capacitance elements. The 373.75-µm² deliberately roomy test slice is not a ROM-cell density. |
+| GEN-SKY130-PEX-PVT | `results/spice/sky130_extracted_pvt.json` and `SKY130_EXTRACTED_PVT_REPORT.md` | simulated from extracted public-PDK geometry | 33/33 deterministic capacitance-extracted cases over SS/TT/FF, 1.62/1.80/1.98 V, -40/25/125 °C, and 5/20/80-fF output loads. This baseline intentionally omits distributed resistance; the separate full-RC row below does not close statistical/yield sign-off, target-node correlation, or silicon. |
+| GEN-SKY130-PEX-MM | `results/spice/sky130_extracted_mismatch.json` and `SKY130_EXTRACTED_MISMATCH_REPORT.md` | simulated from extracted public-PDK geometry and public per-instance mismatch equations | 256/256 fixed-seed nominal-TT local samples pass; a same-seed replay has zero parsed-measure delta; different seeds produce 256 distinct delay values. Process variation is disabled. This is finite public-model sensitivity, not silicon yield, defect coverage, statistical sign-off, compact-array behavior, or target-node evidence. |
+| GEN-SKY130-PEX-RC | `results/spice/sky130_resistance/resistance.json`, `REPORT.md`, and 50 hashed primary/replay artifacts | simulated from integrated Magic detailed-resistance extraction of the archived public-PDK geometry | Five declared interconnect styles each produce ten MOS devices, 630 resistor elements, and 269 capacitor elements; all five semantic replays and 165/165 deterministic electrical cases pass. Nominal local delay is 0.0412 ns versus 0.0354 ns for capacitance-only PEX. Network subdivision changes both R and C, and this roomy local slice is not compact-array, full-array, silicon, target-node, wafer, or GPU evidence. |
+| GEN-IHP-DEVICE-SMOKE | `results/spice/ihp_device_smoke/device_smoke.json`, `REPORT.md`, and nine hashed logs | compiled/simulated from the exact locked IHP SG13G2 public release | All four official Verilog-A modules compile twice byte-identically with `-D__NGSPICE__ --target_cpu generic`; official 1.2-V NMOS/PMOS TT DC and transient checks pass. This closes the independent device/toolchain prerequisite only—not IHP ROM layout, DRC, LVS, PEX, PVT, density, yield, target-node scaling, wafer behavior, or GPU performance. |
+| GEN-IHP-PHYSICAL | `results/spice/ihp_sg13g2_physical/physical.json`, `REPORT.md`, and 12 hashed artifacts | independent public-PDK DRC/LVS/extraction | Exact locked IHP SG13G2 v0.3.0 and pinned tools; zero full Magic DRC errors; unique Netgen LVS for 10 MOS devices, 15 nets, and all 10 ports; six via1 shapes on the programmed side versus five on the absent side; 59 capacitance elements. The 373.75-µm² slice is deliberately roomy, not a density macro. |
+| GEN-IHP-PEX-PVT | `results/spice/ihp_sg13g2_extracted_pvt.json` and `IHP_SG13G2_EXTRACTED_PVT_REPORT.md` | simulated from exact IHP PEX with official PSP103 models | 33/33 deterministic SS/TT/FF, 1.08/1.20/1.32-V, -40/27/125-°C, and 5/20/80-fF cases pass using pinned ngspice 43 and four hash-verified OSDI modules. This is local public-model behavior, not mismatch yield, target-node timing, or silicon. |
+| GEN-IHP-PEX-RC | `results/spice/ihp_sg13g2_resistance/resistance.json`, `REPORT.md`, and 50 hashed primary/replay artifacts | simulated from integrated Magic detailed-resistance extraction of the archived IHP geometry | All five public IHP RC styles produce 10 MOS, 41 resistor, and 68 capacitor elements; all five semantic replays, resistor-graph programming/body-path checks, and 165/165 deterministic electrical cases pass. Nominal local delay is 0.0448 ns versus 0.0432 ns capacitance-only. Network subdivision changes both R and C; this is not compact/full-array, target-node, wafer, GPU, yield, or silicon evidence. |
+| GEN-RTL-IMPL | `results/rtl/implementation_campaign.json`, `IMPLEMENTATION_REPORT.md`, `clean_baseline_replay.json`, and `CLEAN_BASELINE_REPLAY.md` | synthetic open-library synthesis/STA/equivalence/physical proxy | Clean-baseline fingerprint `87e057764094b9ed` closes 7/7 mapped cases, 2/2 generic proofs, 1/1 actual mapped proof, 2/2 physical proxies, and 2/2 post-route proofs; 386 referenced artifacts verify after archival. Nangate45 is generic methodology collateral, not target-node, ROM-macro, full-chip/wafer, manufacturing, or product-PPA evidence. |
+| GEN-PRE-NDA | `results/PRE_NDA_READINESS.md` | reviewed gate record | Distinguishes completed public analytical work from model-owner, GPU-lab, foundry, OSAT, package, yield, and silicon gates. |
 
 ## Explicitly unavailable evidence
 
 No public source currently establishes the target-node via-ROM density, full-array
 read bandwidth, sense margin, yield, repair overhead, MAC density, wafer HBM
 beachfront, stitched-wafer timing, power delivery, cooling, unit cost, NRE, or
-production DeepSeek/Kimi router traces or any model's production KV traces. Those
+production DeepSeek/Kimi router traces, exact A100/B300 application traces, or any
+model's production KV traces. Those
 inputs remain assumptions or
 open gates. Open-PDK work can test methodology and topology but cannot promote any
 of them to leading-node measured evidence.

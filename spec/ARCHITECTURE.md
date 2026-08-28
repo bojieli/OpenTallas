@@ -24,9 +24,11 @@ responsibilities. Hooks do not constitute performance claims for those paths.
 The layer topology and released storage inventories are measured or published.
 The stage capacities, bandwidths, frequencies, arithmetic roofs, area, power,
 repair efficiency, collective timing, HBM organization, links, cost, and package
-are assumed or simulated as identified in `budgets.json`. The architecture freezes
-their logical contracts so RTL can test them; it does not promote them to silicon
-facts. Any report must preserve this distinction.
+in `budgets.json` are legacy public-reference proxy values. The architecture
+freezes their logical contracts so RTL can test them; it does not promote them to
+silicon facts or product targets. Current comparison envelopes live in
+`configs/hardware/technology_inputs.json` and `results/iso-node/`. Any report must
+preserve this precedence and distinction.
 
 ### ARCH-1.3 Configuration versus personalization
 
@@ -55,7 +57,7 @@ deployment instance
             └── repair, BIST, counters, and control endpoint
 ```
 
-The product hypothesis has 4,096 service tiles per stage. A public RTL regression
+The public-reference proxy has 4,096 service tiles per stage. A public RTL regression
 uses reduced dimensions but retains the same protocols, scheduling rules, IDs,
 and aggregation semantics. Parameter reduction is a verification technique, not
 a different architecture.
@@ -64,9 +66,9 @@ Architectural fields support 16 stages, 128 layers, 1,024 experts, top-16 routin
 24-bit session IDs, 20-bit zero-based token positions, and 16-bit transaction IDs.
 The position field covers indices 0 through 1,048,575.
 
-### ARCH-2.2 Frozen model configurations
+### ARCH-2.2 Frozen public-reference model configurations
 
-The midpoint compiler partition is fixed independently of context and batch. Layer
+The legacy proxy compiler partition is fixed independently of context and batch. Layer
 intervals are zero-based and half open:
 
 | Image | Role | Stage layer intervals | Capacity-accounted bytes by stage |
@@ -83,6 +85,10 @@ they do not alter the contiguous main-layer ownership. Qwen3-8B is dense (no exp
 router), uses the BF16 vector profile and full GQA cache at 8,192 tokens, and is
 included to exercise the single-stage dense control path rather than to establish
 a product target.
+
+These partitions validate image, schedule, capacity, and pipeline interfaces.
+They are not the stage counts used by the iso-node product studies, which repack
+the exact checkpoint separately for each technology envelope.
 
 ### ARCH-2.3 Stage identity
 
@@ -171,11 +177,15 @@ block, tile, ROM macro, wordline, nibble order, scale address, and CRC block.
 
 ### ARCH-4.2 ROM service contract
 
-At the product hypothesis, 4,096 tiles expose an aggregate 100 TB/s stage ROM
-interface. The nominal tile macro interface is 256 physical bits per service
+In the public-reference proxy, 4,096 tiles expose an aggregate 100 TB/s stage ROM
+counter/interface budget. The nominal tile macro interface is 256 physical bits per service
 cycle; array duty, repaired resources, clock, and system scheduling make exposed
 and achieved bandwidth smaller and are recorded separately. Reads are synchronous,
 fixed latency within one macro class, and aligned with scale data and block CRC.
+
+The 100-TB/s number is not a current ROM-wafer assumption or physical claim. N7
+and N4 raw/effective services are independently derived and swept in the iso-node
+studies; target macro and full-array evidence must replace both.
 
 There is no functional write. Test access can select addresses and observe
 signatures/sense outputs but cannot change logical content. Behavioral ROM uses
@@ -183,10 +193,17 @@ immutable initialization files whose hash is bound to the manifest.
 
 ### ARCH-4.3 Arithmetic organization
 
-The nominal tile contains 128 routed low-precision MAC-equivalent lanes, counting
-one multiply and one add as two operations, and a half-rate dense higher-precision
-path. This maps to approximately 1.048 POP/s raw routed capacity across 4,096 tiles
-at 1 GHz before the 1 POP/s architectural roof and subsequent derates.
+The nominal tile contains 128 mixed-precision MAC-equivalent lanes, counting one
+multiply and one add as two operations. DeepSeek routed work is explicitly an
+MXFP4 E2M1 weight multiplied by an FP8 activation; it is not FP4 × FP4 work.
+Dense/shared DeepSeek work is FP8 × FP8, and the dense control uses BF16 × BF16.
+The public-proxy service roofs are 0.5 POP/s for each DeepSeek matrix format and
+0.25 POP/s for BF16 × BF16 before subsequent derates. The larger raw lane issue
+count is not credited until format decode, scale delivery, accumulation, wiring,
+and power close together in post-layout evidence.
+
+These fixed roofs exercise counters and throttling only. Product analysis uses
+the per-envelope, format-specific ceilings generated from the technology ledger.
 
 Format decode, scale application, block accumulation, tile reduction, and wafer
 reduction obey `NUMERICS.md`. Arithmetic is transaction tagged. Valid, route,
@@ -216,9 +233,11 @@ failed check leaves the active bank unchanged and emits an error.
 
 ### ARCH-5.3 Collective service bound
 
-The analytical contract uses a 100 ns fixed per-layer NoC floor plus payload at
-128 GB/s, followed by the independent synchronization efficiency. This corresponds
-to the best public cycle-model structure, not placed-and-routed timing. Activation
+The public-reference proxy uses a 100 ns fixed per-layer NoC floor plus payload at
+128 GB/s, followed by the independent synchronization efficiency. The iso-node
+analytical contract instead derives communication from topology, path hops,
+clock, bisection, endpoint/barrier cycles, and two DeepSeek all-reduces per layer.
+Neither is placed-and-routed timing. Activation
 payload is BF16-sized and partial-sum payload is FP32-sized unless the manifest
 selects another qualified numeric profile.
 
@@ -268,19 +287,29 @@ and capacity, the stage publishes reduced capability or remains unavailable.
 
 ### ARCH-6.1 Immutable weight tier
 
-Each stage exposes 160 GB usable weight capacity from a 184 GB raw ROM hypothesis.
+Each public-reference stage exposes a 160-GB usable weight address contract from a
+184-GB raw proxy hypothesis.
 The raw-to-usable gap covers row/column repair, layout fragmentation, immutable
 metadata, CRC/signature storage, and service reserve. The compiler checks every
 physical stage and largest indivisible layer region; aggregate capacity alone is
 insufficient.
 
+This address/capacity contract is not a product density claim. Iso-node stage
+capacity ranges from the independently derived macro/floorplan envelopes and
+therefore produces different Flash/Pro stage counts.
+
 ### ARCH-6.2 Mutable HBM tier
 
-Each stage models 384 GB physical HBM and exposes at most 90% for session/KV state.
+Each public-reference stage models 384 GB physical HBM and exposes at most 90% for
+session/KV state.
 The remainder is reserved for allocator metadata, queues, activation workspace,
 communication, diagnostics, and safety margin. Twelve logical controller ports
 share the 8 TB/s stage budget; their mapping to actual stacks/PHYs is an external
 package decision.
+
+Product studies use same-generation HBM2e/HBM3e stack matrices and explicit
+perimeter-pitch checks instead of this fixed proxy. All stack counts remain OSAT
+and HBM-vendor gates.
 
 Requests are tagged and may complete out of order across tags, in order within a
 tag. The public memory model implements the interface and error behavior but does
