@@ -25,21 +25,31 @@ from .deepseek_v4_graph import (
     build_official_graph_contract,
     load_official_inference_config,
 )
+from .deepseek_v4_encoding import (
+    DeepSeekV4CompletionError,
+    DeepSeekV4EncodingError,
+    encode_messages,
+    parse_message_from_completion_text,
+)
 
 __all__ = [
     "CHECKPOINT_LOCK_SCHEMA",
     "CHECKPOINT_SOURCE_SCHEMA",
     "CheckpointError",
     "DeepSeekV4AdapterError",
+    "DeepSeekV4CompletionError",
+    "DeepSeekV4EncodingError",
     "DeepSeekV4GraphError",
     "build_expected_tensor_contract",
     "build_checkpoint_lock",
     "build_official_tensor_specs",
     "build_official_graph_contract",
+    "encode_messages",
     "load_checkpoint_lock",
     "load_checkpoint_source",
     "load_official_config",
     "load_official_inference_config",
+    "parse_message_from_completion_text",
     "read_tensor_payload",
     "validate_checkpoint_source",
     "validate_checkpoint_lock",

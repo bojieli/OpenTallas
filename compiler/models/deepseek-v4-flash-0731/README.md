@@ -37,3 +37,10 @@ the explicit `n_mtp_layers: 3` used by `model.py`. The graph adapter locks the
 hashes of `inference/config.json`, `model.py`, `kernel.py`, `convert.py`, and
 `generate.py`; it imports none of them. Source anchors in the operator ledger
 refer to named functions in these immutable files.
+
+The official `encoding/encoding_dsv4.py` is also treated as a content-pinned
+semantic source, never imported as checkpoint code. The independent compiler
+adapter reproduces its four published valid fixtures byte-for-byte and replaces
+assertions and permissive fallbacks with explicit validation errors. This is a
+host protocol result, not evidence that model operators or speculative decoding
+are executable.

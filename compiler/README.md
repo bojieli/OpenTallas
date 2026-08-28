@@ -123,6 +123,19 @@ statuses remain pending. The contract also records that the pinned local
 and acceptance live outside the pinned local reference; this is a blocking
 system-semantic gap, not silently treated as implemented behavior.
 
+The host text boundary is independently implemented in
+`frontend/deepseek_v4_encoding.py`. It matches all four pinned official prompt
+fixtures byte-for-byte for valid inputs, including interleaved thinking, DSML
+tool calls/results, reasoning-effort prefixes, multilingual developer messages,
+and quick-task tokens. Unlike the release reference, it fails closed on malformed
+tool JSON, unknown roles/fields, ambiguous result ordering, unsupported content,
+reserved-token injection, and malformed completions. The exact upstream fixture
+bytes are base64-wrapped under `testdata/compiler/deepseek_v4_encoding` to retain
+their different end-of-file newline conventions; tests verify their pinned
+sizes and SHA-256 values before use. This closes prompt-text formatting only:
+tokenizer IDs, generation state, model execution, and DSpark acceptance remain
+separate gates.
+
 The independent scalar numeric-reference foundation is under
 `runtime/reference/formats.py`. It exhaustively defines E2M1, E8M0, E4M3FN, and
 BF16 classification plus target rounding, packing, MXFP4 decode, and activation
