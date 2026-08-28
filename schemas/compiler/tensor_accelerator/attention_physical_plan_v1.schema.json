@@ -1,0 +1,121 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/attention_physical_plan_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "expected_counters": {"$ref": "attention_expectations_v1.schema.json#/$defs/counters"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "hbm": {
+      "additionalProperties": false,
+      "properties": {
+        "image": {"$ref": "#/$defs/image"},
+        "regions": {
+          "items": {"$ref": "#/$defs/hbm_region"},
+          "maxItems": 7,
+          "minItems": 7,
+          "type": "array"
+        }
+      },
+      "required": ["image", "regions"],
+      "type": "object"
+    },
+    "numeric_contracts": {"const": ["bf16_byte_preserving_state_v1", "qwen3_gqa_fp32_softmax_bf16_v1"]},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "problem": {
+      "additionalProperties": false,
+      "properties": {
+        "base_generation": {"const": 4},
+        "committed_length": {"const": 3},
+        "context_capacity": {"const": 8000},
+        "fixture_id": {"const": "checkpoint_derived_nonempty_history"},
+        "head_dim": {"const": 128},
+        "key_value_heads": {"const": 8},
+        "prepared_length": {"const": 1},
+        "qualified_state_resources": {"const": 1},
+        "query_heads": {"const": 32},
+        "source_atomic_state_count": {"const": 36},
+        "transaction_id": {"const": 71830447456258}
+      },
+      "required": ["base_generation", "committed_length", "context_capacity", "fixture_id", "head_dim", "key_value_heads", "prepared_length", "qualified_state_resources", "query_heads", "source_atomic_state_count", "transaction_id"],
+      "type": "object"
+    },
+    "program": {"$ref": "#/$defs/program"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.attention_physical_plan.v1"},
+    "source_operation_ids": {
+      "items": {"minLength": 1, "type": "string"},
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "sram": {
+      "additionalProperties": false,
+      "properties": {
+        "addressing": {"const": "bank_base_plus_byte_offset"},
+        "regions": {
+          "items": {"$ref": "#/$defs/sram_region"},
+          "maxItems": 4,
+          "minItems": 4,
+          "type": "array"
+        }
+      },
+      "required": ["addressing", "regions"],
+      "type": "object"
+    }
+  },
+  "required": ["capability_id", "expected_counters", "graph_id", "hbm", "numeric_contracts", "physical_plan_id", "problem", "program", "qualification_report_id", "schema", "source_operation_ids", "sram"],
+  "title": "Attention/KV HBM/SRAM physical plan v1",
+  "type": "object",
+  "$defs": {
+    "hbm_region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "allocated_size_bytes": {"minimum": 1, "type": "integer"},
+        "id": {"enum": ["query", "current_key", "current_value", "key_state", "value_state", "state_metadata", "transaction_descriptor"]},
+        "offset_bytes": {"minimum": 0, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "payload_size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["address", "allocated_size_bytes", "id", "offset_bytes", "payload_sha256", "payload_size_bytes"],
+      "type": "object"
+    },
+    "image": {
+      "additionalProperties": false,
+      "properties": {
+        "base_address": {"minimum": 0, "type": "integer"},
+        "path": {"const": "memory/hbm_attention.bin"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["base_address", "path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "program": {
+      "additionalProperties": false,
+      "properties": {
+        "command_count": {"const": 7},
+        "path": {"const": "program/commands.bin"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["command_count", "path", "sha256", "size_bytes"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "sram_region": {
+      "additionalProperties": false,
+      "properties": {
+        "address": {"minimum": 0, "type": "integer"},
+        "bank": {"minimum": 0, "type": "integer"},
+        "id": {"enum": ["query", "current_key", "current_value", "attention_output"]},
+        "offset_bytes": {"minimum": 0, "type": "integer"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["address", "bank", "id", "offset_bytes", "size_bytes"],
+      "type": "object"
+    }
+  }
+}

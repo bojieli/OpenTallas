@@ -21,6 +21,7 @@ from .production_command import (
     ABI_MINOR,
     LEGACY_ABI_MINOR,
     RMSNORM_ABI_MINOR,
+    ROPE_ABI_MINOR,
     SUPPORTED_ABI_MINORS,
 )
 
@@ -52,6 +53,7 @@ KNOWN_EXECUTION_MODES = frozenset(
         "fp8_tensor",
         "mxfp4_tensor",
         "routing_selection",
+        "transactional_state",
         "vector_fp32",
     }
 )
@@ -102,6 +104,19 @@ class ProductionVectorEngine:
     max_query_heads: int | None
     max_key_value_heads: int | None
     rope_head_dim: int | None
+    max_attention_context_tokens: int | None
+    attention_head_dim: int | None
+    softmax_reduction_lanes: int | None
+
+
+@dataclass(frozen=True)
+class ProductionStateEngine:
+    generation_bits: int
+    length_bits: int
+    max_inflight_transactions: int
+    max_resources_per_transaction: int
+    position_bits: int
+    transaction_id_bits: int
 
 
 @dataclass(frozen=True)
@@ -119,6 +134,7 @@ class ProductionCapability:
     sram: ProductionSRAM
     tensor_engine: ProductionTensorEngine
     vector_engine: ProductionVectorEngine | None
+    state_engine: ProductionStateEngine | None
     limits: Mapping[str, int]
     raw: Mapping[str, Any]
 
@@ -273,11 +289,26 @@ def _parse_vector_engine(raw: Any) -> ProductionVectorEngine:
         "max_rope_positions",
         "rope_head_dim",
     }
-    exact_keys(value, {"max_rows", "max_width"}, rope_fields, "vector_engine")
+    attention_fields = {
+        "attention_head_dim",
+        "max_attention_context_tokens",
+        "softmax_reduction_lanes",
+    }
+    exact_keys(
+        value,
+        {"max_rows", "max_width"},
+        rope_fields | attention_fields,
+        "vector_engine",
+    )
     present = rope_fields & value.keys()
     if present and present != rope_fields:
         raise ProductionCapabilityError(
             "vector_engine RoPE bounds must be present as one complete group"
+        )
+    attention_present = attention_fields & value.keys()
+    if attention_present and attention_present != attention_fields:
+        raise ProductionCapabilityError(
+            "vector_engine attention bounds must be present as one complete group"
         )
     return ProductionVectorEngine(
         max_rows=require_int(value["max_rows"], "vector_engine.max_rows", minimum=1),
@@ -320,6 +351,77 @@ def _parse_vector_engine(raw: Any) -> ProductionVectorEngine:
             if present
             else None
         ),
+        max_attention_context_tokens=(
+            require_int(
+                value["max_attention_context_tokens"],
+                "vector_engine.max_attention_context_tokens",
+                minimum=1,
+            )
+            if attention_present
+            else None
+        ),
+        attention_head_dim=(
+            require_int(
+                value["attention_head_dim"],
+                "vector_engine.attention_head_dim",
+                minimum=1,
+            )
+            if attention_present
+            else None
+        ),
+        softmax_reduction_lanes=(
+            require_power_of_two(
+                value["softmax_reduction_lanes"],
+                "vector_engine.softmax_reduction_lanes",
+                minimum=1,
+                maximum=1024,
+            )
+            if attention_present
+            else None
+        ),
+    )
+
+
+def _parse_state_engine(raw: Any) -> ProductionStateEngine:
+    value = _object(raw, "state_engine")
+    exact_keys(
+        value,
+        {
+            "generation_bits",
+            "length_bits",
+            "max_inflight_transactions",
+            "max_resources_per_transaction",
+            "position_bits",
+            "transaction_id_bits",
+        },
+        set(),
+        "state_engine",
+    )
+    return ProductionStateEngine(
+        generation_bits=require_int(
+            value["generation_bits"], "state_engine.generation_bits", minimum=1
+        ),
+        length_bits=require_int(
+            value["length_bits"], "state_engine.length_bits", minimum=1
+        ),
+        max_inflight_transactions=require_int(
+            value["max_inflight_transactions"],
+            "state_engine.max_inflight_transactions",
+            minimum=1,
+        ),
+        max_resources_per_transaction=require_int(
+            value["max_resources_per_transaction"],
+            "state_engine.max_resources_per_transaction",
+            minimum=1,
+        ),
+        position_bits=require_int(
+            value["position_bits"], "state_engine.position_bits", minimum=1
+        ),
+        transaction_id_bits=require_int(
+            value["transaction_id_bits"],
+            "state_engine.transaction_id_bits",
+            minimum=1,
+        ),
     )
 
 
@@ -345,7 +447,7 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
                 "sram",
                 "tensor_engine",
             },
-            {"vector_engine"},
+            {"state_engine", "vector_engine"},
             "production capability",
         )
         if raw["schema"] != SCHEMA:
@@ -404,7 +506,12 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
             "declared_execution_modes",
             allowed=KNOWN_EXECUTION_MODES,
         )
-        if set(declared_modes) != KNOWN_EXECUTION_MODES:
+        expected_declared_modes = (
+            KNOWN_EXECUTION_MODES
+            if command_minor == ABI_MINOR
+            else KNOWN_EXECUTION_MODES - {"transactional_state"}
+        )
+        if set(declared_modes) != expected_declared_modes:
             raise ProductionCapabilityError("execution-mode union is incomplete")
         qualified_modes = _sorted_strings(
             raw["qualified_execution_modes"],
@@ -419,24 +526,30 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
             raw["qualified_numeric_contracts"], "qualified_numeric_contracts"
         )
         matrix_contract = "bf16_bf16_fp32_sequential_rne_v1"
+        state_contract = "bf16_byte_preserving_state_v1"
+        attention_contract = "qwen3_gqa_fp32_softmax_bf16_v1"
         rmsnorm_contract = "qwen3_rmsnorm_fp32_bf16_v1"
         rope_contract = "qwen3_rope_fp32_bf16_v1"
         vector_raw = raw.get("vector_engine")
+        state_raw = raw.get("state_engine")
         if command_minor == LEGACY_ABI_MINOR:
             if (
                 qualified_modes != ("bf16_tensor",)
                 or numeric_contracts != (matrix_contract,)
                 or vector_raw is not None
+                or state_raw is not None
             ):
                 raise ProductionCapabilityError(
                     "ABI 2.0 qualification must remain the BF16 projection profile"
                 )
             vector = None
+            state = None
         elif command_minor == RMSNORM_ABI_MINOR:
             if (
                 qualified_modes != ("bf16_tensor", "vector_fp32")
                 or numeric_contracts != (matrix_contract, rmsnorm_contract)
                 or vector_raw is None
+                or state_raw is not None
             ):
                 raise ProductionCapabilityError(
                     "ABI 2.1 qualification must include the bounded RMSNorm profile"
@@ -450,13 +563,14 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
                 raise ProductionCapabilityError(
                     "ABI 2.1 vector engine must not claim RoPE bounds"
                 )
-        else:
+            state = None
+        elif command_minor == ROPE_ABI_MINOR:
             if (
-                command_minor != ABI_MINOR
-                or qualified_modes != ("bf16_tensor", "vector_fp32")
+                qualified_modes != ("bf16_tensor", "vector_fp32")
                 or numeric_contracts
                 != (matrix_contract, rmsnorm_contract, rope_contract)
                 or vector_raw is None
+                or state_raw is not None
             ):
                 raise ProductionCapabilityError(
                     "ABI 2.2 qualification must include bounded Qwen RoPE"
@@ -475,6 +589,61 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
             ):
                 raise ProductionCapabilityError(
                     "ABI 2.2 vector bounds do not cover the Qwen 8K Q/K path"
+                )
+            if vector.max_attention_context_tokens is not None:
+                raise ProductionCapabilityError(
+                    "ABI 2.2 vector engine must not claim attention bounds"
+                )
+            state = None
+        else:
+            if (
+                command_minor != ABI_MINOR
+                or qualified_modes
+                != ("bf16_tensor", "transactional_state", "vector_fp32")
+                or numeric_contracts
+                != (
+                    matrix_contract,
+                    state_contract,
+                    attention_contract,
+                    rmsnorm_contract,
+                    rope_contract,
+                )
+                or vector_raw is None
+                or state_raw is None
+            ):
+                raise ProductionCapabilityError(
+                    "ABI 2.3 qualification must include bounded attention and state"
+                )
+            vector = _parse_vector_engine(vector_raw)
+            state = _parse_state_engine(state_raw)
+            if (
+                vector.max_width < 4096
+                or vector.max_rows < 40
+                or vector.max_rope_positions is None
+                or vector.max_rope_positions < 8000
+                or vector.max_query_heads is None
+                or vector.max_query_heads < 32
+                or vector.max_key_value_heads is None
+                or vector.max_key_value_heads < 8
+                or vector.rope_head_dim != 128
+                or vector.max_attention_context_tokens is None
+                or vector.max_attention_context_tokens < 8000
+                or vector.attention_head_dim != 128
+                or vector.softmax_reduction_lanes != 8
+            ):
+                raise ProductionCapabilityError(
+                    "ABI 2.3 vector bounds do not cover Qwen 8K causal GQA"
+                )
+            if (
+                state.generation_bits != 64
+                or state.transaction_id_bits != 64
+                or state.position_bits < 20
+                or state.length_bits < 21
+                or state.max_inflight_transactions < 8
+                or state.max_resources_per_transaction < 64
+            ):
+                raise ProductionCapabilityError(
+                    "ABI 2.3 state bounds do not cover the cross-model union"
                 )
         hbm = _parse_hbm(raw["hbm"])
         sram = _parse_sram(raw["sram"])
@@ -525,6 +694,7 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
             sram=sram,
             tensor_engine=tensor,
             vector_engine=vector,
+            state_engine=state,
             limits=limits,
             raw=raw,
         )
@@ -552,6 +722,7 @@ __all__ = [
     "ProductionCapabilityError",
     "ProductionHBM",
     "ProductionSRAM",
+    "ProductionStateEngine",
     "ProductionTensorEngine",
     "ProductionVectorEngine",
     "SCHEMA",

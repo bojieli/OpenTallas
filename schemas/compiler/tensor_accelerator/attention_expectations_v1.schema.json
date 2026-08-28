@@ -1,0 +1,77 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/attention_expectations_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "check_id": {"$ref": "#/$defs/sha256"},
+    "committed_state_sha256": {"$ref": "#/$defs/sha256"},
+    "counters": {"$ref": "#/$defs/counters"},
+    "expectations_id": {"$ref": "#/$defs/sha256"},
+    "output_payload_sha256": {
+      "additionalProperties": false,
+      "properties": {
+        "attention": {"$ref": "#/$defs/sha256"},
+        "probabilities": {"$ref": "#/$defs/sha256"},
+        "scaled_scores": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["attention", "probabilities", "scaled_scores"],
+      "type": "object"
+    },
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.attention_expectations.v1"}
+  },
+  "required": ["check_id", "committed_state_sha256", "counters", "expectations_id", "output_payload_sha256", "qualification_report_id", "schema"],
+  "title": "Attention/KV execution expectations v1",
+  "type": "object",
+  "$defs": {
+    "counter": {"minimum": 0, "type": "integer"},
+    "counters": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_command_count": {"$ref": "#/$defs/counter"},
+        "attention_output_sram_bytes_written": {"$ref": "#/$defs/counter"},
+        "attention_query_sram_bytes_read": {"$ref": "#/$defs/counter"},
+        "command_count": {"$ref": "#/$defs/counter"},
+        "complete_command_count": {"$ref": "#/$defs/counter"},
+        "direct_dma_command_count": {"$ref": "#/$defs/counter"},
+        "dma_command_count": {"$ref": "#/$defs/counter"},
+        "dma_sram_bytes_written": {"$ref": "#/$defs/counter"},
+        "exponential_evaluations": {"$ref": "#/$defs/counter"},
+        "hbm_transferred_bytes_read": {"$ref": "#/$defs/counter"},
+        "hbm_transferred_bytes_written": {"$ref": "#/$defs/counter"},
+        "hbm_useful_bytes_read": {"$ref": "#/$defs/counter"},
+        "hbm_useful_bytes_written": {"$ref": "#/$defs/counter"},
+        "kv_prepare_command_count": {"$ref": "#/$defs/counter"},
+        "kv_prepare_sram_bytes_read": {"$ref": "#/$defs/counter"},
+        "mask_additions": {"$ref": "#/$defs/counter"},
+        "probability_multiplications": {"$ref": "#/$defs/counter"},
+        "scaling_multiplications": {"$ref": "#/$defs/counter"},
+        "score_accumulation_additions": {"$ref": "#/$defs/counter"},
+        "score_multiplications": {"$ref": "#/$defs/counter"},
+        "softmax_reciprocal_divisions": {"$ref": "#/$defs/counter"},
+        "softmax_reduction_additions": {"$ref": "#/$defs/counter"},
+        "state_commit_command_count": {"$ref": "#/$defs/counter"},
+        "state_metadata_bytes_read": {"$ref": "#/$defs/counter"},
+        "state_metadata_bytes_written": {"$ref": "#/$defs/counter"},
+        "state_payload_bytes_read": {"$ref": "#/$defs/counter"},
+        "state_payload_bytes_written": {"$ref": "#/$defs/counter"},
+        "value_accumulation_additions": {"$ref": "#/$defs/counter"},
+        "value_multiplications": {"$ref": "#/$defs/counter"}
+      },
+      "required": [
+        "attention_command_count", "attention_output_sram_bytes_written", "attention_query_sram_bytes_read",
+        "command_count", "complete_command_count", "direct_dma_command_count", "dma_command_count",
+        "dma_sram_bytes_written", "exponential_evaluations", "hbm_transferred_bytes_read",
+        "hbm_transferred_bytes_written", "hbm_useful_bytes_read", "hbm_useful_bytes_written",
+        "kv_prepare_command_count", "kv_prepare_sram_bytes_read", "mask_additions",
+        "probability_multiplications", "scaling_multiplications", "score_accumulation_additions",
+        "score_multiplications", "softmax_reciprocal_divisions", "softmax_reduction_additions",
+        "state_commit_command_count", "state_metadata_bytes_read", "state_metadata_bytes_written",
+        "state_payload_bytes_read", "state_payload_bytes_written", "value_accumulation_additions",
+        "value_multiplications"
+      ],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

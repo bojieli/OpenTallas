@@ -334,6 +334,25 @@ for all 46 graph operator kinds. Reference completeness does not imply complete
 graph lowering, artifact-driven service execution, checkpoint-derived layer
 differentials, end-to-end logits, or numerical-quality closure.
 
+The production HBM/SRAM tensor-accelerator path additionally has a connected
+Qwen attention and transactional-KV slice. `production_attention.py` consumes
+the retained authentic Q/K/V execution report, emits neutral `KV_PREPARE`,
+`ATTENTION`, and `STATE_COMMIT` kernels, lays out full 8,000-token KV capacity in
+HBM, assigns banked SRAM, and generates a seven-command ABI 2.3 program.
+`production_attention_checking.py` independently reconstructs the source
+payload, derived nonempty history, memory image, neutral kernels, commands, and
+counters without importing compiler lowering. The artifact-only simulator in
+`runtime/tensor_accelerator/production_attention_simulator.py` executes the same
+program, keeps prepared state transaction-private, and publishes generation
+4→5 only after exact nontrivial GQA output. The retained capability remains
+uncharacterized, and the one-resource commit is explicitly only a qualification
+of the complete graph's 36-resource terminal commit.
+
+This remains a target-precision execution foundation, not operator-complete
+graph execution: the Qwen attention output projection, residual/MLP path,
+complete layers and model, DeepSeek attention/routing union, timing, RTL, and
+physical characterization remain open.
+
 The artifact-only fixture and Query-A service paths verify every deployment hash
 before execution and never read their known-answer files. Their independent
 reference evaluators consume source descriptions and requests rather than

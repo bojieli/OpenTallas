@@ -39,12 +39,12 @@ from .production_capability import (
     load_production_capability,
 )
 from .production_command import (
-    ABI_MINOR,
     Engine,
     MATMUL_FINAL,
     MATMUL_INIT,
     Opcode,
     ProductionCommand,
+    ROPE_ABI_MINOR,
     disassemble,
     encode,
 )
@@ -358,7 +358,7 @@ def _problem(
         )
     vector = capability.vector_engine
     if (
-        capability.command_abi_minor != ABI_MINOR
+        capability.command_abi_minor != ROPE_ABI_MINOR
         or vector is None
         or vector.max_rows < QUERY_HEADS + KEY_VALUE_HEADS
         or vector.max_width < 4096

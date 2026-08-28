@@ -1,0 +1,27 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/attention_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "expected_generation": {"const": 4},
+    "fixture_id": {"const": "checkpoint_derived_nonempty_history"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "position_start": {"const": 3},
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.attention_request.v1"},
+    "source_operation_ids": {
+      "items": {"minLength": 1, "type": "string"},
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "span_tokens": {"const": 1},
+    "state_resource": {"const": "kv.layer.0"},
+    "transaction_id": {"const": 71830447456258}
+  },
+  "required": ["expected_generation", "fixture_id", "graph_id", "position_start", "request_id", "schema", "source_operation_ids", "span_tokens", "state_resource", "transaction_id"],
+  "title": "Attention/KV execution request v1",
+  "type": "object",
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}

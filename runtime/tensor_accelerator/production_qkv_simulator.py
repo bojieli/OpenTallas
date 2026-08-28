@@ -34,11 +34,11 @@ from compiler.tensor_accelerator.production_capability import (
 )
 from compiler.tensor_accelerator.production_command import (
     ABI_MAJOR,
-    ABI_MINOR,
     MATMUL_FINAL,
     MATMUL_INIT,
     Opcode,
     ProductionCommandError,
+    ROPE_ABI_MINOR,
     command_abi,
     decode,
 )
@@ -264,7 +264,10 @@ def _manifest(root: Path) -> dict[str, Any]:
             raise ProductionQKVSimulationError(str(exc)) from exc
     if value["claim_boundary"] != EXPECTED_CLAIM_BOUNDARY:
         raise ProductionQKVSimulationError("manifest claim boundary differs")
-    if value["command_abi"] != {"major": ABI_MAJOR, "minor": ABI_MINOR}:
+    if value["command_abi"] != {
+        "major": ABI_MAJOR,
+        "minor": ROPE_ABI_MINOR,
+    }:
         raise ProductionQKVSimulationError("manifest command ABI differs")
     if value["compiler"] != {
         "deterministic": True,
@@ -936,7 +939,7 @@ class ProductionQKVSimulator:
         if capability.capability_id != manifest["capability_id"] or (
             capability.command_abi_major,
             capability.command_abi_minor,
-        ) != (ABI_MAJOR, ABI_MINOR):
+        ) != (ABI_MAJOR, ROPE_ABI_MINOR):
             raise ProductionQKVSimulationError(
                 "manifest capability identity or ABI differs"
             )

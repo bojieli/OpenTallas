@@ -1,0 +1,493 @@
+{
+  "$defs": {
+    "accounting": {
+      "additionalProperties": false,
+      "properties": {
+        "exponential_evaluations": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "mask_additions": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "probability_multiplications": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "scaling_multiplications": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "score_accumulation_additions": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "score_multiplications": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "softmax_reciprocal_divisions": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "softmax_reduction_additions": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "value_accumulation_additions": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "value_multiplications": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "exponential_evaluations",
+        "mask_additions",
+        "probability_multiplications",
+        "scaling_multiplications",
+        "score_accumulation_additions",
+        "score_multiplications",
+        "softmax_reciprocal_divisions",
+        "softmax_reduction_additions",
+        "value_accumulation_additions",
+        "value_multiplications"
+      ],
+      "type": "object"
+    },
+    "fixture": {
+      "additionalProperties": false,
+      "properties": {
+        "accounting": {
+          "$ref": "#/$defs/accounting"
+        },
+        "fixture_class": {
+          "enum": [
+            "decode",
+            "prefill"
+          ]
+        },
+        "fixture_id": {
+          "enum": [
+            "authentic_empty_history",
+            "checkpoint_derived_causal_prefill",
+            "checkpoint_derived_nonempty_history"
+          ]
+        },
+        "inputs": {
+          "additionalProperties": false,
+          "properties": {
+            "committed_key_payload_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "committed_length": {
+              "maximum": 7999,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "committed_value_payload_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "prepared_key_payload_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "prepared_length": {
+              "maximum": 8000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "prepared_value_payload_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "query_payload_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "query_shape": {
+              "$ref": "#/$defs/shape3"
+            },
+            "transform": {
+              "minLength": 1,
+              "type": "string"
+            }
+          },
+          "required": [
+            "committed_key_payload_sha256",
+            "committed_length",
+            "committed_value_payload_sha256",
+            "prepared_key_payload_sha256",
+            "prepared_length",
+            "prepared_value_payload_sha256",
+            "query_payload_sha256",
+            "query_shape",
+            "transform"
+          ],
+          "type": "object"
+        },
+        "outputs": {
+          "additionalProperties": false,
+          "properties": {
+            "attention": {
+              "$ref": "#/$defs/payload"
+            },
+            "probabilities": {
+              "$ref": "#/$defs/payload"
+            },
+            "scaled_scores": {
+              "$ref": "#/$defs/payload"
+            }
+          },
+          "required": [
+            "attention",
+            "probabilities",
+            "scaled_scores"
+          ],
+          "type": "object"
+        },
+        "saturation": {
+          "additionalProperties": false,
+          "properties": {
+            "mask": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "output": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "probability": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "scaling": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "score": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "mask",
+            "output",
+            "probability",
+            "scaling",
+            "score"
+          ],
+          "type": "object"
+        },
+        "selected_probability_codes": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "codes": {
+                "items": {
+                  "maximum": 65535,
+                  "minimum": 0,
+                  "type": "integer"
+                },
+                "maxItems": 8000,
+                "minItems": 1,
+                "type": "array"
+              },
+              "query_head": {
+                "maximum": 31,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "codes",
+              "query_head"
+            ],
+            "type": "object"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "type": "array"
+        },
+        "status": {
+          "const": "exact_match"
+        },
+        "transaction": {
+          "additionalProperties": false,
+          "properties": {
+            "aborted_state_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "base_generation": {
+              "minimum": 0,
+              "type": "integer"
+            },
+            "committed_length": {
+              "maximum": 8000,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "committed_state_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "next_generation": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "prepared_key_payload_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "prepared_value_payload_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "transaction_id": {
+              "maximum": 18446744073709551615,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "aborted_state_sha256",
+            "base_generation",
+            "committed_length",
+            "committed_state_sha256",
+            "next_generation",
+            "prepared_key_payload_sha256",
+            "prepared_value_payload_sha256",
+            "transaction_id"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "accounting",
+        "fixture_class",
+        "fixture_id",
+        "inputs",
+        "outputs",
+        "saturation",
+        "selected_probability_codes",
+        "status",
+        "transaction"
+      ],
+      "type": "object"
+    },
+    "payload": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "shape": {
+          "$ref": "#/$defs/shape3"
+        }
+      },
+      "required": [
+        "payload_sha256",
+        "shape"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "shape3": {
+      "items": {
+        "minimum": 1,
+        "type": "integer"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    }
+  },
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/attention_qualification_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "fixtures": {
+      "items": {
+        "$ref": "#/$defs/fixture"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "numeric_contract": {
+      "const": "qwen3_gqa_fp32_softmax_bf16_v1"
+    },
+    "profile": {
+      "additionalProperties": false,
+      "properties": {
+        "causal_mask_bf16_code": {
+          "const": 65407
+        },
+        "context_capacity": {
+          "const": 8000
+        },
+        "head_dim": {
+          "const": 128
+        },
+        "key_value_heads": {
+          "const": 8
+        },
+        "query_heads": {
+          "const": 32
+        },
+        "scale_bf16_code": {
+          "const": 15797
+        },
+        "softmax_reduction_lanes": {
+          "const": 8
+        }
+      },
+      "required": [
+        "causal_mask_bf16_code",
+        "context_capacity",
+        "head_dim",
+        "key_value_heads",
+        "query_heads",
+        "scale_bf16_code",
+        "softmax_reduction_lanes"
+      ],
+      "type": "object"
+    },
+    "report_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.attention_qualification.v1"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "modeling_source_path": {
+          "const": "transformers/models/qwen3/modeling_qwen3.py"
+        },
+        "modeling_source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "qkv_build_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "qkv_execution_payload_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "qkv_execution_report_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "qkv_output_payload_sha256": {
+          "additionalProperties": false,
+          "properties": {
+            "k_rotary": {
+              "$ref": "#/$defs/sha256"
+            },
+            "q_rotary": {
+              "$ref": "#/$defs/sha256"
+            },
+            "v": {
+              "$ref": "#/$defs/sha256"
+            }
+          },
+          "required": [
+            "k_rotary",
+            "q_rotary",
+            "v"
+          ],
+          "type": "object"
+        }
+      },
+      "required": [
+        "modeling_source_path",
+        "modeling_source_sha256",
+        "qkv_build_id",
+        "qkv_execution_payload_sha256",
+        "qkv_execution_report_id",
+        "qkv_output_payload_sha256"
+      ],
+      "type": "object"
+    },
+    "state_contract": {
+      "const": "bf16_byte_preserving_state_v1"
+    },
+    "status": {
+      "const": "pass"
+    },
+    "target_adaptation": {
+      "additionalProperties": false,
+      "properties": {
+        "dot_reduction": {
+          "const": "increasing_logical_index_binary32_rne"
+        },
+        "framework_fallback": {
+          "const": false
+        },
+        "softmax_reduction": {
+          "const": "eight_lane_then_fixed_tree_binary32_rne"
+        },
+        "source_semantics": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "dot_reduction",
+        "framework_fallback",
+        "softmax_reduction",
+        "source_semantics"
+      ],
+      "type": "object"
+    },
+    "transaction_qualification": {
+      "additionalProperties": false,
+      "properties": {
+        "abort_preserved_all_resources": {
+          "const": true
+        },
+        "committed_state_sha256": {
+          "items": {
+            "$ref": "#/$defs/sha256"
+          },
+          "maxItems": 2,
+          "minItems": 2,
+          "type": "array"
+        },
+        "generation_checked": {
+          "const": true
+        },
+        "mixed_transaction_rejected": {
+          "const": true
+        },
+        "resource_count": {
+          "const": 2
+        },
+        "status": {
+          "const": "pass"
+        }
+      },
+      "required": [
+        "abort_preserved_all_resources",
+        "committed_state_sha256",
+        "generation_checked",
+        "mixed_transaction_rejected",
+        "resource_count",
+        "status"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "fixtures",
+    "numeric_contract",
+    "profile",
+    "report_id",
+    "schema",
+    "source",
+    "state_contract",
+    "status",
+    "target_adaptation",
+    "transaction_qualification"
+  ],
+  "type": "object"
+}

@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 from pathlib import Path
 import struct
 
-from jsonschema import Draft202012Validator
+from jsonschema import Draft202012Validator, ValidationError
+import pytest
 from referencing import Registry, Resource
 
 from compiler.tensor_accelerator import build_deployment
@@ -72,16 +74,116 @@ def _validate(
     Draft202012Validator(schema, registry=registry).validate(instance)
 
 
+def _attention_state_kernel_ir() -> dict[str, object]:
+    return {
+        "graph_id": "a" * 64,
+        "kernel_ir_id": "b" * 64,
+        "kernels": [
+            {
+                "attributes": {
+                    "append_position_symbol": "position_start",
+                    "generation_check": "exact_expected_generation",
+                    "state_resource": "kv.layer.0",
+                    "transaction_scope": "model_forward_request",
+                    "visibility": "transaction_private_until_commit",
+                },
+                "index": 0,
+                "inputs": ["layer.0.k_rotary", "layer.0.v"],
+                "kind": "KV_PREPARE",
+                "numeric_contract": "bf16_byte_preserving_state_v1",
+                "outputs": ["state.kv.0"],
+                "shape": {
+                    "head_dim": 128,
+                    "key_value_heads": 8,
+                    "max_context_tokens": 8000,
+                    "tokens_symbol": "span_tokens",
+                },
+                "source_operation_id": "node.0008",
+            },
+            {
+                "attributes": {
+                    "causal_mask_bf16_code": 0xFF7F,
+                    "prepared_state_visibility": "transaction_private",
+                    "probability_dtype": "bf16",
+                    "query_heads_per_key_value_head": 4,
+                    "scale_bf16_code": 0x3DB5,
+                    "score_reduction_order": "strictly_increasing_head_dimension",
+                    "softmax_compute_dtype": "fp32",
+                    "softmax_reduction_lanes": 8,
+                    "value_reduction_order": "strictly_increasing_context",
+                },
+                "index": 1,
+                "inputs": ["layer.0.q_rotary", "state.kv.0"],
+                "kind": "ATTENTION",
+                "numeric_contract": "qwen3_gqa_fp32_softmax_bf16_v1",
+                "outputs": ["layer.0.attention"],
+                "shape": {
+                    "head_dim": 128,
+                    "key_value_heads": 8,
+                    "max_context_tokens": 8000,
+                    "query_heads": 32,
+                    "query_tokens_symbol": "span_tokens",
+                },
+                "source_operation_id": "node.0009",
+            },
+            {
+                "attributes": {
+                    "atomic": True,
+                    "coverage": "complete_operation",
+                    "generation_increment": 1,
+                    "source_atomic_state_count": 2,
+                    "transaction_scope": "model_forward_request",
+                },
+                "index": 2,
+                "inputs": ["output.logits"],
+                "kind": "STATE_COMMIT",
+                "numeric_contract": "bf16_byte_preserving_state_v1",
+                "outputs": ["output.committed_logits"],
+                "shape": {"atomic_state_count": 2},
+                "source_operation_id": "state.commit",
+                "state_resources": ["kv.layer.0", "kv.layer.1"],
+            },
+        ],
+        "qualification_report_id": "c" * 64,
+        "schema": "opentallas.production_tensor_kernel_ir.v1",
+    }
+
+
+def test_production_kernel_ir_admits_neutral_attention_and_state_only() -> None:
+    schemas = _schemas()
+    by_name = {
+        schema["$id"].rsplit("/", 1)[-1]: schema
+        for schema in schemas
+    }
+    registry = _registry(schemas)
+    schema = by_name["production_tensor_kernel_ir_v1.schema.json"]
+    value = _attention_state_kernel_ir()
+    _validate(value, schema, registry)
+
+    physical_leak = copy.deepcopy(value)
+    physical_leak["kernels"][1]["hbm_address"] = 0x1000
+    with pytest.raises(ValidationError):
+        _validate(physical_leak, schema, registry)
+
+
 def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 39
+    assert len(schemas) == 47
     by_name = {
         schema["$id"].rsplit("/", 1)[-1]: schema
         for schema in schemas
     }
     assert set(by_name) == {
+        "attention_deployment_v1.schema.json",
+        "attention_execution_v1.schema.json",
+        "attention_expectations_v1.schema.json",
+        "attention_independent_check_v1.schema.json",
+        "attention_physical_plan_v1.schema.json",
+        "attention_qualification_v1.schema.json",
+        "attention_request_v1.schema.json",
+        "attention_source_lock_v1.schema.json",
         "bf16_projection_qualification_v1.schema.json",
         "bf16_projection_deployment_v1.schema.json",
         "bf16_projection_execution_v1.schema.json",
@@ -184,6 +286,14 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         if not name.startswith("bf16_projection_")
         or name == "bf16_projection_qualification_v1.schema.json"
     } - {
+        "attention_deployment_v1.schema.json",
+        "attention_execution_v1.schema.json",
+        "attention_expectations_v1.schema.json",
+        "attention_independent_check_v1.schema.json",
+        "attention_physical_plan_v1.schema.json",
+        "attention_qualification_v1.schema.json",
+        "attention_request_v1.schema.json",
+        "attention_source_lock_v1.schema.json",
         "production_capability_v1.schema.json",
         "production_tensor_kernel_ir_v1.schema.json",
         "qkv_deployment_v1.schema.json",

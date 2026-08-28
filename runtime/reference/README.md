@@ -43,6 +43,16 @@ service execution, RTL execution, schedules, and task quality remain open or
 partial under `M3`–`M9`.
 The earlier exact-integer evaluator remains fixture-only evidence.
 
+`tensor_accelerator_attention.py` independently defines Qwen3 causal GQA and
+transactional BF16 KV publication. It fixes BF16 score, scale, and mask
+boundaries; correctly rounded nonpositive binary32 exponential; an eight-lane
+softmax reduction; BF16 probability/value aggregation; contiguous prepare;
+transaction-private visibility; atomic group commit; abort; and stale-generation
+rejection. A separate NumPy implementation lives outside this reference tree.
+The retained real-Q/K/V qualification covers empty history, nonempty history,
+two-token causal prefill, and two-resource atomic state behavior. This evidence
+does not qualify the remaining Qwen layer or any DeepSeek attention form.
+
 `matrix.py` composes the scalar/block rules into complete `FP8_LINEAR`
 semantics. It quantizes each BF16 activation block once, applies the released
 128-by-128 E8M0 scale orientation, executes ordered 128-value FP8 block dots,

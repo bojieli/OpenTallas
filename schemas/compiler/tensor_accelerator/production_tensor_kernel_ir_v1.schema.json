@@ -11,7 +11,10 @@
           {"$ref": "#/$defs/lookup"},
           {"$ref": "#/$defs/matmul"},
           {"$ref": "#/$defs/rmsnorm"},
-          {"$ref": "#/$defs/rope"}
+          {"$ref": "#/$defs/rope"},
+          {"$ref": "#/$defs/kv_prepare"},
+          {"$ref": "#/$defs/attention"},
+          {"$ref": "#/$defs/state_commit"}
         ]
       },
       "maxItems": 256,
@@ -25,7 +28,95 @@
   "title": "OpenTallas production-neutral Tensor Kernel IR v1",
   "type": "object",
   "$defs": {
+    "attention": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": false,
+          "properties": {
+            "causal_mask_bf16_code": {"const": 65407},
+            "prepared_state_visibility": {"const": "transaction_private"},
+            "probability_dtype": {"const": "bf16"},
+            "query_heads_per_key_value_head": {"minimum": 1, "type": "integer"},
+            "scale_bf16_code": {"const": 15797},
+            "score_reduction_order": {"const": "strictly_increasing_head_dimension"},
+            "softmax_compute_dtype": {"const": "fp32"},
+            "softmax_reduction_lanes": {"const": 8},
+            "value_reduction_order": {"const": "strictly_increasing_context"}
+          },
+          "required": [
+            "causal_mask_bf16_code",
+            "prepared_state_visibility",
+            "probability_dtype",
+            "query_heads_per_key_value_head",
+            "scale_bf16_code",
+            "score_reduction_order",
+            "softmax_compute_dtype",
+            "softmax_reduction_lanes",
+            "value_reduction_order"
+          ],
+          "type": "object"
+        },
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"$ref": "#/$defs/two_identifiers"},
+        "kind": {"const": "ATTENTION"},
+        "numeric_contract": {"const": "qwen3_gqa_fp32_softmax_bf16_v1"},
+        "outputs": {"$ref": "#/$defs/one_identifier"},
+        "shape": {"$ref": "#/$defs/attention_shape"},
+        "source_operation_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
+      "type": "object"
+    },
+    "attention_shape": {
+      "additionalProperties": false,
+      "properties": {
+        "head_dim": {"minimum": 1, "type": "integer"},
+        "key_value_heads": {"minimum": 1, "type": "integer"},
+        "max_context_tokens": {"minimum": 1, "type": "integer"},
+        "query_heads": {"minimum": 1, "type": "integer"},
+        "query_tokens_symbol": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["head_dim", "key_value_heads", "max_context_tokens", "query_heads", "query_tokens_symbol"],
+      "type": "object"
+    },
     "identifier": {"minLength": 1, "type": "string"},
+    "kv_prepare": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": false,
+          "properties": {
+            "append_position_symbol": {"$ref": "#/$defs/identifier"},
+            "generation_check": {"const": "exact_expected_generation"},
+            "state_resource": {"$ref": "#/$defs/identifier"},
+            "transaction_scope": {"const": "model_forward_request"},
+            "visibility": {"const": "transaction_private_until_commit"}
+          },
+          "required": ["append_position_symbol", "generation_check", "state_resource", "transaction_scope", "visibility"],
+          "type": "object"
+        },
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"$ref": "#/$defs/two_identifiers"},
+        "kind": {"const": "KV_PREPARE"},
+        "numeric_contract": {"const": "bf16_byte_preserving_state_v1"},
+        "outputs": {"$ref": "#/$defs/one_identifier"},
+        "shape": {
+          "additionalProperties": false,
+          "properties": {
+            "head_dim": {"minimum": 1, "type": "integer"},
+            "key_value_heads": {"minimum": 1, "type": "integer"},
+            "max_context_tokens": {"minimum": 1, "type": "integer"},
+            "tokens_symbol": {"$ref": "#/$defs/identifier"}
+          },
+          "required": ["head_dim", "key_value_heads", "max_context_tokens", "tokens_symbol"],
+          "type": "object"
+        },
+        "source_operation_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
+      "type": "object"
+    },
     "lookup": {
       "additionalProperties": false,
       "properties": {
@@ -168,6 +259,46 @@
       "type": "object"
     },
     "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "state_commit": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": false,
+          "properties": {
+            "atomic": {"const": true},
+            "coverage": {"enum": ["complete_operation", "qualified_resource_subset"]},
+            "generation_increment": {"const": 1},
+            "source_atomic_state_count": {"maximum": 64, "minimum": 1, "type": "integer"},
+            "transaction_scope": {"const": "model_forward_request"}
+          },
+          "required": ["atomic", "coverage", "generation_increment", "source_atomic_state_count", "transaction_scope"],
+          "type": "object"
+        },
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"$ref": "#/$defs/one_identifier"},
+        "kind": {"const": "STATE_COMMIT"},
+        "numeric_contract": {"const": "bf16_byte_preserving_state_v1"},
+        "outputs": {"$ref": "#/$defs/one_identifier"},
+        "shape": {
+          "additionalProperties": false,
+          "properties": {
+            "atomic_state_count": {"maximum": 64, "minimum": 1, "type": "integer"}
+          },
+          "required": ["atomic_state_count"],
+          "type": "object"
+        },
+        "source_operation_id": {"$ref": "#/$defs/identifier"},
+        "state_resources": {
+          "items": {"$ref": "#/$defs/identifier"},
+          "maxItems": 64,
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        }
+      },
+      "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id", "state_resources"],
+      "type": "object"
+    },
     "two_identifiers": {
       "items": {"$ref": "#/$defs/identifier"},
       "maxItems": 2,

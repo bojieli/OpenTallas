@@ -16,6 +16,7 @@ from compiler.tensor_accelerator.production_command import (
     ProductionCommand,
     ProductionCommandError,
     RMSNORM_ABI_MINOR,
+    ROPE_ABI_MINOR,
     command_abi as read_command_abi,
     decode,
     disassemble,
@@ -64,7 +65,7 @@ def _repair_crcs(payload: bytearray, command_index: int) -> None:
     struct.pack_into("<I", payload, 16, zlib.crc32(body) & 0xFFFFFFFF)
 
 
-def test_v22_command_stream_has_frozen_widths_and_exact_round_trip() -> None:
+def test_v23_command_stream_has_frozen_widths_and_exact_round_trip() -> None:
     commands = _commands()
     payload = encode(commands)
     assert command_abi.HEADER.size == 32
@@ -73,7 +74,7 @@ def test_v22_command_stream_has_frozen_widths_and_exact_round_trip() -> None:
     assert decode(payload) == commands
     assert encode(decode(payload)) == payload
     assert disassemble(commands).splitlines() == [
-        "OTTA-ISA 2.2",
+        "OTTA-ISA 2.3",
         "# index opcode engine flags kernel src0 src1 dst aux size0 size1 size2 size3",
         "00000 DMA_HBM_TO_SRAM DMA 0x0000 7 0x0000000000001000 "
         "0x0000000000000000 0x0000000000002000 0x0000000000000000 "
@@ -152,11 +153,59 @@ def test_v22_adds_bounded_rope_without_breaking_v21() -> None:
         ),
         ProductionCommand(index=1, opcode=Opcode.COMPLETE, engine=Engine.CONTROL),
     )
-    payload = encode(commands)
+    payload = encode(commands, abi_minor=ROPE_ABI_MINOR)
     assert read_command_abi(payload) == (2, 2)
     assert decode(payload) == commands
     with pytest.raises(ProductionCommandError, match="requires ABI 2.2"):
         encode(commands, abi_minor=RMSNORM_ABI_MINOR)
+
+
+def test_v23_adds_bounded_gqa_and_transactional_state_without_breaking_v22() -> None:
+    commands = (
+        ProductionCommand(
+            index=0,
+            opcode=Opcode.KV_PREPARE_BF16,
+            engine=Engine.STATE,
+            kernel_index=0,
+            source0=0x100000,
+            source1=0x200000,
+            destination=0x100000000,
+            auxiliary=0x110000000,
+            size0=1,
+            size1=8,
+            size2=128,
+            size3=0,
+        ),
+        ProductionCommand(
+            index=1,
+            opcode=Opcode.GQA_ATTENTION_BF16,
+            engine=Engine.VECTOR,
+            kernel_index=1,
+            source0=0x300000,
+            source1=0x100000000,
+            destination=0x400000,
+            auxiliary=0x110000000,
+            size0=32,
+            size1=8,
+            size2=128,
+            size3=0,
+        ),
+        ProductionCommand(
+            index=2,
+            opcode=Opcode.STATE_COMMIT,
+            engine=Engine.STATE,
+            source0=0x400000,
+            source1=0x500000,
+            size0=8192,
+            size1=1,
+        ),
+        ProductionCommand(index=3, opcode=Opcode.COMPLETE, engine=Engine.CONTROL),
+    )
+    payload = encode(commands)
+    assert read_command_abi(payload) == (2, 3)
+    assert decode(payload) == commands
+    with pytest.raises(ProductionCommandError, match="requires ABI 2.3"):
+        encode(commands, abi_minor=ROPE_ABI_MINOR)
 
 
 def test_encoder_rejects_nonterminal_duplicate_and_malformed_commands() -> None:
@@ -214,6 +263,39 @@ def test_encoder_rejects_nonterminal_duplicate_and_malformed_commands() -> None:
     )
     with pytest.raises(ProductionCommandError, match="illegal BF16 RoPE"):
         encode((replace(rope, size3=0), replace(complete, index=1)))
+    prepare = ProductionCommand(
+        index=0,
+        opcode=Opcode.KV_PREPARE_BF16,
+        engine=Engine.STATE,
+        kernel_index=0,
+        source0=1,
+        source1=2,
+        destination=3,
+        auxiliary=4,
+        size0=1,
+        size1=8,
+        size2=128,
+    )
+    with pytest.raises(ProductionCommandError, match="illegal BF16 KV prepare"):
+        encode((replace(prepare, source1=0), replace(complete, index=1)))
+    attention = replace(
+        prepare,
+        opcode=Opcode.GQA_ATTENTION_BF16,
+        engine=Engine.VECTOR,
+    )
+    with pytest.raises(ProductionCommandError, match="illegal BF16 GQA attention"):
+        encode((replace(attention, size0=0), replace(complete, index=1)))
+    commit = ProductionCommand(
+        index=0,
+        opcode=Opcode.STATE_COMMIT,
+        engine=Engine.STATE,
+        source0=1,
+        source1=2,
+        size0=8192,
+        size1=1,
+    )
+    with pytest.raises(ProductionCommandError, match="illegal state commit"):
+        encode((replace(commit, destination=3), replace(complete, index=1)))
     with pytest.raises(ProductionCommandError, match="outside its ABI width"):
         encode((replace(dma, size0=1 << 32), replace(complete, index=1)))
     with pytest.raises(ProductionCommandError, match="outside its ABI width"):

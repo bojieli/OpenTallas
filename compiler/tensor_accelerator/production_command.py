@@ -1,8 +1,9 @@
 """Production command ABI v2 for causal HBM/SRAM execution.
 
 ABI 2.1 additively introduces bounded indexed HBM transfer and BF16 RMSNorm.
-ABI 2.2 adds bounded BF16 rotary-position execution.  The decoder retains
-strict support for both older minor versions so qualified artifacts remain
+ABI 2.2 adds bounded BF16 rotary-position execution.  ABI 2.3 adds causal GQA
+and transactional KV prepare/commit.  The decoder retains strict support for
+all older minor versions so qualified artifacts remain
 executable and reproducible.
 """
 
@@ -16,11 +17,12 @@ from typing import Iterable
 
 
 ABI_MAJOR = 2
-ABI_MINOR = 2
+ABI_MINOR = 3
 LEGACY_ABI_MINOR = 0
 RMSNORM_ABI_MINOR = 1
+ROPE_ABI_MINOR = 2
 SUPPORTED_ABI_MINORS = frozenset(
-    {LEGACY_ABI_MINOR, RMSNORM_ABI_MINOR, ABI_MINOR}
+    {LEGACY_ABI_MINOR, RMSNORM_ABI_MINOR, ROPE_ABI_MINOR, ABI_MINOR}
 )
 MAGIC = b"OTTAISA2"
 HEADER = struct.Struct("<8sHHII12s")
@@ -44,6 +46,9 @@ class Opcode(IntEnum):
     MATMUL_BF16_TILE = 0x10
     RMSNORM_BF16 = 0x20
     ROPE_BF16 = 0x21
+    KV_PREPARE_BF16 = 0x30
+    GQA_ATTENTION_BF16 = 0x31
+    STATE_COMMIT = 0x32
     COMPLETE = 0xFF
 
 
@@ -52,6 +57,7 @@ class Engine(IntEnum):
     DMA = 1
     TENSOR = 2
     VECTOR = 3
+    STATE = 4
 
 
 EXPECTED_ENGINE = {
@@ -60,6 +66,9 @@ EXPECTED_ENGINE = {
     Opcode.MATMUL_BF16_TILE: Engine.TENSOR,
     Opcode.RMSNORM_BF16: Engine.VECTOR,
     Opcode.ROPE_BF16: Engine.VECTOR,
+    Opcode.KV_PREPARE_BF16: Engine.STATE,
+    Opcode.GQA_ATTENTION_BF16: Engine.VECTOR,
+    Opcode.STATE_COMMIT: Engine.STATE,
     Opcode.COMPLETE: Engine.CONTROL,
 }
 
@@ -68,7 +77,10 @@ OPCODE_MIN_MINOR = {
     Opcode.DMA_HBM_INDEXED_TO_SRAM: RMSNORM_ABI_MINOR,
     Opcode.MATMUL_BF16_TILE: LEGACY_ABI_MINOR,
     Opcode.RMSNORM_BF16: RMSNORM_ABI_MINOR,
-    Opcode.ROPE_BF16: ABI_MINOR,
+    Opcode.ROPE_BF16: ROPE_ABI_MINOR,
+    Opcode.KV_PREPARE_BF16: ABI_MINOR,
+    Opcode.GQA_ATTENTION_BF16: ABI_MINOR,
+    Opcode.STATE_COMMIT: ABI_MINOR,
     Opcode.COMPLETE: LEGACY_ABI_MINOR,
 }
 
@@ -245,6 +257,52 @@ def _validate_command(
             raise ProductionCommandError(
                 f"command {command.index} has illegal BF16 RoPE fields"
             )
+    elif command.opcode == Opcode.KV_PREPARE_BF16:
+        if (
+            command.flags
+            or command.kernel_index == NO_KERNEL
+            or not command.source0
+            or not command.source1
+            or not command.destination
+            or not command.auxiliary
+            or not command.size0
+            or not command.size1
+            or not command.size2
+        ):
+            raise ProductionCommandError(
+                f"command {command.index} has illegal BF16 KV prepare fields"
+            )
+    elif command.opcode == Opcode.GQA_ATTENTION_BF16:
+        if (
+            command.flags
+            or command.kernel_index == NO_KERNEL
+            or not command.source0
+            or not command.source1
+            or not command.destination
+            or not command.auxiliary
+            or not command.size0
+            or not command.size1
+            or not command.size2
+        ):
+            raise ProductionCommandError(
+                f"command {command.index} has illegal BF16 GQA attention fields"
+            )
+    elif command.opcode == Opcode.STATE_COMMIT:
+        if (
+            command.flags
+            or command.kernel_index != NO_KERNEL
+            or not command.source0
+            or not command.source1
+            or command.destination
+            or command.auxiliary
+            or not command.size0
+            or not command.size1
+            or command.size2
+            or command.size3
+        ):
+            raise ProductionCommandError(
+                f"command {command.index} has illegal state commit fields"
+            )
     elif command.opcode == Opcode.COMPLETE:
         if command.kernel_index != NO_KERNEL or not _all_zero(command):
             raise ProductionCommandError(
@@ -396,6 +454,7 @@ __all__ = [
     "Engine",
     "LEGACY_ABI_MINOR",
     "RMSNORM_ABI_MINOR",
+    "ROPE_ABI_MINOR",
     "MATMUL_FINAL",
     "MATMUL_INIT",
     "NO_KERNEL",
