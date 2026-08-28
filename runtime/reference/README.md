@@ -26,11 +26,21 @@ implementation with zero differences. Binary32 tests include deterministic
 round trips over 20,000 random finite encodings and cases where ordered
 per-product accumulation intentionally differs from one final exact reduction.
 
-This closes neither `M1` nor numerical qualification. Multi-block matrix
-lowering, scale-tile orientation, BF16 output boundaries, all vector/attention/
-routing operators, real-checkpoint known answers, layer differentials,
-end-to-end logits, and task quality remain open. The earlier exact-integer
-evaluator remains fixture-only evidence.
+This closes neither `M1` nor numerical qualification. Matrix operators beyond
+the qualified dense FP8 linear path, all vector/attention/routing operators,
+real-checkpoint known answers, layer differentials, end-to-end logits, and task
+quality remain open. The earlier exact-integer evaluator remains fixture-only
+evidence.
+
+`matrix.py` composes the scalar/block rules into complete `FP8_LINEAR`
+semantics. It quantizes each BF16 activation block once, applies the released
+128-by-128 E8M0 scale orientation, executes ordered 128-value FP8 block dots,
+reduces block partials through the canonical balanced tree, and rounds the
+binary32 result to BF16. It returns explicit activation-block and output-element
+saturation counts. Tests cross the output scale-tile boundary and compare
+multi-block randomized matrices with an independently assembled composition.
+This does not yet provide a checkpoint-derived known answer or service-engine
+opcode.
 
 `indexing.py` independently implements the three source-constructed integer
 index tensors used by `WINDOW_INDEX`, `COMPRESSED_DENSE_INDEX`, and
