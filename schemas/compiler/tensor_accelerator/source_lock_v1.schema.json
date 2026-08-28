@@ -1,0 +1,61 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/source_lock_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "capability_source_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "capability_source_size_bytes": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "compiler_version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "model_source_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "model_source_size_bytes": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.source_lock.v1"
+    },
+    "semantic_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "required": [
+    "capability_id",
+    "capability_source_sha256",
+    "capability_source_size_bytes",
+    "compiler_version",
+    "model_id",
+    "model_source_sha256",
+    "model_source_size_bytes",
+    "schema",
+    "semantic_sha256"
+  ],
+  "title": "OpenTallas tensor-accelerator source lock v1",
+  "type": "object",
+  "$defs": {
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

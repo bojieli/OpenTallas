@@ -1,0 +1,146 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/tensor_kernel_ir_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "kernel_ir_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "kernels": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "index": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "inputs": {
+            "items": {
+              "$ref": "#/$defs/identifier"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "kernel_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "kind": {
+            "enum": [
+              "ADD_I32",
+              "GEMM_I8_I8_I32"
+            ]
+          },
+          "numeric": {
+            "additionalProperties": {
+              "type": [
+                "boolean",
+                "integer",
+                "number",
+                "string"
+              ]
+            },
+            "type": "object"
+          },
+          "operation_id": {
+            "$ref": "#/$defs/identifier"
+          },
+          "outputs": {
+            "items": {
+              "$ref": "#/$defs/identifier"
+            },
+            "minItems": 1,
+            "type": "array"
+          },
+          "shape": {
+            "additionalProperties": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "minProperties": 1,
+            "type": "object"
+          },
+          "tile": {
+            "additionalProperties": {
+              "minimum": 1,
+              "type": "integer"
+            },
+            "minProperties": 1,
+            "type": "object"
+          },
+          "traffic_bytes": {
+            "additionalProperties": false,
+            "properties": {
+              "input0": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "input1": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "output": {
+                "minimum": 1,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "input0",
+              "input1",
+              "output"
+            ],
+            "type": "object"
+          }
+        },
+        "required": [
+          "index",
+          "inputs",
+          "kernel_id",
+          "kind",
+          "numeric",
+          "operation_id",
+          "outputs",
+          "shape",
+          "tile",
+          "traffic_bytes"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "numeric_profile": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "schema": {
+      "const": "opentallas.tensor_kernel_ir.v1"
+    }
+  },
+  "required": [
+    "capability_id",
+    "kernel_ir_id",
+    "kernels",
+    "model_id",
+    "numeric_profile",
+    "schema"
+  ],
+  "title": "OpenTallas Tensor Kernel IR v1",
+  "type": "object",
+  "$defs": {
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}
