@@ -196,10 +196,7 @@ def _elementwise_kernel_ir() -> dict[str, object]:
 
 def test_production_kernel_ir_admits_neutral_attention_and_state_only() -> None:
     schemas = _schemas()
-    by_name = {
-        schema["$id"].rsplit("/", 1)[-1]: schema
-        for schema in schemas
-    }
+    by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
     registry = _registry(schemas)
     schema = by_name["production_tensor_kernel_ir_v1.schema.json"]
     value = _attention_state_kernel_ir()
@@ -213,10 +210,7 @@ def test_production_kernel_ir_admits_neutral_attention_and_state_only() -> None:
 
 def test_production_kernel_ir_admits_bounded_neutral_add_and_silu_only() -> None:
     schemas = _schemas()
-    by_name = {
-        schema["$id"].rsplit("/", 1)[-1]: schema
-        for schema in schemas
-    }
+    by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
     registry = _registry(schemas)
     schema = by_name["production_tensor_kernel_ir_v1.schema.json"]
     value = _elementwise_kernel_ir()
@@ -237,10 +231,7 @@ def test_production_kernel_ir_admits_bounded_neutral_add_and_silu_only() -> None
 
 def test_layer_qualification_schema_rejects_incomplete_or_forged_evidence() -> None:
     schemas = _schemas()
-    by_name = {
-        schema["$id"].rsplit("/", 1)[-1]: schema
-        for schema in schemas
-    }
+    by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
     registry = _registry(schemas)
     schema = by_name["layer_qualification_v1.schema.json"]
     value = load_strict_json(
@@ -273,11 +264,8 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 48
-    by_name = {
-        schema["$id"].rsplit("/", 1)[-1]: schema
-        for schema in schemas
-    }
+    assert len(schemas) == 55
+    by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
     assert set(by_name) == {
         "attention_deployment_v1.schema.json",
         "attention_execution_v1.schema.json",
@@ -302,6 +290,13 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "execution_report_v1.schema.json",
         "execution_request_v1.schema.json",
         "independent_check_v1.schema.json",
+        "layer_downstream_deployment_v1.schema.json",
+        "layer_downstream_execution_v1.schema.json",
+        "layer_downstream_expectations_v1.schema.json",
+        "layer_downstream_independent_check_v1.schema.json",
+        "layer_downstream_physical_plan_v1.schema.json",
+        "layer_downstream_request_v1.schema.json",
+        "layer_downstream_source_lock_v1.schema.json",
         "layer_qualification_v1.schema.json",
         "model_graph_v1.schema.json",
         "model_graph_v2.schema.json",
@@ -344,9 +339,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         FIXTURE / "execution_request.json"
     )
     instances = {
-        "bf16_projection_qualification_v1.schema.json": [
-            _bf16_qualification()
-        ],
+        "bf16_projection_qualification_v1.schema.json": [_bf16_qualification()],
         "capability_v1.schema.json": [
             load_strict_json(FIXTURE / "capability.json"),
             load_strict_json(output / "capability.json"),
@@ -366,8 +359,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         ],
         "layer_qualification_v1.schema.json": [
             load_strict_json(
-                ROOT
-                / "results/tensor_accelerator/qwen3_layer_qualification.json"
+                ROOT / "results/tensor_accelerator/qwen3_layer_qualification.json"
             )
         ],
         "model_graph_v1.schema.json": [
@@ -389,9 +381,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
             )
             for minor in range(1, 6)
         ],
-        "source_lock_v1.schema.json": [
-            load_strict_json(output / "source.lock.json")
-        ],
+        "source_lock_v1.schema.json": [load_strict_json(output / "source.lock.json")],
         "tensor_kernel_ir_v1.schema.json": [
             load_strict_json(output / "ir/tensor_kernel_ir.json")
         ],
@@ -410,6 +400,13 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "attention_qualification_v1.schema.json",
         "attention_request_v1.schema.json",
         "attention_source_lock_v1.schema.json",
+        "layer_downstream_deployment_v1.schema.json",
+        "layer_downstream_execution_v1.schema.json",
+        "layer_downstream_expectations_v1.schema.json",
+        "layer_downstream_independent_check_v1.schema.json",
+        "layer_downstream_physical_plan_v1.schema.json",
+        "layer_downstream_request_v1.schema.json",
+        "layer_downstream_source_lock_v1.schema.json",
         "production_tensor_kernel_ir_v1.schema.json",
         "qkv_deployment_v1.schema.json",
         "qkv_execution_v1.schema.json",
