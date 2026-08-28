@@ -1,0 +1,487 @@
+{
+  "schema_version": 1,
+  "input_id": "deepseek-v4-flash-b300-inverse-comparator-v1",
+  "frozen_as_of_utc": "2026-08-28",
+  "evidence_class": "frozen comparator-derived analytical inputs; not a measured B300 run and not an achieved OpenTallas result",
+  "provenance": {
+    "analytical_artifact": {
+      "path": "results/iso-node/leading_node_market/analytical.json",
+      "sha256": "605d0b7a2e3f5f38e1a19dc78f051cae6e34a2d9e196e4d30132d8f04e7c633a"
+    },
+    "technology_inputs": {
+      "path": "configs/hardware/technology_inputs.json",
+      "sha256": "ffdfebb683709790aafb33dc8e45b207072dd81cb111fcf5bd75429cebbd56f9"
+    },
+    "model_profile": {
+      "path": "configs/models/deepseek-v4-flash-0731.json",
+      "sha256": "dc7301b0d4f1bc4e66c0d2613921842d9b49b49b1dd16c286a709241ded0c138"
+    }
+  },
+  "model_profile": {
+    "name": "DeepSeek-V4-Flash-0731",
+    "checkpoint_bytes": 166878536440
+  },
+  "technology": {
+    "wafer_area_mm2": 46225,
+    "configured_wafer_cooling_limit_w": 23000,
+    "rom_envelopes": [
+      {
+        "compute_anchor_whole_product_ops_s": 125000000000000000,
+        "compute_ceiling_fraction": 0.1,
+        "compute_evidence": "derived:published WSE-3 125-PFLOP/s marketing ceiling multiplied by explicit compute-equivalent fraction 0.1; source arithmetic is ambiguous and this is not ROM-wafer silicon evidence",
+        "density_evidence": "derived:linear planar scaling from fabricated 28nm anchor",
+        "envelope": "conservative",
+        "fp8_peak_ops_s": 12500000000000000,
+        "hbm": {
+          "bandwidth_bytes_s": 23250000000000,
+          "capacity_bytes": 864000000000,
+          "perimeter_pitch_utilization": 0.33488372093023255,
+          "stack_bandwidth_bytes_s": 968750000000,
+          "stack_capacity_bytes": 36000000000,
+          "stacks": 24
+        },
+        "macro_density_bytes_mm2": 7812000.000000001,
+        "raw_weight_bandwidth_bytes_s": 1456087499999999.8,
+        "rom_area_mm2": 16178.749999999998,
+        "usable_weight_capacity_bytes": 101110716000.00002,
+        "weight_bandwidth_density_bytes_s_mm2": 90000000000
+      },
+      {
+        "compute_anchor_whole_product_ops_s": 125000000000000000,
+        "compute_ceiling_fraction": 0.3,
+        "compute_evidence": "derived:published WSE-3 125-PFLOP/s marketing ceiling multiplied by explicit compute-equivalent fraction 0.3; source arithmetic is ambiguous and this is not ROM-wafer silicon evidence",
+        "density_evidence": "derived:geometric midpoint between linear planar case and published 3D-metal evaluation",
+        "envelope": "central",
+        "fp8_peak_ops_s": 37500000000000000,
+        "hbm": {
+          "bandwidth_bytes_s": 38750000000000,
+          "capacity_bytes": 1440000000000,
+          "perimeter_pitch_utilization": 0.5581395348837209,
+          "stack_bandwidth_bytes_s": 968750000000,
+          "stack_capacity_bytes": 36000000000,
+          "stacks": 40
+        },
+        "macro_density_bytes_mm2": 12716461.772049647,
+        "raw_weight_bandwidth_bytes_s": 3993840000000000,
+        "rom_area_mm2": 22188,
+        "usable_weight_capacity_bytes": 242651454266.48428,
+        "weight_bandwidth_density_bytes_s_mm2": 180000000000
+      },
+      {
+        "compute_anchor_whole_product_ops_s": 125000000000000000,
+        "compute_ceiling_fraction": 0.5,
+        "compute_evidence": "derived:published WSE-3 125-PFLOP/s marketing ceiling multiplied by explicit compute-equivalent fraction 0.5; source arithmetic is ambiguous and this is not ROM-wafer silicon evidence",
+        "density_evidence": "simulated:published 3D-METRO architecture density; not silicon",
+        "envelope": "aggressive",
+        "fp8_peak_ops_s": 62500000000000000,
+        "hbm": {
+          "bandwidth_bytes_s": 54250000000000,
+          "capacity_bytes": 2016000000000,
+          "perimeter_pitch_utilization": 0.7813953488372093,
+          "stack_bandwidth_bytes_s": 968750000000,
+          "stack_capacity_bytes": 36000000000,
+          "stacks": 56
+        },
+        "macro_density_bytes_mm2": 20700000,
+        "raw_weight_bandwidth_bytes_s": 7627125000000001,
+        "rom_area_mm2": 25423.750000000004,
+        "usable_weight_capacity_bytes": 473644462500.00006,
+        "weight_bandwidth_density_bytes_s_mm2": 300000000000
+      }
+    ]
+  },
+  "comparator": {
+    "architecture": "NVIDIA-B300-x1",
+    "power_semantics": "published/derived DGX B300 system allocated power divided by eight; not measured GPU-board power",
+    "points": [
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 8192,
+        "batch_size": 1,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 438.31453860762616,
+        "deployed_weight_bytes_per_step": 11217572060,
+        "kv_read_bytes_per_user_token": 13148032,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 31953280,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2055733248,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 704643072,
+          "fp8_e4m3_x_fp8_e4m3": 13725859840,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 29539565568,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 8192,
+        "batch_size": 8,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 1068.9172622011063,
+        "deployed_weight_bytes_per_step": 33202065409.85159,
+        "kv_read_bytes_per_user_token": 13148032,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 31953280,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2055733248,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 704643072,
+          "fp8_e4m3_x_fp8_e4m3": 13725859840,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 29539565568,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 8192,
+        "batch_size": 32,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 1599.4201379562433,
+        "deployed_weight_bytes_per_step": 86037911455.85335,
+        "kv_read_bytes_per_user_token": 13148032,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 31953280,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2055733248,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 704643072,
+          "fp8_e4m3_x_fp8_e4m3": 13725859840,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 29539565568,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 8192,
+        "batch_size": 64,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 2227.3739541543787,
+        "deployed_weight_bytes_per_step": 122681219131.22423,
+        "kv_read_bytes_per_user_token": 13148032,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 31953280,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2055733248,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 704643072,
+          "fp8_e4m3_x_fp8_e4m3": 13725859840,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 29539565568,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 32768,
+        "batch_size": 1,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 437.8860621426581,
+        "deployed_weight_bytes_per_step": 11217572060,
+        "kv_read_bytes_per_user_token": 24160384,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 118186624,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2118647808,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 2818572288,
+          "fp8_e4m3_x_fp8_e4m3": 14166261760,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 32156811264,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 32768,
+        "batch_size": 8,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 1066.3725830267545,
+        "deployed_weight_bytes_per_step": 33202065409.85159,
+        "kv_read_bytes_per_user_token": 24160384,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 118186624,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2118647808,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 2818572288,
+          "fp8_e4m3_x_fp8_e4m3": 14166261760,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 32156811264,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 32768,
+        "batch_size": 32,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 1593.7295497535279,
+        "deployed_weight_bytes_per_step": 86037911455.85335,
+        "kv_read_bytes_per_user_token": 24160384,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 118186624,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2118647808,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 2818572288,
+          "fp8_e4m3_x_fp8_e4m3": 14166261760,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 32156811264,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 32768,
+        "batch_size": 64,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 2216.353180611011,
+        "deployed_weight_bytes_per_step": 122681219131.22423,
+        "kv_read_bytes_per_user_token": 24160384,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 118186624,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2118647808,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 2818572288,
+          "fp8_e4m3_x_fp8_e4m3": 14166261760,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 32156811264,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 200000,
+        "batch_size": 1,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 434.9922880391863,
+        "deployed_weight_bytes_per_step": 11217572060,
+        "kv_read_bytes_per_user_token": 99101828,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 704983412,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2546597888,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 17203200000,
+          "fp8_e4m3_x_fp8_e4m3": 17161912320,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 49965039616,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 200000,
+        "batch_size": 8,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 1049.3721319939716,
+        "deployed_weight_bytes_per_step": 33202065409.85159,
+        "kv_read_bytes_per_user_token": 99101828,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 704983412,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2546597888,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 17203200000,
+          "fp8_e4m3_x_fp8_e4m3": 17161912320,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 49965039616,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 200000,
+        "batch_size": 32,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 1556.0538612845094,
+        "deployed_weight_bytes_per_step": 86037911455.85335,
+        "kv_read_bytes_per_user_token": 99101828,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 704983412,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2546597888,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 17203200000,
+          "fp8_e4m3_x_fp8_e4m3": 17161912320,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 49965039616,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 200000,
+        "batch_size": 64,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 2144.1564735785114,
+        "deployed_weight_bytes_per_step": 122681219131.22423,
+        "kv_read_bytes_per_user_token": 99101828,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 704983412,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 2546597888,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 17203200000,
+          "fp8_e4m3_x_fp8_e4m3": 17161912320,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 49965039616,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 1000000,
+        "batch_size": 1,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 421.66303386555353,
+        "deployed_weight_bytes_per_step": 11217572060,
+        "kv_read_bytes_per_user_token": 457576828,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 3512058412,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 4594597888,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 86016000000,
+          "fp8_e4m3_x_fp8_e4m3": 31497912320,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 135161839616,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 1000000,
+        "batch_size": 8,
+        "feasible": true,
+        "infeasible_reasons": [],
+        "aggregate_tokens_s": 975.0186657675796,
+        "deployed_weight_bytes_per_step": 33202065409.85159,
+        "kv_read_bytes_per_user_token": 457576828,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 3512058412,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 4594597888,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 86016000000,
+          "fp8_e4m3_x_fp8_e4m3": 31497912320,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 135161839616,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "gpu_weight_memory_C3"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 1000000,
+        "batch_size": 32,
+        "feasible": false,
+        "infeasible_reasons": [
+          "C7/C8: 32 resident users required (batch 32 x 1 stages) exceeds capacity 26"
+        ],
+        "aggregate_tokens_s": 0,
+        "deployed_weight_bytes_per_step": 86037911455.85335,
+        "kv_read_bytes_per_user_token": 457576828,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 3512058412,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 4594597888,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 86016000000,
+          "fp8_e4m3_x_fp8_e4m3": 31497912320,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 135161839616,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "capacity_C7_C8_C9"
+      },
+      {
+        "model": "DeepSeek-V4-Flash-0731",
+        "architecture": "NVIDIA-B300-x1",
+        "context_tokens": 1000000,
+        "batch_size": 64,
+        "feasible": false,
+        "infeasible_reasons": [
+          "C7/C8: 64 resident users required (batch 64 x 1 stages) exceeds capacity 26"
+        ],
+        "aggregate_tokens_s": 0,
+        "deployed_weight_bytes_per_step": 122681219131.22423,
+        "kv_read_bytes_per_user_token": 457576828,
+        "kv_write_bytes_per_user_token": 28577.84375,
+        "kv_storage_bytes_per_user": 3512058412,
+        "operations_per_user_token_by_format": {
+          "bf16_x_bf16": 4594597888,
+          "fp32_x_fp32": 67764224,
+          "fp4_e2m1_x_fp4_e2m1": 86016000000,
+          "fp8_e4m3_x_fp8_e4m3": 31497912320,
+          "mxfp4_e2m1_x_fp8_e4m3": 12985565184
+        },
+        "tensor_operations_per_user_token": 135161839616,
+        "cross_stage_payload_bytes_per_user_step": 32768,
+        "power_w": 1812.5,
+        "binding_constraint": "capacity_C7_C8_C9"
+      }
+    ]
+  }
+}

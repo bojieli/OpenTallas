@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "local-rtx-pro-6000-shared-serving-v1",
+  "as_of_utc": "2026-08-28",
+  "evidence_class": "shared_contended service-level measurement; not a clean peak GPU benchmark, not an OpenTallas implementation, and not a DeepSeek-V4 comparison",
+  "endpoint": {
+    "base_url": "http://127.0.0.1:8000",
+    "api_model": "qwen-fast",
+    "expected_root": "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8",
+    "expected_max_model_len": 40960,
+    "request_timeout_s": 300
+  },
+  "gpu": {
+    "expected_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "expected_uuid": "GPU-592644b2-d169-3424-56fd-98aea433ef09",
+    "sample_period_s": 0.2
+  },
+  "request": {
+    "completion_tokens": 64,
+    "temperature": 0,
+    "seed": 20260828,
+    "ignore_eos": true,
+    "stream": true,
+    "include_usage": true,
+    "prompt_seed": "OpenTallas deterministic serving measurement. Read this repeated neutral record and continue with a short technical response. Record 0123456789 alpha beta gamma delta."
+  },
+  "sweep": [
+    {
+      "prompt_tokens": 256,
+      "concurrency": 1,
+      "repetitions": 2
+    },
+    {
+      "prompt_tokens": 2048,
+      "concurrency": 1,
+      "repetitions": 2
+    },
+    {
+      "prompt_tokens": 8192,
+      "concurrency": 1,
+      "repetitions": 2
+    },
+    {
+      "prompt_tokens": 256,
+      "concurrency": 2,
+      "repetitions": 2
+    }
+  ],
+  "contamination_policy": {
+    "label": "shared_contended",
+    "other_endpoints_must_not_be_stopped_or_changed": [
+      "http://127.0.0.1:8004"
+    ],
+    "whole_gpu_energy_attribution_allowed": false,
+    "window_integrated_gpu_energy_semantics": "contaminated whole-GPU observation only; never attribute it to the benchmark requests"
+  },
+  "break_even": {
+    "comparator_inputs": "configs/benchmarks/deepseek_v4_flash_b300_comparator_lock.json",
+    "model": "DeepSeek-V4-Flash-0731",
+    "comparator_architecture": "NVIDIA-B300-x1",
+    "contexts": [
+      8192,
+      32768,
+      200000,
+      1000000
+    ],
+    "batches": [
+      1,
+      8,
+      32,
+      64
+    ],
+    "throughput_multipliers": [
+      1.0,
+      2.0
+    ],
+    "rom_area_scenarios": [
+      {
+        "name": "35pct_area_conservative",
+        "rom_area_fraction": 0.35,
+        "usable_capacity_fraction": 0.8,
+        "weight_bandwidth_efficiency": 0.5
+      },
+      {
+        "name": "48pct_area_central",
+        "rom_area_fraction": 0.48,
+        "usable_capacity_fraction": 0.86,
+        "weight_bandwidth_efficiency": 0.65
+      },
+      {
+        "name": "55pct_area_aggressive",
+        "rom_area_fraction": 0.55,
+        "usable_capacity_fraction": 0.9,
+        "weight_bandwidth_efficiency": 0.75
+      }
+    ],
+    "hbm_bandwidth_efficiency": 0.7,
+    "noc_payload_efficiency": 0.7,
+    "reference_context": 8192,
+    "reference_batch": 1,
+    "reference_throughput_multiplier": 1.0,
+    "comparison_power_semantics": "published/derived DGX B300 system allocated power divided by eight; not measured GPU-board power",
+    "strict_speedup_semantics": "1.0x is equality; higher performance requires measured throughput strictly above the threshold under the same model, context, batch, latency, accuracy, and power scope"
+  },
+  "claim_boundary": [
+    "The endpoint serves Qwen3-VL-30B-A3B-Instruct-FP8, not a DeepSeek-V4 checkpoint.",
+    "Other serving and audio processes share the GPU, so the run is not a clean peak-throughput or energy benchmark.",
+    "SSE content-event timing is only a chunk-arrival proxy because one event need not equal one generated token.",
+    "No whole-GPU energy value from this shared run is attributable to an individual request or model.",
+    "The measurement supplies a local service target; it does not demonstrate OpenTallas performance."
+  ]
+}
