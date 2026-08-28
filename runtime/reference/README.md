@@ -28,9 +28,9 @@ per-product accumulation intentionally differs from one final exact reduction.
 
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
 the qualified dense FP8 linear path, vector operators beyond target-hidden
-capture, attention/routing operators, real-checkpoint known answers, layer
-differentials, end-to-end logits, and task quality remain open. The earlier
-exact-integer evaluator remains fixture-only evidence.
+capture and HC post-mixing, attention/routing operators, real-checkpoint known
+answers, layer differentials, end-to-end logits, and task quality remain open.
+The earlier exact-integer evaluator remains fixture-only evidence.
 
 `matrix.py` composes the scalar/block rules into complete `FP8_LINEAR`
 semantics. It quantizes each BF16 activation block once, applies the released
@@ -95,10 +95,12 @@ Malformed shapes, out-of-range experts, or nonfinite payloads fail closed. A
 known answer reuses all 48 expert IDs from the independently checked official
 lookup slice in `docs/DEEPSEEK_V4_LOOKUP_EVIDENCE.md`.
 
-`vector.py` implements `TARGET_HIDDEN_CAPTURE` over finite BF16 encodings. It
-widens the four official HC streams exactly to binary32, reduces source slots
-with the NUM-6.1 canonical balanced tree, performs one binary32 division by
-four, and converts once to BF16 under round-to-nearest ties-to-even. Shape or HC
-count mismatch, nonfinite BF16 input, and intermediate overflow fail closed.
-The explicit tree is a deterministic target adaptation of the pinned source's
-`h.mean(dim=2)`, not a claim about incidental backend reduction order.
+`vector.py` implements `TARGET_HIDDEN_CAPTURE` and `HC_POST` over finite BF16
+encodings and binary32 coefficients. Capture widens the four official HC
+streams, reduces the source axis with the NUM-6.1 balanced tree, divides once,
+and converts once to BF16. HC post-mixing interprets `comb[source][destination]`,
+rounds each branch/residual product once, reduces residual sources with the same
+tree, adds the branch contribution, and converts once to BF16 while counting
+finite output saturation. Shape mismatch, nonfinite input, and intermediate
+overflow fail closed. Both trees are deterministic target adaptations rather
+than claims about incidental backend reduction order.

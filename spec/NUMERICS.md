@@ -307,6 +307,31 @@ Dispatch performs no arithmetic. Physical rank ownership, repaired placement,
 arrival order, and queue timing may filter or delay groups but must not alter
 this global logical order or payload mapping.
 
+### NUM-6.7 HC post-mixing
+
+`HC_POST` consumes a finite-BF16 branch tensor in
+`[batch, sequence, width]`, a finite-BF16 residual tensor in
+`[batch, sequence, source_hc, width]`, finite binary32 post coefficients in
+`[batch, sequence, destination_hc]`, and finite binary32 combination
+coefficients in `[batch, sequence, source_hc, destination_hc]`. Both HC axes
+must equal manifest `hc_mult`; the pinned Flash and Pro value is four.
+
+For destination stream `j` and hidden column `d`, the branch contribution is
+`post[j] * branch[d]`. Residual source `i` contributes
+`comb[i][j] * residual[i][d]`. BF16 operands widen exactly and each product
+rounds once to binary32. Residual products reduce by increasing source HC index
+with the NUM-6.1 canonical balanced tree. The branch product is then added to
+the residual sum with one binary32 rounding, followed by one NUM-4.2 BF16
+conversion. Intermediate binary32 overflow or nonfinite input poisons. Finite
+BF16 saturation is sticky and counted; output zero is canonical positive zero.
+
+The pinned source expresses the residual term as `torch.sum(..., dim=2)`. A
+bounded development audit found the installed PyTorch CPU and CUDA paths agreed
+with each other but used a left-associated four-term source reduction, which can
+differ from the NUM-6.1 tree after BF16 conversion. The target tree is therefore
+an explicit deterministic adaptation. The reference tests retain a concrete
+case producing target `0xbbd2` versus sequential-source `0xbbd3`.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension

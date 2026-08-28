@@ -90,7 +90,12 @@ from .routing import (
     RoutingReferenceError,
     normalize_routed_weight_codes,
 )
-from .vector import VectorReferenceError, target_hidden_capture_bf16
+from .vector import (
+    HCPostResult,
+    VectorReferenceError,
+    hc_post_bf16,
+    target_hidden_capture_bf16,
+)
 
 __all__ = [
     "BF16_MAX_ENCODING",
@@ -112,6 +117,7 @@ __all__ = [
     "DispatchReferenceError",
     "ExpertDispatchGroup",
     "ExpertDispatchResult",
+    "HCPostResult",
     "IndexMatrix",
     "IndexReferenceError",
     "IndexRow",
@@ -162,6 +168,7 @@ __all__ = [
     "fp8_fp8_block_dot",
     "hash_route_indices",
     "hc_expand_bf16",
+    "hc_post_bf16",
     "index_topk_indices",
     "mxfp4_fp8_block_dot",
     "normalize_routed_weight_codes",
