@@ -30,3 +30,10 @@ namespaces, three trailing compression-ratio entries, and the official inference
 config's `n_mtp_layers: 3`. The adapter preserves the root value and records the
 three-stage resolution as an explicit source adaptation; it does not silently
 equate these fields.
+
+`inference_config.json` is likewise a byte-identical committed copy of the
+official local-inference config. It is retained separately because it supplies
+the explicit `n_mtp_layers: 3` used by `model.py`. The graph adapter locks the
+hashes of `inference/config.json`, `model.py`, `kernel.py`, `convert.py`, and
+`generate.py`; it imports none of them. Source anchors in the operator ledger
+refer to named functions in these immutable files.

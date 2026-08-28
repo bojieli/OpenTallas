@@ -21,6 +21,10 @@ from compiler.frontend.deepseek_v4 import (
     load_official_config,
     validate_official_checkpoint_lock,
 )
+from compiler.frontend.deepseek_v4_graph import (
+    DeepSeekV4GraphError,
+    build_official_graph_contract,
+)
 from compiler.image.rom import RomImageError
 from compiler.ir.model import IRValidationError, canonical_json_bytes
 from compiler.microcode.isa import MicrocodeError
@@ -61,6 +65,11 @@ def parser() -> argparse.ArgumentParser:
     )
     validate_deepseek_parser.add_argument("--lock", required=True, type=Path)
     validate_deepseek_parser.add_argument("--output", required=True, type=Path)
+    graph_parser = subparsers.add_parser(
+        "describe-deepseek-v4-graph",
+        help="emit the source-mapped V4 operator graph and open coverage ledger",
+    )
+    graph_parser.add_argument("--output", required=True, type=Path)
     return result
 
 
@@ -121,6 +130,16 @@ def main(argv: list[str] | None = None) -> int:
                 f"{validation['checkpoint_lock_id']}"
             )
             return 0
+        if arguments.command == "describe-deepseek-v4-graph":
+            graph = build_official_graph_contract()
+            _write_new_json(arguments.output, graph)
+            coverage = graph["coverage"]
+            print(
+                f"described {coverage['node_count']} nodes across "
+                f"{coverage['catalog_kind_count']} operator kinds; graph contract "
+                f"{graph['graph_contract_id']} ({coverage['execution_status']})"
+            )
+            return 0
     except (
         BuildError,
         IRValidationError,
@@ -129,6 +148,7 @@ def main(argv: list[str] | None = None) -> int:
         InverseCheckError,
         CheckpointError,
         DeepSeekV4AdapterError,
+        DeepSeekV4GraphError,
         OSError,
     ) as exc:
         print(f"compiler error: {exc}", file=sys.stderr)

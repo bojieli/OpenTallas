@@ -1,0 +1,449 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_graph_contract_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "adaptations": {
+      "items": {
+        "$ref": "#/$defs/adaptation"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "coverage": {
+      "$ref": "#/$defs/coverage"
+    },
+    "graph_contract_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "graph_inputs": {
+      "$ref": "#/$defs/string_array"
+    },
+    "graph_outputs": {
+      "$ref": "#/$defs/string_array"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "nodes": {
+      "items": {
+        "$ref": "#/$defs/node"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "open_semantic_issues": {
+      "items": {
+        "$ref": "#/$defs/issue"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "operator_catalog": {
+      "items": {
+        "$ref": "#/$defs/operator"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "operator_counts": {
+      "items": {
+        "$ref": "#/$defs/operator_count"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_graph_contract.v1"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "system_scope": {
+      "$ref": "#/$defs/system_scope"
+    },
+    "tensor_assignment": {
+      "$ref": "#/$defs/tensor_assignment"
+    },
+    "tensor_contract_schema": {
+      "const": "opentallas.deepseek_v4_tensor_contract.v1"
+    }
+  },
+  "required": [
+    "adaptations",
+    "coverage",
+    "graph_contract_id",
+    "graph_inputs",
+    "graph_outputs",
+    "model_id",
+    "nodes",
+    "open_semantic_issues",
+    "operator_catalog",
+    "operator_counts",
+    "schema",
+    "source",
+    "system_scope",
+    "tensor_assignment",
+    "tensor_contract_schema"
+  ],
+  "title": "OpenTallas DeepSeek V4 Flash graph contract v1",
+  "type": "object",
+  "$defs": {
+    "adaptation": {
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "inference_config_n_mtp_layers": {
+          "const": 3
+        },
+        "root_config_num_nextn_predict_layers": {
+          "const": 1
+        }
+      },
+      "required": [
+        "decision",
+        "inference_config_n_mtp_layers",
+        "root_config_num_nextn_predict_layers"
+      ],
+      "type": "object"
+    },
+    "coverage": {
+      "additionalProperties": false,
+      "properties": {
+        "catalog_kind_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "consumed_tensor_role_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "execution_status": {
+          "const": "blocked_pending_reference_and_service_engine"
+        },
+        "missing_cost_class_count": {
+          "const": 0
+        },
+        "missing_lowering_count": {
+          "const": 0
+        },
+        "missing_reference_owner_count": {
+          "const": 0
+        },
+        "node_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "pending_reference_kind_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "pending_rtl_kind_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "pending_service_engine_kind_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "unknown_kind_count": {
+          "const": 0
+        },
+        "unmapped_tensor_role_count": {
+          "const": 0
+        }
+      },
+      "required": [
+        "catalog_kind_count",
+        "consumed_tensor_role_count",
+        "execution_status",
+        "missing_cost_class_count",
+        "missing_lowering_count",
+        "missing_reference_owner_count",
+        "node_count",
+        "pending_reference_kind_count",
+        "pending_rtl_kind_count",
+        "pending_service_engine_kind_count",
+        "unknown_kind_count",
+        "unmapped_tensor_role_count"
+      ],
+      "type": "object"
+    },
+    "issue": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^DSV4-SEM-[0-9]{3}$",
+          "type": "string"
+        },
+        "issue": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "required_resolution": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "severity": {
+          "const": "blocking"
+        },
+        "source_anchor": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "issue",
+        "required_resolution",
+        "severity",
+        "source_anchor"
+      ],
+      "type": "object"
+    },
+    "node": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "type": "object"
+        },
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "inputs": {
+          "$ref": "#/$defs/string_array"
+        },
+        "kind": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "outputs": {
+          "$ref": "#/$defs/string_array"
+        },
+        "phases": {
+          "items": {
+            "enum": [
+              "decode",
+              "prefill"
+            ]
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "state_reads": {
+          "$ref": "#/$defs/string_array"
+        },
+        "state_writes": {
+          "$ref": "#/$defs/string_array"
+        },
+        "tensor_roles": {
+          "$ref": "#/$defs/string_array"
+        }
+      },
+      "required": [
+        "attributes",
+        "id",
+        "inputs",
+        "kind",
+        "outputs",
+        "phases",
+        "state_reads",
+        "state_writes",
+        "tensor_roles"
+      ],
+      "type": "object"
+    },
+    "operator": {
+      "additionalProperties": false,
+      "properties": {
+        "cost_class": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "kind": {
+          "pattern": "^[A-Z][A-Z0-9_]*$",
+          "type": "string"
+        },
+        "lowering_class": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "reference_owner": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "reference_status": {
+          "const": "pending_implementation"
+        },
+        "rtl_status": {
+          "const": "pending_implementation"
+        },
+        "semantic_spec_status": {
+          "const": "mapped_to_pinned_official_source"
+        },
+        "semantic_summary": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "service_engine_status": {
+          "const": "pending_implementation"
+        },
+        "source_anchor": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "state_class": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "cost_class",
+        "kind",
+        "lowering_class",
+        "reference_owner",
+        "reference_status",
+        "rtl_status",
+        "semantic_spec_status",
+        "semantic_summary",
+        "service_engine_status",
+        "source_anchor",
+        "state_class"
+      ],
+      "type": "object"
+    },
+    "operator_count": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "node_count": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "kind",
+        "node_count"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "convert_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "encoding_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "generate_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "inference_config_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "kernel_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "model_card_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "model_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "repository": {
+          "const": "deepseek-ai/DeepSeek-V4-Flash-0731"
+        },
+        "revision": {
+          "const": "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+        },
+        "tokenizer_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      },
+      "required": [
+        "convert_sha256",
+        "encoding_sha256",
+        "generate_sha256",
+        "inference_config_sha256",
+        "kernel_sha256",
+        "model_card_sha256",
+        "model_sha256",
+        "repository",
+        "revision",
+        "tokenizer_sha256"
+      ],
+      "type": "object"
+    },
+    "string_array": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "system_scope": {
+      "additionalProperties": false,
+      "properties": {
+        "covered": {
+          "$ref": "#/$defs/string_array"
+        },
+        "request_boundary": {
+          "const": "token_ids_and_start_position"
+        },
+        "unresolved": {
+          "$ref": "#/$defs/string_array"
+        }
+      },
+      "required": [
+        "covered",
+        "request_boundary",
+        "unresolved"
+      ],
+      "type": "object"
+    },
+    "tensor_assignment": {
+      "additionalProperties": false,
+      "properties": {
+        "assigned_tensor_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "assignment_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "maximum_consumers_per_tensor": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "multi_consumer_tensor_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "unassigned_tensor_count": {
+          "const": 0
+        }
+      },
+      "required": [
+        "assigned_tensor_count",
+        "assignment_sha256",
+        "maximum_consumers_per_tensor",
+        "multi_consumer_tensor_count",
+        "unassigned_tensor_count"
+      ],
+      "type": "object"
+    }
+  }
+}

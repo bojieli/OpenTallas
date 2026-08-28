@@ -107,6 +107,22 @@ This second command accepts neither the fixture nor a merely shape-compatible
 model: the lock must carry the exact official source hashes, tensor count,
 payload bytes, and all expected tensor records.
 
+Generate the source-mapped forward-graph and implementation ledger with:
+
+```bash
+python3 -m compiler.cli describe-deepseek-v4-graph \
+  --output /tmp/deepseek-v4-flash.graph-contract.json
+```
+
+This expands 1,924 ordered prefill/decode nodes across the 43 main and three
+DSpark stages, assigns every checkpoint tensor to a layer-correct consumer, and
+gives all 43 operator kinds an explicit source anchor, lowering, state class,
+cost class, and implementation owner. All 43 reference/service-engine/RTL
+statuses remain pending. The contract also records that the pinned local
+`generate.py` does not invoke DSpark and that speculative target verification
+and acceptance live outside the pinned local reference; this is a blocking
+system-semantic gap, not silently treated as implemented behavior.
+
 The service engine verifies every manifest hash before execution and never reads
 the known-answer file. The independent reference evaluator consumes the source
 IR and request, not compiler artifacts. Tests compare both paths with the
