@@ -56,7 +56,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "08132cbb76d2470d593dd1e7af33565799d7408355ecf89fe6aaa05e853522da"
+        "be11b07f197d2e965ab83ba7e6fd34aeba2de27379037b6c1b9f70f70223423a"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -66,7 +66,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 29,
+        "pending_reference_kind_count": 28,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -113,6 +113,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert sum(counts.values()) == 1924
     assert counts["HASH_ROUTE"] == 3
     assert counts["BIASED_TOPK_ROUTE"] == 43
+    assert counts["FP4_QDQ"] == 42
     assert counts["MXFP4_SWIGLU"] == 46
     assert counts["INDEX_TOPK"] == 21
     assert counts["COMPRESSED_DENSE_INDEX"] == 20
@@ -132,6 +133,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "EXPERT_DISPATCH": (
             "runtime.reference.dispatch.dispatch_routed_experts_bf16"
         ),
+        "FP4_QDQ": "runtime.reference.quantization.fp4_qdq_bf16",
         "FP8_LINEAR": "runtime.reference.matrix.dense_fp8_linear_bf16",
         "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
         "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
@@ -188,6 +190,9 @@ def test_layer_classes_and_mutable_state_sites_are_explicit(
     }
     assert by_id["main.layer41.target_hidden"]["attributes"]["hc_mult"] == 4
     assert by_id["main.layer42.target_hidden"]["attributes"]["hc_mult"] == 4
+    fp4_nodes = [node for node in graph_contract["nodes"] if node["kind"] == "FP4_QDQ"]
+    assert len(fp4_nodes) == 42
+    assert all(node["attributes"] == {"block_size": 32} for node in fp4_nodes)
     assert by_id["dspark.layer00.prefill_kv"]["phases"] == ["prefill"]
     assert by_id["dspark.layer00.hc_attn_pre"]["phases"] == ["decode"]
     assert by_id["dspark.layer00.window_kv_write"]["inputs"][0] == (
@@ -222,7 +227,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "fourteen complete matrix/vector/structural/index/lookup/selection/routing" in (
+    assert "fifteen complete matrix/vector/structural/index/lookup/selection/routing/conversion" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -242,14 +247,15 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, target-hidden capture" in " ".join(
-        graph_contract["system_scope"]["covered"]
+    assert "unit-qualified dense FP8 linear, indexer FP4 QDQ, target-hidden capture" in (
+        " ".join(graph_contract["system_scope"]["covered"])
     )
     assert "biased-router top-k" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
     assert "expert-dispatch" in " ".join(graph_contract["system_scope"]["covered"])
     assert "HC post-mixing" in " ".join(graph_contract["system_scope"]["covered"])
+    assert "indexer FP4 QDQ" in " ".join(graph_contract["system_scope"]["covered"])
     assert "DSpark index/noise-embedding" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
@@ -299,7 +305,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "08132cbb76d2470d593dd1e7af33565799d7408355ecf89fe6aaa05e853522da"
+        "be11b07f197d2e965ab83ba7e6fd34aeba2de27379037b6c1b9f70f70223423a"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

@@ -61,6 +61,12 @@ Sign negates a nonzero magnitude. Encoding `1000` is negative zero on input and
 is canonicalized to positive zero at the first arithmetic boundary. E2M1 has no
 infinity or NaN.
 
+Conversion from an exact finite value to E2M1 uses round-to-nearest,
+ties-to-even. At every midpoint, including 0.25 between zero and 0.5, the
+endpoint whose retained encoding/significand least-significant bit is zero is
+selected. Magnitude above six saturates to signed six and sets finite
+saturation. Any result that rounds to zero is canonical positive zero.
+
 An E8M0 byte `e` in 0..254 represents the exact scale `2^(e-127)`. `0xff` is the
 reserved NaN scale and poisons the transaction. E8M0 has no zero; an all-zero data
 block uses the canonical scale byte `0x7f` (1.0).
@@ -130,6 +136,48 @@ For finite block values `x_i`, let `a = max(abs(x_i))` and `M = 448`:
 The saturation flag is counted and returned in tile status. A manifest may promote
 any saturation to poison for numerical qualification. No stochastic rounding,
 history-dependent scaling, or data-dependent reduction reordering is permitted.
+
+### NUM-3.4 Indexer FP4 in-place QDQ
+
+`FP4_QDQ` is the distinct activation-simulation path used after the normalized
+Hadamard rotations of the index query and compressed index KV. It consumes a
+finite-BF16 tensor, makes the last dimension contiguous, flattens all leading
+dimensions in row-major order, and partitions each row into independent blocks
+of exactly 32 values. A last dimension not divisible by 32 is illegal.
+
+For one block, values first widen exactly from BF16 to binary32 and signed zero
+canonicalizes positive. Let `a` be their maximum absolute value and define:
+
+```text
+a_floor = max(a, 6 * 2^-126)
+r       = binary32_RNE(a_floor * binary32_RNE(1/6))
+e       = ceil(log2(r))
+s       = 2^e
+```
+
+The source kernel implements `e` by inspecting the binary32 exponent and adding
+one iff the mantissa is nonzero, then implements `s` by constructing the
+binary32 exponent bits. For the complete finite-BF16 domain, the resulting
+scale exponent is in `[-126, 126]`, so its diagnostic/stored E8M0 code is
+`e + 127` in `0x01..0xfd`. In particular, an all-zero block selects `2^-126`
+(`0x01`), not the ordinary activation-microscaling all-zero scale `0x7f`.
+
+For each element, the operation is ordered as follows:
+
+1. divide the widened BF16 value by `s` with binary32 RNE;
+2. clamp the binary32 quotient to `[-6, 6]`;
+3. convert to E2M1 under the NUM-2.1 RNE rule;
+4. widen E2M1 exactly to binary32 and multiply by `s` with binary32 RNE; and
+5. convert the result to BF16 under NUM-4.2.
+
+The architectural output is the BF16 tensor with its original shape. E2M1 and
+E8M0 codes are exposed by the independent reference for checking even though
+the pinned `inplace=True` wrapper returns only the overwritten BF16 tensor.
+Nonfinite BF16 input, an unrepresentable scale, or intermediate binary32
+overflow poisons. The clamp makes legal E2M1 finite saturation impossible.
+This fail-closed overflow behavior and positive-zero canonicalization are
+governed target rules; they do not silently commit incidental infinity or
+negative-zero behavior from the development CUDA kernel.
 
 ## NUM-4 Arithmetic and rounding
 

@@ -24,6 +24,7 @@ from runtime.reference.formats import (
     decode_mxfp4_block,
     decode_packed_e2m1,
     encode_binary32_rne,
+    encode_e2m1_rne,
     encode_e4m3fn_rne,
     fp8_fp8_block_dot,
     mxfp4_fp8_block_dot,
@@ -54,6 +55,39 @@ def test_e2m1_exhaustive_table_and_canonical_zero() -> None:
     low, high = decode_packed_e2m1(0x91)
     assert low.value == Fraction(1, 2)
     assert high.value == Fraction(-1, 2)
+
+
+def test_e2m1_rne_round_trip_ties_and_saturation() -> None:
+    for code in range(16):
+        decoded = decode_e2m1(code)
+        assert decoded.value is not None
+        canonical = 0 if decoded.zero else code
+        result = encode_e2m1_rne(decoded.value)
+        assert result.code == canonical
+        assert not result.saturated
+
+    # These are every positive midpoint. The retained significand/code LSB
+    # chooses the even endpoint, matching native CUDA E2M1 conversion.
+    midpoints = (
+        (Fraction(1, 4), 0x0),
+        (Fraction(3, 4), 0x2),
+        (Fraction(5, 4), 0x2),
+        (Fraction(7, 4), 0x4),
+        (Fraction(5, 2), 0x4),
+        (Fraction(7, 2), 0x6),
+        (Fraction(5), 0x6),
+    )
+    for value, expected in midpoints:
+        assert encode_e2m1_rne(value).code == expected
+        negative = encode_e2m1_rne(-value)
+        assert negative.code == (0 if expected == 0 else expected | 0x8)
+
+    endpoint = encode_e2m1_rne(6)
+    assert endpoint.code == 0x7 and not endpoint.saturated
+    positive_overflow = encode_e2m1_rne(7)
+    assert positive_overflow.code == 0x7 and positive_overflow.saturated
+    negative_overflow = encode_e2m1_rne(-7)
+    assert negative_overflow.code == 0xF and negative_overflow.saturated
 
 
 def test_e8m0_all_encodings_are_exact_and_ff_is_reserved() -> None:

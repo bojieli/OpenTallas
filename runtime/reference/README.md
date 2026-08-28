@@ -8,7 +8,8 @@ expected result.
 `formats.py` is the first DeepSeek V4 target-precision slice. It provides exact
 rational scalar semantics for:
 
-- E2M1 values and the official low-nibble-first packed layout;
+- E2M1 values, RNE conversion, saturation, and the official low-nibble-first
+  packed layout;
 - E8M0 scales, including the reserved `0xff` poison value;
 - FP8 E4M3FN classification and round-to-nearest-ties-to-even conversion;
 - BF16 classification and binary32-to-BF16 conversion;
@@ -25,6 +26,9 @@ matched every E4M3FN, BF16, and E8M0 decode against the installed PyTorch dtype
 implementation with zero differences. Binary32 tests include deterministic
 round trips over 20,000 random finite encodings and cases where ordered
 per-product accumulation intentionally differs from one final exact reduction.
+A separate SM120 development audit compared E2M1 conversion for all 65,280
+finite BF16 encodings with CUDA's native `cvt.rn.satfinite.e2m1x2.f32`. After
+the governed positive-zero canonicalization, there were zero differences.
 
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
 the qualified dense FP8 linear path, vector operators beyond target-hidden
@@ -41,6 +45,19 @@ saturation counts. Tests cross the output scale-tile boundary and compare
 multi-block randomized matrices with an independently assembled composition.
 This does not yet provide a checkpoint-derived known answer or service-engine
 opcode.
+
+`quantization.py` implements the complete indexer `FP4_QDQ` boundary. It
+flattens leading dimensions into source-order rows, selects an independent
+power-of-two E8M0 scale for every 32 BF16 values using the pinned binary32
+reciprocal/bit-ceiling sequence, applies E2M1 RNE, and reconstructs BF16 through
+the declared binary32 operations. It exposes internal scale and E2M1 codes for
+checking even though the official in-place wrapper returns only BF16. Tests
+cover every quantization midpoint, the unusual all-zero `0x01` scale, lower and
+upper scale transitions, independent blocks, malformed shapes, nonfinite
+input, and intermediate overflow. A development differential matched 2,047
+successful random/boundary rows on native SM120 in scale, E2M1 code, and BF16
+output; the single extreme-overflow row was rejected by the target fail-closed
+rule.
 
 `indexing.py` independently implements the three source-constructed integer
 index tensors used by `WINDOW_INDEX`, `COMPRESSED_DENSE_INDEX`, and

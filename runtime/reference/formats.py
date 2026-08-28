@@ -48,6 +48,14 @@ class DecodedValue:
 
 
 @dataclass(frozen=True)
+class QuantizedE2M1:
+    """E2M1 result plus the sticky finite-overflow indication."""
+
+    code: int
+    saturated: bool
+
+
+@dataclass(frozen=True)
 class QuantizedE4M3FN:
     """E4M3FN result plus the sticky finite-overflow indication."""
 
@@ -75,6 +83,17 @@ class QuantizedActivationBlock:
 ROUTED_REDUCTION_BLOCK = 32
 DENSE_REDUCTION_BLOCK = 128
 
+_E2M1_MAGNITUDES = (
+    Fraction(0),
+    Fraction(1, 2),
+    Fraction(1),
+    Fraction(3, 2),
+    Fraction(2),
+    Fraction(3),
+    Fraction(4),
+    Fraction(6),
+)
+
 
 def _unsigned(value: int, bits: int, label: str) -> int:
     if isinstance(value, bool) or not isinstance(value, int):
@@ -100,17 +119,7 @@ def decode_e2m1(code: int) -> DecodedValue:
     """Decode one E2M1 nibble, canonicalizing negative zero."""
 
     code = _unsigned(code, 4, "E2M1 code")
-    magnitudes = (
-        Fraction(0),
-        Fraction(1, 2),
-        Fraction(1),
-        Fraction(3, 2),
-        Fraction(2),
-        Fraction(3),
-        Fraction(4),
-        Fraction(6),
-    )
-    magnitude = magnitudes[code & 0x7]
+    magnitude = _E2M1_MAGNITUDES[code & 0x7]
     value = -magnitude if code & 0x8 and magnitude else magnitude
     return _finite(value)
 
@@ -412,6 +421,44 @@ def fp8_fp8_block_dot(
         activations, activation_scale_code, "dense activation block"
     )
     return binary32_ordered_dot(activation_values, weight_values)
+
+
+def encode_e2m1_rne(value: Fraction | int) -> QuantizedE2M1:
+    """Round an exact finite value to E2M1, ties to even, saturating overflow.
+
+    E2M1 has no exceptional encodings. Values outside its finite range saturate
+    to signed six. Output zero is canonical positive zero.
+    """
+
+    exact = _fraction(value, "E2M1 input")
+    if exact == 0:
+        return QuantizedE2M1(0, False)
+    sign = 0x8 if exact < 0 else 0
+    magnitude = abs(exact)
+    maximum = _E2M1_MAGNITUDES[-1]
+    if magnitude > maximum:
+        return QuantizedE2M1(sign | 0x7, True)
+
+    index = bisect_left(_E2M1_MAGNITUDES, magnitude)
+    if index < len(_E2M1_MAGNITUDES) and _E2M1_MAGNITUDES[index] == magnitude:
+        return QuantizedE2M1(sign | index, False)
+    if index == 0 or index >= len(_E2M1_MAGNITUDES):  # pragma: no cover - bounded
+        raise RuntimeError("E2M1 rounding search escaped its finite table")
+    lower_code = index - 1
+    upper_code = index
+    lower_distance = magnitude - _E2M1_MAGNITUDES[lower_code]
+    upper_distance = _E2M1_MAGNITUDES[upper_code] - magnitude
+    if lower_distance < upper_distance:
+        selected = lower_code
+    elif upper_distance < lower_distance:
+        selected = upper_code
+    else:
+        # The encoding LSB is the retained significand parity for every
+        # adjacent E2M1 pair, including the zero/subnormal boundary.
+        selected = lower_code if lower_code & 1 == 0 else upper_code
+    if selected == 0:
+        sign = 0
+    return QuantizedE2M1(sign | selected, False)
 
 
 def encode_e4m3fn_rne(value: Fraction | int) -> QuantizedE4M3FN:
