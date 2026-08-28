@@ -126,9 +126,11 @@ system-semantic gap, not silently treated as implemented behavior.
 The independent scalar numeric-reference foundation is under
 `runtime/reference/formats.py`. It exhaustively defines E2M1, E8M0, E4M3FN, and
 BF16 classification plus target rounding, packing, MXFP4 decode, and activation
-microscaling boundaries without importing compiler or RTL algorithms. This is a
-target-precision reference skeleton, not operator-complete graph execution:
-FP32 accumulation, vector/attention/routing semantics, real checkpoint known
+microscaling boundaries without importing compiler or RTL algorithms. It also
+implements exact ordered binary32 product-add accumulation and the official
+32-value routed MXFP4×FP8 and 128-value dense FP8×FP8 block-dot primitives. This
+is a target-precision reference skeleton, not operator-complete graph execution:
+matrix/tile lowering, vector/attention/routing semantics, real checkpoint known
 answers, layer differentials, and numerical quality remain open.
 
 The service engine verifies every manifest hash before execution and never reads

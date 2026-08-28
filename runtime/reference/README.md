@@ -12,16 +12,22 @@ rational scalar semantics for:
 - E8M0 scales, including the reserved `0xff` poison value;
 - FP8 E4M3FN classification and round-to-nearest-ties-to-even conversion;
 - BF16 classification and binary32-to-BF16 conversion;
+- exact IEEE binary32 decode/rounding and ordered fused-product accumulation;
 - packed MXFP4 block decoding; and
-- NUM-3.3 BF16 activation-block microscaling.
+- NUM-3.3 BF16 activation-block microscaling;
+- 32-value MXFP4×FP8 routed block dots; and
+- 128-value FP8×FP8 dense block dots.
 
 The tests exhaust every E2M1, E8M0, E4M3FN, and BF16 code, exercise rounding,
 saturation, poison, scale-selection, and packing boundaries, and compare every
 E4M3FN encoding with the public RTL decoder. A separate development audit also
 matched every E4M3FN, BF16, and E8M0 decode against the installed PyTorch dtype
-implementation with zero differences.
+implementation with zero differences. Binary32 tests include deterministic
+round trips over 20,000 random finite encodings and cases where ordered
+per-product accumulation intentionally differs from one final exact reduction.
 
-This closes neither `M1` nor numerical qualification. FP32 accumulation order,
-all vector/attention/routing operators, real-checkpoint known answers, layer
-differentials, end-to-end logits, and task quality remain open. The earlier
-exact-integer evaluator remains fixture-only evidence.
+This closes neither `M1` nor numerical qualification. Multi-block matrix
+lowering, scale-tile orientation, BF16 output boundaries, all vector/attention/
+routing operators, real-checkpoint known answers, layer differentials,
+end-to-end logits, and task quality remain open. The earlier exact-integer
+evaluator remains fixture-only evidence.

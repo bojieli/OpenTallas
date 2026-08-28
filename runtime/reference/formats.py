@@ -72,6 +72,10 @@ class QuantizedActivationBlock:
     saturated: bool
 
 
+ROUTED_REDUCTION_BLOCK = 32
+DENSE_REDUCTION_BLOCK = 128
+
+
 def _unsigned(value: int, bits: int, label: str) -> int:
     if isinstance(value, bool) or not isinstance(value, int):
         raise NumericReferenceError(f"{label} must be an unsigned {bits}-bit integer")
@@ -167,6 +171,25 @@ def decode_bf16(code: int) -> DecodedValue:
     return _finite(value)
 
 
+def decode_binary32(code: int) -> DecodedValue:
+    """Decode one IEEE binary32 value exactly, canonicalizing signed zero."""
+
+    code = _unsigned(code, 32, "binary32 code")
+    negative = bool(code & 0x80000000)
+    exponent = (code >> 23) & 0xFF
+    fraction = code & 0x7FFFFF
+    if exponent == 0xFF:
+        if fraction == 0:
+            return DecodedValue("infinity", None, negative)
+        return DecodedValue("nan", None, negative)
+    if exponent == 0:
+        magnitude = Fraction(fraction) * _pow2(-149)
+    else:
+        magnitude = Fraction((1 << 23) + fraction) * _pow2(exponent - 150)
+    value = -magnitude if negative and magnitude else magnitude
+    return _finite(value)
+
+
 _E4M3FN_POSITIVE = tuple(
     decode_e4m3fn(code).value for code in range(0x7F)
 )
@@ -178,6 +201,162 @@ def _fraction(value: Fraction | int, label: str) -> Fraction:
     if isinstance(value, bool) or not isinstance(value, (int, Fraction)):
         raise NumericReferenceError(f"{label} must be an exact integer or Fraction")
     return Fraction(value)
+
+
+def _round_ties_to_even_integer(value: Fraction) -> int:
+    if value < 0:
+        raise NumericReferenceError("unsigned rounding input must be nonnegative")
+    quotient, remainder = divmod(value.numerator, value.denominator)
+    doubled = 2 * remainder
+    if doubled > value.denominator or (
+        doubled == value.denominator and quotient & 1
+    ):
+        quotient += 1
+    return quotient
+
+
+def _floor_log2(value: Fraction) -> int:
+    if value <= 0:
+        raise NumericReferenceError("log2 input must be positive")
+    exponent = value.numerator.bit_length() - value.denominator.bit_length()
+    if value < _pow2(exponent):
+        exponent -= 1
+    elif value >= _pow2(exponent + 1):  # pragma: no cover - defensive bound
+        exponent += 1
+    return exponent
+
+
+def encode_binary32_rne(value: Fraction | int) -> int:
+    """Round one exact finite value to IEEE binary32, ties to even.
+
+    Binary32 infinity or NaN is an architectural numeric exception rather than
+    a saturating result, so a finite overflow raises ``NumericReferenceError``.
+    Output zero is canonicalized to positive zero.
+    """
+
+    exact = _fraction(value, "binary32 input")
+    if exact == 0:
+        return 0
+    sign = 0x80000000 if exact < 0 else 0
+    magnitude = abs(exact)
+    minimum_normal = _pow2(-126)
+    if magnitude < minimum_normal:
+        significand = _round_ties_to_even_integer(magnitude / _pow2(-149))
+        if significand == 0:
+            return 0
+        if significand < 1 << 23:
+            return sign | significand
+        # Rounding the largest subnormal upward produces the smallest normal.
+        return sign | (1 << 23)
+
+    exponent = _floor_log2(magnitude)
+    significand = _round_ties_to_even_integer(
+        magnitude / _pow2(exponent - 23)
+    )
+    if significand == 1 << 24:
+        significand = 1 << 23
+        exponent += 1
+    if exponent > 127:
+        raise NumericReferenceError("finite binary32 accumulation overflow")
+    if exponent < -126 or not (1 << 23) <= significand < (1 << 24):
+        raise RuntimeError("binary32 normal encoding invariant failed")
+    return sign | ((exponent + 127) << 23) | (significand - (1 << 23))
+
+
+def binary32_product_add(
+    accumulator_code: int,
+    left: Fraction | int,
+    right: Fraction | int,
+) -> int:
+    """Perform one NUM-4.1 exact-product, single-rounded binary32 add."""
+
+    accumulator = decode_binary32(accumulator_code)
+    if not accumulator.finite or accumulator.value is None:
+        raise NumericReferenceError("binary32 accumulator is NaN or infinity")
+    product = _fraction(left, "product left operand") * _fraction(
+        right, "product right operand"
+    )
+    return encode_binary32_rne(accumulator.value + product)
+
+
+def binary32_ordered_dot(
+    left: Iterable[Fraction | int],
+    right: Iterable[Fraction | int],
+) -> int:
+    """Accumulate a dot product in increasing logical reduction-index order."""
+
+    left_values = tuple(left)
+    right_values = tuple(right)
+    if not left_values or len(left_values) != len(right_values):
+        raise NumericReferenceError("dot operands must have the same nonzero length")
+    accumulator = 0
+    for lhs, rhs in zip(left_values, right_values, strict=True):
+        accumulator = binary32_product_add(accumulator, lhs, rhs)
+    return accumulator
+
+
+def _finite_scale(code: int, label: str) -> Fraction:
+    scale = decode_e8m0(code)
+    if not scale.finite or scale.value is None:
+        raise NumericReferenceError(f"reserved E8M0 scale poisons {label}")
+    return scale.value
+
+
+def _scaled_e4m3fn_values(
+    codes: Iterable[int], scale_code: int, label: str
+) -> tuple[Fraction, ...]:
+    scale = _finite_scale(scale_code, label)
+    result: list[Fraction] = []
+    for index, code in enumerate(codes):
+        decoded = decode_e4m3fn(code)
+        if not decoded.finite or decoded.value is None:
+            raise NumericReferenceError(f"{label} element {index} is E4M3FN NaN")
+        result.append(decoded.value * scale)
+    return tuple(result)
+
+
+def mxfp4_fp8_block_dot(
+    packed_weight_bytes: Iterable[int],
+    weight_scale_code: int,
+    activation_codes: Iterable[int],
+    activation_scale_code: int,
+) -> int:
+    """Execute one official 32-value routed reduction block into binary32."""
+
+    packed = tuple(packed_weight_bytes)
+    activations = tuple(activation_codes)
+    if len(packed) * 2 != ROUTED_REDUCTION_BLOCK:
+        raise NumericReferenceError("MXFP4 routed block must contain 32 weights")
+    if len(activations) != ROUTED_REDUCTION_BLOCK:
+        raise NumericReferenceError("routed activation block must contain 32 values")
+    weights = decode_mxfp4_block(packed, weight_scale_code)
+    activation_values = _scaled_e4m3fn_values(
+        activations, activation_scale_code, "routed activation block"
+    )
+    return binary32_ordered_dot(activation_values, weights)
+
+
+def fp8_fp8_block_dot(
+    weight_codes: Iterable[int],
+    weight_scale_code: int,
+    activation_codes: Iterable[int],
+    activation_scale_code: int,
+) -> int:
+    """Execute one official 128-value dense reduction block into binary32."""
+
+    weights = tuple(weight_codes)
+    activations = tuple(activation_codes)
+    if len(weights) != DENSE_REDUCTION_BLOCK:
+        raise NumericReferenceError("dense FP8 block must contain 128 weights")
+    if len(activations) != DENSE_REDUCTION_BLOCK:
+        raise NumericReferenceError("dense activation block must contain 128 values")
+    weight_values = _scaled_e4m3fn_values(
+        weights, weight_scale_code, "dense weight block"
+    )
+    activation_values = _scaled_e4m3fn_values(
+        activations, activation_scale_code, "dense activation block"
+    )
+    return binary32_ordered_dot(activation_values, weight_values)
 
 
 def encode_e4m3fn_rne(value: Fraction | int) -> QuantizedE4M3FN:

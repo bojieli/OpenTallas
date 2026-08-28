@@ -2,20 +2,27 @@ from __future__ import annotations
 
 from fractions import Fraction
 from pathlib import Path
+import random
 import subprocess
 
 import pytest
 
 from runtime.reference.formats import (
     NumericReferenceError,
+    binary32_ordered_dot,
+    binary32_product_add,
     binary32_bits_to_bf16_rne,
     decode_bf16,
+    decode_binary32,
     decode_e2m1,
     decode_e4m3fn,
     decode_e8m0,
     decode_mxfp4_block,
     decode_packed_e2m1,
+    encode_binary32_rne,
     encode_e4m3fn_rne,
+    fp8_fp8_block_dot,
+    mxfp4_fp8_block_dot,
     quantize_bf16_activation_block,
 )
 
@@ -201,6 +208,99 @@ def test_binary32_to_bf16_uses_rne_and_saturates_finite_overflow() -> None:
         binary32_bits_to_bf16_rne(0x7F800000)
     with pytest.raises(NumericReferenceError, match="NaN"):
         binary32_bits_to_bf16_rne(0x7FC00000)
+
+
+def test_binary32_exact_decode_encode_round_trip_and_classification() -> None:
+    cases = (
+        0x00000000,
+        0x80000000,
+        0x00000001,
+        0x007FFFFF,
+        0x00800000,
+        0x3F800000,
+        0x3F800001,
+        0x7F7FFFFF,
+        0x80800000,
+        0xFF7FFFFF,
+    )
+    for code in cases:
+        decoded = decode_binary32(code)
+        assert decoded.finite and decoded.value is not None
+        canonical = 0 if decoded.zero else code
+        assert encode_binary32_rne(decoded.value) == canonical
+    assert decode_binary32(0x7F800000).infinity
+    assert decode_binary32(0xFF800000).infinity
+    assert decode_binary32(0x7FC00000).nan
+
+    generator = random.Random(0x4F_54_46_33_32)
+    checked = 0
+    while checked < 20_000:
+        code = generator.getrandbits(32)
+        decoded = decode_binary32(code)
+        if not decoded.finite or decoded.value is None:
+            continue
+        canonical = 0 if decoded.zero else code
+        assert encode_binary32_rne(decoded.value) == canonical
+        checked += 1
+
+
+def test_binary32_rne_covers_subnormal_normal_ties_and_overflow() -> None:
+    minimum_subnormal = Fraction(1, 1 << 149)
+    assert encode_binary32_rne(minimum_subnormal / 2) == 0
+    assert encode_binary32_rne(3 * minimum_subnormal / 2) == 0x00000002
+    halfway_above_one = Fraction(1) + Fraction(1, 1 << 24)
+    halfway_above_next = Fraction(1) + Fraction(3, 1 << 24)
+    assert encode_binary32_rne(halfway_above_one) == 0x3F800000
+    assert encode_binary32_rne(halfway_above_next) == 0x3F800002
+    maximum = decode_binary32(0x7F7FFFFF).value
+    assert maximum is not None
+    with pytest.raises(NumericReferenceError, match="overflow"):
+        encode_binary32_rne(maximum * 2)
+
+
+def test_binary32_product_add_rounds_after_each_logical_add() -> None:
+    one = Fraction(1)
+    half_ulp = Fraction(1, 1 << 24)
+    assert binary32_product_add(0x3F800000, half_ulp, one) == 0x3F800000
+    assert binary32_product_add(0x3F800001, half_ulp, one) == 0x3F800002
+    # Ordered accumulation is intentionally not an exact dot followed by one
+    # final rounding: +2^-24 is lost at 1.0 before the later -1.0 arrives.
+    result = binary32_ordered_dot(
+        (one, half_ulp, -one),
+        (one, one, one),
+    )
+    assert result == 0
+    assert decode_binary32(result).value == 0
+
+
+def test_official_routed_mxfp4_fp8_block_dot() -> None:
+    # 0x22 expands to two +1 E2M1 values; 0x3f is FP8 +1.875.
+    packed_weights = [0x22] * 16
+    activations = [0x3F] * 32
+    result = mxfp4_fp8_block_dot(
+        packed_weights,
+        0x7F,
+        activations,
+        0x7F,
+    )
+    assert decode_binary32(result).value == 60
+
+    with pytest.raises(NumericReferenceError, match="32 weights"):
+        mxfp4_fp8_block_dot([0x22], 0x7F, activations, 0x7F)
+    with pytest.raises(NumericReferenceError, match="E4M3FN NaN"):
+        mxfp4_fp8_block_dot(packed_weights, 0x7F, [0x7F] * 32, 0x7F)
+
+
+def test_official_dense_fp8_fp8_block_dot() -> None:
+    # Scale weights by 2 and activations by 1/2. Each logical product remains 1.
+    ones = [0x38] * 128
+    result = fp8_fp8_block_dot(ones, 0x80, ones, 0x7E)
+    assert decode_binary32(result).value == 128
+
+    with pytest.raises(NumericReferenceError, match="128 weights"):
+        fp8_fp8_block_dot(ones[:-1], 0x7F, ones, 0x7F)
+    with pytest.raises(NumericReferenceError, match="reserved E8M0"):
+        fp8_fp8_block_dot(ones, 0xFF, ones, 0x7F)
 
 
 def test_mxfp4_packing_and_scale_follow_official_conversion_order() -> None:
