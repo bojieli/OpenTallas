@@ -11,6 +11,8 @@
           {"$ref": "#/$defs/lookup"},
           {"$ref": "#/$defs/matmul"},
           {"$ref": "#/$defs/rmsnorm"},
+          {"$ref": "#/$defs/add"},
+          {"$ref": "#/$defs/silu_mul"},
           {"$ref": "#/$defs/rope"},
           {"$ref": "#/$defs/kv_prepare"},
           {"$ref": "#/$defs/attention"},
@@ -28,6 +30,32 @@
   "title": "OpenTallas production-neutral Tensor Kernel IR v1",
   "type": "object",
   "$defs": {
+    "add": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": false,
+          "properties": {
+            "addition": {"const": "binary32_rne"},
+            "input_dtype": {"const": "bf16"},
+            "output_dtype": {"const": "bf16"},
+            "output_rounding": {"const": "rne"},
+            "zero_canonicalization": {"const": "positive"}
+          },
+          "required": ["addition", "input_dtype", "output_dtype", "output_rounding", "zero_canonicalization"],
+          "type": "object"
+        },
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"$ref": "#/$defs/two_identifiers"},
+        "kind": {"const": "ADD"},
+        "numeric_contract": {"const": "bf16_add_rne_v1"},
+        "outputs": {"$ref": "#/$defs/one_identifier"},
+        "shape": {"$ref": "#/$defs/vector_shape"},
+        "source_operation_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
+      "type": "object"
+    },
     "attention": {
       "additionalProperties": false,
       "properties": {
@@ -259,6 +287,34 @@
       "type": "object"
     },
     "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "silu_mul": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": false,
+          "properties": {
+            "activation_boundary": {"const": "bf16_rne_before_up_multiply"},
+            "exponential": {"const": "correctly_rounded_binary32_rne"},
+            "input_dtype": {"const": "bf16"},
+            "output_dtype": {"const": "bf16"},
+            "output_rounding": {"const": "rne"},
+            "sigmoid": {"const": "stable_sign_selected_binary32"},
+            "zero_canonicalization": {"const": "positive"}
+          },
+          "required": ["activation_boundary", "exponential", "input_dtype", "output_dtype", "output_rounding", "sigmoid", "zero_canonicalization"],
+          "type": "object"
+        },
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"$ref": "#/$defs/two_identifiers"},
+        "kind": {"const": "SILU_MUL"},
+        "numeric_contract": {"const": "qwen3_silu_mul_bf16_v1"},
+        "outputs": {"$ref": "#/$defs/one_identifier"},
+        "shape": {"$ref": "#/$defs/vector_shape"},
+        "source_operation_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
+      "type": "object"
+    },
     "state_commit": {
       "additionalProperties": false,
       "properties": {

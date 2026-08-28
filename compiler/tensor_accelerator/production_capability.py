@@ -18,7 +18,8 @@ from .common import (
 )
 from .production_command import (
     ABI_MAJOR,
-    ABI_MINOR,
+    ATTENTION_ABI_MINOR,
+    ELEMENTWISE_ABI_MINOR,
     LEGACY_ABI_MINOR,
     RMSNORM_ABI_MINOR,
     ROPE_ABI_MINOR,
@@ -425,6 +426,43 @@ def _parse_state_engine(raw: Any) -> ProductionStateEngine:
     )
 
 
+def _require_attention_state_bounds(
+    vector: ProductionVectorEngine,
+    state: ProductionStateEngine,
+    *,
+    profile: str,
+) -> None:
+    if (
+        vector.max_width < 4096
+        or vector.max_rows < 40
+        or vector.max_rope_positions is None
+        or vector.max_rope_positions < 8000
+        or vector.max_query_heads is None
+        or vector.max_query_heads < 32
+        or vector.max_key_value_heads is None
+        or vector.max_key_value_heads < 8
+        or vector.rope_head_dim != 128
+        or vector.max_attention_context_tokens is None
+        or vector.max_attention_context_tokens < 8000
+        or vector.attention_head_dim != 128
+        or vector.softmax_reduction_lanes != 8
+    ):
+        raise ProductionCapabilityError(
+            f"{profile} vector bounds do not cover Qwen 8K causal GQA"
+        )
+    if (
+        state.generation_bits != 64
+        or state.transaction_id_bits != 64
+        or state.position_bits < 20
+        or state.length_bits < 21
+        or state.max_inflight_transactions < 8
+        or state.max_resources_per_transaction < 64
+    ):
+        raise ProductionCapabilityError(
+            f"{profile} state bounds do not cover the cross-model union"
+        )
+
+
 def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
     """Parse a canonical development capability and reject performance claims."""
 
@@ -508,7 +546,7 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
         )
         expected_declared_modes = (
             KNOWN_EXECUTION_MODES
-            if command_minor == ABI_MINOR
+            if command_minor >= ATTENTION_ABI_MINOR
             else KNOWN_EXECUTION_MODES - {"transactional_state"}
         )
         if set(declared_modes) != expected_declared_modes:
@@ -595,10 +633,9 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
                     "ABI 2.2 vector engine must not claim attention bounds"
                 )
             state = None
-        else:
+        elif command_minor == ATTENTION_ABI_MINOR:
             if (
-                command_minor != ABI_MINOR
-                or qualified_modes
+                qualified_modes
                 != ("bf16_tensor", "transactional_state", "vector_fp32")
                 or numeric_contracts
                 != (
@@ -616,34 +653,36 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
                 )
             vector = _parse_vector_engine(vector_raw)
             state = _parse_state_engine(state_raw)
+            _require_attention_state_bounds(vector, state, profile="ABI 2.3")
+        else:
+            add_contract = "bf16_add_rne_v1"
+            silu_contract = "qwen3_silu_mul_bf16_v1"
             if (
-                vector.max_width < 4096
-                or vector.max_rows < 40
-                or vector.max_rope_positions is None
-                or vector.max_rope_positions < 8000
-                or vector.max_query_heads is None
-                or vector.max_query_heads < 32
-                or vector.max_key_value_heads is None
-                or vector.max_key_value_heads < 8
-                or vector.rope_head_dim != 128
-                or vector.max_attention_context_tokens is None
-                or vector.max_attention_context_tokens < 8000
-                or vector.attention_head_dim != 128
-                or vector.softmax_reduction_lanes != 8
-            ):
-                raise ProductionCapabilityError(
-                    "ABI 2.3 vector bounds do not cover Qwen 8K causal GQA"
+                command_minor != ELEMENTWISE_ABI_MINOR
+                or qualified_modes
+                != ("bf16_tensor", "transactional_state", "vector_fp32")
+                or numeric_contracts
+                != (
+                    add_contract,
+                    matrix_contract,
+                    state_contract,
+                    attention_contract,
+                    rmsnorm_contract,
+                    rope_contract,
+                    silu_contract,
                 )
-            if (
-                state.generation_bits != 64
-                or state.transaction_id_bits != 64
-                or state.position_bits < 20
-                or state.length_bits < 21
-                or state.max_inflight_transactions < 8
-                or state.max_resources_per_transaction < 64
+                or vector_raw is None
+                or state_raw is None
             ):
                 raise ProductionCapabilityError(
-                    "ABI 2.3 state bounds do not cover the cross-model union"
+                    "ABI 2.4 qualification must include bounded residual and SiLU"
+                )
+            vector = _parse_vector_engine(vector_raw)
+            state = _parse_state_engine(state_raw)
+            _require_attention_state_bounds(vector, state, profile="ABI 2.4")
+            if vector.max_width < 12288:
+                raise ProductionCapabilityError(
+                    "ABI 2.4 vector width does not cover the Qwen MLP"
                 )
         hbm = _parse_hbm(raw["hbm"])
         sram = _parse_sram(raw["sram"])
