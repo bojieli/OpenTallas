@@ -123,6 +123,32 @@ statuses remain pending. The contract also records that the pinned local
 and acceptance live outside the pinned local reference; this is a blocking
 system-semantic gap, not silently treated as implemented behavior.
 
+Generate the complete source-to-rank canonical tensor plan with:
+
+```bash
+python3 -m compiler.cli describe-deepseek-v4-canonical-plan \
+  --model-parallel 4 \
+  --output /tmp/deepseek-v4-flash.canonical-plan.json
+```
+
+The default native-MXFP4 plan covers all 72,317 official tensors and all
+166,878,536,440 checkpoint payload bytes. It reproduces the pinned official
+converter's name rules, model-parallel slicing, and 256-expert assignment. It
+retains routed-expert weights as low-nibble-first packed MXFP4 with E8M0 scales,
+and specifies exact E4M3FN/E8M0-to-BF16 conversion for every output-A matrix.
+The scalar conversion is defined for signed zero and BF16 subnormals and fails
+closed on E4M3FN NaN, reserved E8M0, or finite BF16 overflow. Independent
+checkers under `compiler/checking` compare every transformed byte through the
+separate target-precision numeric reference and prove native packed-byte
+identity.
+
+The emitted status is deliberately
+`complete_transform_plan_pending_full_payload_application`: this command plans
+the complete conversion but does not claim that the 166.9-GB checkpoint has
+been streamed, transformed, or emitted on this host. Full checkpoint
+application, per-output content hashes, and independent full-payload reports
+remain the M2 release gate.
+
 The host text boundary is independently implemented in
 `frontend/deepseek_v4_encoding.py`. It matches all four pinned official prompt
 fixtures byte-for-byte for valid inputs, including interleaved thinking, DSML

@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 
 from compiler.build import BuildError, build_deployment
+from compiler.canonical import CanonicalTransformError, build_official_canonical_plan
 from compiler.checking.inverse import InverseCheckError
 from compiler.frontend.checkpoint import (
     CheckpointError,
@@ -90,6 +91,12 @@ def parser() -> argparse.ArgumentParser:
     )
     generation_parser.add_argument("--request", required=True, type=Path)
     generation_parser.add_argument("--output", required=True, type=Path)
+    canonical_parser = subparsers.add_parser(
+        "describe-deepseek-v4-canonical-plan",
+        help="emit the complete V4 checkpoint transform and rank-assignment plan",
+    )
+    canonical_parser.add_argument("--model-parallel", default=4, type=int)
+    canonical_parser.add_argument("--output", required=True, type=Path)
     return result
 
 
@@ -186,6 +193,19 @@ def main(argv: list[str] | None = None) -> int:
                 f"({trace['control_scope']['execution_status']})"
             )
             return 0
+        if arguments.command == "describe-deepseek-v4-canonical-plan":
+            plan = build_official_canonical_plan(
+                model_parallel=arguments.model_parallel
+            )
+            _write_new_json(arguments.output, plan)
+            coverage = plan["coverage"]
+            print(
+                f"planned {coverage['input_tensor_count']} official tensors into "
+                f"{coverage['output_assignment_count']} assignments across "
+                f"{plan['profile']['model_parallel']} ranks; plan {plan['plan_id']} "
+                f"({plan['status']})"
+            )
+            return 0
     except (
         BuildError,
         IRValidationError,
@@ -197,6 +217,7 @@ def main(argv: list[str] | None = None) -> int:
         DeepSeekV4GraphError,
         DeepSeekV4GenerationError,
         DeepSeekV4TokenizerError,
+        CanonicalTransformError,
         OSError,
     ) as exc:
         print(f"compiler error: {exc}", file=sys.stderr)

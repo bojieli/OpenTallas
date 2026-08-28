@@ -1,0 +1,125 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_transform_check_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "check_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "checked_element_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "checked_scale_byte_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "checked_weight_byte_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "output_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "scale_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_transform_check.v1"
+    },
+    "status": {
+      "const": "full_payload_match"
+    },
+    "transform": {
+      "enum": [
+        "dequantize_fp8_e8m0_to_bf16_rne",
+        "native_mxfp4_byte_identity"
+      ]
+    },
+    "weight_sha256": {
+      "$ref": "#/$defs/sha256"
+    }
+  },
+  "required": [
+    "check_id",
+    "scale_sha256",
+    "schema",
+    "status",
+    "transform",
+    "weight_sha256"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "transform": {
+            "const": "dequantize_fp8_e8m0_to_bf16_rne"
+          }
+        },
+        "required": [
+          "transform"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "checked_scale_byte_count"
+              ]
+            },
+            {
+              "required": [
+                "checked_weight_byte_count"
+              ]
+            }
+          ]
+        },
+        "required": [
+          "checked_element_count",
+          "output_sha256"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "transform": {
+            "const": "native_mxfp4_byte_identity"
+          }
+        },
+        "required": [
+          "transform"
+        ]
+      },
+      "then": {
+        "not": {
+          "anyOf": [
+            {
+              "required": [
+                "checked_element_count"
+              ]
+            },
+            {
+              "required": [
+                "output_sha256"
+              ]
+            }
+          ]
+        },
+        "required": [
+          "checked_scale_byte_count",
+          "checked_weight_byte_count"
+        ]
+      }
+    }
+  ],
+  "title": "OpenTallas DeepSeek V4 Flash canonical transform check v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}
