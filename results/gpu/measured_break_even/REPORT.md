@@ -8,8 +8,9 @@
 
 - GPU: `NVIDIA RTX PRO 6000 Blackwell Workstation Edition` (`GPU-592644b2-d169-3424-56fd-98aea433ef09`)
 - Endpoint: `qwen-fast` / `Qwen/Qwen3-VL-30B-A3B-Instruct-FP8`
+- Endpoint runtime: `vLLM 0.19.0`
 - Accounting snapshot revision: `d9748a51ae66354c4dad665aab2c71f26cf2c8cd`
-- Runtime revision linkage: endpoint API reports the matching model root but not a revision; accounting uses the sole locally cached snapshot selected by the default main ref, so exact runtime revision is strongly linked but not API-attested
+- Runtime revision linkage: model-root plus sole default-ref snapshot linked; revision is not API-attested
 - Evidence class: `shared_contended`
 - Energy: **unavailable for attribution** because unrelated workloads remained active
 
@@ -17,9 +18,9 @@
 
 | Prompt | Completion | Concurrency | Repetitions | Median aggregate tok/s | Observed range | Median TTFT | Median E2E |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 256 | 256 | 1 | 3 | 188.222 | 187.456–188.511 | 18.149 ms | 1360.094 ms |
-| 8,192 | 256 | 1 | 3 | 132.270 | 124.724–152.387 | 28.598 ms | 1935.436 ms |
-| 32,768 | 256 | 1 | 3 | 58.093 | 33.416–91.664 | 130.162 ms | 4406.709 ms |
+| 256 | 256 | 1 | 3 | 156.587 | 144.098–179.648 | 22.359 ms | 1634.871 ms |
+| 8,192 | 256 | 1 | 3 | 134.779 | 124.429–156.956 | 32.790 ms | 1899.412 ms |
+| 32,768 | 256 | 1 | 3 | 115.537 | 96.752–118.964 | 74.596 ms | 2215.739 ms |
 
 These are shared-service observations, not a clean RTX PRO 6000 peak.
 The range is the observed repetition range, not a confidence interval.
@@ -28,26 +29,26 @@ threshold and cannot be substituted for a pure decode-only comparison.
 
 ## Reference measured equality threshold
 
-The governed reference is the 8,192-token prompt, 256-token completion, concurrency 1 point. Its median measured service rate is **132.270 completion tokens/s**.
+The governed reference is the 8,192-token prompt, 256-token completion, concurrency 1 point. Its median measured service rate is **134.779 completion tokens/s**.
 
 | Necessary equality requirement | Value | Evidence |
 | --- | ---: | --- |
-| Aggregate completion rate | 132.270 token/s | measured median |
-| Observed comparator range | 124.724–152.387 token/s | measured repetitions |
-| Maximum aggregate token interval | 7.560297 ms | inverse of measured median |
+| Aggregate completion rate | 134.779 token/s | measured median |
+| Observed comparator range | 124.429–156.956 token/s | measured repetitions |
+| Maximum aggregate token interval | 7.419579 ms | inverse of measured median |
 | Full endpoint checkpoint capacity | 32.252 GB | exact tensor headers |
 | Text-image capacity | 31.175 GB | exact tensor roles |
 | Active immutable bytes/token | 3.366 GB | exact dense + 8/128 experts |
-| Effective active-weight service | 445.285 GB/s | derived from measured rate |
-| Logical KV read service | 108.176 GB/s | topology-derived, not measured HBM |
-| Logical KV write service | 13.003 MB/s | topology-derived, not measured HBM |
-| Matrix-operation lower bound | 0.805 TOP/s | checkpoint-derived lower bound |
+| Effective active-weight service | 453.731 GB/s | derived from measured rate |
+| Logical KV read service | 110.227 GB/s | topology-derived, not measured HBM |
+| Logical KV write service | 13.249 MB/s | topology-derived, not measured HBM |
+| Matrix-operation lower bound | 0.820 TOP/s | checkpoint-derived lower bound |
 | Attributable energy | unavailable | shared whole-GPU power rejected |
 
 The exact matrix lower-bound mix at equality is:
 
-- `bf16_x_bf16`: 85.644 Gop/s
-- `fp8_e4m3_x_fp8_e4m3`: 718.995 Gop/s
+- `bf16_x_bf16`: 87.269 Gop/s
+- `fp8_e4m3_x_fp8_e4m3`: 732.632 Gop/s
 
 This operation count is deliberately a lower bound. It excludes
 normalization, rotary embedding, softmax, routing selection, sampling,
@@ -69,12 +70,12 @@ a target ROM compiler, periphery closure, sense margin, repair, or yield.
 
 | Prompt | Target | Required tok/s | Active-weight service | Logical KV read | Matrix lower bound | Max interval |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 256 | 1.0x | 188.222 | 633.649 GB/s | 7.096 GB/s | 1.145 TOP/s | 5.313 ms |
-| 256 | 2.0x | 376.445 | 1267.297 GB/s | 14.192 GB/s | 2.290 TOP/s | 2.656 ms |
-| 8,192 | 1.0x | 132.270 | 445.285 GB/s | 108.176 GB/s | 0.805 TOP/s | 7.560 ms |
-| 8,192 | 2.0x | 264.540 | 890.571 GB/s | 216.351 GB/s | 1.609 TOP/s | 3.780 ms |
-| 32,768 | 1.0x | 58.093 | 195.570 GB/s | 187.860 GB/s | 0.353 TOP/s | 17.214 ms |
-| 32,768 | 2.0x | 116.186 | 391.141 GB/s | 375.719 GB/s | 0.707 TOP/s | 8.607 ms |
+| 256 | 1.0x | 156.587 | 527.150 GB/s | 5.903 GB/s | 0.953 TOP/s | 6.386 ms |
+| 256 | 2.0x | 313.175 | 1054.299 GB/s | 11.807 GB/s | 1.905 TOP/s | 3.193 ms |
+| 8,192 | 1.0x | 134.779 | 453.731 GB/s | 110.227 GB/s | 0.820 TOP/s | 7.420 ms |
+| 8,192 | 2.0x | 269.557 | 907.461 GB/s | 220.455 GB/s | 1.640 TOP/s | 3.710 ms |
+| 32,768 | 1.0x | 115.537 | 388.954 GB/s | 373.619 GB/s | 0.703 TOP/s | 8.655 ms |
+| 32,768 | 2.0x | 231.074 | 777.909 GB/s | 747.238 GB/s | 1.406 TOP/s | 4.328 ms |
 
 ## Evidence decomposition
 

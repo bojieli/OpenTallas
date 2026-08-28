@@ -281,6 +281,17 @@
     "selected_expert_fraction": 0.0625
   },
   "profile_id": "local-qwen3-vl-30b-a3b-instruct-fp8-text-decode-v1",
+  "runtime_binding": {
+    "accounting_snapshot_revision": "d9748a51ae66354c4dad665aab2c71f26cf2c8cd",
+    "endpoint_api_revision_attested": false,
+    "endpoint_root": "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8",
+    "local_cache_ref": "main",
+    "local_cache_ref_revision": "d9748a51ae66354c4dad665aab2c71f26cf2c8cd",
+    "local_cache_snapshot_revisions": [
+      "d9748a51ae66354c4dad665aab2c71f26cf2c8cd"
+    ],
+    "status": "model-root plus sole default-ref snapshot linked; revision is not API-attested"
+  },
   "schema_version": 1,
   "source_manifests": {
     "profile_config": {
@@ -290,8 +301,8 @@
     },
     "runner": {
       "path": "tools/profile_local_qwen3_vl.py",
-      "sha256": "25cdd04c30c077c5dc6c51db7ea294ecafb734aa0505f72d809f150c59a12119",
-      "size_bytes": 20361
+      "sha256": "8e9eda0f42ee09bad252b828c5c5a5edfed091e5401f05b6a38a67b3a84dfe75",
+      "size_bytes": 22242
     },
     "shard_headers": [
       {

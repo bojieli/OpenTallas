@@ -219,6 +219,15 @@ def validate_measurement(
         raise MeasuredBreakEvenError(
             "one or more endpoint identities changed during measurement"
         )
+    version_stability = measurement.get("endpoint_version_stability")
+    if (
+        not isinstance(version_stability, dict)
+        or not version_stability
+        or not all(version_stability.values())
+    ):
+        raise MeasuredBreakEvenError(
+            "one or more endpoint runtime versions changed during measurement"
+        )
     if (
         config["contamination_policy"]["whole_gpu_energy_attribution_allowed"]
         is not False
@@ -453,8 +462,9 @@ def build_result(config_path: Path, measurement_path: Path) -> dict[str, Any]:
             "gpu": measurement["gpu_before"]["name"],
             "gpu_uuid": measurement["gpu_before"]["uuid"],
             "endpoint_model": measurement["selected_endpoint_model"],
+            "endpoint_runtime": measurement["selected_endpoint_version"],
             "model_accounting_revision": model_lock["model"]["revision"],
-            "runtime_revision_binding": "endpoint API reports the matching model root but not a revision; accounting uses the sole locally cached snapshot selected by the default main ref, so exact runtime revision is strongly linked but not API-attested",
+            "runtime_revision_binding": model_lock["runtime_binding"]["status"],
             "contamination_label": measurement["contamination_label"],
             "completion_rate_semantics": "total completion tokens divided by the maximum simultaneous request end-to-end interval for each wave; medians and observed ranges are retained",
             "speedup_semantics": config["measured_break_even"][
@@ -504,6 +514,7 @@ def build_result(config_path: Path, measurement_path: Path) -> dict[str, Any]:
             ),
             "compute_process_count_after": len(measurement["compute_processes_after"]),
             "endpoint_stability": measurement["endpoint_stability"],
+            "endpoint_version_stability": measurement["endpoint_version_stability"],
         },
         "evidence_decomposition": {
             "measured": [
@@ -566,6 +577,7 @@ def render_report(result: dict[str, Any]) -> str:
         "",
         f"- GPU: `{comparison['gpu']}` (`{comparison['gpu_uuid']}`)",
         f"- Endpoint: `{comparison['endpoint_model']['id']}` / `{comparison['endpoint_model']['root']}`",
+        f"- Endpoint runtime: `vLLM {comparison['endpoint_runtime']['version']}`",
         f"- Accounting snapshot revision: `{comparison['model_accounting_revision']}`",
         f"- Runtime revision linkage: {comparison['runtime_revision_binding']}",
         f"- Evidence class: `{comparison['contamination_label']}`",

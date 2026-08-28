@@ -21,7 +21,7 @@ MODEL_LOCK = ROOT / "configs/benchmarks/local_qwen3_vl_30b_fp8_lock.json"
 MEASUREMENT = (
     ROOT
     / "results/gpu/local_rtx_pro_6000_measured_break_even"
-    / "20260828T113804Z/measurement.json"
+    / "20260828T114437Z/measurement.json"
 )
 RESULT = ROOT / "results/gpu/measured_break_even/measured_break_even.json"
 REPORT = ROOT / "results/gpu/measured_break_even/REPORT.md"
@@ -41,7 +41,9 @@ def test_measured_break_even_is_byte_reproducible_from_archived_inputs() -> None
     assert first == second
     assert strict_json(RESULT) == first
     assert REPORT.read_text(encoding="utf-8") == render_report(first)
-    assert first["source_measurement_generated_at"] == "2026-08-28T11:38:29.140+00:00"
+    assert first["source_measurement_generated_at"] == "2026-08-28T11:44:55.122+00:00"
+    assert first["comparison_contract"]["endpoint_runtime"]["version"] == "0.19.0"
+    assert all(first["measurement_environment"]["endpoint_version_stability"].values())
     assert first["reference_threshold"]["energy_requirement"] is None
     assert first["comparison_contract"]["contamination_label"] == "shared_contended"
 
@@ -52,4 +54,13 @@ def test_measurement_usage_tamper_fails_closed() -> None:
     measurement = copy.deepcopy(strict_json(MEASUREMENT))
     measurement["waves"][0]["requests"][0]["completion_tokens"] -= 1
     with pytest.raises(MeasuredBreakEvenError, match="completion usage differs"):
+        validate_measurement(measurement, config, CONFIG, lock)
+
+
+def test_runtime_version_instability_fails_closed() -> None:
+    config = strict_json(CONFIG)
+    lock = strict_json(MODEL_LOCK)
+    measurement = copy.deepcopy(strict_json(MEASUREMENT))
+    measurement["endpoint_version_stability"]["http://127.0.0.1:8000"] = False
+    with pytest.raises(MeasuredBreakEvenError, match="runtime versions changed"):
         validate_measurement(measurement, config, CONFIG, lock)

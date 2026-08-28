@@ -190,6 +190,24 @@ def profile(snapshot: Path, profile_config_path: Path) -> dict[str, Any]:
     profile_config = strict_json(profile_config_path)
     validate_profile_config(profile_config)
     validate_snapshot(snapshot, profile_config)
+    cache_root = snapshot.parent.parent
+    ref_path = cache_root / "refs" / "main"
+    if not ref_path.is_file():
+        raise ProfileError(f"local cache is missing its main ref: {ref_path}")
+    ref_revision = ref_path.read_text(encoding="utf-8").strip()
+    snapshot_revisions = sorted(
+        path.name for path in snapshot.parent.iterdir() if path.is_dir()
+    )
+    if ref_revision != profile_config["revision"]:
+        raise ProfileError(
+            f"local main ref {ref_revision!r} does not select "
+            f"{profile_config['revision']!r}"
+        )
+    if snapshot_revisions != [profile_config["revision"]]:
+        raise ProfileError(
+            "governed endpoint cache must contain exactly the accounting snapshot; "
+            f"found {snapshot_revisions}"
+        )
     config_path = snapshot / "config.json"
     index_path = snapshot / "model.safetensors.index.json"
     config_raw = config_path.read_bytes()
@@ -359,6 +377,15 @@ def profile(snapshot: Path, profile_config_path: Path) -> dict[str, Any]:
             "architecture": expected["architecture"],
             "model_type": expected["model_type"],
         },
+        "runtime_binding": {
+            "endpoint_root": profile_config["endpoint_root"],
+            "endpoint_api_revision_attested": False,
+            "local_cache_ref": "main",
+            "local_cache_ref_revision": ref_revision,
+            "local_cache_snapshot_revisions": snapshot_revisions,
+            "accounting_snapshot_revision": profile_config["revision"],
+            "status": "model-root plus sole default-ref snapshot linked; revision is not API-attested",
+        },
         "source_manifests": {
             "profile_config": {
                 "path": str(profile_config_path.relative_to(ROOT)),
@@ -455,6 +482,16 @@ def validate_lock(lock: dict[str, Any]) -> None:
         decode["dense_active_bytes_per_token"]
     ) + int(decode["selected_expert_bytes_per_token"]):
         raise ProfileError("active immutable byte identity failed")
+    binding = lock.get("runtime_binding")
+    if not isinstance(binding, dict):
+        raise ProfileError("profile lock lacks runtime binding")
+    if binding.get("endpoint_api_revision_attested") is not False:
+        raise ProfileError("endpoint revision must remain explicitly unattested")
+    accounting_revision = binding.get("accounting_snapshot_revision")
+    if binding.get("local_cache_ref_revision") != accounting_revision or binding.get(
+        "local_cache_snapshot_revisions"
+    ) != [accounting_revision]:
+        raise ProfileError("local cache revision binding is inconsistent")
 
 
 def main() -> int:

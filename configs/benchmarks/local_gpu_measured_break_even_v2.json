@@ -8,6 +8,7 @@
     "api_model": "qwen-fast",
     "expected_root": "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8",
     "expected_max_model_len": 40960,
+    "expected_runtime_version": "0.19.0",
     "request_timeout_s": 300
   },
   "gpu": {
@@ -80,7 +81,7 @@
     "strict_speedup_semantics": "1.0x is median observed service equality; a superiority claim requires a statistically governed same-model measurement strictly above the comparator distribution under the same prompt, completion, context, concurrency, latency, software, and power scope"
   },
   "claim_boundary": [
-    "The endpoint serves the exact locally pinned Qwen3-VL-30B-A3B-Instruct-FP8 snapshot in text-only mode.",
+    "The endpoint reports the Qwen3-VL-30B-A3B-Instruct-FP8 root in text-only mode. The API does not expose a revision; accounting uses the sole local snapshot selected by the default main ref.",
     "Other serving and audio processes share the GPU, so the observation is a service target rather than clean peak RTX PRO 6000 performance.",
     "Whole-GPU energy is contaminated and may not be divided by benchmark tokens or requests.",
     "Logical model bytes, operation lower bounds, and KV traffic are derived from pinned tensor headers and config; only service timing and token usage are measured.",

@@ -158,6 +158,13 @@ def endpoint_snapshot(base_url: str, timeout_s: float) -> dict[str, Any]:
     return json_request(f"{base_url.rstrip('/')}/v1/models", None, timeout_s)
 
 
+def endpoint_version(base_url: str, timeout_s: float) -> dict[str, Any]:
+    version = json_request(f"{base_url.rstrip('/')}/version", None, timeout_s)
+    if not isinstance(version.get("version"), str) or not version["version"]:
+        raise MeasurementError("endpoint /version response lacks a version string")
+    return version
+
+
 def select_endpoint_model(snapshot: dict[str, Any], model_id: str) -> dict[str, Any]:
     rows = snapshot.get("data")
     if not isinstance(rows, list):
@@ -184,6 +191,15 @@ def validate_endpoint_contract(
     if int(model.get("max_model_len", -1)) != int(expected["expected_max_model_len"]):
         raise MeasurementError("endpoint max_model_len changed")
     return model
+
+
+def validate_endpoint_version(config: dict[str, Any], version: dict[str, Any]) -> None:
+    expected = config["endpoint"].get("expected_runtime_version")
+    if expected is not None and version.get("version") != expected:
+        raise MeasurementError(
+            f"endpoint runtime version changed: {version.get('version')!r} != "
+            f"{expected!r}"
+        )
 
 
 def stable_endpoint_snapshot(snapshot: dict[str, Any]) -> dict[str, Any]:
@@ -238,6 +254,7 @@ def run_command(arguments: list[str]) -> str:
 
 GPU_FIELDS = (
     "timestamp",
+    "driver_version",
     "name",
     "uuid",
     "memory.total",
@@ -282,6 +299,7 @@ def gpu_sample(gpu_uuid: str) -> dict[str, Any]:
     }
     result: dict[str, Any] = {
         "nvidia_smi_timestamp": row["timestamp"],
+        "driver_version": row["driver_version"],
         "name": row["name"],
         "uuid": row["uuid"],
     }
@@ -743,8 +761,10 @@ def render_report(result: dict[str, Any]) -> str:
         f"- Generated: `{result['generated_at']}`",
         f"- Endpoint model: `{result['selected_endpoint_model']['id']}`",
         f"- Endpoint root: `{result['selected_endpoint_model']['root']}`",
+        f"- Endpoint runtime: `vLLM {result['selected_endpoint_version']['version']}`",
         f"- GPU: `{result['gpu_before']['name']}`",
         f"- GPU UUID: `{result['gpu_before']['uuid']}`",
+        f"- NVIDIA driver: `{result['gpu_before']['driver_version']}`",
         "",
         "## Scenario medians",
         "",
@@ -851,15 +871,22 @@ def main() -> int:
         endpoint: endpoint_snapshot(endpoint, timeout_s)
         for endpoint in endpoint_set(config)
     }
+    before_versions = {
+        endpoint: endpoint_version(endpoint, timeout_s)
+        for endpoint in endpoint_set(config)
+    }
     selected_model = validate_endpoint_contract(
         config, before_endpoints[config["endpoint"]["base_url"]]
     )
+    selected_version = before_versions[config["endpoint"]["base_url"]]
+    validate_endpoint_version(config, selected_version)
     before_gpu = gpu_sample(config["gpu"]["expected_uuid"])
     validate_gpu_contract(config, before_gpu)
     if arguments.check_only:
         print(
             f"measurement contract verified: {selected_model['id']} on "
-            f"{before_gpu['name']} ({config['contamination_policy']['label']})"
+            f"{before_gpu['name']} with vLLM {selected_version['version']} "
+            f"({config['contamination_policy']['label']})"
         )
         return 0
 
@@ -892,7 +919,12 @@ def main() -> int:
         endpoint: endpoint_snapshot(endpoint, timeout_s)
         for endpoint in endpoint_set(config)
     }
+    after_versions = {
+        endpoint: endpoint_version(endpoint, timeout_s)
+        for endpoint in endpoint_set(config)
+    }
     validate_endpoint_contract(config, after_endpoints[config["endpoint"]["base_url"]])
+    validate_endpoint_version(config, after_versions[config["endpoint"]["base_url"]])
     after_gpu = gpu_sample(config["gpu"]["expected_uuid"])
     validate_gpu_contract(config, after_gpu)
     process_after = compute_process_inventory()
@@ -907,12 +939,18 @@ def main() -> int:
         endpoint: before_endpoints[endpoint] == after_endpoints[endpoint]
         for endpoint in before_endpoints
     }
+    endpoint_version_stability = {
+        endpoint: before_versions[endpoint] == after_versions[endpoint]
+        for endpoint in before_versions
+    }
     result = {
         "schema_version": 1,
         "benchmark_id": config["benchmark_id"],
         "generated_at": utc_now(),
         "status": "pass"
-        if not failures and all(endpoint_stability.values())
+        if not failures
+        and all(endpoint_stability.values())
+        and all(endpoint_version_stability.values())
         else "fail",
         "evidence_class": config["evidence_class"],
         "contamination_label": config["contamination_policy"]["label"],
@@ -928,9 +966,15 @@ def main() -> int:
         },
         "git": git_state(),
         "selected_endpoint_model": selected_model,
+        "selected_endpoint_version": selected_version,
         "endpoint_snapshots": {"before": before_endpoints, "after": after_endpoints},
+        "endpoint_version_snapshots": {
+            "before": before_versions,
+            "after": after_versions,
+        },
         "endpoint_stability": endpoint_stability,
         "endpoint_byte_stability": endpoint_byte_stability,
+        "endpoint_version_stability": endpoint_version_stability,
         "endpoint_stability_semantics": "semantic /v1/models comparison excluding response-generated created timestamps and permission IDs; full raw snapshots are retained",
         "gpu_before": before_gpu,
         "gpu_after": after_gpu,

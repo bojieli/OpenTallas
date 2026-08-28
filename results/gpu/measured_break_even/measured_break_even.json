@@ -47,7 +47,7 @@
     "completion_rate_semantics": "total completion tokens divided by the maximum simultaneous request end-to-end interval for each wave; medians and observed ranges are retained",
     "contamination_label": "shared_contended",
     "endpoint_model": {
-      "created": 1787917084,
+      "created": 1787917477,
       "id": "qwen-fast",
       "max_model_len": 40960,
       "object": "model",
@@ -61,9 +61,9 @@
           "allow_sampling": true,
           "allow_search_indices": false,
           "allow_view": true,
-          "created": 1787917084,
+          "created": 1787917477,
           "group": null,
-          "id": "modelperm-85f234ce880d0b22",
+          "id": "modelperm-ac15aa6dce26f2d4",
           "is_blocking": false,
           "object": "model_permission",
           "organization": "*"
@@ -71,11 +71,14 @@
       ],
       "root": "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8"
     },
+    "endpoint_runtime": {
+      "version": "0.19.0"
+    },
     "energy_semantics": "unavailable; whole-GPU samples include unrelated workloads",
     "gpu": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
     "gpu_uuid": "GPU-592644b2-d169-3424-56fd-98aea433ef09",
     "model_accounting_revision": "d9748a51ae66354c4dad665aab2c71f26cf2c8cd",
-    "runtime_revision_binding": "endpoint API reports the matching model root but not a revision; accounting uses the sole locally cached snapshot selected by the default main ref, so exact runtime revision is strongly linked but not API-attested",
+    "runtime_revision_binding": "model-root plus sole default-ref snapshot linked; revision is not API-attested",
     "speedup_semantics": "1.0x is median observed service equality; a superiority claim requires a statistically governed same-model measurement strictly above the comparator distribution under the same prompt, completion, context, concurrency, latency, software, and power scope"
   },
   "evidence_class": "measured shared_contended service comparator; not a clean peak GPU benchmark, not attributable energy, and not an achieved OpenTallas result",
@@ -106,23 +109,23 @@
   "input_manifests": {
     "config": {
       "path": "configs/benchmarks/local_gpu_measured_break_even_v2.json",
-      "sha256": "b53e2fb2584adb7defbb010a9c9c56ce84aa992f80e05659346b49960278c3fc",
-      "size_bytes": 3434
+      "sha256": "ae0bd6fcf73ea7a3cc469e34ce85883bc96f72db551f94aaa9b6dfb457c8866a",
+      "size_bytes": 3562
     },
     "measurement": {
-      "path": "results/gpu/local_rtx_pro_6000_measured_break_even/20260828T113804Z/measurement.json",
-      "sha256": "196ad903c7368dbc0d61b4c1780114cd779f0506155a01d337170a13ec43cefd",
-      "size_bytes": 174645
+      "path": "results/gpu/local_rtx_pro_6000_measured_break_even/20260828T114437Z/measurement.json",
+      "sha256": "4714aeef87db7e7fbd022e25d0af8d44636cc50102fc3e06a5fbb2045f2711df",
+      "size_bytes": 159857
     },
     "model_profile_lock": {
       "path": "configs/benchmarks/local_qwen3_vl_30b_fp8_lock.json",
-      "sha256": "d43f5252837e9b9b2ceee3978b3c84db8cc32ecf49ef428a2e05c239a29856ec",
-      "size_bytes": 12621
+      "sha256": "d994619b9c8245240b128c0b1ef03dd5ca2300529f9e4ed4a31c6229c45372b4",
+      "size_bytes": 13131
     },
     "runner": {
       "path": "tools/measured_gpu_break_even.py",
-      "sha256": "ab8051af7c7e0d74ae6219eb5487cd02bb5c5ea154d1fe86d3602cb1795ca538",
-      "size_bytes": 33605
+      "sha256": "7cdc1985218cff9f9fe221da98012149730620ab4d9d43e4e455210997f94929",
+      "size_bytes": 34012
     }
   },
   "measurement_environment": {
@@ -132,28 +135,34 @@
       "http://127.0.0.1:8000": true,
       "http://127.0.0.1:8004": true
     },
+    "endpoint_version_stability": {
+      "http://127.0.0.1:8000": true,
+      "http://127.0.0.1:8004": true
+    },
     "gpu_after": {
+      "driver_version": "595.71.05",
       "gpu_utilization_percent": 100.0,
       "memory_total_mib": 97887.0,
       "memory_used_mib": 84827.0,
-      "memory_utilization_percent": 68.0,
+      "memory_utilization_percent": 69.0,
       "name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
-      "nvidia_smi_timestamp": "2026/08/28 11:38:29.102",
-      "power_draw_w": 362.89,
+      "nvidia_smi_timestamp": "2026/08/28 11:44:55.094",
+      "power_draw_w": 335.7,
       "power_limit_w": 600.0,
-      "temperature_c": 58.0,
+      "temperature_c": 53.0,
       "uuid": "GPU-592644b2-d169-3424-56fd-98aea433ef09"
     },
     "gpu_before": {
-      "gpu_utilization_percent": 0.0,
+      "driver_version": "595.71.05",
+      "gpu_utilization_percent": 34.0,
       "memory_total_mib": 97887.0,
-      "memory_used_mib": 84827.0,
-      "memory_utilization_percent": 0.0,
+      "memory_used_mib": 84859.0,
+      "memory_utilization_percent": 22.0,
       "name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
-      "nvidia_smi_timestamp": "2026/08/28 11:38:04.250",
-      "power_draw_w": 85.37,
+      "nvidia_smi_timestamp": "2026/08/28 11:44:37.381",
+      "power_draw_w": 211.65,
       "power_limit_w": 600.0,
-      "temperature_c": 46.0,
+      "temperature_c": 51.0,
       "uuid": "GPU-592644b2-d169-3424-56fd-98aea433ef09"
     }
   },
@@ -185,37 +194,37 @@
       "concurrency": 1,
       "logical_kv_read_bytes_per_generated_token": 37699584.0,
       "logical_kv_write_bytes_per_generated_token": 98304,
-      "maximum_aggregate_completion_tokens_s_end_to_end": 188.51140969015466,
-      "median_aggregate_completion_tokens_s_end_to_end": 188.2223211706182,
-      "median_request_end_to_end_s": 1.3600937360024545,
-      "median_request_ttft_s": 0.018148878996726125,
-      "minimum_aggregate_completion_tokens_s_end_to_end": 187.45644744904791,
+      "maximum_aggregate_completion_tokens_s_end_to_end": 179.64786602885096,
+      "median_aggregate_completion_tokens_s_end_to_end": 156.58730447938706,
+      "median_request_end_to_end_s": 1.634870724999928,
+      "median_request_ttft_s": 0.022359237002092414,
+      "minimum_aggregate_completion_tokens_s_end_to_end": 144.09791832747663,
       "prompt_tokens": 256,
       "repetitions": 3,
       "wave_observations": [
         {
-          "aggregate_completion_tokens_s_end_to_end": 187.45644744904791,
+          "aggregate_completion_tokens_s_end_to_end": 144.09791832747663,
           "completion_tokens": 256,
-          "median_request_end_to_end_s": 1.3656505470135016,
-          "median_request_ttft_s": 0.024727692012675107,
+          "median_request_end_to_end_s": 1.7765697309951065,
+          "median_request_ttft_s": 0.035242669997387566,
           "repetition": 0,
-          "service_span_s": 1.3656505470135016
+          "service_span_s": 1.7765697309951065
         },
         {
-          "aggregate_completion_tokens_s_end_to_end": 188.51140969015466,
+          "aggregate_completion_tokens_s_end_to_end": 156.58730447938706,
           "completion_tokens": 256,
-          "median_request_end_to_end_s": 1.3580079870007467,
-          "median_request_ttft_s": 0.016477858007419854,
+          "median_request_end_to_end_s": 1.634870724999928,
+          "median_request_ttft_s": 0.022359237002092414,
           "repetition": 1,
-          "service_span_s": 1.3580079870007467
+          "service_span_s": 1.634870724999928
         },
         {
-          "aggregate_completion_tokens_s_end_to_end": 188.2223211706182,
+          "aggregate_completion_tokens_s_end_to_end": 179.64786602885096,
           "completion_tokens": 256,
-          "median_request_end_to_end_s": 1.3600937360024545,
-          "median_request_ttft_s": 0.018148878996726125,
+          "median_request_end_to_end_s": 1.4250099689961644,
+          "median_request_ttft_s": 0.019677402000525035,
           "repetition": 2,
-          "service_span_s": 1.3600937360024545
+          "service_span_s": 1.4250099689961644
         }
       ]
     },
@@ -225,37 +234,37 @@
       "concurrency": 1,
       "logical_kv_read_bytes_per_generated_token": 817840128.0,
       "logical_kv_write_bytes_per_generated_token": 98304,
-      "maximum_aggregate_completion_tokens_s_end_to_end": 152.38693311425604,
-      "median_aggregate_completion_tokens_s_end_to_end": 132.26993445258367,
-      "median_request_end_to_end_s": 1.9354360540019115,
-      "median_request_ttft_s": 0.028598286007763818,
-      "minimum_aggregate_completion_tokens_s_end_to_end": 124.72378353017325,
+      "maximum_aggregate_completion_tokens_s_end_to_end": 156.95614092735022,
+      "median_aggregate_completion_tokens_s_end_to_end": 134.77854528322558,
+      "median_request_end_to_end_s": 1.8994121019932209,
+      "median_request_ttft_s": 0.03279026898962911,
+      "minimum_aggregate_completion_tokens_s_end_to_end": 124.42929821921234,
       "prompt_tokens": 8192,
       "repetitions": 3,
       "wave_observations": [
         {
-          "aggregate_completion_tokens_s_end_to_end": 152.38693311425604,
+          "aggregate_completion_tokens_s_end_to_end": 124.42929821921234,
           "completion_tokens": 256,
-          "median_request_end_to_end_s": 1.6799340650031809,
-          "median_request_ttft_s": 0.22250036599871237,
+          "median_request_end_to_end_s": 2.057393263996346,
+          "median_request_ttft_s": 0.03279026898962911,
           "repetition": 0,
-          "service_span_s": 1.6799340650031809
+          "service_span_s": 2.057393263996346
         },
         {
-          "aggregate_completion_tokens_s_end_to_end": 132.26993445258367,
+          "aggregate_completion_tokens_s_end_to_end": 134.77854528322558,
           "completion_tokens": 256,
-          "median_request_end_to_end_s": 1.9354360540019115,
-          "median_request_ttft_s": 0.028598286007763818,
+          "median_request_end_to_end_s": 1.8994121019932209,
+          "median_request_ttft_s": 0.03150528400146868,
           "repetition": 1,
-          "service_span_s": 1.9354360540019115
+          "service_span_s": 1.8994121019932209
         },
         {
-          "aggregate_completion_tokens_s_end_to_end": 124.72378353017325,
+          "aggregate_completion_tokens_s_end_to_end": 156.95614092735022,
           "completion_tokens": 256,
-          "median_request_end_to_end_s": 2.052535552997142,
-          "median_request_ttft_s": 0.028372305998345837,
+          "median_request_end_to_end_s": 1.6310288879903965,
+          "median_request_ttft_s": 0.035143072993378155,
           "repetition": 2,
-          "service_span_s": 2.052535552997142
+          "service_span_s": 1.6310288879903965
         }
       ]
     },
@@ -265,37 +274,37 @@
       "concurrency": 1,
       "logical_kv_read_bytes_per_generated_token": 3233759232.0,
       "logical_kv_write_bytes_per_generated_token": 98304,
-      "maximum_aggregate_completion_tokens_s_end_to_end": 91.66390288349811,
-      "median_aggregate_completion_tokens_s_end_to_end": 58.09324573377031,
-      "median_request_end_to_end_s": 4.406708504000562,
-      "median_request_ttft_s": 0.13016213501396123,
-      "minimum_aggregate_completion_tokens_s_end_to_end": 33.41606044730792,
+      "maximum_aggregate_completion_tokens_s_end_to_end": 118.96394552641368,
+      "median_aggregate_completion_tokens_s_end_to_end": 115.5370897480916,
+      "median_request_end_to_end_s": 2.215738690996659,
+      "median_request_ttft_s": 0.0745963309891522,
+      "minimum_aggregate_completion_tokens_s_end_to_end": 96.75194945107047,
       "prompt_tokens": 32768,
       "repetitions": 3,
       "wave_observations": [
         {
-          "aggregate_completion_tokens_s_end_to_end": 33.41606044730792,
+          "aggregate_completion_tokens_s_end_to_end": 118.96394552641368,
           "completion_tokens": 256,
-          "median_request_end_to_end_s": 7.660986860006233,
-          "median_request_ttft_s": 2.0822156200010795,
+          "median_request_end_to_end_s": 2.1519124879996525,
+          "median_request_ttft_s": 0.0745963309891522,
           "repetition": 0,
-          "service_span_s": 7.660986860006233
+          "service_span_s": 2.1519124879996525
         },
         {
-          "aggregate_completion_tokens_s_end_to_end": 58.09324573377031,
+          "aggregate_completion_tokens_s_end_to_end": 96.75194945107047,
           "completion_tokens": 256,
-          "median_request_end_to_end_s": 4.406708504000562,
-          "median_request_ttft_s": 0.13016213501396123,
+          "median_request_end_to_end_s": 2.645941517999745,
+          "median_request_ttft_s": 0.07285020800190978,
           "repetition": 1,
-          "service_span_s": 4.406708504000562
+          "service_span_s": 2.645941517999745
         },
         {
-          "aggregate_completion_tokens_s_end_to_end": 91.66390288349811,
+          "aggregate_completion_tokens_s_end_to_end": 115.5370897480916,
           "completion_tokens": 256,
-          "median_request_end_to_end_s": 2.792811477003852,
-          "median_request_ttft_s": 0.08038302100612782,
+          "median_request_end_to_end_s": 2.215738690996659,
+          "median_request_ttft_s": 0.08568230699165724,
           "repetition": 2,
-          "service_span_s": 2.792811477003852
+          "service_span_s": 2.215738690996659
         }
       ]
     }
@@ -308,29 +317,29 @@
     "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
     "logical_kv_read_bytes_per_generated_token": 817840128.0,
     "logical_kv_write_bytes_per_generated_token": 98304,
-    "maximum_aggregate_token_interval_s": 0.007560297085944966,
-    "measured_median_aggregate_tokens_s": 132.26993445258367,
+    "maximum_aggregate_token_interval_s": 0.007419578523411019,
+    "measured_median_aggregate_tokens_s": 134.77854528322558,
     "measured_observed_rate_range_tokens_s": [
-      124.72378353017325,
-      152.38693311425604
+      124.42929821921234,
+      156.95614092735022
     ],
     "prompt_tokens": 8192,
-    "required_aggregate_tokens_s": 132.26993445258367,
-    "required_effective_active_weight_bandwidth_bytes_s": 445285426449.51105,
+    "required_aggregate_tokens_s": 134.77854528322558,
+    "required_effective_active_weight_bandwidth_bytes_s": 453730640005.72314,
     "required_full_checkpoint_capacity_bytes": 32251808224,
-    "required_logical_kv_read_bandwidth_bytes_s": 108175660123.25264,
-    "required_logical_kv_write_bandwidth_bytes_s": 13002663.636426784,
+    "required_logical_kv_read_bandwidth_bytes_s": 110227302726.087,
+    "required_logical_kv_write_bandwidth_bytes_s": 13249270.115522208,
     "required_matrix_operations_lower_bound_s_by_format": {
-      "bf16_x_bf16": 85644211151.93109,
-      "fp8_e4m3_x_fp8_e4m3": 718995288439.8555
+      "bf16_x_bf16": 87268525827.57294,
+      "fp8_e4m3_x_fp8_e4m3": 732631640307.916
     },
     "required_text_image_capacity_bytes": 31174545408,
-    "required_total_matrix_operations_lower_bound_s": 804639499591.7866,
+    "required_total_matrix_operations_lower_bound_s": 819900166135.489,
     "threshold_semantics": "median observed shared-service equality",
     "throughput_multiplier": 1.0
   },
   "schema_version": 1,
-  "source_measurement_generated_at": "2026-08-28T11:38:29.140+00:00",
+  "source_measurement_generated_at": "2026-08-28T11:44:55.122+00:00",
   "status": "measured_comparator_requirements_derived_not_achieved",
   "thresholds": [
     {
@@ -341,24 +350,24 @@
       "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
       "logical_kv_read_bytes_per_generated_token": 37699584.0,
       "logical_kv_write_bytes_per_generated_token": 98304,
-      "maximum_aggregate_token_interval_s": 0.005312866156259588,
-      "measured_median_aggregate_tokens_s": 188.2223211706182,
+      "maximum_aggregate_token_interval_s": 0.006386213769530969,
+      "measured_median_aggregate_tokens_s": 156.58730447938706,
       "measured_observed_rate_range_tokens_s": [
-        187.45644744904791,
-        188.51140969015466
+        144.09791832747663,
+        179.64786602885096
       ],
       "prompt_tokens": 256,
-      "required_aggregate_tokens_s": 188.2223211706182,
-      "required_effective_active_weight_bandwidth_bytes_s": 633648583078.5743,
+      "required_aggregate_tokens_s": 156.58730447938706,
+      "required_effective_active_weight_bandwidth_bytes_s": 527149612194.58984,
       "required_full_checkpoint_capacity_bytes": 32251808224,
-      "required_logical_kv_read_bandwidth_bytes_s": 7095903207.646699,
-      "required_logical_kv_write_bandwidth_bytes_s": 18503007.06035645,
+      "required_logical_kv_read_bandwidth_bytes_s": 5903276238.554229,
+      "required_logical_kv_write_bandwidth_bytes_s": 15393158.379541665,
       "required_matrix_operations_lower_bound_s_by_format": {
-        "bf16_x_bf16": 121873139837.54782,
-        "fp8_e4m3_x_fp8_e4m3": 1023142278409.4702
+        "bf16_x_bf16": 101389603193.24777,
+        "fp8_e4m3_x_fp8_e4m3": 851180085755.136
       },
       "required_text_image_capacity_bytes": 31174545408,
-      "required_total_matrix_operations_lower_bound_s": 1145015418247.018,
+      "required_total_matrix_operations_lower_bound_s": 952569688948.3838,
       "threshold_semantics": "median observed shared-service equality",
       "throughput_multiplier": 1.0
     },
@@ -370,24 +379,24 @@
       "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
       "logical_kv_read_bytes_per_generated_token": 37699584.0,
       "logical_kv_write_bytes_per_generated_token": 98304,
-      "maximum_aggregate_token_interval_s": 0.002656433078129794,
-      "measured_median_aggregate_tokens_s": 188.2223211706182,
+      "maximum_aggregate_token_interval_s": 0.0031931068847654846,
+      "measured_median_aggregate_tokens_s": 156.58730447938706,
       "measured_observed_rate_range_tokens_s": [
-        187.45644744904791,
-        188.51140969015466
+        144.09791832747663,
+        179.64786602885096
       ],
       "prompt_tokens": 256,
-      "required_aggregate_tokens_s": 376.4446423412364,
-      "required_effective_active_weight_bandwidth_bytes_s": 1267297166157.1487,
+      "required_aggregate_tokens_s": 313.1746089587741,
+      "required_effective_active_weight_bandwidth_bytes_s": 1054299224389.1797,
       "required_full_checkpoint_capacity_bytes": 32251808224,
-      "required_logical_kv_read_bandwidth_bytes_s": 14191806415.293398,
-      "required_logical_kv_write_bandwidth_bytes_s": 37006014.1207129,
+      "required_logical_kv_read_bandwidth_bytes_s": 11806552477.108458,
+      "required_logical_kv_write_bandwidth_bytes_s": 30786316.75908333,
       "required_matrix_operations_lower_bound_s_by_format": {
-        "bf16_x_bf16": 243746279675.09564,
-        "fp8_e4m3_x_fp8_e4m3": 2046284556818.9404
+        "bf16_x_bf16": 202779206386.49554,
+        "fp8_e4m3_x_fp8_e4m3": 1702360171510.272
       },
       "required_text_image_capacity_bytes": 31174545408,
-      "required_total_matrix_operations_lower_bound_s": 2290030836494.036,
+      "required_total_matrix_operations_lower_bound_s": 1905139377896.7676,
       "threshold_semantics": "speedup target relative to median observed shared service",
       "throughput_multiplier": 2.0
     },
@@ -399,24 +408,24 @@
       "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
       "logical_kv_read_bytes_per_generated_token": 817840128.0,
       "logical_kv_write_bytes_per_generated_token": 98304,
-      "maximum_aggregate_token_interval_s": 0.007560297085944966,
-      "measured_median_aggregate_tokens_s": 132.26993445258367,
+      "maximum_aggregate_token_interval_s": 0.007419578523411019,
+      "measured_median_aggregate_tokens_s": 134.77854528322558,
       "measured_observed_rate_range_tokens_s": [
-        124.72378353017325,
-        152.38693311425604
+        124.42929821921234,
+        156.95614092735022
       ],
       "prompt_tokens": 8192,
-      "required_aggregate_tokens_s": 132.26993445258367,
-      "required_effective_active_weight_bandwidth_bytes_s": 445285426449.51105,
+      "required_aggregate_tokens_s": 134.77854528322558,
+      "required_effective_active_weight_bandwidth_bytes_s": 453730640005.72314,
       "required_full_checkpoint_capacity_bytes": 32251808224,
-      "required_logical_kv_read_bandwidth_bytes_s": 108175660123.25264,
-      "required_logical_kv_write_bandwidth_bytes_s": 13002663.636426784,
+      "required_logical_kv_read_bandwidth_bytes_s": 110227302726.087,
+      "required_logical_kv_write_bandwidth_bytes_s": 13249270.115522208,
       "required_matrix_operations_lower_bound_s_by_format": {
-        "bf16_x_bf16": 85644211151.93109,
-        "fp8_e4m3_x_fp8_e4m3": 718995288439.8555
+        "bf16_x_bf16": 87268525827.57294,
+        "fp8_e4m3_x_fp8_e4m3": 732631640307.916
       },
       "required_text_image_capacity_bytes": 31174545408,
-      "required_total_matrix_operations_lower_bound_s": 804639499591.7866,
+      "required_total_matrix_operations_lower_bound_s": 819900166135.489,
       "threshold_semantics": "median observed shared-service equality",
       "throughput_multiplier": 1.0
     },
@@ -428,24 +437,24 @@
       "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
       "logical_kv_read_bytes_per_generated_token": 817840128.0,
       "logical_kv_write_bytes_per_generated_token": 98304,
-      "maximum_aggregate_token_interval_s": 0.003780148542972483,
-      "measured_median_aggregate_tokens_s": 132.26993445258367,
+      "maximum_aggregate_token_interval_s": 0.0037097892617055095,
+      "measured_median_aggregate_tokens_s": 134.77854528322558,
       "measured_observed_rate_range_tokens_s": [
-        124.72378353017325,
-        152.38693311425604
+        124.42929821921234,
+        156.95614092735022
       ],
       "prompt_tokens": 8192,
-      "required_aggregate_tokens_s": 264.53986890516734,
-      "required_effective_active_weight_bandwidth_bytes_s": 890570852899.0221,
+      "required_aggregate_tokens_s": 269.55709056645117,
+      "required_effective_active_weight_bandwidth_bytes_s": 907461280011.4463,
       "required_full_checkpoint_capacity_bytes": 32251808224,
-      "required_logical_kv_read_bandwidth_bytes_s": 216351320246.50528,
-      "required_logical_kv_write_bandwidth_bytes_s": 26005327.27285357,
+      "required_logical_kv_read_bandwidth_bytes_s": 220454605452.174,
+      "required_logical_kv_write_bandwidth_bytes_s": 26498540.231044415,
       "required_matrix_operations_lower_bound_s_by_format": {
-        "bf16_x_bf16": 171288422303.86218,
-        "fp8_e4m3_x_fp8_e4m3": 1437990576879.711
+        "bf16_x_bf16": 174537051655.14587,
+        "fp8_e4m3_x_fp8_e4m3": 1465263280615.832
       },
       "required_text_image_capacity_bytes": 31174545408,
-      "required_total_matrix_operations_lower_bound_s": 1609278999183.5732,
+      "required_total_matrix_operations_lower_bound_s": 1639800332270.978,
       "threshold_semantics": "speedup target relative to median observed shared service",
       "throughput_multiplier": 2.0
     },
@@ -457,24 +466,24 @@
       "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
       "logical_kv_read_bytes_per_generated_token": 3233759232.0,
       "logical_kv_write_bytes_per_generated_token": 98304,
-      "maximum_aggregate_token_interval_s": 0.017213705093752196,
-      "measured_median_aggregate_tokens_s": 58.09324573377031,
+      "maximum_aggregate_token_interval_s": 0.0086552292617057,
+      "measured_median_aggregate_tokens_s": 115.5370897480916,
       "measured_observed_rate_range_tokens_s": [
-        33.41606044730792,
-        91.66390288349811
+        96.75194945107047,
+        118.96394552641368
       ],
       "prompt_tokens": 32768,
-      "required_aggregate_tokens_s": 58.09324573377031,
-      "required_effective_active_weight_bandwidth_bytes_s": 195570337336.72394,
+      "required_aggregate_tokens_s": 115.5370897480916,
+      "required_effective_active_weight_bandwidth_bytes_s": 388954470206.207,
       "required_full_checkpoint_capacity_bytes": 32251808224,
-      "required_logical_kv_read_bandwidth_bytes_s": 187859569708.42435,
-      "required_logical_kv_write_bandwidth_bytes_s": 5710798.428612556,
+      "required_logical_kv_read_bandwidth_bytes_s": 373619130611.3038,
+      "required_logical_kv_write_bandwidth_bytes_s": 11357758.070596397,
       "required_matrix_operations_lower_bound_s_by_format": {
-        "bf16_x_bf16": 37615125649.79471,
-        "fp8_e4m3_x_fp8_e4m3": 315784309908.55994
+        "bf16_x_bf16": 74809766491.6616,
+        "fp8_e4m3_x_fp8_e4m3": 628038590271.6984
       },
       "required_text_image_capacity_bytes": 31174545408,
-      "required_total_matrix_operations_lower_bound_s": 353399435558.3546,
+      "required_total_matrix_operations_lower_bound_s": 702848356763.36,
       "threshold_semantics": "median observed shared-service equality",
       "throughput_multiplier": 1.0
     },
@@ -486,24 +495,24 @@
       "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
       "logical_kv_read_bytes_per_generated_token": 3233759232.0,
       "logical_kv_write_bytes_per_generated_token": 98304,
-      "maximum_aggregate_token_interval_s": 0.008606852546876098,
-      "measured_median_aggregate_tokens_s": 58.09324573377031,
+      "maximum_aggregate_token_interval_s": 0.00432761463085285,
+      "measured_median_aggregate_tokens_s": 115.5370897480916,
       "measured_observed_rate_range_tokens_s": [
-        33.41606044730792,
-        91.66390288349811
+        96.75194945107047,
+        118.96394552641368
       ],
       "prompt_tokens": 32768,
-      "required_aggregate_tokens_s": 116.18649146754062,
-      "required_effective_active_weight_bandwidth_bytes_s": 391140674673.4479,
+      "required_aggregate_tokens_s": 231.0741794961832,
+      "required_effective_active_weight_bandwidth_bytes_s": 777908940412.414,
       "required_full_checkpoint_capacity_bytes": 32251808224,
-      "required_logical_kv_read_bandwidth_bytes_s": 375719139416.8487,
-      "required_logical_kv_write_bandwidth_bytes_s": 11421596.857225113,
+      "required_logical_kv_read_bandwidth_bytes_s": 747238261222.6075,
+      "required_logical_kv_write_bandwidth_bytes_s": 22715516.141192794,
       "required_matrix_operations_lower_bound_s_by_format": {
-        "bf16_x_bf16": 75230251299.58942,
-        "fp8_e4m3_x_fp8_e4m3": 631568619817.1199
+        "bf16_x_bf16": 149619532983.3232,
+        "fp8_e4m3_x_fp8_e4m3": 1256077180543.3967
       },
       "required_text_image_capacity_bytes": 31174545408,
-      "required_total_matrix_operations_lower_bound_s": 706798871116.7092,
+      "required_total_matrix_operations_lower_bound_s": 1405696713526.72,
       "threshold_semantics": "speedup target relative to median observed shared service",
       "throughput_multiplier": 2.0
     }
