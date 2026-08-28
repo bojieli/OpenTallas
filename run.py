@@ -126,6 +126,11 @@ def render_report(result: dict[str, Any]) -> str:
     lines = [
         "# Standard analytical simulation report",
         "",
+        "> **Legacy/superseded technology comparison.** This single-midpoint",
+        "> B200/B300 study is retained for model-general regression and provenance.",
+        "> Current product comparisons are in `results/iso-node/` and must not be",
+        "> combined with the figures below.",
+        "",
         "> This report is generated. Hardware results are conditional on the explicit",
         "> architecture assumptions; checkpoint sizes and model topology are measured/published.",
         "",
@@ -147,6 +152,23 @@ def render_report(result: dict[str, Any]) -> str:
                 f"{context['kv_storage_bytes_per_user']/1e9:.4f} GB | {context['rho_one']:.2f} | "
                 f"{context['rom_stages']} |"
             )
+    lines.extend([
+        "",
+        "## Numeric format contract",
+        "",
+        "Storage width is not used as a proxy for arithmetic precision. In particular,",
+        "DeepSeek routed experts store MXFP4 weights but multiply them by FP8 activations.",
+        "The compatible B200/B300 roof is therefore FP8-rate, not the larger pure-FP4 peak.",
+        "",
+        "| Model | Dense/shared matrix format | Routed expert matrix format | Evidence status |",
+        "|---|---|---|---|",
+    ])
+    for model in result["model_summaries"]:
+        lines.append(
+            f"| {model['model']} | {model['dense_compute_format']} | "
+            f"{model['routed_compute_format'] or 'not applicable'} | "
+            f"{model['compute_precision_status']} |"
+        )
     lines.extend([
         "",
         "## Required operating points",
@@ -322,8 +344,8 @@ def render_report(result: dict[str, Any]) -> str:
         "## Interpretation boundary",
         "",
         "- The curves verify accounting and reveal which constraint binds under each input set.",
-        "- They do **not** verify the assumed ROM density, 100 TB/s read path, 1 POP/s MAC",
-        "  fabric, wafer yield, package HBM capacity, or cost. Sensitivity and circuit/NoC",
+        "- They do **not** verify the assumed ROM density, 100 TB/s read path, format-specific MAC",
+        "  roofs, wafer yield, package HBM capacity, or cost. Sensitivity and circuit/NoC",
         "  work must survive before any go decision.",
         "- GPU marketing peaks are derated explicitly; production traces remain necessary to",
         "  replace engaged-bandwidth, collective, and speculative-acceptance assumptions.",
@@ -726,10 +748,15 @@ def run_standard(output_dir: Path) -> dict[str, Any]:
             "draft_dense_weight_bytes": model.draft_dense_weight_bytes,
             "draft_routed_weight_bytes": model.draft_routed_weight_bytes,
             "resident_only_weight_bytes": model.resident_only_weight_bytes,
+            "dense_compute_format": model.dense_compute_format,
+            "routed_compute_format": model.routed_compute_format,
+            "compute_precision_status": model.metadata.get(
+                "compute_precision_status", "unspecified"
+            ),
             "contexts": contexts,
         })
     result = {
-        "schema_version": 3,
+        "schema_version": 4,
         "inputs": {
             "contexts_by_model": {
                 model.name: list(_contexts_for(model)) for model in models

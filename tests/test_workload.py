@@ -43,6 +43,11 @@ def test_measured_profiles_load(slug: str, layers: int, experts: int, top_k: int
 
 def test_v4_kv_traffic_grows_but_sparse_topk_is_bounded() -> None:
     flash = model("deepseek-v4-flash-0731")
+    assert flash.dense_compute_format == "fp8_e4m3_x_fp8_e4m3"
+    assert flash.routed_compute_format == "mxfp4_e2m1_x_fp8_e4m3"
+    assert "MXFP4 weights x FP8 activations" in flash.metadata[
+        "compute_precision_policy"
+    ]
     low = kv_traffic(flash, 200_000)
     high = kv_traffic(flash, 1_000_000)
     assert low.read_bytes < high.read_bytes

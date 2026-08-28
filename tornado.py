@@ -20,17 +20,21 @@ from opentallas.config import load_architectures, load_model_dir
 from opentallas.schema import ArchitectureProfile, HardwareProfile, ModelProfile, SimulationRequest
 
 
+DEEPSEEK_ROUTED_FORMAT = "mxfp4_e2m1_x_fp8_e4m3"
+
+
 def _replace_compute_roofs(
-    arch: ArchitectureProfile, low_precision_peak_ops_s: float
+    arch: ArchitectureProfile, deepseek_mixed_peak_ops_s: float
 ) -> ArchitectureProfile:
-    ratio = (
-        arch.higher_precision_peak_ops_s_per_device
-        / arch.peak_ops_s_per_device
-    )
+    """Scale every numeric roof around the DeepSeek FP4-weight/FP8-activation roof."""
+
+    ratio = deepseek_mixed_peak_ops_s / arch.compute_roof(DEEPSEEK_ROUTED_FORMAT)
     return replace(
         arch,
-        peak_ops_s_per_device=low_precision_peak_ops_s,
-        higher_precision_peak_ops_s_per_device=low_precision_peak_ops_s * ratio,
+        compute_roofs_ops_s_per_device={
+            numeric_format: peak * ratio
+            for numeric_format, peak in arch.compute_roofs_ops_s_per_device.items()
+        },
     )
 
 
@@ -154,7 +158,7 @@ def main() -> int:
 
     rom_factors: dict[str, tuple[float, float, Callable[[ArchitectureProfile, float], ArchitectureProfile]]] = {
         "ROM array bandwidth (B/s/wafer)": (30e12, 2e15, lambda x, v: replace(x, weight_bandwidth_bytes_s_per_device=v)),
-        "ROM low-precision peak compute (op/s/wafer; higher-precision roof scales proportionally)": (0.5e15, 30e15, _replace_compute_roofs),
+        "ROM DeepSeek MXFP4-weight x FP8-activation peak compute (op/s/wafer; all format roofs scale proportionally)": (0.25e15, 30e15, _replace_compute_roofs),
         "ROM capacity (bytes/wafer)": (128e9, 192e9, lambda x, v: replace(x, weight_capacity_bytes_per_device=v)),
         "ROM HBM bandwidth (B/s/wafer)": (4e12, 16e12, lambda x, v: replace(x, kv_bandwidth_bytes_s_per_device=v)),
         "ROM HBM capacity (bytes/wafer)": (192e9, 768e9, lambda x, v: replace(x, kv_capacity_bytes_per_device=v)),
@@ -282,8 +286,10 @@ def main() -> int:
         ceiling_arch = replace(
             rom,
             weight_bandwidth_bytes_s_per_device=1e30,
-            peak_ops_s_per_device=1e30,
-            higher_precision_peak_ops_s_per_device=1e30,
+            compute_roofs_ops_s_per_device={
+                numeric_format: 1e30
+                for numeric_format in rom.compute_roofs_ops_s_per_device
+            },
             kv_bandwidth_bytes_s_per_device=1e30,
             cooling_limit_w_per_device=1e30,
         )
@@ -297,11 +303,8 @@ def main() -> int:
                 candidate = replace(
                     rom,
                     weight_bandwidth_bytes_s_per_device=bandwidth,
-                    peak_ops_s_per_device=compute,
-                    higher_precision_peak_ops_s_per_device=(
-                        compute
-                        * rom.higher_precision_peak_ops_s_per_device
-                        / rom.peak_ops_s_per_device
+                    compute_roofs_ops_s_per_device=(
+                        _replace_compute_roofs(rom, compute).compute_roofs_ops_s_per_device
                     ),
                 )
                 point = evaluate(simulator, pro, gpus, candidate, 200_000, batch)["rom"]
@@ -376,6 +379,9 @@ def main() -> int:
     )
     lines = [
         "# Sensitivity and provisional-claim audit",
+        "",
+        "> **Legacy/superseded sensitivity.** This sweeps the old single-midpoint",
+        "> B200/B300 comparison. Use `results/iso-node/` for current conclusions.",
         "",
         "Primary ranking: DeepSeek V4 Pro, 200k context, batch 8. Ratio is ROM",
         "per-user speed divided by the fastest feasible B200/B300 configuration.",

@@ -95,6 +95,13 @@ class ModelProfile:
     hidden_size: int
     max_context_tokens: int
     attention_groups: tuple[AttentionGroup, ...]
+    # Arithmetic formats are properties of the released model, not of whether
+    # its stored weights happen to occupy four or eight bits.  For example,
+    # DeepSeek V4 routes MXFP4 expert weights into FP8 activations; it is not an
+    # FP4 x FP4 matrix operation.  Hardware profiles must provide a roof for
+    # every format named here so an unsupported/ambiguous pairing fails closed.
+    dense_compute_format: str
+    routed_compute_format: str | None
     # Exact ordinary-decode storage assigned to each ordered transformer layer.
     # Non-layer tensors, draft modules, and resident-only tensors are kept in the
     # top-level categories and may fill otherwise unused stage ROM capacity.
@@ -127,6 +134,19 @@ class ModelProfile:
             raise ValidationError("active parameters cannot exceed total parameters")
         if self.experts_per_token > self.num_experts:
             raise ValidationError("experts_per_token cannot exceed num_experts")
+        if not self.dense_compute_format.strip():
+            raise ValidationError("dense_compute_format must be non-empty")
+        if self.routed_weight_bytes > 0 and not (
+            isinstance(self.routed_compute_format, str)
+            and self.routed_compute_format.strip()
+        ):
+            raise ValidationError(
+                "routed checkpoints require a non-empty routed_compute_format"
+            )
+        if self.routed_weight_bytes == 0 and self.routed_compute_format is not None:
+            raise ValidationError(
+                "dense checkpoints must set routed_compute_format to null"
+            )
         if any(
             value < 0
             for value in (
@@ -219,8 +239,94 @@ class ModelProfile:
 
 
 @dataclass(frozen=True)
+class ComputePath:
+    """How a model arithmetic format is executed by one architecture.
+
+    ``native`` distinguishes actual format support from an emulation mapping.
+    The operation multiplier permits a documented decomposition into a different
+    primitive, but it must never be used to hide conversion or memory expansion.
+    Those deployment effects require separate accounting.
+    """
+
+    execution_format: str
+    native: bool
+    operation_multiplier: float = 1.0
+    conversion_policy: str = "none"
+    evidence: str = "assumed"
+
+    def __post_init__(self) -> None:
+        if not self.execution_format.strip():
+            raise ValidationError("compute-path execution_format must be non-empty")
+        _positive("compute-path operation_multiplier", self.operation_multiplier)
+        if not self.conversion_policy.strip():
+            raise ValidationError("compute-path conversion_policy must be non-empty")
+        if not self.evidence.strip():
+            raise ValidationError("compute-path evidence must be non-empty")
+
+
+@dataclass(frozen=True)
+class WaferCommunicationProfile:
+    """Physical inputs for a distributed on-wafer all-reduce.
+
+    The profile intentionally does not contain a precomputed ``seconds/layer``
+    number.  Propagation and serialization are derived for each model, context,
+    and batch from the mesh dimensions, link payload, and the two all-reduces in
+    the released DeepSeek block.  A coarse hierarchy can be represented by a
+    small global mesh plus an explicit local path; a WSE-like nearest-neighbour
+    ceiling uses the full core mesh and a zero local path.
+    """
+
+    topology: str
+    rows: int
+    cols: int
+    frequency_hz: float
+    link_payload_bytes_per_cycle: float
+    hop_cycles: float
+    bisection_links: int
+    local_path_hops: int = 0
+    local_hop_cycles: float = 0.0
+    endpoint_cycles: float = 0.0
+    barrier_cycles: float = 0.0
+    payload_efficiency: float = 1.0
+    allreduce_events_per_layer: int = 2
+    reduction_bytes_per_element: float = 4.0
+    result_bytes_per_element: float = 2.0
+    evidence: dict[str, str] = field(default_factory=dict)
+
+    def __post_init__(self) -> None:
+        if self.topology not in {
+            "nearest_neighbor_mesh",
+            "hierarchical_mesh",
+            "coarse_reticle_exchange",
+        }:
+            raise ValidationError(
+                f"unsupported wafer communication topology {self.topology!r}"
+            )
+        for name in (
+            "rows",
+            "cols",
+            "frequency_hz",
+            "link_payload_bytes_per_cycle",
+            "hop_cycles",
+            "bisection_links",
+            "allreduce_events_per_layer",
+            "reduction_bytes_per_element",
+            "result_bytes_per_element",
+        ):
+            _positive(name, float(getattr(self, name)))
+        if self.local_path_hops < 0:
+            raise ValidationError("local_path_hops cannot be negative")
+        for name in ("local_hop_cycles", "endpoint_cycles", "barrier_cycles"):
+            if getattr(self, name) < 0:
+                raise ValidationError(f"{name} cannot be negative")
+        _fraction("payload_efficiency", self.payload_efficiency)
+        if self.bisection_links > self.rows * self.cols:
+            raise ValidationError("bisection_links cannot exceed mesh node count")
+
+
+@dataclass(frozen=True)
 class ArchitectureProfile:
-    """One implementation architecture (GPU cluster or ROM wafer pipeline)."""
+    """One implementation architecture (GPU cluster or wafer pipeline)."""
 
     name: str
     kind: str
@@ -229,8 +335,7 @@ class ArchitectureProfile:
     kv_capacity_bytes_per_device: float
     weight_bandwidth_bytes_s_per_device: float
     kv_bandwidth_bytes_s_per_device: float
-    peak_ops_s_per_device: float
-    higher_precision_peak_ops_s_per_device: float
+    compute_roofs_ops_s_per_device: dict[str, float]
     collective_latency_s_per_layer: float
     cost_per_device: float
     power_w_per_device: float
@@ -266,20 +371,27 @@ class ArchitectureProfile:
     nre_cost: float = 0.0
     production_units: int = 1
     cross_stage_latency_s: float = 0.0
+    cross_stage_bandwidth_bytes_s: float = 1.0e30
+    compute_paths: dict[str, ComputePath] = field(default_factory=dict)
+    wafer_communication: WaferCommunicationProfile | None = None
+    weight_storage_technology: str = "unspecified"
+    kv_storage_technology: str = "unspecified"
+    storage_capacity_policy: str = "unspecified"
+    storage_bandwidth_policy: str = "unspecified"
+    model_deployment_policy: str = "official_packed"
     evidence: dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
-        if self.kind not in {"gpu", "rom"}:
-            raise ValidationError("architecture kind must be 'gpu' or 'rom'")
+        if self.kind not in {"gpu", "rom", "sram"}:
+            raise ValidationError("architecture kind must be 'gpu', 'rom', or 'sram'")
         for name in (
             "device_count",
             "weight_capacity_bytes_per_device",
             "kv_capacity_bytes_per_device",
             "weight_bandwidth_bytes_s_per_device",
             "kv_bandwidth_bytes_s_per_device",
-            "peak_ops_s_per_device",
-            "higher_precision_peak_ops_s_per_device",
             "collective_bandwidth_bytes_s",
+            "cross_stage_bandwidth_bytes_s",
             "kv_read_amplification",
             "cost_per_device",
             "power_w_per_device",
@@ -290,6 +402,36 @@ class ArchitectureProfile:
             "facility_pue",
         ):
             _positive(name, float(getattr(self, name)))
+        if not self.compute_roofs_ops_s_per_device:
+            raise ValidationError("compute_roofs_ops_s_per_device must not be empty")
+        for numeric_format, peak in self.compute_roofs_ops_s_per_device.items():
+            if not isinstance(numeric_format, str) or not numeric_format.strip():
+                raise ValidationError("compute roof names must be non-empty strings")
+            _positive(
+                f"compute_roofs_ops_s_per_device[{numeric_format!r}]",
+                float(peak),
+            )
+        for model_format, path in self.compute_paths.items():
+            if not isinstance(model_format, str) or not model_format.strip():
+                raise ValidationError("compute-path model formats must be non-empty strings")
+            if not isinstance(path, ComputePath):
+                raise ValidationError("compute_paths values must be ComputePath objects")
+            if path.execution_format not in self.compute_roofs_ops_s_per_device:
+                raise ValidationError(
+                    f"compute path for {model_format!r} names unavailable execution "
+                    f"format {path.execution_format!r}"
+                )
+        if self.kind == "gpu" and self.wafer_communication is not None:
+            raise ValidationError("GPU profiles cannot define wafer_communication")
+        for name in (
+            "weight_storage_technology",
+            "kv_storage_technology",
+            "storage_capacity_policy",
+            "storage_bandwidth_policy",
+            "model_deployment_policy",
+        ):
+            if not getattr(self, name).strip():
+                raise ValidationError(f"{name} must be non-empty")
         if self.power_w_per_device > self.cooling_limit_w_per_device:
             raise ValidationError(
                 "power_w_per_device cannot exceed cooling_limit_w_per_device"
@@ -308,6 +450,47 @@ class ArchitectureProfile:
         ):
             _fraction(name, float(getattr(self, name)))
 
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> "ArchitectureProfile":
+        copied = dict(data)
+        copied["compute_paths"] = {
+            numeric_format: (
+                path if isinstance(path, ComputePath) else ComputePath(**path)
+            )
+            for numeric_format, path in copied.get("compute_paths", {}).items()
+        }
+        wafer_communication = copied.get("wafer_communication")
+        if isinstance(wafer_communication, dict):
+            copied["wafer_communication"] = WaferCommunicationProfile(
+                **wafer_communication
+            )
+        return cls(**copied)
+
+    def compute_path(self, numeric_format: str) -> ComputePath:
+        """Resolve native or explicitly emulated model arithmetic."""
+
+        if numeric_format in self.compute_paths:
+            return self.compute_paths[numeric_format]
+        if numeric_format in self.compute_roofs_ops_s_per_device:
+            return ComputePath(
+                execution_format=numeric_format,
+                native=True,
+                evidence="identity path from architecture compute roof",
+            )
+        available = ", ".join(
+            sorted(set(self.compute_roofs_ops_s_per_device) | set(self.compute_paths))
+        )
+        raise ValidationError(
+            f"{self.name} has no compute path for {numeric_format!r}; "
+            f"available formats: {available}"
+        )
+
+    def compute_roof(self, numeric_format: str) -> float:
+        """Return the execution roof selected by a compatible compute path."""
+
+        path = self.compute_path(numeric_format)
+        return self.compute_roofs_ops_s_per_device[path.execution_format]
+
 
 @dataclass(frozen=True)
 class HardwareProfile:
@@ -321,8 +504,8 @@ class HardwareProfile:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> "HardwareProfile":
         return cls(
-            gpu=ArchitectureProfile(**data["gpu"]),
-            rom=ArchitectureProfile(**data["rom"]),
+            gpu=ArchitectureProfile.from_dict(data["gpu"]),
+            rom=ArchitectureProfile.from_dict(data["rom"]),
         )
 
     @classmethod

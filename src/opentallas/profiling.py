@@ -102,6 +102,7 @@ class Inventory:
     decode_layer_routed_bytes: dict[str, int]
     index_sha256: str
     config_sha256: str
+    deployment_storage: dict[str, Any]
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -198,6 +199,27 @@ def _weight_role(adapter: str, name: str) -> str:
     return "decode_routed" if _is_routed(name) else "decode_dense"
 
 
+def _deepseek_a100_bf16_storage_bytes(name: str, dtype: str, storage: int) -> int:
+    """Bytes after offline expansion into arithmetic A100 can execute natively.
+
+    A100 has BF16 Tensor Cores but no FP8 or floating-point FP4 Tensor Core path.
+    FP8 values expand from one to two bytes.  Each released I8 expert payload
+    byte contains two MXFP4 values, so it expands to four BF16 bytes.  E8M0
+    block scales are absorbed during offline dequantization and need not remain
+    resident.  Already-BF16, FP32, and integer lookup tensors are unchanged.
+    """
+
+    if dtype == "F8_E8M0":
+        return 0
+    if dtype == "F8_E4M3":
+        return storage * 2
+    if dtype == "I8":
+        if not (_is_routed(name) and name.endswith(".weight")):
+            raise RuntimeError(f"unexpected DeepSeek I8 tensor {name!r}")
+        return storage * 4
+    return storage
+
+
 def profile_checkpoint(spec: SourceSpec, cache_dir: Path, workers: int = 8) -> tuple[dict, Inventory]:
     root = cache_dir / "metadata" / spec.slug / spec.revision
     config_url = f"{HF_BASE}/{spec.repo}/resolve/{spec.revision}/config.json"
@@ -227,6 +249,9 @@ def profile_checkpoint(spec: SourceSpec, cache_dir: Path, workers: int = 8) -> t
     layer_routed: dict[str, int] = defaultdict(int)
     decode_layer_dense: dict[str, int] = defaultdict(int)
     decode_layer_routed: dict[str, int] = defaultdict(int)
+    deployment_roles: dict[str, int] = defaultdict(int)
+    deployment_layer_dense: dict[str, int] = defaultdict(int)
+    deployment_layer_routed: dict[str, int] = defaultdict(int)
     names: set[str] = set()
     for shard in shards:
         for name, tensor in headers[shard].items():
@@ -255,6 +280,15 @@ def profile_checkpoint(spec: SourceSpec, cache_dir: Path, workers: int = 8) -> t
                 if layer is not None:
                     layer_dense[layer] += storage
             role = _weight_role(spec.adapter, name)
+            if spec.adapter == "deepseek_v4":
+                deployed = _deepseek_a100_bf16_storage_bytes(
+                    name, dtype, storage
+                )
+                deployment_roles[role] += deployed
+                if layer is not None and role == "decode_dense":
+                    deployment_layer_dense[layer] += deployed
+                elif layer is not None and role == "decode_routed":
+                    deployment_layer_routed[layer] += deployed
             if role == "decode_dense":
                 decode_dense += storage
                 if layer is not None:
@@ -309,6 +343,36 @@ def profile_checkpoint(spec: SourceSpec, cache_dir: Path, workers: int = 8) -> t
         ),
         index_sha256=hashlib.sha256(index_raw).hexdigest(),
         config_sha256=hashlib.sha256(config_raw).hexdigest(),
+        deployment_storage=(
+            {
+                "a100_bf16_expanded": {
+                    "checkpoint_bytes": sum(deployment_roles.values()),
+                    "decode_dense_bytes": deployment_roles["decode_dense"],
+                    "decode_routed_bytes": deployment_roles["decode_routed"],
+                    "draft_dense_bytes": deployment_roles["draft_dense"],
+                    "draft_routed_bytes": deployment_roles["draft_routed"],
+                    "resident_only_bytes": deployment_roles["resident_only"],
+                    "decode_layer_dense_bytes": dict(
+                        sorted(
+                            deployment_layer_dense.items(),
+                            key=lambda pair: int(pair[0]),
+                        )
+                    ),
+                    "decode_layer_routed_bytes": dict(
+                        sorted(
+                            deployment_layer_routed.items(),
+                            key=lambda pair: int(pair[0]),
+                        )
+                    ),
+                    "policy": (
+                        "offline exact-value expansion: FP8 to BF16, packed MXFP4 "
+                        "to BF16, E8M0 scales absorbed"
+                    ),
+                }
+            }
+            if spec.adapter == "deepseek_v4"
+            else {}
+        ),
     )
     return config, inventory
 
@@ -373,6 +437,8 @@ def _deepseek_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> M
         checkpoint_bytes=inventory.checkpoint_bytes,
         dense_weight_bytes=inventory.decode_dense_bytes,
         routed_weight_bytes=inventory.decode_routed_bytes,
+        dense_compute_format="fp8_e4m3_x_fp8_e4m3",
+        routed_compute_format="mxfp4_e2m1_x_fp8_e4m3",
         draft_dense_weight_bytes=inventory.draft_dense_bytes,
         draft_routed_weight_bytes=inventory.draft_routed_bytes,
         resident_only_weight_bytes=inventory.resident_only_bytes,
@@ -397,11 +463,50 @@ def _deepseek_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> M
             "checkpoint_inventory": f"data/inventory/{spec.slug}.json",
             "kv_cache_policy": "FP8 main + BF16 RoPE; FP4 index",
             "kv_cache_policy_status": "published serving recipe plus derived scale overhead",
+            "weight_storage_policy": (
+                "routed experts MXFP4 E2M1 with E8M0 microscaling; "
+                "dense/shared matrices FP8 E4M3 with E8M0 block scales"
+            ),
+            "compute_precision_policy": (
+                "routed expert GEMMs use MXFP4 weights x FP8 activations; "
+                "dense/shared GEMMs use FP8 weights x FP8 activations"
+            ),
+            "compute_precision_status": "published DeepSeek report and pinned config",
             "num_hash_layers": int(config.get("num_hash_layers", 0)),
             "weight_traffic_policy": "main decode streamed; MTP charged only under speculation; embeddings/hash tables resident-only",
             "index_heads": int(config["index_n_heads"]),
             "index_head_dim": index_dim,
             "index_topk": int(config["index_topk"]),
+            # Tensor-contraction accounting is derived from these official
+            # dimensions and the released inference implementation.  Keep the
+            # complete input beside the generated profile so a result never
+            # relies on rounded "active parameter" arithmetic.
+            "operator_config": {
+                "vocab_size": int(config["vocab_size"]),
+                "hidden_size": int(config["hidden_size"]),
+                "moe_intermediate_size": int(config["moe_intermediate_size"]),
+                "num_attention_heads": int(config["num_attention_heads"]),
+                "head_dim": head_dim,
+                "rope_head_dim": rope_dim,
+                "q_lora_rank": int(config["q_lora_rank"]),
+                "o_groups": int(config["o_groups"]),
+                "o_lora_rank": int(config["o_lora_rank"]),
+                "num_routed_experts": int(config["n_routed_experts"]),
+                "num_shared_experts": int(config["n_shared_experts"]),
+                "experts_per_token": int(config["num_experts_per_tok"]),
+                "index_heads": int(config["index_n_heads"]),
+                "index_head_dim": index_dim,
+                "index_topk": int(config["index_topk"]),
+                "window_tokens": window,
+                "hc_mult": int(config["hc_mult"]),
+                "hc_sinkhorn_iters": int(config["hc_sinkhorn_iters"]),
+                "compress_ratios": list(ratios),
+            },
+            "operator_accounting_source": (
+                "official config, pinned safetensors tensor shapes/dtypes, and "
+                "pinned DeepSeek inference/model.py"
+            ),
+            "deployment_storage": inventory.deployment_storage,
         },
     )
 
@@ -454,6 +559,8 @@ def _kimi_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Model
         checkpoint_bytes=inventory.checkpoint_bytes,
         dense_weight_bytes=inventory.decode_dense_bytes,
         routed_weight_bytes=inventory.decode_routed_bytes,
+        dense_compute_format="bf16_x_bf16",
+        routed_compute_format="mxfp4_e2m1_x_mxfp8_e4m3",
         draft_dense_weight_bytes=inventory.draft_dense_bytes,
         draft_routed_weight_bytes=inventory.draft_routed_bytes,
         resident_only_weight_bytes=inventory.resident_only_bytes,
@@ -478,6 +585,11 @@ def _kimi_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Model
             "checkpoint_inventory": f"data/inventory/{spec.slug}.json",
             "kv_cache_policy": "FP32 KDA recurrent state + optimized FP8 latent MLA",
             "kv_cache_policy_status": "mixed derived/assumed; swept in sensitivity analysis",
+            "compute_precision_policy": (
+                "routed expert GEMMs use MXFP4 weights x MXFP8 activations; "
+                "dense BF16 checkpoint tensors use the BF16 roof"
+            ),
+            "compute_precision_status": "mixed published checkpoint/README and derived classification",
             "full_attention_layers": mla_count,
             "kda_layers": kda_count,
             "weight_traffic_policy": "text decode streamed; embedding and multimodal front end resident-only",
@@ -518,6 +630,8 @@ def _qwen3_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Mode
         checkpoint_bytes=inventory.checkpoint_bytes,
         dense_weight_bytes=inventory.decode_dense_bytes,
         routed_weight_bytes=0,
+        dense_compute_format="bf16_x_bf16",
+        routed_compute_format=None,
         draft_dense_weight_bytes=0,
         draft_routed_weight_bytes=0,
         resident_only_weight_bytes=inventory.resident_only_bytes,
@@ -540,6 +654,8 @@ def _qwen3_profile(spec: SourceSpec, config: dict, inventory: Inventory) -> Mode
             "attention_sequence": ["full-gqa"] * layers,
             "checkpoint_inventory": f"data/inventory/{spec.slug}.json",
             "checkpoint_storage_dtype": "BF16",
+            "compute_precision_policy": "BF16 weights x BF16 activations",
+            "compute_precision_status": "released BF16 baseline",
             "decode_active_parameter_derivation": (
                 "all ordinary-decode BF16 tensors divided by two bytes; input embedding excluded"
             ),

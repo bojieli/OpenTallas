@@ -25,15 +25,15 @@ uses the cheapest feasible same-batch GPU and remains an incomplete cost proxy.
 
 | Batch | ROM user tok/s | Fastest GPU | GPU user tok/s | ROM/GPU speed | Cheapest GPU | GPU/ROM partial TCO | ROM bind |
 |---:|---:|---|---:|---:|---|---:|---|
-| 1 | 3,371.9 | NVIDIA-B300-x16 | 1,766.6 | 1.91× | NVIDIA-B200-x1 | 1.29× | rom_full_array_read_C4 |
-| 8 | 427.9 | NVIDIA-B300-x16 | 1,434.4 | 0.30× | NVIDIA-B200-x1 | 0.26× | kv_beachfront_C8 |
-| 32 | 107.1 | NVIDIA-B300-x16 | 872.2 | 0.12× | NVIDIA-B200-x1 | 0.14× | kv_beachfront_C8 |
-| 64 | 53.6 | NVIDIA-B300-x16 | 572.8 | 0.09× | NVIDIA-B200-x1 | 0.12× | kv_beachfront_C8 |
-| 128 | 26.8 | NVIDIA-B300-x16 | 339.6 | 0.08× | NVIDIA-B200-x2 | 0.12× | kv_beachfront_C8 |
+| 1 | 3,279.6 | NVIDIA-B300-x16 | 1,759.8 | 1.86× | NVIDIA-B200-x1 | 1.26× | rom_full_array_read_C4 |
+| 8 | 416.1 | NVIDIA-B300-x16 | 1,399.3 | 0.30× | NVIDIA-B200-x1 | 0.25× | kv_beachfront_C8 |
+| 32 | 104.2 | NVIDIA-B300-x16 | 822.1 | 0.13× | NVIDIA-B200-x1 | 0.14× | kv_beachfront_C8 |
+| 64 | 52.1 | NVIDIA-B300-x16 | 530.3 | 0.10× | NVIDIA-B200-x1 | 0.12× | kv_beachfront_C8 |
+| 128 | 26.0 | NVIDIA-B300-x16 | 310.2 | 0.08× | NVIDIA-B200-x2 | 0.11× | kv_beachfront_C8 |
 
 ## Capacity-bound optima and conclusion
 
 - ROM latency/balanced optimum: B1/B1; ROM aggregate-throughput optimum: B286; ROM partial-TCO optimum: B286.
-- GPU latency optimum: NVIDIA-B300-x16/B1; balanced: NVIDIA-B300-x16/B29; aggregate throughput: NVIDIA-B300-x16/B3419; partial TCO: NVIDIA-B200-x4/B522.
+- GPU latency optimum: NVIDIA-B300-x16/B1; balanced: NVIDIA-B300-x16/B26; aggregate throughput: NVIDIA-B300-x16/B3419; partial TCO: NVIDIA-B200-x4/B522.
 - ROM exceeds the fastest GPU's global per-user-speed optimum only at batch 1-1. At B8 and above, the modeled ROM HBM beachfront binds and both speed and partial TCO favor GPU.
 - One 10.24%-occupied ROM stage is a useful dense/GQA verification control, but poor fixed-weight capacity utilization and the single-batch speed island do not support elevating Qwen3-8B into the target list.

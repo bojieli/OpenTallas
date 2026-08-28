@@ -29,6 +29,7 @@
     }
   ],
   "checkpoint_bytes": 1560860324864,
+  "dense_compute_format": "bf16_x_bf16",
   "dense_weight_bytes": 111160730624,
   "draft_dense_weight_bytes": 0,
   "draft_routed_weight_bytes": 0,
@@ -323,6 +324,8 @@
       "gated-mla"
     ],
     "checkpoint_inventory": "data/inventory/kimi-k3.json",
+    "compute_precision_policy": "routed expert GEMMs use MXFP4 weights x MXFP8 activations; dense BF16 checkpoint tensors use the BF16 roof",
+    "compute_precision_status": "mixed published checkpoint/README and derived classification",
     "full_attention_layers": 24,
     "kda_layers": 69,
     "kv_cache_policy": "FP32 KDA recurrent state + optimized FP8 latent MLA",
@@ -335,6 +338,7 @@
   "operations_per_active_parameter": 2.0,
   "resident_only_weight_bytes": 3243528192,
   "routed_weight_bytes": 1446456066048,
+  "routed_compute_format": "mxfp4_e2m1_x_mxfp8_e4m3",
   "router_trace_status": "synthetic; no production activations",
   "source_repo": "moonshotai/Kimi-K3",
   "source_revision": "a590ce090cb049c93a33dfe8c208ec652aa20503",

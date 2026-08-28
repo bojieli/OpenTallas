@@ -8,9 +8,13 @@ hiding a capacity, latency, or thermal failure.
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass, field
+import json
 import math
 from typing import Any
 
+from .deployment import deployment_model
+from .noc import spatial_allreduce
+from .operations import OperationInventory, operation_inventory
 from .schema import ArchitectureProfile, HardwareProfile, ModelProfile, SimulationRequest
 from .workload import (
     KVTraffic,
@@ -217,6 +221,63 @@ def _binding(component_times: dict[str, float], thermal_scale: float) -> str:
     return max(component_times, key=component_times.get)
 
 
+def _scale_formats(values: dict[str, float], multiplier: float) -> dict[str, float]:
+    return {
+        numeric_format: operations * multiplier
+        for numeric_format, operations in values.items()
+        if operations > 0
+    }
+
+
+def _stage_operation_formats(
+    inventory: OperationInventory,
+    partitions: tuple[tuple[int, int], ...],
+    multiplier: float,
+) -> tuple[dict[str, float], ...]:
+    """Place exact layer work and the final projection in pipeline order."""
+
+    stages: list[dict[str, float]] = []
+    for start, end in partitions:
+        stage: dict[str, float] = {}
+        for layer in inventory.per_layer_operations_by_format[start:end]:
+            for numeric_format, operations in layer.items():
+                stage[numeric_format] = stage.get(numeric_format, 0.0) + operations
+        stages.append(stage)
+    if stages:
+        # The vocabulary and final mHC heads consume the last transformer
+        # output. They cannot be spread uniformly over earlier pipeline stages.
+        for numeric_format, operations in inventory.unlayered_operations_by_format.items():
+            stages[-1][numeric_format] = stages[-1].get(numeric_format, 0.0) + operations
+    return tuple(_scale_formats(stage, multiplier) for stage in stages)
+
+
+def _compute_service_time(
+    operations_by_format: dict[str, float],
+    arch: ArchitectureProfile,
+    *,
+    devices: int,
+    effective_clock: float,
+    routed_format: str | None,
+) -> tuple[float, dict[str, float], dict[str, float]]:
+    """Serialize format-specific contractions through compatible compute roofs."""
+
+    times: dict[str, float] = {}
+    roofs: dict[str, float] = {}
+    for numeric_format, operations in operations_by_format.items():
+        path = arch.compute_path(numeric_format)
+        roof = arch.compute_roof(numeric_format)
+        balance = arch.load_balance_efficiency if numeric_format == routed_format else 1.0
+        times[numeric_format] = operations * path.operation_multiplier / (
+            devices
+            * roof
+            * arch.compute_efficiency
+            * effective_clock
+            * balance
+        )
+        roofs[numeric_format] = roof
+    return sum(times.values()), times, roofs
+
+
 class AnalyticalSimulator:
     def __init__(self, hardware: HardwareProfile):
         self.hardware = hardware
@@ -257,6 +318,7 @@ class AnalyticalSimulator:
         *,
         measured_expert_coverage: float | None = None,
     ) -> OperatingPoint:
+        model = deployment_model(model, arch.model_deployment_policy)
         if request.context_tokens > model.max_context_tokens:
             raise ValueError("requested context exceeds model maximum")
 
@@ -288,7 +350,7 @@ class AnalyticalSimulator:
         )
         kv = kv_traffic(model, request.context_tokens)
 
-        if arch.kind == "rom":
+        if arch.kind != "gpu":
             layout = self._cached_rom_layout(model, arch)
             stages = layout.stages
             partitions = layout.partitions
@@ -319,7 +381,11 @@ class AnalyticalSimulator:
         # batch is per stage and the number of simultaneously stored sessions is
         # batch*stages.  Comparing batch alone with aggregate HBM capacity would
         # overstate high-batch feasibility by exactly the pipeline depth.
-        resident_users_required = request.batch_size * stages if arch.kind == "rom" else request.batch_size
+        resident_users_required = (
+            request.batch_size * stages
+            if arch.kind != "gpu"
+            else request.batch_size
+        )
         if resident_users_required > max_users:
             reasons.append(
                 f"C7/C8: {resident_users_required} resident users required "
@@ -331,29 +397,84 @@ class AnalyticalSimulator:
             0.0, min(model.active_parameters, model.dense_parameters)
         )
         routed_active_parameters = model.active_parameters - dense_active_parameters
-        dense_ops = (
-            model.operations_per_active_parameter
-            * dense_active_parameters
-            * request.batch_size
-            * positions
+        per_user_operations = operation_inventory(model, request.context_tokens)
+        operation_multiplier = request.batch_size * positions
+        operations_by_format = _scale_formats(
+            per_user_operations.operations_by_format, operation_multiplier
         )
         routed_ops = (
-            model.operations_per_active_parameter
-            * routed_active_parameters
-            * request.batch_size
-            * positions
+            operations_by_format.get(model.routed_compute_format, 0.0)
+            if model.routed_compute_format is not None
+            else 0.0
         )
-        total_ops = dense_ops + routed_ops
+        total_ops = sum(operations_by_format.values())
+        dense_ops = total_ops - routed_ops
+        compute_roofs = {
+            numeric_format: arch.compute_roof(numeric_format)
+            for numeric_format in operations_by_format
+        }
+        # Retained for the explicitly approximate prefill path and compatibility
+        # metrics. Decode compute below uses every format bucket independently.
+        dense_compute_roof = arch.compute_roof(model.dense_compute_format)
+        routed_compute_roof = (
+            arch.compute_roof(model.routed_compute_format)
+            if routed_ops > 0 and model.routed_compute_format is not None
+            else dense_compute_roof
+        )
         kv_transfer_per_user = (
             kv.read_bytes * arch.kv_read_amplification + kv.write_bytes
         )
         kv_transfer = kv_transfer_per_user * request.batch_size * positions
-        collective_payload_bytes = (
-            request.batch_size * positions * model.hidden_size * (2 + 4)
+        collective_elements = request.batch_size * positions * model.hidden_size
+        collective_reduction_payload_bytes = collective_elements * 4
+        collective_result_payload_bytes = collective_elements * 2
+        collective_payload_bytes_per_event = (
+            collective_reduction_payload_bytes + collective_result_payload_bytes
         )
+        communication_metrics: dict[str, float | str] = {
+            "C6_communication_model": "fixed_architecture_profile",
+            "C6_allreduce_events_per_layer": 2.0,
+            "C6_reduction_payload_bytes_per_event": float(
+                collective_reduction_payload_bytes
+            ),
+            "C6_result_payload_bytes_per_event": float(
+                collective_result_payload_bytes
+            ),
+            "C6_payload_bytes_per_event": float(collective_payload_bytes_per_event),
+            "C6_total_serialized_payload_bytes_per_layer": float(
+                2 * collective_payload_bytes_per_event
+            ),
+            "C6_configured_latency_semantics": (
+                "aggregate_floor_for_all_inter_device_events_per_layer"
+            ),
+        }
 
         if arch.kind == "gpu":
             devices = arch.device_count
+            allreduce_events_per_layer = 0 if devices == 1 else 2
+            serialized_collective_payload_bytes = (
+                allreduce_events_per_layer * collective_payload_bytes_per_event
+            )
+            communication_metrics.update(
+                {
+                    "C6_communication_model": (
+                        "none_single_device"
+                        if devices == 1
+                        else "gpu_aggregate_latency_plus_logical_payload"
+                    ),
+                    "C6_allreduce_events_per_layer": float(
+                        allreduce_events_per_layer
+                    ),
+                    "C6_total_serialized_payload_bytes_per_layer": float(
+                        serialized_collective_payload_bytes
+                    ),
+                    "C6_configured_latency_semantics": (
+                        "zero_single_device"
+                        if devices == 1
+                        else "aggregate_floor_for_both_allreduces_per_layer"
+                    ),
+                }
+            )
             all_weight_bw = (
                 devices
                 * arch.weight_bandwidth_bytes_s_per_device
@@ -377,25 +498,21 @@ class AnalyticalSimulator:
                 * arch.kv_bandwidth_efficiency
                 * effective_clock
             )
-            dense_compute_s = dense_ops / (
-                devices
-                * arch.higher_precision_peak_ops_s_per_device
-                * arch.compute_efficiency
-                * effective_clock
+            compute_s, compute_times_by_format, _ = _compute_service_time(
+                operations_by_format,
+                arch,
+                devices=devices,
+                effective_clock=effective_clock,
+                routed_format=model.routed_compute_format,
             )
-            routed_compute_s = routed_ops / (
-                devices
-                * arch.peak_ops_s_per_device
-                * arch.compute_efficiency
-                * effective_clock
-                * arch.load_balance_efficiency
-            )
-            compute_s = dense_compute_s + routed_compute_s
             collective_s = (
-                model.num_layers
+                0.0
+                if devices == 1
+                else model.num_layers
                 * (
                     arch.collective_latency_s_per_layer
-                    + collective_payload_bytes / arch.collective_bandwidth_bytes_s
+                    + serialized_collective_payload_bytes
+                    / arch.collective_bandwidth_bytes_s
                 )
                 / arch.sync_efficiency
             )
@@ -417,6 +534,7 @@ class AnalyticalSimulator:
             stage_ops = (total_ops,)
             stage_dense_ops = (dense_ops,)
             stage_routed_ops = (routed_ops,)
+            stage_operations_by_format = (operations_by_format,)
             bottleneck_stage = 0
         else:
             used_devices = stages
@@ -453,41 +571,20 @@ class AnalyticalSimulator:
                 value * request.batch_size * positions for value in stage_kv_per_user
             )
 
-            # Exact per-layer active parameter counts are not published. Use the
-            # released-format B=1 active-byte distribution as the deterministic
-            # operation-share proxy, and report that assumption explicitly.
-            routed_fraction = model.routed_fraction_per_token
-            layer_dense_proxy = layer_dense
-            layer_routed_proxy = tuple(
-                routed * routed_fraction for routed in layer_routed
+            stage_operations_by_format = _stage_operation_formats(
+                per_user_operations, partitions, operation_multiplier
             )
-            stage_dense_proxy = tuple(
-                sum(layer_dense_proxy[start:end]) + unlayered_main_dense / stages
-                for start, end in partitions
+            stage_routed_ops = tuple(
+                stage.get(model.routed_compute_format, 0.0)
+                if model.routed_compute_format is not None
+                else 0.0
+                for stage in stage_operations_by_format
             )
-            stage_routed_proxy = tuple(
-                sum(layer_routed_proxy[start:end])
-                + unlayered_main_routed * routed_fraction / stages
-                for start, end in partitions
-            )
-            dense_proxy_total = sum(stage_dense_proxy)
-            routed_proxy_total = sum(stage_routed_proxy)
-            if dense_proxy_total <= 0:
-                stage_dense_ops = tuple(dense_ops / stages for _ in partitions)
-            else:
-                stage_dense_ops = tuple(
-                    dense_ops * value / dense_proxy_total for value in stage_dense_proxy
-                )
-            if routed_proxy_total <= 0:
-                stage_routed_ops = tuple(routed_ops / stages for _ in partitions)
-            else:
-                stage_routed_ops = tuple(
-                    routed_ops * value / routed_proxy_total
-                    for value in stage_routed_proxy
-                )
             stage_ops = tuple(
-                dense + routed
-                for dense, routed in zip(stage_dense_ops, stage_routed_ops)
+                sum(stage.values()) for stage in stage_operations_by_format
+            )
+            stage_dense_ops = tuple(
+                total - routed for total, routed in zip(stage_ops, stage_routed_ops)
             )
 
             weight_times = tuple(
@@ -508,26 +605,70 @@ class AnalyticalSimulator:
                 )
                 for value in stage_kv_transfer
             )
-            compute_times = tuple(
-                dense
-                / (
-                    arch.higher_precision_peak_ops_s_per_device
-                    * arch.compute_efficiency
-                    * effective_clock
+            stage_compute_services = tuple(
+                _compute_service_time(
+                    stage,
+                    arch,
+                    devices=1,
+                    effective_clock=effective_clock,
+                    routed_format=model.routed_compute_format,
                 )
-                + routed
-                / (
-                    arch.peak_ops_s_per_device
-                    * arch.compute_efficiency
-                    * effective_clock
-                    * arch.load_balance_efficiency
-                )
-                for dense, routed in zip(stage_dense_ops, stage_routed_ops)
+                for stage in stage_operations_by_format
             )
-            per_layer_collective_s = (
-                arch.collective_latency_s_per_layer
-                + collective_payload_bytes / arch.collective_bandwidth_bytes_s
-            ) / arch.sync_efficiency
+            compute_times = tuple(service[0] for service in stage_compute_services)
+            stage_compute_times_by_format = tuple(
+                service[1] for service in stage_compute_services
+            )
+            if arch.wafer_communication is not None:
+                allreduce = spatial_allreduce(
+                    arch.wafer_communication,
+                    elements=request.batch_size * positions * model.hidden_size,
+                )
+                per_layer_collective_s = (
+                    allreduce.layer_service_time_s / arch.sync_efficiency
+                )
+                communication_metrics = {
+                    "C6_communication_model": "spatial_bisection_allreduce",
+                    "C6_topology": allreduce.topology,
+                    "C6_allreduce_events_per_layer": float(
+                        allreduce.allreduce_events_per_layer
+                    ),
+                    "C6_global_path_hops": float(allreduce.global_path_hops),
+                    "C6_local_path_hops": float(allreduce.local_path_hops),
+                    "C6_propagation_cycles_per_direction": (
+                        allreduce.propagation_cycles_per_direction
+                    ),
+                    "C6_critical_cut_payload_bytes_per_cycle": (
+                        allreduce.critical_cut_payload_bytes_per_cycle
+                    ),
+                    "C6_reduction_payload_bytes_per_event": (
+                        allreduce.reduction_payload_bytes
+                    ),
+                    "C6_result_payload_bytes_per_event": (
+                        allreduce.result_payload_bytes
+                    ),
+                    "C6_reduction_serialization_cycles_per_event": float(
+                        allreduce.reduction_serialization_cycles
+                    ),
+                    "C6_result_serialization_cycles_per_event": float(
+                        allreduce.result_serialization_cycles
+                    ),
+                    "C6_event_cycles": allreduce.event_cycles,
+                    "C6_event_latency_s": allreduce.event_latency_s,
+                    "C6_layer_service_time_before_sync_derate_s": (
+                        allreduce.layer_service_time_s
+                    ),
+                    "C6_layer_service_time_after_sync_derate_s": (
+                        per_layer_collective_s
+                    ),
+                }
+            else:
+                per_layer_collective_s = (
+                    arch.collective_latency_s_per_layer
+                    + 2
+                    * collective_payload_bytes_per_event
+                    / arch.collective_bandwidth_bytes_s
+                ) / arch.sync_efficiency
             collective_times = tuple(
                 (end - start) * per_layer_collective_s for start, end in partitions
             )
@@ -540,12 +681,17 @@ class AnalyticalSimulator:
             bottleneck_stage = max(
                 range(stages), key=lambda index: stage_service_times[index]
             )
+            compute_times_by_format = stage_compute_times_by_format[bottleneck_stage]
             weight_s = max(weight_times)
             kv_s = max(kv_times)
             compute_s = max(compute_times)
             collective_s = max(collective_times)
             component_times = {
-                "rom_full_array_read_C4": weight_s,
+                (
+                    "rom_full_array_read_C4"
+                    if arch.kind == "rom"
+                    else "sram_weight_banks_C4"
+                ): weight_s,
                 "kv_beachfront_C8": kv_s,
                 "compute_C5": compute_s,
                 "collective_floor_C6": collective_s,
@@ -564,7 +710,22 @@ class AnalyticalSimulator:
             one_position_compute = compute_s / positions
             draft_s = spec.draft_tokens * spec.draft_cost_fraction * one_position_compute
             component_times["speculative_draft_cost"] = draft_s
-        raw_interval = core_s + draft_s
+        # A multi-wafer pipeline carries the mutable hidden state, not weights,
+        # across each stage boundary. DeepSeek mHC keeps ``hc_mult`` copies.
+        # Link serialization can overlap stage work but still sets an initiation
+        # interval floor; per-hop propagation is added to end-to-end latency.
+        hc_mult = int(model.metadata.get("operator_config", {}).get("hc_mult", 1))
+        cross_stage_elements_per_user = hc_mult * model.hidden_size
+        cross_stage_bytes_per_user = 2 * cross_stage_elements_per_user * positions
+        cross_stage_batch_bytes = cross_stage_bytes_per_user * request.batch_size
+        cross_stage_service_s = (
+            cross_stage_batch_bytes / arch.cross_stage_bandwidth_bytes_s
+            if stages > 1
+            else 0.0
+        )
+        if stages > 1:
+            component_times["cross_stage_link_C10"] = cross_stage_service_s
+        raw_interval = max(core_s + draft_s, cross_stage_service_s)
 
         energy_j = (
             weights.total_bytes * arch.weight_read_energy_j_per_byte
@@ -584,7 +745,10 @@ class AnalyticalSimulator:
         throttled_dynamic_power = energy_j / max(interval, 1e-30)
         power = max(throttled_dynamic_power, steady_operating_power)
 
-        cross_stage = max(0, stages - 1) * arch.cross_stage_latency_s
+        cross_stage = max(0, stages - 1) * (
+            arch.cross_stage_latency_s
+            + cross_stage_bytes_per_user / arch.cross_stage_bandwidth_bytes_s
+        )
         per_user_step_latency = interval * per_user_multiplier + cross_stage
         aggregate_tps = request.batch_size * expected_outputs / interval
         per_user_tps = expected_outputs / per_user_step_latency
@@ -637,7 +801,7 @@ class AnalyticalSimulator:
                 * uncached_prompt
                 / (
                     used_devices
-                    * arch.higher_precision_peak_ops_s_per_device
+                    * dense_compute_roof
                     * arch.compute_efficiency
                     * effective_clock
                 )
@@ -648,7 +812,7 @@ class AnalyticalSimulator:
                 * uncached_prompt
                 / (
                     used_devices
-                    * arch.peak_ops_s_per_device
+                    * routed_compute_roof
                     * arch.compute_efficiency
                     * effective_clock
                     * arch.load_balance_efficiency
@@ -678,8 +842,41 @@ class AnalyticalSimulator:
             "C1_weight_bytes_per_step": weights.total_bytes,
             "C1_main_weight_bytes_per_step": main_weights.total_bytes,
             "C1_draft_weight_bytes_per_step": draft_weights.total_bytes,
-            "C5_dense_higher_precision_operations": dense_ops,
-            "C5_routed_low_precision_operations": routed_ops,
+            "C5_dense_operations": dense_ops,
+            "C5_routed_operations": routed_ops,
+            "C5_total_tensor_operations": total_ops,
+            "C5_tensor_operations_per_user_position": (
+                per_user_operations.total_tensor_operations
+            ),
+            "C5_operator_inventory_method": per_user_operations.method,
+            "C5_operations_by_format": json.dumps(
+                operations_by_format, sort_keys=True
+            ),
+            "C5_operations_per_user_position_by_format": json.dumps(
+                per_user_operations.operations_by_format, sort_keys=True
+            ),
+            "C5_compute_roofs_ops_s_per_device": json.dumps(
+                compute_roofs, sort_keys=True
+            ),
+            "C5_compute_paths": json.dumps(
+                {
+                    numeric_format: asdict(arch.compute_path(numeric_format))
+                    for numeric_format in operations_by_format
+                },
+                sort_keys=True,
+            ),
+            "C5_compute_service_times_s_by_format": json.dumps(
+                compute_times_by_format, sort_keys=True
+            ),
+            "C5_auxiliary_counts_per_user_position": json.dumps(
+                per_user_operations.auxiliary_counts, sort_keys=True
+            ),
+            "C5_dense_compute_format": model.dense_compute_format,
+            "C5_routed_compute_format": (
+                model.routed_compute_format or "not_applicable"
+            ),
+            "C5_dense_compute_roof_ops_s_per_device": dense_compute_roof,
+            "C5_routed_compute_roof_ops_s_per_device": routed_compute_roof,
             "C5_dense_active_parameters": dense_active_parameters,
             "C5_routed_active_parameters": routed_active_parameters,
             "C2_kv_read_bytes_per_user_token": kv.read_bytes,
@@ -711,13 +908,30 @@ class AnalyticalSimulator:
             "C11_stage_operations": str(stage_ops),
             "C11_stage_dense_operations": str(stage_dense_ops),
             "C11_stage_routed_operations": str(stage_routed_ops),
-            "C11_operation_partition_proxy": "released_format_active_bytes_at_batch_one",
+            "C11_stage_operations_by_format": json.dumps(
+                stage_operations_by_format, sort_keys=True
+            ),
+            "C11_operation_partition_proxy": per_user_operations.method,
+            **communication_metrics,
+            "C10_cross_stage_payload_bytes_per_user_step": float(
+                cross_stage_bytes_per_user
+            ),
+            "C10_cross_stage_payload_bytes_per_batch": float(
+                cross_stage_batch_bytes
+            ),
+            "C10_cross_stage_link_service_s": cross_stage_service_s,
+            "C10_cross_stage_latency_total_s": cross_stage,
             "thermal_scale": thermal_scale,
             "dynamic_power_w_before_throttle": dynamic_power,
             "steady_operating_power_w": steady_operating_power,
             "electricity_cost_per_kwh": arch.electricity_cost_per_kwh,
             "facility_pue": arch.facility_pue,
             "partial_tco_scope": "hardware_and_nre_capex_plus_active_electricity_only",
+            "weight_storage_technology": arch.weight_storage_technology,
+            "kv_storage_technology": arch.kv_storage_technology,
+            "storage_capacity_policy": arch.storage_capacity_policy,
+            "storage_bandwidth_policy": arch.storage_bandwidth_policy,
+            "model_deployment_policy": arch.model_deployment_policy,
             "prefill_latency_s": prefill_s,
             "kv_handoff_latency_s": kv_handoff_s,
             "router_trace_status": model.router_trace_status,

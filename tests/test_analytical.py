@@ -7,7 +7,13 @@ import pytest
 
 from opentallas.analytical import AnalyticalSimulator
 from opentallas.config import load_architectures
-from opentallas.schema import HardwareProfile, ModelProfile, SimulationRequest, SpeculationProfile
+from opentallas.schema import (
+    HardwareProfile,
+    ModelProfile,
+    SimulationRequest,
+    SpeculationProfile,
+    WaferCommunicationProfile,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -153,6 +159,83 @@ def test_collective_serialization_grows_with_batch(setup) -> None:
     assert b64.component_times_s["collective_floor_C6"] > b1.component_times_s["collective_floor_C6"]
 
 
+def test_multi_gpu_collective_serializes_two_payloads_but_uses_aggregate_latency(
+    setup,
+) -> None:
+    gpus, _, sim = setup
+    model = ModelProfile.load(
+        ROOT / "configs" / "models" / "deepseek-v4-flash-0731.json"
+    )
+    one = sim.simulate(
+        model,
+        gpus[0],
+        SimulationRequest(context_tokens=200_000, batch_size=1),
+    )
+    multi_gpu = next(gpu for gpu in gpus if gpu.device_count > 1)
+    point = sim.simulate(
+        model,
+        multi_gpu,
+        SimulationRequest(context_tokens=200_000, batch_size=8),
+    )
+    per_event = 8 * model.hidden_size * (4 + 2)
+    expected = (
+        model.num_layers
+        * (
+            multi_gpu.collective_latency_s_per_layer
+            + 2 * per_event / multi_gpu.collective_bandwidth_bytes_s
+        )
+        / multi_gpu.sync_efficiency
+    )
+    assert one.metrics["C6_allreduce_events_per_layer"] == 0
+    assert one.component_times_s["collective_floor_C6"] == 0
+    assert point.metrics["C6_allreduce_events_per_layer"] == 2
+    assert point.metrics["C6_payload_bytes_per_event"] == per_event
+    assert point.metrics["C6_total_serialized_payload_bytes_per_layer"] == 2 * per_event
+    assert point.metrics["C6_configured_latency_semantics"] == (
+        "aggregate_floor_for_both_allreduces_per_layer"
+    )
+    assert point.component_times_s["collective_floor_C6"] == pytest.approx(expected)
+
+
+def test_spatial_wafer_collective_charges_two_official_allreduces_per_layer(
+    setup,
+) -> None:
+    _, rom, sim = setup
+    model = ModelProfile.load(
+        ROOT / "configs" / "models" / "deepseek-v4-flash-0731.json"
+    )
+    spatial_rom = replace(
+        rom,
+        wafer_communication=WaferCommunicationProfile(
+            topology="nearest_neighbor_mesh",
+            rows=950,
+            cols=950,
+            frequency_hz=1e9,
+            link_payload_bytes_per_cycle=2,
+            hop_cycles=1,
+            bisection_links=950,
+            payload_efficiency=0.5,
+            allreduce_events_per_layer=2,
+        ),
+    )
+    point = sim.simulate(
+        model,
+        spatial_rom,
+        SimulationRequest(context_tokens=200_000, batch_size=8),
+    )
+    assert point.metrics["C6_communication_model"] == "spatial_bisection_allreduce"
+    assert point.metrics["C6_allreduce_events_per_layer"] == 2
+    assert (
+        point.metrics["C6_reduction_payload_bytes_per_event"]
+        == 8 * model.hidden_size * 4
+    )
+    assert (
+        point.metrics["C6_result_payload_bytes_per_event"]
+        == 8 * model.hidden_size * 2
+    )
+    assert point.component_times_s["collective_floor_C6"] > 0
+
+
 def test_b300_uses_published_device_capacity(setup) -> None:
     gpus, _, _ = setup
     b300_x8 = next(gpu for gpu in gpus if gpu.name == "NVIDIA-B300-x8")
@@ -197,7 +280,7 @@ def test_partial_tco_exposes_capex_and_electricity(setup) -> None:
     )
 
 
-def test_compute_service_separates_dense_and_routed_format_roofs(setup) -> None:
+def test_compute_service_uses_explicit_model_format_roofs(setup) -> None:
     _, rom, sim = setup
     model = ModelProfile.load(ROOT / "configs" / "models" / "deepseek-v4-pro-0813.json")
     request = SimulationRequest(context_tokens=200_000, batch_size=64)
@@ -206,12 +289,41 @@ def test_compute_service_separates_dense_and_routed_format_roofs(setup) -> None:
         model,
         replace(
             rom,
-            higher_precision_peak_ops_s_per_device=(
-                rom.higher_precision_peak_ops_s_per_device / 2
-            ),
+            compute_roofs_ops_s_per_device={
+                **rom.compute_roofs_ops_s_per_device,
+                model.dense_compute_format: (
+                    rom.compute_roof(model.dense_compute_format) / 2
+                ),
+            },
         ),
         request,
     )
-    assert baseline.metrics["C5_dense_higher_precision_operations"] > 0
-    assert baseline.metrics["C5_routed_low_precision_operations"] > 0
+    assert baseline.metrics["C5_dense_operations"] > 0
+    assert baseline.metrics["C5_routed_operations"] > 0
+    assert baseline.metrics["C5_dense_compute_format"] == "fp8_e4m3_x_fp8_e4m3"
+    assert (
+        baseline.metrics["C5_routed_compute_format"]
+        == "mxfp4_e2m1_x_fp8_e4m3"
+    )
     assert slower_dense.per_user_tokens_s < baseline.per_user_tokens_s
+
+
+def test_deepseek_mxfp4_weights_do_not_receive_pure_fp4_gpu_peak(setup) -> None:
+    gpus, _, sim = setup
+    model = ModelProfile.load(
+        ROOT / "configs" / "models" / "deepseek-v4-flash-0731.json"
+    )
+    b300 = next(gpu for gpu in gpus if gpu.name == "NVIDIA-B300-x8")
+    assert model.routed_compute_format == "mxfp4_e2m1_x_fp8_e4m3"
+    assert b300.compute_roof(model.routed_compute_format) == pytest.approx(4.5e15)
+    assert b300.compute_roof(model.routed_compute_format) == b300.compute_roof(
+        model.dense_compute_format
+    )
+    point = sim.simulate(
+        model,
+        b300,
+        SimulationRequest(context_tokens=200_000, batch_size=8),
+    )
+    assert point.metrics["C5_routed_compute_roof_ops_s_per_device"] == pytest.approx(
+        4.5e15
+    )

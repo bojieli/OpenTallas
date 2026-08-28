@@ -11,6 +11,8 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass
 import math
 
+from .schema import WaferCommunicationProfile
+
 
 @dataclass(frozen=True)
 class NoCConfig:
@@ -107,6 +109,90 @@ def collective(config: NoCConfig, activation_bytes: int, partial_sum_bytes: int)
         wafer_mesh_depth=mesh_depth,
         tiles_total=config.reticle_rows * config.reticle_cols * config.tiles_per_reticle,
         critical_link_utilization=lower_bound / total,
+    )
+
+
+@dataclass(frozen=True)
+class SpatialAllReduceResult:
+    """Batch service time for one distributed reduction and result fan-out.
+
+    This is a physical lower-bound style model, not a claim that an arbitrary
+    mapping attains bisection bandwidth.  It charges both traversal directions,
+    endpoint/barrier work, and the critical-cut serialization for the actual
+    batch payload.  Architecture efficiency/imbalance derates remain separate in
+    the analytical simulator.
+    """
+
+    topology: str
+    global_path_hops: int
+    local_path_hops: int
+    propagation_cycles_per_direction: float
+    critical_cut_payload_bytes_per_cycle: float
+    reduction_payload_bytes: float
+    result_payload_bytes: float
+    reduction_serialization_cycles: int
+    result_serialization_cycles: int
+    event_cycles: float
+    event_latency_s: float
+    allreduce_events_per_layer: int
+    layer_service_time_s: float
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+
+def spatial_allreduce(
+    config: WaferCommunicationProfile,
+    *,
+    elements: int,
+) -> SpatialAllReduceResult:
+    """Derive one layer's communication from topology and tensor elements.
+
+    ``elements`` is the number of hidden-state elements in the whole active
+    microbatch.  DeepSeek converts row-parallel partial sums to FP32 before each
+    all-reduce, then returns BF16 activations; those byte widths are configuration
+    inputs so another exact implementation can be represented without changing
+    the equation.
+    """
+
+    if elements <= 0:
+        raise ValueError("all-reduce elements must be positive")
+    global_hops = (config.rows - 1) + (config.cols - 1)
+    propagation = (
+        global_hops * config.hop_cycles
+        + config.local_path_hops * config.local_hop_cycles
+    )
+    cut_bytes_per_cycle = (
+        config.bisection_links
+        * config.link_payload_bytes_per_cycle
+        * config.payload_efficiency
+    )
+    reduction_bytes = elements * config.reduction_bytes_per_element
+    result_bytes = elements * config.result_bytes_per_element
+    reduction_serial = math.ceil(reduction_bytes / cut_bytes_per_cycle)
+    result_serial = math.ceil(result_bytes / cut_bytes_per_cycle)
+    event_cycles = (
+        2 * propagation
+        + reduction_serial
+        + result_serial
+        + 2 * config.endpoint_cycles
+        + config.barrier_cycles
+    )
+    event_s = event_cycles / config.frequency_hz
+    return SpatialAllReduceResult(
+        topology=config.topology,
+        global_path_hops=global_hops,
+        local_path_hops=config.local_path_hops,
+        propagation_cycles_per_direction=propagation,
+        critical_cut_payload_bytes_per_cycle=cut_bytes_per_cycle,
+        reduction_payload_bytes=reduction_bytes,
+        result_payload_bytes=result_bytes,
+        reduction_serialization_cycles=reduction_serial,
+        result_serialization_cycles=result_serial,
+        event_cycles=event_cycles,
+        event_latency_s=event_s,
+        allreduce_events_per_layer=config.allreduce_events_per_layer,
+        layer_service_time_s=event_s * config.allreduce_events_per_layer,
     )
 
 

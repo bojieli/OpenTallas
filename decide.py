@@ -13,7 +13,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("result", type=Path)
     parser.add_argument("--sensitivity", type=Path, default=Path("results/sensitivity/claim-audit.json"))
-    parser.add_argument("--output", type=Path, default=Path("results/DECISION.md"))
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=Path("results/standard/DECISION_LEGACY.md"),
+    )
     args = parser.parse_args()
     data = json.loads(args.result.read_text(encoding="utf-8"))
     all_comparisons = data["comparisons"]
@@ -62,7 +66,10 @@ def main() -> int:
     if args.sensitivity.exists():
         claim_audit = json.loads(args.sensitivity.read_text(encoding="utf-8"))
     lines = [
-        "# Technical gate decision",
+        "# Legacy single-midpoint technical gate decision",
+        "",
+        "> **Superseded.** This generator consumes `results/standard/` and cannot",
+        "> overwrite the current iso-node decision in `results/DECISION.md`.",
         "",
         "**Decision: CONDITIONAL CONTINUE for simulation/test-chip work; no evidence-based",
         "authorization for product silicon.**",
@@ -84,6 +91,7 @@ def main() -> int:
         f"{ratio_text(ratio('Pro', 1_000_000, 8))}, respectively.",
         f"- {len(deepseek_b64_losses)} of {len(deepseek_b64)} DeepSeek B64 points are feasible and lose on same-batch speed; no DeepSeek B64 speed case survives the midpoint.",
         "- Exact checkpoint manifests/configs are pinned and fully accounted without full payload downloads; main-decode, draft-only, and resident-only bytes are separated.",
+        "- DeepSeek numeric formats are now explicit: MXFP4 expert storage is modeled as MXFP4-weight × FP8-activation compute, so neither GPU nor ROM receives an incompatible pure-FP4 roof.",
         "- Closed-form MoE coverage matches uniform trace simulation; correlated stress traces expose the load-balance tail.",
         "- Hierarchical collective and placement sweeps execute on CPU and report their own lower bounds.",
         "- Pipeline capacity charges batch × stages resident sessions, so infeasible high-context points are no longer reported as throughput wins.",
@@ -93,6 +101,8 @@ def main() -> int:
         "- No foundry measurement establishes ROM bit density or PB/s-class full-array read bandwidth.",
         "- No synthesis result establishes the multi-POP/s per-wafer compute density needed by the provisional ultra tiers.",
         "- No production router or GPU profiler trace establishes engaged bandwidth, tail imbalance, or actual KV HBM reads.",
+        "- The 2 × active-parameter compute proxy still lacks an operator-level inventory for context-dependent indexer/attention work and vector operations.",
+        "- The present B200/B300 report is a contemporary-market challenge, not an N7/HBM2e iso-technology comparison; the A100/N7 scenario remains to be built.",
         "- The model owner/checkpoint-freeze commitment has not occurred.",
         "- Packaging, beachfront HBM, yield/repair, clock/power delivery, cooling, NRE, and unit cost remain assumptions.",
         "- Partial TCO excludes staffing, financing, networking, floor space, maintenance, replacement inventory, and idle-period electricity.",
@@ -106,7 +116,7 @@ def main() -> int:
         "",
         "## Next pass criteria",
         "",
-        "Continue only if circuit simulation/test macro and synthesis put the required read/compute point inside a power/cooling envelope, and if measured V4 router/KV traces leave ROM faster than the best B300 production point at the intended batch. A checkpoint-freeze commitment remains an independent mandatory gate.",
+        "Continue only if circuit simulation/test macro and synthesis put the required read/compute point inside a power/cooling envelope, an operator-level V4 trace replaces the current compute proxy, and measured router/KV traces leave ROM viable in both the N7/A100 attribution case and the leading-node/B300 market case at the intended batch. A checkpoint-freeze commitment remains an independent mandatory gate.",
         "",
     ]
     if claim_audit:

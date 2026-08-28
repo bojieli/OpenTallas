@@ -23,7 +23,7 @@ def test_standard_report_is_complete_and_byte_reproducible(tmp_path) -> None:
     assert (tmp_path / "QWEN3_8B_ADDENDUM.md").read_bytes() == first_qwen
 
     decoded = json.loads(first_json)
-    assert decoded["schema_version"] == 3
+    assert decoded["schema_version"] == 4
     assert "generated_at" not in decoded
     assert decoded["inputs"]["required_batches"] == [1, 8, 32, 64, 128]
     assert len(decoded["model_summaries"]) == 4
@@ -41,6 +41,8 @@ def test_standard_report_is_complete_and_byte_reproducible(tmp_path) -> None:
     )
     report = first_report.decode()
     assert "## Assumed speculative-decoding midpoint" in report
+    assert "## Numeric format contract" in report
+    assert "mxfp4_e2m1_x_fp8_e4m3" in report
     assert "DeepSeek-V4-Flash-0731" in report
     assert "DeepSeek-V4-Pro-0813" in report
     assert "Kimi-K3" in report
