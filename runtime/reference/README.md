@@ -31,3 +31,11 @@ lowering, scale-tile orientation, BF16 output boundaries, all vector/attention/
 routing operators, real-checkpoint known answers, layer differentials,
 end-to-end logits, and task quality remain open. The earlier exact-integer
 evaluator remains fixture-only evidence.
+
+`indexing.py` independently implements the three source-constructed integer
+index tensors used by `WINDOW_INDEX`, `COMPRESSED_DENSE_INDEX`, and
+`DSPARK_WINDOW_INDEX`. It preserves the pinned prefill/decode branch behavior,
+circular-window order, compression-completion boundary, offsets, padding, and
+DSpark history/draft address split. Inputs and signed-int32 output bounds fail
+closed. These structural references do not implement learned index scoring,
+top-k tie order, KV mutation, sparse attention, or any service-engine lowering.
