@@ -49,6 +49,15 @@ integer vector addition. It issues five commands, reads 36 useful HBM bytes in
 two 32-byte transfers, and completes in 69 cycles under the fixture capability.
 Its output is the integer vector 0, -1, 4, 3, 3, 0.
 
+The first real-model numeric primitive is also frozen and differentially tested:
+`bf16_bf16_fp32_sequential_rne_v1` rounds each BF16 product to binary32,
+accumulates binary32 values in strictly increasing reduction-index order, and
+rounds once to BF16. The independent exact scalar oracle and the separately
+implemented NumPy data-bearing kernel agree across known answers, subnormals,
+ties, cancellation, saturation, overflow rejection, randomized matrices, and
+work-tile choices. This numeric qualification does not by itself claim a Qwen
+layer or complete-model gate.
+
 This is executable compiler/simulator evidence for the artifact boundaries only.
 It is not Qwen3-8B or DeepSeek-V4 execution, target floating-point qualification,
 RTL correlation, 130-nm physical evidence, HBM PHY evidence, or a production
