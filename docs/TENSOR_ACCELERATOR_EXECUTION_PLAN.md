@@ -3,7 +3,7 @@
 **Document status:** active working execution plan; architecture-review approval
 and gate closure remain evidence controlled
 
-**Plan version:** 1.3
+**Plan version:** 1.4
 
 **Initial issue:** 2026-08-28
 
@@ -11,17 +11,18 @@ and gate closure remain evidence controlled
 concurrent-session planning draft, and the isolated `ta-integration` worktree
 
 **Reconciled committed heads:** `main@3baf87c` and
-`ta-integration@7433b24`; dirty and untracked implementation files in the shared
+`ta-integration@c07331b`; dirty and untracked implementation files in the shared
 `main` worktree remain concurrent-session working state, not release evidence.
-Commit `7433b24` is the coherent post-attention/MLP handoff. It builds on the
-independently specified elementwise contracts and authentic numerical
-qualification at `2317064`, then closes neutral lowering, ABI 2.4 commands,
-13-bank SRAM and tiled-HBM planning, independent reconstruction, causal
-artifact-only execution, strict schemas, corruption rejection, full
-compiler/runtime regression, strict ABI 2.0 through 2.3 replay, a retained
-execution report, and two byte-identical clean builds and runs. The next open
-horizon is one connected authentic full-width Qwen layer; no complete-layer or
-complete-model gate is implied by the closed downstream slice.
+Commit `c07331b` is the coherent connected-layer handoff. It connects the
+previously qualified embedding, attention, transactional-KV, residual, and MLP
+paths in one generated full-width Qwen layer deployment and closes neutral
+lowering, ABI 2.4 commands, 16-bank SRAM and tiled-HBM planning, independent
+reconstruction, causal artifact-only execution, strict schemas, corruption
+rejection, full compiler/runtime regression, strict ABI 2.0 through 2.3 replay,
+a retained execution report, and two byte-identical clean builds and runs. The
+next open horizon is complete 36-layer Qwen assembly, final RMSNorm, vocabulary
+projection, exact one-step logits, and token selection. Connected-layer closure
+does not imply a complete-model, timing, RTL, physical, or comparison gate.
 
 This integration copy is the authoritative tensor-accelerator program plan.
 The concurrent-session planning draft was reviewed as governance input; no
@@ -157,10 +158,10 @@ well short of an end-to-end accelerator claim. The baseline at this revision is:
 
 | Program surface | Evidence present | Remaining plan obligation |
 |---|---|---|
-| Neutral semantics | Production Model Graph IR v2 defines checkpoint bindings, runtime symbols, bounded predicates, and transactional state; a real Qwen export contains 1,053 tensors, 617 operations, and 36 transactional KV resources | Reconcile the complete DeepSeek ordinary graph and prove zero unknown operations for both models; complete the backend-neutral Tensor Kernel IR |
+| Neutral semantics | Production Model Graph IR v2 defines checkpoint bindings, runtime symbols, bounded predicates, and transactional state; a real Qwen export contains 1,053 tensors, 617 operations, and 36 transactional KV resources. One connected layer lowers to a 19-kernel neutral Tensor Kernel IR with no physical addresses or command opcodes | Add Qwen final normalization/vocabulary semantics, reconcile the complete DeepSeek ordinary graph, and prove zero unknown operations for both complete model profiles |
 | Qwen source and checkpoint | Pinned Qwen configuration/checkpoint adapter and deterministic graph identity exist | Keep the adapter semantic-only and bind the complete tokenizer, workload, and target-reference release manifests |
-| Target arithmetic | Committed ordered BF16 matrix, full-width and per-head Qwen RMSNorm, position-indexed RoPE, causal GQA/softmax, transactional-KV, exact BF16 residual-add, and materialized-BF16 SiLU-multiply contracts have independent scalar oracles and separate optimized implementations. Connected actual-checkpoint Q/K/V is qualified through position 7,999; authentic attention and post-attention/MLP numerical and execution reports are retained | Qualify vocabulary execution and every DeepSeek ordinary-path numeric family at full target dimensions; disconnected layer slices must still be composed and rechecked as one program |
-| Compiler/simulator slice | Committed real-checkpoint Qwen projection, embedding/RMSNorm, connected Q/K/V, attention/KV, and post-attention/MLP deployments compile into deterministic HBM/SRAM artifacts, pass independent reconstruction, and execute causally through artifact-only simulation | Compose the slices into one generated complete Qwen layer deployment; no disconnected slice is evidence for a complete layer or model |
+| Target arithmetic | Committed ordered BF16 matrix, full-width and per-head Qwen RMSNorm, position-indexed RoPE, causal GQA/softmax, transactional-KV, exact BF16 residual-add, and materialized-BF16 SiLU-multiply contracts have independent scalar oracles and separate optimized implementations. One connected actual-checkpoint layer reproduces every declared intermediate, `hidden.1`, and committed KV state exactly under those contracts | Qualify final RMSNorm, vocabulary/logit execution, and every DeepSeek ordinary-path numeric family at full target dimensions; preserve first-divergence evidence when 36 layer instances are assembled |
+| Compiler/simulator slice | One generated real-checkpoint Qwen layer connects embedding, Q/K/V, attention/KV, output, residual, and MLP work in a single deterministic HBM/SRAM deployment; independent reconstruction and causal artifact-only execution agree exactly | Assemble all 36 layers, final normalization, vocabulary projection, logits, and one token decision; connected layer evidence is not complete-model evidence |
 | Qwen model-specific execution | The concurrent Qwen service path has passed deterministic deployment and an exact 8,000-token prefill plus 32-token release gate | This is reference evidence, not `TA-QWEN-4`; rerun the same workload through the common HBM/SRAM command simulator with no model-specific service fallback |
 | DeepSeek reference coverage | Graph extraction and several exact numeric, routing, lookup, indexing, structural, and selected linear paths exist | Close every ordinary target-only operator, state transition, layer class, and generation path; keep DSpark/speculation in a separate profile |
 | Physical evidence | Repository flows can support public-node exploration | Characterize the frozen accelerator at 130 nm; all current development capabilities and cycle costs remain explicitly uncharacterized |
@@ -174,14 +175,12 @@ identity and are not duplicated into another worktree or deployment tree.
 The integration worktree now contains committed segmented-K BF16 support,
 production command ABIs 2.0 through 2.4, strict uncharacterized development
 capabilities, neutral lookup/matrix/RMSNorm/RoPE/KV/attention/state/add/SiLU
-kernel artifacts, independent projection, normalization, Q/K/V, attention,
-state, and downstream checkers, and causal functional simulators. Their
-round-trip, corruption,
-differential, schema, determinism, reproducibility, compatibility, rollback,
-and regression tests pass. This evidence qualifies only the declared
-projection, embedding-through-RMSNorm, Q/K/V-preparation, attention/KV
-transaction, and post-attention/MLP slices. It does not freeze the complete
-cross-model instruction set, establish timing, or close a complete-layer or
+kernel artifacts, independent slice and connected-layer checkers, and causal
+functional simulators. Their round-trip, corruption, differential, schema,
+determinism, reproducibility, compatibility, rollback, and regression tests
+pass. The connected evidence qualifies one declared full-width Qwen layer at
+the functional, data-bearing compiler/simulator boundary. It does not freeze
+the complete cross-model instruction set, establish timing, or close a
 complete-model program gate.
 
 Commit `2317064` contains `bf16_add_rne_v1` and
@@ -192,8 +191,10 @@ report schema, retained report, targeted checks, and complete compiler/runtime
 regression pass. That commit closes numerical qualification. Commit `7433b24`
 closes the corresponding neutral Kernel IR records, ABI commands, physical
 lowering, independent deployment reconstruction, and artifact-only command
-execution for the bounded downstream slice. Composition with the earlier
-embedding, Q/K/V, attention, and KV artifacts remains open.
+execution for the bounded downstream slice. Commit `c07331b` then composes that
+work with embedding, Q/K/V, attention, and KV in one authenticated command
+stream. Its seven additional strict schemas raise the production schema catalog
+from 55 to 62. The complete-model assembly and final-output path remain open.
 
 Command ABI 2.2 adds bounded `ROPE_BF16` under an uncharacterized development
 capability for 32 query heads, eight KV heads, head dimension 128, and 8,000
@@ -460,8 +461,90 @@ This closes only the bounded post-attention/MLP slice. Its retained attention
 output is an authenticated handoff artifact, not a command-connected predecessor
 inside the same deployment. It therefore does not close a complete Qwen layer,
 all-layer KV atomicity, model generation, timing, RTL, 130-nm characterization,
-or the governed ROM comparison. The next gate requires one generated deployment
-that connects the earlier slices without injected activation handoffs.
+or the governed ROM comparison. The required connected deployment is now closed
+separately at `c07331b` and recorded in Section 1.8; the boundary stated here
+continues to apply to the historical slice evidence.
+
+### 1.8 Closed connected-layer evidence and its boundary
+
+Commit `ta-integration@c07331b` closes the next architectural horizon: one
+generated, full-width Qwen layer connects runtime token and position inputs to
+`hidden.1` and committed `kv.layer.0` state without an injected Q/K/V,
+attention, or downstream activation handoff. A single 19-kernel neutral Tensor
+Kernel IR covers embedding lookup, four RMSNorm instances, seven projections,
+RoPE, KV prepare, GQA attention, two residual adds, SiLU-multiply, and state
+commit. It contains no HBM address, SRAM bank, or command opcode.
+
+The physical plan builds one 422,765,184-byte HBM image, tiles all seven
+projections, and assigns 26 live-range-checked SRAM regions across the existing
+16 one-MiB banks. Intermediate Q/K/V, attention, and downstream activations are
+caused by the command stream and SRAM lifetimes; no retained activation region
+can bypass a predecessor. The ABI 2.4 program has 23,570 commands:
+
+| Command class | Count |
+|---|---:|
+| Direct HBM/SRAM DMA | 11,780 |
+| Indexed DMA | 2 |
+| Ordered BF16 matrix tile | 11,776 |
+| RMSNorm | 4 |
+| RoPE | 1 |
+| KV prepare | 1 |
+| GQA attention | 1 |
+| Residual add | 2 |
+| SiLU-multiply | 1 |
+| State commit | 1 |
+| Completion | 1 |
+
+The simulator independently authenticates source locks, Model Graph IR,
+neutral Kernel IR, physical plan, HBM regions and tiles, SRAM layout, commands,
+checker output, expectations, and execution request. It interprets the one
+integrated command stream causally and imports no compiler builder, independent
+checker, qualification computation, framework, or scalar oracle. `STATE_COMMIT`
+is legal only after successful production of `hidden.1`; failure before that
+boundary leaves the prior state intact.
+
+The canonical connected-layer identities are:
+
+- build:
+  `80f3698dfedd2852ee2800be2d5cb1397dd2100d755c52fd30e0e6c2d17cd01e`;
+- physical plan:
+  `4b58c336aa79b9d9d863b1470f498e1ae1a64620743e23e417b085106810379c`;
+- independent check:
+  `7304eb5b8777fe0631e567102549cc5f9a902b1feaa23d5fee382590ceb1ebfc`;
+- neutral Kernel IR:
+  `4c3723a04ec8ce213267f8c005b10d50bf6300c4c98321846b7082ea9f7dbef1`;
+- source lock:
+  `f1f6d7b3fc7d7e8cfa9bf2e925d7f3ae00460ca6e9bdcab51fe81edf43216ce6`;
+- execution expectations:
+  `09fab39f148c8e1c01f654d24f342b15ba607394669ae0c3cc146a0e6c964a7c`;
+- qualification bundle:
+  `d7dbe713822c87bf5ce4b781cb77961af1d4dd08f6b54d50287fae301e740dcf`;
+- HBM image:
+  `b3ef0d7d81fc9b78122c56c57e2a6ec7499d83d742aec3960ee40eb2c09deb23`;
+- command program:
+  `ab2318259cfdc669d6050423cf8da9643baa5d012b50816ede06bb2cad28114a`;
+- execution report:
+  `86453b0822f2fd5f045da0fea67f51361e16999c263ded30b1ad497d7f50cca2`;
+- `hidden.1`:
+  `7c65791e13e3814af26b0114a5437a3ff44e91b5728ca5e1f23f1f2b7929bf7a`;
+  and
+- committed KV state:
+  `c446dd569837a2acf3f6a2333799794caaf0a7ae2919f42edecfcd6f7fd6bc56`.
+
+All 72 counters reconcile exactly. The run writes 385,901,568 bytes into SRAM
+through DMA, reads 385,918,208 useful and transferred HBM bytes, and writes
+4,160 useful and transferred HBM bytes. Two clean builds and two causal runs are
+byte-identical. Missing or reordered KV prepare, attention, downstream, SiLU,
+commit, or completion work; early commit; fully rehashed HBM corruption; SRAM
+plan corruption; physical leakage into neutral IR; source corruption; and
+overwrite attempts fail. All 62 production schemas, the full compiler/runtime
+regression, and strict ABI 2.0 through 2.3 compatibility replay pass.
+
+This evidence closes one connected layer only. It does not execute the other 35
+layers, final RMSNorm, vocabulary projection, logits, token selection, prefill,
+or decode. It supplies no characterized clock, cycle, bandwidth, energy, RTL,
+130-nm, or ROM-comparison evidence and therefore closes none of `TA-QWEN-4`,
+`TA-RTL-6`, `TA-PHY-7`, or `TA-CMP-8`.
 
 ## 2. Meaning of production-grade
 
@@ -785,7 +868,7 @@ materialized-SiLU-multiply records. It is a real backend-neutral lowering
 boundary and covers the declared Qwen transformer-layer operation union, but it
 does not yet cover Qwen final-output/vocabulary execution or DeepSeek's complete
 ordinary-path operation and state union. Closed slice schemas and evidence must
-not be mistaken for a complete cross-model Kernel IR or a connected layer
+not be mistaken for a complete cross-model Kernel IR or a complete-model
 deployment.
 
 The compiler therefore evolves additively from the existing Model Graph v2
@@ -1244,7 +1327,8 @@ comparison:
 ~~~text
 shared semantics and numeric contracts
   -> causal real-checkpoint compiler/simulator slice
-  -> complete Qwen layer and short generation
+  -> connected Qwen layer
+  -> full Qwen assembly, exact logits, and short generation
   -> Qwen 8,000-token common-simulator gate
   -> DeepSeek distinct layer classes and ordinary generation
   -> representative RTL correlation
@@ -1516,32 +1600,32 @@ goldens.
 ### 19.1 Status at this reconciliation
 
 The real projection, embedding-through-RMSNorm, connected Q/K/V-preparation,
-attention/transactional-KV, and post-attention/MLP horizons are complete through
-`ta-integration@7433b24`. Their exact evidence boundaries are recorded in
-Sections 1.2 through 1.7 and below. The program is not complete, and none of the
-connected complete-layer, model, timing, RTL, physical, or comparison gates are
-implied by the committed slices.
+attention/transactional-KV, post-attention/MLP, and connected full-width layer
+horizons are complete through `ta-integration@c07331b`. Their exact evidence
+boundaries are recorded in Sections 1.2 through 1.8 and below. The program is
+not complete: complete-model, decoding, timing, RTL, physical, and comparison
+gates remain open.
 
 | Program decision surface | Current state | Consequence |
 |---|---|---|
-| Integration governance | `7433b24` is the clean, coherent committed tensor-accelerator baseline; concurrent Qwen and DeepSeek implementation files on `main` remain dirty or untracked | Only committed, reproduced implementation handoffs become release evidence. The connected-layer compiler work remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
+| Integration governance | `c07331b` is the clean, coherent committed tensor-accelerator baseline; concurrent Qwen and DeepSeek implementation files on `main` remain dirty or untracked | Only committed, reproduced handoffs become release evidence. Full-model compiler work remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
 | Neutral graph semantics | Model Graph IR v2 and a real Qwen graph exist; committed DeepSeek references continue to accumulate | The semantic graph boundary is retained, but `TA-SEM-1` remains open until both complete ordinary graphs have zero unknown operations |
-| Neutral kernel semantics | Lookup, ordered BF16 matrix, RMSNorm, RoPE, KV prepare, GQA attention, state commit, residual add, and materialized-SiLU multiply compose in committed neutral artifacts without HBM addresses, SRAM banks, or command opcodes | Close vocabulary/final-output semantics and the remaining DeepSeek operation/state union with versioned zero-unknown coverage |
-| Target arithmetic | Committed evidence covers connected Q/K/V, authentic nonempty-history GQA/softmax/transaction execution, `bf16_add_rne_v1`, and `qwen3_silu_mul_bf16_v1`, including exhaustive finite-BF16 differential coverage and exact downstream intermediate/final hashes | Qualify vocabulary execution and remaining Qwen and DeepSeek model contracts; retain first-divergence evidence when slices are connected |
+| Neutral kernel semantics | One 19-kernel artifact connects lookup, ordered BF16 matrix, RMSNorm, RoPE, KV prepare, GQA attention, state commit, residual add, and materialized-SiLU multiply without HBM addresses, SRAM banks, or command opcodes | Close vocabulary/final-output semantics and the remaining DeepSeek operation/state union with versioned zero-unknown coverage |
+| Target arithmetic | Connected actual-checkpoint execution matches all declared layer intermediates, `hidden.1`, and committed KV state under independently qualified contracts | Qualify final RMSNorm, vocabulary/logit execution, and remaining DeepSeek contracts; retain first-divergence evidence across every assembled layer |
 | Command and capability ABI | ABI 2.4 is the committed development baseline, additively introduces bounded residual-add and materialized-SiLU commands, and preserves exact ABI 2.0 through 2.3 replay | Add only bounded generic commands required by the cross-model union; routing, remaining vector operations, synchronization, timing, and the final hardware capability remain open |
-| Compiler and checker | Deterministic compilation and independent reconstruction are closed through post-attention output projection, residuals, normalization, and MLP for the declared slice | Reconstruct one command-connected complete-layer artifact, including the transactional KV effect, without trusting retained activation handoffs |
-| Functional simulation | All five committed slices execute artifact-only with exact values, counters, state, and causal command dependence using optimized implementations independent of scalar oracles | Execute one generated end-to-end layer deployment before adding cycle/event timing or claiming layer closure |
+| Compiler and checker | **Connected-layer horizon closed at `c07331b`.** Deterministic compilation and independent reconstruction cover one complete layer, including transactional KV, with no retained activation handoff | Scale the same checked artifact chain over all 36 layers, final normalization, vocabulary projection, logits, and token selection |
+| Functional simulation | **Connected-layer horizon closed at `c07331b`.** One 23,570-command deployment executes artifact-only with exact values, all 72 counters, state, and causal command dependence | Execute the complete Qwen model for one exact token decision before short-generation and long-context gates |
 | Timing and physical evidence | No clock, latency, HBM timing, bandwidth, or energy value is qualified | No committed slice result may be used for a performance, power, or 130-nm comparison claim |
-| End-to-end execution | The common simulator has not executed a complete layer or generated a token | `TA-QWEN-4` and `TA-DSV4-5` remain open; the Qwen-specific service result is reference evidence only |
+| End-to-end execution | The common simulator has executed one complete layer but has not executed all 36 layers, produced final logits, or generated a token | `TA-QWEN-4` and `TA-DSV4-5` remain open; the Qwen-specific service result is reference evidence only |
 
-### 19.2 Next horizon: one complete Qwen layer
+### 19.2 Closed horizon: one complete connected Qwen layer
 
-The next controlled outcome is one complete, full-width Qwen layer executed from
-the actual checkpoint through the common compiler, independent checker, and
-artifact-only simulator. The path begins with an actual token embedding and ends
-after the layer's final residual update, including the layer's transactional KV
-effects. It is intentionally vertical: a collection of disconnected operator
-tests does not satisfy the horizon.
+This controlled outcome closed at `ta-integration@c07331b`: one complete,
+full-width Qwen layer executes from the actual checkpoint through the common
+compiler, independent checker, and artifact-only simulator. The path begins
+with an actual token embedding and ends after the layer's final residual update,
+including the layer's transactional KV effects. It is vertical and connected;
+the earlier collection of disconnected operator tests did not satisfy it.
 
 The pinned official Qwen implementation remains the source-semantics anchor. Its
 reviewed source hash is
@@ -1630,10 +1714,10 @@ complete compiler/runtime regression close this numerical subgate at `2317064`.
 The ABI extension is admitted as ABI 2.4 with strict ABI 2.0 through 2.3 replay,
 generic bounded semantics, complete capability/schema validation, and authentic
 downstream execution. The closed ABI 2.3 attention deployment remains
-byte-for-byte frozen. The active work now composes the downstream slice with the
+byte-for-byte frozen. Commit `c07331b` composes the downstream slice with the
 earlier embedding-through-attention path into one generated complete-layer
 deployment. Disconnected retained activations remain useful qualification
-fixtures but cannot satisfy the complete-layer horizon.
+fixtures but did not contribute inputs to the connected execution.
 
 The horizon is divided by architectural evidence, not by file ownership:
 
@@ -1643,7 +1727,7 @@ The horizon is divided by architectural evidence, not by file ownership:
 | Q/K/V preparation — **closed slice evidence** | Can the qualified segmented matrix path compose with Q/K normalization and position-dependent RoPE while preserving shapes, head grouping, and numeric boundaries? | Closed at `f94384c` with actual full-dimension hashes, neutral kernel composition, exact 16-bank allocation, complete HBM roles, deterministic commands, independent reconstruction, causal execution, strict schemas, adversarial rejection, exact counters, retained reports, two clean reproductions, and strict ABI 2.0/2.1 replay |
 | Attention and KV transaction — **closed slice evidence** | Can one hardware path execute causal GQA, mask, softmax, value aggregation, and prepare/commit state without a host or framework fallback? | Closed at `d353f9d` with authentic Q/K/V, nonempty history, exact intermediates and state, neutral kernel records, legal HBM/SRAM plans, independent reconstruction, prepare/commit/abort and corruption coverage, bounded resources, full command causality, rollback, backward ABI replay, and two clean byte-identical builds/runs |
 | Attention output and MLP — **closed slice evidence** | Can the path complete output projection, residuals, post-attention RMSNorm, gate/up projections, SiLU-multiply, down projection, and final residual? | Closed at `7433b24` with authentic payloads, generic neutral records, ABI 2.4 commands, a 13-bank SRAM plan, complete tiled-HBM reconstruction, exact 20,488-command causal execution, all intermediate/final hashes, 37 counters, zero saturation, strict schemas, corruption rejection, two clean reproductions, full regression, and ABI 2.0–2.3 replay |
-| Integrated layer program | Does one generated deployment—not a handwritten test sequence—execute the entire layer with no unsupported operation or hidden computation? | One manifest covering every input, weight, scale, kernel, allocation, command, expectation, and output; zero fallback; two clean byte-identical builds/runs; first-divergence trace; exact layer and KV results |
+| Integrated layer program — **closed connected evidence** | Does one generated deployment—not a handwritten test sequence—execute the entire layer with no unsupported operation or hidden computation? | Closed at `c07331b` with one 19-kernel neutral IR, one 422,765,184-byte HBM image, 26 SRAM regions across 16 banks, 23,570 causal ABI 2.4 commands, exact `hidden.1` and KV state, all 72 counters reconciled, strict schemas and adversarial rejection, full regression, and two byte-identical clean builds/runs |
 
 Each newly admitted kernel receives all seven parts of the production contract at
 the same time: source semantics, target numerics, neutral kernel representation,
@@ -1661,18 +1745,61 @@ against every shared field-width and queue-bound decision even though Qwen is th
 first data-bearing layer bring-up. This prevents a Qwen-only ABI from becoming a
 premature hardware freeze.
 
-**Horizon exit decision:** advance to complete-model Qwen assembly only when the
-actual layer deployment is deterministic, independently reconstructable, fully
-causal, artifact-only, bit-exact at all declared boundaries, and complete in its
-state and counter accounting. Failure of any one property keeps the horizon
-open.
+**Horizon exit decision:** satisfied at `c07331b`. The actual layer deployment is
+deterministic, independently reconstructable, fully causal, artifact-only,
+bit-exact at all declared boundaries, and complete in state and counter
+accounting. Work therefore advances to complete-model Qwen assembly without
+relabeling this layer result as `TA-QWEN-4`.
 
-### 19.3 Qwen route from one layer to the mandatory 8,000-token gate
+### 19.3 Active horizon: full Qwen assembly and one-step logits
 
-After layer closure, the compiler applies the same neutral layer template across
-all 36 layers and adds the embedding, final normalization, vocabulary projection,
-logit boundary, and generation state. The release route preserves the following
-ordered decisions:
+The active outcome is one complete Qwen forward execution from an actual short
+prompt to exact final-position logits and the frozen host greedy-token decision.
+The entry evidence is the connected layer at `c07331b`; its command ABI,
+numeric contracts, checker independence, and causal simulator rules remain
+unchanged. The full-model result must execute the real 617-operation Model Graph
+IR, all 36 transactional KV resources, and actual checkpoint payloads. Repeating
+a retained layer result or injecting an activation between layers is not
+execution.
+
+The compiler applies the neutral layer pattern to all 36 distinct layer
+instances, then lowers `node.0613` final RMSNorm, `node.0614`
+`LAST_TOKEN_SELECT`, `node.0615` vocabulary `MATMUL`, and the terminal
+36-resource `STATE_COMMIT`. `LAST_TOKEN_SELECT` selects the final sequence
+position inside model-forward execution; greedy argmax remains the frozen host
+policy at the system boundary in Section 3.1. Existing generic kernels are reused
+where their contracts are sufficient. Any necessary IR or ABI extension must be
+bounded, model-neutral, checked against the DeepSeek capability union, and pass
+strict backward replay before admission.
+
+The active horizon is organized as four dependent evidence work packages:
+
+| Work package | Architectural outcome | Required artifact and evidence | Exit condition |
+|---|---|---|---|
+| QW-FM1 — semantic and numeric closure | Every one of the 617 graph operations and all 36 state resources has one supported neutral lowering and one frozen numeric contract | Complete operation/state coverage report; final-RMSNorm, last-position selection, vocabulary/logit, and greedy-boundary known answers; source anchors and actual checkpoint identities; zero backend-specific fields in neutral IR | Zero unknown, duplicated, skipped, or fallback operations; exact final-path known answers at full Qwen dimensions |
+| QW-FM2 — deterministic full-model compilation | One deployment represents embedding, 36 distinct layers, final output, and terminal state effects on the existing hardware/ABI | Content-addressed source lock, neutral Kernel IR, HBM image/region map, SRAM live-range plan, command program, expectations, capacity certificate, and manifest. Layer weights are streamed from the one pinned checkpoint into the deployment image without creating another checkpoint tree | Every source byte and graph effect reconstructs; every HBM/SRAM range and command is legal; all 36 layer-to-layer activations are causal; two clean builds are byte-identical |
+| QW-FM3 — independent reconstruction and adversarial closure | A separately implemented checker can prove the deployment without trusting compiler allocation, scheduling, lowering, or expected-result code | Independent graph walk; checkpoint reread; inverse HBM reconstruction; SRAM lifetime and bank proof; 36-resource transaction proof; command/counter derivation; corruption, omission, reorder, early-commit, stale-state, and no-overwrite tests | Independent identities and expectations agree; every required mutation is rejected or causally changes execution; no shared expected-result implementation is found |
+| QW-FM4 — artifact-only one-step execution | The common simulator executes the complete model and returns exact logits, state, and one greedy token | One actual short-prompt request; per-layer first-divergence checkpoints; final-normalization and full-logit hashes; selected token; all 36 prepared and committed KV states; exact operation, command, byte, arithmetic, and state counters; two independent causal runs | Target-reference layer boundaries, final logits, token, and state match exactly; commit occurs only after successful logits; no framework, service, compiler-builder, checker, scalar-oracle, or precomputed-activation fallback is imported |
+
+The physical plan reuses SRAM by proven non-overlapping lifetimes rather than
+allocating 36 copies of layer scratch. Hidden state passes through causal
+producer-consumer regions, while immutable layer weights and persistent KV state
+remain in declared external HBM regions. HBM remains outside the synthesized
+130-nm boundary. Capacity reporting includes the complete checkpoint, alignment
+and padding, program and metadata, all 36 KV resources at the declared context,
+allocator reserve, and integrity overhead; host paging is a rejected outcome.
+
+State is model-forward transactional. Each layer may prepare its own private KV
+update, but no partial layer update becomes committed state. The sole terminal
+commit covers all 36 resources only after final logits have been produced and
+validated. Abort, malformed program, simulator failure, or missing final-path
+work preserves the previous committed generation.
+
+The horizon exit is narrower than `TA-QWEN-4`: it closes when QW-FM1 through
+QW-FM4 have coherent retained evidence for one exact token decision. It does not
+close short generation, the exactly 8,000-token fixture, timing, RTL, physical
+characterization, DeepSeek, or the governed comparison. After that exit, the
+release route preserves the following ordered decisions:
 
 | Decision point | Execution scope | Evidence required to proceed |
 |---|---|---|
