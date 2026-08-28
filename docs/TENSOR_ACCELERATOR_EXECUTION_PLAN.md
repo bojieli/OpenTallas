@@ -3,7 +3,7 @@
 **Document status:** active working execution plan; architecture-review approval
 and gate closure remain evidence controlled
 
-**Plan version:** 1.2
+**Plan version:** 1.3
 
 **Initial issue:** 2026-08-28
 
@@ -11,20 +11,17 @@ and gate closure remain evidence controlled
 concurrent-session planning draft, and the isolated `ta-integration` worktree
 
 **Reconciled committed heads:** `main@3baf87c` and
-`ta-integration@2317064`; dirty and untracked implementation files in the shared
+`ta-integration@7433b24`; dirty and untracked implementation files in the shared
 `main` worktree remain concurrent-session working state, not release evidence.
-Commit `d353f9d` is the coherent attention and transactional-KV handoff. Commit
-`2317064` adds the independently specified elementwise contracts and closes the
-authentic post-attention numerical-qualification subgate with strict schema,
-retained report, exhaustive finite-BF16 differential coverage, broad regression,
-and an explicit deterministic-target-adaptation classification. The committed
-attention handoff includes strict schemas, retained
-qualification and execution reports, deterministic compiler artifacts,
-independent reconstruction, causal artifact-only execution, adversarial
-rejection and rollback coverage, full compiler/runtime regression, strict ABI
-2.0 through 2.2 replay, and two byte-identical clean builds. The next open
-horizon is one authentic full-width Qwen layer; no complete-layer or
-complete-model gate is implied by the closed attention slice.
+Commit `7433b24` is the coherent post-attention/MLP handoff. It builds on the
+independently specified elementwise contracts and authentic numerical
+qualification at `2317064`, then closes neutral lowering, ABI 2.4 commands,
+13-bank SRAM and tiled-HBM planning, independent reconstruction, causal
+artifact-only execution, strict schemas, corruption rejection, full
+compiler/runtime regression, strict ABI 2.0 through 2.3 replay, a retained
+execution report, and two byte-identical clean builds and runs. The next open
+horizon is one connected authentic full-width Qwen layer; no complete-layer or
+complete-model gate is implied by the closed downstream slice.
 
 This integration copy is the authoritative tensor-accelerator program plan.
 The concurrent-session planning draft was reviewed as governance input; no
@@ -67,10 +64,11 @@ There is already a credible backend-neutral **Model Graph IR v2** and a real
 Qwen adapter. It is a useful foundation, not a completed common compiler. The
 committed production Tensor Kernel IR now composes embedding lookup, matrix,
 RMSNorm, RoPE, KV preparation, GQA attention, and transactional state commit
-without physical addresses or SRAM-bank assignments. It does not yet cover the
-Qwen post-attention residual/MLP/output path or DeepSeek's mixed-format,
-routing, expert, sparse-attention, compressor, and complete state-operation
-union. The plan therefore preserves Model Graph IR v2, grows a genuinely
+plus generic residual add and materialized-SiLU multiply without physical
+addresses or SRAM-bank assignments. It now covers the declared Qwen layer
+operator union, but not DeepSeek's mixed-format, routing, expert,
+sparse-attention, compressor, and complete state-operation union. The plan
+therefore preserves Model Graph IR v2, grows a genuinely
 model- and backend-neutral Tensor Kernel IR additively, and branches into ROM
 and HBM/SRAM physical plans only after target arithmetic is explicit. A kernel
 family is part of the production baseline only after it passes through neutral
@@ -161,8 +159,8 @@ well short of an end-to-end accelerator claim. The baseline at this revision is:
 |---|---|---|
 | Neutral semantics | Production Model Graph IR v2 defines checkpoint bindings, runtime symbols, bounded predicates, and transactional state; a real Qwen export contains 1,053 tensors, 617 operations, and 36 transactional KV resources | Reconcile the complete DeepSeek ordinary graph and prove zero unknown operations for both models; complete the backend-neutral Tensor Kernel IR |
 | Qwen source and checkpoint | Pinned Qwen configuration/checkpoint adapter and deterministic graph identity exist | Keep the adapter semantic-only and bind the complete tokenizer, workload, and target-reference release manifests |
-| Target arithmetic | Committed ordered BF16 matrix, full-width and per-head Qwen RMSNorm, position-indexed RoPE, causal GQA/softmax, transactional-KV, exact BF16 residual-add, and materialized-BF16 SiLU-multiply contracts have independent scalar oracles and separate optimized implementations. Connected actual-checkpoint Q/K/V is qualified through position 7,999; authentic attention and post-attention/MLP numerical reports are retained | Lower the qualified post-attention path through the neutral compiler, physical planner, independent checker, and artifact-only simulator; qualify vocabulary execution and every DeepSeek ordinary-path numeric family at full target dimensions |
-| Compiler/simulator slice | Committed real-checkpoint Qwen projection, embedding/RMSNorm, connected Q/K/V, and attention/KV deployments compile into deterministic HBM/SRAM artifacts, pass independent reconstruction, and execute causally through artifact-only simulation | Extend the same evidence chain through the post-attention/MLP path and one complete Qwen layer; no slice is evidence for unsupported operation families or full-model execution |
+| Target arithmetic | Committed ordered BF16 matrix, full-width and per-head Qwen RMSNorm, position-indexed RoPE, causal GQA/softmax, transactional-KV, exact BF16 residual-add, and materialized-BF16 SiLU-multiply contracts have independent scalar oracles and separate optimized implementations. Connected actual-checkpoint Q/K/V is qualified through position 7,999; authentic attention and post-attention/MLP numerical and execution reports are retained | Qualify vocabulary execution and every DeepSeek ordinary-path numeric family at full target dimensions; disconnected layer slices must still be composed and rechecked as one program |
+| Compiler/simulator slice | Committed real-checkpoint Qwen projection, embedding/RMSNorm, connected Q/K/V, attention/KV, and post-attention/MLP deployments compile into deterministic HBM/SRAM artifacts, pass independent reconstruction, and execute causally through artifact-only simulation | Compose the slices into one generated complete Qwen layer deployment; no disconnected slice is evidence for a complete layer or model |
 | Qwen model-specific execution | The concurrent Qwen service path has passed deterministic deployment and an exact 8,000-token prefill plus 32-token release gate | This is reference evidence, not `TA-QWEN-4`; rerun the same workload through the common HBM/SRAM command simulator with no model-specific service fallback |
 | DeepSeek reference coverage | Graph extraction and several exact numeric, routing, lookup, indexing, structural, and selected linear paths exist | Close every ordinary target-only operator, state transition, layer class, and generation path; keep DSpark/speculation in a separate profile |
 | Physical evidence | Repository flows can support public-node exploration | Characterize the frozen accelerator at 130 nm; all current development capabilities and cycle costs remain explicitly uncharacterized |
@@ -174,24 +172,28 @@ committed `main` history. Locally cached checkpoints are referenced by immutable
 identity and are not duplicated into another worktree or deployment tree.
 
 The integration worktree now contains committed segmented-K BF16 support,
-production command ABIs 2.0 through 2.3, strict uncharacterized development
-capabilities, neutral lookup/matrix/RMSNorm/RoPE/KV/attention/state kernel
-artifacts, independent projection, normalization, Q/K/V, attention, and state
-checkers, and causal functional simulators. Their round-trip, corruption,
+production command ABIs 2.0 through 2.4, strict uncharacterized development
+capabilities, neutral lookup/matrix/RMSNorm/RoPE/KV/attention/state/add/SiLU
+kernel artifacts, independent projection, normalization, Q/K/V, attention,
+state, and downstream checkers, and causal functional simulators. Their
+round-trip, corruption,
 differential, schema, determinism, reproducibility, compatibility, rollback,
 and regression tests pass. This evidence qualifies only the declared
-projection, embedding-through-RMSNorm, Q/K/V-preparation, and attention/KV
-transaction slices. It does not freeze the complete instruction set, establish
-timing, or close a complete-layer or complete-model program gate.
+projection, embedding-through-RMSNorm, Q/K/V-preparation, attention/KV
+transaction, and post-attention/MLP slices. It does not freeze the complete
+cross-model instruction set, establish timing, or close a complete-layer or
+complete-model program gate.
 
 Commit `2317064` contains `bf16_add_rne_v1` and
 `qwen3_silu_mul_bf16_v1`, an independent scalar reference, a separate optimized
 implementation, exhaustive differential coverage over all 65,280 finite BF16
 gate encodings, and an authentic full-width layer-0 qualification. Its strict
 report schema, retained report, targeted checks, and complete compiler/runtime
-regression pass. This closes numerical qualification only: neutral Kernel IR
-records, ABI commands, physical lowering, independent deployment
-reconstruction, and artifact-only command execution remain open.
+regression pass. That commit closes numerical qualification. Commit `7433b24`
+closes the corresponding neutral Kernel IR records, ABI commands, physical
+lowering, independent deployment reconstruction, and artifact-only command
+execution for the bounded downstream slice. Composition with the earlier
+embedding, Q/K/V, attention, and KV artifacts remains open.
 
 Command ABI 2.2 adds bounded `ROPE_BF16` under an uncharacterized development
 capability for 32 query heads, eight KV heads, head dimension 128, and 8,000
@@ -387,6 +389,79 @@ a complete layer, all-layer atomicity, full prefill/decode, cycle timing, RTL,
 130-nm behavior, or a ROM comparison. The capability remains
 `uncharacterized_development`, so the slice authorizes no latency, bandwidth,
 energy, or performance claim.
+
+### 1.7 Closed post-attention and MLP evidence and its boundary
+
+The fifth committed vertical slice, `ta-integration@7433b24`, begins with the
+authentic retained attention output and the checkpoint-authenticated
+`hidden.0` residual. It executes graph nodes `node.0010` through `node.0017`:
+attention output projection, BF16 residual add, post-attention RMSNorm, gate and
+up projections, a materialized-BF16 SiLU multiply, down projection, and the
+final BF16 residual producing `hidden.1`. The neutral Tensor Kernel IR contains
+generic `MATMUL`, `ADD`, `RMS_NORM`, and `SILU_MUL` records; it contains no HBM
+address, SRAM bank, or command opcode.
+
+Command ABI 2.4 additively introduces bounded `ADD_BF16` and
+`SILU_MUL_BF16` while retaining exact ABI 2.0 through 2.3 replay. Development
+capability V5 remains `uncharacterized_development`, retains external HBM at the
+130-nm boundary, and admits the declared 1-by-16,384 maximum vector shape. The
+compiler assigns 13 distinct SRAM banks and tiles all four authentic projection
+weights into a 335,568,896-byte HBM image. The measured legal program contains
+20,488 commands: 10,240 weight-tile DMAs, three direct DMAs, 10,240 ordered
+matrix commands, two residual adds, one RMSNorm, one SiLU multiply, and terminal
+completion. This corrects the pre-execution planning estimate that had
+undercounted the down projection: its 4,096-by-12,288 weight requires
+64-by-48, or 3,072, tiles.
+
+The separately implemented checker does not import compiler lowering. It
+rereads the locked checkpoint, rediscovers all eight graph operations,
+reconstructs every projection tile and HBM byte, proves HBM alignment, coverage,
+and zero padding, proves SRAM roles, bounds, and non-overlap, reconstructs the
+entire ABI program, and derives counters and output expectations. The
+artifact-only simulator imports neither the checker, qualification computation,
+framework, nor scalar oracle. It tracks initialized SRAM bytes, requires a fresh
+causal DMA for every matrix tile, enforces complete N coverage and strictly
+increasing K segments, executes the independent optimized kernels, and fails
+completion if any required intermediate, command, or final output is absent.
+
+The retained identities are:
+
+- capability:
+  `773ec796177d0ae3dc795459afd7cf4f59203ac637afed0ee703c62401c1bb47`;
+- qualification:
+  `94cc82dd113e16f05795c0de36930800701014e37e08267ce355ecfba3cfeea9`;
+- build:
+  `9609e03551b2b4e9509fcd1c6be08dd546dc20aac97289958e70b1d4325ec3a2`;
+- physical plan:
+  `4c7ffe6e22945f4fdbf1b0027994886c26b1567eca53aef149a25d607030f853`;
+- independent check:
+  `357a7df565fa86809215f30cee278145e285103db426c10868980d231107ad27`;
+- neutral Kernel IR:
+  `ff09706b8e1540c020c2fa6e4f0b9b6741e89f5ca6f9e3eb71f6b60307909175`;
+- HBM image:
+  `e42c0dc596d99bdcf9b5fc569a39bdfe8f3eaa7ebc396a43eef9792bbd236081`;
+- execution report:
+  `783c48f0fd81d174c54ab82ddf3945a7b518d55e33c84707cb02a0337e879db7`;
+  and
+- final `hidden.1`:
+  `7c65791e13e3814af26b0114a5437a3ff44e91b5728ca5e1f23f1f2b7929bf7a`.
+
+All eight declared intermediate hashes and all 37 counters match independent
+expectations exactly; 167,772,160 projection multiplications and ordered
+additions, 8,192 residual additions, and 12,288 SiLU elements execute with no
+observed saturation. Seven new strict schemas raise the production schema
+catalog from 48 to 55. Two clean builds and two causal runs are byte-identical.
+Missing or reordered commands, missing vector work, rehashed HBM corruption,
+SRAM corruption, physical leakage into neutral IR, dependency coupling, and
+overwrite attempts fail. The full compiler/runtime regression and the complete
+ABI 2.0 through 2.3 compatibility campaign pass.
+
+This closes only the bounded post-attention/MLP slice. Its retained attention
+output is an authenticated handoff artifact, not a command-connected predecessor
+inside the same deployment. It therefore does not close a complete Qwen layer,
+all-layer KV atomicity, model generation, timing, RTL, 130-nm characterization,
+or the governed ROM comparison. The next gate requires one generated deployment
+that connects the earlier slices without injected activation handoffs.
 
 ## 2. Meaning of production-grade
 
@@ -705,10 +780,13 @@ already exists and is the backend-neutral semantic graph boundary. It is suitabl
 for both targets in structure, but Qwen and DeepSeek still require separate
 coverage proofs against their pinned ordinary execution paths. A production
 Tensor Kernel IR also exists for the qualified lookup, ordered BF16 matrix,
-RMSNorm, RoPE, KV-prepare, GQA-attention, and state-commit records. It is a real
-backend-neutral lowering boundary, but it is not yet operation-complete for
-either model. Closed slice schemas and evidence must not be mistaken for the
-complete cross-model Kernel IR.
+RMSNorm, RoPE, KV-prepare, GQA-attention, state-commit, residual-add, and
+materialized-SiLU-multiply records. It is a real backend-neutral lowering
+boundary and covers the declared Qwen transformer-layer operation union, but it
+does not yet cover Qwen final-output/vocabulary execution or DeepSeek's complete
+ordinary-path operation and state union. Closed slice schemas and evidence must
+not be mistaken for a complete cross-model Kernel IR or a connected layer
+deployment.
 
 The compiler therefore evolves additively from the existing Model Graph v2
 contract. It does not adopt a private Qwen service IR, copy a dirty concurrent
@@ -1438,22 +1516,21 @@ goldens.
 ### 19.1 Status at this reconciliation
 
 The real projection, embedding-through-RMSNorm, connected Q/K/V-preparation,
-and attention/transactional-KV horizons are complete through
-`ta-integration@d353f9d`; the downstream numerical-qualification subgate is
-complete at `ta-integration@2317064`. Their exact evidence boundaries are
-recorded in Sections 1.2 through 1.6 and below. The program is not complete, and
-none of the post-attention/MLP compiler-execution, complete-layer, model, timing,
-RTL, physical, or comparison gates are implied by the committed slices.
+attention/transactional-KV, and post-attention/MLP horizons are complete through
+`ta-integration@7433b24`. Their exact evidence boundaries are recorded in
+Sections 1.2 through 1.7 and below. The program is not complete, and none of the
+connected complete-layer, model, timing, RTL, physical, or comparison gates are
+implied by the committed slices.
 
 | Program decision surface | Current state | Consequence |
 |---|---|---|
-| Integration governance | `2317064` is the clean, coherent committed tensor-accelerator baseline; concurrent Qwen and DeepSeek implementation files on `main` remain dirty or untracked | Only committed, reproduced implementation handoffs become release evidence. The next compiler slice remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
+| Integration governance | `7433b24` is the clean, coherent committed tensor-accelerator baseline; concurrent Qwen and DeepSeek implementation files on `main` remain dirty or untracked | Only committed, reproduced implementation handoffs become release evidence. The connected-layer compiler work remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
 | Neutral graph semantics | Model Graph IR v2 and a real Qwen graph exist; committed DeepSeek references continue to accumulate | The semantic graph boundary is retained, but `TA-SEM-1` remains open until both complete ordinary graphs have zero unknown operations |
-| Neutral kernel semantics | Lookup, ordered BF16 matrix, RMSNorm, RoPE, KV prepare, GQA attention, and state commit compose in committed neutral artifacts without HBM addresses, SRAM banks, or command opcodes | Add generic residual-add and SiLU-multiply records, then close the remaining Qwen and DeepSeek operation/state union with versioned zero-unknown coverage |
-| Target arithmetic | Committed evidence covers connected Q/K/V, authentic nonempty-history GQA/softmax/transaction execution, `bf16_add_rne_v1`, and `qwen3_silu_mul_bf16_v1`, including exhaustive finite-BF16 differential coverage and authentic layer-0 intermediate hashes | Close the post-attention compiler/simulator path, then qualify vocabulary execution and remaining Qwen and DeepSeek model contracts |
-| Command and capability ABI | ABI 2.3 is the committed baseline, additively introduces bounded KV-prepare, GQA-attention, and state-commit commands, and preserves exact ABI 2.0 through 2.2 replay | Add only bounded generic commands needed by the complete layer; routing, remaining vector operations, synchronization, timing, and the final cross-model hardware capability remain open |
-| Compiler and checker | Deterministic compilation and independent reconstruction are closed through attention-memory traversal, runtime context bounds, KV generations, prepare/commit/abort, and exact completion for the declared slice | Extend independent reconstruction through output projection, residuals, post-attention normalization, MLP, and the integrated complete-layer schedule |
-| Functional simulation | All four committed slices execute artifact-only with exact values, counters, state, and causal command dependence; the attention path uses an optimized implementation independent of the scalar oracle | Execute the remaining layer operations and then one generated end-to-end layer deployment before adding cycle/event timing |
+| Neutral kernel semantics | Lookup, ordered BF16 matrix, RMSNorm, RoPE, KV prepare, GQA attention, state commit, residual add, and materialized-SiLU multiply compose in committed neutral artifacts without HBM addresses, SRAM banks, or command opcodes | Close vocabulary/final-output semantics and the remaining DeepSeek operation/state union with versioned zero-unknown coverage |
+| Target arithmetic | Committed evidence covers connected Q/K/V, authentic nonempty-history GQA/softmax/transaction execution, `bf16_add_rne_v1`, and `qwen3_silu_mul_bf16_v1`, including exhaustive finite-BF16 differential coverage and exact downstream intermediate/final hashes | Qualify vocabulary execution and remaining Qwen and DeepSeek model contracts; retain first-divergence evidence when slices are connected |
+| Command and capability ABI | ABI 2.4 is the committed development baseline, additively introduces bounded residual-add and materialized-SiLU commands, and preserves exact ABI 2.0 through 2.3 replay | Add only bounded generic commands required by the cross-model union; routing, remaining vector operations, synchronization, timing, and the final hardware capability remain open |
+| Compiler and checker | Deterministic compilation and independent reconstruction are closed through post-attention output projection, residuals, normalization, and MLP for the declared slice | Reconstruct one command-connected complete-layer artifact, including the transactional KV effect, without trusting retained activation handoffs |
+| Functional simulation | All five committed slices execute artifact-only with exact values, counters, state, and causal command dependence using optimized implementations independent of scalar oracles | Execute one generated end-to-end layer deployment before adding cycle/event timing or claiming layer closure |
 | Timing and physical evidence | No clock, latency, HBM timing, bandwidth, or energy value is qualified | No committed slice result may be used for a performance, power, or 130-nm comparison claim |
 | End-to-end execution | The common simulator has not executed a complete layer or generated a token | `TA-QWEN-4` and `TA-DSV4-5` remain open; the Qwen-specific service result is reference evidence only |
 
@@ -1515,17 +1592,15 @@ and abort scenarios either fail or preserve the prior committed generation. The
 neutral Kernel IR, HBM/SRAM plan, generic commands, independent checker,
 artifact-only simulator, backward ABI replay, and two clean reproductions agree.
 
-The active stage is therefore compiler and simulator closure for the remainder
-of authentic layer 0, graph nodes `node.0010` through `node.0017`: attention
-output projection, the first BF16 residual add, post-attention RMSNorm, gate and
-up projections, SiLU-multiply, down projection, and the final BF16 residual
-producing `hidden.1`. The source-defined contracts are `bf16_add_rne_v1`,
-`qwen3_silu_mul_bf16_v1`, the already-qualified ordered BF16 matrix contract,
-and the existing Qwen RMSNorm contract. Commit `2317064` establishes independent
-scalar references and separate optimized implementations for residual add and
-SiLU-multiply, including the source-required materialized BF16 SiLU boundary,
-and retains the schema-valid authentic qualification. The operations now acquire
-generic neutral `ADD` and `SILU_MUL` records before physical lowering.
+The downstream stage is closed at `7433b24` for authentic layer-0 graph nodes
+`node.0010` through `node.0017`: attention output projection, the first BF16
+residual add, post-attention RMSNorm, gate and up projections, SiLU-multiply,
+down projection, and the final BF16 residual producing `hidden.1`. Commit
+`2317064` establishes the independent scalar references, optimized
+implementations, materialized BF16 SiLU boundary, and authentic qualification.
+Commit `7433b24` adds generic neutral `ADD` and `SILU_MUL` records, physical
+lowering, ABI 2.4 commands, independent inverse checking, and causal
+artifact-only execution.
 
 The closed qualification uses the retained attention output, the authentic
 `hidden.0` residual input, and the following layer-0 payloads:
@@ -1552,15 +1627,13 @@ official full-model layer trace. The strict schema, retained artifact,
 byte-identical regeneration, qualification tests, adversarial rejection, and
 complete compiler/runtime regression close this numerical subgate at `2317064`.
 
-The ABI extension for these operations is additive and provisionally identified
-as ABI 2.4; its number is admitted only with strict ABI 2.0 through 2.3 replay,
-generic bounded semantics, complete capability/schema validation, and the
-downstream layer qualification. The closed ABI 2.3 attention deployment remains
-byte-for-byte frozen. The downstream qualification closes first as an authentic
-attention-output/MLP slice, then composes with the earlier embedding-through-
-attention path into one generated complete-layer deployment. This order localizes
-numeric and memory-plan failures without allowing disconnected slices to satisfy
-the complete-layer horizon.
+The ABI extension is admitted as ABI 2.4 with strict ABI 2.0 through 2.3 replay,
+generic bounded semantics, complete capability/schema validation, and authentic
+downstream execution. The closed ABI 2.3 attention deployment remains
+byte-for-byte frozen. The active work now composes the downstream slice with the
+earlier embedding-through-attention path into one generated complete-layer
+deployment. Disconnected retained activations remain useful qualification
+fixtures but cannot satisfy the complete-layer horizon.
 
 The horizon is divided by architectural evidence, not by file ownership:
 
@@ -1569,7 +1642,7 @@ The horizon is divided by architectural evidence, not by file ownership:
 | Layer input and RMSNorm — **closed slice evidence** | Can the neutral graph express lookup and normalization without backend leakage, and can a bounded vector/reduction path consume legal HBM/SRAM placement? | Closed at `0771d84` with independent scalar oracle, separate optimized implementation, actual full-width checkpoint vector, strict kernel/physical artifacts, corruption tests, causal simulation, exact output/counter match, broad regression, fresh-directory reproduction, and strict ABI 2.0 replay |
 | Q/K/V preparation — **closed slice evidence** | Can the qualified segmented matrix path compose with Q/K normalization and position-dependent RoPE while preserving shapes, head grouping, and numeric boundaries? | Closed at `f94384c` with actual full-dimension hashes, neutral kernel composition, exact 16-bank allocation, complete HBM roles, deterministic commands, independent reconstruction, causal execution, strict schemas, adversarial rejection, exact counters, retained reports, two clean reproductions, and strict ABI 2.0/2.1 replay |
 | Attention and KV transaction — **closed slice evidence** | Can one hardware path execute causal GQA, mask, softmax, value aggregation, and prepare/commit state without a host or framework fallback? | Closed at `d353f9d` with authentic Q/K/V, nonempty history, exact intermediates and state, neutral kernel records, legal HBM/SRAM plans, independent reconstruction, prepare/commit/abort and corruption coverage, bounded resources, full command causality, rollback, backward ABI replay, and two clean byte-identical builds/runs |
-| Attention output and MLP — **active; numerical subgate closed** | Can the path complete output projection, residuals, post-attention RMSNorm, gate/up projections, SiLU-multiply, down projection, and final residual? | Authentic weights, activations, independent add/SiLU semantics, and exact intermediate/final hashes are closed at `2317064`; generic neutral records and commands, complete HBM/SRAM byte roles, independent command/state checking, causal execution, rollback, compatibility replay, and exact observed counters remain required |
+| Attention output and MLP — **closed slice evidence** | Can the path complete output projection, residuals, post-attention RMSNorm, gate/up projections, SiLU-multiply, down projection, and final residual? | Closed at `7433b24` with authentic payloads, generic neutral records, ABI 2.4 commands, a 13-bank SRAM plan, complete tiled-HBM reconstruction, exact 20,488-command causal execution, all intermediate/final hashes, 37 counters, zero saturation, strict schemas, corruption rejection, two clean reproductions, full regression, and ABI 2.0–2.3 replay |
 | Integrated layer program | Does one generated deployment—not a handwritten test sequence—execute the entire layer with no unsupported operation or hidden computation? | One manifest covering every input, weight, scale, kernel, allocation, command, expectation, and output; zero fallback; two clean byte-identical builds/runs; first-divergence trace; exact layer and KV results |
 
 Each newly admitted kernel receives all seven parts of the production contract at
