@@ -44,3 +44,9 @@ adapter reproduces its four published valid fixtures byte-for-byte and replaces
 assertions and permissive fallbacks with explicit validation errors. This is a
 host protocol result, not evidence that model operators or speculative decoding
 are executable.
+
+`tokenizer.json` and `tokenizer_config.json` are loaded only from a local snapshot
+after exact size/SHA-256 verification. The compiler validates the 129,280-token
+runtime vocabulary, all protocol token IDs, the manual-BOS/no-automatic-EOS
+policy, the 1,048,576-token tokenizer bound, the pinned `tokenizers` runtime, and
+independent encode/decode probes. It does not call a remote auto-loader.

@@ -25,6 +25,10 @@ from compiler.frontend.deepseek_v4_graph import (
     DeepSeekV4GraphError,
     build_official_graph_contract,
 )
+from compiler.frontend.deepseek_v4_tokenizer import (
+    DeepSeekV4TokenizerError,
+    load_verified_deepseek_v4_tokenizer,
+)
 from compiler.image.rom import RomImageError
 from compiler.ir.model import IRValidationError, canonical_json_bytes
 from compiler.microcode.isa import MicrocodeError
@@ -70,6 +74,12 @@ def parser() -> argparse.ArgumentParser:
         help="emit the source-mapped V4 operator graph and open coverage ledger",
     )
     graph_parser.add_argument("--output", required=True, type=Path)
+    tokenizer_parser = subparsers.add_parser(
+        "validate-deepseek-v4-tokenizer",
+        help="validate and load the exact local-only V4 tokenizer",
+    )
+    tokenizer_parser.add_argument("--snapshot", required=True, type=Path)
+    tokenizer_parser.add_argument("--output", required=True, type=Path)
     return result
 
 
@@ -140,6 +150,17 @@ def main(argv: list[str] | None = None) -> int:
                 f"{graph['graph_contract_id']} ({coverage['execution_status']})"
             )
             return 0
+        if arguments.command == "validate-deepseek-v4-tokenizer":
+            tokenizer = load_verified_deepseek_v4_tokenizer(arguments.snapshot)
+            report = tokenizer.validation_report
+            _write_new_json(arguments.output, report)
+            print(
+                f"validated official tokenizer {report['validation_id']} "
+                f"with {report['contract']['total_vocab_size']} tokens "
+                f"using local-only {report['runtime']['implementation']} "
+                f"{report['runtime']['version']}"
+            )
+            return 0
     except (
         BuildError,
         IRValidationError,
@@ -149,6 +170,7 @@ def main(argv: list[str] | None = None) -> int:
         CheckpointError,
         DeepSeekV4AdapterError,
         DeepSeekV4GraphError,
+        DeepSeekV4TokenizerError,
         OSError,
     ) as exc:
         print(f"compiler error: {exc}", file=sys.stderr)

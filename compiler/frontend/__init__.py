@@ -31,6 +31,11 @@ from .deepseek_v4_encoding import (
     encode_messages,
     parse_message_from_completion_text,
 )
+from .deepseek_v4_tokenizer import (
+    DeepSeekV4TokenizerError,
+    VerifiedDeepSeekV4Tokenizer,
+    load_verified_deepseek_v4_tokenizer,
+)
 
 __all__ = [
     "CHECKPOINT_LOCK_SCHEMA",
@@ -40,6 +45,8 @@ __all__ = [
     "DeepSeekV4CompletionError",
     "DeepSeekV4EncodingError",
     "DeepSeekV4GraphError",
+    "DeepSeekV4TokenizerError",
+    "VerifiedDeepSeekV4Tokenizer",
     "build_expected_tensor_contract",
     "build_checkpoint_lock",
     "build_official_tensor_specs",
@@ -49,6 +56,7 @@ __all__ = [
     "load_checkpoint_source",
     "load_official_config",
     "load_official_inference_config",
+    "load_verified_deepseek_v4_tokenizer",
     "parse_message_from_completion_text",
     "read_tensor_payload",
     "validate_checkpoint_source",

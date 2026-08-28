@@ -11,6 +11,7 @@ requires-python = ">=3.10"
 dependencies = ["numpy>=1.23"]
 
 [project.optional-dependencies]
+compiler = ["tokenizers==0.22.2"]
 plot = ["matplotlib>=3.6"]
 test = ["jsonschema>=4.18", "pytest>=7", "referencing>=0.30"]
 

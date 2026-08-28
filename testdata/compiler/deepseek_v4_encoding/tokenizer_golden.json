@@ -1,0 +1,42 @@
+{
+  "cases": [
+    {
+      "case": 1,
+      "first_token_id": 0,
+      "last_token_id": 1,
+      "prompt_utf8_sha256": "9b366d9d2eac842a6e890594aac0b58648e5623717202b33497afadf03e26540",
+      "thinking_mode": "thinking",
+      "token_count": 541,
+      "token_ids_le32_sha256": "d3c51fb2d1da9530a6f852c511fb212c6d45037f2fdc53332caf55cb696cfab8"
+    },
+    {
+      "case": 2,
+      "first_token_id": 0,
+      "last_token_id": 1,
+      "prompt_utf8_sha256": "ca66b01a1ac3a204bb032c928fb607d4877171e998a50f7f89f39fa821b75665",
+      "thinking_mode": "thinking",
+      "token_count": 53,
+      "token_ids_le32_sha256": "da4baae079a0670a015992ac6c240d89d1cc9b46823d22616ad4f50b7e831272"
+    },
+    {
+      "case": 3,
+      "first_token_id": 0,
+      "last_token_id": 1,
+      "prompt_utf8_sha256": "b3b1cd8748b7b90d3c6be6da3f786f12e4d70be073bd445ea162dfad4dc01a64",
+      "thinking_mode": "thinking",
+      "token_count": 820,
+      "token_ids_le32_sha256": "ef2c0282002f2d5b519623682b277ced08e1662b4cb505736ce8615b4a704cd5"
+    },
+    {
+      "case": 4,
+      "first_token_id": 0,
+      "last_token_id": 1,
+      "prompt_utf8_sha256": "60e1643840ba9e4aeede450feb7b0498fa66ee24e4a939d48855ce04ec6fc375",
+      "thinking_mode": "chat",
+      "token_count": 582,
+      "token_ids_le32_sha256": "7b89b58cdb8fcd90cd2d509161767308a97edc22d8cb961a1b1ef52f7c9ace67"
+    }
+  ],
+  "schema": "opentallas.deepseek_v4_tokenizer_golden.v1",
+  "tokenizer_validation_id": "176e504a2a500bfccd88d6ef10b72c1d08853a90ff62d97d173faaa808dd5c23"
+}

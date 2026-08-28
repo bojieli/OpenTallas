@@ -133,8 +133,23 @@ reserved-token injection, and malformed completions. The exact upstream fixture
 bytes are base64-wrapped under `testdata/compiler/deepseek_v4_encoding` to retain
 their different end-of-file newline conventions; tests verify their pinned
 sizes and SHA-256 values before use. This closes prompt-text formatting only:
-tokenizer IDs, generation state, model execution, and DSpark acceptance remain
-separate gates.
+generation state, model execution, and DSpark acceptance remain separate gates.
+
+Load and validate token IDs only from the two exact local tokenizer files:
+
+```bash
+python3 -m compiler.cli validate-deepseek-v4-tokenizer \
+  --snapshot /path/to/DeepSeek-V4-Flash-0731-tokenizer \
+  --output /tmp/deepseek-v4-flash.tokenizer-validation.json
+```
+
+This path checks both files against the immutable source contract, parses their
+JSON strictly, validates the full 128,000-base/129,280-total vocabulary and every
+message-protocol token ID, requires `tokenizers==0.22.2`, and runs multilingual,
+whitespace, and protocol-token golden probes. It never invokes Transformers,
+`from_pretrained`, a network client, or checkpoint Python. The tokenizer-only
+snapshot may contain just `tokenizer.json` and `tokenizer_config.json`; a full
+checkpoint lock is still required for model execution.
 
 The independent scalar numeric-reference foundation is under
 `runtime/reference/formats.py`. It exhaustively defines E2M1, E8M0, E4M3FN, and
