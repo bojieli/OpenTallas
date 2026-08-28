@@ -56,7 +56,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "be11b07f197d2e965ab83ba7e6fd34aeba2de27379037b6c1b9f70f70223423a"
+        "6fe8a3b3772bb84c22186e461c22e6ac46626a7743f02ff5e0f61a82ee5cc342"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -66,7 +66,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 28,
+        "pending_reference_kind_count": 27,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -114,6 +114,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert counts["HASH_ROUTE"] == 3
     assert counts["BIASED_TOPK_ROUTE"] == 43
     assert counts["FP4_QDQ"] == 42
+    assert counts["FP8_QDQ"] == 90
     assert counts["MXFP4_SWIGLU"] == 46
     assert counts["INDEX_TOPK"] == 21
     assert counts["COMPRESSED_DENSE_INDEX"] == 20
@@ -134,6 +135,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
             "runtime.reference.dispatch.dispatch_routed_experts_bf16"
         ),
         "FP4_QDQ": "runtime.reference.quantization.fp4_qdq_bf16",
+        "FP8_QDQ": "runtime.reference.quantization.fp8_qdq_bf16",
         "FP8_LINEAR": "runtime.reference.matrix.dense_fp8_linear_bf16",
         "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
         "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
@@ -193,6 +195,21 @@ def test_layer_classes_and_mutable_state_sites_are_explicit(
     fp4_nodes = [node for node in graph_contract["nodes"] if node["kind"] == "FP4_QDQ"]
     assert len(fp4_nodes) == 42
     assert all(node["attributes"] == {"block_size": 32} for node in fp4_nodes)
+    fp8_nodes = [node for node in graph_contract["nodes"] if node["kind"] == "FP8_QDQ"]
+    assert len(fp8_nodes) == 90
+    assert all(
+        node["attributes"]
+        == {
+            "block_size": 64,
+            "dimensions": "non_rope",
+            "inplace": True,
+            "quantized_width": 448,
+            "rope_width": 64,
+            "scale_format": "ue8m0",
+            "scale_storage": "e8m0",
+        }
+        for node in fp8_nodes
+    )
     assert by_id["dspark.layer00.prefill_kv"]["phases"] == ["prefill"]
     assert by_id["dspark.layer00.hc_attn_pre"]["phases"] == ["decode"]
     assert by_id["dspark.layer00.window_kv_write"]["inputs"][0] == (
@@ -227,7 +244,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "fifteen complete matrix/vector/structural/index/lookup/selection/routing/conversion" in (
+    assert "sixteen complete matrix/vector/structural/index/lookup/selection/routing/conversion" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -247,7 +264,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, indexer FP4 QDQ, target-hidden capture" in (
+    assert "unit-qualified dense FP8 linear, KV FP8 QDQ, indexer FP4 QDQ" in (
         " ".join(graph_contract["system_scope"]["covered"])
     )
     assert "biased-router top-k" in " ".join(
@@ -305,7 +322,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "be11b07f197d2e965ab83ba7e6fd34aeba2de27379037b6c1b9f70f70223423a"
+        "6fe8a3b3772bb84c22186e461c22e6ac46626a7743f02ff5e0f61a82ee5cc342"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

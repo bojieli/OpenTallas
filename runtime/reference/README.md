@@ -59,6 +59,21 @@ successful random/boundary rows on native SM120 in scale, E2M1 code, and BF16
 output; the single extreme-overflow row was rejected by the target fail-closed
 rule.
 
+The same module independently implements the complete KV `FP8_QDQ` boundary.
+It consumes the non-RoPE prefix as source-order rows, selects an independent
+power-of-two E8M0 scale for each 64 BF16 values using the pinned binary32 `1e-4`
+floor, rounded `1/448`, and bit-ceiling sequence, applies finite E4M3FN RNE, and
+reconstructs BF16 through the declared binary32 operations. The graph profile
+fixes a 448-value prefix, seven blocks, and an untouched 64-value RoPE suffix.
+Tests cover E4M3FN subnormal and normal midpoints, the lower and upper scale
+transitions, independent blocks, malformed shapes, nonfinite input, and internal
+overflow. A separate PyTorch 2.10.0/CUDA 12.8 audit on native SM120 compared
+2,048 successful boundary/random blocks: all 2,048 scale bytes and all 131,072
+E4M3FN and reconstructed BF16 values matched after governed signed-zero
+canonicalization. Thirty-seven naturally sampled overflow candidates and an
+explicit maximum-BF16 block were rejected; the native path independently
+produced binary32 infinity for the explicit case.
+
 `indexing.py` independently implements the three source-constructed integer
 index tensors used by `WINDOW_INDEX`, `COMPRESSED_DENSE_INDEX`, and
 `DSPARK_WINDOW_INDEX`. It preserves the pinned prefill/decode branch behavior,

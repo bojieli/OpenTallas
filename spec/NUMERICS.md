@@ -179,6 +179,51 @@ This fail-closed overflow behavior and positive-zero canonicalization are
 governed target rules; they do not silently commit incidental infinity or
 negative-zero behavior from the development CUDA kernel.
 
+### NUM-3.5 KV FP8 in-place QDQ
+
+`FP8_QDQ` is the distinct activation-simulation boundary applied to attention KV
+after normalization and RoPE. The pinned Flash and Pro calls pass only
+`kv[..., :-64]` to `act_quant(..., 64, "ue8m0", float8_e8m0fnu, True)`.
+Consequently, each 512-value KV row has an untouched 64-value BF16 RoPE suffix
+and a 448-value non-RoPE prefix divided into seven independent blocks of exactly
+64 values. Graph nodes and deployment manifests shall carry all of these widths;
+a profile that changes them requires separate qualification.
+
+For one block, values first widen exactly from BF16 to binary32 and signed zero
+canonicalizes positive. Let `a` be their maximum absolute value. The official
+kernel's `round_scale=True` path is ordered as follows:
+
+```text
+a_floor = max(a, binary32(1e-4))
+r       = binary32_RNE(a_floor * binary32_RNE(1/448))
+e       = ceil(log2(r))
+s       = 2^e
+```
+
+The exact binary32 floor is `0x38d1b717` and the exact rounded reciprocal is
+`0x3b124925`. As in NUM-3.4, the source obtains `e` by inspecting the binary32
+exponent and adding one iff the mantissa is nonzero, then constructs `s` directly
+from exponent bits. Across the finite-BF16 input domain the selected exponent is
+in `[-22, 120]`, represented by E8M0 codes `0x69..0xf7`. An all-zero block
+therefore selects `2^-22` (`0x69`), not scale one.
+
+For each element, the operation is ordered as follows:
+
+1. divide the widened BF16 value by `s` with binary32 RNE;
+2. clamp the binary32 quotient to `[-448, 448]`;
+3. convert to finite-only E4M3FN under NUM-3.1 RNE;
+4. widen E4M3FN exactly to binary32 and multiply by `s` with binary32 RNE; and
+5. convert the result to BF16 under NUM-4.2.
+
+The architectural result replaces only the 448-value prefix; the RoPE suffix is
+bit-preserving. The independent reference additionally exposes the seven E8M0
+scale bytes and internal E4M3FN codes for checking even though the pinned
+`inplace=True` wrapper returns only the overwritten BF16 tensor. Nonfinite BF16
+input, an unrepresentable scale, E4M3FN NaN, or intermediate binary32 overflow
+poisons. The clamp makes legal E4M3FN finite saturation impossible. Positive-zero
+canonicalization and fail-closed overflow are governed target adaptations rather
+than claims that incidental CUDA infinity or signed-zero behavior may commit.
+
 ## NUM-4 Arithmetic and rounding
 
 ### NUM-4.1 Multiply and accumulate
