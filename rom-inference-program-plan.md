@@ -1,16 +1,22 @@
 # Model-Specific ROM Inference Silicon — Program Plan
 
-**Status:** public-reference architecture frozen and implementation/verification in
-progress; product silicon remains on hold. Nothing here authorizes product silicon.
+**Status:** public pre-NDA analytical and implementation-proxy campaigns are
+closed at their declared evidence boundaries. Executable checkpoint-to-chip
+mapping (`COMP-01`) and external target-node evidence remain open; product
+architecture freeze and product silicon remain on hold. Nothing here authorizes
+product-silicon, production-performance, or economic claims.
 **Purpose:** define a serious chip-development program that can validate, refute, or refine the thesis with traceable evidence, then carry the design as far as public tools and open PDKs allow before foundry engagement.
-**Companion artifacts:** `infersim.py` (analytical model), `run.py`, `decide.py`, `tornado.py` (drivers).
+**Current status authorities:** `docs/METHODOLOGY.md`,
+`results/REQUIREMENT_AUDIT.md`, and `results/PRE_NDA_READINESS.md`.
+**Historical exploratory artifacts:** `infersim.py`, `run.py`, `decide.py`, and
+`tornado.py`.
 
 A note on numbers. This document deliberately avoids quoting specific throughput, cost, or density figures. Every such number in the exploratory work behind it was produced by hand and several were wrong — that is precisely why the analytical model exists. **All quantitative claims must be regenerated from `infersim.py` with measured inputs.** Where this document states a direction ("advantage falls with batch"), that direction is a structural property of the equations and can be relied on; where it would state a magnitude, it points to the model instead.
 
 ## Execution-status addendum — 2026-08-28
 
-The status paragraph and companion-artifact framing above record the historical
-program starting point. They do not identify the current quantitative authority.
+The historical equations and phase descriptions below record the program's
+starting point. They do not identify the current quantitative authority.
 For all present product comparisons, use:
 
 - `docs/METHODOLOGY.md` for comparison rules, evidence classes, immutable-weight
@@ -40,6 +46,13 @@ baselines; foundry ROM/compute/NoC data; and OSAT/HBM, package, power, thermal,
 yield, repair, test, and cost evidence. WSE-2 and WSE-3 remain wafer-construction
 feasibility anchors only. Huawei Tau is not used as a performance or density
 multiplier, and any vertical-ROM option must be a separately parameterized study.
+
+The governed public implementation-proxy campaign is complete at its Nangate45
+methodology boundary: all seven required mapped cases, both required generic
+proofs, the required actual-mapped proof, both physical proxies, and both
+post-route proofs pass, and the exact campaign was reproduced from an isolated
+clean baseline. This does not close `COMP-01`, target-node PPA, product physical
+design, package/manufacturing feasibility, or silicon signoff.
 
 ---
 

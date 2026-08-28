@@ -44,6 +44,18 @@ Exact evidence is in `results/rtl/clean_baseline_replay.json` and
 `results/rtl/CLEAN_BASELINE_REPLAY.md`. The earlier result is retained under
 `results/rtl/noncanonical/87e057764094b9ed/`.
 
+The promoted evidence can be re-audited without rerunning, moving, or rewriting
+the 1.4-GB campaign build:
+
+```bash
+python3 tools/run_clean_rtl_implementation_replay.py --verify-existing
+```
+
+With canonical evidence already present, invoking the runner without arguments
+also selects this non-mutating verification path. A new clean replay is entered
+only when `--reference` names a technically passing `partial_noncanonical`
+campaign.
+
 ## Case and gate closure
 
 | Case | Mapping profile | Cells | Liberty-area proxy (µm²) | Generic / mapped equivalence | Physical / post-route equivalence | Disposition |

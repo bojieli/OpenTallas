@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reproduce the RTL implementation campaign from an isolated clean snapshot.
+"""Reproduce or verify the clean RTL implementation campaign.
 
 The shared OpenTallas worktree intentionally contains user work.  This helper
 does not stash, reset, clean, or commit that tree.  Instead, it copies exactly
@@ -7,7 +7,10 @@ the source inventory recorded by a technically passing noncanonical campaign
 into a temporary repository, creates a deterministic root commit, requires the
 same source/tool fingerprint, runs the complete campaign without
 ``--allow-dirty``, and archives both the clean result and the displaced dirty-
-tree build evidence.
+tree build evidence.  Once canonical evidence exists, the default behavior and
+``--verify-existing`` are non-mutating: they validate the canonical result,
+archived reference, replay record, reports, and referenced case artifacts rather
+than attempting to archive or overwrite them again.
 """
 
 from __future__ import annotations
@@ -27,7 +30,9 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_REFERENCE = ROOT / "results" / "rtl" / "implementation_campaign.json"
+DEFAULT_REPLAY_RECORD = ROOT / "results" / "rtl" / "clean_baseline_replay.json"
 FINGERPRINT_RE = re.compile(r"^[0-9a-f]{16}$")
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
 class ReplayError(RuntimeError):
@@ -68,6 +73,41 @@ def artifact(path: Path, *, root: Path = ROOT) -> dict[str, Any]:
         "sha256": sha256_file(path),
         "size_bytes": path.stat().st_size,
     }
+
+
+def verify_recorded_artifact(record: Any, *, label: str, root: Path = ROOT) -> Path:
+    if not isinstance(record, dict):
+        raise ReplayError(f"{label} artifact record is missing or malformed")
+    path_text = record.get("path")
+    digest = record.get("sha256")
+    size = record.get("size_bytes")
+    path_value = Path(path_text) if isinstance(path_text, str) else None
+    if (
+        path_value is None
+        or path_value.is_absolute()
+        or not path_value.parts
+        or ".." in path_value.parts
+        or not isinstance(digest, str)
+        or SHA256_RE.fullmatch(digest) is None
+        or not isinstance(size, int)
+        or isinstance(size, bool)
+        or size < 0
+    ):
+        raise ReplayError(f"{label} artifact record is invalid: {record!r}")
+    path = (root / path_value).resolve()
+    try:
+        path.relative_to(root.resolve())
+    except ValueError as exc:
+        raise ReplayError(
+            f"{label} artifact escapes the workspace: {path_text}"
+        ) from exc
+    if not path.is_file():
+        raise ReplayError(f"{label} artifact is missing: {path_text}")
+    if path.stat().st_size != size or sha256_file(path) != digest:
+        raise ReplayError(
+            f"{label} artifact does not match its replay record: {path_text}"
+        )
+    return path
 
 
 def run(
@@ -164,7 +204,9 @@ def initialize_clean_repository(snapshot: Path) -> dict[str, str]:
     ).stdout
     if status:
         raise ReplayError(f"new source snapshot is unexpectedly dirty:\n{status}")
-    commit = run(["git", "rev-parse", "HEAD"], cwd=snapshot, capture=True).stdout.strip()
+    commit = run(
+        ["git", "rev-parse", "HEAD"], cwd=snapshot, capture=True
+    ).stdout.strip()
     tree = run(
         ["git", "rev-parse", "HEAD^{tree}"], cwd=snapshot, capture=True
     ).stdout.strip()
@@ -187,15 +229,13 @@ def closure_signature(result: dict[str, Any]) -> dict[str, Any]:
                 "structural_problems": synthesis["structural_problems"],
                 "unexpected_synthesis_warnings": synthesis["warnings"]["unexpected"],
                 "sta_status": sta["status"],
-                "proxy_constraint_coverage": sta["proxy_100mhz"][
-                    "constraint_coverage"
-                ],
+                "proxy_constraint_coverage": sta["proxy_100mhz"]["constraint_coverage"],
                 "generic_equivalence": case["equivalence_generic"]["status"],
                 "mapped_equivalence": case["equivalence_mapped"]["status"],
                 "physical": physical["status"],
-                "postroute_equivalence": physical.get(
-                    "postroute_equivalence", {}
-                ).get("status"),
+                "postroute_equivalence": physical.get("postroute_equivalence", {}).get(
+                    "status"
+                ),
             }
         )
     return {"summary": result.get("summary"), "cases": cases}
@@ -218,7 +258,9 @@ def verify_case_artifacts(value: Any, root: Path) -> int:
                 or path.stat().st_size != value["size_bytes"]
                 or sha256_file(path) != value["sha256"]
             ):
-                raise ReplayError(f"campaign artifact does not match result: {path_text}")
+                raise ReplayError(
+                    f"campaign artifact does not match result: {path_text}"
+                )
             return 1
         for child in value.values():
             verified += verify_case_artifacts(child, root)
@@ -259,9 +301,125 @@ def require_clean_result(
         raise ReplayError("clean result does not bind to the clean snapshot commit")
 
 
+def verify_existing_replay(
+    canonical_path: Path = DEFAULT_REFERENCE,
+    replay_path: Path = DEFAULT_REPLAY_RECORD,
+    *,
+    verify_case_files: bool = True,
+) -> dict[str, Any]:
+    """Verify promoted evidence without changing the repository."""
+
+    canonical_path = canonical_path.resolve()
+    replay_path = replay_path.resolve()
+    canonical = strict_json(canonical_path)
+    replay = strict_json(replay_path)
+    fingerprint = canonical.get("run_fingerprint")
+    if (
+        canonical.get("status") != "pass"
+        or not isinstance(fingerprint, str)
+        or FINGERPRINT_RE.fullmatch(fingerprint) is None
+    ):
+        raise ReplayError("canonical implementation result is not a valid pass")
+    if replay.get("status") != "pass" or replay.get("run_fingerprint") != fingerprint:
+        raise ReplayError("clean replay record disagrees with the canonical result")
+
+    comparisons = replay.get("comparisons", {})
+    if not all(
+        comparisons.get(field) is True
+        for field in (
+            "run_fingerprint_equal",
+            "source_inventory_equal",
+            "toolchain_identity_equal",
+            "technical_closure_signature_equal",
+        )
+    ):
+        raise ReplayError("clean replay comparison record is incomplete")
+    if replay.get("summary") != canonical.get("summary"):
+        raise ReplayError("clean replay summary disagrees with the canonical result")
+
+    recorded_canonical = verify_recorded_artifact(
+        replay.get("canonical_result"), label="canonical result"
+    )
+    if recorded_canonical != canonical_path:
+        raise ReplayError(
+            "requested canonical result is not the replay-recorded result"
+        )
+    canonical_report = verify_recorded_artifact(
+        replay.get("canonical_report"), label="canonical report"
+    )
+    archived_result = verify_recorded_artifact(
+        replay.get("archived_noncanonical_result"),
+        label="archived noncanonical result",
+    )
+    verify_recorded_artifact(
+        replay.get("archived_noncanonical_report"),
+        label="archived noncanonical report",
+    )
+    reference = strict_json(archived_result)
+    if (
+        reference.get("status") != "partial_noncanonical"
+        or reference.get("canonical_eligibility", {}).get("technical_gates_pass")
+        is not True
+    ):
+        raise ReplayError(
+            "archived reference is not a technically passing noncanonical result"
+        )
+    snapshot = replay.get("clean_snapshot")
+    if (
+        not isinstance(snapshot, dict)
+        or not re.fullmatch(r"[0-9a-f]{40}", str(snapshot.get("commit", "")))
+        or not re.fullmatch(r"[0-9a-f]{40}", str(snapshot.get("tree", "")))
+    ):
+        raise ReplayError("clean snapshot identity is missing or malformed")
+    require_clean_result(reference, canonical, snapshot)
+
+    report_text = canonical_report.read_text(encoding="utf-8", errors="replace")
+    if "**Status:** PASS" not in report_text or fingerprint not in report_text:
+        raise ReplayError("canonical Markdown report disagrees with the result")
+
+    build_locations = replay.get("build_locations", {})
+    for key in ("canonical", "archived_noncanonical"):
+        path_text = (
+            build_locations.get(key) if isinstance(build_locations, dict) else None
+        )
+        path_value = Path(path_text) if isinstance(path_text, str) else None
+        if (
+            path_value is None
+            or path_value.is_absolute()
+            or ".." in path_value.parts
+            or not (ROOT / path_value).is_dir()
+        ):
+            raise ReplayError(f"recorded {key} build directory is missing or unsafe")
+
+    expected_artifacts = replay.get("verified_case_artifacts")
+    if (
+        not isinstance(expected_artifacts, int)
+        or isinstance(expected_artifacts, bool)
+        or expected_artifacts < 1
+    ):
+        raise ReplayError("replay record has no valid verified-artifact count")
+    verified_artifacts = expected_artifacts
+    if verify_case_files:
+        verified_artifacts = verify_case_artifacts(canonical.get("cases"), ROOT)
+        if verified_artifacts != expected_artifacts:
+            raise ReplayError(
+                "canonical case-artifact count differs from the replay record"
+            )
+
+    return {
+        "status": "pass",
+        "run_fingerprint": fingerprint,
+        "verified_case_artifacts": verified_artifacts,
+        "clean_snapshot": snapshot,
+        "archived_reference": str(archived_result.relative_to(ROOT)),
+    }
+
+
 def write_json(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    path.write_text(
+        json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def archive_results(
@@ -276,7 +434,10 @@ def archive_results(
     fingerprint = clean_result_path.name  # overwritten below for a guarded value
     clean = strict_json(clean_result_path)
     fingerprint = clean["run_fingerprint"]
-    if not isinstance(fingerprint, str) or FINGERPRINT_RE.fullmatch(fingerprint) is None:
+    if (
+        not isinstance(fingerprint, str)
+        or FINGERPRINT_RE.fullmatch(fingerprint) is None
+    ):
         raise ReplayError(f"unsafe run fingerprint {fingerprint!r}")
     reference_report = ROOT / "results" / "rtl" / "IMPLEMENTATION_REPORT.md"
     clean_report = snapshot / "results" / "rtl" / "IMPLEMENTATION_REPORT.md"
@@ -289,7 +450,9 @@ def archive_results(
     historical_report = historical_dir / "IMPLEMENTATION_REPORT.md"
     for destination in (historical_json, historical_report):
         if destination.exists():
-            raise ReplayError(f"refusing to overwrite historical evidence: {destination}")
+            raise ReplayError(
+                f"refusing to overwrite historical evidence: {destination}"
+            )
     shutil.copy2(reference_path, historical_json)
     shutil.copy2(reference_report, historical_report)
 
@@ -297,7 +460,11 @@ def archive_results(
     shared_build = build_parent / fingerprint
     clean_build = snapshot / "rtl" / "build" / "implementation_campaign" / fingerprint
     reference_commit = str(reference.get("baseline", {}).get("commit", "unknown"))
-    suffix = reference_commit[:12] if re.fullmatch(r"[0-9a-f]{40}", reference_commit) else "unknown"
+    suffix = (
+        reference_commit[:12]
+        if re.fullmatch(r"[0-9a-f]{40}", reference_commit)
+        else "unknown"
+    )
     historical_build = build_parent / f"{fingerprint}-noncanonical-{suffix}"
     if not shared_build.is_dir() or not clean_build.is_dir():
         raise ReplayError("clean or reference campaign build directory is missing")
@@ -402,6 +569,12 @@ def archive_results(
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reference", type=Path, default=DEFAULT_REFERENCE)
+    parser.add_argument("--replay-record", type=Path, default=DEFAULT_REPLAY_RECORD)
+    parser.add_argument(
+        "--verify-existing",
+        action="store_true",
+        help="verify already-promoted evidence without running or writing a campaign",
+    )
     return parser.parse_args()
 
 
@@ -410,8 +583,27 @@ def main() -> int:
     try:
         reference_path = args.reference.resolve()
         reference = strict_json(reference_path)
+        if args.verify_existing or reference.get("status") == "pass":
+            if reference.get("status") == "pass" and not args.verify_existing:
+                print(
+                    "CLEAN REPLAY: canonical evidence already exists; "
+                    "running non-mutating verification",
+                    flush=True,
+                )
+            verified = verify_existing_replay(
+                reference_path, args.replay_record.resolve()
+            )
+            print(
+                "CLEAN RTL IMPLEMENTATION EVIDENCE PASS: "
+                f"fingerprint {verified['run_fingerprint']}, "
+                f"{verified['verified_case_artifacts']} artifacts verified"
+            )
+            return 0
         fingerprint = reference.get("run_fingerprint")
-        if not isinstance(fingerprint, str) or FINGERPRINT_RE.fullmatch(fingerprint) is None:
+        if (
+            not isinstance(fingerprint, str)
+            or FINGERPRINT_RE.fullmatch(fingerprint) is None
+        ):
             raise ReplayError("reference result has an invalid run fingerprint")
         if (
             reference.get("status") != "partial_noncanonical"
@@ -446,7 +638,9 @@ def main() -> int:
                 flush=True,
             )
             run([sys.executable, str(runner)], cwd=snapshot)
-            clean_result_path = snapshot / "results" / "rtl" / "implementation_campaign.json"
+            clean_result_path = (
+                snapshot / "results" / "rtl" / "implementation_campaign.json"
+            )
             clean = strict_json(clean_result_path)
             require_clean_result(reference, clean, snapshot_identity)
             verified = verify_case_artifacts(clean["cases"], snapshot)

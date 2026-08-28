@@ -11,6 +11,7 @@ from tools.rtl_implementation_campaign import (
     validate_spec,
     yosys_script,
 )
+from tools.run_clean_rtl_implementation_replay import verify_existing_replay
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -75,12 +76,15 @@ def test_implementation_proxy_has_closed_physical_gate_contract() -> None:
     postroute = implementation["physical_flow_policy"]["postroute_equivalence"]
     assert postroute["arbitrary_common_initial_state_required"] is True
     assert postroute["private_state_symbol_remaps_max"] == 8
-    assert implementation["warning_policy"]["openroad"][
-        "unexpected_codes_are_fatal"
-    ] is True
+    assert (
+        implementation["warning_policy"]["openroad"]["unexpected_codes_are_fatal"]
+        is True
+    )
 
 
-def test_large_mapping_exception_is_exact_bounded_and_nonphysical(tmp_path: Path) -> None:
+def test_large_mapping_exception_is_exact_bounded_and_nonphysical(
+    tmp_path: Path,
+) -> None:
     implementation = strict_json(ROOT / "spec" / "implementation_proxy.json")
     policy = implementation["large_case_mapping_policy"]
     assert policy["case_names"] == ["numeric_e16_l16"]
@@ -95,7 +99,7 @@ def test_large_mapping_exception_is_exact_bounded_and_nonphysical(tmp_path: Path
     bounded_script = yosys_script(large, tmp_path, bounded)
     assert bounded["profile_id"] == "bounded_structural_liberty_v1"
     assert bounded["qor_comparable_to_default_profile"] is False
-    assert 'abc -liberty ' in bounded_script
+    assert "abc -liberty " in bounded_script
     assert '-script "+strash; &get -n; &nf; &put"' in bounded_script
     assert "-D 10000" not in bounded_script
     for case in implementation["cases"]:
@@ -134,13 +138,36 @@ def test_implementation_evidence_state_is_explicit() -> None:
         assert all(replay["comparisons"].values())
 
 
+def test_promoted_clean_replay_contract_is_nonmutating_and_verifiable() -> None:
+    verified = verify_existing_replay(verify_case_files=False)
+    assert verified["status"] == "pass"
+    assert verified["run_fingerprint"] == "87e057764094b9ed"
+    assert verified["verified_case_artifacts"] == 386
+    assert verified["clean_snapshot"]["commit"] == (
+        "34a0d2ec791a1344a5db96f0123e5d02d57d02ab"
+    )
+
+
+def test_program_plan_header_tracks_current_gate_state() -> None:
+    plan = (ROOT / "rom-inference-program-plan.md").read_text(encoding="utf-8")
+    header = plan.split("## Execution-status addendum", maxsplit=1)[0]
+    normalized = " ".join(header.split())
+    assert "implementation/verification in progress" not in normalized
+    assert "implementation-proxy campaigns are" in normalized
+    assert "COMP-01" in normalized
+    assert "product architecture freeze" in normalized
+    assert "product silicon remain on hold" in normalized
+
+
 def test_generic_equivalence_normalizes_async_reset_cells_before_induction() -> None:
     implementation = strict_json(ROOT / "spec" / "implementation_proxy.json")
     case = next(item for item in implementation["cases"] if item["kind"] == "numeric")
     commands = equivalence_script(case).splitlines()
     assert commands.count("async2sync") == 1
     assert commands.index("async2sync") < next(
-        index for index, command in enumerate(commands) if command.startswith("equiv_opt ")
+        index
+        for index, command in enumerate(commands)
+        if command.startswith("equiv_opt ")
     )
 
 

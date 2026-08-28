@@ -247,6 +247,12 @@ symbol alignment is bounded and recorded; public state-name mismatches fail. Pow
 and IR-drop fields are retained as non-gating diagnostics under PPA-6.3's evidence
 limits.
 
+Promoted clean-replay evidence is re-audited with
+`python3 tools/run_clean_rtl_implementation_replay.py --verify-existing`. This
+non-mutating mode hash-checks the canonical result and report, the archived
+noncanonical reference, both preserved build locations, and every canonical case
+artifact; it does not rerun or rewrite the campaign.
+
 Any RTL, implementation constraint, warning disposition, tool/library identity, or
 runner change invalidates the fingerprint and reopens the affected synthesis, STA,
 equivalence, physical, and source-current pre-synthesis gates. Nangate45 results are
