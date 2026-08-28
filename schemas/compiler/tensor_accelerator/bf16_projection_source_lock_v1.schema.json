@@ -1,0 +1,37 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/bf16_projection_source_lock_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "compiler_version": {"minLength": 1, "type": "string"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.bf16_projection_source_lock.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"},
+    "sources": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "role": {
+            "enum": ["model_graph", "checkpoint_lock", "hardware_capability", "qualification_report"]
+          },
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "size_bytes": {"minimum": 1, "type": "integer"}
+        },
+        "required": ["role", "sha256", "size_bytes"],
+        "type": "object"
+      },
+      "maxItems": 4,
+      "minItems": 4,
+      "type": "array"
+    }
+  },
+  "required": ["capability_id", "checkpoint_lock_id", "compiler_version", "graph_id", "qualification_report_id", "schema", "source_lock_id", "sources"],
+  "title": "OpenTallas BF16 projection source lock v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

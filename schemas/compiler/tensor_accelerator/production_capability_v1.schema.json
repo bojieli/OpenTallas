@@ -1,0 +1,201 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/production_capability_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "architecture": {
+      "const": "opentallas-tensor-accelerator"
+    },
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "command_abi": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {"const": 2},
+        "minor": {"const": 0}
+      },
+      "required": ["major", "minor"],
+      "type": "object"
+    },
+    "declared_execution_modes": {
+      "items": {
+        "enum": [
+          "bf16_tensor",
+          "fp8_tensor",
+          "mxfp4_tensor",
+          "routing_selection",
+          "vector_fp32"
+        ]
+      },
+      "minItems": 5,
+      "maxItems": 5,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "declared_model_profiles": {
+      "items": {
+        "enum": [
+          "deepseek-v4-flash-0731-ordinary-target",
+          "qwen3-8b"
+        ]
+      },
+      "minItems": 2,
+      "maxItems": 2,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "evidence": {
+      "additionalProperties": false,
+      "properties": {
+        "classification": {"const": "uncharacterized_development"},
+        "performance_claims_permitted": {"const": false},
+        "physical_characterization_id": {"const": null},
+        "process_node_nm": {"const": null}
+      },
+      "required": [
+        "classification",
+        "performance_claims_permitted",
+        "physical_characterization_id",
+        "process_node_nm"
+      ],
+      "type": "object"
+    },
+    "formats": {
+      "items": {
+        "enum": [
+          "bf16",
+          "bool",
+          "e8m0",
+          "fp32",
+          "fp4_e2m1",
+          "fp8_e4m3fn",
+          "i16",
+          "i32",
+          "i64",
+          "i8",
+          "mxfp4_e2m1",
+          "u16",
+          "u32",
+          "u64",
+          "u8"
+        ]
+      },
+      "minItems": 15,
+      "maxItems": 15,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "hbm": {
+      "additionalProperties": false,
+      "properties": {
+        "address_bits": {"maximum": 64, "minimum": 32, "type": "integer"},
+        "base_address": {"minimum": 0, "type": "integer"},
+        "burst_bytes": {
+          "enum": [16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
+        },
+        "capacity_bytes": {
+          "maximum": 1125899906842624,
+          "minimum": 1073741824,
+          "type": "integer"
+        },
+        "external_at_130nm_boundary": {"const": true}
+      },
+      "required": [
+        "address_bits",
+        "base_address",
+        "burst_bytes",
+        "capacity_bytes",
+        "external_at_130nm_boundary"
+      ],
+      "type": "object"
+    },
+    "limits": {
+      "additionalProperties": false,
+      "properties": {
+        "max_commands": {"minimum": 1, "type": "integer"},
+        "max_context_tokens": {"minimum": 8000, "type": "integer"},
+        "max_hbm_regions": {"minimum": 1, "type": "integer"},
+        "max_sram_regions": {"minimum": 4, "type": "integer"}
+      },
+      "required": [
+        "max_commands",
+        "max_context_tokens",
+        "max_hbm_regions",
+        "max_sram_regions"
+      ],
+      "type": "object"
+    },
+    "qualified_execution_modes": {
+      "items": {"const": "bf16_tensor"},
+      "minItems": 1,
+      "maxItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "qualified_numeric_contracts": {
+      "items": {"const": "bf16_bf16_fp32_sequential_rne_v1"},
+      "minItems": 1,
+      "maxItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.production_capability.v1"
+    },
+    "sram": {
+      "additionalProperties": false,
+      "properties": {
+        "bank_address_stride": {"minimum": 4096, "type": "integer"},
+        "banks": {"enum": [4, 8, 16, 32, 64, 128, 256, 512, 1024]},
+        "bytes_per_bank": {"minimum": 4096, "type": "integer"},
+        "read_ports_per_bank": {"maximum": 16, "minimum": 1, "type": "integer"},
+        "word_bytes": {"enum": [1, 2, 4, 8, 16, 32, 64, 128, 256]},
+        "write_ports_per_bank": {"maximum": 16, "minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "bank_address_stride",
+        "banks",
+        "bytes_per_bank",
+        "read_ports_per_bank",
+        "word_bytes",
+        "write_ports_per_bank"
+      ],
+      "type": "object"
+    },
+    "tensor_engine": {
+      "additionalProperties": false,
+      "properties": {
+        "max_k": {"minimum": 1, "type": "integer"},
+        "max_m": {"minimum": 1, "type": "integer"},
+        "max_n": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["max_k", "max_m", "max_n"],
+      "type": "object"
+    }
+  },
+  "required": [
+    "architecture",
+    "capability_id",
+    "command_abi",
+    "declared_execution_modes",
+    "declared_model_profiles",
+    "evidence",
+    "formats",
+    "hbm",
+    "limits",
+    "qualified_execution_modes",
+    "qualified_numeric_contracts",
+    "schema",
+    "sram",
+    "tensor_engine"
+  ],
+  "title": "OpenTallas production tensor-accelerator development capability v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

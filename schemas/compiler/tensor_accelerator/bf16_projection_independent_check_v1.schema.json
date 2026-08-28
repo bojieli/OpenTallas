@@ -1,0 +1,36 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/bf16_projection_independent_check_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "check_id": {"$ref": "#/$defs/sha256"},
+    "command_count": {"minimum": 1, "type": "integer"},
+    "expected_counters": {"$ref": "bf16_projection_physical_plan_v1.schema.json#/$defs/counters"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "reconstructed_weight": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"},
+        "source_tensor": {"minLength": 1, "type": "string"},
+        "tile_count": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["payload_sha256", "size_bytes", "source_tensor", "tile_count"],
+      "type": "object"
+    },
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.bf16_projection_independent_check.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"},
+    "status": {"const": "pass"}
+  },
+  "required": ["capability_id", "check_id", "command_count", "expected_counters", "graph_id", "kernel_ir_id", "physical_plan_id", "qualification_report_id", "reconstructed_weight", "request_id", "schema", "source_lock_id", "status"],
+  "title": "OpenTallas BF16 projection independent check v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

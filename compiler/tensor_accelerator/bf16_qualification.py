@@ -27,6 +27,7 @@ from runtime.tensor_accelerator.bf16 import (
 from .common import (
     ArtifactError,
     canonical_json_bytes,
+    load_strict_json,
     require_int,
     require_sha256,
     sha256_bytes,
@@ -307,10 +308,38 @@ def publish_qualification_report(report: Mapping[str, Any], output_path: Path) -
         temporary.unlink(missing_ok=True)
 
 
+def load_qualification_report(path: Path) -> dict[str, Any]:
+    """Load one canonical passing report and verify its content identity."""
+
+    report_path = Path(path)
+    try:
+        payload = report_path.read_bytes()
+        report = load_strict_json(report_path)
+    except (OSError, ArtifactError) as exc:
+        raise BF16QualificationError(
+            f"cannot load BF16 qualification report: {exc}"
+        ) from exc
+    if payload != canonical_json_bytes(report):
+        raise BF16QualificationError(
+            "BF16 qualification report is not canonically serialized"
+        )
+    body = {key: value for key, value in report.items() if key != "report_id"}
+    if (
+        report.get("schema") != SCHEMA
+        or report.get("status") != "pass"
+        or report.get("report_id") != sha256_bytes(canonical_json_bytes(body))
+    ):
+        raise BF16QualificationError(
+            "BF16 qualification report identity or status differs"
+        )
+    return report
+
+
 __all__ = [
     "BF16QualificationError",
     "NUMERIC_CONTRACT",
     "SCHEMA",
+    "load_qualification_report",
     "publish_qualification_report",
     "qualify_bf16_projection_payloads",
     "qualify_locked_bf16_projection",

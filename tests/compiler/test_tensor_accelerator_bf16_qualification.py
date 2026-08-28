@@ -9,6 +9,7 @@ import pytest
 
 from compiler.tensor_accelerator.bf16_qualification import (
     BF16QualificationError,
+    load_qualification_report,
     publish_qualification_report,
     qualify_bf16_projection_payloads,
 )
@@ -134,3 +135,17 @@ def test_publication_rejects_forged_report_identity(tmp_path: Path) -> None:
     report["selected_reference"]["output_codes"][0] ^= 1
     with pytest.raises(BF16QualificationError, match="identity or status differs"):
         publish_qualification_report(report, tmp_path / "forged.json")
+
+
+def test_qualification_loader_requires_canonical_authenticated_report(
+    tmp_path: Path,
+) -> None:
+    report = _report()
+    output = tmp_path / "report.json"
+    publish_qualification_report(report, output)
+    assert load_qualification_report(output) == report
+
+    noncanonical = tmp_path / "noncanonical.json"
+    noncanonical.write_text("{\n  \"status\": \"pass\"\n}\n", encoding="utf-8")
+    with pytest.raises(BF16QualificationError, match="canonically serialized"):
+        load_qualification_report(noncanonical)
