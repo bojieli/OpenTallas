@@ -60,10 +60,12 @@ DEFAULT_INFERENCE_CONFIG = (
 )
 
 _QUALIFIED_REFERENCE_OWNERS = {
+    "BIASED_TOPK_ROUTE": "runtime.reference.selection.biased_topk_route_indices",
     "COMPRESSED_DENSE_INDEX": "runtime.reference.indexing.compressed_dense_indices",
     "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
     "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
     "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
+    "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
     "TOKEN_EMBED": "runtime.reference.lookup.bf16_token_embedding",
     "WINDOW_INDEX": "runtime.reference.indexing.window_indices",
 }
@@ -256,7 +258,7 @@ _OPERATORS = (
     _op(
         "INDEX_TOPK",
         "inference/model.py:Indexer.forward",
-        "Apply causal validity and the source top-k operation to compressed positions; equal-score ordering remains open.",
+        "Apply the BF16 causal mask and deterministic score-descending/index-ascending top-k to compressed positions.",
         "TOPK",
         "index.topk512",
     ),
@@ -312,7 +314,7 @@ _OPERATORS = (
     _op(
         "BIASED_TOPK_ROUTE",
         "inference/model.py:Gate.forward",
-        "Add selection-only bias and select six expert indices; equal-score ordering remains open.",
+        "Add FP32 selection-only bias with one RNE rounding and select six experts by deterministic score-descending/index-ascending order.",
         "TOPK",
         "routing.topk6",
     ),
@@ -1354,13 +1356,6 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "source_anchor": "inference/generate.py:generate;inference/model.py:Transformer.forward_spec;README.md:How to Run with vLLM",
             },
             {
-                "id": "DSV4-SEM-002",
-                "issue": "torch.topk source calls do not declare a hardware-independent equal-score tie order.",
-                "required_resolution": "Define a stable index tie policy and qualify it against official implementations and real activations.",
-                "severity": "blocking",
-                "source_anchor": "inference/model.py:Indexer.forward;inference/model.py:Gate.forward",
-            },
-            {
                 "id": "DSV4-SEM-003",
                 "issue": "The target-only controller now verifies greedy argmax, rejects top_p other than 1.0, and chains stochastic RNG-state hashes. Exact stochastic candidate replay remains blocked because Gumbel-max consumes an unpinned PyTorch/CUDA generator stack; the release recipe recommends top_p although local generate.py has no top-p filter.",
                 "required_resolution": "Pin and qualify the exact Torch/CUDA exponential-race RNG behavior, or freeze a greedy-only acceptance boundary; top-p behavior requires a separately pinned implementation.",
@@ -1376,7 +1371,7 @@ def build_official_graph_contract() -> dict[str, Any]:
             },
             {
                 "id": "DSV4-SEM-005",
-                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, and six complete pure structural/index/lookup operator kinds. Full matrix/tile reduction, vector paths beyond HC expansion, stateful attention, routing beyond hash lookup, and per-operator conversion boundaries remain pending.",
+                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, and eight complete structural/index/lookup/selection operator kinds. Full matrix/tile reduction, vector paths beyond HC expansion, stateful attention, routing beyond qualified selection, and per-operator conversion boundaries remain pending.",
                 "required_resolution": "Implement and qualify complete target-precision semantics for each graph operator before marking that operator executable; scalar and block-dot primitives alone do not close matrix or layer lowering.",
                 "severity": "blocking",
                 "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;runtime/reference/formats.py",
@@ -1424,7 +1419,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "hash-verified local tokenizer encode and decode behavior",
                 "target-only prefill/decode, EOS, and executor-commit control with synthetic transcripts",
                 "scalar target formats, activation microscaling, ordered accumulation, and official block-dot primitives",
-                "unit-qualified HC expansion, token embedding, hash-route, window, compressed-dense, and DSpark index references",
+                "unit-qualified HC expansion, token embedding, hash-route, window, compressed-dense, DSpark index, biased-router top-k, and learned-index top-k references",
                 "complete official-tensor canonical transform plan and independently checked transform primitives",
                 "atomic hash-locked canonical application and replay on an adversarial development fixture",
             ],
@@ -1434,7 +1429,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "exact stochastic replay for the unpinned Torch/CUDA RNG stack",
                 "DSpark target verification and speculative acceptance",
                 "full official-payload transform application and canonical output hashes",
-                "operator-complete target-precision references beyond scalar/block-dot primitives and six pure structural/index/lookup kinds",
+                "operator-complete target-precision references beyond scalar/block-dot primitives and eight structural/index/lookup/selection kinds",
                 "transactional KV/compressor execution, service-engine operators, and microcode",
                 "physical placement, HBM/KV allocation, and static schedule",
             ],

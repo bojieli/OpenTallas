@@ -56,7 +56,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "2918ad848439ce8f0df8a0fb9ddc11d0e65d139f216ffb64dadc269f2322052b"
+        "892541d7e8edde2e5b6ad2a136455483c9aa8f89934927adea593ae6cf0f7360"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -66,7 +66,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 37,
+        "pending_reference_kind_count": 35,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -119,12 +119,16 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert counts["DSPARK_PREFILL_KV"] == 3
     assert counts["MARKOV_AUTOREGRESSIVE_LOOP"] == 1
     qualified_references = {
+        "BIASED_TOPK_ROUTE": (
+            "runtime.reference.selection.biased_topk_route_indices"
+        ),
         "COMPRESSED_DENSE_INDEX": (
             "runtime.reference.indexing.compressed_dense_indices"
         ),
         "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
         "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
         "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
+        "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
         "TOKEN_EMBED": "runtime.reference.lookup.bf16_token_embedding",
         "WINDOW_INDEX": "runtime.reference.indexing.window_indices",
     }
@@ -186,7 +190,6 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     issues = {record["id"]: record for record in graph_contract["open_semantic_issues"]}
     assert set(issues) == {
         "DSV4-SEM-001",
-        "DSV4-SEM-002",
         "DSV4-SEM-003",
         "DSV4-SEM-004",
         "DSV4-SEM-005",
@@ -198,7 +201,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "six complete pure structural/index/lookup" in (
+    assert "eight complete structural/index/lookup/selection" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -219,6 +222,9 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         graph_contract["system_scope"]["covered"]
     )
     assert "unit-qualified HC expansion, token embedding" in " ".join(
+        graph_contract["system_scope"]["covered"]
+    )
+    assert "biased-router top-k" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
     assert "DSpark target verification and speculative acceptance" in (
@@ -264,7 +270,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "2918ad848439ce8f0df8a0fb9ddc11d0e65d139f216ffb64dadc269f2322052b"
+        "892541d7e8edde2e5b6ad2a136455483c9aa8f89934927adea593ae6cf0f7360"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

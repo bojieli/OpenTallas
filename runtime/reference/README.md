@@ -55,3 +55,14 @@ current token at column zero and fills later draft columns with the pinned noise
 token; its shared embedding lookup and HC expansion are already covered by the
 two pure primitives above. Main-hidden projection remains a separate matrix
 operator.
+
+`selection.py` resolves the source's intentionally unpinned `torch.topk` tie
+behavior. The official release requires `torch>=2.10.0`, while PyTorch 2.10
+states that tied indices are not stable. The target rule is therefore score
+descending, then logical index ascending. Router scores use raw binary32
+encodings; learned index scores use raw BF16 encodings. Both are compared as
+exact rationals and NaNs fail closed. `BIASED_TOPK_ROUTE` performs one
+binary32-rounded selection-bias add before this ordering; `INDEX_TOPK` applies
+the BF16 causal completion mask, deterministic top-k, `-1` padding, and the
+compressed-cache offset. Routing-weight normalization and learned index scoring
+remain separate pending operators.

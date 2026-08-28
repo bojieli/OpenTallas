@@ -218,6 +218,30 @@ time only. Reduction endpoints hold early partials until their canonical partner
 and never substitute physical arrival order. Identical legal input and configuration
 therefore produce identical bits.
 
+### NUM-6.3 Deterministic selection
+
+Router top-k comparisons consume IEEE binary32 scores. Learned-index top-k
+comparisons consume BF16 scores, matching the pinned BF16 Q/K einsum, head
+weighting, head reduction, and causal-mask path. Larger values sort first. Exact
+score ties sort by ascending logical candidate index; physical lane, arrival
+order, and backend-specific sort behavior cannot break a tie. NaN scores poison.
+Router and learned-index source scores must be finite; BF16 negative infinity is
+introduced only as the causal invalid-position sentinel.
+
+For biased expert routing, each finite original score and its FP32 selection bias
+are added with one round-to-nearest-ties-to-even binary32 rounding before top-k.
+The selected routing weight is still gathered from the original unbiased score.
+For compressed-index prefill, incomplete groups are replaced by negative infinity
+before top-k and any selected invalid slot becomes `-1`; valid compressed indices
+then receive the manifest window offset. Decode selects from all complete cached
+groups.
+
+This explicit tie rule is a target adaptation, not a claim about incidental CUDA
+ordering. The pinned release requires `torch>=2.10.0`, and the official PyTorch
+2.10 `torch.topk` contract states that indices of tied elements are not guaranteed
+stable. A deterministic accelerator therefore cannot inherit that unspecified
+behavior.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension
