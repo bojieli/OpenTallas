@@ -1367,7 +1367,7 @@ def build_official_graph_contract() -> dict[str, Any]:
             },
             {
                 "id": "DSV4-SEM-007",
-                "issue": "A deterministic plan now covers all 72,317 official tensors and specifies sharding, expert routing, native packed-MXFP4 retention, and wo_a BF16 conversion with independent byte checkers. The 166.9-GB official payload has not yet been streamed through that plan or bound to canonical output hashes.",
+                "issue": "A deterministic plan covers all 72,317 official tensors, and an atomic hash-locked applicator plus independent replay checker is qualified on identity, slicing, native MXFP4, and wo_a BF16 fixture paths. The 166.9-GB official payload has not yet been streamed through that machinery or bound to canonical output hashes.",
                 "required_resolution": "Apply the plan to every hash-locked official payload byte, emit per-rank canonical tensor hashes, and pass independent full-payload transform checks before image generation.",
                 "severity": "blocking",
                 "source_anchor": "inference/convert.py:main;compiler/canonical/deepseek_v4.py;compiler/canonical/plan.py;compiler/checking/deepseek_v4_transforms.py",
@@ -1404,6 +1404,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "target-only prefill/decode, EOS, and executor-commit control with synthetic transcripts",
                 "scalar target formats, activation microscaling, ordered accumulation, and official block-dot primitives",
                 "complete official-tensor canonical transform plan and independently checked transform primitives",
+                "atomic hash-locked canonical application and replay on an adversarial development fixture",
             ],
             "request_boundary": "token_ids_and_start_position",
             "unresolved": [

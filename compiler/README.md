@@ -149,6 +149,45 @@ been streamed, transformed, or emitted on this host. Full checkpoint
 application, per-output content hashes, and independent full-payload reports
 remain the M2 release gate.
 
+Apply that plan only to a complete, official hash-locked snapshot with:
+
+```bash
+python3 -m compiler.cli apply-deepseek-v4-canonical-plan \
+  --snapshot /path/to/DeepSeek-V4-Flash-0731-at-7872f01 \
+  --lock /path/to/deepseek-v4-flash-0731.checkpoint.lock.json \
+  --plan /tmp/deepseek-v4-flash.canonical-plan.json \
+  --output /large-volume/deepseek-v4-flash-canonical
+```
+
+The applicator independently reconstructs the official plan before accepting
+it, requires a structurally complete official checkpoint lock, streams each
+source tensor through a reusable header-verified reader, verifies every source
+payload hash, writes into a temporary sibling directory, and publishes the
+result atomically only after independent replay. The output includes one
+content-hashed artifact per rank assignment, `canonical_application.json`, and
+`canonical_verification.json`. A full MP=4 application requires at least
+175,539,889,120 output bytes plus working reserve; it has not been run on this
+host.
+
+For bounded development, repeat `--tensor NAME` to materialize named tensors
+and their required scale/weight dependencies. Such output is permanently marked
+`partial_official_transform_application_not_release_evidence`; it cannot close
+the full-payload gate. Recheck an existing application without trusting its
+retained report using:
+
+```bash
+python3 -m compiler.cli verify-canonical-application \
+  --snapshot /path/to/DeepSeek-V4-Flash-0731-at-7872f01 \
+  --lock /path/to/deepseek-v4-flash-0731.checkpoint.lock.json \
+  --application /large-volume/deepseek-v4-flash-canonical \
+  --output /tmp/deepseek-v4-flash.canonical-verification.json
+```
+
+Ordinary CI runs all identity, axis-0/axis-1 slicing, native-MXFP4 pairing, and
+FP8/E8M0-to-BF16 paths through a generated adversarial safetensors fixture using
+the same applicator and replay checker. Fixture success proves the mechanism,
+not application of the official checkpoint.
+
 The host text boundary is independently implemented in
 `frontend/deepseek_v4_encoding.py`. It matches all four pinned official prompt
 fixtures byte-for-byte for valid inputs, including interleaved thinking, DSML

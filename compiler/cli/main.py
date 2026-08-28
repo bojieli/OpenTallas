@@ -7,7 +7,17 @@ from pathlib import Path
 import sys
 
 from compiler.build import BuildError, build_deployment
-from compiler.canonical import CanonicalTransformError, build_official_canonical_plan
+from compiler.canonical import (
+    CanonicalApplicationError,
+    CanonicalTransformError,
+    apply_official_canonical_plan,
+    build_official_canonical_plan,
+)
+from compiler.checking.deepseek_v4_application import (
+    DeepSeekV4ApplicationCheckError,
+    VERIFICATION_FILENAME,
+    verify_canonical_application,
+)
 from compiler.checking.inverse import InverseCheckError
 from compiler.frontend.checkpoint import (
     CheckpointError,
@@ -97,6 +107,31 @@ def parser() -> argparse.ArgumentParser:
     )
     canonical_parser.add_argument("--model-parallel", default=4, type=int)
     canonical_parser.add_argument("--output", required=True, type=Path)
+    apply_canonical_parser = subparsers.add_parser(
+        "apply-deepseek-v4-canonical-plan",
+        help="apply an exact V4 plan to a full official hash-locked snapshot",
+    )
+    apply_canonical_parser.add_argument("--snapshot", required=True, type=Path)
+    apply_canonical_parser.add_argument("--lock", required=True, type=Path)
+    apply_canonical_parser.add_argument("--plan", required=True, type=Path)
+    apply_canonical_parser.add_argument("--output", required=True, type=Path)
+    apply_canonical_parser.add_argument(
+        "--tensor",
+        action="append",
+        dest="tensors",
+        help=(
+            "materialize one named input plus required scale dependencies; "
+            "repeatable and explicitly partial"
+        ),
+    )
+    check_canonical_parser = subparsers.add_parser(
+        "verify-canonical-application",
+        help="independently replay every source and output byte in an application",
+    )
+    check_canonical_parser.add_argument("--snapshot", required=True, type=Path)
+    check_canonical_parser.add_argument("--lock", required=True, type=Path)
+    check_canonical_parser.add_argument("--application", required=True, type=Path)
+    check_canonical_parser.add_argument("--output", required=True, type=Path)
     return result
 
 
@@ -206,6 +241,54 @@ def main(argv: list[str] | None = None) -> int:
                 f"({plan['status']})"
             )
             return 0
+        if arguments.command == "apply-deepseek-v4-canonical-plan":
+            lock = load_checkpoint_lock(arguments.lock)
+            try:
+                plan = load_strict_json(arguments.plan)
+            except (OSError, ValueError) as exc:
+                raise CanonicalApplicationError(
+                    f"cannot load canonical plan {arguments.plan}: {exc}"
+                ) from exc
+            result = apply_official_canonical_plan(
+                snapshot=arguments.snapshot,
+                lock=lock,
+                plan=plan,
+                output=arguments.output,
+                requested_names=arguments.tensors,
+            )
+            manifest = result["manifest"]
+            print(
+                f"applied {manifest['coverage']['consumed_input_count']} locked "
+                f"inputs into {manifest['coverage']['output_assignment_count']} "
+                f"canonical assignments; application {manifest['application_id']} "
+                f"({manifest['status']})"
+            )
+            return 0
+        if arguments.command == "verify-canonical-application":
+            lock = load_checkpoint_lock(arguments.lock)
+            report = verify_canonical_application(
+                arguments.application, arguments.snapshot, lock
+            )
+            retained_path = arguments.application / VERIFICATION_FILENAME
+            if retained_path.is_file():
+                try:
+                    retained = load_strict_json(retained_path)
+                except (OSError, ValueError) as exc:
+                    raise DeepSeekV4ApplicationCheckError(
+                        f"cannot load retained verification report: {exc}"
+                    ) from exc
+                if retained != report:
+                    raise DeepSeekV4ApplicationCheckError(
+                        "retained verification report differs from independent replay"
+                    )
+            _write_new_json(arguments.output, report)
+            print(
+                f"verified {report['coverage']['checked_assignment_count']} "
+                f"canonical assignments from "
+                f"{report['coverage']['checked_input_count']} locked inputs; "
+                f"verification {report['verification_id']}"
+            )
+            return 0
     except (
         BuildError,
         IRValidationError,
@@ -217,7 +300,9 @@ def main(argv: list[str] | None = None) -> int:
         DeepSeekV4GraphError,
         DeepSeekV4GenerationError,
         DeepSeekV4TokenizerError,
+        CanonicalApplicationError,
         CanonicalTransformError,
+        DeepSeekV4ApplicationCheckError,
         OSError,
     ) as exc:
         print(f"compiler error: {exc}", file=sys.stderr)

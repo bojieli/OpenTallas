@@ -56,7 +56,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "6e946aa3b1e0a747047db1aa56f3271da81d43a7f8295198a18afae981c80598"
+        "d1dac1263ae41bbdd09c8d9764cd660333f7841ef7078518bbf0797e868cb575"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -185,6 +185,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
+    assert "atomic hash-locked applicator" in issues["DSV4-SEM-007"]["issue"]
     assert graph_contract["system_scope"]["request_boundary"] == (
         "token_ids_and_start_position"
     )
@@ -195,6 +196,9 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         graph_contract["system_scope"]["unresolved"]
     )
     assert "hash-verified local tokenizer encode and decode behavior" in (
+        graph_contract["system_scope"]["covered"]
+    )
+    assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
     assert "DSpark target verification and speculative acceptance" in (
@@ -240,7 +244,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "6e946aa3b1e0a747047db1aa56f3271da81d43a7f8295198a18afae981c80598"
+        "d1dac1263ae41bbdd09c8d9764cd660333f7841ef7078518bbf0797e868cb575"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout
