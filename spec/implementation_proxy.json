@@ -1,0 +1,484 @@
+{
+  "acceptance": {
+    "architectural_diagnostic_is_gate": false,
+    "blackboxes_max": 0,
+    "equivalence_required_cases": [
+      "numeric_e1_l4",
+      "stage_reduced"
+    ],
+    "latches_max": 0,
+    "mapped_equivalence_required_cases": [
+      "numeric_e1_l4"
+    ],
+    "postroute_equivalence_required_cases": [
+      "numeric_e1_l4",
+      "stage_reduced"
+    ],
+    "mapped_internal_cells_max": 0,
+    "prelayout_setup_required_cases": [
+      "numeric_e1_l4"
+    ],
+    "physical_proxy_required_cases": [
+      "numeric_e1_l4",
+      "stage_reduced"
+    ],
+    "proxy_setup_tns_ns_max": 0.0,
+    "proxy_setup_wns_ns_min": 0.0,
+    "physical_drc_errors_max": 0,
+    "physical_antenna_violating_nets_max": 0,
+    "physical_antenna_violating_pins_max": 0,
+    "physical_design_violations_max": 0,
+    "physical_flow_errors_max": 0,
+    "physical_hold_tns_ns_min": 0.0,
+    "physical_hold_violations_max": 0,
+    "physical_hold_wns_ns_min": 0.0,
+    "physical_max_capacitance_violations_max": 0,
+    "physical_max_fanout_violations_max": 0,
+    "physical_max_slew_violations_max": 0,
+    "physical_placement_violations_max": 0,
+    "physical_setup_tns_ns_min": 0.0,
+    "physical_setup_violations_max": 0,
+    "physical_setup_wns_ns_min": 0.0,
+    "required_cases": [
+      "numeric_e1_l4",
+      "numeric_e1_l16",
+      "numeric_e4_l16",
+      "numeric_e16_l16",
+      "stage_reduced",
+      "stage_midpoint",
+      "stage_default"
+    ],
+    "structural_problems_max": 0,
+    "unconstrained_endpoints_max": 0,
+    "unexpected_warnings_are_fatal": true
+  },
+  "campaign_id": "opentallas-public-implementation-proxy-v1",
+  "cases": [
+    {
+      "equivalence": "required",
+      "kind": "numeric",
+      "name": "numeric_e1_l4",
+      "parameters": {
+        "ACC_W": 32,
+        "ACT_W": 8,
+        "LANES": 4,
+        "NUM_EXPERTS": 1,
+        "WEIGHT_W": 4
+      },
+      "physical_proxy": {
+        "allowed_unloaded_top_input_bits": [],
+        "core_area_um": [
+          10.0,
+          10.0,
+          150.0,
+          150.0
+        ],
+        "die_area_um": [
+          0.0,
+          0.0,
+          160.0,
+          160.0
+        ],
+        "place_density": 0.3,
+        "required": true
+      },
+      "sources": [
+        "rtl/ot_numeric_dot.sv"
+      ],
+      "top": "ot_numeric_dot"
+    },
+    {
+      "equivalence": "scaling_only",
+      "kind": "numeric",
+      "name": "numeric_e1_l16",
+      "parameters": {
+        "ACC_W": 32,
+        "ACT_W": 8,
+        "LANES": 16,
+        "NUM_EXPERTS": 1,
+        "WEIGHT_W": 4
+      },
+      "physical_proxy": null,
+      "sources": [
+        "rtl/ot_numeric_dot.sv"
+      ],
+      "top": "ot_numeric_dot"
+    },
+    {
+      "equivalence": "scaling_only",
+      "kind": "numeric",
+      "name": "numeric_e4_l16",
+      "parameters": {
+        "ACC_W": 32,
+        "ACT_W": 8,
+        "LANES": 16,
+        "NUM_EXPERTS": 4,
+        "WEIGHT_W": 4
+      },
+      "physical_proxy": null,
+      "sources": [
+        "rtl/ot_numeric_dot.sv"
+      ],
+      "top": "ot_numeric_dot"
+    },
+    {
+      "equivalence": "scaling_only",
+      "kind": "numeric",
+      "name": "numeric_e16_l16",
+      "parameters": {
+        "ACC_W": 32,
+        "ACT_W": 8,
+        "LANES": 16,
+        "NUM_EXPERTS": 16,
+        "WEIGHT_W": 4
+      },
+      "physical_proxy": null,
+      "sources": [
+        "rtl/ot_numeric_dot.sv"
+      ],
+      "top": "ot_numeric_dot"
+    },
+    {
+      "equivalence": "required",
+      "kind": "stage_control",
+      "name": "stage_reduced",
+      "parameters": {
+        "CMD_FIFO_DEPTH": 4,
+        "CREDIT_DEPTH": 2,
+        "CREDIT_SINKS": 2,
+        "RSP_FIFO_DEPTH": 4,
+        "SCHEDULE_PORTS": 4,
+        "SCHEDULE_SLOTS": 4,
+        "SESSION_ENTRIES": 2,
+        "TELEM_FIFO_DEPTH": 4
+      },
+      "physical_proxy": {
+        "allowed_unloaded_top_input_bits": [
+          {
+            "first_bit": 4,
+            "last_bit": 15,
+            "port": "schedule_wr_data",
+            "reason": "The reduced four-slot synthesis proxy consumes only the low four schedule-data bits; the frozen 16-bit top-level record remains unchanged for interface fidelity."
+          }
+        ],
+        "core_area_um": [
+          10.0,
+          10.0,
+          790.0,
+          790.0
+        ],
+        "die_area_um": [
+          0.0,
+          0.0,
+          800.0,
+          800.0
+        ],
+        "place_density": 0.3,
+        "required": true
+      },
+      "sources": [
+        "rtl/lib/ot_reset_sync.sv",
+        "rtl/lib/ot_sync_bits.sv",
+        "rtl/lib/ot_sync_level.sv",
+        "rtl/lib/ot_cdc_mailbox.sv",
+        "rtl/lib/ot_async_fifo.sv",
+        "rtl/ot_csr_block.sv",
+        "rtl/ot_power_reset_controller.sv",
+        "rtl/ot_schedule_controller.sv",
+        "rtl/ot_cmd_frontend.sv",
+        "rtl/ot_session_table.sv",
+        "rtl/ot_credit_manager.sv",
+        "rtl/ot_ras_controller.sv",
+        "rtl/ot_stage_controller.sv",
+        "rtl/ot_stage_top.sv"
+      ],
+      "top": "ot_stage_top"
+    },
+    {
+      "equivalence": "scaling_only",
+      "kind": "stage_control",
+      "name": "stage_midpoint",
+      "parameters": {
+        "CMD_FIFO_DEPTH": 8,
+        "CREDIT_DEPTH": 4,
+        "CREDIT_SINKS": 4,
+        "RSP_FIFO_DEPTH": 8,
+        "SCHEDULE_PORTS": 8,
+        "SCHEDULE_SLOTS": 16,
+        "SESSION_ENTRIES": 4,
+        "TELEM_FIFO_DEPTH": 8
+      },
+      "physical_proxy": null,
+      "sources": [
+        "rtl/lib/ot_reset_sync.sv",
+        "rtl/lib/ot_sync_bits.sv",
+        "rtl/lib/ot_sync_level.sv",
+        "rtl/lib/ot_cdc_mailbox.sv",
+        "rtl/lib/ot_async_fifo.sv",
+        "rtl/ot_csr_block.sv",
+        "rtl/ot_power_reset_controller.sv",
+        "rtl/ot_schedule_controller.sv",
+        "rtl/ot_cmd_frontend.sv",
+        "rtl/ot_session_table.sv",
+        "rtl/ot_credit_manager.sv",
+        "rtl/ot_ras_controller.sv",
+        "rtl/ot_stage_controller.sv",
+        "rtl/ot_stage_top.sv"
+      ],
+      "top": "ot_stage_top"
+    },
+    {
+      "equivalence": "scaling_only",
+      "kind": "stage_control",
+      "name": "stage_default",
+      "parameters": {
+        "CMD_FIFO_DEPTH": 8,
+        "CREDIT_DEPTH": 8,
+        "CREDIT_SINKS": 4,
+        "RSP_FIFO_DEPTH": 8,
+        "SCHEDULE_PORTS": 8,
+        "SCHEDULE_SLOTS": 256,
+        "SESSION_ENTRIES": 16,
+        "TELEM_FIFO_DEPTH": 16
+      },
+      "physical_proxy": null,
+      "sources": [
+        "rtl/lib/ot_reset_sync.sv",
+        "rtl/lib/ot_sync_bits.sv",
+        "rtl/lib/ot_sync_level.sv",
+        "rtl/lib/ot_cdc_mailbox.sv",
+        "rtl/lib/ot_async_fifo.sv",
+        "rtl/ot_csr_block.sv",
+        "rtl/ot_power_reset_controller.sv",
+        "rtl/ot_schedule_controller.sv",
+        "rtl/ot_cmd_frontend.sv",
+        "rtl/ot_session_table.sv",
+        "rtl/ot_credit_manager.sv",
+        "rtl/ot_ras_controller.sv",
+        "rtl/ot_stage_controller.sv",
+        "rtl/ot_stage_top.sv"
+      ],
+      "top": "ot_stage_top"
+    }
+  ],
+  "constraints": {
+    "architectural_diagnostic": {
+      "aon_period_ns": 4.0,
+      "core_period_ns": 1.0,
+      "input_delay_fraction": 0.2,
+      "input_delay_min_fraction": 0.05,
+      "output_delay_fraction": 0.2,
+      "output_delay_min_fraction": 0.05,
+      "setup_uncertainty_fraction": 0.05
+    },
+    "clock_groups": "aon_clk and core_clk are asynchronous",
+    "external_reset_exceptions": [
+      "aon_rst_n",
+      "core_rst_n"
+    ],
+    "input_transition_ns": 0.1,
+    "max_fanout": 32,
+    "minimum_delay_policy": "Unrouted mapped-netlist hold and removal slack is diagnostic and remains open; post-CTS/routing minimum delay is reported separately and is not product signoff.",
+    "output_load_pf": 0.01,
+    "proxy_setup": {
+      "aon_period_ns": 10.0,
+      "core_period_ns": 10.0,
+      "input_delay_fraction": 0.2,
+      "input_delay_min_fraction": 0.05,
+      "output_delay_fraction": 0.2,
+      "output_delay_min_fraction": 0.05,
+      "setup_uncertainty_fraction": 0.05
+    },
+    "reset_release_obligation": "aon_rst_n must be released synchronously by the platform owner; core_rst_n is conditioned by ot_reset_sync. Exact external-reset timing exceptions do not waive integration recovery/removal checks."
+  },
+  "prelayout_timing_policy": "Complete constraints and raw mapped-netlist timing are reported for every case. The small arithmetic representative is the only pre-layout setup gate. Stage-control and larger arithmetic points deliberately retain flop-mapped inferred memories and unbuffered high-fanout controls, so their raw timing is diagnostic; required physical cases must instead pass the buffered post-route setup gate. This does not waive product SRAM, reset-tree, or target-node timing closure.",
+  "evidence_boundary": "Public Nangate45 45 nm typical-corner synthesis, static timing, logical equivalence, and place/CTS/route methodology proxies. Results are not target-node, ROM/SRAM/HBM/PHY, clock-tree, package, power-integrity, reliability, manufacturing, or product-silicon signoff and cannot substantiate the 1 GHz architecture target.",
+  "generic_equivalence_policy": {
+    "abc_timeout_seconds": 120,
+    "arbitrary_common_initial_state_required": true,
+    "initial_output_partition_bits": 32,
+    "interface_alignment_policy": "Primary inputs, primary outputs, every verbose-map state index, and every state alias must match exactly by index, name, and bit before proof. Constant output bits may be absent from the verbose map only when absent on both sides. The AIGER headers and undefined-initial-state accounting must match exactly.",
+    "minimum_output_partition_bits": 1,
+    "outer_process_timeout_seconds": 240,
+    "require_exact_output_coverage": true,
+    "stage_control_method": "Full flattened RTL is normalized with async2sync and clk2fflogic; every unspecified initial state is converted to solver-controlled anyinit before the exact generic synth -flatten -noabc transform. Both sides are then converted to arbitrary-common-initial-state AIGER. Pinned ABC dsec proves every primary-output bit using exact non-overlapping partitions, recursively bisecting only undecided ranges down to one bit.",
+    "undefined_state_policy": "formalff -ff2anyinit -setundef runs before generic synthesis on both proof sides. This deliberately inhibits X/don't-care state deletion and proves the synthesis transform under a stronger arbitrary-common-initial-state model; it is transformation evidence, not a claim that the separately generated mapped or ORFS netlist retains identical private state. Exact ORFS synthesized-to-final equivalence is governed separately, while qualified RTL-to-product-netlist LEC remains external."
+  },
+  "large_case_mapping_policy": {
+    "abc_script": "strash; &get -n; &nf; &put",
+    "case_names": [
+      "numeric_e16_l16"
+    ],
+    "outer_process_timeout_seconds": 300,
+    "profile_id": "bounded_structural_liberty_v1",
+    "qor_comparability": "The bounded structural mapping result is a netlist-size and STA-coverage scaling proxy only. Its cell count, Liberty area, and timing are not directly comparable to cases mapped by the default delay-oriented ABC recipe.",
+    "rationale": "The exact 113,945-cell generic numeric_e16_l16 design remained in the pinned default quality-oriented ABC recipe for more than 64 minutes without producing a mapped netlist. The governed bounded recipe completed a real Nangate45 Liberty mapping in a preliminary exact-design experiment; it is limited to this non-equivalence, non-physical scaling point and does not resize or omit the case.",
+    "required_closure": {
+      "all_mapped_cells_from_pinned_liberty": true,
+      "blackboxes_max": 0,
+      "complete_mapped_netlist": true,
+      "complete_sta_constraint_coverage": true,
+      "latches_max": 0,
+      "mapped_internal_cells_max": 0,
+      "structural_problems_max": 0
+    },
+    "scope": "Exact case-name allowlist only; every unlisted case retains the default delay-oriented ABC mapping command."
+  },
+  "open_macro_line_items": [
+    "immutable weight ROM arrays, sense amplifiers, repair, and characterization",
+    "qualified SRAM/register-file macros",
+    "HBM controller, PHY, stack, package beachfront, and signal integrity",
+    "stage-link PHY and package channels",
+    "PLL, clock macros, IO/ESD, power grid, thermal sensors, and analog monitors",
+    "scan compression, ATPG, MBIST, fuse, and production test macros"
+  ],
+  "physical_flow_policy": {
+    "capacitance_margin": 0.25,
+    "hold_slack_margin_ns": 0.05,
+    "ir_drop": {
+      "gate": false,
+      "status": "diagnostic_open_default_proxy_pdn",
+      "use": "Records the default Nangate45 proxy grid under vectorless activity only. It is neither a calibrated target-package power-integrity model nor product closure."
+    },
+    "orfs_kepler_lec": {
+      "enabled": false,
+      "failure_observed": "The pinned amd64 image's optional kepler-formal helper terminated with SIGILL in libnaja_python on this public host.",
+      "replacement_gate": "Pinned Yosys Liberty/AIG normalization plus pinned ABC dsec inductive sequential equivalence from the ORFS synthesized netlist to the final extracted physical netlist is required for every physical proxy case.",
+      "trust_boundary": "The disabled helper is not reported as passing. Yosys/ABC and Liberty semantics remain declared public-tool trust boundaries, and product signoff still requires qualified commercial or independently diverse LEC."
+    },
+    "place_density_lower_bound_addon": 0.2,
+    "power": {
+      "gate": false,
+      "status": "illustrative_vectorless_openroad_only",
+      "use": "No workload VCD/SAIF, calibrated macro models, package loss, target voltage/frequency, thermal feedback, or signoff extraction is present; values must not be used as product power or energy claims."
+    },
+    "postroute_equivalence": {
+      "abc_timeout_seconds": 600,
+      "arbitrary_common_initial_state_required": true,
+      "private_state_symbol_remaps_max": 8,
+      "state_alignment_policy": "Primary inputs and outputs must match by public name and bit. Every state bit and its arbitrary-initial-state input must pair by deterministic AIGER latch index. Only autogenerated private state symbols matching the governed pattern may be aligned; public state-name mismatches are fatal."
+    },
+    "tns_end_percent": 100
+  },
+  "reports": {
+    "json": "results/rtl/implementation_campaign.json",
+    "markdown": "results/rtl/IMPLEMENTATION_REPORT.md",
+    "runner": "tools/rtl_implementation_campaign.py"
+  },
+  "schema_version": 1,
+  "toolchain": {
+    "cudd": {
+      "library_sha256": "18e34196440e7b38c2c322076f09c5b4eb64f2c9def8fc2adefca3c0865f8ba9",
+      "version": "3.0.0"
+    },
+    "nangate45": {
+      "corner": "typical, 1.10 V, 25 C",
+      "lef_macro_sha256": "a43aea339f12a57a63497783e508ba16f3da2dc056d3247dec7d99707c2dedef",
+      "lef_technology_sha256": "834a79295054cd4209178d1bade67c353863c47bb4b3c22ee38b862b7cec37f2",
+      "liberty_sha256": "8d540a4d4cf6d09d27c87ad067857a9c0c2eeb023ab7a56e058cd3113db4e9b1",
+      "license_sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594",
+      "orfs_reference_revision": "be0dca0b1fd41df54792b3012350cd52bccd99bb",
+      "use": "comparative open-PDK methodology and scaling proxy only"
+    },
+    "openroad_orfs_container": {
+      "amd64_digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+      "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+      "openroad_executable_sha256": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+      "openroad_version": "26Q3-1510-g6cb3f2b704",
+      "orfs_revision_binding": "The image omits VCS metadata; its immutable image digest is authoritative. The separately recorded ORFS public reference revision was upstream master at acquisition and supplies the pinned Nangate45 files.",
+      "repository": "openroad/orfs",
+      "yosys_executable_sha256": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92",
+      "yosys_version": "0.68+post"
+    },
+    "opensta": {
+      "executable_sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "source_revision": "be771a0116985d57effb4120668ae98e8a7b0f79",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "abc_sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce",
+      "abc_version_family": "UC Berkeley, ABC 1.01",
+      "executable_sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "source_revision": "38e001a6ff74ca434bf4cc02c053f53619160ab0",
+      "version": "0.68"
+    }
+  },
+  "warning_policy": {
+    "allowed_abc_exact": [
+      "ABC: Warning: Detected 2 multi-output cells (for example, \"FA_X1\").",
+      "ABC: Warning: The network is combinational (run \"fraig\" or \"fraig_sweep\")."
+    ],
+    "allowed_memory_to_register": {
+      "rtl/lib/ot_async_fifo.sv": [
+        "mem"
+      ],
+      "rtl/ot_cmd_frontend.sv": [
+        "rsp_mem"
+      ],
+      "rtl/ot_credit_manager.sv": [
+        "free",
+        "free_next"
+      ],
+      "rtl/ot_ras_controller.sv": [
+        "telemetry_mem"
+      ],
+      "rtl/ot_schedule_controller.sv": [
+        "active_crc",
+        "schedule_mem"
+      ],
+      "rtl/ot_session_table.sv": [
+        "entry_context",
+        "entry_epoch",
+        "entry_generation",
+        "entry_image",
+        "entry_position",
+        "entry_session",
+        "entry_transaction"
+      ]
+    },
+    "memory_policy": "No qualified SRAM compiler is used. Enumerated inferred memories are intentionally mapped to flops for comparative control-shell scaling; each occurrence is recorded and is not a macro-area estimate.",
+    "openroad": {
+      "allowed_codes": {
+        "EST-0027": {
+          "case_kinds": ["numeric", "stage_control"],
+          "disposition": "Expected before placement parasitics exist; final extracted timing, not this estimate, is gated."
+        },
+        "FLW-0010": {
+          "case_kinds": ["stage_control"],
+          "disposition": "ORFS declines its single-clock SDC rewrite for the governed two-asynchronous-clock stage SDC; the original complete SDC is retained."
+        },
+        "GRT-0246": {
+          "case_kinds": ["numeric", "stage_control"],
+          "disposition": "The pinned public Nangate45 collateral provides no CORE ANTENNACELL diode; final antenna and DRC metrics are still recorded, while product antenna signoff remains open."
+        },
+        "GRT-0281": {
+          "case_kinds": ["numeric", "stage_control"],
+          "disposition": "Pre-CTS clock fanout notice; final clock trees and timing are gated after CTS and routing."
+        },
+        "GUI-0076": {
+          "case_kinds": ["numeric", "stage_control"],
+          "disposition": "Headless report rendering selects a temporary XDG runtime directory and does not affect design data."
+        },
+        "IFP-0028": {
+          "case_kinds": ["numeric", "stage_control"],
+          "disposition": "The requested proxy core origin is snapped to the public site's legal placement grid; realized areas are taken from final metadata."
+        },
+        "PDN-1051": {
+          "case_kinds": ["numeric", "stage_control"],
+          "disposition": "The macro-grid template has no macro instances in these deliberately macro-free control/arithmetic proxies."
+        },
+        "RCX-0514": {
+          "case_kinds": ["numeric", "stage_control"],
+          "disposition": "Pinned ORFS invokes a deprecated extraction-option spelling; final SPEF generation and extracted timing artifacts remain mandatory."
+        },
+        "RSZ-0104": {
+          "case_kinds": ["numeric", "stage_control"],
+          "disposition": "Permitted only when the independent final-netlist connectivity audit proves every one-pin net is a single unused cell output with no load or top-level connection."
+        }
+      },
+      "forbidden_codes": ["DRT-0120"],
+      "forbidden_code_disposition": "Large routed functional nets are forbidden after the explicit max-fanout constraint; their presence reopens fanout optimization and routing.",
+      "unexpected_codes_are_fatal": true
+    }
+  }
+}

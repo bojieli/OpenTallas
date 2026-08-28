@@ -1,0 +1,114 @@
+# Public implementation-proxy execution status
+
+**As of:** 2026-08-28 UTC  
+**Campaign:** `opentallas-public-implementation-proxy-v1`  
+**Run fingerprint:** `87e057764094b9ed`  
+**Overall status:** **closed — clean-baseline full campaign passed**
+
+The canonical machine-readable result is
+`results/rtl/implementation_campaign.json`; the matching human-readable report
+is `results/rtl/IMPLEMENTATION_REPORT.md`. `spec/verification.json` records the
+campaign as `closed`.
+
+## Evidence boundary
+
+The campaign uses pinned Yosys/OpenSTA/OpenROAD and the Nangate45 open library as
+a digital methodology and scaling proxy. ROM, SRAM, HBM, PHY, package, wafer
+stitching, product clocks, power delivery, cooling, yield, test, and target-node
+PPA are outside it. Closure does not constitute implementation or validation of
+an N7/N4 ROM wafer and none of these 45-nm proxy metrics enter the iso-node
+performance simulations.
+
+## Clean-baseline proof
+
+An initial full technical run was made in the shared dirty worktree and retained
+as explicitly noncanonical evidence. The clean replay copied only the exact 18
+source/spec/runner files in that run's source inventory into an isolated git
+repository, created deterministic clean commit
+`34a0d2ec791a1344a5db96f0123e5d02d57d02ab`, required the same source/tool
+fingerprint, and ran the complete campaign without `--allow-dirty`, `--case`,
+`--skip-equivalence`, or `--skip-physical`.
+
+The replay establishes:
+
+- identical fingerprint `87e057764094b9ed`;
+- identical source inventory and pinned toolchain identity;
+- a clean source baseline with no dirty paths;
+- equal technical closure signatures between the dirty technical run and clean
+  replay;
+- 386 result-referenced artifacts rechecked by size and SHA-256 after archival;
+- preservation of the shared worktree and of the earlier noncanonical result and
+  raw build rather than cleaning, resetting, or overwriting them.
+
+Exact evidence is in `results/rtl/clean_baseline_replay.json` and
+`results/rtl/CLEAN_BASELINE_REPLAY.md`. The earlier result is retained under
+`results/rtl/noncanonical/87e057764094b9ed/`.
+
+## Case and gate closure
+
+| Case | Mapping profile | Cells | Liberty-area proxy (µm²) | Generic / mapped equivalence | Physical / post-route equivalence | Disposition |
+|---|---|---:|---:|---|---|---|
+| `numeric_e1_l4` | Default delay-oriented | 999 | 1,265.096 | Pass: 223/223 / 38/38 points | Pass / pass | Required arithmetic representative closed. |
+| `numeric_e1_l16` | Default delay-oriented | 4,372 | 4,942.014 | Not required / trust boundary | Not required | Scaling point closed. |
+| `numeric_e4_l16` | Default delay-oriented | 19,183 | 21,412.734 | Not required / trust boundary | Not required | Scaling point closed. |
+| `numeric_e16_l16` | Bounded structural Liberty | 145,186 | 165,780.776 | Not required / trust boundary | Not required | Exact large scaling point closed; QoR is not directly comparable to default-profile rows. |
+| `stage_reduced` | Default delay-oriented | 32,815 | 74,695.726 | Pass for all 793 output bits / trust boundary | Pass / pass | Required stage-control representative closed. |
+| `stage_midpoint` | Default delay-oriented | 41,718 | 95,008.816 | Not required / trust boundary | Not required | Scaling point closed. |
+| `stage_default` | Default delay-oriented | 70,985 | 154,729.274 | Not required / trust boundary | Not required | Scaling point closed. |
+
+All seven mapped cases contain zero internal/unmapped cells, latches,
+blackboxes, and structural problems. Every case has zero missing input/output
+delays, multiple/no-clock findings, combinational loops, and unconstrained
+endpoints under the proxy constraints. Exact enumerated warnings were accepted;
+unexpected warnings are fatal.
+
+The 793-bit `stage_reduced` generic proof used 25 top-level output partitions:
+24 ranges of 32 bits and one range of 25 bits. One 32-bit range was recursively
+split into two 16-bit ranges and then two 8-bit ranges, producing 29 total proof
+attempts; every final leaf range passed. The interface audit matched 734 external
+input bits, 9,169 arbitrary-initial-state input bits, 18,329 state bits, and all
+793 output bits before proof.
+
+## Physical representative metrics
+
+| Metric | `numeric_e1_l4` | `stage_reduced` |
+|---|---:|---:|
+| Final setup WNS / TNS | 5.479970 ns / 0 ns | 4.317840 ns / 0 ns |
+| Final hold WNS / TNS | 0.463191 ns / 0 ns | 0.042537 ns / 0 ns |
+| Setup / hold violations | 0 / 0 | 0 / 0 |
+| Max slew / fanout / capacitance violations | 0 / 0 / 0 | 0 / 0 / 0 |
+| Placement / detailed-route DRC violations | 0 / 0 | 0 / 0 |
+| Antenna violating nets / pins | 0 / 0 | 0 / 0 |
+| Standard-cell instance area | 1,971.59 µm² | 78,721.1 µm² |
+| Core utilization | 10.1724% | 12.9696% |
+| Routed wirelength / vias | 13,656 µm / 7,706 | 827,362 µm / 253,387 |
+| Post-route sequential equivalence | Pass | Pass |
+
+The stage-control post-route proof covered 734 external input bits, 8,485 state
+bits, and 793 output bits. Four autogenerated private state-symbol alignments
+were required, below the governed maximum of eight; no public symbol mismatch
+was accepted.
+
+## Bounded large-case policy
+
+The exact `numeric_e16_l16` design has 113,945 generic cells before Liberty
+mapping. The default quality-oriented ABC recipe previously remained active for
+more than 64 minutes without a mapped result. The governed exception is limited
+exactly to this scaling-only, non-equivalence, non-physical case and uses:
+
+```text
+strash; &get -n; &nf; &put
+```
+
+with a 300-second outer process timeout. The clean run produced 145,186 real
+Nangate45 cells with zero internal cells, latches, blackboxes, structural
+problems, or unconstrained endpoints. This preserves the full requested case
+and complete structural/STA coverage, but its area, cell count, and timing are
+not directly QoR-comparable to the six default-profile cases.
+
+## Remaining product gates
+
+This campaign closes only the declared public implementation-methodology gate.
+Target numerical implementation, qualified ROM/SRAM/HBM/PHY/PLL/IO/DFT macros,
+full-chip or wafer physical design, SI/PI, thermal, reliability, manufacturing,
+yield, test, and product signoff remain external.
