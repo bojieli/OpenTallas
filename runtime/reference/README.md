@@ -47,3 +47,11 @@ and only one shard owns a valid token. `HASH_ROUTE` selects the checkpoint's
 ordered expert-ID row for each flattened token ID and intentionally preserves
 duplicates. It does not implement router scoring, selected-weight gathering, or
 expert dispatch.
+
+`structural.py` implements the bit-preserving `HC_EXPAND` copy and the integer
+noise-block construction that precedes `DSPARK_NOISE_EMBED`. The HC result
+copies every BF16 encoding without arithmetic. The DSpark helper fixes the
+current token at column zero and fills later draft columns with the pinned noise
+token; its shared embedding lookup and HC expansion are already covered by the
+two pure primitives above. Main-hidden projection remains a separate matrix
+operator.
