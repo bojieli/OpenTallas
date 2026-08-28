@@ -404,3 +404,23 @@ def test_checkpoint_cli_locks_and_replays_snapshot(
     )
     assert verify_result.returncode == 0, verify_result.stderr
     assert "verified checkpoint lock" in verify_result.stdout
+
+    wrong_model_result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "compiler.cli",
+            "validate-deepseek-v4",
+            "--lock",
+            str(lock_path),
+            "--output",
+            str(tmp_path / "must-not-exist.json"),
+        ],
+        cwd=ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+    assert wrong_model_result.returncode == 2
+    assert "not the pinned V4 Flash release" in wrong_model_result.stderr
+    assert not (tmp_path / "must-not-exist.json").exists()

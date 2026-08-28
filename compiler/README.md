@@ -80,6 +80,33 @@ card, license, and reference inference sources. `remote_code_policy` is
 `disabled`: compiler support must reproduce the semantics explicitly and must
 not make checkpoint Python execution part of the trust boundary.
 
+Generate the deterministic official tensor-role contract without checkpoint
+payloads with:
+
+```bash
+python3 -m compiler.cli describe-deepseek-v4 \
+  --output /tmp/deepseek-v4-flash.tensor-contract.json
+```
+
+The adapter expands all 72,317 expected tensors from the byte-exact official
+config and independently matches the complete pinned header inventory's names,
+dtypes, shapes, scale associations, and 166,878,536,440 payload bytes. The
+result is a source/tensor contract, not yet an executable operator graph; its
+`operator_graph_status` states that boundary explicitly.
+
+After the full checkpoint lock exists, bind its observed tensor table to this
+contract with:
+
+```bash
+python3 -m compiler.cli validate-deepseek-v4 \
+  --lock /path/to/deepseek-v4-flash-0731.checkpoint.lock.json \
+  --output /tmp/deepseek-v4-flash.checkpoint-validation.json
+```
+
+This second command accepts neither the fixture nor a merely shape-compatible
+model: the lock must carry the exact official source hashes, tensor count,
+payload bytes, and all expected tensor records.
+
 The service engine verifies every manifest hash before execution and never reads
 the known-answer file. The independent reference evaluator consumes the source
 IR and request, not compiler artifacts. Tests compare both paths with the

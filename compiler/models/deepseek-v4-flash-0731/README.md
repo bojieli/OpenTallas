@@ -17,3 +17,16 @@ every byte, every header, all 72,317 tensor assignments, and the declared
 This source contract establishes checkpoint identity and loadability. It does
 not claim operator-complete inference, numeric equivalence, compiled scheduling,
 RTL execution, or performance closure; those remain separate end-to-end gates.
+
+`config.json` is a byte-identical committed copy of the official root config,
+not a hand-transcribed approximation. The graph adapter checks its hash against
+the source contract, expands the exact 43 main layers and three checkpoint-backed
+DSpark stages, and derives all 72,317 tensor names, dtypes, shapes, scale pairs,
+and semantic roles. Its independently header-derived tensor-structure digest is
+`18285fe60ca3655be488bbabb88b59489b8ee03cff7fc4f4729424051ca83e0e`.
+
+The root config's `num_nextn_predict_layers: 1` conflicts with the three `mtp.*`
+namespaces, three trailing compression-ratio entries, and the official inference
+config's `n_mtp_layers: 3`. The adapter preserves the root value and records the
+three-stage resolution as an explicit source adaptation; it does not silently
+equate these fields.

@@ -15,6 +15,12 @@ from compiler.frontend.checkpoint import (
     load_checkpoint_source,
     verify_checkpoint_lock,
 )
+from compiler.frontend.deepseek_v4 import (
+    DeepSeekV4AdapterError,
+    build_expected_tensor_contract,
+    load_official_config,
+    validate_official_checkpoint_lock,
+)
 from compiler.image.rom import RomImageError
 from compiler.ir.model import IRValidationError, canonical_json_bytes
 from compiler.microcode.isa import MicrocodeError
@@ -44,6 +50,17 @@ def parser() -> argparse.ArgumentParser:
     )
     verify_parser.add_argument("--lock", required=True, type=Path)
     verify_parser.add_argument("--snapshot", required=True, type=Path)
+    contract_parser = subparsers.add_parser(
+        "describe-deepseek-v4",
+        help="emit the exact official DeepSeek V4 Flash tensor-role contract",
+    )
+    contract_parser.add_argument("--output", required=True, type=Path)
+    validate_deepseek_parser = subparsers.add_parser(
+        "validate-deepseek-v4",
+        help="bind a complete checkpoint lock to the official V4 tensor contract",
+    )
+    validate_deepseek_parser.add_argument("--lock", required=True, type=Path)
+    validate_deepseek_parser.add_argument("--output", required=True, type=Path)
     return result
 
 
@@ -82,6 +99,28 @@ def main(argv: list[str] | None = None) -> int:
             verify_checkpoint_lock(arguments.snapshot, lock)
             print(f"verified checkpoint lock {lock['lock_id']}")
             return 0
+        if arguments.command == "describe-deepseek-v4":
+            contract = build_expected_tensor_contract(load_official_config())
+            _write_new_json(arguments.output, contract)
+            coverage = contract["coverage"]
+            print(
+                f"described {coverage['expected_tensor_count']} official tensors "
+                f"({coverage['expected_payload_bytes']} bytes); contract "
+                f"{contract['contract_id']}"
+            )
+            return 0
+        if arguments.command == "validate-deepseek-v4":
+            lock = load_checkpoint_lock(arguments.lock)
+            validation = validate_official_checkpoint_lock(
+                lock, load_official_config()
+            )
+            _write_new_json(arguments.output, validation)
+            print(
+                f"validated {validation['tensor_count']} official tensors "
+                f"({validation['payload_bytes']} bytes) against checkpoint lock "
+                f"{validation['checkpoint_lock_id']}"
+            )
+            return 0
     except (
         BuildError,
         IRValidationError,
@@ -89,6 +128,7 @@ def main(argv: list[str] | None = None) -> int:
         MicrocodeError,
         InverseCheckError,
         CheckpointError,
+        DeepSeekV4AdapterError,
         OSError,
     ) as exc:
         print(f"compiler error: {exc}", file=sys.stderr)

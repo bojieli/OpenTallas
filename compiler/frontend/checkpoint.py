@@ -868,6 +868,13 @@ def load_checkpoint_lock(path: Path) -> dict[str, Any]:
     return lock
 
 
+def validate_checkpoint_lock(lock: dict[str, Any]) -> dict[str, Any]:
+    """Validate an in-memory lock before another compiler front end consumes it."""
+
+    _validate_lock_structure(lock)
+    return lock
+
+
 def verify_checkpoint_lock(snapshot: Path, lock: dict[str, Any]) -> dict[str, Any]:
     """Rebuild a lock from local bytes and require canonical equality."""
 
