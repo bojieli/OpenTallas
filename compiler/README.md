@@ -151,6 +151,27 @@ whitespace, and protocol-token golden probes. It never invokes Transformers,
 snapshot may contain just `tokenizer.json` and `tokenizer_config.json`; a full
 checkpoint lock is still required for model execution.
 
+Replay and inspect the pinned target-only host generation loop with an executor
+transcript:
+
+```bash
+python3 -m compiler.cli replay-deepseek-v4-generation \
+  --request testdata/compiler/deepseek_v4_generation/greedy_replay.json \
+  --output /tmp/deepseek-v4-flash.generation-trace.json
+```
+
+The controller issues the exact initial prefill span followed by single-token
+decode spans, delays each candidate's KV insertion until the next call, applies
+longer-prompt overrides, requires per-call logits and committed-state hashes,
+tracks EOS versus host-appended termination, and exposes the official batch
+behavior in which one row may continue mutating state after another row reaches
+EOS. Greedy selection is checked against a reported argmax. Stochastic calls
+must chain hashed RNG states, but exact replay remains blocked until the
+Torch/CUDA RNG stack is pinned. The checked replay is a synthetic control
+fixture: its hashes are not DeepSeek logits or state. DSpark is rejected because
+the pinned local generator never calls `forward_spec` and supplies no target
+verification/acceptance algorithm.
+
 The independent scalar numeric-reference foundation is under
 `runtime/reference/formats.py`. It exhaustively defines E2M1, E8M0, E4M3FN, and
 BF16 classification plus target rounding, packing, MXFP4 decode, and activation

@@ -157,6 +157,8 @@ def test_compiler_schemas_are_strict_draft_2020_documents() -> None:
         "checkpoint_lock_v1.schema.json",
         "checkpoint_source_v1.schema.json",
         "deepseek_v4_checkpoint_validation_v1.schema.json",
+        "deepseek_v4_generation_replay_v1.schema.json",
+        "deepseek_v4_generation_trace_v1.schema.json",
         "deepseek_v4_graph_contract_v1.schema.json",
         "deepseek_v4_tensor_contract_v1.schema.json",
         "deepseek_v4_tokenizer_validation_v1.schema.json",

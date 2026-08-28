@@ -50,3 +50,10 @@ after exact size/SHA-256 verification. The compiler validates the 129,280-token
 runtime vocabulary, all protocol token IDs, the manual-BOS/no-automatic-EOS
 policy, the 1,048,576-token tokenizer bound, the pinned `tokenizers` runtime, and
 independent encode/decode probes. It does not call a remote auto-loader.
+
+The target-only generation controller is source-mapped to the pinned
+`inference/generate.py` and makes every prefill/decode span, prompt override,
+EOS decision, logits identity, and mutable-state commit explicit. This validates
+host control semantics with executor transcripts; it does not manufacture model
+outputs. DSpark remains blocked because neither that local loop nor another
+pinned release file defines speculative target acceptance.

@@ -29,8 +29,12 @@ from compiler.frontend.deepseek_v4_tokenizer import (
     DeepSeekV4TokenizerError,
     load_verified_deepseek_v4_tokenizer,
 )
+from compiler.frontend.deepseek_v4_generation import (
+    DeepSeekV4GenerationError,
+    replay_generation_control,
+)
 from compiler.image.rom import RomImageError
-from compiler.ir.model import IRValidationError, canonical_json_bytes
+from compiler.ir.model import IRValidationError, canonical_json_bytes, load_strict_json
 from compiler.microcode.isa import MicrocodeError
 
 
@@ -80,6 +84,12 @@ def parser() -> argparse.ArgumentParser:
     )
     tokenizer_parser.add_argument("--snapshot", required=True, type=Path)
     tokenizer_parser.add_argument("--output", required=True, type=Path)
+    generation_parser = subparsers.add_parser(
+        "replay-deepseek-v4-generation",
+        help="replay target-only V4 generation and executor state commits",
+    )
+    generation_parser.add_argument("--request", required=True, type=Path)
+    generation_parser.add_argument("--output", required=True, type=Path)
     return result
 
 
@@ -161,6 +171,21 @@ def main(argv: list[str] | None = None) -> int:
                 f"{report['runtime']['version']}"
             )
             return 0
+        if arguments.command == "replay-deepseek-v4-generation":
+            try:
+                request = load_strict_json(arguments.request)
+            except (OSError, ValueError) as exc:
+                raise DeepSeekV4GenerationError(
+                    f"cannot load generation replay {arguments.request}: {exc}"
+                ) from exc
+            trace = replay_generation_control(request)
+            _write_new_json(arguments.output, trace)
+            print(
+                f"replayed {len(trace['trace'])} target-only model calls for "
+                f"{len(trace['sessions'])} session(s); trace {trace['trace_id']} "
+                f"({trace['control_scope']['execution_status']})"
+            )
+            return 0
     except (
         BuildError,
         IRValidationError,
@@ -170,6 +195,7 @@ def main(argv: list[str] | None = None) -> int:
         CheckpointError,
         DeepSeekV4AdapterError,
         DeepSeekV4GraphError,
+        DeepSeekV4GenerationError,
         DeepSeekV4TokenizerError,
         OSError,
     ) as exc:

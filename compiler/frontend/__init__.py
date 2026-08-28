@@ -36,6 +36,13 @@ from .deepseek_v4_tokenizer import (
     VerifiedDeepSeekV4Tokenizer,
     load_verified_deepseek_v4_tokenizer,
 )
+from .deepseek_v4_generation import (
+    DeepSeekV4GenerationController,
+    DeepSeekV4GenerationError,
+    GenerationConfig,
+    ModelInvocation,
+    replay_generation_control,
+)
 
 __all__ = [
     "CHECKPOINT_LOCK_SCHEMA",
@@ -45,7 +52,11 @@ __all__ = [
     "DeepSeekV4CompletionError",
     "DeepSeekV4EncodingError",
     "DeepSeekV4GraphError",
+    "DeepSeekV4GenerationController",
+    "DeepSeekV4GenerationError",
     "DeepSeekV4TokenizerError",
+    "GenerationConfig",
+    "ModelInvocation",
     "VerifiedDeepSeekV4Tokenizer",
     "build_expected_tensor_contract",
     "build_checkpoint_lock",
@@ -59,6 +70,7 @@ __all__ = [
     "load_verified_deepseek_v4_tokenizer",
     "parse_message_from_completion_text",
     "read_tensor_payload",
+    "replay_generation_control",
     "validate_checkpoint_source",
     "validate_checkpoint_lock",
     "validate_observed_tensor_records",
