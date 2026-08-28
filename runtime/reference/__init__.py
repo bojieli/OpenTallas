@@ -83,6 +83,7 @@ from .routing import (
     RoutingReferenceError,
     normalize_routed_weight_codes,
 )
+from .vector import VectorReferenceError, target_hidden_capture_bf16
 
 __all__ = [
     "BF16_MAX_ENCODING",
@@ -121,6 +122,7 @@ __all__ = [
     "SelectionReferenceError",
     "TIE_POLICY",
     "TokenMatrix",
+    "VectorReferenceError",
     "binary32_add",
     "binary32_balanced_sum",
     "binary32_divide",
@@ -154,5 +156,6 @@ __all__ = [
     "quantize_bf16_activation_block",
     "stable_topk_bf16",
     "stable_topk_binary32",
+    "target_hidden_capture_bf16",
     "window_indices",
 ]

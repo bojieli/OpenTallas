@@ -264,6 +264,27 @@ in-place multiplication, but does not specify one cross-backend reduction tree.
 The canonical tree is therefore an explicit deterministic target adaptation; it
 does not claim bit identity with every incidental PyTorch CPU or CUDA reduction.
 
+### NUM-6.5 Target-hidden capture
+
+`TARGET_HIDDEN_CAPTURE` consumes a rectangular finite-BF16 tensor in
+`[batch, sequence, hc_mult, width]` order and emits
+`[batch, sequence, width]`. The source HC dimension must equal the manifest
+`hc_mult`; the pinned Flash and Pro value is four. Each BF16 source encoding is
+widened exactly to binary32 by appending sixteen zero low bits. NaN or infinity
+input poisons.
+
+For each output element, source HC slots reduce in increasing stream order with
+the NUM-6.1 canonical balanced binary32 tree. The resulting binary32 sum is
+divided by the binary32 encoding of `hc_mult` with one round-to-nearest
+ties-to-even operation, then converted once to BF16 under NUM-4.2. Intermediate
+binary32 overflow poisons and output zero is canonical positive zero.
+
+The pinned source spells this as `h.mean(dim=2)` and returns BF16 on the audited
+CPU/CUDA paths, but does not specify one cross-backend reduction tree. This
+canonical source-axis tree is an explicit deterministic target adaptation. It
+does not claim that every PyTorch backend or input class implements the same
+intermediate overflow behavior.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension

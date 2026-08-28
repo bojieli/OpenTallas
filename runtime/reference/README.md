@@ -27,10 +27,10 @@ round trips over 20,000 random finite encodings and cases where ordered
 per-product accumulation intentionally differs from one final exact reduction.
 
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
-the qualified dense FP8 linear path, all vector/attention/routing operators,
-real-checkpoint known answers, layer differentials, end-to-end logits, and task
-quality remain open. The earlier exact-integer evaluator remains fixture-only
-evidence.
+the qualified dense FP8 linear path, vector operators beyond target-hidden
+capture, attention/routing operators, real-checkpoint known answers, layer
+differentials, end-to-end logits, and task quality remain open. The earlier
+exact-integer evaluator remains fixture-only evidence.
 
 `matrix.py` composes the scalar/block rules into complete `FP8_LINEAR`
 semantics. It quantizes each BF16 activation block once, applies the released
@@ -84,3 +84,11 @@ each division once, and rounds the subsequent route-scale multiplication once.
 Zero denominators, negative scores, nonfinite values, malformed indices, and
 overflow fail closed. This fixes a deterministic accelerator tree rather than
 claiming that all PyTorch backends use one reduction order.
+
+`vector.py` implements `TARGET_HIDDEN_CAPTURE` over finite BF16 encodings. It
+widens the four official HC streams exactly to binary32, reduces source slots
+with the NUM-6.1 canonical balanced tree, performs one binary32 division by
+four, and converts once to BF16 under round-to-nearest ties-to-even. Shape or HC
+count mismatch, nonfinite BF16 input, and intermediate overflow fail closed.
+The explicit tree is a deterministic target adaptation of the pinned source's
+`h.mean(dim=2)`, not a claim about incidental backend reduction order.

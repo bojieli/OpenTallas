@@ -56,7 +56,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "c3e5d7c0869094e1991873fae9b1466962943132f71495fac11a4bbaa8442536"
+        "c7ef1dba938401b75b7b8bbb5fa8ff307f7e99aada498da69ad45e9c09e2bb59"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -66,7 +66,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 32,
+        "pending_reference_kind_count": 31,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -136,6 +136,9 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "ROUTER_WEIGHT_NORMALIZE": (
             "runtime.reference.routing.normalize_routed_weight_codes"
         ),
+        "TARGET_HIDDEN_CAPTURE": (
+            "runtime.reference.vector.target_hidden_capture_bf16"
+        ),
         "TOKEN_EMBED": "runtime.reference.lookup.bf16_token_embedding",
         "WINDOW_INDEX": "runtime.reference.indexing.window_indices",
     }
@@ -174,6 +177,13 @@ def test_layer_classes_and_mutable_state_sites_are_explicit(
     assert "main.layer03.index_topk" not in by_id
     assert by_id["main.layer00.route_select"]["kind"] == "HASH_ROUTE"
     assert by_id["main.layer03.route_select"]["kind"] == "BIASED_TOPK_ROUTE"
+    assert by_id["main.layer40.target_hidden"]["attributes"] == {
+        "hc_mult": 4,
+        "hc_reduce": "mean",
+        "layer": 40,
+    }
+    assert by_id["main.layer41.target_hidden"]["attributes"]["hc_mult"] == 4
+    assert by_id["main.layer42.target_hidden"]["attributes"]["hc_mult"] == 4
     assert by_id["dspark.layer00.prefill_kv"]["phases"] == ["prefill"]
     assert by_id["dspark.layer00.hc_attn_pre"]["phases"] == ["decode"]
     assert by_id["dspark.layer00.window_kv_write"]["inputs"][0] == (
@@ -208,7 +218,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "eleven complete matrix/structural/index/lookup/selection/routing" in (
+    assert "twelve complete matrix/vector/structural/index/lookup/selection/routing" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -228,7 +238,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, HC expansion, token embedding" in " ".join(
+    assert "unit-qualified dense FP8 linear, target-hidden capture" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
     assert "biased-router top-k" in " ".join(
@@ -283,7 +293,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "c3e5d7c0869094e1991873fae9b1466962943132f71495fac11a4bbaa8442536"
+        "c7ef1dba938401b75b7b8bbb5fa8ff307f7e99aada498da69ad45e9c09e2bb59"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout
