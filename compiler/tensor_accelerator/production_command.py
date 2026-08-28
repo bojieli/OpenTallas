@@ -1,8 +1,9 @@
 """Production command ABI v2 for causal HBM/SRAM execution.
 
 ABI 2.1 additively introduces bounded indexed HBM transfer and BF16 RMSNorm.
-The decoder retains strict ABI 2.0 support so the qualified projection artifacts
-remain executable and reproducible.
+ABI 2.2 adds bounded BF16 rotary-position execution.  The decoder retains
+strict support for both older minor versions so qualified artifacts remain
+executable and reproducible.
 """
 
 from __future__ import annotations
@@ -15,9 +16,12 @@ from typing import Iterable
 
 
 ABI_MAJOR = 2
-ABI_MINOR = 1
+ABI_MINOR = 2
 LEGACY_ABI_MINOR = 0
-SUPPORTED_ABI_MINORS = frozenset({LEGACY_ABI_MINOR, ABI_MINOR})
+RMSNORM_ABI_MINOR = 1
+SUPPORTED_ABI_MINORS = frozenset(
+    {LEGACY_ABI_MINOR, RMSNORM_ABI_MINOR, ABI_MINOR}
+)
 MAGIC = b"OTTAISA2"
 HEADER = struct.Struct("<8sHHII12s")
 COMMAND_WITH_CRC = struct.Struct("<BBHIIQQQQIIIII")
@@ -39,6 +43,7 @@ class Opcode(IntEnum):
     DMA_HBM_INDEXED_TO_SRAM = 0x02
     MATMUL_BF16_TILE = 0x10
     RMSNORM_BF16 = 0x20
+    ROPE_BF16 = 0x21
     COMPLETE = 0xFF
 
 
@@ -54,14 +59,16 @@ EXPECTED_ENGINE = {
     Opcode.DMA_HBM_INDEXED_TO_SRAM: Engine.DMA,
     Opcode.MATMUL_BF16_TILE: Engine.TENSOR,
     Opcode.RMSNORM_BF16: Engine.VECTOR,
+    Opcode.ROPE_BF16: Engine.VECTOR,
     Opcode.COMPLETE: Engine.CONTROL,
 }
 
 OPCODE_MIN_MINOR = {
     Opcode.DMA_HBM_TO_SRAM: LEGACY_ABI_MINOR,
-    Opcode.DMA_HBM_INDEXED_TO_SRAM: ABI_MINOR,
+    Opcode.DMA_HBM_INDEXED_TO_SRAM: RMSNORM_ABI_MINOR,
     Opcode.MATMUL_BF16_TILE: LEGACY_ABI_MINOR,
-    Opcode.RMSNORM_BF16: ABI_MINOR,
+    Opcode.RMSNORM_BF16: RMSNORM_ABI_MINOR,
+    Opcode.ROPE_BF16: ABI_MINOR,
     Opcode.COMPLETE: LEGACY_ABI_MINOR,
 }
 
@@ -226,6 +233,18 @@ def _validate_command(
             raise ProductionCommandError(
                 f"command {command.index} has illegal BF16 RMSNorm fields"
             )
+    elif command.opcode == Opcode.ROPE_BF16:
+        if (
+            command.flags
+            or command.kernel_index == NO_KERNEL
+            or not command.size0
+            or not command.size1
+            or not command.size2
+            or not command.size3
+        ):
+            raise ProductionCommandError(
+                f"command {command.index} has illegal BF16 RoPE fields"
+            )
     elif command.opcode == Opcode.COMPLETE:
         if command.kernel_index != NO_KERNEL or not _all_zero(command):
             raise ProductionCommandError(
@@ -376,6 +395,7 @@ __all__ = [
     "ABI_MINOR",
     "Engine",
     "LEGACY_ABI_MINOR",
+    "RMSNORM_ABI_MINOR",
     "MATMUL_FINAL",
     "MATMUL_INIT",
     "NO_KERNEL",

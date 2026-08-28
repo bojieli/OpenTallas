@@ -17,6 +17,7 @@ from compiler.tensor_accelerator.production_capability import (
 ROOT = Path(__file__).resolve().parents[2]
 CAPABILITY_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v1.json"
 CAPABILITY_V2_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v2.json"
+CAPABILITY_V3_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v3.json"
 
 
 def _rehash(value: dict[str, object]) -> None:
@@ -64,6 +65,7 @@ def test_v21_capability_adds_only_bounded_uncharacterized_rmsnorm() -> None:
     assert capability.vector_engine is not None
     assert capability.vector_engine.max_rows == 64
     assert capability.vector_engine.max_width == 16384
+    assert capability.vector_engine.max_rope_positions is None
     assert capability.to_dict()["evidence"]["performance_claims_permitted"] is False
 
     missing_vector = copy.deepcopy(capability.to_dict())
@@ -85,6 +87,37 @@ def test_v21_capability_adds_only_bounded_uncharacterized_rmsnorm() -> None:
     _rehash(overclaimed_legacy)
     with pytest.raises(ProductionCapabilityError, match="must remain"):
         parse_production_capability(overclaimed_legacy)
+
+
+def test_v22_capability_adds_bounded_qwen_rope_without_timing_claims() -> None:
+    capability = load_production_capability(CAPABILITY_V3_PATH)
+    assert (capability.command_abi_major, capability.command_abi_minor) == (2, 2)
+    assert capability.qualified_numeric_contracts == (
+        "bf16_bf16_fp32_sequential_rne_v1",
+        "qwen3_rmsnorm_fp32_bf16_v1",
+        "qwen3_rope_fp32_bf16_v1",
+    )
+    vector = capability.vector_engine
+    assert vector is not None
+    assert vector.max_rows == 64
+    assert vector.max_width == 16384
+    assert vector.max_rope_positions == 8000
+    assert vector.max_query_heads == 32
+    assert vector.max_key_value_heads == 8
+    assert vector.rope_head_dim == 128
+    assert capability.to_dict()["evidence"]["performance_claims_permitted"] is False
+
+    incomplete = copy.deepcopy(capability.to_dict())
+    del incomplete["vector_engine"]["rope_head_dim"]
+    _rehash(incomplete)
+    with pytest.raises(ProductionCapabilityError, match="complete group"):
+        parse_production_capability(incomplete)
+
+    underbounded = copy.deepcopy(capability.to_dict())
+    underbounded["vector_engine"]["max_rope_positions"] = 7999
+    _rehash(underbounded)
+    with pytest.raises(ProductionCapabilityError, match="do not cover"):
+        parse_production_capability(underbounded)
 
 
 def test_capability_rejects_identity_ordering_and_union_drift() -> None:

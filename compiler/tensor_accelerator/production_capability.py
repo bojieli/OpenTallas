@@ -16,7 +16,13 @@ from .common import (
     require_sha256,
     sha256_bytes,
 )
-from .production_command import ABI_MAJOR, ABI_MINOR, LEGACY_ABI_MINOR
+from .production_command import (
+    ABI_MAJOR,
+    ABI_MINOR,
+    LEGACY_ABI_MINOR,
+    RMSNORM_ABI_MINOR,
+    SUPPORTED_ABI_MINORS,
+)
 
 
 SCHEMA = "opentallas.tensor_accelerator.production_capability.v1"
@@ -92,6 +98,10 @@ class ProductionTensorEngine:
 class ProductionVectorEngine:
     max_rows: int
     max_width: int
+    max_rope_positions: int | None
+    max_query_heads: int | None
+    max_key_value_heads: int | None
+    rope_head_dim: int | None
 
 
 @dataclass(frozen=True)
@@ -257,11 +267,58 @@ def _parse_tensor_engine(raw: Any) -> ProductionTensorEngine:
 
 def _parse_vector_engine(raw: Any) -> ProductionVectorEngine:
     value = _object(raw, "vector_engine")
-    exact_keys(value, {"max_rows", "max_width"}, set(), "vector_engine")
+    rope_fields = {
+        "max_key_value_heads",
+        "max_query_heads",
+        "max_rope_positions",
+        "rope_head_dim",
+    }
+    exact_keys(value, {"max_rows", "max_width"}, rope_fields, "vector_engine")
+    present = rope_fields & value.keys()
+    if present and present != rope_fields:
+        raise ProductionCapabilityError(
+            "vector_engine RoPE bounds must be present as one complete group"
+        )
     return ProductionVectorEngine(
         max_rows=require_int(value["max_rows"], "vector_engine.max_rows", minimum=1),
         max_width=require_int(
             value["max_width"], "vector_engine.max_width", minimum=1
+        ),
+        max_rope_positions=(
+            require_int(
+                value["max_rope_positions"],
+                "vector_engine.max_rope_positions",
+                minimum=1,
+            )
+            if present
+            else None
+        ),
+        max_query_heads=(
+            require_int(
+                value["max_query_heads"],
+                "vector_engine.max_query_heads",
+                minimum=1,
+            )
+            if present
+            else None
+        ),
+        max_key_value_heads=(
+            require_int(
+                value["max_key_value_heads"],
+                "vector_engine.max_key_value_heads",
+                minimum=1,
+            )
+            if present
+            else None
+        ),
+        rope_head_dim=(
+            require_int(
+                value["rope_head_dim"],
+                "vector_engine.rope_head_dim",
+                minimum=2,
+            )
+            if present
+            else None
         ),
     )
 
@@ -306,10 +363,7 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
         exact_keys(command_abi, {"major", "minor"}, set(), "command_abi")
         command_major = command_abi["major"]
         command_minor = command_abi["minor"]
-        if command_major != ABI_MAJOR or command_minor not in {
-            LEGACY_ABI_MINOR,
-            ABI_MINOR,
-        }:
+        if command_major != ABI_MAJOR or command_minor not in SUPPORTED_ABI_MINORS:
             raise ProductionCapabilityError("command ABI differs from the implementation")
         evidence = _object(raw["evidence"], "evidence")
         exact_keys(
@@ -366,6 +420,7 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
         )
         matrix_contract = "bf16_bf16_fp32_sequential_rne_v1"
         rmsnorm_contract = "qwen3_rmsnorm_fp32_bf16_v1"
+        rope_contract = "qwen3_rope_fp32_bf16_v1"
         vector_raw = raw.get("vector_engine")
         if command_minor == LEGACY_ABI_MINOR:
             if (
@@ -377,7 +432,7 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
                     "ABI 2.0 qualification must remain the BF16 projection profile"
                 )
             vector = None
-        else:
+        elif command_minor == RMSNORM_ABI_MINOR:
             if (
                 qualified_modes != ("bf16_tensor", "vector_fp32")
                 or numeric_contracts != (matrix_contract, rmsnorm_contract)
@@ -390,6 +445,36 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
             if vector.max_width < 4096:
                 raise ProductionCapabilityError(
                     "RMSNorm-qualified vector width must cover Qwen hidden width"
+                )
+            if vector.max_rope_positions is not None:
+                raise ProductionCapabilityError(
+                    "ABI 2.1 vector engine must not claim RoPE bounds"
+                )
+        else:
+            if (
+                command_minor != ABI_MINOR
+                or qualified_modes != ("bf16_tensor", "vector_fp32")
+                or numeric_contracts
+                != (matrix_contract, rmsnorm_contract, rope_contract)
+                or vector_raw is None
+            ):
+                raise ProductionCapabilityError(
+                    "ABI 2.2 qualification must include bounded Qwen RoPE"
+                )
+            vector = _parse_vector_engine(vector_raw)
+            if (
+                vector.max_width < 4096
+                or vector.max_rows < 40
+                or vector.max_rope_positions is None
+                or vector.max_rope_positions < 8000
+                or vector.max_query_heads is None
+                or vector.max_query_heads < 32
+                or vector.max_key_value_heads is None
+                or vector.max_key_value_heads < 8
+                or vector.rope_head_dim != 128
+            ):
+                raise ProductionCapabilityError(
+                    "ABI 2.2 vector bounds do not cover the Qwen 8K Q/K path"
                 )
         hbm = _parse_hbm(raw["hbm"])
         sram = _parse_sram(raw["sram"])

@@ -6,9 +6,16 @@
     "graph_id": {"$ref": "#/$defs/sha256"},
     "kernel_ir_id": {"$ref": "#/$defs/sha256"},
     "kernels": {
-      "items": {"oneOf": [{"$ref": "#/$defs/lookup"}, {"$ref": "#/$defs/rmsnorm"}]},
-      "maxItems": 2,
-      "minItems": 2,
+      "items": {
+        "oneOf": [
+          {"$ref": "#/$defs/lookup"},
+          {"$ref": "#/$defs/matmul"},
+          {"$ref": "#/$defs/rmsnorm"},
+          {"$ref": "#/$defs/rope"}
+        ]
+      },
+      "maxItems": 256,
+      "minItems": 1,
       "type": "array"
     },
     "qualification_report_id": {"$ref": "#/$defs/sha256"},
@@ -33,16 +40,65 @@
           "required": ["index_dtype", "output_dtype", "source_index_max_exclusive", "source_index_min"],
           "type": "object"
         },
-        "index": {"const": 0},
-        "inputs": {"items": {"$ref": "#/$defs/identifier"}, "minItems": 2, "maxItems": 2, "type": "array"},
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"$ref": "#/$defs/two_identifiers"},
         "kind": {"const": "EMBEDDING_LOOKUP"},
         "numeric_contract": {"const": "bf16_payload_lookup_v1"},
-        "outputs": {"items": {"$ref": "#/$defs/identifier"}, "minItems": 1, "maxItems": 1, "type": "array"},
-        "shape": {"$ref": "#/$defs/shape"},
+        "outputs": {"$ref": "#/$defs/one_identifier"},
+        "shape": {"$ref": "#/$defs/vector_shape"},
         "source_operation_id": {"$ref": "#/$defs/identifier"}
       },
       "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
       "type": "object"
+    },
+    "matmul": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": false,
+          "properties": {
+            "accumulator_dtype": {"const": "fp32"},
+            "input_dtype": {"const": "bf16"},
+            "output_dtype": {"const": "bf16"},
+            "output_rounding": {"const": "rne"},
+            "reduction_order": {"const": "strictly_increasing_k"},
+            "transpose_weight": {"const": true}
+          },
+          "required": [
+            "accumulator_dtype",
+            "input_dtype",
+            "output_dtype",
+            "output_rounding",
+            "reduction_order",
+            "transpose_weight"
+          ],
+          "type": "object"
+        },
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"$ref": "#/$defs/two_identifiers"},
+        "kind": {"const": "MATMUL"},
+        "numeric_contract": {"const": "bf16_bf16_fp32_sequential_rne_v1"},
+        "outputs": {"$ref": "#/$defs/one_identifier"},
+        "shape": {
+          "additionalProperties": false,
+          "properties": {
+            "reduction_width": {"minimum": 1, "type": "integer"},
+            "rows": {"minimum": 1, "type": "integer"},
+            "width": {"minimum": 1, "type": "integer"}
+          },
+          "required": ["reduction_width", "rows", "width"],
+          "type": "object"
+        },
+        "source_operation_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
+      "type": "object"
+    },
+    "one_identifier": {
+      "items": {"$ref": "#/$defs/identifier"},
+      "maxItems": 1,
+      "minItems": 1,
+      "type": "array"
     },
     "rmsnorm": {
       "additionalProperties": false,
@@ -59,19 +115,66 @@
           "required": ["epsilon_binary32_code", "final_weight_product", "normalized_boundary", "reduction_order", "rsqrt"],
           "type": "object"
         },
-        "index": {"const": 1},
-        "inputs": {"items": {"$ref": "#/$defs/identifier"}, "minItems": 2, "maxItems": 2, "type": "array"},
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"$ref": "#/$defs/two_identifiers"},
         "kind": {"const": "RMS_NORM"},
         "numeric_contract": {"const": "qwen3_rmsnorm_fp32_bf16_v1"},
-        "outputs": {"items": {"$ref": "#/$defs/identifier"}, "minItems": 1, "maxItems": 1, "type": "array"},
-        "shape": {"$ref": "#/$defs/shape"},
+        "outputs": {"$ref": "#/$defs/one_identifier"},
+        "shape": {"$ref": "#/$defs/vector_shape"},
+        "source_operation_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
+      "type": "object"
+    },
+    "rope": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": false,
+          "properties": {
+            "coefficient_layout": {"const": "cos_head_dim_then_sin_head_dim"},
+            "key_value_heads": {"minimum": 1, "type": "integer"},
+            "max_positions": {"minimum": 1, "type": "integer"},
+            "position_symbol": {"$ref": "#/$defs/identifier"},
+            "query_heads": {"minimum": 1, "type": "integer"},
+            "rotation": {"const": "concat_neg_second_half_first_half"}
+          },
+          "required": [
+            "coefficient_layout",
+            "key_value_heads",
+            "max_positions",
+            "position_symbol",
+            "query_heads",
+            "rotation"
+          ],
+          "type": "object"
+        },
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"$ref": "#/$defs/two_identifiers"},
+        "kind": {"const": "ROPE"},
+        "numeric_contract": {"const": "qwen3_rope_fp32_bf16_v1"},
+        "outputs": {"$ref": "#/$defs/two_identifiers"},
+        "shape": {
+          "additionalProperties": false,
+          "properties": {
+            "head_dim": {"minimum": 2, "type": "integer"}
+          },
+          "required": ["head_dim"],
+          "type": "object"
+        },
         "source_operation_id": {"$ref": "#/$defs/identifier"}
       },
       "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
       "type": "object"
     },
     "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
-    "shape": {
+    "two_identifiers": {
+      "items": {"$ref": "#/$defs/identifier"},
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "vector_shape": {
       "additionalProperties": false,
       "properties": {"rows": {"minimum": 1, "type": "integer"}, "width": {"minimum": 1, "type": "integer"}},
       "required": ["rows", "width"],

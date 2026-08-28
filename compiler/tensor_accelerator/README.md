@@ -152,14 +152,55 @@ python tools/run_qwen3_hbm_sram_rmsnorm.py \
   --report /path/to/new/rmsnorm-execution-report.json
 ~~~
 
+The connected Q/K/V slice extends the same path without introducing a
+model-framework shortcut. ABI 2.2 adds one bounded `ROPE_BF16` command and
+position-indexed coefficient DMA while retaining strict ABI 2.0 and 2.1 decode.
+One generated program executes the actual token embedding, layer-input RMSNorm,
+the full layer-0 Q, K, and V projections, per-head Q/K RMSNorm, and position-7,999
+RoPE. Its production-neutral kernel artifact contains lookup, matrix, RMSNorm,
+and RoPE operations but no HBM addresses, SRAM banks, or command opcodes.
+
+The physical program contains 3,082 commands: 1,541 DMAs, 1,536 ordered matrix
+tiles, three RMSNorms, one RoPE, and one completion. All 16 declared SRAM banks
+have explicit, non-overlapping roles. The independent checker rereads the locked
+checkpoint, reconstructs every Q/K/V weight tile, authenticates the complete
+8,000-row coefficient table, proves HBM and SRAM coverage, reconstructs the
+entire legal schedule, and recomputes every counter without importing compiler
+lowering. The artifact-only simulator then executes each command causally.
+
+The canonical build ID is
+`b84d8f049fd16d90bed1aeb67c7317919d80ca3096055688d3a2144a81c06b63`,
+and the execution-report ID is
+`af4b5b5d3ea68689f073fdc22584699462ad64c44295120cea7a5e7873383730`.
+The exact Q-rotary, K-rotary, and V payload hashes are respectively
+`a846335c825cf9fb06213220acf157c6a805376b1324a7cec09d6fa4621e718d`,
+`ce427ae533331720b9b58dde633e3ca352fa9fe0d3dd09d8cab222b799963858`,
+and `b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5`.
+
+Reproduce it with:
+
+~~~bash
+python tools/run_qwen3_hbm_sram_qkv.py \
+  --snapshot /path/to/pinned/qwen3-8b/snapshot \
+  --checkpoint-lock /path/to/qwen3-8b/checkpoint.lock.json \
+  --model-graph build/tensor-accelerator/qwen3-8b/model_graph.v2.json \
+  --capability configs/hardware/tensor_accelerator_development_v3.json \
+  --qualification results/tensor_accelerator/qwen3_qkv_qualification.json \
+  --deployment /path/to/new/qkv-deployment \
+  --report /path/to/new/qkv-execution-report.json
+~~~
+
 The development capability deliberately contains no clock, latency, bandwidth,
 or energy values. Version 1 qualifies only BF16 tensor execution. Version 2
 additively qualifies the bounded vector/RMSNorm path while continuing to declare
 the complete Qwen3-8B and ordinary target-only DeepSeek-V4 Flash model/format
-union. Neither version provides 130-nm characterization or performance evidence.
+union. Version 3 additively qualifies bounded Qwen RoPE at up to 8,000 positions,
+32 query heads, eight KV heads, and head dimension 128. None provides 130-nm
+characterization or performance evidence.
 
-This is executable compiler/simulator evidence for one real Qwen operation and
-the production artifact boundaries. It is not a complete Qwen layer, complete
-Qwen or DeepSeek model execution, RTL correlation, 130-nm physical evidence,
-HBM PHY evidence, or a production performance result. Those gates remain open
-and must use the same artifact path without framework fallbacks.
+This is executable compiler/simulator evidence through real Qwen Q/K/V
+preparation and for the production artifact boundaries. It is not attention, KV
+state, a complete Qwen layer, complete Qwen or DeepSeek model execution, RTL
+correlation, 130-nm physical evidence, HBM PHY evidence, or a production
+performance result. Those gates remain open and must use the same artifact path
+without framework fallbacks.
