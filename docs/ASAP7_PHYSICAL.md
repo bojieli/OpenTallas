@@ -77,31 +77,51 @@ state receive an explicit, audited polarity bridge before comparison. For both
 methods, the AIGER interfaces must have unique, identical symbol-name sets;
 post-route port reordering is therefore matched by name rather than position.
 
-## Measured points so far
+## Measured timing points
 
-The first case has two preserved implementation points. These are measurements
-of the exact signed-integer proxy RTL, pinned flow, nominal ASAP7 TC libraries,
-and declared constraints—not generic frequency estimates for OpenTallas.
+Each case has a preserved failed target and a measured passing target. These
+are measurements of the exact proxy RTL, pinned flow, nominal ASAP7 TC
+libraries, and declared constraints—not generic frequency estimates for
+OpenTallas.
 
 | Case | Requested period | Result | Setup WNS / TNS | Hold WNS / TNS | Routed checks | Reported fmax |
 | --- | ---: | --- | ---: | ---: | --- | ---: |
 | `numeric_e1_l16_tc` | 1.25 ns (800 MHz) | FAIL | -2.12138 / -50.0845 ns | +0.202679 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 296.614 MHz |
 | `numeric_e1_l16_tc` | 4.25 ns (235.294 MHz) | PASS | +0.136856 / 0 ns | +0.805138 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 243.123 MHz |
+| `numeric_e4_l16_tc` | 2.00 ns (500 MHz) | FAIL | -7.60565 / -217.837 ns | +0.361685 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 104.105 MHz |
+| `numeric_e4_l16_tc` | 12.00 ns (83.333 MHz) | PASS | +0.0413225 / 0 ns | +2.36354 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 83.6213 MHz |
+| `reduction_s8_g2_tc` | 1.25 ns (800 MHz) | FAIL | -0.870789 / -15.3251 ns | +0.0565153 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 471.523 MHz |
+| `reduction_s8_g2_tc` | 2.25 ns (444.444 MHz) | PASS | +0.0534617 / 0 ns | +0.0557746 / 0 ns | 0 DRC; 0 antenna; 0 unconstrained | 455.262 MHz |
 
-At the passing point, the flow reports 632.335 um^2 of standard-cell area,
-1,644.62 um^2 of core area, 10,832 um of routed wire, and 42,366 vias. Both the
-mapped and post-route proofs cover 38 named points and report exact
-equivalence. The complete DEF, GDS, ODB, SDC, SPEF, logical netlists, reports,
-and proof artifacts are archived under
-`results/asap7_physical/numeric_e1_l16_tc/`.
+| Passing case | Standard-cell area | Core area | Routed wire | Vias | Mapped / post-route proof |
+| --- | ---: | ---: | ---: | ---: | --- |
+| `numeric_e1_l16_tc` | 632.335 um^2 | 1,644.62 um^2 | 10,832 um | 42,366 | 38 / 38 named points equivalent |
+| `numeric_e4_l16_tc` | 2,603.30 um^2 | 6,790.42 um^2 | 80,823 um | 202,497 | 38 / 38 named points equivalent |
+| `reduction_s8_g2_tc` | 845.509 um^2 | 2,240.22 um^2 | 22,184 um | 61,473 | 687 / 687 transition points equivalent |
 
-This result is marked `canonical: false` because unrelated concurrent work
-made the primary worktree dirty. The selected RTL was independently
-hash-locked and unchanged, so it is valid intermediate evidence, but it does
-not close the campaign's clean-baseline gate. The final three-case results must
-be regenerated from a clean committed worktree. The 1.25 ns failure is kept
-separately under `results/asap7_physical/diagnostics/` so a relaxed passing
-constraint cannot erase the failed target.
+The 12-ns scaling-point target was selected from the 2-ns run's extracted
+9.629-ns worst data arrival and then reimplemented; it was not estimated from
+the smaller block. The reduction target was likewise selected from the
+1.25-ns run's 2.188-ns worst arrival. The small positive passing margins make
+the selected periods measured closure boundaries for these runs. They do not
+imply that a pipelined implementation should use the same periods.
+
+The results falsify an important analytical shortcut: the current one-cycle,
+unpipelined proxy RTL does not support the 0.8-1.1-GHz whole-product clock
+assumptions used in exploratory system envelopes. Pipelining and architectural
+restructuring must be implemented and physically remeasured before such a
+frequency can enter a performance claim.
+
+The complete DEF, GDS, ODB, SDC, SPEF, logical netlists, reports, and proof
+artifacts are archived under each passing case directory. Failed targets are
+kept separately under `results/asap7_physical/diagnostics/` so a relaxed
+passing constraint cannot erase a failed point.
+
+The development passing runs are marked `canonical: false` because their lock
+periods were being tuned in a dirty auxiliary worktree. The selected RTL was
+independently hash-locked and unchanged, so those runs are valid intermediate
+evidence, but they do not close the clean-baseline gate. All three final cases
+must be regenerated from a clean committed worktree at the frozen periods.
 
 ## Claim boundary
 
