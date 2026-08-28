@@ -62,7 +62,7 @@ def test_graph_identity_covers_source_checkpoint_predicate_and_state_contract() 
         lambda value: value["source"].__setitem__("revision", "fedcba9876543210"),
         lambda value: value["tensors"][1]["binding"].__setitem__("payload_sha256", TWO),
         lambda value: value["operations"][1]["predicate"].__setitem__("value", 7999),
-        lambda value: value["operations"][2]["effects"][0].__setitem__("action", "discard"),
+        lambda value: value["operations"][2]["effects"][1].__setitem__("action", "discard"),
     ):
         changed = copy.deepcopy(raw)
         mutate(changed)
@@ -105,7 +105,7 @@ def test_phase_dataflow_and_transactional_state_fail_closed() -> None:
         {"action": "read_committed", "state": "state.kv"}
     ]
     _rehash(missing_prepare)
-    with pytest.raises(ProductionModelGraphError, match="commit lacks a prepare"):
+    with pytest.raises(ProductionModelGraphError, match="reads prepared state.*before"):
         parse_production_model_graph(missing_prepare)
 
     open_prepare = _graph()
@@ -120,6 +120,14 @@ def test_phase_dataflow_and_transactional_state_fail_closed() -> None:
     with pytest.raises(ProductionModelGraphError, match="outside the decode"):
         parse_production_model_graph(illegal_state_boundary)
 
+    committed_read_during_prepare = _graph()
+    committed_read_during_prepare["operations"][2]["effects"][0]["action"] = (
+        "read_committed"
+    )
+    _rehash(committed_read_during_prepare)
+    with pytest.raises(ProductionModelGraphError, match="while a prepare is open"):
+        parse_production_model_graph(committed_read_during_prepare)
+
 
 def test_predicates_are_structured_bounded_and_symbol_checked() -> None:
     unknown = _graph()
@@ -133,6 +141,52 @@ def test_predicates_are_structured_bounded_and_symbol_checked() -> None:
     _rehash(unstructured)
     with pytest.raises(ProductionModelGraphError, match="bounded predicate object"):
         parse_production_model_graph(unstructured)
+
+    affine = _graph()
+    affine["entrypoints"][1]["predicate"] = {
+        "kind": "affine",
+        "operator": "eq",
+        "terms": [
+            {"coefficient": 1, "symbol": "context_tokens"},
+            {"coefficient": -1, "symbol": "position_end"},
+        ],
+        "value": 0,
+    }
+    _rehash(affine)
+    assert parse_production_model_graph(affine).entrypoints[1].predicate == (
+        affine["entrypoints"][1]["predicate"]
+    )
+
+    duplicate = copy.deepcopy(affine)
+    duplicate["entrypoints"][1]["predicate"]["terms"][1]["symbol"] = (
+        "context_tokens"
+    )
+    _rehash(duplicate)
+    with pytest.raises(ProductionModelGraphError, match="duplicate symbols"):
+        parse_production_model_graph(duplicate)
+
+
+def test_zero_based_runtime_indices_are_legal_but_not_tensor_dimensions() -> None:
+    graph = _graph()
+    graph["symbols"].append(
+        {
+            "binding": {"field": "position_start", "kind": "request"},
+            "default": 0,
+            "id": "position_start",
+            "maximum": 8191,
+            "minimum": 0,
+            "multiple_of": 1,
+        }
+    )
+    _rehash(graph)
+    parsed = parse_production_model_graph(graph)
+    assert parsed.symbol_by_id["position_start"].default == 0
+
+    invalid_shape = copy.deepcopy(graph)
+    invalid_shape["tensors"][0]["shape"][1] = "position_start"
+    _rehash(invalid_shape)
+    with pytest.raises(ProductionModelGraphError, match="unknown or non-static"):
+        parse_production_model_graph(invalid_shape)
 
 
 def test_v2_remains_backend_neutral() -> None:

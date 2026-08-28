@@ -170,7 +170,8 @@
             "commit",
             "discard",
             "prepare",
-            "read_committed"
+            "read_committed",
+            "read_prepared"
           ]
         },
         "state": {
@@ -205,6 +206,9 @@
         "phase": {
           "$ref": "#/$defs/phase"
         },
+        "predicate": {
+          "$ref": "#/$defs/predicate"
+        },
         "states": {
           "items": {
             "$ref": "#/$defs/identifier"
@@ -217,6 +221,7 @@
         "inputs",
         "outputs",
         "phase",
+        "predicate",
         "states"
       ],
       "type": "object"
@@ -338,6 +343,44 @@
           },
           "required": [
             "kind"
+          ],
+          "type": "object"
+        },
+        {
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "const": "affine"
+            },
+            "operator": {
+              "enum": [
+                "eq",
+                "ge",
+                "gt",
+                "le",
+                "lt",
+                "ne"
+              ]
+            },
+            "terms": {
+              "items": {
+                "$ref": "#/$defs/affine_term"
+              },
+              "maxItems": 16,
+              "minItems": 1,
+              "type": "array"
+            },
+            "value": {
+              "maximum": 9223372036854775807,
+              "minimum": -9223372036854775808,
+              "type": "integer"
+            }
+          },
+          "required": [
+            "kind",
+            "operator",
+            "terms",
+            "value"
           ],
           "type": "object"
         },
@@ -558,7 +601,7 @@
           ]
         },
         "default": {
-          "minimum": 1,
+          "minimum": 0,
           "type": "integer"
         },
         "id": {
@@ -570,7 +613,7 @@
           "type": "integer"
         },
         "minimum": {
-          "minimum": 1,
+          "minimum": 0,
           "type": "integer"
         },
         "multiple_of": {
@@ -585,6 +628,27 @@
         "maximum",
         "minimum",
         "multiple_of"
+      ],
+      "type": "object"
+    },
+    "affine_term": {
+      "additionalProperties": false,
+      "properties": {
+        "coefficient": {
+          "maximum": 2147483647,
+          "minimum": -2147483648,
+          "not": {
+            "const": 0
+          },
+          "type": "integer"
+        },
+        "symbol": {
+          "$ref": "#/$defs/identifier"
+        }
+      },
+      "required": [
+        "coefficient",
+        "symbol"
       ],
       "type": "object"
     },
