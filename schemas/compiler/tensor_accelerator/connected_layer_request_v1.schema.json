@@ -1,0 +1,43 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/connected_layer_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "expected_generation": {"minimum": 0, "type": "integer"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "position_id": {"maximum": 7999, "minimum": 0, "type": "integer"},
+    "qualification_bundle_id": {"$ref": "#/$defs/sha256"},
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.connected_layer_request.v1"},
+    "source_operation_ids": {"$ref": "#/$defs/source_operations"},
+    "span_tokens": {"const": 1},
+    "state_position_start": {"minimum": 0, "type": "integer"},
+    "token_id": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+    "transaction_id": {"maximum": 18446744073709551615, "minimum": 1, "type": "integer"}
+  },
+  "required": [
+    "expected_generation",
+    "graph_id",
+    "position_id",
+    "qualification_bundle_id",
+    "request_id",
+    "schema",
+    "source_operation_ids",
+    "span_tokens",
+    "state_position_start",
+    "token_id",
+    "transaction_id"
+  ],
+  "title": "Connected Qwen layer execution request v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "source_operations": {
+      "items": {"pattern": "^(node\\.00(0[0-9]|1[0-7])|state\\.commit)$", "type": "string"},
+      "maxItems": 19,
+      "minItems": 19,
+      "type": "array",
+      "uniqueItems": true
+    }
+  }
+}

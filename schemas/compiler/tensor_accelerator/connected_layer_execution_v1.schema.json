@@ -1,0 +1,198 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/connected_layer_execution_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "command_abi": {
+      "additionalProperties": false,
+      "properties": {"major": {"const": 2}, "minor": {"const": 4}},
+      "required": ["major", "minor"],
+      "type": "object"
+    },
+    "command_count": {"const": 23570},
+    "counter_reconciliation": {"const": "exact"},
+    "counters": {"$ref": "connected_layer_expectations_v1.schema.json#/$defs/counters"},
+    "intermediate_payload_sha256": {"$ref": "connected_layer_expectations_v1.schema.json#/$defs/intermediate_hashes"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "mode": {"const": "artifact_only_data_bearing_functional"},
+    "numeric_diagnostics": {
+      "additionalProperties": false,
+      "properties": {
+        "attention": {
+          "additionalProperties": false,
+          "properties": {
+            "probability_payload_sha256": {"$ref": "#/$defs/sha256"},
+            "scaled_score_payload_sha256": {"$ref": "#/$defs/sha256"}
+          },
+          "required": ["probability_payload_sha256", "scaled_score_payload_sha256"],
+          "type": "object"
+        },
+        "rmsnorm": {
+          "additionalProperties": false,
+          "properties": {
+            "attention_norm": {"$ref": "#/$defs/rmsnorm_diagnostic"},
+            "k_norm": {"$ref": "#/$defs/rmsnorm_diagnostic"},
+            "mlp_norm": {"$ref": "#/$defs/rmsnorm_diagnostic"},
+            "q_norm": {"$ref": "#/$defs/rmsnorm_diagnostic"}
+          },
+          "required": ["attention_norm", "k_norm", "mlp_norm", "q_norm"],
+          "type": "object"
+        },
+        "rope": {
+          "additionalProperties": false,
+          "properties": {
+            "coefficient_row_payload_sha256": {"$ref": "#/$defs/sha256"}
+          },
+          "required": ["coefficient_row_payload_sha256"],
+          "type": "object"
+        }
+      },
+      "required": ["attention", "rmsnorm", "rope"],
+      "type": "object"
+    },
+    "output": {
+      "additionalProperties": false,
+      "properties": {"hidden_1": {"$ref": "#/$defs/output_tensor"}},
+      "required": ["hidden_1"],
+      "type": "object"
+    },
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "qualification_bundle_id": {"$ref": "#/$defs/sha256"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "saturated_element_count": {"$ref": "connected_layer_expectations_v1.schema.json#/$defs/saturation"},
+    "schema": {"const": "opentallas.tensor_accelerator.connected_layer_execution.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"},
+    "state": {"$ref": "#/$defs/state"},
+    "status": {"const": "pass"},
+    "timing": {
+      "additionalProperties": false,
+      "properties": {
+        "reason": {"const": "capability_uncharacterized"},
+        "status": {"const": "unavailable"}
+      },
+      "required": ["reason", "status"],
+      "type": "object"
+    },
+    "trace": {
+      "items": {"$ref": "#/$defs/trace_event"},
+      "maxItems": 23570,
+      "minItems": 23570,
+      "type": "array"
+    },
+    "trace_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "required": [
+    "build_id",
+    "capability_id",
+    "command_abi",
+    "command_count",
+    "counter_reconciliation",
+    "counters",
+    "intermediate_payload_sha256",
+    "kernel_ir_id",
+    "mode",
+    "numeric_diagnostics",
+    "output",
+    "physical_plan_id",
+    "qualification_bundle_id",
+    "report_id",
+    "request_id",
+    "saturated_element_count",
+    "schema",
+    "source_lock_id",
+    "state",
+    "status",
+    "timing",
+    "trace",
+    "trace_sha256"
+  ],
+  "title": "Connected Qwen layer artifact-only execution report v1",
+  "type": "object",
+  "$defs": {
+    "output_tensor": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {
+          "items": {"maximum": 65535, "minimum": 0, "type": "integer"},
+          "maxItems": 4096,
+          "minItems": 4096,
+          "type": "array"
+        },
+        "dtype": {"const": "bf16"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {"const": [1, 4096]},
+        "size_bytes": {"const": 8192}
+      },
+      "required": ["codes", "dtype", "payload_sha256", "shape", "size_bytes"],
+      "type": "object"
+    },
+    "rmsnorm_diagnostic": {
+      "additionalProperties": false,
+      "properties": {
+        "inverse_rms_binary32_codes_sha256": {"$ref": "#/$defs/sha256"},
+        "mean_square_binary32_codes_sha256": {"$ref": "#/$defs/sha256"},
+        "normalized_payload_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "inverse_rms_binary32_codes_sha256",
+        "mean_square_binary32_codes_sha256",
+        "normalized_payload_sha256"
+      ],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "state": {
+      "additionalProperties": false,
+      "properties": {
+        "capacity": {"const": 8000},
+        "generation": {"minimum": 0, "type": "integer"},
+        "key_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "length": {"maximum": 8000, "minimum": 0, "type": "integer"},
+        "resource_id": {"const": "kv.layer.0"},
+        "state_sha256": {"$ref": "#/$defs/sha256"},
+        "value_payload_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["capacity", "generation", "key_payload_sha256", "length", "resource_id", "state_sha256", "value_payload_sha256"],
+      "type": "object"
+    },
+    "trace_event": {
+      "additionalProperties": false,
+      "properties": {
+        "accumulator_sha256": {"$ref": "#/$defs/sha256"},
+        "activation_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "base_generation": {"minimum": 0, "type": "integer"},
+        "coefficient_row_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "engine": {"enum": ["CONTROL", "DMA", "STATE", "TENSOR", "VECTOR"]},
+        "final": {"type": "boolean"},
+        "index": {"minimum": 0, "type": "integer"},
+        "inverse_rms_binary32_codes_sha256": {"$ref": "#/$defs/sha256"},
+        "k_start": {"minimum": 0, "type": "integer"},
+        "kernel_index": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+        "key_output_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "logical_index": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+        "mean_square_binary32_codes_sha256": {"$ref": "#/$defs/sha256"},
+        "n_start": {"minimum": 0, "type": "integer"},
+        "normalized_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "opcode": {"enum": ["ADD_BF16", "COMPLETE", "DMA_HBM_INDEXED_TO_SRAM", "DMA_HBM_TO_SRAM", "GQA_ATTENTION_BF16", "KV_PREPARE_BF16", "MATMUL_BF16_TILE", "RMSNORM_BF16", "ROPE_BF16", "SILU_MUL_BF16", "STATE_COMMIT"]},
+        "output": {"minLength": 1, "type": "string"},
+        "output_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "position_start": {"minimum": 0, "type": "integer"},
+        "probability_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "projection": {"enum": ["attention_output", "down", "gate", "k", "q", "up", "v"]},
+        "query_output_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "role": {"minLength": 1, "type": "string"},
+        "scaled_score_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "state_generation": {"minimum": 0, "type": "integer"},
+        "state_length": {"minimum": 0, "type": "integer"},
+        "tile_index": {"minimum": 0, "type": "integer"},
+        "transaction_private": {"type": "boolean"}
+      },
+      "required": ["engine", "index", "kernel_index", "opcode"],
+      "type": "object"
+    }
+  }
+}
