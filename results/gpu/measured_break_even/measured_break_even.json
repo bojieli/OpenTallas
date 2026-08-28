@@ -1,0 +1,511 @@
+{
+  "analysis_id": "opentallas-local-measured-gpu-break-even-v1",
+  "capacity_requirements_by_rom_area": [
+    {
+      "required_raw_macro_density_bytes_mm2": 2491834.0588735226,
+      "required_raw_macro_density_mbit_mm2": 19.93467247098818,
+      "required_usable_density_bytes_mm2": 1993467.2470988182,
+      "required_usable_density_mbit_mm2": 15.947737976790545,
+      "rom_area_fraction": 0.35,
+      "rom_area_mm2": 16178.749999999998,
+      "scenario": "35pct_area_conservative",
+      "usable_capacity_fraction": 0.8,
+      "wafer_area_mm2": 46225
+    },
+    {
+      "required_raw_macro_density_bytes_mm2": 1690197.5205537458,
+      "required_raw_macro_density_mbit_mm2": 13.521580164429967,
+      "required_usable_density_bytes_mm2": 1453569.8676762213,
+      "required_usable_density_mbit_mm2": 11.62855894140977,
+      "rom_area_fraction": 0.48,
+      "rom_area_mm2": 22188.0,
+      "scenario": "48pct_area_central",
+      "usable_capacity_fraction": 0.86,
+      "wafer_area_mm2": 46225
+    },
+    {
+      "required_raw_macro_density_bytes_mm2": 1409522.295928457,
+      "required_raw_macro_density_mbit_mm2": 11.276178367427656,
+      "required_usable_density_bytes_mm2": 1268570.0663356113,
+      "required_usable_density_mbit_mm2": 10.14856053068489,
+      "rom_area_fraction": 0.55,
+      "rom_area_mm2": 25423.750000000004,
+      "scenario": "55pct_area_aggressive",
+      "usable_capacity_fraction": 0.9,
+      "wafer_area_mm2": 46225
+    }
+  ],
+  "claim_boundary": [
+    "This artifact uses a measured same-checkpoint service comparator, but the GPU was shared and contended; it is not a clean peak-GPU characterization.",
+    "Only token usage and service timing are measured. Model bytes and matrix-operation lower bounds come from the exact pinned tensor headers; logical KV traffic comes from the declared topology.",
+    "Whole-GPU power and joules are not attributed because unrelated workloads remained active.",
+    "The matrix-operation values are lower bounds and omit vector, routing, sampling, and control work.",
+    "Every OpenTallas value is a necessary inverse requirement, not an achieved implementation result.",
+    "A performance-superiority claim still requires a statistically governed same-model comparison with accuracy, latency, context, concurrency, software, and power scope controlled."
+  ],
+  "comparison_contract": {
+    "completion_rate_semantics": "total completion tokens divided by the maximum simultaneous request end-to-end interval for each wave; medians and observed ranges are retained",
+    "contamination_label": "shared_contended",
+    "endpoint_model": {
+      "created": 1787917084,
+      "id": "qwen-fast",
+      "max_model_len": 40960,
+      "object": "model",
+      "owned_by": "vllm",
+      "parent": null,
+      "permission": [
+        {
+          "allow_create_engine": false,
+          "allow_fine_tuning": false,
+          "allow_logprobs": true,
+          "allow_sampling": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "created": 1787917084,
+          "group": null,
+          "id": "modelperm-85f234ce880d0b22",
+          "is_blocking": false,
+          "object": "model_permission",
+          "organization": "*"
+        }
+      ],
+      "root": "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8"
+    },
+    "energy_semantics": "unavailable; whole-GPU samples include unrelated workloads",
+    "gpu": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "gpu_uuid": "GPU-592644b2-d169-3424-56fd-98aea433ef09",
+    "model_accounting_revision": "d9748a51ae66354c4dad665aab2c71f26cf2c8cd",
+    "runtime_revision_binding": "endpoint API reports the matching model root but not a revision; accounting uses the sole locally cached snapshot selected by the default main ref, so exact runtime revision is strongly linked but not API-attested",
+    "speedup_semantics": "1.0x is median observed service equality; a superiority claim requires a statistically governed same-model measurement strictly above the comparator distribution under the same prompt, completion, context, concurrency, latency, software, and power scope"
+  },
+  "evidence_class": "measured shared_contended service comparator; not a clean peak GPU benchmark, not attributable energy, and not an achieved OpenTallas result",
+  "evidence_decomposition": {
+    "architecture_derived": [
+      "logical BF16 KV read/write traffic from attention topology"
+    ],
+    "checkpoint_derived": [
+      "full and text-image immutable capacity",
+      "active selected-expert and dense weight bytes",
+      "checkpoint-declared matrix-operation lower bound"
+    ],
+    "measured": [
+      "request token usage",
+      "TTFT and end-to-end service timing",
+      "observed aggregate completion rate distribution",
+      "GPU identity and shared process inventory"
+    ],
+    "unavailable": [
+      "attributable GPU energy or power",
+      "clean peak RTX PRO 6000 throughput",
+      "measured HBM bytes",
+      "production router traces and expert locality",
+      "achieved OpenTallas capacity, bandwidth, arithmetic, latency, or energy",
+      "API-attested served checkpoint revision"
+    ]
+  },
+  "input_manifests": {
+    "config": {
+      "path": "configs/benchmarks/local_gpu_measured_break_even_v2.json",
+      "sha256": "b53e2fb2584adb7defbb010a9c9c56ce84aa992f80e05659346b49960278c3fc",
+      "size_bytes": 3434
+    },
+    "measurement": {
+      "path": "results/gpu/local_rtx_pro_6000_measured_break_even/20260828T113804Z/measurement.json",
+      "sha256": "196ad903c7368dbc0d61b4c1780114cd779f0506155a01d337170a13ec43cefd",
+      "size_bytes": 174645
+    },
+    "model_profile_lock": {
+      "path": "configs/benchmarks/local_qwen3_vl_30b_fp8_lock.json",
+      "sha256": "d43f5252837e9b9b2ceee3978b3c84db8cc32ecf49ef428a2e05c239a29856ec",
+      "size_bytes": 12621
+    },
+    "runner": {
+      "path": "tools/measured_gpu_break_even.py",
+      "sha256": "ab8051af7c7e0d74ae6219eb5487cd02bb5c5ea154d1fe86d3602cb1795ca538",
+      "size_bytes": 33605
+    }
+  },
+  "measurement_environment": {
+    "compute_process_count_after": 6,
+    "compute_process_count_before": 6,
+    "endpoint_stability": {
+      "http://127.0.0.1:8000": true,
+      "http://127.0.0.1:8004": true
+    },
+    "gpu_after": {
+      "gpu_utilization_percent": 100.0,
+      "memory_total_mib": 97887.0,
+      "memory_used_mib": 84827.0,
+      "memory_utilization_percent": 68.0,
+      "name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+      "nvidia_smi_timestamp": "2026/08/28 11:38:29.102",
+      "power_draw_w": 362.89,
+      "power_limit_w": 600.0,
+      "temperature_c": 58.0,
+      "uuid": "GPU-592644b2-d169-3424-56fd-98aea433ef09"
+    },
+    "gpu_before": {
+      "gpu_utilization_percent": 0.0,
+      "memory_total_mib": 97887.0,
+      "memory_used_mib": 84827.0,
+      "memory_utilization_percent": 0.0,
+      "name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+      "nvidia_smi_timestamp": "2026/08/28 11:38:04.250",
+      "power_draw_w": 85.37,
+      "power_limit_w": 600.0,
+      "temperature_c": 46.0,
+      "uuid": "GPU-592644b2-d169-3424-56fd-98aea433ef09"
+    }
+  },
+  "model_accounting": {
+    "active_immutable_bytes_per_generated_token": 3366490112,
+    "decode_contract": {
+      "bf16_gemm_semantics": "BF16 router and LM-head matrices; two tensor operations per matrix weight is a GEMM lower bound",
+      "expert_service": "exact configured 8/128 storage fraction per layer; equal expert shapes make byte count route-identity independent, but no temporal/router-locality credit is taken",
+      "fp8_gemm_semantics": "checkpoint-declared FP8 E4M3 weights and dynamic FP8 activations; two tensor operations per selected matrix weight is a GEMM lower bound",
+      "input_embedding_service": "resident lookup; capacity retained but excluded from full-array active-weight bytes per generated token",
+      "kv_cache_dtype": "BF16",
+      "kv_traffic_semantics": "logical full-attention K/V bytes from the published topology; not measured HBM traffic and excludes allocator, paging, reread, metadata, and kernel effects",
+      "modality": "text-only ordinary autoregressive decode",
+      "visual_frontend_exercised": false
+    },
+    "full_checkpoint_payload_bytes": 32251808224,
+    "kv_bytes_per_context_token": 98304,
+    "matrix_operations_lower_bound_per_token": 6083313664,
+    "matrix_operations_lower_bound_per_token_by_format": {
+      "bf16_x_bf16": 647495680,
+      "fp8_e4m3_x_fp8_e4m3": 5435817984
+    },
+    "text_image_payload_bytes": 31174545408
+  },
+  "observed_service_scenarios": [
+    {
+      "average_prior_context_tokens_during_completion": 383.5,
+      "completion_tokens_per_request": 256,
+      "concurrency": 1,
+      "logical_kv_read_bytes_per_generated_token": 37699584.0,
+      "logical_kv_write_bytes_per_generated_token": 98304,
+      "maximum_aggregate_completion_tokens_s_end_to_end": 188.51140969015466,
+      "median_aggregate_completion_tokens_s_end_to_end": 188.2223211706182,
+      "median_request_end_to_end_s": 1.3600937360024545,
+      "median_request_ttft_s": 0.018148878996726125,
+      "minimum_aggregate_completion_tokens_s_end_to_end": 187.45644744904791,
+      "prompt_tokens": 256,
+      "repetitions": 3,
+      "wave_observations": [
+        {
+          "aggregate_completion_tokens_s_end_to_end": 187.45644744904791,
+          "completion_tokens": 256,
+          "median_request_end_to_end_s": 1.3656505470135016,
+          "median_request_ttft_s": 0.024727692012675107,
+          "repetition": 0,
+          "service_span_s": 1.3656505470135016
+        },
+        {
+          "aggregate_completion_tokens_s_end_to_end": 188.51140969015466,
+          "completion_tokens": 256,
+          "median_request_end_to_end_s": 1.3580079870007467,
+          "median_request_ttft_s": 0.016477858007419854,
+          "repetition": 1,
+          "service_span_s": 1.3580079870007467
+        },
+        {
+          "aggregate_completion_tokens_s_end_to_end": 188.2223211706182,
+          "completion_tokens": 256,
+          "median_request_end_to_end_s": 1.3600937360024545,
+          "median_request_ttft_s": 0.018148878996726125,
+          "repetition": 2,
+          "service_span_s": 1.3600937360024545
+        }
+      ]
+    },
+    {
+      "average_prior_context_tokens_during_completion": 8319.5,
+      "completion_tokens_per_request": 256,
+      "concurrency": 1,
+      "logical_kv_read_bytes_per_generated_token": 817840128.0,
+      "logical_kv_write_bytes_per_generated_token": 98304,
+      "maximum_aggregate_completion_tokens_s_end_to_end": 152.38693311425604,
+      "median_aggregate_completion_tokens_s_end_to_end": 132.26993445258367,
+      "median_request_end_to_end_s": 1.9354360540019115,
+      "median_request_ttft_s": 0.028598286007763818,
+      "minimum_aggregate_completion_tokens_s_end_to_end": 124.72378353017325,
+      "prompt_tokens": 8192,
+      "repetitions": 3,
+      "wave_observations": [
+        {
+          "aggregate_completion_tokens_s_end_to_end": 152.38693311425604,
+          "completion_tokens": 256,
+          "median_request_end_to_end_s": 1.6799340650031809,
+          "median_request_ttft_s": 0.22250036599871237,
+          "repetition": 0,
+          "service_span_s": 1.6799340650031809
+        },
+        {
+          "aggregate_completion_tokens_s_end_to_end": 132.26993445258367,
+          "completion_tokens": 256,
+          "median_request_end_to_end_s": 1.9354360540019115,
+          "median_request_ttft_s": 0.028598286007763818,
+          "repetition": 1,
+          "service_span_s": 1.9354360540019115
+        },
+        {
+          "aggregate_completion_tokens_s_end_to_end": 124.72378353017325,
+          "completion_tokens": 256,
+          "median_request_end_to_end_s": 2.052535552997142,
+          "median_request_ttft_s": 0.028372305998345837,
+          "repetition": 2,
+          "service_span_s": 2.052535552997142
+        }
+      ]
+    },
+    {
+      "average_prior_context_tokens_during_completion": 32895.5,
+      "completion_tokens_per_request": 256,
+      "concurrency": 1,
+      "logical_kv_read_bytes_per_generated_token": 3233759232.0,
+      "logical_kv_write_bytes_per_generated_token": 98304,
+      "maximum_aggregate_completion_tokens_s_end_to_end": 91.66390288349811,
+      "median_aggregate_completion_tokens_s_end_to_end": 58.09324573377031,
+      "median_request_end_to_end_s": 4.406708504000562,
+      "median_request_ttft_s": 0.13016213501396123,
+      "minimum_aggregate_completion_tokens_s_end_to_end": 33.41606044730792,
+      "prompt_tokens": 32768,
+      "repetitions": 3,
+      "wave_observations": [
+        {
+          "aggregate_completion_tokens_s_end_to_end": 33.41606044730792,
+          "completion_tokens": 256,
+          "median_request_end_to_end_s": 7.660986860006233,
+          "median_request_ttft_s": 2.0822156200010795,
+          "repetition": 0,
+          "service_span_s": 7.660986860006233
+        },
+        {
+          "aggregate_completion_tokens_s_end_to_end": 58.09324573377031,
+          "completion_tokens": 256,
+          "median_request_end_to_end_s": 4.406708504000562,
+          "median_request_ttft_s": 0.13016213501396123,
+          "repetition": 1,
+          "service_span_s": 4.406708504000562
+        },
+        {
+          "aggregate_completion_tokens_s_end_to_end": 91.66390288349811,
+          "completion_tokens": 256,
+          "median_request_end_to_end_s": 2.792811477003852,
+          "median_request_ttft_s": 0.08038302100612782,
+          "repetition": 2,
+          "service_span_s": 2.792811477003852
+        }
+      ]
+    }
+  ],
+  "reference_threshold": {
+    "active_immutable_bytes_per_generated_token": 3366490112,
+    "completion_tokens_per_request": 256,
+    "concurrency": 1,
+    "energy_requirement": null,
+    "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
+    "logical_kv_read_bytes_per_generated_token": 817840128.0,
+    "logical_kv_write_bytes_per_generated_token": 98304,
+    "maximum_aggregate_token_interval_s": 0.007560297085944966,
+    "measured_median_aggregate_tokens_s": 132.26993445258367,
+    "measured_observed_rate_range_tokens_s": [
+      124.72378353017325,
+      152.38693311425604
+    ],
+    "prompt_tokens": 8192,
+    "required_aggregate_tokens_s": 132.26993445258367,
+    "required_effective_active_weight_bandwidth_bytes_s": 445285426449.51105,
+    "required_full_checkpoint_capacity_bytes": 32251808224,
+    "required_logical_kv_read_bandwidth_bytes_s": 108175660123.25264,
+    "required_logical_kv_write_bandwidth_bytes_s": 13002663.636426784,
+    "required_matrix_operations_lower_bound_s_by_format": {
+      "bf16_x_bf16": 85644211151.93109,
+      "fp8_e4m3_x_fp8_e4m3": 718995288439.8555
+    },
+    "required_text_image_capacity_bytes": 31174545408,
+    "required_total_matrix_operations_lower_bound_s": 804639499591.7866,
+    "threshold_semantics": "median observed shared-service equality",
+    "throughput_multiplier": 1.0
+  },
+  "schema_version": 1,
+  "source_measurement_generated_at": "2026-08-28T11:38:29.140+00:00",
+  "status": "measured_comparator_requirements_derived_not_achieved",
+  "thresholds": [
+    {
+      "active_immutable_bytes_per_generated_token": 3366490112,
+      "completion_tokens_per_request": 256,
+      "concurrency": 1,
+      "energy_requirement": null,
+      "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
+      "logical_kv_read_bytes_per_generated_token": 37699584.0,
+      "logical_kv_write_bytes_per_generated_token": 98304,
+      "maximum_aggregate_token_interval_s": 0.005312866156259588,
+      "measured_median_aggregate_tokens_s": 188.2223211706182,
+      "measured_observed_rate_range_tokens_s": [
+        187.45644744904791,
+        188.51140969015466
+      ],
+      "prompt_tokens": 256,
+      "required_aggregate_tokens_s": 188.2223211706182,
+      "required_effective_active_weight_bandwidth_bytes_s": 633648583078.5743,
+      "required_full_checkpoint_capacity_bytes": 32251808224,
+      "required_logical_kv_read_bandwidth_bytes_s": 7095903207.646699,
+      "required_logical_kv_write_bandwidth_bytes_s": 18503007.06035645,
+      "required_matrix_operations_lower_bound_s_by_format": {
+        "bf16_x_bf16": 121873139837.54782,
+        "fp8_e4m3_x_fp8_e4m3": 1023142278409.4702
+      },
+      "required_text_image_capacity_bytes": 31174545408,
+      "required_total_matrix_operations_lower_bound_s": 1145015418247.018,
+      "threshold_semantics": "median observed shared-service equality",
+      "throughput_multiplier": 1.0
+    },
+    {
+      "active_immutable_bytes_per_generated_token": 3366490112,
+      "completion_tokens_per_request": 256,
+      "concurrency": 1,
+      "energy_requirement": null,
+      "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
+      "logical_kv_read_bytes_per_generated_token": 37699584.0,
+      "logical_kv_write_bytes_per_generated_token": 98304,
+      "maximum_aggregate_token_interval_s": 0.002656433078129794,
+      "measured_median_aggregate_tokens_s": 188.2223211706182,
+      "measured_observed_rate_range_tokens_s": [
+        187.45644744904791,
+        188.51140969015466
+      ],
+      "prompt_tokens": 256,
+      "required_aggregate_tokens_s": 376.4446423412364,
+      "required_effective_active_weight_bandwidth_bytes_s": 1267297166157.1487,
+      "required_full_checkpoint_capacity_bytes": 32251808224,
+      "required_logical_kv_read_bandwidth_bytes_s": 14191806415.293398,
+      "required_logical_kv_write_bandwidth_bytes_s": 37006014.1207129,
+      "required_matrix_operations_lower_bound_s_by_format": {
+        "bf16_x_bf16": 243746279675.09564,
+        "fp8_e4m3_x_fp8_e4m3": 2046284556818.9404
+      },
+      "required_text_image_capacity_bytes": 31174545408,
+      "required_total_matrix_operations_lower_bound_s": 2290030836494.036,
+      "threshold_semantics": "speedup target relative to median observed shared service",
+      "throughput_multiplier": 2.0
+    },
+    {
+      "active_immutable_bytes_per_generated_token": 3366490112,
+      "completion_tokens_per_request": 256,
+      "concurrency": 1,
+      "energy_requirement": null,
+      "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
+      "logical_kv_read_bytes_per_generated_token": 817840128.0,
+      "logical_kv_write_bytes_per_generated_token": 98304,
+      "maximum_aggregate_token_interval_s": 0.007560297085944966,
+      "measured_median_aggregate_tokens_s": 132.26993445258367,
+      "measured_observed_rate_range_tokens_s": [
+        124.72378353017325,
+        152.38693311425604
+      ],
+      "prompt_tokens": 8192,
+      "required_aggregate_tokens_s": 132.26993445258367,
+      "required_effective_active_weight_bandwidth_bytes_s": 445285426449.51105,
+      "required_full_checkpoint_capacity_bytes": 32251808224,
+      "required_logical_kv_read_bandwidth_bytes_s": 108175660123.25264,
+      "required_logical_kv_write_bandwidth_bytes_s": 13002663.636426784,
+      "required_matrix_operations_lower_bound_s_by_format": {
+        "bf16_x_bf16": 85644211151.93109,
+        "fp8_e4m3_x_fp8_e4m3": 718995288439.8555
+      },
+      "required_text_image_capacity_bytes": 31174545408,
+      "required_total_matrix_operations_lower_bound_s": 804639499591.7866,
+      "threshold_semantics": "median observed shared-service equality",
+      "throughput_multiplier": 1.0
+    },
+    {
+      "active_immutable_bytes_per_generated_token": 3366490112,
+      "completion_tokens_per_request": 256,
+      "concurrency": 1,
+      "energy_requirement": null,
+      "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
+      "logical_kv_read_bytes_per_generated_token": 817840128.0,
+      "logical_kv_write_bytes_per_generated_token": 98304,
+      "maximum_aggregate_token_interval_s": 0.003780148542972483,
+      "measured_median_aggregate_tokens_s": 132.26993445258367,
+      "measured_observed_rate_range_tokens_s": [
+        124.72378353017325,
+        152.38693311425604
+      ],
+      "prompt_tokens": 8192,
+      "required_aggregate_tokens_s": 264.53986890516734,
+      "required_effective_active_weight_bandwidth_bytes_s": 890570852899.0221,
+      "required_full_checkpoint_capacity_bytes": 32251808224,
+      "required_logical_kv_read_bandwidth_bytes_s": 216351320246.50528,
+      "required_logical_kv_write_bandwidth_bytes_s": 26005327.27285357,
+      "required_matrix_operations_lower_bound_s_by_format": {
+        "bf16_x_bf16": 171288422303.86218,
+        "fp8_e4m3_x_fp8_e4m3": 1437990576879.711
+      },
+      "required_text_image_capacity_bytes": 31174545408,
+      "required_total_matrix_operations_lower_bound_s": 1609278999183.5732,
+      "threshold_semantics": "speedup target relative to median observed shared service",
+      "throughput_multiplier": 2.0
+    },
+    {
+      "active_immutable_bytes_per_generated_token": 3366490112,
+      "completion_tokens_per_request": 256,
+      "concurrency": 1,
+      "energy_requirement": null,
+      "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
+      "logical_kv_read_bytes_per_generated_token": 3233759232.0,
+      "logical_kv_write_bytes_per_generated_token": 98304,
+      "maximum_aggregate_token_interval_s": 0.017213705093752196,
+      "measured_median_aggregate_tokens_s": 58.09324573377031,
+      "measured_observed_rate_range_tokens_s": [
+        33.41606044730792,
+        91.66390288349811
+      ],
+      "prompt_tokens": 32768,
+      "required_aggregate_tokens_s": 58.09324573377031,
+      "required_effective_active_weight_bandwidth_bytes_s": 195570337336.72394,
+      "required_full_checkpoint_capacity_bytes": 32251808224,
+      "required_logical_kv_read_bandwidth_bytes_s": 187859569708.42435,
+      "required_logical_kv_write_bandwidth_bytes_s": 5710798.428612556,
+      "required_matrix_operations_lower_bound_s_by_format": {
+        "bf16_x_bf16": 37615125649.79471,
+        "fp8_e4m3_x_fp8_e4m3": 315784309908.55994
+      },
+      "required_text_image_capacity_bytes": 31174545408,
+      "required_total_matrix_operations_lower_bound_s": 353399435558.3546,
+      "threshold_semantics": "median observed shared-service equality",
+      "throughput_multiplier": 1.0
+    },
+    {
+      "active_immutable_bytes_per_generated_token": 3366490112,
+      "completion_tokens_per_request": 256,
+      "concurrency": 1,
+      "energy_requirement": null,
+      "energy_semantics": "unavailable: shared whole-GPU power is contaminated and is not attributed to this benchmark",
+      "logical_kv_read_bytes_per_generated_token": 3233759232.0,
+      "logical_kv_write_bytes_per_generated_token": 98304,
+      "maximum_aggregate_token_interval_s": 0.008606852546876098,
+      "measured_median_aggregate_tokens_s": 58.09324573377031,
+      "measured_observed_rate_range_tokens_s": [
+        33.41606044730792,
+        91.66390288349811
+      ],
+      "prompt_tokens": 32768,
+      "required_aggregate_tokens_s": 116.18649146754062,
+      "required_effective_active_weight_bandwidth_bytes_s": 391140674673.4479,
+      "required_full_checkpoint_capacity_bytes": 32251808224,
+      "required_logical_kv_read_bandwidth_bytes_s": 375719139416.8487,
+      "required_logical_kv_write_bandwidth_bytes_s": 11421596.857225113,
+      "required_matrix_operations_lower_bound_s_by_format": {
+        "bf16_x_bf16": 75230251299.58942,
+        "fp8_e4m3_x_fp8_e4m3": 631568619817.1199
+      },
+      "required_text_image_capacity_bytes": 31174545408,
+      "required_total_matrix_operations_lower_bound_s": 706798871116.7092,
+      "threshold_semantics": "speedup target relative to median observed shared service",
+      "throughput_multiplier": 2.0
+    }
+  ]
+}

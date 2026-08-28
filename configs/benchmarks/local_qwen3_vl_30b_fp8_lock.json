@@ -1,0 +1,350 @@
+{
+  "architecture": {
+    "activation_scheme": "dynamic",
+    "architecture": "Qwen3VLMoeForConditionalGeneration",
+    "head_dim": 128,
+    "hidden_size": 2048,
+    "model_type": "qwen3_vl_moe",
+    "num_attention_heads": 32,
+    "num_experts": 128,
+    "num_experts_per_token": 8,
+    "num_hidden_layers": 48,
+    "num_key_value_heads": 4,
+    "quantization_format": "e4m3",
+    "quantization_method": "fp8",
+    "text_dtype": "bfloat16",
+    "text_model_type": "qwen3_vl_moe_text"
+  },
+  "checkpoint": {
+    "dtype_bytes": {
+      "BF16": 2347510240,
+      "F32": 7299072,
+      "F8_E4M3": 29896998912
+    },
+    "dtype_tensor_counts": {
+      "BF16": 594,
+      "F32": 288,
+      "F8_E4M3": 288
+    },
+    "full_checkpoint_payload_bytes": 32251808224,
+    "layer_role_bytes": {
+      "0": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "1": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "10": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "11": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "12": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "13": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "14": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "15": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "16": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "17": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "18": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "19": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "2": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "20": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "21": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "22": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "23": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "24": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "25": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "26": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "27": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "28": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "29": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "3": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "30": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "31": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "32": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "33": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "34": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "35": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "36": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "37": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "38": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "39": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "4": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "40": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "41": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "42": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "43": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "44": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "45": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "46": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "47": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "5": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "6": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "7": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "8": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      },
+      "9": {
+        "text_decode_dense_layer": 19411968,
+        "text_decode_routed_experts": 604127232
+      }
+    },
+    "role_bytes": {
+      "input_embedding_resident_lookup": 622329856,
+      "text_decode_dense_layer": 931774464,
+      "text_decode_dense_unlayered": 622333952,
+      "text_decode_routed_experts": 28998107136,
+      "visual_resident_only": 1077262816
+    },
+    "role_tensor_counts": {
+      "input_embedding_resident_lookup": 1,
+      "text_decode_dense_layer": 624,
+      "text_decode_dense_unlayered": 2,
+      "text_decode_routed_experts": 192,
+      "visual_resident_only": 351
+    },
+    "shard_count": 4,
+    "tensor_count": 1170,
+    "text_image_payload_bytes": 31174545408
+  },
+  "claim_boundary": [
+    "The profile inventories the exact locally pinned checkpoint tensor headers without claiming that the checkpoint was numerically qualified for OpenTallas.",
+    "The benchmark is text-only; the visual tower remains part of full endpoint capacity but is not active during the measured decode requests.",
+    "The matrix-operation count is a lower bound and excludes normalization, rotary embedding, softmax, routing selection, sampling, and other vector/control work.",
+    "The logical KV calculation is architecture-derived rather than a measured GPU HBM counter.",
+    "No router trace, target-ROM implementation, or OpenTallas performance is supplied by this profile."
+  ],
+  "decode_contract": {
+    "bf16_gemm_semantics": "BF16 router and LM-head matrices; two tensor operations per matrix weight is a GEMM lower bound",
+    "expert_service": "exact configured 8/128 storage fraction per layer; equal expert shapes make byte count route-identity independent, but no temporal/router-locality credit is taken",
+    "fp8_gemm_semantics": "checkpoint-declared FP8 E4M3 weights and dynamic FP8 activations; two tensor operations per selected matrix weight is a GEMM lower bound",
+    "input_embedding_service": "resident lookup; capacity retained but excluded from full-array active-weight bytes per generated token",
+    "kv_cache_dtype": "BF16",
+    "kv_traffic_semantics": "logical full-attention K/V bytes from the published topology; not measured HBM traffic and excludes allocator, paging, reread, metadata, and kernel effects",
+    "modality": "text-only ordinary autoregressive decode",
+    "visual_frontend_exercised": false
+  },
+  "model": {
+    "architecture": "Qwen3VLMoeForConditionalGeneration",
+    "endpoint_root": "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8",
+    "model_type": "qwen3_vl_moe",
+    "repo": "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8",
+    "revision": "d9748a51ae66354c4dad665aab2c71f26cf2c8cd"
+  },
+  "ordinary_text_decode": {
+    "active_immutable_bytes_per_token": 3366490112,
+    "dense_active_bytes_per_token": 1554108416,
+    "kv_bytes_per_context_token": 98304,
+    "kv_write_bytes_per_generated_token": 98304,
+    "matrix_operations_lower_bound_per_token": 6083313664,
+    "matrix_operations_lower_bound_per_token_by_format": {
+      "bf16_x_bf16": 647495680,
+      "fp8_e4m3_x_fp8_e4m3": 5435817984
+    },
+    "matrix_weight_elements_per_token": {
+      "bf16": 323747840,
+      "fp8_e4m3_dynamic_activation": 2717908992
+    },
+    "selected_expert_bytes_per_token": 1812381696,
+    "selected_expert_fraction": 0.0625
+  },
+  "profile_id": "local-qwen3-vl-30b-a3b-instruct-fp8-text-decode-v1",
+  "schema_version": 1,
+  "source_manifests": {
+    "profile_config": {
+      "path": "configs/benchmarks/local_qwen3_vl_30b_fp8_profile.json",
+      "sha256": "087d066c49a6960200cb347fd6bbdb1bcc7965e9e43360c7ec02be1f0f9692bd",
+      "size_bytes": 2461
+    },
+    "runner": {
+      "path": "tools/profile_local_qwen3_vl.py",
+      "sha256": "25cdd04c30c077c5dc6c51db7ea294ecafb734aa0505f72d809f150c59a12119",
+      "size_bytes": 20361
+    },
+    "shard_headers": [
+      {
+        "cache_blob_identity_semantics": "Hugging Face LFS cache-object name; the 32-GB payload was not rehashed by this metadata profiler",
+        "cache_blob_sha256": "232be72a85a61ba59ee66c8e11d6d2c0aae33d960f05bcb3092b3b923045c6b4",
+        "header_length_bytes": 34104,
+        "header_sha256": "b7637ce6982454bbc133d5c210b89642db59b8e2ce1f6ecb3ae5f9da2abd3ad9",
+        "name": "model-00001-of-00004.safetensors",
+        "payload_bytes": 10597751808,
+        "resolved_size_bytes": 10597785920,
+        "tensor_count": 258
+      },
+      {
+        "cache_blob_identity_semantics": "Hugging Face LFS cache-object name; the 32-GB payload was not rehashed by this metadata profiler",
+        "cache_blob_sha256": "9398c079631928f081db3ac774335307b3d10270258e85493a152cdf59d131a7",
+        "header_length_bytes": 37832,
+        "header_sha256": "63ec0bcf8060a5e3785648a34178af4d6dbc753f87cf3e28a32a60e5f4de8e34",
+        "name": "model-00002-of-00004.safetensors",
+        "payload_bytes": 10600166400,
+        "resolved_size_bytes": 10600204240,
+        "tensor_count": 289
+      },
+      {
+        "cache_blob_identity_semantics": "Hugging Face LFS cache-object name; the 32-GB payload was not rehashed by this metadata profiler",
+        "cache_blob_sha256": "d540c42d0f319c9345901f6edc2ad223273e3bb29e93a132bcb897b60921523a",
+        "header_length_bytes": 68352,
+        "header_sha256": "8dd94020b52ee786875ed04a193f1dda25afb85e35ea58552ebb71021048ec07",
+        "name": "model-00003-of-00004.safetensors",
+        "payload_bytes": 10728676768,
+        "resolved_size_bytes": 10728745128,
+        "tensor_count": 567
+      },
+      {
+        "cache_blob_identity_semantics": "Hugging Face LFS cache-object name; the 32-GB payload was not rehashed by this metadata profiler",
+        "cache_blob_sha256": "49d39cc48e99e733f77b48c4222bb12cd45e5c9c709cce37484ab081353a3eea",
+        "header_length_bytes": 6376,
+        "header_sha256": "0ebee75e8296dbd1e7b10e5294ca75392ec815392edfc7dccaac71870cf851a4",
+        "name": "model-00004-of-00004.safetensors",
+        "payload_bytes": 325213248,
+        "resolved_size_bytes": 325219632,
+        "tensor_count": 56
+      }
+    ],
+    "snapshot_config": {
+      "name": "config.json",
+      "sha256": "e52cea0eb24df634274d028d969b513edeced033988eb4528d1e8d2a08dd025d",
+      "size_bytes": 14458
+    },
+    "snapshot_index": {
+      "name": "model.safetensors.index.json",
+      "sha256": "63d9c0cf07b794e290164ba140c4d719ad2a129966f95d7921599eb0047d1dd3",
+      "size_bytes": 111705
+    }
+  },
+  "status": "pass"
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "local-rtx-pro-6000-shared-serving-measured-break-even-v2",
+  "as_of_utc": "2026-08-28",
+  "evidence_class": "measured shared_contended service comparator; not a clean peak GPU benchmark, not attributable energy, and not an achieved OpenTallas result",
+  "endpoint": {
+    "base_url": "http://127.0.0.1:8000",
+    "api_model": "qwen-fast",
+    "expected_root": "Qwen/Qwen3-VL-30B-A3B-Instruct-FP8",
+    "expected_max_model_len": 40960,
+    "request_timeout_s": 300
+  },
+  "gpu": {
+    "expected_name": "NVIDIA RTX PRO 6000 Blackwell Workstation Edition",
+    "expected_uuid": "GPU-592644b2-d169-3424-56fd-98aea433ef09",
+    "sample_period_s": 0.2
+  },
+  "request": {
+    "completion_tokens": 256,
+    "temperature": 0,
+    "seed": 20260828,
+    "ignore_eos": true,
+    "stream": true,
+    "include_usage": true,
+    "prompt_seed": "OpenTallas deterministic measured break-even service observation. Continue this neutral technical record without lists or tool calls. Record 0123456789 alpha beta gamma delta."
+  },
+  "sweep": [
+    {
+      "prompt_tokens": 256,
+      "concurrency": 1,
+      "repetitions": 3
+    },
+    {
+      "prompt_tokens": 8192,
+      "concurrency": 1,
+      "repetitions": 3
+    },
+    {
+      "prompt_tokens": 32768,
+      "concurrency": 1,
+      "repetitions": 3
+    }
+  ],
+  "contamination_policy": {
+    "label": "shared_contended",
+    "other_endpoints_must_not_be_stopped_or_changed": [
+      "http://127.0.0.1:8004"
+    ],
+    "whole_gpu_energy_attribution_allowed": false,
+    "window_integrated_gpu_energy_semantics": "contaminated whole-GPU observation only; never attribute it to the benchmark requests"
+  },
+  "measured_break_even": {
+    "model_profile_lock": "configs/benchmarks/local_qwen3_vl_30b_fp8_lock.json",
+    "reference_prompt_tokens": 8192,
+    "reference_concurrency": 1,
+    "throughput_multipliers": [
+      1.0,
+      2.0
+    ],
+    "rom_area_scenarios": [
+      {
+        "name": "35pct_area_conservative",
+        "wafer_area_mm2": 46225,
+        "rom_area_fraction": 0.35,
+        "usable_capacity_fraction": 0.8
+      },
+      {
+        "name": "48pct_area_central",
+        "wafer_area_mm2": 46225,
+        "rom_area_fraction": 0.48,
+        "usable_capacity_fraction": 0.86
+      },
+      {
+        "name": "55pct_area_aggressive",
+        "wafer_area_mm2": 46225,
+        "rom_area_fraction": 0.55,
+        "usable_capacity_fraction": 0.9
+      }
+    ],
+    "strict_speedup_semantics": "1.0x is median observed service equality; a superiority claim requires a statistically governed same-model measurement strictly above the comparator distribution under the same prompt, completion, context, concurrency, latency, software, and power scope"
+  },
+  "claim_boundary": [
+    "The endpoint serves the exact locally pinned Qwen3-VL-30B-A3B-Instruct-FP8 snapshot in text-only mode.",
+    "Other serving and audio processes share the GPU, so the observation is a service target rather than clean peak RTX PRO 6000 performance.",
+    "Whole-GPU energy is contaminated and may not be divided by benchmark tokens or requests.",
+    "Logical model bytes, operation lower bounds, and KV traffic are derived from pinned tensor headers and config; only service timing and token usage are measured.",
+    "The report derives what OpenTallas would need to equal the measured service; it does not show OpenTallas achieving those requirements."
+  ]
+}
