@@ -71,7 +71,7 @@ def test_iso_node_json_csv_and_markdown_are_mutually_consistent(
         assert len(csv_rows) == len(decoded["points"])
         assert tuple(csv_rows[0]) == runner.CSV_FIELDS
         assert (destination / "REPORT.md").read_text() == (
-            runner.render_report(decoded) + "\n"
+            runner.render_report(decoded).rstrip() + "\n"
         )
 
 
