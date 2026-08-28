@@ -8,6 +8,7 @@ from runtime.reference.structural import (
     BF16_MAX_ENCODING,
     MODEL_SOURCE_SHA256,
     StructuralReferenceError,
+    dspark_noise_embed_bf16,
     dspark_noise_token_block,
     hc_expand_bf16,
 )
@@ -71,6 +72,64 @@ def test_dspark_noise_block_preserves_current_token_only_in_column_zero() -> Non
     ) == ((7,),)
 
 
+def test_dspark_noise_embedding_composes_exact_shared_gather_and_hc_copy() -> None:
+    weight = (
+        (0x0000, 0x8000, 0x7FC1),
+        (0x3F80, 0xBF80, 0x0001),
+        (0x7F80, 0xFF80, 0x7F7F),
+        (0x1234, 0xABCD, BF16_MAX_ENCODING),
+    )
+    observed = dspark_noise_embed_bf16(
+        (3, 0),
+        weight,
+        block_size=3,
+        noise_token_id=2,
+        hc_multiplier=2,
+    )
+    assert observed == (
+        (
+            (weight[3], weight[3]),
+            (weight[2], weight[2]),
+            (weight[2], weight[2]),
+        ),
+        (
+            (weight[0], weight[0]),
+            (weight[2], weight[2]),
+            (weight[2], weight[2]),
+        ),
+    )
+
+
+def test_dspark_noise_embedding_matches_independent_composition_randomly() -> None:
+    rng = random.Random(0xD5A4)
+    for _ in range(500):
+        vocabulary_size = rng.randint(2, 32)
+        width = rng.randint(1, 12)
+        batch = rng.randint(1, 8)
+        block_size = rng.randint(1, 8)
+        hc_multiplier = rng.randint(1, 6)
+        weight = tuple(
+            tuple(rng.randrange(1 << 16) for _ in range(width))
+            for _ in range(vocabulary_size)
+        )
+        current = tuple(rng.randrange(vocabulary_size) for _ in range(batch))
+        noise = rng.randrange(vocabulary_size)
+        expected = tuple(
+            tuple(
+                tuple(weight[token] for _ in range(hc_multiplier))
+                for token in (current_token,) + (noise,) * (block_size - 1)
+            )
+            for current_token in current
+        )
+        assert dspark_noise_embed_bf16(
+            current,
+            weight,
+            block_size=block_size,
+            noise_token_id=noise,
+            hc_multiplier=hc_multiplier,
+        ) == expected
+
+
 @pytest.mark.parametrize(
     ("hidden", "multiplier", "match"),
     [
@@ -109,4 +168,15 @@ def test_invalid_dspark_noise_block_fails_closed(
             block_size=block,
             noise_token_id=noise,
             vocabulary_size=vocab,
+        )
+
+
+def test_invalid_dspark_noise_embedding_fails_closed() -> None:
+    with pytest.raises(StructuralReferenceError, match="vocabulary_size"):
+        dspark_noise_embed_bf16(
+            (0,), (), block_size=5, noise_token_id=0, hc_multiplier=4
+        )
+    with pytest.raises(StructuralReferenceError, match="embedding_weight is invalid"):
+        dspark_noise_embed_bf16(
+            (0,), ((0,), (0, 1)), block_size=1, noise_token_id=0, hc_multiplier=4
         )

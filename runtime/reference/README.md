@@ -52,9 +52,9 @@ expert dispatch.
 noise-block construction that precedes `DSPARK_NOISE_EMBED`. The HC result
 copies every BF16 encoding without arithmetic. The DSpark helper fixes the
 current token at column zero and fills later draft columns with the pinned noise
-token; its shared embedding lookup and HC expansion are already covered by the
-two pure primitives above. Main-hidden projection remains a separate matrix
-operator.
+token. The qualified composite then applies the shared global BF16 embedding
+lookup and HC expansion without changing any payload bit. Main-hidden projection
+remains a separate matrix operator.
 
 `selection.py` resolves the source's intentionally unpinned `torch.topk` tie
 behavior. The official release requires `torch>=2.10.0`, while PyTorch 2.10

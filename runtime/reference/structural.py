@@ -5,6 +5,8 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import TypeAlias
 
+from .lookup import LookupReferenceError, bf16_token_embedding
+
 
 MODEL_SOURCE_SHA256 = (
     "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
@@ -144,6 +146,35 @@ def dspark_noise_token_block(
     return tuple(result)
 
 
+def dspark_noise_embed_bf16(
+    current_token_ids: Sequence[int],
+    embedding_weight: Sequence[Sequence[int]],
+    *,
+    block_size: int,
+    noise_token_id: int,
+    hc_multiplier: int,
+) -> BF16HCBatch:
+    """Construct, embed, and HC-expand the source DSpark noise block.
+
+    ``DSparkBlock.forward_embed`` uses the shared global embedding table. This
+    composition carries every gathered BF16 payload bit unchanged through the
+    subsequent ``unsqueeze``/``repeat`` operation.
+    """
+
+    raw_weight = _sequence(embedding_weight, "embedding_weight")
+    token_block = dspark_noise_token_block(
+        current_token_ids,
+        block_size=block_size,
+        noise_token_id=noise_token_id,
+        vocabulary_size=len(raw_weight),
+    )
+    try:
+        embedded = bf16_token_embedding(token_block, raw_weight)
+    except LookupReferenceError as exc:
+        raise StructuralReferenceError(f"embedding_weight is invalid: {exc}") from exc
+    return hc_expand_bf16(embedded, hc_multiplier)
+
+
 __all__ = [
     "BF16_MAX_ENCODING",
     "MODEL_SOURCE_SHA256",
@@ -153,6 +184,7 @@ __all__ = [
     "BF16Sequence",
     "BF16Vector",
     "StructuralReferenceError",
+    "dspark_noise_embed_bf16",
     "dspark_noise_token_block",
     "hc_expand_bf16",
 ]

@@ -53,6 +53,7 @@ from .structural import (
     BF16Sequence,
     BF16Vector,
     StructuralReferenceError,
+    dspark_noise_embed_bf16,
     dspark_noise_token_block,
     hc_expand_bf16,
 )
@@ -115,6 +116,7 @@ __all__ = [
     "decode_e8m0",
     "decode_mxfp4_block",
     "decode_packed_e2m1",
+    "dspark_noise_embed_bf16",
     "dspark_noise_token_block",
     "dspark_window_indices",
     "encode_binary32_rne",
