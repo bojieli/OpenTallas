@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Why OpenTallas places LLM weights in ROM</title>
+  <desc id="desc">A comparison of shared GPU HBM traffic and the OpenTallas split between immutable mask ROM weights and mutable HBM KV state, using the checked DeepSeek V4 Flash 200K batch-one traffic inventory.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#07111f"/><stop offset="1" stop-color="#0b1b2d"/></linearGradient>
+    <linearGradient id="cyanGlow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#35d4c7" stop-opacity=".28"/><stop offset="1" stop-color="#5aa7ff" stop-opacity=".08"/></linearGradient>
+    <pattern id="microGrid" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M22 0H0V22" fill="none" stroke="#29415d" stroke-width="1" opacity=".34"/></pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000" flood-opacity=".25"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#5aa7ff"/></marker>
+    <marker id="arrowCyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#35d4c7"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+  <rect x="70" y="50" width="425" height="38" rx="19" fill="#f5c85b" fill-opacity="0.13" stroke="#f5c85b" stroke-width="1" />
+<text x="282.5" y="76" fill="#f5c85b" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" letter-spacing="1.4">CHECKED TRAFFIC + ARCHITECTURE CONCEPT</text>
+<text x="70" y="128" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="50" font-weight="760" text-anchor="start" >Why put LLM weights in ROM?</text>
+<text x="70" y="174" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="24" font-weight="400" text-anchor="start" >At low batch, ordinary decode can move far more immutable weight data than mutable KV data.</text>
+<rect x="70" y="240" width="690" height="500" rx="18" fill="#0f1d30" fill-opacity="1" stroke="#5aa7ff" stroke-width="2" filter="url(#shadow)"/>
+<text x="110" y="292" fill="#5aa7ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="start" >CONVENTIONAL GPU DEPLOYMENT</text>
+<rect x="110" y="340" width="240" height="270" rx="18" fill="#172942" fill-opacity="1" stroke="#5aa7ff" stroke-width="2" />
+<text x="230" y="390" fill="#5aa7ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="23" font-weight="750" text-anchor="middle" >SHARED HBM</text>
+<rect x="140" y="425" width="180" height="72" rx="10" fill="#ad8cff" fill-opacity="0.18" stroke="#ad8cff" stroke-width="1" />
+<text x="230" y="456" fill="#ad8cff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="700" text-anchor="middle" >active weights</text>
+<text x="230" y="481" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="16" font-weight="400" text-anchor="middle" >11.22 GB / token step</text>
+<rect x="140" y="518" width="180" height="62" rx="10" fill="#5aa7ff" fill-opacity="0.18" stroke="#5aa7ff" stroke-width="1" />
+<text x="230" y="547" fill="#5aa7ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="700" text-anchor="middle" >KV read</text>
+<text x="230" y="570" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="16" font-weight="400" text-anchor="middle" >99.10 MB / token</text>
+<line x1="350" y1="475" x2="485" y2="475" stroke="#ad8cff" stroke-width="13" stroke-opacity="1" stroke-linecap="round" marker-end="url(#arrow)"/>
+<line x1="350" y1="550" x2="485" y2="550" stroke="#5aa7ff" stroke-width="4" stroke-opacity="1" stroke-linecap="round" marker-end="url(#arrow)"/>
+<rect x="485" y="390" width="210" height="175" rx="18" fill="#0b1728" fill-opacity="1" stroke="#35d4c7" stroke-width="2" />
+<text x="590" y="438" fill="#35d4c7" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="middle" >TENSOR CORES</text>
+<text x="590" y="475" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="400" text-anchor="middle" >weights and KV</text>
+<text x="590" y="502" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="400" text-anchor="middle" >compete for HBM</text>
+<text x="590" y="536" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="650" text-anchor="middle" >every decode step</text>
+<text x="110" y="687" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="400" text-anchor="start" >The checkpoint stays the same; its active matrices are read again for the next token.</text>
+<rect x="840" y="240" width="690" height="500" rx="18" fill="#0f1d30" fill-opacity="1" stroke="#35d4c7" stroke-width="2" filter="url(#shadow)"/>
+<text x="880" y="292" fill="#35d4c7" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="start" >OPENTALLAS HYPOTHESIS</text>
+<rect x="880" y="340" width="230" height="125" rx="18" fill="#241d40" fill-opacity="1" stroke="#ad8cff" stroke-width="2" />
+<text x="995" y="383" fill="#ad8cff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="23" font-weight="750" text-anchor="middle" >MASK ROM</text>
+<text x="995" y="415" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="400" text-anchor="middle" >immutable weights</text>
+<text x="995" y="443" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="16" font-weight="400" text-anchor="middle" >distributed beside MACs</text>
+<rect x="880" y="515" width="230" height="105" rx="18" fill="#172942" fill-opacity="1" stroke="#5aa7ff" stroke-width="2" />
+<text x="995" y="556" fill="#5aa7ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="23" font-weight="750" text-anchor="middle" >HBM</text>
+<text x="995" y="587" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="middle" >mutable KV + sessions</text>
+<line x1="1110" y1="402" x2="1240" y2="455" stroke="#ad8cff" stroke-width="13" stroke-opacity="1" stroke-linecap="round" marker-end="url(#arrowCyan)"/>
+<line x1="1110" y1="566" x2="1240" y2="510" stroke="#5aa7ff" stroke-width="4" stroke-opacity="1" stroke-linecap="round" marker-end="url(#arrowCyan)"/>
+<rect x="1240" y="390" width="235" height="175" rx="18" fill="#0b1728" fill-opacity="1" stroke="#35d4c7" stroke-width="2" />
+<text x="1358" y="438" fill="#35d4c7" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="middle" >LOCAL MACS</text>
+<text x="1358" y="476" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="400" text-anchor="middle" >parallel ROM reads</text>
+<text x="1358" y="505" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="400" text-anchor="middle" >leave HBM for state</text>
+<text x="1358" y="536" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="650" text-anchor="middle" >overlap where legal</text>
+<text x="880" y="674" fill="#9fb3ca" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="start"><tspan x="880" dy="0">What disappears is HBM weight traffic—not computation, KV traffic,</tspan><tspan x="880" dy="22.950000000000003">communication, or heat.</tspan></text>
+<rect x="390" y="776" width="820" height="77" rx="18" fill="url(#cyanGlow)" fill-opacity="1" stroke="#35d4c7" stroke-width="1" />
+<text x="800" y="812" fill="#35d4c7" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="27" font-weight="750" text-anchor="middle" >113.2× more active-weight bytes than KV-read bytes</text>
+<text x="800" y="840" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="middle" >DeepSeek-V4-Flash · 200K resident context · batch 1 · uniform-routing traffic screen</text>
+</svg>

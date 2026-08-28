@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">OpenTallas evidence ladder</title>
+  <desc id="desc">A seven-step evidence ladder showing completed model accounting, architecture simulation, public RTL and local open-PDK methods; partial digital physical work; and open target implementation and silicon stages.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#07111f"/><stop offset="1" stop-color="#0b1b2d"/></linearGradient>
+    <linearGradient id="cyanGlow" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#35d4c7" stop-opacity=".28"/><stop offset="1" stop-color="#5aa7ff" stop-opacity=".08"/></linearGradient>
+    <pattern id="microGrid" width="22" height="22" patternUnits="userSpaceOnUse"><path d="M22 0H0V22" fill="none" stroke="#29415d" stroke-width="1" opacity=".34"/></pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#000" flood-opacity=".25"/></filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#5aa7ff"/></marker>
+    <marker id="arrowCyan" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#35d4c7"/></marker>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+  <rect x="70" y="48" width="190" height="38" rx="19" fill="#5aa7ff" fill-opacity="0.13" stroke="#5aa7ff" stroke-width="1" />
+<text x="165.0" y="74" fill="#5aa7ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="15" font-weight="700" text-anchor="middle" letter-spacing="1.4">EVIDENCE STATUS</text>
+<text x="70" y="124" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="48" font-weight="750" text-anchor="start" >How far has OpenTallas actually progressed?</text>
+<text x="70" y="168" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="22" font-weight="400" text-anchor="start" >Green means repository evidence exists. Amber is partial. Red names work that still requires target technology or silicon.</text>
+<rect x="70" y="225" width="1460" height="78" rx="14" fill="#0f1d30" fill-opacity="1" stroke="#263b55" stroke-width="1" />
+<circle cx="113" cy="264" r="24" fill="#62d6a4" fill-opacity=".16" stroke="#62d6a4" stroke-width="2"/>
+<text x="113" y="272" fill="#62d6a4" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="middle" >1</text>
+<text x="160" y="257" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="750" text-anchor="start" >MODEL ACCOUNTING</text>
+<text x="160" y="283" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="start" >exact checkpoint bytes, operator shapes, KV traffic</text>
+<rect x="1350" y="245" width="145" height="38" rx="19" fill="#62d6a4" fill-opacity="0.13" stroke="#62d6a4" stroke-width="1" />
+<text x="1422" y="271" fill="#62d6a4" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="15" font-weight="750" text-anchor="middle" >DONE</text>
+<rect x="70" y="316" width="1460" height="78" rx="14" fill="#0f1d30" fill-opacity="1" stroke="#263b55" stroke-width="1" />
+<circle cx="113" cy="355" r="24" fill="#62d6a4" fill-opacity=".16" stroke="#62d6a4" stroke-width="2"/>
+<text x="113" y="363" fill="#62d6a4" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="middle" >2</text>
+<text x="160" y="348" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="750" text-anchor="start" >ARCHITECTURE SIMULATION</text>
+<text x="160" y="374" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="start" >capacity, bandwidth, compute, NoC, pipeline, thermal envelopes</text>
+<rect x="1350" y="336" width="145" height="38" rx="19" fill="#62d6a4" fill-opacity="0.13" stroke="#62d6a4" stroke-width="1" />
+<text x="1422" y="362" fill="#62d6a4" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="15" font-weight="750" text-anchor="middle" >DONE</text>
+<rect x="70" y="407" width="1460" height="78" rx="14" fill="#0f1d30" fill-opacity="1" stroke="#263b55" stroke-width="1" />
+<circle cx="113" cy="446" r="24" fill="#62d6a4" fill-opacity=".16" stroke="#62d6a4" stroke-width="2"/>
+<text x="113" y="454" fill="#62d6a4" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="middle" >3</text>
+<text x="160" y="439" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="750" text-anchor="start" >PUBLIC RTL</text>
+<text x="160" y="465" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="start" >dual simulation, 9 formal harnesses, coverage, static checks, 87 directed fault sites</text>
+<rect x="1350" y="427" width="145" height="38" rx="19" fill="#62d6a4" fill-opacity="0.13" stroke="#62d6a4" stroke-width="1" />
+<text x="1422" y="453" fill="#62d6a4" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="15" font-weight="750" text-anchor="middle" >PASS</text>
+<rect x="70" y="498" width="1460" height="78" rx="14" fill="#0f1d30" fill-opacity="1" stroke="#263b55" stroke-width="1" />
+<circle cx="113" cy="537" r="24" fill="#62d6a4" fill-opacity=".16" stroke="#62d6a4" stroke-width="2"/>
+<text x="113" y="545" fill="#62d6a4" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="middle" >4</text>
+<text x="160" y="530" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="750" text-anchor="start" >LOCAL ROM METHOD</text>
+<text x="160" y="556" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="start" >two open-PDK layouts, DRC/LVS/PEX, PVT and detailed-RC simulation</text>
+<rect x="1350" y="518" width="145" height="38" rx="19" fill="#62d6a4" fill-opacity="0.13" stroke="#62d6a4" stroke-width="1" />
+<text x="1422" y="544" fill="#62d6a4" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="15" font-weight="750" text-anchor="middle" >PASS</text>
+<rect x="70" y="589" width="1460" height="78" rx="14" fill="#0f1d30" fill-opacity="1" stroke="#263b55" stroke-width="1" />
+<circle cx="113" cy="628" r="24" fill="#f5c85b" fill-opacity=".16" stroke="#f5c85b" stroke-width="2"/>
+<text x="113" y="636" fill="#f5c85b" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="middle" >5</text>
+<text x="160" y="621" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="750" text-anchor="start" >DIGITAL PHYSICAL PROXY</text>
+<text x="160" y="647" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="start" >one ASAP7 integer numeric block routed; campaign is 1/3 and noncanonical</text>
+<rect x="1350" y="609" width="145" height="38" rx="19" fill="#f5c85b" fill-opacity="0.13" stroke="#f5c85b" stroke-width="1" />
+<text x="1422" y="635" fill="#f5c85b" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="15" font-weight="750" text-anchor="middle" >PARTIAL</text>
+<rect x="70" y="680" width="1460" height="78" rx="14" fill="#0f1d30" fill-opacity="1" stroke="#263b55" stroke-width="1" />
+<circle cx="113" cy="719" r="24" fill="#ff7182" fill-opacity=".16" stroke="#ff7182" stroke-width="2"/>
+<text x="113" y="727" fill="#ff7182" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="middle" >6</text>
+<text x="160" y="712" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="750" text-anchor="start" >TARGET IMPLEMENTATION</text>
+<text x="160" y="738" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="start" >target formats, ROM macro, full stage, NoC, HBM/package, PI/thermal</text>
+<rect x="1350" y="700" width="145" height="38" rx="19" fill="#ff7182" fill-opacity="0.13" stroke="#ff7182" stroke-width="1" />
+<text x="1422" y="726" fill="#ff7182" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="15" font-weight="750" text-anchor="middle" >OPEN</text>
+<rect x="70" y="771" width="1460" height="78" rx="14" fill="#0f1d30" fill-opacity="1" stroke="#263b55" stroke-width="1" />
+<circle cx="113" cy="810" r="24" fill="#ff7182" fill-opacity=".16" stroke="#ff7182" stroke-width="2"/>
+<text x="113" y="818" fill="#ff7182" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="20" font-weight="750" text-anchor="middle" >7</text>
+<text x="160" y="803" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="750" text-anchor="start" >TEST SILICON</text>
+<text x="160" y="829" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="start" >manufacturing, yield, repair exhaustion, silicon correlation</text>
+<rect x="1350" y="791" width="145" height="38" rx="19" fill="#ff7182" fill-opacity="0.13" stroke="#ff7182" stroke-width="1" />
+<text x="1422" y="817" fill="#ff7182" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="15" font-weight="750" text-anchor="middle" >NOT BUILT</text>
+<text x="70" y="874" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="start" >ASAP7 completed cases: 1/3 · no full chip, wafer, target ROM macro, or fabricated OpenTallas silicon exists</text>
+</svg>
