@@ -1,0 +1,98 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/rmsnorm_execution_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "counter_reconciliation": {"const": "exact"},
+    "counters": {"$ref": "rmsnorm_expectations_v1.schema.json#/$defs/counters"},
+    "mode": {"const": "artifact_only_data_bearing_functional"},
+    "output": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {"items": {"maximum": 65535, "minimum": 0, "type": "integer"}, "minItems": 1, "type": "array"},
+        "dtype": {"const": "bf16"},
+        "inverse_rms_binary32_code": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+        "mean_square_binary32_code": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+        "normalized_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "normalized_saturated_element_count": {"minimum": 0, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "saturated_element_count": {"minimum": 0, "type": "integer"},
+        "shape": {"items": {"minimum": 1, "type": "integer"}, "minItems": 2, "maxItems": 2, "type": "array"},
+        "size_bytes": {"minimum": 1, "type": "integer"}
+      },
+      "required": ["codes", "dtype", "inverse_rms_binary32_code", "mean_square_binary32_code", "normalized_payload_sha256", "normalized_saturated_element_count", "payload_sha256", "saturated_element_count", "shape", "size_bytes"],
+      "type": "object"
+    },
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.rmsnorm_execution.v1"},
+    "status": {"const": "pass"},
+    "timing": {
+      "additionalProperties": false,
+      "properties": {"reason": {"const": "capability_uncharacterized"}, "status": {"const": "unavailable"}},
+      "required": ["reason", "status"],
+      "type": "object"
+    },
+    "trace": {
+      "items": {"oneOf": [{"$ref": "#/$defs/direct_dma"}, {"$ref": "#/$defs/indexed_dma"}, {"$ref": "#/$defs/rmsnorm"}, {"$ref": "#/$defs/complete"}]},
+      "minItems": 4,
+      "type": "array"
+    },
+    "trace_sha256": {"$ref": "#/$defs/sha256"}
+  },
+  "required": ["build_id", "capability_id", "counter_reconciliation", "counters", "mode", "output", "physical_plan_id", "report_id", "request_id", "schema", "status", "timing", "trace", "trace_sha256"],
+  "title": "Embedding-to-RMSNorm artifact-only execution report v1",
+  "type": "object",
+  "$defs": {
+    "complete": {
+      "additionalProperties": false,
+      "properties": {"command_index": {"minimum": 0, "type": "integer"}, "opcode": {"const": "COMPLETE"}},
+      "required": ["command_index", "opcode"],
+      "type": "object"
+    },
+    "direct_dma": {
+      "additionalProperties": false,
+      "properties": {
+        "command_index": {"minimum": 0, "type": "integer"},
+        "destination": {"minimum": 0, "type": "integer"},
+        "opcode": {"const": "DMA_HBM_TO_SRAM"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"},
+        "source": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["command_index", "destination", "opcode", "payload_sha256", "size_bytes", "source"],
+      "type": "object"
+    },
+    "indexed_dma": {
+      "additionalProperties": false,
+      "properties": {
+        "command_index": {"minimum": 0, "type": "integer"},
+        "destination": {"minimum": 0, "type": "integer"},
+        "logical_index": {"minimum": 0, "type": "integer"},
+        "opcode": {"const": "DMA_HBM_INDEXED_TO_SRAM"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"minimum": 1, "type": "integer"},
+        "source": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["command_index", "destination", "logical_index", "opcode", "payload_sha256", "size_bytes", "source"],
+      "type": "object"
+    },
+    "rmsnorm": {
+      "additionalProperties": false,
+      "properties": {
+        "command_index": {"minimum": 0, "type": "integer"},
+        "inverse_rms_binary32_code": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+        "mean_square_binary32_code": {"maximum": 4294967295, "minimum": 0, "type": "integer"},
+        "normalized_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "opcode": {"const": "RMSNORM_BF16"},
+        "output_payload_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["command_index", "inverse_rms_binary32_code", "mean_square_binary32_code", "normalized_payload_sha256", "opcode", "output_payload_sha256"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

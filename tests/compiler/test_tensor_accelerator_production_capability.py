@@ -16,6 +16,7 @@ from compiler.tensor_accelerator.production_capability import (
 
 ROOT = Path(__file__).resolve().parents[2]
 CAPABILITY_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v1.json"
+CAPABILITY_V2_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v2.json"
 
 
 def _rehash(value: dict[str, object]) -> None:
@@ -47,6 +48,43 @@ def test_development_capability_covers_both_models_without_performance_claims() 
     assert "clock" not in capability.to_dict()
     assert "latency" not in canonical_json_bytes(capability.to_dict()).decode("ascii")
     assert "energy" not in canonical_json_bytes(capability.to_dict()).decode("ascii")
+
+
+def test_v21_capability_adds_only_bounded_uncharacterized_rmsnorm() -> None:
+    capability = load_production_capability(CAPABILITY_V2_PATH)
+    assert (capability.command_abi_major, capability.command_abi_minor) == (2, 1)
+    assert capability.qualified_execution_modes == (
+        "bf16_tensor",
+        "vector_fp32",
+    )
+    assert capability.qualified_numeric_contracts == (
+        "bf16_bf16_fp32_sequential_rne_v1",
+        "qwen3_rmsnorm_fp32_bf16_v1",
+    )
+    assert capability.vector_engine is not None
+    assert capability.vector_engine.max_rows == 64
+    assert capability.vector_engine.max_width == 16384
+    assert capability.to_dict()["evidence"]["performance_claims_permitted"] is False
+
+    missing_vector = copy.deepcopy(capability.to_dict())
+    del missing_vector["vector_engine"]
+    _rehash(missing_vector)
+    with pytest.raises(ProductionCapabilityError, match="must include"):
+        parse_production_capability(missing_vector)
+
+    overclaimed_legacy = copy.deepcopy(load_strict_json(CAPABILITY_PATH))
+    overclaimed_legacy["qualified_execution_modes"] = [
+        "bf16_tensor",
+        "vector_fp32",
+    ]
+    overclaimed_legacy["qualified_numeric_contracts"] = [
+        "bf16_bf16_fp32_sequential_rne_v1",
+        "qwen3_rmsnorm_fp32_bf16_v1",
+    ]
+    overclaimed_legacy["vector_engine"] = {"max_rows": 64, "max_width": 16384}
+    _rehash(overclaimed_legacy)
+    with pytest.raises(ProductionCapabilityError, match="must remain"):
+        parse_production_capability(overclaimed_legacy)
 
 
 def test_capability_rejects_identity_ordering_and_union_drift() -> None:

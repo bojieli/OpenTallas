@@ -44,6 +44,7 @@ from .production_command import (
     MATMUL_INIT,
     Opcode,
     ProductionCommandError,
+    command_abi,
     decode,
 )
 from .production_model import (
@@ -595,6 +596,7 @@ def _check_program(
     problem: Mapping[str, int],
     tiles: list[dict[str, Any]],
     regions: Mapping[str, Mapping[str, Any]],
+    capability: ProductionCapability,
 ) -> int:
     if not isinstance(raw, dict):
         raise ProductionProjectionCheckError("program record must be an object")
@@ -610,10 +612,18 @@ def _check_program(
         raise ProductionProjectionCheckError("command program identity differs")
     try:
         commands = decode(payload)
+        observed_abi = command_abi(payload)
     except ProductionCommandError as exc:
         raise ProductionProjectionCheckError(
             f"command program is malformed: {exc}"
         ) from exc
+    if observed_abi != (
+        capability.command_abi_major,
+        capability.command_abi_minor,
+    ):
+        raise ProductionProjectionCheckError(
+            "program and capability command ABI differ"
+        )
     if len(commands) != 2 * len(tiles) + 1 or raw["command_count"] != len(commands):
         raise ProductionProjectionCheckError("command count differs from tile schedule")
     for tile_index, tile in enumerate(tiles):
@@ -799,7 +809,12 @@ def check_projection_candidate(
         source_weight=source_weight,
     )
     command_count = _check_program(
-        plan["program"], root, problem=problem, tiles=tiles, regions=regions
+        plan["program"],
+        root,
+        problem=problem,
+        tiles=tiles,
+        regions=regions,
+        capability=capability,
     )
     request_id = _check_request(
         root,

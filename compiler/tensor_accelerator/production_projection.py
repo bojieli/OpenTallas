@@ -37,8 +37,8 @@ from .production_capability import (
 )
 from .production_command import (
     ABI_MAJOR,
-    ABI_MINOR,
     Engine,
+    LEGACY_ABI_MINOR,
     MATMUL_FINAL,
     MATMUL_INIT,
     Opcode,
@@ -593,7 +593,7 @@ def _manifest(
             "uncharacterized functional evidence only",
             "not a complete Qwen layer, model, decode, RTL, 130-nm, HBM PHY, performance, or energy result",
         ],
-        "command_abi": {"major": ABI_MAJOR, "minor": ABI_MINOR},
+        "command_abi": {"major": ABI_MAJOR, "minor": LEGACY_ABI_MINOR},
         "compiler": {
             "deterministic": True,
             "name": "OpenTallas tensor-accelerator projection compiler",
@@ -673,7 +673,11 @@ def _build_into(
     commands = _commands(tiles, problem, sram)
     if len(commands) > capability.limits["max_commands"]:
         raise ProductionProjectionBuildError("command count exceeds capability")
-    command_payload = encode(commands)
+    if capability.command_abi_minor != LEGACY_ABI_MINOR:
+        raise ProductionProjectionBuildError(
+            "projection evidence requires its frozen ABI 2.0 capability"
+        )
+    command_payload = encode(commands, abi_minor=LEGACY_ABI_MINOR)
     kernel_ir = _kernel_ir(model, qualification, operation_id, problem)
     plan = _physical_plan(
         model=model,
@@ -705,7 +709,10 @@ def _build_into(
     (root / HBM_IMAGE_PATH).write_bytes(image)
     write_canonical_json(root / PHYSICAL_PLAN_PATH, plan)
     (root / COMMAND_PATH).write_bytes(command_payload)
-    _write_text(root / "program/commands.disasm", disassemble(commands))
+    _write_text(
+        root / "program/commands.disasm",
+        disassemble(commands, abi_minor=LEGACY_ABI_MINOR),
+    )
     (root / INPUT_PATH).write_bytes(input_payload)
     write_canonical_json(root / REQUEST_PATH, request)
     write_canonical_json(root / "source.lock.json", source_lock)

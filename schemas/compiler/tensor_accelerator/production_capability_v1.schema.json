@@ -13,7 +13,7 @@
       "additionalProperties": false,
       "properties": {
         "major": {"const": 2},
-        "minor": {"const": 0}
+        "minor": {"enum": [0, 1]}
       },
       "required": ["major", "minor"],
       "type": "object"
@@ -127,16 +127,21 @@
       "type": "object"
     },
     "qualified_execution_modes": {
-      "items": {"const": "bf16_tensor"},
+      "items": {"enum": ["bf16_tensor", "vector_fp32"]},
       "minItems": 1,
-      "maxItems": 1,
+      "maxItems": 2,
       "type": "array",
       "uniqueItems": true
     },
     "qualified_numeric_contracts": {
-      "items": {"const": "bf16_bf16_fp32_sequential_rne_v1"},
+      "items": {
+        "enum": [
+          "bf16_bf16_fp32_sequential_rne_v1",
+          "qwen3_rmsnorm_fp32_bf16_v1"
+        ]
+      },
       "minItems": 1,
-      "maxItems": 1,
+      "maxItems": 2,
       "type": "array",
       "uniqueItems": true
     },
@@ -172,6 +177,15 @@
       },
       "required": ["max_k", "max_m", "max_n"],
       "type": "object"
+    },
+    "vector_engine": {
+      "additionalProperties": false,
+      "properties": {
+        "max_rows": {"minimum": 1, "type": "integer"},
+        "max_width": {"minimum": 4096, "type": "integer"}
+      },
+      "required": ["max_rows", "max_width"],
+      "type": "object"
     }
   },
   "required": [
@@ -189,6 +203,41 @@
     "schema",
     "sram",
     "tensor_engine"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "command_abi": {
+            "properties": {"minor": {"const": 0}},
+            "required": ["minor"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "qualified_execution_modes": {"const": ["bf16_tensor"]},
+          "qualified_numeric_contracts": {
+            "const": ["bf16_bf16_fp32_sequential_rne_v1"]
+          }
+        },
+        "not": {"required": ["vector_engine"]}
+      },
+      "else": {
+        "properties": {
+          "qualified_execution_modes": {
+            "const": ["bf16_tensor", "vector_fp32"]
+          },
+          "qualified_numeric_contracts": {
+            "const": [
+              "bf16_bf16_fp32_sequential_rne_v1",
+              "qwen3_rmsnorm_fp32_bf16_v1"
+            ]
+          }
+        },
+        "required": ["vector_engine"]
+      }
+    }
   ],
   "title": "OpenTallas production tensor-accelerator development capability v1",
   "type": "object",

@@ -28,11 +28,12 @@ from compiler.tensor_accelerator.production_capability import (
 )
 from compiler.tensor_accelerator.production_command import (
     ABI_MAJOR,
-    ABI_MINOR,
+    SUPPORTED_ABI_MINORS,
     MATMUL_FINAL,
     MATMUL_INIT,
     Opcode,
     ProductionCommandError,
+    command_abi,
     decode,
 )
 
@@ -211,7 +212,13 @@ def _manifest(root: Path) -> dict[str, Any]:
         require_sha256(value[identity_field], f"manifest.{identity_field}")
     if value["claim_boundary"] != EXPECTED_CLAIM_BOUNDARY:
         raise ProductionSimulationError("deployment claim boundary differs")
-    if value["command_abi"] != {"major": ABI_MAJOR, "minor": ABI_MINOR}:
+    manifest_abi = value["command_abi"]
+    if (
+        not isinstance(manifest_abi, dict)
+        or set(manifest_abi) != {"major", "minor"}
+        or manifest_abi["major"] != ABI_MAJOR
+        or manifest_abi["minor"] not in SUPPORTED_ABI_MINORS
+    ):
         raise ProductionSimulationError("deployment command ABI differs")
     compiler = value["compiler"]
     if (
@@ -524,8 +531,14 @@ def _parse_plan(
         raise ProductionSimulationError("program identity differs")
     try:
         commands = decode(program_payload)
+        observed_abi = command_abi(program_payload)
     except ProductionCommandError as exc:
         raise ProductionSimulationError(f"command decode failed: {exc}") from exc
+    if observed_abi != (
+        capability.command_abi_major,
+        capability.command_abi_minor,
+    ):
+        raise ProductionSimulationError("program and capability command ABI differ")
     if program["command_count"] != len(commands):
         raise ProductionSimulationError("program command count differs")
     return plan, regions, region_records, image, commands
@@ -622,6 +635,11 @@ class ProductionProjectionSimulator:
             raise ProductionSimulationError(f"capability load failed: {exc}") from exc
         if capability.capability_id != manifest["capability_id"]:
             raise ProductionSimulationError("manifest capability identity differs")
+        if manifest["command_abi"] != {
+            "major": capability.command_abi_major,
+            "minor": capability.command_abi_minor,
+        }:
+            raise ProductionSimulationError("manifest and capability command ABI differ")
         plan, _, region_records, image, commands = _parse_plan(
             deployment, manifest, capability
         )

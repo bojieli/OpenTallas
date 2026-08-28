@@ -25,7 +25,11 @@ from compiler.tensor_accelerator.common import (
     load_strict_json,
     write_canonical_json,
 )
-from compiler.tensor_accelerator.production_command import decode, encode
+from compiler.tensor_accelerator.production_command import (
+    LEGACY_ABI_MINOR,
+    decode,
+    encode,
+)
 from compiler.tensor_accelerator.production_model import compute_graph_id
 from compiler.tensor_accelerator.production_projection import (
     build_projection_deployment,
@@ -357,7 +361,7 @@ def _refresh_manifest(root: Path) -> None:
 
 def _replace_program(root: Path, commands: tuple[Any, ...]) -> None:
     command_path = root / "program/commands.bin"
-    payload = encode(commands)
+    payload = encode(commands, abi_minor=LEGACY_ABI_MINOR)
     command_path.write_bytes(payload)
     plan_path = root / "physical/physical_plan.json"
     plan = load_strict_json(plan_path)
@@ -475,7 +479,7 @@ def test_independent_checker_rejects_missing_or_reordered_commands(
         replace(command, index=index)
         for index, command in enumerate(commands[1:])
     )
-    command_path.write_bytes(encode(missing))
+    command_path.write_bytes(encode(missing, abi_minor=LEGACY_ABI_MINOR))
     plan_path = output / "physical/physical_plan.json"
     plan = load_strict_json(plan_path)
     command_payload = command_path.read_bytes()
@@ -506,7 +510,7 @@ def test_independent_checker_rejects_missing_or_reordered_commands(
     swapped = tuple(
         replace(command, index=index) for index, command in enumerate(swapped_raw)
     )
-    reordered_path.write_bytes(encode(swapped))
+    reordered_path.write_bytes(encode(swapped, abi_minor=LEGACY_ABI_MINOR))
     reordered_plan_path = reordered / "physical/physical_plan.json"
     reordered_plan = load_strict_json(reordered_plan_path)
     swapped_payload = reordered_path.read_bytes()
