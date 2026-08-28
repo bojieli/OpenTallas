@@ -117,11 +117,12 @@ artifacts are archived under each passing case directory. Failed targets are
 kept separately under `results/asap7_physical/diagnostics/` so a relaxed
 passing constraint cannot erase a failed point.
 
-The development passing runs are marked `canonical: false` because their lock
-periods were being tuned in a dirty auxiliary worktree. The selected RTL was
-independently hash-locked and unchanged, so those runs are valid intermediate
-evidence, but they do not close the clean-baseline gate. All three final cases
-must be regenerated from a clean committed worktree at the frozen periods.
+The final passing runs are marked `canonical: true`. All three were regenerated
+in one campaign from a clean detached worktree at commit `bc8089f`, after the
+periods and failed targets were committed. The aggregate record reports
+`all_pass: true`, `all_canonical: true`, and 3/3 completed required cases. This
+closes the clean-baseline gate for these exact proxy blocks and constraints; it
+does not broaden the evidence boundary below.
 
 ## Claim boundary
 

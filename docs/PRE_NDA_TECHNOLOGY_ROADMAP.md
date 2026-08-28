@@ -130,14 +130,17 @@ result. In particular, it omits a foundry-calibrated density error bar,
 periphery closure, sense margin, simultaneous-read power, repair structures,
 and yield.
 
-The first governed ASAP7 physical point supplies another useful negative
+The governed ASAP7 physical campaign supplies another useful negative
 constraint. The current unpipelined one-cycle 16-lane signed-integer proxy
 failed a correctly scaled 1.25-ns/800-MHz constraint with -2.121-ns setup WNS.
-It passed at 4.25 ns, with 243.123-MHz reported fmax, exact mapped and post-route
-equivalence, and zero DRC, antenna, hold, or unconstrained-endpoint violations.
-It therefore does not support the present analytical 0.9-1.1-GHz whole-product
-clock assumptions. The RTL must be pipelined/restructured and remeasured; the
-frequency assumption cannot simply be inherited from a node label.
+It passed canonically at 4.25 ns, with 243.123-MHz reported fmax. The 64-term
+scaling proxy passed canonically at 12 ns/83.621 MHz, and the stateful reduction
+endpoint passed canonically at 2.25 ns/455.262 MHz. All three have exact mapped
+and post-route equivalence and zero setup, hold, DRC, antenna, flow, or
+unconstrained-endpoint failures at their passing targets. They therefore do not
+support the present analytical 0.9-1.1-GHz whole-product clock assumptions. The
+RTL must be pipelined/restructured and remeasured; frequency cannot simply be
+inherited from a node label.
 
 The bounded local RTX PRO 6000 measurement also completed, with the existing
 Qwen3-VL-30B-A3B-Instruct-FP8 endpoint left in service. At concurrency one,

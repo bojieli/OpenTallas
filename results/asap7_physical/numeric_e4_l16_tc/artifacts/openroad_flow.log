@@ -1,0 +1,2040 @@
+cp /work/constraint.sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/1_2_yosys.sdc
+touch -r /work/constraint.sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/1_2_yosys.sdc
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 32 thread(s).
+mkdir -p /work/objects/asap7/opentallas_numeric_e4_l16_tc/base
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb
+Running synth_odb.tcl, stage 1_synth
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+link_design ot_numeric_dot
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/1_2_yosys.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+eliminate_dead_logic
+Removed 0 unused instances and 0 unused nets.
+Design area 2385 um^2 100% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/1_synth.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/1_synth.sdc
+Elapsed time: 0:01.13[h:]min:sec. CPU time: user 1.07 sys 0.07 (100%). Peak memory: 257512KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_synth                   .odb            1            251 70278266f55799e97b72
+1_synth                   .sdc                             311a2347b2117b1c3c7e
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_1_floorplan floorplan
+Running floorplan.tcl, stage 2_1_floorplan
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/1_synth.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/1_synth.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+
+==========================================================================
+Floorplan check_setup
+--------------------------------------------------------------------------
+number instances in verilog is 22431
+initialize_floorplan -utilization 35 -aspect_ratio 1 -core_space 2 -site asap7sc7p5t
+[INFO IFP-0107] Defining die area using utilization: 35.00% and aspect ratio: 1.
+[WARNING IFP-0028] Core area lower left (2.000, 2.000) snapped to (2.052, 2.160).
+[INFO IFP-0001] Added 305 rows of 1527 site asap7sc7p5t.
+[INFO IFP-0100] Die BBox:  (  0.000  0.000 ) ( 86.545 86.545 ) um
+[INFO IFP-0101] Core BBox: (  2.052  2.160 ) ( 84.510 84.510 ) um
+[INFO IFP-0102] Core area:                         6790.416 um^2
+[INFO IFP-0103] Total instances area:              2384.792 um^2
+[INFO IFP-0104] Effective utilization:                0.351
+[INFO IFP-0105] Number of instances:                  22431
+source /OpenROAD-flow-scripts/flow/platforms/asap7/openRoad/make_tracks.tcl
+source /OpenROAD-flow-scripts/flow/platforms/asap7/fastroute.tcl
+set_dont_use "*x1p*_ASAP7* *xp*_ASAP7* SDF* ICG*"
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIELOx1_ASAP7_75t_R/L
+[INFO RSZ-0042] Inserted 3 tie TIELOx1_ASAP7_75t_R instances.
+repair_tie_fanout -separation 0 asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120/TIEHIx1_ASAP7_75t_R/H
+[INFO RSZ-0042] Inserted 36 tie TIEHIx1_ASAP7_75t_R instances.
+repair_timing -setup_margin 0 -hold_margin 0 -repair_tns 100 -setup -skip_last_gasp -sequence unbuffer,sizeup,swap,vt_swap -verbose
+[WARNING EST-0027] no estimated parasitics. Using wire load models.
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove 
+[INFO RSZ-0094] Found 2 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 2 out of 2 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -111.069 |    -1567.5 |     -131.4 |      2 | result\[31\]$_DFF_PN0_/D
+      10* |       0 |       1 |        0 |      0 |     8 |    +0.0% | -105.671 |    -1435.9 |     -120.6 |      2 | result\[31\]$_DFF_PN0_/D
+      20* |       0 |       1 |        0 |      0 |    18 |    +0.0% |  -88.034 |    -1097.0 |      -88.0 |      2 | result\[31\]$_DFF_PN0_/D
+      30* |       0 |       1 |        0 |      0 |    28 |    +0.0% |  -74.921 |     -818.5 |      -74.9 |      2 | result\[31\]$_DFF_PN0_/D
+      40* |       0 |       1 |        0 |      0 |    38 |    +0.0% |  -57.278 |     -514.1 |      -57.3 |      2 | result\[31\]$_DFF_PN0_/D
+      50* |       0 |       1 |        0 |      0 |    48 |    +0.0% |  -52.611 |     -420.4 |      -52.6 |      2 | result\[31\]$_DFF_PN0_/D
+      60* |       0 |       1 |        0 |      0 |    58 |    +0.0% |  -49.448 |     -385.9 |      -49.4 |      2 | result\[31\]$_DFF_PN0_/D
+      70* |       0 |       3 |        0 |      0 |    66 |    +0.0% |  -55.161 |     -462.2 |      -55.2 |      2 | result\[31\]$_DFF_PN0_/D
+      80* |       0 |       7 |        0 |      0 |    72 |    +0.0% |  -43.905 |     -373.9 |      -43.9 |      2 | result\[31\]$_DFF_PN0_/D
+      90* |       0 |       7 |        0 |      0 |    82 |    +0.0% |  -46.539 |     -415.8 |      -46.5 |      2 | result\[31\]$_DFF_PN0_/D
+     100* |       0 |      11 |        0 |      0 |    88 |    +0.0% |  -43.801 |     -388.3 |      -43.8 |      2 | result\[31\]$_DFF_PN0_/D
+     110* |       0 |      14 |        0 |      0 |    95 |    +0.0% |  -35.886 |     -305.6 |      -35.9 |      2 | result\[31\]$_DFF_PN0_/D
+     120* |       0 |      15 |        0 |      0 |   104 |    +0.0% |  -31.961 |     -242.9 |      -32.0 |      2 | result\[31\]$_DFF_PN0_/D
+     130* |       0 |      16 |        0 |      0 |   113 |    +0.0% |  -29.903 |     -208.0 |      -29.9 |      2 | result\[31\]$_DFF_PN0_/D
+     140* |       0 |      17 |        0 |      0 |   122 |    +0.0% |  -28.599 |     -232.0 |      -28.6 |      2 | result\[31\]$_DFF_PN0_/D
+     150* |       0 |      21 |        0 |      0 |   128 |    +0.0% |  -27.708 |     -225.7 |      -27.7 |      2 | result\[31\]$_DFF_PN0_/D
+     155* |       0 |      22 |        0 |      0 |   129 |    +0.0% |  -26.104 |     -214.5 |      -26.1 |      2 | result\[31\]$_DFF_PN0_/D
+     156* |       0 |      22 |        0 |      0 |   129 |    +0.0% |  -26.104 |     -214.5 |      -26.1 |      2 | result\[31\]$_DFF_PN0_/D
+     156* |       0 |      22 |        0 |      0 |   129 |    +0.0% |  -26.104 |     -214.5 |      -26.1 |      2 | result\[31\]$_DFF_PN0_/D
+    final |       0 |      22 |        0 |      0 |   129 |    +0.0% |  -26.104 |     -214.5 |      -26.1 |      1 | result\[31\]$_DFF_PN0_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0051] Resized 22 instances: 22 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 129 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 12.40s
+Took 12 seconds: repair_timing -setup_margin 0 -hold_margin 0 -repair_tns 100 -setup -skip_last_gasp -sequence unbuffer,sizeup,swap,vt_swap -verbose
+Default units for flow
+ time 1ps
+ capacitance 1fF
+ resistance 1kohm
+ voltage 1v
+ current 1mA
+ power 1pW
+ distance 1um
+   Layer   | Unit Resistance | Unit Capacitance 
+           |       (kohm/um) |          (fF/um)
+------------------------------------------------
+        M1 |        7.04e-02 |         1.00e-10
+        M2 |        2.97e-02 |         1.75e-01
+        M3 |        3.13e-02 |         1.56e-01
+        M4 |        1.80e-02 |         1.78e-01
+        M5 |        1.90e-02 |         1.64e-01
+        M6 |        1.19e-02 |         1.87e-01
+        M7 |        1.25e-02 |         1.63e-01
+        M8 |        8.45e-03 |         1.04e-01
+        M9 |        8.90e-03 |         9.28e-02
+       Pad |        0.00e+00 |         0.00e+00
+------------------------------------------------
+
+   Layer   | Via Resistance 
+           |         (kohm) 
+----------------------------
+        V1 |       1.72e-02 
+        V2 |       1.72e-02 
+        V3 |       1.72e-02 
+        V4 |       1.18e-02 
+        V5 |       1.18e-02 
+        V6 |       8.20e-03 
+        V7 |       8.20e-03 
+        V8 |       6.30e-03 
+        V9 |       6.30e-03 
+----------------------------
+Report metrics stage 2, floorplan final...
+
+==========================================================================
+floorplan final report_design_area
+--------------------------------------------------------------------------
+Design area 2387 um^2 35% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_1_floorplan.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_1_floorplan.sdc
+Elapsed time: 0:14.31[h:]min:sec. CPU time: user 33.28 sys 14.63 (334%). Peak memory: 305420KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_1_floorplan             .odb           14            298 0421a31ee9122b419672
+2_1_floorplan             .sdc                             311a2347b2117b1c3c7e
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_2_floorplan_macro macro_place
+Running macro_place.tcl, stage 2_2_floorplan_macro
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_1_floorplan.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+No macros found: Skipping macro_placement
+Design area 2387 um^2 35% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_2_floorplan_macro.odb
+Elapsed time: 0:00.95[h:]min:sec. CPU time: user 0.89 sys 0.06 (100%). Peak memory: 235156KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_2_floorplan_macro       .odb            0            229 0421a31ee9122b419672
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_3_floorplan_tapcell tapcell
+Running tapcell.tcl, stage 2_3_floorplan_tapcell
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_2_floorplan_macro.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+Tap and End Cap cell insertion
+  TAP Cell          : TAPCELL_ASAP7_75t_R
+  ENDCAP Cell       : TAPCELL_ASAP7_75t_R
+  Halo Around Macro : 2 2
+  TAP Cell Distance : 25
+[INFO TAP-0004] Inserted 610 endcaps.
+[INFO TAP-0005] Inserted 460 tapcells.
+Design area 2419 um^2 36% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_3_floorplan_tapcell.odb
+Elapsed time: 0:00.96[h:]min:sec. CPU time: user 0.89 sys 0.07 (100%). Peak memory: 222396KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_3_floorplan_tapcell     .odb            0            217 f8d45760afd13b91f9bf
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 2_4_floorplan_pdn pdn
+Running pdn.tcl, stage 2_4_floorplan_pdn
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_3_floorplan_tapcell.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_1_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[WARNING PDN-1051] No instances found for grid (CORE_macro_grid_1).
+[WARNING PDN-1051] No instances found for grid (CORE_macro_grid_2).
+[INFO PDN-0001] Inserting grid: top
+[INFO PDN-0500] Runtime: 0.07s
+Design area 2419 um^2 36% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_4_floorplan_pdn.odb
+Elapsed time: 0:01.08[h:]min:sec. CPU time: user 0.99 sys 0.09 (100%). Peak memory: 244404KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2_4_floorplan_pdn         .odb            1            238 bafad398b174fef4bf2e
+cp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_4_floorplan_pdn.odb /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_floorplan.odb
+cp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_1_floorplan.sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_floorplan.sdc
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_1_place_gp_skip_io global_place_skip_io
+Running global_place_skip_io.tcl, stage 3_1_place_gp_skip_io
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_floorplan.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+Placement density is 0.411500004529953, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.3700000047683716
+global_placement -skip_io -density 0.411500004529953 -pad_left 0 -pad_right 0
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.052  2.160 ) ( 84.510 84.510 ) um
+[INFO GPL-0016] Core area:                    6790.416 um^2
+[INFO GPL-0036] Movable instances area:       2387.388 um^2
+[INFO GPL-0037] Total instances area:         2418.589 um^2
+[INFO GPL-0035] Pin density area adjust:       101.481 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             23538
+[INFO GPL-0007] Movable instances:               22468
+[INFO GPL-0008] Fixed instances:                  1070
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  27230
+[INFO GPL-0011] Number of pins:                  77144
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 86.545 86.545 ) um
+[INFO GPL-0013] Placement BBox: (  2.052  2.160 ) ( 84.510 84.510 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                  6790.416 um^2
+[INFO GPL-0017] Fixed instances area:           31.201 um^2
+[INFO GPL-0018] Movable instances area:       2488.869 um^2
+[INFO GPL-0019] Utilization:                    36.822 %
+[INFO GPL-0020] Standard cells area:          2488.869 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 22468	Region center = 0
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.4115
+[INFO GPL-0024] Movable insts average area:      0.111 um^2
+[INFO GPL-0025] Ideal bin area:                  0.269 um^2
+[INFO GPL-0026] Ideal bin count:                 25225
+[INFO GPL-0027] Total bin area:               6790.416 um^2
+[INFO GPL-0028] Bin count (X, Y):         128 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.644 *  0.643 um
+[INFO GPL-0030] Number of bins:                  16384
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9963 |  5.489763e+03 |   +0.00% |  3.74e-14 |      
+       10 |   0.9961 |  3.523141e+03 |  -35.82% |  6.09e-14 |      
+       20 |   0.9961 |  3.359977e+03 |   -4.63% |  9.93e-14 |      
+       30 |   0.9961 |  3.274819e+03 |   -2.53% |  1.62e-13 |      
+       40 |   0.9960 |  3.223811e+03 |   -1.56% |  2.63e-13 |      
+       50 |   0.9960 |  3.198538e+03 |   -0.78% |  4.29e-13 |      
+       60 |   0.9960 |  3.188749e+03 |   -0.31% |  6.99e-13 |      
+       70 |   0.9959 |  3.191097e+03 |   +0.07% |  1.14e-12 |      
+       80 |   0.9959 |  3.206339e+03 |   +0.48% |  1.85e-12 |      
+       90 |   0.9958 |  3.243062e+03 |   +1.15% |  3.02e-12 |      
+      100 |   0.9958 |  3.325288e+03 |   +2.54% |  4.92e-12 |      
+      110 |   0.9957 |  3.494931e+03 |   +5.10% |  8.01e-12 |      
+      120 |   0.9954 |  3.810226e+03 |   +9.02% |  1.31e-11 |      
+      130 |   0.9950 |  4.345794e+03 |  +14.06% |  2.13e-11 |      
+      140 |   0.9936 |  5.265627e+03 |  +21.17% |  3.46e-11 |      
+      150 |   0.9914 |  7.022464e+03 |  +33.36% |  5.64e-11 |      
+      160 |   0.9865 |  9.656788e+03 |  +37.51% |  9.18e-11 |      
+      170 |   0.9782 |  1.273401e+04 |  +31.87% |  1.50e-10 |      
+      180 |   0.9665 |  1.608276e+04 |  +26.30% |  2.43e-10 |      
+      190 |   0.9510 |  1.970431e+04 |  +22.52% |  3.96e-10 |      
+      200 |   0.9295 |  2.387050e+04 |  +21.14% |  6.45e-10 |      
+      210 |   0.8994 |  2.847727e+04 |  +19.30% |  1.05e-09 |      
+      220 |   0.8623 |  3.309599e+04 |  +16.22% |  1.71e-09 |      
+      230 |   0.8223 |  3.750829e+04 |  +13.33% |  2.79e-09 |      
+      240 |   0.7825 |  4.153262e+04 |  +10.73% |  4.54e-09 |      
+      250 |   0.7455 |  4.534605e+04 |   +9.18% |  7.38e-09 |      
+      260 |   0.7052 |  4.929184e+04 |   +8.70% |  1.20e-08 |      
+      270 |   0.6618 |  5.336513e+04 |   +8.26% |  1.96e-08 |      
+      280 |   0.6103 |  5.704474e+04 |   +6.90% |  3.19e-08 |      
+      290 |   0.5616 |  6.002922e+04 |   +5.23% |  5.19e-08 |      
+      300 |   0.5201 |  6.249802e+04 |   +4.11% |  8.45e-08 |      
+      310 |   0.4835 |  6.441075e+04 |   +3.06% |  1.38e-07 |      
+      320 |   0.4591 |  6.528858e+04 |   +1.36% |  2.24e-07 |      
+      330 |   0.4351 |  6.567944e+04 |   +0.60% |  3.65e-07 |      
+      340 |   0.4014 |  6.493469e+04 |   -1.13% |  5.95e-07 |      
+      350 |   0.3681 |  6.517429e+04 |   +0.37% |  9.69e-07 |      
+      360 |   0.3412 |  6.510172e+04 |   -0.11% |  1.56e-06 |      
+      370 |   0.3166 |  6.459138e+04 |   -0.78% |  2.30e-06 |      
+      380 |   0.2929 |  6.463023e+04 |   +0.06% |  3.39e-06 |      
+      390 |   0.2677 |  6.454818e+04 |   -0.13% |  4.99e-06 |      
+      400 |   0.2437 |  6.459858e+04 |   +0.08% |  7.36e-06 |      
+      410 |   0.2195 |  6.468880e+04 |   +0.14% |  1.08e-05 |      
+      420 |   0.1945 |  6.485466e+04 |   +0.26% |  1.60e-05 |      
+      430 |   0.1701 |  6.502360e+04 |   +0.26% |  2.35e-05 |      
+      440 |   0.1457 |  6.522528e+04 |   +0.31% |  3.46e-05 |      
+      450 |   0.1228 |  6.543312e+04 |   +0.32% |  5.10e-05 |      
+      460 |   0.1034 |  6.564738e+04 |   +0.33% |  7.52e-05 |      
+      462 |   0.0997 |  6.569111e+04 |          |  8.45e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 462
+[INFO GPL-1002] Placed Cell Area             2488.8686
+[INFO GPL-1003] Available Free Area          6759.2151
+[INFO GPL-1004] Minimum Feasible Density        0.3700 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.4091
+[INFO GPL-1008]     - For 80% usage of free space: 0.4603
+[INFO GPL-1009]     - For 50% usage of free space: 0.7364
+[INFO GPL-1014] Final placement area: 2488.87 (+0.00%)
+Took 39 seconds: global_placement -skip_io -density 0.411500004529953 -pad_left 0 -pad_right 0
+Design area 2419 um^2 36% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_1_place_gp_skip_io.odb
+Elapsed time: 0:39.71[h:]min:sec. CPU time: user 1052.48 sys 0.49 (2651%). Peak memory: 273540KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_1_place_gp_skip_io      .odb           39            267 41dd7de0422f1de23349
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+Running io_placement.tcl, stage 3_2_place_iop
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_1_place_gp_skip_io.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+place_pins -hor_layers M4 -ver_layers M5
+Found 0 macro blocks.
+Using 2 tracks default min distance between IO pins.
+[INFO PPL-0001] Number of available slots 3544
+[INFO PPL-0002] Number of I/O             430
+[INFO PPL-0003] Number of I/O w/sink      430
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0005] Slots per section         200
+[INFO PPL-0008] Successfully assigned pins to sections.
+[INFO PPL-0012] I/O nets HPWL: 10505.01 um.
+Design area 2419 um^2 36% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_2_place_iop.odb
+Elapsed time: 0:00.95[h:]min:sec. CPU time: user 0.89 sys 0.06 (100%). Peak memory: 239496KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_2_place_iop             .odb            0            233 c39accf033c9195b4769
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_3_place_gp global_place
+Running global_place.tcl, stage 3_3_place_gp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_2_place_iop.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+[INFO RSZ-0026] Removed 472 buffers.
+Perform port buffering...
+[INFO RSZ-0027] Inserted 391 BUFx2_ASAP7_75t_R input buffers.
+[INFO RSZ-0028] Inserted 36 BUFx2_ASAP7_75t_R output buffers.
+[INFO GPL-0022] Initialize gpl and calculate uniform density.
+Placement density is 0.411500004529953, computed from PLACE_DENSITY_LB_ADDON  0.05 and lower bound 0.3700000047683716
+global_placement -density 0.411500004529953 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.052  2.160 ) ( 84.510 84.510 ) um
+[INFO GPL-0016] Core area:                    6790.416 um^2
+[INFO GPL-0036] Movable instances area:       2383.188 um^2
+[INFO GPL-0037] Total instances area:         2414.390 um^2
+[INFO GPL-0035] Pin density area adjust:        99.831 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             23493
+[INFO GPL-0007] Movable instances:               22423
+[INFO GPL-0008] Fixed instances:                  1070
+[INFO GPL-0009] Dummy instances:                     0
+[INFO GPL-0010] Number of nets:                  27185
+[INFO GPL-0011] Number of pins:                  77484
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 86.545 86.545 ) um
+[INFO GPL-0013] Placement BBox: (  2.052  2.160 ) ( 84.510 84.510 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                  6790.416 um^2
+[INFO GPL-0017] Fixed instances area:           31.201 um^2
+[INFO GPL-0018] Movable instances area:       2483.019 um^2
+[INFO GPL-0019] Utilization:                    36.735 %
+[INFO GPL-0020] Standard cells area:          2483.019 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 22423	Region center = 0
+[InitialPlace]  Iter: 1 conjugate gradient residual: 0.00016327 HPWL: 88732299
+[InitialPlace]  Iter: 2 conjugate gradient residual: 0.00002854 HPWL: 52786911
+[InitialPlace]  Iter: 3 conjugate gradient residual: 0.00001791 HPWL: 53464502
+[InitialPlace]  Iter: 4 conjugate gradient residual: 0.00001624 HPWL: 54071939
+[InitialPlace]  Iter: 5 conjugate gradient residual: 0.00002624 HPWL: 54146344
+[InitialPlace]  Iter: 6 conjugate gradient residual: 0.00000871 HPWL: 54415993
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.4115
+[INFO GPL-0024] Movable insts average area:      0.111 um^2
+[INFO GPL-0025] Ideal bin area:                  0.269 um^2
+[INFO GPL-0026] Ideal bin count:                 25233
+[INFO GPL-0027] Total bin area:               6790.416 um^2
+[INFO GPL-0028] Bin count (X, Y):         128 ,    128
+[INFO GPL-0029] Bin size (W * H):       0.644 *  0.643 um
+[INFO GPL-0030] Number of bins:                  16384
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9516 |  3.662871e+04 |   +0.00% |  1.70e-13 |      
+       10 |   0.9230 |  4.218156e+04 |  +15.16% |  2.77e-13 |      
+       20 |   0.8954 |  4.641023e+04 |  +10.02% |  4.51e-13 |      
+       30 |   0.8696 |  4.872588e+04 |   +4.99% |  7.34e-13 |      
+       40 |   0.8443 |  5.003576e+04 |   +2.69% |  1.20e-12 |      
+       50 |   0.8224 |  5.106808e+04 |   +2.06% |  1.95e-12 |      
+       60 |   0.8062 |  5.190322e+04 |   +1.64% |  3.17e-12 |      
+       70 |   0.7980 |  5.235283e+04 |   +0.87% |  5.16e-12 |      
+       80 |   0.7946 |  5.244237e+04 |   +0.17% |  8.41e-12 |      
+       90 |   0.7953 |  5.235253e+04 |   -0.17% |  1.37e-11 |      
+      100 |   0.7958 |  5.220264e+04 |   -0.29% |  2.23e-11 |      
+      110 |   0.7969 |  5.203435e+04 |   -0.32% |  3.64e-11 |      
+      120 |   0.7969 |  5.190190e+04 |   -0.25% |  5.92e-11 |      
+      130 |   0.7962 |  5.186162e+04 |   -0.08% |  9.64e-11 |      
+      140 |   0.7944 |  5.194769e+04 |   +0.17% |  1.57e-10 |      
+      150 |   0.7912 |  5.216671e+04 |   +0.42% |  2.56e-10 |      
+      160 |   0.7855 |  5.253909e+04 |   +0.71% |  4.17e-10 |      
+      170 |   0.7772 |  5.310585e+04 |   +1.08% |  6.79e-10 |      
+      180 |   0.7649 |  5.391934e+04 |   +1.53% |  1.11e-09 |      
+      190 |   0.7466 |  5.501146e+04 |   +2.03% |  1.80e-09 |      
+      200 |   0.7232 |  5.635568e+04 |   +2.44% |  2.93e-09 |      
+      210 |   0.6934 |  5.772837e+04 |   +2.44% |  4.78e-09 |      
+      220 |   0.6591 |  5.923768e+04 |   +2.61% |  7.78e-09 |      
+[INFO GPL-0100] Timing-driven iteration 1/2, virtual: false.
+[INFO GPL-0101]    Iter: 228, overflow: 0.632, keep resizer changes at: 1, HPWL: 60266198
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     27185
+    final |     +0.6% |       0 |     134 |            34 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0034] Found 32 slew violations.
+[INFO RSZ-0035] Found 9 fanout violations.
+[INFO RSZ-0038] Inserted 134 buffers in 34 nets.
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     26754
+     2600 |     +2.0% |       0 |      565 |     24154
+     5200 |     +4.3% |      10 |     1205 |     21554
+     7800 |     +6.2% |      18 |     1747 |     18954
+    10400 |     +7.9% |      38 |     2271 |     16354
+    13000 |     +9.7% |      50 |     2802 |     13754
+    15600 |    +10.5% |      50 |     3002 |     11154
+    18200 |    +10.6% |      50 |     3036 |      8554
+    20800 |    +10.6% |      50 |     3037 |      5954
+    23400 |    +10.6% |      50 |     3045 |      3354
+    26000 |    +10.7% |      58 |     3086 |       754
+    final |    +11.3% |     134 |     3290 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack 1.3010126e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: 288.626 um^2 (+11.62%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: 3290 (+14.67%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 3424, deleted: 134
+[INFO GPL-0110] Timing-driven: new target density: 0.45420104
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      230 |   0.6206 |  6.321878e+04 |   +6.72% |  1.27e-08 |      
+[INFO GPL-0038] Routability snapshot saved at iter = 237
+      236 |   0.5999 |  6.410021e+04 |          |           |      
+      240 |   0.5882 |  6.453992e+04 |   +2.09% |  2.06e-08 |      
+      250 |   0.5591 |  6.561232e+04 |   +1.66% |  3.36e-08 |      
+      260 |   0.5340 |  6.689501e+04 |   +1.95% |  5.47e-08 |      
+      270 |   0.5064 |  6.839209e+04 |   +2.24% |  8.91e-08 |      
+      280 |   0.4747 |  6.989562e+04 |   +2.20% |  1.45e-07 |      
+      290 |   0.4445 |  7.114071e+04 |   +1.78% |  2.36e-07 |      
+      300 |   0.4144 |  7.170135e+04 |   +0.79% |  3.85e-07 |      
+      310 |   0.3920 |  7.149295e+04 |   -0.29% |  6.27e-07 |      
+      320 |   0.3642 |  7.095391e+04 |   -0.75% |  1.02e-06 |      
+      330 |   0.3354 |  7.021347e+04 |   -1.04% |  1.60e-06 |      
+      340 |   0.3100 |  7.061008e+04 |   +0.56% |  2.35e-06 |      
+[INFO GPL-0040] Routability iteration: 1
+[INFO GPL-0041] Total routing overflow: 0.0000
+[INFO GPL-0042] Number of overflowed tiles: 0 (0.00%)
+[INFO GPL-0043] Average top 0.5% routing congestion: 0.6680
+[INFO GPL-0044] Average top 1.0% routing congestion: 0.6426
+[INFO GPL-0045] Average top 2.0% routing congestion: 0.6168
+[INFO GPL-0046] Average top 5.0% routing congestion: 0.5802
+[INFO GPL-0047] Routability iteration weighted routing congestion: 0.6553
+[INFO GPL-0050] Weighted routing congestion is lower than target routing congestion(1.0100), end routability optimization.
+[INFO GPL-0090] Routability finished. Target routing congestion achieved succesfully.
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      350 |   0.2877 |  7.105236e+04 |   +0.63% |  3.47e-06 |      
+      360 |   0.2624 |  7.082165e+04 |   -0.32% |  5.11e-06 |      
+      370 |   0.2392 |  7.099748e+04 |   +0.25% |  7.53e-06 |      
+      380 |   0.2165 |  7.115583e+04 |   +0.22% |  1.11e-05 |      
+[INFO GPL-0100] Timing-driven iteration 2/2, virtual: false.
+[INFO GPL-0101]    Iter: 390, overflow: 0.195, keep resizer changes at: 1, HPWL: 71199850
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     30475
+    final |     +0.0% |       0 |       0 |             0 |         0
+---------------------------------------------------------------------
+   Iter   |    Area   | Removed | Inserted |   Pins
+          |           | Buffers | Buffers  | Remaining
+-------------------------------------------------------
+        0 |     +0.0% |       0 |        0 |     26754
+     2600 |     -1.2% |     565 |      183 |     24154
+     5200 |     -2.6% |    1205 |      391 |     21554
+     7800 |     -3.7% |    1747 |      616 |     18954
+    10400 |     -4.6% |    2271 |      843 |     16354
+    13000 |     -5.8% |    2802 |     1002 |     13754
+    15600 |     -6.3% |    3002 |     1051 |     11154
+    18200 |     -6.4% |    3036 |     1051 |      8554
+    20800 |     -6.4% |    3037 |     1051 |      5954
+    23400 |     -6.4% |    3045 |     1051 |      3354
+    26000 |     -6.5% |    3086 |     1061 |       754
+    final |     -6.9% |    3290 |     1159 |         0
+-------------------------------------------------------
+[INFO GPL-0106] Timing-driven: worst slack -5.711791e-10
+[INFO GPL-0107] Timing-driven: repair_design delta area: -185.895 um^2 (-6.71%)
+[INFO GPL-0108] Timing-driven: repair_design, gpl delta gcells: -2131 (-8.29%)
+[INFO GPL-0109] Timing-driven: repair_design, gcells created: 1159, deleted: 3290
+[INFO GPL-0110] Timing-driven: new target density: 0.42669863
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+      390 |   0.1957 |  7.194205e+04 |   +1.10% |  1.63e-05 |      
+      400 |   0.1720 |  7.165881e+04 |   -0.39% |  2.41e-05 |      
+      410 |   0.1515 |  7.138152e+04 |   -0.39% |  3.54e-05 |      
+      420 |   0.1284 |  7.141034e+04 |   +0.04% |  5.22e-05 |      
+      430 |   0.1097 |  7.161758e+04 |   +0.29% |  7.69e-05 |      
+      436 |   0.0987 |  7.171212e+04 |          |  1.01e-04 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 436
+[INFO GPL-1017] Routability mode iteration count: 108
+[INFO GPL-1005] Routability final weighted congestion: 0.6142
+[INFO GPL-1002] Placed Cell Area             2585.7497
+[INFO GPL-1003] Available Free Area          6759.2151
+[INFO GPL-1004] Minimum Feasible Density        0.3700 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.4251
+[INFO GPL-1008]     - For 80% usage of free space: 0.4782
+[INFO GPL-1009]     - For 50% usage of free space: 0.7651
+[INFO GPL-1011] Original area (um^2): 2483.02
+[INFO GPL-1012] Total routability artificial inflation: 0.00 (+0.00%)
+[INFO GPL-1013] Total timing-driven delta area: 102.73 (+4.14%)
+[INFO GPL-1014] Final placement area: 2585.75 (+4.14%)
+Took 71 seconds: global_placement -density 0.411500004529953 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+estimate_parasitics -placement
+Report metrics stage 3, global place...
+
+==========================================================================
+global place report_design_area
+--------------------------------------------------------------------------
+Design area 2517 um^2 37% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_3_place_gp.odb
+Elapsed time: 1:14.10[h:]min:sec. CPU time: user 1486.33 sys 8.52 (2017%). Peak memory: 587836KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_3_place_gp              .odb           74            574 6a82b33ae6a7daa98a1d
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_4_place_resized resize
+Running resize.tcl, stage 3_4_place_resized
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_3_place_gp.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+estimate_parasitics -placement
+Perform buffer insertion and gate resizing...
+repair_design -verbose
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     28344
+     1000 |     +0.0% |       0 |       0 |             0 |     27344
+     2000 |     +0.0% |       0 |       0 |             0 |     26344
+     3000 |     +0.0% |       0 |       0 |             0 |     25344
+     4000 |     +0.0% |       0 |       0 |             0 |     24344
+     5000 |     +0.0% |       0 |       0 |             0 |     23344
+     6000 |     +0.0% |       0 |       0 |             0 |     22344
+     7000 |     +0.0% |       0 |       0 |             0 |     21344
+     8000 |     +0.0% |       0 |       0 |             0 |     20344
+     9000 |     +0.0% |       0 |       0 |             0 |     19344
+    10000 |     +0.0% |       0 |       0 |             0 |     18344
+    11000 |     +0.0% |       0 |       0 |             0 |     17344
+    12000 |     +0.0% |       0 |       0 |             0 |     16344
+    13000 |     +0.0% |       0 |       0 |             0 |     15344
+    14000 |     +0.0% |       0 |       0 |             0 |     14344
+    15000 |     +0.0% |       0 |       0 |             0 |     13344
+    16000 |     +0.0% |       0 |       0 |             0 |     12344
+    17000 |     +0.0% |       0 |       0 |             0 |     11344
+    18000 |     +0.0% |       0 |       0 |             0 |     10344
+    19000 |     +0.0% |       0 |       0 |             0 |      9344
+    20000 |     +0.0% |       0 |       0 |             0 |      8344
+    21000 |     +0.0% |       0 |       0 |             0 |      7344
+    22000 |     +0.0% |       0 |       0 |             0 |      6344
+    23000 |     +0.0% |       0 |       0 |             0 |      5344
+    24000 |     +0.0% |       0 |       0 |             0 |      4344
+    25000 |     +0.0% |       0 |       0 |             0 |      3344
+    26000 |     +0.0% |       0 |       0 |             0 |      2344
+    27000 |     +0.0% |       0 |       0 |             0 |      1344
+    28000 |     +0.0% |       0 |       0 |             0 |       344
+    final |     +0.0% |       0 |       0 |             0 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0504] Runtime: 1.35s
+Floating nets: 
+Report metrics stage 3, resizer...
+
+==========================================================================
+resizer report_design_area
+--------------------------------------------------------------------------
+Design area 2517 um^2 37% utilization.
+Instance count before 24652, after 24652
+Pin count before 79372, after 79372
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_4_place_resized.odb
+Elapsed time: 0:05.55[h:]min:sec. CPU time: user 8.14 sys 2.19 (186%). Peak memory: 324464KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_4_place_resized         .odb            5            316 6a82b33ae6a7daa98a1d
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_5_place_dp detail_place
+Running detail_place.tcl, stage 3_5_place_dp
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_4_place_resized.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+detailed_placement
+[INFO DPL-0006] Core area: 6790.42 um^2
+[INFO DPL-0007] Movable instances area: 2485.92 um^2
+[INFO DPL-0008] Fixed instances area within core: 31.20 um^2
+[INFO DPL-0009] Utilization: 37.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 24652 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.17s
+Placement Analysis
+---------------------------------
+total displacement       5949.8 u
+average displacement        0.2 u
+max displacement            1.7 u
+original HPWL           71719.4 u
+legalized HPWL          74901.5 u
+delta HPWL                    4 %
+
+improve_placement -max_displacement "5 1"
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 1500 fixed cells.
+[INFO DPL-0318] Collected 23582 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2052, 2160) - (84510, 84510)
+[INFO DPL-0310] Assigned 23582 cells into segments.  Movement in X-direction is 0.000000, movement in Y-direction is 0.000000.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 7.489533e+07.
+[INFO DPL-0302] End of matching; objective is 7.486621e+07, improvement is 0.04 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 7.379027e+07.
+[INFO DPL-0306] Pass   2 of global swaps; hpwl is 7.360150e+07.
+[INFO DPL-0307] End of global swaps; objective is 7.360150e+07, improvement is 1.69 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 7.331783e+07.
+[INFO DPL-0309] End of vertical swaps; objective is 7.331783e+07, improvement is 0.39 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 7.326572e+07.
+[INFO DPL-0305] End of reordering; objective is 7.326572e+07, improvement is 0.07 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 471640 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 471640, swaps 38422, moves 189215 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 7.326572e+07, Scratch cost 7.260220e+07, Incremental cost 7.260220e+07, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 7.260220e+07.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.91 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.905635 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 6974 cell flips.
+[INFO DPL-0384] End of flipping; objective is 7.124022e+07, improvement is 1.88 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 0 site alignment problems.
+[INFO DPL-0311] Found 0 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL            74901.5 u (   36137.5,    38764.0)
+Final HPWL               71131.1 u (   34482.9,    36648.2)
+Delta HPWL                  -5.0 % (      -4.6,       -5.5)
+
+optimize_mirroring
+[INFO DPL-0020] Mirrored 2523 instances
+[INFO DPL-0021] HPWL before           71131.1 u
+[INFO DPL-0022] HPWL after            71067.3 u
+[INFO DPL-0023] HPWL delta               -0.1 %
+[INFO FLW-0012] Placement violations .
+estimate_parasitics -placement
+Report metrics stage 3, detailed place...
+
+==========================================================================
+detailed place report_design_area
+--------------------------------------------------------------------------
+Design area 2517 um^2 37% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_5_place_dp.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_place.sdc
+Elapsed time: 0:07.32[h:]min:sec. CPU time: user 9.64 sys 1.59 (153%). Peak memory: 436500KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_5_place_dp              .odb            7            426 7acaf25eb039b643895f
+cp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_5_place_dp.odb /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_place.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 4_1_cts cts
+Running cts.tcl, stage 4_1_cts
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_place.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/3_place.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+clock_tree_synthesis -sink_clustering_enable -repair_clock_nets
+[INFO CTS-0050] Root buffer is BUFx16f_ASAP7_75t_R.
+[INFO CTS-0051] Sink buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0052] The following clock buffers will be used for CTS:
+                    BUFx16f_ASAP7_75t_R
+                    BUFx24_ASAP7_75t_R
+[INFO CTS-0049] Characterization buffer is BUFx24_ASAP7_75t_R.
+[INFO CTS-0007] Net "clk" found for clock "core_clk".
+[INFO CTS-0010]  Clock net "clk" has 36 sinks.
+[INFO CTS-0008] TritonCTS found 1 clock nets.
+[INFO CTS-0097] Characterization used 2 buffer(s) types.
+[INFO CTS-0201] 0 blockages from hard placement blockages and placed macros will be used.
+[INFO CTS-0027] Generating H-Tree topology for net clk.
+[INFO CTS-0028]  Total number of sinks: 36.
+[INFO CTS-0060]  Register sinks will be clustered in groups of up to 32 and based on buffer max cap.
+[INFO CTS-0030]  Number of static layers: 0.
+[INFO CTS-0020]  Wire segment unit: 1350  dbu (1 um).
+[INFO CTS-0023]  Original sink region: [(69862, 3061), (82714, 26281)].
+[INFO CTS-0024]  Normalized sink region: [(51.7496, 2.26741), (61.2696, 19.4674)].
+[INFO CTS-0025]     Width:  9.5200.
+[INFO CTS-0026]     Height: 17.2000.
+ Level 1
+    Direction: Vertical
+    Sinks per sub-region: 18
+    Sub-region size: 9.5200 X 8.6000
+[INFO CTS-0034]     Segment length (rounded): 4.
+ Level 2
+    Direction: Horizontal
+    Sinks per sub-region: 9
+    Sub-region size: 4.7600 X 8.6000
+[INFO CTS-0034]     Segment length (rounded): 2.
+[INFO CTS-0038]  Stop criterion found. Sink region hpwl is smaller than max wirelength (162.640 um) and max number of sinks is 15.
+[INFO CTS-0035]  Number of sinks covered: 36.
+[INFO CTS-0018]     Created 5 clock buffers.
+[INFO CTS-0012]     Minimum number of buffers in the clock path: 2.
+[INFO CTS-0013]     Maximum number of buffers in the clock path: 2.
+[INFO CTS-0015]     Created 5 clock nets.
+[INFO CTS-0016]     Fanout distribution for the current clock = 6:1, 9:2, 12:1..
+[INFO CTS-0017]     Max level of the clock tree: 2.
+[INFO CTS-0098] Clock net "clk"
+[INFO CTS-0099]  Sinks 39
+[INFO CTS-0100]  Leaf buffers 0
+[INFO CTS-0101]  Average sink wire length 31.15 um
+[INFO CTS-0102]  Path depth 2 - 2
+[INFO CTS-0207]  Dummy loads inserted 3
+[INFO CTS-0500] Runtime: 1.99s
+estimate_parasitics -placement
+detailed_placement
+[INFO DPL-0006] Core area: 6790.42 um^2
+[INFO DPL-0007] Movable instances area: 2488.03 um^2
+[INFO DPL-0008] Fixed instances area within core: 31.20 um^2
+[INFO DPL-0009] Utilization: 37.1%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 24660 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.11s
+Placement Analysis
+---------------------------------
+total displacement       2716.6 u
+average displacement        0.1 u
+max displacement            1.4 u
+original HPWL           71107.4 u
+legalized HPWL          72636.6 u
+delta HPWL                    2 %
+
+estimate_parasitics -placement
+repair_timing -setup_margin 0 -hold_margin 0 -repair_tns 100 -verbose
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 14 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 14 out of 14 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -610.910 |   -22968.9 |    -3825.5 |     14 | result\[31\]$_DFF_PN0_/D
+      10* |       0 |       0 |       11 |      0 |     1 |    +0.0% | -532.709 |   -17900.7 |    -3456.6 |     14 | result\[31\]$_DFF_PN0_/D
+      20* |       0 |       0 |       26 |      0 |     1 |    +0.1% | -486.002 |   -15210.6 |    -3337.6 |     14 | result\[31\]$_DFF_PN0_/D
+      30* |       0 |       0 |       37 |      0 |     2 |    +0.1% | -442.878 |   -12944.5 |    -2678.0 |     14 | result\[31\]$_DFF_PN0_/D
+      40* |       0 |       0 |       50 |      0 |     4 |    +0.2% | -433.805 |   -12432.8 |    -2660.2 |     14 | result\[31\]$_DFF_PN0_/D
+      50* |       0 |       0 |       63 |      0 |     4 |    +0.2% | -385.679 |   -10148.9 |    -2240.7 |     14 | result\[31\]$_DFF_PN0_/D
+      60* |       0 |       0 |       73 |      0 |     7 |    +0.3% | -375.124 |    -9731.7 |    -2190.2 |     14 | result\[31\]$_DFF_PN0_/D
+      70* |       0 |       0 |       83 |      0 |     9 |    +0.3% | -365.439 |    -9337.5 |    -2180.5 |     14 | result\[31\]$_DFF_PN0_/D
+      80* |       0 |       0 |       94 |      0 |    11 |    +0.3% | -356.381 |    -8957.5 |    -2031.4 |     14 | result\[31\]$_DFF_PN0_/D
+      90* |       0 |       0 |      104 |      0 |    13 |    +0.4% | -344.643 |    -8576.3 |    -1783.6 |     14 | result\[31\]$_DFF_PN0_/D
+     100* |       0 |       0 |      115 |      0 |    13 |    +0.4% | -323.684 |    -7784.0 |    -1589.9 |     14 | result\[31\]$_DFF_PN0_/D
+     110* |       0 |       0 |      126 |      0 |    14 |    +0.4% | -304.813 |    -6991.2 |    -1294.4 |     14 | result\[31\]$_DFF_PN0_/D
+     120* |       0 |       0 |      139 |      0 |    14 |    +0.5% | -290.724 |    -6509.7 |    -1268.3 |     14 | result\[31\]$_DFF_PN0_/D
+     130* |       0 |       0 |      150 |      0 |    16 |    +0.5% | -283.739 |    -6237.5 |    -1152.7 |     14 | result\[31\]$_DFF_PN0_/D
+     140* |       0 |       0 |      160 |      0 |    18 |    +0.6% | -257.949 |    -5445.0 |    -1025.5 |     14 | result\[31\]$_DFF_PN0_/D
+     150* |       0 |       0 |      171 |      0 |    19 |    +0.6% | -247.145 |    -4852.3 |     -920.0 |     14 | result\[31\]$_DFF_PN0_/D
+     160* |       0 |       0 |      180 |      0 |    22 |    +0.6% | -241.838 |    -4642.3 |     -835.1 |     14 | result\[31\]$_DFF_PN0_/D
+     170* |       0 |       0 |      188 |      0 |    26 |    +0.7% | -233.864 |    -4393.1 |     -828.1 |     14 | result\[31\]$_DFF_PN0_/D
+     180* |       0 |       0 |      201 |      0 |    27 |    +0.7% | -227.263 |    -4186.7 |     -707.1 |     14 | result\[31\]$_DFF_PN0_/D
+     190* |       0 |       0 |      210 |      0 |    30 |    +0.7% | -222.402 |    -4015.0 |     -697.6 |     14 | result\[31\]$_DFF_PN0_/D
+     200* |       0 |       0 |      218 |      0 |    34 |    +0.8% | -218.439 |    -3862.1 |     -692.8 |     14 | result\[31\]$_DFF_PN0_/D
+     210* |       0 |       0 |      225 |      0 |    37 |    +0.8% | -211.909 |    -3699.1 |     -606.2 |     14 | result\[31\]$_DFF_PN0_/D
+     220* |       0 |       0 |      232 |      0 |    40 |    +0.8% | -202.860 |    -3533.4 |     -593.9 |     14 | result\[31\]$_DFF_PN0_/D
+     230* |       0 |       0 |      237 |      0 |    45 |    +0.8% | -201.568 |    -3499.9 |     -574.6 |     14 | result\[31\]$_DFF_PN0_/D
+     240* |       0 |       0 |      249 |      0 |    46 |    +0.9% | -181.147 |    -2791.4 |     -434.8 |     14 | result\[31\]$_DFF_PN0_/D
+     250* |       0 |       0 |      255 |      0 |    50 |    +0.9% | -174.152 |    -2675.8 |     -427.8 |     14 | result\[31\]$_DFF_PN0_/D
+     260* |       0 |       0 |      263 |      0 |    53 |    +0.9% | -170.781 |    -2578.7 |     -413.0 |     14 | result\[31\]$_DFF_PN0_/D
+     270* |       0 |       0 |      271 |      0 |    56 |    +0.9% | -164.688 |    -2378.1 |     -368.9 |     14 | result\[31\]$_DFF_PN0_/D
+     280* |       0 |       0 |      280 |      0 |    58 |    +1.0% | -158.079 |    -2173.8 |     -362.3 |     14 | result\[31\]$_DFF_PN0_/D
+     290* |       0 |       0 |      287 |      0 |    61 |    +1.0% | -148.896 |    -1967.4 |     -243.3 |     14 | result\[31\]$_DFF_PN0_/D
+     300* |       0 |       0 |      299 |      0 |    63 |    +1.0% | -139.427 |    -1662.6 |     -199.9 |     14 | result\[31\]$_DFF_PN0_/D
+     310* |       0 |       0 |      307 |      0 |    65 |    +1.1% | -134.521 |    -1583.0 |     -187.1 |     14 | result\[31\]$_DFF_PN0_/D
+     320* |       0 |       0 |      316 |      0 |    66 |    +1.1% | -121.516 |    -1413.6 |     -158.6 |     14 | result\[31\]$_DFF_PN0_/D
+     330* |       0 |       0 |      325 |      0 |    68 |    +1.1% | -116.779 |    -1317.8 |     -148.3 |     14 | result\[31\]$_DFF_PN0_/D
+     340* |       0 |       0 |      336 |      0 |    69 |    +1.2% | -113.502 |    -1256.2 |     -142.4 |     14 | result\[31\]$_DFF_PN0_/D
+     350* |       0 |       0 |      345 |      0 |    70 |    +1.2% | -109.686 |    -1179.7 |     -134.7 |     14 | result\[31\]$_DFF_PN0_/D
+     360* |       0 |       0 |      354 |      0 |    73 |    +1.2% | -103.100 |     -975.7 |     -117.7 |     14 | result\[31\]$_DFF_PN0_/D
+     370* |       0 |       0 |      364 |      0 |    75 |    +1.3% |  -95.628 |     -890.0 |     -106.6 |     14 | result\[31\]$_DFF_PN0_/D
+     380* |       0 |       0 |      374 |      0 |    76 |    +1.3% |  -88.697 |     -746.7 |      -92.8 |     14 | result\[31\]$_DFF_PN0_/D
+     390* |       0 |       0 |      383 |      0 |    79 |    +1.3% |  -84.359 |     -687.2 |      -88.1 |     14 | result\[31\]$_DFF_PN0_/D
+     400* |       0 |       0 |      390 |      0 |    83 |    +1.4% |  -82.018 |     -655.3 |      -85.7 |     14 | result\[31\]$_DFF_PN0_/D
+     410* |       0 |       0 |      401 |      0 |    85 |    +1.4% |  -80.040 |     -624.7 |      -83.3 |     14 | result\[31\]$_DFF_PN0_/D
+     420* |       0 |       0 |      411 |      0 |    88 |    +1.4% |  -74.087 |     -569.7 |      -74.1 |     14 | result\[31\]$_DFF_PN0_/D
+     430* |       0 |       0 |      417 |      0 |    92 |    +1.4% |  -67.637 |     -420.6 |      -67.6 |     14 | result\[31\]$_DFF_PN0_/D
+     440* |       0 |       0 |      426 |      0 |    93 |    +1.5% |  -62.454 |     -379.1 |      -62.5 |     14 | result\[31\]$_DFF_PN0_/D
+     450* |       0 |       0 |      432 |      0 |    98 |    +1.5% |  -58.195 |     -331.2 |      -58.2 |     14 | result\[31\]$_DFF_PN0_/D
+     460* |       0 |       0 |      442 |      0 |    99 |    +1.5% |  -54.800 |     -299.3 |      -54.8 |     14 | result\[31\]$_DFF_PN0_/D
+     470* |       0 |       0 |      452 |      0 |   102 |    +1.6% |  -51.856 |     -275.3 |      -51.9 |     14 | result\[31\]$_DFF_PN0_/D
+     480* |       0 |       1 |      458 |      0 |   105 |    +1.6% |  -49.486 |     -254.0 |      -49.5 |     14 | result\[31\]$_DFF_PN0_/D
+     490* |       0 |       1 |      465 |      0 |   108 |    +1.6% |  -45.689 |     -230.7 |      -45.7 |     14 | result\[31\]$_DFF_PN0_/D
+     500* |       0 |       1 |      473 |      0 |   110 |    +1.6% |  -43.714 |     -218.9 |      -43.7 |     14 | result\[31\]$_DFF_PN0_/D
+     510* |       0 |       1 |      483 |      0 |   111 |    +1.7% |  -40.512 |     -199.7 |      -40.5 |     14 | result\[31\]$_DFF_PN0_/D
+     520* |       0 |       1 |      493 |      0 |   112 |    +1.7% |  -34.460 |     -163.4 |      -34.5 |     14 | result\[31\]$_DFF_PN0_/D
+     530* |       0 |       2 |      499 |      0 |   116 |    +1.7% |  -32.113 |     -149.3 |      -32.1 |     14 | result\[31\]$_DFF_PN0_/D
+     540* |       0 |       2 |      506 |      0 |   119 |    +1.8% |  -28.714 |     -128.9 |      -28.7 |     14 | result\[31\]$_DFF_PN0_/D
+     550* |       0 |       2 |      512 |      0 |   123 |    +1.8% |  -28.497 |     -127.6 |      -28.5 |     14 | result\[31\]$_DFF_PN0_/D
+     560* |       0 |       3 |      518 |      0 |   126 |    +1.8% |  -23.915 |     -100.1 |      -23.9 |     14 | result\[31\]$_DFF_PN0_/D
+     570* |       0 |       3 |      527 |      0 |   129 |    +1.8% |  -21.455 |      -85.3 |      -21.5 |     14 | result\[31\]$_DFF_PN0_/D
+     580* |       0 |       3 |      534 |      0 |   132 |    +1.9% |  -21.906 |      -74.6 |      -21.9 |     14 | result\[31\]$_DFF_PN0_/D
+     590* |       0 |       3 |      544 |      0 |   133 |    +1.9% |  -19.523 |      -60.3 |      -19.5 |     14 | result\[31\]$_DFF_PN0_/D
+     600* |       0 |       3 |      550 |      0 |   137 |    +1.9% |  -16.359 |      -41.3 |      -16.4 |     14 | result\[31\]$_DFF_PN0_/D
+     610* |       0 |       3 |      554 |      0 |   143 |    +1.9% |  -17.685 |      -49.3 |      -17.7 |     14 | result\[31\]$_DFF_PN0_/D
+     620* |       0 |       3 |      559 |      0 |   148 |    +1.9% |  -18.788 |      -55.9 |      -18.8 |     14 | result\[31\]$_DFF_PN0_/D
+     630* |       0 |       3 |      568 |      0 |   149 |    +2.0% |  -16.262 |      -40.7 |      -16.3 |     14 | result\[31\]$_DFF_PN0_/D
+     640* |       0 |       4 |      572 |      0 |   154 |    +2.0% |  -15.428 |      -35.7 |      -15.4 |     14 | result\[31\]$_DFF_PN0_/D
+     650* |       0 |       4 |      579 |      0 |   157 |    +2.0% |  -14.627 |      -30.9 |      -14.6 |     14 | result\[31\]$_DFF_PN0_/D
+     660* |       0 |       4 |      584 |      0 |   162 |    +2.0% |  -11.846 |      -16.2 |      -11.8 |     14 | result\[31\]$_DFF_PN0_/D
+     670* |       0 |       4 |      594 |      0 |   162 |    +2.1% |  -12.931 |      -21.3 |      -12.9 |     14 | result\[31\]$_DFF_PN0_/D
+     680* |       0 |       4 |      603 |      0 |   163 |    +2.1% |   -7.246 |       -7.2 |       -7.2 |     14 | result\[31\]$_DFF_PN0_/D
+     690* |       0 |       5 |      608 |      0 |   167 |    +2.1% |   -4.040 |       -4.0 |       -4.0 |     14 | result\[31\]$_DFF_PN0_/D
+     700* |       0 |       5 |      613 |      0 |   172 |    +2.1% |   -0.964 |       -1.0 |       -1.0 |     14 | result\[31\]$_DFF_PN0_/D
+     709* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     710* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     710* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     711* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     712* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     713* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     714* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     715* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     716* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     717* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     718* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     719* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     720* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     720* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     721* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     722* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+     722* |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |     14 | result\[31\]$_DFF_PN0_/D
+    final |       0 |       6 |      618 |      0 |   175 |    +2.2% |    1.868 |        0.0 |        0.0 |      0 | result\[31\]$_DFF_PN0_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0040] Inserted 618 buffers.
+[INFO RSZ-0051] Resized 6 instances: 6 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 175 instances.
+[INFO RSZ-0505] Runtime: 32.28s
+[INFO RSZ-0033] No hold violations found.
+[INFO RSZ-0506] Runtime: 0.00s
+Took 33 seconds: repair_timing -setup_margin 0 -hold_margin 0 -repair_tns 100 -verbose
+detailed_placement
+[INFO DPL-0006] Core area: 6790.42 um^2
+[INFO DPL-0007] Movable instances area: 2542.31 um^2
+[INFO DPL-0008] Fixed instances area within core: 31.20 um^2
+[INFO DPL-0009] Utilization: 37.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 25278 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 0.
+[INFO DPL-0500] Runtime: 0.14s
+Placement Analysis
+---------------------------------
+total displacement        323.1 u
+average displacement        0.0 u
+max displacement            1.6 u
+original HPWL           72966.0 u
+legalized HPWL          73252.8 u
+delta HPWL                    0 %
+
+estimate_parasitics -placement
+Report metrics stage 4, cts final...
+
+==========================================================================
+cts final report_design_area
+--------------------------------------------------------------------------
+Design area 2574 um^2 38% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/4_1_cts.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/4_cts.sdc
+Elapsed time: 0:39.96[h:]min:sec. CPU time: user 73.93 sys 19.22 (233%). Peak memory: 464660KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+4_1_cts                   .odb           39            453 3efd73aba9b213a450a4
+cp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/4_1_cts.odb /work/results/asap7/opentallas_numeric_e4_l16_tc/base/4_cts.odb
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_1_grt global_route
+Running global_route.tcl, stage 5_1_grt
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/4_cts.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/4_cts.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+pin_access
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       14
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_numeric_dot
+Die area:                 ( 0 0 ) ( 86545 86545 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     25278
+Number of terminals:      432
+Number of snets:          2
+Number of nets:           28967
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 175.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 392547.
+[INFO DRT-0033] V1 shape region query size = 714960.
+[INFO DRT-0033] M2 shape region query size = 10698.
+[INFO DRT-0033] V2 shape region query size = 14688.
+[INFO DRT-0033] M3 shape region query size = 14688.
+[INFO DRT-0033] V3 shape region query size = 9792.
+[INFO DRT-0033] M4 shape region query size = 10065.
+[INFO DRT-0033] V4 shape region query size = 9792.
+[INFO DRT-0033] M5 shape region query size = 5597.
+[INFO DRT-0033] V5 shape region query size = 1024.
+[INFO DRT-0033] M6 shape region query size = 576.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1038 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 175 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0084]   Complete 17898 groups.
+#scanned instances     = 25278
+#unique  instances     = 175
+#stdCellGenAp          = 4893
+#stdCellValidPlanarAp  = 90
+#stdCellValidViaAp     = 4009
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 80582
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:02:39, elapsed time = 00:00:06, memory = 330.22 (MB), peak = 325.88 (MB)
+Took 7 seconds: pin_access
+global_route -congestion_report_file /work/reports/asap7/opentallas_numeric_e4_l16_tc/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+[INFO GRT-0020] Min routing layer: M2
+[INFO GRT-0021] Max routing layer: M7
+[INFO GRT-0022] Global adjustment: 0%
+[INFO GRT-0023] Grid origin: (0, 0)
+[INFO GRT-0088] Layer M1      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M2      Track-Pitch = 0.0390  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M3      Track-Pitch = 0.0360  line-2-Via Pitch: 0.0360
+[INFO GRT-0088] Layer M4      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M5      Track-Pitch = 0.0480  line-2-Via Pitch: 0.0480
+[INFO GRT-0088] Layer M6      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0088] Layer M7      Track-Pitch = 0.0640  line-2-Via Pitch: 0.0640
+[INFO GRT-0003] Macros: 0
+[INFO GRT-0004] Blockages: 216
+[INFO GRT-0019] Found 6 clock nets.
+[INFO GRT-0001] Minimum degree: 2
+[INFO GRT-0002] Maximum degree: 33
+
+[INFO GRT-0053] Routing resources analysis:
+          Routing      Original      Derated      Resource
+Layer     Direction    Resources     Resources    Reduction (%)
+---------------------------------------------------------------
+M1         Vertical            0             0          0.00%
+M2         Horizontal     304207        216155          28.94%
+M3         Vertical       347830        258652          25.64%
+M4         Horizontal     266818        198418          25.64%
+M5         Vertical       257823        191298          25.80%
+M6         Horizontal     179455        121575          32.25%
+M7         Vertical       202800        136800          32.54%
+---------------------------------------------------------------
+
+[INFO GRT-0197] Via related to pin nodes: 160615
+[INFO GRT-0198] Via related Steiner nodes: 2355
+[INFO GRT-0199] Via filling finished.
+[INFO GRT-0111] Final number of vias: 206436
+[INFO GRT-0112] Final usage 3D: 761299
+
+[INFO GRT-0096] Final congestion report:
+Layer         Resource        Demand        Usage (%)    Max H / Max V / Total Congestion
+---------------------------------------------------------------------------------------
+M1                   0             0            0.00%             0 /  0 /  0
+M2              216155         47920           22.17%             0 /  0 /  0
+M3              258652         53678           20.75%             0 /  0 /  0
+M4              198418          4809            2.42%             0 /  0 /  0
+M5              191298          3618            1.89%             0 /  0 /  0
+M6              121575         18041           14.84%             0 /  0 /  0
+M7              136800         13925           10.18%             0 /  0 /  0
+---------------------------------------------------------------------------------------
+Total          1122898        141991           12.65%             0 /  0 /  0
+
+[INFO GRT-0018] Total wirelength: 113807 um
+[INFO GRT-0014] Routed nets: 28967
+[INFO GRT-0303] Global routing runtime = 00:00:08
+Took 8 seconds: global_route -congestion_report_file /work/reports/asap7/opentallas_numeric_e4_l16_tc/base/congestion.rpt -congestion_iterations 30 -congestion_report_iter_step 5 -verbose -resistance_aware
+estimate_parasitics -global_routing
+Perform buffer insertion and gate resizing...
+repair_design -verbose
+Iteration |   Area    | Resized | Buffers | Nets repaired | Remaining
+---------------------------------------------------------------------
+        0 |     +0.0% |       0 |       0 |             0 |     28970
+     1000 |     +0.0% |       0 |       0 |             0 |     27970
+     2000 |     +0.0% |       0 |       0 |             0 |     26970
+     3000 |     +0.0% |       0 |       0 |             0 |     25970
+     4000 |     +0.0% |       0 |       0 |             0 |     24970
+     5000 |     +0.0% |       0 |       0 |             0 |     23970
+     6000 |     +0.0% |       0 |       0 |             0 |     22970
+     7000 |     +0.0% |       0 |       0 |             0 |     21970
+     8000 |     +0.0% |       0 |       0 |             0 |     20970
+     9000 |     +0.0% |       0 |       0 |             0 |     19970
+    10000 |     +0.0% |       0 |       0 |             0 |     18970
+    11000 |     +0.0% |       0 |       0 |             0 |     17970
+    12000 |     +0.0% |       0 |       0 |             0 |     16970
+    13000 |     +0.0% |       0 |       0 |             0 |     15970
+    14000 |     +0.0% |       0 |       0 |             0 |     14970
+    15000 |     +0.0% |       0 |       0 |             0 |     13970
+    16000 |     +0.0% |       0 |       0 |             0 |     12970
+    17000 |     +0.0% |       0 |       0 |             0 |     11970
+    18000 |     +0.0% |       0 |       0 |             0 |     10970
+    19000 |     +0.0% |       0 |       0 |             0 |      9970
+    20000 |     +0.0% |       0 |       0 |             0 |      8970
+    21000 |     +0.0% |       0 |       0 |             0 |      7970
+    22000 |     +0.0% |       0 |       0 |             0 |      6970
+    23000 |     +0.0% |       0 |       0 |             0 |      5970
+    24000 |     +0.0% |       0 |       0 |             0 |      4970
+    25000 |     +0.0% |       0 |       0 |             0 |      3970
+    26000 |     +0.0% |       0 |       0 |             0 |      2970
+    27000 |     +0.0% |       0 |       0 |             0 |      1970
+    28000 |     +0.0% |       0 |       0 |             0 |       970
+    final |     +0.0% |       0 |       0 |             0 |         0
+---------------------------------------------------------------------
+[INFO RSZ-0504] Runtime: 1.50s
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 6790.42 um^2
+[INFO DPL-0007] Movable instances area: 2542.31 um^2
+[INFO DPL-0008] Fixed instances area within core: 31.20 um^2
+[INFO DPL-0009] Utilization: 37.9%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 25278 cells
+[INFO DPL-0500] Runtime: 0.11s
+Placement Analysis
+---------------------------------
+total displacement          0.0 u
+average displacement        0.0 u
+max displacement            0.0 u
+original HPWL           73252.8 u
+legalized HPWL          73252.8 u
+delta HPWL                    0 %
+
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_numeric_e4_l16_tc/base/congestion_post_repair_design.rpt
+Repair setup and hold violations...
+estimate_parasitics -global_routing
+repair_timing -setup_margin 0 -hold_margin 0 -repair_tns 100 -verbose
+[INFO RSZ-0100] Repair move sequence: UnbufferMove SizeUpMove SwapPinsMove BufferMove CloneMove SplitLoadMove 
+[INFO RSZ-0094] Found 14 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 14 out of 14 (100.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -490.316 |   -15580.4 |    -3456.2 |     14 | result\[31\]$_DFF_PN0_/D
+      10* |       0 |       0 |        9 |      0 |     1 |    +0.0% | -478.193 |   -14831.8 |    -3451.7 |     14 | result\[31\]$_DFF_PN0_/D
+      20* |       0 |       0 |       19 |      0 |     2 |    +0.1% | -467.010 |   -14212.1 |    -3406.5 |     14 | result\[31\]$_DFF_PN0_/D
+      30* |       0 |       0 |       29 |      0 |     3 |    +0.1% | -461.389 |   -13960.5 |    -3428.3 |     14 | result\[31\]$_DFF_PN0_/D
+      40* |       0 |       0 |       41 |      0 |     4 |    +0.1% | -458.142 |   -13674.4 |    -3297.7 |     14 | result\[31\]$_DFF_PN0_/D
+      50* |       0 |       0 |       49 |      0 |     7 |    +0.2% | -448.905 |   -13376.9 |    -3240.7 |     14 | result\[31\]$_DFF_PN0_/D
+      60* |       0 |       0 |       55 |      0 |    11 |    +0.2% | -448.244 |   -13356.6 |    -3232.1 |     14 | result\[31\]$_DFF_PN0_/D
+      70* |       0 |       0 |       63 |      0 |    13 |    +0.2% | -442.727 |   -13114.4 |    -3160.9 |     14 | result\[31\]$_DFF_PN0_/D
+      80* |       0 |       0 |       70 |      0 |    16 |    +0.2% | -438.971 |   -13037.4 |    -3124.7 |     14 | result\[31\]$_DFF_PN0_/D
+      90* |       0 |       0 |       78 |      0 |    18 |    +0.3% | -441.117 |   -12998.6 |    -3142.9 |     14 | result\[31\]$_DFF_PN0_/D
+     100* |       0 |       0 |       83 |      0 |    23 |    +0.3% | -443.633 |   -13041.7 |    -3147.9 |     14 | result\[31\]$_DFF_PN0_/D
+     110* |       0 |       0 |       89 |      0 |    27 |    +0.3% | -438.899 |   -12896.8 |    -3138.5 |     14 | result\[31\]$_DFF_PN0_/D
+     120* |       0 |       0 |       92 |      0 |    34 |    +0.3% | -437.010 |   -12872.7 |    -3134.7 |     14 | result\[31\]$_DFF_PN0_/D
+     130* |       0 |       0 |       98 |      0 |    38 |    +0.3% | -436.059 |   -12856.2 |    -3135.5 |     14 | result\[31\]$_DFF_PN0_/D
+     140* |       0 |       0 |      102 |      0 |    44 |    +0.3% | -434.315 |   -12711.7 |    -3079.0 |     14 | result\[31\]$_DFF_PN0_/D
+     150* |       0 |       0 |      110 |      0 |    46 |    +0.4% | -435.012 |   -12739.5 |    -3079.7 |     14 | result\[31\]$_DFF_PN0_/D
+     160* |       0 |       0 |      117 |      0 |    50 |    +0.4% | -429.690 |   -12414.2 |    -2964.0 |     14 | result\[31\]$_DFF_PN0_/D
+     170* |       0 |       0 |      123 |      0 |    54 |    +0.4% | -432.578 |   -12461.4 |    -2969.0 |     14 | result\[31\]$_DFF_PN0_/D
+     180* |       0 |       0 |      124 |      0 |    63 |    +0.4% | -437.749 |   -12665.5 |    -2982.2 |     14 | result\[31\]$_DFF_PN0_/D
+     190* |       0 |       0 |      129 |      0 |    68 |    +0.4% | -439.598 |   -12727.2 |    -2984.6 |     14 | result\[31\]$_DFF_PN0_/D
+     200* |       0 |       2 |      130 |      0 |    75 |    +0.4% | -436.664 |   -12652.2 |    -2978.3 |     14 | result\[31\]$_DFF_PN0_/D
+     210* |       0 |       3 |      130 |      0 |    84 |    +0.4% | -430.768 |   -12527.2 |    -2966.5 |     14 | result\[31\]$_DFF_PN0_/D
+     220* |       0 |       5 |      133 |      0 |    89 |    +0.5% | -425.590 |   -12402.6 |    -2956.4 |     14 | result\[31\]$_DFF_PN0_/D
+     230* |       0 |       6 |      135 |      0 |    96 |    +0.5% | -423.285 |   -12355.8 |    -2951.7 |     14 | result\[31\]$_DFF_PN0_/D
+     240* |       0 |       8 |      138 |      0 |   101 |    +0.5% | -420.723 |   -12313.7 |    -2947.9 |     14 | result\[31\]$_DFF_PN0_/D
+     250* |       0 |       9 |      143 |      0 |   105 |    +0.5% | -420.362 |   -12181.1 |    -2819.8 |     14 | result\[31\]$_DFF_PN0_/D
+     260* |       0 |      10 |      145 |      0 |   112 |    +0.5% | -419.329 |   -12176.0 |    -2816.7 |     14 | result\[31\]$_DFF_PN0_/D
+     270* |       0 |      10 |      149 |      0 |   118 |    +0.5% | -424.303 |   -12201.4 |    -2890.0 |     14 | result\[31\]$_DFF_PN0_/D
+     280* |       0 |      11 |      155 |      0 |   122 |    +0.6% | -417.361 |   -12021.6 |    -2726.0 |     14 | result\[31\]$_DFF_PN0_/D
+     290* |       0 |      12 |      161 |      0 |   126 |    +0.6% | -414.804 |   -11942.5 |    -2764.3 |     14 | result\[31\]$_DFF_PN0_/D
+     300* |       0 |      13 |      162 |      0 |   134 |    +0.6% | -413.801 |   -11904.0 |    -2774.8 |     14 | result\[31\]$_DFF_PN0_/D
+     310* |       0 |      16 |      166 |      0 |   137 |    +0.6% | -410.759 |   -11851.3 |    -2769.1 |     14 | result\[31\]$_DFF_PN0_/D
+     320* |       0 |      18 |      170 |      0 |   141 |    +0.6% | -408.786 |   -11839.5 |    -2720.2 |     14 | result\[31\]$_DFF_PN0_/D
+     330* |       0 |      19 |      174 |      0 |   146 |    +0.6% | -409.079 |   -11833.8 |    -2709.5 |     14 | result\[31\]$_DFF_PN0_/D
+     340* |       0 |      19 |      174 |      0 |   156 |    +0.6% | -409.742 |   -11845.5 |    -2710.8 |     14 | result\[31\]$_DFF_PN0_/D
+     350* |       0 |      20 |      174 |      0 |   165 |    +0.6% | -407.931 |   -11822.8 |    -2707.2 |     14 | result\[31\]$_DFF_PN0_/D
+     360* |       0 |      21 |      175 |      0 |   173 |    +0.6% | -405.487 |   -11781.4 |    -2658.0 |     14 | result\[31\]$_DFF_PN0_/D
+     370* |       0 |      27 |      175 |      0 |   177 |    +0.6% | -399.442 |   -11756.7 |    -2580.3 |     14 | result\[31\]$_DFF_PN0_/D
+     375* |       0 |      30 |      175 |      0 |   178 |    +0.6% | -398.635 |   -11746.5 |    -2569.0 |     14 | result\[31\]$_DFF_PN0_/D
+     380* |       1 |      31 |      175 |      0 |   180 |    +0.6% | -398.824 |   -11746.7 |    -2556.1 |     14 | result\[31\]$_DFF_PN0_/D
+     380* |       1 |      30 |      175 |      0 |   180 |    +0.6% | -398.635 |   -11746.5 |    -2553.5 |     14 | result\[31\]$_DFF_PN0_/D
+     390* |       1 |      30 |      184 |      0 |   182 |    +0.7% | -398.635 |   -11467.0 |    -2329.8 |     14 | result\[31\]$_DFF_PN0_/D
+     400* |       1 |      30 |      193 |      0 |   184 |    +0.7% | -398.572 |   -11448.5 |    -2240.2 |     14 | result\[31\]$_DFF_PN0_/D
+     410* |       1 |      30 |      199 |      0 |   188 |    +0.7% | -398.572 |   -11440.0 |    -2180.6 |     14 | result\[31\]$_DFF_PN0_/D
+     420* |       1 |      31 |      200 |      0 |   196 |    +0.7% | -398.572 |   -11419.1 |    -2181.4 |     14 | result\[31\]$_DFF_PN0_/D
+     430* |       3 |      31 |      205 |      0 |   199 |    +0.7% | -398.402 |   -11395.7 |    -2174.7 |     14 | result\[31\]$_DFF_PN0_/D
+     435* |       3 |      31 |      206 |      0 |   200 |    +0.7% | -398.402 |   -11395.7 |    -2149.9 |     14 | result\[31\]$_DFF_PN0_/D
+     440* |       3 |      31 |      209 |      0 |   202 |    +0.8% | -398.402 |   -11414.9 |    -2070.3 |     14 | result\[31\]$_DFF_PN0_/D
+     450* |       3 |      31 |      215 |      0 |   206 |    +0.8% | -398.402 |   -11380.4 |    -2013.4 |     14 | result\[31\]$_DFF_PN0_/D
+     460* |       3 |      35 |      218 |      0 |   209 |    +0.8% | -398.592 |   -11380.6 |    -2054.4 |     14 | result\[31\]$_DFF_PN0_/D
+     460* |       3 |      32 |      216 |      0 |   207 |    +0.8% | -398.402 |   -11380.4 |    -2009.5 |     14 | result\[31\]$_DFF_PN0_/D
+     470* |       3 |      32 |      225 |      0 |   210 |    +0.8% | -398.402 |   -11369.8 |    -1917.7 |     14 | result\[31\]$_DFF_PN0_/D
+     480* |       3 |      32 |      235 |      0 |   213 |    +0.8% | -398.402 |   -11369.8 |    -1891.6 |     14 | result\[31\]$_DFF_PN0_/D
+     490* |       3 |      32 |      243 |      0 |   216 |    +0.9% | -398.402 |   -11369.8 |    -1830.9 |     14 | result\[31\]$_DFF_PN0_/D
+     500* |       3 |      32 |      249 |      0 |   220 |    +0.9% | -398.402 |   -11466.2 |    -1819.7 |     14 | result\[31\]$_DFF_PN0_/D
+     510* |       3 |      33 |      259 |      0 |   220 |    +0.9% | -397.995 |   -11338.3 |    -1807.4 |     14 | result\[31\]$_DFF_PN0_/D
+     520* |       3 |      33 |      266 |      0 |   225 |    +1.0% | -397.995 |   -11256.1 |    -1804.8 |     14 | result\[31\]$_DFF_PN0_/D
+     530* |       3 |      34 |      266 |      0 |   234 |    +1.0% | -397.995 |   -11344.0 |    -1804.8 |     14 | result\[31\]$_DFF_PN0_/D
+     540* |       3 |      35 |      270 |      0 |   239 |    +1.0% | -397.459 |   -11213.1 |    -1796.2 |     14 | result\[31\]$_DFF_PN0_/D
+     550* |       3 |      36 |      271 |      0 |   247 |    +1.0% | -397.459 |   -11199.9 |    -1807.0 |     14 | result\[31\]$_DFF_PN0_/D
+     560* |       3 |      37 |      272 |      0 |   255 |    +1.0% | -397.459 |   -11210.7 |    -1801.9 |     14 | result\[31\]$_DFF_PN0_/D
+     568* |       3 |      36 |      270 |      0 |   241 |    +1.0% | -397.458 |   -11215.8 |    -1793.5 |     14 | result\[31\]$_DFF_PN0_/D
+     570* |       3 |      36 |      271 |      0 |   241 |    +1.0% | -397.458 |   -11215.8 |    -1787.7 |     14 | result\[31\]$_DFF_PN0_/D
+     580* |       3 |      36 |      277 |      0 |   245 |    +1.0% | -397.458 |   -11193.4 |    -1778.6 |     14 | result\[31\]$_DFF_PN0_/D
+     590* |       3 |      36 |      288 |      0 |   247 |    +1.0% | -397.458 |   -11193.4 |    -1751.1 |     14 | result\[31\]$_DFF_PN0_/D
+     600* |       3 |      36 |      294 |      0 |   251 |    +1.1% | -397.458 |   -11226.4 |    -1720.4 |     14 | result\[31\]$_DFF_PN0_/D
+     610* |       3 |      36 |      302 |      0 |   253 |    +1.1% | -397.458 |   -11210.6 |    -1709.4 |     14 | result\[31\]$_DFF_PN0_/D
+     620* |       3 |      36 |      306 |      0 |   259 |    +1.1% | -397.458 |   -11241.2 |    -1704.4 |     14 | result\[31\]$_DFF_PN0_/D
+     630* |       3 |      37 |      313 |      0 |   262 |    +1.1% | -397.458 |   -11241.2 |    -1767.1 |     14 | result\[31\]$_DFF_PN0_/D
+     640* |       3 |      39 |      315 |      0 |   268 |    +1.1% | -397.458 |   -11241.2 |    -1811.5 |     14 | result\[31\]$_DFF_PN0_/D
+     646* |       3 |      36 |      311 |      0 |   261 |    +1.1% | -397.458 |   -11241.2 |    -1702.2 |     14 | result\[31\]$_DFF_PN0_/D
+     650* |       3 |      36 |      315 |      0 |   261 |    +1.1% | -397.458 |   -11241.2 |    -1688.6 |     14 | result\[31\]$_DFF_PN0_/D
+     660* |       3 |      36 |      324 |      0 |   263 |    +1.2% | -397.458 |   -11241.2 |    -1754.4 |     14 | result\[31\]$_DFF_PN0_/D
+     665* |       3 |      36 |      322 |      0 |   262 |    +1.1% | -397.458 |   -11241.2 |    -1681.5 |     14 | result\[31\]$_DFF_PN0_/D
+     670* |       3 |      36 |      325 |      0 |   263 |    +1.2% | -397.458 |   -11241.2 |    -1693.2 |     14 | result\[31\]$_DFF_PN0_/D
+     680* |       3 |      37 |      332 |      0 |   265 |    +1.2% | -397.458 |   -11207.4 |    -1692.6 |     14 | result\[31\]$_DFF_PN0_/D
+     690* |       3 |      38 |      337 |      0 |   270 |    +1.2% | -397.476 |   -11073.1 |    -1693.1 |     14 | result\[31\]$_DFF_PN0_/D
+     700* |       3 |      38 |      341 |      0 |   276 |    +1.2% | -397.476 |   -11073.1 |    -1682.6 |     14 | result\[31\]$_DFF_PN0_/D
+     710* |       3 |      39 |      345 |      0 |   281 |    +1.2% | -397.476 |   -11072.1 |    -1682.0 |     14 | result\[31\]$_DFF_PN0_/D
+     717* |       3 |      36 |      323 |      0 |   262 |    +1.1% | -397.458 |   -11241.2 |    -1676.6 |     14 | result\[31\]$_DFF_PN0_/D
+     720* |       3 |      36 |      325 |      0 |   262 |    +1.2% | -397.458 |   -11241.2 |    -1720.2 |     14 | result\[31\]$_DFF_PN0_/D
+     724* |       3 |      36 |      324 |      0 |   262 |    +1.2% | -397.458 |   -11241.2 |    -1676.2 |     14 | result\[31\]$_DFF_PN0_/D
+     725* |       3 |      36 |      324 |      0 |   262 |    +1.2% | -397.458 |   -11241.2 |    -1676.2 |     14 | result\[31\]$_DFF_PN0_/D
+     726* |       3 |      36 |      324 |      0 |   262 |    +1.2% | -397.458 |   -11241.2 |    -1676.2 |     14 | result\[31\]$_DFF_PN0_/D
+     727* |       3 |      36 |      324 |      0 |   262 |    +1.2% | -397.458 |   -11241.2 |    -1676.2 |     14 | result\[31\]$_DFF_PN0_/D
+     728* |       3 |      36 |      324 |      0 |   262 |    +1.2% | -397.458 |   -11241.2 |    -1676.2 |     14 | result\[31\]$_DFF_PN0_/D
+     729* |       3 |      36 |      324 |      0 |   262 |    +1.2% | -397.458 |   -11241.2 |    -1676.2 |     14 | result\[31\]$_DFF_PN0_/D
+     729* |       3 |      36 |      324 |      0 |   262 |    +1.2% | -397.458 |   -11241.2 |    -1676.2 |     14 | result\[31\]$_DFF_PN0_/D
+     730+ |       3 |      36 |      324 |      0 |   262 |    +1.2% | -397.458 |   -11241.2 |    -1676.2 |      9 | result\[31\]$_DFF_PN0_/D
+     730+ |       3 |      36 |      324 |      0 |   262 |    +1.2% | -397.458 |   -11241.2 |    -1676.2 |      9 | result\[31\]$_DFF_PN0_/D
+     732+ |       3 |      36 |      324 |      0 |   263 |    +1.2% | -397.458 |   -11241.2 |    -1675.7 |      9 | result\[31\]$_DFF_PN0_/D
+     733+ |       3 |      36 |      324 |      0 |   263 |    +1.2% | -397.458 |   -11241.2 |    -1675.7 |      9 | result\[31\]$_DFF_PN0_/D
+     734+ |       3 |      36 |      324 |      0 |   263 |    +1.2% | -397.458 |   -11241.2 |    -1675.7 |      9 | result\[31\]$_DFF_PN0_/D
+     736+ |       3 |      37 |      324 |      0 |   263 |    +1.2% | -397.458 |   -11241.2 |    -1674.2 |      9 | result\[31\]$_DFF_PN0_/D
+     740+ |       3 |      39 |      324 |      0 |   264 |    +1.2% | -397.458 |   -11241.2 |    -1670.0 |      9 | result\[31\]$_DFF_PN0_/D
+     740+ |       3 |      39 |      324 |      0 |   264 |    +1.2% | -397.458 |   -11241.2 |    -1670.0 |      9 | result\[31\]$_DFF_PN0_/D
+     742+ |       3 |      39 |      324 |      0 |   265 |    +1.2% | -397.458 |   -11241.2 |    -1669.8 |      9 | result\[31\]$_DFF_PN0_/D
+     743+ |       3 |      39 |      324 |      0 |   265 |    +1.2% | -397.458 |   -11241.2 |    -1669.8 |      9 | result\[31\]$_DFF_PN0_/D
+     744+ |       3 |      39 |      324 |      0 |   265 |    +1.2% | -397.458 |   -11241.2 |    -1669.8 |      9 | result\[31\]$_DFF_PN0_/D
+    final |       3 |      39 |      324 |      0 |   265 |    +1.2% | -397.458 |   -11241.2 |    -1669.8 |      9 | result\[31\]$_DFF_PN0_/D
+------------------------------------------------------------------------------------------------------------------------------
+[INFO RSZ-0059] Removed 3 buffers.
+[INFO RSZ-0040] Inserted 324 buffers.
+[INFO RSZ-0051] Resized 39 instances: 39 up, 0 up match, 0 down, 0 VT
+[INFO RSZ-0043] Swapped pins on 265 instances.
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 79.40s
+[INFO RSZ-0033] No hold violations found.
+[INFO RSZ-0506] Runtime: 0.10s
+Took 79 seconds: repair_timing -setup_margin 0 -hold_margin 0 -repair_tns 100 -verbose
+global_route -start_incremental
+detailed_placement
+[INFO DPL-0006] Core area: 6790.42 um^2
+[INFO DPL-0007] Movable instances area: 2572.10 um^2
+[INFO DPL-0008] Fixed instances area within core: 31.20 um^2
+[INFO DPL-0009] Utilization: 38.3%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (1 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 25599 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |          4 |         2 |         2
+        1 |          0 |         0 |         0
+Negotiation phase 1 converged at iteration 1.
+[INFO DPL-0500] Runtime: 0.17s
+Placement Analysis
+---------------------------------
+total displacement        145.6 u
+average displacement        0.0 u
+max displacement            1.6 u
+original HPWL           73412.8 u
+legalized HPWL          73559.6 u
+delta HPWL                    0 %
+
+check_placement -verbose
+global_route -end_incremental -resistance_aware -congestion_report_file /work/reports/asap7/opentallas_numeric_e4_l16_tc/base/congestion_post_repair_timing.rpt
+estimate_parasitics -global_routing
+repair_timing -setup -sequence "vt_swap reroute" -skip_last_gasp -repair_tns 0 -verbose
+[INFO RSZ-0100] Repair move sequence: RerouteMove 
+[INFO RSZ-0094] Found 10 endpoints with setup violations.
+[INFO RSZ-0099] Repairing 1 out of 10 (0.00%) violating endpoints...
+   Iter   | Removed | Resized | Inserted | Cloned |  Pin  |   Area   |    WNS   |   StTNS    |   EnTNS    |  Viol  |  Worst  
+          | Buffers |  Gates  | Buffers  |  Gates | Swaps |          |          |            |            | Endpts | St/EnPt 
+------------------------------------------------------------------------------------------------------------------------------
+       0* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -404.213 |   -11598.5 |    -1788.0 |     10 | result\[31\]$_DFF_PN0_/D
+       1* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -404.213 |   -11598.5 |    -1788.0 |     10 | result\[31\]$_DFF_PN0_/D
+       1* |       0 |       0 |        0 |      0 |     0 |    +0.0% | -404.213 |   -11598.5 |    -1788.0 |     10 | result\[31\]$_DFF_PN0_/D
+    final |       0 |       0 |        0 |      0 |     0 |    +0.0% | -404.213 |   -11598.5 |    -1788.0 |     10 | result\[31\]$_DFF_PN0_/D
+------------------------------------------------------------------------------------------------------------------------------
+[WARNING RSZ-0062] Unable to repair all setup violations.
+[INFO RSZ-0505] Runtime: 0.61s
+Repair antennas...
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Estimate parasitics...
+estimate_parasitics -global_routing
+Report metrics stage 5, global route...
+
+==========================================================================
+global route report_design_area
+--------------------------------------------------------------------------
+Design area 2603 um^2 38% utilization.
+[INFO FLW-0007] clock core_clk period 12000.000000
+[INFO FLW-0008] Clock core_clk period 11784.002
+[INFO FLW-0009] Clock core_clk slack -404.213
+write_sdc -no_timestamp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/updated_clks.sdc
+[INFO FLW-0011] Path endpoint path count 110
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_1_grt.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_1_grt.sdc
+Elapsed time: 1:44.58[h:]min:sec. CPU time: user 872.12 sys 32.20 (864%). Peak memory: 731520KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_1_grt                   .odb          104            714 53c8a7cec4942e528df6
+5_1_grt                   .sdc                             6cc757cb303125f3a7b3
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_2_route detail_route
+Running detail_route.tcl, stage 5_2_route
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_1_grt.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_1_grt.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+detailed_route -output_drc /work/reports/asap7/opentallas_numeric_e4_l16_tc/base/5_route_drc.rpt -output_maze /work/results/asap7/opentallas_numeric_e4_l16_tc/base/maze.log -droute_end_iter 64 -verbose 1 -drc_report_iter_step 5
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     212
+Number of vias:       14
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   ot_numeric_dot
+Die area:                 ( 0 0 ) ( 86545 86545 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     25599
+Number of terminals:      432
+Number of snets:          2
+Number of nets:           29288
+
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 181.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 396700.
+[INFO DRT-0033] V1 shape region query size = 714960.
+[INFO DRT-0033] M2 shape region query size = 10698.
+[INFO DRT-0033] V2 shape region query size = 14688.
+[INFO DRT-0033] M3 shape region query size = 14688.
+[INFO DRT-0033] V3 shape region query size = 9792.
+[INFO DRT-0033] M4 shape region query size = 10065.
+[INFO DRT-0033] V4 shape region query size = 9792.
+[INFO DRT-0033] M5 shape region query size = 5597.
+[INFO DRT-0033] V5 shape region query size = 1024.
+[INFO DRT-0033] M6 shape region query size = 576.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0078]   Complete 1071 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0081]   Complete 181 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0084]   Complete 18096 groups.
+#scanned instances     = 25599
+#unique  instances     = 181
+#stdCellGenAp          = 5042
+#stdCellValidPlanarAp  = 90
+#stdCellValidViaAp     = 4146
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 81224
+#instTermValidViaApCnt = 0
+#macroGenAp            = 0
+#macroValidPlanarAp    = 0
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:02:41, elapsed time = 00:00:06, memory = 532.62 (MB), peak = 527.80 (MB)
+[INFO DRT-0156] guideIn read 100000 guides.
+[INFO DRT-0156] guideIn read 200000 guides.
+
+[INFO DRT-0157] Number of guides:     208161
+
+[INFO DRT-0169] Post process guides.
+[INFO DRT-0176] GCELLGRID X 0 DO 151 STEP 570 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 151 STEP 570 ;
+[INFO DRT-0026]   Complete 100000 origin guides.
+[INFO DRT-0026]   Complete 200000 origin guides.
+[INFO DRT-0028]   Complete Active.
+[INFO DRT-0028]   Complete V0.
+[INFO DRT-0028]   Complete M1.
+[INFO DRT-0028]   Complete V1.
+[INFO DRT-0028]   Complete M2.
+[INFO DRT-0028]   Complete V2.
+[INFO DRT-0028]   Complete M3.
+[INFO DRT-0028]   Complete V3.
+[INFO DRT-0028]   Complete M4.
+[INFO DRT-0028]   Complete V4.
+[INFO DRT-0028]   Complete M5.
+[INFO DRT-0028]   Complete V5.
+[INFO DRT-0028]   Complete M6.
+[INFO DRT-0028]   Complete V6.
+[INFO DRT-0028]   Complete M7.
+[INFO DRT-0028]   Complete V7.
+[INFO DRT-0028]   Complete M8.
+[INFO DRT-0028]   Complete V8.
+[INFO DRT-0028]   Complete M9.
+[INFO DRT-0028]   Complete V9.
+[INFO DRT-0028]   Complete Pad.
+[INFO DRT-0178] Init guide query.
+[INFO DRT-0035]   Complete Active (guide).
+[INFO DRT-0035]   Complete V0 (guide).
+[INFO DRT-0035]   Complete M1 (guide).
+[INFO DRT-0035]   Complete V1 (guide).
+[INFO DRT-0035]   Complete M2 (guide).
+[INFO DRT-0035]   Complete V2 (guide).
+[INFO DRT-0035]   Complete M3 (guide).
+[INFO DRT-0035]   Complete V3 (guide).
+[INFO DRT-0035]   Complete M4 (guide).
+[INFO DRT-0035]   Complete V4 (guide).
+[INFO DRT-0035]   Complete M5 (guide).
+[INFO DRT-0035]   Complete V5 (guide).
+[INFO DRT-0035]   Complete M6 (guide).
+[INFO DRT-0035]   Complete V6 (guide).
+[INFO DRT-0035]   Complete M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 65280.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 56805.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 29094.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 6207.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 5324.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 4490.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 2215.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 0.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 590.28 (MB), peak = 584.80 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 101913 vertical wires in 4 frboxes and 67502 horizontal wires in 4 frboxes.
+[INFO DRT-0186] Done with 7375 vertical wires in 4 frboxes and 11621 horizontal wires in 4 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:00:06, elapsed time = 00:00:02, memory = 1121.09 (MB), peak = 1222.05 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 1121.09 (MB), peak = 1222.05 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+    Completing 10% with 0 violations.
+    elapsed time = 00:00:01, memory = 3242.27 (MB).
+    Completing 20% with 0 violations.
+    elapsed time = 00:00:02, memory = 3569.64 (MB).
+    Completing 30% with 590 violations.
+    elapsed time = 00:00:04, memory = 3997.78 (MB).
+    Completing 40% with 590 violations.
+    elapsed time = 00:00:05, memory = 4080.67 (MB).
+    Completing 50% with 590 violations.
+    elapsed time = 00:00:06, memory = 3104.42 (MB).
+    Completing 60% with 1085 violations.
+    elapsed time = 00:00:09, memory = 4601.61 (MB).
+    Completing 70% with 1085 violations.
+    elapsed time = 00:00:10, memory = 4473.46 (MB).
+    Completing 80% with 1471 violations.
+    elapsed time = 00:00:12, memory = 4927.34 (MB).
+    Completing 90% with 1471 violations.
+    elapsed time = 00:00:14, memory = 5138.64 (MB).
+    Completing 100% with 1912 violations.
+    elapsed time = 00:00:16, memory = 3770.50 (MB).
+[INFO DRT-0199]   Number of violations = 2690.
+Viol/Layer          M1     M2     M3     V3     M4     V4     M5     V5     M6     V6     M7
+CutSpcTbl            0      0      0      9      0      5      0     19      0      9      0
+EOL                  0     96     15      0      4      0      1      0      0      0      0
+Metal Spacing      453     40    144      0      0      0      3      0     71      0      0
+Recheck              1    406    189      0     65      0     70      0     42      0      5
+Short              150    107     14      0      0      5      3      9     59      0      0
+eolKeepOut           0    612     60      0     12      0      9      0      3      0      0
+[INFO DRT-0267] cpu time = 00:05:29, elapsed time = 00:00:16, memory = 4215.40 (MB), peak = 5212.18 (MB)
+Total wire length = 81512 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 25565 um.
+Total wire length on LAYER M3 = 32010 um.
+Total wire length on LAYER M4 = 4897 um.
+Total wire length on LAYER M5 = 1905 um.
+Total wire length on LAYER M6 = 9569 um.
+Total wire length on LAYER M7 = 7564 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 210970.
+Up-via summary (total 210970):
+
+-----------------
+ Active         0
+     M1     76364
+     M2    109994
+     M3     10774
+     M4      5188
+     M5      4920
+     M6      3730
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       210970
+
+
+[INFO DRT-0195] Start 1st optimization iteration.
+    Completing 10% with 2690 violations.
+    elapsed time = 00:00:01, memory = 5945.45 (MB).
+    Completing 20% with 2690 violations.
+    elapsed time = 00:00:02, memory = 5513.79 (MB).
+    Completing 30% with 1965 violations.
+    elapsed time = 00:00:04, memory = 5521.24 (MB).
+    Completing 40% with 1965 violations.
+    elapsed time = 00:00:06, memory = 5530.38 (MB).
+    Completing 50% with 1965 violations.
+    elapsed time = 00:00:07, memory = 4117.14 (MB).
+    Completing 60% with 1351 violations.
+    elapsed time = 00:00:09, memory = 5735.27 (MB).
+    Completing 70% with 1351 violations.
+    elapsed time = 00:00:11, memory = 5195.58 (MB).
+    Completing 80% with 667 violations.
+    elapsed time = 00:00:13, memory = 5613.37 (MB).
+    Completing 90% with 667 violations.
+    elapsed time = 00:00:14, memory = 5606.36 (MB).
+    Completing 100% with 127 violations.
+    elapsed time = 00:00:16, memory = 4264.23 (MB).
+[INFO DRT-0199]   Number of violations = 129.
+Viol/Layer          M1     M2     M3     V3     M4     V4     V5     M6     V6
+CutSpcTbl            0      0      0      7      0      4      2      0      5
+EOL                  0      5      0      0      1      0      0      0      0
+Metal Spacing        6      5     14      0      0      0      0      1      0
+Recheck              0      1      1      0      0      0      0      0      0
+Short                2      7      8      0      0      0      0      0      0
+eolKeepOut           0     57      0      0      3      0      0      0      0
+[INFO DRT-0267] cpu time = 00:05:30, elapsed time = 00:00:17, memory = 4682.43 (MB), peak = 6007.70 (MB)
+Total wire length = 80856 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 25501 um.
+Total wire length on LAYER M3 = 31897 um.
+Total wire length on LAYER M4 = 4812 um.
+Total wire length on LAYER M5 = 1813 um.
+Total wire length on LAYER M6 = 9456 um.
+Total wire length on LAYER M7 = 7374 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 202855.
+Up-via summary (total 202855):
+
+-----------------
+ Active         0
+     M1     76300
+     M2    104429
+     M3      9749
+     M4      4546
+     M5      4420
+     M6      3411
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       202855
+
+
+[INFO DRT-0195] Start 2nd optimization iteration.
+    Completing 10% with 129 violations.
+    elapsed time = 00:00:00, memory = 4682.43 (MB).
+    Completing 20% with 129 violations.
+    elapsed time = 00:00:00, memory = 4682.43 (MB).
+    Completing 30% with 93 violations.
+    elapsed time = 00:00:01, memory = 4686.35 (MB).
+    Completing 40% with 93 violations.
+    elapsed time = 00:00:01, memory = 4686.35 (MB).
+    Completing 50% with 93 violations.
+    elapsed time = 00:00:01, memory = 5188.88 (MB).
+    Completing 60% with 65 violations.
+    elapsed time = 00:00:02, memory = 4686.35 (MB).
+    Completing 70% with 65 violations.
+    elapsed time = 00:00:02, memory = 4686.35 (MB).
+    Completing 80% with 53 violations.
+    elapsed time = 00:00:03, memory = 4686.35 (MB).
+    Completing 90% with 53 violations.
+    elapsed time = 00:00:03, memory = 4686.35 (MB).
+    Completing 100% with 45 violations.
+    elapsed time = 00:00:04, memory = 4686.35 (MB).
+[INFO DRT-0199]   Number of violations = 45.
+Viol/Layer          M2     M3     V3     V4     V5     V6
+CutSpcTbl            0      0      4      3      2      2
+EOL                  3      0      0      0      0      0
+Metal Spacing        3      9      0      0      0      0
+Short                1      3      0      0      0      0
+eolKeepOut          15      0      0      0      0      0
+[INFO DRT-0267] cpu time = 00:00:44, elapsed time = 00:00:04, memory = 4689.35 (MB), peak = 6007.70 (MB)
+Total wire length = 80821 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 25500 um.
+Total wire length on LAYER M3 = 31901 um.
+Total wire length on LAYER M4 = 4804 um.
+Total wire length on LAYER M5 = 1811 um.
+Total wire length on LAYER M6 = 9442 um.
+Total wire length on LAYER M7 = 7361 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 202465.
+Up-via summary (total 202465):
+
+-----------------
+ Active         0
+     M1     76299
+     M2    104191
+     M3      9695
+     M4      4525
+     M5      4388
+     M6      3367
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       202465
+
+
+[INFO DRT-0195] Start 3rd guides tiles iteration.
+    Completing 10% with 45 violations.
+    elapsed time = 00:00:00, memory = 5127.24 (MB).
+    Completing 20% with 45 violations.
+    elapsed time = 00:00:00, memory = 5127.24 (MB).
+    Completing 30% with 45 violations.
+    elapsed time = 00:00:00, memory = 5127.24 (MB).
+    Completing 40% with 45 violations.
+    elapsed time = 00:00:00, memory = 5091.15 (MB).
+    Completing 50% with 45 violations.
+    elapsed time = 00:00:00, memory = 4828.53 (MB).
+    Completing 60% with 9 violations.
+    elapsed time = 00:00:00, memory = 4262.89 (MB).
+    Completing 70% with 9 violations.
+    elapsed time = 00:00:00, memory = 4353.58 (MB).
+    Completing 80% with 9 violations.
+    elapsed time = 00:00:01, memory = 4263.01 (MB).
+    Completing 90% with 4 violations.
+    elapsed time = 00:00:01, memory = 4263.01 (MB).
+    Completing 100% with 0 violations.
+    elapsed time = 00:00:01, memory = 4263.01 (MB).
+[INFO DRT-0199]   Number of violations = 0.
+[INFO DRT-0267] cpu time = 00:00:08, elapsed time = 00:00:02, memory = 4714.55 (MB), peak = 6007.70 (MB)
+Total wire length = 80823 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 25494 um.
+Total wire length on LAYER M3 = 31911 um.
+Total wire length on LAYER M4 = 4814 um.
+Total wire length on LAYER M5 = 1809 um.
+Total wire length on LAYER M6 = 9439 um.
+Total wire length on LAYER M7 = 7353 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 202497.
+Up-via summary (total 202497):
+
+-----------------
+ Active         0
+     M1     76299
+     M2    104186
+     M3      9725
+     M4      4529
+     M5      4393
+     M6      3365
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       202497
+
+
+[INFO DRT-0198] Complete detail routing.
+Total wire length = 80823 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 25494 um.
+Total wire length on LAYER M3 = 31911 um.
+Total wire length on LAYER M4 = 4814 um.
+Total wire length on LAYER M5 = 1809 um.
+Total wire length on LAYER M6 = 9439 um.
+Total wire length on LAYER M7 = 7353 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 202497.
+Up-via summary (total 202497):
+
+-----------------
+ Active         0
+     M1     76299
+     M2    104186
+     M3      9725
+     M4      4529
+     M5      4393
+     M6      3365
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       202497
+
+
+[INFO DRT-0267] cpu time = 00:11:53, elapsed time = 00:00:40, memory = 4714.68 (MB), peak = 6007.70 (MB)
+
+[INFO DRT-0180] Post processing.
+[INFO DRT-0501] Runtime: 50.10s
+Took 50 seconds: detailed_route -output_drc /work/reports/asap7/opentallas_numeric_e4_l16_tc/base/5_route_drc.rpt -output_maze /work/results/asap7/opentallas_numeric_e4_l16_tc/base/maze.log -droute_end_iter 64 -verbose 1 -drc_report_iter_step 5
+[WARNING GRT-0246] No diode with LEF class CORE ANTENNACELL found.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+[INFO ANT-0002] Found 0 net violations.
+[INFO ANT-0001] Found 0 pin violations.
+Design area 2603 um^2 38% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_2_route.odb
+Elapsed time: 0:52.91[h:]min:sec. CPU time: user 889.83 sys 17.88 (1715%). Peak memory: 6151880KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_2_route                 .odb           52           6007 edf670c62e5d313dbe9f
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 5_3_fillcell fillcell
+Running fillcell.tcl, stage 5_3_fillcell
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_2_route.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_1_grt.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+filler_placement "FILLERxp5_ASAP7_75t_R FILLER_ASAP7_75t_R DECAPx1_ASAP7_75t_R DECAPx2_ASAP7_75t_R DECAPx4_ASAP7_75t_R DECAPx6_ASAP7_75t_R DECAPx10_ASAP7_75t_R"
+[INFO DPL-0001] Placed 38375 filler instances.
+Design area 2603 um^2 38% utilization.
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_3_fillcell.odb
+Elapsed time: 0:01.23[h:]min:sec. CPU time: user 1.13 sys 0.10 (100%). Peak memory: 326592KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+5_3_fillcell              .odb            1            318 2f71cfdcd5f9ce38f096
+cp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_3_fillcell.odb /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_route.odb
+cp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_1_grt.sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_route.sdc
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 6_1_fill density_fill
+Running density_fill.tcl, stage 6_1_fill
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_route.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_route.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+exec cp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_route.odb /work/results/asap7/opentallas_numeric_e4_l16_tc/base/6_1_fill.odb
+Elapsed time: 0:01.07[h:]min:sec. CPU time: user 0.96 sys 0.10 (99%). Peak memory: 272280KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+6_1_fill                  .odb            1            265 2f71cfdcd5f9ce38f096
+cp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/5_route.sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/6_1_fill.sdc
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 6_report final_report
+Running final_report.tcl, stage 6_report
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/6_1_fill.odb
+read_sdc /work/results/asap7/opentallas_numeric_e4_l16_tc/base/6_1_fill.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+write_db /work/results/asap7/opentallas_numeric_e4_l16_tc/base/6_final.odb
+write_sdc -no_timestamp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/6_final.sdc
+Deleted 0 routing obstructions
+[INFO RCX-0431] Defined process_corner X with ext_model_index 0
+[INFO RCX-0029] Defined extraction corner X
+[WARNING RCX-0514] The ext_model_file option is deprecated. Use set_extraction_rules_file command instead.
+[INFO RCX-0435] Reading extraction model file /OpenROAD-flow-scripts/flow/platforms/asap7/rcx_patterns.rules ...
+[INFO RCX-0436] RC segment generation ot_numeric_dot (max_merge_res 50.0) ...
+[INFO RCX-0040] Final 148768 rc segments
+[INFO RCX-0439] Coupling Cap extraction ot_numeric_dot ...
+[INFO RCX-0440] Coupling threshhold is 0.1000 fF, coupling capacitance less than 0.1000 fF will be grounded.
+[INFO RCX-0442] 21% of 151103 wires extracted
+[INFO RCX-0442] 54% of 151103 wires extracted
+[INFO RCX-0442] 72% of 151103 wires extracted
+[INFO RCX-0442] 100% of 151103 wires extracted
+[INFO RCX-0045] Extract 29288 nets, 178055 rsegs, 178055 caps, 172916 ccs
+[INFO RCX-0443] 29288 nets finished
+[INFO PSM-0040] All shapes on net VDD are connected.
+########## IR report #################
+Net              : VDD
+Corner           : default
+Total power      : 3.58e-02 W
+Supply voltage   : 7.00e-01 V
+Worstcase voltage: 6.89e-01 V
+Average voltage  : 6.99e-01 V
+Average IR drop  : 1.08e-03 V
+Worstcase IR drop: 1.15e-02 V
+Percentage drop  : 1.64 %
+######################################
+[INFO PSM-0040] All shapes on net VSS are connected.
+########## IR report #################
+Net              : VSS
+Corner           : default
+Total power      : 3.58e-02 W
+Supply voltage   : 0.00e+00 V
+Worstcase voltage: 9.94e-03 V
+Average voltage  : 1.09e-03 V
+Average IR drop  : 1.09e-03 V
+Worstcase IR drop: 9.94e-03 V
+Percentage drop  : 1.42 %
+######################################
+Cell type report:                       Count       Area
+  Fill cell                             38375    4187.11
+  Tap cell                               1070      31.20
+  Tie cell                                 39       1.71
+  Clock buffer                              7       2.01
+  Timing Repair Buffer                   2525     216.78
+  Inverter                               3962     173.36
+  Clock inverter                            1       0.10
+  Sequential cell                          36      13.65
+  Multi-Input combinational cell        17959    2164.50
+  Total                                 63974    6790.42
+Report metrics stage 6, finish...
+
+==========================================================================
+finish report_design_area
+--------------------------------------------------------------------------
+Design area 2603 um^2 38% utilization.
+[WARNING GUI-0076] QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-root'
+Elapsed time: 0:17.43[h:]min:sec. CPU time: user 20.45 sys 2.58 (132%). Peak memory: 842772KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+6_report                                 17            823                  N/A
+cp /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef /work/objects/asap7/opentallas_numeric_e4_l16_tc/base/klayout_tech.lef
+/usr/bin/python3 /OpenROAD-flow-scripts/flow/util/generate_klayout_tech.py \
+	--template /OpenROAD-flow-scripts/flow/platforms/asap7/KLayout/asap7.lyt \
+	--output /work/objects/asap7/opentallas_numeric_e4_l16_tc/base/klayout.lyt \
+	--lef-files /work/objects/asap7/opentallas_numeric_e4_l16_tc/base/klayout_tech.lef /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef   \
+	--map-files 
+/usr/bin/python3 /OpenROAD-flow-scripts/flow/scripts/run_command.py --log /work/logs/asap7/opentallas_numeric_e4_l16_tc/base/6_1_merge.log --tee -- \
+        /OpenROAD-flow-scripts/flow/scripts/klayout.sh -zz -rd design_name=ot_numeric_dot \
+        -rd in_def=/work/results/asap7/opentallas_numeric_e4_l16_tc/base/6_final.def \
+        -rd in_files="/OpenROAD-flow-scripts/flow/platforms/asap7/gds/asap7sc7p5t_28_R_220121a.gds  " \
+        -rd seal_file="" \
+        -rd out_file=/work/results/asap7/opentallas_numeric_e4_l16_tc/base/6_1_merged.gds \
+        -rd tech_file=/work/objects/asap7/opentallas_numeric_e4_l16_tc/base/klayout.lyt \
+        -rd layer_map= \
+        -r /OpenROAD-flow-scripts/flow/util/def2stream.py
+KLayout 0.30.7
+Warning: DEF UNITS does not match reader DBU (DEF UNITS is 1000 and corresponds to a DBU of 0.001, but reader DBU is set to 0.00025) (line=5, cell=, file=6_final.def)
+[INFO] Reporting cells prior to loading DEF ...
+	/OpenROAD-flow-scripts/flow/platforms/asap7/gds/asap7sc7p5t_28_R_220121a.gds
+[INFO] GDS_ALLOW_EMPTY=fakeram.*
+[INFO] All LEF cells have matching GDS/OAS cells
+[INFO] No orphan cells in the final layout
+Elapsed time: 0:01.86[h:]min:sec. CPU time: user 1.70 sys 0.16 (99%). Peak memory: 547872KB.
+cp /work/results/asap7/opentallas_numeric_e4_l16_tc/base/6_1_merged.gds /work/results/asap7/opentallas_numeric_e4_l16_tc/base/6_final.gds
+/work/logs/asap7/opentallas_numeric_e4_l16_tc/base
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+1_1_yosys_canonicalize    .rtlil          0             83 ceb279fd823e40b589c4
+1_2_yosys                 .v             23            317 4c9fe78fdba0ff81d389
+1_2_yosys                 .sdc                             23a6ab4467eb0ec82ac2
+1_synth                   .odb            1            251 70278266f55799e97b72
+1_synth                   .sdc                             311a2347b2117b1c3c7e
+2_1_floorplan             .odb           14            298 0421a31ee9122b419672
+2_1_floorplan             .sdc                             311a2347b2117b1c3c7e
+2_2_floorplan_macro       .odb            0            229 0421a31ee9122b419672
+2_3_floorplan_tapcell     .odb            0            217 f8d45760afd13b91f9bf
+2_4_floorplan_pdn         .odb            1            238 bafad398b174fef4bf2e
+3_1_place_gp_skip_io      .odb           39            267 41dd7de0422f1de23349
+3_2_place_iop             .odb            0            233 c39accf033c9195b4769
+3_3_place_gp              .odb           74            574 6a82b33ae6a7daa98a1d
+3_4_place_resized         .odb            5            316 6a82b33ae6a7daa98a1d
+3_5_place_dp              .odb            7            426 7acaf25eb039b643895f
+4_1_cts                   .odb           39            453 3efd73aba9b213a450a4
+5_1_grt                   .odb          104            714 53c8a7cec4942e528df6
+5_1_grt                   .sdc                             6cc757cb303125f3a7b3
+5_2_route                 .odb           52           6007 edf670c62e5d313dbe9f
+5_3_fillcell              .odb            1            318 2f71cfdcd5f9ce38f096
+6_1_fill                  .odb            1            265 2f71cfdcd5f9ce38f096
+6_1_fill                  .sdc                             6cc757cb303125f3a7b3
+6_1_merge                                 1            535                  N/A
+6_report                                 17            823                  N/A
+Total                                   379           6007                     
+mkdir -p /work/reports/asap7/opentallas_numeric_e4_l16_tc/base
+echo /work > /work/reports/asap7/opentallas_numeric_e4_l16_tc/base/design-dir.txt
+/usr/bin/python3 /OpenROAD-flow-scripts/flow/util/genMetrics.py -d opentallas_numeric_e4_l16_tc \
+    -p asap7 \
+    -v base \
+    --logs /work/logs/asap7/opentallas_numeric_e4_l16_tc/base \
+    --reports /work/reports/asap7/opentallas_numeric_e4_l16_tc/base \
+    --results /work/results/asap7/opentallas_numeric_e4_l16_tc/base \
+    -o /work/reports/asap7/opentallas_numeric_e4_l16_tc/base/metadata.json 2>&1 \
+    | tee /work/reports/asap7/opentallas_numeric_e4_l16_tc/base/metadata-generate.log
+[WARN] not a git repo: /OpenROAD-flow-scripts/flow/util/../
+[WARN] not a git repo: /OpenROAD-flow-scripts/flow/platforms/asap7
+[WARN] Overwriting Tag synth__runtime__total
+[WARN] Overwriting Tag synth__cpu__total
+[WARN] Overwriting Tag synth__mem__peak
+[WARN] Overwriting Tag finish__runtime__total
+[WARN] Overwriting Tag finish__cpu__total
+[WARN] Overwriting Tag finish__mem__peak
