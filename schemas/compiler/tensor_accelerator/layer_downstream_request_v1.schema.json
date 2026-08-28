@@ -1,0 +1,30 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/layer_downstream_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "inputs": {
+      "additionalProperties": false,
+      "properties": {
+        "attention_execution_report_id": {"$ref": "#/$defs/sha256"},
+        "token_id": {"maximum": 4294967295, "minimum": 0, "type": "integer"}
+      },
+      "required": ["attention_execution_report_id", "token_id"],
+      "type": "object"
+    },
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.layer_downstream_request.v1"},
+    "source_operation_ids": {
+      "items": {"minLength": 1, "type": "string"},
+      "maxItems": 8,
+      "minItems": 8,
+      "type": "array",
+      "uniqueItems": true
+    }
+  },
+  "required": ["graph_id", "inputs", "request_id", "schema", "source_operation_ids"],
+  "title": "Layer downstream execution request v1",
+  "type": "object",
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}

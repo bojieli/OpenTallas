@@ -1,0 +1,59 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/layer_downstream_independent_check_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "check_id": {"$ref": "#/$defs/sha256"},
+    "checks": {
+      "items": {"minLength": 1, "type": "string"},
+      "maxItems": 9,
+      "minItems": 9,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "command_abi": {
+      "additionalProperties": false,
+      "properties": {"major": {"const": 2}, "minor": {"const": 4}},
+      "required": ["major", "minor"],
+      "type": "object"
+    },
+    "command_count": {"minimum": 1, "type": "integer"},
+    "expected_counters": {"$ref": "layer_downstream_expectations_v1.schema.json#/$defs/counters"},
+    "expected_intermediate_payload_sha256": {"$ref": "layer_downstream_expectations_v1.schema.json#/$defs/intermediate_hashes"},
+    "expected_output_payload_sha256": {"$ref": "layer_downstream_expectations_v1.schema.json#/$defs/output_hashes"},
+    "expected_saturated_element_count": {"$ref": "layer_downstream_expectations_v1.schema.json#/$defs/saturation"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "hbm_image_sha256": {"$ref": "#/$defs/sha256"},
+    "hbm_size_bytes": {"minimum": 1, "type": "integer"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.layer_downstream_independent_check.v1"},
+    "source_lock_id": {"$ref": "#/$defs/sha256"},
+    "status": {"const": "pass"}
+  },
+  "required": [
+    "capability_id",
+    "check_id",
+    "checks",
+    "command_abi",
+    "command_count",
+    "expected_counters",
+    "expected_intermediate_payload_sha256",
+    "expected_output_payload_sha256",
+    "expected_saturated_element_count",
+    "graph_id",
+    "hbm_image_sha256",
+    "hbm_size_bytes",
+    "kernel_ir_id",
+    "physical_plan_id",
+    "qualification_report_id",
+    "schema",
+    "source_lock_id",
+    "status"
+  ],
+  "title": "Layer downstream independent inverse check v1",
+  "type": "object",
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}
