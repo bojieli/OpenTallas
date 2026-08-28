@@ -166,11 +166,45 @@ def test_production_kernel_ir_admits_neutral_attention_and_state_only() -> None:
         _validate(physical_leak, schema, registry)
 
 
+def test_layer_qualification_schema_rejects_incomplete_or_forged_evidence() -> None:
+    schemas = _schemas()
+    by_name = {
+        schema["$id"].rsplit("/", 1)[-1]: schema
+        for schema in schemas
+    }
+    registry = _registry(schemas)
+    schema = by_name["layer_qualification_v1.schema.json"]
+    value = load_strict_json(
+        ROOT / "results/tensor_accelerator/qwen3_layer_qualification.json"
+    )
+    _validate(value, schema, registry)
+
+    incomplete = copy.deepcopy(value)
+    del incomplete["sources"]["down_projection_weight"]
+    with pytest.raises(ValidationError):
+        _validate(incomplete, schema, registry)
+
+    physical_leak = copy.deepcopy(value)
+    physical_leak["intermediates"]["down"]["sram_bank"] = 4
+    with pytest.raises(ValidationError):
+        _validate(physical_leak, schema, registry)
+
+    wrong_width = copy.deepcopy(value)
+    wrong_width["output"]["hidden_1"]["shape"] = [1, 12288]
+    with pytest.raises(ValidationError):
+        _validate(wrong_width, schema, registry)
+
+    false_equivalence = copy.deepcopy(value)
+    false_equivalence["official_source_replay"]["status"] = "exact_match"
+    with pytest.raises(ValidationError):
+        _validate(false_equivalence, schema, registry)
+
+
 def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 47
+    assert len(schemas) == 48
     by_name = {
         schema["$id"].rsplit("/", 1)[-1]: schema
         for schema in schemas
@@ -199,6 +233,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "execution_report_v1.schema.json",
         "execution_request_v1.schema.json",
         "independent_check_v1.schema.json",
+        "layer_qualification_v1.schema.json",
         "model_graph_v1.schema.json",
         "model_graph_v2.schema.json",
         "operator_coverage_v1.schema.json",
@@ -259,6 +294,12 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         ],
         "independent_check_v1.schema.json": [
             load_strict_json(output / "checks/independent_check.json")
+        ],
+        "layer_qualification_v1.schema.json": [
+            load_strict_json(
+                ROOT
+                / "results/tensor_accelerator/qwen3_layer_qualification.json"
+            )
         ],
         "model_graph_v1.schema.json": [
             load_strict_json(FIXTURE / "model_graph.json"),

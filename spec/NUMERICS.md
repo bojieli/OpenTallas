@@ -1,6 +1,6 @@
 # Numerical-format and determinism specification
 
-**Document:** SPEC-NUM 1.1
+**Document:** SPEC-NUM 1.2
 
 The numerical contract is architectural. A different encoding, reduction tree,
 rounding point, saturation rule, or exceptional-value policy is an externally
@@ -374,6 +374,39 @@ any validation, arithmetic, memory, or completion dependency fails. Abort and
 malformed or incomplete execution discard all prepared records and preserve the
 prior committed payload, length, and generation bit-for-bit. Reusing a prepared
 record after commit is stale and fails closed.
+
+### NUM-6.9 Qwen BF16 residual and SiLU-gating boundaries
+
+`bf16_add_rne_v1` consumes two equal-shape finite-BF16 tensors. Each operand
+widens exactly to binary32, one binary32 addition rounds to nearest ties to even,
+and the result converts once to BF16 under NUM-4.2. There is no fused residual
+operation, hidden FP32 residual state, or reassociation across elements. The two
+Qwen decoder residual sites use this same contract.
+
+`qwen3_silu_mul_bf16_v1` consumes equal-shape finite-BF16 gate and up tensors.
+For gate value `x`, sigmoid is defined with a stable sign-selected binary32
+subgraph:
+
+```text
+x >= 0: e = exp(-x); sigmoid = 1 / (1 + e)
+x <  0: e = exp( x); sigmoid = e / (1 + e)
+```
+
+The nonpositive exponential is correctly rounded to binary32 as in NUM-6.7.
+The denominator addition and division each round once to binary32. The
+binary32 product `x * sigmoid` rounds once and then converts to BF16 under
+NUM-4.2. This materialized BF16 SiLU activation is multiplied by the BF16 up
+value with one binary32 rounding and converted once more to BF16. Thus each
+element accounts for one exponential, one sigmoid-denominator addition, one
+division, two multiplications, and two BF16 conversions. An optimized engine may
+replace the internal sigmoid computation only when exhaustive finite-BF16
+differential evidence proves the same materialized activation and final output.
+
+Nonfinite input or binary32 overflow poisons. Each finite BF16 conversion has
+its own sticky saturation count. Input negative zero is accepted; every output
+zero is canonical positive zero. The intermediate BF16 boundary follows the
+pinned source's BF16 `SiLU` tensor followed by its separate BF16 multiplication,
+rather than treating the whole expression as one unrounded host operation.
 
 ## NUM-7 Speculative decoding
 

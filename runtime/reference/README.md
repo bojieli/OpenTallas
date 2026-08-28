@@ -42,6 +42,15 @@ The retained real-Q/K/V qualification covers empty history, nonempty history,
 two-token causal prefill, and two-resource atomic state behavior. This evidence
 does not qualify the remaining Qwen layer or any DeepSeek attention form.
 
+`tensor_accelerator_elementwise.py` independently defines the two finite-BF16
+Qwen decoder boundaries that follow attention: one-rounded residual addition
+and the stable binary32 SiLU subgraph with a materialized BF16 activation before
+the BF16 up-path multiply. The separate NumPy kernel is exhaustively
+differential-tested over all 65,280 finite BF16 gate encodings, including the
+single supported-libm boundary that requires an explicit correctly-rounded
+correction. This establishes operator semantics; authentic full-width layer
+qualification and command-driven execution remain separate gates.
+
 `matrix.py` composes the scalar/block rules into complete `FP8_LINEAR`
 semantics. It quantizes each BF16 activation block once, applies the released
 128-by-128 E8M0 scale orientation, executes ordered 128-value FP8 block dots,
