@@ -1,0 +1,2044 @@
+{
+  "acceptance": {
+    "absent_bitline_fraction_min": 0.75,
+    "discharge_delay_ns_max": 4.0,
+    "inactive_leakage_ua_max": 1000.0,
+    "masked_bitline_fraction_min": 0.75,
+    "present_bitline_fraction_max": 0.25,
+    "read_energy_fj_max": 10000.0,
+    "read_energy_fj_min": 0.0,
+    "read_margin_fraction_min": 0.5,
+    "sense_high_fraction_min": 0.75,
+    "sense_low_fraction_max": 0.25,
+    "unexpected_warnings_max": 0
+  },
+  "cases": [
+    {
+      "array_rows": 64,
+      "bitline_cap_ff": 12.68,
+      "campaigns": [
+        "array_and_port_load_fast_high_cold"
+      ],
+      "case_id": "case_001",
+      "deck_sha256": "00640ec0233e0224ed007e626bfab358cd2100cc5a45a1d65de6a725dfa8c330",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 3.414535e-11,
+        "inactive_leakage": 1.3569e-07,
+        "read_energy": 2.31609e-14,
+        "read_margin": 2.06704,
+        "sense_absent_v": 2.439172e-08,
+        "sense_masked_v": 2.488917e-08,
+        "sense_present_v": 1.98,
+        "v_absent": 2.067042,
+        "v_masked": 2.065534,
+        "v_present": 3.499428e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.03414535,
+        "inactive_leakage_ua": 0.13569,
+        "read_energy_fj": 23.1609,
+        "read_margin_fraction_vdd": 1.043959595959596
+      },
+      "ngspice_log_sha256": "1a402cea75ae2426b2c170924adce0279f1ac72c4424a1bc0f0c11d530797517",
+      "output_load_ff": 5.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 64,
+      "bitline_cap_ff": 12.68,
+      "campaigns": [
+        "array_and_port_load_slow_low_hot"
+      ],
+      "case_id": "case_002",
+      "deck_sha256": "c83e575a281dc4607ab6eea9f52709d1acb6095bf099f3554af339c35424d1bc",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 8.537794e-11,
+        "inactive_leakage": 2.0651e-06,
+        "read_energy": 1.49317e-14,
+        "read_margin": 1.71496,
+        "sense_absent_v": -6.650005e-08,
+        "sense_masked_v": -4.94169e-08,
+        "sense_present_v": 1.62,
+        "v_absent": 1.714964,
+        "v_masked": 1.713127,
+        "v_present": 3.730727e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.08537794,
+        "inactive_leakage_ua": 2.0650999999999997,
+        "read_energy_fj": 14.9317,
+        "read_margin_fraction_vdd": 1.0586172839506172
+      },
+      "ngspice_log_sha256": "e950df9ab9b9dcd68dcaf6a73e9ec83f68d01daaaf1bf038157fe647f1ecd2f7",
+      "output_load_ff": 5.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 64,
+      "bitline_cap_ff": 12.68,
+      "campaigns": [
+        "array_and_port_load_nominal_pvt"
+      ],
+      "case_id": "case_003",
+      "deck_sha256": "568d590d2ab1681d0aab7d8b1b360ffeee6a2f5c9be5d17dd537c3891e228a4c",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 4.996875e-11,
+        "inactive_leakage": 7.59867e-06,
+        "read_energy": 1.89135e-14,
+        "read_margin": 1.89061,
+        "sense_absent_v": 2.767878e-08,
+        "sense_masked_v": 2.888853e-08,
+        "sense_present_v": 1.8,
+        "v_absent": 1.890608,
+        "v_masked": 1.888887,
+        "v_present": 1.864527e-07
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.04996875,
+        "inactive_leakage_ua": 7.59867,
+        "read_energy_fj": 18.9135,
+        "read_margin_fraction_vdd": 1.0503388888888887
+      },
+      "ngspice_log_sha256": "c04454a3d4041e0a5f8fa09f675f56b5559acfe98ee49d505cec5ab30ebc3b69",
+      "output_load_ff": 5.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 64,
+      "bitline_cap_ff": 12.68,
+      "campaigns": [
+        "array_and_port_load_fast_high_cold"
+      ],
+      "case_id": "case_004",
+      "deck_sha256": "589885926cacc67fc5e0676c34ecc2c8f8f5945716757191419153d4de09ad65",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 3.414336e-11,
+        "inactive_leakage": 1.37543e-07,
+        "read_energy": 8.23815e-14,
+        "read_margin": 2.06705,
+        "sense_absent_v": 2.438945e-08,
+        "sense_masked_v": 2.488695e-08,
+        "sense_present_v": 1.98,
+        "v_absent": 2.067048,
+        "v_masked": 2.06554,
+        "v_present": 3.499429e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.03414336,
+        "inactive_leakage_ua": 0.137543,
+        "read_energy_fj": 82.3815,
+        "read_margin_fraction_vdd": 1.0439646464646466
+      },
+      "ngspice_log_sha256": "c7a196176f3d5e41b941ce9007e137c8a25c7c1df757eab46af8629f51ee4bad",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 64,
+      "bitline_cap_ff": 12.68,
+      "campaigns": [
+        "array_and_port_load_slow_low_hot"
+      ],
+      "case_id": "case_005",
+      "deck_sha256": "f3f08c89edcf5b1c3a4e69037bec367330f6e16044aab6e8529187b0ecc68e1f",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 8.540654e-11,
+        "inactive_leakage": 2.07327e-06,
+        "read_energy": 5.47141e-14,
+        "read_margin": 1.71498,
+        "sense_absent_v": -6.667897e-08,
+        "sense_masked_v": -4.958096e-08,
+        "sense_present_v": 1.62,
+        "v_absent": 1.714985,
+        "v_masked": 1.713146,
+        "v_present": 3.730728e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.08540654,
+        "inactive_leakage_ua": 2.07327,
+        "read_energy_fj": 54.7141,
+        "read_margin_fraction_vdd": 1.0586296296296296
+      },
+      "ngspice_log_sha256": "fbda46f42471f2afe86ba6f9bb00560d5693dba892ca9dec1ab5303ee0a1e974",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 64,
+      "bitline_cap_ff": 12.68,
+      "campaigns": [
+        "array_and_port_load_nominal_pvt"
+      ],
+      "case_id": "case_006",
+      "deck_sha256": "b7d9ee5f5c095418498a1793b5fe1404c4702f096202f25875f7ab890c113be0",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 4.998174e-11,
+        "inactive_leakage": 7.60891e-06,
+        "read_energy": 6.79935e-14,
+        "read_margin": 1.89062,
+        "sense_absent_v": 2.767029e-08,
+        "sense_masked_v": 2.888029e-08,
+        "sense_present_v": 1.8,
+        "v_absent": 1.89062,
+        "v_masked": 1.888899,
+        "v_present": 1.864529e-07
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.049981740000000004,
+        "inactive_leakage_ua": 7.60891,
+        "read_energy_fj": 67.9935,
+        "read_margin_fraction_vdd": 1.0503444444444443
+      },
+      "ngspice_log_sha256": "1cb904da34ee95a8e86c30c374cdcbaaec958c85474f6a3900934c547a775c34",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 64,
+      "bitline_cap_ff": 12.68,
+      "campaigns": [
+        "array_and_port_load_fast_high_cold"
+      ],
+      "case_id": "case_007",
+      "deck_sha256": "839f292b71a4a531532d4eca5595dbbcdfdf0bf97f85a98954beb63c0d92201d",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 3.414916e-11,
+        "inactive_leakage": 1.40778e-07,
+        "read_energy": 3.18215e-13,
+        "read_margin": 2.06706,
+        "sense_absent_v": 2.438599e-08,
+        "sense_masked_v": 2.488358e-08,
+        "sense_present_v": 1.97999,
+        "v_absent": 2.067058,
+        "v_masked": 2.065549,
+        "v_present": 4.946983e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.03414916,
+        "inactive_leakage_ua": 0.140778,
+        "read_energy_fj": 318.21500000000003,
+        "read_margin_fraction_vdd": 1.043969696969697
+      },
+      "ngspice_log_sha256": "dfe43f4846b95fe6f80f89484687b7fa7471cd6ae4003e490b1c6bd063cae99c",
+      "output_load_ff": 80.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 64,
+      "bitline_cap_ff": 12.68,
+      "campaigns": [
+        "array_and_port_load_slow_low_hot"
+      ],
+      "case_id": "case_008",
+      "deck_sha256": "5e78b8ec39cf39ac739c4b00cfa97751b0d517f9a31843cb2c0318f9ebe1314d",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 8.543361e-11,
+        "inactive_leakage": 2.07238e-06,
+        "read_energy": 2.11355e-13,
+        "read_margin": 1.71497,
+        "sense_absent_v": -6.687365e-08,
+        "sense_masked_v": -4.975862e-08,
+        "sense_present_v": 1.611136,
+        "v_absent": 1.714998,
+        "v_masked": 1.713159,
+        "v_present": 3.144534e-05
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.08543361,
+        "inactive_leakage_ua": 2.0723800000000003,
+        "read_energy_fj": 211.35500000000002,
+        "read_margin_fraction_vdd": 1.0586234567901234
+      },
+      "ngspice_log_sha256": "56587071e7f680f812e6d37f580d2fdea1d9c6bcf772f1397c0af682310ff683",
+      "output_load_ff": 80.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 64,
+      "bitline_cap_ff": 12.68,
+      "campaigns": [
+        "array_and_port_load_nominal_pvt"
+      ],
+      "case_id": "case_009",
+      "deck_sha256": "b1e8645c858964b59808b11cb6d59edb84915ee6758862bcad859c0e91e5316a",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 4.99973e-11,
+        "inactive_leakage": 7.6059e-06,
+        "read_energy": 2.62832e-13,
+        "read_margin": 1.89063,
+        "sense_absent_v": 2.766235e-08,
+        "sense_masked_v": 2.887261e-08,
+        "sense_present_v": 1.799767,
+        "v_absent": 1.890631,
+        "v_masked": 1.888909,
+        "v_present": 7.124685e-07
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.0499973,
+        "inactive_leakage_ua": 7.6059,
+        "read_energy_fj": 262.832,
+        "read_margin_fraction_vdd": 1.05035
+      },
+      "ngspice_log_sha256": "f42d267cdb40d5be3f5850fb887ede74d9a09e1c5e95a1c79bf318dbdc2be7f9",
+      "output_load_ff": 80.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "array_and_port_load_fast_high_cold"
+      ],
+      "case_id": "case_010",
+      "deck_sha256": "2bb6f071d9e3ae82fa6fd59b4fd819d94705ab8e6c4710faeeec7a130ee34bed",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 6.707384e-11,
+        "inactive_leakage": 2.35308e-08,
+        "read_energy": 2.49446e-14,
+        "read_margin": 2.01962,
+        "sense_absent_v": 4.964682e-08,
+        "sense_masked_v": 4.987267e-08,
+        "sense_present_v": 1.98,
+        "v_absent": 2.019621,
+        "v_masked": 2.019305,
+        "v_present": 3.499416e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.06707384,
+        "inactive_leakage_ua": 0.0235308,
+        "read_energy_fj": 24.9446,
+        "read_margin_fraction_vdd": 1.020010101010101
+      },
+      "ngspice_log_sha256": "4f99211de8abe3f8a0554822f7973fac0ef21374be948dac86535e15a73160e8",
+      "output_load_ff": 5.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "array_and_port_load_slow_low_hot"
+      ],
+      "case_id": "case_011",
+      "deck_sha256": "273ef298eb087c6c7fc80948c8fafb9fc12dd2889074220f1fbabb65b2c1e1c4",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.562487e-10,
+        "inactive_leakage": 2.26768e-06,
+        "read_energy": 1.56261e-14,
+        "read_margin": 1.66147,
+        "sense_absent_v": 3.656414e-07,
+        "sense_masked_v": 3.687481e-07,
+        "sense_present_v": 1.62,
+        "v_absent": 1.661474,
+        "v_masked": 1.661112,
+        "v_present": 3.730727e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1562487,
+        "inactive_leakage_ua": 2.2676800000000004,
+        "read_energy_fj": 15.626100000000001,
+        "read_margin_fraction_vdd": 1.0255987654320986
+      },
+      "ngspice_log_sha256": "146188b600f9e815f46a94a8a4ae6f8b82166bfd2a4487b903b51022ca8d7a80",
+      "output_load_ff": 5.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "array_and_port_load_nominal_pvt"
+      ],
+      "case_id": "case_012",
+      "deck_sha256": "f5d3ee5a4eb4611b9df1bcd54081d3c961d25a0e3b14a195252b17672de20bd2",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 9.424696e-11,
+        "inactive_leakage": 7.77902e-06,
+        "read_energy": 1.97795e-14,
+        "read_margin": 1.83962,
+        "sense_absent_v": 8.606029e-08,
+        "sense_masked_v": 8.661704e-08,
+        "sense_present_v": 1.8,
+        "v_absent": 1.839618,
+        "v_masked": 1.839284,
+        "v_present": 1.864529e-07
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.09424696,
+        "inactive_leakage_ua": 7.779019999999999,
+        "read_energy_fj": 19.7795,
+        "read_margin_fraction_vdd": 1.0220111111111112
+      },
+      "ngspice_log_sha256": "ed678af7f6cf5289c90a741d3bf0e3df8fda5680cab6ef939a04d489d03c02a9",
+      "output_load_ff": 5.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_013",
+      "deck_sha256": "f93e98089369b3f5211a3749e734988f203eca825bb5d470ece90af9521b6951",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 8.312684e-11,
+        "inactive_leakage": 7.44508e-07,
+        "read_energy": 5.61501e-14,
+        "read_margin": 1.65038,
+        "sense_absent_v": 2.790437e-08,
+        "sense_masked_v": 2.801119e-08,
+        "sense_present_v": 1.62,
+        "v_absent": 1.650382,
+        "v_masked": 1.650123,
+        "v_present": 1.634501e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.08312684,
+        "inactive_leakage_ua": 0.7445080000000001,
+        "read_energy_fj": 56.1501,
+        "read_margin_fraction_vdd": 1.018753086419753
+      },
+      "ngspice_log_sha256": "a24d1cd7add8d4e72ad7e8e4279117f9002f36f8fef6b36bb2bd9e15b2955035",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_014",
+      "deck_sha256": "ad6a3edb82d71a7e6188c00f9cebe316b89064680bbdfedddd7a1fe3ceb43163",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 7.334319e-11,
+        "inactive_leakage": 4.77916e-07,
+        "read_energy": 6.91108e-14,
+        "read_margin": 1.83511,
+        "sense_absent_v": 3.652695e-08,
+        "sense_masked_v": 3.668245e-08,
+        "sense_present_v": 1.8,
+        "v_absent": 1.835108,
+        "v_masked": 1.834819,
+        "v_present": 2.377323e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.07334318999999999,
+        "inactive_leakage_ua": 0.477916,
+        "read_energy_fj": 69.1108,
+        "read_margin_fraction_vdd": 1.0195055555555554
+      },
+      "ngspice_log_sha256": "0204d97e826d4c56adf05bad66a18e393d08750adf4e60ed5cf0a963bc6a1517",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "array_and_port_load_fast_high_cold",
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_015",
+      "deck_sha256": "af532aa13a0cac588e1be9de7c082f8ac11f514437e9ef6167c2f975a7805ab1",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 6.70595e-11,
+        "inactive_leakage": 2.0007e-08,
+        "read_energy": 8.36285e-14,
+        "read_margin": 2.01962,
+        "sense_absent_v": 4.964627e-08,
+        "sense_masked_v": 4.987213e-08,
+        "sense_present_v": 1.98,
+        "v_absent": 2.019621,
+        "v_masked": 2.019306,
+        "v_present": 3.499418e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.0670595,
+        "inactive_leakage_ua": 0.020006999999999997,
+        "read_energy_fj": 83.6285,
+        "read_margin_fraction_vdd": 1.020010101010101
+      },
+      "ngspice_log_sha256": "9f09f9187e2398ca5420e6133259d7d56f6e59f87c5db91a2f9fde484d077325",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_016",
+      "deck_sha256": "cb70c16076c474055bde09c608d14f560a4988583c0e1c0441d2ea168e9e807f",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 8.93799e-11,
+        "inactive_leakage": 3.64379e-07,
+        "read_energy": 5.6335e-14,
+        "read_margin": 1.65404,
+        "sense_absent_v": 1.659829e-06,
+        "sense_masked_v": 1.666333e-06,
+        "sense_present_v": 1.62,
+        "v_absent": 1.654041,
+        "v_masked": 1.653753,
+        "v_present": 1.734465e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.0893799,
+        "inactive_leakage_ua": 0.364379,
+        "read_energy_fj": 56.335,
+        "read_margin_fraction_vdd": 1.0210123456790123
+      },
+      "ngspice_log_sha256": "73f7616a8eac3a4002315ec3b5e2443b5d860369a9f7a8fbc075f7c520d0d04d",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_017",
+      "deck_sha256": "a7744b7a4915faf8a05cc247b91047a80b4235e2d45d66e6109b5126b1227319",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 7.939359e-11,
+        "inactive_leakage": 7.40081e-06,
+        "read_energy": 6.9584e-14,
+        "read_margin": 1.83871,
+        "sense_absent_v": 1.973804e-06,
+        "sense_masked_v": 1.982122e-06,
+        "sense_present_v": 1.8,
+        "v_absent": 1.838708,
+        "v_masked": 1.838391,
+        "v_present": 2.196479e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.07939359,
+        "inactive_leakage_ua": 7.40081,
+        "read_energy_fj": 69.584,
+        "read_margin_fraction_vdd": 1.0215055555555557
+      },
+      "ngspice_log_sha256": "9f6ed9dcfcc992aa1dea062fd5a74e4b6f7d27e812476ca25b4e436658e2fafa",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_018",
+      "deck_sha256": "b59583bd05a0cab276782169dfabf6b2c5c422150836f05000532f405ddd5bea",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 7.27917e-11,
+        "inactive_leakage": 1.47391e-07,
+        "read_energy": 8.44962e-14,
+        "read_margin": 2.02318,
+        "sense_absent_v": 2.419211e-06,
+        "sense_masked_v": 2.430052e-06,
+        "sense_present_v": 1.98,
+        "v_absent": 2.023182,
+        "v_masked": 2.022839,
+        "v_present": 2.847975e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.0727917,
+        "inactive_leakage_ua": 0.147391,
+        "read_energy_fj": 84.4962,
+        "read_margin_fraction_vdd": 1.0218080808080807
+      },
+      "ngspice_log_sha256": "96ea0547567a81904a24a72a82b5570d8a4a2f6e985352150b8d1c6b6a9741f9",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_019",
+      "deck_sha256": "8bbe9a750d97485b31aadb5fc5996bb4f73913965feab6ac1a866f2e5f266d76",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 9.995704e-11,
+        "inactive_leakage": 7.7672e-06,
+        "read_energy": 6.27874e-14,
+        "read_margin": 1.65749,
+        "sense_absent_v": 8.437668e-05,
+        "sense_masked_v": 8.468114e-05,
+        "sense_present_v": 1.619999,
+        "v_absent": 1.65763,
+        "v_masked": 1.657311,
+        "v_present": 0.0001353868
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.09995704,
+        "inactive_leakage_ua": 7.767200000000001,
+        "read_energy_fj": 62.787400000000005,
+        "read_margin_fraction_vdd": 1.023141975308642
+      },
+      "ngspice_log_sha256": "216d8bd82a7cf86b5e42f55e546d1a1d30b5ffb27bdebda75a8268d058c8b9c5",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_020",
+      "deck_sha256": "ab36a698699d51cadebad8dbb7e3d126ed27849e4ce660ef04ad700185074773",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 8.951274e-11,
+        "inactive_leakage": 6.9378e-06,
+        "read_energy": 7.92198e-14,
+        "read_margin": 1.84193,
+        "sense_absent_v": 9.673828e-05,
+        "sense_masked_v": 9.711419e-05,
+        "sense_present_v": 1.799999,
+        "v_absent": 1.842095,
+        "v_masked": 1.841748,
+        "v_present": 0.0001610837
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.08951274000000001,
+        "inactive_leakage_ua": 6.9378,
+        "read_energy_fj": 79.2198,
+        "read_margin_fraction_vdd": 1.0232944444444445
+      },
+      "ngspice_log_sha256": "125d63077117a1ac9dfc713468ff39eca39e49963ad763bc54a36d0bb05b31b8",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_021",
+      "deck_sha256": "acf394a7461c2298eb994a53b76b84dc3a33279421cfad08cf50865f680cb7e9",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 8.248633e-11,
+        "inactive_leakage": 1.11742e-06,
+        "read_energy": 9.86227e-14,
+        "read_margin": 2.02621,
+        "sense_absent_v": 0.0001143365,
+        "sense_masked_v": 0.0001148102,
+        "sense_present_v": 1.979999,
+        "v_absent": 2.026404,
+        "v_masked": 2.026032,
+        "v_present": 0.0001972549
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.08248633000000001,
+        "inactive_leakage_ua": 1.11742,
+        "read_energy_fj": 98.6227,
+        "read_margin_fraction_vdd": 1.0233383838383838
+      },
+      "ngspice_log_sha256": "8c2f53af70372315882676eec01ba8f2aa6c587716631f7f4162aa4c0c5b1347",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_022",
+      "deck_sha256": "de134941880188111ae8ecb2ddd5a0456629e0bde90293bf855a8f7987bc7bc5",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.33514e-10,
+        "inactive_leakage": 1.3711e-07,
+        "read_energy": 5.52817e-14,
+        "read_margin": 1.65047,
+        "sense_absent_v": 1.332058e-09,
+        "sense_masked_v": 1.306748e-09,
+        "sense_present_v": 1.62,
+        "v_absent": 1.650468,
+        "v_masked": 1.650194,
+        "v_present": 1.23559e-09
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.133514,
+        "inactive_leakage_ua": 0.13710999999999998,
+        "read_energy_fj": 55.2817,
+        "read_margin_fraction_vdd": 1.0188086419753086
+      },
+      "ngspice_log_sha256": "f1649c9b49a1750e837d4f392e4320ad3564543b9c9140b84eab62993b76a180",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_023",
+      "deck_sha256": "f1b0c0a6cf81d6e830035faac53c9742b40f81984129f8ded5d8e63880a2d011",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.082475e-10,
+        "inactive_leakage": 4.54098e-08,
+        "read_energy": 6.80805e-14,
+        "read_margin": 1.83684,
+        "sense_absent_v": 1.722306e-09,
+        "sense_masked_v": 1.69777e-09,
+        "sense_present_v": 1.8,
+        "v_absent": 1.836837,
+        "v_masked": 1.836515,
+        "v_present": 1.277012e-09
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.10824750000000001,
+        "inactive_leakage_ua": 0.0454098,
+        "read_energy_fj": 68.0805,
+        "read_margin_fraction_vdd": 1.0204666666666666
+      },
+      "ngspice_log_sha256": "2b08a9b2c5892ee2de3b7b75c86bb3347a2cc5bc6ca30796932a88212804195d",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_024",
+      "deck_sha256": "c2ebfcc549283dd08cba672e810d3133ad6ea736072f07e293400aa033df449d",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 9.312744e-11,
+        "inactive_leakage": 2.07478e-06,
+        "read_energy": 8.21067e-14,
+        "read_margin": 2.02307,
+        "sense_absent_v": 2.811891e-09,
+        "sense_masked_v": 2.786588e-09,
+        "sense_present_v": 1.98,
+        "v_absent": 2.023068,
+        "v_masked": 2.022702,
+        "v_present": 1.557632e-09
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.09312744,
+        "inactive_leakage_ua": 2.07478,
+        "read_energy_fj": 82.1067,
+        "read_margin_fraction_vdd": 1.0217525252525252
+      },
+      "ngspice_log_sha256": "b794f3ddf7206f5f4b619aa97494d8fd53d45d1220ee95b17891fe14ac890622",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_025",
+      "deck_sha256": "1f101138352e8a6d3723b8c7168fa15ac3113cde1a94ebd2dd1c7ee2f63ea85f",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.415075e-10,
+        "inactive_leakage": 2.38001e-08,
+        "read_energy": 5.52868e-14,
+        "read_margin": 1.65507,
+        "sense_absent_v": 1.827438e-09,
+        "sense_masked_v": 1.794341e-09,
+        "sense_present_v": 1.62,
+        "v_absent": 1.655069,
+        "v_masked": 1.654756,
+        "v_present": 2.990443e-09
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.14150749999999998,
+        "inactive_leakage_ua": 0.0238001,
+        "read_energy_fj": 55.2868,
+        "read_margin_fraction_vdd": 1.021648148148148
+      },
+      "ngspice_log_sha256": "70c4488d635bc4f0ad54d78d87d80a169ac2b4606759ec2c2b5a7b7501bbd938",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_026",
+      "deck_sha256": "8c6734ee416a402f1061a58745a5838e116bf4e06bc0d858edeb0298f6e61b73",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.170504e-10,
+        "inactive_leakage": 1.99885e-06,
+        "read_energy": 6.80656e-14,
+        "read_margin": 1.84128,
+        "sense_absent_v": 2.392184e-09,
+        "sense_masked_v": 2.359857e-09,
+        "sense_present_v": 1.8,
+        "v_absent": 1.841276,
+        "v_masked": 1.840919,
+        "v_present": 3.495746e-09
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1170504,
+        "inactive_leakage_ua": 1.99885,
+        "read_energy_fj": 68.0656,
+        "read_margin_fraction_vdd": 1.0229333333333333
+      },
+      "ngspice_log_sha256": "894b71140ef8e504a12d3732664092146ed77ab85ba4bc623de7cf1f74fe22ee",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_027",
+      "deck_sha256": "16854042ab640311bc2d50653629c6aa9a105ec438810042915adf54699ca980",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.017376e-10,
+        "inactive_leakage": 3.68223e-07,
+        "read_energy": 8.21668e-14,
+        "read_margin": 2.02735,
+        "sense_absent_v": 3.916038e-09,
+        "sense_masked_v": 3.88255e-09,
+        "sense_present_v": 1.98,
+        "v_absent": 2.027355,
+        "v_masked": 2.026956,
+        "v_present": 4.518486e-09
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1017376,
+        "inactive_leakage_ua": 0.36822299999999997,
+        "read_energy_fj": 82.1668,
+        "read_margin_fraction_vdd": 1.0239141414141415
+      },
+      "ngspice_log_sha256": "fc6e68058c468c10a2f967c3294cb3fb90c747b1ff6a407ec9efc2b5f929e784",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "array_and_port_load_slow_low_hot",
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_028",
+      "deck_sha256": "bcbf53290055763cfb0f4e360ee8b40ddaf6038e5290e6bfcc3009d37cdd5c5f",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.562325e-10,
+        "inactive_leakage": 2.2655e-06,
+        "read_energy": 5.52212e-14,
+        "read_margin": 1.66147,
+        "sense_absent_v": 3.656246e-07,
+        "sense_masked_v": 3.687316e-07,
+        "sense_present_v": 1.62,
+        "v_absent": 1.661475,
+        "v_masked": 1.661114,
+        "v_present": 3.730732e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1562325,
+        "inactive_leakage_ua": 2.2655000000000003,
+        "read_energy_fj": 55.2212,
+        "read_margin_fraction_vdd": 1.0255987654320986
+      },
+      "ngspice_log_sha256": "0c043280f005eabbacb065b04037f095db9599c1f097ab741795c63a2c4af4de",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_029",
+      "deck_sha256": "8badbf1ea42f0bc7108b2c2131dfa65366e0d84117a50b1da7888c281fb317b4",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.320241e-10,
+        "inactive_leakage": 3.0689e-06,
+        "read_energy": 6.81053e-14,
+        "read_margin": 1.84742,
+        "sense_absent_v": 4.014607e-07,
+        "sense_masked_v": 4.05188e-07,
+        "sense_present_v": 1.8,
+        "v_absent": 1.847423,
+        "v_masked": 1.847022,
+        "v_present": 4.214655e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.13202409999999998,
+        "inactive_leakage_ua": 3.0688999999999997,
+        "read_energy_fj": 68.1053,
+        "read_margin_fraction_vdd": 1.0263444444444445
+      },
+      "ngspice_log_sha256": "728280cbd7eea1a159bd81a9d19a64e35de8da2691ccb1c23516f07744850211",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_030",
+      "deck_sha256": "a0d7153849b6382cdb32b724291c264f6b4f63ef5ef9e6921425b88001fe5ad2",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.162334e-10,
+        "inactive_leakage": 2.3511e-06,
+        "read_energy": 8.23891e-14,
+        "read_margin": 2.03325,
+        "sense_absent_v": 4.568081e-07,
+        "sense_masked_v": 4.613475e-07,
+        "sense_present_v": 1.98,
+        "v_absent": 2.033253,
+        "v_masked": 2.032816,
+        "v_present": 4.888507e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1162334,
+        "inactive_leakage_ua": 2.3510999999999997,
+        "read_energy_fj": 82.3891,
+        "read_margin_fraction_vdd": 1.0268939393939394
+      },
+      "ngspice_log_sha256": "713269967f76e641d4d8662cecf21c80d6a340734b42db16f75686202387683c",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_031",
+      "deck_sha256": "a3a111769f55d3130de5003c04ec8d503db78de9c4d571bc5ffad6859196583f",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.027832e-10,
+        "inactive_leakage": 6.82868e-07,
+        "read_energy": 5.57434e-14,
+        "read_margin": 1.65003,
+        "sense_absent_v": 1.267297e-09,
+        "sense_masked_v": 1.248213e-09,
+        "sense_present_v": 1.62,
+        "v_absent": 1.650027,
+        "v_masked": 1.649763,
+        "v_present": 1.228173e-09
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1027832,
+        "inactive_leakage_ua": 0.682868,
+        "read_energy_fj": 55.7434,
+        "read_margin_fraction_vdd": 1.018537037037037
+      },
+      "ngspice_log_sha256": "71d8f4d2567cbe2abff33f7b7a4c9ee05dbbfcca9626e7f7a624d63cd1cb8f66",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_032",
+      "deck_sha256": "f426440f798249a18e53e74fb0259e3236b31ec39fb0a9fb485d4c0377b60dd1",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 8.711104e-11,
+        "inactive_leakage": 2.37401e-06,
+        "read_energy": 6.8542e-14,
+        "read_margin": 1.83558,
+        "sense_absent_v": 1.820758e-09,
+        "sense_masked_v": 1.80225e-09,
+        "sense_present_v": 1.8,
+        "v_absent": 1.835578,
+        "v_masked": 1.835275,
+        "v_present": 1.46738e-09
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.08711104,
+        "inactive_leakage_ua": 2.3740099999999997,
+        "read_energy_fj": 68.542,
+        "read_margin_fraction_vdd": 1.0197666666666667
+      },
+      "ngspice_log_sha256": "e0b014d2cc9f525127f48593cac9926bddc585b514a73d60ff5abe1858340acc",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_033",
+      "deck_sha256": "c15f5e3f3f54e9b1994bcecbb94babb07b0326b22e53461e63b2234fc8c6ed18",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 7.729056e-11,
+        "inactive_leakage": 2.64955e-06,
+        "read_energy": 8.26429e-14,
+        "read_margin": 2.02093,
+        "sense_absent_v": 3.197022e-09,
+        "sense_masked_v": 3.178184e-09,
+        "sense_present_v": 1.98,
+        "v_absent": 2.020934,
+        "v_masked": 2.020596,
+        "v_present": 2.031131e-09
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.07729056,
+        "inactive_leakage_ua": 2.64955,
+        "read_energy_fj": 82.6429,
+        "read_margin_fraction_vdd": 1.0206717171717172
+      },
+      "ngspice_log_sha256": "ce28ac080506deee2d39f94f38cbb56768c503d49860e43459b9565e1bb40722",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_034",
+      "deck_sha256": "8c30d2fe6079a9a13c985916856bec82c67bae35cf5979fa659ff772001d44b8",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.097718e-10,
+        "inactive_leakage": 3.82959e-06,
+        "read_energy": 5.56996e-14,
+        "read_margin": 1.65417,
+        "sense_absent_v": 6.989571e-08,
+        "sense_masked_v": 7.031332e-08,
+        "sense_present_v": 1.62,
+        "v_absent": 1.654171,
+        "v_masked": 1.653873,
+        "v_present": 1.473608e-07
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1097718,
+        "inactive_leakage_ua": 3.82959,
+        "read_energy_fj": 55.699600000000004,
+        "read_margin_fraction_vdd": 1.0210925925925924
+      },
+      "ngspice_log_sha256": "2b7ee54c2e68a24647dfa3590a948b5ac413a901d51cfee0e2ce337ddc053274",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "array_and_port_load_nominal_pvt",
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_035",
+      "deck_sha256": "8767976641409b6e1767befed35351537926dfc6b2e25fbbe46743fda8fe38bc",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 9.42383e-11,
+        "inactive_leakage": 7.77131e-06,
+        "read_energy": 6.85919e-14,
+        "read_margin": 1.83962,
+        "sense_absent_v": 8.605847e-08,
+        "sense_masked_v": 8.661526e-08,
+        "sense_present_v": 1.8,
+        "v_absent": 1.839619,
+        "v_masked": 1.839285,
+        "v_present": 1.864529e-07
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.0942383,
+        "inactive_leakage_ua": 7.771310000000001,
+        "read_energy_fj": 68.5919,
+        "read_margin_fraction_vdd": 1.0220111111111112
+      },
+      "ngspice_log_sha256": "a8896b3e3c99a1081c3b6c29e3ceb6503d6feec2eb3f64a64da5bbceb81aeb02",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_036",
+      "deck_sha256": "5d4e93b5bac39076a4e42dfff51b0842cb021eae09e1bd9c7c06518283e74bc2",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 8.417821e-11,
+        "inactive_leakage": 4.40647e-06,
+        "read_energy": 8.28815e-14,
+        "read_margin": 2.0249,
+        "sense_absent_v": 1.091143e-07,
+        "sense_masked_v": 1.098533e-07,
+        "sense_present_v": 1.98,
+        "v_absent": 2.024898,
+        "v_masked": 2.02453,
+        "v_present": 2.399955e-07
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.08417821,
+        "inactive_leakage_ua": 4.40647,
+        "read_energy_fj": 82.8815,
+        "read_margin_fraction_vdd": 1.0226767676767679
+      },
+      "ngspice_log_sha256": "f96d46a7e0f31953898be618d1a565121b39f50cba4f8eb24a894f2e0c5b298a",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_037",
+      "deck_sha256": "49b38aca1ee26dc6d9cd290f5458fc5129d5cee669b4fd65f7418c06d4242e1a",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.217704e-10,
+        "inactive_leakage": 6.69801e-06,
+        "read_energy": 5.67002e-14,
+        "read_margin": 1.65943,
+        "sense_absent_v": 1.398226e-05,
+        "sense_masked_v": 1.404537e-05,
+        "sense_present_v": 1.62,
+        "v_absent": 1.65946,
+        "v_masked": 1.659124,
+        "v_present": 3.038031e-05
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.12177040000000001,
+        "inactive_leakage_ua": 6.69801,
+        "read_energy_fj": 56.7002,
+        "read_margin_fraction_vdd": 1.0243395061728393
+      },
+      "ngspice_log_sha256": "8aeed91580855777170c778eac3f476ec68444aacac43970918385f70ffc854e",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_038",
+      "deck_sha256": "d24656bbb9c7ef4dcb0dfaed81b22ba62c4688d46eed60780d703e8010286af2",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.061301e-10,
+        "inactive_leakage": 6.69343e-06,
+        "read_energy": 7.02084e-14,
+        "read_margin": 1.84465,
+        "sense_absent_v": 1.512363e-05,
+        "sense_masked_v": 1.519608e-05,
+        "sense_present_v": 1.8,
+        "v_absent": 1.844684,
+        "v_masked": 1.844315,
+        "v_present": 3.347731e-05
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1061301,
+        "inactive_leakage_ua": 6.693429999999999,
+        "read_energy_fj": 70.2084,
+        "read_margin_fraction_vdd": 1.0248055555555555
+      },
+      "ngspice_log_sha256": "d5c64e8fa05af2a81495882e6f9fe69828aedd102c721bab869dbbba34782fea",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "full_pvt_nominal_load"
+      ],
+      "case_id": "case_039",
+      "deck_sha256": "5d9856e7022f287295bf5dd96234998d31cd62aa11395c863c3911f3198ccdb4",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 9.572074e-11,
+        "inactive_leakage": 6.00207e-06,
+        "read_energy": 8.53618e-14,
+        "read_margin": 2.02972,
+        "sense_absent_v": 1.681726e-05,
+        "sense_masked_v": 1.690198e-05,
+        "sense_present_v": 1.98,
+        "v_absent": 2.029762,
+        "v_masked": 2.029364,
+        "v_present": 3.786313e-05
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.09572074,
+        "inactive_leakage_ua": 6.00207,
+        "read_energy_fj": 85.3618,
+        "read_margin_fraction_vdd": 1.0251111111111113
+      },
+      "ngspice_log_sha256": "bc806bfa5180c64fd124a2643eb5e4aa679cf984641e6b8cf374c560af27f2bc",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "array_and_port_load_fast_high_cold"
+      ],
+      "case_id": "case_040",
+      "deck_sha256": "e07907e8fc7d67ac1cb3efa2729a59ecf2c223fb8a85c85e83ed3dfbdd26c1a6",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 6.705433e-11,
+        "inactive_leakage": 2.13492e-08,
+        "read_energy": 3.1922e-13,
+        "read_margin": 2.01962,
+        "sense_absent_v": 4.964557e-08,
+        "sense_masked_v": 4.987144e-08,
+        "sense_present_v": 1.979988,
+        "v_absent": 2.019622,
+        "v_masked": 2.019307,
+        "v_present": 5.439147e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.06705433,
+        "inactive_leakage_ua": 0.0213492,
+        "read_energy_fj": 319.21999999999997,
+        "read_margin_fraction_vdd": 1.020010101010101
+      },
+      "ngspice_log_sha256": "1d045a309b3f2eabc791230bea98ee6b2309c4e6d2d5e6e78a2d7b4b5d7a1f1d",
+      "output_load_ff": 80.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "array_and_port_load_slow_low_hot"
+      ],
+      "case_id": "case_041",
+      "deck_sha256": "ae50b74adeedb0340e76c8cb60ac7c9ee0df53faeae410d1f7e48a8652883d8e",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.562366e-10,
+        "inactive_leakage": 2.26568e-06,
+        "read_energy": 2.11478e-13,
+        "read_margin": 1.66143,
+        "sense_absent_v": 3.656073e-07,
+        "sense_masked_v": 3.687145e-07,
+        "sense_present_v": 1.607982,
+        "v_absent": 1.661476,
+        "v_masked": 1.661115,
+        "v_present": 4.443342e-05
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1562366,
+        "inactive_leakage_ua": 2.26568,
+        "read_energy_fj": 211.478,
+        "read_margin_fraction_vdd": 1.025574074074074
+      },
+      "ngspice_log_sha256": "e4eaac5b190873129fa7f24971a8623ee62556246fa5291c1094e4780cc2dbf9",
+      "output_load_ff": 80.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 256,
+      "bitline_cap_ff": 35.72,
+      "campaigns": [
+        "array_and_port_load_nominal_pvt"
+      ],
+      "case_id": "case_042",
+      "deck_sha256": "cf107df1303b1a965f7cd9f724e58d1a30ed736f116a5b4c4d0227a3a12565ab",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 9.424024e-11,
+        "inactive_leakage": 7.77209e-06,
+        "read_energy": 2.63418e-13,
+        "read_margin": 1.83962,
+        "sense_absent_v": 8.605694e-08,
+        "sense_masked_v": 8.661374e-08,
+        "sense_present_v": 1.799692,
+        "v_absent": 1.83962,
+        "v_masked": 1.839285,
+        "v_present": 9.303553e-07
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.09424024,
+        "inactive_leakage_ua": 7.77209,
+        "read_energy_fj": 263.418,
+        "read_margin_fraction_vdd": 1.0220111111111112
+      },
+      "ngspice_log_sha256": "af1133f283a170b729049d954c51c3d1d3d07e9f9a1e29ca31450d487b7f2db2",
+      "output_load_ff": 80.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 1024,
+      "bitline_cap_ff": 127.88,
+      "campaigns": [
+        "array_and_port_load_fast_high_cold"
+      ],
+      "case_id": "case_043",
+      "deck_sha256": "aa5e1825dd33702cce5947dfbf34ed47c32ad8e900ea2fffd4ac631321f45d00",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.962357e-10,
+        "inactive_leakage": 6.55693e-08,
+        "read_energy": 2.94127e-14,
+        "read_margin": 1.99246,
+        "sense_absent_v": 7.583984e-08,
+        "sense_masked_v": 7.587251e-08,
+        "sense_present_v": 1.98,
+        "v_absent": 1.992456,
+        "v_masked": 1.992424,
+        "v_present": 3.499417e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1962357,
+        "inactive_leakage_ua": 0.0655693,
+        "read_energy_fj": 29.412699999999997,
+        "read_margin_fraction_vdd": 1.0062929292929292
+      },
+      "ngspice_log_sha256": "dfddc72980c4a5356fdeaaab8866d30f5207c3ab677c9d944082025f29669a02",
+      "output_load_ff": 5.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 1024,
+      "bitline_cap_ff": 127.88,
+      "campaigns": [
+        "array_and_port_load_slow_low_hot"
+      ],
+      "case_id": "case_044",
+      "deck_sha256": "61e9989254bae927f27457811db6795f8e44c760368dbac681955da32cf3fbbd",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 4.347052e-10,
+        "inactive_leakage": 2.36345e-06,
+        "read_energy": 1.67918e-14,
+        "read_margin": 1.63268,
+        "sense_absent_v": 7.024717e-07,
+        "sense_masked_v": 7.029273e-07,
+        "sense_present_v": 1.62,
+        "v_absent": 1.632683,
+        "v_masked": 1.632649,
+        "v_present": 8.106872e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.4347052,
+        "inactive_leakage_ua": 2.36345,
+        "read_energy_fj": 16.791800000000002,
+        "read_margin_fraction_vdd": 1.0078271604938271
+      },
+      "ngspice_log_sha256": "73c8ce664ddd4817e5c048ebce7df2d49888d6f2273bcc41f6cc6db19c9a24dc",
+      "output_load_ff": 5.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 1024,
+      "bitline_cap_ff": 127.88,
+      "campaigns": [
+        "array_and_port_load_nominal_pvt"
+      ],
+      "case_id": "case_045",
+      "deck_sha256": "7f1a6077dfac852036cfc35f84ac81a8d15c1cf30e2fc60be4b9e5ca41b599da",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 2.682376e-10,
+        "inactive_leakage": 7.83472e-06,
+        "read_energy": 2.1413e-14,
+        "read_margin": 1.81216,
+        "sense_absent_v": 1.478845e-07,
+        "sense_masked_v": 1.479663e-07,
+        "sense_present_v": 1.8,
+        "v_absent": 1.812163,
+        "v_masked": 1.812131,
+        "v_present": 1.864549e-07
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.2682376,
+        "inactive_leakage_ua": 7.834719999999999,
+        "read_energy_fj": 21.413,
+        "read_margin_fraction_vdd": 1.0067555555555556
+      },
+      "ngspice_log_sha256": "faf620c81c9bc289ea52423e7a221e760a98fa98e533ab4aabf96edf4f707b80",
+      "output_load_ff": 5.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 1024,
+      "bitline_cap_ff": 127.88,
+      "campaigns": [
+        "array_and_port_load_fast_high_cold"
+      ],
+      "case_id": "case_046",
+      "deck_sha256": "592b2b44d42078574352af504a4be6fce8ba13630e50e0c2b8dc142721f06964",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.962165e-10,
+        "inactive_leakage": 6.78456e-08,
+        "read_energy": 8.67884e-14,
+        "read_margin": 1.99246,
+        "sense_absent_v": 7.583981e-08,
+        "sense_masked_v": 7.587248e-08,
+        "sense_present_v": 1.98,
+        "v_absent": 1.992456,
+        "v_masked": 1.992424,
+        "v_present": 3.499417e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1962165,
+        "inactive_leakage_ua": 0.0678456,
+        "read_energy_fj": 86.7884,
+        "read_margin_fraction_vdd": 1.0062929292929292
+      },
+      "ngspice_log_sha256": "351f8adbb5fbd262918ff91cb988bdc2491fdcafa7fc99770430a04b5be4cf94",
+      "output_load_ff": 20.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 1024,
+      "bitline_cap_ff": 127.88,
+      "campaigns": [
+        "array_and_port_load_slow_low_hot"
+      ],
+      "case_id": "case_047",
+      "deck_sha256": "bed7dc8d69504370c292e012e3656b2cf365cb960a9f4a4d2fa71530fe8735b5",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 4.346215e-10,
+        "inactive_leakage": 2.36485e-06,
+        "read_energy": 5.58388e-14,
+        "read_margin": 1.63267,
+        "sense_absent_v": 7.024708e-07,
+        "sense_masked_v": 7.029263e-07,
+        "sense_present_v": 1.62,
+        "v_absent": 1.632683,
+        "v_masked": 1.632649,
+        "v_present": 8.379967e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.4346215,
+        "inactive_leakage_ua": 2.36485,
+        "read_energy_fj": 55.8388,
+        "read_margin_fraction_vdd": 1.007820987654321
+      },
+      "ngspice_log_sha256": "a5696d8bfe9a212fbbe4e12d42ddf9ba6977adffd6fd7838bd0dfb201a297f36",
+      "output_load_ff": 20.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 1024,
+      "bitline_cap_ff": 127.88,
+      "campaigns": [
+        "array_and_port_load_nominal_pvt"
+      ],
+      "case_id": "case_048",
+      "deck_sha256": "4631d30df0b64803d507cba7da634650b99fcbbf815af46ad075ee45866811b2",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 2.682071e-10,
+        "inactive_leakage": 7.83514e-06,
+        "read_energy": 6.95232e-14,
+        "read_margin": 1.81216,
+        "sense_absent_v": 1.478844e-07,
+        "sense_masked_v": 1.479662e-07,
+        "sense_present_v": 1.8,
+        "v_absent": 1.812163,
+        "v_masked": 1.812131,
+        "v_present": 1.864552e-07
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.2682071,
+        "inactive_leakage_ua": 7.83514,
+        "read_energy_fj": 69.52319999999999,
+        "read_margin_fraction_vdd": 1.0067555555555556
+      },
+      "ngspice_log_sha256": "eab704b78916f43cb2b7fba3e01cc0c3fa2da040efb99d9db32af81e38a73c81",
+      "output_load_ff": 20.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    },
+    {
+      "array_rows": 1024,
+      "bitline_cap_ff": 127.88,
+      "campaigns": [
+        "array_and_port_load_fast_high_cold"
+      ],
+      "case_id": "case_049",
+      "deck_sha256": "0a05246e3b307abde4c8377d94bb8a84afc0aaaa74dc187e778eeed0c4d0ce49",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 1.961977e-10,
+        "inactive_leakage": 6.83915e-08,
+        "read_energy": 3.20689e-13,
+        "read_margin": 1.99246,
+        "sense_absent_v": 7.583978e-08,
+        "sense_masked_v": 7.587245e-08,
+        "sense_present_v": 1.979967,
+        "v_absent": 1.992456,
+        "v_masked": 1.992425,
+        "v_present": 9.95028e-08
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.1961977,
+        "inactive_leakage_ua": 0.0683915,
+        "read_energy_fj": 320.689,
+        "read_margin_fraction_vdd": 1.0062929292929292
+      },
+      "ngspice_log_sha256": "e4063bb50c42ca7ab60d6266de72388f07632d7c8e7cf686a1d20913aca29b96",
+      "output_load_ff": 80.0,
+      "process_corner": "ff",
+      "status": "pass",
+      "temperature_c": -40.0,
+      "vdd_v": 1.98,
+      "warnings": []
+    },
+    {
+      "array_rows": 1024,
+      "bitline_cap_ff": 127.88,
+      "campaigns": [
+        "array_and_port_load_slow_low_hot"
+      ],
+      "case_id": "case_050",
+      "deck_sha256": "a61374e92241c27892233edab1b0b8bfa5ca3d9938d2d915a2eb734b6f861e92",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 4.34574e-10,
+        "inactive_leakage": 2.36478e-06,
+        "read_energy": 2.08008e-13,
+        "read_margin": 1.63249,
+        "sense_absent_v": 7.024696e-07,
+        "sense_masked_v": 7.029251e-07,
+        "sense_present_v": 1.579831,
+        "v_absent": 1.632683,
+        "v_masked": 1.632649,
+        "v_present": 0.000189411
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.434574,
+        "inactive_leakage_ua": 2.36478,
+        "read_energy_fj": 208.008,
+        "read_margin_fraction_vdd": 1.0077098765432098
+      },
+      "ngspice_log_sha256": "00040f47e042abcd61dea5e842b196ec87fca1f414ffb2b8b58fe3a5cd9c59f3",
+      "output_load_ff": 80.0,
+      "process_corner": "ss",
+      "status": "pass",
+      "temperature_c": 125.0,
+      "vdd_v": 1.62,
+      "warnings": []
+    },
+    {
+      "array_rows": 1024,
+      "bitline_cap_ff": 127.88,
+      "campaigns": [
+        "array_and_port_load_nominal_pvt"
+      ],
+      "case_id": "case_051",
+      "deck_sha256": "6f69e3ffb232d5d8f4c0d9bcf13a863918b8836321e4b51820e81de4984dc2f6",
+      "failures": [],
+      "measures_si": {
+        "discharge_delay": 2.681867e-10,
+        "inactive_leakage": 7.83555e-06,
+        "read_energy": 2.63628e-13,
+        "read_margin": 1.81216,
+        "sense_absent_v": 1.478843e-07,
+        "sense_masked_v": 1.479662e-07,
+        "sense_present_v": 1.799048,
+        "v_absent": 1.812163,
+        "v_masked": 1.812131,
+        "v_present": 3.328761e-06
+      },
+      "metrics": {
+        "discharge_delay_ns": 0.2681867,
+        "inactive_leakage_ua": 7.83555,
+        "read_energy_fj": 263.62800000000004,
+        "read_margin_fraction_vdd": 1.0067555555555556
+      },
+      "ngspice_log_sha256": "837a2555ae3bb60ac2078ef0cfe94990dddb807a6667e6a32de9ba40dedfef61",
+      "output_load_ff": 80.0,
+      "process_corner": "tt",
+      "status": "pass",
+      "temperature_c": 25.0,
+      "vdd_v": 1.8,
+      "warnings": []
+    }
+  ],
+  "claim_boundary": {
+    "establishes": [
+      "via-present versus via-absent NOR-ROM read topology",
+      "transistor-level expert-wordline masking and static sense polarity",
+      "deterministic sensitivity to the declared PVT and synthetic capacitive loads",
+      "a reproducible open-PDK/ngspice circuit-methodology path"
+    ],
+    "evidence_class": "simulated",
+    "forbidden_inferences": [
+      "N7 or N4 ROM density, delay, energy, leakage, bandwidth, yield, or cost",
+      "full-array simultaneous-read current, IR drop, noise, or thermal feasibility",
+      "extracted decoder, wordline, bitline, sense-amplifier, repair, or port timing",
+      "statistical sense offset, mismatch yield, aging, electromigration, or silicon correlation",
+      "wafer-scale inference throughput or GPU speedup"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited_without_a_separately_reviewed_physics_based_rule_and_target_macro_correlation"
+  },
+  "contract": {
+    "path": "spice/sky130_rom_read_contract.json",
+    "sha256": "7600eee004331826a2b47e80bd57a40bc1c7cf32e53b61a5be364391270627f1"
+  },
+  "experiment_id": "sky130_via_nor_read_v1",
+  "input_model": {
+    "campaigns": [
+      {
+        "dimensions": [
+          "process_corner",
+          "vdd_v",
+          "temperature_c"
+        ],
+        "fixed": {
+          "array_rows": 256,
+          "output_load_ff": 20.0
+        },
+        "name": "full_pvt_nominal_load"
+      },
+      {
+        "dimensions": [
+          "array_rows",
+          "output_load_ff"
+        ],
+        "fixed": {
+          "process_corner": "tt",
+          "temperature_c": 25.0,
+          "vdd_v": 1.8
+        },
+        "name": "array_and_port_load_nominal_pvt"
+      },
+      {
+        "dimensions": [
+          "array_rows",
+          "output_load_ff"
+        ],
+        "fixed": {
+          "process_corner": "ss",
+          "temperature_c": 125.0,
+          "vdd_v": 1.62
+        },
+        "name": "array_and_port_load_slow_low_hot"
+      },
+      {
+        "dimensions": [
+          "array_rows",
+          "output_load_ff"
+        ],
+        "fixed": {
+          "process_corner": "ff",
+          "temperature_c": -40.0,
+          "vdd_v": 1.98
+        },
+        "name": "array_and_port_load_fast_high_cold"
+      }
+    ],
+    "dimensions": {
+      "array_rows": [
+        64,
+        256,
+        1024
+      ],
+      "output_load_ff": [
+        5.0,
+        20.0,
+        80.0
+      ],
+      "process_corner": [
+        "ss",
+        "tt",
+        "ff"
+      ],
+      "temperature_c": [
+        -40.0,
+        25.0,
+        125.0
+      ],
+      "vdd_v": [
+        1.62,
+        1.8,
+        1.98
+      ]
+    },
+    "netlist": {
+      "bitline_fixed_cap_ff": 5.0,
+      "bitline_per_row_cap_ff": 0.12,
+      "device_geometry_um": {
+        "channel_length": 0.15,
+        "precharge_pfet_width": 2.0,
+        "read_nfet_width": 1.0,
+        "sense_nfet_width": 1.0,
+        "sense_pfet_width": 1.0,
+        "wordline_gate_nfet_width": 1.0,
+        "wordline_gate_pfet_width": 1.0
+      },
+      "parasitic_status": "synthetic_lumped_capacitance_not_extracted_layout",
+      "timing_ns": {
+        "precharge_release": 2.0,
+        "read_sample": 5.0,
+        "simulation_stop": 10.0,
+        "wordline_assert": 2.2,
+        "wordline_deassert": 7.0
+      },
+      "topology": "three matched precharged bitlines: selected via-present cell, selected via-absent dummy, and via-present cell behind a transistor-level expert wordline mask; static CMOS inverter senses each bitline"
+    }
+  },
+  "pdk": {
+    "annotated_tag_object": "a0efde9b7b9f6847fbcc42b15c8fcae962c4fca7",
+    "cache_environment_variable": "OPENTALLAS_SKY130_PR_ROOT",
+    "commit": "d717cd4d8d93cce6a8d7534f6a40432f0045039f",
+    "files": [
+      {
+        "path": "cells/nfet_01v8/sky130_fd_pr__nfet_01v8.pm3.spice",
+        "sha256": "a11bcf1a0c5b0b2822f464c0c55885e17850505c8c8680f9580067ed9430a83c",
+        "size_bytes": 407758
+      },
+      {
+        "path": "cells/nfet_01v8/sky130_fd_pr__nfet_01v8__ff.corner.spice",
+        "sha256": "8ee5013771732c9bec0da1084ef80190455d9c0d84761890c308d1f098b8a565",
+        "size_bytes": 67074
+      },
+      {
+        "path": "cells/nfet_01v8/sky130_fd_pr__nfet_01v8__ss.corner.spice",
+        "sha256": "88f06a72f0dd1f954fe35d328779f1157fa0ef10fc5c9cb2f7dc252697abfc00",
+        "size_bytes": 67125
+      },
+      {
+        "path": "cells/nfet_01v8/sky130_fd_pr__nfet_01v8__tt.corner.spice",
+        "sha256": "270aa2fe27c8dd4bc392cb3f63e3dd522d4c7fe5978575fb66788db192915366",
+        "size_bytes": 66380
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__ff.corner.spice",
+        "sha256": "30ba71bde4024ff291a68352930bf2fc3e07f627efb090e1575b9dbd7b6e75da",
+        "size_bytes": 792
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__ff.pm3.spice",
+        "sha256": "7c701f17c39f0649fbc64397f64df00f04355e8aade2f16a375ff17a16966fe8",
+        "size_bytes": 790636
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__ss.corner.spice",
+        "sha256": "8d8b59726b48aa7a435b8f9bf0d0ecce0cef9f6359d4bb206f0a31306712e310",
+        "size_bytes": 790
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__ss.pm3.spice",
+        "sha256": "52afa3f88f9c2ed7069990160e13aab8ae464b047a9efea7ef51a93510986e60",
+        "size_bytes": 788935
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__tt.corner.spice",
+        "sha256": "641d251a08bf9ddcfc67ba4bd4698ae1978d09447eb6ebf90055fdf3d21917ab",
+        "size_bytes": 796
+      },
+      {
+        "path": "cells/pfet_01v8/sky130_fd_pr__pfet_01v8__tt.pm3.spice",
+        "sha256": "bf40d8c358fc11998f60f3734208dce44c206b0007a51c7bb5680f55d41a5c55",
+        "size_bytes": 787521
+      },
+      {
+        "path": "models/parameters/invariant.spice",
+        "sha256": "9f47fd02e7d4010fc3eccc59420bf8f2ec86aa8b5ee68d677d150a6ff405f12e",
+        "size_bytes": 371970
+      },
+      {
+        "path": "models/corners/ff/nonfet.spice",
+        "sha256": "8b6237c8cb7601af952dc7c1ccd033096e008766f75f630f1aee9d34745b0e4f",
+        "size_bytes": 1821
+      },
+      {
+        "path": "models/corners/ss/nonfet.spice",
+        "sha256": "b26f1ce3a77d18807c766de9b9963c90185f605074a960f81ce101e935708a95",
+        "size_bytes": 1819
+      },
+      {
+        "path": "models/corners/tt/nonfet.spice",
+        "sha256": "63fdbb8e8fee2a45bf91dd5a56748a00874b741e66beec8649b024859d4dd755",
+        "size_bytes": 1745
+      }
+    ],
+    "license": "Apache-2.0",
+    "repository": "https://github.com/google/skywater-pdk-libs-sky130_fd_pr",
+    "tag": "v0.20.1"
+  },
+  "runner": {
+    "path": "spice/run_sky130_rom_read.py",
+    "sha256": "2bda97a2a8ec49f358022353c894b10a616273e3654a0aa2e9c072e67d527e3c"
+  },
+  "schema_version": 1,
+  "status": "pass",
+  "summary": {
+    "cases_failed": 0,
+    "cases_passed": 51,
+    "cases_total": 51,
+    "max_discharge_delay_ns": {
+      "case_id": "case_044",
+      "value": 0.4347052
+    },
+    "max_inactive_leakage_ua": {
+      "case_id": "case_051",
+      "value": 7.83555
+    },
+    "max_read_energy_fj": {
+      "case_id": "case_049",
+      "value": 320.689
+    },
+    "min_read_margin_fraction_vdd": {
+      "case_id": "case_043",
+      "value": 1.0062929292929292
+    }
+  },
+  "toolchain": {
+    "ngspice": {
+      "canonical_package": "ngspice 36+ds-1ubuntu0.1",
+      "executable": "/usr/bin/ngspice",
+      "executable_sha256": "5d0793e89377619b8ae2895d32464c4900acf3a65f6861e246e00d8e4483f773",
+      "version_output": "******\n** ngspice-36 : Circuit level simulation program\n** The U. C. Berkeley CAD Group\n** Copyright 1985-1994, Regents of the University of California.\n** Copyright 2001-2020, The ngspice team.\n** Please get your ngspice manual from http://ngspice.sourceforge.net/docs.html\n** Please file your bug-reports at http://ngspice.sourceforge.net/bugrep.html\n** Creation Date: Mon Mar 11 21:44:53 UTC 2024\n******"
+    }
+  }
+}

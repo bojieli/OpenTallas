@@ -1,0 +1,77 @@
+
+Magic 8.3 revision 674 - Compiled on Fri Aug 28 06:53:01 UTC 2026.
+Starting magic under Tcl interpreter
+Using the terminal as the console.
+Using NULL graphics device.
+Processing system .magicrc file
+Switching to WIRING tool.
+Switching to NETLIST tool.
+Switching to PICK tool.
+Switching to BOX tool.
+Sourcing design .magicrc for technology sky130A ...
+2 Magic internal units = 1 Lambda
+Input style sky130(): scaleFactor=2, multiplier=2
+The following types are not handled by extraction and will be treated as non-electrical types:
+    ubm 
+Scaled tech values by 2 / 1 to match internal grid scaling
+Loading sky130A Device Generator Menu ...
+Loading "extract_resistance.tcl" from command line.
+The following types are not handled by extraction and will be treated as non-electrical types:
+    ubm 
+Extraction style is now "ngspice(lrlc)"
+OT_EXTRESIST_SETTINGS_BEGIN
+OT_EXTRESIST_THRESHOLD_MOHM=0.0
+OT_EXTRESIST_MINDELAY_PS=0.0
+OT_EXTRESIST_MINRES_MOHM=0.0
+OT_EXTRESIST_SIMPLIFY=off
+OT_EXTRACT_INTEGRATED_EXTRESIST=on
+OT_EXTRACTION_STYLE=ngspice(lrlc)
+OT_EXTRESIST_SETTINGS_END
+Cell sky130_fd_pr__pfet_01v8_WWEVP9 read from current working directory
+Cell sky130_fd_pr__nfet_01v8_MJJGZY read from current working directory
+Extracting sky130_fd_pr__pfet_01v8_WWEVP9 into sky130_fd_pr__pfet_01v8_WWEVP9.ext:
+Processing sky130_fd_pr__pfet_01v8_WWEVP9
+Extracting sky130_fd_pr__nfet_01v8_MJJGZY into sky130_fd_pr__nfet_01v8_MJJGZY.ext:
+Processing sky130_fd_pr__nfet_01v8_MJJGZY
+Extracting sky130_rom_slice into sky130_rom_slice.ext:
+Processing sky130_rom_slice
+Processing cell sky130_fd_pr__pfet_01v8_WWEVP9 for resistance extraction.
+Extracting B
+Extracting G
+Extracting D
+Extracting S
+Total Nets: 5
+Nets extracted: 4 (0.800000)
+Nets output: 4 (0.800000)
+Processing cell sky130_fd_pr__nfet_01v8_MJJGZY for resistance extraction.
+Extracting B
+Extracting G
+Extracting D
+Extracting S
+Total Nets: 4
+Nets extracted: 4 (1.000000)
+Nets output: 4 (1.000000)
+Processing cell sky130_rom_slice for resistance extraction.
+Extracting w_0_0#
+Extracting BL_PRESENT
+Extracting BL_ABSENT
+Extracting m1_590_598#
+Extracting m1_4190_598#
+Extracting PRE_PRESENT
+Extracting PRE_ABSENT
+Extracting VPWR
+Extracting Q_PRESENT
+Extracting Q_ABSENT
+Extracting WL_PRESENT
+Extracting EN_PRESENT
+Extracting WL_ABSENT
+Extracting EN_ABSENT
+Extracting VGND
+Total Nets: 36
+Nets extracted: 15 (0.416667)
+Nets output: 15 (0.416667)
+OT_EXTRESIST_ARTIFACTS_BEGIN
+OT_TOP_EXT=1
+OT_TOP_RES_EXT=1
+OT_EXTRESIST_ARTIFACTS_END
+exttospice finished.

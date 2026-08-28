@@ -1,0 +1,60 @@
+
+Circuit 1 cell sg13_lv_nmos and Circuit 2 cell sg13_lv_nmos are black boxes.
+Warning: Equate pins:  cell sg13_lv_nmos is a placeholder, treated as a black box.
+Warning: Equate pins:  cell sg13_lv_nmos is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: sg13_lv_nmos                    |Circuit 2: sg13_lv_nmos                    
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13_lv_nmos and sg13_lv_nmos are equivalent.
+
+Circuit 1 cell sg13_lv_pmos and Circuit 2 cell sg13_lv_pmos are black boxes.
+Warning: Equate pins:  cell sg13_lv_pmos is a placeholder, treated as a black box.
+Warning: Equate pins:  cell sg13_lv_pmos is a placeholder, treated as a black box.
+
+Subcircuit pins:
+Circuit 1: sg13_lv_pmos                    |Circuit 2: sg13_lv_pmos                    
+-------------------------------------------|-------------------------------------------
+1                                          |1                                          
+2                                          |2                                          
+3                                          |3                                          
+4                                          |4                                          
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes sg13_lv_pmos and sg13_lv_pmos are equivalent.
+
+Subcircuit summary:
+Circuit 1: ihp_sg13g2_rom_slice            |Circuit 2: ihp_sg13g2_rom_slice            
+-------------------------------------------|-------------------------------------------
+sg13_lv_nmos (6)                           |sg13_lv_nmos (6)                           
+sg13_lv_pmos (4)                           |sg13_lv_pmos (4)                           
+Number of devices: 10                      |Number of devices: 10                      
+Number of nets: 15                         |Number of nets: 15                         
+---------------------------------------------------------------------------------------
+Netlists match uniquely.
+
+Subcircuit pins:
+Circuit 1: ihp_sg13g2_rom_slice            |Circuit 2: ihp_sg13g2_rom_slice            
+-------------------------------------------|-------------------------------------------
+VPWR                                       |VPWR                                       
+Q_PRESENT                                  |Q_PRESENT                                  
+Q_ABSENT                                   |Q_ABSENT                                   
+WL_PRESENT                                 |WL_PRESENT                                 
+PRE_PRESENT                                |PRE_PRESENT                                
+WL_ABSENT                                  |WL_ABSENT                                  
+EN_PRESENT                                 |EN_PRESENT                                 
+EN_ABSENT                                  |EN_ABSENT                                  
+PRE_ABSENT                                 |PRE_ABSENT                                 
+VGND                                       |VGND                                       
+---------------------------------------------------------------------------------------
+Cell pin lists are equivalent.
+Device classes ihp_sg13g2_rom_slice and ihp_sg13g2_rom_slice are equivalent.
+
+Final result: Circuits match uniquely.
+.

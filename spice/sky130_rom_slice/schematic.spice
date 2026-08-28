@@ -1,0 +1,19 @@
+* Schematic contract for the two-column physical ROM slice.
+* Device pin order is D G S B for the SKY130 primitive subcircuits.
+.subckt sky130_rom_slice VGND VPWR WL_PRESENT EN_PRESENT PRE_PRESENT Q_PRESENT WL_ABSENT EN_ABSENT PRE_ABSENT Q_ABSENT
+
+* Programmed column: the row transistor drain is connected to BL_PRESENT.
+XROW_PRESENT BL_PRESENT WL_PRESENT MID_PRESENT VGND sky130_fd_pr__nfet_01v8 w=1.0 l=0.15
+XMASK_PRESENT MID_PRESENT EN_PRESENT VGND VGND sky130_fd_pr__nfet_01v8 w=1.0 l=0.15
+XPRE_PRESENT BL_PRESENT PRE_PRESENT VPWR VPWR sky130_fd_pr__pfet_01v8 w=1.0 l=0.15
+XNSENSE_PRESENT Q_PRESENT BL_PRESENT VGND VGND sky130_fd_pr__nfet_01v8 w=1.0 l=0.15
+XPSENSE_PRESENT Q_PRESENT BL_PRESENT VPWR VPWR sky130_fd_pr__pfet_01v8 w=1.0 l=0.15
+
+* Unprogrammed column: ROM_DRAIN_ABSENT has no via to BL_ABSENT.
+XROW_ABSENT ROM_DRAIN_ABSENT WL_ABSENT MID_ABSENT VGND sky130_fd_pr__nfet_01v8 w=1.0 l=0.15
+XMASK_ABSENT MID_ABSENT EN_ABSENT VGND VGND sky130_fd_pr__nfet_01v8 w=1.0 l=0.15
+XPRE_ABSENT BL_ABSENT PRE_ABSENT VPWR VPWR sky130_fd_pr__pfet_01v8 w=1.0 l=0.15
+XNSENSE_ABSENT Q_ABSENT BL_ABSENT VGND VGND sky130_fd_pr__nfet_01v8 w=1.0 l=0.15
+XPSENSE_ABSENT Q_ABSENT BL_ABSENT VPWR VPWR sky130_fd_pr__pfet_01v8 w=1.0 l=0.15
+
+.ends sky130_rom_slice

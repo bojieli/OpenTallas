@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "purpose": "foundry-backed open-PDK physical-methodology experiment only; never a target-node scaling anchor",
+  "pdk": {
+    "family": "sky130",
+    "variant": "sky130A",
+    "release": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+    "open_pdks_commit": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+    "open_pdks_version": "1.0.605",
+    "build_date": "2026-07-14",
+    "included_libraries": [
+      "sky130_fd_pr"
+    ],
+    "archives": [
+      {
+        "content": "common",
+        "url": "https://github.com/fossi-foundation/ciel-releases/releases/download/sky130-f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/common.tar.zst",
+        "sha256": "5c7b29ca868346b3c6669db5251000f583f51372af66d56d895bf99e2fe7bc9f"
+      },
+      {
+        "content": "sky130_fd_pr",
+        "url": "https://github.com/fossi-foundation/ciel-releases/releases/download/sky130-f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130_fd_pr.tar.zst",
+        "sha256": "66a83db0a46d0d2d20d823d11e5167ea0b811c2ee4374e0e5f1efb49e7e85fac"
+      }
+    ],
+    "installed_tree": {
+      "files": 3204,
+      "bytes": 104965496,
+      "manifest_algorithm": "sha256 of UTF-8 path, NUL, decimal size, NUL, lowercase file sha256, newline for every lexically sorted regular file after resolving the variant symlink",
+      "manifest_sha256": "13eba0cce6a05552a2c3343a43b02e5e6fb4e46c76f587fd82d7c6dc01fb65c7"
+    }
+  },
+  "installer": {
+    "name": "ciel",
+    "version": "2.6.1",
+    "wheel_sha256": "7d9464ff8d3c6897206ea401beef87ebac3c4dd6b5823f755d409a78f04f17c9",
+    "data_source": "static-web:https://fossi-foundation.github.io/ciel-releases"
+  },
+  "tools": {
+    "magic": {
+      "repository": "https://github.com/RTimothyEdwards/magic.git",
+      "commit": "17ac06a24a952380ade3a7d33cd2f0c3943dfc12",
+      "version": "8.3.674",
+      "reason": "exact Magic source identity recorded in the selected Ciel PDK release; the deck requires at least 8.3.411"
+    },
+    "netgen_lvs": {
+      "repository": "https://github.com/RTimothyEdwards/netgen.git",
+      "tag": "1.5.322",
+      "tag_object": "f17a42dc7334e6db1c2de2b17455c22022d08c07",
+      "commit": "5e48c4e8762d7b58e296b59392572633ba9b184d",
+      "version": "1.5.322"
+    },
+    "ngspice": {
+      "version": "36+ds-1ubuntu0.1",
+      "canonical_executable_sha256": "5d0793e89377619b8ae2895d32464c4900acf3a65f6861e246e00d8e4483f773"
+    },
+    "klayout_independent_check": {
+      "version": "0.26.2-3build3",
+      "canonical_executable_sha256": "32441e21747f7718500e6c36c028229f6f1ce2ffcfe5b11acf03305047639ee3",
+      "gating": false,
+      "reason": "independent deck check; Magic DRC, Netgen LVS, and Magic extraction are the primary governed path"
+    }
+  },
+  "forbidden_inferences": [
+    "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+    "target-foundry late-via personalization availability or mask economics",
+    "whole-wafer inference throughput or GPU speedup"
+  ]
+}

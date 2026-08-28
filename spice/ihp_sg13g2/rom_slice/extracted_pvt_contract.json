@@ -1,0 +1,113 @@
+{
+  "acceptance": {
+    "absent_bitline_fraction_min": 0.75,
+    "discharge_delay_ns_max": 5.0,
+    "inactive_leakage_ua_max": 5000.0,
+    "masked_bitline_fraction_min": 0.75,
+    "present_bitline_fraction_max": 0.25,
+    "read_energy_fj_max": 50000.0,
+    "read_energy_fj_min": 0.0,
+    "read_margin_fraction_min": 0.5,
+    "sense_high_fraction_min": 0.75,
+    "sense_low_fraction_max": 0.25,
+    "unexpected_warnings_max": 0
+  },
+  "campaigns": [
+    {
+      "dimensions": [
+        "process_corner",
+        "vdd_v",
+        "temperature_c"
+      ],
+      "fixed": {
+        "output_load_ff": 20.0
+      },
+      "name": "full_pvt_nominal_load"
+    },
+    {
+      "dimensions": [
+        "output_load_ff"
+      ],
+      "fixed": {
+        "process_corner": "tt",
+        "temperature_c": 27.0,
+        "vdd_v": 1.2
+      },
+      "name": "output_load_nominal_pvt"
+    },
+    {
+      "dimensions": [
+        "output_load_ff"
+      ],
+      "fixed": {
+        "process_corner": "ss",
+        "temperature_c": 125.0,
+        "vdd_v": 1.08
+      },
+      "name": "output_load_slow_low_hot"
+    },
+    {
+      "dimensions": [
+        "output_load_ff"
+      ],
+      "fixed": {
+        "process_corner": "ff",
+        "temperature_c": -40.0,
+        "vdd_v": 1.32
+      },
+      "name": "output_load_fast_high_cold"
+    }
+  ],
+  "claim_boundary": {
+    "establishes": [
+      "electrical read behavior of the exact capacitance-extracted IHP SG13G2 two-column demonstration slice",
+      "selected programmed discharge, absent-via retention, expert-enable masking, and static sense polarity over the declared deterministic PVT and output-load cases",
+      "delay, supply-energy, and leakage sensitivity using official public IHP PSP103 low-voltage MOS models"
+    ],
+    "evidence_class": "independent_capacitance_extracted_open_pdk_simulation",
+    "forbidden_inferences": [
+      "statistical mismatch yield or sense-amplifier offset",
+      "distributed wire-resistance, full-row, full-column, decoder, repair, IR-drop, noise, aging, electromigration, or simultaneous-read behavior",
+      "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+      "whole-wafer inference throughput or GPU speedup",
+      "silicon correlation or manufacturing sign-off"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "dimensions": {
+    "output_load_ff": [
+      5.0,
+      20.0,
+      80.0
+    ],
+    "process_corner": [
+      "ss",
+      "tt",
+      "ff"
+    ],
+    "temperature_c": [
+      -40.0,
+      27.0,
+      125.0
+    ],
+    "vdd_v": [
+      1.08,
+      1.2,
+      1.32
+    ]
+  },
+  "experiment_id": "ihp_sg13g2_via_rom_extracted_pvt_v1",
+  "inputs": {
+    "physical_result": "results/spice/ihp_sg13g2_physical/physical.json",
+    "pex_netlist": "results/spice/ihp_sg13g2_physical/artifacts/ihp_sg13g2_rom_slice.pex.spice",
+    "spice_init": "spice/ihp_sg13g2/device_smoke/.spiceinit",
+    "template": "spice/ihp_sg13g2/rom_slice/extracted_testbench.spice.in"
+  },
+  "pdk_lock": "configs/pdk/ihp_sg13g2_physical_lock.json",
+  "reports": {
+    "json": "results/spice/ihp_sg13g2_extracted_pvt.json",
+    "markdown": "results/spice/IHP_SG13G2_EXTRACTED_PVT_REPORT.md"
+  },
+  "schema_version": 1
+}

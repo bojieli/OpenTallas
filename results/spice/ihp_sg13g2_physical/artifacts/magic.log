@@ -1,0 +1,41 @@
+
+Magic 8.3 revision 674 - Compiled on Fri Aug 28 06:53:01 UTC 2026.
+Starting magic under Tcl interpreter
+Using the terminal as the console.
+Using NULL graphics device.
+Processing system .magicrc file
+Switching to WIRING tool.
+Switching to NETLIST tool.
+Switching to PICK tool.
+Switching to BOX tool.
+Sourcing design .magicrc for technology ihp-sg13g2 ...
+2 Magic internal units = 1 Lambda
+Input style sg13g2(): scaleFactor=2, multiplier=2
+The following types are not handled by extraction and will be treated as non-electrical types:
+    pblock sealcont difffill nemitter hvnemitter hvisodiffres sealvia1 sealvia2 sealvia3 sealvia4 sealvia5 sealvia6 pillar solder seal glass thruvia inductor 
+Scaled tech values by 2 / 1 to match internal grid scaling
+Loading ihp-sg13g2 Device Generator Menu ...
+Loading "generate_layout.tcl" from command line.
+Adjusting size of label "Q_PRESENT" in cell ihp_sg13g2_rom_slice.
+Adjusting size of label "Q_ABSENT" in cell ihp_sg13g2_rom_slice.
+DRC style is now "drc(full)"
+Loading DRC CIF style.
+OT_DRC_COUNT_BEGIN
+Total DRC errors found: 0
+No errors found.
+OT_DRC_DETAILS=
+OT_DRC_COUNT_END
+   Generating output for cell sg13_lv_nmos_3CGW2K
+   Generating output for cell sg13_lv_pmos_GBCT8S
+   Generating output for cell ihp_sg13g2_rom_slice
+The following types are not handled by extraction and will be treated as non-electrical types:
+    pblock sealcont difffill nemitter hvnemitter hvisodiffres sealvia1 sealvia2 sealvia3 sealvia4 sealvia5 sealvia6 pillar solder seal glass thruvia inductor 
+Extraction style is now "ngspice()"
+Extracting sg13_lv_nmos_3CGW2K into sg13_lv_nmos_3CGW2K.ext:
+Processing sg13_lv_nmos_3CGW2K
+Extracting sg13_lv_pmos_GBCT8S into sg13_lv_pmos_GBCT8S.ext:
+Processing sg13_lv_pmos_GBCT8S
+Extracting ihp_sg13g2_rom_slice into ihp_sg13g2_rom_slice.ext:
+Processing ihp_sg13g2_rom_slice
+exttospice finished.
+exttospice finished.

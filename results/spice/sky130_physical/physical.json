@@ -1,0 +1,373 @@
+{
+  "artifacts": [
+    {
+      "path": "results/spice/sky130_physical/artifacts/lvs.log",
+      "sha256": "fd43129f27c5874197e818201b3e6a3529dbbe6179e11d313ae2e740c435c0db",
+      "size_bytes": 4038
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/magic.log",
+      "sha256": "e130754dbda0104036dda75d9107e875a9738bd84414608174bedf9da8ca4c6f",
+      "size_bytes": 3412
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/netgen.stdout",
+      "sha256": "212f025fcd9c29ec6a76124e82b46169f8fb6358a640a548e4e3ed69ad3d5884",
+      "size_bytes": 4688
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/sky130_fd_pr__nfet_01v8_MJJGZY.ext",
+      "sha256": "89f5f4bc2ee91ca504b74e7e4ca25f400320b486cffe2ca8812c946d7d502996",
+      "size_bytes": 1183
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/sky130_fd_pr__nfet_01v8_MJJGZY.mag",
+      "sha256": "f886a3beeb73ca15f40cf9a9cf2fb33d7eb818f542834d9bbb6270df9ebad929",
+      "size_bytes": 2416
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/sky130_fd_pr__pfet_01v8_WWEVP9.ext",
+      "sha256": "fae8cc94dc8a62e6853eaa5a73ac888c91ccf751cb5b064fb77cce9659ecefc7",
+      "size_bytes": 1400
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/sky130_fd_pr__pfet_01v8_WWEVP9.mag",
+      "sha256": "9827e3d8a8e264d5a13d2c1e66a274ef1704da4d61f7439c09819ba47693b59e",
+      "size_bytes": 2345
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/sky130_rom_slice.ext",
+      "sha256": "3aa6d3749db9672d780ed95ff603d35ed0cca2ee3e65317acbd2bb59846938b0",
+      "size_bytes": 14882
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/sky130_rom_slice.extracted.spice",
+      "sha256": "6fb0b30c482d2f64000472f79bfe017ca0b22abbe7af96faa564041149d95247",
+      "size_bytes": 1213
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/sky130_rom_slice.gds",
+      "sha256": "63eaad954da117c24af9ba9cb31ea8f87f5fc79de0f9e8190e70f48e3b3411b8",
+      "size_bytes": 14660
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/sky130_rom_slice.mag",
+      "sha256": "a32b94a78846d4b0d010c6ba293f17bcd4f213b6d28dc558eb325be83ff20bed",
+      "size_bytes": 5399
+    },
+    {
+      "path": "results/spice/sky130_physical/artifacts/sky130_rom_slice.pex.spice",
+      "sha256": "cc4cfae726535e5a5aacda9444862d957b8adb775cde596a0d74b38f1764ff5b",
+      "size_bytes": 3088
+    }
+  ],
+  "claim_boundary": {
+    "establishes": [
+      "legal geometry under the exact installed public SKY130A Magic deck",
+      "schematic-versus-layout connectivity for the two-column via-programmed ROM slice",
+      "one physical via1 programming difference between otherwise matched present and absent columns",
+      "device and coupling-capacitance extraction from the drawn local geometry"
+    ],
+    "evidence_class": "open_pdk_drc_lvs_and_extraction",
+    "forbidden_inferences": [
+      "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+      "availability or economics of target-foundry late-via ROM personalization",
+      "full-array decoder, wordline, bitline, sense, repair, simultaneous-read, IR-drop, noise, or thermal behavior",
+      "whole-wafer inference throughput or GPU speedup",
+      "silicon correlation or manufacturing sign-off"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "contract": {
+    "path": "spice/sky130_rom_slice/physical_contract.json",
+    "sha256": "9834a79a70915d7a53dc47d7274b92866702f79f8e72e6a00c290aea16303e8c"
+  },
+  "experiment_id": "sky130_via_rom_physical_v1",
+  "inputs": {
+    "generator": {
+      "path": "spice/sky130_rom_slice/generate_layout.tcl",
+      "sha256": "f12b7fc170d2c129e4e5fcfa017649f68ac52193a6f107b4215ab57487cb2666",
+      "size_bytes": 6370
+    },
+    "schematic": {
+      "path": "spice/sky130_rom_slice/schematic.spice",
+      "sha256": "a644747d44c7fea2367f5c27b784b886de5afa20df18227e2aa119637c338ae8",
+      "size_bytes": 1252
+    }
+  },
+  "metrics": {
+    "layout": {
+      "bbox_database_units": [
+        0,
+        0,
+        6500,
+        2300
+      ],
+      "bbox_um": [
+        0.0,
+        0.0,
+        32.5,
+        11.5
+      ],
+      "coordinate_unit_um": 0.005,
+      "footprint_area_um2": 373.75,
+      "footprint_density_status": "roomy_two_column_test_slice_not_a_ROM_cell_density",
+      "layers": {
+        "metal1": {
+          "rectangle_count": 43,
+          "union_area_um2": 23.529600000000002
+        },
+        "metal2": {
+          "rectangle_count": 43,
+          "union_area_um2": 13.861200000000002
+        },
+        "metal3": {
+          "rectangle_count": 20,
+          "union_area_um2": 4.673
+        },
+        "via1": {
+          "rectangle_count": 11,
+          "union_area_um2": 0.7436
+        },
+        "via2": {
+          "rectangle_count": 20,
+          "union_area_um2": 0.3136
+        }
+      },
+      "programming_via1": {
+        "absent_column_count": 5,
+        "delta": 1,
+        "present_column_count": 6
+      }
+    },
+    "parasitics": {
+      "capacitance_element_count": 59,
+      "incident_capacitance_ff": {
+        "BL_ABSENT": 3.36481,
+        "BL_PRESENT": 3.6954000000000002,
+        "Q_ABSENT": 1.6325700000000003,
+        "Q_PRESENT": 1.63185
+      },
+      "nonzero_capacitance_element_count": 53,
+      "resistance_extraction_status": "not_in_this_gate; base Magic extraction supplies device and coupling capacitance, while detailed extresist wiring is a separate campaign",
+      "total_extracted_capacitance_ff": 20.798830000000002
+    },
+    "topology": {
+      "device_count": 10,
+      "device_counts": {
+        "sky130_fd_pr__nfet_01v8": 6,
+        "sky130_fd_pr__pfet_01v8": 4
+      },
+      "devices": [
+        {
+          "instance": "X0",
+          "model": "sky130_fd_pr__nfet_01v8",
+          "nodes_dgsb": [
+            "VGND",
+            "EN_ABSENT",
+            "NROW_ABSENT/S",
+            "VGND"
+          ]
+        },
+        {
+          "instance": "X1",
+          "model": "sky130_fd_pr__pfet_01v8",
+          "nodes_dgsb": [
+            "VPWR",
+            "PRE_ABSENT",
+            "BL_ABSENT",
+            "VPWR"
+          ]
+        },
+        {
+          "instance": "X2",
+          "model": "sky130_fd_pr__pfet_01v8",
+          "nodes_dgsb": [
+            "VPWR",
+            "BL_PRESENT",
+            "Q_PRESENT",
+            "VPWR"
+          ]
+        },
+        {
+          "instance": "X3",
+          "model": "sky130_fd_pr__pfet_01v8",
+          "nodes_dgsb": [
+            "VPWR",
+            "PRE_PRESENT",
+            "BL_PRESENT",
+            "VPWR"
+          ]
+        },
+        {
+          "instance": "X4",
+          "model": "sky130_fd_pr__nfet_01v8",
+          "nodes_dgsb": [
+            "NROW_PRESENT/S",
+            "WL_PRESENT",
+            "BL_PRESENT",
+            "VGND"
+          ]
+        },
+        {
+          "instance": "X5",
+          "model": "sky130_fd_pr__pfet_01v8",
+          "nodes_dgsb": [
+            "VPWR",
+            "BL_ABSENT",
+            "Q_ABSENT",
+            "VPWR"
+          ]
+        },
+        {
+          "instance": "X6",
+          "model": "sky130_fd_pr__nfet_01v8",
+          "nodes_dgsb": [
+            "VGND",
+            "BL_PRESENT",
+            "Q_PRESENT",
+            "VGND"
+          ]
+        },
+        {
+          "instance": "X7",
+          "model": "sky130_fd_pr__nfet_01v8",
+          "nodes_dgsb": [
+            "VGND",
+            "BL_ABSENT",
+            "Q_ABSENT",
+            "VGND"
+          ]
+        },
+        {
+          "instance": "X8",
+          "model": "sky130_fd_pr__nfet_01v8",
+          "nodes_dgsb": [
+            "VGND",
+            "EN_PRESENT",
+            "NROW_PRESENT/S",
+            "VGND"
+          ]
+        },
+        {
+          "instance": "X9",
+          "model": "sky130_fd_pr__nfet_01v8",
+          "nodes_dgsb": [
+            "NROW_ABSENT/S",
+            "WL_ABSENT",
+            "ROM_DRAIN_ABSENT",
+            "VGND"
+          ]
+        }
+      ],
+      "net_count": 15,
+      "ports": [
+        "VGND",
+        "VPWR",
+        "WL_PRESENT",
+        "EN_PRESENT",
+        "PRE_PRESENT",
+        "Q_PRESENT",
+        "WL_ABSENT",
+        "EN_ABSENT",
+        "PRE_ABSENT",
+        "Q_ABSENT"
+      ],
+      "programmed_row_device": {
+        "instance": "X4",
+        "model": "sky130_fd_pr__nfet_01v8",
+        "nodes_dgsb": [
+          "NROW_PRESENT/S",
+          "WL_PRESENT",
+          "BL_PRESENT",
+          "VGND"
+        ]
+      },
+      "unprogrammed_row_device": {
+        "instance": "X9",
+        "model": "sky130_fd_pr__nfet_01v8",
+        "nodes_dgsb": [
+          "NROW_ABSENT/S",
+          "WL_ABSENT",
+          "ROM_DRAIN_ABSENT",
+          "VGND"
+        ]
+      }
+    }
+  },
+  "pdk": {
+    "family": "sky130",
+    "magic_deck_sha256": "f23e3f5a7c8669820ac35393b95b71242da72e8ab36ccb18ee29c77958399043",
+    "netgen_setup_sha256": "7a33f3f54fab57a9d9b0887ac7b7b64ce6c454110e8b7f01f3cfb90a1282dc94",
+    "open_pdks_commit": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+    "release": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+    "root": "/home/ubuntu/.local/opentallas-pdk/ciel/sky130/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130A",
+    "tree": {
+      "bytes": 104965496,
+      "files": 3204,
+      "manifest_sha256": "13eba0cce6a05552a2c3343a43b02e5e6fb4e46c76f587fd82d7c6dc01fb65c7"
+    },
+    "variant": "sky130A"
+  },
+  "pdk_lock": {
+    "path": "configs/pdk/sky130_physical_lock.json",
+    "sha256": "bf01612dcfd3a6b1789662224f0b99f4d936df84d279181187fd1a8448665c74"
+  },
+  "reports": {
+    "artifacts": "results/spice/sky130_physical/artifacts",
+    "json": "results/spice/sky130_physical/physical.json",
+    "markdown": "results/spice/sky130_physical/REPORT.md"
+  },
+  "run_utc": "2026-08-28T07:20:54.068225+00:00",
+  "runner": {
+    "path": "tools/run_sky130_physical.py",
+    "sha256": "463a044be41cbf79e4a5a3e7ce0823e11300435d942c7cdbba738b31bcd8e930"
+  },
+  "schema_version": 1,
+  "status": "pass",
+  "toolchain": {
+    "magic": {
+      "commit": "17ac06a24a952380ade3a7d33cd2f0c3943dfc12",
+      "engine": {
+        "path": "/home/ubuntu/.local/opentallas-tools/magic-17ac06a/lib/magic/tcl/magicdnull",
+        "sha256": "2d4c3604dd2ef95531b2e1337f48d3bf6e1b5fdefc59cacd5600e1067110136f",
+        "size_bytes": 18152
+      },
+      "launcher": {
+        "path": "/home/ubuntu/.local/opentallas-tools/magic-17ac06a/bin/magic",
+        "sha256": "cfd07f3a4e0619aebd6456370d012801593138f513d635a3412efb50c727a2bc",
+        "size_bytes": 2167
+      },
+      "version": "8.3.674"
+    },
+    "netgen": {
+      "compiled_on": "Fri Aug 28 06:53:32 UTC 2026",
+      "engine": {
+        "path": "/home/ubuntu/.local/opentallas-tools/netgen-1.5.322/lib/netgen/tcl/netgenexec",
+        "sha256": "1952bc209e539765d2506b3e60246744353d19ba7797da1a94b4e7da3c824b8f",
+        "size_bytes": 18152
+      },
+      "expected_source_commit": "5e48c4e8762d7b58e296b59392572633ba9b184d",
+      "launcher": {
+        "path": "/home/ubuntu/.local/opentallas-tools/netgen-1.5.322/bin/netgen",
+        "sha256": "f0c3805445f26e7072df58d8dd036ee4c5c0da8e5e52a43738762046df0979be",
+        "size_bytes": 1900
+      },
+      "source_identity_boundary": "Netgen does not embed its Git commit; the version is checked at runtime, the exact executable is hashed, and the governed bootstrap pins this commit",
+      "version": "1.5.322"
+    }
+  },
+  "verification": {
+    "drc": {
+      "errors": 0,
+      "status": "pass"
+    },
+    "lvs": {
+      "final_result": "Circuits match uniquely.",
+      "netlists_match_uniquely": true,
+      "pin_lists_equivalent": true,
+      "status": "pass"
+    }
+  }
+}

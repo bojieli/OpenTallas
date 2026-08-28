@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "experiment_id": "ihp_sg13g2_official_device_smoke_v1",
+  "pdk_lock": "configs/pdk/ihp_sg13g2_physical_lock.json",
+  "inputs": {
+    "spice_init": "spice/ihp_sg13g2/device_smoke/.spiceinit",
+    "deck": "spice/ihp_sg13g2/device_smoke/device_smoke.spice"
+  },
+  "model_compile": {
+    "define": "__NGSPICE__",
+    "target_cpu": "generic",
+    "replays": 2,
+    "models": [
+      "psp103",
+      "psp103_nqs",
+      "r3_cmc",
+      "mosvar"
+    ],
+    "require_byte_identical_replay": true,
+    "require_output_outside_pdk": true
+  },
+  "simulation": {
+    "model_corner": "mos_tt",
+    "supply_v": 1.2,
+    "temperature_c": 27,
+    "official_subcircuits": [
+      "sg13_lv_nmos",
+      "sg13_lv_pmos"
+    ]
+  },
+  "acceptance": {
+    "dc_out_low_v": {
+      "min": 1.19,
+      "max": 1.200001
+    },
+    "dc_out_high_v": {
+      "min": -1e-06,
+      "max": 0.001
+    },
+    "tran_out_low_v": {
+      "min": -1e-06,
+      "max": 0.001
+    },
+    "tran_out_high_v": {
+      "min": 1.19,
+      "max": 1.200001
+    },
+    "tphl_s": {
+      "min_exclusive": 0,
+      "max": 1e-09
+    },
+    "tplh_s": {
+      "min_exclusive": 0,
+      "max": 1e-09
+    },
+    "expected_ngspice_warnings": [
+      "Warning: m=xx on .subckt line will override multiplier m hierarchy!"
+    ],
+    "unexpected_errors_max": 0
+  },
+  "reports": {
+    "artifacts": "results/spice/ihp_device_smoke/artifacts",
+    "json": "results/spice/ihp_device_smoke/device_smoke.json",
+    "markdown": "results/spice/ihp_device_smoke/REPORT.md"
+  },
+  "claim_boundary": {
+    "evidence_class": "public_pdk_official_device_model_smoke",
+    "establishes": [
+      "all four official IHP ngspice Verilog-A modules compile reproducibly for generic x86-64",
+      "official IHP SG13G2 1.2 V NMOS and PMOS wrappers load and show sensible DC and transient inverter behavior",
+      "the immutable PDK checkout remains pristine before and after generated-model compilation"
+    ],
+    "forbidden_inferences": [
+      "ROM topology, density, array delay, array energy, sense margin, mismatch yield, or silicon yield",
+      "N7 or N4 scaling of any local result",
+      "wafer-scale bandwidth, throughput, cost, or GPU speedup",
+      "production signoff or measured silicon behavior"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  }
+}

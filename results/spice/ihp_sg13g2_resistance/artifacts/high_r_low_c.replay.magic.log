@@ -1,0 +1,71 @@
+
+Magic 8.3 revision 674 - Compiled on Fri Aug 28 06:53:01 UTC 2026.
+Starting magic under Tcl interpreter
+Using the terminal as the console.
+Using NULL graphics device.
+Processing system .magicrc file
+Switching to WIRING tool.
+Switching to NETLIST tool.
+Switching to PICK tool.
+Switching to BOX tool.
+Sourcing design .magicrc for technology ihp-sg13g2 ...
+2 Magic internal units = 1 Lambda
+Input style sg13g2(): scaleFactor=2, multiplier=2
+The following types are not handled by extraction and will be treated as non-electrical types:
+    pblock sealcont difffill nemitter hvnemitter hvisodiffres sealvia1 sealvia2 sealvia3 sealvia4 sealvia5 sealvia6 pillar solder seal glass thruvia inductor 
+Scaled tech values by 2 / 1 to match internal grid scaling
+Loading ihp-sg13g2 Device Generator Menu ...
+Loading "extract_resistance.tcl" from command line.
+The following types are not handled by extraction and will be treated as non-electrical types:
+    pblock sealcont difffill nemitter hvnemitter hvisodiffres sealvia1 sealvia2 sealvia3 sealvia4 sealvia5 sealvia6 pillar solder seal glass thruvia inductor 
+Extraction style is now "ngspice(hrlc)"
+OT_EXTRESIST_SETTINGS_BEGIN
+OT_EXTRESIST_THRESHOLD_MOHM=0.0
+OT_EXTRESIST_MINDELAY_PS=0.0
+OT_EXTRESIST_MINRES_MOHM=0.0
+OT_EXTRESIST_SIMPLIFY=off
+OT_EXTRACT_INTEGRATED_EXTRESIST=on
+OT_EXTRACTION_STYLE=ngspice(hrlc)
+OT_EXTRESIST_SETTINGS_END
+Cell sg13_lv_pmos_GBCT8S read from current working directory
+Cell sg13_lv_nmos_3CGW2K read from current working directory
+Extracting sg13_lv_pmos_GBCT8S into sg13_lv_pmos_GBCT8S.ext:
+Processing sg13_lv_pmos_GBCT8S
+Extracting sg13_lv_nmos_3CGW2K into sg13_lv_nmos_3CGW2K.ext:
+Processing sg13_lv_nmos_3CGW2K
+Extracting ihp_sg13g2_rom_slice into ihp_sg13g2_rom_slice.ext:
+Processing ihp_sg13g2_rom_slice
+Processing cell sg13_lv_pmos_GBCT8S for resistance extraction.
+Extracting w_n143_143#
+Total Nets: 5
+Nets extracted: 1 (0.200000)
+Nets output: 1 (0.200000)
+Processing cell sg13_lv_nmos_3CGW2K for resistance extraction.
+Extracting w_n81_n155#
+Total Nets: 4
+Nets extracted: 1 (0.250000)
+Nets output: 1 (0.250000)
+Processing cell ihp_sg13g2_rom_slice for resistance extraction.
+Extracting BL_PRESENT
+Extracting BL_ABSENT
+Extracting m1_508_556#
+Extracting ROM_DRAIN_ABSENT
+Extracting m1_4108_556#
+Extracting VGND
+Extracting VPWR
+Extracting PRE_PRESENT
+Extracting PRE_ABSENT
+Extracting Q_PRESENT
+Extracting Q_ABSENT
+Extracting WL_PRESENT
+Extracting EN_PRESENT
+Extracting WL_ABSENT
+Extracting EN_ABSENT
+Total Nets: 41
+Nets extracted: 15 (0.365854)
+Nets output: 15 (0.365854)
+OT_EXTRESIST_ARTIFACTS_BEGIN
+OT_TOP_EXT=1
+OT_TOP_RES_EXT=1
+OT_EXTRESIST_ARTIFACTS_END
+exttospice finished.

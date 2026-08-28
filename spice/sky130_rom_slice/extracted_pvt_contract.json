@@ -1,0 +1,112 @@
+{
+  "acceptance": {
+    "absent_bitline_fraction_min": 0.75,
+    "discharge_delay_ns_max": 4.0,
+    "inactive_leakage_ua_max": 1000.0,
+    "masked_bitline_fraction_min": 0.75,
+    "present_bitline_fraction_max": 0.25,
+    "read_energy_fj_max": 20000.0,
+    "read_energy_fj_min": 0.0,
+    "read_margin_fraction_min": 0.5,
+    "sense_high_fraction_min": 0.75,
+    "sense_low_fraction_max": 0.25,
+    "unexpected_warnings_max": 0
+  },
+  "campaigns": [
+    {
+      "dimensions": [
+        "process_corner",
+        "vdd_v",
+        "temperature_c"
+      ],
+      "fixed": {
+        "output_load_ff": 20.0
+      },
+      "name": "full_pvt_nominal_load"
+    },
+    {
+      "dimensions": [
+        "output_load_ff"
+      ],
+      "fixed": {
+        "process_corner": "tt",
+        "temperature_c": 25.0,
+        "vdd_v": 1.8
+      },
+      "name": "output_load_nominal_pvt"
+    },
+    {
+      "dimensions": [
+        "output_load_ff"
+      ],
+      "fixed": {
+        "process_corner": "ss",
+        "temperature_c": 125.0,
+        "vdd_v": 1.62
+      },
+      "name": "output_load_slow_low_hot"
+    },
+    {
+      "dimensions": [
+        "output_load_ff"
+      ],
+      "fixed": {
+        "process_corner": "ff",
+        "temperature_c": -40.0,
+        "vdd_v": 1.98
+      },
+      "name": "output_load_fast_high_cold"
+    }
+  ],
+  "claim_boundary": {
+    "establishes": [
+      "electrical read behavior of the exact capacitance-extracted two-column SKY130A demonstration slice",
+      "selected programmed discharge, absent-via retention, expert-enable masking, and static sense polarity over the declared deterministic PVT and output-load campaigns",
+      "delay, supply-energy, and leakage sensitivity for two instantiated copies of this local demonstration slice"
+    ],
+    "evidence_class": "capacitance_extracted_open_pdk_simulation",
+    "forbidden_inferences": [
+      "statistical mismatch yield or sense-amplifier offset",
+      "distributed wire-resistance, full-row, full-column, decoder, repair, IR-drop, noise, aging, electromigration, or simultaneous-read behavior",
+      "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+      "whole-wafer inference throughput or GPU speedup",
+      "silicon correlation or manufacturing sign-off"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "dimensions": {
+    "output_load_ff": [
+      5.0,
+      20.0,
+      80.0
+    ],
+    "process_corner": [
+      "ss",
+      "tt",
+      "ff"
+    ],
+    "temperature_c": [
+      -40.0,
+      25.0,
+      125.0
+    ],
+    "vdd_v": [
+      1.62,
+      1.8,
+      1.98
+    ]
+  },
+  "experiment_id": "sky130_via_rom_extracted_pvt_v1",
+  "inputs": {
+    "physical_result": "results/spice/sky130_physical/physical.json",
+    "pex_netlist": "results/spice/sky130_physical/artifacts/sky130_rom_slice.pex.spice",
+    "template": "spice/sky130_rom_slice/extracted_testbench.spice.in"
+  },
+  "pdk_lock": "configs/pdk/sky130_physical_lock.json",
+  "reports": {
+    "json": "results/spice/sky130_extracted_pvt.json",
+    "markdown": "results/spice/SKY130_EXTRACTED_PVT_REPORT.md"
+  },
+  "schema_version": 1
+}
