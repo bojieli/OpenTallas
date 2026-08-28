@@ -249,10 +249,26 @@ The independent scalar numeric-reference foundation is under
 BF16 classification plus target rounding, packing, MXFP4 decode, and activation
 microscaling boundaries without importing compiler or RTL algorithms. It also
 implements exact ordered binary32 product-add accumulation and the official
-32-value routed MXFP4×FP8 and 128-value dense FP8×FP8 block-dot primitives. This
-is a target-precision reference skeleton, not operator-complete graph execution:
-matrix/tile lowering, vector/attention/routing semantics, real checkpoint known
-answers, layer differentials, and numerical quality remain open.
+32-value routed MXFP4×FP8 and 128-value dense FP8×FP8 block-dot primitives.
+
+The production HBM/SRAM tensor-accelerator path additionally has a connected
+Qwen attention and transactional-KV slice. `production_attention.py` consumes
+the retained authentic Q/K/V execution report, emits neutral `KV_PREPARE`,
+`ATTENTION`, and `STATE_COMMIT` kernels, lays out full 8,000-token KV capacity in
+HBM, assigns banked SRAM, and generates a seven-command ABI 2.3 program.
+`production_attention_checking.py` independently reconstructs the source
+payload, derived nonempty history, memory image, neutral kernels, commands, and
+counters without importing compiler lowering. The artifact-only simulator in
+`runtime/tensor_accelerator/production_attention_simulator.py` executes the same
+program, keeps prepared state transaction-private, and publishes generation
+4→5 only after exact nontrivial GQA output. The retained capability remains
+uncharacterized, and the one-resource commit is explicitly only a qualification
+of the complete graph's 36-resource terminal commit.
+
+This remains a target-precision execution foundation, not operator-complete
+graph execution: the Qwen attention output projection, residual/MLP path,
+complete layers and model, DeepSeek attention/routing union, timing, RTL, and
+physical characterization remain open.
 
 The service engine verifies every manifest hash before execution and never reads
 the known-answer file. The independent reference evaluator consumes the source

@@ -38,13 +38,13 @@ from .production_capability import (
 )
 from .production_command import (
     ABI_MAJOR,
-    ABI_MINOR,
     Engine,
     MATMUL_FINAL,
     MATMUL_INIT,
     Opcode,
     ProductionCommand,
     ProductionCommandError,
+    ROPE_ABI_MINOR,
     command_abi,
     decode,
     disassemble,
@@ -369,7 +369,7 @@ def _problem(
         raise ProductionQKVCheckError("qualified source shapes differ")
     vector = capability.vector_engine
     if (
-        capability.command_abi_minor != ABI_MINOR
+        capability.command_abi_minor != ROPE_ABI_MINOR
         or vector is None
         or vector.max_rows < QUERY_HEADS + KEY_VALUE_HEADS
         or vector.max_width < 4096
@@ -1075,7 +1075,7 @@ def _program(
     except (OSError, ProductionCommandError) as exc:
         raise ProductionQKVCheckError(f"cannot decode command program: {exc}") from exc
     if (
-        command_abi(payload) != (ABI_MAJOR, ABI_MINOR)
+        command_abi(payload) != (ABI_MAJOR, ROPE_ABI_MINOR)
         or raw["command_count"] != len(commands)
         or raw["size_bytes"] != len(payload)
         or raw["sha256"] != hashlib.sha256(payload).hexdigest()
@@ -1236,7 +1236,7 @@ def _program(
         raise ProductionQKVCheckError(
             f"cannot read command disassembly: {exc}"
         ) from exc
-    if emitted_disassembly != disassemble(commands, abi_minor=ABI_MINOR):
+    if emitted_disassembly != disassemble(commands, abi_minor=ROPE_ABI_MINOR):
         raise ProductionQKVCheckError("command disassembly differs from binary")
     return len(commands)
 

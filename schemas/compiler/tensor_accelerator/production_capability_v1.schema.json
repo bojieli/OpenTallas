@@ -13,7 +13,7 @@
       "additionalProperties": false,
       "properties": {
         "major": {"const": 2},
-        "minor": {"enum": [0, 1, 2]}
+        "minor": {"enum": [0, 1, 2, 3]}
       },
       "required": ["major", "minor"],
       "type": "object"
@@ -25,11 +25,12 @@
           "fp8_tensor",
           "mxfp4_tensor",
           "routing_selection",
+          "transactional_state",
           "vector_fp32"
         ]
       },
       "minItems": 5,
-      "maxItems": 5,
+      "maxItems": 6,
       "type": "array",
       "uniqueItems": true
     },
@@ -127,9 +128,11 @@
       "type": "object"
     },
     "qualified_execution_modes": {
-      "items": {"enum": ["bf16_tensor", "vector_fp32"]},
+      "items": {
+        "enum": ["bf16_tensor", "transactional_state", "vector_fp32"]
+      },
       "minItems": 1,
-      "maxItems": 2,
+      "maxItems": 3,
       "type": "array",
       "uniqueItems": true
     },
@@ -137,12 +140,14 @@
       "items": {
         "enum": [
           "bf16_bf16_fp32_sequential_rne_v1",
+          "bf16_byte_preserving_state_v1",
+          "qwen3_gqa_fp32_softmax_bf16_v1",
           "qwen3_rmsnorm_fp32_bf16_v1",
           "qwen3_rope_fp32_bf16_v1"
         ]
       },
       "minItems": 1,
-      "maxItems": 3,
+      "maxItems": 5,
       "type": "array",
       "uniqueItems": true
     },
@@ -179,17 +184,48 @@
       "required": ["max_k", "max_m", "max_n"],
       "type": "object"
     },
+    "state_engine": {
+      "additionalProperties": false,
+      "properties": {
+        "generation_bits": {"minimum": 1, "type": "integer"},
+        "length_bits": {"minimum": 1, "type": "integer"},
+        "max_inflight_transactions": {"minimum": 1, "type": "integer"},
+        "max_resources_per_transaction": {"minimum": 1, "type": "integer"},
+        "position_bits": {"minimum": 1, "type": "integer"},
+        "transaction_id_bits": {"minimum": 1, "type": "integer"}
+      },
+      "required": [
+        "generation_bits",
+        "length_bits",
+        "max_inflight_transactions",
+        "max_resources_per_transaction",
+        "position_bits",
+        "transaction_id_bits"
+      ],
+      "type": "object"
+    },
     "vector_engine": {
       "additionalProperties": false,
       "properties": {
+        "attention_head_dim": {"minimum": 1, "type": "integer"},
+        "max_attention_context_tokens": {"minimum": 1, "type": "integer"},
         "max_key_value_heads": {"minimum": 1, "type": "integer"},
         "max_query_heads": {"minimum": 1, "type": "integer"},
         "max_rope_positions": {"minimum": 1, "type": "integer"},
         "max_rows": {"minimum": 1, "type": "integer"},
         "max_width": {"minimum": 4096, "type": "integer"},
-        "rope_head_dim": {"minimum": 2, "type": "integer"}
+        "rope_head_dim": {"minimum": 2, "type": "integer"},
+        "softmax_reduction_lanes": {"minimum": 1, "type": "integer"}
       },
       "dependentRequired": {
+        "attention_head_dim": [
+          "max_attention_context_tokens",
+          "softmax_reduction_lanes"
+        ],
+        "max_attention_context_tokens": [
+          "attention_head_dim",
+          "softmax_reduction_lanes"
+        ],
         "max_key_value_heads": [
           "max_query_heads",
           "max_rope_positions",
@@ -209,6 +245,10 @@
           "max_key_value_heads",
           "max_query_heads",
           "max_rope_positions"
+        ],
+        "softmax_reduction_lanes": [
+          "attention_head_dim",
+          "max_attention_context_tokens"
         ]
       },
       "required": ["max_rows", "max_width"],
@@ -284,29 +324,119 @@
           "required": ["vector_engine"]
         },
         "else": {
-          "properties": {
-            "qualified_execution_modes": {
-              "const": ["bf16_tensor", "vector_fp32"]
-            },
-            "qualified_numeric_contracts": {
-              "const": [
-                "bf16_bf16_fp32_sequential_rne_v1",
-                "qwen3_rmsnorm_fp32_bf16_v1",
-                "qwen3_rope_fp32_bf16_v1"
-              ]
-            },
-            "vector_engine": {
-              "required": [
-                "max_key_value_heads",
-                "max_query_heads",
-                "max_rope_positions",
-                "max_rows",
-                "max_width",
-                "rope_head_dim"
-              ]
+          "if": {
+            "properties": {
+              "command_abi": {
+                "properties": {"minor": {"const": 2}},
+                "required": ["minor"]
+              }
             }
           },
-          "required": ["vector_engine"]
+          "then": {
+            "properties": {
+              "qualified_execution_modes": {
+                "const": ["bf16_tensor", "vector_fp32"]
+              },
+              "qualified_numeric_contracts": {
+                "const": [
+                  "bf16_bf16_fp32_sequential_rne_v1",
+                  "qwen3_rmsnorm_fp32_bf16_v1",
+                  "qwen3_rope_fp32_bf16_v1"
+                ]
+              },
+              "vector_engine": {
+                "not": {
+                  "anyOf": [
+                    {"required": ["attention_head_dim"]},
+                    {"required": ["max_attention_context_tokens"]},
+                    {"required": ["softmax_reduction_lanes"]}
+                  ]
+                },
+                "required": [
+                  "max_key_value_heads",
+                  "max_query_heads",
+                  "max_rope_positions",
+                  "max_rows",
+                  "max_width",
+                  "rope_head_dim"
+                ]
+              }
+            },
+            "required": ["vector_engine"]
+          },
+          "else": {
+            "properties": {
+              "qualified_execution_modes": {
+                "const": [
+                  "bf16_tensor",
+                  "transactional_state",
+                  "vector_fp32"
+                ]
+              },
+              "qualified_numeric_contracts": {
+                "const": [
+                  "bf16_bf16_fp32_sequential_rne_v1",
+                  "bf16_byte_preserving_state_v1",
+                  "qwen3_gqa_fp32_softmax_bf16_v1",
+                  "qwen3_rmsnorm_fp32_bf16_v1",
+                  "qwen3_rope_fp32_bf16_v1"
+                ]
+              },
+              "vector_engine": {
+                "required": [
+                  "attention_head_dim",
+                  "max_attention_context_tokens",
+                  "max_key_value_heads",
+                  "max_query_heads",
+                  "max_rope_positions",
+                  "max_rows",
+                  "max_width",
+                  "rope_head_dim",
+                  "softmax_reduction_lanes"
+                ]
+              }
+            },
+            "required": ["state_engine", "vector_engine"]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "command_abi": {
+            "properties": {"minor": {"const": 3}},
+            "required": ["minor"]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "declared_execution_modes": {
+            "const": [
+              "bf16_tensor",
+              "fp8_tensor",
+              "mxfp4_tensor",
+              "routing_selection",
+              "transactional_state",
+              "vector_fp32"
+            ]
+          }
+        },
+        "required": ["state_engine"]
+      },
+      "else": {
+        "not": {"required": ["state_engine"]},
+        "properties": {
+          "declared_execution_modes": {
+            "const": [
+              "bf16_tensor",
+              "fp8_tensor",
+              "mxfp4_tensor",
+              "routing_selection",
+              "vector_fp32"
+            ]
+          }
         }
       }
     }

@@ -26,11 +26,21 @@ implementation with zero differences. Binary32 tests include deterministic
 round trips over 20,000 random finite encodings and cases where ordered
 per-product accumulation intentionally differs from one final exact reduction.
 
-This closes neither `M1` nor numerical qualification. Matrix operators beyond
-the qualified dense FP8 linear path, vector operators beyond target-hidden
-capture, attention/routing operators, real-checkpoint known answers, layer
-differentials, end-to-end logits, and task quality remain open. The earlier
-exact-integer evaluator remains fixture-only evidence.
+This closes neither `M1` nor complete numerical qualification. Matrix operators
+beyond the qualified dense FP8 linear path, most remaining vector operators,
+DeepSeek attention/routing, complete-layer differentials, end-to-end logits,
+and task quality remain open. The earlier exact-integer evaluator remains
+fixture-only evidence.
+
+`tensor_accelerator_attention.py` independently defines Qwen3 causal GQA and
+transactional BF16 KV publication. It fixes BF16 score, scale, and mask
+boundaries; correctly rounded nonpositive binary32 exponential; an eight-lane
+softmax reduction; BF16 probability/value aggregation; contiguous prepare;
+transaction-private visibility; atomic group commit; abort; and stale-generation
+rejection. A separate NumPy implementation lives outside this reference tree.
+The retained real-Q/K/V qualification covers empty history, nonempty history,
+two-token causal prefill, and two-resource atomic state behavior. This evidence
+does not qualify the remaining Qwen layer or any DeepSeek attention form.
 
 `matrix.py` composes the scalar/block rules into complete `FP8_LINEAR`
 semantics. It quantizes each BF16 activation block once, applies the released

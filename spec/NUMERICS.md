@@ -1,6 +1,6 @@
 # Numerical-format and determinism specification
 
-**Document:** SPEC-NUM 1.0
+**Document:** SPEC-NUM 1.1
 
 The numerical contract is architectural. A different encoding, reduction tree,
 rounding point, saturation rule, or exceptional-value policy is an externally
@@ -306,6 +306,74 @@ and applies every route-weight contribution under the NUM-6.1 reduction rule.
 Dispatch performs no arithmetic. Physical rank ownership, repaired placement,
 arrival order, and queue timing may filter or delay groups but must not alter
 this global logical order or payload mapping.
+
+### NUM-6.7 Qwen causal GQA and softmax
+
+`qwen3_gqa_fp32_softmax_bf16_v1` consumes BF16 Q in
+`[sequence,32,128]` order and transaction-private BF16 K/V in
+`[sequence,8,128]` order. Query heads `4*h` through `4*h+3` select KV head
+`h`, matching the source `repeat_kv` mapping. The committed prefix is followed
+by the active request's prepared append. Query position `i` may observe the
+complete committed prefix and prepared positions through `i`; later prepared
+positions are causal-mask targets.
+
+For every query/key pair, BF16 factors widen exactly to binary32. Products and
+accumulator additions execute in increasing head-dimension order under
+NUM-4.1. The completed dot converts to BF16 under NUM-4.2. It is then multiplied
+by BF16 `0x3db5`, the Qwen `128**-0.5` scalar after source-dtype promotion, and
+converted again to BF16. An allowed mask element is positive zero. A disallowed
+element is finite BF16 minimum `0xff7f`; mask addition widens both operands,
+performs one binary32 addition, and converts once to BF16.
+
+Softmax widens the masked BF16 scores to binary32. It selects the finite maximum,
+subtracts that maximum from each element with one binary32 rounding, and applies
+the correctly rounded mathematical exponential to binary32. A shifted input at
+or below -104 produces positive zero, which is its correctly rounded binary32
+result. Exponentials reduce as follows:
+
+- rows shorter than eight reduce sequentially in increasing key index;
+- other rows accumulate increasing key indices into eight lanes;
+- tail indices update the corresponding low lanes; and
+- lanes combine as `(0+4, 1+5, 2+6, 3+7)`, then adjacent pairs, with one
+  binary32 rounding at every addition.
+
+One binary32 division computes the reciprocal denominator. Each exponential is
+multiplied by that reciprocal with one binary32 rounding and converted to BF16.
+The probability-by-V dot then executes in increasing key index under NUM-4.1
+and converts once to BF16. The output layout is `[sequence,32,128]`; flattening
+the final two dimensions to 4,096 elements is a separate layout operation.
+
+NaN or infinity input, intermediate binary32 overflow, a nonpositive softmax
+denominator, or any illegal shape poisons the transaction. The maximum element
+guarantees an exact exponential of one, so a zero denominator cannot occur for
+a legal nonempty row. Saturating BF16 conversions set their operation-specific
+sticky count. Output zero is canonical positive zero.
+
+The pinned source fixes GQA grouping, score scaling, causal masking, FP32
+softmax, BF16 probability conversion, and BF16 value aggregation, but `matmul`
+and reduction primitives do not promise one bit pattern across every PyTorch
+backend and input. Increasing-index dots and the eight-lane sum are deterministic
+target adaptations. Authentic-checkpoint known answers and decoding gates, not
+incidental synthetic backend differences, qualify the profile.
+
+### NUM-6.8 Transactional KV publication
+
+`bf16_byte_preserving_state_v1` stores K and V without arithmetic conversion.
+One resource snapshot has a 64-bit generation, a committed contiguous length,
+and a fixed capacity. Prepare requires an exact expected-generation match and a
+nonempty append beginning at the committed length; overwrite, holes, and
+capacity overflow poison. Prepared bytes remain private to the request
+transaction. Its attention operations read the committed prefix plus only that
+transaction's append.
+
+Commit first validates every resource in the request group. All entries must
+have distinct resource IDs, the same nonzero transaction ID, matching base
+generations, and legal appends. It then atomically publishes every append and
+increments each generation by exactly one. No resource may become visible when
+any validation, arithmetic, memory, or completion dependency fails. Abort and
+malformed or incomplete execution discard all prepared records and preserve the
+prior committed payload, length, and generation bit-for-bit. Reusing a prepared
+record after commit is stale and fails closed.
 
 ## NUM-7 Speculative decoding
 

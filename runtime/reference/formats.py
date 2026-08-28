@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from bisect import bisect_left
 from dataclasses import dataclass
+from decimal import Decimal, ROUND_HALF_EVEN, localcontext
 from fractions import Fraction
 from typing import Iterable, Literal
 
@@ -190,9 +191,7 @@ def decode_binary32(code: int) -> DecodedValue:
     return _finite(value)
 
 
-_E4M3FN_POSITIVE = tuple(
-    decode_e4m3fn(code).value for code in range(0x7F)
-)
+_E4M3FN_POSITIVE = tuple(decode_e4m3fn(code).value for code in range(0x7F))
 if any(value is None for value in _E4M3FN_POSITIVE):  # pragma: no cover - invariant
     raise RuntimeError("positive E4M3FN table unexpectedly contains NaN")
 
@@ -208,9 +207,7 @@ def _round_ties_to_even_integer(value: Fraction) -> int:
         raise NumericReferenceError("unsigned rounding input must be nonnegative")
     quotient, remainder = divmod(value.numerator, value.denominator)
     doubled = 2 * remainder
-    if doubled > value.denominator or (
-        doubled == value.denominator and quotient & 1
-    ):
+    if doubled > value.denominator or (doubled == value.denominator and quotient & 1):
         quotient += 1
     return quotient
 
@@ -250,9 +247,7 @@ def encode_binary32_rne(value: Fraction | int) -> int:
         return sign | (1 << 23)
 
     exponent = _floor_log2(magnitude)
-    significand = _round_ties_to_even_integer(
-        magnitude / _pow2(exponent - 23)
-    )
+    significand = _round_ties_to_even_integer(magnitude / _pow2(exponent - 23))
     if significand == 1 << 24:
         significand = 1 << 23
         exponent += 1
@@ -289,15 +284,90 @@ def binary32_multiply(left_code: int, right_code: int) -> int:
 def binary32_divide(numerator_code: int, denominator_code: int) -> int:
     """Divide finite binary32 encodings with one RNE rounding."""
 
-    numerator = _finite_binary32_value(
-        numerator_code, "binary32 division numerator"
-    )
+    numerator = _finite_binary32_value(numerator_code, "binary32 division numerator")
     denominator = _finite_binary32_value(
         denominator_code, "binary32 division denominator"
     )
     if denominator == 0:
         raise NumericReferenceError("binary32 division denominator is zero")
     return encode_binary32_rne(numerator / denominator)
+
+
+def binary32_exp_nonpositive(code: int) -> int:
+    """Return the correctly rounded binary32 exponential for ``code <= 0``.
+
+    Attention softmax first subtracts the row maximum, so its exponential
+    domain is nonpositive.  ``Decimal.exp`` is correctly rounded under the
+    active decimal context.  The implementation encloses that rounded result
+    by half a decimal ulp and increases precision until both interval endpoints
+    select the same binary32 encoding.  This keeps the scalar oracle independent
+    of the host ``libm`` implementation.
+
+    Values at or below -104 are smaller than half the minimum binary32
+    subnormal after exponentiation and therefore round to positive zero.
+    """
+
+    decoded = decode_binary32(code)
+    if not decoded.finite or decoded.value is None:
+        raise NumericReferenceError("binary32 exponential input is NaN or infinity")
+    exact = decoded.value
+    if exact > 0:
+        raise NumericReferenceError("binary32 softmax exponential input must be <= 0")
+    if exact == 0:
+        return 0x3F800000
+    if exact <= -104:
+        return 0
+
+    for precision in (192, 384, 768, 1536):
+        with localcontext() as context:
+            context.prec = precision
+            context.rounding = ROUND_HALF_EVEN
+            operand = Decimal(exact.numerator) / Decimal(exact.denominator)
+            result = operand.exp()
+            decimal_ulp = Decimal(1).scaleb(result.adjusted() - precision + 1)
+            half_ulp = decimal_ulp / 2
+            lower = max(Decimal(0), result - half_ulp)
+            upper = result + half_ulp
+        lower_code = encode_binary32_rne(Fraction(lower))
+        upper_code = encode_binary32_rne(Fraction(upper))
+        if lower_code == upper_code:
+            return lower_code
+    raise NumericReferenceError(
+        "binary32 exponential could not establish an unambiguous RNE result"
+    )
+
+
+def binary32_lanes8_sum(codes: Iterable[int]) -> int:
+    """Reduce finite binary32 values with the Qwen softmax eight-lane order.
+
+    Rows shorter than eight values reduce sequentially.  Longer rows accumulate
+    increasing logical indices into eight lanes and then combine lanes in the
+    fixed ``(0,4)/(1,5)/(2,6)/(3,7)`` tree.  Tail values update the corresponding
+    low lanes.  Every addition rounds once to binary32 RNE.
+    """
+
+    values = tuple(codes)
+    if not values:
+        raise NumericReferenceError("binary32 eight-lane sum must not be empty")
+    for index, item in enumerate(values):
+        _finite_binary32_value(item, f"binary32 eight-lane input {index}")
+    if len(values) < 8:
+        accumulator = values[0]
+        for item in values[1:]:
+            accumulator = binary32_add(accumulator, item)
+        return accumulator
+
+    lanes = list(values[:8])
+    full = len(values) - len(values) % 8
+    for start in range(8, full, 8):
+        for lane in range(8):
+            lanes[lane] = binary32_add(lanes[lane], values[start + lane])
+    for lane, item in enumerate(values[full:]):
+        lanes[lane] = binary32_add(lanes[lane], item)
+
+    half = [binary32_add(lanes[index], lanes[index + 4]) for index in range(4)]
+    quarter = [binary32_add(half[index], half[index + 2]) for index in range(2)]
+    return binary32_add(quarter[0], quarter[1])
 
 
 def binary32_balanced_sum(codes: Iterable[int]) -> int:
@@ -449,9 +519,7 @@ def encode_e4m3fn_rne(value: Fraction | int) -> QuantizedE4M3FN:
     return QuantizedE4M3FN(sign | selected, False)
 
 
-def decode_mxfp4_block(
-    packed: Iterable[int], scale_code: int
-) -> tuple[Fraction, ...]:
+def decode_mxfp4_block(packed: Iterable[int], scale_code: int) -> tuple[Fraction, ...]:
     """Decode one packed MXFP4 block using its exact E8M0 scale."""
 
     scale = decode_e8m0(scale_code)
@@ -485,11 +553,7 @@ def quantize_bf16_activation_block(
         return QuantizedActivationBlock(0x7F, tuple(0 for _ in decoded), False)
 
     scale_code = next(
-        (
-            code
-            for code in range(0xFF)
-            if maximum <= Fraction(448) * _pow2(code - 127)
-        ),
+        (code for code in range(0xFF) if maximum <= Fraction(448) * _pow2(code - 127)),
         None,
     )
     if scale_code is None:

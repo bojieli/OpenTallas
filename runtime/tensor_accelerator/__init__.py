@@ -1,6 +1,11 @@
 """Artifact-only functional and data-bearing timing simulator."""
 
 from .simulator import SimulationError, TensorAcceleratorSimulator
+from .production_attention_simulator import (
+    ProductionAttentionSimulationError,
+    ProductionAttentionSimulator,
+    publish_attention_execution_report,
+)
 from .production_simulator import (
     ProductionProjectionSimulator,
     ProductionSimulationError,
@@ -18,6 +23,8 @@ from .production_qkv_simulator import (
 )
 
 __all__ = [
+    "ProductionAttentionSimulationError",
+    "ProductionAttentionSimulator",
     "ProductionProjectionSimulator",
     "ProductionSimulationError",
     "ProductionRMSNormSimulationError",
@@ -27,6 +34,7 @@ __all__ = [
     "SimulationError",
     "TensorAcceleratorSimulator",
     "publish_execution_report",
+    "publish_attention_execution_report",
     "publish_rmsnorm_execution_report",
     "publish_qkv_execution_report",
 ]

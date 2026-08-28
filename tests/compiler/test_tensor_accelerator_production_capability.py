@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 CAPABILITY_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v1.json"
 CAPABILITY_V2_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v2.json"
 CAPABILITY_V3_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v3.json"
+CAPABILITY_V4_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v4.json"
 
 
 def _rehash(value: dict[str, object]) -> None:
@@ -118,6 +119,68 @@ def test_v22_capability_adds_bounded_qwen_rope_without_timing_claims() -> None:
     _rehash(underbounded)
     with pytest.raises(ProductionCapabilityError, match="do not cover"):
         parse_production_capability(underbounded)
+
+
+def test_v23_capability_adds_bounded_qwen_attention_and_transactional_state() -> None:
+    capability = load_production_capability(CAPABILITY_V4_PATH)
+    assert (capability.command_abi_major, capability.command_abi_minor) == (2, 3)
+    assert capability.qualified_execution_modes == (
+        "bf16_tensor",
+        "transactional_state",
+        "vector_fp32",
+    )
+    assert capability.qualified_numeric_contracts == (
+        "bf16_bf16_fp32_sequential_rne_v1",
+        "bf16_byte_preserving_state_v1",
+        "qwen3_gqa_fp32_softmax_bf16_v1",
+        "qwen3_rmsnorm_fp32_bf16_v1",
+        "qwen3_rope_fp32_bf16_v1",
+    )
+    vector = capability.vector_engine
+    assert vector is not None
+    assert vector.max_attention_context_tokens == 8000
+    assert vector.attention_head_dim == 128
+    assert vector.softmax_reduction_lanes == 8
+    state = capability.state_engine
+    assert state is not None
+    assert state.generation_bits == 64
+    assert state.transaction_id_bits == 64
+    assert state.position_bits == 20
+    assert state.length_bits == 21
+    assert state.max_inflight_transactions == 8
+    assert state.max_resources_per_transaction == 64
+    assert capability.to_dict()["evidence"]["performance_claims_permitted"] is False
+
+    missing_state = copy.deepcopy(capability.to_dict())
+    del missing_state["state_engine"]
+    _rehash(missing_state)
+    with pytest.raises(ProductionCapabilityError, match="must include"):
+        parse_production_capability(missing_state)
+
+    incomplete_attention = copy.deepcopy(capability.to_dict())
+    del incomplete_attention["vector_engine"]["softmax_reduction_lanes"]
+    _rehash(incomplete_attention)
+    with pytest.raises(ProductionCapabilityError, match="complete group"):
+        parse_production_capability(incomplete_attention)
+
+    underbounded_state = copy.deepcopy(capability.to_dict())
+    underbounded_state["state_engine"]["max_resources_per_transaction"] = 36
+    _rehash(underbounded_state)
+    with pytest.raises(ProductionCapabilityError, match="cross-model union"):
+        parse_production_capability(underbounded_state)
+
+
+def test_all_committed_capability_minors_remain_canonical_and_loadable() -> None:
+    observed = tuple(
+        load_production_capability(path).command_abi_minor
+        for path in (
+            CAPABILITY_PATH,
+            CAPABILITY_V2_PATH,
+            CAPABILITY_V3_PATH,
+            CAPABILITY_V4_PATH,
+        )
+    )
+    assert observed == (0, 1, 2, 3)
 
 
 def test_capability_rejects_identity_ordering_and_union_drift() -> None:
