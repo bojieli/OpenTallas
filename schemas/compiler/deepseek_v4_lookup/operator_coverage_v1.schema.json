@@ -1,0 +1,35 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_lookup/operator_coverage_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "implemented_operator_kinds": {
+      "const": [
+        "HASH_ROUTE",
+        "HC_EXPAND",
+        "TOKEN_EMBED"
+      ]
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_lookup_coverage.v1"
+    },
+    "status": {
+      "const": "three_operator_real_payload_slice_only"
+    },
+    "unimplemented_graph_operator_kind_count": {
+      "const": 40
+    }
+  },
+  "required": [
+    "implemented_operator_kinds",
+    "model_id",
+    "schema",
+    "status",
+    "unimplemented_graph_operator_kind_count"
+  ],
+  "title": "OpenTallas DeepSeek V4 lookup operator coverage v1",
+  "type": "object"
+}

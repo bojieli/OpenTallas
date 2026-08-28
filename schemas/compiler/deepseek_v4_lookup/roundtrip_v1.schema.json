@@ -1,0 +1,98 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_lookup/roundtrip_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "application_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "checked_artifact_count": {
+      "minimum": 2,
+      "type": "integer"
+    },
+    "checked_payload_bytes": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "reconstructed": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "deployment_path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "rank": {
+            "oneOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "size_bytes": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "source_assignment_path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "tensor_name": {
+            "enum": [
+              "embed.weight",
+              "layers.0.ffn.gate.tid2eid"
+            ]
+          }
+        },
+        "required": [
+          "deployment_path",
+          "rank",
+          "sha256",
+          "size_bytes",
+          "source_assignment_path",
+          "tensor_name"
+        ],
+        "type": "object"
+      },
+      "minItems": 2,
+      "type": "array"
+    },
+    "roundtrip_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_lookup_roundtrip.v1"
+    },
+    "status": {
+      "const": "full_selected_payload_match"
+    }
+  },
+  "required": [
+    "application_id",
+    "checked_artifact_count",
+    "checked_payload_bytes",
+    "model_id",
+    "reconstructed",
+    "roundtrip_id",
+    "schema",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 lookup roundtrip report v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

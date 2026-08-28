@@ -1,0 +1,147 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_lookup/deployment_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "minLength": 1,
+            "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\\\u0000]+$",
+            "type": "string"
+          },
+          "role": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "size_bytes": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "path",
+          "role",
+          "sha256",
+          "size_bytes"
+        ],
+        "type": "object"
+      },
+      "minItems": 10,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "build_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "claim_boundary": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "compiler": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "const": "opentallas-deepseek-v4-lookup-slice-compiler"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "type": "object"
+    },
+    "entrypoint": {
+      "additionalProperties": false,
+      "properties": {
+        "execution_expectations": {
+          "const": "execution_expectations.json"
+        },
+        "microcode": {
+          "const": "microcode.bin"
+        },
+        "semantic_ir": {
+          "const": "model.ir.json"
+        },
+        "tensor_manifest": {
+          "const": "tensor_manifest.json"
+        }
+      },
+      "required": [
+        "execution_expectations",
+        "microcode",
+        "semantic_ir",
+        "tensor_manifest"
+      ],
+      "type": "object"
+    },
+    "microcode_abi": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "const": 0
+        },
+        "name": {
+          "const": "deepseek_v4_lookup"
+        }
+      },
+      "required": [
+        "major",
+        "minor",
+        "name"
+      ],
+      "type": "object"
+    },
+    "model_id": {
+      "const": "deepseek-v4-flash-0731"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_lookup_deployment.v1"
+    },
+    "source_application_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "enum": [
+        "development_fixture_lookup_slice_not_release_evidence",
+        "real_checkpoint_lookup_slice_not_full_model"
+      ]
+    }
+  },
+  "required": [
+    "artifacts",
+    "build_id",
+    "claim_boundary",
+    "compiler",
+    "entrypoint",
+    "microcode_abi",
+    "model_id",
+    "schema",
+    "source_application_id",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 lookup deployment v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

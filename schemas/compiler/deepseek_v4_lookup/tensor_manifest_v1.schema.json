@@ -1,0 +1,157 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_lookup/tensor_manifest_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "embedding": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "BF16"
+        },
+        "hidden_size": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "ranks": {
+          "items": {
+            "$ref": "#/$defs/embeddingRank"
+          },
+          "minItems": 1,
+          "type": "array"
+        },
+        "vocabulary_size": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "hidden_size",
+        "ranks",
+        "vocabulary_size"
+      ],
+      "type": "object"
+    },
+    "hash_route": {
+      "additionalProperties": false,
+      "properties": {
+        "dtype": {
+          "const": "I64"
+        },
+        "expert_count": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "path": {
+          "const": "rom/hash_route.bin"
+        },
+        "route_top_k": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "source_assignment_path": {
+          "$ref": "#/$defs/nonempty"
+        },
+        "source_rank": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "verified_replica_ranks": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "minItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "vocabulary_size": {
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "dtype",
+        "expert_count",
+        "path",
+        "route_top_k",
+        "sha256",
+        "size_bytes",
+        "source_assignment_path",
+        "source_rank",
+        "verified_replica_ranks",
+        "vocabulary_size"
+      ],
+      "type": "object"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_lookup_tensors.v1"
+    }
+  },
+  "required": [
+    "embedding",
+    "hash_route",
+    "schema"
+  ],
+  "title": "OpenTallas DeepSeek V4 lookup tensor manifest v1",
+  "type": "object",
+  "$defs": {
+    "embeddingRank": {
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "pattern": "^rom/embed/rank-[0-9]{3}\\.bin$",
+          "type": "string"
+        },
+        "rank": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "row_start": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "row_stop": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "source_assignment_path": {
+          "$ref": "#/$defs/nonempty"
+        }
+      },
+      "required": [
+        "path",
+        "rank",
+        "row_start",
+        "row_stop",
+        "sha256",
+        "size_bytes",
+        "source_assignment_path"
+      ],
+      "type": "object"
+    },
+    "nonempty": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

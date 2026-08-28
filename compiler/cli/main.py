@@ -18,6 +18,10 @@ from compiler.checking.deepseek_v4_application import (
     VERIFICATION_FILENAME,
     verify_canonical_application,
 )
+from compiler.checking.deepseek_v4_lookup_execution import (
+    DeepSeekV4LookupDifferentialError,
+    verify_deepseek_v4_lookup_execution,
+)
 from compiler.checking.inverse import InverseCheckError
 from compiler.frontend.checkpoint import (
     CheckpointError,
@@ -47,6 +51,10 @@ from compiler.frontend.deepseek_v4_generation import (
 from compiler.image.rom import RomImageError
 from compiler.ir.model import IRValidationError, canonical_json_bytes, load_strict_json
 from compiler.microcode.isa import MicrocodeError
+from compiler.vertical_slice.deepseek_v4_lookup import (
+    DeepSeekV4LookupBuildError,
+    build_deepseek_v4_lookup_deployment,
+)
 
 
 def parser() -> argparse.ArgumentParser:
@@ -132,6 +140,24 @@ def parser() -> argparse.ArgumentParser:
     check_canonical_parser.add_argument("--lock", required=True, type=Path)
     check_canonical_parser.add_argument("--application", required=True, type=Path)
     check_canonical_parser.add_argument("--output", required=True, type=Path)
+    lookup_parser = subparsers.add_parser(
+        "compile-deepseek-v4-lookup-slice",
+        help="compile verified canonical V4 lookup tensors into an executable slice",
+    )
+    lookup_parser.add_argument("--snapshot", required=True, type=Path)
+    lookup_parser.add_argument("--lock", required=True, type=Path)
+    lookup_parser.add_argument("--application", required=True, type=Path)
+    lookup_parser.add_argument("--output", required=True, type=Path)
+    lookup_check_parser = subparsers.add_parser(
+        "verify-deepseek-v4-lookup-execution",
+        help="compare lookup service outputs directly with locked checkpoint rows",
+    )
+    lookup_check_parser.add_argument("--snapshot", required=True, type=Path)
+    lookup_check_parser.add_argument("--lock", required=True, type=Path)
+    lookup_check_parser.add_argument("--deployment", required=True, type=Path)
+    lookup_check_parser.add_argument("--request", required=True, type=Path)
+    lookup_check_parser.add_argument("--result", required=True, type=Path)
+    lookup_check_parser.add_argument("--output", required=True, type=Path)
     return result
 
 
@@ -289,6 +315,36 @@ def main(argv: list[str] | None = None) -> int:
                 f"verification {report['verification_id']}"
             )
             return 0
+        if arguments.command == "compile-deepseek-v4-lookup-slice":
+            lock = load_checkpoint_lock(arguments.lock)
+            deployment = build_deepseek_v4_lookup_deployment(
+                snapshot=arguments.snapshot,
+                lock=lock,
+                application_root=arguments.application,
+                output=arguments.output,
+            )
+            print(
+                f"built three-operator V4 lookup deployment "
+                f"{deployment['build_id']} at {arguments.output.resolve()} "
+                f"({deployment['status']})"
+            )
+            return 0
+        if arguments.command == "verify-deepseek-v4-lookup-execution":
+            lock = load_checkpoint_lock(arguments.lock)
+            report = verify_deepseek_v4_lookup_execution(
+                snapshot=arguments.snapshot,
+                lock=lock,
+                deployment_root=arguments.deployment,
+                request_path=arguments.request,
+                result_path=arguments.result,
+            )
+            _write_new_json(arguments.output, report)
+            print(
+                f"verified {report['token_count']} token rows across "
+                f"{len(report['comparisons'])} lookup outputs; differential "
+                f"{report['differential_id']} ({report['status']})"
+            )
+            return 0
     except (
         BuildError,
         IRValidationError,
@@ -303,6 +359,8 @@ def main(argv: list[str] | None = None) -> int:
         CanonicalApplicationError,
         CanonicalTransformError,
         DeepSeekV4ApplicationCheckError,
+        DeepSeekV4LookupDifferentialError,
+        DeepSeekV4LookupBuildError,
         OSError,
     ) as exc:
         print(f"compiler error: {exc}", file=sys.stderr)
