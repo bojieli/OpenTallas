@@ -1,0 +1,137 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deployment_manifest_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "artifacts": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "role": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "sha256": {
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "size_bytes": {
+            "minimum": 0,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "path",
+          "role",
+          "sha256",
+          "size_bytes"
+        ],
+        "type": "object"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "build_id": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "claim_boundary": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "compiler": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "type": "object"
+    },
+    "entrypoint": {
+      "additionalProperties": false,
+      "properties": {
+        "execution_expectations": {
+          "type": "string"
+        },
+        "microcode": {
+          "type": "string"
+        },
+        "rom_image": {
+          "type": "string"
+        },
+        "semantic_ir": {
+          "type": "string"
+        },
+        "tensor_manifest": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "execution_expectations",
+        "microcode",
+        "rom_image",
+        "semantic_ir",
+        "tensor_manifest"
+      ],
+      "type": "object"
+    },
+    "microcode_abi": {
+      "additionalProperties": false,
+      "properties": {
+        "major": {
+          "const": 1
+        },
+        "minor": {
+          "const": 0
+        }
+      },
+      "required": [
+        "major",
+        "minor"
+      ],
+      "type": "object"
+    },
+    "model_id": {
+      "type": "string"
+    },
+    "numeric_profile": {
+      "const": "int_exact_fixture_v1"
+    },
+    "schema": {
+      "const": "opentallas.deployment_manifest.v1"
+    },
+    "semantic_sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  },
+  "required": [
+    "artifacts",
+    "build_id",
+    "claim_boundary",
+    "compiler",
+    "entrypoint",
+    "microcode_abi",
+    "model_id",
+    "numeric_profile",
+    "schema",
+    "semantic_sha256"
+  ],
+  "title": "OpenTallas deployment manifest v1",
+  "type": "object"
+}
