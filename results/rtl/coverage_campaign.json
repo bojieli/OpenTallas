@@ -25,7 +25,7 @@
           ]
         },
         "image": "rtl/build/coverage_campaign/coverage_units/iverilog/tb_coverage_units.vvp",
-        "image_sha256": "397eb9bab374e903330cea09bf5e193970b42c8011d69652358706464709c01d",
+        "image_sha256": "521343a1d69844cebcd111fa9ca355a8534366dd8eac743ac820e64e34a3f24c",
         "observations": {
           "duplicate_ids": [],
           "failed_ids": [],
@@ -79,7 +79,7 @@
           "unexpected_warnings": [],
           "warnings": []
         },
-        "semantic_output_sha256": "3c70272744c05cab9708c9c4471602e7c0f13b984cb471f16cb80d3e1f4e2a03",
+        "semantic_output_sha256": "20a427edd17b6232d060eda08b0cb8b0024aa913980243ee7c5662d1b3102fad",
         "status": "pass"
       },
       "name": "coverage_units",
@@ -130,7 +130,7 @@
       "source_sha256": {
         "rtl/lib/ot_crc16_ccitt.sv": "bc70fe269d5736df24a90e738a41ceb6dd833e161b7f7121161090cf43071f3c",
         "rtl/lib/ot_crc32c.sv": "8cd8dda8419a9268c91ea4fbf0ef76d09e8a18362912728bdf7889b4ac487d09",
-        "rtl/ot_format_decode.sv": "e225c7d15151bee4e61725c41326f24504e385f1bf6fdd05bdc265f404d2cc98",
+        "rtl/ot_format_decode.sv": "b2350b6f961460f709a183a519d67a0d876c527637caf046dd9d6bebcc6ce551",
         "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c",
         "rtl/ot_reduction_tree.sv": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5",
         "rtl/ot_route_mask.sv": "4bdf835a9c072bc8d1f13b7de50370ae3b7e1c928f8bb9d6a55a70c64950db0a",
@@ -139,7 +139,7 @@
         "rtl/ot_stage_link_tx.sv": "fe26c3b031dfc5eeda5073e22ce81f9dd6b2838a3be0b7c0b56c5352d7a12c90",
         "rtl/ot_tile.sv": "92f0248dc5f46e94011be658202eb0c7497d28a90cb4906414d0b449829f9f9f",
         "rtl/static_timeslot_switch.sv": "04f1de6146d694bce80c7fea65e43d73d0a2cb11b7e37f43cbf3e1bab4d574fe",
-        "rtl/test/tb_coverage_units.sv": "43d8c81aa2705a6bca6fc149323c769d3bfa5a997bc0c967a326960c637adaec",
+        "rtl/test/tb_coverage_units.sv": "9cba80a26397e1c663e05aa9827c915d6ee03b5a3fc1135fe1e587d884df9c72",
         "rtl/via_mask_rom.sv": "203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141"
       },
       "status": "pass",
@@ -156,9 +156,9 @@
           "warnings": []
         },
         "coverage_data": "rtl/build/coverage_campaign/coverage_units/verilator/coverage.dat",
-        "coverage_data_sha256": "abc40ef0e27406b1963baf37b580425dc25d2ddc2b66b12ed564e880362d4946",
+        "coverage_data_sha256": "313986b4b33a0a61aca398bbb4e6945ed1e3a3f377bb1e25db708d776a619d16",
         "executable": "rtl/build/coverage_campaign/coverage_units/verilator/Vtb_coverage_units",
-        "executable_sha256": "a32d6b03bc719425f0035cc643b7e41280809fcea7ce3cfb8463612d93203bfc",
+        "executable_sha256": "149ec259d46857d5a876514ccb5f221711ca7a8dd85bb4692fd9f2a55fac3f9e",
         "observations": {
           "duplicate_ids": [],
           "failed_ids": [],
@@ -211,7 +211,7 @@
           "unexpected_warnings": [],
           "warnings": []
         },
-        "semantic_output_sha256": "3c70272744c05cab9708c9c4471602e7c0f13b984cb471f16cb80d3e1f4e2a03",
+        "semantic_output_sha256": "20a427edd17b6232d060eda08b0cb8b0024aa913980243ee7c5662d1b3102fad",
         "status": "pass",
         "warning_suppressions": [
           "PROCASSINIT",
@@ -239,7 +239,7 @@
           ]
         },
         "image": "rtl/build/coverage_campaign/coverage_control/iverilog/tb_coverage_control.vvp",
-        "image_sha256": "4f94aa6153c3ceb1636bd8c6accc9e624e729baa57a6a7b5e622db8184a5574e",
+        "image_sha256": "d73c1b8e6c3584a3598b86ab32d36189c29d713347d88708f5763f1daed2e504",
         "observations": {
           "duplicate_ids": [],
           "failed_ids": [],
@@ -394,7 +394,7 @@
           "warnings": []
         },
         "image": "rtl/build/coverage_campaign/coverage_stage_controller/iverilog/tb_coverage_stage_controller.vvp",
-        "image_sha256": "8bdf2d0862256a4b5762dd9c1484425078e6afdd5ca3a7ae6234325c5502db87",
+        "image_sha256": "65bdd40b18f1c8cf80acf4a120a54390f245ed5764b74b1031df0a65f3bd7a6e",
         "observations": {
           "duplicate_ids": [],
           "failed_ids": [],
@@ -576,7 +576,7 @@
           ]
         },
         "image": "rtl/build/coverage_campaign/coverage_data_boundary/iverilog/tb_coverage_data_boundary.vvp",
-        "image_sha256": "001bacfe27a04af33507f2deb9c0c8c0a182631310907591e777a80e68de5290",
+        "image_sha256": "0a383cd47d393690f3c4a2c8d76d0a76b4c3510e34d056bbc6603cd34eb83504",
         "observations": {
           "duplicate_ids": [],
           "failed_ids": [],
@@ -746,7 +746,7 @@
           ]
         },
         "image": "rtl/build/coverage_campaign/coverage_stage_random/iverilog/tb_coverage_stage_random.vvp",
-        "image_sha256": "96e453cd9c8c715168f1370280d77d823f30425d65843d3a2f5572fa86c7ccab",
+        "image_sha256": "a372a5b0bdd82c5629e27f5cac130b4bb36f1885d691630389215e992534e2be",
         "observations": {
           "duplicate_ids": [],
           "failed_ids": [],
@@ -827,7 +827,7 @@
         "rtl/ot_credit_manager.sv": "4d61c6121b85f599fecd891ac5b4faf234df55e065e17eb28f619968e8720449",
         "rtl/ot_csr_block.sv": "107553401553638187b4d609f2b8739ca96624af93f11b832f5ebed1f5ba83a9",
         "rtl/ot_dft_controller.sv": "338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225",
-        "rtl/ot_format_decode.sv": "e225c7d15151bee4e61725c41326f24504e385f1bf6fdd05bdc265f404d2cc98",
+        "rtl/ot_format_decode.sv": "b2350b6f961460f709a183a519d67a0d876c527637caf046dd9d6bebcc6ce551",
         "rtl/ot_hbm_frontend.sv": "47b8f1def0c75d5cfaf1716f18f07f1f1a9ea4adcfcef214fc483996fd227287",
         "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c",
         "rtl/ot_power_reset_controller.sv": "1c7b187ad1ada1797d66776383270b2017b2625607594eba7013b8ac53627594",
@@ -940,7 +940,7 @@
           ]
         },
         "image": "rtl/build/coverage_campaign/fault_data_supplement/iverilog/tb_fault_data.vvp",
-        "image_sha256": "763fb7c69df91e9457fbcdd6c6123c6f60609ff7a6e54f1b4321298c88392675",
+        "image_sha256": "fcde38ad0179bff2edcba4b6c3f7dd826386ac630089df7d85ca07d3d3fb1758",
         "observations": {
           "duplicate_ids": [],
           "failed_ids": [],
@@ -1046,7 +1046,7 @@
           "warnings": []
         },
         "image": "rtl/build/coverage_campaign/fault_link_supplement/iverilog/tb_fault_link.vvp",
-        "image_sha256": "76e6c646594e0969d7aed14a3d70bcfc148d6dd269036260518af68ff11945fd",
+        "image_sha256": "3ce154ef2f08592bb71c4df4f4f910f7e4a4164a9fe7c8fba87b1668aa310ef1",
         "observations": {
           "duplicate_ids": [],
           "failed_ids": [],
@@ -1150,7 +1150,7 @@
           "warnings": []
         },
         "image": "rtl/build/coverage_campaign/fault_ras_dft_supplement/iverilog/tb_fault_ras_dft.vvp",
-        "image_sha256": "c2ea50821761c591923fc406c2487e6aac1c809a5f0761eb142cbe225a3fa30d",
+        "image_sha256": "3f0cf4fe289e03d67f06090853921cf949cbb9561b6bf84aea7ad431e3247ec0",
         "observations": {
           "duplicate_ids": [],
           "failed_ids": [],
@@ -1258,7 +1258,7 @@
           ]
         },
         "image": "rtl/build/coverage_campaign/fault_control_supplement/iverilog/tb_fault_control.vvp",
-        "image_sha256": "27f66e2e873e68c1eeaab26f7995707e38a9ec465df857fdb67ddb5574d7152b",
+        "image_sha256": "07aed738a69456b4017305bd895374d42a50a4bb27b4bbc165dc7508f308d512",
         "observations": {
           "duplicate_ids": [],
           "failed_ids": [],
@@ -2576,7 +2576,7 @@
     "rtl/ot_credit_manager.sv": "4d61c6121b85f599fecd891ac5b4faf234df55e065e17eb28f619968e8720449",
     "rtl/ot_csr_block.sv": "107553401553638187b4d609f2b8739ca96624af93f11b832f5ebed1f5ba83a9",
     "rtl/ot_dft_controller.sv": "338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225",
-    "rtl/ot_format_decode.sv": "e225c7d15151bee4e61725c41326f24504e385f1bf6fdd05bdc265f404d2cc98",
+    "rtl/ot_format_decode.sv": "b2350b6f961460f709a183a519d67a0d876c527637caf046dd9d6bebcc6ce551",
     "rtl/ot_hbm_frontend.sv": "47b8f1def0c75d5cfaf1716f18f07f1f1a9ea4adcfcef214fc483996fd227287",
     "rtl/ot_numeric_dot.sv": "e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c",
     "rtl/ot_power_reset_controller.sv": "1c7b187ad1ada1797d66776383270b2017b2625607594eba7013b8ac53627594",
@@ -2598,7 +2598,7 @@
     "rtl/test/tb_coverage_data_boundary.sv": "d73f8b98357c0af7d29949955e096ddd257d61f859ddd8035a967e62c1e1ec62",
     "rtl/test/tb_coverage_stage_controller.sv": "b85609c2c8d5563c188ca1a26db70a51279c6102ca0c438a9f90a3552bcee07d",
     "rtl/test/tb_coverage_stage_random.sv": "c1de7e21f2b82b5d9fea4ed15649e831d6ad58ae7fa4e2e599e757475fa28f1a",
-    "rtl/test/tb_coverage_units.sv": "43d8c81aa2705a6bca6fc149323c769d3bfa5a997bc0c967a326960c637adaec",
+    "rtl/test/tb_coverage_units.sv": "9cba80a26397e1c663e05aa9827c915d6ee03b5a3fc1135fe1e587d884df9c72",
     "rtl/test/tb_fault_control.sv": "fbf7a5509ffa47ae81c2c1555c56d85c0a854caab88d82fd765c6116098091f6",
     "rtl/test/tb_fault_data.sv": "8eb8a4eea57d445d0b6b58d1c04d31d48a540b84244f1c0e460610b3b14bbdba",
     "rtl/test/tb_fault_link.sv": "b3c767a3a93de59026ab3b27ab8dbf149eec6b2726d3ac2dcb39445cabc22827",
@@ -2606,7 +2606,7 @@
     "rtl/via_mask_rom.sv": "203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141",
     "spec/coverage_plan.json": "7778b5d128a26ca78f61b1af73e9078c20c483ba6fabc824e9b21ba605b134b5",
     "spec/coverage_waivers.json": "28b01488d550d4e38cb63b2bfa3740c710580a9b787c2e6581b3b729125851ae",
-    "spec/verification.json": "d94e21eda4f07edeb00e31024beaa7ba2b2d6b40b658f498c7e8fec729f5f55e",
+    "spec/verification.json": "315a91fdcb96ea7296123de590c6dc62981c30985f6f7f0b6901c72704a536d3",
     "tools/rtl_coverage_campaign.py": "66723c35efc204c751e20bca52943547d55f1d1561ac4a51a23ff7b3f5d0ab00"
   },
   "status": "pass",

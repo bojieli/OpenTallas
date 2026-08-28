@@ -87,7 +87,9 @@ module ot_format_decode (
                                               $signed({12'b0,1'b0,frac3});
                         exponent = -9;
                     end
-                end else if (exp4 == 4'hf && frac3 >= 3'b110) begin
+                // E4M3FN has no infinity and reserves only the all-ones
+                // magnitude code for NaN.  exp=15, frac=6 is finite 448.
+                end else if (exp4 == 4'hf && frac3 == 3'b111) begin
                     nan = 1'b1;
                 end else begin
                     finite = 1'b1;

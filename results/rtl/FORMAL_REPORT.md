@@ -44,6 +44,6 @@ This is reproducible methodology evidence for the checked public RTL. It is not 
 - `rtl/ot_route_mask.sv`: `4bdf835a9c072bc8d1f13b7de50370ae3b7e1c928f8bb9d6a55a70c64950db0a`
 - `rtl/ot_schedule_controller.sv`: `07301550750eeaedceb8116ba9b97bd95fe0c17e84b536020bd0470e3029d826`
 - `rtl/ot_stage_controller.sv`: `04f23234bb07f79a86d9d71efabcb0acb7d9e033192515b9029e0c9f161856f4`
-- `spec/VERIFICATION_PLAN.md`: `217037c192a7019b0c9be8d55c84c4907105d0095cf5c23d72acdf6c408c6868`
-- `spec/verification.json`: `d94e21eda4f07edeb00e31024beaa7ba2b2d6b40b658f498c7e8fec729f5f55e`
+- `spec/VERIFICATION_PLAN.md`: `45909ae5b943bb41b911cd6964086f8e8a67a28f9bdebaef77e1fe4a9ef5b419`
+- `spec/verification.json`: `315a91fdcb96ea7296123de590c6dc62981c30985f6f7f0b6901c72704a536d3`
 - `tools/rtl_campaign.py`: `f0dc494bb91b432c852f4b1593a3dda01f801de119989c34fb68372fb4d8d79b`

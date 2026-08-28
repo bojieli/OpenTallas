@@ -123,6 +123,14 @@ statuses remain pending. The contract also records that the pinned local
 and acceptance live outside the pinned local reference; this is a blocking
 system-semantic gap, not silently treated as implemented behavior.
 
+The independent scalar numeric-reference foundation is under
+`runtime/reference/formats.py`. It exhaustively defines E2M1, E8M0, E4M3FN, and
+BF16 classification plus target rounding, packing, MXFP4 decode, and activation
+microscaling boundaries without importing compiler or RTL algorithms. This is a
+target-precision reference skeleton, not operator-complete graph execution:
+FP32 accumulation, vector/attention/routing semantics, real checkpoint known
+answers, layer differentials, and numerical quality remain open.
+
 The service engine verifies every manifest hash before execution and never reads
 the known-answer file. The independent reference evaluator consumes the source
 IR and request, not compiler artifacts. Tests compare both paths with the

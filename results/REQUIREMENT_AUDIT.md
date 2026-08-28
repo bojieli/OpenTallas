@@ -66,14 +66,18 @@ that Phase 6 has begun.
 ## Executable-system frontier
 
 `COMP-01` has ten milestones (`M0`–`M9`) and six validation levels (`A`–`F`).
-The first deterministic exact-integer fixture closes only the Level A plumbing
-slice. It exercises schemas, ROM-image generation, inverse checking, microcode,
-artifact-only interpretation, known-answer comparison, and exact functional
-counters. It does not close a real-model milestone. The next hard frontier is
-the official DeepSeek semantic/operator ledger and complete checkpoint front end
-(`M1`/`M2`), followed by real placement/images, execution, certified schedules,
-a full-dimension vertical slice, RTL integration, complete-model execution, and
-implementation-derived performance revalidation (`M3`–`M9`).
+The deterministic exact-integer fixture closes only the Level A plumbing slice.
+The pinned Flash adapter now also emits a deterministic 1,924-node source graph
+across 43 operator kinds and assigns every expected tensor role, while the
+independent scalar reference exhausts E2M1, E8M0, E4M3FN, and BF16 encodings and
+target packing/rounding/microscaling boundaries. All 43 graph kinds still report
+pending reference, service-engine, and RTL implementations, so this does not
+close `M1`. The streaming checkpoint lock and complete 72,317-tensor structural
+contract are an `M2` foundation, but the 166.9-GB payload has not been locally
+streamed, canonically converted, or round-tripped. The active frontier therefore
+remains `M1`/`M2`, followed by real placement/images, execution, certified
+schedules, a full-dimension vertical slice, RTL integration, complete-model
+execution, and implementation-derived performance revalidation (`M3`–`M9`).
 
 ## Current disposition
 

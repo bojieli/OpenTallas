@@ -301,7 +301,7 @@ module tb_coverage_units;
                 #1;
                 expected_zero = ((code_i & 32'h0000_007f) == 0);
                 expected_nan = (((code_i >> 3) & 32'h0000_000f) == 32'h0000_000f) &&
-                               ((code_i & 32'h0000_0007) >= 32'h0000_0006);
+                               ((code_i & 32'h0000_0007) == 32'h0000_0007);
                 expected_finite = !expected_nan;
                 if (format_zero != expected_zero)
                     format_errors = format_errors + 1;
@@ -314,6 +314,20 @@ module tb_coverage_units;
             end
             checks = checks + 4*256;
             pass_bin("COV-UNIT-FORMAT-FP8-EXHAUSTIVE",format_errors == 0);
+
+            format_mode = 4'd2;
+            format_code = 16'h007e;
+            #1;
+            require_true(format_finite && !format_nan &&
+                         format_mantissa == 16'sd14 &&
+                         format_exponent == 9'sd5,
+                         "E4M3FN positive finite endpoint is +448");
+            format_code = 16'h00fe;
+            #1;
+            require_true(format_finite && !format_nan && format_negative &&
+                         format_mantissa == -16'sd14 &&
+                         format_exponent == 9'sd5,
+                         "E4M3FN negative finite endpoint is -448");
 
             format_errors = 0;
             format_mode = 4'd3;

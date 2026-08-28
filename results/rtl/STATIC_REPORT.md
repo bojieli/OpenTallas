@@ -62,7 +62,7 @@ Owned waivers consumed: 3. Unowned, ambiguous, expired, and stale waivers are ca
 - `rtl/ot_credit_manager.sv`: `4d61c6121b85f599fecd891ac5b4faf234df55e065e17eb28f619968e8720449`
 - `rtl/ot_csr_block.sv`: `107553401553638187b4d609f2b8739ca96624af93f11b832f5ebed1f5ba83a9`
 - `rtl/ot_dft_controller.sv`: `338dda08b2a6a5f7b83f9bf22a7d866f1ef90c8b39fddfb925cadf07c6d23225`
-- `rtl/ot_format_decode.sv`: `e225c7d15151bee4e61725c41326f24504e385f1bf6fdd05bdc265f404d2cc98`
+- `rtl/ot_format_decode.sv`: `b2350b6f961460f709a183a519d67a0d876c527637caf046dd9d6bebcc6ce551`
 - `rtl/ot_hbm_frontend.sv`: `47b8f1def0c75d5cfaf1716f18f07f1f1a9ea4adcfcef214fc483996fd227287`
 - `rtl/ot_numeric_dot.sv`: `e7c35364cb3b66ead558f0edb0d682ffd4c47ad22673d924c35bfe5ddebb304c`
 - `rtl/ot_power_reset_controller.sv`: `1c7b187ad1ada1797d66776383270b2017b2625607594eba7013b8ac53627594`
@@ -81,9 +81,9 @@ Owned waivers consumed: 3. Unowned, ambiguous, expired, and stale waivers are ca
 - `rtl/rom_mac_tile.sv`: `841d5e9ab4c8278c1e7fc7f3f598c5e962041df3d94aa9e0ffb82c6d4f3e5e00`
 - `rtl/static_timeslot_switch.sv`: `04f1de6146d694bce80c7fea65e43d73d0a2cb11b7e37f43cbf3e1bab4d574fe`
 - `rtl/via_mask_rom.sv`: `203d9950d505fcab97af084746ea696154eada5e2b20282b6f45ff1e8cc78141`
-- `spec/CLOCK_RESET_POWER.md`: `64e9e13e2be44325f62cb2cdf64a26cd806990903a92808d2707c7b45e44d100`
+- `spec/CLOCK_RESET_POWER.md`: `d3c23eb1cf27e29e868396a6d87c5bc28089cff7e31407fa4e2b83fe080feaa2`
 - `spec/INTERFACES.md`: `09ab47051bbb2bb4492d5a378a2a208291c7a19ceb3501ae968a0c287dd8471e`
-- `spec/VERIFICATION_PLAN.md`: `217037c192a7019b0c9be8d55c84c4907105d0095cf5c23d72acdf6c408c6868`
+- `spec/VERIFICATION_PLAN.md`: `45909ae5b943bb41b911cd6964086f8e8a67a28f9bdebaef77e1fe4a9ef5b419`
 - `spec/clock_reset_crossings.json`: `445055e40c862c3bf3439e11c8ddf1dc3b50f4cd964b1729b456283e58cd16cd`
 - `spec/rtl_waivers.json`: `56f3aa73a1007f297c5aaaa81fa8cbf6afafb09b5e1c2f13afd1f11af6997c68`
 - `tools/rtl_static.py`: `16012d7b377df9cc6e3a8533876476c6301c3c1310f8621251b0786df5f1cc8e`

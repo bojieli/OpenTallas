@@ -9,8 +9,11 @@
 > service engine, end-to-end model differential evidence, a target-node ROM
 > macro, a full placed-and-routed chip or wafer, or fabricated OpenTallas silicon.
 > A deterministic exact-integer compiler/interpreter fixture now proves the first
-> artifact path only. Current speedups are conditional break-even scenarios, not
-> achieved implementation results.
+> artifact path. The official Flash front end additionally locks the expected
+> tensors, maps a 1,924-node source graph, and has an independent scalar
+> target-format reference, but all 43 graph operator kinds still await executable
+> reference/service-engine/RTL implementations. Current speedups are conditional
+> break-even scenarios, not achieved implementation results.
 
 ## Start here
 

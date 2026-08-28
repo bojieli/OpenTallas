@@ -91,9 +91,10 @@ CRCs. RTL never infers nibble order from a source dtype string.
 
 FP8 dense/shared weights use the finite-only E4M3 encoding identified by
 safetensors `F8_E4M3`: one sign, four exponent, and three fraction bits, exponent
-bias 7, subnormals enabled, no infinity, and the standard E4M3FN NaN encodings.
-Finite maximum magnitude is 448. NaN weight encodings poison the transaction.
-Negative zero is canonicalized to positive zero.
+bias 7, subnormals enabled, and no infinity. Only `0x7f` and `0xff` are NaN;
+`0x7e` and `0xfe` are the valid finite endpoints +448 and -448. NaN weight
+encodings poison the transaction. Negative zero is canonicalized to positive
+zero.
 
 Released dense weight scale tensors describe 128×128 logical weight tiles. One
 E8M0 scale multiplies each FP8 value in its tile. Scale `0xff` is illegal. Exact

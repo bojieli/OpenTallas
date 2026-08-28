@@ -32,14 +32,19 @@ engine. `docs/EXECUTABLE_SYSTEM_RECOVERY_PLAN.md` defines the implementation,
 independence, vertical-slice, full-model, and claim-reentry criteria. Until that
 gate closes, all analytical speedups are conditional break-even scenarios.
 
-The first `COMP-01` plumbing slice is now implemented under `compiler/` and
+The first `COMP-01` plumbing slice is implemented under `compiler/` and
 `runtime/`: a strict exact-integer fixture emits deterministic ROM and microcode
 artifacts, passes an independently implemented inverse-image check, executes in
 the artifact-only software service engine, matches an independent reference and
-known answer, and reconciles functional counters exactly. This closes only a
-unit-test fixture. It does not ingest a real checkpoint, implement DeepSeek
-operators or target formats, emit certified physical schedules, model hardware
-cycles, or drive RTL, so `COMP-01` remains open.
+known answer, and reconciles functional counters exactly. The official Flash
+front end now also maps 1,924 ordered source nodes across 43 operator kinds with
+complete expected tensor-role assignment, and the independent scalar reference
+exhausts the E2M1, E8M0, E4M3FN, and BF16 encodings plus initial target packing,
+rounding, and microscaling rules. All 43 graph kinds still have pending
+reference, service-engine, and RTL status. The full checkpoint payload has not
+been streamed, canonically converted, or round-tripped. No real transformer
+layer executes, no physical schedules are certified, and no hardware cycles are
+derived, so `COMP-01` remains open.
 
 The governed open-library implementation-methodology campaign is now closed from
 an isolated clean baseline. All seven arithmetic and stage-control cases pass
