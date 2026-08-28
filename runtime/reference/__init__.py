@@ -61,6 +61,7 @@ from .matrix import (
     DenseFP8LinearResult,
     MatrixReferenceError,
     dense_fp8_linear_bf16,
+    dense_fp8_linear_selected_rows_bf16,
 )
 from .structural import (
     BF16Batch,
@@ -150,6 +151,7 @@ __all__ = [
     "decode_mxfp4_block",
     "decode_packed_e2m1",
     "dense_fp8_linear_bf16",
+    "dense_fp8_linear_selected_rows_bf16",
     "dispatch_routed_experts_bf16",
     "dspark_noise_embed_bf16",
     "dspark_noise_token_block",

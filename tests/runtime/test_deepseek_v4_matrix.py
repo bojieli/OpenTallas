@@ -18,6 +18,7 @@ from runtime.reference.matrix import (
     MODEL_SOURCE_SHA256,
     MatrixReferenceError,
     dense_fp8_linear_bf16,
+    dense_fp8_linear_selected_rows_bf16,
 )
 
 
@@ -92,6 +93,36 @@ def test_dense_fp8_weight_scale_orientation_crosses_output_tile_boundary() -> No
     assert result.values[0][128] != result.values[0][127]
 
 
+def test_selected_output_rows_are_an_exact_projection_of_complete_linear() -> None:
+    inputs = (
+        tuple(_bf16(Fraction((index % 11) - 5, 4)) for index in range(256)),
+    )
+    weights = tuple(
+        tuple((row * 13 + column * 5) % 0x7F for column in range(256))
+        for row in range(257)
+    )
+    scales = (
+        (0x7D, 0x7E),
+        (0x7F, 0x80),
+        (0x81, 0x82),
+    )
+    complete = dense_fp8_linear_bf16(inputs, weights, scales)
+    selected_rows = (0, 127, 128, 255, 256)
+    selected = dense_fp8_linear_selected_rows_bf16(
+        inputs,
+        tuple(weights[index] for index in selected_rows),
+        scales,
+        output_row_indices=selected_rows,
+        declared_output_count=257,
+    )
+    assert selected.values == (
+        tuple(complete.values[0][index] for index in selected_rows),
+    )
+    assert selected.activation_saturated_block_count == (
+        complete.activation_saturated_block_count
+    )
+
+
 def test_dense_fp8_linear_matches_independent_composition_randomly() -> None:
     rng = random.Random(0xF8_11)
     for _ in range(24):
@@ -146,3 +177,26 @@ def test_dense_fp8_linear_rejects_malformed_or_poisoned_inputs(
 ) -> None:
     with pytest.raises(MatrixReferenceError, match=match):
         dense_fp8_linear_bf16(inputs, weights, scales)
+
+
+@pytest.mark.parametrize(
+    ("indices", "declared", "match"),
+    [
+        ((), 4, "non-empty"),
+        ((1, 0), 4, "strictly increasing"),
+        ((0, 0), 4, "strictly increasing"),
+        ((4,), 4, "must be in"),
+        ((0,), 0, "declared_output_count"),
+    ],
+)
+def test_selected_dense_fp8_rows_reject_illegal_logical_indices(
+    indices, declared: int, match: str
+) -> None:
+    with pytest.raises(MatrixReferenceError, match=match):
+        dense_fp8_linear_selected_rows_bf16(
+            ((0,) * 128,),
+            tuple((0,) * 128 for _ in indices),
+            ((0x7F,),),
+            output_row_indices=indices,
+            declared_output_count=declared,
+        )

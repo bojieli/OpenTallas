@@ -107,6 +107,73 @@ def dense_fp8_linear_bf16(
     tree; the final binary32 value rounds once to BF16.
     """
 
+    raw_weights = _sequence(weight_codes, "weight_codes")
+    return _dense_fp8_linear_bf16(
+        input_codes,
+        raw_weights,
+        weight_scale_codes,
+        output_row_indices=tuple(range(len(raw_weights))),
+        declared_output_count=len(raw_weights),
+    )
+
+
+def dense_fp8_linear_selected_rows_bf16(
+    input_codes: Sequence[Sequence[int]],
+    selected_weight_codes: Sequence[Sequence[int]],
+    weight_scale_codes: Sequence[Sequence[int]],
+    *,
+    output_row_indices: Sequence[int],
+    declared_output_count: int,
+) -> DenseFP8LinearResult:
+    """Execute exact linear semantics for explicit logical output rows.
+
+    This is an evidence-oriented projection of the complete operator. Weight
+    rows are supplied in the same order as the strictly increasing logical
+    ``output_row_indices``; scale lookup still uses the original logical output
+    tile. ``declared_output_count`` binds the full matrix extent.
+    """
+
+    if (
+        isinstance(declared_output_count, bool)
+        or not isinstance(declared_output_count, int)
+        or declared_output_count < 1
+    ):
+        raise MatrixReferenceError("declared_output_count must be an integer >= 1")
+    raw_indices = _sequence(output_row_indices, "output_row_indices")
+    indices = tuple(
+        _unsigned(
+            index,
+            declared_output_count - 1,
+            f"output_row_indices[{position}]",
+        )
+        for position, index in enumerate(raw_indices)
+    )
+    if not indices or indices != tuple(sorted(set(indices))):
+        raise MatrixReferenceError(
+            "output_row_indices must be non-empty, unique, and strictly increasing"
+        )
+    raw_weights = _sequence(selected_weight_codes, "selected_weight_codes")
+    if len(raw_weights) != len(indices):
+        raise MatrixReferenceError(
+            "selected weight row count must match output_row_indices"
+        )
+    return _dense_fp8_linear_bf16(
+        input_codes,
+        raw_weights,
+        weight_scale_codes,
+        output_row_indices=indices,
+        declared_output_count=declared_output_count,
+    )
+
+
+def _dense_fp8_linear_bf16(
+    input_codes: Sequence[Sequence[int]],
+    weight_codes: Sequence[Sequence[int]],
+    weight_scale_codes: Sequence[Sequence[int]],
+    *,
+    output_row_indices: tuple[int, ...],
+    declared_output_count: int,
+) -> DenseFP8LinearResult:
     inputs = _rectangular_codes(input_codes, "input_codes", maximum=(1 << 16) - 1)
     reduction = len(inputs[0])
     if reduction % DENSE_REDUCTION_BLOCK:
@@ -120,7 +187,7 @@ def dense_fp8_linear_bf16(
         expected_width=reduction,
     )
     reduction_blocks = reduction // DENSE_REDUCTION_BLOCK
-    scale_rows = (len(weights) + DENSE_OUTPUT_SCALE_BLOCK - 1) // (
+    scale_rows = (declared_output_count + DENSE_OUTPUT_SCALE_BLOCK - 1) // (
         DENSE_OUTPUT_SCALE_BLOCK
     )
     scales = _rectangular_codes(
@@ -157,7 +224,8 @@ def dense_fp8_linear_bf16(
     try:
         for input_index, activation_blocks in enumerate(quantized_inputs):
             output_row: list[int] = []
-            for output_index, weight_row in enumerate(weights):
+            for selected_index, weight_row in enumerate(weights):
+                output_index = output_row_indices[selected_index]
                 scale_row = scales[output_index // DENSE_OUTPUT_SCALE_BLOCK]
                 partials = []
                 for block_index, activation in enumerate(activation_blocks):
@@ -196,4 +264,5 @@ __all__ = [
     "FP8Matrix",
     "MatrixReferenceError",
     "dense_fp8_linear_bf16",
+    "dense_fp8_linear_selected_rows_bf16",
 ]
