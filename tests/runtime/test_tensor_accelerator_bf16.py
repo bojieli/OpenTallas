@@ -15,7 +15,9 @@ from runtime.reference.tensor_accelerator_bf16 import (
 from runtime.tensor_accelerator.bf16 import (
     BF16KernelError,
     NUMERIC_CONTRACT as KERNEL_CONTRACT,
+    accumulate_bf16_tile_fp32,
     dense_bf16_linear_bf16 as kernel_linear,
+    finalize_bf16_accumulator,
 )
 
 
@@ -193,6 +195,56 @@ def test_finite_bf16_output_overflow_saturates_and_counts() -> None:
     assert reference.output_saturated_element_count == 1
     assert _tuples(kernel.values) == reference.values
     assert kernel.output_saturated_element_count == 1
+
+
+def test_segmented_accumulation_is_bit_exact_for_every_k_partition() -> None:
+    rng = random.Random(0xACC0)
+    inputs = np.asarray(
+        [[_random_finite_bf16(rng) for _ in range(31)] for _ in range(3)],
+        dtype=np.uint16,
+    )
+    weights = np.asarray(
+        [[_random_finite_bf16(rng) for _ in range(31)] for _ in range(7)],
+        dtype=np.uint16,
+    )
+    try:
+        expected = kernel_linear(inputs, weights)
+    except BF16KernelError:
+        # Keep this test deterministic if the unrestricted random encodings
+        # happen to overflow on a future numeric implementation.
+        inputs &= np.uint16(0xBFFF)
+        weights &= np.uint16(0xBFFF)
+        expected = kernel_linear(inputs, weights)
+    for boundaries in ((0, 31), (0, 1, 31), (0, 7, 19, 31)):
+        accumulator = None
+        for start, end in zip(boundaries[:-1], boundaries[1:], strict=True):
+            accumulator = accumulate_bf16_tile_fp32(
+                inputs[:, start:end],
+                weights[:, start:end],
+                None if accumulator is None else accumulator.values,
+            )
+        assert accumulator is not None
+        observed = finalize_bf16_accumulator(accumulator.values)
+        assert np.array_equal(observed.values, expected.values)
+        assert (
+            observed.output_saturated_element_count
+            == expected.output_saturated_element_count
+        )
+
+
+def test_segmented_accumulator_rejects_shape_range_and_nonfinite_state() -> None:
+    inputs = np.asarray([[0x3F80, 0x4000]], dtype=np.uint16)
+    weights = np.asarray([[0x4040, 0x4080]], dtype=np.uint16)
+    with pytest.raises(BF16KernelError, match=r"integer \[M,N\]"):
+        accumulate_bf16_tile_fp32(inputs, weights, np.zeros((2, 1), dtype=np.uint32))
+    with pytest.raises(BF16KernelError, match="NaN or infinity"):
+        accumulate_bf16_tile_fp32(
+            inputs,
+            weights,
+            np.asarray([[0x7F800000]], dtype=np.uint32),
+        )
+    with pytest.raises(BF16KernelError, match="nonempty integer"):
+        finalize_bf16_accumulator(np.asarray([], dtype=np.uint32))
 
 
 def test_reference_has_no_compiler_simulator_or_array_dependency() -> None:

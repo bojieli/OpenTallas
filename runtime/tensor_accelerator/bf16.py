@@ -31,6 +31,13 @@ class BF16KernelResult:
     values: np.ndarray[Any, np.dtype[np.uint16]]
 
 
+@dataclass(frozen=True)
+class BF16AccumulatorResult:
+    """Raw binary32 accumulator encodings after one ordered K segment."""
+
+    values: np.ndarray[Any, np.dtype[np.uint32]]
+
+
 def _codes(value: object, label: str) -> np.ndarray[Any, np.dtype[np.uint16]]:
     try:
         raw = np.asarray(value)
@@ -72,6 +79,84 @@ def _encode_bf16_rne(
     rounded = np.where(saturated, signs | np.uint32(0x7F7F), rounded)
     rounded = np.where((rounded & np.uint32(0x7FFF)) == 0, 0, rounded)
     return np.ascontiguousarray(rounded, dtype=np.uint16), saturation_count
+
+
+def accumulate_bf16_tile_fp32(
+    input_codes: Sequence[Sequence[int]] | np.ndarray[Any, Any],
+    weight_codes: Sequence[Sequence[int]] | np.ndarray[Any, Any],
+    accumulator_codes: np.ndarray[Any, Any] | None = None,
+) -> BF16AccumulatorResult:
+    """Accumulate one contiguous K segment into binary32 state.
+
+    Inputs have shapes ``[M,K]`` and ``[N,K]``.  If supplied, accumulator codes
+    have shape ``[M,N]`` and represent the result of all immediately preceding K
+    segments.  No BF16 output rounding occurs in this operation.
+    """
+
+    inputs = _codes(input_codes, "input_codes")
+    weights = _codes(weight_codes, "weight_codes")
+    if inputs.shape[1] != weights.shape[1]:
+        raise BF16KernelError("input and weight reduction widths differ")
+    input_values = _decode(inputs)
+    weight_values = _decode(weights)
+    expected_shape = (inputs.shape[0], weights.shape[0])
+    if accumulator_codes is None:
+        accumulator_values = np.zeros(expected_shape, dtype=np.float32)
+    else:
+        raw_accumulator = np.asarray(accumulator_codes)
+        if raw_accumulator.shape != expected_shape or raw_accumulator.dtype.kind not in {
+            "i",
+            "u",
+        }:
+            raise BF16KernelError(
+                "accumulator_codes must be an integer [M,N] matrix"
+            )
+        if np.any(raw_accumulator < 0) or np.any(raw_accumulator > 0xFFFFFFFF):
+            raise BF16KernelError("accumulator_codes contains a value outside uint32")
+        accumulator_bits = np.ascontiguousarray(raw_accumulator, dtype=np.uint32)
+        exponent = accumulator_bits & np.uint32(0x7F800000)
+        if np.any(exponent == np.uint32(0x7F800000)):
+            raise BF16KernelError("accumulator_codes contains binary32 NaN or infinity")
+        accumulator_values = accumulator_bits.view(np.float32)
+
+    previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
+    try:
+        products = np.multiply(
+            input_values[:, None, :],
+            weight_values[None, :, :],
+            dtype=np.float32,
+        )
+        if not np.all(np.isfinite(products)):
+            raise BF16KernelError("BF16 multiplication overflowed binary32")
+        products[products == 0] = np.float32(0.0)
+        ordered = np.concatenate((accumulator_values[:, :, None], products), axis=2)
+        accumulated = np.add.accumulate(ordered, axis=2, dtype=np.float32)[:, :, -1]
+        if not np.all(np.isfinite(accumulated)):
+            raise BF16KernelError("BF16 accumulation overflowed binary32")
+    finally:
+        np.seterr(**previous)
+    return BF16AccumulatorResult(
+        np.ascontiguousarray(accumulated, dtype=np.float32).view(np.uint32)
+    )
+
+
+def finalize_bf16_accumulator(
+    accumulator_codes: np.ndarray[Any, Any],
+) -> BF16KernelResult:
+    """Round a finite binary32 accumulator matrix once to BF16."""
+
+    raw = np.asarray(accumulator_codes)
+    if raw.ndim != 2 or not raw.shape[0] or not raw.shape[1] or raw.dtype.kind not in {
+        "i",
+        "u",
+    }:
+        raise BF16KernelError("accumulator_codes must be a nonempty integer matrix")
+    if np.any(raw < 0) or np.any(raw > 0xFFFFFFFF):
+        raise BF16KernelError("accumulator_codes contains a value outside uint32")
+    bits = np.ascontiguousarray(raw, dtype=np.uint32)
+    values = bits.view(np.float32)
+    encoded, saturation_count = _encode_bf16_rne(values)
+    return BF16KernelResult(saturation_count, encoded)
 
 
 def dense_bf16_linear_bf16(
@@ -137,6 +222,9 @@ def dense_bf16_linear_bf16(
 __all__ = [
     "BF16KernelError",
     "BF16KernelResult",
+    "BF16AccumulatorResult",
     "NUMERIC_CONTRACT",
+    "accumulate_bf16_tile_fp32",
     "dense_bf16_linear_bf16",
+    "finalize_bf16_accumulator",
 ]
