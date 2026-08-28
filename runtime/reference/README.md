@@ -74,6 +74,18 @@ canonicalization. Thirty-seven naturally sampled overflow candidates and an
 explicit maximum-BF16 block were rejected; the native path independently
 produced binary32 infinity for the explicit case.
 
+`hadamard.py` implements the complete 128-point `HADAMARD_ROTATE` boundary used
+for both index queries and compressed index KV. It widens BF16 exactly, applies
+seven ascending-stride binary32 Sylvester butterfly stages, multiplies once by
+the pinned binary32 scale `0x3db504f3`, and converts once to BF16. Tests fix
+matrix orientation, rounding order, signed zero, subnormal preservation,
+overflow, and malformed input. A separate native SM120 audit compared 1,024
+rows against public `fast_hadamard_transform` v1.1.0: all 131,072 ordinary
+outputs matched after positive-zero canonicalization. The audit also confirmed
+the documented target adaptations: the native fast-math build flushes one
+all-minimum-subnormal case to zero where NUM-3.6 preserves `0x000b`, and it emits
+infinity for an extreme block that the target rejects.
+
 `indexing.py` independently implements the three source-constructed integer
 index tensors used by `WINDOW_INDEX`, `COMPRESSED_DENSE_INDEX`, and
 `DSPARK_WINDOW_INDEX`. It preserves the pinned prefill/decode branch behavior,

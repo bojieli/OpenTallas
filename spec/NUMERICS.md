@@ -224,6 +224,33 @@ poisons. The clamp makes legal E4M3FN finite saturation impossible. Positive-zer
 canonicalization and fail-closed overflow are governed target adaptations rather
 than claims that incidental CUDA infinity or signed-zero behavior may commit.
 
+### NUM-3.6 Indexer Hadamard rotation
+
+`HADAMARD_ROTATE` is the width-128 normalized Sylvester Hadamard transform
+applied to index queries and compressed index KV immediately before NUM-3.4.
+The pinned model requires BF16 input and calls the unversioned
+`fast_hadamard_transform` dependency with `scale=128**-0.5`. Because the release
+does not pin one dependency version or backend, OpenTallas freezes the
+documented matrix and the public CUDA kernel's operation order as a governed
+target rule.
+
+Each BF16 input widens exactly to binary32 and signed zero canonicalizes
+positive. Seven butterfly stages execute in ascending strides
+`1, 2, 4, 8, 16, 32, 64`. For every pair `(a, b)` in a stage, the lower output
+is `binary32_RNE(a+b)` and the upper output is `binary32_RNE(a-b)`. Both use the
+pre-stage values; no in-place dependency is permitted within a pair. After all
+stages, each element is multiplied once by binary32 `0x3db504f3`, the
+binary32-rounded value of the source's Python `128**-0.5`, and converted once
+to BF16 under NUM-4.2.
+
+The target preserves binary32 subnormals. This intentionally differs from the
+observed FTZ edge behavior of a public v1.1.0 development build compiled with
+`--use_fast_math`; the tested ordinary finite vectors match that implementation
+bit for bit.
+Nonfinite BF16 input, intermediate binary32 overflow, or output-conversion
+exception poisons. Widths other than 128 require a separate profile rather than
+implicit padding or a different butterfly schedule.
+
 ## NUM-4 Arithmetic and rounding
 
 ### NUM-4.1 Multiply and accumulate

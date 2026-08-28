@@ -56,7 +56,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "6fe8a3b3772bb84c22186e461c22e6ac46626a7743f02ff5e0f61a82ee5cc342"
+        "06ad30e715bb5f0185570649bf131f56acc8fc270ed60909d867cbca6e58a026"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -66,7 +66,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 27,
+        "pending_reference_kind_count": 26,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -115,6 +115,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert counts["BIASED_TOPK_ROUTE"] == 43
     assert counts["FP4_QDQ"] == 42
     assert counts["FP8_QDQ"] == 90
+    assert counts["HADAMARD_ROTATE"] == 42
     assert counts["MXFP4_SWIGLU"] == 46
     assert counts["INDEX_TOPK"] == 21
     assert counts["COMPRESSED_DENSE_INDEX"] == 20
@@ -137,6 +138,9 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "FP4_QDQ": "runtime.reference.quantization.fp4_qdq_bf16",
         "FP8_QDQ": "runtime.reference.quantization.fp8_qdq_bf16",
         "FP8_LINEAR": "runtime.reference.matrix.dense_fp8_linear_bf16",
+        "HADAMARD_ROTATE": (
+            "runtime.reference.hadamard.hadamard_rotate_128_bf16"
+        ),
         "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
         "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
         "HC_POST": "runtime.reference.vector.hc_post_bf16",
@@ -210,6 +214,24 @@ def test_layer_classes_and_mutable_state_sites_are_explicit(
         }
         for node in fp8_nodes
     )
+    hadamard_nodes = [
+        node for node in graph_contract["nodes"] if node["kind"] == "HADAMARD_ROTATE"
+    ]
+    assert len(hadamard_nodes) == 42
+    assert all(
+        node["attributes"]
+        == {
+            "arithmetic": "binary32_rne",
+            "butterfly_order": "ascending_stride_1_to_64",
+            "input_dtype": "bf16",
+            "normalization_scale_binary32": "0x3db504f3",
+            "output_dtype": "bf16",
+            "stages": 7,
+            "subnormal_policy": "preserve",
+            "width": 128,
+        }
+        for node in hadamard_nodes
+    )
     assert by_id["dspark.layer00.prefill_kv"]["phases"] == ["prefill"]
     assert by_id["dspark.layer00.hc_attn_pre"]["phases"] == ["decode"]
     assert by_id["dspark.layer00.window_kv_write"]["inputs"][0] == (
@@ -244,7 +266,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "sixteen complete matrix/vector/structural/index/lookup/selection/routing/conversion" in (
+    assert "seventeen complete matrix/vector/structural/index/lookup/selection/routing/conversion" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -266,6 +288,9 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     )
     assert "unit-qualified dense FP8 linear, KV FP8 QDQ, indexer FP4 QDQ" in (
         " ".join(graph_contract["system_scope"]["covered"])
+    )
+    assert "indexer Hadamard rotation" in " ".join(
+        graph_contract["system_scope"]["covered"]
     )
     assert "biased-router top-k" in " ".join(
         graph_contract["system_scope"]["covered"]
@@ -322,7 +347,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "6fe8a3b3772bb84c22186e461c22e6ac46626a7743f02ff5e0f61a82ee5cc342"
+        "06ad30e715bb5f0185570649bf131f56acc8fc270ed60909d867cbca6e58a026"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout
