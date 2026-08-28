@@ -1,6 +1,12 @@
 """Independent target-semantic reference implementations."""
 
 from .evaluator import ReferenceError, evaluate_reference
+from .dispatch import (
+    DispatchReferenceError,
+    ExpertDispatchGroup,
+    ExpertDispatchResult,
+    dispatch_routed_experts_bf16,
+)
 from .formats import (
     DENSE_REDUCTION_BLOCK,
     ROUTED_REDUCTION_BLOCK,
@@ -102,6 +108,9 @@ __all__ = [
     "ROUTED_REDUCTION_BLOCK",
     "DecodedValue",
     "DenseFP8LinearResult",
+    "DispatchReferenceError",
+    "ExpertDispatchGroup",
+    "ExpertDispatchResult",
     "IndexMatrix",
     "IndexReferenceError",
     "IndexRow",
@@ -141,6 +150,7 @@ __all__ = [
     "decode_mxfp4_block",
     "decode_packed_e2m1",
     "dense_fp8_linear_bf16",
+    "dispatch_routed_experts_bf16",
     "dspark_noise_embed_bf16",
     "dspark_noise_token_block",
     "dspark_window_indices",

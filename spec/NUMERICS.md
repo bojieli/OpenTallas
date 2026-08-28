@@ -285,6 +285,28 @@ canonical source-axis tree is an explicit deterministic target adaptation. It
 does not claim that every PyTorch backend or input class implements the same
 intermediate overflow behavior.
 
+### NUM-6.6 Routed-expert dispatch
+
+`EXPERT_DISPATCH` flattens the BF16 hidden tensor's batch and sequence axes in
+row-major order, matching the pinned `x.view(-1, dim)`. Its route-index and
+binary32 route-weight matrices have one row per flattened token and exactly the
+manifest `top_k` columns. Expert indices must lie in the manifest expert range;
+hidden payloads and route weights must be finite, and route weights must be
+nonnegative.
+
+Nonempty dispatch groups appear in ascending logical expert ID. Within one
+expert, assignments appear in ascending flattened token index and then
+ascending selected-slot index, matching the logical result of the source's
+expert loop and `torch.where(indices == i)`. Each assignment carries the
+unchanged BF16 hidden row and binary32 route-weight encoding. Duplicate expert
+IDs within one token remain separate selected-slot assignments. A later
+implementation may execute their identical expert input once only if it retains
+and applies every route-weight contribution under the NUM-6.1 reduction rule.
+
+Dispatch performs no arithmetic. Physical rank ownership, repaired placement,
+arrival order, and queue timing may filter or delay groups but must not alter
+this global logical order or payload mapping.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension

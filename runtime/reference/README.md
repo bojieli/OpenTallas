@@ -85,6 +85,16 @@ Zero denominators, negative scores, nonfinite values, malformed indices, and
 overflow fail closed. This fixes a deterministic accelerator tree rather than
 claiming that all PyTorch backends use one reduction order.
 
+`dispatch.py` implements `EXPERT_DISPATCH`. It applies the source's row-major
+batch/sequence flattening, emits only nonempty expert groups in ascending
+logical expert-ID order, and orders each group's assignments by flattened token
+then selected slot. BF16 hidden rows and binary32 route weights are copied
+bit-for-bit. Duplicate expert IDs for one token remain distinct assignments, so
+later expert execution/reduction cannot silently discard a selected slot.
+Malformed shapes, out-of-range experts, or nonfinite payloads fail closed. A
+known answer reuses all 48 expert IDs from the independently checked official
+lookup slice in `docs/DEEPSEEK_V4_LOOKUP_EVIDENCE.md`.
+
 `vector.py` implements `TARGET_HIDDEN_CAPTURE` over finite BF16 encodings. It
 widens the four official HC streams exactly to binary32, reduces source slots
 with the NUM-6.1 canonical balanced tree, performs one binary32 division by
