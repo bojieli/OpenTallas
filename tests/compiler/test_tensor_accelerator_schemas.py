@@ -1,12 +1,17 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
+import struct
 
 from jsonschema import Draft202012Validator
 from referencing import Registry, Resource
 
 from compiler.tensor_accelerator import build_deployment
+from compiler.tensor_accelerator.bf16_qualification import (
+    qualify_bf16_projection_payloads,
+)
 from compiler.tensor_accelerator.common import load_strict_json
 from runtime.tensor_accelerator import TensorAcceleratorSimulator
 
@@ -14,6 +19,32 @@ from runtime.tensor_accelerator import TensorAcceleratorSimulator
 ROOT = Path(__file__).resolve().parents[2]
 SCHEMA_ROOT = ROOT / "schemas/compiler/tensor_accelerator"
 FIXTURE = ROOT / "testdata/compiler/tensor_accelerator_fixture"
+
+
+def _bf16_qualification() -> dict[str, object]:
+    input_payload = struct.pack("<2H", 0x3F80, 0x4000)
+    weight_payload = struct.pack("<4H", 0x4040, 0x4080, 0xBF80, 0x3F00)
+    return qualify_bf16_projection_payloads(
+        checkpoint_lock_id="a" * 64,
+        input_record={
+            "dtype": "BF16",
+            "name": "embedding.weight",
+            "payload_sha256": hashlib.sha256(input_payload).hexdigest(),
+            "shape": [1, 2],
+            "size_bytes": len(input_payload),
+        },
+        input_row=0,
+        input_row_payload=input_payload,
+        weight_record={
+            "dtype": "BF16",
+            "name": "projection.weight",
+            "payload_sha256": hashlib.sha256(weight_payload).hexdigest(),
+            "shape": [2, 2],
+            "size_bytes": len(weight_payload),
+        },
+        weight_payload=weight_payload,
+        selected_rows=[0, 1],
+    )
 
 
 def _schemas() -> tuple[dict[str, object], ...]:
@@ -45,12 +76,13 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 12
+    assert len(schemas) == 13
     by_name = {
         schema["$id"].rsplit("/", 1)[-1]: schema
         for schema in schemas
     }
     assert set(by_name) == {
+        "bf16_projection_qualification_v1.schema.json",
         "capability_v1.schema.json",
         "deployment_v1.schema.json",
         "execution_expectations_v1.schema.json",
@@ -80,6 +112,9 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         FIXTURE / "execution_request.json"
     )
     instances = {
+        "bf16_projection_qualification_v1.schema.json": [
+            _bf16_qualification()
+        ],
         "capability_v1.schema.json": [
             load_strict_json(FIXTURE / "capability.json"),
             load_strict_json(output / "capability.json"),

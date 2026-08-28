@@ -66,6 +66,15 @@ ties, cancellation, saturation, overflow rejection, randomized matrices, and
 work-tile choices. This numeric qualification does not by itself claim a Qwen
 layer or complete-model gate.
 
+The first checkpoint-bearing qualification applies that contract to Qwen's
+actual layer-0 Q projection at its full 4096-by-4096 dimensions. Checkpoint row
+zero supplies the 4096-element input, the immutable reader authenticates both
+complete source tensors, the data-bearing kernel computes all 4,096 outputs,
+and the independent scalar oracle checks eight boundary/interior rows exactly.
+The canonical report is retained at
+`results/tensor_accelerator/qwen3_bf16_projection.json`. This remains one matrix
+operation; it does not close the full-layer, compiled-HBM, or end-to-end gates.
+
 This is executable compiler/simulator evidence for the artifact boundaries only.
 It is not Qwen3-8B or DeepSeek-V4 execution, target floating-point qualification,
 RTL correlation, 130-nm physical evidence, HBM PHY evidence, or a production
