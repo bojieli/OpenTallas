@@ -36,7 +36,8 @@
     }
   ],
   "claim_boundary": [
-    "This artifact uses a measured same-checkpoint service comparator, but the GPU was shared and contended; it is not a clean peak-GPU characterization.",
+    "This artifact uses a measured model-root-matched service comparator with accounting tied to the sole local snapshot; the endpoint API does not attest its revision.",
+    "The GPU was shared and contended; it is not a clean peak-GPU characterization.",
     "Only token usage and service timing are measured. Model bytes and matrix-operation lower bounds come from the exact pinned tensor headers; logical KV traffic comes from the declared topology.",
     "Whole-GPU power and joules are not attributed because unrelated workloads remained active.",
     "The matrix-operation values are lower bounds and omit vector, routing, sampling, and control work.",
@@ -124,8 +125,8 @@
     },
     "runner": {
       "path": "tools/measured_gpu_break_even.py",
-      "sha256": "7cdc1985218cff9f9fe221da98012149730620ab4d9d43e4e455210997f94929",
-      "size_bytes": 34012
+      "sha256": "0c30b717803d7abd9cdb3da86847862ed6ab465e84e0e5e19e958ecb17408b24",
+      "size_bytes": 34200
     }
   },
   "measurement_environment": {

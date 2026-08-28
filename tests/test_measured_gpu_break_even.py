@@ -33,6 +33,10 @@ def test_model_accounting_lock_closes_internal_identities() -> None:
     assert lock["model"]["revision"] == "d9748a51ae66354c4dad665aab2c71f26cf2c8cd"
     assert lock["checkpoint"]["tensor_count"] == 1170
     assert lock["checkpoint"]["full_checkpoint_payload_bytes"] == 32_251_808_224
+    binding = lock["runtime_binding"]
+    assert binding["endpoint_api_revision_attested"] is False
+    assert binding["accounting_snapshot_revision"] == lock["model"]["revision"]
+    assert binding["local_cache_snapshot_revisions"] == [lock["model"]["revision"]]
 
 
 def test_measured_break_even_is_byte_reproducible_from_archived_inputs() -> None:
@@ -44,8 +48,23 @@ def test_measured_break_even_is_byte_reproducible_from_archived_inputs() -> None
     assert first["source_measurement_generated_at"] == "2026-08-28T11:44:55.122+00:00"
     assert first["comparison_contract"]["endpoint_runtime"]["version"] == "0.19.0"
     assert all(first["measurement_environment"]["endpoint_version_stability"].values())
+    assert (
+        first["measurement_environment"]["gpu_before"]["driver_version"] == "595.71.05"
+    )
+    assert (
+        "not API-attested" in first["comparison_contract"]["runtime_revision_binding"]
+    )
     assert first["reference_threshold"]["energy_requirement"] is None
     assert first["comparison_contract"]["contamination_label"] == "shared_contended"
+    reference = first["reference_threshold"]
+    assert reference["required_aggregate_tokens_s"] == pytest.approx(134.77854528322558)
+    assert reference["maximum_aggregate_token_interval_s"] == pytest.approx(
+        0.007419578523411019
+    )
+    assert reference["required_full_checkpoint_capacity_bytes"] == 32_251_808_224
+    assert reference["required_effective_active_weight_bandwidth_bytes_s"] == (
+        pytest.approx(453_730_640_005.72314)
+    )
 
 
 def test_measurement_usage_tamper_fails_closed() -> None:

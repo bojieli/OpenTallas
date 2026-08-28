@@ -1,7 +1,8 @@
 # OpenTallas measured local-GPU break-even requirements
 
 > **Outcome:** the local GPU service timing is measured, and the model
-> accounting is pinned to the exact served checkpoint. The resulting
+> accounting is pinned to the sole snapshot associated with the served
+> model root; the API does not attest its revision. The resulting
 > OpenTallas values are requirements, not achieved performance.
 
 ## Measurement contract
@@ -88,7 +89,8 @@ a target ROM compiler, periphery closure, sense margin, repair, or yield.
 
 ## Claim boundary
 
-- This artifact uses a measured same-checkpoint service comparator, but the GPU was shared and contended; it is not a clean peak-GPU characterization.
+- This artifact uses a measured model-root-matched service comparator with accounting tied to the sole local snapshot; the endpoint API does not attest its revision.
+- The GPU was shared and contended; it is not a clean peak-GPU characterization.
 - Only token usage and service timing are measured. Model bytes and matrix-operation lower bounds come from the exact pinned tensor headers; logical KV traffic comes from the declared topology.
 - Whole-GPU power and joules are not attributed because unrelated workloads remained active.
 - The matrix-operation values are lower bounds and omit vector, routing, sampling, and control work.
