@@ -15,6 +15,7 @@ from referencing import Registry, Resource
 
 from compiler.frontend.checkpoint import (
     CheckpointError,
+    LockedCheckpointReader,
     build_checkpoint_lock,
     load_checkpoint_lock,
     load_checkpoint_source,
@@ -176,6 +177,50 @@ def test_checkpoint_replay_and_individual_payload_access(
     )
     with pytest.raises(CheckpointError, match="0 records"):
         read_tensor_payload(checkpoint_snapshot, loaded, "missing")
+
+
+def test_reusable_reader_streams_locked_payloads_and_reports_access(
+    checkpoint_snapshot: Path,
+) -> None:
+    lock = build_checkpoint_lock(
+        checkpoint_snapshot, load_checkpoint_source(FIXTURE_SOURCE)
+    )
+    a_chunks: list[bytes] = []
+    b_chunks: list[bytes] = []
+    with LockedCheckpointReader(checkpoint_snapshot, lock) as reader:
+        a_record = reader.consume_tensor_payload(
+            "a.weight", a_chunks.append, chunk_bytes=2
+        )
+        b_record = reader.consume_tensor_payload(
+            "b.scale", b_chunks.append, chunk_bytes=3
+        )
+        assert a_record == reader.tensor_record("a.weight")
+        assert b_record == reader.tensor_record("b.scale")
+        assert a_record["shape"] == [2, 2]
+        assert a_record["dtype"] == "I8"
+        assert reader.accessed_tensor_names == ("a.weight", "b.scale")
+        assert reader.accessed_shard_paths == (
+            "model-00001-of-00002.safetensors",
+        )
+    assert a_chunks == [b"\x01\x02", b"\x03\x04"]
+    assert b"".join(b_chunks) == struct.pack("<f", 1.5)
+    with pytest.raises(CheckpointError, match="closed"):
+        reader.tensor_record("a.weight")
+
+
+def test_reusable_reader_rejects_snapshot_mutation_while_active(
+    checkpoint_snapshot: Path,
+) -> None:
+    lock = build_checkpoint_lock(
+        checkpoint_snapshot, load_checkpoint_source(FIXTURE_SOURCE)
+    )
+    shard_path = checkpoint_snapshot / "model-00001-of-00002.safetensors"
+    with pytest.raises(CheckpointError, match="changed while reader was active"):
+        with LockedCheckpointReader(checkpoint_snapshot, lock) as reader:
+            reader.consume_tensor_payload("a.weight", lambda _: None)
+            payload = bytearray(shard_path.read_bytes())
+            payload[-1] ^= 1
+            shard_path.write_bytes(payload)
 
 
 def test_source_identity_and_payload_tampering_fail_closed(

@@ -9,10 +9,12 @@ hashes. Canonical output contains no timestamps, hostnames, or local paths.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import re
 import struct
@@ -887,19 +889,198 @@ def verify_checkpoint_lock(snapshot: Path, lock: dict[str, Any]) -> dict[str, An
     return rebuilt
 
 
-def _find_tensor(lock: dict[str, Any], tensor_name: str) -> tuple[dict[str, Any], dict[str, Any]]:
-    matches: list[tuple[dict[str, Any], dict[str, Any]]] = []
-    for shard in lock["shards"]:
-        if not isinstance(shard, dict) or not isinstance(shard.get("tensors"), list):
-            raise CheckpointError("checkpoint lock shard table is malformed")
-        for tensor in shard["tensors"]:
-            if isinstance(tensor, dict) and tensor.get("name") == tensor_name:
-                matches.append((shard, tensor))
-    if len(matches) != 1:
-        raise CheckpointError(
-            f"checkpoint lock contains {len(matches)} records for tensor {tensor_name!r}"
+class LockedCheckpointReader:
+    """Reuse verified shard handles while consuming hash-locked tensor bytes.
+
+    The reader validates the complete lock once, verifies each accessed shard
+    header once, hashes every consumed tensor payload, and rejects a snapshot
+    file whose inode, size, or modification time changes while the reader is
+    active. It is intentionally single-threaded; callbacks are completed before
+    another tensor may be consumed.
+    """
+
+    def __init__(self, snapshot: Path, lock: dict[str, Any]):
+        _validate_lock_structure(lock)
+        try:
+            resolved_snapshot = Path(snapshot).resolve()
+        except TypeError as exc:
+            raise CheckpointError("checkpoint snapshot must be a filesystem path") from exc
+        if not resolved_snapshot.is_dir():
+            raise CheckpointError(
+                f"checkpoint snapshot is not a directory: {resolved_snapshot}"
+            )
+        self._snapshot = resolved_snapshot
+        self._lock_id = lock["lock_id"]
+        self._shards: dict[str, dict[str, Any]] = {}
+        self._tensors: dict[str, tuple[dict[str, Any], dict[str, Any]]] = {}
+        for shard in lock["shards"]:
+            logical_path = shard["path"]
+            self._shards[logical_path] = shard
+            for tensor in shard["tensors"]:
+                self._tensors[tensor["name"]] = (shard, tensor)
+        self._handles: dict[
+            str, tuple[BinaryIO, tuple[int, int, int, int]]
+        ] = {}
+        self._accessed_tensors: set[str] = set()
+        self._closed = False
+
+    @property
+    def lock_id(self) -> str:
+        return self._lock_id
+
+    @property
+    def accessed_tensor_names(self) -> tuple[str, ...]:
+        return tuple(sorted(self._accessed_tensors))
+
+    @property
+    def accessed_shard_paths(self) -> tuple[str, ...]:
+        return tuple(sorted(self._handles))
+
+    def __enter__(self) -> LockedCheckpointReader:
+        self._require_open()
+        return self
+
+    def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> None:
+        self.close(verify_unchanged=exc_type is None)
+
+    def _require_open(self) -> None:
+        if self._closed:
+            raise CheckpointError("locked checkpoint reader is closed")
+
+    @staticmethod
+    def _fingerprint(stat_result: os.stat_result) -> tuple[int, int, int, int]:
+        return (
+            stat_result.st_dev,
+            stat_result.st_ino,
+            stat_result.st_size,
+            stat_result.st_mtime_ns,
         )
-    return matches[0]
+
+    def _open_shard(self, shard: dict[str, Any]) -> BinaryIO:
+        self._require_open()
+        logical_path = _safe_relative_path(shard["path"], "locked shard path")
+        cached = self._handles.get(logical_path)
+        if cached is not None:
+            return cached[0]
+        shard_path = _snapshot_file(self._snapshot, logical_path)
+        try:
+            handle = shard_path.open("rb")
+            stat_result = os.fstat(handle.fileno())
+            if stat_result.st_size != shard["file_size_bytes"]:
+                raise CheckpointError(
+                    f"locked shard {logical_path!r} has a different file size"
+                )
+            prefix = _read_exact(handle, 8, f"{logical_path} prefix")
+            header_length = struct.unpack("<Q", prefix)[0]
+            if header_length != shard["header_length_bytes"]:
+                raise CheckpointError(
+                    f"locked shard {logical_path!r} has a different header length"
+                )
+            raw_header = _read_exact(handle, header_length, f"{logical_path} header")
+            if _sha256_bytes(raw_header) != shard["header_sha256"]:
+                raise CheckpointError(
+                    f"locked shard {logical_path!r} has a different header"
+                )
+        except Exception:
+            if "handle" in locals():
+                handle.close()
+            raise
+        self._handles[logical_path] = (handle, self._fingerprint(stat_result))
+        return handle
+
+    def _tensor_entry(
+        self, tensor_name: str
+    ) -> tuple[dict[str, Any], dict[str, Any]]:
+        self._require_open()
+        if not isinstance(tensor_name, str) or not tensor_name:
+            raise CheckpointError("tensor_name must be a non-empty string")
+        entry = self._tensors.get(tensor_name)
+        if entry is None:
+            raise CheckpointError(
+                f"checkpoint lock contains 0 records for tensor {tensor_name!r}"
+            )
+        return entry
+
+    def tensor_record(self, tensor_name: str) -> dict[str, Any]:
+        """Return immutable identity metadata for one locked tensor."""
+
+        shard, tensor = self._tensor_entry(tensor_name)
+        return {
+            "dtype": tensor["dtype"],
+            "name": tensor["name"],
+            "payload_sha256": tensor["payload_sha256"],
+            "shape": list(tensor["shape"]),
+            "shard": shard["path"],
+            "size_bytes": tensor["size_bytes"],
+        }
+
+    def consume_tensor_payload(
+        self,
+        tensor_name: str,
+        consumer: Callable[[bytes], None],
+        *,
+        chunk_bytes: int = CHUNK_BYTES,
+    ) -> dict[str, Any]:
+        """Feed every locked payload byte to ``consumer`` and verify its hash."""
+
+        if not callable(consumer):
+            raise CheckpointError("tensor payload consumer must be callable")
+        chunk_bytes = _integer(chunk_bytes, "chunk_bytes", minimum=1)
+        if chunk_bytes > 256 * 1024 * 1024:
+            raise CheckpointError("chunk_bytes exceeds the 256-MiB reader bound")
+        shard, tensor = self._tensor_entry(tensor_name)
+        handle = self._open_shard(shard)
+        start, end = tensor["data_offsets"]
+        remaining = end - start
+        digest = hashlib.sha256()
+        try:
+            handle.seek(8 + shard["header_length_bytes"] + start)
+            while remaining:
+                chunk = handle.read(min(remaining, chunk_bytes))
+                if not chunk:
+                    raise CheckpointError(
+                        f"short read while reading tensor {tensor_name!r}"
+                    )
+                digest.update(chunk)
+                consumer(chunk)
+                remaining -= len(chunk)
+        except OSError as exc:
+            raise CheckpointError(
+                f"cannot read tensor {tensor_name!r}: {exc}"
+            ) from exc
+        if digest.hexdigest() != tensor["payload_sha256"]:
+            raise CheckpointError(
+                f"tensor {tensor_name!r} payload differs from its lock"
+            )
+        self._accessed_tensors.add(tensor_name)
+        return self.tensor_record(tensor_name)
+
+    def close(self, *, verify_unchanged: bool = True) -> None:
+        """Close all shard handles, optionally rejecting concurrent mutation."""
+
+        if self._closed:
+            return
+        first_error: CheckpointError | None = None
+        if verify_unchanged:
+            for logical_path, (handle, fingerprint) in self._handles.items():
+                try:
+                    observed = self._fingerprint(os.fstat(handle.fileno()))
+                except OSError as exc:
+                    if first_error is None:
+                        first_error = CheckpointError(
+                            f"cannot restat locked shard {logical_path!r}: {exc}"
+                        )
+                    continue
+                if observed != fingerprint and first_error is None:
+                    first_error = CheckpointError(
+                        f"locked shard {logical_path!r} changed while reader was active"
+                    )
+        for handle, _ in self._handles.values():
+            handle.close()
+        self._handles.clear()
+        self._closed = True
+        if first_error is not None:
+            raise first_error
 
 
 def read_tensor_payload(
@@ -907,53 +1088,7 @@ def read_tensor_payload(
 ) -> bytes:
     """Read one tensor by locked interval and verify its exact payload hash."""
 
-    _validate_lock_structure(lock)
-    if not isinstance(tensor_name, str) or not tensor_name:
-        raise CheckpointError("tensor_name must be a non-empty string")
-    shard, tensor = _find_tensor(lock, tensor_name)
-    snapshot = snapshot.resolve()
-    if not snapshot.is_dir():
-        raise CheckpointError(f"checkpoint snapshot is not a directory: {snapshot}")
-    logical_path = _safe_relative_path(shard.get("path"), "locked shard path")
-    shard_path = _snapshot_file(snapshot, logical_path)
-    offsets = tensor.get("data_offsets")
-    if (
-        not isinstance(offsets, list)
-        or len(offsets) != 2
-        or any(isinstance(item, bool) or not isinstance(item, int) for item in offsets)
-    ):
-        raise CheckpointError(f"locked tensor {tensor_name!r} has invalid offsets")
-    start, end = offsets
-    size = end - start
-    if size != tensor.get("size_bytes") or size < 0:
-        raise CheckpointError(f"locked tensor {tensor_name!r} has inconsistent size")
-    header_length = _integer(
-        shard.get("header_length_bytes"), "locked shard header_length_bytes", minimum=2
-    )
-    expected_file_size = _integer(
-        shard.get("file_size_bytes"), "locked shard file_size_bytes", minimum=10
-    )
-    try:
-        if shard_path.stat().st_size != expected_file_size:
-            raise CheckpointError(
-                f"locked shard {logical_path!r} has a different file size"
-            )
-        with shard_path.open("rb") as handle:
-            prefix = _read_exact(handle, 8, f"{logical_path} prefix")
-            observed_header_length = struct.unpack("<Q", prefix)[0]
-            if observed_header_length != header_length:
-                raise CheckpointError(
-                    f"locked shard {logical_path!r} has a different header length"
-                )
-            raw_header = _read_exact(handle, header_length, f"{logical_path} header")
-            if _sha256_bytes(raw_header) != shard.get("header_sha256"):
-                raise CheckpointError(
-                    f"locked shard {logical_path!r} has a different header"
-                )
-            handle.seek(8 + header_length + start)
-            payload = _read_exact(handle, size, f"tensor {tensor_name!r}")
-    except OSError as exc:
-        raise CheckpointError(f"cannot read tensor {tensor_name!r}: {exc}") from exc
-    if tensor.get("payload_sha256") != _sha256_bytes(payload):
-        raise CheckpointError(f"tensor {tensor_name!r} payload differs from its lock")
-    return payload
+    chunks: list[bytes] = []
+    with LockedCheckpointReader(snapshot, lock) as reader:
+        reader.consume_tensor_payload(tensor_name, chunks.append)
+    return b"".join(chunks)
