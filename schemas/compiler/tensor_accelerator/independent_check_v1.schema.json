@@ -1,0 +1,180 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/independent_check_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "command_count": {
+      "minimum": 1,
+      "type": "integer"
+    },
+    "command_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "expected_counters": {
+      "$ref": "#/$defs/counters"
+    },
+    "hbm_image_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "model_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "physical_plan_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "reconstructed_tensors": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "payload_sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "size_bytes": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "tensor_id": {
+            "$ref": "#/$defs/identifier"
+          }
+        },
+        "required": [
+          "payload_sha256",
+          "size_bytes",
+          "tensor_id"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.independent_check.v1"
+    },
+    "semantic_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "pass"
+    }
+  },
+  "required": [
+    "capability_id",
+    "command_count",
+    "command_sha256",
+    "expected_counters",
+    "hbm_image_sha256",
+    "model_id",
+    "physical_plan_id",
+    "reconstructed_tensors",
+    "schema",
+    "semantic_sha256",
+    "status"
+  ],
+  "title": "OpenTallas tensor-accelerator independent check v1",
+  "type": "object",
+  "$defs": {
+    "counters": {
+      "additionalProperties": false,
+      "properties": {
+        "commands_executed": {
+          "$ref": "#/$defs/counter"
+        },
+        "completion_events": {
+          "$ref": "#/$defs/counter"
+        },
+        "control_cycles": {
+          "$ref": "#/$defs/counter"
+        },
+        "cycles": {
+          "$ref": "#/$defs/counter"
+        },
+        "dma_commands": {
+          "$ref": "#/$defs/counter"
+        },
+        "dma_cycles": {
+          "$ref": "#/$defs/counter"
+        },
+        "elementwise_add_operations": {
+          "$ref": "#/$defs/counter"
+        },
+        "hbm_read_transactions": {
+          "$ref": "#/$defs/counter"
+        },
+        "hbm_transferred_bytes_read": {
+          "$ref": "#/$defs/counter"
+        },
+        "hbm_useful_bytes_read": {
+          "$ref": "#/$defs/counter"
+        },
+        "host_input_bytes_written": {
+          "$ref": "#/$defs/counter"
+        },
+        "scalar_accumulate_add_operations": {
+          "$ref": "#/$defs/counter"
+        },
+        "scalar_multiply_operations": {
+          "$ref": "#/$defs/counter"
+        },
+        "semantic_operations_executed": {
+          "$ref": "#/$defs/counter"
+        },
+        "sram_bytes_read": {
+          "$ref": "#/$defs/counter"
+        },
+        "sram_bytes_written": {
+          "$ref": "#/$defs/counter"
+        },
+        "tensor_commands": {
+          "$ref": "#/$defs/counter"
+        },
+        "tensor_cycles": {
+          "$ref": "#/$defs/counter"
+        },
+        "vector_commands": {
+          "$ref": "#/$defs/counter"
+        },
+        "vector_cycles": {
+          "$ref": "#/$defs/counter"
+        }
+      },
+      "required": [
+        "commands_executed",
+        "completion_events",
+        "control_cycles",
+        "cycles",
+        "dma_commands",
+        "dma_cycles",
+        "elementwise_add_operations",
+        "hbm_read_transactions",
+        "hbm_transferred_bytes_read",
+        "hbm_useful_bytes_read",
+        "host_input_bytes_written",
+        "scalar_accumulate_add_operations",
+        "scalar_multiply_operations",
+        "semantic_operations_executed",
+        "sram_bytes_read",
+        "sram_bytes_written",
+        "tensor_commands",
+        "tensor_cycles",
+        "vector_commands",
+        "vector_cycles"
+      ],
+      "type": "object"
+    },
+    "counter": {
+      "minimum": 0,
+      "type": "integer"
+    },
+    "identifier": {
+      "maxLength": 128,
+      "pattern": "^[A-Za-z][A-Za-z0-9_.-]{0,127}$",
+      "type": "string"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

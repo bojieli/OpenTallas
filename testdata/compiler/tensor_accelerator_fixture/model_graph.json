@@ -1,0 +1,120 @@
+{
+  "model_id": "tensor-accelerator-linear-fixture",
+  "numeric_profile": "int_exact_tensor_accelerator_v1",
+  "operations": [
+    {
+      "attributes": {},
+      "id": "projection",
+      "inputs": [
+        "input",
+        "projection_weight"
+      ],
+      "kind": "MATMUL",
+      "numeric": {
+        "accumulator_dtype": "i32",
+        "input_dtype": "i8",
+        "output_dtype": "i32",
+        "reduction_order": "ascending_k",
+        "weight_dtype": "i8"
+      },
+      "outputs": [
+        "projection_output"
+      ]
+    },
+    {
+      "attributes": {},
+      "id": "bias_add",
+      "inputs": [
+        "projection_output",
+        "projection_bias"
+      ],
+      "kind": "ADD",
+      "numeric": {
+        "dtype": "i32",
+        "rounding": "exact"
+      },
+      "outputs": [
+        "output"
+      ]
+    }
+  ],
+  "outputs": [
+    "output"
+  ],
+  "schema": "opentallas.model_graph.v1",
+  "symbols": [],
+  "tensors": [
+    {
+      "dtype": "i8",
+      "id": "input",
+      "layout": "row_major",
+      "role": "input",
+      "shape": [
+        2,
+        4
+      ]
+    },
+    {
+      "dtype": "i8",
+      "id": "projection_weight",
+      "layout": "row_major",
+      "role": "weight",
+      "shape": [
+        3,
+        4
+      ],
+      "values": [
+        1,
+        0,
+        2,
+        -1,
+        2,
+        -2,
+        1,
+        0,
+        -1,
+        1,
+        0,
+        2
+      ]
+    },
+    {
+      "dtype": "i32",
+      "id": "projection_output",
+      "layout": "row_major",
+      "role": "activation",
+      "shape": [
+        2,
+        3
+      ]
+    },
+    {
+      "dtype": "i32",
+      "id": "projection_bias",
+      "layout": "row_major",
+      "role": "weight",
+      "shape": [
+        2,
+        3
+      ],
+      "values": [
+        1,
+        2,
+        3,
+        -1,
+        -2,
+        -3
+      ]
+    },
+    {
+      "dtype": "i32",
+      "id": "output",
+      "layout": "row_major",
+      "role": "output",
+      "shape": [
+        2,
+        3
+      ]
+    }
+  ]
+}
