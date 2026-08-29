@@ -24,6 +24,15 @@ state's first feature half and the current state's second feature half, then
 copies the full current state into the previous state.  Inactive batches are
 preserved bit-for-bit.
 
+The released module trusts its caller to provide contiguous positions and to
+reset batch lanes between requests.  The target reference makes that causal
+contract explicit.  Every state lane carries an immutable lowercase SHA-256
+session identity, the absolute next token position, and a monotonic 64-bit
+version.  A ``start_pos == 0`` call is a fresh-session transition that resets
+the active raw lanes before applying prefill data.  Decode accepts only the
+exact next position for the exact session.  This prevents stale finite rows
+from satisfying a skipped or replayed compression window.
+
 The result deliberately contains *pre-softmax operands*, not a compressed KV
 vector.  Learned projection, softmax pooling, normalization, RoPE, QDQ, and
 compressed-cache writes are separate downstream operations and are explicit
@@ -45,7 +54,7 @@ OFFICIAL_REVISION = "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
 INFERENCE_CONFIG_SHA256 = (
     "c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71"
 )
-COMPRESS_STATE_PROFILE = "opentallas.deepseek_v4_compress_state_update.v1"
+COMPRESS_STATE_PROFILE = "opentallas.deepseek_v4_compress_state_update.v2"
 
 PINNED_MAX_BATCH_SIZE = 4
 PINNED_MAX_POSITION = 1_048_576
@@ -60,6 +69,8 @@ PINNED_COMPRESSION_RATIOS = (
 F32_BYTES = 4
 F32_MAX_ENCODING = (1 << 32) - 1
 F32_NEGATIVE_INFINITY = 0xFF800000
+LANE_METADATA_BYTES = 32 + 8 + 8
+STATE_VERSION_MAX = (1 << 64) - 1
 
 EXCLUDED_DOWNSTREAM_OPERATIONS = (
     "learned_projection",
@@ -85,12 +96,29 @@ class CompressionStateReferenceError(ValueError):
 
 
 @dataclass(frozen=True)
+class CompressionLaneState:
+    """Immutable causal identity for one physical compressor batch lane.
+
+    ``session_id is None`` is the sole uninitialized representation and requires
+    ``next_pos == version == 0``.  Initialized identities are canonical
+    lowercase SHA-256 hex strings.  ``next_pos`` is the next absolute token
+    position that decode may accept; ``version`` increments once per committed
+    prefill or decode transaction affecting this lane.
+    """
+
+    session_id: str | None
+    next_pos: int
+    version: int
+
+
+@dataclass(frozen=True)
 class CompressionState:
-    """Immutable projected-KV and biased-score state for one ratio profile."""
+    """Immutable raw tensors and causal lane state for one ratio profile."""
 
     ratio: int
     kv_f32_codes: F32Batch
     score_f32_codes: F32Batch
+    lanes: tuple[CompressionLaneState, ...]
 
 
 @dataclass(frozen=True)
@@ -142,6 +170,13 @@ class CompressionStateCounters:
     overlap_pool_negative_infinity_f32_values: int
     kv_state_roll_f32_values: int
     score_state_roll_f32_values: int
+    kv_state_reset_f32_values: int
+    score_state_reset_f32_values: int
+    lane_metadata_records_read: int
+    lane_metadata_read_bytes: int
+    lane_metadata_records_written: int
+    lane_metadata_write_bytes: int
+    lane_metadata_records_preserved: int
     logical_ratio_modulo_evaluations: int
     transaction_commits: int
 
@@ -188,6 +223,96 @@ def _ratio(value: object) -> int:
             "ratio must be exactly 4 (overlap) or 128 (non-overlap)"
         )
     return value
+
+
+def _session_id(value: object, label: str) -> str:
+    if (
+        type(value) is not str
+        or len(value) != 64
+        or any(character not in "0123456789abcdef" for character in value)
+    ):
+        raise CompressionStateReferenceError(
+            f"{label} must be a canonical lowercase SHA-256 hex string"
+        )
+    return value
+
+
+def _freeze_lanes(
+    value: object,
+    *,
+    capacity: int,
+) -> tuple[CompressionLaneState, ...]:
+    raw_lanes = _sequence(value, "state.lanes")
+    if len(raw_lanes) != capacity:
+        raise CompressionStateReferenceError(
+            f"state.lanes must contain exactly {capacity} lane records"
+        )
+
+    lanes: list[CompressionLaneState] = []
+    initialized_sessions: set[str] = set()
+    for batch_index, raw_lane in enumerate(raw_lanes):
+        if type(raw_lane) is not CompressionLaneState:
+            raise CompressionStateReferenceError(
+                f"state.lanes[{batch_index}] must be an exact CompressionLaneState"
+            )
+        if raw_lane.session_id is None:
+            if (
+                type(raw_lane.next_pos) is not int
+                or raw_lane.next_pos != 0
+                or type(raw_lane.version) is not int
+                or raw_lane.version != 0
+            ):
+                raise CompressionStateReferenceError(
+                    "an uninitialized compressor lane must have next_pos and "
+                    "version equal to exact integer zero"
+                )
+            lane = CompressionLaneState(None, 0, 0)
+        else:
+            session_id = _session_id(
+                raw_lane.session_id,
+                f"state.lanes[{batch_index}].session_id",
+            )
+            next_pos = _integer(
+                raw_lane.next_pos,
+                f"state.lanes[{batch_index}].next_pos",
+                minimum=1,
+                maximum=PINNED_MAX_POSITION,
+            )
+            version = _integer(
+                raw_lane.version,
+                f"state.lanes[{batch_index}].version",
+                minimum=1,
+                maximum=STATE_VERSION_MAX,
+            )
+            if session_id in initialized_sessions:
+                raise CompressionStateReferenceError(
+                    "initialized compressor session IDs must be unique across lanes"
+                )
+            initialized_sessions.add(session_id)
+            lane = CompressionLaneState(session_id, next_pos, version)
+        lanes.append(lane)
+    return tuple(lanes)
+
+
+def _freeze_active_session_ids(
+    value: object,
+    *,
+    batch_size: int,
+) -> tuple[str, ...]:
+    raw_sessions = _sequence(value, "session_ids")
+    if len(raw_sessions) != batch_size:
+        raise CompressionStateReferenceError(
+            f"session_ids must contain exactly {batch_size} active lane identities"
+        )
+    sessions = tuple(
+        _session_id(session_id, f"session_ids[{batch_index}]")
+        for batch_index, session_id in enumerate(raw_sessions)
+    )
+    if len(set(sessions)) != len(sessions):
+        raise CompressionStateReferenceError(
+            "active compressor session IDs must be unique"
+        )
+    return sessions
 
 
 def _f32_code(
@@ -357,8 +482,9 @@ def _validate_state(
         width=width,
         allow_negative_infinity=True,
     )
+    frozen_lanes = _freeze_lanes(state.lanes, capacity=capacity)
     return (
-        CompressionState(ratio, frozen_kv, frozen_scores),
+        CompressionState(ratio, frozen_kv, frozen_scores, frozen_lanes),
         capacity,
         ratio,
         overlap,
@@ -400,21 +526,24 @@ def zero_compression_state_f32(
         ratio=ratio,
         kv_f32_codes=(kv_sequence,) * batch_capacity,
         score_f32_codes=(score_sequence,) * batch_capacity,
+        lanes=(CompressionLaneState(None, 0, 0),) * batch_capacity,
     )
 
 
 def compression_state_f32(
     kv_f32_codes: object,
     score_f32_codes: object,
+    lanes: object,
     *,
     ratio: int,
 ) -> CompressionState:
-    """Validate and deeply freeze caller-provided projected state tensors."""
+    """Validate and deeply freeze caller-provided tensors and causal lanes."""
 
     candidate = CompressionState(
         ratio=ratio,
         kv_f32_codes=kv_f32_codes,  # type: ignore[arg-type]
         score_f32_codes=score_f32_codes,  # type: ignore[arg-type]
+        lanes=lanes,  # type: ignore[arg-type]
     )
     frozen, _, _, _, _, _, _ = _validate_state(candidate)
     return frozen
@@ -520,12 +649,15 @@ def compress_state_update_f32(
     projected_score_f32_codes: object,
     ape_f32_codes: object,
     *,
+    session_ids: object,
     start_pos: int,
 ) -> CompressionStateUpdateResult:
-    """Commit one exact prefill or decode compressor-state transaction.
+    """Prepare one exact causal prefill or decode state version.
 
     All caller data and the entire old state are validated before address
-    derivation or result construction.  The old state is never mutated.
+    derivation or result construction.  ``session_ids`` supplies one canonical
+    lowercase SHA-256 identity for every active batch lane.  The old state is
+    never mutated, so downstream poison can discard the returned version.
     """
 
     (
@@ -575,14 +707,54 @@ def compress_state_update_f32(
             "decode COMPRESS_STATE_UPDATE requires sequence length exactly 1"
         )
 
+    active_sessions = _freeze_active_session_ids(
+        session_ids,
+        batch_size=batch_size,
+    )
+    if start_pos == 0:
+        existing_sessions = {
+            lane.session_id
+            for lane in frozen_state.lanes
+            if lane.session_id is not None
+        }
+        reused_sessions = sorted(set(active_sessions) & existing_sessions)
+        if reused_sessions:
+            raise CompressionStateReferenceError(
+                "fresh-session prefill cannot reuse an existing compressor "
+                f"session ID ({reused_sessions[0]})"
+            )
+    else:
+        for batch_index, session_id in enumerate(active_sessions):
+            lane = frozen_state.lanes[batch_index]
+            if lane.session_id is None:
+                raise CompressionStateReferenceError(
+                    f"decode compressor lane {batch_index} is uninitialized"
+                )
+            if lane.session_id != session_id:
+                raise CompressionStateReferenceError(
+                    f"decode compressor lane {batch_index} session ID does not match"
+                )
+            if lane.next_pos != start_pos:
+                raise CompressionStateReferenceError(
+                    f"decode compressor lane {batch_index} expected start_pos "
+                    f"{lane.next_pos}, received {start_pos}"
+                )
+    for batch_index in range(batch_size):
+        if frozen_state.lanes[batch_index].version == STATE_VERSION_MAX:
+            raise CompressionStateReferenceError(
+                f"compressor lane {batch_index} state version would overflow"
+            )
+
     mutable_kv = [list(sequence) for sequence in frozen_state.kv_f32_codes]
     mutable_scores = [list(sequence) for sequence in frozen_state.score_f32_codes]
+    mutable_lanes = list(frozen_state.lanes)
     pool_inputs: CompressionPoolInputs | None
     prefill_cutoff: int | None
     prefill_remainder: int | None
     decode_phase: int | None
     state_source_rows_per_batch: int
     roll_values = 0
+    reset_values = 0
 
     if start_pos == 0:
         mode: CompressionMode = "prefill"
@@ -593,6 +765,22 @@ def compress_state_update_f32(
         prefill_cutoff = cutoff
         prefill_remainder = remainder
         decode_phase = None
+
+        # A fresh session must not inherit any raw row from a previous request.
+        # This reset is essential for a short ratio-four prefill because the
+        # previous-half rows supply the first overlap window's padding.
+        zero_row = (0,) * projected_width
+        negative_infinity_row = (F32_NEGATIVE_INFINITY,) * projected_width
+        slot_count = coefficient * ratio
+        reset_values = batch_size * slot_count * projected_width
+        for batch_index, session_id in enumerate(active_sessions):
+            mutable_kv[batch_index] = [zero_row] * slot_count
+            mutable_scores[batch_index] = [negative_infinity_row] * slot_count
+            mutable_lanes[batch_index] = CompressionLaneState(
+                session_id=session_id,
+                next_pos=sequence_length,
+                version=frozen_state.lanes[batch_index].version + 1,
+            )
 
         previous_rows = ratio if overlap and cutoff >= ratio else 0
         state_source_rows_per_batch = previous_rows + remainder
@@ -650,6 +838,13 @@ def compress_state_update_f32(
         state_source_rows_per_batch = 1
         destination = ratio + phase if overlap else phase
 
+        for batch_index, session_id in enumerate(active_sessions):
+            mutable_lanes[batch_index] = CompressionLaneState(
+                session_id=session_id,
+                next_pos=start_pos + 1,
+                version=frozen_state.lanes[batch_index].version + 1,
+            )
+
         for batch_index in range(batch_size):
             mutable_kv[batch_index][destination] = frozen_kv[batch_index][0]
             mutable_scores[batch_index][destination] = _add_ape(
@@ -698,6 +893,7 @@ def compress_state_update_f32(
         ratio=ratio,
         kv_f32_codes=tuple(tuple(sequence) for sequence in mutable_kv),
         score_f32_codes=tuple(tuple(sequence) for sequence in mutable_scores),
+        lanes=tuple(mutable_lanes),
     )
 
     state_source_values = batch_size * state_source_rows_per_batch * projected_width
@@ -714,7 +910,10 @@ def compress_state_update_f32(
     kv_source_values_read = state_source_values + pool_kv_source_values
     score_source_values_read = state_source_values + pool_score_source_values
     state_values_read = (pool_values if mode == "decode" else 0) + roll_values
-    state_values_written = state_source_values + roll_values
+    state_values_written = reset_values + state_source_values + roll_values
+    state_values_touched = (
+        reset_values if mode == "prefill" else state_source_values + roll_values
+    )
     total_state_values = capacity * coefficient * ratio * projected_width
     input_values = batch_size * sequence_length * projected_width
     counters = CompressionStateCounters(
@@ -743,14 +942,21 @@ def compress_state_update_f32(
         logical_score_state_f32_values_written=state_values_written,
         logical_kv_state_write_bytes=state_values_written * F32_BYTES,
         logical_score_state_write_bytes=state_values_written * F32_BYTES,
-        kv_state_f32_values_preserved=total_state_values - state_values_written,
-        score_state_f32_values_preserved=total_state_values - state_values_written,
+        kv_state_f32_values_preserved=total_state_values - state_values_touched,
+        score_state_f32_values_preserved=total_state_values - state_values_touched,
         pool_kv_f32_values=pool_values,
         pool_score_f32_values=pool_values,
         overlap_pool_zero_f32_values=overlap_padding,
         overlap_pool_negative_infinity_f32_values=overlap_padding,
         kv_state_roll_f32_values=roll_values,
         score_state_roll_f32_values=roll_values,
+        kv_state_reset_f32_values=reset_values,
+        score_state_reset_f32_values=reset_values,
+        lane_metadata_records_read=capacity,
+        lane_metadata_read_bytes=capacity * LANE_METADATA_BYTES,
+        lane_metadata_records_written=batch_size,
+        lane_metadata_write_bytes=batch_size * LANE_METADATA_BYTES,
+        lane_metadata_records_preserved=capacity - batch_size,
         logical_ratio_modulo_evaluations=modulo_evaluations,
         transaction_commits=1,
     )
@@ -775,6 +981,7 @@ __all__ = [
     "F32_MAX_ENCODING",
     "F32_NEGATIVE_INFINITY",
     "INFERENCE_CONFIG_SHA256",
+    "LANE_METADATA_BYTES",
     "MODEL_SOURCE_SHA256",
     "OFFICIAL_REVISION",
     "PINNED_COMPRESSION_RATIOS",
@@ -784,6 +991,8 @@ __all__ = [
     "PINNED_MAX_POSITION",
     "PINNED_NONOVERLAP_RATIO",
     "PINNED_OVERLAP_RATIO",
+    "STATE_VERSION_MAX",
+    "CompressionLaneState",
     "CompressionMode",
     "CompressionPoolInputs",
     "CompressionState",

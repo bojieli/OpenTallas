@@ -21,11 +21,15 @@ from .compression import (
 )
 from .compressed_kv import (
     COMPRESSED_KV_PROFILE,
+    COMPRESSED_KV_VALID_VIEW_PROFILE,
     CompressedKVState,
     CompressedKVReferenceError,
+    CompressedKVValidViewCounters,
+    CompressedKVValidViewResult,
     CompressedKVWriteCounters,
     CompressedKVWriteResult,
     compressed_kv_state_bf16,
+    compressed_kv_valid_view_bf16,
     compressed_kv_write_bf16,
     zero_compressed_kv_state_bf16,
 )
@@ -40,6 +44,7 @@ from .compression_pool import (
 )
 from .compression_state import (
     COMPRESS_STATE_PROFILE,
+    CompressionLaneState,
     CompressionPoolInputs,
     CompressionState,
     CompressionStateCounters,
@@ -256,6 +261,7 @@ __all__ = [
     "COMPRESS_INPUT_FEATURES",
     "COMPRESS_OUTPUT_FEATURE_PROFILES",
     "COMPRESSED_KV_PROFILE",
+    "COMPRESSED_KV_VALID_VIEW_PROFILE",
     "COMPRESS_POOL_NUMERIC_PROFILE",
     "COMPRESS_STATE_PROFILE",
     "DENSE_REDUCTION_BLOCK",
@@ -278,6 +284,8 @@ __all__ = [
     "CompressProjectResult",
     "CompressedKVReferenceError",
     "CompressedKVState",
+    "CompressedKVValidViewCounters",
+    "CompressedKVValidViewResult",
     "CompressedKVWriteCounters",
     "CompressedKVWriteResult",
     "CompressionPoolCounters",
@@ -285,6 +293,7 @@ __all__ = [
     "CompressionPoolReferenceError",
     "CompressionPoolResult",
     "CompressionReferenceError",
+    "CompressionLaneState",
     "CompressionState",
     "CompressionStateCounters",
     "CompressionStateReferenceError",
@@ -377,6 +386,7 @@ __all__ = [
     "compress_pool_prefill_f32",
     "compress_project_bf16",
     "compressed_kv_state_bf16",
+    "compressed_kv_valid_view_bf16",
     "compressed_kv_write_bf16",
     "compress_state_update_f32",
     "compression_state_f32",

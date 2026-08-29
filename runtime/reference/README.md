@@ -222,8 +222,12 @@ or ratio-128 groups, and emits an explicit `should_compress` predicate. Ratio
 four keeps separate previous/current raw groups and reproduces the first-group
 zero-KV/negative-infinity-score padding. Full prior state and all inputs validate
 before immutable commit; inactive batches are preserved. New-session reset is
-intentionally external because the official method overwrites only addressed
-rows. Counters distinguish projected input, APE, raw-state, overlap, roll, and
+an explicit target transaction because the official method overwrites only
+addressed rows and trusts its caller to maintain request identity and position.
+Each lane carries a canonical session ID, exact next position, and monotonic
+version; fresh prefill resets every active raw slot, while skipped, replayed, or
+stale-session decode fails before a new immutable state is returned. Counters
+distinguish projected input, APE, raw-state, metadata, reset, overlap, roll, and
 pool-operand traffic without assigning those bytes to a physical memory.
 
 `compression_pool.py` implements all 62 `COMPRESS_POOL` sites over the prepared
@@ -243,14 +247,18 @@ finite saturation and exact four-byte-read/two-byte-write logical traffic, and
 commits an immutable result atomically. This prevents the binary32 pool output
 from being passed silently into the BF16-only RMSNorm reference.
 
-`compressed_kv.py` implements all 62 `COMPRESS_KV_WRITE` sites after RMSNorm,
-position transform, and activation QDQ. Prefill commits only the complete
+`compressed_kv.py` implements all 62 `COMPRESS_KV_WRITE` and
+`COMPRESSED_KV_VALID_VIEW` sites after RMSNorm, position transform, and
+activation QDQ. Prefill commits only the complete
 `floor(sequence_length / ratio)` prefix; decode commits one row only at a ratio
-boundary. An explicit contiguous-prefix validity contract invalidates stale
-active-batch state on a new session and rejects forged decode prefixes. This is
-an accelerator adaptation because the released PyTorch cache has no validity
-bitmap. Payload bytes and validity-bit writes remain separate counters, and
-main and indexer caches remain distinct state objects.
+boundary, but advances the session cursor and version on every token. Each lane
+tracks active status, exact session, next position, valid-prefix length, and a
+monotonic version; removed lanes retain a tombstone until reassignment. The
+valid-view operation exposes only each exact active session's contiguous prefix,
+never preserved stale capacity rows. These are accelerator adaptations because
+the released PyTorch cache has no causal metadata. Payload and logical metadata
+fields remain separate counters, and main and indexer caches remain distinct
+state objects.
 
 `index_score.py` implements all 21 `INDEX_SCORE` sites. It contracts BF16
 FP4-QDQ query heads against BF16 compressed index KV with increasing-dimension
