@@ -3,7 +3,7 @@
 **Document status:** active working execution plan; architecture-review approval
 and gate closure remain evidence controlled
 
-**Plan version:** 1.9
+**Plan version:** 2.0
 
 **Initial issue:** 2026-08-28
 
@@ -39,8 +39,8 @@ dirty concurrent implementation, generated artifact, or checkpoint payload was
 admitted with it. Implementation evidence enters this branch only through the
 gate and handoff rules in Sections 16 and 17.
 
-**Primary targets:** Qwen3-8B at an 8,000-token prompt context and
-DeepSeek-V4-Flash-0731
+**Primary targets:** Qwen3-8B at exactly 8,000 resident prompt tokens and
+DeepSeek-V4-Flash-0731 at exactly 200,000 resident prompt tokens
 
 **Primary architecture:** programmable tensor accelerator with HBM-resident
 weights and mutable state, plus banked on-chip SRAM
@@ -49,6 +49,13 @@ weights and mutable state, plus banked on-chip SRAM
 
 **Primary outcome:** compile and execute each complete pinned model through an
 artifact-driven simulator and produce verified autoregressive decoding results
+
+**Workload decision record `TA-WL-2026-08-29`:** Qwen's mandatory context is
+exactly 8,000 resident prompt tokens; DeepSeek's mandatory context is exactly
+200,000 resident prompt tokens. Any earlier DeepSeek 8,000-token language in
+this plan is superseded by version 2.0. No DeepSeek end-to-end gate had closed,
+so no closed gate is invalidated; any pre-2.0 DeepSeek workload or capacity
+artifact must be regenerated or explicitly classified as diagnostic-only.
 
 ## Executive recommendation
 
@@ -94,6 +101,9 @@ tokens, followed by frozen greedy decoding through the common artifact-only
 simulator. DeepSeek semantics and capability-union review proceed concurrently;
 after Qwen short generation is stable, DeepSeek enters the same compiler and
 simulator by distinct ordinary-path layer classes and then as a complete model.
+DeepSeek's mandatory release gate is exactly 200,000 resident prompt tokens
+followed by its frozen ordinary greedy-decode campaign; an 8,000-token DeepSeek
+run is diagnostic bring-up evidence only and cannot substitute for that gate.
 
 Treat functional correctness, modeled timing, RTL correlation, and 130-nm
 physical characterization as separate evidence gates. HBM remains external to
@@ -899,11 +909,17 @@ The DeepSeek workload contract includes:
 - final logits, token selection, EOS/length behavior, and output text; and
 - full tensor, memory, operation, communication, and state accounting.
 
-The first complete-model correctness run uses a predeclared practical prompt
-suite and an 8,000-token long-context profile. The official maximum context of
-1,048,576 tokens is a separate capacity and qualification profile. The project
-must not claim one-million-token end-to-end correctness until that path has
-actually executed under its declared state, numerical, and performance policy.
+Short prompts and smaller contexts are progressive diagnostic stages, not the
+release target. The mandatory DeepSeek long-context fixture contains exactly
+200,000 resident prompt tokens before the first generated token and then runs
+the frozen ordinary greedy-decode length, no shorter than 32 generated tokens
+unless EOS is the expected earlier result. Per-step logits, routes, sparse
+indices, compressor and KV state, tokens, and decoded text must match the frozen
+target reference. An 8,000-token DeepSeek run cannot close this gate. The
+official maximum context of 1,048,576 tokens is a separate later capacity and
+qualification profile; the project must not claim one-million-token end-to-end
+correctness until that path has actually executed under its declared state,
+numerical, and performance policy.
 
 ### 4.3 Meaning of one dynamic accelerator
 
@@ -920,6 +936,12 @@ tensor dimensions, top-k, expert count, tag count, SRAM capacity, and context
 address width are explicit capabilities. A compiler error, not undefined
 behavior, results when a deployment exceeds them.
 
+The release hardware/capability ABI must accept both Qwen's exact 8,000-token
+profile and DeepSeek's exact 200,000-token profile without resynthesis. The two
+models may use different state layouts and compiled schedules, but the context
+address fields, memory protection, queues, state generations, and external-HBM
+capacity certificate must make the 200,000-token DeepSeek path legal.
+
 ## 5. Definition of done and hard program gates
 
 | Gate | Required evidence | Claim enabled |
@@ -929,7 +951,7 @@ behavior, results when a deployment exceeds them.
 | TA-COMP-2 | Deterministic HBM/SRAM deployment, complete payload coverage, legal physical plan, command stream, and independent reconstruction/checking | Compiler correctness for declared profiles |
 | TA-SIM-3 | Artifact-only functional and cycle/event simulation; exact state/counter reconciliation; no framework or host-compute fallback | Executable architecture correctness |
 | TA-QWEN-4 | Actual checkpoint, full 36-layer prefill/decode, 8,000-token prompt, exact target logits/tokens/text and state | Qwen3-8B 8K end-to-end correctness |
-| TA-DSV4-5 | Actual complete checkpoint, all ordinary-path layers/operators, prefill/decode, exact target logits/tokens/text and state | DeepSeek-V4 Flash end-to-end correctness for executed contexts |
+| TA-DSV4-5 | Actual complete checkpoint, all ordinary-path layers/operators, exactly 200,000 resident prompt tokens plus frozen decode, exact target logits/tokens/text, routes, and state | DeepSeek-V4 Flash 200K end-to-end correctness |
 | TA-RTL-6 | Generated programs execute representative complete kernels/layers through RTL co-simulation and match the architectural simulator | RTL correlation for tested scope |
 | TA-PHY-7 | 130-nm characterized compute, SRAM, control, and interconnect feed the frozen capability model; timing and energy are traceable | Public-PDK physical-proxy performance |
 | TA-CMP-8 | ROM and HBM/SRAM backends use identical model, numeric, workload, process, and reporting scopes | Governed architecture comparison |
@@ -1265,6 +1287,18 @@ and declared memory/device models. It may not import:
 Every executed instruction, memory transaction, state update, and result is caused
 by a deployment artifact.
 
+“Artifact-only” defines the execution provenance; it does **not** mean
+metadata-only, trace-only, timing-only, or partial execution. At a functional
+correctness gate it means **artifact-driven full data-bearing execution**: actual
+input tokens cause every compiled model operation, memory transfer, intermediate
+activation, route or sparse decision, state update, final logit, and token
+decision. QW-FM4 is one complete 36-layer Qwen model-forward step but is not yet
+the full long-context acceptance workload. `TA-QWEN-4` additionally requires the
+exact 8,000-token prefill and frozen decode campaign; `TA-DSV4-5` requires the
+exact 200,000-token DeepSeek prefill and frozen ordinary decode campaign. A
+timing-only replay can support design exploration but cannot close either
+correctness gate.
+
 ### 9.3 Numerical execution
 
 An independent scalar target-precision reference defines expected behavior.
@@ -1374,8 +1408,8 @@ removed from the suite.
 | Full-dimension slice | Real checkpoint values, unreduced dimensions | Representative Qwen layer and all DeepSeek layer classes | Inputs, intermediate tensors, routes, indices, state, outputs, bytes, and cycles |
 | Short full model | Complete real checkpoint | Prompt prefill plus at least 32 decode steps or expected EOS | Every layer checkpoint, logits, token IDs, state, and text |
 | Qwen 8,000 | Complete Qwen checkpoint | Exact 8,000-token prompt plus decode | Bit-exact target results and exact golden tokens/text |
-| DeepSeek 8,000 | Complete DeepSeek checkpoint | Exact 8,000-token prompt plus ordinary decode | Bit-exact target results, routing/state, and exact golden tokens/text |
-| Long-context qualification | Complete checkpoint and declared state | 8,192 and later 32K/200K/1M profiles as applicable | Capacity, state, correctness, timing, and quality for each claimed context |
+| DeepSeek 200,000 | Complete DeepSeek checkpoint | Exact 200,000-token prompt plus at least 32 ordinary greedy decode steps or expected EOS | Bit-exact target results, routing/state, and exact golden tokens/text |
+| Beyond-target qualification | Complete checkpoint and declared state | Qwen 8,192 boundary; DeepSeek 1,048,576 or other separately declared profiles | Capacity, state, correctness, timing, and quality for each claimed context |
 | Fault/degraded | Valid deployment plus injected faults | Representative commands and sessions | Containment, no bad commit, exact diagnostics, drain, and recovery |
 
 ### 11.2 Mandatory end-to-end acceptance
@@ -1579,7 +1613,7 @@ dirty artifact is classified, and both model frontends have a stable handoff.
 
 Architecture, compiler, model, runtime, and verification owners review and freeze
 the system boundary in Sections 3 and 4. They produce machine-readable workload
-manifests for Qwen short, Qwen 8,000, DeepSeek short, and DeepSeek 8,000 profiles;
+manifests for Qwen short, Qwen 8,000, DeepSeek short, and DeepSeek 200,000 profiles;
 numeric acceptance rules; hardware field and capacity bounds; and end-to-end
 golden-generation procedures.
 
@@ -1679,9 +1713,9 @@ The progression is:
 1. every distinct layer class with actual payloads;
 2. complete model, one decode step from a valid state;
 3. complete short prefill and at least 32 decode steps or expected EOS;
-4. complete 8,000-token prefill and frozen generation;
-5. longer context profiles only after their state/capacity and runtime costs are
-   legal; and
+4. complete 200,000-token prefill and frozen ordinary generation;
+5. the separate 1,048,576-token capacity/qualification profile only after its
+   state, capacity, and runtime costs are legal; and
 6. speculative execution as a separately versioned extension.
 
 **Exit gate:** TA-DSV4-5. All ordinary-path operations execute, routes and sparse
@@ -1728,8 +1762,9 @@ The campaign is tiered:
 - nightly CI adds randomized kernels, memory contention, long command streams,
   state rollback, and simulator replay;
 - scheduled checkpoint CI runs real Qwen layers and full short-model generation;
-- controlled large-artifact campaigns run Qwen 8,000 and DeepSeek slices/full
-  model from locally pinned checkpoints; and
+- controlled large-artifact campaigns run Qwen 8,000, DeepSeek layer/full-model
+  diagnostics, and the mandatory DeepSeek 200,000 workload from locally pinned
+  checkpoints; and
 - release CI runs both independent clean builds, end-to-end goldens, RTL
   correlation, and comparison generation.
 
@@ -2100,8 +2135,8 @@ MXFP4/E8M0, routing, expert dispatch, sparse-index, attention, compressor, and
 transactional-state requirements. This review does not claim those paths are
 implemented. After Qwen short full-model generation is stable, actual DeepSeek
 payloads enter the common path one structurally distinct ordinary layer class at
-a time, followed by complete short generation and the declared 8,000-token
-profile.
+a time, followed by complete short generation and the declared exact
+200,000-token profile. Smaller DeepSeek contexts remain diagnostic-only.
 
 ### 19.5 Failure handling and redesign rules for the horizon
 
