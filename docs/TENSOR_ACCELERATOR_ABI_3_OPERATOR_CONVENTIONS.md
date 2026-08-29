@@ -204,11 +204,38 @@ simulation speed.
     blocked association, one RNE output rounding. Used for **execution**.
 
 The blocked contract's association is fixed by an *implementation identity* —
-library, version, device and shape — which every execution report records. Two
-runs of the same implementation are bit-identical; this was verified, and the
+library, version, device, shape **and thread count** — which every execution
+report records. Two runs of the same implementation are bit-identical; the
 contract does not claim portability across implementations. That is a weaker
 guarantee than the sequential contract and is stated as such wherever it is
 used.
+
+Thread count was not in the identity when A7 was first written, and leaving it
+out made the amendment's own guarantee false. A threaded library parallelises a
+matmul by splitting the reduction across threads, so the association — and
+therefore the bits — is a function of how many threads run it. Measured on this
+machine at Qwen3-8B shapes, `[97,4096] × [512,4096]ᵀ` with BF16-rounded
+operands under `torch.matmul`:
+
+| Threads | SHA-256 of the binary32 result (first 32 hex) |
+|---:|---|
+| 1 | `be2bc1c7c38a621236a4a5ae95dbdaa4` |
+| 4 | `d88caa090e8273ae051771c963d80a3d` |
+| 16 | `63799d46b2ec83d22e7a1b7c94077c9f` |
+
+Three thread counts, three different answers, one recorded identity. Two runs
+could therefore have declared the same identity and disagreed, which is
+precisely what the identity exists to rule out. The torch backends now record
+`torch_num_threads` and `torch_num_interop_threads`; NumPy exposes no portable
+accessor, so its identity records the thread-count environment variables
+instead, and an empty value there means the BLAS chose for itself — such a run
+is reproducible only on a machine that would make the same choice.
+
+This does not change which associations are legal, so it is a completion of A7
+rather than a new amendment. It does mean that any execution record written
+before this change is *incomplete*, not wrong: its tokens are what that machine
+produced, but the record does not pin down the configuration well enough to
+guarantee a rerun reproduces them.
 
 Three consequences make it sound for this program's purposes:
 

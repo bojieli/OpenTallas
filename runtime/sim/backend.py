@@ -15,7 +15,8 @@ single place where either one is executed.
     BF16 operands widened exactly to binary32, exact products, binary32
     accumulation in the executing implementation's declared deterministic
     blocked association, one RNE output rounding.  The association is fixed by
-    an *implementation identity* -- library, version, device and shape -- which
+    an *implementation identity* -- library, version, device, shape and
+    thread count -- which
     :meth:`Backend.implementation_identity` returns and every execution report
     must record.  Two runs of the same implementation are bit-identical; the
     contract makes no portability claim across implementations, and anything
@@ -368,10 +369,17 @@ class NumpyBackend(Backend):
             "flags": {
                 "allow_tf32": False,
                 "float32_matmul_precision": "highest",
+                # A threaded BLAS splits the reduction across threads, so the
+                # association -- and the bits -- depend on the thread count.
+                # NumPy exposes no portable accessor, so the identity records
+                # the environment that sets it; an empty string means the BLAS
+                # chose for itself and the run is reproducible only on a
+                # machine that would make the same choice.
+                **_blas_thread_environment(),
             },
             "blocked_association": (
                 "numpy.matmul over binary32, blocked by the linked BLAS; fixed "
-                "by (library, version, device, shape)"
+                "by (library, version, device, shape, thread count)"
             ),
         }
 
@@ -517,6 +525,22 @@ def _numpy_reduce_sum(values: np.ndarray, order: int) -> np.ndarray:
     finally:
         np.seterr(**previous)
     raise BackendError(f"reduction order {order} is not implemented")
+
+
+#: Environment variables that fix a threaded BLAS's thread count, and with it
+#: the reduction association of a NumPy matmul.
+_BLAS_THREAD_VARIABLES = (
+    "OMP_NUM_THREADS",
+    "OPENBLAS_NUM_THREADS",
+    "MKL_NUM_THREADS",
+    "VECLIB_MAXIMUM_THREADS",
+    "NUMEXPR_NUM_THREADS",
+)
+
+
+def _blas_thread_environment() -> dict[str, str]:
+    """The thread-count environment, as part of the implementation identity."""
+    return {name: os.environ.get(name, "") for name in _BLAS_THREAD_VARIABLES}
 
 
 def _numpy_blas_identity() -> dict[str, str]:
@@ -796,6 +820,16 @@ class TorchBackend(Backend):
         flags["cublas_workspace_config"] = os.environ.get(
             "CUBLAS_WORKSPACE_CONFIG", ""
         )
+        # Thread count belongs to the identity because it changes the answer.
+        # torch parallelises a CPU matmul by splitting the reduction across
+        # threads, so the blocked association -- and therefore the bits -- is a
+        # function of how many threads run it.  Measured at Qwen3-8B shapes
+        # ([97,4096] x [512,4096]^T, BF16-rounded operands): 1, 4 and 16 threads
+        # give three different results.  Omitting it would let two runs record
+        # the same identity and disagree, which is exactly the claim this
+        # dictionary exists to make.
+        flags["torch_num_threads"] = int(torch.get_num_threads())
+        flags["torch_num_interop_threads"] = int(torch.get_num_interop_threads())
         return {
             "backend": self.name,
             "library": "torch",
@@ -805,7 +839,7 @@ class TorchBackend(Backend):
             "flags": flags,
             "blocked_association": (
                 "torch.matmul over binary32; the library's blocked association "
-                "is fixed by (library, version, device, shape)"
+                "is fixed by (library, version, device, shape, thread count)"
             ),
         }
 
@@ -832,7 +866,8 @@ class TorchCudaBackend(TorchBackend):
     """PyTorch on a CUDA device.
 
     The blocked association here is cuBLAS's.  It is deterministic for a fixed
-    (library, version, device, shape) and a pinned workspace, which is what
+    (library, version, device, shape, thread count) and a pinned workspace,
+    which is what
     makes ``bf16_bf16_fp32_blocked_rne_v1`` reproducible -- and no more than
     that.  Weights stream: a Qwen deployment addresses 16 GB and this device
     does not have it free, so nothing here assumes residency.
