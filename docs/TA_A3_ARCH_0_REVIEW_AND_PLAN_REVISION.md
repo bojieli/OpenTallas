@@ -142,6 +142,12 @@ another.
 | `TA-DS-LONG` | DeepSeek long context toward 200,000 | functional acceptance at the **achieved** context, which every report must state numerically |
 | `TA-*-CYCLE` | all four at their full mandatory context | cycle-model result over the executed operation trace, labelled as such |
 
+One correction to the mandatory DeepSeek figure itself: **200,000 is not an
+admissible deployment context.** A deployment context must be a whole number of
+128-token sliding windows, so the nearest admissible value is 200,064. The
+prompt contract is unchanged — 200,000 natural prompt tokens — but it sits
+inside a 200,064-token context, and a report should say so rather than round.
+
 Rationale, now measured rather than estimated. The reference oracle executes
 DeepSeek-V4-Flash on this machine by streaming the released 156 GB checkpoint
 layer by layer through a GPU shared with other tenants, and produces correct
