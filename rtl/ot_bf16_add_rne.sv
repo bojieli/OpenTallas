@@ -87,6 +87,7 @@ module ot_bf16_add_rne (
         arithmetic_extended = 12'b0;
         normalized_extended = 12'b0;
         round_increment = 1'b0;
+        normalization_step = 0;
 
         if (left_nonfinite || right_nonfinite) begin
             result_error = ERR_NONFINITE;

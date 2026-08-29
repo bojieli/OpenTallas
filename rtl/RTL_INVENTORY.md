@@ -50,7 +50,7 @@ layer, correlate architectural counters, establish timing, or close
 QW-RTL-ADD-001 is retained as vector set
 `e625aabe70b198319b76f8928d0b99ffe88d6d9e846eb8e0ddaeb3ba72eb7413`
 and campaign
-`d7cb9dec3e1bc84e5a5c9f1775a84ecb54c11d85790f8f395e2cbfadf4f0d24c`.
+`3bd4ae49139f8a400638d4cb2e5d1a68511d496187c67a89a7056fb4cdb1fefa`.
 It executes all 4,096 operand pairs from authentic layer-0 operation
 `node.0011`, command index 5,131, and checks the exact
 `layer.0.post_attention` payload SHA-256
@@ -64,7 +64,7 @@ not instantiate or exercise a memory macro, execute a complete Qwen layer,
 establish timing or performance, or close `TA-RTL-6`.
 
 QW-RTL-ADD-SRAM-001 is retained as campaign
-`9f31ea12a383a0749e869835c541a62f621e0065a0a233c636ff4cad0a8da2c3`.
+`fbf88795280e4b59b7909ca2dd9fa6bd3b1c23771ac5fab9a696c39d38425ad9`.
 The same authentic vector set executes through a single ordered read channel
 and a backpressured write channel in Icarus and Verilator. Each replay checks
 8,192 exact 16-bit read transactions, 4,096 exact write transactions, all

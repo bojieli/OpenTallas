@@ -912,7 +912,7 @@ stalls. They also match completion and saturation counters, 20 directed
 rounding, subnormal, saturation, and error vectors in both operand orders,
 130,560 exhaustive finite-encoding checks for zero identity and exact-sign
 cancellation, and two executor fault cases. The retained campaign ID is
-`d7cb9dec3e1bc84e5a5c9f1775a84ecb54c11d85790f8f395e2cbfadf4f0d24c`.
+`3bd4ae49139f8a400638d4cb2e5d1a68511d496187c67a89a7056fb4cdb1fefa`.
 
 This is a complete arithmetic command only at an external SRAM stream
 boundary. Operand bytes are supplied by the campaign; no SRAM macro, DMA path,
@@ -934,7 +934,7 @@ overflowing arithmetic result retires as a command error without asserting the
 write interface.
 
 The retained two-simulator campaign ID is
-`9f31ea12a383a0749e869835c541a62f621e0065a0a233c636ff4cad0a8da2c3`.
+`fbf88795280e4b59b7909ca2dd9fa6bd3b1c23771ac5fab9a696c39d38425ad9`.
 It reuses authentic vector set
 `e625aabe70b198319b76f8928d0b99ffe88d6d9e846eb8e0ddaeb3ba72eb7413`
 and therefore remains bound to command index 5,131 and expected output hash
