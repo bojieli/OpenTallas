@@ -68,6 +68,9 @@ _QUALIFIED_REFERENCE_OWNERS = {
     "EXPERT_DISPATCH": (
         "runtime.reference.dispatch.dispatch_routed_experts_bf16"
     ),
+    "EXPERT_REDUCE": (
+        "runtime.reference.dispatch.reduce_expert_outputs_bf16"
+    ),
     "FP4_QDQ": "runtime.reference.quantization.fp4_qdq_bf16",
     "FP8_QDQ": "runtime.reference.quantization.fp8_qdq_bf16",
     "FP8_LINEAR": "runtime.reference.matrix.dense_fp8_linear_bf16",
@@ -368,7 +371,7 @@ _OPERATORS = (
     _op(
         "EXPERT_REDUCE",
         "inference/model.py:MoE.forward",
-        "Sum weighted routed expert contributions, collective partials, and the shared expert contribution.",
+        "Preserve every routed slot, reduce duplicate slots then ascending logical experts, add the shared expert last, and convert once to BF16.",
         "REDUCE",
         "routing.expert_reduce",
     ),
@@ -621,6 +624,26 @@ def _router_score_attributes() -> dict[str, Any]:
         "product": "exact_bf16_product",
         "subnormal_policy": "preserve",
         "weight_compute_dtype": "binary32_exact_bf16_widen",
+    }
+
+
+def _expert_reduce_attributes() -> dict[str, Any]:
+    return {
+        "distinct_expert_order": "ascending_logical_expert_id",
+        "duplicate_slot_order": "ascending_selected_slot",
+        "duplicate_slot_policy": "preserve_all",
+        "intermediate_overflow": "poison",
+        "output_dtype": "bf16",
+        "output_rounding": "bf16_rne_once",
+        "output_saturation": "sticky_count",
+        "output_zero": "canonical_positive",
+        "reduction_tree": "num_6_1_balanced_binary32_rne",
+        "routed_alignment": "expert_dispatch_groups_one_to_one",
+        "routed_input_dtype": "bf16",
+        "shared_add_order": "after_routed_reduction",
+        "shared_add_rounding": "binary32_rne_once",
+        "shared_input_dtype": "bf16",
+        "subnormal_policy": "preserve",
     }
 
 
@@ -1149,9 +1172,9 @@ def _add_block_graph(
     (ffn_output,) = graph.add(
         f"{root}.expert_reduce",
         "EXPERT_REDUCE",
-        (routed_output, shared_output),
+        (dispatch, routed_output, shared_output),
         phases=normal_phases,
-        attributes={"collective": "sum_if_tensor_parallel"},
+        attributes=_expert_reduce_attributes(),
     )
     (hidden,) = graph.add(
         f"{root}.hc_ffn_post",
@@ -1513,7 +1536,7 @@ def build_official_graph_contract() -> dict[str, Any]:
             },
             {
                 "id": "DSV4-SEM-005",
-                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 and BF16 linear, binary32 router-score projection, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 and indexer FP4 QDQ, and indexer Hadamard semantics, and twenty-one complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion operator kinds. Matrix paths beyond the qualified dense linear and router projection operators, vector paths beyond the qualified normalization, HC expansion, target-hidden capture, and HC post-mixing paths, stateful attention, routing beyond qualified score, selection, weight normalization, and expert dispatch, and conversion boundaries beyond the qualified QDQ and Hadamard paths remain pending.",
+                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 and BF16 linear, binary32 router-score projection, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 and indexer FP4 QDQ, and indexer Hadamard semantics, and twenty-two complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion operator kinds. Matrix paths beyond the qualified dense linear and router projection operators, vector paths beyond the qualified normalization, HC expansion, target-hidden capture, and HC post-mixing paths, stateful attention, remaining routing/nonlinear paths beyond the qualified score, selection, weight normalization, expert dispatch, and expert reduction boundaries, and conversion boundaries beyond the qualified QDQ and Hadamard paths remain pending.",
                 "required_resolution": "Implement and qualify complete target-precision semantics for each graph operator before marking that operator executable; scalar and block-dot primitives alone do not close matrix or layer lowering.",
                 "severity": "blocking",
                 "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/model.py:RMSNorm.forward;inference/model.py:Transformer.forward;inference/model.py:Block.hc_post;inference/model.py:MoE.forward;runtime/reference/formats.py;runtime/reference/normalization.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py",

@@ -199,6 +199,17 @@ Malformed shapes, out-of-range experts, or nonfinite payloads fail closed. A
 known answer reuses all 48 expert IDs from the independently checked official
 lookup slice in `docs/DEEPSEEK_V4_LOOKUP_EVIDENCE.md`.
 
+The same module implements all 46 `EXPERT_REDUCE` sites. Routed BF16 outputs
+remain aligned to the qualified dispatch, duplicate slots reduce first in
+selected-slot order, and distinct experts reduce in ascending logical ID order
+with the NUM-6.1 tree. The shared BF16 expert is added last with one binary32
+RNE addition, followed by one BF16 conversion. Forged dispatches, malformed or
+nonfinite outputs, and intermediate overflow fail closed; final finite BF16
+saturation is counted. A native PyTorch 2.10.0+cu128 witness confirms why this
+is a governed target rule: advanced-index mutation discarded the first of two
+duplicate contributions on CPU and the second on SM120. A separate seeded
+no-duplicate audit matched both backends in all 2,048 BF16 outputs.
+
 `vector.py` implements `TARGET_HIDDEN_CAPTURE` and `HC_POST` over finite BF16
 encodings and binary32 coefficients. Capture widens the four official HC
 streams, reduces the source axis with the NUM-6.1 balanced tree, divides once,

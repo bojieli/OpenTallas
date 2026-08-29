@@ -57,7 +57,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "a687bd121cea28df833308fcc5d0c658be8b03d5f15356d15d55df2f8223f79e"
+        "b9ca078c80b4f8dd970630c1d0576ba86bbb8031b41bd48d45522c32cdf99a29"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -67,7 +67,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 22,
+        "pending_reference_kind_count": 21,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -136,6 +136,9 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
         "EXPERT_DISPATCH": (
             "runtime.reference.dispatch.dispatch_routed_experts_bf16"
+        ),
+        "EXPERT_REDUCE": (
+            "runtime.reference.dispatch.reduce_expert_outputs_bf16"
         ),
         "FP4_QDQ": "runtime.reference.quantization.fp4_qdq_bf16",
         "FP8_QDQ": "runtime.reference.quantization.fp8_qdq_bf16",
@@ -285,6 +288,39 @@ def test_router_score_profile_and_binary32_numeric_contract_are_explicit(
         }
 
 
+def test_expert_reduce_profile_and_numeric_contract_are_explicit(
+    graph_contract: dict,
+) -> None:
+    nodes = [
+        node for node in graph_contract["nodes"] if node["kind"] == "EXPERT_REDUCE"
+    ]
+    assert len(nodes) == 46
+    for node in nodes:
+        prefix = node["id"].removesuffix(".expert_reduce")
+        assert node["inputs"] == [
+            f"{prefix}.expert_dispatch.output",
+            f"{prefix}.routed_experts.output",
+            f"{prefix}.shared_expert.output",
+        ]
+        assert node["attributes"] == {
+            "distinct_expert_order": "ascending_logical_expert_id",
+            "duplicate_slot_order": "ascending_selected_slot",
+            "duplicate_slot_policy": "preserve_all",
+            "intermediate_overflow": "poison",
+            "output_dtype": "bf16",
+            "output_rounding": "bf16_rne_once",
+            "output_saturation": "sticky_count",
+            "output_zero": "canonical_positive",
+            "reduction_tree": "num_6_1_balanced_binary32_rne",
+            "routed_alignment": "expert_dispatch_groups_one_to_one",
+            "routed_input_dtype": "bf16",
+            "shared_add_order": "after_routed_reduction",
+            "shared_add_rounding": "binary32_rne_once",
+            "shared_input_dtype": "bf16",
+            "subnormal_policy": "preserve",
+        }
+
+
 def test_layer_classes_and_mutable_state_sites_are_explicit(
     graph_contract: dict,
 ) -> None:
@@ -381,7 +417,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "twenty-one complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion" in (
+    assert "twenty-two complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -468,7 +504,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "a687bd121cea28df833308fcc5d0c658be8b03d5f15356d15d55df2f8223f79e"
+        "b9ca078c80b4f8dd970630c1d0576ba86bbb8031b41bd48d45522c32cdf99a29"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

@@ -5,7 +5,10 @@ from .dispatch import (
     DispatchReferenceError,
     ExpertDispatchGroup,
     ExpertDispatchResult,
+    ExpertOutputGroup,
+    ExpertReduceResult,
     dispatch_routed_experts_bf16,
+    reduce_expert_outputs_bf16,
 )
 from .formats import (
     DENSE_REDUCTION_BLOCK,
@@ -170,6 +173,8 @@ __all__ = [
     "DispatchReferenceError",
     "ExpertDispatchGroup",
     "ExpertDispatchResult",
+    "ExpertOutputGroup",
+    "ExpertReduceResult",
     "FP4_AMAX_FLOOR",
     "FP4_MAXIMUM",
     "FP4_QDQ_BLOCK_SIZE",
@@ -257,6 +262,7 @@ __all__ = [
     "mxfp4_fp8_block_dot",
     "normalize_routed_weight_codes",
     "quantize_bf16_activation_block",
+    "reduce_expert_outputs_bf16",
     "rms_norm_bf16",
     "router_score_bf16",
     "stable_topk_bf16",
