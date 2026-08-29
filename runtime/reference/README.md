@@ -189,6 +189,17 @@ overflow tests are retained. On a governed 64-output full-width corpus, native
 CPU and SM120 reassociation differed from the explicit target in 63 and 62
 outputs respectively, without a sign change and by at most 290 binary32 codes.
 
+`confidence.py` implements the single `CONFIDENCE_SCORE` projection. It
+concatenates each BF16 final-DSpark hidden row before its BF16 Markov embedding,
+widens the official `[1, 4352]` BF16 checkpoint weight exactly, and executes an
+increasing-K binary32 RNE fused-product accumulation. The output remains
+binary32; there is no bias, quantization, activation, or final BF16 conversion.
+Tests cover the full five-position 4,096+256 graph profile, concatenation order,
+rounding order, subnormal and malformed inputs, overflow, 200 independent
+randomized compositions, and CPU/SM120 differentials. A separate audit using
+the actual 8,704-byte official weight payload recorded only bounded same-sign
+native reassociation differences; NUM-4.6 retains the hashes and counts.
+
 `dispatch.py` implements `EXPERT_DISPATCH`. It applies the source's row-major
 batch/sequence flattening, emits only nonempty expert groups in ascending
 logical expert-ID order, and orders each group's assignments by flattened token

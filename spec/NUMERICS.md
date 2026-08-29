@@ -362,6 +362,50 @@ native SM120 differed in 62, by at most 290 steps. No sign changed. These result
 are expected reassociation effects after cancellation, not evidence for adopting
 either backend tree as the target.
 
+### NUM-4.6 Binary32 DSpark confidence projection
+
+`CONFIDENCE_SCORE` is the single projection after the final five-position
+DSpark Markov loop. The official checkpoint header contains exactly one tensor,
+`mtp.2.confidence_head.proj.weight`, with shape `[1, 4352]` and BF16 storage.
+For each draft position, the pinned source concatenates the 4,096-wide BF16
+DSpark hidden row followed by its 256-wide BF16 Markov embedding, converts the
+result to binary32, and invokes the bias-free binary32 `Linear` parameter. The
+checkpoint loader widens that parameter from its BF16 payload exactly. The one
+output remains binary32 after `squeeze(-1)`.
+
+For each batch and draft position, the target therefore:
+
+1. accepts finite BF16 hidden, Markov-embedding, and checkpoint-weight values;
+2. orders reduction indices as hidden columns `0..4095`, then Markov columns
+   `0..255`;
+3. widens each operand exactly, forms its exact product, and adds it to a
+   binary32 accumulator initialized to positive zero, with one RNE rounding per
+   fused product-add in increasing reduction-index order; and
+4. emits the completed finite binary32 encoding without activation, bias,
+   scaling, or BF16 output conversion.
+
+BF16 and binary32 subnormals are preserved and output zero canonicalizes
+positive. A malformed batch/position/width, any nonfinite input, or intermediate
+binary32 overflow poisons. The independent reference accepts smaller nonzero
+widths for practical unit cases; only hidden width 4,096, Markov width 256,
+block size five, and one output are graph-qualified.
+
+Native `F.linear` is a cross-check rather than the reduction contract. An
+official-weight development audit used the tensor payload SHA-256
+`15c5d09c7842d0f947ce0afdc154691ead377e6263af71bd2f7cb34bd592f30f`,
+seed `0x434f4e464f464649`, PyTorch 2.10.0+cu128, CUDA 12.8, four batches, and all
+five draft positions. Inputs sampled finite BF16 signs, significands, and biased
+exponents 117 through 134. Native CPU differed from the increasing-K target in
+all 20 binary32 outputs by at most 86 same-sign encoding steps; native SM120
+differed in 19 of 20 by at most 73 same-sign steps. Hashing each row-major output
+as a little-endian binary32 stream gave target, CPU, and SM120 SHA-256 values of
+respectively
+`cfe942601b45620854e7fadb7c1eb33c171fd0b41484c613265e21b9ef299b67`,
+`540eb9d9b0b9e1d2bcce1db72a1feb5ec65b7c782e253f68053c9bf1140cc11c`,
+and `5d569fb7829185b013ac13a759beba0ea80a197b5b86d3a44683606f262b53d9`.
+These bounded reassociation differences do not make either backend tree
+architectural.
+
 ## NUM-5 Exceptional values and errors
 
 ### NUM-5.1 Classification

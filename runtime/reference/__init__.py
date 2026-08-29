@@ -1,5 +1,14 @@
 """Independent target-semantic reference implementations."""
 
+from .confidence import (
+    CONFIDENCE_BLOCK_SIZE,
+    CONFIDENCE_HIDDEN_WIDTH,
+    CONFIDENCE_INPUT_WIDTH,
+    CONFIDENCE_MARKOV_WIDTH,
+    CONFIDENCE_OUTPUTS,
+    ConfidenceReferenceError,
+    confidence_score_bf16,
+)
 from .evaluator import ReferenceError, evaluate_reference
 from .dispatch import (
     DispatchReferenceError,
@@ -160,6 +169,11 @@ __all__ = [
     "BF16Row",
     "BF16Sequence",
     "BF16Vector",
+    "CONFIDENCE_BLOCK_SIZE",
+    "CONFIDENCE_HIDDEN_WIDTH",
+    "CONFIDENCE_INPUT_WIDTH",
+    "CONFIDENCE_MARKOV_WIDTH",
+    "CONFIDENCE_OUTPUTS",
     "DENSE_REDUCTION_BLOCK",
     "DENSE_OUTPUT_SCALE_BLOCK",
     "INT32_MAX",
@@ -170,6 +184,7 @@ __all__ = [
     "ROUTER_SCORE_INPUT_FEATURES",
     "DecodedValue",
     "DenseFP8LinearResult",
+    "ConfidenceReferenceError",
     "DispatchReferenceError",
     "ExpertDispatchGroup",
     "ExpertDispatchResult",
@@ -232,6 +247,7 @@ __all__ = [
     "biased_topk_route_indices",
     "bf16_token_embedding",
     "compressed_dense_indices",
+    "confidence_score_bf16",
     "decode_bf16",
     "decode_binary32",
     "decode_e2m1",

@@ -131,6 +131,29 @@ def test_main_and_dspark_tensor_names_cover_exact_stage_topology(
     assert not any(name.startswith("mtp.3.") for name in names)
 
 
+def test_official_header_has_one_bf16_confidence_projection(
+    official_specs: tuple[TensorSpec, ...],
+) -> None:
+    confidence = tuple(
+        spec
+        for spec in official_specs
+        if spec.semantic_role == "dspark.confidence_head.weight"
+    )
+    assert confidence == (
+        TensorSpec(
+            name="mtp.2.confidence_head.proj.weight",
+            storage_dtype="BF16",
+            shape=(1, 4352),
+            logical_dtype="BF16",
+            semantic_role="dspark.confidence_head.weight",
+            scope="dspark",
+            layer=2,
+            expert=None,
+            scale_for=None,
+        ),
+    )
+
+
 def test_expected_contract_is_deterministic_and_keeps_execution_gate_open(
     official_config: dict,
 ) -> None:
