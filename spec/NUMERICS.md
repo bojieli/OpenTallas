@@ -1615,6 +1615,120 @@ qualify checkpoint-derived projection activations, an executable service-engine
 transaction, RTL, a schedule, cycles, physical bandwidth, PPA, complete-model
 decode, or any GPU comparison.
 
+### NUM-6.14 Grouped attention-output projection
+
+The grouped-output contract is pinned to `Attention.forward` in
+`deepseek-ai/DeepSeek-V4-Flash-0731` revision
+`7872f01b1d1fe23eabc4c98b48bffcef5a386062`. After sparse attention and inverse
+RoPE, the official source executes:
+
+```text
+o = o.view(batch, sequence, local_groups, -1)
+wo_a = wo_a.weight.view(local_groups, output_rank, -1)
+o = einsum("bsgd,grd->bsgr", o, wo_a)
+x = wo_b(o.flatten(2))
+```
+
+`GROUPED_OUTPUT_PROJECT` covers the first view, the `einsum`, and the group-major
+flattened alias. The downstream FP8 `wo_b` projection is a separate
+`FP8_LINEAR` node. The released global profile has 64 attention heads, eight
+groups, eight contiguous heads per group, head dimension 512, group-input width
+4,096, output rank 1,024 per group, and global canonical weight shape
+`[8192,4096]`. Tensor-parallel world sizes 1, 2, 4, and 8 assign each rank one
+contiguous interval of respectively 8, 4, 2, or 1 groups.
+
+The raw checkpoint `wo_a` tensor is FP8 E4M3FN with E8M0 scales. The governed
+canonical transform slices output rows and dequantizes each exact FP8/scale
+value once to BF16 RNE. Grouped-output arithmetic consumes that canonical BF16
+payload; raw checkpoint conversion is not repeated inside this operator.
+
+#### NUM-6.14.1 Group orientation and dot arithmetic
+
+For each batch `b`, position `s`, local group `g`, and output-rank row `r`, form
+the input vector by concatenating that group's eight heads in increasing
+logical-head order, with each head's 512 dimensions in increasing order. Let
+`K = 8 * head_dim`. The target then executes:
+
+```text
+acc = binary32(+0)
+for k = 0 .. K-1:
+    acc = RN32_FMA(BF16(input[b,s,g,k]), BF16(weight[g,r,k]), acc)
+output[b,s,g,r] = BF16_RNE(acc)
+```
+
+Each BF16 product is exact before one binary32 RNE fused-product-add boundary.
+The loop is left-associated in increasing `k`; a balanced tree, tensor-core
+tile tree, end-of-dot exact sum, or reassociation is not conforming. A completed
+finite accumulator converts once under NUM-4.2. There is no bias, activation
+quantization, scale lookup, or additional rounding inside this operator.
+Output zero is canonical positive zero, gradual subnormal behavior is retained,
+and finite BF16 saturation is sticky and counted.
+
+The grouped result has shape `[B,S,G_local,R]`. Its flattened result is the
+exact group-major alias `[B,S,G_local*R]`; it performs no second arithmetic or
+copy in the semantic contract. A selected-row audit entry point may evaluate
+explicit increasing output-rank rows while retaining the declared rank of
+1,024. Such a result is evidence for those rows only and reports incomplete
+coverage unless every row is supplied.
+
+#### NUM-6.14.2 Poison, immutability, and logical counters
+
+All attention and canonical-weight elements must be finite exact BF16 codes.
+Shapes, tensor-parallel ownership, selected ranks, and every caller payload
+validate and freeze before arithmetic begins. Any malformed axis, nonfinite
+input, binary32 accumulation overflow, or inconsistent public result record
+poisons the complete transaction. No partial output commits. Public records use
+deep exact tuples, bind the numeric profile, reject subclass authority, and
+reconcile grouped/flattened aliases, topology, dimensions, and all derivable
+counters.
+
+For `T = B*S`, `G` local groups, `R` evaluated rows per group, and reduction
+width `K`, the operator reports:
+
+```text
+attention_values       = T * G * K
+canonical_weight_values = G * R * K
+product_accumulates    = T * G * R * K
+binary32_roundings     = product_accumulates
+output_conversions     = T * G * R
+declared_full_outputs  = T * G * 1024
+transaction_commits    = 1
+```
+
+These are semantic operations and logical payload values. They are not physical
+ROM/SRAM/HBM transactions, bursts, cache behavior, NoC flits, cycles, latency,
+bandwidth, energy, area, PPA, or a GPU comparison.
+
+#### NUM-6.14.3 Conformance evidence and source boundary
+
+The independent official-evidence checker re-hashes `inference/model.py`,
+`inference/convert.py`, `inference/config.json`, the checkpoint index and lock,
+the canonical application, and its independent verification. It verifies all
+four 16,777,216-byte MP=4 BF16 `layers.0.attn.wo_a.weight` assignments and all
+15 legal aggregate tensor-parallel resource mappings. The resulting certificate
+identity is
+`57d86552d860aadc779bcfc69a2bffe4fbfdb1908159054661646e1192e02838`.
+
+The reference and separately implemented service arithmetic match exactly on
+official-width grouped and flattened output, saturation, ownership, and all
+corresponding logical counters. The locked differential covers all 15 legal
+topology/rank mappings at one token and `T=1..4` for MP=4 rank zero, using real
+canonical layer-0 weights and selected output rows 0 and 1,023. Its aggregate
+identity is
+`7966492eeeed82bfd9b8cc7555bef3c31f3c4ec65079e235379ddc957906aaed`.
+The activation corpus is deterministic synthetic data; it is not a
+checkpoint-derived sparse-attention output, and selected rows are not complete
+1,024-row execution.
+
+PyTorch `einsum` fixes orientation and dtype but not one portable reduction
+tree. Native CPU/CUDA comparisons are therefore bounded development
+observations, not the architectural oracle. The target rule above is a
+deterministic adaptation and does not claim official-backend bit equivalence.
+The logical microprogram and independently checked two-slot schedule establish
+operator/resource ordering only. They do not establish artifact-driven
+execution, `wo_b`, a tensor-parallel collective, a complete attention or block,
+RTL, a physical schedule, timing, bandwidth, PPA, model decode, or performance.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension

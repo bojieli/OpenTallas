@@ -58,7 +58,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "78ad4c98d9c8397ab6cd8ec82cbdcb91751e2cba4aac96a1275a6c783a38db6f"
+        "14ca0f60959ef3674f25691e409b269bb18c3d956b37407e1dfda8ef2d33f08c"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 46,
@@ -68,7 +68,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 2136,
-        "pending_reference_kind_count": 7,
+        "pending_reference_kind_count": 6,
         "pending_rtl_kind_count": 46,
         "pending_service_engine_kind_count": 46,
         "unknown_kind_count": 0,
@@ -345,6 +345,9 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "FP8_QDQ": "runtime.reference.quantization.fp8_qdq_bf16",
         "FP8_LINEAR": "runtime.reference.matrix.dense_fp8_linear_bf16",
         "FP8_SWIGLU": "runtime.reference.swiglu.fp8_swiglu_bf16",
+        "GROUPED_OUTPUT_PROJECT": (
+            "runtime.reference.grouped_output.grouped_output_project_bf16"
+        ),
         "HADAMARD_ROTATE": ("runtime.reference.hadamard.hadamard_rotate_128_bf16"),
         "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
         "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
@@ -1117,10 +1120,10 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
     assert (
-        "thirty-nine complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state/control"
+        "forty complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state/control"
         in (issues["DSV4-SEM-005"]["issue"])
     )
-    assert "Seven" in issues["DSV4-SEM-005"]["issue"]
+    assert "Six" in issues["DSV4-SEM-005"]["issue"]
     assert (
         "immutable causal raw compressor-state updates"
         in issues["DSV4-SEM-006"]["issue"]
@@ -1142,10 +1145,13 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         graph_contract["system_scope"]["covered"]
     )
     assert (
-        "unit-qualified routed-MXFP4 and shared-FP8 SwiGLU, dense FP8 linear, index-head BF16 linear, binary32 router-score, sqrt-softplus router activation, compressor, and DSpark-confidence projections, causal raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, session-bound compressed-KV write and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, base/YaRN RoPE application and inverse, weighted RMS normalization, unweighted BF16 head RMS normalization, complete HC pre-mixing, final HC-head reduction, KV FP8 QDQ, indexer FP4 QDQ"
+        "unit-qualified routed-MXFP4 and shared-FP8 SwiGLU, dense FP8 linear, index-head BF16 linear, binary32 router-score, sqrt-softplus router activation, compressor, and DSpark-confidence projections, causal raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, session-bound compressed-KV write and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, complete grouped attention-output projection, base/YaRN RoPE application and inverse, weighted RMS normalization, unweighted BF16 head RMS normalization, complete HC pre-mixing, final HC-head reduction, KV FP8 QDQ, indexer FP4 QDQ"
         in (" ".join(graph_contract["system_scope"]["covered"]))
     )
     assert "block-64 sparse attention" in " ".join(
+        graph_contract["system_scope"]["covered"]
+    )
+    assert "complete grouped attention-output projection" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
     assert "indexer Hadamard rotation" in " ".join(
@@ -1187,7 +1193,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         in (graph_contract["system_scope"]["unresolved"])
     )
     assert (
-        "seven remaining operator-complete target-precision references"
+        "six remaining operator-complete target-precision references"
         in (graph_contract["system_scope"]["unresolved"])
     )
 
@@ -1230,7 +1236,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "78ad4c98d9c8397ab6cd8ec82cbdcb91751e2cba4aac96a1275a6c783a38db6f"
+        "14ca0f60959ef3674f25691e409b269bb18c3d956b37407e1dfda8ef2d33f08c"
     )
     assert "described 2136 nodes across 46 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

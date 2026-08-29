@@ -34,8 +34,9 @@ the governed positive-zero canonicalization, there were zero differences.
 
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
 the qualified routed-MXFP4/shared-FP8 SwiGLU, dense FP8, index-head BF16,
-router-score, compressor, and confidence projection paths, vector operators
-beyond the SwiGLU nonlinear section, weighted and head RMS normalization,
+router-score, compressor, confidence, and grouped attention-output projection
+paths, vector operators beyond the SwiGLU nonlinear section, weighted and head
+RMS normalization,
 target-hidden capture, and HC post-mixing, attention operators
 beyond the qualified learned index scoring/top-k and sparse-attention boundary,
 mutable attention-state operations, remaining routing and nonlinear operators,
@@ -81,6 +82,19 @@ composition, and native CPU/CUDA differentials. A governed full-width audit
 matched all 64 CPU outputs; native SM120 tensor-core tiling differed in 27,
 each by at most six same-sign BF16 encoding steps. This freezes target order; it
 does not declare CUDA's backend-dependent tree incorrect.
+
+`grouped_output.py` implements all 46 `GROUPED_OUTPUT_PROJECT` sites between
+inverse RoPE and the downstream `wo_b` FP8 projection. It freezes the released
+eight-group/eight-head-per-group orientation, increasing-feature binary32 FMA
+order, one final BF16 conversion, contiguous tensor-parallel group ownership,
+and group-major flattened alias. Public result records reconcile exact tuple
+shape, alias, topology, counters, and numeric profile. Tests cover every legal
+world-size/rank mapping, full 4,096-value reduction width, all four bounded
+command extents, all four hash-locked MP=4 layer-0 canonical weight payloads,
+and exact agreement with a separately implemented service arithmetic lane.
+The locked corpus uses deterministic synthetic attention outputs and selected
+weight rows; it is not complete `wo_a`, downstream `wo_b`, a collective, a
+checkpoint-derived activation, physical execution, or performance evidence.
 
 `normalization.py` implements the weighted `RMS_NORM` operation at all 251
 Flash graph sites and all four observed widths. It widens BF16 input and BF16

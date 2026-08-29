@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import ast
 from copy import deepcopy
-from dataclasses import FrozenInstanceError
+from dataclasses import FrozenInstanceError, fields, replace
 from fractions import Fraction
 from hashlib import sha256
 from pathlib import Path
@@ -51,6 +51,8 @@ from runtime.reference.grouped_output import (
     OFFICIAL_WEIGHT_SHAPE,
     PINNED_MAX_BATCH_SIZE,
     PINNED_MAX_POSITION,
+    GroupedOutputProjectCounters,
+    GroupedOutputProjectResult,
     GroupedOutputReferenceError,
     grouped_output_project_bf16,
     grouped_output_project_selected_bf16,
@@ -635,6 +637,146 @@ def test_all_caller_inputs_remain_unchanged_and_result_is_deeply_immutable() -> 
         result.complete_output = False  # type: ignore[misc]
     with pytest.raises(TypeError):
         result.flattened_bf16_codes[0][0][0] = 1  # type: ignore[index]
+
+
+def _public_record_fixture() -> GroupedOutputProjectResult:
+    return grouped_output_project_selected_bf16(
+        _uniform_attention(
+            batches=1,
+            sequence_length=1,
+            local_groups=1,
+            head_dim=2,
+        ),
+        _uniform_weights(
+            local_groups=1,
+            output_rank=1,
+            head_dim=2,
+        ),
+        local_group_count=1,
+        declared_output_rank=2,
+        selected_output_ranks=(0,),
+        tensor_parallel_rank=3,
+    )
+
+
+def test_public_counter_constructor_rejects_types_and_inconsistent_formulas() -> None:
+    counters = _public_record_fixture().counters
+    for field in fields(counters):
+        if field.name == "complete_output":
+            with pytest.raises(GroupedOutputReferenceError, match="exact boolean"):
+                replace(counters, complete_output=1)
+        else:
+            with pytest.raises(GroupedOutputReferenceError, match="counters"):
+                replace(counters, **{field.name: True})
+
+    with pytest.raises(GroupedOutputReferenceError, match="does not reconcile"):
+        replace(
+            counters,
+            attention_input_bf16_values=counters.attention_input_bf16_values + 1,
+        )
+    with pytest.raises(GroupedOutputReferenceError, match="rank coverage"):
+        replace(counters, complete_output=True)
+    with pytest.raises(GroupedOutputReferenceError, match="outside evaluated"):
+        replace(
+            counters,
+            output_bf16_saturated_values=counters.output_bf16_conversions + 1,
+        )
+
+
+def test_public_result_constructor_reconciles_shape_alias_and_metadata() -> None:
+    result = _public_record_fixture()
+    with pytest.raises(GroupedOutputReferenceError, match="numeric profile"):
+        replace(result, numeric_profile="forged")
+    with pytest.raises(GroupedOutputReferenceError, match="deeply immutable"):
+        replace(result, selected_output_ranks=[0])
+    with pytest.raises(GroupedOutputReferenceError, match="completion status"):
+        replace(result, complete_output=True)
+    with pytest.raises(GroupedOutputReferenceError, match="official-shape status"):
+        replace(result, official_shape_profile=True)
+    with pytest.raises(GroupedOutputReferenceError, match="deeply immutable"):
+        replace(result, grouped_bf16_codes=[[[[0]]]])
+    with pytest.raises(GroupedOutputReferenceError, match="flattened output differs"):
+        replace(result, flattened_bf16_codes=(((1,),),))
+
+    class WritableInteger(int):
+        pass
+
+    writable_code = WritableInteger(0)
+    writable_code.state = []
+    writable_group = WritableInteger(3)
+    writable_group.state = []
+    with pytest.raises(GroupedOutputReferenceError, match="exact integers"):
+        replace(result, global_group_indices=(writable_group,))
+    groups = list(result.grouped_bf16_codes[0][0])
+    groups[0] = (writable_code,)
+    with pytest.raises(GroupedOutputReferenceError, match="16-bit BF16"):
+        replace(result, grouped_bf16_codes=((tuple(groups),),))
+    with pytest.raises(GroupedOutputReferenceError, match="16-bit BF16"):
+        replace(result, flattened_bf16_codes=(((writable_code,),),))
+    with pytest.raises(GroupedOutputReferenceError, match="maximum-finite"):
+        replace(
+            result,
+            counters=replace(result.counters, output_bf16_saturated_values=1),
+        )
+
+    two_batches = grouped_output_project_selected_bf16(
+        _uniform_attention(
+            batches=2,
+            sequence_length=1,
+            local_groups=1,
+            head_dim=2,
+        ),
+        _uniform_weights(
+            local_groups=1,
+            output_rank=1,
+            head_dim=2,
+        ),
+        local_group_count=1,
+        declared_output_rank=2,
+        selected_output_ranks=(0,),
+        tensor_parallel_rank=3,
+    )
+    with pytest.raises(GroupedOutputReferenceError, match="metadata does not reconcile"):
+        replace(result, counters=two_batches.counters)
+
+
+def test_public_records_reject_subclass_authority_and_writable_state() -> None:
+    result = _public_record_fixture()
+
+    class ResultSubclass(GroupedOutputProjectResult):
+        pass
+
+    values = {field.name: getattr(result, field.name) for field in fields(result)}
+    with pytest.raises(GroupedOutputReferenceError, match="exact GroupedOutput"):
+        ResultSubclass(**values)
+    for record in (result, result.counters):
+        assert not hasattr(record, "__dict__")
+        with pytest.raises(TypeError):
+            vars(record)
+    with pytest.raises(FrozenInstanceError):
+        result.numeric_profile = "forged"  # type: ignore[misc]
+
+
+def test_reference_result_and_counters_make_no_physical_claim() -> None:
+    assert [field.name for field in fields(GroupedOutputProjectResult)] == [
+        "numeric_profile",
+        "tensor_parallel_world_size",
+        "tensor_parallel_rank",
+        "global_group_indices",
+        "selected_output_ranks",
+        "declared_output_rank",
+        "complete_output",
+        "official_shape_profile",
+        "grouped_bf16_codes",
+        "flattened_bf16_codes",
+        "counters",
+    ]
+    prohibited = {"cycle", "latency", "bandwidth", "energy", "area", "ppa"}
+    assert not any(
+        term in field.name
+        for field in fields(GroupedOutputProjectCounters)
+        for term in prohibited
+    )
 
 
 @pytest.mark.parametrize(

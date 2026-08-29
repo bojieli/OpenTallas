@@ -137,7 +137,7 @@ class GroupedOutputReferenceError(ValueError):
     """Raised when a grouped-output transaction is malformed or poisoned."""
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class GroupedOutputProjectCounters:
     """Exact logical shape and arithmetic counts for evaluated output rows."""
 
@@ -166,8 +166,11 @@ class GroupedOutputProjectCounters:
     declared_full_output_bf16_values: int
     transaction_commits: int
 
+    def __post_init__(self) -> None:
+        _validate_project_counters(self)
 
-@dataclass(frozen=True)
+
+@dataclass(frozen=True, slots=True)
 class GroupedOutputProjectResult:
     """Immutable grouped and group-major flattened BF16 outputs."""
 
@@ -182,6 +185,9 @@ class GroupedOutputProjectResult:
     grouped_bf16_codes: BF16GroupedOutput
     flattened_bf16_codes: BF16FlattenedOutput
     counters: GroupedOutputProjectCounters
+
+    def __post_init__(self) -> None:
+        _validate_project_result(self)
 
 
 def _sequence(value: object, label: str) -> list[object] | tuple[object, ...]:
@@ -384,6 +390,306 @@ def _freeze_weights(
         frozen_rows.append(tuple(frozen_row))
         value_rows.append(tuple(value_row))
     return tuple(frozen_rows), tuple(value_rows)
+
+
+def _exact_tuple(value: object, label: str) -> tuple[object, ...]:
+    if type(value) is not tuple:
+        raise GroupedOutputReferenceError(
+            f"{label} must be a deeply immutable exact tuple"
+        )
+    return value
+
+
+def _validate_project_counters(
+    counters: object,
+) -> GroupedOutputProjectCounters:
+    if type(counters) is not GroupedOutputProjectCounters:
+        raise GroupedOutputReferenceError(
+            "counters must be an exact GroupedOutputProjectCounters record"
+        )
+    batch_count = _integer(
+        counters.batch_count,
+        "counters.batch_count",
+        minimum=1,
+        maximum=PINNED_MAX_BATCH_SIZE,
+    )
+    sequence_length = _integer(
+        counters.sequence_length,
+        "counters.sequence_length",
+        minimum=1,
+        maximum=PINNED_MAX_POSITION,
+    )
+    world_size = counters.tensor_parallel_world_size
+    if type(world_size) is not int or world_size not in (
+        OFFICIAL_TENSOR_PARALLEL_WORLD_SIZES
+    ):
+        raise GroupedOutputReferenceError(
+            "counters.tensor_parallel_world_size must be exactly 1, 2, 4, or 8"
+        )
+    rank = _integer(
+        counters.tensor_parallel_rank,
+        "counters.tensor_parallel_rank",
+        minimum=0,
+        maximum=world_size - 1,
+    )
+    local_group_count = OFFICIAL_GLOBAL_GROUPS // world_size
+    head_dim = _integer(
+        counters.head_dim,
+        "counters.head_dim",
+        minimum=1,
+        maximum=OFFICIAL_HEAD_DIM,
+    )
+    declared_output_rank = _integer(
+        counters.declared_output_rank,
+        "counters.declared_output_rank",
+        minimum=1,
+        maximum=OFFICIAL_OUTPUT_RANK,
+    )
+    evaluated_rank_count = _integer(
+        counters.evaluated_output_ranks_per_group,
+        "counters.evaluated_output_ranks_per_group",
+        minimum=1,
+        maximum=declared_output_rank,
+    )
+    if type(counters.complete_output) is not bool:
+        raise GroupedOutputReferenceError(
+            "counters.complete_output must be an exact boolean"
+        )
+    complete_output = evaluated_rank_count == declared_output_rank
+    if counters.complete_output != complete_output:
+        raise GroupedOutputReferenceError(
+            "counters.complete_output does not reconcile to rank coverage"
+        )
+
+    group_input_features = OFFICIAL_HEADS_PER_GROUP * head_dim
+    token_count = batch_count * sequence_length
+    input_values = token_count * local_group_count * group_input_features
+    weight_values = local_group_count * evaluated_rank_count * group_input_features
+    evaluated_outputs = token_count * local_group_count * evaluated_rank_count
+    full_outputs = token_count * local_group_count * declared_output_rank
+    product_accumulates = evaluated_outputs * group_input_features
+    saturation_count = counters.output_bf16_saturated_values
+    if (
+        type(saturation_count) is not int
+        or not 0 <= saturation_count <= evaluated_outputs
+    ):
+        raise GroupedOutputReferenceError(
+            "counters.output_bf16_saturated_values is outside evaluated outputs"
+        )
+    expected = {
+        "batch_count": batch_count,
+        "sequence_length": sequence_length,
+        "tensor_parallel_world_size": world_size,
+        "tensor_parallel_rank": rank,
+        "local_group_count": local_group_count,
+        "local_head_count": local_group_count * OFFICIAL_HEADS_PER_GROUP,
+        "heads_per_group": OFFICIAL_HEADS_PER_GROUP,
+        "head_dim": head_dim,
+        "group_input_features": group_input_features,
+        "declared_output_rank": declared_output_rank,
+        "evaluated_output_ranks_per_group": evaluated_rank_count,
+        "attention_input_bf16_values": input_values,
+        "canonical_weight_bf16_values": weight_values,
+        "attention_group_reshape_values": input_values,
+        "weight_group_reshape_values": weight_values,
+        "exact_product_accumulates": product_accumulates,
+        "binary32_accumulation_roundings": product_accumulates,
+        "output_bf16_conversions": evaluated_outputs,
+        "evaluated_grouped_output_bf16_values": evaluated_outputs,
+        "evaluated_flattened_output_bf16_values": evaluated_outputs,
+        "declared_full_output_bf16_values": full_outputs,
+        "transaction_commits": 1,
+    }
+    for name, expected_value in expected.items():
+        observed = getattr(counters, name)
+        if type(observed) is not int or observed != expected_value:
+            raise GroupedOutputReferenceError(
+                f"counters.{name} does not reconcile to grouped-output dimensions"
+            )
+    return counters
+
+
+def _validate_project_result(result: object) -> GroupedOutputProjectResult:
+    if type(result) is not GroupedOutputProjectResult:
+        raise GroupedOutputReferenceError(
+            "result must be an exact GroupedOutputProjectResult record"
+        )
+    if (
+        type(result.numeric_profile) is not str
+        or result.numeric_profile != GROUPED_OUTPUT_NUMERIC_PROFILE
+    ):
+        raise GroupedOutputReferenceError(
+            "result numeric profile differs from the qualified grouped-output profile"
+        )
+    world_size = result.tensor_parallel_world_size
+    if type(world_size) is not int or world_size not in (
+        OFFICIAL_TENSOR_PARALLEL_WORLD_SIZES
+    ):
+        raise GroupedOutputReferenceError(
+            "result tensor_parallel_world_size must be exactly 1, 2, 4, or 8"
+        )
+    rank = _integer(
+        result.tensor_parallel_rank,
+        "result.tensor_parallel_rank",
+        minimum=0,
+        maximum=world_size - 1,
+    )
+    local_group_count = OFFICIAL_GLOBAL_GROUPS // world_size
+    expected_global_groups = tuple(
+        range(rank * local_group_count, (rank + 1) * local_group_count)
+    )
+    global_groups = _exact_tuple(
+        result.global_group_indices,
+        "result.global_group_indices",
+    )
+    if any(type(group) is not int for group in global_groups):
+        raise GroupedOutputReferenceError(
+            "result global group ownership must contain exact integers"
+        )
+    if global_groups != expected_global_groups:
+        raise GroupedOutputReferenceError(
+            "result global group ownership does not reconcile to tensor parallelism"
+        )
+    declared_output_rank = _integer(
+        result.declared_output_rank,
+        "result.declared_output_rank",
+        minimum=1,
+        maximum=OFFICIAL_OUTPUT_RANK,
+    )
+    _exact_tuple(result.selected_output_ranks, "result.selected_output_ranks")
+    selected_ranks = _selected_ranks(
+        result.selected_output_ranks,
+        declared_output_rank=declared_output_rank,
+    )
+    selected_rank_count = len(selected_ranks)
+    complete_output = selected_ranks == tuple(range(declared_output_rank))
+    if type(result.complete_output) is not bool or result.complete_output != (
+        complete_output
+    ):
+        raise GroupedOutputReferenceError(
+            "result completion status does not reconcile to selected ranks"
+        )
+    if type(result.counters) is not GroupedOutputProjectCounters:
+        raise GroupedOutputReferenceError(
+            "result counters must be an exact GroupedOutputProjectCounters record"
+        )
+    counters = _validate_project_counters(result.counters)
+    official_shape_profile = (
+        counters.head_dim == OFFICIAL_HEAD_DIM
+        and declared_output_rank == OFFICIAL_OUTPUT_RANK
+    )
+    if (
+        type(result.official_shape_profile) is not bool
+        or result.official_shape_profile != official_shape_profile
+    ):
+        raise GroupedOutputReferenceError(
+            "result official-shape status does not reconcile to dimensions"
+        )
+
+    batches = _exact_tuple(result.grouped_bf16_codes, "result.grouped_bf16_codes")
+    if not 1 <= len(batches) <= PINNED_MAX_BATCH_SIZE:
+        raise GroupedOutputReferenceError(
+            "result grouped output has an invalid batch extent"
+        )
+    sequence_length: int | None = None
+    expected_flattened: list[tuple[BF16Vector, ...]] = []
+    for batch_index, batch_value in enumerate(batches):
+        sequence = _exact_tuple(
+            batch_value,
+            f"result.grouped_bf16_codes[{batch_index}]",
+        )
+        if sequence_length is None:
+            sequence_length = len(sequence)
+            if not 1 <= sequence_length <= PINNED_MAX_POSITION:
+                raise GroupedOutputReferenceError(
+                    "result grouped output has an invalid sequence extent"
+                )
+        elif len(sequence) != sequence_length:
+            raise GroupedOutputReferenceError(
+                "result grouped output is not rectangular on the sequence axis"
+            )
+        flattened_sequence: list[BF16Vector] = []
+        for position, groups_value in enumerate(sequence):
+            groups = _exact_tuple(
+                groups_value,
+                f"result.grouped_bf16_codes[{batch_index}][{position}]",
+            )
+            if len(groups) != local_group_count:
+                raise GroupedOutputReferenceError(
+                    "result grouped output local-group extent differs"
+                )
+            flattened_row: list[int] = []
+            for local_group, row_value in enumerate(groups):
+                row = _exact_tuple(
+                    row_value,
+                    "result.grouped_bf16_codes"
+                    f"[{batch_index}][{position}][{local_group}]",
+                )
+                if len(row) != selected_rank_count:
+                    raise GroupedOutputReferenceError(
+                        "result grouped output selected-rank extent differs"
+                    )
+                flattened_row.extend(
+                    _finite_bf16(
+                        code,
+                        "result.grouped_bf16_codes"
+                        f"[{batch_index}][{position}][{local_group}][{output}]",
+                    )[0]
+                    for output, code in enumerate(row)
+                )
+            flattened_sequence.append(tuple(flattened_row))
+        expected_flattened.append(tuple(flattened_sequence))
+    assert sequence_length is not None
+    expected_flattened_tuple = tuple(expected_flattened)
+
+    flattened_batches = _exact_tuple(
+        result.flattened_bf16_codes,
+        "result.flattened_bf16_codes",
+    )
+    for batch_index, sequence_value in enumerate(flattened_batches):
+        sequence = _exact_tuple(
+            sequence_value,
+            f"result.flattened_bf16_codes[{batch_index}]",
+        )
+        for position, row_value in enumerate(sequence):
+            row = _exact_tuple(
+                row_value,
+                f"result.flattened_bf16_codes[{batch_index}][{position}]",
+            )
+            for output, code in enumerate(row):
+                _finite_bf16(
+                    code,
+                    "result.flattened_bf16_codes"
+                    f"[{batch_index}][{position}][{output}]",
+                )
+    if result.flattened_bf16_codes != expected_flattened_tuple:
+        raise GroupedOutputReferenceError(
+            "result flattened output differs from the grouped output alias view"
+        )
+    saturation_candidates = sum(
+        code & 0x7FFF == 0x7F7F
+        for sequence in expected_flattened_tuple
+        for row in sequence
+        for code in row
+    )
+    if counters.output_bf16_saturated_values > saturation_candidates:
+        raise GroupedOutputReferenceError(
+            "result saturation count exceeds maximum-finite BF16 candidates"
+        )
+    if (
+        counters.batch_count != len(batches)
+        or counters.sequence_length != sequence_length
+        or counters.tensor_parallel_world_size != world_size
+        or counters.tensor_parallel_rank != rank
+        or counters.local_group_count != local_group_count
+        or counters.declared_output_rank != declared_output_rank
+        or counters.evaluated_output_ranks_per_group != selected_rank_count
+        or counters.complete_output != complete_output
+    ):
+        raise GroupedOutputReferenceError(
+            "result metadata does not reconcile to grouped-output counters"
+        )
+    return result
 
 
 def _reshape_attention_groups(
