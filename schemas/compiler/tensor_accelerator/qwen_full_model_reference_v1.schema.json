@@ -1,0 +1,182 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_reference_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "checks": {
+      "additionalProperties": false,
+      "properties": {
+        "all_399_checkpoint_tensors_authenticated": {"const": true},
+        "all_617_operation_outputs_exact": {"const": true},
+        "all_36_layer_boundaries_exact": {"const": true},
+        "all_36_prepared_and_committed_states_exact": {"const": true},
+        "all_70_counters_independently_derived": {"const": true},
+        "complete_logits_and_unique_greedy_token_exact": {"const": true},
+        "independent_scalar_kernel_cross_checks": {"const": true},
+        "row_major_checkpoint_not_tiled_hbm_source": {"const": true},
+        "segmented_k_not_fused_matrix_execution": {"const": true}
+      },
+      "required": [
+        "all_399_checkpoint_tensors_authenticated",
+        "all_617_operation_outputs_exact",
+        "all_36_layer_boundaries_exact",
+        "all_36_prepared_and_committed_states_exact",
+        "all_70_counters_independently_derived",
+        "complete_logits_and_unique_greedy_token_exact",
+        "independent_scalar_kernel_cross_checks",
+        "row_major_checkpoint_not_tiled_hbm_source",
+        "segmented_k_not_fused_matrix_execution"
+      ],
+      "type": "object"
+    },
+    "counter_sha256": {"$ref": "#/$defs/sha256"},
+    "execution_report_id": {"$ref": "#/$defs/sha256"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "layer_outputs": {
+      "items": {"$ref": "#/$defs/layer_output"},
+      "maxItems": 36,
+      "minItems": 36,
+      "type": "array"
+    },
+    "outputs": {
+      "additionalProperties": false,
+      "properties": {
+        "committed_logits": {
+          "additionalProperties": false,
+          "properties": {
+            "greedy_maximum_count": {"const": 1},
+            "greedy_token_id": {
+              "maximum": 151935,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "payload_sha256": {"$ref": "#/$defs/sha256"},
+            "size_bytes": {"const": 303872}
+          },
+          "required": [
+            "greedy_maximum_count",
+            "greedy_token_id",
+            "payload_sha256",
+            "size_bytes"
+          ],
+          "type": "object"
+        },
+        "final_normalization": {"$ref": "#/$defs/hidden_capture"},
+        "hidden_36": {"$ref": "#/$defs/hidden_capture"},
+        "last_token": {"$ref": "#/$defs/hidden_capture"}
+      },
+      "required": [
+        "committed_logits",
+        "final_normalization",
+        "hidden_36",
+        "last_token"
+      ],
+      "type": "object"
+    },
+    "reference_id": {"$ref": "#/$defs/sha256"},
+    "reference_version": {
+      "const": "tensor-accelerator-qwen-full-model-reference-0.1.0"
+    },
+    "request_id": {"$ref": "#/$defs/sha256"},
+    "saturation": {
+      "additionalProperties": false,
+      "properties": {
+        "by_kernel": {
+          "additionalProperties": false,
+          "maxProperties": 578,
+          "minProperties": 578,
+          "patternProperties": {
+            "^(?:[0-9]|[1-9][0-9]|[1-5][0-9]{2}|60[0-9]|61[0-6])$": {
+              "minimum": 0,
+              "type": "integer"
+            }
+          },
+          "type": "object"
+        },
+        "total": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["by_kernel", "total"],
+      "type": "object"
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_full_model_reference.v1"
+    },
+    "state": {
+      "items": {"$ref": "#/$defs/state"},
+      "maxItems": 36,
+      "minItems": 36,
+      "type": "array"
+    },
+    "status": {"const": "pass"}
+  },
+  "required": [
+    "capability_id",
+    "checkpoint_lock_id",
+    "checks",
+    "counter_sha256",
+    "execution_report_id",
+    "graph_id",
+    "layer_outputs",
+    "outputs",
+    "reference_id",
+    "reference_version",
+    "request_id",
+    "saturation",
+    "schema",
+    "state",
+    "status"
+  ],
+  "title": "Independent Qwen complete-model target-precision reference report v1",
+  "type": "object",
+  "$defs": {
+    "hidden_capture": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"const": 8192}
+      },
+      "required": ["payload_sha256", "size_bytes"],
+      "type": "object"
+    },
+    "layer_output": {
+      "additionalProperties": false,
+      "properties": {
+        "layer": {"maximum": 36, "minimum": 1, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "size_bytes": {"const": 8192},
+        "tensor_id": {
+          "pattern": "^hidden\\.(?:[1-9]|[12][0-9]|3[0-6])$",
+          "type": "string"
+        }
+      },
+      "required": ["layer", "payload_sha256", "size_bytes", "tensor_id"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "state": {
+      "additionalProperties": false,
+      "properties": {
+        "generation": {"const": 1},
+        "key_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "layer": {"maximum": 35, "minimum": 0, "type": "integer"},
+        "length": {"const": 1},
+        "resource_id": {
+          "pattern": "^kv\\.layer\\.(?:[0-9]|[12][0-9]|3[0-5])$",
+          "type": "string"
+        },
+        "value_payload_sha256": {"$ref": "#/$defs/sha256"}
+      },
+      "required": [
+        "generation",
+        "key_payload_sha256",
+        "layer",
+        "length",
+        "resource_id",
+        "value_payload_sha256"
+      ],
+      "type": "object"
+    }
+  }
+}
