@@ -293,6 +293,14 @@
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
 
+- **OI-30 — commit `8841b95` carries another change's admission proofs.** A14's
+  two `participant_scope` refusals were staged into my A13 clamp fix, because I
+  staged `runtime/abi3/verifier.py` whole while an agent was adding to it. The
+  code is correct and present in HEAD; only the history misattributes it. This is
+  the third time tonight that staging a file rather than a change has muddled a
+  commit, and it is the reason a `git add <path>` on a shared file is not
+  actually safer than `git add -A` while anyone else is writing.
+
 - **OI-28 — the DeepSeek 32-node HBM lane cannot produce a token, and the
   reason is upstream of every operand issue: the functional device has no node
   dimension.** 96 tensor views in the `cluster_32` lowering carry a `NODE_ID`
