@@ -319,6 +319,9 @@ class ViewResolver:
         self.deployment = deployment
         self.memory = memory
         self._cache: dict[int, Descriptor] = {}
+        self._device_cache: dict[tuple[Any, ...], tuple[int, Any]] = {}
+        self._device_cache_backend: str = ""
+        self._device_cache_used: int = 0
 
     def descriptor(self, view_id: int) -> Descriptor:
         cached = self._cache.get(view_id)
@@ -404,6 +407,59 @@ class ViewResolver:
             strides=tuple(s * itemsize for s in view.strides),
             writeable=False,
         )
+
+    def device_array(self, view: ResolvedView, backend: Any) -> Any:
+        """The view's elements placed on ``backend``'s device, without detour.
+
+        The host read stays exactly what :meth:`read_array` produces -- a
+        strided view over the ``numpy.memmap`` when the extent lies in one
+        mapped segment -- so the zero-copy weight residency is untouched.  What
+        this adds is the *placement*: the mapped bytes are handed to the
+        backend in their storage format, so a BF16 weight crosses the bus as
+        16-bit codes and is widened on the far side, rather than being widened
+        to binary32 on the host and crossing at twice the width.
+
+        Immutable objects may additionally be held resident, bounded by
+        ``backend.device_cache_bytes()``.  The budget is zero unless an
+        operator opts in, because the device is shared and a Qwen deployment
+        addresses more weight than it has free.
+        """
+        array = self.read_array(view)
+        if getattr(backend, "device", "host") == "host":
+            # A host backend computes on the mapping itself.  Placing would be
+            # a copy with no destination, so there is nothing to place.
+            return array
+        if backend.name != self._device_cache_backend:
+            self.clear_device_cache()
+            self._device_cache_backend = backend.name
+        budget = int(backend.device_cache_bytes())
+        obj = self.memory[view.object_id]
+        cacheable = budget > 0 and not obj.writable
+        key: tuple[Any, ...] | None = None
+        if cacheable:
+            key = (
+                view.object_id,
+                int(view.dtype),
+                tuple(view.dims),
+                tuple(view.strides),
+                int(view.element_offset),
+            )
+            hit = self._device_cache.get(key)
+            if hit is not None:
+                return hit[1]
+        placed = backend.place(array)
+        if cacheable and key is not None:
+            nbytes = int(array.size) * int(array.dtype.itemsize)
+            if nbytes <= budget - self._device_cache_used:
+                self._device_cache[key] = (nbytes, placed)
+                self._device_cache_used += nbytes
+        return placed
+
+    def clear_device_cache(self) -> None:
+        """Release every device-resident view this resolver is holding."""
+        self._device_cache.clear()
+        self._device_cache_used = 0
+        self._device_cache_backend = ""
 
     def _read_sub_byte(self, view: ResolvedView, obj: MemoryObject) -> np.ndarray:
         """Read a 4-bit view as one uint8 nibble per element, low nibble first."""

@@ -252,7 +252,9 @@ def check_deployment(
     )
     body_kernels = sum(len(b["body"]) for b in bands)
     prologue = sum(1 for k in graph.kernels if k.layer is None)
-    ceiling = 24 * (body_kernels + prologue) + 64
+    # One engine instruction per kernel, wrapped where the token count is a
+    # runtime symbol: at most three instructions per kernel plus loop framing.
+    ceiling = 6 * (body_kernels + prologue) + 64
     require(
         "loop_compressed",
         len(instructions) <= ceiling,

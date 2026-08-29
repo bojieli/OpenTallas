@@ -124,7 +124,20 @@ TRAP_CAPABILITY = 4
 # Recording engine stubs
 # ---------------------------------------------------------------------------
 def _install_engine_stubs() -> None:
-    """Register a recording no-op for every dispatchable engine operation."""
+    """Force every dispatchable engine operation to a recording no-op.
+
+    RTL 3.0 implements the control plane; engine datapaths are a separate
+    deliverable.  A comparison against a golden model that *does* compute would
+    not be well posed: a data-dependent engine fault would trap the reference on
+    a program the RTL can only run to completion.  Every dispatchable
+    ``(family, subopcode)`` is therefore bound to a no-op here, so the two sides
+    differ in nothing but the datapath that neither is exercising.
+
+    ``runtime.sim.engine.register`` is the public path but refuses to replace an
+    existing implementation, so the binding is written directly.  The result is
+    independent of whether the engine package has been imported: the vector set
+    is identical either way, which is the property that keeps it reproducible.
+    """
     from runtime.abi3.constants import SUBOPCODES
 
     dispatchable = (
@@ -137,14 +150,13 @@ def _install_engine_stubs() -> None:
         Major.SELECTION,
         Major.LINK,
     )
+
+    def _noop(ctx, sub, descriptor):  # noqa: ANN001 - engine handler signature
+        return None
+
     for family in dispatchable:
         for member in SUBOPCODES[family]:
-            if (int(family), int(member)) in engine_module.implemented():
-                continue
-
-            @engine_module.register(family, int(member))
-            def _stub(ctx, sub, descriptor):  # noqa: ANN001
-                return None
+            engine_module._REGISTRY[(int(family), int(member))] = _noop  # noqa: SLF001
 
 
 # ---------------------------------------------------------------------------
@@ -1317,6 +1329,11 @@ def build(argv: list[str] | None = None) -> int:
         "schema": "opentallas.rtl.abi3_vectors.v1",
         "abi": {"major": 3, "minor": 0},
         "capability_digest": capability.digest,
+        "engine_stub_policy": (
+            "every dispatchable engine operation is a recording no-op: RTL 3.0 "
+            "implements the control plane, so the comparison is the control "
+            "plane"
+        ),
         "case_count": len(cases),
         "positive_case_count": positives,
         "negative_case_count": len(cases) - positives,

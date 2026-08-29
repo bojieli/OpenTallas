@@ -104,8 +104,13 @@ module ot_a3_instruction_decoder
 
     // Every structural defect other than a failed integrity check is an
     // illegal instruction (trap class 5); a failed CRC is an integrity fault
-    // (trap class 2).  See RTL_ABI3_NOTES for the one place the frozen ABI
-    // does not itself assign a class.
+    // (trap class 2).  The frozen ABI does not itself assign trap classes to
+    // record-level defects: section 1 says nonzero reserved values "fail
+    // before work is issued" (readable as class 1, admission) while section 3
+    // calls a bad flag combination "illegal" (class 5).  Class 5 is used here
+    // because the defect is in an instruction the sequencer is executing, not
+    // in the deployment's admission; the golden model raises no trap class at
+    // all for these, since it rejects the whole body at load time.
     function automatic [15:0] trap_of_error;
         input [3:0] error;
         begin

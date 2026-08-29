@@ -147,6 +147,60 @@ def test_operator_operand_limits(graph):
         assert kernel.outputs, kernel.kernel_id
 
 
+#: Kinds this export deliberately emits with fewer operands than the shared
+#: lowering table declares, with the released reason.  Anything not listed must
+#: match the table exactly, so a table change shows up here.
+UNDERFILLED_OPERANDS = {
+    # the released query head norm has no gain vector
+    "HEAD_RMS_NORM": (1, 1),
+    # x and one projection; the position weight is added by a separate ADD
+    "COMPRESS_PROJECT": (2, 1),
+    # the routed expert bank cannot be one operand: see IR3-GAP-3
+    "ROUTED_MATMUL": (2, 1),
+    # TA-ABI3-OPCONV-1 amendment A8: SWIGLU is (gate, up); the limit is numeric
+    "SWIGLU": (2, 1),
+    # the released group split is contiguous and equal, so no group index view
+    "GROUPED_MATMUL": (2, 1),
+    # Sinkhorn post and combination coefficients travel as one operand
+    "HYPER_CONNECT_POST": (3, 1),
+    # mean over the hyper-connection streams needs no base
+    "PARTITION_SUM": (1, 1),
+    # variable by site
+    "CONCAT": None,
+    "SCALE": None,
+    "DEQUANTIZE": None,
+}
+
+
+def test_emitted_operand_counts_respect_the_shared_lowering_table(graph):
+    for kernel in graph.kernels:
+        declared = KERNEL_TO_ENGINE[kernel.kind]
+        shape = (len(kernel.inputs), len(kernel.outputs))
+        assert shape[0] <= declared.inputs, kernel.kernel_id
+        assert shape[1] <= declared.outputs, kernel.kernel_id
+        if kernel.kind in UNDERFILLED_OPERANDS:
+            expected = UNDERFILLED_OPERANDS[kernel.kind]
+            if expected is not None:
+                assert shape == expected, kernel.kernel_id
+        else:
+            assert shape == (declared.inputs, declared.outputs), kernel.kernel_id
+
+
+def test_sparse_attention_uses_the_frozen_operand_order(graph):
+    """TA-ABI3-OPCONV-1 amendment A6: query, fused KV, index, per-head sink."""
+
+    by_id = {t.tensor_id: t for t in graph.tensors}
+    for kernel in graph.kernels:
+        if kernel.kind != "ATTENTION_SPARSE":
+            continue
+        query, key_value, index, sink = kernel.inputs
+        assert by_id[query].shape[1:] == (64, 512)
+        assert by_id[key_value].shape[1] == 512
+        assert by_id[index].dtype == "i32"
+        assert by_id[sink].role == "weight"
+        assert by_id[sink].shape == (64,)
+
+
 def test_kernels_are_indexed_and_topologically_ordered(graph):
     available = {
         tensor.tensor_id

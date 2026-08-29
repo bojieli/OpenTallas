@@ -131,19 +131,20 @@ def dense_graph(
     weight("embed", (vocab, hidden))
     act("hidden0", (SPAN, hidden))
     for index in range(layers):
-        states.append(
-            StateResource(
-                state_id=f"kv{index}",
-                state_class="kv_cache",
-                dtype="bf16",
-                row_elements=kv,
-                capacity_rows=span_max,
+        for half in ("k", "v"):
+            states.append(
+                StateResource(
+                    state_id=f"kv{index}{half}",
+                    state_class="kv_cache",
+                    dtype="bf16",
+                    row_elements=kv,
+                    capacity_rows=span_max,
+                )
             )
-        )
 
     emit("STATE_PREPARE", (), (), "exact_copy_v1",
          state_writes=tuple(s.state_id for s in states))
-    emit("EMBEDDING_LOOKUP", ["embed", "tokens"], ["hidden0"],
+    emit("EMBEDDING_LOOKUP", ["tokens", "embed"], ["hidden0"],
          "exact_index_gather_v1")
 
     previous = "hidden0"
@@ -163,7 +164,8 @@ def dense_graph(
         act(f"{p}.k", (SPAN, kv))
         act(f"{p}.v", (SPAN, kv))
         act(f"{p}.qr", (SPAN, hidden))
-        act(f"{p}.kv", (span_max, kv), role="state")
+        act(f"kv{index}k", (span_max, kv), role="state")
+        act(f"kv{index}v", (span_max, kv), role="state")
         act(f"{p}.attn", (SPAN, hidden))
         act(f"{p}.o", (SPAN, hidden))
         act(f"{p}.res1", (SPAN, hidden))
@@ -175,24 +177,28 @@ def dense_graph(
         act(f"{p}.res2", (SPAN, hidden))
         layer = {"layer": index}
         emit("RMS_NORM", [previous, f"{p}.norm1"], [f"{p}.n1"],
-             "bf16_rms_norm_fp32_v1", **layer)
+             "qwen3_rmsnorm_fp32_bf16_v1", **layer)
         emit("MATMUL", [f"{p}.n1", f"{p}.wq"], [f"{p}.q"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("MATMUL", [f"{p}.n1", f"{p}.wk"], [f"{p}.k"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("MATMUL", [f"{p}.n1", f"{p}.wv"], [f"{p}.v"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
-        emit("ROPE", [f"{p}.q", "rope"], [f"{p}.qr"], "bf16_rope_fp32_v1", **layer)
-        emit("KV_APPEND", [f"{p}.k", f"{p}.v"], [f"{p}.kv"],
-             "bf16_convert_rne_v1", state_writes=(f"kv{index}",), **layer)
-        emit("ATTENTION_GQA", [f"{p}.qr", f"{p}.k", f"{p}.v", f"{p}.kv"],
+        emit("ROPE", [f"{p}.q", "rope"], [f"{p}.qr"], "bf16_rope_fp32_v1",
+             attributes={"rotary_width": 64}, **layer)
+        emit("KV_APPEND", [f"{p}.k"], [f"kv{index}k"],
+             "bf16_convert_rne_v1", state_writes=(f"kv{index}k",), **layer)
+        emit("KV_APPEND", [f"{p}.v"], [f"kv{index}v"],
+             "bf16_convert_rne_v1", state_writes=(f"kv{index}v",), **layer)
+        emit("ATTENTION_GQA", [f"{p}.qr", f"kv{index}k", f"kv{index}v"],
              [f"{p}.attn"], "bf16_attention_fp32_v1",
-             state_reads=(f"kv{index}",), **layer)
+             attributes={"group_size": 2, "mask_mode": 0},
+             state_reads=(f"kv{index}k", f"kv{index}v"), **layer)
         emit("MATMUL", [f"{p}.attn", f"{p}.wo"], [f"{p}.o"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("ADD", [previous, f"{p}.o"], [f"{p}.res1"], "bf16_add_rne_v1", **layer)
         emit("RMS_NORM", [f"{p}.res1", f"{p}.norm2"], [f"{p}.n2"],
-             "bf16_rms_norm_fp32_v1", **layer)
+             "qwen3_rmsnorm_fp32_bf16_v1", **layer)
         emit("MATMUL", [f"{p}.n2", f"{p}.wg"], [f"{p}.g"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("MATMUL", [f"{p}.n2", f"{p}.wu"], [f"{p}.u"],
@@ -215,7 +221,7 @@ def dense_graph(
     act("tokens.out", (1, 1), "u32", role="output")
 
     emit("RMS_NORM", [previous, "norm.final"], ["hidden.final"],
-         "bf16_rms_norm_fp32_v1")
+         "qwen3_rmsnorm_fp32_bf16_v1")
     emit("LAST_TOKEN_SELECT", ["hidden.final", "last.index"], ["hidden.last"],
          "exact_index_gather_v1")
     emit("VOCAB_PROJECT", ["hidden.last", "lm_head"], ["logits"],
@@ -310,7 +316,7 @@ def moe_graph(
         )
     emit("STATE_PREPARE", (), (), "exact_copy_v1",
          state_writes=tuple(s.state_id for s in states))
-    emit("EMBEDDING_LOOKUP", ["embed", "tokens"], ["hidden0"],
+    emit("EMBEDDING_LOOKUP", ["tokens", "embed"], ["hidden0"],
          "exact_index_gather_v1")
 
     previous = "hidden0"
@@ -319,32 +325,36 @@ def moe_graph(
         weight(f"{p}.norm", (hidden,))
         weight(f"{p}.router", (hidden, experts))
         weight(f"{p}.bias", (experts,))
-        weight(f"{p}.experts", (experts, hidden, ffn), "fp8_e4m3fn")
-        weight(f"{p}.down", (ffn, hidden))
+        weight(f"{p}.experts", (experts, ffn, hidden), "fp8_e4m3fn")
+        weight(f"{p}.wdown", (hidden, ffn))
         act(f"{p}.n", (SPAN, hidden))
         act(f"{p}.scores", (SPAN, experts))
         act(f"{p}.index", (SPAN, topk), "u32")
         act(f"{p}.gate", (SPAN, topk))
         act(f"{p}.dispatch", (SPAN, hidden))
+        act(f"{p}.dispatched_ids", (SPAN, topk), "u32")
         act(f"{p}.expert", (SPAN, ffn))
         act(f"{p}.reduced", (SPAN, ffn))
         act(f"{p}.down", (SPAN, hidden))
         act(f"{p}.res", (SPAN, hidden))
         layer = {"layer": index}
         emit("RMS_NORM", [previous, f"{p}.norm"], [f"{p}.n"],
-             "bf16_rms_norm_fp32_v1", **layer)
+             "deepseek_rmsnorm_binary32_v1", **layer)
         emit("ROUTER_SCORE", [f"{p}.n", f"{p}.router"], [f"{p}.scores"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("BIASED_TOPK", [f"{p}.scores", f"{p}.bias"],
-             [f"{p}.index", f"{p}.gate"], "exact_router_topk_v1", **layer)
-        emit("EXPERT_DISPATCH", [f"{p}.n", f"{p}.index"], [f"{p}.dispatch"],
-             "exact_copy_v1", **layer)
+             [f"{p}.index", f"{p}.gate"], "exact_router_topk_v1",
+             attributes={"top_k": topk}, **layer)
+        emit("EXPERT_DISPATCH", [f"{p}.n", f"{p}.index"],
+             [f"{p}.dispatch", f"{p}.dispatched_ids"], "exact_copy_v1",
+             attributes={"expert_count": experts}, **layer)
         emit("ROUTED_MATMUL",
-             [f"{p}.dispatch", f"{p}.experts", f"{p}.index", f"{p}.gate"],
-             [f"{p}.expert"], "fp8_e4m3fn_bf16_fp32_sequential_rne_v1", **layer)
+             [f"{p}.dispatch", f"{p}.experts", f"{p}.dispatched_ids", f"{p}.gate"],
+             [f"{p}.expert"], "fp8_e4m3fn_bf16_fp32_sequential_rne_v1",
+             attributes={"expert_count": experts}, **layer)
         emit("EXPERT_REDUCE", [f"{p}.expert", f"{p}.gate", f"{p}.index"],
              [f"{p}.reduced"], "bf16_expert_sum_fp32_v1", **layer)
-        emit("MATMUL", [f"{p}.reduced", f"{p}.down"], [f"{p}.down"],
+        emit("MATMUL", [f"{p}.reduced", f"{p}.wdown"], [f"{p}.down"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("ADD", [previous, f"{p}.down"], [f"{p}.res"], "bf16_add_rne_v1", **layer)
         previous = f"{p}.res"
@@ -358,7 +368,7 @@ def moe_graph(
     act("token", (1, 1), "u32")
     act("tokens.out", (1, 1), "u32", role="output")
     emit("RMS_NORM", [previous, "norm.final"], ["hidden.final"],
-         "bf16_rms_norm_fp32_v1")
+         "deepseek_rmsnorm_binary32_v1")
     emit("LAST_TOKEN_SELECT", ["hidden.final", "last.index"], ["hidden.last"],
          "exact_index_gather_v1")
     emit("VOCAB_PROJECT", ["hidden.last", "lm_head"], ["logits"],
@@ -581,10 +591,23 @@ def test_instruction_count_is_independent_of_layer_count(single_chip):
 
 
 def test_loop_compression_ratio_is_large(single_chip):
-    graph = dense_graph(layers=32)
-    deployment = lower_to_abi3(graph, single_chip)
+    """The program is small; the work it retires is not.
+
+    A flat expansion would need one command per (layer, token block, kernel);
+    the loop-compressed program describes the same work in a body that does not
+    mention either the layer count or the context length.
+    """
+    layers, span = 32, 8192
+    graph = dense_graph(layers=layers, span_max=span)
+    deployment, plan = lower_with_plan(graph, single_chip)
     report = require_admitted(deployment, single_chip)
-    assert report.proved_retired_work > 100 * report.instruction_count
+    body_kernels = len(plan.bands[0].body_kernels)
+    blocks = span // plan.proofs["token_block_rows"]
+    flat = layers * blocks * body_kernels
+    assert report.instruction_count < 100
+    assert report.proved_retired_work >= flat
+    ratio = report.proved_retired_work / report.instruction_count
+    assert ratio > 100, (ratio, report.proved_retired_work, report.instruction_count)
 
 
 def test_layer_loop_moves_the_weight_window(dense, single_chip):
@@ -706,9 +729,39 @@ def test_deployment_round_trips_through_disk(dense, single_chip, tmp_path):
 # One backend, one code path
 # ---------------------------------------------------------------------------
 def test_lowering_never_names_a_model():
-    source = Path("compiler/backends/hbm_sram/lower.py").read_text().lower()
+    """No model name may reach executable code in the emitter.
+
+    Prose may name the models -- the design has to be explained -- but a string
+    literal, identifier or attribute naming one is how a backend acquires a
+    per-model code path, so the check is run over the parsed module with
+    docstrings and comments removed.
+    """
+    import ast
+
+    module = ast.parse(Path("compiler/backends/hbm_sram/lower.py").read_text())
+    docstrings = set()
+    for node in ast.walk(module):
+        if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef)):
+            body = getattr(node, "body", [])
+            if (
+                body
+                and isinstance(body[0], ast.Expr)
+                and isinstance(body[0].value, ast.Constant)
+                and isinstance(body[0].value.value, str)
+            ):
+                docstrings.add(id(body[0].value))
+    names: list[str] = []
+    for node in ast.walk(module):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            if id(node) not in docstrings:
+                names.append(node.value)
+        elif isinstance(node, ast.Name):
+            names.append(node.id)
+        elif isinstance(node, ast.Attribute):
+            names.append(node.attr)
+    blob = " ".join(names).lower()
     for forbidden in ("qwen", "deepseek", "llama", "mistral"):
-        assert forbidden not in source, f"{forbidden} must not appear in the emitter"
+        assert forbidden not in blob, f"{forbidden} reaches executable code"
 
 
 def test_the_same_call_serves_both_graphs(dense, moe, single_chip, cluster):
@@ -743,11 +796,14 @@ def test_every_kernel_reaches_an_operator(dense, single_chip):
 
 def test_state_resources_are_merged_and_closed(dense, single_chip):
     deployment, plan = lower_with_plan(dense, single_chip)
-    assert len(plan.states) == 1, "one band, one physical KV resource"
-    assert len(plan.states[0].members) == 4
+    # Eight declared resources -- a key and a value cache per layer -- become
+    # two physical resources, one per role, each with one member per layer.
+    assert len(dense.states) == 8
+    assert len(plan.states) == 2
+    assert all(len(s.members) == 4 for s in plan.states)
     report = verify_deployment(deployment, single_chip)
     assert report.admitted
-    assert report.state_resources == 1
+    assert report.state_resources == 2
     assert report.checks["state_discipline"]
 
 

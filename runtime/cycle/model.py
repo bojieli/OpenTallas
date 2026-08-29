@@ -44,6 +44,7 @@ waits.  And no global barrier or collective is ever modelled as zero-latency.
 from __future__ import annotations
 
 import math
+import sys
 from dataclasses import dataclass, field as dc_field
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -54,6 +55,7 @@ from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     CompletionStatus,
     Control,
+    DType,
     Link,
     Major,
     NO_ID,
@@ -61,6 +63,7 @@ from runtime.abi3.constants import (
     TopologyClass,
     TrapClass,
 )
+from runtime.abi3.crc import sha256
 from runtime.abi3.deployment import Deployment
 from runtime.abi3.descriptors import (
     CollectiveOp,
@@ -212,6 +215,22 @@ def effective_symbols(
     symbols.setdefault(int(Symbol.NODE_ID), node_id)
     symbols.setdefault(int(Symbol.NODE_COUNT), node_count)
     return symbols
+
+
+def effective_generation_policy(device: Device, request: "CycleRequest") -> int:
+    """The generation policy both models must use for the same request.
+
+    ADR-003 section 8.7 binds selection to a policy descriptor, and the
+    entrypoint table already names one.  When the request does not override it,
+    the entrypoint's policy is used -- by *both* models, so that a token
+    selected in one is a token selected in the other.
+    """
+    if request.generation_policy_id != NO_ID:
+        return request.generation_policy_id
+    entry = device._entrypoints.get(request.entrypoint_id)  # noqa: SLF001
+    if entry is None:
+        return NO_ID
+    return int(entry.get("generation_policy_id", NO_ID))
 
 
 def _delta(before: Mapping[str, int], after: Mapping[str, int]) -> dict[str, int]:
@@ -1069,7 +1088,9 @@ class _EngineUnit:
     """One engine family's datapath occupancy."""
 
     __slots__ = ("name", "params", "free_at", "busy_cycles", "operations",
-                 "compute_cycles", "memory_stall_cycles", "work_units", "bytes")
+                 "compute_cycles", "memory_stall_cycles", "work_units", "bytes",
+                 "tiles", "tile_issue_cycles", "pipeline_stall_cycles",
+                 "issued_work", "padding_work", "transferred_bytes")
 
     def __init__(self, name: str, params: EngineParams) -> None:
         self.name = name
@@ -1081,16 +1102,28 @@ class _EngineUnit:
         self.memory_stall_cycles = 0
         self.work_units = 0
         self.bytes = 0
+        self.tiles = 0
+        self.tile_issue_cycles = 0
+        self.pipeline_stall_cycles = 0
+        self.issued_work = 0
+        self.padding_work = 0
+        self.transferred_bytes = 0
 
     def to_dict(self, span: int) -> dict[str, Any]:
         return {
             "operations": self.operations,
+            "tiles": self.tiles,
             "busy_cycles": self.busy_cycles,
             "idle_cycles": max(0, span - self.busy_cycles),
             "compute_bound_cycles": self.compute_cycles,
             "memory_stall_cycles": self.memory_stall_cycles,
+            "tile_issue_cycles": self.tile_issue_cycles,
+            "tile_pipeline_stall_cycles": self.pipeline_stall_cycles,
             "work_units": self.work_units,
+            "issued_tile_work": self.issued_work,
+            "tile_padding_work": self.padding_work,
             "bytes_touched": self.bytes,
+            "bytes_transferred": self.transferred_bytes,
             "utilisation": _round(self.busy_cycles / span) if span else 0.0,
             "structure": self.params.to_dict(),
         }
@@ -1249,12 +1282,14 @@ class CycleModel:
         *,
         root: Path | None = None,
         verify: bool = True,
+        strict_schedules: bool = True,
     ) -> None:
         self.deployment = deployment
         self.capability = capability
         self.machine = MachineModel(capability, cost_table)
         self.root = root
         self.verify = verify
+        self.strict_schedules = strict_schedules
         self.topology_class = TopologyClass(int(deployment.topology_class))
         self.sequencer: SequencerParams = self.machine.sequencer()
         self.memory_params: MemoryParams = self.machine.memory()
@@ -1264,6 +1299,200 @@ class CycleModel:
         }
         self.fabric = build_fabric(self.machine, self.topology_class)
         self.gaps: list[dict[str, str]] = []
+        self.schedule_audit = self._audit_schedules()
+        if strict_schedules and not self.schedule_audit["complete"]:
+            raise ScheduleError(
+                "the deployment cannot be timed: "
+                + "; ".join(
+                    finding["detail"] for finding in self.schedule_audit["findings"]
+                )
+            )
+
+    # -- schedule audit ---------------------------------------------------
+    def _audit_schedules(self) -> dict[str, Any]:
+        """Report every engine instruction whose tile mapping is missing or zero.
+
+        Tiling is no longer in the program, so an operator without a usable
+        SCHEDULE descriptor cannot be timed at all.  The audit runs once at
+        construction so the problem is visible before a run rather than in the
+        middle of one, and it names the offending descriptors.
+        """
+        findings: list[dict[str, Any]] = []
+        seen: set[int] = set()
+        header, body = None, None
+        for index, record in enumerate(self._instructions()):
+            family = ENGINE_FAMILY_NAMES.get(int(record.major), "")
+            if family not in TILED_FAMILIES:
+                continue
+            operator_id = record.descriptor_id
+            if operator_id in seen:
+                continue
+            seen.add(operator_id)
+            try:
+                operator = self.deployment.table.get(
+                    operator_id, ExtendedDescriptorType.OPERATOR
+                )
+            except Exception:
+                findings.append(
+                    {
+                        "instruction": index,
+                        "mnemonic": record.mnemonic,
+                        "operator_id": operator_id,
+                        "schedule_id": NO_ID,
+                        "reason": "no_operator_descriptor",
+                        "detail": (
+                            f"instruction {index} ({record.mnemonic}) does not "
+                            f"reference an OPERATOR descriptor"
+                        ),
+                    }
+                )
+                continue
+            schedule_id = operator.payload.get("schedule_id", NO_ID)
+            if schedule_id == NO_ID:
+                schedule_id = operator.schedule_id
+            if schedule_id == NO_ID:
+                findings.append(
+                    {
+                        "instruction": index,
+                        "mnemonic": record.mnemonic,
+                        "operator_id": operator_id,
+                        "schedule_id": NO_ID,
+                        "reason": "absent_tile_mapping",
+                        "detail": (
+                            f"operator {operator_id} ({record.mnemonic}) carries no "
+                            "SCHEDULE descriptor, so its tile shape is unknown"
+                        ),
+                    }
+                )
+                continue
+            try:
+                schedule = self.deployment.table.get(
+                    schedule_id, ExtendedDescriptorType.SCHEDULE
+                )
+            except Exception:
+                findings.append(
+                    {
+                        "instruction": index,
+                        "mnemonic": record.mnemonic,
+                        "operator_id": operator_id,
+                        "schedule_id": schedule_id,
+                        "reason": "bad_schedule_descriptor",
+                        "detail": (
+                            f"operator {operator_id} names descriptor {schedule_id}, "
+                            "which is not a SCHEDULE"
+                        ),
+                    }
+                )
+                continue
+            zeroed = [
+                name
+                for name in ("tile_rows", "tile_cols")
+                if int(schedule.payload.get(name, 0)) <= 0
+            ]
+            if family in REDUCING_FAMILIES and int(
+                schedule.payload.get("tile_depth", 0)
+            ) <= 0:
+                zeroed.append("tile_depth")
+            if zeroed:
+                findings.append(
+                    {
+                        "instruction": index,
+                        "mnemonic": record.mnemonic,
+                        "operator_id": operator_id,
+                        "schedule_id": schedule_id,
+                        "reason": "zeroed_tile_mapping",
+                        "detail": (
+                            f"SCHEDULE descriptor {schedule_id}, used by operator "
+                            f"{operator_id} ({record.mnemonic}), leaves "
+                            f"{sorted(zeroed)} at zero"
+                        ),
+                    }
+                )
+        del header, body
+        return {
+            "complete": not findings,
+            "rule": (
+                "the program carries no tile loops, so every OPERATOR-driven "
+                "engine instruction must name a SCHEDULE descriptor with a "
+                "non-zero tile shape; a zeroed or absent mapping is a hard error"
+            ),
+            "operators_checked": len(seen),
+            "findings": findings,
+        }
+
+    def _instructions(self):
+        from runtime.abi3.records import decode_body, split_program
+
+        _, body = split_program(self.deployment.program)
+        return decode_body(body)
+
+    def _numeric_contracts(self) -> dict[str, Any]:
+        """Every numeric contract the deployment binds, by digest.
+
+        ``TA-ABI3-OPCONV-1`` amendment A7 requires anything claiming
+        bit-exactness to name which contract it means, and requires an execution
+        report to record the implementation identity that fixes the blocked
+        contract's association.  A timing result is an execution report.
+        """
+        known = {
+            sha256(name.encode("ascii")).hex(): name
+            for name in self.capability.numeric_contracts
+        }
+        contracts: dict[str, Any] = {}
+        for did in self.deployment.table.ids_of_type(ExtendedDescriptorType.NUMERIC):
+            payload = self.deployment.table[did].payload
+            digest = bytes(payload["contract_digest"]).hex()
+            contracts[digest] = {
+                "numeric_profile_id": did,
+                "contract": known.get(digest, "<not advertised by the capability>"),
+                "input_dtype": DType(payload["input_dtype"]).name,
+                "second_input_dtype": DType(payload["second_input_dtype"]).name,
+                "accumulator_dtype": DType(payload["accumulator_dtype"]).name,
+                "output_dtype": DType(payload["output_dtype"]).name,
+                "rounding_mode": int(payload["rounding_mode"]),
+                "reduction_order": int(payload["reduction_order"]),
+            }
+        return contracts
+
+    @staticmethod
+    def _engine_coverage() -> dict[str, Any]:
+        """Which engine operations were registered when this run executed.
+
+        An operation with no engine traps in both models, so a timing result has
+        to say which engines were present: otherwise a short run looks like a
+        fast one.
+        """
+        from runtime.sim.engine import coverage_report
+
+        report = coverage_report()
+        return {
+            "implemented": len(report["implemented"]),
+            "missing": len(report["missing"]),
+            "missing_operations": report["missing"],
+        }
+
+    def implementation_identity(self) -> dict[str, Any]:
+        """The executing arithmetic substrate, named so a run is reproducible."""
+        import platform
+
+        identity = {
+            "python": platform.python_version(),
+            "platform": platform.platform(terse=True),
+            "machine": platform.machine(),
+            "numpy": getattr(np, "__version__", "unknown"),
+            "device": "cpu",
+            "note": (
+                "TA-ABI3-OPCONV-1 amendment A7: the blocked contract's "
+                "association is fixed by an implementation identity -- library, "
+                "version, device and shape -- and does not claim portability "
+                "across implementations. Two runs of this identity are "
+                "bit-identical; a run on another identity is not guaranteed to be"
+            ),
+        }
+        torch = sys.modules.get("torch")
+        if torch is not None:
+            identity["torch"] = getattr(torch, "__version__", "unknown")
+        return identity
 
     # -- gap reporting ---------------------------------------------------
     def _gap(self, where: str, detail: str) -> None:
@@ -1287,10 +1516,14 @@ class CycleModel:
         session = device.create_session()
         symbols = effective_symbols(request, node_id=node_id, node_count=node_count)
 
-        queues = {
-            name: _Queue(name, params.queue_depth, params.max_outstanding)
-            for name, params in sorted(self.engine_params.items())
-        }
+        queues: dict[str, _Queue] = {}
+        for name, params in sorted(self.engine_params.items()):
+            queues[name] = _Queue(name, params.queue_depth, params.max_outstanding)
+            # A SCHEDULE descriptor may name a queue index within its family.
+            for index in range(params.queues):
+                queues[f"{name}.{index}"] = _Queue(
+                    f"{name}.{index}", params.queue_depth, params.max_outstanding
+                )
         engines = {
             name: _EngineUnit(name, params)
             for name, params in sorted(self.engine_params.items())
@@ -1310,7 +1543,12 @@ class CycleModel:
             "compute": 0,
             "memory_stall": 0,
             "transaction_cycles": 0,
+            "tiles": 0,
+            "tile_issue": 0,
+            "tile_padding": 0,
+            "tile_pipeline_stall": 0,
         }
+        tiles_seen: dict[str, list[TileMapping]] = {}
         fabric_timings: list[FabricTiming] = []
         results: list[TransactionResult] = []
         produced: list[int] = []
@@ -1325,7 +1563,7 @@ class CycleModel:
                 session,
                 entrypoint_id=request.entrypoint_id,
                 symbols=symbols,
-                generation_policy_id=request.generation_policy_id,
+                generation_policy_id=effective_generation_policy(device, request),
             )
             results.append(result)
             produced.extend(result.produced_tokens)
@@ -1345,6 +1583,7 @@ class CycleModel:
                 counters=counters,
                 fabric=fabric if fabric is not None else self.fabric,
                 fabric_timings=fabric_timings,
+                tiles_seen=tiles_seen,
                 node_id=node_id,
                 node_count=node_count,
             )
@@ -1373,6 +1612,10 @@ class CycleModel:
         counters.add("latency.sequencer_fetch_cycles", totals["fetch_cycles"])
         counters.add("latency.compute_cycles", totals["compute"])
         counters.add("latency.memory_stall_cycles", totals["memory_stall"])
+        counters.add("latency.tile_launches", totals["tiles"])
+        counters.add("latency.tile_issue_cycles", totals["tile_issue"])
+        counters.add("latency.tile_pipeline_stall_cycles", totals["tile_pipeline_stall"])
+        counters.add("latency.tile_padding_work", totals["tile_padding"])
         counters.add("latency.engine_busy_cycles", engine_busy)
         counters.add(
             "latency.engine_idle_cycles",
@@ -1430,6 +1673,7 @@ class CycleModel:
             "engine_busy": engine_busy,
             "addresses": device.addresses,
             "queue_max_occupancy": occupancy,
+            "tiles_seen": tiles_seen,
         }
 
     # -- the event loop ---------------------------------------------------
@@ -1446,6 +1690,7 @@ class CycleModel:
         counters: CounterSet,
         fabric: ClusterFabric | WaferFabric | None,
         fabric_timings: list[FabricTiming],
+        tiles_seen: dict[str, list["TileMapping"]],
         node_id: int,
         node_count: int,
     ) -> tuple[int, int]:
@@ -1513,9 +1758,15 @@ class CycleModel:
                 end_cycle = max(end_cycle, seq_free)
                 continue
             family = step.family
-            queue = queues[family]
             unit = engines[family]
-            admitted, stall = queue.admit(arrival)
+            mapping: TileMapping | None = None
+            if family in TILED_FAMILIES and not step.trapped:
+                mapping = tile_mapping(step, unit.params)
+                apply_tile_amplification(step, mapping)
+            queue = queues[self._queue_key(family, mapping, queues)]
+            admitted, stall = queue.admit(
+                arrival, mapping.max_outstanding if mapping else None
+            )
             totals["queue_stall"] += stall
             seq_free = admitted + seq.issue_cycles
             totals["issue_cycles"] += seq.issue_cycles
@@ -1527,10 +1778,33 @@ class CycleModel:
                 continue
 
             start = max(admitted + seq.queue_transit_cycles, unit.free_at)
-            compute = self._compute_cycles(step, unit.params)
-            memory_finish, _conflicts = memory.schedule(step.accesses, start)
+            compute, tile_issue = self._compute_cycles(step, unit.params, mapping)
+            memory_finish, _conflicts = memory.schedule(
+                step.accesses,
+                start,
+                bank_mask=mapping.bank_mask if mapping else 0,
+                port_mask=mapping.port_mask if mapping else 0,
+            )
             memory_span = max(0, memory_finish - start)
-            service = max(compute, memory_span, unit.params.minimum_cycles)
+            if mapping is not None and mapping.issue_window <= 1:
+                # One tile in flight: the engine cannot prefetch the next tile's
+                # operands while contracting this one, so memory and compute
+                # serialise instead of overlapping.
+                service = compute + memory_span
+                totals["tile_pipeline_stall"] += min(compute, memory_span)
+                unit.pipeline_stall_cycles += min(compute, memory_span)
+            else:
+                service = max(compute, memory_span)
+            service = max(service, unit.params.minimum_cycles)
+            if mapping is not None:
+                unit.tiles += mapping.tiles
+                unit.tile_issue_cycles += tile_issue
+                unit.issued_work += mapping.issued_work
+                unit.padding_work += mapping.padding_work
+                totals["tiles"] += mapping.tiles
+                totals["tile_issue"] += tile_issue
+                totals["tile_padding"] += mapping.padding_work
+                tiles_seen.setdefault(family, []).append(mapping)
             if family == "link" and fabric is not None:
                 timing = self._time_link(step, fabric, start, node_id, node_count)
                 if timing is not None:
@@ -1547,6 +1821,7 @@ class CycleModel:
             unit.memory_stall_cycles += max(0, memory_span - compute)
             unit.work_units += self._work_units(step, family)
             unit.bytes += step.bytes_moved
+            unit.transferred_bytes += step.bytes_transferred
             totals["compute"] += compute
             totals["memory_stall"] += max(0, memory_span - compute)
             finish = start + service + unit.params.fixed_latency_cycles
@@ -1563,15 +1838,50 @@ class CycleModel:
             for name in FAMILY_WORK_COUNTERS.get(family, ())
         )
 
-    def _compute_cycles(self, step: TraceStep, params: EngineParams) -> int:
-        work = self._work_units(step, params.family)
-        if work:
-            rate = params.lanes * params.work_per_lane_cycle
-            cycles = math.ceil(work / rate)
+    @staticmethod
+    def _queue_key(
+        family: str, mapping: "TileMapping | None", queues: Mapping[str, "_Queue"]
+    ) -> str:
+        """Which queue instance of ``family`` this operation is submitted to."""
+        if mapping is None:
+            return family
+        indexed = f"{family}.{mapping.queue_index}"
+        return indexed if indexed in queues else family
+
+    def _compute_cycles(
+        self,
+        step: TraceStep,
+        params: EngineParams,
+        mapping: "TileMapping | None",
+    ) -> tuple[int, int]:
+        """``(engine_cycles, tile_issue_cycles)`` for one engine instruction.
+
+        With a tile mapping the cost is per tile and includes the padding a
+        partial tile wastes: an operator whose extent does not divide the tile
+        shape really does run full tiles.  Without one -- STATE and LINK, which
+        are not driven by an OPERATOR -- the cost falls back to the work counter
+        or to the bytes moved.
+        """
+        if mapping is None:
+            work = self._work_units(step, params.family)
+            if work:
+                cycles = math.ceil(work / (params.lanes * params.work_per_lane_cycle))
+            else:
+                nbytes = step.bytes_moved
+                cycles = math.ceil(nbytes / params.bytes_per_cycle) if nbytes else 0
+            return max(cycles, params.minimum_cycles), 0
+        if params.family == "dma":
+            per_tile = math.ceil(
+                max(step.bytes_transferred, 1) / mapping.tiles / params.bytes_per_cycle
+            )
         else:
-            nbytes = step.bytes_moved
-            cycles = math.ceil(nbytes / params.bytes_per_cycle) if nbytes else 0
-        return max(cycles, params.minimum_cycles)
+            per_tile = math.ceil(
+                mapping.tile_work / (params.lanes * params.work_per_lane_cycle)
+            )
+        per_tile = max(per_tile, 1)
+        tile_issue = mapping.tiles * params.tile_issue_cycles
+        cycles = mapping.tiles * max(per_tile, params.tile_issue_cycles)
+        return max(cycles, params.minimum_cycles), tile_issue
 
     def _time_link(
         self,
@@ -1701,6 +2011,7 @@ class CycleModel:
         }
         body["memory"] = node["memory"].report(span)
         body["memory"]["address_placement"] = node["addresses"].to_dict()
+        body["tiling"] = self._tiling_block(node)
         body["counters"] = self._counter_block(node)
         body["proofs"] = self._proof_block(node)
         body["rates"] = self._rate_block(node, span)
@@ -1754,6 +2065,7 @@ class CycleModel:
         }
         body["memory"] = primary["memory"].report(span)
         body["memory"]["address_placement"] = primary["addresses"].to_dict()
+        body["tiling"] = self._tiling_block(primary)
         body["counters"] = self._counter_block(primary)
         body["proofs"] = self._proof_block(primary)
         body["rates"] = self._rate_block(primary, span)
@@ -1858,6 +2170,9 @@ class CycleModel:
             "wait_stall_cycles": totals["wait_stall"],
             "compute_cycles": totals["compute"],
             "memory_stall_cycles": totals["memory_stall"],
+            "tile_launches": totals["tiles"],
+            "tile_issue_cycles": totals["tile_issue"],
+            "tile_pipeline_stall_cycles": totals["tile_pipeline_stall"],
             "engine_busy_cycles": node["engine_busy"],
             "link_cycles": node["link_cycles"],
             "collective_cycles": node["collective_cycles"],
@@ -1919,6 +2234,66 @@ class CycleModel:
                 "checked": [],
             }
         return proofs
+
+    def _tiling_block(self, node: dict[str, Any]) -> dict[str, Any]:
+        """What the SCHEDULE descriptors decomposed each operator into."""
+        totals = node["totals"]
+        per_family: dict[str, Any] = {}
+        for family, mappings in sorted(node["tiles_seen"].items()):
+            shapes = sorted(
+                {
+                    (m.tile_rows, m.tile_cols, m.tile_depth, m.schedule_id)
+                    for m in mappings
+                }
+            )
+            per_family[family] = {
+                "operations": len(mappings),
+                "tiles": sum(m.tiles for m in mappings),
+                "issued_work": sum(m.issued_work for m in mappings),
+                "useful_work": sum(m.useful_work for m in mappings),
+                "padding_work": sum(m.padding_work for m in mappings),
+                "tile_shapes": [
+                    {
+                        "schedule_id": schedule_id,
+                        "tile_rows": rows,
+                        "tile_cols": cols,
+                        "tile_depth": depth,
+                    }
+                    for rows, cols, depth, schedule_id in shapes
+                ],
+                "examples": [m.to_dict() for m in mappings[:4]],
+            }
+        issued = sum(f["issued_work"] for f in per_family.values())
+        useful = sum(f["useful_work"] for f in per_family.values())
+        return {
+            "source": "SCHEDULE descriptor",
+            "rule": (
+                "the program loops over layers, token blocks, experts and "
+                "vocabulary partitions only; one engine instruction names a whole "
+                "contraction and the SCHEDULE descriptor carries the tile shape, "
+                "so this model is the only place tiling becomes time"
+            ),
+            "tile_launches": totals["tiles"],
+            "tile_issue_cycles": totals["tile_issue"],
+            "tile_pipeline_stall_cycles": totals["tile_pipeline_stall"],
+            "issued_tile_work": issued,
+            "useful_work": useful,
+            "padding_work": totals["tile_padding"],
+            "padding_fraction": _round(
+                (issued - useful) / issued
+            ) if issued else 0.0,
+            "by_family": per_family,
+            "unmodelled_schedule_fields": {
+                "resource_bound": (
+                    "recorded but not timed: ABI 3.0 does not say what unit "
+                    "resource_bound counts"
+                ),
+                "priority": (
+                    "recorded but not timed: the microsequencer is in-order, so "
+                    "a queue priority cannot reorder anything it issues"
+                ),
+            },
+        }
 
     def _fabric_block(self, node: dict[str, Any]) -> dict[str, Any]:
         timings = node["fabric_timings"]
@@ -2034,6 +2409,18 @@ class CycleModel:
                     for name, params in sorted(self.engine_params.items())
                 },
             },
+            "schedule_audit": self.schedule_audit,
+            "engine_coverage": self._engine_coverage(),
+            "numerics": {
+                "contracts": self._numeric_contracts(),
+                "implementation_identity": self.implementation_identity(),
+                "rule": (
+                    "TA-ABI3-OPCONV-1 amendment A7: anything claiming "
+                    "bit-exactness must name which of the two declared contracts "
+                    "it means, and an execution report records the implementation "
+                    "identity that fixes the blocked contract's association"
+                ),
+            },
             "execution": {
                 "transactions": len(results),
                 "status": CompletionStatus(last.status).name if last else "NONE",
@@ -2084,6 +2471,7 @@ def functional_counters(
     device = Device(deployment, capability, root=root, verify=verify)
     session = device.create_session()
     counters = CounterSet()
+    policy = effective_generation_policy(device, request)
     for _ in range(max(1, request.transactions)):
         if session.finished:
             break
@@ -2091,7 +2479,7 @@ def functional_counters(
             session,
             entrypoint_id=request.entrypoint_id,
             symbols=effective_symbols(request, node_id=node_id, node_count=node_count),
-            generation_policy_id=request.generation_policy_id,
+            generation_policy_id=policy,
         )
         for name, value in result.counters.items():
             counters.add(name, value)

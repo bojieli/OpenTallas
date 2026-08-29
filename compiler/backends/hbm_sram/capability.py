@@ -28,6 +28,7 @@ from __future__ import annotations
 
 from typing import Any, Mapping
 
+from compiler.ir.v3.numeric import canonical_contract_id, union_contract_ids
 from runtime.abi3.capability import Capability, digest_of
 from runtime.abi3.constants import Feature, TopologyClass
 
@@ -37,38 +38,41 @@ TECHNOLOGY_VIEW = "shared-hbm-sram-chip-v3"
 #: outside this tuple is a compile error: ADR-003 section 14 forbids silent
 #: emulation, so an unimplemented contract must fail admission, not be
 #: approximated.
-SHARED_NUMERIC_CONTRACTS: tuple[str, ...] = (
+#:
+#: The list is *derived* from the published cross-model union rather than hand
+#: written.  One chip serves both models, so its capability must declare the
+#: union of both models' contracts, and a hand-maintained union goes stale the
+#: moment an exporter adds an operation -- with the failure surfacing as an
+#: admission error at the very end of a long build.  Two contracts with
+#: different names are different operations: Qwen's RMSNorm and DeepSeek's
+#: disagree by one ulp on roughly 27 % of elements, so both are declared.
+#:
+#: One contract is added on top of the union: TA-ABI3-OPCONV-1 amendment A7's
+#: blocked execution contract, which no exporter names because it is what the
+#: *backend* declares on an execution operator while the graph names the
+#: sequential oracle.
+EXECUTION_ONLY_CONTRACTS: tuple[str, ...] = ("bf16_bf16_fp32_blocked_rne_v1",)
+
+#: Used only when no neutral graph has been published yet, so that the module
+#: remains importable and testable on a bare checkout.
+_FALLBACK_CONTRACTS: tuple[str, ...] = (
     "bf16_add_rne_v1",
-    # TA-ABI3-OPCONV-1 amendment A7: the sequential contract is the scalar
-    # oracle used for numeric qualification, the blocked contract is what
-    # execution operators declare.  Both are exact; they differ in association
-    # and the artifact always names which one it means.
-    "bf16_bf16_fp32_blocked_rne_v1",
-    "bf16_attention_fp32_v1",
     "bf16_bf16_fp32_sequential_rne_v1",
-    "bf16_compress_fp32_v1",
     "bf16_convert_rne_v1",
-    "bf16_expert_sum_fp32_v1",
-    "bf16_hadamard_fp32_v1",
-    "bf16_mhc_fp32_v1",
-    "bf16_ordered_sum_fp32_v1",
-    "bf16_partition_sum_fp32_v1",
-    # Amendment A8: two RMSNorm contracts coexist and are genuinely different
-    # operations; the engine dispatches on the contract digest.
-    "deepseek_rmsnorm_binary32_v1",
-    "qwen3_rmsnorm_fp32_bf16_v1",
-    "bf16_rope_fp32_v1",
-    "bf16_scale_rne_v1",
-    "bf16_silu_mul_fp32_v1",
-    "bf16_softmax_fp32_v1",
-    "bf16_sqrt_softplus_fp32_v1",
     "exact_copy_v1",
     "exact_index_gather_v1",
     "exact_index_select_v1",
-    "exact_router_topk_v1",
-    "fp8_e4m3fn_bf16_fp32_sequential_rne_v1",
-    "mxfp4_e2m1_e8m0_bf16_fp32_v1",
 )
+
+
+def shared_numeric_contracts() -> tuple[str, ...]:
+    """The contract union this chip declares, canonical and sorted."""
+    union = set(union_contract_ids()) or set(_FALLBACK_CONTRACTS)
+    union |= set(EXECUTION_ONLY_CONTRACTS)
+    return tuple(sorted(canonical_contract_id(name) for name in union))
+
+
+SHARED_NUMERIC_CONTRACTS: tuple[str, ...] = shared_numeric_contracts()
 
 #: Feature bits the shared chip implements.  ``INTER_CHIP_ENDPOINT`` is present
 #: in *both* profiles: the endpoint is synthesized into every chip whether or

@@ -1354,11 +1354,20 @@ def _emission_order(
     body_position: dict[int, int] = {}
     band_layers: dict[int, set[int]] = {}
     by_index = {k.index: k for k in graph.kernels}
+    by_layer: dict[int, list[Kernel]] = {}
+    for kernel in graph.kernels:
+        if kernel.layer is not None:
+            by_layer.setdefault(kernel.layer, []).append(kernel)
+    # Every layer's kernels get the body position of their band's body, so a
+    # tensor produced at position p of layer L and consumed at position q of
+    # layer L+1 resolves to the same buffer -- which is exactly what makes the
+    # residual stream legal across a layer-loop iteration.
+    for layer, kernels in by_layer.items():
+        for position, kernel in enumerate(kernels):
+            body_position[kernel.index] = position
     for band in bands:
         layers = set(range(band.first_layer, band.first_layer + band.layer_count))
         band_layers[band.band_id] = layers
-        for position, index in enumerate(band.body_kernels):
-            body_position[index] = position
     layer_to_band = {
         layer: band.band_id for band in bands for layer in band_layers[band.band_id]
     }
@@ -1973,6 +1982,7 @@ def _plan_kernels(
                     transposed=transposed,
                     node_count=node_count,
                     shard_columns=shard_columns,
+                    sharded=shard_columns != cols,
                     depth=depth,
                 )
             )
@@ -1993,6 +2003,7 @@ def _plan_kernels(
                     transposed=transposed,
                     node_count=node_count,
                     shard_columns=shard_columns,
+                    sharded=shard_columns != cols,
                     depth=depth,
                 )
             )
@@ -2050,6 +2061,7 @@ def _operand_plan(
     transposed: bool,
     node_count: int,
     shard_columns: int,
+    sharded: bool,
     depth: int,
 ) -> OperandPlan:
     tensor = tensors[name]
@@ -2078,14 +2090,14 @@ def _operand_plan(
         view_cols = depth or cols
         if placement is not None and placement.layer_stride_elements:
             terms.append("layer")
-        if node_count > 1 and shard_columns * node_count <= max(rows, cols):
+        if sharded:
             terms.append("node")
     elif contraction and direction == "out" and slot == 0:
         view_cols = shard_columns
         if row_loop:
             view_rows = block
             terms.append("row")
-        if node_count > 1 and shard_columns != cols:
+        if sharded:
             terms.append("node")
     else:
         if placement is not None and placement.layer_stride_elements:

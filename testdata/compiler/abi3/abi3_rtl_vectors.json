@@ -2840,6 +2840,7 @@
       "verifier_errors": []
     }
   ],
+  "engine_stub_policy": "every dispatchable engine operation is a recording no-op: RTL 3.0 implements the control plane, so the comparison is the control plane",
   "geometry": {
     "case_stride": 32,
     "case_words": 1024,

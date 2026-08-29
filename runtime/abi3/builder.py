@@ -57,6 +57,27 @@ from .layout import RecordError
 from .records import Instruction, build_program
 
 
+#: Reduction order each named numeric contract fixes.
+#:
+#: The contract is the authority on how its accumulation associates, so the
+#: builder must not default a field the contract already decides.  Amendment A8
+#: of the operator conventions records the case that forced this: the frozen
+#: RMSNorm kernels reduce a row with a balanced tree, but the builder defaulted
+#: every numeric descriptor to ``SEQUENTIAL_ASCENDING``, so every RMSNorm
+#: descriptor in every target declared an order its own kernel does not
+#: execute.  A contract absent from this table keeps the ascending default.
+NUMERIC_CONTRACT_REDUCTION_ORDER: Mapping[str, ReductionOrder] = {
+    # Contraction: one ordered, one blocked, both exact, both declared.
+    "bf16_bf16_fp32_sequential_rne_v1": ReductionOrder.SEQUENTIAL_ASCENDING,
+    "bf16_bf16_fp32_blocked_rne_v1": ReductionOrder.BLOCKED_ASCENDING,
+    # RMSNorm: the row sum is a balanced tree in every frozen implementation.
+    "qwen3_rmsnorm_fp32_bf16_v1": ReductionOrder.PAIRWISE_TREE,
+    "deepseek_rmsnorm_binary32_v1": ReductionOrder.PAIRWISE_TREE,
+    "runtime.reference.normalization.rms_norm_bf16": ReductionOrder.PAIRWISE_TREE,
+    "runtime.tensor_accelerator.rmsnorm.rms_norm_bf16": ReductionOrder.PAIRWISE_TREE,
+}
+
+
 class BuildError(ValueError):
     """Raised when a backend asks for something the ABI cannot express."""
 
@@ -235,6 +256,29 @@ class DeploymentBuilder:
         vid = self.table.add(descriptor)
         return self.name(key, vid) if key else vid
 
+    @staticmethod
+    def _reduction_order(
+        contract: str, requested: ReductionOrder | None
+    ) -> ReductionOrder:
+        """The reduction order a numeric descriptor must declare.
+
+        A named contract fixes its own association, so an unstated order is
+        taken from the contract rather than defaulted, and a stated order that
+        contradicts the contract is refused instead of being encoded.
+        """
+        fixed = NUMERIC_CONTRACT_REDUCTION_ORDER.get(contract)
+        if requested is None:
+            if fixed is not None:
+                return fixed
+            return ReductionOrder.SEQUENTIAL_ASCENDING
+        if fixed is not None and int(requested) != int(fixed):
+            raise BuildError(
+                f"numeric contract {contract!r} accumulates under "
+                f"{ReductionOrder(fixed).name}, but the descriptor declares "
+                f"{ReductionOrder(int(requested)).name}"
+            )
+        return ReductionOrder(int(requested))
+
     def numeric(
         self,
         *,
@@ -244,7 +288,7 @@ class DeploymentBuilder:
         accumulator_dtype: DType = DType.FP32,
         second_input_dtype: DType | None = None,
         rounding: RoundingMode = RoundingMode.NEAREST_EVEN,
-        reduction_order: ReductionOrder = ReductionOrder.SEQUENTIAL_ASCENDING,
+        reduction_order: ReductionOrder | None = None,
         saturate: bool = False,
         nan_policy: int = 0,
         epsilon_bits: int = 0,
@@ -254,6 +298,7 @@ class DeploymentBuilder:
     ) -> int:
         if second_input_dtype is None:
             second_input_dtype = input_dtype
+        reduction_order = self._reduction_order(contract, reduction_order)
         descriptor = Descriptor(
             descriptor_id=NO_ID,
             descriptor_type=ExtendedDescriptorType.NUMERIC,

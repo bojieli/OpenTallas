@@ -99,19 +99,46 @@ Both-model impact: Qwen3-8B has no expert bank and is unaffected today, but any
 banked weight -- mixture-of-experts, stacked adapters, or a tensor-parallel
 shard set -- hits the same wall.
 
+**IR3-GAP-4, computed constants.**  ``check_neutral`` requires every tensor
+whose role is ``constant`` to carry a :class:`CheckpointBinding`, so a table
+that is *derived* rather than stored -- the YaRN rotary coefficient rows, the
+causal window index table, the compressed-group enumeration -- cannot be
+declared at all.  TA-ABI3-OPCONV-1 nevertheless gives ``VECTOR.ROPE`` a
+"coefficient rows" operand in ``in1``.  This export therefore feeds ``ROPE``
+the position offset and declares every rotary parameter (theta, YaRN factor,
+beta_fast, beta_slow, original max position, rotary width) as attributes, so
+the coefficient rows are reproducible but never an operand.  Proposal: allow
+``role="constant"`` with ``binding=None`` when the tensor names a declared
+deterministic generator, or add a ``derived`` role with the generator and its
+parameters.  Both-model impact: Qwen3 has the same rotary table and the same
+``in1`` slot, so both exporters are currently unable to name it.
+
 Arity notes
 -----------
-``KERNEL_TO_ENGINE`` records a nominal operand arity per kind.  Where the
-released semantics differ, this export follows the semantics and stays inside
-the ABI 3.0 descriptor limits (at most four input views and two output views,
-``runtime/abi3/builder.py``): ``HEAD_RMS_NORM`` takes one input because the
-released query head norm is unweighted; ``STATE_READ`` takes one input and
-produces one output because a valid-prefix view must yield a tensor;
-``EXPERT_DISPATCH`` produces two outputs, the permuted rows and the per-row
-expert identity; ``HYPER_CONNECT_PRE`` packs the Sinkhorn post and combination
-coefficients into one output because only two output views exist; and
+``KERNEL_TO_ENGINE`` records a nominal operand arity per kind and
+TA-ABI3-OPCONV-1 freezes what each slot means.  This export never exceeds
+either, and follows the released semantics where they use fewer operands:
+``HEAD_RMS_NORM`` takes one input because the released query head norm is
+unweighted; ``GROUPED_MATMUL`` takes no group-index view because the released
+group split is contiguous and equal; ``SWIGLU`` is binary per amendment A8,
+with the clamp limit in the numeric contract; ``HYPER_CONNECT_PRE`` packs the
+Sinkhorn post and combination coefficients into its second output because only
+two output views exist, so ``HYPER_CONNECT_POST`` reads three operands; and
 ``COMPRESSED_DENSE_INDEX`` reuses ``WINDOW_INDEX`` parameterised by
 ``index_family``, since both enumerate causal indices from a position.
+``ATTENTION_SPARSE`` follows amendment A6 exactly: query, fused KV, index,
+per-head sink.
+
+One cross-lane observation: the frozen ``REDUCTION.EXPERT_SUM`` row reads
+(contributions, weights, optional base), but the released DeepSeek expert
+multiplies by its routing weight *before* the down projection -- confirmed by
+the qualified references ``runtime/reference/swiglu.py:mxfp4_swiglu_bf16``,
+which takes ``route_weight_binary32_codes``, and
+``runtime/reference/dispatch.py:reduce_expert_outputs_bf16``, which takes none.
+``EXPERT_REDUCE`` is therefore emitted as (routed contributions, shared base,
+routed row expert identity) with an explicit
+``routing_weight_application`` attribute; a backend that re-applies the weights
+at the reduction would square them.
 """
 
 from __future__ import annotations
@@ -1949,19 +1976,22 @@ def export_deepseek_v4_kernel_graph(
                 dispatch_rows if isinstance(rows, Symbolic) else rows * TOP_K
             )
             output = act(out0, "bf16", (routed_rows, HIDDEN))
+            expert_rows = act(f"{node_id}.expert_ids", "i32", (routed_rows,))
             emit(
                 node_id,
                 "EXPERT_DISPATCH",
                 (source, indices),
-                (output,),
+                (output, expert_rows),
                 iteration_domain={"tokens": rows, "top_k": TOP_K,
                                   "routed_rows": routed_rows, "width": HIDDEN},
                 attributes={
                     **attrs,
                     "row_order": "ascending_token_then_ascending_selection",
+                    "routed_row_expert_output": True,
                 },
             )
             bind(out0, output)
+            context_of[root]["expert_rows"] = expert_rows
             context_of[root]["dispatch"] = output
 
         elif source_kind in {"MXFP4_SWIGLU", "FP8_SWIGLU"}:
@@ -1972,7 +2002,7 @@ def export_deepseek_v4_kernel_graph(
                 gate_weights = role_weight_family(roles[0], scope, layer)
                 down_weights = role_weight_family(roles[2], scope, layer)
                 up_weights = role_weight_family(roles[4], scope, layer)
-                expert_rows = context_of[root]["expert_indices"]
+                expert_rows = context_of[root]["expert_rows"]
                 route_weights = context_of[root]["route_weights"]
                 weight_attributes = {
                     "expert_count": ROUTED_EXPERTS,
@@ -2124,10 +2154,11 @@ def export_deepseek_v4_kernel_graph(
             routed_output, shared_output = operands[1], operands[2]
             rows = rows_of(shared_output)
             output = act(out0, "bf16", (rows, HIDDEN))
+            expert_rows = context_of[root]["expert_rows"]
             emit(
                 node_id,
                 "EXPERT_REDUCE",
-                (routed_output, shared_output),
+                (routed_output, shared_output, expert_rows),
                 (output,),
                 iteration_domain={"tokens": rows, "top_k": TOP_K,
                                   "width": HIDDEN},
@@ -2137,6 +2168,12 @@ def export_deepseek_v4_kernel_graph(
                     "contribution_row_order": (
                         "ascending_token_then_ascending_selection"
                     ),
+                    # The released expert multiplies by the routing weight
+                    # before its down projection, so the reduction must not
+                    # apply it again: runtime/reference/swiglu.py takes
+                    # route_weight_binary32_codes and
+                    # runtime/reference/dispatch.py:reduce_expert_outputs_bf16
+                    # takes no weights.
                     "routing_weight_application": (
                         "already_applied_inside_the_expert_before_the_down_"
                         "projection"

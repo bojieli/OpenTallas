@@ -87,17 +87,20 @@ def main() -> int:
     workload = json.loads(args.workload.read_text())
 
     # -- lower --------------------------------------------------------
-    from compiler.ir.v3 import kernel_ir as ir  # noqa: F401  (schema check)
+    from compiler.ir.v3.kernel_ir import KernelGraph
 
     print(f"loading neutral IR from {args.kernel_ir} ...", flush=True)
-    graph_body = json.loads(args.kernel_ir.read_text())
-    graph_id = graph_body.get("graph_id", "")
+    # KernelGraph.read re-derives graph_id, so a document edited after
+    # publication is rejected here rather than silently compiled.
+    graph = KernelGraph.read(args.kernel_ir)
+    graph_body = graph.to_dict()
+    graph_id = graph.graph_id
     lower = resolve(BACKENDS[args.backend])
     started = time.perf_counter()
     kwargs: dict[str, Any] = {}
     if args.topology:
         kwargs["topology"] = args.topology
-    deployment = lower(graph_body, capability, **kwargs)
+    deployment = lower(graph, capability, **kwargs)
     lowering_seconds = time.perf_counter() - started
     print(
         f"lowered in {lowering_seconds:.1f}s: "

@@ -380,6 +380,7 @@ class KernelGraph:
         except KeyError:
             raise IRError(f"unknown tensor {tensor_id!r}") from None
 
+
     def write(self, path) -> str:
         from pathlib import Path
 
@@ -387,6 +388,127 @@ class KernelGraph:
         body["graph_id"] = self.graph_id
         Path(path).write_bytes(canonical_json(body))
         return body["graph_id"]
+
+    # -- reading ---------------------------------------------------------
+    @classmethod
+    def from_dict(cls, body: Mapping[str, Any]) -> "KernelGraph":
+        """Rebuild a graph from its published JSON.
+
+        The published document is the interface between the exporters and the
+        backends, so this is the only sanctioned way to read one: it rejects a
+        foreign schema and re-derives ``graph_id``, which means a document
+        edited after publication cannot be silently consumed.
+        """
+        if body.get("schema") != KERNEL_IR_SCHEMA:
+            raise IRError(
+                f"expected schema {KERNEL_IR_SCHEMA!r}, got {body.get('schema')!r}"
+            )
+        graph = cls(
+            model_id=body["model_id"],
+            source=dict(body.get("source", {})),
+            numeric_profile=body.get("numeric_profile", "target_precision_v1"),
+            symbols=tuple(RuntimeSymbol(**s) for s in body.get("symbols", [])),
+            tensors=tuple(_tensor_from(t) for t in body.get("tensors", [])),
+            states=tuple(_state_from(s) for s in body.get("states", [])),
+            kernels=tuple(_kernel_from(k) for k in body.get("kernels", [])),
+            entrypoints=tuple(
+                Entrypoint(
+                    phase=e["phase"],
+                    inputs=tuple(e.get("inputs", ())),
+                    outputs=tuple(e.get("outputs", ())),
+                    states=tuple(e.get("states", ())),
+                    generation_policy=e.get("generation_policy", ""),
+                )
+                for e in body.get("entrypoints", [])
+            ),
+            generation_policy=dict(body.get("generation_policy", {})),
+        )
+        declared = body.get("graph_id")
+        if declared is not None and declared != graph.graph_id:
+            raise IRError(
+                f"graph_id {declared[:16]} does not match the document's content "
+                f"digest {graph.graph_id[:16]}; the document was edited after "
+                "publication"
+            )
+        return graph
+
+    @classmethod
+    def read(cls, path) -> "KernelGraph":
+        from pathlib import Path
+
+        return cls.from_dict(json.loads(Path(path).read_text()))
+
+
+def _extent_from(value: Any) -> Extent:
+    if isinstance(value, Mapping):
+        return Symbolic(
+            symbol=value["symbol"],
+            multiplier=int(value.get("multiplier", 1)),
+            maximum=int(value.get("maximum", 0)),
+        )
+    return int(value)
+
+
+def _attributes_from(body: Mapping[str, Any]) -> dict[str, Any]:
+    out: dict[str, Any] = {}
+    for key, value in body.items():
+        if isinstance(value, Mapping) and set(value) >= {"symbol", "multiplier"}:
+            out[key] = _extent_from(value)
+        elif isinstance(value, list):
+            out[key] = [
+                _extent_from(v)
+                if isinstance(v, Mapping) and set(v) >= {"symbol", "multiplier"}
+                else v
+                for v in value
+            ]
+        else:
+            out[key] = value
+    return out
+
+
+def _tensor_from(body: Mapping[str, Any]) -> Tensor:
+    binding = body.get("binding")
+    return Tensor(
+        tensor_id=body["tensor_id"],
+        dtype=body["dtype"],
+        shape=tuple(_extent_from(d) for d in body["shape"]),
+        role=body["role"],
+        binding=CheckpointBinding(**binding) if binding else None,
+        scale_tensor_id=body.get("scale_tensor_id"),
+        scale_block_elements=int(body.get("scale_block_elements", 0)),
+    )
+
+
+def _state_from(body: Mapping[str, Any]) -> StateResource:
+    return StateResource(
+        state_id=body["state_id"],
+        state_class=body["state_class"],
+        dtype=body["dtype"],
+        row_elements=int(body["row_elements"]),
+        capacity_rows=_extent_from(body["capacity_rows"]),
+        initialization=body.get("initialization", "zero"),
+    )
+
+
+def _kernel_from(body: Mapping[str, Any]) -> Kernel:
+    return Kernel(
+        index=int(body["index"]),
+        kernel_id=body["kernel_id"],
+        kind=body["kind"],
+        inputs=tuple(body.get("inputs", ())),
+        outputs=tuple(body.get("outputs", ())),
+        numeric_contract=body["numeric_contract"],
+        iteration_domain={
+            k: _extent_from(v) for k, v in body.get("iteration_domain", {}).items()
+        },
+        attributes=_attributes_from(body.get("attributes", {})),
+        phases=tuple(body.get("phases", PHASES)),
+        state_reads=tuple(body.get("state_reads", ())),
+        state_writes=tuple(body.get("state_writes", ())),
+        counter_class=body.get("counter_class", ""),
+        source_operation_id=body.get("source_operation_id", ""),
+        layer=body.get("layer"),
+    )
 
 
 # ---------------------------------------------------------------------------

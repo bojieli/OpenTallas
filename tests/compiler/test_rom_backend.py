@@ -89,13 +89,8 @@ class _GraphBuilder:
         self.seed = seed
 
     def _payload(self, size: int) -> bytes:
-        out = bytearray(size)
-        value = self.seed
-        for i in range(size):
-            value = (value * 1103515245 + 12345) & 0xFFFFFFFF
-            out[i] = (value >> 16) & 0xFF
-        self.seed = value or 1
-        return bytes(out)
+        self.seed = (self.seed * 1103515245 + 12345) & 0xFFFFFFFF
+        return hashlib.shake_128(str(self.seed).encode("ascii")).digest(size)
 
     def weight(self, tensor_id: str, dtype: str, shape: tuple[int, ...]) -> str:
         elements = 1
@@ -221,7 +216,11 @@ def qwen_shaped_graph(
     """A dense Qwen-shaped decoder: one layer run, GQA attention, SwiGLU MLP."""
     heads, kv_heads, head_dim, intermediate, vocabulary = 4, 2, 16, 128, 32
     kv_width = kv_heads * head_dim
-    builder = _GraphBuilder(root / "qwen-checkpoint.bin", seed=11)
+    # One checkpoint file per configuration, so a differently shaped fixture
+    # never clobbers another test's authenticated bytes.
+    builder = _GraphBuilder(
+        root / f"qwen-checkpoint-l{layers}-h{hidden}-s{span_max}.bin", seed=11
+    )
     span = Symbolic("span_tokens", 1, span_max)
     context = Symbolic("context_tokens", 1, span_max)
 
@@ -539,7 +538,11 @@ def deepseek_shaped_graph(
     """An MoE DeepSeek-shaped block: two layer classes, routed experts, sparse
     attention, FP8 dense weights and MXFP4 expert weights with E8M0 scales."""
     kv_width, experts, expert_width, vocabulary = 32, 8, 96, 32
-    builder = _GraphBuilder(root / "deepseek-checkpoint.bin", seed=97)
+    builder = _GraphBuilder(
+        root
+        / f"deepseek-checkpoint-d{dense_layers}-m{moe_layers}-h{hidden}.bin",
+        seed=97,
+    )
     span = Symbolic("span_tokens", 1, span_max)
     context = Symbolic("context_tokens", 1, span_max)
     layers = dense_layers + moe_layers
@@ -787,12 +790,16 @@ def deepseek_shaped_graph(
             dispatched = builder.value(
                 f"{prefix}.dispatched", "bf16", (span, 2, hidden), "activation"
             )
+            dispatched_ids = builder.value(
+                f"{prefix}.dispatched_ids", "u32", (span, 2), "activation"
+            )
             builder.kernel(
                 f"{prefix}.expert_dispatch",
                 "EXPERT_DISPATCH",
                 (feed_forward_norm, expert_ids),
-                (dispatched,),
+                (dispatched, dispatched_ids),
                 contract="deepseek_v4_router_fp32_sigmoid_v1",
+                attributes={"expert_count": experts},
                 layer=layer,
             )
             expert_output = builder.value(
@@ -809,7 +816,7 @@ def deepseek_shaped_graph(
                     builder.weight(
                         f"{base}.mlp.experts.scale", "e8m0", (experts, expert_width, hidden // 32)
                     ),
-                    expert_ids,
+                    dispatched_ids,
                 ),
                 (expert_output,),
                 contract="mxfp4_e2m1_fp8_e4m3fn_fp32_blocked_rne_v1",
@@ -822,7 +829,7 @@ def deepseek_shaped_graph(
             builder.kernel(
                 f"{prefix}.expert_reduce",
                 "EXPERT_REDUCE",
-                (expert_output, expert_weights, expert_ids),
+                (expert_output, expert_weights, dispatched_ids),
                 (feed_forward_output,),
                 contract="bf16_add_rne_v1",
                 layer=layer,
@@ -1061,20 +1068,29 @@ def test_mutable_state_never_lives_in_rom(qwen_build, deepseek_build):
                 continue
             assert descriptor.payload["committed_object_id"] not in rom_ids
             assert descriptor.payload["prepared_object_id"] not in rom_ids
-        # Every ROM region is a checkpoint-bound weight; nothing else hides there.
-        placed = {
-            member["tensor_id"]
-            for region in plan.to_dict()["regions"]
-            for member in region["members"]
-        }
-        weights = {
-            t.tensor_id
-            for t in (
-                deployment.notes and []
-            )
-        }
-        assert placed
-        assert all(isinstance(name, str) for name in placed)
+        # Every ROM region member is a checkpoint-bound weight, so no mutable
+        # value can be hiding inside a mask image.
+        for region in plan.regions:
+            assert region.role in {"global_weight", "layer_weight"}
+            for member in region.members:
+                assert member.source_sha256
+                assert member.bytes > 0
+        # Mutable objects live only in SRAM, HBM, STATE or HOST.
+        mutable = [
+            d
+            for d in deployment.table.descriptors()
+            if d.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+            and d.permissions
+            & int(Permission.WRITE | Permission.STATE_PREPARE | Permission.STATE_COMMIT)
+        ]
+        assert mutable
+        for descriptor in mutable:
+            assert descriptor.payload["storage_class"] in {
+                int(StorageClass.SRAM),
+                int(StorageClass.HBM),
+                int(StorageClass.STATE),
+                int(StorageClass.HOST),
+            }
 
 
 # ---------------------------------------------------------------------------
@@ -1085,7 +1101,7 @@ def test_rom_regions_are_zero_copy_checkpoint_ranges(qwen_build, qwen_graph, wor
     bindings = {
         t.tensor_id: t.binding for t in qwen_graph.tensors if t.binding is not None
     }
-    checkpoint = (workspace / "qwen-checkpoint.bin").stat().st_size
+    checkpoint = (workspace / "qwen-checkpoint-l4-h64-s16.bin").stat().st_size
     for region in plan.regions:
         source = deployment.objects[region.object_id]
         assert source.kind == "segments"
@@ -1622,3 +1638,293 @@ def test_unlowerable_kind_is_a_compile_error(workspace):
         build_qwen3_rom_deployment(
             graph, capability=qwen3_rom_capability(max_context_positions=16, vocabulary_size=32)
         )
+
+
+# ---------------------------------------------------------------------------
+# Tile mapping lives in the SCHEDULE descriptor, never in program loops
+# ---------------------------------------------------------------------------
+def _schedules(deployment):
+    return [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.SCHEDULE
+    ]
+
+
+def test_schedule_payloads_are_real(qwen_build, deepseek_build):
+    for deployment, plan in (qwen_build, deepseek_build):
+        schedules = _schedules(deployment)
+        assert schedules
+        for descriptor in schedules:
+            payload = descriptor.payload
+            assert payload["tile_rows"] >= 1
+            assert payload["tile_cols"] >= 1
+            assert payload["tile_depth"] >= 1
+            assert payload["issue_window"] >= 1
+            assert payload["max_outstanding"] >= 1
+            assert payload["resource_bound"] >= 1
+            assert payload["engine_family"] in {
+                int(Major.DMA),
+                int(Major.TENSOR),
+                int(Major.VECTOR),
+                int(Major.ATTENTION),
+                int(Major.ROUTE),
+                int(Major.REDUCTION),
+                int(Major.SELECTION),
+            }
+        # Every operator names one, and no operator shares a placeholder.
+        operators = [
+            d
+            for d in deployment.table.descriptors()
+            if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        ]
+        ids = {d.descriptor_id for d in schedules}
+        for operator in operators:
+            assert operator.payload["schedule_id"] in ids
+
+
+def test_rom_reading_operators_declare_bank_and_rom_bound(qwen_build):
+    from compiler.backends.rom.common.program import ResourceBound
+
+    deployment, plan = qwen_build
+    rom_ids = {r.object_id for r in plan.regions}
+    views = {
+        d.descriptor_id: d.primary_object_id
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+    }
+    schedules = {d.descriptor_id: d.payload for d in _schedules(deployment)}
+    checked = 0
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
+            continue
+        if descriptor.payload["engine_family"] != int(Major.TENSOR):
+            continue
+        reads_rom = any(
+            views.get(descriptor.payload[f"input_view_{i}"]) in rom_ids
+            for i in range(4)
+        )
+        if not reads_rom:
+            continue
+        payload = schedules[descriptor.payload["schedule_id"]]
+        assert payload["bank_mask"] != 0
+        assert payload["resource_bound"] == ResourceBound.ROM_READ
+        checked += 1
+    assert checked >= 8
+
+
+def test_tile_mapping_is_not_a_program_loop(qwen_build, qwen_graph):
+    """Only layer runs are program loops; tiles are schedule fields."""
+    deployment, _plan = qwen_build
+    loops = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.LOOP_CONTROL
+    ]
+    assert len(loops) == len(analyze(qwen_graph).runs)
+    for descriptor in loops:
+        assert descriptor.payload["max_iterations"] == 4  # the layer count
+
+
+def test_schedule_tiles_are_real_at_wider_shapes(tmp_path):
+    """A shape wider than the lane array decomposes into several tiles."""
+    graph = qwen_shaped_graph(tmp_path, layers=2, hidden=1024, span_max=256)
+    capability = qwen3_rom_capability(max_context_positions=256, vocabulary_size=32)
+    deployment, _plan = build_qwen3_rom_deployment(graph, capability=capability)
+    require_admitted(deployment, capability)
+    tensor_schedules = [
+        d.payload
+        for d in _schedules(deployment)
+        if d.payload["engine_family"] == int(Major.TENSOR)
+    ]
+    assert tensor_schedules
+    assert any(payload["tile_cols"] < 1024 for payload in tensor_schedules)
+    assert any(payload["max_outstanding"] > 1 for payload in tensor_schedules)
+    assert any(payload["issue_window"] > 1 for payload in tensor_schedules)
+
+
+# ---------------------------------------------------------------------------
+# Numeric contracts (TA-ABI3-OPCONV-1 amendments A7 and A8)
+# ---------------------------------------------------------------------------
+def test_execution_operators_declare_the_blocked_contract(qwen_build):
+    from runtime.abi3.crc import sha256
+
+    deployment, _plan = qwen_build
+    blocked = sha256(b"bf16_bf16_fp32_blocked_rne_v1")
+    sequential = sha256(b"bf16_bf16_fp32_sequential_rne_v1")
+    digests = {
+        d.payload["contract_digest"]
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.NUMERIC
+    }
+    assert blocked in digests
+    assert sequential not in digests
+    notes = deployment.notes["rom_lowering"]["numeric_contract_substitutions"]
+    assert notes["bf16_bf16_fp32_sequential_rne_v1"] == (
+        "bf16_bf16_fp32_blocked_rne_v1"
+    )
+
+
+def test_rmsnorm_declares_a_pairwise_tree_reduction(qwen_build):
+    from runtime.abi3.constants import ReductionOrder
+    from runtime.abi3.crc import sha256
+
+    deployment, _plan = qwen_build
+    target = sha256(b"qwen3_rmsnorm_fp32_bf16_v1")
+    found = [
+        d.payload
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.NUMERIC
+        and d.payload["contract_digest"] == target
+    ]
+    assert found
+    for payload in found:
+        assert payload["reduction_order"] == int(ReductionOrder.PAIRWISE_TREE)
+
+
+def test_rom_and_hbm_share_the_numeric_profile(qwen_graph, qwen_capability):
+    rom, _ = build_qwen3_rom_deployment(qwen_graph, capability=qwen_capability)
+    hbm, _ = build_qwen3_rom_deployment(
+        qwen_graph, capability=qwen_capability, weight_storage_class=StorageClass.HBM
+    )
+    left = [
+        d.encode()
+        for d in rom.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.NUMERIC
+    ]
+    right = [
+        d.encode()
+        for d in hbm.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.NUMERIC
+    ]
+    assert left == right
+
+
+# ---------------------------------------------------------------------------
+# Operand conventions (TA-ABI3-OPCONV-1)
+# ---------------------------------------------------------------------------
+def _operators(deployment, family, sub):
+    return [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and d.payload["engine_family"] == int(family)
+        and d.payload["engine_sub"] == sub
+    ]
+
+
+def test_expert_dispatch_declares_its_expert_bound(deepseek_build):
+    from runtime.abi3.constants import Route
+
+    deployment, _plan = deepseek_build
+    operators = _operators(deployment, Major.ROUTE, int(Route.EXPERT_DISPATCH))
+    assert operators
+    for descriptor in operators:
+        assert descriptor.payload["aux_id_0"] == 8
+
+
+def test_routed_matmul_declares_its_expert_count(deepseek_build):
+    deployment, _plan = deepseek_build
+    operators = _operators(deployment, Major.TENSOR, int(TensorOp.ROUTED_MATMUL))
+    assert operators
+    for descriptor in operators:
+        assert descriptor.payload["aux_id_0"] == 8
+
+
+def test_attention_operators_carry_the_four_aux_slots(qwen_build, deepseek_build):
+    from runtime.abi3.constants import NO_ID
+    from runtime.abi3.descriptors import Symbol
+
+    for deployment, _plan in (qwen_build, deepseek_build):
+        operators = [
+            d
+            for d in deployment.table.descriptors()
+            if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+            and d.payload["engine_family"] == int(Major.ATTENTION)
+        ]
+        assert operators
+        for descriptor in operators:
+            assert descriptor.payload["aux_id_0"] >= 1
+            assert descriptor.payload["aux_id_2"] == int(Symbol.CONTEXT_LENGTH)
+            assert descriptor.payload["aux_id_3"] == int(Symbol.POSITION_START)
+            assert descriptor.payload["aux_id_0"] != NO_ID
+
+
+def test_head_rms_norm_declares_its_head_count(qwen_build):
+    from runtime.abi3.constants import Vector
+
+    deployment, _plan = qwen_build
+    operators = _operators(deployment, Major.VECTOR, int(Vector.HEAD_RMS_NORM))
+    assert operators
+    for descriptor in operators:
+        assert descriptor.payload["aux_id_0"] >= 1
+
+
+# ---------------------------------------------------------------------------
+# Publication and the CLI
+# ---------------------------------------------------------------------------
+def test_deployment_round_trips_through_disk(qwen_build, tmp_path, workspace):
+    deployment, _plan = qwen_build
+    root = tmp_path / "bundle"
+    deployment.write(root)
+    from runtime.abi3.deployment import Deployment as Bundle
+
+    reloaded = Bundle.read(root)
+    assert reloaded.table.encode() == deployment.table.encode()
+    assert reloaded.program == deployment.program
+    report = check_rom_inverse(reloaded, reader=_reader(workspace))
+    assert report["status"] == "pass"
+
+
+def test_cli_builds_verifies_and_proves(tmp_path, monkeypatch):
+    import tools.build_rom_deployment as cli
+
+    graph = qwen_shaped_graph(tmp_path)
+    ir_path = tmp_path / "kernel_ir.v3.json"
+    graph.write(ir_path)
+
+    capability = qwen3_rom_capability(max_context_positions=16, vocabulary_size=32)
+    monkeypatch.setattr(cli, "qwen3_rom_capability", lambda: capability)
+
+    code = cli.main(
+        [
+            "qwen3-8b",
+            "--ir",
+            str(ir_path),
+            "--output",
+            str(tmp_path / "bundle"),
+            "--checkpoint-root",
+            str(tmp_path),
+            "--verify",
+            "--inverse",
+            "--determinism",
+            "--json",
+        ]
+    )
+    assert code == 0
+    assert (tmp_path / "bundle" / "deployment.json").is_file()
+    assert (tmp_path / "bundle" / "descriptors.bin").is_file()
+    assert (tmp_path / "bundle" / "program.bin").is_file()
+    # Zero copy: the bundle never contains a weight image.
+    written = sum(p.stat().st_size for p in (tmp_path / "bundle").iterdir())
+    assert written < graph_checkpoint_bytes(graph)
+
+
+def graph_checkpoint_bytes(graph) -> int:
+    return sum(t.binding.bytes for t in graph.tensors if t.binding is not None)
+
+
+def test_cli_reads_back_the_ir_it_was_given(tmp_path):
+    import tools.build_rom_deployment as cli
+
+    graph = qwen_shaped_graph(tmp_path)
+    path = tmp_path / "kernel_ir.v3.json"
+    graph.write(path)
+    reloaded = cli.load_kernel_graph(path)
+    assert reloaded.graph_id == graph.graph_id
+
+
+def test_lowering_table_is_complete():
+    from compiler.ir.v3.lowering import check_table_complete
+
+    assert check_table_complete() == []

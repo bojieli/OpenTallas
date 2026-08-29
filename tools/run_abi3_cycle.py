@@ -36,8 +36,14 @@ from runtime.abi3.constants import StorageClass, TopologyClass  # noqa: E402
 from runtime.abi3.deployment import Deployment  # noqa: E402
 from runtime.abi3.descriptors import Symbol  # noqa: E402
 from runtime.abi3.fixture import build_fixture, fixture_capability  # noqa: E402
+from runtime.sim.engines import load_engines  # noqa: E402
 from runtime.cycle.machine import MachineError, load_cost_table  # noqa: E402
-from runtime.cycle.model import CycleModel, CycleRequest, functional_counters  # noqa: E402
+from runtime.cycle.model import (  # noqa: E402
+    CycleModel,
+    CycleRequest,
+    ScheduleError,
+    functional_counters,
+)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -102,6 +108,23 @@ def build_parser() -> argparse.ArgumentParser:
         "--force",
         action="store_true",
         help="overwrite an existing output path",
+    )
+    parser.add_argument(
+        "--no-load-engines",
+        action="store_true",
+        help=(
+            "do not register the engine implementations; every engine "
+            "operation then traps, which is a legitimate diagnostic run"
+        ),
+    )
+    parser.add_argument(
+        "--permissive-schedules",
+        action="store_true",
+        help=(
+            "time the deployment even though some operator has no tile "
+            "mapping; the operators that lack one still fail closed when "
+            "they execute"
+        ),
     )
     parser.add_argument(
         "--no-verify",
@@ -170,6 +193,8 @@ def main(argv: list[str] | None = None) -> int:
             f"{out} already exists; pass --force to overwrite a previous result"
         )
 
+    if not args.no_load_engines:
+        load_engines()
     deployment, capability, root = load_inputs(args)
     try:
         cost_table = load_cost_table(args.cost_table)
@@ -177,14 +202,18 @@ def main(argv: list[str] | None = None) -> int:
         raise SystemExit(str(exc)) from None
     request = load_request(args)
 
-    model = CycleModel(
-        deployment,
-        capability,
-        cost_table,
-        root=root,
-        verify=not args.no_verify,
-    )
-    result = model.run(request)
+    try:
+        model = CycleModel(
+            deployment,
+            capability,
+            cost_table,
+            root=root,
+            verify=not args.no_verify,
+            strict_schedules=not args.permissive_schedules,
+        )
+        result = model.run(request)
+    except ScheduleError as exc:
+        raise SystemExit(f"tile mapping is incomplete: {exc}") from None
     body: dict[str, Any] = result.to_dict()
 
     if args.check_functional_agreement:
@@ -231,8 +260,19 @@ def main(argv: list[str] | None = None) -> int:
             "  NOTE: this result depends on assumed machine values and is not a "
             "performance claim"
         )
+    tiling = body["tiling"]
+    print(f"  tile launches         {tiling['tile_launches']}")
+    print(
+        f"  tile padding          {tiling['padding_work']}"
+        f" of {tiling['issued_tile_work']} work units"
+    )
     if body.get("gaps"):
         print(f"  contract gaps         {len(body['gaps'])}")
+    if not body["schedule_audit"]["complete"]:
+        print(
+            f"  operators without a tile mapping "
+            f"{len(body['schedule_audit']['findings'])}"
+        )
     return 0
 
 

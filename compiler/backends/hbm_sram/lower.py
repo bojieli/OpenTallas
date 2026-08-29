@@ -859,11 +859,21 @@ class _Emitter:
         """
         mapping = self.plan.state_of_resource.get(operand.tensor_id)
         if mapping is None:
+            # The tensor need not be named after the resource, so fall back to
+            # position: the n-th state operand of a direction binds the n-th
+            # resource the kernel declares in that direction.
             kernel = self.kernels[plan.index]
-            for name in (*kernel.state_writes, *kernel.state_reads):
-                if name in self.plan.state_of_resource:
-                    mapping = self.plan.state_of_resource[name]
-                    break
+            peers = [
+                o
+                for o in plan.operands
+                if o.residence == "state" and o.direction == operand.direction
+            ]
+            names = list(
+                kernel.state_reads if operand.direction == "in" else kernel.state_writes
+            ) or list((*kernel.state_writes, *kernel.state_reads))
+            position = peers.index(operand) if operand in peers else 0
+            if position < len(names):
+                mapping = self.plan.state_of_resource.get(names[position])
         if mapping is None:
             raise LoweringError(
                 f"state operand {operand.tensor_id} of kernel {plan.kernel_id} is "

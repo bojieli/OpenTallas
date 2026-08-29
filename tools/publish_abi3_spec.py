@@ -139,7 +139,23 @@ def build() -> dict[str, dict]:
             },
         },
         "spec/abi3/counters.json": _counter_registry(),
+        "spec/abi3/numeric_contract_union.json": _numeric_union(),
     }
+
+
+def _numeric_union() -> dict:
+    """The numeric-contract union the shared chip must implement.
+
+    Derived from the published neutral graphs rather than hand-listed: a
+    hand-listed union goes stale the moment an exporter adds an operation, and
+    the failure mode is an admission error at the end of a long build.
+    """
+    from compiler.ir.v3.numeric import capability_union, default_graph_paths
+
+    paths = default_graph_paths()
+    body = capability_union(paths)
+    body["derived_from"] = [str(p.relative_to(REPO)) for p in paths]
+    return body
 
 
 def _counter_registry() -> dict:
