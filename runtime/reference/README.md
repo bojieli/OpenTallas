@@ -33,9 +33,9 @@ finite BF16 encodings with CUDA's native `cvt.rn.satfinite.e2m1x2.f32`. After
 the governed positive-zero canonicalization, there were zero differences.
 
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
-the qualified dense FP8 and index-head BF16 linear paths, vector operators
-beyond weighted and head RMS normalization, target-hidden capture, and HC
-post-mixing, attention/routing
+the qualified dense FP8, index-head BF16, router-score, compressor, and
+confidence projection paths, vector operators beyond weighted and head RMS
+normalization, target-hidden capture, and HC post-mixing, attention/routing
 operators, real-checkpoint known answers, layer differentials, end-to-end
 logits, and task quality remain open.
 The earlier exact-integer evaluator remains fixture-only evidence.
@@ -199,6 +199,19 @@ rounding order, subnormal and malformed inputs, overflow, 200 independent
 randomized compositions, and CPU/SM120 differentials. A separate audit using
 the actual 8,704-byte official weight payload recorded only bounded same-sign
 native reassociation differences; NUM-4.6 retains the hashes and counts.
+
+`compression.py` implements all 62 paired `COMPRESS_PROJECT` sites. It widens
+the BF16 hidden tensor and both BF16 checkpoint matrices exactly, executes the
+KV projection followed by the independent gate-score projection, and retains
+both outputs in binary32. The graph qualifies 21 main `[1024, 4096]`, 20 main
+`[512, 4096]`, and 21 indexer `[256, 4096]` profiles for each projection role.
+Tests cover orientation and output independence, increasing-K rounding,
+subnormals, the full 4,096-column reduction, malformed/nonfinite input,
+overflow, 200 independent randomized compositions, and CPU/SM120
+differentials. A separate audit used the first four rows from six actual
+official tensors spanning all three profiles; NUM-4.7 retains complete payload
+and output hashes, source order, counts, and native reassociation bounds.
+Pooling and mutable compressor state remain separate pending operators.
 
 `dispatch.py` implements `EXPERT_DISPATCH`. It applies the source's row-major
 batch/sequence flattening, emits only nonempty expert groups in ascending

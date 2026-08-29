@@ -154,6 +154,50 @@ def test_official_header_has_one_bf16_confidence_projection(
     )
 
 
+def test_official_header_has_all_bf16_compressor_projection_profiles(
+    official_specs: tuple[TensorSpec, ...],
+) -> None:
+    projections = tuple(
+        spec
+        for spec in official_specs
+        if spec.semantic_role
+        in {
+            "attention.compressor.wgate.weight",
+            "attention.compressor.wkv.weight",
+            "attention.indexer.compressor.wgate.weight",
+            "attention.indexer.compressor.wkv.weight",
+        }
+    )
+    assert len(projections) == 124
+    assert Counter(
+        (spec.semantic_role, spec.storage_dtype, spec.logical_dtype, spec.shape)
+        for spec in projections
+    ) == {
+        ("attention.compressor.wgate.weight", "BF16", "BF16", (1024, 4096)): 21,
+        ("attention.compressor.wkv.weight", "BF16", "BF16", (1024, 4096)): 21,
+        ("attention.compressor.wgate.weight", "BF16", "BF16", (512, 4096)): 20,
+        ("attention.compressor.wkv.weight", "BF16", "BF16", (512, 4096)): 20,
+        (
+            "attention.indexer.compressor.wgate.weight",
+            "BF16",
+            "BF16",
+            (256, 4096),
+        ): 21,
+        (
+            "attention.indexer.compressor.wkv.weight",
+            "BF16",
+            "BF16",
+            (256, 4096),
+        ): 21,
+    }
+    assert {spec.layer for spec in projections if spec.shape[0] == 1024} == set(
+        range(2, 43, 2)
+    )
+    assert {spec.layer for spec in projections if spec.shape[0] == 512} == set(
+        range(3, 42, 2)
+    )
+
+
 def test_expected_contract_is_deterministic_and_keeps_execution_gate_open(
     official_config: dict,
 ) -> None:

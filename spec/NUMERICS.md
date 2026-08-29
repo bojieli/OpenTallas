@@ -406,6 +406,73 @@ and `5d569fb7829185b013ac13a759beba0ea80a197b5b86d3a44683606f262b53d9`.
 These bounded reassociation differences do not make either backend tree
 architectural.
 
+### NUM-4.7 Binary32 compressor projections
+
+`COMPRESS_PROJECT` is the paired bias-free projection at every compressed
+main-model attention site. The pinned `Compressor.forward` records the input
+dtype, widens `x` to binary32, then evaluates `wkv(x)` followed by `wgate(x)`.
+Both `Linear` modules have binary32 runtime parameters, but the source states
+that their checkpoint tensors are BF16; checkpoint loading therefore widens
+every stored weight exactly. Neither output is converted back to BF16 before
+the separately specified pooling operation.
+
+The qualified Flash graph and official checkpoint headers contain these exact
+profiles. Each site has one `wkv.weight` and one `wgate.weight` tensor.
+
+| Projection scope | Ratio | Sites | Shape of each tensor | Storage |
+|---|---:|---:|---:|---:|
+| Main overlapping compressor | 4 | 21 | `[1024, 4096]` | BF16 |
+| Main non-overlapping compressor | 128 | 20 | `[512, 4096]` | BF16 |
+| Indexer overlapping compressor | 4 | 21 | `[256, 4096]` | BF16 |
+
+For every batch, sequence position, and output row, the target:
+
+1. accepts finite BF16 hidden-state and checkpoint-weight encodings;
+2. widens each operand exactly and interprets each checkpoint matrix as
+   `[output, input]`;
+3. forms exact products in increasing input-column order and adds each to a
+   binary32 accumulator initialized to positive zero, with one RNE rounding per
+   fused product-add;
+4. executes the KV and gate projections independently in source order; and
+5. emits both completed finite tensors as binary32 without bias, activation
+   quantization, scaling, output conversion, or saturation.
+
+BF16 and binary32 subnormals are preserved and output zero canonicalizes
+positive. A malformed batch/position/matrix shape, mismatched KV/gate output
+count, any nonfinite input, or intermediate binary32 overflow poisons. The
+independent reference accepts smaller nonzero rectangular profiles for practical
+unit cases; only the three 4,096-column profiles above are graph-qualified.
+Pooling, positional weights, overlap transformation, compressor mutation,
+normalization, rotation, and cache commit remain separate operators.
+
+An actual-weight development audit byte-range fetched the two projection tensors
+for layer 2's main and indexer ratio-four compressors and layer 3's main
+ratio-128 compressor. The complete payload SHA-256 values were:
+
+- layer 2 main KV/gate:
+  `0247c85dc0f6ccd8356b333c691c518eda037e350cac7cb7a6542463e6e86d76` /
+  `b2609470385caf2fe20cda729aa8b37cd3d65cdb877ca220d064c677d11c7d78`;
+- layer 3 main KV/gate:
+  `79cd97ab7621210200ea2b3161878f7e32633dbc3bdf6d27516e6518220b8637` /
+  `282fce242df3dd61eceb2ef751130dee076b83b55955849e1670bb53dc6e8883`;
+  and
+- layer 2 indexer KV/gate:
+  `0b000926c809a0b34ff42cc992ca095c7ae079d1d0a45c6fbba3d87b45be1c26` /
+  `6e15bcf0cbcea64e0a6490457b2588b31c5eae668e4aac76912aa7036db38eaa`.
+
+With seed `0x434f4d504f464649`, two batches, four positions, and the first
+four output rows of each tensor, the audit emitted 192 binary32 values in
+profile order main-ratio-4, main-ratio-128, index-ratio-4, with KV before gate.
+PyTorch 2.10.0+cu128 CPU differed from the increasing-K target in 187 values,
+by at most 2,936 same-sign encoding steps; CUDA 12.8 SM120 differed in 188, by
+at most 1,272 same-sign steps. Hashing the concatenated little-endian binary32
+streams gave target, CPU, and SM120 SHA-256 values of respectively
+`33a79e6826ab9b34b471a1ff1b0287a45edea04e2ffcfaa6ba1d084b80513999`,
+`261432c24e3f753626874f45f8a83191dd05f1575e8aea3074de6005a331f530`,
+and `3402752582908f1e68810844636e7d897447af6cb6a05e74101121b33e1ce4a0`.
+These expected reassociation differences make neither native backend's reduction
+tree architectural.
+
 ## NUM-5 Exceptional values and errors
 
 ### NUM-5.1 Classification

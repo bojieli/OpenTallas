@@ -63,6 +63,7 @@ _QUALIFIED_REFERENCE_OWNERS = {
     "BIASED_TOPK_ROUTE": "runtime.reference.selection.biased_topk_route_indices",
     "BF16_LINEAR": "runtime.reference.matrix.bf16_linear_bf16",
     "CONFIDENCE_SCORE": "runtime.reference.confidence.confidence_score_bf16",
+    "COMPRESS_PROJECT": "runtime.reference.compression.compress_project_bf16",
     "COMPRESSED_DENSE_INDEX": "runtime.reference.indexing.compressed_dense_indices",
     "DSPARK_NOISE_EMBED": "runtime.reference.structural.dspark_noise_embed_bf16",
     "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
@@ -673,6 +674,51 @@ def _confidence_score_attributes() -> dict[str, Any]:
     }
 
 
+def _compress_project_attributes(
+    *,
+    ratio: int,
+    output_features: int,
+    projection_scope: str,
+) -> dict[str, Any]:
+    expected_output_features = {
+        ("indexer", 4): 256,
+        ("main", 4): 1024,
+        ("main", 128): 512,
+    }
+    expected = expected_output_features.get((projection_scope, ratio))
+    if expected is None or output_features != expected:
+        raise DeepSeekV4GraphError(
+            "unsupported COMPRESS_PROJECT profile "
+            f"scope={projection_scope!r}, ratio={ratio}, "
+            f"output_features={output_features}"
+        )
+    return {
+        "accumulation_order": "increasing_reduction_index",
+        "accumulation_rounding": "binary32_rne_each_fused_product_add",
+        "accumulator_dtype": "binary32",
+        "activation_quantization": "none",
+        "bias": "none",
+        "checkpoint_weight_dtype": "bf16",
+        "in_features": 4096,
+        "input_compute_dtype": "binary32_exact_bf16_widen",
+        "input_dtype": "bf16",
+        "intermediate_overflow": "poison",
+        "output_conversion": "none",
+        "output_dtypes": {"kv": "binary32", "scores": "binary32"},
+        "output_features": output_features,
+        "output_zero": "canonical_positive",
+        "overlap": ratio == 4,
+        "product": "exact_bf16_product",
+        "projection_arithmetic": "independent",
+        "projection_order": "kv_then_gate",
+        "projection_scope": projection_scope,
+        "ratio": ratio,
+        "subnormal_policy": "preserve",
+        "weight_compute_dtype": "binary32_exact_bf16_widen",
+        "weight_layout": "output_by_input",
+    }
+
+
 def _add_block_graph(
     graph: _GraphBuilder,
     hidden: str,
@@ -867,7 +913,11 @@ def _add_block_graph(
             (attn_norm,),
             ("kv", "scores"),
             phases=normal_phases,
-            attributes={"overlap": ratio == 4, "ratio": ratio},
+            attributes=_compress_project_attributes(
+                ratio=ratio,
+                output_features=1024 if ratio == 4 else 512,
+                projection_scope="main",
+            ),
             tensor_roles=(
                 "attention.compressor.wkv.weight",
                 "attention.compressor.wgate.weight",
@@ -974,7 +1024,11 @@ def _add_block_graph(
                 (attn_norm,),
                 ("kv", "scores"),
                 phases=normal_phases,
-                attributes={"head_dim": 128, "overlap": True, "ratio": 4},
+                attributes=_compress_project_attributes(
+                    ratio=4,
+                    output_features=256,
+                    projection_scope="indexer",
+                ),
                 tensor_roles=(
                     "attention.indexer.compressor.wkv.weight",
                     "attention.indexer.compressor.wgate.weight",
@@ -1562,10 +1616,10 @@ def build_official_graph_contract() -> dict[str, Any]:
             },
             {
                 "id": "DSV4-SEM-005",
-                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 and BF16 linear, binary32 router-score and DSpark confidence projections, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 and indexer FP4 QDQ, and indexer Hadamard semantics, and twenty-three complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion operator kinds. Matrix paths beyond the qualified dense, router-score, and confidence projection operators, vector paths beyond the qualified normalization, HC expansion, target-hidden capture, and HC post-mixing paths, stateful attention, remaining routing/nonlinear paths beyond the qualified score, selection, weight normalization, expert dispatch, and expert reduction boundaries, and conversion boundaries beyond the qualified QDQ and Hadamard paths remain pending.",
+                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 and BF16 linear, binary32 router-score, compressor, and DSpark confidence projections, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 and indexer FP4 QDQ, and indexer Hadamard semantics, and twenty-four complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion operator kinds. Matrix paths beyond the qualified dense, router-score, compressor, and confidence projection operators, vector paths beyond the qualified normalization, HC expansion, target-hidden capture, and HC post-mixing paths, stateful attention, remaining routing/nonlinear paths beyond the qualified score, selection, weight normalization, expert dispatch, and expert reduction boundaries, and conversion boundaries beyond the qualified QDQ and Hadamard paths remain pending.",
                 "required_resolution": "Implement and qualify complete target-precision semantics for each graph operator before marking that operator executable; scalar and block-dot primitives alone do not close matrix or layer lowering.",
                 "severity": "blocking",
-                "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/model.py:RMSNorm.forward;inference/model.py:Transformer.forward;inference/model.py:Block.hc_post;inference/model.py:MoE.forward;runtime/reference/formats.py;runtime/reference/normalization.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py",
+                "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/model.py:RMSNorm.forward;inference/model.py:Compressor.forward;inference/model.py:Transformer.forward;inference/model.py:Block.hc_post;inference/model.py:MoE.forward;runtime/reference/formats.py;runtime/reference/compression.py;runtime/reference/normalization.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py",
             },
             {
                 "id": "DSV4-SEM-006",
@@ -1610,7 +1664,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "hash-verified local tokenizer encode and decode behavior",
                 "target-only prefill/decode, EOS, and executor-commit control with synthetic transcripts",
                 "scalar target formats, activation microscaling, ordered accumulation, and official block-dot primitives",
-                "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score and DSpark-confidence projections, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC expansion, HC post-mixing, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, learned-index top-k, routed-weight normalization, expert-dispatch, and expert-reduction references",
+                "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC expansion, HC post-mixing, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, learned-index top-k, routed-weight normalization, expert-dispatch, and expert-reduction references",
                 "complete official-tensor canonical transform plan and independently checked transform primitives",
                 "atomic hash-locked canonical application and replay on an adversarial development fixture",
             ],
@@ -1620,7 +1674,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "exact stochastic replay for the unpinned Torch/CUDA RNG stack",
                 "DSpark target verification and speculative acceptance",
                 "full official-payload transform application and canonical output hashes",
-                "operator-complete target-precision references beyond dense FP8 and index-head BF16 linear, binary32 router-score and DSpark-confidence projections, weighted and head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC post-mixing, expert dispatch/reduction, and ten structural/index/lookup/selection/routing kinds",
+                "operator-complete target-precision references beyond dense FP8 and index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, weighted and head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC post-mixing, expert dispatch/reduction, and ten structural/index/lookup/selection/routing kinds",
                 "transactional KV/compressor execution, service-engine operators, and microcode",
                 "physical placement, HBM/KV allocation, and static schedule",
             ],

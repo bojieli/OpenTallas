@@ -57,7 +57,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "34870e4ae928f72e1d2c41ed810a8159f47d0713427340d620f9841755e742ae"
+        "df2bf6671cafbfbcbb9f135a70d5c9231b1ec1e3204e963f2cdf629178cd8e7e"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -67,7 +67,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 20,
+        "pending_reference_kind_count": 19,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -128,6 +128,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         ),
         "BF16_LINEAR": "runtime.reference.matrix.bf16_linear_bf16",
         "CONFIDENCE_SCORE": "runtime.reference.confidence.confidence_score_bf16",
+        "COMPRESS_PROJECT": "runtime.reference.compression.compress_project_bf16",
         "COMPRESSED_DENSE_INDEX": (
             "runtime.reference.indexing.compressed_dense_indices"
         ),
@@ -359,6 +360,66 @@ def test_dspark_confidence_profile_and_binary32_contract_are_explicit(
     }
 
 
+def test_compressor_projection_profiles_and_binary32_contract_are_explicit(
+    graph_contract: dict,
+) -> None:
+    nodes = [
+        node
+        for node in graph_contract["nodes"]
+        if node["kind"] == "COMPRESS_PROJECT"
+    ]
+    assert len(nodes) == 62
+    assert Counter(
+        (
+            node["attributes"]["projection_scope"],
+            node["attributes"]["ratio"],
+            node["attributes"]["output_features"],
+        )
+        for node in nodes
+    ) == {
+        ("indexer", 4, 256): 21,
+        ("main", 4, 1024): 21,
+        ("main", 128, 512): 20,
+    }
+    for node in nodes:
+        attributes = node["attributes"]
+        assert attributes == {
+            "accumulation_order": "increasing_reduction_index",
+            "accumulation_rounding": "binary32_rne_each_fused_product_add",
+            "accumulator_dtype": "binary32",
+            "activation_quantization": "none",
+            "bias": "none",
+            "checkpoint_weight_dtype": "bf16",
+            "in_features": 4096,
+            "input_compute_dtype": "binary32_exact_bf16_widen",
+            "input_dtype": "bf16",
+            "intermediate_overflow": "poison",
+            "output_conversion": "none",
+            "output_dtypes": {"kv": "binary32", "scores": "binary32"},
+            "output_features": attributes["output_features"],
+            "output_zero": "canonical_positive",
+            "overlap": attributes["ratio"] == 4,
+            "product": "exact_bf16_product",
+            "projection_arithmetic": "independent",
+            "projection_order": "kv_then_gate",
+            "projection_scope": attributes["projection_scope"],
+            "ratio": attributes["ratio"],
+            "subnormal_policy": "preserve",
+            "weight_compute_dtype": "binary32_exact_bf16_widen",
+            "weight_layout": "output_by_input",
+        }
+        assert node["tensor_roles"] in (
+            [
+                "attention.compressor.wkv.weight",
+                "attention.compressor.wgate.weight",
+            ],
+            [
+                "attention.indexer.compressor.wkv.weight",
+                "attention.indexer.compressor.wgate.weight",
+            ],
+        )
+
+
 def test_layer_classes_and_mutable_state_sites_are_explicit(
     graph_contract: dict,
 ) -> None:
@@ -455,7 +516,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "twenty-three complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion" in (
+    assert "twenty-four complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -475,7 +536,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score and DSpark-confidence projections, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
+    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
         " ".join(graph_contract["system_scope"]["covered"])
     )
     assert "indexer Hadamard rotation" in " ".join(
@@ -542,7 +603,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "34870e4ae928f72e1d2c41ed810a8159f47d0713427340d620f9841755e742ae"
+        "df2bf6671cafbfbcbb9f135a70d5c9231b1ec1e3204e963f2cdf629178cd8e7e"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout
