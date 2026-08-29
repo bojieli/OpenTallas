@@ -13,7 +13,7 @@ compression, package, power-delivery, or thermal macros.
 | stage integration | `ot_stage_top.sv`, `ot_stage_controller.sv`, `ot_tile.sv` |
 | command/session/control | `ot_cmd_frontend.sv`, `ot_session_table.sv`, `ot_schedule_controller.sv`, `ot_credit_manager.sv`, `ot_csr_block.sv` |
 | data and numeric path | `ot_route_mask.sv`, `ot_rom_wrapper.sv`, `via_mask_rom.sv`, `ot_format_decode.sv`, `ot_numeric_dot.sv`, `ot_reduction_tree.sv` |
-| bounded tensor-accelerator path | `ot_ta_command_decoder.sv`, `ot_ta_dma_hbm_to_sram.sv`, `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv`, `ot_ta_add_bf16_sram_engine.sv`, `ot_ta_dma_add_sequencer.sv`, `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_rmsnorm_sequencer.sv`, `ot_ta_matmul_bf16_sram_engine.sv`, `ot_ta_dma_matmul_sequencer.sv` |
+| bounded tensor-accelerator path | `ot_ta_command_decoder.sv`, `ot_ta_dma_hbm_to_sram.sv`, `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv`, `ot_ta_add_bf16_sram_engine.sv`, `ot_ta_dma_add_sequencer.sv`, `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_rmsnorm_sequencer.sv`, `ot_ta_head_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_head_rmsnorm_sequencer.sv`, `ot_ta_matmul_bf16_sram_engine.sv`, `ot_ta_dma_matmul_sequencer.sv` |
 | HBM and stage protocol | `ot_hbm_frontend.sv`, `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` |
 | RAS, power, and test | `ot_ras_controller.sv`, `ot_power_reset_controller.sv`, `ot_bist_controller.sv`, `ot_dft_controller.sv` |
 | CDC/protocol primitives | `lib/ot_reset_sync.sv`, `lib/ot_skid_buffer.sv`, `lib/ot_async_fifo.sv`, `lib/ot_cdc_mailbox.sv`, `lib/ot_sync_level.sv`, `lib/ot_sync_bits.sv`, and CRC helpers |
@@ -58,9 +58,23 @@ SHA-256 values
 `dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403`
 and
 `b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5`.
-This closes the two projection operations only. Per-head Q/K RMSNorm, RoPE,
-attention, state, vector kernels, complete-layer sequencing, and the physical
-gates remain open.
+This closes the two projection operations only. The subsequent per-head Q/K
+RMSNorm operations close separately below.
+
+The per-head RMSNorm campaign executes authentic commands 3,075 through 3,078:
+two 256-byte direct DMAs stage the exact Q and K normalization weights, then two
+128-wide RMSNorm commands process 32 query rows and eight key rows. The dedicated
+engine preserves the independently qualified full-width RMSNorm engine and
+buffers all 4,096 Q or 1,024 K outputs before its first destination write. Icarus
+and Verilator match all 5,120 input and weight reads, 5,080 balanced-reduction
+additions, 40 correctly rounded reciprocal square roots, and all 5,120 BF16
+outputs. The Q and K output SHA-256 values are respectively
+`bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c`
+and
+`71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66`.
+This completes graph operations `node.0005` and `node.0006`, not complete QKV
+preparation. RoPE, KV preparation, attention, state, vector kernels,
+complete-layer sequencing, and the physical gates remain open.
 
 ## Fault and containment benches
 
