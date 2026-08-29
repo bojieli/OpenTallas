@@ -36,7 +36,8 @@ This closes neither `M1` nor numerical qualification. Matrix operators beyond
 the qualified dense FP8, index-head BF16, router-score, compressor, and
 confidence projection paths, vector operators beyond weighted and head RMS
 normalization, target-hidden capture, and HC post-mixing, attention operators
-beyond learned index scoring/top-k, remaining routing and nonlinear operators,
+beyond the qualified learned index scoring/top-k and sparse-attention boundary,
+mutable attention-state operations, remaining routing and nonlinear operators,
 real-checkpoint known answers, layer differentials, end-to-end logits, and task
 quality remain open.
 The earlier exact-integer evaluator remains fixture-only evidence.
@@ -230,6 +231,54 @@ independent randomized compositions, and malformed/nonfinite inputs. With seed
 2.10.0+cu128 CPU and CUDA 12.8 SM120 after positive-zero canonicalization. This
 is a bounded synthetic differential, not checkpoint or sparse-attention
 closure.
+
+`transcendental.py` defines a general correctly rounded binary32 exponential
+without calling host `libm`. Exact rational Taylor bounds enclose `exp(x)` for
+negative arguments; positive arguments use the monotone reciprocal enclosure
+of `exp(-x)`. The interval precision doubles until both endpoints round to one
+binary32 code. Gradual underflow is legal and finite overflow poisons. Fixed
+answers and 68 independently evaluated 220-digit `decimal` cases cover both
+signs, underflow, signed zero, and the positive overflow boundary.
+
+`sparse_attention.py` implements all 46 `SPARSE_ATTENTION` sites. It preserves
+the official block-64 gather order, `-1` padding, duplicate selected rows,
+BF16 Q/K/V inputs, binary32 online maximum and denominator, the learned
+binary32 sink logit, and the one BF16 probability conversion before AV. The
+target fixes increasing-dimension QK and increasing-slot AV product-add order,
+NUM-6.1 balanced 64-lane score sums, separate rescale multiply/add boundaries,
+general CR32 sink exponential, and one final BF16 conversion. These are
+deterministic target adaptations where TileLang leaves a backend tree or
+approximation unspecified.
+
+Traffic counters keep storage tiers distinct. For every valid selected slot,
+the source gather reads one 512-value BF16 mutable-KV row, exactly 1,024 logical
+bytes. A duplicate is another selected occurrence and another logical read;
+explicit `-1` and implicit tail lanes consume block-compute lanes but read zero
+KV bytes. Index, query, sink, output, valid-KV, and padded-work counters are
+reported separately. They are logical source traffic, not a claim about HBM
+transactions, caches, coalescing, cycles, or achieved bandwidth.
+
+The canonical MP=4 checkpoint audit concatenated `layers.0..42` and then
+`mtp.0..2`, each in rank `0..3` order. All 184 sink shards contained 2,944
+finite binary32 values (11,776 bytes), SHA-256
+`2f93e2a35c5ad1dbd4aaff353a46082d6811e7b896bf388583bd05e023c2844f`.
+The range was `-2.4585509300231934` (`0xc01d58e6`) through
+`2.4927473068237305` (`0x401f892c`), with 2,680 positive, 264 negative, and no
+zero values. This qualifies the real sink payload only; real Q/KV layer outputs
+and complete attention known answers remain open.
+
+With seed `0x5350415253454456`, a bounded source-structure differential exercised
+two blocks, holes, and duplicates. All 96 BF16 outputs matched PyTorch
+2.10.0+cu128 on CPU and CUDA 12.8/SM120.
+
+The exact released kernel was then executed through TileLang 0.1.8 on the same
+CUDA/SM120 stack with all broad transitive dependencies and wheel hashes
+recorded in `docs/DEEPSEEK_V4_SPARSE_ATTENTION_EVIDENCE.md`. The exact-eighths
+corpus matched all 8,192 BF16 outputs. A broader BF16 corpus differed in three
+of 8,192 outputs, each by one same-sign BF16 encoding step, consistent with the
+declared Tensor Core/reduction/`expf` versus deterministic-target boundary. The
+audit does not establish a service-engine opcode, KV transaction path,
+schedule, cycle count, or PPA.
 
 `dispatch.py` implements `EXPERT_DISPATCH`. It applies the source's row-major
 batch/sequence flattening, emits only nonempty expert groups in ascending

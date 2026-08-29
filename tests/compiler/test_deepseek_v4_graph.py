@@ -57,7 +57,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "e0a9a041221682563a250c11379ff512ad887d9f9417aaf2ee8df1501a50b96f"
+        "8bb65d0fed3f5360edb6716b5525ff886744362b6fa0e8e5240135ea5e601a2c"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -67,7 +67,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 18,
+        "pending_reference_kind_count": 17,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -159,6 +159,9 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "ROUTER_SCORE": "runtime.reference.routing.router_score_bf16",
         "ROUTER_WEIGHT_NORMALIZE": (
             "runtime.reference.routing.normalize_routed_weight_codes"
+        ),
+        "SPARSE_ATTENTION": (
+            "runtime.reference.sparse_attention.sparse_attention_bf16"
         ),
         "TARGET_HIDDEN_CAPTURE": (
             "runtime.reference.vector.target_hidden_capture_bf16"
@@ -468,6 +471,72 @@ def test_index_score_profile_and_bf16_numeric_contract_are_explicit(
         assert node["tensor_roles"] == []
 
 
+def test_sparse_attention_profile_numeric_and_kv_traffic_contract_are_explicit(
+    graph_contract: dict,
+) -> None:
+    nodes = [
+        node
+        for node in graph_contract["nodes"]
+        if node["kind"] == "SPARSE_ATTENTION"
+    ]
+    assert len(nodes) == 46
+    assert {node["attributes"]["ratio"] for node in nodes} == {0, 4, 128}
+    for node in nodes:
+        ratio = node["attributes"]["ratio"]
+        assert node["attributes"] == {
+            "attention_sink_dtype": "binary32",
+            "av_accumulation_order": "ascending_source_slot_within_each_block",
+            "av_accumulation_rounding": (
+                "binary32_rne_each_fused_product_add"
+            ),
+            "block_order": "ascending_64_slot_source_blocks",
+            "block_size": 64,
+            "counter_scope": (
+                "logical_source_work_separates_valid_kv_reads_from_padding"
+            ),
+            "duplicate_index_policy": "preserve_every_source_slot",
+            "final_division_rounding": "binary32_rne",
+            "finite_saturation": "sticky_count_at_final_bf16_boundary",
+            "first_block_valid_policy": "at_least_one_valid_index_required",
+            "head_dim": 512,
+            "heads": 64,
+            "index_dtype": "int32",
+            "intermediate_overflow": "poison",
+            "kv_input_dtype": "bf16",
+            "kv_read_bytes_per_valid_slot": 1024,
+            "online_denominator_update": (
+                "separate_binary32_multiply_then_add"
+            ),
+            "online_max": "maximum_by_finite_binary32_numeric_value",
+            "online_rescale_exp": "correctly_rounded_binary32",
+            "output_dtype": "bf16",
+            "output_rounding": "bf16_rne_once",
+            "output_zero": "canonical_positive",
+            "padding_index": -1,
+            "probability_dtype": "bf16",
+            "probability_rounding": "binary32_to_bf16_rne_once_before_av",
+            "qk_accumulation_order": "increasing_head_dimension",
+            "qk_accumulation_rounding": (
+                "binary32_rne_each_fused_product_add"
+            ),
+            "qk_accumulator_dtype": "binary32",
+            "query_input_dtype": "bf16",
+            "ratio": ratio,
+            "score_reduction_tree": (
+                "num_6_1_balanced_64_lane_binary32_rne"
+            ),
+            "score_scale_binary32": "0x3d3504f3",
+            "score_scale_rounding": "binary32_rne_multiply",
+            "sink_denominator_order": "after_all_selected_blocks",
+            "sink_exp": "general_cr32_finite_overflow_poison",
+            "subnormal_policy": "preserve",
+            "tail_padding": "implicit_negative_one_to_64_slot_block",
+        }
+        assert node["tensor_roles"] == ["attention.sink"]
+        assert node["state_reads"]
+        assert node["state_writes"] == []
+
+
 def test_layer_classes_and_mutable_state_sites_are_explicit(
     graph_contract: dict,
 ) -> None:
@@ -564,7 +633,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "twenty-five complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion" in (
+    assert "twenty-six complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -584,8 +653,11 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, learned sparse-index scoring, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
+    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
         " ".join(graph_contract["system_scope"]["covered"])
+    )
+    assert "block-64 sparse attention" in " ".join(
+        graph_contract["system_scope"]["covered"]
     )
     assert "indexer Hadamard rotation" in " ".join(
         graph_contract["system_scope"]["covered"]
@@ -651,7 +723,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "e0a9a041221682563a250c11379ff512ad887d9f9417aaf2ee8df1501a50b96f"
+        "8bb65d0fed3f5360edb6716b5525ff886744362b6fa0e8e5240135ea5e601a2c"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

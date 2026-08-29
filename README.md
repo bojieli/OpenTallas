@@ -11,8 +11,8 @@
 > A deterministic exact-integer compiler/interpreter fixture now proves the first
 > artifact path. The official Flash front end additionally locks the expected
 > tensors, maps a 1,924-node source graph, and has an independent scalar
-> target-format reference. Twenty-five of 43 graph operator kinds have
-> unit-qualified executable references; the other 18 references and all service-engine/RTL
+> target-format reference. Twenty-six of 43 graph operator kinds have
+> unit-qualified executable references; the other 17 references and all service-engine/RTL
 > implementations remain pending. Current speedups are conditional break-even
 > scenarios, not achieved implementation results.
 

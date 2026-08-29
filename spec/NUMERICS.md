@@ -1137,6 +1137,273 @@ of the explicit target tree. Preserving every selected slot is the governed
 architectural rule because inheriting the released advanced-index collision
 would make valid model behavior backend-dependent.
 
+### NUM-6.12 Sparse attention with learned sink
+
+`SPARSE_ATTENTION` is the selected-KV attention boundary in every main and
+DSpark block. The Flash graph contains 46 sites: one in each of 43 main blocks
+and one in each of three DSpark blocks. The global logical profile is:
+
+```text
+heads = H = 64
+head dimension = D = 512
+source block = G = 64 selected slots
+score scale = binary32 0x3d3504f3
+padding index = signed INT32 -1
+query, KV, probability, output = BF16
+score, denominator, output accumulator, attention sink = binary32
+```
+
+The score-scale code is the correctly rounded binary32 representation of
+`512^-1/2`, exact rational `11863283 / 268435456`. The 64 global heads may be
+partitioned across execution ranks, but the graph and counters use global
+logical order. A physical partition shall reconstruct the same head-indexed
+results and aggregate counts.
+
+For positive batch and query extents, inputs are finite BF16
+`q[batch, query, H, D]`, finite BF16 `kv[batch, rows, D]`, finite binary32
+`sink[H]`, and signed INT32 `index[batch, query, P]` for positive selected-axis
+extent `P`. A valid index lies in `0..rows-1`; only `-1` denotes padding.
+Duplicate valid indices are legal and remain distinct source slots. Padding may
+occur between valid entries and before valid entries in later blocks. The first
+64-slot source block of every query row must nevertheless contain at least one
+valid entry: the released window construction guarantees this, while an
+all-padding first block would expose the source expression `-inf - -inf` and is
+not a finite target transaction.
+
+The selected axis is extended implicitly with `-1` to
+`T = ceil(P / G) * G`. This tail extension changes block work but performs no
+index-buffer read and no mutable-KV read. Explicit `-1` entries are read from the
+index tensor but likewise perform no mutable-KV read.
+
+In this section, `RN32` means one binary32 round-to-nearest-ties-to-even
+operation with gradual underflow. `FPA32(acc, a, b)` means the exact product of
+the finite BF16 operands `a` and `b` is added to the finite binary32 accumulator
+and rounded once to binary32, as in NUM-4.1. `CR32(exp(x))` means the correctly
+rounded binary32 encoding of the mathematical exponential with no visible
+intermediate approximation. `BF16_RNE_SAT` is NUM-4.2.
+
+#### NUM-6.12.1 Block score and online-softmax state
+
+For each query row and head, initialize:
+
+```text
+scores_max = -infinity                 # source-control sentinel only
+sum_exp = binary32 +0
+acc_o[d] = binary32 +0 for d = 0..D-1
+```
+
+Traverse the 64-slot blocks in increasing source order. For every valid slot
+`j`, gather the complete BF16 KV row once and form:
+
+```text
+qk = binary32 +0
+for d = 0..D-1:
+    qk = FPA32(qk, q[head,d], gathered_kv[j,d])
+score[j] = RN32(qk * score_scale)
+```
+
+An invalid slot has conceptual score `-infinity` and a zero gathered row. It
+does not enter the finite ordered dot. Determine `new_max` by finite numeric
+binary32 value across the previous maximum and all valid scores in the block.
+For the first block, define the exact source result of
+`exp(-infinity - finite_new_max)` as positive binary32 zero. For every later
+block:
+
+```text
+scores_scale = CR32(exp(RN32(scores_max - new_max)))
+```
+
+If a later block is entirely padding, `new_max == scores_max` and
+`scores_scale == 1.0`; that block is legal and numerically neutral. For each of
+the 64 lanes:
+
+```text
+p32[j] = 0                                           if padding
+p32[j] = CR32(exp(RN32(score[j] - new_max)))         otherwise
+```
+
+Reduce all 64 `p32` codes, including zeros for padding, with the exact NUM-6.1
+balanced binary32 tree. There are six levels and 63 additions:
+
+```text
+block_sum = NUM-6.1-balanced-sum(p32[0:64])
+sum_scaled = RN32(sum_exp * scores_scale)
+sum_exp = RN32(sum_scaled + block_sum)
+```
+
+The multiply and add are distinct target boundaries. Contraction into one FMA
+or reassociation with the score tree is not conforming. Assign
+`scores_max = new_max` only with the completed block state.
+
+#### NUM-6.12.2 Probability conversion and AV accumulation
+
+Each of the 64 binary32 `p32` values converts exactly once with
+`BF16_RNE_SAT`; this is the released kernel's shared-memory `FP32 -> BF16` copy
+before AV. Because `0 <= p32 <= 1`, ordinary finite inputs cannot saturate at
+this boundary. For every output dimension, first rescale the prior accumulator
+with one separate binary32 multiplication, then traverse all 64 source slots in
+increasing order:
+
+```text
+p16[j] = BF16_RNE_SAT(p32[j])
+acc = RN32(acc_o[d] * scores_scale)
+for j = 0..63:
+    acc = FPA32(acc, p16[j], gathered_kv[j,d])
+acc_o[d] = acc
+```
+
+Padding supplies BF16 positive zero for both operands. Duplicate valid indices
+execute separate product-adds at their separate source slots. Implementations
+may reuse a physical row value only if every duplicate probability contribution
+and every logical traffic/event count is retained.
+
+#### NUM-6.12.3 Learned sink and final conversion
+
+After all selected blocks, the learned sink contributes only to the denominator;
+it has no AV value. Preserve the source order rather than inserting the sink into
+the running maximum:
+
+```text
+sink_delta = RN32(sink[head] - scores_max)
+sink_exp = CR32(exp(sink_delta))
+denominator = RN32(sum_exp + sink_exp)
+o32[d] = RN32(acc_o[d] / denominator)
+output[d] = BF16_RNE_SAT(o32[d])
+```
+
+Unlike score and rescale exponentials, `sink_delta` can be positive. The target
+general exponential is proved with exact rational intervals: nonpositive
+arguments use an alternating-Taylor enclosure after power-of-two argument
+reduction, while positive arguments use the reciprocal enclosure of
+`exp(-x)`. Precision doubles until both interval endpoints select the same RNE
+code. Correct underflow to a binary32 subnormal or positive zero is legal;
+finite exponential overflow poisons. Host `libm`, a GPU approximate intrinsic,
+or an error bound that returns a different code is not this numeric profile.
+
+The denominator must be positive finite. A maximum selected score always yields
+one exact `p32 = 1`, so a successful finite transaction cannot have a zero
+denominator. The final divide rounds once to binary32, then the output converts
+once to BF16. No earlier output BF16 boundary exists.
+
+#### NUM-6.12.4 Poison, subnormals, and atomicity
+
+Malformed or nonrectangular shapes; an empty batch, query, head, dimension, KV,
+or selected axis; nonfinite BF16 query/KV; nonfinite sink or scale; nonpositive
+scale; an index other than `-1` or a legal KV row; an all-padding first block;
+binary32 overflow at a dot, scale, rescale, denominator, AV, sink exponential,
+or divide boundary; or a zero/nonfinite denominator poisons the complete
+homogeneous command under NUM-5. BF16 and binary32 subnormals are preserved;
+FTZ and DAZ are not permitted. Arithmetic zero canonicalizes positive. Finite
+BF16 saturation is sticky and countable at the final output conversion.
+
+All validation and arithmetic complete before any result, final maximum,
+denominator, sink diagnostic, counter, or downstream state can commit. KV is
+read-only at this operator; prepare/commit semantics for window and compressed
+KV remain separate state operators.
+
+#### NUM-6.12.5 Logical bytes and operation counters
+
+For one global logical query row, let:
+
+```text
+P = selected-axis entries stored in the index tensor
+T = ceil(P / 64) * 64 source compute lanes
+V = number of valid selected occurrences, duplicates included
+U = number of unique valid KV row indices
+E = P - V explicit -1 entries
+L = T - P implicit tail lanes
+```
+
+The storage-tier-neutral logical traffic is:
+
+| Traffic | Bytes per query row |
+|---|---:|
+| query read | `H * D * 2 = 65,536` |
+| attention-sink read | `H * 4 = 256` |
+| selected-index read | `P * 4` |
+| **mutable selected-KV read** | **`V * D * 2 = 1,024 * V`** |
+| BF16 output write | `H * D * 2 = 65,536` |
+
+The mutable-KV term counts valid occurrences, not `T`, and is therefore zero for
+all `E + L` padding lanes. It deliberately does not collapse duplicates from
+`V` to `U`. These are semantic bytes at the operator boundary. A later physical
+schedule must separately report HBM transactions, SRAM hits, multicast,
+coalescing, compression, retries, and inter-wafer flits; none may silently
+replace this logical counter.
+
+Exact source-work counters per query row are:
+
+| Counter identifier | Value |
+|---|---:|
+| `sparse_source_blocks` | `T / 64` |
+| `sparse_valid_selected_rows` | `V` |
+| `sparse_unique_selected_rows` | `U` |
+| `sparse_duplicate_selected_rows` | `V - U` |
+| `sparse_explicit_padding_slots` | `E` |
+| `sparse_implicit_tail_padding_lanes` | `L` |
+| `sparse_qk_valid_product_accumulates` | `H * D * V` |
+| `sparse_qk_padding_product_lanes` | `H * D * (E + L)` |
+| `sparse_score_scale_multiplies` | `H * T` |
+| `sparse_online_rescale_exp_evaluations` | `H * T / 64` |
+| `sparse_score_exp_evaluations` | `H * T` |
+| `sparse_score_reduction_adds` | `H * (T / 64) * 63` |
+| `sparse_online_denominator_multiplies` | `H * T / 64` |
+| `sparse_online_denominator_adds` | `H * T / 64` |
+| `sparse_probability_bf16_conversions` | `H * T` |
+| `sparse_output_rescale_multiplies` | `H * D * T / 64` |
+| `sparse_av_product_accumulates` | `H * D * T` |
+| `sparse_sink_exp_evaluations` | `H` |
+| `sparse_sink_denominator_adds` | `H` |
+| `sparse_final_binary32_divides` | `H * D` |
+| `sparse_output_bf16_conversions` | `H * D` |
+
+The padded QK and AV entries describe source block lanes; they are not mutable
+KV bytes. A physical implementation may gate zero work, but its schedule and
+counter reconciliation must show the transformation explicitly. These counts
+are not cycles, Tensor Core instructions, bandwidth utilization, energy, or PPA.
+
+#### NUM-6.12.6 Conformance evidence and source boundary
+
+The one-row anchor with `q=(1,0)`, selected `kv=(2,4)`, sink zero, and scale one
+has maximum `0x40000000`, sink exponential `0x3e0a9555`, denominator
+`0x3f9152ab`, and BF16 output `(0x3fe1, 0x4061)`. The first probability-rounding
+sentinel produces BF16 output `0xbea9`; retaining its probability in binary32
+through AV produces adjacent code `0xbea8`. A 65-slot two-block sentinel fixes
+online rescaling, duplicate preservation, and final denominator `0x41c56fdd`.
+
+The general exponential has fixed underflow, ordinary, positive, and overflow
+answers and matches an independent 220-decimal-digit corpus. With seed
+`0x5350415253454456`, the complete target matched a separately expressed
+PyTorch source-structure calculation in all 96 BF16 outputs on both CPU and
+CUDA 12.8/SM120 under PyTorch 2.10.0+cu128. The bounded corpus includes two
+source blocks, holes, duplicates, positive/negative sinks, and tail padding.
+
+The unmodified pinned kernel was additionally executed through TileLang 0.1.8
+on CUDA 12.8/SM120. A full-dimension exact-eighths corpus matched all 8,192 BF16
+outputs. A broad finite-BF16 corpus differed in three of 8,192 outputs at flat
+indices 5,066, 5,651, and 6,124; each difference was one same-sign BF16 code.
+The deterministic report SHA-256 is
+`57834785ff91628950e59f90222548f7088d13984366c1ee12f86f1a8edcbc4d`.
+This bounded difference is retained rather than used to change the target tree.
+
+The canonical MP=4 checkpoint audit concatenates `layers.0..42`, then
+`mtp.0..2`, each in rank `0..3` order. Its 184 sink shards contain 2,944 finite
+binary32 values and 11,776 bytes with SHA-256
+`2f93e2a35c5ad1dbd4aaff353a46082d6811e7b896bf388583bd05e023c2844f`.
+The minimum is `-2.4585509300231934` (`0xc01d58e6`), the maximum is
+`2.4927473068237305` (`0x401f892c`), and the sign counts are 2,680 positive,
+264 negative, and zero exact zeros.
+
+The pinned source fixes block size, data types, gather/padding behavior,
+online-update expression order, the BF16 probability copy, learned sink
+position, and final output type. It does not fix TileLang GEMM/reduction trees,
+FMA contraction, exponential approximation, or device FTZ. The explicit target
+rules are therefore deterministic adaptations, not a claim that every
+PyTorch/TileLang/CUDA backend emits identical intermediate bits. The checkpoint
+audit qualifies the sink payload only. Real checkpoint-derived query/KV known
+answers, service-engine execution, transactional KV state, certified schedules,
+RTL, cycles, and PPA remain open.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension
