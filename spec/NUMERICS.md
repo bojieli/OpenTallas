@@ -2203,7 +2203,7 @@ malformed or incomplete execution discard all prepared records and preserve the
 prior committed payload, length, and generation bit-for-bit. Reusing a prepared
 record after commit is stale and fails closed.
 
-### NUM-6.9 Qwen BF16 residual and SiLU-gating boundaries
+### NUM-6.21 Qwen BF16 residual and SiLU-gating boundaries
 
 `bf16_add_rne_v1` consumes two equal-shape finite-BF16 tensors. Each operand
 widens exactly to binary32, one binary32 addition rounds to nearest ties to even,
@@ -2220,7 +2220,7 @@ x >= 0: e = exp(-x); sigmoid = 1 / (1 + e)
 x <  0: e = exp( x); sigmoid = e / (1 + e)
 ```
 
-The nonpositive exponential is correctly rounded to binary32 as in NUM-6.7.
+The nonpositive exponential is correctly rounded to binary32 as in NUM-6.19.
 The denominator addition and division each round once to binary32. The
 binary32 product `x * sigmoid` rounds once and then converts to BF16 under
 NUM-4.2. This materialized BF16 SiLU activation is multiplied by the BF16 up
