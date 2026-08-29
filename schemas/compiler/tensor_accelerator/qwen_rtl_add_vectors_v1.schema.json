@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_add_vectors_v1.schema.json",
+  "title": "Qwen authentic ADD_BF16 RTL vectors v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "abi",
+    "attention_execution_report_id",
+    "build_id",
+    "checkpoint_lock_id",
+    "claim_boundary",
+    "command",
+    "command_program_sha256",
+    "command_vector_set_id",
+    "directed_vectors",
+    "expected",
+    "kernel_ir_id",
+    "left",
+    "numeric_contract",
+    "operand_count",
+    "operation",
+    "physical_plan_id",
+    "qualification_report_id",
+    "right",
+    "schema",
+    "vector_set_id"
+  ],
+  "properties": {
+    "abi": {"const": {"major": 2, "minor": 5}},
+    "attention_execution_report_id": {"$ref": "#/$defs/sha256"},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "claim_boundary": {
+      "const": {
+        "complete_add_command": true,
+        "complete_layer_execution": false,
+        "external_sram_stream_boundary": true,
+        "memory_macro_execution": false,
+        "ta_rtl_6_closed": false,
+        "timing_or_performance": false
+      }
+    },
+    "command": {"$ref": "#/$defs/command"},
+    "command_program_sha256": {"$ref": "#/$defs/sha256"},
+    "command_vector_set_id": {"$ref": "#/$defs/sha256"},
+    "directed_vectors": {
+      "type": "array",
+      "minItems": 16,
+      "items": {"$ref": "#/$defs/directed"}
+    },
+    "expected": {"$ref": "#/$defs/payload"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "left": {"$ref": "#/$defs/payload"},
+    "numeric_contract": {"const": "bf16_add_rne_v1"},
+    "operand_count": {"const": 4096},
+    "operation": {
+      "const": {
+        "command_count": 1,
+        "command_start": 5131,
+        "inputs": ["hidden.0", "layer.0.attention_projected"],
+        "kernel_index": 11,
+        "operation_id": "node.0011",
+        "output": "layer.0.post_attention"
+      }
+    },
+    "physical_plan_id": {"$ref": "#/$defs/sha256"},
+    "qualification_report_id": {"$ref": "#/$defs/sha256"},
+    "right": {"$ref": "#/$defs/payload"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_rtl_add_vectors.v1"},
+    "vector_set_id": {"$ref": "#/$defs/sha256"}
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "codes": {
+      "type": "array",
+      "minItems": 4096,
+      "maxItems": 4096,
+      "items": {"maximum": 65535, "minimum": 0, "type": "integer"}
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["address", "codes", "payload_sha256", "tensor_id"],
+      "properties": {
+        "address": {"maximum": 18446744073709551615, "minimum": 0, "type": "integer"},
+        "codes": {"$ref": "#/$defs/codes"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "tensor_id": {"minLength": 1, "type": "string"}
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "abi_major",
+        "abi_minor",
+        "expected_error",
+        "expected_fields",
+        "expected_index",
+        "name",
+        "record_hex"
+      ],
+      "properties": {
+        "abi_major": {"const": 2},
+        "abi_minor": {"const": 5},
+        "expected_error": {"const": 0},
+        "expected_fields": {
+          "const": {
+            "auxiliary": 0,
+            "destination": 3145728,
+            "engine": 3,
+            "flags": 0,
+            "index": 5131,
+            "kernel_index": 11,
+            "opcode": 34,
+            "size0": 1,
+            "size1": 4096,
+            "size2": 0,
+            "size3": 0,
+            "source0": 1048576,
+            "source1": 2097152
+          }
+        },
+        "expected_index": {"const": 5131},
+        "name": {"const": "add_bf16"},
+        "record_hex": {"pattern": "^[0-9a-f]{128}$", "type": "string"}
+      }
+    },
+    "directed": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expected", "expected_error", "left", "name", "right", "saturated"],
+      "properties": {
+        "expected": {"maximum": 65535, "minimum": 0, "type": "integer"},
+        "expected_error": {"maximum": 2, "minimum": 0, "type": "integer"},
+        "left": {"maximum": 65535, "minimum": 0, "type": "integer"},
+        "name": {"pattern": "^[a-z][a-z0-9_]{0,63}$", "type": "string"},
+        "right": {"maximum": 65535, "minimum": 0, "type": "integer"},
+        "saturated": {"type": "boolean"}
+      }
+    }
+  }
+}
