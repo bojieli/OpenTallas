@@ -47,6 +47,7 @@ from runtime.abi3.builder import BuildError, DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     Control,
+    Dma,
     CounterGroup,
     DType,
     Feature,
@@ -937,17 +938,7 @@ class _Emitter:
         writes_state = operand.direction == "out" and bool(kernel.state_writes)
         generated = self._generated_object.get(operand.tensor_id)
         if generated is not None and operand.tensor_id in self._position_inputs:
-            # The request's position range: ascending indices read from
-            # POSITION_START.  One descriptor serves prefill and every decode
-            # step because the start is a bound symbol, not a stored value.
-            dims, _, _ = self._declared_view(plan, operand)
-            return self._view(
-                object_id=generated,
-                dtype=dtype_of(operand.dtype),
-                dims=[max(dims[0], 1)],
-                strides=[1],
-                dynamic=[DynamicTerm.symbol(Symbol.POSITION_START, 1)],
-            )
+            return self._position_view(plan, operand, loops, generated)
         if operand.residence == "state" or writes_state:
             # A declared state effect is the authority: a kernel that writes a
             # state resource writes into that resource's prepared image, even
@@ -1019,6 +1010,63 @@ class _Emitter:
             writable=writable,
             scale_object_id=scale_object,
             scale_block_elements=scale_block,
+        )
+
+    def _position_view(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        loops: Mapping[str, int],
+        object_id: int,
+    ) -> int:
+        """The request's positions, as many as the movement addresses.
+
+        An index vector holds exactly one index per row the movement touches,
+        and which index depends on what the movement addresses.  A *scatter*
+        addresses rows of the KV window, so its indices are absolute positions:
+        ``POSITION_START`` plus the token block.  A *gather* addresses rows of
+        the span it reads, so its indices are span-relative; selecting the final
+        row is ``SPAN_LAST_INDEX``, which is the whole reason that symbol
+        exists -- a view offsets by ``selector * stride`` and cannot compute
+        ``span - 1`` for itself.
+        """
+        is_gather = plan.engine_family == int(Major.DMA) and plan.engine_sub == int(
+            Dma.GATHER
+        )
+        if is_gather:
+            addressed = next(
+                (o for o in plan.operands if o.direction == "out"), None
+            )
+        else:
+            addressed = next(
+                (
+                    o
+                    for o in plan.operands
+                    if o.direction == "in" and o is not operand
+                ),
+                None,
+            )
+        count = 1
+        if addressed is not None:
+            dims, _, _ = self._declared_view(plan, addressed)
+            count = max(dims[0], 1)
+        terms: list[DynamicTerm] = []
+        row_loop = loops.get("row") if "row" in operand.terms else None
+        if is_gather:
+            if count == 1 and row_loop is None:
+                terms.append(DynamicTerm.symbol(Symbol.SPAN_LAST_INDEX, 1))
+            elif row_loop is not None:
+                terms.append(DynamicTerm.loop(row_loop, count))
+        else:
+            terms.append(DynamicTerm.symbol(Symbol.POSITION_START, 1))
+            if row_loop is not None:
+                terms.append(DynamicTerm.loop(row_loop, count))
+        return self._view(
+            object_id=object_id,
+            dtype=dtype_of(operand.dtype),
+            dims=[count],
+            strides=[1],
+            dynamic=terms,
         )
 
     def _declared_view(

@@ -734,7 +734,11 @@ def test_symbolic_token_extents_are_bound(dense, single_chip):
     for loop in symbol_loops:
         assert loop.payload["bound_symbol_id"] == int(Symbol.SPAN_TOKENS)
         assert loop.payload["max_iterations"] > 0
-        assert loop.payload["bound_divisor"] > 1
+        # The divisor is the token block.  It is one by default: a view's
+        # extents are static while the token count is not, so a larger block
+        # would present rows the request does not have.
+        assert loop.payload["bound_divisor"] >= 1
+        assert loop.payload["step"] == loop.payload["bound_divisor"]
 
     symbol_views = [
         d

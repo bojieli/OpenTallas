@@ -63,6 +63,7 @@ from runtime.abi3.constants import (
     Vector,
     counter_id,
 )
+from runtime.abi3.constants import IntegrityMode
 from runtime.abi3.deployment import Deployment, ObjectSource
 from runtime.abi3.descriptors import ExtendedDescriptorType
 from runtime.abi3.descriptors import (
@@ -81,6 +82,7 @@ from .image import (
     RomImagePlan,
     RomLayoutPolicy,
     RomMember,
+    ROM_PERMISSIONS,
     emit_rom_objects,
     plan_rom_image,
 )
@@ -517,6 +519,7 @@ class RomLowering:
         self.tensors = {t.tensor_id: t for t in graph.tensors}
         self.states = {s.state_id: s for s in graph.states}
         self.analysis = analyze(graph)
+        self._generated_objects: dict[str, int] = {}
         self.builder = DeploymentBuilder(
             target_id=policy.target_id,
             model_id=graph.model_id,
@@ -664,6 +667,18 @@ class RomLowering:
             key: str, role: str, columns: Sequence[Sequence[Tensor]]
         ) -> None:
             """Place one operand across a run's groups, plus its scale."""
+            # A derived constant is mask-programmed as its own object rather
+            # than as a member of a checkpoint-backed region: it has no
+            # checkpoint byte range to name, and its authentication is the
+            # digest of its declared generator's output. `_region_object`
+            # materialises it on first reference.
+            if any(t.generator for column in columns for t in column):
+                if not all(t.generator for column in columns for t in column):
+                    raise RomLoweringError(
+                        f"operand {key!r} mixes derived constants with "
+                        "checkpoint-backed weights; a region is one or the other"
+                    )
+                return
             head = columns[0][0]
             emit(
                 key,
@@ -737,10 +752,16 @@ class RomLowering:
                         f"rom.r{run.index}.p{position:03d}.experts", list(column)
                     )
 
+        # A derived constant is placed as its own mask-programmed object on
+        # first reference, so it is legitimately absent from the region plan.
+        # Everything else backed by checkpoint bytes must be placed, or it
+        # would silently have no home.
         unplaced = sorted(
             t.tensor_id
             for t in self.graph.tensors
-            if t.role in WEIGHT_ROLES and t.tensor_id not in placed
+            if t.role in WEIGHT_ROLES
+            and t.tensor_id not in placed
+            and not t.generator
         )
         if unplaced:
             raise RomLoweringError(
@@ -766,13 +787,17 @@ class RomLowering:
     def _member(self, tensor: Tensor, slot: int, offset: int) -> RomMember:
         binding = tensor.binding
         if binding is None:
+            if tensor.generator:
+                raise RomLoweringError(
+                    f"constant {tensor.tensor_id!r} is derived, so it is placed "
+                    "as its own mask-programmed object rather than as a member "
+                    "of a checkpoint-backed region; this is a caller error"
+                )
             raise RomLoweringError(
-                f"weight {tensor.tensor_id!r} has no checkpoint binding.  A ROM "
-                "region names authenticated checkpoint bytes, never a private "
-                "copy.  A derived constant table would need "
-                "ObjectSource.generated, which the neutral IR cannot yet "
-                "express for a weight tensor; report the gap rather than "
-                "materialising the table here"
+                f"weight {tensor.tensor_id!r} has neither a checkpoint binding "
+                "nor a generator.  A ROM region names authenticated checkpoint "
+                "bytes or a declared deterministic generator, never a private "
+                "copy of unspecified contents"
             )
         expected = self._bytes(tensor)
         if binding.bytes != expected:
@@ -1484,12 +1509,67 @@ class RomLowering:
     def _region_object(self, tensor_id: str) -> int:
         if self.plan is None:  # pragma: no cover - programming error
             raise RomLoweringError("plan_regions() must run before lowering")
+        generated = self._generated_object(tensor_id)
+        if generated is not None:
+            return generated
         key, _slot = self._region_of_tensor[tensor_id]
         return self.plan.region(key).object_id
+
+    def _generated_object(self, tensor_id: str) -> int | None:
+        """Place a derived constant as its own mask-programmed ROM object.
+
+        A rotary coefficient table is exactly the kind of thing a mask ROM is
+        for: a constant array, fixed at manufacture, that no checkpoint
+        contains. Its authentication is the digest of its declared generator's
+        output rather than a checkpoint byte range, and the device re-derives
+        and re-checks it at load, so nothing is taken on trust.
+        """
+        tensor = self.tensors.get(tensor_id)
+        if tensor is None or not tensor.generator:
+            return None
+        cached = self._generated_objects.get(tensor_id)
+        if cached is not None:
+            return cached
+        from runtime.sim.generators import GeneratorError, digest_of, generate
+
+        try:
+            payload = generate(tensor.generator, tensor.generator_parameters)
+            digest = digest_of(tensor.generator, tensor.generator_parameters)
+        except GeneratorError as exc:
+            raise RomLoweringError(f"constant {tensor_id!r}: {exc}") from None
+        object_id = self.builder.memory_object(
+            storage_class=self.weight_storage_class,
+            size_bytes=int(payload.nbytes),
+            source=ObjectSource.generated(
+                tensor.generator,
+                tensor.generator_parameters,
+                int(payload.nbytes),
+                digest,
+            ),
+            permissions=ROM_PERMISSIONS,
+            alignment_log2=12,
+            integrity_mode=IntegrityMode.CRC_AND_ECC,
+            content_digest=bytes.fromhex(digest),
+            key=f"obj.rom.generated.{tensor_id}",
+        )
+        self._generated_objects[tensor_id] = object_id
+        return object_id
 
     def _weight_view(self, tensor_id: str, *, run: LayerRun | None) -> int:
         if self.plan is None:  # pragma: no cover - programming error
             raise RomLoweringError("plan_regions() must run before lowering")
+        generated = self._generated_object(tensor_id)
+        if generated is not None:
+            # A derived constant has one mask-programmed object of its own and
+            # no per-layer striping, so the view is the whole table.
+            tensor = self.tensors[tensor_id]
+            return self.builder.tensor_view(
+                object_id=generated,
+                dtype=self._dtype(tensor.dtype),
+                dims=self._dims(tensor),
+                permissions=int(Permission.READ),
+                key=f"view.rom.generated.{tensor_id}",
+            )
         key, slot = self._region_of_tensor[tensor_id]
         region = self.plan.region(key)
         tensor = self.tensors[tensor_id]

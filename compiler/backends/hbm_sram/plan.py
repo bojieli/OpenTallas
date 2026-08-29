@@ -223,12 +223,22 @@ class TileConfig:
     that becomes a loop, because the number of tokens is the thing that
     genuinely varies at runtime.  Actual tiles are the largest divisors of the
     real extents not exceeding these targets, so no tile is ever partial.
+
+    ``block`` defaults to one token.  A larger block would retire fewer
+    instructions, but a tensor view's extents are static while the token count
+    is a runtime symbol, so the final block of a request would present rows the
+    request does not have: attention would be asked for a query at a position
+    with no key, and the KV append would write rows past the committed cursor.
+    A block of one is the only extent that is exact for every span.  Raising it
+    is safe exactly when the device bounds the final iteration's row extent from
+    the loop's ``bound_symbol`` and ``bound_divisor``, which it does not yet do;
+    ``build_plan`` accepts a larger block for that case.
     """
 
     rows: int = 64
     cols: int = 128
     depth: int = 128
-    block: int = 512
+    block: int = 1
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -896,7 +906,7 @@ def build_plan(
     units, body_position, band_of_kernel = _emission_order(graph, bands)
     # One token block for the whole plan: the arena padding, the loop divisor
     # and every row-tiled view must agree on it.
-    block = max(min(tile.block, round_up(span_max, tile.rows)), tile.rows)
+    block = max(min(int(tile.block), span_max), 1)
     states, state_of_resource, warn_state = _place_states(
         graph, bands, band_of_kernel, span_max
     )
