@@ -226,4 +226,20 @@
   genuinely varies — layers, and token *blocks* if an SRAM working set needs
   bounding. Expected effect is roughly 90x fewer dispatches, which is what makes
   the 8,000-token campaign feasible.
+- **OI-16 — RTL does not yet implement amendment A13.** The microsequencer
+  issues descriptors; it does not resolve tensor views, so the partial
+  final-iteration extent rule has no effect there today and the correlation
+  campaign is unaffected. It becomes normative for RTL the moment an engine
+  datapath resolves a view, and a mismatch would show up as an engine reading
+  the block size where the request has fewer rows. The rule is stated in wire
+  format section 12.4 so the RTL lane inherits it rather than rediscovering it.
+- **OI-17 — the ABI 2.5 retained deployment cannot load in a fresh checkout.**
+  Four `tests/runtime` tests fail with "deployment file set differs from the
+  final manifest": the manifest names 31 files and 13 are present, the missing
+  18 being the multi-gigabyte `memory/hbm/hbm.*.bin` images that were never
+  tracked. This is pre-existing and unrelated to ABI 3.0 - the failing lane
+  imports neither `runtime.sim` nor `runtime.abi3` - but it means those four
+  tests fail on any clone, so either the loader should distinguish "artifact not
+  built" from "artifact corrupted", or the tests should skip when the images are
+  absent.
 
