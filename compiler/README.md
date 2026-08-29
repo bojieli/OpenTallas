@@ -30,9 +30,11 @@ hashes. Index/header disagreement, unsafe paths, gaps, overlap, trailing data,
 shape/dtype size errors, source-hash mismatches, and later payload changes fail
 closed. The committed official source contract binds every release file for
 DeepSeek V4 Flash at its immutable revision; the adversarial test suite uses a
-tiny generated checkpoint so it remains fast. A complete 166.9-GB official
-snapshot has not yet been streamed on this host, so checkpoint identity support
-is implemented but the real-payload ingestion gate remains open.
+tiny generated checkpoint so it remains fast. The complete 166.9-GB official
+snapshot has also been streamed and locked outside Git; the governed checkpoint
+lock is `30b3d07304b92cb26440e5ea9e28dcb06c835dbf35652529fa9a856da07ad760`.
+Together with the complete canonical application and independent replay below,
+that closes the recovery plan's M2 payload gate.
 
 Compile and execute the fixture with:
 
@@ -91,8 +93,10 @@ python3 -m compiler.cli describe-deepseek-v4 \
 The adapter expands all 72,317 expected tensors from the byte-exact official
 config and independently matches the complete pinned header inventory's names,
 dtypes, shapes, scale associations, and 166,878,536,440 payload bytes. The
-result is a source/tensor contract, not yet an executable operator graph; its
-`operator_graph_status` states that boundary explicitly.
+result is a source/tensor contract rather than an executable operator graph; its
+`operator_graph_status` states that boundary explicitly. The separate graph
+command below now emits the complete qualified semantic/operator ledger; neither
+document by itself is graph-to-microcode execution.
 
 After the full checkpoint lock exists, bind its observed tensor table to this
 contract with:
@@ -150,6 +154,20 @@ a matrix operator complete. The contract also records that the pinned local
 and acceptance live outside the pinned local reference; this is a blocking
 system-semantic gap, not silently treated as implemented behavior.
 
+The bounded DSpark Markov executable slice freezes the five-step dependency as
+a 388-byte, 21-record semantic microprogram with SHA-256
+`993f099a7fa78937de8eaa93e50cb883884a65fd2e50614b83134d0a30224584`.
+An independent checker reconstructs
+the wire records and causal/register/resource contract without importing the
+assembler. A reference-independent service lane executes bounded BF16 W1/W2
+shards, binary32 base logits, greedy or explicit-entropy sampling, and the
+six-token causal result while reconciling source-logical and micro-op counters.
+It also reproduces the governed eight-row official selected projection. The
+weight shards and base logits are still caller-supplied rather than packaged as
+authenticated deployment artifacts, so this advances but does not close M4 or
+M6. See
+[`../docs/DEEPSEEK_V4_MARKOV_MICROPROGRAM_EVIDENCE.md`](../docs/DEEPSEEK_V4_MARKOV_MICROPROGRAM_EVIDENCE.md).
+
 Generate the complete source-to-rank canonical tensor plan with:
 
 ```bash
@@ -171,10 +189,10 @@ identity.
 
 The emitted status is deliberately
 `complete_transform_plan_pending_full_payload_application`: this command plans
-the complete conversion but does not claim that the 166.9-GB checkpoint has
-been streamed, transformed, or emitted on this host. Full checkpoint
-application, per-output content hashes, and independent full-payload reports
-remain the M2 release gate.
+the complete conversion and cannot by itself claim that the 166.9-GB checkpoint
+was streamed, transformed, or emitted. The separately executed application and
+post-publication replay below provide the per-output identities that now satisfy
+the M2 release gate.
 
 Apply that plan only to a complete, official hash-locked snapshot with:
 
@@ -311,16 +329,20 @@ BF16 classification plus target rounding, packing, MXFP4 decode, and activation
 microscaling boundaries without importing compiler or RTL algorithms. It also
 implements exact ordered binary32 product-add accumulation and the official
 32-value routed MXFP4×FP8 and 128-value dense FP8×FP8 block-dot primitives. This
-is a target-precision reference skeleton, not operator-complete graph execution:
-matrix/tile lowering, vector/attention/routing semantics, real checkpoint known
-answers, layer differentials, and numerical quality remain open.
+scalar foundation is composed by the independently qualified reference modules
+for all 46 graph operator kinds. Reference completeness does not imply complete
+graph lowering, artifact-driven service execution, checkpoint-derived layer
+differentials, end-to-end logits, or numerical-quality closure.
 
-The service engine verifies every manifest hash before execution and never reads
-the known-answer file. The independent reference evaluator consumes the source
-IR and request, not compiler artifacts. Tests compare both paths with the
-committed known answer.
+The artifact-only fixture and Query-A service paths verify every deployment hash
+before execution and never read their known-answer files. Their independent
+reference evaluators consume source descriptions and requests rather than
+compiler artifacts. The standalone Markov service has a separate, narrower
+boundary: it verifies the exact program but receives caller-selected resources
+directly and therefore makes no deployment-authentication claim.
 
-Planned expansion follows the recovery plan: source/checkpoint locks, the full
-semantic operator ledger, target numeric formats, complete payload ingestion,
-physical placement, certified schedules, real full-dimension checkpoint slices,
-and only then generated-artifact-driven RTL integration.
+Planned expansion follows the remaining recovery gates: complete legal physical
+placement, graph-to-microcode and authenticated artifact packaging, certified
+schedules, checkpoint-derived transformer-layer execution, operator-complete
+prefill/decode, and only then generated-artifact-driven RTL and performance
+revalidation.

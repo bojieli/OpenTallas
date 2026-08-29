@@ -51,6 +51,19 @@ occurs on either the bias or adjusted-logit boundary. A cancellation sentinel
 distinguishes increasing-rank accumulation from a one-round exact dot, and a
 half-ULP sentinel independently fixes the later logit-add rounding point.
 
+## Executable microprogram follow-on
+
+The qualified reference now has a separately implemented bounded compiler and
+service differential. Its fixed ABI 1.0 program contains 21 semantic records in
+388 bytes and has SHA-256
+`993f099a7fa78937de8eaa93e50cb883884a65fd2e50614b83134d0a30224584`.
+An independent checker reconstructs every wire record and the service executes
+all five causal steps without importing the compiler or target reference. See
+`DEEPSEEK_V4_MARKOV_MICROPROGRAM_EVIDENCE.md` for the executable evidence and
+its narrower claim boundary. The service receives caller-selected resources
+directly; this follow-on is not content-addressed artifact execution and does not
+change any graph-wide service-engine or RTL status.
+
 ## Source and checkpoint authority
 
 The suite re-reads the pinned model, conversion source, configuration, and

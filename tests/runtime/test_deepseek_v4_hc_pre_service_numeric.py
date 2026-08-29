@@ -23,7 +23,9 @@ from runtime.service_engine.hc_pre_numeric import (
     hc_pre_branch_column,
     rn32_add,
     rn32_affine,
+    rn32_balanced_sum,
     rn32_balanced_sum4,
+    rn32_divide,
     rn32_fused_product_add,
     rn32_multiply,
     sinkhorn20,
@@ -282,6 +284,29 @@ def test_four_source_branch_uses_balanced_order_through_bf16_conversion() -> Non
     assert branch_code == 0xC9D2
     # The left-associated code converts to adjacent BF16 0xc9d3.
     assert not saturated
+
+
+def test_public_divide_and_arbitrary_balanced_sum_pin_service_boundaries() -> None:
+    assert rn32_divide(0x3F800000, 0x40400000) == 0x3EAAAAAB
+    assert rn32_divide(0x80000001, 0x40000000) == 0
+
+    values = (0x3F800000, 0x33800000, 0xBF800000, 0x33800000, 0x33800000)
+    expected = _oracle_add(
+        _oracle_add(
+            _oracle_add(values[0], values[1]),
+            _oracle_add(values[2], values[3]),
+        ),
+        _oracle_add(values[4], 0),
+    )
+    assert rn32_balanced_sum(values) == expected == 0x34000000
+    assert rn32_balanced_sum((0x80000000,)) == 0
+
+    with pytest.raises(HCPreServiceNumericError, match="denominator is zero"):
+        rn32_divide(0x3F800000, 0)
+    with pytest.raises(HCPreServiceNumericError, match="balanced reduction is empty"):
+        rn32_balanced_sum(())
+    with pytest.raises(HCPreServiceNumericError, match="finite binary32"):
+        rn32_balanced_sum((0x7F800000,))
 
 
 def test_scalar_rn32_preserves_subnormals_and_poisons_exceptions() -> None:

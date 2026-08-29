@@ -32,20 +32,15 @@ A separate SM120 development audit compared E2M1 conversion for all 65,280
 finite BF16 encodings with CUDA's native `cvt.rn.satfinite.e2m1x2.f32`. After
 the governed positive-zero canonicalization, there were zero differences.
 
-This closes neither `M1` nor numerical qualification. Matrix operators beyond
-the qualified routed-MXFP4/shared-FP8 SwiGLU, dense FP8, index-head BF16,
-router-score, compressor, confidence, grouped attention-output, and DSpark
-main-conditioning projection and prefill-KV paths, and the shared BF16
-vocabulary head, vector operators beyond the
-SwiGLU
-nonlinear section, weighted and head RMS normalization,
-target-hidden capture, and HC post-mixing, attention operators
-beyond the qualified KV row-space composition, learned index scoring/top-k, and
-sparse-attention boundary,
-mutable attention-state operations beyond the qualified circular-window and
-compressed-KV transactions, remaining routing and nonlinear operators,
-real-checkpoint known answers, layer differentials, end-to-end logits, and task
-quality remain open.
+Together with the source-mapped graph ledger, the reference modules now qualify
+all 46 graph operator kinds and close the recovery plan's `M1` semantic/reference
+gate. That qualification includes the five-step Markov loop and shared
+BF16-storage/binary32-runtime vocabulary head as well as the matrix, vector,
+attention, routing, state, and structural operators described below. It does not
+make the graph artifact-executable: complete graph-to-microcode lowering,
+checkpoint-derived layer differentials, end-to-end logits, generated-artifact
+service execution, RTL execution, schedules, and task quality remain open or
+partial under `M3`–`M9`.
 The earlier exact-integer evaluator remains fixture-only evidence.
 
 `matrix.py` composes the scalar/block rules into complete `FP8_LINEAR`
@@ -157,10 +152,14 @@ post-exponential draws in step/batch/vocabulary order. Tests hash both complete
 66,191,360-byte official matrices and their MP=4 shards, cross every shard
 boundary with eight full-rank rows, freeze projection and later bias-add
 rounding independently, and cover causal histories, poison atomicity,
-immutability, counters, and randomized complete fixtures. This does not provide
-checkpoint-derived base logits, a complete official vocabulary projection,
-artifact-driven service execution, a physical collective, or performance
-evidence. See `docs/DEEPSEEK_V4_MARKOV_LOOP_EVIDENCE.md` for the exact boundary.
+immutability, counters, and randomized complete fixtures. A separately
+implemented fixed 21-record microprogram service now matches the reference on
+complete reduced fixtures and the selected official rows. It accepts its
+program and resources directly, so it does not provide checkpoint-derived base
+logits, a complete official vocabulary projection, content-addressed
+artifact-driven execution, a physical collective, or performance evidence. See
+`docs/DEEPSEEK_V4_MARKOV_LOOP_EVIDENCE.md` and
+`docs/DEEPSEEK_V4_MARKOV_MICROPROGRAM_EVIDENCE.md` for the exact boundaries.
 
 `normalization.py` implements the weighted `RMS_NORM` operation at all 251
 Flash graph sites and all four observed widths. It widens BF16 input and BF16

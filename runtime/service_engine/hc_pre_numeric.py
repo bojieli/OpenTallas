@@ -331,6 +331,16 @@ def rn32_multiply(left_code: int, right_code: int) -> int:
     return _multiply_codes(left, right)
 
 
+def rn32_divide(numerator_code: int, denominator_code: int) -> int:
+    """Apply one finite binary32 RNE division boundary."""
+
+    numerator = _validate_finite_binary32(numerator_code, "numerator_code")
+    denominator = _validate_finite_binary32(
+        denominator_code, "denominator_code"
+    )
+    return _divide_codes(numerator, denominator)
+
+
 def rn32_fused_product_add(
     accumulator_code: int,
     left_code: int,
@@ -364,6 +374,17 @@ def rn32_balanced_sum4(codes: Sequence[int]) -> int:
         for index, code in enumerate(raw)
     )
     return _sum4(validated)
+
+
+def rn32_balanced_sum(codes: Sequence[int]) -> int:
+    """Reduce one nonempty finite binary32 row through the NUM-6.1 tree."""
+
+    raw = _sequence(codes, "codes")
+    validated = tuple(
+        _validate_finite_binary32(code, f"codes[{index}]")
+        for index, code in enumerate(raw)
+    )
+    return _sum_balanced(validated)
 
 
 def cr32_rsqrt(value_code: int) -> int:
@@ -1066,7 +1087,9 @@ __all__ = [
     "hc_pre_branch_column",
     "rn32_add",
     "rn32_affine",
+    "rn32_balanced_sum",
     "rn32_balanced_sum4",
+    "rn32_divide",
     "rn32_fused_product_add",
     "rn32_multiply",
     "sinkhorn20",

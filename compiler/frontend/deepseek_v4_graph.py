@@ -4,8 +4,8 @@ This module turns the pinned official topology into an ordered graph contract.
 It deliberately stops short of calling that graph executable: every operator is
 owned, source-anchored, assigned a lowering and cost class, and connected to its
 checkpoint tensor roles.  Qualified reference slices are named individually;
-the remaining reference, service-engine, and RTL implementations stay explicitly
-pending.
+all 46 reference owners are qualified, while graph-wide service-engine and RTL
+execution stay explicitly pending.
 """
 
 from __future__ import annotations
