@@ -342,7 +342,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 95
+    assert len(schemas) == 100
     by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
     assert set(by_name) == {
         "attention_deployment_v1.schema.json",
@@ -400,6 +400,11 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "qwen_final_output_qualification_v1.schema.json",
         "qwen_full_model_capacity_v1.schema.json",
         "qwen_full_model_deployment_v1.schema.json",
+        "qwen_full_model_dynamic_execution_v1.schema.json",
+        "qwen_full_model_dynamic_request_v1.schema.json",
+        "qwen_full_model_dynamic_session_execution_v1.schema.json",
+        "qwen_full_model_dynamic_session_reference_v1.schema.json",
+        "qwen_full_model_dynamic_session_v1.schema.json",
         "qwen_full_model_execution_v1.schema.json",
         "qwen_full_model_physical_check_v1.schema.json",
         "qwen_full_model_physical_plan_v1.schema.json",
@@ -515,6 +520,36 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
             load_strict_json(
                 ROOT / "results/tensor_accelerator/qwen3_full_model_physical/"
                 "deployment_manifest.json"
+            )
+        ],
+        "qwen_full_model_dynamic_request_v1.schema.json": [
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/qwen3_short_generation_v1/"
+                "requests/request.0000.json"
+            )
+        ],
+        "qwen_full_model_dynamic_execution_v1.schema.json": [
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/qwen3_short_generation_v1/"
+                "executions/execution.0010.json"
+            )
+        ],
+        "qwen_full_model_dynamic_session_execution_v1.schema.json": [
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/qwen3_short_generation_v1/"
+                "session_execution.json"
+            )
+        ],
+        "qwen_full_model_dynamic_session_reference_v1.schema.json": [
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/qwen3_short_generation_v1/"
+                "reference.json"
+            )
+        ],
+        "qwen_full_model_dynamic_session_v1.schema.json": [
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/qwen3_short_generation_v1/"
+                "session.json"
             )
         ],
         "qwen_full_model_physical_check_v1.schema.json": [

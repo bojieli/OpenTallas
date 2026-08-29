@@ -31,6 +31,7 @@ from runtime.tensor_accelerator.attention import (
     NUMERIC_CONTRACT as KERNEL_CONTRACT,
     SCALE_BF16_CODE as KERNEL_SCALE,
     AttentionKernelError,
+    _exp_binary32_rne,
     abort_kv_group as kernel_abort_group,
     commit_kv_append as kernel_commit,
     commit_kv_group as kernel_commit_group,
@@ -93,6 +94,17 @@ def test_contract_constants_and_softmax_scalar_primitives_are_frozen() -> None:
     assert binary32_lanes8_sum([0x3F800000] * 8) == 0x41000000
     with pytest.raises(NumericReferenceError, match="must be <= 0"):
         binary32_exp_nonpositive(0x3F800000)
+
+
+def test_target_exponential_matches_exact_binary32_adversarial_cases() -> None:
+    input_codes = np.asarray(
+        [0x00000000, 0xB3010000, 0xBF800000, 0xC0000000, 0xC0550000, 0xC2D00000],
+        dtype=np.uint32,
+    )
+    values = input_codes.view(np.float32)
+    observed = _exp_binary32_rne(values).view(np.uint32).tolist()
+    expected = [binary32_exp_nonpositive(int(code)) for code in input_codes]
+    assert observed == expected
 
 
 def test_empty_history_current_token_is_private_until_commit_and_exact() -> None:

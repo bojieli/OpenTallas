@@ -467,6 +467,27 @@ def _lanes8_sum(values: np.ndarray[Any, np.dtype[np.float32]]) -> np.float32:
     return np.float32(np.add(quarter[0], quarter[1], dtype=np.float32))
 
 
+def _exp_binary32_rne(
+    values: np.ndarray[Any, np.dtype[np.float32]],
+) -> np.ndarray[Any, np.dtype[np.float32]]:
+    """Evaluate exp with guard precision before architectural binary32 RNE.
+
+    NumPy's float32 exponential is an optimized single-precision
+    approximation, not a correctly rounded binary32 operation.  For example,
+    it places ``exp(-1.0)`` one binary32 ulp below the value required by this
+    target numeric contract.  Preserve the architectural binary32 input,
+    evaluate it with binary64 guard precision, and round once on conversion
+    to the architectural binary32 result.
+    """
+
+    binary32 = np.ascontiguousarray(values, dtype=np.float32)
+    binary64 = np.asarray(binary32, dtype=np.float64)
+    return np.ascontiguousarray(
+        np.exp(binary64, dtype=np.float64).astype(np.float32),
+        dtype=np.float32,
+    )
+
+
 def _softmax_bf16(
     masked_codes: np.ndarray[Any, np.dtype[np.uint16]],
 ) -> tuple[np.ndarray[Any, np.dtype[np.uint16]], int]:
@@ -475,7 +496,7 @@ def _softmax_bf16(
     shifted = np.subtract(values, maximum, dtype=np.float32)
     previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
     try:
-        exponentials = np.exp(shifted, dtype=np.float32)
+        exponentials = _exp_binary32_rne(shifted)
     finally:
         np.seterr(**previous)
     exponentials = np.where(

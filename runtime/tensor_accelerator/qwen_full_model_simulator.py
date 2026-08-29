@@ -87,6 +87,17 @@ PHYSICAL_PLAN_SCHEMA = "opentallas.tensor_accelerator.qwen_full_model_physical_p
 REQUEST_SCHEMA = "opentallas.tensor_accelerator.qwen_full_model_request.v1"
 CHECK_SCHEMA = "opentallas.tensor_accelerator.qwen_full_model_physical_check.v1"
 EXECUTION_SCHEMA = "opentallas.tensor_accelerator.qwen_full_model_execution.v1"
+DYNAMIC_SESSION_SCHEMA = (
+    "opentallas.tensor_accelerator.qwen_full_model_dynamic_session.v1"
+)
+DYNAMIC_REQUEST_SCHEMA = (
+    "opentallas.tensor_accelerator.qwen_full_model_dynamic_request.v1"
+)
+DYNAMIC_EXECUTION_SCHEMA = (
+    "opentallas.tensor_accelerator.qwen_full_model_dynamic_execution.v1"
+)
+DYNAMIC_SESSION_VERSION = "tensor-accelerator-qwen-dynamic-session-0.2.0"
+DYNAMIC_REQUEST_VERSION = "tensor-accelerator-qwen-dynamic-request-0.1.0"
 SIMULATOR_VERSION = "tensor-accelerator-qwen-full-model-simulator-0.1.0"
 
 MANIFEST_PATH = "deployment_manifest.json"
@@ -141,6 +152,31 @@ def _identity(value: Mapping[str, Any], field: str, label: str) -> None:
     )
     if observed != expected:
         raise QwenFullModelSimulationError(f"{label} identity differs")
+
+
+def _integer(value: object, label: str, minimum: int, maximum: int) -> int:
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, int)
+        or not minimum <= value <= maximum
+    ):
+        raise QwenFullModelSimulationError(
+            f"{label} must be an integer in [{minimum}, {maximum}]"
+        )
+    return value
+
+
+def _dynamic_transaction_id(request: Mapping[str, Any]) -> int:
+    seed = {
+        "previous_report_id": request["previous_report_id"],
+        "session_id": request["session_id"],
+        "step_index": request["step_index"],
+        "token_id": request["token_id"],
+    }
+    transaction = int.from_bytes(
+        hashlib.sha256(canonical_json_bytes(seed)).digest()[:8], "big"
+    )
+    return transaction or 1
 
 
 def _safe_relative(value: object, label: str) -> str:
@@ -307,8 +343,10 @@ class QwenFullModelSimulator:
         plan: dict[str, Any],
         model: ProductionModelGraph,
         capability: ProductionCapability,
+        checkpoint_lock: dict[str, Any],
         commands: tuple[ProductionCommand, ...],
         request: dict[str, Any],
+        source_lock: dict[str, Any],
         hbm: HBMShardReader,
         hbm_hashes_verified: bool,
     ) -> None:
@@ -317,8 +355,10 @@ class QwenFullModelSimulator:
         self._plan = plan
         self._model = model
         self._capability = capability
+        self._checkpoint_lock = checkpoint_lock
         self._commands = commands
         self._request = request
+        self._source_lock = source_lock
         self._hbm = hbm
         self._hbm_hashes_verified = hbm_hashes_verified
         self._closed = False
@@ -351,6 +391,11 @@ class QwenFullModelSimulator:
                 "physical execution lookup tables are incomplete or ambiguous"
             )
         self._states = self._initial_states()
+        self._execution_mode: str | None = None
+        self._dynamic_session: dict[str, Any] | None = None
+        self._dynamic_previous_report_id: str | None = None
+        self._dynamic_previous_token: int | None = None
+        self._dynamic_complete = False
 
     @classmethod
     def load(
@@ -493,6 +538,11 @@ class QwenFullModelSimulator:
                 "physical source lock",
             )
             _identity(source_lock, "source_lock_id", "physical source lock")
+            checkpoint_lock = _canonical(
+                _artifact(root, "source/checkpoint.lock.json", "checkpoint lock"),
+                "checkpoint lock",
+            )
+            _identity(checkpoint_lock, "lock_id", "checkpoint lock")
             capacity = _canonical(
                 _artifact(
                     root, "physical/capacity_certificate.json", "capacity certificate"
@@ -532,6 +582,8 @@ class QwenFullModelSimulator:
                 or check.get("check_id") != manifest["independent_check_id"]
                 or check.get("physical_plan_id") != plan["physical_plan_id"]
                 or source_lock.get("source_lock_id") != manifest["source_lock_id"]
+                or checkpoint_lock.get("lock_id")
+                != source_lock.get("checkpoint_lock_id")
                 or capacity.get("capacity_certificate_id")
                 != manifest["capacity_certificate_id"]
                 or capability.capability_id != manifest["capability_id"]
@@ -580,8 +632,10 @@ class QwenFullModelSimulator:
                 plan=plan,
                 model=model,
                 capability=capability,
+                checkpoint_lock=checkpoint_lock,
                 commands=commands,
                 request=request,
+                source_lock=source_lock,
                 hbm=hbm,
                 hbm_hashes_verified=verify_hbm_hashes,
             )
@@ -687,6 +741,300 @@ class QwenFullModelSimulator:
 
     def __exit__(self, exc_type: object, exc: object, traceback: object) -> None:
         self.close()
+
+    def _validate_dynamic_session(self, raw: Mapping[str, Any]) -> dict[str, Any]:
+        value = dict(raw)
+        exact_keys(
+            value,
+            {
+                "build_id",
+                "checkpoint_lock_id",
+                "claim_boundary",
+                "command_program_sha256",
+                "context_capacity",
+                "generation",
+                "graph_id",
+                "model_id",
+                "prompt",
+                "schema",
+                "session_id",
+                "session_version",
+                "tokenizer",
+            },
+            set(),
+            "dynamic session",
+        )
+        _identity(value, "session_id", "dynamic session")
+        prompt = value.get("prompt")
+        generation = value.get("generation")
+        tokenizer = value.get("tokenizer")
+        if not isinstance(prompt, dict):
+            raise QwenFullModelSimulationError(
+                "dynamic session prompt must be an object"
+            )
+        if not isinstance(generation, dict):
+            raise QwenFullModelSimulationError(
+                "dynamic session generation must be an object"
+            )
+        if not isinstance(tokenizer, dict):
+            raise QwenFullModelSimulationError(
+                "dynamic session tokenizer must be an object"
+            )
+        exact_keys(
+            prompt,
+            {"text", "token_count", "token_ids", "utf8_sha256"},
+            set(),
+            "dynamic session prompt",
+        )
+        exact_keys(
+            generation,
+            {
+                "eos_token_ids",
+                "generated_token_limit",
+                "selection",
+                "unexpected_early_eos",
+            },
+            set(),
+            "dynamic session generation",
+        )
+        exact_keys(
+            tokenizer,
+            {
+                "decoded_prompt_exact",
+                "library",
+                "library_version",
+                "path",
+                "sha256",
+                "vocabulary_size",
+            },
+            set(),
+            "dynamic session tokenizer",
+        )
+        prompt_ids = prompt.get("token_ids")
+        eos_ids = generation.get("eos_token_ids")
+        if (
+            not isinstance(prompt.get("text"), str)
+            or not prompt["text"]
+            or not isinstance(prompt_ids, list)
+            or not prompt_ids
+            or any(
+                isinstance(token, bool)
+                or not isinstance(token, int)
+                or not 0 <= token < VOCABULARY_SIZE
+                for token in prompt_ids
+            )
+            or not isinstance(eos_ids, list)
+            or not eos_ids
+            or any(
+                isinstance(token, bool)
+                or not isinstance(token, int)
+                or not 0 <= token < VOCABULARY_SIZE
+                for token in eos_ids
+            )
+            or len(set(eos_ids)) != len(eos_ids)
+        ):
+            raise QwenFullModelSimulationError("dynamic session token lists differ")
+        limit = _integer(
+            generation.get("generated_token_limit"),
+            "dynamic session generated token limit",
+            32,
+            CONTEXT_CAPACITY,
+        )
+        tokenizer_records = [
+            record
+            for record in self._checkpoint_lock.get("files", [])
+            if record.get("path") == "tokenizer.json"
+        ]
+        if (
+            value.get("schema") != DYNAMIC_SESSION_SCHEMA
+            or value.get("session_version") != DYNAMIC_SESSION_VERSION
+            or value.get("model_id") != MODEL_ID
+            or value.get("graph_id") != self._model.graph_id
+            or value.get("build_id") != self._manifest["build_id"]
+            or value.get("checkpoint_lock_id")
+            != self._source_lock["checkpoint_lock_id"]
+            or value.get("command_program_sha256")
+            != self._plan["command_program"]["sha256"]
+            or value.get("context_capacity") != CONTEXT_CAPACITY
+            or value.get("claim_boundary")
+            != {
+                "exact_8000_token_acceptance": False,
+                "short_generation": True,
+                "timing_or_performance": False,
+            }
+            or prompt.get("token_count") != len(prompt_ids)
+            or prompt.get("utf8_sha256")
+            != hashlib.sha256(prompt["text"].encode("utf-8")).hexdigest()
+            or len(prompt_ids) + limit - 1 > CONTEXT_CAPACITY
+            or generation.get("selection") != "greedy_lowest_token_id_argmax"
+            or generation.get("unexpected_early_eos") != "fail"
+            or tokenizer.get("decoded_prompt_exact") is not True
+            or tokenizer.get("library") != "tokenizers"
+            or tokenizer.get("library_version") != "0.22.2"
+            or tokenizer.get("path") != "tokenizer.json"
+            or tokenizer.get("vocabulary_size") != VOCABULARY_SIZE
+            or len(tokenizer_records) != 1
+            or tokenizer.get("sha256") != tokenizer_records[0].get("sha256")
+        ):
+            raise QwenFullModelSimulationError("dynamic session boundary differs")
+        require_sha256(tokenizer["sha256"], "dynamic session tokenizer SHA-256")
+        return value
+
+    def begin_dynamic_session(self, session_path: Path) -> dict[str, Any]:
+        """Bind one immutable tokenizer/workload session to the loaded machine."""
+
+        if self._closed:
+            raise QwenFullModelSimulationError("simulator is closed")
+        if self._execution_mode is not None or self._dynamic_session is not None:
+            raise QwenFullModelSimulationError(
+                "simulator already has an execution mode or dynamic session"
+            )
+        if (
+            self.state_generations != (0,) * STATE_COUNT
+            or self.state_lengths != (0,) * STATE_COUNT
+        ):
+            raise QwenFullModelSimulationError(
+                "dynamic session must begin from an empty committed state"
+            )
+        value = self._validate_dynamic_session(
+            _canonical(Path(session_path), "dynamic session")
+        )
+        self._dynamic_session = value
+        self._execution_mode = "dynamic_v1"
+        return dict(value)
+
+    def _validate_dynamic_request(self, raw: Mapping[str, Any]) -> dict[str, Any]:
+        session = self._dynamic_session
+        if session is None or self._execution_mode != "dynamic_v1":
+            raise QwenFullModelSimulationError("no dynamic session is active")
+        if self._dynamic_complete:
+            raise QwenFullModelSimulationError("dynamic session is already complete")
+        value = dict(raw)
+        exact_keys(
+            value,
+            {
+                "build_id",
+                "command_program_sha256",
+                "expected_generations",
+                "expected_lengths",
+                "generated_token_index",
+                "graph_id",
+                "input_role",
+                "last_row_index",
+                "output_role",
+                "phase",
+                "position_end",
+                "position_start",
+                "previous_report_id",
+                "request_id",
+                "request_version",
+                "schema",
+                "session_id",
+                "span_tokens",
+                "step_index",
+                "token_id",
+                "transaction_id",
+            },
+            set(),
+            "dynamic request",
+        )
+        _identity(value, "request_id", "dynamic request")
+        current_generations = list(self.state_generations)
+        current_lengths = list(self.state_lengths)
+        if len(set(current_generations)) != 1 or len(set(current_lengths)) != 1:
+            raise QwenFullModelSimulationError(
+                "dynamic state resources are not synchronized"
+            )
+        step = current_lengths[0]
+        if current_generations[0] != step:
+            raise QwenFullModelSimulationError(
+                "dynamic state generation and length differ"
+            )
+        prompt_ids = session["prompt"]["token_ids"]
+        prompt_count = len(prompt_ids)
+        prompt_input = step < prompt_count
+        generated_index = None if step < prompt_count - 1 else step - prompt_count + 1
+        if (
+            generated_index is not None
+            and generated_index >= session["generation"]["generated_token_limit"]
+        ):
+            raise QwenFullModelSimulationError(
+                "dynamic request exceeds the generated-token limit"
+            )
+        expected_token = (
+            prompt_ids[step] if prompt_input else self._dynamic_previous_token
+        )
+        if expected_token is None:
+            raise QwenFullModelSimulationError(
+                "dynamic generated input has no preceding greedy token"
+            )
+        expected_role = "prompt" if prompt_input else "generated"
+        expected_output = (
+            "prefill_intermediate" if generated_index is None else "generated_token"
+        )
+        if (
+            value.get("schema") != DYNAMIC_REQUEST_SCHEMA
+            or value.get("request_version") != DYNAMIC_REQUEST_VERSION
+            or value.get("session_id") != session["session_id"]
+            or value.get("build_id") != self._manifest["build_id"]
+            or value.get("graph_id") != self._model.graph_id
+            or value.get("command_program_sha256")
+            != self._plan["command_program"]["sha256"]
+            or value.get("previous_report_id") != self._dynamic_previous_report_id
+            or value.get("step_index") != step
+            or value.get("token_id") != expected_token
+            or value.get("position_start") != step
+            or value.get("position_end") != step + 1
+            or value.get("span_tokens") != 1
+            or value.get("last_row_index") != 0
+            or value.get("phase") != ("prefill" if prompt_input else "decode")
+            or value.get("input_role") != expected_role
+            or value.get("output_role") != expected_output
+            or value.get("generated_token_index") != generated_index
+            or value.get("expected_generations") != current_generations
+            or value.get("expected_lengths") != current_lengths
+            or value.get("transaction_id") != _dynamic_transaction_id(value)
+        ):
+            raise QwenFullModelSimulationError("dynamic request chain boundary differs")
+        return value
+
+    def _state_metadata_payload(self, states: Mapping[str, KVSnapshot]) -> bytes:
+        records = bytearray()
+        for layer in range(LAYER_COUNT):
+            resource_id = f"kv.layer.{layer}"
+            state = states[resource_id]
+            physical = self._state_records[resource_id]
+            records.extend(
+                STATE_METADATA.pack(
+                    STATE_MAGIC,
+                    state.generation,
+                    state.length,
+                    state.capacity,
+                    physical["key_address"],
+                    physical["value_address"],
+                    layer,
+                    bytes(8),
+                )
+            )
+        return bytes(records)
+
+    def _transaction_descriptor_payload(self, request: Mapping[str, Any]) -> bytes:
+        metadata_address = self._plan["hbm"]["metadata_table"]["address"]
+        records = bytearray()
+        for layer in range(LAYER_COUNT):
+            records.extend(
+                TRANSACTION_DESCRIPTOR.pack(
+                    TRANSACTION_MAGIC,
+                    request["transaction_id"],
+                    request["expected_generations"][layer],
+                    request["position_start"],
+                    request["span_tokens"],
+                    request["position_end"],
+                    metadata_address + layer * STATE_METADATA.size,
+                    bytes(8),
+                )
+            )
+        return bytes(records)
 
     def _validate_request(self, request: Mapping[str, Any]) -> dict[str, Any]:
         exact_keys(
@@ -945,6 +1293,10 @@ class QwenFullModelSimulator:
     def execute(self, request_path: Path | None = None) -> dict[str, Any]:
         """Execute one complete one-token forward transaction artifact-only."""
 
+        if self._execution_mode is not None:
+            raise QwenFullModelSimulationError(
+                "fixed request v1 cannot share a simulator execution session"
+            )
         if self._closed:
             raise QwenFullModelSimulationError("simulator is closed")
         if not self._hbm_hashes_verified:
@@ -957,6 +1309,52 @@ class QwenFullModelSimulator:
         else:
             raw_request = _canonical(Path(request_path), "execution request")
         request = self._validate_request(raw_request)
+        report = self._execute_transaction(request, dynamic=False)
+        self._execution_mode = "fixed_v1"
+        return report
+
+    def execute_dynamic(self, request_path: Path) -> dict[str, Any]:
+        """Execute the next request in one bound dynamic prefill/decode session."""
+
+        if self._closed:
+            raise QwenFullModelSimulationError("simulator is closed")
+        if not self._hbm_hashes_verified:
+            raise QwenFullModelSimulationError(
+                "full data-bearing execution requires SHA-256 verification of every "
+                "HBM shard"
+            )
+        request = self._validate_dynamic_request(
+            _canonical(Path(request_path), "dynamic request")
+        )
+        report = self._execute_transaction(request, dynamic=True)
+        self._dynamic_previous_report_id = report["report_id"]
+        self._dynamic_previous_token = report["outputs"]["committed_logits"][
+            "greedy_token_id"
+        ]
+        generated_index = request["generated_token_index"]
+        if (
+            generated_index is not None
+            and generated_index + 1
+            == self._dynamic_session["generation"]["generated_token_limit"]
+        ):
+            self._dynamic_complete = True
+        return report
+
+    def _execute_transaction(
+        self, request: Mapping[str, Any], *, dynamic: bool
+    ) -> dict[str, Any]:
+        """Execute one already-admitted transaction and publish state atomically."""
+
+        state_before = self._states
+        runtime_register_payload = struct.pack(
+            "<IIII",
+            request["token_id"],
+            request["position_start"],
+            request["last_row_index"],
+            0,
+        )
+        metadata_before_payload = self._state_metadata_payload(state_before)
+        descriptor_payload = self._transaction_descriptor_payload(request)
         slots = _slots(self._plan["sram"])
         owners: dict[str, str] = {}
         produced: set[str] = {
@@ -971,16 +1369,7 @@ class QwenFullModelSimulator:
         saturation_by_kernel: dict[str, int] = {}
 
         runtime = slots["runtime_ids"]
-        runtime.write(
-            runtime.address,
-            struct.pack(
-                "<IIII",
-                request["token_id"],
-                request["position_start"],
-                request["last_row_index"],
-                0,
-            ),
-        )
+        runtime.write(runtime.address, runtime_register_payload)
         owners[runtime.slot_id] = "runtime.request_fields"
 
         def assignment(tensor_id: str) -> Mapping[str, Any]:
@@ -1666,7 +2055,7 @@ class QwenFullModelSimulator:
         selected_token = int(np.argmax(logits_values))
         maximum = logits_values[selected_token]
         maximum_count = int(np.count_nonzero(logits_values == maximum))
-        if maximum_count != 1:
+        if not dynamic and maximum_count != 1:
             raise QwenFullModelSimulationError("greedy logit maximum is not unique")
 
         state_report: list[dict[str, Any]] = []
@@ -1751,6 +2140,55 @@ class QwenFullModelSimulator:
                 "status": "unavailable",
             },
         }
+        if dynamic:
+            metadata_after_payload = self._state_metadata_payload(staged_states)
+            body.update(
+                {
+                    "claim_boundary": {
+                        "complete_model_one_token_execution": True,
+                        "exact_8000_token_acceptance": False,
+                        "generated_token_decision": request["output_role"]
+                        == "generated_token",
+                        "session_generation_complete": False,
+                        "timing_or_performance": False,
+                    },
+                    "input": {
+                        "generated_token_index": request["generated_token_index"],
+                        "input_role": request["input_role"],
+                        "output_role": request["output_role"],
+                        "phase": request["phase"],
+                        "position_end": request["position_end"],
+                        "position_start": request["position_start"],
+                        "token_id": request["token_id"],
+                    },
+                    "mode": "artifact_only_data_bearing_dynamic_transaction",
+                    "previous_report_id": request["previous_report_id"],
+                    "runtime_binding": {
+                        "request_registers_sha256": _payload_sha256(
+                            runtime_register_payload
+                        ),
+                        "request_registers_size_bytes": len(runtime_register_payload),
+                        "state_metadata_after_sha256": _payload_sha256(
+                            metadata_after_payload
+                        ),
+                        "state_metadata_before_sha256": _payload_sha256(
+                            metadata_before_payload
+                        ),
+                        "state_metadata_size_bytes": len(metadata_before_payload),
+                        "transaction_descriptors_sha256": _payload_sha256(
+                            descriptor_payload
+                        ),
+                        "transaction_descriptors_size_bytes": len(descriptor_payload),
+                    },
+                    "schema": DYNAMIC_EXECUTION_SCHEMA,
+                    "session_id": request["session_id"],
+                    "state_before": {
+                        "generations": list(self.state_generations),
+                        "lengths": list(self.state_lengths),
+                    },
+                    "step_index": request["step_index"],
+                }
+            )
         report = _identified(body, "report_id")
         self._states = staged_states
         return report
@@ -1799,10 +2237,63 @@ def publish_qwen_full_model_execution_report(
         os.fsync(handle.fileno())
 
 
+def publish_qwen_full_model_dynamic_execution_report(
+    report: Mapping[str, Any], output: Path
+) -> None:
+    """Publish one canonical dynamic transaction report without overwrite."""
+
+    value = dict(report)
+    input_record = value.get("input")
+    if (
+        value.get("schema") != DYNAMIC_EXECUTION_SCHEMA
+        or value.get("status") != "pass"
+        or value.get("mode") != "artifact_only_data_bearing_dynamic_transaction"
+        or not isinstance(input_record, dict)
+        or value.get("artifact_admission")
+        != {
+            "all_hbm_shards_sha256_verified": True,
+            "non_hbm_manifest_artifacts_sha256_verified": True,
+        }
+        or value.get("claim_boundary")
+        != {
+            "complete_model_one_token_execution": True,
+            "exact_8000_token_acceptance": False,
+            "generated_token_decision": input_record.get("output_role")
+            == "generated_token",
+            "session_generation_complete": False,
+            "timing_or_performance": False,
+        }
+        or value.get("command_count") != EXPECTED_COMMAND_COUNT
+        or value.get("operation_count") != OPERATION_COUNT
+        or value.get("timing")
+        != {
+            "reason": "capability_uncharacterized",
+            "status": "unavailable",
+        }
+    ):
+        raise QwenFullModelSimulationError("dynamic execution report boundary differs")
+    _identity(value, "report_id", "dynamic execution report")
+    path = Path(output)
+    if path.exists():
+        raise QwenFullModelSimulationError(
+            f"dynamic execution report already exists: {path}"
+        )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = canonical_json_bytes(value)
+    with path.open("xb") as handle:
+        handle.write(payload)
+        handle.flush()
+        os.fsync(handle.fileno())
+
+
 __all__ = [
+    "DYNAMIC_EXECUTION_SCHEMA",
+    "DYNAMIC_REQUEST_SCHEMA",
+    "DYNAMIC_SESSION_SCHEMA",
     "EXECUTION_SCHEMA",
     "QwenFullModelSimulationError",
     "QwenFullModelSimulator",
     "SIMULATOR_VERSION",
+    "publish_qwen_full_model_dynamic_execution_report",
     "publish_qwen_full_model_execution_report",
 ]
