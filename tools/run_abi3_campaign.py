@@ -189,6 +189,7 @@ def main() -> int:
         generated_token_ids=result.generated_token_ids,
         stop_reason=result.stop_reason,
         counters=result.counters,
+        implementation_identity=_implementation_identity(),
         notes={
             "lowering_seconds": round(lowering_seconds, 3),
             "verification": report.to_dict(),
@@ -215,6 +216,16 @@ def main() -> int:
             print(f"  TOKEN LEGITIMACY {problem}")
         return 3
     return 0 if not result.failure else 4
+
+
+def _implementation_identity() -> dict[str, Any]:
+    """What executed the blocked contract, so the result is reproducible."""
+    try:
+        from runtime.sim.backend import get_backend
+
+        return dict(get_backend().implementation_identity())
+    except Exception as exc:  # a missing backend must be visible, not silent
+        return {"unavailable": f"{type(exc).__name__}: {exc}"}
 
 
 def _write(path: Path, body: dict[str, Any]) -> None:

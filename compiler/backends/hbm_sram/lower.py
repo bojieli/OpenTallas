@@ -259,6 +259,7 @@ class _Emitter:
         self._layer_loop: int | None = None
         self._link_instructions = 0
         self._hoisted: set[str] = set()
+        self._transaction_source: dict[tuple[str, str], int] = {}
         self.token_ring_tensor: str | None = None
         self.token_ring_object: int = NO_ID
         self.commit_token_object: int = NO_ID
@@ -278,6 +279,9 @@ class _Emitter:
                     Major.STATE,
                     State.PREPARE,
                     descriptor_id=self._state_descriptor[physical_id],
+                    source_operation_id=self._transaction_source.get(
+                        ("STATE_PREPARE", physical_id), NO_ID
+                    ),
                 )
 
         for unit in self.plan.units:
@@ -314,6 +318,9 @@ class _Emitter:
                     Major.STATE,
                     State.COMMIT,
                     descriptor_id=self._state_descriptor[physical_id],
+                    source_operation_id=self._transaction_source.get(
+                        ("STATE_COMMIT", physical_id), NO_ID
+                    ),
                 )
 
         builder.emit(Major.CONTROL, Control.COMPLETE)
@@ -603,7 +610,12 @@ class _Emitter:
         return out
 
     def _compute_hoisted(self) -> set[str]:
-        """Physical states whose transaction must be hoisted out of a loop."""
+        """Physical states whose transaction must be hoisted out of a loop.
+
+        Also records which graph kernel declared each hoisted transaction, so
+        the hoisted instruction still names its source operation and the kernel
+        stays traceable to an instruction.
+        """
         hoisted: set[str] = set()
         for kernel in self.graph.kernels:
             if kernel.kind not in ("STATE_PREPARE", "STATE_COMMIT"):
@@ -616,6 +628,9 @@ class _Emitter:
             )
             iterated = band is not None and band.layer_count > 1
             for physical_id in self._physical_states(kernel):
+                self._transaction_source.setdefault(
+                    (kernel.kind, physical_id), kernel.index
+                )
                 if iterated or len(self.plan.state(physical_id).members) > 1:
                     hoisted.add(physical_id)
         return hoisted

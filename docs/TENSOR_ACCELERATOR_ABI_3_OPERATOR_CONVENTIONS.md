@@ -238,8 +238,9 @@ This matches the `COMPRESS`/`MHC` pattern already in section 3.
 
 **Two RMSNorm contracts coexist and are both correct.** The Qwen contract
 materialises the normalised value in BF16 before the gain multiply; the DeepSeek
-contract stays in binary32. They disagree by one ulp on roughly 27 % of
-elements, so they are genuinely different operations and get different names:
+contract stays in binary32. Measured, they disagree by exactly one BF16 ulp on 24.81 % of elements at
+width 4096 and 25.78 % at width 128, so they are genuinely different
+operations and get different names:
 `qwen3_rmsnorm_fp32_bf16_v1` and `deepseek_rmsnorm_binary32_v1`. The engine
 dispatches on the numeric descriptor's contract digest. Silently picking one
 would corrupt whichever model did not get it.

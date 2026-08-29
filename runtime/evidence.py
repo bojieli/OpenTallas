@@ -162,6 +162,14 @@ class ExecutionRecord:
     quantities: tuple[Quantity, ...] = ()
     notes: Mapping[str, Any] = dc_field(default_factory=dict)
     failure: str | None = None
+    implementation_identity: Mapping[str, Any] = dc_field(default_factory=dict)
+    """Library, version, device and flags that fixed the blocked association.
+
+    Amendment A7 makes the blocked numeric contract's association a property of
+    the executing implementation rather than of the specification. A result
+    that cannot name the implementation it ran on is therefore not
+    reproducible, so every execution record carries this.
+    """
 
     @property
     def depends_on_assumption(self) -> bool:
@@ -180,6 +188,7 @@ class ExecutionRecord:
             "depends_on_assumption": self.depends_on_assumption,
             "notes": dict(self.notes),
             "failure": self.failure,
+            "implementation_identity": dict(self.implementation_identity),
         }
 
 
@@ -218,6 +227,18 @@ def check_comparable(left: ExecutionRecord, right: ExecutionRecord) -> list[str]
         problems.append(
             f"technology views differ: {left.target.technology_view} vs "
             f"{right.target.technology_view}; no number crosses views"
+        )
+    if (
+        left.implementation_identity
+        and right.implementation_identity
+        and left.implementation_identity != right.implementation_identity
+    ):
+        problems.append(
+            "the two records ran on different implementations: "
+            f"{left.implementation_identity.get('backend')} vs "
+            f"{right.implementation_identity.get('backend')}; the blocked "
+            "contract's association is fixed by the implementation, so a token "
+            "or counter difference between them would not be attributable"
         )
     if left.target.deployment_digest == right.target.deployment_digest:
         problems.append(

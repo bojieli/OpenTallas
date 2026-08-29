@@ -106,7 +106,11 @@ NUMERIC_CONTRACT_BY_KIND: Mapping[str, str] = {
     "HEAD_RMS_NORM": "qwen3_rmsnorm_fp32_bf16_v1",
     "KV_APPEND": "bf16_byte_preserving_state_v1",
     "LAST_TOKEN_SELECT": "exact_index_select_v1",
-    "MATMUL": "bf16_bf16_fp32_sequential_rne_v1",
+    # Amendment A7: contractions execute under the blocked contract. The
+    # sequential contract remains the qualification oracle and the scalar
+    # reference, but naming it here would put every deployment on a kernel
+    # measured at 0.353 GMAC/s -- 47.6 hours for one 8,000-token prefill.
+    "MATMUL": "bf16_bf16_fp32_blocked_rne_v1",
     "RMS_NORM": "qwen3_rmsnorm_fp32_bf16_v1",
     "GATHER": "exact_index_select_v1",
     "ROPE": "qwen3_rope_fp32_bf16_v1",
@@ -114,7 +118,7 @@ NUMERIC_CONTRACT_BY_KIND: Mapping[str, str] = {
     "STATE_COMMIT": "bf16_byte_preserving_state_v1",
     "STATE_PREPARE": "bf16_byte_preserving_state_v1",
     "TOKEN_APPEND": "exact_token_append_eos_v1",
-    "VOCAB_PROJECT": "bf16_bf16_fp32_sequential_rne_v1",
+    "VOCAB_PROJECT": "bf16_bf16_fp32_blocked_rne_v1",
 }
 
 #: Counter namespace per kind, named with the ABI 3.0 counter groups
