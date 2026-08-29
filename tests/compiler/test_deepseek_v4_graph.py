@@ -58,7 +58,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "95c51d73b94acbf7990c18776a180e0f87404e183e55fcbb3844397d8b38b709"
+        "5c7f52fefc72c306d27f0fd86d4bc0c18ad003a31983213d06a0bae173c54322"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 46,
@@ -68,7 +68,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 2136,
-        "pending_reference_kind_count": 2,
+        "pending_reference_kind_count": 1,
         "pending_rtl_kind_count": 46,
         "pending_service_engine_kind_count": 46,
         "unknown_kind_count": 0,
@@ -315,6 +315,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert counts["COMPRESSED_KV_VALID_VIEW"] == 62
     assert counts["ATTENTION_KV_VIEW"] == 46
     assert counts["DSPARK_PREFILL_KV"] == 3
+    assert counts["LM_HEAD"] == 2
     assert counts["MARKOV_AUTOREGRESSIVE_LOOP"] == 1
     qualified_references = {
         "ATTENTION_KV_VIEW": (
@@ -367,6 +368,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "INDEX_SCORE": "runtime.reference.index_score.index_score_bf16",
         "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
         "KV_WINDOW_WRITE": "runtime.reference.kv_window.kv_window_write_bf16",
+        "LM_HEAD": "runtime.reference.lm_head.lm_head_bf16",
         "RMS_NORM": "runtime.reference.normalization.rms_norm_bf16",
         "ROPE_APPLY": "runtime.reference.rope.rope_apply_bf16",
         "ROPE_INVERSE": "runtime.reference.rope.rope_inverse_bf16",
@@ -402,6 +404,9 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
             assert requirement["reference_status"] == "pending_implementation"
         assert requirement["service_engine_status"] == "pending_implementation"
         assert requirement["rtl_status"] == "pending_implementation"
+    assert set(catalog).difference(qualified_references) == {
+        "MARKOV_AUTOREGRESSIVE_LOOP"
+    }
 
 
 def test_sampling_contract_exposes_exact_and_blocked_numeric_boundaries(
@@ -421,6 +426,53 @@ def test_sampling_contract_exposes_exact_and_blocked_numeric_boundaries(
     }
     assert node["inputs"] == ["main.lm_head.output"]
     assert node["state_reads"] == node["state_writes"] == []
+
+
+def test_shared_vocabulary_head_profile_and_binary32_contract_are_explicit(
+    graph_contract: dict,
+) -> None:
+    nodes = [node for node in graph_contract["nodes"] if node["kind"] == "LM_HEAD"]
+    assert [node["id"] for node in nodes] == ["main.lm_head", "dspark.lm_head"]
+    common = {
+        "accumulator_dtype": "binary32",
+        "bias": False,
+        "checkpoint_weight_dtype": "bf16",
+        "collective": "all_gather_then_rank_order_concat",
+        "hidden_width": 4096,
+        "input_dtype": "bf16",
+        "intermediate_overflow": "poison",
+        "output_dtype": "binary32",
+        "output_zero": "canonical_positive",
+        "partition_axis": "vocabulary",
+        "partition_rule": "equal_contiguous_rank_order",
+        "product": "exact_bf16_product",
+        "reduction_order": "increasing_hidden_index",
+        "reduction_rounding": "binary32_rne_each_fused_product_add",
+        "reference_profile": "opentallas.deepseek_v4_lm_head_binary32.v1",
+        "runtime_weight_dtype": "binary32_exact_bf16_widen",
+        "subnormal_policy": "preserve",
+        "tensor_parallel_world_sizes": [1, 2, 4, 8],
+        "untied": True,
+        "vocabulary_size": 129280,
+    }
+    main, dspark = nodes
+    assert main["attributes"] == {
+        **common,
+        "full_logits": False,
+        "position_selection": "final_source_position",
+    }
+    assert dspark["attributes"] == {
+        **common,
+        "block_size": 5,
+        "full_logits": True,
+        "position_selection": "all_source_positions",
+        "shared_main_head": True,
+    }
+    assert main["tensor_roles"] == dspark["tensor_roles"] == [
+        "model.lm_head.weight"
+    ]
+    assert main["phases"] == ["prefill", "decode"]
+    assert dspark["phases"] == ["decode"]
 
 
 def test_weighted_rms_norm_profile_and_numeric_contract_are_explicit(
@@ -1323,7 +1375,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "95c51d73b94acbf7990c18776a180e0f87404e183e55fcbb3844397d8b38b709"
+        "5c7f52fefc72c306d27f0fd86d4bc0c18ad003a31983213d06a0bae173c54322"
     )
     assert "described 2136 nodes across 46 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

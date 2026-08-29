@@ -97,6 +97,7 @@ _QUALIFIED_REFERENCE_OWNERS = {
     "INDEX_SCORE": "runtime.reference.index_score.index_score_bf16",
     "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
     "KV_WINDOW_WRITE": "runtime.reference.kv_window.kv_window_write_bf16",
+    "LM_HEAD": "runtime.reference.lm_head.lm_head_bf16",
     "RMS_NORM": "runtime.reference.normalization.rms_norm_bf16",
     "ROPE_APPLY": "runtime.reference.rope.rope_apply_bf16",
     "ROPE_INVERSE": "runtime.reference.rope.rope_inverse_bf16",
@@ -885,6 +886,38 @@ def _confidence_score_attributes() -> dict[str, Any]:
         "subnormal_policy": "preserve",
         "weight_compute_dtype": "binary32_exact_bf16_widen",
     }
+
+
+def _lm_head_attributes(*, full_logits: bool) -> dict[str, Any]:
+    attributes: dict[str, Any] = {
+        "accumulator_dtype": "binary32",
+        "bias": False,
+        "checkpoint_weight_dtype": "bf16",
+        "collective": "all_gather_then_rank_order_concat",
+        "full_logits": full_logits,
+        "hidden_width": 4096,
+        "input_dtype": "bf16",
+        "intermediate_overflow": "poison",
+        "output_dtype": "binary32",
+        "output_zero": "canonical_positive",
+        "partition_axis": "vocabulary",
+        "partition_rule": "equal_contiguous_rank_order",
+        "position_selection": (
+            "all_source_positions" if full_logits else "final_source_position"
+        ),
+        "product": "exact_bf16_product",
+        "reduction_order": "increasing_hidden_index",
+        "reduction_rounding": "binary32_rne_each_fused_product_add",
+        "reference_profile": "opentallas.deepseek_v4_lm_head_binary32.v1",
+        "runtime_weight_dtype": "binary32_exact_bf16_widen",
+        "subnormal_policy": "preserve",
+        "tensor_parallel_world_sizes": [1, 2, 4, 8],
+        "untied": True,
+        "vocabulary_size": 129280,
+    }
+    if full_logits:
+        attributes.update({"block_size": 5, "shared_main_head": True})
+    return attributes
 
 
 def _compress_project_attributes(
@@ -2083,7 +2116,7 @@ def build_official_graph_contract() -> dict[str, Any]:
         "main.lm_head",
         "LM_HEAD",
         (main_hidden,),
-        attributes={"untied": True, "vocab_size": 129280},
+        attributes=_lm_head_attributes(full_logits=False),
         tensor_roles=("model.lm_head.weight",),
     )
     (main_token,) = graph.add(
@@ -2155,7 +2188,7 @@ def build_official_graph_contract() -> dict[str, Any]:
         "LM_HEAD",
         (draft_hidden,),
         phases=("decode",),
-        attributes={"block_size": 5, "shared_main_head": True},
+        attributes=_lm_head_attributes(full_logits=True),
         tensor_roles=("model.lm_head.weight",),
     )
     draft_tokens, markov_embeddings = graph.add(

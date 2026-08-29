@@ -117,7 +117,7 @@ python3 -m compiler.cli describe-deepseek-v4-graph \
 This expands 2,136 ordered prefill/decode nodes across the 43 main and three
 DSpark stages, assigns every checkpoint tensor to a layer-correct consumer, and
 gives all 46 operator kinds an explicit source anchor, lowering, state class,
-cost class, and implementation owner. Forty-four operator references—routed
+cost class, and implementation owner. Forty-five operator references—routed
 MXFP4 and shared FP8 SwiGLU, dense FP8 linear, index-head BF16 linear, binary32
 router-score, sqrt-softplus router activation, compressor, and DSpark-confidence
 and main-conditioning projections, complete stage-local DSpark prefill-KV
@@ -136,8 +136,11 @@ embedding, hash-route lookup, ordinary window indices, compressed-dense
 indices, DSpark window indices, DSpark noise embedding/HC expansion,
 biased-router top-k, learned-index top-k, routed-weight normalization, expert
 dispatch, expert reduction, and fail-closed greedy/target-adapted sampling—are
-implemented and unit-qualified; the other two
-reference kinds and all 46 service-engine/RTL kinds remain pending.
+implemented and unit-qualified. This set also includes the shared untied BF16
+vocabulary head: its main site selects the final source position, its DSpark
+site projects all five positions, and its vocabulary-shard gather preserves
+binary32 values in increasing rank order. Only the Markov autoregressive-loop
+reference kind and all 46 graph-wide service-engine/RTL kinds remain pending.
 Scalar and block-dot numeric primitives are tracked separately and do not make
 a matrix operator complete. The contract also records that the pinned local
 `generate.py` does not invoke DSpark and that speculative target verification

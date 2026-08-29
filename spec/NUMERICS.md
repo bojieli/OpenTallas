@@ -590,6 +590,84 @@ not a complete expert invocation. Logical payload/read/work counters do not
 specify ROM transactions, cache reuse, cycles, achieved bandwidth, throughput,
 energy, area, PPA, or a wafer/GPU advantage.
 
+### NUM-4.10 Shared BF16 vocabulary head
+
+`LM_HEAD` is the one untied vocabulary projection shared by the main model and
+DSpark. It is not an MXFP4 routed matrix or an FP8 dense/shared matrix. The
+official checkpoint stores `head.weight` as BF16 with shape `[129280,4096]`,
+for exactly 1,059,061,760 bytes. The pinned `ParallelHead` creates a binary32
+runtime parameter, loads the BF16 payload into it by exact widening, widens its
+BF16 hidden input with `x.float()`, and evaluates a bias-free linear projection.
+There is no activation microscaling, weight scale, bias, output conversion, or
+output saturation at this boundary.
+
+For every selected source row and global vocabulary row, the target:
+
+1. accepts finite BF16 hidden and checkpoint-weight encodings;
+2. widens both operands exactly to binary32;
+3. starts a binary32 positive-zero accumulator and traverses hidden columns
+   `0..4095` in increasing order;
+4. forms the exact BF16 product at each column and performs one binary32 RNE
+   fused product-add, as in NUM-4.1; and
+5. returns the completed finite binary32 logit without BF16 conversion.
+
+BF16 and binary32 subnormals are preserved. Output zero canonicalizes positive.
+A malformed batch, sequence, width, vocabulary, or partition shape; a nonfinite
+BF16 operand; or binary32 accumulation overflow poisons the complete
+transaction. The reference admits smaller nonzero dimensions for exhaustive
+unit cases, but only hidden width 4,096 and vocabulary size 129,280 are graph
+qualified.
+
+The main-model site calls `ParallelHead` with `full_logits=False`. It validates
+the complete finite BF16 input tensor but projects only source position `S-1`,
+returning binary32 shape `[B,129280]`. The DSpark site invokes the same head and
+same weight with `full_logits=True`; its qualified block size is five and it
+projects all five source positions, returning `[B,5,129280]`. Final RMS
+normalization and HC-head reduction are upstream operators. Sampling, Markov
+bias addition, and the Markov autoregressive loop are downstream operators and
+must not be folded into this boundary.
+
+Tensor parallelism partitions only the vocabulary axis. For world size `W` in
+`{1,2,4,8}`, rank `r` owns the equal contiguous global rows
+`[r*129280/W,(r+1)*129280/W)`. Each rank produces its local binary32 logits;
+the source all-gathers those arrays and concatenates them in increasing rank
+order. This collective performs no numerical cross-rank reduction. Therefore a
+conforming physical collective must reproduce global vocabulary order but may
+choose any implementation that leaves every binary32 code unchanged.
+
+For batch `B`, source sequence length `S`, projected-position count `P` (`1`
+for main, `S=5` for DSpark), evaluated vocabulary rows `V`, and hidden width
+`K`, the semantic counters are:
+
+```text
+source hidden BF16 values validated = B * S * K
+selected hidden BF16 values read    = B * P * K
+selected weight BF16 values read    = V * K
+input binary32 widens               = B * P * K
+weight binary32 widens              = V * K
+exact product-accumulates           = B * P * V * K
+binary32 accumulation roundings     = B * P * V * K
+binary32 logits produced/gathered   = B * P * V
+```
+
+These values describe logical semantic coverage. In particular, the weight
+count does not assert that a physical ROM, SRAM, cache, or HBM reads each value
+once, and the gathered-logit count is not a link transfer measurement. Physical
+placement, reuse, transactions, flits, cycles, latency, bandwidth, inference
+bytes/s, throughput, energy, area, PPA, and a GPU comparison require generated
+images, schedules, execution counters, and implementation characterization.
+
+The released `F.linear` does not define one CUDA GEMM association order.
+OpenTallas therefore freezes increasing hidden-index accumulation as a
+deterministic target adaptation; this is not a claim of bit identity with an
+arbitrary PyTorch/CUDA kernel. Qualification evidence separately covers a
+complete small main/DSpark operator, the complete official BF16 payload and its
+four MP=4 partitions, eight full-width official rows crossing every MP=4
+boundary under a deterministic synthetic hidden row, and an independently
+implemented selected-row arithmetic lane. It does not provide a
+checkpoint-derived hidden activation or a complete 129,280-logit official
+numeric execution.
+
 ## NUM-5 Exceptional values and errors
 
 ### NUM-5.1 Classification

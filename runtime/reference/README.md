@@ -35,7 +35,8 @@ the governed positive-zero canonicalization, there were zero differences.
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
 the qualified routed-MXFP4/shared-FP8 SwiGLU, dense FP8, index-head BF16,
 router-score, compressor, confidence, grouped attention-output, and DSpark
-main-conditioning projection and prefill-KV paths, vector operators beyond the
+main-conditioning projection and prefill-KV paths, and the shared BF16
+vocabulary head, vector operators beyond the
 SwiGLU
 nonlinear section, weighted and head RMS normalization,
 target-hidden capture, and HC post-mixing, attention operators
@@ -122,6 +123,23 @@ official projection rows per stage through an independent FP8 service lane.
 Those corpora do not supply checkpoint-derived nonzero conditioning. Logical
 resource/state counts remain distinct from physical ROM/SRAM/HBM traffic,
 cycles, bandwidth, latency, throughput, energy, area, or PPA.
+
+`lm_head.py` implements both `LM_HEAD` sites through one shared untied BF16
+checkpoint matrix. It distinguishes the official `[129280,4096]` BF16 storage
+from the source's binary32 runtime parameter, widens BF16 hidden and weight
+values exactly, freezes increasing-hidden-index binary32 fused-product
+accumulation, and returns binary32 logits without output conversion. Main mode
+selects only the final source position; DSpark full-logit mode projects all five
+positions. Vocabulary shards are equal and contiguous, and their increasing-rank
+concatenation is a logical gather rather than a numerical reduction. The suite
+streams and hashes the complete 1,059,061,760-byte official weight, reconstructs
+all four MP=4 shard identities, and evaluates eight full-width official rows
+crossing every shard boundary under a deterministic synthetic hidden row. A
+separately implemented selected-row service lane matches every retained
+binary32 code. This is not a checkpoint-derived hidden activation, complete
+official vocabulary execution, physical collective, artifact-driven service
+path, or physical traffic/performance evidence. See
+`docs/DEEPSEEK_V4_LM_HEAD_EVIDENCE.md` for the exact claim boundary.
 
 `normalization.py` implements the weighted `RMS_NORM` operation at all 251
 Flash graph sites and all four observed widths. It widens BF16 input and BF16
