@@ -909,6 +909,13 @@ class _Emitter:
                 f"a tensor view needs {len(dynamic)} dynamic index terms but the "
                 f"frozen ABI 3.0 view admits {MAX_DYNAMIC_TERMS}"
             )
+        if writable and shares_an_axis(dims, strides):
+            raise LoweringError(
+                f"a writable view of dims {tuple(int(d) for d in dims)} declares "
+                f"strides {tuple(int(s) for s in strides)}; an axis of stride "
+                "zero may be read as a broadcast but never written, because "
+                "every element of it is the same location"
+            )
         vid = self.builder.tensor_view(
             object_id=object_id,
             dtype=dtype,
@@ -1166,8 +1173,45 @@ class _Emitter:
         if lead_symbolic and "row" in operand.terms:
             dims[0] = plan.block_rows
         row_stride = dims[0] * strides[0]
+        dims, strides = self._insert_broadcast_axis(plan, operand, dims, strides)
         dims, strides = self._broadcast_to_principal(plan, operand, dims, strides)
         return dims, strides, row_stride
+
+    def _insert_broadcast_axis(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        dims: list[int],
+        strides: list[int],
+    ) -> tuple[list[int], list[int]]:
+        """Read a ``BROADCAST`` source through one axis of stride zero.
+
+        The neutral kernel says the result is its source with ``extent``
+        inserted at ``axis``, every element of the new axis being the same
+        element.  A stride of zero on that axis *is* that statement: the
+        verifier bounds a view by ``(dim - 1) * stride``, so the axis reaches no
+        further than the source does and costs no bytes, and the engine reads
+        one row ``extent`` times instead of four copies of it.
+
+        Only the source is widened.  The destination keeps its own declared
+        strides, because a zero stride on a writable view would make every
+        element of the axis the same *location* -- an aliasing write whose
+        result is whichever copy landed last.  ``_view`` refuses that outright.
+        """
+        if plan.kind != "BROADCAST" or operand.direction != "in":
+            return dims, strides
+        attributes = self.kernels[plan.index].attributes
+        axis = int(attributes["axis"])
+        extent = int(attributes["extent"])
+        if not 0 <= axis <= len(dims):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: BROADCAST axis {axis} is outside the "
+                f"rank-{len(dims)} source"
+            )
+        return (
+            [*dims[:axis], extent, *dims[axis:]],
+            [*strides[:axis], 0, *strides[axis:]],
+        )
 
     def _broadcast_to_principal(
         self,
@@ -1591,7 +1635,7 @@ class _Emitter:
         loop = self.builder.loop_control(
             lower_bound=0,
             # The induction variable counts *blocks*, not rows, so the step is
-            # one.  Device.loop_trip_count already divides the symbol by
+            # one.  Device._loop_trip already divides the symbol by
             # bound_divisor: trip = ceil(ceil(span / divisor) / step).  A step
             # of divisor divides twice, which yields one iteration at any span
             # -- correct only while the whole prompt fits in a single block,
@@ -1706,6 +1750,23 @@ class _Emitter:
         )
         self._link_instructions += 1
         return event
+
+
+def shares_an_axis(
+    dims: Sequence[int], strides: Sequence[int]
+) -> bool:
+    """True when some axis of extent above one has a stride of zero.
+
+    Such an axis names the same elements repeatedly.  Read, that is a
+    broadcast, and it is how ABI 3.0 expresses ``repeat`` without moving
+    anything -- the verifier bounds a view by ``(dim - 1) * stride``, so the
+    axis costs no bytes.  Written, it is an alias: every element of the axis is
+    one location, and the value that survives is whichever store landed last.
+    A backend must therefore never mark such a view writable.
+    """
+    return any(
+        int(stride) == 0 and int(dim) > 1 for dim, stride in zip(dims, strides)
+    )
 
 
 def _binary32_bits(attributes: Mapping[str, Any], keys: Sequence[str]) -> int:

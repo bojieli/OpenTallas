@@ -80,6 +80,7 @@ from runtime.abi3.constants import (
     DTYPE_BITS,
     DType,
     Major,
+    NO_ID,
     Route,
     Selection,
     StateClass,
@@ -2101,6 +2102,19 @@ _MAX_INPUTS: Mapping[tuple[int, int], int] = {
 
 _INDEX_DTYPES = frozenset({"u32", "i32", "u64", "i64"})
 
+#: Neutral operand orders that differ from TA-ABI3-OPCONV-1's slot order, and
+#: the permutation that reconciles them.  Section 3's ``MHC`` row is
+#: ``(hidden, fn, base, scale)``; both exporters emit
+#: ``(hidden, fn, scale, base)``, following the released module's own argument
+#: order.  The neutral IR fixes *which* tensors an operation reads and the
+#: convention fixes *which slot* each occupies, so the reconciliation belongs
+#: here -- the same reasoning as amendment A11's ``KV_APPEND`` permutation, and
+#: the same reason ADR-003 section 15 keeps a backend concern out of the IR.
+_SLOT_PERMUTATION: Mapping[str, tuple[int, ...]] = {
+    "HYPER_CONNECT_PRE": (0, 1, 3, 2),
+    "HYPER_CONNECT_HEAD": (0, 1, 3, 2),
+}
+
 
 def _conforming_input_order(
     kernel: Kernel, engine: Any, tensors: Mapping[str, Tensor]
@@ -2112,6 +2126,9 @@ def _conforming_input_order(
     job -- an engine rejects a non-conforming operator rather than guessing.
     """
     order = list(range(len(kernel.inputs)))
+    permutation = _SLOT_PERMUTATION.get(kernel.kind)
+    if permutation is not None and len(order) == len(permutation):
+        order = [order[slot] for slot in permutation]
     key = (int(engine.family), int(engine.sub))
     if key in _INDEX_FIRST and len(order) >= 2:
         first = kernel.inputs[order[0]]
@@ -2149,7 +2166,19 @@ def _aux_ids(
         return matrix_shape(tensors[kernel.inputs[slot]], span_max)[1]
 
     if kernel.kind in _SUBCASE and family in (int(Major.VECTOR),):
+        # TA-ABI3-OPCONV-1 section 3 gives ``COMPRESS`` and ``MHC`` more than a
+        # sub-case: ``MHC`` names the Sinkhorn iteration count in ``aux1`` and
+        # ``hc_mult`` in ``aux2``, and ``COMPRESS`` names the compression ratio
+        # in ``aux1``.  Emitting only the sub-case left those slots ``NO_ID``,
+        # and the engines refuse an operator that does not state them -- an
+        # unstated stream count is a shape the engine cannot check the operands
+        # against, which is exactly what the aux slots exist to prevent.
         aux = [_SUBCASE[kernel.kind]]
+        if sub == int(Vector.MHC):
+            aux.append(int(attributes.get("sinkhorn_iterations", NO_ID)))
+            aux.append(int(attributes.get("hc_mult", NO_ID)))
+        elif sub == int(Vector.COMPRESS):
+            aux.append(int(attributes.get("ratio", NO_ID)))
     elif family == int(Major.ATTENTION):
         aux = [
             _group_size(kernel, tensors, attributes),
