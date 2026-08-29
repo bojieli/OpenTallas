@@ -16,7 +16,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Static schedule | `ot_schedule_controller.sv`, `static_timeslot_switch.sv` | fully rewritten shadow bank, typed schedule-ID/epoch atomic commit, and slot transport | DV-NOC-001 |
 | Credits | `ot_credit_manager.sv` | atomic reservation and conservation | DV-NOC-004 |
 | Sessions/commands | `ot_session_table.sv`, `ot_cmd_frontend.sv` | generation/transaction ownership, position/image/context/epoch/schedule validation, CRC/version/field legality | DV-CMD-001/002, DV-SESSION-001 |
-| Production tensor commands | `ot_ta_command_decoder.sv` | Registered admission of the 64-byte ABI 2.0–2.5 record, IEEE CRC32, opcode/engine/minor/field/index checks, and deterministic error priority | QW-RTL-CMD-001 |
+| Production tensor commands | `ot_ta_command_decoder.sv` | Registered admission of the 64-byte ABI 2.0–2.5 record, four-byte-per-cycle IEEE CRC32 with fixed 15-cycle admission latency, opcode/engine/minor/field/index checks, and deterministic error priority | QW-RTL-CMD-001 |
 | Production BF16 residual add | `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv` | Command-decoded, backpressured `ADD_BF16` execution with exact external-SRAM byte addresses, RNE arithmetic, retirement counters, saturation, and fail-closed arithmetic faults | QW-RTL-ADD-001 |
 | Production ADD SRAM control | `ot_ta_add_bf16_sram_engine.sv` | One-outstanding-read operand fetch, finite-only writeback retirement, exact transaction counters, stable completion, and fault write suppression | QW-RTL-ADD-SRAM-001 |
 | Production direct DMA | `ot_ta_dma_hbm_to_sram.sv` | One-outstanding 64-byte HBM request/response, four 16-byte SRAM writes per response, exact byte/transaction accounting, response-error fail-closed completion | QW-RTL-DMA-001 |
@@ -39,9 +39,10 @@ entry.
 
 QW-RTL-CMD-001 is retained as campaign
 `a058f6ce18a22a8d43625a4013f892e74464135d03406512b24fa190309277a5`.
-Icarus and Verilator both admit one authentic record for each of the 12
-production opcodes and reject seven directed corruptions. The vectors bind to
-the 924,386-command Qwen program with SHA-256
+The decoder consumes four bytes per cycle and resolves the 60-byte protected
+payload after exactly 15 CRC cycles. Icarus and Verilator both admit one
+authentic record for each of the 12 production opcodes and reject seven
+directed corruptions. The vectors bind to the 924,386-command Qwen program with SHA-256
 `f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec`.
 This evidence covers record admission only: it does not execute a kernel or
 layer, correlate architectural counters, establish timing, or close
@@ -88,3 +89,18 @@ error proves fail-closed completion with zero SRAM writes. HBM responses and
 SRAM contents are behavioral campaign models. HBM PHY/package behavior,
 production ECC/retry, physical SRAM, arbitration, multi-command scheduling,
 timing, performance, complete-layer execution, and `TA-RTL-6` remain open.
+
+The bounded IHP SG13G2 physical campaign for
+`ot_ta_add_bf16_sram_engine` is retained as
+`0af6cbe8da22330c466a5ab1fc5de9c245e97c8375cac42fb8b9451c3b40b316`.
+At a 20 ns target, `route-v6` has +2.39413 ns aggregate extracted setup WNS,
++0.0608542 ns aggregate extracted hold WNS, zero timing and driver violations,
+zero internal detailed-route and residual antenna violations, and 18,101
+post-route standard cells in a 922,637 µm² core. Independent extracted STA is
+positive for both setup and hold at slow, typical, and fast corners. This is
+macro-free open-PDK feasibility for the ADD-SRAM slice only: the SRAM is still
+external, the structural netlist audit is not formal equivalence, and no
+execution-derived power/IR, thermal, foundry DRC/LVS, package, reliability,
+yield, or silicon claim follows. See
+[`QWEN3_RTL_IHP_PHYSICAL.md`](../docs/QWEN3_RTL_IHP_PHYSICAL.md) for the exact
+flow lock, retained measurements, rejected predecessor, and open gates.
