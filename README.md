@@ -4,15 +4,19 @@
 
 > **Research status:** OpenTallas is a unified ABI 3.0 accelerator program. One
 > wire format, one verifier, one functional device, one counter registry and one
-> backend-neutral IR now serve all four model/backend targets, so a target is a
-> set of descriptors rather than a separate code path. Both real models compile:
-> Qwen3-8B and DeepSeek-V4-Flash-0731 each export to the neutral Tensor Kernel
-> IR with every weight bound to authenticated checkpoint byte ranges, and all
-> four deployments are admitted by an independent verifier. It does **not** yet
-> have accelerator-produced tokens end to end, a fabricated chip or wafer, a
-> full-chip placed-and-routed netlist, or foundry signoff DRC/LVS. Progress is
-> tracked in [`docs/UNIFIED_EXECUTION_CHECKLIST.md`](docs/UNIFIED_EXECUTION_CHECKLIST.md)
-> and generated status in [`docs/PROGRAM_STATUS.md`](docs/PROGRAM_STATUS.md).
+> backend-neutral IR serve all four model/backend targets, so a target is a set
+> of descriptors rather than a separate code path. **The Qwen3-8B accelerator
+> produces output token-identical to an independent reference** over the pinned
+> chat workload, executed entirely from compiled artifacts through the
+> microsequencer and engines with on-device token selection. Both real models
+> compile, and all four deployments are admitted by an independent verifier. It
+> does **not** yet have accelerator results at the mandatory contexts, a
+> ROM-versus-HBM comparison, a fabricated chip or wafer, a full-chip
+> placed-and-routed netlist, or foundry signoff DRC/LVS. Progress is tracked in
+> [`docs/UNIFIED_EXECUTION_CHECKLIST.md`](docs/UNIFIED_EXECUTION_CHECKLIST.md),
+> generated status in [`docs/PROGRAM_STATUS.md`](docs/PROGRAM_STATUS.md), and the
+> narrative and judgements in
+> [`docs/ABI3_PROGRAM_REPORT.md`](docs/ABI3_PROGRAM_REPORT.md).
 
 ## ABI 3.0 at a glance
 
