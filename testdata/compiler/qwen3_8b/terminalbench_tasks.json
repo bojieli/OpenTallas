@@ -1,0 +1,32 @@
+{
+  "enable_thinking": false,
+  "generation_mode": "greedy",
+  "maximum_agent_turns": 4,
+  "maximum_new_tokens_per_turn": 800,
+  "schema": "opentallas.qwen3.terminalbench_task_suite.v1",
+  "suite_id": "5646864e53f53cb93af35e6c9e477653874a59f708443bc44c63239d1902ae8a",
+  "tasks": [
+    {
+      "dockerfile_sha256": "a678ece7805bff5b99cc424448db6c099ed937a01fcc3b8a06acee3b3fa18cbb",
+      "id": "hello-world",
+      "instruction": "Create a file called /app/hello.txt. Write \"Hello, world!\" to it.",
+      "runtime_files": [],
+      "task_yaml_sha256": "9ab51f37beba25bc4ac4ee52dc082df5c92e4be8b55fe2bbec63834896ae929c",
+      "test_sha256": "ae70869cb2179ea8d9c4834132c5d9675e371f4152094a3f199198e95958e165"
+    },
+    {
+      "dockerfile_sha256": "4b2d30e9a8332d066b840ad171f24f93dc742e680b1acbfde4bec0625c59bed7",
+      "id": "fix-permissions",
+      "instruction": "A script called '/app/process_data.sh' won't run. Figure out what's wrong and fix it so the script can run successfully.",
+      "runtime_files": [
+        {
+          "path": "process_data.sh",
+          "sha256": "2c88798ff5e05bc391425acb1b1791806d874c82629e492360923368f21a9e59"
+        }
+      ],
+      "task_yaml_sha256": "7e944134d7e807e22678f2eb210bea8ccd800ebff76701fc6c542e9b9405a0e1",
+      "test_sha256": "4ea2c9adcaa9dc682ddff3f198c40e929288540201196d8dee006ff4b1be5cb8"
+    }
+  ],
+  "terminalbench_commit": "d28711d0da2675d0bb1d56de45ae5df6082438a3"
+}
