@@ -293,6 +293,41 @@
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
 
+- **OI-27 — the governed comparison tool cannot produce a comparison. Any
+  comparison.** `tools/build_comparison_report.py` exists to compare Qwen ROM
+  against Qwen HBM and the DeepSeek wafer against the DeepSeek cluster. Run on
+  the first pair that has ever had two real records, it refuses on three counts,
+  and two of them are structural — no pair of distinct deployments can ever
+  satisfy them.
+
+  1. **`generation_policy_digest` digests deployment-local identifiers.** The
+     two Qwen lanes are semantically identical — `selection_mode` 0, `tie_rule`
+     0, the same two EOS tokens, the same vocabulary size, zero RNG seed. They
+     differ on `token_ring_object_id` (36 vs 24), which two deployments *must*
+     assign differently; on a declared `max_new_tokens` bound (512 vs 8192),
+     which is a capability limit rather than the run's limit; and on
+     `counter_class_id`. Comparing the whole record's digest therefore refuses
+     every pair, forever. The gate should compare the policy's *semantics*.
+  2. **The `technology_view` gate forbids the study.** "No number crosses views"
+     is the right principle for the wrong field: it exists so a SKY130 number is
+     never compared with an ASAP7 one. But the capability's `technology_view`
+     conflates the *characterization* view with the *memory technology* —
+     `single_chip_rom_declared_v1` against `shared-hbm-sram-chip-v3` — and the
+     memory technology is the study's independent variable. It has to differ.
+     The two axes need separating: gate on characterization, report both memory
+     technologies side by side and never normalise them away, exactly as the
+     tool already promises for topology cost.
+  3. **`tokenizer_sha256` is empty on one side**, and that one is real but
+     small: two different evidence writers source it differently. The campaign
+     runner reads `workload.metadata.tokenizer_sha256`, which the workload files
+     do not carry, while the earlier wrapper read it from the oracle. One
+     source, and it should be the workload.
+
+  That the tool has never run is itself the finding. W11.1 and W11.2 were
+  blocked on something nobody had tried, and the gate — which is otherwise a
+  good gate, and refused for exactly the reasons a good gate should look at —
+  had never been exercised against two real records.
+
 - **OI-26 — two agents worked the DeepSeek lane at once and the evidence file
   became a moving target.** `results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json`
   was written at 20:02:11 describing one failure, while the exporter that
