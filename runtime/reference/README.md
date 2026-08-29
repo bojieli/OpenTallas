@@ -35,9 +35,10 @@ the governed positive-zero canonicalization, there were zero differences.
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
 the qualified dense FP8, index-head BF16, router-score, compressor, and
 confidence projection paths, vector operators beyond weighted and head RMS
-normalization, target-hidden capture, and HC post-mixing, attention/routing
-operators, real-checkpoint known answers, layer differentials, end-to-end
-logits, and task quality remain open.
+normalization, target-hidden capture, and HC post-mixing, attention operators
+beyond learned index scoring/top-k, remaining routing and nonlinear operators,
+real-checkpoint known answers, layer differentials, end-to-end logits, and task
+quality remain open.
 The earlier exact-integer evaluator remains fixture-only evidence.
 
 `matrix.py` composes the scalar/block rules into complete `FP8_LINEAR`
@@ -169,8 +170,9 @@ encodings; learned index scores use raw BF16 encodings. Both are compared as
 exact rationals and NaNs fail closed. `BIASED_TOPK_ROUTE` performs one
 binary32-rounded selection-bias add before this ordering; `INDEX_TOPK` applies
 the BF16 causal completion mask, deterministic top-k, `-1` padding, and the
-compressed-cache offset. Learned index scoring remains a separate pending
-operator.
+compressed-cache offset. Score formation is the separately qualified
+`INDEX_SCORE` boundary in `index_score.py`; selection does not duplicate its
+arithmetic.
 
 `routing.py` implements `ROUTER_WEIGHT_NORMALIZE` over raw FP32 encodings. It
 gathers unbiased scores in selected slot order, retains duplicate selection
@@ -212,6 +214,22 @@ differentials. A separate audit used the first four rows from six actual
 official tensors spanning all three profiles; NUM-4.7 retains complete payload
 and output hashes, source order, counts, and native reassociation bounds.
 Pooling and mutable compressor state remain separate pending operators.
+
+`index_score.py` implements all 21 `INDEX_SCORE` sites. It contracts BF16
+FP4-QDQ query heads against BF16 compressed index KV with increasing-dimension
+binary32 RNE accumulation, converts each dot once to BF16, canonicalizes the
+BF16 ReLU zero, and applies each BF16 head weight after a direct multiplication
+by binary32 scale `0x3c3504f3`. The resulting BF16 head contributions reduce in
+ascending logical-head order with the NUM-6.1 tree and convert once to BF16.
+The graph-qualified profile is 64 heads by 128 values at compression ratio four;
+causal masking and top-k remain `INDEX_TOPK`. Tests cover the full profile,
+rounding and tree discriminators, signed zero, subnormals, every finite
+saturation boundary, binary32 overflow, empty short-prefill candidates, 200
+independent randomized compositions, and malformed/nonfinite inputs. With seed
+`0x494e44584e415449`, all 28 final BF16 outputs matched both PyTorch
+2.10.0+cu128 CPU and CUDA 12.8 SM120 after positive-zero canonicalization. This
+is a bounded synthetic differential, not checkpoint or sparse-attention
+closure.
 
 `dispatch.py` implements `EXPERT_DISPATCH`. It applies the source's row-major
 batch/sequence flattening, emits only nonempty expert groups in ascending

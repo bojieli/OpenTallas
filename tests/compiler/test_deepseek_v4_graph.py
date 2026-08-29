@@ -57,7 +57,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "df2bf6671cafbfbcbb9f135a70d5c9231b1ec1e3204e963f2cdf629178cd8e7e"
+        "e0a9a041221682563a250c11379ff512ad887d9f9417aaf2ee8df1501a50b96f"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -67,7 +67,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 19,
+        "pending_reference_kind_count": 18,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -117,6 +117,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert counts["FP4_QDQ"] == 42
     assert counts["FP8_QDQ"] == 90
     assert counts["HADAMARD_ROTATE"] == 42
+    assert counts["INDEX_SCORE"] == 21
     assert counts["MXFP4_SWIGLU"] == 46
     assert counts["INDEX_TOPK"] == 21
     assert counts["COMPRESSED_DENSE_INDEX"] == 20
@@ -152,6 +153,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
         "HC_POST": "runtime.reference.vector.hc_post_bf16",
         "HEAD_RMS_NORM": "runtime.reference.normalization.head_rms_norm_bf16",
+        "INDEX_SCORE": "runtime.reference.index_score.index_score_bf16",
         "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
         "RMS_NORM": "runtime.reference.normalization.rms_norm_bf16",
         "ROUTER_SCORE": "runtime.reference.routing.router_score_bf16",
@@ -420,6 +422,52 @@ def test_compressor_projection_profiles_and_binary32_contract_are_explicit(
         )
 
 
+def test_index_score_profile_and_bf16_numeric_contract_are_explicit(
+    graph_contract: dict,
+) -> None:
+    nodes = [
+        node for node in graph_contract["nodes"] if node["kind"] == "INDEX_SCORE"
+    ]
+    assert len(nodes) == 21
+    for node in nodes:
+        assert node["attributes"] == {
+            "candidate_axis": "may_be_empty",
+            "finite_saturation": "sticky_count_at_each_bf16_boundary",
+            "head_dim": 128,
+            "head_reduction_order": "ascending_logical_head",
+            "head_reduction_tree": "num_6_1_balanced_binary32_rne",
+            "head_weight_input_dtype": "bf16",
+            "head_weight_scale_binary32": "0x3c3504f3",
+            "head_weight_scale_rounding": (
+                "direct_binary32_factor_to_bf16_rne_once"
+            ),
+            "heads": 64,
+            "intermediate_overflow": "poison",
+            "kv_input_dtype": "bf16",
+            "mask_and_topk": "separate_index_topk_operator",
+            "output_dtype": "bf16",
+            "output_rounding": "bf16_rne_once",
+            "output_zero": "canonical_positive",
+            "qk_accumulation_order": "increasing_head_dimension",
+            "qk_accumulation_rounding": (
+                "binary32_rne_each_fused_product_add"
+            ),
+            "qk_accumulator_dtype": "binary32",
+            "qk_output_rounding": "bf16_rne_once",
+            "query_input_dtype": "bf16",
+            "ratio": 4,
+            "relu": "bf16_nonpositive_to_positive_zero",
+            "score_weight_product_rounding": (
+                "direct_bf16_product_to_bf16_rne_once"
+            ),
+            "subnormal_policy": "preserve",
+            "tensor_parallel_reduction": (
+                "contiguous_logical_head_partitions_compose_global_tree"
+            ),
+        }
+        assert node["tensor_roles"] == []
+
+
 def test_layer_classes_and_mutable_state_sites_are_explicit(
     graph_contract: dict,
 ) -> None:
@@ -516,7 +564,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "twenty-four complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion" in (
+    assert "twenty-five complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -536,7 +584,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
+    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, learned sparse-index scoring, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
         " ".join(graph_contract["system_scope"]["covered"])
     )
     assert "indexer Hadamard rotation" in " ".join(
@@ -603,7 +651,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "df2bf6671cafbfbcbb9f135a70d5c9231b1ec1e3204e963f2cdf629178cd8e7e"
+        "e0a9a041221682563a250c11379ff512ad887d9f9417aaf2ee8df1501a50b96f"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

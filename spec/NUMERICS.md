@@ -473,6 +473,66 @@ and `3402752582908f1e68810844636e7d897447af6cb6a05e74101121b33e1ce4a0`.
 These expected reassociation differences make neither native backend's reduction
 tree architectural.
 
+### NUM-4.8 BF16 learned sparse-index score
+
+`INDEX_SCORE` is the learned score calculation at the 21 ratio-four indexer
+sites. The pinned `Indexer.forward` first obtains one BF16 head weight per
+logical head from the NUM-4.4 projection, multiplies it by
+`head_dim**-0.5 * n_heads**-0.5`, contracts the FP4-QDQ BF16 query and
+compressed-KV tensors with `einsum("bshd,btd->bsht")`, applies in-place ReLU,
+multiplies by the scaled head weights, and sums the head axis. A
+tensor-parallel execution all-reduces this score after the local head sum.
+Causal masking and top-k selection are the separate `INDEX_TOPK` operator.
+
+The qualified Flash profile is fixed as follows:
+
+| Quantity | Qualified value |
+|---|---:|
+| Sites | 21 |
+| Compression ratio | 4 |
+| Logical heads | 64 |
+| Head dimension | 128 |
+| Query / compressed-KV input | BF16 after FP4 QDQ |
+| Head-weight input | BF16 from NUM-4.4 |
+| Scale | binary32 `0x3c3504f3` |
+| Score output | BF16 |
+
+For each batch, query position, candidate, and logical head, the target:
+
+1. accepts finite BF16 query, compressed-KV, and head-weight encodings;
+2. forms exact query/KV products in increasing head-dimension order, adds each
+   to binary32 positive zero with one RNE rounding per fused product-add, and
+   converts the completed dot product once to BF16 under NUM-4.2;
+3. maps every nonpositive BF16 dot product, including negative zero, to BF16
+   positive zero;
+4. multiplies the BF16 head weight directly by binary32 `0x3c3504f3` and rounds
+   the exact product once to BF16, without first rounding the scale to BF16;
+5. multiplies the BF16 ReLU result by that scaled BF16 weight and rounds the
+   exact product once to BF16;
+6. widens the head contributions exactly to binary32 and reduces logical heads
+   in ascending order with the NUM-6.1 balanced tree; valid contiguous
+   tensor-parallel partitions must compose into this same global logical tree;
+   and
+7. converts the completed finite sum once to BF16 under NUM-4.2.
+
+BF16 and binary32 subnormals are preserved. Finite BF16 saturation at the QK,
+scaled-weight, weighted-score, or final-output boundary is counted separately;
+nonfinite input or binary32 overflow poisons. A zero-length candidate axis is
+legal for a short prefill span and produces an empty score row. The independent
+reference accepts smaller nonzero head counts and dimensions for practical
+unit cases; only the 64-by-128 profile above is graph-qualified.
+
+The binary32 scale boundary is observable: BF16 head weight `0x0246` becomes
+`0x0012` when multiplied directly by `0x3c3504f3`, whereas incorrectly
+prerounding the scale to BF16 `0x3c35` produces `0x0011`. A governed development
+differential used seed `0x494e44584e415449`, PyTorch 2.10.0+cu128, CUDA 12.8,
+two batches, two query positions, seven candidates, and the full 64-by-128
+profile. After target positive-zero canonicalization, all 28 final BF16 outputs
+matched on both CPU and native SM120: each backend had zero differing outputs
+and a maximum difference of zero BF16 encoding steps. This bounded synthetic
+observation does not establish checkpoint, layer, service-engine, or
+end-to-end-model equivalence.
+
 ## NUM-5 Exceptional values and errors
 
 ### NUM-5.1 Classification
