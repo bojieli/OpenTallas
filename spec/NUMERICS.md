@@ -452,6 +452,50 @@ differ from the NUM-6.1 tree after BF16 conversion. The target tree is therefore
 an explicit deterministic adaptation. The reference tests retain a concrete
 case producing target `0xbbd2` versus sequential-source `0xbbd3`.
 
+### NUM-6.8 Weighted RMS normalization
+
+`RMS_NORM` consumes one or more finite-BF16 rows and one finite-BF16 checkpoint
+weight for every column. The qualified Flash graph contains 251 weighted sites:
+21 at width 128, 90 at width 512, 46 at width 1,024, and 94 at width 4,096.
+This contract does not qualify the separately catalogued unweighted
+`HEAD_RMS_NORM` operation or an RMS operation hidden inside another composite
+operator.
+
+Checkpoint normalization weights are stored as BF16. The pinned source loads
+them into binary32 parameters; the target therefore widens every BF16 weight
+exactly rather than inventing additional parameter precision. Each BF16 input is
+likewise widened exactly. For one row, operations occur in this order:
+
+1. square every widened input with one binary32 RNE multiplication;
+2. reduce those squares in increasing column order with the NUM-6.1 tree;
+3. divide once by the exact binary32 encoding of the qualified width;
+4. add once the binary32 encoding `0x358637bd` of the source literal `1e-6`;
+5. compute a correctly rounded, ties-to-even binary32 reciprocal square root;
+6. multiply each original widened input by that reciprocal RMS with one rounding;
+7. multiply by its widened checkpoint weight with one further rounding; and
+8. convert once to BF16 under NUM-4.2.
+
+No square-add, divide-add, normalization-weight multiply, or output conversion is
+fused across these boundaries. BF16 and binary32 subnormal inputs are preserved
+at each conversion boundary and arithmetic follows IEEE binary32 RNE, including
+correct underflow when a result rounds to zero. Output zero is canonical positive
+zero. Nonfinite input or intermediate binary32 overflow poisons; finite BF16
+output saturation remains sticky and counted under NUM-5.1.
+
+The pinned source spells the reduction as `x.square().mean(-1)` and invokes
+`torch.rsqrt`; neither expression fixes one cross-backend reduction tree or one
+architectural reciprocal-square-root approximation. A deterministic development
+audit used seed `0x524d534e41554449`, PyTorch 2.10.0+cu128, CUDA 12.8, and
+native SM120 over 16 rows at each qualified width. The explicit target tree
+matched all 64 mean-square codes on both CPU and CUDA. The ordinary source
+reduction differed in 30/64 CPU and 15/64 CUDA means. Native reciprocal square
+root differed from the correctly rounded target in 22/64 CPU and 14/64 CUDA
+cases when fed the canonical means, always by one binary32 code in that corpus.
+After positive-zero canonicalization, the source expression differed in 22 of
+92,160 CPU BF16 outputs and zero CUDA BF16 outputs. These bounded observations
+justify keeping the deterministic target rules; they are not a promise of
+equivalence for untested inputs, backends, or overflow behavior.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension

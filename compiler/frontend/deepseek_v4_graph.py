@@ -75,6 +75,7 @@ _QUALIFIED_REFERENCE_OWNERS = {
     "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
     "HC_POST": "runtime.reference.vector.hc_post_bf16",
     "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
+    "RMS_NORM": "runtime.reference.normalization.rms_norm_bf16",
     "ROUTER_WEIGHT_NORMALIZE": (
         "runtime.reference.routing.normalize_routed_weight_codes"
     ),
@@ -543,6 +544,26 @@ def _fp8_roles(base: str) -> tuple[str, str]:
     return (f"{base}.weight", f"{base}.scale")
 
 
+def _rms_norm_attributes(width: int) -> dict[str, Any]:
+    if width not in {128, 512, 1024, 4096}:
+        raise DeepSeekV4GraphError(f"unsupported RMS_NORM width {width}")
+    return {
+        "checkpoint_weight_dtype": "bf16",
+        "epsilon": 1e-6,
+        "epsilon_binary32": "0x358637bd",
+        "input_dtype": "bf16",
+        "intermediate_overflow": "poison",
+        "operation_rounding": "binary32_rne_each_operation",
+        "output_dtype": "bf16",
+        "output_zero": "canonical_positive",
+        "reduction_tree": "num_6_1_balanced_binary32_rne",
+        "rsqrt_rounding": "correct_binary32_rne",
+        "subnormal_policy": "preserve",
+        "weight_compute_dtype": "binary32_exact_bf16_widen",
+        "width": width,
+    }
+
+
 def _add_block_graph(
     graph: _GraphBuilder,
     hidden: str,
@@ -590,7 +611,7 @@ def _add_block_graph(
         "RMS_NORM",
         (attn_input,),
         phases=normal_phases,
-        attributes={"epsilon": 1e-6, "width": 4096},
+        attributes=_rms_norm_attributes(4096),
         tensor_roles=("block.attention_norm.weight",),
     )
     (q_rank,) = graph.add(
@@ -606,7 +627,7 @@ def _add_block_graph(
         "RMS_NORM",
         (q_rank,),
         phases=normal_phases,
-        attributes={"epsilon": 1e-6, "width": 1024},
+        attributes=_rms_norm_attributes(1024),
         tensor_roles=("attention.q_norm.weight",),
     )
     (query,) = graph.add(
@@ -644,7 +665,7 @@ def _add_block_graph(
         "RMS_NORM",
         (kv,),
         phases=normal_phases,
-        attributes={"epsilon": 1e-6, "width": 512},
+        attributes=_rms_norm_attributes(512),
         tensor_roles=("attention.kv_norm.weight",),
     )
     (kv,) = graph.add(
@@ -687,7 +708,7 @@ def _add_block_graph(
             "RMS_NORM",
             (main_kv,),
             phases=normal_phases,
-            attributes={"epsilon": 1e-6, "width": 512},
+            attributes=_rms_norm_attributes(512),
             tensor_roles=("attention.kv_norm.weight",),
         )
         (main_kv,) = graph.add(
@@ -756,7 +777,7 @@ def _add_block_graph(
             "RMS_NORM",
             (compressed_kv,),
             phases=normal_phases,
-            attributes={"epsilon": 1e-6, "width": 512},
+            attributes=_rms_norm_attributes(512),
             tensor_roles=("attention.compressor.norm.weight",),
         )
         (compressed_kv,) = graph.add(
@@ -863,7 +884,7 @@ def _add_block_graph(
                 "RMS_NORM",
                 (index_kv,),
                 phases=normal_phases,
-                attributes={"epsilon": 1e-6, "width": 128},
+                attributes=_rms_norm_attributes(128),
                 tensor_roles=("attention.indexer.compressor.norm.weight",),
             )
             (index_kv,) = graph.add(
@@ -984,7 +1005,7 @@ def _add_block_graph(
         "RMS_NORM",
         (ffn_input,),
         phases=normal_phases,
-        attributes={"epsilon": 1e-6, "width": 4096},
+        attributes=_rms_norm_attributes(4096),
         tensor_roles=("block.ffn_norm.weight",),
     )
     (router_scores,) = graph.add(
@@ -1269,7 +1290,7 @@ def build_official_graph_contract() -> dict[str, Any]:
         "main.final_norm",
         "RMS_NORM",
         (main_hidden,),
-        attributes={"epsilon": 1e-6, "width": 4096},
+        attributes=_rms_norm_attributes(4096),
         tensor_roles=("model.final_norm.weight",),
     )
     (main_logits,) = graph.add(
@@ -1331,7 +1352,7 @@ def build_official_graph_contract() -> dict[str, Any]:
         "RMS_NORM",
         (draft_hidden,),
         phases=("decode",),
-        attributes={"epsilon": 1e-6, "width": 4096},
+        attributes=_rms_norm_attributes(4096),
         tensor_roles=("dspark.final_norm.weight",),
     )
     (draft_logits,) = graph.add(
@@ -1432,10 +1453,10 @@ def build_official_graph_contract() -> dict[str, Any]:
             },
             {
                 "id": "DSV4-SEM-005",
-                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 linear, KV FP8 and indexer FP4 QDQ, and indexer Hadamard semantics, and seventeen complete matrix/vector/structural/index/lookup/selection/routing/conversion operator kinds. Matrix paths beyond dense FP8 linear, vector paths beyond HC expansion, target-hidden capture, and HC post-mixing, stateful attention, routing beyond qualified selection, weight normalization, and expert dispatch, and conversion boundaries beyond the qualified QDQ and Hadamard paths remain pending.",
+                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 linear, weighted RMS normalization, KV FP8 and indexer FP4 QDQ, and indexer Hadamard semantics, and eighteen complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion operator kinds. Matrix paths beyond dense FP8 linear, vector paths beyond weighted RMS normalization, HC expansion, target-hidden capture, and HC post-mixing, stateful attention, routing beyond qualified selection, weight normalization, and expert dispatch, and conversion boundaries beyond the qualified QDQ and Hadamard paths remain pending.",
                 "required_resolution": "Implement and qualify complete target-precision semantics for each graph operator before marking that operator executable; scalar and block-dot primitives alone do not close matrix or layer lowering.",
                 "severity": "blocking",
-                "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/model.py:Transformer.forward;inference/model.py:Block.hc_post;inference/model.py:MoE.forward;runtime/reference/formats.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py",
+                "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/model.py:RMSNorm.forward;inference/model.py:Transformer.forward;inference/model.py:Block.hc_post;inference/model.py:MoE.forward;runtime/reference/formats.py;runtime/reference/normalization.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py",
             },
             {
                 "id": "DSV4-SEM-006",
@@ -1480,7 +1501,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "hash-verified local tokenizer encode and decode behavior",
                 "target-only prefill/decode, EOS, and executor-commit control with synthetic transcripts",
                 "scalar target formats, activation microscaling, ordered accumulation, and official block-dot primitives",
-                "unit-qualified dense FP8 linear, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC expansion, HC post-mixing, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, learned-index top-k, routed-weight normalization, and expert-dispatch references",
+                "unit-qualified dense FP8 linear, weighted RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC expansion, HC post-mixing, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, learned-index top-k, routed-weight normalization, and expert-dispatch references",
                 "complete official-tensor canonical transform plan and independently checked transform primitives",
                 "atomic hash-locked canonical application and replay on an adversarial development fixture",
             ],
@@ -1490,7 +1511,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "exact stochastic replay for the unpinned Torch/CUDA RNG stack",
                 "DSpark target verification and speculative acceptance",
                 "full official-payload transform application and canonical output hashes",
-                "operator-complete target-precision references beyond dense FP8 linear, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC post-mixing, expert dispatch, and ten structural/index/lookup/selection/routing kinds",
+                "operator-complete target-precision references beyond dense FP8 linear, weighted RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC post-mixing, expert dispatch, and ten structural/index/lookup/selection/routing kinds",
                 "transactional KV/compressor execution, service-engine operators, and microcode",
                 "physical placement, HBM/KV allocation, and static schedule",
             ],

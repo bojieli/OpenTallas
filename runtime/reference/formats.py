@@ -82,6 +82,7 @@ class QuantizedActivationBlock:
 
 ROUTED_REDUCTION_BLOCK = 32
 DENSE_REDUCTION_BLOCK = 128
+_BINARY32_MAX_FINITE = 0x7F7FFFFF
 
 _E2M1_MAGNITUDES = (
     Fraction(0),
@@ -307,6 +308,50 @@ def binary32_divide(numerator_code: int, denominator_code: int) -> int:
     if denominator == 0:
         raise NumericReferenceError("binary32 division denominator is zero")
     return encode_binary32_rne(numerator / denominator)
+
+
+def binary32_rsqrt(value_code: int) -> int:
+    """Return correctly rounded binary32 ``1/sqrt(value)``.
+
+    Candidate selection uses exact rational comparisons, so no host square-root
+    implementation or floating-point mode participates. The positive finite
+    binary32 code space is monotonic; after locating the adjacent candidates,
+    comparing the exact input times their midpoint squared resolves RNE and its
+    ties-to-even case without representing the irrational result itself.
+    """
+
+    value = _finite_binary32_value(value_code, "binary32 rsqrt input")
+    if value <= 0:
+        raise NumericReferenceError("binary32 rsqrt input must be positive")
+
+    lower_code = 0
+    upper_exclusive = _BINARY32_MAX_FINITE + 1
+    while lower_code + 1 < upper_exclusive:
+        candidate_code = (lower_code + upper_exclusive) // 2
+        candidate = _finite_binary32_value(
+            candidate_code, "binary32 rsqrt candidate"
+        )
+        if candidate * candidate * value <= 1:
+            lower_code = candidate_code
+        else:
+            upper_exclusive = candidate_code
+
+    lower = _finite_binary32_value(lower_code, "binary32 rsqrt lower candidate")
+    lower_product = lower * lower * value
+    if lower_product == 1:
+        return lower_code
+    if lower_code == _BINARY32_MAX_FINITE:  # pragma: no cover - finite input bound
+        raise NumericReferenceError("binary32 rsqrt overflow")
+
+    upper_code = lower_code + 1
+    upper = _finite_binary32_value(upper_code, "binary32 rsqrt upper candidate")
+    midpoint = (lower + upper) / 2
+    midpoint_product = midpoint * midpoint * value
+    if midpoint_product < 1:
+        return upper_code
+    if midpoint_product > 1:
+        return lower_code
+    return lower_code if lower_code & 1 == 0 else upper_code
 
 
 def binary32_balanced_sum(codes: Iterable[int]) -> int:

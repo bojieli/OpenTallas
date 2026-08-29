@@ -15,6 +15,7 @@ from runtime.reference.formats import (
     binary32_multiply,
     binary32_ordered_dot,
     binary32_product_add,
+    binary32_rsqrt,
     binary32_bits_to_bf16_rne,
     decode_bf16,
     decode_binary32,
@@ -318,6 +319,71 @@ def test_binary32_scalar_arithmetic_rounds_each_declared_operation() -> None:
     assert one_third == 0x3EAAAAAB
     assert binary32_multiply(one_third, three) == one
     assert binary32_add(one, one_third) == 0x3FAAAAAB
+
+
+def test_binary32_rsqrt_is_correctly_rounded_and_fails_closed() -> None:
+    assert binary32_rsqrt(0x3F800000) == 0x3F800000
+    assert binary32_rsqrt(0x40800000) == 0x3F000000
+    assert binary32_rsqrt(0x40000000) == 0x3F3504F3
+    assert binary32_rsqrt(0x358637BD) == 0x447A0000
+    assert binary32_rsqrt(0x00000001) == 0x64B504F3
+    assert binary32_rsqrt(0x7F7FFFFF) == 0x1F800000
+
+    generator = random.Random(0x5253_5152_5433_32)
+    previous_input = 0
+    previous_result = 0x7F800000
+    for _ in range(2_000):
+        input_code = generator.randrange(1, 0x7F800000)
+        result = binary32_rsqrt(input_code)
+        source = decode_binary32(input_code).value
+        rounded = decode_binary32(result).value
+        assert source is not None and rounded is not None
+        assert rounded > 0
+
+        product = source * rounded * rounded
+        if product == 1:
+            # The target happens to be exactly representable.
+            pass
+        elif product < 1:
+            lower_code = result
+            upper_code = result + 1
+            lower = rounded
+            upper = decode_binary32(upper_code).value
+            assert upper is not None
+            assert source * upper * upper > 1
+            midpoint_product = source * ((lower + upper) / 2) ** 2
+            if midpoint_product < 1:
+                assert result == upper_code
+            elif midpoint_product == 1:
+                assert result == (lower_code if lower_code & 1 == 0 else upper_code)
+            else:
+                assert result == lower_code
+        else:
+            upper_code = result
+            lower_code = result - 1
+            upper = rounded
+            lower = decode_binary32(lower_code).value
+            assert lower is not None
+            assert source * lower * lower < 1
+            midpoint_product = source * ((lower + upper) / 2) ** 2
+            if midpoint_product < 1:
+                assert result == upper_code
+            elif midpoint_product == 1:
+                assert result == (lower_code if lower_code & 1 == 0 else upper_code)
+            else:
+                assert result == lower_code
+
+        if input_code > previous_input:
+            assert result <= previous_result
+        previous_input = input_code
+        previous_result = result
+
+    for code in (0, 0x80000000, 0xBF800000):
+        with pytest.raises(NumericReferenceError, match="must be positive"):
+            binary32_rsqrt(code)
+    for code in (0x7F800000, 0x7FC00000):
+        with pytest.raises(NumericReferenceError, match="NaN or infinity"):
+            binary32_rsqrt(code)
 
 
 def test_binary32_balanced_sum_uses_canonical_tree_not_linear_accumulation() -> None:

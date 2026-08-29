@@ -13,7 +13,8 @@ rational scalar semantics for:
 - E8M0 scales, including the reserved `0xff` poison value;
 - FP8 E4M3FN classification and round-to-nearest-ties-to-even conversion;
 - BF16 classification and binary32-to-BF16 conversion;
-- exact IEEE binary32 decode/rounding and ordered fused-product accumulation;
+- exact IEEE binary32 decode/rounding, correctly rounded reciprocal square root,
+  and ordered fused-product accumulation;
 - packed MXFP4 block decoding; and
 - NUM-3.3 BF16 activation-block microscaling;
 - 32-value MXFP4×FP8 routed block dots; and
@@ -31,9 +32,10 @@ finite BF16 encodings with CUDA's native `cvt.rn.satfinite.e2m1x2.f32`. After
 the governed positive-zero canonicalization, there were zero differences.
 
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
-the qualified dense FP8 linear path, vector operators beyond target-hidden
-capture and HC post-mixing, attention/routing operators, real-checkpoint known
-answers, layer differentials, end-to-end logits, and task quality remain open.
+the qualified dense FP8 linear path, vector operators beyond weighted RMS
+normalization, target-hidden capture, and HC post-mixing, attention/routing
+operators, real-checkpoint known answers, layer differentials, end-to-end
+logits, and task quality remain open.
 The earlier exact-integer evaluator remains fixture-only evidence.
 
 `matrix.py` composes the scalar/block rules into complete `FP8_LINEAR`
@@ -45,6 +47,26 @@ saturation counts. Tests cross the output scale-tile boundary and compare
 multi-block randomized matrices with an independently assembled composition.
 This does not yet provide a checkpoint-derived known answer or service-engine
 opcode.
+
+`normalization.py` implements the weighted `RMS_NORM` operation at all 251
+Flash graph sites and all four observed widths. It widens BF16 input and BF16
+checkpoint weights exactly, squares with binary32 RNE, reduces with the NUM-6.1
+balanced tree, divides once, adds binary32 `0x358637bd`, applies correctly
+rounded binary32 reciprocal square root, performs the two ordered pointwise
+multiplies, and converts once to BF16. Tests retain mean-square and inverse-RMS
+codes, cover signed zero, BF16 subnormals, finite saturation, overflow, every
+qualified width, and an independently assembled randomized composition.
+`HEAD_RMS_NORM` remains a distinct pending unweighted operator.
+
+A deterministic development audit used seed `0x524d534e41554449`, PyTorch
+2.10.0+cu128, CUDA 12.8, and native SM120 on 16 rows per width. The explicit
+balanced tree matched all 64 target mean-square codes on CPU and CUDA; the
+source reduction differed in 30 CPU and 15 CUDA rows. Native `rsqrt` fed the
+canonical means differed from correct RNE in 22 CPU and 14 CUDA rows, always by
+one binary32 code. After positive-zero canonicalization, the complete source
+expression differed in 22 of 92,160 CPU BF16 outputs and zero CUDA outputs.
+These are bounded development observations, not a replacement for target RTL,
+full-checkpoint, layer, or task-quality qualification.
 
 `quantization.py` implements the complete indexer `FP4_QDQ` boundary. It
 flattens leading dimensions into source-order rows, selects an independent

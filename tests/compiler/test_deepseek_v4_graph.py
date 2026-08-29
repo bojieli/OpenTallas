@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections import Counter
 import json
 from pathlib import Path
 import subprocess
@@ -56,7 +57,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "06ad30e715bb5f0185570649bf131f56acc8fc270ed60909d867cbca6e58a026"
+        "913b3597f8950f744fc4b952bab7063d04f01a668d2912d0dc3b853084fee0e4"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -66,7 +67,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 26,
+        "pending_reference_kind_count": 25,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -145,6 +146,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
         "HC_POST": "runtime.reference.vector.hc_post_bf16",
         "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
+        "RMS_NORM": "runtime.reference.normalization.rms_norm_bf16",
         "ROUTER_WEIGHT_NORMALIZE": (
             "runtime.reference.routing.normalize_routed_weight_codes"
         ),
@@ -168,6 +170,38 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
             assert requirement["reference_status"] == "pending_implementation"
         assert requirement["service_engine_status"] == "pending_implementation"
         assert requirement["rtl_status"] == "pending_implementation"
+
+
+def test_weighted_rms_norm_profile_and_numeric_contract_are_explicit(
+    graph_contract: dict,
+) -> None:
+    nodes = [
+        node for node in graph_contract["nodes"] if node["kind"] == "RMS_NORM"
+    ]
+    assert len(nodes) == 251
+    assert Counter(node["attributes"]["width"] for node in nodes) == {
+        128: 21,
+        512: 90,
+        1024: 46,
+        4096: 94,
+    }
+    for node in nodes:
+        width = node["attributes"]["width"]
+        assert node["attributes"] == {
+            "checkpoint_weight_dtype": "bf16",
+            "epsilon": 1e-6,
+            "epsilon_binary32": "0x358637bd",
+            "input_dtype": "bf16",
+            "intermediate_overflow": "poison",
+            "operation_rounding": "binary32_rne_each_operation",
+            "output_dtype": "bf16",
+            "output_zero": "canonical_positive",
+            "reduction_tree": "num_6_1_balanced_binary32_rne",
+            "rsqrt_rounding": "correct_binary32_rne",
+            "subnormal_policy": "preserve",
+            "weight_compute_dtype": "binary32_exact_bf16_widen",
+            "width": width,
+        }
 
 
 def test_layer_classes_and_mutable_state_sites_are_explicit(
@@ -266,7 +300,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "seventeen complete matrix/vector/structural/index/lookup/selection/routing/conversion" in (
+    assert "eighteen complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -286,10 +320,13 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, KV FP8 QDQ, indexer FP4 QDQ" in (
+    assert "unit-qualified dense FP8 linear, weighted RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
         " ".join(graph_contract["system_scope"]["covered"])
     )
     assert "indexer Hadamard rotation" in " ".join(
+        graph_contract["system_scope"]["covered"]
+    )
+    assert "weighted RMS normalization" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
     assert "biased-router top-k" in " ".join(
@@ -347,7 +384,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "06ad30e715bb5f0185570649bf131f56acc8fc270ed60909d867cbca6e58a026"
+        "913b3597f8950f744fc4b952bab7063d04f01a668d2912d0dc3b853084fee0e4"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout
