@@ -362,6 +362,7 @@ class ViewResolver:
         payload = descriptor.payload
         rank = payload["rank"]
         offset = payload["element_offset"]
+        leading_loop: int | None = None
         for slot in range(payload["dynamic_term_count"]):
             kind = payload[f"term{slot}_kind"]
             index = payload[f"term{slot}_index"]
@@ -383,17 +384,58 @@ class ViewResolver:
             else:
                 raise MemoryError_(f"view {view_id}: bad selector kind {kind}")
             offset += value * stride
+            if kind == SelectorKind.LOOP_INDUCTION:
+                leading_loop = self._remaining_rows(index, value, symbols, leading_loop)
+        dims = [payload[f"dim{a}"] for a in range(rank)]
+        if leading_loop is not None and dims:
+            # A symbol-bounded loop's final iteration is partial: a block of 512
+            # tokens over a span of 93 has one iteration holding 93 rows, not
+            # 512.  The loop descriptor already states this -- ``bound_symbol``
+            # and ``bound_divisor`` are exactly the extent and the block -- so
+            # the resolved view presents the rows the request has rather than
+            # the rows the block could hold.  Without it a backend must emit one
+            # token per dispatch to stay correct, which is the retired-work
+            # failure ABI 3.0 exists to remove.
+            remaining = leading_loop
+            if 0 < remaining < dims[0]:
+                dims[0] = remaining
         return ResolvedView(
             descriptor_id=view_id,
             object_id=descriptor.primary_object_id,
             dtype=payload["dtype"],
-            dims=tuple(payload[f"dim{a}"] for a in range(rank)),
+            dims=tuple(dims),
             strides=tuple(payload[f"stride{a}"] for a in range(rank)),
             element_offset=offset,
             writable=bool(descriptor.permissions & Permission.WRITE),
             scale_object_id=payload["scale_object_id"],
             scale_block_elements=payload["scale_block_elements"],
         )
+
+    def _remaining_rows(
+        self,
+        loop_id: int,
+        iteration: int,
+        symbols: Mapping[int, int],
+        current: int | None,
+    ) -> int | None:
+        """Rows left in a symbol-bounded loop's current iteration, if fewer."""
+        try:
+            loop = self.deployment.table.get(
+                loop_id, ExtendedDescriptorType.LOOP_CONTROL
+            )
+        except Exception:  # not a loop descriptor: nothing to bound
+            return current
+        payload = loop.payload
+        if payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
+            return current
+        bound = symbols.get(payload["bound_symbol_id"])
+        if bound is None:
+            return current
+        divisor = max(int(payload["bound_divisor"]), 1)
+        remaining = int(bound) - int(iteration) * divisor
+        if remaining <= 0 or remaining >= divisor:
+            return current
+        return remaining if current is None else min(current, remaining)
 
     # -- array access ----------------------------------------------------
     def read_array(self, view: ResolvedView) -> np.ndarray:

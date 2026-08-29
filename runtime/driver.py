@@ -290,7 +290,13 @@ class GenerationDriver:
                 failure = "prefill produced no token to decode from"
                 stop_reason = "failed"
                 break
-            self._write_input_tokens([generated[-1]], position)
+            # The input window holds *this transaction's* input span, not the
+            # whole history: the device reads it from element zero and the
+            # history lives in committed KV state. Writing a decode token at
+            # its absolute position instead left the device re-reading the
+            # first prompt token every step, which showed up as the generation
+            # repeating itself after the first decode.
+            self._write_input_tokens([generated[-1]], 0)
             symbols = {
                 int(Symbol.SPAN_TOKENS): 1,
                 int(Symbol.POSITION_START): position,
