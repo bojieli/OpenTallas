@@ -206,6 +206,28 @@ it is the argument for the structure.
   abort left prepared state open — a case the fixture cannot produce, because it
   prepares one resource where the real graph prepares thirty-six.
 
+Three defects, though, were found by asking what a *field in a report* actually
+promised, and they are the ones a reader should be most suspicious of, because
+nothing was failing when they were found:
+
+- **`status: pass` meant "the script finished".** The campaign runner marked a
+  run as passing whenever it neither crashed nor emitted an illegitimate token.
+  Nothing compared the tokens to anything. This program has already seen a
+  released vendor kernel decode fluent, well-formed, semantically empty text and
+  pass every liveness check it had, so an unchecked decode reported as `pass` is
+  the exact shape of a miss. `pass` is now reserved for a run compared against
+  the oracle and matching; a run with no reference is `executed_unverified`.
+- **The implementation identity did not identify the implementation.** A7 says
+  two runs of one identity are bit-identical. Thread count was not in it, and at
+  Qwen shapes 1, 4 and 16 threads give three different results. Two runs could
+  have declared the same identity and disagreed.
+- **The storage-class proof was narrower than the sentence built on it.** It
+  varies storage class within one backend; the comparison needs the two backends
+  to emit the same program, and they do not (§2.2).
+
+None of the three would have produced a failing test. All three would have
+produced a confident number in a report.
+
 One error went the other way and is worth the same candour: chasing a token
 divergence, an activation was read back *after* a transaction and found wrong by
 a factor of a thousand. It was not wrong. Arena slots are reused, and the tensor
