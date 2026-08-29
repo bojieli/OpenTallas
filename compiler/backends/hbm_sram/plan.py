@@ -2259,6 +2259,28 @@ def _infer_expert_count(
     return 0
 
 
+def _pass_depth(
+    kernel: Kernel, tensors: Mapping[str, Tensor], span_max: int, tile: TileConfig
+) -> int:
+    """The depth a non-contraction operation reduces or passes over.
+
+    Attention reduces over the head dimension, so that is its depth.  A lookup,
+    a movement or an elementwise pass reduces over nothing and makes one pass,
+    which is a depth of one.  Zero would mean "unstated", and a cycle model
+    cannot decompose an operation whose tile shape says nothing.
+    """
+    engine = engine_for(kernel.kind)
+    if int(engine.family) == int(Major.ATTENTION) and kernel.inputs:
+        shape = tensors[kernel.inputs[0]].shape
+        if shape:
+            head_dim, _ = _extent_value(shape[-1], span_max)
+            return choose_tile(max(int(head_dim), 1), tile.depth)
+    domain = _domain_extent(kernel, ("reduction_width", "reduction", "depth"), span_max)
+    if domain:
+        return choose_tile(domain, tile.depth)
+    return 1
+
+
 def _domain_extent(kernel: Kernel, keys: Sequence[str], span_max: int) -> int:
     """Read one iteration-domain extent, resolving a symbol to its maximum."""
     for key in keys:
@@ -2394,10 +2416,16 @@ def _plan_kernels(
 
         # Tile shape for the SCHEDULE descriptor.  These are hardware tiles, not
         # program loops: the engine decomposes one operator this way and the
-        # cycle model costs it from exactly these numbers.
+        # cycle model costs it from exactly these numbers, so every field has to
+        # state something.  An operation with no contraction axis still has a
+        # depth: a lookup or an elementwise pass makes one pass over its row,
+        # and attention's depth is the head dimension it reduces over.
         tile_rows = choose_tile(max(rows, 1), tile.rows) if not symbolic else tile.rows
         tile_cols = choose_tile(max(shard_columns, 1), tile.cols)
-        tile_depth = choose_tile(depth, tile.depth) if depth else 0
+        if depth:
+            tile_depth = choose_tile(depth, tile.depth)
+        else:
+            tile_depth = _pass_depth(kernel, tensors, span_max, tile)
 
         row_loop = None
         if symbolic:

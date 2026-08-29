@@ -1055,17 +1055,10 @@ class _Emitter:
                 if self.node_count <= 1:
                     continue
                 terms.append(DynamicTerm.symbol(Symbol.NODE_ID, node_stride))
-        if (
-            operand.residence == "host"
-            and operand.direction == "in"
-            and tensor.shape
-            and isinstance(tensor.shape[0], Symbolic)
-        ):
-            # A host window holds the whole session, not just this request: the
-            # prompt and every token appended since.  The request's rows begin
-            # at POSITION_START, so a decode step reads the token it was given
-            # rather than the first token of the prompt.
-            terms.append(DynamicTerm.symbol(Symbol.POSITION_START, strides[0]))
+        # A host input window is staged for *this* request and read from its
+        # start: the host writes the prompt for a prefill and the one selected
+        # token for a decode step at element zero.  Offsetting the read by
+        # POSITION_START would look for the token where nothing was written.
         return self._view(
             object_id=object_id,
             dtype=dtype,

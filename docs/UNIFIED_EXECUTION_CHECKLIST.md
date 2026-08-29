@@ -158,7 +158,11 @@
 - **OI-6 — Yosys 0.68 cannot parse SystemVerilog packages**, so `rtl/abi3`
   cannot enter the repository's existing synthesis flow unchanged. The
   synthesis probe required textually inlining the package.
-- **OI-7 — DeepSeek 32-node HBM capacity: diagnosed and largely closed.** The
+- **OI-7 — DeepSeek 32-node HBM capacity: closed for the deployment profile.**
+  Two profiles are now built: `kernel_ir.v3.json` declares an 8,192-token
+  context, which is what actually executes and what fits the 32-node cluster,
+  and `kernel_ir.v3.capacity200k.json` declares 200,064 for capacity study.
+  Original diagnosis follows. The
   reported overflow (172 GB per node against 96 GB) came from sizing activation
   arenas at the *architectural* endpoint rather than the *deployment's* declared
   context. Measured, at a declared context of 8,192 tokens — which is what
