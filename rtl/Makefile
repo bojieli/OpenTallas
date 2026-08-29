@@ -1,4 +1,4 @@
-.PHONY: sim unit-sim cdc-sim integration-sim verilator-sim qwen-command-sim qwen-add-sim qwen-add-sram-sim sim-campaign fault-sim fault-campaign coverage coverage-campaign lint static formal pre-synth-verify synth synth-reference verify clean
+.PHONY: sim unit-sim cdc-sim integration-sim verilator-sim qwen-command-sim qwen-add-sim qwen-add-sram-sim qwen-dma-sim sim-campaign fault-sim fault-campaign coverage coverage-campaign lint static formal pre-synth-verify synth synth-reference verify clean
 
 SOURCES = expert_mask_controller.sv via_mask_rom.sv rom_mac_tile.sv opentallas_tile.sv
 LIB_SOURCES = lib/ot_reset_sync.sv lib/ot_skid_buffer.sv lib/ot_async_fifo.sv lib/ot_crc_pkg.sv \
@@ -54,6 +54,9 @@ qwen-add-sim:
 qwen-add-sram-sim:
 	python3 -m pytest -q ../tests/compiler/test_tensor_accelerator_qwen_rtl_add_sram.py
 
+qwen-dma-sim:
+	python3 -m pytest -q ../tests/compiler/test_tensor_accelerator_qwen_rtl_dma.py
+
 sim-campaign:
 	python3 ../tools/rtl_sim_campaign.py
 
@@ -90,6 +93,7 @@ pre-synth-verify:
 	$(MAKE) qwen-command-sim
 	$(MAKE) qwen-add-sim
 	$(MAKE) qwen-add-sram-sim
+	$(MAKE) qwen-dma-sim
 	$(MAKE) sim-campaign
 	$(MAKE) fault-campaign
 	$(MAKE) coverage-campaign

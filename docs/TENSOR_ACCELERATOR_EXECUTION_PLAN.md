@@ -955,6 +955,44 @@ does not close `TA-RTL-6`. The next horizon is a bounded command sequencer with
 DMA/population and additional production kernels before complete-layer
 correlation.
 
+### 1.16 Authentic Qwen HBM-to-SRAM DMA command in RTL
+
+QW-RTL-DMA-001 adds a synthesizable executor for the production
+`DMA_HBM_TO_SRAM` record. It admits the unchanged command through the common
+decoder, permits one outstanding 64-byte HBM request, holds requests and SRAM
+writes under backpressure, and drains each successful HBM response as four
+ordered 16-byte SRAM writes. Completion carries exact HBM request, response,
+byte-read, SRAM write, and byte-written counters. A response error terminates
+the command without exposing any bytes from the failing response to SRAM.
+
+The authentic record is command index 1 of layer-0 operation `node.0001`. It
+moves the complete 8,192-byte
+`model.layers.0.input_layernorm.weight` payload from HBM address 1,244,659,712
+to SRAM address 2,097,152. The checkpoint and deployed payload SHA-256 is
+`00695bad97c2abc77a9d1ce57e4d4a5e5c2b574387fcb4029ef5ce12239b2530`.
+The retained vector set ID is
+`98806ae5e1b8f3dbe1e516084b099a5f592f98acf6adb74edb0198d82ae10216`,
+and it remains bound to the unchanged full-program SHA-256
+`f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec`.
+
+Icarus and Verilator each reproduce all 8,192 bytes through 128 ordered
+64-byte HBM requests/responses and 512 ordered 16-byte SRAM writes. The
+campaign independently inserts HBM-request and SRAM-write stalls plus variable
+HBM response latency and checks exact addresses, byte enables, values,
+transaction counts, byte totals, and stable completion. A separate injected
+HBM response error checks one accepted request and response, zero admitted
+payload bytes, and zero SRAM writes. The retained campaign ID is
+`17658f09d7863d451a113bc5620a9fa0862fb4de60a11d1dafa89b33d9587e34`.
+
+This is one complete direct-DMA command at an external HBM response boundary.
+The campaign does not instantiate an HBM PHY, package channel, controller
+calibration model, production ECC/retry policy, SRAM macro, or bank arbiter. It
+does not execute the following RMSNorm command, a command sequence, or a
+complete layer. It supplies no qualified cycle, timing, area, power, bandwidth,
+or performance result and does not close `TA-RTL-6`. The next RTL horizon is a
+sequencer that joins DMA-populated SRAM data to additional authentic compute
+commands while preserving program order and correlated counters.
+
 ## 2. Meaning of production-grade
 
 Production-grade in this plan describes the quality of the compiler, simulator,
@@ -2055,7 +2093,7 @@ RTL, physical, and comparison gates remain open.
 | Command and capability ABI | ABI 2.5 and capability V6 admit bounded indexed SRAM selection with a strict schema and preserve older minor decoding; the complete 924,386-command program executes causally | Fixed request v1 remains immutable; add a separately versioned dynamic request/session contract. Routing, remaining vector operations, synchronization, timing, 8,192-plus context support, and the final hardware capability remain open |
 | Compiler and checker | **QW-FM1 closed at `74c0d59`; QW-FM2/QW-FM3 closed at `324f48d`; QW-FM4 closed at `c5b9578`.** Complete Qwen neutral lowering, streamed full-model HBM layout, SRAM lifetime allocation, command lowering, inverse reconstruction, and one target-precision execution are deterministic and retained | Preserve those artifacts unchanged while adding dynamic prefill/decode compilation; do not relabel one fixed transaction as generation or long-context acceptance |
 | Functional simulation | **Fixed one-step QW-FM4 closed at `c5b9578`.** The common simulator authenticates all 17 HBM shards, validates and executes all commands, commits all 36 states atomically, and produces exact complete logits and one token; a separate checkpoint-layout and algorithmic path matches it exactly | Execute at least 32 ordinary greedy steps through a versioned dynamic request/session path, then prove operational readiness for the exact 8,000-token run |
-| RTL correlation | QW-RTL-CMD-001 admits all production records; QW-RTL-ADD-001 executes all 4,096 authentic values of `node.0011`; QW-RTL-ADD-SRAM-001 adds 8,192 exact reads, 4,096 exact finite-result writes, stalls/latency, stable counters, and two zero-write arithmetic faults in both simulators. Campaign `9f31ea12...da2c3` is deterministic and source-bound | This is one command against behavioral SRAM. Add DMA, banking/ECC/arbitration, more representative kernels, and a bounded sequencer, then execute and correlate a complete layer before `TA-RTL-6`; no timing or physical claim follows |
+| RTL correlation | QW-RTL-CMD-001 admits all production records; QW-RTL-ADD-001 and ADD-SRAM-001 execute authentic residual data and explicit SRAM traffic; QW-RTL-DMA-001 independently moves an authentic 8,192-byte layer-0 weight through 128 HBM transactions and 512 SRAM writes, including stalls and zero-write HBM fault handling. Campaign `17658f09...e7e34` is deterministic and source-bound | ADD and DMA are still separate commands against behavioral memories. Join them under a program-order sequencer, add banking/ECC/arbitration and more compute kernels, then execute a complete layer before `TA-RTL-6`; no timing or physical claim follows |
 | Timing and physical evidence | No clock, latency, HBM timing, bandwidth, or energy value is qualified | No committed slice result may be used for a performance, power, or 130-nm comparison claim |
 | End-to-end execution | One complete 36-layer fixed request produces exact final logits, token `50994`, and committed state, but no multi-step generation or long-context common-simulator run has closed | `TA-QWEN-4` and `TA-DSV4-5` remain open; QW-FM4 cannot substitute for Qwen 8,000 or DeepSeek 200,000 |
 

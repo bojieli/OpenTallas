@@ -19,6 +19,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Production tensor commands | `ot_ta_command_decoder.sv` | Registered admission of the 64-byte ABI 2.0–2.5 record, IEEE CRC32, opcode/engine/minor/field/index checks, and deterministic error priority | QW-RTL-CMD-001 |
 | Production BF16 residual add | `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv` | Command-decoded, backpressured `ADD_BF16` execution with exact external-SRAM byte addresses, RNE arithmetic, retirement counters, saturation, and fail-closed arithmetic faults | QW-RTL-ADD-001 |
 | Production ADD SRAM control | `ot_ta_add_bf16_sram_engine.sv` | One-outstanding-read operand fetch, finite-only writeback retirement, exact transaction counters, stable completion, and fault write suppression | QW-RTL-ADD-SRAM-001 |
+| Production direct DMA | `ot_ta_dma_hbm_to_sram.sv` | One-outstanding 64-byte HBM request/response, four 16-byte SRAM writes per response, exact byte/transaction accounting, response-error fail-closed completion | QW-RTL-DMA-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
@@ -73,3 +74,17 @@ Two arithmetic-fault replays each retire after two reads and prove zero SRAM
 writes. The SRAM contents are behavioral campaign models: ECC, banking,
 arbitration, DMA, HBM, and a qualified physical memory macro do not execute.
 No cycle, timing, performance, complete-layer, or `TA-RTL-6` claim follows.
+
+QW-RTL-DMA-001 is retained as vector set
+`98806ae5e1b8f3dbe1e516084b099a5f592f98acf6adb74edb0198d82ae10216`
+and campaign
+`17658f09d7863d451a113bc5620a9fa0862fb4de60a11d1dafa89b33d9587e34`.
+It executes authentic command index 1 and moves the exact 8,192-byte layer-0
+input-normalization weight payload from HBM address 1,244,659,712 to SRAM
+address 2,097,152. Icarus and Verilator each check 128 ordered 64-byte HBM
+transactions and 512 ordered 16-byte SRAM writes under request stalls,
+writeback stalls, and variable HBM response latency. One injected HBM response
+error proves fail-closed completion with zero SRAM writes. HBM responses and
+SRAM contents are behavioral campaign models. HBM PHY/package behavior,
+production ECC/retry, physical SRAM, arbitration, multi-command scheduling,
+timing, performance, complete-layer execution, and `TA-RTL-6` remain open.
