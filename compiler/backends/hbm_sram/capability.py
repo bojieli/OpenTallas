@@ -39,6 +39,11 @@ TECHNOLOGY_VIEW = "shared-hbm-sram-chip-v3"
 #: approximated.
 SHARED_NUMERIC_CONTRACTS: tuple[str, ...] = (
     "bf16_add_rne_v1",
+    # TA-ABI3-OPCONV-1 amendment A7: the sequential contract is the scalar
+    # oracle used for numeric qualification, the blocked contract is what
+    # execution operators declare.  Both are exact; they differ in association
+    # and the artifact always names which one it means.
+    "bf16_bf16_fp32_blocked_rne_v1",
     "bf16_attention_fp32_v1",
     "bf16_bf16_fp32_sequential_rne_v1",
     "bf16_compress_fp32_v1",
@@ -48,7 +53,10 @@ SHARED_NUMERIC_CONTRACTS: tuple[str, ...] = (
     "bf16_mhc_fp32_v1",
     "bf16_ordered_sum_fp32_v1",
     "bf16_partition_sum_fp32_v1",
-    "bf16_rms_norm_fp32_v1",
+    # Amendment A8: two RMSNorm contracts coexist and are genuinely different
+    # operations; the engine dispatches on the contract digest.
+    "deepseek_rmsnorm_binary32_v1",
+    "qwen3_rmsnorm_fp32_bf16_v1",
     "bf16_rope_fp32_v1",
     "bf16_scale_rne_v1",
     "bf16_silu_mul_fp32_v1",

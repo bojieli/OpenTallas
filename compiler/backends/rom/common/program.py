@@ -410,7 +410,8 @@ class RomLowering:
         self._state_descriptor: dict[str, int] = {}
         self._state_slot: dict[str, tuple[str, int]] = {}
         self._state_group_shape: dict[str, tuple[int, int, int]] = {}
-        self._state_tensor_offset: dict[str, tuple[str, int, int]] = {}
+        self._state_tensor_offset: dict[str, int] = {}
+        self._state_owner: dict[str, str] = {}
         self._event_of_tensor: dict[str, tuple[int, int]] = {}
         self._communications: list[tuple[str, int]] = []
         self._link_instruction_count = 0
@@ -1077,56 +1078,66 @@ class RomLowering:
                 self._state_descriptor[state.state_id] = descriptor
                 self._state_slot[state.state_id] = (group_key, slot)
             self.builder.name(f"obj.{group_key}", prepared)
+        self._plan_state_layout()
 
-    def _state_struct_key(self, tensor_id: str) -> str:
-        """Structural identity of a state operand, shared by every layer."""
-        placement = self.analysis.body_input.get(
-            tensor_id
-        ) or self.analysis.body_output.get(tensor_id)
-        if placement is not None:
-            run, position, slot = placement
-            return f"st.r{run}.p{position:03d}.s{slot}"
-        return f"st.g.{tensor_id}"
+    def _plan_state_layout(self) -> None:
+        """Assign every role=``state`` tensor a byte offset inside a layer slot.
+
+        The IR names one state tensor per logical view per layer (a key history
+        and a value history, say).  Physically they are sub-ranges of one layer
+        slot of one merged state object, in first-use order, and the assignment
+        must be identical for every layer -- including layers in different loop
+        runs -- or the compressed body could not address them with one view.
+        """
+        order: dict[str, list[str]] = {}
+        owner: dict[str, str] = {}
+        for kernel in self.graph.kernels:
+            state_ids = kernel.state_reads or kernel.state_writes
+            if not state_ids:
+                continue
+            for name in (*kernel.inputs, *kernel.outputs):
+                if self.tensors[name].role != "state":
+                    continue
+                if name in owner:
+                    continue
+                owner[name] = state_ids[0]
+                order.setdefault(state_ids[0], []).append(name)
+        # The layout is per *structural* position, so layer 0's key history and
+        # layer 7's key history land at the same offset inside their slots.
+        offsets: dict[str, int] = {}
+        for state_id, names in order.items():
+            group_key, _slot = self._state_slot.get(state_id, (None, 0))
+            if group_key is None:
+                continue
+            slot_bytes = self._state_group_shape[group_key][0]
+            cursor = 0
+            for name in names:
+                size = self._bytes(self.tensors[name])
+                if cursor + size > slot_bytes:
+                    raise RomLoweringError(
+                        f"state tensors of {state_id!r} need {cursor + size} bytes "
+                        f"but a layer slot of group {group_key} is {slot_bytes}"
+                    )
+                offsets[name] = cursor
+                cursor += size
+        self._state_tensor_offset = offsets
+        self._state_owner = owner
 
     def _state_view(self, tensor_id: str) -> int | None:
         """Bind a role=``state`` tensor to a slice of its physical state object."""
         tensor = self.tensors[tensor_id]
         if tensor.role != "state":
             return None
-        state_ids: tuple[str, ...] = ()
-        for candidate in self.graph.kernels:
-            if tensor_id in candidate.inputs or tensor_id in candidate.outputs:
-                state_ids = candidate.state_reads or candidate.state_writes
-                if state_ids:
-                    break
-        if not state_ids or state_ids[0] not in self._state_slot:
+        state_id = self._state_owner.get(tensor_id)
+        if state_id is None or state_id not in self._state_slot:
             return None
-        group_key, _slot = self._state_slot[state_ids[0]]
+        group_key, slot = self._state_slot[state_id]
         slot_bytes, _capacity, _row_elements = self._state_group_shape[group_key]
         prepared = self.builder.lookup(f"obj.{group_key}")
         dtype = self._dtype(tensor.dtype)
         bits = DTYPE_BITS[dtype]
-        size = self._bytes(tensor)
-        struct_key = self._state_struct_key(tensor_id)
-        placed = self._state_tensor_offset.get(struct_key)
-        if placed is None:
-            cursor = 0
-            for other_group, offset, extent in self._state_tensor_offset.values():
-                if other_group == group_key:
-                    cursor = max(cursor, offset + extent)
-            if cursor + size > slot_bytes:
-                raise RomLoweringError(
-                    f"state tensors of group {group_key} need more than the "
-                    f"{slot_bytes}-byte per-layer slot"
-                )
-            placed = (group_key, cursor, size)
-            self._state_tensor_offset[struct_key] = placed
-        elif placed[2] != size:
-            raise RomLoweringError(
-                f"state operand {struct_key!r} changes size between layers"
-            )
-        element_offset = placed[1] * 8 // bits
         stride = slot_bytes * 8 // bits
+        element_offset = slot * stride + self._state_tensor_offset[tensor_id] * 8 // bits
         dynamic: list[DynamicTerm] = []
         loop = self._loop_for_state_slot(tensor_id)
         if loop is not None:

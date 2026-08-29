@@ -61,7 +61,11 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "SWIGLU": EngineOp(Major.VECTOR, Vector.SILU_MUL, 3, 1),
     "CONVERT": EngineOp(Major.VECTOR, Vector.CONVERT, 1, 1),
     "QUANTIZE": EngineOp(Major.VECTOR, Vector.CONVERT, 1, 2),
-    "DEQUANTIZE": EngineOp(Major.VECTOR, Vector.CONVERT, 2, 1),
+    # Three inputs, because DeepSeek's FP8 QDQ is *partial*: it quantises the
+    # non-rotary channels and passes the rotary channels through untouched, so
+    # the third operand is the passthrough source. A two-operand dequantize
+    # cannot express that without a separate concat.
+    "DEQUANTIZE": EngineOp(Major.VECTOR, Vector.CONVERT, 3, 1),
     "HADAMARD": EngineOp(Major.VECTOR, Vector.HADAMARD, 1, 1),
     "SOFTMAX": EngineOp(Major.VECTOR, Vector.SOFTMAX, 1, 1),
     "SQRT_SOFTPLUS": EngineOp(Major.VECTOR, Vector.SQRT_SOFTPLUS, 1, 1),
@@ -86,7 +90,10 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "HASH_ROUTE": EngineOp(Major.ROUTE, Route.HASH_ROUTE, 2, 1),
     "INDEX_TOPK": EngineOp(Major.ROUTE, Route.INDEX_TOPK, 1, 1),
     "WEIGHT_NORMALIZE": EngineOp(Major.ROUTE, Route.WEIGHT_NORMALIZE, 1, 1),
-    "EXPERT_DISPATCH": EngineOp(Major.ROUTE, Route.EXPERT_DISPATCH, 2, 1),
+    # Two outputs: the dispatched activations and the expert IDs they were
+    # dispatched under. Re-emitting the IDs keeps the dataflow into
+    # ROUTED_MATMUL explicit rather than implied by ordering.
+    "EXPERT_DISPATCH": EngineOp(Major.ROUTE, Route.EXPERT_DISPATCH, 2, 2),
     "EXPERT_REDUCE": EngineOp(Major.REDUCTION, Reduction.EXPERT_SUM, 3, 1),
     # reduction and selection
     "ORDERED_SUM": EngineOp(Major.REDUCTION, Reduction.ORDERED_SUM, 2, 1),
@@ -96,7 +103,10 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "ARGMAX": EngineOp(Major.SELECTION, Selection.ARGMAX, 1, 1),
     "TOKEN_APPEND": EngineOp(Major.SELECTION, Selection.TOKEN_APPEND, 1, 1),
     # state
-    "STATE_READ": EngineOp(Major.STATE, State.READ, 0, 0),
+    # STATE_READ names the state view it reads and the activation it produces;
+    # STATE_PREPARE and STATE_COMMIT are pure transitions over the resource
+    # named by the instruction's descriptor and carry no operands.
+    "STATE_READ": EngineOp(Major.STATE, State.READ, 1, 1),
     "STATE_PREPARE": EngineOp(Major.STATE, State.PREPARE, 0, 0),
     "STATE_COMMIT": EngineOp(Major.STATE, State.COMMIT, 0, 0),
     "KV_APPEND": EngineOp(Major.VECTOR, Vector.CONVERT, 2, 1),

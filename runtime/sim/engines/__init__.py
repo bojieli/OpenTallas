@@ -23,6 +23,7 @@ ENGINE_MODULES = (
     "runtime.sim.engines.reduction",
     "runtime.sim.engines.selection",
     "runtime.sim.engines.link",
+    "runtime.sim.engines.deepseek_vector",
 )
 
 

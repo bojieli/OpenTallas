@@ -1798,7 +1798,8 @@ def export_deepseek_v4_kernel_graph(
             emit(
                 node_id,
                 "ATTENTION_SPARSE",
-                (query, key_value, sink, indices),
+                # TA-ABI3-OPCONV-1 amendment A6 freezes q, kv, indices, sink.
+                (query, key_value, indices, sink),
                 (output,),
                 iteration_domain={
                     "tokens": rows,
@@ -1879,6 +1880,7 @@ def export_deepseek_v4_kernel_graph(
                             "table_rows": VOCABULARY},
             )
             bind(out0, output)
+            context_of[root]["expert_indices"] = output
 
         elif source_kind == "BIASED_TOPK_ROUTE":
             score = operands[0]
@@ -1903,6 +1905,7 @@ def export_deepseek_v4_kernel_graph(
                 },
             )
             bind(out0, indices)
+            context_of[root]["expert_indices"] = indices
 
         elif source_kind == "ROUTER_WEIGHT_NORMALIZE":
             score, indices = operands[0], operands[1]
@@ -1946,22 +1949,19 @@ def export_deepseek_v4_kernel_graph(
                 dispatch_rows if isinstance(rows, Symbolic) else rows * TOP_K
             )
             output = act(out0, "bf16", (routed_rows, HIDDEN))
-            expert_rows = act(f"{node_id}.expert_ids", "i32", (routed_rows,))
             emit(
                 node_id,
                 "EXPERT_DISPATCH",
                 (source, indices),
-                (output, expert_rows),
+                (output,),
                 iteration_domain={"tokens": rows, "top_k": TOP_K,
                                   "routed_rows": routed_rows, "width": HIDDEN},
                 attributes={
                     **attrs,
-                    "group_order": "ascending_expert_then_ascending_token",
-                    "routed_row_expert_output": True,
+                    "row_order": "ascending_token_then_ascending_selection",
                 },
             )
             bind(out0, output)
-            context_of[root]["expert_rows"] = expert_rows
             context_of[root]["dispatch"] = output
 
         elif source_kind in {"MXFP4_SWIGLU", "FP8_SWIGLU"}:
@@ -1972,7 +1972,7 @@ def export_deepseek_v4_kernel_graph(
                 gate_weights = role_weight_family(roles[0], scope, layer)
                 down_weights = role_weight_family(roles[2], scope, layer)
                 up_weights = role_weight_family(roles[4], scope, layer)
-                expert_rows = context_of[root]["expert_rows"]
+                expert_rows = context_of[root]["expert_indices"]
                 route_weights = context_of[root]["route_weights"]
                 weight_attributes = {
                     "expert_count": ROUTED_EXPERTS,
@@ -2122,16 +2122,27 @@ def export_deepseek_v4_kernel_graph(
 
         elif source_kind == "EXPERT_REDUCE":
             routed_output, shared_output = operands[1], operands[2]
-            expert_rows = context_of[root]["expert_rows"]
             rows = rows_of(shared_output)
             output = act(out0, "bf16", (rows, HIDDEN))
             emit(
                 node_id,
                 "EXPERT_REDUCE",
-                (routed_output, shared_output, expert_rows),
+                (routed_output, shared_output),
                 (output,),
                 iteration_domain={"tokens": rows, "top_k": TOP_K,
                                   "width": HIDDEN},
+                attributes={
+                    **attrs,
+                    "base_operand_index": 1,
+                    "contribution_row_order": (
+                        "ascending_token_then_ascending_selection"
+                    ),
+                    "routing_weight_application": (
+                        "already_applied_inside_the_expert_before_the_down_"
+                        "projection"
+                    ),
+                    "top_k": TOP_K,
+                },
             )
             bind(out0, output)
 

@@ -8,34 +8,33 @@ deployment and the DeepSeek deployment is the *graph* it is handed, the
 compiles against.  One node or thirty-two, dense or mixture-of-experts, 8,000
 tokens or 200,000: same code path.
 
-Everything is emitted through :class:`runtime.abi3.builder.DeploymentBuilder`
-and every opcode comes from :func:`compiler.ir.v3.lowering.engine_for`.  No
-private descriptor, no private opcode.
+Everything is emitted through :class:`runtime.abi3.builder.DeploymentBuilder`,
+every opcode comes from :func:`compiler.ir.v3.lowering.engine_for`, and every
+operand slot follows ``TA-ABI3-OPCONV-1``.  No private descriptor, no private
+opcode, no locally invented slot meaning.
 
-Loop compression (ADR-003 section 5.1)
---------------------------------------
-The program this emitter produces is a loop nest, never a flat expansion.  The
-ABI 2.5 backend spent 924,386 commands on one Qwen forward step; that is the
-failure mode ABI 3.0 exists to remove.  Four nested compact loops carry the
-whole model:
+Where the work lives
+--------------------
+ADR-003 section 5.1 requires compact control flow and section 6.2 defines the
+SCHEDULE descriptor as carrying "engine queue, tile mapping, bank/port use, NoC
+path, issue window, and resource bound".  Those two together fix the split this
+emitter implements:
 
-``layer``
-    one iteration per layer of a band.  The weight views inside the body are
-    functions of the induction variable -- ``DynamicTerm.loop(layer, stride)``
-    -- which is legal because the planner built one memory object per weight
-    role with the layers concatenated in order, so the stride is constant.
-``row``
-    one iteration per tile of the token axis.  Token counts are symbolic, so
-    this loop is bound by ``Symbol.SPAN_TOKENS`` with the tile size as the
-    divisor and the declared maximum as the proof bound.
-``column``
-    one iteration per output tile of a contraction.
-``depth``
-    one iteration per contraction tile of the reduction axis.
+*Program loops* express what genuinely varies -- **layers** and **token
+blocks**.  A forward step is one loop over the layers of a band whose body is
+one engine instruction per kernel, wrapped where the token count is symbolic in
+a block loop bound by ``Symbol.SPAN_TOKENS``.
 
-That is exactly the ``max_loop_depth`` of 4 the capability advertises, and a
-whole transformer layer costs a few dozen instructions rather than tens of
-thousands.
+*Schedule descriptors* express how one engine instruction is decomposed on the
+hardware -- ``tile_rows``, ``tile_cols``, ``tile_depth``, ``bank_mask``,
+``port_mask``, ``issue_window``, ``max_outstanding``.  The functional engine
+executes the whole contraction named by one operator; the cycle model reads the
+same descriptor and costs the tiles, the bank conflicts and the DMA traffic.
+
+Making tiles into program loops instead would retire on the order of 258,000
+engine dispatches for one Qwen forward step -- roughly the ABI 2.5 failure this
+ABI exists to remove -- while hiding nothing extra, since the tiling is fully
+readable out of the descriptor table either way.
 """
 
 from __future__ import annotations
@@ -50,7 +49,6 @@ from runtime.abi3.constants import (
     Control,
     CounterGroup,
     DType,
-    Dma,
     Feature,
     IntegrityMode,
     Link,
@@ -58,6 +56,7 @@ from runtime.abi3.constants import (
     NO_ID,
     Ordering,
     Permission,
+    ReductionOrder,
     Selection,
     State,
     StateClass,
@@ -84,7 +83,6 @@ from .plan import (
     OperandPlan,
     PhysicalPlan,
     PlanError,
-    StatePlacement,
     TileConfig,
     build_plan,
     bytes_for,
@@ -93,6 +91,16 @@ from .plan import (
 )
 
 BACKEND_ID = "hbm-sram-abi3"
+
+#: TA-ABI3-OPCONV-1 amendment A7.  The strictly sequential contract is the
+#: scalar oracle used for numeric qualification; execution operators declare the
+#: blocked contract, which is what a lane array actually does and what an
+#: implementation can run at model scale.  Every substitution this table makes
+#: is recorded in the deployment notes -- a report that says only "exact" is
+#: incomplete, so the artifact names which contract it means.
+EXECUTION_CONTRACT: Mapping[str, str] = {
+    "bf16_bf16_fp32_sequential_rne_v1": "bf16_bf16_fp32_blocked_rne_v1",
+}
 
 #: Which counter namespace observes which engine family.
 _COUNTER_GROUP: Mapping[int, CounterGroup] = {
@@ -107,7 +115,7 @@ _COUNTER_GROUP: Mapping[int, CounterGroup] = {
     int(Major.LINK): CounterGroup.COMMUNICATION,
 }
 
-#: Feature bits implied by an element type actually used by the program.
+#: Feature bits implied by an element type the program actually uses.
 _DTYPE_FEATURE: Mapping[int, Feature] = {
     int(DType.BF16): Feature.BF16_TENSOR,
     int(DType.FP8_E4M3FN): Feature.FP8_E4M3FN_TENSOR,
@@ -117,12 +125,31 @@ _DTYPE_FEATURE: Mapping[int, Feature] = {
 }
 
 #: Cluster traffic class -> (LINK subopcode, collective, route class).
+#: TA-HBM-3.0 section 3.6's ordered traffic classes, one virtual channel each.
 _LINK_OP: Mapping[str, tuple[Link, CollectiveOp, int]] = {
     "expert_dispatch": (Link.SCATTER, CollectiveOp.CONCAT, 0),
     "sparse_gather": (Link.GATHER, CollectiveOp.ALL_GATHER, 1),
     "activation_transfer": (Link.COLLECTIVE, CollectiveOp.ALL_GATHER, 2),
     "reduction": (Link.COLLECTIVE, CollectiveOp.SUM, 3),
     "coordinated_commit": (Link.BARRIER, CollectiveOp.SUM, 4),
+}
+
+#: SRAM regions each engine family streams through; the union becomes the
+#: schedule's bank mask, which is the cycle model's bank-conflict input.
+_ENGINE_REGIONS: Mapping[int, tuple[str, ...]] = {
+    int(Major.TENSOR): (
+        "sram.activation_stage",
+        "sram.weight_stage",
+        "sram.accumulator",
+    ),
+    int(Major.DMA): ("sram.activation_stage", "sram.weight_stage"),
+    int(Major.VECTOR): ("sram.vector_stream",),
+    int(Major.REDUCTION): ("sram.vector_stream", "sram.accumulator"),
+    int(Major.ATTENTION): ("sram.attention_working",),
+    int(Major.ROUTE): ("sram.route_index",),
+    int(Major.SELECTION): ("sram.vector_stream",),
+    int(Major.STATE): ("sram.state_stage",),
+    int(Major.LINK): ("sram.link_stage",),
 }
 
 _STATE_CLASS: Mapping[str, StateClass] = {
@@ -133,6 +160,8 @@ _STATE_CLASS: Mapping[str, StateClass] = {
     "route_history": StateClass.ROUTE_HISTORY,
     "scratch": StateClass.SCRATCH,
 }
+
+_TRANSACTION_KINDS = frozenset({"STATE_PREPARE", "STATE_COMMIT", "STATE_READ"})
 
 
 class LoweringError(ValueError):
@@ -153,8 +182,9 @@ def lower_to_abi3(
 ) -> Deployment:
     """Lower ``graph`` onto ``capability`` and return the ABI 3.0 deployment."""
     plan = plan or build_plan(graph, capability, topology=topology, tile=tile)
-    emitter = _Emitter(graph, capability, plan, deployment_id, generation, target_id, backend)
-    return emitter.run()
+    return _Emitter(
+        graph, capability, plan, deployment_id, generation, target_id, backend
+    ).run()
 
 
 def lower_with_plan(
@@ -199,28 +229,28 @@ class _Emitter:
             deployment_id=deployment_id,
             generation=generation,
         )
-        # descriptor caches -- every key is a tuple of primitives, so two runs
-        # over the same inputs allocate identical descriptor IDs.
+        # Descriptor caches.  Every key is a tuple of primitives and every miss
+        # allocates in emission order, so two runs over the same inputs produce
+        # identical descriptor IDs and therefore identical bytes.
         self._numeric: dict[tuple, int] = {}
         self._schedule: dict[tuple, int] = {}
         self._counter: dict[int, int] = {}
         self._views: dict[tuple, int] = {}
         self._waits: dict[tuple, int] = {}
         self._predicates: dict[tuple, int] = {}
-        # object ids
         self._weight_object: dict[str, int] = {}
         self._arena_object: dict[str, int] = {}
         self._sram_object: dict[str, int] = {}
         self._host_object: dict[str, int] = {}
         self._state_objects: dict[str, tuple[int, int]] = {}
         self._state_descriptor: dict[str, int] = {}
-        # program state
         self._event_of_tensor: dict[str, int] = {}
+        self._substitutions: dict[str, str] = {}
         self._layer_loop: int | None = None
-        self._layer_index: int = 0
         self._link_instructions = 0
         self.token_ring_tensor: str | None = None
         self.token_ring_object: int = NO_ID
+        self.commit_token_object: int = NO_ID
 
     # -- entry point -----------------------------------------------------
     def run(self) -> Deployment:
@@ -249,6 +279,7 @@ class _Emitter:
                     lower_bound=0,
                     upper_bound=band.layer_count,
                     step=1,
+                    counter_class_id=self._counter_class(int(Major.CONTROL)),
                     key=f"loop.band{band.band_id}",
                 )
                 builder.open_loop(loop)
@@ -261,6 +292,8 @@ class _Emitter:
                 for kernel_plan in body:
                     self._emit_kernel(kernel_plan)
 
+        # A cluster commits its state as one coordinated transaction: the
+        # barrier is the point at which every node agrees the step happened.
         if self.node_count > 1:
             self._emit_link("coordinated_commit", "commit", None, wait=None)
         for physical_id in sorted(self._state_descriptor):
@@ -294,8 +327,20 @@ class _Emitter:
                     for b in self.plan.bands
                 ],
                 "link_instructions": self._link_instructions,
+                "numeric_contract_substitutions": dict(
+                    sorted(self._substitutions.items())
+                ),
                 "plan_warnings": list(self.plan.warnings),
-                "sram_regions": [r.region_id for r in self.plan.sram_regions],
+                "sram_regions": [
+                    {
+                        "region_id": r.region_id,
+                        "offset": r.offset,
+                        "size_bytes": r.size_bytes,
+                        "bank_mask": r.bank_mask,
+                    }
+                    for r in self.plan.sram_regions
+                ],
+                "token_block_rows": self.plan.proofs.get("token_block_rows", 0),
             }
         )
         return builder.finish()
@@ -315,9 +360,7 @@ class _Emitter:
             link_count=topology.peers_per_node,
             route_group_count=int(link.get("route_groups", 0)),
             bisection_link_count=int(link.get("bisection_links", 0)),
-            route_table_digest=sha256(
-                ",".join(topology.link_classes).encode("ascii")
-            ),
+            route_table_digest=sha256(",".join(topology.link_classes).encode("ascii")),
             key="topology",
         )
         if self.node_count > 1:
@@ -328,10 +371,7 @@ class _Emitter:
         for group in self.plan.weight_groups:
             segments = tuple(
                 Segment(
-                    path=s.path,
-                    offset=s.file_offset,
-                    bytes=s.bytes,
-                    sha256=s.sha256,
+                    path=s.path, offset=s.file_offset, bytes=s.bytes, sha256=s.sha256
                 )
                 for s in group.segments
             )
@@ -361,6 +401,9 @@ class _Emitter:
                 key=f"obj.arena.{slot.slot_id}",
             )
 
+        # The scratchpad allocation is declared object by object, with its base
+        # address and first bank, so the bank plan is readable out of the
+        # descriptor table rather than living only in the compiler.
         for region in self.plan.sram_regions:
             self._sram_object[region.region_id] = builder.memory_object(
                 storage_class=StorageClass.SRAM,
@@ -373,13 +416,11 @@ class _Emitter:
                 key=f"obj.{region.region_id}",
             )
 
-        # Host-visible inputs and outputs.  The token ring is the output the
-        # selection engine appends to, so it is sized by the capability's
-        # context bound rather than by its declared shape.
         for kernel in self.graph.kernels:
             if kernel.kind == "TOKEN_APPEND" and kernel.outputs:
                 self.token_ring_tensor = kernel.outputs[0]
         ring_bytes = int(self.capability.limits["max_context_positions"]) * 4
+
         for key in sorted(self.plan.host_objects):
             spec = self.plan.host_objects[key]
             tensor_id = key.split(".", 2)[2] if key.count(".") >= 2 else key
@@ -417,8 +458,6 @@ class _Emitter:
                 permissions=int(Permission.READ | Permission.WRITE),
                 key="obj.commit_token",
             )
-        else:
-            self.commit_token_object = NO_ID
 
     def _declare_states(self) -> None:
         builder = self.builder
@@ -480,8 +519,7 @@ class _Emitter:
     def _declare_entrypoints(self) -> None:
         builder = self.builder
         policy_id = NO_ID
-        generative = any(k.kind == "TOKEN_APPEND" for k in self.graph.kernels)
-        if generative:
+        if any(k.kind == "TOKEN_APPEND" for k in self.graph.kernels):
             body = dict(self.graph.generation_policy)
             eos = tuple(int(t) for t in body.get("eos_token_ids", ()))[:8]
             vocabulary = int(body.get("vocabulary_size", 0)) or self._vocabulary()
@@ -530,9 +568,16 @@ class _Emitter:
         return cid
 
     def _numeric_profile(
-        self, contract: str, in_dtype: DType, out_dtype: DType, second: DType
+        self,
+        contract: str,
+        in_dtype: DType,
+        out_dtype: DType,
+        second: DType,
+        *,
+        scale_bits: int = 0,
+        epsilon_bits: int = 0,
     ) -> int:
-        key = (contract, int(in_dtype), int(out_dtype), int(second))
+        key = (contract, int(in_dtype), int(out_dtype), int(second), scale_bits, epsilon_bits)
         if key in self._numeric:
             return self._numeric[key]
         nid = self.builder.numeric(
@@ -541,19 +586,31 @@ class _Emitter:
             output_dtype=out_dtype,
             second_input_dtype=second,
             accumulator_dtype=DType.FP32,
+            reduction_order=_reduction_order(contract),
+            scale_bits=scale_bits,
+            epsilon_bits=epsilon_bits,
             key=f"num.{len(self._numeric)}",
         )
         self._numeric[key] = nid
         return nid
 
-    def _schedule_for(self, plan: KernelPlan, family: int) -> int:
-        mask = self._bank_mask(family)
-        key = (family, plan.tile_rows, plan.tile_cols, plan.tile_depth, mask)
+    def _schedule_for(self, plan: KernelPlan) -> int:
+        """The tile mapping, bank/port use, issue window and resource bound.
+
+        These numbers are the cycle model's direct input, so they are derived
+        from the real extents and the real bank plan.  A zeroed tile mapping
+        would produce a meaningless timing result, which is why the planner
+        chooses divisor tiles rather than leaving the field at zero.
+        """
+        family = plan.engine_family
+        mask, ports = self._bank_and_port_mask(family)
+        key = (family, plan.tile_rows, plan.tile_cols, plan.tile_depth, mask, ports)
         if key in self._schedule:
             return self._schedule[key]
-        engines = self.capability.engines
         name = Major(family).name.lower()
-        queues = int(engines.get(name, {}).get("queues", 1))
+        engine = dict(self.capability.engines.get(name, {}))
+        queues = int(engine.get("queues", 1))
+        lanes = int(engine.get("lanes", 1))
         sid = self.builder.schedule(
             engine_family=Major(family),
             queue_index=0,
@@ -562,42 +619,31 @@ class _Emitter:
             tile_cols=plan.tile_cols,
             tile_depth=plan.tile_depth,
             bank_mask=mask,
-            port_mask=self.plan.sram_regions[0].port_mask if self.plan.sram_regions else 0,
-            resource_bound=queues,
+            port_mask=ports,
+            noc_route_class=0,
+            resource_bound=lanes,
             max_outstanding=int(self.capability.limits["max_outstanding_per_queue"]),
+            priority=0,
             key=f"sched.{len(self._schedule)}",
         )
         self._schedule[key] = sid
         return sid
 
-    def _bank_mask(self, family: int) -> int:
-        wanted = {
-            int(Major.TENSOR): (
-                "sram.activation_stage",
-                "sram.weight_stage",
-                "sram.accumulator",
-            ),
-            int(Major.DMA): ("sram.activation_stage", "sram.weight_stage"),
-            int(Major.VECTOR): ("sram.vector_stream",),
-            int(Major.REDUCTION): ("sram.vector_stream", "sram.accumulator"),
-            int(Major.ATTENTION): ("sram.attention_working",),
-            int(Major.ROUTE): ("sram.route_index",),
-            int(Major.SELECTION): ("sram.vector_stream",),
-            int(Major.STATE): ("sram.state_stage",),
-            int(Major.LINK): ("sram.link_stage",),
-        }.get(family, ())
+    def _bank_and_port_mask(self, family: int) -> tuple[int, int]:
+        wanted = _ENGINE_REGIONS.get(family, ())
         mask = 0
+        ports = 0
         for region in self.plan.sram_regions:
             if region.region_id in wanted:
                 mask |= region.bank_mask
-        return mask
+                ports |= region.port_mask
+        return mask, ports
 
     def _wait_set(self, events: Iterable[int]) -> int:
         unique = tuple(sorted({e for e in events if e != NO_ID}))
         if not unique:
             return NO_ID
-        if len(unique) > 12:
-            unique = unique[:12]
+        unique = unique[:12]
         if unique in self._waits:
             return self._waits[unique]
         wid = self.builder.wait_set(list(unique), key=f"wait.{len(self._waits)}")
@@ -632,8 +678,12 @@ class _Emitter:
         element_offset: int = 0,
         dynamic: Sequence[DynamicTerm] = (),
         writable: bool = False,
-        layout: LayoutClass = LayoutClass.DENSE,
+        scale_object_id: int = NO_ID,
+        scale_block_elements: int = 0,
     ) -> int:
+        layout = (
+            LayoutClass.BLOCK_SCALED if scale_object_id != NO_ID else LayoutClass.DENSE
+        )
         key = (
             object_id,
             int(dtype),
@@ -642,7 +692,8 @@ class _Emitter:
             int(element_offset),
             tuple((t.kind, t.index, t.stride) for t in dynamic),
             bool(writable),
-            int(layout),
+            scale_object_id,
+            scale_block_elements,
         )
         if key in self._views:
             return self._views[key]
@@ -659,6 +710,8 @@ class _Emitter:
             element_offset=element_offset,
             dynamic=list(dynamic),
             layout_class=layout,
+            scale_object_id=scale_object_id,
+            scale_block_elements=scale_block_elements,
             permissions=int(
                 Permission.READ | Permission.WRITE if writable else Permission.READ
             ),
@@ -683,6 +736,22 @@ class _Emitter:
             )
         return self._arena_object[slot], 0
 
+    def _scale_binding(self, operand: OperandPlan) -> tuple[int, int]:
+        """Amendment A8 block-scale addressing, when the tensor declares one."""
+        tensor = self.tensors[operand.tensor_id]
+        if not tensor.scale_tensor_id:
+            return NO_ID, 0
+        placement = self.plan._weight_index.get(tensor.scale_tensor_id)
+        if placement is None:
+            return NO_ID, 0
+        block = tensor.scale_block_elements
+        if block <= 0 or operand.cols % block:
+            raise LoweringError(
+                f"tensor {operand.tensor_id}: block-scale addressing requires "
+                f"K % scale_block_elements == 0, got {operand.cols} % {block}"
+            )
+        return self._weight_object[placement.group_id], block
+
     def _operand_view(
         self,
         plan: KernelPlan,
@@ -695,67 +764,58 @@ class _Emitter:
         dtype = dtype_of(operand.dtype)
         self._require_dtype(dtype)
 
+        # TA-ABI3-OPCONV-1 section 8: the ring output carries a dynamic term
+        # bound to GENERATION_INDEX so one descriptor serves every decode step.
         if operand.tensor_id == self.token_ring_tensor and operand.direction == "out":
-            # The generation ring is written at the live token position, which is
-            # a runtime symbol rather than a loop index.
             return self._view(
                 object_id=self.token_ring_object,
                 dtype=DType.U32,
                 dims=[1],
                 strides=[1],
-                dynamic=[DynamicTerm.symbol(Symbol.SPAN_TOKENS, 1)],
+                dynamic=[DynamicTerm.symbol(Symbol.GENERATION_INDEX, 1)],
                 writable=True,
             )
-        if tensor.role == "state" or (
-            operand.direction == "out" and operand.tensor_id in self.plan.state_of_resource
-        ):
+        if operand.residence == "state":
             return self._state_view(plan, operand, loops, writable=writable)
+        if plan.engine_family == int(Major.SELECTION):
+            return self._selection_view(operand, writable=writable)
 
         object_id, base = self._object_for(operand)
-        rows, cols = operand.rows, operand.cols
-        terms: list[DynamicTerm] = []
-        transposed = operand.transposed
-        if transposed:
-            # stored [cols, rows]; presented as [rows, cols] by stride swap
-            strides = [1, rows]
-            store_cols = rows
+        scale_object, scale_block = self._scale_binding(operand)
+        contraction_weight = (
+            plan.contraction and operand.direction == "in" and operand.slot == 1
+        )
+        if contraction_weight:
+            # Presented n-major as ``[N, K]``; a checkpoint stored ``[K, N]`` is
+            # transposed by swapping strides, never by a relayout pass.
+            if operand.transposed:
+                strides = [1, operand.cols]
+                node_stride = plan.shard_columns
+            else:
+                strides = [operand.cols, 1]
+                node_stride = plan.shard_columns * operand.cols
         else:
-            strides = [cols, 1]
-            store_cols = cols
+            strides = [operand.cols, 1]
+            node_stride = plan.shard_columns
         dims = [max(operand.tile_rows, 1), max(operand.tile_cols, 1)]
 
+        terms: list[DynamicTerm] = []
         for term in operand.terms:
             if term == "layer":
                 loop = loops.get("layer")
                 placement = self.plan.placement(operand.tensor_id)
                 if loop is None or not placement.layer_stride_elements:
                     continue
-                terms.append(
-                    DynamicTerm.loop(loop, placement.layer_stride_elements)
-                )
+                terms.append(DynamicTerm.loop(loop, placement.layer_stride_elements))
             elif term == "row":
                 loop = loops.get("row")
-                if loop is None:
-                    continue
-                terms.append(DynamicTerm.loop(loop, dims[0] * strides[0]))
-            elif term == "column":
-                loop = loops.get("column")
-                if loop is None:
-                    continue
-                terms.append(DynamicTerm.loop(loop, dims[1] * strides[1]))
-            elif term == "depth":
-                loop = loops.get("depth")
                 if loop is None:
                     continue
                 terms.append(DynamicTerm.loop(loop, dims[0] * strides[0]))
             elif term == "node":
                 if self.node_count <= 1:
                     continue
-                terms.append(
-                    DynamicTerm.symbol(
-                        Symbol.NODE_ID, plan.shard_columns * strides[1]
-                    )
-                )
+                terms.append(DynamicTerm.symbol(Symbol.NODE_ID, node_stride))
         return self._view(
             object_id=object_id,
             dtype=dtype,
@@ -763,6 +823,21 @@ class _Emitter:
             strides=strides,
             element_offset=base,
             dynamic=terms,
+            writable=writable,
+            scale_object_id=scale_object,
+            scale_block_elements=scale_block,
+        )
+
+    def _selection_view(self, operand: OperandPlan, *, writable: bool) -> int:
+        """TA-ABI3-OPCONV-1 section 8: selection operands are one-dimensional."""
+        object_id, base = self._object_for(operand)
+        elements = 1 if operand.direction == "out" else operand.cols
+        return self._view(
+            object_id=object_id,
+            dtype=dtype_of(operand.dtype),
+            dims=[max(elements, 1)],
+            strides=[1],
+            element_offset=base,
             writable=writable,
         )
 
@@ -774,11 +849,18 @@ class _Emitter:
         *,
         writable: bool,
     ) -> int:
+        """A window on the merged state resource, moved by the layer loop.
+
+        A 36-layer model declares 36 KV resources but one loop body can name
+        only one state descriptor, so the planner merges a band's resources into
+        one physical resource and the layer induction variable selects the
+        window.  Attention reads the whole context, so the window is the full
+        capacity rather than a token block.
+        """
         mapping = self.plan.state_of_resource.get(operand.tensor_id)
         if mapping is None:
             kernel = self.kernels[plan.index]
-            names = (*kernel.state_writes, *kernel.state_reads)
-            for name in names:
+            for name in (*kernel.state_writes, *kernel.state_reads):
                 if name in self.plan.state_of_resource:
                     mapping = self.plan.state_of_resource[name]
                     break
@@ -790,44 +872,20 @@ class _Emitter:
         physical_id, member = mapping[0], int(mapping[1])
         state = self.plan.state(physical_id)
         committed, prepared = self._state_objects[physical_id]
-        object_id = prepared if writable else committed
         window = state.capacity_rows * state.row_elements
         terms: list[DynamicTerm] = []
+        offset = member * window
         loop = loops.get("layer")
-        if loop is not None and len(state.members) > 1:
+        if len(state.members) > 1 and loop is not None:
             terms.append(DynamicTerm.loop(loop, window))
-        rows = state.capacity_rows
-        if plan.row_loop is not None and rows > plan.tile_rows:
-            rows = plan.tile_rows
-            terms.append(
-                DynamicTerm.loop(loops["row"], plan.tile_rows * state.row_elements)
-            )
+            offset = 0
         return self._view(
-            object_id=object_id,
+            object_id=prepared if writable else committed,
             dtype=dtype_of(state.dtype),
-            dims=[rows, state.row_elements],
+            dims=[state.capacity_rows, state.row_elements],
             strides=[state.row_elements, 1],
-            element_offset=member * window if len(state.members) == 1 else 0,
+            element_offset=offset,
             dynamic=terms,
-            writable=writable,
-        )
-
-    def _sram_view(
-        self, region_id: str, dtype: DType, dims: Sequence[int], *, writable: bool
-    ) -> int:
-        region = next(r for r in self.plan.sram_regions if r.region_id == region_id)
-        object_id = self._sram_object[region_id]
-        needed = bytes_for(dims[0] * dims[1], _dtype_name(dtype))
-        if needed > region.size_bytes:
-            raise LoweringError(
-                f"staging tile of {needed} bytes does not fit SRAM region "
-                f"{region_id} of {region.size_bytes} bytes"
-            )
-        return self._view(
-            object_id=object_id,
-            dtype=dtype,
-            dims=list(dims),
-            strides=[dims[1], 1],
             writable=writable,
         )
 
@@ -839,7 +897,7 @@ class _Emitter:
     # -- kernel emission --------------------------------------------------
     def _emit_kernel(self, plan: KernelPlan) -> None:
         kernel = self.kernels[plan.index]
-        if kernel.kind in {"STATE_PREPARE", "STATE_COMMIT", "STATE_READ"}:
+        if kernel.kind in _TRANSACTION_KINDS:
             self._emit_state_kernel(plan, kernel)
             return
 
@@ -883,9 +941,8 @@ class _Emitter:
             self._event_of_tensor[name] = event
 
     def _emit_state_kernel(self, plan: KernelPlan, kernel: Kernel) -> None:
-        names = (*kernel.state_writes, *kernel.state_reads)
         physical: list[str] = []
-        for name in names:
+        for name in (*kernel.state_writes, *kernel.state_reads):
             mapping = self.plan.state_of_resource.get(name)
             if mapping and mapping[0] not in physical:
                 physical.append(mapping[0])
@@ -905,9 +962,9 @@ class _Emitter:
     def _open_loops(self, plan: KernelPlan) -> dict[str, int]:
         """Open this kernel's token-block loop and return the live loops.
 
-        Layers are carried by the enclosing band loop; tiles are carried by the
-        schedule descriptor.  The only per-kernel loop is the token block, and
-        it exists because the token count is a runtime symbol.
+        Layers are carried by the enclosing band loop and tiles by the schedule
+        descriptor, so the only per-kernel loop is the token block -- the one
+        extent that is a runtime symbol rather than a static shape.
         """
         loops: dict[str, int] = {}
         if self._layer_loop is not None:
@@ -935,6 +992,7 @@ class _Emitter:
                 self.builder.close_loop()
 
     def _kernel_numeric(self, plan: KernelPlan) -> int:
+        kernel = self.kernels[plan.index]
         inputs = [o for o in plan.operands if o.direction == "in"]
         outputs = [o for o in plan.operands if o.direction == "out"]
         in_dtype = dtype_of(inputs[0].dtype) if inputs else DType.BF16
@@ -943,7 +1001,14 @@ class _Emitter:
         contract = EXECUTION_CONTRACT.get(plan.numeric_contract, plan.numeric_contract)
         if contract != plan.numeric_contract:
             self._substitutions[plan.numeric_contract] = contract
-        return self._numeric_profile(contract, in_dtype, out_dtype, second)
+        return self._numeric_profile(
+            contract,
+            in_dtype,
+            out_dtype,
+            second,
+            scale_bits=int(kernel.attributes.get("scale_bits", 0)),
+            epsilon_bits=int(kernel.attributes.get("epsilon_bits", 0)),
+        )
 
     def _producer_events(self, kernel: Kernel) -> list[int]:
         return [
@@ -969,9 +1034,7 @@ class _Emitter:
         builder = self.builder
         sub, collective, route_class = _LINK_OP[link_class]
         if plan is not None:
-            operand = next(
-                (o for o in plan.operands if o.direction == "out"), None
-            )
+            operand = next((o for o in plan.operands if o.direction == "out"), None)
             if operand is None:
                 return wait if wait is not None else NO_ID
             object_id, _ = self._object_for(operand)
@@ -995,6 +1058,7 @@ class _Emitter:
             participant_count=self.node_count,
             chunk_bytes=self.plan.topology.chunk_bytes,
             ordering=Ordering.ACQUIRE_RELEASE,
+            integrity_mode=IntegrityMode.CRC32C,
             virtual_channel=route_class % max(self.plan.topology.virtual_channels, 1),
             reduction_numeric_id=(
                 self._numeric_profile(
@@ -1018,22 +1082,17 @@ class _Emitter:
         return event
 
 
-_DTYPE_NAMES = {
-    int(DType.BF16): "bf16",
-    int(DType.FP16): "fp16",
-    int(DType.FP32): "fp32",
-    int(DType.FP8_E4M3FN): "fp8_e4m3fn",
-    int(DType.FP8_E5M2): "fp8_e5m2",
-    int(DType.MXFP4_E2M1): "mxfp4_e2m1",
-    int(DType.E8M0_SCALE): "e8m0",
-    int(DType.U8): "u8",
-    int(DType.I8): "i8",
-    int(DType.U32): "u32",
-    int(DType.I32): "i32",
-    int(DType.U64): "u64",
-    int(DType.I64): "i64",
-}
+def _reduction_order(contract: str) -> ReductionOrder:
+    """The association a numeric contract's name declares.
 
-
-def _dtype_name(dtype: DType) -> str:
-    return _DTYPE_NAMES[int(dtype)]
+    Amendment A8: RMSNorm's row sum is a balanced tree, so declaring the
+    builder's sequential default would contradict the frozen kernel.  Amendment
+    A7: the execution contract is blocked, the qualification contract is
+    strictly ascending.
+    """
+    lowered = contract.lower()
+    if "rmsnorm" in lowered or "rms_norm" in lowered:
+        return ReductionOrder.PAIRWISE_TREE
+    if "blocked" in lowered:
+        return ReductionOrder.BLOCKED_ASCENDING
+    return ReductionOrder.SEQUENTIAL_ASCENDING

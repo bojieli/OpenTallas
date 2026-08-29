@@ -135,8 +135,16 @@ def test_vector_set_is_reproducible(tmp_path: Path) -> None:
 
 
 def test_every_expectation_comes_from_the_device_or_a_declared_override() -> None:
+    """Only three documented places may differ from the golden observation.
+
+    Two are traps the golden model raises without an instruction index, where
+    the RTL reports the instruction that raised them.  The third is a branch
+    target outside the authenticated body: the RTL rejects that instruction
+    record at admission, so it never retires and never transfers control, while
+    the golden model transfers control first and faults at the target index.
+    """
     vectors = _vectors()
-    overrides = 0
+    overrides = set()
     for case in vectors["cases"]:
         if not case["device_executed"]:
             # Images the normative decoder rejects outright cannot be executed
@@ -145,11 +153,15 @@ def test_every_expectation_comes_from_the_device_or_a_declared_override() -> Non
             continue
         for key, value in case["expected"].items():
             if key in case["golden"] and case["golden"][key] != value:
-                overrides += 1
+                overrides.add((case["name"], key))
                 assert case["note"], case["name"]
-    # Only the two traps the golden model raises without an instruction index,
-    # plus the branch target the RTL rejects before transferring control.
-    assert overrides == 3
+    assert overrides == {
+        ("negative_branch_out_of_range", "branches"),
+        ("negative_branch_out_of_range", "first_fault"),
+        ("negative_branch_out_of_range", "retired"),
+        ("negative_loop_over_maximum", "first_fault"),
+        ("negative_commit_without_prepare", "first_fault"),
+    }
 
 
 def test_issue_events_are_legal_opcodes_and_counted() -> None:
@@ -160,7 +172,9 @@ def test_issue_events_are_legal_opcodes_and_counted() -> None:
             family = Major(issue["family"])
             assert issue["sub"] in {int(m) for m in SUBOPCODES[family]}
             assert family is not Major.CONTROL
-            assert issue["descriptor_id"] != NO_ID
+            # Every issuing family except recovery names a typed descriptor.
+            if family is not Major.RECOVERY:
+                assert issue["descriptor_id"] != NO_ID
             total += 1
     assert total == vectors["issue_event_count"] == 99
     assert vectors["case_count"] == len(vectors["cases"])

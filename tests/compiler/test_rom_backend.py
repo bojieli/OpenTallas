@@ -1439,21 +1439,27 @@ def test_repair_map_is_a_first_class_artifact(qwen_build):
 def test_repair_map_activates_spares_deterministically(qwen_build):
     _deployment, plan = qwen_build
     policy = RomLayoutPolicy(resource_bytes=1 << 33, minimum_spare_rows=8)
+    inventory = sorted(
+        plan_repair_map(plan.regions, policy).banks, key=lambda b: -b.data_rows
+    )
+    wide, other = inventory[0], inventory[1]
+    assert wide.data_rows > 1
     defects = (
-        DefectRecord(RomCoordinate(bank=1), "row", 3, "bist"),
-        DefectRecord(RomCoordinate(bank=0), "row", 7, "bist"),
-        DefectRecord(RomCoordinate(bank=0), "column", 2, "bist"),
+        DefectRecord(other.coordinate, "row", 0, "bist"),
+        DefectRecord(wide.coordinate, "row", wide.data_rows - 1, "bist"),
+        DefectRecord(wide.coordinate, "column", 2, "bist"),
     )
     first = plan_repair_map(plan.regions, policy, defects)
     second = plan_repair_map(plan.regions, policy, tuple(reversed(defects)))
     assert first.to_dict() == second.to_dict()
     rows = [e for e in first.entries if e.kind == "row"]
     assert len(rows) == 2
-    bank0 = [e for e in rows if e.coordinate.bank == 0][0]
-    geometry = [b for b in first.banks if b.coordinate.bank == 0][0]
-    assert bank0.spare_index == geometry.data_rows
+    activated = [e for e in rows if e.coordinate == wide.coordinate][0]
+    # The first activated spare is the lowest one in the owning bank.
+    assert activated.spare_index == wide.data_rows
     assert first.to_dict()["spare_columns_used"] == 1
     assert not first.quarantine
+    assert wide.coordinate.resource_id in first.active_resources
 
 
 def test_repair_map_quarantines_when_spares_are_exhausted(qwen_build):
@@ -1461,13 +1467,18 @@ def test_repair_map_quarantines_when_spares_are_exhausted(qwen_build):
     policy = RomLayoutPolicy(
         resource_bytes=1 << 33, minimum_spare_rows=1, spare_row_fraction=0.0
     )
+    inventory = sorted(
+        plan_repair_map(plan.regions, policy).banks, key=lambda b: -b.data_rows
+    )
+    wide = inventory[0]
+    assert wide.spare_rows == 1 and wide.data_rows >= 3
     defects = tuple(
-        DefectRecord(RomCoordinate(bank=0), "row", index, "bist") for index in range(3)
+        DefectRecord(wide.coordinate, "row", index, "bist") for index in range(3)
     )
     repaired = plan_repair_map(plan.regions, policy, defects)
     assert len(repaired.entries) == 1
     assert [q.reason for q in repaired.quarantine] == ["spare_rows_exhausted"]
-    assert (0, 0, 0, 0) not in repaired.active_resources
+    assert wide.coordinate.resource_id not in repaired.active_resources
 
 
 def test_building_onto_a_quarantined_resource_is_refused(qwen_graph, qwen_capability):

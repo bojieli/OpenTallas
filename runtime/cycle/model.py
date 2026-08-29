@@ -316,7 +316,15 @@ class _AccessRecorder:
         self.current = None
         return out
 
-    def raw(self, object_id: int, offset: int, nbytes: int, *, write: bool) -> None:
+    def raw(
+        self,
+        object_id: int,
+        offset: int,
+        nbytes: int,
+        *,
+        write: bool,
+        view_id: int = NO_ID,
+    ) -> None:
         if self.current is None or nbytes <= 0:
             return
         self.current.append(
@@ -328,6 +336,7 @@ class _AccessRecorder:
                 address=self.addresses.address(object_id, offset),
                 nbytes=int(nbytes),
                 write=write,
+                view_id=view_id,
             )
         )
 
@@ -341,6 +350,7 @@ class _AccessRecorder:
             int(view.element_offset) * itemsize,
             nbytes,
             write=write,
+            view_id=view.descriptor_id,
         )
 
 
@@ -404,6 +414,68 @@ class TracingDevice(Device):
             for slot in range(wait.payload["producer_count"])
         )
 
+    def _describe_operator(self, step: TraceStep, ctx, instruction) -> None:
+        """Record the operator's schedule, operand extents and numeric contract.
+
+        The program no longer contains tile loops: one engine instruction names
+        a whole contraction and the SCHEDULE descriptor carries the tile shape.
+        The cycle model is therefore the only place tiling becomes time, and it
+        needs the operand extents to decompose the contraction -- so they are
+        captured here, from the same resolved views the engine will read.
+        """
+        try:
+            operator = self.deployment.table.get(
+                instruction.descriptor_id, ExtendedDescriptorType.OPERATOR
+            )
+        except Exception:
+            return
+        payload = operator.payload
+        step.operator_id = operator.descriptor_id
+        schedule_id = payload.get("schedule_id", NO_ID)
+        if schedule_id == NO_ID:
+            schedule_id = operator.schedule_id
+        step.schedule_id = schedule_id
+        if schedule_id != NO_ID:
+            try:
+                schedule = self.deployment.table.get(
+                    schedule_id, ExtendedDescriptorType.SCHEDULE
+                )
+                step.schedule = {
+                    k: int(v)
+                    for k, v in schedule.payload.items()
+                    if isinstance(v, int)
+                }
+            except Exception:
+                step.schedule = None
+        numeric_id = payload.get("numeric_profile_id", NO_ID)
+        if numeric_id == NO_ID:
+            numeric_id = operator.numeric_profile_id
+        step.numeric_profile_id = numeric_id
+        if numeric_id != NO_ID:
+            try:
+                numeric = self.deployment.table.get(
+                    numeric_id, ExtendedDescriptorType.NUMERIC
+                )
+                step.contract_digest = bytes(
+                    numeric.payload["contract_digest"]
+                ).hex()
+            except Exception:
+                step.contract_digest = ""
+        for slot in range(4):
+            self._record_operand(step, ctx, f"in{slot}", payload[f"input_view_{slot}"])
+        for slot in range(2):
+            self._record_operand(step, ctx, f"out{slot}", payload[f"output_view_{slot}"])
+
+    def _record_operand(self, step: TraceStep, ctx, name: str, view_id: int) -> None:
+        if view_id == NO_ID:
+            return
+        try:
+            view = self.views.resolve(view_id, ctx.loops, ctx.symbols)
+        except Exception:
+            return
+        step.operand_dims[name] = tuple(int(d) for d in view.dims)
+        step.operand_objects[name] = int(view.object_id)
+
     def _evaluate_predicate(self, descriptor, loops, symbols):  # type: ignore[override]
         step = self._new_step("PREDICATE", descriptor_id=descriptor.descriptor_id)
         taken = super()._evaluate_predicate(descriptor, loops, symbols)
@@ -447,6 +519,7 @@ class TracingDevice(Device):
             wait_producers=self._wait_producers(instruction.wait_set_id),
             signal_event_id=instruction.signal_event_id,
         )
+        self._describe_operator(step, ctx, instruction)
         self._recorder.begin()
         try:
             super()._issue(ctx, instruction, family)
@@ -484,6 +557,215 @@ class TracingDevice(Device):
             )
             step.accesses = self._recorder.end()
             step.counter_delta = _delta(before, counters.snapshot())
+
+
+# ---------------------------------------------------------------------------
+# Schedule-driven tiling
+#
+# The program loops over layers, token blocks, experts and vocabulary
+# partitions only.  One engine instruction names a whole contraction, and the
+# SCHEDULE descriptor carries the tile shape.  The functional device does not
+# model tiles at all, so this module is the only place tiling becomes time --
+# which is exactly why a missing or zeroed tile mapping is a hard error here and
+# never a default.
+# ---------------------------------------------------------------------------
+class ScheduleError(MachineError):
+    """Raised when an operator cannot be tiled from its SCHEDULE descriptor."""
+
+
+#: Families whose OPERATOR descriptor must carry a tile mapping.  STATE and LINK
+#: are driven by STATE and COMMUNICATION descriptors instead, and OBSERVATION
+#: and RECOVERY retire in the microsequencer.
+TILED_FAMILIES = frozenset(
+    {"dma", "tensor", "vector", "attention", "route", "reduction", "selection"}
+)
+
+#: Families with a reduction axis, for which ``tile_depth`` is load-bearing.
+REDUCING_FAMILIES = frozenset({"tensor", "attention", "reduction"})
+
+
+def _product(values: Sequence[int]) -> int:
+    total = 1
+    for value in values:
+        total *= int(value)
+    return total
+
+
+@dataclass(slots=True)
+class TileMapping:
+    """One operator decomposed into tiles by its SCHEDULE descriptor."""
+
+    schedule_id: int
+    rows: int
+    cols: int
+    depth: int
+    tile_rows: int
+    tile_cols: int
+    tile_depth: int
+    row_tiles: int
+    col_tiles: int
+    depth_tiles: int
+    issue_window: int
+    max_outstanding: int
+    bank_mask: int
+    port_mask: int
+    queue_index: int
+    noc_route_class: int
+    resource_bound: int
+    priority: int
+
+    @property
+    def tiles(self) -> int:
+        return self.row_tiles * self.col_tiles * self.depth_tiles
+
+    @property
+    def tile_work(self) -> int:
+        return self.tile_rows * self.tile_cols * self.tile_depth
+
+    @property
+    def issued_work(self) -> int:
+        """Work the tiled machine performs, padding included."""
+        return self.tiles * self.tile_work
+
+    @property
+    def useful_work(self) -> int:
+        return self.rows * self.cols * self.depth
+
+    @property
+    def padding_work(self) -> int:
+        return max(0, self.issued_work - self.useful_work)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "schedule_id": self.schedule_id,
+            "extent": {"rows": self.rows, "cols": self.cols, "depth": self.depth},
+            "tile_shape": {
+                "tile_rows": self.tile_rows,
+                "tile_cols": self.tile_cols,
+                "tile_depth": self.tile_depth,
+            },
+            "tiles": self.tiles,
+            "row_tiles": self.row_tiles,
+            "col_tiles": self.col_tiles,
+            "depth_tiles": self.depth_tiles,
+            "issued_work": self.issued_work,
+            "useful_work": self.useful_work,
+            "padding_work": self.padding_work,
+            "issue_window": self.issue_window,
+            "max_outstanding": self.max_outstanding,
+            "bank_mask": self.bank_mask,
+            "port_mask": self.port_mask,
+            "queue_index": self.queue_index,
+            "noc_route_class": self.noc_route_class,
+        }
+
+
+def operand_extents(step: TraceStep) -> tuple[int, int, int]:
+    """``(rows, cols, depth)`` for one operator, per the frozen operand table.
+
+    ``TA-ABI3-OPCONV-1`` fixes which slot holds what, so the extents can be read
+    off the resolved views: the output surface is ``rows x cols``, and the
+    reduction extent is the family's contracted axis.
+    """
+    dims = step.operand_dims
+    out = dims.get("out0") or ()
+    in0 = dims.get("in0") or ()
+    in1 = dims.get("in1") or ()
+    surface = out or in0
+    if not surface:
+        return 1, 1, 1
+    cols = int(surface[-1])
+    rows = _product(surface[:-1]) or 1
+    family = step.family
+    if family == "tensor":
+        depth = int(in0[-1]) if in0 else 1
+    elif family == "attention":
+        depth = int(step.counter_delta.get("attention.context_positions", 0))
+        if depth <= 0:
+            depth = int(in1[-2]) if len(in1) >= 2 else 1
+    elif family == "reduction":
+        total = _product(in0) if in0 else 0
+        depth = max(1, total // max(rows * cols, 1))
+    else:
+        depth = 1
+    return max(rows, 1), max(cols, 1), max(depth, 1)
+
+
+def tile_mapping(step: TraceStep, params: EngineParams) -> TileMapping:
+    """Decompose one operator into tiles, failing closed on a missing mapping."""
+    if step.schedule_id == NO_ID or step.schedule is None:
+        raise ScheduleError(
+            f"operator {step.operator_id} ({step.mnemonic}) carries no SCHEDULE "
+            "descriptor.  The program contains no tile loops, so the cycle model "
+            "is the only place tiling becomes time and it will not invent a tile "
+            "shape: a timing number from an absent tile mapping is meaningless."
+        )
+    schedule = step.schedule
+    rows, cols, depth = operand_extents(step)
+    tile_rows = int(schedule.get("tile_rows", 0))
+    tile_cols = int(schedule.get("tile_cols", 0))
+    tile_depth = int(schedule.get("tile_depth", 0))
+    missing = [
+        name
+        for name, value in (
+            ("tile_rows", tile_rows),
+            ("tile_cols", tile_cols),
+        )
+        if value <= 0
+    ]
+    if step.family in REDUCING_FAMILIES and tile_depth <= 0:
+        missing.append("tile_depth")
+    if missing:
+        raise ScheduleError(
+            f"SCHEDULE descriptor {step.schedule_id}, used by operator "
+            f"{step.operator_id} ({step.mnemonic}), leaves {sorted(missing)} at "
+            "zero.  A zeroed tile mapping is a hard error, not a default."
+        )
+    tile_depth = max(tile_depth, 1)
+    return TileMapping(
+        schedule_id=step.schedule_id,
+        rows=rows,
+        cols=cols,
+        depth=depth,
+        tile_rows=tile_rows,
+        tile_cols=tile_cols,
+        tile_depth=tile_depth,
+        row_tiles=max(1, -(-rows // tile_rows)),
+        col_tiles=max(1, -(-cols // tile_cols)),
+        depth_tiles=max(1, -(-depth // tile_depth)),
+        issue_window=int(schedule.get("issue_window", 0)) or params.tile_pipeline_depth,
+        max_outstanding=int(schedule.get("max_outstanding", 0)) or params.max_outstanding,
+        bank_mask=int(schedule.get("bank_mask", 0)),
+        port_mask=int(schedule.get("port_mask", 0)),
+        queue_index=int(schedule.get("queue_index", 0)),
+        noc_route_class=int(schedule.get("noc_route_class", 0)),
+        resource_bound=int(schedule.get("resource_bound", 1)),
+        priority=int(schedule.get("priority", 0)),
+    )
+
+
+def apply_tile_amplification(step: TraceStep, mapping: TileMapping) -> None:
+    """Set each access's re-fetch factor from the tile decomposition.
+
+    A tiled contraction re-reads the left operand once per column tile and the
+    right operand once per row tile; the output is written once because the
+    partial sums stay in the engine's accumulator across depth tiles.  The
+    amplified figure is wire traffic and is timed; the useful figure is what the
+    functional device counted and is what the architectural counters report.
+    """
+    left = step.operand_objects.get("in0")
+    right = step.operand_objects.get("in1")
+    left_view = step.operand_dims.get("in0")
+    for access in step.accesses:
+        if access.write:
+            access.amplification = 1
+        elif right is not None and access.object_id == right and access.object_id != left:
+            access.amplification = mapping.row_tiles
+        elif left is not None and access.object_id == left:
+            access.amplification = mapping.col_tiles
+        else:
+            access.amplification = 1
+    del left_view
 
 
 # ---------------------------------------------------------------------------
@@ -525,10 +807,19 @@ class _MemoryUnit:
 
 @dataclass(slots=True)
 class MemoryClassStats:
-    """Per-storage-class traffic and occupancy."""
+    """Per-storage-class traffic and occupancy.
+
+    ``bytes_read``/``bytes_written`` are the *useful* bytes -- the architectural
+    figure the functional device counted.  ``transferred_*`` are the bytes the
+    tiled schedule actually moved over the wire, which is larger whenever an
+    operand is re-fetched per tile.  Reporting only one of the two would either
+    understate the bandwidth demand or contradict the counter registry.
+    """
 
     bytes_read: int = 0
     bytes_written: int = 0
+    transferred_read: int = 0
+    transferred_written: int = 0
     transactions: int = 0
     busy_cycles: int = 0
     conflict_cycles: int = 0
@@ -537,19 +828,28 @@ class MemoryClassStats:
     def to_dict(self, params: MemoryClassParams, span: int) -> dict[str, Any]:
         capacity = params.units * params.ports_per_unit * max(span, 1)
         total = self.bytes_read + self.bytes_written
+        transferred = self.transferred_read + self.transferred_written
         return {
             "bytes_read": self.bytes_read,
             "bytes_written": self.bytes_written,
             "bytes_total": total,
+            "transferred_bytes_read": self.transferred_read,
+            "transferred_bytes_written": self.transferred_written,
+            "transferred_bytes_total": transferred,
+            "tile_amplification": (
+                _round(transferred / total) if total else 1.0
+            ),
             "accesses": self.accesses,
             "transactions": self.transactions,
             "busy_cycles": self.busy_cycles,
             "conflict_cycles": self.conflict_cycles,
             "unit_utilisation": _round(self.busy_cycles / capacity) if capacity else 0.0,
-            "achieved_bytes_per_cycle": _round(total / span) if span else 0.0,
+            "achieved_bytes_per_cycle": _round(transferred / span) if span else 0.0,
             "peak_bytes_per_cycle": _round(params.peak_bytes_per_cycle),
             "bandwidth_utilisation": (
-                _round(total / (params.peak_bytes_per_cycle * span)) if span else 0.0
+                _round(transferred / (params.peak_bytes_per_cycle * span))
+                if span
+                else 0.0
             ),
             "structure": params.to_dict(),
         }
@@ -569,6 +869,7 @@ class MemorySystem:
         self.params = params
         self.units: dict[str, list[_MemoryUnit]] = {}
         self.stats: dict[str, MemoryClassStats] = {}
+        self._allow_cache: dict[tuple[str, int, int], list[int]] = {}
         for klass in (params.hbm, params.sram, params.rom, params.host):
             self.units[klass.name] = [
                 _MemoryUnit(
@@ -579,13 +880,49 @@ class MemorySystem:
             ]
             self.stats[klass.name] = MemoryClassStats()
 
-    def _unit_of(self, klass: MemoryClassParams, address: int) -> int:
-        lane = (address // klass.interleave_bytes) % klass.units
-        port = (address // klass.transaction_bytes) % klass.ports_per_unit
-        return lane * klass.ports_per_unit + port
+    def _allowed(
+        self, klass: MemoryClassParams, bank_mask: int, port_mask: int
+    ) -> list[int]:
+        """Indices of the units a schedule's bank and port masks permit.
+
+        ``bank_mask`` and ``port_mask`` are SCHEDULE fields: a narrow mask
+        confines the operation to part of the SRAM, which is a real source of
+        bank conflict rather than a hint.  Zero means unrestricted, matching the
+        builder's default for an unspecified mask.
+        """
+        key = (klass.name, bank_mask, port_mask)
+        cached = self._allow_cache.get(key)
+        if cached is not None:
+            return cached
+        banks = [
+            b for b in range(klass.units)
+            if not bank_mask or (bank_mask >> (b % 32)) & 1
+        ] or list(range(klass.units))
+        ports = [
+            p for p in range(klass.ports_per_unit)
+            if not port_mask or (port_mask >> (p % 32)) & 1
+        ] or list(range(klass.ports_per_unit))
+        allowed = [b * klass.ports_per_unit + p for b in banks for p in ports]
+        self._allow_cache[key] = allowed
+        return allowed
+
+    def _unit_of(
+        self,
+        klass: MemoryClassParams,
+        address: int,
+        allowed: Sequence[int],
+    ) -> int:
+        stripe = (address // klass.interleave_bytes) * klass.ports_per_unit
+        stripe += (address // klass.transaction_bytes) % klass.ports_per_unit
+        return allowed[stripe % len(allowed)]
 
     def schedule(
-        self, accesses: Sequence[MemoryAccess], start: int
+        self,
+        accesses: Sequence[MemoryAccess],
+        start: int,
+        *,
+        bank_mask: int = 0,
+        port_mask: int = 0,
     ) -> tuple[int, dict[str, int]]:
         """Run ``accesses`` from ``start`` and return ``(finish, conflicts)``."""
         finish = start
@@ -593,36 +930,48 @@ class MemorySystem:
         for access in accesses:
             klass = self.params.klass(StorageClass(access.storage_class))
             units = self.units[klass.name]
+            allowed = (
+                self._allowed(klass, bank_mask, port_mask)
+                if klass.name == "sram"
+                else self._allowed(klass, 0, 0)
+            )
             stats = self.stats[klass.name]
             stats.accesses += 1
+            moved = access.transferred_bytes
             if access.write:
                 stats.bytes_written += access.nbytes
+                stats.transferred_written += moved
                 latency = klass.write_latency_cycles
             else:
                 stats.bytes_read += access.nbytes
+                stats.transferred_read += moved
                 latency = klass.read_latency_cycles
-            count = max(1, math.ceil(access.nbytes / klass.transaction_bytes))
+            base_count = max(1, math.ceil(access.nbytes / klass.transaction_bytes))
+            count = max(1, math.ceil(moved / klass.transaction_bytes))
             stats.transactions += count
             conflict = 0
             done = start
             if count <= self.params.max_modeled_transactions_per_access:
                 for index in range(count):
-                    address = access.address + index * klass.transaction_bytes
+                    # A re-fetched operand walks the same address range again,
+                    # so the channel and bank it lands on repeat too.
+                    slot = index % base_count
+                    address = access.address + slot * klass.transaction_bytes
                     nbytes = min(
                         klass.transaction_bytes,
-                        access.nbytes - index * klass.transaction_bytes,
+                        access.nbytes - slot * klass.transaction_bytes,
                     )
-                    unit = units[self._unit_of(klass, address)]
+                    unit = units[self._unit_of(klass, address, allowed)]
                     end, waited = unit.occupy(start, max(nbytes, 1))
                     conflict += waited
                     done = max(done, end)
             else:
                 # Bulk reservation: exact total occupancy, coarser interleave.
-                per_unit = count // len(units)
-                remainder = count % len(units)
-                first = self._unit_of(klass, access.address)
-                for offset in range(len(units)):
-                    unit = units[(first + offset) % len(units)]
+                per_unit = count // len(allowed)
+                remainder = count % len(allowed)
+                first = allowed.index(self._unit_of(klass, access.address, allowed))
+                for offset in range(len(allowed)):
+                    unit = units[allowed[(first + offset) % len(allowed)]]
                     share = per_unit + (1 if offset < remainder else 0)
                     if not share:
                         continue
@@ -673,15 +1022,27 @@ class _Queue:
     def bound(self) -> int:
         return max(1, min(self.depth, self.max_outstanding))
 
+    def bound_for(self, schedule_outstanding: int | None) -> int:
+        """The credit bound for one operation.
+
+        ``max_outstanding`` is a SCHEDULE field, so a schedule may narrow the
+        queue below the capability's limit; it may never widen it past what the
+        implementation advertises.
+        """
+        if not schedule_outstanding:
+            return self.bound
+        return max(1, min(self.bound, int(schedule_outstanding)))
+
     def _drain(self, now: int) -> None:
         if self._completions:
             self._completions = [c for c in self._completions if c > now]
 
-    def admit(self, arrival: int) -> tuple[int, int]:
+    def admit(self, arrival: int, bound: int | None = None) -> tuple[int, int]:
         """Block until a credit is free; return ``(admit_cycle, stall)``."""
+        limit = self.bound if bound is None else max(1, min(bound, self.bound))
         self._drain(arrival)
         now = arrival
-        while len(self._completions) >= self.bound:
+        while len(self._completions) >= limit:
             now = min(self._completions)
             self._drain(now)
         stall = max(0, now - arrival)
