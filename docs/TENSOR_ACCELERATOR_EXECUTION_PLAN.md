@@ -1030,6 +1030,50 @@ remain open. The exact lock, artifact hashes, constraints, measurements, and
 nonclaims are retained in [QWEN3_RTL_IHP_PHYSICAL.md](QWEN3_RTL_IHP_PHYSICAL.md)
 and its bound JSON report.
 
+### 1.18 Ordered DMA-to-ADD shared-SRAM execution and fail-stop behavior
+
+QW-RTL-DMA-ADD-001 introduces `ot_ta_dma_add_sequencer` as the first bounded
+multi-command RTL control point. It admits only one command at a time, requires
+strictly increasing submitted command indices, gives the active DMA or ADD
+engine exclusive ownership of the shared SRAM write port, accumulates
+architectural transaction/byte/element counters, and holds one stable program
+completion until acknowledged. CRC/decoder errors, executor errors, and
+non-monotonic submissions end the bounded program before another command can be
+accepted. An explicit `cmd_last` marks the final submitted record; full command-
+program header/body CRC and terminal `COMPLETE` semantics remain separate work.
+
+The retained vector-set ID is
+`575ddc7ba55ddc76deec04f5747c661b7646baec13020ee29bb572d3f543cd3d`;
+the dual-simulator campaign ID is
+`6df5e663467f84893f3a92eaf01f3dc398a58cedfde134d66ceff4791991516d`.
+The first unchanged record is Qwen command 1, which transfers the authentic
+8,192-byte layer-0 input-normalization weight from HBM to SRAM address
+2,097,152. The second unchanged record is Qwen command 5,131, the existing
+4,096-element residual ADD. For this bounded composition, the DMA destination
+is exactly the ADD right-operand address; the expected ADD result is recomputed
+by independent scalar and optimized BF16 implementations and has payload hash
+`8901268db88a2d0e207c56b01aab6bcd0cdae0c2de2538e7d5a0120c595202ac`.
+
+Icarus and Verilator reconcile two accepted/completed commands, 128 HBM
+requests and responses, 8,192 HBM bytes, 512 16-byte DMA writes, 8,192
+two-byte ADD reads, 4,096 two-byte ADD writes, 4,096 retired elements, zero
+saturations, and 16,384 total SRAM bytes written. The test models independently
+insert HBM-request, SRAM-read, and shared-write backpressure. They also prove
+three fail-stop paths: a corrupted DMA record causes CRC error 1 with no HBM or
+SRAM activity; a failing first HBM response causes error 11 with no admitted
+payload or successor reads; and a second non-monotonic submitted index causes
+program-order error 12 after the successful DMA but before ADD dispatch.
+
+This is a real ordered shared-memory composition, but not a semantic shortcut.
+Both records are authentic members of the frozen program, yet commands 2
+through 5,130 are deliberately absent; using the normalization weight as this
+ADD operand is not the graph-valid Qwen layer sequence. The schema fixes
+`graph_valid_qwen_operation_sequence`, `complete_layer_execution`, and
+`ta_rtl_6_closed` to false. The next horizon is the authentic adjacent
+command-1 DMA plus command-2 RMSNorm path, followed by additional DMA/tensor/
+vector kernels, banking/ECC/arbitration, program authentication, and a complete
+representative layer.
+
 ## 2. Meaning of production-grade
 
 Production-grade in this plan describes the quality of the compiler, simulator,
@@ -2130,7 +2174,7 @@ RTL, physical, and comparison gates remain open.
 | Command and capability ABI | ABI 2.5 and capability V6 admit bounded indexed SRAM selection with a strict schema and preserve older minor decoding; the complete 924,386-command program executes causally | Fixed request v1 remains immutable; add a separately versioned dynamic request/session contract. Routing, remaining vector operations, synchronization, timing, 8,192-plus context support, and the final hardware capability remain open |
 | Compiler and checker | **QW-FM1 closed at `74c0d59`; QW-FM2/QW-FM3 closed at `324f48d`; QW-FM4 closed at `c5b9578`.** Complete Qwen neutral lowering, streamed full-model HBM layout, SRAM lifetime allocation, command lowering, inverse reconstruction, and one target-precision execution are deterministic and retained | Preserve those artifacts unchanged while adding dynamic prefill/decode compilation; do not relabel one fixed transaction as generation or long-context acceptance |
 | Functional simulation | **Fixed one-step QW-FM4 closed at `c5b9578`.** The common simulator authenticates all 17 HBM shards, validates and executes all commands, commits all 36 states atomically, and produces exact complete logits and one token; a separate checkpoint-layout and algorithmic path matches it exactly | Execute at least 32 ordinary greedy steps through a versioned dynamic request/session path, then prove operational readiness for the exact 8,000-token run |
-| RTL correlation | QW-RTL-CMD-001 admits all production records with a four-byte-per-cycle, fixed-15-cycle CRC check; QW-RTL-ADD-001 and ADD-SRAM-001 execute authentic residual data and explicit SRAM traffic; QW-RTL-DMA-001 independently moves an authentic 8,192-byte layer-0 weight through 128 HBM transactions and 512 SRAM writes, including stalls and zero-write HBM fault handling. DMA campaign `033c073f...b17d` is deterministic and source-bound | ADD and DMA are still separate commands against behavioral memories. Join them under a program-order sequencer, add banking/ECC/arbitration and more compute kernels, then execute a complete layer before `TA-RTL-6` |
+| RTL correlation | QW-RTL-CMD-001 admits all production records with a four-byte-per-cycle, fixed-15-cycle CRC check; QW-RTL-ADD-001 and ADD-SRAM-001 execute authentic residual data and explicit SRAM traffic; QW-RTL-DMA-001 independently moves an authentic 8,192-byte layer-0 weight; QW-RTL-DMA-ADD-001 joins authentic DMA and ADD records under fail-stop monotonic sequencing with a real shared-SRAM dependency. Campaign `6df5e663...516d` passes Icarus and Verilator plus CRC, HBM-response, and order failures | The two-record composition deliberately skips intervening graph operations and is not a valid layer schedule. Implement the adjacent DMA-to-RMSNorm path, then additional compute kernels, program authentication, banking/ECC/arbitration, and a representative complete layer before `TA-RTL-6` |
 | Timing and physical evidence | Bounded macro-free ADD-SRAM RTL-to-GDS feasibility passes on pinned public IHP SG13G2 at a 20 ns target: campaign `0af6cbe8...b316` has positive extracted setup/hold slack at slow, typical, and fast corners, zero internal route/antenna violations, 18,101 post-route cells, and no unconstrained endpoints | This is one control/compute slice with an external behavioral SRAM. Formal equivalence, SRAM macro, activity-derived power/IR, thermal, foundry DRC/LVS, HBM/package, complete-layer timing, performance per watt, reliability, yield, and silicon remain open; `TA-PHY-7` is not closed |
 | End-to-end execution | One complete 36-layer fixed request produces exact final logits, token `50994`, and committed state, but no multi-step generation or long-context common-simulator run has closed | `TA-QWEN-4` and `TA-DSV4-5` remain open; QW-FM4 cannot substitute for Qwen 8,000 or DeepSeek 200,000 |
 
