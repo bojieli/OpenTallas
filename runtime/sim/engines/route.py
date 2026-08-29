@@ -1,0 +1,460 @@
+"""ROUTE engine family: expert routing, sparse index selection and windowing.
+
+Routing is where a MoE model decides *what work exists*, so every decision here
+is made from device memory and is deterministic down to the tie break.  Two
+rules hold across all seven subopcodes:
+
+* a rank order is by descending key, and equal keys resolve to the lower index,
+  so a re-run of the same scores selects the same experts in the same slots;
+* an ID that names something outside its declared bound is a fault (trap class
+  3) after being counted in ``route.rejected_ids``, never a clamp or a wrap.
+
+``ROUTE.TOPK``
+    ``input_view_0`` scores ``[groups, experts]`` (or ``[experts]``).
+    ``output_view_0`` U32 selected expert IDs ``[groups, k]``,
+    ``output_view_1`` optional selected weights ``[groups, k]``.
+    ``aux_id_0`` is an immediate ``k``; ``NO_ID`` takes ``k`` from the output.
+
+``ROUTE.BIASED_TOPK``
+    DeepSeek routing.  ``input_view_1`` is the per-expert selection bias,
+    ``[experts]`` or ``[groups, experts]``.  Selection ranks ``score + bias``;
+    the weights written out are the *unbiased* scores of the selected experts,
+    which is the whole point of the biased-gate contract.
+
+``ROUTE.WEIGHT_NORMALIZE``
+    ``input_view_0`` weights ``[groups, k]`` to ``output_view_0`` of the same
+    shape: each group is divided by its ordered sum and multiplied by the
+    numeric profile's ``scale_bits`` when that scale is non-zero (the routed
+    scaling factor).  A non-positive group sum is a numeric fault.
+
+``ROUTE.EXPERT_DISPATCH``
+    ``input_view_0`` U32 expert IDs ``[groups, k]``, ``input_view_1`` the token
+    rows ``[groups, width]``, ``output_view_0`` the dispatch buffer
+    ``[groups * k, width]`` in ``(group, slot)`` order.  ``aux_id_0`` is the
+    immediate expert count every ID is checked against and is mandatory: an
+    engine that cannot state the bound cannot prove the ID is inside it.
+
+``ROUTE.INDEX_TOPK``
+    Lightning-indexer selection.  ``input_view_0`` index scores
+    ``[span, context]``; ``output_view_0`` U32 selected KV positions
+    ``[span, k]``, **sorted ascending** and tail-padded with ``0xffffffff`` so
+    that ATTENTION.SPARSE gathers in address order and never executes a pad.
+    ``aux_id_0`` immediate ``k`` (``NO_ID`` uses the output extent),
+    ``aux_id_1`` mask mode (``0`` causal, ``1`` full), ``aux_id_2`` the runtime
+    symbol bounding the context, ``aux_id_3`` the symbol holding the absolute
+    position of query ``0``.
+
+``ROUTE.HASH_ROUTE``
+    ``input_view_0`` U32/U64 keys ``[n]``, ``input_view_1`` a U32 route table
+    ``[slots]``, ``output_view_0`` U32 destinations ``[n]``.  The mixing
+    function is the frozen 32-bit finalizer in :func:`mix32`; it is part of the
+    contract because two nodes must derive the same destination.
+
+``ROUTE.WINDOW_INDEX``
+    ``input_view_0`` U32 absolute query positions ``[span]``;
+    ``output_view_0`` U32 ``[span, window]`` of the visible positions ending at
+    each query, ascending and tail-padded with ``0xffffffff``.  ``aux_id_0``
+    immediate window (``NO_ID`` uses the output extent), ``aux_id_1`` mask
+    mode, ``aux_id_2`` the runtime symbol bounding the context.
+"""
+
+from __future__ import annotations
+
+import numpy as np
+
+from runtime.abi3.constants import DType, Major, NO_ID, Route
+from runtime.abi3.descriptors import Descriptor
+from runtime.sim.engine import EngineContext, EngineError, register
+from runtime.sim.engines.reduction import narrow, ordered_sum, widen
+from runtime.sim.memory import ResolvedView
+
+MASK_CAUSAL = 0
+MASK_FULL = 1
+
+PAD_INDEX = NO_ID
+"""Tail padding written into an index output that has fewer entries than slots."""
+
+
+def _require(condition: bool, message: str, trap_class: int = 3) -> None:
+    if not condition:
+        raise EngineError(message, trap_class=trap_class)
+
+
+def _check_operator(descriptor: Descriptor, sub: int) -> None:
+    payload = descriptor.payload
+    _require(
+        int(payload["engine_family"]) == int(Major.ROUTE)
+        and int(payload["engine_sub"]) == int(sub),
+        f"operator {descriptor.descriptor_id} does not describe "
+        f"ROUTE.{Route(sub).name}",
+    )
+
+
+def _aux(descriptor: Descriptor, slot: int) -> int | None:
+    value = int(descriptor.payload[f"aux_id_{slot}"])
+    return None if value == NO_ID else value
+
+
+def mix32(keys: np.ndarray) -> np.ndarray:
+    """Frozen 32-bit avalanche used by ``ROUTE.HASH_ROUTE``."""
+    value = np.ascontiguousarray(keys, dtype=np.uint64).astype(np.uint64)
+    value = value & np.uint64(0xFFFFFFFF)
+    value ^= value >> np.uint64(16)
+    value = (value * np.uint64(0x85EBCA6B)) & np.uint64(0xFFFFFFFF)
+    value ^= value >> np.uint64(13)
+    value = (value * np.uint64(0xC2B2AE35)) & np.uint64(0xFFFFFFFF)
+    value ^= value >> np.uint64(16)
+    return value.astype(np.uint32)
+
+
+def _groups(view: ResolvedView, label: str) -> tuple[int, int]:
+    """Interpret a view as ``[groups, width]``, allowing a rank-1 single group."""
+    _require(
+        len(view.dims) in (1, 2),
+        f"ROUTE {label} view {view.descriptor_id} has rank {len(view.dims)}, "
+        "expected [groups, width] or [width]",
+    )
+    if len(view.dims) == 1:
+        return 1, int(view.dims[0])
+    return int(view.dims[0]), int(view.dims[1])
+
+
+def _u32_out(view: ResolvedView, label: str) -> None:
+    _require(
+        view.dtype == int(DType.U32),
+        f"ROUTE {label} view {view.descriptor_id} is dtype {view.dtype:#04x}, "
+        "expected U32",
+    )
+
+
+def _rank_descending(keys: np.ndarray) -> np.ndarray:
+    """Indices ordered by descending key, ties resolved to the lower index."""
+    return np.argsort(-keys, axis=-1, kind="stable")
+
+
+def _symbol_value(ctx: EngineContext, symbol_id: int | None, default: int) -> int:
+    if symbol_id is None:
+        return default
+    return int(ctx.symbol(symbol_id))
+
+
+# ---------------------------------------------------------------------------
+# TOPK and BIASED_TOPK
+# ---------------------------------------------------------------------------
+def _topk(ctx: EngineContext, descriptor: Descriptor, sub: int) -> None:
+    _check_operator(descriptor, sub)
+    score_view = ctx.input_view(descriptor, 0)
+    bias_view = (
+        ctx.input_view(descriptor, 1) if sub == int(Route.BIASED_TOPK) else None
+    )
+    id_view = ctx.output_view(descriptor, 0)
+    weight_view_id = descriptor.payload["output_view_1"]
+    weight_view = None if weight_view_id == NO_ID else ctx.view(weight_view_id)
+    _u32_out(id_view, "expert ID")
+
+    groups, experts = _groups(score_view, "score")
+    out_groups, slots = _groups(id_view, "expert ID")
+    declared = _aux(descriptor, 0)
+    topk = slots if declared is None else declared
+    _require(
+        out_groups == groups,
+        f"ROUTE.TOPK output view {id_view.descriptor_id} covers {out_groups} "
+        f"groups, expected {groups}",
+    )
+    _require(
+        0 < topk <= experts and topk == slots,
+        f"ROUTE.TOPK selects {topk} of {experts} experts into {slots} slots",
+    )
+
+    scores = widen(ctx, score_view).reshape(groups, experts)
+    keys = scores
+    if bias_view is not None:
+        bias_groups, bias_experts = _groups(bias_view, "bias")
+        _require(
+            bias_experts == experts and bias_groups in (1, groups),
+            f"ROUTE.BIASED_TOPK bias view {bias_view.descriptor_id} dims "
+            f"{bias_view.dims} do not broadcast over {groups} x {experts}",
+        )
+        bias = widen(ctx, bias_view).reshape(bias_groups, experts)
+        keys = np.add(scores, bias, dtype=np.float32)
+    _require(
+        bool(np.all(np.isfinite(keys))),
+        f"ROUTE.{Route(sub).name}: the routing keys contain a NaN or infinite "
+        "value",
+        trap_class=6,
+    )
+
+    order = _rank_descending(keys)[:, :topk]
+    ctx.write(id_view, order.astype(np.uint32).reshape(id_view.dims))
+    if weight_view is not None:
+        weight_groups, weight_slots = _groups(weight_view, "weight")
+        _require(
+            weight_groups == groups and weight_slots == topk,
+            f"ROUTE.TOPK weight view {weight_view.descriptor_id} dims "
+            f"{weight_view.dims} differ from {(groups, topk)}",
+        )
+        selected = np.take_along_axis(scores, order, axis=1)
+        ctx.write(weight_view, narrow(selected, weight_view))
+    ctx.counters.add("route.topk_candidates", groups * experts)
+    ctx.counters.add("route.selected_experts", groups * topk)
+
+
+@register(Major.ROUTE, Route.TOPK)
+def topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    _topk(ctx, descriptor, int(Route.TOPK))
+
+
+@register(Major.ROUTE, Route.BIASED_TOPK)
+def biased_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    _topk(ctx, descriptor, int(Route.BIASED_TOPK))
+
+
+# ---------------------------------------------------------------------------
+# WEIGHT_NORMALIZE
+# ---------------------------------------------------------------------------
+@register(Major.ROUTE, Route.WEIGHT_NORMALIZE)
+def weight_normalize(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    _check_operator(descriptor, int(Route.WEIGHT_NORMALIZE))
+    profile = ctx.numeric(descriptor.payload["numeric_profile_id"])
+    weight_view = ctx.input_view(descriptor, 0)
+    out_view = ctx.output_view(descriptor, 0)
+    groups, slots = _groups(weight_view, "weight")
+    _require(
+        out_view.element_count == groups * slots,
+        f"ROUTE.WEIGHT_NORMALIZE output view {out_view.descriptor_id} holds "
+        f"{out_view.element_count} elements, expected {groups * slots}",
+    )
+    weights = widen(ctx, weight_view).reshape(groups, slots)
+    totals = ordered_sum(
+        np.ascontiguousarray(weights.T), profile.reduction_order
+    ).reshape(groups)
+    if not bool(np.all(np.isfinite(totals))) or bool(np.any(totals <= 0)):
+        raise EngineError(
+            "ROUTE.WEIGHT_NORMALIZE: a group weight sum is not positive finite; "
+            "a routed gate cannot be normalised by it",
+            trap_class=6,
+        )
+    scale = np.float32(profile.scale) if profile.scale_bits else np.float32(1.0)
+    _require(
+        bool(np.isfinite(scale)) and scale > 0,
+        f"numeric profile {profile.descriptor_id}: routed scale bits "
+        f"{profile.scale_bits:#010x} are not a positive finite binary32 value",
+    )
+    normalised = np.multiply(
+        np.divide(weights, totals.reshape(groups, 1), dtype=np.float32),
+        scale,
+        dtype=np.float32,
+    )
+    ctx.write(out_view, narrow(normalised, out_view))
+    ctx.counters.add("reduction.elements", groups * slots)
+    ctx.counters.add("reduction.ordered_sums", groups)
+
+
+# ---------------------------------------------------------------------------
+# EXPERT_DISPATCH
+# ---------------------------------------------------------------------------
+@register(Major.ROUTE, Route.EXPERT_DISPATCH)
+def expert_dispatch(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    _check_operator(descriptor, int(Route.EXPERT_DISPATCH))
+    id_view = ctx.input_view(descriptor, 0)
+    token_view = ctx.input_view(descriptor, 1)
+    out_view = ctx.output_view(descriptor, 0)
+    _u32_out(id_view, "expert ID")
+    groups, slots = _groups(id_view, "expert ID")
+    token_groups, width = _groups(token_view, "token")
+    _require(
+        token_groups == groups,
+        f"ROUTE.EXPERT_DISPATCH token view {token_view.descriptor_id} covers "
+        f"{token_groups} groups, expected {groups}",
+    )
+    _require(
+        token_view.dtype == out_view.dtype,
+        f"ROUTE.EXPERT_DISPATCH moves {token_view.dtype:#04x} codes into a "
+        f"{out_view.dtype:#04x} view",
+    )
+    _require(
+        out_view.dims == (groups * slots, width),
+        f"ROUTE.EXPERT_DISPATCH output view {out_view.descriptor_id} dims "
+        f"{out_view.dims} differ from {(groups * slots, width)}",
+    )
+    experts = _aux(descriptor, 0)
+    _require(
+        experts is not None and experts > 0,
+        f"operator {descriptor.descriptor_id}: ROUTE.EXPERT_DISPATCH must "
+        "declare the expert count in aux_id_0 so every ID can be bound-checked",
+    )
+    assert experts is not None
+    ids = np.asarray(ctx.read(id_view), dtype=np.uint64).reshape(groups, slots)
+    rejected = int(np.count_nonzero(ids >= np.uint64(experts)))
+    if rejected:
+        ctx.counters.add("route.rejected_ids", rejected)
+        raise EngineError(
+            f"ROUTE.EXPERT_DISPATCH: {rejected} expert ID(s) name an expert "
+            f"outside the declared {experts}",
+            trap_class=3,
+        )
+    tokens = np.array(ctx.read(token_view)).reshape(groups, width)
+    dispatched = np.repeat(tokens, slots, axis=0)
+    ctx.write(out_view, dispatched.reshape(out_view.dims))
+    ctx.counters.add(
+        "route.dispatched_bytes", int(dispatched.size) * dispatched.dtype.itemsize
+    )
+
+
+# ---------------------------------------------------------------------------
+# INDEX_TOPK and WINDOW_INDEX
+# ---------------------------------------------------------------------------
+def _mask_mode(descriptor: Descriptor, slot: int) -> int:
+    mode = _aux(descriptor, slot)
+    mode = MASK_CAUSAL if mode is None else mode
+    _require(mode in (MASK_CAUSAL, MASK_FULL), f"ROUTE: unknown mask mode {mode}")
+    return mode
+
+
+@register(Major.ROUTE, Route.INDEX_TOPK)
+def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    _check_operator(descriptor, int(Route.INDEX_TOPK))
+    score_view = ctx.input_view(descriptor, 0)
+    out_view = ctx.output_view(descriptor, 0)
+    _u32_out(out_view, "index")
+    span, width = _groups(score_view, "index score")
+    out_span, slots = _groups(out_view, "index")
+    declared = _aux(descriptor, 0)
+    topk_count = slots if declared is None else declared
+    _require(
+        out_span == span,
+        f"ROUTE.INDEX_TOPK output view {out_view.descriptor_id} covers "
+        f"{out_span} query rows, expected {span}",
+    )
+    _require(
+        0 < topk_count <= slots,
+        f"ROUTE.INDEX_TOPK selects {topk_count} positions into {slots} slots",
+    )
+    mode = _mask_mode(descriptor, 1)
+    context = _symbol_value(ctx, _aux(descriptor, 2), width)
+    _require(
+        0 < context <= width,
+        f"ROUTE.INDEX_TOPK: context {context} is outside the {width} scored "
+        f"positions of view {score_view.descriptor_id}",
+    )
+    base = _symbol_value(ctx, _aux(descriptor, 3), context - span)
+    _require(
+        base >= 0,
+        f"ROUTE.INDEX_TOPK: a span of {span} does not fit in {context} "
+        "positions",
+    )
+    scores = widen(ctx, score_view).reshape(span, width)
+    _require(
+        bool(np.all(np.isfinite(scores[:, :context]))),
+        f"ROUTE.INDEX_TOPK: index score view {score_view.descriptor_id} "
+        "contains a NaN or infinite value",
+        trap_class=6,
+    )
+    selected = np.full((span, slots), np.uint32(PAD_INDEX), dtype=np.uint32)
+    candidates = 0
+    for row in range(span):
+        limit = base + row + 1 if mode == MASK_CAUSAL else context
+        _require(
+            0 < limit <= context,
+            f"ROUTE.INDEX_TOPK: query {row} at absolute position "
+            f"{base + row} is outside {context} positions",
+        )
+        candidates += limit
+        take = min(topk_count, limit)
+        order = _rank_descending(scores[row, :limit])[:take]
+        selected[row, :take] = np.sort(order).astype(np.uint32)
+    ctx.write(out_view, selected.reshape(out_view.dims))
+    ctx.counters.add("route.topk_candidates", candidates)
+
+
+@register(Major.ROUTE, Route.WINDOW_INDEX)
+def window_index(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    _check_operator(descriptor, int(Route.WINDOW_INDEX))
+    position_view = ctx.input_view(descriptor, 0)
+    out_view = ctx.output_view(descriptor, 0)
+    _u32_out(out_view, "window index")
+    _u32_out(position_view, "position")
+    span, slots = _groups(out_view, "window index")
+    declared = _aux(descriptor, 0)
+    window = slots if declared is None else declared
+    _require(
+        0 < window <= slots,
+        f"ROUTE.WINDOW_INDEX writes a {window}-position window into {slots} "
+        "slots",
+    )
+    _require(
+        position_view.element_count == span,
+        f"ROUTE.WINDOW_INDEX position view {position_view.descriptor_id} holds "
+        f"{position_view.element_count} positions for {span} query rows",
+    )
+    mode = _mask_mode(descriptor, 1)
+    context_symbol = _aux(descriptor, 2)
+    _require(
+        mode == MASK_CAUSAL or context_symbol is not None,
+        "ROUTE.WINDOW_INDEX in full-visibility mode must name the context "
+        "symbol in aux_id_2",
+    )
+    context = None if context_symbol is None else int(ctx.symbol(context_symbol))
+    positions = np.asarray(ctx.read(position_view), dtype=np.int64).reshape(span)
+    selected = np.full((span, slots), np.uint32(PAD_INDEX), dtype=np.uint32)
+    produced = 0
+    for row in range(span):
+        position = int(positions[row])
+        _require(
+            position >= 0 and (context is None or position < context),
+            f"ROUTE.WINDOW_INDEX: query {row} at absolute position {position} "
+            f"is outside the {context} visible positions",
+        )
+        last = position if mode == MASK_CAUSAL else (context or position + 1) - 1
+        first = max(0, last - window + 1)
+        count = last - first + 1
+        selected[row, :count] = np.arange(first, last + 1, dtype=np.uint32)
+        produced += count
+    ctx.write(out_view, selected.reshape(out_view.dims))
+    ctx.counters.add("route.topk_candidates", produced)
+
+
+# ---------------------------------------------------------------------------
+# HASH_ROUTE
+# ---------------------------------------------------------------------------
+@register(Major.ROUTE, Route.HASH_ROUTE)
+def hash_route(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    _check_operator(descriptor, int(Route.HASH_ROUTE))
+    key_view = ctx.input_view(descriptor, 0)
+    table_view = ctx.input_view(descriptor, 1)
+    out_view = ctx.output_view(descriptor, 0)
+    _require(
+        key_view.dtype in (int(DType.U32), int(DType.U64)),
+        f"ROUTE.HASH_ROUTE key view {key_view.descriptor_id} is dtype "
+        f"{key_view.dtype:#04x}, expected U32 or U64",
+    )
+    _u32_out(table_view, "route table")
+    _u32_out(out_view, "destination")
+    keys_count = int(key_view.element_count)
+    slots = int(table_view.element_count)
+    _require(slots > 0, "ROUTE.HASH_ROUTE: the route table is empty")
+    _require(
+        out_view.element_count == keys_count,
+        f"ROUTE.HASH_ROUTE output view {out_view.descriptor_id} holds "
+        f"{out_view.element_count} destinations for {keys_count} keys",
+    )
+    keys = np.asarray(ctx.read(key_view), dtype=np.uint64).reshape(keys_count)
+    table = np.asarray(ctx.read(table_view), dtype=np.uint32).reshape(slots)
+    destinations = table[(mix32(keys) % np.uint32(slots)).astype(np.intp)]
+    ctx.write(out_view, destinations.astype(np.uint32).reshape(out_view.dims))
+    ctx.counters.add("route.hash_lookups", keys_count)
+
+
+__all__ = [
+    "MASK_CAUSAL",
+    "MASK_FULL",
+    "PAD_INDEX",
+    "biased_topk",
+    "expert_dispatch",
+    "hash_route",
+    "index_topk",
+    "mix32",
+    "topk",
+    "weight_normalize",
+    "window_index",
+]

@@ -56,6 +56,8 @@ def load_engines(modules: Iterable[str] | None = None) -> dict[str, object]:
         "unavailable": unavailable,
         "implemented": report["implemented"],
         "missing": report["missing"],
+        "sequencer_executed": report["sequencer_executed"],
         "implemented_count": len(report["implemented"]),
         "missing_count": len(report["missing"]),
+        "sequencer_count": len(report["sequencer_executed"]),
     }

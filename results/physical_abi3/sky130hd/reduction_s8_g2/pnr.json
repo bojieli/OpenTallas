@@ -1,0 +1,89 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-08-29T15:59:29.981979+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+        "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+        "size_bytes": 12841637
+      }
+    ],
+    "name": "tt",
+    "process": "typical",
+    "temperature_c": 25.0,
+    "voltage_v": 1.8
+  },
+  "design": {
+    "block": "reduction_s8_g2",
+    "clock_port": "clk",
+    "description": "Eight-source, two-group tagged deterministic reduction endpoint.",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "parameters": {
+      "DATA_W": 32,
+      "GROUPS": 2,
+      "SOURCES": 8,
+      "TAG_W": 16
+    },
+    "sources": [
+      {
+        "path": "rtl/ot_reduction_tree.sv",
+        "sha256": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5",
+        "size_bytes": 8276
+      }
+    ],
+    "top": "ot_reduction_endpoint"
+  },
+  "error": "FlowError: ORFS place-and-route failed with exit 2:\n30_fd_sc_hd__lpflow_isobufsrc_2 -dont_use sky130_fd_sc_hd__lpflow_isobufsrc_4 -dont_use sky130_fd_sc_hd__lpflow_isobufsrc_8 -dont_use sky130_fd_sc_hd__lpflow_isobufsrckapwr_16 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_hl_isowell_tap_1 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_hl_isowell_tap_2 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_hl_isowell_tap_4 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_isowell_4 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_isowell_tap_1 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_isowell_tap_2 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_isowell_tap_4 -constr /work/objects/sky130hd/opentallas_reduction_s8_g2_sky130hd/base/abc.constr -D 20\n15. Executing ABC pass (technology mapping using ABC).\n15.1. Extracting gate netlist of module `\\ot_reduction_endpoint' to `<abc-temp-dir>/input.blif'..\n15.1.1. Executed ABC.\n15.1.2. Re-integrating ABC results.\n16. Executing SPLITNETS pass (splitting up multi-bit signals).\n17. Executing OPT_CLEAN pass (remove unused cells and wires).\n18. Executing HILOMAP pass (mapping to constant drivers).\n19. Executing INSBUF pass (insert buffer cells for connected wires).\n20. Executing CHECK pass (checking for obvious problems).\n21. Printing statistics.\n22. Executing CHECK pass (checking for obvious problems).\n23. Executing Verilog backend.\n23.1. Executing BMUXMAP pass.\n23.2. Executing DEMUXMAP pass.\nWarnings: 2 unique messages, 2 total\nEnd of script. Logfile hash: 7dc1fe5421, time: 4.74s, user: 1.43s, system: 0.14s, MEM: 72.73 MB peak\nYosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)\nTime spent: 67% 1x abc (3 sec), 12% 1x extract_fa (0 sec), ...\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n1_2_yosys                 .v              4             74 03421e66b02dfe890d57\ncp /work/constraint.sdc /work/results/sky130hd/opentallas_reduction_s8_g2_sky130hd/base/1_2_yosys.sdc\ntouch -r /work/constraint.sdc /work/results/sky130hd/opentallas_reduction_s8_g2_sky130hd/base/1_2_yosys.sdc\nOpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 32 thread(s).\nmkdir -p /work/objects/sky130hd/opentallas_reduction_s8_g2_sky130hd/base\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb\nRunning synth_odb.tcl, stage 1_synth\nread_liberty /OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd.tlef, created 13 layers, 25 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd_merged.lef, created 441 library cells\n[ERROR STA-0171] /work/results/sky130hd/opentallas_reduction_s8_g2_sky130hd/base/1_2_yosys.v line 19, syntax error\nError: synth_odb.tcl, 4 STA-0171\n\nElapsed time: 0:00.17[h:]min:sec. CPU time: user 0.15 sys 0.02 (99%). Peak memory: 59136KB.\nElapsed time: 0:04.75[h:]min:sec. CPU time: user 4.64 sys 0.17 (101%). Peak memory: 76012KB.\nElapsed time: 0:00.27[h:]min:sec. CPU time: user 0.25 sys 0.02 (98%). Peak memory: 120944KB.\nmake[1]: *** [Makefile:445: do-1_synth] Error 1\nmake: *** [Makefile:445: /work/results/sky130hd/opentallas_reduction_s8_g2_sky130hd/base/1_synth.odb] Error 2\n",
+  "generated_at": "2026-08-29T15:59:23.428943+00:00",
+  "git": {
+    "commit": "9e5969d5de4e212bd46aac0997870d495634d870",
+    "worktree_dirty": true
+  },
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "sky130hd",
+      "--block",
+      "reduction_s8_g2",
+      "--clock-period-ns",
+      "20",
+      "--stages",
+      "pnr",
+      "--force",
+      "--core-utilization",
+      "35",
+      "--place-density",
+      "0.6",
+      "--output",
+      "results/physical_abi3/sky130hd/reduction_s8_g2/pnr.json"
+    ],
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "stages_completed": [],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "fail",
+  "target_clock_period_ns": 20.0,
+  "tools": {},
+  "view": {
+    "cell_library": "sky130_fd_sc_hd",
+    "description": "SkyWater SKY130 high-density standard cells; open manufacturable 130 nm foundry PDK.  Mature implementation view.",
+    "evidence_class": "mature open foundry PDK (manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "sky130hd",
+    "node_nm": 130,
+    "pdk_lock": "configs/pdk/sky130_full_physical_lock.json",
+    "predictive": false
+  }
+}

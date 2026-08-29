@@ -37,7 +37,7 @@
 - [x] W2.1 Model Graph v3 schema (source semantics, phases, state effects, numeric-contract IDs) — `compiler/ir/v3/kernel_ir.py`
 - [x] W2.2 Tensor Kernel IR v3 schema (target numerics, iteration domains, tensor views, deps, counter classes) — `compiler/ir/v3/kernel_ir.py` + `lowering.py` (53 kinds mapped)
 - [x] W2.3 Neutrality checker (no ROM/HBM/SRAM/stage/queue/address terms in either IR) — `compiler/ir/v3/kernel_ir.py::check_neutral`
-- [~] W2.4 Qwen3-8B exporter → Model Graph v3 → Kernel IR v3
+- [x] W2.4 Qwen3-8B exporter → Model Graph v3 → Kernel IR v3 — `compiler/frontends/v3/qwen3.py`; 691 kernels, 1127 tensors, 36 states, all 399 weight bindings verified against 16,381,470,720 real checkpoint bytes; graph_id `65eb209f`
 - [~] W2.5 DeepSeek-V4-Flash exporter → Model Graph v3 → Kernel IR v3
 - [ ] W2.6 Cross-model operator union report; both exporters pass one schema + verifier
 
@@ -46,16 +46,16 @@
 - [x] W3.1 Device memory model (HBM/SRAM/ROM/host windows, permissions, mmap-backed weight regions) — `runtime/sim/memory.py` (mmap-backed, strided zero-copy views)
 - [x] W3.2 Microsequencer: fetch/decode/retire, loops, predicates, events, waits, fences, traps, completion — `runtime/sim/device.py`
 - [x] W3.3 Transactional state engine (prepare/commit/discard, generations, session store) — `runtime/sim/device.py` staged commit
-- [~] W3.4 DMA engine (transfer/fill/gather/scatter)
-- [~] W3.5 Tensor engine (BF16/FP8-E4M3FN/MXFP4-E2M1+E8M0; matmul/grouped/routed/embed)
+- [x] W3.4 DMA engine (transfer/fill/gather/scatter) — `runtime/sim/engines/dma.py`
+- [x] W3.5 Tensor engine — `runtime/sim/engines/tensor.py` + `runtime/sim/formats.py`
 - [~] W3.6 Vector engine (rmsnorm, head-rmsnorm, rope, add, silu-mul, convert, scale, softmax, compress, mhc, hadamard, index-score, sqrt-softplus)
-- [~] W3.7 Attention engine (dense/GQA/sparse)
-- [~] W3.8 Route engine (topk, biased topk, weight-normalize, expert dispatch, index topk, hash route, window index)
-- [~] W3.9 Reduction engine (ordered sum, expert sum, vocab gather, grouped concat, partition sum)
-- [~] W3.10 Selection engine (argmax, token append, EOS) — on-device, no host argmax
+- [x] W3.7 Attention engine (dense/GQA/sparse) — `runtime/sim/engines/attention.py`
+- [x] W3.8 Route engine — `runtime/sim/engines/route.py`
+- [x] W3.9 Reduction engine — `runtime/sim/engines/reduction.py`
+- [x] W3.10 Selection engine (argmax, token append, EOS) — `runtime/sim/engines/selection.py`, on-device
 - [~] W3.11 Link engine (send/recv/remote-dma/multicast/gather/scatter/collective/barrier) for 32-node + wafer
 - [ ] W3.12 Observation/recovery engines + full counter set
-- [ ] W3.13 Host queue driver (capability, load/activate, session, generate, checkpoint/restore)
+- [x] W3.13 Host queue driver — `runtime/driver.py`, real 128-byte submission/completion records per token
 
 ## W4 — HBM/SRAM backend (shared chip; 1 node Qwen, 32 nodes DeepSeek)
 
@@ -126,3 +126,21 @@
 - [ ] W11.2 TA-CMP-7-ASAP7: same, predictive view, no cross-view mixing
 - [ ] W11.3 Evidence ledger: every number traced to executed counters or labeled external
 - [ ] W11.4 Final status report and README update
+
+---
+
+## Open issues raised by workers (tracked, not deferred silently)
+
+- **OI-1 — on-device selection numerics are unqualified.** The Qwen exporter
+  names `greedy_lowest_token_id_argmax_v1` and `exact_token_append_eos_v1`, but
+  no qualification evidence exists for either. ABI 2.5 kept argmax on the host,
+  so this is genuinely new numeric surface. Evidence is required before an
+  acceptance claim; a differential against the reference oracle's token IDs is
+  the natural form.
+- **OI-2 — `CheckpointBinding` carries no per-binding checkpoint identity.**
+  Model Graph v2's binding carried a `checkpoint_lock_id`; v3 records the lock
+  id once in `source`. Acceptable for one-checkpoint graphs, insufficient if a
+  graph ever mixes checkpoints. Revisit before any multi-source deployment.
+- **OI-3 — `Tensor` has no layout field.** Head-shaped views rely on row-major
+  equivalence between `(tokens, heads, head_dim)` and `(tokens, heads*head_dim)`.
+  True today; would break for any non-row-major source tensor.

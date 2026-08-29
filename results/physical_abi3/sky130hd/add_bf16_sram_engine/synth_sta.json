@@ -1,0 +1,152 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-08-29T15:58:48.464760+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+        "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+        "size_bytes": 12841637
+      }
+    ],
+    "name": "tt",
+    "process": "typical",
+    "temperature_c": 25.0,
+    "voltage_v": 1.8
+  },
+  "design": {
+    "block": "add_bf16_sram_engine",
+    "clock_port": "clk",
+    "description": "Memory-bound ADD_BF16 stream executor: command decode, RNE bf16 adder and ordered SRAM read/write control.  SRAM arrays are external, so the block maps to standard cells only.",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/ot_ta_add_bf16_sram_engine.sv",
+        "sha256": "6ea266a72e66454f57f601a593b08d9af6e493b4589ba2c857df7f0cae51e373",
+        "size_bytes": 6686
+      },
+      {
+        "path": "rtl/ot_ta_command_decoder.sv",
+        "sha256": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908",
+        "size_bytes": 11949
+      },
+      {
+        "path": "rtl/ot_bf16_add_rne.sv",
+        "sha256": "4ad5938dcd02ec99e08358067e0c755b45d82634642896d7e01fbe20a1cd7233",
+        "size_bytes": 7208
+      },
+      {
+        "path": "rtl/ot_ta_add_bf16_executor.sv",
+        "sha256": "609759d82677ee3e8d486157eb30c5aa3888c942b5aba3343154413a135b68ef",
+        "size_bytes": 8580
+      }
+    ],
+    "top": "ot_ta_add_bf16_sram_engine"
+  },
+  "elapsed_seconds": 8.789,
+  "generated_at": "2026-08-29T15:58:39.675283+00:00",
+  "git": {
+    "commit": "9e5969d5de4e212bd46aac0997870d495634d870",
+    "worktree_dirty": true
+  },
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "sky130hd",
+      "--block",
+      "add_bf16_sram_engine",
+      "--clock-period-ns",
+      "26",
+      "--stages",
+      "synth,sta",
+      "--force",
+      "--output",
+      "results/physical_abi3/sky130hd/add_bf16_sram_engine/synth_sta.json"
+    ],
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "static_timing": {
+    "clock_period_ns": 26.0,
+    "critical_path_ns": 26.389556842254734,
+    "fmax_definition": "1 / (target clock period - setup WNS), pre-layout, ideal clock",
+    "fmax_hz": 37893777.67794905,
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 0.4347889116250235,
+    "library_time_unit_ns": 1.0,
+    "raw_library_units": {
+      "hold_wns": 0.4347889116250235,
+      "setup_tns": -3.336909509826529,
+      "setup_wns": -0.38955684225473425
+    },
+    "sdc_clock_period_library_units": 26.0,
+    "setup_tns_ns": -3.336909509826529,
+    "setup_violating_paths": 23,
+    "setup_wns_ns": -0.38955684225473425,
+    "timing_met": false
+  },
+  "status": "pass",
+  "synthesis": {
+    "abc_delay_target_ps": 26000.0,
+    "cell_area_um2": 106312.266,
+    "cell_count": 12774,
+    "cell_types_used": 72,
+    "chip_area_um2": 106276.928,
+    "combinational_cell_count": 11248,
+    "dont_use_cell_count": 36,
+    "liberty_cell_count": 428,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "15ba7657cedf95ab906b9b0cfafd1ba396fcf2b79388720288965693cf0e854d",
+      "raw_netlist_sha256": "15ba7657cedf95ab906b9b0cfafd1ba396fcf2b79388720288965693cf0e854d",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 38267.082,
+    "sequential_cell_count": 1526,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 26.0,
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "sky130_fd_sc_hd",
+    "description": "SkyWater SKY130 high-density standard cells; open manufacturable 130 nm foundry PDK.  Mature implementation view.",
+    "evidence_class": "mature open foundry PDK (manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "sky130hd",
+    "node_nm": 130,
+    "pdk_lock": "configs/pdk/sky130_full_physical_lock.json",
+    "predictive": false
+  }
+}

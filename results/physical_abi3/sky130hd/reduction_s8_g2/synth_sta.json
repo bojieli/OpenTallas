@@ -1,0 +1,142 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-08-29T15:58:10.309256+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+        "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+        "size_bytes": 12841637
+      }
+    ],
+    "name": "tt",
+    "process": "typical",
+    "temperature_c": 25.0,
+    "voltage_v": 1.8
+  },
+  "design": {
+    "block": "reduction_s8_g2",
+    "clock_port": "clk",
+    "description": "Eight-source, two-group tagged deterministic reduction endpoint.",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "parameters": {
+      "DATA_W": 32,
+      "GROUPS": 2,
+      "SOURCES": 8,
+      "TAG_W": 16
+    },
+    "sources": [
+      {
+        "path": "rtl/ot_reduction_tree.sv",
+        "sha256": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5",
+        "size_bytes": 8276
+      }
+    ],
+    "top": "ot_reduction_endpoint"
+  },
+  "elapsed_seconds": 1.476,
+  "generated_at": "2026-08-29T15:58:08.833567+00:00",
+  "git": {
+    "commit": "9e5969d5de4e212bd46aac0997870d495634d870",
+    "worktree_dirty": true
+  },
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "sky130hd",
+      "--block",
+      "reduction_s8_g2",
+      "--clock-period-ns",
+      "20",
+      "--stages",
+      "synth,sta",
+      "--force",
+      "--output",
+      "results/physical_abi3/sky130hd/reduction_s8_g2/synth_sta.json"
+    ],
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "static_timing": {
+    "clock_period_ns": 20.0,
+    "critical_path_ns": 17.512746859484285,
+    "fmax_definition": "1 / (target clock period - setup WNS), pre-layout, ideal clock",
+    "fmax_hz": 57101265.039894946,
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 0.4274561936513227,
+    "library_time_unit_ns": 1.0,
+    "raw_library_units": {
+      "hold_wns": 0.4274561936513227,
+      "setup_tns": 0.0,
+      "setup_wns": 2.487253140515714
+    },
+    "sdc_clock_period_library_units": 20.0,
+    "setup_tns_ns": 0.0,
+    "setup_violating_paths": 0,
+    "setup_wns_ns": 2.487253140515714,
+    "timing_met": true
+  },
+  "status": "pass",
+  "synthesis": {
+    "abc_delay_target_ps": 20000.0,
+    "cell_area_um2": 39148.327,
+    "cell_count": 3374,
+    "cell_types_used": 56,
+    "chip_area_um2": 39135.0336,
+    "combinational_cell_count": 2754,
+    "dont_use_cell_count": 36,
+    "liberty_cell_count": 428,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "283ab05ec96324fb93cef6d00e8893c7272b1c2ca0c1003ccd9761f23294af62",
+      "raw_netlist_sha256": "283ab05ec96324fb93cef6d00e8893c7272b1c2ca0c1003ccd9761f23294af62",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 18100.0,
+    "sequential_cell_count": 620,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 20.0,
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "sky130_fd_sc_hd",
+    "description": "SkyWater SKY130 high-density standard cells; open manufacturable 130 nm foundry PDK.  Mature implementation view.",
+    "evidence_class": "mature open foundry PDK (manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "sky130hd",
+    "node_nm": 130,
+    "pdk_lock": "configs/pdk/sky130_full_physical_lock.json",
+    "predictive": false
+  }
+}

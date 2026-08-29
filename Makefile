@@ -1,4 +1,4 @@
-.PHONY: profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: abi3 abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -85,3 +85,31 @@ verify:
 
 clean-results:
 	find results -type f \( -name '*.csv' -o -name '*.json' -o -name 'REPORT.md' -o -name 'QWEN3_8B_ADDENDUM.md' \) -delete
+
+# --- ABI 3.0 program -------------------------------------------------------
+# The unified stack: one wire format, one verifier, one device, one counter
+# registry, one neutral IR. Every target is a set of descriptors produced by
+# this one path.
+
+abi3-spec:
+	PYTHONPATH=. python3 tools/publish_abi3_spec.py --check
+
+abi3-test:
+	PYTHONPATH=. python3 -m pytest tests/abi3 tests/sim -q
+	PYTHONPATH=. python3 -m pytest tests/runtime/test_abi3_driver_evidence_agent.py -q
+
+abi3-engines:
+	@PYTHONPATH=. python3 -c "from runtime.sim.engines import load_engines; \
+	r = load_engines(); \
+	print(f\"engines: {r['implemented_count']} implemented, {r['missing_count']} missing\"); \
+	[print('  missing', name) for name in r['missing']]"
+
+abi3-workloads:
+	PYTHONPATH=. python3 tools/build_qwen3_workloads.py
+
+abi3-oracle:
+	PYTHONPATH=. python3 tools/run_qwen3_reference_oracle.py \
+	  --only TA-QW-CHAT-1 --only TA-QW-AGENT-1 \
+	  --output results/abi3/qwen3_reference_oracle_short.json --force
+
+abi3: abi3-spec abi3-test abi3-engines

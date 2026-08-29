@@ -1,0 +1,879 @@
+"""VECTOR engine: normalisation, rotation, elementwise and activation kernels.
+
+Ten frozen subopcodes live here.  Each names one numeric contract, and each
+contract is executed by an implementation that already exists in this
+repository rather than by fresh arithmetic:
+
+===================== ==========================================================
+subopcode             numeric contract and implementation
+===================== ==========================================================
+``RMS_NORM``          ``qwen3_rmsnorm_fp32_bf16_v1`` --
+                      ``runtime.tensor_accelerator.rmsnorm.rms_norm_bf16``
+``HEAD_RMS_NORM``     the same contract applied per head row when a head weight
+                      is bound; the unweighted DeepSeek head path
+                      (``runtime.reference.normalization.head_rms_norm_bf16``)
+                      when input 1 is ``NO_ID``
+``ROPE``              ``qwen3_rope_fp32_bf16_v1`` --
+                      ``runtime.tensor_accelerator.rope.rope_bf16``
+``ADD``               ``bf16_add_rne_v1`` --
+                      ``runtime.tensor_accelerator.elementwise.bf16_add_rne``
+``SILU_MUL``          ``qwen3_silu_mul_bf16_v1`` --
+                      ``runtime.tensor_accelerator.elementwise.qwen3_silu_mul_bf16``
+``CONVERT``           one rounding at the storage boundary; block-scaled
+                      decode and encode follow ``runtime.reference.formats``
+``SCALE``             one binary32 product and one output rounding; the
+                      single-operand form is the constant scale of the numeric
+                      profile, or the exact logistic sigmoid when no constant
+                      is declared
+``SOFTMAX``           row maximum, binary32 exponential, ordered denominator,
+                      reciprocal multiply -- the reduction order comes from the
+                      numeric profile
+``SQRT_SOFTPLUS``     ``runtime.reference.sqrt_softplus`` exactly
+``HADAMARD``          the 128-point normalised transform of
+                      ``runtime.reference.hadamard``
+===================== ==========================================================
+
+Every operation reduces over, or is elementwise on, the view's **last** axis;
+the leading axes are rows.  That is what lets one descriptor cover
+``[tokens, hidden]``, ``[tokens, heads, head_dim]`` and a single flattened row
+without a private opcode per shape.
+
+Everything fails closed: a shape, dtype, epsilon or rounding mode that
+contradicts the descriptor raises :class:`EngineError` instead of being
+silently reinterpreted.
+"""
+
+from __future__ import annotations
+
+import contextlib
+from functools import lru_cache
+from typing import Iterator, Sequence
+
+import numpy as np
+
+from runtime.abi3.constants import (
+    NO_ID,
+    DType,
+    Major,
+    ReductionOrder,
+    RoundingMode,
+    TrapClass,
+    Vector,
+)
+from runtime.abi3.descriptors import Descriptor
+from runtime.reference import formats as exact
+from runtime.reference.hadamard import (
+    HADAMARD_SCALE_BINARY32,
+    HADAMARD_STRIDES,
+    HADAMARD_WIDTH,
+)
+from runtime.reference.normalization import (
+    HEAD_RMS_NORM_EPSILON_BF16,
+    head_rms_norm_bf16,
+)
+from runtime.reference.sqrt_softplus import binary32_sqrt_softplus_rne
+from runtime.sim.engine import EngineContext, EngineError, NumericProfile, register
+from runtime.sim.formats import narrow, narrow_bf16_rne, widen, widen_bf16
+from runtime.sim.memory import ResolvedView
+from runtime.tensor_accelerator.elementwise import bf16_add_rne, qwen3_silu_mul_bf16
+from runtime.tensor_accelerator.rmsnorm import rms_norm_bf16
+from runtime.tensor_accelerator.rope import rope_bf16
+
+#: Below this shifted argument the binary32 exponential is zero, matching
+#: ``runtime.reference.formats.binary32_exp_nonpositive``.
+_EXP_ZERO_CUTOFF = np.float32(-104.0)
+
+_ONE = np.uint32(0x3F800000)
+
+
+# ---------------------------------------------------------------------------
+# Shared validation
+# ---------------------------------------------------------------------------
+def _require(
+    condition: bool,
+    message: str,
+    trap_class: int = TrapClass.DESCRIPTOR_OR_ADDRESS,
+) -> None:
+    if not condition:
+        raise EngineError(message, trap_class=int(trap_class))
+
+
+@contextlib.contextmanager
+def _numeric_guard(what: str) -> Iterator[None]:
+    """Turn a frozen kernel's numeric refusal into an architectural trap."""
+    try:
+        yield
+    except EngineError:
+        raise
+    except ValueError as exc:
+        raise EngineError(
+            f"{what}: {exc}", trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE)
+        ) from exc
+
+
+def _profile(ctx: EngineContext, operator: Descriptor) -> NumericProfile:
+    profile = ctx.numeric(operator.payload["numeric_profile_id"])
+    _require(
+        profile.rounding_mode == RoundingMode.NEAREST_EVEN,
+        f"numeric profile {profile.descriptor_id} selects rounding mode "
+        f"{RoundingMode(profile.rounding_mode).name}; the vector engine "
+        "implements round-to-nearest-even only",
+        TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE,
+    )
+    return profile
+
+
+def _check_dtype(view: ResolvedView, expected: int, label: str) -> None:
+    _require(
+        view.dtype == expected,
+        f"{label} view {view.descriptor_id} stores {DType(view.dtype).name} but "
+        f"its numeric profile declares {DType(expected).name}",
+    )
+
+
+def _same_shape(left: ResolvedView, right: ResolvedView, label: str) -> None:
+    _require(
+        tuple(left.dims) == tuple(right.dims),
+        f"{label}: view {left.descriptor_id} is {left.dims} and view "
+        f"{right.descriptor_id} is {right.dims}",
+    )
+
+
+def _rows(dims: Sequence[int]) -> int:
+    count = 1
+    for extent in dims[:-1]:
+        count *= int(extent)
+    return count
+
+
+def _unscaled(view: ResolvedView, label: str) -> None:
+    _require(
+        view.scale_object_id == NO_ID,
+        f"{label} view {view.descriptor_id} declares a block scale object; the "
+        "vector engine takes block scales as an explicit operand view",
+    )
+
+
+def _read_rows(ctx: EngineContext, view: ResolvedView, width: int) -> np.ndarray:
+    """Read a view and flatten its leading axes into rows of ``width``."""
+    _require(
+        view.dims and int(view.dims[-1]) == int(width),
+        f"view {view.descriptor_id} is {view.dims}; its last axis must be {width}",
+    )
+    return np.ascontiguousarray(ctx.read(view)).reshape(-1, int(width))
+
+
+def _write_rows(
+    ctx: EngineContext, view: ResolvedView, values: np.ndarray
+) -> tuple[int, int]:
+    """Narrow a binary32 row block into ``view`` and write it.
+
+    Returns ``(saturations, conversions)``.
+    """
+    if values.dtype == np.uint16 and view.dtype == DType.BF16:
+        ctx.write(view, np.ascontiguousarray(values.reshape(view.dims)))
+        return 0, int(values.size)
+    with _numeric_guard(f"output view {view.descriptor_id}"):
+        narrowed, saturations = narrow(view.dtype, values.reshape(view.dims))
+    ctx.write(view, np.ascontiguousarray(narrowed))
+    conversions = 0 if view.dtype == DType.FP32 else int(narrowed.size)
+    return saturations, conversions
+
+
+def _finite(ctx: EngineContext, values: np.ndarray, label: str) -> np.ndarray:
+    if not np.all(np.isfinite(values)):
+        raise EngineError(
+            f"{label} contains a NaN or infinite binary32 value",
+            trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
+        )
+    return values
+
+
+# ---------------------------------------------------------------------------
+# VECTOR.RMS_NORM and VECTOR.HEAD_RMS_NORM
+# ---------------------------------------------------------------------------
+def _weighted_rms_norm(
+    ctx: EngineContext, operator: Descriptor, counter_rows: str
+) -> None:
+    profile = _profile(ctx, operator)
+    input_view = ctx.input_view(operator, 0)
+    weight_view = ctx.input_view(operator, 1)
+    output_view = ctx.output_view(operator, 0)
+    _check_dtype(input_view, profile.input_dtype, "RMSNorm input")
+    _check_dtype(weight_view, profile.second_input_dtype, "RMSNorm weight")
+    _check_dtype(output_view, profile.output_dtype, "RMSNorm output")
+    _require(
+        input_view.dtype == DType.BF16 and output_view.dtype == DType.BF16,
+        f"the RMSNorm contract is BF16 in and BF16 out; view "
+        f"{input_view.descriptor_id} stores {DType(input_view.dtype).name}",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    _same_shape(input_view, output_view, "RMSNorm output shape")
+    _require(
+        len(weight_view.dims) == 1,
+        f"RMSNorm weight view {weight_view.descriptor_id} has rank "
+        f"{len(weight_view.dims)}; expected one gain per reduction element",
+    )
+    _require(
+        profile.epsilon_bits != 0,
+        f"numeric profile {profile.descriptor_id} declares no epsilon; the "
+        "RMSNorm contract requires a positive finite binary32 epsilon",
+        TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE,
+    )
+    width = int(weight_view.dims[0])
+    values = _read_rows(ctx, input_view, width)
+    weights = np.ascontiguousarray(ctx.read(weight_view))
+    with _numeric_guard("qwen3_rmsnorm_fp32_bf16_v1"):
+        result = rms_norm_bf16(values, weights, epsilon_code=int(profile.epsilon_bits))
+    ctx.write(output_view, result.values.reshape(output_view.dims))
+
+    rows = values.shape[0]
+    ctx.counters.add(counter_rows, rows)
+    ctx.counters.add("vector.elements", int(values.size))
+    # Two architectural BF16 boundaries per element: the normalised value and
+    # the weighted output.
+    ctx.counters.add("vector.conversions", 2 * int(values.size))
+
+
+@register(Major.VECTOR, Vector.RMS_NORM)
+def _vector_rms_norm(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
+    """Weighted RMS normalisation over the last axis."""
+    _weighted_rms_norm(ctx, operator, "vector.norm_rows")
+
+
+@register(Major.VECTOR, Vector.HEAD_RMS_NORM)
+def _vector_head_rms_norm(
+    ctx: EngineContext, sub: int, operator: Descriptor
+) -> None:
+    """Per-head RMS normalisation.
+
+    With a head gain bound to input 1 this is the weighted contract applied to
+    each ``head_dim`` row -- the Qwen ``q_norm``/``k_norm`` path.  With input 1
+    unbound it is the DeepSeek query-head path, whose square, mean, epsilon and
+    reciprocal square root are all BF16-domain, and which is executed by the
+    exact reference implementation.
+    """
+    if operator.payload["input_view_1"] != NO_ID:
+        _weighted_rms_norm(ctx, operator, "vector.norm_rows")
+        return
+    profile = _profile(ctx, operator)
+    input_view = ctx.input_view(operator, 0)
+    output_view = ctx.output_view(operator, 0)
+    _check_dtype(input_view, profile.input_dtype, "head RMSNorm input")
+    _check_dtype(output_view, profile.output_dtype, "head RMSNorm output")
+    _require(
+        input_view.dtype == DType.BF16 and output_view.dtype == DType.BF16,
+        "the unweighted head RMSNorm contract is BF16 in and BF16 out",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    _same_shape(input_view, output_view, "head RMSNorm output shape")
+    _require(
+        profile.epsilon_bits == HEAD_RMS_NORM_EPSILON_BF16,
+        f"numeric profile {profile.descriptor_id} declares epsilon "
+        f"0x{profile.epsilon_bits:x}; the unweighted head RMSNorm contract "
+        f"requires the BF16 encoding 0x{HEAD_RMS_NORM_EPSILON_BF16:04x}",
+        TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE,
+    )
+    width = int(input_view.dims[-1])
+    values = _read_rows(ctx, input_view, width)
+    with _numeric_guard("deepseek_v4 head RMSNorm"):
+        rows = head_rms_norm_bf16(
+            [tuple(int(code) for code in row) for row in values],
+            epsilon_bf16=int(profile.epsilon_bits),
+        )
+    codes = np.asarray(rows.output_codes, dtype=np.uint16)
+    ctx.write(output_view, codes.reshape(output_view.dims))
+    ctx.counters.add("vector.norm_rows", int(values.shape[0]))
+    ctx.counters.add("vector.elements", int(values.size))
+    ctx.counters.add("vector.conversions", 2 * int(values.size))
+
+
+# ---------------------------------------------------------------------------
+# VECTOR.ROPE
+# ---------------------------------------------------------------------------
+@register(Major.VECTOR, Vector.ROPE)
+def _vector_rope(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
+    """Rotary position embedding over the last axis.
+
+    ``input 0`` is ``[..., head_dim]``, ``input 1`` is the coefficient row
+    ``cos[head_dim] || sin[head_dim]``: rank 1 to apply one position to every
+    row, or ``[rows, 2 * head_dim]`` to apply one coefficient row per input
+    row.  ``output 0`` has the input's shape.
+    """
+    profile = _profile(ctx, operator)
+    input_view = ctx.input_view(operator, 0)
+    coefficient_view = ctx.input_view(operator, 1)
+    output_view = ctx.output_view(operator, 0)
+    _check_dtype(input_view, profile.input_dtype, "RoPE input")
+    _check_dtype(coefficient_view, profile.second_input_dtype, "RoPE coefficient")
+    _check_dtype(output_view, profile.output_dtype, "RoPE output")
+    _require(
+        input_view.dtype == DType.BF16 and output_view.dtype == DType.BF16,
+        "the RoPE contract is BF16 in and BF16 out",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    _same_shape(input_view, output_view, "RoPE output shape")
+    width = int(input_view.dims[-1])
+    values = _read_rows(ctx, input_view, width)
+    coefficients = np.ascontiguousarray(ctx.read(coefficient_view))
+    _require(
+        coefficients.shape[-1] == 2 * width,
+        f"RoPE coefficient view {coefficient_view.descriptor_id} has last axis "
+        f"{coefficients.shape[-1]}; expected cosine then sine over {width}",
+    )
+    with _numeric_guard("qwen3_rope_fp32_bf16_v1"):
+        if coefficients.ndim == 1:
+            # The frozen kernel rotates a query and a key together; one tensor
+            # is rotated by presenting it in both operand positions.
+            rotated = rope_bf16(values, values, coefficients).query_values
+        else:
+            _require(
+                coefficients.shape[0] == values.shape[0],
+                f"RoPE coefficient view {coefficient_view.descriptor_id} has "
+                f"{coefficients.shape[0]} rows; the input has {values.shape[0]}",
+            )
+            rotated = np.empty_like(values)
+            for index in range(values.shape[0]):
+                row = values[index : index + 1]
+                rotated[index] = rope_bf16(row, row, coefficients[index]).query_values[0]
+    ctx.write(output_view, rotated.reshape(output_view.dims))
+    ctx.counters.add("vector.rope_pairs", int(values.shape[0]) * (width // 2))
+    ctx.counters.add("vector.elements", int(values.size))
+    # Direct product, rotated product and their sum each round once.
+    ctx.counters.add("vector.conversions", 3 * int(values.size))
+
+
+# ---------------------------------------------------------------------------
+# VECTOR.ADD
+# ---------------------------------------------------------------------------
+@register(Major.VECTOR, Vector.ADD)
+def _vector_add(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
+    """Residual add of two equal-shape BF16 tensors through one rounding."""
+    profile = _profile(ctx, operator)
+    left_view = ctx.input_view(operator, 0)
+    right_view = ctx.input_view(operator, 1)
+    output_view = ctx.output_view(operator, 0)
+    _check_dtype(left_view, profile.input_dtype, "ADD left")
+    _check_dtype(right_view, profile.second_input_dtype, "ADD right")
+    _check_dtype(output_view, profile.output_dtype, "ADD output")
+    _require(
+        left_view.dtype == DType.BF16 and output_view.dtype == DType.BF16,
+        "the residual add contract is BF16 in and BF16 out",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    _same_shape(left_view, right_view, "ADD operand shape")
+    _same_shape(left_view, output_view, "ADD output shape")
+    width = int(left_view.dims[-1])
+    left = _read_rows(ctx, left_view, width)
+    right = _read_rows(ctx, right_view, width)
+    with _numeric_guard("bf16_add_rne_v1"):
+        result = bf16_add_rne(left, right)
+    ctx.write(output_view, result.values.reshape(output_view.dims))
+    ctx.counters.add("vector.elements", int(left.size))
+    ctx.counters.add("vector.conversions", int(left.size))
+
+
+# ---------------------------------------------------------------------------
+# VECTOR.SILU_MUL
+# ---------------------------------------------------------------------------
+@register(Major.VECTOR, Vector.SILU_MUL)
+def _vector_silu_mul(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
+    """SiLU the gate, materialise it in BF16, and multiply the up path.
+
+    ``output 1``, when bound, receives the materialised BF16 activation.
+    """
+    profile = _profile(ctx, operator)
+    _require(
+        operator.payload["input_view_2"] == NO_ID,
+        "the three-operand SwiGLU form has no frozen numeric contract; bind the "
+        "gate and up projections only",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    gate_view = ctx.input_view(operator, 0)
+    up_view = ctx.input_view(operator, 1)
+    output_view = ctx.output_view(operator, 0)
+    _check_dtype(gate_view, profile.input_dtype, "SILU_MUL gate")
+    _check_dtype(up_view, profile.second_input_dtype, "SILU_MUL up")
+    _check_dtype(output_view, profile.output_dtype, "SILU_MUL output")
+    _require(
+        gate_view.dtype == DType.BF16 and output_view.dtype == DType.BF16,
+        "the SiLU-multiply contract is BF16 in and BF16 out",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    _same_shape(gate_view, up_view, "SILU_MUL operand shape")
+    _same_shape(gate_view, output_view, "SILU_MUL output shape")
+    width = int(gate_view.dims[-1])
+    gate = _read_rows(ctx, gate_view, width)
+    up = _read_rows(ctx, up_view, width)
+    with _numeric_guard("qwen3_silu_mul_bf16_v1"):
+        result = qwen3_silu_mul_bf16(gate, up)
+    ctx.write(output_view, result.values.reshape(output_view.dims))
+    if operator.payload["output_view_1"] != NO_ID:
+        activation_view = ctx.output_view(operator, 1)
+        _same_shape(gate_view, activation_view, "SILU_MUL activation shape")
+        ctx.write(
+            activation_view,
+            result.activation_values.reshape(activation_view.dims),
+        )
+    ctx.counters.add("vector.activation_elements", int(gate.size))
+    ctx.counters.add("vector.elements", 2 * int(gate.size))
+    # The SiLU activation and the gated product each round once.
+    ctx.counters.add("vector.conversions", 2 * int(gate.size))
+
+
+# ---------------------------------------------------------------------------
+# VECTOR.CONVERT
+# ---------------------------------------------------------------------------
+@register(Major.VECTOR, Vector.CONVERT)
+def _vector_convert(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
+    """Storage-format conversion, block dequantisation and block quantisation.
+
+    Three descriptor shapes select the three lowered kernel kinds:
+
+    * one input and one output -- ``CONVERT``/``KV_APPEND``: widen the source
+      to binary32 and round once into the destination format, or move the
+      elements unchanged when both formats agree;
+    * two inputs and one output -- ``DEQUANTIZE``: input 1 supplies one block
+      scale per ``block`` elements of input 0's last axis;
+    * one input and two outputs -- ``QUANTIZE``: output 0 receives E4M3FN
+      codes and output 1 the E8M0 block scale, exactly as
+      ``runtime.reference.formats.quantize_bf16_activation_block`` specifies.
+    """
+    has_second_input = operator.payload["input_view_1"] != NO_ID
+    has_second_output = operator.payload["output_view_1"] != NO_ID
+    _require(
+        not (has_second_input and has_second_output),
+        "CONVERT takes either a scale input or a scale output, never both",
+    )
+    if has_second_output:
+        _convert_quantize(ctx, operator)
+        return
+    if has_second_input:
+        _convert_dequantize(ctx, operator)
+        return
+
+    source_view = ctx.input_view(operator, 0)
+    output_view = ctx.output_view(operator, 0)
+    _unscaled(source_view, "CONVERT source")
+    _unscaled(output_view, "CONVERT destination")
+    _same_shape(source_view, output_view, "CONVERT output shape")
+    source = ctx.read(source_view)
+    if source_view.dtype == output_view.dtype:
+        ctx.write(output_view, np.ascontiguousarray(source).reshape(output_view.dims))
+        ctx.counters.add("vector.elements", int(source.size))
+        return
+    with _numeric_guard(f"CONVERT source view {source_view.descriptor_id}"):
+        values = widen(source_view.dtype, source)
+    _finite(ctx, values, f"CONVERT source view {source_view.descriptor_id}")
+    _, conversions = _write_rows(ctx, output_view, values)
+    ctx.counters.add("vector.elements", int(values.size))
+    ctx.counters.add("vector.conversions", conversions)
+
+
+def _convert_dequantize(ctx: EngineContext, operator: Descriptor) -> None:
+    code_view = ctx.input_view(operator, 0)
+    scale_view = ctx.input_view(operator, 1)
+    output_view = ctx.output_view(operator, 0)
+    _same_shape(code_view, output_view, "DEQUANTIZE output shape")
+    width = int(code_view.dims[-1])
+    rows = _rows(code_view.dims)
+    scale_rows = _rows(scale_view.dims)
+    blocks = int(scale_view.dims[-1])
+    _require(
+        scale_rows == rows and blocks > 0 and width % blocks == 0,
+        f"DEQUANTIZE scale view {scale_view.descriptor_id} is {scale_view.dims}; "
+        f"expected {rows} rows of block scales dividing {width}",
+    )
+    block = width // blocks
+    codes = np.ascontiguousarray(ctx.read(code_view)).reshape(rows, blocks, block)
+    with _numeric_guard(f"DEQUANTIZE codes view {code_view.descriptor_id}"):
+        values = widen(code_view.dtype, codes)
+    scale_codes = np.ascontiguousarray(ctx.read(scale_view)).reshape(rows, blocks)
+    with _numeric_guard(f"DEQUANTIZE scale view {scale_view.descriptor_id}"):
+        scales = widen(
+            DType.E8M0_SCALE if scale_view.dtype == DType.U8 else scale_view.dtype,
+            scale_codes,
+        )
+    _finite(ctx, values, f"DEQUANTIZE codes view {code_view.descriptor_id}")
+    _finite(ctx, scales, f"DEQUANTIZE scale view {scale_view.descriptor_id}")
+    scaled = np.multiply(values, scales[:, :, None], dtype=np.float32)
+    _finite(ctx, scaled, "DEQUANTIZE product")
+    _, conversions = _write_rows(ctx, output_view, scaled.reshape(code_view.dims))
+    ctx.counters.add("vector.elements", int(values.size))
+    ctx.counters.add("vector.conversions", conversions)
+
+
+def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
+    source_view = ctx.input_view(operator, 0)
+    code_view = ctx.output_view(operator, 0)
+    scale_view = ctx.output_view(operator, 1)
+    _require(
+        source_view.dtype == DType.BF16,
+        f"QUANTIZE source view {source_view.descriptor_id} stores "
+        f"{DType(source_view.dtype).name}; the block activation quantiser is "
+        "specified from BF16",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    _require(
+        code_view.dtype == DType.FP8_E4M3FN,
+        f"QUANTIZE code view {code_view.descriptor_id} stores "
+        f"{DType(code_view.dtype).name}; expected FP8_E4M3FN",
+    )
+    _require(
+        scale_view.dtype in (DType.E8M0_SCALE, DType.U8),
+        f"QUANTIZE scale view {scale_view.descriptor_id} stores "
+        f"{DType(scale_view.dtype).name}; expected an E8M0 scale",
+    )
+    _same_shape(source_view, code_view, "QUANTIZE code shape")
+    width = int(source_view.dims[-1])
+    rows = _rows(source_view.dims)
+    blocks = int(scale_view.dims[-1])
+    _require(
+        _rows(scale_view.dims) == rows and blocks > 0 and width % blocks == 0,
+        f"QUANTIZE scale view {scale_view.descriptor_id} is {scale_view.dims}; "
+        f"expected {rows} rows of block scales dividing {width}",
+    )
+    block = width // blocks
+    source = _read_rows(ctx, source_view, width).reshape(rows, blocks, block)
+    codes = np.empty((rows, blocks, block), dtype=np.uint8)
+    scales = np.empty((rows, blocks), dtype=np.uint8)
+    saturations = 0
+    with _numeric_guard("block activation quantisation"):
+        for row in range(rows):
+            for index in range(blocks):
+                quantized = exact.quantize_bf16_activation_block(
+                    int(code) for code in source[row, index]
+                )
+                codes[row, index] = np.asarray(quantized.value_codes, dtype=np.uint8)
+                scales[row, index] = np.uint8(quantized.scale_code)
+                saturations += int(quantized.saturated)
+    ctx.write(code_view, codes.reshape(code_view.dims))
+    ctx.write(scale_view, scales.reshape(scale_view.dims))
+    ctx.counters.add("vector.elements", int(source.size))
+    ctx.counters.add("vector.conversions", int(codes.size) + int(scales.size))
+    if saturations:
+        raise EngineError(
+            f"QUANTIZE saturated {saturations} E4M3FN block(s)",
+            trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
+        )
+
+
+# ---------------------------------------------------------------------------
+# VECTOR.SCALE
+# ---------------------------------------------------------------------------
+@lru_cache(maxsize=1 << 16)
+def _sigmoid_binary32_from_bf16(code: int) -> int:
+    """The exact logistic sigmoid of one BF16 code, as a binary32 encoding.
+
+    Composed from the exact scalar primitives in
+    ``runtime.reference.formats``: one correctly rounded binary32 exponential
+    of a non-positive argument, one binary32 denominator addition and one
+    binary32 division, sign-selected for stability.  This is the same subgraph
+    the frozen SiLU contract uses.
+    """
+    value = code << 16
+    if code & 0x8000:
+        exponential = exact.binary32_exp_nonpositive(value)
+        denominator = exact.binary32_add(int(_ONE), exponential)
+        return exact.binary32_divide(exponential, denominator)
+    negated = 0 if value & 0x7FFFFFFF == 0 else value ^ 0x80000000
+    exponential = exact.binary32_exp_nonpositive(negated)
+    denominator = exact.binary32_add(int(_ONE), exponential)
+    return exact.binary32_divide(int(_ONE), denominator)
+
+
+def _map_codes(codes: np.ndarray, function) -> np.ndarray:
+    """Apply an exact scalar code-to-code map over the distinct codes only."""
+    flat = np.ascontiguousarray(codes).reshape(-1)
+    unique, inverse = np.unique(flat, return_inverse=True)
+    mapped = np.fromiter(
+        (function(int(code)) for code in unique), dtype=np.uint32, count=unique.size
+    )
+    return mapped[inverse].reshape(codes.shape)
+
+
+@register(Major.VECTOR, Vector.SCALE)
+def _vector_scale(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
+    """Elementwise product, constant scale, or logistic sigmoid.
+
+    With ``input 1`` bound this multiplies two operands elementwise; the second
+    operand may cover only the trailing axes, which is how a per-channel gain
+    is applied to ``[tokens, channels]`` without a broadcast copy.
+
+    With ``input 1`` unbound the numeric profile decides, because the frozen
+    lowering table maps both ``SCALE`` and ``SIGMOID`` onto this subopcode: a
+    non-zero ``scale_bits`` is the binary32 constant to multiply by, and a zero
+    ``scale_bits`` selects the logistic sigmoid.
+    """
+    profile = _profile(ctx, operator)
+    source_view = ctx.input_view(operator, 0)
+    second_view = ctx.optional_input(operator, 1)
+    output_view = ctx.output_view(operator, 0)
+    _unscaled(source_view, "SCALE source")
+    _same_shape(source_view, output_view, "SCALE output shape")
+    _check_dtype(source_view, profile.input_dtype, "SCALE source")
+    _check_dtype(output_view, profile.output_dtype, "SCALE output")
+    source = ctx.read(source_view)
+
+    if second_view is not None:
+        _check_dtype(second_view, profile.second_input_dtype, "SCALE factor")
+        _unscaled(second_view, "SCALE factor")
+        trailing = tuple(source_view.dims[len(source_view.dims) - len(second_view.dims) :])
+        _require(
+            tuple(second_view.dims) == trailing,
+            f"SCALE factor view {second_view.descriptor_id} is "
+            f"{second_view.dims}; expected {trailing} to broadcast over "
+            f"{source_view.dims}",
+        )
+        with _numeric_guard("SCALE operands"):
+            left = widen(source_view.dtype, source)
+            right = widen(second_view.dtype, ctx.read(second_view))
+        _finite(ctx, left, f"SCALE source view {source_view.descriptor_id}")
+        _finite(ctx, right, f"SCALE factor view {second_view.descriptor_id}")
+        values = np.multiply(left, right, dtype=np.float32)
+        _finite(ctx, values, "SCALE product")
+        _, conversions = _write_rows(ctx, output_view, values)
+        ctx.counters.add("vector.elements", int(left.size))
+        ctx.counters.add("vector.conversions", conversions)
+        return
+
+    if profile.scale_bits != 0:
+        with _numeric_guard(f"SCALE source view {source_view.descriptor_id}"):
+            left = widen(source_view.dtype, source)
+        _finite(ctx, left, f"SCALE source view {source_view.descriptor_id}")
+        constant = np.float32(profile.scale)
+        _require(
+            np.isfinite(constant),
+            f"numeric profile {profile.descriptor_id} declares a non-finite "
+            "constant scale",
+            TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE,
+        )
+        values = np.multiply(left, constant, dtype=np.float32)
+        _finite(ctx, values, "SCALE product")
+        _, conversions = _write_rows(ctx, output_view, values)
+        ctx.counters.add("vector.elements", int(left.size))
+        ctx.counters.add("vector.conversions", conversions)
+        return
+
+    _require(
+        source_view.dtype == DType.BF16,
+        f"the sigmoid form of SCALE takes BF16 input; view "
+        f"{source_view.descriptor_id} stores {DType(source_view.dtype).name}",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    codes = np.ascontiguousarray(source, dtype=np.uint16)
+    with _numeric_guard("logistic sigmoid"):
+        binary32 = _map_codes(codes, _sigmoid_binary32_from_bf16)
+    values = binary32.view(np.float32)
+    _, conversions = _write_rows(ctx, output_view, values)
+    ctx.counters.add("vector.activation_elements", int(codes.size))
+    ctx.counters.add("vector.elements", int(codes.size))
+    ctx.counters.add("vector.conversions", conversions)
+
+
+# ---------------------------------------------------------------------------
+# VECTOR.SOFTMAX
+# ---------------------------------------------------------------------------
+def _ordered_row_sum(values: np.ndarray, order: int) -> np.ndarray:
+    """Reduce each row under the declared binary32 reduction order."""
+    if order == ReductionOrder.SEQUENTIAL_ASCENDING:
+        return np.ascontiguousarray(
+            np.add.accumulate(values, axis=1, dtype=np.float32)[:, -1]
+        )
+    if order == ReductionOrder.PAIRWISE_TREE:
+        level = np.ascontiguousarray(values, dtype=np.float32)
+        while level.shape[1] > 1:
+            if level.shape[1] & 1:
+                level = np.concatenate(
+                    (level, np.zeros((level.shape[0], 1), dtype=np.float32)), axis=1
+                )
+            level = np.add(level[:, 0::2], level[:, 1::2], dtype=np.float32)
+        return np.ascontiguousarray(level[:, 0], dtype=np.float32)
+    # BLOCKED_ASCENDING: eight lanes accumulated in increasing index order and
+    # combined (0,4)/(1,5)/(2,6)/(3,7), matching binary32_lanes8_sum.
+    width = values.shape[1]
+    if width < 8:
+        return np.ascontiguousarray(
+            np.add.accumulate(values, axis=1, dtype=np.float32)[:, -1]
+        )
+    lanes = np.ascontiguousarray(values[:, :8], dtype=np.float32).copy()
+    full = width - width % 8
+    for start in range(8, full, 8):
+        lanes = np.add(lanes, values[:, start : start + 8], dtype=np.float32)
+    tail = width - full
+    if tail:
+        lanes[:, :tail] = np.add(lanes[:, :tail], values[:, full:], dtype=np.float32)
+    half = np.add(lanes[:, :4], lanes[:, 4:], dtype=np.float32)
+    quarter = np.add(half[:, :2], half[:, 2:], dtype=np.float32)
+    return np.ascontiguousarray(
+        np.add(quarter[:, 0], quarter[:, 1], dtype=np.float32)
+    )
+
+
+@register(Major.VECTOR, Vector.SOFTMAX)
+def _vector_softmax(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
+    """Row softmax over the last axis.
+
+    The row maximum is subtracted before the binary32 exponential, so the
+    exponential's argument is non-positive and its correctly rounded result is
+    defined by ``runtime.reference.formats.binary32_exp_nonpositive``.  The
+    denominator uses the numeric profile's reduction order, and the row is
+    scaled by one binary32 reciprocal rather than divided element by element.
+    """
+    profile = _profile(ctx, operator)
+    source_view = ctx.input_view(operator, 0)
+    output_view = ctx.output_view(operator, 0)
+    _unscaled(source_view, "SOFTMAX source")
+    _same_shape(source_view, output_view, "SOFTMAX output shape")
+    _check_dtype(source_view, profile.input_dtype, "SOFTMAX source")
+    _check_dtype(output_view, profile.output_dtype, "SOFTMAX output")
+    width = int(source_view.dims[-1])
+    _require(width > 0, "SOFTMAX row is empty")
+    codes = _read_rows(ctx, source_view, width)
+    with _numeric_guard(f"SOFTMAX source view {source_view.descriptor_id}"):
+        values = widen(source_view.dtype, codes)
+    _finite(ctx, values, f"SOFTMAX source view {source_view.descriptor_id}")
+
+    previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
+    try:
+        maximum = np.max(values, axis=1, keepdims=True)
+        shifted = np.subtract(values, maximum, dtype=np.float32)
+        # Evaluate with binary64 guard precision and round once to binary32:
+        # NumPy's float32 exponential is an approximation, not the correctly
+        # rounded binary32 operation the contract names.
+        exponentials = np.ascontiguousarray(
+            np.exp(shifted.astype(np.float64)).astype(np.float32), dtype=np.float32
+        )
+        exponentials = np.where(
+            shifted <= _EXP_ZERO_CUTOFF, np.float32(0.0), exponentials
+        ).astype(np.float32, copy=False)
+        _finite(ctx, exponentials, "SOFTMAX exponential")
+        denominator = _ordered_row_sum(exponentials, int(profile.reduction_order))
+        if not np.all(np.isfinite(denominator)) or np.any(denominator <= 0):
+            raise EngineError(
+                "SOFTMAX denominator is not positive finite",
+                trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
+            )
+        inverse = np.divide(np.float32(1.0), denominator, dtype=np.float32)
+        probabilities = np.multiply(
+            exponentials, inverse[:, None], dtype=np.float32
+        )
+    finally:
+        np.seterr(**previous)
+
+    rows = int(codes.shape[0])
+    _, conversions = _write_rows(
+        ctx, output_view, probabilities.reshape(source_view.dims)
+    )
+    ctx.counters.add("vector.softmax_rows", rows)
+    ctx.counters.add("vector.elements", int(values.size))
+    ctx.counters.add("vector.conversions", conversions)
+
+
+# ---------------------------------------------------------------------------
+# VECTOR.SQRT_SOFTPLUS
+# ---------------------------------------------------------------------------
+@register(Major.VECTOR, Vector.SQRT_SOFTPLUS)
+def _vector_sqrt_softplus(
+    ctx: EngineContext, sub: int, operator: Descriptor
+) -> None:
+    """``sqrt(softplus(x))`` with both stages rounded once in binary32.
+
+    The scalar semantics are the exact, host-``libm``-independent rounding in
+    ``runtime.reference.sqrt_softplus``; this engine applies it to the distinct
+    input encodings of the tensor rather than to every element.
+    """
+    profile = _profile(ctx, operator)
+    source_view = ctx.input_view(operator, 0)
+    output_view = ctx.output_view(operator, 0)
+    _unscaled(source_view, "SQRT_SOFTPLUS source")
+    _same_shape(source_view, output_view, "SQRT_SOFTPLUS output shape")
+    _check_dtype(source_view, profile.input_dtype, "SQRT_SOFTPLUS source")
+    _check_dtype(output_view, profile.output_dtype, "SQRT_SOFTPLUS output")
+    _require(
+        source_view.dtype in (DType.FP32, DType.BF16),
+        f"SQRT_SOFTPLUS source view {source_view.descriptor_id} stores "
+        f"{DType(source_view.dtype).name}; the operator is defined on binary32 "
+        "scores",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    source = np.ascontiguousarray(ctx.read(source_view))
+    if source_view.dtype == DType.BF16:
+        codes = source.astype(np.uint32) << np.uint32(16)
+    else:
+        codes = source.view(np.uint32)
+    with _numeric_guard("deepseek_v4 SQRT_SOFTPLUS"):
+        mapped = _map_codes(codes, binary32_sqrt_softplus_rne)
+    values = np.ascontiguousarray(mapped).view(np.float32)
+    _, conversions = _write_rows(ctx, output_view, values)
+    ctx.counters.add("vector.activation_elements", int(values.size))
+    ctx.counters.add("vector.elements", int(values.size))
+    ctx.counters.add("vector.conversions", conversions)
+
+
+# ---------------------------------------------------------------------------
+# VECTOR.HADAMARD
+# ---------------------------------------------------------------------------
+@register(Major.VECTOR, Vector.HADAMARD)
+def _vector_hadamard(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
+    """The normalised 128-point Hadamard rotation.
+
+    Seven ascending-stride binary32 butterfly stages, one binary32
+    normalisation product and one BF16 conversion, exactly as
+    ``runtime.reference.hadamard`` freezes them.  Signed zero is canonicalised
+    to positive zero at every stage, which is what makes the vectorised
+    butterfly identical to the scalar one.
+    """
+    profile = _profile(ctx, operator)
+    source_view = ctx.input_view(operator, 0)
+    output_view = ctx.output_view(operator, 0)
+    _unscaled(source_view, "HADAMARD source")
+    _same_shape(source_view, output_view, "HADAMARD output shape")
+    _check_dtype(source_view, profile.input_dtype, "HADAMARD source")
+    _check_dtype(output_view, profile.output_dtype, "HADAMARD output")
+    _require(
+        source_view.dtype == DType.BF16 and output_view.dtype == DType.BF16,
+        "the Hadamard rotation contract is BF16 in and BF16 out",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    width = int(source_view.dims[-1])
+    _require(
+        width == HADAMARD_WIDTH,
+        f"HADAMARD view {source_view.descriptor_id} has width {width}; the "
+        f"qualified transform is {HADAMARD_WIDTH}-point",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    codes = _read_rows(ctx, source_view, width)
+    with _numeric_guard("deepseek_v4 Hadamard rotation"):
+        values = widen_bf16(codes).copy()
+    _finite(ctx, values, f"HADAMARD source view {source_view.descriptor_id}")
+    values[values == 0] = np.float32(0.0)
+    rows = values.shape[0]
+    previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
+    try:
+        for stride in HADAMARD_STRIDES:
+            blocks = values.reshape(rows, -1, 2, stride)
+            lower = blocks[:, :, 0, :]
+            upper = blocks[:, :, 1, :]
+            summed = np.add(lower, upper, dtype=np.float32)
+            differed = np.subtract(lower, upper, dtype=np.float32)
+            blocks[:, :, 0, :] = summed
+            blocks[:, :, 1, :] = differed
+            values = blocks.reshape(rows, width)
+            values[values == 0] = np.float32(0.0)
+            _finite(ctx, values, "HADAMARD butterfly stage")
+        scale = np.asarray([HADAMARD_SCALE_BINARY32], dtype=np.uint32).view(np.float32)[0]
+        scaled = np.multiply(values, scale, dtype=np.float32)
+    finally:
+        np.seterr(**previous)
+    _finite(ctx, scaled, "HADAMARD normalisation")
+    with _numeric_guard("HADAMARD BF16 conversion"):
+        narrowed, saturations = narrow_bf16_rne(scaled)
+    if saturations:
+        raise EngineError(
+            "HADAMARD output saturated the BF16 range",
+            trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
+        )
+    ctx.write(output_view, narrowed.reshape(output_view.dims))
+    ctx.counters.add("vector.elements", int(codes.size))
+    ctx.counters.add("vector.conversions", int(codes.size))

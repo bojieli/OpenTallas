@@ -45,6 +45,15 @@ def main() -> int:
     )
     parser.add_argument("--only", action="append", default=None)
     parser.add_argument("--gpu-gib", type=int, default=9)
+    parser.add_argument(
+        "--cpu-only",
+        action="store_true",
+        help=(
+            "Run entirely on CPU. Slower, but immune to the GPU memory "
+            "fluctuation caused by other tenants on this machine, which is what "
+            "matters for a long-prefill oracle that must not be evicted."
+        ),
+    )
     parser.add_argument("--cpu-gib", type=int, default=80)
     parser.add_argument("--force", action="store_true")
     args = parser.parse_args()
@@ -61,13 +70,24 @@ def main() -> int:
         str(args.snapshot), local_files_only=True, trust_remote_code=False
     )
 
-    print("loading Qwen3-8B in bfloat16 with GPU/CPU sharding ...", flush=True)
+    print(
+        "loading Qwen3-8B in bfloat16 "
+        + ("on CPU ..." if args.cpu_only else "with GPU/CPU sharding ..."),
+        flush=True,
+    )
     started = time.perf_counter()
+    placement = (
+        {"device_map": {"": "cpu"}}
+        if args.cpu_only
+        else {
+            "device_map": "auto",
+            "max_memory": {0: f"{args.gpu_gib}GiB", "cpu": f"{args.cpu_gib}GiB"},
+        }
+    )
     model = AutoModelForCausalLM.from_pretrained(
         str(args.snapshot),
         dtype=torch.bfloat16,
-        device_map="auto",
-        max_memory={0: f"{args.gpu_gib}GiB", "cpu": f"{args.cpu_gib}GiB"},
+        **placement,
         local_files_only=True,
         trust_remote_code=False,
         attn_implementation="sdpa",
@@ -89,7 +109,7 @@ def main() -> int:
         "torch_version": torch.__version__,
         "dtype": "bfloat16",
         "selection": "greedy_lowest_token_id_argmax",
-        "device_map": "auto (gpu+cpu bfloat16)",
+        "device_map": "cpu bfloat16" if args.cpu_only else "auto (gpu+cpu bfloat16)",
         "results": {},
     }
 

@@ -227,17 +227,43 @@ def implemented() -> frozenset[tuple[int, int]]:
     return frozenset(_REGISTRY)
 
 
+#: Families the microsequencer executes itself rather than dispatching to an
+#: engine.  Control flow, transactional state, observation and recovery are
+#: sequencer responsibilities under ADR-003 section 5, so they are not engine
+#: registrations and must not be reported as missing engines.
+SEQUENCER_FAMILIES: frozenset[int] = frozenset(
+    {
+        int(Major.CONTROL),
+        int(Major.STATE),
+        int(Major.OBSERVATION),
+        int(Major.RECOVERY),
+    }
+)
+
+
 def coverage_report() -> dict[str, list[str]]:
-    """Which frozen subopcodes have an implementation and which do not."""
+    """Which frozen subopcodes have an implementation and which do not.
+
+    Sequencer-executed families are reported separately: they are implemented
+    in ``runtime/sim/device.py``, not registered here, so counting them as
+    missing engines would misreport a complete device as incomplete.
+    """
     from runtime.abi3.constants import SUBOPCODES
 
     present: list[str] = []
     missing: list[str] = []
+    sequencer: list[str] = []
     for family, enum_type in SUBOPCODES.items():
         for member in enum_type:
             name = f"{Major(family).name}.{member.name}"
-            if (int(family), int(member)) in _REGISTRY:
+            if int(family) in SEQUENCER_FAMILIES:
+                sequencer.append(name)
+            elif (int(family), int(member)) in _REGISTRY:
                 present.append(name)
             else:
                 missing.append(name)
-    return {"implemented": sorted(present), "missing": sorted(missing)}
+    return {
+        "implemented": sorted(present),
+        "missing": sorted(missing),
+        "sequencer_executed": sorted(sequencer),
+    }

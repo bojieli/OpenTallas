@@ -1,0 +1,134 @@
+{
+  "consumed_by": {
+    "note": "The place-and-route stage for this view does NOT read this root.  It reads the sky130hd platform baked into the pinned OpenROAD-flow-scripts image, whose liberty is a different file from a different open_pdks build; both identities are recorded in every result record.",
+    "stages": [
+      "synth",
+      "sta"
+    ],
+    "tool": "tools/run_abi3_physical.py",
+    "view": "sky130hd"
+  },
+  "forbidden_inferences": [
+    "N7 or N4 density, bandwidth, delay, energy, leakage, yield, or cost",
+    "target-foundry late-via personalization availability or mask economics",
+    "whole-wafer inference throughput or GPU speedup"
+  ],
+  "installer": {
+    "command": "ciel enable --pdk-root ~/.local/opentallas-pdk-full f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+    "data_source": "static-web:https://fossi-foundation.github.io/ciel-releases",
+    "name": "ciel",
+    "version": "2.6.1"
+  },
+  "pdk": {
+    "archive_sha256_status": "not independently recomputed for this root; the installed_tree manifest below is the authoritative identity and covers extracted content directly",
+    "archives": [
+      {
+        "content": "common",
+        "url": "https://github.com/fossi-foundation/ciel-releases/releases/download/sky130-f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/common.tar.zst"
+      },
+      {
+        "content": "sky130_fd_io",
+        "url": "https://github.com/fossi-foundation/ciel-releases/releases/download/sky130-f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130_fd_io.tar.zst"
+      },
+      {
+        "content": "sky130_fd_pr",
+        "url": "https://github.com/fossi-foundation/ciel-releases/releases/download/sky130-f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130_fd_pr.tar.zst"
+      },
+      {
+        "content": "sky130_fd_sc_hd",
+        "url": "https://github.com/fossi-foundation/ciel-releases/releases/download/sky130-f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130_fd_sc_hd.tar.zst"
+      },
+      {
+        "content": "sky130_fd_sc_hvl",
+        "url": "https://github.com/fossi-foundation/ciel-releases/releases/download/sky130-f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130_fd_sc_hvl.tar.zst"
+      },
+      {
+        "content": "sky130_ml_xx_hd",
+        "url": "https://github.com/fossi-foundation/ciel-releases/releases/download/sky130-f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130_ml_xx_hd.tar.zst"
+      },
+      {
+        "content": "sky130_sram_macros",
+        "url": "https://github.com/fossi-foundation/ciel-releases/releases/download/sky130-f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7/sky130_sram_macros.tar.zst"
+      }
+    ],
+    "family": "sky130",
+    "included_libraries": [
+      "sky130_fd_io",
+      "sky130_fd_pr",
+      "sky130_fd_sc_hd",
+      "sky130_fd_sc_hvl",
+      "sky130_ml_xx_hd",
+      "sky130_sram_macros"
+    ],
+    "installed_tree": {
+      "bytes": 1114549811,
+      "files": 8374,
+      "manifest_algorithm": "sha256 of UTF-8 path, NUL, decimal size, NUL, lowercase file sha256, newline for every lexically sorted regular file under the resolved sky130A variant directory; symlinks are not followed",
+      "manifest_sha256": "d92f7dbb964318953d1a6f2e0c3a50aa3780d68a42e265d1e6e8cbad12d65f21"
+    },
+    "key_files": {
+      "libs.ref/sky130_fd_sc_hd/gds/sky130_fd_sc_hd.gds": {
+        "sha256": "8ee881e8b658f27ffb49251de237095b555736548fb4414a487862e96a422187",
+        "size_bytes": 4194544
+      },
+      "libs.ref/sky130_fd_sc_hd/lef/sky130_ef_sc_hd.lef": {
+        "sha256": "46d4bfbcc9acbf3456e647827fcf4f401fae850e3f2debbe80e10874243972a1",
+        "size_bytes": 14857
+      },
+      "libs.ref/sky130_fd_sc_hd/lef/sky130_fd_sc_hd.lef": {
+        "sha256": "3a3ea4e9d0973402702764d897659e52fe3d413eb48c306cd811de40a75264fa",
+        "size_bytes": 1415362
+      },
+      "libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__ff_n40C_1v95.lib": {
+        "sha256": "fb61d91c55a7f85b1989e8149d040b13ba5e7f5478f5bf0c3c16c5da30720139",
+        "size_bytes": 12918504
+      },
+      "libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__ss_n40C_1v28.lib": {
+        "sha256": "afd8201328f73996b7c80bf13909674ba7b483ec413dea3fca74831cec712578",
+        "size_bytes": 12838331
+      },
+      "libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib": {
+        "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+        "size_bytes": 12841637
+      },
+      "libs.ref/sky130_fd_sc_hd/techlef/sky130_fd_sc_hd__nom.tlef": {
+        "sha256": "5de46c6f7c2cf82599b93d30a6459465f770f63c85b36182c672782219938519",
+        "size_bytes": 18167
+      },
+      "libs.ref/sky130_fd_sc_hd/verilog/sky130_fd_sc_hd.v": {
+        "sha256": "4a183a476baef9abb68d82808d24d8f2907ed7b6cdebff8d03002f45b12e7833",
+        "size_bytes": 3995427
+      }
+    },
+    "open_pdks_commit": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+    "release": "f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+    "root": "/home/ubuntu/.local/opentallas-pdk-full",
+    "sources_file": "open_pdks f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7",
+    "sram_macro_files": {
+      "count": 638,
+      "macro_names": [
+        "sky130_sram_1kbyte_1rw1r_32x256_8",
+        "sky130_sram_1kbyte_1rw1r_32x256_8_TT_1p8V_25C",
+        "sky130_sram_1kbyte_1rw1r_8x1024_8",
+        "sky130_sram_1kbyte_1rw1r_8x1024_8_TT_1p8V_25C",
+        "sky130_sram_2kbyte_1rw1r_32x512_8",
+        "sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C",
+        "sram_1rw1r_32_256_8_sky130",
+        "sram_1rw1r_32_256_8_sky130_FF_1p8V_25C",
+        "sram_1rw1r_32_256_8_sky130_SS_1p8V_25C",
+        "sram_1rw1r_32_256_8_sky130_TT_1p7V_25C",
+        "sram_1rw1r_32_256_8_sky130_TT_1p8V_0C",
+        "sram_1rw1r_32_256_8_sky130_TT_1p8V_100C",
+        "sram_1rw1r_32_256_8_sky130_TT_1p8V_25C",
+        "sram_1rw1r_32_256_8_sky130_TT_1p9V_25C"
+      ],
+      "path_manifest_sha256": "acecbbcc9bc9fff1d0acaf502879d7a77e132b58f36bd3930f2dd0a3ed65898e",
+      "root": "libs.ref/sky130_sram_macros"
+    },
+    "variant": "sky130A",
+    "variant_path": "sky130A (symlink into ciel/sky130/versions/f6eeac7dad085ffcc829ccfd721f7b4ce39edcf7)"
+  },
+  "purpose": "full open-PDK standard-cell view used by the ABI 3.0 physical characterisation flow (tools/run_abi3_physical.py, view 'sky130hd'); methodology and implementation evidence only, never a target-node scaling anchor",
+  "relationship_to_existing_locks": "This is a SEPARATE PDK root from configs/pdk/sky130_physical_lock.json. That lock covers ~/.local/opentallas-pdk (sky130_fd_pr device models only) and its tree hash backs the retained SPICE evidence; it is unmodified and its tree was not touched by this installation.",
+  "schema_version": 1
+}

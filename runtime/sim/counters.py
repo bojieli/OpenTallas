@@ -128,11 +128,53 @@ COUNTERS: dict[int, str] = dict(
         _reg(CounterGroup.FAULT_RECOVERY, 6, "fault.resets"),
         _reg(CounterGroup.FAULT_RECOVERY, 7, "fault.integrity_events"),
         # 0x0c latency
+        #
+        # Group 0x0c is the *timing* group.  A functional model leaves every
+        # counter in this group at zero; the cycle model fills them in.  That
+        # split is mechanical, not editorial: architectural-counter agreement
+        # between ``runtime/sim/device.py`` and ``runtime/cycle/model.py`` is
+        # defined as equality on every counter outside this group.  Events 4
+        # and above were added by the shared cycle model (additive extension).
         _reg(CounterGroup.LATENCY, 1, "latency.transaction_cycles"),
         _reg(CounterGroup.LATENCY, 2, "latency.issue_cycles"),
         _reg(CounterGroup.LATENCY, 3, "latency.stall_cycles"),
+        _reg(CounterGroup.LATENCY, 4, "latency.compute_cycles"),
+        _reg(CounterGroup.LATENCY, 5, "latency.engine_busy_cycles"),
+        _reg(CounterGroup.LATENCY, 6, "latency.engine_idle_cycles"),
+        _reg(CounterGroup.LATENCY, 7, "latency.queue_stall_cycles"),
+        _reg(CounterGroup.LATENCY, 8, "latency.wait_stall_cycles"),
+        _reg(CounterGroup.LATENCY, 9, "latency.memory_stall_cycles"),
+        _reg(CounterGroup.LATENCY, 10, "latency.hbm_busy_cycles"),
+        _reg(CounterGroup.LATENCY, 11, "latency.sram_busy_cycles"),
+        _reg(CounterGroup.LATENCY, 12, "latency.rom_busy_cycles"),
+        _reg(CounterGroup.LATENCY, 13, "latency.host_busy_cycles"),
+        _reg(CounterGroup.LATENCY, 14, "latency.sram_bank_conflict_cycles"),
+        _reg(CounterGroup.LATENCY, 15, "latency.hbm_channel_conflict_cycles"),
+        _reg(CounterGroup.LATENCY, 16, "latency.link_serialization_cycles"),
+        _reg(CounterGroup.LATENCY, 17, "latency.link_hop_cycles"),
+        _reg(CounterGroup.LATENCY, 18, "latency.link_credit_stall_cycles"),
+        _reg(CounterGroup.LATENCY, 19, "latency.link_retry_cycles"),
+        _reg(CounterGroup.LATENCY, 20, "latency.link_switch_contention_cycles"),
+        _reg(CounterGroup.LATENCY, 21, "latency.collective_cycles"),
+        _reg(CounterGroup.LATENCY, 22, "latency.barrier_cycles"),
+        _reg(CounterGroup.LATENCY, 23, "latency.node_skew_cycles"),
+        _reg(CounterGroup.LATENCY, 24, "latency.sequencer_fetch_cycles"),
     ]
 )
+
+TIMING_GROUP: int = int(CounterGroup.LATENCY)
+"""Counter group whose events are timing, not architectural, observations."""
+
+
+def is_timing_counter(name: str) -> bool:
+    """True when ``name`` is a timing counter (group 0x0c).
+
+    ADR-003 section 13 requires identical event definitions across the
+    functional simulator, the cycle simulator and RTL.  The functional
+    simulator cannot know a cycle count, so exactly one group is allowed to
+    differ between it and the cycle model, and this predicate names it.
+    """
+    return (NAME_TO_ID[name] >> 24) == TIMING_GROUP
 
 NAME_TO_ID: dict[str, int] = {name: cid for cid, name in COUNTERS.items()}
 

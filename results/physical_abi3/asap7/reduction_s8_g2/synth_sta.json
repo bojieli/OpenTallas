@@ -1,0 +1,162 @@
+{
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-08-29T15:58:12.931642+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib",
+        "sha256": "b1ece108c0a2acd8d01c05cee6daee2834425037b1d9aad625d6f1dd640f1940",
+        "size_bytes": 22136706
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib",
+        "sha256": "a4ceb32e418e1aac8667e28fbd8e9e46baf520180be4db075598a4d7c681a56e",
+        "size_bytes": 309886
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib",
+        "sha256": "6529c6c72465cd133dfbfb03952327ab2774bb6aa4be866d78fd7bc6c58c9f6f",
+        "size_bytes": 19915253
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+        "sha256": "57a0b403485b99ebd676942af4673ac086b86c7c75fbdc3e5c0038501dd22ba3",
+        "size_bytes": 1512690
+      },
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib",
+        "sha256": "fa92e6ab1481810602811b1eea54bc016a341f11fb5188d7512c026599adf038",
+        "size_bytes": 2306883
+      }
+    ],
+    "name": "TT",
+    "process": "typical",
+    "temperature_c": 0.0,
+    "voltage_v": 0.7
+  },
+  "design": {
+    "block": "reduction_s8_g2",
+    "clock_port": "clk",
+    "description": "Eight-source, two-group tagged deterministic reduction endpoint.",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "parameters": {
+      "DATA_W": 32,
+      "GROUPS": 2,
+      "SOURCES": 8,
+      "TAG_W": 16
+    },
+    "sources": [
+      {
+        "path": "rtl/ot_reduction_tree.sv",
+        "sha256": "653a1bcc033f8838f31d71220e50e3b38ec4fbf935f6901dd1fb8e6af0c297c5",
+        "size_bytes": 8276
+      }
+    ],
+    "top": "ot_reduction_endpoint"
+  },
+  "elapsed_seconds": 2.588,
+  "generated_at": "2026-08-29T15:58:10.343441+00:00",
+  "git": {
+    "commit": "9e5969d5de4e212bd46aac0997870d495634d870",
+    "worktree_dirty": true
+  },
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "asap7",
+      "--block",
+      "reduction_s8_g2",
+      "--clock-period-ns",
+      "2.25",
+      "--stages",
+      "synth,sta",
+      "--force",
+      "--output",
+      "results/physical_abi3/asap7/reduction_s8_g2/synth_sta.json"
+    ],
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "synth",
+    "sta"
+  ],
+  "stages_requested": [
+    "synth",
+    "sta"
+  ],
+  "static_timing": {
+    "clock_period_ns": 2.25,
+    "critical_path_ns": 1.9770281315770415,
+    "fmax_definition": "1 / (target clock period - setup WNS), pre-layout, ideal clock",
+    "fmax_hz": 505809696.90214634,
+    "hold_violating_paths": 0,
+    "hold_wns_ns": 0.05295744766664513,
+    "library_time_unit_ns": 0.001,
+    "raw_library_units": {
+      "hold_wns": 52.95744766664513,
+      "setup_tns": 0.0,
+      "setup_wns": 272.97186842295855
+    },
+    "sdc_clock_period_library_units": 2250.0,
+    "setup_tns_ns": 0.0,
+    "setup_violating_paths": 0,
+    "setup_wns_ns": 0.27297186842295856,
+    "timing_met": true
+  },
+  "status": "pass",
+  "synthesis": {
+    "abc_delay_target_ps": 2250.0,
+    "cell_area_um2": 679.939,
+    "cell_count": 5072,
+    "cell_types_used": 39,
+    "chip_area_um2": 679.9383,
+    "combinational_cell_count": 4452,
+    "dont_use_cell_count": 81,
+    "liberty_cell_count": 202,
+    "macro_count": 0,
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "9a874d7721f976883bbf6e083ec437fcd4351d1ba6007ed30fd3bb72c112fd3d",
+      "raw_netlist_sha256": "9a874d7721f976883bbf6e083ec437fcd4351d1ba6007ed30fd3bb72c112fd3d",
+      "signed_declarations_stripped": 0
+    },
+    "sequential_area_um2": 190.24,
+    "sequential_cell_count": 620,
+    "unmapped_cell_types": []
+  },
+  "target_clock_period_ns": 2.25,
+  "tools": {
+    "abc": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",
+      "sha256": "da898a762b6c3d0f4e76d3a4c142fea05dd14d98916e315e942ea9227e4e87ce"
+    },
+    "opensta": {
+      "path": "/home/ubuntu/.local/opentallas-tools/opensta-be771a0/bin/sta",
+      "sha256": "ecf87c20ca592279f330aeb5681610616b16df810e4f308b855af04605a09a88",
+      "version": "3.1.0"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+      "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+    }
+  },
+  "view": {
+    "cell_library": "asap7sc7p5t_RVT",
+    "description": "ASAP7 7 nm predictive FinFET academic PDK (RVT), as distributed inside the pinned OpenROAD-flow-scripts image.  Predictive view.",
+    "evidence_class": "predictive academic PDK (not manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "asap7",
+    "node_nm": 7,
+    "pdk_lock": "configs/pdk/asap7_local_liberty_lock.json",
+    "predictive": true
+  }
+}
