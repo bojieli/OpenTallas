@@ -118,9 +118,40 @@ def test_every_weight_carries_a_checkpoint_binding(graph: dict) -> None:
     missing = [
         tensor["tensor_id"]
         for tensor in graph["tensors"]
-        if tensor["role"] in {"weight", "constant"} and not tensor.get("binding")
+        if tensor["role"] == "weight" and not tensor.get("binding")
     ]
     assert missing == [], missing[:10]
+
+
+def test_every_constant_is_bound_or_derived(graph: dict) -> None:
+    """A constant is either checkpoint bytes or a declared generator.
+
+    Amendment A9: a rotary coefficient table exists in no checkpoint, so
+    requiring a binding for every constant made it undeclarable. It may name a
+    deterministic generator instead -- but never neither, which would leave its
+    contents unspecified.
+    """
+    unbound = [
+        tensor["tensor_id"]
+        for tensor in graph["tensors"]
+        if tensor["role"] == "constant"
+        and not tensor.get("binding")
+        and not tensor.get("generator")
+    ]
+    assert unbound == [], unbound[:10]
+
+
+def test_declared_generators_are_implemented_and_reproducible(graph: dict) -> None:
+    """Every named generator must exist and be deterministic."""
+    from runtime.sim.generators import digest_of, registered
+
+    for tensor in graph["tensors"]:
+        name = tensor.get("generator")
+        if not name:
+            continue
+        assert name in registered(), f"{tensor['tensor_id']} names unknown {name}"
+        parameters = tensor.get("generator_parameters", {})
+        assert digest_of(name, parameters) == digest_of(name, parameters)
 
 
 def test_bindings_name_a_real_file_and_a_plausible_extent(graph: dict) -> None:
