@@ -91,6 +91,22 @@
   "$defs": {
     "adaptation": {
       "additionalProperties": false,
+      "oneOf": [
+        {
+          "required": [
+            "decision",
+            "inference_config_n_mtp_layers",
+            "root_config_num_nextn_predict_layers"
+          ]
+        },
+        {
+          "required": [
+            "decision",
+            "source_behavior",
+            "target_contract"
+          ]
+        }
+      ],
       "properties": {
         "decision": {
           "minLength": 1,
@@ -101,12 +117,18 @@
         },
         "root_config_num_nextn_predict_layers": {
           "const": 1
+        },
+        "source_behavior": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "target_contract": {
+          "minLength": 1,
+          "type": "string"
         }
       },
       "required": [
-        "decision",
-        "inference_config_n_mtp_layers",
-        "root_config_num_nextn_predict_layers"
+        "decision"
       ],
       "type": "object"
     },

@@ -1404,6 +1404,156 @@ audit qualifies the sink payload only. Real checkpoint-derived query/KV known
 answers, service-engine execution, transactional KV state, certified schedules,
 RTL, cycles, and PPA remain open.
 
+### NUM-6.13 DeepSeek V4 compressor pooling and state
+
+The compressor contract is pinned to `deepseek-ai/DeepSeek-V4-Flash-0731`
+revision `7872f01b1d1fe23eabc4c98b48bffcef5a386062`, whose
+`inference/model.py` SHA-256 is
+`c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`.
+The graph contains the following released profiles:
+
+| Scope | Ratio | Raw projected width | Pooled width | Sites |
+|---|---:|---:|---:|---:|
+| main overlapping compressor | 4 | 1,024 binary32 values | 512 | 21 |
+| indexer overlapping compressor | 4 | 256 binary32 values | 128 | 21 |
+| main non-overlapping compressor | 128 | 512 binary32 values | 512 | 20 |
+
+Each of the 62 sites is represented by five separate graph operations:
+`COMPRESS_PROJECT`, `COMPRESS_STATE_UPDATE`, `COMPRESS_POOL`,
+`BINARY32_TO_BF16`, and `COMPRESS_KV_WRITE`. Weighted RMS normalization,
+position transformation, and FP8 or FP4 QDQ remain separate operations between
+conversion and cache commit. This separation is architectural: projection and
+raw compressor state are binary32, while only the post-pool converted and
+subsequently transformed row is committed as BF16 mutable KV.
+
+#### NUM-6.13.1 Raw state, APE, and overlap assembly
+
+`COMPRESS_STATE_UPDATE` accepts finite binary32 KV and gate-score projection
+outputs. It adds the finite binary32 APE checkpoint row with one binary32 RNE
+addition per score feature. Ratio four owns eight raw rows of width `2D`: four
+previous rows and four current rows. A completed pool group has eight rows of
+width `D`, formed from the previous group's first feature half followed by the
+current group's second feature half. The first completed group substitutes four
+positive-zero KV rows and four negative-infinity score rows for the absent
+previous group. Ratio 128 owns 128 ordinary non-overlapping rows of width `D`.
+
+For prefill at `start_pos == 0`, only the complete prefix
+`floor(sequence_length / ratio) * ratio` is exposed to pooling. The incomplete
+suffix remains in raw state. For ratio four, the last complete raw group is also
+retained as the next group's previous half. The source can evaluate score-plus-
+APE separately for complete-prefix pooling and for rows retained in state; the
+target counters preserve both source computations instead of assuming a reused
+temporary. For decode, exactly one raw row is accepted, written at the phase
+`start_pos mod ratio`, and a pool group is emitted only when
+`(start_pos + 1) mod ratio == 0`. A completed ratio-four current group then
+becomes the previous group.
+
+All caller tensors and the complete prior state validate before address
+derivation and immutable result construction. Inactive batches remain
+bit-preserved. `Compressor.forward` itself overwrites only addressed rows, so a
+new-session raw-state reset is an explicit session-controller responsibility;
+it is not silently attributed to the source method.
+
+#### NUM-6.13.2 Deterministic binary32 pooling
+
+For every batch, complete group, and output dimension, `COMPRESS_POOL` executes
+the following target rule over eight ratio-four candidates or 128 ratio-128
+candidates:
+
+1. select the finite numeric maximum, retaining the first source lane on a tie;
+2. subtract that maximum from every finite score with binary32 RNE;
+3. evaluate mathematical exponential once with correctly rounded binary32
+   output; a negative-infinity sentinel contributes positive zero;
+4. reduce exponentials in source-position order with the NUM-6.1 balanced
+   binary32 tree;
+5. divide every exponential by the denominator once with binary32 RNE;
+6. multiply every binary32 KV value by its probability once with binary32 RNE;
+7. reduce products in source-position order with the same NUM-6.1 tree; and
+8. canonicalize a zero result to positive zero.
+
+Input NaNs, positive infinity, an unexpected negative infinity, a nonpositive
+denominator, or intermediate binary32 overflow poisons the whole transaction.
+Binary32 subnormals are preserved. This arithmetic freezes a reproducible
+accelerator target; it does not assert that PyTorch CPU and CUDA softmax use the
+same reduction tree or exponential approximation.
+
+#### NUM-6.13.3 Explicit binary32-to-BF16 boundary
+
+Immediately after pooling, the official method executes `kv.to(dtype)` before
+RMS normalization. `BINARY32_TO_BF16` therefore validates a nonempty finite
+rank-three binary32 tensor and converts each value exactly once under NUM-4.2
+round-to-nearest, ties-to-even. Gradual BF16 underflow is preserved, output zero
+is canonical positive zero, finite BF16 saturation is counted, and the result
+commits only after the complete input validates. Its logical traffic is exactly
+four input bytes and two output bytes per value. It does not include RMSNorm,
+RoPE, activation QDQ, or a compressed-cache write.
+
+#### NUM-6.13.4 Compressed-KV commit and validity
+
+`COMPRESS_KV_WRITE` accepts only finite BF16 rows after normalization, position
+transformation, and FP8/FP4 QDQ reconstruction. A prefill commits the complete
+prefix `floor(sequence_length / ratio)` at slots starting from zero. A one-token
+decode commits slot `floor(start_pos / ratio)` only on a ratio boundary; an
+incomplete decode window commits no payload row.
+
+The released PyTorch cache object has no validity bitmap. The accelerator target
+adds committed-prefix validity so stale payload cannot become visible across
+sessions. New-session prefill invalidates the active batches before committing
+their new complete prefixes. Decode requires the old valid-prefix length to
+equal `floor(start_pos / ratio)` and rejects a gap, forged prefix, or generation
+mismatch. Inactive batches and payload outside the newly written rows remain
+bit-preserved. Validation, prefix checking, result preparation, and commit are
+atomic. Validity-bit writes are counted separately from BF16 payload bytes.
+
+`INDEX_SCORE` reads the committed index-compressed cache; `SPARSE_ATTENTION`
+reads the committed main-compressed cache. Neither may consume the uncommitted
+pool result or the wrong cache namespace.
+
+#### NUM-6.13.5 Logical counters and storage-tier boundary
+
+The raw-state reference separately reports source KV/score reads, APE reads and
+adds, raw-state reads and writes, preserved values, overlap fill, state rolls,
+pool operands, modulo evaluations, and transaction commits. The pool reference
+separately reports source/APE traffic, comparisons, subtractions, exponentials,
+tree additions, probability divisions, weighted multiplications, output writes,
+and commits. Conversion reports binary32 reads, BF16 writes, saturation, and
+commit. The compressed-cache reference separately reports BF16 source/state
+payload traffic, preserved rows, validity invalidation/writes, and commit.
+
+These are logical operator bytes and operations. They do not identify SRAM or
+HBM placement, cache hits, banks, bursts, coalescing, NoC traffic, cycles,
+achieved bandwidth, latency, energy, area, PPA, or ROM/GPU advantage. Immutable
+model weights may be candidates for ROM; raw compressor state and compressed KV
+are mutable and must remain in a writable tier. Any M9 storage or throughput
+claim must map these exact logical streams through an executable placement and
+schedule rather than treating them as a measured physical byte rate.
+
+#### NUM-6.13.6 Checkpoint and source conformance evidence
+
+The governed checkpoint audit found all 62 finite FP32 APE tensors: 21 of shape
+`[4,256]`, 21 of `[4,1024]`, and 20 of `[128,512]`. Together they contain
+1,418,240 values and 5,672,960 bytes with aggregate SHA-256
+`ad6333d91c83b72c3fc426ea712b91446ef4020eac1dc39a299d9e56ab288ea4`.
+The range is `-3.3454201221466064` (`0xc0561b5d`) through
+`1.1580443382263184` (`0x3f943acc`), with 799,732 negative, 618,508 positive,
+and no zero values.
+
+The audit executes the unmodified official `Compressor.forward` and
+`overlap_transform`; projection, normalization, RoPE, and QDQ are isolated by
+test doubles. On CPU and CUDA 12.8/SM120, the APE-cancelled corpus matched all
+1,024 target BF16 outputs. On a broad exact-eighth corpus, both devices differed
+from the deterministic target at one of 1,024 outputs: official `0x3d08` versus
+target `0x3d09` at flat index 672. The one-code difference is retained as
+evidence of the declared backend/target boundary, not hidden by changing the
+target arithmetic. The deterministic report SHA-256 is
+`d14c2b33d9cfc105af9ba3dc18c4ac3b749a203bd0a6b0d3f1d8592315651324`.
+
+This qualifies the pooling target, all released APE payloads, raw-state
+semantics, conversion, and compressed-cache transaction references. It does not
+qualify checkpoint-derived projection activations, an executable service-engine
+transaction, RTL, a schedule, cycles, physical bandwidth, PPA, complete-model
+decode, or any GPU comparison.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension

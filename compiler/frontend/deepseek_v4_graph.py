@@ -62,8 +62,18 @@ DEFAULT_INFERENCE_CONFIG = (
 _QUALIFIED_REFERENCE_OWNERS = {
     "BIASED_TOPK_ROUTE": "runtime.reference.selection.biased_topk_route_indices",
     "BF16_LINEAR": "runtime.reference.matrix.bf16_linear_bf16",
+    "BINARY32_TO_BF16": (
+        "runtime.reference.conversion.binary32_tensor_to_bf16_rne"
+    ),
     "CONFIDENCE_SCORE": "runtime.reference.confidence.confidence_score_bf16",
+    "COMPRESS_KV_WRITE": (
+        "runtime.reference.compressed_kv.compressed_kv_write_bf16"
+    ),
+    "COMPRESS_POOL": "runtime.reference.compression_pool.compress_pool_f32",
     "COMPRESS_PROJECT": "runtime.reference.compression.compress_project_bf16",
+    "COMPRESS_STATE_UPDATE": (
+        "runtime.reference.compression_state.compress_state_update_f32"
+    ),
     "COMPRESSED_DENSE_INDEX": "runtime.reference.indexing.compressed_dense_indices",
     "DSPARK_NOISE_EMBED": "runtime.reference.structural.dspark_noise_embed_bf16",
     "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
@@ -256,14 +266,21 @@ _OPERATORS = (
     _op(
         "COMPRESS_POOL",
         "inference/model.py:Compressor.forward;inference/model.py:Compressor.overlap_transform",
-        "Apply positional score weights, overlap transform where ratio=4, softmax, and weighted reduction.",
+        "Apply deterministic per-dimension stable softmax and weighted reduction to a complete ratio-derived candidate group.",
         "COMPRESS",
         "attention.compression_pool",
     ),
     _op(
+        "BINARY32_TO_BF16",
+        "inference/model.py:Compressor.forward:kv.to(dtype)",
+        "Convert each finite pooled binary32 KV value once to BF16 with round-to-nearest, ties-to-even before RMS normalization.",
+        "CONVERT",
+        "numeric.binary32_to_bf16",
+    ),
+    _op(
         "COMPRESS_STATE_UPDATE",
         "inference/model.py:Compressor.forward",
-        "Update incomplete compression KV/score windows without exposing uncommitted cache entries.",
+        "Add FP32 positional scores, update raw incomplete KV/score windows transactionally, and emit complete ratio-derived pooling groups.",
         "KV_PREPARE",
         "state.compressor_prepare",
         "mutable_compressor",
@@ -271,9 +288,25 @@ _OPERATORS = (
     _op(
         "COMPRESS_KV_WRITE",
         "inference/model.py:Compressor.forward",
-        "Commit a complete normalized/rotated compressed KV entry to its ratio-derived cache slot.",
+        "Advance the session-bound compressor cursor on every processed span and commit a complete normalized/rotated compressed KV entry only at its ratio-derived boundary.",
         "KV_COMMIT",
         "state.compressed_kv_write",
+        "mutable_kv",
+    ),
+    _op(
+        "COMPRESSED_KV_VALID_VIEW",
+        "inference/model.py:Compressor.forward;inference/model.py:Indexer.forward;inference/model.py:Attention.forward",
+        "Validate the active session/cursor and expose only the immutable contiguous committed prefix of a compressed-KV state.",
+        "STATE_VIEW",
+        "state.compressed_kv_valid_view",
+        "mutable_kv",
+    ),
+    _op(
+        "ATTENTION_KV_VIEW",
+        "inference/model.py:Attention.forward;inference/model.py:DSparkBlock.forward",
+        "Materialize the exact prefill or decode KV row space seen by sparse attention from current KV, committed circular-window state, and an optional valid compressed prefix.",
+        "STATE_VIEW",
+        "state.attention_kv_view",
         "mutable_kv",
     ),
     _op(
@@ -464,6 +497,9 @@ class GraphNode:
     inputs: tuple[str, ...]
     outputs: tuple[str, ...]
     phases: tuple[str, ...]
+    guard: str | None
+    optional_inputs: tuple[str, ...]
+    optional_output_guards: tuple[tuple[str, str], ...]
     attributes: dict[str, Any]
     state_reads: tuple[str, ...]
     state_writes: tuple[str, ...]
@@ -475,6 +511,9 @@ class GraphNode:
             "id": self.node_id,
             "inputs": list(self.inputs),
             "kind": self.kind,
+            "guard": self.guard,
+            "optional_inputs": list(self.optional_inputs),
+            "optional_output_guards": dict(self.optional_output_guards),
             "outputs": list(self.outputs),
             "phases": list(self.phases),
             "state_reads": list(self.state_reads),
@@ -489,11 +528,16 @@ class _GraphBuilder:
         self.node_ids: set[str] = set()
         self.values: set[str] = {
             "request.input_ids",
+            "request.session_ids",
             "request.start_pos",
         }
         self.value_phases: dict[str, frozenset[str]] = {
             "request.input_ids": frozenset({"prefill", "decode"}),
+            "request.session_ids": frozenset({"prefill", "decode"}),
             "request.start_pos": frozenset({"prefill", "decode"}),
+        }
+        self.value_guards: dict[str, str | None] = {
+            value: None for value in self.values
         }
 
     def add(
@@ -504,6 +548,9 @@ class _GraphBuilder:
         output_names: tuple[str, ...] = ("output",),
         *,
         phases: tuple[str, ...] = ("prefill", "decode"),
+        guard: str | None = None,
+        optional_inputs: tuple[str, ...] = (),
+        optional_output_guards: dict[str, str] | None = None,
         attributes: dict[str, Any] | None = None,
         state_reads: tuple[str, ...] = (),
         state_writes: tuple[str, ...] = (),
@@ -518,6 +565,16 @@ class _GraphBuilder:
             raise DeepSeekV4GraphError(
                 f"graph node {node_id!r} has unavailable inputs {missing_inputs}"
             )
+        if guard is not None and guard not in self.values:
+            raise DeepSeekV4GraphError(
+                f"graph node {node_id!r} has unavailable guard {guard!r}"
+            )
+        if len(set(optional_inputs)) != len(optional_inputs) or not set(
+            optional_inputs
+        ).issubset(inputs):
+            raise DeepSeekV4GraphError(
+                f"graph node {node_id!r} has invalid optional inputs"
+            )
         if not phases or any(phase not in {"prefill", "decode"} for phase in phases):
             raise DeepSeekV4GraphError(f"graph node {node_id!r} has invalid phases")
         phase_set = frozenset(phases)
@@ -531,15 +588,64 @@ class _GraphBuilder:
                 f"graph node {node_id!r} consumes phase-unavailable values "
                 f"{invalid_phase_inputs}"
             )
+        if guard is not None and not phase_set.issubset(self.value_phases[guard]):
+            raise DeepSeekV4GraphError(
+                f"graph node {node_id!r} consumes a phase-unavailable guard"
+            )
+        guarded_inputs = {
+            value: self.value_guards[value]
+            for value in inputs
+            if self.value_guards[value] is not None
+        }
+        for value, value_guard in guarded_inputs.items():
+            if guard == value_guard:
+                continue
+            if value not in optional_inputs or value_guard not in inputs:
+                raise DeepSeekV4GraphError(
+                    f"graph node {node_id!r} consumes guarded value {value!r} "
+                    "without the same execution guard or an explicit optional "
+                    "input plus its guard"
+                )
+        for value in optional_inputs:
+            if self.value_guards[value] is None:
+                raise DeepSeekV4GraphError(
+                    f"graph node {node_id!r} marks unguarded value {value!r} optional"
+                )
         outputs = tuple(f"{node_id}.{name}" for name in output_names)
         if set(outputs) & self.values:
             raise DeepSeekV4GraphError(f"graph node {node_id!r} redefines a value")
+        output_by_name = dict(zip(output_names, outputs, strict=True))
+        resolved_output_guards: dict[str, str] = {}
+        for output_name, raw_guard in (optional_output_guards or {}).items():
+            if output_name not in output_by_name:
+                raise DeepSeekV4GraphError(
+                    f"graph node {node_id!r} guards unknown output {output_name!r}"
+                )
+            resolved_guard = output_by_name.get(raw_guard, raw_guard)
+            if resolved_guard not in self.values and resolved_guard not in outputs:
+                raise DeepSeekV4GraphError(
+                    f"graph node {node_id!r} has unavailable output guard "
+                    f"{raw_guard!r}"
+                )
+            resolved_output_guards[output_by_name[output_name]] = resolved_guard
+        if guard is not None and resolved_output_guards:
+            raise DeepSeekV4GraphError(
+                f"graph node {node_id!r} cannot combine a node guard with "
+                "per-output guards"
+            )
+        node_output_guards = {
+            output: guard for output in outputs if guard is not None
+        }
+        node_output_guards.update(resolved_output_guards)
         node = GraphNode(
             node_id=node_id,
             kind=kind,
             inputs=inputs,
             outputs=outputs,
             phases=phases,
+            guard=guard,
+            optional_inputs=optional_inputs,
+            optional_output_guards=tuple(sorted(resolved_output_guards.items())),
             attributes=attributes or {},
             state_reads=state_reads,
             state_writes=state_writes,
@@ -549,6 +655,9 @@ class _GraphBuilder:
         self.node_ids.add(node_id)
         self.values.update(outputs)
         self.value_phases.update({output: phase_set for output in outputs})
+        self.value_guards.update(
+            {output: node_output_guards.get(output) for output in outputs}
+        )
         return outputs
 
 
@@ -720,6 +829,128 @@ def _compress_project_attributes(
         "subnormal_policy": "preserve",
         "weight_compute_dtype": "binary32_exact_bf16_widen",
         "weight_layout": "output_by_input",
+    }
+
+
+def _compress_state_attributes(
+    *,
+    ratio: int,
+    head_dim: int,
+    projection_scope: str,
+) -> dict[str, Any]:
+    expected = {
+        ("indexer", 4): 128,
+        ("main", 4): 512,
+        ("main", 128): 512,
+    }.get((projection_scope, ratio))
+    if expected is None or head_dim != expected:
+        raise DeepSeekV4GraphError(
+            "unsupported COMPRESS_STATE_UPDATE profile "
+            f"scope={projection_scope!r}, ratio={ratio}, head_dim={head_dim}"
+        )
+    overlap = ratio == 4
+    return {
+        "ape_checkpoint_dtype": "binary32",
+        "ape_shape": [ratio, (2 if overlap else 1) * head_dim],
+        "candidate_input_dtype": "binary32",
+        "counter_scope": "logical_raw_state_reads_and_writes",
+        "decode_sequence_length": 1,
+        "head_dim": head_dim,
+        "intermediate_overflow": "poison",
+        "new_session_prefill": "source_overwrites_only_addressed_rows_session_reset_external",
+        "output": "optional_pool_kv_pool_scores_and_should_compress_predicate",
+        "overlap": overlap,
+        "positional_score_add_rounding": "binary32_rne",
+        "projection_scope": projection_scope,
+        "ratio": ratio,
+        "state_dtype": "binary32",
+        "state_slots": (2 if overlap else 1) * ratio,
+        "state_transaction": "validate_prepare_atomic_commit_target_adaptation",
+    }
+
+
+def _compress_pool_attributes(*, ratio: int, head_dim: int) -> dict[str, Any]:
+    if (ratio, head_dim) not in {(4, 128), (4, 512), (128, 512)}:
+        raise DeepSeekV4GraphError(
+            f"unsupported COMPRESS_POOL profile ratio={ratio}, head_dim={head_dim}"
+        )
+    overlap = ratio == 4
+    return {
+        "candidate_count": 2 * ratio if overlap else ratio,
+        "candidate_input_dtype": "binary32",
+        "first_overlap_padding": (
+            "positive_zero_kv_and_negative_infinity_score"
+            if overlap
+            else "not_applicable"
+        ),
+        "head_dim": head_dim,
+        "intermediate_overflow": "poison",
+        "maximum": "per_dimension_finite_binary32_numeric_value",
+        "output_dtype": "binary32",
+        "output_zero": "canonical_positive",
+        "overlap": overlap,
+        "probability_division_rounding": "binary32_rne",
+        "predicate": "execute_only_when_compress_state_should_compress",
+        "ratio": ratio,
+        "reduction_tree": "num_6_1_balanced_binary32_rne",
+        "score_exponential": "correctly_rounded_binary32",
+        "score_subtraction_rounding": "binary32_rne",
+        "subnormal_policy": "preserve",
+        "weighted_value_multiply_rounding": "binary32_rne",
+    }
+
+
+def _binary32_to_bf16_attributes(*, head_dim: int) -> dict[str, Any]:
+    if head_dim not in {128, 512}:
+        raise DeepSeekV4GraphError(
+            f"unsupported BINARY32_TO_BF16 width={head_dim}"
+        )
+    return {
+        "counter_scope": "logical_binary32_reads_and_bf16_writes",
+        "finite_input_required": True,
+        "finite_saturation": "sticky_count",
+        "input_dtype": "binary32",
+        "input_rank": 3,
+        "intermediate_overflow": "poison",
+        "output_dtype": "bf16",
+        "output_zero": "canonical_positive",
+        "predicate": "execute_only_when_compress_state_should_compress",
+        "rounding": "round_to_nearest_ties_to_even_once",
+        "subnormal_policy": "preserve_gradual_underflow",
+        "transaction": "validate_prepare_atomic_immutable_commit",
+        "width": head_dim,
+    }
+
+
+def _compress_kv_write_attributes(
+    *,
+    layer: int,
+    ratio: int,
+    scope: str,
+    projection_scope: str,
+    head_dim: int,
+) -> dict[str, Any]:
+    if (projection_scope, ratio, head_dim) not in {
+        ("indexer", 4, 128),
+        ("main", 4, 512),
+        ("main", 128, 512),
+    }:
+        raise DeepSeekV4GraphError(
+            "unsupported COMPRESS_KV_WRITE profile "
+            f"scope={projection_scope!r}, ratio={ratio}, head_dim={head_dim}"
+        )
+    return {
+        "cache_slot": "completed_absolute_position_floor_div_ratio",
+        "committed_input_dtype": "bf16_after_normalize_position_transform_and_qdq",
+        "decode_sequence_length": 1,
+        "head_dim": head_dim,
+        "kv_head_count": 1,
+        "layer": layer,
+        "new_session_prefill": "invalidate_then_commit_complete_prefix",
+        "projection_scope": projection_scope,
+        "ratio": ratio,
+        "scope": scope,
+        "state_transaction": "valid_prefix_validate_prepare_atomic_commit_target_adaptation",
     }
 
 
@@ -1000,8 +1231,9 @@ def _add_block_graph(
         state_writes=(f"state.{scope}.layer{layer}.window_kv",),
     )
     attention_indices = window_indices
+    compressed_kv_cache: str | None = None
     if ratio:
-        compressed_kv, compression_scores = graph.add(
+        projected_compressed_kv, compression_scores = graph.add(
             f"{root}.compress_project",
             "COMPRESS_PROJECT",
             (attn_norm,),
@@ -1017,13 +1249,34 @@ def _add_block_graph(
                 "attention.compressor.wgate.weight",
             ),
         )
+        pool_kv, pool_scores, should_compress = graph.add(
+            f"{root}.compress_state",
+            "COMPRESS_STATE_UPDATE",
+            (projected_compressed_kv, compression_scores, "request.start_pos"),
+            ("pool_kv", "pool_scores", "should_compress"),
+            phases=normal_phases,
+            attributes=_compress_state_attributes(
+                ratio=ratio,
+                head_dim=512,
+                projection_scope="main",
+            ),
+            state_reads=(f"state.{scope}.layer{layer}.compressor",),
+            state_writes=(f"state.{scope}.layer{layer}.compressor",),
+            tensor_roles=("attention.compressor.position_weight",),
+        )
         (compressed_kv,) = graph.add(
             f"{root}.compress_pool",
             "COMPRESS_POOL",
-            (compressed_kv, compression_scores, "request.start_pos"),
+            (pool_kv, pool_scores, should_compress),
             phases=normal_phases,
-            attributes={"overlap": ratio == 4, "ratio": ratio},
-            tensor_roles=("attention.compressor.position_weight",),
+            attributes=_compress_pool_attributes(ratio=ratio, head_dim=512),
+        )
+        (compressed_kv,) = graph.add(
+            f"{root}.compress_bf16",
+            "BINARY32_TO_BF16",
+            (compressed_kv, should_compress),
+            phases=normal_phases,
+            attributes=_binary32_to_bf16_attributes(head_dim=512),
         )
         (compressed_kv,) = graph.add(
             f"{root}.compress_norm",
@@ -1055,21 +1308,19 @@ def _add_block_graph(
                 "scale_storage": "e8m0",
             },
         )
-        graph.add(
-            f"{root}.compress_state",
-            "COMPRESS_STATE_UPDATE",
-            (compressed_kv, compression_scores, "request.start_pos"),
-            phases=normal_phases,
-            attributes={"overlap": ratio == 4, "ratio": ratio},
-            state_reads=(f"state.{scope}.layer{layer}.compressor",),
-            state_writes=(f"state.{scope}.layer{layer}.compressor",),
-        )
-        graph.add(
+        (compressed_kv_cache,) = graph.add(
             f"{root}.compress_kv_write",
             "COMPRESS_KV_WRITE",
-            (compressed_kv, "request.start_pos"),
+            (compressed_kv, should_compress, "request.start_pos"),
+            ("committed_cache",),
             phases=normal_phases,
-            attributes={"layer": layer, "ratio": ratio, "scope": scope},
+            attributes=_compress_kv_write_attributes(
+                layer=layer,
+                ratio=ratio,
+                scope=scope,
+                projection_scope="main",
+                head_dim=512,
+            ),
             state_reads=(f"state.{scope}.layer{layer}.compressed_kv",),
             state_writes=(f"state.{scope}.layer{layer}.compressed_kv",),
         )
@@ -1128,13 +1379,36 @@ def _add_block_graph(
                     "attention.indexer.compressor.wgate.weight",
                 ),
             )
+            index_pool_kv, index_pool_scores, index_should_compress = graph.add(
+                f"{root}.index_compress_state",
+                "COMPRESS_STATE_UPDATE",
+                (index_kv, index_scores, "request.start_pos"),
+                ("pool_kv", "pool_scores", "should_compress"),
+                phases=normal_phases,
+                attributes=_compress_state_attributes(
+                    ratio=4,
+                    head_dim=128,
+                    projection_scope="indexer",
+                ),
+                state_reads=(f"state.{scope}.layer{layer}.index_compressor",),
+                state_writes=(f"state.{scope}.layer{layer}.index_compressor",),
+                tensor_roles=(
+                    "attention.indexer.compressor.position_weight",
+                ),
+            )
             (index_kv,) = graph.add(
                 f"{root}.index_compress_pool",
                 "COMPRESS_POOL",
-                (index_kv, index_scores, "request.start_pos"),
+                (index_pool_kv, index_pool_scores, index_should_compress),
                 phases=normal_phases,
-                attributes={"head_dim": 128, "overlap": True, "ratio": 4},
-                tensor_roles=("attention.indexer.compressor.position_weight",),
+                attributes=_compress_pool_attributes(ratio=4, head_dim=128),
+            )
+            (index_kv,) = graph.add(
+                f"{root}.index_compress_bf16",
+                "BINARY32_TO_BF16",
+                (index_kv, index_should_compress),
+                phases=normal_phases,
+                attributes=_binary32_to_bf16_attributes(head_dim=128),
             )
             (index_kv,) = graph.add(
                 f"{root}.index_compress_norm",
@@ -1167,6 +1441,26 @@ def _add_block_graph(
                 phases=normal_phases,
                 attributes={"block_size": 32},
             )
+            (index_kv_cache,) = graph.add(
+                f"{root}.index_compress_kv_write",
+                "COMPRESS_KV_WRITE",
+                (index_kv, index_should_compress, "request.start_pos"),
+                ("committed_cache",),
+                phases=normal_phases,
+                attributes=_compress_kv_write_attributes(
+                    layer=layer,
+                    ratio=4,
+                    scope=scope,
+                    projection_scope="indexer",
+                    head_dim=128,
+                ),
+                state_reads=(
+                    f"state.{scope}.layer{layer}.index_compressed_kv",
+                ),
+                state_writes=(
+                    f"state.{scope}.layer{layer}.index_compressed_kv",
+                ),
+            )
             (head_weights,) = graph.add(
                 f"{root}.index_head_weights",
                 "BF16_LINEAR",
@@ -1178,9 +1472,12 @@ def _add_block_graph(
             (index_score,) = graph.add(
                 f"{root}.index_score",
                 "INDEX_SCORE",
-                (index_query, index_kv, head_weights),
+                (index_query, index_kv_cache, head_weights),
                 phases=normal_phases,
                 attributes=_index_score_attributes(),
+                state_reads=(
+                    f"state.{scope}.layer{layer}.index_compressed_kv",
+                ),
             )
             (attention_indices,) = graph.add(
                 f"{root}.index_topk",
@@ -1200,7 +1497,12 @@ def _add_block_graph(
     (attention_output,) = graph.add(
         f"{root}.sparse_attention",
         "SPARSE_ATTENTION",
-        (query, kv, attention_indices),
+        (
+            query,
+            kv,
+            attention_indices,
+            *((compressed_kv_cache,) if compressed_kv_cache is not None else ()),
+        ),
         phases=normal_phases,
         attributes=_sparse_attention_attributes(ratio),
         state_reads=(
@@ -1661,7 +1963,22 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "decision": "resolve three DSpark stages from official inference config and checkpoint namespaces",
                 "inference_config_n_mtp_layers": 3,
                 "root_config_num_nextn_predict_layers": 1,
-            }
+            },
+            {
+                "decision": "freeze compressor pooling arithmetic rather than inherit backend-dependent reduction and exponential behavior",
+                "source_behavior": "PyTorch softmax and reduction results may vary with backend implementation details",
+                "target_contract": "NUM-6.13 finite binary32 stable softmax, correctly rounded exponential, balanced reductions, preserved subnormals, and positive-zero canonicalization",
+            },
+            {
+                "decision": "make new-session raw compressor-state reset an explicit controller responsibility",
+                "source_behavior": "Compressor.forward overwrites only raw-state rows addressed by the current call",
+                "target_contract": "session isolation resets raw compressor validity before the first prefill while each operator update remains validate-prepare-commit atomic",
+            },
+            {
+                "decision": "track an explicit committed-prefix validity contract for compressed KV",
+                "source_behavior": "the released PyTorch cache object exposes payload storage without a validity bitmap",
+                "target_contract": "new-session invalidation and atomic prefix commit prevent stale compressed rows from becoming accelerator-visible",
+            },
         ],
         "coverage": {
             "catalog_kind_count": len(OPERATOR_CATALOG),
@@ -1710,17 +2027,17 @@ def build_official_graph_contract() -> dict[str, Any]:
             },
             {
                 "id": "DSV4-SEM-005",
-                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 and BF16 linear, binary32 router-score, compressor, and DSpark confidence projections, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 and indexer FP4 QDQ, and indexer Hadamard semantics, and twenty-six complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion operator kinds. Matrix paths beyond the qualified dense, router-score, compressor, and confidence projection operators, vector paths beyond the qualified normalization, HC expansion, target-hidden capture, and HC post-mixing paths, mutable attention-state prepare/commit, remaining routing/nonlinear paths beyond the qualified score, selection, learned-index score, sparse-attention, weight normalization, expert dispatch, and expert reduction boundaries, and conversion boundaries beyond the qualified QDQ and Hadamard paths remain pending.",
+                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 and BF16 linear, binary32 router-score, compressor, and DSpark confidence projections, raw compressor-state updates, deterministic compressor pooling, explicit pooled-binary32 to BF16 conversion, compressed-KV prefix commit, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 and indexer FP4 QDQ, and indexer Hadamard semantics, and thirty complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state operator kinds. Fourteen matrix, vector, window-KV state, routing, nonlinear, output, and speculative-control operator kinds remain pending even though every kind has a source, lowering, and cost-class ledger entry.",
                 "required_resolution": "Implement and qualify complete target-precision semantics for each graph operator before marking that operator executable; scalar and block-dot primitives alone do not close matrix or layer lowering.",
                 "severity": "blocking",
-                "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/kernel.py:sparse_attn_kernel;inference/model.py:RMSNorm.forward;inference/model.py:Compressor.forward;inference/model.py:Indexer.forward;inference/model.py:Transformer.forward;inference/model.py:Block.hc_post;inference/model.py:MoE.forward;runtime/reference/formats.py;runtime/reference/transcendental.py;runtime/reference/compression.py;runtime/reference/index_score.py;runtime/reference/sparse_attention.py;runtime/reference/normalization.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py",
+                "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/kernel.py:sparse_attn_kernel;inference/model.py:RMSNorm.forward;inference/model.py:Compressor.forward;inference/model.py:Indexer.forward;inference/model.py:Transformer.forward;inference/model.py:Block.hc_post;inference/model.py:MoE.forward;runtime/reference/formats.py;runtime/reference/transcendental.py;runtime/reference/compression.py;runtime/reference/compression_state.py;runtime/reference/compression_pool.py;runtime/reference/conversion.py;runtime/reference/compressed_kv.py;runtime/reference/index_score.py;runtime/reference/sparse_attention.py;runtime/reference/normalization.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py",
             },
             {
                 "id": "DSV4-SEM-006",
-                "issue": "The generation controller requires a committed-state hash for every processed span, but no operator-complete executor implements the source's in-place KV and compressor mutations with accelerator abort/prepare/commit semantics.",
-                "required_resolution": "Specify and implement atomic prepare/commit, rollback, poison, bounds, and session isolation for every KV and compressor state transition, then bind their hashes to generation invocations.",
+                "issue": "Independent references now define atomic raw compressor-state updates and committed-prefix compressed-KV writes, including external new-session reset and explicit validity target adaptations. The generation controller still has no operator-complete executor that invokes those transactions together with window-KV mutation and binds the resulting committed-state hash to each processed span.",
+                "required_resolution": "Implement service-engine and session-controller integration for the qualified compressor transactions, specify and implement the remaining window-KV transaction, and bind reset, abort, commit, bounds, isolation, and state hashes to generation invocations.",
                 "severity": "blocking",
-                "source_anchor": "inference/model.py:Attention.forward;inference/model.py:Compressor.forward;compiler/frontend/deepseek_v4_generation.py",
+                "source_anchor": "inference/model.py:Attention.forward;inference/model.py:Compressor.forward;compiler/frontend/deepseek_v4_generation.py;runtime/reference/compression_state.py;runtime/reference/compressed_kv.py",
             },
             {
                 "id": "DSV4-SEM-007",
@@ -1753,12 +2070,12 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "one target-model prefill/decode forward graph from token IDs",
                 "attached three-stage DSpark draft and confidence graph",
                 "all checkpoint tensor roles and per-layer consumers",
-                "mutable KV/compressor state access sites",
+                "mutable window-KV, raw-compressor, and compressed-KV state access sites",
                 "host message wire encoding and completion parsing outside the token-ID graph",
                 "hash-verified local tokenizer encode and decode behavior",
                 "target-only prefill/decode, EOS, and executor-commit control with synthetic transcripts",
                 "scalar target formats, activation microscaling, ordered accumulation, and official block-dot primitives",
-                "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC expansion, HC post-mixing, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, learned-index top-k, routed-weight normalization, expert-dispatch, and expert-reduction references",
+                "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, atomic raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, committed-prefix compressed-KV write, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC expansion, HC post-mixing, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, learned-index top-k, routed-weight normalization, expert-dispatch, and expert-reduction references",
                 "complete official-tensor canonical transform plan and independently checked transform primitives",
                 "atomic hash-locked canonical application and replay on an adversarial development fixture",
             ],
@@ -1768,8 +2085,8 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "exact stochastic replay for the unpinned Torch/CUDA RNG stack",
                 "DSpark target verification and speculative acceptance",
                 "full official-payload transform application and canonical output hashes",
-                "operator-complete target-precision references beyond dense FP8 and index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, learned sparse-index scoring, weighted and head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC post-mixing, expert dispatch/reduction, and ten structural/index/lookup/selection/routing kinds",
-                "transactional KV/compressor execution, service-engine operators, and microcode",
+                "fourteen remaining operator-complete target-precision references",
+                "service-engine integration of qualified raw-compressor and compressed-KV transactions, remaining window-KV transaction semantics, session control, and microcode",
                 "physical placement, HBM/KV allocation, and static schedule",
             ],
         },

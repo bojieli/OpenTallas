@@ -502,7 +502,7 @@ row must not be read as milestone closure.
 | Gate | Current direct evidence | Status |
 |---|---|---|
 | M0 | Repository baseline and additive compiler/runtime layout are committed on `main`; large generated payloads remain outside Git | Ongoing because concurrent model and simulation work may keep the worktree active |
-| M1 | The pinned official graph has a complete 1,924-node/43-kind ledger; 26 kinds now have qualified target references, including all 46 sparse-attention sites and explicit valid-selected-KV byte accounting | Partial: 17 operator references and operator-complete semantics remain open |
+| M1 | The pinned official graph has a complete 2,028-node/44-kind ledger; 30 kinds now have qualified target references, including all 62 raw-compressor/pool/FP32-to-BF16/compressed-KV transaction sites and all 46 sparse-attention sites with explicit logical traffic accounting | Partial: 14 operator references and operator-complete semantics remain open |
 | M2 | The official 72,317-tensor checkpoint is locked; the complete 77,116-assignment MP=4 application was independently re-read with verification `b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28` | Checkpoint/canonical payload gate achieved; this does not imply executable operators |
 | M3 | Lookup and complete-output query-A deployments have content-addressed images and independent payload roundtrips | Partial: complete stage placement, capacity, repair, and physical-address legality remain open |
 | M4 | Artifact-only fixed-microcode service paths execute official lookup tensors and all 1,024 query-A FP8 output rows; runtime and checker reject artifact mutation, result drift, and coverage overstatement | Partial: the query-A input is an explicit validation row, not the real HC_PRE/RMS-normalized activation; no transformer block, transactional KV path, or complete graph-to-microcode lowering yet |
@@ -517,7 +517,9 @@ The governed evidence records are
 [`DEEPSEEK_V4_FP8_LINEAR_EVIDENCE.md`](DEEPSEEK_V4_FP8_LINEAR_EVIDENCE.md), and
 [`DEEPSEEK_V4_FP8_LINEAR_FULL_EVIDENCE.md`](DEEPSEEK_V4_FP8_LINEAR_FULL_EVIDENCE.md),
 and
-[`DEEPSEEK_V4_SPARSE_ATTENTION_EVIDENCE.md`](DEEPSEEK_V4_SPARSE_ATTENTION_EVIDENCE.md).
+[`DEEPSEEK_V4_SPARSE_ATTENTION_EVIDENCE.md`](DEEPSEEK_V4_SPARSE_ATTENTION_EVIDENCE.md),
+and
+[`DEEPSEEK_V4_COMPRESSOR_EVIDENCE.md`](DEEPSEEK_V4_COMPRESSOR_EVIDENCE.md).
 Neither changes the `COMP-01` closure criteria.
 
 ### M0 — governed baseline

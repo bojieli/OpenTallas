@@ -57,26 +57,26 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "8bb65d0fed3f5360edb6716b5525ff886744362b6fa0e8e5240135ea5e601a2c"
+        "418eb748668a2714d1584a5846b10ad62fc4154b43637f2b8ffde68c15a8cbb8"
     )
     assert graph_contract["coverage"] == {
-        "catalog_kind_count": 43,
+        "catalog_kind_count": 44,
         "consumed_tensor_role_count": 63,
         "execution_status": "blocked_pending_reference_and_service_engine",
         "missing_cost_class_count": 0,
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
-        "node_count": 1924,
-        "pending_reference_kind_count": 17,
-        "pending_rtl_kind_count": 43,
-        "pending_service_engine_kind_count": 43,
+        "node_count": 2028,
+        "pending_reference_kind_count": 14,
+        "pending_rtl_kind_count": 44,
+        "pending_service_engine_kind_count": 44,
         "unknown_kind_count": 0,
         "unmapped_tensor_role_count": 0,
     }
     assert graph_contract["tensor_assignment"] == {
         "assigned_tensor_count": 72_317,
         "assignment_sha256": (
-            "3ec76a4a9beb92f0a89f83552557a83cda47e4278890c3c0cf85ec421da0fc17"
+            "23d29fcdaee370b461756c02978bdc2a528218f36fe9a5d9c06cde03ed13d46a"
         ),
         "maximum_consumers_per_tensor": 3,
         "multi_consumer_tensor_count": 11,
@@ -111,7 +111,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     counts = {record["kind"]: record["node_count"] for record in graph_contract["operator_counts"]}
 
     assert set(catalog) == set(counts)
-    assert sum(counts.values()) == 1924
+    assert sum(counts.values()) == 2028
     assert counts["HASH_ROUTE"] == 3
     assert counts["BIASED_TOPK_ROUTE"] == 43
     assert counts["FP4_QDQ"] == 42
@@ -121,6 +121,11 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert counts["MXFP4_SWIGLU"] == 46
     assert counts["INDEX_TOPK"] == 21
     assert counts["COMPRESSED_DENSE_INDEX"] == 20
+    assert counts["COMPRESS_PROJECT"] == 62
+    assert counts["COMPRESS_STATE_UPDATE"] == 62
+    assert counts["COMPRESS_POOL"] == 62
+    assert counts["BINARY32_TO_BF16"] == 62
+    assert counts["COMPRESS_KV_WRITE"] == 62
     assert counts["DSPARK_PREFILL_KV"] == 3
     assert counts["MARKOV_AUTOREGRESSIVE_LOOP"] == 1
     qualified_references = {
@@ -128,8 +133,18 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
             "runtime.reference.selection.biased_topk_route_indices"
         ),
         "BF16_LINEAR": "runtime.reference.matrix.bf16_linear_bf16",
+        "BINARY32_TO_BF16": (
+            "runtime.reference.conversion.binary32_tensor_to_bf16_rne"
+        ),
         "CONFIDENCE_SCORE": "runtime.reference.confidence.confidence_score_bf16",
+        "COMPRESS_KV_WRITE": (
+            "runtime.reference.compressed_kv.compressed_kv_write_bf16"
+        ),
+        "COMPRESS_POOL": "runtime.reference.compression_pool.compress_pool_f32",
         "COMPRESS_PROJECT": "runtime.reference.compression.compress_project_bf16",
+        "COMPRESS_STATE_UPDATE": (
+            "runtime.reference.compression_state.compress_state_update_f32"
+        ),
         "COMPRESSED_DENSE_INDEX": (
             "runtime.reference.indexing.compressed_dense_indices"
         ),
@@ -425,6 +440,204 @@ def test_compressor_projection_profiles_and_binary32_contract_are_explicit(
         )
 
 
+def test_compressor_state_pool_conversion_and_commit_are_explicit(
+    graph_contract: dict,
+) -> None:
+    state_nodes = [
+        node
+        for node in graph_contract["nodes"]
+        if node["kind"] == "COMPRESS_STATE_UPDATE"
+    ]
+    pool_nodes = [
+        node for node in graph_contract["nodes"] if node["kind"] == "COMPRESS_POOL"
+    ]
+    conversion_nodes = [
+        node
+        for node in graph_contract["nodes"]
+        if node["kind"] == "BINARY32_TO_BF16"
+    ]
+    write_nodes = [
+        node
+        for node in graph_contract["nodes"]
+        if node["kind"] == "COMPRESS_KV_WRITE"
+    ]
+    assert len(state_nodes) == len(pool_nodes) == len(conversion_nodes) == 62
+    assert len(write_nodes) == 62
+    profile_counts = {
+        ("indexer", 4, 128): 21,
+        ("main", 4, 512): 21,
+        ("main", 128, 512): 20,
+    }
+    assert Counter(
+        (
+            node["attributes"]["projection_scope"],
+            node["attributes"]["ratio"],
+            node["attributes"]["head_dim"],
+        )
+        for node in state_nodes
+    ) == profile_counts
+    assert Counter(
+        (
+            node["attributes"]["projection_scope"],
+            node["attributes"]["ratio"],
+            node["attributes"]["head_dim"],
+        )
+        for node in write_nodes
+    ) == profile_counts
+
+    for node in state_nodes:
+        attributes = node["attributes"]
+        ratio = attributes["ratio"]
+        width = attributes["head_dim"]
+        overlap = ratio == 4
+        assert attributes == {
+            "ape_checkpoint_dtype": "binary32",
+            "ape_shape": [ratio, (2 if overlap else 1) * width],
+            "candidate_input_dtype": "binary32",
+            "counter_scope": "logical_raw_state_reads_and_writes",
+            "decode_sequence_length": 1,
+            "head_dim": width,
+            "intermediate_overflow": "poison",
+            "new_session_prefill": (
+                "source_overwrites_only_addressed_rows_session_reset_external"
+            ),
+            "output": "optional_pool_kv_pool_scores_and_should_compress_predicate",
+            "overlap": overlap,
+            "positional_score_add_rounding": "binary32_rne",
+            "projection_scope": attributes["projection_scope"],
+            "ratio": ratio,
+            "state_dtype": "binary32",
+            "state_slots": (2 if overlap else 1) * ratio,
+            "state_transaction": (
+                "validate_prepare_atomic_commit_target_adaptation"
+            ),
+        }
+        assert node["inputs"][-1] == "request.start_pos"
+        assert node["outputs"][-1].endswith(".should_compress")
+        assert node["state_reads"] == node["state_writes"]
+        assert len(node["state_reads"]) == 1
+        if attributes["projection_scope"] == "indexer":
+            assert node["state_reads"][0].endswith(".index_compressor")
+            assert node["tensor_roles"] == [
+                "attention.indexer.compressor.position_weight"
+            ]
+        else:
+            assert node["state_reads"][0].endswith(".compressor")
+            assert node["tensor_roles"] == [
+                "attention.compressor.position_weight"
+            ]
+
+    assert Counter(
+        (
+            node["attributes"]["ratio"],
+            node["attributes"]["head_dim"],
+        )
+        for node in pool_nodes
+    ) == {(4, 128): 21, (4, 512): 21, (128, 512): 20}
+    for node in pool_nodes:
+        attributes = node["attributes"]
+        ratio = attributes["ratio"]
+        width = attributes["head_dim"]
+        overlap = ratio == 4
+        assert attributes == {
+            "candidate_count": 2 * ratio if overlap else ratio,
+            "candidate_input_dtype": "binary32",
+            "first_overlap_padding": (
+                "positive_zero_kv_and_negative_infinity_score"
+                if overlap
+                else "not_applicable"
+            ),
+            "head_dim": width,
+            "intermediate_overflow": "poison",
+            "maximum": "per_dimension_finite_binary32_numeric_value",
+            "output_dtype": "binary32",
+            "output_zero": "canonical_positive",
+            "overlap": overlap,
+            "probability_division_rounding": "binary32_rne",
+            "predicate": "execute_only_when_compress_state_should_compress",
+            "ratio": ratio,
+            "reduction_tree": "num_6_1_balanced_binary32_rne",
+            "score_exponential": "correctly_rounded_binary32",
+            "score_subtraction_rounding": "binary32_rne",
+            "subnormal_policy": "preserve",
+            "weighted_value_multiply_rounding": "binary32_rne",
+        }
+        assert node["inputs"][0].endswith(".pool_kv")
+        assert node["inputs"][1].endswith(".pool_scores")
+        assert node["inputs"][2].endswith(".should_compress")
+        assert node["tensor_roles"] == []
+
+    assert Counter(node["attributes"]["width"] for node in conversion_nodes) == {
+        128: 21,
+        512: 41,
+    }
+    for node in conversion_nodes:
+        width = node["attributes"]["width"]
+        assert node["attributes"] == {
+            "counter_scope": "logical_binary32_reads_and_bf16_writes",
+            "finite_input_required": True,
+            "finite_saturation": "sticky_count",
+            "input_dtype": "binary32",
+            "input_rank": 3,
+            "intermediate_overflow": "poison",
+            "output_dtype": "bf16",
+            "output_zero": "canonical_positive",
+            "predicate": "execute_only_when_compress_state_should_compress",
+            "rounding": "round_to_nearest_ties_to_even_once",
+            "subnormal_policy": "preserve_gradual_underflow",
+            "transaction": "validate_prepare_atomic_immutable_commit",
+            "width": width,
+        }
+        assert node["inputs"][0].endswith("compress_pool.output")
+        assert node["inputs"][1].endswith(".should_compress")
+
+    for node in write_nodes:
+        attributes = node["attributes"]
+        assert attributes == {
+            "cache_slot": "completed_absolute_position_floor_div_ratio",
+            "committed_input_dtype": (
+                "bf16_after_normalize_position_transform_and_qdq"
+            ),
+            "decode_sequence_length": 1,
+            "head_dim": attributes["head_dim"],
+            "kv_head_count": 1,
+            "layer": attributes["layer"],
+            "new_session_prefill": "invalidate_then_commit_complete_prefix",
+            "projection_scope": attributes["projection_scope"],
+            "ratio": attributes["ratio"],
+            "scope": attributes["scope"],
+            "state_transaction": (
+                "valid_prefix_validate_prepare_atomic_commit_target_adaptation"
+            ),
+        }
+        assert node["inputs"][1].endswith(".should_compress")
+        assert node["inputs"][2] == "request.start_pos"
+        assert node["outputs"][0].endswith(".committed_cache")
+        assert node["state_reads"] == node["state_writes"]
+        if attributes["projection_scope"] == "indexer":
+            assert node["state_reads"][0].endswith(".index_compressed_kv")
+        else:
+            assert node["state_reads"][0].endswith(".compressed_kv")
+
+    by_id = {node["id"]: node for node in graph_contract["nodes"]}
+    assert by_id["main.layer02.compress_bf16"]["inputs"] == [
+        "main.layer02.compress_pool.output",
+        "main.layer02.compress_state.should_compress",
+    ]
+    assert by_id["main.layer02.compress_norm"]["inputs"] == [
+        "main.layer02.compress_bf16.output"
+    ]
+    assert by_id["main.layer02.index_score"]["inputs"][1] == (
+        "main.layer02.index_compress_kv_write.committed_cache"
+    )
+    assert by_id["main.layer02.sparse_attention"]["inputs"][-1] == (
+        "main.layer02.compress_kv_write.committed_cache"
+    )
+    assert by_id["main.layer03.sparse_attention"]["inputs"][-1] == (
+        "main.layer03.compress_kv_write.committed_cache"
+    )
+
+
 def test_index_score_profile_and_bf16_numeric_contract_are_explicit(
     graph_contract: dict,
 ) -> None:
@@ -543,15 +756,11 @@ def test_layer_classes_and_mutable_state_sites_are_explicit(
     by_id = {node["id"]: node for node in graph_contract["nodes"]}
 
     assert "main.layer00.compress_pool" not in by_id
-    assert by_id["main.layer02.compress_pool"]["attributes"] == {
-        "overlap": True,
-        "ratio": 4,
-    }
+    assert by_id["main.layer02.compress_pool"]["attributes"]["overlap"] is True
+    assert by_id["main.layer02.compress_pool"]["attributes"]["ratio"] == 4
     assert "main.layer02.index_topk" in by_id
-    assert by_id["main.layer03.compress_pool"]["attributes"] == {
-        "overlap": False,
-        "ratio": 128,
-    }
+    assert by_id["main.layer03.compress_pool"]["attributes"]["overlap"] is False
+    assert by_id["main.layer03.compress_pool"]["attributes"]["ratio"] == 128
     assert "main.layer03.compressed_dense_indices" in by_id
     assert "main.layer03.index_topk" not in by_id
     assert by_id["main.layer00.route_select"]["kind"] == "HASH_ROUTE"
@@ -613,12 +822,42 @@ def test_layer_classes_and_mutable_state_sites_are_explicit(
         if node["state_reads"] or node["state_writes"]
     ]
     assert mutable_nodes
-    assert all(node["state_writes"] for node in mutable_nodes if node["kind"] != "SPARSE_ATTENTION")
+    read_only_kinds = {"INDEX_SCORE", "SPARSE_ATTENTION"}
+    assert all(
+        node["state_writes"]
+        for node in mutable_nodes
+        if node["kind"] not in read_only_kinds
+    )
+    assert {
+        node["kind"] for node in mutable_nodes if not node["state_writes"]
+    } == read_only_kinds
 
 
 def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     graph_contract: dict,
 ) -> None:
+    adaptations = {
+        record["decision"]: record for record in graph_contract["adaptations"]
+    }
+    assert len(adaptations) == 4
+    pool_adaptation = adaptations[
+        "freeze compressor pooling arithmetic rather than inherit "
+        "backend-dependent reduction and exponential behavior"
+    ]
+    assert "PyTorch softmax" in pool_adaptation["source_behavior"]
+    assert "NUM-6.13" in pool_adaptation["target_contract"]
+    reset_adaptation = adaptations[
+        "make new-session raw compressor-state reset an explicit controller "
+        "responsibility"
+    ]
+    assert "overwrites only" in reset_adaptation["source_behavior"]
+    assert "session isolation" in reset_adaptation["target_contract"]
+    validity_adaptation = adaptations[
+        "track an explicit committed-prefix validity contract for compressed KV"
+    ]
+    assert "without a validity bitmap" in validity_adaptation["source_behavior"]
+    assert "stale compressed rows" in validity_adaptation["target_contract"]
+
     issues = {record["id"]: record for record in graph_contract["open_semantic_issues"]}
     assert set(issues) == {
         "DSV4-SEM-001",
@@ -633,9 +872,12 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "twenty-six complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion" in (
+    assert "thirty complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state" in (
         issues["DSV4-SEM-005"]["issue"]
     )
+    assert "Fourteen" in issues["DSV4-SEM-005"]["issue"]
+    assert "atomic raw compressor-state updates" in issues["DSV4-SEM-006"]["issue"]
+    assert "operator-complete executor" in issues["DSV4-SEM-006"]["issue"]
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
     assert "atomic hash-locked applicator" in issues["DSV4-SEM-007"]["issue"]
     assert graph_contract["system_scope"]["request_boundary"] == (
@@ -653,7 +895,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
+    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, atomic raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, committed-prefix compressed-KV write, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
         " ".join(graph_contract["system_scope"]["covered"])
     )
     assert "block-64 sparse attention" in " ".join(
@@ -681,6 +923,9 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         graph_contract["system_scope"]["covered"]
     )
     assert "DSpark target verification and speculative acceptance" in (
+        graph_contract["system_scope"]["unresolved"]
+    )
+    assert "fourteen remaining operator-complete target-precision references" in (
         graph_contract["system_scope"]["unresolved"]
     )
 
@@ -723,7 +968,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "8bb65d0fed3f5360edb6716b5525ff886744362b6fa0e8e5240135ea5e601a2c"
+        "418eb748668a2714d1584a5846b10ad62fc4154b43637f2b8ffde68c15a8cbb8"
     )
-    assert "described 1924 nodes across 43 operator kinds" in result.stdout
+    assert "described 2028 nodes across 44 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

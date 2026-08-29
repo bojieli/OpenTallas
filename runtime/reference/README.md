@@ -214,7 +214,43 @@ overflow, 200 independent randomized compositions, and CPU/SM120
 differentials. A separate audit used the first four rows from six actual
 official tensors spanning all three profiles; NUM-4.7 retains complete payload
 and output hashes, source order, counts, and native reassociation bounds.
-Pooling and mutable compressor state remain separate pending operators.
+
+`compression_state.py` implements all 62 `COMPRESS_STATE_UPDATE` sites after
+projection. It adds the official FP32 APE with one binary32 RNE operation,
+retains incomplete prefill/decode windows, assembles complete ratio-four overlap
+or ratio-128 groups, and emits an explicit `should_compress` predicate. Ratio
+four keeps separate previous/current raw groups and reproduces the first-group
+zero-KV/negative-infinity-score padding. Full prior state and all inputs validate
+before immutable commit; inactive batches are preserved. New-session reset is
+intentionally external because the official method overwrites only addressed
+rows. Counters distinguish projected input, APE, raw-state, overlap, roll, and
+pool-operand traffic without assigning those bytes to a physical memory.
+
+`compression_pool.py` implements all 62 `COMPRESS_POOL` sites over the prepared
+groups. It fixes finite numeric maximum, correctly rounded binary32 exponential,
+NUM-6.1 balanced denominators and weighted reductions, binary32 RNE division and
+multiplication, gradual underflow, and positive-zero output. Direct prepared-
+state, prefill, and complete decode-window APIs agree on the three official
+profiles. The latter two are functional-equivalence adapters; state ownership
+remains in `compression_state.py`. The real-checkpoint audit in
+`docs/DEEPSEEK_V4_COMPRESSOR_EVIDENCE.md` locks every official APE payload and
+executes the unmodified official pool path on CPU and SM120.
+
+`conversion.py` implements the 62 explicit `BINARY32_TO_BF16` boundaries for
+the official `kv.to(dtype)` immediately after pooling. It validates finite
+rank-three input, converts once with BF16 RNE and gradual underflow, counts
+finite saturation and exact four-byte-read/two-byte-write logical traffic, and
+commits an immutable result atomically. This prevents the binary32 pool output
+from being passed silently into the BF16-only RMSNorm reference.
+
+`compressed_kv.py` implements all 62 `COMPRESS_KV_WRITE` sites after RMSNorm,
+position transform, and activation QDQ. Prefill commits only the complete
+`floor(sequence_length / ratio)` prefix; decode commits one row only at a ratio
+boundary. An explicit contiguous-prefix validity contract invalidates stale
+active-batch state on a new session and rejects forged decode prefixes. This is
+an accelerator adaptation because the released PyTorch cache has no validity
+bitmap. Payload bytes and validity-bit writes remain separate counters, and
+main and indexer caches remain distinct state objects.
 
 `index_score.py` implements all 21 `INDEX_SCORE` sites. It contracts BF16
 FP4-QDQ query heads against BF16 compressed index KV with increasing-dimension
