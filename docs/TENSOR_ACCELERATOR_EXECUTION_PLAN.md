@@ -1074,6 +1074,58 @@ command-1 DMA plus command-2 RMSNorm path, followed by additional DMA/tensor/
 vector kernels, banking/ECC/arbitration, program authentication, and a complete
 representative layer.
 
+### 1.19 Adjacent DMA-to-RMSNorm graph-valid execution
+
+QW-RTL-DMA-RMS-001 advances the bounded RTL boundary from synthetic
+cross-operation composition to the first adjacent production Qwen operation.
+The unchanged command-1 DMA stages the authentic 8,192-byte
+`model.layers.0.input_layernorm.weight` payload at SRAM address 2,097,152. The
+unchanged command-2 `RMSNORM_BF16` consumes that range with `hidden.0` at
+1,048,576 and writes `layer.0.attention_norm` at 3,145,728. Together these are
+the complete physical command range for neutral graph operation `node.0001`.
+The initial `hidden.0` embedding row is still preloaded in the behavioral SRAM;
+embedding command 0 is not part of this bounded sequence.
+
+The engine implements `qwen3_rmsnorm_fp32_bf16_v1`: BF16 widens exactly,
+squares and every node of the 12-level balanced tree round to binary32 RNE,
+division by 4,096 uses exact `2^-12`, epsilon is the command-carried binary32
+code `0x358637bd`, reciprocal square root is correctly rounded, normalization
+rounds to BF16 before the BF16 weight product, and the final result rounds to
+BF16. A complete input row and complete output row are buffered, and writeback
+begins only after every input, weight, and arithmetic event succeeds. This
+prevents a late operand fault from leaving a partially modified destination.
+
+The retained vector-set ID is
+`ce2a725cc574f334273dbfdc93e6fab7fc4da48df8d2d4087f22307635212d81`;
+the campaign ID is
+`5fd24c36de35d32aa390a732040cd7888d474e0a06416de13ca740a7191441fd`.
+The expected mean-square code is `0x3a5bf2ca`, the inverse-RMS code is
+`0x420a0297`, the normalized payload SHA-256 is
+`bf4b81b7e711157b4e8c91bde7294d3be647844dbd7336d462201a246a1da28d`,
+and the final payload SHA-256 is
+`976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58`.
+Both the optimized implementation and an exact scalar Fraction oracle produce
+those values with zero normalized or final saturation.
+
+Before the command sequence, Icarus and Verilator each run 5,000 positive
+binary32 additions, 5,000 general binary32 multiplications, 5,000
+binary32-to-BF16 conversions, and 2,000 correctly rounded reciprocal square
+roots against the independent scalar oracle. The complete program in both
+simulators reconciles 128 HBM requests/responses, 512 DMA SRAM writes, 4,096
+RMSNorm input reads, 4,096 weight reads, 4,096 destination writes, and every
+byte counter under independent request/response/write backpressure. Seven
+fail-stop cases cover record CRC corruption, HBM response error, non-monotonic
+submission, nonfinite input, square overflow, nonfinite weight, and weighted
+product overflow. All four numeric fault paths prove zero destination writes.
+
+This is graph-valid execution of one complete RMSNorm operation, not a complete
+layer or model. The campaign fixes `complete_layer_execution` and
+`ta_rtl_6_closed` false. Behavioral HBM/SRAM, preloaded embedding output,
+banking, ECC, arbitration, command-program header/body authentication,
+`COMPLETE`, additional tensor/vector kernels, a representative layer, formal
+equivalence, timing, activity-derived power/IR, thermal, foundry/package,
+reliability, yield, and silicon evidence remain separate gates.
+
 ## 2. Meaning of production-grade
 
 Production-grade in this plan describes the quality of the compiler, simulator,

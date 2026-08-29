@@ -21,6 +21,8 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Production ADD SRAM control | `ot_ta_add_bf16_sram_engine.sv` | One-outstanding-read operand fetch, finite-only writeback retirement, exact transaction counters, stable completion, and fault write suppression | QW-RTL-ADD-SRAM-001 |
 | Production direct DMA | `ot_ta_dma_hbm_to_sram.sv` | One-outstanding 64-byte HBM request/response, four 16-byte SRAM writes per response, exact byte/transaction accounting, response-error fail-closed completion | QW-RTL-DMA-001 |
 | Production DMA/ADD sequencing | `ot_ta_dma_add_sequencer.sv` | One-command-at-a-time dispatch, monotonic submitted indices, shared SRAM write ownership, stable aggregate counters, explicit last-command completion, and fail-stop error handling | QW-RTL-DMA-ADD-001 |
+| Production RMSNorm arithmetic and SRAM control | `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv` | Finite FP32 RNE arithmetic, correctly rounded reciprocal square root, canonical 4,096-element balanced reduction, complete-pass buffered writeback, exact SRAM counters, and numeric-fault write suppression | QW-RTL-DMA-RMS-001 |
+| Production DMA/RMSNorm sequencing | `ot_ta_dma_rmsnorm_sequencer.sv` | Adjacent authentic command-1/command-2 dispatch, monotonic indices, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-RMS-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
@@ -108,6 +110,29 @@ composed across intervening operations to test the shared-memory dependency;
 the campaign is therefore not a graph-valid Qwen operation sequence or a
 complete layer. Behavioral HBM/SRAM, banking, ECC, arbitration, a program
 header/body CRC, COMPLETE-command handling, timing, and `TA-RTL-6` remain open.
+
+QW-RTL-DMA-RMS-001 is retained as vector set
+`ce2a725cc574f334273dbfdc93e6fab7fc4da48df8d2d4087f22307635212d81`
+and campaign
+`5fd24c36de35d32aa390a732040cd7888d474e0a06416de13ca740a7191441fd`.
+It executes adjacent authentic Qwen command 1 and command 2. The DMA stages the
+exact 8,192-byte `model.layers.0.input_layernorm.weight` payload, then the new
+RMSNorm engine consumes it with the preloaded authentic `hidden.0` embedding
+row and produces the complete `node.0001` output. The output payload SHA-256 is
+`976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58`,
+the mean-square binary32 code is `0x3a5bf2ca`, and the inverse-RMS code is
+`0x420a0297`, matching independent exact-scalar and optimized implementations.
+
+Icarus and Verilator each pass 17,000 deterministic arithmetic-oracle cases,
+then reconcile 128 HBM requests, 512 DMA writes, 4,096 input reads, 4,096
+weight reads, and 4,096 delayed output writes. Seven fail-stop cases cover CRC,
+HBM response, order, input nonfinite/overflow, and weight nonfinite/overflow
+failures. Numeric faults perform no destination writes because the entire
+output row is validated before writeback begins. This closes one complete
+graph-valid RMSNorm operation only. `hidden.0` is behaviorally preloaded;
+embedding command 0, physical HBM/SRAM, banking, ECC, arbitration, program
+authentication/`COMPLETE`, a representative layer, timing, activity-derived
+power/IR, and `TA-RTL-6` remain open.
 
 The bounded IHP SG13G2 physical campaign for
 `ot_ta_add_bf16_sram_engine` is retained as
