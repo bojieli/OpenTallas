@@ -26,7 +26,7 @@ complete routing, transformer execution, RTL correctness, or PPA.
 from __future__ import annotations
 
 from collections.abc import Sequence
-from dataclasses import dataclass
+from dataclasses import InitVar, dataclass
 from fractions import Fraction
 from functools import lru_cache
 from typing import Literal, TypeAlias
@@ -42,17 +42,23 @@ from .formats import (
 OFFICIAL_REPOSITORY = "deepseek-ai/DeepSeek-V4-Flash-0731"
 OFFICIAL_REVISION = "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
 MODEL_SOURCE_SHA256 = "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
+INFERENCE_CONFIG_SHA256 = (
+    "c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71"
+)
 SOURCE_EXPRESSION = "scores = F.softplus(scores).sqrt()"
 NUMERIC_PROFILE = "opentallas.deepseek_v4_sqrt_softplus_numeric.v1"
 
 SOFTPLUS_BETA_BINARY32 = 0x3F800000  # 1.0
 SOFTPLUS_THRESHOLD_BINARY32 = 0x41A00000  # 20.0
+OFFICIAL_ROUTED_EXPERT_COUNT = 256
+MAX_TOKENS_PER_TRANSACTION = 4
 
 _SOFTPLUS_THRESHOLD = Fraction(20)
 _PROVED_ZERO_CUTOFF = Fraction(-105)
 _BINARY32_MAX_FINITE = 0x7F7FFFFF
 _INITIAL_PRECISION_BITS = 48
 _MAX_CACHE_ENTRIES = 65_536
+_ROUNDING_CONSTRUCTION_AUTHORITY = object()
 
 Binary32Row: TypeAlias = tuple[int, ...]
 Binary32Matrix: TypeAlias = tuple[Binary32Row, ...]
@@ -78,6 +84,13 @@ class SqrtSoftplusRounding:
     softplus_interval_evaluations: int
     softplus_final_precision_bits: int
     sqrt_candidate_evaluations: int
+    _construction_authority: InitVar[object] = None
+
+    def __post_init__(self, _construction_authority: object) -> None:
+        _validate_rounding_result(
+            self,
+            reconcile=_construction_authority is not _ROUNDING_CONSTRUCTION_AUTHORITY,
+        )
 
 
 def _finite_binary32(code: object, label: str) -> tuple[int, Fraction]:
@@ -311,6 +324,110 @@ def _binary32_sqrt_rne(value_code: int) -> tuple[int, int]:
     )
 
 
+def _validate_rounding_result(
+    result: SqrtSoftplusRounding,
+    *,
+    reconcile: bool,
+) -> None:
+    input_code, input_value = _finite_binary32(
+        result.input_binary32_code,
+        "SQRT_SOFTPLUS diagnostic input",
+    )
+    if input_code != result.input_binary32_code:
+        raise SqrtSoftplusReferenceError(
+            "SQRT_SOFTPLUS diagnostic input must use canonical positive zero"
+        )
+    _, softplus_value = _finite_binary32(
+        result.softplus_binary32_code,
+        "SQRT_SOFTPLUS diagnostic softplus result",
+    )
+    _, output_value = _finite_binary32(
+        result.output_binary32_code,
+        "SQRT_SOFTPLUS diagnostic output",
+    )
+    if softplus_value < 0 or output_value < 0:
+        raise SqrtSoftplusReferenceError(
+            "SQRT_SOFTPLUS diagnostic results must be nonnegative"
+        )
+    if type(result.softplus_branch) is not str or result.softplus_branch not in {
+        "linear_threshold",
+        "proved_underflow_zero",
+        "transcendental",
+    }:
+        raise SqrtSoftplusReferenceError(
+            "SQRT_SOFTPLUS diagnostic branch is not canonical"
+        )
+    for label, value in (
+        ("softplus_interval_evaluations", result.softplus_interval_evaluations),
+        ("softplus_final_precision_bits", result.softplus_final_precision_bits),
+        ("sqrt_candidate_evaluations", result.sqrt_candidate_evaluations),
+    ):
+        if type(value) is not int or value < 0:
+            raise SqrtSoftplusReferenceError(
+                f"SQRT_SOFTPLUS diagnostic {label} must be a nonnegative integer"
+            )
+
+    if result.softplus_branch == "linear_threshold":
+        structurally_valid = (
+            input_value > _SOFTPLUS_THRESHOLD
+            and result.softplus_binary32_code == input_code
+            and result.softplus_interval_evaluations == 0
+            and result.softplus_final_precision_bits == 0
+        )
+    elif result.softplus_branch == "proved_underflow_zero":
+        structurally_valid = (
+            input_value <= _PROVED_ZERO_CUTOFF
+            and result.softplus_binary32_code == 0
+            and result.output_binary32_code == 0
+            and result.softplus_interval_evaluations == 0
+            and result.softplus_final_precision_bits == 0
+            and result.sqrt_candidate_evaluations == 0
+        )
+    else:
+        precision_multiple = (
+            result.softplus_final_precision_bits // _INITIAL_PRECISION_BITS
+            if result.softplus_final_precision_bits >= _INITIAL_PRECISION_BITS
+            else 0
+        )
+        structurally_valid = (
+            _PROVED_ZERO_CUTOFF < input_value <= _SOFTPLUS_THRESHOLD
+            and result.softplus_interval_evaluations >= 1
+            and result.softplus_final_precision_bits
+            == _INITIAL_PRECISION_BITS
+            * (1 << (result.softplus_interval_evaluations - 1))
+            and precision_multiple > 0
+            and precision_multiple & (precision_multiple - 1) == 0
+        )
+    if not structurally_valid:
+        raise SqrtSoftplusReferenceError(
+            "SQRT_SOFTPLUS diagnostic branch or counters do not reconcile"
+        )
+
+    if reconcile:
+        expected_softplus, expected_branch, interval_evaluations, precision = (
+            _softplus_binary32(input_code, input_value)
+        )
+        expected_output, sqrt_evaluations = _binary32_sqrt_rne(expected_softplus)
+        if (
+            result.softplus_binary32_code,
+            result.output_binary32_code,
+            result.softplus_branch,
+            result.softplus_interval_evaluations,
+            result.softplus_final_precision_bits,
+            result.sqrt_candidate_evaluations,
+        ) != (
+            expected_softplus,
+            expected_output,
+            expected_branch,
+            interval_evaluations,
+            precision,
+            sqrt_evaluations,
+        ):
+            raise SqrtSoftplusReferenceError(
+                "SQRT_SOFTPLUS diagnostic values do not match a fresh evaluation"
+            )
+
+
 @lru_cache(maxsize=_MAX_CACHE_ENTRIES)
 def _binary32_sqrt_softplus_cached(value_code: int) -> SqrtSoftplusRounding:
     decoded = decode_binary32(value_code)
@@ -328,6 +445,7 @@ def _binary32_sqrt_softplus_cached(value_code: int) -> SqrtSoftplusRounding:
         softplus_interval_evaluations=interval_evaluations,
         softplus_final_precision_bits=precision,
         sqrt_candidate_evaluations=sqrt_evaluations,
+        _construction_authority=_ROUNDING_CONSTRUCTION_AUTHORITY,
     )
 
 
@@ -360,17 +478,13 @@ def bf16_sqrt_softplus_binary32_rne(input_bf16_code: int) -> int:
     return binary32_sqrt_softplus_rne(code << 16)
 
 
-def _sequence(value: object, label: str) -> Sequence[object]:
-    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
-        raise SqrtSoftplusReferenceError(f"{label} must be a sequence")
+def _sequence(value: object, label: str) -> list[object] | tuple[object, ...]:
+    if type(value) not in {list, tuple}:
+        raise SqrtSoftplusReferenceError(f"{label} must be an exact list or tuple")
     return value
 
 
-def sqrt_softplus_binary32(
-    score_binary32_codes: Sequence[Sequence[int]],
-) -> Binary32Matrix:
-    """Atomically apply SQRT_SOFTPLUS to one nonempty rectangular score matrix."""
-
+def _materialize_score_matrix(score_binary32_codes: object) -> Binary32Matrix:
     raw_rows = _sequence(score_binary32_codes, "score_binary32_codes")
     if not raw_rows:
         raise SqrtSoftplusReferenceError(
@@ -400,17 +514,57 @@ def sqrt_softplus_binary32(
             )
         )
 
-    # Validation is complete before any output container becomes observable.
+    return tuple(validated)
+
+
+def _execute_score_matrix(validated: Binary32Matrix) -> Binary32Matrix:
     return tuple(
         tuple(binary32_sqrt_softplus_rne(code) for code in row) for row in validated
     )
 
 
+def sqrt_softplus_binary32(
+    score_binary32_codes: Sequence[Sequence[int]],
+) -> Binary32Matrix:
+    """Atomically apply SQRT_SOFTPLUS to a shape-neutral audit matrix.
+
+    The production graph entry point is :func:`sqrt_softplus_router_binary32`,
+    which additionally requires the official 256-expert width and bounded
+    transaction extent.  This shape-neutral helper remains useful for scalar
+    and boundary qualification and makes no tensor-shape claim.
+    """
+
+    validated = _materialize_score_matrix(score_binary32_codes)
+    # Validation is complete before any output container becomes observable.
+    return _execute_score_matrix(validated)
+
+
+def sqrt_softplus_router_binary32(
+    score_binary32_codes: Sequence[Sequence[int]],
+) -> Binary32Matrix:
+    """Execute the official bounded ``[tokens, 256]`` router operator."""
+
+    validated = _materialize_score_matrix(score_binary32_codes)
+    if not 1 <= len(validated) <= MAX_TOKENS_PER_TRANSACTION:
+        raise SqrtSoftplusReferenceError(
+            f"router token extent must be in [1, {MAX_TOKENS_PER_TRANSACTION}]"
+        )
+    if any(len(row) != OFFICIAL_ROUTED_EXPERT_COUNT for row in validated):
+        raise SqrtSoftplusReferenceError(
+            "router rows must contain exactly "
+            f"{OFFICIAL_ROUTED_EXPERT_COUNT} expert scores"
+        )
+    return _execute_score_matrix(validated)
+
+
 __all__ = [
     "MODEL_SOURCE_SHA256",
+    "INFERENCE_CONFIG_SHA256",
+    "MAX_TOKENS_PER_TRANSACTION",
     "NUMERIC_PROFILE",
     "OFFICIAL_REPOSITORY",
     "OFFICIAL_REVISION",
+    "OFFICIAL_ROUTED_EXPERT_COUNT",
     "SOFTPLUS_BETA_BINARY32",
     "SOFTPLUS_THRESHOLD_BINARY32",
     "SOURCE_EXPRESSION",
@@ -422,4 +576,5 @@ __all__ = [
     "binary32_sqrt_softplus_rne",
     "binary32_sqrt_softplus_rne_with_diagnostics",
     "sqrt_softplus_binary32",
+    "sqrt_softplus_router_binary32",
 ]

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from collections import Counter
+from dataclasses import replace
 from decimal import Decimal, localcontext
 from fractions import Fraction
 import hashlib
@@ -18,18 +19,23 @@ from runtime.reference.formats import (
 )
 import runtime.reference.sqrt_softplus as sqrt_softplus_module
 from runtime.reference.sqrt_softplus import (
+    INFERENCE_CONFIG_SHA256,
+    MAX_TOKENS_PER_TRANSACTION,
     MODEL_SOURCE_SHA256,
     NUMERIC_PROFILE,
     OFFICIAL_REPOSITORY,
     OFFICIAL_REVISION,
+    OFFICIAL_ROUTED_EXPERT_COUNT,
     SOFTPLUS_BETA_BINARY32,
     SOFTPLUS_THRESHOLD_BINARY32,
     SOURCE_EXPRESSION,
     SqrtSoftplusReferenceError,
+    SqrtSoftplusRounding,
     bf16_sqrt_softplus_binary32_rne,
     binary32_sqrt_softplus_rne,
     binary32_sqrt_softplus_rne_with_diagnostics,
     sqrt_softplus_binary32,
+    sqrt_softplus_router_binary32,
 )
 
 
@@ -138,10 +144,15 @@ def test_operator_is_pinned_to_exact_official_source_identity() -> None:
     assert MODEL_SOURCE_SHA256 == (
         "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
     )
+    assert INFERENCE_CONFIG_SHA256 == (
+        "c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71"
+    )
     assert SOURCE_EXPRESSION == "scores = F.softplus(scores).sqrt()"
     assert NUMERIC_PROFILE == "opentallas.deepseek_v4_sqrt_softplus_numeric.v1"
     assert SOFTPLUS_BETA_BINARY32 == 0x3F800000
     assert SOFTPLUS_THRESHOLD_BINARY32 == 0x41A00000
+    assert OFFICIAL_ROUTED_EXPERT_COUNT == 256
+    assert MAX_TOKENS_PER_TRANSACTION == 4
 
 
 def test_cached_official_source_has_the_pinned_gate_expression() -> None:
@@ -162,6 +173,10 @@ def test_cached_official_source_has_the_pinned_gate_expression() -> None:
     assert lines[568].strip().startswith("def forward(")
     assert lines[569].strip() == "scores = linear(x.float(), self.weight.float())"
     assert lines[575].strip() == SOURCE_EXPRESSION
+    config_payload = (snapshot / "inference/config.json").read_bytes()
+    assert hashlib.sha256(config_payload).hexdigest() == INFERENCE_CONFIG_SHA256
+    assert b'"n_routed_experts": 256' in config_payload
+    assert b'"score_func": "sqrtsoftplus"' in config_payload
 
 
 def test_production_path_uses_no_host_math_or_framework_transcendentals() -> None:
@@ -282,6 +297,74 @@ def test_matrix_operator_is_rectangular_immutable_and_scalar_exact() -> None:
         result[0][0] = 0  # type: ignore[index]
 
 
+def test_official_router_entry_executes_every_expert_at_all_token_extents() -> None:
+    row = tuple(
+        (0xBF800000, 0x00000000, 0x3F800000, 0x41A00001)[index % 4]
+        for index in range(OFFICIAL_ROUTED_EXPERT_COUNT)
+    )
+    expected = tuple(binary32_sqrt_softplus_rne(code) for code in row)
+    for token_count in range(1, MAX_TOKENS_PER_TRANSACTION + 1):
+        result = sqrt_softplus_router_binary32((row,) * token_count)
+        assert result == (expected,) * token_count
+        assert len(result) == token_count
+        assert all(
+            len(output_row) == OFFICIAL_ROUTED_EXPERT_COUNT for output_row in result
+        )
+
+
+@pytest.mark.parametrize(
+    "invalid",
+    [
+        (),
+        ((0,) * OFFICIAL_ROUTED_EXPERT_COUNT,) * (MAX_TOKENS_PER_TRANSACTION + 1),
+        ((0,) * (OFFICIAL_ROUTED_EXPERT_COUNT - 1),),
+        ((0,) * (OFFICIAL_ROUTED_EXPERT_COUNT + 1),),
+    ],
+)
+def test_official_router_entry_rejects_nonofficial_extents(invalid: object) -> None:
+    with pytest.raises(SqrtSoftplusReferenceError):
+        sqrt_softplus_router_binary32(invalid)  # type: ignore[arg-type]
+
+
+def test_every_matrix_axis_requires_an_exact_list_or_tuple() -> None:
+    class ListAlias(list):
+        pass
+
+    class TupleAlias(tuple):
+        pass
+
+    for invalid in (
+        ListAlias([[0]]),
+        (ListAlias([0]),),
+        TupleAlias(((0,),)),
+        (TupleAlias((0,)),),
+        range(1),
+        (range(1),),
+    ):
+        with pytest.raises(SqrtSoftplusReferenceError, match="exact list or tuple"):
+            sqrt_softplus_binary32(invalid)  # type: ignore[arg-type]
+
+
+def test_official_shape_validation_finishes_before_arithmetic(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls = 0
+
+    def observe(_code: int) -> int:
+        nonlocal calls
+        calls += 1
+        return 0
+
+    monkeypatch.setattr(
+        sqrt_softplus_module,
+        "binary32_sqrt_softplus_rne",
+        observe,
+    )
+    with pytest.raises(SqrtSoftplusReferenceError, match="exactly 256"):
+        sqrt_softplus_router_binary32(((0,) * 255,))
+    assert calls == 0
+
+
 @pytest.mark.parametrize(
     "invalid",
     [
@@ -317,6 +400,36 @@ def test_matrix_validation_finishes_before_arithmetic(
     with pytest.raises(SqrtSoftplusReferenceError):
         sqrt_softplus_binary32([[0, 0], [0, 0x7F800000]])
     assert calls == []
+
+
+def test_public_diagnostic_constructor_reconciles_every_field() -> None:
+    result = binary32_sqrt_softplus_rne_with_diagnostics(0x3F800000)
+    assert type(result) is SqrtSoftplusRounding
+    reconstructed = SqrtSoftplusRounding(
+        input_binary32_code=result.input_binary32_code,
+        softplus_binary32_code=result.softplus_binary32_code,
+        output_binary32_code=result.output_binary32_code,
+        softplus_branch=result.softplus_branch,
+        softplus_interval_evaluations=result.softplus_interval_evaluations,
+        softplus_final_precision_bits=result.softplus_final_precision_bits,
+        sqrt_candidate_evaluations=result.sqrt_candidate_evaluations,
+    )
+    assert reconstructed == result
+
+    invalid_changes = (
+        {"input_binary32_code": 0x80000000},
+        {"input_binary32_code": True},
+        {"softplus_binary32_code": result.softplus_binary32_code + 1},
+        {"output_binary32_code": result.output_binary32_code + 1},
+        {"softplus_branch": "linear_threshold"},
+        {"softplus_interval_evaluations": True},
+        {"softplus_interval_evaluations": result.softplus_interval_evaluations + 1},
+        {"softplus_final_precision_bits": result.softplus_final_precision_bits * 2},
+        {"sqrt_candidate_evaluations": result.sqrt_candidate_evaluations + 1},
+    )
+    for changes in invalid_changes:
+        with pytest.raises(SqrtSoftplusReferenceError):
+            replace(result, **changes)
 
 
 def test_stratified_binary32_domain_matches_independent_decimal_oracle() -> None:
