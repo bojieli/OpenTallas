@@ -464,7 +464,8 @@ request does not have.
 The loop descriptor already carries everything needed to know this:
 `bound_symbol_id` is the extent and `bound_divisor` is the block. So when a
 view's leading axis is indexed by a `LOOP_INDUCTION` term over a
-symbol-bounded loop, its resolved leading extent is
+symbol-bounded loop — meaning the term advances by one whole block of leading
+rows, `term_stride = stride0 × bound_divisor` — its resolved leading extent is
 
 ```
 remaining = symbol_value - iteration * bound_divisor
@@ -491,6 +492,21 @@ loop and claiming more than `bound_divisor` leading rows is claiming rows that
 belong to the next iteration, which is malformed however the clamp is written.
 A deployment containing one is **refused at admission**, and on every admissible
 program the two statements of the rule are provably the same rule.
+
+**Which loops index the leading axis is derived, not assumed.** A term is
+walking the leading axis exactly when one iteration advances by one whole block
+of it, `term_stride = stride0 × bound_divisor`; the clamp and the admission
+rule above both apply only to such terms. A view may perfectly well be indexed
+by a loop along some *other* axis. The DeepSeek mHC branch reduction is one: its
+leading axis is the four hyper-connection streams while its loop steps over
+tokens, so its term stride is one token's row rather than four streams' worth of
+the leading one. Clamping that view would present four streams as one, which is
+not a partial final iteration of anything.
+
+Both the reference resolver and the admission rule originally applied to any
+loop-induction term in slot zero. That is the same statement with the stride
+condition assumed rather than checked, and it held for every view either model
+had emitted until one of them needed a loop over a non-leading axis.
 
 Nothing about the descriptor changes. A13 fixes the *interpretation* of an
 existing field combination that was previously unstated, which is why it is

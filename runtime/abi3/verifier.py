@@ -39,11 +39,13 @@ from .constants import (
     DType,
     InstructionFlag,
     Major,
+    ParticipantScope,
     Permission,
     Selection,
     State,
     StorageClass,
     SUBOPCODES,
+    TopologyClass,
 )
 from .deployment import Deployment, DescriptorTable, DeploymentError
 from .descriptors import (
@@ -623,8 +625,7 @@ class Verifier:
                         )
                         continue
                     last += (trip - 1) * stride
-                    if slot == 0:
-                        self._verify_block_extent(vid, sel, payload["dim0"])
+                    self._verify_block_extent(vid, sel, payload, stride)
                 elif kind == SelectorKind.RUNTIME_SYMBOL:
                     try:
                         maximum = symbol_max[Symbol(sel)]
@@ -659,7 +660,13 @@ class Verifier:
         self.checks.setdefault("view_bounds", True)
         self.checks.setdefault("block_extent", True)
 
-    def _verify_block_extent(self, vid: int, loop_id: int, dim0: int) -> None:
+    def _verify_block_extent(
+        self,
+        vid: int,
+        loop_id: int,
+        payload: Mapping[str, Any],
+        term_stride: int,
+    ) -> None:
         """A block-loop-indexed leading axis may not exceed the block.
 
         Amendment A13 clamps a view's leading extent in the final iteration of
@@ -686,12 +693,22 @@ class Verifier:
             )
         except Exception:  # not a loop descriptor: _verify_views said so
             return
-        payload = loop.payload
-        if payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
+        loop_payload = loop.payload
+        if loop_payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
             return
-        divisor = int(payload["bound_divisor"])
+        divisor = int(loop_payload["bound_divisor"])
         if divisor <= 0:
             return
+        # Only a loop that walks the *leading* axis can clamp it, and the
+        # arithmetic says which loops those are: one iteration advances by one
+        # whole block of leading rows, so the term stride is
+        # ``stride0 * bound_divisor``.  A view indexed along some other axis --
+        # the mHC branch reduction steps over tokens while its leading axis is
+        # the four hyper-connection streams -- is not a partial final iteration
+        # of anything, and neither the clamp nor this rule applies to it.
+        if int(term_stride) != int(payload["stride0"]) * divisor:
+            return
+        dim0 = int(payload["dim0"])
         if dim0 > divisor:
             self._fail(
                 f"view {vid}: leading extent {dim0} exceeds the block "
@@ -863,6 +880,87 @@ class Verifier:
                     )
         self.checks.setdefault("flag_consistency", True)
 
+    # -- participant scope (amendment A14) ---------------------------------
+    def _verify_participant_scope(self) -> None:
+        """Wire format section 12.5: a collective may only name a fabric the
+        admitted topology actually has.
+
+        ``participant_scope`` decides what a collective's members are, and the
+        engine derives the member count from the TOPOLOGY descriptor:
+        ``NODE`` from ``node_count``, ``RETICLE`` from ``reticle_count``,
+        ``TILE`` from ``reticle_count * tiles_per_reticle``.  Two rules keep the
+        field honest, and both are admission rules rather than engine faults
+        because a deployment that cannot run its own collectives should be
+        refused before it is activated, not when it reaches the instruction:
+
+        * a scope the topology cannot support is refused -- ``RETICLE`` against
+          a zero ``reticle_count``, ``TILE`` against a zero
+          ``tiles_per_reticle``; and
+        * a ``SINGLE_CHIP`` topology admits only ``NODE``, because a chip has
+          no reticle or tile fabric to address.
+
+        A pre-amendment program carries zero at payload offset 80 -- the byte
+        was reserved-zero and reserved bytes must be zero -- so it declares
+        ``NODE`` and passes both rules exactly as it did before A14 existed.
+        """
+        communications = self.table.ids_of_type(
+            int(ExtendedDescriptorType.COMMUNICATION)
+        )
+        if not communications:
+            return
+        topology_ids = self.table.ids_of_type(int(ExtendedDescriptorType.TOPOLOGY))
+        topology = (
+            self.table[topology_ids[0]].payload if len(topology_ids) == 1 else None
+        )
+        if topology is None:
+            topology_class = int(self.deployment.topology_class)
+            reticles = 0
+            tiles = 0
+        else:
+            topology_class = int(topology["topology_class"])
+            reticles = int(topology["reticle_count"])
+            tiles = int(topology["tiles_per_reticle"])
+        for did in communications:
+            payload = self.table[did].payload
+            raw = int(payload["participant_scope"])
+            try:
+                scope = ParticipantScope(raw)
+            except ValueError:
+                self._check(
+                    "participant_scope_registry",
+                    False,
+                    f"COMMUNICATION descriptor {did} declares participant scope "
+                    f"{raw}, which is not in the frozen registry",
+                )
+                continue
+            self.checks.setdefault("participant_scope_registry", True)
+            if scope is ParticipantScope.RETICLE:
+                self._check(
+                    "participant_scope_supported",
+                    reticles >= 1,
+                    f"COMMUNICATION descriptor {did} is RETICLE-scoped; the "
+                    f"admitted topology declares {reticles} reticles, so it has "
+                    "no reticle fabric to address",
+                )
+            elif scope is ParticipantScope.TILE:
+                self._check(
+                    "participant_scope_supported",
+                    reticles >= 1 and tiles >= 1,
+                    f"COMMUNICATION descriptor {did} is TILE-scoped; the "
+                    f"admitted topology declares {reticles} reticles of {tiles} "
+                    "tiles, so it has no tile fabric to address",
+                )
+            if topology_class == int(TopologyClass.SINGLE_CHIP):
+                self._check(
+                    "participant_scope_topology_class",
+                    scope is ParticipantScope.NODE,
+                    f"COMMUNICATION descriptor {did} is {scope.name}-scoped on a "
+                    "SINGLE_CHIP topology; a chip has no reticle or tile fabric, "
+                    "so a single-chip deployment admits only NODE",
+                )
+        self.checks.setdefault("participant_scope_supported", True)
+        self.checks.setdefault("participant_scope_topology_class", True)
+
     # -- entrypoints ------------------------------------------------------
     def _verify_entrypoints(self) -> None:
         eid = self.header.entrypoint_table_descriptor
@@ -958,6 +1056,7 @@ class Verifier:
         self._verify_schedules()
         self._verify_flags()
         self._verify_views()
+        self._verify_participant_scope()
         self._verify_entrypoints()
         self._verify_selection()
         return VerificationReport(

@@ -442,7 +442,9 @@ class ViewResolver:
             else:
                 raise MemoryError_(f"view {view_id}: bad selector kind {kind}")
             offset += value * stride
-            if kind == SelectorKind.LOOP_INDUCTION:
+            if kind == SelectorKind.LOOP_INDUCTION and self._indexes_leading_axis(
+                payload, stride, index
+            ):
                 leading_loop = self._remaining_rows(index, value, symbols, leading_loop)
         dims = [payload[f"dim{a}"] for a in range(rank)]
         if leading_loop is not None and dims:
@@ -468,6 +470,41 @@ class ViewResolver:
             scale_object_id=payload["scale_object_id"],
             scale_block_elements=payload["scale_block_elements"],
         )
+
+    def _indexes_leading_axis(
+        self, payload: Mapping[str, Any], term_stride: int, loop_id: int
+    ) -> bool:
+        """Does this term step the view along its *leading* axis?
+
+        A13 clamps the leading extent because a block loop's final iteration
+        holds fewer rows than the block.  That is only meaningful when the loop
+        is walking the leading axis, and the arithmetic says when it is: one
+        iteration advances by one whole block of leading rows, so the term's
+        stride is ``stride0 * bound_divisor``.
+
+        A view can perfectly well be indexed by a loop along some *other* axis.
+        The mHC branch reduction is one: its leading axis is the four
+        hyper-connection streams while the loop steps over tokens, so its term
+        stride is one token's row and not four streams' worth of the leading
+        one.  Clamping such a view would present four streams as one, which is
+        not a partial final iteration of anything.
+
+        Deriving the answer rather than assuming it is the point.  The rule
+        originally applied to any loop-induction term in slot zero, which is the
+        assumption that the loop indexes the leading axis -- true of every view
+        either model had emitted, and false in general.
+        """
+        divisor = 0
+        try:
+            loop = self.deployment.table.get(
+                loop_id, ExtendedDescriptorType.LOOP_CONTROL
+            )
+        except Exception:  # not a loop descriptor: _remaining_rows says so
+            return True
+        if loop.payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
+            return False
+        divisor = max(int(loop.payload["bound_divisor"]), 1)
+        return int(term_stride) == int(payload["stride0"]) * divisor
 
     def _remaining_rows(
         self,
