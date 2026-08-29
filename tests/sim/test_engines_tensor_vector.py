@@ -1135,6 +1135,7 @@ def test_scale_applies_the_declared_constant(harness: Harness) -> None:
         engine_sub=Vector.SCALE,
         inputs=[harness.const_view(values, DType.BF16)],
         outputs=[output],
+        aux=[0],  # amendment A8: aux0 names the sub-case, not ``scale_bits``
         numeric_profile_id=numeric,
     )
     harness.run(Major.VECTOR, Vector.SCALE, operator)
@@ -1147,8 +1148,13 @@ def test_scale_applies_the_declared_constant(harness: Harness) -> None:
         assert int(produced[0, index]) == expected
 
 
-def test_scale_without_a_constant_is_the_logistic_sigmoid(harness: Harness) -> None:
-    """Cross-checked against the frozen SiLU contract: silu(x) = x * sigmoid(x)."""
+def test_scale_sub_case_two_is_the_logistic_sigmoid(harness: Harness) -> None:
+    """Cross-checked against the frozen SiLU contract: silu(x) = x * sigmoid(x).
+
+    Amendment A8: the sigmoid is selected by ``aux0 == 2``, not by a zero
+    ``scale_bits`` -- which is what made a legitimate scale of zero
+    unrepresentable.
+    """
     rng = np.random.default_rng(71)
     gate = random_bf16(rng, (2, 5), scale=2.0)
     numeric = harness.numeric(
@@ -1162,6 +1168,7 @@ def test_scale_without_a_constant_is_the_logistic_sigmoid(harness: Harness) -> N
         engine_sub=Vector.SCALE,
         inputs=[harness.const_view(gate, DType.BF16)],
         outputs=[output],
+        aux=[2],
         numeric_profile_id=numeric,
     )
     harness.run(Major.VECTOR, Vector.SCALE, operator)

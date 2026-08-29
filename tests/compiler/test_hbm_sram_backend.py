@@ -142,10 +142,10 @@ def dense_graph(
                 )
             )
 
-    emit("STATE_PREPARE", (), (), "exact_copy_v1",
+    emit("STATE_PREPARE", (), (), "bf16_byte_preserving_state_v1",
          state_writes=tuple(s.state_id for s in states))
     emit("EMBEDDING_LOOKUP", ["tokens", "embed"], ["hidden0"],
-         "exact_index_gather_v1")
+         "lookup_bf16_token_embedding_v1")
 
     previous = "hidden0"
     for index in range(layers):
@@ -184,14 +184,14 @@ def dense_graph(
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("MATMUL", [f"{p}.n1", f"{p}.wv"], [f"{p}.v"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
-        emit("ROPE", [f"{p}.q", "rope"], [f"{p}.qr"], "bf16_rope_fp32_v1",
+        emit("ROPE", [f"{p}.q", "rope"], [f"{p}.qr"], "qwen3_rope_fp32_bf16_v1",
              attributes={"rotary_width": 64}, **layer)
         emit("KV_APPEND", [f"{p}.k"], [f"kv{index}k"],
-             "bf16_convert_rne_v1", state_writes=(f"kv{index}k",), **layer)
+             "bf16_byte_preserving_state_v1", state_writes=(f"kv{index}k",), **layer)
         emit("KV_APPEND", [f"{p}.v"], [f"kv{index}v"],
-             "bf16_convert_rne_v1", state_writes=(f"kv{index}v",), **layer)
+             "bf16_byte_preserving_state_v1", state_writes=(f"kv{index}v",), **layer)
         emit("ATTENTION_GQA", [f"{p}.qr", f"kv{index}k", f"kv{index}v"],
-             [f"{p}.attn"], "bf16_attention_fp32_v1",
+             [f"{p}.attn"], "qwen3_gqa_fp32_softmax_bf16_v1",
              attributes={"group_size": 2, "mask_mode": 0},
              state_reads=(f"kv{index}k", f"kv{index}v"), **layer)
         emit("MATMUL", [f"{p}.attn", f"{p}.wo"], [f"{p}.o"],
@@ -204,7 +204,7 @@ def dense_graph(
         emit("MATMUL", [f"{p}.n2", f"{p}.wu"], [f"{p}.u"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("SILU_MUL", [f"{p}.g", f"{p}.u"], [f"{p}.act"],
-             "bf16_silu_mul_fp32_v1", **layer)
+             "qwen3_silu_mul_bf16_v1", **layer)
         emit("MATMUL", [f"{p}.act", f"{p}.wd"], [f"{p}.d"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("ADD", [f"{p}.res1", f"{p}.d"], [f"{p}.res2"], "bf16_add_rne_v1", **layer)
@@ -223,12 +223,12 @@ def dense_graph(
     emit("RMS_NORM", [previous, "norm.final"], ["hidden.final"],
          "qwen3_rmsnorm_fp32_bf16_v1")
     emit("LAST_TOKEN_SELECT", ["hidden.final", "last.index"], ["hidden.last"],
-         "exact_index_gather_v1")
+         "lookup_bf16_token_embedding_v1")
     emit("VOCAB_PROJECT", ["hidden.last", "lm_head"], ["logits"],
-         "bf16_bf16_fp32_sequential_rne_v1")
-    emit("ARGMAX", ["logits"], ["token"], "exact_index_select_v1")
-    emit("TOKEN_APPEND", ["token"], ["tokens.out"], "exact_index_select_v1")
-    emit("STATE_COMMIT", (), (), "exact_copy_v1",
+         "lm_head_bf16_vocabulary_projection_v1")
+    emit("ARGMAX", ["logits"], ["token"], "greedy_lowest_token_id_argmax_v1")
+    emit("TOKEN_APPEND", ["token"], ["tokens.out"], "exact_token_append_eos_v1")
+    emit("STATE_COMMIT", (), (), "bf16_byte_preserving_state_v1",
          state_writes=tuple(s.state_id for s in states))
 
     return KernelGraph(
@@ -314,10 +314,10 @@ def moe_graph(
                 capacity_rows=span_max,
             )
         )
-    emit("STATE_PREPARE", (), (), "exact_copy_v1",
+    emit("STATE_PREPARE", (), (), "bf16_byte_preserving_state_v1",
          state_writes=tuple(s.state_id for s in states))
     emit("EMBEDDING_LOOKUP", ["tokens", "embed"], ["hidden0"],
-         "exact_index_gather_v1")
+         "lookup_bf16_token_embedding_v1")
 
     previous = "hidden0"
     for index in range(layers):
@@ -339,21 +339,21 @@ def moe_graph(
         act(f"{p}.res", (SPAN, hidden))
         layer = {"layer": index}
         emit("RMS_NORM", [previous, f"{p}.norm"], [f"{p}.n"],
-             "deepseek_rmsnorm_binary32_v1", **layer)
+             "normalization_rms_norm_bf16_v1", **layer)
         emit("ROUTER_SCORE", [f"{p}.n", f"{p}.router"], [f"{p}.scores"],
-             "bf16_bf16_fp32_sequential_rne_v1", **layer)
+             "routing_router_score_bf16_v1", **layer)
         emit("BIASED_TOPK", [f"{p}.scores", f"{p}.bias"],
-             [f"{p}.index", f"{p}.gate"], "exact_router_topk_v1",
+             [f"{p}.index", f"{p}.gate"], "selection_biased_topk_route_indices_v1",
              attributes={"top_k": topk}, **layer)
         emit("EXPERT_DISPATCH", [f"{p}.n", f"{p}.index"],
-             [f"{p}.dispatch", f"{p}.dispatched_ids"], "exact_copy_v1",
+             [f"{p}.dispatch", f"{p}.dispatched_ids"], "dispatch_routed_experts_bf16_v1",
              attributes={"expert_count": experts}, **layer)
         emit("ROUTED_MATMUL",
              [f"{p}.dispatch", f"{p}.experts", f"{p}.dispatched_ids", f"{p}.gate"],
-             [f"{p}.expert"], "fp8_e4m3fn_bf16_fp32_sequential_rne_v1",
+             [f"{p}.expert"], "matrix_dense_fp8_linear_bf16_block_scaled_contraction_v1",
              attributes={"expert_count": experts}, **layer)
         emit("EXPERT_REDUCE", [f"{p}.expert", f"{p}.gate", f"{p}.index"],
-             [f"{p}.reduced"], "bf16_expert_sum_fp32_v1", **layer)
+             [f"{p}.reduced"], "dispatch_reduce_expert_outputs_bf16_v1", **layer)
         emit("MATMUL", [f"{p}.reduced", f"{p}.wdown"], [f"{p}.down"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("ADD", [previous, f"{p}.down"], [f"{p}.res"], "bf16_add_rne_v1", **layer)
@@ -368,14 +368,14 @@ def moe_graph(
     act("token", (1, 1), "u32")
     act("tokens.out", (1, 1), "u32", role="output")
     emit("RMS_NORM", [previous, "norm.final"], ["hidden.final"],
-         "deepseek_rmsnorm_binary32_v1")
+         "normalization_rms_norm_bf16_v1")
     emit("LAST_TOKEN_SELECT", ["hidden.final", "last.index"], ["hidden.last"],
-         "exact_index_gather_v1")
+         "lookup_bf16_token_embedding_v1")
     emit("VOCAB_PROJECT", ["hidden.last", "lm_head"], ["logits"],
-         "bf16_bf16_fp32_sequential_rne_v1")
-    emit("ARGMAX", ["logits"], ["token"], "exact_index_select_v1")
-    emit("TOKEN_APPEND", ["token"], ["tokens.out"], "exact_index_select_v1")
-    emit("STATE_COMMIT", (), (), "exact_copy_v1",
+         "lm_head_bf16_vocabulary_projection_v1")
+    emit("ARGMAX", ["logits"], ["token"], "greedy_lowest_token_id_argmax_v1")
+    emit("TOKEN_APPEND", ["token"], ["tokens.out"], "exact_token_append_eos_v1")
+    emit("STATE_COMMIT", (), (), "bf16_byte_preserving_state_v1",
          state_writes=tuple(s.state_id for s in states))
 
     return KernelGraph(

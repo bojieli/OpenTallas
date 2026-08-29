@@ -5,8 +5,8 @@ Four frozen subopcodes live here.
 ``TENSOR.MATMUL``
     ``[rows, K] x [N, K]^T -> [rows, N]``.  Input 1 is n-major (already
     transposed), which is the layout every checkpoint in this repository
-    stores a linear weight in, so no relayout pass exists.  The reduction is
-    strictly increasing in K under ``ReductionOrder.SEQUENTIAL_ASCENDING``.
+    stores a linear weight in, so no relayout pass exists.  The accumulation
+    order is the one the numeric descriptor's contract fixes.
 
 ``TENSOR.GROUPED_MATMUL``
     One contraction per group against a stacked weight tensor.  Input 2 is the
@@ -25,14 +25,38 @@ Four frozen subopcodes live here.
 
 Numeric contracts
 -----------------
-BF16 x BF16 -> FP32 -> BF16 is ``bf16_bf16_fp32_sequential_rne_v1`` and is
-executed by the frozen kernels in ``runtime/tensor_accelerator/bf16.py``.  The
-block-scaled formats (FP8 E4M3FN, MXFP4 E2M1 with E8M0 scales) use the same
-shape of arithmetic -- exact binary32 products, ordered binary32 accumulation,
-one rounding at the output boundary -- which is what
-``runtime/reference/formats.binary32_ordered_dot`` specifies exactly.  Both
-operand formats carry at most eight significand bits, so their binary32
-product is exact and the accumulate-then-round-once identity holds.
+Amendment A7 declares two contraction contracts and this engine executes
+whichever one the numeric descriptor names.
+
+``bf16_bf16_fp32_sequential_rne_v1``
+    Exact products, strictly ascending-K binary32 accumulation, one RNE output
+    rounding.  Executed by the frozen kernels in
+    ``runtime/tensor_accelerator/bf16.py`` for the BF16 x BF16 -> BF16 case and
+    by ``runtime.sim.backend.sequential_matmul_binary32`` otherwise.  It is
+    reproducible on any machine and is the oracle -- and, at 0.15 GMAC/s on
+    Qwen3-8B shapes, it is about 112 hours per 8,000-token prefill, so it
+    qualifies numerics rather than producing tokens.
+
+``bf16_bf16_fp32_blocked_rne_v1``
+    Exact products, binary32 accumulation in the executing implementation's
+    declared deterministic blocked association, one RNE output rounding.
+    Executed through ``runtime/sim/backend.py``, whose
+    ``implementation_identity()`` -- library, version, device -- every
+    execution report must record alongside the shape.  Two runs of the same
+    implementation are bit-identical; the contract claims nothing across
+    implementations, and every target of a comparison must run on the same
+    backend so that a ROM-versus-HBM token difference is a real difference.
+
+A descriptor that names *neither* contract is executed under the sequential,
+exact interpretation when it declares ``SEQUENTIAL_ASCENDING``, and is refused
+otherwise.  Only an explicitly named blocked contract may use a library
+association; an unnamed one never silently acquires one.
+
+The block-scaled formats (FP8 E4M3FN, MXFP4 E2M1 with E8M0 scales) use the same
+shape of arithmetic -- exact binary32 products, binary32 accumulation, one
+rounding at the output boundary.  Both operand formats carry at most eight
+significand bits, so their binary32 product is exact and the
+accumulate-then-round-once identity holds under either association.
 
 Everything fails closed.  An operand whose dtype contradicts the numeric
 profile, a reduction order this engine does not implement, a reserved E8M0
@@ -57,6 +81,15 @@ from runtime.abi3.constants import (
     TrapClass,
 )
 from runtime.abi3.descriptors import Descriptor
+from runtime.sim.backend import (
+    CONTRACT_BLOCKED,
+    CONTRACT_SEQUENTIAL,
+    MATMUL_CONTRACTS,
+    BackendError,
+    declared_contract,
+    get_backend,
+    required_reduction_order,
+)
 from runtime.sim.engine import EngineContext, EngineError, NumericProfile, register
 from runtime.sim.formats import (
     FormatError,
@@ -100,7 +133,7 @@ def _numeric_guard(what: str) -> Iterator[None]:
         yield
     except EngineError:
         raise
-    except ValueError as exc:
+    except (ValueError, BackendError) as exc:
         raise EngineError(
             f"{what}: {exc}", trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE)
         ) from exc
@@ -122,14 +155,46 @@ def _profile(ctx: EngineContext, operator: Descriptor) -> NumericProfile:
         "in binary32 only",
         TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE,
     )
+    profile.contract = _execution_contract(ctx, profile)
+    return profile
+
+
+def _execution_contract(ctx: EngineContext, profile: NumericProfile) -> str:
+    """Which contraction contract this numeric descriptor selects.
+
+    A descriptor that names one of the two frozen contraction contracts must
+    also declare the reduction order that contract fixes; the two fields cannot
+    disagree, because then neither would say what the engine executed.
+
+    A descriptor that names some other contract -- the digest space is open, and
+    several emitters pin a reference owner instead -- is executed under the
+    *sequential* contract when it declares ``SEQUENTIAL_ASCENDING``, and refused
+    otherwise.  An unnamed contract therefore never acquires a library
+    association by accident: only ``bf16_bf16_fp32_blocked_rne_v1``, named
+    outright, may use one.
+    """
+    contract = declared_contract(ctx.table, profile.descriptor_id)
+    order = int(profile.reduction_order)
+    if contract in MATMUL_CONTRACTS:
+        fixed = required_reduction_order(contract)
+        if fixed is not None and order != fixed:
+            raise EngineError(
+                f"numeric profile {profile.descriptor_id} names contract "
+                f"{contract} but declares reduction order "
+                f"{ReductionOrder(order).name}; that contract accumulates "
+                f"under {ReductionOrder(fixed).name}",
+                trap_class=int(TrapClass.CAPABILITY_OR_RESOURCE),
+            )
+        return contract
     _require(
-        profile.reduction_order == ReductionOrder.SEQUENTIAL_ASCENDING,
+        order == int(ReductionOrder.SEQUENTIAL_ASCENDING),
         f"numeric profile {profile.descriptor_id} selects reduction order "
-        f"{ReductionOrder(profile.reduction_order).name}; the tensor engine "
-        "implements the strictly increasing reduction index only",
+        f"{ReductionOrder(order).name} without naming a contract that fixes "
+        "it; the tensor engine executes an unnamed contract under the strictly "
+        "increasing reduction index only",
         TrapClass.CAPABILITY_OR_RESOURCE,
     )
-    return profile
+    return CONTRACT_SEQUENTIAL
 
 
 def _check_dtype(view: ResolvedView, expected: int, label: str) -> None:
@@ -248,48 +313,25 @@ def _operand(
 # ---------------------------------------------------------------------------
 # Contraction
 # ---------------------------------------------------------------------------
-def _ordered_contract(
-    activations: np.ndarray, weights: np.ndarray
-) -> np.ndarray:
-    """``[M,K] @ [N,K]^T`` with exact products and increasing-K accumulation.
+def _read_device(ctx: EngineContext, view: ResolvedView, backend) -> object:
+    """Read one view straight onto the backend's device, accounting the read.
 
-    This is the generalisation of ``dense_bf16_linear_bf16`` to any operand
-    format whose binary32 products are exact: the products are materialised so
-    the host cannot contract them, every exact zero is canonicalised before
-    accumulation, and ``np.add.accumulate`` performs the strictly ordered
-    binary32 reduction.
+    ``ViewResolver.device_array`` hands the mapped bytes to the backend in
+    their *storage* format, so a BF16 weight crosses the bus as 16-bit codes
+    and is widened on the far side.  Widening on the host first would double
+    the bytes moved for no numeric difference.  For a host backend the call
+    returns the ``numpy.memmap`` view itself, so the zero-copy property is
+    unchanged.
     """
-    rows = activations.shape[0]
-    cols = weights.shape[0]
-    output = np.empty((rows, cols), dtype=np.float32)
-    previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
-    try:
-        for row_start in range(0, rows, _ROW_TILE):
-            row_end = min(row_start + _ROW_TILE, rows)
-            row_tile = activations[row_start:row_end]
-            for col_start in range(0, cols, _COL_TILE):
-                col_end = min(col_start + _COL_TILE, cols)
-                col_tile = weights[col_start:col_end]
-                products = np.multiply(
-                    row_tile[:, None, :], col_tile[None, :, :], dtype=np.float32
-                )
-                if not np.all(np.isfinite(products)):
-                    raise FormatError("contraction product left the binary32 range")
-                products[products == 0] = np.float32(0.0)
-                accumulated = np.add.accumulate(products, axis=2, dtype=np.float32)
-                final = accumulated[:, :, -1]
-                if not np.all(np.isfinite(final)):
-                    raise FormatError("contraction sum left the binary32 range")
-                output[row_start:row_end, col_start:col_end] = final
-    finally:
-        np.seterr(**previous)
-    return output
+    array = ctx.views.device_array(view, backend)
+    _account_read(ctx, view, _element_bytes(view, view.element_count))
+    return array
 
 
 def _uses_bf16_kernel(
     activation_view: ResolvedView, weight_view: ResolvedView, output_dtype: int
 ) -> bool:
-    """Whether the frozen BF16 dense kernel covers this operand combination."""
+    """Whether the BF16 dense path covers this operand combination."""
     return (
         activation_view.dtype == DType.BF16
         and weight_view.dtype == DType.BF16
@@ -302,33 +344,69 @@ def _uses_bf16_kernel(
 def _contract(
     ctx: EngineContext,
     activation_view: ResolvedView,
-    activations: np.ndarray,
+    activations,
     weight_view: ResolvedView,
-    weights: np.ndarray,
+    weights,
     output_dtype: int,
+    *,
+    contract: str,
 ) -> tuple[np.ndarray, int, int]:
-    """Execute one contraction.
+    """Execute one contraction under the named numeric contract.
 
     Returns ``(values, saturations, scale_multiplications)``.  ``values`` is
-    BF16 codes when the output view is BF16 and the frozen BF16 kernel applied,
-    otherwise a binary32 accumulator the caller narrows.
+    BF16 codes when the output view is BF16 and the dense BF16 path applied,
+    otherwise a binary32 accumulator the caller narrows.  Both are host arrays:
+    a device handle never escapes this function, so nothing downstream has to
+    know which backend ran.
     """
+    backend = get_backend()
     if _uses_bf16_kernel(activation_view, weight_view, output_dtype):
-        with _numeric_guard("bf16_bf16_fp32_sequential_rne_v1"):
-            result = dense_bf16_linear_bf16(
-                activations,
-                weights,
-                input_tile_rows=_ROW_TILE,
-                output_tile_rows=_COL_TILE,
+        if contract == CONTRACT_SEQUENTIAL:
+            with _numeric_guard(CONTRACT_SEQUENTIAL):
+                result = dense_bf16_linear_bf16(
+                    _host(backend, activations),
+                    _host(backend, weights),
+                    input_tile_rows=_ROW_TILE,
+                    output_tile_rows=_COL_TILE,
+                )
+            return result.values, result.output_saturated_element_count, 0
+        # Blocked: widen, contract and round on the backend's own device, so
+        # the only host traffic is the BF16 codes in and the BF16 codes out.
+        with _numeric_guard(contract):
+            left = backend.widen_bf16(activations)
+            right = backend.widen_bf16(weights)
+            accumulator = backend.matmul_binary32(left, right, contract=contract)
+            narrowed = backend.narrow_rne(accumulator)
+            codes = np.ascontiguousarray(
+                backend.fetch(narrowed.codes), dtype=np.uint16
             )
-        return result.values, result.output_saturated_element_count, 0
-    left, left_scale = _operand(ctx, activation_view, activations, "activation")
-    right, right_scale = _operand(ctx, weight_view, weights, "weight")
-    with _numeric_guard("binary32 ordered contraction"):
-        accumulator = _ordered_contract(
-            np.ascontiguousarray(left), np.ascontiguousarray(right)
+        return codes, narrowed.saturations, 0
+    left_values, left_scale = _operand(
+        ctx, activation_view, _host(backend, activations), "activation"
+    )
+    right_values, right_scale = _operand(
+        ctx, weight_view, _host(backend, weights), "weight"
+    )
+    with _numeric_guard(contract):
+        accumulator = backend.fetch(
+            backend.matmul_binary32(
+                np.ascontiguousarray(left_values),
+                np.ascontiguousarray(right_values),
+                contract=contract,
+            )
         )
-    return accumulator, 0, left_scale + right_scale
+    return (
+        np.ascontiguousarray(accumulator, dtype=np.float32),
+        0,
+        left_scale + right_scale,
+    )
+
+
+def _host(backend, values) -> np.ndarray:
+    """The host view of an operand, whichever side of the bus it arrived on."""
+    if isinstance(values, np.ndarray):
+        return values
+    return backend.fetch(values)
 
 
 def _write_result(
@@ -398,8 +476,15 @@ def _tensor_matmul(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
     _check_dtype(output_view, profile.output_dtype, "MATMUL output")
     rows, cols, depth = _matmul_shapes(activation_view, weight_view, output_view)
 
-    activations = ctx.read(activation_view)
-    weights = ctx.read(weight_view)
+    backend = get_backend()
+    if profile.contract == CONTRACT_BLOCKED and _uses_bf16_kernel(
+        activation_view, weight_view, output_view.dtype
+    ):
+        activations = _read_device(ctx, activation_view, backend)
+        weights = _read_device(ctx, weight_view, backend)
+    else:
+        activations = ctx.read(activation_view)
+        weights = ctx.read(weight_view)
     values, saturations, scale_multiplications = _contract(
         ctx,
         activation_view,
@@ -407,6 +492,7 @@ def _tensor_matmul(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
         weight_view,
         weights,
         output_view.dtype,
+        contract=profile.contract,
     )
     write_saturations, conversions = _write_result(ctx, output_view, values)
 
@@ -495,6 +581,7 @@ def _tensor_grouped_matmul(
             _slice_view(weight_view, (cols, depth), group),
             stack[group],
             output_view.dtype,
+            contract=profile.contract,
         )
         output[cursor : cursor + span] = values
         saturations += group_saturations
@@ -632,6 +719,7 @@ def _tensor_routed_matmul(
                 _slice_view(weight_view, (cols, depth), int(expert)),
                 stack[int(expert)],
                 DType.FP32,
+                contract=profile.contract,
             )
             partial[selected] = values
             scale_multiplications += group_scale

@@ -7,10 +7,16 @@ repository rather than by fresh arithmetic:
 ===================== ==========================================================
 subopcode             numeric contract and implementation
 ===================== ==========================================================
-``RMS_NORM``          ``qwen3_rmsnorm_fp32_bf16_v1`` --
-                      ``runtime.tensor_accelerator.rmsnorm.rms_norm_bf16``
-``HEAD_RMS_NORM``     the same contract applied per head row when a head weight
-                      is bound; the unweighted DeepSeek head path
+``RMS_NORM``          two contracts, dispatched on the numeric descriptor's
+                      contract digest: ``qwen3_rmsnorm_fp32_bf16_v1``
+                      (``runtime.tensor_accelerator.rmsnorm.rms_norm_bf16``)
+                      materialises the normalised value in BF16 before the gain
+                      multiply, and ``deepseek_rmsnorm_binary32_v1`` stays in
+                      binary32 through it.  They disagree by one ulp on roughly
+                      27 % of elements, so picking one silently would corrupt
+                      whichever model did not get it
+``HEAD_RMS_NORM``     the same two contracts applied per head row when a head
+                      weight is bound; the unweighted DeepSeek head path
                       (``runtime.reference.normalization.head_rms_norm_bf16``)
                       when input 1 is ``NO_ID``
 ``ROPE``              ``qwen3_rope_fp32_bf16_v1`` --
@@ -21,10 +27,10 @@ subopcode             numeric contract and implementation
                       ``runtime.tensor_accelerator.elementwise.qwen3_silu_mul_bf16``
 ``CONVERT``           one rounding at the storage boundary; block-scaled
                       decode and encode follow ``runtime.reference.formats``
-``SCALE``             one binary32 product and one output rounding; the
-                      single-operand form is the constant scale of the numeric
-                      profile, or the exact logistic sigmoid when no constant
-                      is declared
+``SCALE``             one binary32 product and one output rounding.  ``aux0``
+                      names the sub-case (amendment A8): ``0`` the profile's
+                      constant ``scale_bits``, ``1`` an elementwise product
+                      with ``input_view_1``, ``2`` the exact logistic sigmoid
 ``SOFTMAX``           row maximum, binary32 exponential, ordered denominator,
                       reciprocal multiply -- the reduction order comes from the
                       numeric profile
@@ -38,9 +44,17 @@ the leading axes are rows.  That is what lets one descriptor cover
 ``[tokens, hidden]``, ``[tokens, heads, head_dim]`` and a single flattened row
 without a private opcode per shape.
 
-Everything fails closed: a shape, dtype, epsilon or rounding mode that
-contradicts the descriptor raises :class:`EngineError` instead of being
-silently reinterpreted.
+Binary32 bulk arithmetic goes through ``runtime/sim/backend.py`` rather than
+straight to NumPy, so that one backend selection covers the whole device and a
+comparison between two targets cannot differ by which substrate ran it.  The
+frozen BF16 kernels (``ADD``, ``SILU_MUL``, ``ROPE``, ``SQRT_SOFTPLUS``,
+``QUANTIZE``) stay on their own implementations: each *is* the contract it
+names, and each already has a bit-exact scalar oracle.
+
+Everything fails closed: a shape, dtype, epsilon, rounding mode, reduction
+order or sub-case that contradicts the descriptor raises :class:`EngineError`
+instead of being silently reinterpreted.  An RMSNorm whose contract this engine
+does not recognise is refused rather than assigned to one of the two.
 """
 
 from __future__ import annotations
@@ -72,11 +86,26 @@ from runtime.reference.normalization import (
     head_rms_norm_bf16,
 )
 from runtime.reference.sqrt_softplus import binary32_sqrt_softplus_rne
+from runtime.sim.backend import (
+    CONTRACT_DEEPSEEK_RMSNORM,
+    CONTRACT_QWEN_RMSNORM,
+    BackendError,
+    declared_contract,
+    get_backend,
+    required_reduction_order,
+)
 from runtime.sim.engine import EngineContext, EngineError, NumericProfile, register
 from runtime.sim.formats import narrow, narrow_bf16_rne, widen, widen_bf16
 from runtime.sim.memory import ResolvedView
 from runtime.tensor_accelerator.elementwise import bf16_add_rne, qwen3_silu_mul_bf16
-from runtime.tensor_accelerator.rmsnorm import rms_norm_bf16
+from runtime.tensor_accelerator.rmsnorm import (
+    # The correctly rounded binary32 reciprocal square root of the frozen Qwen
+    # kernel.  The DeepSeek contract differs from the Qwen one only in where it
+    # rounds to BF16, so both must take their inverse RMS from one
+    # implementation or they would differ for a second, unrelated reason.
+    _binary32_rsqrt_rne as binary32_rsqrt_rne,
+    rms_norm_bf16,
+)
 from runtime.tensor_accelerator.rope import rope_bf16
 
 #: Below this shifted argument the binary32 exponential is zero, matching
@@ -105,7 +134,7 @@ def _numeric_guard(what: str) -> Iterator[None]:
         yield
     except EngineError:
         raise
-    except ValueError as exc:
+    except (ValueError, BackendError) as exc:
         raise EngineError(
             f"{what}: {exc}", trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE)
         ) from exc
@@ -220,19 +249,114 @@ def _weighted_rms_norm(
         "RMSNorm contract requires a positive finite binary32 epsilon",
         TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE,
     )
+    contract = _rms_norm_contract(ctx, profile)
     width = int(weight_view.dims[0])
     values = _read_rows(ctx, input_view, width)
     weights = np.ascontiguousarray(ctx.read(weight_view))
-    with _numeric_guard("qwen3_rmsnorm_fp32_bf16_v1"):
-        result = rms_norm_bf16(values, weights, epsilon_code=int(profile.epsilon_bits))
-    ctx.write(output_view, result.values.reshape(output_view.dims))
+    with _numeric_guard(contract):
+        if contract == CONTRACT_QWEN_RMSNORM:
+            codes = rms_norm_bf16(
+                values, weights, epsilon_code=int(profile.epsilon_bits)
+            ).values
+        else:
+            codes = _deepseek_rms_norm_binary32(
+                values, weights, epsilon_bits=int(profile.epsilon_bits)
+            )
+    ctx.write(output_view, codes.reshape(output_view.dims))
 
     rows = values.shape[0]
     ctx.counters.add(counter_rows, rows)
     ctx.counters.add("vector.elements", int(values.size))
-    # Two architectural BF16 boundaries per element: the normalised value and
-    # the weighted output.
-    ctx.counters.add("vector.conversions", 2 * int(values.size))
+    # The Qwen contract crosses two architectural BF16 boundaries per element,
+    # the normalised value and the weighted output; the DeepSeek contract stays
+    # in binary32 and crosses one.
+    ctx.counters.add(
+        "vector.conversions",
+        (2 if contract == CONTRACT_QWEN_RMSNORM else 1) * int(values.size),
+    )
+
+
+def _rms_norm_contract(ctx: EngineContext, profile: NumericProfile) -> str:
+    """Which of the two RMSNorm contracts this descriptor names.
+
+    Amendment A8: both contracts are correct and they are genuinely different
+    operations -- they disagree by one ulp on roughly 27 % of elements -- so
+    the engine dispatches on the digest and refuses a descriptor that names
+    neither.  Guessing would corrupt whichever model did not get its own
+    rounding, and would do it silently.
+    """
+    contract = declared_contract(ctx.table, profile.descriptor_id)
+    _require(
+        contract in (CONTRACT_QWEN_RMSNORM, CONTRACT_DEEPSEEK_RMSNORM),
+        f"numeric profile {profile.descriptor_id} names no RMSNorm contract "
+        f"this engine implements; expected {CONTRACT_QWEN_RMSNORM} (BF16 "
+        f"materialised before the gain multiply) or {CONTRACT_DEEPSEEK_RMSNORM} "
+        "(binary32 through it)",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    fixed = required_reduction_order(contract)
+    order = int(profile.reduction_order)
+    if fixed is not None and order != fixed:
+        raise EngineError(
+            f"numeric profile {profile.descriptor_id} declares reduction order "
+            f"{ReductionOrder(order).name}; the {contract} row sum is a "
+            f"balanced tree, so it must declare "
+            f"{ReductionOrder(fixed).name}",
+            trap_class=int(TrapClass.CAPABILITY_OR_RESOURCE),
+        )
+    profile.contract = contract
+    return contract
+
+
+def _deepseek_rms_norm_binary32(
+    input_codes: np.ndarray, weight_codes: np.ndarray, *, epsilon_bits: int
+) -> np.ndarray:
+    """``deepseek_rmsnorm_binary32_v1``: one rounding, at the output.
+
+    Square, balanced row sum, divide by the width, add epsilon, correctly
+    rounded reciprocal square root, normalise and apply the gain -- all in
+    binary32 -- and convert to BF16 once.  The Qwen contract is the same
+    computation with an extra BF16 materialisation of the normalised value
+    before the gain multiply, which is the whole of the difference between
+    them.
+
+    The row sum and the elementwise work run on the selected backend; the
+    per-row reciprocal square root is the exact integer algorithm shared with
+    the Qwen kernel.
+    """
+    backend = get_backend()
+    values = backend.widen_bf16(np.ascontiguousarray(input_codes, dtype=np.uint16))
+    gains = backend.widen_bf16(np.ascontiguousarray(weight_codes, dtype=np.uint16))
+    width = int(np.asarray(input_codes).shape[-1])
+    squares = backend.elementwise("square", values)
+    if not backend.all_finite(squares):
+        raise ValueError("BF16 square overflowed binary32")
+    totals = np.ascontiguousarray(
+        backend.fetch(
+            backend.reduce_sum(squares, order=int(ReductionOrder.PAIRWISE_TREE))
+        ),
+        dtype=np.float32,
+    )
+    epsilon = np.asarray([np.uint32(epsilon_bits)], dtype=np.uint32).view(np.float32)[0]
+    previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
+    try:
+        means = np.divide(totals, np.float32(width), dtype=np.float32)
+        arguments = np.add(means, epsilon, dtype=np.float32)
+    finally:
+        np.seterr(**previous)
+    if not np.all(np.isfinite(arguments)) or np.any(arguments <= 0):
+        raise ValueError("RMSNorm variance argument is not positive finite")
+    inverse = np.asarray(
+        [
+            binary32_rsqrt_rne(int(code))
+            for code in np.ascontiguousarray(arguments).view(np.uint32)
+        ],
+        dtype=np.uint32,
+    ).view(np.float32)
+    normalized = backend.multiply(values, backend.place(inverse[:, None]))
+    weighted = backend.multiply(normalized, gains)
+    narrowed = backend.narrow_rne(weighted)
+    return np.ascontiguousarray(backend.fetch(narrowed.codes), dtype=np.uint16)
 
 
 @register(Major.VECTOR, Vector.RMS_NORM)
@@ -592,20 +716,64 @@ def _map_codes(codes: np.ndarray, function) -> np.ndarray:
     return mapped[inverse].reshape(codes.shape)
 
 
+#: ``VECTOR.SCALE`` sub-cases, named by ``aux_id_0`` (amendment A8).
+SCALE_CONSTANT = 0
+SCALE_ELEMENTWISE = 1
+SCALE_SIGMOID = 2
+
+_SCALE_SUBCASE_NAMES = {
+    SCALE_CONSTANT: "0 (multiply by the profile's scale_bits)",
+    SCALE_ELEMENTWISE: "1 (elementwise multiply by input_view_1)",
+    SCALE_SIGMOID: "2 (logistic sigmoid)",
+}
+
+
+def _scale_subcase(operator: Descriptor) -> int:
+    """Resolve the ``VECTOR.SCALE`` sub-case from ``aux_id_0``.
+
+    Amendment A8 moved this out of the numeric profile.  The first
+    implementation read it from ``scale_bits != 0``, which makes a legitimate
+    scale of zero unrepresentable -- a descriptor asking for "multiply by
+    zero" was silently executed as the logistic sigmoid.  ``aux_id_0`` now
+    names the sub-case outright, matching the ``COMPRESS``/``MHC`` pattern.
+
+    An unnamed ``aux_id_0`` is accepted only where the operand map already
+    settles the question: ``input_view_1`` bound can only be the elementwise
+    product.  With one operand and no sub-case there is nothing left to read
+    it from, so it fails closed rather than guessing.
+    """
+    aux = int(operator.payload["aux_id_0"])
+    if aux in _SCALE_SUBCASE_NAMES:
+        return aux
+    if aux == NO_ID:
+        if operator.payload["input_view_1"] != NO_ID:
+            return SCALE_ELEMENTWISE
+        raise EngineError(
+            "VECTOR.SCALE names no sub-case in aux_id_0 and binds one operand; "
+            "the constant scale and the logistic sigmoid are then "
+            "indistinguishable.  Amendment A8 requires aux_id_0: "
+            + ", ".join(_SCALE_SUBCASE_NAMES[k] for k in sorted(_SCALE_SUBCASE_NAMES)),
+            trap_class=int(TrapClass.DESCRIPTOR_OR_ADDRESS),
+        )
+    raise EngineError(
+        f"VECTOR.SCALE sub-case {aux} is not defined; aux_id_0 is "
+        + ", ".join(_SCALE_SUBCASE_NAMES[k] for k in sorted(_SCALE_SUBCASE_NAMES)),
+        trap_class=int(TrapClass.DESCRIPTOR_OR_ADDRESS),
+    )
+
+
 @register(Major.VECTOR, Vector.SCALE)
 def _vector_scale(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
     """Elementwise product, constant scale, or logistic sigmoid.
 
-    With ``input 1`` bound this multiplies two operands elementwise; the second
-    operand may cover only the trailing axes, which is how a per-channel gain
-    is applied to ``[tokens, channels]`` without a broadcast copy.
-
-    With ``input 1`` unbound the numeric profile decides, because the frozen
-    lowering table maps both ``SCALE`` and ``SIGMOID`` onto this subopcode: a
-    non-zero ``scale_bits`` is the binary32 constant to multiply by, and a zero
-    ``scale_bits`` selects the logistic sigmoid.
+    ``aux_id_0`` names which: ``0`` multiplies by the numeric profile's
+    ``scale_bits``, ``1`` multiplies elementwise by ``input_view_1``, and ``2``
+    is the exact logistic sigmoid.  Under sub-case ``1`` the second operand may
+    cover only the trailing axes, which is how a per-channel gain is applied to
+    ``[tokens, channels]`` without a broadcast copy.
     """
     profile = _profile(ctx, operator)
+    subcase = _scale_subcase(operator)
     source_view = ctx.input_view(operator, 0)
     second_view = ctx.optional_input(operator, 1)
     output_view = ctx.output_view(operator, 0)
@@ -615,7 +783,18 @@ def _vector_scale(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
     _check_dtype(output_view, profile.output_dtype, "SCALE output")
     source = ctx.read(source_view)
 
-    if second_view is not None:
+    _require(
+        (second_view is not None) == (subcase == SCALE_ELEMENTWISE),
+        f"VECTOR.SCALE sub-case {_SCALE_SUBCASE_NAMES[subcase]} "
+        + (
+            "does not read input_view_1, but one is bound"
+            if second_view is not None
+            else "requires input_view_1, which is unbound"
+        ),
+    )
+
+    if subcase == SCALE_ELEMENTWISE:
+        assert second_view is not None  # settled by the check above
         _check_dtype(second_view, profile.second_input_dtype, "SCALE factor")
         _unscaled(second_view, "SCALE factor")
         trailing = tuple(source_view.dims[len(source_view.dims) - len(second_view.dims) :])
@@ -625,19 +804,21 @@ def _vector_scale(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
             f"{second_view.dims}; expected {trailing} to broadcast over "
             f"{source_view.dims}",
         )
+        backend = get_backend()
         with _numeric_guard("SCALE operands"):
             left = widen(source_view.dtype, source)
             right = widen(second_view.dtype, ctx.read(second_view))
         _finite(ctx, left, f"SCALE source view {source_view.descriptor_id}")
         _finite(ctx, right, f"SCALE factor view {second_view.descriptor_id}")
-        values = np.multiply(left, right, dtype=np.float32)
+        with _numeric_guard("SCALE product"):
+            values = backend.fetch(backend.multiply(left, right))
         _finite(ctx, values, "SCALE product")
         _, conversions = _write_rows(ctx, output_view, values)
         ctx.counters.add("vector.elements", int(left.size))
         ctx.counters.add("vector.conversions", conversions)
         return
 
-    if profile.scale_bits != 0:
+    if subcase == SCALE_CONSTANT:
         with _numeric_guard(f"SCALE source view {source_view.descriptor_id}"):
             left = widen(source_view.dtype, source)
         _finite(ctx, left, f"SCALE source view {source_view.descriptor_id}")
@@ -648,7 +829,11 @@ def _vector_scale(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
             "constant scale",
             TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE,
         )
-        values = np.multiply(left, constant, dtype=np.float32)
+        backend = get_backend()
+        with _numeric_guard("SCALE product"):
+            values = backend.fetch(
+                backend.multiply(left, np.full((1,), constant, dtype=np.float32))
+            )
         _finite(ctx, values, "SCALE product")
         _, conversions = _write_rows(ctx, output_view, values)
         ctx.counters.add("vector.elements", int(left.size))
@@ -675,38 +860,17 @@ def _vector_scale(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
 # VECTOR.SOFTMAX
 # ---------------------------------------------------------------------------
 def _ordered_row_sum(values: np.ndarray, order: int) -> np.ndarray:
-    """Reduce each row under the declared binary32 reduction order."""
-    if order == ReductionOrder.SEQUENTIAL_ASCENDING:
-        return np.ascontiguousarray(
-            np.add.accumulate(values, axis=1, dtype=np.float32)[:, -1]
-        )
-    if order == ReductionOrder.PAIRWISE_TREE:
-        level = np.ascontiguousarray(values, dtype=np.float32)
-        while level.shape[1] > 1:
-            if level.shape[1] & 1:
-                level = np.concatenate(
-                    (level, np.zeros((level.shape[0], 1), dtype=np.float32)), axis=1
-                )
-            level = np.add(level[:, 0::2], level[:, 1::2], dtype=np.float32)
-        return np.ascontiguousarray(level[:, 0], dtype=np.float32)
-    # BLOCKED_ASCENDING: eight lanes accumulated in increasing index order and
-    # combined (0,4)/(1,5)/(2,6)/(3,7), matching binary32_lanes8_sum.
-    width = values.shape[1]
-    if width < 8:
-        return np.ascontiguousarray(
-            np.add.accumulate(values, axis=1, dtype=np.float32)[:, -1]
-        )
-    lanes = np.ascontiguousarray(values[:, :8], dtype=np.float32).copy()
-    full = width - width % 8
-    for start in range(8, full, 8):
-        lanes = np.add(lanes, values[:, start : start + 8], dtype=np.float32)
-    tail = width - full
-    if tail:
-        lanes[:, :tail] = np.add(lanes[:, :tail], values[:, full:], dtype=np.float32)
-    half = np.add(lanes[:, :4], lanes[:, 4:], dtype=np.float32)
-    quarter = np.add(half[:, :2], half[:, 2:], dtype=np.float32)
+    """Reduce each row under the declared binary32 reduction order.
+
+    The three orders are the frozen enumeration: strictly ascending,
+    a balanced pairwise tree, and the eight-lane blocked accumulation that
+    matches ``binary32_lanes8_sum``.  The backend owns all three so that one
+    substrate selection covers the engine's reductions as well as its
+    contractions.
+    """
     return np.ascontiguousarray(
-        np.add(quarter[:, 0], quarter[:, 1], dtype=np.float32)
+        get_backend().fetch(get_backend().reduce_sum(values, order=int(order))),
+        dtype=np.float32,
     )
 
 

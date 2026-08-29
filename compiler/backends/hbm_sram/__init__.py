@@ -27,13 +27,21 @@ from .capability import (  # noqa: F401
     profile_difference,
     single_chip_capability,
 )
-from .plan import PhysicalPlan, PlanError, TileConfig, build_plan, read_kernel_graph  # noqa: F401
+from .plan import (  # noqa: F401
+    PhysicalPlan,
+    PlanError,
+    TileConfig,
+    as_kernel_graph,
+    build_plan,
+    read_kernel_graph,
+)
 
 __all__ = [
     "PROFILES",
     "PhysicalPlan",
     "PlanError",
     "TileConfig",
+    "as_kernel_graph",
     "build_plan",
     "capability_for",
     "cluster32_capability",

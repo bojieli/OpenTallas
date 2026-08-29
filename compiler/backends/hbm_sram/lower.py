@@ -80,6 +80,8 @@ from runtime.abi3.descriptors import (
 
 from .plan import (
     KernelPlan,
+    _extent_value as _static_extent,
+    as_kernel_graph,
     OperandPlan,
     PhysicalPlan,
     PlanError,
@@ -169,7 +171,7 @@ class LoweringError(ValueError):
 
 
 def lower_to_abi3(
-    graph: KernelGraph,
+    graph: KernelGraph | Mapping[str, Any] | str,
     capability: Capability,
     *,
     topology: TopologyClass | int | None = None,
@@ -180,7 +182,12 @@ def lower_to_abi3(
     target_id: str | None = None,
     backend: str = BACKEND_ID,
 ) -> Deployment:
-    """Lower ``graph`` onto ``capability`` and return the ABI 3.0 deployment."""
+    """Lower ``graph`` onto ``capability`` and return the ABI 3.0 deployment.
+
+    ``graph`` may be a :class:`KernelGraph`, a published JSON body, or a path to
+    one, so a campaign driver can hand over the artifact it already has.
+    """
+    graph = as_kernel_graph(graph)
     plan = plan or build_plan(graph, capability, topology=topology, tile=tile)
     return _Emitter(
         graph, capability, plan, deployment_id, generation, target_id, backend
@@ -188,7 +195,7 @@ def lower_to_abi3(
 
 
 def lower_with_plan(
-    graph: KernelGraph,
+    graph: KernelGraph | Mapping[str, Any] | str,
     capability: Capability,
     *,
     topology: TopologyClass | int | None = None,
@@ -196,6 +203,7 @@ def lower_with_plan(
     **kwargs: Any,
 ) -> tuple[Deployment, PhysicalPlan]:
     """Convenience wrapper returning both artifacts."""
+    graph = as_kernel_graph(graph)
     plan = build_plan(graph, capability, topology=topology, tile=tile)
     return lower_to_abi3(graph, capability, plan=plan, **kwargs), plan
 
@@ -419,7 +427,12 @@ class _Emitter:
         for kernel in self.graph.kernels:
             if kernel.kind == "TOKEN_APPEND" and kernel.outputs:
                 self.token_ring_tensor = kernel.outputs[0]
-        ring_bytes = int(self.capability.limits["max_context_positions"]) * 4
+        ring_element = 4
+        if self.token_ring_tensor is not None:
+            ring_element = max(
+                bytes_for(1, self.tensors[self.token_ring_tensor].dtype), 1
+            )
+        ring_bytes = int(self.capability.limits["max_context_positions"]) * ring_element
 
         for key in sorted(self.plan.host_objects):
             spec = self.plan.host_objects[key]
@@ -769,14 +782,20 @@ class _Emitter:
         if operand.tensor_id == self.token_ring_tensor and operand.direction == "out":
             return self._view(
                 object_id=self.token_ring_object,
-                dtype=DType.U32,
+                dtype=dtype,
                 dims=[1],
                 strides=[1],
                 dynamic=[DynamicTerm.symbol(Symbol.GENERATION_INDEX, 1)],
                 writable=True,
             )
-        if operand.residence == "state":
-            return self._state_view(plan, operand, loops, writable=writable)
+        kernel = self.kernels[plan.index]
+        if operand.residence == "state" or (
+            operand.direction == "out" and kernel.state_writes
+        ):
+            # A declared state effect is the authority: a kernel that writes a
+            # state resource writes into that resource's prepared image, even
+            # when the graph names the result as an ordinary activation.
+            return self._state_view(plan, operand, loops, writable=True)
         if plan.engine_family == int(Major.SELECTION):
             return self._selection_view(operand, writable=writable)
 
@@ -857,23 +876,7 @@ class _Emitter:
         window.  Attention reads the whole context, so the window is the full
         capacity rather than a token block.
         """
-        mapping = self.plan.state_of_resource.get(operand.tensor_id)
-        if mapping is None:
-            # The tensor need not be named after the resource, so fall back to
-            # position: the n-th state operand of a direction binds the n-th
-            # resource the kernel declares in that direction.
-            kernel = self.kernels[plan.index]
-            peers = [
-                o
-                for o in plan.operands
-                if o.residence == "state" and o.direction == operand.direction
-            ]
-            names = list(
-                kernel.state_reads if operand.direction == "in" else kernel.state_writes
-            ) or list((*kernel.state_writes, *kernel.state_reads))
-            position = peers.index(operand) if operand in peers else 0
-            if position < len(names):
-                mapping = self.plan.state_of_resource.get(names[position])
+        mapping, column = self._bind_state(plan, operand)
         if mapping is None:
             raise LoweringError(
                 f"state operand {operand.tensor_id} of kernel {plan.kernel_id} is "
@@ -883,21 +886,87 @@ class _Emitter:
         state = self.plan.state(physical_id)
         committed, prepared = self._state_objects[physical_id]
         window = state.capacity_rows * state.row_elements
+        width = min(
+            self._state_row_width(operand.tensor_id) or state.row_elements,
+            state.row_elements - column,
+        )
         terms: list[DynamicTerm] = []
-        offset = member * window
+        offset = member * window + column
         loop = loops.get("layer")
         if len(state.members) > 1 and loop is not None:
             terms.append(DynamicTerm.loop(loop, window))
-            offset = 0
+            offset = column
         return self._view(
             object_id=prepared if writable else committed,
             dtype=dtype_of(state.dtype),
-            dims=[state.capacity_rows, state.row_elements],
+            dims=[state.capacity_rows, max(width, 1)],
             strides=[state.row_elements, 1],
             element_offset=offset,
             dynamic=terms,
             writable=writable,
         )
+
+    def _state_row_width(self, tensor_id: str) -> int:
+        """Elements one position contributes: the product of the non-position axes."""
+        tensor = self.tensors.get(tensor_id)
+        if tensor is None or len(tensor.shape) < 2:
+            return 0
+        width = 1
+        for axis in tensor.shape[1:]:
+            value, _ = _static_extent(axis, self.span_max)
+            width *= max(value, 1)
+        return width
+
+    def _bind_state(
+        self, plan: KernelPlan, operand: OperandPlan
+    ) -> tuple[Sequence[Any] | None, int]:
+        """Resolve a state operand to ``(resource, column offset in the row)``.
+
+        A resource's row may be a *fused* record -- a key half and a value half
+        of one KV row, say -- in which case several operands name windows of one
+        resource and their column offsets accumulate in operand order.  When the
+        kernel declares as many resources as it has state operands, the binding
+        is positional instead.
+        """
+        direct = self.plan.state_of_resource.get(operand.tensor_id)
+        kernel = self.kernels[plan.index]
+        names = list(
+            kernel.state_writes if operand.direction == "out" else kernel.state_reads
+        ) or list((*kernel.state_writes, *kernel.state_reads))
+        peers = [
+            o
+            for o in plan.operands
+            if o.direction == operand.direction
+            and (
+                o.residence == "state"
+                or (o.direction == "out" and kernel.state_writes)
+            )
+        ]
+        position = peers.index(operand) if operand in peers else 0
+        if direct is not None:
+            mapping = direct
+            index = next(
+                (i for i, n in enumerate(names) if self.plan.state_of_resource.get(n) == direct),
+                position,
+            )
+        elif names:
+            index = min(position, len(names) - 1)
+            mapping = self.plan.state_of_resource.get(names[index])
+        else:
+            return None, 0
+        column = 0
+        for peer in peers[:position]:
+            peer_names_index = min(peers.index(peer), len(names) - 1) if names else 0
+            peer_mapping = (
+                self.plan.state_of_resource.get(operand.tensor_id)
+                if peer.tensor_id == operand.tensor_id
+                else self.plan.state_of_resource.get(names[peer_names_index])
+                if names
+                else None
+            )
+            if peer_mapping == mapping:
+                column += self._state_row_width(peer.tensor_id)
+        return mapping, column
 
     def _require_dtype(self, dtype: DType) -> None:
         feature = _DTYPE_FEATURE.get(int(dtype))

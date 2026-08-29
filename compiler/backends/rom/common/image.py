@@ -198,18 +198,68 @@ class RomMember:
 class RegionRequest:
     """What a backend asks the planner to place.
 
-    ``slots`` are the *same* logical operand for successive iterations of one
-    compressed loop.  Every slot must have identical byte length, or the loop
-    stride would not be constant and the region could not be addressed by a
-    single dynamic term.
+    A region is ``slot_count`` slots of ``slot_bytes`` each.  A slot is what one
+    iteration of a compressed loop reads: usually one layer's copy of one
+    operand, but for a routed MoE weight it is a whole expert bank -- every
+    expert's matrix for that layer, in ascending logical expert order.  Slots
+    must be equal-sized, or the loop stride would not be constant and one
+    dynamic term could not reach every slot.
     """
 
     key: str
     role: str
     dtype: str
-    slots: tuple[RomMember, ...]
+    members: tuple[RomMember, ...]
+    slot_count: int
+    slot_bytes: int
     element_count_per_slot: int
     coordinate_hint: RomCoordinate = RomCoordinate()
+
+    @staticmethod
+    def striped(
+        key: str,
+        role: str,
+        dtype: str,
+        slots: Sequence[Sequence[tuple[str, int, str, int, str]]],
+        element_count_per_slot: int,
+        coordinate_hint: "RomCoordinate | None" = None,
+    ) -> "RegionRequest":
+        """Build a request from per-slot ``(tensor_id, bytes, path, offset, sha)``."""
+        members: list[RomMember] = []
+        cursor = 0
+        slot_bytes = sum(entry[1] for entry in slots[0]) if slots else 0
+        for index, entries in enumerate(slots):
+            total = sum(entry[1] for entry in entries)
+            if total != slot_bytes:
+                raise RomImageError(
+                    f"ROM region {key!r} slot {index} is {total} bytes but slot 0 "
+                    f"is {slot_bytes}; a loop-addressed region needs a constant "
+                    "stride"
+                )
+            for tensor_id, extent, path, offset, digest in entries:
+                members.append(
+                    RomMember(
+                        tensor_id=tensor_id,
+                        slot=index,
+                        offset_bytes=cursor,
+                        bytes=extent,
+                        source_path=path,
+                        source_offset=offset,
+                        source_sha256=digest,
+                        dtype=dtype,
+                    )
+                )
+                cursor += extent
+        return RegionRequest(
+            key=key,
+            role=role,
+            dtype=dtype,
+            members=tuple(members),
+            slot_count=len(slots),
+            slot_bytes=slot_bytes,
+            element_count_per_slot=element_count_per_slot,
+            coordinate_hint=coordinate_hint or RomCoordinate(),
+        )
 
 
 @dataclass(slots=True)
@@ -665,27 +715,38 @@ def plan_rom_image(
         if request.key in seen_keys:
             raise RomImageError(f"duplicate ROM region key {request.key!r}")
         seen_keys.add(request.key)
-        if not request.slots:
+        if not request.members:
             raise RomImageError(f"ROM region {request.key!r} places no payload")
         if request.dtype not in DTYPE_BY_NAME:
             raise RomImageError(
                 f"ROM region {request.key!r} has unrepresentable dtype "
                 f"{request.dtype!r}"
             )
-        slot_bytes = request.slots[0].bytes
-        if slot_bytes <= 0:
+        slot_bytes = request.slot_bytes
+        if slot_bytes <= 0 or request.slot_count <= 0:
             raise RomImageError(f"ROM region {request.key!r} has an empty slot")
-        for slot_index, member in enumerate(request.slots):
-            if member.bytes != slot_bytes:
+        cursor = 0
+        for member in request.members:
+            if member.bytes <= 0:
                 raise RomImageError(
-                    f"ROM region {request.key!r} slot {slot_index} is "
-                    f"{member.bytes} bytes but slot 0 is {slot_bytes}; a "
-                    "loop-addressed region needs a constant stride"
+                    f"ROM region {request.key!r} member {member.tensor_id!r} is empty"
                 )
-            if member.slot != slot_index:
+            if member.offset_bytes != cursor:
                 raise RomImageError(
-                    f"ROM region {request.key!r} slot {slot_index} declares slot "
-                    f"{member.slot}"
+                    f"ROM region {request.key!r} member {member.tensor_id!r} sits at "
+                    f"{member.offset_bytes}, expected {cursor}; members must tile "
+                    "the region without gaps or overlap"
+                )
+            if member.slot != member.offset_bytes // slot_bytes:
+                raise RomImageError(
+                    f"ROM region {request.key!r} member {member.tensor_id!r} declares "
+                    f"slot {member.slot} but sits in slot "
+                    f"{member.offset_bytes // slot_bytes}"
+                )
+            if (member.offset_bytes + member.bytes - 1) // slot_bytes != member.slot:
+                raise RomImageError(
+                    f"ROM region {request.key!r} member {member.tensor_id!r} straddles "
+                    "a slot boundary"
                 )
             if member.tensor_id in placed:
                 raise RomImageError(
@@ -693,14 +754,15 @@ def plan_rom_image(
                     f"{placed[member.tensor_id]!r} and {request.key!r}"
                 )
             placed[member.tensor_id] = request.key
-            expected = slot_index * slot_bytes
-            if member.offset_bytes != expected:
-                raise RomImageError(
-                    f"ROM region {request.key!r} slot {slot_index} sits at "
-                    f"{member.offset_bytes}, expected {expected}"
-                )
+            cursor += member.bytes
+        if cursor != slot_bytes * request.slot_count:
+            raise RomImageError(
+                f"ROM region {request.key!r} members cover {cursor} bytes but "
+                f"{request.slot_count} slots of {slot_bytes} need "
+                f"{slot_bytes * request.slot_count}"
+            )
 
-        payload_bytes = slot_bytes * len(request.slots)
+        payload_bytes = slot_bytes * request.slot_count
         total = _align_up(payload_bytes, policy.alignment_bytes)
         pad_bytes = total - payload_bytes
 
@@ -724,18 +786,18 @@ def plan_rom_image(
                 payload_bytes=payload_bytes,
                 pad_bytes=pad_bytes,
                 alignment=policy.alignment_bytes,
-                slot_count=len(request.slots),
+                slot_count=request.slot_count,
                 slot_bytes=slot_bytes,
                 slot_elements=request.element_count_per_slot,
-                members=tuple(request.slots),
+                members=request.members,
                 shards=shards,
                 content_digest=region_content_digest(
                     key=request.key,
                     payload_bytes=payload_bytes,
                     pad_bytes=pad_bytes,
-                    slot_count=len(request.slots),
+                    slot_count=request.slot_count,
                     slot_bytes=slot_bytes,
-                    members=request.slots,
+                    members=request.members,
                 ),
                 pad_digest=_sha256(bytes(pad_bytes)),
             )

@@ -144,3 +144,17 @@
 - **OI-3 — `Tensor` has no layout field.** Head-shaped views rely on row-major
   equivalence between `(tokens, heads, head_dim)` and `(tokens, heads*head_dim)`.
   True today; would break for any non-row-major source tensor.
+- **OI-4 — no governed stochastic sampling contract.** The neutral IR cannot
+  express randomness and `SELECTION.SAMPLE` is unimplemented, so neither lane
+  can honour a `do_sample: true` request. Greedy acceptance is unaffected
+  (ADR-003 section 7 makes sampling optional), but inventing an RNG to close
+  this would make every future result irreproducible. Closing it needs a
+  versioned RNG and probability contract first.
+- **OI-5 — descriptor CRC and header digests are not checked in RTL.** The RTL
+  microsequencer enforces instruction and header CRC32C, but descriptor record
+  CRCs and the header's four SHA-256 digests need a digest engine that does not
+  exist yet. Until it does, RTL's "fail before work is issued" is narrower than
+  the ABI's.
+- **OI-6 — Yosys 0.68 cannot parse SystemVerilog packages**, so `rtl/abi3`
+  cannot enter the repository's existing synthesis flow unchanged. The
+  synthesis probe required textually inlining the package.

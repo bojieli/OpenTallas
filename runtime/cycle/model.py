@@ -73,7 +73,7 @@ from runtime.abi3.descriptors import (
     Symbol,
 )
 from runtime.sim.counters import CounterSet, COUNTERS, is_timing_counter
-from runtime.sim.device import Device, PendingCommit, Session, TransactionResult
+from runtime.sim.device import Device, PendingCommit, TransactionResult
 from runtime.sim.memory import ResolvedView, ViewResolver
 from runtime.cycle.fabric import (
     ClusterFabric,
@@ -84,7 +84,6 @@ from runtime.cycle.fabric import (
 )
 from runtime.cycle.machine import (
     ENGINE_FAMILY_NAMES,
-    FAMILY_BY_NAME,
     FAMILY_WORK_COUNTERS,
     CostTable,
     EngineParams,
@@ -92,7 +91,6 @@ from runtime.cycle.machine import (
     MachineModel,
     MemoryClassParams,
     MemoryParams,
-    Provenance,
     SequencerParams,
 )
 
@@ -1319,7 +1317,6 @@ class CycleModel:
         """
         findings: list[dict[str, Any]] = []
         seen: set[int] = set()
-        header, body = None, None
         for index, record in enumerate(self._instructions()):
             family = ENGINE_FAMILY_NAMES.get(int(record.major), "")
             if family not in TILED_FAMILIES:
@@ -1408,7 +1405,6 @@ class CycleModel:
                         ),
                     }
                 )
-        del header, body
         return {
             "complete": not findings,
             "rule": (
@@ -1716,6 +1712,7 @@ class CycleModel:
                 unit.busy_cycles += service
                 unit.operations += 1
                 unit.bytes += step.bytes_moved
+                unit.transferred_bytes += step.bytes_transferred
                 unit.memory_stall_cycles += max(0, finish - start)
                 totals["memory_stall"] += max(0, finish - start)
                 seq_free = start + service
@@ -2452,6 +2449,55 @@ def run_deployment(
     return model.run(request)
 
 
+def functional_reference(
+    deployment: Deployment,
+    capability: Capability,
+    request: CycleRequest,
+    *,
+    root: Path | None = None,
+    verify: bool = True,
+    node_id: int = 0,
+    node_count: int = 1,
+) -> dict[str, Any]:
+    """What the *functional* device alone does with this deployment and request.
+
+    This is the reference side of the agreement check: a plain
+    :class:`~runtime.sim.device.Device`, with no cycle-model instrumentation,
+    running the same program under the same symbol and policy binding.
+    """
+    device = Device(deployment, capability, root=root, verify=verify)
+    session = device.create_session()
+    counters = CounterSet()
+    policy = effective_generation_policy(device, request)
+    results: list[TransactionResult] = []
+    for _ in range(max(1, request.transactions)):
+        if session.finished:
+            break
+        result = device.run_transaction(
+            session,
+            entrypoint_id=request.entrypoint_id,
+            symbols=effective_symbols(request, node_id=node_id, node_count=node_count),
+            generation_policy_id=policy,
+        )
+        results.append(result)
+        for name, value in result.counters.items():
+            counters.add(name, value)
+        if result.status != CompletionStatus.SUCCESS:
+            break
+    last = results[-1] if results else None
+    return {
+        "counters": architectural_counters(counters.snapshot()),
+        "transactions": len(results),
+        "status": CompletionStatus(last.status).name if last else "NONE",
+        "trap_class": TrapClass(last.trap_class).name if last else "NONE",
+        "first_fault_instruction": last.first_fault_instruction if last else NO_ID,
+        "retired": sum(r.retired for r in results),
+        "fetched": sum(r.fetched for r in results),
+        "predicated_off": sum(r.predicated_off for r in results),
+        "produced_tokens": [t for r in results for t in r.produced_tokens],
+    }
+
+
 def functional_counters(
     deployment: Deployment,
     capability: Capability,
@@ -2462,27 +2508,13 @@ def functional_counters(
     node_id: int = 0,
     node_count: int = 1,
 ) -> dict[str, int]:
-    """Architectural counters produced by the *functional* device alone.
-
-    This is the reference side of the agreement test: a plain
-    :class:`~runtime.sim.device.Device`, with no cycle-model instrumentation,
-    running the same deployment and request.
-    """
-    device = Device(deployment, capability, root=root, verify=verify)
-    session = device.create_session()
-    counters = CounterSet()
-    policy = effective_generation_policy(device, request)
-    for _ in range(max(1, request.transactions)):
-        if session.finished:
-            break
-        result = device.run_transaction(
-            session,
-            entrypoint_id=request.entrypoint_id,
-            symbols=effective_symbols(request, node_id=node_id, node_count=node_count),
-            generation_policy_id=policy,
-        )
-        for name, value in result.counters.items():
-            counters.add(name, value)
-        if result.status != CompletionStatus.SUCCESS:
-            break
-    return architectural_counters(counters.snapshot())
+    """Architectural counters produced by the functional device alone."""
+    return functional_reference(
+        deployment,
+        capability,
+        request,
+        root=root,
+        verify=verify,
+        node_id=node_id,
+        node_count=node_count,
+    )["counters"]

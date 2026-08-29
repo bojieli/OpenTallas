@@ -277,6 +277,12 @@ class Device:
     def _loop_trip(self, loop: Descriptor, symbols: Mapping[int, int]) -> int:
         payload = loop.payload
         step = payload["step"]
+        if step == 0:
+            raise DeviceTrap(
+                f"loop {loop.descriptor_id} declares a zero step; a zero-step "
+                "loop has no finite trip count",
+                TrapClass.ILLEGAL_INSTRUCTION_OR_CONTROL_FLOW,
+            )
         if payload["bound_selector_kind"] == SelectorKind.CONSTANT:
             span = payload["upper_bound"] - payload["lower_bound"]
         else:
@@ -401,9 +407,22 @@ class Device:
                             )
                 family = Major(instruction.major)
                 if family is Major.CONTROL:
-                    pc, done = self._execute_control(
-                        instruction, pc, loops, loop_stack, symbols, counters
-                    )
+                    try:
+                        pc, done = self._execute_control(
+                            instruction, pc, loops, loop_stack, symbols, counters
+                        )
+                    except DeviceTrap as trap:
+                        # A trap raised below the control handler may not know
+                        # its own program counter; a completion that reports
+                        # NO_ID where a precise index exists is a worse
+                        # diagnostic than the fault itself.
+                        if trap.instruction == NO_ID:
+                            trap.instruction = pc
+                        raise
+                    if instruction.signal_event_id != NO_ID:
+                        # Nothing in the wire format exempts CONTROL from
+                        # publishing an event; the asymmetry was accidental.
+                        signalled.add(instruction.signal_event_id)
                     retired += 1
                     counters.add("instructions.retired")
                     if done:
@@ -412,7 +431,12 @@ class Device:
                     continue
                 # -- engine issue
                 counters.add("instructions.issued")
-                self._issue(ctx, instruction, family)
+                try:
+                    self._issue(ctx, instruction, family)
+                except DeviceTrap as trap:
+                    if trap.instruction == NO_ID:
+                        trap.instruction = pc
+                    raise
                 if instruction.signal_event_id != NO_ID:
                     signalled.add(instruction.signal_event_id)
                 retired += 1
@@ -625,11 +649,17 @@ class Device:
                     "state commit with a non-positive row count",
                     TrapClass.STATE_TRANSACTION,
                 )
-            if resource.cursor_rows + rows > resource.capacity_rows:
+            # Capacity must be checked against the *staged* total, not the
+            # committed cursor: several commits staged in one transaction can
+            # each pass individually and still overflow when they are applied.
+            staged = sum(
+                p.rows for p in pending if p.resource is resource
+            )
+            if resource.cursor_rows + staged + rows > resource.capacity_rows:
                 raise DeviceTrap(
                     f"state {resource.descriptor_id}: committing {rows} rows at "
-                    f"cursor {resource.cursor_rows} exceeds capacity "
-                    f"{resource.capacity_rows}",
+                    f"cursor {resource.cursor_rows} with {staged} already staged "
+                    f"exceeds capacity {resource.capacity_rows}",
                     TrapClass.CAPABILITY_OR_RESOURCE,
                 )
             pending.append(PendingCommit(resource, rows))

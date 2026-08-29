@@ -258,3 +258,68 @@ carries no shape, so the rule is: one E8M0 byte per `scale_block_elements`, laid
 out in the view's logical row-major order, addressed at
 `element_offset // scale_block_elements`. It requires last-axis stride 1 and
 `K % scale_block_elements == 0`; anything else fails closed.
+
+---
+
+## 13. Amendment A9 — neutral IR gaps found by lowering a second model
+
+Exporting DeepSeek-V4-Flash against the same schema Qwen uses found four
+things the neutral IR could not express. That is exactly what a second model is
+for: a schema validated against one model is a schema with unexamined
+assumptions. Three are resolved in the schema; one is deferred with a stated
+reason rather than half-built.
+
+**Predicated kernels (resolved).** `Kernel` gains `predicate`, naming an
+earlier kernel's boolean output. DeepSeek's compressor runs its
+pool/norm/rope/quantise/commit chain only at ratio boundaries, and the source
+graph carries that as a first-class guard. With no predicate field the guard
+could only travel as an attribute, leaving a backend to choose between always
+running the chain — wrong — and honouring an unenforced hint. ABI 3.0 already
+carries predicates on instructions and loop descriptors; the neutral IR was the
+only layer missing one. `check_neutral` now requires the named tensor to be a
+`bool` produced earlier.
+
+**Banked weights (resolved).** `CheckpointBinding` gains an ordered `segments`
+list. A layer's 256 routed experts are one operand to the model but are
+interleaved and lexicographically ordered across the shards, so no single byte
+range covers a bank. Without segments the operand had to travel as an attribute
+holding a list of tensor names, which is not an operand at all. Each segment
+carries its own digest, so verification stays incremental instead of requiring
+the assembled image — which matters when the bank is part of 156 GB. This is
+the same mechanism the backends already use to give a per-layer weight group a
+uniform stride.
+
+**Derived constants (resolved).** `Tensor` gains `generator`, and a `constant`
+may now carry a generator instead of a checkpoint binding. A rotary coefficient
+table, a causal window index table and a compressed-group enumeration are
+constants no checkpoint contains — they are computed from declared parameters.
+Requiring a binding for every constant made them undeclarable, which in turn
+left `VECTOR.ROPE`'s `in1` "coefficient rows" slot unfillable by either
+exporter.
+
+**Stochastic selection (deferred, with reason).** No neutral kind produces or
+consumes randomness, so only the greedy branch of the released `sample()` is
+expressible. This is deliberately left open: ADR-003 section 7 makes sampling an
+optional capability with an explicitly versioned RNG and probability contract,
+and says it is not required for initial greedy acceptance. `SELECTION.SAMPLE` is
+correspondingly unimplemented and fails closed. The gap is real and is recorded
+as **OI-4**: neither lane can honour a `do_sample: true` request until a
+governed sampling contract exists, and inventing an RNG to close it would make
+every future result irreproducible.
+
+## 14. Amendment A10 — two operand corrections from the DeepSeek lowering
+
+**`REDUCTION.EXPERT_SUM` weights are optional.** Section 6 reads
+(contributions, weights, optional base), but the released DeepSeek expert
+applies its routing weight *before* the down projection — `mxfp4_swiglu_bf16`
+takes `route_weight_binary32_codes` and `reduce_expert_outputs_bf16` takes
+none. A backend that re-applied weights at the reduction would square them.
+`input_view_1` is therefore optional, and an operator that omits it is
+declaring that the weight was already applied. The kernel's
+`routing_weight_application` attribute records which convention is in force.
+
+**`ROUTE.BIASED_TOPK`'s second output may be unused.** The `noaux_tc` gate
+selects on biased scores and re-gathers weights from the unbiased scores, so
+the biased scores themselves are dead in this model. The slot stays in the row
+because a model that selects and weights on the same scores needs it; an
+exporter that does not use it says so rather than silently dropping it.

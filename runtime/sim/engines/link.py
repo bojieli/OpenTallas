@@ -416,7 +416,7 @@ def _credit_stalls(ctx: EngineContext, payload: Mapping[str, int], extent: int) 
 # ---------------------------------------------------------------------------
 def _reduction_profile(
     ctx: EngineContext, payload: Mapping[str, int], extent: int
-) -> tuple[NumericProfile, np.dtype, int]:
+) -> tuple[NumericProfile, int]:
     """Decode the arithmetic contract of a collective and its element width."""
     profile_id = int(payload["reduction_numeric_id"])
     _require(
@@ -448,7 +448,7 @@ def _reduction_profile(
         f"byte extent {extent} is not a whole number of "
         f"{DType(profile.input_dtype).name} elements",
     )
-    return profile, np.dtype(np.uint8), itemsize
+    return profile, itemsize
 
 
 def _decode(payload: bytes, dtype: int) -> np.ndarray:
@@ -623,7 +623,7 @@ def multicast(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     payload = transfer.payload
     local = _object(ctx, int(payload["local_object_id"]), "local")
     remote = _remote(ctx, int(payload["remote_object_id"]))
-    root = _member_index(transfer.members, int(payload["source_node"]), "source")
+    _member_index(transfer.members, int(payload["source_node"]), "source")
     data = _fetch(ctx, local, int(payload["local_offset"]), transfer.extent)
     for index in range(transfer.count):
         _store(ctx, remote, transfer.slot(index), data)
@@ -632,7 +632,6 @@ def multicast(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     )
     _account_link(ctx, messages, moved)
     _credit_stalls(ctx, payload, transfer.extent)
-    assert 0 <= root < transfer.count
 
 
 @register(Major.LINK, Link.GATHER)
@@ -734,7 +733,7 @@ def collective(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
                 data = _fetch(ctx, remote, transfer.slot(index), extent)
                 _store(ctx, local, base + index * extent, data)
     else:
-        profile, _, itemsize = _reduction_profile(ctx, payload, extent)
+        profile, itemsize = _reduction_profile(ctx, payload, extent)
         slots = [
             _fetch(ctx, remote, transfer.slot(index), extent) for index in range(count)
         ]

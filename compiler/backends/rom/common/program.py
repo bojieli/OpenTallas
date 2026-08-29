@@ -170,19 +170,34 @@ class RomLoweringError(ValueError):
 # ---------------------------------------------------------------------------
 @dataclass(frozen=True, slots=True)
 class LayerRun:
-    """A maximal run of consecutive, structurally identical layers."""
+    """A span of layers a single loop body covers.
+
+    ``period`` is how many source layers one loop iteration executes.  A stack
+    of identical layers has ``period == 1``.  A stack that *alternates* -- as
+    DeepSeek-V4-Flash does, whose 43 layers run window, window, then compressed
+    sparse and compressed dense attention in alternation -- has ``period == 2``,
+    and the body holds both layers' kernels.  Without periodic detection an
+    alternating stack would compress to nothing: 41 runs of one layer each.
+    """
 
     index: int
     layers: tuple[int, ...]
-    body: tuple[tuple[Kernel, ...], ...]  # [position][layer]
+    period: int
+    groups: int
+    body: tuple[tuple[Kernel, ...], ...]  # [body position][group]
 
     @property
     def length(self) -> int:
-        return len(self.layers)
+        """Loop trip count: how many times the body executes."""
+        return self.groups
 
     @property
     def positions(self) -> int:
         return len(self.body)
+
+    @property
+    def layers_covered(self) -> int:
+        return len(self.layers)
 
 
 @dataclass(frozen=True, slots=True)
@@ -192,12 +207,12 @@ class GraphAnalysis:
     epilogue: tuple[Kernel, ...]
     producer: Mapping[str, Kernel]
     #: ``tensor_id -> (run index, body position, output slot)`` for tensors a
-    #: compressed body produces; every layer of the run shares one buffer.
+    #: compressed body produces; every group of the run shares one buffer.
     body_output: Mapping[str, tuple[int, int, int]]
     #: ``tensor_id -> (run index, body position, input slot)`` for every operand
     #: a compressed body reads, first occurrence wins.
     body_input: Mapping[str, tuple[int, int, int]]
-    #: ``(run, position, slot) -> the operand of that slot in each layer``.
+    #: ``(run, position, slot) -> the operand of that slot in each group``.
     body_operand: Mapping[tuple[int, int, int], tuple[str, ...]]
 
     @property
@@ -210,6 +225,19 @@ class GraphAnalysis:
 
 
 def _kernel_signature(kernel: Kernel, tensors: Mapping[str, Tensor]) -> tuple[Any, ...]:
+    """Structural identity of a kernel, including its weights' byte lengths.
+
+    Byte lengths belong in the signature because a loop-addressed ROM region
+    needs a constant stride: two layers that differ only in how large one
+    projection is cannot share a compressed body.
+    """
+
+    def weight_extent(name: str) -> int:
+        tensor = tensors[name]
+        if tensor.role not in WEIGHT_ROLES or tensor.binding is None:
+            return -1
+        return tensor.binding.bytes
+
     return (
         kernel.kind,
         kernel.numeric_contract,
@@ -217,14 +245,55 @@ def _kernel_signature(kernel: Kernel, tensors: Mapping[str, Tensor]) -> tuple[An
         tuple(tensors[name].role for name in kernel.outputs),
         tuple(tensors[name].dtype for name in kernel.inputs),
         tuple(tensors[name].dtype for name in kernel.outputs),
+        tuple(weight_extent(name) for name in kernel.inputs),
         len(kernel.state_reads),
         len(kernel.state_writes),
         kernel.phases,
     )
 
 
+#: Longest layer pattern the compressor will look for.
+MAX_LAYER_PERIOD = 8
+
+
+def _detect_spans(
+    signatures: Sequence[tuple[Any, ...]], max_period: int = MAX_LAYER_PERIOD
+) -> list[tuple[int, int, int]]:
+    """Split a layer signature sequence into ``(start, period, groups)`` spans.
+
+    Chosen greedily by how many layers a span eliminates from the program
+    (``(groups - 1) * period``), then by the smallest period, so a stack with no
+    repetition never gets folded into one pointless wide body.
+    """
+    spans: list[tuple[int, int, int]] = []
+    index = 0
+    total = len(signatures)
+    while index < total:
+        best = (0, 1, 1)  # (eliminated, period, groups) with period minimal
+        for period in range(1, min(max_period, total - index) + 1):
+            groups = 1
+            while True:
+                nxt = groups + 1
+                if index + nxt * period > total:
+                    break
+                base = index + (nxt - 1) * period
+                if any(
+                    signatures[base + offset] != signatures[index + offset]
+                    for offset in range(period)
+                ):
+                    break
+                groups = nxt
+            eliminated = (groups - 1) * period
+            if eliminated > best[0] or (eliminated == best[0] and period < best[1]):
+                best = (eliminated, period, groups)
+        _eliminated, period, groups = best
+        spans.append((index, period, groups))
+        index += period * groups
+    return spans
+
+
 def analyze(graph: KernelGraph) -> GraphAnalysis:
-    """Split ``graph`` into prologue, layer runs and epilogue."""
+    """Split ``graph`` into prologue, periodic layer runs and epilogue."""
     tensors = {tensor.tensor_id: tensor for tensor in graph.tensors}
     kernels = list(graph.kernels)
     layered = [i for i, k in enumerate(kernels) if k.layer is not None]
@@ -246,24 +315,22 @@ def analyze(graph: KernelGraph) -> GraphAnalysis:
     for kernel in kernels[first : last + 1]:
         by_layer.setdefault(int(kernel.layer), []).append(kernel)
     layer_numbers = sorted(by_layer)
+    if layer_numbers != list(range(layer_numbers[0], layer_numbers[-1] + 1)):
+        raise RomLoweringError(
+            "layer numbers are not consecutive; the compressor addresses a "
+            "layer by a loop induction variable and cannot skip one"
+        )
 
-    signatures = {
-        layer: tuple(_kernel_signature(k, tensors) for k in by_layer[layer])
+    signatures = [
+        tuple(_kernel_signature(k, tensors) for k in by_layer[layer])
         for layer in layer_numbers
-    }
-    runs: list[LayerRun] = []
-    current: list[int] = []
-    for layer in layer_numbers:
-        if current and (
-            layer == current[-1] + 1 and signatures[layer] == signatures[current[-1]]
-        ):
-            current.append(layer)
-            continue
-        if current:
-            runs.append(_make_run(len(runs), current, by_layer))
-        current = [layer]
-    if current:
-        runs.append(_make_run(len(runs), current, by_layer))
+    ]
+    runs = [
+        _make_run(index, layer_numbers[start : start + period * groups], period, by_layer)
+        for index, (start, period, groups) in enumerate(
+            _detect_spans(signatures)
+        )
+    ]
 
     producer: dict[str, Kernel] = {}
     for kernel in kernels:
@@ -275,14 +342,12 @@ def analyze(graph: KernelGraph) -> GraphAnalysis:
     body_operand: dict[tuple[int, int, int], tuple[str, ...]] = {}
     for run in runs:
         for position, column in enumerate(run.body):
-            width_in = len(column[0].inputs)
-            width_out = len(column[0].outputs)
-            for slot in range(width_in):
+            for slot in range(len(column[0].inputs)):
                 names = tuple(k.inputs[slot] for k in column)
                 body_operand[(run.index, position, slot)] = names
                 for name in names:
                     body_input.setdefault(name, (run.index, position, slot))
-            for slot in range(width_out):
+            for slot in range(len(column[0].outputs)):
                 for kernel in column:
                     body_output[kernel.outputs[slot]] = (run.index, position, slot)
     return GraphAnalysis(
@@ -297,13 +362,34 @@ def analyze(graph: KernelGraph) -> GraphAnalysis:
 
 
 def _make_run(
-    index: int, layers: Sequence[int], by_layer: Mapping[int, Sequence[Kernel]]
+    index: int,
+    layers: Sequence[int],
+    period: int,
+    by_layer: Mapping[int, Sequence[Kernel]],
 ) -> LayerRun:
-    width = len(by_layer[layers[0]])
-    body: list[tuple[Kernel, ...]] = []
-    for position in range(width):
-        body.append(tuple(by_layer[layer][position] for layer in layers))
-    return LayerRun(index=index, layers=tuple(layers), body=tuple(body))
+    groups = len(layers) // period
+    columns: list[list[Kernel]] = []
+    for group in range(groups):
+        flattened: list[Kernel] = []
+        for offset in range(period):
+            flattened.extend(by_layer[layers[group * period + offset]])
+        columns.append(flattened)
+    width = len(columns[0])
+    if any(len(column) != width for column in columns):
+        raise RomLoweringError(
+            f"layer run {index} has groups of different kernel counts"
+        )
+    body = tuple(
+        tuple(columns[group][position] for group in range(groups))
+        for position in range(width)
+    )
+    return LayerRun(
+        index=index,
+        layers=tuple(layers),
+        period=period,
+        groups=groups,
+        body=body,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -397,6 +483,8 @@ class RomLowering:
         )
         self.plan: RomImagePlan | None = None
         self._region_of_tensor: dict[str, tuple[str, int]] = {}
+        self._scale_of_region: dict[str, tuple[str, int]] = {}
+        self._expert_bank: dict[str, tuple[int, tuple[int, ...]]] = {}
         self._buffer_object: dict[str, int] = {}
         self._buffer_place: dict[str, BufferPlacement] = {}
         self._buffer_root: dict[str, str] = {}
@@ -450,92 +538,145 @@ class RomLowering:
 
     # -- region planning -------------------------------------------------
     def plan_regions(self) -> RomImagePlan:
-        """Derive the ROM region requests structurally and lay them out."""
+        """Derive the ROM region requests structurally and lay them out.
+
+        Region identity is ``(layer run, body position, operand slot)``, never a
+        tensor name, so any conforming front end gets the same partition.  Three
+        kinds of payload are placed:
+
+        * a direct weight operand of a kernel;
+        * its block-scale tensor, named by ``Tensor.scale_tensor_id`` -- a scale
+          is immutable model content and belongs in ROM beside the weight it
+          scales; and
+        * a routed **expert bank**, named by a kernel's
+          ``expert_weight_tensors`` attribute.  One slot of that region is one
+          layer's whole bank in ascending logical expert order, which is what
+          lets one ROUTED_MATMUL descriptor address any runtime-selected expert
+          and what lets expert dispatch enable only the tiles that hold them.
+        """
         requests: list[RegionRequest] = []
         placed: set[str] = set()
 
-        def coordinate(key: str, role: str, index: int, size: int) -> RomCoordinate:
+        def coordinate(key: str, role: str, size: int) -> RomCoordinate:
             if self.policy.place_region is None:
                 return RomCoordinate()
-            return self.policy.place_region(key, role, index, size)
+            return self.policy.place_region(key, role, len(requests), size)
 
-        # Prologue and epilogue weights: one slot each.
+        def entry(tensor: Tensor) -> tuple[str, int, str, int, str]:
+            member = self._member(tensor, 0, 0)
+            return (
+                member.tensor_id,
+                member.bytes,
+                member.source_path,
+                member.source_offset,
+                member.source_sha256,
+            )
+
+        def emit(
+            key: str,
+            role: str,
+            dtype: str,
+            slots: list[list[tuple[str, int, str, int, str]]],
+            elements: int,
+        ) -> None:
+            names = [entry_[0] for slot in slots for entry_ in slot]
+            if any(name in placed for name in names):
+                if all(name in placed for name in names):
+                    return
+                raise RomLoweringError(
+                    f"ROM region {key!r} mixes already-placed and unplaced weights"
+                )
+            placed.update(names)
+            size = sum(entry_[1] for slot in slots for entry_ in slot)
+            requests.append(
+                RegionRequest.striped(
+                    key,
+                    role,
+                    dtype,
+                    slots,
+                    elements,
+                    coordinate(key, role, size),
+                )
+            )
+            for slot_index, slot in enumerate(slots):
+                for entry_ in slot:
+                    self._region_of_tensor[entry_[0]] = (key, slot_index)
+
+        def place_operand(
+            key: str, role: str, columns: Sequence[Sequence[Tensor]]
+        ) -> None:
+            """Place one operand across a run's groups, plus its scale."""
+            head = columns[0][0]
+            emit(
+                key,
+                role,
+                head.dtype,
+                [[entry(t) for t in column] for column in columns],
+                sum(self._elements(t) for t in columns[0]),
+            )
+            scales = [
+                [self.tensors[t.scale_tensor_id] for t in column]
+                for column in columns
+                if all(t.scale_tensor_id for t in column)
+            ]
+            if len(scales) != len(columns) or not scales:
+                return
+            emit(
+                f"{key}.scale",
+                f"{role}_scale",
+                scales[0][0].dtype,
+                [[entry(t) for t in column] for column in scales],
+                sum(self._elements(t) for t in scales[0]),
+            )
+            self._scale_of_region[key] = (
+                f"{key}.scale",
+                int(head.scale_block_elements or 0),
+            )
+
+        def expert_bank(key: str, columns: Sequence[Sequence[Kernel]]) -> None:
+            """Place one routed expert bank per group of a compressed run."""
+            names = [
+                list(kernel.attributes["expert_weight_tensors"]) for kernel in columns
+            ]
+            head = self.tensors[names[0][0]]
+            place_operand(
+                key,
+                "expert_bank",
+                [[self.tensors[n] for n in group] for group in names],
+            )
+            self._expert_bank[key] = (len(names[0]), self._dims(head))
+
+        # -- prologue and epilogue weights: one slot each -----------------
         for kernel in (*self.analysis.prologue, *self.analysis.epilogue):
             for slot, name in enumerate(kernel.inputs):
                 tensor = self.tensors[name]
                 if tensor.role not in WEIGHT_ROLES or name in placed:
                     continue
-                placed.add(name)
-                key = f"rom.global.k{kernel.index:05d}.s{slot}"
-                member = self._member(tensor, 0, 0)
-                requests.append(
-                    RegionRequest(
-                        key=key,
-                        role="global_weight",
-                        dtype=tensor.dtype,
-                        slots=(member,),
-                        element_count_per_slot=self._elements(tensor),
-                        coordinate_hint=coordinate(
-                            key, "global_weight", len(requests), member.bytes
-                        ),
-                    )
+                place_operand(
+                    f"rom.global.k{kernel.index:05d}.s{slot}",
+                    "global_weight",
+                    [[tensor]],
                 )
-                self._region_of_tensor[name] = (key, 0)
+            if "expert_weight_tensors" in kernel.attributes:
+                expert_bank(f"rom.global.k{kernel.index:05d}.experts", [kernel])
 
-        # Layer-run weights: one region per (run, body position, operand slot),
-        # striped by layer so one dynamic term reaches every layer.
+        # -- layer-run weights: one region per (run, position, slot) ------
         for run in self.analysis.runs:
             for position, column in enumerate(run.body):
                 head = column[0]
                 for slot, name in enumerate(head.inputs):
                     if self.tensors[name].role not in WEIGHT_ROLES:
                         continue
-                    names = [k.inputs[slot] for k in column]
-                    if any(n in placed for n in names):
-                        if all(n in placed for n in names):
-                            continue
-                        raise RomLoweringError(
-                            f"run {run.index} position {position} slot {slot} mixes "
-                            "already-placed and unplaced weights"
-                        )
-                    placed.update(names)
-                    key = f"rom.r{run.index}.p{position:03d}.s{slot}"
-                    members = tuple(
-                        self._member(self.tensors[n], i, 0) for i, n in enumerate(names)
+                    columns = [[self.tensors[k.inputs[slot]]] for k in column]
+                    place_operand(
+                        f"rom.r{run.index}.p{position:03d}.s{slot}",
+                        "layer_weight",
+                        columns,
                     )
-                    slot_bytes = members[0].bytes
-                    members = tuple(
-                        RomMember(
-                            tensor_id=m.tensor_id,
-                            slot=i,
-                            offset_bytes=i * slot_bytes,
-                            bytes=m.bytes,
-                            source_path=m.source_path,
-                            source_offset=m.source_offset,
-                            source_sha256=m.source_sha256,
-                            dtype=m.dtype,
-                        )
-                        for i, m in enumerate(members)
+                if "expert_weight_tensors" in head.attributes:
+                    expert_bank(
+                        f"rom.r{run.index}.p{position:03d}.experts", list(column)
                     )
-                    requests.append(
-                        RegionRequest(
-                            key=key,
-                            role="layer_weight",
-                            dtype=self.tensors[names[0]].dtype,
-                            slots=members,
-                            element_count_per_slot=self._elements(
-                                self.tensors[names[0]]
-                            ),
-                            coordinate_hint=coordinate(
-                                key,
-                                "layer_weight",
-                                len(requests),
-                                slot_bytes * len(members),
-                            ),
-                        )
-                    )
-                    for index, n in enumerate(names):
-                        self._region_of_tensor[n] = (key, index)
 
         unplaced = sorted(
             t.tensor_id
@@ -1136,10 +1277,15 @@ class RomLowering:
         prepared = self.builder.lookup(f"obj.{group_key}")
         dtype = self._dtype(tensor.dtype)
         bits = DTYPE_BITS[dtype]
-        stride = slot_bytes * 8 // bits
-        element_offset = slot * stride + self._state_tensor_offset[tensor_id] * 8 // bits
+        slot_elements = slot_bytes * 8 // bits
+        element_offset = (
+            slot * slot_elements + self._state_tensor_offset[tensor_id] * 8 // bits
+        )
         dynamic: list[DynamicTerm] = []
-        loop = self._loop_for_state_slot(tensor_id)
+        loop, period = self._loop_for_state_slot(tensor_id)
+        # One loop iteration advances by a whole period of layers, so the state
+        # stride is the period's worth of slots, not one slot.
+        stride = slot_elements * period
         if loop is not None:
             if stride > 0xFFFFFFFF:
                 raise RomLoweringError(
@@ -1158,16 +1304,15 @@ class RomLowering:
             label="view.state",
         )
 
-    def _loop_for_state_slot(self, tensor_id: str) -> int | None:
-        placement = self.analysis.body_output.get(tensor_id)
+    def _loop_for_state_slot(self, tensor_id: str) -> tuple[int | None, int]:
+        """The loop that indexes this state operand, and its layer period."""
+        placement = self.analysis.body_output.get(
+            tensor_id
+        ) or self.analysis.body_input.get(tensor_id)
         if placement is not None:
-            return self._loop_of_run.get(placement[0])
-        for run in self.analysis.runs:
-            for column in run.body:
-                for kernel in column:
-                    if tensor_id in kernel.inputs or tensor_id in kernel.outputs:
-                        return self._loop_of_run.get(run.index)
-        return None
+            run = self.analysis.runs[placement[0]]
+            return self._loop_of_run.get(run.index), run.period
+        return None, 1
 
     # -- operand views ---------------------------------------------------
     def _operand_view(
@@ -1582,7 +1727,9 @@ class RomLowering:
                 {
                     "body_positions": run.positions,
                     "first_layer": run.layers[0],
-                    "layer_count": run.length,
+                    "layers_covered": run.layers_covered,
+                    "loop_trip": run.groups,
+                    "period": run.period,
                     "run": run.index,
                 }
                 for run in self.analysis.runs

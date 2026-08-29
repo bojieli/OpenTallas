@@ -176,15 +176,14 @@ def _extent_dict(value: Extent) -> Any:
 
 
 @dataclass(frozen=True, slots=True)
-class CheckpointBinding:
-    """Where a weight's payload lives in the locked checkpoint."""
+class BindingSegment:
+    """One authenticated byte range contributing to a segmented binding."""
 
     source_name: str
     path: str
     offset: int
     bytes: int
     sha256: str
-    transform: str = "identity"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -193,8 +192,59 @@ class CheckpointBinding:
             "offset": self.offset,
             "bytes": self.bytes,
             "sha256": self.sha256,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class CheckpointBinding:
+    """Where a weight's payload lives in the locked checkpoint.
+
+    A binding is usually one contiguous range. ``segments`` covers the case a
+    single range cannot express: a *bank* of weights that the model addresses
+    as one operand but the checkpoint stores apart. DeepSeek's 256 routed
+    experts per layer are the motivating case -- they are interleaved and
+    lexicographically ordered in the shards, so no single range covers a bank,
+    and without this the operand would have to travel as an attribute holding a
+    list of tensor names, which is not an operand at all.
+
+    When ``segments`` is present the payload is their ordered concatenation,
+    ``bytes`` is the total, and each segment carries its own digest so
+    verification stays incremental rather than requiring the assembled image.
+    """
+
+    source_name: str
+    path: str
+    offset: int
+    bytes: int
+    sha256: str
+    transform: str = "identity"
+    segments: tuple[BindingSegment, ...] = ()
+
+    def __post_init__(self) -> None:
+        if self.segments:
+            total = sum(segment.bytes for segment in self.segments)
+            if total != self.bytes:
+                raise IRError(
+                    f"binding {self.source_name}: segments cover {total} bytes, "
+                    f"the binding declares {self.bytes}"
+                )
+
+    @property
+    def is_segmented(self) -> bool:
+        return bool(self.segments)
+
+    def to_dict(self) -> dict[str, Any]:
+        body: dict[str, Any] = {
+            "source_name": self.source_name,
+            "path": self.path,
+            "offset": self.offset,
+            "bytes": self.bytes,
+            "sha256": self.sha256,
             "transform": self.transform,
         }
+        if self.segments:
+            body["segments"] = [segment.to_dict() for segment in self.segments]
+        return body
 
 
 @dataclass(frozen=True, slots=True)
@@ -208,6 +258,16 @@ class Tensor:
     binding: CheckpointBinding | None = None
     scale_tensor_id: str | None = None
     scale_block_elements: int = 0
+    generator: str = ""
+    """Names a deterministic generator for a *derived* constant.
+
+    A rotary coefficient table, a causal window index table and a compressed
+    group enumeration are all constants that no checkpoint contains: they are
+    computed from declared parameters. Requiring a checkpoint binding for every
+    constant made them impossible to declare at all, so they had to travel as
+    attributes -- which meant the operand slot the conventions document gives
+    them (``VECTOR.ROPE`` in1, "coefficient rows") could not be filled.
+    """
 
     def to_dict(self) -> dict[str, Any]:
         body: dict[str, Any] = {
@@ -216,6 +276,8 @@ class Tensor:
             "shape": [_extent_dict(d) for d in self.shape],
             "role": self.role,
         }
+        if self.generator:
+            body["generator"] = self.generator
         if self.binding is not None:
             body["binding"] = self.binding.to_dict()
         if self.scale_tensor_id is not None:
@@ -264,6 +326,17 @@ class Kernel:
     counter_class: str = ""
     source_operation_id: str = ""
     layer: int | None = None
+    predicate: str = ""
+    """Names an earlier kernel's boolean output that guards this kernel.
+
+    DeepSeek's compressor runs its pool/norm/rope/quantise/commit chain only at
+    ratio boundaries, and the source graph carries that as a first-class guard.
+    With no predicate field the guard could only travel as an attribute, which
+    a backend is under no obligation to honour -- so the choice was between
+    always running the chain, which is wrong, and trusting an unenforced hint.
+    ABI 3.0 already carries predicates on its instructions and loop
+    descriptors; the neutral IR was the only layer missing one.
+    """
 
     def to_dict(self) -> dict[str, Any]:
         body: dict[str, Any] = {
@@ -283,6 +356,8 @@ class Kernel:
             "counter_class": self.counter_class,
             "source_operation_id": self.source_operation_id,
         }
+        if self.predicate:
+            body["predicate"] = self.predicate
         if self.layer is not None:
             body["layer"] = self.layer
         return body
@@ -473,9 +548,25 @@ def _tensor_from(body: Mapping[str, Any]) -> Tensor:
         dtype=body["dtype"],
         shape=tuple(_extent_from(d) for d in body["shape"]),
         role=body["role"],
-        binding=CheckpointBinding(**binding) if binding else None,
+        binding=_binding_from(binding) if binding else None,
         scale_tensor_id=body.get("scale_tensor_id"),
         scale_block_elements=int(body.get("scale_block_elements", 0)),
+        generator=body.get("generator", ""),
+    )
+
+
+def _binding_from(body: Mapping[str, Any]) -> CheckpointBinding:
+    segments = tuple(
+        BindingSegment(**segment) for segment in body.get("segments", ())
+    )
+    return CheckpointBinding(
+        source_name=body["source_name"],
+        path=body["path"],
+        offset=int(body["offset"]),
+        bytes=int(body["bytes"]),
+        sha256=body["sha256"],
+        transform=body.get("transform", "identity"),
+        segments=segments,
     )
 
 
@@ -508,6 +599,7 @@ def _kernel_from(body: Mapping[str, Any]) -> Kernel:
         counter_class=body.get("counter_class", ""),
         source_operation_id=body.get("source_operation_id", ""),
         layer=body.get("layer"),
+        predicate=body.get("predicate", ""),
     )
 
 
@@ -526,9 +618,18 @@ def check_neutral(graph: KernelGraph) -> list[str]:
             errors.append(f"tensor {tensor.tensor_id}: unknown dtype {tensor.dtype!r}")
         if tensor.role not in ROLES:
             errors.append(f"tensor {tensor.tensor_id}: unknown role {tensor.role!r}")
-        if tensor.role in {"weight", "constant"} and tensor.binding is None:
+        if tensor.role == "weight" and tensor.binding is None:
             errors.append(
-                f"tensor {tensor.tensor_id}: {tensor.role} without a checkpoint binding"
+                f"tensor {tensor.tensor_id}: weight without a checkpoint binding"
+            )
+        if (
+            tensor.role == "constant"
+            and tensor.binding is None
+            and not tensor.generator
+        ):
+            errors.append(
+                f"tensor {tensor.tensor_id}: constant has neither a checkpoint "
+                "binding nor a declared generator"
             )
         errors.extend(_scan_term(tensor.tensor_id, f"tensor {tensor.tensor_id}"))
 
@@ -559,6 +660,19 @@ def check_neutral(graph: KernelGraph) -> list[str]:
                 errors.append(f"{where}: unknown state resource {name!r}")
         if not kernel.numeric_contract:
             errors.append(f"{where}: no numeric contract named")
+        if kernel.predicate:
+            if kernel.predicate not in produced:
+                errors.append(
+                    f"{where}: predicate {kernel.predicate!r} is not produced by "
+                    "an earlier kernel"
+                )
+            elif seen_tensor.get(kernel.predicate) is not None and (
+                seen_tensor[kernel.predicate].dtype != "bool"
+            ):
+                errors.append(
+                    f"{where}: predicate {kernel.predicate!r} is "
+                    f"{seen_tensor[kernel.predicate].dtype}, not bool"
+                )
         errors.extend(_scan_term(kernel.kernel_id, where))
         errors.extend(_scan_term(kernel.kind, where))
         for key in kernel.attributes:

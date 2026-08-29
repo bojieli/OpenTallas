@@ -17,7 +17,11 @@ Three modules:
     contract: the 32-node inter-node fabric and the on-wafer fabric.
 ``model``
     the event-driven core: microsequencer issue, bounded engine queues, engine
-    occupancy, memory hierarchy and the event/wait scoreboard.
+    occupancy, memory hierarchy and the event/wait scoreboard -- and the
+    schedule-driven tile decomposition.  The program loops over layers, token
+    blocks, experts and vocabulary partitions only; one engine instruction names
+    a whole contraction and the SCHEDULE descriptor carries its tile shape, so
+    this model is the only place tiling becomes time.
 """
 
 from __future__ import annotations
@@ -37,9 +41,17 @@ from runtime.cycle.fabric import (
 )
 from runtime.cycle.model import (
     CycleModel,
+    CycleRequest,
     CycleResult,
     CYCLE_RESULT_SCHEMA,
+    ScheduleError,
+    TileMapping,
     architectural_counters,
+    functional_counters,
+    functional_reference,
+    operand_extents,
+    prove_acyclic_waits,
+    tile_mapping,
     timing_counters,
 )
 
@@ -48,14 +60,22 @@ __all__ = [
     "ClusterFabric",
     "CostTable",
     "CycleModel",
+    "CycleRequest",
     "CycleResult",
     "FabricTiming",
     "MachineModel",
     "Provenance",
     "ResolvedParameter",
+    "ScheduleError",
+    "TileMapping",
     "WaferFabric",
     "architectural_counters",
     "build_fabric",
+    "functional_counters",
+    "functional_reference",
     "load_cost_table",
+    "operand_extents",
+    "prove_acyclic_waits",
+    "tile_mapping",
     "timing_counters",
 ]

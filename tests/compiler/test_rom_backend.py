@@ -534,18 +534,20 @@ def deepseek_shaped_graph(
     moe_layers: int = 3,
     hidden: int = 64,
     span_max: int = 16,
+    sequence: tuple[str, ...] | None = None,
 ) -> KernelGraph:
     """An MoE DeepSeek-shaped block: two layer classes, routed experts, sparse
     attention, FP8 dense weights and MXFP4 expert weights with E8M0 scales."""
     kv_width, experts, expert_width, vocabulary = 32, 8, 96, 32
+    if sequence is None:
+        sequence = ("dense",) * dense_layers + ("moe",) * moe_layers
+    tag = "".join(kind[0] for kind in sequence)
     builder = _GraphBuilder(
-        root
-        / f"deepseek-checkpoint-d{dense_layers}-m{moe_layers}-h{hidden}.bin",
-        seed=97,
+        root / f"deepseek-checkpoint-{tag}-h{hidden}.bin", seed=97
     )
     span = Symbolic("span_tokens", 1, span_max)
     context = Symbolic("context_tokens", 1, span_max)
-    layers = dense_layers + moe_layers
+    layers = len(sequence)
 
     token_ids = builder.value("input.token_ids", "i64", (span,), "input")
     positions = builder.value("input.positions", "i32", (span,), "input")
@@ -571,7 +573,7 @@ def deepseek_shaped_graph(
     )
 
     for layer in range(layers):
-        moe = layer >= dense_layers
+        moe = sequence[layer] == "moe"
         base = f"model.layers.{layer}"
         prefix = f"decoder.{layer}"
         state_id = states[layer].state_id
@@ -1928,3 +1930,89 @@ def test_lowering_table_is_complete():
     from compiler.ir.v3.lowering import check_table_complete
 
     assert check_table_complete() == []
+
+
+# ---------------------------------------------------------------------------
+# Periodic layer stacks
+# ---------------------------------------------------------------------------
+def test_detect_spans_folds_an_alternating_stack():
+    from compiler.backends.rom.common.program import _detect_spans
+
+    published = json.loads(
+        Path("configs/models/deepseek-v4-flash-0731.json").read_text()
+    )["metadata"]["attention_sequence"]
+    assert len(published) == 43
+    spans = _detect_spans([(kind,) for kind in published])
+    # window, window then a period-2 alternation, not 41 single-layer runs.
+    assert len(spans) <= 3
+    assert sum(period * groups for _start, period, groups in spans) == 43
+    assert max(groups for _s, _p, groups in spans) >= 20
+    # The compressed program emits at most this many source layers' bodies.
+    emitted = sum(period for _start, period, _groups in spans)
+    assert emitted <= 6
+
+
+def test_alternating_layers_compress_into_one_periodic_loop(tmp_path):
+    sequence = ("dense", "dense") + ("moe", "dense") * 4
+    graph = deepseek_shaped_graph(tmp_path, sequence=sequence)
+    analysis = analyze(graph)
+    assert sum(run.layers_covered for run in analysis.runs) == len(sequence)
+    periodic = [run for run in analysis.runs if run.period > 1]
+    assert periodic, "an alternating stack must fold into a periodic run"
+    assert max(run.groups for run in periodic) >= 4
+    capability = deepseek_v4_rom_capability(
+        max_context_positions=16,
+        vocabulary_size=32,
+        expert_count=8,
+        experts_per_token=2,
+        tile_rom_bytes=1 << 16,
+        tiles_per_reticle=8,
+    )
+    deployment, plan = build_deepseek_v4_rom_deployment(
+        graph, capability=capability, tile_rom_bytes=1 << 16, tiles_per_reticle=8
+    )
+    require_admitted(deployment, capability)
+    assert check_rom_inverse(deployment, reader=_reader(tmp_path))["status"] == "pass"
+    # Each ROM region striped by a periodic run has one slot per loop iteration.
+    trips = {run.index: run.groups for run in analysis.runs}
+    for region in plan.regions:
+        if not region.key.startswith("rom.r"):
+            continue
+        run_index = int(region.key.split(".")[1][1:])
+        assert region.slot_count == trips[run_index]
+
+
+def test_non_uniform_weight_sizes_split_a_run(tmp_path):
+    """Two layers whose projections differ in size cannot share a body."""
+    from compiler.backends.rom.common.program import _kernel_signature
+
+    graph = qwen_shaped_graph(tmp_path, layers=3)
+    tensors = {t.tensor_id: t for t in graph.tensors}
+    victim = tensors["model.layers.1.self_attn.q_proj.weight"]
+    assert victim.binding is not None
+    shrunk = Tensor(
+        tensor_id=victim.tensor_id,
+        dtype=victim.dtype,
+        shape=victim.shape,
+        role=victim.role,
+        binding=CheckpointBinding(
+            source_name=victim.binding.source_name,
+            path=victim.binding.path,
+            offset=victim.binding.offset,
+            bytes=victim.binding.bytes // 2,
+            sha256=victim.binding.sha256,
+        ),
+    )
+    graph.tensors = tuple(
+        shrunk if t.tensor_id == victim.tensor_id else t for t in graph.tensors
+    )
+    tensors[victim.tensor_id] = shrunk
+    kernel = [k for k in graph.kernels if victim.tensor_id in k.inputs][0]
+    other = [
+        k
+        for k in graph.kernels
+        if "model.layers.0.self_attn.q_proj.weight" in k.inputs
+    ][0]
+    assert _kernel_signature(kernel, tensors) != _kernel_signature(other, tensors)
+    analysis = analyze(graph)
+    assert len(analysis.runs) > 1

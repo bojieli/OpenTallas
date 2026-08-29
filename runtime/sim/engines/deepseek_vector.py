@@ -117,7 +117,7 @@ being reinterpreted.
 
 from __future__ import annotations
 
-from typing import Callable, Sequence
+from typing import Callable
 
 import numpy as np
 
@@ -130,7 +130,7 @@ from runtime.abi3.constants import (
     TrapClass,
     Vector,
 )
-from runtime.abi3.descriptors import Descriptor, Symbol
+from runtime.abi3.descriptors import Descriptor
 from runtime.reference.compression_pool import (
     F32_NEGATIVE_INFINITY,
     PINNED_COMPRESSION_RATIOS,

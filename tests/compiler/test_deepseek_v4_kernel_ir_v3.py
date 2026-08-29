@@ -35,8 +35,14 @@ from compiler.ir.v3.kernel_ir import (
     check_neutral,
 )
 from compiler.ir.v3.lowering import KERNEL_TO_ENGINE
+from compiler.ir.v3.numeric import (
+    CONTRACT_PATTERN,
+    canonical_contract_id,
+    is_implementation_path,
+)
 from compiler.frontends.v3.deepseek_v4 import (
     ARCHITECTURAL_MAX_CONTEXT,
+    CONTRACT_BASE_BY_SOURCE_KIND,
     DEFAULT_CHECKPOINT_LOCK,
     DEFAULT_CONTEXT_TOKENS,
     DEFAULT_SNAPSHOT,
@@ -446,15 +452,47 @@ def test_emitted_kinds_follow_the_declared_lowering_plan(graph, contract):
         assert kinds <= set(LOWERING_PLAN[source_kind]), source_kind
 
 
-def test_numeric_contracts_name_a_qualified_reference(graph, contract):
+def test_numeric_contracts_are_canonical_semantic_identifiers(graph, contract):
+    """ADR-003 section 15: the neutral IR must not name an implementation."""
+
     node_kind = {node["id"]: node["kind"] for node in contract["nodes"]}
-    owners = {
-        kind: OPERATOR_CATALOG[kind].to_dict()["reference_owner"]
-        for kind in OPERATOR_CATALOG
-    }
     for kernel in graph.kernels:
-        owner = owners[node_kind[kernel.source_operation_id]]
-        assert kernel.numeric_contract.split("#")[0] == owner
+        name = kernel.numeric_contract
+        assert CONTRACT_PATTERN.match(name), name
+        assert not is_implementation_path(name), name
+        assert canonical_contract_id(name) == name
+        base = CONTRACT_BASE_BY_SOURCE_KIND[node_kind[kernel.source_operation_id]]
+        assert name.startswith(f"{base}_"), (name, base)
+
+
+def test_the_frozen_contract_table_is_complete_and_distinct():
+    assert set(CONTRACT_BASE_BY_SOURCE_KIND) == set(OPERATOR_CATALOG)
+    bases = list(CONTRACT_BASE_BY_SOURCE_KIND.values())
+    assert len(set(bases)) == len(bases)
+    for base in bases:
+        assert CONTRACT_PATTERN.match(f"{base}_v1"), base
+        assert not is_implementation_path(base), base
+
+
+def test_one_source_kind_maps_to_one_contract_family(graph, contract):
+    node_kind = {node["id"]: node["kind"] for node in contract["nodes"]}
+    families: dict[str, set[str]] = {}
+    for kernel in graph.kernels:
+        families.setdefault(
+            node_kind[kernel.source_operation_id], set()
+        ).add(kernel.numeric_contract)
+    # a one-to-one lowering names exactly one contract
+    assert families["RMS_NORM"] == {"normalization_rms_norm_bf16_v1"}
+    assert families["SPARSE_ATTENTION"] == {"sparse_attention_bf16_v1"}
+    # a multi-kernel lowering qualifies each sub-operation distinctly
+    assert families["MXFP4_SWIGLU"] == {
+        "mxfp4_swiglu_bf16_activation_quantize_v1",
+        "mxfp4_swiglu_bf16_gate_contraction_v1",
+        "mxfp4_swiglu_bf16_up_contraction_v1",
+        "mxfp4_swiglu_bf16_clamped_silu_product_v1",
+        "mxfp4_swiglu_bf16_routing_weight_product_v1",
+        "mxfp4_swiglu_bf16_down_contraction_v1",
+    }
 
 
 def test_layer_coverage_and_per_layer_census(graph):

@@ -260,24 +260,20 @@ class DeploymentBuilder:
     def _reduction_order(
         contract: str, requested: ReductionOrder | None
     ) -> ReductionOrder:
-        """The reduction order a numeric descriptor must declare.
+        """The reduction order a numeric descriptor declares.
 
-        A named contract fixes its own association, so an unstated order is
-        taken from the contract rather than defaulted, and a stated order that
-        contradicts the contract is refused instead of being encoded.
+        An *unstated* order is taken from the contract, which is the authority
+        on how its own accumulation associates.  A stated order is encoded as
+        given: the builder is an encoder, and a descriptor that contradicts its
+        contract is rejected where compliance is checked -- by the engine, at
+        execution -- rather than being silently corrected here.
         """
+        if requested is not None:
+            return ReductionOrder(int(requested))
         fixed = NUMERIC_CONTRACT_REDUCTION_ORDER.get(contract)
-        if requested is None:
-            if fixed is not None:
-                return fixed
-            return ReductionOrder.SEQUENTIAL_ASCENDING
-        if fixed is not None and int(requested) != int(fixed):
-            raise BuildError(
-                f"numeric contract {contract!r} accumulates under "
-                f"{ReductionOrder(fixed).name}, but the descriptor declares "
-                f"{ReductionOrder(int(requested)).name}"
-            )
-        return ReductionOrder(int(requested))
+        if fixed is not None:
+            return fixed
+        return ReductionOrder.SEQUENTIAL_ASCENDING
 
     def numeric(
         self,
@@ -909,6 +905,9 @@ class DeploymentBuilder:
         for instruction in self.instructions:
             if instruction.major == Major.CONTROL:
                 if instruction.sub == Control.LOOP_SETUP:
+                    # Counted at the enclosing multiplier, before the loop it
+                    # opens starts multiplying -- must match the verifier.
+                    work += multiplier
                     trip = 1
                     if 0 <= instruction.control_id < len(self.table):
                         descriptor = self.table[instruction.control_id]

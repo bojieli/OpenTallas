@@ -316,6 +316,12 @@ class Verifier:
                             f"instruction {index}: loop body_start "
                             f"{payload['body_start']} must be {index + 1}"
                         )
+                    # The LOOP_SETUP instruction itself retires once, at the
+                    # enclosing multiplier -- before the loop it opens starts
+                    # multiplying. Counting it after the multiplier update, or
+                    # not at all, under-counts the bound and lets the device's
+                    # own watchdog fire on a program the verifier admitted.
+                    work += multiplier
                     stack.append((instruction.control_id, index, trip))
                     multiplier *= max(trip, 1)
                     max_depth = max(max_depth, len(stack))

@@ -42,7 +42,13 @@ from runtime.abi3.constants import (
 )
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.deployment import Deployment, ObjectSource
-from runtime.abi3.descriptors import CollectiveOp, Phase, SelectionMode, Symbol
+from runtime.abi3.descriptors import (
+    CollectiveOp,
+    ExtendedDescriptorType,
+    Phase,
+    SelectionMode,
+    Symbol,
+)
 from runtime.abi3.fixture import build_fixture, fixture_capability
 from runtime.abi3.verifier import verify_deployment
 from runtime.sim.counters import COUNTERS, NAME_TO_ID, is_timing_counter
@@ -65,6 +71,7 @@ from runtime.cycle.model import (
     ScheduleError,
     architectural_counters,
     functional_counters,
+    functional_reference,
     operand_extents,
     prove_acyclic_waits,
     timing_counters,
@@ -321,6 +328,8 @@ def synthetic_tiled_deployment(
     bank_mask: int = 0,
     port_mask: int = 0,
     schedule_reduction: bool = True,
+    layers: int = 1,
+    independent_matmuls: int = 0,
 ) -> tuple[Deployment, Capability]:
     """A completing deployment whose every operator carries a tile mapping.
 
@@ -379,8 +388,12 @@ def synthetic_tiled_deployment(
         key="obj.kv.prepared",
     )
 
+    # TA-ABI3-OPCONV-1 amendment A7 names the blocked contract for execution,
+    # but the tensor engine in this tree implements the sequential association
+    # only, so the deployment binds what the machine can actually run.  The
+    # cycle-model report names whichever contract the deployment bound.
     matmul_numeric = builder.numeric(
-        contract="bf16_bf16_fp32_blocked_rne_v1",
+        contract="bf16_bf16_fp32_sequential_rne_v1",
         input_dtype=DType.BF16,
         output_dtype=DType.BF16,
         key="num.matmul",
@@ -561,7 +574,18 @@ def synthetic_tiled_deployment(
         key="policy",
     )
 
+    layer_loop = (
+        builder.loop_control(
+            lower_bound=0, upper_bound=layers, step=1, key="loop.layer"
+        )
+        if layers > 1
+        else NO_ID
+    )
+
     builder.emit(Major.STATE, State.PREPARE, descriptor_id=kv_state)
+    if layer_loop != NO_ID:
+        # The program loops over layers, never over tiles.
+        builder.open_loop(layer_loop)
     matmul_event = builder.new_event()
     builder.emit(
         Major.TENSOR,
@@ -570,6 +594,12 @@ def synthetic_tiled_deployment(
         signal_event_id=matmul_event,
         source_operation_id=0,
     )
+    for _ in range(independent_matmuls):
+        # No wait set and no signal: these are independent of everything, so the
+        # only thing that can hold them up is a queue credit.
+        builder.emit(
+            Major.TENSOR, Tensor.MATMUL, descriptor_id=matmul_op, source_operation_id=0
+        )
     add_event = builder.new_event()
     builder.emit(
         Major.VECTOR,
@@ -579,6 +609,8 @@ def synthetic_tiled_deployment(
         signal_event_id=add_event,
         source_operation_id=1,
     )
+    if layer_loop != NO_ID:
+        builder.close_loop()
     reduce_event = builder.new_event()
     builder.emit(
         Major.REDUCTION,
@@ -818,16 +850,70 @@ def test_capability_supplies_structure_and_cost_table_supplies_rates():
 # ---------------------------------------------------------------------------
 # 3. Architectural-counter agreement (the load-bearing property)
 # ---------------------------------------------------------------------------
-@pytest.mark.parametrize("storage", [StorageClass.HBM, StorageClass.ROM])
-def test_fixture_counter_agreement(storage: StorageClass):
-    capability = fixture_capability()
-    deployment = build_fixture(storage_class=storage, capability=capability)
+@pytest.mark.parametrize(
+    "storage,table",
+    [(StorageClass.HBM, BASELINE), (StorageClass.ROM, SKY130_ROM)],
+)
+def test_tiled_deployment_counter_agreement(storage: StorageClass, table: Path):
+    """The load-bearing property, on a transaction that actually contracts."""
+    deployment, capability = synthetic_tiled_deployment(storage_class=storage)
     req = request()
-    model = CycleModel(deployment, capability, load_cost_table(BASELINE))
-    result = model.run(req)
+    result = CycleModel(deployment, capability, load_cost_table(table)).run(req)
+    body = result.to_dict()
+    assert body["execution"]["status"] == "SUCCESS"
     reference = functional_counters(deployment, capability, req)
     assert result.architectural == reference
-    assert reference, "the fixture must produce at least one architectural counter"
+    assert reference["tensor.multiplications"] > 0
+    assert reference["selection.tokens_selected"] == 1
+    assert body["timing"]["tile_launches"] > 0
+
+
+def test_abi3_fixture_cannot_be_timed_until_it_carries_tile_mappings():
+    """The ABI 3.0 fixture is missing three tile mappings; say so, do not guess.
+
+    ``runtime/abi3/fixture.py`` gives only its MATMUL a SCHEDULE descriptor.
+    Now that tiling lives in the schedule rather than in the program, its
+    REDUCTION and SELECTION operators cannot be timed at all, and the model must
+    refuse rather than invent a tile shape.
+    """
+    capability = fixture_capability()
+    deployment = build_fixture(storage_class=StorageClass.HBM, capability=capability)
+    with pytest.raises(ScheduleError) as strict:
+        CycleModel(deployment, capability, load_cost_table(BASELINE))
+    assert "REDUCTION.ORDERED_SUM" in str(strict.value)
+    assert "SELECTION.ARGMAX" in str(strict.value)
+
+    permissive = CycleModel(
+        deployment, capability, load_cost_table(BASELINE), strict_schedules=False
+    )
+    audit = permissive.schedule_audit
+    assert audit["complete"] is False
+    assert {f["reason"] for f in audit["findings"]} == {"absent_tile_mapping"}
+    assert [f["mnemonic"] for f in audit["findings"]] == [
+        "REDUCTION.ORDERED_SUM",
+        "SELECTION.ARGMAX",
+        "SELECTION.TOKEN_APPEND",
+    ]
+    with pytest.raises(ScheduleError, match="will not invent a tile shape"):
+        permissive.run(request())
+
+
+@pytest.mark.parametrize("storage", [StorageClass.HBM, StorageClass.ROM])
+def test_fixture_matmul_tile_mapping_is_read_from_the_schedule(
+    storage: StorageClass,
+):
+    capability = fixture_capability()
+    deployment = build_fixture(storage_class=storage, capability=capability)
+    model = CycleModel(
+        deployment, capability, load_cost_table(BASELINE), strict_schedules=False
+    )
+    findings = {f["operator_id"] for f in model.schedule_audit["findings"]}
+    matmul = deployment.table.get(
+        deployment.table.ids_of_type(ExtendedDescriptorType.OPERATOR)[0],
+        ExtendedDescriptorType.OPERATOR,
+    )
+    assert matmul.payload["schedule_id"] != NO_ID
+    assert matmul.descriptor_id not in findings
 
 
 def test_synthetic_deployment_completes_and_agrees():
@@ -859,16 +945,21 @@ def test_multi_transaction_agreement():
     assert result.architectural["state.commits"] == 3
 
 
-def test_link_trap_agreement():
-    """Both models must fail the same way on an unimplemented engine."""
+def test_trap_agreement_on_a_link_collective():
+    """Both models must fail in the same place, in the same way."""
     deployment, capability = synthetic_link_deployment()
     req = request()
-    model = CycleModel(deployment, capability, load_cost_table(CLUSTER32))
-    result = model.run(req)
+    result = CycleModel(deployment, capability, load_cost_table(CLUSTER32)).run(req)
     body = result.to_dict()
-    assert body["execution"]["status"] == "FAILED"
-    assert body["execution"]["trap_class"] == "CAPABILITY_OR_RESOURCE"
-    assert result.architectural == functional_counters(deployment, capability, req)
+    reference = functional_reference(deployment, capability, req)
+    assert body["execution"]["status"] == reference["status"] == "FAILED"
+    assert body["execution"]["trap_class"] == reference["trap_class"]
+    assert (
+        body["execution"]["first_fault_instruction"]
+        == reference["first_fault_instruction"]
+    )
+    assert body["execution"]["retired"] == reference["retired"]
+    assert result.architectural == reference["counters"]
 
 
 def test_agreement_holds_across_cost_tables():
@@ -903,6 +994,259 @@ def test_functional_device_leaves_every_timing_counter_at_zero():
     )
     assert timing_counters(result.counters) == {}
     assert architectural_counters(result.counters)
+
+
+# ---------------------------------------------------------------------------
+# 3b. Schedule-driven tiling
+#
+# The program carries no tile loops, so this model is the only place tiling
+# becomes time.  These tests protect that: a missing or zeroed mapping must be a
+# hard error, a different tile shape must change cycles and nothing else, and
+# every schedule field the model claims to honour must be observable in the
+# result.
+# ---------------------------------------------------------------------------
+def test_tile_count_follows_the_schedule_not_the_program():
+    deployment, capability = synthetic_tiled_deployment(
+        tile_rows=4, tile_cols=8, tile_depth=16
+    )
+    body = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(
+        request()
+    ).to_dict()
+    tensor = body["tiling"]["by_family"]["tensor"]
+    # 8x32x64 contraction under a 4x8x16 tile: 2 * 4 * 4 tiles.
+    assert tensor["tiles"] == 2 * 4 * 4
+    assert tensor["tile_shapes"][0]["tile_rows"] == 4
+    assert body["tiling"]["source"] == "SCHEDULE descriptor"
+    # The program itself contains no tile loop.
+    assert body["execution"]["retired"] == 8
+
+
+def test_tile_shape_changes_cycles_but_never_architectural_counters():
+    coarse, capability = synthetic_tiled_deployment(
+        tile_rows=8, tile_cols=32, tile_depth=64
+    )
+    fine, _ = synthetic_tiled_deployment(
+        capability, tile_rows=2, tile_cols=4, tile_depth=8
+    )
+    req = request()
+    table = load_cost_table(BASELINE)
+    coarse_result = CycleModel(coarse, capability, table).run(req)
+    fine_result = CycleModel(fine, capability, table).run(req)
+    assert coarse_result.architectural == fine_result.architectural
+    assert (
+        fine_result.to_dict()["tiling"]["tile_launches"]
+        > coarse_result.to_dict()["tiling"]["tile_launches"]
+    )
+    assert coarse_result.total_cycles != fine_result.total_cycles
+
+
+def test_partial_tiles_charge_their_padding():
+    deployment, capability = synthetic_tiled_deployment(
+        tile_rows=3, tile_cols=7, tile_depth=10
+    )
+    body = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(
+        request()
+    ).to_dict()
+    tensor = body["tiling"]["by_family"]["tensor"]
+    assert tensor["padding_work"] > 0
+    assert tensor["issued_work"] > tensor["useful_work"]
+    assert body["counters"]["timing"]["latency.tile_padding_work"] > 0
+
+
+def test_an_absent_tile_mapping_is_a_hard_error():
+    deployment, capability = synthetic_tiled_deployment(schedule_reduction=False)
+    with pytest.raises(ScheduleError, match="carries no SCHEDULE descriptor"):
+        CycleModel(deployment, capability, load_cost_table(BASELINE))
+    permissive = CycleModel(
+        deployment, capability, load_cost_table(BASELINE), strict_schedules=False
+    )
+    finding = permissive.schedule_audit["findings"][0]
+    assert finding["reason"] == "absent_tile_mapping"
+    assert finding["mnemonic"] == "REDUCTION.ORDERED_SUM"
+    with pytest.raises(ScheduleError):
+        permissive.run(request())
+
+
+def test_a_zeroed_tile_mapping_is_a_hard_error_and_names_the_descriptor():
+    deployment, capability = synthetic_tiled_deployment(tile_rows=4)
+    # Zero the tensor schedule's tile_rows in place and re-encode the table.
+    schedules = deployment.table.ids_of_type(ExtendedDescriptorType.SCHEDULE)
+    target = schedules[0]
+    descriptor = deployment.table[target]
+    descriptor.payload["tile_rows"] = 0
+    deployment.table._records[target] = descriptor.encode()  # noqa: SLF001
+    with pytest.raises(ScheduleError) as excinfo:
+        CycleModel(
+            deployment, capability, load_cost_table(BASELINE), verify=False
+        )
+    message = str(excinfo.value)
+    assert f"SCHEDULE descriptor {target}" in message
+    assert "tile_rows" in message
+
+
+def test_schedule_max_outstanding_narrows_the_queue():
+    deployment, capability = synthetic_tiled_deployment(max_outstanding=1)
+    model = CycleModel(deployment, capability, load_cost_table(BASELINE))
+    body = model.run(request()).to_dict()
+    tensor = body["tiling"]["by_family"]["tensor"]["examples"][0]
+    assert tensor["max_outstanding"] == 1
+    assert (
+        tensor["max_outstanding"]
+        <= capability.limits["max_outstanding_per_queue"]
+    )
+
+
+def test_schedule_max_outstanding_produces_real_queue_stalls():
+    """The credit bound is timed, not just reported."""
+    table = load_cost_table(BASELINE)
+    narrow, capability = synthetic_tiled_deployment(
+        independent_matmuls=3, max_outstanding=1
+    )
+    wide, _ = synthetic_tiled_deployment(
+        capability, independent_matmuls=3, max_outstanding=4
+    )
+    req = request()
+    narrow_result = CycleModel(narrow, capability, table).run(req)
+    wide_result = CycleModel(wide, capability, table).run(req)
+    narrow_body = narrow_result.to_dict()
+    wide_body = wide_result.to_dict()
+    assert narrow_body["timing"]["queue_stall_cycles"] > 0
+    assert wide_body["timing"]["queue_stall_cycles"] == 0
+    assert narrow_body["queues"]["tensor.0"]["observed_max_occupancy"] == 1
+    assert wide_body["queues"]["tensor.0"]["observed_max_occupancy"] == 4
+    assert narrow_result.total_cycles > wide_result.total_cycles
+    # A queue bound is a timing property; the architecture is unchanged.
+    assert narrow_result.architectural == wide_result.architectural
+
+
+def test_program_loops_over_layers_and_the_schedule_owns_the_tiles():
+    deployment, capability = synthetic_tiled_deployment(layers=4)
+    req = request()
+    result = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(req)
+    body = result.to_dict()
+    assert body["execution"]["status"] == "SUCCESS"
+    assert result.architectural == functional_counters(deployment, capability, req)
+    # Four layer iterations retire four MATMUL descriptors, and the tile count
+    # is four times one layer's tiles -- not four times an unrolled tile loop.
+    assert result.architectural["control.loop_iterations"] == 4
+    assert result.architectural["engine.tensor.descriptors"] == 4
+    assert body["tiling"]["by_family"]["tensor"]["tiles"] == 4 * 32
+
+
+def test_wait_stalls_dominate_a_serial_dependency_chain():
+    deployment, capability = synthetic_tiled_deployment(layers=4)
+    body = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(
+        request()
+    ).to_dict()
+    timing = body["timing"]
+    assert timing["wait_stall_cycles"] > 0
+    assert timing["stall_cycles"] == (
+        timing["wait_stall_cycles"] + timing["queue_stall_cycles"]
+    )
+
+
+def test_schedule_bank_mask_confines_sram_and_raises_conflicts():
+    table = load_cost_table(BASELINE)
+    wide, capability = synthetic_tiled_deployment(bank_mask=0)
+    narrow, _ = synthetic_tiled_deployment(capability, bank_mask=0b1)
+    wide_body = CycleModel(wide, capability, table).run(request()).to_dict()
+    narrow_body = CycleModel(narrow, capability, table).run(request()).to_dict()
+    assert (
+        narrow_body["memory"]["sram"]["conflict_cycles"]
+        > wide_body["memory"]["sram"]["conflict_cycles"]
+    )
+    # The mask changed the timing, never the architectural traffic.
+    assert (
+        narrow_body["memory"]["sram"]["bytes_total"]
+        == wide_body["memory"]["sram"]["bytes_total"]
+    )
+
+
+def test_tiling_amplifies_wire_traffic_but_not_architectural_bytes():
+    deployment, capability = synthetic_tiled_deployment(
+        tile_rows=4, tile_cols=8, tile_depth=16
+    )
+    req = request()
+    result = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(req)
+    body = result.to_dict()
+    hbm = body["memory"]["hbm"]
+    # The weight operand is re-fetched once per row tile.
+    assert hbm["transferred_bytes_read"] == hbm["bytes_read"] * 2
+    assert hbm["tile_amplification"] == 2.0
+    reference = functional_counters(deployment, capability, req)
+    assert reference["hbm.bytes_read"] == hbm["bytes_read"]
+
+
+def test_issue_window_of_one_serialises_memory_behind_compute():
+    deployment, capability = synthetic_tiled_deployment()
+    body = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(
+        request()
+    ).to_dict()
+    # The VECTOR schedule declares issue_window=1, so its tile memory cannot
+    # overlap its tile compute.
+    assert body["timing"]["tile_pipeline_stall_cycles"] > 0
+    assert body["engines"]["vector"]["tile_pipeline_stall_cycles"] > 0
+    assert body["engines"]["tensor"]["tile_pipeline_stall_cycles"] == 0
+
+
+def test_operand_extents_follow_the_frozen_operand_table():
+    from runtime.cycle.model import TraceStep
+
+    step = TraceStep(index=0, kind="ENGINE", family="tensor")
+    step.operand_dims = {"in0": (8, 64), "in1": (32, 64), "out0": (8, 32)}
+    assert operand_extents(step) == (8, 32, 64)
+    step.family = "vector"
+    assert operand_extents(step) == (8, 32, 1)
+    step.family = "reduction"
+    step.operand_dims = {"in0": (8, 32), "out0": (32,)}
+    assert operand_extents(step) == (1, 32, 8)
+
+
+def test_unmodelled_schedule_fields_are_named_rather_than_ignored():
+    deployment, capability = synthetic_tiled_deployment()
+    body = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(
+        request()
+    ).to_dict()
+    unmodelled = body["tiling"]["unmodelled_schedule_fields"]
+    assert set(unmodelled) == {"resource_bound", "priority"}
+    for reason in unmodelled.values():
+        assert reason
+
+
+# ---------------------------------------------------------------------------
+# 3c. Numeric contract identity
+# ---------------------------------------------------------------------------
+def test_result_names_the_numeric_contracts_it_timed():
+    deployment, capability = synthetic_tiled_deployment()
+    body = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(
+        request()
+    ).to_dict()
+    contracts = body["numerics"]["contracts"]
+    assert contracts
+    named = {entry["contract"] for entry in contracts.values()}
+    assert "bf16_bf16_fp32_sequential_rne_v1" in named
+    for entry in contracts.values():
+        assert entry["contract"] in capability.numeric_contracts
+
+
+def test_result_records_the_implementation_identity():
+    deployment, capability = synthetic_tiled_deployment()
+    body = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(
+        request()
+    ).to_dict()
+    identity = body["numerics"]["implementation_identity"]
+    assert set(identity) >= {"python", "numpy", "platform", "device", "note"}
+    assert "TA-ABI3-OPCONV-1" in identity["note"]
+
+
+def test_result_records_which_engines_were_registered():
+    deployment, capability = synthetic_tiled_deployment()
+    body = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(
+        request()
+    ).to_dict()
+    coverage = body["engine_coverage"]
+    assert coverage["implemented"] > 0
+    assert isinstance(coverage["missing_operations"], list)
 
 
 # ---------------------------------------------------------------------------
@@ -963,15 +1307,16 @@ def test_acyclic_waits_proof_passes_on_an_admitted_program():
 
 
 def test_acyclic_waits_proof_catches_a_wait_on_a_later_signal():
-    """The verifier admits this program; the cycle model's proof rejects it.
+    """An independent check of the same deadlock the verifier now rejects.
 
-    ``runtime/abi3/verifier.py`` only checks that *some* instruction signals the
-    event.  On an in-order microsequencer that is not enough: waiting on an
-    event signalled later is a deadlock, and the cycle model must say so.
+    The two are deliberately separate: the verifier decides admission, the cycle
+    model has to prove the schedule it is about to *time* cannot deadlock.  A
+    program that waits on an event signalled later in program order would hang
+    an in-order microsequencer, and both must say so.
     """
     deployment, capability = backward_wait_deployment()
-    assert verify_deployment(deployment, capability).admitted
-    device = Device(deployment, capability)
+    assert not verify_deployment(deployment, capability).admitted
+    device = Device(deployment, capability, verify=False)
     proof = prove_acyclic_waits(device)
     assert not proof["proved"]
     assert proof["violations"][0]["kind"] == "wait_on_later_or_self_signal"
@@ -1301,6 +1646,23 @@ def test_cluster_reports_compute_link_collective_and_skew_separately():
     assert aggregate["critical_path_cycles"] > 0
 
 
+def test_cluster_per_node_compute_is_nonzero_for_a_contracting_program():
+    capability = cycle_capability(TopologyClass.CLUSTER_32)
+    deployment, _ = synthetic_tiled_deployment(capability)
+    req = request()
+    result = CycleModel(deployment, capability, load_cost_table(CLUSTER32)).run(req)
+    body = result.to_dict()
+    cluster = body["cluster"]
+    assert len(cluster["per_node"]) == 32
+    assert all(node["compute_cycles"] > 0 for node in cluster["per_node"])
+    assert cluster["aggregate"]["compute_cycles_total"] == 32 * (
+        cluster["per_node"][0]["compute_cycles"]
+    )
+    assert result.architectural == functional_counters(
+        deployment, capability, req, node_count=32
+    )
+
+
 def test_cluster_declared_communication_is_timed_and_labelled():
     capability = fixture_capability(TopologyClass.CLUSTER_32)
     deployment, _ = synthetic_state_deployment(capability, with_communication=True)
@@ -1319,11 +1681,17 @@ def test_cluster_declared_communication_is_timed_and_labelled():
 
 
 def test_cluster_notes_a_topology_descriptor_mismatch_as_a_gap():
-    capability = fixture_capability(TopologyClass.CLUSTER_32)
-    deployment = build_fixture(storage_class=StorageClass.HBM, capability=capability)
-    body = CycleModel(deployment, capability, load_cost_table(CLUSTER32)).run(
-        request()
-    ).to_dict()
+    capability = cycle_capability(TopologyClass.CLUSTER_32)
+    deployment, _ = synthetic_tiled_deployment(capability)
+    # The tiled builder declares the capability's node count in its topology
+    # descriptor, so force a mismatch the way a stale build would.
+    topology_id = deployment.table.ids_of_type(ExtendedDescriptorType.TOPOLOGY)[0]
+    descriptor = deployment.table[topology_id]
+    descriptor.payload["node_count"] = 1
+    deployment.table._records[topology_id] = descriptor.encode()  # noqa: SLF001
+    body = CycleModel(
+        deployment, capability, load_cost_table(CLUSTER32), verify=False
+    ).run(request()).to_dict()
     wheres = [gap["where"] for gap in body["gaps"]]
     assert "topology descriptor vs capability" in wheres
 
@@ -1353,13 +1721,31 @@ def run_cli(*args: str) -> subprocess.CompletedProcess:
     )
 
 
+def publish(tmp_path: Path, storage: StorageClass = StorageClass.HBM) -> Path:
+    """Write a real deployment root plus its capability, as a backend would."""
+    deployment, capability = synthetic_tiled_deployment(storage_class=storage)
+    root = tmp_path / f"deployment-{storage.name.lower()}"
+    deployment.write(root)
+    (root / "capability.json").write_bytes(canonical_json(capability.to_dict()))
+    return root
+
+
+SYMBOLS = (
+    "--symbol", "SPAN_TOKENS=1",
+    "--symbol", "POSITION_START=0",
+    "--symbol", "POSITION_END=1",
+    "--symbol", "CONTEXT_LENGTH=1",
+)
+
+
 def test_cli_writes_canonical_json(tmp_path: Path):
+    root = publish(tmp_path)
     out = tmp_path / "result.json"
     proc = run_cli(
-        "--fixture", "hbm",
+        "--deployment", str(root),
+        "--capability", str(root / "capability.json"),
         "--cost-table", str(BASELINE),
-        "--symbol", "SPAN_TOKENS=1",
-        "--symbol", "POSITION_END=1",
+        *SYMBOLS,
         "--out", str(out),
         "--check-functional-agreement",
     )
@@ -1369,14 +1755,20 @@ def test_cli_writes_canonical_json(tmp_path: Path):
     assert raw == canonical_json(body), "output is not canonical JSON"
     assert body["schema"] == "opentallas.abi3.cycle_result.v1"
     assert body["functional_agreement"]["agrees"] is True
+    assert body["execution"]["status"] == "SUCCESS"
+    assert body["timing"]["tile_launches"] > 0
     assert body["provenance"]["class"] == "assumed"
 
 
 def test_cli_refuses_to_overwrite_without_force(tmp_path: Path):
+    root = publish(tmp_path)
     out = tmp_path / "result.json"
     out.write_text("{}")
     proc = run_cli(
-        "--fixture", "hbm", "--cost-table", str(BASELINE), "--out", str(out)
+        "--deployment", str(root),
+        "--capability", str(root / "capability.json"),
+        "--cost-table", str(BASELINE),
+        "--out", str(out),
     )
     assert proc.returncode != 0
     assert "already exists" in proc.stderr
@@ -1384,30 +1776,65 @@ def test_cli_refuses_to_overwrite_without_force(tmp_path: Path):
 
 
 def test_cli_force_overwrites(tmp_path: Path):
+    root = publish(tmp_path, StorageClass.ROM)
     out = tmp_path / "result.json"
     out.write_text("{}")
     proc = run_cli(
-        "--fixture", "rom",
+        "--deployment", str(root),
+        "--capability", str(root / "capability.json"),
         "--cost-table", str(SKY130_ROM),
+        *SYMBOLS,
         "--out", str(out),
         "--force",
     )
     assert proc.returncode == 0, proc.stderr
-    assert json.loads(out.read_text())["inputs"]["target_id"] == "fixture-rom"
+    body = json.loads(out.read_text())
+    assert body["inputs"]["target_id"] == "cycle-tiled"
+    assert body["memory"]["rom"]["bytes_read"] > 0
 
 
 def test_cli_output_is_reproducible(tmp_path: Path):
+    root = publish(tmp_path)
     first = tmp_path / "a.json"
     second = tmp_path / "b.json"
     for out in (first, second):
         proc = run_cli(
-            "--fixture", "hbm",
+            "--deployment", str(root),
+            "--capability", str(root / "capability.json"),
             "--cost-table", str(ASAP7),
-            "--symbol", "SPAN_TOKENS=1",
+            *SYMBOLS,
             "--out", str(out),
         )
         assert proc.returncode == 0, proc.stderr
     assert first.read_bytes() == second.read_bytes()
+
+
+def test_cli_refuses_a_deployment_without_a_tile_mapping(tmp_path: Path):
+    out = tmp_path / "result.json"
+    proc = run_cli(
+        "--fixture", "hbm",
+        "--cost-table", str(BASELINE),
+        *SYMBOLS,
+        "--out", str(out),
+    )
+    assert proc.returncode != 0
+    assert "tile mapping is incomplete" in proc.stderr
+    assert "REDUCTION.ORDERED_SUM" in proc.stderr
+    assert not out.exists()
+
+
+def test_cli_permissive_schedules_still_fails_closed_at_timing(tmp_path: Path):
+    out = tmp_path / "result.json"
+    proc = run_cli(
+        "--fixture", "hbm",
+        "--cost-table", str(BASELINE),
+        "--permissive-schedules",
+        *SYMBOLS,
+        "--out", str(out),
+    )
+    assert proc.returncode != 0
+    assert "will not invent a tile shape" in proc.stderr
+    assert not out.exists()
 
 
 def test_cli_rejects_an_unknown_symbol(tmp_path: Path):

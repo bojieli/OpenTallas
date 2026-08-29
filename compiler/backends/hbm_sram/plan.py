@@ -726,19 +726,24 @@ def matrix_shape(tensor: Tensor, span_max: int) -> tuple[int, int, bool]:
     """
     if not tensor.shape:
         return 1, 1, False
-    if len(tensor.shape) == 1 and isinstance(tensor.shape[0], Symbolic):
-        # A rank-1 tensor over a runtime symbol is one value per token: rows
-        # vary, the width is one.  Reading it the other way round would put a
-        # symbol on the fastest axis, which no tensor view can express.
+    if isinstance(tensor.shape[0], Symbolic):
+        # Token-major: one row per position, and everything the position
+        # carries -- heads, key/value halves, head dimension -- folds into the
+        # width.  Folding the head axis into the *rows* instead would make the
+        # token-block loop count head-rows rather than tokens, and every view
+        # in the body would step by the wrong stride.
         rows, _ = _extent_value(tensor.shape[0], span_max)
-        return max(rows, 1), 1, True
-    cols, cols_symbolic = _extent_value(tensor.shape[-1], span_max)
-    if cols_symbolic:
-        raise PlanError(
-            f"tensor {tensor.tensor_id}: the innermost axis is symbolic; the "
-            "ABI 3.0 tensor view requires a static element stride on the "
-            "fastest axis"
-        )
+        cols = 1
+        for axis in tensor.shape[1:]:
+            # A symbolic axis after the position axis -- a sparse index width,
+            # say -- contributes its declared maximum.  The *stride* stays
+            # static, which is all a tensor view needs; the window is the worst
+            # case and the tail padding is never executed (TA-ABI3-OPCONV-1
+            # section 4.1).
+            value, _ = _extent_value(axis, span_max)
+            cols *= max(value, 1)
+        return max(rows, 1), max(cols, 1), True
+    cols, _ = _extent_value(tensor.shape[-1], span_max)
     rows = 1
     symbolic = False
     for axis in tensor.shape[:-1]:
@@ -752,7 +757,7 @@ def matrix_shape(tensor: Tensor, span_max: int) -> tuple[int, int, bool]:
 # Planner
 # ---------------------------------------------------------------------------
 def build_plan(
-    graph: KernelGraph,
+    graph: KernelGraph | Mapping[str, Any] | str,
     capability: Capability,
     *,
     topology: TopologyClass | int | None = None,
@@ -760,6 +765,7 @@ def build_plan(
     validate: bool = True,
 ) -> PhysicalPlan:
     """Produce the physical plan for ``graph`` on ``capability``."""
+    graph = as_kernel_graph(graph)
     if validate:
         require_neutral(graph)
     tile = tile or TileConfig()
@@ -1358,7 +1364,12 @@ def _place_activations(
         band_id = band_of_kernel.get(kernel.index)
         for slot, name in enumerate(kernel.outputs):
             tensor = tensors[name]
-            if tensor.role in {"weight", "constant", "state"}:
+            if (
+                tensor.role in {"weight", "constant", "state", "input", "output"}
+                or kernel.state_writes
+            ):
+                # Host-visible results keep their host identity even though a
+                # kernel produces them; state effects live in state objects.
                 continue
             if band_id is None:
                 keys[name] = f"k{kernel.index}.o{slot}"
@@ -1726,9 +1737,17 @@ def _aux_ids(
             ]
     elif family == int(Major.TENSOR):
         if sub == int(TensorOp.GROUPED_MATMUL):
-            aux = [int(attributes.get("group_count", groups))]
+            aux = [
+                int(attributes.get("group_count", 0))
+                or _domain_extent(kernel, ("groups",), span_max)
+                or groups
+            ]
         elif sub == int(TensorOp.ROUTED_MATMUL):
-            aux = [int(attributes.get("expert_count", groups))]
+            aux = [
+                int(attributes.get("expert_count", 0))
+                or _domain_extent(kernel, ("experts",), span_max)
+                or groups
+            ]
     elif family == int(Major.VECTOR):
         if sub == int(Vector.ROPE):
             aux = [int(attributes.get("rotary_width", in_cols(1)))]
@@ -1761,6 +1780,16 @@ def _infer_expert_count(
             return w_rows // a_cols
         if a_cols and w_cols % a_cols == 0:
             return w_cols // a_cols
+    return 0
+
+
+def _domain_extent(kernel: Kernel, keys: Sequence[str], span_max: int) -> int:
+    """Read one iteration-domain extent, resolving a symbol to its maximum."""
+    for key in keys:
+        if key in kernel.iteration_domain:
+            value, _ = _extent_value(kernel.iteration_domain[key], span_max)
+            if value:
+                return int(value)
     return 0
 
 
@@ -1833,7 +1862,18 @@ def _plan_kernels(
         if contraction and len(kernel.inputs) >= 2:
             a_rows, a_cols, _ = matrix_shape(tensors[kernel.inputs[0]], span_max)
             w_rows, w_cols, _ = matrix_shape(tensors[kernel.inputs[1]], span_max)
-            depth = a_cols
+            # The iteration domain is the authority on contraction geometry when
+            # the graph states it.  A grouped projection contracts one group's
+            # reduction width at a time, so inferring the depth from the folded
+            # operand width would be wrong by the group count.
+            depth = _domain_extent(
+                kernel, ("reduction_width", "reduction", "depth"), span_max
+            ) or a_cols
+            groups = (
+                _domain_extent(kernel, ("groups",), span_max)
+                or int(kernel.attributes.get("groups", 0) or 0)
+                or 1
+            )
             # TA-ABI3-OPCONV-1 section 2: in1 is n-major ``[N, K]``.  A
             # checkpoint that stores ``[K, N]`` is presented n-major by swapping
             # the view's strides -- a description, never a relayout pass.
@@ -1846,11 +1886,11 @@ def _plan_kernels(
             elif depth and w_cols % depth == 0:
                 transposed = False
                 weight_rows = w_rows
-                groups = w_cols // depth
+                groups = max(groups, w_cols // depth)
             elif depth and w_rows % depth == 0:
                 transposed = True
                 weight_rows = w_cols
-                groups = w_rows // depth
+                groups = max(groups, w_rows // depth)
             else:
                 raise PlanError(
                     f"kernel {kernel.kernel_id}: contraction operand shapes "

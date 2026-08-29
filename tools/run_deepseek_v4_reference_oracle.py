@@ -83,13 +83,44 @@ def _host_memory() -> dict[str, int]:
     }
 
 
-def _peak_host_rss() -> int:
+def _host_footprint() -> dict[str, object]:
+    """Separate the engine's own memory from mapped checkpoint pages.
+
+    The shards are read through ``safetensors``' mmap, so every page the loader
+    touches is charged to RSS even though it is clean, file-backed and evictable
+    under pressure.  Peak RSS therefore approaches the size of the checkpoint
+    and says nothing about what the engine actually needs; ``RssAnon`` is the
+    number that does.
+    """
+    footprint: dict[str, object] = {
+        "note": (
+            "peak_rss_bytes counts clean file-backed pages of the mmapped "
+            "checkpoint; anonymous_rss_bytes is the engine's own memory"
+        )
+    }
     try:
         import resource
 
-        return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        footprint["peak_rss_bytes"] = (
+            resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
+        )
     except Exception:
-        return 0
+        footprint["peak_rss_bytes"] = 0
+    try:
+        for line in Path("/proc/self/status").read_text().splitlines():
+            key, _, rest = line.partition(":")
+            if key in ("RssAnon", "RssFile", "VmRSS"):
+                value = int(rest.strip().split()[0]) * 1024
+                footprint[
+                    {
+                        "RssAnon": "anonymous_rss_bytes",
+                        "RssFile": "file_backed_rss_bytes",
+                        "VmRSS": "resident_bytes",
+                    }[key]
+                ] = value
+    except OSError:
+        pass
+    return footprint
 
 
 def main() -> int:
@@ -205,6 +236,9 @@ def main() -> int:
         "source": index.get("source", {}),
         "tokenizer_sha256": index["tokenizer_sha256"],
         "vendor_source_sha256": engine.vendor_digests,
+        # Kept at the top level as well as inside "environment" so this report
+        # has the same readable shape as the Qwen3 one.
+        "torch_version": engine.torch.__version__,
         "dtype": "vendor mixed: FP8-E4M3 dense, MXFP4-E2M1 routed experts, "
         "bfloat16 activations, float32 norms/gating/hyper-connections/head",
         "selection": "greedy_lowest_token_id_argmax",
@@ -299,9 +333,7 @@ def main() -> int:
 
         generated = outcome["generated_token_ids"]
         raw_text = tokenizer.decode(generated)
-        visible = tokenizer.decode(
-            [token for token in generated if token not in (0, EOS_TOKEN_ID)]
-        )
+        visible = tokenizer.decode(generated, skip_special_tokens=True)
 
         report["results"][workload_id] = {
             "kind": entry["kind"],
@@ -337,7 +369,7 @@ def main() -> int:
         flush()
 
     report["total_wall_seconds"] = round(time.perf_counter() - started_all, 3)
-    report["peak_host_rss_bytes"] = _peak_host_rss()
+    report["host_footprint"] = _host_footprint()
     report["peak_device_bytes"] = int(engine.peak_device_bytes)
     report["checkpoint_bytes_read"] = int(engine.store.stats.bytes_read)
     report["host_weight_cache_bytes"] = int(engine.store.stats.host_cache_bytes)

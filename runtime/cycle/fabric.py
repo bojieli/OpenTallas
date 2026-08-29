@@ -28,8 +28,8 @@ link time on the same fabric.
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass, field as dc_field
-from typing import Any, Iterable, Mapping, Sequence
+from dataclasses import dataclass
+from typing import Any, Sequence
 
 from runtime.abi3.constants import TopologyClass
 from runtime.abi3.descriptors import CollectiveOp

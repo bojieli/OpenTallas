@@ -848,9 +848,11 @@ def test_loop_work_is_multiplied_by_the_trip_count(capability: Capability) -> No
     )
     report = verify_deployment(deployment, capability)
     assert report.admitted, report.errors
-    # the loop body and its LOOP_NEXT retire once per trip; LOOP_SETUP is
-    # accounted to the enclosing scope, and the tail retires once
-    assert report.proved_retired_work == 4 * 2 + 3
+    # The loop body and its LOOP_NEXT retire once per trip. LOOP_SETUP itself
+    # retires once, at the enclosing multiplier -- omitting it under-counted
+    # the bound, so a program the verifier admitted could still trip the
+    # device's watchdog. The tail retires once.
+    assert report.proved_retired_work == 1 + 4 * 2 + 3
 
 
 def test_a_header_that_does_not_bind_the_descriptor_table_is_rejected(

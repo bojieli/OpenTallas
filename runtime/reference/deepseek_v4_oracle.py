@@ -16,32 +16,48 @@ usable device memory.  So the vendor modules are imported *verbatim* and driven
 by a loader that materialises one transformer block - and, inside the MoE, one
 expert - at a time, directly from the released HuggingFace shards.
 
-Exactly three vendor behaviours are replaced, each for a measured reason, and
-each recorded in :data:`ADAPTATIONS` so the report can state them:
+What is changed, and why
+-----------------------
+Every deviation is recorded in :data:`ADAPTATIONS` so the report states it
+rather than burying it:
 
-``sparse_attn``
+``sparse_attn`` is launched 16 heads at a time
     The released TileLang kernel asks for 141,312 bytes of dynamic shared memory
     when instantiated at ``h=64, d=512`` (this model's ``n_heads`` and
     ``head_dim`` at ``world_size=1``).  sm_120 offers 101,376 bytes per block, so
-    the kernel cannot launch.  It launches at ``h<=16``, which is precisely the
-    per-rank head count the vendor's own ``world_size=4`` configuration produces.
-    Every head in that kernel is independent - its own query row, its own online
-    softmax accumulators, its own ``attn_sink`` entry, its own output row - so
-    calling it four times with 16 heads and concatenating returns *bitwise*
-    identical results, which :func:`verify_head_split_identity` re-checks at
-    runtime on this machine rather than asserting from the source.
+    the 64-head launch cannot start at all - this is a hard property of the GPU,
+    not a memory-pressure problem.  It launches at ``h<=16``, which is precisely
+    the per-rank head count the vendor's own ``world_size=4`` configuration
+    produces.  Every head in that kernel is independent - its own query row, its
+    own online softmax accumulators, its own ``attn_sink`` entry, its own output
+    row - so calling it four times with 16 heads and concatenating returns
+    *bitwise* identical results.  :func:`verify_head_split_identity` re-proves
+    that on this machine at startup rather than asserting it from the source,
+    and the engine refuses to run if it ever fails.
 
-``rotate_activation``
-    ``fast_hadamard_transform`` does not build against this host's toolchain.
-    The transform is replaced by the arithmetic OpenTallas already froze in
-    ``runtime/reference/hadamard.py``: seven ascending-stride binary32 butterfly
-    stages, one binary32 scale multiply, one RNE conversion to bfloat16.  Every
-    use in this graph is width 128 and is immediately FP4-quantised afterwards.
+Parameter residency is on demand
+    Blocks, and individual routed experts within a block's MoE, are copied to
+    the device only while they execute.  Values are untouched; only residency
+    and timing differ.
 
-``ParallelEmbedding``/``ParallelHead`` placement
-    The embedding (1.01 GiB) and the LM head (2.02 GiB once widened to the
-    float32 the vendor declares) are held in host memory when device memory is
-    scarce.  The arithmetic is unchanged; only the device is.
+The embedding and the LM head sit in host memory
+    The embedding (1.01 GiB) is a pure gather, and the LM head (2.02 GiB once
+    widened to the float32 the vendor declares) is one matmul per step.  Keeping
+    them on the host frees 3 GiB of contended device memory for the same
+    arithmetic.  ``--head-on-device`` moves the head back when there is room.
+
+The three DSpark stages are not built
+    ``dspark_block_size`` is set to 0.  They are a speculative-decoding draft
+    head that the vendor's own ``generate.py`` never invokes, and the 43-layer
+    main model's token outputs do not depend on them.
+
+``rotate_activation`` has a PyTorch fallback that is *not* normally used
+    The official ``fast_hadamard_transform`` extension is preferred and is what
+    runs here.  If it is unavailable, :func:`torch_hadamard_transform` takes
+    over with the arithmetic OpenTallas froze in ``runtime/reference/hadamard.py``
+    - seven ascending-stride binary32 butterfly stages, one binary32 scale
+    multiply, one RNE conversion to bfloat16 - which the tests check is bitwise
+    identical to the extension at this graph's only width, 128.
 
 Nothing else is altered.  The attention, compressor, indexer, hyper-connection,
 gating, expert and quantisation math all run the vendor's own code and the
@@ -50,16 +66,14 @@ vendor's own TileLang kernels.
 
 from __future__ import annotations
 
-import gc
 import hashlib
 import importlib
 import importlib.metadata
 import json
-import os
 import sys
 import time
-from collections.abc import Iterable, Iterator, Mapping, Sequence
-from dataclasses import dataclass, field as dc_field
+from collections.abc import Iterable, Sequence
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
 
@@ -361,9 +375,6 @@ class WeightStore:
             self._handles[filename] = handle
         return handle
 
-    def has(self, name: str) -> bool:
-        return name in self.weight_map
-
     def raw(self, name: str):
         """Read one checkpoint tensor into host memory, exactly as stored."""
         filename = self.weight_map.get(name)
@@ -435,9 +446,6 @@ class WeightStore:
             host = self._host_cache.get(name, host)
         return host.to(self.device, non_blocking=host.is_pinned())
 
-    def host_cache_bytes(self) -> int:
-        return self.stats.host_cache_bytes
-
 
 # ---------------------------------------------------------------------------
 # The streaming model
@@ -477,21 +485,38 @@ ADAPTATIONS: tuple[dict[str, str], ...] = (
         ),
     },
     {
-        "id": "hadamard_without_fast_hadamard_transform",
+        "id": "hadamard_fallback_available_but_unused",
         "vendor_symbol": "model.rotate_activation",
         "change": (
-            "binary32 Sylvester butterfly in PyTorch instead of the "
-            "fast_hadamard_transform CUDA extension"
+            "the official fast_hadamard_transform extension is used when "
+            "importable; a PyTorch binary32 Sylvester butterfly stands in "
+            "otherwise. The report's environment.fast_hadamard_transform field "
+            "records which one actually ran"
         ),
         "reason": (
-            "fast_hadamard_transform does not build against this host's "
-            "toolchain"
+            "the released extension has no wheel for this toolchain and had to "
+            "be built from source against CUDA 12.8 for sm_120"
         ),
         "fidelity": (
-            "matches the arithmetic frozen in runtime/reference/hadamard.py: "
-            "seven ascending-stride binary32 butterfly stages, one binary32 "
-            "scale multiply, one RNE bfloat16 conversion, width 128"
+            "the fallback matches the arithmetic frozen in "
+            "runtime/reference/hadamard.py - seven ascending-stride binary32 "
+            "butterfly stages, one binary32 scale multiply, one RNE bfloat16 "
+            "conversion - and is checked bitwise identical to the extension at "
+            "this graph's only width, 128"
         ),
+    },
+    {
+        "id": "endpoint_residency",
+        "vendor_symbol": "model.ParallelEmbedding / model.ParallelHead",
+        "change": (
+            "the embedding and the float32 LM head are held in host memory "
+            "unless --head-on-device is passed"
+        ),
+        "reason": (
+            "3.03 GiB of device memory for a gather and one matmul per step, "
+            "on a GPU whose free memory was measured dipping to 1.59 GiB"
+        ),
+        "fidelity": "same arithmetic and same float32 width; only the device differs",
     },
     {
         "id": "layer_streaming",
@@ -541,7 +566,6 @@ class StreamingDeepSeekV4:
         # matmul in this graph (norms, gating, hyper-connections, LM head).
         torch.backends.cuda.matmul.allow_tf32 = False
         torch.backends.cudnn.allow_tf32 = False
-        torch.use_deterministic_algorithms(False)
 
         self.vendor_sparse_attn = self.kernel_mod.sparse_attn
         self.head_split_evidence = verify_head_split_identity(

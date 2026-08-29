@@ -188,6 +188,7 @@ from compiler.ir.v3.kernel_ir import (
     check_neutral,
 )
 from compiler.ir.v3.lowering import KERNEL_TO_ENGINE
+from compiler.ir.v3.numeric import CONTRACT_PATTERN
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 
@@ -347,10 +348,71 @@ LOWERING_PLAN: Mapping[str, tuple[str, ...]] = {
     "WINDOW_INDEX": ("WINDOW_INDEX",),
 }
 
-#: Sub-operation name per emitted kernel, qualifying the reference owner that
-#: pins its target-precision identity.  ``""`` means the neutral kernel is the
-#: whole reference.
-_CONTRACT_STEP_SEPARATOR = "#"
+#: Canonical numeric-contract base per source operator kind.  ADR-003 section 15
+#: forbids the neutral IR from naming an implementation location, so these are
+#: opaque semantic identifiers, not module paths: renaming or moving anything
+#: under ``runtime/reference/`` must not change a published ``graph_id``.  The
+#: names were derived once from the qualified reference that owns each kind's
+#: target-precision identity and are frozen here; they are deliberately *not*
+#: recomputed from that module.  A kernel that implements only part of a
+#: reference appends its sub-operation, so ``MXFP4_SWIGLU``'s gate contraction
+#: is ``mxfp4_swiglu_bf16_gate_contraction_v1``.
+#:
+#: Several of these differ from the Qwen contract of the same name in kind:
+#: ``normalization_rms_norm_bf16_v1`` stays in binary32 through the gain
+#: multiply where Qwen's ``qwen3_rmsnorm_fp32_bf16_v1`` materialises BF16
+#: first, and the two disagree by one ulp on roughly 27 % of elements.  They
+#: must never be collapsed onto one identity.
+CONTRACT_VERSION = 1
+
+CONTRACT_BASE_BY_SOURCE_KIND: Mapping[str, str] = {
+    "ATTENTION_KV_VIEW": "attention_kv_view_bf16",
+    "BF16_LINEAR": "matrix_bf16_linear_bf16",
+    "BIASED_TOPK_ROUTE": "selection_biased_topk_route_indices",
+    "BINARY32_TO_BF16": "conversion_binary32_tensor_to_bf16_rne",
+    "COMPRESSED_DENSE_INDEX": "indexing_compressed_dense_indices",
+    "COMPRESSED_KV_VALID_VIEW": "compressed_kv_valid_view_bf16",
+    "COMPRESS_KV_WRITE": "compressed_kv_write_bf16",
+    "COMPRESS_POOL": "compression_pool_compress_pool_f32",
+    "COMPRESS_PROJECT": "compression_compress_project_bf16",
+    "COMPRESS_STATE_UPDATE": "compression_state_compress_state_update_f32",
+    "CONFIDENCE_SCORE": "confidence_score_bf16",
+    "DSPARK_MAIN_PROJECT": "dspark_main_project_bf16",
+    "DSPARK_NOISE_EMBED": "structural_dspark_noise_embed_bf16",
+    "DSPARK_PREFILL_KV": "dspark_prefill_kv_bf16",
+    "DSPARK_WINDOW_INDEX": "indexing_dspark_window_indices",
+    "EXPERT_DISPATCH": "dispatch_routed_experts_bf16",
+    "EXPERT_REDUCE": "dispatch_reduce_expert_outputs_bf16",
+    "FP4_QDQ": "quantization_fp4_qdq_bf16",
+    "FP8_LINEAR": "matrix_dense_fp8_linear_bf16",
+    "FP8_QDQ": "quantization_fp8_qdq_bf16",
+    "FP8_SWIGLU": "fp8_swiglu_bf16",
+    "GROUPED_OUTPUT_PROJECT": "grouped_output_project_bf16",
+    "HADAMARD_ROTATE": "hadamard_rotate_128_bf16",
+    "HASH_ROUTE": "lookup_hash_route_indices",
+    "HC_EXPAND": "structural_hc_expand_bf16",
+    "HC_HEAD": "hc_head_bf16",
+    "HC_POST": "vector_hc_post_bf16",
+    "HC_PRE": "hyper_connection_hc_pre_bf16",
+    "HEAD_RMS_NORM": "normalization_head_rms_norm_bf16",
+    "INDEX_SCORE": "index_score_bf16",
+    "INDEX_TOPK": "selection_index_topk_indices",
+    "KV_WINDOW_WRITE": "kv_window_write_bf16",
+    "LM_HEAD": "lm_head_bf16",
+    "MARKOV_AUTOREGRESSIVE_LOOP": "markov_loop_markov_autoregressive_loop_bf16",
+    "MXFP4_SWIGLU": "mxfp4_swiglu_bf16",
+    "RMS_NORM": "normalization_rms_norm_bf16",
+    "ROPE_APPLY": "rope_apply_bf16",
+    "ROPE_INVERSE": "rope_inverse_bf16",
+    "ROUTER_SCORE": "routing_router_score_bf16",
+    "ROUTER_WEIGHT_NORMALIZE": "routing_normalize_routed_weight_codes",
+    "SAMPLE": "sampling_deepseek_v4_sample_binary32",
+    "SPARSE_ATTENTION": "sparse_attention_bf16",
+    "SQRT_SOFTPLUS": "sqrt_softplus_router_binary32",
+    "TARGET_HIDDEN_CAPTURE": "vector_target_hidden_capture_bf16",
+    "TOKEN_EMBED": "lookup_bf16_token_embedding",
+    "WINDOW_INDEX": "indexing_window_indices",
+}
 
 #: Counter namespace per neutral kind, named with the ABI 3.0 counter groups in
 #: ``runtime.abi3.constants.CounterGroup`` rather than an engine instance.
@@ -686,13 +748,23 @@ def _split_node_id(node_id: str) -> tuple[str, int | None, str]:
     return head, None, rest
 
 
-def _reference_owner(source_kind: str) -> str:
-    return OPERATOR_CATALOG[source_kind].to_dict()["reference_owner"]
-
-
 def _contract(source_kind: str, step: str = "") -> str:
-    owner = _reference_owner(source_kind)
-    return f"{owner}{_CONTRACT_STEP_SEPARATOR}{step}" if step else owner
+    """Return the canonical numeric-contract identity for one emitted kernel."""
+
+    try:
+        base = CONTRACT_BASE_BY_SOURCE_KIND[source_kind]
+    except KeyError:
+        raise DeepSeekV4KernelIRError(
+            f"source kind {source_kind!r} has no frozen numeric contract"
+        ) from None
+    name = f"{base}_{step}_v{CONTRACT_VERSION}" if step else (
+        f"{base}_v{CONTRACT_VERSION}"
+    )
+    if not CONTRACT_PATTERN.match(name):
+        raise DeepSeekV4KernelIRError(
+            f"numeric contract {name!r} is not a canonical identifier"
+        )
+    return name
 
 
 _SOURCE_STATE_SUFFIX_TO_NEUTRAL: Mapping[str, tuple[str, ...]] = {
@@ -2706,6 +2778,7 @@ __all__ = [
     "DEFAULT_CONTEXT_TOKENS",
     "DEFAULT_SNAPSHOT",
     "DeepSeekV4KernelIRError",
+    "CONTRACT_BASE_BY_SOURCE_KIND",
     "LOWERING_PLAN",
     "NUMERIC_PROFILE",
     "export_deepseek_v4_kernel_graph",

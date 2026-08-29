@@ -407,6 +407,9 @@ def check_control_flow(
                     continue
                 trip = loop_trip(descriptor, capability, report)
                 trips[descriptor.descriptor_id] = trip
+                # LOOP_SETUP retires once, at the enclosing multiplier, before
+                # the loop it opens starts multiplying.
+                work += multiplier
                 if descriptor.payload["body_start"] != index + 1:
                     report.fail(
                         "loop_bodies",
