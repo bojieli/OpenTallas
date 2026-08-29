@@ -79,8 +79,8 @@
 
 - [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle**, and **decode reaches a real EOS**. `TA-QW-AGENT-1` ran 112 prompt tokens to the natural stop at token 151645 after 23 tokens (`results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json`), `TA-QW-CHAT-1` ran 24 tokens (`..._ta-qw-chat-1_...`); both agree with the oracle at every position, with no legitimacy problems and all 27 admission checks passing
 - [x] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — **re-verified with evidence in the repository** (`results/abi3/qwen3_rom_ta-qw-chat-1_execution.json`, status pass, 24 tokens, `reference_agreement` true, no divergence index). The 24 tokens are identical to `qwen3_hbm_ta-qw-chat-1_execution.json` position for position, which is the claim this item makes. Both admit at 75 instructions; the ROM lane emits 239 descriptors against HBM's 218 and declares 2,105 retired work against 22,715, because the two lanes block the token loop differently — see [OI-19] — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. Storage-class equivalence re-proved after every change: 18 descriptors differ, all `MEMORY_OBJECT`, all ROM→HBM, none beyond storage class
-- [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **no tokens yet, and two of the three remaining blockers are decisions, not bugs.** The deployment admits (996 instructions, 2,307 descriptors, work bound proved exactly) and `HYPER_CONNECT_PRE` now executes against the frozen `VECTOR.MHC` operand row. It stops at the branch reduction the ABI leaves to `REDUCTION.EXPERT_SUM`, which provably cannot carry per-token weights over a token block (**OI-28**). Behind that: the functional simulator binds no `NODE_ID`, so the mandated 32-node capability cannot execute at all (**OI-27**), and the `attention_kv_view` row space needs an extent no view can present (**OI-26**). Landed on the way: the mHC pre/post split, the axis-1 index concatenations (**OI-20**), and one epsilon-encoding defect (**OI-29**)
-- [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence
+- [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **blocked on [OI-28]**: the functional device has no node dimension, so no token is reachable on a 32-node capability however the operands are fixed. The deployment admits (996 instructions, 2,307 descriptors, work 4,587,224 proved exactly) and the cycle model covers it; it cannot run — **no tokens yet, and two of the three remaining blockers are decisions, not bugs.** The deployment admits (996 instructions, 2,307 descriptors, work bound proved exactly) and `HYPER_CONNECT_PRE` now executes against the frozen `VECTOR.MHC` operand row. It stops at the branch reduction the ABI leaves to `REDUCTION.EXPERT_SUM`, which provably cannot carry per-token weights over a token block (**OI-28**). Behind that: the functional simulator binds no `NODE_ID`, so the mandated 32-node capability cannot execute at all (**OI-27**), and the `attention_kv_view` row space needs an extent no view can present (**OI-26**). Landed on the way: the mHC pre/post split, the axis-1 index concatenations (**OI-20**), and one epsilon-encoding defect (**OI-29**)
+- [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence — **this is the reachable DeepSeek execution path**, because a wafer-scale logical device is one node (`max_nodes = 1`) and needs no multi-node simulation; its tile-scoped collectives are what amendment A14 makes expressible
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
 - [~] W6.6 Checkpoint/restart exactness on all four — **Qwen-HBM proven; the other three wait on W6.2-W6.4**. `tools/run_abi3_restart_exactness.py` runs one workload three times in three separate OS processes: uninterrupted; interrupted after N tokens with the device state serialised by `runtime/sim/checkpoint.py`; and finished in a fresh process that loads only that checkpoint. `TA-QW-CHAT-1` on `torch_cpu`, 93 prompt tokens, 6 new tokens split 3+3: both runs give `[1654, 525, 2661, 1447, 12, 3070]`, with identical retired work in every transaction and identical values for all 42 architectural counters (`results/abi3/restart_exactness.json`). Fifteen guards stand between the run and the word *pass* — three distinct PIDs, one deployment digest, one implementation identity, one runtime source digest, and explicit non-emptiness and length checks, because two empty lists are not a match. Two controls make the pass mean something: erasing the KV STATE images from the checkpoint diverges at the first resumed token, and erasing everything **except** the STATE images still reproduces the sequence, so what carries the generation is the STATE resources and the cursor, not activation scratch. The source-digest guard earned itself on its first run, refusing a token-identical result because a concurrent commit changed `runtime/` between two phases
 - [x] W6.7 Fail-closed campaigns — `tools/run_abi3_failclosed_campaign.py`, 8/8 refused against the **real** Qwen deployment: six corruption classes refused at admission, a mid-transaction fault leaving cursor and generation unchanged, and no prepared state left open. Found and fixed a real defect on its first run
@@ -292,6 +292,49 @@
   each break it for a reason that has nothing to do with the deployment. The
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
+
+- **OI-28 — the DeepSeek 32-node HBM lane cannot produce a token, and the
+  reason is upstream of every operand issue: the functional device has no node
+  dimension.** 96 tensor views in the `cluster_32` lowering carry a `NODE_ID`
+  term. `Symbol.NODE_ID` and `Symbol.NODE_COUNT` exist in the registry, and
+  neither `runtime/driver.py` nor `runtime/sim/device.py` mentions either —
+  only the verifier and the cycle model do. Binding `NODE_ID = 0` would not
+  rescue it: one device would compute a thirty-second of every contraction and
+  the LINK all-gather would have no peer.
+
+  **This changes which DeepSeek target is reachable, and the answer is the
+  wafer.** `rom_deepseek_v4` declares `topology_class = 2` with `max_nodes = 1`
+  — a wafer-scale logical device is *one node*, which is the whole content of
+  that topology class — so it needs no multi-node simulation at all. Its
+  collectives are tile-scoped, which is exactly what amendment A14 makes
+  expressible. `hbm_sram_cluster_32` declares 32 nodes and genuinely does need a
+  simulator that has more than one.
+
+  So W6.4 (wafer) is the DeepSeek execution path that can close, and W6.3
+  (32-node) is blocked on functional multi-node execution that does not exist.
+  The 32-node deployment still admits, still proves its work bound, and is still
+  covered by the cycle model; what it cannot do is produce a token. A report must
+  say that in those words rather than let "admitted" stand in for "ran".
+
+- **OI-29 — `REDUCTION.EXPERT_SUM` cannot express the mHC branch reduction.**
+  It reduces the *leading* axis of `in0` and takes one weight per leading index,
+  and the mHC branch weights vary per token **and** per stream. Four framings
+  were tried and each is refused for a different structural reason, including
+  one per-token descriptor, which A13's own admission rule now forbids because
+  `dim0 > bound_divisor`. Two resolutions are on the table: apply the weight
+  before the reduction under amendment A10 — bit-exact, since the reference is
+  four binary32 products reduced by a balanced tree and converted once, not a
+  fused product-add — at the cost of a materialised `[span, 4, 4096]` binary32
+  intermediate and a stream-major view whose leading axis is no longer the token
+  axis, which **silently** defeats A13 when `span mod block` is 1, 2 or 3; or
+  amend the operand row so the weight may match the first two axes.
+
+  **Deliberately not decided.** The lane it would unblock is blocked upstream by
+  OI-28, so choosing now would settle a question whose answer cannot be used or
+  tested yet. The word that decides it is *silently*: a resolution that defeats
+  A13 without saying so is the shape of defect this program has spent its whole
+  effort removing, so the operand-row amendment is the likely answer — but it
+  should be made against a lane that can execute and prove it.
 
 - **OI-27 — the governed comparison tool cannot produce a comparison. Any
   comparison.** `tools/build_comparison_report.py` exists to compare Qwen ROM
