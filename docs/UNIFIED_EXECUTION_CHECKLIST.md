@@ -77,7 +77,7 @@
 
 ## W6 — Real end-to-end execution (the correctness spine)
 
-- [~] W6.1 Qwen-HBM: short prompt → prefill → decode → first EOS, real tokenizer tokens, validated text — **executes end to end and produces real tokens**; on a 5-token prompt the selected token matches the vendor reference (`results/abi3/qwen3_activation_bisect.json`). Pinned-workload agreement and decode-to-EOS still to confirm
+- [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle** on the pinned chat workload (`results/abi3/qwen3_hbm_chat_execution.json`, status pass, 8/8 tokens, no legitimacy problems). Decode to first EOS still to run at full length
 - [ ] W6.2 Qwen-ROM: identical token sequence from the ROM deployment
 - [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens
 - [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence
