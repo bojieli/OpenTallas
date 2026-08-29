@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/deepseek_v4_hc_pre_schedule/logical_schedule_certificate_v1.schema.json",
+  "title": "OpenTallas DeepSeek V4 HC_PRE logical schedule certificate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "certificate_id",
+    "checks",
+    "claim_boundary",
+    "counts",
+    "program_contract_id",
+    "program_sha256",
+    "register_table_sha256",
+    "required_nonclaims",
+    "resource_table_sha256",
+    "schedule_id",
+    "schema",
+    "status"
+  ],
+  "properties": {
+    "certificate_id": {"$ref": "#/$defs/sha256"},
+    "checks": {"$ref": "#/$defs/checks"},
+    "claim_boundary": {
+      "const": "Independent logical-schedule conformance certificate only; no execution, cycle, bandwidth, physical-topology, numeric-correctness, or PPA claim."
+    },
+    "counts": {"$ref": "#/$defs/counts"},
+    "program_contract_id": {"$ref": "#/$defs/sha256"},
+    "program_sha256": {"$ref": "#/$defs/sha256"},
+    "register_table_sha256": {"$ref": "#/$defs/sha256"},
+    "required_nonclaims": {
+      "const": [
+        "attention_completion",
+        "bandwidth",
+        "checkpoint_execution",
+        "cycle_accuracy",
+        "cycle_latency",
+        "execution_evidence",
+        "full_model_execution",
+        "nvidia_comparison",
+        "numeric_correctness",
+        "physical_topology",
+        "ppa",
+        "query_projection",
+        "transformer_block_completion",
+        "weighted_rms_norm"
+      ]
+    },
+    "resource_table_sha256": {"$ref": "#/$defs/sha256"},
+    "schedule_id": {"$ref": "#/$defs/sha256"},
+    "schema": {
+      "const": "opentallas.deepseek_v4_hc_pre_logical_schedule_certificate.v1"
+    },
+    "status": {"const": "pass"}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonical_serialization_hash",
+        "exact_count_reconciliation",
+        "instruction_identity",
+        "producer_before_consumer",
+        "register_contract",
+        "resource_identity_and_bounds",
+        "terminal_complete"
+      ],
+      "properties": {
+        "canonical_serialization_hash": {"const": true},
+        "exact_count_reconciliation": {"const": true},
+        "instruction_identity": {"const": true},
+        "producer_before_consumer": {"const": true},
+        "register_contract": {"const": true},
+        "resource_identity_and_bounds": {"const": true},
+        "terminal_complete": {"const": true}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checkpoint_parameter_bytes",
+        "complete_count",
+        "dependency_edge_count",
+        "evidence_observable_register_count",
+        "external_input_register_count",
+        "hc_pre_count",
+        "instruction_count",
+        "live_at_complete_register_count",
+        "produced_register_count",
+        "register_count",
+        "resource_count",
+        "resource_read_count",
+        "slot_count"
+      ],
+      "properties": {
+        "checkpoint_parameter_bytes": {"const": 1572972},
+        "complete_count": {"const": 1},
+        "dependency_edge_count": {"const": 1},
+        "evidence_observable_register_count": {"const": 5},
+        "external_input_register_count": {"const": 1},
+        "hc_pre_count": {"const": 1},
+        "instruction_count": {"const": 2},
+        "live_at_complete_register_count": {"const": 4},
+        "produced_register_count": {"const": 5},
+        "register_count": {"const": 6},
+        "resource_count": {"const": 3},
+        "resource_read_count": {"const": 3},
+        "slot_count": {"const": 2}
+      }
+    }
+  }
+}
