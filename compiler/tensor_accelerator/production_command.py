@@ -3,8 +3,10 @@
 ABI 2.1 additively introduces bounded indexed HBM transfer and BF16 RMSNorm.
 ABI 2.2 adds bounded BF16 rotary-position execution.  ABI 2.3 adds causal GQA
 and transactional KV prepare/commit.  ABI 2.4 adds bounded BF16 residual-add
-and materialized-SiLU multiply.  The decoder retains strict support for all
-older minor versions so qualified artifacts remain executable and reproducible.
+and materialized-SiLU multiply.  ABI 2.5 adds bounded indexed SRAM-to-SRAM
+transfer for model-neutral sequence-position selection.  The decoder retains
+strict support for all older minor versions so qualified artifacts remain
+executable and reproducible.
 """
 
 from __future__ import annotations
@@ -22,7 +24,8 @@ RMSNORM_ABI_MINOR = 1
 ROPE_ABI_MINOR = 2
 ATTENTION_ABI_MINOR = 3
 ELEMENTWISE_ABI_MINOR = 4
-ABI_MINOR = ELEMENTWISE_ABI_MINOR
+SELECTION_ABI_MINOR = 5
+ABI_MINOR = SELECTION_ABI_MINOR
 SUPPORTED_ABI_MINORS = frozenset(
     {
         LEGACY_ABI_MINOR,
@@ -30,6 +33,7 @@ SUPPORTED_ABI_MINORS = frozenset(
         ROPE_ABI_MINOR,
         ATTENTION_ABI_MINOR,
         ELEMENTWISE_ABI_MINOR,
+        SELECTION_ABI_MINOR,
     }
 )
 MAGIC = b"OTTAISA2"
@@ -51,6 +55,7 @@ class ProductionCommandError(ValueError):
 class Opcode(IntEnum):
     DMA_HBM_TO_SRAM = 0x01
     DMA_HBM_INDEXED_TO_SRAM = 0x02
+    DMA_SRAM_INDEXED_TO_SRAM = 0x03
     MATMUL_BF16_TILE = 0x10
     RMSNORM_BF16 = 0x20
     ROPE_BF16 = 0x21
@@ -73,6 +78,7 @@ class Engine(IntEnum):
 EXPECTED_ENGINE = {
     Opcode.DMA_HBM_TO_SRAM: Engine.DMA,
     Opcode.DMA_HBM_INDEXED_TO_SRAM: Engine.DMA,
+    Opcode.DMA_SRAM_INDEXED_TO_SRAM: Engine.DMA,
     Opcode.MATMUL_BF16_TILE: Engine.TENSOR,
     Opcode.RMSNORM_BF16: Engine.VECTOR,
     Opcode.ROPE_BF16: Engine.VECTOR,
@@ -87,6 +93,7 @@ EXPECTED_ENGINE = {
 OPCODE_MIN_MINOR = {
     Opcode.DMA_HBM_TO_SRAM: LEGACY_ABI_MINOR,
     Opcode.DMA_HBM_INDEXED_TO_SRAM: RMSNORM_ABI_MINOR,
+    Opcode.DMA_SRAM_INDEXED_TO_SRAM: SELECTION_ABI_MINOR,
     Opcode.MATMUL_BF16_TILE: LEGACY_ABI_MINOR,
     Opcode.RMSNORM_BF16: RMSNORM_ABI_MINOR,
     Opcode.ROPE_BF16: ROPE_ABI_MINOR,
@@ -222,7 +229,10 @@ def _validate_command(
             raise ProductionCommandError(
                 f"command {command.index} has illegal DMA fields"
             )
-    elif command.opcode == Opcode.DMA_HBM_INDEXED_TO_SRAM:
+    elif command.opcode in {
+        Opcode.DMA_HBM_INDEXED_TO_SRAM,
+        Opcode.DMA_SRAM_INDEXED_TO_SRAM,
+    }:
         if (
             command.flags
             or command.kernel_index == NO_KERNEL
@@ -382,14 +392,17 @@ def encode(
         )
         records.append(prefix + struct.pack("<I", zlib.crc32(prefix) & 0xFFFFFFFF))
     body = b"".join(records)
-    return HEADER.pack(
-        MAGIC,
-        ABI_MAJOR,
-        abi_minor,
-        len(parsed),
-        zlib.crc32(body) & 0xFFFFFFFF,
-        bytes(12),
-    ) + body
+    return (
+        HEADER.pack(
+            MAGIC,
+            ABI_MAJOR,
+            abi_minor,
+            len(parsed),
+            zlib.crc32(body) & 0xFFFFFFFF,
+            bytes(12),
+        )
+        + body
+    )
 
 
 def decode(payload: bytes) -> tuple[ProductionCommand, ...]:
@@ -484,6 +497,7 @@ __all__ = [
     "LEGACY_ABI_MINOR",
     "RMSNORM_ABI_MINOR",
     "ROPE_ABI_MINOR",
+    "SELECTION_ABI_MINOR",
     "MATMUL_FINAL",
     "MATMUL_INIT",
     "NO_KERNEL",

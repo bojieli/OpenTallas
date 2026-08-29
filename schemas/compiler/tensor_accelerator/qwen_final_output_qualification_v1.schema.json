@@ -1,0 +1,218 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_final_output_qualification_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accounting": {
+      "additionalProperties": false,
+      "properties": {
+        "epsilon_additions": {"const": 1},
+        "final_weight_multiplications": {"const": 4096},
+        "input_square_multiplications": {"const": 4096},
+        "mean_divisions": {"const": 1},
+        "normalization_multiplications": {"const": 4096},
+        "projection_accumulation_additions": {"const": 622329856},
+        "projection_multiplications": {"const": 622329856},
+        "reciprocal_square_roots": {"const": 1},
+        "reduction_additions": {"const": 4095},
+        "selected_row_bytes": {"const": 8192},
+        "vocabulary_elements": {"const": 151936}
+      },
+      "required": ["epsilon_additions", "final_weight_multiplications", "input_square_multiplications", "mean_divisions", "normalization_multiplications", "projection_accumulation_additions", "projection_multiplications", "reciprocal_square_roots", "reduction_additions", "selected_row_bytes", "vocabulary_elements"],
+      "type": "object"
+    },
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "connected_input": {
+      "additionalProperties": false,
+      "properties": {
+        "build_id": {"$ref": "#/$defs/sha256"},
+        "hidden_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "report_id": {"$ref": "#/$defs/sha256"}
+      },
+      "required": ["build_id", "hidden_payload_sha256", "payload_sha256", "report_id"],
+      "type": "object"
+    },
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "input": {
+      "additionalProperties": false,
+      "properties": {
+        "classification": {"const": "authentic_connected_layer_proxy"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {"$ref": "#/$defs/hidden_shape"}
+      },
+      "required": ["classification", "payload_sha256", "shape"],
+      "type": "object"
+    },
+    "numeric_contracts": {
+      "items": false,
+      "maxItems": 3,
+      "minItems": 3,
+      "prefixItems": [
+        {"const": "bf16_bf16_fp32_sequential_rne_v1"},
+        {"const": "exact_index_select_v1"},
+        {"const": "qwen3_rmsnorm_fp32_bf16_v1"}
+      ],
+      "type": "array"
+    },
+    "operations": {
+      "items": false,
+      "maxItems": 3,
+      "minItems": 3,
+      "prefixItems": [
+        {"const": "node.0613"},
+        {"const": "node.0614"},
+        {"const": "node.0615"}
+      ],
+      "type": "array"
+    },
+    "outputs": {
+      "additionalProperties": false,
+      "properties": {
+        "final_norm": {"$ref": "#/$defs/hidden_output"},
+        "last_token": {
+          "additionalProperties": false,
+          "properties": {
+            "payload_sha256": {"$ref": "#/$defs/sha256"},
+            "selected_index": {"const": 1},
+            "shape": {"$ref": "#/$defs/hidden_shape"}
+          },
+          "required": ["payload_sha256", "selected_index", "shape"],
+          "type": "object"
+        },
+        "logits": {
+          "additionalProperties": false,
+          "properties": {
+            "argmax_tie_count": {"minimum": 1, "type": "integer"},
+            "argmax_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+            "payload_sha256": {"$ref": "#/$defs/sha256"},
+            "shape": {"const": [1, 151936]}
+          },
+          "required": ["argmax_tie_count", "argmax_token_id", "payload_sha256", "shape"],
+          "type": "object"
+        }
+      },
+      "required": ["final_norm", "last_token", "logits"],
+      "type": "object"
+    },
+    "projection_saturated_element_count": {"minimum": 0, "type": "integer"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "rmsnorm": {
+      "additionalProperties": false,
+      "properties": {
+        "inverse_rms_binary32_codes_sha256": {"$ref": "#/$defs/sha256"},
+        "mean_square_binary32_codes_sha256": {"$ref": "#/$defs/sha256"},
+        "normalized_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "normalized_saturated_element_count": {"minimum": 0, "type": "integer"},
+        "output_saturated_element_count": {"minimum": 0, "type": "integer"}
+      },
+      "required": ["inverse_rms_binary32_codes_sha256", "mean_square_binary32_codes_sha256", "normalized_payload_sha256", "normalized_saturated_element_count", "output_saturated_element_count"],
+      "type": "object"
+    },
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_final_output_qualification.v1"},
+    "selected_reference": {
+      "additionalProperties": false,
+      "properties": {
+        "output": {
+          "additionalProperties": false,
+          "properties": {
+            "final_norm": {"$ref": "#/$defs/selected"},
+            "last_token": {"$ref": "#/$defs/selected"},
+            "logits": {"$ref": "#/$defs/selected"}
+          },
+          "required": ["final_norm", "last_token", "logits"],
+          "type": "object"
+        },
+        "projection": {
+          "additionalProperties": false,
+          "properties": {
+            "codes": {"$ref": "#/$defs/codes"},
+            "rows": {"$ref": "#/$defs/indices"}
+          },
+          "required": ["codes", "rows"],
+          "type": "object"
+        },
+        "selection_fixture_rows": {"const": 2},
+        "status": {"const": "exact_match"}
+      },
+      "required": ["output", "projection", "selection_fixture_rows", "status"],
+      "type": "object"
+    },
+    "sources": {
+      "additionalProperties": false,
+      "properties": {
+        "final_norm_weight": {"$ref": "#/$defs/source"},
+        "vocabulary_weight": {"$ref": "#/$defs/source"}
+      },
+      "required": ["final_norm_weight", "vocabulary_weight"],
+      "type": "object"
+    },
+    "status": {"const": "pass"},
+    "target_adaptation": {
+      "additionalProperties": false,
+      "properties": {
+        "classification": {"const": "qualified_operator_family_fixture"},
+        "framework_fallback": {"const": false},
+        "full_model_claim": {"const": false},
+        "input_boundary": {"const": "connected_layer_hidden_1_not_hidden_36"},
+        "matrix_reduction": {"const": "strictly_increasing_k_binary32_rne"}
+      },
+      "required": ["classification", "framework_fallback", "full_model_claim", "input_boundary", "matrix_reduction"],
+      "type": "object"
+    }
+  },
+  "required": ["accounting", "checkpoint_lock_id", "connected_input", "graph_id", "input", "numeric_contracts", "operations", "outputs", "projection_saturated_element_count", "report_id", "rmsnorm", "schema", "selected_reference", "sources", "status", "target_adaptation"],
+  "title": "OpenTallas Qwen final-output qualification v1",
+  "type": "object",
+  "$defs": {
+    "codes": {
+      "items": {"maximum": 65535, "minimum": 0, "type": "integer"},
+      "maxItems": 8,
+      "minItems": 1,
+      "type": "array"
+    },
+    "hidden_output": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {"$ref": "#/$defs/hidden_shape"}
+      },
+      "required": ["payload_sha256", "shape"],
+      "type": "object"
+    },
+    "hidden_shape": {"const": [1, 4096]},
+    "indices": {
+      "items": {"minimum": 0, "type": "integer"},
+      "maxItems": 8,
+      "minItems": 1,
+      "type": "array",
+      "uniqueItems": true
+    },
+    "selected": {
+      "additionalProperties": false,
+      "properties": {
+        "codes": {"$ref": "#/$defs/codes"},
+        "element_indices": {"$ref": "#/$defs/indices"}
+      },
+      "required": ["codes", "element_indices"],
+      "type": "object"
+    },
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "source": {
+      "additionalProperties": false,
+      "properties": {
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {
+          "items": {"minimum": 1, "type": "integer"},
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array"
+        },
+        "size_bytes": {"minimum": 1, "type": "integer"},
+        "tensor": {"minLength": 1, "type": "string"}
+      },
+      "required": ["payload_sha256", "shape", "size_bytes", "tensor"],
+      "type": "object"
+    }
+  }
+}
