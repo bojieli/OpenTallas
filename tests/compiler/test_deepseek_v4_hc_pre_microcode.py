@@ -4,6 +4,7 @@ import copy
 from dataclasses import replace
 import hashlib
 import struct
+from types import MappingProxyType
 import zlib
 
 import pytest
@@ -40,6 +41,26 @@ from compiler.microcode.deepseek_v4_hc_pre import (
 )
 
 
+class _IntAlias(int):
+    pass
+
+
+class _StrAlias(str):
+    pass
+
+
+class _BytesAlias(bytes):
+    pass
+
+
+class _TupleAlias(tuple):
+    pass
+
+
+class _DictAlias(dict):
+    pass
+
+
 def _repair_crc(payload: bytearray) -> None:
     struct.pack_into(
         "<I",
@@ -53,6 +74,12 @@ def test_hc_pre_fragment_is_exact_and_integrated_abi_compatible() -> None:
     instructions = assemble()
     payload = encode(instructions)
     assert len(payload) == HEADER.size + 2 * RECORD.size
+    assert len(payload) == 136
+    assert payload == encode_shared(instructions)
+    assert (
+        hashlib.sha256(payload).hexdigest()
+        == "7811e26fae1162677a425795294e776caded0e6cd44383986bb34b9bf9c15739"
+    )
     assert decode(payload) == instructions
     verify(decode(payload))
     assert [item.opcode for item in instructions] == [
@@ -129,7 +156,10 @@ def test_hc_pre_fragment_typed_state_is_complete_and_bounded() -> None:
         verify_tensor_contract(tuple(changed), 3)
 
 
-@pytest.mark.parametrize("token_count", [0, 5, -1, True, 1.0, "1"])
+@pytest.mark.parametrize(
+    "token_count",
+    [0, 5, -1, True, 1.0, "1", _IntAlias(1)],
+)
 def test_hc_pre_fragment_rejects_out_of_bounds_token_count(
     token_count: object,
 ) -> None:
@@ -195,6 +225,85 @@ def test_hc_pre_fragment_rejects_every_semantic_operand_drift() -> None:
         verify(decoded)
 
 
+def test_hc_pre_fragment_rejects_python_type_aliases_in_instructions() -> None:
+    instructions = assemble()
+    first, complete = instructions
+    mutations = (
+        _TupleAlias(instructions),
+        (replace(first, opcode=int(first.opcode)), complete),
+        (replace(first, destination0=int(first.destination0)), complete),
+        (replace(first, resource0=int(first.resource0)), complete),
+        (replace(first, flags=False), complete),
+        (replace(first, immediate0=4.0), complete),
+        (first, replace(complete, immediate0=False)),
+    )
+    for changed in mutations:
+        with pytest.raises(DeepSeekV4HCPreMicrocodeError, match="does not exactly"):
+            verify(changed)  # type: ignore[arg-type]
+        with pytest.raises(DeepSeekV4HCPreMicrocodeError, match="does not exactly"):
+            encode(changed)  # type: ignore[arg-type]
+
+
+def test_hc_pre_tensor_contract_rejects_nested_type_aliases() -> None:
+    specs = tensor_contract(3)
+    mutations = []
+
+    changed = list(specs)
+    changed[0] = replace(changed[0], register=int(changed[0].register))
+    mutations.append(tuple(changed))
+
+    changed = list(specs)
+    changed[0] = replace(changed[0], shape=(3.0, 4, 4096))
+    mutations.append(tuple(changed))
+
+    changed = list(specs)
+    changed[1] = replace(changed[1], live_at_complete=1)
+    mutations.append(tuple(changed))
+
+    changed = list(specs)
+    changed[1] = replace(changed[1], evidence_observable=1)
+    mutations.append(tuple(changed))
+
+    changed = list(specs)
+    changed[1] = replace(changed[1], dtype=_StrAlias("BF16"))
+    mutations.append(tuple(changed))
+    mutations.append(_TupleAlias(specs))
+
+    for mutation in mutations:
+        with pytest.raises(DeepSeekV4HCPreMicrocodeError, match="typed HC_PRE state"):
+            verify_tensor_contract(mutation, 3)
+
+
+def test_hc_pre_resource_contract_rejects_nested_type_aliases() -> None:
+    resources = resource_contract()
+    mutations = []
+
+    changed = list(resources)
+    changed[0] = replace(changed[0], resource=int(changed[0].resource))
+    mutations.append(tuple(changed))
+
+    changed = list(resources)
+    changed[0] = replace(changed[0], role=_StrAlias(changed[0].role))
+    mutations.append(tuple(changed))
+
+    changed = list(resources)
+    changed[0] = replace(changed[0], shape=(24.0,))
+    mutations.append(tuple(changed))
+
+    changed = list(resources)
+    changed[0] = replace(changed[0], size_bytes=96.0)
+    mutations.append(tuple(changed))
+
+    changed = list(resources)
+    changed[0] = replace(changed[0], checkpoint_derived=1)
+    mutations.append(tuple(changed))
+    mutations.append(_TupleAlias(resources))
+
+    for mutation in mutations:
+        with pytest.raises(DeepSeekV4HCPreMicrocodeError, match="artifact resources"):
+            verify_resource_contract(mutation)
+
+
 def test_hc_pre_fragment_decode_rejects_corruption_and_malformed_records() -> None:
     payload = encode(assemble())
     with pytest.raises(DeepSeekV4HCPreMicrocodeError, match="body length"):
@@ -225,6 +334,11 @@ def test_hc_pre_fragment_decode_rejects_corruption_and_malformed_records() -> No
     with pytest.raises(DeepSeekV4HCPreMicrocodeError, match="reserved bits"):
         decode(bytes(reserved))
 
+    with pytest.raises(DeepSeekV4HCPreMicrocodeError, match="exact bytes"):
+        decode(_BytesAlias(payload))
+    with pytest.raises(DeepSeekV4HCPreMicrocodeError, match="exact bytes"):
+        decode(bytearray(payload))  # type: ignore[arg-type]
+
 
 def test_hc_pre_program_contract_is_hash_bound_and_contains_no_expectations() -> None:
     contract = build_program_contract()
@@ -248,3 +362,36 @@ def test_hc_pre_program_contract_is_hash_bound_and_contains_no_expectations() ->
     ).hexdigest()
     with pytest.raises(DeepSeekV4HCPreMicrocodeError, match="hash-bound"):
         verify_program_contract(changed)
+
+
+def test_hc_pre_program_contract_rejects_json_type_aliases() -> None:
+    contract = build_program_contract()
+    mutations = []
+
+    changed = copy.deepcopy(contract)
+    changed["abi"]["major"] = True
+    mutations.append(changed)
+
+    changed = copy.deepcopy(contract)
+    changed["dimensions"]["minimum_token_count"] = True
+    mutations.append(changed)
+
+    changed = copy.deepcopy(contract)
+    changed["dimensions"]["maximum_token_count"] = 4.0
+    mutations.append(changed)
+
+    changed = copy.deepcopy(contract)
+    changed["schema"] = _StrAlias(changed["schema"])
+    mutations.append(changed)
+
+    changed = copy.deepcopy(contract)
+    minimum = changed["dimensions"].pop("minimum_token_count")
+    changed["dimensions"][_StrAlias("minimum_token_count")] = minimum
+    mutations.append(changed)
+
+    mutations.append(_DictAlias(contract))
+    mutations.append(MappingProxyType(contract))
+
+    for mutation in mutations:
+        with pytest.raises(DeepSeekV4HCPreMicrocodeError, match="hash-bound"):
+            verify_program_contract(mutation)

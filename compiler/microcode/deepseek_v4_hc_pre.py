@@ -9,7 +9,7 @@ callback, or implicit arithmetic fallback.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, fields, is_dataclass
 import hashlib
 
 from compiler.ir.model import canonical_json_bytes
@@ -25,6 +25,7 @@ from compiler.microcode.deepseek_v4_embedding_query_a import (
     MAGIC,
     MAX_TOKEN_COUNT,
     MIN_TOKEN_COUNT,
+    NO_OPERAND,
     RECORD,
     SINKHORN_ITERATIONS,
     DeepSeekV4EmbeddingQueryAMicrocodeError,
@@ -103,6 +104,43 @@ PROGRAM_BINDING = HCPreProgramBinding(
 )
 
 
+def _strict_contract_equal(value: object, expected: object) -> bool:
+    """Compare public contract values without Python's cross-type aliases.
+
+    Python considers ``True == 1``, raw integers equal to ``IntEnum`` members,
+    and integral floats equal to integers.  None of those substitutions are
+    legal at a typed microcode or JSON-contract boundary.
+    """
+
+    if type(value) is not type(expected):
+        return False
+    if isinstance(expected, dict):
+        if (
+            value.keys() != expected.keys()
+            or any(type(key) is not str for key in value)
+            or any(type(key) is not str for key in expected)
+        ):
+            return False
+        return all(
+            _strict_contract_equal(value[key], expected_item)
+            for key, expected_item in expected.items()
+        )
+    if isinstance(expected, (list, tuple)):
+        return len(value) == len(expected) and all(
+            _strict_contract_equal(actual_item, expected_item)
+            for actual_item, expected_item in zip(value, expected)
+        )
+    if is_dataclass(expected) and not isinstance(expected, type):
+        return all(
+            _strict_contract_equal(
+                getattr(value, field.name),
+                getattr(expected, field.name),
+            )
+            for field in fields(expected)
+        )
+    return value == expected
+
+
 def _expected_program() -> tuple[Instruction, ...]:
     return (
         Instruction(
@@ -136,7 +174,7 @@ def assemble() -> tuple[Instruction, ...]:
 def verify(instructions: tuple[Instruction, ...]) -> None:
     """Require one exact HC_PRE instruction followed by terminal COMPLETE."""
 
-    if instructions != _expected_program():
+    if not _strict_contract_equal(instructions, _expected_program()):
         raise DeepSeekV4HCPreMicrocodeError(
             "program does not exactly lower HC_PRE and terminal COMPLETE"
         )
@@ -154,11 +192,57 @@ def encode(instructions: tuple[Instruction, ...]) -> bytes:
         ) from exc
 
 
+def _decoded_register(value: int) -> int:
+    if value == NO_OPERAND:
+        return value
+    try:
+        return Register(value)
+    except ValueError:
+        return value
+
+
+def _decoded_resource(value: int) -> int:
+    if value == NO_OPERAND:
+        return value
+    try:
+        return Resource(value)
+    except ValueError:
+        return value
+
+
+def _typed_decoded_instruction(instruction: Instruction) -> Instruction:
+    """Restore enum operand types erased by the shared uint32 wire decoder."""
+
+    return Instruction(
+        instruction.opcode,
+        destination0=_decoded_register(instruction.destination0),
+        destination1=_decoded_register(instruction.destination1),
+        destination2=_decoded_register(instruction.destination2),
+        destination3=_decoded_register(instruction.destination3),
+        destination4=_decoded_register(instruction.destination4),
+        source=_decoded_register(instruction.source),
+        resource0=_decoded_resource(instruction.resource0),
+        resource1=_decoded_resource(instruction.resource1),
+        resource2=_decoded_resource(instruction.resource2),
+        resource3=_decoded_resource(instruction.resource3),
+        immediate0=instruction.immediate0,
+        immediate1=instruction.immediate1,
+        immediate2=instruction.immediate2,
+        immediate3=instruction.immediate3,
+        flags=instruction.flags,
+    )
+
+
 def decode(payload: bytes) -> tuple[Instruction, ...]:
     """Decode structurally valid shared-ABI bytes; call :func:`verify` next."""
 
+    if type(payload) is not bytes:
+        raise DeepSeekV4HCPreMicrocodeError("microcode must be exact bytes")
     try:
-        return _decode_program(payload)
+        return tuple(
+            _typed_decoded_instruction(instruction)
+            for instruction in _decode_program(payload)
+        )
     except DeepSeekV4EmbeddingQueryAMicrocodeError as exc:
         raise DeepSeekV4HCPreMicrocodeError(
             f"cannot decode HC_PRE program: {exc}"
@@ -167,8 +251,7 @@ def decode(payload: bytes) -> tuple[Instruction, ...]:
 
 def validate_token_count(token_count: int) -> None:
     if (
-        isinstance(token_count, bool)
-        or not isinstance(token_count, int)
+        type(token_count) is not int
         or not MIN_TOKEN_COUNT <= token_count <= MAX_TOKEN_COUNT
     ):
         raise DeepSeekV4HCPreMicrocodeError(
@@ -229,7 +312,7 @@ def tensor_contract(token_count: int) -> tuple[TensorSpec, ...]:
 
 
 def verify_tensor_contract(value: object, token_count: int) -> None:
-    if value != tensor_contract(token_count):
+    if not _strict_contract_equal(value, tensor_contract(token_count)):
         raise DeepSeekV4HCPreMicrocodeError(
             "typed HC_PRE state differs from the exact program contract"
         )
@@ -267,7 +350,7 @@ def resource_contract() -> tuple[ResourceSpec, ...]:
 
 
 def verify_resource_contract(value: object) -> None:
-    if value != resource_contract():
+    if not _strict_contract_equal(value, resource_contract()):
         raise DeepSeekV4HCPreMicrocodeError(
             "HC_PRE artifact resources differ from the exact program contract"
         )
@@ -322,7 +405,7 @@ def build_program_contract() -> dict[str, object]:
 
 
 def verify_program_contract(value: object) -> None:
-    if value != build_program_contract():
+    if not _strict_contract_equal(value, build_program_contract()):
         raise DeepSeekV4HCPreMicrocodeError(
             "HC_PRE program contract differs from its hash-bound definition"
         )
