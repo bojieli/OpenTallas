@@ -39,7 +39,7 @@
 - [x] W2.3 Neutrality checker (no ROM/HBM/SRAM/stage/queue/address terms in either IR) — `compiler/ir/v3/kernel_ir.py::check_neutral`
 - [x] W2.4 Qwen3-8B exporter → Model Graph v3 → Kernel IR v3 — `compiler/frontends/v3/qwen3.py`; 691 kernels, 1127 tensors, 36 states, all 399 weight bindings verified against 16,381,470,720 real checkpoint bytes; graph_id `65eb209f`
 - [x] W2.5 DeepSeek-V4-Flash exporter → Model Graph v3 → Kernel IR v3 — `compiler/frontends/v3/deepseek_v4.py`; 3003 kernels, 71278 tensors, 229 states, 156,015,698,140 bound weight bytes
-- [~] W2.6 Cross-model operator union report; both exporters pass one schema + verifier
+- [x] W2.6 Cross-model operator union report; both exporters pass one schema + verifier — `tests/compiler/test_neutral_ir_cross_model.py` (22 gates); union published as `spec/abi3/numeric_contract_union.json` (71 contracts)
 
 ## W3 — Functional simulator (ABI 3.0 device)
 
@@ -54,7 +54,7 @@
 - [x] W3.9 Reduction engine — `runtime/sim/engines/reduction.py`
 - [x] W3.10 Selection engine (argmax, token append, EOS) — `runtime/sim/engines/selection.py`, on-device
 - [x] W3.11 Link engine (send/recv/remote-dma/multicast/gather/scatter/collective/barrier) for 32-node + wafer — `runtime/sim/engines/link.py`
-- [ ] W3.12 Observation/recovery engines + full counter set
+- [x] W3.12 Observation/recovery engines + full counter set — sequencer-executed; 115-counter registry published
 - [x] W3.13 Host queue driver — `runtime/driver.py`, real 128-byte submission/completion records per token
 
 ## W4 — HBM/SRAM backend (shared chip; 1 node Qwen, 32 nodes DeepSeek)

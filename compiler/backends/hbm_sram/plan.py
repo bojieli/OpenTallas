@@ -72,6 +72,7 @@ from compiler.ir.v3.kernel_ir import (
     require_neutral,
 )
 from compiler.ir.v3.lowering import engine_for
+from compiler.ir.v3.numeric import canonical_contract_id
 from runtime.abi3.capability import Capability, canonical_json, digest_of
 from runtime.abi3.constants import (
     Attention,
@@ -677,116 +678,23 @@ class PhysicalPlan:
 # ---------------------------------------------------------------------------
 # Neutral IR deserialisation
 # ---------------------------------------------------------------------------
-def _extent_from_json(value: Any) -> int | Symbolic:
-    if isinstance(value, Mapping):
-        return Symbolic(
-            symbol=str(value["symbol"]),
-            multiplier=int(value.get("multiplier", 1)),
-            maximum=int(value.get("maximum", 0)),
-        )
-    return int(value)
-
-
-def graph_from_dict(body: Mapping[str, Any]) -> KernelGraph:
-    """Rebuild a :class:`KernelGraph` from its canonical JSON body.
-
-    The frozen IR module writes documents but does not read them back; a
-    consumer therefore needs this.  It performs no interpretation: every field
-    is copied straight across so that ``graph.to_dict()`` round-trips.
-    """
-    tensors = []
-    for body_t in body["tensors"]:
-        binding = None
-        if "binding" in body_t:
-            b = body_t["binding"]
-            binding = CheckpointBinding(
-                source_name=b["source_name"],
-                path=b["path"],
-                offset=int(b["offset"]),
-                bytes=int(b["bytes"]),
-                sha256=b["sha256"],
-                transform=b.get("transform", "identity"),
-            )
-        tensors.append(
-            Tensor(
-                tensor_id=body_t["tensor_id"],
-                dtype=body_t["dtype"],
-                shape=tuple(_extent_from_json(d) for d in body_t["shape"]),
-                role=body_t["role"],
-                binding=binding,
-                scale_tensor_id=body_t.get("scale_tensor_id"),
-                scale_block_elements=int(body_t.get("scale_block_elements", 0)),
-            )
-        )
-    states = tuple(
-        StateResource(
-            state_id=s["state_id"],
-            state_class=s["state_class"],
-            dtype=s["dtype"],
-            row_elements=int(s["row_elements"]),
-            capacity_rows=_extent_from_json(s["capacity_rows"]),
-            initialization=s.get("initialization", "zero"),
-        )
-        for s in body["states"]
-    )
-    kernels = tuple(
-        Kernel(
-            index=int(k["index"]),
-            kernel_id=k["kernel_id"],
-            kind=k["kind"],
-            inputs=tuple(k["inputs"]),
-            outputs=tuple(k["outputs"]),
-            numeric_contract=k["numeric_contract"],
-            iteration_domain={
-                key: _extent_from_json(v)
-                for key, v in dict(k.get("iteration_domain", {})).items()
-            },
-            attributes=dict(k.get("attributes", {})),
-            phases=tuple(k.get("phases", ("prefill", "decode"))),
-            state_reads=tuple(k.get("state_reads", ())),
-            state_writes=tuple(k.get("state_writes", ())),
-            counter_class=k.get("counter_class", ""),
-            source_operation_id=k.get("source_operation_id", ""),
-            layer=k.get("layer"),
-        )
-        for k in body["kernels"]
-    )
-    entrypoints = tuple(
-        Entrypoint(
-            phase=e["phase"],
-            inputs=tuple(e["inputs"]),
-            outputs=tuple(e["outputs"]),
-            states=tuple(e["states"]),
-            generation_policy=e.get("generation_policy", ""),
-        )
-        for e in body["entrypoints"]
-    )
-    symbols = tuple(
-        RuntimeSymbol(
-            name=s["name"],
-            minimum=int(s["minimum"]),
-            maximum=int(s["maximum"]),
-            multiple_of=int(s.get("multiple_of", 1)),
-            binding=s.get("binding", "request"),
-        )
-        for s in body["symbols"]
-    )
-    return KernelGraph(
-        model_id=body["model_id"],
-        source=dict(body.get("source", {})),
-        symbols=symbols,
-        tensors=tuple(tensors),
-        states=states,
-        kernels=kernels,
-        entrypoints=entrypoints,
-        numeric_profile=body.get("numeric_profile", "target_precision_v1"),
-        generation_policy=dict(body.get("generation_policy", {})),
-    )
-
-
 def read_kernel_graph(path: Path | str) -> KernelGraph:
-    """Read a Tensor Kernel IR v3 document from disk."""
-    return graph_from_dict(json.loads(Path(path).read_text()))
+    """Read a published Tensor Kernel IR v3 document.
+
+    Deserialisation belongs to the frozen IR module, which re-derives
+    ``graph_id`` and rejects a document edited after publication; a second
+    implementation here could only drift from it.
+    """
+    return KernelGraph.read(path)
+
+
+def as_kernel_graph(source: KernelGraph | Mapping[str, Any] | Path | str) -> KernelGraph:
+    """Accept a graph, a published JSON body, or a path to one."""
+    if isinstance(source, KernelGraph):
+        return source
+    if isinstance(source, Mapping):
+        return KernelGraph.from_dict(source)
+    return read_kernel_graph(source)
 
 
 # ---------------------------------------------------------------------------
@@ -818,6 +726,12 @@ def matrix_shape(tensor: Tensor, span_max: int) -> tuple[int, int, bool]:
     """
     if not tensor.shape:
         return 1, 1, False
+    if len(tensor.shape) == 1 and isinstance(tensor.shape[0], Symbolic):
+        # A rank-1 tensor over a runtime symbol is one value per token: rows
+        # vary, the width is one.  Reading it the other way round would put a
+        # symbol on the fastest axis, which no tensor view can express.
+        rows, _ = _extent_value(tensor.shape[0], span_max)
+        return max(rows, 1), 1, True
     cols, cols_symbolic = _extent_value(tensor.shape[-1], span_max)
     if cols_symbolic:
         raise PlanError(
@@ -958,9 +872,20 @@ def build_plan(
 
 
 def _check_numeric_contracts(graph: KernelGraph, capability: Capability) -> None:
-    implemented = set(capability.numeric_contracts)
+    """Every contract the graph names must be one the capability implements.
+
+    Both sides are canonicalised first: an exporter that emitted an
+    implementation path rather than a semantic identifier would otherwise miss
+    a contract the chip does in fact implement, and ADR-003 section 15 forbids
+    the neutral IR from carrying an implementation location anyway.
+    """
+    implemented = {canonical_contract_id(c) for c in capability.numeric_contracts}
     missing = sorted(
-        {k.numeric_contract for k in graph.kernels if k.numeric_contract}
+        {
+            canonical_contract_id(k.numeric_contract)
+            for k in graph.kernels
+            if k.numeric_contract
+        }
         - implemented
     )
     if missing:
@@ -2022,7 +1947,7 @@ def _plan_kernels(
                 kind=kernel.kind,
                 engine_family=int(engine.family),
                 engine_sub=int(engine.sub),
-                numeric_contract=kernel.numeric_contract,
+                numeric_contract=canonical_contract_id(kernel.numeric_contract),
                 band_id=band_id,
                 layer=kernel.layer,
                 body_position=body_position.get(kernel.index, -1),

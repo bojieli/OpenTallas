@@ -21,6 +21,10 @@ import pytest
 from runtime.abi3.capability import Capability, canonical_json
 from runtime.abi3.constants import (
     Control,
+    Reduction,
+    Selection,
+    Tensor,
+    Vector,
     CounterGroup,
     DType,
     Feature,
@@ -36,9 +40,9 @@ from runtime.abi3.constants import (
     TopologyClass,
     counter_id,
 )
-from runtime.abi3.builder import DeploymentBuilder
+from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.deployment import Deployment, ObjectSource
-from runtime.abi3.descriptors import CollectiveOp, Phase, Symbol
+from runtime.abi3.descriptors import CollectiveOp, Phase, SelectionMode, Symbol
 from runtime.abi3.fixture import build_fixture, fixture_capability
 from runtime.abi3.verifier import verify_deployment
 from runtime.sim.counters import COUNTERS, NAME_TO_ID, is_timing_counter
@@ -58,11 +62,19 @@ from runtime.cycle.machine import (
 from runtime.cycle.model import (
     CycleModel,
     CycleRequest,
+    ScheduleError,
     architectural_counters,
     functional_counters,
+    operand_extents,
     prove_acyclic_waits,
     timing_counters,
 )
+from runtime.sim.engines import load_engines
+
+#: The engine implementations register themselves on import; a driver loads
+#: them, so the tests do too.  Without them every engine operation traps in
+#: *both* models, which is a legitimate run but not one that exercises tiling.
+load_engines()
 
 REPO = Path(__file__).resolve().parents[2]
 HARDWARE = REPO / "configs" / "hardware"
@@ -229,6 +241,384 @@ def synthetic_state_deployment(
     builder.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
     builder.entrypoint(entrypoint_id=1, first_instruction=0, phase=Phase.DECODE)
     builder.source_identity = {"fixture": "abi3-cycle-synthetic-v1"}
+    return builder.finish(), capability
+
+
+TILE_ROWS = 8
+TILE_COLS = 32
+TILE_DEPTH = 64
+VOCAB = 32
+CONTEXT = 64
+
+
+def cycle_capability(
+    topology: TopologyClass = TopologyClass.SINGLE_CHIP,
+) -> Capability:
+    """A capability large enough to tile against, with a full engine set."""
+    features = [
+        Feature.HOST_QUEUE_ABI,
+        Feature.DEPLOYMENT_DESCRIPTOR_ABI,
+        Feature.DETERMINISTIC_MICROSEQUENCER,
+        Feature.BF16_TENSOR,
+        Feature.TRANSACTIONAL_STATE,
+        Feature.ON_DEVICE_SELECTION,
+    ]
+    if topology == TopologyClass.CLUSTER_32:
+        features.append(Feature.INTER_CHIP_ENDPOINT)
+    if topology == TopologyClass.WAFER_LOGICAL_DEVICE:
+        features.append(Feature.WAFER_ENDPOINT)
+    capability = Capability(
+        capability_id="",
+        topology_class=int(topology),
+        features=tuple(int(f) for f in features),
+        limits={
+            "max_instructions": 4096,
+            "max_descriptors": 4096,
+            "max_loop_depth": 4,
+            "max_loop_trip": 1 << 20,
+            "max_retired_work": 1 << 32,
+            "max_events": 256,
+            "max_outstanding_per_queue": 4,
+            "max_context_positions": CONTEXT,
+            "max_expert_ids": 1024,
+            "max_topk": 16,
+            "max_vocabulary": VOCAB,
+            "max_sessions": 4,
+            "max_nodes": 32 if topology == TopologyClass.CLUSTER_32 else 1,
+        },
+        numeric_contracts=(
+            "bf16_bf16_fp32_blocked_rne_v1",
+            "bf16_bf16_fp32_sequential_rne_v1",
+            "exact_index_select_v1",
+        ),
+        engines={
+            "tensor": {"lanes": 32, "queues": 2},
+            "vector": {"lanes": 16, "queues": 1},
+            "reduction": {"lanes": 8, "queues": 1},
+            "selection": {"lanes": 8, "queues": 1},
+            "dma": {"lanes": 1, "queues": 2},
+            "state": {"lanes": 1, "queues": 1},
+        },
+        memory={
+            "sram": {"bytes": 1 << 20, "banks": 8, "ports": 2},
+            "hbm": {"bytes": 1 << 24, "channels": 4},
+            "rom": {"bytes": 1 << 24},
+        },
+        technology_view="fixture",
+    )
+    capability.validate()
+    return capability
+
+
+def synthetic_tiled_deployment(
+    capability: Capability | None = None,
+    *,
+    storage_class: StorageClass = StorageClass.HBM,
+    tile_rows: int = 4,
+    tile_cols: int = 8,
+    tile_depth: int = 16,
+    max_outstanding: int = 4,
+    bank_mask: int = 0,
+    port_mask: int = 0,
+    schedule_reduction: bool = True,
+) -> tuple[Deployment, Capability]:
+    """A completing deployment whose every operator carries a tile mapping.
+
+    Extents deliberately do not divide the tile shape, so partial tiles -- and
+    the padding work they waste -- are exercised rather than assumed away.
+    """
+    capability = capability or cycle_capability()
+    builder = _state_builder(capability, target="cycle-tiled")
+    builder.require(Feature.BF16_TENSOR)
+
+    weight_bytes = VOCAB * TILE_DEPTH * 2
+    weights = builder.memory_object(
+        storage_class=storage_class,
+        size_bytes=weight_bytes,
+        source=ObjectSource.zeros(weight_bytes),
+        permissions=int(Permission.READ | Permission.IMMUTABLE),
+        key="obj.weights",
+    )
+    act_bytes = TILE_ROWS * TILE_DEPTH * 2
+    out_bytes = TILE_ROWS * VOCAB * 2
+    activations = builder.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=act_bytes + 2 * out_bytes,
+        source=ObjectSource.zeros(act_bytes + 2 * out_bytes),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.activations",
+    )
+    logits = builder.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=VOCAB * 2,
+        source=ObjectSource.zeros(VOCAB * 2),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.logits",
+    )
+    token_slots = 1 + CONTEXT
+    tokens = builder.memory_object(
+        storage_class=StorageClass.HOST,
+        size_bytes=token_slots * 4,
+        source=ObjectSource.zeros(token_slots * 4),
+        permissions=int(Permission.READ | Permission.WRITE | Permission.HOST_VISIBLE),
+        key="obj.tokens",
+    )
+    row_bytes = TILE_DEPTH * 2
+    kv_committed = builder.memory_object(
+        storage_class=StorageClass.STATE,
+        size_bytes=CONTEXT * row_bytes,
+        source=ObjectSource.zeros(CONTEXT * row_bytes),
+        permissions=int(Permission.READ | Permission.STATE_COMMIT),
+        key="obj.kv.committed",
+    )
+    kv_prepared = builder.memory_object(
+        storage_class=StorageClass.STATE,
+        size_bytes=CONTEXT * row_bytes,
+        source=ObjectSource.zeros(CONTEXT * row_bytes),
+        permissions=int(Permission.READ | Permission.STATE_PREPARE),
+        key="obj.kv.prepared",
+    )
+
+    matmul_numeric = builder.numeric(
+        contract="bf16_bf16_fp32_blocked_rne_v1",
+        input_dtype=DType.BF16,
+        output_dtype=DType.BF16,
+        key="num.matmul",
+    )
+    select_numeric = builder.numeric(
+        contract="exact_index_select_v1",
+        input_dtype=DType.BF16,
+        output_dtype=DType.U32,
+        accumulator_dtype=DType.FP32,
+        key="num.select",
+    )
+
+    tensor_schedule = builder.schedule(
+        engine_family=Major.TENSOR,
+        tile_rows=tile_rows,
+        tile_cols=tile_cols,
+        tile_depth=tile_depth,
+        max_outstanding=max_outstanding,
+        issue_window=2,
+        bank_mask=bank_mask,
+        port_mask=port_mask,
+        queue_index=0,
+        key="sched.tensor",
+    )
+    vector_schedule = builder.schedule(
+        engine_family=Major.VECTOR,
+        tile_rows=tile_rows,
+        tile_cols=tile_cols,
+        tile_depth=1,
+        max_outstanding=max_outstanding,
+        issue_window=1,
+        key="sched.vector",
+    )
+    reduction_schedule = builder.schedule(
+        engine_family=Major.REDUCTION,
+        tile_rows=1,
+        tile_cols=tile_cols,
+        tile_depth=tile_rows,
+        max_outstanding=max_outstanding,
+        issue_window=2,
+        key="sched.reduction",
+    )
+    selection_schedule = builder.schedule(
+        engine_family=Major.SELECTION,
+        tile_rows=1,
+        tile_cols=tile_cols,
+        tile_depth=1,
+        max_outstanding=max_outstanding,
+        issue_window=2,
+        key="sched.selection",
+    )
+
+    activation_view = builder.tensor_view(
+        object_id=activations,
+        dtype=DType.BF16,
+        dims=[TILE_ROWS, TILE_DEPTH],
+        key="view.activations",
+    )
+    weight_view = builder.tensor_view(
+        object_id=weights,
+        dtype=DType.BF16,
+        dims=[VOCAB, TILE_DEPTH],
+        key="view.weights",
+    )
+    output_view = builder.tensor_view(
+        object_id=activations,
+        dtype=DType.BF16,
+        dims=[TILE_ROWS, VOCAB],
+        element_offset=TILE_ROWS * TILE_DEPTH,
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.output",
+    )
+    residual_view = builder.tensor_view(
+        object_id=activations,
+        dtype=DType.BF16,
+        dims=[TILE_ROWS, VOCAB],
+        element_offset=TILE_ROWS * TILE_DEPTH + TILE_ROWS * VOCAB,
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.residual",
+    )
+    logits_view = builder.tensor_view(
+        object_id=logits,
+        dtype=DType.BF16,
+        dims=[VOCAB],
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.logits",
+    )
+    selected_view = builder.tensor_view(
+        object_id=tokens,
+        dtype=DType.U32,
+        dims=[1],
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.selected",
+    )
+    ring_view = builder.tensor_view(
+        object_id=tokens,
+        dtype=DType.U32,
+        dims=[1],
+        element_offset=1,
+        dynamic=[DynamicTerm.symbol(Symbol.GENERATION_INDEX, 1)],
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.ring",
+    )
+    kv_view = builder.tensor_view(
+        object_id=kv_prepared,
+        dtype=DType.BF16,
+        dims=[CONTEXT, TILE_DEPTH],
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.kv",
+    )
+
+    matmul_op = builder.operator(
+        engine_family=Major.TENSOR,
+        engine_sub=Tensor.MATMUL,
+        inputs=[activation_view, weight_view],
+        outputs=[output_view],
+        numeric_profile_id=matmul_numeric,
+        schedule_id=tensor_schedule,
+        source_kernel_id=0,
+        key="op.matmul",
+    )
+    add_op = builder.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.ADD,
+        inputs=[output_view, residual_view],
+        outputs=[residual_view],
+        numeric_profile_id=matmul_numeric,
+        schedule_id=vector_schedule,
+        source_kernel_id=1,
+        key="op.add",
+    )
+    reduce_op = builder.operator(
+        engine_family=Major.REDUCTION,
+        engine_sub=Reduction.ORDERED_SUM,
+        inputs=[residual_view],
+        outputs=[logits_view],
+        numeric_profile_id=matmul_numeric,
+        schedule_id=reduction_schedule if schedule_reduction else NO_ID,
+        source_kernel_id=2,
+        key="op.reduce",
+    )
+    argmax_op = builder.operator(
+        engine_family=Major.SELECTION,
+        engine_sub=Selection.ARGMAX,
+        inputs=[logits_view],
+        outputs=[selected_view],
+        numeric_profile_id=select_numeric,
+        schedule_id=selection_schedule,
+        source_kernel_id=3,
+        key="op.argmax",
+    )
+    append_op = builder.operator(
+        engine_family=Major.SELECTION,
+        engine_sub=Selection.TOKEN_APPEND,
+        inputs=[selected_view],
+        outputs=[ring_view],
+        numeric_profile_id=select_numeric,
+        schedule_id=selection_schedule,
+        source_kernel_id=4,
+        key="op.append",
+    )
+    kv_state = builder.state(
+        state_class=StateClass.KV_CACHE,
+        committed_object_id=kv_committed,
+        prepared_object_id=kv_prepared,
+        row_bytes=row_bytes,
+        capacity_rows=CONTEXT,
+        element_dtype=DType.BF16,
+        view_descriptor_id=kv_view,
+        key="state.kv",
+    )
+    policy = builder.generation_policy(
+        eos_token_ids=[VOCAB - 1],
+        max_new_tokens=8,
+        vocabulary_size=VOCAB,
+        token_ring_object_id=tokens,
+        selection_mode=SelectionMode.GREEDY_ARGMAX_LOWEST_ID,
+        key="policy",
+    )
+
+    builder.emit(Major.STATE, State.PREPARE, descriptor_id=kv_state)
+    matmul_event = builder.new_event()
+    builder.emit(
+        Major.TENSOR,
+        Tensor.MATMUL,
+        descriptor_id=matmul_op,
+        signal_event_id=matmul_event,
+        source_operation_id=0,
+    )
+    add_event = builder.new_event()
+    builder.emit(
+        Major.VECTOR,
+        Vector.ADD,
+        descriptor_id=add_op,
+        wait_set_id=builder.wait_set([matmul_event], key="wait.matmul"),
+        signal_event_id=add_event,
+        source_operation_id=1,
+    )
+    reduce_event = builder.new_event()
+    builder.emit(
+        Major.REDUCTION,
+        Reduction.ORDERED_SUM,
+        descriptor_id=reduce_op,
+        wait_set_id=builder.wait_set([add_event], key="wait.add"),
+        signal_event_id=reduce_event,
+        source_operation_id=2,
+    )
+    argmax_event = builder.new_event()
+    builder.emit(
+        Major.SELECTION,
+        Selection.ARGMAX,
+        descriptor_id=argmax_op,
+        wait_set_id=builder.wait_set([reduce_event], key="wait.reduce"),
+        signal_event_id=argmax_event,
+        source_operation_id=3,
+    )
+    builder.emit(
+        Major.SELECTION,
+        Selection.TOKEN_APPEND,
+        descriptor_id=append_op,
+        wait_set_id=builder.wait_set([argmax_event], key="wait.argmax"),
+        source_operation_id=4,
+    )
+    builder.emit(Major.STATE, State.COMMIT, descriptor_id=kv_state)
+    builder.emit(Major.CONTROL, Control.COMPLETE)
+    builder.entrypoint(
+        entrypoint_id=0,
+        first_instruction=0,
+        phase=Phase.PREFILL,
+        generation_policy_id=policy,
+    )
+    builder.entrypoint(
+        entrypoint_id=1,
+        first_instruction=0,
+        phase=Phase.DECODE,
+        generation_policy_id=policy,
+    )
+    builder.source_identity = {"fixture": "abi3-cycle-tiled-v1"}
     return builder.finish(), capability
 
 

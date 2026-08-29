@@ -73,9 +73,6 @@ def test_hadamard_preserves_shape_and_rejects_bad_input() -> None:
         torch_hadamard_transform(torch.zeros(4, 96, dtype=torch.bfloat16), 1.0)
 
 
-@pytest.mark.skipif(
-    pytest.importorskip is None, reason="unreachable"  # keeps the import local
-)
 def test_hadamard_matches_official_extension_when_available() -> None:
     fht = pytest.importorskip("fast_hadamard_transform")
     if not torch.cuda.is_available():
@@ -264,7 +261,6 @@ def test_reference_oracle_report_shape(name: str) -> None:
 # ---------------------------------------------------------------------------
 @snapshot_available
 @cuda_available
-@pytest.mark.slow
 def test_head_split_is_bitwise_identical_on_this_gpu() -> None:
     from runtime.reference.deepseek_v4_oracle import (
         import_vendor,
