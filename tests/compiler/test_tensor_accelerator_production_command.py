@@ -19,6 +19,7 @@ from compiler.tensor_accelerator.production_command import (
     ProductionCommandError,
     RMSNORM_ABI_MINOR,
     ROPE_ABI_MINOR,
+    SELECTION_ABI_MINOR,
     command_abi as read_command_abi,
     decode,
     disassemble,
@@ -62,12 +63,14 @@ def _commands() -> tuple[ProductionCommand, ...]:
 def _repair_crcs(payload: bytearray, command_index: int) -> None:
     offset = command_abi.HEADER.size + command_index * command_abi.COMMAND_WITH_CRC.size
     prefix = payload[offset : offset + command_abi.COMMAND_PREFIX.size]
-    struct.pack_into("<I", payload, offset + len(prefix), zlib.crc32(prefix) & 0xFFFFFFFF)
+    struct.pack_into(
+        "<I", payload, offset + len(prefix), zlib.crc32(prefix) & 0xFFFFFFFF
+    )
     body = payload[command_abi.HEADER.size :]
     struct.pack_into("<I", payload, 16, zlib.crc32(body) & 0xFFFFFFFF)
 
 
-def test_v24_command_stream_has_frozen_widths_and_exact_round_trip() -> None:
+def test_current_command_stream_has_frozen_widths_and_exact_round_trip() -> None:
     commands = _commands()
     payload = encode(commands)
     assert command_abi.HEADER.size == 32
@@ -76,7 +79,7 @@ def test_v24_command_stream_has_frozen_widths_and_exact_round_trip() -> None:
     assert decode(payload) == commands
     assert encode(decode(payload)) == payload
     assert disassemble(commands).splitlines() == [
-        "OTTA-ISA 2.4",
+        "OTTA-ISA 2.5",
         "# index opcode engine flags kernel src0 src1 dst aux size0 size1 size2 size3",
         "00000 DMA_HBM_TO_SRAM DMA 0x0000 7 0x0000000000001000 "
         "0x0000000000000000 0x0000000000002000 0x0000000000000000 "
@@ -245,6 +248,31 @@ def test_v24_adds_bounded_add_and_silu_without_breaking_v23() -> None:
         encode(commands, abi_minor=ATTENTION_ABI_MINOR)
 
 
+def test_v25_adds_bounded_indexed_sram_copy_without_breaking_v24() -> None:
+    commands = (
+        ProductionCommand(
+            index=0,
+            opcode=Opcode.DMA_SRAM_INDEXED_TO_SRAM,
+            engine=Engine.DMA,
+            kernel_index=614,
+            source0=0x100000,
+            source1=0x200000,
+            destination=0x300000,
+            size0=8192,
+            size1=8192,
+            size2=8000,
+            size3=4,
+        ),
+        ProductionCommand(index=1, opcode=Opcode.COMPLETE, engine=Engine.CONTROL),
+    )
+    payload = encode(commands, abi_minor=SELECTION_ABI_MINOR)
+    assert read_command_abi(payload) == (2, 5)
+    assert decode(payload) == commands
+    assert encode(decode(payload), abi_minor=SELECTION_ABI_MINOR) == payload
+    with pytest.raises(ProductionCommandError, match="requires ABI 2.5"):
+        encode(commands, abi_minor=ELEMENTWISE_ABI_MINOR)
+
+
 def test_encoder_rejects_nonterminal_duplicate_and_malformed_commands() -> None:
     dma, matmul, complete = _commands()
     with pytest.raises(ProductionCommandError, match="nonempty"):
@@ -273,6 +301,9 @@ def test_encoder_rejects_nonterminal_duplicate_and_malformed_commands() -> None:
     )
     with pytest.raises(ProductionCommandError, match="illegal indexed DMA"):
         encode((replace(indexed, size3=8), replace(complete, index=1)))
+    sram_indexed = replace(indexed, opcode=Opcode.DMA_SRAM_INDEXED_TO_SRAM)
+    with pytest.raises(ProductionCommandError, match="illegal indexed DMA"):
+        encode((replace(sram_indexed, size2=0), replace(complete, index=1)))
     rmsnorm = ProductionCommand(
         index=0,
         opcode=Opcode.RMSNORM_BF16,

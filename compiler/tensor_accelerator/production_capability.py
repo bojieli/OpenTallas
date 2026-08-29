@@ -23,6 +23,7 @@ from .production_command import (
     LEGACY_ABI_MINOR,
     RMSNORM_ABI_MINOR,
     ROPE_ABI_MINOR,
+    SELECTION_ABI_MINOR,
     SUPPORTED_ABI_MINORS,
 )
 
@@ -160,9 +161,7 @@ def _sorted_strings(
         or not value
         or any(not isinstance(item, str) or not item for item in value)
     ):
-        raise ProductionCapabilityError(
-            f"{label} must be a nonempty string array"
-        )
+        raise ProductionCapabilityError(f"{label} must be a nonempty string array")
     parsed = tuple(value)
     if parsed != tuple(sorted(set(parsed))):
         raise ProductionCapabilityError(
@@ -207,9 +206,7 @@ def _parse_hbm(raw: Any) -> ProductionHBM:
     )
     external = value["external_at_130nm_boundary"]
     if external is not True:
-        raise ProductionCapabilityError(
-            "hbm.external_at_130nm_boundary must be true"
-        )
+        raise ProductionCapabilityError("hbm.external_at_130nm_boundary must be true")
     if base % burst or capacity % burst or base + capacity > 1 << address_bits:
         raise ProductionCapabilityError(
             "HBM address range must be burst-aligned and fit address_bits"
@@ -313,9 +310,7 @@ def _parse_vector_engine(raw: Any) -> ProductionVectorEngine:
         )
     return ProductionVectorEngine(
         max_rows=require_int(value["max_rows"], "vector_engine.max_rows", minimum=1),
-        max_width=require_int(
-            value["max_width"], "vector_engine.max_width", minimum=1
-        ),
+        max_width=require_int(value["max_width"], "vector_engine.max_width", minimum=1),
         max_rope_positions=(
             require_int(
                 value["max_rope_positions"],
@@ -504,7 +499,9 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
         command_major = command_abi["major"]
         command_minor = command_abi["minor"]
         if command_major != ABI_MAJOR or command_minor not in SUPPORTED_ABI_MINORS:
-            raise ProductionCapabilityError("command ABI differs from the implementation")
+            raise ProductionCapabilityError(
+                "command ABI differs from the implementation"
+            )
         evidence = _object(raw["evidence"], "evidence")
         exact_keys(
             evidence,
@@ -635,8 +632,7 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
             state = None
         elif command_minor == ATTENTION_ABI_MINOR:
             if (
-                qualified_modes
-                != ("bf16_tensor", "transactional_state", "vector_fp32")
+                qualified_modes != ("bf16_tensor", "transactional_state", "vector_fp32")
                 or numeric_contracts
                 != (
                     matrix_contract,
@@ -654,13 +650,11 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
             vector = _parse_vector_engine(vector_raw)
             state = _parse_state_engine(state_raw)
             _require_attention_state_bounds(vector, state, profile="ABI 2.3")
-        else:
+        elif command_minor == ELEMENTWISE_ABI_MINOR:
             add_contract = "bf16_add_rne_v1"
             silu_contract = "qwen3_silu_mul_bf16_v1"
             if (
-                command_minor != ELEMENTWISE_ABI_MINOR
-                or qualified_modes
-                != ("bf16_tensor", "transactional_state", "vector_fp32")
+                qualified_modes != ("bf16_tensor", "transactional_state", "vector_fp32")
                 or numeric_contracts
                 != (
                     add_contract,
@@ -683,6 +677,38 @@ def parse_production_capability(raw: dict[str, Any]) -> ProductionCapability:
             if vector.max_width < 12288:
                 raise ProductionCapabilityError(
                     "ABI 2.4 vector width does not cover the Qwen MLP"
+                )
+        else:
+            add_contract = "bf16_add_rne_v1"
+            select_contract = "exact_index_select_v1"
+            silu_contract = "qwen3_silu_mul_bf16_v1"
+            if (
+                command_minor != SELECTION_ABI_MINOR
+                or qualified_modes
+                != ("bf16_tensor", "transactional_state", "vector_fp32")
+                or numeric_contracts
+                != (
+                    add_contract,
+                    matrix_contract,
+                    state_contract,
+                    select_contract,
+                    attention_contract,
+                    rmsnorm_contract,
+                    rope_contract,
+                    silu_contract,
+                )
+                or vector_raw is None
+                or state_raw is None
+            ):
+                raise ProductionCapabilityError(
+                    "ABI 2.5 qualification must include bounded index selection"
+                )
+            vector = _parse_vector_engine(vector_raw)
+            state = _parse_state_engine(state_raw)
+            _require_attention_state_bounds(vector, state, profile="ABI 2.5")
+            if vector.max_width < 12288:
+                raise ProductionCapabilityError(
+                    "ABI 2.5 vector width does not cover Qwen MLP and selection"
                 )
         hbm = _parse_hbm(raw["hbm"])
         sram = _parse_sram(raw["sram"])

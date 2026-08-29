@@ -9,6 +9,7 @@
       "items": {
         "oneOf": [
           {"$ref": "#/$defs/lookup"},
+          {"$ref": "#/$defs/last_token_select"},
           {"$ref": "#/$defs/matmul"},
           {"$ref": "#/$defs/rmsnorm"},
           {"$ref": "#/$defs/add"},
@@ -19,7 +20,7 @@
           {"$ref": "#/$defs/state_commit"}
         ]
       },
-      "maxItems": 256,
+      "maxItems": 65536,
       "minItems": 1,
       "type": "array"
     },
@@ -165,6 +166,40 @@
         "numeric_contract": {"const": "bf16_payload_lookup_v1"},
         "outputs": {"$ref": "#/$defs/one_identifier"},
         "shape": {"$ref": "#/$defs/vector_shape"},
+        "source_operation_id": {"$ref": "#/$defs/identifier"}
+      },
+      "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
+      "type": "object"
+    },
+    "last_token_select": {
+      "additionalProperties": false,
+      "properties": {
+        "attributes": {
+          "additionalProperties": false,
+          "properties": {
+            "index_dtype": {"const": "u32"},
+            "input_dtype": {"const": "bf16"},
+            "output_dtype": {"const": "bf16"},
+            "selection": {"const": "last_logical_row"}
+          },
+          "required": ["index_dtype", "input_dtype", "output_dtype", "selection"],
+          "type": "object"
+        },
+        "index": {"minimum": 0, "type": "integer"},
+        "inputs": {"$ref": "#/$defs/one_identifier"},
+        "kind": {"const": "LAST_TOKEN_SELECT"},
+        "numeric_contract": {"const": "exact_index_select_v1"},
+        "outputs": {"$ref": "#/$defs/one_identifier"},
+        "shape": {
+          "additionalProperties": false,
+          "properties": {
+            "maximum_rows": {"minimum": 1, "type": "integer"},
+            "rows_symbol": {"$ref": "#/$defs/identifier"},
+            "width": {"minimum": 1, "type": "integer"}
+          },
+          "required": ["maximum_rows", "rows_symbol", "width"],
+          "type": "object"
+        },
         "source_operation_id": {"$ref": "#/$defs/identifier"}
       },
       "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],

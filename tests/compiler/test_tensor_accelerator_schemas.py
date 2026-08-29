@@ -194,6 +194,36 @@ def _elementwise_kernel_ir() -> dict[str, object]:
     }
 
 
+def _selection_kernel_ir() -> dict[str, object]:
+    return {
+        "graph_id": "a" * 64,
+        "kernel_ir_id": "b" * 64,
+        "kernels": [
+            {
+                "attributes": {
+                    "index_dtype": "u32",
+                    "input_dtype": "bf16",
+                    "output_dtype": "bf16",
+                    "selection": "last_logical_row",
+                },
+                "index": 0,
+                "inputs": ["hidden.final_norm"],
+                "kind": "LAST_TOKEN_SELECT",
+                "numeric_contract": "exact_index_select_v1",
+                "outputs": ["hidden.last_token"],
+                "shape": {
+                    "maximum_rows": 8000,
+                    "rows_symbol": "span_tokens",
+                    "width": 4096,
+                },
+                "source_operation_id": "node.0614",
+            }
+        ],
+        "qualification_report_id": "c" * 64,
+        "schema": "opentallas.production_tensor_kernel_ir.v1",
+    }
+
+
 def test_production_kernel_ir_admits_neutral_attention_and_state_only() -> None:
     schemas = _schemas()
     by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
@@ -227,6 +257,54 @@ def test_production_kernel_ir_admits_bounded_neutral_add_and_silu_only() -> None
     )
     with pytest.raises(ValidationError):
         _validate(fused_boundary, schema, registry)
+
+
+def test_production_kernel_ir_admits_model_neutral_last_row_selection_only() -> None:
+    schemas = _schemas()
+    by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
+    registry = _registry(schemas)
+    schema = by_name["production_tensor_kernel_ir_v1.schema.json"]
+    value = _selection_kernel_ir()
+    _validate(value, schema, registry)
+
+    model_specific = copy.deepcopy(value)
+    model_specific["kernels"][0]["attributes"]["selection"] = "qwen_last_token"
+    with pytest.raises(ValidationError):
+        _validate(model_specific, schema, registry)
+
+
+def test_production_capability_schema_distinguishes_abi_24_and_25() -> None:
+    schemas = _schemas()
+    by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
+    registry = _registry(schemas)
+    schema = by_name["production_capability_v1.schema.json"]
+    elementwise = load_strict_json(
+        ROOT / "configs/hardware/tensor_accelerator_development_v5.json"
+    )
+    selection = load_strict_json(
+        ROOT / "configs/hardware/tensor_accelerator_development_v6.json"
+    )
+    _validate(elementwise, schema, registry)
+    _validate(selection, schema, registry)
+
+    missing_selection_contract = copy.deepcopy(selection)
+    missing_selection_contract["qualified_numeric_contracts"].remove(
+        "exact_index_select_v1"
+    )
+    with pytest.raises(ValidationError):
+        _validate(missing_selection_contract, schema, registry)
+
+    overclaimed_elementwise = copy.deepcopy(elementwise)
+    overclaimed_elementwise["qualified_numeric_contracts"].insert(
+        3, "exact_index_select_v1"
+    )
+    with pytest.raises(ValidationError):
+        _validate(overclaimed_elementwise, schema, registry)
+
+    missing_state = copy.deepcopy(selection)
+    del missing_state["state_engine"]
+    with pytest.raises(ValidationError):
+        _validate(missing_state, schema, registry)
 
 
 def test_layer_qualification_schema_rejects_incomplete_or_forged_evidence() -> None:
@@ -264,7 +342,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 62
+    assert len(schemas) == 63
     by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
     assert set(by_name) == {
         "attention_deployment_v1.schema.json",
@@ -319,6 +397,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "qkv_qualification_v1.schema.json",
         "qkv_request_v1.schema.json",
         "qkv_source_lock_v1.schema.json",
+        "qwen_final_output_qualification_v1.schema.json",
         "rmsnorm_deployment_v1.schema.json",
         "rmsnorm_execution_v1.schema.json",
         "rmsnorm_expectations_v1.schema.json",
@@ -386,7 +465,13 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
             load_strict_json(
                 ROOT / f"configs/hardware/tensor_accelerator_development_v{minor}.json"
             )
-            for minor in range(1, 6)
+            for minor in range(1, 7)
+        ],
+        "qwen_final_output_qualification_v1.schema.json": [
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/"
+                "qwen3_final_output_qualification.json"
+            )
         ],
         "source_lock_v1.schema.json": [load_strict_json(output / "source.lock.json")],
         "tensor_kernel_ir_v1.schema.json": [

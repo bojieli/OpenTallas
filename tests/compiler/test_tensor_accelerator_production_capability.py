@@ -20,6 +20,7 @@ CAPABILITY_V2_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v2.
 CAPABILITY_V3_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v3.json"
 CAPABILITY_V4_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v4.json"
 CAPABILITY_V5_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v5.json"
+CAPABILITY_V6_PATH = ROOT / "configs/hardware/tensor_accelerator_development_v6.json"
 
 
 def _rehash(value: dict[str, object]) -> None:
@@ -194,9 +195,7 @@ def test_v24_capability_adds_bounded_residual_and_silu_without_timing_claims() -
     assert capability.to_dict()["evidence"]["performance_claims_permitted"] is False
 
     missing_contract = copy.deepcopy(capability.to_dict())
-    missing_contract["qualified_numeric_contracts"].remove(
-        "qwen3_silu_mul_bf16_v1"
-    )
+    missing_contract["qualified_numeric_contracts"].remove("qwen3_silu_mul_bf16_v1")
     _rehash(missing_contract)
     with pytest.raises(ProductionCapabilityError, match="residual and SiLU"):
         parse_production_capability(missing_contract)
@@ -205,6 +204,41 @@ def test_v24_capability_adds_bounded_residual_and_silu_without_timing_claims() -
     underbounded["vector_engine"]["max_width"] = 8192
     _rehash(underbounded)
     with pytest.raises(ProductionCapabilityError, match="does not cover the Qwen MLP"):
+        parse_production_capability(underbounded)
+
+
+def test_v25_capability_adds_bounded_index_selection_without_timing_claims() -> None:
+    capability = load_production_capability(CAPABILITY_V6_PATH)
+    assert (capability.command_abi_major, capability.command_abi_minor) == (2, 5)
+    assert capability.qualified_execution_modes == (
+        "bf16_tensor",
+        "transactional_state",
+        "vector_fp32",
+    )
+    assert capability.qualified_numeric_contracts == (
+        "bf16_add_rne_v1",
+        "bf16_bf16_fp32_sequential_rne_v1",
+        "bf16_byte_preserving_state_v1",
+        "exact_index_select_v1",
+        "qwen3_gqa_fp32_softmax_bf16_v1",
+        "qwen3_rmsnorm_fp32_bf16_v1",
+        "qwen3_rope_fp32_bf16_v1",
+        "qwen3_silu_mul_bf16_v1",
+    )
+    assert capability.vector_engine is not None
+    assert capability.vector_engine.max_width == 16384
+    assert capability.to_dict()["evidence"]["performance_claims_permitted"] is False
+
+    missing_contract = copy.deepcopy(capability.to_dict())
+    missing_contract["qualified_numeric_contracts"].remove("exact_index_select_v1")
+    _rehash(missing_contract)
+    with pytest.raises(ProductionCapabilityError, match="index selection"):
+        parse_production_capability(missing_contract)
+
+    underbounded = copy.deepcopy(capability.to_dict())
+    underbounded["vector_engine"]["max_width"] = 8192
+    _rehash(underbounded)
+    with pytest.raises(ProductionCapabilityError, match="MLP and selection"):
         parse_production_capability(underbounded)
 
 
@@ -217,9 +251,10 @@ def test_all_committed_capability_minors_remain_canonical_and_loadable() -> None
             CAPABILITY_V3_PATH,
             CAPABILITY_V4_PATH,
             CAPABILITY_V5_PATH,
+            CAPABILITY_V6_PATH,
         )
     )
-    assert observed == (0, 1, 2, 3, 4)
+    assert observed == (0, 1, 2, 3, 4, 5)
 
 
 def test_capability_rejects_identity_ordering_and_union_drift() -> None:
