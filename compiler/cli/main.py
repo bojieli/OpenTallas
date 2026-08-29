@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
+import stat
 import sys
 
 from compiler.build import BuildError, build_deployment
@@ -69,10 +71,38 @@ from compiler.vertical_slice.deepseek_v4_hc_pre_executable import (
     DeepSeekV4HCPreExecutableBuildError,
     build_deepseek_v4_hc_pre_executable_deployment,
 )
+from compiler.vertical_slice.deepseek_v4_hc_pre_input import (
+    DeepSeekV4HCPreInputBuildError,
+    build_deepseek_v4_hc_pre_input_request,
+)
 from compiler.vertical_slice.deepseek_v4_lookup import (
     DeepSeekV4LookupBuildError,
     build_deepseek_v4_lookup_deployment,
 )
+from runtime.reference.deepseek_v4_hc_pre_execution_check import (
+    DeepSeekV4HCPreExecutionCheckError,
+    verify_deepseek_v4_hc_pre_execution,
+)
+from runtime.service_engine.deepseek_v4_hc_pre_executable import (
+    DeepSeekV4HCPreExecutableServiceError,
+    execute_deepseek_v4_hc_pre_executable_deployment,
+)
+
+
+_MAX_SOURCE_TEXT_FILE_BYTES = 1024 * 1024
+_SOURCE_READ_CHUNK_BYTES = 1024 * 1024
+
+
+def _stat_fingerprint(value: os.stat_result) -> tuple[int, ...]:
+    return (
+        value.st_dev,
+        value.st_ino,
+        value.st_mode,
+        value.st_nlink,
+        value.st_size,
+        value.st_mtime_ns,
+        value.st_ctime_ns,
+    )
 
 
 def parser() -> argparse.ArgumentParser:
@@ -234,6 +264,59 @@ def parser() -> argparse.ArgumentParser:
     hc_pre_executable_parser.add_argument("--lock", required=True, type=Path)
     hc_pre_executable_parser.add_argument("--application", required=True, type=Path)
     hc_pre_executable_parser.add_argument("--output", required=True, type=Path)
+    hc_pre_input_parser = subparsers.add_parser(
+        "compose-deepseek-v4-hc-pre-input",
+        help=(
+            "compose a V4 HC_PRE request from verified tokenizer, lookup, "
+            "checkpoint, and executable artifacts"
+        ),
+    )
+    hc_pre_input_parser.add_argument("--snapshot", required=True, type=Path)
+    hc_pre_input_parser.add_argument("--lock", required=True, type=Path)
+    hc_pre_input_parser.add_argument("--lookup-deployment", required=True, type=Path)
+    hc_pre_input_parser.add_argument("--lookup-request", required=True, type=Path)
+    hc_pre_input_parser.add_argument("--lookup-result", required=True, type=Path)
+    hc_pre_input_parser.add_argument("--lookup-differential", required=True, type=Path)
+    hc_pre_input_parser.add_argument(
+        "--executable-deployment", required=True, type=Path
+    )
+    hc_pre_input_parser.add_argument(
+        "--executable-application", required=True, type=Path
+    )
+    hc_pre_input_parser.add_argument(
+        "--source-text-file",
+        action="append",
+        dest="source_text_files",
+        required=True,
+        type=Path,
+        help=(
+            "UTF-8 source text for one batch row; repeat once per batch row "
+            "without trimming or newline normalization"
+        ),
+    )
+    hc_pre_input_parser.add_argument("--output", required=True, type=Path)
+    hc_pre_input_parser.add_argument("--report-output", required=True, type=Path)
+    hc_pre_execute_parser = subparsers.add_parser(
+        "execute-deepseek-v4-hc-pre",
+        help="execute the exact packaged V4 HC_PRE program on one closed request",
+    )
+    hc_pre_execute_parser.add_argument("--deployment", required=True, type=Path)
+    hc_pre_execute_parser.add_argument("--request", required=True, type=Path)
+    hc_pre_execute_parser.add_argument("--output", required=True, type=Path)
+    hc_pre_verify_parser = subparsers.add_parser(
+        "verify-deepseek-v4-hc-pre-execution",
+        help=(
+            "compare a persisted HC_PRE result with an independent locked-"
+            "checkpoint recomputation"
+        ),
+    )
+    hc_pre_verify_parser.add_argument("--snapshot", required=True, type=Path)
+    hc_pre_verify_parser.add_argument("--lock", required=True, type=Path)
+    hc_pre_verify_parser.add_argument("--application", required=True, type=Path)
+    hc_pre_verify_parser.add_argument("--deployment", required=True, type=Path)
+    hc_pre_verify_parser.add_argument("--request", required=True, type=Path)
+    hc_pre_verify_parser.add_argument("--result", required=True, type=Path)
+    hc_pre_verify_parser.add_argument("--output", required=True, type=Path)
     return result
 
 
@@ -244,6 +327,82 @@ def _write_new_json(path: Path, value: object) -> None:
             handle.write(canonical_json_bytes(value))
     except FileExistsError as exc:
         raise CheckpointError(f"output already exists: {path}") from exc
+
+
+def _read_source_text_file(path: Path) -> str:
+    """Read one exact bounded UTF-8 prompt without following the final symlink."""
+
+    if (
+        not hasattr(os, "O_NOFOLLOW")
+        or not hasattr(os, "O_NONBLOCK")
+        or not hasattr(os, "O_CLOEXEC")
+        or not hasattr(os, "pread")
+    ):
+        raise DeepSeekV4HCPreInputBuildError(
+            "platform lacks bounded no-follow source-text reads"
+        )
+    source = Path(path).absolute()
+    flags = os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK
+    try:
+        descriptor = os.open(source, flags)
+    except OSError as exc:
+        raise DeepSeekV4HCPreInputBuildError(
+            f"cannot open source text {source} without following symlinks: {exc}"
+        ) from exc
+    try:
+        before = os.fstat(descriptor)
+        if not stat.S_ISREG(before.st_mode):
+            raise DeepSeekV4HCPreInputBuildError(
+                f"source text {source} is not a regular file"
+            )
+        if before.st_size > _MAX_SOURCE_TEXT_FILE_BYTES:
+            raise DeepSeekV4HCPreInputBuildError(
+                f"source text {source} exceeds the "
+                f"{_MAX_SOURCE_TEXT_FILE_BYTES}-byte bound"
+            )
+        payload = bytearray()
+        offset = 0
+        while offset < before.st_size:
+            chunk = os.pread(
+                descriptor,
+                min(_SOURCE_READ_CHUNK_BYTES, before.st_size - offset),
+                offset,
+            )
+            if not chunk:
+                break
+            payload.extend(chunk)
+            offset += len(chunk)
+        after = os.fstat(descriptor)
+        try:
+            current_descriptor = os.open(source, flags)
+        except OSError as exc:
+            raise DeepSeekV4HCPreInputBuildError(
+                f"cannot reopen source text {source} after reading: {exc}"
+            ) from exc
+        try:
+            current = os.fstat(current_descriptor)
+        finally:
+            os.close(current_descriptor)
+        if (
+            len(payload) != before.st_size
+            or _stat_fingerprint(after) != _stat_fingerprint(before)
+            or _stat_fingerprint(current) != _stat_fingerprint(before)
+        ):
+            raise DeepSeekV4HCPreInputBuildError(
+                f"source text {source} changed or was replaced while it was read"
+            )
+    except OSError as exc:
+        raise DeepSeekV4HCPreInputBuildError(
+            f"cannot read source text {source}: {exc}"
+        ) from exc
+    finally:
+        os.close(descriptor)
+    try:
+        return bytes(payload).decode("utf-8", errors="strict")
+    except UnicodeDecodeError as exc:
+        raise DeepSeekV4HCPreInputBuildError(
+            f"source text {source} is not valid UTF-8"
+        ) from exc
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -502,6 +661,60 @@ def main(argv: list[str] | None = None) -> int:
                 f"({deployment['status']})"
             )
             return 0
+        if arguments.command == "compose-deepseek-v4-hc-pre-input":
+            lock = load_checkpoint_lock(arguments.lock)
+            source_texts = tuple(
+                _read_source_text_file(path) for path in arguments.source_text_files
+            )
+            report = build_deepseek_v4_hc_pre_input_request(
+                snapshot=arguments.snapshot,
+                lock=lock,
+                lookup_deployment_root=arguments.lookup_deployment,
+                lookup_request_path=arguments.lookup_request,
+                lookup_result_path=arguments.lookup_result,
+                lookup_differential_path=arguments.lookup_differential,
+                executable_deployment_root=arguments.executable_deployment,
+                executable_application_root=arguments.executable_application,
+                source_texts=source_texts,
+                output=arguments.output,
+                report_output=arguments.report_output,
+            )
+            print(
+                f"composed {report['request']['shape'][0]}x"
+                f"{report['request']['shape'][1]} V4 HC_PRE input "
+                f"{report['composition_id']} at {arguments.output.resolve()} "
+                f"({report['status']})"
+            )
+            return 0
+        if arguments.command == "execute-deepseek-v4-hc-pre":
+            result = execute_deepseek_v4_hc_pre_executable_deployment(
+                arguments.deployment,
+                arguments.request / "request_manifest.json",
+                arguments.output,
+            )
+            print(
+                f"executed {result.token_count} token(s) through packaged V4 "
+                f"HC_PRE {result.build_id}; request {result.request_sha256} at "
+                f"{arguments.output.resolve()} ({result.status})"
+            )
+            return 0
+        if arguments.command == "verify-deepseek-v4-hc-pre-execution":
+            lock = load_checkpoint_lock(arguments.lock)
+            report = verify_deepseek_v4_hc_pre_execution(
+                snapshot=arguments.snapshot,
+                lock=lock,
+                application_root=arguments.application,
+                deployment_root=arguments.deployment,
+                request_root=arguments.request,
+                result_root=arguments.result,
+                report_path=arguments.output,
+            )
+            print(
+                f"verified {len(report['comparisons'])} HC_PRE payloads and "
+                f"{len(report['logical_counters'])} counters; differential "
+                f"{report['differential_id']} ({report['status']})"
+            )
+            return 0
     except (
         BuildError,
         IRValidationError,
@@ -520,6 +733,9 @@ def main(argv: list[str] | None = None) -> int:
         DeepSeekV4FP8LinearBuildError,
         DeepSeekV4HCPreBuildError,
         DeepSeekV4HCPreExecutableBuildError,
+        DeepSeekV4HCPreExecutableServiceError,
+        DeepSeekV4HCPreExecutionCheckError,
+        DeepSeekV4HCPreInputBuildError,
         DeepSeekV4LookupDifferentialError,
         DeepSeekV4LookupBuildError,
         OSError,
