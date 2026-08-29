@@ -596,18 +596,26 @@ class StreamingDeepSeekV4:
         started = time.perf_counter()
         with torch.device("meta"):
             self.model = self.model_mod.Transformer(self.args)
-        self._meta_params = {
-            name: param for name, param in self.model.named_parameters()
-        }
         self._materialise_buffers()
         self._prefix_of: dict[int, str] = {}
-        for name, module in self.model.named_modules():
-            self._prefix_of[id(module)] = name
+        # One "slot" per parameter tensor: the owning module, the local name in
+        # that module's ``_parameters`` dict, and the meta placeholder to put
+        # back when the parameter is evicted.  Residency is changed by swapping
+        # the dict entry rather than by ``Parameter.data =``, because a meta
+        # placeholder and a CUDA tensor are different tensor types and
+        # ``set_data`` refuses to cross that boundary.
+        self._slots: dict[str, tuple[Any, str, Any]] = {}
+        for module_name, module in self.model.named_modules():
+            self._prefix_of[id(module)] = module_name
+            for local, param in module.named_parameters(recurse=False):
+                full = f"{module_name}.{local}" if module_name else local
+                self._slots[full] = (module, local, param)
         self._module_params: dict[int, list[str]] = {}
+        self._block_dense_cache: dict[int, list[str]] = {}
         self.skeleton_seconds = time.perf_counter() - started
         self._log(
             f"skeleton built in {self.skeleton_seconds:.1f}s "
-            f"({len(self._meta_params)} parameter tensors on meta)"
+            f"({len(self._slots)} parameter tensors on meta)"
         )
 
     def _materialise_buffers(self) -> None:
@@ -722,22 +730,43 @@ class StreamingDeepSeekV4:
             self._module_params[key] = names
         return names
 
-    def _materialise(self, module, *, cache: bool) -> None:  # noqa: ANN001
-        for name in self._params_of(module):
-            param = self._meta_params[name]
-            if param.data.device.type != "meta":
+    def _materialise_names(self, names: Iterable[str], *, cache: bool) -> None:
+        """Bring the named parameters onto the device, then relink FP8/FP4 scales.
+
+        ``model.linear()`` reads the block scale off the weight tensor itself
+        (``weight.scale``), which ``Linear.__init__`` aliases to the ``scale``
+        parameter.  Swapping the dict entries breaks that alias, so it is
+        re-established for every module whose weight actually carries one.
+        """
+        touched: dict[int, Any] = {}
+        for name in names:
+            module, local, meta = self._slots[name]
+            current = module._parameters[local]
+            if current is not None and current.device.type != "meta":
                 continue
-            param.data = self.store.device_tensor(name, param, cache=cache)
+            module._parameters[local] = self.store.device_tensor(
+                name, meta, cache=cache
+            )
+            touched[id(module)] = module
+        for module in touched.values():
+            scale = module._parameters.get("scale")
+            weight = module._parameters.get("weight")
+            if scale is not None and weight is not None:
+                weight.scale = scale
+
+    def _release_names(self, names: Iterable[str]) -> None:
+        for name in names:
+            module, local, meta = self._slots[name]
+            current = module._parameters[local]
+            if current is None or current.device.type == "meta":
+                continue
+            module._parameters[local] = meta
+
+    def _materialise(self, module, *, cache: bool) -> None:  # noqa: ANN001
+        self._materialise_names(self._params_of(module), cache=cache)
 
     def _release(self, module) -> None:  # noqa: ANN001
-        torch = self.torch
-        for name in self._params_of(module):
-            param = self._meta_params[name]
-            if param.data.device.type == "meta":
-                continue
-            param.data = torch.empty(
-                param.shape, dtype=param.dtype, device="meta"
-            )
+        self._release_names(self._params_of(module))
 
     def _install_streaming_hooks(self) -> None:
         """Decorate ``Block.forward`` and ``Expert.forward`` with residency.
@@ -785,12 +814,10 @@ class StreamingDeepSeekV4:
         self._vendor_expert_forward = expert_forward
 
     def _block_dense_names(self, block) -> list[str]:  # noqa: ANN001
+        """Every parameter of a block except the 257 expert FFNs it contains."""
         key = id(block)
-        names = self._block_dense_cache.get(key) if hasattr(
-            self, "_block_dense_cache"
-        ) else None
+        names = self._block_dense_cache.get(key)
         if names is None:
-            prefix = self._prefix_of[key]
             expert_prefixes = tuple(
                 self._prefix_of[id(module)] + "."
                 for module in list(block.ffn.experts) + [block.ffn.shared_experts]
@@ -801,28 +828,16 @@ class StreamingDeepSeekV4:
                 for name in self._params_of(block)
                 if not name.startswith(expert_prefixes)
             ]
-            if not hasattr(self, "_block_dense_cache"):
-                self._block_dense_cache: dict[int, list[str]] = {}
             self._block_dense_cache[key] = names
         return names
 
     def _materialise_block(self, block) -> None:  # noqa: ANN001
-        cache = self.config.host_cache_dense
-        for name in self._block_dense_names(block):
-            param = self._meta_params[name]
-            if param.data.device.type != "meta":
-                continue
-            param.data = self.store.device_tensor(name, param, cache=cache)
+        self._materialise_names(
+            self._block_dense_names(block), cache=self.config.host_cache_dense
+        )
 
     def _release_block(self, block) -> None:  # noqa: ANN001
-        torch = self.torch
-        for name in self._block_dense_names(block):
-            param = self._meta_params[name]
-            if param.data.device.type == "meta":
-                continue
-            param.data = torch.empty(
-                param.shape, dtype=param.dtype, device="meta"
-            )
+        self._release_names(self._block_dense_names(block))
 
     def _note_peak(self) -> None:
         allocated = self.torch.cuda.max_memory_allocated()
@@ -835,15 +850,19 @@ class StreamingDeepSeekV4:
         torch = self.torch
         report: dict[str, Any] = {}
 
-        norm_param = self._meta_params["norm.weight"]
-        norm_param.data = self.store.device_tensor("norm.weight", norm_param)
-        for name in ("hc_head_fn", "hc_head_base", "hc_head_scale"):
-            param = self._meta_params[name]
-            param.data = self.store.device_tensor(name, param)
+        self._materialise_names(
+            ("norm.weight", "hc_head_fn", "hc_head_base", "hc_head_scale"),
+            cache=False,
+        )
 
-        embed_param = self._meta_params["embed.weight"]
-        embed_host = self.store.host_tensor("embed.weight", embed_param)
-        embed_param.data = embed_host
+        # The embedding is a pure gather: only the rows the prompt names are
+        # ever touched, so keeping its 1.01 GiB in host memory costs one small
+        # host-to-device copy per step and frees a GiB of contended device
+        # memory.  The values are identical either way.
+        embed_module, embed_local, embed_meta = self._slots["embed.weight"]
+        embed_module._parameters[embed_local] = self.store.host_tensor(
+            "embed.weight", embed_meta
+        )
         report["embed_device"] = "cpu"
         engine = self
 
@@ -854,19 +873,18 @@ class StreamingDeepSeekV4:
 
         self.model_mod.ParallelEmbedding.forward = embed_forward
 
-        head_param = self._meta_params["head.weight"]
-        head_host = self.store.host_tensor("head.weight", head_param)
+        head_module, head_local, head_meta = self._slots["head.weight"]
+        head_host = self.store.host_tensor("head.weight", head_meta)
         free_bytes, _ = torch.cuda.mem_get_info()
         need = head_host.numel() * head_host.element_size()
-        on_device = self.config.head_on_device and free_bytes > need * 2
-        if on_device:
-            head_param.data = head_host.to(self.device)
+        if self.config.head_on_device and free_bytes > need * 2:
+            head_module._parameters[head_local] = head_host.to(self.device)
             report["head_device"] = "cuda"
         else:
-            head_param.data = head_host
+            head_module._parameters[head_local] = head_host
             report["head_device"] = "cpu"
-        report["head_dtype"] = str(head_param.dtype).replace("torch.", "")
-        report["head_bytes"] = need
+        report["head_dtype"] = str(head_meta.dtype).replace("torch.", "")
+        report["head_bytes"] = int(need)
 
         def head_forward(self, x, full_logits=False):  # noqa: ANN001
             if not full_logits:

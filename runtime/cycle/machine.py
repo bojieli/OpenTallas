@@ -472,7 +472,29 @@ class MachineModel:
                 unit="count",
                 note=f"capability.{'.'.join(capability_path)}",
             )
-        return self.integer(fallback, minimum=1)
+        # Unadvertised: the cost table must say, and the value is reported under
+        # the structural name so that a rate can cite it by the name it used.
+        resolved = self.cost_table.resolve(fallback)
+        value = int(resolved.value)
+        if value < 1:
+            raise MachineError(f"structural parameter {fallback!r} must be positive")
+        self._record(
+            ResolvedParameter(
+                name=name,
+                value=value,
+                unit=resolved.unit or "count",
+                provenance=resolved.provenance,
+                source=resolved.source,
+                origin="cost_table",
+                note=(
+                    f"the capability does not advertise "
+                    f"{'.'.join(capability_path)}; taken from cost table "
+                    f"parameter {fallback!r}."
+                    + (f"  {resolved.note}" if resolved.note else "")
+                ),
+            )
+        )
+        return value
 
     # -- reporting -------------------------------------------------------
     def used(self) -> dict[str, ResolvedParameter]:

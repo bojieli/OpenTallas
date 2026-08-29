@@ -4,7 +4,7 @@
     "minor": 0
   },
   "capability_digest": "89f0b51783ed717486fda73553fc3ef9a130f4f6ced9a33447548338aba5058d",
-  "case_count": 29,
+  "case_count": 30,
   "cases": [
     {
       "admitted": true,
@@ -249,6 +249,318 @@
     },
     {
       "admitted": true,
+      "declared_retired_work": 4096,
+      "descriptor_count": 19,
+      "descriptor_table_sha256": "a6316a7e8bffa3fddbe4bb48354cdc6c0ee6621a150c578d115c68d9644eae01",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 59,
+        "first_fault": 4294967295,
+        "issued": 21,
+        "loop_iterations": 27,
+        "predicated_off": 0,
+        "retired": 59,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 14,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 14,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 14,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 4,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 59,
+        "first_fault": 4294967295,
+        "issued": 21,
+        "loop_iterations": 27,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 59,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 27,
+        "engine.tensor.descriptors": 18,
+        "engine.vector.descriptors": 3,
+        "instructions.fetched": 59,
+        "instructions.issued": 21,
+        "instructions.retired": 59
+      },
+      "instruction_count": 9,
+      "name": "loop_nested",
+      "note": "three-deep nesting, non-unit step, 3*2*3 inner issues",
+      "phase": 0,
+      "program_sha256": "654db23b21de54837588959344832e116be5941fb0d336767b5d61c0d23a88c3",
+      "python_rejects_image": null,
+      "symbols": {
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 17,
+      "descriptor_count": 16,
+      "descriptor_table_sha256": "28d4f1869200992101f0c26e93bb11c2e638f7997484119a3cd9daa59848296c",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 8,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 3,
+        "predicated_off": 0,
+        "retired": 8,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 1,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 1,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 13,
+          "family": 32,
+          "index": 1,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 8,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 3,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 8,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 3,
+        "engine.tensor.descriptors": 3,
+        "instructions.fetched": 8,
+        "instructions.issued": 3,
+        "instructions.retired": 8
+      },
+      "instruction_count": 4,
+      "name": "loop_symbol",
+      "note": "ceil(5/2)=3 iterations from a request symbol, maximum 8",
+      "phase": 1,
+      "program_sha256": "769250dafb6f2e2dc1c8c979e7a58b3a47f52aa54ed356c15c8c9805a50e119d",
+      "python_rejects_image": null,
+      "symbols": {
+        "3": 5,
+        "4": 1,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
       "declared_retired_work": 49,
       "descriptor_count": 19,
       "descriptor_table_sha256": "a6316a7e8bffa3fddbe4bb48354cdc6c0ee6621a150c578d115c68d9644eae01",
@@ -436,106 +748,13 @@
         "instructions.retired": 50
       },
       "instruction_count": 9,
-      "name": "loop_nested",
-      "note": "three-deep nesting, non-unit step, 3*2*3 inner issues",
+      "name": "work_bound_deficit",
+      "note": "admitted by the verifier, trapped by its own work bound: the proof does not count LOOP_SETUP retires",
       "phase": 0,
-      "program_sha256": "72f1e4cb2673d2add7605b5099ffcefe858dd42850dae65230495b54fda08c8d",
+      "program_sha256": "8c251c1351c3c39dd326f09f80f7930d41ec5ba4f993b02facb703681bd60e9e",
       "python_rejects_image": null,
       "symbols": {
         "4": 0,
-        "5": 0
-      },
-      "verifier_errors": []
-    },
-    {
-      "admitted": true,
-      "declared_retired_work": 17,
-      "descriptor_count": 16,
-      "descriptor_table_sha256": "28d4f1869200992101f0c26e93bb11c2e638f7997484119a3cd9daa59848296c",
-      "device_executed": true,
-      "entrypoint_id": 0,
-      "expected": {
-        "branches": 0,
-        "complete": true,
-        "fetched": 8,
-        "first_fault": 4294967295,
-        "issued": 3,
-        "loop_iterations": 3,
-        "predicated_off": 0,
-        "retired": 8,
-        "state_commits": 0,
-        "state_commits_applied": 0,
-        "state_discards": 0,
-        "state_generation_advances": 0,
-        "state_prepares": 0,
-        "state_reads": 0,
-        "state_rows_committed": 0,
-        "status": 0,
-        "trap_class": 0,
-        "wait_events": 0
-      },
-      "expected_header_legal": true,
-      "expected_header_trap_class": 0,
-      "expected_issues": [
-        {
-          "descriptor_id": 13,
-          "family": 32,
-          "index": 1,
-          "mnemonic": "TENSOR.MATMUL",
-          "sub": 0
-        },
-        {
-          "descriptor_id": 13,
-          "family": 32,
-          "index": 1,
-          "mnemonic": "TENSOR.MATMUL",
-          "sub": 0
-        },
-        {
-          "descriptor_id": 13,
-          "family": 32,
-          "index": 1,
-          "mnemonic": "TENSOR.MATMUL",
-          "sub": 0
-        }
-      ],
-      "golden": {
-        "branches": 0,
-        "complete": true,
-        "fetched": 8,
-        "first_fault": 4294967295,
-        "issued": 3,
-        "loop_iterations": 3,
-        "message": "",
-        "predicated_off": 0,
-        "retired": 8,
-        "state_commits": 0,
-        "state_commits_applied": 0,
-        "state_discards": 0,
-        "state_generation_advances": 0,
-        "state_prepares": 0,
-        "state_reads": 0,
-        "state_rows_committed": 0,
-        "status": 0,
-        "trap_class": 0,
-        "wait_events": 0
-      },
-      "golden_counters": {
-        "control.loop_iterations": 3,
-        "engine.tensor.descriptors": 3,
-        "instructions.fetched": 8,
-        "instructions.issued": 3,
-        "instructions.retired": 8
-      },
-      "instruction_count": 4,
-      "name": "loop_symbol",
-      "note": "ceil(5/2)=3 iterations from a request symbol, maximum 8",
-      "phase": 1,
-      "program_sha256": "769250dafb6f2e2dc1c8c979e7a58b3a47f52aa54ed356c15c8c9805a50e119d",
-      "python_rejects_image": null,
-      "symbols": {
-        "3": 5,
-        "4": 1,
         "5": 0
       },
       "verifier_errors": []
@@ -1804,7 +2023,7 @@
         "branches": 0,
         "complete": false,
         "fetched": 2,
-        "first_fault": 4294967295,
+        "first_fault": 1,
         "issued": 0,
         "loop_iterations": 0,
         "predicated_off": 0,
@@ -1852,7 +2071,7 @@
       },
       "instruction_count": 5,
       "name": "negative_loop_over_maximum",
-      "note": "runtime trip 9 exceeds the verified maximum 4: capability trap",
+      "note": "runtime trip 9 exceeds the verified maximum 4: capability trap. The golden model raises this trap without an instruction index; the RTL reports the LOOP_SETUP that raised it",
       "phase": 1,
       "program_sha256": "b70028e80c4837457557e6dc091c1ce8b57197538ad3abe6acbe784badb388d8",
       "python_rejects_image": null,
@@ -1971,7 +2190,7 @@
         "branches": 0,
         "complete": false,
         "fetched": 1,
-        "first_fault": 4294967295,
+        "first_fault": 0,
         "issued": 1,
         "loop_iterations": 0,
         "predicated_off": 0,
@@ -2020,7 +2239,7 @@
       },
       "instruction_count": 2,
       "name": "negative_commit_without_prepare",
-      "note": "state transaction trap: commit with no open prepare",
+      "note": "state transaction trap: commit with no open prepare. The golden model raises it without an instruction index; the RTL reports the instruction that raised it",
       "phase": 0,
       "program_sha256": "9c7c2cb8c9604f67c642d30d97579727e3fa2b81208b718da2e2b75bf3e0c9cf",
       "python_rejects_image": null,
@@ -2602,16 +2821,16 @@
     "symbol_words": 512
   },
   "image_sha256": {
-    "a3_case.hex": "2e85f5268052d17780fb303e4738b39b4e495604a17fbe88e841fc859d24c7a5",
-    "a3_descriptor.hex": "aa1e29951c85b6744d934c6e4d301d0fbf9d570128b8709c039a0d23efc91bba",
-    "a3_header.hex": "f0e4556163f31279bfda1f0f64d860e182a674fabfba79e6fd1ecc3f91f58f9b",
-    "a3_issue.hex": "186fae91a16bde3650aa4d8f501a45964f121dd4e2b6996730654c30fadeebd7",
-    "a3_meta.hex": "6005ddbb7a55e3f170e3b460eb29401783790c86fefe9fd16271294fb95f4e47",
-    "a3_program.hex": "682e1d179c7d07568efc9d3aba1169b43b3b01e60f381df6572252e843779a31",
-    "a3_symbol.hex": "b2fe3c5d40a4bcb2d03b0a78fe6eff8243cf9eb536518ff7cb30548b0559de99"
+    "a3_case.hex": "6a968938a4d51cebad3e5a79a0f6e2dd0d24a0ea6808d24ff81c5c179e39ec43",
+    "a3_descriptor.hex": "5d5cef6c428972d5eaa4fd366a456eabca81c18430d025ef0da4585114664952",
+    "a3_header.hex": "6661c71b6641ac28dc401b123a80f78c1e4e579c55c0f2c98d285b618c030714",
+    "a3_issue.hex": "914075adf7c463329710cb664eb02b69a871d9805e8fe2803d0484db3a174d9f",
+    "a3_meta.hex": "89241f8b102439aca4eb8c4b0edf00d14872c1c1c50dd5e3926882fb46fba55f",
+    "a3_program.hex": "762e8622562b61127c7ac680b62e5b7d926413f73b5d7edeaaf6fb5673e75c4b",
+    "a3_symbol.hex": "f8e38f900f5f618c28834f3575818933abc5782749f941c94dc69291d31d6b68"
   },
-  "issue_event_count": 78,
+  "issue_event_count": 99,
   "negative_case_count": 17,
-  "positive_case_count": 12,
+  "positive_case_count": 13,
   "schema": "opentallas.rtl.abi3_vectors.v1"
 }

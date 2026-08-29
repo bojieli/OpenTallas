@@ -10,12 +10,10 @@ proves only that the CRC works.
 
 from __future__ import annotations
 
-import itertools
 
 import pytest
 
 from runtime.abi3.constants import (
-    ABI_MAJOR,
     ABI_MINOR,
     COMPLETION_BYTES,
     INSTRUCTION_BYTES,

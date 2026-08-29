@@ -23,7 +23,6 @@ from runtime.abi3 import constants as C
 from runtime.abi3 import descriptors as D
 from runtime.abi3 import records as R
 from runtime.abi3.crc import CRC32C_POLY_REFLECTED, crc32c
-from runtime.abi3.layout import Layout
 
 from . import ROOT, WIRE_FORMAT_DOC
 
@@ -689,10 +688,15 @@ def test_all_five_freeze_amendments_are_documented() -> None:
     the completion record, the descriptor registry and loop-parametric views.
     """
     table = table_for("13.", "ID")
-    documented = {row[0].strip("`") for row in table.rows}
-    assert documented == set(AMENDMENTS)
-    for amendment in AMENDMENTS:
-        assert amendment in DOC_TEXT
+    documented = [row[0].strip("`") for row in table.rows]
+    assert set(AMENDMENTS) <= set(documented), (
+        "the wire format no longer records every amendment the encoder "
+        f"implements; missing {sorted(set(AMENDMENTS) - set(documented))}"
+    )
+    # Amendment IDs are assigned in order and none may be withdrawn or reused.
+    numbers = [int(name.rsplit("-A", 1)[1]) for name in documented]
+    assert numbers == sorted(numbers) == list(range(1, len(numbers) + 1)), documented
+    assert len(set(documented)) == len(documented)
 
 
 def test_amendment_a1_and_a2_own_the_completion_bytes_they_claim() -> None:

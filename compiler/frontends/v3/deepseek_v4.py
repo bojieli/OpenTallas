@@ -1838,6 +1838,9 @@ def export_deepseek_v4_kernel_graph(
                     **attrs,
                     "bias_scope": "selection_only",
                     "order": "score_descending_then_index_ascending",
+                    "selected_score_output": (
+                        "unused_the_released_graph_regathers_unbiased_scores"
+                    ),
                 },
             )
             bind(out0, indices)

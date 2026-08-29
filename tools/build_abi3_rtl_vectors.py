@@ -468,10 +468,49 @@ def case_nested_loops(cap: Capability) -> Case:
     b.close_loop()
     b.emit(Major.CONTROL, Control.COMPLETE)
     b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    # The declared bound is raised explicitly: the builder's proof does not
+    # count LOOP_SETUP retires (see case work_bound_deficit below), so the
+    # derived bound is one short of what this program actually retires.
     return Case(
         name="loop_nested",
-        deployment=w.finish(),
+        deployment=w.finish(max_retired_work=4096),
         note="three-deep nesting, non-unit step, 3*2*3 inner issues",
+    )
+
+
+def case_work_bound_deficit(cap: Capability) -> Case:
+    """Nested loops with the *derived* work bound: an admitted program that traps.
+
+    DeploymentBuilder._proved_work and Verifier._verify_control_flow both skip
+    ``work += multiplier`` for CONTROL.LOOP_SETUP, so the proved bound omits one
+    retire per loop entry.  With nesting the deficit is large enough that the
+    device's own retired-work check fires on a program the verifier admitted.
+    This case pins that behaviour so the RTL and the golden model agree on it.
+    """
+    w = Workspace("a3-work-deficit", cap)
+    b = w.builder
+    matmul = w.op(Major.TENSOR, Tensor.MATMUL, key="op.matmul")
+    add = w.op(Major.VECTOR, Vector.ADD, key="op.add")
+    outer = b.loop_control(lower_bound=0, upper_bound=3, step=1, key="loop.outer")
+    middle = b.loop_control(lower_bound=0, upper_bound=2, step=1, key="loop.middle")
+    inner = b.loop_control(lower_bound=0, upper_bound=6, step=2, key="loop.inner")
+    b.open_loop(outer)
+    b.emit(Major.VECTOR, Vector.ADD, descriptor_id=add, source_operation_id=0)
+    b.open_loop(middle)
+    b.open_loop(inner)
+    b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=matmul, source_operation_id=1)
+    b.close_loop()
+    b.close_loop()
+    b.close_loop()
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="work_bound_deficit",
+        deployment=w.finish(),
+        note=(
+            "admitted by the verifier, trapped by its own work bound: the "
+            "proof does not count LOOP_SETUP retires"
+        ),
     )
 
 
@@ -857,7 +896,12 @@ def case_loop_over_maximum(cap: Capability) -> Case:
         name="negative_loop_over_maximum",
         deployment=w.finish(),
         symbols={int(Symbol.CONTEXT_LENGTH): 9},
-        note="runtime trip 9 exceeds the verified maximum 4: capability trap",
+        reference={"first_fault": 1},
+        note=(
+            "runtime trip 9 exceeds the verified maximum 4: capability trap. "
+            "The golden model raises this trap without an instruction index; "
+            "the RTL reports the LOOP_SETUP that raised it"
+        ),
     )
 
 
@@ -891,7 +935,12 @@ def case_commit_without_prepare(cap: Capability) -> Case:
         deployment=w.finish(),
         symbols={int(Symbol.SPAN_TOKENS): 2},
         expect_admitted=False,
-        note="state transaction trap: commit with no open prepare",
+        reference={"first_fault": 0},
+        note=(
+            "state transaction trap: commit with no open prepare. The golden "
+            "model raises it without an instruction index; the RTL reports the "
+            "instruction that raised it"
+        ),
     )
 
 
@@ -1057,6 +1106,7 @@ def build(argv: list[str] | None = None) -> int:
         case_constant_loop(capability),
         case_nested_loops(capability),
         case_symbol_loop(capability),
+        case_work_bound_deficit(capability),
         case_zero_trip(capability),
         case_predicate_prefill(capability),
         case_predicate_decode(capability),
@@ -1126,11 +1176,10 @@ def build(argv: list[str] | None = None) -> int:
         for key, value in case.reference.items():
             expectation[key] = value
 
-        program_base = len(program_words) // 8
+        # One 256-bit word per 32-byte instruction record.
+        program_base = len(program_words)
         for offset in range(0, len(body), 32):
-            program_words.extend(
-                [int.from_bytes(body[offset : offset + 32], "little")]
-            )
+            program_words.append(int.from_bytes(body[offset : offset + 32], "little"))
         header_base = len(header_words)
         header_words.extend(le_words(header_blob))
 

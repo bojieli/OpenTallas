@@ -100,7 +100,6 @@ class FabricTiming:
         self.messages += other.messages
         self.retries += other.retries
         self.hops += other.hops
-        self.steps += other.steps
 
     def counters(self) -> dict[str, int]:
         """Frozen-registry counter deltas produced by this operation.
@@ -578,6 +577,22 @@ class _FabricBase:
     def _all_ports(self) -> list[_Port]:  # pragma: no cover - abstract
         raise NotImplementedError
 
+    # -- non-destructive probing -------------------------------------------
+    def snapshot(self) -> dict[str, Any]:
+        """Capture enough state to undo a probe exactly."""
+        return {
+            "ports": [
+                (port, port.free_at, port.busy_cycles, port.contention_cycles)
+                for port in self._all_ports()
+            ]
+        }
+
+    def restore(self, state: dict[str, Any]) -> None:
+        for port, free_at, busy, contention in state["ports"]:
+            port.free_at = free_at
+            port.busy_cycles = busy
+            port.contention_cycles = contention
+
 
 # ---------------------------------------------------------------------------
 # 32-node conventional-chip cluster
@@ -818,6 +833,17 @@ class WaferFabric(_FabricBase):
     def _all_ports(self) -> list[_Port]:
         return [self._links[key] for key in sorted(self._links)]
 
+    def snapshot(self) -> dict[str, Any]:
+        state = super().snapshot()
+        state["links"] = set(self._links)
+        return state
+
+    def restore(self, state: dict[str, Any]) -> None:
+        for key in list(self._links):
+            if key not in state["links"]:
+                del self._links[key]
+        super().restore(state)
+
     def to_dict(self) -> dict[str, Any]:
         return {
             "kind": "wafer",
@@ -856,7 +882,7 @@ def assert_no_zero_latency_global_operations(fabric: _FabricBase) -> dict[str, A
     members = list(range(min(endpoints, 4)))
     if len(members) < 2:
         members = [0, 0]
-    saved = [(p, p.free_at, p.busy_cycles, p.contention_cycles) for p in fabric._all_ports()]
+    saved = fabric.snapshot()
     try:
         probes["barrier_cycles"] = fabric.barrier(members).cycles
         probes["zero_byte_all_reduce_cycles"] = fabric.collective(
@@ -866,10 +892,7 @@ def assert_no_zero_latency_global_operations(fabric: _FabricBase) -> dict[str, A
             int(CollectiveOp.BROADCAST), members, 1
         ).cycles
     finally:
-        for port, free_at, busy, contention in saved:
-            port.free_at = free_at
-            port.busy_cycles = busy
-            port.contention_cycles = contention
+        fabric.restore(saved)
     violations = sorted(name for name, cycles in probes.items() if cycles <= 0)
     return {
         "checked": sorted(probes),

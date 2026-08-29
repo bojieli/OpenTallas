@@ -40,10 +40,8 @@ if str(ROOT) not in sys.path:
 from runtime.abi3.capability import Capability, canonical_json  # noqa: E402
 from runtime.abi3.constants import (  # noqa: E402
     DTYPE_BITS,
-    INSTRUCTION_BYTES,
     NO_ID,
     PROGRAM_HEADER_BYTES,
-    SUBOPCODES,
     Control,
     DType,
     Feature,

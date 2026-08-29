@@ -39,7 +39,6 @@ from runtime.abi3.constants import (
     Feature,
     Major,
     Permission,
-    Reduction,
     Selection,
     StateClass,
     StorageClass,
@@ -48,13 +47,7 @@ from runtime.abi3.constants import (
 )
 from runtime.abi3.crc import record_crc, sha256
 from runtime.abi3.deployment import Deployment, DescriptorTable, ObjectSource
-from runtime.abi3.descriptors import (
-    DESCRIPTOR_HEADER,
-    Descriptor,
-    ExtendedDescriptorType,
-    Phase,
-    SelectionMode,
-)
+from runtime.abi3.descriptors import DESCRIPTOR_HEADER, Phase, SelectionMode
 from runtime.abi3.layout import Layout
 from runtime.abi3.records import ProgramHeader
 

@@ -35,7 +35,6 @@ from runtime.abi3.descriptors import (
     LOOP_CONTROL_PAYLOAD,
     MEMORY_OBJECT_PAYLOAD,
     TENSOR_VIEW_PAYLOAD,
-    ExtendedDescriptorType,
     Phase,
     Symbol,
 )
@@ -277,9 +276,7 @@ def test_loop_next_without_an_open_loop_is_rejected(capability: Capability) -> N
         default_tail(builder, ids)
 
     assert_rejected(
-        # the builder's own work estimator cannot walk an unbalanced program, so
-        # the bound is declared rather than derived; the verifier is under test
-        probe_deployment(capability, program=program, max_retired_work=64),
+        probe_deployment(capability, program=program),
         capability,
         "LOOP_NEXT with no open loop",
     )

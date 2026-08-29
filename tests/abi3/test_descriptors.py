@@ -297,16 +297,33 @@ def test_nonzero_header_reserved_bytes_fail_closed(index: int) -> None:
         Descriptor.decode(seal_descriptor(bytes(record)), 0)
 
 
+RESERVED_PAYLOADS = sorted(
+    (
+        (int(descriptor_type), layout)
+        for descriptor_type, layout in PAYLOAD_LAYOUTS.items()
+        if any(field.kind == "reserved" for field in layout.fields)
+    ),
+    key=lambda item: item[0],
+)
+
+
+def test_most_payload_types_declare_a_reserved_span() -> None:
+    """OPERATOR is fully assigned; every other payload keeps room to grow."""
+    without = {
+        ExtendedDescriptorType(dtype).name
+        for dtype in PAYLOAD_LAYOUTS
+        if not any(f.kind == "reserved" for f in PAYLOAD_LAYOUTS[dtype].fields)
+    }
+    assert without == {"OPERATOR"}
+
+
 @pytest.mark.parametrize(
-    "descriptor_type,layout",
-    sorted(PAYLOAD_LAYOUTS.items(), key=lambda item: int(item[0])),
+    "descriptor_type,layout", RESERVED_PAYLOADS, ids=lambda item: getattr(item, "name", item)
 )
 def test_nonzero_payload_reserved_bytes_fail_closed(
     descriptor_type: int, layout: Layout
 ) -> None:
     reserved = [f for f in layout.fields if f.kind == "reserved"]
-    if not reserved:
-        pytest.skip(f"{layout.name} declares no reserved payload span")
     record = bytearray(descriptor_for(descriptor_type).encode())
     record[64 + reserved[0].offset] = 0x01
     with pytest.raises(RecordError, match="reserved"):
