@@ -42,6 +42,7 @@ import os
 import platform
 import sys
 import time
+import traceback
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
@@ -414,11 +415,18 @@ def main() -> int:
             )
         except (OracleError, RuntimeError, MemoryError) as exc:
             detail = f"{type(exc).__name__}: {exc}"
+            # Which line asked for the memory matters as much as how much:
+            # "it stopped here" is the answer the ladder exists to produce.
+            frames = traceback.extract_tb(exc.__traceback__)
             report["not_executed"][workload_id] = {
                 "kind": entry["kind"],
                 "prompt_token_count": entry["prompt_token_count"],
                 "reason": "execution_failed",
                 "detail": detail[:2000],
+                "failed_at": [
+                    f"{frame.filename}:{frame.lineno} {frame.name}: {frame.line}"
+                    for frame in frames[-6:]
+                ],
                 "device_free_bytes_at_failure": int(
                     engine.torch.cuda.mem_get_info()[0]
                 ),

@@ -323,3 +323,27 @@ selects on biased scores and re-gathers weights from the unbiased scores, so
 the biased scores themselves are dead in this model. The slot stays in the row
 because a model that selects and weights on the same scores needs it; an
 exporter that does not use it says so rather than silently dropping it.
+
+---
+
+## 15. Amendment A11 — the KV append operand row
+
+`KV_APPEND` lowered to `VECTOR.CONVERT`, which the vector engine correctly read
+as a dequantize and rejected on a shape mismatch. An append is a *movement*: one
+source plane written at the positions the request names. It lowers to
+`DMA.SCATTER`.
+
+| Neutral kind | in0 | in1 | out0 |
+|---|---|---|---|
+| `KV_APPEND` | source plane | destination positions (U32) | appended extent |
+
+That is the reverse of `DMA.SCATTER`'s own row in section 7, where `in0` is the
+index. The backend permutes the two when it binds the operator. Both exporters
+already emit `(source, index)` in that order, and rewriting either to match the
+engine's slot order would push a backend concern into the neutral IR, which
+ADR-003 section 15 forbids.
+
+Qwen appends the key plane and the value plane as two independent movements
+rather than one fused operation, which is what the hardware does — two DMA
+descriptors into two extents of the prepared state. Its per-layer kernel count
+is therefore twenty rather than nineteen.

@@ -216,19 +216,52 @@ def _difference(left: np.ndarray, right: np.ndarray, width: int) -> dict[str, An
 # ---------------------------------------------------------------------------
 # Execution
 # ---------------------------------------------------------------------------
-def _run(backend, activations: np.ndarray, weights: np.ndarray, contract: str):
+#: Output columns contracted per weight residency.  A vocabulary head widened
+#: whole is 2.5 GB of binary32 on a device this program does not own outright,
+#: so the weight is presented in column blocks -- which is what a streaming
+#: implementation does anyway.  The block is part of the executed *shape*, and
+#: the blocked contract's association is fixed by (library, version, device,
+#: shape), so the report records it.
+DEFAULT_COLUMN_TILE = 8192
+
+
+def _run(
+    backend,
+    activations: np.ndarray,
+    weights: np.ndarray,
+    contract: str,
+    *,
+    column_tile: int = 0,
+):
     """One contraction: BF16 codes in, binary32 accumulator and BF16 out."""
+    cols = int(weights.shape[0])
+    tile = int(column_tile) if column_tile else cols
+    tile = max(min(tile, cols), 1)
     started = time.perf_counter()
     left = backend.widen_bf16(activations)
-    right = backend.widen_bf16(weights)
-    accumulator = backend.matmul_binary32(left, right, contract=contract)
-    narrowed = backend.narrow_rne(accumulator)
-    codes = np.ascontiguousarray(backend.fetch(narrowed.codes), dtype=np.uint16)
+    accumulators = []
+    code_blocks = []
+    saturations = 0
+    for start in range(0, cols, tile):
+        stop = min(start + tile, cols)
+        right = backend.widen_bf16(np.ascontiguousarray(weights[start:stop]))
+        block = backend.matmul_binary32(left, right, contract=contract)
+        narrowed = backend.narrow_rne(block)
+        saturations += int(narrowed.saturations)
+        code_blocks.append(
+            np.ascontiguousarray(backend.fetch(narrowed.codes), dtype=np.uint16)
+        )
+        accumulators.append(
+            np.ascontiguousarray(backend.fetch(block), dtype=np.float32)
+        )
+        del right, block, narrowed
     seconds = time.perf_counter() - started
     return (
-        np.ascontiguousarray(backend.fetch(accumulator), dtype=np.float32),
-        codes,
-        int(narrowed.saturations),
+        np.concatenate(accumulators, axis=1) if len(accumulators) > 1
+        else accumulators[0],
+        np.concatenate(code_blocks, axis=1) if len(code_blocks) > 1
+        else code_blocks[0],
+        saturations,
         seconds,
     )
 
@@ -238,23 +271,28 @@ def _rate(macs: int, seconds: float) -> float:
 
 
 def _case_report(
-    backend, case: dict[str, Any], *, seed: int, argmax: bool
+    backend, case: dict[str, Any], *, seed: int, argmax: bool, column_tile: int
 ) -> dict[str, Any]:
     rows, depth, cols = int(case["rows"]), int(case["k"]), int(case["n"])
     activations, weights = _operands(rows, depth, cols, seed)
     macs = rows * depth * cols
 
     sequential_acc, sequential_codes, sequential_sat, sequential_s = _run(
-        backend, activations, weights, CONTRACT_SEQUENTIAL
+        backend, activations, weights, CONTRACT_SEQUENTIAL, column_tile=column_tile
     )
     blocked_acc, blocked_codes, blocked_sat, blocked_s = _run(
-        backend, activations, weights, CONTRACT_BLOCKED
+        backend, activations, weights, CONTRACT_BLOCKED, column_tile=column_tile
     )
 
     body: dict[str, Any] = {
         "model": case["model"],
         "operation": case["operation"],
-        "shape": {"rows": rows, "k": depth, "n": cols},
+        "shape": {
+            "rows": rows,
+            "k": depth,
+            "n": cols,
+            "column_tile": min(column_tile or cols, cols),
+        },
         "multiply_accumulates": macs,
         "accumulator_binary32": _difference(sequential_acc, blocked_acc, 32),
         "output_bf16": _difference(sequential_codes, blocked_codes, 16),
@@ -366,13 +404,15 @@ def _rmsnorm_report(rows: int) -> dict[str, Any]:
     }
 
 
-def _determinism(backend, repeats: int) -> dict[str, Any]:
+def _determinism(backend, repeats: int, column_tile: int = 0) -> dict[str, Any]:
     """Whether repeating the blocked contract reproduces itself bit for bit."""
     activations, weights = _operands(8, 4096, 4096, seed=99)
     reference = None
     identical = True
     for _ in range(max(repeats, 2)):
-        _, codes, _, _ = _run(backend, activations, weights, CONTRACT_BLOCKED)
+        _, codes, _, _ = _run(
+            backend, activations, weights, CONTRACT_BLOCKED, column_tile=column_tile
+        )
         if reference is None:
             reference = codes
         elif not np.array_equal(reference, codes):
@@ -488,7 +528,12 @@ def _bf16_buffer(shape: tuple[int, int], scale: float, seed: int) -> np.ndarray:
 
 
 def _forward_contractions(
-    backend, *, tokens: int, row_tile: int, contract: str
+    backend,
+    *,
+    tokens: int,
+    row_tile: int,
+    contract: str,
+    column_tile: int = DEFAULT_COLUMN_TILE,
 ) -> dict[str, Any]:
     """Time every contraction of one Qwen3-8B forward pass, for real.
 
@@ -540,17 +585,19 @@ def _forward_contractions(
     # The vocabulary head runs on the sampled position only, which is what a
     # prefill actually needs: the logits of the token being selected.
     weight_bytes += head_weights.nbytes
-    out = backend.matmul_binary32(
-        backend.widen_bf16(head_activation),
-        backend.widen_bf16(head_weights),
-        contract=contract,
+    _run(
+        backend,
+        head_activation,
+        head_weights,
+        contract,
+        column_tile=column_tile,
     )
-    backend.fetch(backend.narrow_rne(out).codes)
     macs += QWEN["hidden"] * QWEN["vocabulary"]
     seconds = time.perf_counter() - started
     return {
         "tokens": tokens,
         "row_tile": row_tile,
+        "column_tile": column_tile,
         "contract": contract,
         "layers": QWEN["layers"],
         "multiply_accumulates": macs,
@@ -635,6 +682,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="skip the vocabulary heads, which dominate the runtime",
     )
     parser.add_argument(
+        "--column-tile",
+        type=int,
+        default=DEFAULT_COLUMN_TILE,
+        help=(
+            "output columns contracted per weight residency (0 for none); part "
+            "of the executed shape, and therefore of the blocked association"
+        ),
+    )
+    parser.add_argument(
         "--forward-tokens",
         type=int,
         default=0,
@@ -654,25 +710,36 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     backend = backends.get_backend(args.backend)
     cases = [
-        _case_report(backend, case, seed=1000 + index, argmax=False)
+        _case_report(
+            backend, case, seed=1000 + index, argmax=False,
+            column_tile=args.column_tile,
+        )
         for index, case in enumerate(_cases(args.rows))
     ]
     if not args.skip_vocabulary:
         cases += [
-            _case_report(backend, case, seed=2000 + index, argmax=True)
+            _case_report(
+                backend, case, seed=2000 + index, argmax=True,
+                column_tile=args.column_tile,
+            )
             for index, case in enumerate(_vocabulary_cases())
         ]
     throughput = _throughput(backends.available_backends(), args.rows)
     forward: dict[str, Any] = {}
     if args.forward_tokens:
         forward["decode_one_token"] = _forward_contractions(
-            backend, tokens=1, row_tile=1, contract=CONTRACT_BLOCKED
+            backend,
+            tokens=1,
+            row_tile=1,
+            contract=CONTRACT_BLOCKED,
+            column_tile=args.column_tile,
         )
         forward["prefill"] = _forward_contractions(
             backend,
             tokens=int(args.forward_tokens),
             row_tile=int(args.row_tile),
             contract=CONTRACT_BLOCKED,
+            column_tile=args.column_tile,
         )
 
     changed = sum(
@@ -692,7 +759,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "backend": backend.name,
         "implementation_identity": backend.implementation_identity(),
         "backend_availability": backends.backend_availability(),
-        "determinism": _determinism(backend, args.repeats),
+        "determinism": _determinism(backend, args.repeats, args.column_tile),
         "rmsnorm_contracts": _rmsnorm_report(max(args.rows, 8)),
         "cases": cases,
         "vocabulary_argmax_changes": changed,

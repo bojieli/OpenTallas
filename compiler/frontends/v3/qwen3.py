@@ -125,7 +125,7 @@ COUNTER_CLASS_BY_KIND: Mapping[str, str] = {
     "ATTENTION_GQA": "attention",
     "EMBEDDING_LOOKUP": "tensor",
     "HEAD_RMS_NORM": "vector_reduction",
-    "KV_APPEND": "state",
+    "KV_APPEND": "memory",
     "LAST_TOKEN_SELECT": "memory",
     "MATMUL": "tensor",
     "RMS_NORM": "vector_reduction",
@@ -139,8 +139,8 @@ COUNTER_CLASS_BY_KIND: Mapping[str, str] = {
 }
 
 #: One Qwen3-8B decoder layer emits exactly these nineteen kernels, so the
-#: whole-model census is ``1 + 36 * 19 + 6 == 691``.  See ``KERNEL_CENSUS``.
-KERNELS_PER_LAYER = 19
+#: whole-model census is ``2 + 36 * 20 + 6 == 728``.  See ``KERNEL_CENSUS``.
+KERNELS_PER_LAYER = 20
 
 #: Exact kernel census, justified operation by operation:
 #:
@@ -150,7 +150,8 @@ KERNELS_PER_LAYER = 19
 #: * ``MATMUL`` 252                -- 36 * (q, k, v, o, gate, up, down).
 #: * ``ROPE`` 72                   -- Q and K rotate separately (1 output each).
 #: * ``STATE_PREPARE`` 36          -- one prepared KV extent per layer.
-#: * ``KV_APPEND`` 36              -- one rotated-K/unrotated-V append per layer.
+#: * ``KV_APPEND`` 72              -- the key plane and the value plane are
+#:                                  appended by two independent movements.
 #: * ``ATTENTION_GQA`` 36          -- one causal GQA per layer.
 #: * ``ADD`` 72                    -- attention and MLP residuals per layer.
 #: * ``SILU_MUL`` 36               -- one gated MLP activation per layer.
@@ -172,7 +173,7 @@ KERNEL_CENSUS: Mapping[str, int] = {
     "ATTENTION_GQA": 36,
     "EMBEDDING_LOOKUP": 1,
     "HEAD_RMS_NORM": 72,
-    "KV_APPEND": 36,
+    "KV_APPEND": 72,
     "LAST_TOKEN_SELECT": 1,
     "MATMUL": 252,
     "RMS_NORM": 73,
@@ -186,8 +187,9 @@ KERNEL_CENSUS: Mapping[str, int] = {
 KERNEL_COUNT = sum(KERNEL_CENSUS.values())
 
 #: 2 request inputs + 399 weights + 1 generated rotary table + 72 KV views
-#: + 653 activations (652 plus the gathered coefficient rows) + 2 outputs.
-TENSOR_TOTAL = 1129
+#: + 689 activations + 2 outputs.  The key and value planes are appended
+#: separately, so each layer declares two appended tensors rather than one.
+TENSOR_TOTAL = 1165
 
 GENERATION_POLICY_ID = "greedy_argmax_lowest_id_first_eos_v1"
 
@@ -900,33 +902,44 @@ def export_qwen3_kernel_graph(
             state_writes=(state_id,),
         )
 
-        appended = builder.tensor(
-            f"{prefix}.attention.appended_key_value",
-            "bf16",
-            (span, 2, kv_heads, head_dim),
-            "activation",
-        )
-        builder.kernel(
-            f"{prefix}.attention.key_value_append",
-            "KV_APPEND",
-            (rotated["key"], value),
-            (appended,),
-            iteration_domain={
-                "tokens": span,
-                "key_value_heads": kv_heads,
-                "head_dim": head_dim,
-            },
-            attributes={
-                "append_order": "strictly_increasing_position",
-                "key_rotated": True,
-                "row_layout": "key_then_value",
-                "transform": "byte_preserving",
-                "value_rotated": False,
-            },
-            source_operation_id=f"{base}.self_attn.past_key_values.update",
-            layer=layer,
-            state_writes=(state_id,),
-        )
+        # The key and the value are appended by two independent movements, not
+        # one fused operation. That is what the hardware does -- two DMA
+        # descriptors into two extents of the prepared state -- and expressing
+        # it as one two-operand kernel forced a mapping onto VECTOR.CONVERT,
+        # which the engine correctly read as a dequantize and rejected.
+        for role, source, rotated_flag in (
+            ("key", rotated["key"], True),
+            ("value", value, False),
+        ):
+            appended = builder.tensor(
+                f"{prefix}.attention.appended_{role}",
+                "bf16",
+                (span, kv_heads, head_dim),
+                "activation",
+            )
+            builder.kernel(
+                f"{prefix}.attention.{role}_append",
+                "KV_APPEND",
+                (source, positions),
+                (appended,),
+                iteration_domain={
+                    "tokens": span,
+                    "key_value_heads": kv_heads,
+                    "head_dim": head_dim,
+                },
+                attributes={
+                    "append_order": "strictly_increasing_position",
+                    "plane": role,
+                    "row_layout": "key_plane_then_value_plane",
+                    "rotated": rotated_flag,
+                    "transform": "byte_preserving",
+                },
+                source_operation_id=(
+                    f"{base}.self_attn.past_key_values.update.{role}"
+                ),
+                layer=layer,
+                state_writes=(state_id,),
+            )
 
         key_history = builder.tensor(
             f"{prefix}.attention.key_history",

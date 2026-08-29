@@ -1037,10 +1037,31 @@ class _Emitter:
         state = self.plan.state(physical_id)
         committed, prepared = self._state_objects[physical_id]
         window = state.capacity_rows * state.row_elements
-        width = min(
-            self._state_row_width(operand.tensor_id) or state.row_elements,
-            state.row_elements - column,
-        )
+        # The window keeps the rank the graph declared -- ``[context, heads,
+        # head_dim]`` for a KV history -- so an engine that reads heads finds an
+        # axis for them.  Only the leading axis becomes the resource's capacity
+        # and the leading stride the fused row width, which is what turns a
+        # half of a ``key_then_value`` row into a view rather than a copy.
+        tensor = self.tensors.get(operand.tensor_id)
+        extents = []
+        if tensor is not None:
+            for axis in tensor.shape:
+                value, _ = _static_extent(axis, self.span_max)
+                extents.append(max(int(value), 1))
+        if len(extents) < 2:
+            width = min(
+                self._state_row_width(operand.tensor_id) or state.row_elements,
+                state.row_elements - column,
+            )
+            extents = [state.capacity_rows, max(width, 1)]
+        else:
+            extents[0] = state.capacity_rows
+        strides = [1] * len(extents)
+        running = 1
+        for axis in range(len(extents) - 1, 0, -1):
+            strides[axis] = running
+            running *= extents[axis]
+        strides[0] = state.row_elements
         terms: list[DynamicTerm] = []
         offset = member * window + column
         loop = loops.get("layer")
@@ -1050,8 +1071,8 @@ class _Emitter:
         return self._view(
             object_id=prepared if writable else committed,
             dtype=dtype_of(state.dtype),
-            dims=[state.capacity_rows, max(width, 1)],
-            strides=[state.row_elements, 1],
+            dims=extents,
+            strides=strides,
             element_offset=offset,
             dynamic=terms,
             writable=writable,
@@ -1131,6 +1152,10 @@ class _Emitter:
             self._emit_state_kernel(plan, kernel)
             return
 
+        if self._is_fused_state_append(plan, kernel):
+            self._emit_state_append(plan, kernel)
+            return
+
         builder = self.builder
         loops = self._open_loops(plan)
         inputs = [
@@ -1169,6 +1194,122 @@ class _Emitter:
         event = self._maybe_link(plan, event)
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
+
+    def _is_fused_state_append(self, plan: KernelPlan, kernel: Kernel) -> bool:
+        """True when a state write concatenates several sources into one row.
+
+        A KV append names a key and a value but writes one fused row.  The
+        engine's convention for the opcode it lowers to takes one source and one
+        destination of the same shape, so the concatenation is expressed as one
+        write per source into its own column range -- the ``key_then_value`` row
+        layout, stated in offsets rather than in a copy.
+        """
+        if not kernel.state_writes or len(kernel.outputs) != 1:
+            return False
+        sources = [o for o in plan.operands if o.direction == "in"]
+        if len(sources) < 2:
+            return False
+        row = self._state_row_width(kernel.outputs[0])
+        widths = [self._state_row_width(o.tensor_id) for o in sources]
+        return bool(row) and all(widths) and sum(widths) == row
+
+    def _emit_state_append(self, plan: KernelPlan, kernel: Kernel) -> None:
+        """Emit one write per source into its column range of the state row."""
+        builder = self.builder
+        loops = self._open_loops(plan)
+        numeric = self._kernel_numeric(plan)
+        schedule = self._schedule_for(plan)
+        counter = self._counter_class(plan.engine_family)
+        predicate = self._phase_predicate(plan.phases)
+        column = 0
+        event = NO_ID
+        for slot, operand in enumerate(
+            o for o in plan.operands if o.direction == "in"
+        ):
+            source = self._operand_view(plan, operand, loops, writable=False)
+            dims, strides, row_stride = self._declared_view(plan, operand)
+            destination = self._state_window(
+                plan, kernel, loops, column=column, dims=dims, row_stride=row_stride
+            )
+            operator = builder.operator(
+                engine_family=Major(plan.engine_family),
+                engine_sub=plan.engine_sub,
+                inputs=[source],
+                outputs=[destination],
+                aux=list(plan.aux),
+                numeric_profile_id=numeric,
+                schedule_id=schedule,
+                counter_class_id=counter,
+                source_kernel_id=plan.index,
+                key=f"op.k{plan.index}.part{slot}",
+            )
+            event = builder.new_event()
+            builder.emit(
+                Major(plan.engine_family),
+                plan.engine_sub,
+                descriptor_id=operator,
+                wait_set_id=self._wait_set(self._producer_events(kernel)),
+                signal_event_id=event,
+                predicate_id=predicate,
+                source_operation_id=plan.index,
+            )
+            column += self._state_row_width(operand.tensor_id)
+        self._close_loops(loops, ["row"])
+        for name in kernel.outputs:
+            self._event_of_tensor[name] = event
+
+    def _state_window(
+        self,
+        plan: KernelPlan,
+        kernel: Kernel,
+        loops: Mapping[str, int],
+        *,
+        column: int,
+        dims: Sequence[int],
+        row_stride: int,
+    ) -> int:
+        """A write window on the state row, shaped like the source it receives."""
+        mapping = self.plan.state_of_tensor.get(kernel.outputs[0])
+        if mapping is None:
+            for name in kernel.state_writes:
+                mapping = self.plan.state_of_resource.get(name)
+                if mapping is not None:
+                    break
+        if mapping is None:
+            raise LoweringError(
+                f"kernel {plan.kernel_id} declares a state write that binds no "
+                "declared resource"
+            )
+        physical_id, member = mapping[0], int(mapping[1])
+        state = self.plan.state(physical_id)
+        _, prepared = self._state_objects[physical_id]
+        window = state.capacity_rows * state.row_elements
+        strides = [1] * len(dims)
+        running = 1
+        for axis in range(len(dims) - 1, 0, -1):
+            strides[axis] = running
+            running *= dims[axis]
+        strides[0] = state.row_elements
+        terms: list[DynamicTerm] = []
+        offset = member * window + column
+        loop = loops.get("layer")
+        if len(state.members) > 1 and loop is not None:
+            terms.append(DynamicTerm.loop(loop, window))
+            offset = column
+        row_loop = loops.get("row")
+        if row_loop is not None:
+            terms.append(
+                DynamicTerm.loop(row_loop, dims[0] * state.row_elements)
+            )
+        return self._view(
+            object_id=prepared,
+            dtype=dtype_of(state.dtype),
+            dims=list(dims),
+            strides=strides,
+            element_offset=offset,
+            dynamic=terms,
+            writable=True,
+        )
 
     def _emit_state_kernel(self, plan: KernelPlan, kernel: Kernel) -> None:
         physical: list[str] = []

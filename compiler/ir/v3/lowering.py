@@ -109,7 +109,16 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "STATE_READ": EngineOp(Major.STATE, State.READ, 1, 1),
     "STATE_PREPARE": EngineOp(Major.STATE, State.PREPARE, 0, 0),
     "STATE_COMMIT": EngineOp(Major.STATE, State.COMMIT, 0, 0),
-    "KV_APPEND": EngineOp(Major.VECTOR, Vector.CONVERT, 2, 1),
+    # A KV append is a movement, not a conversion. Mapping it to VECTOR.CONVERT
+    # made the engine read it as a dequantize and compare the wrong shapes.
+    # It is a scatter: one source plane written at the positions the request
+    # names. Operand row, frozen in TA-ABI3-OPCONV-1: in0 source, in1
+    # destination positions. That is the reverse of DMA.SCATTER's own row, so
+    # the backend permutes the two when it binds the operator -- a lowering
+    # detail, not a semantic one. Both models already emit (source, index),
+    # and rewriting either exporter to match the engine's slot order would put
+    # a backend concern into the neutral IR.
+    "KV_APPEND": EngineOp(Major.DMA, Dma.SCATTER, 2, 1),
 }
 
 

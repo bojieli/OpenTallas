@@ -222,14 +222,24 @@ def test_prompts_carry_the_official_encoding_not_a_chat_template() -> None:
 RESULTS = REPO / "results" / "abi3"
 
 
+def _oracle_reports() -> list[Path]:
+    """Every report this tool writes, so a new one cannot escape the check."""
+    return sorted(RESULTS.glob("deepseek_v4_reference_oracle*.json"))
+
+
+def test_at_least_one_oracle_report_exists() -> None:
+    if not RESULTS.exists():
+        pytest.skip("no results directory on this machine")
+    if not _oracle_reports():
+        pytest.skip("the oracle has not been run on this machine")
+
+
 @pytest.mark.parametrize(
-    "name",
-    ["deepseek_v4_reference_oracle_short.json", "deepseek_v4_reference_oracle.json"],
+    "path", _oracle_reports() or [None], ids=lambda p: p.name if p else "none"
 )
-def test_reference_oracle_report_shape(name: str) -> None:
-    path = RESULTS / name
-    if not path.exists():
-        pytest.skip(f"{name} has not been produced on this machine")
+def test_reference_oracle_report_shape(path: Path | None) -> None:
+    if path is None:
+        pytest.skip("the oracle has not been run on this machine")
     report = json.loads(path.read_text())
     assert report["schema"] == "opentallas.abi3.reference_oracle.v1"
     assert report["evidence_class"] == "external_reference_comparator"

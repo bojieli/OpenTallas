@@ -1967,8 +1967,8 @@ def _aux_ids(
         aux = [_SUBCASE[kernel.kind]]
     elif family == int(Major.ATTENTION):
         aux = [
-            int(attributes.get("group_size", 1)),
-            int(attributes.get("mask_mode", 0)),
+            _group_size(kernel, tensors, attributes),
+            int(attributes.get("mask_mode", 0 if attributes.get("causal", True) else 1)),
             int(Symbol.CONTEXT_LENGTH),
             int(Symbol.POSITION_START),
         ]
@@ -2025,6 +2025,30 @@ def _aux_ids(
         elif sub == int(Vector.HADAMARD):
             aux = [int(attributes.get("block_width", in_cols(0)))]
     return tuple(a for a in aux)
+
+
+def _group_size(
+    kernel: Kernel, tensors: Mapping[str, Tensor], attributes: Mapping[str, Any]
+) -> int:
+    """Query heads per key/value head, from the graph or from the operands.
+
+    A grouped-query attention operator must state its group size: the engine
+    checks it against the head counts it can see, and a wrong one silently
+    pairs a query head with the wrong key head.  The graph usually names it;
+    when it names it under its own spelling, the operand shapes still say it.
+    """
+    for key in ("group_size", "query_heads_per_key_value_head", "group"):
+        if key in attributes:
+            return max(int(attributes[key]), 1)
+    if len(kernel.inputs) >= 2:
+        query = tensors[kernel.inputs[0]].shape
+        key_shape = tensors[kernel.inputs[1]].shape
+        if len(query) >= 3 and len(key_shape) >= 3:
+            query_heads, _ = _extent_value(query[1], 1)
+            key_heads, _ = _extent_value(key_shape[1], 1)
+            if key_heads:
+                return max(int(query_heads) // int(key_heads), 1)
+    return 1
 
 
 def _infer_expert_count(

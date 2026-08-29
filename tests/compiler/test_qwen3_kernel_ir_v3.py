@@ -71,6 +71,9 @@ LAYER_KINDS = (
     "ROPE",
     "ROPE",
     "STATE_PREPARE",
+    # Amendment A11: the key plane and the value plane are appended by two
+    # independent movements, which is what the hardware does.
+    "KV_APPEND",
     "KV_APPEND",
     "ATTENTION_GQA",
     "MATMUL",
@@ -140,7 +143,7 @@ def test_neutrality_checker_is_live(graph) -> None:
 def test_kernel_census_matches_the_architecture(graph) -> None:
     census = Counter(kernel.kind for kernel in graph.kernels)
     assert dict(sorted(census.items())) == dict(sorted(KERNEL_CENSUS.items()))
-    assert len(graph.kernels) == KERNEL_COUNT == 692
+    assert len(graph.kernels) == KERNEL_COUNT == 728
 
     # 1 embedding + 36 * 19 layer kernels + a 6-kernel tail.
     assert census["EMBEDDING_LOOKUP"] == 1
@@ -155,7 +158,7 @@ def test_kernel_census_matches_the_architecture(graph) -> None:
     assert census["ROPE"] == 2 * LAYER_COUNT == 72
     # One prepared extent, one append and one attention per layer.
     assert census["STATE_PREPARE"] == LAYER_COUNT == 36
-    assert census["KV_APPEND"] == LAYER_COUNT == 36
+    assert census["KV_APPEND"] == 2 * LAYER_COUNT == 72
     assert census["ATTENTION_GQA"] == LAYER_COUNT == 36
     # Attention and MLP residuals.
     assert census["ADD"] == 2 * LAYER_COUNT == 72
@@ -201,11 +204,12 @@ def test_every_kind_lowers_to_one_abi3_engine_operation(graph) -> None:
 
 @REAL
 def test_tensor_inventory(graph) -> None:
-    assert len(graph.tensors) == TENSOR_TOTAL == 1129
+    assert len(graph.tensors) == TENSOR_TOTAL == 1165
     roles = Counter(tensor.role for tensor in graph.tensors)
     assert roles == {
         # +1 for the gathered rotary coefficient rows (amendment A9).
-        "activation": 653,
+        # Key and value planes are appended separately (amendment A11).
+        "activation": 689,
         "weight": TENSOR_COUNT,
         "state": 2 * LAYER_COUNT,
         "input": 2,
@@ -281,6 +285,7 @@ def test_state_resources_and_transaction_order(graph) -> None:
         sequence = by_state[state.state_id]
         assert [kind for _, kind in sequence] == [
             "STATE_PREPARE",
+            "KV_APPEND",
             "KV_APPEND",
             "ATTENTION_GQA",
             "STATE_COMMIT",
