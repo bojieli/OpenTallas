@@ -140,7 +140,7 @@ def test_neutrality_checker_is_live(graph) -> None:
 def test_kernel_census_matches_the_architecture(graph) -> None:
     census = Counter(kernel.kind for kernel in graph.kernels)
     assert dict(sorted(census.items())) == dict(sorted(KERNEL_CENSUS.items()))
-    assert len(graph.kernels) == KERNEL_COUNT == 691
+    assert len(graph.kernels) == KERNEL_COUNT == 692
 
     # 1 embedding + 36 * 19 layer kernels + a 6-kernel tail.
     assert census["EMBEDDING_LOOKUP"] == 1
@@ -167,13 +167,18 @@ def test_kernel_census_matches_the_architecture(graph) -> None:
 
 @REAL
 def test_layer_structure_repeats_exactly(graph) -> None:
-    assert graph.kernels[0].kind == "EMBEDDING_LOOKUP"
+    # The prologue is the embedding lookup plus the rotary coefficient gather
+    # that amendment A9 made expressible; both precede layer 0.
+    PROLOGUE_KINDS_COUNT = 2
+    prologue = {k.kind for k in graph.kernels[:PROLOGUE_KINDS_COUNT]}
+    assert prologue == {"EMBEDDING_LOOKUP", "GATHER"}
+    assert all(k.layer is None for k in graph.kernels[:PROLOGUE_KINDS_COUNT])
     for layer in range(LAYER_COUNT):
-        start = 1 + layer * len(LAYER_KINDS)
+        start = PROLOGUE_KINDS_COUNT + layer * len(LAYER_KINDS)
         window = graph.kernels[start : start + len(LAYER_KINDS)]
         assert tuple(k.kind for k in window) == LAYER_KINDS
         assert {k.layer for k in window} == {layer}
-    tail = graph.kernels[1 + LAYER_COUNT * len(LAYER_KINDS) :]
+    tail = graph.kernels[PROLOGUE_KINDS_COUNT + LAYER_COUNT * len(LAYER_KINDS) :]
     assert tuple(k.kind for k in tail) == TAIL_KINDS
     assert all(k.layer is None for k in tail)
     assert graph.kernels[-1].kind == "STATE_COMMIT"
@@ -196,13 +201,16 @@ def test_every_kind_lowers_to_one_abi3_engine_operation(graph) -> None:
 
 @REAL
 def test_tensor_inventory(graph) -> None:
-    assert len(graph.tensors) == TENSOR_TOTAL == 1127
+    assert len(graph.tensors) == TENSOR_TOTAL == 1129
     roles = Counter(tensor.role for tensor in graph.tensors)
     assert roles == {
-        "activation": 652,
+        # +1 for the gathered rotary coefficient rows (amendment A9).
+        "activation": 653,
         "weight": TENSOR_COUNT,
         "state": 2 * LAYER_COUNT,
         "input": 2,
+        # The rotary coefficient table is a derived constant with a generator.
+        "constant": 1,
         "output": 2,
     }
     ids = [tensor.tensor_id for tensor in graph.tensors]

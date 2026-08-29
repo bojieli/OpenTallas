@@ -355,6 +355,16 @@ class _Emitter:
         )
         return builder.finish()
 
+    def _address(self, key: str) -> tuple[int, int]:
+        """The planned base address and home channel for one object."""
+        placement = self.plan.hbm_map.get(key)
+        if placement is None:
+            raise LoweringError(
+                f"object {key!r} has no address in the plan's HBM map; the "
+                "cycle model cannot place an object that names no address"
+            )
+        return placement.base_address, placement.channel
+
     # -- declarations ----------------------------------------------------
     def _declare_topology(self) -> None:
         topology = self.plan.topology
@@ -388,6 +398,7 @@ class _Emitter:
             digest = sha256(
                 b"".join(bytes.fromhex(s.sha256) for s in group.segments if s.sha256)
             )
+            base, channel = self._address(f"weight.{group.group_id}")
             self._weight_object[group.group_id] = builder.memory_object(
                 storage_class=StorageClass.HBM,
                 size_bytes=group.size_bytes,
@@ -395,6 +406,8 @@ class _Emitter:
                     kind="segments", size_bytes=group.size_bytes, segments=segments
                 ),
                 permissions=int(Permission.READ | Permission.IMMUTABLE),
+                base_address=base,
+                bank_or_tile=channel,
                 alignment_log2=12,
                 integrity_mode=IntegrityMode.CRC_AND_ECC,
                 content_digest=digest,
@@ -402,6 +415,7 @@ class _Emitter:
             )
 
         for constant in self.plan.generated_constants:
+            base, channel = self._address(f"generated.{constant.tensor_id}")
             self._generated_object[constant.tensor_id] = builder.memory_object(
                 storage_class=StorageClass.HBM,
                 size_bytes=constant.size_bytes,
@@ -412,6 +426,8 @@ class _Emitter:
                     constant.digest,
                 ),
                 permissions=int(Permission.READ | Permission.IMMUTABLE),
+                base_address=base,
+                bank_or_tile=channel,
                 alignment_log2=12,
                 integrity_mode=IntegrityMode.CRC32C,
                 content_digest=bytes.fromhex(constant.digest),
@@ -419,11 +435,14 @@ class _Emitter:
             )
 
         for slot in self.plan.arena_slots:
+            base, channel = self._address(f"arena.{slot.slot_id}")
             self._arena_object[slot.slot_id] = builder.memory_object(
                 storage_class=StorageClass.HBM,
                 size_bytes=slot.size_bytes,
                 source=ObjectSource.zeros(slot.size_bytes),
                 permissions=int(Permission.READ | Permission.WRITE),
+                base_address=base,
+                bank_or_tile=channel,
                 alignment_log2=12,
                 key=f"obj.arena.{slot.slot_id}",
             )
@@ -459,6 +478,7 @@ class _Emitter:
             size = int(spec["size_bytes"])
             if tensor_id == self.token_ring_tensor:
                 size = ring_bytes
+            base, _ = self._address(f"host.{key}")
             self._host_object[key] = builder.memory_object(
                 storage_class=StorageClass.HOST,
                 size_bytes=size,
@@ -466,6 +486,8 @@ class _Emitter:
                 permissions=int(
                     Permission.READ | Permission.WRITE | Permission.HOST_VISIBLE
                 ),
+                base_address=base,
+                alignment_log2=12,
                 key=f"obj.host.{key}",
             )
             if tensor_id == self.token_ring_tensor:
@@ -483,11 +505,15 @@ class _Emitter:
             )
 
         if self.node_count > 1:
+            span = int(self.plan.proofs.get("hbm_address_span", 0))
             self.commit_token_object = builder.memory_object(
                 storage_class=StorageClass.HBM,
                 size_bytes=64,
                 source=ObjectSource.zeros(64),
                 permissions=int(Permission.READ | Permission.WRITE),
+                base_address=_round_up(span, 4096),
+                bank_or_tile=0,
+                alignment_log2=12,
                 key="obj.commit_token",
             )
 
@@ -495,19 +521,29 @@ class _Emitter:
         builder = self.builder
         for state in self.plan.states:
             size = state.size_bytes
+            committed_base, committed_channel = self._address(
+                f"state.{state.physical_id}.committed"
+            )
             committed = builder.memory_object(
                 storage_class=StorageClass.STATE,
                 size_bytes=size,
                 source=ObjectSource.zeros(size),
                 permissions=int(Permission.READ | Permission.STATE_COMMIT),
+                base_address=committed_base,
+                bank_or_tile=committed_channel,
                 alignment_log2=12,
                 key=f"obj.{state.physical_id}.committed",
+            )
+            prepared_base, prepared_channel = self._address(
+                f"state.{state.physical_id}.prepared"
             )
             prepared = builder.memory_object(
                 storage_class=StorageClass.STATE,
                 size_bytes=size,
                 source=ObjectSource.zeros(size),
                 permissions=int(Permission.READ | Permission.STATE_PREPARE),
+                base_address=prepared_base,
+                bank_or_tile=prepared_channel,
                 alignment_log2=12,
                 key=f"obj.{state.physical_id}.prepared",
             )
@@ -907,7 +943,60 @@ class _Emitter:
         dims = list(extents)
         if lead_symbolic and "row" in operand.terms:
             dims[0] = plan.block_rows
-        return dims, strides, dims[0] * strides[0]
+        row_stride = dims[0] * strides[0]
+        dims, strides = self._broadcast_to_principal(plan, operand, dims, strides)
+        return dims, strides, row_stride
+
+    def _broadcast_to_principal(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        dims: list[int],
+        strides: list[int],
+    ) -> tuple[list[int], list[int]]:
+        """Align a lower-rank operand to the principal operand by broadcasting.
+
+        A rotary coefficient table holds one row per *token*, while the tensor
+        it rotates holds one row per ``(token, head)``: every head of a token
+        shares the same coefficients.  The ABI expresses that with a zero stride
+        on the inserted axis, so one row is read many times and nothing is
+        copied or duplicated -- which is the whole point of describing operands
+        with strides rather than materialising them.
+
+        The rule is positional and model-blind: when an input has exactly one
+        axis fewer than the operation's principal operand and agrees with it on
+        the leading axis, the missing middle axes are inserted with stride zero.
+        """
+        if operand.direction != "in" or operand.slot == 0 or len(dims) < 2:
+            return dims, strides
+        principal = self._principal_extents(plan)
+        if principal is None or len(principal) != len(dims) + 1:
+            return dims, strides
+        if principal[0] != dims[0] or len(principal) < 3:
+            return dims, strides
+        inserted = list(principal[1:-1])
+        return (
+            [dims[0], *inserted, dims[-1]],
+            [strides[0], *([0] * len(inserted)), strides[-1]],
+        )
+
+    def _principal_extents(self, plan: KernelPlan) -> tuple[int, ...] | None:
+        """The declared extents of the operation's first input, block-scoped."""
+        first = next(
+            (o for o in plan.operands if o.direction == "in" and o.slot == 0), None
+        )
+        if first is None:
+            return None
+        tensor = self.tensors.get(first.tensor_id)
+        if tensor is None or not tensor.shape:
+            return None
+        extents = []
+        for axis in tensor.shape:
+            value, _ = _static_extent(axis, self.span_max)
+            extents.append(max(int(value), 1))
+        if isinstance(tensor.shape[0], Symbolic) and "row" in first.terms:
+            extents[0] = plan.block_rows
+        return tuple(extents)
 
     def _selection_view(self, operand: OperandPlan, *, writable: bool) -> int:
         """TA-ABI3-OPCONV-1 section 8: selection operands are one-dimensional."""

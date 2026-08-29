@@ -60,6 +60,28 @@ def widen(codes: np.ndarray) -> np.ndarray:
     )
 
 
+def _default_schedule(build, family) -> int:
+    """A tile mapping every engine operator needs for admission.
+
+    The verifier refuses a deployment whose operator carries none, because it
+    cannot be timed. These unit tests do not depend on the schedule's contents.
+    """
+    schedules = build.__dict__.setdefault("_default_schedules", {})
+    schedule = schedules.get(int(family))
+    if schedule is None:
+        schedule = build.builder.schedule(
+            engine_family=family,
+            tile_rows=1,
+            tile_cols=1,
+            tile_depth=1,
+            bank_mask=0b1,
+            max_outstanding=1,
+        )
+        schedules[int(family)] = schedule
+    return schedule
+
+
+
 def narrow(values: np.ndarray) -> np.ndarray:
     """Binary32 values to BF16 bit patterns, round-to-nearest-even."""
     bits = np.ascontiguousarray(values, dtype=np.float32).view(np.uint32)
@@ -242,6 +264,7 @@ def build_attention(
         build.scratch(span * heads * dim * 2), DType.BF16, q.shape, writable=True
     )
     op = build.builder.operator(
+        schedule_id=_default_schedule(build, Major.ATTENTION),
         engine_family=Major.ATTENTION,
         engine_sub=sub,
         inputs=inputs,
@@ -493,6 +516,7 @@ def build_sparse(
         build.scratch(span * heads * dim * 2), DType.BF16, q.shape, writable=True
     )
     op = build.builder.operator(
+        schedule_id=_default_schedule(build, Major.ATTENTION),
         engine_family=Major.ATTENTION,
         engine_sub=Attention.SPARSE,
         inputs=[q_view, kv_view, index_view, sink_view],
@@ -609,6 +633,7 @@ def test_sparse_refuses_a_missing_attention_sink():
         build.scratch(span * heads * dim * 2), DType.BF16, q.shape, writable=True
     )
     op = build.builder.operator(
+        schedule_id=_default_schedule(build, Major.ATTENTION),
         engine_family=Major.ATTENTION,
         engine_sub=Attention.SPARSE,
         inputs=[q_view, kv_view, index_view],
@@ -755,6 +780,7 @@ def build_selection(
     )
     if token_override is None:
         argmax_op = build.builder.operator(
+            schedule_id=_default_schedule(build, Major.SELECTION),
             engine_family=Major.SELECTION,
             engine_sub=Selection.ARGMAX,
             inputs=[logits_view],
@@ -766,6 +792,7 @@ def build_selection(
         )
     if append:
         append_op = build.builder.operator(
+            schedule_id=_default_schedule(build, Major.SELECTION),
             engine_family=Major.SELECTION,
             engine_sub=Selection.TOKEN_APPEND,
             inputs=[token_view],

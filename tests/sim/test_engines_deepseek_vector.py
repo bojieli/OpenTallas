@@ -231,6 +231,20 @@ def emit(
     aux,
     numeric_profile_id: int = NO_ID,
 ) -> None:
+    # A tile mapping is required for admission: a deployment without one cannot
+    # be timed. These unit tests do not depend on its contents.
+    schedules = build.__dict__.setdefault("_default_schedules", {})
+    schedule = schedules.get(int(Major.VECTOR))
+    if schedule is None:
+        schedule = build.builder.schedule(
+            engine_family=Major.VECTOR,
+            tile_rows=1,
+            tile_cols=1,
+            tile_depth=1,
+            bank_mask=0b1,
+            max_outstanding=1,
+        )
+        schedules[int(Major.VECTOR)] = schedule
     operator = build.builder.operator(
         engine_family=Major.VECTOR,
         engine_sub=int(sub),
@@ -238,6 +252,7 @@ def emit(
         outputs=list(outputs),
         aux=list(aux),
         numeric_profile_id=numeric_profile_id,
+        schedule_id=schedule,
     )
     build.builder.emit(Major.VECTOR, int(sub), descriptor_id=operator)
 

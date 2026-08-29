@@ -161,6 +161,13 @@ def check_deployment(
         if d.permissions & Permission.IMMUTABLE
         and d.payload["storage_class"] == int(StorageClass.HBM)
     ]
+    generated = [
+        d
+        for d in immutable
+        if (deployment.objects.get(d.descriptor_id) or _NO_SOURCE).kind == "generated"
+    ]
+    _check_generated_constants(graph, deployment, generated, require, errors)
+    immutable = [d for d in immutable if d not in generated]
     actual_groups: list[list[tuple[str, int, int, str | None]]] = []
     seen_ranges: dict[tuple[str, int, int], int] = {}
     for descriptor in immutable:
@@ -426,6 +433,7 @@ def check_deployment(
     return {
         "ok": not errors,
         "errors": errors,
+        "generated_constants": len(generated),
         "warnings": warnings,
         "checks": dict(sorted(checks.items())),
         "expected": {
@@ -454,6 +462,76 @@ def check_deployment(
         },
         "verifier": verifier.to_dict(),
     }
+
+
+class _NoSource:
+    kind = "missing"
+
+
+_NO_SOURCE = _NoSource()
+
+
+def _check_generated_constants(
+    graph: KernelGraph,
+    deployment: Deployment,
+    generated: Sequence[Any],
+    require: Any,
+    errors: list[str],
+) -> None:
+    """Prove every derived constant is declared, reproducible and digest-bound.
+
+    A generated object is the one place a deployment carries bytes no
+    checkpoint authenticated, so it gets the strictest independent check in
+    this module: the graph must declare that generator on a ``constant``, the
+    parameters must be exactly the graph's, and re-running the registered
+    generator here must reproduce the bound digest.  That catches a backend
+    that fabricates a table, one that binds a stale digest, and a generator
+    that has drifted since the deployment was built.
+    """
+    declared = {
+        tensor.generator: dict(tensor.generator_parameters)
+        for tensor in graph.tensors
+        if getattr(tensor, "generator", "")
+    }
+    for descriptor in generated:
+        source = deployment.objects[descriptor.descriptor_id]
+        oid = descriptor.descriptor_id
+        if not require(
+            "generated_is_declared",
+            source.generator in declared,
+            f"object {oid} names generator {source.generator!r}, which no "
+            "constant in the graph declares",
+        ):
+            continue
+        require(
+            "generated_parameters_match",
+            dict(source.parameters) == declared[source.generator],
+            f"object {oid} declares parameters {dict(source.parameters)}, the "
+            f"graph declares {declared[source.generator]}",
+        )
+        try:
+            from runtime.sim.generators import digest_of as _generator_digest
+
+            recomputed = _generator_digest(source.generator, source.parameters)
+        except Exception as exc:  # unknown or misparameterised generator
+            errors.append(f"object {oid}: generator failed to reproduce: {exc}")
+            continue
+        require(
+            "generated_digest_reproduces",
+            recomputed == source.digest,
+            f"object {oid} binds digest {source.digest[:16]} but "
+            f"{source.generator} reproduces {recomputed[:16]}",
+        )
+        require(
+            "generated_content_digest_bound",
+            descriptor.payload["content_digest"].hex() == source.digest,
+            f"object {oid} descriptor does not bind its generated result",
+        )
+        require(
+            "generated_is_immutable",
+            not descriptor.permissions & Permission.WRITE,
+            f"object {oid} is a derived constant but declares a write path",
+        )
 
 
 # ---------------------------------------------------------------------------

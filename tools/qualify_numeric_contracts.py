@@ -52,8 +52,15 @@ from runtime.abi3.capability import canonical_json  # noqa: E402
 from runtime.sim import backend as backends  # noqa: E402
 from runtime.sim.backend import (  # noqa: E402
     CONTRACT_BLOCKED,
+    CONTRACT_DEEPSEEK_RMSNORM,
+    CONTRACT_QWEN_RMSNORM,
     CONTRACT_SEQUENTIAL,
     BackendError,
+)
+from runtime.sim.engines.vector import deepseek_rms_norm_binary32  # noqa: E402
+from runtime.tensor_accelerator.rmsnorm import (  # noqa: E402
+    EPSILON_CODE,
+    rms_norm_bf16 as qwen_rms_norm_bf16,
 )
 
 DEFAULT_OUTPUT = REPO / "results/abi3/numeric_contract_qualification.json"
@@ -313,6 +320,50 @@ def _argmax_report(
             "top_two_margin": [round(m, 8) for m in margins],
         }
     return out
+
+
+def _rmsnorm_report(rows: int) -> dict[str, Any]:
+    """Measure the gap between the two RMSNorm contracts (amendment A8).
+
+    They are the same computation apart from one BF16 materialisation: the Qwen
+    contract rounds the normalised value to BF16 *before* the gain multiply, the
+    DeepSeek contract stays in binary32 through it and rounds once.  That is a
+    double rounding, so the two disagree by at most one ulp -- but on a
+    substantial fraction of elements, which is why they carry different names
+    and why the engine dispatches on the contract digest rather than picking
+    one.  The fraction is measured here, not quoted.
+    """
+    cases = []
+    for label, width in (
+        ("qwen3-8b hidden", 4096),
+        ("qwen3-8b head_dim", 128),
+        ("deepseek-v4 hidden", 4096),
+        ("deepseek-v4 head_dim", 128),
+    ):
+        values = _bf16_normal((rows, width), 1.0, seed=5100 + width)
+        gains = _bf16_normal((1, width), 0.5, seed=5200 + width)[0]
+        qwen = qwen_rms_norm_bf16(values, gains, epsilon_code=EPSILON_CODE).values
+        deepseek, _ = deepseek_rms_norm_binary32(
+            values, gains, epsilon_bits=EPSILON_CODE
+        )
+        cases.append(
+            {
+                "label": label,
+                "shape": {"rows": rows, "width": width},
+                "difference": _difference(qwen, deepseek, 16),
+            }
+        )
+    return {
+        "contracts": {
+            "qwen": CONTRACT_QWEN_RMSNORM,
+            "deepseek": CONTRACT_DEEPSEEK_RMSNORM,
+        },
+        "difference_is": (
+            "one BF16 materialisation of the normalised value before the gain "
+            "multiply; a double rounding, so at most one ulp per element"
+        ),
+        "cases": cases,
+    }
 
 
 def _determinism(backend, repeats: int) -> dict[str, Any]:
@@ -642,6 +693,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "implementation_identity": backend.implementation_identity(),
         "backend_availability": backends.backend_availability(),
         "determinism": _determinism(backend, args.repeats),
+        "rmsnorm_contracts": _rmsnorm_report(max(args.rows, 8)),
         "cases": cases,
         "vocabulary_argmax_changes": changed,
         "throughput": throughput,
@@ -664,6 +716,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(f"  backend                  {backend.name} on {backend.device}")
     print(f"  blocked determinism      {body['determinism']['bit_identical']}")
     print(f"  vocabulary argmax changes {changed}")
+    for case in body["rmsnorm_contracts"]["cases"]:
+        gap = case["difference"]
+        print(
+            f"  rmsnorm {case['label']:<22} differ {gap['differing_fraction']:.2%} "
+            f"max {gap['max_ulp_diff']} ulp"
+        )
     for name, record in forward.items():
         print(
             f"  {name:<24} {record['seconds']:.3f} s  "

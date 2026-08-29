@@ -272,7 +272,7 @@ def _weighted_rms_norm(
             )
             codes = result.values
         else:
-            codes, saturations = _deepseek_rms_norm_binary32(
+            codes, saturations = deepseek_rms_norm_binary32(
                 values, weights, epsilon_bits=int(profile.epsilon_bits)
             )
             ctx.counters.add("vector.saturations", saturations)
@@ -322,7 +322,7 @@ def _rms_norm_contract(ctx: EngineContext, profile: NumericProfile) -> str:
     return contract
 
 
-def _deepseek_rms_norm_binary32(
+def deepseek_rms_norm_binary32(
     input_codes: np.ndarray, weight_codes: np.ndarray, *, epsilon_bits: int
 ) -> tuple[np.ndarray, int]:
     """``deepseek_rmsnorm_binary32_v1``: one rounding, at the output.
@@ -456,12 +456,29 @@ def _vector_rope(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
     _same_shape(input_view, output_view, "RoPE output shape")
     width = int(input_view.dims[-1])
     values = _read_rows(ctx, input_view, width)
-    coefficients = np.ascontiguousarray(ctx.read(coefficient_view))
+    raw = ctx.read(coefficient_view)
+    if raw.ndim == 1:
+        coefficients = np.ascontiguousarray(raw)
+    else:
+        # The coefficient view is flattened exactly as the input is, so a table
+        # holding one row per *token* reaches an input holding one row per
+        # (token, head) as a broadcast: dims (tokens, heads, 2 * head_dim) with
+        # a zero stride on the head axis.  Every head of a token shares the row,
+        # and nothing is copied to say so.
+        coefficients = _read_rows(ctx, coefficient_view, 2 * width)
     _require(
         coefficients.shape[-1] == 2 * width,
         f"RoPE coefficient view {coefficient_view.descriptor_id} has last axis "
         f"{coefficients.shape[-1]}; expected cosine then sine over {width}",
     )
+    if coefficients.dtype != np.uint16:
+        # ``qwen3_rope_fp32_bf16_v1``: the coefficient table is computed in
+        # binary32 and applied at a BF16 boundary, which is where the frozen
+        # kernel takes it.  The narrowing is part of the contract, so it happens
+        # here rather than being pushed onto whoever produced the table.
+        coefficients = narrow_bf16_rne(
+            np.ascontiguousarray(coefficients, dtype=np.float32)
+        )
     with _numeric_guard("qwen3_rope_fp32_bf16_v1"):
         if coefficients.ndim == 1:
             # The frozen kernel rotates a query and a key together; one tensor

@@ -133,18 +133,27 @@ CHAT_QUESTION = (
     "through the rates step by step, then state the final time on its own line."
 )
 CHAT_CHECKS = {
-    "must_contain_any": ["15:", "15.", "3:", "15 "],
+    "must_contain_any": ["14:00", "14:0", "2:00 pm", "2 pm"],
     "reasoning_terms": ["rate", "litre", "hour", "pump", "drain"],
+    "expected_answer": "14:00",
     "expected_answer_note": (
         "Pump A is 800 l/h, pump B 480 l/h, the drain -320 l/h. From 08:00 to "
         "10:00 the net rate is 480 l/h, so 960 l are in the tank at 10:00. "
-        "After 10:00 the net rate is 960 l/h and the remaining 3,840 l take "
-        "4 hours exactly, giving 14:00. The acceptance check is deliberately "
-        "loose on the arithmetic and strict on the structure, because the gate "
-        "is that the model produced coherent, on-topic, legitimately decoded "
-        "text - not that it is a calculator."
+        "After 10:00 the net rate is 800+480-320 = 960 l/h and the remaining "
+        "3,840 l take 4 hours exactly, giving 14:00. The acceptance check is "
+        "deliberately loose on the arithmetic and strict on the structure, "
+        "because the gate is that the model produced coherent, on-topic, "
+        "legitimately decoded text - not that it is a calculator. The strings "
+        "checked for deliberately exclude the figures quoted in the prompt "
+        "itself (6, 10 and 15 hours), so a check cannot pass by echoing the "
+        "question."
     ),
 }
+
+#: The chat workload gets more room than the others because this model answers
+#: with worked reasoning: at 256 tokens it is still mid-derivation, so the
+#: final-answer line - the part a reader would check - never appears.
+CHAT_MAX_NEW_TOKENS = 512
 
 AGENT_SYSTEM = (
     "You are a careful command-line assistant operating on a frozen sandbox "
@@ -195,7 +204,7 @@ def _ladder_id(tokens: int) -> str:
 def build_chat_workload(
     encode_prompt: Callable[..., tuple[str, list[int]]],
     *,
-    max_new_tokens: int = DEFAULT_MAX_NEW_TOKENS,
+    max_new_tokens: int = CHAT_MAX_NEW_TOKENS,
 ) -> Workload:
     """The pinned reasoning question, rendered through the official encoding."""
     text, ids = encode_prompt(
@@ -343,7 +352,7 @@ def build_workloads(
         return tokenizer.encode_prompt(messages, thinking_mode)
 
     workloads: list[Workload] = [
-        build_chat_workload(encode_prompt, max_new_tokens=max_new_tokens),
+        build_chat_workload(encode_prompt),
         build_agent_workload(encode_prompt, max_new_tokens=max_new_tokens),
         build_stress_workload(encode, decode),
     ]

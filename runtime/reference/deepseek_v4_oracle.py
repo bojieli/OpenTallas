@@ -198,9 +198,11 @@ def verify_fp4_gemm(kernel_mod: Any, convert_mod: Any, store: "WeightStore") -> 
     scale = store.raw(name.replace(".weight", ".scale"))
     device = torch.device("cuda")
 
-    fp8_weight, fp8_scale = convert_mod.cast_e2m1fn_to_e4m3fn(packed, scale)
-    fp8_weight = fp8_weight.to(device).contiguous()
-    fp8_scale = fp8_scale.to(device).contiguous()
+    fp8_weight, fp8_scale = cast_experts_to_fp8(
+        convert_mod, packed, scale, device
+    )
+    fp8_weight = fp8_weight.contiguous()
+    fp8_scale = fp8_scale.contiguous()
     fp4_weight = packed.to(device).view(torch.float4_e2m1fn_x2).contiguous()
     fp4_scale = scale.to(device).contiguous()
 
@@ -251,6 +253,19 @@ def verify_fp4_gemm(kernel_mod: Any, convert_mod: Any, store: "WeightStore") -> 
     }
 
 
+#: Device copies of the vendor's FP4 lookup table, keyed by module and device.
+_FP4_TABLES: dict[tuple[int, str], Any] = {}
+
+
+def _fp4_table(convert_mod: Any, device) -> Any:  # noqa: ANN001
+    key = (id(convert_mod), str(device))
+    table = _FP4_TABLES.get(key)
+    if table is None:
+        table = convert_mod.FP4_TABLE.to(device)
+        _FP4_TABLES[key] = table
+    return table
+
+
 def cast_experts_to_fp8(
     convert_mod: Any, packed, scale, device
 ):  # noqa: ANN001
@@ -261,15 +276,19 @@ def cast_experts_to_fp8(
     alternative to the FP4 expert path.  The only change is that the vendor's
     ``FP4_TABLE`` constant is read from device memory so the arithmetic runs on
     the GPU instead of 32 CPU threads; the values are identical.
-    """
-    import torch
 
-    table = convert_mod.FP4_TABLE
-    if table.device != device:
-        convert_mod.FP4_TABLE = table.to(device)
-    return convert_mod.cast_e2m1fn_to_e4m3fn(
-        packed.to(device), scale.to(device)
-    )
+    The module global is restored afterwards.  Leaving a CUDA table behind
+    breaks any later CPU-side call into ``convert.py`` - which is exactly what
+    happened the first time the context ladder rebuilt its engine.
+    """
+    previous = convert_mod.FP4_TABLE
+    convert_mod.FP4_TABLE = _fp4_table(convert_mod, device)
+    try:
+        return convert_mod.cast_e2m1fn_to_e4m3fn(
+            packed.to(device), scale.to(device)
+        )
+    finally:
+        convert_mod.FP4_TABLE = previous
 
 
 # ---------------------------------------------------------------------------

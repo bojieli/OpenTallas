@@ -177,6 +177,28 @@ class Harness:
         return self.builder.numeric(**kwargs)
 
     def operator(self, **kwargs: Any) -> int:
+        # The verifier requires every engine operator to carry a tile mapping,
+        # since a deployment without one cannot be timed. These unit harnesses
+        # do not care about the schedule's contents, so a default one is
+        # supplied per engine family rather than repeated at every call site.
+        if kwargs.get("schedule_id") in (None, NO_ID):
+            family = kwargs["engine_family"]
+            cached = getattr(self, "_default_schedules", None)
+            if cached is None:
+                cached = {}
+                self._default_schedules = cached
+            schedule = cached.get(int(family))
+            if schedule is None:
+                schedule = self.builder.schedule(
+                    engine_family=family,
+                    tile_rows=1,
+                    tile_cols=1,
+                    tile_depth=1,
+                    bank_mask=0b1,
+                    max_outstanding=1,
+                )
+                cached[int(family)] = schedule
+            kwargs["schedule_id"] = schedule
         return self.builder.operator(**kwargs)
 
     # -- execution -------------------------------------------------------
@@ -1428,9 +1450,18 @@ def test_a_device_transaction_executes_a_tensor_program(tmp_path: Path) -> None:
         input_dtype=DType.BF16,
         output_dtype=DType.BF16,
     )
+    schedule = builder.schedule(
+        engine_family=Major.TENSOR,
+        tile_rows=rows,
+        tile_cols=cols,
+        tile_depth=depth,
+        bank_mask=0b1,
+        max_outstanding=1,
+    )
     operator = builder.operator(
         engine_family=Major.TENSOR,
         engine_sub=Tensor.MATMUL,
+        schedule_id=schedule,
         inputs=[
             builder.tensor_view(
                 object_id=activation_object,

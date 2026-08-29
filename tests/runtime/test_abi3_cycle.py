@@ -1037,12 +1037,25 @@ def test_partial_tiles_charge_their_padding():
     assert body["counters"]["timing"]["latency.tile_padding_work"] > 0
 
 
-def test_an_absent_tile_mapping_is_a_hard_error():
+def test_an_absent_tile_mapping_is_rejected_before_it_reaches_the_model():
+    """The verifier now refuses an untimeable deployment at admission.
+
+    That is stronger than catching it here: the deployment never reaches a
+    timing model at all. The cycle model keeps its own check for the case where
+    verification is bypassed, which is what the rest of this test exercises.
+    """
     deployment, capability = synthetic_tiled_deployment(schedule_reduction=False)
+    report = verify_deployment(deployment, capability)
+    assert not report.admitted
+    assert any("carries no SCHEDULE descriptor" in e for e in report.errors), report.errors
     with pytest.raises(ScheduleError, match="carries no SCHEDULE descriptor"):
-        CycleModel(deployment, capability, load_cost_table(BASELINE))
+        CycleModel(deployment, capability, load_cost_table(BASELINE), verify=False)
     permissive = CycleModel(
-        deployment, capability, load_cost_table(BASELINE), strict_schedules=False
+        deployment,
+        capability,
+        load_cost_table(BASELINE),
+        strict_schedules=False,
+        verify=False,
     )
     finding = permissive.schedule_audit["findings"][0]
     assert finding["reason"] == "absent_tile_mapping"
@@ -1880,7 +1893,13 @@ def test_cli_permissive_schedules_still_fails_closed_at_timing(tmp_path: Path):
         "--out", str(out),
     )
     assert proc.returncode != 0
-    assert "will not invent a tile shape" in proc.stderr
+    # Refused at admission now, before timing. Either refusal is acceptable so
+    # long as it is a clean diagnosis naming the missing schedule.
+    assert "Traceback" not in proc.stderr, proc.stderr
+    assert (
+        "carries no SCHEDULE descriptor" in proc.stderr
+        or "will not invent a tile shape" in proc.stderr
+    ), proc.stderr
     assert not out.exists()
 
 

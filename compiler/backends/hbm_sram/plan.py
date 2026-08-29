@@ -350,6 +350,33 @@ class WeightPlacement:
 
 
 @dataclass(frozen=True, slots=True)
+class HbmPlacement:
+    """One object's window in the node-local HBM address space.
+
+    ADR-003 section 6.2 gives every memory object a base address, and the cycle
+    model needs it: without one it cannot map an object onto channels and has to
+    substitute a synthetic packed placement, which makes its channel and
+    bank-conflict figures a property of the model rather than of this plan.  So
+    the planner assigns the address, and the descriptor carries it.
+    """
+
+    key: str
+    base_address: int
+    size_bytes: int
+    channel: int
+    alignment_log2: int
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "key": self.key,
+            "base_address": self.base_address,
+            "size_bytes": self.size_bytes,
+            "channel": self.channel,
+            "alignment_log2": self.alignment_log2,
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class ArenaSlot:
     """One reusable HBM activation buffer."""
 
@@ -648,6 +675,7 @@ class PhysicalPlan:
     weight_placements: tuple[WeightPlacement, ...]
     generated_constants: tuple[GeneratedConstant, ...]
     arena_slots: tuple[ArenaSlot, ...]
+    hbm_map: Mapping[str, HbmPlacement]
     activation_keys: Mapping[str, str]
     arena_of_key: Mapping[str, str]
     sram_regions: tuple[SramRegion, ...]
@@ -701,6 +729,9 @@ class PhysicalPlan:
             ],
             "weight_placements": [p.to_dict() for p in self.weight_placements],
             "arena_slots": [a.to_dict() for a in self.arena_slots],
+            "hbm_map": [
+                self.hbm_map[key].to_dict() for key in sorted(self.hbm_map)
+            ],
             "activation_keys": dict(sorted(self.activation_keys.items())),
             "arena_of_key": dict(sorted(self.arena_of_key.items())),
             "sram_regions": [r.to_dict() for r in self.sram_regions],
@@ -849,6 +880,7 @@ def build_plan(
     bands, warnings_bands = _build_bands(graph, tensors)
     warnings.extend(warnings_bands)
     groups, placements = _place_weights(graph, bands, span_max)
+    generated = _generated_constants(graph)
 
     units, body_position, band_of_kernel = _emission_order(graph, bands)
     # One token block for the whole plan: the arena padding, the loop divisor
@@ -889,6 +921,9 @@ def build_plan(
     warnings.extend(warn_kernels)
 
     sram_regions = _allocate_sram(kernel_plans, capability, node_count, tile)
+    hbm_map = _allocate_hbm(
+        capability, groups, generated, states, arena_slots, host_objects
+    )
 
     link = dict(capability.link)
     topology_plan = TopologyPlan(
@@ -915,6 +950,7 @@ def build_plan(
         bands,
         node_count,
         host_objects,
+        hbm_map,
     )
 
     plan = PhysicalPlan(
@@ -925,9 +961,10 @@ def build_plan(
         topology=topology_plan,
         span_max=span_max,
         weight_groups=groups,
-        generated_constants=_generated_constants(graph),
+        generated_constants=generated,
         weight_placements=placements,
         arena_slots=arena_slots,
+        hbm_map=hbm_map,
         activation_keys=activation_keys,
         arena_of_key=arena_of_key,
         sram_regions=sram_regions,
@@ -2456,6 +2493,74 @@ def _allocate_sram(
     return tuple(regions)
 
 
+# -- HBM address space ------------------------------------------------------
+def _allocate_hbm(
+    capability: Capability,
+    groups: Sequence[WeightGroup],
+    generated: Sequence[GeneratedConstant],
+    states: Sequence[StatePlacement],
+    arenas: Sequence[ArenaSlot],
+    host_objects: Mapping[str, Mapping[str, Any]],
+) -> dict[str, HbmPlacement]:
+    """Assign every resident object a real base address and a home channel.
+
+    A bump allocator over the node-local address space, in a fixed order, with
+    each object aligned to its own natural alignment.  The home channel is the
+    round robin over the declared channel count: the cycle model reads it to
+    account request distribution, and an object that names no channel forces
+    that model to invent one.
+
+    Host-visible windows are allocated from a separate space, because they are
+    not node HBM and interleaving them into it would misreport occupancy.
+    """
+    channels = max(int(capability.memory["hbm"].get("channels", 1)), 1)
+    out: dict[str, HbmPlacement] = {}
+    cursor = 0
+    index = 0
+
+    def place(key: str, size: int, alignment_log2: int) -> None:
+        nonlocal cursor, index
+        alignment = 1 << alignment_log2
+        base = round_up(cursor, alignment)
+        out[key] = HbmPlacement(
+            key=key,
+            base_address=base,
+            size_bytes=size,
+            channel=index % channels,
+            alignment_log2=alignment_log2,
+        )
+        cursor = base + size
+        index += 1
+
+    # Immutable first: weights and derived constants are resident for the life
+    # of the deployment, so they never fragment the mutable region.
+    for group in groups:
+        place(f"weight.{group.group_id}", group.size_bytes, 12)
+    for constant in generated:
+        place(f"generated.{constant.tensor_id}", constant.size_bytes, 12)
+    for state in states:
+        place(f"state.{state.physical_id}.committed", state.size_bytes, 12)
+        place(f"state.{state.physical_id}.prepared", state.size_bytes, 12)
+    for slot in arenas:
+        place(f"arena.{slot.slot_id}", slot.size_bytes, 12)
+
+    host_cursor = 0
+    host_index = 0
+    for key in sorted(host_objects):
+        size = int(host_objects[key]["size_bytes"])
+        base = round_up(host_cursor, 4096)
+        out[f"host.{key}"] = HbmPlacement(
+            key=f"host.{key}",
+            base_address=base,
+            size_bytes=size,
+            channel=host_index % channels,
+            alignment_log2=12,
+        )
+        host_cursor = base + size
+        host_index += 1
+    return out
+
+
 # -- proofs -----------------------------------------------------------------
 def _prove(
     capability: Capability,
@@ -2467,6 +2572,7 @@ def _prove(
     bands: Sequence[LayerBand],
     node_count: int,
     host_objects: Mapping[str, Mapping[str, Any]],
+    hbm_map: Mapping[str, HbmPlacement],
 ) -> dict[str, Any]:
     weight_bytes = sum(g.size_bytes for g in groups)
     arena_bytes = sum(a.size_bytes for a in arenas)
@@ -2487,6 +2593,12 @@ def _prove(
 
     proved_layers = sum(b.layer_count * b.period for b in bands)
     return {
+        "hbm_address_span": max(
+            (p.base_address + p.size_bytes for p in hbm_map.values()
+             if not p.key.startswith("host.")),
+            default=0,
+        ),
+        "hbm_channels": int(capability.memory["hbm"].get("channels", 1)),
         "weight_bytes": weight_bytes,
         "weight_objects": len(groups),
         "weight_segments": sum(len(g.segments) for g in groups),

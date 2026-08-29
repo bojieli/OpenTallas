@@ -312,6 +312,22 @@ def main() -> int:
         "not_executed": {},
     }
 
+    # With --engine-per-workload each engine keeps its own counters, so the
+    # session totals have to be accumulated as engines are retired rather than
+    # read off whichever one happens to be alive at the end.
+    session = {"peak_device_bytes": 0, "bytes_read": 0, "host_cache_bytes": 0}
+
+    def absorb(built) -> None:  # noqa: ANN001
+        if built is None:
+            return
+        session["peak_device_bytes"] = max(
+            session["peak_device_bytes"], int(built.peak_device_bytes)
+        )
+        session["bytes_read"] += int(built.store.stats.bytes_read)
+        session["host_cache_bytes"] = max(
+            session["host_cache_bytes"], int(built.store.stats.host_cache_bytes)
+        )
+
     def flush() -> None:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_bytes(canonical_json(report))
@@ -346,7 +362,8 @@ def main() -> int:
         if args.engine_per_workload:
             own_length = sequence_length_for([workload_id])
             if own_length != engine.args.max_seq_len:
-                del engine
+                absorb(engine)
+                engine = None
                 gc.collect()
                 torch.cuda.empty_cache()
                 try:
@@ -447,11 +464,12 @@ def main() -> int:
         print(f"text: {visible[:400]!r}", flush=True)
         flush()
 
+    absorb(engine)
     report["total_wall_seconds"] = round(time.perf_counter() - started_all, 3)
     report["host_footprint"] = _host_footprint()
-    report["peak_device_bytes"] = int(engine.peak_device_bytes)
-    report["checkpoint_bytes_read"] = int(engine.store.stats.bytes_read)
-    report["host_weight_cache_bytes"] = int(engine.store.stats.host_cache_bytes)
+    report["peak_device_bytes"] = session["peak_device_bytes"]
+    report["checkpoint_bytes_read"] = session["bytes_read"]
+    report["host_weight_cache_bytes"] = session["host_cache_bytes"]
     executed = report["results"]
     natural = [
         value["prompt_token_count"]

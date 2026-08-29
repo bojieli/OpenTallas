@@ -276,5 +276,25 @@ def main(argv: list[str] | None = None) -> int:
     return 0
 
 
+def _main_with_clean_errors() -> int:
+    """Report a refusal as a diagnosis, not a stack trace.
+
+    Both a verification refusal and a schedule refusal are ordinary,
+    informative outcomes here -- the tool is meant to fail closed on a
+    deployment it cannot honestly time. A traceback would bury the reason.
+    """
+    from runtime.abi3.verifier import VerificationError
+    from runtime.cycle import ScheduleError
+
+    try:
+        return main()
+    except VerificationError as exc:
+        print(f"deployment refused at admission:\n{exc}", file=sys.stderr)
+        return 2
+    except ScheduleError as exc:
+        print(f"deployment cannot be timed: {exc}", file=sys.stderr)
+        return 3
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(_main_with_clean_errors())

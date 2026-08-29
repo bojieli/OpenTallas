@@ -181,6 +181,22 @@ def emit_op(
     aux=(),
     numeric_profile_id: int = NO_ID,
 ):
+    # The verifier requires every engine operator to carry a tile mapping,
+    # because a deployment without one cannot be timed. These unit tests do not
+    # care about the schedule's contents, so one per family is supplied here
+    # rather than repeated at every call site.
+    schedules = build.__dict__.setdefault("_default_schedules", {})
+    schedule = schedules.get(int(family))
+    if schedule is None:
+        schedule = build.builder.schedule(
+            engine_family=family,
+            tile_rows=1,
+            tile_cols=1,
+            tile_depth=1,
+            bank_mask=0b1,
+            max_outstanding=1,
+        )
+        schedules[int(family)] = schedule
     op = build.builder.operator(
         engine_family=family,
         engine_sub=sub,
@@ -188,6 +204,7 @@ def emit_op(
         outputs=list(outputs),
         aux=list(aux),
         numeric_profile_id=numeric_profile_id,
+        schedule_id=schedule,
     )
     build.builder.emit(family, sub, descriptor_id=op)
     return op
