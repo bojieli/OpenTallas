@@ -87,6 +87,8 @@ or production-throughput claim.
 |---|---|---|---|
 | SRC-NV-B200 | [NVIDIA DGX B200 product specifications](https://www.nvidia.com/en-us/data-center/dgx-b200/) | 8 Blackwell GPUs; 1,440 GB total HBM; 64 TB/s aggregate HBM3e; 72 dense FP4 PFLOPS (144 sparse); 72 sparse FP8 PFLOPS, hence 36 dense by NVIDIA's half-sparse footnote; approximately 14.3 kW maximum system power; 14.4 TB/s aggregate NVLink. | 180 GB capacity, 8 TB/s HBM, 9 pure-FP4 POP/s, 4.5 dense FP8 POP/s, 2.25 derived dense BF16 POP/s, and 1,787.5 W allocated system-power envelope per GPU-equivalent. The 9 POP/s pure-FP4 peak is retained as a source fact but is not used for DeepSeek's FP4-weight×FP8-activation experts. |
 | SRC-NV-B300 | [NVIDIA DGX B300 February 2026 datasheet](https://dam-cdn.nvd.orangelogic.com/AssetLink/625w0j7hnw6f07ui7fo63211mti2v08o.pdf) and [NVIDIA DGX B300 system guide](https://docs.nvidia.com/dgx/dgxb300-user-guide/introduction-to-dgxb300.html) | Datasheet: 2.1 TB total label, 62 TB/s aggregate HBM3e, 108 dense FP4 PFLOPS (144 sparse), 72 sparse / 36 dense FP8 PFLOPS, 14.4 TB/s aggregate NVLink, and 14.5 kW busbar / 15.1 kW PSU. System guide: exact **8 × 288 GB = 2.3 TB total** population. | **288 GB** physical capacity, 7.75 TB/s HBM, 13.5 pure-FP4 POP/s, 4.5 dense FP8 POP/s, 2.25 derived dense BF16 POP/s, and 1,812.5 W busbar envelope per GPU-equivalent. The 13.5 POP/s pure-FP4 peak is not used for DeepSeek's mixed expert GEMMs. |
+| SRC-NV-BLACKWELL-NVL72 | NVIDIA, [*NVIDIA Blackwell: The engine of the new industrial revolution*](https://dam-cdn.nvd.orangelogic.com/AssetLink/y441155802qub41q118b2852i557jem5.pdf) | Document `4204213`, Oct. 2025; downloaded 2026-08-29; 1,156,321 bytes; SHA-256 `ad8ed65e64974278670d8e6904c0e3020391027925e339bf28e75fdfe2d307d7`. It states 36 Grace CPUs, 72 Blackwell GPUs, up to 13.5 TB HBM3E, a 130-TB/s low-latency NVLink domain, and fifth-generation NVLink at 1.8 TB/s of GPU-to-GPU interconnect. | Immutable primary source for the fifth-generation NVL72 reference envelope. The 72-GPU rack is not the OpenTallas topology: OpenTallas uses exactly 32 accelerator nodes, and its bandwidth/latency capability comes from compiled traffic plus an explicit topology model rather than division of the 130-TB/s headline. |
+| SRC-NV-NVLINK-SWITCH | NVIDIA, [NVLink and NVLink Switch product page](https://www.nvidia.com/en-us/data-center/nvlink/) | Checked 2026-08-29. The live page distinguishes fifth-generation 1.8-TB/s-per-GPU and 130-TB/s NVL72 from sixth-generation 3.6-TB/s-per-GPU and 260-TB/s NVL72; it describes all-to-all GPU domains and SHARP in-network reduction/multicast acceleration. | Current sensitivity and feature envelope only. Live-page facts are not copied into an OpenTallas capability, do not imply protocol compatibility, and cannot replace endpoint/switch/route/credit simulation. The immutable Blackwell PDF above controls the initial fifth-generation anchor. |
 
 The checked B300 PDF identifies itself as document `4868000`, `Feb26`; its
 downloaded SHA-256 was
@@ -120,10 +122,11 @@ NVIDIA SKU: Qwen uses one conventional HBM/SRAM accelerator chip and DeepSeek
 uses exactly 32 byte-identical copies of that chip. The cluster's high-speed
 fabric is described as **NVLink-class/NVL72-style**, not NVLink-compatible.
 `SRC-NV-B200` and `SRC-NV-B300` seed the public bandwidth, HBM, system-power,
-and sensitivity envelope already available in this repository. Before
-`TA-A3-ARCH-0` closes, the exact additional NVLink/NVL72-class public documents,
-publication dates, downloaded identities where applicable, topology facts, and
-allowed derivations must be locked here.
+and sensitivity envelope already available in this repository.
+`SRC-NV-BLACKWELL-NVL72` is the immutable fifth-generation NVL72 source lock;
+`SRC-NV-NVLINK-SWITCH` records the current feature/sensitivity page without
+turning it into a capability. Their topology facts and allowed derivations are
+frozen by `TA-A3-ARCH-0` and the ABI 3.0 architecture review.
 
 The 32-node count is a project architecture requirement; it is not attributed
 to a vendor product. No aggregate vendor bandwidth is divided, multiplied, or
@@ -176,7 +179,7 @@ primary compatibility case because it does not assume free just-in-time unpackin
 | ID | Primary artifact | Published fact used | Simulation boundary |
 |---|---|---|---|
 | SRC-NV-BLACKWELL-NODE | [NVIDIA Blackwell architecture page](https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/) | NVIDIA states that Blackwell products use custom TSMC 4NP. B200/B300 product specifications use HBM3e, not HBM4. | The commercial study pairs an N4-class ROM hypothesis and HBM3e with B300. It does not compare an N7 ROM wafer with Blackwell. |
-| SRC-CEREBRAS-WSE3 | [Cerebras WSE-3 product page](https://www.cerebras.ai/product-chip) and *The Cerebras Wafer-Scale Architecture for Deep Learning* public architecture paper | 46,225 mm², TSMC 5 nm, over four trillion transistors, 900,000 cores, 44 GB SRAM, 21 PB/s memory bandwidth, 214 Pb/s (26.75 PB/s) fabric bandwidth, 125 advertised peak PFLOP/s, a 2-D mesh, and one-clock nearest-neighbour routing. | Node, area, SRAM, fabric, and peak compute are feasibility ceilings. The 125-PFLOP/s precision/utilization contract is not sufficiently specific to calibrate DeepSeek format roofs, so the study uses explicit bounded fractions and labels them assumed. |
+| SRC-CEREBRAS-WSE3 | [Cerebras WSE-3 product page](https://www.cerebras.ai/product-chip) and [*The Cerebras Wafer-Scale Architecture for Deep Learning*](https://cdn.sanity.io/files/e4qjo92p/production/2d7fa58e3b820715664bcf42097e86c05070c161.pdf) | White paper downloaded 2026-08-29; 19,926,881 bytes; SHA-256 `57d9b501c0fd70f33bac14f8f4d3cccc02a0edd57c91f1a5c4fc82854d090c0b`; CDN last-modified 2025-10-17. It states WSE-3 release in 2024, 46,225 mm², TSMC 5 nm, over four trillion transistors, 900,000 cores, 44 GB distributed SRAM, 21 PB/s memory bandwidth, 214 Pb/s (26.75 PB/s) fabric bandwidth, a 2-D mesh, one-clock nearest-neighbour routing, native multicast, redundant-link repair, and 84 stitched dies. The product page separately advertises 125 peak PFLOP/s. | Immutable source lock for the wafer-scale reference envelope. Area, SRAM, topology, fabric, repair, and peak compute are feasibility/sensitivity anchors only. The 125-PFLOP/s precision/utilization contract is not sufficiently specific to calibrate DeepSeek format roofs, and neither the 84-die topology nor any vendor bandwidth becomes an OpenTallas capability without compiled-trace and physical-methodology evidence. |
 
 ## Tau scaling and vertical-integration boundary
 
