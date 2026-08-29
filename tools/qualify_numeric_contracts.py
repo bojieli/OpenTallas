@@ -25,13 +25,23 @@ reports, on the binary32 accumulator and on the BF16 output separately:
 * the fraction of elements that differ,
 
 and, at the vocabulary head, whether the greedy argmax -- the value that
-actually decides a token -- changes.  It also measures the rate of both
-contracts on every available backend, because the rate is why the blocked
-contract exists at all: the sequential kernel is about 112 hours per
-8,000-token Qwen prefill and cannot run the mandatory workloads.
+actually decides a token -- changes.
+
+It also measures, because both are claims that would otherwise be quoted rather
+than checked:
+
+* the gap between the two RMSNorm contracts of amendment A8, which differ only
+  in whether the normalised value is materialised in BF16 before the gain
+  multiply;
+* the rate of both contraction contracts on every available backend, and the
+  wall time of *every contraction of a real Qwen3-8B forward pass* at a chosen
+  token count.  The rate is why the blocked contract exists at all: on the
+  exact scalar kernel an 8,000-token Qwen prefill is tens of hours and the
+  mandatory workloads cannot run.
 
 Nothing here is asserted.  Every number in the output was produced by running
-both contracts on the same operands in the same process.
+both contracts on the same operands in the same process, on the machine named
+by the recorded implementation identity, which was shared with other tenants.
 """
 
 from __future__ import annotations

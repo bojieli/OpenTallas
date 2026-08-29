@@ -258,6 +258,7 @@ class _Emitter:
         self._substitutions: dict[str, str] = {}
         self._layer_loop: int | None = None
         self._link_instructions = 0
+        self._hoisted: set[str] = set()
         self.token_ring_tensor: str | None = None
         self.token_ring_object: int = NO_ID
         self.commit_token_object: int = NO_ID
@@ -269,6 +270,7 @@ class _Emitter:
         self._declare_objects()
         self._declare_states()
 
+        self._hoisted = self._compute_hoisted()
         prepared, committed = self._state_transaction_sites()
         for physical_id in sorted(self._state_descriptor):
             if physical_id not in prepared:
@@ -568,21 +570,55 @@ class _Emitter:
             )
 
     def _state_transaction_sites(self) -> tuple[set[str], set[str]]:
-        """Physical states whose prepare/commit the graph places explicitly."""
+        """Physical states whose prepare/commit the graph places explicitly.
+
+        A graph that declares one transaction per layer, over resources the
+        planner merged into one, cannot keep those transactions inside the layer
+        loop: the loop would prepare the same physical resource once per
+        iteration, which is a double prepare rather than 36 transactions.  Such
+        a resource is hoisted -- prepared once before the body and committed
+        once after it -- which is the transaction the merged resource actually
+        has.  A resource that was not merged keeps the graph's own placement.
+        """
         prepared: set[str] = set()
         committed: set[str] = set()
         for kernel in self.graph.kernels:
-            names = (*kernel.state_reads, *kernel.state_writes)
-            physical = {
-                self.plan.state_of_resource[n][0]
-                for n in names
-                if n in self.plan.state_of_resource
-            }
-            if kernel.kind == "STATE_PREPARE":
-                prepared |= physical
-            elif kernel.kind == "STATE_COMMIT":
-                committed |= physical
+            if kernel.kind not in ("STATE_PREPARE", "STATE_COMMIT"):
+                continue
+            for physical_id in self._physical_states(kernel):
+                if physical_id in self._hoisted:
+                    continue
+                if kernel.kind == "STATE_PREPARE":
+                    prepared.add(physical_id)
+                else:
+                    committed.add(physical_id)
         return prepared, committed
+
+    def _physical_states(self, kernel: Kernel) -> list[str]:
+        out: list[str] = []
+        for name in (*kernel.state_writes, *kernel.state_reads):
+            mapping = self.plan.state_of_resource.get(name)
+            if mapping and mapping[0] not in out:
+                out.append(mapping[0])
+        return out
+
+    def _compute_hoisted(self) -> set[str]:
+        """Physical states whose transaction must be hoisted out of a loop."""
+        hoisted: set[str] = set()
+        for kernel in self.graph.kernels:
+            if kernel.kind not in ("STATE_PREPARE", "STATE_COMMIT"):
+                continue
+            plan = self.plan._kernel_index.get(kernel.index)
+            band = (
+                self.plan.band(plan.band_id)
+                if plan is not None and plan.band_id is not None
+                else None
+            )
+            iterated = band is not None and band.layer_count > 1
+            for physical_id in self._physical_states(kernel):
+                if iterated or len(self.plan.state(physical_id).members) > 1:
+                    hoisted.add(physical_id)
+        return hoisted
 
     def _declare_entrypoints(self) -> None:
         builder = self.builder
@@ -1323,6 +1359,8 @@ class _Emitter:
             "STATE_READ": State.READ,
         }[kernel.kind]
         for physical_id in physical:
+            if kernel.kind != "STATE_READ" and physical_id in self._hoisted:
+                continue  # hoisted out of the loop; see _state_transaction_sites
             self.builder.emit(
                 Major.STATE,
                 sub,

@@ -2,19 +2,55 @@
 
 ![Conceptual OpenTallas fixed-model decode architecture](docs/assets/architecture-overview.svg)
 
-> **Research status:** OpenTallas has checked analytical studies, synthesizable
-> public-reference RTL, open-tool verification, local open-PDK ROM methodology
-> slices, and a partial predictive-PDK digital physical proxy. It does **not**
-> have a complete checkpoint-to-physical-image compiler, an operator-complete
-> service engine, end-to-end model differential evidence, a target-node ROM
-> macro, a full placed-and-routed chip or wafer, or fabricated OpenTallas silicon.
-> A deterministic exact-integer compiler/interpreter fixture now proves the first
-> artifact path. The official Flash front end additionally locks the expected
-> tensors, maps a 2,136-node source graph, and has independent target-format
-> references. Thirty-two of 46 graph operator kinds have unit-qualified executable
-> references; the other 14 references and all service-engine/RTL
-> implementations remain pending. Current speedups are conditional break-even
-> scenarios, not achieved implementation results.
+> **Research status:** OpenTallas is a unified ABI 3.0 accelerator program. One
+> wire format, one verifier, one functional device, one counter registry and one
+> backend-neutral IR now serve all four model/backend targets, so a target is a
+> set of descriptors rather than a separate code path. Both real models compile:
+> Qwen3-8B and DeepSeek-V4-Flash-0731 each export to the neutral Tensor Kernel
+> IR with every weight bound to authenticated checkpoint byte ranges, and all
+> four deployments are admitted by an independent verifier. It does **not** yet
+> have accelerator-produced tokens end to end, a fabricated chip or wafer, a
+> full-chip placed-and-routed netlist, or foundry signoff DRC/LVS. Progress is
+> tracked in [`docs/UNIFIED_EXECUTION_CHECKLIST.md`](docs/UNIFIED_EXECUTION_CHECKLIST.md)
+> and generated status in [`docs/PROGRAM_STATUS.md`](docs/PROGRAM_STATUS.md).
+
+## ABI 3.0 at a glance
+
+The four targets are one conventional HBM/SRAM accelerator chip used as one node
+for Qwen and 32 identical nodes for DeepSeek, plus a Qwen-specific ROM chip and a
+DeepSeek-specific wafer-scale ROM accelerator.
+
+| Target | Instructions | Descriptors | Weights bound | Topology |
+|---|---:|---:|---:|---|
+| Qwen3-8B HBM | 69 | 204 | 16.38 GB | single chip |
+| Qwen3-8B ROM | 29 | 197 | 16.38 GB | single chip, 14 role-striped banks |
+| DeepSeek-V4-Flash HBM | 913 | 2,149 | 156.0 GB | 32 nodes, 77 link instructions |
+| DeepSeek-V4-Flash ROM | 322 | 2,205 | 156.0 GB | wafer, 9,300 tiles on 37 reticles |
+
+Three properties are worth stating plainly because the program exists to
+establish them:
+
+**Loop compression.** One Qwen forward step is 69 instructions. The same step
+under the previous ABI 2.5 was 924,386 flat commands. Programs describe loop
+nests over layers and token blocks; tile mapping lives in schedule descriptors,
+where the cycle model reads it.
+
+**Zero-copy weights.** No image file is written anywhere. A memory object
+references authenticated byte ranges of the locked checkpoint, and tiling is
+expressed by view strides. The Qwen deployment bundle is 223 KB for 16.38 GB of
+weights; the DeepSeek bundle is 30.9 MB for 156.0 GB.
+
+**ROM and HBM differ only in storage class.** For the same model the two
+deployments have an identical instruction stream and identical operator, view,
+numeric and schedule descriptors. Only the memory object's storage class and
+permissions differ. That is what makes the comparison meaningful rather than
+asserted.
+
+Evidence boundaries are declared, never inferred: functional, cycle, RTL,
+synthesis, place-and-route, SPICE, external-reference and assumed are distinct
+classes, and `runtime/evidence.py` refuses to mix them, refuses a pair that did
+not share a prompt or a technology view, and refuses any comparison whose two
+targets produced different tokens.
 
 ## Start here
 
