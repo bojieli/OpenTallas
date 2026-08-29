@@ -265,10 +265,36 @@ program, keeps prepared state transaction-private, and publishes generation
 uncharacterized, and the one-resource commit is explicitly only a qualification
 of the complete graph's 36-resource terminal commit.
 
-This remains a target-precision execution foundation, not operator-complete
-graph execution: the Qwen attention output projection, residual/MLP path,
-complete layers and model, DeepSeek attention/routing union, timing, RTL, and
-physical characterization remain open.
+The complete Qwen physical compiler is now available in
+`qwen_full_model_physical.py`. It streams all 399 authenticated BF16 weights
+from the one pinned checkpoint into 17 fixed-size content-addressed HBM shards,
+allocates all transient values into 18 reusable regions across the 16 SRAM
+banks, and lowers the complete 617-operation graph to 924,386 ABI 2.5 commands.
+The 17,573,089,792-byte logical HBM image contains 16,381,470,720 immutable
+weight bytes, 1,179,648,000 bytes of zero-initialized 8,000-token KV capacity,
+the qualified RoPE table, and explicit metadata and transaction descriptors.
+Build it without executing the model using:
+
+```bash
+python3 tools/build_qwen3_tensor_accelerator_full_physical.py \
+  --snapshot /path/to/pinned/Qwen3-8B-snapshot \
+  --checkpoint-lock /path/to/checkpoint.lock.json \
+  --output /large-volume/qwen3-full-model-physical
+```
+
+`qwen_full_model_physical_checking.py` does not import the forward compiler. It
+independently walks the graph, rereads every checkpoint tensor, reconstructs the
+tiled bytes, authenticates every shard and zero extent, proves SRAM liveness,
+re-derives every command and the single terminal 36-resource commit, and can
+audit either the prepublication candidate or the final manifest. Two authentic
+clean builds were byte-identical. The retained deployment has build ID
+`3460d88c...cad290f`, physical-plan ID `ba1d9546...5109c3`, and independent
+check ID `a2de7229...58a15a`.
+
+This closes deterministic physical compilation and independent reconstruction,
+not model execution. `hidden.36`, final logits, the selected token, repeated
+prefill/decode state updates, the exact 8,000-token workload, DeepSeek's
+attention/routing union, timing, RTL, and physical characterization remain open.
 
 The service engine verifies every manifest hash before execution and never reads
 the known-answer file. The independent reference evaluator consumes the source

@@ -1,0 +1,83 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_capacity_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capacity_certificate_id": {"$ref": "#/$defs/sha256"},
+    "command_capacity": {
+      "additionalProperties": false,
+      "properties": {
+        "available": {"const": 16777216},
+        "margin": {"const": 15852830},
+        "required": {"const": 924386}
+      },
+      "required": ["available", "margin", "required"],
+      "type": "object"
+    },
+    "context_capacity_tokens": {"const": 8000},
+    "hbm_capacity": {
+      "additionalProperties": false,
+      "properties": {
+        "alignment_padding_bytes": {"const": 7870464},
+        "available_bytes": {"const": 274877906944},
+        "immutable_weight_bytes": {"const": 16381470720},
+        "margin_bytes": {"const": 257304817152},
+        "metadata_and_descriptor_bytes": {"const": 4608},
+        "mutable_kv_bytes": {"const": 1179648000},
+        "required_bytes": {"const": 17573089792},
+        "rope_coefficient_bytes": {"const": 4096000}
+      },
+      "required": [
+        "alignment_padding_bytes",
+        "available_bytes",
+        "immutable_weight_bytes",
+        "margin_bytes",
+        "metadata_and_descriptor_bytes",
+        "mutable_kv_bytes",
+        "required_bytes",
+        "rope_coefficient_bytes"
+      ],
+      "type": "object"
+    },
+    "no_host_paging": {"const": true},
+    "physical_profile": {"const": "single_token_forward"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_capacity.v1"},
+    "sram_capacity": {
+      "additionalProperties": false,
+      "properties": {
+        "available_bytes": {"const": 16777216},
+        "bank_allocated_bytes": {
+          "const": [8208, 8192, 8192, 8192, 32768, 256, 303872, 8192, 24576, 24576, 24576, 8192, 10240, 512, 8192, 2048]
+        },
+        "max_bank_allocated_bytes": {"const": 303872},
+        "slots": {"const": 18}
+      },
+      "required": [
+        "available_bytes",
+        "bank_allocated_bytes",
+        "max_bank_allocated_bytes",
+        "slots"
+      ],
+      "type": "object"
+    },
+    "state_resource_count": {"const": 36},
+    "weight_count": {"const": 399}
+  },
+  "required": [
+    "capacity_certificate_id",
+    "command_capacity",
+    "context_capacity_tokens",
+    "hbm_capacity",
+    "no_host_paging",
+    "physical_profile",
+    "schema",
+    "sram_capacity",
+    "state_resource_count",
+    "weight_count"
+  ],
+  "title": "Qwen complete-model physical capacity certificate v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}
