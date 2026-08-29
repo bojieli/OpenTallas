@@ -114,7 +114,7 @@
 ## W10 — Mandatory workload campaigns
 
 - [ ] W10.1 Qwen exactly 8,000 natural prompt tokens → decode to first EOS (HBM + ROM) — **blocked on OI-21**, not on anything architectural: the deployment admits and the oracle for this workload exists, but prefill attention as implemented needs ~26 h for an 8,000-token prompt. Started, measured, stopped at 43 min
-- [ ] W10.2 Qwen repeated-special-token stress run — same 8,000-token prompt, so **blocked on OI-21** for the same reason
+- [~] W10.2 Qwen repeated-special-token stress run — **executed, and it diverged**: 8,000 prompt tokens (one distinct id), 32 decoded in 11,942 s, recorded `status: diverged` at index 2 (`results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json`). The run itself is complete and the workload has served its purpose — see [OI-33]. Whether the divergence is acceptable is a numeric-contract question, not an execution one
 - [x] W10.3 Qwen chat workload (pinned template) — `TA-QW-CHAT-1`, 93 prompt tokens, 24 decoded tokens, token-identical to the oracle; the model is mid-derivation at the token cap (`We are given:\n\n- **Ship 1** (from Port A) leaves at **06:00**`), so this record proves token fidelity, not answer correctness, and W10.1 carries the run to EOS
 - [x] W10.4 Qwen agentic workload — `TA-QW-AGENT-1` decoded a **complete, well-formed tool call and stopped at a real EOS** entirely on the accelerator: ```bash / awk -F',' '{sum += $2} END {print sum}' inventory.txt / ```. Token-identical to the oracle. Feeding the result back through the sandbox loop is `tools/run_qwen3_agent_episode.py`
 - [x] W10.5 DeepSeek long-context campaign — largest context **actually executed is 8,000 tokens**; 32K/128K/200K exhaust GPU memory in the mHC hyper-connection, not the sparse indexer. A 200,000-token prefill needs a chunked rewrite of the vendor prefill path on any GPU: `hc_post` alone is 48.8 GiB at that context and the indexer term 2.33 TiB, while persistent KV state is only 2.32 GiB
@@ -292,6 +292,45 @@
   each break it for a reason that has nothing to do with the deployment. The
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
+
+- **OI-33 — the accelerator's tokens diverge from the oracle on the
+  repeated-token stress workload, and this is the first token divergence this
+  program has produced.** `TA-QW-STRESS-1` ran to completion — 8,000 prompt
+  tokens, 32 decoded, 11,941 s — and was recorded `status: diverged`, not
+  `pass`, which is the reference gate doing exactly the job it was given this
+  morning. Under the campaign runner as it stood twelve hours ago this would
+  have been recorded as a pass, because nothing compared the tokens to anything.
+
+  The divergence is small and highly structured, and the structure is the
+  finding:
+
+  | | |
+  |---|---|
+  | prompt | 8,000 tokens, **one distinct token id** — maximally degenerate |
+  | first divergence | index 2: accelerator `279` (" the"), oracle `264` (" a") |
+  | then | the oracle emits a third `271` newline; the accelerator emits two |
+  | after that | accelerator `[3:12]` **equals** oracle `[4:13]` exactly — a nine-token aligned run at shift +1 |
+  | ties | `selection.tie_multiplicity` 33 over 32 tokens, so exactly one genuine tie |
+  | legitimacy | no problems; every token in vocabulary |
+
+  So the two are producing the *same continuation*, offset by one, after a
+  single word choice flipped between near-tied candidates. This is not a broken
+  computation; it is an argmax flip in a regime where the logits are nearly
+  degenerate by construction.
+
+  **What it falsifies is a claim this program has been resting on.** Amendment
+  A7's justification measured the blocked contract against the sequential one
+  and found 0.012–0.089% of elements differing by 1–5 ULP with *zero* vocabulary
+  argmax changes. That measurement was taken on natural prompts. It does not
+  hold here, and a workload of 8,000 identical tokens is precisely the instrument
+  for finding that out — which is what the mandatory stress contract is for.
+
+  **The discriminating experiment is already running.** `TA-QW-8K-1` is natural
+  prose at the same 8,000-token context. If it agrees with its oracle, this
+  divergence is about degeneracy rather than context length, and A7's claim needs
+  qualifying rather than withdrawing. If it also diverges, the claim is wrong at
+  long context generally and the numeric contract needs re-examining. Either way
+  the answer arrives without another experiment being designed.
 
 - **OI-32 — one capability, two sources of truth, and they have now diverged.**
   `configs/hardware/abi3_capability/hbm_sram_single_chip.json` and
