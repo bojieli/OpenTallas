@@ -71,9 +71,13 @@ from .lookup import (
     hash_route_indices,
 )
 from .matrix import (
+    BF16_LINEAR_INPUT_FEATURES,
+    BF16_LINEAR_OUTPUT_FEATURES,
     DENSE_OUTPUT_SCALE_BLOCK,
+    BF16LinearResult,
     DenseFP8LinearResult,
     MatrixReferenceError,
+    bf16_linear_bf16,
     dense_fp8_linear_bf16,
     dense_fp8_linear_selected_rows_bf16,
 )
@@ -143,6 +147,9 @@ __all__ = [
     "BF16HCBatch",
     "BF16HCSequence",
     "BF16HadamardMatrix",
+    "BF16LinearResult",
+    "BF16_LINEAR_INPUT_FEATURES",
+    "BF16_LINEAR_OUTPUT_FEATURES",
     "BF16RMSMatrix",
     "BF16Row",
     "BF16Sequence",
@@ -211,6 +218,7 @@ __all__ = [
     "binary32_rsqrt",
     "binary32_bits_to_bf16_rne",
     "bf16_rsqrt",
+    "bf16_linear_bf16",
     "biased_topk_route_indices",
     "bf16_token_embedding",
     "compressed_dense_indices",

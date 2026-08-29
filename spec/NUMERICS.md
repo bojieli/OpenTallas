@@ -295,6 +295,40 @@ This mode exercises masks, ROM addressing, pipelines, reductions, repair, RAS, a
 formal properties cheaply. Its throughput, area, correctness, and coverage do not
 close `DSV4_MXFP4`, `FP8_DENSE`, or model quality.
 
+### NUM-4.4 Bias-free BF16 index-head linear
+
+`BF16_LINEAR` is the distinct index-head weight projection at every ratio-four
+main-model layer. The qualified Flash graph contains 21 sites, all with logical
+shape 4,096 inputs by 64 outputs. The official checkpoint headers contain 21
+corresponding `indexer.weights_proj.weight` tensors, each `[64, 4096]` BF16. The
+pinned module constructs `ColumnParallelLinear(..., dtype=torch.bfloat16)` and
+the generic `linear` dispatcher reaches bias-free `F.linear` because this weight
+is neither FP4 nor FP8.
+
+For each logical output and flattened input row, the target:
+
+1. accepts finite BF16 activations and finite BF16 checkpoint weights;
+2. decodes each pair at increasing reduction index and forms its exact product;
+3. adds that product to a binary32 accumulator initialized to positive zero,
+   with one RNE rounding per fused product-add;
+4. converts the completed binary32 accumulator once to BF16 under NUM-4.2; and
+5. canonicalizes output zero positive and counts finite BF16 saturation.
+
+There is no bias, activation quantization, hidden block scale, or reassociation.
+Subnormal BF16 inputs and binary32 accumulators are preserved. Nonfinite input
+or intermediate binary32 overflow poisons. The reference accepts general
+rectangular matrices so small independent cases remain practical, while the
+graph contract qualifies only the source-observed 4,096-to-64 profile.
+
+PyTorch `F.linear` does not make its GEMM reduction tree architectural. A
+deterministic development audit used seed `0x424631364c494e45`, PyTorch
+2.10.0+cu128, CUDA 12.8, and 16 BF16 input rows by four BF16 weight rows at the
+full reduction width 4,096. Native CPU matched all 64 target BF16 outputs.
+Native SM120 differed in 27 of 64 outputs under tensor-core tiling; every
+difference retained sign and was at most six BF16 encoding steps. These bounded
+results motivate an explicit increasing-index target and do not promise native
+backend equivalence outside the governed corpus.
+
 ## NUM-5 Exceptional values and errors
 
 ### NUM-5.1 Classification

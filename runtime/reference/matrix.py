@@ -1,15 +1,16 @@
-"""Exact multi-block matrix references for pinned DeepSeek V4 dense FP8.
+"""Exact dense-matrix references for pinned DeepSeek V4 FP8 and BF16 paths.
 
-The implementation composes the scalar and 128-value block contracts from
-``formats.py`` into the complete ``FP8_LINEAR`` operator.  Inputs and outputs are
-raw BF16 encodings; weights are raw E4M3FN encodings; activation and weight
-scales are E8M0.  No host floating-point arithmetic participates.
+The FP8 implementation composes scalar and 128-value block contracts into the
+complete ``FP8_LINEAR`` operator. The distinct BF16 implementation defines the
+indexer's 4,096-to-64 ``F.linear`` path with increasing-reduction-index
+binary32 accumulation. No host floating-point arithmetic participates.
 """
 
 from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
+from fractions import Fraction
 from typing import TypeAlias
 
 from .formats import (
@@ -17,6 +18,8 @@ from .formats import (
     NumericReferenceError,
     binary32_balanced_sum,
     binary32_bits_to_bf16_rne,
+    binary32_ordered_dot,
+    decode_bf16,
     fp8_fp8_block_dot,
     quantize_bf16_activation_block,
 )
@@ -26,6 +29,8 @@ MODEL_SOURCE_SHA256 = (
     "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
 )
 DENSE_OUTPUT_SCALE_BLOCK = 128
+BF16_LINEAR_INPUT_FEATURES = 4096
+BF16_LINEAR_OUTPUT_FEATURES = 64
 
 BF16Matrix: TypeAlias = tuple[tuple[int, ...], ...]
 FP8Matrix: TypeAlias = tuple[tuple[int, ...], ...]
@@ -41,6 +46,14 @@ class DenseFP8LinearResult:
     """BF16 result codes and sticky saturation event counts."""
 
     activation_saturated_block_count: int
+    output_saturated_element_count: int
+    values: BF16Matrix
+
+
+@dataclass(frozen=True)
+class BF16LinearResult:
+    """BF16 matrix result plus the sticky finite-output saturation count."""
+
     output_saturated_element_count: int
     values: BF16Matrix
 
@@ -90,6 +103,73 @@ def _rectangular_codes(
             )
         )
     return tuple(result)
+
+
+def _finite_bf16_matrix(
+    value: object,
+    label: str,
+    *,
+    expected_width: int | None = None,
+) -> tuple[tuple[Fraction, ...], ...]:
+    codes = _rectangular_codes(
+        value,
+        label,
+        maximum=(1 << 16) - 1,
+        expected_width=expected_width,
+    )
+    result: list[tuple[Fraction, ...]] = []
+    for row_index, row in enumerate(codes):
+        decoded_row: list[Fraction] = []
+        for column, code in enumerate(row):
+            decoded = decode_bf16(code)
+            if not decoded.finite or decoded.value is None:
+                raise MatrixReferenceError(
+                    f"{label}[{row_index}][{column}] must be finite BF16"
+                )
+            decoded_row.append(decoded.value)
+        result.append(tuple(decoded_row))
+    return tuple(result)
+
+
+def bf16_linear_bf16(
+    input_codes: Sequence[Sequence[int]],
+    weight_codes: Sequence[Sequence[int]],
+) -> BF16LinearResult:
+    """Execute deterministic bias-free ``BF16_LINEAR`` matrix semantics.
+
+    ``input_codes`` has shape ``[M, K]`` and ``weight_codes`` has shape
+    ``[N, K]``. Each exact BF16 product is added to a binary32 accumulator in
+    increasing logical K order with one RNE rounding per fused product-add. The
+    completed accumulator converts once to BF16. This general matrix primitive
+    covers the graph-qualified 4,096-to-64 profile without baking batch/sequence
+    dimensions into the reference.
+    """
+
+    inputs = _finite_bf16_matrix(input_codes, "input_codes")
+    reduction = len(inputs[0])
+    weights = _finite_bf16_matrix(
+        weight_codes,
+        "weight_codes",
+        expected_width=reduction,
+    )
+
+    output: list[tuple[int, ...]] = []
+    saturation_count = 0
+    for input_index, input_row in enumerate(inputs):
+        output_row: list[int] = []
+        for output_index, weight_row in enumerate(weights):
+            try:
+                accumulator = binary32_ordered_dot(input_row, weight_row)
+                converted = binary32_bits_to_bf16_rne(accumulator)
+            except NumericReferenceError as exc:
+                raise MatrixReferenceError(
+                    f"BF16 linear arithmetic failed at input row {input_index}, "
+                    f"output row {output_index}: {exc}"
+                ) from exc
+            saturation_count += int(converted.saturated)
+            output_row.append(converted.code)
+        output.append(tuple(output_row))
+    return BF16LinearResult(saturation_count, tuple(output))
 
 
 def dense_fp8_linear_bf16(
@@ -256,6 +336,9 @@ def _dense_fp8_linear_bf16(
 
 
 __all__ = [
+    "BF16_LINEAR_INPUT_FEATURES",
+    "BF16_LINEAR_OUTPUT_FEATURES",
+    "BF16LinearResult",
     "DENSE_OUTPUT_SCALE_BLOCK",
     "MODEL_SOURCE_SHA256",
     "BF16Matrix",
@@ -263,6 +346,7 @@ __all__ = [
     "E8M0Matrix",
     "FP8Matrix",
     "MatrixReferenceError",
+    "bf16_linear_bf16",
     "dense_fp8_linear_bf16",
     "dense_fp8_linear_selected_rows_bf16",
 ]

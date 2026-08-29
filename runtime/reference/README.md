@@ -33,8 +33,9 @@ finite BF16 encodings with CUDA's native `cvt.rn.satfinite.e2m1x2.f32`. After
 the governed positive-zero canonicalization, there were zero differences.
 
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
-the qualified dense FP8 linear path, vector operators beyond weighted and head
-RMS normalization, target-hidden capture, and HC post-mixing, attention/routing
+the qualified dense FP8 and index-head BF16 linear paths, vector operators
+beyond weighted and head RMS normalization, target-hidden capture, and HC
+post-mixing, attention/routing
 operators, real-checkpoint known answers, layer differentials, end-to-end
 logits, and task quality remain open.
 The earlier exact-integer evaluator remains fixture-only evidence.
@@ -48,6 +49,17 @@ saturation counts. Tests cross the output scale-tile boundary and compare
 multi-block randomized matrices with an independently assembled composition.
 This does not yet provide a checkpoint-derived known answer or service-engine
 opcode.
+
+The same module separately implements all 21 `BF16_LINEAR` index-head weight
+projections. Official headers confirm every checkpoint matrix is `[64, 4096]`
+BF16. Exact BF16 products accumulate in increasing K order with binary32 RNE at
+each fused product-add, followed by one BF16 output conversion. Tests cover the
+complete graph shape, an order-sensitive cancellation, subnormal and malformed
+inputs, finite output saturation, binary32 overflow, independent randomized
+composition, and native CPU/CUDA differentials. A governed full-width audit
+matched all 64 CPU outputs; native SM120 tensor-core tiling differed in 27,
+each by at most six same-sign BF16 encoding steps. This freezes target order; it
+does not declare CUDA's backend-dependent tree incorrect.
 
 `normalization.py` implements the weighted `RMS_NORM` operation at all 251
 Flash graph sites and all four observed widths. It widens BF16 input and BF16
