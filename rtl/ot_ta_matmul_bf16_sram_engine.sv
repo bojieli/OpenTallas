@@ -1,9 +1,11 @@
 `timescale 1ns/1ps
-// Bounded data-bearing execution of the first production Qwen q_proj output
-// block.  Each MATMUL_BF16_TILE consumes [1,256] @ [64,256]^T.  Command 4
-// initializes 64 raw binary32 accumulators, commands 6 through 32 reload and
-// extend those accumulators, and command 34 reloads, extends, and finalizes the
-// result to 64 BF16 auxiliary values.
+// Bounded data-bearing execution of complete production Qwen q_proj output
+// blocks.  Each MATMUL_BF16_TILE consumes [1,256] @ [64,256]^T.  Within every
+// 32-command DMA/MATMUL block, the first MATMUL initializes 64 raw binary32
+// accumulators, the next fourteen reload and extend them, and the last reloads,
+// extends, and finalizes 64 BF16 auxiliary values.  The default bound retains
+// the original command-4-through-34 single-block profile; a sequencer may raise
+// PROFILE_LAST_COMMAND_INDEX to the final MATMUL of another whole output block.
 //
 // BF16 operands widen exactly.  Every product and every strictly increasing-K
 // accumulation rounds once to binary32 RNE, and exact zero is canonicalized
@@ -19,7 +21,8 @@
 module ot_ta_matmul_bf16_sram_engine #(
     parameter [31:0] PROFILE_INPUT_ROWS = 32'd1,
     parameter [31:0] PROFILE_OUTPUTS = 32'd64,
-    parameter [31:0] PROFILE_REDUCTION = 32'd256
+    parameter [31:0] PROFILE_REDUCTION = 32'd256,
+    parameter [31:0] PROFILE_LAST_COMMAND_INDEX = 32'd34
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -124,21 +127,27 @@ module ot_ta_matmul_bf16_sram_engine #(
     wire [31:0] decoder_size3;
     wire decoder_out_ready = (state == STATE_IDLE) && !done_valid;
 
+    wire profile_command_bound_legal =
+        (PROFILE_LAST_COMMAND_INDEX >= 32'd34) &&
+        (PROFILE_LAST_COMMAND_INDEX[4:0] == 5'd2);
+    wire [4:0] command_offset_in_block = decoder_index[4:0] - 5'd4;
     wire command_index_legal =
         (decoder_index >= 32'd4) &&
-        (decoder_index <= 32'd34) &&
+        (decoder_index <= PROFILE_LAST_COMMAND_INDEX) &&
         !decoder_index[0];
     wire command_flags_legal =
-        ((decoder_index == 32'd4) &&
+        ((command_offset_in_block == 5'd0) &&
          (decoder_flags == FLAG_MATMUL_INIT)) ||
-        ((decoder_index > 32'd4) && (decoder_index < 32'd34) &&
-         !decoder_index[0] && (decoder_flags == 16'b0)) ||
-        ((decoder_index == 32'd34) &&
+        ((command_offset_in_block > 5'd0) &&
+         (command_offset_in_block < 5'd30) &&
+         !command_offset_in_block[0] && (decoder_flags == 16'b0)) ||
+        ((command_offset_in_block == 5'd30) &&
          (decoder_flags == FLAG_MATMUL_FINAL));
     wire command_profile_legal =
         (PROFILE_INPUT_ROWS == 32'd1) &&
         (PROFILE_OUTPUTS == 32'd64) &&
         (PROFILE_REDUCTION == 32'd256) &&
+        profile_command_bound_legal &&
         command_index_legal &&
         command_flags_legal &&
         (decoder_kernel_index == 32'd2) &&

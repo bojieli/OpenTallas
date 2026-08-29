@@ -385,7 +385,7 @@ def test_dma_matmul_campaign_logs_and_sources_are_reproducible() -> None:
             VECTORS,
         )
     }
-    expected_sources = {
+    current_sources = {
         name: _sha256_file(path) for name, path in sorted(static_paths.items())
     }
     generated = {
@@ -393,15 +393,58 @@ def test_dma_matmul_campaign_logs_and_sources_are_reproducible() -> None:
         **campaign_runner._program_files(load_strict_json(VECTORS)),
     }
     for name, payload in sorted(generated.items()):
-        expected_sources[f"generated/{name}"] = _sha256(payload.encode("ascii"))
-    assert campaign["source_sha256"] == expected_sources
+        current_sources[f"generated/{name}"] = _sha256(payload.encode("ascii"))
+    historical_sources = dict(current_sources)
+    historical_sources["rtl/ot_ta_dma_matmul_sequencer.sv"] = (
+        "c61dd19d8fbab32574ff79ef4c22a7761e3268c29b7905c7de4a36e22bd2ff0d"
+    )
+    historical_sources["rtl/ot_ta_matmul_bf16_sram_engine.sv"] = (
+        "3a77bb1b155ac2ca605e03132ac3833f615d688ad96ff8fb7d22af75ecd97b99"
+    )
+    assert campaign["source_sha256"] == historical_sources
+    complete_campaign = load_strict_json(
+        ROOT / "results/tensor_accelerator/qwen3_rtl_q_proj_campaign.json"
+    )
+    assert current_sources["rtl/ot_ta_dma_matmul_sequencer.sv"] == (
+        complete_campaign["source_sha256"]["rtl/ot_ta_dma_matmul_sequencer.sv"]
+    )
+    assert current_sources["rtl/ot_ta_matmul_bf16_sram_engine.sv"] == (
+        complete_campaign["source_sha256"][
+            "rtl/ot_ta_matmul_bf16_sram_engine.sv"
+        ]
+    )
 
 
 @pytest.mark.skipif(
     any(shutil.which(tool) is None for tool in ("iverilog", "vvp", "verilator")),
     reason="Icarus and Verilator are required for the RTL correlation replay",
 )
-def test_retained_dma_matmul_campaign_replays_exactly() -> None:
+def test_generalized_engine_preserves_retained_first_block_campaign() -> None:
     retained = load_strict_json(CAMPAIGN)
     replayed = campaign_runner.run(VECTORS)
-    assert canonical_json_bytes(replayed) == canonical_json_bytes(retained)
+    assert replayed["campaign_id"] == (
+        "dec3d325cd072dabf1d0114b879bf367c359b4ac7106210049ef5ab2a7200992"
+    )
+    assert replayed["status"] == "pass"
+    retained_functional = {
+        key: value
+        for key, value in retained.items()
+        if key not in {"campaign_id", "source_sha256"}
+    }
+    replayed_functional = {
+        key: value
+        for key, value in replayed.items()
+        if key not in {"campaign_id", "source_sha256"}
+    }
+    assert canonical_json_bytes(replayed_functional) == canonical_json_bytes(
+        retained_functional
+    )
+    assert set(replayed["source_sha256"]) == set(retained["source_sha256"])
+    assert {
+        key
+        for key in replayed["source_sha256"]
+        if replayed["source_sha256"][key] != retained["source_sha256"][key]
+    } == {
+        "rtl/ot_ta_dma_matmul_sequencer.sv",
+        "rtl/ot_ta_matmul_bf16_sram_engine.sv",
+    }
