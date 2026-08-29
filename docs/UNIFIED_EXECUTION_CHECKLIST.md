@@ -254,3 +254,19 @@
   each break it for a reason that has nothing to do with the deployment. The
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
+
+- **OI-19 — the storage-class equivalence proof is narrower than the claim
+  resting on it.** `tools/prove_storage_class_equivalence.py` builds the same
+  graph twice *through one backend*, varying only the weight storage class, and
+  shows nothing else differs. That is a real result and it holds for both
+  models. But the ROM-versus-HBM comparison needs the stronger property that
+  `rom_qwen3` and `hbm_sram` lower the same graph to the *same program*, and
+  that does not hold today: 31 instructions / 210 descriptors from the ROM
+  lowering against 75 / 218 from the HBM lowering. Until they agree, a measured
+  ROM-versus-HBM difference is partly a difference between two compilers. The
+  README and `ABI3_PROGRAM_REPORT.md` §2.2 previously stated the narrow proof in
+  words that implied the broad one; both are corrected. Two things are needed:
+  re-run the proof once the ROM lane lands (the recorded result predates the A13
+  loop-compression change to the HBM lowering), and add a cross-backend program
+  comparison that either shows the two agree or reports exactly where they do
+  not.

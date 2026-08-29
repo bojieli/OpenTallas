@@ -51,10 +51,14 @@ reads went to the *committed* image, which is empty mid-transaction, so
 attention was attending to a context that did not yet contain the current
 tokens.
 
-### 2.2 ROM and HBM differ only in storage class
+### 2.2 Storage class is separable from the program
 
-This is the property the comparison rests on, and it is now checked
-mechanically rather than argued:
+The property the comparison rests on has two halves, and only the first is
+proven. This section reports the first and is explicit about the second.
+
+**Proven: within one backend, storage class changes nothing else.** The same
+graph built twice through the ROM backend, varying only where the immutable
+weights live:
 
 | | Qwen3-8B | DeepSeek-V4-Flash |
 |---|---|---|
@@ -65,10 +69,21 @@ mechanically rather than argued:
 | Transitions | all ROM→HBM | all ROM→HBM |
 | **Differing beyond storage class** | **0** | **0** |
 
-Not one operand view, numeric profile, schedule or operator differs. Had any
-differed, a measured gap between the two targets would have been
-unattributable — the study would have been measuring the compiler rather than
-the memory technology.
+Not one operand view, numeric profile, schedule or operator differs.
+
+**Not proven: that the two backends emit the same program.** The table above
+varies storage class inside a single backend. The ROM-versus-HBM comparison
+needs more than that — it needs `rom_qwen3` and `hbm_sram` to lower the same
+graph to the same program — and today they do not: 31 instructions and 210
+descriptors from the ROM lowering against 75 and 218 from the HBM lowering. The
+two figures appear in adjacent sections of this report and it would be easy to
+read the 75-instruction program as the one covered by the table. It is not.
+
+Until the counts agree, a measured gap between the two targets is partly a
+measurement of the compiler rather than of the memory technology, which is
+precisely the failure the property exists to exclude. Tracked as OI-19. The
+numbers here are also from a build predating the A13 loop-compression change to
+the HBM lowering, so the proof must be re-run once the ROM lane lands.
 
 ### 2.3 Loop compression
 

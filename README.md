@@ -44,11 +44,20 @@ references authenticated byte ranges of the locked checkpoint, and tiling is
 expressed by view strides. The Qwen deployment bundle is 223 KB for 16.38 GB of
 weights; the DeepSeek bundle is 30.9 MB for 156.0 GB.
 
-**ROM and HBM differ only in storage class.** For the same model the two
-deployments have an identical instruction stream and identical operator, view,
-numeric and schedule descriptors. Only the memory object's storage class and
-permissions differ. That is what makes the comparison meaningful rather than
-asserted.
+**A deployment's storage class is separable from its program.** Building the
+same graph twice through the ROM backend, changing only where the immutable
+weights live, yields a byte-identical instruction stream and identical operator,
+view, numeric and schedule descriptors; only the memory object's storage class
+and permissions differ. This is checked mechanically
+(`tools/prove_storage_class_equivalence.py`).
+
+Note what that proof does *not* yet cover. It varies storage class **within one
+backend**. The stronger property the ROM-versus-HBM comparison actually needs —
+that the `rom_qwen3` and `hbm_sram` backends emit the *same* program for the
+same graph — is not proven, and at the moment it does not hold: the HBM lowering
+emits 75 instructions and 218 descriptors where the ROM lowering emits 31 and
+210. Until the two agree, a measured ROM-versus-HBM gap is partly a measurement
+of the compiler. Tracked as OI-19.
 
 Evidence boundaries are declared, never inferred: functional, cycle, RTL,
 synthesis, place-and-route, SPICE, external-reference and assumed are distinct
