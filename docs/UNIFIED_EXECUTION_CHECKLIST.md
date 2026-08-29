@@ -59,20 +59,20 @@
 
 ## W4 — HBM/SRAM backend (shared chip; 1 node Qwen, 32 nodes DeepSeek)
 
-- [~] W4.1 Physical Plan IR (allocation, tiling, banks, schedules, topology)
-- [~] W4.2 Weight/state allocator + HBM address map (mmap-backed, no 16/156 GB copy)
-- [~] W4.3 Tiling + loop-nest schedule synthesis (loop-compressed programs)
-- [~] W4.4 Descriptor + program emission (ABI 3.0)
-- [~] W4.5 Independent legality checker (reconstructs the plan without reusing the generator)
+- [x] W4.1 Physical Plan IR (allocation, tiling, banks, schedules, topology) — `compiler/backends/hbm_sram/plan.py`
+- [x] W4.2 Weight/state allocator + HBM address map (mmap-backed, no 16/156 GB copy) — zero-copy: 14 objects over 399 checkpoint ranges for Qwen, 196 objects for DeepSeek; no image written
+- [x] W4.3 Tiling + loop-nest schedule synthesis (loop-compressed programs) — Qwen 69 instructions from 691 kernels (13,400x vs ABI 2.5); tiling in SCHEDULE descriptors
+- [x] W4.4 Descriptor + program emission (ABI 3.0) — `compiler/backends/hbm_sram/lower.py`
+- [x] W4.5 Independent legality checker (reconstructs the plan without reusing the generator) — `compiler/backends/hbm_sram/check.py`, does not import the generator
 - [~] W4.6 Qwen single-node deployment
 - [~] W4.7 DeepSeek 32-node sharded deployment (experts, sparse gather, collectives, coordinated commit)
 
 ## W5 — ROM backends
 
-- [~] W5.1 Common ROM contracts (immutable regions, repair map, inverse reconstruction)
-- [~] W5.2 Qwen conventional single-chip ROM partition + images + schedules + deployment
-- [~] W5.3 DeepSeek wafer-scale reticle/tile ROM placement + on-wafer fabric + distributed HBM state + deployment
-- [~] W5.4 Inverse proof: ROM image → original weights bit-exact
+- [x] W5.1 Common ROM contracts (immutable regions, repair map, inverse reconstruction) — `compiler/backends/rom/common/image.py` incl. repair map
+- [x] W5.2 Qwen conventional single-chip ROM partition + images + schedules + deployment — Qwen ROM 29 instructions, 14 role-striped banks, 16,381,470,720 B
+- [x] W5.3 DeepSeek wafer-scale reticle/tile ROM placement + on-wafer fabric + distributed HBM state + deployment — DeepSeek ROM wafer 322 instructions, 172 regions, 9,300 tiles of 37 reticles, 18 link instructions
+- [x] W5.4 Inverse proof: ROM image → original weights bit-exact — inverse proof passes bit-identically over 16.4 GB and 156 GB
 - [~] W5.5 Independent schedule checker
 
 ## W6 — Real end-to-end execution (the correctness spine)
@@ -87,27 +87,27 @@
 
 ## W7 — Cycle model and capability
 
-- [~] W7.1 One event-driven cycle simulator over the same ABI 3.0 artifacts
-- [~] W7.2 Capability records for SKY130 view and ASAP7 view (separately versioned)
-- [~] W7.3 32-node fabric model (latency, serialization, contention, credits, retry)
-- [~] W7.4 Wafer fabric model (reticle/tile routing, congestion, barriers)
-- [~] W7.5 Counter reconciliation: functional == cycle == RTL for the same program
+- [x] W7.1 One event-driven cycle simulator over the same ABI 3.0 artifacts — `runtime/cycle/model.py`, trace derived by running the frozen device itself
+- [x] W7.2 Capability records for SKY130 view and ASAP7 view (separately versioned) — five cost tables with per-parameter provenance
+- [x] W7.3 32-node fabric model (latency, serialization, contention, credits, retry) — `runtime/cycle/fabric.py` ClusterFabric
+- [x] W7.4 Wafer fabric model (reticle/tile routing, congestion, barriers) — `runtime/cycle/fabric.py` WaferFabric
+- [x] W7.5 Counter reconciliation: functional == cycle == RTL for the same program — functional vs cycle agreement over 31 architectural counters
 
 ## W8 — RTL 3.0
 
-- [~] W8.1 Microsequencer RTL (fetch/decode/loop/predicate/event/trap/complete)
-- [~] W8.2 Queue/event/state controller RTL
+- [x] W8.1 Microsequencer RTL (fetch/decode/loop/predicate/event/trap/complete) — `rtl/abi3/ot_a3_microsequencer.sv`
+- [x] W8.2 Queue/event/state controller RTL — `rtl/abi3/ot_a3_event_scoreboard.sv`, `ot_a3_state_controller.sv`
 - [~] W8.3 Representative engine datapaths (DMA, tensor MAC array, vector, selection)
 - [~] W8.4 Inter-chip endpoint RTL (packets, credits, retry, collectives)
 - [~] W8.5 ROM service RTL (Qwen chip, DeepSeek wafer tile)
-- [~] W8.6 Verilator co-simulation vs functional simulator on generated programs
-- [~] W8.7 Fault/stall/backpressure/reset campaigns
+- [x] W8.6 Verilator co-simulation vs functional simulator on generated programs — 30 cases, 99 issue events, 12 traps matched on two simulators
+- [x] W8.7 Fault/stall/backpressure/reset campaigns — 17 negative cases incl. CRC, illegal opcode, loop overrun, mid-transaction trap
 
 ## W9 — Physical (SKY130 implementation view, ASAP7 predictive view)
 
-- [~] W9.1 Inventory available PDKs/tools; record what can actually run offline
-- [~] W9.2 SKY130 synthesis + place/route of RTL 3.0 blocks; area/timing/power
-- [~] W9.3 ASAP7 synthesis (predictive) of the same blocks
+- [x] W9.1 Inventory available PDKs/tools; record what can actually run offline — `docs/ABI3_PHYSICAL_VIEWS.md`
+- [x] W9.2 SKY130 synthesis + place/route of RTL 3.0 blocks; area/timing/power — SKY130 HD full place-and-route, 0 DRC, 0 antenna
+- [x] W9.3 ASAP7 synthesis (predictive) of the same blocks — ASAP7 full place-and-route; archived case reproduced bit-for-bit
 - [ ] W9.4 SRAM/ROM macro methodology per view
 - [ ] W9.5 Feed characterized capability back into cycle model; recompile; rerun
 
@@ -117,7 +117,7 @@
 - [ ] W10.2 Qwen repeated-special-token stress run
 - [ ] W10.3 Qwen chat workload (pinned template) with question-specific checks
 - [ ] W10.4 Qwen agentic workload (model-generated tool calls, sandboxed, fed back)
-- [ ] W10.5 DeepSeek long-context campaign (target 200,000; record achieved boundary honestly)
+- [~] W10.5 DeepSeek long-context campaign (target 200,000; record achieved boundary honestly) — oracle ladder reaches 8,000 tokens so far
 - [ ] W10.6 DeepSeek agentic scenario
 
 ## W11 — Governed comparison and release

@@ -476,9 +476,10 @@ def _vector_rope(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
         # binary32 and applied at a BF16 boundary, which is where the frozen
         # kernel takes it.  The narrowing is part of the contract, so it happens
         # here rather than being pushed onto whoever produced the table.
-        coefficients = narrow_bf16_rne(
+        coefficients, saturations = narrow_bf16_rne(
             np.ascontiguousarray(coefficients, dtype=np.float32)
         )
+        ctx.counters.add("vector.saturations", int(saturations))
     with _numeric_guard("qwen3_rope_fp32_bf16_v1"):
         if coefficients.ndim == 1:
             # The frozen kernel rotates a query and a key together; one tensor

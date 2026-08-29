@@ -257,6 +257,11 @@ def test_reference_oracle_report_shape(name: str) -> None:
         assert isinstance(result["raw_decoded_text"], str)
         assert result["wall_seconds"] > 0
         assert result["peak_device_bytes"] > 0
+        # The KV caches were sized for at least this workload's own run.
+        assert (
+            result["max_seq_len"]
+            >= result["prompt_token_count"] + result["generated_token_count"]
+        ), workload_id
     # A workload that could not run must say so rather than disappear.
     for workload_id, skipped in report.get("not_executed", {}).items():
         assert skipped["reason"] in {

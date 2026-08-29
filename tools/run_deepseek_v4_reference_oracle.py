@@ -292,7 +292,10 @@ def main() -> int:
             f"embed on {endpoints['embed_device']}, "
             f"lm_head on {endpoints['head_device']}"
         ),
-        "max_seq_len": max_seq_len,
+        # The length the first engine was built at.  Under
+        # --engine-per-workload every result carries its own "max_seq_len",
+        # because the engine is rebuilt at each workload's own length.
+        "initial_max_seq_len": max_seq_len,
         "engine_per_workload": bool(args.engine_per_workload),
         "mandatory_context_tokens": index.get("mandatory_context_tokens"),
         "context_ladder": index.get("context_ladder"),
