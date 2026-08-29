@@ -43,12 +43,19 @@ SEMANTIC_SCHEMA = "opentallas.deepseek_v4_fp8_linear_slice.v1"
 TENSOR_SCHEMA = "opentallas.deepseek_v4_fp8_linear_tensors.v1"
 EXPECTATION_SCHEMA = "opentallas.deepseek_v4_fp8_linear_expectations.v1"
 COVERAGE_SCHEMA = "opentallas.deepseek_v4_fp8_linear_coverage.v1"
+FULL_DEPLOYMENT_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_deployment.v1"
+FULL_SEMANTIC_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full.v1"
+FULL_TENSOR_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_tensors.v1"
+FULL_COVERAGE_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_coverage.v1"
 COMPILER_VERSION = "0.1.0"
 
 WEIGHT_NAME = "layers.0.attn.wq_a.weight"
 SCALE_NAME = "layers.0.attn.wq_a.scale"
 DEFAULT_OUTPUT_ROWS = (0, 127, 128, 1023)
 MAX_SELECTED_OUTPUT_ROWS = 64
+MAX_FEATURE_EXTENT = 65_536
+MAX_WEIGHT_PAYLOAD_BYTES = 8 * 1024 * 1024
+MAX_FULL_PRODUCTS_PER_INPUT_ROW = 8 * 1024 * 1024
 
 
 class DeepSeekV4FP8LinearBuildError(RuntimeError):
@@ -239,6 +246,7 @@ def _build_into(
     verification: Mapping[str, Any],
     root: Path,
     requested_rows: Sequence[int],
+    full_operator: bool,
 ) -> dict[str, Any]:
     raw_assignments = application.get("assignments")
     if not isinstance(raw_assignments, list) or any(
@@ -267,6 +275,13 @@ def _build_into(
             "weight and scale replicas cover different ranks"
         )
     output_features, input_features = weight_shape
+    if (
+        output_features > MAX_FEATURE_EXTENT
+        or input_features > MAX_FEATURE_EXTENT
+    ):
+        raise DeepSeekV4FP8LinearBuildError(
+            f"FP8 feature extents must not exceed {MAX_FEATURE_EXTENT}"
+        )
     expected_scale_shape = [
         (output_features + DENSE_BLOCK_SIZE - 1) // DENSE_BLOCK_SIZE,
         input_features // DENSE_BLOCK_SIZE,
@@ -275,7 +290,28 @@ def _build_into(
         raise DeepSeekV4FP8LinearBuildError(
             "FP8 weight and scale shapes violate 128-by-128 tile orientation"
         )
-    output_rows = _output_rows(requested_rows, output_features)
+    expected_weight_bytes = output_features * input_features
+    expected_scale_bytes = expected_scale_shape[0] * expected_scale_shape[1]
+    if expected_weight_bytes > MAX_WEIGHT_PAYLOAD_BYTES:
+        raise DeepSeekV4FP8LinearBuildError(
+            "FP8 weight payload exceeds the deployment memory budget"
+        )
+    if full_operator and expected_weight_bytes > MAX_FULL_PRODUCTS_PER_INPUT_ROW:
+        raise DeepSeekV4FP8LinearBuildError(
+            "complete FP8 operator exceeds the exact-arithmetic work budget"
+        )
+    if (
+        weights[0].get("payload_bytes") != expected_weight_bytes
+        or scales[0].get("payload_bytes") != expected_scale_bytes
+    ):
+        raise DeepSeekV4FP8LinearBuildError(
+            "FP8 weight or scale payload size differs from its declared shape"
+        )
+    output_rows = (
+        tuple(range(output_features))
+        if full_operator
+        else _output_rows(requested_rows, output_features)
+    )
     official = application.get("evidence_scope") == "official_checkpoint"
     if official and (
         weight_shape != [1024, 4096]
@@ -338,7 +374,7 @@ def _build_into(
             "size_bytes": scale_size,
             "source_assignment_path": scales[0]["path"],
         },
-        "schema": TENSOR_SCHEMA,
+        "schema": FULL_TENSOR_SCHEMA if full_operator else TENSOR_SCHEMA,
         "weight": {
             "dtype": "F8_E4M3",
             "path": weight_relative,
@@ -352,27 +388,38 @@ def _build_into(
     write_canonical_json(root / "tensor_manifest.json", tensor_manifest)
 
     source_record = application["source"]
+    semantic_dimensions = {
+        "block_size": DENSE_BLOCK_SIZE,
+        "input_features": input_features,
+        "output_features": output_features,
+    }
+    if not full_operator:
+        semantic_dimensions["selected_output_rows"] = list(output_rows)
     semantic = {
         "claim_boundary": (
-            "Selected logical output rows of layer-0 query-A FP8_LINEAR only; "
-            "not complete query projection, attention, or a transformer block."
+            "Complete layer-0 query-A FP8_LINEAR outputs for supplied BF16 rows; "
+            "not input normalization, attention, or a transformer block."
+            if full_operator
+            else (
+                "Selected logical output rows of layer-0 query-A FP8_LINEAR only; "
+                "not complete query projection, attention, or a transformer block."
+            )
         ),
-        "dimensions": {
-            "block_size": DENSE_BLOCK_SIZE,
-            "input_features": input_features,
-            "output_features": output_features,
-            "selected_output_rows": list(output_rows),
-        },
+        "dimensions": semantic_dimensions,
         "model_id": MODEL_ID,
-        "numeric_profile": "deepseek_v4_dense_fp8_selected_rows_v1",
+        "numeric_profile": (
+            "deepseek_v4_dense_fp8_full_v1"
+            if full_operator
+            else "deepseek_v4_dense_fp8_selected_rows_v1"
+        ),
         "operation": {
             "input": "input_bf16_codes",
-            "kind": "FP8_LINEAR_SELECTED_ROWS",
+            "kind": "FP8_LINEAR" if full_operator else "FP8_LINEAR_SELECTED_ROWS",
             "output": "output_bf16_codes",
             "scale_resource": SCALE_NAME,
             "weight_resource": WEIGHT_NAME,
         },
-        "schema": SEMANTIC_SCHEMA,
+        "schema": FULL_SEMANTIC_SCHEMA if full_operator else SEMANTIC_SCHEMA,
         "source": {
             "application_id": application["application_id"],
             "application_status": application["status"],
@@ -419,10 +466,16 @@ def _build_into(
     }
     write_canonical_json(root / "execution_expectations.json", expectations)
     coverage = {
-        "implemented_operator_kind": "FP8_LINEAR_SELECTED_ROWS",
+        "implemented_operator_kind": (
+            "FP8_LINEAR" if full_operator else "FP8_LINEAR_SELECTED_ROWS"
+        ),
         "model_id": MODEL_ID,
-        "schema": COVERAGE_SCHEMA,
-        "status": "selected_output_rows_arithmetic_slice_only",
+        "schema": FULL_COVERAGE_SCHEMA if full_operator else COVERAGE_SCHEMA,
+        "status": (
+            "complete_operator_arithmetic_only"
+            if full_operator
+            else "selected_output_rows_arithmetic_slice_only"
+        ),
         "underlying_graph_operator_kind": "FP8_LINEAR",
     }
     write_canonical_json(root / "operator_coverage.json", coverage)
@@ -457,16 +510,29 @@ def _build_into(
         "source_application_id": application["application_id"],
     }
     build_id = hashlib.sha256(canonical_json_bytes(identity)).hexdigest()
-    deployment = {
-        "artifacts": artifacts,
-        "build_id": build_id,
-        "claim_boundary": [
+    deployment_claims = (
+        [
+            "Executes every logical output row of one FP8_LINEAR operator.",
+            "Does not execute input normalization, attention, a transformer block, logits, or decode state.",
+            "Functional counters are not hardware cycles, PPA, or NVIDIA comparison evidence.",
+        ]
+        if full_operator
+        else [
             "Executes selected logical output rows of one FP8_LINEAR operator.",
             "Does not execute all query-A rows, attention, a transformer block, logits, or decode state.",
             "Functional counters are not hardware cycles, PPA, or NVIDIA comparison evidence.",
-        ],
+        ]
+    )
+    deployment = {
+        "artifacts": artifacts,
+        "build_id": build_id,
+        "claim_boundary": deployment_claims,
         "compiler": {
-            "name": "opentallas-deepseek-v4-fp8-linear-slice-compiler",
+            "name": (
+                "opentallas-deepseek-v4-fp8-linear-compiler"
+                if full_operator
+                else "opentallas-deepseek-v4-fp8-linear-slice-compiler"
+            ),
             "version": COMPILER_VERSION,
         },
         "entrypoint": {
@@ -477,25 +543,34 @@ def _build_into(
         },
         "microcode_abi": identity["microcode_abi"],
         "model_id": MODEL_ID,
-        "schema": DEPLOYMENT_SCHEMA,
+        "schema": FULL_DEPLOYMENT_SCHEMA if full_operator else DEPLOYMENT_SCHEMA,
         "source_application_id": application["application_id"],
         "status": (
-            "real_checkpoint_selected_fp8_linear_rows_not_full_operator"
-            if official
-            else "development_fixture_selected_fp8_linear_rows_not_release_evidence"
+            "real_checkpoint_complete_fp8_linear_operator"
+            if full_operator and official
+            else (
+                "development_fixture_complete_fp8_linear_operator_not_release_evidence"
+                if full_operator
+                else (
+                    "real_checkpoint_selected_fp8_linear_rows_not_full_operator"
+                    if official
+                    else "development_fixture_selected_fp8_linear_rows_not_release_evidence"
+                )
+            )
         ),
     }
     write_canonical_json(root / "deployment_manifest.json", deployment)
     return deployment
 
 
-def build_deepseek_v4_fp8_linear_deployment(
+def _build_deepseek_v4_fp8_linear_deployment(
     *,
     snapshot: Path,
     lock: dict[str, Any],
     application_root: Path,
     output: Path,
-    output_rows: Sequence[int] = DEFAULT_OUTPUT_ROWS,
+    output_rows: Sequence[int],
+    full_operator: bool,
 ) -> dict[str, Any]:
     """Verify a canonical application and atomically build the arithmetic slice."""
 
@@ -543,6 +618,7 @@ def build_deepseek_v4_fp8_linear_deployment(
             verification=verification,
             root=temporary,
             requested_rows=output_rows,
+            full_operator=full_operator,
         )
         os.replace(temporary, output)
         return deployment
@@ -552,8 +628,48 @@ def build_deepseek_v4_fp8_linear_deployment(
         raise
 
 
+def build_deepseek_v4_fp8_linear_deployment(
+    *,
+    snapshot: Path,
+    lock: dict[str, Any],
+    application_root: Path,
+    output: Path,
+    output_rows: Sequence[int] = DEFAULT_OUTPUT_ROWS,
+) -> dict[str, Any]:
+    """Build the bounded selected-row diagnostic profile."""
+
+    return _build_deepseek_v4_fp8_linear_deployment(
+        snapshot=snapshot,
+        lock=lock,
+        application_root=application_root,
+        output=output,
+        output_rows=output_rows,
+        full_operator=False,
+    )
+
+
+def build_deepseek_v4_fp8_linear_full_deployment(
+    *,
+    snapshot: Path,
+    lock: dict[str, Any],
+    application_root: Path,
+    output: Path,
+) -> dict[str, Any]:
+    """Build a complete-output FP8_LINEAR operator deployment."""
+
+    return _build_deepseek_v4_fp8_linear_deployment(
+        snapshot=snapshot,
+        lock=lock,
+        application_root=application_root,
+        output=output,
+        output_rows=(),
+        full_operator=True,
+    )
+
+
 __all__ = [
     "DEFAULT_OUTPUT_ROWS",
     "DeepSeekV4FP8LinearBuildError",
     "build_deepseek_v4_fp8_linear_deployment",
+    "build_deepseek_v4_fp8_linear_full_deployment",
 ]

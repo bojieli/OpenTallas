@@ -59,6 +59,7 @@ from compiler.vertical_slice.deepseek_v4_fp8_linear import (
     DEFAULT_OUTPUT_ROWS,
     DeepSeekV4FP8LinearBuildError,
     build_deepseek_v4_fp8_linear_deployment,
+    build_deepseek_v4_fp8_linear_full_deployment,
 )
 from compiler.vertical_slice.deepseek_v4_lookup import (
     DeepSeekV4LookupBuildError,
@@ -185,9 +186,17 @@ def parser() -> argparse.ArgumentParser:
             "0,127,128,1023"
         ),
     )
+    fp8_full_parser = subparsers.add_parser(
+        "compile-deepseek-v4-fp8-linear",
+        help="compile verified query-A tensors into a complete-output FP8 operator",
+    )
+    fp8_full_parser.add_argument("--snapshot", required=True, type=Path)
+    fp8_full_parser.add_argument("--lock", required=True, type=Path)
+    fp8_full_parser.add_argument("--application", required=True, type=Path)
+    fp8_full_parser.add_argument("--output", required=True, type=Path)
     fp8_check_parser = subparsers.add_parser(
         "verify-deepseek-v4-fp8-linear-execution",
-        help="compare selected-row FP8 outputs directly with locked checkpoint arithmetic",
+        help="compare FP8 linear outputs directly with locked checkpoint arithmetic",
     )
     fp8_check_parser.add_argument("--snapshot", required=True, type=Path)
     fp8_check_parser.add_argument("--lock", required=True, type=Path)
@@ -401,6 +410,20 @@ def main(argv: list[str] | None = None) -> int:
                 f"({deployment['status']})"
             )
             return 0
+        if arguments.command == "compile-deepseek-v4-fp8-linear":
+            lock = load_checkpoint_lock(arguments.lock)
+            deployment = build_deepseek_v4_fp8_linear_full_deployment(
+                snapshot=arguments.snapshot,
+                lock=lock,
+                application_root=arguments.application,
+                output=arguments.output,
+            )
+            print(
+                f"built complete-output V4 FP8 linear deployment "
+                f"{deployment['build_id']} at {arguments.output.resolve()} "
+                f"({deployment['status']})"
+            )
+            return 0
         if arguments.command == "verify-deepseek-v4-fp8-linear-execution":
             lock = load_checkpoint_lock(arguments.lock)
             report = verify_deepseek_v4_fp8_linear_execution(
@@ -411,9 +434,15 @@ def main(argv: list[str] | None = None) -> int:
                 result_path=arguments.result,
             )
             _write_new_json(arguments.output, report)
+            if "selected_output_rows" in report:
+                output_scope = (
+                    f"{len(report['selected_output_rows'])} selected FP8 outputs"
+                )
+            else:
+                output_scope = f"{report['output_row_count']} FP8 outputs"
             print(
                 f"verified {report['input_row_count']} input row(s) across "
-                f"{len(report['selected_output_rows'])} selected FP8 outputs; "
+                f"{output_scope}; "
                 f"differential {report['differential_id']} ({report['status']})"
             )
             return 0

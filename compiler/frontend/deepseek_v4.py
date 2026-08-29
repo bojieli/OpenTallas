@@ -33,6 +33,12 @@ INDEX_SHA256 = "98efab455cf08dfbbbaaba6f570e1bf10bf927d2b4c3c453a59c2f6f0e3be92b
 TENSOR_STRUCTURE_SHA256 = (
     "18285fe60ca3655be488bbabb88b59489b8ee03cff7fc4f4729424051ca83e0e"
 )
+OFFICIAL_CHECKPOINT_LOCK_ID = (
+    "30b3d07304b92cb26440e5ea9e28dcb06c835dbf35652529fa9a856da07ad760"
+)
+OFFICIAL_TENSOR_CONTENT_SHA256 = (
+    "7ca2e951786c4cd46b64b437d975da3565a1692bdceeb804c09d5fe9e1503b3f"
+)
 TENSOR_COUNT = 72_317
 PAYLOAD_BYTES = 166_878_536_440
 
@@ -1003,6 +1009,13 @@ def validate_official_checkpoint_lock(
     ):
         raise DeepSeekV4AdapterError("checkpoint lock has a different official index")
     summary = lock["checkpoint"]
+    if (
+        lock["lock_id"] != OFFICIAL_CHECKPOINT_LOCK_ID
+        or summary["tensor_content_sha256"] != OFFICIAL_TENSOR_CONTENT_SHA256
+    ):
+        raise DeepSeekV4AdapterError(
+            "checkpoint lock content is not the pinned official V4 Flash release"
+        )
     if summary["tensor_count"] != TENSOR_COUNT or summary["payload_bytes"] != PAYLOAD_BYTES:
         raise DeepSeekV4AdapterError("checkpoint lock summary differs from V4 Flash")
     records = [

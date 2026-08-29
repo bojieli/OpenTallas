@@ -12,6 +12,10 @@ from compiler.ir.model import canonical_json_bytes, load_strict_json
 
 
 ROUNDTRIP_SCHEMA = "opentallas.deepseek_v4_fp8_linear_roundtrip.v1"
+SELECTED_SEMANTIC_SCHEMA = "opentallas.deepseek_v4_fp8_linear_slice.v1"
+SELECTED_TENSOR_SCHEMA = "opentallas.deepseek_v4_fp8_linear_tensors.v1"
+FULL_SEMANTIC_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full.v1"
+FULL_TENSOR_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_tensors.v1"
 
 
 class DeepSeekV4FP8LinearCheckError(RuntimeError):
@@ -92,10 +96,14 @@ def verify_deepseek_v4_fp8_linear_roundtrip(
         raise DeepSeekV4FP8LinearCheckError(
             f"cannot load FP8 linear roundtrip inputs: {exc}"
         ) from exc
-    if tensors.get("schema") != "opentallas.deepseek_v4_fp8_linear_tensors.v1":
-        raise DeepSeekV4FP8LinearCheckError("FP8 linear tensor schema differs")
-    if semantic.get("schema") != "opentallas.deepseek_v4_fp8_linear_slice.v1":
-        raise DeepSeekV4FP8LinearCheckError("FP8 linear semantic schema differs")
+    schema_pair = (semantic.get("schema"), tensors.get("schema"))
+    if schema_pair not in {
+        (SELECTED_SEMANTIC_SCHEMA, SELECTED_TENSOR_SCHEMA),
+        (FULL_SEMANTIC_SCHEMA, FULL_TENSOR_SCHEMA),
+    }:
+        raise DeepSeekV4FP8LinearCheckError(
+            "FP8 linear semantic/tensor schema profile differs"
+        )
     if semantic.get("source", {}).get("application_id") != application.get(
         "application_id"
     ):

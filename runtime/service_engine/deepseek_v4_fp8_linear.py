@@ -1,4 +1,4 @@
-"""Artifact-only service engine for selected rows of DeepSeek V4 FP8 linear."""
+"""Artifact-only service engine for DeepSeek V4 FP8 linear deployments."""
 
 from __future__ import annotations
 
@@ -15,7 +15,12 @@ import stat
 import struct
 from typing import Any, Iterator
 
-from compiler.frontend.deepseek_v4 import MODEL_ID, REPOSITORY, REVISION
+from compiler.frontend.deepseek_v4 import (
+    MODEL_ID,
+    OFFICIAL_CHECKPOINT_LOCK_ID,
+    REPOSITORY,
+    REVISION,
+)
 from compiler.ir.model import canonical_json_bytes, load_strict_json
 from compiler.microcode.deepseek_v4_fp8_linear import (
     ABI_MAJOR,
@@ -44,7 +49,18 @@ ROUNDTRIP_SCHEMA = "opentallas.deepseek_v4_fp8_linear_roundtrip.v1"
 REQUEST_SCHEMA = "opentallas.deepseek_v4_fp8_linear_request.v1"
 RESULT_SCHEMA = "opentallas.deepseek_v4_fp8_linear_result.v1"
 NUMERIC_PROFILE = "deepseek_v4_dense_fp8_selected_rows_v1"
+FULL_DEPLOYMENT_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_deployment.v1"
+FULL_SEMANTIC_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full.v1"
+FULL_TENSOR_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_tensors.v1"
+FULL_COVERAGE_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_coverage.v1"
+FULL_RESULT_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_result.v1"
+FULL_NUMERIC_PROFILE = "deepseek_v4_dense_fp8_full_v1"
 MAX_INPUT_ROWS = 4
+MAX_FEATURE_EXTENT = 65_536
+MAX_WEIGHT_PAYLOAD_BYTES = 8 * 1024 * 1024
+MAX_FULL_PRODUCTS_PER_INPUT_ROW = 8 * 1024 * 1024
+MAX_PRODUCTS_PER_REQUEST = 16 * 1024 * 1024
+JSON_FIXED_OVERHEAD_BYTES = 64 * 1024
 
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _ROLES = frozenset(
@@ -87,6 +103,15 @@ _DEPLOYMENT_CLAIMS = [
     "Does not execute all query-A rows, attention, a transformer block, logits, or decode state.",
     "Functional counters are not hardware cycles, PPA, or NVIDIA comparison evidence.",
 ]
+_FULL_SEMANTIC_CLAIM = (
+    "Complete layer-0 query-A FP8_LINEAR outputs for supplied BF16 rows; "
+    "not input normalization, attention, or a transformer block."
+)
+_FULL_DEPLOYMENT_CLAIMS = [
+    "Executes every logical output row of one FP8_LINEAR operator.",
+    "Does not execute input normalization, attention, a transformer block, logits, or decode state.",
+    "Functional counters are not hardware cycles, PPA, or NVIDIA comparison evidence.",
+]
 
 
 class DeepSeekV4FP8LinearServiceEngineError(RuntimeError):
@@ -102,10 +127,22 @@ def _exact_keys(value: Mapping[str, Any], expected: set[str], label: str) -> Non
         )
 
 
-def _integer(value: Any, label: str, *, minimum: int = 0) -> int:
-    if isinstance(value, bool) or not isinstance(value, int) or value < minimum:
+def _integer(
+    value: Any,
+    label: str,
+    *,
+    minimum: int = 0,
+    maximum: int | None = None,
+) -> int:
+    if (
+        isinstance(value, bool)
+        or not isinstance(value, int)
+        or value < minimum
+        or (maximum is not None and value > maximum)
+    ):
+        bound = f"[{minimum}, {maximum}]" if maximum is not None else f">= {minimum}"
         raise DeepSeekV4FP8LinearServiceEngineError(
-            f"{label} must be an integer >= {minimum}"
+            f"{label} must be an integer in {bound}"
         )
     return value
 
@@ -172,15 +209,95 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
         ) from exc
 
 
+def _file_fingerprint(value: os.stat_result) -> tuple[int, ...]:
+    return (
+        value.st_dev,
+        value.st_ino,
+        value.st_mode,
+        value.st_nlink,
+        value.st_size,
+        value.st_mtime_ns,
+        value.st_ctime_ns,
+    )
+
+
 def _small_bytes(path: Path, label: str, maximum: int = 1024 * 1024) -> bytes:
-    try:
-        if path.stat().st_size > maximum:
+    """Read one stable, bounded regular file without following its final symlink."""
+
+    if (
+        not hasattr(os, "O_NOFOLLOW")
+        or not hasattr(os, "O_NONBLOCK")
+        or not hasattr(os, "O_CLOEXEC")
+        or not hasattr(os, "pread")
+    ):
+        raise DeepSeekV4FP8LinearServiceEngineError(
+            "platform lacks race-resistant bounded file operations"
+        )
+    path = Path(path)
+    flags = os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK
+
+    def open_descriptor(context: str) -> int:
+        try:
+            return os.open(path, flags)
+        except OSError as exc:
             raise DeepSeekV4FP8LinearServiceEngineError(
-                f"{label} exceeds its {maximum}-byte runtime bound"
-            )
-        return path.read_bytes()
+                f"cannot {context} {label} without following symlinks: {exc}"
+            ) from exc
+
+    try:
+        descriptor = open_descriptor("open")
+        try:
+            before = os.fstat(descriptor)
+            before_fingerprint = _file_fingerprint(before)
+            if not stat.S_ISREG(before.st_mode):
+                raise DeepSeekV4FP8LinearServiceEngineError(
+                    f"{label} is not a regular file"
+                )
+            if before.st_size > maximum:
+                raise DeepSeekV4FP8LinearServiceEngineError(
+                    f"{label} exceeds its {maximum}-byte runtime bound"
+                )
+            payload = bytearray()
+            offset = 0
+            while offset < before.st_size:
+                chunk = os.pread(
+                    descriptor,
+                    min(1024 * 1024, before.st_size - offset),
+                    offset,
+                )
+                if not chunk:
+                    break
+                payload.extend(chunk)
+                offset += len(chunk)
+            if (
+                len(payload) != before.st_size
+                or _file_fingerprint(os.fstat(descriptor)) != before_fingerprint
+            ):
+                raise DeepSeekV4FP8LinearServiceEngineError(
+                    f"{label} changed while the runtime read it"
+                )
+        finally:
+            os.close(descriptor)
+
+        current_descriptor = open_descriptor("reopen")
+        try:
+            current = os.fstat(current_descriptor)
+            if (
+                not stat.S_ISREG(current.st_mode)
+                or _file_fingerprint(current) != before_fingerprint
+            ):
+                raise DeepSeekV4FP8LinearServiceEngineError(
+                    f"{label} was replaced while the runtime read it"
+                )
+        finally:
+            os.close(current_descriptor)
+        return bytes(payload)
+    except DeepSeekV4FP8LinearServiceEngineError:
+        raise
     except OSError as exc:
-        raise DeepSeekV4FP8LinearServiceEngineError(f"cannot read {label}: {exc}") from exc
+        raise DeepSeekV4FP8LinearServiceEngineError(
+            f"cannot read {label}: {exc}"
+        ) from exc
 
 
 @dataclass(frozen=True)
@@ -205,6 +322,7 @@ class DeepSeekV4FP8LinearDeployment:
     input_features: int
     output_features: int
     evidence_scope: str
+    full_operator: bool
     manifest_artifact: _Artifact
     artifacts: tuple[_Artifact, ...]
 
@@ -313,7 +431,9 @@ def _verify_artifacts(
     return by_role, retained
 
 
-def _verify_manifest(manifest: dict[str, Any], artifacts: list[dict[str, Any]]) -> None:
+def _verify_manifest(
+    manifest: dict[str, Any], artifacts: list[dict[str, Any]], *, full_operator: bool
+) -> None:
     _exact_keys(
         manifest,
         {
@@ -330,7 +450,8 @@ def _verify_manifest(manifest: dict[str, Any], artifacts: list[dict[str, Any]]) 
         },
         "deployment manifest",
     )
-    if manifest["schema"] != DEPLOYMENT_SCHEMA or manifest["model_id"] != MODEL_ID:
+    expected_schema = FULL_DEPLOYMENT_SCHEMA if full_operator else DEPLOYMENT_SCHEMA
+    if manifest["schema"] != expected_schema or manifest["model_id"] != MODEL_ID:
         raise DeepSeekV4FP8LinearServiceEngineError(
             "deployment schema or model identity differs"
         )
@@ -338,9 +459,13 @@ def _verify_manifest(manifest: dict[str, Any], artifacts: list[dict[str, Any]]) 
     if not isinstance(compiler, Mapping):
         raise DeepSeekV4FP8LinearServiceEngineError("compiler identity is absent")
     _exact_keys(compiler, {"name", "version"}, "compiler identity")
+    expected_compiler = (
+        "opentallas-deepseek-v4-fp8-linear-compiler"
+        if full_operator
+        else "opentallas-deepseek-v4-fp8-linear-slice-compiler"
+    )
     if (
-        compiler["name"]
-        != "opentallas-deepseek-v4-fp8-linear-slice-compiler"
+        compiler["name"] != expected_compiler
         or not isinstance(compiler["version"], str)
         or not compiler["version"]
     ):
@@ -368,17 +493,28 @@ def _verify_manifest(manifest: dict[str, Any], artifacts: list[dict[str, Any]]) 
         raise DeepSeekV4FP8LinearServiceEngineError(
             "deployment build_id does not bind its artifacts"
         )
-    if manifest["claim_boundary"] != _DEPLOYMENT_CLAIMS:
+    expected_claims = (
+        _FULL_DEPLOYMENT_CLAIMS if full_operator else _DEPLOYMENT_CLAIMS
+    )
+    if manifest["claim_boundary"] != expected_claims:
         raise DeepSeekV4FP8LinearServiceEngineError("deployment claim boundary differs")
-    if manifest["status"] not in {
-        "development_fixture_selected_fp8_linear_rows_not_release_evidence",
-        "real_checkpoint_selected_fp8_linear_rows_not_full_operator",
-    }:
+    allowed_statuses = (
+        {
+            "development_fixture_complete_fp8_linear_operator_not_release_evidence",
+            "real_checkpoint_complete_fp8_linear_operator",
+        }
+        if full_operator
+        else {
+            "development_fixture_selected_fp8_linear_rows_not_release_evidence",
+            "real_checkpoint_selected_fp8_linear_rows_not_full_operator",
+        }
+    )
+    if manifest["status"] not in allowed_statuses:
         raise DeepSeekV4FP8LinearServiceEngineError("deployment status is unsupported")
 
 
 def _verify_semantic(
-    semantic: dict[str, Any], manifest: Mapping[str, Any]
+    semantic: dict[str, Any], manifest: Mapping[str, Any], *, full_operator: bool
 ) -> tuple[int, int, tuple[int, ...], str]:
     _exact_keys(
         semantic,
@@ -393,55 +529,77 @@ def _verify_semantic(
         },
         "FP8 linear semantic IR",
     )
+    expected_schema = FULL_SEMANTIC_SCHEMA if full_operator else SEMANTIC_SCHEMA
+    expected_numeric = FULL_NUMERIC_PROFILE if full_operator else NUMERIC_PROFILE
+    expected_claim = _FULL_SEMANTIC_CLAIM if full_operator else _SEMANTIC_CLAIM
+    expected_operation = {
+        "input": "input_bf16_codes",
+        "kind": "FP8_LINEAR" if full_operator else "FP8_LINEAR_SELECTED_ROWS",
+        "output": "output_bf16_codes",
+        "scale_resource": "layers.0.attn.wq_a.scale",
+        "weight_resource": "layers.0.attn.wq_a.weight",
+    }
     if (
-        semantic["schema"] != SEMANTIC_SCHEMA
+        semantic["schema"] != expected_schema
         or semantic["model_id"] != MODEL_ID
-        or semantic["numeric_profile"] != NUMERIC_PROFILE
-        or semantic["claim_boundary"] != _SEMANTIC_CLAIM
-        or semantic["operation"]
-        != {
-            "input": "input_bf16_codes",
-            "kind": "FP8_LINEAR_SELECTED_ROWS",
-            "output": "output_bf16_codes",
-            "scale_resource": "layers.0.attn.wq_a.scale",
-            "weight_resource": "layers.0.attn.wq_a.weight",
-        }
+        or semantic["numeric_profile"] != expected_numeric
+        or semantic["claim_boundary"] != expected_claim
+        or semantic["operation"] != expected_operation
     ):
         raise DeepSeekV4FP8LinearServiceEngineError("FP8 linear semantics differ")
     dimensions = semantic["dimensions"]
     if not isinstance(dimensions, Mapping):
         raise DeepSeekV4FP8LinearServiceEngineError("semantic dimensions are absent")
-    _exact_keys(
-        dimensions,
-        {"block_size", "input_features", "output_features", "selected_output_rows"},
-        "semantic dimensions",
-    )
+    dimension_keys = {"block_size", "input_features", "output_features"}
+    if not full_operator:
+        dimension_keys.add("selected_output_rows")
+    _exact_keys(dimensions, dimension_keys, "semantic dimensions")
     input_features = _integer(
-        dimensions["input_features"], "dimensions.input_features", minimum=1
+        dimensions["input_features"],
+        "dimensions.input_features",
+        minimum=1,
+        maximum=MAX_FEATURE_EXTENT,
     )
     output_features = _integer(
-        dimensions["output_features"], "dimensions.output_features", minimum=1
+        dimensions["output_features"],
+        "dimensions.output_features",
+        minimum=1,
+        maximum=MAX_FEATURE_EXTENT,
     )
     if dimensions["block_size"] != DENSE_BLOCK_SIZE or input_features % DENSE_BLOCK_SIZE:
         raise DeepSeekV4FP8LinearServiceEngineError(
             "semantic block size or reduction extent differs"
         )
-    raw_rows = dimensions["selected_output_rows"]
-    if not isinstance(raw_rows, list):
-        raise DeepSeekV4FP8LinearServiceEngineError("selected output rows are absent")
-    rows = tuple(
-        _integer(row, f"selected_output_rows[{index}]")
-        for index, row in enumerate(raw_rows)
-    )
-    if (
-        not rows
-        or rows != tuple(sorted(set(rows)))
-        or rows[-1] >= output_features
-        or len(rows) > 64
-    ):
+    weight_bytes = input_features * output_features
+    if weight_bytes > MAX_WEIGHT_PAYLOAD_BYTES:
         raise DeepSeekV4FP8LinearServiceEngineError(
-            "selected output rows are not legal logical indices"
+            "FP8 weight extent exceeds the runtime memory budget"
         )
+    if full_operator and weight_bytes > MAX_FULL_PRODUCTS_PER_INPUT_ROW:
+        raise DeepSeekV4FP8LinearServiceEngineError(
+            "complete FP8 operator exceeds the runtime work budget"
+        )
+    if full_operator:
+        rows = tuple(range(output_features))
+    else:
+        raw_rows = dimensions["selected_output_rows"]
+        if not isinstance(raw_rows, list):
+            raise DeepSeekV4FP8LinearServiceEngineError(
+                "selected output rows are absent"
+            )
+        rows = tuple(
+            _integer(row, f"selected_output_rows[{index}]")
+            for index, row in enumerate(raw_rows)
+        )
+        if (
+            not rows
+            or rows != tuple(sorted(set(rows)))
+            or rows[-1] >= output_features
+            or len(rows) > 64
+        ):
+            raise DeepSeekV4FP8LinearServiceEngineError(
+                "selected output rows are not legal logical indices"
+            )
     source = semantic["source"]
     if not isinstance(source, Mapping):
         raise DeepSeekV4FP8LinearServiceEngineError("semantic source is absent")
@@ -466,9 +624,17 @@ def _verify_semantic(
     if evidence_scope not in {"development_fixture", "official_checkpoint"}:
         raise DeepSeekV4FP8LinearServiceEngineError("evidence scope is unsupported")
     expected_status = (
-        "real_checkpoint_selected_fp8_linear_rows_not_full_operator"
-        if evidence_scope == "official_checkpoint"
-        else "development_fixture_selected_fp8_linear_rows_not_release_evidence"
+        "real_checkpoint_complete_fp8_linear_operator"
+        if full_operator and evidence_scope == "official_checkpoint"
+        else (
+            "development_fixture_complete_fp8_linear_operator_not_release_evidence"
+            if full_operator
+            else (
+                "real_checkpoint_selected_fp8_linear_rows_not_full_operator"
+                if evidence_scope == "official_checkpoint"
+                else "development_fixture_selected_fp8_linear_rows_not_release_evidence"
+            )
+        )
     )
     if manifest["status"] != expected_status:
         raise DeepSeekV4FP8LinearServiceEngineError(
@@ -491,9 +657,16 @@ def _verify_semantic(
         if (
             source["repository"],
             source["revision"],
+            source["checkpoint_lock_id"],
             input_features,
             output_features,
-        ) != (REPOSITORY, REVISION, 4096, 1024):
+        ) != (
+            REPOSITORY,
+            REVISION,
+            OFFICIAL_CHECKPOINT_LOCK_ID,
+            4096,
+            1024,
+        ):
             raise DeepSeekV4FP8LinearServiceEngineError(
                 "official FP8 linear source or dimensions differ"
             )
@@ -521,11 +694,14 @@ def _verify_tensors(
     input_features: int,
     output_features: int,
     selected_rows: tuple[int, ...],
+    *,
+    full_operator: bool,
 ) -> tuple[_Artifact, _Artifact]:
     _exact_keys(
         tensors, {"output_selection", "scale", "schema", "weight"}, "tensor manifest"
     )
-    if tensors["schema"] != TENSOR_SCHEMA:
+    expected_schema = FULL_TENSOR_SCHEMA if full_operator else TENSOR_SCHEMA
+    if tensors["schema"] != expected_schema:
         raise DeepSeekV4FP8LinearServiceEngineError("tensor schema differs")
     weight = tensors["weight"]
     scale = tensors["scale"]
@@ -587,7 +763,9 @@ def _verify_tensors(
     ):
         raise DeepSeekV4FP8LinearServiceEngineError("weight or scale metadata differs")
     selection_payload = _verified_small_bytes(
-        selection_artifact, "output selection", maximum=64 * 4
+        selection_artifact,
+        "output selection",
+        maximum=(output_features if full_operator else 64) * 4,
     )
     if (
         selection["dtype"] != "U32"
@@ -685,14 +863,23 @@ def _verify_auxiliary(
     roundtrip: dict[str, Any],
     manifest: Mapping[str, Any],
     artifacts: Mapping[str, _Artifact],
+    *,
+    full_operator: bool,
 ) -> None:
-    if coverage != {
-        "implemented_operator_kind": "FP8_LINEAR_SELECTED_ROWS",
+    expected_coverage = {
+        "implemented_operator_kind": (
+            "FP8_LINEAR" if full_operator else "FP8_LINEAR_SELECTED_ROWS"
+        ),
         "model_id": MODEL_ID,
-        "schema": COVERAGE_SCHEMA,
-        "status": "selected_output_rows_arithmetic_slice_only",
+        "schema": FULL_COVERAGE_SCHEMA if full_operator else COVERAGE_SCHEMA,
+        "status": (
+            "complete_operator_arithmetic_only"
+            if full_operator
+            else "selected_output_rows_arithmetic_slice_only"
+        ),
         "underlying_graph_operator_kind": "FP8_LINEAR",
-    }:
+    }
+    if coverage != expected_coverage:
         raise DeepSeekV4FP8LinearServiceEngineError("coverage ledger differs")
     _exact_keys(
         roundtrip,
@@ -772,8 +959,14 @@ def load_deepseek_v4_fp8_linear_deployment(
         len(manifest_payload),
         manifest_path,
     )
+    manifest_schema = manifest.get("schema")
+    if manifest_schema not in {DEPLOYMENT_SCHEMA, FULL_DEPLOYMENT_SCHEMA}:
+        raise DeepSeekV4FP8LinearServiceEngineError(
+            "deployment schema is not a supported FP8 linear profile"
+        )
+    full_operator = manifest_schema == FULL_DEPLOYMENT_SCHEMA
     artifacts, retained = _verify_artifacts(root, manifest)
-    _verify_manifest(manifest, retained)
+    _verify_manifest(manifest, retained, full_operator=full_operator)
     entrypoint = manifest["entrypoint"]
     expected_entrypoint = {
         "execution_expectations": artifacts["execution_expectations"].relative_path,
@@ -787,11 +980,16 @@ def load_deepseek_v4_fp8_linear_deployment(
         )
     semantic = _verified_json(artifacts["semantic_ir"], "semantic IR")
     input_features, output_features, rows, evidence_scope = _verify_semantic(
-        semantic, manifest
+        semantic, manifest, full_operator=full_operator
     )
     tensors = _verified_json(artifacts["tensor_manifest"], "tensor manifest")
     weight_artifact, scale_artifact = _verify_tensors(
-        tensors, artifacts, input_features, output_features, rows
+        tensors,
+        artifacts,
+        input_features,
+        output_features,
+        rows,
+        full_operator=full_operator,
     )
     _scan_codes(
         weight_artifact, frozenset({0x7F, 0xFF}), "FP8 weight payload"
@@ -806,6 +1004,7 @@ def load_deepseek_v4_fp8_linear_deployment(
         _verified_json(artifacts["roundtrip_report"], "roundtrip report"),
         manifest,
         artifacts,
+        full_operator=full_operator,
     )
     try:
         instructions = decode(
@@ -833,26 +1032,40 @@ def load_deepseek_v4_fp8_linear_deployment(
             "microcode disassembly differs from decoded program"
         )
     return DeepSeekV4FP8LinearDeployment(
-        root,
-        manifest,
-        semantic,
-        expectations,
-        instructions,
-        weight_artifact.path,
-        scale_artifact.path,
-        rows,
-        input_features,
-        output_features,
-        evidence_scope,
-        manifest_artifact,
-        tuple(sorted(artifacts.values(), key=lambda artifact: artifact.relative_path)),
+        root=root,
+        manifest=manifest,
+        semantic=semantic,
+        expectations=expectations,
+        instructions=instructions,
+        weight_path=weight_artifact.path,
+        scale_path=scale_artifact.path,
+        selected_rows=rows,
+        input_features=input_features,
+        output_features=output_features,
+        evidence_scope=evidence_scope,
+        full_operator=full_operator,
+        manifest_artifact=manifest_artifact,
+        artifacts=tuple(
+            sorted(artifacts.values(), key=lambda artifact: artifact.relative_path)
+        ),
     )
 
 
 def _load_request(
     deployment: DeepSeekV4FP8LinearDeployment, request_path: Path
 ) -> tuple[tuple[tuple[int, ...], ...], str]:
-    request = _load_json(Path(request_path), "FP8 linear execution request")
+    maximum = (
+        JSON_FIXED_OVERHEAD_BYTES
+        + MAX_INPUT_ROWS * deployment.input_features * 6
+    )
+    request = _strict_json_payload(
+        _small_bytes(
+            Path(request_path),
+            "FP8 linear execution request",
+            maximum=maximum,
+        ),
+        "FP8 linear execution request",
+    )
     _exact_keys(
         request,
         {"build_id", "input_bf16_codes", "model_id", "schema"},
@@ -898,6 +1111,13 @@ def _load_request(
                 )
             row.append(code)
         rows.append(tuple(row))
+    product_accumulates = (
+        len(rows) * len(deployment.selected_rows) * deployment.input_features
+    )
+    if product_accumulates > MAX_PRODUCTS_PER_REQUEST:
+        raise DeepSeekV4FP8LinearServiceEngineError(
+            "FP8 linear request exceeds the exact-arithmetic work budget"
+        )
     return tuple(rows), hashlib.sha256(canonical_json_bytes(request)).hexdigest()
 
 
@@ -1063,7 +1283,7 @@ def _expected_counters(
 
 
 class DeepSeekV4FP8LinearServiceEngine:
-    """Verified interpreter for one selected-row FP8 linear program."""
+    """Verified interpreter for one bounded or complete FP8 linear program."""
 
     def __init__(self, deployment: DeepSeekV4FP8LinearDeployment):
         self.deployment = deployment
@@ -1134,13 +1354,21 @@ class DeepSeekV4FP8LinearServiceEngine:
                 "execution counters do not cover their strict contract"
             )
         values = state[OUTPUT_BF16]
+        execution_scope = (
+            "complete_fp8_linear_operator"
+            if self.deployment.full_operator
+            else "selected_output_rows_arithmetic_slice_only"
+        )
+        result_schema = (
+            FULL_RESULT_SCHEMA if self.deployment.full_operator else RESULT_SCHEMA
+        )
         return {
             "build_id": self.deployment.manifest["build_id"],
             "counter_reconciliation": "exact",
             "counters": counters,
             "deployment_status": self.deployment.manifest["status"],
             "evidence_scope": self.deployment.evidence_scope,
-            "execution_scope": "selected_output_rows_arithmetic_slice_only",
+            "execution_scope": execution_scope,
             "model_id": MODEL_ID,
             "numeric_status": {
                 "activation_saturated_block_count": activation_saturations,
@@ -1157,7 +1385,7 @@ class DeepSeekV4FP8LinearServiceEngine:
                 }
             ],
             "request_sha256": request_sha256,
-            "schema": RESULT_SCHEMA,
+            "schema": result_schema,
             "source_application_status": self.deployment.semantic["source"][
                 "application_status"
             ],
@@ -1173,6 +1401,8 @@ def execute_deepseek_v4_fp8_linear_deployment(
 
 __all__ = [
     "DEPLOYMENT_SCHEMA",
+    "FULL_DEPLOYMENT_SCHEMA",
+    "FULL_RESULT_SCHEMA",
     "DeepSeekV4FP8LinearDeployment",
     "DeepSeekV4FP8LinearServiceEngine",
     "DeepSeekV4FP8LinearServiceEngineError",

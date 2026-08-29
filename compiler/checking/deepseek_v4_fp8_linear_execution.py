@@ -1,21 +1,24 @@
-"""Independent locked-checkpoint differential for selected DeepSeek V4 FP8 rows.
+"""Independent locked-checkpoint differential for DeepSeek V4 FP8 linear.
 
 The checker never imports the FP8 service engine.  It validates and hashes the
 persisted deployment, streams the original locked weight tensor while retaining
-only selected logical rows, reads the small scale table from the original
-checkpoint, executes the independent target-precision reference, and compares
-the persisted service result exactly.
+the required logical rows, reads the small scale table from the original
+checkpoint, executes an independent target-precision reference, and compares the
+persisted service result exactly.
 """
 
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+from contextlib import ExitStack
 from dataclasses import dataclass
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 import re
+import stat
 import struct
 from typing import Any
 
@@ -23,11 +26,18 @@ from compiler.frontend.checkpoint import (
     LockedCheckpointReader,
     validate_checkpoint_lock,
 )
-from compiler.frontend.deepseek_v4 import MODEL_ID, REPOSITORY, REVISION
-from compiler.ir.model import canonical_json_bytes, load_strict_json
+from compiler.frontend.deepseek_v4 import (
+    MODEL_ID,
+    REPOSITORY,
+    REVISION,
+    load_official_config,
+    validate_official_checkpoint_lock,
+)
+from compiler.ir.model import canonical_json_bytes
 from compiler.microcode.deepseek_v4_fp8_linear import decode, disassemble, verify
 from runtime.reference.matrix import (
     MatrixReferenceError,
+    dense_fp8_linear_bf16,
     dense_fp8_linear_selected_rows_bf16,
 )
 
@@ -41,12 +51,22 @@ RESULT_SCHEMA = "opentallas.deepseek_v4_fp8_linear_result.v1"
 EXPECTATION_SCHEMA = "opentallas.deepseek_v4_fp8_linear_expectations.v1"
 COVERAGE_SCHEMA = "opentallas.deepseek_v4_fp8_linear_coverage.v1"
 ROUNDTRIP_SCHEMA = "opentallas.deepseek_v4_fp8_linear_roundtrip.v1"
+FULL_DIFFERENTIAL_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_differential.v1"
+FULL_DEPLOYMENT_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_deployment.v1"
+FULL_SEMANTIC_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full.v1"
+FULL_TENSOR_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_tensors.v1"
+FULL_RESULT_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_result.v1"
+FULL_COVERAGE_SCHEMA = "opentallas.deepseek_v4_fp8_linear_full_coverage.v1"
 WEIGHT_NAME = "layers.0.attn.wq_a.weight"
 SCALE_NAME = "layers.0.attn.wq_a.scale"
 BLOCK_SIZE = 128
 MAX_INPUT_ROWS = 4
 MAX_SELECTED_ROWS = 64
 MAX_FEATURE_EXTENT = 65_536
+MAX_WEIGHT_PAYLOAD_BYTES = 8 * 1024 * 1024
+MAX_FULL_PRODUCTS_PER_INPUT_ROW = 8 * 1024 * 1024
+MAX_PRODUCTS_PER_REQUEST = 16 * 1024 * 1024
+JSON_FIXED_OVERHEAD_BYTES = 64 * 1024
 
 _SHA256 = re.compile(r"^[0-9a-f]{64}$")
 _ROLES = frozenset(
@@ -72,6 +92,15 @@ _DEPLOYMENT_CLAIMS = [
     "Does not execute all query-A rows, attention, a transformer block, logits, or decode state.",
     "Functional counters are not hardware cycles, PPA, or NVIDIA comparison evidence.",
 ]
+_FULL_SEMANTIC_CLAIM = (
+    "Complete layer-0 query-A FP8_LINEAR outputs for supplied BF16 rows; "
+    "not input normalization, attention, or a transformer block."
+)
+_FULL_DEPLOYMENT_CLAIMS = [
+    "Executes every logical output row of one FP8_LINEAR operator.",
+    "Does not execute input normalization, attention, a transformer block, logits, or decode state.",
+    "Functional counters are not hardware cycles, PPA, or NVIDIA comparison evidence.",
+]
 
 
 class DeepSeekV4FP8LinearDifferentialError(RuntimeError):
@@ -85,15 +114,8 @@ class _Artifact:
     role: str
     sha256: str
     size_bytes: int
-
-
-def _load_json(path: Path, label: str) -> dict[str, Any]:
-    try:
-        return load_strict_json(path)
-    except (OSError, ValueError) as exc:
-        raise DeepSeekV4FP8LinearDifferentialError(
-            f"cannot load {label}: {exc}"
-        ) from exc
+    descriptor: int
+    fingerprint: tuple[int, ...]
 
 
 def _strict_json_payload(payload: bytes, label: str) -> dict[str, Any]:
@@ -133,22 +155,211 @@ def _strict_json_payload(payload: bytes, label: str) -> dict[str, Any]:
 
 
 def _small_bytes(path: Path, label: str, maximum: int = 1024 * 1024) -> bytes:
-    try:
-        if path.stat().st_size > maximum:
+    """Read one stable, bounded regular file without following its final symlink."""
+
+    if (
+        not hasattr(os, "O_NOFOLLOW")
+        or not hasattr(os, "O_NONBLOCK")
+        or not hasattr(os, "O_CLOEXEC")
+        or not hasattr(os, "pread")
+    ):
+        raise DeepSeekV4FP8LinearDifferentialError(
+            "platform lacks race-resistant bounded file operations"
+        )
+    path = Path(path)
+    flags = os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK
+
+    def open_descriptor(stack: ExitStack, context: str) -> int:
+        try:
+            descriptor = os.open(path, flags)
+        except OSError as exc:
             raise DeepSeekV4FP8LinearDifferentialError(
-                f"{label} exceeds its {maximum}-byte checker bound"
+                f"cannot {context} {label} without following symlinks: {exc}"
+            ) from exc
+        stack.callback(os.close, descriptor)
+        return descriptor
+
+    try:
+        with ExitStack() as stack:
+            descriptor = open_descriptor(stack, "open")
+            payload, fingerprint = _descriptor_bytes(
+                descriptor,
+                label,
+                maximum=maximum,
             )
-        return path.read_bytes()
+            current_descriptor = open_descriptor(stack, "reopen")
+            current = os.fstat(current_descriptor)
+            if (
+                not stat.S_ISREG(current.st_mode)
+                or _fingerprint(current) != fingerprint
+            ):
+                raise DeepSeekV4FP8LinearDifferentialError(
+                    f"{label} was replaced while the checker read it"
+                )
+            return payload
+    except DeepSeekV4FP8LinearDifferentialError:
+        raise
     except OSError as exc:
         raise DeepSeekV4FP8LinearDifferentialError(
             f"cannot read {label}: {exc}"
         ) from exc
 
 
+def _fingerprint(value: os.stat_result) -> tuple[int, ...]:
+    return (
+        value.st_dev,
+        value.st_ino,
+        value.st_mode,
+        value.st_nlink,
+        value.st_size,
+        value.st_mtime_ns,
+        value.st_ctime_ns,
+    )
+
+
+def _open_root(stack: ExitStack, root: Path) -> tuple[int, tuple[int, ...]]:
+    if (
+        not hasattr(os, "O_NOFOLLOW")
+        or not hasattr(os, "O_DIRECTORY")
+        or not hasattr(os, "pread")
+        or os.open not in os.supports_dir_fd
+    ):
+        raise DeepSeekV4FP8LinearDifferentialError(
+            "platform lacks race-resistant checker file operations"
+        )
+    flags = os.O_RDONLY | os.O_CLOEXEC | os.O_DIRECTORY | os.O_NOFOLLOW
+    try:
+        descriptor = os.open(root, flags)
+    except OSError as exc:
+        raise DeepSeekV4FP8LinearDifferentialError(
+            f"cannot open deployment root descriptor: {exc}"
+        ) from exc
+    stack.callback(os.close, descriptor)
+    metadata = os.fstat(descriptor)
+    if not stat.S_ISDIR(metadata.st_mode):
+        raise DeepSeekV4FP8LinearDifferentialError(
+            "deployment root descriptor is not a directory"
+        )
+    return descriptor, _fingerprint(metadata)
+
+
+def _open_relative(
+    stack: ExitStack, root_descriptor: int, relative: str, label: str
+) -> int:
+    parts = Path(relative).parts
+    directory_flags = os.O_RDONLY | os.O_CLOEXEC | os.O_DIRECTORY | os.O_NOFOLLOW
+    file_flags = os.O_RDONLY | os.O_CLOEXEC | os.O_NOFOLLOW | os.O_NONBLOCK
+    directory_descriptor = os.dup(root_descriptor)
+    try:
+        for part in parts[:-1]:
+            next_descriptor = os.open(
+                part,
+                directory_flags,
+                dir_fd=directory_descriptor,
+            )
+            os.close(directory_descriptor)
+            directory_descriptor = next_descriptor
+        descriptor = os.open(
+            parts[-1], file_flags, dir_fd=directory_descriptor
+        )
+    except OSError as exc:
+        raise DeepSeekV4FP8LinearDifferentialError(
+            f"cannot open {label} without following symlinks: {exc}"
+        ) from exc
+    finally:
+        os.close(directory_descriptor)
+    stack.callback(os.close, descriptor)
+    return descriptor
+
+
+def _descriptor_bytes(
+    descriptor: int,
+    label: str,
+    *,
+    maximum: int,
+    expected_fingerprint: tuple[int, ...] | None = None,
+) -> tuple[bytes, tuple[int, ...]]:
+    before = os.fstat(descriptor)
+    before_fingerprint = _fingerprint(before)
+    if not stat.S_ISREG(before.st_mode):
+        raise DeepSeekV4FP8LinearDifferentialError(
+            f"{label} descriptor is not a regular file"
+        )
+    if before.st_size > maximum:
+        raise DeepSeekV4FP8LinearDifferentialError(
+            f"{label} exceeds its {maximum}-byte checker bound"
+        )
+    payload = bytearray()
+    offset = 0
+    while offset < before.st_size:
+        chunk = os.pread(
+            descriptor,
+            min(8 * 1024 * 1024, before.st_size - offset),
+            offset,
+        )
+        if not chunk:
+            break
+        payload.extend(chunk)
+        offset += len(chunk)
+    after_fingerprint = _fingerprint(os.fstat(descriptor))
+    if after_fingerprint != before_fingerprint or len(payload) != before.st_size:
+        raise DeepSeekV4FP8LinearDifferentialError(
+            f"{label} changed while the checker read it"
+        )
+    if (
+        expected_fingerprint is not None
+        and before_fingerprint != expected_fingerprint
+    ):
+        raise DeepSeekV4FP8LinearDifferentialError(
+            f"{label} descriptor identity changed"
+        )
+    return bytes(payload), before_fingerprint
+
+
+def _descriptor_hash(
+    descriptor: int,
+    label: str,
+    *,
+    expected_fingerprint: tuple[int, ...] | None = None,
+) -> tuple[str, int, tuple[int, ...]]:
+    before = os.fstat(descriptor)
+    before_fingerprint = _fingerprint(before)
+    if not stat.S_ISREG(before.st_mode):
+        raise DeepSeekV4FP8LinearDifferentialError(
+            f"{label} descriptor is not a regular file"
+        )
+    digest = hashlib.sha256()
+    size = 0
+    while True:
+        chunk = os.pread(descriptor, 8 * 1024 * 1024, size)
+        if not chunk:
+            break
+        digest.update(chunk)
+        size += len(chunk)
+    after_fingerprint = _fingerprint(os.fstat(descriptor))
+    if after_fingerprint != before_fingerprint or size != before.st_size:
+        raise DeepSeekV4FP8LinearDifferentialError(
+            f"{label} changed while the checker hashed it"
+        )
+    if (
+        expected_fingerprint is not None
+        and before_fingerprint != expected_fingerprint
+    ):
+        raise DeepSeekV4FP8LinearDifferentialError(
+            f"{label} descriptor identity changed"
+        )
+    return digest.hexdigest(), size, before_fingerprint
+
+
 def _verified_small_bytes(
     artifact: _Artifact, label: str, maximum: int = 1024 * 1024
 ) -> bytes:
-    payload = _small_bytes(artifact.path, label, maximum)
+    payload, _ = _descriptor_bytes(
+        artifact.descriptor,
+        label,
+        maximum=maximum,
+        expected_fingerprint=artifact.fingerprint,
+    )
     if (hashlib.sha256(payload).hexdigest(), len(payload)) != (
         artifact.sha256,
         artifact.size_bytes,
@@ -204,21 +415,6 @@ def _sha256_json(value: Any) -> str:
     return hashlib.sha256(canonical_json_bytes(value)).hexdigest()
 
 
-def _sha256_file(path: Path) -> tuple[str, int]:
-    digest = hashlib.sha256()
-    size = 0
-    try:
-        with path.open("rb") as handle:
-            while chunk := handle.read(8 * 1024 * 1024):
-                digest.update(chunk)
-                size += len(chunk)
-    except OSError as exc:
-        raise DeepSeekV4FP8LinearDifferentialError(
-            f"cannot hash deployment artifact {path.name!r}: {exc}"
-        ) from exc
-    return digest.hexdigest(), size
-
-
 def _safe_file(root: Path, value: Any, label: str) -> tuple[str, Path]:
     if not isinstance(value, str) or not value or "\\" in value or "\x00" in value:
         raise DeepSeekV4FP8LinearDifferentialError(
@@ -254,8 +450,12 @@ def _safe_file(root: Path, value: Any, label: str) -> tuple[str, Path]:
 
 
 def _deployment_artifacts(
-    root: Path, manifest: Mapping[str, Any]
-) -> dict[str, _Artifact]:
+    root: Path,
+    manifest: Mapping[str, Any],
+    *,
+    stack: ExitStack,
+    root_descriptor: int,
+) -> tuple[dict[str, _Artifact], bool]:
     _exact_keys(
         manifest,
         {
@@ -272,18 +472,35 @@ def _deployment_artifacts(
         },
         "FP8 linear deployment manifest",
     )
-    if manifest["schema"] != DEPLOYMENT_SCHEMA or manifest["model_id"] != MODEL_ID:
+    schema = manifest["schema"]
+    if schema not in {DEPLOYMENT_SCHEMA, FULL_DEPLOYMENT_SCHEMA}:
+        raise DeepSeekV4FP8LinearDifferentialError(
+            "FP8 linear deployment schema is unsupported"
+        )
+    full_operator = schema == FULL_DEPLOYMENT_SCHEMA
+    if manifest["model_id"] != MODEL_ID:
         raise DeepSeekV4FP8LinearDifferentialError(
             "FP8 linear deployment identity differs"
         )
-    if manifest["claim_boundary"] != _DEPLOYMENT_CLAIMS:
+    expected_claims = (
+        _FULL_DEPLOYMENT_CLAIMS if full_operator else _DEPLOYMENT_CLAIMS
+    )
+    if manifest["claim_boundary"] != expected_claims:
         raise DeepSeekV4FP8LinearDifferentialError(
             "FP8 linear deployment claim boundary differs"
         )
-    if manifest["status"] not in {
-        "development_fixture_selected_fp8_linear_rows_not_release_evidence",
-        "real_checkpoint_selected_fp8_linear_rows_not_full_operator",
-    }:
+    expected_statuses = (
+        {
+            "development_fixture_complete_fp8_linear_operator_not_release_evidence",
+            "real_checkpoint_complete_fp8_linear_operator",
+        }
+        if full_operator
+        else {
+            "development_fixture_selected_fp8_linear_rows_not_release_evidence",
+            "real_checkpoint_selected_fp8_linear_rows_not_full_operator",
+        }
+    )
+    if manifest["status"] not in expected_statuses:
         raise DeepSeekV4FP8LinearDifferentialError(
             "FP8 linear deployment status is unsupported"
         )
@@ -318,11 +535,28 @@ def _deployment_artifacts(
             )
         digest = _hash(record["sha256"], f"artifact {relative}.sha256")
         size = _integer(record["size_bytes"], f"artifact {relative}.size_bytes")
-        if _sha256_file(path) != (digest, size):
+        descriptor = _open_relative(
+            stack,
+            root_descriptor,
+            relative,
+            f"deployment artifact {relative!r}",
+        )
+        observed_digest, observed_size, fingerprint = _descriptor_hash(
+            descriptor, f"deployment artifact {relative!r}"
+        )
+        if (observed_digest, observed_size) != (digest, size):
             raise DeepSeekV4FP8LinearDifferentialError(
                 f"deployment artifact {relative!r} differs from its manifest"
             )
-        artifact = _Artifact(path, relative, role, digest, size)
+        artifact = _Artifact(
+            path,
+            relative,
+            role,
+            digest,
+            size,
+            descriptor,
+            fingerprint,
+        )
         by_role[role] = artifact
         retained.append(dict(record))
         seen_paths.add(relative)
@@ -348,8 +582,13 @@ def _deployment_artifacts(
     if not isinstance(compiler, Mapping):
         raise DeepSeekV4FP8LinearDifferentialError("compiler identity is absent")
     _exact_keys(compiler, {"name", "version"}, "compiler identity")
+    expected_compiler = (
+        "opentallas-deepseek-v4-fp8-linear-compiler"
+        if full_operator
+        else "opentallas-deepseek-v4-fp8-linear-slice-compiler"
+    )
     if (
-        compiler["name"] != "opentallas-deepseek-v4-fp8-linear-slice-compiler"
+        compiler["name"] != expected_compiler
         or not isinstance(compiler["version"], str)
         or not compiler["version"]
     ):
@@ -371,13 +610,15 @@ def _deployment_artifacts(
         raise DeepSeekV4FP8LinearDifferentialError(
             "deployment build_id does not bind verified artifacts"
         )
-    return by_role
+    return by_role, full_operator
 
 
 def _dimensions_and_source(
     semantic: Mapping[str, Any],
     manifest: Mapping[str, Any],
     lock: Mapping[str, Any],
+    *,
+    full_operator: bool,
 ) -> tuple[int, int, tuple[int, ...], Mapping[str, Any]]:
     _exact_keys(
         semantic,
@@ -392,20 +633,26 @@ def _dimensions_and_source(
         },
         "FP8 linear semantic IR",
     )
+    expected_schema = FULL_SEMANTIC_SCHEMA if full_operator else SEMANTIC_SCHEMA
+    expected_claim = _FULL_SEMANTIC_CLAIM if full_operator else _SEMANTIC_CLAIM
+    expected_numeric_profile = (
+        "deepseek_v4_dense_fp8_full_v1"
+        if full_operator
+        else "deepseek_v4_dense_fp8_selected_rows_v1"
+    )
+    expected_operation = {
+        "input": "input_bf16_codes",
+        "kind": "FP8_LINEAR" if full_operator else "FP8_LINEAR_SELECTED_ROWS",
+        "output": "output_bf16_codes",
+        "scale_resource": SCALE_NAME,
+        "weight_resource": WEIGHT_NAME,
+    }
     if (
-        semantic["schema"] != SEMANTIC_SCHEMA
+        semantic["schema"] != expected_schema
         or semantic["model_id"] != MODEL_ID
-        or semantic["claim_boundary"] != _SEMANTIC_CLAIM
-        or semantic["numeric_profile"]
-        != "deepseek_v4_dense_fp8_selected_rows_v1"
-        or semantic["operation"]
-        != {
-            "input": "input_bf16_codes",
-            "kind": "FP8_LINEAR_SELECTED_ROWS",
-            "output": "output_bf16_codes",
-            "scale_resource": SCALE_NAME,
-            "weight_resource": WEIGHT_NAME,
-        }
+        or semantic["claim_boundary"] != expected_claim
+        or semantic["numeric_profile"] != expected_numeric_profile
+        or semantic["operation"] != expected_operation
     ):
         raise DeepSeekV4FP8LinearDifferentialError(
             "FP8 linear semantic identity differs"
@@ -413,11 +660,10 @@ def _dimensions_and_source(
     dimensions = semantic["dimensions"]
     if not isinstance(dimensions, Mapping):
         raise DeepSeekV4FP8LinearDifferentialError("semantic dimensions are absent")
-    _exact_keys(
-        dimensions,
-        {"block_size", "input_features", "output_features", "selected_output_rows"},
-        "FP8 linear dimensions",
-    )
+    dimension_keys = {"block_size", "input_features", "output_features"}
+    if not full_operator:
+        dimension_keys.add("selected_output_rows")
+    _exact_keys(dimensions, dimension_keys, "FP8 linear dimensions")
     input_features = _integer(
         dimensions["input_features"],
         "dimensions.input_features",
@@ -434,25 +680,39 @@ def _dimensions_and_source(
         raise DeepSeekV4FP8LinearDifferentialError(
             "FP8 linear dimensions violate the 128-value block contract"
         )
-    raw_rows = dimensions["selected_output_rows"]
-    if not isinstance(raw_rows, list):
-        raise DeepSeekV4FP8LinearDifferentialError("selected output rows are absent")
-    rows = tuple(
-        _integer(
-            row,
-            f"selected_output_rows[{index}]",
-            maximum=output_features - 1,
-        )
-        for index, row in enumerate(raw_rows)
-    )
-    if (
-        not rows
-        or len(rows) > MAX_SELECTED_ROWS
-        or rows != tuple(sorted(set(rows)))
-    ):
+    weight_bytes = input_features * output_features
+    if weight_bytes > MAX_WEIGHT_PAYLOAD_BYTES:
         raise DeepSeekV4FP8LinearDifferentialError(
-            "selected output rows are not unique strictly increasing indices"
+            "FP8 weight extent exceeds the checker memory budget"
         )
+    if full_operator and weight_bytes > MAX_FULL_PRODUCTS_PER_INPUT_ROW:
+        raise DeepSeekV4FP8LinearDifferentialError(
+            "complete FP8 operator exceeds the checker work budget"
+        )
+    if full_operator:
+        rows = tuple(range(output_features))
+    else:
+        raw_rows = dimensions["selected_output_rows"]
+        if not isinstance(raw_rows, list):
+            raise DeepSeekV4FP8LinearDifferentialError(
+                "selected output rows are absent"
+            )
+        rows = tuple(
+            _integer(
+                row,
+                f"selected_output_rows[{index}]",
+                maximum=output_features - 1,
+            )
+            for index, row in enumerate(raw_rows)
+        )
+        if (
+            not rows
+            or len(rows) > MAX_SELECTED_ROWS
+            or rows != tuple(sorted(set(rows)))
+        ):
+            raise DeepSeekV4FP8LinearDifferentialError(
+                "selected output rows are not unique strictly increasing indices"
+            )
     source = semantic["source"]
     if not isinstance(source, Mapping):
         raise DeepSeekV4FP8LinearDifferentialError("semantic source is absent")
@@ -498,9 +758,17 @@ def _dimensions_and_source(
             "semantic application status differs from evidence scope"
         )
     expected_deployment_status = (
-        "real_checkpoint_selected_fp8_linear_rows_not_full_operator"
-        if evidence_scope == "official_checkpoint"
-        else "development_fixture_selected_fp8_linear_rows_not_release_evidence"
+        "real_checkpoint_complete_fp8_linear_operator"
+        if full_operator and evidence_scope == "official_checkpoint"
+        else (
+            "development_fixture_complete_fp8_linear_operator_not_release_evidence"
+            if full_operator
+            else (
+                "real_checkpoint_selected_fp8_linear_rows_not_full_operator"
+                if evidence_scope == "official_checkpoint"
+                else "development_fixture_selected_fp8_linear_rows_not_release_evidence"
+            )
+        )
     )
     if manifest["status"] != expected_deployment_status:
         raise DeepSeekV4FP8LinearDifferentialError(
@@ -539,11 +807,13 @@ def _tensor_resources(
     output_features: int,
     selected_rows: tuple[int, ...],
     evidence_scope: str,
+    full_operator: bool,
 ) -> tuple[Mapping[str, Any], Mapping[str, Any]]:
     _exact_keys(
         tensors, {"output_selection", "scale", "schema", "weight"}, "tensor manifest"
     )
-    if tensors["schema"] != TENSOR_SCHEMA:
+    expected_schema = FULL_TENSOR_SCHEMA if full_operator else TENSOR_SCHEMA
+    if tensors["schema"] != expected_schema:
         raise DeepSeekV4FP8LinearDifferentialError("tensor manifest schema differs")
     weight = tensors["weight"]
     scale = tensors["scale"]
@@ -606,7 +876,9 @@ def _tensor_resources(
             "weight or scale resource metadata differs"
         )
     selection_payload = _verified_small_bytes(
-        artifacts["output_selection"], "output selection", maximum=64 * 4
+        artifacts["output_selection"],
+        "output selection",
+        maximum=(output_features if full_operator else MAX_SELECTED_ROWS) * 4,
     )
     if (
         selection["dtype"] != "U32"
@@ -642,23 +914,29 @@ def _scan_artifact_codes(
 ) -> None:
     digest = hashlib.sha256()
     size = 0
-    try:
-        with artifact.path.open("rb") as handle:
-            offset = 0
-            while chunk := handle.read(8 * 1024 * 1024):
-                digest.update(chunk)
-                size += len(chunk)
-                for index, code in enumerate(chunk):
-                    if code in forbidden:
-                        raise DeepSeekV4FP8LinearDifferentialError(
-                            f"{label} contains reserved code 0x{code:02x} at "
-                            f"byte {offset + index}"
-                        )
-                offset += len(chunk)
-    except OSError as exc:
+    before_fingerprint = _fingerprint(os.fstat(artifact.descriptor))
+    if before_fingerprint != artifact.fingerprint:
         raise DeepSeekV4FP8LinearDifferentialError(
-            f"cannot scan {label}: {exc}"
-        ) from exc
+            f"{label} descriptor identity changed before scanning"
+        )
+    offset = 0
+    while True:
+        chunk = os.pread(artifact.descriptor, 8 * 1024 * 1024, offset)
+        if not chunk:
+            break
+        digest.update(chunk)
+        size += len(chunk)
+        for index, code in enumerate(chunk):
+            if code in forbidden:
+                raise DeepSeekV4FP8LinearDifferentialError(
+                    f"{label} contains reserved code 0x{code:02x} at "
+                    f"byte {offset + index}"
+                )
+        offset += len(chunk)
+    if _fingerprint(os.fstat(artifact.descriptor)) != before_fingerprint:
+        raise DeepSeekV4FP8LinearDifferentialError(
+            f"{label} changed while the checker scanned it"
+        )
     if (digest.hexdigest(), size) != (artifact.sha256, artifact.size_bytes):
         raise DeepSeekV4FP8LinearDifferentialError(
             f"{label} changed while the checker scanned it"
@@ -673,6 +951,7 @@ def _verify_contract_artifacts(
     selected_count: int,
     weight_resource: Mapping[str, Any],
     scale_resource: Mapping[str, Any],
+    full_operator: bool,
 ) -> None:
     expectations = _verified_json(
         artifacts["execution_expectations"], "execution expectations"
@@ -710,13 +989,20 @@ def _verify_contract_artifacts(
         )
 
     coverage = _verified_json(artifacts["operator_coverage"], "coverage ledger")
-    if coverage != {
-        "implemented_operator_kind": "FP8_LINEAR_SELECTED_ROWS",
+    expected_coverage = {
+        "implemented_operator_kind": (
+            "FP8_LINEAR" if full_operator else "FP8_LINEAR_SELECTED_ROWS"
+        ),
         "model_id": MODEL_ID,
-        "schema": COVERAGE_SCHEMA,
-        "status": "selected_output_rows_arithmetic_slice_only",
+        "schema": FULL_COVERAGE_SCHEMA if full_operator else COVERAGE_SCHEMA,
+        "status": (
+            "complete_operator_arithmetic_only"
+            if full_operator
+            else "selected_output_rows_arithmetic_slice_only"
+        ),
         "underlying_graph_operator_kind": "FP8_LINEAR",
-    }:
+    }
+    if coverage != expected_coverage:
         raise DeepSeekV4FP8LinearDifferentialError("coverage ledger differs")
 
     roundtrip = _verified_json(artifacts["roundtrip_report"], "roundtrip report")
@@ -908,6 +1194,7 @@ def _parse_result(
     input_row_count: int,
     selected_rows: tuple[int, ...],
     expected_counters: Mapping[str, int],
+    full_operator: bool,
 ) -> tuple[tuple[tuple[int, ...], ...], Mapping[str, Any]]:
     _exact_keys(
         result,
@@ -928,16 +1215,21 @@ def _parse_result(
         },
         "FP8 linear result",
     )
+    expected_schema = FULL_RESULT_SCHEMA if full_operator else RESULT_SCHEMA
+    expected_scope = (
+        "complete_fp8_linear_operator"
+        if full_operator
+        else "selected_output_rows_arithmetic_slice_only"
+    )
     if (
-        result["schema"] != RESULT_SCHEMA
+        result["schema"] != expected_schema
         or result["model_id"] != MODEL_ID
         or result["build_id"] != manifest["build_id"]
         or result["request_sha256"] != request_sha256
         or result["deployment_status"] != manifest["status"]
         or result["evidence_scope"] != source["evidence_scope"]
         or result["source_application_status"] != source["application_status"]
-        or result["execution_scope"]
-        != "selected_output_rows_arithmetic_slice_only"
+        or result["execution_scope"] != expected_scope
         or result["counter_reconciliation"] != "exact"
         or result["status"] != "pass"
         or result["counters"] != expected_counters
@@ -1076,15 +1368,16 @@ class _BoundedCollector:
         return bytes(self._payload)
 
 
-def verify_deepseek_v4_fp8_linear_execution(
+def _verify_deepseek_v4_fp8_linear_execution(
     *,
     snapshot: Path,
     lock: dict[str, Any],
     deployment_root: Path,
     request_path: Path,
     result_path: Path,
+    stack: ExitStack,
 ) -> dict[str, Any]:
-    """Compare persisted selected-row execution to the original locked tensors."""
+    """Compare persisted FP8 execution to the original locked tensors."""
 
     validate_checkpoint_lock(lock)
     root = Path(deployment_root).resolve()
@@ -1092,20 +1385,36 @@ def verify_deepseek_v4_fp8_linear_execution(
         raise DeepSeekV4FP8LinearDifferentialError(
             f"FP8 linear deployment is not a directory: {root}"
         )
+    root_descriptor, root_fingerprint = _open_root(stack, root)
     manifest_path = root / "deployment_manifest.json"
     if manifest_path.is_symlink():
         raise DeepSeekV4FP8LinearDifferentialError(
             "deployment manifest must not be a symlink"
         )
-    manifest_payload = _small_bytes(
-        manifest_path, "deployment manifest", maximum=1024 * 1024
+    manifest_descriptor = _open_relative(
+        stack,
+        root_descriptor,
+        "deployment_manifest.json",
+        "deployment manifest",
+    )
+    manifest_payload, manifest_fingerprint = _descriptor_bytes(
+        manifest_descriptor,
+        "deployment manifest",
+        maximum=1024 * 1024,
     )
     manifest = _strict_json_payload(manifest_payload, "deployment manifest")
-    artifacts = _deployment_artifacts(root, manifest)
+    artifacts, full_operator = _deployment_artifacts(
+        root,
+        manifest,
+        stack=stack,
+        root_descriptor=root_descriptor,
+    )
     semantic = _verified_json(artifacts["semantic_ir"], "semantic IR")
     input_features, output_features, selected_rows, source = _dimensions_and_source(
-        semantic, manifest, lock
+        semantic, manifest, lock, full_operator=full_operator
     )
+    if source["evidence_scope"] == "official_checkpoint":
+        validate_official_checkpoint_lock(lock, load_official_config())
     tensors = _verified_json(artifacts["tensor_manifest"], "tensor manifest")
     weight_resource, scale_resource = _tensor_resources(
         tensors,
@@ -1114,6 +1423,7 @@ def verify_deepseek_v4_fp8_linear_execution(
         output_features=output_features,
         selected_rows=selected_rows,
         evidence_scope=source["evidence_scope"],
+        full_operator=full_operator,
     )
     _verify_contract_artifacts(
         artifacts,
@@ -1122,8 +1432,19 @@ def verify_deepseek_v4_fp8_linear_execution(
         selected_count=len(selected_rows),
         weight_resource=weight_resource,
         scale_resource=scale_resource,
+        full_operator=full_operator,
     )
-    request = _load_json(Path(request_path), "execution request")
+    request = _strict_json_payload(
+        _small_bytes(
+            Path(request_path),
+            "execution request",
+            maximum=(
+                JSON_FIXED_OVERHEAD_BYTES
+                + MAX_INPUT_ROWS * input_features * 6
+            ),
+        ),
+        "execution request",
+    )
     inputs, request_sha256 = _parse_request(
         request,
         build_id=manifest["build_id"],
@@ -1134,7 +1455,22 @@ def verify_deepseek_v4_fp8_linear_execution(
         selected_count=len(selected_rows),
         input_row_count=len(inputs),
     )
-    result = _load_json(Path(result_path), "execution result")
+    product_accumulates = len(inputs) * len(selected_rows) * input_features
+    if product_accumulates > MAX_PRODUCTS_PER_REQUEST:
+        raise DeepSeekV4FP8LinearDifferentialError(
+            "FP8 linear request exceeds the checker work budget"
+        )
+    result = _strict_json_payload(
+        _small_bytes(
+            Path(result_path),
+            "execution result",
+            maximum=(
+                JSON_FIXED_OVERHEAD_BYTES
+                + len(inputs) * len(selected_rows) * 6
+            ),
+        ),
+        "execution result",
+    )
     observed, observed_numeric = _parse_result(
         result,
         manifest=manifest,
@@ -1143,6 +1479,7 @@ def verify_deepseek_v4_fp8_linear_execution(
         input_row_count=len(inputs),
         selected_rows=selected_rows,
         expected_counters=expected_counters,
+        full_operator=full_operator,
     )
 
     blocks = input_features // BLOCK_SIZE
@@ -1176,13 +1513,19 @@ def verify_deepseek_v4_fp8_linear_execution(
         for start in range(0, len(scale_payload), blocks)
     )
     try:
-        expected = dense_fp8_linear_selected_rows_bf16(
-            inputs,
-            tuple(tuple(selected_weight_rows[row]) for row in selected_rows),
-            scales,
-            output_row_indices=selected_rows,
-            declared_output_count=output_features,
+        ordered_weight_rows = tuple(
+            tuple(selected_weight_rows[row]) for row in selected_rows
         )
+        if full_operator:
+            expected = dense_fp8_linear_bf16(inputs, ordered_weight_rows, scales)
+        else:
+            expected = dense_fp8_linear_selected_rows_bf16(
+                inputs,
+                ordered_weight_rows,
+                scales,
+                output_row_indices=selected_rows,
+                declared_output_count=output_features,
+            )
     except MatrixReferenceError as exc:
         raise DeepSeekV4FP8LinearDifferentialError(
             f"independent FP8 reference rejected locked execution: {exc}"
@@ -1203,23 +1546,71 @@ def verify_deepseek_v4_fp8_linear_execution(
             "FP8 saturation status differs from independent semantics"
         )
 
-    if _small_bytes(
-        manifest_path, "deployment manifest", maximum=1024 * 1024
-    ) != manifest_payload:
+    current_manifest_payload, _ = _descriptor_bytes(
+        manifest_descriptor,
+        "deployment manifest",
+        maximum=1024 * 1024,
+        expected_fingerprint=manifest_fingerprint,
+    )
+    if current_manifest_payload != manifest_payload:
         raise DeepSeekV4FP8LinearDifferentialError(
             "deployment manifest changed during independent checking"
         )
     for artifact in artifacts.values():
-        relative, current_path = _safe_file(
-            root, artifact.relative_path, f"rechecked artifact {artifact.role}.path"
+        digest, size, _ = _descriptor_hash(
+            artifact.descriptor,
+            f"deployment artifact {artifact.relative_path!r}",
+            expected_fingerprint=artifact.fingerprint,
         )
-        if relative != artifact.relative_path or _sha256_file(current_path) != (
-            artifact.sha256,
-            artifact.size_bytes,
-        ):
+        if (digest, size) != (artifact.sha256, artifact.size_bytes):
             raise DeepSeekV4FP8LinearDifferentialError(
                 f"deployment artifact {artifact.relative_path!r} changed during checking"
             )
+    with ExitStack() as current_stack:
+        current_root_descriptor, current_root_fingerprint = _open_root(
+            current_stack, root
+        )
+        if current_root_fingerprint != root_fingerprint:
+            raise DeepSeekV4FP8LinearDifferentialError(
+                "deployment root changed during independent checking"
+            )
+        current_manifest_descriptor = _open_relative(
+            current_stack,
+            current_root_descriptor,
+            "deployment_manifest.json",
+            "current deployment manifest",
+        )
+        current_payload, current_fingerprint = _descriptor_bytes(
+            current_manifest_descriptor,
+            "current deployment manifest",
+            maximum=1024 * 1024,
+        )
+        if (
+            current_payload != manifest_payload
+            or current_fingerprint != manifest_fingerprint
+        ):
+            raise DeepSeekV4FP8LinearDifferentialError(
+                "deployment manifest was replaced during independent checking"
+            )
+        for artifact in artifacts.values():
+            current_descriptor = _open_relative(
+                current_stack,
+                current_root_descriptor,
+                artifact.relative_path,
+                f"current deployment artifact {artifact.relative_path!r}",
+            )
+            digest, size, current_fingerprint = _descriptor_hash(
+                current_descriptor,
+                f"current deployment artifact {artifact.relative_path!r}",
+            )
+            if (
+                (digest, size) != (artifact.sha256, artifact.size_bytes)
+                or current_fingerprint != artifact.fingerprint
+            ):
+                raise DeepSeekV4FP8LinearDifferentialError(
+                    f"deployment artifact {artifact.relative_path!r} was replaced "
+                    "during independent checking"
+                )
     shape = [len(inputs), len(selected_rows)]
     comparison = {
         "element_count": math.prod(shape),
@@ -1243,31 +1634,69 @@ def verify_deepseek_v4_fp8_linear_execution(
             (scale_resource, scale_record),
         )
     ]
-    body: dict[str, Any] = {
+    common_body: dict[str, Any] = {
         "build_id": manifest["build_id"],
         "checkpoint_lock_id": lock["lock_id"],
-        "claim_boundary": (
-            "Exact selected-row layer-0 query-A FP8 linear differential only; "
-            "not the complete projection, attention, a transformer block, or full model."
-        ),
         "comparison": comparison,
         "counters": expected_counters,
         "input_row_count": len(inputs),
         "model_id": MODEL_ID,
         "numeric_status": expected_numeric,
         "request_sha256": request_sha256,
-        "schema": DIFFERENTIAL_SCHEMA,
-        "selected_output_rows": list(selected_rows),
         "source_application_id": source["application_id"],
         "source_tensors": source_tensors,
-        "status": "exact_locked_checkpoint_selected_row_differential",
     }
+    if full_operator:
+        body = {
+            **common_body,
+            "claim_boundary": (
+                "Exact complete-output layer-0 query-A FP8 linear differential "
+                "for supplied BF16 rows only; not input normalization, attention, "
+                "a transformer block, or full model."
+            ),
+            "output_row_count": output_features,
+            "schema": FULL_DIFFERENTIAL_SCHEMA,
+            "status": "exact_locked_checkpoint_complete_fp8_linear_differential",
+        }
+    else:
+        body = {
+            **common_body,
+            "claim_boundary": (
+                "Exact selected-row layer-0 query-A FP8 linear differential only; "
+                "not the complete projection, attention, a transformer block, or full model."
+            ),
+            "schema": DIFFERENTIAL_SCHEMA,
+            "selected_output_rows": list(selected_rows),
+            "status": "exact_locked_checkpoint_selected_row_differential",
+        }
     body["differential_id"] = _sha256_json(body)
     return body
 
 
+def verify_deepseek_v4_fp8_linear_execution(
+    *,
+    snapshot: Path,
+    lock: dict[str, Any],
+    deployment_root: Path,
+    request_path: Path,
+    result_path: Path,
+) -> dict[str, Any]:
+    """Independently verify one stable artifact tree against locked tensors."""
+
+    with ExitStack() as stack:
+        return _verify_deepseek_v4_fp8_linear_execution(
+            snapshot=snapshot,
+            lock=lock,
+            deployment_root=deployment_root,
+            request_path=request_path,
+            result_path=result_path,
+            stack=stack,
+        )
+
+
 __all__ = [
     "DIFFERENTIAL_SCHEMA",
+    "FULL_DIFFERENTIAL_SCHEMA",
     "DeepSeekV4FP8LinearDifferentialError",
     "verify_deepseek_v4_fp8_linear_execution",
 ]
