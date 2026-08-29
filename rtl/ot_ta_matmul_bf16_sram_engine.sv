@@ -1,11 +1,11 @@
 `timescale 1ns/1ps
-// Bounded data-bearing execution of complete production Qwen q_proj output
+// Bounded data-bearing execution of complete production Qwen projection output
 // blocks.  Each MATMUL_BF16_TILE consumes [1,256] @ [64,256]^T.  Within every
 // 32-command DMA/MATMUL block, the first MATMUL initializes 64 raw binary32
 // accumulators, the next fourteen reload and extend them, and the last reloads,
 // extends, and finalizes 64 BF16 auxiliary values.  The default bound retains
-// the original command-4-through-34 single-block profile; a sequencer may raise
-// PROFILE_LAST_COMMAND_INDEX to the final MATMUL of another whole output block.
+// the original q_proj command-4-through-34 single-block profile.  A sequencer
+// may raise the bounds and name as many as three adjacent source-kernel ranges.
 //
 // BF16 operands widen exactly.  Every product and every strictly increasing-K
 // accumulation rounds once to binary32 RNE, and exact zero is canonicalized
@@ -22,7 +22,17 @@ module ot_ta_matmul_bf16_sram_engine #(
     parameter [31:0] PROFILE_INPUT_ROWS = 32'd1,
     parameter [31:0] PROFILE_OUTPUTS = 32'd64,
     parameter [31:0] PROFILE_REDUCTION = 32'd256,
-    parameter [31:0] PROFILE_LAST_COMMAND_INDEX = 32'd34
+    parameter [31:0] PROFILE_FIRST_COMMAND_INDEX = 32'd3,
+    parameter [31:0] PROFILE_LAST_COMMAND_INDEX = 32'd34,
+    parameter [31:0] PROFILE_KERNEL0_INDEX = 32'd2,
+    parameter [31:0] PROFILE_KERNEL0_LAST_COMMAND_INDEX =
+        PROFILE_LAST_COMMAND_INDEX,
+    parameter [31:0] PROFILE_KERNEL1_INDEX = PROFILE_KERNEL0_INDEX,
+    parameter [31:0] PROFILE_KERNEL1_LAST_COMMAND_INDEX =
+        PROFILE_LAST_COMMAND_INDEX,
+    parameter [31:0] PROFILE_KERNEL2_INDEX = PROFILE_KERNEL1_INDEX,
+    parameter [31:0] PROFILE_KERNEL2_LAST_COMMAND_INDEX =
+        PROFILE_LAST_COMMAND_INDEX
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -128,11 +138,28 @@ module ot_ta_matmul_bf16_sram_engine #(
     wire decoder_out_ready = (state == STATE_IDLE) && !done_valid;
 
     wire profile_command_bound_legal =
-        (PROFILE_LAST_COMMAND_INDEX >= 32'd34) &&
-        (PROFILE_LAST_COMMAND_INDEX[4:0] == 5'd2);
+        (PROFILE_FIRST_COMMAND_INDEX[4:0] == 5'd3) &&
+        (PROFILE_KERNEL0_LAST_COMMAND_INDEX >=
+         PROFILE_FIRST_COMMAND_INDEX) &&
+        ((PROFILE_KERNEL0_LAST_COMMAND_INDEX -
+          PROFILE_FIRST_COMMAND_INDEX) >= 32'd31) &&
+        (PROFILE_KERNEL0_LAST_COMMAND_INDEX[4:0] == 5'd2) &&
+        (PROFILE_KERNEL1_LAST_COMMAND_INDEX >=
+         PROFILE_KERNEL0_LAST_COMMAND_INDEX) &&
+        (PROFILE_KERNEL1_LAST_COMMAND_INDEX[4:0] == 5'd2) &&
+        (PROFILE_KERNEL2_LAST_COMMAND_INDEX >=
+         PROFILE_KERNEL1_LAST_COMMAND_INDEX) &&
+        (PROFILE_KERNEL2_LAST_COMMAND_INDEX[4:0] == 5'd2) &&
+        (PROFILE_KERNEL2_LAST_COMMAND_INDEX ==
+         PROFILE_LAST_COMMAND_INDEX);
+    wire [31:0] profile_kernel_index =
+        decoder_index <= PROFILE_KERNEL0_LAST_COMMAND_INDEX
+        ? PROFILE_KERNEL0_INDEX
+        : decoder_index <= PROFILE_KERNEL1_LAST_COMMAND_INDEX
+          ? PROFILE_KERNEL1_INDEX : PROFILE_KERNEL2_INDEX;
     wire [4:0] command_offset_in_block = decoder_index[4:0] - 5'd4;
     wire command_index_legal =
-        (decoder_index >= 32'd4) &&
+        (decoder_index >= PROFILE_FIRST_COMMAND_INDEX + 1'b1) &&
         (decoder_index <= PROFILE_LAST_COMMAND_INDEX) &&
         !decoder_index[0];
     wire command_flags_legal =
@@ -150,7 +177,7 @@ module ot_ta_matmul_bf16_sram_engine #(
         profile_command_bound_legal &&
         command_index_legal &&
         command_flags_legal &&
-        (decoder_kernel_index == 32'd2) &&
+        (decoder_kernel_index == profile_kernel_index) &&
         (decoder_size0 == PROFILE_INPUT_ROWS) &&
         (decoder_size1 == PROFILE_OUTPUTS) &&
         (decoder_size2 == PROFILE_REDUCTION) &&

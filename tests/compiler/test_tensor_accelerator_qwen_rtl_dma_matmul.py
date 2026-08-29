@@ -402,17 +402,18 @@ def test_dma_matmul_campaign_logs_and_sources_are_reproducible() -> None:
         "3a77bb1b155ac2ca605e03132ac3833f615d688ad96ff8fb7d22af75ecd97b99"
     )
     assert campaign["source_sha256"] == historical_sources
-    complete_campaign = load_strict_json(
+    q_campaign = load_strict_json(
         ROOT / "results/tensor_accelerator/qwen3_rtl_q_proj_campaign.json"
     )
-    assert current_sources["rtl/ot_ta_dma_matmul_sequencer.sv"] == (
-        complete_campaign["source_sha256"]["rtl/ot_ta_dma_matmul_sequencer.sv"]
+    kv_campaign = load_strict_json(
+        ROOT / "results/tensor_accelerator/qwen3_rtl_kv_proj_campaign.json"
     )
-    assert current_sources["rtl/ot_ta_matmul_bf16_sram_engine.sv"] == (
-        complete_campaign["source_sha256"][
-            "rtl/ot_ta_matmul_bf16_sram_engine.sv"
-        ]
-    )
+    for source in (
+        "rtl/ot_ta_dma_matmul_sequencer.sv",
+        "rtl/ot_ta_matmul_bf16_sram_engine.sv",
+    ):
+        assert current_sources[source] == kv_campaign["source_sha256"][source]
+        assert current_sources[source] != q_campaign["source_sha256"][source]
 
 
 @pytest.mark.skipif(
@@ -423,7 +424,7 @@ def test_generalized_engine_preserves_retained_first_block_campaign() -> None:
     retained = load_strict_json(CAMPAIGN)
     replayed = campaign_runner.run(VECTORS)
     assert replayed["campaign_id"] == (
-        "dec3d325cd072dabf1d0114b879bf367c359b4ac7106210049ef5ab2a7200992"
+        "f09a219aa0f495bcca848186b288fb773d1866336cb2ff7f1bb83cc546e15253"
     )
     assert replayed["status"] == "pass"
     retained_functional = {

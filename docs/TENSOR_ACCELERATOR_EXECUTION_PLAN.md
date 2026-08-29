@@ -1248,6 +1248,59 @@ authentication, terminal `COMPLETE`, subsequent kernels, timing, activity-
 derived power/IR, thermal, foundry, package, reliability, yield, and silicon
 remain separate gates.
 
+### 1.22 Complete authentic K- and V-projection execution in RTL
+
+QW-RTL-KV-PROJ-001 extends the bounded sequencer across exact adjacent kernel
+ranges without weakening their command or kernel-index profiles. Authentic
+commands 2,051 through 2,562 execute `node.0003` K projection, and commands
+2,563 through 3,074 execute `node.0004` V projection. Each operation contains
+256 alternating DMA/MATMUL pairs, 16 output blocks, and all 16 K tiles per
+block. Only command 3,074 may carry the terminal marker.
+
+The source-bound vector-set ID is
+`ee711ae0b31985d0215b9f0c14233c3a2cb0cade3f79809bfc00493d369d5873`;
+the dual-simulator campaign ID is
+`584e0f388d6295a3abc5d6d6f96e5f32500b493bf81d6a7b09d51b112a735894`.
+The deployed K- and V-weight identities are respectively
+`0460b9a479fbccdcebf61c86d0dc6eb068be781c51f7b247ed191774db2c28e8`
+and
+`2b82652e5d6446530230f86a685ef547ba9e94f613c2d2d42ab3388dd7271b1c`;
+their combined 16,777,216-byte slice has SHA-256
+`a7d864dfda7e9659bcf297728eed39ce59aa85b09d40c1f63e638dc45fc8a10c`.
+The builder authenticates the containing immutable HBM shard and streams the
+slice only to a temporary simulator input. The retained vector artifact is
+1.1 MiB and contains commands, exact accumulators, outputs, and hashes rather
+than the raw weight payload.
+
+Both Icarus and Verilator execute all 1,024 commands under independent
+backpressure and reconcile 262,144 HBM requests/responses, 1,048,576 DMA
+writes, 61,440 accumulator halfword reload reads, 131,072 input reads,
+8,388,608 weight reads, products, and ordered additions, 32,768 FP32
+accumulator writes, and 2,048 BF16 writes. Every intermediate accumulator tile
+matches the oracle; their aggregate SHA-256 is
+`a1c2f04da9b9059abf17fb048a6a7ffda68b243b9ec7fe0ac8bebe516ac81f69`.
+The complete K and V BF16 outputs match architectural and independent-reference
+hashes
+`dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403`
+and
+`b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5`.
+All conversions are finite with zero saturation.
+
+An early terminal assertion on command 2,051 reports program-order error 12
+before any HBM request or SRAM write. Icarus observes 48,506,095 cycles and
+Verilator 48,505,442 cycles under their deterministic harness schedules. These
+are correlation observations, not characterized latency or performance. The
+earlier Q campaign remains immutable and binds its original RTL source hashes;
+this K/V campaign binds the current generalized sources while the default
+single-block profile retains compatibility evidence.
+
+This closes complete RTL execution and architectural correlation for the K and
+V projection graph operations. It does not close complete QKV preparation,
+because per-head Q/K RMSNorm and RoPE remain. It also does not execute KV
+prepare, attention, state, vector kernels, a complete layer, program
+authentication/`COMPLETE`, physical memories/interconnect, or any timing,
+power, package, reliability, yield, silicon, `TA-RTL-6`, or later gate.
+
 ## 2. Meaning of production-grade
 
 Production-grade in this plan describes the quality of the compiler, simulator,
@@ -2348,7 +2401,7 @@ RTL, physical, and comparison gates remain open.
 | Command and capability ABI | ABI 2.5 and capability V6 admit bounded indexed SRAM selection with a strict schema and preserve older minor decoding; the complete 924,386-command program executes causally | Fixed request v1 remains immutable; add a separately versioned dynamic request/session contract. Routing, remaining vector operations, synchronization, timing, 8,192-plus context support, and the final hardware capability remain open |
 | Compiler and checker | **QW-FM1 closed at `74c0d59`; QW-FM2/QW-FM3 closed at `324f48d`; QW-FM4 closed at `c5b9578`.** Complete Qwen neutral lowering, streamed full-model HBM layout, SRAM lifetime allocation, command lowering, inverse reconstruction, and one target-precision execution are deterministic and retained | Preserve those artifacts unchanged while adding dynamic prefill/decode compilation; do not relabel one fixed transaction as generation or long-context acceptance |
 | Functional simulation | **Fixed one-step QW-FM4 closed at `c5b9578`.** The common simulator authenticates all 17 HBM shards, validates and executes all commands, commits all 36 states atomically, and produces exact complete logits and one token; a separate checkpoint-layout and algorithmic path matches it exactly | Execute at least 32 ordinary greedy steps through a versioned dynamic request/session path, then prove operational readiness for the exact 8,000-token run |
-| RTL correlation | QW-RTL-CMD-001 admits all production records; QW-RTL-DMA-RMS-001 executes adjacent commands 1 and 2 and completes `node.0001`; QW-RTL-DMA-MATMUL-001 retains focused first-block arithmetic/fail-stop evidence; **QW-RTL-Q-PROJ-001 executes all commands 3 through 2,050, all 64 output blocks, and all 4,096 BF16 values of `node.0002` in Icarus and Verilator, matching the independently checked architectural output with exact counters and zero saturation** | Complete `node.0002` is now closed at the RTL/software-correlation boundary. Add subsequent Q/K/V, RoPE, attention, state and vector kernels, program authentication, banking/ECC/arbitration, and a representative complete layer before `TA-RTL-6` |
+| RTL correlation | QW-RTL-CMD-001 admits all production records; QW-RTL-DMA-RMS-001 executes adjacent commands 1 and 2 and completes `node.0001`; QW-RTL-DMA-MATMUL-001 retains focused first-block arithmetic/fail-stop evidence; QW-RTL-Q-PROJ-001 executes all commands 3 through 2,050 and all 4,096 BF16 values of `node.0002`; **QW-RTL-KV-PROJ-001 executes all commands 2,051 through 3,074 and all 2,048 BF16 values of `node.0003` and `node.0004` in Icarus and Verilator, matching independent architectural outputs, every accumulator tile, exact counters, zero saturation, and fail-stop behavior** | Q, K, and V projection operations are closed at the RTL/software-correlation boundary. Add per-head Q/K RMSNorm, RoPE, KV prepare, attention, state and vector kernels, program authentication, banking/ECC/arbitration, and a representative complete layer before `TA-RTL-6` |
 | Timing and physical evidence | Bounded macro-free ADD-SRAM RTL-to-GDS feasibility passes on pinned public IHP SG13G2 at a 20 ns target: campaign `0af6cbe8...b316` has positive extracted setup/hold slack at slow, typical, and fast corners, zero internal route/antenna violations, 18,101 post-route cells, and no unconstrained endpoints | This is one control/compute slice with an external behavioral SRAM. Formal equivalence, SRAM macro, activity-derived power/IR, thermal, foundry DRC/LVS, HBM/package, complete-layer timing, performance per watt, reliability, yield, and silicon remain open; `TA-PHY-7` is not closed |
 | End-to-end execution | One complete 36-layer fixed request produces exact final logits, token `50994`, and committed state, but no multi-step generation or long-context common-simulator run has closed | `TA-QWEN-4` and `TA-DSV4-5` remain open; QW-FM4 cannot substitute for Qwen 8,000 or DeepSeek 200,000 |
 

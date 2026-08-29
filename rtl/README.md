@@ -48,6 +48,20 @@ This completes graph operation `node.0002`, not a complete layer. HBM and SRAM
 remain behavioral interfaces, and timing, power, memory-macro, and `TA-RTL-6`
 gates remain open.
 
+The complete K/V-projection campaign continues over authentic commands 2,051
+through 3,074 and kernel indices 3 and 4. Its 512 DMA/MATMUL pairs consume the
+same retained `attention_norm` row and stream 16 MiB of authenticated deployed
+weights from immutable HBM evidence without retaining that payload. Icarus and
+Verilator match every one of the 512 accumulator rewrites and all 2,048 BF16
+values for graph operations `node.0003` and `node.0004`, including exact output
+SHA-256 values
+`dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403`
+and
+`b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5`.
+This closes the two projection operations only. Per-head Q/K RMSNorm, RoPE,
+attention, state, vector kernels, complete-layer sequencing, and the physical
+gates remain open.
+
 ## Fault and containment benches
 
 | Bench | Planned sites | Scope |

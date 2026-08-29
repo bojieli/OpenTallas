@@ -62,6 +62,14 @@ EXPECTED_VECTOR_ID = "32dbdaa446fc4192f31a0a26394e04094e74c6459858d8a6b0135c11fc
 EXPECTED_CAMPAIGN_ID = (
     "af8c787f6c6995527ca0b75ab813b06f9ed05f9c18066ccf3e05ea1fa4d69603"
 )
+RETAINED_Q_RTL_SOURCE_SHA256 = {
+    "rtl/ot_ta_dma_matmul_sequencer.sv": (
+        "679efc3f15309137c8520ea619cb3555ad2adad2d19e62fcd4f530adb1662fc0"
+    ),
+    "rtl/ot_ta_matmul_bf16_sram_engine.sv": (
+        "fece9a44fe9c433fabfd83c94057cf6dd07a87ae1b9a2e074c791d63680e29c6"
+    ),
+}
 
 
 def _sha256(payload: bytes) -> str:
@@ -304,6 +312,10 @@ def test_q_proj_campaign_logs_and_sources_are_reproducible() -> None:
     expected_sources = {
         name: _sha256_file(path) for name, path in sorted(static_paths.items())
     }
+    # The Q campaign is immutable evidence for the source revision that ran it.
+    # Later K/V generalization changes these two modules without rewriting the
+    # retained Q artifact; the K/V campaign binds the current source hashes.
+    expected_sources.update(RETAINED_Q_RTL_SOURCE_SHA256)
     generated = campaign_runner._program_files(load_strict_json(VECTORS))
     for name, payload in sorted(generated.items()):
         expected_sources[f"generated/{name}"] = _sha256(payload.encode("ascii"))

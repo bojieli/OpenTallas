@@ -24,7 +24,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Production RMSNorm arithmetic and SRAM control | `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv` | Finite FP32 RNE arithmetic, correctly rounded reciprocal square root, canonical 4,096-element balanced reduction, complete-pass buffered writeback, exact SRAM counters, and numeric-fault write suppression | QW-RTL-DMA-RMS-001 |
 | Production DMA/RMSNorm sequencing | `ot_ta_dma_rmsnorm_sequencer.sv` | Adjacent authentic command-1/command-2 dispatch, monotonic indices, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-RMS-001 |
 | Production BF16 MATMUL SRAM control | `ot_fp32_rne_pkg.sv`, `ot_ta_matmul_bf16_sram_engine.sv` | Signed finite FP32 RNE accumulation over fixed `1 x 64 x 256` segments, ordered 16-bit halfword reload of FP32 state, complete-tile buffered accumulator writeback, buffered `MATMUL_FINAL` BF16 conversion/writeback, exact counters, and numeric-fault write suppression | QW-RTL-DMA-MATMUL-001 |
-| Production DMA/MATMUL sequencing | `ot_ta_dma_matmul_sequencer.sv` | Parameter-bounded command-3-through-final dispatch for complete 32-command output blocks, strict alternating profile/order, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-MATMUL-001/QW-RTL-Q-PROJ-001 |
+| Production DMA/MATMUL sequencing | `ot_ta_dma_matmul_sequencer.sv` | Parameter-bounded first-through-final dispatch for complete 32-command output blocks across as many as three exact adjacent kernel-index ranges, strict alternating profile/order, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-MATMUL-001/QW-RTL-Q-PROJ-001/QW-RTL-KV-PROJ-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
@@ -184,9 +184,42 @@ differential cases.
 This completes one authentic Q-projection graph operation, not a complete
 layer or `TA-RTL-6`. The input `attention_norm` row remains behaviorally
 preloaded. Physical HBM/SRAM, banking, ECC, arbitration, program authentication
-and `COMPLETE`, subsequent Q/K/V, RoPE, attention, vector, state, and layer
+and `COMPLETE`, per-head Q/K RMSNorm, RoPE, attention, vector, state, and layer
 sequencing, characterized timing, activity-derived power/IR, thermal, foundry,
-package, reliability, yield, and silicon remain open.
+package, reliability, yield, and silicon remain open. K and V projections close
+separately in QW-RTL-KV-PROJ-001 below.
+
+QW-RTL-KV-PROJ-001 is retained as vector set
+`ee711ae0b31985d0215b9f0c14233c3a2cb0cade3f79809bfc00493d369d5873`
+and campaign
+`584e0f388d6295a3abc5d6d6f96e5f32500b493bf81d6a7b09d51b112a735894`.
+It executes every authentic command from 2,051 through 3,074: 256
+DMA/MATMUL pairs and 16 output blocks for each of `node.0003` K projection and
+`node.0004` V projection. The two deployed 8 MiB weight payloads have SHA-256
+`0460b9a479fbccdcebf61c86d0dc6eb068be781c51f7b247ed191774db2c28e8`
+and
+`2b82652e5d6446530230f86a685ef547ba9e94f613c2d2d42ab3388dd7271b1c`.
+They are streamed from the pinned HBM shard into temporary campaign storage;
+the repository retains hashes and arithmetic oracles, not raw weights.
+
+Icarus and Verilator each reconcile 262,144 HBM requests/responses, 1,048,576
+DMA writes, 61,440 accumulator halfword reload reads, 131,072 input reads,
+8,388,608 weight reads, products, and ordered additions, 32,768 FP32
+accumulator writes, and 2,048 BF16 writes with zero saturation. All 512
+intermediate accumulator tiles have aggregate SHA-256
+`a1c2f04da9b9059abf17fb048a6a7ffda68b243b9ec7fe0ac8bebe516ac81f69`.
+The K and V output hashes are respectively
+`dd690fbd9886a0af94cc6b2477ef5bfcc84fe66cac66f345f2ec654a83b28403`
+and
+`b07011da7a3d58dcccceb91e596ceebc2084ab3c2fc9d0b6a9a8704e91ef8dc5`,
+matching the full-model simulator events and independent row-major reference.
+An early terminal marker on command 2,051 fails before HBM or SRAM activity.
+
+This closes two additional authentic projection operations, not complete QKV
+preparation, a layer, or `TA-RTL-6`. The Q and K per-head RMSNorm operations,
+RoPE, KV preparation, attention, state, vector kernels, program authentication,
+physical memories/interconnect, and all characterized physical claims remain
+open.
 
 The bounded IHP SG13G2 physical campaign for
 `ot_ta_add_bf16_sram_engine` is retained as
