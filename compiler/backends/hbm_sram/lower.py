@@ -532,12 +532,19 @@ class _Emitter:
                         and tensor.dtype in _INDEX_DTYPES
                     ):
                         self.token_input_tensor = name
+        # A host request window is addressed from POSITION_START and is a whole
+        # request wide, so it must reach one request past the last admissible
+        # start.  The ring additionally holds the prompt and every appended
+        # token of the session.
+        window_rows = (
+            int(self.capability.limits["max_context_positions"]) + self.span_max
+        )
         ring_element = 4
         if self.token_ring_tensor is not None:
             ring_element = max(
                 bytes_for(1, self.tensors[self.token_ring_tensor].dtype), 1
             )
-        ring_bytes = int(self.capability.limits["max_context_positions"]) * ring_element
+        ring_bytes = window_rows * ring_element
 
         ring_key = None
         for key in sorted(self.plan.host_objects):
@@ -555,6 +562,15 @@ class _Emitter:
             size = int(spec["size_bytes"])
             if tensor_id in (self.token_ring_tensor, self.token_input_tensor):
                 size = ring_bytes
+            else:
+                tensor = self.tensors.get(tensor_id)
+                if (
+                    tensor is not None
+                    and tensor.shape
+                    and isinstance(tensor.shape[0], Symbolic)
+                ):
+                    rows = max(int(spec["rows"]), 1)
+                    size = (size // rows) * window_rows
             base, _ = self._address(f"host.{key}")
             self._host_object[key] = builder.memory_object(
                 storage_class=StorageClass.HOST,
@@ -961,12 +977,16 @@ class _Emitter:
         # TA-ABI3-OPCONV-1 section 8: the ring output carries a dynamic term
         # bound to GENERATION_INDEX so one descriptor serves every decode step.
         if operand.tensor_id == self.token_ring_tensor and operand.direction == "out":
+            # The ring is one buffer holding the prompt and everything the
+            # loop appends, so the selected token goes at the first free
+            # position -- ``POSITION_END`` -- and not at the generation
+            # counter, which would overwrite the prompt on the first step.
             return self._view(
                 object_id=self.token_ring_object,
                 dtype=dtype,
                 dims=[1],
                 strides=[1],
-                dynamic=[DynamicTerm.symbol(Symbol.GENERATION_INDEX, 1)],
+                dynamic=[DynamicTerm.symbol(Symbol.POSITION_END, 1)],
                 writable=True,
             )
         kernel = self.kernels[plan.index]
@@ -1035,6 +1055,17 @@ class _Emitter:
                 if self.node_count <= 1:
                     continue
                 terms.append(DynamicTerm.symbol(Symbol.NODE_ID, node_stride))
+        if (
+            operand.residence == "host"
+            and operand.direction == "in"
+            and tensor.shape
+            and isinstance(tensor.shape[0], Symbolic)
+        ):
+            # A host window holds the whole session, not just this request: the
+            # prompt and every token appended since.  The request's rows begin
+            # at POSITION_START, so a decode step reads the token it was given
+            # rather than the first token of the prompt.
+            terms.append(DynamicTerm.symbol(Symbol.POSITION_START, strides[0]))
         return self._view(
             object_id=object_id,
             dtype=dtype,
