@@ -7,22 +7,27 @@
 // This testbench replays each one through the RTL and requires exact agreement
 // on: program-header admission and its trap class; retired, fetched,
 // predicated-off, issued, loop-iteration, branch, wait and state counts; the
-// engine-issue sequence (family, subopcode, descriptor ID) in order; whether
-// the staged state commit was applied or discarded; and the trap class and
-// first faulting instruction.
+// engine-issue sequence (family, subopcode, descriptor ID) in order; the
+// resolved operand tensor views (descriptor, operand slot, leading extent and
+// element offset) in order, which is where amendments A4 and A13 are checked;
+// whether the staged state commit was applied or discarded; and the trap class
+// and first faulting instruction.
 //
 // The engine issue port is back-pressured from a free-running LFSR so the
 // sequence is checked under stalls, not only under a permanently ready
 // consumer.
 // ---------------------------------------------------------------------------
 module tb_a3_microsequencer;
-    localparam integer CASE_MEM_WORDS  = 1024;
+    localparam integer CASE_MEM_WORDS  = 2048;
     localparam integer ISSUE_MEM_WORDS = 2048;
+    localparam integer VIEW_MEM_WORDS  = 8192;
     localparam integer META_WORDS      = 8;
-    localparam integer CASE_STRIDE     = 32;
+    localparam integer CASE_STRIDE     = 35;
+    localparam integer VIEW_STRIDE     = 6;
 
     reg [31:0] case_mem  [0:CASE_MEM_WORDS-1];
     reg [31:0] issue_mem [0:ISSUE_MEM_WORDS-1];
+    reg [31:0] view_mem  [0:VIEW_MEM_WORDS-1];
     reg [31:0] meta_mem  [0:META_WORDS-1];
 
     reg clk = 1'b0;
@@ -49,6 +54,7 @@ module tb_a3_microsequencer;
     reg [31:0] cfg_symbol_base = 32'd0;
     reg [31:0] cfg_symbol_mask = 32'd0;
     reg [63:0] cfg_max_retired_work = 64'd0;
+    reg [31:0] cfg_state_count = 32'd0;
 
     wire        busy;
     wire        done;
@@ -63,6 +69,14 @@ module tb_a3_microsequencer;
     wire [7:0]  issue_sub;
     wire [31:0] issue_descriptor_id;
     wire [31:0] issue_index;
+
+    wire        view_valid;
+    wire [31:0] view_descriptor_id;
+    wire [2:0]  view_slot;
+    wire [31:0] view_dim0;
+    wire [63:0] view_element_offset;
+    wire [7:0]  view_rank;
+    wire [31:0] count_views_resolved;
 
     wire [31:0] count_fetched;
     wire [31:0] count_retired;
@@ -106,6 +120,7 @@ module tb_a3_microsequencer;
         .cfg_symbol_base(cfg_symbol_base),
         .cfg_symbol_mask(cfg_symbol_mask),
         .cfg_max_retired_work(cfg_max_retired_work),
+        .cfg_state_count(cfg_state_count),
         .busy(busy),
         .done(done),
         .complete(complete),
@@ -118,6 +133,13 @@ module tb_a3_microsequencer;
         .issue_sub(issue_sub),
         .issue_descriptor_id(issue_descriptor_id),
         .issue_index(issue_index),
+        .view_valid(view_valid),
+        .view_descriptor_id(view_descriptor_id),
+        .view_slot(view_slot),
+        .view_dim0(view_dim0),
+        .view_element_offset(view_element_offset),
+        .view_rank(view_rank),
+        .count_views_resolved(count_views_resolved),
         .count_fetched(count_fetched),
         .count_retired(count_retired),
         .count_predicated_off(count_predicated_off),
@@ -149,9 +171,15 @@ module tb_a3_microsequencer;
     integer    total_traps;
     integer    total_programs;
     integer    total_headers;
+    integer    total_views;
     integer    checks;
     reg [31:0] expect_word0;
     reg [31:0] expect_word1;
+
+    integer    view_seen;
+    integer    expect_view_base;
+    integer    expect_view_count;
+    integer    view_slot_base;
 
     always @(posedge clk) begin
         if (rst_n) begin
@@ -184,6 +212,50 @@ module tb_a3_microsequencer;
         end
     end
 
+    // -- resolved operand views (amendments A4 and A13) ------------------
+    // The view port is an observation pulse, not a handshake, so every
+    // assertion is one event.  Order is program order, then operand order.
+    always @(posedge clk) begin
+        if (rst_n && capture && view_valid) begin
+            if (view_seen >= expect_view_count) begin
+                $display("FAIL: view overflow, expected %0d", expect_view_count);
+                $fatal(1, "view overflow");
+            end
+            view_slot_base = (expect_view_base + view_seen) * VIEW_STRIDE;
+            if (view_descriptor_id !== view_mem[view_slot_base]) begin
+                $display("FAIL: view %0d descriptor %0d expected %0d", view_seen,
+                         view_descriptor_id, view_mem[view_slot_base]);
+                $fatal(1, "view descriptor mismatch");
+            end
+            if ({29'd0, view_slot} !== view_mem[view_slot_base + 1]) begin
+                $display("FAIL: view %0d operand slot %0d expected %0d", view_seen,
+                         view_slot, view_mem[view_slot_base + 1]);
+                $fatal(1, "view slot mismatch");
+            end
+            if (view_dim0 !== view_mem[view_slot_base + 2]) begin
+                $display("FAIL: view %0d (descriptor %0d) leading extent %0d expected %0d",
+                         view_seen, view_descriptor_id, view_dim0,
+                         view_mem[view_slot_base + 2]);
+                $fatal(1, "A13 leading extent mismatch");
+            end
+            if (view_element_offset !== {view_mem[view_slot_base + 4],
+                                         view_mem[view_slot_base + 3]}) begin
+                $display("FAIL: view %0d element offset %0d expected %0d", view_seen,
+                         view_element_offset,
+                         {view_mem[view_slot_base + 4], view_mem[view_slot_base + 3]});
+                $fatal(1, "A4 element offset mismatch");
+            end
+            if ({24'd0, view_rank} !== view_mem[view_slot_base + 5]) begin
+                $display("FAIL: view %0d rank %0d expected %0d", view_seen,
+                         view_rank, view_mem[view_slot_base + 5]);
+                $fatal(1, "view rank mismatch");
+            end
+            view_seen = view_seen + 1;
+            total_views = total_views + 1;
+            checks = checks + 5;
+        end
+    end
+
     integer case_index;
     integer base;
     integer guard;
@@ -206,15 +278,21 @@ module tb_a3_microsequencer;
     initial begin
         $readmemh("a3_case.hex", case_mem);
         $readmemh("a3_issue.hex", issue_mem);
+        $readmemh("a3_view.hex", view_mem);
         $readmemh("a3_meta.hex", meta_mem);
         total_issues = 0;
         total_traps = 0;
         total_programs = 0;
         total_headers = 0;
+        total_views = 0;
         checks = 0;
         issue_seen = 0;
         expect_issue_base = 0;
         expect_issue_count = 0;
+        view_seen = 0;
+        expect_view_base = 0;
+        expect_view_count = 0;
+        view_slot_base = 0;
         case_index = 0;
         case_count = meta_mem[0];
 
@@ -263,9 +341,13 @@ module tb_a3_microsequencer;
                 cfg_symbol_mask = case_mem[base + 5];
                 cfg_entry_pc = case_mem[base + 7];
                 cfg_max_retired_work = {case_mem[base + 9], case_mem[base + 8]};
+                cfg_state_count = case_mem[base + 34];
                 expect_issue_base = case_mem[base + 30];
                 expect_issue_count = case_mem[base + 31];
+                expect_view_base = case_mem[base + 32];
+                expect_view_count = case_mem[base + 33];
                 issue_seen = 0;
+                view_seen = 0;
                 capture = 1'b1;
                 @(negedge clk);
                 start = 1'b1;
@@ -321,6 +403,11 @@ module tb_a3_microsequencer;
                             {32'd0, case_mem[base + 29]});
                 check_equal("issue count", {32'd0, issue_seen[31:0]},
                             {32'd0, case_mem[base + 31]});
+                check_equal("resolved view count", {32'd0, view_seen[31:0]},
+                            {32'd0, case_mem[base + 33]});
+                check_equal("views resolved counter",
+                            {32'd0, count_views_resolved},
+                            {32'd0, case_mem[base + 33]});
                 check_equal("event single assignment", {63'd0, event_signal_error},
                             64'd0);
                 @(negedge clk);
@@ -331,9 +418,19 @@ module tb_a3_microsequencer;
             $display("FAIL: issue total %0d expected %0d", total_issues, meta_mem[1]);
             $fatal(1, "issue total mismatch");
         end
-        $display("PASS: ABI3 RTL microsequencer cases=%0d headers=%0d programs=%0d issues=%0d traps=%0d checks=%0d",
+        // A view comparison that compared nothing is a defect, not a pass.
+        if (total_views !== meta_mem[4]) begin
+            $display("FAIL: resolved view total %0d expected %0d",
+                     total_views, meta_mem[4]);
+            $fatal(1, "view total mismatch");
+        end
+        if (total_views === 0) begin
+            $display("FAIL: no operand view was resolved; the A4/A13 comparison is vacuous");
+            $fatal(1, "no views compared");
+        end
+        $display("PASS: ABI3 RTL microsequencer cases=%0d headers=%0d programs=%0d issues=%0d views=%0d traps=%0d checks=%0d",
                  case_count, total_headers, total_programs, total_issues,
-                 total_traps, checks);
+                 total_views, total_traps, checks);
         $finish;
     end
 endmodule

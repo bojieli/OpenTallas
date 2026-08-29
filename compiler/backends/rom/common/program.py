@@ -1776,6 +1776,27 @@ class RomLowering:
         self._position_input_cache = frozenset(names)
         return self._position_input_cache
 
+    def _token_stream_input(self) -> str | None:
+        """The declared input the host stages a request's tokens into.
+
+        A rank-one index vector over the token axis that an embedding reads is
+        the token stream, and the host queue's input window is where it arrives.
+        Binding it to the same object the generation policy names as the token
+        ring is what makes a decode step read the token the previous step
+        appended.
+        """
+        for kernel in self.graph.kernels:
+            if kernel.kind != "EMBEDDING_LOOKUP" or not kernel.inputs:
+                continue
+            tensor = self.tensors[kernel.inputs[0]]
+            if (
+                tensor.role == "input"
+                and tensor.dtype in {"u32", "i32"}
+                and len(tensor.shape) == 1
+            ):
+                return tensor.tensor_id
+        return None
+
     def _position_object(self, tensor_id: str) -> int:
         """The mask-programmed position range, materialised once."""
         cached = self._generated_objects.get(tensor_id)
@@ -2380,19 +2401,24 @@ class RomLowering:
         if source_name is not None:
             if gather:
                 # A gather addresses arbitrary rows of its source, so the source
-                # presents its whole declared extent rather than one block.
+                # presents its whole declared extent rather than one block.  It
+                # may well be immutable -- a rotary coefficient table is a mask
+                # ROM constant -- so it resolves the same way any weight does.
                 tensor = self.tensors[source_name]
-                views.append(
-                    self._buffer_view(
-                        tensor,
-                        dims=self._dims(tensor),
-                        strides=None,
-                        shape=shape,
-                        loop=loop,
-                        writable=False,
-                        blocked=False,
+                if tensor.role in WEIGHT_ROLES:
+                    views.append(self._weight_view(source_name, run=run))
+                else:
+                    views.append(
+                        self._buffer_view(
+                            tensor,
+                            dims=self._dims(tensor),
+                            strides=None,
+                            shape=shape,
+                            loop=loop,
+                            writable=False,
+                            blocked=False,
+                        )
                     )
-                )
             else:
                 views.append(
                     self._operand_view(
@@ -2688,9 +2714,13 @@ class RomLowering:
                 key=f"loop.r{run.index}",
             )
         policy_body = dict(self.graph.generation_policy)
-        token_bytes = max(
-            int(policy_body.get("maximum_new_tokens", 1024)) * 8, 4096
-        )
+        span_max = int(self.capability.limits["max_context_positions"])
+        max_new = int(policy_body.get("maximum_new_tokens", 1024))
+        # One host window serves both directions: the host stages the prompt
+        # into it and on-device selection appends each new token to it.  The
+        # graph's token-stream input is a view of that window, not a second
+        # buffer -- a separate object would be one nothing could fill.
+        token_bytes = max((span_max + max_new) * 4, 4096)
         token_ring = builder.memory_object(
             storage_class=StorageClass.HOST,
             size_bytes=token_bytes,
@@ -2700,6 +2730,17 @@ class RomLowering:
             ),
             key="obj.token_ring",
         )
+        stream = self._token_stream_input()
+        if stream is not None:
+            key = self._buffer_key(stream)
+            self._buffer_object[key] = token_ring
+            self._buffer_place[key] = BufferPlacement(
+                StorageClass.HOST,
+                token_bytes,
+                int(Permission.READ | Permission.WRITE | Permission.HOST_VISIBLE),
+                0,
+            )
+            self._substituted_inputs[stream] = "host_input_window"
         generation_policy = builder.generation_policy(
             eos_token_ids=[int(i) for i in policy_body.get("eos_token_ids", [0])][:8],
             max_new_tokens=int(policy_body.get("maximum_new_tokens", 1024)),

@@ -19,6 +19,15 @@ registry is populated here with recording no-ops through the public
 ``runtime.sim.engine.register`` decorator.  That makes the comparison exactly
 the control plane: the same instruction stream, the same issue order, the same
 descriptor IDs, with no engine arithmetic on either side.
+
+*Resolved operand views* are the one thing beyond the raw issue that the RTL
+must reproduce, because amendments A4 and A13 make a view's element offset and
+its leading extent functions of the loop and symbol bindings live at the
+dispatch.  The golden value is not written here: for every issue the generator
+calls ``runtime.sim.memory.ViewResolver.resolve`` -- the *same* resolver the
+functional device uses -- with the loop bindings the device recorded in its own
+trace at that instruction.  A hand-computed extent would prove only that this
+file and the RTL agree with each other.
 """
 
 from __future__ import annotations
@@ -29,7 +38,7 @@ import hashlib
 import json
 from pathlib import Path
 import sys
-from typing import Any, Callable
+from typing import Any, Callable, Sequence
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -57,7 +66,7 @@ from runtime.abi3.constants import (  # noqa: E402
     CounterGroup,
     counter_id,
 )
-from runtime.abi3.builder import DeploymentBuilder  # noqa: E402
+from runtime.abi3.builder import DeploymentBuilder, DynamicTerm  # noqa: E402
 from runtime.abi3.crc import record_crc, sha256  # noqa: E402
 from runtime.abi3.deployment import Deployment, ObjectSource  # noqa: E402
 from runtime.abi3.descriptors import (  # noqa: E402
@@ -69,7 +78,10 @@ from runtime.abi3.descriptors import (  # noqa: E402
     Symbol,
 )
 from runtime.abi3.records import Instruction, decode_body, split_program  # noqa: E402
-from runtime.abi3.verifier import verify_deployment  # noqa: E402
+from runtime.abi3.verifier import (  # noqa: E402
+    _FAMILY_DESCRIPTOR as FAMILY_DESCRIPTOR,
+    verify_deployment,
+)
 from runtime.sim import engine as engine_module  # noqa: E402
 from runtime.sim.device import Device  # noqa: E402
 
@@ -77,19 +89,35 @@ OUTPUT_DIR = ROOT / "testdata/compiler/abi3"
 
 # RTL memory geometry.  The images are padded to these sizes so that both
 # simulators read a fully initialised memory.
-PROGRAM_WORDS = 1024      # 256-bit instruction records
-HEADER_WORDS = 2048       # 32-bit words, 64 per case
-DESC_WORDS = 1024         # 1024-bit descriptor prefixes
-SYMBOL_WORDS = 512        # 32-bit words, 16 per case
-CASE_WORDS = 1024         # 32-bit words, 32 per case
+PROGRAM_WORDS = 2048      # 256-bit instruction records
+HEADER_WORDS = 4096       # 32-bit words, 64 per case
+DESC_WORDS = 2048         # 1536-bit descriptor prefixes
+SYMBOL_WORDS = 1024       # 32-bit words, 16 per case
+CASE_WORDS = 2048         # 32-bit words, CASE_STRIDE per case
 ISSUE_WORDS = 2048        # 32-bit words, 2 per issue
+VIEW_WORDS = 8192         # 32-bit words, VIEW_STRIDE per resolved view
 META_WORDS = 8
 
-CASE_STRIDE = 32
+CASE_STRIDE = 35
 SYMBOL_STRIDE = 16
 HEADER_STRIDE = 64
+VIEW_STRIDE = 6
 
-DESCRIPTOR_PREFIX_BYTES = 128   # header (64) plus the first payload block (64)
+# Header (64) plus *both* 64-byte payload blocks.  A TENSOR_VIEW payload is 128
+# bytes and its amendment-A4 dynamic terms begin at payload offset 72, so a
+# 128-byte record prefix stops one block short of what view resolution needs.
+DESCRIPTOR_PREFIX_BYTES = 192
+
+# OPERATOR operand slots, in the order both the golden model and the RTL walk
+# them (runtime/abi3/descriptors.OPERATOR_PAYLOAD).
+OPERAND_FIELDS = (
+    "input_view_0",
+    "input_view_1",
+    "input_view_2",
+    "input_view_3",
+    "output_view_0",
+    "output_view_1",
+)
 
 IDLE_OBSERVATION: dict[str, Any] = {
     "status": 1,
@@ -111,6 +139,7 @@ IDLE_OBSERVATION: dict[str, Any] = {
     "state_commits_applied": 0,
     "state_rows_committed": 0,
     "issues": [],
+    "views": [],
 }
 
 TRAP_NONE = 0
@@ -275,13 +304,11 @@ class Workspace:
             output_dtype=DType.BF16,
             key="num.matmul",
         )
-        self.schedule = b.schedule(
-            engine_family=Major.TENSOR,
-            tile_rows=ROWS,
-            tile_cols=COLS,
-            tile_depth=COLS,
-            key="sched.tensor",
-        )
+        # One SCHEDULE per engine family.  The verifier's schedule-completeness
+        # proof requires an operator's schedule to name that operator's own
+        # family, so a single shared descriptor is not admissible.
+        self.schedules: dict[int, int] = {}
+        self.schedule = self.schedule_for(Major.TENSOR)
         self.view_in = b.tensor_view(
             object_id=self.activations,
             dtype=DType.BF16,
@@ -325,6 +352,21 @@ class Workspace:
             key="state.kv",
         )
 
+    def schedule_for(self, family: Major) -> int:
+        """The SCHEDULE descriptor for one engine family, created on demand."""
+        existing = self.schedules.get(int(family))
+        if existing is not None:
+            return existing
+        sid = self.builder.schedule(
+            engine_family=family,
+            tile_rows=ROWS,
+            tile_cols=COLS,
+            tile_depth=COLS,
+            key=f"sched.{family.name.lower()}",
+        )
+        self.schedules[int(family)] = sid
+        return sid
+
     def op(self, family: Major, sub: int, *, key: str) -> int:
         """One OPERATOR descriptor reading view.in and writing view.out."""
         return self.builder.operator(
@@ -333,7 +375,7 @@ class Workspace:
             inputs=[self.view_in, self.view_weights],
             outputs=[self.view_out],
             numeric_profile_id=self.numeric,
-            schedule_id=self.schedule,
+            schedule_id=self.schedule_for(family),
             counter_class_id=self.counters,
             source_kernel_id=0,
             key=key,
@@ -491,13 +533,17 @@ def case_nested_loops(cap: Capability) -> Case:
 
 
 def case_work_bound_deficit(cap: Capability) -> Case:
-    """Nested loops with the *derived* work bound: an admitted program that traps.
+    """Three nested loops running to completion under the *derived* work bound.
 
-    DeploymentBuilder._proved_work and Verifier._verify_control_flow both skip
-    ``work += multiplier`` for CONTROL.LOOP_SETUP, so the proved bound omits one
-    retire per loop entry.  With nesting the deficit is large enough that the
-    device's own retired-work check fires on a program the verifier admitted.
-    This case pins that behaviour so the RTL and the golden model agree on it.
+    This case was written when DeploymentBuilder._proved_work and
+    Verifier._verify_control_flow both skipped ``work += multiplier`` for
+    CONTROL.LOOP_SETUP: the proved bound omitted one retire per loop entry, and
+    with nesting the deficit was large enough that the device's own retired-work
+    check fired on a program the verifier had admitted.  Both now count the
+    LOOP_SETUP retire, so the derived bound is sound and the program completes.
+    The case is kept because a deep nest exercising the derived bound at its
+    edge is worth pinning either way; the work-bound *trap* is covered by
+    ``case_work_bound``.
     """
     w = Workspace("a3-work-deficit", cap)
     b = w.builder
@@ -520,8 +566,8 @@ def case_work_bound_deficit(cap: Capability) -> Case:
         name="work_bound_deficit",
         deployment=w.finish(),
         note=(
-            "admitted by the verifier, trapped by its own work bound: the "
-            "proof does not count LOOP_SETUP retires"
+            "three nested loops under the derived work bound, which now counts "
+            "the LOOP_SETUP retire the earlier proof omitted"
         ),
     )
 
@@ -578,6 +624,276 @@ def case_zero_trip(cap: Capability) -> Case:
         deployment=w.finish(),
         symbols={int(Symbol.SPARSE_INDEX_COUNT): 0},
         note="zero-trip loop skips its body and its LOOP_NEXT",
+    )
+
+
+# ---------------------------------------------------------------------------
+# Amendment A13 - the partial final iteration of a block loop
+# ---------------------------------------------------------------------------
+# One block loop over a symbolic token extent, with the operand views indexed by
+# its induction variable.  ``A13_BLOCK`` is the tile height T and the request's
+# SPAN_TOKENS is N, so the loop runs ceil(N/T) times and the last iteration
+# holds N - T*floor(N/T) rows.  ``A13_MAX_ITER`` bounds the object the verifier
+# has to prove in range.
+A13_BLOCK = 4
+A13_MAX_ITER = 4
+A13_ROW_ELEMENTS = COLS
+
+
+class BlockWorkspace(Workspace):
+    """A workspace with a token buffer big enough for a whole blocked span."""
+
+    def __init__(self, name: str, capability: Capability) -> None:
+        super().__init__(name, capability)
+        # Room for an input and an output window, with headroom for a
+        # leading extent wider than the block.
+        size = A13_MAX_ITER * A13_BLOCK * A13_ROW_ELEMENTS * 2 * 8
+        self.tokens = self.builder.memory_object(
+            storage_class=StorageClass.SRAM,
+            size_bytes=size,
+            source=ObjectSource.zeros(size),
+            permissions=int(Permission.READ | Permission.WRITE),
+            key="obj.tokens",
+        )
+        self.token_out_offset = A13_MAX_ITER * A13_BLOCK * A13_ROW_ELEMENTS
+
+    def block_views(
+        self,
+        *,
+        loop_ids: Sequence[int],
+        strides: Sequence[int],
+        dim0: int = A13_BLOCK,
+        extra: Sequence[DynamicTerm] = (),
+    ) -> tuple[int, int]:
+        """An input and an output view indexed by the given block loops."""
+        terms = [
+            DynamicTerm.loop(loop_id, stride)
+            for loop_id, stride in zip(loop_ids, strides)
+        ] + list(extra)
+        view_in = self.builder.tensor_view(
+            object_id=self.tokens,
+            dtype=DType.BF16,
+            dims=[dim0, A13_ROW_ELEMENTS],
+            dynamic=terms,
+            key="view.block.in",
+        )
+        view_out = self.builder.tensor_view(
+            object_id=self.tokens,
+            dtype=DType.BF16,
+            dims=[dim0, A13_ROW_ELEMENTS],
+            element_offset=self.token_out_offset,
+            dynamic=terms,
+            permissions=int(Permission.READ | Permission.WRITE),
+            key="view.block.out",
+        )
+        return view_in, view_out
+
+    def block_operator(self, view_in: int, view_out: int, *, key: str) -> int:
+        return self.builder.operator(
+            engine_family=Major.TENSOR,
+            engine_sub=Tensor.MATMUL,
+            inputs=[view_in, self.view_weights],
+            outputs=[view_out],
+            numeric_profile_id=self.numeric,
+            schedule_id=self.schedule,
+            counter_class_id=self.counters,
+            source_kernel_id=0,
+            key=key,
+        )
+
+
+def _a13_block_case(
+    cap: Capability,
+    name: str,
+    *,
+    span: int,
+    dim0: int = A13_BLOCK,
+    divisor: int = A13_BLOCK,
+    note: str,
+) -> Case:
+    """A block loop over SPAN_TOKENS with loop-indexed operand views."""
+    w = BlockWorkspace(f"a3-{name}", cap)
+    b = w.builder
+    loop = b.loop_control(
+        lower_bound=0,
+        upper_bound=0,
+        step=1,
+        bound_symbol=Symbol.SPAN_TOKENS,
+        bound_divisor=divisor,
+        max_iterations=A13_MAX_ITER,
+        key="loop.block",
+    )
+    view_in, view_out = w.block_views(
+        loop_ids=[loop],
+        strides=[A13_BLOCK * A13_ROW_ELEMENTS],
+        dim0=dim0,
+    )
+    op = w.block_operator(view_in, view_out, key="op.block")
+    tail = w.op(Major.VECTOR, Vector.ADD, key="op.tail")
+    b.open_loop(loop)
+    b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
+    b.close_loop()
+    # A tail dispatch outside the loop: a case with zero iterations still has to
+    # prove that it ran, rather than passing because nothing was compared.
+    b.emit(Major.VECTOR, Vector.ADD, descriptor_id=tail, source_operation_id=1)
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name=name,
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): span},
+        note=note,
+    )
+
+
+def case_a13_block_exact(cap: Capability) -> Case:
+    return _a13_block_case(
+        cap, "a13_block_exact", span=2 * A13_BLOCK,
+        note="N divisible by T: every iteration is full and A13 must not clamp",
+    )
+
+
+def case_a13_block_partial(cap: Capability) -> Case:
+    return _a13_block_case(
+        cap, "a13_block_partial", span=2 * A13_BLOCK + 1,
+        note="N = 9, T = 4: three iterations, the last holding one row",
+    )
+
+
+def case_a13_block_partial_mid(cap: Capability) -> Case:
+    return _a13_block_case(
+        cap, "a13_block_partial_mid", span=A13_BLOCK + 3,
+        note="N = 7, T = 4: two iterations, the last holding three rows",
+    )
+
+
+def case_a13_block_short(cap: Capability) -> Case:
+    return _a13_block_case(
+        cap, "a13_block_short", span=A13_BLOCK - 1,
+        note="N < T: one short iteration holding the whole span",
+    )
+
+
+def case_a13_block_empty(cap: Capability) -> Case:
+    return _a13_block_case(
+        cap, "a13_block_empty", span=0,
+        note=(
+            "N = 0: the ABI admits it as a zero-trip loop -- ceil(0/T) = 0 -- so "
+            "the body never runs and no view is resolved.  The tail dispatch "
+            "outside the loop keeps the case from passing vacuously"
+        ),
+    )
+
+
+def case_a13_extent_below_block(cap: Capability) -> Case:
+    return _a13_block_case(
+        cap, "a13_extent_below_block", span=A13_BLOCK + 3, dim0=2,
+        note=(
+            "leading extent 2 under a block of 4: the final iteration's three "
+            "remaining rows are not fewer than the extent, so dim0 is unchanged"
+        ),
+    )
+
+
+def case_a13_extent_above_block(cap: Capability) -> Case:
+    return _a13_block_case(
+        cap, "a13_extent_above_block", span=A13_BLOCK + 1, dim0=A13_BLOCK + 2,
+        note=(
+            "leading extent 6 over a block of 4.  ViewResolver._remaining_rows "
+            "bounds a loop only while remaining < bound_divisor, so the first "
+            "iteration's five remaining rows leave dim0 at 6; the prose formula "
+            "in wire format 12.4, which compares remaining against dim0 alone, "
+            "would give 5.  The reference resolver is normative here"
+        ),
+    )
+
+
+def case_a13_symbol_term(cap: Capability) -> Case:
+    """A4 without A13: a RUNTIME_SYMBOL term moves the window, nothing clamps."""
+    w = BlockWorkspace("a3-a13-symbol", cap)
+    b = w.builder
+    view_in, view_out = w.block_views(
+        loop_ids=[],
+        strides=[],
+        extra=[DynamicTerm.symbol(Symbol.GENERATION_INDEX, A13_ROW_ELEMENTS)],
+    )
+    op = w.block_operator(view_in, view_out, key="op.block")
+    b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.DECODE)
+    return Case(
+        name="a13_symbol_term",
+        deployment=w.finish(),
+        symbols={int(Symbol.GENERATION_INDEX): 3},
+        note="a symbol-indexed view: the offset moves, the extent does not",
+    )
+
+
+def case_a13_constant_loop(cap: Capability) -> Case:
+    """A constant-bounded loop never has a partial iteration to state."""
+    w = BlockWorkspace("a3-a13-constant", cap)
+    b = w.builder
+    loop = b.loop_control(
+        lower_bound=0, upper_bound=3, step=1, key="loop.constant"
+    )
+    view_in, view_out = w.block_views(
+        loop_ids=[loop], strides=[A13_BLOCK * A13_ROW_ELEMENTS]
+    )
+    op = w.block_operator(view_in, view_out, key="op.block")
+    b.open_loop(loop)
+    b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
+    b.close_loop()
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="a13_constant_loop",
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): 5},
+        note=(
+            "a constant-bounded loop: bound_selector_kind is not RUNTIME_SYMBOL, "
+            "so no iteration is partial and the extent is never clamped"
+        ),
+    )
+
+
+def case_a13_nested_blocks(cap: Capability) -> Case:
+    """Two symbol-bounded block loops index one view: the smaller bound wins."""
+    w = BlockWorkspace("a3-a13-nested", cap)
+    b = w.builder
+    outer = b.loop_control(
+        lower_bound=0, upper_bound=0, step=1,
+        bound_symbol=Symbol.SPAN_TOKENS, bound_divisor=A13_BLOCK,
+        max_iterations=A13_MAX_ITER, key="loop.outer",
+    )
+    inner = b.loop_control(
+        lower_bound=0, upper_bound=0, step=1,
+        bound_symbol=Symbol.CONTEXT_LENGTH, bound_divisor=A13_BLOCK,
+        max_iterations=A13_MAX_ITER, key="loop.inner",
+    )
+    view_in, view_out = w.block_views(
+        loop_ids=[outer, inner],
+        strides=[A13_BLOCK * A13_ROW_ELEMENTS, A13_ROW_ELEMENTS],
+    )
+    op = w.block_operator(view_in, view_out, key="op.block")
+    b.open_loop(outer)
+    b.open_loop(inner)
+    b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
+    b.close_loop()
+    b.close_loop()
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="a13_nested_blocks",
+        deployment=w.finish(),
+        symbols={
+            int(Symbol.SPAN_TOKENS): 2 * A13_BLOCK + 1,
+            int(Symbol.CONTEXT_LENGTH): A13_BLOCK + 2,
+        },
+        note=(
+            "two symbol-bounded loops index one view: _remaining_rows folds "
+            "them with min(), so the outer loop's last iteration (one row) wins "
+            "over the inner loop's (two rows)"
+        ),
     )
 
 
@@ -791,65 +1107,89 @@ def _tiny(cap: Capability, name: str) -> Workspace:
     return w
 
 
-def negative_instruction_cases(cap: Capability) -> list[Case]:
-    """Instruction-record defects, each on the first executed instruction."""
-    empty = {
+def declared_state_count(deployment: Deployment) -> int:
+    """How many STATE descriptors a session over this deployment declares."""
+    return len(deployment.table.ids_of_type(ExtendedDescriptorType.STATE))
+
+
+def trapped_at_first_instruction(deployment: Deployment, trap_class: int) -> dict:
+    """The observation a program that faults on its first instruction leaves.
+
+    These deployments carry a deliberately corrupted image, so the golden model
+    cannot execute them and the expectation is stated rather than run.  The one
+    field that is not simply zero is the discard count: ADR-003 8.6 makes an
+    abort discard the whole *declared* prepared state set, which is the
+    ``len(session.states)`` runtime/sim/device.py adds on its failing path --
+    not zero, and not only the slots the transaction reached.
+    """
+    return {
         "fetched": 1, "retired": 0, "predicated_off": 0, "issued": 0,
         "loop_iterations": 0, "branches": 0, "wait_events": 0,
-        "state_prepares": 0, "state_commits": 0, "state_discards": 0,
+        "state_prepares": 0, "state_commits": 0,
+        "state_discards": declared_state_count(deployment),
         "state_reads": 0, "state_generation_advances": 0,
         "state_commits_applied": 0, "state_rows_committed": 0,
-        "first_fault": 0, "issues": [], "complete": False,
+        "first_fault": 0, "issues": [], "views": [], "complete": False,
+        "trap_class": trap_class,
     }
+
+
+def negative_instruction_cases(cap: Capability) -> list[Case]:
+    """Instruction-record defects, each on the first executed instruction."""
     cases: list[Case] = []
 
     w = _tiny(cap, "a3-neg-crc")
+    crc_deployment = w.finish()
     cases.append(Case(
         name="negative_instruction_crc",
-        deployment=w.finish(),
+        deployment=crc_deployment,
         device_runs=False,
         corrupt=corrupt_instruction_crc(0),
-        reference=dict(empty, trap_class=TRAP_INTEGRITY),
+        reference=trapped_at_first_instruction(crc_deployment, TRAP_INTEGRITY),
         note="one flipped CRC bit; admission fails on integrity, class 2",
     ))
 
     w = _tiny(cap, "a3-neg-opcode")
+    deployment = w.finish()
     cases.append(Case(
         name="negative_illegal_opcode",
-        deployment=w.finish(),
+        deployment=deployment,
         device_runs=False,
         corrupt=lambda image: patch_instruction(image, 0, {0: 0x11}, reseal=True),
-        reference=dict(empty, trap_class=TRAP_ILLEGAL),
+        reference=trapped_at_first_instruction(deployment, TRAP_ILLEGAL),
         note="major opcode 0x11 is not in the frozen registry",
     ))
 
     w = _tiny(cap, "a3-neg-subopcode")
+    deployment = w.finish()
     cases.append(Case(
         name="negative_illegal_subopcode",
-        deployment=w.finish(),
+        deployment=deployment,
         device_runs=False,
         corrupt=lambda image: patch_instruction(image, 0, {1: 0x0D}, reseal=True),
-        reference=dict(empty, trap_class=TRAP_ILLEGAL),
+        reference=trapped_at_first_instruction(deployment, TRAP_ILLEGAL),
         note="VECTOR subopcode 0x0d is beyond SQRT_SOFTPLUS",
     ))
 
     w = _tiny(cap, "a3-neg-flag")
+    deployment = w.finish()
     cases.append(Case(
         name="negative_reserved_flag",
-        deployment=w.finish(),
+        deployment=deployment,
         device_runs=False,
         corrupt=lambda image: patch_instruction(image, 0, {3: 0x01}, reseal=True),
-        reference=dict(empty, trap_class=TRAP_ILLEGAL),
+        reference=trapped_at_first_instruction(deployment, TRAP_ILLEGAL),
         note="flag bit 8 is reserved and must be zero",
     ))
 
     w = _tiny(cap, "a3-neg-invert")
+    deployment = w.finish()
     cases.append(Case(
         name="negative_invert_without_predicate",
-        deployment=w.finish(),
+        deployment=deployment,
         device_runs=False,
         corrupt=lambda image: patch_instruction(image, 0, {2: 0x02}, reseal=True),
-        reference=dict(empty, trap_class=TRAP_ILLEGAL),
+        reference=trapped_at_first_instruction(deployment, TRAP_ILLEGAL),
         note="PREDICATE_INVERT without PREDICATED",
     ))
     return cases
@@ -864,20 +1204,13 @@ def case_branch_out_of_range(cap: Capability) -> Case:
     b.emit(Major.VECTOR, Vector.ADD, descriptor_id=add, source_operation_id=0)
     b.emit(Major.CONTROL, Control.COMPLETE)
     b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    deployment = w.finish()
     return Case(
         name="negative_branch_out_of_range",
-        deployment=w.finish(),
+        deployment=deployment,
         device_runs=True,
         expect_admitted=False,
-        reference={
-            "fetched": 1, "retired": 0, "predicated_off": 0, "issued": 0,
-            "loop_iterations": 0, "branches": 0, "wait_events": 0,
-            "state_prepares": 0, "state_commits": 0, "state_discards": 0,
-            "state_reads": 0, "state_generation_advances": 0,
-            "state_commits_applied": 0, "state_rows_committed": 0,
-            "trap_class": TRAP_ILLEGAL, "first_fault": 0, "issues": [],
-            "complete": False,
-        },
+        reference=trapped_at_first_instruction(deployment, TRAP_ILLEGAL),
         note=(
             "RTL rejects the branch record at admission; the golden model "
             "transfers control first and faults at the target index"
@@ -1026,6 +1359,42 @@ def header_cases(cap: Capability) -> list[Case]:
 # ---------------------------------------------------------------------------
 # Golden execution
 # ---------------------------------------------------------------------------
+def resolved_views(
+    device: Device, entry: dict[str, Any], symbols: dict[int, int]
+) -> list[dict[str, Any]]:
+    """Every operand view of one issued instruction, resolved by the simulator.
+
+    The extents come from ``runtime.sim.memory.ViewResolver.resolve`` -- the
+    device's own resolver, holding the A4 term arithmetic and the A13 partial
+    final extent -- evaluated against the loop bindings the device recorded in
+    its trace for exactly this instruction.  Nothing here recomputes them.
+    """
+    instruction = device.instructions[entry["pc"]]
+    if FAMILY_DESCRIPTOR.get(instruction.major) != ExtendedDescriptorType.OPERATOR:
+        return []
+    operator = device.deployment.table.get(
+        instruction.descriptor_id, ExtendedDescriptorType.OPERATOR
+    )
+    views: list[dict[str, Any]] = []
+    for slot, field in enumerate(OPERAND_FIELDS):
+        view_id = int(operator.payload[field])
+        if view_id == NO_ID:
+            continue
+        resolved = device.views.resolve(view_id, entry["loops"], symbols)
+        views.append({
+            "index": int(entry["pc"]),
+            "slot": slot,
+            "operand": field,
+            "descriptor_id": view_id,
+            "dim0": int(resolved.dims[0]),
+            "dims": [int(d) for d in resolved.dims],
+            "element_offset": int(resolved.element_offset),
+            "rank": len(resolved.dims),
+            "loops": {str(k): int(v) for k, v in sorted(entry["loops"].items())},
+        })
+    return views
+
+
 def run_golden(case: Case, capability: Capability) -> dict[str, Any]:
     """Execute one case on the golden device and return the observation."""
     device = Device(case.deployment, capability, verify=False, trace=True)
@@ -1036,7 +1405,9 @@ def run_golden(case: Case, capability: Capability) -> dict[str, Any]:
     )
     trace = device.trace[mark:]
     counters = result.counters
+    symbols = effective_symbols(case)
     issues = []
+    views: list[dict[str, Any]] = []
     for entry in trace:
         instruction = device.instructions[entry["pc"]]
         issues.append({
@@ -1046,6 +1417,7 @@ def run_golden(case: Case, capability: Capability) -> dict[str, Any]:
             "descriptor_id": int(instruction.descriptor_id),
             "mnemonic": instruction.mnemonic,
         })
+        views.extend(resolved_views(device, entry, symbols))
     success = result.status == 0
     return {
         "status": int(result.status),
@@ -1069,6 +1441,7 @@ def run_golden(case: Case, capability: Capability) -> dict[str, Any]:
         "state_commits_applied": int(counters.get("state.commits", 0)) if success else 0,
         "state_rows_committed": int(counters.get("state.rows_committed", 0)),
         "issues": issues,
+        "views": views,
         "message": result.message,
         "counters": {k: int(v) for k, v in sorted(counters.items())},
     }
@@ -1127,6 +1500,16 @@ def build(argv: list[str] | None = None) -> int:
         case_observation(capability),
         case_events(capability),
         case_mixed(capability),
+        case_a13_block_exact(capability),
+        case_a13_block_partial(capability),
+        case_a13_block_partial_mid(capability),
+        case_a13_block_short(capability),
+        case_a13_block_empty(capability),
+        case_a13_extent_below_block(capability),
+        case_a13_extent_above_block(capability),
+        case_a13_symbol_term(capability),
+        case_a13_constant_loop(capability),
+        case_a13_nested_blocks(capability),
     ]
     positives = len(cases)
     cases.extend(negative_instruction_cases(capability))
@@ -1144,6 +1527,7 @@ def build(argv: list[str] | None = None) -> int:
     symbol_words: list[int] = []
     case_words: list[int] = []
     issue_words: list[int] = []
+    view_words: list[int] = []
     records: list[dict[str, Any]] = []
 
     for case in cases:
@@ -1203,6 +1587,9 @@ def build(argv: list[str] | None = None) -> int:
             prefix = prefix + bytes(DESCRIPTOR_PREFIX_BYTES - len(prefix))
             desc_words.append(int.from_bytes(prefix, "little"))
 
+        state_count = len(
+            table.ids_of_type(ExtendedDescriptorType.STATE)
+        )
         symbols = effective_symbols(case)
         symbol_base = len(symbol_words)
         mask = 0
@@ -1216,6 +1603,15 @@ def build(argv: list[str] | None = None) -> int:
         for issue in expectation["issues"]:
             issue_words.append((issue["family"] << 8) | issue["sub"])
             issue_words.append(issue["descriptor_id"] & 0xFFFFFFFF)
+
+        view_base = len(view_words) // VIEW_STRIDE
+        for view in expectation["views"]:
+            view_words.append(view["descriptor_id"] & 0xFFFFFFFF)
+            view_words.append(view["slot"])
+            view_words.append(view["dim0"] & 0xFFFFFFFF)
+            view_words.append(view["element_offset"] & 0xFFFFFFFF)
+            view_words.append((view["element_offset"] >> 32) & 0xFFFFFFFF)
+            view_words.append(view["rank"])
 
         entry = next(
             e for e in case.deployment.entrypoints
@@ -1270,6 +1666,12 @@ def build(argv: list[str] | None = None) -> int:
             int(expectation["state_rows_committed"]),
             issue_base,
             len(expectation["issues"]),
+            view_base,
+            len(expectation["views"]),
+            # ADR-003 8.6: an abort discards the whole declared state set, so
+            # the device needs the session's state count, not just the slots a
+            # transaction touched.
+            state_count,
         ]
         if len(words) != CASE_STRIDE:
             raise SystemExit(f"case record is {len(words)} words, expected {CASE_STRIDE}")
@@ -1284,6 +1686,7 @@ def build(argv: list[str] | None = None) -> int:
             "symbols": {str(k): int(v) for k, v in sorted(symbols.items())},
             "instruction_count": instruction_count,
             "descriptor_count": len(table),
+            "state_descriptor_count": state_count,
             "declared_retired_work": work,
             "admitted": report.admitted,
             "verifier_errors": list(report.errors),
@@ -1293,33 +1696,46 @@ def build(argv: list[str] | None = None) -> int:
             "descriptor_table_sha256": hashlib.sha256(table.encode()).hexdigest(),
             "golden": {
                 key: value for key, value in sorted(golden.items())
-                if key not in {"issues", "counters"}
+                if key not in {"issues", "views", "counters"}
             },
             "golden_counters": golden.get("counters", {}),
             "expected": {
                 key: value for key, value in sorted(expectation.items())
-                if key not in {"issues", "counters", "message"}
+                if key not in {"issues", "views", "counters", "message"}
             },
             "expected_issues": expectation["issues"],
+            "expected_views": expectation["views"],
             "expected_header_legal": case.expect_header_legal,
             "expected_header_trap_class": int(case.expect_header_trap),
         })
 
     total_issues = sum(len(r["expected_issues"]) for r in records)
+    total_views = sum(len(r["expected_views"]) for r in records)
     program_runs = sum(1 for r in records if r["runs_program"])
     trap_runs = sum(
         1 for r in records
         if r["runs_program"] and int(r["expected"]["trap_class"]) != 0
     )
-    meta = [len(cases), total_issues, positives, len(cases) - positives, 0, 0, 0, 0]
+    if total_views == 0:
+        raise SystemExit(
+            "no operand view was resolved by the golden model: the view "
+            "comparison would pass without comparing anything"
+        )
+    meta = [
+        len(cases), total_issues, positives, len(cases) - positives,
+        total_views, 0, 0, 0,
+    ]
 
     files = {
         "a3_program.hex": hex_lines(program_words, 256, PROGRAM_WORDS),
         "a3_header.hex": hex_lines(header_words, 32, HEADER_WORDS),
-        "a3_descriptor.hex": hex_lines(desc_words, 1024, DESC_WORDS),
+        "a3_descriptor.hex": hex_lines(
+            desc_words, DESCRIPTOR_PREFIX_BYTES * 8, DESC_WORDS
+        ),
         "a3_symbol.hex": hex_lines(symbol_words, 32, SYMBOL_WORDS),
         "a3_case.hex": hex_lines(case_words, 32, CASE_WORDS),
         "a3_issue.hex": hex_lines(issue_words, 32, ISSUE_WORDS),
+        "a3_view.hex": hex_lines(view_words, 32, VIEW_WORDS),
         "a3_meta.hex": hex_lines(meta, 32, META_WORDS),
     }
     for name, payload in files.items():
@@ -1338,13 +1754,20 @@ def build(argv: list[str] | None = None) -> int:
         "positive_case_count": positives,
         "negative_case_count": len(cases) - positives,
         "issue_event_count": total_issues,
+        "view_resolution_count": total_views,
+        "view_reference": (
+            "runtime.sim.memory.ViewResolver.resolve, evaluated against the "
+            "loop bindings runtime.sim.device.Device recorded at each issue; "
+            "amendments A4 (dynamic index terms) and A13 (partial final "
+            "iteration of a block loop)"
+        ),
         "header_admission_count": len(cases),
         "program_run_count": program_runs,
         "trap_count": trap_runs,
         "required_marker": (
             f"PASS: ABI3 RTL microsequencer cases={len(cases)} "
             f"headers={len(cases)} programs={program_runs} "
-            f"issues={total_issues} traps={trap_runs}"
+            f"issues={total_issues} views={total_views} traps={trap_runs}"
         ),
         "geometry": {
             "program_words": PROGRAM_WORDS,
@@ -1353,7 +1776,9 @@ def build(argv: list[str] | None = None) -> int:
             "symbol_words": SYMBOL_WORDS,
             "case_words": CASE_WORDS,
             "issue_words": ISSUE_WORDS,
+            "view_words": VIEW_WORDS,
             "case_stride": CASE_STRIDE,
+            "view_stride": VIEW_STRIDE,
             "descriptor_prefix_bytes": DESCRIPTOR_PREFIX_BYTES,
         },
         "image_sha256": {
@@ -1367,7 +1792,8 @@ def build(argv: list[str] | None = None) -> int:
     )
     print(
         f"abi3 rtl vectors: cases={len(cases)} positive={positives} "
-        f"negative={len(cases) - positives} issues={total_issues}"
+        f"negative={len(cases) - positives} issues={total_issues} "
+        f"views={total_views}"
     )
     return 0
 

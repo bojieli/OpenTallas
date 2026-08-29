@@ -10,8 +10,11 @@
 //
 // It requires exact agreement on program-header admission and trap class, the
 // retired/fetched/predicated-off/issued/loop/branch/wait/state counters, the
-// ordered engine-issue sequence, the state commit-or-discard decision, and the
-// trap class and first faulting instruction.
+// ordered engine-issue sequence, the ordered stream of resolved operand tensor
+// views -- descriptor, operand slot, leading extent, element offset and rank,
+// which is where amendments A4 and A13 are checked -- the state
+// commit-or-discard decision, and the trap class and first faulting
+// instruction.
 // ---------------------------------------------------------------------------
 #include "Vot_a3_microsequencer_top.h"
 #include "verilated.h"
@@ -26,7 +29,8 @@
 
 namespace {
 
-constexpr unsigned kCaseStride = 32;
+constexpr unsigned kCaseStride = 35;
+constexpr unsigned kViewStride = 6;
 
 [[noreturn]] void fail(const std::string& message) {
     std::cerr << "FAIL: " << message << "\n";
@@ -72,6 +76,7 @@ class Model {
         dut.cfg_symbol_base = 0;
         dut.cfg_symbol_mask = 0;
         dut.cfg_max_retired_work = 0;
+        dut.cfg_state_count = 0;
         for (unsigned cycle = 0; cycle < 6; ++cycle) step();
         dut.rst_n = 1;
         for (unsigned cycle = 0; cycle < 2; ++cycle) step();
@@ -107,11 +112,13 @@ int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);
     const std::vector<uint32_t> cases = load_words("a3_case.hex");
     const std::vector<uint32_t> issues = load_words("a3_issue.hex");
+    const std::vector<uint32_t> views = load_words("a3_view.hex");
     const std::vector<uint32_t> meta = load_words("a3_meta.hex");
-    if (meta.empty()) fail("empty a3_meta.hex");
+    if (meta.size() < 5) fail("a3_meta.hex is short");
 
     const unsigned case_count = meta[0];
     const unsigned expected_issue_total = meta[1];
+    const unsigned expected_view_total = meta[4];
     if (cases.size() < case_count * kCaseStride) fail("a3_case.hex is short");
 
     Model model;
@@ -119,6 +126,7 @@ int main(int argc, char** argv) {
     model.reset();
 
     unsigned total_issues = 0;
+    unsigned total_views = 0;
     unsigned total_traps = 0;
     unsigned total_programs = 0;
     unsigned total_headers = 0;
@@ -163,16 +171,22 @@ int main(int argc, char** argv) {
         model.dut.cfg_entry_pc = word[7];
         model.dut.cfg_max_retired_work =
             (static_cast<uint64_t>(word[9]) << 32) | word[8];
+        model.dut.cfg_state_count = word[34];
         const unsigned issue_base = word[30];
         const unsigned issue_count = word[31];
         if ((issue_base + issue_count) * 2 > issues.size())
             fail("issue image is short");
+        const unsigned view_base = word[32];
+        const unsigned view_count = word[33];
+        if ((view_base + view_count) * kViewStride > views.size())
+            fail("view image is short");
 
         model.dut.start = 1;
         model.step();
         model.dut.start = 0;
 
         unsigned seen = 0;
+        unsigned views_seen = 0;
         unsigned tick = 0;
         guard = 0;
         while (!model.dut.done && guard < 400000) {
@@ -182,9 +196,32 @@ int main(int argc, char** argv) {
             const uint32_t family = model.dut.issue_family;
             const uint32_t sub = model.dut.issue_sub;
             const uint32_t descriptor = model.dut.issue_descriptor_id;
+            // The view port is an observation pulse, not a handshake: one
+            // assertion is one resolved operand view.
+            const bool view_fire = model.dut.view_valid;
+            const uint32_t view_descriptor = model.dut.view_descriptor_id;
+            const uint32_t view_slot = model.dut.view_slot;
+            const uint32_t view_dim0 = model.dut.view_dim0;
+            const uint64_t view_offset = model.dut.view_element_offset;
+            const uint32_t view_rank = model.dut.view_rank;
             model.step();
             ++tick;
             ++guard;
+            if (view_fire) {
+                if (views_seen >= view_count) fail("resolved view overflow");
+                const uint32_t* expect =
+                    views.data() + (view_base + views_seen) * kViewStride;
+                check.equal("view descriptor", index, view_descriptor, expect[0]);
+                check.equal("view operand slot", index, view_slot, expect[1]);
+                // Amendment A13: the resolved leading extent.
+                check.equal("view leading extent", index, view_dim0, expect[2]);
+                // Amendment A4: the accumulated element offset.
+                check.equal("view element offset", index, view_offset,
+                            (static_cast<uint64_t>(expect[4]) << 32) | expect[3]);
+                check.equal("view rank", index, view_rank, expect[5]);
+                ++views_seen;
+                ++total_views;
+            }
             if (!fire) continue;
             if (seen >= issue_count) fail("engine issue overflow");
             const uint32_t expect_opcode = issues[(issue_base + seen) * 2];
@@ -227,6 +264,9 @@ int main(int argc, char** argv) {
         check.equal("state rows committed", index,
                     model.dut.count_state_rows_committed, word[29]);
         check.equal("issue count", index, seen, issue_count);
+        check.equal("resolved view count", index, views_seen, view_count);
+        check.equal("views resolved counter", index,
+                    model.dut.count_views_resolved, view_count);
         check.equal("event single assignment", index,
                     model.dut.event_signal_error, 0U);
         model.step();
@@ -234,11 +274,16 @@ int main(int argc, char** argv) {
 
     if (total_issues != expected_issue_total)
         fail("engine issue total differs from the vector set");
+    if (total_views != expected_view_total)
+        fail("resolved view total differs from the vector set");
+    // A comparison that compared nothing is a defect, not a pass.
+    if (total_views == 0)
+        fail("no operand view was resolved; the A4/A13 comparison is vacuous");
     model.dut.final();
     std::printf(
         "PASS: ABI3 RTL microsequencer cases=%u headers=%u programs=%u "
-        "issues=%u traps=%u checks=%u\n",
-        case_count, total_headers, total_programs, total_issues, total_traps,
-        check.count);
+        "issues=%u views=%u traps=%u checks=%u\n",
+        case_count, total_headers, total_programs, total_issues, total_views,
+        total_traps, check.count);
     return 0;
 }

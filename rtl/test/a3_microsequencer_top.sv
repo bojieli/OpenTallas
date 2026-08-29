@@ -12,21 +12,24 @@
 //
 //   a3_program.hex     256-bit words: every program body, instruction records
 //   a3_header.hex       32-bit words: 64 per case, the 256-byte program header
-//   a3_descriptor.hex 1024-bit words: descriptor header + first payload block
+//   a3_descriptor.hex 1536-bit words: descriptor header + both payload blocks
 //   a3_symbol.hex       32-bit words: 16 runtime symbols per case
 //
-// The descriptor image keeps the first 128 bytes of each record because that is
-// what control needs (header plus a 64-byte payload).  Descriptor record CRC is
-// therefore not re-checked here; it belongs to a descriptor-admission block
-// that owns whole records.
+// The descriptor image keeps the first 192 bytes of each record: the 64-byte
+// header plus both 64-byte payload blocks.  A 128-byte prefix was enough while
+// the sequencer only read control descriptors, but a TENSOR_VIEW payload is 128
+// bytes and its amendment-A4 dynamic terms start at payload offset 72, so view
+// resolution needs the second block.  Descriptor record CRC is still not
+// re-checked here; it belongs to a descriptor-admission block that owns whole
+// records.
 // ---------------------------------------------------------------------------
 module ot_a3_microsequencer_top
     import ot_a3_pkg::*;
 #(
-    parameter integer PROGRAM_WORDS = 1024,
-    parameter integer HEADER_WORDS  = 2048,
-    parameter integer DESC_WORDS    = 1024,
-    parameter integer SYMBOL_WORDS  = 512
+    parameter integer PROGRAM_WORDS = 2048,
+    parameter integer HEADER_WORDS  = 4096,
+    parameter integer DESC_WORDS    = 2048,
+    parameter integer SYMBOL_WORDS  = 1024
 ) (
     input  wire        clk,
     input  wire        rst_n,
@@ -53,6 +56,7 @@ module ot_a3_microsequencer_top
     input  wire [31:0] cfg_symbol_base,
     input  wire [31:0] cfg_symbol_mask,
     input  wire [63:0] cfg_max_retired_work,
+    input  wire [31:0] cfg_state_count,
 
     output wire        busy,
     output wire        done,
@@ -68,6 +72,15 @@ module ot_a3_microsequencer_top
     output wire [7:0]  issue_sub,
     output wire [31:0] issue_descriptor_id,
     output wire [31:0] issue_index,
+
+    // -- resolved operand tensor views (A4 and A13) ---------------------
+    output wire        view_valid,
+    output wire [31:0] view_descriptor_id,
+    output wire [2:0]  view_slot,
+    output wire [31:0] view_dim0,
+    output wire [63:0] view_element_offset,
+    output wire [7:0]  view_rank,
+    output wire [31:0] count_views_resolved,
 
     // -- accounting -----------------------------------------------------
     output wire [31:0] count_fetched,
@@ -92,7 +105,7 @@ module ot_a3_microsequencer_top
 );
     reg [255:0]  program_mem [0:PROGRAM_WORDS-1];
     reg [31:0]   header_mem  [0:HEADER_WORDS-1];
-    reg [1023:0] desc_mem    [0:DESC_WORDS-1];
+    reg [1535:0] desc_mem    [0:DESC_WORDS-1];
     reg [31:0]   symbol_mem  [0:SYMBOL_WORDS-1];
 
     initial begin
@@ -182,7 +195,7 @@ module ot_a3_microsequencer_top
     wire [31:0]  desc_id;
     reg          desc_valid;
     reg          desc_fault;
-    reg  [1023:0] desc_data;
+    reg  [1535:0] desc_data;
     wire [32:0]  desc_absolute = {1'b0, cfg_desc_base} + {1'b0, desc_id};
     wire         desc_out_of_range = (desc_id >= cfg_desc_count) ||
                                      (desc_absolute >= DESC_WORDS);
@@ -191,13 +204,13 @@ module ot_a3_microsequencer_top
         if (!rst_n) begin
             desc_valid <= 1'b0;
             desc_fault <= 1'b0;
-            desc_data <= 1024'd0;
+            desc_data <= 1536'd0;
         end else begin
             desc_valid <= desc_req;
             if (desc_req) begin
                 desc_fault <= desc_out_of_range;
                 desc_data <= desc_out_of_range
-                           ? 1024'd0
+                           ? 1536'd0
                            : desc_mem[desc_absolute[19:0]];
             end
         end
@@ -217,6 +230,7 @@ module ot_a3_microsequencer_top
         .cfg_instruction_count(cfg_instruction_count),
         .cfg_entry_pc(cfg_entry_pc),
         .cfg_max_retired_work(cfg_max_retired_work),
+        .cfg_state_count(cfg_state_count),
         .busy(busy),
         .done(done),
         .complete(complete),
@@ -241,6 +255,13 @@ module ot_a3_microsequencer_top
         .issue_sub(issue_sub),
         .issue_descriptor_id(issue_descriptor_id),
         .issue_index(issue_index),
+        .view_valid(view_valid),
+        .view_descriptor_id(view_descriptor_id),
+        .view_slot(view_slot),
+        .view_dim0(view_dim0),
+        .view_element_offset(view_element_offset),
+        .view_rank(view_rank),
+        .count_views_resolved(count_views_resolved),
         .count_fetched(count_fetched),
         .count_retired(count_retired),
         .count_predicated_off(count_predicated_off),

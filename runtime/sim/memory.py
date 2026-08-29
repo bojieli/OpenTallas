@@ -233,6 +233,19 @@ class MemoryObject:
                 return segment
         raise MemoryError_(f"object {self.object_id}: offset {offset} unmapped")
 
+    def anonymous_buffer(self) -> np.ndarray | None:
+        """The private byte buffer of this object, or ``None`` if it is mapped.
+
+        A zero-filled or generated object owns a private ``uint8`` array: it is
+        process memory and nothing outside the process holds its contents.  A
+        file-backed object is a read-only ``numpy.memmap`` over authenticated
+        checkpoint bytes, which the deployment manifest already binds.  The
+        distinction is exactly the one a checkpoint has to make -- what must be
+        serialised versus what is re-derived from the deployment -- so it is
+        stated here rather than by reaching for a private attribute.
+        """
+        return self._anonymous
+
     def contiguous_base(self, offset: int, nbytes: int) -> np.ndarray | None:
         """Return a zero-copy uint8 view, or ``None`` if the range spans files."""
         self._check_range(offset, nbytes)

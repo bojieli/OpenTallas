@@ -25,6 +25,15 @@
 // here (trap class 5).  The golden model uses the innermost open loop and
 // ignores the instruction's control ID, which is safe only because the
 // verifier proves they agree; this block does not rely on that proof.
+//
+// Amendment A13 (wire format section 12.4) needs three of the LOOP_CONTROL
+// payload fields at *view resolution* time, not at setup time: the bound
+// selector kind, the bound divisor and the value of the bound symbol.  They are
+// cached per open loop here and published on the query port, so a view resolver
+// never re-reads the loop descriptor and the two never disagree about which
+// loop a partial extent belongs to.  A request symbol is bound for the whole
+// transaction (runtime/sim/device.Device.run_transaction copies it once and
+// never rewrites it), so the cached value is exact for every iteration.
 // ---------------------------------------------------------------------------
 module ot_a3_loop_stack
     import ot_a3_pkg::*;
@@ -63,6 +72,10 @@ module ot_a3_loop_stack
     output wire        query_active,
     output wire [31:0] query_value,
     output wire [31:0] query_trip,
+    // Amendment A13 operands, cached at LOOP_SETUP (see the header note).
+    output wire        query_symbol_bounded,
+    output wire [31:0] query_divisor,
+    output wire [31:0] query_bound_value,
 
     output reg  [31:0] iteration_count,
     output wire [3:0]  depth
@@ -84,6 +97,9 @@ module ot_a3_loop_stack
     reg [31:0] loop_index  [0:DEPTH-1];
     reg [31:0] loop_step   [0:DEPTH-1];
     reg [31:0] loop_start  [0:DEPTH-1];
+    reg        loop_symbolic [0:DEPTH-1];  // A13: bound kind is RUNTIME_SYMBOL
+    reg [31:0] loop_divisor  [0:DEPTH-1];  // A13: max(bound_divisor, 1)
+    reg [31:0] loop_bound    [0:DEPTH-1];  // A13: the bound symbol's value
     reg [3:0]  stack_pointer;
 
     reg [2:0]  state;
@@ -98,6 +114,9 @@ module ot_a3_loop_stack
     reg [7:0]  hold_kind;
     reg [31:0] hold_bound;
     reg [31:0] hold_trip;
+    reg        hold_symbolic;
+    reg [31:0] hold_divisor;
+    reg [31:0] hold_symbol_value;
 
     // -- shared restoring divider: quotient = floor(numerator / divisor) ----
     reg         div_start;
@@ -149,22 +168,34 @@ module ot_a3_loop_stack
     reg        query_hit;
     reg [31:0] query_hit_value;
     reg [31:0] query_hit_trip;
+    reg        query_hit_symbolic;
+    reg [31:0] query_hit_divisor;
+    reg [31:0] query_hit_bound;
     integer    q;
     always @* begin
         query_hit = 1'b0;
         query_hit_value = 32'd0;
         query_hit_trip = 32'd0;
+        query_hit_symbolic = 1'b0;
+        query_hit_divisor = 32'd1;
+        query_hit_bound = 32'd0;
         for (q = 0; q < DEPTH; q = q + 1) begin
             if ((q < stack_pointer) && (loop_id[q] == query_id)) begin
                 query_hit = 1'b1;
                 query_hit_value = loop_value[q];
                 query_hit_trip = loop_trip[q];
+                query_hit_symbolic = loop_symbolic[q];
+                query_hit_divisor = loop_divisor[q];
+                query_hit_bound = loop_bound[q];
             end
         end
     end
     assign query_active = query_hit;
     assign query_value = query_hit_value;
     assign query_trip = query_hit_trip;
+    assign query_symbol_bounded = query_hit_symbolic;
+    assign query_divisor = query_hit_divisor;
+    assign query_bound_value = query_hit_bound;
     assign depth = stack_pointer;
 
     wire signed [32:0] constant_span =
@@ -203,6 +234,9 @@ module ot_a3_loop_stack
             hold_kind <= A3_SELECTOR_CONSTANT;
             hold_bound <= 32'd0;
             hold_trip <= 32'd0;
+            hold_symbolic <= 1'b0;
+            hold_divisor <= 32'd1;
+            hold_symbol_value <= 32'd0;
             for (i = 0; i < DEPTH; i = i + 1) begin
                 loop_id[i] <= A3_NO_ID;
                 loop_trip[i] <= 32'd0;
@@ -210,6 +244,9 @@ module ot_a3_loop_stack
                 loop_index[i] <= 32'd0;
                 loop_step[i] <= 32'd1;
                 loop_start[i] <= 32'd0;
+                loop_symbolic[i] <= 1'b0;
+                loop_divisor[i] <= 32'd1;
+                loop_bound[i] <= 32'd0;
             end
         end else begin
             done <= 1'b0;
@@ -235,6 +272,16 @@ module ot_a3_loop_stack
                             hold_loop_id <= op_loop_id;
                             hold_pc <= op_pc;
                             hold_kind <= setup_bound_kind;
+                            // A13 operands.  ``_remaining_rows`` bounds only a
+                            // loop whose bound selector is a runtime symbol
+                            // that this request actually bound, and reads the
+                            // divisor as max(bound_divisor, 1).
+                            hold_symbolic <= (setup_bound_kind ==
+                                              A3_SELECTOR_RUNTIME_SYMBOL) &&
+                                             setup_symbol_bound;
+                            hold_divisor <= (setup_bound_divisor == 32'd0)
+                                          ? 32'd1 : setup_bound_divisor;
+                            hold_symbol_value <= setup_symbol_value;
                             if (setup_bound_kind == A3_SELECTOR_CONSTANT) begin
                                 state <= S_SPAN;
                             end else if (!setup_symbol_bound) begin
@@ -330,6 +377,9 @@ module ot_a3_loop_stack
                             loop_index[stack_pointer] <= 32'd0;
                             loop_step[stack_pointer] <= hold_step;
                             loop_start[stack_pointer] <= hold_body_start;
+                            loop_symbolic[stack_pointer] <= hold_symbolic;
+                            loop_divisor[stack_pointer] <= hold_divisor;
+                            loop_bound[stack_pointer] <= hold_symbol_value;
                             stack_pointer <= stack_pointer + 4'd1;
                             next_pc <= hold_pc + 32'd1;
                             action <= ACTION_PUSH;

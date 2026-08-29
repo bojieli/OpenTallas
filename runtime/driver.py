@@ -125,6 +125,15 @@ class GenerationDriver:
         return self.policy["vocabulary_size"]
 
     # -- host queue ------------------------------------------------------
+    @property
+    def transaction_count(self) -> int:
+        """Transactions this driver has submitted.
+
+        A restart carries it forward so the resumed process does not reuse the
+        transaction identifiers and idempotency keys the interrupted one spent.
+        """
+        return self._transaction
+
     def _next_transaction(self) -> int:
         self._transaction += 1
         return self._transaction
@@ -224,11 +233,19 @@ class GenerationDriver:
         max_new_tokens: int | None = None,
         session: Session | None = None,
         progress: Callable[[int, int], None] | None = None,
+        stop_after_tokens: int | None = None,
     ) -> GenerationResult:
         """Prefill the prompt then decode to the first official EOS or the bound.
 
         The EOS token is included in the returned sequence and no transaction
         runs after it (ADR-003 section 8.7).
+
+        ``stop_after_tokens`` stops this *process* after that many tokens
+        without changing the request the device sees: the declared bound in
+        ``MAX_NEW_TOKENS`` stays ``max_new_tokens``, so a run that stops early
+        and a run that does not submit identical transactions up to the stop.
+        It exists so that a checkpoint can be taken between two transactions of
+        a generation that is still, from the device's side, the same request.
         """
         started = time.perf_counter()
         if not prompt_token_ids:
@@ -245,9 +262,6 @@ class GenerationDriver:
         per_step: list[dict[str, Any]] = []
         generated: list[int] = []
         transactions = 0
-        stop_reason = "max_new_tokens"
-        failure: str | None = None
-        eos_token: int | None = None
 
         symbols = {
             int(Symbol.SPAN_TOKENS): len(prompt),
@@ -270,21 +284,114 @@ class GenerationDriver:
         transactions += 1
         per_step.append(_step_record(0, "prefill", completion, result))
         if completion.status != CompletionStatus.SUCCESS:
-            failure = f"prefill failed: {result.message}"
             return self._finish(
                 prompt, generated, "failed", None, transactions, len(prompt), 0,
-                per_step, started, failure,
+                per_step, started, f"prefill failed: {result.message}",
             )
         generated.extend(result.produced_tokens)
         if result.eos_reason == EosReason.OFFICIAL_EOS:
-            eos_token = result.selected_token
             return self._finish(
-                prompt, generated, "eos", eos_token, transactions, len(prompt), 0,
-                per_step, started, None,
+                prompt, generated, "eos", result.selected_token, transactions,
+                len(prompt), 0, per_step, started, None,
             )
 
-        position = len(prompt)
+        return self._decode(
+            session,
+            prompt=prompt,
+            generated=generated,
+            position=len(prompt),
+            limit=limit,
+            stop_after_tokens=stop_after_tokens,
+            per_step=per_step,
+            transactions=transactions,
+            prefill_tokens=len(prompt),
+            started=started,
+            progress=progress,
+        )
+
+    def resume(
+        self,
+        prompt_token_ids: Sequence[int],
+        generated_token_ids: Sequence[int],
+        *,
+        session: Session,
+        position: int,
+        max_new_tokens: int | None = None,
+        transaction_offset: int = 0,
+        progress: Callable[[int, int], None] | None = None,
+        stop_after_tokens: int | None = None,
+    ) -> GenerationResult:
+        """Continue decode for a session restored from a device checkpoint.
+
+        No prefill runs: the prompt's KV is already in the restored state
+        images, and re-prefilling would be a different computation from the one
+        the interrupted run performed.  ``position`` is the absolute position
+        the next decode token occupies and ``generated_token_ids`` is what the
+        interrupted process had produced, so the first resumed transaction is
+        byte-for-byte the transaction the uninterrupted run would have issued.
+        """
+        started = time.perf_counter()
+        if session.finished:
+            raise DriverError(
+                "restored session already returned EOS; there is nothing to resume"
+            )
+        generated = [int(t) for t in generated_token_ids]
+        if not generated:
+            raise DriverError(
+                "resume needs the tokens the interrupted run produced; decode "
+                "continues from the last one"
+            )
+        if position < len(prompt_token_ids):
+            raise DriverError(
+                f"resume position {position} is inside the prompt "
+                f"({len(prompt_token_ids)} tokens)"
+            )
+        limit = (
+            self.policy["max_new_tokens"]
+            if max_new_tokens is None
+            else min(max_new_tokens, self.policy["max_new_tokens"])
+        )
+        self._transaction = int(transaction_offset)
+        self.device.sessions[session.session_id] = session
+        return self._decode(
+            session,
+            prompt=tuple(int(t) for t in prompt_token_ids),
+            generated=generated,
+            position=int(position),
+            limit=limit,
+            stop_after_tokens=stop_after_tokens,
+            per_step=[],
+            transactions=0,
+            prefill_tokens=0,
+            started=started,
+            progress=progress,
+        )
+
+    def _decode(
+        self,
+        session: Session,
+        *,
+        prompt: tuple[int, ...],
+        generated: list[int],
+        position: int,
+        limit: int,
+        stop_after_tokens: int | None,
+        per_step: list[dict[str, Any]],
+        transactions: int,
+        prefill_tokens: int,
+        started: float,
+        progress: Callable[[int, int], None] | None,
+    ) -> GenerationResult:
+        """The decode loop, shared by a fresh generation and a resumed one."""
         decode_steps = 0
+        failure: str | None = None
+        eos_token: int | None = None
+        stop_reason = "max_new_tokens"
+        if stop_after_tokens is not None and len(generated) >= stop_after_tokens:
+            return self._finish(
+                prompt, generated, "stopped", None, transactions, prefill_tokens,
+                decode_steps, per_step, started, None,
+            )
         while len(generated) < limit:
             if not generated:
                 failure = "prefill produced no token to decode from"
@@ -330,11 +437,14 @@ class GenerationDriver:
                 eos_token = result.selected_token
                 stop_reason = "eos"
                 break
+            if stop_after_tokens is not None and len(generated) >= stop_after_tokens:
+                stop_reason = "stopped"
+                break
         else:
             stop_reason = "max_new_tokens"
 
         return self._finish(
-            prompt, generated, stop_reason, eos_token, transactions, len(prompt),
+            prompt, generated, stop_reason, eos_token, transactions, prefill_tokens,
             decode_steps, per_step, started, failure,
         )
 

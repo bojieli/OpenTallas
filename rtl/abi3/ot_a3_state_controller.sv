@@ -48,6 +48,13 @@ module ot_a3_state_controller
 
     input  wire         commit_all,      // CONTROL.COMPLETE reached
     input  wire         discard_all,     // transaction trapped
+    // The number of STATE descriptors this session declares.  An abort
+    // discards the whole prepared state set, not only the slots this
+    // transaction happened to touch (ADR-003 8.6; runtime/sim/device.py
+    // counts ``len(session.states)`` on the failing path), so the discard
+    // accounting needs the session's declared state count, which is a
+    // deployment property this block cannot observe from its own traffic.
+    input  wire [31:0]  session_state_count,
     output reg          apply_busy,
     output reg          apply_done,
     output reg          apply_overflow,
@@ -165,11 +172,16 @@ module ot_a3_state_controller
                 count_bytes_written <= 64'd0;
             end else if (discard_all) begin
                 // A trap poisons the whole transaction: nothing staged is
-                // applied and every open prepare is released.
+                // applied and every open prepare is released.  Releasing the
+                // whole declared set -- not only the slots that reached a
+                // staged commit -- is what keeps a resource that was prepared
+                // and then faulted from refusing a legitimate retry as a
+                // double prepare.
                 pending_count <= {(SLOT_W+1){1'b0}};
                 slot_open <= {SLOTS{1'b0}};
                 apply_busy <= 1'b0;
                 apply_done <= 1'b1;
+                count_discards <= count_discards + session_state_count;
             end else if (commit_all) begin
                 if (pending_count == {(SLOT_W+1){1'b0}}) begin
                     apply_done <= 1'b1;

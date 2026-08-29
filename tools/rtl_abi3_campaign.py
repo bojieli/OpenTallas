@@ -46,6 +46,7 @@ RTL_SOURCES = (
     "rtl/abi3/ot_a3_instruction_decoder.sv",
     "rtl/abi3/ot_a3_program_header.sv",
     "rtl/abi3/ot_a3_loop_stack.sv",
+    "rtl/abi3/ot_a3_view_resolver.sv",
     "rtl/abi3/ot_a3_event_scoreboard.sv",
     "rtl/abi3/ot_a3_state_controller.sv",
     "rtl/abi3/ot_a3_microsequencer.sv",
@@ -65,6 +66,7 @@ CONTRACT_SOURCES = (
     "runtime/abi3/crc.py",
     "runtime/abi3/verifier.py",
     "runtime/sim/device.py",
+    "runtime/sim/memory.py",
 )
 TOOL_SOURCES = (
     "tools/build_abi3_rtl_vectors.py",
@@ -77,6 +79,7 @@ VECTOR_FILES = (
     "a3_symbol.hex",
     "a3_case.hex",
     "a3_issue.hex",
+    "a3_view.hex",
     "a3_meta.hex",
 )
 
@@ -326,6 +329,8 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "program_run_count": vectors["program_run_count"],
             "header_admission_count": vectors["header_admission_count"],
             "issue_event_count": vectors["issue_event_count"],
+            "view_resolution_count": vectors["view_resolution_count"],
+            "view_reference": vectors["view_reference"],
             "trap_count": vectors["trap_count"],
             "positive_case_count": vectors["positive_case_count"],
             "negative_case_count": vectors["negative_case_count"],
@@ -335,6 +340,10 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "instructions issued and loop iterations",
                 "branches taken and wait-set evaluations",
                 "engine issue sequence: family, subopcode, descriptor ID",
+                "resolved operand tensor views in operand order: descriptor, "
+                "slot, leading extent, element offset and rank -- amendment A4 "
+                "dynamic index terms and amendment A13 partial final extent, "
+                "against runtime.sim.memory.ViewResolver.resolve",
                 "state prepare, commit, discard, read and advance counts",
                 "state commit applied or discarded, and rows committed",
                 "trap class and first faulting instruction",
@@ -345,7 +354,12 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
         "cases": cases,
         "limitations": [
             "engine datapaths are out of scope: the issue port carries family, "
-            "subopcode and descriptor ID only",
+            "subopcode and descriptor ID, and the view port carries the "
+            "resolved extents an engine would read; no engine arithmetic is "
+            "modelled on either side",
+            "view resolution covers the leading extent and the element offset. "
+            "Trailing extents, strides and the scale binding are copied from "
+            "the descriptor unchanged and are not republished",
             "descriptor record CRC32C and the header's SHA-256 digests are not "
             "checked in RTL; instruction and header CRC32C are",
             "predicate kinds that require an engine or a memory read "

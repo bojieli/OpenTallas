@@ -66,6 +66,16 @@ def main() -> int:
     parser.add_argument("--deployment-root", type=Path, default=None)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--max-new-tokens", type=int, default=None)
+    parser.add_argument(
+        "--reference",
+        type=Path,
+        default=None,
+        help=(
+            "reference-oracle result file holding this workload's gold token "
+            "ids.  Without it a run cannot be reported as a pass: executing "
+            "without crashing is not evidence of a correct token."
+        ),
+    )
     parser.add_argument("--topology", default=None)
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--trace", action="store_true")
@@ -164,6 +174,20 @@ def main() -> int:
         result.generated_token_ids, driver.vocabulary_size
     )
 
+    reference = _load_reference(args.reference, workload["workload_id"])
+    got = list(result.generated_token_ids)
+    agreement, divergence = _compare(got, reference)
+    if reference is None:
+        print(
+            "  NO REFERENCE: this run is recorded as executed_unverified.  "
+            "Pass --reference to compare against the oracle."
+        )
+    else:
+        print(
+            f"reference: {len(reference)} gold tokens, agreement={agreement}, "
+            f"first divergence={divergence}"
+        )
+
     record = ExecutionRecord(
         evidence_class=EvidenceClass.FUNCTIONAL,
         workload=WorkloadIdentity(
@@ -199,23 +223,87 @@ def main() -> int:
             },
             "token_legitimacy_problems": legitimacy,
             "per_step": result.per_step,
+            "reference_token_ids": reference,
+            "reference_agreement": agreement,
+            "first_divergence_index": divergence,
         },
         failure=result.failure,
     )
+    status = _status(result.failure, legitimacy, reference, agreement)
     _write(
         args.output,
         {
             "schema": "opentallas.abi3.campaign.v1",
-            "status": "failed" if (result.failure or legitimacy) else "pass",
+            "status": status,
             "record": record.to_dict(),
         },
     )
-    print(f"wrote {args.output}")
+    print(f"wrote {args.output} (status {status})")
     if legitimacy:
         for problem in legitimacy:
             print(f"  TOKEN LEGITIMACY {problem}")
         return 3
-    return 0 if not result.failure else 4
+    if result.failure:
+        return 4
+    return 0 if status == "pass" else 5
+
+
+def _status(
+    failure: Any,
+    legitimacy: list[Any],
+    reference: list[int] | None,
+    agreement: bool | None,
+) -> str:
+    """The engineering result, which is not the same as "the script finished".
+
+    ``pass`` is reserved for a run whose tokens were compared against a
+    reference oracle and matched.  A run with no reference is
+    ``executed_unverified`` however healthy it looks: the device produced
+    tokens and nothing checked them, and a fluent-but-wrong decode is exactly
+    the failure this program has already hit once, in a vendor kernel that
+    produced well-formed and semantically empty text.
+    """
+    if failure or legitimacy:
+        return "failed"
+    if reference is None:
+        return "executed_unverified"
+    if not reference:
+        return "reference_empty"
+    return "pass" if agreement else "diverged"
+
+
+def _load_reference(path: Path | None, workload_id: str) -> list[int] | None:
+    """Gold token ids for this workload, or None if no reference was named."""
+    if path is None:
+        return None
+    body = json.loads(path.read_text())
+    results = body.get("results", {})
+    if workload_id not in results:
+        raise SystemExit(
+            f"reference {path} holds no result for workload {workload_id!r}; "
+            f"it has {sorted(results)}"
+        )
+    return [int(t) for t in results[workload_id]["generated_token_ids"]]
+
+
+def _compare(
+    got: list[int], reference: list[int] | None
+) -> tuple[bool | None, int | None]:
+    """Prefix agreement and the first differing index.
+
+    A run stopped by a token cap is a prefix of the oracle's sequence, so the
+    comparison is against ``reference[:len(got)]``.  Both sides must be
+    non-empty: two empty lists compare equal, and reporting that as agreement
+    is a vacuous pass this repository has already produced once.
+    """
+    if reference is None:
+        return None, None
+    divergence = next(
+        (i for i, (a, b) in enumerate(zip(got, reference)) if a != b), None
+    )
+    if not got or not reference:
+        return False, divergence
+    return got == reference[: len(got)], divergence
 
 
 def _implementation_identity() -> dict[str, Any]:

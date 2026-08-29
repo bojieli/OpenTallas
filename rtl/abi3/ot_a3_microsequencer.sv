@@ -28,6 +28,16 @@
 // carrying (family, subopcode, descriptor ID) and nothing else.  This block
 // therefore models the control plane exactly and the data plane not at all.
 //
+// The one thing an engine cannot be handed as a raw descriptor ID is its
+// operands' *extents*, because amendments A4 and A13 make those a function of
+// the loop and symbol bindings live at the dispatch.  Before an OPERATOR-family
+// instruction issues, each operand tensor view it names is therefore resolved
+// by ot_a3_view_resolver against the open loops and the request's symbols, and
+// the resolved extent and element offset are published on the view port in
+// operand order (inputs 0..3 then outputs 0..1, skipping NO_ID).  Without A13 a
+// final block iteration would present the block size where the request has
+// fewer rows -- the failure the amendment exists to remove.
+//
 // Where this block is deliberately stricter than the golden model -- it may
 // assume a verified program, but it does not have to trust one -- the check is
 // marked STRICTER below.
@@ -44,6 +54,7 @@ module ot_a3_microsequencer
     input  wire [31:0]   cfg_instruction_count,
     input  wire [31:0]   cfg_entry_pc,
     input  wire [63:0]   cfg_max_retired_work,
+    input  wire [31:0]   cfg_state_count,
 
     output reg           busy,
     output reg           done,
@@ -59,14 +70,16 @@ module ot_a3_microsequencer
     input  wire [255:0]  imem_data,
 
     // -- descriptor store (registered read, one cycle) -----------------
+    // 192 bytes: the 64-byte header plus both 64-byte payload blocks, because
+    // a TENSOR_VIEW's dynamic terms (payload offset 72) lie in the second.
     output reg           desc_req,
     output reg  [31:0]   desc_id,
     input  wire          desc_valid,
     input  wire          desc_fault,
-    input  wire [1023:0] desc_data,
+    input  wire [1535:0] desc_data,
 
     // -- runtime symbol file (combinational read) ----------------------
-    output reg  [3:0]    sym_index,
+    output wire [3:0]    sym_index,
     input  wire [31:0]   sym_value,
     input  wire          sym_bound,
 
@@ -77,6 +90,18 @@ module ot_a3_microsequencer
     output reg  [7:0]    issue_sub,
     output reg  [31:0]   issue_descriptor_id,
     output reg  [31:0]   issue_index,
+
+    // -- resolved tensor views (amendments A4 and A13) -----------------
+    // One single-cycle pulse per operand view of the instruction about to
+    // issue, in operand order.  Observation only: it carries no back-pressure
+    // because it states what the issue already means.
+    output reg           view_valid,
+    output reg  [31:0]   view_descriptor_id,
+    output reg  [2:0]    view_slot,
+    output reg  [31:0]   view_dim0,
+    output reg  [63:0]   view_element_offset,
+    output reg  [7:0]    view_rank,
+    output reg  [31:0]   count_views_resolved,
 
     // -- accounting ----------------------------------------------------
     output reg  [31:0]   count_fetched,
@@ -131,12 +156,17 @@ module ot_a3_microsequencer
     localparam [4:0] S_COMMIT      = 5'd23;
     localparam [4:0] S_DISCARD     = 5'd24;
     localparam [4:0] S_DONE        = 5'd25;
+    localparam [4:0] S_VIEW_SCAN   = 5'd26;
+    localparam [4:0] S_VIEW_WAIT   = 5'd27;
+    localparam [4:0] S_VIEW_RES    = 5'd28;
+    localparam [4:0] S_VIEW_EMIT   = 5'd29;
 
     reg [4:0]  state;
     reg [31:0] pc;
     reg [31:0] instruction_count;
     reg [31:0] program_base;
     reg [63:0] work_bound;
+    reg [31:0] state_count;
     reg [255:0] record;
     reg        xact_clear;
 
@@ -152,6 +182,7 @@ module ot_a3_microsequencer
 
     reg [511:0] pred_payload;
     reg [511:0] state_payload;
+    reg [3:0]   sym_index_q;
 
     // -- instruction decoder --------------------------------------------
     reg         dec_in_valid;
@@ -204,10 +235,14 @@ module ot_a3_microsequencer
     wire [15:0] loop_trap_class;
     wire [31:0] loop_next_pc;
     wire [1:0]  loop_action;
-    reg  [31:0] loop_query_id;
+    reg  [31:0] loop_query_id_q;
+    wire [31:0] loop_query_id;
     wire        loop_query_active;
     wire [31:0] loop_query_value;
     wire [31:0] loop_query_trip;
+    wire        loop_query_symbol_bounded;
+    wire [31:0] loop_query_divisor;
+    wire [31:0] loop_query_bound_value;
     reg  [511:0] loop_payload;
 
     wire [7:0]  loop_bound_kind = loop_payload[15:8];
@@ -248,6 +283,9 @@ module ot_a3_microsequencer
         .query_active(loop_query_active),
         .query_value(loop_query_value),
         .query_trip(loop_query_trip),
+        .query_symbol_bounded(loop_query_symbol_bounded),
+        .query_divisor(loop_query_divisor),
+        .query_bound_value(loop_query_bound_value),
         .iteration_count(count_loop_iterations),
         .depth(loop_depth)
     );
@@ -306,6 +344,7 @@ module ot_a3_microsequencer
         .op_trap_class(st_op_trap_class),
         .commit_all(st_commit_all),
         .discard_all(st_discard_all),
+        .session_state_count(state_count),
         .apply_busy(),
         .apply_done(st_apply_done),
         .apply_overflow(state_apply_overflow),
@@ -319,6 +358,71 @@ module ot_a3_microsequencer
         .count_bytes_written(count_state_bytes_written)
     );
 
+    // -- tensor view resolution (A4 and A13) -------------------------------
+    // OPERATOR payload (runtime/abi3/descriptors.OPERATOR_PAYLOAD):
+    // input_view_{0..3} at byte 24, output_view_{0..1} at byte 40.
+    reg  [511:0]  op_payload;
+    reg  [1023:0] view_payload;
+    reg  [2:0]    view_next_slot;
+    reg           view_start;
+
+    reg [31:0] view_slot_id;
+    always @* begin
+        case (view_next_slot)
+            3'd0:    view_slot_id = op_payload[223:192];   // input_view_0
+            3'd1:    view_slot_id = op_payload[255:224];   // input_view_1
+            3'd2:    view_slot_id = op_payload[287:256];   // input_view_2
+            3'd3:    view_slot_id = op_payload[319:288];   // input_view_3
+            3'd4:    view_slot_id = op_payload[351:320];   // output_view_0
+            3'd5:    view_slot_id = op_payload[383:352];   // output_view_1
+            default: view_slot_id = A3_NO_ID;
+        endcase
+    end
+
+    wire view_active = (state == S_VIEW_SCAN) || (state == S_VIEW_WAIT) ||
+                       (state == S_VIEW_RES)  || (state == S_VIEW_EMIT);
+
+    wire         res_done;
+    wire         res_fault;
+    wire [15:0]  res_trap_class;
+    wire [63:0]  res_element_offset;
+    wire [31:0]  res_dim0;
+    wire [7:0]   res_rank;
+    wire [31:0]  res_loop_query_id;
+    wire [3:0]   res_sym_index;
+
+    // The resolver owns the loop query and the symbol select while it walks a
+    // view's terms; the sequencer's own predicate, loop and state reads own
+    // them otherwise.  Only one of the two is ever in flight.
+    assign loop_query_id = view_active ? res_loop_query_id : loop_query_id_q;
+    assign sym_index     = view_active ? res_sym_index     : sym_index_q;
+
+    ot_a3_view_resolver view_resolver (
+        .clk(clk),
+        .rst_n(rst_n),
+        .clear(xact_clear),
+        .start(view_start),
+        .payload(view_payload),
+        .busy(),
+        .done(res_done),
+        .fault(res_fault),
+        .trap_class(res_trap_class),
+        .out_element_offset(res_element_offset),
+        .out_dim0(res_dim0),
+        .out_rank(res_rank),
+        .out_dtype(),
+        .out_term_count(),
+        .loop_query_id(res_loop_query_id),
+        .loop_query_active(loop_query_active),
+        .loop_query_value(loop_query_value),
+        .loop_query_symbol_bounded(loop_query_symbol_bounded),
+        .loop_query_divisor(loop_query_divisor),
+        .loop_query_bound_value(loop_query_bound_value),
+        .sym_index(res_sym_index),
+        .sym_value(sym_value),
+        .sym_bound(sym_bound)
+    );
+
     assign dbg_decode_error = dec_out_error;
     assign dbg_source_operation_id = dec_source_operation_id;
     assign dbg_wait_fault_event = evt_wait_fault_event;
@@ -330,6 +434,9 @@ module ot_a3_microsequencer
     wire [7:0]   desc_type_major    = desc_data[55:48];
     wire [31:0]  desc_payload_offset= desc_data[351:320];   // byte 40
     wire [511:0] desc_payload       = desc_data[1023:512];
+    // A TENSOR_VIEW payload is 128 bytes; a 64-byte prefix stops short of the
+    // dynamic terms, so view resolution reads both payload blocks.
+    wire [1023:0] desc_payload_wide = desc_data[1535:512];
     wire         desc_header_ok = !desc_fault &&
                                   (desc_magic == A3_DESCRIPTOR_MAGIC) &&
                                   (desc_type_major == A3_TYPE_MAJOR) &&
@@ -392,6 +499,7 @@ module ot_a3_microsequencer
             instruction_count <= 32'd0;
             program_base <= 32'd0;
             work_bound <= 64'd0;
+            state_count <= 32'd0;
             record <= 256'd0;
             xact_clear <= 1'b0;
             busy <= 1'b0;
@@ -404,16 +512,27 @@ module ot_a3_microsequencer
             imem_index <= 32'd0;
             desc_req <= 1'b0;
             desc_id <= A3_NO_ID;
-            sym_index <= 4'd0;
+            sym_index_q <= 4'd0;
             issue_valid <= 1'b0;
             issue_family <= 8'd0;
             issue_sub <= 8'd0;
             issue_descriptor_id <= A3_NO_ID;
             issue_index <= A3_NO_ID;
+            view_valid <= 1'b0;
+            view_descriptor_id <= A3_NO_ID;
+            view_slot <= 3'd0;
+            view_dim0 <= 32'd0;
+            view_element_offset <= 64'd0;
+            view_rank <= 8'd0;
+            count_views_resolved <= 32'd0;
+            op_payload <= 512'd0;
+            view_payload <= 1024'd0;
+            view_next_slot <= 3'd0;
+            view_start <= 1'b0;
             dec_in_valid <= 1'b0;
             loop_setup_valid <= 1'b0;
             loop_next_valid <= 1'b0;
-            loop_query_id <= A3_NO_ID;
+            loop_query_id_q <= A3_NO_ID;
             loop_payload <= 512'd0;
             evt_signal_valid <= 1'b0;
             evt_wait_start <= 1'b0;
@@ -442,6 +561,8 @@ module ot_a3_microsequencer
             xact_clear <= 1'b0;
             imem_req <= 1'b0;
             desc_req <= 1'b0;
+            view_valid <= 1'b0;
+            view_start <= 1'b0;
             dec_in_valid <= 1'b0;
             loop_setup_valid <= 1'b0;
             loop_next_valid <= 1'b0;
@@ -463,11 +584,13 @@ module ot_a3_microsequencer
                         program_base <= cfg_program_base;
                         instruction_count <= cfg_instruction_count;
                         work_bound <= cfg_max_retired_work;
+                        state_count <= cfg_state_count;
                         count_fetched <= 32'd0;
                         count_retired <= 32'd0;
                         count_predicated_off <= 32'd0;
                         count_issued <= 32'd0;
                         count_branches <= 32'd0;
+                        count_views_resolved <= 32'd0;
                         xact_clear <= 1'b1;
                         state <= S_CHECK_PC;
                     end
@@ -544,10 +667,10 @@ module ot_a3_microsequencer
                     // is read so the register file read is not in the compare
                     // path.
                     if (pred_kind == A3_PRED_PHASE_IS)
-                        sym_index <= A3_SYMBOL_PHASE;
+                        sym_index_q <= A3_SYMBOL_PHASE;
                     else
-                        sym_index <= pred_selector[3:0];
-                    loop_query_id <= pred_selector;
+                        sym_index_q <= pred_selector[3:0];
+                    loop_query_id_q <= pred_selector;
                     state <= S_PRED_EVAL;
                 end
                 S_PRED_EVAL: begin
@@ -708,7 +831,7 @@ module ot_a3_microsequencer
                 end
                 S_LOOP_SYM: begin
                     if (loop_symbol_id >= A3_SYMBOL_COUNT) begin
-                        sym_index <= 4'd0;
+                        sym_index_q <= 4'd0;
                         if (loop_bound_kind != A3_SELECTOR_CONSTANT) begin
                             // Symbol-bounded loop naming a symbol outside the
                             // frozen registry.
@@ -718,7 +841,7 @@ module ot_a3_microsequencer
                             state <= S_LOOP_DONE;
                         end
                     end else begin
-                        sym_index <= loop_symbol_id[3:0];
+                        sym_index_q <= loop_symbol_id[3:0];
                         state <= S_LOOP_OP;
                     end
                 end
@@ -747,13 +870,69 @@ module ot_a3_microsequencer
                             raise_trap(A3_TRAP_DESCRIPTOR, pc);
                         end else if (ins_major == A3_MAJOR_STATE) begin
                             state_payload <= desc_payload;
-                            sym_index <= A3_SYMBOL_SPAN_TOKENS;
+                            sym_index_q <= A3_SYMBOL_SPAN_TOKENS;
                             state <= S_STATE_SYM;
+                        end else if (expected_type == A3_DESC_OPERATOR) begin
+                            // A4/A13: an engine is handed extents, not just a
+                            // descriptor ID, so every operand view this
+                            // operator names is resolved before the issue.
+                            op_payload <= desc_payload;
+                            view_next_slot <= 3'd0;
+                            state <= S_VIEW_SCAN;
                         end else begin
                             state <= S_ISSUE;
                         end
                     end
                 end
+
+                // -- operand tensor views (A4 and A13) ---------------------
+                S_VIEW_SCAN: begin
+                    if (view_next_slot >= 3'd6) begin
+                        state <= S_ISSUE;
+                    end else if (view_slot_id == A3_NO_ID) begin
+                        view_next_slot <= view_next_slot + 3'd1;
+                    end else begin
+                        desc_req <= 1'b1;
+                        desc_id <= view_slot_id;
+                        state <= S_VIEW_WAIT;
+                    end
+                end
+                S_VIEW_WAIT: begin
+                    if (desc_valid) begin
+                        if (!desc_header_ok ||
+                            (desc_type != A3_DESC_TENSOR_VIEW)) begin
+                            raise_trap(A3_TRAP_DESCRIPTOR, pc);
+                        end else begin
+                            view_payload <= desc_payload_wide;
+                            view_descriptor_id <= desc_id;
+                            view_start <= 1'b1;
+                            state <= S_VIEW_RES;
+                        end
+                    end
+                end
+                S_VIEW_RES: begin
+                    if (res_done) begin
+                        if (res_fault) begin
+                            // The reference resolver raises rather than
+                            // resolving; so does this.
+                            raise_trap(res_trap_class, pc);
+                        end else begin
+                            view_valid <= 1'b1;
+                            view_slot <= view_next_slot;
+                            view_dim0 <= res_dim0;
+                            view_element_offset <= res_element_offset;
+                            view_rank <= res_rank;
+                            count_views_resolved <=
+                                count_views_resolved + 32'd1;
+                            state <= S_VIEW_EMIT;
+                        end
+                    end
+                end
+                S_VIEW_EMIT: begin
+                    view_next_slot <= view_next_slot + 3'd1;
+                    state <= S_VIEW_SCAN;
+                end
+
                 S_STATE_SYM: begin
                     st_op_valid <= 1'b1;
                     state <= S_STATE_DONE;
