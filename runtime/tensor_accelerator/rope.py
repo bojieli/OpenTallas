@@ -11,7 +11,7 @@ import numpy as np
 
 NUMERIC_CONTRACT = "qwen3_rope_fp32_bf16_v1"
 HEAD_DIM = 128
-MAX_POSITIONS = 8000
+MAX_POSITIONS = 8192
 INV_FREQ_BINARY32_CODES = (
     0x3F800000,
     0x3F4E4BAD,
@@ -80,7 +80,7 @@ INV_FREQ_BINARY32_CODES = (
 )
 
 # NumPy's float32 trigonometric path lands one BF16 code away at four
-# near-midpoint arguments in the qualified 0..7999 domain.  These values were
+# near-midpoint arguments in the qualified 0..8191 domain.  These values were
 # established independently with 200-decimal-digit evaluation and match the
 # pinned upstream tensor.  Applying them before table authentication makes the
 # generated payload host-library independent at the architectural boundary.

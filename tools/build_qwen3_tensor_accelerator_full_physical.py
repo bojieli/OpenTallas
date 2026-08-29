@@ -64,6 +64,14 @@ def main() -> int:
             "independent_check.json"
         ),
     )
+    parser.add_argument(
+        "--reuse-hbm-root",
+        type=Path,
+        help=(
+            "Previously admitted physical deployment whose authenticated, "
+            "content-identical immutable HBM prefix will be retained as hard links"
+        ),
+    )
     parser.add_argument("--output", required=True, type=Path)
     arguments = parser.parse_args()
     try:
@@ -76,6 +84,7 @@ def main() -> int:
             semantic_kernel_ir_path=arguments.semantic_kernel_ir,
             semantic_check_path=arguments.semantic_check,
             output=arguments.output,
+            reuse_hbm_root=arguments.reuse_hbm_root,
         )
     except (QwenFullModelPhysicalError, QwenFullModelPhysicalCheckError) as exc:
         parser.error(str(exc))

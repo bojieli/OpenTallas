@@ -3,7 +3,7 @@
 **Document status:** active working execution plan; architecture-review approval
 and gate closure remain evidence controlled
 
-**Plan version:** 2.4
+**Plan version:** 2.7
 
 **Initial issue:** 2026-08-28
 
@@ -40,6 +40,13 @@ and operational readiness for the exact 8,000-token acceptance workload,
 together with the official release/golden comparison. Short diagnostic closure
 does not imply long-context acceptance, timing, RTL, physical
 characterization, DeepSeek execution, or a comparison gate.
+
+The separately versioned 8,192-row long-acceptance graph, V7 capability,
+complete neutral Kernel IR, physical HBM/SRAM deployment, and independent
+physical reconstruction are now retained with the exact identities in Section
+1.14. This closes representational and physical capacity for the required 8,031
+committed-row chain. It does not execute that chain, close the separate Qwen
+8,192 resident-context boundary, or change any admitted V6 artifact.
 
 This integration copy is the authoritative tensor-accelerator program plan.
 The concurrent-session planning draft was reviewed as governance input; no
@@ -84,6 +91,23 @@ matched by the independent reference, not an execution failure or permission to
 choose arbitrarily. The provisional dynamic-session requirement for a unique
 maximum is superseded; the admitted fixed QW-FM4 result remains unchanged because
 its maximum multiplicity is one.
+
+**Long-acceptance capacity decision record `TA-QW-CAP-2026-08-29`:** the Qwen
+acceptance fixture remains exactly 8,000 resident prompt tokens followed by at
+least 32 ordinary greedy generated-token decisions. These are workload counts,
+not the physical KV/RoPE allocation bound. The first decision consumes the
+8,000-token prompt state and each of the following 31 decisions consumes one
+previously generated token, so the admitted execution must represent positions
+0 through 8,030 and commit at least 8,031 rows. Capability V6, its 8,000-row
+Model Graph and Tensor Kernel IR, its physical deployment, and its short-session
+evidence are therefore preserved unchanged but cannot admit this workload. A
+separately versioned long-acceptance profile allocates 8,192 KV and RoPE rows,
+retains ABI 2.5 and the same hardware/operator semantics, and receives distinct
+graph, Kernel IR, capability, physical-plan, deployment, request/session, and
+evidence identities. The 8,192 allocation is headroom for the 8,031-row
+acceptance chain; it does not pass or replace the separate Qwen 8,192 resident
+context qualification. No release report may infer that boundary test merely
+from allocation capacity.
 
 ## Executive recommendation
 
@@ -1514,6 +1538,81 @@ KV preparation, attention, state and vector kernels, program authentication/
 `COMPLETE`, physical SRAM/HBM/interconnect, a representative connected complete
 RTL layer, characterized timing or activity-derived power, and `TA-RTL-6`
 remain open.
+### 1.26 Closed Qwen long-acceptance physical-capacity profile
+
+The immutable V6 deployment remains the admitted short-session profile. The
+long-acceptance profile is separately versioned because the mandatory 8,000
+prompt tokens plus 32 token decisions require 8,031 committed KV rows. It uses
+one 8,192-row allocation for all 36 KV resources and RoPE, capability V7, and
+the same ABI 2.5 and 617-operation hardware/operator structure. Independent
+change-scope checking proves that the graph differs only in four context-bound
+symbol records and two entrypoint predicates; operations, tensors, checkpoint
+bindings, state resources, and numeric contracts are unchanged.
+
+The retained semantic and physical identities are:
+
+- graph ID:
+  `738f3cd8cb5db1ce400c0a44c12385cef6c42ddb2854e22d473251e97a1a51e3`;
+- capability ID:
+  `a9b231b5f146f845257325e68031f02440f0a3712db42d4e4e2b54c69031f6cd`;
+- semantic Kernel IR ID:
+  `35bae3f71666c72ec886875abf336fefc68dd1635288d3b49720c4297d4cc1e1`;
+- deployment build ID:
+  `6445ef52a940af167f3bde52e0a326258bb8c8da013d4bb25a3b16e18f171bad`;
+- physical-plan ID:
+  `2bb30b4bc970b3c0af716eb78b86d3158ed06108218735b515d8e2133dc407a2`;
+- capacity-certificate ID:
+  `3b2411a77adb66bc4e7b32fdccb8dad0ab69609a225b94d4046abcc96e94a3fd`;
+- independent physical-check ID:
+  `af1545ca635b7400de621a297f8ef8118d07cdab51ab3ca9fb739d4b23fa9c45`;
+  and
+- logical HBM SHA-256:
+  `55fbb4f91ff9a081dede418edec25d7373553a591ce3c031a27d219048b90b97`.
+
+The forward compiler and separately implemented inverse checker agree on all
+399 weights, 36 state resources, 17 HBM shards, 18 SRAM slots, and 924,386
+commands. The allocation contains 1,207,959,552 mutable KV bytes, a 4,194,304
+byte qualified 8,192-position RoPE table, and 17,599,304,192 total logical HBM
+bytes. The command count and 59,160,736-byte program size remain unchanged,
+while context-bearing command fields and physical addresses produce distinct
+command SHA-256
+`dfc7ee4d89a091aea616f602174f8bd41cae319ceec92d31fda4cb43636dce6d`.
+The independent checker authenticates the checkpoint payload reconstruction,
+RoPE and state tables, HBM regions and shards, SRAM liveness, capacity, command
+ranges, and terminal atomic commit.
+
+The common simulator and separately implemented row-major reference now also
+admit this exact V7 deployment and execute one complete position-zero
+transaction.  The simulator report ID is
+`284510d06232bbdfc739a4defe9adf581a6c1243eca2aec9cf445eccf2694fc9`
+and the independent-reference ID is
+`89e83e62ac9cefb21069ab8aa1c071d18b6f8d5275ebd387700e69f88d09f483`.
+They reproduce the unchanged position-zero `hidden.36` payload
+`889f2b193be2a3bc8a07d0903eb80f7f2b97046701b286bcb9780605e6e7326d`,
+complete-logit payload
+`26e85f90dd11ebdf1e74c7b64521319fa3140ef12d45fd92ec7da74aa5bc2c82`,
+and unique greedy token `50994`, while binding the distinct V7 graph,
+capability, Kernel IR, physical plan, command program, and deployment IDs.  All
+617 operation outputs, 36 layer boundaries and state transitions, complete
+logits, and 70 counters match independently.  This is runtime admission of one
+complete transaction, not execution of the long workload.
+
+Persistent storage reuse is content-proven and fail-closed. The builder hashes
+both deployments and hard-links only identical full immutable-prefix shards 0
+through 14; it leaves profile-dependent shards 15 and 16 independent. An inode
+audit confirms all 15 admitted pairs share storage and both suffix shards do
+not. When measured with the existing V6 deployment, the retained V7 bundle adds
+328 MiB of allocated filesystem storage rather than another complete checkpoint
+copy. Reuse is a storage property only and does not weaken either deployment's
+content-addressed manifest or independent byte verification.
+
+This closes physical representability for row 8,031, rejects capacities above
+row 8,192, and proves that both execution implementations can load and execute
+the V7 artifacts. It does not prove a resident 8,192-token execution, execute
+the 8,000-token acceptance prompt, qualify checkpoint/restart, produce
+acceptance tokens or text, establish official/golden quality, or make timing,
+RTL, 130-nm, DeepSeek, or ROM-comparison claims. The active path is now
+authenticated checkpoint/restart and the exact long session.
 
 ## 2. Meaning of production-grade
 
@@ -2654,7 +2753,9 @@ at `2222f76`. Complete Qwen neutral-semantic coverage closes narrowly at
 `324f48d`, fixed one-step complete-model execution closes at `c5b9578`, and the
 32-decision target-precision diagnostic session closes at `720cb2a`. Their exact
 evidence boundaries are recorded in Sections 1.2 through 1.13 and below. The
-program is not complete: exact Qwen 8,000-token execution and official/golden
+separately versioned 8,192-row graph, semantic IR, capability, physical plan,
+HBM/SRAM deployment, and independent reconstruction are retained in Section
+1.14. The program is not complete: exact Qwen 8,000-token execution and official/golden
 acceptance, DeepSeek semantic union and exact 200,000-token execution, timing,
 RTL, physical, and comparison gates remain open.
 
@@ -2664,8 +2765,8 @@ RTL, physical, and comparison gates remain open.
 | Neutral graph semantics | Model Graph IR v2 and a real Qwen graph exist; committed DeepSeek references continue to accumulate | The semantic graph boundary is retained, but `TA-SEM-1` remains open until both complete ordinary graphs have zero unknown operations |
 | Neutral kernel semantics | **QW-FM1 closed at `74c0d59`.** One retained dynamic-shape neutral artifact maps all 617 Qwen operations and 36 state resources exactly once, including final output and terminal commit, and an independent checker reconstructs all source, numeric, tensor, state, and qualification bindings without backend leakage | Preserve the admitted Qwen semantic artifact through physical execution; separately close the remaining DeepSeek operation/state union before `TA-SEM-1` |
 | Target arithmetic | **Dynamic target-precision diagnostic closed at `720cb2a`.** The row-major checkpoint reference independently reproduces 32 complete transactions, all 19,744 operation events, 1,152 layer boundaries, complete logits/ties/tokens, zero saturation, and 2,240 counter comparisons; the first failed softmax campaign is preserved and the corrected target is adversarially covered | Preserve first-divergence evidence and qualify the official/golden comparison plus every remaining DeepSeek ordinary-path contract |
-| Command and capability ABI | ABI 2.5 and capability V6 admit bounded indexed SRAM selection and the complete 924,386-command program; dynamic session/request/report contracts now bind position, phase, predecessor, transaction, and state generations without changing fixed request v1 | Add authenticated checkpoint/restart and operational controls for the 8,000-token workload. Routing, remaining vector operations, synchronization, timing, 8,192-plus context support, and the final hardware capability remain open |
-| Compiler and checker | **QW-FM1 through QW-FM4 remain closed; dynamic diagnostic closed at `720cb2a`.** Complete neutral lowering, physical deployment, dynamic request construction, aggregate reconstruction, and a separately implemented 32-transaction reference are deterministic and retained | Preserve those artifacts while adding checkpoint/restart and the exact 8,000-token acceptance manifest; do not relabel the one-token prompt as long-context acceptance |
+| Command and capability ABI | ABI 2.5 capability V7 and the separately versioned long graph/Kernel IR/physical deployment admit 8,192 KV/RoPE rows and the complete 924,386-command program without resynthesis; V6 remains immutable; the common simulator and independent reference execute one complete V7 position-zero transaction | Add authenticated checkpoint/restart and operational controls for the 8,000-token workload. DeepSeek routing, remaining vector operations, synchronization, timing, 8,192 resident execution, and the final hardware capability remain open |
+| Compiler and checker | **QW-FM1 through QW-FM4 remain closed; dynamic diagnostic closed at `720cb2a`; long physical capacity closed in Section 1.14.** Forward and inverse V7 planners agree on the complete graph, HBM/SRAM layout, 399 checkpoint weights, 36 expanded state resources, and command program | Preserve V6 and V7 artifacts while adding runtime/reference admission, checkpoint/restart, and the exact 8,000-token acceptance manifest; do not relabel allocation as execution |
 | Functional simulation | **32-decision diagnostic closed at `720cb2a`.** The common simulator executes every full-model transaction, carries and atomically commits all 36 KV resources to generation/length 32, and is byte-identical across two clean campaigns; the independent path matches every declared boundary | Prove checkpoint/restart and measured operational readiness, then execute the exact 8,000-token resident prompt plus at least 32 generated tokens and compare with the governed official/golden result |
 | RTL correlation | QW-RTL-CMD-001 admits all production records; QW-RTL-DMA-RMS-001 executes adjacent commands 1 and 2 and completes `node.0001`; QW-RTL-DMA-MATMUL-001 retains focused first-block arithmetic/fail-stop evidence; QW-RTL-Q-PROJ-001 executes all commands 3 through 2,050 and all 4,096 BF16 values of `node.0002`; QW-RTL-KV-PROJ-001 executes all commands 2,051 through 3,074 and all 2,048 BF16 values of `node.0003` and `node.0004`; **QW-RTL-HEAD-RMS-001 executes commands 3,075 through 3,078 and all 5,120 BF16 values of per-head RMSNorm operations `node.0005` and `node.0006` in Icarus and Verilator, matching independent scalar outputs, exact counters, zero saturation, complete-operation atomic writeback, and fail-stop behavior** | Q, K, and V projections plus Q/K per-head RMSNorm are closed at the RTL/software-correlation boundary. Add indexed coefficient DMA and RoPE to close QKV preparation, then KV prepare, attention, state and vector kernels, program authentication, banking/ECC/arbitration, and a representative complete layer before `TA-RTL-6` |
 | Timing and physical evidence | Bounded macro-free ADD-SRAM RTL-to-GDS feasibility passes on pinned public IHP SG13G2 at a 20 ns target: campaign `0af6cbe8...b316` has positive extracted setup/hold slack at slow, typical, and fast corners, zero internal route/antenna violations, 18,101 post-route cells, and no unconstrained endpoints | This is one control/compute slice with an external behavioral SRAM. Formal equivalence, SRAM macro, activity-derived power/IR, thermal, foundry DRC/LVS, HBM/package, complete-layer timing, performance per watt, reliability, yield, and silicon remain open; `TA-PHY-7` is not closed |

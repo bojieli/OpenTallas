@@ -47,7 +47,8 @@ OPERATION_COUNT = 617
 TENSOR_COUNT = 1053
 STATE_RESOURCE_COUNT = 36
 LAYER_COUNT = 36
-CONTEXT_CAPACITY = 8000
+MIN_CONTEXT_CAPACITY = 8000
+MAX_CONTEXT_CAPACITY = 40960
 HIDDEN_WIDTH = 4096
 INTERMEDIATE_WIDTH = 12288
 VOCABULARY_SIZE = 151936
@@ -169,6 +170,22 @@ def _runtime_symbol_maximum(model: ProductionModelGraph, symbol_id: str) -> int:
     return symbol.maximum
 
 
+def _context_capacity(model: ProductionModelGraph) -> int:
+    symbol = model.symbol_by_id.get("context_capacity")
+    if (
+        symbol is None
+        or symbol.binding != {"kind": "compile_time"}
+        or symbol.minimum != symbol.maximum
+        or symbol.default != symbol.maximum
+        or symbol.multiple_of != symbol.maximum
+        or not MIN_CONTEXT_CAPACITY <= symbol.maximum <= MAX_CONTEXT_CAPACITY
+    ):
+        raise QwenFullModelSemanticError(
+            "Qwen compile-time context-capacity symbol differs"
+        )
+    return symbol.maximum
+
+
 def _row_extent(
     model: ProductionModelGraph,
     tensor: ProductionTensor,
@@ -208,7 +225,7 @@ def _state_ids_sha256(model: ProductionModelGraph) -> str:
     )
 
 
-def _validate_complete_graph(model: ProductionModelGraph) -> str:
+def _validate_complete_graph(model: ProductionModelGraph) -> tuple[str, int]:
     if (
         model.model_id != MODEL_ID
         or model.numeric_profile != NUMERIC_PROFILE
@@ -240,20 +257,21 @@ def _validate_complete_graph(model: ProductionModelGraph) -> str:
             raise QwenFullModelSemanticError(
                 f"state resource {state.state_id!r} contract differs"
             )
+    context_capacity = _context_capacity(model)
     expected_symbols = [
         {
             "binding": {"kind": "compile_time"},
-            "default": CONTEXT_CAPACITY,
+            "default": context_capacity,
             "id": "context_capacity",
-            "maximum": CONTEXT_CAPACITY,
-            "minimum": CONTEXT_CAPACITY,
-            "multiple_of": CONTEXT_CAPACITY,
+            "maximum": context_capacity,
+            "minimum": context_capacity,
+            "multiple_of": context_capacity,
         },
         {
             "binding": {"field": "position_end", "kind": "request"},
             "default": 1,
             "id": "position_end",
-            "maximum": CONTEXT_CAPACITY,
+            "maximum": context_capacity,
             "minimum": 1,
             "multiple_of": 1,
         },
@@ -261,7 +279,7 @@ def _validate_complete_graph(model: ProductionModelGraph) -> str:
             "binding": {"field": "position_start", "kind": "request"},
             "default": 0,
             "id": "position_start",
-            "maximum": CONTEXT_CAPACITY - 1,
+            "maximum": context_capacity - 1,
             "minimum": 0,
             "multiple_of": 1,
         },
@@ -269,7 +287,7 @@ def _validate_complete_graph(model: ProductionModelGraph) -> str:
             "binding": {"field": "span_tokens", "kind": "request"},
             "default": 1,
             "id": "span_tokens",
-            "maximum": CONTEXT_CAPACITY,
+            "maximum": context_capacity,
             "minimum": 1,
             "multiple_of": 1,
         },
@@ -334,7 +352,7 @@ def _validate_complete_graph(model: ProductionModelGraph) -> str:
                 "kind": "compare",
                 "operator": "le",
                 "symbol": "position_end",
-                "value": CONTEXT_CAPACITY,
+                "value": context_capacity,
             },
         ],
     }
@@ -384,7 +402,7 @@ def _validate_complete_graph(model: ProductionModelGraph) -> str:
         or any(effect.action != "commit" for effect in terminal.effects)
     ):
         raise QwenFullModelSemanticError("Qwen terminal atomic commit differs")
-    return checkpoint_lock_ids.pop()
+    return checkpoint_lock_ids.pop(), context_capacity
 
 
 def _load_qualification_evidence(
@@ -457,14 +475,16 @@ def _load_qualification_evidence(
     return records, checkpoint_ids.pop()
 
 
-def _validate_capability(capability: ProductionCapability) -> None:
+def _validate_capability(
+    capability: ProductionCapability, context_capacity: int
+) -> None:
     required_contracts = set(CONTRACT_BY_KIND.values()) - {"bf16_payload_lookup_v1"}
     if (
         (capability.command_abi_major, capability.command_abi_minor) != (2, 5)
         or capability.vector_engine is None
         or capability.state_engine is None
-        or capability.vector_engine.max_attention_context_tokens != CONTEXT_CAPACITY
-        or capability.vector_engine.max_rope_positions != CONTEXT_CAPACITY
+        or capability.vector_engine.max_attention_context_tokens != context_capacity
+        or capability.vector_engine.max_rope_positions != context_capacity
         or capability.state_engine.max_resources_per_transaction < STATE_RESOURCE_COUNT
         or not required_contracts <= set(capability.qualified_numeric_contracts)
         or capability.hbm.external_at_130nm_boundary is not True
@@ -736,6 +756,7 @@ def _silu_kernel(
 def _rope_kernel(
     model: ProductionModelGraph, operation: ProductionOperation
 ) -> dict[str, Any]:
+    context_capacity = _context_capacity(model)
     if len(operation.inputs) != 2 or len(operation.outputs) != 2:
         raise QwenFullModelSemanticError(
             f"RoPE operation {operation.operation_id!r} arity differs"
@@ -770,7 +791,7 @@ def _rope_kernel(
         "attributes": {
             "coefficient_layout": "cos_head_dim_then_sin_head_dim",
             "key_value_heads": KEY_VALUE_HEADS,
-            "max_positions": CONTEXT_CAPACITY,
+            "max_positions": context_capacity,
             "position_count_symbol": "span_tokens",
             "position_progression": "consecutive_from_start",
             "position_symbol": "position_start",
@@ -784,6 +805,7 @@ def _rope_kernel(
 def _prepare_kernel(
     model: ProductionModelGraph, operation: ProductionOperation
 ) -> dict[str, Any]:
+    context_capacity = _context_capacity(model)
     if len(operation.inputs) != 2 or len(operation.outputs) != 1:
         raise QwenFullModelSemanticError(
             f"KV prepare operation {operation.operation_id!r} arity differs"
@@ -820,7 +842,7 @@ def _prepare_kernel(
         "shape": {
             "head_dim": HEAD_DIM,
             "key_value_heads": KEY_VALUE_HEADS,
-            "max_context_tokens": CONTEXT_CAPACITY,
+            "max_context_tokens": context_capacity,
             "tokens_symbol": "span_tokens",
         },
     }
@@ -829,6 +851,7 @@ def _prepare_kernel(
 def _attention_kernel(
     model: ProductionModelGraph, operation: ProductionOperation
 ) -> dict[str, Any]:
+    context_capacity = _context_capacity(model)
     if len(operation.inputs) != 2 or len(operation.outputs) != 1:
         raise QwenFullModelSemanticError(
             f"attention operation {operation.operation_id!r} arity differs"
@@ -874,7 +897,7 @@ def _attention_kernel(
         "shape": {
             "head_dim": HEAD_DIM,
             "key_value_heads": KEY_VALUE_HEADS,
-            "max_context_tokens": CONTEXT_CAPACITY,
+            "max_context_tokens": context_capacity,
             "query_heads": QUERY_HEADS,
             "query_tokens_symbol": "span_tokens",
         },
@@ -884,6 +907,7 @@ def _attention_kernel(
 def _selection_kernel(
     model: ProductionModelGraph, operation: ProductionOperation
 ) -> dict[str, Any]:
+    context_capacity = _context_capacity(model)
     if len(operation.inputs) != 1 or len(operation.outputs) != 1:
         raise QwenFullModelSemanticError("last-token selection arity differs")
     source = _tensor(model, operation.inputs[0])
@@ -906,7 +930,7 @@ def _selection_kernel(
             "selection": "last_logical_row",
         },
         "shape": {
-            "maximum_rows": CONTEXT_CAPACITY,
+            "maximum_rows": context_capacity,
             "rows_symbol": "span_tokens",
             "width": HIDDEN_WIDTH,
         },
@@ -987,8 +1011,8 @@ def build_qwen_full_model_semantics(
         raise QwenFullModelSemanticError(
             f"Qwen full-model semantic source admission failed: {exc}"
         ) from exc
-    graph_checkpoint_lock_id = _validate_complete_graph(model)
-    _validate_capability(capability)
+    graph_checkpoint_lock_id, context_capacity = _validate_complete_graph(model)
+    _validate_capability(capability, context_capacity)
     kernels = [_kernel(model, operation) for operation in model.operations]
     if (
         len(kernels) != OPERATION_COUNT

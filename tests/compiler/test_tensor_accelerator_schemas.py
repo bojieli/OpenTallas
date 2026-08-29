@@ -342,7 +342,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 100
+    assert len(schemas) == 102
     by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
     assert set(by_name) == {
         "attention_deployment_v1.schema.json",
@@ -399,6 +399,8 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "qkv_source_lock_v1.schema.json",
         "qwen_final_output_qualification_v1.schema.json",
         "qwen_full_model_capacity_v1.schema.json",
+        "qwen_full_model_context_profile_check_v1.schema.json",
+        "qwen_full_model_context_profile_v1.schema.json",
         "qwen_full_model_deployment_v1.schema.json",
         "qwen_full_model_dynamic_execution_v1.schema.json",
         "qwen_full_model_dynamic_request_v1.schema.json",
@@ -489,8 +491,12 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
             load_strict_json(FIXTURE / "model_graph.json"),
             load_strict_json(output / "ir/model_graph.json"),
         ],
-        "model_graph_v2.schema.json": [
-            load_strict_json(FIXTURE / "production_model_graph.json")
+            "model_graph_v2.schema.json": [
+                load_strict_json(FIXTURE / "production_model_graph.json"),
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/"
+                    "qwen3_long_acceptance_context_v1/model_graph.v2.json"
+                ),
         ],
         "operator_coverage_v1.schema.json": [
             load_strict_json(output / "ir/operator_coverage.json")
@@ -502,25 +508,51 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
             load_strict_json(
                 ROOT / f"configs/hardware/tensor_accelerator_development_v{minor}.json"
             )
-            for minor in range(1, 7)
+                for minor in range(1, 8)
         ],
-        "qwen_final_output_qualification_v1.schema.json": [
-            load_strict_json(
-                ROOT / "results/tensor_accelerator/"
-                "qwen3_final_output_qualification.json"
-            )
-        ],
-        "qwen_full_model_capacity_v1.schema.json": [
+            "qwen_final_output_qualification_v1.schema.json": [
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/"
+                    "qwen3_final_output_qualification.json"
+                ),
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/"
+                    "qwen3_long_acceptance_context_v1/"
+                    "final_output_qualification.json"
+                ),
+            ],
+            "qwen_full_model_capacity_v1.schema.json": [
             load_strict_json(
                 ROOT / "results/tensor_accelerator/qwen3_full_model_physical/"
                 "physical/capacity_certificate.json"
-            )
-        ],
+            ),
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/"
+                "qwen3_long_acceptance_physical_v1/"
+                "physical/capacity_certificate.json"
+            ),
+            ],
+            "qwen_full_model_context_profile_check_v1.schema.json": [
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/"
+                    "qwen3_long_acceptance_context_v1/independent_check.json"
+                )
+            ],
+            "qwen_full_model_context_profile_v1.schema.json": [
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/"
+                    "qwen3_long_acceptance_context_v1/context_profile.json"
+                )
+            ],
         "qwen_full_model_deployment_v1.schema.json": [
             load_strict_json(
                 ROOT / "results/tensor_accelerator/qwen3_full_model_physical/"
                 "deployment_manifest.json"
-            )
+            ),
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/"
+                "qwen3_long_acceptance_physical_v1/deployment_manifest.json"
+            ),
         ],
         "qwen_full_model_dynamic_request_v1.schema.json": [
             load_strict_json(
@@ -556,13 +588,22 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
             load_strict_json(
                 ROOT / "results/tensor_accelerator/qwen3_full_model_physical/"
                 "checks/independent_check.json"
-            )
+            ),
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/"
+                "qwen3_long_acceptance_physical_v1/"
+                "checks/independent_check.json"
+            ),
         ],
         "qwen_full_model_physical_plan_v1.schema.json": [
             load_strict_json(
                 ROOT / "results/tensor_accelerator/qwen3_full_model_physical/"
                 "physical/physical_plan.json"
-            )
+            ),
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/"
+                "qwen3_long_acceptance_physical_v1/physical/physical_plan.json"
+            ),
         ],
         "qwen_full_model_reference_v1.schema.json": [
             load_strict_json(
@@ -573,25 +614,41 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
             load_strict_json(
                 ROOT / "results/tensor_accelerator/qwen3_full_model_physical/"
                 "request/execution_request.json"
-            )
-        ],
-        "qwen_full_model_semantic_check_v1.schema.json": [
+            ),
             load_strict_json(
-                ROOT / "results/tensor_accelerator/qwen3_full_model_semantics/"
-                "independent_check.json"
-            )
+                ROOT / "results/tensor_accelerator/"
+                "qwen3_long_acceptance_physical_v1/request/execution_request.json"
+            ),
         ],
-        "qwen_full_model_semantic_coverage_v1.schema.json": [
-            load_strict_json(
-                ROOT / "results/tensor_accelerator/qwen3_full_model_semantics/"
-                "coverage.json"
-            )
+            "qwen_full_model_semantic_check_v1.schema.json": [
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/qwen3_full_model_semantics/"
+                    "independent_check.json"
+                ),
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/"
+                    "qwen3_long_acceptance_semantics_v1/independent_check.json"
+                ),
+            ],
+            "qwen_full_model_semantic_coverage_v1.schema.json": [
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/qwen3_full_model_semantics/"
+                    "coverage.json"
+                ),
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/"
+                    "qwen3_long_acceptance_semantics_v1/coverage.json"
+                ),
         ],
         "qwen_full_model_source_lock_v1.schema.json": [
             load_strict_json(
                 ROOT / "results/tensor_accelerator/qwen3_full_model_physical/"
                 "source.lock.json"
-            )
+            ),
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/"
+                "qwen3_long_acceptance_physical_v1/source.lock.json"
+            ),
         ],
         "qwen_rtl_add_campaign_v1.schema.json": [
             load_strict_json(
@@ -731,10 +788,14 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
             )
         ],
         "production_tensor_kernel_ir_v1.schema.json": [
-            load_strict_json(
-                ROOT / "results/tensor_accelerator/qwen3_full_model_semantics/"
-                "tensor_kernel_ir.json"
-            )
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/qwen3_full_model_semantics/"
+                    "tensor_kernel_ir.json"
+                ),
+                load_strict_json(
+                    ROOT / "results/tensor_accelerator/"
+                    "qwen3_long_acceptance_semantics_v1/tensor_kernel_ir.json"
+                ),
         ],
         "source_lock_v1.schema.json": [load_strict_json(output / "source.lock.json")],
         "tensor_kernel_ir_v1.schema.json": [

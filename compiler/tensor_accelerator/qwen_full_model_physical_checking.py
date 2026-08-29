@@ -135,6 +135,10 @@ EXPECTED_OPCODE_COUNTS = {
 COEFFICIENT_TABLE_SHA256 = (
     "82b9d0c0dc0c98906ced230591852dbd27d73760de42df8de253ae29243034b9"
 )
+QUALIFIED_COEFFICIENT_TABLE_SHA256 = {
+    8000: COEFFICIENT_TABLE_SHA256,
+    8192: "aeaab0b9af138b2f7464ed38c925ca4ab2faa6de294a49d3e579003e70f7051b",
+}
 
 CLAIM_BOUNDARY = {
     "complete_graph_physical_lowering": True,
@@ -147,6 +151,22 @@ CLAIM_BOUNDARY = {
 
 class QwenFullModelPhysicalCheckError(ArtifactError):
     """Raised when a QW-FM2 candidate cannot be reconstructed exactly."""
+
+
+def _context_capacity(model: ProductionModelGraph) -> int:
+    symbol = model.symbol_by_id.get("context_capacity")
+    if (
+        symbol is None
+        or symbol.binding != {"kind": "compile_time"}
+        or symbol.minimum != symbol.maximum
+        or symbol.default != symbol.maximum
+        or symbol.multiple_of != symbol.maximum
+        or symbol.maximum not in QUALIFIED_COEFFICIENT_TABLE_SHA256
+    ):
+        raise QwenFullModelPhysicalCheckError(
+            "independent Qwen physical context is not qualified"
+        )
+    return symbol.maximum
 
 
 def _identified(body: Mapping[str, Any], field: str) -> dict[str, Any]:
@@ -268,6 +288,7 @@ def _admit_semantic_bundle(
 def _admit_model_and_capability(
     model: ProductionModelGraph, capability: ProductionCapability
 ) -> None:
+    context_capacity = _context_capacity(model)
     vector = capability.vector_engine
     state = capability.state_engine
     if (
@@ -283,8 +304,8 @@ def _admit_model_and_capability(
         or vector is None
         or vector.max_rows < QUERY_HEADS + KEY_VALUE_HEADS
         or vector.max_width < INTERMEDIATE_WIDTH
-        or vector.max_rope_positions != CONTEXT_CAPACITY
-        or vector.max_attention_context_tokens != CONTEXT_CAPACITY
+        or vector.max_rope_positions != context_capacity
+        or vector.max_attention_context_tokens != context_capacity
         or vector.max_query_heads != QUERY_HEADS
         or vector.max_key_value_heads != KEY_VALUE_HEADS
         or vector.rope_head_dim != HEAD_DIM
@@ -475,6 +496,9 @@ def _derive_hbm(
     capability: ProductionCapability,
     checkpoint_lock: Mapping[str, Any],
 ) -> dict[str, Any]:
+    context_capacity = _context_capacity(model)
+    state_plane_bytes = context_capacity * KV_TOKEN_BYTES
+    coefficient_sha256 = QUALIFIED_COEFFICIENT_TABLE_SHA256[context_capacity]
     consumers = _weight_consumers(model)
     weights = sorted(
         (tensor for tensor in model.tensors if tensor.role == "weight"),
@@ -573,7 +597,7 @@ def _derive_hbm(
     if immutable != EXPECTED_WEIGHT_BYTES:
         raise QwenFullModelPhysicalCheckError("immutable byte count differs")
 
-    coefficient_size = CONTEXT_CAPACITY * 2 * HEAD_DIM * BF16_BYTES
+    coefficient_size = context_capacity * 2 * HEAD_DIM * BF16_BYTES
     coefficient_start, coefficient_end = _reserved_extent(
         cursor,
         coefficient_size,
@@ -585,8 +609,8 @@ def _derive_hbm(
         "address": capability.hbm.base_address + coefficient_start,
         "layout": "position_major_cos_then_sin_bf16",
         "offset_bytes": coefficient_start,
-        "payload_sha256": COEFFICIENT_TABLE_SHA256,
-        "positions": CONTEXT_CAPACITY,
+        "payload_sha256": coefficient_sha256,
+        "positions": context_capacity,
         "row_bytes": 2 * HEAD_DIM * BF16_BYTES,
         "size_bytes": coefficient_size,
     }
@@ -596,13 +620,13 @@ def _derive_hbm(
     for layer in range(LAYER_COUNT):
         key_start, key_end = _reserved_extent(
             cursor,
-            STATE_PLANE_BYTES,
+            state_plane_bytes,
             capability.hbm.burst_bytes,
             keep_within_shard=True,
         )
         value_start, value_end = _reserved_extent(
             key_end,
-            STATE_PLANE_BYTES,
+            state_plane_bytes,
             capability.hbm.burst_bytes,
             keep_within_shard=True,
         )
@@ -614,16 +638,16 @@ def _derive_hbm(
                 "key_offset_bytes": key_start,
                 "key_value_heads": KEY_VALUE_HEADS,
                 "layer": layer,
-                "max_context_tokens": CONTEXT_CAPACITY,
+                "max_context_tokens": context_capacity,
                 "resource_id": f"kv.layer.{layer}",
-                "size_bytes_per_plane": STATE_PLANE_BYTES,
+                "size_bytes_per_plane": state_plane_bytes,
                 "value_address": capability.hbm.base_address + value_start,
                 "value_offset_bytes": value_start,
             }
         )
         cursor = value_end
-    mutable = len(states) * 2 * STATE_PLANE_BYTES
-    if mutable != EXPECTED_KV_BYTES:
+    mutable = len(states) * 2 * state_plane_bytes
+    if mutable != STATE_COUNT * 2 * context_capacity * KV_TOKEN_BYTES:
         raise QwenFullModelPhysicalCheckError("mutable KV byte count differs")
 
     table_size = LAYER_COUNT * STATE_METADATA.size
@@ -1143,7 +1167,7 @@ def _metadata_payload(hbm: Mapping[str, Any]) -> bytes:
             STATE_MAGIC,
             0,
             0,
-            CONTEXT_CAPACITY,
+            state["max_context_tokens"],
             state["key_address"],
             state["value_address"],
             state["layer"],
@@ -1220,14 +1244,19 @@ def _verify_hbm_payloads(
                     )
 
             coefficient_record = hbm["coefficient_table"]
+            coefficient_positions = coefficient_record["positions"]
+            coefficient_sha256 = QUALIFIED_COEFFICIENT_TABLE_SHA256.get(
+                coefficient_positions
+            )
             if (
-                coefficient_record["size_bytes"]
-                != CONTEXT_CAPACITY * 2 * HEAD_DIM * BF16_BYTES
+                coefficient_sha256 is None
+                or coefficient_record["size_bytes"]
+                != coefficient_positions * 2 * HEAD_DIM * BF16_BYTES
                 or hbm_reader.sha256(
                     coefficient_record["offset_bytes"],
                     coefficient_record["size_bytes"],
                 )
-                != COEFFICIENT_TABLE_SHA256
+                != coefficient_sha256
             ):
                 raise QwenFullModelPhysicalCheckError(
                     "authenticated RoPE coefficient table differs"
@@ -1314,6 +1343,7 @@ def _verify_command_program(
     payload: bytes,
     candidate_program: Mapping[str, Any],
 ) -> dict[str, Any]:
+    context_capacity = _context_capacity(model)
     try:
         observed = decode(payload)
     except ProductionCommandError as exc:
@@ -1483,7 +1513,7 @@ def _verify_command_program(
                     destination=slots["rope_coefficients"]["address"],
                     size0=hbm["coefficient_table"]["row_bytes"],
                     size1=hbm["coefficient_table"]["row_bytes"],
-                    size2=CONTEXT_CAPACITY,
+                    size2=context_capacity,
                     size3=4,
                 )
             )
@@ -1610,7 +1640,7 @@ def _verify_command_program(
                     kernel_index=NO_KERNEL,
                     source0=hbm["metadata_table"]["address"],
                     source1=hbm["descriptor_table"]["address"],
-                    size0=CONTEXT_CAPACITY,
+                    size0=context_capacity,
                     size1=STATE_COUNT,
                 )
             )
@@ -1670,7 +1700,7 @@ def _derive_capacity(
                 "margin": capability.limits["max_commands"] - EXPECTED_COMMAND_COUNT,
                 "required": EXPECTED_COMMAND_COUNT,
             },
-            "context_capacity_tokens": CONTEXT_CAPACITY,
+            "context_capacity_tokens": hbm["coefficient_table"]["positions"],
             "hbm_capacity": {
                 "alignment_padding_bytes": hbm["alignment_padding_bytes"],
                 "available_bytes": capability.hbm.capacity_bytes,

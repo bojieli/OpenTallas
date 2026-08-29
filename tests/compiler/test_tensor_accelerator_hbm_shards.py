@@ -9,6 +9,7 @@ from compiler.tensor_accelerator.hbm_shards import (
     HBMShardError,
     HBMShardReader,
     HBMShardWriter,
+    hardlink_verified_shard_prefix,
 )
 
 
@@ -74,3 +75,65 @@ def test_hbm_shards_reject_out_of_range_access(tmp_path: Path) -> None:
             reader.read(4090, 16)
         with pytest.raises(HBMShardError, match="256 MiB"):
             reader.read(0, 256 * 1024 * 1024 + 1)
+
+
+def _small_sharded_image(root: Path, payload: bytes) -> dict[str, object]:
+    with HBMShardWriter(root, total_size=len(payload), shard_bytes=4096) as writer:
+        writer.write(payload)
+        return writer.finish()
+
+
+def test_verified_hbm_prefix_reuse_hardlinks_only_admitted_shards(
+    tmp_path: Path,
+) -> None:
+    payload = bytes(range(256)) * 36
+    source_root = tmp_path / "source"
+    target_root = tmp_path / "target"
+    source_root.mkdir()
+    target_root.mkdir()
+    source = _small_sharded_image(source_root, payload)
+    target = _small_sharded_image(target_root, payload)
+    source_paths = [source_root / record["path"] for record in source["shards"]]
+    target_paths = [target_root / record["path"] for record in target["shards"]]
+    before_suffix_inode = target_paths[2].stat().st_ino
+
+    reused = hardlink_verified_shard_prefix(
+        target_root,
+        target["shards"],
+        source_root=source_root,
+        source_shards=source["shards"],
+        shard_count=2,
+    )
+    assert reused == {"reused_bytes": 8192, "reused_shard_count": 2}
+    for index in range(2):
+        assert source_paths[index].stat().st_ino == target_paths[index].stat().st_ino
+        assert source_paths[index].stat().st_nlink == 2
+    assert target_paths[2].stat().st_ino == before_suffix_inode
+    assert target_paths[2].stat().st_ino != source_paths[2].stat().st_ino
+    with HBMShardReader(target_root, target["shards"]) as reader:
+        assert reader.sha256(0, len(payload)) == hashlib.sha256(payload).hexdigest()
+
+
+def test_verified_hbm_prefix_reuse_fails_closed_on_drift(tmp_path: Path) -> None:
+    payload = bytes(range(256)) * 32
+    source_root = tmp_path / "source"
+    target_root = tmp_path / "target"
+    source_root.mkdir()
+    target_root.mkdir()
+    source = _small_sharded_image(source_root, payload)
+    target = _small_sharded_image(target_root, payload)
+    source_path = source_root / source["shards"][0]["path"]
+    target_path = target_root / target["shards"][0]["path"]
+    target_inode = target_path.stat().st_ino
+    with source_path.open("r+b") as handle:
+        handle.seek(17)
+        handle.write(b"\xff")
+    with pytest.raises(HBMShardError, match="hash differs"):
+        hardlink_verified_shard_prefix(
+            target_root,
+            target["shards"],
+            source_root=source_root,
+            source_shards=source["shards"],
+            shard_count=1,
+        )
+    assert target_path.stat().st_ino == target_inode

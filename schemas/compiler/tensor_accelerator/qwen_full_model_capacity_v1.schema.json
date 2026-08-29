@@ -2,6 +2,38 @@
   "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_capacity_v1.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
+  "oneOf": [
+    {
+      "properties": {
+        "capacity_certificate_id": {"const": "e0e63f0aeab52582591111d360ae2c92a9cdc968c020c8594d7f71805fe81263"},
+        "context_capacity_tokens": {"const": 8000},
+        "hbm_capacity": {
+          "properties": {
+            "alignment_padding_bytes": {"const": 7870464},
+            "margin_bytes": {"const": 257304817152},
+            "mutable_kv_bytes": {"const": 1179648000},
+            "required_bytes": {"const": 17573089792},
+            "rope_coefficient_bytes": {"const": 4096000}
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "capacity_certificate_id": {"const": "3b2411a77adb66bc4e7b32fdccb8dad0ab69609a225b94d4046abcc96e94a3fd"},
+        "context_capacity_tokens": {"const": 8192},
+        "hbm_capacity": {
+          "properties": {
+            "alignment_padding_bytes": {"const": 5675008},
+            "margin_bytes": {"const": 257278602752},
+            "mutable_kv_bytes": {"const": 1207959552},
+            "required_bytes": {"const": 17599304192},
+            "rope_coefficient_bytes": {"const": 4194304}
+          }
+        }
+      }
+    }
+  ],
   "properties": {
     "capacity_certificate_id": {"$ref": "#/$defs/sha256"},
     "command_capacity": {
@@ -14,18 +46,18 @@
       "required": ["available", "margin", "required"],
       "type": "object"
     },
-    "context_capacity_tokens": {"const": 8000},
+    "context_capacity_tokens": {"enum": [8000, 8192]},
     "hbm_capacity": {
       "additionalProperties": false,
       "properties": {
-        "alignment_padding_bytes": {"const": 7870464},
+        "alignment_padding_bytes": {"enum": [5675008, 7870464]},
         "available_bytes": {"const": 274877906944},
         "immutable_weight_bytes": {"const": 16381470720},
-        "margin_bytes": {"const": 257304817152},
+        "margin_bytes": {"enum": [257278602752, 257304817152]},
         "metadata_and_descriptor_bytes": {"const": 4608},
-        "mutable_kv_bytes": {"const": 1179648000},
-        "required_bytes": {"const": 17573089792},
-        "rope_coefficient_bytes": {"const": 4096000}
+        "mutable_kv_bytes": {"enum": [1179648000, 1207959552]},
+        "required_bytes": {"enum": [17573089792, 17599304192]},
+        "rope_coefficient_bytes": {"enum": [4096000, 4194304]}
       },
       "required": [
         "alignment_padding_bytes",

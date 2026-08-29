@@ -1,0 +1,60 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_context_profile_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "acceptance_workload": {
+      "additionalProperties": false,
+      "properties": {
+        "generated_decisions_minimum": {"const": 32},
+        "prompt_tokens_exact": {"const": 8000},
+        "required_committed_rows": {"const": 8031}
+      },
+      "required": ["generated_decisions_minimum", "prompt_tokens_exact", "required_committed_rows"],
+      "type": "object"
+    },
+    "base_context_capacity_tokens": {"const": 8000},
+    "base_graph_id": {"const": "989ab0d4dae37c783e2eff349e1ed1fe16279288e12a19a94975f43b0254426f"},
+    "base_graph_payload_sha256": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"const": "fa32932d73c1f605a69db3a803f1f25ef5b022a98cc3c6b5fe42b7f7af024e2a"},
+    "claim_boundary": {
+      "additionalProperties": false,
+      "properties": {
+        "allocation_capacity_only": {"const": true},
+        "exact_8000_token_acceptance_executed": {"const": false},
+        "qwen_8192_boundary_executed": {"const": false},
+        "timing_or_performance": {"const": false}
+      },
+      "required": ["allocation_capacity_only", "exact_8000_token_acceptance_executed", "qwen_8192_boundary_executed", "timing_or_performance"],
+      "type": "object"
+    },
+    "expanded_graph_id": {"$ref": "#/$defs/sha256"},
+    "expanded_graph_payload_sha256": {"$ref": "#/$defs/sha256"},
+    "long_context_capacity_tokens": {"const": 8192},
+    "maximum_position_embeddings": {"const": 40960},
+    "model_id": {"const": "qwen3-8b"},
+    "profile_id": {"$ref": "#/$defs/sha256"},
+    "profile_name": {"const": "qwen3-8b-8000-prompt-32-decision-long-v1"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_context_profile.v1"},
+    "transformation": {
+      "additionalProperties": false,
+      "properties": {
+        "entrypoint_context_predicates_changed": {"const": 2},
+        "numeric_contracts_changed": {"const": 0},
+        "operation_records_changed": {"const": 0},
+        "source_records_changed": {"const": 0},
+        "state_resource_records_changed": {"const": 0},
+        "symbol_records_changed": {"const": 4},
+        "tensor_records_changed": {"const": 0}
+      },
+      "required": ["entrypoint_context_predicates_changed", "numeric_contracts_changed", "operation_records_changed", "source_records_changed", "state_resource_records_changed", "symbol_records_changed", "tensor_records_changed"],
+      "type": "object"
+    }
+  },
+  "required": ["acceptance_workload", "base_context_capacity_tokens", "base_graph_id", "base_graph_payload_sha256", "checkpoint_lock_id", "claim_boundary", "expanded_graph_id", "expanded_graph_payload_sha256", "long_context_capacity_tokens", "maximum_position_embeddings", "model_id", "profile_id", "profile_name", "schema", "transformation"],
+  "title": "OpenTallas Qwen3-8B long-acceptance context profile v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

@@ -41,7 +41,12 @@ from .common import (
     sha256_file,
     write_canonical_json,
 )
-from .hbm_shards import DEFAULT_SHARD_BYTES, HBMShardError, HBMShardWriter
+from .hbm_shards import (
+    DEFAULT_SHARD_BYTES,
+    HBMShardError,
+    HBMShardWriter,
+    hardlink_verified_shard_prefix,
+)
 from .production_capability import (
     ProductionCapability,
     ProductionCapabilityError,
@@ -114,6 +119,10 @@ EXPECTED_MUTABLE_KV_BYTES = 1179648000
 COEFFICIENT_TABLE_SHA256 = (
     "82b9d0c0dc0c98906ced230591852dbd27d73760de42df8de253ae29243034b9"
 )
+QUALIFIED_COEFFICIENT_TABLE_SHA256 = {
+    8000: COEFFICIENT_TABLE_SHA256,
+    8192: "aeaab0b9af138b2f7464ed38c925ca4ab2faa6de294a49d3e579003e70f7051b",
+}
 
 CLAIM_BOUNDARY = {
     "complete_graph_physical_lowering": True,
@@ -135,6 +144,22 @@ SOURCE_COPIES = {
 
 class QwenFullModelPhysicalError(ArtifactError):
     """Raised when the complete physical deployment cannot be proven."""
+
+
+def _context_capacity(model: ProductionModelGraph) -> int:
+    symbol = model.symbol_by_id.get("context_capacity")
+    if (
+        symbol is None
+        or symbol.binding != {"kind": "compile_time"}
+        or symbol.minimum != symbol.maximum
+        or symbol.default != symbol.maximum
+        or symbol.multiple_of != symbol.maximum
+        or symbol.maximum not in QUALIFIED_COEFFICIENT_TABLE_SHA256
+    ):
+        raise QwenFullModelPhysicalError(
+            "Qwen physical context capacity is not a qualified profile"
+        )
+    return symbol.maximum
 
 
 def _identified(body: Mapping[str, Any], field: str) -> dict[str, Any]:
@@ -165,6 +190,31 @@ def _copy_canonical(source: Path, destination: Path) -> None:
         handle.write(payload)
         handle.flush()
         os.fsync(handle.fileno())
+
+
+def _load_reuse_artifact(root: Path, relative: str, label: str) -> dict[str, Any]:
+    safe = _safe_relative(relative)
+    try:
+        resolved_root = root.resolve(strict=True)
+        candidate = root / safe
+        resolved = candidate.resolve(strict=True)
+        payload = resolved.read_bytes()
+        value = load_strict_json(resolved)
+    except (OSError, ArtifactError, TypeError, ValueError) as exc:
+        raise QwenFullModelPhysicalError(
+            f"cannot load {label} from HBM reuse deployment: {exc}"
+        ) from exc
+    if (
+        resolved == resolved_root
+        or resolved_root not in resolved.parents
+        or candidate.is_symlink()
+        or not resolved.is_file()
+        or payload != canonical_json_bytes(value)
+    ):
+        raise QwenFullModelPhysicalError(
+            f"{label} in HBM reuse deployment is not a canonical regular artifact"
+        )
+    return value
 
 
 def _identity(value: Mapping[str, Any], field: str, label: str) -> None:
@@ -249,6 +299,7 @@ def _validate_model_capability(
     model: ProductionModelGraph,
     capability: ProductionCapability,
 ) -> None:
+    context_capacity = _context_capacity(model)
     vector = capability.vector_engine
     state = capability.state_engine
     if (
@@ -264,8 +315,8 @@ def _validate_model_capability(
         or vector is None
         or vector.max_rows < QUERY_HEADS + KEY_VALUE_HEADS
         or vector.max_width < INTERMEDIATE_WIDTH
-        or vector.max_rope_positions != CONTEXT_CAPACITY
-        or vector.max_attention_context_tokens != CONTEXT_CAPACITY
+        or vector.max_rope_positions != context_capacity
+        or vector.max_attention_context_tokens != context_capacity
         or vector.max_query_heads != QUERY_HEADS
         or vector.max_key_value_heads != KEY_VALUE_HEADS
         or vector.rope_head_dim != HEAD_DIM
@@ -349,6 +400,9 @@ def _physical_layout(
     capability: ProductionCapability,
     checkpoint_lock: Mapping[str, Any],
 ) -> dict[str, Any]:
+    context_capacity = _context_capacity(model)
+    state_payload_bytes = context_capacity * KV_TOKEN_BYTES
+    coefficient_sha256 = QUALIFIED_COEFFICIENT_TABLE_SHA256[context_capacity]
     consumers = _weight_consumers(model)
     weights = sorted(
         (tensor for tensor in model.tensors if tensor.role == "weight"),
@@ -452,7 +506,7 @@ def _physical_layout(
     if immutable_bytes != EXPECTED_IMMUTABLE_WEIGHT_BYTES:
         raise QwenFullModelPhysicalError("Qwen immutable weight-byte count differs")
 
-    coefficient_size = CONTEXT_CAPACITY * 2 * HEAD_DIM * BF16_BYTES
+    coefficient_size = context_capacity * 2 * HEAD_DIM * BF16_BYTES
     coefficient_offset, cursor_after_coefficient = _place(
         cursor,
         size=coefficient_size,
@@ -465,8 +519,8 @@ def _physical_layout(
         "address": capability.hbm.base_address + coefficient_offset,
         "layout": "position_major_cos_then_sin_bf16",
         "offset_bytes": coefficient_offset,
-        "payload_sha256": COEFFICIENT_TABLE_SHA256,
-        "positions": CONTEXT_CAPACITY,
+        "payload_sha256": coefficient_sha256,
+        "positions": context_capacity,
         "row_bytes": 2 * HEAD_DIM * BF16_BYTES,
         "size_bytes": coefficient_size,
     }
@@ -476,7 +530,7 @@ def _physical_layout(
     for layer in range(LAYER_COUNT):
         key_offset, key_end = _place(
             cursor,
-            size=STATE_PAYLOAD_BYTES,
+            size=state_payload_bytes,
             alignment=capability.hbm.burst_bytes,
             shard_bytes=DEFAULT_SHARD_BYTES,
             no_cross_shard=True,
@@ -484,7 +538,7 @@ def _physical_layout(
         padding += key_offset - cursor
         value_offset, value_end = _place(
             key_end,
-            size=STATE_PAYLOAD_BYTES,
+            size=state_payload_bytes,
             alignment=capability.hbm.burst_bytes,
             shard_bytes=DEFAULT_SHARD_BYTES,
             no_cross_shard=True,
@@ -497,16 +551,16 @@ def _physical_layout(
                 "key_offset_bytes": key_offset,
                 "key_value_heads": KEY_VALUE_HEADS,
                 "layer": layer,
-                "max_context_tokens": CONTEXT_CAPACITY,
+                "max_context_tokens": context_capacity,
                 "resource_id": f"kv.layer.{layer}",
-                "size_bytes_per_plane": STATE_PAYLOAD_BYTES,
+                "size_bytes_per_plane": state_payload_bytes,
                 "value_address": capability.hbm.base_address + value_offset,
                 "value_offset_bytes": value_offset,
             }
         )
         cursor = value_end
-    mutable_kv_bytes = len(states) * 2 * STATE_PAYLOAD_BYTES
-    if mutable_kv_bytes != EXPECTED_MUTABLE_KV_BYTES:
+    mutable_kv_bytes = len(states) * 2 * state_payload_bytes
+    if mutable_kv_bytes != STATE_RESOURCE_COUNT * 2 * context_capacity * KV_TOKEN_BYTES:
         raise QwenFullModelPhysicalError("Qwen mutable KV-byte count differs")
 
     table_bytes = LAYER_COUNT * STATE_METADATA.size
@@ -870,6 +924,7 @@ def _commands(
     hbm: Mapping[str, Any],
     sram: Mapping[str, Any],
 ) -> tuple[tuple[ProductionCommand, ...], list[dict[str, Any]], dict[str, int]]:
+    context_capacity = _context_capacity(model)
     slots = _slot_by_id(sram)
     assignments = _assignment_by_tensor(sram)
     weights = {item["consumer_kernel_index"]: item for item in hbm["weights"]}
@@ -958,7 +1013,7 @@ def _commands(
                         auxiliary=0,
                         size0=hbm["coefficient_table"]["row_bytes"],
                         size1=hbm["coefficient_table"]["row_bytes"],
-                        size2=CONTEXT_CAPACITY,
+                        size2=context_capacity,
                         size3=4,
                     ),
                     ProductionCommand(
@@ -1068,7 +1123,7 @@ def _commands(
                     kernel_index=NO_KERNEL,
                     source0=hbm["metadata_table"]["address"],
                     source1=hbm["descriptor_table"]["address"],
-                    size0=CONTEXT_CAPACITY,
+                    size0=context_capacity,
                     size1=STATE_RESOURCE_COUNT,
                 )
             )
@@ -1116,7 +1171,7 @@ def _metadata_payload(hbm: Mapping[str, Any]) -> bytes:
             STATE_MAGIC,
             0,
             0,
-            CONTEXT_CAPACITY,
+            state["max_context_tokens"],
             state["key_address"],
             state["value_address"],
             state["layer"],
@@ -1231,19 +1286,27 @@ def _publish_hbm(
                     raise QwenFullModelPhysicalError(
                         "full-model compiler did not consume all checkpoint weights"
                     )
-                coefficient = coefficient_table_bf16(CONTEXT_CAPACITY)
+                coefficient_record = hbm["coefficient_table"]
+                context_capacity = int(coefficient_record["positions"])
+                coefficient_sha256 = QUALIFIED_COEFFICIENT_TABLE_SHA256.get(
+                    context_capacity
+                )
+                if coefficient_sha256 is None:
+                    raise QwenFullModelPhysicalError(
+                        "HBM publication requested an unqualified RoPE table"
+                    )
+                coefficient = coefficient_table_bf16(context_capacity)
                 coefficient_payload = np.ascontiguousarray(
                     coefficient, dtype="<u2"
                 ).tobytes(order="C")
                 if (
-                    coefficient.shape != (CONTEXT_CAPACITY, 2 * HEAD_DIM)
+                    coefficient.shape != (context_capacity, 2 * HEAD_DIM)
                     or hashlib.sha256(coefficient_payload).hexdigest()
-                    != COEFFICIENT_TABLE_SHA256
+                    != coefficient_sha256
                 ):
                     raise QwenFullModelPhysicalError(
                         "full-model RoPE coefficient table differs"
                     )
-                coefficient_record = hbm["coefficient_table"]
                 writer.advance_to(coefficient_record["offset_bytes"])
                 writer.write(coefficient_payload)
                 for state in hbm["states"]:
@@ -1270,6 +1333,109 @@ def _publish_hbm(
             f"full-model HBM publication failed: {exc}"
         ) from exc
     return image
+
+
+def _reuse_authenticated_hbm_prefix(
+    *,
+    root: Path,
+    hbm: Mapping[str, Any],
+    checkpoint_lock_id: str,
+    reuse_hbm_root: Path,
+) -> dict[str, int]:
+    """Deduplicate only full immutable-weight shards from a checked deployment."""
+
+    manifest = _load_reuse_artifact(
+        reuse_hbm_root,
+        "deployment_manifest.json",
+        "reuse deployment manifest",
+    )
+    plan = _load_reuse_artifact(
+        reuse_hbm_root,
+        PHYSICAL_PLAN_PATH,
+        "reuse physical plan",
+    )
+    source_lock = _load_reuse_artifact(
+        reuse_hbm_root,
+        "source.lock.json",
+        "reuse source lock",
+    )
+    checkpoint_lock = _load_reuse_artifact(
+        reuse_hbm_root,
+        "source/checkpoint.lock.json",
+        "reuse checkpoint lock",
+    )
+    _identity(manifest, "build_id", "reuse deployment manifest")
+    _identity(plan, "physical_plan_id", "reuse physical plan")
+    _identity(source_lock, "source_lock_id", "reuse source lock")
+    _identity(checkpoint_lock, "lock_id", "reuse checkpoint lock")
+    source_image = plan.get("hbm", {}).get("image")
+    artifacts = manifest.get("artifacts")
+    if (
+        manifest.get("schema") != MANIFEST_SCHEMA
+        or manifest.get("build_class")
+        != "independently_reconstructed_physical_deployment"
+        or manifest.get("physical_plan_id") != plan.get("physical_plan_id")
+        or manifest.get("source_lock_id") != source_lock.get("source_lock_id")
+        or source_lock.get("checkpoint_lock_id") != checkpoint_lock_id
+        or checkpoint_lock.get("lock_id") != checkpoint_lock_id
+        or plan.get("schema") != PHYSICAL_PLAN_SCHEMA
+        or not isinstance(source_image, Mapping)
+        or not isinstance(source_image.get("shards"), list)
+        or not isinstance(artifacts, list)
+    ):
+        raise QwenFullModelPhysicalError(
+            "HBM reuse deployment identities or checkpoint binding differ"
+        )
+    artifact_by_path: dict[str, Mapping[str, Any]] = {}
+    for record in artifacts:
+        if (
+            not isinstance(record, Mapping)
+            or not isinstance(record.get("path"), str)
+            or record["path"] in artifact_by_path
+        ):
+            raise QwenFullModelPhysicalError(
+                "HBM reuse deployment artifact table is malformed"
+            )
+        artifact_by_path[record["path"]] = record
+    for record in source_image["shards"]:
+        if not isinstance(record, Mapping) or artifact_by_path.get(
+            record.get("path")
+        ) != {
+            "path": record.get("path"),
+            "role": "hbm_shard",
+            "sha256": record.get("sha256"),
+            "size_bytes": record.get("size_bytes"),
+        }:
+            raise QwenFullModelPhysicalError(
+                "HBM reuse shard differs between its plan and manifest"
+            )
+
+    target_image = hbm.get("image")
+    if (
+        not isinstance(target_image, Mapping)
+        or not isinstance(target_image.get("shards"), list)
+        or target_image.get("shard_bytes") != hbm.get("shard_bytes")
+    ):
+        raise QwenFullModelPhysicalError("new HBM shard image is incomplete")
+    reusable_shards = (
+        int(hbm["coefficient_table"]["offset_bytes"]) // int(hbm["shard_bytes"])
+    )
+    if reusable_shards != EXPECTED_IMMUTABLE_WEIGHT_BYTES // DEFAULT_SHARD_BYTES:
+        raise QwenFullModelPhysicalError(
+            "immutable HBM reuse boundary differs from the frozen checkpoint layout"
+        )
+    try:
+        return hardlink_verified_shard_prefix(
+            root,
+            target_image["shards"],
+            source_root=reuse_hbm_root,
+            source_shards=source_image["shards"],
+            shard_count=reusable_shards,
+        )
+    except (HBMShardError, OSError, TypeError, ValueError) as exc:
+        raise QwenFullModelPhysicalError(
+            f"authenticated HBM shard reuse failed: {exc}"
+        ) from exc
 
 
 def _request(model: ProductionModelGraph) -> dict[str, Any]:
@@ -1336,7 +1502,7 @@ def _capacity_certificate(
             "margin": capability.limits["max_commands"] - command_count,
             "required": command_count,
         },
-        "context_capacity_tokens": CONTEXT_CAPACITY,
+        "context_capacity_tokens": hbm["coefficient_table"]["positions"],
         "hbm_capacity": {
             "alignment_padding_bytes": hbm["alignment_padding_bytes"],
             "available_bytes": capability.hbm.capacity_bytes,
@@ -1466,6 +1632,7 @@ def _build_into(
     semantic_coverage_path: Path,
     semantic_kernel_ir_path: Path,
     semantic_check_path: Path,
+    reuse_hbm_root: Path | None,
     root: Path,
 ) -> dict[str, Any]:
     try:
@@ -1530,6 +1697,20 @@ def _build_into(
         hbm=hbm,
     )
     hbm["image"] = image
+    if reuse_hbm_root is not None:
+        reused = _reuse_authenticated_hbm_prefix(
+            root=root,
+            hbm=hbm,
+            checkpoint_lock_id=checkpoint_lock["lock_id"],
+            reuse_hbm_root=reuse_hbm_root,
+        )
+        if reused != {
+            "reused_bytes": 15 * DEFAULT_SHARD_BYTES,
+            "reused_shard_count": 15,
+        }:
+            raise QwenFullModelPhysicalError(
+                "authenticated HBM reuse did not cover the complete immutable prefix"
+            )
     capacity = _capacity_certificate(
         capability=capability,
         hbm=hbm,
@@ -1590,6 +1771,7 @@ def build_qwen_full_model_physical_deployment(
     semantic_kernel_ir_path: Path,
     semantic_check_path: Path,
     output: Path,
+    reuse_hbm_root: Path | None = None,
 ) -> dict[str, Any]:
     """Build, independently reconstruct, and atomically publish QW-FM2/3."""
 
@@ -1603,6 +1785,9 @@ def build_qwen_full_model_physical_deployment(
         "semantic_check_path": Path(semantic_check_path).resolve(),
     }
     output = Path(output).resolve()
+    reuse_root = (
+        None if reuse_hbm_root is None else Path(reuse_hbm_root).resolve()
+    )
     if not snapshot.is_dir():
         raise QwenFullModelPhysicalError(
             f"checkpoint snapshot does not exist: {snapshot}"
@@ -1616,12 +1801,19 @@ def build_qwen_full_model_physical_deployment(
         raise QwenFullModelPhysicalError(
             f"full-model deployment output already exists: {output}"
         )
+    if reuse_root is not None and (
+        not reuse_root.is_dir() or reuse_root == output
+    ):
+        raise QwenFullModelPhysicalError(
+            f"HBM reuse deployment does not exist or aliases output: {reuse_root}"
+        )
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = Path(tempfile.mkdtemp(prefix=f".{output.name}.tmp-", dir=output.parent))
     try:
         manifest = _build_into(
             snapshot=snapshot,
             root=temporary,
+            reuse_hbm_root=reuse_root,
             **sources,
         )
         os.replace(temporary, output)

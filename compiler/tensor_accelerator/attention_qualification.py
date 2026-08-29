@@ -15,7 +15,6 @@ from runtime.reference.tensor_accelerator_attention import (
     CAUSAL_MASK_BF16_CODE,
     HEAD_DIM,
     KEY_VALUE_HEADS,
-    MAX_CONTEXT_TOKENS,
     NUMERIC_CONTRACT,
     QUERY_HEADS,
     SCALE_BF16_CODE,
@@ -72,6 +71,11 @@ EXPECTED_SHAPES = {
     "q_rotary": [QUERY_HEADS, HEAD_DIM],
     "v": [KEY_VALUE_HEADS, HEAD_DIM],
 }
+
+# This v1 qualification is an admitted 8,000-row artifact.  The reusable
+# attention implementation may accept a larger separately qualified deployment
+# capacity, but that must not retroactively broaden or re-identify this report.
+QUALIFICATION_CONTEXT_TOKENS = 8_000
 
 
 class AttentionQualificationError(ArtifactError):
@@ -192,20 +196,24 @@ def _attention_fixture(
     transform: str,
 ) -> dict[str, Any]:
     if committed_keys.shape[0] == 0:
-        reference_state = reference_empty("kv.layer.0")
-        kernel_state = kernel_empty("kv.layer.0")
+        reference_state = reference_empty(
+            "kv.layer.0", capacity=QUALIFICATION_CONTEXT_TOKENS
+        )
+        kernel_state = kernel_empty(
+            "kv.layer.0", capacity=QUALIFICATION_CONTEXT_TOKENS
+        )
     else:
         reference_state = reference_snapshot(
             resource_id="kv.layer.0",
             generation=generation,
-            capacity=MAX_CONTEXT_TOKENS,
+            capacity=QUALIFICATION_CONTEXT_TOKENS,
             key_values=committed_keys.tolist(),
             value_values=committed_values.tolist(),
         )
         kernel_state = kernel_snapshot(
             resource_id="kv.layer.0",
             generation=generation,
-            capacity=MAX_CONTEXT_TOKENS,
+            capacity=QUALIFICATION_CONTEXT_TOKENS,
             key_values=committed_keys,
             value_values=committed_values,
         )
@@ -349,12 +357,12 @@ def _transaction_qualification(
     values: np.ndarray,
 ) -> dict[str, Any]:
     reference_states = (
-        reference_empty("kv.layer.0"),
-        reference_empty("kv.layer.1"),
+        reference_empty("kv.layer.0", capacity=QUALIFICATION_CONTEXT_TOKENS),
+        reference_empty("kv.layer.1", capacity=QUALIFICATION_CONTEXT_TOKENS),
     )
     kernel_states = (
-        kernel_empty("kv.layer.0"),
-        kernel_empty("kv.layer.1"),
+        kernel_empty("kv.layer.0", capacity=QUALIFICATION_CONTEXT_TOKENS),
+        kernel_empty("kv.layer.1", capacity=QUALIFICATION_CONTEXT_TOKENS),
     )
     reference_transactions = tuple(
         reference_prepare(
@@ -540,7 +548,7 @@ def qualify_qkv_attention(
         "numeric_contract": NUMERIC_CONTRACT,
         "profile": {
             "causal_mask_bf16_code": CAUSAL_MASK_BF16_CODE,
-            "context_capacity": MAX_CONTEXT_TOKENS,
+            "context_capacity": QUALIFICATION_CONTEXT_TOKENS,
             "head_dim": HEAD_DIM,
             "key_value_heads": KEY_VALUE_HEADS,
             "query_heads": QUERY_HEADS,

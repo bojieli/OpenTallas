@@ -37,10 +37,12 @@ from compiler.tensor_accelerator.common import (
 )
 from compiler.tensor_accelerator.hbm_shards import HBMShardError, HBMShardReader
 from compiler.tensor_accelerator.production_capability import (
+    ProductionCapability,
     ProductionCapabilityError,
     load_production_capability,
 )
 from compiler.tensor_accelerator.production_model import (
+    ProductionModelGraph,
     ProductionModelGraphError,
     ProductionOperation,
     load_production_model_graph,
@@ -105,6 +107,11 @@ WEIGHT_COUNT = 399
 STATE_COUNT = 36
 LAYER_COUNT = 36
 CONTEXT_CAPACITY = 8000
+QUALIFIED_CONTEXT_CAPACITIES = frozenset({8000, 8192})
+QUALIFIED_ROPE_SHA256 = {
+    8000: "82b9d0c0dc0c98906ced230591852dbd27d73760de42df8de253ae29243034b9",
+    8192: "aeaab0b9af138b2f7464ed38c925ca4ab2faa6de294a49d3e579003e70f7051b",
+}
 HIDDEN_WIDTH = 4096
 INTERMEDIATE_WIDTH = 12288
 VOCABULARY_SIZE = 151936
@@ -140,6 +147,28 @@ def _identity(value: Mapping[str, Any], field: str, label: str) -> None:
     )
     if observed != expected:
         raise QwenFullModelReferenceError(f"{label} identity differs")
+
+
+def _qualified_context_capacity(
+    model: ProductionModelGraph, capability: ProductionCapability
+) -> int:
+    symbol = model.symbol_by_id.get("context_capacity")
+    vector = capability.vector_engine
+    if (
+        symbol is None
+        or symbol.binding != {"kind": "compile_time"}
+        or symbol.minimum != symbol.maximum
+        or symbol.default != symbol.maximum
+        or symbol.multiple_of != symbol.maximum
+        or symbol.maximum not in QUALIFIED_CONTEXT_CAPACITIES
+        or vector is None
+        or vector.max_attention_context_tokens != symbol.maximum
+        or vector.max_rope_positions != symbol.maximum
+    ):
+        raise QwenFullModelReferenceError(
+            "independent context capacity is not one qualified graph/capability profile"
+        )
+    return symbol.maximum
 
 
 def _exact(
@@ -476,6 +505,7 @@ def _check_qwen_full_model_transaction(
         ) from exc
     _identity(request, "request_id", "execution request")
     _identity(report, "report_id", "execution report")
+    context_capacity = _qualified_context_capacity(model, capability)
     fixed_request_keys = {
         "expected_generations",
         "graph_id",
@@ -576,7 +606,7 @@ def _check_qwen_full_model_transaction(
         or not 0 <= token_id < VOCABULARY_SIZE
         or isinstance(position, bool)
         or not isinstance(position, int)
-        or not 0 <= position < CONTEXT_CAPACITY
+        or not 0 <= position < context_capacity
         or request.get("position_end") != position + 1
         or request.get("span_tokens") != 1
         or request.get("last_row_index") != 0
@@ -704,7 +734,7 @@ def _check_qwen_full_model_transaction(
     if initial_states is None:
         states: dict[str, KVSnapshotReference] = {
             f"kv.layer.{layer}": empty_kv_snapshot(
-                f"kv.layer.{layer}", capacity=CONTEXT_CAPACITY
+                f"kv.layer.{layer}", capacity=context_capacity
             )
             for layer in range(LAYER_COUNT)
         }
@@ -716,7 +746,7 @@ def _check_qwen_full_model_transaction(
             or state.resource_id != resource
             or state.generation != position
             or state.length != position
-            or state.capacity != CONTEXT_CAPACITY
+            or state.capacity != context_capacity
             for resource, state in states.items()
         ):
             raise QwenFullModelReferenceError(
@@ -1338,8 +1368,9 @@ def _state_metadata_payload(
             not isinstance(physical, dict)
             or physical.get("layer") != layer
             or physical.get("resource_id") != resource
-            or physical.get("max_context_tokens") != CONTEXT_CAPACITY
             or not isinstance(state, KVSnapshotReference)
+            or state.capacity not in QUALIFIED_CONTEXT_CAPACITIES
+            or physical.get("max_context_tokens") != state.capacity
         ):
             raise QwenFullModelReferenceError(
                 "independent physical state ordering differs"
@@ -1425,13 +1456,17 @@ def _load_rope_table(
         raise QwenFullModelReferenceError("independent physical HBM plan is absent")
     coefficient = hbm.get("coefficient_table")
     image = hbm.get("image")
+    positions = (
+        coefficient.get("positions") if isinstance(coefficient, dict) else None
+    )
     if (
         not isinstance(coefficient, dict)
         or not isinstance(image, dict)
         or coefficient.get("layout") != "position_major_cos_then_sin_bf16"
-        or coefficient.get("positions") != CONTEXT_CAPACITY
+        or positions not in QUALIFIED_CONTEXT_CAPACITIES
         or coefficient.get("row_bytes") != 2 * HEAD_DIM * BF16_BYTES
-        or coefficient.get("size_bytes") != CONTEXT_CAPACITY * 2 * HEAD_DIM * BF16_BYTES
+        or coefficient.get("size_bytes") != positions * 2 * HEAD_DIM * BF16_BYTES
+        or coefficient.get("payload_sha256") != QUALIFIED_ROPE_SHA256[positions]
         or coefficient.get("offset_bytes") != coefficient.get("address")
         or not isinstance(image.get("shards"), list)
     ):
@@ -1457,7 +1492,7 @@ def _load_rope_table(
         raise QwenFullModelReferenceError(
             "independent RoPE coefficient payload differs"
         )
-    values = np.frombuffer(payload, dtype="<u2").reshape(CONTEXT_CAPACITY, 2 * HEAD_DIM)
+    values = np.frombuffer(payload, dtype="<u2").reshape(positions, 2 * HEAD_DIM)
     if np.any((values & np.uint16(0x7F80)) == np.uint16(0x7F80)):
         raise QwenFullModelReferenceError(
             "independent RoPE coefficient table is not finite"
@@ -1557,6 +1592,7 @@ def check_qwen_dynamic_session_execution(
         (aggregate, "session_execution_id", "dynamic session execution"),
     ):
         _identity(value, field, label)
+    context_capacity = _qualified_context_capacity(model, capability)
 
     _exact(
         session,
@@ -1597,7 +1633,7 @@ def check_qwen_dynamic_session_execution(
         or session.get("checkpoint_lock_id") != lock["lock_id"]
         or session.get("command_program_sha256")
         != plan.get("command_program", {}).get("sha256")
-        or session.get("context_capacity") != CONTEXT_CAPACITY
+        or session.get("context_capacity") != context_capacity
         or session.get("claim_boundary")
         != {
             "exact_8000_token_acceptance": False,
@@ -1628,8 +1664,8 @@ def check_qwen_dynamic_session_execution(
         )
         or isinstance(generated_limit, bool)
         or not isinstance(generated_limit, int)
-        or not 32 <= generated_limit <= CONTEXT_CAPACITY
-        or len(prompt_ids) + generated_limit - 1 > CONTEXT_CAPACITY
+        or not 32 <= generated_limit <= context_capacity
+        or len(prompt_ids) + generated_limit - 1 > context_capacity
         or generation.get("selection") != "greedy_lowest_token_id_argmax"
         or generation.get("unexpected_early_eos") != "fail"
         or plan.get("graph_id") != model.graph_id
@@ -1648,10 +1684,14 @@ def check_qwen_dynamic_session_execution(
             "independent dynamic prompt tokenizer round trip differs"
         )
     rope_table, rope_record = _load_rope_table(root, plan)
+    if rope_table.shape[0] != context_capacity:
+        raise QwenFullModelReferenceError(
+            "independent RoPE table and graph context capacities differ"
+        )
     transaction_count = len(prompt_ids) + generated_limit - 1
     states: dict[str, KVSnapshotReference] = {
         f"kv.layer.{layer}": empty_kv_snapshot(
-            f"kv.layer.{layer}", capacity=CONTEXT_CAPACITY
+            f"kv.layer.{layer}", capacity=context_capacity
         )
         for layer in range(LAYER_COUNT)
     }

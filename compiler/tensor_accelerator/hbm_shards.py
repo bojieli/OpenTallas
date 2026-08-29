@@ -52,6 +52,137 @@ def _update_zeros(digest: object, size: int) -> None:
         remaining -= count
 
 
+def _regular_artifact(root: Path, relative: object, label: str) -> Path:
+    safe = _safe_relative(relative, label)
+    try:
+        resolved_root = root.resolve(strict=True)
+        candidate = root / safe
+        resolved = candidate.resolve(strict=True)
+    except OSError as exc:
+        raise HBMShardError(f"cannot resolve {label}: {exc}") from exc
+    if (
+        resolved == resolved_root
+        or resolved_root not in resolved.parents
+        or candidate.is_symlink()
+        or not resolved.is_file()
+    ):
+        raise HBMShardError(f"{label} is not a regular file beneath its root")
+    return resolved
+
+
+def hardlink_verified_shard_prefix(
+    target_root: Path,
+    target_shards: Sequence[Mapping[str, object]],
+    *,
+    source_root: Path,
+    source_shards: Sequence[Mapping[str, object]],
+    shard_count: int,
+) -> dict[str, int]:
+    """Replace an identical authenticated shard prefix with atomic hard links.
+
+    Both source and newly published target bytes are hashed before any link is
+    installed.  Records must be byte-for-byte identical, including index,
+    logical offset, content address, and size.  This deliberately supports only
+    a prefix so a caller cannot accidentally share mutable or profile-dependent
+    suffix storage.
+    """
+
+    count = _integer(shard_count, "reused HBM shard count", minimum=1)
+    try:
+        resolved_target = Path(target_root).resolve(strict=True)
+        resolved_source = Path(source_root).resolve(strict=True)
+    except OSError as exc:
+        raise HBMShardError(f"cannot resolve HBM reuse roots: {exc}") from exc
+    if (
+        not resolved_target.is_dir()
+        or not resolved_source.is_dir()
+        or resolved_target == resolved_source
+    ):
+        raise HBMShardError("HBM reuse roots must be distinct directories")
+    if count > len(target_shards) or count > len(source_shards):
+        raise HBMShardError("reused HBM shard prefix is incomplete")
+
+    target_prefix = tuple(target_shards[:count])
+    source_prefix = tuple(source_shards[:count])
+    pairs: list[tuple[Path, Path, int]] = []
+    reused_bytes = 0
+    for index, (target_record, source_record) in enumerate(
+        zip(target_prefix, source_prefix, strict=True)
+    ):
+        if not isinstance(target_record, Mapping) or not isinstance(
+            source_record, Mapping
+        ):
+            raise HBMShardError(f"reused HBM shard {index} record is malformed")
+        if dict(target_record) != dict(source_record):
+            raise HBMShardError(
+                f"reused HBM shard {index} is not content-identical"
+            )
+        target_path = _regular_artifact(
+            resolved_target,
+            target_record.get("path"),
+            f"target HBM shard {index}",
+        )
+        source_path = _regular_artifact(
+            resolved_source,
+            source_record.get("path"),
+            f"source HBM shard {index}",
+        )
+        size = _integer(
+            target_record.get("size_bytes"),
+            f"reused HBM shard {index}.size_bytes",
+            minimum=1,
+        )
+        if target_path.stat().st_dev != source_path.stat().st_dev:
+            raise HBMShardError(
+                f"reused HBM shard {index} is on a different filesystem"
+            )
+        pairs.append((source_path, target_path, size))
+        reused_bytes += size
+
+    # Hash both sides while they are still independent.  This proves that the
+    # content-address records are authentic rather than trusting filenames.
+    with HBMShardReader(
+        resolved_source, source_prefix, verify_hashes=True
+    ), HBMShardReader(resolved_target, target_prefix, verify_hashes=True):
+        pass
+
+    for index, (source_path, target_path, size) in enumerate(pairs):
+        temporary = target_path.with_name(f".{target_path.name}.reuse.tmp")
+        if temporary.exists() or temporary.is_symlink():
+            raise HBMShardError(
+                f"temporary HBM reuse path already exists for shard {index}"
+            )
+        try:
+            os.link(source_path, temporary, follow_symlinks=False)
+            source_stat = source_path.stat()
+            linked_stat = temporary.stat()
+            if (
+                source_stat.st_dev != linked_stat.st_dev
+                or source_stat.st_ino != linked_stat.st_ino
+                or linked_stat.st_size != size
+            ):
+                raise HBMShardError(
+                    f"hard-linked HBM shard {index} identity differs"
+                )
+            os.replace(temporary, target_path)
+            target_stat = target_path.stat()
+            if (
+                source_stat.st_dev != target_stat.st_dev
+                or source_stat.st_ino != target_stat.st_ino
+                or target_stat.st_size != size
+            ):
+                raise HBMShardError(
+                    f"published HBM shard {index} does not share source storage"
+                )
+        except Exception:
+            try:
+                temporary.unlink()
+            except FileNotFoundError:
+                pass
+            raise
+    return {"reused_bytes": reused_bytes, "reused_shard_count": count}
+
+
 class HBMShardWriter:
     """Write one pre-sized logical image monotonically into sparse mmap shards."""
 
@@ -435,4 +566,5 @@ __all__ = [
     "HBMShardError",
     "HBMShardReader",
     "HBMShardWriter",
+    "hardlink_verified_shard_prefix",
 ]

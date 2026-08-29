@@ -49,12 +49,16 @@ def _assert_differential(
     )
 
 
-def test_contract_constants_and_complete_8k_coefficient_table_are_frozen() -> None:
+def test_contract_constants_and_complete_8192_coefficient_table_are_frozen() -> None:
     assert REFERENCE_CONTRACT == KERNEL_CONTRACT == "qwen3_rope_fp32_bf16_v1"
     assert REFERENCE_INV_FREQ == KERNEL_INV_FREQ
     table = coefficient_table_bf16(MAX_POSITIONS)
-    assert table.shape == (8000, 256)
+    assert table.shape == (8192, 256)
     assert hashlib.sha256(table.astype("<u2", copy=False).tobytes()).hexdigest() == (
+        "aeaab0b9af138b2f7464ed38c925ca4ab2faa6de294a49d3e579003e70f7051b"
+    )
+    legacy = table[:8000]
+    assert hashlib.sha256(legacy.astype("<u2", copy=False).tobytes()).hexdigest() == (
         "82b9d0c0dc0c98906ced230591852dbd27d73760de42df8de253ae29243034b9"
     )
     assert [int(table[7999, index]) for index in (0, 3, 10, 16, 128, 142)] == [

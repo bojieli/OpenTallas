@@ -115,6 +115,11 @@ WEIGHT_COUNT = 399
 STATE_COUNT = 36
 LAYER_COUNT = 36
 CONTEXT_CAPACITY = 8000
+QUALIFIED_CONTEXT_CAPACITIES = frozenset({8000, 8192})
+QUALIFIED_ROPE_SHA256 = {
+    8000: "82b9d0c0dc0c98906ced230591852dbd27d73760de42df8de253ae29243034b9",
+    8192: "aeaab0b9af138b2f7464ed38c925ca4ab2faa6de294a49d3e579003e70f7051b",
+}
 HIDDEN_WIDTH = 4096
 INTERMEDIATE_WIDTH = 12288
 VOCABULARY_SIZE = 151936
@@ -223,6 +228,49 @@ def _u16_payload(value: np.ndarray[Any, Any]) -> bytes:
 
 def _payload_sha256(payload: bytes) -> str:
     return hashlib.sha256(payload).hexdigest()
+
+
+def _qualified_context_capacity(
+    model: ProductionModelGraph,
+    capability: ProductionCapability,
+    plan: Mapping[str, Any],
+) -> int:
+    symbol = model.symbol_by_id.get("context_capacity")
+    vector = capability.vector_engine
+    hbm = plan.get("hbm")
+    coefficient = hbm.get("coefficient_table") if isinstance(hbm, dict) else None
+    states = hbm.get("states") if isinstance(hbm, dict) else None
+    if (
+        symbol is None
+        or symbol.binding != {"kind": "compile_time"}
+        or symbol.minimum != symbol.maximum
+        or symbol.default != symbol.maximum
+        or symbol.multiple_of != symbol.maximum
+        or symbol.maximum not in QUALIFIED_CONTEXT_CAPACITIES
+        or vector is None
+        or vector.max_attention_context_tokens != symbol.maximum
+        or vector.max_rope_positions != symbol.maximum
+        or not isinstance(coefficient, dict)
+        or coefficient.get("positions") != symbol.maximum
+        or coefficient.get("row_bytes") != 2 * HEAD_DIM * BF16_BYTES
+        or coefficient.get("size_bytes")
+        != symbol.maximum * 2 * HEAD_DIM * BF16_BYTES
+        or coefficient.get("payload_sha256")
+        != QUALIFIED_ROPE_SHA256[symbol.maximum]
+        or not isinstance(states, list)
+        or len(states) != STATE_COUNT
+        or any(
+            not isinstance(state, dict)
+            or state.get("max_context_tokens") != symbol.maximum
+            or state.get("size_bytes_per_plane")
+            != symbol.maximum * KEY_VALUE_HEADS * HEAD_DIM * BF16_BYTES
+            for state in states
+        )
+    ):
+        raise QwenFullModelSimulationError(
+            "deployment context capacity is not one coherent qualified profile"
+        )
+    return symbol.maximum
 
 
 @dataclass
@@ -349,6 +397,7 @@ class QwenFullModelSimulator:
         source_lock: dict[str, Any],
         hbm: HBMShardReader,
         hbm_hashes_verified: bool,
+        context_capacity: int,
     ) -> None:
         self._root = root
         self._manifest = manifest
@@ -361,6 +410,7 @@ class QwenFullModelSimulator:
         self._source_lock = source_lock
         self._hbm = hbm
         self._hbm_hashes_verified = hbm_hashes_verified
+        self._context_capacity = context_capacity
         self._closed = False
 
         self._slot_records = {item["id"]: item for item in plan["sram"]["slots"]}
@@ -565,6 +615,7 @@ class QwenFullModelSimulator:
                 root, COMMAND_PATH, "command program"
             ).read_bytes()
             commands = decode(command_payload)
+            context_capacity = _qualified_context_capacity(model, capability, plan)
 
             if (
                 plan.get("schema") != PHYSICAL_PLAN_SCHEMA
@@ -638,6 +689,7 @@ class QwenFullModelSimulator:
                 source_lock=source_lock,
                 hbm=hbm,
                 hbm_hashes_verified=verify_hbm_hashes,
+                context_capacity=context_capacity,
             )
         except QwenFullModelSimulationError:
             if hbm is not None:
@@ -686,7 +738,7 @@ class QwenFullModelSimulator:
                 STATE_MAGIC,
                 0,
                 0,
-                CONTEXT_CAPACITY,
+                self._context_capacity,
                 state["key_address"],
                 state["value_address"],
                 layer,
@@ -709,7 +761,7 @@ class QwenFullModelSimulator:
                     f"initial transaction descriptor for layer {layer} differs"
                 )
             result[state["resource_id"]] = empty_kv_snapshot(
-                state["resource_id"], capacity=CONTEXT_CAPACITY
+                state["resource_id"], capacity=self._context_capacity
             )
         return result
 
@@ -838,7 +890,7 @@ class QwenFullModelSimulator:
             generation.get("generated_token_limit"),
             "dynamic session generated token limit",
             32,
-            CONTEXT_CAPACITY,
+            self._context_capacity,
         )
         tokenizer_records = [
             record
@@ -855,7 +907,7 @@ class QwenFullModelSimulator:
             != self._source_lock["checkpoint_lock_id"]
             or value.get("command_program_sha256")
             != self._plan["command_program"]["sha256"]
-            or value.get("context_capacity") != CONTEXT_CAPACITY
+            or value.get("context_capacity") != self._context_capacity
             or value.get("claim_boundary")
             != {
                 "exact_8000_token_acceptance": False,
@@ -865,7 +917,7 @@ class QwenFullModelSimulator:
             or prompt.get("token_count") != len(prompt_ids)
             or prompt.get("utf8_sha256")
             != hashlib.sha256(prompt["text"].encode("utf-8")).hexdigest()
-            or len(prompt_ids) + limit - 1 > CONTEXT_CAPACITY
+            or len(prompt_ids) + limit - 1 > self._context_capacity
             or generation.get("selection") != "greedy_lowest_token_id_argmax"
             or generation.get("unexpected_early_eos") != "fail"
             or tokenizer.get("decoded_prompt_exact") is not True
@@ -1084,7 +1136,7 @@ class QwenFullModelSimulator:
             or value["last_row_index"] != 0
             or value["position_start"] < 0
             or value["position_end"] != value["position_start"] + 1
-            or value["position_end"] > CONTEXT_CAPACITY
+            or value["position_end"] > self._context_capacity
             or not 0 <= value["token_id"] < VOCABULARY_SIZE
             or not 1 <= value["transaction_id"] < 1 << 64
             or not isinstance(expected, list)
@@ -1608,7 +1660,7 @@ class QwenFullModelSimulator:
                     destination=coefficient_slot.address,
                     size0=coefficient["row_bytes"],
                     size1=coefficient["row_bytes"],
-                    size2=CONTEXT_CAPACITY,
+                    size2=self._context_capacity,
                     size3=4,
                 )
                 expected_command = ProductionCommand(
@@ -1956,7 +2008,7 @@ class QwenFullModelSimulator:
                     kernel_index=NO_KERNEL,
                     source0=self._plan["hbm"]["metadata_table"]["address"],
                     source1=self._plan["hbm"]["descriptor_table"]["address"],
-                    size0=CONTEXT_CAPACITY,
+                    size0=self._context_capacity,
                     size1=STATE_COUNT,
                 )
                 self._expect_command(command, expected)

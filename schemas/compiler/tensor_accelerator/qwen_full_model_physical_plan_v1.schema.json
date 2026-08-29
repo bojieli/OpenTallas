@@ -2,6 +2,10 @@
   "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_physical_plan_v1.schema.json",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "additionalProperties": false,
+  "oneOf": [
+    {"$ref": "#/$defs/context_8000"},
+    {"$ref": "#/$defs/context_8192"}
+  ],
   "properties": {
     "capability_id": {"$ref": "#/$defs/sha256"},
     "capacity_certificate_id": {"$ref": "#/$defs/sha256"},
@@ -33,6 +37,128 @@
   "title": "Qwen complete-model HBM/SRAM physical plan v1",
   "type": "object",
   "$defs": {
+    "context_8000": {
+      "properties": {
+        "command_program": {
+          "properties": {
+            "sha256": {"const": "f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec"}
+          }
+        },
+        "hbm": {
+          "properties": {
+            "alignment_padding_bytes": {"const": 7870464},
+            "coefficient_table": {
+              "properties": {
+                "payload_sha256": {"const": "82b9d0c0dc0c98906ced230591852dbd27d73760de42df8de253ae29243034b9"},
+                "positions": {"const": 8000},
+                "size_bytes": {"const": 4096000}
+              }
+            },
+            "descriptor_table": {
+              "properties": {
+                "address": {"const": 17573087488},
+                "offset_bytes": {"const": 17573087488}
+              }
+            },
+            "image": {
+              "properties": {
+                "shards": {
+                  "contains": {
+                    "properties": {
+                      "index": {"const": 16},
+                      "logical_offset": {"const": 17179869184},
+                      "size_bytes": {"const": 393220608}
+                    },
+                    "required": ["index", "logical_offset", "size_bytes"],
+                    "type": "object"
+                  },
+                  "maxContains": 1,
+                  "minContains": 1
+                },
+                "size_bytes": {"const": 17573089792}
+              }
+            },
+            "metadata_table": {
+              "properties": {
+                "address": {"const": 17573085184},
+                "offset_bytes": {"const": 17573085184}
+              }
+            },
+            "mutable_kv_bytes": {"const": 1179648000},
+            "states": {
+              "items": {
+                "properties": {
+                  "max_context_tokens": {"const": 8000},
+                  "size_bytes_per_plane": {"const": 16384000}
+                }
+              }
+            },
+            "total_size_bytes": {"const": 17573089792}
+          }
+        }
+      }
+    },
+    "context_8192": {
+      "properties": {
+        "command_program": {
+          "properties": {
+            "sha256": {"const": "dfc7ee4d89a091aea616f602174f8bd41cae319ceec92d31fda4cb43636dce6d"}
+          }
+        },
+        "hbm": {
+          "properties": {
+            "alignment_padding_bytes": {"const": 5675008},
+            "coefficient_table": {
+              "properties": {
+                "payload_sha256": {"const": "aeaab0b9af138b2f7464ed38c925ca4ab2faa6de294a49d3e579003e70f7051b"},
+                "positions": {"const": 8192},
+                "size_bytes": {"const": 4194304}
+              }
+            },
+            "descriptor_table": {
+              "properties": {
+                "address": {"const": 17599301888},
+                "offset_bytes": {"const": 17599301888}
+              }
+            },
+            "image": {
+              "properties": {
+                "shards": {
+                  "contains": {
+                    "properties": {
+                      "index": {"const": 16},
+                      "logical_offset": {"const": 17179869184},
+                      "size_bytes": {"const": 419435008}
+                    },
+                    "required": ["index", "logical_offset", "size_bytes"],
+                    "type": "object"
+                  },
+                  "maxContains": 1,
+                  "minContains": 1
+                },
+                "size_bytes": {"const": 17599304192}
+              }
+            },
+            "metadata_table": {
+              "properties": {
+                "address": {"const": 17599299584},
+                "offset_bytes": {"const": 17599299584}
+              }
+            },
+            "mutable_kv_bytes": {"const": 1207959552},
+            "states": {
+              "items": {
+                "properties": {
+                  "max_context_tokens": {"const": 8192},
+                  "size_bytes_per_plane": {"const": 16777216}
+                }
+              }
+            },
+            "total_size_bytes": {"const": 17599304192}
+          }
+        }
+      }
+    },
     "address": {"maximum": 281474976710655, "minimum": 0, "type": "integer"},
     "claim_boundary": {
       "additionalProperties": false,
@@ -55,13 +181,13 @@
     "coefficient_table": {
       "additionalProperties": false,
       "properties": {
-        "address": {"$ref": "#/$defs/address"},
+        "address": {"const": 16384425984},
         "layout": {"const": "position_major_cos_then_sin_bf16"},
-        "offset_bytes": {"minimum": 0, "type": "integer"},
-        "payload_sha256": {"const": "82b9d0c0dc0c98906ced230591852dbd27d73760de42df8de253ae29243034b9"},
-        "positions": {"const": 8000},
+        "offset_bytes": {"const": 16384425984},
+        "payload_sha256": {"enum": ["82b9d0c0dc0c98906ced230591852dbd27d73760de42df8de253ae29243034b9", "aeaab0b9af138b2f7464ed38c925ca4ab2faa6de294a49d3e579003e70f7051b"]},
+        "positions": {"enum": [8000, 8192]},
         "row_bytes": {"const": 512},
-        "size_bytes": {"const": 4096000}
+        "size_bytes": {"enum": [4096000, 4194304]}
       },
       "required": [
         "address",
@@ -160,14 +286,14 @@
     "hbm": {
       "additionalProperties": false,
       "properties": {
-        "alignment_padding_bytes": {"const": 7870464},
+        "alignment_padding_bytes": {"enum": [5675008, 7870464]},
         "base_address": {"const": 0},
         "coefficient_table": {"$ref": "#/$defs/coefficient_table"},
         "descriptor_table": {"$ref": "#/$defs/table"},
         "image": {"$ref": "#/$defs/image"},
         "immutable_weight_bytes": {"const": 16381470720},
         "metadata_table": {"$ref": "#/$defs/table"},
-        "mutable_kv_bytes": {"const": 1179648000},
+        "mutable_kv_bytes": {"enum": [1179648000, 1207959552]},
         "shard_bytes": {"const": 1073741824},
         "states": {
           "items": {"$ref": "#/$defs/state"},
@@ -175,7 +301,7 @@
           "minItems": 36,
           "type": "array"
         },
-        "total_size_bytes": {"const": 17573089792},
+        "total_size_bytes": {"enum": [17573089792, 17599304192]},
         "weights": {
           "items": {"$ref": "#/$defs/weight"},
           "maxItems": 399,
@@ -210,7 +336,7 @@
           "minItems": 17,
           "type": "array"
         },
-        "size_bytes": {"const": 17573089792}
+        "size_bytes": {"enum": [17573089792, 17599304192]}
       },
       "required": ["logical_sha256", "shard_bytes", "shards", "size_bytes"],
       "type": "object"
@@ -289,9 +415,9 @@
         "key_offset_bytes": {"minimum": 0, "type": "integer"},
         "key_value_heads": {"const": 8},
         "layer": {"maximum": 35, "minimum": 0, "type": "integer"},
-        "max_context_tokens": {"const": 8000},
+        "max_context_tokens": {"enum": [8000, 8192]},
         "resource_id": {"pattern": "^kv\\.layer\\.(?:[0-9]|[12][0-9]|3[0-5])$", "type": "string"},
-        "size_bytes_per_plane": {"const": 16384000},
+        "size_bytes_per_plane": {"enum": [16384000, 16777216]},
         "value_address": {"$ref": "#/$defs/address"},
         "value_offset_bytes": {"minimum": 0, "type": "integer"}
       },

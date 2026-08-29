@@ -79,6 +79,7 @@ def _request_simulator() -> QwenFullModelSimulator:
         f"kv.layer.{layer}": empty_kv_snapshot(f"kv.layer.{layer}", capacity=8000)
         for layer in range(36)
     }
+    simulator._context_capacity = 8000
     simulator._request = _request()
     return simulator
 

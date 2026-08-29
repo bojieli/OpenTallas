@@ -41,7 +41,8 @@ KERNEL_SCHEMA = "opentallas.production_tensor_kernel_ir.v1"
 OPERATION_COUNT = 617
 TENSOR_COUNT = 1053
 STATE_RESOURCE_COUNT = 36
-CONTEXT_CAPACITY = 8000
+MIN_CONTEXT_CAPACITY = 8000
+MAX_CONTEXT_CAPACITY = 40960
 QUERY_HEADS = 32
 KEY_VALUE_HEADS = 8
 HEAD_DIM = 128
@@ -150,6 +151,22 @@ def _tensor(model: ProductionModelGraph, tensor_id: str) -> ProductionTensor:
     return tensor
 
 
+def _context_capacity(model: ProductionModelGraph) -> int:
+    symbol = model.symbol_by_id.get("context_capacity")
+    if (
+        symbol is None
+        or symbol.binding != {"kind": "compile_time"}
+        or symbol.minimum != symbol.maximum
+        or symbol.default != symbol.maximum
+        or symbol.multiple_of != symbol.maximum
+        or not MIN_CONTEXT_CAPACITY <= symbol.maximum <= MAX_CONTEXT_CAPACITY
+    ):
+        raise QwenFullModelSemanticCheckError(
+            "independent Qwen context-capacity symbol differs"
+        )
+    return symbol.maximum
+
+
 def _row_extent(
     model: ProductionModelGraph,
     tensor: ProductionTensor,
@@ -197,7 +214,7 @@ def _state_ids_sha256(model: ProductionModelGraph) -> str:
     )
 
 
-def _check_model_contract(model: ProductionModelGraph) -> str:
+def _check_model_contract(model: ProductionModelGraph) -> tuple[str, int]:
     expected_operation_ids = tuple(
         [f"node.{index:04d}" for index in range(OPERATION_COUNT - 1)] + ["state.commit"]
     )
@@ -218,20 +235,21 @@ def _check_model_contract(model: ProductionModelGraph) -> str:
         raise QwenFullModelSemanticCheckError(
             "independent complete-graph identity/cardinality differs"
         )
+    context_capacity = _context_capacity(model)
     expected_symbols = [
         {
             "binding": {"kind": "compile_time"},
-            "default": CONTEXT_CAPACITY,
+            "default": context_capacity,
             "id": "context_capacity",
-            "maximum": CONTEXT_CAPACITY,
-            "minimum": CONTEXT_CAPACITY,
-            "multiple_of": CONTEXT_CAPACITY,
+            "maximum": context_capacity,
+            "minimum": context_capacity,
+            "multiple_of": context_capacity,
         },
         {
             "binding": {"field": "position_end", "kind": "request"},
             "default": 1,
             "id": "position_end",
-            "maximum": CONTEXT_CAPACITY,
+            "maximum": context_capacity,
             "minimum": 1,
             "multiple_of": 1,
         },
@@ -239,7 +257,7 @@ def _check_model_contract(model: ProductionModelGraph) -> str:
             "binding": {"field": "position_start", "kind": "request"},
             "default": 0,
             "id": "position_start",
-            "maximum": CONTEXT_CAPACITY - 1,
+            "maximum": context_capacity - 1,
             "minimum": 0,
             "multiple_of": 1,
         },
@@ -247,7 +265,7 @@ def _check_model_contract(model: ProductionModelGraph) -> str:
             "binding": {"field": "span_tokens", "kind": "request"},
             "default": 1,
             "id": "span_tokens",
-            "maximum": CONTEXT_CAPACITY,
+            "maximum": context_capacity,
             "minimum": 1,
             "multiple_of": 1,
         },
@@ -352,7 +370,7 @@ def _check_model_contract(model: ProductionModelGraph) -> str:
                 "kind": "compare",
                 "operator": "le",
                 "symbol": "position_end",
-                "value": CONTEXT_CAPACITY,
+                "value": context_capacity,
             },
         ],
     }
@@ -390,10 +408,12 @@ def _check_model_contract(model: ProductionModelGraph) -> str:
         )
     for operation in model.operations:
         _check_source_operation_contract(model, operation)
-    return checkpoint_lock_ids.pop()
+    return checkpoint_lock_ids.pop(), context_capacity
 
 
-def _check_capability_contract(capability: ProductionCapability) -> None:
+def _check_capability_contract(
+    capability: ProductionCapability, context_capacity: int
+) -> None:
     required_contracts = set(EXPECTED_CONTRACTS.values()) - {"bf16_payload_lookup_v1"}
     vector = capability.vector_engine
     state = capability.state_engine
@@ -403,8 +423,8 @@ def _check_capability_contract(capability: ProductionCapability) -> None:
         or "qwen3-8b" not in capability.declared_model_profiles
         or vector is None
         or state is None
-        or vector.max_attention_context_tokens != CONTEXT_CAPACITY
-        or vector.max_rope_positions != CONTEXT_CAPACITY
+        or vector.max_attention_context_tokens != context_capacity
+        or vector.max_rope_positions != context_capacity
         or vector.max_query_heads != QUERY_HEADS
         or vector.max_key_value_heads != KEY_VALUE_HEADS
         or vector.rope_head_dim != HEAD_DIM
@@ -963,6 +983,7 @@ def _check_kernel_shape(
     operation: ProductionOperation,
     kernel: Mapping[str, Any],
 ) -> None:
+    context_capacity = _context_capacity(model)
     shape = kernel.get("shape")
     if not isinstance(shape, dict):
         raise QwenFullModelSemanticCheckError(
@@ -1012,7 +1033,7 @@ def _check_kernel_shape(
         if shape != {
             "head_dim": HEAD_DIM,
             "key_value_heads": KEY_VALUE_HEADS,
-            "max_context_tokens": CONTEXT_CAPACITY,
+            "max_context_tokens": context_capacity,
             "tokens_symbol": "span_tokens",
         }:
             raise QwenFullModelSemanticCheckError("KV-prepare kernel shape differs")
@@ -1020,14 +1041,14 @@ def _check_kernel_shape(
         if shape != {
             "head_dim": HEAD_DIM,
             "key_value_heads": KEY_VALUE_HEADS,
-            "max_context_tokens": CONTEXT_CAPACITY,
+            "max_context_tokens": context_capacity,
             "query_heads": QUERY_HEADS,
             "query_tokens_symbol": "span_tokens",
         }:
             raise QwenFullModelSemanticCheckError("attention kernel shape differs")
     elif operation.kind == "LAST_TOKEN_SELECT":
         if shape != {
-            "maximum_rows": CONTEXT_CAPACITY,
+            "maximum_rows": context_capacity,
             "rows_symbol": "span_tokens",
             "width": 4096,
         }:
@@ -1044,8 +1065,11 @@ def _check_kernel_shape(
 
 
 def _check_kernel_attributes(
-    operation: ProductionOperation, kernel: Mapping[str, Any]
+    model: ProductionModelGraph,
+    operation: ProductionOperation,
+    kernel: Mapping[str, Any],
 ) -> None:
+    context_capacity = _context_capacity(model)
     attributes = kernel.get("attributes")
     if not isinstance(attributes, dict):
         raise QwenFullModelSemanticCheckError(
@@ -1126,7 +1150,7 @@ def _check_kernel_attributes(
         expected = {
             "coefficient_layout": "cos_head_dim_then_sin_head_dim",
             "key_value_heads": KEY_VALUE_HEADS,
-            "max_positions": CONTEXT_CAPACITY,
+            "max_positions": context_capacity,
             "position_count_symbol": "span_tokens",
             "position_progression": "consecutive_from_start",
             "position_symbol": "position_start",
@@ -1209,7 +1233,7 @@ def _check_kernel_ir(
                 f"kernel {index} does not map operation {operation.operation_id!r}"
             )
         _check_kernel_shape(model, operation, kernel)
-        _check_kernel_attributes(operation, kernel)
+        _check_kernel_attributes(model, operation, kernel)
     encoded = canonical_json_bytes(kernel_ir)
     for forbidden in (
         b"HBM_",
@@ -1245,8 +1269,8 @@ def check_qwen_full_model_semantics(
         raise QwenFullModelSemanticCheckError(
             f"independent semantic source admission failed: {exc}"
         ) from exc
-    checkpoint_lock_id = _check_model_contract(model)
-    _check_capability_contract(capability)
+    checkpoint_lock_id, context_capacity = _check_model_contract(model)
+    _check_capability_contract(capability, context_capacity)
     coverage = _load_canonical(Path(coverage_path), "semantic coverage")
     kernel_ir = _load_canonical(Path(kernel_ir_path), "complete neutral Kernel IR")
     _check_coverage(model, capability, checkpoint_lock_id, coverage)
