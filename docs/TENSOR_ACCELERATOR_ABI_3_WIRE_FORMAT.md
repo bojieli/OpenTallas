@@ -422,3 +422,29 @@ ABI 3.0 deliberately does not have: a descriptor states a binding, it does not
 compute one.
 
 Assigning a previously unassigned symbol value is additive.
+
+### 12.4 Amendment A13 — the partial final iteration of a block loop
+
+A tensor view states static extents. When a loop blocks a symbolic extent — a
+512-token block over a 93-token span — the final iteration holds fewer rows than
+the block, and a view whose `dim0` is the block size would present rows the
+request does not have.
+
+The loop descriptor already carries everything needed to know this:
+`bound_symbol_id` is the extent and `bound_divisor` is the block. So when a
+view's leading axis is indexed by a `LOOP_INDUCTION` term over a
+symbol-bounded loop, its resolved leading extent is
+
+```
+remaining = symbol_value - iteration * bound_divisor
+dim0      = remaining if 0 < remaining < dim0 else dim0
+```
+
+This is normative for every ABI 3.0 implementation, including RTL 3.0. Without
+it a backend must emit one dispatch per token to stay correct, which is exactly
+the retired-work failure ABI 3.0 exists to remove: with the rule, a 93-token
+Qwen prefill issues about 700 engine dispatches; without it, about 63,600.
+
+Nothing about the descriptor changes. A13 fixes the *interpretation* of an
+existing field combination that was previously unstated, which is why it is
+recorded here rather than left in one implementation's resolver.

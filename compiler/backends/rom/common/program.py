@@ -208,6 +208,31 @@ COUNTER_GROUP_BY_FAMILY: Mapping[int, CounterGroup] = {
 }
 
 
+def _binary32_bits(attributes: Mapping[str, Any], keys: Sequence[str]) -> int:
+    """Read a numeric-descriptor constant as a binary32 bit pattern.
+
+    A graph may state such a constant three ways: already as a bit pattern, as
+    a BF16 code (the model's own storage form, which widens exactly by a
+    sixteen-bit shift), or as a real number. The descriptor field is a binary32
+    pattern, so all three are converted here rather than at three call sites.
+    """
+    import struct
+
+    for key in keys:
+        if key not in attributes:
+            continue
+        value = attributes[key]
+        if key.endswith("_bits"):
+            return int(value) & 0xFFFFFFFF
+        if key.endswith("_bf16_code"):
+            return (int(value) & 0xFFFF) << 16
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, (int, float)):
+            return int.from_bytes(struct.pack("<f", float(value)), "little")
+    return 0
+
+
 class RomLoweringError(ValueError):
     """Raised when a neutral graph cannot be lowered onto a ROM target."""
 
@@ -1037,6 +1062,15 @@ class RomLowering:
         if contract != kernel.numeric_contract:
             self._contract_substitutions[kernel.numeric_contract] = contract
         order = self._reduction_order(contract, kernel.kind)
+        # An engine reads its epsilon and its scale from the numeric
+        # descriptor, so a kernel that declares either must have it carried
+        # through. Omitting them produced a deployment the verifier admitted
+        # and the RMSNorm engine then refused at execution, which is the worst
+        # place for a missing field to surface.
+        epsilon_bits = _binary32_bits(attributes, ("epsilon_bits", "epsilon"))
+        scale_bits = _binary32_bits(
+            attributes, ("scale_bits", "scale_bf16_code", "scale")
+        )
         input_dtype = self._dtype(first)
         second_dtype = self._dtype(second)
         output_dtype = self._dtype(result)
@@ -1048,6 +1082,8 @@ class RomLowering:
             int(output_dtype),
             int(accumulator_dtype),
             int(order),
+            epsilon_bits,
+            scale_bits,
         )
         if key in self._numeric_cache:
             return self._numeric_cache[key]
@@ -1058,6 +1094,8 @@ class RomLowering:
             output_dtype=output_dtype,
             accumulator_dtype=accumulator_dtype,
             reduction_order=order,
+            epsilon_bits=epsilon_bits,
+            scale_bits=scale_bits,
             key=f"num.{len(self._numeric_cache):04d}",
         )
         self._numeric_cache[key] = descriptor

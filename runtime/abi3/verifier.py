@@ -699,10 +699,20 @@ class Verifier:
                     f"instruction {index}: schedule {schedule_id} is for "
                     f"{Major(payload['engine_family']).name}, not {family.name}"
                 )
-            if payload["tile_rows"] == 0 or payload["tile_cols"] == 0:
+            # tile_depth is required too: the cycle model decomposes an
+            # operation into tiles of (rows, cols, depth), and a zero in any of
+            # the three means it cannot be timed. A pass-shaped operation
+            # declares depth 1; it must declare something.
+            zeroed = [
+                name
+                for name in ("tile_rows", "tile_cols", "tile_depth")
+                if payload[name] == 0
+            ]
+            if zeroed:
                 self._fail(
-                    f"instruction {index}: schedule {schedule_id} declares a zero "
-                    "tile extent; a zeroed tile mapping cannot be evaluated"
+                    f"instruction {index}: schedule {schedule_id} leaves "
+                    f"{zeroed} at zero; a tile mapping with a zero extent "
+                    "cannot be evaluated"
                 )
             if payload["max_outstanding"] == 0:
                 self._fail(
