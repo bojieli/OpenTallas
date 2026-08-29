@@ -494,6 +494,29 @@ silently supply missing operator costs or clocks.
 
 ## 13. Milestones and hard exit gates
 
+### 13.1 Current evidence ledger (2026-08-29)
+
+This ledger reports implementation evidence against the gates below. A partial
+row must not be read as milestone closure.
+
+| Gate | Current direct evidence | Status |
+|---|---|---|
+| M0 | Repository baseline and additive compiler/runtime layout are committed on `main`; large generated payloads remain outside Git | Ongoing because concurrent model and simulation work may keep the worktree active |
+| M1 | The pinned official graph has a complete 1,924-node/43-kind ledger; qualified target references exist for a growing subset | Partial: operator-complete reference semantics remain open |
+| M2 | The official 72,317-tensor checkpoint is locked; the complete 77,116-assignment MP=4 application was independently re-read with verification `b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28` | Checkpoint/canonical payload gate achieved; this does not imply executable operators |
+| M3 | Lookup and selected-row query-A deployments have content-addressed images and independent payload roundtrips | Partial: complete stage placement, capacity, repair, and physical-address legality remain open |
+| M4 | Artifact-only fixed-microcode service paths execute official lookup tensors and four query-A FP8 output rows; runtime rejects artifact mutation and independent checkers reject result and coverage drift | Partial: no real checkpoint-derived transformer block, transactional KV path, or complete graph-to-microcode lowering yet |
+| M5 | No certified physical schedule exists | Open |
+| M6 | Official lookup differential `830f0d8a0730d012e6be41eb1507f10ef1b70f1829efbbad7b3e50cd2b3e2a95` and selected-row FP8 differential `9b4cacd415df0fbd77b08c24bbb4b48b737f0b3305abfd08ba719d4302e3b800` are exact | Partial: selected rows and three lookup operators are not a layer or all layer classes |
+| M7 | No generated-artifact RTL controller/operator integration evidence | Open |
+| M8 | No complete DeepSeek V4 Flash prefill/decode execution | Open |
+| M9 | No schedule-driven performance closure or same-scope NVIDIA comparison | Open |
+
+The two governed evidence records are
+[`DEEPSEEK_V4_LOOKUP_EVIDENCE.md`](DEEPSEEK_V4_LOOKUP_EVIDENCE.md) and
+[`DEEPSEEK_V4_FP8_LINEAR_EVIDENCE.md`](DEEPSEEK_V4_FP8_LINEAR_EVIDENCE.md).
+Neither changes the `COMP-01` closure criteria.
+
 ### M0 — governed baseline
 
 Deliverables:

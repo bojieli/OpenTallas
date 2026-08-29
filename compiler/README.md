@@ -174,8 +174,13 @@ payload hash, writes into a temporary sibling directory, and publishes the
 result atomically only after independent replay. The output includes one
 content-hashed artifact per rank assignment, `canonical_application.json`, and
 `canonical_verification.json`. A full MP=4 application requires at least
-175,539,889,120 output bytes plus working reserve; it has not been run on this
-host.
+175,539,889,120 output bytes plus working reserve. The complete official MP=4
+application has now been materialized outside Git as application
+`0f0f5177460c599059c971cbfd43e4299d6537f0cedb6055a83b77ecb52e16cb`.
+An independently invoked post-publication replay re-read all 77,116 assignments
+derived from all 72,317 locked tensors and produced verification
+`b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28`.
+The large payload remains in the governed cache rather than Git.
 
 For bounded development, repeat `--tensor NAME` to materialize named tensors
 and their required scale/weight dependencies. Such output is permanently marked
@@ -194,7 +199,43 @@ python3 -m compiler.cli verify-canonical-application \
 Ordinary CI runs all identity, axis-0/axis-1 slicing, native-MXFP4 pairing, and
 FP8/E8M0-to-BF16 paths through a generated adversarial safetensors fixture using
 the same applicator and replay checker. Fixture success proves the mechanism,
-not application of the official checkpoint.
+not application of the official checkpoint; the separate complete official
+application and independent verification above provide that evidence.
+
+Compile and execute the current real-checkpoint arithmetic slice with:
+
+```bash
+python3 -m compiler.cli compile-deepseek-v4-fp8-linear-slice \
+  --snapshot /path/to/DeepSeek-V4-Flash-0731-at-7872f01 \
+  --lock /path/to/checkpoint.lock.json \
+  --application /path/to/query-a-canonical-application \
+  --output /path/to/fp8-linear-deployment
+
+python3 -m runtime.service_engine \
+  --deployment /path/to/fp8-linear-deployment \
+  --inputs /path/to/fp8-linear-request.json \
+  --output /path/to/fp8-linear-result.json
+
+python3 -m compiler.cli verify-deepseek-v4-fp8-linear-execution \
+  --snapshot /path/to/DeepSeek-V4-Flash-0731-at-7872f01 \
+  --lock /path/to/checkpoint.lock.json \
+  --deployment /path/to/fp8-linear-deployment \
+  --request /path/to/fp8-linear-request.json \
+  --result /path/to/fp8-linear-result.json \
+  --output /path/to/fp8-linear-differential.json
+```
+
+This path compiles a fixed semantic descriptor and two-instruction microprogram,
+executes selected rows of `layers.0.attn.wq_a.weight` through a race-resistant,
+artifact-only service engine, and compares the persisted result to an
+independent replay streamed from the original locked checkpoint. The governed
+official run covers rows `0`, `127`, `128`, and `1023`, with exact differential
+`9b4cacd415df0fbd77b08c24bbb4b48b737f0b3305abfd08ba719d4302e3b800`.
+See
+[`../docs/DEEPSEEK_V4_FP8_LINEAR_EVIDENCE.md`](../docs/DEEPSEEK_V4_FP8_LINEAR_EVIDENCE.md)
+for identities, counters, reproduction commands, and explicit non-claims. It is
+not a complete query projection, attention operation, transformer block, or
+full-model execution.
 
 The host text boundary is independently implemented in
 `frontend/deepseek_v4_encoding.py`. It matches all four pinned official prompt
