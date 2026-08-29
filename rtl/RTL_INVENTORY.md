@@ -25,6 +25,9 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Production DMA/RMSNorm sequencing | `ot_ta_dma_rmsnorm_sequencer.sv` | Adjacent authentic command-1/command-2 dispatch, monotonic indices, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-RMS-001 |
 | Production per-head RMSNorm arithmetic and SRAM control | `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_head_rmsnorm_bf16_sram_engine.sv` | Exact 128-element balanced reduction over as many as 32 rows, independent correctly rounded reciprocal square roots, BF16 normalization and weighting boundaries, complete-operation buffered writeback, exact SRAM counters, and numeric-fault write suppression | QW-RTL-HEAD-RMS-001 |
 | Production DMA/per-head-RMSNorm sequencing | `ot_ta_dma_head_rmsnorm_sequencer.sv` | Exact four-command Q-weight-DMA/Q-RMS/K-weight-DMA/K-RMS dispatch, kernel/profile enforcement, monotonic indices, unique terminal command, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-HEAD-RMS-001 |
+| Production indexed HBM-to-SRAM DMA | `ot_ta_dma_hbm_indexed_to_sram.sv` | Little-endian 32-bit SRAM index fetch, 8,000-row bounds enforcement, overflow-safe row selection, complete-row HBM buffering before SRAM replacement, exact counters, and response-error atomicity | QW-RTL-ROPE-001 |
+| Production BF16 RoPE arithmetic and SRAM control | `ot_fp32_rne_pkg.sv`, `ot_ta_rope_bf16_sram_engine.sv` | Exact `cos[128] || sin[128]` consumption, half-vector rotation, independently BF16-rounded products, signed binary32 addition, signed-zero canonicalization, complete Q/K output buffering, and exact SRAM/arithmetic counters | QW-RTL-ROPE-001 |
+| Production indexed-DMA/RoPE sequencing | `ot_ta_dma_rope_sequencer.sv` | Exact command-3,079/3,080 dispatch, kernel/profile enforcement, unique terminal command, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-ROPE-001 |
 | Production BF16 MATMUL SRAM control | `ot_fp32_rne_pkg.sv`, `ot_ta_matmul_bf16_sram_engine.sv` | Signed finite FP32 RNE accumulation over fixed `1 x 64 x 256` segments, ordered 16-bit halfword reload of FP32 state, complete-tile buffered accumulator writeback, buffered `MATMUL_FINAL` BF16 conversion/writeback, exact counters, and numeric-fault write suppression | QW-RTL-DMA-MATMUL-001 |
 | Production DMA/MATMUL sequencing | `ot_ta_dma_matmul_sequencer.sv` | Parameter-bounded first-through-final dispatch for complete 32-command output blocks across as many as three exact adjacent kernel-index ranges, strict alternating profile/order, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-MATMUL-001/QW-RTL-Q-PROJ-001/QW-RTL-KV-PROJ-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
@@ -248,10 +251,56 @@ zero structural problems, and both simulator front ends are warning-free.
 
 This closes the two per-head RMSNorm graph operations only. Q and K projection
 inputs remain behaviorally preloaded from independently qualified campaigns;
-HBM and SRAM remain behavioral interfaces. RoPE, complete QKV preparation, KV
-state preparation, attention, state and vector kernels, program authentication,
-physical memories/interconnect, a representative complete RTL layer, timing,
-activity-derived power/IR, and `TA-RTL-6` remain open.
+HBM and SRAM remain behavioral interfaces. The separate RoPE closure follows
+below.
+
+QW-RTL-ROPE-001 is retained as vector set
+`7a55f9aba5c3e329e571e2a5564beeb666964cd774a868d5ba448470574206d7`
+and campaign
+`1706f1e27f36411a30e621c2acbefc979f7719d694357d25eba1920d7109c754`.
+It executes authentic command 3,079, `DMA_HBM_INDEXED_TO_SRAM`, followed by
+authentic command 3,080, `ROPE_BF16`, and completes graph operation
+`node.0007`. The DMA reads two 16-bit SRAM responses at addresses 4 and 6 to
+form the little-endian position, bounds it below 8,000, and selects a 512-byte
+row from HBM table address 16,384,425,984. The complete 4,096,000-byte table is
+authenticated as
+`82b9d0c0dc0c98906ced230591852dbd27d73760de42df8de253ae29243034b9`
+inside the immutable 1 GiB shard
+`4cc984816239b7b9215743b405300e1ecfe26ac1bb62177f2874c20b3889b62b`;
+only two compact coefficient rows are retained.
+
+Both simulators execute position 0 and the maximum legal position 7,999 under
+independent HBM, SRAM-read, and SRAM-write schedules. Per successful program
+they reconcile two index reads, eight 64-byte HBM requests/responses, 32
+coefficient writes, 256 coefficient reads, 4,096 Q reads, 1,024 K reads, 5,152
+total writes, 10,240 multiplications, 5,120 additions, and 5,120 exact outputs
+with zero multiplication or addition saturation. Position 0 is a genuine
+identity row and matches Q/K input hashes
+`bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c`
+and
+`71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66`.
+Position 7,999 prevents an identity-only implementation from passing and
+matches Q/K output hashes
+`a846335c825cf9fb06213220acf157c6a805376b1324a7cec09d6fa4621e718d`
+and
+`ce427ae533331720b9b58dde633e3ca352fa9fe0d3dd09d8cab222b799963858`.
+
+Three fail-stop cases cover an early terminal marker, out-of-range position
+8,000, and an HBM error on the fourth burst. The range case performs no HBM
+request or write; the HBM case buffers successful bursts but performs no
+coefficient write, proving row-replacement atomicity. Icarus observes 37,707
+cycles and Verilator 43,445 cycles under their distinct deterministic
+schedules; these are control-correlation observations, not characterized
+performance. The strict 95-schema inventory and source-hash-bound campaign
+preserve the exact claim boundary.
+
+This makes the Q, K, and V projections, Q/K per-head RMSNorm, and RoPE graph
+operations individually closed. It does not claim one connected
+commands-3-through-3,080 RTL program: projection and normalized inputs remain
+preloaded from separately qualified campaigns. KV state preparation, attention,
+state and vector kernels, program authentication, physical memories/interconnect,
+a representative complete RTL layer, timing, activity-derived power/IR, and
+`TA-RTL-6` remain open.
 
 The bounded IHP SG13G2 physical campaign for
 `ot_ta_add_bf16_sram_engine` is retained as

@@ -1,0 +1,197 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_rope_campaign_v1.schema.json",
+  "title": "Qwen indexed RoPE RTL campaign v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "arithmetic_evidence",
+    "campaign_id",
+    "cases",
+    "claim_boundary",
+    "command_program_sha256",
+    "program_correlation",
+    "schema",
+    "simulators",
+    "source_sha256",
+    "status",
+    "tools",
+    "vector_set_id"
+  ],
+  "properties": {
+    "arithmetic_evidence": {
+      "const": {
+        "exact_scalar_all_elements": true,
+        "head_rmsnorm_campaign_id": "d7153d61372e1470310e578d71fda690ccda2fe361a30386399a60d6f0b36c37",
+        "identity_position_zero": true,
+        "non_identity_position_7999": true,
+        "position_count": 2,
+        "qkv_qualification_report_id": "42be4b6e14ca271c583e0b8f4bb0bc9a5e854e4e5aa918b0e90acc6217d763ae",
+        "status": "pass"
+      }
+    },
+    "campaign_id": {"$ref": "#/$defs/sha256"},
+    "cases": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {"$ref": "#/$defs/iverilog_case"},
+        {"$ref": "#/$defs/verilator_case"}
+      ],
+      "items": false
+    },
+    "claim_boundary": {
+      "const": {
+        "activity_derived_power_or_timing": false,
+        "all_qkv_preparation_graph_operations_individually_closed": true,
+        "architectural_simulator_output_correlated": true,
+        "authentic_command_records": true,
+        "behavioral_hbm_and_sram": true,
+        "complete_layer_execution": false,
+        "complete_rope_graph_operation": true,
+        "connected_qkv_preparation_program": false,
+        "dual_simulator_complete_operations": true,
+        "exact_scalar_all_elements": true,
+        "generic_position_selection": true,
+        "hbm_response_error_atomicity": true,
+        "index_range_fail_stop": true,
+        "preloaded_q_and_k_normalized_inputs": true,
+        "program_order_and_fail_stop": true,
+        "qualified_hbm_phy": false,
+        "qualified_position_7999_profile_replay": true,
+        "qualified_sram_macro": false,
+        "ta_rtl_6_closed": false
+      }
+    },
+    "command_program_sha256": {
+      "const": "f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec"
+    },
+    "program_correlation": {
+      "const": {
+        "addition_count": 5120,
+        "addition_saturation_count": 0,
+        "coefficient_read_count": 256,
+        "command_count": 2,
+        "command_end": 3080,
+        "command_start": 3079,
+        "dma_hbm_bytes": 512,
+        "dma_hbm_request_count": 8,
+        "dma_hbm_response_count": 8,
+        "dma_index_read_count": 2,
+        "dma_sram_write_count": 32,
+        "early_terminal_fail_stop_cases": 1,
+        "element_count": 5120,
+        "graph_operation_ids": ["node.0007"],
+        "hbm_response_error_fail_stop_cases": 1,
+        "index_range_fail_stop_cases": 1,
+        "key_input_read_count": 1024,
+        "key_output_write_count": 1024,
+        "multiplication_count": 10240,
+        "multiplication_saturation_count": 0,
+        "position_cases": [
+          {
+            "coefficient_payload_sha256": "b262f6c135906b739518f2c53c49f425e115901a9e6469e024ee3921efd62e56",
+            "k_output_payload_sha256": "71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66",
+            "position": 0,
+            "q_output_payload_sha256": "bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c",
+            "selected_hbm_address": 16384425984
+          },
+          {
+            "coefficient_payload_sha256": "c3245faed3b4547a5bcb76623152d12a210c5229e59fc72fa41aacb6b16a1af7",
+            "k_output_payload_sha256": "ce427ae533331720b9b58dde633e3ca352fa9fe0d3dd09d8cab222b799963858",
+            "position": 7999,
+            "q_output_payload_sha256": "a846335c825cf9fb06213220acf157c6a805376b1324a7cec09d6fa4621e718d",
+            "selected_hbm_address": 16388521472
+          }
+        ],
+        "query_input_read_count": 4096,
+        "query_output_write_count": 4096,
+        "sram_bytes_read": 10756,
+        "sram_bytes_written": 10752,
+        "sram_read_count": 5378,
+        "sram_write_count": 5152,
+        "verified_position_count": 2
+      }
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_rtl_rope_campaign.v1"
+    },
+    "simulators": {"const": ["iverilog", "verilator"]},
+    "source_sha256": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/sha256"},
+      "minProperties": 23
+    },
+    "status": {"enum": ["fail", "pass"]},
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["iverilog", "verilator"],
+      "properties": {
+        "iverilog": {"type": "string", "minLength": 1},
+        "verilator": {"type": "string", "minLength": 1}
+      }
+    },
+    "vector_set_id": {
+      "const": "7a55f9aba5c3e329e571e2a5564beeb666964cd774a868d5ba448470574206d7"
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["cycles", "read_stalls", "request_stalls", "write_stalls"],
+      "properties": {
+        "cycles": {"type": "integer", "minimum": 1},
+        "read_stalls": {"type": "integer", "minimum": 1},
+        "request_stalls": {"type": "integer", "minimum": 1},
+        "write_stalls": {"type": "integer", "minimum": 1}
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command",
+        "compile_log",
+        "compile_returncode",
+        "log_sha256",
+        "name",
+        "observation",
+        "run_log",
+        "run_returncode",
+        "status"
+      ],
+      "properties": {
+        "command": {"type": "string", "minLength": 1},
+        "compile_log": {"type": "string"},
+        "compile_returncode": {"type": "integer"},
+        "log_sha256": {"$ref": "#/$defs/sha256"},
+        "name": {"type": "string"},
+        "observation": {
+          "oneOf": [
+            {"$ref": "#/$defs/observation"},
+            {"type": "null"}
+          ]
+        },
+        "run_log": {"type": "string"},
+        "run_returncode": {"type": ["integer", "null"]},
+        "status": {"enum": ["fail", "pass"]}
+      }
+    },
+    "iverilog_case": {
+      "allOf": [
+        {"$ref": "#/$defs/case"},
+        {"properties": {"name": {"const": "rope_iverilog"}}}
+      ]
+    },
+    "verilator_case": {
+      "allOf": [
+        {"$ref": "#/$defs/case"},
+        {"properties": {"name": {"const": "rope_verilator"}}}
+      ]
+    }
+  }
+}
