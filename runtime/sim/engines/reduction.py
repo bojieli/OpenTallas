@@ -51,12 +51,9 @@ from runtime.abi3.constants import (
     ReductionOrder,
 )
 from runtime.abi3.descriptors import Descriptor
+from runtime.sim import formats
 from runtime.sim.engine import EngineContext, EngineError, register
 from runtime.sim.memory import ResolvedView
-from runtime.tensor_accelerator.bf16 import (
-    BF16KernelError,
-    finalize_bf16_accumulator,
-)
 
 MAX_INPUTS = 4
 
@@ -85,41 +82,39 @@ def _aux(descriptor: Descriptor, slot: int) -> int | None:
 # numeric helpers
 # ---------------------------------------------------------------------------
 def widen(ctx: EngineContext, view: ResolvedView) -> np.ndarray:
-    """Read a BF16 or binary32 view as binary32 values."""
+    """Read a view as binary32 through the shared conversion site."""
     codes = ctx.read(view)
-    if view.dtype == int(DType.BF16):
-        return (codes.astype(np.uint32) << np.uint32(16)).view(np.float32)
-    if view.dtype == int(DType.FP32):
-        return np.ascontiguousarray(codes, dtype=np.float32)
-    raise EngineError(
-        f"view {view.descriptor_id} is dtype {view.dtype:#04x}; this engine "
-        "reads BF16 or binary32 operands",
-        trap_class=3,
-    )
+    if view.dtype not in formats.WIDENABLE:
+        raise EngineError(
+            f"view {view.descriptor_id} is dtype {view.dtype:#04x}, which has "
+            "no binary32 widening",
+            trap_class=3,
+        )
+    try:
+        return formats.widen(view.dtype, codes)
+    except formats.FormatError as exc:
+        raise EngineError(str(exc), trap_class=3) from exc
 
 
 def narrow(values: np.ndarray, view: ResolvedView) -> np.ndarray:
     """Round binary32 results once into the output view's storage dtype."""
-    flat = np.ascontiguousarray(values, dtype=np.float32).reshape(1, -1)
-    if not bool(np.all(np.isfinite(flat))):
+    if view.dtype not in formats.NARROWABLE:
+        raise EngineError(
+            f"output view {view.descriptor_id} is dtype {view.dtype:#04x}, "
+            "which is not a narrowing target",
+            trap_class=3,
+        )
+    if not bool(np.all(np.isfinite(np.asarray(values, dtype=np.float32)))):
         raise EngineError(
             f"view {view.descriptor_id}: the reduction produced a NaN or "
             "infinite value",
             trap_class=6,
         )
-    if view.dtype == int(DType.FP32):
-        return flat.reshape(view.dims).astype(np.float32, copy=False)
-    if view.dtype == int(DType.BF16):
-        try:
-            rounded = finalize_bf16_accumulator(flat.view(np.uint32))
-        except BF16KernelError as exc:
-            raise EngineError(f"BF16 rounding failed: {exc}", trap_class=6) from exc
-        return rounded.values.reshape(view.dims)
-    raise EngineError(
-        f"output view {view.descriptor_id} is dtype {view.dtype:#04x}; this "
-        "engine writes BF16 or binary32 results",
-        trap_class=3,
-    )
+    try:
+        rounded, _ = formats.narrow(view.dtype, values)
+    except formats.FormatError as exc:
+        raise EngineError(str(exc), trap_class=6) from exc
+    return rounded.reshape(view.dims)
 
 
 def ordered_sum(stack: np.ndarray, order: int) -> np.ndarray:

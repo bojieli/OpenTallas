@@ -1,18 +1,18 @@
 {
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-08-29T16:03:59.071471+00:00",
+  "completed_at": "2026-08-29T16:07:13.054215+00:00",
   "corner": {
     "liberty": [
       {
-        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
-        "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
-        "size_bytes": 12841637
+        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__ss_100C_1v60.lib",
+        "sha256": "9b24f0db3967ac67b4cae1f74bb480fd47922d18d0ed577e3c121739b412c361",
+        "size_bytes": 12845260
       }
     ],
-    "name": "tt",
-    "process": "typical",
-    "temperature_c": 25.0,
-    "voltage_v": 1.8
+    "name": "ss",
+    "process": "slow",
+    "temperature_c": 100.0,
+    "voltage_v": 1.6
   },
   "design": {
     "block": "reduction_s8_g2",
@@ -36,8 +36,8 @@
     ],
     "top": "ot_reduction_endpoint"
   },
-  "elapsed_seconds": 7.119,
-  "generated_at": "2026-08-29T16:03:51.952292+00:00",
+  "elapsed_seconds": 8.332,
+  "generated_at": "2026-08-29T16:07:04.722423+00:00",
   "git": {
     "commit": "8f971bcec0b78c2270604fda406857eb33b78bc9",
     "worktree_dirty": true
@@ -49,6 +49,8 @@
       "sky130hd",
       "--block",
       "reduction_s8_g2",
+      "--corner",
+      "ss",
       "--clock-period-ns",
       "20",
       "--stages",
@@ -56,7 +58,7 @@
       "--fmax-search",
       "--force",
       "--output",
-      "results/physical_abi3/sky130hd/reduction_s8_g2/synth_sta.json"
+      "results/physical_abi3/sky130hd/reduction_s8_g2/corner_ss.json"
     ],
     "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
     "python": "3.10.12"
@@ -72,79 +74,83 @@
   ],
   "static_timing": {
     "clock_period_ns": 20.0,
-    "critical_path_ns": 17.512746859484285,
+    "critical_path_ns": 37.377006991851744,
     "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
-    "fmax_hz": 57101265.039894946,
+    "fmax_hz": 26754416.163338114,
     "fmax_search": {
-      "evaluations": 12,
-      "fmax_hz": 57079152.73132665,
+      "evaluations": 13,
+      "fmax_hz": 26750261.233019855,
       "method": "bisection on the SDC clock period with the mapped netlist held fixed; reported period is the smallest evaluated period with setup WNS >= 0",
-      "min_clock_period_ns": 17.51953125,
+      "min_clock_period_ns": 37.3828125,
       "relative_tolerance": 0.001,
       "search_trace": [
         {
-          "clock_period_ns": 10.0,
-          "setup_wns_ns": -7.5127470815288975
-        },
-        {
-          "clock_period_ns": 15.0,
-          "setup_wns_ns": -2.5127474145958137
-        },
-        {
-          "clock_period_ns": 17.5,
-          "setup_wns_ns": -0.012747137040049853
-        },
-        {
-          "clock_period_ns": 17.509765625,
-          "setup_wns_ns": -0.002946976079911191
-        },
-        {
-          "clock_period_ns": 17.51953125,
-          "setup_wns_ns": 0.006751932537518045
-        },
-        {
-          "clock_period_ns": 17.5390625,
-          "setup_wns_ns": 0.02635225445779537
-        },
-        {
-          "clock_period_ns": 17.578125,
-          "setup_wns_ns": 0.06535216996982081
-        },
-        {
-          "clock_period_ns": 17.65625,
-          "setup_wns_ns": 0.1434532533365811
-        },
-        {
-          "clock_period_ns": 17.8125,
-          "setup_wns_ns": 0.29975311969903184
-        },
-        {
-          "clock_period_ns": 18.125,
-          "setup_wns_ns": 0.6122533764381135
-        },
-        {
-          "clock_period_ns": 18.75,
-          "setup_wns_ns": 1.2372521135593872
-        },
-        {
           "clock_period_ns": 20.0,
-          "setup_wns_ns": 2.487253140515714
+          "setup_wns_ns": -17.37700699185174
+        },
+        {
+          "clock_period_ns": 30.0,
+          "setup_wns_ns": -7.3770076579855735
+        },
+        {
+          "clock_period_ns": 30.0,
+          "setup_wns_ns": -7.3770076579855735
+        },
+        {
+          "clock_period_ns": 33.75,
+          "setup_wns_ns": -3.6270081298303722
+        },
+        {
+          "clock_period_ns": 35.625,
+          "setup_wns_ns": -1.752006589395882
+        },
+        {
+          "clock_period_ns": 36.5625,
+          "setup_wns_ns": -0.814505819178637
+        },
+        {
+          "clock_period_ns": 37.03125,
+          "setup_wns_ns": -0.34580694841981396
+        },
+        {
+          "clock_period_ns": 37.265625,
+          "setup_wns_ns": -0.11140599869060293
+        },
+        {
+          "clock_period_ns": 37.32421875,
+          "setup_wns_ns": -0.052807537615189803
+        },
+        {
+          "clock_period_ns": 37.353515625,
+          "setup_wns_ns": -0.023508307077483245
+        },
+        {
+          "clock_period_ns": 37.3828125,
+          "setup_wns_ns": 0.005790923460223317
+        },
+        {
+          "clock_period_ns": 37.5,
+          "setup_wns_ns": 0.12299139832482885
+        },
+        {
+          "clock_period_ns": 45.0,
+          "setup_wns_ns": 7.622994007349011
         }
       ]
     },
     "hold_violating_paths": 0,
-    "hold_wns_ns": 0.4274561936513227,
+    "hold_wns_ns": 0.851431227399328,
     "library_time_unit_ns": 1.0,
     "raw_library_units": {
-      "hold_wns": 0.4274561936513227,
-      "setup_tns": 0.0,
-      "setup_wns": 2.487253140515714
+      "hold_wns": 0.851431227399328,
+      "setup_tns": -185.52672101504587,
+      "setup_wns": -17.37700699185174
     },
     "sdc_clock_period_library_units": 20.0,
-    "setup_tns_ns": 0.0,
-    "setup_violating_paths": 0,
-    "setup_wns_ns": 2.487253140515714,
-    "timing_met": true
+    "setup_tns_ns": -185.52672101504587,
+    "setup_violating_paths": 21,
+    "setup_wns_ns": -17.37700699185174,
+    "timing_met": false
   },
   "status": "pass",
   "synthesis": {

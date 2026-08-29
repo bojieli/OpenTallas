@@ -364,6 +364,9 @@ class MachineModel:
         return cycles
 
     def number(self, name: str, *, minimum: float = 0.0) -> float:
+        entry = self.cost_table.entry(name)
+        if entry.get("convert") == "bytes_per_second_to_bytes_per_cycle":
+            return self._bandwidth_to_rate(name, minimum=minimum)
         raw = self.value(name)
         try:
             number = float(raw)
@@ -374,6 +377,51 @@ class MachineModel:
                 f"parameter {name!r} is {number}, below the legal minimum {minimum}"
             )
         return number
+
+    def _bandwidth_to_rate(self, name: str, *, minimum: float) -> float:
+        """Convert a sourced bytes-per-second bandwidth into bytes per cycle.
+
+        A vendor bandwidth is a physical fact about a component; bytes per cycle
+        is that fact divided by *our* clock.  Composing them here means a
+        datasheet bandwidth over an assumed clock is reported as ``assumed``.
+        """
+        entry = self.cost_table.entry(name)
+        if str(entry.get("unit", "")) != "B/s":
+            raise MachineError(
+                f"parameter {name!r} requests a bandwidth conversion but is not "
+                "expressed in B/s"
+            )
+        source = self.cost_table.resolve(name)
+        clock = self.cost_table.resolve("clock.frequency_hz")
+        divisor = float(entry.get("lanes", 1))
+        if divisor <= 0:
+            raise MachineError(f"parameter {name!r} declares a non-positive lane count")
+        rate = float(source.value) / float(clock.value) / divisor
+        if rate < minimum:
+            raise MachineError(
+                f"parameter {name!r} converts to {rate} B/cycle, below {minimum}"
+            )
+        self._record(
+            ResolvedParameter(
+                name=name,
+                value=rate,
+                unit="B/cycle",
+                provenance=worst((source.provenance, clock.provenance)),
+                source=(
+                    f"{source.source} @ clock.frequency_hz={clock.value} "
+                    f"({clock.provenance.value}, {clock.source or 'no source'})"
+                ),
+                origin="cost_table",
+                note=(
+                    f"{source.value} B/s over {divisor:g} lane(s) at the table's "
+                    "clock; provenance is the weaker of the bandwidth "
+                    f"({source.provenance.value}) and the clock "
+                    f"({clock.provenance.value})."
+                    + (f"  {source.note}" if source.note else "")
+                ),
+            )
+        )
+        return rate
 
     def text(self, name: str) -> str:
         return str(self.value(name))

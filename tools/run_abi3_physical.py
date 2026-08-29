@@ -104,10 +104,16 @@ VIEWS: dict[str, dict[str, Any]] = {
                 "process": "typical",
             },
             "ss": {
+                "liberty": [SKY130_HD / "lib/sky130_fd_sc_hd__ss_100C_1v60.lib"],
+                "voltage_v": 1.60,
+                "temperature_c": 100.0,
+                "process": "slow",
+            },
+            "ss_lv": {
                 "liberty": [SKY130_HD / "lib/sky130_fd_sc_hd__ss_n40C_1v28.lib"],
                 "voltage_v": 1.28,
                 "temperature_c": -40.0,
-                "process": "slow",
+                "process": "slow, extreme low voltage",
             },
             "ff": {
                 "liberty": [SKY130_HD / "lib/sky130_fd_sc_hd__ff_n40C_1v95.lib"],

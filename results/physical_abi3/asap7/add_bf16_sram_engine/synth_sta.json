@@ -1,6 +1,6 @@
 {
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-08-29T15:58:56.746438+00:00",
+  "completed_at": "2026-08-29T16:05:39.806247+00:00",
   "corner": {
     "liberty": [
       {
@@ -66,10 +66,10 @@
     ],
     "top": "ot_ta_add_bf16_sram_engine"
   },
-  "elapsed_seconds": 8.251,
-  "generated_at": "2026-08-29T15:58:48.495761+00:00",
+  "elapsed_seconds": 43.863,
+  "generated_at": "2026-08-29T16:04:55.943220+00:00",
   "git": {
-    "commit": "9e5969d5de4e212bd46aac0997870d495634d870",
+    "commit": "8f971bcec0b78c2270604fda406857eb33b78bc9",
     "worktree_dirty": true
   },
   "runner": {
@@ -80,9 +80,10 @@
       "--block",
       "add_bf16_sram_engine",
       "--clock-period-ns",
-      "4.0",
+      "4.4",
       "--stages",
       "synth,sta",
+      "--fmax-search",
       "--force",
       "--output",
       "results/physical_abi3/asap7/add_bf16_sram_engine/synth_sta.json"
@@ -100,27 +101,84 @@
     "sta"
   ],
   "static_timing": {
-    "clock_period_ns": 4.0,
-    "critical_path_ns": 4.145412571454345,
-    "fmax_definition": "1 / (target clock period - setup WNS), pre-layout, ideal clock",
-    "fmax_hz": 241230512.70845345,
+    "clock_period_ns": 4.4,
+    "critical_path_ns": 4.225412543698769,
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
+    "fmax_hz": 236663281.9063478,
+    "fmax_search": {
+      "evaluations": 12,
+      "fmax_hz": 239062427.0439371,
+      "method": "bisection on the SDC clock period with the mapped netlist held fixed; reported period is the smallest evaluated period with setup WNS >= 0",
+      "min_clock_period_ns": 4.1830078125,
+      "relative_tolerance": 0.001,
+      "search_trace": [
+        {
+          "clock_period_ns": 2.2,
+          "setup_wns_ns": -1.585412030220618
+        },
+        {
+          "clock_period_ns": 3.3000000000000003,
+          "setup_wns_ns": -0.7054123979819962
+        },
+        {
+          "clock_period_ns": 3.8500000000000005,
+          "setup_wns_ns": -0.2654125818626854
+        },
+        {
+          "clock_period_ns": 4.125,
+          "setup_wns_ns": -0.04541256278072705
+        },
+        {
+          "clock_period_ns": 4.159375,
+          "setup_wns_ns": -0.017908341547971825
+        },
+        {
+          "clock_period_ns": 4.176562499999999,
+          "setup_wns_ns": -0.004164668626615082
+        },
+        {
+          "clock_period_ns": 4.180859374999999,
+          "setup_wns_ns": -0.0007243095041596501
+        },
+        {
+          "clock_period_ns": 4.1830078125,
+          "setup_wns_ns": 0.0009956480124622535
+        },
+        {
+          "clock_period_ns": 4.1851562499999995,
+          "setup_wns_ns": 0.002715605529084157
+        },
+        {
+          "clock_period_ns": 4.19375,
+          "setup_wns_ns": 0.00958744198976253
+        },
+        {
+          "clock_period_ns": 4.2625,
+          "setup_wns_ns": 0.0645874467602521
+        },
+        {
+          "clock_period_ns": 4.4,
+          "setup_wns_ns": 0.17458745630123126
+        }
+      ]
+    },
     "hold_violating_paths": 0,
     "hold_wns_ns": 0.054090808437521544,
     "library_time_unit_ns": 0.001,
     "raw_library_units": {
       "hold_wns": 54.090808437521545,
-      "setup_tns": -4024.0948512105983,
-      "setup_wns": -145.41257145434446
+      "setup_tns": 0.0,
+      "setup_wns": 174.58745630123127
     },
-    "sdc_clock_period_library_units": 4000.0,
-    "setup_tns_ns": -4.024094851210599,
-    "setup_violating_paths": 34,
-    "setup_wns_ns": -0.14541257145434447,
-    "timing_met": false
+    "sdc_clock_period_library_units": 4400.0,
+    "setup_tns_ns": 0.0,
+    "setup_violating_paths": 0,
+    "setup_wns_ns": 0.17458745630123126,
+    "timing_met": true
   },
   "status": "pass",
   "synthesis": {
-    "abc_delay_target_ps": 4000.0,
+    "abc_delay_target_ps": 4400.0,
     "cell_area_um2": 1785.788,
     "cell_count": 12549,
     "cell_types_used": 37,
@@ -138,7 +196,7 @@
     "sequential_cell_count": 1526,
     "unmapped_cell_types": []
   },
-  "target_clock_period_ns": 4.0,
+  "target_clock_period_ns": 4.4,
   "tools": {
     "abc": {
       "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",

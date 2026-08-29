@@ -98,7 +98,6 @@ module ot_a3_loop_stack
     reg [7:0]  hold_kind;
     reg [31:0] hold_bound;
     reg [31:0] hold_trip;
-    reg        hold_zero_span;
 
     // -- shared restoring divider: quotient = floor(numerator / divisor) ----
     reg         div_start;
@@ -204,7 +203,6 @@ module ot_a3_loop_stack
             hold_kind <= A3_SELECTOR_CONSTANT;
             hold_bound <= 32'd0;
             hold_trip <= 32'd0;
-            hold_zero_span <= 1'b0;
             for (i = 0; i < DEPTH; i = i + 1) begin
                 loop_id[i] <= A3_NO_ID;
                 loop_trip[i] <= 32'd0;
@@ -289,7 +287,6 @@ module ot_a3_loop_stack
                     S_SPAN: begin
                         if (span_value <= 33'sd0) begin
                             hold_trip <= 32'd0;
-                            hold_zero_span <= 1'b1;
                             state <= S_CHECK;
                         end else if (hold_step == 32'd0) begin
                             // The verifier rejects a zero step; the golden
@@ -300,8 +297,7 @@ module ot_a3_loop_stack
                             trap_class <= A3_TRAP_INTERNAL;
                             state <= S_IDLE;
                         end else begin
-                            hold_zero_span <= 1'b0;
-                            div_start <= 1'b1;
+                                            div_start <= 1'b1;
                             div_divisor <= hold_step;
                             div_numerator <= {1'b0, span_value} +
                                              {2'b00, hold_step} - 34'd1;

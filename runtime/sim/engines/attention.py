@@ -45,11 +45,26 @@ Operand and attribute convention (ABI 3.0 ``OPERATOR`` payload)
 
 The scale is the numeric profile's ``scale_bits`` read as a binary32 pattern;
 a non-positive or non-finite scale is a descriptor fault, never a default.
+
+Counter semantics (frozen registry, ``runtime/sim/counters.py``)
+---------------------------------------------------------------
+``attention.heads``
+    Head passes executed: ``span * query_heads``.
+``attention.score_multiplications`` / ``attention.value_multiplications``
+    Products the datapath actually formed, so a masked-but-computed lane counts
+    and a sparse lane that was never gathered does not.
+``attention.context_positions``
+    Visible KV positions per query token, summed over the span (not multiplied
+    by the head count).
+``attention.sparse_indices``
+    Executed index slots, taken from the gathered rows themselves.  Padding
+    sentinels are excluded, and the count is never a planning formula.
+``attention.kv_bytes_read``
+    Distinct key and value bytes the KV heads read for this operator.
 """
 
 from __future__ import annotations
 
-from typing import Any
 
 import numpy as np
 
@@ -210,7 +225,13 @@ def _execute(ctx: EngineContext, descriptor: Descriptor, sub: int) -> None:
         positions = None
     else:
         indices = None
-        positions = _positions(ctx, descriptor, extra_view, span, context)
+        # Absolute positions exist to place the causal horizon.  Full-visibility
+        # attention needs none, and must not be constrained by one.
+        positions = (
+            _positions(ctx, descriptor, extra_view, span, context)
+            if mask_mode == MASK_CAUSAL or extra_view is not None
+            else None
+        )
 
     outputs = np.empty((span, query_heads, head_dim), dtype=np.uint16)
     visible_total = 0
@@ -222,10 +243,11 @@ def _execute(ctx: EngineContext, descriptor: Descriptor, sub: int) -> None:
     try:
         for token in range(span):
             if indices is None:
-                assert positions is not None
-                limit = (
-                    int(positions[token]) + 1 if mask_mode == MASK_CAUSAL else context
-                )
+                if mask_mode == MASK_CAUSAL:
+                    assert positions is not None
+                    limit = int(positions[token]) + 1
+                else:
+                    limit = context
                 visible_total += limit
                 kv_elements += 2 * limit * kv_heads * head_dim
                 mask = np.zeros(context, dtype=np.uint16)

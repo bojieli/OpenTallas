@@ -47,7 +47,7 @@ from __future__ import annotations
 
 import hashlib
 from dataclasses import dataclass, field as dc_field
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from runtime.abi3.builder import DeploymentBuilder
 from runtime.abi3.capability import canonical_json
@@ -108,6 +108,10 @@ class RomLayoutPolicy:
     spare_columns_per_bank: int = 8
     #: First ROM byte address of every placement resource.
     base_address: int = 0
+    #: How a region that overflows one placement resource finds the next one.
+    #: The default walks banks on a conventional chip; the wafer product
+    #: supplies one that walks tiles and wraps into the next reticle.
+    advance_resource: "Callable[[RomCoordinate], RomCoordinate] | None" = None
 
     def validate(self) -> None:
         for name in ("alignment_bytes", "row_bytes", "resource_bytes"):
@@ -778,25 +782,19 @@ def _shard(
     shards: list[RomShard] = []
     remaining = total_bytes
     offset = 0
-    tile = hint.tile
-    reticle = hint.reticle
-    bank = hint.bank
+    advance = policy.advance_resource or _next_resource
+    here = hint
     guard = 0
     while remaining:
         guard += 1
         if guard > 1 << 22:
             raise RomImageError(f"ROM region {request.key!r} failed to place")
-        here = RomCoordinate(
-            node_id=hint.node_id, reticle=reticle, tile=tile, bank=bank
-        )
         rid = here.resource_id
         resources.setdefault(rid, here)
-        start = cursor.get(rid, policy.base_address)
-        start = _align_up(start, policy.alignment_bytes)
+        start = _align_up(cursor.get(rid, policy.base_address), policy.alignment_bytes)
         room = policy.base_address + policy.resource_bytes - start
         if room <= 0:
-            tile += 1
-            bank += 1
+            here = advance(here)
             continue
         take = min(room, remaining)
         if not shards:
@@ -813,8 +811,7 @@ def _shard(
         offset += take
         remaining -= take
         if remaining:
-            tile += 1
-            bank += 1
+            here = advance(here)
     # The trailing pad belongs to the last shard; the payload never straddles
     # the pad boundary because the pad is always the region tail.
     if payload_bytes > total_bytes:  # pragma: no cover - defensive
@@ -825,6 +822,16 @@ def _shard(
 # ---------------------------------------------------------------------------
 # Emission
 # ---------------------------------------------------------------------------
+def _next_resource(coordinate: RomCoordinate) -> RomCoordinate:
+    """Default spill order for a conventional chip: the next ROM bank."""
+    return RomCoordinate(
+        node_id=coordinate.node_id,
+        reticle=coordinate.reticle,
+        tile=coordinate.tile,
+        bank=coordinate.bank + 1,
+    )
+
+
 def region_object_source(region: RomRegion) -> ObjectSource:
     """The zero-copy source for a region: byte ranges of the checkpoint.
 

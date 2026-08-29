@@ -301,7 +301,6 @@ def _uses_bf16_kernel(
 
 def _contract(
     ctx: EngineContext,
-    profile: NumericProfile,
     activation_view: ResolvedView,
     activations: np.ndarray,
     weight_view: ResolvedView,
@@ -403,7 +402,6 @@ def _tensor_matmul(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
     weights = ctx.read(weight_view)
     values, saturations, scale_multiplications = _contract(
         ctx,
-        profile,
         activation_view,
         activations,
         weight_view,
@@ -492,7 +490,6 @@ def _tensor_grouped_matmul(
         _account_read(ctx, weight_view, _element_bytes(weight_view, cols * depth))
         values, group_saturations, group_scale = _contract(
             ctx,
-            profile,
             activation_view,
             np.ascontiguousarray(activations[cursor : cursor + span]),
             _slice_view(weight_view, (cols, depth), group),
@@ -630,7 +627,6 @@ def _tensor_routed_matmul(
             )
             values, _, group_scale = _contract(
                 ctx,
-                profile,
                 activation_view,
                 np.ascontiguousarray(activations[selected]),
                 _slice_view(weight_view, (cols, depth), int(expert)),

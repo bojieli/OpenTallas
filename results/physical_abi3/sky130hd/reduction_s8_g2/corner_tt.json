@@ -1,6 +1,6 @@
 {
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-08-29T16:03:59.071471+00:00",
+  "completed_at": "2026-08-29T16:07:36.205677+00:00",
   "corner": {
     "liberty": [
       {
@@ -36,10 +36,10 @@
     ],
     "top": "ot_reduction_endpoint"
   },
-  "elapsed_seconds": 7.119,
-  "generated_at": "2026-08-29T16:03:51.952292+00:00",
+  "elapsed_seconds": 9.786,
+  "generated_at": "2026-08-29T16:07:26.419752+00:00",
   "git": {
-    "commit": "8f971bcec0b78c2270604fda406857eb33b78bc9",
+    "commit": "06d9661a0c0b9066f87fb464617139a342173ed0",
     "worktree_dirty": true
   },
   "runner": {
@@ -49,6 +49,8 @@
       "sky130hd",
       "--block",
       "reduction_s8_g2",
+      "--corner",
+      "tt",
       "--clock-period-ns",
       "20",
       "--stages",
@@ -56,7 +58,7 @@
       "--fmax-search",
       "--force",
       "--output",
-      "results/physical_abi3/sky130hd/reduction_s8_g2/synth_sta.json"
+      "results/physical_abi3/sky130hd/reduction_s8_g2/corner_tt.json"
     ],
     "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
     "python": "3.10.12"

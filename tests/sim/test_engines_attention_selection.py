@@ -10,7 +10,6 @@ either, and that is exactly what these tests are for.
 from __future__ import annotations
 
 import numpy as np
-import pytest
 
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
@@ -354,6 +353,74 @@ def test_gqa_is_causal_by_absolute_position():
     assert np.array_equal(first, second)
     # Query 0 sits at absolute position 1, so exactly two positions are visible.
     assert result.counters["attention.context_positions"] == 2
+
+
+def test_gqa_bounds_the_context_with_a_runtime_symbol():
+    """A KV view spans its capacity; only the filled rows may be read."""
+    rng = np.random.default_rng(23)
+    span, q_heads, kv_heads, dim, capacity, filled = 1, 2, 1, 4, 6, 4
+    q = bf16_uniform(rng, (span, q_heads, dim))
+    k = bf16_uniform(rng, (capacity, kv_heads, dim))
+    v = bf16_uniform(rng, (capacity, kv_heads, dim))
+    # Rows beyond the filled length hold whatever the cache held before.
+    k[filled:] = narrow(np.full((capacity - filled, kv_heads, dim), 9.0, np.float32))
+    v[filled:] = narrow(np.full((capacity - filled, kv_heads, dim), -9.0, np.float32))
+
+    build, bounded_view = build_attention(
+        sub=int(Attention.GQA),
+        q=q,
+        k=k,
+        v=v,
+        scale_bits=fp32_bits(0.5),
+        aux=[NO_ID, NO_ID, int(Symbol.CONTEXT_LENGTH)],
+    )
+    device = build.finish()
+    bounded = device.run_transaction(
+        device.create_session(),
+        entrypoint_id=0,
+        symbols={int(Symbol.CONTEXT_LENGTH): filled},
+    )
+    assert bounded.status == CompletionStatus.SUCCESS, bounded.message
+
+    trimmed_build, trimmed_view = build_attention(
+        sub=int(Attention.GQA),
+        q=q,
+        k=k[:filled],
+        v=v[:filled],
+        scale_bits=fp32_bits(0.5),
+    )
+    trimmed_device = trimmed_build.finish()
+    trimmed = trimmed_device.run_transaction(
+        trimmed_device.create_session(), entrypoint_id=0, symbols={}
+    )
+    assert trimmed.status == CompletionStatus.SUCCESS, trimmed.message
+    assert np.array_equal(
+        read(device, bounded_view), read(trimmed_device, trimmed_view)
+    )
+    assert bounded.counters["attention.context_positions"] == filled
+
+
+def test_gqa_rejects_a_context_symbol_beyond_the_kv_view():
+    rng = np.random.default_rng(29)
+    q = bf16_uniform(rng, (1, 1, 4))
+    k = bf16_uniform(rng, (3, 1, 4))
+    v = bf16_uniform(rng, (3, 1, 4))
+    build, _ = build_attention(
+        sub=int(Attention.GQA),
+        q=q,
+        k=k,
+        v=v,
+        scale_bits=fp32_bits(0.5),
+        aux=[NO_ID, NO_ID, int(Symbol.CONTEXT_LENGTH)],
+    )
+    device = build.finish()
+    result = device.run_transaction(
+        device.create_session(),
+        entrypoint_id=0,
+        symbols={int(Symbol.CONTEXT_LENGTH): 9},
+    )
+    assert result.status == CompletionStatus.FAILED
+    assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
 
 
 def test_dense_rejects_a_grouped_head_map():

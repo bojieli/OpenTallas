@@ -61,6 +61,8 @@ module ot_a3_state_controller
     output reg  [31:0]  count_rows_committed,
     output reg  [63:0]  count_bytes_written
 );
+    localparam integer SLOT_W = $clog2(SLOTS);
+
     reg [31:0] slot_descriptor [0:SLOTS-1];
     reg [31:0] slot_cursor     [0:SLOTS-1];
     reg [31:0] slot_capacity   [0:SLOTS-1];
@@ -69,47 +71,47 @@ module ot_a3_state_controller
     reg [SLOTS-1:0] slot_used;
     reg [SLOTS-1:0] slot_open;
 
-    reg [3:0]  pending_slot [0:SLOTS-1];
+    reg [SLOT_W-1:0] pending_slot [0:SLOTS-1];
     reg [31:0] pending_rows [0:SLOTS-1];
-    reg [3:0]  pending_count;
-    reg [3:0]  apply_index;
+    reg [SLOT_W:0] pending_count;
+    reg [SLOT_W-1:0] apply_index;
 
     // STATE payload fields (byte offsets 16, 24, 32 inside the payload).
     wire [31:0] payload_row_bytes   = op_payload[128 +: 32];
     wire [31:0] payload_capacity    = op_payload[192 +: 32];
     wire [31:0] payload_initial_cur = op_payload[256 +: 32];
 
-    reg [3:0] s;
-    reg [3:0] hit_slot;
-    reg       hit_found;
-    reg [3:0] free_slot;
-    reg       free_found;
+    reg [SLOT_W:0]   s;
+    reg [SLOT_W-1:0] hit_slot;
+    reg              hit_found;
+    reg [SLOT_W-1:0] free_slot;
+    reg              free_found;
     always @* begin
-        hit_slot = 4'd0;
+        hit_slot = {SLOT_W{1'b0}};
         hit_found = 1'b0;
-        free_slot = 4'd0;
+        free_slot = {SLOT_W{1'b0}};
         free_found = 1'b0;
-        for (s = 4'd0; s < SLOTS; s = s + 4'd1) begin
-            if (!hit_found && slot_used[s] &&
-                (slot_descriptor[s] == op_descriptor_id)) begin
-                hit_slot = s;
+        for (s = 0; s < SLOTS; s = s + 1) begin
+            if (!hit_found && slot_used[s[SLOT_W-1:0]] &&
+                (slot_descriptor[s[SLOT_W-1:0]] == op_descriptor_id)) begin
+                hit_slot = s[SLOT_W-1:0];
                 hit_found = 1'b1;
             end
-            if (!free_found && !slot_used[s]) begin
-                free_slot = s;
+            if (!free_found && !slot_used[s[SLOT_W-1:0]]) begin
+                free_slot = s[SLOT_W-1:0];
                 free_found = 1'b1;
             end
         end
     end
 
-    wire [3:0]  target = hit_found ? hit_slot : free_slot;
+    wire [SLOT_W-1:0] target = hit_found ? hit_slot : free_slot;
     wire [31:0] target_cursor = hit_found ? slot_cursor[target] : payload_initial_cur;
     wire [31:0] target_capacity = hit_found ? slot_capacity[target] : payload_capacity;
     wire        target_open = hit_found ? slot_open[target] : 1'b0;
     wire [31:0] commit_rows = op_rows_bound ? op_rows : 32'd0;
     wire [32:0] commit_end = {1'b0, target_cursor} + {1'b0, commit_rows};
 
-    wire [3:0]  apply_slot = pending_slot[apply_index];
+    wire [SLOT_W-1:0] apply_slot = pending_slot[apply_index];
     wire [31:0] apply_rows = pending_rows[apply_index];
     wire [32:0] apply_end = {1'b0, slot_cursor[apply_slot]} + {1'b0, apply_rows};
 
@@ -127,8 +129,8 @@ module ot_a3_state_controller
             end
             slot_used <= {SLOTS{1'b0}};
             slot_open <= {SLOTS{1'b0}};
-            pending_count <= 4'd0;
-            apply_index <= 4'd0;
+            pending_count <= {(SLOT_W+1){1'b0}};
+            apply_index <= {SLOT_W{1'b0}};
             op_done <= 1'b0;
             op_ok <= 1'b0;
             op_trap_class <= A3_TRAP_NONE;
@@ -150,7 +152,7 @@ module ot_a3_state_controller
             if (clear) begin
                 slot_used <= {SLOTS{1'b0}};
                 slot_open <= {SLOTS{1'b0}};
-                pending_count <= 4'd0;
+                pending_count <= {(SLOT_W+1){1'b0}};
                 apply_busy <= 1'b0;
                 apply_overflow <= 1'b0;
                 count_prepares <= 32'd0;
@@ -164,16 +166,16 @@ module ot_a3_state_controller
             end else if (discard_all) begin
                 // A trap poisons the whole transaction: nothing staged is
                 // applied and every open prepare is released.
-                pending_count <= 4'd0;
+                pending_count <= {(SLOT_W+1){1'b0}};
                 slot_open <= {SLOTS{1'b0}};
                 apply_busy <= 1'b0;
                 apply_done <= 1'b1;
             end else if (commit_all) begin
-                if (pending_count == 4'd0) begin
+                if (pending_count == {(SLOT_W+1){1'b0}}) begin
                     apply_done <= 1'b1;
                 end else begin
                     apply_busy <= 1'b1;
-                    apply_index <= 4'd0;
+                    apply_index <= {SLOT_W{1'b0}};
                 end
             end else if (apply_busy) begin
                 slot_cursor[apply_slot] <= apply_end[31:0];
@@ -185,12 +187,12 @@ module ot_a3_state_controller
                     ({32'd0, apply_rows} * {32'd0, slot_row_bytes[apply_slot]});
                 if (apply_end > {1'b0, slot_capacity[apply_slot]})
                     apply_overflow <= 1'b1;
-                if (apply_index + 4'd1 >= pending_count) begin
+                if (({1'b0, apply_index} + 1'b1) >= pending_count) begin
                     apply_busy <= 1'b0;
                     apply_done <= 1'b1;
-                    pending_count <= 4'd0;
+                    pending_count <= {(SLOT_W+1){1'b0}};
                 end else begin
-                    apply_index <= apply_index + 4'd1;
+                    apply_index <= apply_index + 1'b1;
                 end
             end else if (op_valid) begin
                 op_done <= 1'b1;
@@ -229,13 +231,13 @@ module ot_a3_state_controller
                             end else if (commit_end > {1'b0, target_capacity}) begin
                                 op_ok <= 1'b0;
                                 op_trap_class <= A3_TRAP_CAPABILITY;
-                            end else if (pending_count >= SLOTS) begin
+                            end else if (pending_count >= SLOTS[SLOT_W:0]) begin
                                 op_ok <= 1'b0;
                                 op_trap_class <= A3_TRAP_CAPABILITY;
                             end else begin
-                                pending_slot[pending_count] <= target;
-                                pending_rows[pending_count] <= commit_rows;
-                                pending_count <= pending_count + 4'd1;
+                                pending_slot[pending_count[SLOT_W-1:0]] <= target;
+                                pending_rows[pending_count[SLOT_W-1:0]] <= commit_rows;
+                                pending_count <= pending_count + 1'b1;
                                 count_commits <= count_commits + 32'd1;
                             end
                         end

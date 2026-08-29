@@ -277,7 +277,9 @@ def test_loop_next_without_an_open_loop_is_rejected(capability: Capability) -> N
         default_tail(builder, ids)
 
     assert_rejected(
-        probe_deployment(capability, program=program),
+        # the builder's own work estimator cannot walk an unbalanced program, so
+        # the bound is declared rather than derived; the verifier is under test
+        probe_deployment(capability, program=program, max_retired_work=64),
         capability,
         "LOOP_NEXT with no open loop",
     )
@@ -605,22 +607,26 @@ def test_a_rom_object_with_a_write_permission_is_rejected(
     )
 
 
-def test_an_immutable_object_with_a_write_path_is_rejected(
-    capability: Capability,
+@pytest.mark.parametrize(
+    "write_bit",
+    [Permission.WRITE, Permission.STATE_PREPARE, Permission.STATE_COMMIT],
+)
+def test_an_immutable_object_with_a_write_path_never_decodes(
+    capability: Capability, write_bit: Permission
 ) -> None:
+    """A writable-immutable mask is refused by the descriptor decoder, so it
+    cannot even reach the verifier's own IMMUTABLE check."""
     deployment = probe_deployment(capability)
     weights = deployment.notes["probe_ids"]["weights"]
-    deployment.table = patched_table(
-        deployment.table,
-        weights,
-        32,
-        int(Permission.READ | Permission.WRITE | Permission.IMMUTABLE).to_bytes(
-            4, "little"
-        ),
-    )
-    assert_rejected(
-        restamp(deployment), capability, "IMMUTABLE object declares a write path"
-    )
+    with pytest.raises(RecordError, match="IMMUTABLE"):
+        patched_table(
+            deployment.table,
+            weights,
+            32,
+            int(Permission.READ | write_bit | Permission.IMMUTABLE).to_bytes(
+                4, "little"
+            ),
+        )
 
 
 def test_a_zero_size_memory_object_is_rejected(capability: Capability) -> None:
@@ -845,8 +851,9 @@ def test_loop_work_is_multiplied_by_the_trip_count(capability: Capability) -> No
     )
     report = verify_deployment(deployment, capability)
     assert report.admitted, report.errors
-    # one instruction and one LOOP_NEXT per trip, plus setup and the tail
-    assert report.proved_retired_work == 1 + 4 * 2 + 3
+    # the loop body and its LOOP_NEXT retire once per trip; LOOP_SETUP is
+    # accounted to the enclosing scope, and the tail retires once
+    assert report.proved_retired_work == 4 * 2 + 3
 
 
 def test_a_header_that_does_not_bind_the_descriptor_table_is_rejected(

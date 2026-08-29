@@ -527,6 +527,9 @@ class _Builder:
     def has_tensor(self, tensor_id: str) -> bool:
         return tensor_id in self._tensor_ids
 
+    def has_state(self, state_id: str) -> bool:
+        return state_id in self._state_ids
+
     def state(self, resource: StateResource) -> str:
         if resource.state_id in self._state_ids:
             return resource.state_id
@@ -604,3 +607,1012 @@ def _reference_owner(source_kind: str) -> str:
 def _contract(source_kind: str, step: str = "") -> str:
     owner = _reference_owner(source_kind)
     return f"{owner}{_CONTRACT_STEP_SEPARATOR}{step}" if step else owner
+
+
+_SOURCE_STATE_SUFFIX_TO_NEUTRAL: Mapping[str, tuple[str, ...]] = {
+    "window_kv": ("attention_window",),
+    "compressor": ("compressor_window_kv", "compressor_window_score"),
+    "compressed_kv": ("compressed_key_value",),
+    "index_compressor": (
+        "index_compressor_window_kv",
+        "index_compressor_window_score",
+    ),
+    "index_compressed_kv": ("index_compressed_key_value",),
+}
+
+
+def _neutral_state_ids(source_names: Iterable[str]) -> tuple[str, ...]:
+    """Translate ``state.<scope>.layer<n>.<suffix>`` into neutral state IDs."""
+
+    out: list[str] = []
+    for name in source_names:
+        parts = name.split(".")
+        if len(parts) != 4 or parts[0] != "state" or not parts[2].startswith("layer"):
+            raise DeepSeekV4KernelIRError(f"unrecognised source state {name!r}")
+        scope = parts[1]
+        layer = int(parts[2][len("layer") :])
+        try:
+            families = _SOURCE_STATE_SUFFIX_TO_NEUTRAL[parts[3]]
+        except KeyError:
+            raise DeepSeekV4KernelIRError(
+                f"source state {name!r} has no neutral state class"
+            ) from None
+        out.extend(f"{family}.{scope}.layer.{layer}" for family in families)
+    return tuple(out)
+
+
+def export_deepseek_v4_kernel_graph(
+    *,
+    snapshot: Path = DEFAULT_SNAPSHOT,
+    checkpoint_lock_path: Path = DEFAULT_CHECKPOINT_LOCK,
+    config_path: Path = DEFAULT_CONFIG,
+    source_path: Path = DEFAULT_SOURCE,
+    context_tokens: int = DEFAULT_CONTEXT_TOKENS,
+    maximum_new_tokens: int | None = None,
+    include_speculative: bool = False,
+) -> KernelGraph:
+    """Export DeepSeek-V4-Flash-0731 as one neutral Tensor Kernel IR v3 graph.
+
+    ``include_speculative`` selects the profile.  ``False`` -- the first
+    release -- emits the ordinary target-model path: the 43 main layers, the
+    hyper-connection head, the final norm, the vocabulary head and greedy
+    selection.  ``True`` additionally emits the three DSpark draft blocks, the
+    DSpark conditioning projection, the Markov draft head and the confidence
+    head, which ADR-003 section 18 sequences after ordinary generation and
+    whose acceptance contract is still open (DSV4-SEM-001).
+    """
+
+    snapshot = Path(snapshot)
+    if context_tokens < 1 or context_tokens > ARCHITECTURAL_MAX_CONTEXT:
+        raise DeepSeekV4KernelIRError(
+            f"deployment context {context_tokens} is outside the architectural "
+            f"capacity 1..{ARCHITECTURAL_MAX_CONTEXT}"
+        )
+    if context_tokens % SLIDING_WINDOW:
+        raise DeepSeekV4KernelIRError(
+            "deployment context must be a whole number of sliding windows"
+        )
+    if maximum_new_tokens is None:
+        maximum_new_tokens = context_tokens
+    if not 1 <= maximum_new_tokens <= context_tokens:
+        raise DeepSeekV4KernelIRError(
+            "maximum_new_tokens is outside the deployment context"
+        )
+
+    config = load_official_config(Path(config_path))
+    specs = build_official_tensor_specs(config)
+    for key, expected in (
+        ("hidden_size", HIDDEN),
+        ("hc_mult", HC_MULT),
+        ("num_attention_heads", HEADS),
+        ("head_dim", HEAD_DIM),
+        ("qk_rope_head_dim", ROPE_DIM),
+        ("q_lora_rank", Q_RANK),
+        ("o_groups", O_GROUPS),
+        ("o_lora_rank", O_RANK),
+        ("index_head_dim", INDEX_HEAD_DIM),
+        ("index_n_heads", INDEX_HEADS),
+        ("index_topk", INDEX_TOPK),
+        ("vocab_size", VOCABULARY),
+        ("n_routed_experts", ROUTED_EXPERTS),
+        ("num_experts_per_tok", TOP_K),
+        ("moe_intermediate_size", MOE_INTERMEDIATE),
+        ("sliding_window", SLIDING_WINDOW),
+        ("num_hidden_layers", 43),
+    ):
+        if int(config[key]) != expected:
+            raise DeepSeekV4KernelIRError(
+                f"released config {key}={config[key]} differs from the pinned {expected}"
+            )
+
+    try:
+        lock = load_checkpoint_lock(Path(checkpoint_lock_path))
+    except CheckpointError as exc:
+        raise DeepSeekV4KernelIRError(
+            f"invalid DeepSeek V4 checkpoint lock: {exc}"
+        ) from exc
+    validate_official_checkpoint_lock(lock, config)
+    if (
+        lock["lock_id"] != OFFICIAL_CHECKPOINT_LOCK_ID
+        or lock["checkpoint"]["tensor_count"] != TENSOR_COUNT
+        or lock["checkpoint"]["payload_bytes"] != PAYLOAD_BYTES
+    ):
+        raise DeepSeekV4KernelIRError(
+            "checkpoint lock is not the pinned DeepSeek-V4-Flash-0731 release"
+        )
+    bindings = read_checkpoint_bindings(snapshot, lock)
+    if len(bindings) != TENSOR_COUNT:
+        raise DeepSeekV4KernelIRError(
+            f"checkpoint headers describe {len(bindings)} tensors, expected {TENSOR_COUNT}"
+        )
+
+    contract = build_official_graph_contract()
+    nodes = contract["nodes"]
+
+    ratios = [int(r) for r in config["compress_ratios"][:43]]
+
+    # ------------------------------------------------------------------
+    # Tensor specification index
+    # ------------------------------------------------------------------
+    spec_index: dict[tuple[str, int | None, str], list[TensorSpec]] = defaultdict(list)
+    for spec in specs:
+        spec_index[(spec.scope, spec.layer, spec.semantic_role)].append(spec)
+    for group in spec_index.values():
+        group.sort(key=lambda s: (-1 if s.expert is None else s.expert, s.name))
+    scale_of: dict[str, TensorSpec] = {
+        spec.scale_for: spec for spec in specs if spec.scale_for is not None
+    }
+
+    builder = _Builder()
+
+    # ------------------------------------------------------------------
+    # Runtime symbols and extents
+    # ------------------------------------------------------------------
+    span = Symbolic("span_tokens", 1, context_tokens)
+    dispatch_rows = Symbolic("span_tokens", TOP_K, TOP_K * context_tokens)
+    groups = {
+        4: Symbolic("span_groups_ratio4", 1, context_tokens // 4),
+        128: Symbolic("span_groups_ratio128", 1, context_tokens // 128),
+    }
+    committed_groups = {
+        4: Symbolic("context_groups_ratio4", 1, context_tokens // 4),
+        128: Symbolic("context_groups_ratio128", 1, context_tokens // 128),
+    }
+    attention_rows = {
+        0: Symbolic("attention_rows_window", 1, context_tokens + SLIDING_WINDOW),
+        4: Symbolic(
+            "attention_rows_ratio4",
+            1,
+            context_tokens + SLIDING_WINDOW + context_tokens // 4,
+        ),
+        128: Symbolic(
+            "attention_rows_ratio128",
+            1,
+            context_tokens + SLIDING_WINDOW + context_tokens // 128,
+        ),
+    }
+    selected_rows_128 = Symbolic(
+        "selected_rows_ratio128", 1, SLIDING_WINDOW + context_tokens // 128
+    )
+    symbols = (
+        RuntimeSymbol("span_tokens", 1, context_tokens, 1, "request"),
+        RuntimeSymbol("context_length", 1, context_tokens, 1, "request"),
+        RuntimeSymbol("span_groups_ratio4", 0, context_tokens // 4, 1, "derived"),
+        RuntimeSymbol("span_groups_ratio128", 0, context_tokens // 128, 1, "derived"),
+        RuntimeSymbol("context_groups_ratio4", 0, context_tokens // 4, 1, "derived"),
+        RuntimeSymbol(
+            "context_groups_ratio128", 0, context_tokens // 128, 1, "derived"
+        ),
+        RuntimeSymbol(
+            "attention_rows_window", 1, context_tokens + SLIDING_WINDOW, 1, "derived"
+        ),
+        RuntimeSymbol(
+            "attention_rows_ratio4",
+            1,
+            context_tokens + SLIDING_WINDOW + context_tokens // 4,
+            1,
+            "derived",
+        ),
+        RuntimeSymbol(
+            "attention_rows_ratio128",
+            1,
+            context_tokens + SLIDING_WINDOW + context_tokens // 128,
+            1,
+            "derived",
+        ),
+        RuntimeSymbol(
+            "selected_rows_ratio128",
+            1,
+            SLIDING_WINDOW + context_tokens // 128,
+            1,
+            "derived",
+        ),
+    )
+
+    # ------------------------------------------------------------------
+    # Request inputs
+    # ------------------------------------------------------------------
+    token_ids = builder.tensor("input.token_ids", "i32", (span,), "input")
+    position_offset = builder.tensor("input.position_offset", "i32", (1,), "input")
+    session_ids = builder.tensor("input.session_ids", "u32", (1,), "input")
+    temperature = builder.tensor("input.temperature", "fp32", (1,), "input")
+    entropy = builder.tensor("input.entropy_stream", "fp32", (1, VOCABULARY), "input")
+
+    value_tensor: dict[str, str] = {
+        "request.input_ids": token_ids,
+        "request.start_pos": position_offset,
+        "request.session_ids": session_ids,
+        "request.temperature_binary32": temperature,
+        "request.explicit_exponential_entropy": entropy,
+    }
+    predicate_values: set[str] = set()
+    context_of: dict[str, dict[str, str]] = defaultdict(dict)
+
+    role_any: dict[str, list[TensorSpec]] = defaultdict(list)
+    for spec in specs:
+        role_any[spec.semantic_role].append(spec)
+    for group in role_any.values():
+        group.sort(key=lambda s: (-1 if s.expert is None else s.expert, s.name))
+
+    def declare_weight(spec: TensorSpec) -> str:
+        if builder.has_tensor(spec.name):
+            return spec.name
+        binding = bindings.get(spec.name)
+        if binding is None:
+            raise DeepSeekV4KernelIRError(
+                f"checkpoint has no payload for {spec.name!r}"
+            )
+        if binding.bytes != spec.size_bytes:
+            raise DeepSeekV4KernelIRError(
+                f"{spec.name!r} byte length differs from the derived contract"
+            )
+        dtype = _STORAGE_DTYPE[spec.storage_dtype]
+        shape: tuple[int, ...] = tuple(spec.shape)
+        if spec.logical_dtype == "MXFP4_E2M1_X2":
+            # Two E2M1 elements share one stored byte; the neutral shape is the
+            # architectural one and the binding still names the stored bytes.
+            dtype = "mxfp4_e2m1"
+            shape = (spec.shape[0], spec.shape[1] * 2)
+        scale_spec = scale_of.get(spec.name)
+        scale_id: str | None = None
+        block = 0
+        if scale_spec is not None:
+            scale_id = declare_weight(scale_spec)
+            block = FP4_BLOCK if dtype == "mxfp4_e2m1" else FP8_WEIGHT_BLOCK
+        return builder.tensor(
+            spec.name,
+            dtype,
+            shape,
+            "weight",
+            binding=binding,
+            scale_tensor_id=scale_id,
+            scale_block_elements=block,
+        )
+
+    def role_specs(role: str, scope: str, layer: int | None) -> list[TensorSpec]:
+        for key in ((scope, layer, role), ("global", None, role)):
+            if key in spec_index:
+                return spec_index[key]
+        if role in role_any:
+            return role_any[role]
+        raise DeepSeekV4KernelIRError(
+            f"role {role!r} has no tensor in scope {scope!r} layer {layer!r}"
+        )
+
+    def role_weight(role: str, scope: str, layer: int | None) -> str:
+        found = role_specs(role, scope, layer)
+        if len(found) != 1:
+            raise DeepSeekV4KernelIRError(
+                f"role {role!r} resolves to {len(found)} tensors, expected one"
+            )
+        return declare_weight(found[0])
+
+    def role_weight_family(role: str, scope: str, layer: int | None) -> list[str]:
+        return [declare_weight(spec) for spec in role_specs(role, scope, layer)]
+
+    def ten(value: str) -> str:
+        try:
+            return value_tensor[value]
+        except KeyError:
+            raise DeepSeekV4KernelIRError(
+                f"source value {value!r} has no neutral tensor"
+            ) from None
+
+    def bind(value: str, tensor_id: str) -> str:
+        value_tensor[value] = tensor_id
+        return tensor_id
+
+    def act(tensor_id: str, dtype: str, shape: tuple[Any, ...]) -> str:
+        return builder.tensor(tensor_id, dtype, shape, "activation")
+
+    def view(tensor_id: str, dtype: str, shape: tuple[Any, ...]) -> str:
+        return builder.tensor(tensor_id, dtype, shape, "state")
+
+    def rows_of(tensor_id: str) -> Any:
+        return builder.shape[tensor_id][0]
+
+    quantized: dict[tuple[str, int, str, int], tuple[str, str]] = {}
+
+    def quantize(
+        source: str,
+        *,
+        block: int,
+        dtype: str,
+        width: int | None,
+        source_operation_id: str,
+        source_kind: str,
+        contract: str,
+        attributes: Mapping[str, Any],
+        layer: int | None,
+        phases: Sequence[str],
+    ) -> tuple[str, str]:
+        """Emit (or reuse) the dynamic quantization of one activation value."""
+
+        shape = builder.shape[source]
+        full_width = shape[-1]
+        if width is None:
+            width = int(full_width)
+        key = (source, block, dtype, width)
+        if key in quantized:
+            return quantized[key]
+        suffix = f"quantized_{dtype}_{block}"
+        if width != full_width:
+            suffix = f"{suffix}_{width}"
+        if width % block:
+            raise DeepSeekV4KernelIRError(
+                f"{source!r} width {width} is not a whole number of {block}-blocks"
+            )
+        scale = act(
+            f"{source}.{suffix}.scale", "e8m0", (*shape[:-1], width // block)
+        )
+        payload = builder.tensor(
+            f"{source}.{suffix}",
+            dtype,
+            (*shape[:-1], width),
+            "activation",
+            scale_tensor_id=scale,
+            scale_block_elements=block,
+        )
+        builder.kernel(
+            f"{source}.{suffix}",
+            "QUANTIZE",
+            (source,),
+            (payload, scale),
+            numeric_contract=contract,
+            iteration_domain={"rows": shape[0], "width": width, "block": block},
+            attributes=dict(attributes),
+            source_operation_id=source_operation_id,
+            source_kind=source_kind,
+            phases=phases,
+            layer=layer,
+        )
+        quantized[key] = (payload, scale)
+        return payload, scale
+
+    def rope_attributes(ratio: int, *, inverse: bool) -> dict[str, Any]:
+        if ratio:
+            return {
+                "beta_fast": int(config["rope_scaling"]["beta_fast"]),
+                "beta_slow": int(config["rope_scaling"]["beta_slow"]),
+                "factor": float(config["rope_scaling"]["factor"]),
+                "inverse": inverse,
+                "original_max_position": int(
+                    config["rope_scaling"]["original_max_position_embeddings"]
+                ),
+                "position_scaling": "yarn",
+                "rotary_width": ROPE_DIM,
+                "theta": float(config["compress_rope_theta"]),
+            }
+        return {
+            "inverse": inverse,
+            "position_scaling": "none",
+            "rotary_width": ROPE_DIM,
+            "theta": float(config["rope_theta"]),
+        }
+
+    def ensure_state(state_id: str) -> str:
+        if builder.has_state(state_id):
+            return state_id
+        family, state_scope, _, layer_text = state_id.split(".")
+        state_layer = int(layer_text)
+        state_ratio = ratios[state_layer] if state_scope == "main" else 0
+        coefficient = 2 if state_ratio == 4 else 1
+        if family == "attention_window":
+            resource = StateResource(
+                state_id=state_id,
+                state_class="kv_window",
+                dtype="bf16",
+                row_elements=HEAD_DIM,
+                capacity_rows=SLIDING_WINDOW,
+                initialization="zero",
+            )
+        elif family in {"compressor_window_kv", "compressor_window_score"}:
+            resource = StateResource(
+                state_id=state_id,
+                state_class="compressor_window",
+                dtype="fp32",
+                row_elements=coefficient * HEAD_DIM,
+                capacity_rows=coefficient * state_ratio,
+                initialization=(
+                    "zero"
+                    if family.endswith("kv")
+                    else "negative_infinity"
+                ),
+            )
+        elif family == "compressed_key_value":
+            resource = StateResource(
+                state_id=state_id,
+                state_class="compressed_kv",
+                dtype="bf16",
+                row_elements=HEAD_DIM,
+                capacity_rows=context_tokens // state_ratio,
+                initialization="zero",
+            )
+        elif family in {
+            "index_compressor_window_kv",
+            "index_compressor_window_score",
+        }:
+            resource = StateResource(
+                state_id=state_id,
+                state_class="compressor_window",
+                dtype="fp32",
+                row_elements=2 * INDEX_HEAD_DIM,
+                capacity_rows=2 * 4,
+                initialization=(
+                    "zero" if family.endswith("kv") else "negative_infinity"
+                ),
+            )
+        elif family == "index_compressed_key_value":
+            resource = StateResource(
+                state_id=state_id,
+                state_class="compressed_kv",
+                dtype="bf16",
+                row_elements=INDEX_HEAD_DIM,
+                capacity_rows=context_tokens // 4,
+                initialization="zero",
+            )
+        else:  # pragma: no cover - the translation table is closed
+            raise DeepSeekV4KernelIRError(f"unknown state family {family!r}")
+        return builder.state(resource)
+
+    def states_of(node: Mapping[str, Any]) -> tuple[tuple[str, ...], tuple[str, ...]]:
+        reads = _neutral_state_ids(node["state_reads"])
+        writes = _neutral_state_ids(node["state_writes"])
+        for state_id in (*reads, *writes):
+            ensure_state(state_id)
+        return reads, writes
+
+    def dedupe(items: Iterable[str]) -> tuple[str, ...]:
+        seen: dict[str, None] = {}
+        for item in items:
+            seen.setdefault(item, None)
+        return tuple(seen)
+
+    # ------------------------------------------------------------------
+    # Lower every source node
+    # ------------------------------------------------------------------
+    emitted_source_kinds: Counter = Counter()
+    for node in nodes:
+        node_id = node["id"]
+        source_kind = node["kind"]
+        speculative = node_id.startswith("dspark.") or source_kind == (
+            "TARGET_HIDDEN_CAPTURE"
+        )
+        if speculative and not include_speculative:
+            continue
+        emitted_source_kinds[source_kind] += 1
+        scope, layer, leaf = _split_node_id(node_id)
+        root = f"{scope}.layer{layer:02d}" if layer is not None else scope
+        ratio = ratios[layer] if scope == "main" and layer is not None else 0
+        phases = tuple(node["phases"])
+        attrs = dict(node["attributes"])
+        attrs["source_operation_kind"] = source_kind
+        source_inputs = list(node["inputs"])
+        source_outputs = list(node["outputs"])
+        roles = list(node["tensor_roles"])
+        reads, writes = states_of(node)
+        predicated = [v for v in source_inputs if v in predicate_values]
+        if predicated:
+            attrs["execution_predicate"] = predicated[0]
+        if node["guard"] is not None:
+            attrs["execution_predicate"] = node["guard"]
+        operands = [ten(v) for v in source_inputs if v not in predicate_values]
+        out0 = source_outputs[0]
+
+        def emit(
+            kernel_id: str,
+            kind: str,
+            inputs: Sequence[str],
+            outputs: Sequence[str],
+            *,
+            step: str = "",
+            iteration_domain: Mapping[str, Any],
+            attributes: Mapping[str, Any] | None = None,
+            state: bool = True,
+        ) -> None:
+            builder.kernel(
+                kernel_id,
+                kind,
+                inputs,
+                outputs,
+                numeric_contract=_contract(source_kind, step),
+                iteration_domain=iteration_domain,
+                attributes=attrs if attributes is None else attributes,
+                source_operation_id=node_id,
+                source_kind=source_kind,
+                phases=phases,
+                layer=layer,
+                state_reads=reads if state else (),
+                state_writes=writes if state else (),
+            )
+
+        # -- movement, normalisation and dense contraction ---------------
+        if source_kind == "TOKEN_EMBED":
+            weight = role_weight(roles[0], scope, layer)
+            output = act(out0, "bf16", (span, HIDDEN))
+            emit(
+                node_id,
+                "EMBEDDING_LOOKUP",
+                (operands[0], weight),
+                (output,),
+                iteration_domain={"tokens": span, "width": HIDDEN},
+            )
+            bind(out0, output)
+
+        elif source_kind == "HC_EXPAND":
+            source = operands[0]
+            output = act(out0, "bf16", (span, HC_MULT, HIDDEN))
+            emit(
+                node_id,
+                "CONCAT",
+                (source,) * HC_MULT,
+                (output,),
+                iteration_domain={"tokens": span, "hyper_streams": HC_MULT,
+                                  "width": HIDDEN},
+                attributes={**attrs, "axis": 1, "copies": HC_MULT,
+                            "source_replication": "single_embedding"},
+            )
+            bind(out0, output)
+
+        elif source_kind == "HC_PRE":
+            hidden = operands[0]
+            base = role_weight(roles[0], scope, layer)
+            projection = role_weight(roles[1], scope, layer)
+            scale = role_weight(roles[2], scope, layer)
+            rows = rows_of(hidden)
+            branch = act(source_outputs[0], "bf16", (rows, HIDDEN))
+            coefficients = act(
+                f"{node_id}.coefficients", "fp32", (rows, HC_COEFFICIENTS)
+            )
+            emit(
+                node_id,
+                "HYPER_CONNECT_PRE",
+                (hidden, projection, scale, base),
+                (branch, coefficients),
+                iteration_domain={
+                    "tokens": rows,
+                    "hyper_streams": HC_MULT,
+                    "width": HIDDEN,
+                    "mix_width": HC_MIX,
+                },
+                attributes={
+                    **attrs,
+                    "coefficient_layout": "post_then_combination",
+                    "coefficient_width": HC_COEFFICIENTS,
+                    "combination_width": HC_MULT * HC_MULT,
+                    "epsilon": RMS_EPSILON,
+                    "mix_width": HC_MIX,
+                    "post_width": HC_MULT,
+                    "sinkhorn_iterations": int(config["hc_sinkhorn_iters"]),
+                },
+            )
+            bind(source_outputs[0], branch)
+            bind(source_outputs[1], coefficients)
+            bind(source_outputs[2], coefficients)
+            bind(source_outputs[3], hidden)
+
+        elif source_kind == "HC_POST":
+            inputs = dedupe(operands)
+            rows = rows_of(inputs[0])
+            output = act(out0, "bf16", (rows, HC_MULT, HIDDEN))
+            emit(
+                node_id,
+                "HYPER_CONNECT_POST",
+                inputs,
+                (output,),
+                iteration_domain={
+                    "tokens": rows,
+                    "hyper_streams": HC_MULT,
+                    "width": HIDDEN,
+                },
+                attributes={
+                    **attrs,
+                    "coefficient_layout": "post_then_combination",
+                    "combination_width": HC_MULT * HC_MULT,
+                    "post_width": HC_MULT,
+                },
+            )
+            bind(out0, output)
+
+        elif source_kind == "HC_HEAD":
+            hidden = operands[0]
+            base = role_weight(roles[0], scope, layer)
+            projection = role_weight(roles[1], scope, layer)
+            scale = role_weight(roles[2], scope, layer)
+            rows = rows_of(hidden)
+            output = act(out0, "bf16", (rows, HIDDEN))
+            emit(
+                node_id,
+                "HYPER_CONNECT_HEAD",
+                (hidden, projection, scale, base),
+                (output,),
+                iteration_domain={
+                    "tokens": rows,
+                    "hyper_streams": HC_MULT,
+                    "width": HIDDEN,
+                },
+            )
+            bind(out0, output)
+
+        elif source_kind == "RMS_NORM":
+            source = operands[0]
+            weight = role_weight(roles[0], scope, layer)
+            shape = builder.shape[source]
+            output = act(out0, "bf16", shape)
+            emit(
+                node_id,
+                "RMS_NORM",
+                (source, weight),
+                (output,),
+                iteration_domain={"rows": shape[0], "width": int(attrs["width"])},
+            )
+            bind(out0, output)
+
+        elif source_kind == "HEAD_RMS_NORM":
+            source = operands[0]
+            shape = builder.shape[source]
+            output = act(out0, "bf16", shape)
+            emit(
+                node_id,
+                "HEAD_RMS_NORM",
+                (source,),
+                (output,),
+                iteration_domain={
+                    "tokens": shape[0],
+                    "heads": HEADS,
+                    "width": HEAD_DIM,
+                },
+            )
+            bind(out0, output)
+
+        elif source_kind in {"FP8_LINEAR", "DSPARK_MAIN_PROJECT"}:
+            if source_kind == "DSPARK_MAIN_PROJECT":
+                rows = rows_of(operands[0])
+                joined = act(
+                    f"{node_id}.joined_target_hidden",
+                    "bf16",
+                    (rows, HIDDEN * len(operands)),
+                )
+                emit(
+                    f"{node_id}.concat",
+                    "CONCAT",
+                    tuple(operands),
+                    (joined,),
+                    step="target_hidden_concat",
+                    iteration_domain={"tokens": rows,
+                                      "width": HIDDEN * len(operands)},
+                )
+                source = joined
+                weight = role_weight(roles[0], scope, layer)
+                norm_weight = role_weight(roles[2], scope, layer)
+            else:
+                source = operands[0]
+                weight = role_weight(roles[0], scope, layer)
+                norm_weight = None
+            out_features, in_features = builder.shape[weight]
+            payload, scale = quantize(
+                source,
+                block=ACTIVATION_BLOCK,
+                dtype="fp8_e4m3fn",
+                width=None,
+                source_operation_id=node_id,
+                source_kind=source_kind,
+                contract=_contract(source_kind, "activation_quantize"),
+                attributes={
+                    "block_size": ACTIVATION_BLOCK,
+                    "amax_floor_binary32": "0x38d1b717",
+                    "output_dtype": "fp8_e4m3fn",
+                    "rounding": "rne",
+                    "scale_format": "ue8m0",
+                    "scale_selection": "bit_ceiling_power_of_two",
+                    "source_operation_kind": source_kind,
+                },
+                layer=layer,
+                phases=phases,
+            )
+            rows = rows_of(source)
+            if "heads" in attrs:
+                shape = (rows, int(attrs["heads"]), int(attrs["head_dim"]))
+            else:
+                shape = (rows, out_features)
+            product = f"{node_id}.projection" if norm_weight else out0
+            output = act(product, "bf16", shape)
+            emit(
+                f"{node_id}.contract",
+                "MATMUL",
+                (payload, weight),
+                (output,),
+                step="block_scaled_contraction",
+                iteration_domain={
+                    "rows": rows,
+                    "output_width": out_features,
+                    "reduction_width": in_features,
+                },
+                attributes={
+                    **attrs,
+                    "accumulator_dtype": "fp32",
+                    "activation_block_elements": ACTIVATION_BLOCK,
+                    "input_dtype": "fp8_e4m3fn",
+                    "output_dtype": "bf16",
+                    "reduction_order": "increasing_reduction_index",
+                    "transpose_weight": True,
+                    "weight_block_elements": FP8_WEIGHT_BLOCK,
+                },
+            )
+            if norm_weight is not None:
+                normalized = act(out0, "bf16", shape)
+                emit(
+                    f"{node_id}.norm",
+                    "RMS_NORM",
+                    (output, norm_weight),
+                    (normalized,),
+                    step="conditioning_norm",
+                    iteration_domain={"rows": rows, "width": HIDDEN},
+                )
+                output = normalized
+            bind(out0, output)
+
+        elif source_kind == "BF16_LINEAR":
+            source = operands[0]
+            weight = role_weight(roles[0], scope, layer)
+            out_features, in_features = builder.shape[weight]
+            rows = rows_of(source)
+            output = act(out0, "bf16", (rows, out_features))
+            emit(
+                node_id,
+                "MATMUL",
+                (source, weight),
+                (output,),
+                iteration_domain={
+                    "rows": rows,
+                    "output_width": out_features,
+                    "reduction_width": in_features,
+                },
+            )
+            bind(out0, output)
+
+        elif source_kind in {"ROPE_APPLY", "ROPE_INVERSE"}:
+            source = operands[0]
+            shape = builder.shape[source]
+            output = act(out0, "bf16", shape)
+            inverse = source_kind == "ROPE_INVERSE"
+            emit(
+                node_id,
+                "ROPE_INVERSE" if inverse else "ROPE",
+                (source, ten("request.start_pos")),
+                (output,),
+                iteration_domain={"rows": shape[0], "width": ROPE_DIM},
+                attributes={**attrs, **rope_attributes(ratio, inverse=inverse)},
+            )
+            bind(out0, output)
+
+        elif source_kind in {"FP8_QDQ", "FP4_QDQ"}:
+            source = operands[0]
+            shape = builder.shape[source]
+            if source_kind == "FP8_QDQ":
+                width = int(attrs["quantized_width"])
+                block = KV_QUANT_BLOCK
+                payload_dtype = "fp8_e4m3fn"
+            else:
+                width = int(shape[-1])
+                block = FP4_BLOCK
+                payload_dtype = "mxfp4_e2m1"
+            payload, scale = quantize(
+                source,
+                block=block,
+                dtype=payload_dtype,
+                width=width,
+                source_operation_id=node_id,
+                source_kind=source_kind,
+                contract=_contract(source_kind, "quantize"),
+                attributes={**attrs, "block_size": block,
+                            "output_dtype": payload_dtype},
+                layer=layer,
+                phases=phases,
+            )
+            output = act(out0, "bf16", shape)
+            carried = width != int(shape[-1])
+            emit(
+                node_id,
+                "DEQUANTIZE",
+                (payload, scale, source) if carried else (payload, scale),
+                (output,),
+                step="reconstruct",
+                iteration_domain={"rows": shape[0], "width": int(shape[-1]),
+                                  "block": block},
+                attributes={
+                    **attrs,
+                    "block_size": block,
+                    "carried_width": int(shape[-1]) - width,
+                    "output_dtype": "bf16",
+                    "reconstructed_width": width,
+                },
+            )
+            bind(out0, output)
+
+        elif source_kind == "HADAMARD_ROTATE":
+            source = operands[0]
+            shape = builder.shape[source]
+            output = act(out0, "bf16", shape)
+            emit(
+                node_id,
+                "HADAMARD",
+                (source,),
+                (output,),
+                iteration_domain={"rows": shape[0], "width": int(attrs["width"])},
+            )
+            bind(out0, output)
+
+        # -- window and compression state --------------------------------
+        elif source_kind == "WINDOW_INDEX":
+            output = act(out0, "i32", (span, SLIDING_WINDOW))
+            emit(
+                node_id,
+                "WINDOW_INDEX",
+                (ten("request.start_pos"),),
+                (output,),
+                iteration_domain={"tokens": span, "width": SLIDING_WINDOW},
+                attributes={**attrs, "index_family": "causal_circular_window",
+                            "padding_index": -1},
+            )
+            bind(out0, output)
+            context_of[root]["window_indices"] = output
+
+        elif source_kind == "DSPARK_WINDOW_INDEX":
+            width = SLIDING_WINDOW + DRAFT_BLOCK
+            output = act(out0, "i32", (DRAFT_BLOCK, width))
+            emit(
+                node_id,
+                "WINDOW_INDEX",
+                (ten("request.start_pos"),),
+                (output,),
+                iteration_domain={"tokens": DRAFT_BLOCK, "width": width},
+                attributes={
+                    **attrs,
+                    "index_family": "causal_window_then_current_draft",
+                    "padding_index": -1,
+                },
+            )
+            bind(out0, output)
+            context_of[root]["window_indices"] = output
+
+        elif source_kind == "KV_WINDOW_WRITE":
+            source = operands[0]
+            committed = view(out0, "bf16", (SLIDING_WINDOW, HEAD_DIM))
+            emit(
+                node_id,
+                "KV_APPEND",
+                (source, ten("request.start_pos")),
+                (committed,),
+                iteration_domain={"rows": rows_of(source), "width": HEAD_DIM,
+                                  "capacity": SLIDING_WINDOW},
+            )
+            bind(out0, committed)
+
+        elif source_kind == "COMPRESS_PROJECT":
+            source = operands[0]
+            key_value_weight = role_weight(roles[0], scope, layer)
+            gate_weight = role_weight(roles[1], scope, layer)
+            width = int(attrs["output_features"])
+            rows = rows_of(source)
+            key_value = act(source_outputs[0], "fp32", (rows, width))
+            score = act(source_outputs[1], "fp32", (rows, width))
+            emit(
+                f"{node_id}.key_value",
+                "COMPRESS_PROJECT",
+                (source, key_value_weight),
+                (key_value,),
+                step="key_value_projection",
+                iteration_domain={"tokens": rows, "output_width": width,
+                                  "reduction_width": HIDDEN},
+            )
+            emit(
+                f"{node_id}.score",
+                "COMPRESS_PROJECT",
+                (source, gate_weight),
+                (score,),
+                step="score_projection",
+                iteration_domain={"tokens": rows, "output_width": width,
+                                  "reduction_width": HIDDEN},
+            )
+            bind(source_outputs[0], key_value)
+            bind(source_outputs[1], score)
+
+        elif source_kind == "COMPRESS_STATE_UPDATE":
+            key_value, score = operands[0], operands[1]
+            position_weight = role_weight(roles[0], scope, layer)
+            node_ratio = int(attrs["ratio"])
+            head_width = int(attrs["head_dim"])
+            candidates = 2 * node_ratio if attrs["overlap"] else node_ratio
+            rows = rows_of(score)
+            biased = act(
+                f"{node_id}.positional_score", "fp32", builder.shape[score]
+            )
+            emit(
+                f"{node_id}.positional_score",
+                "ADD",
+                (score, position_weight),
+                (biased,),
+                step="positional_score_add",
+                iteration_domain={"tokens": rows,
+                                  "width": builder.shape[score][-1]},
+                state=False,
+            )
+            group_rows = groups[node_ratio]
+            pool_key_value = act(
+                source_outputs[0], "fp32", (group_rows, candidates, head_width)
+            )
+            pool_score = act(
+                source_outputs[1], "fp32", (group_rows, candidates, head_width)
+            )
+            emit(
+                node_id,
+                "COMPRESS_STATE_UPDATE",
+                (key_value, biased),
+                (pool_key_value, pool_score),
+                step="raw_window_transaction",
+                iteration_domain={"groups": group_rows, "candidates": candidates,
+                                  "width": head_width},
+            )
+            bind(source_outputs[0], pool_key_value)
+            bind(source_outputs[1], pool_score)
+            predicate_values.add(source_outputs[2])
+
+        elif source_kind == "COMPRESS_POOL":
+            pool_key_value, pool_score = operands[0], operands[1]
+            head_width = int(attrs["head_dim"])
+            group_rows = rows_of(pool_key_value)
+            output = act(out0, "fp32", (group_rows, head_width))
+            emit(
+                node_id,
+                "COMPRESS_POOL",
+                (pool_key_value, pool_score),
+                (output,),
+                iteration_domain={"groups": group_rows,
+                                  "candidates": int(attrs["candidate_count"]),
+                                  "width": head_width},
+            )
+            bind(out0, output)
+
+        elif source_kind == "BINARY32_TO_BF16":
+            source = operands[0]
+            shape = builder.shape[source]
+            output = act(out0, "bf16", shape)
+            emit(
+                node_id,
+                "CONVERT",
+                (source,),
+                (output,),
+                iteration_domain={"rows": shape[0], "width": int(attrs["width"])},
+            )
+            bind(out0, output)
+
+        elif source_kind == "COMPRESS_KV_WRITE":
+            source = operands[0]
+            head_width = int(attrs["head_dim"])
+            capacity = context_tokens // int(attrs["ratio"])
+            committed = view(out0, "bf16", (capacity, head_width))
+            emit(
+                node_id,
+                "KV_APPEND",
+                (source, ten("request.start_pos")),
+                (committed,),
+                iteration_domain={"rows": rows_of(source), "width": head_width,
+                                  "capacity": capacity},
+            )
+            bind(out0, committed)
+
+        elif source_kind == "COMPRESSED_KV_VALID_VIEW":
+            source = operands[0]
+            head_width = int(attrs["head_dim"])
+            node_ratio = int(attrs["ratio"])
+            output = view(out0, "bf16", (committed_groups[node_ratio], head_width))
+            emit(
+                node_id,
+                "STATE_READ",
+                (source,),
+                (output,),
+                iteration_domain={"rows": committed_groups[node_ratio],
+                                  "width": head_width},
+            )
+            bind(out0, output)

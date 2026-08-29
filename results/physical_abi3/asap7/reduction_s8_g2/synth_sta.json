@@ -1,6 +1,6 @@
 {
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-08-29T15:58:12.931642+00:00",
+  "completed_at": "2026-08-29T16:04:55.887431+00:00",
   "corner": {
     "liberty": [
       {
@@ -56,10 +56,10 @@
     ],
     "top": "ot_reduction_endpoint"
   },
-  "elapsed_seconds": 2.588,
-  "generated_at": "2026-08-29T15:58:10.343441+00:00",
+  "elapsed_seconds": 25.946,
+  "generated_at": "2026-08-29T16:04:29.941716+00:00",
   "git": {
-    "commit": "9e5969d5de4e212bd46aac0997870d495634d870",
+    "commit": "8f971bcec0b78c2270604fda406857eb33b78bc9",
     "worktree_dirty": true
   },
   "runner": {
@@ -73,6 +73,7 @@
       "2.25",
       "--stages",
       "synth,sta",
+      "--fmax-search",
       "--force",
       "--output",
       "results/physical_abi3/asap7/reduction_s8_g2/synth_sta.json"
@@ -92,8 +93,65 @@
   "static_timing": {
     "clock_period_ns": 2.25,
     "critical_path_ns": 1.9770281315770415,
-    "fmax_definition": "1 / (target clock period - setup WNS), pre-layout, ideal clock",
+    "fmax_definition": "1 / (target clock period - setup WNS) at this target period.  Note the SDC derives input/output delay as 20% of the clock period, so for an I/O-bounded path this quantity varies with the target period; use fmax_search for a period-independent figure.",
     "fmax_hz": 505809696.90214634,
+    "fmax_search": {
+      "evaluations": 12,
+      "fmax_hz": 505679012.345679,
+      "method": "bisection on the SDC clock period with the mapped netlist held fixed; reported period is the smallest evaluated period with setup WNS >= 0",
+      "min_clock_period_ns": 1.9775390625,
+      "relative_tolerance": 0.001,
+      "search_trace": [
+        {
+          "clock_period_ns": 1.125,
+          "setup_wns_ns": -0.8520280071106315
+        },
+        {
+          "clock_period_ns": 1.6875,
+          "setup_wns_ns": -0.2895279583215336
+        },
+        {
+          "clock_period_ns": 1.96875,
+          "setup_wns_ns": -0.008278044949287529
+        },
+        {
+          "clock_period_ns": 1.97314453125,
+          "setup_wns_ns": -0.003888001047772984
+        },
+        {
+          "clock_period_ns": 1.975341796875,
+          "setup_wns_ns": -0.0016882051379907479
+        },
+        {
+          "clock_period_ns": 1.9764404296875,
+          "setup_wns_ns": -0.0005881961607967237
+        },
+        {
+          "clock_period_ns": 1.9775390625,
+          "setup_wns_ns": 0.0005118128163973003
+        },
+        {
+          "clock_period_ns": 1.986328125,
+          "setup_wns_ns": 0.00930189262668794
+        },
+        {
+          "clock_period_ns": 2.00390625,
+          "setup_wns_ns": 0.02688183020266341
+        },
+        {
+          "clock_period_ns": 2.0390625,
+          "setup_wns_ns": 0.06203193539195861
+        },
+        {
+          "clock_period_ns": 2.109375,
+          "setup_wns_ns": 0.1323519077404663
+        },
+        {
+          "clock_period_ns": 2.25,
+          "setup_wns_ns": 0.27297186842295856
+        }
+      ]
+    },
     "hold_violating_paths": 0,
     "hold_wns_ns": 0.05295744766664513,
     "library_time_unit_ns": 0.001,

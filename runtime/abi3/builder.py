@@ -849,22 +849,36 @@ class DeploymentBuilder:
         return deployment
 
     def _proved_work(self) -> int:
-        """Re-derive the retired-work bound the verifier will prove."""
+        """Re-derive the retired-work bound the verifier will prove.
+
+        This runs on programs that may be deliberately malformed -- the
+        conformance suite builds illegal deployments so the *verifier* can
+        reject them with a specific diagnosis.  So an unbalanced loop here is
+        counted conservatively rather than raised: crashing in the builder
+        would replace the verifier's precise error with a stack trace and hide
+        which proof actually failed.
+        """
         work = 0
         multiplier = 1
         stack: list[tuple[int, int]] = []
         for instruction in self.instructions:
             if instruction.major == Major.CONTROL:
                 if instruction.sub == Control.LOOP_SETUP:
-                    payload = self.table[instruction.control_id].payload
-                    trip = max(payload["max_iterations"], 1)
+                    trip = 1
+                    if 0 <= instruction.control_id < len(self.table):
+                        descriptor = self.table[instruction.control_id]
+                        if descriptor.descriptor_type == int(
+                            ExtendedDescriptorType.LOOP_CONTROL
+                        ):
+                            trip = max(descriptor.payload["max_iterations"], 1)
                     stack.append((instruction.control_id, trip))
                     multiplier *= trip
                     continue
                 if instruction.sub == Control.LOOP_NEXT:
-                    _, trip = stack.pop()
                     work += multiplier
-                    multiplier //= trip
+                    if stack:
+                        _, trip = stack.pop()
+                        multiplier //= trip
                     continue
             work += multiplier
         return work

@@ -39,6 +39,7 @@ from runtime.abi3.descriptors import (
     SelectionMode,
 )
 from runtime.abi3.records import EosReason
+from runtime.sim import formats
 from runtime.sim.engine import EngineContext, EngineError, register
 from runtime.sim.memory import ResolvedView
 
@@ -61,17 +62,13 @@ def _check_operator(descriptor: Descriptor, sub: int) -> None:
 def _widen(ctx: EngineContext, view: ResolvedView) -> np.ndarray:
     """Read a logits view as binary32, failing closed on an exceptional value."""
     codes = ctx.read(view)
-    if view.dtype == int(DType.BF16):
-        values = (codes.astype(np.uint32) << np.uint32(16)).view(np.float32)
-    elif view.dtype == int(DType.FP32):
-        values = np.ascontiguousarray(codes, dtype=np.float32)
-    else:
+    if view.dtype not in (int(DType.BF16), int(DType.FP32)):
         raise EngineError(
             f"selection logits view {view.descriptor_id} is dtype "
             f"{view.dtype:#04x}; on-device selection reads BF16 or binary32",
             trap_class=3,
         )
-    values = values.reshape(-1)
+    values = formats.widen(view.dtype, codes).reshape(-1)
     if not bool(np.all(np.isfinite(values))):
         raise EngineError(
             f"selection logits view {view.descriptor_id} contains a NaN or "

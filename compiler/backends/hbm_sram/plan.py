@@ -945,19 +945,75 @@ def _check_numeric_contracts(graph: KernelGraph, capability: Capability) -> None
 
 
 # -- weights ----------------------------------------------------------------
-def _place_weights(
-    graph: KernelGraph, span_max: int
-) -> tuple[tuple[WeightGroup, ...], tuple[WeightPlacement, ...]]:
-    """Group checkpoint byte ranges into a few large zero-copy objects."""
-    weights = [
-        t
-        for t in graph.tensors
-        if t.role in {"weight", "constant"} and t.binding is not None
-    ]
-    weights.sort(key=lambda t: (t.binding.path, t.binding.offset, t.tensor_id))
+def weight_roles(
+    graph: KernelGraph, bands: Sequence[LayerBand]
+) -> list[tuple[str, tuple[str, ...]]]:
+    """Return ``(role_key, tensor ids in layer order)`` for every weight role.
 
-    groups: list[dict[str, Any]] = []
-    for tensor in weights:
+    A *role* is one operand slot of one body position of one band: every
+    layer's ``q_proj`` weight, say.  Roles are derived from the kernel
+    structure, never from tensor names, so the rule holds for any exporter's
+    naming convention.
+    """
+    by_index = {k.index: k for k in graph.kernels}
+    by_layer: dict[int, list[Kernel]] = {}
+    for kernel in graph.kernels:
+        if kernel.layer is not None:
+            by_layer.setdefault(kernel.layer, []).append(kernel)
+    tensors = {t.tensor_id: t for t in graph.tensors}
+
+    roles: list[tuple[str, tuple[str, ...]]] = []
+    claimed: set[str] = set()
+    for band in bands:
+        layers = [band.first_layer + i for i in range(band.layer_count)]
+        body = [by_index[i] for i in band.body_kernels]
+        for position, kernel in enumerate(body):
+            for slot, name in enumerate(kernel.inputs):
+                tensor = tensors[name]
+                if tensor.role not in {"weight", "constant"} or tensor.binding is None:
+                    continue
+                members: list[str] = []
+                for layer in layers:
+                    peer = by_layer[layer][position]
+                    if slot >= len(peer.inputs):
+                        members = []
+                        break
+                    member = peer.inputs[slot]
+                    if member in claimed or tensors[member].binding is None:
+                        members = []
+                        break
+                    members.append(member)
+                if not members:
+                    continue
+                claimed.update(members)
+                roles.append((f"b{band.band_id}.p{position}.i{slot}", tuple(members)))
+    return roles
+
+
+def _place_weights(
+    graph: KernelGraph, bands: Sequence[LayerBand], span_max: int
+) -> tuple[tuple[WeightGroup, ...], tuple[WeightPlacement, ...]]:
+    """Build the zero-copy weight objects.
+
+    Two rules, applied in order:
+
+    1. one object per weight *role*, holding every layer's payload for that
+       role as segments concatenated in layer order.  This is what gives the
+       layer loop a constant stride however the checkpoint shards the file:
+       layer ``L`` starts at ``L * per_layer_bytes`` inside the object because
+       the object's address space is the manifest's, not the file's.  Each
+       layer's payload lies wholly inside one segment, so the window a view
+       takes is a zero-copy range rather than a gather across two.
+    2. one object per run of *file-adjacent* leftover bindings -- embeddings,
+       final norms, the vocabulary projection -- so the object count stays in
+       the low tens.
+
+    No byte is copied, relaid out, or counted twice: every object's source is
+    the ordered list of authenticated checkpoint ranges themselves.
+    """
+    tensors = {t.tensor_id: t for t in graph.tensors}
+
+    def _segment(tensor: Tensor, cursor: int) -> PlacedSegment:
         binding = tensor.binding
         assert binding is not None
         if binding.transform != "identity":
@@ -967,13 +1023,89 @@ def _place_weights(
                 "a weight image, so a non-identity transform must be resolved "
                 "in the checkpoint lock"
             )
-        current = groups[-1] if groups else None
-        contiguous = (
+        return PlacedSegment(
+            tensor_id=tensor.tensor_id,
+            source_name=binding.source_name,
+            path=binding.path,
+            file_offset=binding.offset,
+            bytes=binding.bytes,
+            sha256=binding.sha256,
+            element_offset=elements_in(cursor, tensor.dtype),
+            elements=elements_in(binding.bytes, tensor.dtype),
+            dtype=tensor.dtype,
+        )
+
+    def _record(
+        group_id: str,
+        segment: PlacedSegment,
+        layer: int | None,
+        role_key: str,
+        stride: int,
+    ) -> WeightPlacement:
+        tensor = tensors[segment.tensor_id]
+        rows, cols, _ = matrix_shape(tensor, span_max)
+        return WeightPlacement(
+            tensor_id=segment.tensor_id,
+            group_id=group_id,
+            element_offset=segment.element_offset,
+            elements=segment.elements,
+            dtype=segment.dtype,
+            rows=rows,
+            cols=cols,
+            layer=layer,
+            role_key=role_key,
+            layer_stride_elements=stride,
+        )
+
+    weight_groups: list[WeightGroup] = []
+    placements: list[WeightPlacement] = []
+    placed: set[str] = set()
+
+    # (1) one object per weight role, segments in layer order.
+    for role_key, members in weight_roles(graph, bands):
+        group_id = f"wr{len(weight_groups):04d}"
+        segments: list[PlacedSegment] = []
+        cursor = 0
+        for member in members:
+            tensor = tensors[member]
+            segments.append(_segment(tensor, cursor))
+            cursor += tensor.binding.bytes  # type: ignore[union-attr]
+        stride = segments[1].element_offset if len(segments) > 1 else 0
+        paths = sorted({s.path for s in segments})
+        weight_groups.append(
+            WeightGroup(
+                group_id=group_id,
+                path=paths[0] if len(paths) == 1 else "<multi-shard>",
+                size_bytes=cursor,
+                file_start=min(s.file_offset for s in segments),
+                file_end=max(s.file_offset + s.bytes for s in segments),
+                segments=tuple(segments),
+            )
+        )
+        for layer_index, segment in enumerate(segments):
+            placements.append(_record(group_id, segment, layer_index, role_key, stride))
+            placed.add(segment.tensor_id)
+
+    # (2) leftovers, grouped by adjacency inside one checkpoint file.
+    leftovers = [
+        t
+        for t in graph.tensors
+        if t.role in {"weight", "constant"}
+        and t.binding is not None
+        and t.tensor_id not in placed
+    ]
+    leftovers.sort(key=lambda t: (t.binding.path, t.binding.offset, t.tensor_id))
+    runs: list[dict[str, Any]] = []
+    for tensor in leftovers:
+        binding = tensor.binding
+        assert binding is not None
+        current = runs[-1] if runs else None
+        adjacent = (
             current is not None
             and current["path"] == binding.path
             and 0 <= binding.offset - current["file_end"] <= SEGMENT_MERGE_SLACK
         )
-        if not contiguous:
+        if not adjacent:
             current = {
                 "path": binding.path,
                 "file_start": binding.offset,
@@ -981,29 +1113,14 @@ def _place_weights(
                 "cursor": 0,
                 "segments": [],
             }
-            groups.append(current)
+            runs.append(current)
         assert current is not None
-        element_offset = elements_in(current["cursor"], tensor.dtype)
-        current["segments"].append(
-            PlacedSegment(
-                tensor_id=tensor.tensor_id,
-                source_name=binding.source_name,
-                path=binding.path,
-                file_offset=binding.offset,
-                bytes=binding.bytes,
-                sha256=binding.sha256,
-                element_offset=element_offset,
-                elements=elements_in(binding.bytes, tensor.dtype),
-                dtype=tensor.dtype,
-            )
-        )
+        current["segments"].append(_segment(tensor, current["cursor"]))
         current["cursor"] += binding.bytes
         current["file_end"] = binding.offset + binding.bytes
 
-    weight_groups: list[WeightGroup] = []
-    placements: list[WeightPlacement] = []
-    for index, body in enumerate(groups):
-        group_id = f"wg{index:04d}"
+    for body in runs:
+        group_id = f"wg{len(weight_groups):04d}"
         weight_groups.append(
             WeightGroup(
                 group_id=group_id,
@@ -1015,22 +1132,8 @@ def _place_weights(
             )
         )
         for segment in body["segments"]:
-            tensor = graph.tensor(segment.tensor_id)
-            rows, cols, _ = matrix_shape(tensor, span_max)
-            placements.append(
-                WeightPlacement(
-                    tensor_id=segment.tensor_id,
-                    group_id=group_id,
-                    element_offset=segment.element_offset,
-                    elements=segment.elements,
-                    dtype=segment.dtype,
-                    rows=rows,
-                    cols=cols,
-                    layer=None,
-                    role_key="",
-                    layer_stride_elements=0,
-                )
-            )
+            placements.append(_record(group_id, segment, None, "", 0))
+
     placements.sort(key=lambda p: p.tensor_id)
     return tuple(weight_groups), tuple(placements)
 
@@ -1073,11 +1176,22 @@ def _layer_signature(
 
 
 def _build_bands(
-    graph: KernelGraph,
-    tensors: Mapping[str, Tensor],
-    placements: Sequence[WeightPlacement],
+    graph: KernelGraph, tensors: Mapping[str, Tensor]
 ) -> tuple[tuple[LayerBand, ...], list[str]]:
-    """Fold layers with one structure and one weight stride into bands."""
+    """Fold structurally identical, uniformly sized layers into bands.
+
+    Two conditions make a run of layers one band:
+
+    * their kernel sequences are identical modulo the layer index -- same
+      kinds, same numeric contracts, same operand classes, same phases and the
+      same state effects, in the same order; and
+    * for every weight operand, every layer's payload has the same byte extent,
+      so the role object built in :func:`_place_weights` has a constant stride.
+
+    A run that fails either test is emitted one layer per band.  That is a
+    correctness-preserving fallback, not a workaround: it is reported in the
+    plan's warnings and shows up immediately as a larger instruction count.
+    """
     warnings: list[str] = []
     producer = {
         name: kernel.index for kernel in graph.kernels for name in kernel.outputs
@@ -1096,13 +1210,12 @@ def _build_bands(
         if indices != list(range(indices[0], indices[0] + len(indices))):
             warnings.append(
                 f"layer {layer} kernels are not a contiguous index block; the "
-                "layer is emitted on its own"
+                "emitted body follows kernel order within the layer"
             )
 
     signatures = {
         layer: _layer_signature(by_layer[layer], tensors, producer) for layer in layers
     }
-    placement_by_tensor = {p.tensor_id: p for p in placements}
 
     runs: list[list[int]] = []
     for layer in layers:
@@ -1117,7 +1230,7 @@ def _build_bands(
 
     bands: list[LayerBand] = []
     for run in runs:
-        uniform, reason = _uniform_strides(run, by_layer, tensors, placement_by_tensor)
+        uniform, reason = _uniform_weight_extents(run, by_layer, tensors)
         if uniform or len(run) == 1:
             bands.append(
                 LayerBand(
@@ -1132,7 +1245,7 @@ def _build_bands(
             continue
         warnings.append(
             f"layers {run[0]}..{run[-1]} share a structure but not a uniform "
-            f"weight stride ({reason}); they are emitted one layer per band"
+            f"weight extent ({reason}); they are emitted one layer per band"
         )
         for layer in run:
             bands.append(
@@ -1149,83 +1262,51 @@ def _build_bands(
     return tuple(bands), warnings
 
 
-def _uniform_strides(
+def _uniform_weight_extents(
     run: Sequence[int],
     by_layer: Mapping[int, Sequence[Kernel]],
     tensors: Mapping[str, Tensor],
-    placement_by_tensor: Mapping[str, WeightPlacement],
 ) -> tuple[bool, str]:
+    """Every layer's payload for a given weight role must have one byte extent."""
     if len(run) < 2:
         return True, ""
     body = by_layer[run[0]]
     for position, kernel in enumerate(body):
+        if any(len(by_layer[layer]) != len(body) for layer in run):
+            return False, "layers declare different kernel counts"
         for slot, name in enumerate(kernel.inputs):
-            if tensors[name].role not in {"weight", "constant"}:
+            tensor = tensors[name]
+            if tensor.role not in {"weight", "constant"}:
                 continue
-            offsets = []
-            group = None
+            if tensor.binding is None:
+                return False, f"operand {position}.{slot} has no checkpoint binding"
+            extents: set[tuple[int, str, tuple[Any, ...]]] = set()
+            seen: set[str] = set()
             for layer in run:
                 peer = by_layer[layer][position]
                 if slot >= len(peer.inputs):
                     return False, f"operand {position}.{slot} is missing in layer {layer}"
-                placement = placement_by_tensor.get(peer.inputs[slot])
-                if placement is None:
-                    return False, f"operand {position}.{slot} is not a placed weight"
-                if group is None:
-                    group = placement.group_id
-                elif group != placement.group_id:
+                member = tensors[peer.inputs[slot]]
+                if member.binding is None:
                     return False, (
-                        f"operand {position}.{slot} spans memory objects "
-                        f"{group} and {placement.group_id}"
+                        f"operand {position}.{slot} of layer {layer} has no "
+                        "checkpoint binding"
                     )
-                offsets.append(placement.element_offset)
-            deltas = {b - a for a, b in zip(offsets, offsets[1:])}
-            if len(deltas) != 1:
-                return False, f"operand {position}.{slot} stride is not constant"
-    return True, ""
-
-
-def _apply_layer_strides(
-    graph: KernelGraph,
-    bands: Sequence[LayerBand],
-    placements: Sequence[WeightPlacement],
-    tensors: Mapping[str, Tensor],
-) -> tuple[WeightPlacement, ...]:
-    """Attach each band's per-layer element stride to its first-layer weights."""
-    by_index = {k.index: k for k in graph.kernels}
-    by_tensor = {p.tensor_id: p for p in placements}
-    updated = {p.tensor_id: p for p in placements}
-    by_layer: dict[int, list[Kernel]] = {}
-    for kernel in graph.kernels:
-        if kernel.layer is not None:
-            by_layer.setdefault(kernel.layer, []).append(kernel)
-
-    for band in bands:
-        body = [by_index[i] for i in band.body_kernels]
-        for position, kernel in enumerate(body):
-            for slot, name in enumerate(kernel.inputs):
-                placement = by_tensor.get(name)
-                if placement is None:
-                    continue
-                role_key = f"b{band.band_id}.p{position}.i{slot}"
-                stride = 0
-                if band.layer_count > 1:
-                    peer = by_layer[band.first_layer + 1][position]
-                    other = by_tensor[peer.inputs[slot]]
-                    stride = other.element_offset - placement.element_offset
-                updated[name] = WeightPlacement(
-                    tensor_id=placement.tensor_id,
-                    group_id=placement.group_id,
-                    element_offset=placement.element_offset,
-                    elements=placement.elements,
-                    dtype=placement.dtype,
-                    rows=placement.rows,
-                    cols=placement.cols,
-                    layer=band.first_layer,
-                    role_key=role_key,
-                    layer_stride_elements=stride,
+                if peer.inputs[slot] in seen:
+                    return False, (
+                        f"operand {position}.{slot} names the same tensor in two "
+                        "layers, so it cannot carry a per-layer stride"
+                    )
+                seen.add(peer.inputs[slot])
+                extents.add(
+                    (member.binding.bytes, member.dtype, tuple(map(str, member.shape)))
                 )
-    return tuple(sorted(updated.values(), key=lambda p: p.tensor_id))
+            if len(extents) != 1:
+                return False, (
+                    f"operand {position}.{slot} has {len(extents)} distinct "
+                    "payload extents across the run"
+                )
+    return True, ""
 
 
 def _emission_order(
