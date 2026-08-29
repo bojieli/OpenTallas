@@ -44,6 +44,7 @@ from compiler.frontend.checkpoint import (
     load_checkpoint_source,
 )
 from compiler.ir.v3.kernel_ir import (
+    TOKEN_DTYPE,
     CheckpointBinding,
     Entrypoint,
     Kernel,
@@ -599,7 +600,7 @@ def export_qwen3_kernel_graph(
     context = Symbolic("context_tokens", 1, MAX_CONTEXT_TOKENS)
 
     builder = _Builder()
-    token_ids = builder.tensor("input.token_ids", "i64", (span,), "input")
+    token_ids = builder.tensor("input.token_ids", TOKEN_DTYPE, (span,), "input")
     positions = builder.tensor("input.positions", "i32", (span,), "input")
 
     weight_shapes: dict[str, tuple[int, ...]] = {}
@@ -1100,7 +1101,7 @@ def export_qwen3_kernel_graph(
         source_operation_id="lm_head",
         kind="VOCAB_PROJECT",
     )
-    selected = builder.tensor("output.selected_token", "i32", (1,), "activation")
+    selected = builder.tensor("output.selected_token", TOKEN_DTYPE, (1,), "activation")
     builder.kernel(
         "token_selection",
         "ARGMAX",
@@ -1115,7 +1116,7 @@ def export_qwen3_kernel_graph(
         },
         source_operation_id="generation.greedy_select",
     )
-    next_token = builder.tensor("output.next_token", "i64", (1,), "output")
+    next_token = builder.tensor("output.next_token", TOKEN_DTYPE, (1,), "output")
     builder.kernel(
         "token_append",
         "TOKEN_APPEND",

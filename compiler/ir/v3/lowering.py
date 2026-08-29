@@ -58,7 +58,7 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "MUL": EngineOp(Major.VECTOR, Vector.SCALE, 2, 1),
     "SCALE": EngineOp(Major.VECTOR, Vector.SCALE, 2, 1),
     "SILU_MUL": EngineOp(Major.VECTOR, Vector.SILU_MUL, 2, 1),
-    "SWIGLU": EngineOp(Major.VECTOR, Vector.SILU_MUL, 3, 1),
+    "SWIGLU": EngineOp(Major.VECTOR, Vector.SILU_MUL, 2, 1),
     "CONVERT": EngineOp(Major.VECTOR, Vector.CONVERT, 1, 1),
     "QUANTIZE": EngineOp(Major.VECTOR, Vector.CONVERT, 1, 2),
     # Three inputs, because DeepSeek's FP8 QDQ is *partial*: it quantises the

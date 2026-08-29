@@ -177,6 +177,7 @@ from compiler.frontend.deepseek_v4_graph import (
     build_official_graph_contract,
 )
 from compiler.ir.v3.kernel_ir import (
+    TOKEN_DTYPE,
     CheckpointBinding,
     Entrypoint,
     Kernel,
@@ -970,7 +971,7 @@ def export_deepseek_v4_kernel_graph(
     # ------------------------------------------------------------------
     # Request inputs
     # ------------------------------------------------------------------
-    token_ids = builder.tensor("input.token_ids", "i32", (span,), "input")
+    token_ids = builder.tensor("input.token_ids", TOKEN_DTYPE, (span,), "input")
     position_offset = builder.tensor("input.position_offset", "i32", (1,), "input")
     session_ids = builder.tensor("input.session_ids", "u32", (1,), "input")
     temperature = builder.tensor("input.temperature", "fp32", (1,), "input")
@@ -2350,7 +2351,7 @@ def export_deepseek_v4_kernel_graph(
 
         elif source_kind == "DSPARK_NOISE_EMBED":
             weight = role_weight(roles[0], scope, layer)
-            draft_ids = act(f"{node_id}.draft_token_ids", "i32", (DRAFT_BLOCK,))
+            draft_ids = act(f"{node_id}.draft_token_ids", TOKEN_DTYPE, (DRAFT_BLOCK,))
             emit(
                 f"{node_id}.compose",
                 "SCATTER",

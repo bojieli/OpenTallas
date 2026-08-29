@@ -789,13 +789,15 @@ class _Emitter:
                 writable=True,
             )
         kernel = self.kernels[plan.index]
-        if operand.residence == "state" or (
-            operand.direction == "out" and kernel.state_writes
-        ):
+        writes_state = operand.direction == "out" and bool(kernel.state_writes)
+        if operand.residence == "state" or writes_state:
             # A declared state effect is the authority: a kernel that writes a
             # state resource writes into that resource's prepared image, even
-            # when the graph names the result as an ordinary activation.
-            return self._state_view(plan, operand, loops, writable=True)
+            # when the graph names the result as an ordinary activation.  A read
+            # still reads the committed image.
+            return self._state_view(
+                plan, operand, loops, writable=writable or writes_state
+            )
         if plan.engine_family == int(Major.SELECTION):
             return self._selection_view(operand, writable=writable)
 
@@ -928,7 +930,7 @@ class _Emitter:
         kernel declares as many resources as it has state operands, the binding
         is positional instead.
         """
-        direct = self.plan.state_of_resource.get(operand.tensor_id)
+        direct = self.plan.state_of_tensor.get(operand.tensor_id)
         kernel = self.kernels[plan.index]
         names = list(
             kernel.state_writes if operand.direction == "out" else kernel.state_reads
@@ -946,7 +948,11 @@ class _Emitter:
         if direct is not None:
             mapping = direct
             index = next(
-                (i for i, n in enumerate(names) if self.plan.state_of_resource.get(n) == direct),
+                (
+                    i
+                    for i, n in enumerate(names)
+                    if list(self.plan.state_of_resource.get(n, ())) == list(direct)
+                ),
                 position,
             )
         elif names:
@@ -957,14 +963,10 @@ class _Emitter:
         column = 0
         for peer in peers[:position]:
             peer_names_index = min(peers.index(peer), len(names) - 1) if names else 0
-            peer_mapping = (
-                self.plan.state_of_resource.get(operand.tensor_id)
-                if peer.tensor_id == operand.tensor_id
-                else self.plan.state_of_resource.get(names[peer_names_index])
-                if names
-                else None
-            )
-            if peer_mapping == mapping:
+            peer_mapping = self.plan.state_of_tensor.get(peer.tensor_id)
+            if peer_mapping is None and names:
+                peer_mapping = self.plan.state_of_resource.get(names[peer_names_index])
+            if peer_mapping is not None and list(peer_mapping) == list(mapping):
                 column += self._state_row_width(peer.tensor_id)
         return mapping, column
 

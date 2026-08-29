@@ -581,9 +581,12 @@ def build_deepseek_v4_rom_deployment(
             f"the DeepSeek ROM image needs {plan.rom_bytes} bytes but the wafer "
             f"capability declares {declared}"
         )
-    if plan.largest_region_bytes > tile_rom_bytes * tiles_per_reticle:
+    reticle_rom_bytes = tile_rom_bytes * tiles_per_reticle
+    if plan.largest_member_bytes > reticle_rom_bytes:
         raise DeepSeekV4RomError(
-            "one indivisible ROM region exceeds a whole reticle field's ROM"
+            f"the largest indivisible ROM payload is {plan.largest_member_bytes} "
+            f"bytes, more than one reticle field's {reticle_rom_bytes}; no legal "
+            "wafer placement exists"
         )
     geometry = wafer_geometry(
         tile_rom_bytes=tile_rom_bytes, tiles_per_reticle=tiles_per_reticle
@@ -594,7 +597,9 @@ def build_deepseek_v4_rom_deployment(
         "distributed_region_count": sum(
             1 for r in plan.regions if len(r.shards) > 1
         ),
+        "largest_member_bytes": plan.largest_member_bytes,
         "largest_region_bytes": plan.largest_region_bytes,
+        "tensor_parallel_member_count": plan.distributed_member_count,
         "max_reticles": geometry["max_reticles"],
         "planned_rom_bytes": plan.rom_bytes,
         "reticles_used": reticles_used,

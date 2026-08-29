@@ -380,21 +380,42 @@ class SramRegion:
 
 @dataclass(frozen=True, slots=True)
 class LayerBand:
-    """A run of layers with one kernel structure and one weight stride."""
+    """A repeating block of layers emitted as one loop.
+
+    ``period`` is how many layers one iteration covers.  It is usually one, but
+    a model that alternates two layer structures -- dense attention on the even
+    layers and sparse on the odd ones, say -- has period two, and the repeating
+    unit is the *pair*.  Banding by period rather than by run of identical
+    layers is what keeps such a model compressed without reordering it: the
+    residual stream still flows layer by layer through the body.
+    """
 
     band_id: int
     first_layer: int
     layer_count: int
+    period: int
     signature: str
     body_kernels: tuple[int, ...]
     degraded: bool
     reason: str = ""
+
+    @property
+    def layers(self) -> tuple[int, ...]:
+        """Every layer this band covers, in order."""
+        return tuple(
+            range(self.first_layer, self.first_layer + self.layer_count * self.period)
+        )
+
+    def iteration_layers(self, iteration: int) -> tuple[int, ...]:
+        base = self.first_layer + iteration * self.period
+        return tuple(range(base, base + self.period))
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "band_id": self.band_id,
             "first_layer": self.first_layer,
             "layer_count": self.layer_count,
+            "period": self.period,
             "signature": self.signature,
             "body_kernels": list(self.body_kernels),
             "degraded": self.degraded,
@@ -605,6 +626,7 @@ class PhysicalPlan:
     bands: tuple[LayerBand, ...]
     states: tuple[StatePlacement, ...]
     state_of_resource: Mapping[str, Sequence[Any]]
+    state_of_tensor: Mapping[str, Sequence[Any]]
     kernels: tuple[KernelPlan, ...]
     units: tuple[EmissionUnit, ...]
     host_objects: Mapping[str, Mapping[str, Any]]
@@ -655,6 +677,9 @@ class PhysicalPlan:
             "states": [s.to_dict() for s in self.states],
             "state_of_resource": {
                 k: list(v) for k, v in sorted(self.state_of_resource.items())
+            },
+            "state_of_tensor": {
+                k: list(v) for k, v in sorted(self.state_of_tensor.items())
             },
             "kernels": [k.to_dict() for k in self.kernels],
             "units": [u.to_dict() for u in self.units],
@@ -798,20 +823,29 @@ def build_plan(
     # One token block for the whole plan: the arena padding, the loop divisor
     # and every row-tiled view must agree on it.
     block = max(min(tile.block, round_up(span_max, tile.rows)), tile.rows)
-    activation_keys, arena_slots, arena_of_key, host_objects = _place_activations(
-        graph, tensors, bands, units, body_position, band_of_kernel, span_max, block
-    )
     states, state_of_resource, warn_state = _place_states(
         graph, bands, band_of_kernel, span_max
     )
     warnings.extend(warn_state)
+    state_of_tensor = _bind_state_tensors(graph, tensors, state_of_resource)
+    activation_keys, arena_slots, arena_of_key, host_objects = _place_activations(
+        graph,
+        tensors,
+        bands,
+        units,
+        body_position,
+        band_of_kernel,
+        span_max,
+        block,
+        state_of_tensor,
+    )
 
     kernel_plans, warn_kernels = _plan_kernels(
         graph,
         tensors,
         placements,
         activation_keys,
-        state_of_resource,
+        state_of_tensor,
         bands,
         band_of_kernel,
         body_position,
@@ -868,6 +902,7 @@ def build_plan(
         bands=bands,
         states=states,
         state_of_resource=state_of_resource,
+        state_of_tensor=state_of_tensor,
         kernels=kernel_plans,
         units=units,
         host_objects=host_objects,
@@ -1332,6 +1367,7 @@ def _place_activations(
     band_of_kernel: Mapping[int, int],
     span_max: int,
     block: int,
+    state_of_tensor: Mapping[str, Sequence[Any]],
 ) -> tuple[
     dict[str, str], tuple[ArenaSlot, ...], dict[str, str], dict[str, dict[str, Any]]
 ]:
@@ -1365,8 +1401,9 @@ def _place_activations(
         for slot, name in enumerate(kernel.outputs):
             tensor = tensors[name]
             if (
-                tensor.role in {"weight", "constant", "state", "input", "output"}
-                or kernel.state_writes
+                tensor.role in {"weight", "constant", "input", "output"}
+                or name in state_of_tensor
+                or (kernel.state_writes and tensor.role == "state")
             ):
                 # Host-visible results keep their host identity even though a
                 # kernel produces them; state effects live in state objects.
@@ -1614,6 +1651,46 @@ def _place_states(
     return tuple(placements), state_of_resource, warnings
 
 
+def _bind_state_tensors(
+    graph: KernelGraph,
+    tensors: Mapping[str, Tensor],
+    state_of_resource: Mapping[str, Sequence[Any]],
+) -> dict[str, list[Any]]:
+    """Bind each state-role tensor to the physical resource it belongs to.
+
+    A graph names its state effects on the kernel (``state_reads`` /
+    ``state_writes``) and its state operands on the tensor, and the two need not
+    use the same identifiers.  This pass joins them positionally at the point of
+    declaration, so a later kernel that merely *reads* the tensor -- with no
+    state effect of its own -- still resolves to the right resource.  A state
+    tensor no kernel ever binds is not an error: it is a materialised view, and
+    it is placed in an activation arena like any other intermediate.
+    """
+    bound: dict[str, list[Any]] = {}
+    for kernel in graph.kernels:
+        writes = list(kernel.state_writes)
+        reads = list(kernel.state_reads) or writes
+        outs = [n for n in kernel.outputs if tensors[n].role == "state"]
+        if not outs and writes:
+            outs = list(kernel.outputs)
+        for position, name in enumerate(outs):
+            if not writes or name in bound:
+                continue
+            mapping = state_of_resource.get(writes[min(position, len(writes) - 1)])
+            if mapping is not None:
+                bound[name] = list(mapping)
+        ins = [n for n in kernel.inputs if tensors[n].role == "state"]
+        for position, name in enumerate(ins):
+            if not reads or name in bound:
+                continue
+            mapping = state_of_resource.get(reads[min(position, len(reads) - 1)])
+            if mapping is not None:
+                bound[name] = list(mapping)
+    for resource_id, mapping in state_of_resource.items():
+        bound.setdefault(resource_id, list(mapping))
+    return dict(sorted(bound.items()))
+
+
 # -- kernels ----------------------------------------------------------------
 #: Sub-case selectors that TA-ABI3-OPCONV-1 sections 3 and 12 put in ``aux0``
 #: because several neutral kinds share one subopcode.
@@ -1798,7 +1875,7 @@ def _plan_kernels(
     tensors: Mapping[str, Tensor],
     placements: Sequence[WeightPlacement],
     activation_keys: Mapping[str, str],
-    state_of_resource: Mapping[str, Sequence[Any]],
+    state_of_tensor: Mapping[str, Sequence[Any]],
     bands: Sequence[LayerBand],
     band_of_kernel: Mapping[int, int],
     body_position: Mapping[int, int],
@@ -1939,6 +2016,7 @@ def _plan_kernels(
                     tensors,
                     placement_by_tensor,
                     activation_keys,
+                    state_of_tensor,
                     span_max,
                     contraction=contraction,
                     row_loop=row_loop is not None,
@@ -1960,6 +2038,7 @@ def _plan_kernels(
                     tensors,
                     placement_by_tensor,
                     activation_keys,
+                    state_of_tensor,
                     span_max,
                     contraction=contraction,
                     row_loop=row_loop is not None,
@@ -2017,6 +2096,7 @@ def _operand_plan(
     tensors: Mapping[str, Tensor],
     placement_by_tensor: Mapping[str, WeightPlacement],
     activation_keys: Mapping[str, str],
+    state_of_tensor: Mapping[str, Sequence[Any]],
     span_max: int,
     *,
     contraction: bool,
@@ -2037,7 +2117,7 @@ def _operand_plan(
     if placement is not None:
         residence = "weight"
         key = placement.group_id
-    elif tensor.role == "state":
+    elif name in state_of_tensor:
         residence = "state"
         key = name
     elif tensor.role in {"input", "output"}:

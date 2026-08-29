@@ -80,6 +80,12 @@ COUNTERS: dict[int, str] = dict(
         _reg(CounterGroup.VECTOR_REDUCTION, 8, "vector.softmax_rows"),
         _reg(CounterGroup.VECTOR_REDUCTION, 9, "vector.compress_rows"),
         _reg(CounterGroup.VECTOR_REDUCTION, 10, "vector.mhc_sites"),
+        # Saturation and exceptional values are per-engine observations.  The
+        # vector engine had no event of its own, so its saturations were either
+        # dropped or charged to ``tensor.saturations``, which made the TENSOR
+        # group disagree with the work the tensor engine actually did.
+        _reg(CounterGroup.VECTOR_REDUCTION, 11, "vector.saturations"),
+        _reg(CounterGroup.VECTOR_REDUCTION, 12, "vector.exceptional_values"),
         # 0x06 attention
         _reg(CounterGroup.ATTENTION, 1, "attention.score_multiplications"),
         _reg(CounterGroup.ATTENTION, 2, "attention.value_multiplications"),

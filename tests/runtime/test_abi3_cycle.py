@@ -1403,6 +1403,56 @@ def test_state_traffic_is_timed_in_its_backing_storage_class():
     assert memory["sram"]["busy_cycles"] > 0
 
 
+def test_rom_and_hbm_route_the_same_weight_traffic_to_different_classes():
+    """The property the ROM-versus-HBM comparison rests on.
+
+    The two builds differ only in the weight object's storage class, so the same
+    contraction must appear as ROM traffic in one and HBM traffic in the other,
+    with identical architectural counters.
+    """
+    table = load_cost_table(BASELINE)
+    hbm_deployment, capability = synthetic_tiled_deployment(
+        storage_class=StorageClass.HBM
+    )
+    rom_deployment, _ = synthetic_tiled_deployment(
+        capability, storage_class=StorageClass.ROM
+    )
+    req = request()
+    hbm = CycleModel(hbm_deployment, capability, table).run(req)
+    rom = CycleModel(rom_deployment, capability, table).run(req)
+    hbm_body, rom_body = hbm.to_dict(), rom.to_dict()
+    assert hbm_body["memory"]["hbm"]["bytes_read"] > 0
+    assert hbm_body["memory"]["rom"]["bytes_read"] == 0
+    assert rom_body["memory"]["rom"]["bytes_read"] > 0
+    assert rom_body["memory"]["hbm"]["bytes_read"] == 0
+    assert (
+        rom_body["memory"]["rom"]["bytes_read"]
+        == hbm_body["memory"]["hbm"]["bytes_read"]
+    )
+    # Architecturally the two builds are the same program on the same data.
+    hbm_counters = hbm.architectural
+    rom_counters = rom.architectural
+    assert hbm_counters.pop("hbm.bytes_read") == rom_counters.pop("rom.bytes_read")
+    assert hbm_counters == rom_counters
+
+
+def test_memory_bandwidth_and_latency_move_the_total(tmp_path: Path):
+    """A slower memory really does make the same program take longer."""
+    body = json.loads(BASELINE.read_text())
+    body["parameters"]["hbm.read_latency_cycles"]["value"] = 12000
+    body["parameters"]["hbm.bytes_per_cycle_per_channel"]["value"] = 4.0e9
+    body["cost_table_id"] = "abi3-cost-slow-hbm"
+    slow = tmp_path / "abi3_cost_slow.json"
+    slow.write_text(json.dumps(body))
+
+    deployment, capability = synthetic_tiled_deployment()
+    req = request()
+    fast_result = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(req)
+    slow_result = CycleModel(deployment, capability, load_cost_table(slow)).run(req)
+    assert slow_result.total_cycles > fast_result.total_cycles * 5
+    assert slow_result.architectural == fast_result.architectural
+
+
 def test_each_storage_class_keeps_its_own_bandwidth_and_latency():
     machine = MachineModel(fixture_capability(), load_cost_table(BASELINE))
     memory = machine.memory()

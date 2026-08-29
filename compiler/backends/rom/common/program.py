@@ -65,7 +65,13 @@ from runtime.abi3.constants import (
     counter_id,
 )
 from runtime.abi3.deployment import Deployment, ObjectSource
-from runtime.abi3.descriptors import MAX_RANK, Phase, SelectionMode, Symbol
+from runtime.abi3.descriptors import (
+    LayoutClass,
+    MAX_RANK,
+    Phase,
+    SelectionMode,
+    Symbol,
+)
 
 from .image import (
     DTYPE_BY_NAME,
@@ -138,13 +144,30 @@ MHC_SUBCASE: Mapping[str, int] = {
 }
 SCALE_SUBCASE: Mapping[str, int] = {"SCALE": 0, "MUL": 1, "SIGMOID": 2}
 
+#: Neutral state-class name -> frozen ABI 3.0 :class:`StateClass`.
+#:
+#: ``compressor_window`` has no exact value in the frozen registry.  It is
+#: session-durable, transactional, row-appended recurrent compressor state, so
+#: ``SCRATCH`` would misdescribe it and ``COMPRESSED_KV`` is the closest frozen
+#: class that preserves durability and commit semantics.  The alias is recorded
+#: in the deployment manifest rather than hidden, and the gap is reported: the
+#: registry needs its own value through a versioned minor bump, which a backend
+#: may not make privately.
 STATE_CLASS_BY_NAME: Mapping[str, StateClass] = {
     "kv_cache": StateClass.KV_CACHE,
+    "kv_window": StateClass.KV_CACHE,
     "compressed_kv": StateClass.COMPRESSED_KV,
+    "compressor_window": StateClass.COMPRESSED_KV,
     "token_ring": StateClass.TOKEN_RING,
     "position_cursor": StateClass.POSITION_CURSOR,
     "route_history": StateClass.ROUTE_HISTORY,
     "scratch": StateClass.SCRATCH,
+}
+
+#: Neutral names that have no exact frozen class, and the value they borrow.
+STATE_CLASS_ALIASES: Mapping[str, str] = {
+    "compressor_window": "COMPRESSED_KV",
+    "kv_window": "KV_CACHE",
 }
 
 COUNTER_GROUP_BY_FAMILY: Mapping[int, CounterGroup] = {
@@ -505,6 +528,7 @@ class RomLowering:
         self._link_instruction_count = 0
         self._queue_cursor: dict[int, int] = {}
         self._contract_substitutions: dict[str, str] = {}
+        self._state_class_aliases: dict[str, str] = {}
         self._port_cursor = 0
         self._unify_buffers()
 
@@ -1009,8 +1033,17 @@ class RomLowering:
         element_offset: int = 0,
         dynamic: Sequence[DynamicTerm] = (),
         permissions: int = int(Permission.READ),
+        scale_object_id: int = NO_ID,
+        scale_block_elements: int = 0,
         label: str = "view",
     ) -> int:
+        # Amendment A8 freezes block-scale addressing: one scale byte per
+        # ``scale_block_elements`` in the view's logical row-major order.
+        layout = (
+            LayoutClass.BLOCK_SCALED
+            if scale_object_id != NO_ID and scale_block_elements
+            else LayoutClass.DENSE
+        )
         key = (
             object_id,
             int(dtype),
@@ -1018,15 +1051,26 @@ class RomLowering:
             element_offset,
             tuple((t.kind, t.index, t.stride) for t in dynamic),
             permissions,
+            scale_object_id,
+            scale_block_elements,
+            int(layout),
         )
         if key in self._view_cache:
             return self._view_cache[key]
+        if layout is LayoutClass.BLOCK_SCALED and dims[-1] % scale_block_elements:
+            raise RomLoweringError(
+                f"block-scaled view of {dims} needs the last axis to be a multiple "
+                f"of {scale_block_elements}"
+            )
         descriptor = self.builder.tensor_view(
             object_id=object_id,
             dtype=dtype,
             dims=list(dims),
             element_offset=element_offset,
             dynamic=list(dynamic),
+            layout_class=layout,
+            scale_object_id=scale_object_id,
+            scale_block_elements=scale_block_elements,
             permissions=permissions,
             key=f"{label}.{len(self._view_cache):05d}",
         )
@@ -1144,6 +1188,22 @@ class RomLowering:
         return object_id
 
     # -- state -----------------------------------------------------------
+    def _state_tensors(self) -> dict[str, list[str]]:
+        """Role=``state`` tensors bound to each declared state resource."""
+        order: dict[str, list[str]] = {}
+        owner: dict[str, str] = {}
+        for kernel in self.graph.kernels:
+            state_ids = kernel.state_reads or kernel.state_writes
+            if not state_ids:
+                continue
+            for name in (*kernel.inputs, *kernel.outputs):
+                if self.tensors[name].role != "state" or name in owner:
+                    continue
+                owner[name] = state_ids[0]
+                order.setdefault(state_ids[0], []).append(name)
+        self._state_owner = owner
+        return order
+
     def emit_states(self) -> None:
         """Merge congruent per-layer state resources into one physical state.
 
@@ -1153,6 +1213,11 @@ class RomLowering:
         term the weights use, and so one prepare/commit covers the whole token
         step.  Partial layer advancement therefore cannot become architectural.
         """
+        views = self._state_tensors()
+        footprint = {
+            state_id: sum(self._bytes(self.tensors[n]) for n in names)
+            for state_id, names in views.items()
+        }
         groups: dict[tuple[Any, ...], list[StateResource]] = {}
         for state in self.graph.states:
             key = (
@@ -1169,13 +1234,30 @@ class RomLowering:
             if state_class is None:
                 raise RomLoweringError(
                     f"state class {members[0].state_class!r} is not in the frozen "
-                    "ABI 3.0 registry"
+                    "ABI 3.0 registry and has no documented alias; extend the "
+                    "registry through a versioned change, never privately"
+                )
+            if members[0].state_class in STATE_CLASS_ALIASES:
+                self._state_class_aliases[members[0].state_class] = (
+                    STATE_CLASS_ALIASES[members[0].state_class]
                 )
             dtype = self._dtype(members[0].dtype)
             bits = DTYPE_BITS[dtype]
             row_bytes = (members[0].row_elements * bits + 7) // 8
             capacity = self._extent(members[0].capacity_rows)
-            slot_bytes = row_bytes * capacity
+            # The IR's row contract describes the append transaction.  The
+            # physical slot must additionally hold every declared view of the
+            # resource -- a windowed KV resource exposes a key history and a
+            # value history, each of the full capacity -- so the object is sized
+            # to the larger of the two.
+            slot_bytes = max(
+                row_bytes * capacity,
+                max((footprint.get(m.state_id, 0) for m in members), default=0),
+            )
+            if slot_bytes <= 0:
+                raise RomLoweringError(
+                    f"state group {index} has no capacity"
+                )
             total = slot_bytes * len(members)
             group_key = f"state.{index}"
             committed = self.builder.memory_object(
@@ -1230,19 +1312,7 @@ class RomLowering:
         must be identical for every layer -- including layers in different loop
         runs -- or the compressed body could not address them with one view.
         """
-        order: dict[str, list[str]] = {}
-        owner: dict[str, str] = {}
-        for kernel in self.graph.kernels:
-            state_ids = kernel.state_reads or kernel.state_writes
-            if not state_ids:
-                continue
-            for name in (*kernel.inputs, *kernel.outputs):
-                if self.tensors[name].role != "state":
-                    continue
-                if name in owner:
-                    continue
-                owner[name] = state_ids[0]
-                order.setdefault(state_ids[0], []).append(name)
+        order = self._state_tensors()
         # The layout is per *structural* position, so layer 0's key history and
         # layer 7's key history land at the same offset inside their slots.
         offsets: dict[str, int] = {}
@@ -1262,7 +1332,6 @@ class RomLowering:
                 offsets[name] = cursor
                 cursor += size
         self._state_tensor_offset = offsets
-        self._state_owner = owner
 
     def _state_view(self, tensor_id: str) -> int | None:
         """Bind a role=``state`` tensor to a slice of its physical state object."""
@@ -1330,13 +1399,32 @@ class RomLowering:
         )
         if tensor.role in {"input", "output"}:
             permissions |= int(Permission.HOST_VISIBLE)
+        scale_object = NO_ID
+        block = 0
+        if tensor.scale_tensor_id and tensor.scale_tensor_id in self.tensors:
+            scale = self.tensors[tensor.scale_tensor_id]
+            block = int(tensor.scale_block_elements or 0)
+            if block:
+                scale_object = (
+                    self._region_object(scale.tensor_id)
+                    if scale.role in WEIGHT_ROLES
+                    else self._buffer(scale.tensor_id)
+                )
         return self._view(
             object_id=object_id,
             dtype=self._dtype(tensor.dtype),
             dims=self._dims(tensor),
             permissions=permissions,
+            scale_object_id=scale_object,
+            scale_block_elements=block if scale_object != NO_ID else 0,
             label="view.buf",
         )
+
+    def _region_object(self, tensor_id: str) -> int:
+        if self.plan is None:  # pragma: no cover - programming error
+            raise RomLoweringError("plan_regions() must run before lowering")
+        key, _slot = self._region_of_tensor[tensor_id]
+        return self.plan.region(key).object_id
 
     def _weight_view(self, tensor_id: str, *, run: LayerRun | None) -> int:
         if self.plan is None:  # pragma: no cover - programming error
@@ -1365,6 +1453,7 @@ class RomLowering:
             dynamic.append(DynamicTerm.loop(loop, stride))
         else:
             element_offset = slot * region.slot_element_stride
+        scale_object, block = self._scale_binding(key)
         return self._view(
             object_id=region.object_id,
             dtype=dtype,
@@ -1372,7 +1461,59 @@ class RomLowering:
             element_offset=element_offset,
             dynamic=dynamic,
             permissions=int(Permission.READ),
+            scale_object_id=scale_object,
+            scale_block_elements=block,
             label="view.rom",
+        )
+
+    def _scale_binding(self, region_key: str) -> tuple[int, int]:
+        """The immutable block-scale object that scales ``region_key``."""
+        if self.plan is None or region_key not in self._scale_of_region:
+            return NO_ID, 0
+        scale_key, block = self._scale_of_region[region_key]
+        if not block:
+            return NO_ID, 0
+        return self.plan.region(scale_key).object_id, block
+
+    def _expert_bank_view(self, kernel: Kernel, run: LayerRun | None) -> int:
+        """One view over a layer's whole routed expert bank.
+
+        The engine resolves the runtime expert ID inside this view
+        (TA-ABI3-OPCONV-1 section 2), so a routed matmul needs exactly one
+        weight descriptor no matter how many experts the layer has -- and the
+        expert dimension is an addressing dimension, never a program loop.
+        """
+        names = list(kernel.attributes["expert_weight_tensors"])
+        key, _slot = self._region_of_tensor[names[0]]
+        region = self.plan.region(key)  # type: ignore[union-attr]
+        head = self.tensors[names[0]]
+        dims = (len(names), *self._dims(head))
+        dynamic: list[DynamicTerm] = []
+        element_offset = 0
+        if region.slot_count > 1:
+            if run is None:
+                raise RomLoweringError(
+                    f"expert bank {key!r} is read outside a compressed layer body"
+                )
+            stride = region.slot_element_stride
+            if stride > 0xFFFFFFFF:
+                raise RomLoweringError(
+                    f"expert bank {key!r} needs a per-layer element stride of "
+                    f"{stride}, which does not fit the 32-bit dynamic-term stride "
+                    "field of ABI 3.0 tensor views; split the bank"
+                )
+            dynamic.append(DynamicTerm.loop(self._loop_of_run[run.index], stride))
+        scale_object, block = self._scale_binding(key)
+        return self._view(
+            object_id=region.object_id,
+            dtype=self._dtype(region.dtype),
+            dims=dims,
+            element_offset=element_offset,
+            dynamic=dynamic,
+            permissions=int(Permission.READ),
+            scale_object_id=scale_object,
+            scale_block_elements=block,
+            label="view.experts",
         )
 
     # -- operand conventions (TA-ABI3-OPCONV-1) --------------------------
@@ -1526,6 +1667,13 @@ class RomLowering:
             self._operand_view(name, run=run, writable=False)
             for name in kernel.inputs[:MAX_OPERATOR_INPUTS]
         ]
+        if "expert_weight_tensors" in kernel.attributes:
+            # TA-ABI3-OPCONV-1 section 2: ROUTED_MATMUL reads
+            # (activations, routed weights, expert IDs, route weights).  The
+            # neutral IR names the bank in an attribute rather than an operand,
+            # so the backend places it and binds it to slot 1.
+            inputs.insert(1, self._expert_bank_view(kernel, run))
+            inputs = inputs[:MAX_OPERATOR_INPUTS]
         outputs = [
             self._operand_view(name, run=run, writable=True)
             for name in kernel.outputs[:MAX_OPERATOR_OUTPUTS]
@@ -1739,6 +1887,7 @@ class RomLowering:
                 sorted(self._contract_substitutions.items())
             ),
             "schedule_descriptor_count": len(self._schedule_cache),
+            "state_class_aliases": dict(sorted(self._state_class_aliases.items())),
             "source_kernel_count": len(self.graph.kernels),
             "state_groups": len(set(self._state_descriptor.values())),
             "tile_mapping_owner": "schedule_descriptor",

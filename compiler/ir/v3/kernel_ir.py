@@ -37,6 +37,24 @@ PHASES = ("prefill", "decode")
 #: Neutral tensor roles.  ``state`` is mutable and session-bound.
 ROLES = frozenset({"input", "weight", "constant", "activation", "state", "output"})
 
+#: The architectural type of a token identifier.
+#:
+#: ABI 3.0 fixes token IDs at 32 bits unsigned: the generation policy stores its
+#: EOS set as u32, the selection engine writes a u32, and the host reads a u32.
+#: Left unstated, the two exporters disagreed - Qwen emitted i64 (an artifact of
+#: the framework checkpoint) and DeepSeek emitted i32 - and the mismatch only
+#: surfaced when a real deployment reached the embedding engine. A signed token
+#: ID is meaningless anyway: it indexes a vocabulary.
+TOKEN_DTYPE = "u32"
+
+#: Kernel kinds whose named operand slot must carry a token identifier.
+TOKEN_OPERAND_SLOTS: dict[str, tuple[str, int]] = {
+    "EMBEDDING_LOOKUP": ("inputs", 0),
+    "HASH_ROUTE": ("inputs", 0),
+    "ARGMAX": ("outputs", 0),
+    "TOKEN_APPEND": ("inputs", 0),
+}
+
 #: Neutral element types.  These name *architectural* formats, not storage.
 DTYPES = frozenset(
     {
@@ -658,6 +676,17 @@ def check_neutral(graph: KernelGraph) -> list[str]:
         for name in (*kernel.state_reads, *kernel.state_writes):
             if name not in state_ids:
                 errors.append(f"{where}: unknown state resource {name!r}")
+        slot = TOKEN_OPERAND_SLOTS.get(kernel.kind)
+        if slot is not None:
+            names = kernel.inputs if slot[0] == "inputs" else kernel.outputs
+            if len(names) > slot[1]:
+                token = seen_tensor.get(names[slot[1]])
+                if token is not None and token.dtype != TOKEN_DTYPE:
+                    errors.append(
+                        f"{where}: {slot[0][:-1]} {slot[1]} {token.tensor_id!r} is "
+                        f"{token.dtype!r}, but a token identifier is "
+                        f"{TOKEN_DTYPE!r} in ABI 3.0"
+                    )
         if not kernel.numeric_contract:
             errors.append(f"{where}: no numeric contract named")
         if kernel.predicate:

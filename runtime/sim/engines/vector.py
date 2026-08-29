@@ -206,13 +206,20 @@ def _write_rows(
         narrowed, saturations = narrow(view.dtype, values.reshape(view.dims))
     ctx.write(view, np.ascontiguousarray(narrowed))
     conversions = 0 if view.dtype == DType.FP32 else int(narrowed.size)
+    # Vector saturation is a VECTOR_REDUCTION observation.  Counting it here
+    # means every narrowing this engine performs is accounted once, whatever
+    # the caller does with the returned count.
+    ctx.counters.add("vector.saturations", int(saturations))
     return saturations, conversions
 
 
 def _finite(ctx: EngineContext, values: np.ndarray, label: str) -> np.ndarray:
-    if not np.all(np.isfinite(values)):
+    array = np.asarray(values)
+    exceptional = int(np.count_nonzero(~np.isfinite(array)))
+    if exceptional:
+        ctx.counters.add("vector.exceptional_values", exceptional)
         raise EngineError(
-            f"{label} contains a NaN or infinite binary32 value",
+            f"{label} contains {exceptional} NaN or infinite binary32 value(s)",
             trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
         )
     return values
@@ -255,9 +262,15 @@ def _weighted_rms_norm(
     weights = np.ascontiguousarray(ctx.read(weight_view))
     with _numeric_guard(contract):
         if contract == CONTRACT_QWEN_RMSNORM:
-            codes = rms_norm_bf16(
+            result = rms_norm_bf16(
                 values, weights, epsilon_code=int(profile.epsilon_bits)
-            ).values
+            )
+            ctx.counters.add(
+                "vector.saturations",
+                int(result.normalized_saturated_element_count)
+                + int(result.output_saturated_element_count),
+            )
+            codes = result.values
         else:
             codes = _deepseek_rms_norm_binary32(
                 values, weights, epsilon_bits=int(profile.epsilon_bits)
@@ -492,6 +505,9 @@ def _vector_add(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
     right = _read_rows(ctx, right_view, width)
     with _numeric_guard("bf16_add_rne_v1"):
         result = bf16_add_rne(left, right)
+    ctx.counters.add(
+        "vector.saturations", int(result.output_saturated_element_count)
+    )
     ctx.write(output_view, result.values.reshape(output_view.dims))
     ctx.counters.add("vector.elements", int(left.size))
     ctx.counters.add("vector.conversions", int(left.size))
@@ -676,6 +692,7 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
     ctx.counters.add("vector.elements", int(source.size))
     ctx.counters.add("vector.conversions", int(codes.size) + int(scales.size))
     if saturations:
+        ctx.counters.add("vector.saturations", int(saturations))
         raise EngineError(
             f"QUANTIZE saturated {saturations} E4M3FN block(s)",
             trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
@@ -1034,6 +1051,7 @@ def _vector_hadamard(ctx: EngineContext, sub: int, operator: Descriptor) -> None
     with _numeric_guard("HADAMARD BF16 conversion"):
         narrowed, saturations = narrow_bf16_rne(scaled)
     if saturations:
+        ctx.counters.add("vector.saturations", int(saturations))
         raise EngineError(
             "HADAMARD output saturated the BF16 range",
             trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),

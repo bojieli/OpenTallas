@@ -658,6 +658,26 @@ class RomImagePlan:
     def largest_region_bytes(self) -> int:
         return max((r.total_bytes for r in self.regions), default=0)
 
+    @property
+    def largest_member_bytes(self) -> int:
+        """The largest *indivisible* payload: one tensor's bytes.
+
+        A region may be distributed over many placement resources, so region
+        size is not a capacity constraint.  What must fit is the smallest thing
+        the plan will not split further, which is one checkpoint tensor.
+        """
+        return max(
+            (m.bytes for r in self.regions for m in r.members), default=0
+        )
+
+    @property
+    def distributed_member_count(self) -> int:
+        """Members larger than one placement resource, i.e. tensor-parallel."""
+        limit = self.policy.resource_bytes
+        return sum(
+            1 for r in self.regions for m in r.members if m.bytes > limit
+        )
+
     def region(self, key: str) -> RomRegion:
         for candidate in self.regions:
             if candidate.key == key:
@@ -680,6 +700,8 @@ class RomImagePlan:
             "repair_map": self.repair_map.to_dict(),
             "schema": ROM_PLAN_SCHEMA,
             "totals": {
+                "distributed_member_count": self.distributed_member_count,
+                "largest_member_bytes": self.largest_member_bytes,
                 "largest_region_bytes": self.largest_region_bytes,
                 "padding_bytes": self.padding_bytes,
                 "payload_bytes": self.payload_bytes,
@@ -725,16 +747,16 @@ def plan_rom_image(
         slot_bytes = request.slot_bytes
         if slot_bytes <= 0 or request.slot_count <= 0:
             raise RomImageError(f"ROM region {request.key!r} has an empty slot")
-        cursor = 0
+        covered = 0
         for member in request.members:
             if member.bytes <= 0:
                 raise RomImageError(
                     f"ROM region {request.key!r} member {member.tensor_id!r} is empty"
                 )
-            if member.offset_bytes != cursor:
+            if member.offset_bytes != covered:
                 raise RomImageError(
                     f"ROM region {request.key!r} member {member.tensor_id!r} sits at "
-                    f"{member.offset_bytes}, expected {cursor}; members must tile "
+                    f"{member.offset_bytes}, expected {covered}; members must tile "
                     "the region without gaps or overlap"
                 )
             if member.slot != member.offset_bytes // slot_bytes:
@@ -754,10 +776,10 @@ def plan_rom_image(
                     f"{placed[member.tensor_id]!r} and {request.key!r}"
                 )
             placed[member.tensor_id] = request.key
-            cursor += member.bytes
-        if cursor != slot_bytes * request.slot_count:
+            covered += member.bytes
+        if covered != slot_bytes * request.slot_count:
             raise RomImageError(
-                f"ROM region {request.key!r} members cover {cursor} bytes but "
+                f"ROM region {request.key!r} members cover {covered} bytes but "
                 f"{request.slot_count} slots of {slot_bytes} need "
                 f"{slot_bytes * request.slot_count}"
             )
