@@ -77,7 +77,7 @@
 
 ## W6 — Real end-to-end execution (the correctness spine)
 
-- [ ] W6.1 Qwen-HBM: short prompt → prefill → decode → first EOS, real tokenizer tokens, validated text
+- [~] W6.1 Qwen-HBM: short prompt → prefill → decode → first EOS, real tokenizer tokens, validated text — **executes end to end and produces real tokens**; on a 5-token prompt the selected token matches the vendor reference (`results/abi3/qwen3_activation_bisect.json`). Pinned-workload agreement and decode-to-EOS still to confirm
 - [ ] W6.2 Qwen-ROM: identical token sequence from the ROM deployment
 - [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens
 - [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence
@@ -211,4 +211,15 @@
   available. Split into four 16-head launches, which is bitwise identical
   because the heads are independent, and is the per-rank head count the
   vendor's own world_size=4 configuration produces.
+- **OI-15 — every operation is wrapped in a per-token loop.** The HBM lowering
+  emits nineteen `SPAN_TOKENS` loops inside the layer body, so a 93-token
+  prefill issues about 63,600 engine dispatches, each on one token row. The
+  instruction count looks compressed but the retired work is not: this is the
+  ABI 2.5 failure mode in different clothes, one dispatch per token instead of
+  one command per tile. Every engine already accepts `[span, ...]`, so the body
+  should issue one dispatch per operation for the whole span, with the token
+  axis carried as a symbolic view dimension. Loops belong only where the work
+  genuinely varies — layers, and token *blocks* if an SRAM working set needs
+  bounding. Expected effect is roughly 90x fewer dispatches, which is what makes
+  the 8,000-token campaign feasible.
 

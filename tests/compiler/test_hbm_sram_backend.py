@@ -770,6 +770,79 @@ def test_alternating_layer_structures_band_with_period_two(single_chip):
     assert check_deployment(graph, deployment, single_chip)["ok"]
 
 
+def test_band_carries_the_residual_in_one_buffer(dense, single_chip):
+    """The value entering a band and the value leaving it are one buffer.
+
+    Emitted as a loop, a body that read one buffer and wrote another would
+    re-read the prologue's value every iteration, collapsing the stack to one
+    layer applied N times.
+    """
+    plan = build_plan(dense, single_chip)
+    keys = plan.activation_keys
+    live_in = keys["hidden0"]
+    per_layer = [keys[f"l{i}.res2"] for i in range(4)]
+    assert len(set(per_layer)) == 1, per_layer
+    assert live_in == per_layer[0]
+
+
+def test_state_views_bind_the_prepared_image(dense, single_chip):
+    """A transaction reads what it has just appended, not the last commit."""
+    deployment, plan = lower_with_plan(dense, single_chip)
+    prepared = {
+        deployment.table[d.descriptor_id].payload["prepared_object_id"]
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.STATE
+    }
+    committed = {
+        deployment.table[d.descriptor_id].payload["committed_object_id"]
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.STATE
+    }
+    touched = set()
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
+            continue
+        for slot in (*range(4), *range(4)):
+            pass
+        views = [descriptor.payload[f"input_view_{i}"] for i in range(4)]
+        views += [descriptor.payload[f"output_view_{i}"] for i in range(2)]
+        for vid in views:
+            if vid == 0xFFFFFFFF:
+                continue
+            touched.add(deployment.table[vid].primary_object_id)
+    assert touched & prepared, "no operator reads or writes the prepared image"
+    assert not (touched & committed), (
+        "an operator addresses the committed image; the commit publishes it, "
+        "execution runs against the prepared one"
+    )
+
+
+def test_request_windows_are_addressed_from_position_start(dense, single_chip):
+    """A host window holds the session; the request begins at POSITION_START."""
+    deployment = lower_to_abi3(dense, single_chip)
+    host_objects = {
+        d.descriptor_id
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+        and d.payload["storage_class"] == int(StorageClass.HOST)
+    }
+    offsets = set()
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.TENSOR_VIEW:
+            continue
+        if descriptor.primary_object_id not in host_objects:
+            continue
+        for slot in range(descriptor.payload["dynamic_term_count"]):
+            if descriptor.payload[f"term{slot}_kind"] == int(
+                SelectorKind.RUNTIME_SYMBOL
+            ):
+                offsets.add(descriptor.payload[f"term{slot}_index"])
+    assert int(Symbol.POSITION_START) in offsets
+    # The ring is written at the first free position, never at the generation
+    # counter, which would overwrite the prompt on the first decode step.
+    assert int(Symbol.POSITION_END) in offsets
+
+
 # ---------------------------------------------------------------------------
 # Zero-copy weights
 # ---------------------------------------------------------------------------
