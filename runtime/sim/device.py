@@ -184,6 +184,7 @@ class Device:
         root: Path | None = None,
         verify: bool = True,
         trace: bool = False,
+        on_issue: Any = None,
     ) -> None:
         self.deployment = deployment
         self.capability = capability
@@ -198,6 +199,16 @@ class Device:
         self.sessions: dict[int, Session] = {}
         self.trace_enabled = trace
         self.trace: list[dict[str, Any]] = []
+        self.on_issue = on_issue
+        """Optional hook called after each engine issue.
+
+        Signature ``(pc, instruction, family, ctx) -> None``. It exists because
+        arena slots are reused: ``sequence.embedding`` shares a slot with all
+        thirty-six layer residuals, so reading an activation after a
+        transaction returns whichever tensor last occupied that slot, not the
+        one asked for. Any comparison against a reference has to sample at the
+        moment the producing engine writes, and this is that moment.
+        """
         self._entrypoints = self._load_entrypoints()
         self._next_session = 1
         self._device_cycle = 0
@@ -437,6 +448,8 @@ class Device:
                     if trap.instruction == NO_ID:
                         trap.instruction = pc
                     raise
+                if self.on_issue is not None:
+                    self.on_issue(pc, instruction, family, ctx)
                 if instruction.signal_event_id != NO_ID:
                     signalled.add(instruction.signal_event_id)
                 retired += 1

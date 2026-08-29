@@ -860,8 +860,22 @@ def build_plan(
     topology: TopologyClass | int | None = None,
     tile: TileConfig | None = None,
     validate: bool = True,
+    unroll_layers: bool = False,
+    reuse_arenas: bool = True,
+    span_override: int | None = None,
 ) -> PhysicalPlan:
-    """Produce the physical plan for ``graph`` on ``capability``."""
+    """Produce the physical plan for ``graph`` on ``capability``.
+
+    ``unroll_layers``, ``reuse_arenas`` and ``span_override`` exist for
+    differential harnesses, and only for them.  A deployment that loops over
+    layers and reuses activation buffers holds one residual buffer, not
+    thirty-six, so a harness comparing *per-layer* activations against a
+    reference cannot read them back -- every layer names the same memory.
+    Turning banding and reuse off gives each tensor its own buffer at the cost
+    of a much larger program and image, which is only affordable with a small
+    ``span_override``.  The production build uses none of them, so nothing in
+    the shipped artifact depends on a debugging mode.
+    """
     graph = as_kernel_graph(graph)
     if validate:
         require_neutral(graph)
@@ -878,6 +892,8 @@ def build_plan(
     span_max = symbol_maximum(
         graph, "span_tokens", int(capability.limits["max_context_positions"])
     )
+    if span_override is not None:
+        span_max = max(int(span_override), 1)
     if span_max > capability.limits["max_context_positions"]:
         raise PlanError(
             f"graph declares span_tokens up to {span_max}, capability admits "
@@ -889,6 +905,12 @@ def build_plan(
 
     bands, warnings_bands = _build_bands(graph, tensors)
     warnings.extend(warnings_bands)
+    if unroll_layers:
+        bands = _unrolled_bands(bands, graph)
+        warnings.append(
+            "layer banding is off: this is a diagnostic build, not a deployable "
+            "one"
+        )
     groups, placements = _place_weights(graph, bands, span_max)
     positions = position_inputs(graph)
     generated = _generated_constants(
@@ -922,6 +944,7 @@ def build_plan(
         span_max,
         block,
         state_of_tensor,
+        reuse_arenas,
     )
 
     kernel_plans, warn_kernels = _plan_kernels(
@@ -1622,6 +1645,7 @@ def _place_activations(
     span_max: int,
     block: int,
     state_of_tensor: Mapping[str, Sequence[Any]],
+    reuse_arenas: bool = True,
 ) -> tuple[
     dict[str, str], tuple[ArenaSlot, ...], dict[str, str], dict[str, dict[str, Any]]
 ]:
@@ -1673,6 +1697,9 @@ def _place_activations(
             keys.setdefault(tensor.tensor_id, f"host.in.{tensor.tensor_id}")
         elif tensor.role == "output":
             keys.setdefault(tensor.tensor_id, f"host.out.{tensor.tensor_id}")
+
+    if reuse_arenas:
+        _unify_loop_carried(graph, bands, keys)
 
     # Size and liveness.
     sizes: dict[str, tuple[int, int, int, str, bool]] = {}
@@ -1737,7 +1764,7 @@ def _place_activations(
     for key in arena_keys:
         size, rows, cols, dtype, symbolic = sizes[key]
         chosen = None
-        for slot in slots:
+        for slot in slots if reuse_arenas else ():
             if slot["size_bytes"] != size or slot["dtype"] != dtype:
                 continue
             if slot["free_at"] <= first_use.get(key, 0):
@@ -1783,6 +1810,79 @@ def _place_activations(
         for slot in slots
     )
     return keys, arena_slots, arena_of_key, host_objects
+
+
+def _unrolled_bands(
+    bands: Sequence[LayerBand], graph: KernelGraph
+) -> tuple[LayerBand, ...]:
+    """One band per layer, for a diagnostic build that must be readable back."""
+    by_layer: dict[int, list[Kernel]] = {}
+    for kernel in graph.kernels:
+        if kernel.layer is not None:
+            by_layer.setdefault(kernel.layer, []).append(kernel)
+    out: list[LayerBand] = []
+    for band in bands:
+        for layer in band.layers:
+            out.append(
+                LayerBand(
+                    band_id=len(out),
+                    first_layer=layer,
+                    layer_count=1,
+                    period=1,
+                    signature=band.signature,
+                    body_kernels=tuple(k.index for k in by_layer.get(layer, ())),
+                    degraded=True,
+                    reason="diagnostic unrolled build",
+                )
+            )
+    return tuple(out)
+
+
+def _unify_loop_carried(
+    graph: KernelGraph, bands: Sequence[LayerBand], keys: dict[str, str]
+) -> None:
+    """Give a band's live-in and live-out value one buffer.
+
+    A residual stream enters the first layer from the prologue and leaves the
+    last layer for the epilogue, and in between each layer reads what the layer
+    before it wrote.  Emitted as a loop, the body reads one buffer and writes
+    another, so unless those are the *same* buffer every iteration would re-read
+    the prologue's value and the stack would collapse to one layer applied
+    thirty-six times to the embedding.
+
+    The identification is positional: an operand of the band's first iteration
+    that is produced outside the band, whose counterpart in the second iteration
+    is produced inside it, is the same logical buffer as that counterpart.
+    """
+    by_layer: dict[int, list[Kernel]] = {}
+    for kernel in graph.kernels:
+        if kernel.layer is not None:
+            by_layer.setdefault(kernel.layer, []).append(kernel)
+    alias: dict[str, str] = {}
+    for band in bands:
+        if band.layer_count < 2:
+            continue
+        prefix = f"b{band.band_id}."
+        first = _block_kernels(by_layer, band.first_layer, band.period)
+        second = _block_kernels(
+            by_layer, band.first_layer + band.period, band.period
+        )
+        for outer, inner in zip(first, second):
+            for outside, inside in zip(outer.inputs, inner.inputs):
+                here, later = keys.get(outside), keys.get(inside)
+                if not here or not later:
+                    continue
+                if not later.startswith(prefix) or here.startswith(prefix):
+                    continue
+                if here.startswith("host."):
+                    continue  # a host window is not a loop-carried buffer
+                alias.setdefault(here, later)
+    if not alias:
+        return
+    for name, key in list(keys.items()):
+        target = alias.get(key)
+        if target is not None:
+            keys[name] = target
 
 
 # -- states -----------------------------------------------------------------

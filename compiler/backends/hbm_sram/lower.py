@@ -176,6 +176,37 @@ class LoweringError(ValueError):
     """Raised when a graph cannot be expressed in ABI 3.0 on this chip."""
 
 
+#: The most recent lowering, retained for differential harnesses.
+#:
+#: A deployment is deliberately opaque -- it names objects, not tensors, because
+#: that is what a device consumes.  A harness comparing per-layer activations
+#: against a reference needs the other direction: which arena holds which
+#: tensor.  That mapping is the *plan's*, so it is exposed here rather than
+#: pushed into the artifact, which would put a debugging concern into the wire
+#: format.  It is diagnostic state: nothing in the build reads it, and two
+#: builds are byte-identical whether or not anything looks at it.
+_LAST_LOWERING: "_Emitter | None" = None
+
+
+def last_lowering() -> "_Emitter":
+    """The most recent lowering, for a harness that must locate a tensor."""
+    if _LAST_LOWERING is None:
+        raise LoweringError("no deployment has been lowered in this process")
+    return _LAST_LOWERING
+
+
+def arena_object_of(tensor_id: str) -> int:
+    """The memory object holding ``tensor_id`` in the most recent lowering."""
+    lowering = last_lowering()
+    key = lowering.plan.activation_keys.get(tensor_id)
+    if key is None:
+        raise LoweringError(f"{tensor_id!r} has no activation placement")
+    slot = lowering.plan.arena_of_key.get(key)
+    if slot is None:
+        raise LoweringError(f"{tensor_id!r} is not held in an arena")
+    return lowering._arena_object[slot]
+
+
 def lower_to_abi3(
     graph: KernelGraph | Mapping[str, Any] | str,
     capability: Capability,
@@ -195,9 +226,13 @@ def lower_to_abi3(
     """
     graph = as_kernel_graph(graph)
     plan = plan or build_plan(graph, capability, topology=topology, tile=tile)
-    return _Emitter(
+    emitter = _Emitter(
         graph, capability, plan, deployment_id, generation, target_id, backend
-    ).run()
+    )
+    deployment = emitter.run()
+    global _LAST_LOWERING
+    _LAST_LOWERING = emitter
+    return deployment
 
 
 def lower_with_plan(
@@ -1198,7 +1233,7 @@ class _Emitter:
             )
         physical_id, member = mapping[0], int(mapping[1])
         state = self.plan.state(physical_id)
-        committed, prepared = self._state_objects[physical_id]
+        _committed, prepared = self._state_objects[physical_id]
         window = state.capacity_rows * state.row_elements
         # The window keeps the rank the graph declared -- ``[context, heads,
         # head_dim]`` for a KV history -- so an engine that reads heads finds an
@@ -1231,8 +1266,14 @@ class _Emitter:
         if len(state.members) > 1 and loop is not None:
             terms.append(DynamicTerm.loop(loop, window))
             offset = column
+        # Both reads and writes name the *prepared* image.  A transaction reads
+        # what it has just appended -- attention over a prefill span attends the
+        # very rows the append wrote -- and the committed image is the durability
+        # record the commit publishes, not the buffer execution runs against.
+        # Reading the committed image mid-transaction would attend to a context
+        # that does not yet contain the current tokens.
         return self._view(
-            object_id=prepared if writable else committed,
+            object_id=prepared,
             dtype=dtype_of(state.dtype),
             dims=extents,
             strides=strides,
