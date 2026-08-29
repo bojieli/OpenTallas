@@ -35,7 +35,8 @@ the governed positive-zero canonicalization, there were zero differences.
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
 the qualified routed-MXFP4/shared-FP8 SwiGLU, dense FP8, index-head BF16,
 router-score, compressor, confidence, grouped attention-output, and DSpark
-main-conditioning projection paths, vector operators beyond the SwiGLU
+main-conditioning projection and prefill-KV paths, vector operators beyond the
+SwiGLU
 nonlinear section, weighted and head RMS normalization,
 target-hidden capture, and HC post-mixing, attention operators
 beyond the qualified KV row-space composition, learned index scoring/top-k, and
@@ -109,6 +110,18 @@ projection rows 0, 127, 128, and 4,095. None of those corpora is a
 checkpoint-derived nonzero captured activation or artifact-driven service
 execution, and logical counters are not physical bytes, cycles, bandwidth,
 latency, throughput, energy, area, or PPA.
+
+`dspark_prefill_kv.py` implements all three prefill-only
+`DSPARK_PREFILL_KV` sites. From already-produced width-4,096 BF16 conditioning,
+it applies the stage's complete `[512,4096]` E4M3FN/E8M0 projection, width-512
+weighted RMS normalization, base RoPE on the final 64 channels, block-64 FP8
+QDQ on the first 448 channels, and a session/version-authorized stage-local
+window commit. The suite locks a nonzero complete-shape synthetic composition,
+all official stage resources at zero input for `T=1..4`, and four nonzero
+official projection rows per stage through an independent FP8 service lane.
+Those corpora do not supply checkpoint-derived nonzero conditioning. Logical
+resource/state counts remain distinct from physical ROM/SRAM/HBM traffic,
+cycles, bandwidth, latency, throughput, energy, area, or PPA.
 
 `normalization.py` implements the weighted `RMS_NORM` operation at all 251
 Flash graph sites and all four observed widths. It widens BF16 input and BF16

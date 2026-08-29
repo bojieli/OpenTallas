@@ -1967,6 +1967,96 @@ target reference semantics only; it does not qualify compiler/service/RTL
 execution, producer authentication, atomic inter-request compare-and-swap,
 checkpoint-derived attention, or physical performance.
 
+### NUM-6.18 DSpark prefill-only main-KV transaction
+
+`DSPARK_PREFILL_KV` is pinned to `Transformer.forward_spec` and the
+`start_pos == 0` branch of `DSparkBlock.forward` and
+`DSparkAttention.forward` in
+`deepseek-ai/DeepSeek-V4-Flash-0731` revision
+`7872f01b1d1fe23eabc4c98b48bffcef5a386062`. Each of the three DSpark stages
+skips its ordinary block during prefill. From an already-produced BF16
+conditioning tensor `[B,S,4096]`, the stage instead performs:
+
+```text
+FP8 wkv [512,4096]
+  -> weighted BF16 RMSNorm [512]
+  -> base RoPE on channels [448,512)
+  -> block-64 FP8 QDQ on channels [0,448)
+  -> session/version-authorized circular-window commit [B,128,1,512]
+```
+
+The released resource set for each stage is an E4M3FN projection weight of
+2,097,152 bytes, an E8M0 scale tensor `[4,32]` of 128 bytes, and 512 finite
+BF16 normalization weights. Projection uses the ordinary dense-FP8 rule:
+32 increasing 128-value activation blocks, output scale tile
+`floor(output_row/128)`, NUM-6.1 reduction of 32 binary32 block partials, and
+one BF16 conversion. Weighted RMS normalization is NUM-6.8 at width 512.
+
+Base RoPE begins at absolute position zero and changes only the final 64
+channels. The first 448 channels are then independently quantized and
+dequantized in seven increasing 64-value blocks under the qualified FP8-QDQ
+contract. The committed row concatenates those 448 reconstructed BF16 values
+with the 64 rotated BF16 values. RoPE is deliberately before QDQ, and the RoPE
+channels are never included in the QDQ blocks.
+
+`start_pos` must equal zero. The window must have the official fixed
+`[capacity,128,1,512]` shape, active batch capacity must cover `B`, and the
+write obeys the complete NUM-6.15 session, freshness, retirement, and
+capacity-wide version authority. For `S>128`, all `S` arithmetic rows are
+retained in the operator result while only the final 128 rows per active lane
+are read and committed by the circular-window transaction. Projection,
+normalization, RoPE, QDQ, state authority, and every complete resource validate
+before the immutable successor is exposed. A failure poisons the whole
+composition without a partial state transition.
+
+For `T=B*S`, capacity `C`, and `W=128`, principal logical counts are:
+
+```text
+conditioning_values              = T * 4,096
+activation_blocks                = T * 32
+projection_block_dots            = T * 512 * 32
+projection_products              = T * 512 * 4,096
+projection_tree_adds             = T * 512 * 31
+projection_conversions           = T * 512
+rms_squares                      = T * 512
+rms_tree_adds                    = T * 511
+rms_pointwise_multiplies         = T * 1,024
+rope_rotated_values              = T * 64
+rope_binary32_multiplies         = T * 128
+rope_binary32_adds               = T * 64
+qdq_blocks                       = T * 7
+qdq_values                       = T * 448
+window_source_rows_read          = B * min(S,W)
+window_state_rows_written        = B * min(S,W)
+window_state_rows_preserved      = C * W - B * min(S,W)
+transaction_commits              = 1
+```
+
+The resource-value counters additionally cover all 2,097,152 E4M3FN weights,
+128 E8M0 scales, and 512 BF16 norm weights once per stage transaction. Exact
+zero activation and byte-exact zero weight rows may skip redundant host work
+only after complete input/resource validation; counters still retain the
+declared semantic extent. Window rows and bytes are logical state values, not
+physical SRAM/HBM transactions. Projection resource values are likewise not a
+claim that every byte is physically fetched per token.
+
+Public results retain projection, normalization weights and diagnostics,
+rotated values, QDQ codes/scales, committed KV, the complete window-write
+record, and counters. They reconstruct every boundary after projection. They
+omit conditioning and projection resources, so public construction does not
+authenticate projection arithmetic or provenance.
+
+The locked evidence separates three claims: a nonzero complete-shape synthetic
+composition; all three official stage resources at zero input for `T=1..4`;
+and four nonzero official projection rows checked through an independent FP8
+service lane. No checkpoint-derived nonzero conditioning is available, and
+those corpora may not be combined into such a claim. The identities and
+resource hashes are governed by
+`docs/DEEPSEEK_V4_DSPARK_PREFILL_KV_EVIDENCE.md`. This qualifies reference
+semantics only, not a complete DSpark block, autoregressive acceptance,
+artifact-driven service execution, RTL, physical ROM/SRAM/HBM traffic, cycles,
+latency, inference bytes/s, throughput, energy, area, PPA, or GPU advantage.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension

@@ -74,6 +74,9 @@ _QUALIFIED_REFERENCE_OWNERS = {
     "DSPARK_MAIN_PROJECT": (
         "runtime.reference.dspark_main_project.dspark_main_project_bf16"
     ),
+    "DSPARK_PREFILL_KV": (
+        "runtime.reference.dspark_prefill_kv.dspark_prefill_kv_bf16"
+    ),
     "DSPARK_NOISE_EMBED": "runtime.reference.structural.dspark_noise_embed_bf16",
     "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
     "EXPERT_DISPATCH": ("runtime.reference.dispatch.dispatch_routed_experts_bf16"),

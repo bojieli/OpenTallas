@@ -58,7 +58,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "cab1b68f0411ed5942b40aa31f3aa6ebdee19b8913ba7a3918672f63930c76d9"
+        "95c51d73b94acbf7990c18776a180e0f87404e183e55fcbb3844397d8b38b709"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 46,
@@ -68,7 +68,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 2136,
-        "pending_reference_kind_count": 3,
+        "pending_reference_kind_count": 2,
         "pending_rtl_kind_count": 46,
         "pending_service_engine_kind_count": 46,
         "unknown_kind_count": 0,
@@ -342,6 +342,9 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         ),
         "DSPARK_MAIN_PROJECT": (
             "runtime.reference.dspark_main_project.dspark_main_project_bf16"
+        ),
+        "DSPARK_PREFILL_KV": (
+            "runtime.reference.dspark_prefill_kv.dspark_prefill_kv_bf16"
         ),
         "DSPARK_NOISE_EMBED": ("runtime.reference.structural.dspark_noise_embed_bf16"),
         "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
@@ -1320,7 +1323,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "cab1b68f0411ed5942b40aa31f3aa6ebdee19b8913ba7a3918672f63930c76d9"
+        "95c51d73b94acbf7990c18776a180e0f87404e183e55fcbb3844397d8b38b709"
     )
     assert "described 2136 nodes across 46 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout
