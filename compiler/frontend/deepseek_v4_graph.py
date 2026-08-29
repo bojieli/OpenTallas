@@ -54,6 +54,9 @@ DEFAULT_INFERENCE_CONFIG = (
 )
 
 _QUALIFIED_REFERENCE_OWNERS = {
+    "ATTENTION_KV_VIEW": (
+        "runtime.reference.attention_kv_view.attention_kv_view_bf16"
+    ),
     "BIASED_TOPK_ROUTE": "runtime.reference.selection.biased_topk_route_indices",
     "BF16_LINEAR": "runtime.reference.matrix.bf16_linear_bf16",
     "BINARY32_TO_BF16": ("runtime.reference.conversion.binary32_tensor_to_bf16_rne"),
@@ -1092,15 +1095,40 @@ def _attention_kv_view_attributes(
         raise DeepSeekV4GraphError(
             f"unsupported ATTENTION_KV_VIEW compression ratio {ratio}"
         )
+    if dspark and ratio:
+        raise DeepSeekV4GraphError("DSpark ATTENTION_KV_VIEW cannot use compressed KV")
+    compressed_offset = {
+        "decode": "window_size" if ratio else "not_applicable",
+        "prefill": "current_sequence_length" if ratio else "not_applicable",
+    }
     return {
-        "compressed_offset": "current_sequence_length" if ratio else "not_applicable",
+        "compressed_offset": compressed_offset,
         "compression_ratio": ratio,
-        "decode_layout": "committed_window_capacity_then_valid_compressed_prefix",
+        "current_source": "five_current_draft_kv_rows" if dspark else "main_current_kv",
+        "decode_layout": (
+            "committed_main_window_capacity_then_five_current_draft_rows"
+            if dspark
+            else "committed_window_capacity_then_valid_compressed_prefix"
+        ),
+        "draft_block_size": 5 if dspark else 0,
         "dspark": dspark,
+        "invalid_window_capacity": "exposed_but_never_selectable",
+        "kv_head_count": 1,
+        "kv_row_width": 512,
         "output_dtype": "bf16",
-        "prefill_layout": "current_full_kv_then_valid_compressed_prefix",
+        "prefill_layout": (
+            "separate_dspark_prefill_state_write"
+            if dspark
+            else "current_full_kv_then_valid_compressed_prefix"
+        ),
+        "reference_profile": "opentallas.deepseek_v4_attention_kv_view.v1",
         "session_identity": "per_active_batch_lowercase_sha256",
-        "status": "pending_reference_and_session_bound_window_state",
+        "validation": (
+            "session_cursor_complete_window_versions_and_five_draft_rows"
+            if dspark
+            else "session_cursor_complete_window_versions_current_write_and_compressed_prefix"
+        ),
+        "valid_rows": "explicit_physical_indices_exclude_unused_or_stale_capacity",
         "window_size": 128,
     }
 
@@ -1690,7 +1718,7 @@ def _add_block_graph(
                 attributes={"ratio": ratio},
             )
     attention_kv_inputs = (
-        main_kv if dspark else kv,
+        kv,
         window_kv_state,
         *((compressed_kv_view,) if compressed_kv_view is not None else ()),
         "request.start_pos",

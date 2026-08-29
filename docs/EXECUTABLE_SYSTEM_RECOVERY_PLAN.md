@@ -502,7 +502,7 @@ row must not be read as milestone closure.
 | Gate | Current direct evidence | Status |
 |---|---|---|
 | M0 | Repository baseline and additive compiler/runtime layout are committed on `main`; large generated payloads remain outside Git | Ongoing because concurrent model and simulation work may keep the worktree active |
-| M1 | The pinned official graph has a complete 2,136-node/46-kind ledger; 42 kinds now have qualified target references, including all routed-MXFP4/shared-FP8 SwiGLU, sqrt-softplus router activation, session-bound circular-window KV transition/view, complete grouped attention-output projection, DSpark main-conditioning projection, base/YaRN RoPE application and inverse, complete HC pre-mixing/final-head reduction, compressor transaction/view, sparse-attention, and fail-closed greedy/target-adapted sampling sites | Partial: four operator references and operator-complete semantics remain open |
+| M1 | The pinned official graph has a complete 2,136-node/46-kind ledger; 43 kinds now have qualified target references, including all routed-MXFP4/shared-FP8 SwiGLU, sqrt-softplus router activation, session-bound circular-window KV transition/view, exact main/DSpark attention KV row-space composition, complete grouped attention-output projection, DSpark main-conditioning projection, base/YaRN RoPE application and inverse, complete HC pre-mixing/final-head reduction, compressor transaction/view, sparse-attention, and fail-closed greedy/target-adapted sampling sites | Partial: three operator references and operator-complete semantics remain open |
 | M2 | The official 72,317-tensor checkpoint is locked; the complete 77,116-assignment MP=4 application was independently re-read with verification `b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28` | Checkpoint/canonical payload gate achieved; this does not imply executable operators |
 | M3 | Lookup and complete-output query-A deployments have content-addressed images and independent payload roundtrips | Partial: complete stage placement, capacity, repair, and physical-address legality remain open |
 | M4 | Artifact-only fixed-microcode paths execute official lookup tensors and all 1,024 Query-A FP8 outputs. The real HC_PRE→Query-A chain ends at artifact-only result `d30df5494e60c3f261cc6bec15320680ee3e87d867873e1d0fc100f7776336c0`. A separate official-width layer-2 ratio-four post-projection compressor harness executes immutable causal raw/compressed state, conditional pool/conversion, abort, retirement, commit, and valid-view semantics under a controlled APE-cancellation known answer | Partial: the compressor request is not a checkpoint-derived activation, starts after learned projection, and its direct BF16 cache payload omits official RMSNorm/RoPE/QDQ; neither path yet completes attention, a transformer block, complete graph-to-microcode lowering, or full-model execution |
@@ -522,6 +522,8 @@ and
 [`DEEPSEEK_V4_GROUPED_OUTPUT_EVIDENCE.md`](DEEPSEEK_V4_GROUPED_OUTPUT_EVIDENCE.md),
 and
 [`DEEPSEEK_V4_KV_WINDOW_EVIDENCE.md`](DEEPSEEK_V4_KV_WINDOW_EVIDENCE.md),
+and
+[`DEEPSEEK_V4_ATTENTION_KV_VIEW_EVIDENCE.md`](DEEPSEEK_V4_ATTENTION_KV_VIEW_EVIDENCE.md),
 and
 [`DEEPSEEK_V4_DSPARK_MAIN_PROJECT_EVIDENCE.md`](DEEPSEEK_V4_DSPARK_MAIN_PROJECT_EVIDENCE.md),
 and

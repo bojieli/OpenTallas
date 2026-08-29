@@ -1876,6 +1876,97 @@ reference semantics only. Logical values and operations are not physical
 ROM/SRAM/HBM bytes, cycles, bandwidth, latency, throughput, energy, area, PPA,
 or GPU-comparison evidence.
 
+### NUM-6.17 Attention KV row-space composition
+
+`ATTENTION_KV_VIEW` is pinned to `Attention.forward`,
+`DSparkAttention.forward`, and their index helpers in
+`deepseek-ai/DeepSeek-V4-Flash-0731` revision
+`7872f01b1d1fe23eabc4c98b48bffcef5a386062`. The pinned
+`inference/model.py` has SHA-256
+`c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`.
+This operation composes already-projected, normalized, position-transformed,
+and QDQ-processed BF16 KV with already-committed session-bound state. It does
+not repeat any of those producer operations or execute sparse attention.
+
+Let `B` be the active batch count, `W=128`, `D=512`, `S` the current sequence
+extent, `N` the committed exclusive next position, and `R` a compression ratio
+in `{4,128}`. The three legal layouts are:
+
+```text
+main prefill: current_kv[0:S] || compressed_prefix[0:floor(S/R)]
+main decode:  physical_window[0:W] || compressed_prefix[0:floor(N/R)]
+DSpark decode: physical_main_window[0:W] || current_draft_kv[0:5]
+```
+
+The compressed suffix is absent when the main layer has ratio zero. Main
+prefill requires `start_pos=0` and `N=S`; it retains the complete current
+sequence even when `S>W`. Main decode requires `S=1` and
+`N=start_pos+1`. DSpark is decode-only, forbids compressed KV, and requires
+exactly five current draft rows. Its separately produced `main_kv` row is
+committed to slot `start_pos mod W`; the suffix is the distinct draft `kv`
+block. The compiler graph must therefore route draft `kv`, not `main_kv`, into
+the DSpark `ATTENTION_KV_VIEW` input.
+
+For any decode view define the valid physical-slot set:
+
+```text
+P = {p mod W | max(0,N-W) <= p < N}
+```
+
+The main-decode selectable set is `P` plus compressed rows
+`W..W+floor(N/R)-1` when compression exists. The DSpark selectable set is `P`
+plus draft rows `W..W+4`. Unused or preserved stale window slots remain in the
+fixed physical output but are never selectable. The set is retained as
+increasing physical indices; chronological or query-specific ordering belongs
+to `WINDOW_INDEX`, `COMPRESSED_DENSE_INDEX`, `INDEX_TOPK`, or
+`DSPARK_WINDOW_INDEX`, not this operation. Every emitted prefill row is valid;
+causal per-query masking likewise remains in the separate index tensor.
+
+All active window lanes must form a contiguous prefix, match one to four unique
+lowercase 64-hex-digit sessions, share one cursor, and carry the exact complete
+capacity-wide version vector. Main prefill rechecks every retained circular
+row against the corresponding current KV write. Main decode rechecks the one
+new physical slot against its current row. DSpark deliberately omits that
+comparison against the five draft rows because its committed main row has a
+different source. A compressed input must be an exact independently
+revalidated `COMPRESSED_KV_VALID_VIEW` record with the same sessions, cursor,
+ratio, row width, prefix length, versions, finite payload, and complete logical
+counters. Any mismatch poisons the whole view.
+
+For `C=floor(N/R)` when compression is present and zero otherwise, principal
+logical counts are:
+
+```text
+current_source_rows_read = B * S
+window_state_rows_read   = 0 for main prefill, otherwise B * W
+compressed_rows_read     = B * C
+output_rows_written      = B * (S + C) for main prefill
+                           B * (W + C) for main decode
+                           B * (W + 5) for DSpark decode
+valid_output_rows        = output_rows_written for main prefill
+                           B * (min(N,W) + C) for main decode
+                           B * (min(N,W) + 5) for DSpark decode
+transaction_commits      = 0
+```
+
+BF16 values and bytes, current/window reconciliation, invalid exposed capacity,
+modulo evaluations, and session/active/cursor/prefix/version metadata are also
+reconciled. These are logical counters only, not HBM/SRAM traffic, bursts,
+banks, cache behavior, cycles, latency, bandwidth, throughput, energy, area,
+routing, or PPA. Returned payloads, retained sources, compressed snapshots,
+regions, validity sets, and counters are deeply immutable and reconstructible.
+
+The conformance suite covers both compression ratios, prefill beyond the
+window, decode before and after fill, circular wraparound, official
+`[1,128,512]` decode shape, the DSpark main/draft distinction, stale authority,
+wrong current rows, forged compressed views and counters, malformed/nonfinite
+payloads, alias resistance, forged public results, exact counters, and a
+bounded randomized physical-slot oracle. The governed source and claim boundary
+are recorded in `docs/DEEPSEEK_V4_ATTENTION_KV_VIEW_EVIDENCE.md`. This qualifies
+target reference semantics only; it does not qualify compiler/service/RTL
+execution, producer authentication, atomic inter-request compare-and-swap,
+checkpoint-derived attention, or physical performance.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension

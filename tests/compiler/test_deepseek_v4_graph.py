@@ -58,7 +58,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "60801be7ee10cee3e3b7aa61132834843230ab7358c1dccbb6722bb09f25fc20"
+        "cab1b68f0411ed5942b40aa31f3aa6ebdee19b8913ba7a3918672f63930c76d9"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 46,
@@ -68,7 +68,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 2136,
-        "pending_reference_kind_count": 4,
+        "pending_reference_kind_count": 3,
         "pending_rtl_kind_count": 46,
         "pending_service_engine_kind_count": 46,
         "unknown_kind_count": 0,
@@ -317,6 +317,9 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert counts["DSPARK_PREFILL_KV"] == 3
     assert counts["MARKOV_AUTOREGRESSIVE_LOOP"] == 1
     qualified_references = {
+        "ATTENTION_KV_VIEW": (
+            "runtime.reference.attention_kv_view.attention_kv_view_bf16"
+        ),
         "BIASED_TOPK_ROUTE": ("runtime.reference.selection.biased_topk_route_indices"),
         "BF16_LINEAR": "runtime.reference.matrix.bf16_linear_bf16",
         "BINARY32_TO_BF16": (
@@ -903,6 +906,82 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
     )
 
 
+def test_attention_kv_view_layout_and_validity_contract_are_explicit(
+    graph_contract: dict,
+) -> None:
+    nodes = [
+        node for node in graph_contract["nodes"] if node["kind"] == "ATTENTION_KV_VIEW"
+    ]
+    assert len(nodes) == 46
+    assert Counter(
+        (node["attributes"]["dspark"], node["attributes"]["compression_ratio"])
+        for node in nodes
+    ) == {
+        (False, 0): 2,
+        (False, 4): 21,
+        (False, 128): 20,
+        (True, 0): 3,
+    }
+    for node in nodes:
+        attributes = node["attributes"]
+        dspark = attributes["dspark"]
+        ratio = attributes["compression_ratio"]
+        compressed_offset = {
+            "decode": "window_size" if ratio else "not_applicable",
+            "prefill": "current_sequence_length" if ratio else "not_applicable",
+        }
+        assert attributes == {
+            "compressed_offset": compressed_offset,
+            "compression_ratio": ratio,
+            "current_source": (
+                "five_current_draft_kv_rows" if dspark else "main_current_kv"
+            ),
+            "decode_layout": (
+                "committed_main_window_capacity_then_five_current_draft_rows"
+                if dspark
+                else "committed_window_capacity_then_valid_compressed_prefix"
+            ),
+            "draft_block_size": 5 if dspark else 0,
+            "dspark": dspark,
+            "invalid_window_capacity": "exposed_but_never_selectable",
+            "kv_head_count": 1,
+            "kv_row_width": 512,
+            "output_dtype": "bf16",
+            "prefill_layout": (
+                "separate_dspark_prefill_state_write"
+                if dspark
+                else "current_full_kv_then_valid_compressed_prefix"
+            ),
+            "reference_profile": "opentallas.deepseek_v4_attention_kv_view.v1",
+            "session_identity": "per_active_batch_lowercase_sha256",
+            "validation": (
+                "session_cursor_complete_window_versions_and_five_draft_rows"
+                if dspark
+                else "session_cursor_complete_window_versions_current_write_and_compressed_prefix"
+            ),
+            "valid_rows": (
+                "explicit_physical_indices_exclude_unused_or_stale_capacity"
+            ),
+            "window_size": 128,
+        }
+        assert node["inputs"][-2:] == [
+            "request.start_pos",
+            "request.session_ids",
+        ]
+        assert node["inputs"][0].endswith(".kv_fp8_qdq.output")
+        assert node["inputs"][1].endswith(".window_kv_write.committed_window")
+        assert node["state_reads"] == node["state_writes"] == []
+        if dspark:
+            assert node["phases"] == ["decode"]
+            assert len(node["inputs"]) == 4
+        elif ratio:
+            assert node["phases"] == ["prefill", "decode"]
+            assert node["inputs"][2].endswith(".compress_kv_valid_view.output")
+        else:
+            assert node["phases"] == ["prefill", "decode"]
+            assert len(node["inputs"]) == 4
+
+
 def test_index_score_profile_and_bf16_numeric_contract_are_explicit(
     graph_contract: dict,
 ) -> None:
@@ -1065,7 +1144,7 @@ def test_layer_classes_and_mutable_state_sites_are_explicit(
         "dspark.layer00.attention_kv_view.output"
     )
     assert by_id["dspark.layer00.attention_kv_view"]["inputs"] == [
-        "dspark.layer00.main_kv_fp8_qdq.output",
+        "dspark.layer00.kv_fp8_qdq.output",
         "dspark.layer00.window_kv_write.committed_window",
         "request.start_pos",
         "request.session_ids",
@@ -1241,7 +1320,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "60801be7ee10cee3e3b7aa61132834843230ab7358c1dccbb6722bb09f25fc20"
+        "cab1b68f0411ed5942b40aa31f3aa6ebdee19b8913ba7a3918672f63930c76d9"
     )
     assert "described 2136 nodes across 46 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

@@ -38,7 +38,8 @@ router-score, compressor, confidence, grouped attention-output, and DSpark
 main-conditioning projection paths, vector operators beyond the SwiGLU
 nonlinear section, weighted and head RMS normalization,
 target-hidden capture, and HC post-mixing, attention operators
-beyond the qualified learned index scoring/top-k and sparse-attention boundary,
+beyond the qualified KV row-space composition, learned index scoring/top-k, and
+sparse-attention boundary,
 mutable attention-state operations beyond the qualified circular-window and
 compressed-KV transactions, remaining routing and nonlinear operators,
 real-checkpoint known answers, layer differentials, end-to-end logits, and task
@@ -208,6 +209,19 @@ successor/view relation, and reconcile payload plus metadata counters. This is
 a pure immutable semantic reference: it does not supply atomic service-level
 compare-and-swap, `ATTENTION_KV_VIEW` composition, HBM placement, schedules,
 cycles, RTL, or checkpoint-derived attention output.
+
+`attention_kv_view.py` implements all 46 `ATTENTION_KV_VIEW` sites. Main
+prefill retains complete current KV and appends only the valid compressed
+prefix; main decode retains physical 128-row circular capacity and appends only
+that prefix. DSpark decode instead appends the five current draft KV rows after
+the physical main window—the main-conditioning KV row updates the window but is
+not the draft suffix. Exact sessions, shared cursor, complete window versions,
+current writes, compressed-view records, row widths, and finite payloads are
+revalidated before an immutable result is returned. Explicit valid physical
+indices make unused or preserved stale capacity nonselectable. The reference
+does not construct attention indices, execute sparse-attention arithmetic,
+authenticate producers, provide service-level atomicity, or make physical or
+performance claims.
 
 `lookup.py` implements the two pinned pure-gather paths. `TOKEN_EMBED` selects
 global embedding rows while carrying BF16 as exact 16-bit encodings; this is

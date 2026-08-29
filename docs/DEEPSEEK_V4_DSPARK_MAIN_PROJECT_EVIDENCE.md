@@ -6,7 +6,7 @@
 - **Official revision:** `7872f01b1d1fe23eabc4c98b48bffcef5a386062`
 - **Reference profile:** `opentallas.deepseek_v4_dspark_main_project_bf16.v1`
 - **Independent service profile:** `opentallas.deepseek_v4_dspark_main_project_service.v1`
-- **Graph contract:** `60801be7ee10cee3e3b7aa61132834843230ab7358c1dccbb6722bb09f25fc20`
+- **Graph contract at qualification:** `60801be7ee10cee3e3b7aa61132834843230ab7358c1dccbb6722bb09f25fc20`
 
 ## Qualified boundary
 
