@@ -78,8 +78,8 @@
 ## W6 — Real end-to-end execution (the correctness spine)
 
 - [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle**, and **decode reaches a real EOS**. `TA-QW-AGENT-1` ran 112 prompt tokens to the natural stop at token 151645 after 23 tokens (`results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json`), `TA-QW-CHAT-1` ran 24 tokens (`..._ta-qw-chat-1_...`); both agree with the oracle at every position, with no legitimacy problems and all 27 admission checks passing
-- [x] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. Storage-class equivalence re-proved after every change: 18 descriptors differ, all `MEMORY_OBJECT`, all ROM→HBM, none beyond storage class
-- [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens
+- [~] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — **reported, being re-verified with persisted evidence** (the reporting run left no artifact in `results/`, so the claim below is not yet checkable in this repository) — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. Storage-class equivalence re-proved after every change: 18 descriptors differ, all `MEMORY_OBJECT`, all ROM→HBM, none beyond storage class
+- [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **no tokens yet, and two of the three remaining blockers are decisions, not bugs.** The deployment admits (996 instructions, 2,307 descriptors, work bound proved exactly) and `HYPER_CONNECT_PRE` now executes against the frozen `VECTOR.MHC` operand row. It stops at the branch reduction the ABI leaves to `REDUCTION.EXPERT_SUM`, which provably cannot carry per-token weights over a token block (**OI-28**). Behind that: the functional simulator binds no `NODE_ID`, so the mandated 32-node capability cannot execute at all (**OI-27**), and the `attention_kv_view` row space needs an extent no view can present (**OI-26**). Landed on the way: the mHC pre/post split, the axis-1 index concatenations (**OI-20**), and two contract-naming defects (**OI-29**)
 - [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
 - [~] W6.6 Checkpoint/restart exactness on all four — **Qwen-HBM proven; the other three wait on W6.2-W6.4**. `tools/run_abi3_restart_exactness.py` runs one workload three times in three separate OS processes: uninterrupted; interrupted after N tokens with the device state serialised by `runtime/sim/checkpoint.py`; and finished in a fresh process that loads only that checkpoint. `TA-QW-CHAT-1` on `torch_cpu`, 93 prompt tokens, 6 new tokens split 3+3: both runs give `[1654, 525, 2661, 1447, 12, 3070]`, with identical retired work in every transaction and identical values for all 42 architectural counters (`results/abi3/restart_exactness.json`). Fifteen guards stand between the run and the word *pass* — three distinct PIDs, one deployment digest, one implementation identity, one runtime source digest, and explicit non-emptiness and length checks, because two empty lists are not a match. Two controls make the pass mean something: erasing the KV STATE images from the checkpoint diverges at the first resumed token, and erasing everything **except** the STATE images still reproduces the sequence, so what carries the generation is the STATE resources and the cursor, not activation scratch. The source-digest guard earned itself on its first run, refusing a token-identical result because a concurrent commit changed `runtime/` between two phases
@@ -316,6 +316,178 @@
   concurrent backend work has settled. Related to [OI-17], which is the same
   lane failing for a different reason.
 
+- **OI-29 — the measured DeepSeek prefill ladder, and two defects closed off
+  it.** Because OI-28 stops the real graph at the third kernel, the rest of the
+  prefill was walked with a *diagnostic* graph in which the branch reduction is
+  replaced by a `SELECT` of stream 0 — structurally identical, numerically
+  wrong, never published — on the single-chip capability (OI-27 rules out the
+  cluster). It admits (911 instructions, 2,114 descriptors) and fails in this
+  order:
+
+  1. `numeric profile 418 names no RMSNorm contract this engine implements` —
+     **closed.** Amendment A8 gives the vector engine two RMSNorm contracts and
+     it dispatches on the one the NUMERIC descriptor names. The DeepSeek
+     exporter names its own qualified source identity,
+     `normalization_rms_norm_bf16_v1`; the arithmetic it denotes is
+     `deepseek_rmsnorm_binary32_v1`, qualified in
+     `results/abi3/numeric_contract_qualification.json`. Naming the execution
+     contract is what `EXECUTION_CONTRACT` in the HBM lowering exists for.
+     Qwen names `qwen3_rmsnorm_fp32_bf16_v1` and is untouched.
+  2. `numeric profile 456 declares epsilon 0x358637bd; the unweighted head
+     RMSNorm contract requires the BF16 encoding 0x3586` — **closed.** The
+     released *unweighted* head norm is qualified against
+     `head_rms_norm_bf16`, which takes a BF16 epsilon code because the kernel
+     adds it to a BF16 mean. The NUMERIC field is otherwise a binary32 pattern,
+     so the backend now narrows it for that one operand shape. Qwen's head norm
+     passes a gain vector, takes the weighted path, and keeps binary32.
+  3. `RoPE coefficient view 461 has last axis 1; expected cosine then sine over
+     512` — **open.** This is IR3-GAP-4, which amendment A9 resolved in the
+     schema and the DeepSeek exporter has not yet taken up: `Tensor.generator`
+     now lets a derived constant be declared, so the rotary coefficient rows can
+     fill `VECTOR.ROPE`'s `in1` instead of the position offset the exporter
+     still passes there. Qwen already declares the table this way.
+
+  The ladder was not walked past that point. Its value is the ordering: every
+  step so far has been a *naming* or *encoding* mismatch between the exporter
+  and an engine that refuses to guess, not a missing capability.
+
+- **OI-28 — `REDUCTION.EXPERT_SUM` cannot express the mHC branch reduction, and
+  that is what now blocks the DeepSeek HBM prefill.** *(Found by landing the
+  ABI's own `HYPER_CONNECT_PRE` decomposition.)* The frozen `VECTOR.MHC` row
+  gives `HYPER_CONNECT_PRE` two output views and spends them on the packed
+  `[tokens, 2, streams]` pre/post coefficient block and the
+  `[tokens, streams, streams]` combination matrix, leaving the branch input
+  `y[t,h] = sum_m pre[t,m] * x[t,m,h]` to a separate `REDUCTION.EXPERT_SUM`.
+  The exporter now says exactly that. The operator then fails, and it fails for
+  a reason no exporter can fix:
+
+  > `reduction output view 413 holds 425984 elements, expected 16384`
+
+  `EXPERT_SUM` reduces the **leading** axis of `input_view_0` and takes exactly
+  one weight per leading index (`weight_view.element_count == values_view.dims[0]`).
+  The branch weights vary per token *and* per stream. A descriptor covering a
+  512-token block would need `512 x 4` weights against 4 leading contributions,
+  and there is no view that supplies them. Four framings were checked and all
+  four fail:
+
+  | framing | why it fails |
+  |---|---|
+  | contributions `[tokens, streams, width]` | leading axis is tokens, so out must be `[streams, width]`, not `[tokens, width]` — the measured error |
+  | contributions presented stream-major `[streams, tokens, width]` | shapes agree, but `weight_view.element_count` must then be 4 and the request has `4 x tokens` weights |
+  | one descriptor per token (`bound_divisor = 1`) | A13's admission rule forbids `dim0 > bound_divisor`, so a rank-3 contributions view of `dim0 = 4` is **refused at admission**; a rank-3 view of `dim0 = 1` reduces one stream |
+  | `bound_divisor = streams` | the loop trip count becomes `ceil(span / 4)`, which is not the token count |
+
+  So this is a product decision, not a lowering bug. Two resolutions are
+  available and both cost something:
+
+  - **Apply the weight before the reduction (amendment A10).** A10 already
+    blesses this: an `EXPERT_SUM` that omits `input_view_1` declares the weight
+    was applied earlier, which is exactly what the DeepSeek MoE does. One
+    `VECTOR.SCALE` sub-case 1 with the coefficient read through a trailing
+    zero-stride axis, writing binary32, then `EXPERT_SUM` over a stream-major
+    view. It is bit-exact — the frozen reference is "four binary32 branch
+    products reduced by a balanced tree and converted once to BF16", which is
+    a binary32 product then a `PAIRWISE_TREE` sum, not a fused product-add. It
+    costs a materialised `[span, 4, 4096]` binary32 intermediate (17 GB at the
+    declared 262,144-token context, 537 MB at 8,192) and it needs a stream-major
+    contributions view, whose leading axis is then *not* the token axis, which
+    silently defeats A13 whenever `span mod block` is 1, 2 or 3.
+  - **Amend the operand row** so a weighted reduction can name its axis and take
+    one weight per reduced *element* rather than per reduced *index*. That is an
+    ABI change and therefore not ours to make.
+
+  Until one is chosen the DeepSeek HBM prefill stops at
+  `main.layer00.hc_attn_pre.branch_reduce`. Everything before it now runs:
+  `HYPER_CONNECT_PRE` executes and writes both frozen output views.
+
+- **OI-27 — no multi-node deployment can execute functionally: `NODE_ID` is
+  never bound.** The 32-node capability makes every large contraction
+  column-sharded (`shard_columns = cols // 32`), and the resulting views carry a
+  `RUNTIME_SYMBOL` term on `NODE_ID`. `runtime/driver.py` binds `SPAN_TOKENS`,
+  `POSITION_START`, `POSITION_END` and `CONTEXT_LENGTH`; `runtime/sim/device.py`
+  adds `PHASE` and `GENERATION_INDEX`. Nothing binds `NODE_ID` or `NODE_COUNT` —
+  only the verifier and the cycle model do — so the first sharded matmul traps
+  with `view 431: symbol NODE_ID is unbound`. The mandated W6.3 capability is
+  `hbm_sram_cluster_32.json`, so **W6.3 cannot produce a token until the
+  functional simulator has a node dimension**, independently of every operand
+  issue above. Binding `NODE_ID = 0` would not fix it: one device would then
+  compute 1/32 of every contraction's columns and the LINK all-gather has no
+  peer to gather from. The single-chip capability lowers the same graph
+  unsharded and does execute, which is how the ladder below was measured.
+
+- **OI-26 — the `attention_kv_view` row space needs an extent no ABI 3.0 view
+  can present, and the neutral IR states the wrong one.** *(Investigation only;
+  no change landed.)* The 43 axis-0 `CONCAT` kernels resolve to inputs
+  `(span_tokens, 512)`, `(128, 512)` and `(context_groups_ratio_R, 512)` against
+  an output declared as `(attention_rows_ratio_R, 512)` — a derived symbol with
+  no entry in the ABI's frozen registry, so no view can carry it and the backend
+  falls back to a `SPAN_TOKENS` row loop that A13 clamps to 104 rows.
+
+  **What the operand actually needs.** `docs/DEEPSEEK_V4_ATTENTION_KV_VIEW_EVIDENCE.md`
+  is explicit, and it is not one extent but two, one per phase:
+
+  ```text
+  prefill: current_kv[0:S]                   || compressed_valid_prefix[0:floor(S / R)]
+  decode:  physical_window_capacity[0:128]   || compressed_valid_prefix[0:floor((start_pos + 1) / R)]
+  ```
+
+  Prefill has **no** window segment and decode has **no** current segment. The
+  IR's single three-input `CONCAT` with one `attention_rows_*` extent is the
+  union of both layouts, which is a shape neither phase has. That is a defect in
+  the neutral IR independent of the symbol question, and it has to be fixed
+  first: the kernel should be two phase-predicated compositions, which ABI 3.0
+  already supports through instruction predicates and the `PHASE` symbol.
+
+  **What today's symbols can and cannot express**, taking the composition as
+  per-segment movements into row windows (the same idiom as OI-20's column
+  concatenation):
+
+  | quantity | expressible today? |
+  |---|---|
+  | segment offsets `S x 512` and `S x 512 + 128 x 512` | **yes** — one `RUNTIME_SYMBOL` term on `SPAN_TOKENS` plus a static element offset |
+  | the current segment's `S` rows | **yes** — a block loop on `SPAN_TOKENS`, clamped exactly by A13 |
+  | the window segment's 128 rows | **yes** — static |
+  | the compressed prefix's `floor(X / R)` rows | **no** |
+
+  The last one is the whole gap, and it is narrower than "a symbol for
+  `attention_rows_*`". A view's leading extent is a *static* field; the only
+  runtime narrowing in ABI 3.0 is A13, which clamps to `symbol - i x bound_divisor`
+  in the loop's own units. A loop bound comes closer — `bound_symbol = CONTEXT_LENGTH`,
+  `bound_divisor = R`, `step = 1` gives `trip = ceil(context_length / R)` by
+  `runtime.sim.device.loop_trip_count` — but the reference says `floor`, and
+  `ceil` copies one uncommitted group whenever `R` does not divide the context
+  (at `R = 128` and a 104-token prompt, `ceil` is 1 and `floor` is 0). No
+  `lower_bound` makes `ceil` into `floor` at every input.
+
+  **If a symbol is added, this is what it would have to mean.** Not
+  `attention_rows_*`: that is a sum of three things, two of which are already
+  expressible, and it differs per phase and per layer. What is missing is *the
+  number of committed rows of the compressed-KV stream this operand reads*.
+  Three shapes it could take, in increasing generality:
+
+  1. Two request-scoped symbols, `COMPRESSED_ROWS_RATIO_4` and
+     `COMPRESSED_ROWS_RATIO_128`, bound by the host as `floor(context_length / R)`.
+     Exact, trivial to bind — and it puts one model's two compression ratios in
+     a model-neutral registry, which is the objection.
+  2. One symbol `COMMITTED_STATE_ROWS`, meaning the committed row count of the
+     state resource the operand reads. This is the honest quantity: the count is
+     a property of the compressed-KV resource's cursor, which the STATE
+     descriptor already carries. But ABI symbols are request-scoped scalars with
+     no operand context, so this needs a resolution rule ("resolved against the
+     resource this view's object belongs to") that no other symbol has.
+  3. Generalise the extent rule instead of the registry: let a tensor view name
+     a symbol and a divisor for its leading extent, resolving as
+     `dim0 = min(dim0, floor(symbol / divisor) - i x block)`. A13 becomes the
+     special case with `divisor = 1`. Model-neutral, subsumes the case above,
+     and is a wire-format change to `TENSOR_VIEW` rather than a registry
+     addition — so it is the largest of the three and the only one that is not
+     purely additive.
+
+  Recommendation: fix the phase split in the neutral IR first, since it is
+  needed under every option and may narrow the requirement; then choose between
+  (1) and (3). This is TA-ABI3-WIRE-1 amendment territory and is left for
+  decision.
+
 - **OI-24 — a zero-source memory object committed its whole declared arena on
   activation, and the DeepSeek cluster plan declares 160.4 GiB of it.**
   `MemoryObject` built zero-sourced objects with `np.full`, which writes every
@@ -443,8 +615,20 @@
   is the only thing between that and a plausible wrong answer. Second, since all
   four inputs are the same tensor, this is a broadcast, and ABI 3.0 views carry
   per-axis strides — a zero-stride axis expresses it with no operator and no
-  data movement at all. The other 84 `CONCAT` kernels in the graph are genuine
-  axis-0 concatenations and must not be disturbed.
+  data movement at all.
+
+  **Corrected census, and half of it now closed.** The other 84 `CONCAT`
+  kernels are not all axis-0. Forty-one of them
+  (`main.layerNN.index_topk.concat`, `main.layerNN.compressed_dense_indices.concat`)
+  join along **axis 1** — 128 window indices beside 512 selected indices, or
+  beside a symbolic compressed-group width — which `REDUCTION.GROUPED_CONCAT`
+  cannot express at all, since axis 0 would join two operands of different
+  widths. These now lower as one `DMA.TRANSFER` per input into its own column
+  range of the destination row: the same `key_then_value` idiom
+  `_emit_state_append` already uses for a fused KV append, with an arena object
+  in place of a state resource, and stated in offsets rather than performed by
+  an operator. The remaining 43 are the `attention_kv_view` row-space
+  compositions, which are a different problem entirely — see OI-26.
 
 - **OI-19 — the storage-class equivalence proof is narrower than the claim
   resting on it.** `tools/prove_storage_class_equivalence.py` builds the same
