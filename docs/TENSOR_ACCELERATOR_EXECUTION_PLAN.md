@@ -3,7 +3,7 @@
 **Document status:** active working execution plan; architecture-review approval
 and gate closure remain evidence controlled
 
-**Plan version:** 2.0
+**Plan version:** 2.1
 
 **Initial issue:** 2026-08-28
 
@@ -11,7 +11,7 @@ and gate closure remain evidence controlled
 concurrent-session working trees, and the isolated `ta-integration` worktree
 
 **Reconciled implementation heads:** `main@3baf87c` and admitted accelerator
-implementation `ta-integration@324f48d`; dirty and untracked implementation
+implementation `ta-integration@c5b9578`; dirty and untracked implementation
 files in either worktree remain working state, not release evidence. Commit
 `c07331b` is the coherent connected-layer implementation handoff, and `1f4e52f`
 reconciles its evidence boundary into this plan. The connected implementation
@@ -27,11 +27,14 @@ Commit `74c0d59` subsequently closes QW-FM1 at the complete neutral-semantic
 boundary for all 617 operations and 36 state resources; Section 1.10 records
 that evidence and its exact non-physical boundary. Commit `324f48d` closes
 QW-FM2 and QW-FM3 at deterministic physical compilation and independent
-reconstruction; Section 1.11 records its exact non-execution boundary. The next
-open horizon is artifact-only execution of the retained 36-layer deployment to
-exact one-step logits and token selection.
-Connected-layer or final-output-fixture closure does not imply a complete-model,
-timing, RTL, physical, or comparison gate.
+reconstruction; Section 1.11 records its exact non-execution boundary. Commit
+`c5b9578` closes QW-FM4 for one fixed, complete, 36-layer, artifact-only
+target-precision execution; Section 1.12 records the exact result and its
+non-generation boundary. The next open Qwen horizon is a separately versioned
+dynamic request and transactional decode campaign of at least 32 greedy steps
+before the exact 8,000-token acceptance workload. QW-FM4 closure does not imply
+short generation, long-context acceptance, timing, RTL, physical
+characterization, DeepSeek execution, or a comparison gate.
 
 This integration copy is the authoritative tensor-accelerator program plan.
 The concurrent-session planning draft was reviewed as governance input; no
@@ -181,8 +184,8 @@ well short of an end-to-end accelerator claim. The baseline at this revision is:
 |---|---|---|
 | Neutral semantics | Production Model Graph IR v2 defines checkpoint bindings, runtime symbols, bounded predicates, and transactional state. Commit `74c0d59` independently proves one-to-one neutral lowering for all 617 Qwen operations, 1,053 tensors, 399 checkpoint-bound weights, and 36 transactional KV resources, including final normalization, last-row selection, vocabulary projection, and terminal atomic commit | Reconcile the complete DeepSeek ordinary graph and prove zero unknown operations and complete state coverage for that second model profile |
 | Qwen source and checkpoint | Pinned Qwen configuration/checkpoint adapter and deterministic graph identity exist | Keep the adapter semantic-only and bind the complete tokenizer, workload, and target-reference release manifests |
-| Target arithmetic | Committed ordered BF16 matrix, full-width and per-head Qwen RMSNorm, position-indexed RoPE, causal GQA/softmax, transactional-KV, exact BF16 residual-add, materialized-BF16 SiLU-multiply, last-row selection, final RMSNorm, and full vocabulary-projection contracts have independent scalar oracles and separate optimized implementations. One connected actual-checkpoint layer reproduces every declared intermediate, `hidden.1`, and committed KV state exactly under those contracts | Connect the admitted contracts to authentic `hidden.36` and complete logits, qualify every DeepSeek ordinary-path numeric family at full target dimensions, and preserve first-divergence evidence when 36 layer instances are assembled |
-| Compiler/simulator slice | Commit `324f48d` compiles and independently reconstructs all 36 Qwen layers, final normalization, selection, vocabulary projection, and terminal commit in one deterministic physical deployment; the earlier connected-layer simulator still supplies the deepest data-bearing execution evidence | Execute the retained complete deployment to exact logits and one token decision; physical compilation is not complete-model execution evidence |
+| Target arithmetic | Committed ordered BF16 matrix, full-width and per-head Qwen RMSNorm, position-indexed RoPE, causal GQA/softmax, transactional-KV, exact BF16 residual-add, materialized-BF16 SiLU-multiply, last-row selection, final RMSNorm, and full vocabulary-projection contracts have independent scalar oracles and separate optimized implementations. Commit `c5b9578` independently reproduces all 36 authentic layer boundaries, state, complete logits, and one greedy token under those contracts | Extend the same exact boundaries across dynamic Qwen decode positions and qualify every DeepSeek ordinary-path numeric family at full target dimensions |
+| Compiler/simulator slice | Commit `324f48d` compiles and independently reconstructs all 36 Qwen layers, final normalization, selection, vocabulary projection, and terminal commit in one deterministic physical deployment. Commit `c5b9578` executes its 924,386-command program artifact-only and reproduces every operation through a separately implemented target-precision path | Introduce a separately versioned dynamic request/session ABI, close at least 32 greedy decode steps, and then execute the exact 8,000-token Qwen workload; do not broaden fixed request v1 silently |
 | Qwen model-specific execution | The concurrent Qwen service path has passed deterministic deployment and an exact 8,000-token prefill plus 32-token release gate | This is reference evidence, not `TA-QWEN-4`; rerun the same workload through the common HBM/SRAM command simulator with no model-specific service fallback |
 | DeepSeek reference coverage | Graph extraction and several exact numeric, routing, lookup, indexing, structural, and selected linear paths exist | Close every ordinary target-only operator, state transition, layer class, and generation path; keep DSpark/speculation in a separate profile |
 | Physical evidence | Repository flows can support public-node exploration | Characterize the frozen accelerator at 130 nm; all current development capabilities and cycle costs remain explicitly uncharacterized |
@@ -624,7 +627,8 @@ At admission, two dependent obligations remained. The second—complete
 occurring exactly once—closed at `74c0d59`. The first remains: an independent
 physical checker and the artifact-only simulator must consume the selection
 command without sharing generator or expected-result code. The independent
-physical-checker part closed at `324f48d`; artifact-only execution remains open.
+physical-checker part closed at `324f48d`; artifact-only execution remained open
+at that boundary and subsequently closes in Section 1.12.
 Admitting the operator-family fixture, neutral semantic bundle, or physical
 deployment does not erase the QW-FM4 obligation.
 
@@ -696,17 +700,17 @@ The coverage artifact intentionally fixes `full_model_execution`,
 copy the approximately 16.38-GB immutable payload, prove SRAM liveness, emit a
 complete ABI 2.5 program, execute `hidden.36`, compute complete-model logits,
 generate a token, or advance any committed KV state. Those obligations began at
-QW-FM2; the physical parts close in Section 1.11, while QW-FM4 execution remains
-open. `TA-SEM-1` also remains open because the complete DeepSeek ordinary-path
+QW-FM2; the physical parts close in Section 1.11 and QW-FM4 execution closes in
+Section 1.12. `TA-SEM-1` remains open because the complete DeepSeek ordinary-path
 semantic and numeric union is not yet closed.
 
 ### 1.11 Closed Qwen full-model physical compilation and reconstruction
 
 Commit `ta-integration@324f48d` closes QW-FM2 and QW-FM3 at the physical-artifact
-boundary. It does not close QW-FM4 or claim that any complete-model activation,
-logit, state transition, or token has executed. The compiler consumes the one
-pinned Qwen checkpoint and the QW-FM1 semantic bundle, streams every one of the
-399 authenticated weight tensors into a deployment image, assigns every
+boundary. At that commit it did not close QW-FM4 or claim that any
+complete-model activation, logit, state transition, or token had executed. The
+compiler consumes the one pinned Qwen checkpoint and the QW-FM1 semantic bundle,
+streams all 399 authenticated weight tensors into a deployment image, assigns every
 materialized graph value to a checked SRAM lifetime, and lowers all 617 graph
 operations into one ABI 2.5 command template.
 
@@ -763,8 +767,81 @@ unavailable-source skips.
 
 The manifest fixes `full_model_execution` and `timing_or_performance` to false.
 No `hidden.36` value, final-normalization value, complete logits, selected token,
-or committed model step follows from this closure. QW-FM4 artifact-only
-execution is now the active Qwen work package.
+or committed model step follows from the physical closure alone. QW-FM4 uses
+that unchanged deployment and closes separately in Section 1.12.
+
+### 1.12 Closed Qwen full-model one-step artifact-only execution
+
+Commit `ta-integration@c5b9578` closes QW-FM4 at its deliberately narrow
+one-step functional boundary. The common simulator authenticates every one of
+the 17 HBM shards before execution, consumes only the retained deployment,
+fixed request v1, capability, and memory/device artifacts, validates every one
+of the 924,386 ABI 2.5 commands causally, and executes one complete 617-operation
+Qwen forward transaction from token ID 0 at position 0 through all 36 layers,
+complete logits, unique host greedy selection, and atomic commit of all 36 KV
+resources. It imports neither the physical compiler nor its checker, framework
+model execution, scalar oracle, expected activations, or a precomputed logit.
+
+The retained execution identities are:
+
+- deployment build ID:
+  `3460d88ce16f5ef0ca4d1277daf8ebb19ae555e88822f95d55deb4aa8cad290f`;
+- execution report ID:
+  `77b849e49608cacf9522eb16fad289385523c39618425e1e1c5f30126e504746`;
+- execution-report file SHA-256:
+  `4ddc5212edb5942f2b0d43a630da30fc7912309029cd917ce692bb6e663299f0`;
+- `hidden.36` payload SHA-256:
+  `889f2b193be2a3bc8a07d0903eb80f7f2b97046701b286bcb9780605e6e7326d`;
+- complete-logit payload SHA-256:
+  `26e85f90dd11ebdf1e74c7b64521319fa3140ef12d45fd92ec7da74aa5bc2c82`;
+  and
+- unique greedy token ID: `50994`.
+
+The run records one event for every graph operation, all 36 layer outputs, all
+36 prepared and committed state transitions, 578 saturation records with total
+zero, and exactly 70 independently reconcilable counters. It executes
+7,568,097,280 matrix multiplications and the same number of ordered
+accumulation additions. Architectural state remains private until terminal
+commit and is not published if command validation, numerical execution,
+complete-logit construction, token selection, counter reconciliation, report
+construction, or `COMPLETE` fails.
+
+A separately implemented target-precision path closes the numerical independence
+obligation. It reads and authenticates all 399 tensors from the immutable
+row-major checkpoint rather than the tiled HBM image, executes matrices in
+explicit 256-element increasing-K segments rather than the simulator's fused
+whole-K output blocks, and uses independent scalar RMSNorm, RoPE, attention,
+elementwise, selection, and transactional-state references. It stops at the
+first operation divergence and reproduces every event, layer, prepared and
+committed state, saturation value, complete logit, greedy token, and counter.
+Its retained identities are:
+
+- independent-reference report ID:
+  `9033bc2ca0d078ff1bf85a624c952f207d2d8042eb0a1bc8bd1830d9b28007fb`;
+- independent-reference file SHA-256:
+  `5ed2ab5c12998e63627ffcda33a631b98ea48d811da1d23c6e7035ce375cad80`;
+  and
+- independently derived counter-map SHA-256:
+  `71e090344eb7fd72158bb971d1db49e588fac559825496929ec6ee791eceedcd`.
+
+Two fresh simulator executions each authenticate the full HBM shard set and
+produce byte-identical 233,600-byte canonical reports. The focused
+execution/reference/schema campaign passes 21 tests. All 73 strict
+tensor-accelerator schemas validate, and the complete compiler/runtime campaign
+collects 578 tests: 569 pass and the same nine explicitly unavailable-source
+tests skip. Corrupted events, malformed or broadened fixed requests, extra
+deployment files, injected command failures, forged report identities,
+schema overclaims, overwrite attempts, and prohibited import dependencies are
+rejected.
+
+This is artifact-driven full data-bearing execution of the fixed request, not a
+metadata, trace, or timing replay. It is also not `TA-QWEN-4`: request v1 cannot
+be reused silently for changing positions or generations, no 32-step generation
+has closed, and no 8,000-token prefill has run through the common simulator.
+Qwen 8,192 remains a separate capacity boundary. Timing, RTL, 130-nm
+characterization, DeepSeek execution, and the governed ROM comparison remain
+open. The active Qwen work therefore moves to a separately versioned dynamic
+request/session contract and at least 32 ordinary greedy decode steps.
 
 ## 2. Meaning of production-grade
 
@@ -1850,23 +1927,24 @@ attention/transactional-KV, post-attention/MLP, and connected full-width layer
 horizons are complete through `ta-integration@c07331b`; plan reconciliation is
 committed through `1f4e52f`, and bounded final-output-family evidence is admitted
 at `2222f76`. Complete Qwen neutral-semantic coverage closes narrowly at
-`74c0d59`, and complete physical compilation plus reconstruction close at
-`324f48d`. Their exact evidence boundaries are recorded in Sections 1.2 through
-1.11 and below. The program is not complete: Qwen complete-model execution,
-decoding, DeepSeek semantic union, timing, RTL, physical, and comparison gates
-remain open.
+`74c0d59`, complete physical compilation plus reconstruction close at
+`324f48d`, and fixed one-step complete-model execution closes at `c5b9578`.
+Their exact evidence boundaries are recorded in Sections 1.2 through 1.12 and
+below. The program is not complete: Qwen short generation and exact 8,000-token
+execution, DeepSeek semantic union and exact 200,000-token execution, timing,
+RTL, physical, and comparison gates remain open.
 
 | Program decision surface | Current state | Consequence |
 |---|---|---|
-| Integration governance | `324f48d` is the current admitted implementation head; concurrent Qwen/DeepSeek files on `main` remain dirty or untracked | Only committed, reproduced handoffs become release evidence. Full-model simulator work remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
+| Integration governance | `c5b9578` is the current admitted implementation head; concurrent Qwen/DeepSeek files on `main` remain dirty or untracked | Only committed, reproduced handoffs become release evidence. Dynamic-decode work remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
 | Neutral graph semantics | Model Graph IR v2 and a real Qwen graph exist; committed DeepSeek references continue to accumulate | The semantic graph boundary is retained, but `TA-SEM-1` remains open until both complete ordinary graphs have zero unknown operations |
 | Neutral kernel semantics | **QW-FM1 closed at `74c0d59`.** One retained dynamic-shape neutral artifact maps all 617 Qwen operations and 36 state resources exactly once, including final output and terminal commit, and an independent checker reconstructs all source, numeric, tensor, state, and qualification bindings without backend leakage | Preserve the admitted Qwen semantic artifact through physical execution; separately close the remaining DeepSeek operation/state union before `TA-SEM-1` |
-| Target arithmetic | Connected actual-checkpoint execution matches all declared layer intermediates, `hidden.1`, and committed KV state. The authentic-weight final-output fixture matches independent references but deliberately consumes `hidden.1`, not `hidden.36` | Connect the admitted contracts to the complete 36-layer output and qualify every remaining DeepSeek contract; retain first-divergence evidence across every assembled layer |
-| Command and capability ABI | ABI 2.5 and capability V6 admit bounded indexed SRAM selection with a strict schema and preserve older minor decoding; `324f48d` independently derives the complete physical ABI 2.5 program | Execute ABI 2.5 through artifact-only simulation. Routing, remaining vector operations, synchronization, timing, 8,192-plus context support, and the final hardware capability remain open |
-| Compiler and checker | **QW-FM1 closed at `74c0d59`; QW-FM2/QW-FM3 closed at `324f48d`.** Complete Qwen neutral lowering, streamed full-model HBM layout, SRAM lifetime allocation, command lowering, and inverse reconstruction are deterministic and retained | Preserve those artifacts unchanged while implementing the separate common full-model simulator; do not relabel compilation as execution |
-| Functional simulation | **Connected-layer horizon closed at `c07331b`.** One 23,570-command deployment executes artifact-only with exact values, all 72 counters, state, and causal command dependence | Execute the complete Qwen model for one exact token decision before short-generation and long-context gates |
+| Target arithmetic | **QW-FM4 closed at `c5b9578`.** The authentic row-major checkpoint reference independently reproduces every one of the 617 execution events, all 36 layer/state boundaries, complete logits, token `50994`, 578 saturation records, and 70 counters | Preserve first-divergence evidence across dynamic Qwen positions and qualify every remaining DeepSeek ordinary-path contract |
+| Command and capability ABI | ABI 2.5 and capability V6 admit bounded indexed SRAM selection with a strict schema and preserve older minor decoding; the complete 924,386-command program executes causally | Fixed request v1 remains immutable; add a separately versioned dynamic request/session contract. Routing, remaining vector operations, synchronization, timing, 8,192-plus context support, and the final hardware capability remain open |
+| Compiler and checker | **QW-FM1 closed at `74c0d59`; QW-FM2/QW-FM3 closed at `324f48d`; QW-FM4 closed at `c5b9578`.** Complete Qwen neutral lowering, streamed full-model HBM layout, SRAM lifetime allocation, command lowering, inverse reconstruction, and one target-precision execution are deterministic and retained | Preserve those artifacts unchanged while adding dynamic prefill/decode compilation; do not relabel one fixed transaction as generation or long-context acceptance |
+| Functional simulation | **Fixed one-step QW-FM4 closed at `c5b9578`.** The common simulator authenticates all 17 HBM shards, validates and executes all commands, commits all 36 states atomically, and produces exact complete logits and one token; a separate checkpoint-layout and algorithmic path matches it exactly | Execute at least 32 ordinary greedy steps through a versioned dynamic request/session path, then prove operational readiness for the exact 8,000-token run |
 | Timing and physical evidence | No clock, latency, HBM timing, bandwidth, or energy value is qualified | No committed slice result may be used for a performance, power, or 130-nm comparison claim |
-| End-to-end execution | The common simulator has executed one complete layer but has not executed all 36 layers, produced final logits, or generated a token | `TA-QWEN-4` and `TA-DSV4-5` remain open; the Qwen-specific service result is reference evidence only |
+| End-to-end execution | One complete 36-layer fixed request produces exact final logits, token `50994`, and committed state, but no multi-step generation or long-context common-simulator run has closed | `TA-QWEN-4` and `TA-DSV4-5` remain open; QW-FM4 cannot substitute for Qwen 8,000 or DeepSeek 200,000 |
 
 ### 19.2 Closed horizon: one complete connected Qwen layer
 
@@ -1999,13 +2077,14 @@ premature hardware freeze.
 deterministic, independently reconstructable, fully causal, artifact-only,
 bit-exact at all declared boundaries, and complete in state and counter
 accounting. That closure authorized complete-model Qwen assembly without
-relabeling the layer result as `TA-QWEN-4`; QW-FM2 and QW-FM3 have since closed,
-so the active work is QW-FM4 artifact-only execution.
+relabeling the layer result as `TA-QWEN-4`; QW-FM2 and QW-FM3 subsequently
+closed at `324f48d`, and QW-FM4 subsequently closed at `c5b9578`.
 
-### 19.3 Active horizon: full Qwen artifact-only execution and one-step logits
+### 19.3 Closed horizon: full Qwen artifact-only execution and one-step logits
 
-The active outcome is one complete Qwen forward execution from an actual short
-prompt to exact final-position logits and the frozen host greedy-token decision.
+The closed outcome is one complete Qwen forward execution from a fixed actual
+token request to exact final-position logits and the frozen host greedy-token
+decision.
 The entry evidence is the connected layer at `c07331b`, final-output-family
 qualification at `2222f76`, complete neutral-semantic bundle at `74c0d59`, and
 the deterministic full-model deployment plus independent physical reconstruction
@@ -2026,14 +2105,14 @@ extension discovered during execution must be bounded, model-neutral, checked
 against the DeepSeek capability union, and pass strict backward replay before
 admission.
 
-The active horizon is organized as four dependent evidence work packages:
+The horizon was organized as four dependent evidence work packages:
 
 | Work package | Architectural outcome | Required artifact and evidence | Exit condition |
 |---|---|---|---|
 | QW-FM1 — semantic and numeric closure — **closed at `74c0d59`** | Every one of the 617 graph operations and all 36 state resources has one supported neutral lowering and one frozen numeric contract | Retained coverage ID `00dbdf8b...b106`, Kernel IR ID `270b7609...e050`, and independent check ID `280ee81a...2215`; full-dimensional final-output qualification; exact source/checkpoint/capability bindings; zero backend-specific fields | Satisfied narrowly for Qwen semantics and numerics; no physical-plan or execution claim follows |
 | QW-FM2 — deterministic full-model compilation — **closed at `324f48d`** | One deployment represents embedding, 36 distinct layers, final output, and terminal state effects on the existing hardware/ABI | Retained build ID `3460d88c...290f`, physical-plan ID `ba1d9546...09c3`, 17 content-addressed HBM shards, 18-slot SRAM plan, 924,386-command program, capacity certificate, source lock, request, and manifest | Satisfied at the physical-artifact boundary; two authentic clean builds are byte-identical and no checkpoint tree was copied |
 | QW-FM3 — independent reconstruction and adversarial closure — **closed at `324f48d`** | A separately implemented checker can prove the deployment without trusting compiler allocation, scheduling, lowering, or expected-result code | Retained independent-check ID `a2de7229...8a15`; separate graph walk, checkpoint reread, inverse HBM reconstruction, SRAM lifetime/bank proof, 36-resource transaction proof, exact command derivation, postpublication audit, and adversarial rejection | Satisfied for physical reconstruction; the checker imports neither the generator nor its RoPE-table generator and fresh audit reproduces the retained identity |
-| QW-FM4 — artifact-only one-step execution | The common simulator executes the complete model and returns exact logits, state, and one greedy token | One actual short-prompt request; per-layer first-divergence checkpoints; final-normalization and full-logit hashes; selected token; all 36 prepared and committed KV states; exact operation, command, byte, arithmetic, and state counters; two independent causal runs | Target-reference layer boundaries, final logits, token, and state match exactly; commit occurs only after successful logits; no framework, service, compiler-builder, checker, scalar-oracle, or precomputed-activation fallback is imported |
+| QW-FM4 — artifact-only one-step execution — **closed at `c5b9578`** | The common simulator executes the complete model and returns exact logits, state, and one greedy token | Retained execution report ID `77b849e4...4746`, independent-reference ID `9033bc2c...07fb`, all 617 event checkpoints, final-normalization and full-logit hashes, token `50994`, all 36 prepared and committed KV states, 70 exact counters, and two byte-identical fully hashed simulator runs | Satisfied narrowly for fixed token ID 0 at position 0; target-reference layer boundaries, complete logits, token, state, saturation, and counters match exactly, and no framework, service, compiler-builder, checker, scalar-oracle, or precomputed-activation fallback is imported |
 
 #### 19.3.1 Full-model scale envelope and construction policy
 
@@ -2079,10 +2158,10 @@ logit command cannot expose a partially advanced model state.
 #### 19.3.2 QW-FM decision sequence
 
 QW-FM1 closed at `74c0d59`. QW-FM2 and QW-FM3 closed at `324f48d`; the retained
-physical deployment and separately implemented checker now map all 617
-operations, 399 weights, and 36 state resources into exact HBM, SRAM, and ABI
-artifacts. This decision advances the active work to QW-FM4 without implying
-model execution.
+physical deployment and separately implemented checker map all 617 operations,
+399 weights, and 36 state resources into exact HBM, SRAM, and ABI artifacts.
+QW-FM4 closed at `c5b9578` with the independent data-bearing result in Section
+1.12. No earlier physical decision is retroactively relabeled as execution.
 
 Full-model construction and the independent physical checker are developed
 against the same artifact schemas but separate algorithms.
@@ -2091,20 +2170,20 @@ checker owns inverse reconstruction, graph-effect accounting, range/lifetime
 proofs, and command derivation. Their agreement admits the deployment for
 artifact-only execution; it is not replaced by generator self-validation.
 
-One-step execution then advances through diagnostic boundaries—embedding, every
+One-step execution advanced through diagnostic boundaries—embedding, every
 layer output, every prepared state, final normalization, selected row, complete
 logits, and token decision—without injecting any of those values. The first
-divergence stops promotion and remains a retained diagnostic. Only an exact
-complete one-step result authorizes the 32-step decode campaign, and only that
-campaign plus measured simulator feasibility authorizes the exact 8,000-token
-gate. The separate 8,192 boundary is run after, and is never substituted for,
-the mandatory 8,000-token workload.
+divergence would have stopped promotion and remained a retained diagnostic. The
+exact complete one-step result now authorizes the 32-step decode campaign; only
+that campaign plus measured simulator feasibility authorizes the exact
+8,000-token gate. The separate 8,192 boundary is run after, and is never
+substituted for, the mandatory 8,000-token workload.
 
-The horizon exit is narrower than `TA-QWEN-4`: it closes when QW-FM1 through
-QW-FM4 have coherent retained evidence for one exact token decision. It does not
-close short generation, the exactly 8,000-token fixture, timing, RTL, physical
-characterization, DeepSeek, or the governed comparison. After that exit, the
-release route preserves the following ordered decisions:
+The horizon exit is narrower than `TA-QWEN-4` and is satisfied at `c5b9578`:
+QW-FM1 through QW-FM4 have coherent retained evidence for one exact token
+decision. It does not close short generation, the exactly 8,000-token fixture,
+timing, RTL, physical characterization, DeepSeek, or the governed comparison.
+After that exit, the release route preserves the following ordered decisions:
 
 | Decision point | Execution scope | Evidence required to proceed |
 |---|---|---|
@@ -2120,6 +2199,13 @@ whole-model shortcut, precomputed activation injection, or timing-only replay ma
 not close correctness. If feasibility measurements show the 8,000-token
 data-bearing run is too slow, the simulator implementation is optimized and
 revalidated; the acceptance boundary is not weakened.
+
+The active Qwen work is the `Short generation` row. Request v1 remains fixed and
+must not be broadened: a new version binds changing token IDs, position spans,
+expected state generations, committed KV lengths, transaction identities, and
+prefill/decode phase transitions. At least 32 ordinary greedy decode steps or
+the frozen expected earlier EOS must reproduce target-reference logits, tokens,
+text, state, saturation, and counters before long-prefill readiness is claimed.
 
 ### 19.4 DeepSeek integration lane
 
