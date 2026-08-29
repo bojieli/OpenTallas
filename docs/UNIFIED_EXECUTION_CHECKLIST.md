@@ -293,6 +293,27 @@
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
 
+- **OI-31 — a vector set can rot into agreeing with the implementation instead
+  of checking it.** Refining A13 changed what `a13_nested_blocks` resolved to,
+  and the obvious response — re-record the golden — would have been wrong: that
+  case exists to exercise the `min()` fold of two clamping loops, and under the
+  refined rule its second loop no longer qualified, so re-recording would have
+  kept the test green while deleting what it tested. It was repaired instead, by
+  changing the loop's block *and* its stride together.
+
+  `a13_four_terms` had the identical defect and nobody had noticed. Its golden
+  would have silently become `[4, 4, 1, 1]` on the next regeneration, with its
+  docstring still describing a fold that no longer happened. It was found by
+  someone reading the case, not by any test.
+
+  The general point is worth keeping: a golden regenerated from the
+  implementation it checks is only as good as the reason the case was written,
+  and that reason lives in prose. When a rule changes, every case that depended
+  on the old rule has to be re-read, not re-recorded. The two new cases here —
+  the mHC shape and the mixed-axis view — had **no** coverage before, and the
+  mutation evidence shows it: dropping the stride condition survives cases 0
+  through 23 and dies only at case 24.
+
 - **OI-30 — commit `8841b95` carries another change's admission proofs.** A14's
   two `participant_scope` refusals were staged into my A13 clamp fix, because I
   staged `runtime/abi3/verifier.py` whole while an agent was adding to it. The
