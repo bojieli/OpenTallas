@@ -342,7 +342,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 102
+    assert len(schemas) == 108
     by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
     assert set(by_name) == {
         "attention_deployment_v1.schema.json",
@@ -408,10 +408,16 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "qwen_full_model_dynamic_session_reference_v1.schema.json",
         "qwen_full_model_dynamic_session_v1.schema.json",
         "qwen_full_model_execution_v1.schema.json",
+        "qwen_full_model_long_acceptance_execution_v1.schema.json",
+        "qwen_full_model_long_acceptance_request_v1.schema.json",
+        "qwen_full_model_long_acceptance_session_execution_v1.schema.json",
+        "qwen_full_model_long_acceptance_session_v1.schema.json",
         "qwen_full_model_physical_check_v1.schema.json",
         "qwen_full_model_physical_plan_v1.schema.json",
         "qwen_full_model_reference_v1.schema.json",
         "qwen_full_model_request_v1.schema.json",
+        "qwen_full_model_restart_differential_v1.schema.json",
+        "qwen_full_model_runtime_checkpoint_v1.schema.json",
         "qwen_full_model_semantic_check_v1.schema.json",
         "qwen_full_model_semantic_coverage_v1.schema.json",
         "qwen_full_model_source_lock_v1.schema.json",
@@ -584,6 +590,18 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
                 "session.json"
             )
         ],
+        "qwen_full_model_long_acceptance_request_v1.schema.json": [
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/"
+                "qwen3_long_acceptance_session_v1/requests/request.0000.json"
+            )
+        ],
+        "qwen_full_model_long_acceptance_session_v1.schema.json": [
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/"
+                "qwen3_long_acceptance_session_v1/session.json"
+            )
+        ],
         "qwen_full_model_physical_check_v1.schema.json": [
             load_strict_json(
                 ROOT / "results/tensor_accelerator/qwen3_full_model_physical/"
@@ -619,6 +637,12 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
                 ROOT / "results/tensor_accelerator/"
                 "qwen3_long_acceptance_physical_v1/request/execution_request.json"
             ),
+        ],
+        "qwen_full_model_restart_differential_v1.schema.json": [
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/"
+                "qwen3_long_acceptance_restart_v1/restart_differential.json"
+            )
         ],
             "qwen_full_model_semantic_check_v1.schema.json": [
                 load_strict_json(
@@ -839,6 +863,9 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "qkv_request_v1.schema.json",
         "qkv_source_lock_v1.schema.json",
         "qwen_full_model_execution_v1.schema.json",
+        "qwen_full_model_long_acceptance_execution_v1.schema.json",
+        "qwen_full_model_long_acceptance_session_execution_v1.schema.json",
+        "qwen_full_model_runtime_checkpoint_v1.schema.json",
         "rmsnorm_deployment_v1.schema.json",
         "rmsnorm_execution_v1.schema.json",
         "rmsnorm_expectations_v1.schema.json",

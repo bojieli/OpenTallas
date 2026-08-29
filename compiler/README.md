@@ -374,10 +374,23 @@ clean builds were byte-identical. The retained deployment has build ID
 `3460d88c...cad290f`, physical-plan ID `ba1d9546...5109c3`, and independent
 check ID `a2de7229...58a15a`.
 
-This closes deterministic physical compilation and independent reconstruction,
-not model execution. `hidden.36`, final logits, the selected token, repeated
-prefill/decode state updates, the exact 8,000-token workload, DeepSeek's
-attention/routing union, timing, RTL, and physical characterization remain open.
+The common full-model simulator now consumes that physical deployment and its
+compiled ABI program without importing compiler lowering. The admitted V6 path
+executes every operation and all 36 transactional K/V resources for one complete
+transaction and for a separately versioned one-token-prompt, 32-decision
+diagnostic session. V7 expands only the context-bearing bounds to 8,192 rows so
+the required 8,000-prompt-plus-32-decision chain is representable without
+changing ABI 2.5 or the operator structure.
+
+`qwen_full_model_checkpoint.py` durably persists all active V7 K/V bytes in
+content-addressed shards and binds restore to the deployment, session,
+predecessor report, token, and next step. The restart differential retains an
+actual step-1 checkpoint and proves the following full-model transaction,
+report, counters, logits, all 36 state records, and step-2 checkpoint byte-exact
+against uninterrupted execution. This closes restart correctness only. The
+exact 8,000-token workload, independent long-session replay, official/golden
+comparison, separate 8,192 resident boundary, DeepSeek's attention/routing
+union, timing, RTL, and physical characterization remain open.
 
 The artifact-only fixture and Query-A service paths verify every deployment hash
 before execution and never read their known-answer files. Their independent

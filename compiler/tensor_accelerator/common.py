@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 import re
+import tempfile
 from typing import Any, NoReturn
 
 
@@ -66,6 +68,46 @@ def canonical_json_bytes(value: Any) -> bytes:
 
 def write_canonical_json(path: Path, value: Any) -> None:
     path.write_bytes(canonical_json_bytes(value))
+
+
+def publish_bytes_atomic_no_replace(path: Path, payload: bytes) -> None:
+    """Durably publish bytes without exposing or replacing a partial artifact."""
+
+    destination = Path(path)
+    if not isinstance(payload, bytes):
+        raise TypeError("atomic publication payload must be bytes")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{destination.name}.tmp-", dir=destination.parent
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            descriptor = -1
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.link(temporary, destination, follow_symlinks=False)
+        _fsync_directory(destination.parent)
+        temporary.unlink()
+        _fsync_directory(destination.parent)
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
+        try:
+            temporary.unlink()
+        except FileNotFoundError:
+            pass
+        else:
+            _fsync_directory(destination.parent)
+
+
+def _fsync_directory(path: Path) -> None:
+    descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+    try:
+        os.fsync(descriptor)
+    finally:
+        os.close(descriptor)
 
 
 def sha256_bytes(payload: bytes) -> str:

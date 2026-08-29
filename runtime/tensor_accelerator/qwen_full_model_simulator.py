@@ -18,7 +18,6 @@ from __future__ import annotations
 from collections import Counter
 from dataclasses import asdict, dataclass
 import hashlib
-import os
 from pathlib import Path, PurePosixPath
 import struct
 from typing import Any, Mapping, Sequence
@@ -31,6 +30,7 @@ from compiler.tensor_accelerator.common import (
     canonical_json_bytes,
     exact_keys,
     load_strict_json,
+    publish_bytes_atomic_no_replace,
     require_sha256,
     sha256_bytes,
     sha256_file,
@@ -80,6 +80,11 @@ from .elementwise import (
 )
 from .rmsnorm import RMSNormKernelError, rms_norm_bf16
 from .rope import RoPEKernelError, rope_bf16
+from .qwen_full_model_checkpoint import (
+    QwenFullModelCheckpointError,
+    load_runtime_checkpoint,
+    publish_runtime_checkpoint,
+)
 
 
 MANIFEST_SCHEMA = "opentallas.tensor_accelerator.qwen_full_model_deployment.v1"
@@ -96,8 +101,23 @@ DYNAMIC_REQUEST_SCHEMA = (
 DYNAMIC_EXECUTION_SCHEMA = (
     "opentallas.tensor_accelerator.qwen_full_model_dynamic_execution.v1"
 )
+LONG_ACCEPTANCE_SESSION_SCHEMA = (
+    "opentallas.tensor_accelerator.qwen_full_model_long_acceptance_session.v1"
+)
+LONG_ACCEPTANCE_REQUEST_SCHEMA = (
+    "opentallas.tensor_accelerator.qwen_full_model_long_acceptance_request.v1"
+)
+LONG_ACCEPTANCE_EXECUTION_SCHEMA = (
+    "opentallas.tensor_accelerator.qwen_full_model_long_acceptance_execution.v1"
+)
 DYNAMIC_SESSION_VERSION = "tensor-accelerator-qwen-dynamic-session-0.2.0"
 DYNAMIC_REQUEST_VERSION = "tensor-accelerator-qwen-dynamic-request-0.1.0"
+LONG_ACCEPTANCE_SESSION_VERSION = (
+    "tensor-accelerator-qwen-long-acceptance-session-0.1.0"
+)
+LONG_ACCEPTANCE_REQUEST_VERSION = (
+    "tensor-accelerator-qwen-long-acceptance-request-0.1.0"
+)
 SIMULATOR_VERSION = "tensor-accelerator-qwen-full-model-simulator-0.1.0"
 
 MANIFEST_PATH = "deployment_manifest.json"
@@ -133,6 +153,30 @@ TILE_BYTES = N_TILE * K_TILE * BF16_BYTES
 EMBEDDING_ROW_BYTES = HIDDEN_WIDTH * BF16_BYTES
 KV_TOKEN_BYTES = KEY_VALUE_HEADS * HEAD_DIM * BF16_BYTES
 EXPECTED_COMMAND_COUNT = 924386
+LONG_ACCEPTANCE_CONTEXT_CAPACITY = 8192
+LONG_ACCEPTANCE_PROMPT_TOKENS = 8000
+LONG_ACCEPTANCE_PROMPT_TOKEN_ID = 151643
+LONG_ACCEPTANCE_GENERATED_TOKENS = 32
+LONG_ACCEPTANCE_TRANSACTIONS = 8031
+LONG_ACCEPTANCE_FIXTURE_COMMIT = "3a985ffcecfd17fb8642cdef819c22e16d8e9f4c"
+LONG_ACCEPTANCE_FIXTURE_SHA256 = (
+    "124fad68b395250caf87e1ee37e7914d87ba9b23fc85fc23ef1cce92a9e11f84"
+)
+LONG_ACCEPTANCE_RELEASE_SHA256 = (
+    "257263925d380047546b51c3211404d00882e5873a269e7b8356ea1c907c6b59"
+)
+LONG_ACCEPTANCE_WORKLOAD_ID = (
+    "340ec91558350b2e52259bcf9dedd919bd6022473a7ad24318afd99f1e55183e"
+)
+LONG_ACCEPTANCE_RELEASE_REPORT_ID = (
+    "a79d454e73d3566c9d6f9a44d87eb5c1d14470bc3cadbdf79beb8c2529738267"
+)
+LONG_ACCEPTANCE_PROMPT_SHA256 = (
+    "8dcbc057d9f4bb2657755ffc4419dae1189837343c093964ed329ad95e43d461"
+)
+LONG_ACCEPTANCE_PREFILL_LOGITS_SHA256 = (
+    "d7a3fd7b6e94a82ed503c489998173c88f05d368cb259a46461169ea4d69d1e8"
+)
 
 STATE_MAGIC = b"OTTAKV23"
 TRANSACTION_MAGIC = b"OTTATX23"
@@ -932,6 +976,191 @@ class QwenFullModelSimulator:
         require_sha256(tokenizer["sha256"], "dynamic session tokenizer SHA-256")
         return value
 
+    def _validate_long_acceptance_session(
+        self, raw: Mapping[str, Any]
+    ) -> dict[str, Any]:
+        value = dict(raw)
+        exact_keys(
+            value,
+            {
+                "build_id",
+                "capability_id",
+                "checkpoint_lock_id",
+                "claim_boundary",
+                "command_program_sha256",
+                "context_capacity",
+                "generation",
+                "graph_id",
+                "hbm_logical_sha256",
+                "kernel_ir_id",
+                "model_id",
+                "official_prefill_golden",
+                "physical_plan_id",
+                "prompt",
+                "schema",
+                "session_id",
+                "session_version",
+                "tokenizer",
+                "workload_fixture",
+            },
+            set(),
+            "long acceptance session",
+        )
+        _identity(value, "session_id", "long acceptance session")
+        prompt = value.get("prompt")
+        generation = value.get("generation")
+        tokenizer = value.get("tokenizer")
+        fixture = value.get("workload_fixture")
+        golden = value.get("official_prefill_golden")
+        if not all(
+            isinstance(record, dict)
+            for record in (prompt, generation, tokenizer, fixture, golden)
+        ):
+            raise QwenFullModelSimulationError(
+                "long acceptance nested records must be objects"
+            )
+        assert isinstance(prompt, dict)
+        assert isinstance(generation, dict)
+        assert isinstance(tokenizer, dict)
+        assert isinstance(fixture, dict)
+        assert isinstance(golden, dict)
+        exact_keys(
+            prompt,
+            {"encoding", "token_count", "token_id", "token_ids_sha256"},
+            set(),
+            "long acceptance prompt",
+        )
+        exact_keys(
+            generation,
+            {
+                "eos_token_ids",
+                "generated_token_limit",
+                "selection",
+                "unexpected_early_eos",
+            },
+            set(),
+            "long acceptance generation",
+        )
+        exact_keys(
+            tokenizer,
+            {
+                "explicit_vocabulary_size",
+                "library",
+                "library_version",
+                "model_vocabulary_size",
+                "path",
+                "prompt_source",
+                "sha256",
+            },
+            set(),
+            "long acceptance tokenizer",
+        )
+        exact_keys(
+            fixture,
+            {
+                "commit",
+                "file_sha256",
+                "file_size_bytes",
+                "git_blob",
+                "git_tree",
+                "long_context_release_report_id",
+                "path",
+                "release_file_sha256",
+                "release_file_size_bytes",
+                "release_git_blob",
+                "release_path",
+                "schema",
+                "workload_id",
+            },
+            set(),
+            "long acceptance workload fixture",
+        )
+        tokenizer_records = [
+            record
+            for record in self._checkpoint_lock.get("files", [])
+            if record.get("path") == "tokenizer.json"
+        ]
+        expected_fixture = {
+            "commit": LONG_ACCEPTANCE_FIXTURE_COMMIT,
+            "file_sha256": LONG_ACCEPTANCE_FIXTURE_SHA256,
+            "file_size_bytes": 4_768,
+            "git_blob": "ddb325754b103ce04aa9e09a0aa5f529c9d43878",
+            "git_tree": "71613b6eb97390884b8c409d11b05d85b6f19a79",
+            "long_context_release_report_id": LONG_ACCEPTANCE_RELEASE_REPORT_ID,
+            "path": "testdata/compiler/qwen3_8b/workload_manifest.json",
+            "release_file_sha256": LONG_ACCEPTANCE_RELEASE_SHA256,
+            "release_file_size_bytes": 185_656,
+            "release_git_blob": "f3464f2f77abab75cfae074ff647e3c44ab8f72e",
+            "release_path": "results/compiler/qwen3-8b/release_gate.json",
+            "schema": "opentallas.qwen3.workload_manifest.v1",
+            "workload_id": LONG_ACCEPTANCE_WORKLOAD_ID,
+        }
+        if (
+            self._context_capacity != LONG_ACCEPTANCE_CONTEXT_CAPACITY
+            or value.get("schema") != LONG_ACCEPTANCE_SESSION_SCHEMA
+            or value.get("session_version") != LONG_ACCEPTANCE_SESSION_VERSION
+            or value.get("model_id") != MODEL_ID
+            or value.get("graph_id") != self._model.graph_id
+            or value.get("build_id") != self._manifest["build_id"]
+            or value.get("capability_id") != self._capability.capability_id
+            or value.get("checkpoint_lock_id")
+            != self._source_lock["checkpoint_lock_id"]
+            or value.get("command_program_sha256")
+            != self._plan["command_program"]["sha256"]
+            or value.get("context_capacity") != self._context_capacity
+            or value.get("hbm_logical_sha256")
+            != self._plan["hbm"]["image"]["logical_sha256"]
+            or value.get("kernel_ir_id") != self._manifest["kernel_ir_id"]
+            or value.get("physical_plan_id") != self._plan["physical_plan_id"]
+            or value.get("claim_boundary")
+            != {
+                "exact_8000_token_acceptance": True,
+                "separate_8192_resident_boundary": False,
+                "timing_or_performance": False,
+            }
+            or prompt
+            != {
+                "encoding": "repeated_token_id_v1",
+                "token_count": LONG_ACCEPTANCE_PROMPT_TOKENS,
+                "token_id": LONG_ACCEPTANCE_PROMPT_TOKEN_ID,
+                "token_ids_sha256": LONG_ACCEPTANCE_PROMPT_SHA256,
+            }
+            or generation
+            != {
+                "eos_token_ids": [151_645, 151_643],
+                "generated_token_limit": LONG_ACCEPTANCE_GENERATED_TOKENS,
+                "selection": "greedy_lowest_token_id_argmax",
+                "unexpected_early_eos": "fail",
+            }
+            or len(tokenizer_records) != 1
+            or tokenizer
+            != {
+                "explicit_vocabulary_size": 151_669,
+                "library": "tokenizers",
+                "library_version": "0.22.2",
+                "model_vocabulary_size": VOCABULARY_SIZE,
+                "path": "tokenizer.json",
+                "prompt_source": (
+                    "authenticated_token_id_fixture_no_retokenization"
+                ),
+                "sha256": tokenizer_records[0].get("sha256"),
+            }
+            or fixture != expected_fixture
+            or golden
+            != {
+                "comparison_status": "pending_common_simulator_execution",
+                "greedy_token_id": 33_975,
+                "logits_sha256": LONG_ACCEPTANCE_PREFILL_LOGITS_SHA256,
+                "release_report_id": LONG_ACCEPTANCE_RELEASE_REPORT_ID,
+            }
+            or LONG_ACCEPTANCE_TRANSACTIONS > self._context_capacity
+        ):
+            raise QwenFullModelSimulationError(
+                "long acceptance session boundary differs"
+            )
+        require_sha256(tokenizer["sha256"], "long acceptance tokenizer SHA-256")
+        return value
+
     def begin_dynamic_session(self, session_path: Path) -> dict[str, Any]:
         """Bind one immutable tokenizer/workload session to the loaded machine."""
 
@@ -954,6 +1183,113 @@ class QwenFullModelSimulator:
         self._dynamic_session = value
         self._execution_mode = "dynamic_v1"
         return dict(value)
+
+    def begin_long_acceptance_session(self, session_path: Path) -> dict[str, Any]:
+        """Bind the exact token-ID fixture to the V7 8,192-row deployment."""
+
+        if self._closed:
+            raise QwenFullModelSimulationError("simulator is closed")
+        if self._execution_mode is not None or self._dynamic_session is not None:
+            raise QwenFullModelSimulationError(
+                "simulator already has an execution mode or dynamic session"
+            )
+        if (
+            self.state_generations != (0,) * STATE_COUNT
+            or self.state_lengths != (0,) * STATE_COUNT
+        ):
+            raise QwenFullModelSimulationError(
+                "long acceptance session must begin from empty committed state"
+            )
+        value = self._validate_long_acceptance_session(
+            _canonical(Path(session_path), "long acceptance session")
+        )
+        self._dynamic_session = value
+        self._execution_mode = "long_acceptance_v1"
+        return dict(value)
+
+    def _long_checkpoint_bindings(self) -> dict[str, str]:
+        session = self._dynamic_session
+        if session is None or self._execution_mode != "long_acceptance_v1":
+            raise QwenFullModelSimulationError(
+                "no long acceptance session is active"
+            )
+        return {
+            "build_id": self._manifest["build_id"],
+            "capability_id": self._capability.capability_id,
+            "checkpoint_lock_id": self._source_lock["checkpoint_lock_id"],
+            "command_program_sha256": self._plan["command_program"]["sha256"],
+            "graph_id": self._model.graph_id,
+            "hbm_logical_sha256": self._plan["hbm"]["image"]["logical_sha256"],
+            "kernel_ir_id": self._manifest["kernel_ir_id"],
+            "physical_plan_id": self._plan["physical_plan_id"],
+            "session_id": session["session_id"],
+        }
+
+    def checkpoint_long_acceptance(self, output: Path) -> dict[str, Any]:
+        """Atomically persist all committed long-session KV bytes."""
+
+        self._long_checkpoint_bindings()
+        if self._dynamic_previous_report_id is None or self._dynamic_previous_token is None:
+            raise QwenFullModelSimulationError(
+                "long acceptance checkpoint requires one completed transaction"
+            )
+        lengths = self.state_lengths
+        generations = self.state_generations
+        if len(set(lengths)) != 1 or generations != lengths:
+            raise QwenFullModelSimulationError(
+                "long acceptance checkpoint state is not synchronized"
+            )
+        next_step = lengths[0]
+        if not 1 <= next_step <= LONG_ACCEPTANCE_TRANSACTIONS:
+            raise QwenFullModelSimulationError(
+                "long acceptance checkpoint next step differs"
+            )
+        try:
+            return publish_runtime_checkpoint(
+                output=Path(output),
+                bindings=self._long_checkpoint_bindings(),
+                next_step_index=next_step,
+                previous_report_id=self._dynamic_previous_report_id,
+                previous_greedy_token_id=self._dynamic_previous_token,
+                states=self._states,
+            )
+        except QwenFullModelCheckpointError as exc:
+            raise QwenFullModelSimulationError(
+                f"cannot publish long acceptance checkpoint: {exc}"
+            ) from exc
+
+    def restore_long_acceptance(self, checkpoint_root: Path) -> dict[str, Any]:
+        """Restore an authenticated checkpoint into the already-bound session."""
+
+        self._long_checkpoint_bindings()
+        if (
+            self.state_generations != (0,) * STATE_COUNT
+            or self.state_lengths != (0,) * STATE_COUNT
+            or self._dynamic_previous_report_id is not None
+            or self._dynamic_previous_token is not None
+        ):
+            raise QwenFullModelSimulationError(
+                "long acceptance restore requires a newly bound empty session"
+            )
+        try:
+            manifest, states = load_runtime_checkpoint(
+                Path(checkpoint_root),
+                expected_bindings=self._long_checkpoint_bindings(),
+            )
+        except QwenFullModelCheckpointError as exc:
+            raise QwenFullModelSimulationError(
+                f"cannot restore long acceptance checkpoint: {exc}"
+            ) from exc
+        next_step = manifest["next_step_index"]
+        if next_step >= LONG_ACCEPTANCE_TRANSACTIONS:
+            raise QwenFullModelSimulationError(
+                "completed long acceptance checkpoint cannot be resumed"
+            )
+        self._states = states
+        self._dynamic_previous_report_id = manifest["previous_report_id"]
+        self._dynamic_previous_token = manifest["previous_greedy_token_id"]
+        self._dynamic_complete = False
+        return manifest
 
     def _validate_dynamic_request(self, raw: Mapping[str, Any]) -> dict[str, Any]:
         session = self._dynamic_session
@@ -1048,6 +1384,116 @@ class QwenFullModelSimulator:
             or value.get("transaction_id") != _dynamic_transaction_id(value)
         ):
             raise QwenFullModelSimulationError("dynamic request chain boundary differs")
+        return value
+
+    def _validate_long_acceptance_request(
+        self, raw: Mapping[str, Any]
+    ) -> dict[str, Any]:
+        session = self._dynamic_session
+        if session is None or self._execution_mode != "long_acceptance_v1":
+            raise QwenFullModelSimulationError(
+                "no long acceptance session is active"
+            )
+        if self._dynamic_complete:
+            raise QwenFullModelSimulationError(
+                "long acceptance session is already complete"
+            )
+        value = dict(raw)
+        exact_keys(
+            value,
+            {
+                "build_id",
+                "command_program_sha256",
+                "expected_generations",
+                "expected_lengths",
+                "generated_token_index",
+                "graph_id",
+                "input_role",
+                "last_row_index",
+                "output_role",
+                "phase",
+                "position_end",
+                "position_start",
+                "previous_report_id",
+                "request_id",
+                "request_version",
+                "schema",
+                "session_id",
+                "span_tokens",
+                "step_index",
+                "token_id",
+                "transaction_id",
+            },
+            set(),
+            "long acceptance request",
+        )
+        _identity(value, "request_id", "long acceptance request")
+        current_generations = list(self.state_generations)
+        current_lengths = list(self.state_lengths)
+        if len(set(current_generations)) != 1 or len(set(current_lengths)) != 1:
+            raise QwenFullModelSimulationError(
+                "long acceptance state resources are not synchronized"
+            )
+        step = current_lengths[0]
+        if (
+            current_generations[0] != step
+            or not 0 <= step < LONG_ACCEPTANCE_TRANSACTIONS
+        ):
+            raise QwenFullModelSimulationError(
+                "long acceptance state generation or length differs"
+            )
+        prompt_input = step < LONG_ACCEPTANCE_PROMPT_TOKENS
+        generated_index = (
+            None
+            if step < LONG_ACCEPTANCE_PROMPT_TOKENS - 1
+            else step - LONG_ACCEPTANCE_PROMPT_TOKENS + 1
+        )
+        if (
+            generated_index is not None
+            and generated_index >= LONG_ACCEPTANCE_GENERATED_TOKENS
+        ):
+            raise QwenFullModelSimulationError(
+                "long acceptance request exceeds the generated-token limit"
+            )
+        expected_token = (
+            LONG_ACCEPTANCE_PROMPT_TOKEN_ID
+            if prompt_input
+            else self._dynamic_previous_token
+        )
+        if expected_token is None:
+            raise QwenFullModelSimulationError(
+                "long generated input has no preceding greedy token"
+            )
+        expected_output = (
+            "prefill_intermediate" if generated_index is None else "generated_token"
+        )
+        if (
+            value.get("schema") != LONG_ACCEPTANCE_REQUEST_SCHEMA
+            or value.get("request_version") != LONG_ACCEPTANCE_REQUEST_VERSION
+            or value.get("session_id") != session["session_id"]
+            or value.get("build_id") != self._manifest["build_id"]
+            or value.get("graph_id") != self._model.graph_id
+            or value.get("command_program_sha256")
+            != self._plan["command_program"]["sha256"]
+            or value.get("previous_report_id") != self._dynamic_previous_report_id
+            or value.get("step_index") != step
+            or value.get("token_id") != expected_token
+            or value.get("position_start") != step
+            or value.get("position_end") != step + 1
+            or value.get("span_tokens") != 1
+            or value.get("last_row_index") != 0
+            or value.get("phase") != ("prefill" if prompt_input else "decode")
+            or value.get("input_role")
+            != ("prompt" if prompt_input else "generated")
+            or value.get("output_role") != expected_output
+            or value.get("generated_token_index") != generated_index
+            or value.get("expected_generations") != current_generations
+            or value.get("expected_lengths") != current_lengths
+            or value.get("transaction_id") != _dynamic_transaction_id(value)
+        ):
+            raise QwenFullModelSimulationError(
+                "long acceptance request chain boundary differs"
+            )
         return value
 
     def _state_metadata_payload(self, states: Mapping[str, KVSnapshot]) -> bytes:
@@ -1361,7 +1807,9 @@ class QwenFullModelSimulator:
         else:
             raw_request = _canonical(Path(request_path), "execution request")
         request = self._validate_request(raw_request)
-        report = self._execute_transaction(request, dynamic=False)
+        report = self._execute_transaction(
+            request, dynamic=False, long_acceptance=False
+        )
         self._execution_mode = "fixed_v1"
         return report
 
@@ -1378,7 +1826,9 @@ class QwenFullModelSimulator:
         request = self._validate_dynamic_request(
             _canonical(Path(request_path), "dynamic request")
         )
-        report = self._execute_transaction(request, dynamic=True)
+        report = self._execute_transaction(
+            request, dynamic=True, long_acceptance=False
+        )
         self._dynamic_previous_report_id = report["report_id"]
         self._dynamic_previous_token = report["outputs"]["committed_logits"][
             "greedy_token_id"
@@ -1392,8 +1842,36 @@ class QwenFullModelSimulator:
             self._dynamic_complete = True
         return report
 
+    def execute_long_acceptance(self, request_path: Path) -> dict[str, Any]:
+        """Execute the next exact 8,000+32 acceptance transaction."""
+
+        if self._closed:
+            raise QwenFullModelSimulationError("simulator is closed")
+        if not self._hbm_hashes_verified:
+            raise QwenFullModelSimulationError(
+                "full data-bearing execution requires SHA-256 verification of every "
+                "HBM shard"
+            )
+        request = self._validate_long_acceptance_request(
+            _canonical(Path(request_path), "long acceptance request")
+        )
+        report = self._execute_transaction(
+            request, dynamic=True, long_acceptance=True
+        )
+        self._dynamic_previous_report_id = report["report_id"]
+        self._dynamic_previous_token = report["outputs"]["committed_logits"][
+            "greedy_token_id"
+        ]
+        if request["step_index"] + 1 == LONG_ACCEPTANCE_TRANSACTIONS:
+            self._dynamic_complete = True
+        return report
+
     def _execute_transaction(
-        self, request: Mapping[str, Any], *, dynamic: bool
+        self,
+        request: Mapping[str, Any],
+        *,
+        dynamic: bool,
+        long_acceptance: bool,
     ) -> dict[str, Any]:
         """Execute one already-admitted transaction and publish state atomically."""
 
@@ -2194,6 +2672,16 @@ class QwenFullModelSimulator:
         }
         if dynamic:
             metadata_after_payload = self._state_metadata_payload(staged_states)
+            dynamic_schema = (
+                LONG_ACCEPTANCE_EXECUTION_SCHEMA
+                if long_acceptance
+                else DYNAMIC_EXECUTION_SCHEMA
+            )
+            dynamic_mode = (
+                "artifact_only_data_bearing_long_acceptance_transaction"
+                if long_acceptance
+                else "artifact_only_data_bearing_dynamic_transaction"
+            )
             body.update(
                 {
                     "claim_boundary": {
@@ -2201,7 +2689,11 @@ class QwenFullModelSimulator:
                         "exact_8000_token_acceptance": False,
                         "generated_token_decision": request["output_role"]
                         == "generated_token",
-                        "session_generation_complete": False,
+                        "session_generation_complete": bool(
+                            long_acceptance
+                            and request["step_index"] + 1
+                            == LONG_ACCEPTANCE_TRANSACTIONS
+                        ),
                         "timing_or_performance": False,
                     },
                     "input": {
@@ -2213,7 +2705,7 @@ class QwenFullModelSimulator:
                         "position_start": request["position_start"],
                         "token_id": request["token_id"],
                     },
-                    "mode": "artifact_only_data_bearing_dynamic_transaction",
+                    "mode": dynamic_mode,
                     "previous_report_id": request["previous_report_id"],
                     "runtime_binding": {
                         "request_registers_sha256": _payload_sha256(
@@ -2232,7 +2724,7 @@ class QwenFullModelSimulator:
                         ),
                         "transaction_descriptors_size_bytes": len(descriptor_payload),
                     },
-                    "schema": DYNAMIC_EXECUTION_SCHEMA,
+                    "schema": dynamic_schema,
                     "session_id": request["session_id"],
                     "state_before": {
                         "generations": list(self.state_generations),
@@ -2279,14 +2771,16 @@ def publish_qwen_full_model_execution_report(
         raise QwenFullModelSimulationError("execution report boundary differs")
     _identity(value, "report_id", "execution report")
     path = Path(output)
-    if path.exists():
-        raise QwenFullModelSimulationError(f"execution report already exists: {path}")
-    path.parent.mkdir(parents=True, exist_ok=True)
-    payload = canonical_json_bytes(value)
-    with path.open("xb") as handle:
-        handle.write(payload)
-        handle.flush()
-        os.fsync(handle.fileno())
+    try:
+        publish_bytes_atomic_no_replace(path, canonical_json_bytes(value))
+    except FileExistsError as exc:
+        raise QwenFullModelSimulationError(
+            f"execution report already exists: {path}"
+        ) from exc
+    except OSError as exc:
+        raise QwenFullModelSimulationError(
+            f"cannot publish execution report: {exc}"
+        ) from exc
 
 
 def publish_qwen_full_model_dynamic_execution_report(
@@ -2326,16 +2820,70 @@ def publish_qwen_full_model_dynamic_execution_report(
         raise QwenFullModelSimulationError("dynamic execution report boundary differs")
     _identity(value, "report_id", "dynamic execution report")
     path = Path(output)
-    if path.exists():
+    try:
+        publish_bytes_atomic_no_replace(path, canonical_json_bytes(value))
+    except FileExistsError as exc:
         raise QwenFullModelSimulationError(
             f"dynamic execution report already exists: {path}"
+        ) from exc
+    except OSError as exc:
+        raise QwenFullModelSimulationError(
+            f"cannot publish dynamic execution report: {exc}"
+        ) from exc
+
+
+def publish_qwen_full_model_long_acceptance_execution_report(
+    report: Mapping[str, Any], output: Path
+) -> None:
+    """Publish one canonical long-acceptance transaction without overwrite."""
+
+    value = dict(report)
+    input_record = value.get("input")
+    step = value.get("step_index")
+    if (
+        value.get("schema") != LONG_ACCEPTANCE_EXECUTION_SCHEMA
+        or value.get("status") != "pass"
+        or value.get("mode")
+        != "artifact_only_data_bearing_long_acceptance_transaction"
+        or not isinstance(input_record, dict)
+        or isinstance(step, bool)
+        or not isinstance(step, int)
+        or not 0 <= step < LONG_ACCEPTANCE_TRANSACTIONS
+        or value.get("artifact_admission")
+        != {
+            "all_hbm_shards_sha256_verified": True,
+            "non_hbm_manifest_artifacts_sha256_verified": True,
+        }
+        or value.get("claim_boundary")
+        != {
+            "complete_model_one_token_execution": True,
+            "exact_8000_token_acceptance": False,
+            "generated_token_decision": input_record.get("output_role")
+            == "generated_token",
+            "session_generation_complete": step + 1
+            == LONG_ACCEPTANCE_TRANSACTIONS,
+            "timing_or_performance": False,
+        }
+        or value.get("command_count") != EXPECTED_COMMAND_COUNT
+        or value.get("operation_count") != OPERATION_COUNT
+        or value.get("timing")
+        != {"reason": "capability_uncharacterized", "status": "unavailable"}
+    ):
+        raise QwenFullModelSimulationError(
+            "long acceptance execution report boundary differs"
         )
-    path.parent.mkdir(parents=True, exist_ok=True)
-    payload = canonical_json_bytes(value)
-    with path.open("xb") as handle:
-        handle.write(payload)
-        handle.flush()
-        os.fsync(handle.fileno())
+    _identity(value, "report_id", "long acceptance execution report")
+    path = Path(output)
+    try:
+        publish_bytes_atomic_no_replace(path, canonical_json_bytes(value))
+    except FileExistsError as exc:
+        raise QwenFullModelSimulationError(
+            f"long acceptance execution report already exists: {path}"
+        ) from exc
+    except OSError as exc:
+        raise QwenFullModelSimulationError(
+            f"cannot publish long acceptance execution report: {exc}"
+        ) from exc
 
 
 __all__ = [
@@ -2343,9 +2891,13 @@ __all__ = [
     "DYNAMIC_REQUEST_SCHEMA",
     "DYNAMIC_SESSION_SCHEMA",
     "EXECUTION_SCHEMA",
+    "LONG_ACCEPTANCE_EXECUTION_SCHEMA",
+    "LONG_ACCEPTANCE_REQUEST_SCHEMA",
+    "LONG_ACCEPTANCE_SESSION_SCHEMA",
     "QwenFullModelSimulationError",
     "QwenFullModelSimulator",
     "SIMULATOR_VERSION",
     "publish_qwen_full_model_dynamic_execution_report",
     "publish_qwen_full_model_execution_report",
+    "publish_qwen_full_model_long_acceptance_execution_report",
 ]

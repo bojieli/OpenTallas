@@ -3,7 +3,7 @@
 **Document status:** active working execution plan; architecture-review approval
 and gate closure remain evidence controlled
 
-**Plan version:** 2.7
+**Plan version:** 2.8
 
 **Initial issue:** 2026-08-28
 
@@ -11,7 +11,7 @@ and gate closure remain evidence controlled
 concurrent-session working trees, and the isolated `ta-integration` worktree
 
 **Reconciled implementation heads:** `main@3baf87c` and admitted accelerator
-implementation `ta-integration@720cb2a`; dirty and untracked implementation
+implementation `ta-integration@a9bb0e7`; dirty and untracked implementation
 files in either worktree remain working state, not release evidence. Commit
 `c07331b` is the coherent connected-layer implementation handoff, and `1f4e52f`
 reconciles its evidence boundary into this plan. The connected implementation
@@ -35,18 +35,26 @@ one-token-prompt, 32-generated-decision target-precision diagnostic session;
 Section 1.25 records its arithmetic repair, causal evidence, and exact
 non-acceptance boundary. The first production-command RTL admission campaign
 is recorded in Section 1.13, with subsequent bounded RTL evidence through
-Section 1.24. The next functional horizon is authenticated checkpoint/restart
-and operational readiness for the exact 8,000-token acceptance workload,
-together with the official release/golden comparison. Short diagnostic closure
-does not imply long-context acceptance, timing, RTL, physical
+Section 1.24. Section 1.27 subsequently closes authenticated checkpoint/restart
+at a two-transaction boundary. The open Qwen horizon is growing-position
+operational readiness and the exact 8,000-token acceptance workload, together
+with the official release/golden comparison. Short diagnostic closure does not
+imply long-context acceptance, timing, RTL, physical
 characterization, DeepSeek execution, or a comparison gate.
 
 The separately versioned 8,192-row long-acceptance graph, V7 capability,
 complete neutral Kernel IR, physical HBM/SRAM deployment, and independent
 physical reconstruction are now retained with the exact identities in Section
-1.14. This closes representational and physical capacity for the required 8,031
+1.26. This closes representational and physical capacity for the required 8,031
 committed-row chain. It does not execute that chain, close the separate Qwen
 8,192 resident-context boundary, or change any admitted V6 artifact.
+
+The separately versioned restart tranche in Section 1.27 now closes byte-exact
+checkpoint/restart after one authentic V7 transaction and proves the following
+transaction identical to an uninterrupted comparator. This is operational
+readiness evidence for two transactions only. It does not execute or admit the
+8,000-token prompt, establish long-position scaling, or close independent
+reference, timing, RTL, physical, DeepSeek, or comparison gates.
 
 This integration copy is the authoritative tensor-accelerator program plan.
 The concurrent-session planning draft was reviewed as governance input; no
@@ -969,9 +977,11 @@ one-token prompt and 32 generated decisions. It does not establish the exact
 8,000-token resident-prompt workload, Qwen 8,192 capacity, official/golden
 release equivalence, acceptable natural-language quality, timing, cycles,
 bandwidth, RTL, 130-nm characterization, DeepSeek execution, or the governed
-ROM comparison. The next Qwen work is authenticated checkpoint/restart and
-measured long-prefill readiness, followed by the exact 8,000-token prompt plus
-at least 32 generated tokens and a separately governed official/golden check.
+ROM comparison. At that closure the next Qwen work was authenticated
+checkpoint/restart and measured long-prefill readiness. Section 1.15 now closes
+the first item; growing-position readiness, the exact 8,000-token prompt plus
+at least 32 generated tokens, and a separately governed official/golden check
+remain open.
 
 ### 1.13 Initial Qwen production-command RTL admission and its boundary
 
@@ -1609,10 +1619,92 @@ content-addressed manifest or independent byte verification.
 This closes physical representability for row 8,031, rejects capacities above
 row 8,192, and proves that both execution implementations can load and execute
 the V7 artifacts. It does not prove a resident 8,192-token execution, execute
-the 8,000-token acceptance prompt, qualify checkpoint/restart, produce
+the 8,000-token acceptance prompt, produce
 acceptance tokens or text, establish official/golden quality, or make timing,
-RTL, 130-nm, DeepSeek, or ROM-comparison claims. The active path is now
-authenticated checkpoint/restart and the exact long session.
+RTL, 130-nm, DeepSeek, or ROM-comparison claims. Section 1.15 subsequently
+qualifies checkpoint/restart at steps 1 and 2; the exact long session remains
+open.
+
+### 1.27 Closed Qwen authenticated checkpoint/restart differential
+
+The current restart tranche closes the first operational prerequisite for the
+exact long campaign without broadening the acceptance claim. Runtime checkpoint
+v1 writes every active byte of all 36 K/V resources into 256-MiB-bounded,
+content-addressed shards. Its manifest binds the V7 deployment build, graph,
+capability, neutral Kernel IR, physical plan, ABI command program, logical HBM
+image, checkpoint lock, long-session identity, predecessor report, predecessor
+greedy token, and next step. It records and verifies per-plane, per-shard, and
+whole-image SHA-256 identities. Publication fsyncs each file and directory and
+atomically installs the completed directory; restore rejects extra files,
+symbolic links, path escape, missing bytes, hash drift, binding drift, stale
+predecessors, and completed-session checkpoints.
+
+The long runner publishes requests and reports with atomic no-replace semantics,
+fsyncs the containing directory, admits at most one request without its report
+at a crash boundary, and reconstructs that report by deterministic replay. It
+audits the durable prefix through the checkpoint predecessor, replays any
+complete reports newer than the selected checkpoint and requires byte equality,
+retains the newest two checkpoints, and removes only narrowly named hidden
+staging artifacts owned by the runner. A final checkpoint at step 8,031 is
+recognized as a completed snapshot and is never passed to the resumable restore
+API. The aggregate is reconstructed lazily so the eventual approximately
+1.9-GiB report set need not be held in memory at once.
+
+An authentic interrupted/restored campaign executed V7 step 0 in one process,
+published checkpoint step 1, then loaded the deployment in a fresh process,
+authenticated and restored that checkpoint, and executed step 1. A separate
+fresh process executed steps 0 and 1 uninterrupted. Both paths consumed token
+ID `151643` at positions 0 and 1 and produced greedy token `33975` for both
+transactions. This repeated early-position token is not the governed
+8,000-token-prefill result and is not used to claim official-golden agreement.
+
+The retained restart identities are:
+
+- restart differential ID:
+  `bec7ab6d95be3e4b539ba0d8542b4aafcf5c331ec1aeab74e6fbf6f778c92c55`;
+- restart-differential file SHA-256:
+  `01fb0d3717035bad911621083dae4896c85b8a6f872d42f050eb56da56948ab4`;
+- runner SHA-256:
+  `299eca4caa281ca28020e38036fd544e83d88a71b4428b77d75b3fc879d1060e`;
+- step-0 report ID:
+  `9a7ca4398cf8ba6d98fc19ba6bccee1078382e5fd73af6a85bfce8752a7bf143`;
+- step-1 report ID:
+  `5ed72f16506ae287e96b6f672e65e50e5bb9d5421294caadcc22b7c2c418df57`;
+- restart checkpoint ID:
+  `20cfc61600b1b86b58e9aa677f17f195df4fdecba4e20a4d5db660dc4bb5e4b2`;
+- restart state-image SHA-256:
+  `fd6c50ddbe171c9242f995e3df1bebc3bbafe13321ccf5aef4060e376f4d6218`;
+- post-transaction checkpoint ID:
+  `12bd2c932062e4bb38d855618a5febd381c0f06b3ff430767148e019d2c9afe3`;
+  and
+- post-transaction state-image SHA-256:
+  `3a323f2f4465b4e2ca3e4d8cb006166145e84ee8a1c55cc39e99040f9351b584`.
+
+The differential authenticates and retains both canonical requests, both
+complete 617-operation/924,386-command reports, the actual step-1 restart
+checkpoint, and the step-2 final checkpoint. Interrupted/restored and
+uninterrupted requests, reports, complete logits records, greedy tokens, all 70
+command/numeric counters, runtime bindings, all 36 state records, and every
+byte of the final checkpoint tree are identical. The evidence builder rereads
+and hashes every checkpoint shard, reconstructs every immutable K/V snapshot,
+binds every checkpoint plane hash to its predecessor report, and atomically
+publishes the retained evidence only after all comparisons pass.
+
+The bounded operational observations were 38.24 seconds wall time and 689,440
+KiB peak RSS for step 0 plus checkpoint, 38.20 seconds and 690,168 KiB for a
+fresh-process restore plus step 1 and checkpoint, and 61.81 seconds and 699,420
+KiB for the two-step uninterrupted comparator. These are host-process readiness
+observations from GNU `time`, not characterized accelerator latency or
+performance evidence; the retained differential correctly keeps
+`timing_or_performance: false`. They establish that restart works at the
+smallest authentic boundary, not that cost at position 8,000 is acceptable.
+
+This closure removes checkpoint correctness and basic runner durability as
+blockers to a long campaign. The next gate is measured growing-position
+readiness, including report-volume and checkpoint-cost controls, followed by the
+exact 8,031-transaction common-simulator run. Independent long-session replay
+and the governed official/golden comparison remain mandatory before
+`TA-QWEN-4`; the separate resident-8,192 boundary remains later and distinct.
 
 ## 2. Meaning of production-grade
 
@@ -2761,16 +2853,16 @@ RTL, physical, and comparison gates remain open.
 
 | Program decision surface | Current state | Consequence |
 |---|---|---|
-| Integration governance | `720cb2a` is the current admitted implementation head; concurrent Qwen/DeepSeek files on `main` remain dirty or untracked | Only committed, reproduced handoffs become release evidence. Long-context work remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
+| Integration governance | `a9bb0e7` is the current admitted implementation head; the separately retained restart tranche in Section 1.15 is the next coherent commit candidate; concurrent Qwen/DeepSeek files on `main` remain dirty or untracked | Only committed, reproduced handoffs become release evidence. Long-context work remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
 | Neutral graph semantics | Model Graph IR v2 and a real Qwen graph exist; committed DeepSeek references continue to accumulate | The semantic graph boundary is retained, but `TA-SEM-1` remains open until both complete ordinary graphs have zero unknown operations |
 | Neutral kernel semantics | **QW-FM1 closed at `74c0d59`.** One retained dynamic-shape neutral artifact maps all 617 Qwen operations and 36 state resources exactly once, including final output and terminal commit, and an independent checker reconstructs all source, numeric, tensor, state, and qualification bindings without backend leakage | Preserve the admitted Qwen semantic artifact through physical execution; separately close the remaining DeepSeek operation/state union before `TA-SEM-1` |
 | Target arithmetic | **Dynamic target-precision diagnostic closed at `720cb2a`.** The row-major checkpoint reference independently reproduces 32 complete transactions, all 19,744 operation events, 1,152 layer boundaries, complete logits/ties/tokens, zero saturation, and 2,240 counter comparisons; the first failed softmax campaign is preserved and the corrected target is adversarially covered | Preserve first-divergence evidence and qualify the official/golden comparison plus every remaining DeepSeek ordinary-path contract |
-| Command and capability ABI | ABI 2.5 capability V7 and the separately versioned long graph/Kernel IR/physical deployment admit 8,192 KV/RoPE rows and the complete 924,386-command program without resynthesis; V6 remains immutable; the common simulator and independent reference execute one complete V7 position-zero transaction | Add authenticated checkpoint/restart and operational controls for the 8,000-token workload. DeepSeek routing, remaining vector operations, synchronization, timing, 8,192 resident execution, and the final hardware capability remain open |
-| Compiler and checker | **QW-FM1 through QW-FM4 remain closed; dynamic diagnostic closed at `720cb2a`; long physical capacity closed in Section 1.14.** Forward and inverse V7 planners agree on the complete graph, HBM/SRAM layout, 399 checkpoint weights, 36 expanded state resources, and command program | Preserve V6 and V7 artifacts while adding runtime/reference admission, checkpoint/restart, and the exact 8,000-token acceptance manifest; do not relabel allocation as execution |
-| Functional simulation | **32-decision diagnostic closed at `720cb2a`.** The common simulator executes every full-model transaction, carries and atomically commits all 36 KV resources to generation/length 32, and is byte-identical across two clean campaigns; the independent path matches every declared boundary | Prove checkpoint/restart and measured operational readiness, then execute the exact 8,000-token resident prompt plus at least 32 generated tokens and compare with the governed official/golden result |
+| Command and capability ABI | ABI 2.5 capability V7 and the separately versioned long graph/Kernel IR/physical deployment admit 8,192 KV/RoPE rows and the complete 924,386-command program without resynthesis; V6 remains immutable; authenticated checkpoint/restart is byte-exact across two authentic transactions | Measure growing-position cost and complete the 8,000-token workload. DeepSeek routing, remaining vector operations, synchronization, timing, 8,192 resident execution, and the final hardware capability remain open |
+| Compiler and checker | **QW-FM1 through QW-FM4 remain closed; dynamic diagnostic closed at `720cb2a`; long physical capacity and restart close in Sections 1.26 and 1.27.** Forward and inverse V7 planners agree on the complete graph, HBM/SRAM layout, 399 checkpoint weights, 36 expanded state resources, and command program | Preserve V6 and V7 artifacts while adding independent long-session checking and the final official/golden comparison; do not relabel two restart transactions as acceptance execution |
+| Functional simulation | **32-decision diagnostic closed at `720cb2a`; V7 checkpoint/restart differential closed in Section 1.27.** The common simulator carries and atomically commits all 36 KV resources; the interrupted/restored step following checkpoint 1 is byte-identical to uninterrupted execution, including full reports and the step-2 checkpoint | Measure representative growing positions, optimize without changing arithmetic ordering, then execute the exact 8,000-token resident prompt plus at least 32 generated tokens and compare with the governed official/golden result |
 | RTL correlation | QW-RTL-CMD-001 admits all production records; QW-RTL-DMA-RMS-001 executes adjacent commands 1 and 2 and completes `node.0001`; QW-RTL-DMA-MATMUL-001 retains focused first-block arithmetic/fail-stop evidence; QW-RTL-Q-PROJ-001 executes all commands 3 through 2,050 and all 4,096 BF16 values of `node.0002`; QW-RTL-KV-PROJ-001 executes all commands 2,051 through 3,074 and all 2,048 BF16 values of `node.0003` and `node.0004`; **QW-RTL-HEAD-RMS-001 executes commands 3,075 through 3,078 and all 5,120 BF16 values of per-head RMSNorm operations `node.0005` and `node.0006` in Icarus and Verilator, matching independent scalar outputs, exact counters, zero saturation, complete-operation atomic writeback, and fail-stop behavior** | Q, K, and V projections plus Q/K per-head RMSNorm are closed at the RTL/software-correlation boundary. Add indexed coefficient DMA and RoPE to close QKV preparation, then KV prepare, attention, state and vector kernels, program authentication, banking/ECC/arbitration, and a representative complete layer before `TA-RTL-6` |
 | Timing and physical evidence | Bounded macro-free ADD-SRAM RTL-to-GDS feasibility passes on pinned public IHP SG13G2 at a 20 ns target: campaign `0af6cbe8...b316` has positive extracted setup/hold slack at slow, typical, and fast corners, zero internal route/antenna violations, 18,101 post-route cells, and no unconstrained endpoints | This is one control/compute slice with an external behavioral SRAM. Formal equivalence, SRAM macro, activity-derived power/IR, thermal, foundry DRC/LVS, HBM/package, complete-layer timing, performance per watt, reliability, yield, and silicon remain open; `TA-PHY-7` is not closed |
-| End-to-end execution | A one-token-prompt, 32-generated-decision target-precision session is independently exact, but it is diagnostic: it neither uses the exact 8,000-token prompt nor establishes official/golden release quality | `TA-QWEN-4` and `TA-DSV4-5` remain open; the short diagnostic cannot substitute for Qwen 8,000 or DeepSeek 200,000 |
+| End-to-end execution | A one-token-prompt, 32-generated-decision target-precision session is independently exact, and the V7 long path has two authentic byte-exact restart-qualified transactions; neither uses the exact 8,000-token prompt | `TA-QWEN-4` and `TA-DSV4-5` remain open; short or two-step evidence cannot substitute for Qwen 8,000 or DeepSeek 200,000 |
 
 ### 19.2 Closed horizon: one complete connected Qwen layer
 
@@ -3017,7 +3109,7 @@ comparison open. The release route preserves the following ordered decisions:
 |---|---|---|
 | Full model, one step | Short actual prompt, full prefill, one generated-token decision | Every layer/state checkpoint matches; no payload or operation is unassigned; final logits and selected token are exact |
 | Short target-precision diagnostic — **closed at `720cb2a`** | One-token prompt plus exactly 32 generated decisions | All 32 full-model transactions, logits/ties/tokens, KV generations, decoded text, saturation, and counters match the independent target-precision reference; this does not establish official release quality |
-| Long prefill readiness | Representative growing contexts plus checkpoint/restart | Simulator wall-clock and host-memory measurements show the data-bearing run is operationally feasible without changing architectural ordering or results |
+| Long prefill readiness — checkpoint correctness closed in Section 1.15; growing-position scaling open | Representative growing contexts plus authenticated checkpoint/restart | Simulator wall-clock, host-memory, report-volume, and checkpoint-cost measurements show the data-bearing run is operationally feasible without changing architectural ordering or results |
 | Mandatory Qwen gate | Exactly 8,000 resident prompt tokens followed by the frozen decode length | Common-simulator artifact-only execution matches exact target logits, state, token IDs, and text and reconciles all operations, bytes, stalls, cycles, and state |
 | Capacity boundary | Separate 8,192-token fixture | Correct capacity and boundary behavior is reported separately and never substituted for the 8,000-token acceptance fixture |
 
@@ -3028,13 +3120,15 @@ not close correctness. If feasibility measurements show the 8,000-token
 data-bearing run is too slow, the simulator implementation is optimized and
 revalidated; the acceptance boundary is not weakened.
 
-The active Qwen work is the `Long prefill readiness` row plus the governed
-official/golden acceptance definition. Fixed request v1 remains immutable; the
-dynamic version now binds changing token IDs, position spans, expected state
-generations, committed KV lengths, transaction identities, and prefill/decode
-phase transitions. Checkpoint/restart must authenticate and reproduce this
-state chain before it is used to make the exact 8,000-token campaign
-operationally feasible.
+The active Qwen work is the remaining growing-position portion of `Long prefill
+readiness` plus the governed official/golden acceptance definition. Fixed
+request v1 remains immutable; long-acceptance request/session v1 separately
+binds changing token IDs, position spans, expected state generations, committed
+KV lengths, transaction identities, and prefill/decode phase transitions.
+Section 1.15 proves checkpoint/restart authentication and reproduction at steps
+1 and 2. Representative later positions must still demonstrate feasible
+attention, report, and checkpoint scaling before the exact 8,000-token campaign
+is treated as operationally ready.
 
 ### 19.4 DeepSeek integration lane
 
