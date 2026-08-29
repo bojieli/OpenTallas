@@ -38,7 +38,7 @@ static-waiver source; the campaign fails an unowned, ambiguous, stale, or expire
 entry.
 
 QW-RTL-CMD-001 is retained as campaign
-`43af672ea8fc7a43407ec38afb4424c6f3450ff47dddbce0f2777d190b4b6a2a`.
+`a058f6ce18a22a8d43625a4013f892e74464135d03406512b24fa190309277a5`.
 Icarus and Verilator both admit one authentic record for each of the 12
 production opcodes and reject seven directed corruptions. The vectors bind to
 the 924,386-command Qwen program with SHA-256
@@ -50,7 +50,7 @@ layer, correlate architectural counters, establish timing, or close
 QW-RTL-ADD-001 is retained as vector set
 `e625aabe70b198319b76f8928d0b99ffe88d6d9e846eb8e0ddaeb3ba72eb7413`
 and campaign
-`3bd4ae49139f8a400638d4cb2e5d1a68511d496187c67a89a7056fb4cdb1fefa`.
+`c6cd95aec4f868f24f7738126a5f293db1b5d81cb481cb04eb7f00dfa790bd9d`.
 It executes all 4,096 operand pairs from authentic layer-0 operation
 `node.0011`, command index 5,131, and checks the exact
 `layer.0.post_attention` payload SHA-256
@@ -64,7 +64,7 @@ not instantiate or exercise a memory macro, execute a complete Qwen layer,
 establish timing or performance, or close `TA-RTL-6`.
 
 QW-RTL-ADD-SRAM-001 is retained as campaign
-`fbf88795280e4b59b7909ca2dd9fa6bd3b1c23771ac5fab9a696c39d38425ad9`.
+`7e96454558f15a9c992d5f04a3478d20b656107fdc576e2e4f3b22f4dc8c7b59`.
 The same authentic vector set executes through a single ordered read channel
 and a backpressured write channel in Icarus and Verilator. Each replay checks
 8,192 exact 16-bit read transactions, 4,096 exact write transactions, all
@@ -78,7 +78,7 @@ No cycle, timing, performance, complete-layer, or `TA-RTL-6` claim follows.
 QW-RTL-DMA-001 is retained as vector set
 `98806ae5e1b8f3dbe1e516084b099a5f592f98acf6adb74edb0198d82ae10216`
 and campaign
-`17658f09d7863d451a113bc5620a9fa0862fb4de60a11d1dafa89b33d9587e34`.
+`033c073ff5c3cfede3d95364a857ff7ebb23d2c39c6d7d8e483c7df20f55b17d`.
 It executes authentic command index 1 and moves the exact 8,192-byte layer-0
 input-normalization weight payload from HBM address 1,244,659,712 to SRAM
 address 2,097,152. Icarus and Verilator each check 128 ordered 64-byte HBM

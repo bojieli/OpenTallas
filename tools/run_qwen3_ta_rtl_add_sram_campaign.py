@@ -206,8 +206,8 @@ module tb_qwen_ta_add_sram;
             write_stalls <= 0;
         end else begin
             cycles <= cycles + 1;
-            read_ready <= (cycles % 5) != 1;
-            write_ready <= (cycles % 7) != 3;
+            read_ready <= cycles[0];
+            write_ready <= !cycles[0];
 
             if (read_valid && !read_ready)
                 read_stalls <= read_stalls + 1;
@@ -449,8 +449,8 @@ int main(int argc, char** argv) {{
     uint32_t cycles = 0;
 
     while (!dut.done_valid) {{
-        const bool read_ready = (cycles % 5U) != 1U;
-        const bool write_ready = (cycles % 7U) != 3U;
+        const bool read_ready = (cycles & 1U) != 0U;
+        const bool write_ready = (cycles & 1U) == 0U;
         dut.sram_read_ready = read_ready;
         dut.sram_write_ready = write_ready;
         dut.sram_response_valid = response_valid;

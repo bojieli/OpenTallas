@@ -1,9 +1,11 @@
 `timescale 1ns/1ps
 // Registered admission boundary for the production tensor-accelerator command
 // ABI.  The 64-byte record layout, reflected IEEE CRC32, opcode/minor mapping,
-// engine mapping, and field legality mirror production_command.py.  This block
-// intentionally decodes one record at a time; stream-level header/body CRC and
-// terminal-COMPLETE ordering remain command-processor responsibilities.
+// engine mapping, and field legality mirror production_command.py.  CRC is
+// evaluated over four bytes per cycle instead of placing all 480 recurrence
+// steps between an input pad and an output register.  This block intentionally
+// decodes one record at a time; stream-level header/body CRC and terminal-
+// COMPLETE ordering remain command-processor responsibilities.
 module ot_ta_command_decoder (
     input  wire         clk,
     input  wire         rst_n,
@@ -59,20 +61,32 @@ module ot_ta_command_decoder (
     localparam [7:0] ENGINE_STATE   = 8'd4;
     localparam [31:0] NO_KERNEL = 32'hffff_ffff;
 
-    wire [7:0]  opcode      = command_record[7:0];
-    wire [7:0]  engine      = command_record[15:8];
-    wire [15:0] flags       = command_record[31:16];
-    wire [31:0] index       = command_record[63:32];
-    wire [31:0] kernel      = command_record[95:64];
-    wire [63:0] source0     = command_record[159:96];
-    wire [63:0] source1     = command_record[223:160];
-    wire [63:0] destination = command_record[287:224];
-    wire [63:0] auxiliary   = command_record[351:288];
-    wire [31:0] size0       = command_record[383:352];
-    wire [31:0] size1       = command_record[415:384];
-    wire [31:0] size2       = command_record[447:416];
-    wire [31:0] size3       = command_record[479:448];
-    wire [31:0] supplied_crc = command_record[511:480];
+    localparam [3:0] CRC_WORDS = 4'd15;
+
+    reg busy;
+    reg [3:0] crc_word_index;
+    reg [31:0] crc_state;
+    reg [511:0] record_buffer;
+    reg [15:0] abi_major_buffer;
+    reg [15:0] abi_minor_buffer;
+    reg [31:0] expected_index_buffer;
+
+    wire [7:0]  opcode       = record_buffer[7:0];
+    wire [7:0]  engine       = record_buffer[15:8];
+    wire [15:0] flags        = record_buffer[31:16];
+    wire [31:0] index        = record_buffer[63:32];
+    wire [31:0] kernel       = record_buffer[95:64];
+    wire [63:0] source0      = record_buffer[159:96];
+    wire [63:0] source1      = record_buffer[223:160];
+    wire [63:0] destination  = record_buffer[287:224];
+    wire [63:0] auxiliary    = record_buffer[351:288];
+    wire [31:0] size0        = record_buffer[383:352];
+    wire [31:0] size1        = record_buffer[415:384];
+    wire [31:0] size2        = record_buffer[447:416];
+    wire [31:0] size3        = record_buffer[479:448];
+    wire [31:0] supplied_crc = record_buffer[511:480];
+    wire [31:0] crc_payload_word =
+        record_buffer[crc_word_index * 32 +: 32];
 
     reg [7:0] expected_engine;
     reg [15:0] minimum_minor;
@@ -80,25 +94,26 @@ module ot_ta_command_decoder (
     reg fields_legal;
     reg [3:0] error_comb;
 
-    function automatic [31:0] crc32_ieee;
-        input [479:0] payload;
-        integer byte_index;
+    function automatic [31:0] crc32_ieee_word;
+        input [31:0] crc_in;
+        input [31:0] payload_word;
         integer bit_index;
         reg [31:0] crc;
         reg feedback;
         begin
-            crc = 32'hffff_ffff;
-            for (byte_index = 0; byte_index < 60; byte_index = byte_index + 1) begin
-                for (bit_index = 0; bit_index < 8; bit_index = bit_index + 1) begin
-                    feedback = crc[0] ^ payload[byte_index*8 + bit_index];
-                    crc = crc >> 1;
-                    if (feedback)
-                        crc = crc ^ 32'hedb8_8320;
-                end
+            crc = crc_in;
+            for (bit_index = 0; bit_index < 32; bit_index = bit_index + 1) begin
+                feedback = crc[0] ^ payload_word[bit_index];
+                crc = crc >> 1;
+                if (feedback)
+                    crc = crc ^ 32'hedb8_8320;
             end
-            crc32_ieee = ~crc;
+            crc32_ieee_word = crc;
         end
     endfunction
+
+    wire [31:0] crc_word_next =
+        crc32_ieee_word(crc_state, crc_payload_word);
 
     always @* begin
         opcode_known = 1'b1;
@@ -203,27 +218,33 @@ module ot_ta_command_decoder (
     end
 
     always @* begin
-        if (crc32_ieee(command_record[479:0]) != supplied_crc)
-            error_comb = ERR_CRC;
-        else if (!opcode_known)
+        if (!opcode_known)
             error_comb = ERR_OPCODE;
         else if (engine != expected_engine)
             error_comb = ERR_ENGINE;
-        else if ((abi_major != 16'd2) || (abi_minor > 16'd5) ||
-                 (abi_minor < minimum_minor))
+        else if ((abi_major_buffer != 16'd2) ||
+                 (abi_minor_buffer > 16'd5) ||
+                 (abi_minor_buffer < minimum_minor))
             error_comb = ERR_ABI;
         else if (!fields_legal)
             error_comb = ERR_FIELD;
-        else if (index != expected_index)
+        else if (index != expected_index_buffer)
             error_comb = ERR_INDEX;
         else
             error_comb = ERR_NONE;
     end
 
-    assign in_ready = !out_valid || out_ready;
+    assign in_ready = !busy && (!out_valid || out_ready);
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
+            busy <= 1'b0;
+            crc_word_index <= 0;
+            crc_state <= 32'hffff_ffff;
+            record_buffer <= 0;
+            abi_major_buffer <= 0;
+            abi_minor_buffer <= 0;
+            expected_index_buffer <= 0;
             out_valid <= 1'b0;
             out_legal <= 1'b0;
             out_error <= ERR_NONE;
@@ -240,24 +261,46 @@ module ot_ta_command_decoder (
             out_size1 <= 0;
             out_size2 <= 0;
             out_size3 <= 0;
-        end else if (in_ready) begin
-            out_valid <= in_valid;
-            if (in_valid) begin
-                out_legal <= (error_comb == ERR_NONE);
-                out_error <= error_comb;
-                out_opcode <= opcode;
-                out_engine <= engine;
-                out_flags <= flags;
-                out_index <= index;
-                out_kernel_index <= kernel;
-                out_source0 <= source0;
-                out_source1 <= source1;
-                out_destination <= destination;
-                out_auxiliary <= auxiliary;
-                out_size0 <= size0;
-                out_size1 <= size1;
-                out_size2 <= size2;
-                out_size3 <= size3;
+        end else begin
+            if (out_valid && out_ready)
+                out_valid <= 1'b0;
+
+            if (in_valid && in_ready) begin
+                busy <= 1'b1;
+                crc_word_index <= 0;
+                crc_state <= 32'hffff_ffff;
+                record_buffer <= command_record;
+                abi_major_buffer <= abi_major;
+                abi_minor_buffer <= abi_minor;
+                expected_index_buffer <= expected_index;
+            end else if (busy) begin
+                if (crc_word_index == CRC_WORDS - 1'b1) begin
+                    busy <= 1'b0;
+                    out_valid <= 1'b1;
+                    if ((~crc_word_next) != supplied_crc) begin
+                        out_legal <= 1'b0;
+                        out_error <= ERR_CRC;
+                    end else begin
+                        out_legal <= (error_comb == ERR_NONE);
+                        out_error <= error_comb;
+                    end
+                    out_opcode <= opcode;
+                    out_engine <= engine;
+                    out_flags <= flags;
+                    out_index <= index;
+                    out_kernel_index <= kernel;
+                    out_source0 <= source0;
+                    out_source1 <= source1;
+                    out_destination <= destination;
+                    out_auxiliary <= auxiliary;
+                    out_size0 <= size0;
+                    out_size1 <= size1;
+                    out_size2 <= size2;
+                    out_size3 <= size3;
+                end else begin
+                    crc_state <= crc_word_next;
+                    crc_word_index <= crc_word_index + 1'b1;
+                end
             end
         end
     end

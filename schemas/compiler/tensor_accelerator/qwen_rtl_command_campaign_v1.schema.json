@@ -10,6 +10,8 @@
     "cases",
     "claim_boundary",
     "command_program_sha256",
+    "decoder_crc_bytes_per_cycle",
+    "decoder_crc_latency_cycles",
     "execution_report_id",
     "negative_vector_count",
     "positive_vector_count",
@@ -62,6 +64,8 @@
       }
     },
     "command_program_sha256": {"$ref": "#/$defs/sha256"},
+    "decoder_crc_bytes_per_cycle": {"const": 4},
+    "decoder_crc_latency_cycles": {"const": 15},
     "execution_report_id": {"$ref": "#/$defs/sha256"},
     "negative_vector_count": {"const": 7},
     "positive_vector_count": {"const": 12},

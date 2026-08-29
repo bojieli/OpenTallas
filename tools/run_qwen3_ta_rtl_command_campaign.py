@@ -147,6 +147,7 @@ module tb_ta_command_decoder;
     wire [31:0] out_size2;
     wire [31:0] out_size3;
     integer checks = 0;
+    integer wait_cycles;
 
     always #5 clk = ~clk;
 
@@ -193,7 +194,14 @@ module tb_ta_command_decoder;
             in_valid = 1'b1;
             @(negedge clk);
             in_valid = 1'b0;
+            wait_cycles = 0;
+            while (!out_valid && wait_cycles < 20) begin
+                @(negedge clk);
+                wait_cycles = wait_cycles + 1;
+            end
             if (!out_valid) $fatal(1, "%0s: decoder produced no result", name);
+            if (wait_cycles != 15)
+                $fatal(1, "%0s: decoder latency %0d != 15", name, wait_cycles);
             if (out_error !== expected_error_value)
                 $fatal(1, "%0s: error %0d != %0d", name, out_error, expected_error_value);
             if (out_legal !== (expected_error_value == 0))
@@ -345,7 +353,17 @@ void check(Vot_ta_command_decoder& dut, const Vector& vector) {{
     require_equal(vector, "in_ready", dut.in_ready, 1);
 
     rise(dut);
+    fall(dut);
+    dut.in_valid = 0;
+    dut.eval();
+    unsigned wait_cycles = 0;
+    while (!dut.out_valid && wait_cycles < 20) {{
+        rise(dut);
+        fall(dut);
+        ++wait_cycles;
+    }}
     require_equal(vector, "out_valid", dut.out_valid, 1);
+    require_equal(vector, "decoder_latency_cycles", wait_cycles, 15);
     require_equal(vector, "out_legal", dut.out_legal, vector.error == 0);
     require_equal(vector, "out_error", dut.out_error, vector.error);
     require_equal(vector, "out_opcode", dut.out_opcode, vector.opcode);
@@ -361,7 +379,6 @@ void check(Vot_ta_command_decoder& dut, const Vector& vector) {{
     require_equal(vector, "out_size1", dut.out_size1, vector.size1);
     require_equal(vector, "out_size2", dut.out_size2, vector.size2);
     require_equal(vector, "out_size3", dut.out_size3, vector.size3);
-    fall(dut);
 }}
 
 }}  // namespace
@@ -523,6 +540,8 @@ def run(vectors_path: Path) -> dict[str, Any]:
             "timing_or_performance": False,
         },
         "command_program_sha256": vectors["command_program_sha256"],
+        "decoder_crc_bytes_per_cycle": 4,
+        "decoder_crc_latency_cycles": 15,
         "execution_report_id": vectors["execution_report_id"],
         "negative_vector_count": len(vectors["negative_vectors"]),
         "positive_vector_count": len(vectors["vectors"]),

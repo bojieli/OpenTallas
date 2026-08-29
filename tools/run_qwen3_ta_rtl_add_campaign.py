@@ -518,7 +518,7 @@ int main(int argc, char** argv) {{
     eval_low(dut);
     tick(dut);
     dut.cmd_valid = 0;
-    for (unsigned wait = 0; !dut.operand_ready && wait < 8; ++wait) tick(dut);
+    for (unsigned wait = 0; !dut.operand_ready && wait < 20; ++wait) tick(dut);
     require(dut.operand_ready, "executor did not enter active state");
 
     uint32_t sent = 0;
@@ -578,7 +578,7 @@ int main(int argc, char** argv) {{
         eval_low(dut);
         tick(dut);
         dut.cmd_valid = 0;
-        for (unsigned wait = 0; !dut.operand_ready && wait < 8; ++wait) tick(dut);
+        for (unsigned wait = 0; !dut.operand_ready && wait < 20; ++wait) tick(dut);
         require(dut.operand_ready, "fault executor did not enter active state");
         dut.operand_left = left_code;
         dut.operand_right = right_code;
