@@ -1925,6 +1925,13 @@ def _bind_state_tensors(
     tensor no kernel ever binds is not an error: it is a materialised view, and
     it is placed in an activation arena like any other intermediate.
     """
+    # Several kernels may write disjoint planes of one fused state row -- a key
+    # plane and a value plane of one KV row.  Each write therefore needs its own
+    # column offset, accumulated in kernel order and wrapping when the row is
+    # full; without it every plane would land at column zero and the last write
+    # would erase the others.
+    row_elements = {s.state_id: s.row_elements for s in graph.states}
+    cursor: dict[str, int] = {}
     bound: dict[str, list[Any]] = {}
     for kernel in graph.kernels:
         writes = list(kernel.state_writes)
@@ -1935,9 +1942,19 @@ def _bind_state_tensors(
         for position, name in enumerate(outs):
             if not writes or name in bound:
                 continue
-            mapping = state_of_resource.get(writes[min(position, len(writes) - 1)])
-            if mapping is not None:
-                bound[name] = list(mapping)
+            resource = writes[min(position, len(writes) - 1)]
+            mapping = state_of_resource.get(resource)
+            if mapping is None:
+                continue
+            width = 1
+            for axis in tensors[name].shape[1:]:
+                width *= max(_extent_value(axis, 1)[0], 1)
+            row = int(row_elements.get(resource, 0))
+            column = cursor.get(resource, 0)
+            if row and column + width > row:
+                column = 0
+            bound[name] = [*mapping, column]
+            cursor[resource] = column + width
         ins = [n for n in kernel.inputs if tensors[n].role == "state"]
         for position, name in enumerate(ins):
             if not reads or name in bound:

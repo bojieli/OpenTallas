@@ -89,8 +89,11 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--token-block",
         type=int,
-        default=512,
-        help="tokens per iteration of the program's token-block loop",
+        default=None,
+        help=(
+            "tokens per iteration of the program's token-block loop; the "
+            "default is the backend's, which is exact for every span"
+        ),
     )
     parser.add_argument(
         "--check-determinism",
@@ -111,7 +114,7 @@ def build(args: argparse.Namespace) -> tuple[dict[str, Any], int]:
         rows=args.tile_rows,
         cols=args.tile_cols,
         depth=args.tile_depth,
-        block=args.token_block,
+        **({} if args.token_block is None else {"block": args.token_block}),
     )
     deployment, plan = lower_with_plan(graph, capability, tile=tile)
     verification = verify_deployment(deployment, capability)

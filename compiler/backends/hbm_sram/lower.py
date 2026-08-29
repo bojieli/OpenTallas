@@ -1033,26 +1033,41 @@ class _Emitter:
         is_gather = plan.engine_family == int(Major.DMA) and plan.engine_sub == int(
             Dma.GATHER
         )
+        source = next(
+            (o for o in plan.operands if o.direction == "in" and o is not operand),
+            None,
+        )
         if is_gather:
             addressed = next(
                 (o for o in plan.operands if o.direction == "out"), None
             )
         else:
-            addressed = next(
-                (
-                    o
-                    for o in plan.operands
-                    if o.direction == "in" and o is not operand
-                ),
-                None,
+            addressed = source
+        # An index is absolute when what it addresses is indexed by position --
+        # a rotary table spans every admissible position -- and span-relative
+        # when what it addresses is indexed by the request's own rows.
+        span_domain = True
+        subject = source if is_gather else addressed
+        if subject is not None:
+            tensor = self.tensors.get(subject.tensor_id)
+            span_domain = bool(
+                tensor is not None
+                and tensor.shape
+                and isinstance(tensor.shape[0], Symbolic)
             )
+        if not is_gather:
+            span_domain = False  # a scatter addresses the state's own rows
         count = 1
         if addressed is not None:
             dims, _, _ = self._declared_view(plan, addressed)
             count = max(dims[0], 1)
         terms: list[DynamicTerm] = []
         row_loop = loops.get("row") if "row" in operand.terms else None
-        if is_gather:
+        if is_gather and span_domain:
+            # Selecting rows of the request itself: the final row is
+            # ``SPAN_LAST_INDEX``, which is the reason that symbol exists -- a
+            # view offsets by ``selector * stride`` and cannot compute
+            # ``span - 1`` for itself.
             if count == 1 and row_loop is None:
                 terms.append(DynamicTerm.symbol(Symbol.SPAN_LAST_INDEX, 1))
             elif row_loop is not None:
@@ -1249,6 +1264,9 @@ class _Emitter:
         is positional instead.
         """
         direct = self.plan.state_of_tensor.get(operand.tensor_id)
+        if direct is not None and len(direct) > 2:
+            # The plan recorded this write's plane within the fused row.
+            return list(direct[:2]), int(direct[2])
         kernel = self.kernels[plan.index]
         names = list(
             kernel.state_writes if operand.direction == "out" else kernel.state_reads
