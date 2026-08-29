@@ -10,7 +10,7 @@ post-projection transactional known answer
 **Model source SHA-256:**
 `c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`
 
-**Graph contract:**
+**Graph contract at evidence capture (before later reference qualifications):**
 `8357b3d82b443750c7849047997048438325a078cb9a8284408eb6ea2c05f27a`
 
 ## What is qualified

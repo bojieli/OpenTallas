@@ -9,7 +9,7 @@ differential
 **Kernel SHA-256:**
 `59b325083d7103975cba025bd0d60ea343bb82d8fff53088afb7c04bd380c0c2`
 
-**Graph contract:**
+**Graph contract at evidence capture (before later reference qualifications):**
 `8357b3d82b443750c7849047997048438325a078cb9a8284408eb6ea2c05f27a`
 
 ## What is qualified

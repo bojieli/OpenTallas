@@ -58,7 +58,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "8357b3d82b443750c7849047997048438325a078cb9a8284408eb6ea2c05f27a"
+        "87eeb9d3a73818318a4f24b6185bece850770c6b2df2dd93586807078f373993"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 46,
@@ -68,7 +68,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 2136,
-        "pending_reference_kind_count": 14,
+        "pending_reference_kind_count": 12,
         "pending_rtl_kind_count": 46,
         "pending_service_engine_kind_count": 46,
         "unknown_kind_count": 0,
@@ -344,6 +344,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "FP4_QDQ": "runtime.reference.quantization.fp4_qdq_bf16",
         "FP8_QDQ": "runtime.reference.quantization.fp8_qdq_bf16",
         "FP8_LINEAR": "runtime.reference.matrix.dense_fp8_linear_bf16",
+        "FP8_SWIGLU": "runtime.reference.swiglu.fp8_swiglu_bf16",
         "HADAMARD_ROTATE": ("runtime.reference.hadamard.hadamard_rotate_128_bf16"),
         "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
         "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
@@ -360,6 +361,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "SPARSE_ATTENTION": (
             "runtime.reference.sparse_attention.sparse_attention_bf16"
         ),
+        "MXFP4_SWIGLU": "runtime.reference.swiglu.mxfp4_swiglu_bf16",
         "TARGET_HIDDEN_CAPTURE": (
             "runtime.reference.vector.target_hidden_capture_bf16"
         ),
@@ -1108,10 +1110,10 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
     assert (
-        "thirty-two complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state/control"
+        "thirty-four complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state/control"
         in (issues["DSV4-SEM-005"]["issue"])
     )
-    assert "Fourteen" in issues["DSV4-SEM-005"]["issue"]
+    assert "Twelve" in issues["DSV4-SEM-005"]["issue"]
     assert (
         "immutable causal raw compressor-state updates"
         in issues["DSV4-SEM-006"]["issue"]
@@ -1133,7 +1135,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         graph_contract["system_scope"]["covered"]
     )
     assert (
-        "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, causal raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, session-bound compressed-KV write and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ"
+        "unit-qualified routed-MXFP4 and shared-FP8 SwiGLU, dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, causal raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, session-bound compressed-KV write and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ"
         in (" ".join(graph_contract["system_scope"]["covered"]))
     )
     assert "block-64 sparse attention" in " ".join(
@@ -1166,7 +1168,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         in (graph_contract["system_scope"]["unresolved"])
     )
     assert (
-        "fourteen remaining operator-complete target-precision references"
+        "twelve remaining operator-complete target-precision references"
         in (graph_contract["system_scope"]["unresolved"])
     )
 
@@ -1209,7 +1211,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "8357b3d82b443750c7849047997048438325a078cb9a8284408eb6ea2c05f27a"
+        "87eeb9d3a73818318a4f24b6185bece850770c6b2df2dd93586807078f373993"
     )
     assert "described 2136 nodes across 46 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

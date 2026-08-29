@@ -502,7 +502,7 @@ row must not be read as milestone closure.
 | Gate | Current direct evidence | Status |
 |---|---|---|
 | M0 | Repository baseline and additive compiler/runtime layout are committed on `main`; large generated payloads remain outside Git | Ongoing because concurrent model and simulation work may keep the worktree active |
-| M1 | The pinned official graph has a complete 2,136-node/46-kind ledger; 32 kinds now have qualified target references, including all 62 raw-compressor/pool/FP32-to-BF16/compressed-KV transaction and valid-view sites, all 46 sparse-attention sites with explicit logical traffic accounting, and fail-closed greedy/target-adapted sampling | Partial: 14 operator references and operator-complete semantics remain open |
+| M1 | The pinned official graph has a complete 2,136-node/46-kind ledger; 34 kinds now have qualified target references, including all 46 routed-MXFP4 and all 46 shared-FP8 SwiGLU sites, all 62 raw-compressor/pool/FP32-to-BF16/compressed-KV transaction and valid-view sites, all 46 sparse-attention sites with explicit logical traffic accounting, and fail-closed greedy/target-adapted sampling | Partial: 12 operator references and operator-complete semantics remain open |
 | M2 | The official 72,317-tensor checkpoint is locked; the complete 77,116-assignment MP=4 application was independently re-read with verification `b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28` | Checkpoint/canonical payload gate achieved; this does not imply executable operators |
 | M3 | Lookup and complete-output query-A deployments have content-addressed images and independent payload roundtrips | Partial: complete stage placement, capacity, repair, and physical-address legality remain open |
 | M4 | Artifact-only fixed-microcode paths execute official lookup tensors and all 1,024 Query-A FP8 outputs. The real HC_PRE→Query-A chain ends at artifact-only result `d30df5494e60c3f261cc6bec15320680ee3e87d867873e1d0fc100f7776336c0`. A separate official-width layer-2 ratio-four post-projection compressor harness executes immutable causal raw/compressed state, conditional pool/conversion, abort, retirement, commit, and valid-view semantics under a controlled APE-cancellation known answer | Partial: the compressor request is not a checkpoint-derived activation, starts after learned projection, and its direct BF16 cache payload omits official RMSNorm/RoPE/QDQ; neither path yet completes attention, a transformer block, complete graph-to-microcode lowering, or full-model execution |
@@ -518,6 +518,8 @@ The governed evidence records are
 [`DEEPSEEK_V4_FP8_LINEAR_FULL_EVIDENCE.md`](DEEPSEEK_V4_FP8_LINEAR_FULL_EVIDENCE.md),
 and
 [`DEEPSEEK_V4_SPARSE_ATTENTION_EVIDENCE.md`](DEEPSEEK_V4_SPARSE_ATTENTION_EVIDENCE.md),
+and
+[`DEEPSEEK_V4_SWIGLU_EVIDENCE.md`](DEEPSEEK_V4_SWIGLU_EVIDENCE.md),
 and
 [`DEEPSEEK_V4_COMPRESSOR_EVIDENCE.md`](DEEPSEEK_V4_COMPRESSOR_EVIDENCE.md).
 Neither changes the `COMP-01` closure criteria.

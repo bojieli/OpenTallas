@@ -33,9 +33,10 @@ finite BF16 encodings with CUDA's native `cvt.rn.satfinite.e2m1x2.f32`. After
 the governed positive-zero canonicalization, there were zero differences.
 
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
-the qualified dense FP8, index-head BF16, router-score, compressor, and
-confidence projection paths, vector operators beyond weighted and head RMS
-normalization, target-hidden capture, and HC post-mixing, attention operators
+the qualified routed-MXFP4/shared-FP8 SwiGLU, dense FP8, index-head BF16,
+router-score, compressor, and confidence projection paths, vector operators
+beyond the SwiGLU nonlinear section, weighted and head RMS normalization,
+target-hidden capture, and HC post-mixing, attention operators
 beyond the qualified learned index scoring/top-k and sparse-attention boundary,
 mutable attention-state operations, remaining routing and nonlinear operators,
 real-checkpoint known answers, layer differentials, end-to-end logits, and task
@@ -51,6 +52,24 @@ saturation counts. Tests cross the output scale-tile boundary and compare
 multi-block randomized matrices with an independently assembled composition.
 This does not yet provide a checkpoint-derived known answer or service-engine
 opcode.
+
+`swiglu.py` implements all 46 routed `MXFP4_SWIGLU` and shared `FP8_SWIGLU`
+sites. It preserves the source's three BF16-output learned projections, the
+released 128-value activation quantization block, the routed 32-value E8M0
+weight-scale block, low-nibble-first MXFP4 packing, asymmetric clamp
+(`up` in `[-10,10]`, `gate` upper-only at `10`), direct correctly rounded
+binary32 logistic, separate SiLU/up/route binary32 multiplies, and one BF16
+conversion before `w2`. Routed block partials add in increasing 32-value order;
+the shared path reuses the qualified dense balanced tree unchanged. Every
+resource validates before arithmetic and the immutable result has one commit.
+Counters distinguish canonical payload capacity from logical per-command reads
+and scalar work; none is a physical transaction, cycle, bandwidth, throughput,
+energy, area, or PPA claim. Tests include complete reduced operators,
+order-sensitive cancellation, clamp asymmetry, route placement, independent
+composition, malformed/nonfinite/overflow rejection, and full-column selected
+rows from all twelve hash-locked layer-0 routed/shared tensors. Those selected
+rows are payload evidence, not a checkpoint-derived hidden activation, complete
+official expert output, service-engine opcode, schedule, RTL, or model result.
 
 The same module separately implements all 21 `BF16_LINEAR` index-head weight
 projections. Official headers confirm every checkpoint matrix is `[64, 4096]`

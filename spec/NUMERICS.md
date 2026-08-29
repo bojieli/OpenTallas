@@ -122,8 +122,11 @@ model for the frozen operation, rounding, and order.
 ### NUM-3.3 Activation microscaling
 
 Before an FP8/MXFP4 matrix operation, each manifest-sized activation block is
-converted from BF16 to E4M3FN plus one E8M0 scale. Routed blocks contain 32 values;
-dense blocks contain 128 unless the manifest selects a separately qualified profile.
+converted from BF16 to E4M3FN plus one E8M0 scale. The released dense and routed
+matrix kernels use 128-value activation blocks. Routed MXFP4 weights retain a
+distinct E8M0 scale per 32 reduction values, so one activation scale is reused
+across four consecutive routed weight blocks. Another activation or weight block
+dimension requires a separately qualified manifest profile.
 
 For finite block values `x_i`, let `a = max(abs(x_i))` and `M = 448`:
 
@@ -532,6 +535,60 @@ matched on both CPU and native SM120: each backend had zero differing outputs
 and a maximum difference of zero BF16 encoding steps. This bounded synthetic
 observation does not establish checkpoint, layer, service-engine, or
 end-to-end-model equivalence.
+
+### NUM-4.9 Routed MXFP4 and shared FP8 SwiGLU
+
+`MXFP4_SWIGLU` and `FP8_SWIGLU` are the routed and shared expert paths at all
+43 main layers and three DSpark layers. The pinned `Expert.forward` preserves
+its BF16 input dtype, executes bias-free `w1` and `w3`, widens both BF16 outputs
+exactly to binary32, applies the configured limit, evaluates SiLU and the up
+product in binary32, optionally applies one routed binary32 weight, converts
+the complete intermediate once to BF16, and executes bias-free `w2`. Routed
+experts store all three matrices as packed E2M1 plus per-32 E8M0 scales; the
+shared expert stores all three as E4M3FN plus 128-by-128 E8M0 tiles.
+
+Every learned projection first applies NUM-3.3 to nonoverlapping 128-value BF16
+activation blocks. For routed projections, one activation scale is reused for
+four consecutive 32-value MXFP4 weight blocks. Each block executes the NUM-4.1
+increasing-index dot, and its completed binary32 partial is added to a binary32
+accumulator in increasing 32-value block order with one RNE addition per block,
+matching the released kernel's `C_local_accum +=` source order. The completed
+finite accumulator converts once to BF16. Shared projections use the already
+qualified `FP8_LINEAR` rule unchanged: ordered 128-value block dots, NUM-6.1
+balanced cross-block reduction, and one BF16 conversion. Thus all three learned
+projection outputs are architectural BF16 even though the following vector
+section operates in binary32.
+
+For every intermediate column, the target executes:
+
+1. widen the BF16 gate and up values exactly to binary32;
+2. clamp up to the closed interval `[-10,10]`, but clamp gate only above at
+   binary32 `10` (`0x41200000`); a gate below `-10` is deliberately retained;
+3. correctly round the mathematical logistic function directly to binary32;
+4. multiply gate by that sigmoid with one binary32 RNE rounding (SiLU);
+5. multiply SiLU by clamped up with one binary32 RNE rounding;
+6. at routed sites only, multiply by the finite nonnegative binary32 route
+   weight with one binary32 RNE rounding; and
+7. convert that completed finite value once to BF16 under NUM-4.2 before `w2`.
+
+The logistic rule reuses the exact rational-enclosure implementation qualified
+for NUM-6.10; it does not expose a separately rounded exponential, add, or
+divide. Source and TileLang do not promise a common tensor-core reduction tree
+or SiLU approximation across backends, so these are deterministic OpenTallas
+target boundaries rather than claims of bit identity with every CUDA launch.
+Signed output zero canonicalizes positive. Any malformed shape or scale layout,
+nonfinite BF16/binary32 input, E4M3FN NaN, reserved E8M0 scale, or intermediate
+binary32 overflow poisons the complete transaction. Finite BF16 saturation is
+sticky and counted. All weight, scale, input, and route resources validate before
+any result is returned; one immutable result constitutes one logical commit.
+
+The official shape is `4096 -> 2048 -> 4096`, with a limit of 10, six routed
+slots per token, and one shared expert. The independent reference also admits
+bounded complete matrices and explicit selected-row projection audits so exact
+unit and checkpoint-payload evidence remains tractable. A selected-row audit is
+not a complete expert invocation. Logical payload/read/work counters do not
+specify ROM transactions, cache reuse, cycles, achieved bandwidth, throughput,
+energy, area, PPA, or a wafer/GPU advantage.
 
 ## NUM-5 Exceptional values and errors
 
