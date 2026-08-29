@@ -245,12 +245,31 @@ def probe_deployment(
         output_dtype=DType.BF16,
     )
     ids["loop"] = builder.loop_control(lower_bound=0, upper_bound=4, step=1)
+    # Every engine operator carries a schedule: the verifier rejects one that
+    # cannot be timed, because a timing result derived from an absent tile
+    # mapping is meaningless rather than merely imprecise.
+    ids["tensor_schedule"] = builder.schedule(
+        engine_family=Major.TENSOR,
+        tile_rows=4,
+        tile_cols=8,
+        tile_depth=8,
+        bank_mask=0b11,
+        max_outstanding=2,
+    )
+    ids["select_schedule"] = builder.schedule(
+        engine_family=Major.SELECTION,
+        tile_rows=1,
+        tile_cols=8,
+        tile_depth=1,
+        bank_mask=0b01,
+    )
     ids["matmul"] = builder.operator(
         engine_family=Major.TENSOR,
         engine_sub=Tensor.MATMUL,
         inputs=[ids["activation_view"], ids["weight_view"]],
         outputs=[ids["activation_view"]],
         numeric_profile_id=ids["numeric"],
+        schedule_id=ids["tensor_schedule"],
     )
     ids["argmax"] = builder.operator(
         engine_family=Major.SELECTION,
@@ -258,6 +277,7 @@ def probe_deployment(
         inputs=[ids["activation_view"]],
         outputs=[ids["token_view"]],
         numeric_profile_id=ids["numeric"],
+        schedule_id=ids["select_schedule"],
     )
     ids["append"] = builder.operator(
         engine_family=Major.SELECTION,
@@ -265,6 +285,7 @@ def probe_deployment(
         inputs=[ids["token_view"]],
         outputs=[ids["token_view"]],
         numeric_profile_id=ids["numeric"],
+        schedule_id=ids["select_schedule"],
     )
     ids["state"] = builder.state(
         state_class=StateClass.KV_CACHE,

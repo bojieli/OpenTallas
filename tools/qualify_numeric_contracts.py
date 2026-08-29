@@ -116,11 +116,32 @@ def _vocabulary_cases() -> list[dict[str, Any]]:
 # ---------------------------------------------------------------------------
 # Operands
 # ---------------------------------------------------------------------------
+#: Elements generated per block.  A vocabulary head is 622 million elements and
+#: the rounding pipeline holds several temporaries of that size, so a whole-array
+#: conversion would need tens of gigabytes of host memory to produce operands
+#: that are then contracted a block at a time anyway.
+_GENERATION_BLOCK = 1 << 23
+
+
 def _bf16_codes(values: np.ndarray) -> np.ndarray:
     """Round binary32 to the architectural BF16 codes, ties to even."""
     return backends.NumpyBackend().narrow_rne(
         np.ascontiguousarray(values, dtype=np.float32)
     ).codes
+
+
+def _bf16_normal(
+    shape: tuple[int, int], scale: float, seed: int
+) -> np.ndarray:
+    """Deterministic normal BF16 operands of ``shape``, generated in blocks."""
+    rng = np.random.default_rng(seed)
+    rows, cols = int(shape[0]), int(shape[1])
+    out = np.empty(rows * cols, dtype=np.uint16)
+    for start in range(0, out.size, _GENERATION_BLOCK):
+        span = min(_GENERATION_BLOCK, out.size - start)
+        block = rng.standard_normal(span, dtype=np.float32) * np.float32(scale)
+        out[start : start + span] = _bf16_codes(block.reshape(1, span))[0]
+    return out.reshape(rows, cols)
 
 
 def _operands(rows: int, depth: int, cols: int, seed: int) -> tuple[np.ndarray, np.ndarray]:
@@ -131,12 +152,9 @@ def _operands(rows: int, depth: int, cols: int, seed: int) -> tuple[np.ndarray, 
     contrived scale would make the two contracts look either better or worse
     than they are.
     """
-    rng = np.random.default_rng(seed)
-    activations = rng.standard_normal((rows, depth)).astype(np.float32)
-    weights = (
-        rng.standard_normal((cols, depth)) / np.sqrt(depth)
-    ).astype(np.float32)
-    return _bf16_codes(activations), _bf16_codes(weights)
+    activations = _bf16_normal((rows, depth), 1.0, seed)
+    weights = _bf16_normal((cols, depth), 1.0 / float(np.sqrt(depth)), seed + 1)
+    return activations, weights
 
 
 # ---------------------------------------------------------------------------
@@ -410,7 +428,11 @@ def _bf16_buffer(shape: tuple[int, int], scale: float, seed: int) -> np.ndarray:
     numeric claim is made from this buffer.
     """
     rng = np.random.default_rng(seed)
-    pool = _bf16_codes((rng.standard_normal(1 << 20) * scale).astype(np.float32))
+    pool = _bf16_codes(
+        (rng.standard_normal(1 << 20, dtype=np.float32) * np.float32(scale)).reshape(
+            1, 1 << 20
+        )
+    )[0]
     return np.resize(pool, shape[0] * shape[1]).reshape(shape)
 
 

@@ -655,6 +655,61 @@ class Verifier:
                 )
         self.checks.setdefault("view_bounds", True)
 
+    # -- schedule completeness ----------------------------------------------
+    def _verify_schedules(self) -> None:
+        """Every engine operator must carry a usable tile mapping.
+
+        ADR-003 section 6.2 defines the Schedule descriptor as carrying the tile
+        mapping, and the cycle model derives all tile-level time from it. An
+        operator with no schedule, or with a zeroed one, produces a deployment
+        that executes but cannot be evaluated -- and a timing result computed
+        from an absent tile mapping is meaningless rather than merely imprecise.
+        Admitting it would let that meaninglessness reach a comparison table.
+        """
+        for index, instruction in enumerate(self.instructions):
+            family = Major(instruction.major)
+            if family not in ENGINE_FAMILIES or family in (Major.STATE, Major.LINK):
+                continue
+            descriptor = self._descriptor(
+                instruction.descriptor_id,
+                ExtendedDescriptorType.OPERATOR,
+                f"instruction {index} operator",
+            )
+            if descriptor is None:
+                continue
+            schedule_id = descriptor.payload["schedule_id"]
+            if schedule_id == NO_ID:
+                self._fail(
+                    f"instruction {index} ({instruction.mnemonic}): operator "
+                    f"{descriptor.descriptor_id} carries no SCHEDULE descriptor, "
+                    "so its tile mapping is unknown and it cannot be timed"
+                )
+                continue
+            schedule = self._descriptor(
+                schedule_id,
+                ExtendedDescriptorType.SCHEDULE,
+                f"instruction {index} schedule",
+            )
+            if schedule is None:
+                continue
+            payload = schedule.payload
+            if payload["engine_family"] != int(family):
+                self._fail(
+                    f"instruction {index}: schedule {schedule_id} is for "
+                    f"{Major(payload['engine_family']).name}, not {family.name}"
+                )
+            if payload["tile_rows"] == 0 or payload["tile_cols"] == 0:
+                self._fail(
+                    f"instruction {index}: schedule {schedule_id} declares a zero "
+                    "tile extent; a zeroed tile mapping cannot be evaluated"
+                )
+            if payload["max_outstanding"] == 0:
+                self._fail(
+                    f"instruction {index}: schedule {schedule_id} admits zero "
+                    "outstanding operations"
+                )
+        self.checks.setdefault("schedule_completeness", True)
+
     # -- engine write paths ------------------------------------------------
     def _verify_engine_write_paths(self) -> None:
         """Every engine output must name a writable, mutable destination.
@@ -843,6 +898,7 @@ class Verifier:
         self._verify_state()
         self._verify_permissions()
         self._verify_engine_write_paths()
+        self._verify_schedules()
         self._verify_flags()
         self._verify_views()
         self._verify_entrypoints()
