@@ -24,16 +24,32 @@ claim below rests on that.
 ### 2.1 The Qwen accelerator produces correct tokens
 
 The pinned chat workload — rendered through the official template, tokenized by
-the pinned tokenizer — is compiled from the neutral IR into an ABI 3.0
-deployment, admitted by the independent verifier, and executed entirely by the
-microsequencer and engines: embedding, thirty-six layers, GQA attention,
+the pinned tokenizer — is compiled from the neutral IR into a 75-instruction
+ABI 3.0 deployment, admitted by the independent verifier, and executed entirely
+by the microsequencer and engines: embedding, thirty-six layers, GQA attention,
 transactional KV state, vocabulary projection, and **on-device argmax and token
 append**. Its output is token-identical to a reference the accelerator did not
-compute.
+compute, over 24 tokens, with no divergence at any index:
+
+```
+(1654, 525, 2661, 1447, 12, 3070, 29624, 220, 16, 334, 320, 1499,
+ 5776, 362, 8, 10901, 518, 3070, 15, 21, 25, 15, 15, 334)
+```
+
+Three independent runs agree, two of them from a different process than the one
+that built the deployment.
 
 Host software tokenizes, stages a bounded input span, submits real 128-byte ABI
 records, and reads token IDs back. It does not sequence device operations,
 select a token, or supply an activation.
+
+Getting here took six lowering corrections and one amendment. Two of the
+lowering bugs are worth recording because no single component could have
+revealed either: the band's loop-carried residual used two buffers, so
+thirty-six layers collapsed into one layer applied thirty-six times; and state
+reads went to the *committed* image, which is empty mid-transaction, so
+attention was attending to a context that did not yet contain the current
+tokens.
 
 ### 2.2 ROM and HBM differ only in storage class
 
@@ -56,10 +72,21 @@ the memory technology.
 
 ### 2.3 Loop compression
 
-One Qwen forward step is compiled to a program of tens of instructions. The same
-step under ABI 2.5 was 924,386 flat commands. Programs describe loop nests over
-layers and token blocks; tile mapping lives in schedule descriptors, where the
-cycle model reads it and where a reviewer can audit it.
+One Qwen forward step is 75 instructions. The same step under ABI 2.5 was
+924,386 flat commands.
+
+The instruction count was never the whole story, though, and it is worth saying
+how that was nearly missed. An early lowering wrapped every operation in its own
+per-token loop: the program looked compressed at 69 instructions while a
+93-token prefill issued about 63,600 engine dispatches and retired 11,256,539
+units of work — the ABI 2.5 failure in different clothes, one dispatch per token
+rather than one command per tile.
+
+The cause was a gap in the ABI, not in the backend. A tensor view states static
+extents, so a 512-token block over a 93-token span could not express its
+partial final iteration, and a backend that wanted to stay correct had no choice
+but to emit one dispatch per token. Amendment A13 states the resolved extent
+normatively. With it: about 700 dispatches and 22,715 retired work.
 
 ### 2.4 Zero-copy weights
 
