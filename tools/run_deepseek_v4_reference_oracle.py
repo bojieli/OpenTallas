@@ -257,6 +257,8 @@ def main() -> int:
         "context_ladder": index.get("context_ladder"),
         "adaptations": [dict(item) for item in ADAPTATIONS],
         "head_split_verification": engine.head_split_evidence,
+        "fp4_gemm_verification": engine.fp4_gemm_evidence,
+        "expert_numeric_path": engine.expert_dtype,
         "environment": {
             **engine.environment(),
             **_host_memory(),

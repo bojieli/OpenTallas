@@ -30,7 +30,6 @@ from dataclasses import dataclass, field as dc_field
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
 from compiler.ir.v3.kernel_ir import (
-    IRError,
     Kernel,
     KernelGraph,
     StateResource,
@@ -38,8 +37,8 @@ from compiler.ir.v3.kernel_ir import (
     Tensor,
     require_neutral,
 )
-from compiler.ir.v3.lowering import KERNEL_TO_ENGINE, EngineOp
-from runtime.abi3.builder import BuildError, DeploymentBuilder, DynamicTerm
+from compiler.ir.v3.lowering import KERNEL_TO_ENGINE
+from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     Attention,
@@ -79,7 +78,6 @@ from .image import (
     DefectRecord,
     RegionRequest,
     RomCoordinate,
-    RomImageError,
     RomImagePlan,
     RomLayoutPolicy,
     RomMember,

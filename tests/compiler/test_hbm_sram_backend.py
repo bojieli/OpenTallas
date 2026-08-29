@@ -548,6 +548,16 @@ def test_capability_lookup_rejects_unknown_profiles():
         capability_for("wafer")
 
 
+def test_profiles_map_to_capability_records_not_factories():
+    from compiler.backends.hbm_sram.capability import PROFILES
+    from runtime.abi3.capability import Capability
+
+    assert set(PROFILES) == {"single-chip", "cluster-32"}
+    for name, profile in PROFILES.items():
+        assert isinstance(profile, Capability), name
+        assert profile.digest == capability_for(name).digest
+
+
 # ---------------------------------------------------------------------------
 # The plan
 # ---------------------------------------------------------------------------
@@ -956,12 +966,27 @@ def test_checker_does_not_import_the_lowering():
 # ---------------------------------------------------------------------------
 @pytest.mark.skipif(not REAL_QWEN_IR.exists(), reason="Qwen IR not published yet")
 def test_real_qwen_ir_lowers_and_is_admitted():
+    """The 691-kernel, 36-layer Qwen graph compiles to a handful of instructions.
+
+    The ABI 2.5 backend expanded one forward step of this model into 924,386
+    commands.  The bound asserted here is three orders of magnitude below that;
+    the actual figure is printed so a regression is visible even while it still
+    passes.
+    """
     graph = read_kernel_graph(REAL_QWEN_IR)
     capability = single_chip_capability()
     deployment, plan = lower_with_plan(graph, capability)
     report = require_admitted(deployment, capability)
-    assert report.instruction_count < 20000
+    assert report.instruction_count < 1000
+    assert report.loop_depth <= capability.limits["max_loop_depth"]
     assert check_deployment(graph, deployment, capability)["ok"]
+    # 36 layers, one band, one loop: the layer count is nowhere in the program.
+    assert plan.proofs["bands"] == 1
+    assert plan.proofs["layers_covered"] == 36
+    assert plan.proofs["degraded_bands"] == 0
+    # 16 GB of weights, described rather than copied.
+    assert plan.proofs["weight_bytes"] > 16_000_000_000
+    assert plan.proofs["hbm_fits"] and plan.proofs["sram_fits"]
     print(
         json.dumps(
             {
@@ -969,8 +994,68 @@ def test_real_qwen_ir_lowers_and_is_admitted():
                 "descriptors": report.descriptor_count,
                 "proved_retired_work": report.proved_retired_work,
                 "weight_objects": plan.proofs["weight_objects"],
+                "weight_segments": plan.proofs["weight_segments"],
+                "weight_bytes": plan.proofs["weight_bytes"],
                 "bands": plan.proofs["bands"],
             },
             indent=2,
         )
     )
+
+
+@pytest.mark.skipif(not REAL_QWEN_IR.exists(), reason="Qwen IR not published yet")
+def test_real_qwen_ir_is_deterministic():
+    graph = read_kernel_graph(REAL_QWEN_IR)
+    capability = single_chip_capability()
+    first = lower_to_abi3(graph, capability)
+    second = lower_to_abi3(graph, capability)
+    assert first.program == second.program
+    assert first.table.encode() == second.table.encode()
+    assert first.deployment_digest == second.deployment_digest
+
+
+# ---------------------------------------------------------------------------
+# The command line
+# ---------------------------------------------------------------------------
+def test_cli_builds_verifies_and_reports(tmp_path):
+    import tools.build_hbm_sram_deployment as cli
+
+    graph = dense_graph(layers=6)
+    ir = tmp_path / "kernel_ir.v3.json"
+    graph.write(ir)
+    out = tmp_path / "deployment"
+    status = cli.main(
+        [
+            "--ir",
+            str(ir),
+            "--profile",
+            "single-chip",
+            "--out",
+            str(out),
+            "--check-determinism",
+            "--json",
+        ]
+    )
+    assert status == 0
+    report = json.loads((out / "build_report.json").read_text())
+    assert report["verifier"]["admitted"]
+    assert report["checker"]["ok"]
+    assert report["deterministic"] is True
+    assert report["neutrality_errors"] == []
+    assert (out / "deployment.json").exists()
+    assert (out / "descriptors.bin").exists()
+    assert (out / "program.bin").exists()
+    assert (out / "physical_plan.json").exists()
+
+
+def test_cli_serves_the_cluster_profile(tmp_path):
+    import tools.build_hbm_sram_deployment as cli
+
+    graph = moe_graph(layers=3)
+    ir = tmp_path / "kernel_ir.v3.json"
+    graph.write(ir)
+    out = tmp_path / "cluster"
+    assert cli.main(["--ir", str(ir), "--profile", "cluster-32", "--out", str(out)]) == 0
+    report = json.loads((out / "build_report.json").read_text())
+    assert report["node_count"] == 32
+    assert report["program"]["link_instructions"] > 0

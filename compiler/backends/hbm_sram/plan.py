@@ -2240,7 +2240,11 @@ def _operand_plan(
     else:
         if placement is not None and placement.layer_stride_elements:
             terms.append("layer")
-        if row_loop and symbolic:
+        if row_loop and symbolic and rows == kernel_rows:
+            # Only an operand whose position axis is the *kernel's* position
+            # axis steps with the token-block loop.  An operand bounded by a
+            # different symbol -- a sparse index count, say -- is presented
+            # whole, because the loop's trip count is not its trip count.
             view_rows = block
             terms.append("row")
     return OperandPlan(

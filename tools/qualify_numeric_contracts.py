@@ -399,57 +399,74 @@ QWEN_LAYER_CONTRACTIONS = (
 )
 
 
+def _bf16_buffer(shape: tuple[int, int], scale: float, seed: int) -> np.ndarray:
+    """A BF16 code buffer of ``shape`` at a realistic magnitude, built fast.
+
+    A vocabulary head is 622 million elements; drawing that many normal
+    variates would dominate a *throughput* measurement with host random-number
+    generation, which is not what is being measured.  A pool of one million
+    draws is tiled instead.  The bytes moved, the shapes contracted and the
+    exponent range are those of a real weight; only the values repeat, and no
+    numeric claim is made from this buffer.
+    """
+    rng = np.random.default_rng(seed)
+    pool = _bf16_codes((rng.standard_normal(1 << 20) * scale).astype(np.float32))
+    return np.resize(pool, shape[0] * shape[1]).reshape(shape)
+
+
 def _forward_contractions(
     backend, *, tokens: int, row_tile: int, contract: str
 ) -> dict[str, Any]:
     """Time every contraction of one Qwen3-8B forward pass, for real.
 
-    This is not a projection.  It runs all 36 layers' seven projections plus
-    the vocabulary head at the true shapes, streaming a weight of the true size
-    for each one, and reports the wall time.  Weights are re-presented from one
-    buffer per geometry rather than read from the 16 GB checkpoint: the bytes
-    moved across the bus and the arithmetic performed are exactly those of the
-    real shape sequence, and the point being measured is the rate, not the
-    values.
+    This is a measurement, not a projection.  It runs all 36 layers' seven
+    projections plus the vocabulary head at the true shapes, moving a weight of
+    the true size across the bus for every one of them, and reports the wall
+    time.  One host buffer per weight *geometry* is reused across layers: the
+    bytes streamed and the arithmetic performed are exactly those of the real
+    sequence, and operand generation stays out of the timed region.
 
     Each weight is placed on the device once and every row tile of the
-    activation is contracted against it before the next weight arrives, which
-    is the order a streaming implementation must use: the alternative
-    re-uploads 15 GB per tile.
+    activation is contracted against it before the next weight arrives.  That
+    is the order a streaming implementation must use -- the alternative
+    re-uploads the whole 15 GB per tile -- and it is why ``row_tile`` matters
+    for prefill and not for decode.
     """
-    rng = np.random.default_rng(4242)
+    geometries = sorted({(depth, cols) for _n, depth, cols in QWEN_LAYER_CONTRACTIONS})
+    weights = {
+        (depth, cols): _bf16_buffer((cols, depth), 1.0 / np.sqrt(depth), 7000 + index)
+        for index, (depth, cols) in enumerate(geometries)
+    }
+    activations = {
+        depth: _bf16_buffer((min(tokens, row_tile), depth), 1.0, 8000 + depth)
+        for depth, _cols in geometries
+    }
+    head_weights = _bf16_buffer(
+        (QWEN["vocabulary"], QWEN["hidden"]),
+        1.0 / np.sqrt(QWEN["hidden"]),
+        9001,
+    )
+    head_activation = _bf16_buffer((1, QWEN["hidden"]), 1.0, 9002)
+
     macs = 0
     weight_bytes = 0
     started = time.perf_counter()
-    for _ in range(QWEN["layers"]):
+    for _layer in range(QWEN["layers"]):
         for _name, depth, cols in QWEN_LAYER_CONTRACTIONS:
-            activations = _bf16_codes(
-                rng.standard_normal((min(tokens, row_tile), depth)).astype(np.float32)
-            )
-            weights = _bf16_codes(
-                (rng.standard_normal((cols, depth)) / np.sqrt(depth)).astype(np.float32)
-            )
-            weight_bytes += weights.nbytes
-            right = backend.widen_bf16(weights)
-            for start in range(0, tokens, row_tile):
-                span = min(row_tile, tokens - start)
-                left = backend.widen_bf16(activations[:span])
+            weight = weights[(depth, cols)]
+            weight_bytes += weight.nbytes
+            right = backend.widen_bf16(weight)
+            rows = activations[depth]
+            for start_row in range(0, tokens, row_tile):
+                span = min(row_tile, tokens - start_row)
+                left = backend.widen_bf16(rows[:span])
                 out = backend.matmul_binary32(left, right, contract=contract)
                 backend.fetch(backend.narrow_rne(out).codes)
                 macs += span * depth * cols
             del right
-    # The vocabulary head runs on the final token row only, which is what a
-    # prefill actually needs: the logits of the position being sampled.
-    head_weights = _bf16_codes(
-        (
-            rng.standard_normal((QWEN["vocabulary"], QWEN["hidden"]))
-            / np.sqrt(QWEN["hidden"])
-        ).astype(np.float32)
-    )
+    # The vocabulary head runs on the sampled position only, which is what a
+    # prefill actually needs: the logits of the token being selected.
     weight_bytes += head_weights.nbytes
-    head_activation = _bf16_codes(
-        rng.standard_normal((1, QWEN["hidden"])).astype(np.float32)
-    )
     out = backend.matmul_binary32(
         backend.widen_bf16(head_activation),
         backend.widen_bf16(head_weights),
@@ -467,9 +484,7 @@ def _forward_contractions(
         "weight_bytes_streamed": weight_bytes,
         "seconds": round(seconds, 4),
         "gmac_per_second": round(_rate(macs, seconds), 4),
-        "weight_stream_gigabytes_per_second": round(
-            weight_bytes / seconds / 1e9, 4
-        ),
+        "weight_stream_gigabytes_per_second": round(weight_bytes / seconds / 1e9, 4),
         "measured": True,
     }
 

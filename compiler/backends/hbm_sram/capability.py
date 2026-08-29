@@ -213,20 +213,30 @@ def cluster32_capability() -> Capability:
     )
 
 
-PROFILES: dict[str, Any] = {
+#: Factories, one per named profile.  Kept private so that ``PROFILES`` can be
+#: a mapping of *capabilities* rather than of callables: a consumer that writes
+#: ``PROFILES["single-chip"]`` should get the record, not something it has to
+#: know to call.
+_FACTORIES: dict[str, Any] = {
     "single-chip": single_chip_capability,
     "cluster-32": cluster32_capability,
 }
 
+#: The shared chip's deployment profiles, by name.  These records are shared;
+#: call :func:`capability_for` for one a caller may modify.
+PROFILES: dict[str, Capability] = {
+    name: factory() for name, factory in _FACTORIES.items()
+}
+
 
 def capability_for(profile: str) -> Capability:
-    """Return the capability for a named profile."""
+    """Return a fresh capability record for a named profile."""
     try:
-        factory = PROFILES[profile]
+        factory = _FACTORIES[profile]
     except KeyError:
         raise KeyError(
             f"unknown capability profile {profile!r}; known profiles are "
-            f"{sorted(PROFILES)}"
+            f"{sorted(_FACTORIES)}"
         ) from None
     return factory()
 

@@ -166,6 +166,25 @@ def campaign_results() -> dict[str, Any]:
     return out
 
 
+def rtl_correlation() -> dict[str, Any]:
+    body = _load(REPO / "results" / "rtl" / "abi3_campaign.json")
+    if not body:
+        return {"present": False}
+    correlation = body.get("correlation", {})
+    return {
+        "present": True,
+        "evidence_class": body.get("evidence_class"),
+        "reference": correlation.get("reference"),
+        "cases": correlation.get("case_count"),
+        "programs_run": correlation.get("program_run_count"),
+        "issue_events": correlation.get("issue_event_count"),
+        "traps": correlation.get("trap_count"),
+        "negative_cases": correlation.get("negative_case_count"),
+        "simulators": body.get("simulators_counted", []),
+        "limitations": body.get("limitations", []),
+    }
+
+
 def checklist_progress() -> dict[str, Any]:
     path = REPO / "docs" / "UNIFIED_EXECUTION_CHECKLIST.md"
     if not path.exists():
@@ -200,6 +219,7 @@ def main() -> int:
         "reference_oracle": oracle_results(),
         "physical": physical_results(),
         "campaigns": campaign_results(),
+        "rtl_correlation": rtl_correlation(),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(canonical_json(status))
@@ -270,6 +290,23 @@ def main() -> int:
                 f"| {body.get('setup_violating_paths')} |"
             )
         lines.append("")
+
+    rtl = status["rtl_correlation"]
+    if rtl.get("present"):
+        lines += [
+            "## RTL 3.0 correlation",
+            "",
+            f"{rtl['cases']} cases, {rtl['programs_run']} programs executed, "
+            f"{rtl['issue_events']} engine-issue events and {rtl['traps']} traps "
+            f"matched against `{rtl['reference']}` on "
+            f"{len(rtl['simulators'])} independent simulators; "
+            f"{rtl['negative_cases']} negative cases.",
+            "",
+        ]
+        if rtl["limitations"]:
+            lines.append("Declared limitations:")
+            lines += [f"- {item}" for item in rtl["limitations"]]
+            lines.append("")
 
     if status["campaigns"]:
         lines += ["## Accelerator campaigns", "",

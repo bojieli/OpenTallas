@@ -36,7 +36,6 @@ from compiler.backends.rom.common.inverse import check_rom_inverse  # noqa: E402
 from compiler.backends.rom.deepseek_v4 import (  # noqa: E402
     build_deepseek_v4_rom_deployment,
     deepseek_v4_rom_capability,
-    wafer_geometry,
 )
 from compiler.backends.rom.qwen3 import (  # noqa: E402
     build_qwen3_rom_deployment,

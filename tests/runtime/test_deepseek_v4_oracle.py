@@ -239,6 +239,17 @@ def test_reference_oracle_report_shape(name: str) -> None:
     assert report["vendor_source_sha256"] == VENDOR_SOURCE_SHA256
     assert report["head_split_verification"]["bitwise_identical"] is True
 
+    # The routed-expert numeric path must be justified by a measurement, not
+    # by a preference: whichever GEMM was used has to have passed its check.
+    fp4 = report["fp4_gemm_verification"]
+    assert fp4["fp8_gemm_agrees"] is True
+    assert report["expert_numeric_path"] in {"fp4", "fp8"}
+    if report["expert_numeric_path"] == "fp4":
+        assert fp4["fp4_gemm_agrees"] is True
+    else:
+        assert fp4["fp4_gemm_agrees"] is False
+        assert fp4["fp4_path_max_abs_error"] > fp4["tolerance"]
+
     for workload_id, result in report["results"].items():
         assert result["generated_token_count"] == len(result["generated_token_ids"])
         assert result["generated_token_count"] > 0, workload_id
@@ -267,7 +278,7 @@ def test_head_split_is_bitwise_identical_on_this_gpu() -> None:
         verify_head_split_identity,
     )
 
-    _, kernel_mod, _ = import_vendor(DEFAULT_SNAPSHOT)
+    _, kernel_mod, _, _ = import_vendor(DEFAULT_SNAPSHOT)
     evidence = verify_head_split_identity(kernel_mod.sparse_attn)
     assert evidence["bitwise_identical"] is True
     assert evidence["max_abs_difference"] == 0.0

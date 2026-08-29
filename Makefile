@@ -1,4 +1,4 @@
-.PHONY: abi3 abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: abi3 abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -112,4 +112,21 @@ abi3-oracle:
 	  --only TA-QW-CHAT-1 --only TA-QW-AGENT-1 \
 	  --output results/abi3/qwen3_reference_oracle_short.json --force
 
-abi3: abi3-spec abi3-test abi3-engines
+abi3-rtl:
+	PYTHONPATH=. python3 tools/rtl_abi3_campaign.py --output results/rtl/abi3_campaign.json --force
+
+abi3-physical:
+	PYTHONPATH=. python3 tools/run_abi3_physical.py --view sky130hd --block reduction_endpoint --force
+	PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --block reduction_endpoint --force
+
+abi3-ir:
+	PYTHONPATH=. python3 tools/build_qwen3_kernel_ir_v3.py \
+	  --output build/ir-v3/qwen3-8b/kernel_ir.v3.json
+	PYTHONPATH=. python3 tools/build_deepseek_v4_kernel_ir_v3.py \
+	  --output build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json \
+	  --census-output build/ir-v3/deepseek-v4-flash-0731/census.json
+
+abi3-status:
+	PYTHONPATH=. python3 tools/build_program_status.py
+
+abi3: abi3-spec abi3-test abi3-engines abi3-status

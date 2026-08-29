@@ -12,7 +12,7 @@ import ast
 import hashlib
 import json
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 import pytest
 
@@ -92,7 +92,15 @@ class _GraphBuilder:
         self.seed = (self.seed * 1103515245 + 12345) & 0xFFFFFFFF
         return hashlib.shake_128(str(self.seed).encode("ascii")).digest(size)
 
-    def weight(self, tensor_id: str, dtype: str, shape: tuple[int, ...]) -> str:
+    def weight(
+        self,
+        tensor_id: str,
+        dtype: str,
+        shape: tuple[int, ...],
+        *,
+        scale_block_elements: int = 0,
+        scale_dtype: str = "e8m0",
+    ) -> str:
         elements = 1
         for dim in shape:
             elements *= dim
@@ -100,6 +108,11 @@ class _GraphBuilder:
         offset = len(self.blob)
         payload = self._payload(size)
         self.blob.extend(payload)
+        scale_id: str | None = None
+        if scale_block_elements:
+            scale_id = f"{tensor_id.rsplit('.', 1)[0]}.scale"
+            scale_shape = (*shape[:-1], shape[-1] // scale_block_elements)
+            self.weight(scale_id, scale_dtype, scale_shape)
         self.tensors.append(
             Tensor(
                 tensor_id=tensor_id,
@@ -113,6 +126,8 @@ class _GraphBuilder:
                     bytes=size,
                     sha256=hashlib.sha256(payload).hexdigest(),
                 ),
+                scale_tensor_id=scale_id,
+                scale_block_elements=scale_block_elements,
             )
         )
         return tensor_id
@@ -590,7 +605,12 @@ def deepseek_shaped_graph(
         builder.kernel(
             f"{prefix}.query_projection",
             "MATMUL",
-            (norm, builder.weight(f"{base}.self_attn.q_proj.weight", "fp8_e4m3fn", (hidden, hidden))),
+            (norm, builder.weight(
+                    f"{base}.self_attn.q_proj.weight",
+                    "fp8_e4m3fn",
+                    (hidden, hidden),
+                    scale_block_elements=32,
+                )),
             (query,),
             contract="fp8_e4m3fn_fp8_e4m3fn_fp32_sequential_rne_v1",
             attributes={"input_dtype": "bf16", "second_input_dtype": "fp8_e4m3fn"},
@@ -600,7 +620,12 @@ def deepseek_shaped_graph(
         builder.kernel(
             f"{prefix}.key_value_projection",
             "MATMUL",
-            (norm, builder.weight(f"{base}.self_attn.kv_proj.weight", "fp8_e4m3fn", (kv_width, hidden))),
+            (norm, builder.weight(
+                    f"{base}.self_attn.kv_proj.weight",
+                    "fp8_e4m3fn",
+                    (kv_width, hidden),
+                    scale_block_elements=32,
+                )),
             (latent,),
             contract="fp8_e4m3fn_fp8_e4m3fn_fp32_sequential_rne_v1",
             attributes={"input_dtype": "bf16", "second_input_dtype": "fp8_e4m3fn"},
@@ -668,7 +693,12 @@ def deepseek_shaped_graph(
         builder.kernel(
             f"{prefix}.output_projection",
             "MATMUL",
-            (attention, builder.weight(f"{base}.self_attn.o_proj.weight", "fp8_e4m3fn", (hidden, hidden))),
+            (attention, builder.weight(
+                    f"{base}.self_attn.o_proj.weight",
+                    "fp8_e4m3fn",
+                    (hidden, hidden),
+                    scale_block_elements=32,
+                )),
             (attention_output,),
             contract="fp8_e4m3fn_fp8_e4m3fn_fp32_sequential_rne_v1",
             attributes={"input_dtype": "bf16", "second_input_dtype": "fp8_e4m3fn"},
@@ -807,22 +837,32 @@ def deepseek_shaped_graph(
             expert_output = builder.value(
                 f"{prefix}.expert_output", "bf16", (span, 2, hidden), "activation"
             )
+            # The routed bank is named by attribute, exactly as the DeepSeek
+            # front end does: one tensor per expert, ascending logical ID.
+            bank = [
+                builder.weight(
+                    f"{base}.mlp.experts.{expert}.w1.weight",
+                    "mxfp4_e2m1",
+                    (expert_width, hidden),
+                    scale_block_elements=32,
+                )
+                for expert in range(experts)
+            ]
             builder.kernel(
                 f"{prefix}.routed_projection",
                 "ROUTED_MATMUL",
-                (
-                    dispatched,
-                    builder.weight(
-                        f"{base}.mlp.experts.weight", "mxfp4_e2m1", (experts, expert_width, hidden)
-                    ),
-                    builder.weight(
-                        f"{base}.mlp.experts.scale", "e8m0", (experts, expert_width, hidden // 32)
-                    ),
-                    dispatched_ids,
-                ),
+                (dispatched, dispatched_ids),
                 (expert_output,),
                 contract="mxfp4_e2m1_fp8_e4m3fn_fp32_blocked_rne_v1",
-                attributes={"input_dtype": "bf16", "second_input_dtype": "mxfp4_e2m1"},
+                attributes={
+                    "expert_count": experts,
+                    "expert_weight_block_elements": 32,
+                    "expert_weight_dtype": "mxfp4_e2m1",
+                    "expert_weight_order": "ascending_logical_expert_id",
+                    "expert_weight_tensors": bank,
+                    "input_dtype": "bf16",
+                    "second_input_dtype": "mxfp4_e2m1",
+                },
                 layer=layer,
             )
             feed_forward_output = builder.value(
@@ -1073,7 +1113,14 @@ def test_mutable_state_never_lives_in_rom(qwen_build, deepseek_build):
         # Every ROM region member is a checkpoint-bound weight, so no mutable
         # value can be hiding inside a mask image.
         for region in plan.regions:
-            assert region.role in {"global_weight", "layer_weight"}
+            assert region.role in {
+                "expert_bank",
+                "expert_bank_scale",
+                "global_weight",
+                "global_weight_scale",
+                "layer_weight",
+                "layer_weight_scale",
+            }
             for member in region.members:
                 assert member.source_sha256
                 assert member.bytes > 0
@@ -2016,3 +2063,108 @@ def test_non_uniform_weight_sizes_split_a_run(tmp_path):
     assert _kernel_signature(kernel, tensors) != _kernel_signature(other, tensors)
     analysis = analyze(graph)
     assert len(analysis.runs) > 1
+
+
+# ---------------------------------------------------------------------------
+# Block scales and routed expert banks
+# ---------------------------------------------------------------------------
+def test_block_scales_live_in_rom_beside_their_weight(deepseek_build):
+    from runtime.abi3.descriptors import LayoutClass
+
+    deployment, plan = deepseek_build
+    scale_regions = [r for r in plan.regions if r.role.endswith("_scale")]
+    assert scale_regions
+    scale_objects = {r.object_id for r in scale_regions}
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_id not in scale_objects:
+            continue
+        assert descriptor.payload["storage_class"] == int(StorageClass.ROM)
+        assert descriptor.permissions == int(Permission.READ | Permission.IMMUTABLE)
+    scaled_views = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+        and d.payload["layout_class"] == int(LayoutClass.BLOCK_SCALED)
+    ]
+    assert scaled_views
+    for descriptor in scaled_views:
+        assert descriptor.payload["scale_block_elements"] > 0
+        assert descriptor.payload["scale_object_id"] != 0xFFFFFFFF
+
+
+def test_routed_expert_bank_is_one_region_and_one_view(deepseek_build, deepseek_graph):
+    deployment, plan = deepseek_build
+    banks = [r for r in plan.regions if r.role == "expert_bank"]
+    assert banks
+    routed = [
+        k for k in deepseek_graph.kernels if "expert_weight_tensors" in k.attributes
+    ]
+    assert routed
+    experts = len(routed[0].attributes["expert_weight_tensors"])
+    for region in banks:
+        # One slot per loop iteration, holding that layer's whole bank.
+        assert len(region.members) == region.slot_count * experts
+        assert region.slot_bytes % experts == 0
+    bank_objects = {r.object_id for r in banks}
+    views = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+        and d.primary_object_id in bank_objects
+    ]
+    assert views
+    for descriptor in views:
+        # The expert dimension is an addressing dimension, not a program loop.
+        assert descriptor.payload["dim0"] == experts
+        assert descriptor.payload["rank"] == 3
+    operators = _operators(deployment, Major.TENSOR, int(TensorOp.ROUTED_MATMUL))
+    assert operators
+    view_ids = {d.descriptor_id for d in views}
+    for descriptor in operators:
+        # TA-ABI3-OPCONV-1: routed weights are slot 1.
+        assert descriptor.payload["input_view_1"] in view_ids
+
+
+def test_expert_bank_members_are_placed_in_ascending_expert_order(deepseek_build):
+    _deployment, plan = deepseek_build
+    for region in [r for r in plan.regions if r.role == "expert_bank"]:
+        for slot in range(region.slot_count):
+            members = [m for m in region.members if m.slot == slot]
+            ids = [int(m.tensor_id.split(".experts.")[1].split(".")[0]) for m in members]
+            assert ids == sorted(ids)
+            assert ids == list(range(len(ids)))
+
+
+# ---------------------------------------------------------------------------
+# Memory capacity
+# ---------------------------------------------------------------------------
+def test_memory_capacity_is_proved(qwen_build, deepseek_build):
+    for deployment, _plan in (qwen_build, deepseek_build):
+        footprint = deployment.notes["memory_footprint"]
+        declared = footprint["declared"]
+        used = footprint["used"]
+        assert used["rom"] <= declared["rom"]
+        assert used.get("sram", 0) <= declared["sram"]
+        assert footprint["session_bytes_in_hbm"] <= declared["hbm"]
+
+
+def test_mutable_state_overflow_is_refused(qwen_graph):
+    from compiler.backends.rom.qwen3 import qwen3_rom_capability as make
+
+    capability = make(max_context_positions=16, vocabulary_size=32)
+    capability.memory["hbm"] = {"bytes": 4096}
+    capability.memory["sram"] = {"bytes": 4096, "banks": 4}
+    with pytest.raises(RomLoweringError, match="does not fit the target"):
+        build_qwen3_rom_deployment(qwen_graph, capability=capability)
+
+
+def test_symbolic_extent_uses_the_declared_maximum(qwen_graph, qwen_capability):
+    """``Symbolic.maximum`` is the extent's maximum, multiplier included."""
+    from compiler.backends.rom.common.program import RomLowering
+    from compiler.backends.rom.qwen3 import qwen3_rom_policy
+
+    lowering = RomLowering(qwen_graph, qwen_capability, qwen3_rom_policy())
+    assert lowering._extent(Symbolic("span_tokens", 1, 16)) == 16
+    assert lowering._extent(Symbolic("span_tokens", 6, 96)) == 96
+    assert lowering._extent(Symbolic("span_tokens", 6, 0)) == 6 * 16
+    assert lowering._extent(7) == 7
