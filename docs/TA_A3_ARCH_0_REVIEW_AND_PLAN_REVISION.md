@@ -142,14 +142,49 @@ another.
 | `TA-DS-LONG` | DeepSeek long context toward 200,000 | functional acceptance at the **achieved** context, which every report must state numerically |
 | `TA-*-CYCLE` | all four at their full mandatory context | cycle-model result over the executed operation trace, labelled as such |
 
-Rationale: DeepSeek-V4-Flash is a 156 GB, 43-layer, 256-expert model with a
-learned sparse indexer, a two-rate compressor, 20-iteration Sinkhorn hyper-
-connections and FP4 experts. A functionally exact 200,000-token prefill is a
-compute campaign, not a correctness gate. Separating the two lets the
-correctness gate close on real tokens now and lets the capacity/cost comparison
-be produced by the cycle model over a real executed trace, with the extrapolation
-visible instead of hidden. **A functional claim is never made from a cycle
-result, and a cycle result always names the executed trace it extends.**
+Rationale, now measured rather than estimated. The reference oracle executes
+DeepSeek-V4-Flash on this machine by streaming the released 156 GB checkpoint
+layer by layer through a GPU shared with other tenants, and produces correct
+tokens: the pinned chat workload runs to a real EOS in 333 tokens and reaches
+the correct answer, and the agent workload emits a well-formed tool call. Decode
+costs 0.85-1.19 s per token at a peak device footprint of 0.39 GiB.
+
+**The largest context actually executed is 8,000 tokens**, and the reason 200,000
+does not run is specific and worth recording, because it is not the reason
+anyone assumed:
+
+| Context | Result |
+|---:|---|
+| 1,000 | prefill 35.1 s, peak 0.66 GiB |
+| 8,000 | prefill 47.7 s, peak 5.09 GiB |
+| 32,000 | out of memory in `hc_post` |
+| 128,000 | out of memory in `hc_pre` |
+| 200,000 | out of memory in the hyper-connection expansion |
+
+The wall is the **mHC hyper-connection, not the sparse indexer**. At 200,000
+tokens `hc_post`'s `[b, s, 4, 4, 4096]` binary32 intermediate is 48.8 GiB and is
+allocated twice per layer across 43 layers; the indexer's unchunked score tensor
+would be 2.33 TiB. The persistent KV and RoPE state is only 2.32 GiB, measured —
+that was never the constraint. **A 200,000-token prefill requires a chunked
+rewrite of the vendor prefill path on any GPU**: even an empty 95 GiB card
+cannot hold `hc_post` plus the indexer term. Once chunked the time is about 58
+seconds, so the blocker is memory and vendor code structure, not throughput.
+
+This is why the workload contract separates the functional gate from the
+capacity result. The correctness gate closes on real tokens at the context that
+runs; the capacity and cost comparison comes from the cycle model over a real
+executed trace, with the extrapolation visible instead of hidden.
+
+One further result belongs here because it nearly went the other way. The
+released TileLang `fp4_gemm` kernel is **wrong on this GPU architecture**,
+giving a maximum absolute error of 6.52 against a signal whose mean magnitude is
+1.28. Two mutually independent references agree with each other to half a
+bfloat16 ulp and disagree with it. Because the routed experts are most of the
+model, it did not crash — it produced fluent, on-topic, semantically empty text,
+which is precisely the failure mode this program's rules exist to catch:
+*exact failures remain failures even when output text is semantically
+plausible*. The oracle uses the release's own documented FP8 recast instead, and
+re-proves the check at every start.
 
 ## 6. Revision: what is reused and what is abandoned
 

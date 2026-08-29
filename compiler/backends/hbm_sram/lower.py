@@ -166,6 +166,9 @@ _STATE_CLASS: Mapping[str, StateClass] = {
 
 _TRANSACTION_KINDS = frozenset({"STATE_PREPARE", "STATE_COMMIT", "STATE_READ"})
 
+#: Element types that address something rather than carry a value.
+_INDEX_DTYPES = frozenset({"u32", "i32", "u64", "i64"})
+
 
 class LoweringError(ValueError):
     """Raised when a graph cannot be expressed in ABI 3.0 on this chip."""
@@ -261,6 +264,7 @@ class _Emitter:
         self._hoisted: set[str] = set()
         self._transaction_source: dict[tuple[str, str], int] = {}
         self.token_ring_tensor: str | None = None
+        self.token_input_tensor: str | None = None
         self.token_ring_object: int = NO_ID
         self.commit_token_object: int = NO_ID
 
@@ -474,6 +478,21 @@ class _Emitter:
         for kernel in self.graph.kernels:
             if kernel.kind == "TOKEN_APPEND" and kernel.outputs:
                 self.token_ring_tensor = kernel.outputs[0]
+            if kernel.kind == "EMBEDDING_LOOKUP":
+                # The tokens a generation loop reads are the tokens it appends.
+                # Placing the embedding's index input and the selection ring in
+                # one buffer is what closes that loop in memory: the host writes
+                # the prompt once, the device appends each selected token to the
+                # same ring, and the next step's lookup reads it without a copy
+                # or a second host window.
+                for name in kernel.inputs:
+                    tensor = self.tensors.get(name)
+                    if (
+                        tensor is not None
+                        and tensor.role == "input"
+                        and tensor.dtype in _INDEX_DTYPES
+                    ):
+                        self.token_input_tensor = name
         ring_element = 4
         if self.token_ring_tensor is not None:
             ring_element = max(
@@ -481,11 +500,21 @@ class _Emitter:
             )
         ring_bytes = int(self.capability.limits["max_context_positions"]) * ring_element
 
+        ring_key = None
+        for key in sorted(self.plan.host_objects):
+            tensor_id = key.split(".", 2)[2] if key.count(".") >= 2 else key
+            if tensor_id in (self.token_ring_tensor, self.token_input_tensor):
+                ring_key = ring_key or key
         for key in sorted(self.plan.host_objects):
             spec = self.plan.host_objects[key]
             tensor_id = key.split(".", 2)[2] if key.count(".") >= 2 else key
+            if (
+                tensor_id in (self.token_ring_tensor, self.token_input_tensor)
+                and key != ring_key
+            ):
+                continue  # shares the ring created for its partner
             size = int(spec["size_bytes"])
-            if tensor_id == self.token_ring_tensor:
+            if tensor_id in (self.token_ring_tensor, self.token_input_tensor):
                 size = ring_bytes
             base, _ = self._address(f"host.{key}")
             self._host_object[key] = builder.memory_object(
@@ -499,8 +528,12 @@ class _Emitter:
                 alignment_log2=12,
                 key=f"obj.host.{key}",
             )
-            if tensor_id == self.token_ring_tensor:
+            if tensor_id in (self.token_ring_tensor, self.token_input_tensor):
                 self.token_ring_object = self._host_object[key]
+        for key in sorted(self.plan.host_objects):
+            tensor_id = key.split(".", 2)[2] if key.count(".") >= 2 else key
+            if tensor_id in (self.token_ring_tensor, self.token_input_tensor):
+                self._host_object[key] = self.token_ring_object
 
         if self.token_ring_object == NO_ID:
             self.token_ring_object = builder.memory_object(

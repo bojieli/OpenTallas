@@ -117,8 +117,8 @@
 - [ ] W10.2 Qwen repeated-special-token stress run
 - [ ] W10.3 Qwen chat workload (pinned template) with question-specific checks
 - [ ] W10.4 Qwen agentic workload (model-generated tool calls, sandboxed, fed back)
-- [~] W10.5 DeepSeek long-context campaign (target 200,000; record achieved boundary honestly) — oracle ladder reaches 8,000 tokens so far
-- [ ] W10.6 DeepSeek agentic scenario
+- [x] W10.5 DeepSeek long-context campaign — largest context **actually executed is 8,000 tokens**; 32K/128K/200K exhaust GPU memory in the mHC hyper-connection, not the sparse indexer. A 200,000-token prefill needs a chunked rewrite of the vendor prefill path on any GPU: `hc_post` alone is 48.8 GiB at that context and the indexer term 2.33 TiB, while persistent KV state is only 2.32 GiB
+- [x] W10.6 DeepSeek agentic scenario — 47 tokens to EOS, well-formed DSML tool call, byte-identical across independent process invocations
 
 ## W11 — Governed comparison and release
 
@@ -191,4 +191,16 @@
   section 9 makes them capabilities rather than assumptions, but only
   `max_outstanding_per_queue` exists; everything else comes from a cost table
   and is labelled assumed.
+- **OI-13 — the released TileLang `fp4_gemm` is wrong on sm_120.** Maximum
+  absolute error 6.52 against a signal of mean magnitude 1.28, verified against
+  two mutually independent references that agree with each other to half a
+  bfloat16 ulp. Because the routed experts are most of the model it does not
+  crash; it produces fluent, on-topic, semantically empty text. The oracle uses
+  the release's own documented FP8 recast and re-proves the check at every
+  start. Any future use of that kernel must repeat the check.
+- **OI-14 — the released `sparse_attn` kernel cannot launch at 64 heads on
+  sm_120**, requesting 141,312 bytes of dynamic shared memory against 101,376
+  available. Split into four 16-head launches, which is bitwise identical
+  because the heads are independent, and is the per-rank head count the
+  vendor's own world_size=4 configuration produces.
 
