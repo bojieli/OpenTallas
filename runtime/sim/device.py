@@ -173,6 +173,34 @@ class TransactionResult:
 # ---------------------------------------------------------------------------
 # Device
 # ---------------------------------------------------------------------------
+def loop_trip_count(
+    payload: Mapping[str, Any], symbols: Mapping[int, int]
+) -> int:
+    """How many times a loop descriptor runs, given its symbol bindings.
+
+    A symbol-bounded loop's induction variable counts *blocks*: the symbol is
+    divided by ``bound_divisor`` first, and only then does ``step`` apply.  A
+    backend that sets ``step`` to the divisor therefore divides twice and gets
+    one iteration at every span, which is correct exactly while the whole
+    request fits in a single block.  That defect shipped once and survived
+    every gate, because every gate used a prompt shorter than one block.
+
+    This is the single definition.  Anything that needs to know what the device
+    will do -- a backend, a checker, a test -- calls it rather than restating
+    the formula, because a restatement is what let the two drift apart.
+    """
+    step = int(payload["step"])
+    if step == 0:
+        raise ValueError("a zero-step loop has no finite trip count")
+    if payload["bound_selector_kind"] == SelectorKind.CONSTANT:
+        span = int(payload["upper_bound"]) - int(payload["lower_bound"])
+    else:
+        bound = int(symbols[int(payload["bound_symbol_id"])])
+        divisor = max(int(payload["bound_divisor"]), 1)
+        span = (bound + divisor - 1) // divisor - int(payload["lower_bound"])
+    return max((span + step - 1) // step, 0)
+
+
 class Device:
     """One activated ABI 3.0 deployment on one logical accelerator."""
 
@@ -288,27 +316,25 @@ class Device:
     def _loop_trip(self, loop: Descriptor, symbols: Mapping[int, int]) -> int:
         payload = loop.payload
         step = payload["step"]
+        # The arithmetic lives in loop_trip_count() so that a backend or a test
+        # can ask what the device will do without restating the formula.  A
+        # restated formula is how the block-loop encoding defect survived: the
+        # backend's own tests asserted the fields they had emitted rather than
+        # the trip the device would derive from them.
         if step == 0:
             raise DeviceTrap(
                 f"loop {loop.descriptor_id} declares a zero step; a zero-step "
                 "loop has no finite trip count",
                 TrapClass.ILLEGAL_INSTRUCTION_OR_CONTROL_FLOW,
             )
-        if payload["bound_selector_kind"] == SelectorKind.CONSTANT:
-            span = payload["upper_bound"] - payload["lower_bound"]
-        else:
+        if payload["bound_selector_kind"] != SelectorKind.CONSTANT:
             symbol = payload["bound_symbol_id"]
-            try:
-                bound = symbols[symbol]
-            except KeyError:
+            if symbol not in symbols:
                 raise DeviceTrap(
                     f"loop {loop.descriptor_id}: symbol {symbol} is unbound",
                     TrapClass.DESCRIPTOR_OR_ADDRESS,
-                ) from None
-            divisor = max(payload["bound_divisor"], 1)
-            bound = (bound + divisor - 1) // divisor
-            span = bound - payload["lower_bound"]
-        trip = max((span + step - 1) // step, 0)
+                )
+        trip = loop_trip_count(payload, symbols)
         if trip > payload["max_iterations"]:
             raise DeviceTrap(
                 f"loop {loop.descriptor_id}: runtime trip {trip} exceeds the "

@@ -82,7 +82,7 @@
 - [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens
 - [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
-- [ ] W6.6 Checkpoint/restart exactness on all four
+- [~] W6.6 Checkpoint/restart exactness on all four — **Qwen-HBM proven; the other three wait on W6.2-W6.4**. `tools/run_abi3_restart_exactness.py` runs one workload three times in three separate OS processes: uninterrupted; interrupted after N tokens with the device state serialised by `runtime/sim/checkpoint.py`; and finished in a fresh process that loads only that checkpoint. `TA-QW-CHAT-1` on `torch_cpu`, 93 prompt tokens, 6 new tokens split 3+3: both runs give `[1654, 525, 2661, 1447, 12, 3070]`, with identical retired work in every transaction and identical values for all 42 architectural counters (`results/abi3/restart_exactness.json`). Fifteen guards stand between the run and the word *pass* — three distinct PIDs, one deployment digest, one implementation identity, one runtime source digest, and explicit non-emptiness and length checks, because two empty lists are not a match. Two controls make the pass mean something: erasing the KV STATE images from the checkpoint diverges at the first resumed token, and erasing everything **except** the STATE images still reproduces the sequence, so what carries the generation is the STATE resources and the cursor, not activation scratch. The source-digest guard earned itself on its first run, refusing a token-identical result because a concurrent commit changed `runtime/` between two phases
 - [x] W6.7 Fail-closed campaigns — `tools/run_abi3_failclosed_campaign.py`, 8/8 refused against the **real** Qwen deployment: six corruption classes refused at admission, a mid-transaction fault leaving cursor and generation unchanged, and no prepared state left open. Found and fixed a real defect on its first run
 
 ## W7 — Cycle model and capability
@@ -292,6 +292,99 @@
   each break it for a reason that has nothing to do with the deployment. The
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
+
+- **OI-25 — fourteen test files still validate the retired ABI 2.5 lane, and
+  one of them fails.** `tests/compiler/test_tensor_accelerator_qwen_rtl_rope.py`
+  fails `test_rope_builder_reproduces_retained_artifact` — and it fails on a
+  clean checkout of HEAD, so it predates tonight's work. It rebuilds a vector
+  artifact from `results/tensor_accelerator/qwen3_full_model_physical/ir/tensor_kernel_ir.json`
+  (the ABI 2.5 IR, not `build/ir-v3/qwen3-8b/kernel_ir.v3.json`) and from a
+  second repository at `/home/ubuntu/OpenTallas-ta-integration/`. Thirteen more
+  files in `tests/compiler/test_tensor_accelerator_qwen_*.py` have the same two
+  dependencies.
+
+  Whether they pass tells us nothing about ABI 3.0: they exercise a pipeline
+  this program has replaced, from inputs that are not the shared IR. **The lane
+  should be quarantined** — moved to a clearly named directory with a note that
+  it is superseded — so that no reader takes a green tick there as evidence for
+  the new ABI, and so a red one is not mistaken for an ABI 3.0 regression.
+
+  I have deliberately *not* silenced the failing test. Skipping the one that
+  happens to be red, while leaving thirteen green ones making claims about a
+  retired lane, would make the suite look better and the repository less honest.
+  The quarantine is a single coherent change and belongs in one commit, once the
+  concurrent backend work has settled. Related to [OI-17], which is the same
+  lane failing for a different reason.
+
+- **OI-24 — a zero-source memory object committed its whole declared arena on
+  activation, and the DeepSeek cluster plan declares 160.4 GiB of it.**
+  `MemoryObject` built zero-sourced objects with `np.full`, which writes every
+  byte and so commits the entire arena up front. The kernel killed the process:
+  `Out of memory: Killed process 706797 (python3) ... anon-rss:153687324kB`.
+  `np.zeros` is calloc-backed and faults lazily, giving identical bytes at a
+  ~33 GB peak. The arena is sized by `span_tokens` at its 8,192 maximum, so this
+  scales with the declared context and not with the workload — a short prompt
+  paid the full price.
+
+- **OI-23 — the committed state image holds one layer's KV window out of
+  thirty-six, so the ABI's durability record is not a durability record.**
+  *(Found by the restart-exactness work.)* `Device._apply_commit` reads
+  `prepared[0 : rows × row_bytes]` and appends it to the committed image at the
+  cursor. That is a coherent contract for one logical stream. But
+  `_state_view` in the HBM backend merges 36 layer KV resources into a single
+  physical resource whose prepared image holds 36 populated windows of 393,216
+  bytes, one per layer. A commit publishes the window at offset 0 and nothing
+  else, and the committed image is never read back. A restart from the ABI's own
+  durability record would lose 35 of 36 layers of KV cache.
+
+  **The ABI is right and the backend is wrong.** A resource is one durable
+  stream; the backend declared thirty-six of them as one, in a layout the commit
+  contract cannot publish. The fix belongs in the layout, not in
+  `_apply_commit`: make the resource's row the concatenation of all layers' rows
+  for one position, so `capacity_rows` counts positions and one commit of
+  `span_tokens` rows publishes every layer. Per-layer views then take a column
+  offset inside the row — the same state-plane idiom the ROM lane already uses
+  for the key and value halves.
+
+  Execution today is unaffected, because reads name the prepared image; it is
+  the durability claim that is hollow. W6.6's proof stands on its own terms —
+  it checkpoints the prepared image, and says so — but it cannot be restated as
+  "restart from the committed state" until this is fixed.
+
+- **OI-22 — the HBM lane's block loop ran once at any prompt length, so every
+  token past the first 512 was silently dropped.** *(Found by the ROM lane; fixed.)*
+  `Device._loop_trip` computes `trip = ceil(ceil(span / bound_divisor) / step)`
+  — it has already divided the symbol by the divisor before the step applies.
+  The HBM lowering emitted `step = bound_divisor`, which divides a second time
+  and yields `trip = 1` at *every* span. Verified on a clean checkout of HEAD, by
+  summing the rows a token-indexed view presents across all iterations:
+
+  | span | trip | rows presented |
+  |---:|---:|---:|
+  | 93 | 1 | 93 |
+  | 512 | 1 | 512 |
+  | 600 | 1 | **512 of 600** |
+  | 8,000 | 1 | **512 of 8,000** |
+
+  Every gate this program has passed used a prompt of 93 or 112 tokens, which
+  fits in one block, so the encoding was correct on every workload anyone had
+  run. The mandatory 8,000-token workload would have returned an answer computed
+  from one sixteenth of its prompt. It would not have looked wrong: it would
+  have produced fluent tokens, and under the campaign runner as it stood this
+  morning it would have been recorded as `status: pass`, because nothing
+  compared them to anything (OI-18's sibling defect, fixed earlier today). The
+  two findings are the same lesson from opposite ends.
+
+  The fix is `step = 1` with `upper_bound = trip`: the induction variable counts
+  blocks, not rows. Confirmed end to end as well as at the resolver: a
+  600-token prompt (one block plus 88) now runs to completion with
+  `tensor.embedding_rows = 600`, which is `prompt + generated - 1` because the
+  last generated token is never fed back. Before the fix that number would have
+  been 512. Coverage is then exact at 93, 512, 600, 1,024, 8,000 and
+  8,192, and the deployment still admits with the same 75 instructions, 218
+  descriptors and work bound 22,715. **It was found only because the ROM lane
+  lowered the same graph independently and encoded the loop differently** —
+  neither lane's tests could have caught it alone.
 
 - **OI-21 — prefill attention is a per-(token, head) Python loop, and it is
   what blocks the mandatory 8,000-token workload.**

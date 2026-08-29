@@ -27,7 +27,11 @@ from compiler.backends.hbm_sram.capability import (
     single_chip_capability,
 )
 from compiler.backends.hbm_sram.check import check_deployment
-from compiler.backends.hbm_sram.lower import lower_to_abi3, lower_with_plan
+from compiler.backends.hbm_sram.lower import (
+    lower_to_abi3,
+    lower_with_plan,
+    shares_an_axis,
+)
 from compiler.backends.hbm_sram.plan import PLAN_SCHEMA, build_plan, read_kernel_graph
 from compiler.ir.v3.kernel_ir import (
     CheckpointBinding,
@@ -43,9 +47,14 @@ from compiler.ir.v3.kernel_ir import (
 from compiler.ir.v3.lowering import engine_for
 from runtime.abi3.constants import Major, Permission, StorageClass, TopologyClass
 from runtime.abi3.descriptors import ExtendedDescriptorType, SelectorKind, Symbol
+from runtime.sim.device import loop_trip_count
+from runtime.sim.memory import ViewResolver
 from runtime.abi3.verifier import require_admitted, verify_deployment
 
 REAL_QWEN_IR = Path("build/ir-v3/qwen3-8b/kernel_ir.v3.json")
+REAL_DEEPSEEK_IR = Path(
+    "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json"
+)
 
 
 # ---------------------------------------------------------------------------
@@ -738,7 +747,13 @@ def test_symbolic_token_extents_are_bound(dense, single_chip):
         # extents are static while the token count is not, so a larger block
         # would present rows the request does not have.
         assert loop.payload["bound_divisor"] >= 1
-        assert loop.payload["step"] == loop.payload["bound_divisor"]
+        # The induction variable counts *blocks*, so the step is one.  It is
+        # emphatically not the divisor: Device._loop_trip computes
+        # ceil(ceil(span / divisor) / step), having already divided by the
+        # divisor, so a step of divisor divides twice and yields one iteration
+        # at every span.  This assertion previously read
+        # ``step == bound_divisor`` and is what let that through.
+        assert loop.payload["step"] == 1
 
     symbol_views = [
         d
@@ -780,10 +795,64 @@ def test_token_loop_steps_by_the_block_it_advances(dense, single_chip):
             ):
                 continue
             block = loop["bound_divisor"]
-            assert loop["step"] == block
+            assert loop["step"] == 1
             # dim0 is one block of rows, and the term moves by one block.
             assert payload["dim0"] == block, (payload["dim0"], block)
             assert payload[f"term{slot}_stride"] == block * payload["stride0"]
+            checked += 1
+    assert checked, "no token-loop view to check"
+
+
+def test_the_token_loop_covers_every_row_of_the_span(dense, single_chip):
+    """Across all its iterations the loop must present exactly `span` rows.
+
+    Checking the encoding field by field is not enough: the two assertions above
+    both held while the loop ran a single iteration at every prompt length,
+    because the step was the divisor and the device had already divided by the
+    divisor before applying it.  Every gate used a prompt that fits in one
+    block, so nothing noticed until the ROM lane encoded the same loop
+    differently.  This asserts the property that actually matters -- that the
+    rows presented add up to the request -- at spans on both sides of a block
+    boundary.
+    """
+    deployment = lower_to_abi3(dense, single_chip)
+    # resolve() reads descriptors and bindings, never bytes, so no device
+    # memory is needed -- and the synthetic fixture has no checkpoint to map.
+    resolver = ViewResolver(deployment, None)
+    loops = {
+        d.descriptor_id: d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.LOOP_CONTROL
+        and d.payload["bound_selector_kind"] == int(SelectorKind.RUNTIME_SYMBOL)
+    }
+    assert loops
+    checked = 0
+    for view in deployment.table.descriptors():
+        if view.descriptor_type != ExtendedDescriptorType.TENSOR_VIEW:
+            continue
+        payload = view.payload
+        if payload["dynamic_term_count"] < 1:
+            continue
+        if payload["term0_kind"] != int(SelectorKind.LOOP_INDUCTION):
+            continue
+        loop = loops.get(payload["term0_index"])
+        if loop is None:
+            continue
+        block = loop.payload["bound_divisor"]
+        for span in (1, block - 1, block, block + 1, 2 * block, 3 * block + 7):
+            if span < 1:
+                continue
+            symbols = {int(Symbol.SPAN_TOKENS): span}
+            trip = loop_trip_count(loop.payload, symbols)
+            rows = sum(
+                resolver.resolve(
+                    view.descriptor_id,
+                    loops={loop.descriptor_id: i},
+                    symbols=symbols,
+                ).dims[0]
+                for i in range(trip)
+            )
+            assert rows == span, (view.descriptor_id, span, trip, rows)
             checked += 1
     assert checked, "no token-loop view to check"
 
@@ -1220,3 +1289,148 @@ def test_cli_serves_the_cluster_profile(tmp_path):
     report = json.loads((out / "build_report.json").read_text())
     assert report["node_count"] == 32
     assert report["program"]["link_instructions"] > 0
+
+
+# ---------------------------------------------------------------------------
+# BROADCAST: an inserted axis is read through a zero stride, never written
+# ---------------------------------------------------------------------------
+def test_a_shared_axis_is_readable_but_never_writable():
+    """A zero stride on an axis of extent above one names one location.
+
+    Reading it repeats that location, which is the whole point.  Writing it
+    would make the axis an alias, so the emitter refuses to mark such a view
+    writable rather than leaving the surviving value to store order.
+    """
+    assert shares_an_axis([3, 4, 5], [20, 0, 1])
+    assert not shares_an_axis([3, 4, 5], [20, 5, 1])
+    # An axis of extent one reaches one element whatever its stride, so a zero
+    # there is a degenerate axis and not a shared one.
+    assert not shares_an_axis([3, 1, 5], [5, 0, 1])
+
+
+@pytest.mark.skipif(
+    not REAL_DEEPSEEK_IR.is_file(), reason="the DeepSeek neutral IR is not built"
+)
+def test_the_hyper_connection_expansion_moves_no_duplicate_rows():
+    """``main.hc_expand`` reads one embedding through a stride-zero axis.
+
+    The mHC expansion is ``unsqueeze(2).repeat(1, 1, hc_mult, 1)``.  Expressed
+    as a ``CONCAT`` it reached ``REDUCTION.GROUPED_CONCAT``, which joins on axis
+    0 and therefore refused a ``[tokens, streams, width]`` result -- correctly,
+    because the join it would have performed puts four consecutive *tokens*
+    where four *streams* belong.  As a ``BROADCAST`` it is one movement whose
+    source names the embedding once per stream through a stride of zero.
+    """
+    graph = read_kernel_graph(REAL_DEEPSEEK_IR)
+    kernel = next(k for k in graph.kernels if k.kernel_id == "main.hc_expand")
+    assert kernel.kind == "BROADCAST"
+    assert len(kernel.inputs) == 1
+    assert kernel.attributes["axis"] == 1
+    extent = kernel.attributes["extent"]
+
+    capability = cluster32_capability()
+    deployment = lower_to_abi3(graph, capability)
+    require_admitted(deployment, capability)
+
+    operators = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and d.payload["source_kernel_id"] == kernel.index
+    ]
+    assert len(operators) == 1
+    payload = operators[0].payload
+    assert payload["engine_family"] == int(Major.DMA)
+
+    def axes(view_id: int):
+        view = deployment.table.get(
+            view_id, ExtendedDescriptorType.TENSOR_VIEW
+        ).payload
+        rank = view["rank"]
+        return (
+            [view[f"dim{a}"] for a in range(rank)],
+            [view[f"stride{a}"] for a in range(rank)],
+        )
+
+    source_dims, source_strides = axes(payload["input_view_0"])
+    result_dims, result_strides = axes(payload["output_view_0"])
+    assert source_dims == result_dims
+    assert source_dims[1] == extent
+    # The inserted axis is shared on the way in and dense on the way out.
+    assert source_strides[1] == 0
+    assert result_strides[1] == source_strides[2] * source_dims[2]
+    assert not shares_an_axis(result_dims, result_strides)
+
+
+def _broadcast_graph(*, extent: int = 4, result_shape=None) -> KernelGraph:
+    """The smallest graph that carries one BROADCAST, for the neutral checks."""
+    span, width = Symbolic("span_tokens", 1, 64), 8
+    shape = result_shape if result_shape is not None else (span, extent, width)
+    tensors = (
+        Tensor(tensor_id="tokens", dtype="u32", shape=(span, 1), role="input"),
+        Tensor(tensor_id="hidden", dtype="bf16", shape=(span, width),
+               role="activation"),
+        Tensor(tensor_id="streams", dtype="bf16", shape=shape, role="activation"),
+        Tensor(tensor_id="out", dtype="u32", shape=(1, 1), role="output"),
+    )
+    kernels = (
+        Kernel(index=0, kernel_id="k0", kind="BROADCAST", inputs=("hidden",),
+               outputs=("streams",), numeric_contract="structural_hc_expand_bf16_v1",
+               attributes={"axis": 1, "extent": extent}),
+    )
+    return KernelGraph(
+        model_id="synthetic-broadcast",
+        source={"family": "broadcast"},
+        symbols=(RuntimeSymbol("span_tokens", 1, 64, 1),),
+        tensors=tensors,
+        states=(),
+        kernels=kernels,
+        entrypoints=(
+            Entrypoint("prefill", ("tokens",), ("out",), ()),
+            Entrypoint("decode", ("tokens",), ("out",), ()),
+        ),
+        generation_policy={"eos_token_ids": [0], "max_new_tokens": 1,
+                           "vocabulary_size": 8},
+    )
+
+
+def test_a_well_formed_broadcast_is_neutral():
+    assert check_neutral(_broadcast_graph()) == []
+
+
+@pytest.mark.parametrize(
+    "shape_factory, fragment",
+    [
+        # the inserted axis is the wrong size
+        (lambda span, width: (span, 3, width), "declares"),
+        # the axis was inserted in the wrong place
+        (lambda span, width: (4, span, width), "declares"),
+        # a concatenation, which is what the defect said this operation was
+        (lambda span, width: (span, 4 * width), "declares"),
+    ],
+)
+def test_a_broadcast_whose_result_is_not_the_inserted_axis_is_rejected(
+    shape_factory, fragment
+):
+    span, width = Symbolic("span_tokens", 1, 64), 8
+    errors = check_neutral(
+        _broadcast_graph(result_shape=shape_factory(span, width))
+    )
+    assert errors and any(fragment in e and "BROADCAST" in e for e in errors)
+
+
+def test_a_broadcast_must_state_its_axis_and_extent():
+    graph = _broadcast_graph()
+    stripped = Kernel(
+        index=0, kernel_id="k0", kind="BROADCAST", inputs=("hidden",),
+        outputs=("streams",), numeric_contract="structural_hc_expand_bf16_v1",
+        attributes={},
+    )
+    graph = KernelGraph(
+        model_id=graph.model_id, source=graph.source, symbols=graph.symbols,
+        tensors=graph.tensors, states=graph.states, kernels=(stripped,),
+        entrypoints=graph.entrypoints,
+        generation_policy=graph.generation_policy,
+    )
+    errors = check_neutral(graph)
+    assert any("'axis'" in e for e in errors)
