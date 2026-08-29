@@ -68,7 +68,9 @@ def synthetic_deployment(tmp_path_factory: pytest.TempPathFactory) -> Path:
         deployment,
         source_kind="synthetic",
     )
-    assert report["evidence_eligible"] is False
+    assert report["checkpoint_payload_evidence_eligible"] is False
+    assert report["controlled_known_answer_verified"] is True
+    assert report["model_execution_evidence_eligible"] is False
     return deployment
 
 
@@ -138,31 +140,35 @@ def test_logical_schedule_is_causal_and_explicitly_not_physical() -> None:
 def test_synthetic_package_is_closed_and_known_answer_is_exact(
     synthetic_deployment: Path,
 ) -> None:
-    report = verify_deepseek_v4_compressor_executable_deployment(
-        synthetic_deployment
-    )
+    report = verify_deepseek_v4_compressor_executable_deployment(synthetic_deployment)
     assert report == {
         "ape_sha256": (
             "4fe7b59af6de3b665b67788cc2f99892ab827efae3a467342b3bb4e3bc8e5bfe"
         ),
         "build_id": (
-            "0ab4faa1400a848425337eb210c97a2099c5ea79ae359ca6f7da1c144cf9cde7"
+            "70edc3bfbd67eb9a2495fb104471e49fe4415f046dea63cff4192978e44ddffa"
         ),
-        "evidence_eligible": False,
+        "checkpoint_payload_evidence_eligible": False,
+        "controlled_known_answer_verified": True,
         "known_answer_sha256": (
             "89920f941c0a2938fef9cfe15254bf2ce58341a8712a0a6ce5173b7cfdcdb80c"
         ),
+        "model_execution_evidence_eligible": False,
         "program_sha256": PROGRAM_SHA256,
         "schedule_sha256": (
             "f61f02da92d690857df29a231bbc58b896dfeee6b1c8c1c4a56bee0cb7c7d843"
         ),
         "source_kind": "synthetic",
-        "status": "verified_logical_schedule_and_full_width_known_answer",
+        "status": ("verified_logical_schedule_and_controlled_full_width_known_answer"),
     }
-    manifest = json.loads((synthetic_deployment / "deployment_manifest.json").read_text())
+    manifest = json.loads(
+        (synthetic_deployment / "deployment_manifest.json").read_text()
+    )
     assert manifest["claim_boundary"] == CLAIM_BOUNDARY
     assert len(manifest["artifacts"]) == 11
-    known = json.loads((synthetic_deployment / "evidence/known_answer.json").read_text())
+    known = json.loads(
+        (synthetic_deployment / "evidence/known_answer.json").read_text()
+    )
     assert known["expected"] == {
         "completed_rows_per_batch": 1,
         "converted_bf16_code": "0x4020",
@@ -180,7 +186,9 @@ def test_synthetic_package_is_closed_and_known_answer_is_exact(
     }
 
 
-@pytest.mark.skipif(not OFFICIAL_APE.is_file(), reason="official canonical cache absent")
+@pytest.mark.skipif(
+    not OFFICIAL_APE.is_file(), reason="official canonical cache absent"
+)
 def test_optional_official_cache_gate_uses_exact_canonical_ape(tmp_path: Path) -> None:
     deployment = tmp_path / "official-deployment"
     report = build_deepseek_v4_compressor_executable_deployment(
@@ -190,11 +198,17 @@ def test_optional_official_cache_gate_uses_exact_canonical_ape(tmp_path: Path) -
     assert OFFICIAL_APE.stat().st_size == APE_BYTES
     assert hashlib.sha256(OFFICIAL_APE.read_bytes()).hexdigest() == OFFICIAL_APE_SHA256
     assert report["ape_sha256"] == OFFICIAL_APE_SHA256
-    assert report["evidence_eligible"] is True
+    assert report["checkpoint_payload_evidence_eligible"] is True
+    assert report["controlled_known_answer_verified"] is True
+    assert report["model_execution_evidence_eligible"] is False
     binding = json.loads((deployment / "evidence/source_binding.json").read_text())
     assert binding["application_id"] == OFFICIAL_APPLICATION_ID
     assert binding["verification_id"] == OFFICIAL_VERIFICATION_ID
-    assert binding["evidence_eligible"] is True
+    assert binding["checkpoint_payload_evidence_eligible"] is True
+    assert binding["execution_input_provenance"] == (
+        "controlled_known_answer_not_checkpoint_activation"
+    )
+    assert binding["model_execution_evidence_eligible"] is False
 
 
 @pytest.mark.parametrize(

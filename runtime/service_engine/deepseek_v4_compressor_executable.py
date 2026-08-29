@@ -229,7 +229,9 @@ def _reshape4(
     return tuple(result)
 
 
-def _descriptor(path: str, payload: bytes, *, dtype: str, shape: list[int]) -> dict[str, Any]:
+def _descriptor(
+    path: str, payload: bytes, *, dtype: str, shape: list[int]
+) -> dict[str, Any]:
     return {
         "dtype": dtype,
         "path": path,
@@ -277,7 +279,9 @@ class CompressorDeployment:
 
     def verify_snapshot(self) -> None:
         try:
-            with SecureDirectory(self.root, label="guarded compressor deployment") as root:
+            with SecureDirectory(
+                self.root, label="guarded compressor deployment"
+            ) as root:
                 files, _ = root.enumerate_tree(maximum_depth=4, maximum_entries=64)
                 expected = {path for path, _, _ in self.artifact_digests}
                 if files != expected:
@@ -679,7 +683,9 @@ def load_deepseek_v4_compressor_state(
                 return payload
 
             raw_kv_payload = read_descriptor(raw_kv_descriptor, "state raw KV")
-            raw_score_payload = read_descriptor(raw_score_descriptor, "state raw scores")
+            raw_score_payload = read_descriptor(
+                raw_score_descriptor, "state raw scores"
+            )
             compressed_payload = read_descriptor(
                 compressed_descriptor,
                 "state compressed KV",
@@ -701,7 +707,10 @@ def load_deepseek_v4_compressor_state(
                 PROJECTED_WIDTH,
             )
             raw_lanes_value = raw_record["lanes"]
-            if type(raw_lanes_value) is not list or len(raw_lanes_value) != INITIAL_BATCH_CAPACITY:
+            if (
+                type(raw_lanes_value) is not list
+                or len(raw_lanes_value) != INITIAL_BATCH_CAPACITY
+            ):
                 _poison("state raw lanes differ")
             raw_lanes = []
             for index, raw_lane in enumerate(raw_lanes_value):
@@ -761,7 +770,9 @@ def load_deepseek_v4_compressor_state(
                 raw_score_payload=raw_score_payload,
                 compressed_payload=compressed_payload,
             )
-            observed_core = {key: manifest[key] for key in manifest if key != "state_id"}
+            observed_core = {
+                key: manifest[key] for key in manifest if key != "state_id"
+            }
             if _json_payload(observed_core) != _json_payload(expected_core):
                 _poison("state manifest differs from reconstructed state")
             state_id = _digest(manifest["state_id"], "state state_id")
@@ -1176,7 +1187,9 @@ class DeepSeekV4CompressorExecutableServiceEngine:
         """Execute all candidates and atomically publish their successor package."""
 
         output_root = Path(result_dir).absolute()
-        if output_root.name in {"", ".", ".."} or output_root == Path(output_root.anchor):
+        if output_root.name in {"", ".", ".."} or output_root == Path(
+            output_root.anchor
+        ):
             _poison("compressor result must name one non-root directory")
         state_output = output_root / "state"
         deployment = self.deployment
@@ -1210,7 +1223,9 @@ class DeepSeekV4CompressorExecutableServiceEngine:
                         session_ids=request.session_ids,
                         start_pos=request.start_pos,
                     )
-                    trace.append({"opcode": opcode.name, "slot": slot, "status": "executed"})
+                    trace.append(
+                        {"opcode": opcode.name, "slot": slot, "status": "executed"}
+                    )
                 elif opcode is CompressorOpcode.POOL_IF_READY:
                     if slot != 1 or state_result is None:
                         _poison("POOL_IF_READY control flow differs")
@@ -1227,7 +1242,9 @@ class DeepSeekV4CompressorExecutableServiceEngine:
                         if state_result.pool_inputs is not None:
                             _poison("non-boundary transaction exposed pool operands")
                         status = "guard_false_no_payload"
-                    trace.append({"opcode": opcode.name, "slot": slot, "status": status})
+                    trace.append(
+                        {"opcode": opcode.name, "slot": slot, "status": status}
+                    )
                 elif opcode is CompressorOpcode.F32_TO_BF16_IF_READY:
                     if slot != 2 or state_result is None:
                         _poison("F32_TO_BF16_IF_READY control flow differs")
@@ -1238,7 +1255,9 @@ class DeepSeekV4CompressorExecutableServiceEngine:
                         status = "executed"
                     else:
                         status = "guard_false_no_payload"
-                    trace.append({"opcode": opcode.name, "slot": slot, "status": status})
+                    trace.append(
+                        {"opcode": opcode.name, "slot": slot, "status": status}
+                    )
                 elif opcode is CompressorOpcode.COMPRESSED_KV_COMMIT:
                     if slot != 3 or state_result is None or write_result is not None:
                         _poison("COMPRESSED_KV_COMMIT control flow differs")
@@ -1259,8 +1278,16 @@ class DeepSeekV4CompressorExecutableServiceEngine:
                     if bool(write_result.counters.completed_rows_per_batch) != bool(
                         conversion_result is not None
                     ):
-                        _poison("compressed commit payload boundary differs from conversion")
-                    trace.append({"opcode": opcode.name, "slot": slot, "status": "candidate_only"})
+                        _poison(
+                            "compressed commit payload boundary differs from conversion"
+                        )
+                    trace.append(
+                        {
+                            "opcode": opcode.name,
+                            "slot": slot,
+                            "status": "candidate_only",
+                        }
+                    )
                 elif opcode is CompressorOpcode.VALID_PREFIX_VIEW:
                     if slot != 4 or write_result is None or view_result is not None:
                         _poison("VALID_PREFIX_VIEW control flow differs")
@@ -1268,7 +1295,13 @@ class DeepSeekV4CompressorExecutableServiceEngine:
                         write_result.state,
                         active_session_ids=request.session_ids,
                     )
-                    trace.append({"opcode": opcode.name, "slot": slot, "status": "candidate_only"})
+                    trace.append(
+                        {
+                            "opcode": opcode.name,
+                            "slot": slot,
+                            "status": "candidate_only",
+                        }
+                    )
                 elif opcode is CompressorOpcode.COMPLETE:
                     if (
                         slot != len(deployment.instructions) - 1
@@ -1279,14 +1312,25 @@ class DeepSeekV4CompressorExecutableServiceEngine:
                     ):
                         _poison("COMPLETE control flow differs")
                     completed = True
-                    trace.append({"opcode": opcode.name, "slot": slot, "status": "awaiting_publication"})
+                    trace.append(
+                        {
+                            "opcode": opcode.name,
+                            "slot": slot,
+                            "status": "awaiting_publication",
+                        }
+                    )
                 else:  # pragma: no cover - deployment verifier freezes opcodes
                     _poison(f"unsupported compressor opcode {opcode}")
         except DeepSeekV4CompressorExecutableServiceError:
             raise
         except Exception as exc:
             _poison(f"compressor candidate execution poisoned: {exc}", exc)
-        if not completed or state_result is None or write_result is None or view_result is None:
+        if (
+            not completed
+            or state_result is None
+            or write_result is None
+            or view_result is None
+        ):
             _poison("compressor program did not reach a complete candidate")
 
         pooled_payload = (
@@ -1305,7 +1349,9 @@ class DeepSeekV4CompressorExecutableServiceEngine:
         view_payload = _pack_u16(view_result.bf16_codes, label="valid BF16 view")
         counters = {
             "compressed_kv_commit": asdict(write_result.counters),
-            "conversion": None if conversion_result is None else asdict(conversion_result.counters),
+            "conversion": None
+            if conversion_result is None
+            else asdict(conversion_result.counters),
             "logical_only": True,
             "physical_interpretation": None,
             "pool": None if pool_result is None else asdict(pool_result.counters),
@@ -1316,8 +1362,12 @@ class DeepSeekV4CompressorExecutableServiceEngine:
         }
         counter_payload = _json_payload(counters)
         output_hashes = {
-            "converted_bf16_sha256": None if converted_payload is None else _sha256(converted_payload),
-            "pooled_f32_sha256": None if pooled_payload is None else _sha256(pooled_payload),
+            "converted_bf16_sha256": None
+            if converted_payload is None
+            else _sha256(converted_payload),
+            "pooled_f32_sha256": None
+            if pooled_payload is None
+            else _sha256(pooled_payload),
             "valid_view_bf16_sha256": _sha256(view_payload),
         }
         transition_core = {
@@ -1403,7 +1453,9 @@ class DeepSeekV4CompressorExecutableServiceEngine:
                 "converted_bf16": (
                     None if converted_payload is None else "outputs/converted.bf16le"
                 ),
-                "pooled_f32": None if pooled_payload is None else "outputs/pooled.f32le",
+                "pooled_f32": None
+                if pooled_payload is None
+                else "outputs/pooled.f32le",
             },
             "prior_state_id": prior.state_id,
             "program_sha256": PROGRAM_SHA256,

@@ -61,9 +61,7 @@ def test_full_width_known_answer_executes_from_artifacts_and_reconciles_counters
     synthetic_deployment: Path,
     tmp_path: Path,
 ) -> None:
-    loaded = load_deepseek_v4_compressor_executable_deployment(
-        synthetic_deployment
-    )
+    loaded = load_deepseek_v4_compressor_executable_deployment(synthetic_deployment)
     prior_dir = tmp_path / "state-0"
     prior = build_initial_deepseek_v4_compressor_state(
         synthetic_deployment,
@@ -94,15 +92,22 @@ def test_full_width_known_answer_executes_from_artifacts_and_reconciles_counters
     assert result.should_compress
     assert result.complete_group_count == 1
     assert result.prior_state_id == prior.state_id
-    assert hashlib.sha256(
-        (result_dir / "outputs/pooled.f32le").read_bytes()
-    ).hexdigest() == known["expected"]["pooled_f32_sha256"]
-    assert hashlib.sha256(
-        (result_dir / "outputs/converted.bf16le").read_bytes()
-    ).hexdigest() == known["expected"]["converted_bf16_sha256"]
-    assert hashlib.sha256(
-        (result_dir / "outputs/valid_view.bf16le").read_bytes()
-    ).hexdigest() == known["expected"]["valid_view_bf16_sha256"]
+    assert (
+        hashlib.sha256((result_dir / "outputs/pooled.f32le").read_bytes()).hexdigest()
+        == known["expected"]["pooled_f32_sha256"]
+    )
+    assert (
+        hashlib.sha256(
+            (result_dir / "outputs/converted.bf16le").read_bytes()
+        ).hexdigest()
+        == known["expected"]["converted_bf16_sha256"]
+    )
+    assert (
+        hashlib.sha256(
+            (result_dir / "outputs/valid_view.bf16le").read_bytes()
+        ).hexdigest()
+        == known["expected"]["valid_view_bf16_sha256"]
+    )
     for stage, expected in known["counters"].items():
         assert result.counters[stage] == expected
     assert result.counters["logical_only"] is True
@@ -140,9 +145,7 @@ def test_optional_pool_payload_is_absent_until_exact_ratio_boundary(
     synthetic_deployment: Path,
     tmp_path: Path,
 ) -> None:
-    loaded = load_deepseek_v4_compressor_executable_deployment(
-        synthetic_deployment
-    )
+    loaded = load_deepseek_v4_compressor_executable_deployment(synthetic_deployment)
     session_id = _session("boundary")
     initial_dir = tmp_path / "state-0"
     build_initial_deepseek_v4_compressor_state(synthetic_deployment, initial_dir)
@@ -213,9 +216,7 @@ def test_downstream_abort_discards_candidate_and_leaves_prior_unchanged(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    loaded = load_deepseek_v4_compressor_executable_deployment(
-        synthetic_deployment
-    )
+    loaded = load_deepseek_v4_compressor_executable_deployment(synthetic_deployment)
     prior_dir = tmp_path / "state"
     build_initial_deepseek_v4_compressor_state(synthetic_deployment, prior_dir)
     before = _tree_hashes(prior_dir)
@@ -349,9 +350,7 @@ def test_lane_retirement_hides_retired_capacity_and_prevents_reactivation(
     synthetic_deployment: Path,
     tmp_path: Path,
 ) -> None:
-    loaded = load_deepseek_v4_compressor_executable_deployment(
-        synthetic_deployment
-    )
+    loaded = load_deepseek_v4_compressor_executable_deployment(synthetic_deployment)
     session_a = _session("retire-a")
     session_b = _session("retire-b")
     initial_dir = tmp_path / "state-0"
@@ -426,9 +425,7 @@ def test_state_payload_tamper_and_create_once_result_fail_closed(
     synthetic_deployment: Path,
     tmp_path: Path,
 ) -> None:
-    loaded = load_deepseek_v4_compressor_executable_deployment(
-        synthetic_deployment
-    )
+    loaded = load_deepseek_v4_compressor_executable_deployment(synthetic_deployment)
     state_dir = tmp_path / "state"
     build_initial_deepseek_v4_compressor_state(synthetic_deployment, state_dir)
     payload_path = state_dir / "raw_kv.f32le"
@@ -491,9 +488,7 @@ def test_fresh_engine_can_continue_only_from_published_state_artifact(
         session_ids=(session_id,),
         start_pos=0,
     )
-    engine0 = DeepSeekV4CompressorExecutableServiceEngine.load(
-        synthetic_deployment
-    )
+    engine0 = DeepSeekV4CompressorExecutableServiceEngine.load(synthetic_deployment)
     result0 = engine0.execute(state0, request0, tmp_path / "result-0")
 
     # A new engine object has no process-local session state.  It can continue
@@ -509,9 +504,7 @@ def test_fresh_engine_can_continue_only_from_published_state_artifact(
         session_ids=(session_id,),
         start_pos=1,
     )
-    engine1 = DeepSeekV4CompressorExecutableServiceEngine.load(
-        synthetic_deployment
-    )
+    engine1 = DeepSeekV4CompressorExecutableServiceEngine.load(synthetic_deployment)
     result1 = engine1.execute(
         result0.state_dir,
         request1,

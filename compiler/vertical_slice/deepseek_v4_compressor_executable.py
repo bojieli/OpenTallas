@@ -66,18 +66,14 @@ from runtime.service_engine.secure_artifacts import (
 
 DEPLOYMENT_SCHEMA = "opentallas.deepseek_v4_compressor_executable.v1"
 COUNTER_CONTRACT_SCHEMA = "opentallas.deepseek_v4_compressor_counter_contract.v1"
-EXECUTION_CONTRACT_SCHEMA = (
-    "opentallas.deepseek_v4_compressor_execution_contract.v1"
-)
+EXECUTION_CONTRACT_SCHEMA = "opentallas.deepseek_v4_compressor_execution_contract.v1"
 KNOWN_ANSWER_SCHEMA = "opentallas.deepseek_v4_compressor_known_answer.v1"
 COVERAGE_SCHEMA = "opentallas.deepseek_v4_compressor_coverage.v1"
-SOURCE_BINDING_SCHEMA = "opentallas.deepseek_v4_compressor_source_binding.v1"
+SOURCE_BINDING_SCHEMA = "opentallas.deepseek_v4_compressor_source_binding.v2"
 DEPLOYMENT_STATUS = "post_projection_functional_slice_logical_schedule_only"
 COMPILER_NAME = "opentallas-deepseek-v4-compressor-executable-packager"
 COMPILER_VERSION = "0.1.0"
-OFFICIAL_APE_SHA256 = (
-    "f93afef4a88371262663f89f026a48b79f7187bd9d6498742c1db2860ae73554"
-)
+OFFICIAL_APE_SHA256 = "f93afef4a88371262663f89f026a48b79f7187bd9d6498742c1db2860ae73554"
 OFFICIAL_APPLICATION_ID = (
     "0f0f5177460c599059c971cbfd43e4299d6537f0cedb6055a83b77ecb52e16cb"
 )
@@ -96,6 +92,7 @@ KNOWN_SESSION_ID = hashlib.sha256(
 CLAIM_BOUNDARY = [
     "Executes a generated post-projection ratio-four compressor harness at official 1,024-value projected width using one complete checkpoint-derived layer-2 APE payload.",
     "The request supplies projected FP32 KV and score tensors; learned wkv and wgate projection weights and activations are outside this slice.",
+    "The packaged APE-cancellation known answer is a controlled operator-harness stimulus, not a checkpoint-derived activation, and is never model-execution evidence.",
     "The direct post-pool FP32-to-BF16 value is used as this harness's transactional compressed-cache payload; official RMSNorm, RoPE, and activation QDQ between those boundaries are not implemented here.",
     "State versions are immutable, hash-bound artifact packages; failed execution or publication leaves the prior package unchanged, and successful result publication is restart-persistent at the package boundary.",
     "All counters are logical values, bytes, arithmetic operations, metadata fields, and commit events; none are physical memory transactions, cycles, bandwidth, latency, throughput, energy, area, routing, or PPA.",
@@ -260,13 +257,22 @@ def _known_answer(ape_codes: tuple[tuple[int, ...], ...]) -> dict[str, Any]:
     pooled_payload = _f32_payload(pool.pooled_f32_codes)
     converted_payload = _bf16_payload(converted.bf16_codes)
     view_payload = _bf16_payload(view.bf16_codes)
-    expected_f32 = encode_binary32_rne(5)  # replaced below by exact 5/2 encoding
     expected_f32 = 0x40200000
-    if any(code != expected_f32 for sequence in pool.pooled_f32_codes for row in sequence for code in row):
+    if any(
+        code != expected_f32
+        for sequence in pool.pooled_f32_codes
+        for row in sequence
+        for code in row
+    ):
         raise DeepSeekV4CompressorExecutableBuildError(
             "known-answer pooled values differ from exact binary32 2.5"
         )
-    if any(code != 0x4020 for sequence in converted.bf16_codes for row in sequence for code in row):
+    if any(
+        code != 0x4020
+        for sequence in converted.bf16_codes
+        for row in sequence
+        for code in row
+    ):
         raise DeepSeekV4CompressorExecutableBuildError(
             "known-answer converted values differ from exact BF16 2.5"
         )
@@ -303,11 +309,15 @@ def _known_answer(ape_codes: tuple[tuple[int, ...], ...]) -> dict[str, Any]:
 
 def _counter_contract() -> dict[str, Any]:
     stages = {
-        "compressed_kv_commit": [field.name for field in fields(CompressedKVWriteCounters)],
+        "compressed_kv_commit": [
+            field.name for field in fields(CompressedKVWriteCounters)
+        ],
         "conversion": [field.name for field in fields(Binary32ToBF16Counters)],
         "pool": [field.name for field in fields(CompressionPoolCounters)],
         "raw_state_prepare": [field.name for field in fields(CompressionStateCounters)],
-        "valid_prefix_view": [field.name for field in fields(CompressedKVValidViewCounters)],
+        "valid_prefix_view": [
+            field.name for field in fields(CompressedKVValidViewCounters)
+        ],
     }
     return {
         "counter_kind": "logical_semantic_accounting_only",
@@ -349,7 +359,9 @@ def _execution_contract() -> dict[str, Any]:
 def _coverage(*, source_kind: str) -> dict[str, Any]:
     return {
         "covered": [
-            "official_full_size_ape_load" if source_kind == "official" else "synthetic_full_size_ape_load",
+            "official_full_size_ape_load"
+            if source_kind == "official"
+            else "synthetic_full_size_ape_load",
             "causal_raw_state_prepare_update",
             "deterministic_ratio4_pool",
             "finite_binary32_to_bf16_conversion",
@@ -379,8 +391,12 @@ def _source_binding(*, source_kind: str, ape_sha256: str) -> dict[str, Any]:
         "application_id": OFFICIAL_APPLICATION_ID if official else None,
         "ape_sha256": ape_sha256,
         "canonical_relative_path": OFFICIAL_TENSOR_PATH if official else None,
-        "evidence_eligible": official,
+        "checkpoint_payload_evidence_eligible": official,
+        "execution_input_provenance": (
+            "controlled_known_answer_not_checkpoint_activation"
+        ),
         "model_id": MODEL_ID,
+        "model_execution_evidence_eligible": False,
         "schema": SOURCE_BINDING_SCHEMA,
         "shape": list(APE_SHAPE),
         "source_kind": source_kind,
@@ -422,8 +438,13 @@ def build_deepseek_v4_compressor_executable_deployment(
 
     program = assemble()
     program_payload = encode(program)
-    if len(program_payload) != PROGRAM_BYTES or _sha256(program_payload) != PROGRAM_SHA256:
-        raise DeepSeekV4CompressorExecutableBuildError("assembled program identity drifted")
+    if (
+        len(program_payload) != PROGRAM_BYTES
+        or _sha256(program_payload) != PROGRAM_SHA256
+    ):
+        raise DeepSeekV4CompressorExecutableBuildError(
+            "assembled program identity drifted"
+        )
     schedule = build_logical_schedule(ape_sha256=ape_sha256)
     certificate = build_logical_schedule_certificate(
         schedule,
@@ -450,7 +471,9 @@ def build_deepseek_v4_compressor_executable_deployment(
         ),
     }
     roles = {
-        "ape": "checkpoint_ape_f32" if source_kind == "official" else "synthetic_ape_f32",
+        "ape": "checkpoint_ape_f32"
+        if source_kind == "official"
+        else "synthetic_ape_f32",
         "counter_contract": "counter_contract",
         "coverage": "execution_coverage",
         "execution_contract": "execution_contract",
@@ -496,9 +519,7 @@ def build_deepseek_v4_compressor_executable_deployment(
             maximum_depth=4,
             maximum_entries=64,
         )
-        report = verify_deepseek_v4_compressor_executable_deployment(
-            Path(output_dir)
-        )
+        report = verify_deepseek_v4_compressor_executable_deployment(Path(output_dir))
     except (SecureArtifactError, OSError, ValueError) as exc:
         raise DeepSeekV4CompressorExecutableBuildError(
             f"cannot publish verified compressor deployment: {exc}"

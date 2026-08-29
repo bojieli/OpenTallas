@@ -116,14 +116,17 @@ def encode(instructions: tuple[CompressorInstruction, ...]) -> bytes:
 
     verify(instructions)
     body = b"".join(_record_bytes(instruction) for instruction in instructions)
-    return HEADER.pack(
-        MAGIC,
-        ABI_MAJOR,
-        ABI_MINOR,
-        len(instructions),
-        RECORD.size,
-        hashlib.sha256(body).digest(),
-    ) + body
+    return (
+        HEADER.pack(
+            MAGIC,
+            ABI_MAJOR,
+            ABI_MINOR,
+            len(instructions),
+            RECORD.size,
+            hashlib.sha256(body).digest(),
+        )
+        + body
+    )
 
 
 def decode(payload: bytes) -> tuple[CompressorInstruction, ...]:

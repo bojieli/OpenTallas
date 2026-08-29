@@ -18,9 +18,7 @@ from compiler.microcode.deepseek_v4_compressor import (
 
 
 SCHEDULE_SCHEMA = "opentallas.deepseek_v4_compressor_logical_schedule.v1"
-CERTIFICATE_SCHEMA = (
-    "opentallas.deepseek_v4_compressor_logical_schedule_certificate.v1"
-)
+CERTIFICATE_SCHEMA = "opentallas.deepseek_v4_compressor_logical_schedule_certificate.v1"
 SCHEDULE_STATUS = "logical_causality_only_no_cycle_claim"
 NONCLAIMS = [
     "achieved_bandwidth",
@@ -179,9 +177,7 @@ def verify_logical_schedule_certificate(
     if type(value) is not dict or canonical_json_bytes(value) != canonical_json_bytes(
         expected
     ):
-        raise DeepSeekV4CompressorScheduleError(
-            "logical schedule certificate differs"
-        )
+        raise DeepSeekV4CompressorScheduleError("logical schedule certificate differs")
 
 
 __all__ = [

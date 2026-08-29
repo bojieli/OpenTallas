@@ -1,8 +1,8 @@
 # DeepSeek V4 compressor reference evidence
 
 **Evidence status:** operator-level target semantics, exact released APE payload,
-bounded unmodified-method differential, and one generated full-width
-post-projection transactional executable slice
+bounded unmodified-method differential, and one generated full-width controlled
+post-projection transactional known answer
 
 **Official source:** `deepseek-ai/DeepSeek-V4-Flash-0731` revision
 `7872f01b1d1fe23eabc4c98b48bffcef5a386062`
@@ -166,15 +166,15 @@ cycle or physical pipeline stage.
 | Independent canonical verification | `b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28` |
 | Packaged tensor | `layers.2.attn.compressor.ape`, F32 `[4,1024]`, 16,384 bytes |
 | Packaged APE SHA-256 | `f93afef4a88371262663f89f026a48b79f7187bd9d6498742c1db2860ae73554` |
-| Deployment build | `74d36b1814c6279974ce30288df0862fffec828a6af3d57b5405b5ee8b467b63` |
+| Deployment build | `6c92812e400d49627e2a735c1be0bb6e0d9364605f0547145885c34845791e9c` |
 | Program SHA-256 | `7fba505367f95ce4c39155678fe299999e13445813781c8b0e45ba1e6525a1fc` |
 | Logical schedule SHA-256 | `5fe1e1e91b87458ef7c19a08b7248d6fb2a5b6f29afd084c682a7c1568e364b2` |
 | Known-answer record SHA-256 | `89920f941c0a2938fef9cfe15254bf2ce58341a8712a0a6ce5173b7cfdcdb80c` |
 | Initial state ID | `4af26c08a44ab99361023a8e64b6bbd24432d4ebc9c7bf2e5bfc59a6005f388c` |
-| Request ID | `0f2c322bc763d3561336d371af8112b65e4c2f117e2a18537b74a58d82249165` |
-| Transition ID | `9ecfce7cda6032b23d49a0d74a20c6823230371da31bc826a2bd9373a07de42f` |
-| Successor state ID | `077c6d5a97f55b79b69663bb22055c89c7532abbcdb75a08ac7c6a23f3d5825b` |
-| Machine-readable report SHA-256 | `69c585d6a048604cd0a69e2bc1c2e99927aa25023f2a9526e5c04f224a36cc51` |
+| Request ID | `0f6642770d4a5f94a2e5c9a466e637181e5f8f5f19957c7453f91af321d525b8` |
+| Transition ID | `0bda0c6444ddae1be750a4f6ad754d1bdd32f2f204be8b9a6db0ad879717bb7d` |
+| Successor state ID | `73475bf9a4c2d88ff8315cc01261a8154fe91a044bdb089faf67621e73a9602e` |
+| Machine-readable report SHA-256 | `bc051b0184a668fc84a8e9802d613d785cdd81fe2779325843a9dfe984ac71f8` |
 
 The known answer uses one active lane and four official-width projected rows.
 Each score code is the bitwise sign-negation of the packaged APE, so every
@@ -184,6 +184,11 @@ therefore contains four excluded padding rows and four equally weighted finite
 rows, producing all 512 outputs as exact binary32 `2.5` (`0x40200000`). The
 conversion and valid view contain all 512 values as exact BF16 `2.5`
 (`0x4020`).
+
+This deliberately controlled APE-cancellation stimulus is not a
+checkpoint-derived activation. The package is eligible as evidence of the exact
+checkpoint APE identity and of the declared operator-harness transaction only;
+it is explicitly ineligible as model-execution evidence.
 
 | Output | Bytes | SHA-256 |
 |---|---:|---|
@@ -265,7 +270,7 @@ python tools/audit_deepseek_v4_compressor_executable.py \
 
 It rejects APE, deployment, program, schedule, known-answer, output, state-chain,
 counter, or final-report drift. Its expected report SHA-256 is
-`69c585d6a048604cd0a69e2bc1c2e99927aa25023f2a9526e5c04f224a36cc51`.
+`bc051b0184a668fc84a8e9802d613d785cdd81fe2779325843a9dfe984ac71f8`.
 Ordinary CI builds a full-size synthetic APE through the same package, checker,
 state, request, service, and result path. The real-cache test is an optional
 gate and becomes active only when the official canonical payload is present.
@@ -277,7 +282,8 @@ immutable causal raw-state and compressed-cache contracts, and stale-capacity
 exclusion. The official-method audit separately establishes exact official APE
 identity and range plus bounded ratio-four prefill pool/BF16 behavior under one
 declared development stack. The generated service slice establishes artifact-only
-execution of its explicitly narrower post-projection transactional harness. It
+execution of its explicitly narrower controlled post-projection transactional
+harness. It
 does not extend the official-method differential to state/cache transactions,
 and it does not establish:
 

@@ -47,9 +47,9 @@ from runtime.service_engine.secure_artifacts import (  # noqa: E402
 )
 
 
-REPORT_SCHEMA = "opentallas.deepseek_v4_compressor_executable_audit.v1"
+REPORT_SCHEMA = "opentallas.deepseek_v4_compressor_executable_audit.v2"
 EXPECTED_REPORT_SHA256 = (
-    "69c585d6a048604cd0a69e2bc1c2e99927aa25023f2a9526e5c04f224a36cc51"
+    "bc051b0184a668fc84a8e9802d613d785cdd81fe2779325843a9dfe984ac71f8"
 )
 
 
@@ -133,13 +133,9 @@ def build_report(ape_path: Path) -> dict[str, object]:
             )
 
         output_files = {
-            "converted_bf16": _file_record(
-                result_dir / "outputs/converted.bf16le"
-            ),
+            "converted_bf16": _file_record(result_dir / "outputs/converted.bf16le"),
             "pooled_f32": _file_record(result_dir / "outputs/pooled.f32le"),
-            "valid_view_bf16": _file_record(
-                result_dir / "outputs/valid_view.bf16le"
-            ),
+            "valid_view_bf16": _file_record(result_dir / "outputs/valid_view.bf16le"),
         }
         return {
             "artifact_execution": {
@@ -166,6 +162,9 @@ def build_report(ape_path: Path) -> dict[str, object]:
                     "512 exact binary32 2.5 values, 512 exact BF16 2.5 values, "
                     "one committed and exposed valid-prefix row"
                 ),
+                "input_provenance": (
+                    "controlled_known_answer_not_checkpoint_activation"
+                ),
                 "timing_measurement": None,
             },
             "model_id": "deepseek-v4-flash-0731",
@@ -177,7 +176,9 @@ def build_report(ape_path: Path) -> dict[str, object]:
                 "tensor_name": OFFICIAL_TENSOR_NAME,
                 "verification_id": OFFICIAL_VERIFICATION_ID,
             },
-            "status": "exact_official_ape_post_projection_transactional_slice",
+            "status": (
+                "official_ape_controlled_post_projection_transactional_known_answer"
+            ),
         }
 
 
