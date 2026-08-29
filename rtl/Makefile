@@ -1,4 +1,4 @@
-.PHONY: sim unit-sim cdc-sim integration-sim verilator-sim sim-campaign fault-sim fault-campaign coverage coverage-campaign lint static formal pre-synth-verify synth synth-reference verify clean
+.PHONY: sim unit-sim cdc-sim integration-sim verilator-sim qwen-command-sim sim-campaign fault-sim fault-campaign coverage coverage-campaign lint static formal pre-synth-verify synth synth-reference verify clean
 
 SOURCES = expert_mask_controller.sv via_mask_rom.sv rom_mac_tile.sv opentallas_tile.sv
 LIB_SOURCES = lib/ot_reset_sync.sv lib/ot_skid_buffer.sv lib/ot_async_fifo.sv lib/ot_crc_pkg.sv \
@@ -45,6 +45,9 @@ verilator-sim: build
 	verilator_coverage --write-info build/verilator_unit/coverage.info \
 		build/verilator_unit/coverage.dat
 
+qwen-command-sim:
+	python3 -m pytest -q ../tests/compiler/test_tensor_accelerator_qwen_rtl_command.py
+
 sim-campaign:
 	python3 ../tools/rtl_sim_campaign.py
 
@@ -78,6 +81,7 @@ pre-synth-verify:
 	$(MAKE) cdc-sim
 	$(MAKE) integration-sim
 	$(MAKE) verilator-sim
+	$(MAKE) qwen-command-sim
 	$(MAKE) sim-campaign
 	$(MAKE) fault-campaign
 	$(MAKE) coverage-campaign

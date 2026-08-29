@@ -11,7 +11,7 @@ and gate closure remain evidence controlled
 concurrent-session working trees, and the isolated `ta-integration` worktree
 
 **Reconciled implementation heads:** `main@3baf87c` and admitted accelerator
-implementation `ta-integration@c5b9578`; dirty and untracked implementation
+implementation `ta-integration@171c22b`; dirty and untracked implementation
 files in either worktree remain working state, not release evidence. Commit
 `c07331b` is the coherent connected-layer implementation handoff, and `1f4e52f`
 reconciles its evidence boundary into this plan. The connected implementation
@@ -30,7 +30,9 @@ QW-FM2 and QW-FM3 at deterministic physical compilation and independent
 reconstruction; Section 1.11 records its exact non-execution boundary. Commit
 `c5b9578` closes QW-FM4 for one fixed, complete, 36-layer, artifact-only
 target-precision execution; Section 1.12 records the exact result and its
-non-generation boundary. The next open Qwen horizon is a separately versioned
+non-generation boundary. The first production-command RTL admission campaign
+is recorded in Section 1.13; it does not execute a kernel or close `TA-RTL-6`.
+The next open Qwen horizon is a separately versioned
 dynamic request and transactional decode campaign of at least 32 greedy steps
 before the exact 8,000-token acceptance workload. QW-FM4 closure does not imply
 short generation, long-context acceptance, timing, RTL, physical
@@ -842,6 +844,42 @@ Qwen 8,192 remains a separate capacity boundary. Timing, RTL, 130-nm
 characterization, DeepSeek execution, and the governed ROM comparison remain
 open. The active Qwen work therefore moves to a separately versioned dynamic
 request/session contract and at least 32 ordinary greedy decode steps.
+
+### 1.13 Initial Qwen production-command RTL admission and its boundary
+
+QW-RTL-CMD-001 introduces a synthesizable registered decoder for the 64-byte
+production command record. It implements the ABI 2.0 through 2.5 opcode and
+minor-version map, engine matching, per-opcode field legality, contiguous-index
+checking, and reflected IEEE CRC32. Errors have a fixed fail-closed priority:
+CRC, opcode, engine, ABI, fields, then index.
+
+The retained vector set ID is
+`420ada71f902c8e43b9e5866d9c57ab8e3a1ced59e25c01b20793c94cf45b1a2`.
+Its 12 positive vectors are actual records selected from the unchanged
+924,386-command full-Qwen program—one record for every production opcode. The
+source program SHA-256 is
+`f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec`,
+and the vectors remain bound to build
+`3460d88ce16f5ef0ca4d1277daf8ebb19ae555e88822f95d55deb4aa8cad290f`
+and fixed one-step report
+`77b849e49608cacf9522eb16fad289385523c39618425e1e1c5f30126e504746`.
+Seven negative vectors lock all six rejection classes, including ABI-minor and
+error-precedence behavior.
+
+Icarus 11.0 and Verilator 4.038 independently pass all 19 vectors. The retained
+campaign ID is
+`43af672ea8fc7a43407ec38afb4424c6f3450ff47dddbce0f2777d190b4b6a2a`.
+The canonical report contains normalized commands, compile and run diagnostics,
+tool versions, generated-harness hashes, static-source hashes, and a content
+identity. Direct and Makefile-driven replays are byte-identical.
+
+This closes only production record admission for the tested ABI. The decoder
+does not execute DMA, vector, tensor, attention, state, or control semantics;
+does not consume the program header or validate whole-stream ordering; does not
+correlate output data, architectural counters, cycles, or stalls; and provides
+no timing, area, power, or physical claim. Representative complete generated
+kernels and a complete layer must still execute through RTL and match the
+architectural simulator before `TA-RTL-6` can close.
 
 ## 2. Meaning of production-grade
 
@@ -1943,6 +1981,7 @@ RTL, physical, and comparison gates remain open.
 | Command and capability ABI | ABI 2.5 and capability V6 admit bounded indexed SRAM selection with a strict schema and preserve older minor decoding; the complete 924,386-command program executes causally | Fixed request v1 remains immutable; add a separately versioned dynamic request/session contract. Routing, remaining vector operations, synchronization, timing, 8,192-plus context support, and the final hardware capability remain open |
 | Compiler and checker | **QW-FM1 closed at `74c0d59`; QW-FM2/QW-FM3 closed at `324f48d`; QW-FM4 closed at `c5b9578`.** Complete Qwen neutral lowering, streamed full-model HBM layout, SRAM lifetime allocation, command lowering, inverse reconstruction, and one target-precision execution are deterministic and retained | Preserve those artifacts unchanged while adding dynamic prefill/decode compilation; do not relabel one fixed transaction as generation or long-context acceptance |
 | Functional simulation | **Fixed one-step QW-FM4 closed at `c5b9578`.** The common simulator authenticates all 17 HBM shards, validates and executes all commands, commits all 36 states atomically, and produces exact complete logits and one token; a separate checkpoint-layout and algorithmic path matches it exactly | Execute at least 32 ordinary greedy steps through a versioned dynamic request/session path, then prove operational readiness for the exact 8,000-token run |
+| RTL correlation | QW-RTL-CMD-001 admits all 12 authentic production opcode records and rejects seven directed failures in Icarus and Verilator; campaign `43af672e...b6a2a` is deterministic and source-bound | Record admission is an initial sub-gate only. Execute representative generated kernels and a complete layer through RTL, correlate data/counters with the architectural simulator, and close robustness evidence before `TA-RTL-6` |
 | Timing and physical evidence | No clock, latency, HBM timing, bandwidth, or energy value is qualified | No committed slice result may be used for a performance, power, or 130-nm comparison claim |
 | End-to-end execution | One complete 36-layer fixed request produces exact final logits, token `50994`, and committed state, but no multi-step generation or long-context common-simulator run has closed | `TA-QWEN-4` and `TA-DSV4-5` remain open; QW-FM4 cannot substitute for Qwen 8,000 or DeepSeek 200,000 |
 
