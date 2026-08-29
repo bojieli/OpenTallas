@@ -104,6 +104,7 @@ class MemoryObject:
         root: Path | None,
         *,
         writable_override: bool = False,
+        mappings: dict[Path, np.ndarray] | None = None,
     ) -> None:
         payload = descriptor.payload
         self.object_id = object_id
@@ -140,7 +141,7 @@ class MemoryObject:
             cursor = 0
             for segment in source.segments:
                 path = resolve_path(root, segment.path)
-                array = _map_range(path, segment.offset, segment.bytes)
+                array = _map_range(path, segment.offset, segment.bytes, mappings)
                 self._segments.append(
                     _MappedSegment(
                         start=cursor,
@@ -260,8 +261,28 @@ class MemoryObject:
         return None
 
 
-def _map_range(path: Path, offset: int, nbytes: int) -> np.ndarray:
-    """Memory-map ``nbytes`` at ``offset`` of ``path`` as a uint8 array."""
+def _map_range(
+    path: Path,
+    offset: int,
+    nbytes: int,
+    mappings: dict[Path, np.ndarray] | None = None,
+) -> np.ndarray:
+    """Return a zero-copy uint8 view of ``nbytes`` at ``offset`` of ``path``.
+
+    One mapping per *file*, not per segment.  This matters at scale and the
+    limit is the kernel's, not this program's: Linux caps a process at
+    ``vm.max_map_count`` mappings, 65,530 by default.  The DeepSeek deployment
+    addresses its 156 GB checkpoint as 67,612 segments across 48 shards, so
+    mapping each segment separately exceeds the cap and fails with a bare
+    ``OSError: [Errno 12] Cannot allocate memory`` that looks like the machine
+    is out of RAM when it has 130 GB free.
+
+    Mapping whole files and slicing costs nothing extra -- the pages are only
+    faulted in on access either way -- and takes the DeepSeek deployment from
+    67,612 mappings to 48.  ``mappings`` is the per-deployment cache; passing
+    ``None`` maps this one file on its own, which is what a caller wanting a
+    single range should do.
+    """
     if not path.exists():
         raise MemoryError_(f"object source file is missing: {path}")
     size = path.stat().st_size
@@ -271,13 +292,19 @@ def _map_range(path: Path, offset: int, nbytes: int) -> np.ndarray:
         )
     if nbytes == 0:
         return np.empty(0, dtype=np.uint8)
-    page = mmap.ALLOCATIONGRANULARITY
-    aligned = (offset // page) * page
-    slack = offset - aligned
-    mapping = np.memmap(
-        path, dtype=np.uint8, mode="r", offset=aligned, shape=(slack + nbytes,)
-    )
-    return mapping[slack : slack + nbytes]
+    if mappings is None:
+        page = mmap.ALLOCATIONGRANULARITY
+        aligned = (offset // page) * page
+        slack = offset - aligned
+        mapping = np.memmap(
+            path, dtype=np.uint8, mode="r", offset=aligned, shape=(slack + nbytes,)
+        )
+        return mapping[slack : slack + nbytes]
+    whole = mappings.get(path)
+    if whole is None:
+        whole = np.memmap(path, dtype=np.uint8, mode="r", shape=(size,))
+        mappings[path] = whole
+    return whole[offset : offset + nbytes]
 
 
 class DeviceMemory:
@@ -287,6 +314,10 @@ class DeviceMemory:
         self.deployment = deployment
         self.root = root if root is not None else deployment.root
         self.objects: dict[int, MemoryObject] = {}
+        # One whole-file mapping shared by every object that reads from it.
+        # Held on the instance so the mappings outlive the loop below and die
+        # with this deployment rather than with the process.
+        self._mappings: dict[Path, np.ndarray] = {}
         for descriptor in deployment.table.descriptors():
             if descriptor.descriptor_type != ExtendedDescriptorType.MEMORY_OBJECT:
                 continue
@@ -294,7 +325,9 @@ class DeviceMemory:
             source = deployment.objects.get(oid)
             if source is None:
                 raise MemoryError_(f"object {oid} has no declared source")
-            self.objects[oid] = MemoryObject(oid, descriptor, source, self.root)
+            self.objects[oid] = MemoryObject(
+                oid, descriptor, source, self.root, mappings=self._mappings
+            )
 
     def __getitem__(self, object_id: int) -> MemoryObject:
         try:
