@@ -11,7 +11,7 @@ requires-python = ">=3.10"
 dependencies = ["numpy>=1.23"]
 
 [project.optional-dependencies]
-compiler = ["tokenizers==0.22.2"]
+compiler = ["jinja2>=3.1,<4", "tokenizers==0.22.2"]
 qwen3 = [
   "jinja2>=3.1",
   "jsonschema>=4.18",

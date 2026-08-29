@@ -36,6 +36,11 @@ from .attention import (
 
 SCHEMA = "opentallas.tensor_accelerator.qwen_full_model_runtime_checkpoint.v1"
 VERSION = "tensor-accelerator-qwen-full-model-runtime-checkpoint-0.1.0"
+DYNAMIC_SCHEMA = (
+    "opentallas.tensor_accelerator.qwen_full_model_runtime_checkpoint.v2"
+)
+DYNAMIC_VERSION = "tensor-accelerator-qwen-full-model-runtime-checkpoint-0.2.0"
+DYNAMIC_EXECUTION_MODE = "dynamic_v1"
 SIMULATOR_VERSION = "tensor-accelerator-qwen-full-model-simulator-0.1.0"
 MANIFEST_NAME = "checkpoint_manifest.json"
 STATE_COUNT = 36
@@ -619,14 +624,542 @@ def load_runtime_checkpoint(
     return manifest, snapshots
 
 
+def validate_dynamic_checkpoint_manifest(
+    value: Mapping[str, Any],
+    *,
+    expected_bindings: Mapping[str, str] | None = None,
+    expected_context_capacity: int | None = None,
+) -> dict[str, Any]:
+    """Validate the separately versioned arbitrary dynamic-session checkpoint."""
+
+    manifest = dict(value)
+    exact_keys(
+        manifest,
+        {
+            "build_id",
+            "capability_id",
+            "checkpoint_id",
+            "checkpoint_lock_id",
+            "checkpoint_version",
+            "claim_boundary",
+            "command_program_sha256",
+            "context_capacity",
+            "execution_mode",
+            "graph_id",
+            "hbm_logical_sha256",
+            "kernel_ir_id",
+            "next_step_index",
+            "physical_plan_id",
+            "previous_greedy_token_id",
+            "previous_report_id",
+            "schema",
+            "session_id",
+            "simulator_version",
+            "state_count",
+            "state_image",
+            "states",
+        },
+        set(),
+        "dynamic runtime checkpoint manifest",
+    )
+    _identity(manifest, "checkpoint_id", "dynamic runtime checkpoint manifest")
+    for field in (
+        "build_id",
+        "capability_id",
+        "checkpoint_lock_id",
+        "command_program_sha256",
+        "graph_id",
+        "hbm_logical_sha256",
+        "kernel_ir_id",
+        "physical_plan_id",
+        "previous_report_id",
+        "session_id",
+    ):
+        require_sha256(manifest[field], f"dynamic runtime checkpoint.{field}")
+    context_capacity = _integer(
+        manifest["context_capacity"],
+        "dynamic runtime checkpoint.context_capacity",
+        1,
+        CONTEXT_CAPACITY,
+    )
+    next_step = _integer(
+        manifest["next_step_index"],
+        "dynamic runtime checkpoint.next_step_index",
+        1,
+        context_capacity,
+    )
+    _integer(
+        manifest["previous_greedy_token_id"],
+        "dynamic runtime checkpoint.previous_greedy_token_id",
+        0,
+        151_935,
+    )
+    if (
+        manifest["schema"] != DYNAMIC_SCHEMA
+        or manifest["checkpoint_version"] != DYNAMIC_VERSION
+        or manifest["execution_mode"] != DYNAMIC_EXECUTION_MODE
+        or manifest["simulator_version"] != SIMULATOR_VERSION
+        or manifest["state_count"] != STATE_COUNT
+        or manifest["claim_boundary"]
+        != {
+            "dynamic_session_complete": False,
+            "restart_state_only": True,
+            "target_precision_reference_verified": False,
+            "timing_or_performance": False,
+        }
+        or (
+            expected_context_capacity is not None
+            and context_capacity != expected_context_capacity
+        )
+    ):
+        raise QwenFullModelCheckpointError(
+            "dynamic runtime checkpoint boundary differs"
+        )
+    if expected_bindings is not None:
+        required = {
+            "build_id",
+            "capability_id",
+            "checkpoint_lock_id",
+            "command_program_sha256",
+            "graph_id",
+            "hbm_logical_sha256",
+            "kernel_ir_id",
+            "physical_plan_id",
+            "session_id",
+        }
+        if set(expected_bindings) != required or any(
+            manifest[field] != expected_bindings[field] for field in required
+        ):
+            raise QwenFullModelCheckpointError(
+                "dynamic runtime checkpoint deployment or session binding differs"
+            )
+
+    states = manifest["states"]
+    if not isinstance(states, list) or len(states) != STATE_COUNT:
+        raise QwenFullModelCheckpointError(
+            "dynamic runtime checkpoint state coverage differs"
+        )
+    cursor = 0
+    plane_size = next_step * TOKEN_PLANE_BYTES
+    for layer, state in enumerate(states):
+        if not isinstance(state, dict):
+            raise QwenFullModelCheckpointError(
+                "dynamic runtime checkpoint state record must be an object"
+            )
+        exact_keys(
+            state,
+            {
+                "capacity",
+                "generation",
+                "key",
+                "layer",
+                "length",
+                "resource_id",
+                "value",
+            },
+            set(),
+            f"dynamic runtime checkpoint state[{layer}]",
+        )
+        if (
+            state["layer"] != layer
+            or state["resource_id"] != f"kv.layer.{layer}"
+            or state["generation"] != next_step
+            or state["length"] != next_step
+            or state["capacity"] != context_capacity
+        ):
+            raise QwenFullModelCheckpointError(
+                "dynamic runtime checkpoint state ordering or metadata differs"
+            )
+        for plane_name in ("key", "value"):
+            plane = state[plane_name]
+            if not isinstance(plane, dict):
+                raise QwenFullModelCheckpointError(
+                    "dynamic runtime checkpoint plane record must be an object"
+                )
+            exact_keys(
+                plane,
+                {"logical_offset", "sha256", "size_bytes"},
+                set(),
+                f"dynamic runtime checkpoint state[{layer}].{plane_name}",
+            )
+            require_sha256(
+                plane["sha256"],
+                f"dynamic runtime checkpoint state[{layer}].{plane_name}.sha256",
+            )
+            if plane != {
+                "logical_offset": cursor,
+                "sha256": plane["sha256"],
+                "size_bytes": plane_size,
+            }:
+                raise QwenFullModelCheckpointError(
+                    "dynamic runtime checkpoint plane geometry differs"
+                )
+            cursor += plane_size
+    image = manifest["state_image"]
+    if not isinstance(image, dict):
+        raise QwenFullModelCheckpointError(
+            "dynamic runtime checkpoint state image must be an object"
+        )
+    exact_keys(
+        image,
+        {"logical_sha256", "shard_bytes", "shards", "size_bytes"},
+        set(),
+        "dynamic runtime checkpoint state image",
+    )
+    require_sha256(
+        image["logical_sha256"], "dynamic runtime checkpoint image SHA-256"
+    )
+    if image["shard_bytes"] != DEFAULT_SHARD_BYTES or image["size_bytes"] != cursor:
+        raise QwenFullModelCheckpointError(
+            "dynamic runtime checkpoint state-image geometry differs"
+        )
+    shards = image["shards"]
+    expected_shards = (cursor + DEFAULT_SHARD_BYTES - 1) // DEFAULT_SHARD_BYTES
+    if not isinstance(shards, list) or len(shards) != expected_shards:
+        raise QwenFullModelCheckpointError(
+            "dynamic runtime checkpoint shard coverage differs"
+        )
+    shard_cursor = 0
+    for index, shard in enumerate(shards):
+        if not isinstance(shard, dict):
+            raise QwenFullModelCheckpointError(
+                "dynamic runtime checkpoint shard record must be an object"
+            )
+        exact_keys(
+            shard,
+            {"index", "logical_offset", "path", "sha256", "size_bytes"},
+            set(),
+            f"dynamic runtime checkpoint shard[{index}]",
+        )
+        require_sha256(
+            shard["sha256"], f"dynamic runtime checkpoint shard[{index}].sha256"
+        )
+        path = _safe_relative(
+            shard["path"], f"dynamic runtime checkpoint shard[{index}].path"
+        )
+        size = min(DEFAULT_SHARD_BYTES, cursor - shard_cursor)
+        if (
+            shard["index"] != index
+            or shard["logical_offset"] != shard_cursor
+            or shard["size_bytes"] != size
+            or not path.startswith("state/hbm.")
+            or not path.endswith(f".{shard['sha256']}.bin")
+        ):
+            raise QwenFullModelCheckpointError(
+                "dynamic runtime checkpoint shard geometry or name differs"
+            )
+        shard_cursor += size
+    return manifest
+
+
+def validate_dynamic_checkpoint_predecessor(
+    manifest_value: Mapping[str, Any],
+    report_value: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Bind every dynamic V2 K/V plane to its predecessor transaction report."""
+
+    manifest = validate_dynamic_checkpoint_manifest(manifest_value)
+    report = dict(report_value)
+    report_id = require_sha256(
+        report.get("report_id"), "dynamic runtime checkpoint predecessor report ID"
+    )
+    report_body = {key: item for key, item in report.items() if key != "report_id"}
+    step = report.get("step_index")
+    outputs = report.get("outputs")
+    logits = outputs.get("committed_logits") if isinstance(outputs, dict) else None
+    report_states = report.get("state")
+    if (
+        report_id != sha256_bytes(canonical_json_bytes(report_body))
+        or isinstance(step, bool)
+        or not isinstance(step, int)
+        or step + 1 != manifest["next_step_index"]
+        or not isinstance(logits, dict)
+        or logits.get("greedy_token_id") != manifest["previous_greedy_token_id"]
+        or report_id != manifest["previous_report_id"]
+        or report.get("session_id") != manifest["session_id"]
+        or not isinstance(report_states, list)
+        or len(report_states) != STATE_COUNT
+    ):
+        raise QwenFullModelCheckpointError(
+            "dynamic runtime checkpoint predecessor boundary differs"
+        )
+    for layer, (checkpoint_state, report_state) in enumerate(
+        zip(manifest["states"], report_states, strict=True)
+    ):
+        if (
+            not isinstance(report_state, dict)
+            or report_state.get("layer") != layer
+            or report_state.get("resource_id") != f"kv.layer.{layer}"
+            or report_state.get("generation") != manifest["next_step_index"]
+            or report_state.get("length") != manifest["next_step_index"]
+            or checkpoint_state["key"]["sha256"]
+            != report_state.get("key_payload_sha256")
+            or checkpoint_state["value"]["sha256"]
+            != report_state.get("value_payload_sha256")
+        ):
+            raise QwenFullModelCheckpointError(
+                "dynamic runtime checkpoint state differs from predecessor report"
+            )
+    return manifest
+
+
+def publish_dynamic_runtime_checkpoint(
+    *,
+    output: Path,
+    bindings: Mapping[str, str],
+    context_capacity: int,
+    next_step_index: int,
+    previous_report_id: str,
+    previous_greedy_token_id: int,
+    states: Mapping[str, KVSnapshot],
+) -> dict[str, Any]:
+    """Atomically persist all active arbitrary dynamic-session K/V bytes."""
+
+    destination = Path(output).resolve()
+    if destination.exists() or destination.is_symlink():
+        raise QwenFullModelCheckpointError(
+            f"dynamic runtime checkpoint output already exists: {destination}"
+        )
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    capacity = _integer(
+        context_capacity, "dynamic runtime checkpoint context capacity", 1, CONTEXT_CAPACITY
+    )
+    next_step = _integer(
+        next_step_index, "dynamic runtime checkpoint next step", 1, capacity
+    )
+    require_sha256(previous_report_id, "dynamic runtime checkpoint previous report ID")
+    previous_token = _integer(
+        previous_greedy_token_id,
+        "dynamic runtime checkpoint previous greedy token",
+        0,
+        151_935,
+    )
+    expected_resources = {f"kv.layer.{layer}" for layer in range(STATE_COUNT)}
+    if set(states) != expected_resources:
+        raise QwenFullModelCheckpointError(
+            "dynamic runtime checkpoint state resources differ"
+        )
+    temporary = Path(
+        tempfile.mkdtemp(prefix=f".{destination.name}.tmp-", dir=destination.parent)
+    )
+    try:
+        state_records: list[dict[str, Any]] = []
+        total_size = STATE_COUNT * 2 * next_step * TOKEN_PLANE_BYTES
+        with HBMShardWriter(
+            temporary,
+            total_size=total_size,
+            shard_bytes=DEFAULT_SHARD_BYTES,
+            relative_directory="state",
+        ) as writer:
+            for layer in range(STATE_COUNT):
+                resource = f"kv.layer.{layer}"
+                state = states[resource]
+                if (
+                    not isinstance(state, KVSnapshot)
+                    or state.resource_id != resource
+                    or state.generation != next_step
+                    or state.length != next_step
+                    or state.capacity != capacity
+                ):
+                    raise QwenFullModelCheckpointError(
+                        f"dynamic runtime checkpoint state {resource!r} differs"
+                    )
+                planes: dict[str, dict[str, Any]] = {}
+                for name, values in (
+                    ("key", state.key_values),
+                    ("value", state.value_values),
+                ):
+                    payload = _plane_payload(values)
+                    offset = writer.cursor
+                    digest = hashlib.sha256(payload).hexdigest()
+                    writer.write(payload)
+                    planes[name] = {
+                        "logical_offset": offset,
+                        "sha256": digest,
+                        "size_bytes": len(payload),
+                    }
+                state_records.append(
+                    {
+                        "capacity": state.capacity,
+                        "generation": state.generation,
+                        "key": planes["key"],
+                        "layer": layer,
+                        "length": state.length,
+                        "resource_id": resource,
+                        "value": planes["value"],
+                    }
+                )
+            image = writer.finish()
+        body: dict[str, Any] = {
+            **dict(bindings),
+            "checkpoint_version": DYNAMIC_VERSION,
+            "claim_boundary": {
+                "dynamic_session_complete": False,
+                "restart_state_only": True,
+                "target_precision_reference_verified": False,
+                "timing_or_performance": False,
+            },
+            "context_capacity": capacity,
+            "execution_mode": DYNAMIC_EXECUTION_MODE,
+            "next_step_index": next_step,
+            "previous_greedy_token_id": previous_token,
+            "previous_report_id": previous_report_id,
+            "schema": DYNAMIC_SCHEMA,
+            "simulator_version": SIMULATOR_VERSION,
+            "state_count": STATE_COUNT,
+            "state_image": image,
+            "states": state_records,
+        }
+        manifest = validate_dynamic_checkpoint_manifest(
+            _identified(body, "checkpoint_id"),
+            expected_bindings=bindings,
+            expected_context_capacity=capacity,
+        )
+        manifest_path = temporary / MANIFEST_NAME
+        with manifest_path.open("xb") as handle:
+            handle.write(canonical_json_bytes(manifest))
+            handle.flush()
+            os.fsync(handle.fileno())
+        _fsync_directory(temporary / "state")
+        _fsync_directory(temporary)
+        os.replace(temporary, destination)
+        _fsync_directory(destination.parent)
+        return manifest
+    except (HBMShardError, OSError, ValueError) as exc:
+        shutil.rmtree(temporary, ignore_errors=True)
+        if isinstance(exc, QwenFullModelCheckpointError):
+            raise
+        raise QwenFullModelCheckpointError(
+            f"cannot publish dynamic runtime checkpoint: {exc}"
+        ) from exc
+    except Exception:
+        shutil.rmtree(temporary, ignore_errors=True)
+        raise
+
+
+def load_dynamic_runtime_checkpoint(
+    root: Path,
+    *,
+    expected_bindings: Mapping[str, str],
+    expected_context_capacity: int,
+) -> tuple[dict[str, Any], dict[str, KVSnapshot]]:
+    """Authenticate a V2 state image and reconstruct all dynamic K/V snapshots."""
+
+    try:
+        checkpoint_root = Path(root).resolve(strict=True)
+    except OSError as exc:
+        raise QwenFullModelCheckpointError(
+            f"cannot resolve dynamic runtime checkpoint: {exc}"
+        ) from exc
+    if not checkpoint_root.is_dir():
+        raise QwenFullModelCheckpointError(
+            "dynamic runtime checkpoint must be a directory"
+        )
+    manifest_path = checkpoint_root / MANIFEST_NAME
+    if manifest_path.is_symlink() or not manifest_path.is_file():
+        raise QwenFullModelCheckpointError(
+            "dynamic runtime checkpoint manifest must be a regular file"
+        )
+    manifest = validate_dynamic_checkpoint_manifest(
+        _canonical_manifest(manifest_path),
+        expected_bindings=expected_bindings,
+        expected_context_capacity=expected_context_capacity,
+    )
+    image = manifest["state_image"]
+    expected_files = {MANIFEST_NAME}
+    resolved_root = checkpoint_root.resolve(strict=True)
+    for index, shard in enumerate(image["shards"]):
+        relative = _safe_relative(
+            shard["path"], f"dynamic runtime checkpoint shard[{index}]"
+        )
+        candidate = checkpoint_root / relative
+        try:
+            resolved = candidate.resolve(strict=True)
+        except OSError as exc:
+            raise QwenFullModelCheckpointError(
+                f"cannot resolve dynamic runtime checkpoint shard {index}: {exc}"
+            ) from exc
+        if (
+            candidate.is_symlink()
+            or not resolved.is_file()
+            or resolved_root not in resolved.parents
+        ):
+            raise QwenFullModelCheckpointError(
+                f"dynamic runtime checkpoint shard {index} is unsafe"
+            )
+        expected_files.add(relative)
+    observed_files = {
+        path.relative_to(checkpoint_root).as_posix()
+        for path in checkpoint_root.rglob("*")
+        if path.is_file() or path.is_symlink()
+    }
+    if observed_files != expected_files:
+        raise QwenFullModelCheckpointError(
+            "dynamic runtime checkpoint file inventory differs"
+        )
+
+    snapshots: dict[str, KVSnapshot] = {}
+    try:
+        with HBMShardReader(
+            checkpoint_root, image["shards"], verify_hashes=True
+        ) as reader:
+            if (
+                reader.total_size != image["size_bytes"]
+                or reader.sha256(0, reader.total_size) != image["logical_sha256"]
+            ):
+                raise QwenFullModelCheckpointError(
+                    "dynamic runtime checkpoint logical image differs"
+                )
+            for state in manifest["states"]:
+                planes: dict[str, np.ndarray[Any, np.dtype[np.uint16]]] = {}
+                for name in ("key", "value"):
+                    record = state[name]
+                    if (
+                        reader.sha256(record["logical_offset"], record["size_bytes"])
+                        != record["sha256"]
+                    ):
+                        raise QwenFullModelCheckpointError(
+                            f"dynamic runtime checkpoint {state['resource_id']} "
+                            f"{name} differs"
+                        )
+                    payload = reader.read(
+                        record["logical_offset"], record["size_bytes"]
+                    )
+                    values = np.frombuffer(payload, dtype="<u2").reshape(
+                        state["length"], KEY_VALUE_HEADS, HEAD_DIM
+                    )
+                    planes[name] = np.ascontiguousarray(values, dtype=np.uint16)
+                snapshots[state["resource_id"]] = make_kv_snapshot(
+                    resource_id=state["resource_id"],
+                    generation=state["generation"],
+                    capacity=state["capacity"],
+                    key_values=planes["key"],
+                    value_values=planes["value"],
+                )
+    except (HBMShardError, OSError, ValueError) as exc:
+        if isinstance(exc, QwenFullModelCheckpointError):
+            raise
+        raise QwenFullModelCheckpointError(
+            f"cannot reconstruct dynamic runtime checkpoint: {exc}"
+        ) from exc
+    return manifest, snapshots
+
+
 __all__ = [
     "DEFAULT_SHARD_BYTES",
+    "DYNAMIC_EXECUTION_MODE",
+    "DYNAMIC_SCHEMA",
+    "DYNAMIC_VERSION",
     "MANIFEST_NAME",
     "QwenFullModelCheckpointError",
     "SCHEMA",
     "VERSION",
+    "load_dynamic_runtime_checkpoint",
     "load_runtime_checkpoint",
+    "publish_dynamic_runtime_checkpoint",
     "publish_runtime_checkpoint",
+    "validate_dynamic_checkpoint_manifest",
+    "validate_dynamic_checkpoint_predecessor",
     "validate_checkpoint_predecessor",
     "validate_checkpoint_manifest",
 ]

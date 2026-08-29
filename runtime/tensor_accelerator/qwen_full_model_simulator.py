@@ -82,7 +82,9 @@ from .rmsnorm import RMSNormKernelError, rms_norm_bf16
 from .rope import RoPEKernelError, rope_bf16
 from .qwen_full_model_checkpoint import (
     QwenFullModelCheckpointError,
+    load_dynamic_runtime_checkpoint,
     load_runtime_checkpoint,
+    publish_dynamic_runtime_checkpoint,
     publish_runtime_checkpoint,
 )
 
@@ -1224,6 +1226,100 @@ class QwenFullModelSimulator:
             "physical_plan_id": self._plan["physical_plan_id"],
             "session_id": session["session_id"],
         }
+
+    def _dynamic_checkpoint_bindings(self) -> dict[str, str]:
+        session = self._dynamic_session
+        if session is None or self._execution_mode != "dynamic_v1":
+            raise QwenFullModelSimulationError("no dynamic session is active")
+        return {
+            "build_id": self._manifest["build_id"],
+            "capability_id": self._capability.capability_id,
+            "checkpoint_lock_id": self._source_lock["checkpoint_lock_id"],
+            "command_program_sha256": self._plan["command_program"]["sha256"],
+            "graph_id": self._model.graph_id,
+            "hbm_logical_sha256": self._plan["hbm"]["image"]["logical_sha256"],
+            "kernel_ir_id": self._manifest["kernel_ir_id"],
+            "physical_plan_id": self._plan["physical_plan_id"],
+            "session_id": session["session_id"],
+        }
+
+    def checkpoint_dynamic_session(self, output: Path) -> dict[str, Any]:
+        """Atomically persist all committed arbitrary dynamic-session KV bytes."""
+
+        self._dynamic_checkpoint_bindings()
+        if self._dynamic_previous_report_id is None or self._dynamic_previous_token is None:
+            raise QwenFullModelSimulationError(
+                "dynamic checkpoint requires one completed transaction"
+            )
+        lengths = self.state_lengths
+        generations = self.state_generations
+        if len(set(lengths)) != 1 or generations != lengths:
+            raise QwenFullModelSimulationError(
+                "dynamic checkpoint state is not synchronized"
+            )
+        next_step = lengths[0]
+        if not 1 <= next_step <= self._context_capacity:
+            raise QwenFullModelSimulationError("dynamic checkpoint next step differs")
+        try:
+            return publish_dynamic_runtime_checkpoint(
+                output=Path(output),
+                bindings=self._dynamic_checkpoint_bindings(),
+                context_capacity=self._context_capacity,
+                next_step_index=next_step,
+                previous_report_id=self._dynamic_previous_report_id,
+                previous_greedy_token_id=self._dynamic_previous_token,
+                states=self._states,
+            )
+        except QwenFullModelCheckpointError as exc:
+            raise QwenFullModelSimulationError(
+                f"cannot publish dynamic checkpoint: {exc}"
+            ) from exc
+
+    def restore_dynamic_session(self, checkpoint_root: Path) -> dict[str, Any]:
+        """Restore an authenticated V2 checkpoint into a new dynamic session."""
+
+        session = self._dynamic_session
+        self._dynamic_checkpoint_bindings()
+        assert session is not None
+        if (
+            self.state_generations != (0,) * STATE_COUNT
+            or self.state_lengths != (0,) * STATE_COUNT
+            or self._dynamic_previous_report_id is not None
+            or self._dynamic_previous_token is not None
+        ):
+            raise QwenFullModelSimulationError(
+                "dynamic restore requires a newly bound empty session"
+            )
+        try:
+            manifest, states = load_dynamic_runtime_checkpoint(
+                Path(checkpoint_root),
+                expected_bindings=self._dynamic_checkpoint_bindings(),
+                expected_context_capacity=self._context_capacity,
+            )
+        except QwenFullModelCheckpointError as exc:
+            raise QwenFullModelSimulationError(
+                f"cannot restore dynamic checkpoint: {exc}"
+            ) from exc
+        maximum_transactions = (
+            session["prompt"]["token_count"]
+            + session["generation"]["generated_token_limit"]
+            - 1
+        )
+        if manifest["next_step_index"] >= maximum_transactions:
+            raise QwenFullModelSimulationError(
+                "completed dynamic checkpoint cannot be resumed"
+            )
+        if manifest["previous_greedy_token_id"] in session["generation"][
+            "eos_token_ids"
+        ]:
+            raise QwenFullModelSimulationError(
+                "terminal EOS dynamic checkpoint cannot be resumed"
+            )
+        self._states = states
+        self._dynamic_previous_report_id = manifest["previous_report_id"]
+        self._dynamic_previous_token = manifest["previous_greedy_token_id"]
+        self._dynamic_complete = False
+        return manifest
 
     def checkpoint_long_acceptance(self, output: Path) -> dict[str, Any]:
         """Atomically persist all committed long-session KV bytes."""
