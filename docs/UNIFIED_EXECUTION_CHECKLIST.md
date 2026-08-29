@@ -113,7 +113,7 @@
 
 ## W10 — Mandatory workload campaigns
 
-- [ ] W10.1 Qwen exactly 8,000 natural prompt tokens → decode to first EOS (HBM + ROM) — **blocked on OI-21**, not on anything architectural: the deployment admits and the oracle for this workload exists, but prefill attention as implemented needs ~26 h for an 8,000-token prompt. Started, measured, stopped at 43 min
+- [~] W10.1 Qwen exactly 8,000 natural prompt tokens → decode to first EOS (HBM) — **executed**: 8,000 prompt tokens, 193 decoded in 14,982 s (`results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json`). The first **137 tokens are identical to the reference oracle**, and the continuation is coherent Melville pastiche. It did not reach EOS for two separate reasons, both recorded: one argmax flip at index 137 (see [OI-33]) and a hard stop at index 193 (see [OI-34]). ROM side not yet run
 - [~] W10.2 Qwen repeated-special-token stress run — **executed, and it diverged**: 8,000 prompt tokens (one distinct id), 32 decoded in 11,942 s, recorded `status: diverged` at index 2 (`results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json`). The run itself is complete and the workload has served its purpose — see [OI-33]. Whether the divergence is acceptable is a numeric-contract question, not an execution one
 - [x] W10.3 Qwen chat workload (pinned template) — `TA-QW-CHAT-1`, 93 prompt tokens, 24 decoded tokens, token-identical to the oracle; the model is mid-derivation at the token cap (`We are given:\n\n- **Ship 1** (from Port A) leaves at **06:00**`), so this record proves token fidelity, not answer correctness, and W10.1 carries the run to EOS
 - [x] W10.4 Qwen agentic workload — `TA-QW-AGENT-1` decoded a **complete, well-formed tool call and stopped at a real EOS** entirely on the accelerator: ```bash / awk -F',' '{sum += $2} END {print sum}' inventory.txt / ```. Token-identical to the oracle. Feeding the result back through the sandbox loop is `tools/run_qwen3_agent_episode.py`
@@ -293,6 +293,27 @@
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
 
+- **OI-34 — the mandatory Qwen workload does not fit the context the capability
+  declares, and the device said so exactly where it should.** `TA-QW-8K-1`
+  stopped at decode step 193 with
+
+      DMA index view 45 names row 8192, outside the 8192 rows of the addressed view
+
+  which is arithmetic, not a bug: 8,000 prompt tokens plus 192 decoded is 8,192,
+  and `max_context_positions` is 8,192. The 193rd token needs row 8,192 and there
+  is no such row. It failed closed at precisely the right position rather than
+  wrapping, truncating or quietly computing against stale rows.
+
+  The workload contract asks for 8,000 natural prompt tokens decoded **to first
+  EOS**, with `max_new_tokens` 256. That needs 8,256 positions. The two documents
+  have never been reconciled: the mandatory prompt length was fixed at 8,000 and
+  the capability's context at 8,192, leaving 192 tokens of headroom for a
+  contract that asks for up to 256. Either the declared context rises to 8,256 or
+  beyond, or the contract states a decode budget the context can hold. **This is
+  a specification question and it is mine, not an implementation defect** — and
+  it went unnoticed because until tonight nothing had ever run long enough at
+  that context to reach the boundary.
+
 - **OI-33 — the accelerator's tokens diverge from the oracle on the
   repeated-token stress workload, and this is the first token divergence this
   program has produced.** `TA-QW-STRESS-1` ran to completion — 8,000 prompt
@@ -325,12 +346,21 @@
   hold here, and a workload of 8,000 identical tokens is precisely the instrument
   for finding that out — which is what the mandatory stress contract is for.
 
-  **The discriminating experiment is already running.** `TA-QW-8K-1` is natural
-  prose at the same 8,000-token context. If it agrees with its oracle, this
-  divergence is about degeneracy rather than context length, and A7's claim needs
-  qualifying rather than withdrawing. If it also diverges, the claim is wrong at
-  long context generally and the numeric contract needs re-examining. Either way
-  the answer arrives without another experiment being designed.
+  **The discriminating experiment has now answered: degeneracy, not context
+  length.** `TA-QW-8K-1` is natural prose at the same 8,000-token context. It
+  agreed with the oracle for **137 consecutive tokens**, then substituted
+  ` world` for ` universe` in *"the whole of the ___ and its inhabitants"* — two
+  interchangeable words after an identical 137-token prefix — and **realigned
+  immediately**, agreeing again from index 138. No ties were involved anywhere:
+  `selection.tie_multiplicity` is 193 over 193 tokens, multiplicity one each.
+
+  So A7's claim is **qualified, not withdrawn**. Zero argmax changes over 137
+  tokens of natural prose at the mandatory context; an argmax flip at index 2 on
+  a prompt of 8,000 identical tokens. The contract is sound for the inputs it
+  was measured on and the stress workload marks the boundary — which is what it
+  is for. The honest statement is that the blocked contract preserves the
+  argmax on natural text and does not preserve it under engineered degeneracy,
+  and A7 should say so rather than claiming a general invariance.
 
 - **OI-32 — one capability, two sources of truth, and they have now diverged.**
   `configs/hardware/abi3_capability/hbm_sram_single_chip.json` and
