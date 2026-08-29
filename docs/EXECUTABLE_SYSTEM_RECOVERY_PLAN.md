@@ -6,6 +6,18 @@
 **Applies to:** checkpoint ingestion, model semantics, compiler, runtime, RTL,
 verification, performance accounting, and physical re-entry
 
+**Post-unification authority:** this document remains the detailed DeepSeek
+semantic, checkpoint, and executable-evidence ledger. New DeepSeek ROM
+implementation follows
+[DEEPSEEK_V4_ROM_HARDWARE_IMPLEMENTATION_PLAN.md](DEEPSEEK_V4_ROM_HARDWARE_IMPLEMENTATION_PLAN.md);
+cross-target ownership and dependencies follow
+[FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md](FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md);
+and shared control semantics follow
+[TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md).
+All pre-unification sessions are stopped at `main@39a607e`. Existing milestone
+evidence remains historical input, while new compiler, simulator, or RTL work
+is blocked until `TA-A3-ARCH-0` closes.
+
 ## 1. Decision and purpose
 
 OpenTallas has not yet validated an executable model-to-chip system. The current
@@ -501,7 +513,7 @@ row must not be read as milestone closure.
 
 | Gate | Current direct evidence | Status |
 |---|---|---|
-| M0 | Repository baseline and additive compiler/runtime layout are committed on `main`; large generated payloads remain outside Git | Ongoing because concurrent model and simulation work may keep the worktree active |
+| M0 | Repository baseline and additive compiler/runtime layout are committed on `main`; all pre-unification sessions stopped and merged at `39a607e`; large generated payloads remain outside Git | Handoff/governance baseline achieved; new implementation remains blocked on `TA-A3-ARCH-0` |
 | M1 | The pinned official graph has a complete 2,136-node/46-kind ledger; all 46 kinds have qualified target references, including routed-MXFP4/shared-FP8 SwiGLU, sqrt-softplus routing, session-bound KV/compressor transactions and views, exact main/DSpark attention row-space composition, grouped attention-output projection, DSpark main-conditioning and prefill-KV transactions, the shared BF16-storage/binary32-runtime vocabulary head, the five-step causal Markov loop with adjusted logits and entropy continuation, RoPE, HC paths, sparse attention, and fail-closed greedy/target-adapted sampling | Semantic/operator-reference gate achieved; this does not imply graph-to-microcode, artifact-driven service-engine, or RTL execution |
 | M2 | The official 72,317-tensor checkpoint is locked; the complete 77,116-assignment MP=4 application was independently re-read with verification `b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28` | Checkpoint/canonical payload gate achieved; this does not imply executable operators |
 | M3 | Lookup and complete-output query-A deployments have content-addressed images and independent payload roundtrips | Partial: complete stage placement, capacity, repair, and physical-address legality remain open |
@@ -745,7 +757,9 @@ code path.
 
 ## 18. Concurrency and repository hygiene
 
-Existing simulations may continue while compiler work is additive. The rules are:
+All pre-unification simulations are stopped. New agents and campaigns follow the
+launch waves and dependency gates in the four-target master plan. When a
+campaign is authorized, the rules are:
 
 - a running campaign owns a unique build/output directory;
 - no campaign writes source or a canonical result path while that path is being
@@ -766,6 +780,11 @@ implementation change, and are pushed only after the complete local series passe
 its applicable gates.
 
 ## 19. Initial execution sequence
+
+The sequence below records the original recovery order and explains the retained
+DeepSeek artifacts. New work enters through TA-A3-ARCH-0 and the launch sequence
+in the four-target master plan; this list does not independently authorize
+implementation.
 
 1. Audit, classify, test, commit, and push the current pre-compiler baseline.
 2. Add `COMP-01` to top-level decision and traceability artifacts.

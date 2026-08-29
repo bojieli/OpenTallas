@@ -7,12 +7,13 @@ and gate closure remain evidence controlled
 
 **Initial issue:** 2026-08-28
 
-**Last reconciled:** 2026-08-29 against `origin/main@f9bb181`, the
-concurrent-session working trees, and the isolated `ta-integration` worktree
+**Last reconciled:** 2026-08-29 against clean, fast-forward-current
+`main`/`origin/main@39a607e` after all concurrent sessions stopped and pushed
+their partial handoffs
 
-**Reconciled implementation heads:** ROM/source work inspected read-only and
-accelerator implementation through `087b374`; dirty and untracked implementation
-files in either worktree remain working state, not release evidence. Commit
+**Reconciled implementation heads:** the authoritative merged baseline is
+`main@39a607e`; all earlier worktree and branch identities below are retained as
+historical evidence anchors, not active integration heads. Commit
 `c07331b` is the coherent connected-layer implementation handoff, and `1f4e52f`
 reconciles its evidence boundary into this plan. The connected implementation
 links the previously qualified embedding, attention, transactional-KV, residual,
@@ -56,11 +57,14 @@ readiness evidence for two transactions only. It does not execute or admit the
 8,000-token prompt, establish long-position scaling, or close independent
 reference, timing, RTL, physical, DeepSeek, or comparison gates.
 
-This integration copy is the authoritative tensor-accelerator program plan.
-The concurrent-session planning draft was reviewed as governance input; no
-dirty concurrent implementation, generated artifact, or checkpoint payload was
-admitted with it. Implementation evidence enters this branch only through the
-gate and handoff rules in Sections 16 and 17.
+This integration copy remains the detailed tensor-accelerator evidence ledger.
+The post-unification program structure and agent handoff policy are controlled by
+[FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md](FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md),
+and the production control architecture is controlled by
+[TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md).
+No dirty concurrent implementation, generated artifact, or checkpoint payload
+was admitted during the merge. New implementation evidence enters `main` only
+through the gate and handoff rules in those documents and Sections 16 and 17.
 
 **Primary targets:** Qwen3-8B at exactly 8,000 resident prompt tokens and
 DeepSeek-V4-Flash-0731 at exactly 200,000 resident prompt tokens
@@ -144,6 +148,19 @@ reasoning, and agentic accelerator gates remain open. Section 1.29 records the
 subsequent working-state tensor-accelerator campaign without promoting its
 uncommitted artifacts to release evidence.
 
+**Post-unification architecture decision record
+`TA-4LANE-A3-2026-08-29`:** the program now has four verification targets but
+three hardware families: one shared HBM/SRAM tensor-accelerator RTL 3.0 hierarchy
+must run Qwen and DeepSeek without resynthesis, while Qwen-ROM and DeepSeek-ROM
+are separate model-personalized hardware, netlist, and mask lanes. “RTL 3.0”
+means the RTL implementation of ABI 3.0; it is not another ISA or target.
+All ABI 2.5 model campaigns remain paused. No ABI 3.0 compiler, simulator, or
+RTL implementation begins until architecture gate `TA-A3-ARCH-0` in
+TA-ADR-003 is reviewed and closed. After closure, work follows the separate
+[HBM/SRAM](HBM_SRAM_TENSOR_ACCELERATOR_IMPLEMENTATION_PLAN.md),
+[Qwen ROM](QWEN3_ROM_HARDWARE_IMPLEMENTATION_PLAN.md), and
+[DeepSeek ROM](DEEPSEEK_V4_ROM_HARDWARE_IMPLEMENTATION_PLAN.md) lane plans.
+
 ## Executive recommendation
 
 Build the HBM-plus-banked-SRAM design as a programmable **tensor accelerator**,
@@ -154,15 +171,12 @@ the models require it—sequence position, masks, sparse indices, expert choices
 addresses, queue occupancy, and state generations—but every dynamic dimension
 has an explicit hardware bound and a fail-closed compiler or runtime check.
 
-Do not freeze the active Qwen and DeepSeek ROM sessions. Let them continue to
-own model-source fidelity, checkpoint locks, tokenizer and generation semantics,
-independent numerical references, golden traces, and ROM-specific lowering.
-Protect the common program with a narrower boundary: only the integration owner
-changes the production-neutral IRs, tensor-accelerator capability and command
-ABI, HBM/SRAM physical planner, and common simulator. The integration lane
-consumes coherent, tested commits and immutable manifests, never dirty files from
-another session. When a shared contract must change, pause only that interface
-long enough to review and version it.
+All prior Qwen and DeepSeek sessions are stopped and their partial work is merged
+on `main`. New agents receive separate common-ABI, shared-HBM/SRAM, Qwen-ROM, or
+DeepSeek-ROM charters from the four-target master plan. Only the common owner
+changes production-neutral IRs, ABI 3.0, capability, and shared evidence schemas.
+Backend agents consume released contracts and return versioned change requests;
+they do not create private incompatible IRs or ISAs.
 
 There is already a credible backend-neutral **Model Graph IR v2** and a real
 Qwen adapter. It is a useful foundation, not a completed common compiler. The
@@ -232,9 +246,9 @@ This plan extends the executable-system program in
 the numerical requirements in [NUMERICS.md](../spec/NUMERICS.md), the artifact and
 ABI principles in [FIRMWARE_COMPILER.md](../spec/FIRMWARE_COMPILER.md), and the
 verification independence rules in
-[VERIFICATION_PLAN.md](../spec/VERIFICATION_PLAN.md). It is additive while the
-current ROM sessions finish their model-specific milestones. It becomes normative
-only after architecture review and traceability integration.
+[VERIFICATION_PLAN.md](../spec/VERIFICATION_PLAN.md). It is additive to the
+merged ROM and HBM evidence on `main`. New implementation remains blocked until
+TA-ADR-003 passes architecture review and traceability integration.
 
 ### 1.1 Plan authority and change control
 
@@ -2846,18 +2860,17 @@ phase is diagnostic staging, not a substitute for the exit evidence.
 
 ### Phase 0 — concurrent-session handoff and baseline
 
-The Qwen and DeepSeek ROM sessions finish their current model-specific
-semantic/reference/deployment milestones, run their tests, and create scoped
-commits. Active checkpoint downloads continue. The sessions do not redesign the
-common production IR, generic command ISA, accelerator capability schema, or
-HBM/SRAM backend.
-
-The integration owner inventories both commits, generated manifests, known
-answers, open limitations, and overlapping documents. Work begins in an isolated
-worktree from a reconciled baseline.
+This phase is closed at the post-unification baseline `main@39a607e`. The Qwen,
+DeepSeek, and accelerator sessions stopped and pushed their partial commits;
+the integration owner fast-forward checked the authoritative checkout, audited
+the merged IR/ISA/RTL boundaries, and preserved unadmitted drafts separately.
+No live writer owns a shared implementation path.
 
 **Exit gate:** TA-GOV-0. No live writer owns a shared implementation path, every
 dirty artifact is classified, and both model frontends have a stable handoff.
+
+**Exit status:** satisfied for handoff/governance. This does not close
+TA-A3-ARCH-0 or authorize ABI 3.0 implementation.
 
 ### Phase 1 — workload, correctness, and capability freeze
 
@@ -2878,10 +2891,12 @@ and architectural bound is explicit; no unresolved term can change what
 
 ### Phase 2 — neutral semantics and independent references
 
-The production Model Graph IR and Tensor Kernel IR schemas are introduced
-additively. Qwen and DeepSeek adapters export into the common graph. Independent
-target-precision references cover every operation and state transition, beginning
-with small known answers and progressing to real checkpoint tensors.
+Before TA-A3-ARCH-0 this phase is limited to auditing the two model contracts and
+their independent references. After Phase 3 freezes the architecture, the
+production Model Graph IR and Tensor Kernel IR schemas are introduced additively.
+Qwen and DeepSeek adapters export into the common graph. Independent
+target-precision references cover every operation and state transition,
+beginning with small known answers and progressing to real checkpoint tensors.
 
 Coverage tooling rejects unknown operations, implicit broadcasts, unbound state,
 undefined rounding, and backend-specific semantic nodes.
@@ -2892,18 +2907,22 @@ class, and known-answer strategy.
 
 ### Phase 3 — tensor-accelerator architecture and ABI freeze
 
-The command processor, tensor/vector/selection engines, SRAM hierarchy, HBM
-frontend, NoC, state machinery, counters, errors, and host ABI are specified at
-bit and cycle-contract level. Reduced fixtures explore alternatives, but the
-selected v1 capability supports the union of the two model contracts.
+This architecture phase is the implementation prerequisite even though the
+original phase numbering lists semantic audit first. TA-ADR-003 specifies the
+RV32 management boundary, deterministic microsequencer, three ABI layers,
+tensor/vector/attention/route/reduce/selection engines, SRAM hierarchy, HBM
+frontend, NoC, state machinery, events, queues, traps, counters, errors, and
+versioning. The selected ABI 3.0 capability supports the union of the two model
+contracts.
 
 The architecture review explicitly tests DeepSeek data-dependent experts and
 sparse indices; a design that only supports a compile-time dense schedule does
 not pass.
 
-**Exit gate:** all externally visible records, engine contracts, numeric modes,
-memory rules, dynamic bounds, errors, and counters are versioned and
-requirement-traced.
+**Exit gate:** TA-A3-ARCH-0. All externally visible records, engine contracts,
+numeric modes, memory rules, dynamic bounds, errors, and counters are versioned
+and requirement-traced. No common IR/ABI implementation or model campaign
+resumes before this gate closes.
 
 ### Phase 4 — deterministic HBM/SRAM compiler vertical slice
 
@@ -3044,14 +3063,15 @@ One integration owner controls:
 - the production-neutral IRs;
 - generic compiler schemas and artifact identity;
 - the tensor-accelerator capability and command ABI;
-- the HBM/SRAM backend;
-- the common simulator architecture; and
+- the common simulator and engine interface contracts; and
 - cross-model release gates.
 
-The Qwen and DeepSeek owners control their model adapters, official-source
-evidence, independent references, golden traces, and model-specific tests. After
-the shared schemas freeze, they add thin exporters and review semantic fidelity;
-they do not fork the common IR.
+The shared HBM/SRAM owner controls its backend physical planner, functional and
+cycle simulator implementations, and one RTL 3.0 hierarchy. The Qwen-ROM and
+DeepSeek-ROM owners control their respective physical plans, model-specific ROM
+simulators, RTL, and physical evidence. Qwen and DeepSeek semantic owners retain
+their adapters, official-source evidence, independent references, golden traces,
+and model-specific tests. No backend owner forks the common IR or ABI.
 
 Independent checkers remain separate modules and receive review from someone
 other than the corresponding generator owner whenever staffing permits.
@@ -3061,14 +3081,12 @@ paths are never mutated by a running campaign. Promotion is atomic after
 validation. Checkpoint downloads and generated multi-gigabyte artifacts remain
 outside Git.
 
-The active Qwen and DeepSeek ROM sessions are not frozen merely to start the
-tensor-accelerator program. They continue on model-owned source adapters,
-semantics, independent references, golden traces, and ROM-specific lowering.
-They must not edit the production-neutral IR, generic accelerator ABI,
-HBM/SRAM planner, or common simulator while the integration owner controls those
-surfaces. The integration owner consumes only coherent commits, never dirty
-working-tree files. A handoff records the source commit, generated artifact
-identities, tests, known limitations, and semantic coverage delta.
+All pre-unification sessions are stopped. New work follows the four active roles,
+launch waves, isolated-worktree policy, and copyable task packets in
+[FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md](FOUR_TARGET_IMPLEMENTATION_MASTER_PLAN.md).
+The integration owner consumes only coherent commits, never dirty working-tree
+files. A handoff records the source commit, generated artifact identities, test
+scope, failures, known limitations, dependency, and semantic coverage delta.
 
 If two sessions need the same shared contract, implementation pauses at that
 boundary long enough to review and version the contract; neither session creates
@@ -3116,7 +3134,7 @@ RTL, physical, and comparison gates remain open.
 
 | Program decision surface | Current state | Consequence |
 |---|---|---|
-| Integration governance | `087b374` is the current accelerator implementation handoff and includes the governed natural/agent workload, control, checkpoint, execution, schema, and fail-closed campaign foundation; concurrent Qwen/DeepSeek work on `main` remains read-only input until a coherent committed handoff is imported | Only committed, reproduced handoffs become release evidence. Long-context work remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
+| Integration governance | `main@39a607e` is the clean merged baseline. TA-ADR-003 and the four-target master/lane plans define the proposed post-unification architecture, ownership, dependencies, and handoffs; ABI 3.0 implementation is not started | Review and close `TA-A3-ARCH-0`, then launch one common owner and the three backend roles in dependency waves. Only committed, reproduced handoffs become release evidence |
 | Natural/agentic workloads | The ROM lane has committed six-question EOS and two-task bash-agent evidence. Section 1.29 imports workload ID `6e416e...e998`, closes first-EOS/token legitimacy and dynamic restart V2 at tested implementation scope, passes arithmetic and geography, and preserves science as an exact-comparison failure. Three natural and both live-agent campaigns are paused behind the ABI 3.0 architecture gate; no complete natural or agentic gate is admitted | Diagnose the science divergence, freeze and implement ABI 3.0, prove ABI 2.5 functional-reference equivalence, then resume the incomplete campaigns under new run roots where required; repeated special tokens remain stress-only evidence |
 | Neutral graph semantics | Model Graph IR v2 and a real Qwen graph exist; committed DeepSeek references continue to accumulate | The semantic graph boundary is retained, but `TA-SEM-1` remains open until both complete ordinary graphs have zero unknown operations |
 | Neutral kernel semantics | **QW-FM1 closed at `74c0d59`.** One retained dynamic-shape neutral artifact maps all 617 Qwen operations and 36 state resources exactly once, including final output and terminal commit, and an independent checker reconstructs all source, numeric, tensor, state, and qualification bindings without backend leakage | Preserve the admitted Qwen semantic artifact through physical execution; separately close the remaining DeepSeek operation/state union before `TA-SEM-1` |

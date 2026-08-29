@@ -7,8 +7,17 @@
 **Evidence status:** complete functional compiler/service/reference path;
 physical implementation and operator-complete RTL remain separate gates
 
-The Qwen implementation is additive under `compiler/qwen3` and does not share
-model-specific code with the live DeepSeek-V4 work. The source declaration
+**Post-unification authority:** this document remains the retained Qwen
+functional evidence ledger. New Qwen ROM hardware work follows
+[QWEN3_ROM_HARDWARE_IMPLEMENTATION_PLAN.md](QWEN3_ROM_HARDWARE_IMPLEMENTATION_PLAN.md);
+new Qwen HBM/SRAM work follows
+[HBM_SRAM_TENSOR_ACCELERATOR_IMPLEMENTATION_PLAN.md](HBM_SRAM_TENSOR_ACCELERATOR_IMPLEMENTATION_PLAN.md);
+and both remain paused behind `TA-A3-ARCH-0` in
+[TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md](TENSOR_ACCELERATOR_ABI_3_ARCHITECTURE_DECISION.md).
+
+The retained Qwen implementation is additive under `compiler/qwen3` and does not
+share model-specific code with the merged DeepSeek-V4 implementation. The source
+declaration
 pins all five official BF16 shards plus config, index, tokenizer, vocabulary,
 generation config, license, and model card. Remote checkpoint code is disabled.
 
