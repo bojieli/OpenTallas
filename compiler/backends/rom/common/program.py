@@ -1,18 +1,40 @@
 """Loop-compressed, IR-driven lowering shared by both ROM products.
 
 The neutral Tensor Kernel IR names one kernel per layer per operation: Qwen3-8B
-is roughly 617 kernels, 36 structurally identical layers of about 17 operations.
+is roughly 730 kernels, 36 structurally identical layers of about 20 operations.
 Emitting one instruction per kernel would reproduce the ABI 2.5 failure this
-program exists to remove.  So this module compresses:
+program exists to remove.  So this module compresses along two axes, and only
+two -- a third would be the engine's own decomposition leaking into the
+instruction stream.
 
-* layers whose kernel signatures are identical and whose layer numbers are
-  consecutive form one **run**;
-* a run is emitted once, between ``CONTROL.LOOP_SETUP`` and
-  ``CONTROL.LOOP_NEXT`` (:meth:`~runtime.abi3.builder.DeploymentBuilder.
-  open_loop` / :meth:`~runtime.abi3.builder.DeploymentBuilder.close_loop`); and
-* every weight the body reads lives in one ROM region striped by layer, so its
-  tensor view is a single descriptor carrying
-  ``DynamicTerm.loop(run_loop, slot_element_stride)``.
+**Layers.** Layers whose kernel signatures agree form one **run**, emitted once
+between ``CONTROL.LOOP_SETUP`` and ``CONTROL.LOOP_NEXT``.  A run may be periodic:
+DeepSeek's stack alternates two attention classes, so its body holds two layers
+and the loop runs twenty times.  Every weight the body reads lives in one ROM
+region striped by layer, so its tensor view is a single descriptor carrying
+``DynamicTerm.loop(run_loop, slot_element_stride)``.
+
+**Token blocks.** A span is a runtime symbol and a view states static extents, so
+an operand over the token axis is read through a loop bound by
+``Symbol.SPAN_TOKENS`` with the block as its ``bound_divisor``.  Amendment A13
+(wire format section 12.4) then resolves the final iteration's leading extent to
+``symbol - iteration * bound_divisor``: the rows the request actually has.  With
+one block spanning the declared context that loop runs once and exists only to
+carry the resolution, and a 93-token prefill issues one dispatch per kernel per
+layer rather than one per token.
+
+Everything else is a *schedule* field.  Output tiles, reduction tiles, bank and
+port masks and the NoC route class describe how one engine instruction is
+decomposed on the hardware, and the cycle model reads them from the SCHEDULE
+descriptor.  Making them program loops would retire on the order of 258,000
+dispatches per Qwen forward step.
+
+Operand shapes follow ``TA-ABI3-OPCONV-1``: a contraction states its operands as
+matrices (``[rows, K]``, ``[N, K]``, ``[rows, N]``) whatever rank the graph gave
+them, everything else keeps the declared rank so an engine that reads heads
+finds an axis for them, and a lower-rank input is broadcast onto the principal
+operand with a zero stride.  All of it is description; nothing is relaid out and
+nothing is copied.
 
 Region identity is derived *structurally* -- run index, body position, operand
 slot -- never from tensor names, so the same lowering serves any front end that
@@ -623,10 +645,12 @@ class RomLowering:
         self._state_owner: dict[str, str] = {}
         self._event_of_tensor: dict[str, int] = {}
         self._communications: list[tuple[str, int]] = []
+        self._link_fanout: dict[str, int] = {}
         self._link_instruction_count = 0
         self._queue_cursor: dict[int, int] = {}
         self._contract_substitutions: dict[str, str] = {}
         self._state_class_aliases: dict[str, str] = {}
+        self._state_row_widenings: dict[str, dict[str, int]] = {}
         self._port_cursor = 0
         self._unify_buffers()
 
@@ -1382,15 +1406,19 @@ class RomLowering:
         step.  Partial layer advancement therefore cannot become architectural.
         """
         views = self._state_tensors()
-        footprint = {
-            state_id: sum(
-                self._bytes(self.tensors[name])
-                for name, direction in names
-                if direction == "in"
-            )
-            or sum(self._bytes(self.tensors[name]) for name, _ in names)
-            for state_id, names in views.items()
-        }
+        # A resource's *physical* row must hold every plane the graph places on
+        # it in one direction at once.  The declared row states the append
+        # contract; where a graph declares planes wider than that -- DeepSeek's
+        # compressor window declares a 1,024-element row and then writes two
+        # 4,096-element planes -- the row is widened to what the views need and
+        # the widening is recorded, because silently truncating a plane would
+        # corrupt the model and silently overlapping two would be worse.
+        plane_rows: dict[str, int] = {}
+        for state_id, names in views.items():
+            per_direction = {"in": 0, "out": 0}
+            for name, direction in names:
+                per_direction[direction] += self._plane_width(name)
+            plane_rows[state_id] = max(per_direction.values(), default=0)
         groups: dict[tuple[Any, ...], list[StateResource]] = {}
         for state in self.graph.states:
             key = (
@@ -1416,21 +1444,21 @@ class RomLowering:
                 )
             dtype = self._dtype(members[0].dtype)
             bits = DTYPE_BITS[dtype]
-            row_bytes = (members[0].row_elements * bits + 7) // 8
-            capacity = self._extent(members[0].capacity_rows)
-            # The IR's row contract describes the append transaction.  The
-            # physical slot must additionally hold every declared view of the
-            # resource -- a windowed KV resource exposes a key history and a
-            # value history, each of the full capacity -- so the object is sized
-            # to the larger of the two.
-            slot_bytes = max(
-                row_bytes * capacity,
-                max((footprint.get(m.state_id, 0) for m in members), default=0),
+            declared_row = members[0].row_elements
+            row_elements = max(
+                declared_row,
+                max((plane_rows.get(m.state_id, 0) for m in members), default=0),
             )
+            if row_elements != declared_row:
+                self._state_row_widenings[members[0].state_class] = {
+                    "declared_row_elements": declared_row,
+                    "physical_row_elements": row_elements,
+                }
+            row_bytes = (row_elements * bits + 7) // 8
+            capacity = self._extent(members[0].capacity_rows)
+            slot_bytes = row_bytes * capacity
             if slot_bytes <= 0:
-                raise RomLoweringError(
-                    f"state group {index} has no capacity"
-                )
+                raise RomLoweringError(f"state group {index} has no capacity")
             total = slot_bytes * len(members)
             group_key = f"state.{index}"
             committed = self.builder.memory_object(
@@ -1450,7 +1478,7 @@ class RomLowering:
             view = self._view(
                 object_id=prepared,
                 dtype=dtype,
-                dims=(capacity, members[0].row_elements),
+                dims=(capacity, row_elements),
                 permissions=int(Permission.READ | Permission.WRITE),
                 label="view.state",
             )
@@ -1465,11 +1493,7 @@ class RomLowering:
                 counter_class_id=self._counter_class("state", Major.STATE),
                 key=f"desc.{group_key}",
             )
-            self._state_group_shape[group_key] = (
-                slot_bytes,
-                capacity,
-                members[0].row_elements,
-            )
+            self._state_group_shape[group_key] = (slot_bytes, capacity, row_elements)
             for slot, state in enumerate(members):
                 self._state_descriptor[state.state_id] = descriptor
                 self._state_slot[state.state_id] = (group_key, slot)
@@ -1654,12 +1678,24 @@ class RomLowering:
         # a span -- is not expressible that way, so such an operand keeps its
         # full declared extent rather than silently presenting the wrong rows.
         row_symbolic = symbol is not None and multiplier == 1
-        span_max = int(self.capability.limits["max_context_positions"])
+        # The rows a block loop may walk are bounded by the *smallest* extent
+        # any of the kernel's symbolic-leading operands declares.  A graph may
+        # give one operand a shorter maximum than the capability's context
+        # bound, and a view that presented the capability's rows would run off
+        # that operand's object.
+        rows_bound = self._symbolic_row_bound(kernel)
         configured = int(self.policy.token_block_rows or 0)
-        block = max(min(configured or span_max, span_max), 1)
+        block = max(min(configured or rows_bound, rows_bound), 1)
+        # A view's row term advances by ``block * row width`` elements and that
+        # stride is a 32-bit field, so the block is halved until every operand's
+        # stride fits.  Halving costs iterations, never correctness; refusing
+        # would cost the whole compression.
+        widest = self._widest_row(kernel)
+        while block > 1 and block * widest > 0xFFFFFFFF:
+            block //= 2
         declared_rows = principal_dims[0] if principal_dims else 1
-        trip = max(-(-declared_rows // block), 1) if row_symbolic else 1
-        rows = block if row_symbolic else max(declared_rows, 1)
+        trip = max(-(-rows_bound // block), 1) if row_symbolic else 1
+        rows = min(block, rows_bound) if row_symbolic else max(declared_rows, 1)
 
         cols = principal_dims[-1] if len(principal_dims) > 1 else 1
         depth = 0
@@ -1669,18 +1705,31 @@ class RomLowering:
             activation = self.tensors[kernel.inputs[0]] if kernel.inputs else None
             weight_dims = tuple(self._dims(weight)) if weight is not None else (1, 1)
             act_dims = tuple(self._dims(activation)) if activation is not None else (1,)
-            depth = int(
-                self._extent(kernel.iteration_domain.get("reduction_width", 0)) or 0
-            )
-            if depth <= 1:
-                depth = act_dims[-1]
+            # The iteration domain is the authority on the reduction width
+            # when the graph states it.  Otherwise it is read off the operands:
+            # the activation's last axis, or -- when the graph gave the result a
+            # head-shaped rank -- the product of its non-leading axes, which is
+            # the same contraction described differently.
+            folded = 1
+            for extent in act_dims[1:]:
+                folded *= extent
+            candidates = [
+                int(self._extent(kernel.iteration_domain.get("reduction_width", 0)) or 0),
+                act_dims[-1],
+                folded,
+            ]
             # TA-ABI3-OPCONV-1 section 2: in1 is n-major ``[N, K]``.  A
             # checkpoint that stores ``[K, N]`` is presented n-major by swapping
             # the view's strides, never by a relayout pass.
-            if len(weight_dims) >= 2 and weight_dims[-1] == depth:
-                cols, transposed = weight_dims[-2], False
-            elif len(weight_dims) >= 2 and weight_dims[-2] == depth:
-                cols, transposed = weight_dims[-1], True
+            for candidate in candidates:
+                if candidate <= 0 or len(weight_dims) < 2:
+                    continue
+                if weight_dims[-1] == candidate:
+                    depth, cols, transposed = candidate, weight_dims[-2], False
+                    break
+                if weight_dims[-2] == candidate:
+                    depth, cols, transposed = candidate, weight_dims[-1], True
+                    break
             else:
                 raise RomLoweringError(
                     f"kernel {kernel.kernel_id!r}: weight {weight_dims} shares no "
@@ -1711,6 +1760,33 @@ class RomLowering:
             symbol=symbol if symbol is not None else int(Symbol.SPAN_TOKENS),
             principal=principal_dims,
         )
+
+    def _symbolic_row_bound(self, kernel: Kernel) -> int:
+        """The smallest leading extent any symbolic-leading operand declares."""
+        span_max = int(self.capability.limits["max_context_positions"])
+        bound = span_max
+        for name in (*kernel.inputs, *kernel.outputs):
+            tensor = self.tensors.get(name)
+            if tensor is None or tensor.role in WEIGHT_ROLES:
+                continue
+            symbol, multiplier = self._leading_symbol(tensor)
+            if symbol is None or multiplier != 1:
+                continue
+            bound = min(bound, self._dims(tensor)[0])
+        return max(bound, 1)
+
+    def _widest_row(self, kernel: Kernel) -> int:
+        """The widest per-row element count any of this kernel's operands has."""
+        widest = 1
+        for name in (*kernel.inputs, *kernel.outputs):
+            tensor = self.tensors.get(name)
+            if tensor is None or tensor.role in WEIGHT_ROLES:
+                continue
+            width = 1
+            for extent in self._dims(tensor)[1:]:
+                width *= extent
+            widest = max(widest, width)
+        return widest
 
     def _contraction_weight(self, kernel: Kernel) -> Tensor | None:
         if "expert_weight_tensors" in kernel.attributes:
@@ -1750,11 +1826,16 @@ class RomLowering:
     def _position_inputs(self) -> frozenset[str]:
         """Declared inputs whose content is the request's position range.
 
-        A rank-one index vector over the token axis that no embedding reads
+        A rank-one integer input over the token axis that no embedding reads
         holds ``POSITION_START + i`` and nothing else.  ADR-003 binds that range
         as a request symbol, so it is materialised from the frozen
         ``arange_u32_v1`` generator and the view is offset by the symbol --
         identical values, and no host window that nothing could fill.
+
+        A graph may declare the range as a span-length vector or as a single
+        base offset; both name the same range, and both resolve to a view of
+        the materialised one.  Reading a scalar offset as if it were the whole
+        vector is how the second form would otherwise fail.
         """
         cached = getattr(self, "_position_input_cache", None)
         if cached is not None:
@@ -1767,7 +1848,10 @@ class RomLowering:
         for tensor in self.graph.tensors:
             if tensor.role != "input" or tensor.dtype not in {"u32", "i32"}:
                 continue
-            if len(tensor.shape) != 1 or not isinstance(tensor.shape[0], Symbolic):
+            if len(tensor.shape) != 1:
+                continue
+            axis = tensor.shape[0]
+            if not isinstance(axis, Symbolic) and int(axis) != 1:
                 continue
             kinds = consumers.get(tensor.tensor_id, [])
             if not kinds or any(k == "EMBEDDING_LOOKUP" for k in kinds):
@@ -1995,6 +2079,14 @@ class RomLowering:
                 return view
         if tensor.role in WEIGHT_ROLES:
             return self._weight_view(name, run=run, shape=shape, slot=slot)
+        if name in self._position_inputs:
+            # The request's position range is a bound symbol, not host data:
+            # every operand that reads it reads the same materialised range
+            # offset by POSITION_START, whether it indexes a movement or places
+            # attention's causal horizon.
+            return self._index_view(
+                kernel, shape, name, loop, count=shape.rows, absolute=True
+            )
         if family is Major.SELECTION:
             # TA-ABI3-OPCONV-1 section 8: selection operands are one-dimensional
             # and an ID is exactly one element.
@@ -2386,13 +2478,12 @@ class RomLowering:
         if gather and subject is not None:
             symbol, _ = self._leading_symbol(subject)
             absolute = symbol is None
+        # One index per row the movement touches: the rows it writes for a
+        # gather, the rows it reads for a scatter.
+        counted = addressed if gather else source_name
         count = 1
-        if addressed is not None:
-            dims = self._blocked_dims(self.tensors[addressed], shape)
-            if gather:
-                count = max(dims[0], 1)
-            else:
-                count = max(self._blocked_dims(self.tensors[source_name], shape)[0], 1)
+        if counted is not None:
+            count = max(self._blocked_dims(self.tensors[counted], shape)[0], 1)
         views = [
             self._index_view(
                 kernel, shape, index_name, loop, count=count, absolute=absolute
@@ -2570,20 +2661,35 @@ class RomLowering:
 
     # -- link fabric -----------------------------------------------------
     def _emit_links(self, run: LayerRun, steps: Iterable[LinkStep]) -> None:
+        """Issue one compressed body's on-fabric steps.
+
+        ABI 3.0 counts a collective's participants in *nodes*: the engine
+        derives the participant set from the admitted topology's ``node_count``
+        partitioned by ``route_group_count``, and rejects a descriptor whose
+        declared count disagrees.  A wafer-scale logical accelerator is one
+        node by construction -- that is what "presented to the host as one
+        device" means -- so its tile-scoped collectives cannot state their true
+        fan-out in ``participant_count``.  The emitted count is therefore
+        derived from the topology, and the intended on-wafer fan-out is
+        recorded in the deployment notes instead of being asserted in a field
+        that means something else.  This is reported, not worked around.
+        """
+        nodes = max(int(self.capability.limits.get("max_nodes", 1)), 1)
         for step in steps:
             local = self._link_local_object(run)
             communication = self.builder.communication(
                 collective_op=step.collective_op,
                 local_object_id=local,
-                group_id=step.group_id,
+                group_id=NO_ID,
                 route_class=step.route_class,
                 byte_extent=step.byte_extent,
-                participant_count=step.participant_count,
+                participant_count=nodes,
                 virtual_channel=step.virtual_channel,
                 counter_class_id=self._counter_class("communication", Major.LINK),
                 key=f"comm.r{run.index}.{step.label}",
             )
             self._communications.append((step.label, communication))
+            self._link_fanout[step.label] = step.participant_count
             self.builder.emit(
                 Major.LINK,
                 step.link_sub,
@@ -2785,11 +2891,15 @@ class RomLowering:
                 for run in self.analysis.runs
             ],
             "link_instruction_count": self._link_instruction_count,
+            "on_wafer_fanout": dict(sorted(self._link_fanout.items())),
             "numeric_contract_substitutions": dict(
                 sorted(self._contract_substitutions.items())
             ),
             "schedule_descriptor_count": len(self._schedule_cache),
             "state_class_aliases": dict(sorted(self._state_class_aliases.items())),
+            "state_row_widenings": dict(sorted(self._state_row_widenings.items())),
+            "substituted_inputs": dict(sorted(self._substituted_inputs.items())),
+            "token_block_rows": int(self.policy.token_block_rows or 0),
             "source_kernel_count": len(self.graph.kernels),
             "state_groups": len(set(self._state_descriptor.values())),
             "tile_mapping_owner": "schedule_descriptor",

@@ -41,17 +41,7 @@ from compiler.backends.rom.qwen3 import (  # noqa: E402
     build_qwen3_rom_deployment,
     qwen3_rom_capability,
 )
-from compiler.ir.v3.kernel_ir import (  # noqa: E402
-    CheckpointBinding,
-    Entrypoint,
-    Kernel,
-    KernelGraph,
-    RuntimeSymbol,
-    StateResource,
-    Symbolic,
-    Tensor,
-    require_neutral,
-)
+from compiler.ir.v3.kernel_ir import KernelGraph, require_neutral  # noqa: E402
 from runtime.abi3.capability import canonical_json  # noqa: E402
 from runtime.abi3.constants import StorageClass  # noqa: E402
 from runtime.abi3.deployment import Deployment  # noqa: E402
@@ -65,106 +55,13 @@ PRODUCTS = ("qwen3-8b", "deepseek-v4-flash")
 # ---------------------------------------------------------------------------
 # Reading a Tensor Kernel IR v3 document
 # ---------------------------------------------------------------------------
-def _extent(value: Any) -> Any:
-    if isinstance(value, Mapping):
-        return Symbolic(
-            symbol=str(value["symbol"]),
-            multiplier=int(value.get("multiplier", 1)),
-            maximum=int(value.get("maximum", 0)),
-        )
-    return int(value)
-
-
 def load_kernel_graph(path: Path) -> KernelGraph:
-    """Read a neutral Tensor Kernel IR v3 document written by a front end."""
-    body = json.loads(Path(path).read_text())
-    schema = body.get("schema")
-    if schema != "opentallas.tensor_kernel_ir.v3":
-        raise SystemExit(f"{path}: unexpected IR schema {schema!r}")
-    tensors = []
-    for record in body["tensors"]:
-        binding = record.get("binding")
-        tensors.append(
-            Tensor(
-                tensor_id=record["tensor_id"],
-                dtype=record["dtype"],
-                shape=tuple(_extent(d) for d in record["shape"]),
-                role=record["role"],
-                binding=CheckpointBinding(
-                    source_name=binding["source_name"],
-                    path=binding["path"],
-                    offset=int(binding["offset"]),
-                    bytes=int(binding["bytes"]),
-                    sha256=binding["sha256"],
-                    transform=binding.get("transform", "identity"),
-                )
-                if binding
-                else None,
-                scale_tensor_id=record.get("scale_tensor_id"),
-                scale_block_elements=int(record.get("scale_block_elements", 0)),
-            )
-        )
-    states = tuple(
-        StateResource(
-            state_id=record["state_id"],
-            state_class=record["state_class"],
-            dtype=record["dtype"],
-            row_elements=int(record["row_elements"]),
-            capacity_rows=_extent(record["capacity_rows"]),
-            initialization=record.get("initialization", "zero"),
-        )
-        for record in body["states"]
-    )
-    kernels = tuple(
-        Kernel(
-            index=int(record["index"]),
-            kernel_id=record["kernel_id"],
-            kind=record["kind"],
-            inputs=tuple(record["inputs"]),
-            outputs=tuple(record["outputs"]),
-            numeric_contract=record["numeric_contract"],
-            iteration_domain={
-                k: _extent(v) for k, v in record.get("iteration_domain", {}).items()
-            },
-            attributes=dict(record.get("attributes", {})),
-            phases=tuple(record.get("phases", ("prefill", "decode"))),
-            state_reads=tuple(record.get("state_reads", ())),
-            state_writes=tuple(record.get("state_writes", ())),
-            counter_class=record.get("counter_class", ""),
-            source_operation_id=record.get("source_operation_id", ""),
-            layer=record.get("layer"),
-        )
-        for record in body["kernels"]
-    )
-    graph = KernelGraph(
-        model_id=body["model_id"],
-        source=dict(body.get("source", {})),
-        symbols=tuple(
-            RuntimeSymbol(
-                name=record["name"],
-                minimum=int(record["minimum"]),
-                maximum=int(record["maximum"]),
-                multiple_of=int(record.get("multiple_of", 1)),
-                binding=record.get("binding", "request"),
-            )
-            for record in body.get("symbols", ())
-        ),
-        tensors=tuple(tensors),
-        states=states,
-        kernels=kernels,
-        entrypoints=tuple(
-            Entrypoint(
-                phase=record["phase"],
-                inputs=tuple(record["inputs"]),
-                outputs=tuple(record["outputs"]),
-                states=tuple(record["states"]),
-                generation_policy=record.get("generation_policy", ""),
-            )
-            for record in body["entrypoints"]
-        ),
-        numeric_profile=body.get("numeric_profile", "target_precision_v1"),
-        generation_policy=dict(body.get("generation_policy", {})),
-    )
+    """Read a neutral Tensor Kernel IR v3 document written by a front end.
+
+    The schema owns its own reader, so a backend that hand-decoded it would be a
+    second place for the format to drift.
+    """
+    graph = KernelGraph.read(Path(path))
     require_neutral(graph)
     return graph
 
@@ -207,6 +104,16 @@ def summarise(deployment: Deployment, plan, capability) -> dict[str, Any]:
         if descriptor.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
         and descriptor.payload["storage_class"] != int(StorageClass.ROM)
     )
+    # Mask-programmed derived constants -- a rotary table, a position range --
+    # are immutable ROM bytes with no checkpoint range, so they sit outside the
+    # region plan and are reported separately rather than silently missing.
+    generated = sum(
+        descriptor.payload["size_bytes"]
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+        and descriptor.payload["storage_class"] == int(StorageClass.ROM)
+        and deployment.objects[descriptor.descriptor_id].kind == "generated"
+    )
     topology = next(
         (
             d.payload
@@ -238,6 +145,7 @@ def summarise(deployment: Deployment, plan, capability) -> dict[str, Any]:
         "product": plan.product,
         "quarantined_resources": len(plan.repair_map.quarantine),
         "region_count": plan.region_count,
+        "rom_generated_bytes": generated,
         "rom_padding_bytes": plan.padding_bytes,
         "rom_payload_bytes": plan.payload_bytes,
         "rom_resource_count": plan.resource_count,
@@ -359,7 +267,8 @@ def _print_human(report: Mapping[str, Any]) -> None:
     print(f"ROM regions        {report['region_count']}")
     print(f"ROM payload bytes  {report['rom_payload_bytes']}")
     print(f"ROM padding bytes  {report['rom_padding_bytes']}")
-    print(f"ROM total bytes    {report['rom_total_bytes']}")
+    print(f"ROM generated      {report['rom_generated_bytes']}")
+    print(f"ROM total bytes    {report['rom_total_bytes'] + report['rom_generated_bytes']}")
     print(f"ROM resources      {report['rom_resource_count']}")
     print(f"largest region     {report['largest_region_bytes']}")
     print(f"mutable state      {report['mutable_state_bytes']}")

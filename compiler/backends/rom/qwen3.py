@@ -306,6 +306,8 @@ def build_qwen3_rom_deployment(
     defects: Sequence[DefectRecord] = (),
     weight_storage_class: StorageClass = StorageClass.ROM,
     alignment_bytes: int = ROM_ROW_BYTES,
+    deployment_id: int = 1,
+    generation: int = 1,
     notes: Mapping[str, Any] | None = None,
 ) -> tuple[Deployment, RomImagePlan]:
     """Lower ``graph`` onto the conventional single-chip Qwen ROM target."""
@@ -314,7 +316,12 @@ def build_qwen3_rom_deployment(
         defects=defects, alignment_bytes=alignment_bytes, notes=notes
     )
     lowering = RomLowering(
-        graph, capability, policy, weight_storage_class=weight_storage_class
+        graph,
+        capability,
+        policy,
+        weight_storage_class=weight_storage_class,
+        deployment_id=deployment_id,
+        generation=generation,
     )
     plan = lowering.plan_regions()
     declared = int(capability.memory["rom"]["bytes"])
@@ -336,6 +343,37 @@ def build_qwen3_rom_deployment(
     return lowering.build(), plan
 
 
+def lower_to_abi3(
+    graph: KernelGraph,
+    capability: Capability,
+    *,
+    topology: int | None = None,
+    deployment_id: int = 1,
+    generation: int = 1,
+    **kwargs: Any,
+) -> Deployment:
+    """The shared backend entry point: one neutral graph in, one deployment out.
+
+    Every target is driven through the same call so that a campaign selects a
+    backend by name and nothing else changes.  ``topology`` is accepted and
+    checked rather than ignored: this product is a conventional single chip and
+    cannot be asked to be anything else.
+    """
+    if topology is not None and int(topology) != int(TopologyClass.SINGLE_CHIP):
+        raise Qwen3RomError(
+            f"Qwen3-8B ROM is a conventional single chip; topology class "
+            f"{int(topology)} was requested"
+        )
+    deployment, _plan = build_qwen3_rom_deployment(
+        graph,
+        capability=capability,
+        deployment_id=deployment_id,
+        generation=generation,
+        **kwargs,
+    )
+    return deployment
+
+
 __all__ = [
     "BACKEND",
     "PRODUCT",
@@ -343,6 +381,7 @@ __all__ = [
     "ROM_CAPACITY_BYTES",
     "TARGET_ID",
     "build_qwen3_rom_deployment",
+    "lower_to_abi3",
     "qwen3_area_accounting",
     "qwen3_layout_policy",
     "qwen3_rom_capability",

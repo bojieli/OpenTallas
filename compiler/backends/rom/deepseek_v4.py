@@ -552,6 +552,8 @@ def build_deepseek_v4_rom_deployment(
     tiles_per_reticle: int = TILES_PER_RETICLE,
     alignment_bytes: int = ROM_ROW_BYTES,
     epoch: int = 1,
+    deployment_id: int = 1,
+    generation: int = 1,
     notes: Mapping[str, Any] | None = None,
 ) -> tuple[Deployment, RomImagePlan]:
     """Lower ``graph`` onto the mandatory wafer-scale DeepSeek ROM target."""
@@ -572,7 +574,12 @@ def build_deepseek_v4_rom_deployment(
         notes=notes,
     )
     lowering = RomLowering(
-        graph, capability, policy, weight_storage_class=weight_storage_class
+        graph,
+        capability,
+        policy,
+        weight_storage_class=weight_storage_class,
+        deployment_id=deployment_id,
+        generation=generation,
     )
     plan = lowering.plan_regions()
     declared = int(capability.memory["rom"]["bytes"])
@@ -611,6 +618,37 @@ def build_deepseek_v4_rom_deployment(
     return lowering.build(), plan
 
 
+def lower_to_abi3(
+    graph: KernelGraph,
+    capability: Capability,
+    *,
+    topology: int | None = None,
+    deployment_id: int = 1,
+    generation: int = 1,
+    **kwargs: Any,
+) -> Deployment:
+    """The shared backend entry point: one neutral graph in, one deployment out.
+
+    ``topology`` is accepted and checked rather than ignored: the wafer-scale
+    logical device is mandatory for this product, not an option.
+    """
+    if topology is not None and int(topology) != int(
+        TopologyClass.WAFER_LOGICAL_DEVICE
+    ):
+        raise DeepSeekV4RomError(
+            f"DeepSeek-V4-Flash ROM is a mandatory wafer-scale logical device; "
+            f"topology class {int(topology)} was requested"
+        )
+    deployment, _plan = build_deepseek_v4_rom_deployment(
+        graph,
+        capability=capability,
+        deployment_id=deployment_id,
+        generation=generation,
+        **kwargs,
+    )
+    return deployment
+
+
 __all__ = [
     "BACKEND",
     "DeepSeekV4RomError",
@@ -620,6 +658,7 @@ __all__ = [
     "TILES_PER_RETICLE",
     "TILE_ROM_BYTES",
     "build_deepseek_v4_rom_deployment",
+    "lower_to_abi3",
     "deepseek_v4_layout_policy",
     "deepseek_v4_rom_capability",
     "deepseek_v4_rom_policy",

@@ -88,9 +88,23 @@ class _GraphBuilder:
         self.kernels: list[Kernel] = []
         self.seed = seed
 
-    def _payload(self, size: int) -> bytes:
+    def _payload(self, size: int, dtype: str = "u8") -> bytes:
         self.seed = (self.seed * 1103515245 + 12345) & 0xFFFFFFFF
-        return hashlib.shake_128(str(self.seed).encode("ascii")).digest(size)
+        raw = hashlib.shake_128(str(self.seed).encode("ascii")).digest(size)
+        if dtype != "bf16" or size % 2:
+            return raw
+        # A random bit pattern is a valid BF16 code but not a plausible weight:
+        # its exponent ranges over the whole format, and the numeric contracts
+        # fail closed on the overflow that follows.  Constraining the exponent
+        # to [2^-3, 2) keeps the fixture exercising real arithmetic.
+        codes = bytearray(raw)
+        for index in range(0, size, 2):
+            value = codes[index] | (codes[index + 1] << 8)
+            exponent = 124 + ((value >> 5) & 0x03)
+            value = (value & 0x807F) | (exponent << 7)
+            codes[index] = value & 0xFF
+            codes[index + 1] = value >> 8
+        return bytes(codes)
 
     def weight(
         self,
@@ -106,7 +120,7 @@ class _GraphBuilder:
             elements *= dim
         size = (elements * DTYPE_BITS_BY_NAME[dtype] + 7) // 8
         offset = len(self.blob)
-        payload = self._payload(size)
+        payload = self._payload(size, dtype)
         self.blob.extend(payload)
         scale_id: str | None = None
         if scale_block_elements:
@@ -128,6 +142,27 @@ class _GraphBuilder:
                 ),
                 scale_tensor_id=scale_id,
                 scale_block_elements=scale_block_elements,
+            )
+        )
+        return tensor_id
+
+    def constant(
+        self,
+        tensor_id: str,
+        dtype: str,
+        shape: tuple[int, ...],
+        generator: str,
+        parameters: dict[str, Any],
+    ) -> str:
+        """A derived constant: no checkpoint range, an attested generator."""
+        self.tensors.append(
+            Tensor(
+                tensor_id=tensor_id,
+                dtype=dtype,
+                shape=shape,
+                role="constant",
+                generator=generator,
+                generator_parameters=parameters,
             )
         )
         return tensor_id
@@ -229,8 +264,10 @@ def qwen_shaped_graph(
     root: Path, *, layers: int = 4, hidden: int = 64, span_max: int = 16
 ) -> KernelGraph:
     """A dense Qwen-shaped decoder: one layer run, GQA attention, SwiGLU MLP."""
-    heads, kv_heads, head_dim, intermediate, vocabulary = 4, 2, 16, 128, 32
+    heads, kv_heads, vocabulary = 4, 2, 32
+    head_dim = hidden // heads
     kv_width = kv_heads * head_dim
+    intermediate = 2 * hidden
     # One checkpoint file per configuration, so a differently shaped fixture
     # never clobbers another test's authenticated bytes.
     builder = _GraphBuilder(
@@ -240,7 +277,25 @@ def qwen_shaped_graph(
     context = Symbolic("context_tokens", 1, span_max)
 
     token_ids = builder.value("input.token_ids", "u32", (span,), "input")
-    positions = builder.value("input.positions", "i32", (span,), "input")
+    positions = builder.value("input.positions", "u32", (span,), "input")
+    rope_table = builder.constant(
+        "rope.coefficient_table",
+        "fp32",
+        (span_max, 2 * head_dim),
+        "rope_coefficients_v1",
+        {"head_dim": head_dim, "maximum_position": span_max, "theta": 1000000.0},
+    )
+    rope_rows = builder.value(
+        "rope.coefficient_rows", "fp32", (span, 2 * head_dim), "activation"
+    )
+    builder.kernel(
+        "rope.coefficient_gather",
+        "GATHER",
+        (positions, rope_table),
+        (rope_rows,),
+        contract="exact_index_select_v1",
+        attributes={"input_dtype": "u32", "output_dtype": "fp32"},
+    )
     embed = builder.weight("model.embed_tokens.weight", "bf16", (vocabulary, hidden))
     residual = builder.value("sequence.embedding", "bf16", (span, hidden), "activation")
     builder.kernel(
@@ -275,10 +330,11 @@ def qwen_shaped_graph(
             (residual, builder.weight(f"{base}.input_layernorm.weight", "bf16", (hidden,))),
             (attention_norm,),
             contract="qwen3_rmsnorm_fp32_bf16_v1",
+            attributes={"epsilon": 1e-06},
             layer=layer,
         )
         query = builder.value(
-            f"{prefix}.attention.query", "bf16", (span, hidden), "activation"
+            f"{prefix}.attention.query", "bf16", (span, heads, head_dim), "activation"
         )
         builder.kernel(
             f"{prefix}.attention.query_projection",
@@ -289,7 +345,7 @@ def qwen_shaped_graph(
             layer=layer,
         )
         key = builder.value(
-            f"{prefix}.attention.key", "bf16", (span, kv_width), "activation"
+            f"{prefix}.attention.key", "bf16", (span, kv_heads, head_dim), "activation"
         )
         builder.kernel(
             f"{prefix}.attention.key_projection",
@@ -300,7 +356,7 @@ def qwen_shaped_graph(
             layer=layer,
         )
         value = builder.value(
-            f"{prefix}.attention.value", "bf16", (span, kv_width), "activation"
+            f"{prefix}.attention.value", "bf16", (span, kv_heads, head_dim), "activation"
         )
         builder.kernel(
             f"{prefix}.attention.value_projection",
@@ -311,7 +367,10 @@ def qwen_shaped_graph(
             layer=layer,
         )
         query_normalized = builder.value(
-            f"{prefix}.attention.query_normalized", "bf16", (span, hidden), "activation"
+            f"{prefix}.attention.query_normalized",
+            "bf16",
+            (span, heads, head_dim),
+            "activation",
         )
         builder.kernel(
             f"{prefix}.attention.query_head_norm",
@@ -319,10 +378,14 @@ def qwen_shaped_graph(
             (query, builder.weight(f"{base}.self_attn.q_norm.weight", "bf16", (head_dim,))),
             (query_normalized,),
             contract="qwen3_rmsnorm_fp32_bf16_v1",
+            attributes={"epsilon": 1e-06},
             layer=layer,
         )
         key_normalized = builder.value(
-            f"{prefix}.attention.key_normalized", "bf16", (span, kv_width), "activation"
+            f"{prefix}.attention.key_normalized",
+            "bf16",
+            (span, kv_heads, head_dim),
+            "activation",
         )
         builder.kernel(
             f"{prefix}.attention.key_head_norm",
@@ -330,59 +393,103 @@ def qwen_shaped_graph(
             (key, builder.weight(f"{base}.self_attn.k_norm.weight", "bf16", (head_dim,))),
             (key_normalized,),
             contract="qwen3_rmsnorm_fp32_bf16_v1",
+            attributes={"epsilon": 1e-06},
             layer=layer,
         )
         query_rotated = builder.value(
-            f"{prefix}.attention.query_rotated", "bf16", (span, hidden), "activation"
+            f"{prefix}.attention.query_rotated",
+            "bf16",
+            (span, heads, head_dim),
+            "activation",
         )
         builder.kernel(
             f"{prefix}.attention.query_rotation",
             "ROPE",
-            (query_normalized, positions),
+            (query_normalized, rope_rows),
             (query_rotated,),
             contract="qwen3_rope_fp32_bf16_v1",
             layer=layer,
-            attributes={"input_dtype": "bf16", "output_dtype": "bf16"},
+            attributes={
+                "input_dtype": "bf16",
+                "output_dtype": "bf16",
+                "second_input_dtype": "fp32",
+            },
         )
         key_rotated = builder.value(
-            f"{prefix}.attention.key_rotated", "bf16", (span, kv_width), "activation"
+            f"{prefix}.attention.key_rotated",
+            "bf16",
+            (span, kv_heads, head_dim),
+            "activation",
         )
         builder.kernel(
             f"{prefix}.attention.key_rotation",
             "ROPE",
-            (key_normalized, positions),
+            (key_normalized, rope_rows),
             (key_rotated,),
             contract="qwen3_rope_fp32_bf16_v1",
             layer=layer,
-            attributes={"input_dtype": "bf16", "output_dtype": "bf16"},
+            attributes={
+                "input_dtype": "bf16",
+                "output_dtype": "bf16",
+                "second_input_dtype": "fp32",
+            },
         )
-        appended = builder.value(
-            f"{prefix}.attention.appended", "bf16", (span, 2, kv_width), "activation"
+        appended_key = builder.value(
+            f"{prefix}.attention.appended_key",
+            "bf16",
+            (span, kv_heads, head_dim),
+            "activation",
         )
         builder.kernel(
-            f"{prefix}.attention.key_value_append",
+            f"{prefix}.attention.key_append",
             "KV_APPEND",
-            (key_rotated, value),
-            (appended,),
+            (key_rotated, positions),
+            (appended_key,),
+            contract="bf16_byte_preserving_state_v1",
+            layer=layer,
+            state_writes=(state_id,),
+        )
+        appended_value = builder.value(
+            f"{prefix}.attention.appended_value",
+            "bf16",
+            (span, kv_heads, head_dim),
+            "activation",
+        )
+        builder.kernel(
+            f"{prefix}.attention.value_append",
+            "KV_APPEND",
+            (value, positions),
+            (appended_value,),
             contract="bf16_byte_preserving_state_v1",
             layer=layer,
             state_writes=(state_id,),
         )
         key_history = builder.value(
-            f"{prefix}.attention.key_history", "bf16", (context, kv_width), "state"
+            f"{prefix}.attention.key_history",
+            "bf16",
+            (context, kv_heads, head_dim),
+            "state",
         )
         value_history = builder.value(
-            f"{prefix}.attention.value_history", "bf16", (context, kv_width), "state"
+            f"{prefix}.attention.value_history",
+            "bf16",
+            (context, kv_heads, head_dim),
+            "state",
         )
         attention_context = builder.value(
-            f"{prefix}.attention.context", "bf16", (span, hidden), "activation"
+            f"{prefix}.attention.context", "bf16", (span, heads, head_dim), "activation"
         )
         builder.kernel(
             f"{prefix}.attention.gqa",
             "ATTENTION_GQA",
-            (query_rotated, key_history, value_history, appended),
+            (query_rotated, key_history, value_history, positions),
             (attention_context,),
             contract="qwen3_gqa_fp32_softmax_bf16_v1",
+            attributes={
+                "causal": True,
+                "query_heads_per_key_value_head": heads // kv_heads,
+                "scale_bf16_code": 16000,
+            },
             layer=layer,
             state_reads=(state_id,),
         )
@@ -420,6 +527,7 @@ def qwen_shaped_graph(
             ),
             (feed_forward_norm,),
             contract="qwen3_rmsnorm_fp32_bf16_v1",
+            attributes={"epsilon": 1e-06},
             layer=layer,
         )
         gate = builder.value(
@@ -486,6 +594,7 @@ def qwen_shaped_graph(
         (residual, builder.weight("model.norm.weight", "bf16", (hidden,))),
         (final,),
         contract="qwen3_rmsnorm_fp32_bf16_v1",
+        attributes={"epsilon": 1e-06},
     )
     last = builder.value("sequence.last_token", "bf16", (1, hidden), "activation")
     builder.kernel(
@@ -565,7 +674,7 @@ def deepseek_shaped_graph(
     layers = len(sequence)
 
     token_ids = builder.value("input.token_ids", "u32", (span,), "input")
-    positions = builder.value("input.positions", "i32", (span,), "input")
+    positions = builder.value("input.positions", "u32", (span,), "input")
     embed = builder.weight("model.embed_tokens.weight", "bf16", (vocabulary, hidden))
     residual = builder.value("sequence.embedding", "bf16", (span, hidden), "activation")
     builder.kernel(
@@ -599,6 +708,7 @@ def deepseek_shaped_graph(
             (residual, builder.weight(f"{base}.input_layernorm.weight", "bf16", (hidden,))),
             (norm,),
             contract="deepseek_v4_hyper_connect_fp32_bf16_v1",
+            attributes={"epsilon": 1e-06},
             layer=layer,
         )
         query = builder.value(f"{prefix}.query", "bf16", (span, hidden), "activation")
@@ -727,6 +837,7 @@ def deepseek_shaped_graph(
             ),
             (feed_forward_norm,),
             contract="deepseek_v4_hyper_connect_fp32_bf16_v1",
+            attributes={"epsilon": 1e-06},
             layer=layer,
         )
         if not moe:
@@ -835,7 +946,7 @@ def deepseek_shaped_graph(
                 layer=layer,
             )
             expert_output = builder.value(
-                f"{prefix}.expert_output", "bf16", (span, 2, hidden), "activation"
+                f"{prefix}.expert_output", "bf16", (span, 2, expert_width), "activation"
             )
             # The routed bank is named by attribute, exactly as the DeepSeek
             # front end does: one tensor per expert, ascending logical ID.
@@ -896,6 +1007,7 @@ def deepseek_shaped_graph(
         (residual, builder.weight("model.norm.weight", "bf16", (hidden,))),
         (final,),
         contract="deepseek_v4_hyper_connect_fp32_bf16_v1",
+        attributes={"epsilon": 1e-06},
     )
     last = builder.value("sequence.last_token", "bf16", (1, hidden), "activation")
     builder.kernel(
@@ -1181,18 +1293,45 @@ def test_each_layer_weight_view_stays_inside_one_segment(qwen_build):
 # ---------------------------------------------------------------------------
 # Loop compression
 # ---------------------------------------------------------------------------
+def _engine_dispatches(instructions) -> int:
+    """Instructions that issue engine work, i.e. everything a loop repeats."""
+    return sum(
+        1
+        for i in instructions
+        if i.major not in (int(Major.CONTROL), int(Major.OBSERVATION))
+    )
+
+
+def _loops(deployment, *, symbolic: bool | None = None):
+    from runtime.abi3.descriptors import SelectorKind
+
+    out = []
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.LOOP_CONTROL:
+            continue
+        is_symbolic = (
+            descriptor.payload["bound_selector_kind"] == int(SelectorKind.RUNTIME_SYMBOL)
+        )
+        if symbolic is None or is_symbolic == symbolic:
+            out.append(descriptor)
+    return out
+
+
 def test_qwen_program_is_loop_compressed(qwen_build, qwen_graph):
     deployment, _plan = qwen_build
     instructions = _instructions(deployment)
     analysis = analyze(qwen_graph)
     assert len(analysis.runs) == 1
     assert analysis.runs[0].length == 4
-    # One body, not four.
-    assert len(instructions) < len(qwen_graph.kernels)
-    loop_setups = [i for i in instructions if i.major == Major.CONTROL and i.sub == 0x02]
-    loop_nexts = [i for i in instructions if i.major == Major.CONTROL and i.sub == 0x03]
-    assert len(loop_setups) == 1
-    assert len(loop_nexts) == 1
+    # One body, not four: what compression removes is engine dispatches, so
+    # that is what the count is taken over.  Control instructions are the loops
+    # doing the removing.
+    assert _engine_dispatches(instructions) < len(qwen_graph.kernels)
+    setups = [i for i in instructions if i.major == Major.CONTROL and i.sub == 0x02]
+    nexts = [i for i in instructions if i.major == Major.CONTROL and i.sub == 0x03]
+    assert len(setups) == len(nexts)
+    # Exactly one layer loop; the rest are token blocks.
+    assert len(_loops(deployment, symbolic=False)) == 1
     matmuls = [
         i
         for i in instructions
@@ -1226,9 +1365,8 @@ def test_rom_weight_views_move_by_a_loop_dynamic_term(qwen_build):
 def test_deepseek_program_is_loop_compressed(deepseek_build, deepseek_graph):
     deployment, _plan = deepseek_build
     instructions = _instructions(deployment)
-    assert len(instructions) < len(deepseek_graph.kernels)
-    loop_setups = [i for i in instructions if i.major == Major.CONTROL and i.sub == 0x02]
-    assert len(loop_setups) == 2
+    assert _engine_dispatches(instructions) < len(deepseek_graph.kernels)
+    assert len(_loops(deployment, symbolic=False)) == 2
 
 
 # ---------------------------------------------------------------------------
@@ -1763,16 +1901,32 @@ def test_rom_reading_operators_declare_bank_and_rom_bound(qwen_build):
 
 
 def test_tile_mapping_is_not_a_program_loop(qwen_build, qwen_graph):
-    """Only layer runs are program loops; tiles are schedule fields."""
+    """A program loop varies the work; a tile is a schedule field.
+
+    Two loop kinds are legitimate: the layer run and the token block.  A third --
+    one loop per output tile or per reduction tile -- would put the engine's own
+    decomposition into the instruction stream, which is the retired-work failure
+    ABI 3.0 exists to remove.
+    """
+    from runtime.abi3.descriptors import Symbol
+
     deployment, _plan = qwen_build
-    loops = [
-        d
-        for d in deployment.table.descriptors()
-        if d.descriptor_type == ExtendedDescriptorType.LOOP_CONTROL
-    ]
-    assert len(loops) == len(analyze(qwen_graph).runs)
-    for descriptor in loops:
+    layer_loops = _loops(deployment, symbolic=False)
+    assert len(layer_loops) == len(analyze(qwen_graph).runs)
+    for descriptor in layer_loops:
         assert descriptor.payload["max_iterations"] == 4  # the layer count
+    block_loops = _loops(deployment, symbolic=True)
+    assert block_loops, "a symbolic span must be carried by a token-block loop"
+    for descriptor in block_loops:
+        payload = descriptor.payload
+        # Amendment A13: the loop counts blocks, so its divisor is the block and
+        # its induction value is the block index the resolver reads.
+        assert payload["step"] == 1
+        assert payload["bound_divisor"] > 0
+        assert Symbol(payload["bound_symbol_id"]) is Symbol.SPAN_TOKENS
+        assert payload["max_iterations"] == payload["upper_bound"]
+    schedules = _schedules(deployment)
+    assert len(schedules) >= len(block_loops) // 4
 
 
 def test_schedule_tiles_are_real_at_wider_shapes(tmp_path):
@@ -2168,3 +2322,291 @@ def test_symbolic_extent_uses_the_declared_maximum(qwen_graph, qwen_capability):
     assert lowering._extent(Symbolic("span_tokens", 6, 96)) == 96
     assert lowering._extent(Symbolic("span_tokens", 6, 0)) == 6 * 16
     assert lowering._extent(7) == 7
+
+
+# ---------------------------------------------------------------------------
+# Execution: the token-block loop, the operand conventions, and ROM versus HBM
+# ---------------------------------------------------------------------------
+def _run(graph, root: Path, capability, storage_class, *, prompt=(1, 2, 3, 4), tokens=4):
+    from runtime.sim.device import Device
+    from runtime.sim.engines import load_engines
+    from runtime.driver import GenerationDriver
+
+    load_engines()
+    deployment, _plan = build_qwen3_rom_deployment(
+        graph, capability=capability, weight_storage_class=storage_class
+    )
+    device = Device(deployment, capability, root=root, verify=True)
+    return GenerationDriver(device).generate(list(prompt), max_new_tokens=tokens)
+
+
+@pytest.fixture(scope="module")
+def execution_workspace(tmp_path_factory) -> Path:
+    return tmp_path_factory.mktemp("rom-execution")
+
+
+@pytest.fixture(scope="module")
+def execution_graph(execution_workspace: Path) -> KernelGraph:
+    return qwen_shaped_graph(execution_workspace)
+
+
+def test_rom_deployment_executes_and_generates_tokens(
+    execution_graph, execution_workspace, qwen_capability
+):
+    result = _run(execution_graph, execution_workspace, qwen_capability, StorageClass.ROM)
+    assert result.failure is None
+    assert len(result.generated_token_ids) == 4
+    assert all(0 <= t < 32 for t in result.generated_token_ids)
+
+
+def test_rom_and_hbm_execution_produce_identical_tokens(
+    execution_graph, execution_workspace, qwen_capability
+):
+    """The whole ROM-versus-HBM comparison rests on this.
+
+    The two builds share every descriptor but the weight objects' storage class,
+    so a token difference between them could only come from the memory
+    technology -- which is exactly the measurement the program wants, and
+    exactly why the tokens must agree when nothing else changes.
+    """
+    rom = _run(execution_graph, execution_workspace, qwen_capability, StorageClass.ROM)
+    hbm = _run(execution_graph, execution_workspace, qwen_capability, StorageClass.HBM)
+    assert rom.failure is None and hbm.failure is None
+    left = list(rom.generated_token_ids)
+    right = list(hbm.generated_token_ids)
+    divergence = next(
+        (i for i, (a, b) in enumerate(zip(left, right)) if a != b), None
+    )
+    assert divergence is None, (
+        f"ROM and HBM diverge at token {divergence}: {left} vs {right}"
+    )
+    assert left == right
+
+
+def test_token_block_loop_carries_the_request_span(
+    execution_graph, execution_workspace, qwen_capability
+):
+    """A13: the last iteration presents the rows the request has, not the block.
+
+    Without it a backend must dispatch one token at a time to stay correct.
+    """
+    from runtime.sim.device import Device
+    from runtime.sim.engines import load_engines
+    from runtime.abi3.constants import NO_ID
+
+    load_engines()
+    deployment, _plan = build_qwen3_rom_deployment(
+        execution_graph, capability=qwen_capability
+    )
+    seen: list[tuple[int, ...]] = []
+
+    def on_issue(pc, instruction, family, ctx):
+        if instruction.descriptor_id == NO_ID:
+            return
+        descriptor = ctx.table[instruction.descriptor_id]
+        if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
+            return
+        view_id = descriptor.payload["output_view_0"]
+        if view_id != NO_ID:
+            seen.append(tuple(ctx.view(view_id).dims))
+
+    device = Device(deployment, qwen_capability, root=execution_workspace, verify=False)
+    device.on_issue = on_issue
+    from runtime.driver import GenerationDriver
+
+    GenerationDriver(device).generate([1, 2, 3, 4, 5], max_new_tokens=1)
+    # The declared block is the whole 16-position context; the resolved extent
+    # is the request's five rows.  A state window is the exception and stays at
+    # its capacity, because attention reads the whole context.
+    leading = {dims[0] for dims in seen if dims}
+    assert 5 in leading, leading
+    assert leading <= {1, 5, 16}, leading
+
+
+def test_prefill_issues_one_dispatch_per_kernel_per_layer(
+    execution_graph, execution_workspace, qwen_capability
+):
+    """One block covers the span, so the layer body runs once per layer."""
+    from runtime.sim.device import Device
+    from runtime.sim.engines import load_engines
+    from runtime.driver import GenerationDriver
+    from runtime.abi3.constants import Major as M
+
+    load_engines()
+    deployment, _plan = build_qwen3_rom_deployment(
+        execution_graph, capability=qwen_capability
+    )
+    dispatches = []
+
+    def on_issue(pc, instruction, family, ctx):
+        dispatches.append(int(instruction.major))
+
+    device = Device(deployment, qwen_capability, root=execution_workspace, verify=False)
+    device.on_issue = on_issue
+    GenerationDriver(device).generate([1, 2, 3, 4, 5], max_new_tokens=0)
+    engine = [d for d in dispatches if d != int(M.CONTROL)]
+    state = [d for d in engine if d == int(M.STATE)]
+    work = len(engine) - len(state)
+    # Exactly one dispatch per kernel that does engine work: not one per token,
+    # and not one per tile.  The graph's own state kernels are emitted once each
+    # at the transaction boundary rather than per layer.
+    priced = [
+        k
+        for k in execution_graph.kernels
+        if k.kind not in {"STATE_PREPARE", "STATE_COMMIT"}
+    ]
+    assert work == len(priced)
+    assert len(state) == 2
+
+
+def test_position_range_is_materialised_not_staged(qwen_build, qwen_graph):
+    """A request's positions are a bound symbol, never a host window."""
+    deployment, _plan = qwen_build
+    generated = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+        and deployment.objects[d.descriptor_id].kind == "generated"
+    ]
+    assert generated
+    kinds = {deployment.objects[d.descriptor_id].generator for d in generated}
+    assert "arange_u32_v1" in kinds
+    substituted = deployment.notes["rom_lowering"]["substituted_inputs"]
+    assert substituted.get("input.positions") == "arange_u32_v1"
+    for descriptor in generated:
+        assert descriptor.payload["storage_class"] == int(StorageClass.ROM)
+        assert descriptor.permissions == int(Permission.READ | Permission.IMMUTABLE)
+
+
+def test_token_stream_reads_the_host_input_window(qwen_build):
+    """The declared token input is a view of the window the host stages into."""
+    deployment, _plan = qwen_build
+    policy = next(
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.GENERATION_POLICY
+    )
+    ring = policy.payload["token_ring_object_id"]
+    embed = next(
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and d.payload["engine_family"] == int(Major.TENSOR)
+        and d.payload["engine_sub"] == 0x03
+    )
+    views = {
+        d.descriptor_id: d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+    }
+    assert views[embed.payload["input_view_0"]].primary_object_id == ring
+
+
+def test_contraction_operands_are_stated_as_matrices(qwen_build, qwen_graph):
+    """TA-ABI3-OPCONV-1 section 2: ``[rows, K] x [N, K] -> [rows, N]``."""
+    deployment, _plan = qwen_build
+    views = {
+        d.descriptor_id: d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+    }
+    kernels = {k.index: k for k in qwen_graph.kernels}
+    checked = 0
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
+            continue
+        if descriptor.payload["engine_family"] != int(Major.TENSOR):
+            continue
+        if descriptor.payload["engine_sub"] != int(TensorOp.MATMUL):
+            continue
+        activation = views[descriptor.payload["input_view_0"]].payload
+        weight = views[descriptor.payload["input_view_1"]].payload
+        result = views[descriptor.payload["output_view_0"]].payload
+        assert activation["rank"] == weight["rank"] == result["rank"] == 2
+        assert activation["dim1"] == weight["dim1"]  # the shared reduction axis
+        assert result["dim0"] == activation["dim0"]
+        assert result["dim1"] == weight["dim0"]
+        source = kernels[descriptor.payload["source_kernel_id"]]
+        # A head-shaped result is folded, never relaid out.
+        assert len(source.outputs) == 1
+        checked += 1
+    assert checked >= 8
+
+
+def test_state_planes_share_one_fused_row(qwen_build):
+    """Key and value are halves of one row, described rather than copied."""
+    deployment, plan = qwen_build
+    state = next(
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.STATE
+    )
+    row_elements = state.payload["row_bytes"] // 2  # BF16
+    prepared = state.payload["prepared_object_id"]
+    planes = [
+        d.payload
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+        and d.primary_object_id == prepared
+        and d.payload["rank"] == 3
+    ]
+    assert planes
+    offsets = set()
+    for payload in planes:
+        assert payload["stride0"] == row_elements
+        assert payload["dim0"] == state.payload["capacity_rows"]
+        offsets.add(payload["element_offset"])
+    # Two distinct planes, both inside one row.
+    assert len(offsets) >= 2
+    assert max(offsets) < row_elements
+
+
+def test_movement_operands_are_permuted_into_the_engine_order(qwen_build, qwen_graph):
+    """DMA reads ``(index, source)``; both exporters emit ``(source, index)``."""
+    from runtime.abi3.constants import DType, Dma
+
+    deployment, _plan = qwen_build
+    views = {
+        d.descriptor_id: d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+    }
+    movements = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and d.payload["engine_family"] == int(Major.DMA)
+        and d.payload["engine_sub"] in (int(Dma.GATHER), int(Dma.SCATTER))
+    ]
+    assert movements
+    for descriptor in movements:
+        index = views[descriptor.payload["input_view_0"]].payload
+        assert index["dtype"] == int(DType.U32)
+        assert index["rank"] == 1
+
+
+def test_on_wafer_collectives_declare_a_topology_consistent_participant_count(
+    deepseek_build, deepseek_capability
+):
+    """ABI 3.0 counts a collective's participants in nodes, not tiles.
+
+    A wafer-scale logical accelerator is one node -- that is what "presented to
+    the host as one device" means -- so a tile-scoped collective cannot state
+    its true fan-out in ``participant_count``.  The emitted count is derived
+    from the admitted topology so the deployment is internally consistent, and
+    the intended fan-out is recorded in the notes.  The gap is reported here so
+    it cannot be closed by quietly declaring the wafer to be a cluster.
+    """
+    deployment, _plan = deepseek_build
+    nodes = deepseek_capability.limits["max_nodes"]
+    communications = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.COMMUNICATION
+    ]
+    assert communications
+    for descriptor in communications:
+        assert descriptor.payload["participant_count"] == nodes
+    fanout = deployment.notes["rom_lowering"]["on_wafer_fanout"]
+    assert fanout, "the intended on-wafer fan-out must be recorded"
+    assert max(fanout.values()) > nodes

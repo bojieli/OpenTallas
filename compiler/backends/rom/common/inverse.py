@@ -20,15 +20,20 @@ What it proves
     whose SHA-256 equals the authenticated payload digest.  Reconstruction and
     expectation are read separately, so a swapped or truncated segment table
     fails.
-4.  Every padding byte is zero.  Padding is a declared, addressable, immutable
+4.  Every mask-programmed derived constant re-derives.  A rotary coefficient
+    table has no checkpoint byte range; its authentication is the digest of its
+    declared generator's output, so the proof re-runs the frozen generator and
+    compares every byte -- the same thing the device does at load, and the same
+    standard the checkpoint-backed regions are held to.
+5.  Every padding byte is zero.  Padding is a declared, addressable, immutable
     zero-source ROM object; the checker materialises it and inspects every byte,
     and confirms its content digest.
-5.  Each region's content digest recomputes under an independently written
+6.  Each region's content digest recomputes under an independently written
     implementation of the binding rule.
-6.  Placement is unique: no two regions overlap in any physical resource, every
+7.  Placement is unique: no two regions overlap in any physical resource, every
     weight tensor is placed exactly once, and no region sits on a quarantined
     resource.
-7.  The repair map is internally consistent: every activated spare belongs to a
+8.  The repair map is internally consistent: every activated spare belongs to a
     declared bank, spare indices are inside the declared inventory, and no
     logical row or column is repaired twice.
 
@@ -446,11 +451,14 @@ def check_rom_inverse(
             f"region {key!r} shards cover {covered} of {declared_payload + pad} bytes",
         )
 
+    generated = _check_generated(deployment, rom_objects, referenced)
+
     unreferenced = sorted(set(rom_objects) - referenced)
     _require(
         not unreferenced,
-        f"ROM objects {unreferenced} are declared but owned by no plan region; "
-        "every immutable byte must be accounted for",
+        f"ROM objects {unreferenced} are declared but owned by no plan region "
+        "and are not derived constants; every immutable byte must be accounted "
+        "for",
     )
 
     repair = _check_repair_map(plan, occupied)
@@ -482,12 +490,66 @@ def check_rom_inverse(
                 for record in reconstructed
             )
         ).hexdigest(),
+        "generated_bytes": generated["bytes"],
+        "generated_object_count": generated["count"],
         "region_count": len(regions),
         "repair": repair,
         "rom_bytes": payload_bytes + padding_bytes,
         "schema": INVERSE_REPORT_SCHEMA,
         "status": "pass",
     }
+
+
+def _check_generated(
+    deployment: Deployment,
+    rom_objects: Mapping[int, Any],
+    referenced: set[int],
+) -> dict[str, int]:
+    """Re-derive every mask-programmed constant and prove it byte for byte.
+
+    A derived constant is immutable model content with no checkpoint byte range
+    to name: its authentication is the digest of its declared generator's
+    output.  So the proof re-runs the frozen generator -- the same registry the
+    device re-derives from at load -- and requires the bytes, the length, the
+    source digest and the descriptor's content digest all to agree.  Nothing
+    here is taken on the producer's word.
+    """
+    from runtime.sim.generators import GeneratorError, generate_bytes
+
+    count = 0
+    total = 0
+    for object_id, descriptor in sorted(rom_objects.items()):
+        source = deployment.objects.get(object_id)
+        if source is None or source.kind != "generated":
+            continue
+        try:
+            payload = generate_bytes(source.generator, source.parameters)
+        except GeneratorError as exc:
+            raise InverseProofError(
+                f"ROM object {object_id}: generator {source.generator!r} is not "
+                f"in the frozen registry: {exc}"
+            ) from None
+        _require(
+            len(payload) == source.size_bytes == descriptor.payload["size_bytes"],
+            f"ROM object {object_id}: generator {source.generator!r} produced "
+            f"{len(payload)} bytes; the manifest declares {source.size_bytes} and "
+            f"the descriptor {descriptor.payload['size_bytes']}",
+        )
+        digest = hashlib.sha256(payload).hexdigest()
+        _require(
+            digest == _hex(source.digest, f"ROM object {object_id} source digest"),
+            f"ROM object {object_id}: generator {source.generator!r} re-derives to "
+            f"{digest[:16]}, the manifest binds {source.digest[:16]}",
+        )
+        _require(
+            descriptor.payload["content_digest"].hex() == digest,
+            f"ROM object {object_id}: the descriptor does not bind the "
+            "re-derived content digest",
+        )
+        referenced.add(object_id)
+        count += 1
+        total += len(payload)
+    return {"bytes": total, "count": count}
 
 
 def _check_repair_map(
