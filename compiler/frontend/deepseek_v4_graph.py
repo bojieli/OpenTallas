@@ -33,9 +33,7 @@ from compiler.ir.model import canonical_json_bytes, load_strict_json
 INFERENCE_CONFIG_SHA256 = (
     "c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71"
 )
-MODEL_SOURCE_SHA256 = (
-    "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
-)
+MODEL_SOURCE_SHA256 = "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
 KERNEL_SOURCE_SHA256 = (
     "59b325083d7103975cba025bd0d60ea343bb82d8fff53088afb7c04bd380c0c2"
 )
@@ -45,15 +43,11 @@ CONVERT_SOURCE_SHA256 = (
 GENERATE_SOURCE_SHA256 = (
     "775fcfee2344e21a7b02c73161c517763e4348b84cf2eb266353e0857b9c8812"
 )
-MODEL_CARD_SHA256 = (
-    "252acafdc9204d0dba3fde1b0a93d71cd1664a4ceadfe222b60117ed0ccc56ff"
-)
+MODEL_CARD_SHA256 = "252acafdc9204d0dba3fde1b0a93d71cd1664a4ceadfe222b60117ed0ccc56ff"
 ENCODING_SOURCE_SHA256 = (
     "abc0d26120250dda0ae077dc64aa28836026e61e970854aaeb792445e6a0dde6"
 )
-TOKENIZER_SHA256 = (
-    "8f9f37ca37fdc4f5fd36d5cf4d3b0e8392edb4e894fd10cc0d70b4957c8633cf"
-)
+TOKENIZER_SHA256 = "8f9f37ca37fdc4f5fd36d5cf4d3b0e8392edb4e894fd10cc0d70b4957c8633cf"
 DEFAULT_INFERENCE_CONFIG = (
     Path(__file__).resolve().parents[1]
     / "models/deepseek-v4-flash-0731/inference_config.json"
@@ -62,13 +56,9 @@ DEFAULT_INFERENCE_CONFIG = (
 _QUALIFIED_REFERENCE_OWNERS = {
     "BIASED_TOPK_ROUTE": "runtime.reference.selection.biased_topk_route_indices",
     "BF16_LINEAR": "runtime.reference.matrix.bf16_linear_bf16",
-    "BINARY32_TO_BF16": (
-        "runtime.reference.conversion.binary32_tensor_to_bf16_rne"
-    ),
+    "BINARY32_TO_BF16": ("runtime.reference.conversion.binary32_tensor_to_bf16_rne"),
     "CONFIDENCE_SCORE": "runtime.reference.confidence.confidence_score_bf16",
-    "COMPRESS_KV_WRITE": (
-        "runtime.reference.compressed_kv.compressed_kv_write_bf16"
-    ),
+    "COMPRESS_KV_WRITE": ("runtime.reference.compressed_kv.compressed_kv_write_bf16"),
     "COMPRESS_POOL": "runtime.reference.compression_pool.compress_pool_f32",
     "COMPRESS_PROJECT": "runtime.reference.compression.compress_project_bf16",
     "COMPRESS_STATE_UPDATE": (
@@ -80,12 +70,8 @@ _QUALIFIED_REFERENCE_OWNERS = {
     "COMPRESSED_DENSE_INDEX": "runtime.reference.indexing.compressed_dense_indices",
     "DSPARK_NOISE_EMBED": "runtime.reference.structural.dspark_noise_embed_bf16",
     "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
-    "EXPERT_DISPATCH": (
-        "runtime.reference.dispatch.dispatch_routed_experts_bf16"
-    ),
-    "EXPERT_REDUCE": (
-        "runtime.reference.dispatch.reduce_expert_outputs_bf16"
-    ),
+    "EXPERT_DISPATCH": ("runtime.reference.dispatch.dispatch_routed_experts_bf16"),
+    "EXPERT_REDUCE": ("runtime.reference.dispatch.reduce_expert_outputs_bf16"),
     "FP4_QDQ": "runtime.reference.quantization.fp4_qdq_bf16",
     "FP8_QDQ": "runtime.reference.quantization.fp8_qdq_bf16",
     "FP8_LINEAR": "runtime.reference.matrix.dense_fp8_linear_bf16",
@@ -102,12 +88,8 @@ _QUALIFIED_REFERENCE_OWNERS = {
         "runtime.reference.routing.normalize_routed_weight_codes"
     ),
     "SAMPLE": "runtime.reference.sampling.deepseek_v4_sample_binary32",
-    "SPARSE_ATTENTION": (
-        "runtime.reference.sparse_attention.sparse_attention_bf16"
-    ),
-    "TARGET_HIDDEN_CAPTURE": (
-        "runtime.reference.vector.target_hidden_capture_bf16"
-    ),
+    "SPARSE_ATTENTION": ("runtime.reference.sparse_attention.sparse_attention_bf16"),
+    "TARGET_HIDDEN_CAPTURE": ("runtime.reference.vector.target_hidden_capture_bf16"),
     "TOKEN_EMBED": "runtime.reference.lookup.bf16_token_embedding",
     "WINDOW_INDEX": "runtime.reference.indexing.window_indices",
 }
@@ -567,7 +549,9 @@ class _GraphBuilder:
         if node_id in self.node_ids:
             raise DeepSeekV4GraphError(f"duplicate graph node {node_id!r}")
         if kind not in OPERATOR_CATALOG:
-            raise DeepSeekV4GraphError(f"graph node {node_id!r} has unknown kind {kind!r}")
+            raise DeepSeekV4GraphError(
+                f"graph node {node_id!r} has unknown kind {kind!r}"
+            )
         missing_inputs = sorted(set(inputs) - self.values)
         if missing_inputs:
             raise DeepSeekV4GraphError(
@@ -579,8 +563,7 @@ class _GraphBuilder:
             )
         if guard is not None and guard not in self.predicate_values:
             raise DeepSeekV4GraphError(
-                f"graph node {node_id!r} guard {guard!r} is not a declared "
-                "predicate"
+                f"graph node {node_id!r} guard {guard!r} is not a declared predicate"
             )
         if guard is not None and self.value_guards[guard] is not None:
             raise DeepSeekV4GraphError(
@@ -629,10 +612,46 @@ class _GraphBuilder:
                 raise DeepSeekV4GraphError(
                     f"graph node {node_id!r} marks unguarded value {value!r} optional"
                 )
+        if (
+            type(output_names) is not tuple
+            or not output_names
+            or any(type(name) is not str or not name for name in output_names)
+            or len(set(output_names)) != len(output_names)
+        ):
+            raise DeepSeekV4GraphError(
+                f"graph node {node_id!r} has invalid or duplicate output names"
+            )
+        if (
+            type(predicate_outputs) is not tuple
+            or any(type(name) is not str for name in predicate_outputs)
+            or len(set(predicate_outputs)) != len(predicate_outputs)
+            or not set(predicate_outputs).issubset(output_names)
+        ):
+            raise DeepSeekV4GraphError(
+                f"graph node {node_id!r} has invalid predicate outputs"
+            )
+        if guard is not None and predicate_outputs:
+            raise DeepSeekV4GraphError(
+                f"graph node {node_id!r} cannot produce predicates under a guard"
+            )
         outputs = tuple(f"{node_id}.{name}" for name in output_names)
         if set(outputs) & self.values:
             raise DeepSeekV4GraphError(f"graph node {node_id!r} redefines a value")
         output_by_name = dict(zip(output_names, outputs, strict=True))
+        resolved_predicate_outputs = tuple(
+            output_by_name[name] for name in predicate_outputs
+        )
+        predicate_output_set = set(resolved_predicate_outputs)
+        if optional_output_guards is not None and (
+            type(optional_output_guards) is not dict
+            or any(
+                type(name) is not str or type(output_guard) is not str
+                for name, output_guard in optional_output_guards.items()
+            )
+        ):
+            raise DeepSeekV4GraphError(
+                f"graph node {node_id!r} has invalid optional-output guards"
+            )
         resolved_output_guards: dict[str, str] = {}
         for output_name, raw_guard in (optional_output_guards or {}).items():
             if output_name not in output_by_name:
@@ -642,8 +661,7 @@ class _GraphBuilder:
             resolved_guard = output_by_name.get(raw_guard, raw_guard)
             if resolved_guard not in self.values and resolved_guard not in outputs:
                 raise DeepSeekV4GraphError(
-                    f"graph node {node_id!r} has unavailable output guard "
-                    f"{raw_guard!r}"
+                    f"graph node {node_id!r} has unavailable output guard {raw_guard!r}"
                 )
             resolved_output_guards[output_by_name[output_name]] = resolved_guard
         if guard is not None and resolved_output_guards:
@@ -651,9 +669,49 @@ class _GraphBuilder:
                 f"graph node {node_id!r} cannot combine a node guard with "
                 "per-output guards"
             )
-        node_output_guards = {
-            output: guard for output in outputs if guard is not None
-        }
+        guarded_outputs = set(resolved_output_guards)
+        for output, output_guard in resolved_output_guards.items():
+            if output == output_guard:
+                raise DeepSeekV4GraphError(
+                    f"graph node {node_id!r} output {output!r} cannot guard itself"
+                )
+            if output_guard in outputs:
+                if output_guard in guarded_outputs:
+                    relationship = (
+                        "circularly guarded"
+                        if resolved_output_guards[output_guard] == output
+                        else "itself guarded"
+                    )
+                    raise DeepSeekV4GraphError(
+                        f"graph node {node_id!r} output guard {output_guard!r} "
+                        f"is {relationship}"
+                    )
+                if output_guard not in predicate_output_set:
+                    raise DeepSeekV4GraphError(
+                        f"graph node {node_id!r} sibling output guard "
+                        f"{output_guard!r} is not a declared predicate"
+                    )
+            else:
+                if output_guard not in self.predicate_values:
+                    raise DeepSeekV4GraphError(
+                        f"graph node {node_id!r} output guard {output_guard!r} "
+                        "is not a declared predicate"
+                    )
+                if self.value_guards[output_guard] is not None:
+                    raise DeepSeekV4GraphError(
+                        f"graph node {node_id!r} output guard {output_guard!r} "
+                        "is itself guarded"
+                    )
+                if not phase_set.issubset(self.value_phases[output_guard]):
+                    raise DeepSeekV4GraphError(
+                        f"graph node {node_id!r} consumes a phase-unavailable "
+                        "output guard"
+                    )
+        if guarded_outputs & predicate_output_set:
+            raise DeepSeekV4GraphError(
+                f"graph node {node_id!r} cannot guard a predicate output"
+            )
+        node_output_guards = {output: guard for output in outputs if guard is not None}
         node_output_guards.update(resolved_output_guards)
         node = GraphNode(
             node_id=node_id,
@@ -664,6 +722,7 @@ class _GraphBuilder:
             guard=guard,
             optional_inputs=optional_inputs,
             optional_output_guards=tuple(sorted(resolved_output_guards.items())),
+            predicate_outputs=resolved_predicate_outputs,
             attributes=attributes or {},
             state_reads=state_reads,
             state_writes=state_writes,
@@ -676,6 +735,7 @@ class _GraphBuilder:
         self.value_guards.update(
             {output: node_output_guards.get(output) for output in outputs}
         )
+        self.predicate_values.update(resolved_predicate_outputs)
         return outputs
 
 
@@ -923,9 +983,7 @@ def _compress_pool_attributes(*, ratio: int, head_dim: int) -> dict[str, Any]:
 
 def _binary32_to_bf16_attributes(*, head_dim: int) -> dict[str, Any]:
     if head_dim not in {128, 512}:
-        raise DeepSeekV4GraphError(
-            f"unsupported BINARY32_TO_BF16 width={head_dim}"
-        )
+        raise DeepSeekV4GraphError(f"unsupported BINARY32_TO_BF16 width={head_dim}")
     return {
         "counter_scope": "logical_binary32_reads_and_bf16_writes",
         "finite_input_required": True,
@@ -1040,9 +1098,7 @@ def _index_score_attributes() -> dict[str, Any]:
         "head_reduction_tree": "num_6_1_balanced_binary32_rne",
         "head_weight_input_dtype": "bf16",
         "head_weight_scale_binary32": "0x3c3504f3",
-        "head_weight_scale_rounding": (
-            "direct_binary32_factor_to_bf16_rne_once"
-        ),
+        "head_weight_scale_rounding": ("direct_binary32_factor_to_bf16_rne_once"),
         "heads": 64,
         "intermediate_overflow": "poison",
         "kv_input_dtype": "bf16",
@@ -1051,9 +1107,7 @@ def _index_score_attributes() -> dict[str, Any]:
         "output_rounding": "bf16_rne_once",
         "output_zero": "canonical_positive",
         "qk_accumulation_order": "increasing_head_dimension",
-        "qk_accumulation_rounding": (
-            "binary32_rne_each_fused_product_add"
-        ),
+        "qk_accumulation_rounding": ("binary32_rne_each_fused_product_add"),
         "qk_accumulator_dtype": "binary32",
         "qk_output_rounding": "bf16_rne_once",
         "query_input_dtype": "bf16",
@@ -1075,14 +1129,10 @@ def _sparse_attention_attributes(ratio: int) -> dict[str, Any]:
     return {
         "attention_sink_dtype": "binary32",
         "av_accumulation_order": "ascending_source_slot_within_each_block",
-        "av_accumulation_rounding": (
-            "binary32_rne_each_fused_product_add"
-        ),
+        "av_accumulation_rounding": ("binary32_rne_each_fused_product_add"),
         "block_order": "ascending_64_slot_source_blocks",
         "block_size": 64,
-        "counter_scope": (
-            "logical_source_work_separates_valid_kv_reads_from_padding"
-        ),
+        "counter_scope": ("logical_source_work_separates_valid_kv_reads_from_padding"),
         "duplicate_index_policy": "preserve_every_source_slot",
         "final_division_rounding": "binary32_rne",
         "finite_saturation": "sticky_count_at_final_bf16_boundary",
@@ -1093,9 +1143,7 @@ def _sparse_attention_attributes(ratio: int) -> dict[str, Any]:
         "intermediate_overflow": "poison",
         "kv_input_dtype": "bf16",
         "kv_read_bytes_per_valid_slot": 1024,
-        "online_denominator_update": (
-            "separate_binary32_multiply_then_add"
-        ),
+        "online_denominator_update": ("separate_binary32_multiply_then_add"),
         "online_max": "maximum_by_finite_binary32_numeric_value",
         "online_rescale_exp": "correctly_rounded_binary32",
         "output_dtype": "bf16",
@@ -1105,9 +1153,7 @@ def _sparse_attention_attributes(ratio: int) -> dict[str, Any]:
         "probability_dtype": "bf16",
         "probability_rounding": "binary32_to_bf16_rne_once_before_av",
         "qk_accumulation_order": "increasing_head_dimension",
-        "qk_accumulation_rounding": (
-            "binary32_rne_each_fused_product_add"
-        ),
+        "qk_accumulation_rounding": ("binary32_rne_each_fused_product_add"),
         "qk_accumulator_dtype": "binary32",
         "query_input_dtype": "bf16",
         "ratio": ratio,
@@ -1342,6 +1388,7 @@ def _add_block_graph(
                 "pool_kv": "should_compress",
                 "pool_scores": "should_compress",
             },
+            predicate_outputs=("should_compress",),
             attributes=_compress_state_attributes(
                 ratio=ratio,
                 head_dim=512,
@@ -1503,6 +1550,7 @@ def _add_block_graph(
                     "pool_kv": "should_compress",
                     "pool_scores": "should_compress",
                 },
+                predicate_outputs=("should_compress",),
                 attributes=_compress_state_attributes(
                     ratio=4,
                     head_dim=128,
@@ -1510,9 +1558,7 @@ def _add_block_graph(
                 ),
                 state_reads=(f"state.{scope}.layer{layer}.index_compressor",),
                 state_writes=(f"state.{scope}.layer{layer}.index_compressor",),
-                tensor_roles=(
-                    "attention.indexer.compressor.position_weight",
-                ),
+                tensor_roles=("attention.indexer.compressor.position_weight",),
             )
             (index_kv,) = graph.add(
                 f"{root}.index_compress_pool",
@@ -1583,12 +1629,8 @@ def _add_block_graph(
                     projection_scope="indexer",
                     head_dim=128,
                 ),
-                state_reads=(
-                    f"state.{scope}.layer{layer}.index_compressed_kv",
-                ),
-                state_writes=(
-                    f"state.{scope}.layer{layer}.index_compressed_kv",
-                ),
+                state_reads=(f"state.{scope}.layer{layer}.index_compressed_kv",),
+                state_writes=(f"state.{scope}.layer{layer}.index_compressed_kv",),
             )
             (index_kv_view,) = graph.add(
                 f"{root}.index_compress_kv_valid_view",
@@ -1722,9 +1764,7 @@ def _add_block_graph(
     )
     route_kind = "HASH_ROUTE" if hash_route else "BIASED_TOPK_ROUTE"
     route_roles = (
-        ("moe.hash_route.table",)
-        if hash_route
-        else ("moe.router.selection_bias",)
+        ("moe.hash_route.table",) if hash_route else ("moe.router.selection_bias",)
     )
     (expert_indices,) = graph.add(
         f"{root}.route_select",
@@ -1824,7 +1864,9 @@ def load_official_inference_config(
         payload = path.read_bytes()
         config = load_strict_json(path)
     except (OSError, ValueError) as exc:
-        raise DeepSeekV4GraphError(f"cannot load inference config {path}: {exc}") from exc
+        raise DeepSeekV4GraphError(
+            f"cannot load inference config {path}: {exc}"
+        ) from exc
     if hashlib.sha256(payload).hexdigest() != INFERENCE_CONFIG_SHA256:
         raise DeepSeekV4GraphError("committed inference config is not byte-exact")
     root = load_official_config(source_path=source_path)
@@ -1910,9 +1952,7 @@ def _assert_tensor_role_coverage(
             raise DeepSeekV4GraphError(
                 f"tensor {spec.name!r} has no layer- and scope-correct graph consumer"
             )
-        assignments.append(
-            {"consumers": sorted(candidates), "tensor": spec.name}
-        )
+        assignments.append({"consumers": sorted(candidates), "tensor": spec.name})
     return {
         "assigned_tensor_count": len(assignments),
         "assignment_sha256": hashlib.sha256(
@@ -1935,7 +1975,9 @@ def build_official_graph_contract() -> dict[str, Any]:
     inference_config = load_official_inference_config()
     specs = build_official_tensor_specs(config)
     if inference_config["n_mtp_layers"] != 3:
-        raise DeepSeekV4GraphError("official inference graph does not have three DSpark stages")
+        raise DeepSeekV4GraphError(
+            "official inference graph does not have three DSpark stages"
+        )
     graph = _GraphBuilder()
     (hidden,) = graph.add(
         "main.token_embed",
@@ -2181,7 +2223,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 and BF16 linear, binary32 router-score, compressor, and DSpark confidence projections, causal raw compressor-state updates, deterministic compressor pooling, explicit pooled-binary32 to BF16 conversion, session-bound compressed-KV prefix commit and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 and indexer FP4 QDQ, indexer Hadamard semantics, and fail-closed greedy/target-adapted sampling, comprising thirty-two complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state/control operator kinds. Fourteen matrix, vector, KV-view/window-state, routing, nonlinear, output, and speculative-control operator kinds remain pending even though every kind has a source, lowering, and cost-class ledger entry.",
                 "required_resolution": "Implement and qualify complete target-precision semantics for each graph operator before marking that operator executable; scalar and block-dot primitives alone do not close matrix or layer lowering.",
                 "severity": "blocking",
-                "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/kernel.py:sparse_attn_kernel;inference/model.py:RMSNorm.forward;inference/model.py:Compressor.forward;inference/model.py:Indexer.forward;inference/model.py:Transformer.forward;inference/model.py:Block.hc_post;inference/model.py:MoE.forward;runtime/reference/formats.py;runtime/reference/transcendental.py;runtime/reference/compression.py;runtime/reference/compression_state.py;runtime/reference/compression_pool.py;runtime/reference/conversion.py;runtime/reference/compressed_kv.py;runtime/reference/index_score.py;runtime/reference/sparse_attention.py;runtime/reference/normalization.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py",
+                "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/kernel.py:sparse_attn_kernel;inference/model.py:RMSNorm.forward;inference/model.py:Compressor.forward;inference/model.py:Indexer.forward;inference/model.py:Transformer.forward;inference/model.py:Block.hc_post;inference/model.py:MoE.forward;inference/model.py:sample;runtime/reference/formats.py;runtime/reference/transcendental.py;runtime/reference/compression.py;runtime/reference/compression_state.py;runtime/reference/compression_pool.py;runtime/reference/conversion.py;runtime/reference/compressed_kv.py;runtime/reference/index_score.py;runtime/reference/sparse_attention.py;runtime/reference/normalization.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py;runtime/reference/sampling.py",
             },
             {
                 "id": "DSV4-SEM-006",

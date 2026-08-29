@@ -19,6 +19,7 @@ from compiler.frontend.deepseek_v4_graph import (
     MODEL_CARD_SHA256,
     TOKENIZER_SHA256,
     DeepSeekV4GraphError,
+    _GraphBuilder,
     build_official_graph_contract,
     load_official_inference_config,
 )
@@ -57,7 +58,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "56953b69334f2f980430672cf2213f33065b995c47b19e3ac7dd003710778bd9"
+        "8357b3d82b443750c7849047997048438325a078cb9a8284408eb6ea2c05f27a"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 46,
@@ -91,6 +92,7 @@ def test_graph_is_topological_and_phase_safe(graph_contract: dict) -> None:
         "request.start_pos": {"prefill", "decode"},
     }
     value_guards: dict[str, str | None] = {value: None for value in values}
+    predicate_values: set[str] = set()
     assert graph_contract["graph_inputs"] == sorted(values)
     node_ids: set[str] = set()
     for node in graph_contract["nodes"]:
@@ -104,6 +106,8 @@ def test_graph_is_topological_and_phase_safe(graph_contract: dict) -> None:
         guard = node["guard"]
         if guard is not None:
             assert guard in values
+            assert guard in predicate_values
+            assert value_guards[guard] is None
             assert phases <= values[guard]
         optional_inputs = node["optional_inputs"]
         assert len(optional_inputs) == len(set(optional_inputs))
@@ -117,6 +121,13 @@ def test_graph_is_topological_and_phase_safe(graph_contract: dict) -> None:
         output_guards = node["optional_output_guards"]
         assert set(output_guards) <= set(node["outputs"])
         assert not (guard is not None and output_guards)
+        predicate_outputs = node["predicate_outputs"]
+        assert len(predicate_outputs) == len(set(predicate_outputs))
+        assert set(predicate_outputs) <= set(node["outputs"])
+        assert not (guard is not None and predicate_outputs)
+        assert not (set(predicate_outputs) & set(output_guards))
+        for output_guard in output_guards.values():
+            assert output_guard in predicate_values or output_guard in predicate_outputs
         for output in node["outputs"]:
             assert output not in values
             values[output] = phases
@@ -125,14 +136,165 @@ def test_graph_is_topological_and_phase_safe(graph_contract: dict) -> None:
             if output_guard is not None:
                 assert output_guard in values
             value_guards[output] = output_guard
+        predicate_values.update(predicate_outputs)
     assert all(output in values for output in graph_contract["graph_outputs"])
+
+
+def _predicate_builder() -> tuple[_GraphBuilder, str]:
+    builder = _GraphBuilder()
+    (predicate,) = builder.add(
+        "predicate",
+        "COMPRESS_STATE_UPDATE",
+        ("request.start_pos",),
+        ("ready",),
+        predicate_outputs=("ready",),
+    )
+    return builder, predicate
+
+
+def test_graph_builder_rejects_nonpredicate_and_nested_node_guards() -> None:
+    builder = _GraphBuilder()
+    with pytest.raises(DeepSeekV4GraphError, match="not a declared predicate"):
+        builder.add(
+            "nonpredicate_guard",
+            "RMS_NORM",
+            ("request.input_ids",),
+            guard="request.input_ids",
+        )
+
+    builder, predicate = _predicate_builder()
+    (guarded_value,) = builder.add(
+        "guarded",
+        "RMS_NORM",
+        ("request.input_ids",),
+        guard=predicate,
+    )
+    builder.predicate_values.add(guarded_value)
+    with pytest.raises(DeepSeekV4GraphError, match="itself guarded"):
+        builder.add(
+            "nested_guard",
+            "RMS_NORM",
+            ("request.input_ids",),
+            guard=guarded_value,
+        )
+
+
+def test_graph_builder_rejects_invalid_predicate_declarations() -> None:
+    builder = _GraphBuilder()
+    with pytest.raises(DeepSeekV4GraphError, match="invalid or duplicate output names"):
+        builder.add(
+            "duplicate_outputs",
+            "COMPRESS_STATE_UPDATE",
+            ("request.start_pos",),
+            ("ready", "ready"),
+        )
+    with pytest.raises(DeepSeekV4GraphError, match="invalid predicate outputs"):
+        builder.add(
+            "unknown_predicate",
+            "COMPRESS_STATE_UPDATE",
+            ("request.start_pos",),
+            ("payload",),
+            predicate_outputs=("ready",),
+        )
+    with pytest.raises(DeepSeekV4GraphError, match="invalid optional-output guards"):
+        builder.add(
+            "invalid_output_guard_mapping",
+            "COMPRESS_STATE_UPDATE",
+            ("request.start_pos",),
+            ("payload",),
+            optional_output_guards={"payload": 1},  # type: ignore[dict-item]
+        )
+
+    builder, predicate = _predicate_builder()
+    with pytest.raises(DeepSeekV4GraphError, match="produce predicates under a guard"):
+        builder.add(
+            "guarded_predicate",
+            "COMPRESS_STATE_UPDATE",
+            ("request.start_pos",),
+            ("ready",),
+            guard=predicate,
+            predicate_outputs=("ready",),
+        )
+
+
+def test_graph_builder_rejects_self_circular_and_nonpredicate_output_guards() -> None:
+    builder = _GraphBuilder()
+    with pytest.raises(DeepSeekV4GraphError, match="cannot guard itself"):
+        builder.add(
+            "self_guard",
+            "COMPRESS_STATE_UPDATE",
+            ("request.start_pos",),
+            ("ready",),
+            optional_output_guards={"ready": "ready"},
+            predicate_outputs=("ready",),
+        )
+    with pytest.raises(DeepSeekV4GraphError, match="circularly guarded"):
+        builder.add(
+            "circular_guards",
+            "COMPRESS_STATE_UPDATE",
+            ("request.start_pos",),
+            ("left", "right"),
+            optional_output_guards={"left": "right", "right": "left"},
+            predicate_outputs=("left", "right"),
+        )
+    with pytest.raises(DeepSeekV4GraphError, match="is itself guarded"):
+        builder.add(
+            "nested_output_guards",
+            "COMPRESS_STATE_UPDATE",
+            ("request.start_pos",),
+            ("payload", "inner", "root"),
+            optional_output_guards={"payload": "inner", "inner": "root"},
+            predicate_outputs=("inner", "root"),
+        )
+    with pytest.raises(DeepSeekV4GraphError, match="not a declared predicate"):
+        builder.add(
+            "nonpredicate_output_guard",
+            "COMPRESS_STATE_UPDATE",
+            ("request.start_pos",),
+            ("payload", "ordinary"),
+            optional_output_guards={"payload": "ordinary"},
+        )
+
+
+def test_graph_builder_accepts_only_phase_available_unguarded_predicates() -> None:
+    builder, predicate = _predicate_builder()
+    (payload,) = builder.add(
+        "externally_guarded_output",
+        "COMPRESS_STATE_UPDATE",
+        ("request.start_pos",),
+        ("payload",),
+        optional_output_guards={"payload": predicate},
+    )
+    assert builder.value_guards[payload] == predicate
+
+    prefill_builder = _GraphBuilder()
+    (prefill_predicate,) = prefill_builder.add(
+        "prefill_predicate",
+        "COMPRESS_STATE_UPDATE",
+        ("request.start_pos",),
+        ("ready",),
+        phases=("prefill",),
+        predicate_outputs=("ready",),
+    )
+    with pytest.raises(DeepSeekV4GraphError, match="phase-unavailable output guard"):
+        prefill_builder.add(
+            "decode_output",
+            "COMPRESS_STATE_UPDATE",
+            ("request.start_pos",),
+            ("payload",),
+            phases=("decode",),
+            optional_output_guards={"payload": prefill_predicate},
+        )
 
 
 def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     graph_contract: dict,
 ) -> None:
     catalog = {record["kind"]: record for record in graph_contract["operator_catalog"]}
-    counts = {record["kind"]: record["node_count"] for record in graph_contract["operator_counts"]}
+    counts = {
+        record["kind"]: record["node_count"]
+        for record in graph_contract["operator_counts"]
+    }
 
     assert set(catalog) == set(counts)
     assert sum(counts.values()) == 2136
@@ -155,9 +317,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert counts["DSPARK_PREFILL_KV"] == 3
     assert counts["MARKOV_AUTOREGRESSIVE_LOOP"] == 1
     qualified_references = {
-        "BIASED_TOPK_ROUTE": (
-            "runtime.reference.selection.biased_topk_route_indices"
-        ),
+        "BIASED_TOPK_ROUTE": ("runtime.reference.selection.biased_topk_route_indices"),
         "BF16_LINEAR": "runtime.reference.matrix.bf16_linear_bf16",
         "BINARY32_TO_BF16": (
             "runtime.reference.conversion.binary32_tensor_to_bf16_rne"
@@ -177,22 +337,14 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "COMPRESSED_DENSE_INDEX": (
             "runtime.reference.indexing.compressed_dense_indices"
         ),
-        "DSPARK_NOISE_EMBED": (
-            "runtime.reference.structural.dspark_noise_embed_bf16"
-        ),
+        "DSPARK_NOISE_EMBED": ("runtime.reference.structural.dspark_noise_embed_bf16"),
         "DSPARK_WINDOW_INDEX": "runtime.reference.indexing.dspark_window_indices",
-        "EXPERT_DISPATCH": (
-            "runtime.reference.dispatch.dispatch_routed_experts_bf16"
-        ),
-        "EXPERT_REDUCE": (
-            "runtime.reference.dispatch.reduce_expert_outputs_bf16"
-        ),
+        "EXPERT_DISPATCH": ("runtime.reference.dispatch.dispatch_routed_experts_bf16"),
+        "EXPERT_REDUCE": ("runtime.reference.dispatch.reduce_expert_outputs_bf16"),
         "FP4_QDQ": "runtime.reference.quantization.fp4_qdq_bf16",
         "FP8_QDQ": "runtime.reference.quantization.fp8_qdq_bf16",
         "FP8_LINEAR": "runtime.reference.matrix.dense_fp8_linear_bf16",
-        "HADAMARD_ROTATE": (
-            "runtime.reference.hadamard.hadamard_rotate_128_bf16"
-        ),
+        "HADAMARD_ROTATE": ("runtime.reference.hadamard.hadamard_rotate_128_bf16"),
         "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
         "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
         "HC_POST": "runtime.reference.vector.hc_post_bf16",
@@ -233,9 +385,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
 def test_sampling_contract_exposes_exact_and_blocked_numeric_boundaries(
     graph_contract: dict,
 ) -> None:
-    (node,) = [
-        node for node in graph_contract["nodes"] if node["kind"] == "SAMPLE"
-    ]
+    (node,) = [node for node in graph_contract["nodes"] if node["kind"] == "SAMPLE"]
     assert node["id"] == "main.sample"
     assert node["attributes"] == {
         "greedy_policy": "finite_binary32_first_index_argmax_exact",
@@ -254,9 +404,7 @@ def test_sampling_contract_exposes_exact_and_blocked_numeric_boundaries(
 def test_weighted_rms_norm_profile_and_numeric_contract_are_explicit(
     graph_contract: dict,
 ) -> None:
-    nodes = [
-        node for node in graph_contract["nodes"] if node["kind"] == "RMS_NORM"
-    ]
+    nodes = [node for node in graph_contract["nodes"] if node["kind"] == "RMS_NORM"]
     assert len(nodes) == 251
     assert Counter(node["attributes"]["width"] for node in nodes) == {
         128: 21,
@@ -312,9 +460,7 @@ def test_head_rms_norm_profile_and_bf16_numeric_contract_are_explicit(
 def test_index_head_bf16_linear_profile_and_numeric_contract_are_explicit(
     graph_contract: dict,
 ) -> None:
-    nodes = [
-        node for node in graph_contract["nodes"] if node["kind"] == "BF16_LINEAR"
-    ]
+    nodes = [node for node in graph_contract["nodes"] if node["kind"] == "BF16_LINEAR"]
     assert len(nodes) == 21
     for node in nodes:
         assert node["attributes"] == {
@@ -338,9 +484,7 @@ def test_index_head_bf16_linear_profile_and_numeric_contract_are_explicit(
 def test_router_score_profile_and_binary32_numeric_contract_are_explicit(
     graph_contract: dict,
 ) -> None:
-    nodes = [
-        node for node in graph_contract["nodes"] if node["kind"] == "ROUTER_SCORE"
-    ]
+    nodes = [node for node in graph_contract["nodes"] if node["kind"] == "ROUTER_SCORE"]
     assert len(nodes) == 46
     for node in nodes:
         assert node["attributes"] == {
@@ -398,9 +542,7 @@ def test_dspark_confidence_profile_and_binary32_contract_are_explicit(
     graph_contract: dict,
 ) -> None:
     nodes = [
-        node
-        for node in graph_contract["nodes"]
-        if node["kind"] == "CONFIDENCE_SCORE"
+        node for node in graph_contract["nodes"] if node["kind"] == "CONFIDENCE_SCORE"
     ]
     assert len(nodes) == 1
     node = nodes[0]
@@ -435,9 +577,7 @@ def test_compressor_projection_profiles_and_binary32_contract_are_explicit(
     graph_contract: dict,
 ) -> None:
     nodes = [
-        node
-        for node in graph_contract["nodes"]
-        if node["kind"] == "COMPRESS_PROJECT"
+        node for node in graph_contract["nodes"] if node["kind"] == "COMPRESS_PROJECT"
     ]
     assert len(nodes) == 62
     assert Counter(
@@ -503,14 +643,10 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
         node for node in graph_contract["nodes"] if node["kind"] == "COMPRESS_POOL"
     ]
     conversion_nodes = [
-        node
-        for node in graph_contract["nodes"]
-        if node["kind"] == "BINARY32_TO_BF16"
+        node for node in graph_contract["nodes"] if node["kind"] == "BINARY32_TO_BF16"
     ]
     write_nodes = [
-        node
-        for node in graph_contract["nodes"]
-        if node["kind"] == "COMPRESS_KV_WRITE"
+        node for node in graph_contract["nodes"] if node["kind"] == "COMPRESS_KV_WRITE"
     ]
     view_nodes = [
         node
@@ -524,22 +660,28 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
         ("main", 4, 512): 21,
         ("main", 128, 512): 20,
     }
-    assert Counter(
-        (
-            node["attributes"]["projection_scope"],
-            node["attributes"]["ratio"],
-            node["attributes"]["head_dim"],
+    assert (
+        Counter(
+            (
+                node["attributes"]["projection_scope"],
+                node["attributes"]["ratio"],
+                node["attributes"]["head_dim"],
+            )
+            for node in state_nodes
         )
-        for node in state_nodes
-    ) == profile_counts
-    assert Counter(
-        (
-            node["attributes"]["projection_scope"],
-            node["attributes"]["ratio"],
-            node["attributes"]["head_dim"],
+        == profile_counts
+    )
+    assert (
+        Counter(
+            (
+                node["attributes"]["projection_scope"],
+                node["attributes"]["ratio"],
+                node["attributes"]["head_dim"],
+            )
+            for node in write_nodes
         )
-        for node in write_nodes
-    ) == profile_counts
+        == profile_counts
+    )
 
     for node in state_nodes:
         attributes = node["attributes"]
@@ -587,9 +729,7 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
             ]
         else:
             assert node["state_reads"][0].endswith(".compressor")
-            assert node["tensor_roles"] == [
-                "attention.compressor.position_weight"
-            ]
+            assert node["tensor_roles"] == ["attention.compressor.position_weight"]
 
     assert Counter(
         (
@@ -676,9 +816,7 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
                 "preserved_tombstone_prevents_session_resurrection"
             ),
             "session_identity": "per_active_batch_lowercase_sha256",
-            "session_reuse": (
-                "fresh_prefill_identity_not_retained_by_any_lane"
-            ),
+            "session_reuse": ("fresh_prefill_identity_not_retained_by_any_lane"),
             "scope": attributes["scope"],
             "state_metadata": (
                 "session_id_next_position_valid_prefix_monotonic_version"
@@ -698,14 +836,17 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
         else:
             assert node["state_reads"][0].endswith(".compressed_kv")
 
-    assert Counter(
-        (
-            node["attributes"]["projection_scope"],
-            node["attributes"]["ratio"],
-            node["attributes"]["head_dim"],
+    assert (
+        Counter(
+            (
+                node["attributes"]["projection_scope"],
+                node["attributes"]["ratio"],
+                node["attributes"]["head_dim"],
+            )
+            for node in view_nodes
         )
-        for node in view_nodes
-    ) == profile_counts
+        == profile_counts
+    )
     for node in view_nodes:
         attributes = node["attributes"]
         assert attributes == {
@@ -718,9 +859,7 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
             "ratio": attributes["ratio"],
             "session_identity": "per_active_batch_lowercase_sha256",
             "stale_invalid_payload": "never_exposed",
-            "validation": (
-                "session_cursor_prefix_and_payload_before_immutable_view"
-            ),
+            "validation": ("session_cursor_prefix_and_payload_before_immutable_view"),
         }
         assert node["inputs"][0].endswith(".committed_state")
         assert node["inputs"][1] == "request.session_ids"
@@ -751,9 +890,7 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
 def test_index_score_profile_and_bf16_numeric_contract_are_explicit(
     graph_contract: dict,
 ) -> None:
-    nodes = [
-        node for node in graph_contract["nodes"] if node["kind"] == "INDEX_SCORE"
-    ]
+    nodes = [node for node in graph_contract["nodes"] if node["kind"] == "INDEX_SCORE"]
     assert len(nodes) == 21
     for node in nodes:
         assert node["attributes"] == {
@@ -764,9 +901,7 @@ def test_index_score_profile_and_bf16_numeric_contract_are_explicit(
             "head_reduction_tree": "num_6_1_balanced_binary32_rne",
             "head_weight_input_dtype": "bf16",
             "head_weight_scale_binary32": "0x3c3504f3",
-            "head_weight_scale_rounding": (
-                "direct_binary32_factor_to_bf16_rne_once"
-            ),
+            "head_weight_scale_rounding": ("direct_binary32_factor_to_bf16_rne_once"),
             "heads": 64,
             "intermediate_overflow": "poison",
             "kv_input_dtype": "bf16",
@@ -775,17 +910,13 @@ def test_index_score_profile_and_bf16_numeric_contract_are_explicit(
             "output_rounding": "bf16_rne_once",
             "output_zero": "canonical_positive",
             "qk_accumulation_order": "increasing_head_dimension",
-            "qk_accumulation_rounding": (
-                "binary32_rne_each_fused_product_add"
-            ),
+            "qk_accumulation_rounding": ("binary32_rne_each_fused_product_add"),
             "qk_accumulator_dtype": "binary32",
             "qk_output_rounding": "bf16_rne_once",
             "query_input_dtype": "bf16",
             "ratio": 4,
             "relu": "bf16_nonpositive_to_positive_zero",
-            "score_weight_product_rounding": (
-                "direct_bf16_product_to_bf16_rne_once"
-            ),
+            "score_weight_product_rounding": ("direct_bf16_product_to_bf16_rne_once"),
             "subnormal_policy": "preserve",
             "tensor_parallel_reduction": (
                 "contiguous_logical_head_partitions_compose_global_tree"
@@ -798,9 +929,7 @@ def test_sparse_attention_profile_numeric_and_kv_traffic_contract_are_explicit(
     graph_contract: dict,
 ) -> None:
     nodes = [
-        node
-        for node in graph_contract["nodes"]
-        if node["kind"] == "SPARSE_ATTENTION"
+        node for node in graph_contract["nodes"] if node["kind"] == "SPARSE_ATTENTION"
     ]
     assert len(nodes) == 46
     assert {node["attributes"]["ratio"] for node in nodes} == {0, 4, 128}
@@ -809,9 +938,7 @@ def test_sparse_attention_profile_numeric_and_kv_traffic_contract_are_explicit(
         assert node["attributes"] == {
             "attention_sink_dtype": "binary32",
             "av_accumulation_order": "ascending_source_slot_within_each_block",
-            "av_accumulation_rounding": (
-                "binary32_rne_each_fused_product_add"
-            ),
+            "av_accumulation_rounding": ("binary32_rne_each_fused_product_add"),
             "block_order": "ascending_64_slot_source_blocks",
             "block_size": 64,
             "counter_scope": (
@@ -827,9 +954,7 @@ def test_sparse_attention_profile_numeric_and_kv_traffic_contract_are_explicit(
             "intermediate_overflow": "poison",
             "kv_input_dtype": "bf16",
             "kv_read_bytes_per_valid_slot": 1024,
-            "online_denominator_update": (
-                "separate_binary32_multiply_then_add"
-            ),
+            "online_denominator_update": ("separate_binary32_multiply_then_add"),
             "online_max": "maximum_by_finite_binary32_numeric_value",
             "online_rescale_exp": "correctly_rounded_binary32",
             "output_dtype": "bf16",
@@ -839,15 +964,11 @@ def test_sparse_attention_profile_numeric_and_kv_traffic_contract_are_explicit(
             "probability_dtype": "bf16",
             "probability_rounding": "binary32_to_bf16_rne_once_before_av",
             "qk_accumulation_order": "increasing_head_dimension",
-            "qk_accumulation_rounding": (
-                "binary32_rne_each_fused_product_add"
-            ),
+            "qk_accumulation_rounding": ("binary32_rne_each_fused_product_add"),
             "qk_accumulator_dtype": "binary32",
             "query_input_dtype": "bf16",
             "ratio": ratio,
-            "score_reduction_tree": (
-                "num_6_1_balanced_64_lane_binary32_rne"
-            ),
+            "score_reduction_tree": ("num_6_1_balanced_64_lane_binary32_rne"),
             "score_scale_binary32": "0x3d3504f3",
             "score_scale_rounding": "binary32_rne_multiply",
             "sink_denominator_order": "after_all_selected_blocks",
@@ -986,11 +1107,15 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "thirty-two complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state/control" in (
-        issues["DSV4-SEM-005"]["issue"]
+    assert (
+        "thirty-two complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state/control"
+        in (issues["DSV4-SEM-005"]["issue"])
     )
     assert "Fourteen" in issues["DSV4-SEM-005"]["issue"]
-    assert "immutable causal raw compressor-state updates" in issues["DSV4-SEM-006"]["issue"]
+    assert (
+        "immutable causal raw compressor-state updates"
+        in issues["DSV4-SEM-006"]["issue"]
+    )
     assert "operator-complete executor" in issues["DSV4-SEM-006"]["issue"]
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
     assert "atomic hash-locked applicator" in issues["DSV4-SEM-007"]["issue"]
@@ -998,19 +1123,18 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         "token_ids_session_ids_and_start_position"
     )
     assert (
-        "end-to-end binding of the verified host boundary to "
-        "checkpoint-derived logits"
-    ) in (
-        graph_contract["system_scope"]["unresolved"]
-    )
-    assert "hash-verified local tokenizer encode and decode behavior" in (
-        graph_contract["system_scope"]["covered"]
+        "end-to-end binding of the verified host boundary to checkpoint-derived logits"
+    ) in (graph_contract["system_scope"]["unresolved"])
+    assert (
+        "hash-verified local tokenizer encode and decode behavior"
+        in (graph_contract["system_scope"]["covered"])
     )
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, causal raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, session-bound compressed-KV write and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
-        " ".join(graph_contract["system_scope"]["covered"])
+    assert (
+        "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, causal raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, session-bound compressed-KV write and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ"
+        in (" ".join(graph_contract["system_scope"]["covered"]))
     )
     assert "block-64 sparse attention" in " ".join(
         graph_contract["system_scope"]["covered"]
@@ -1024,9 +1148,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "unweighted BF16 head RMS normalization" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "biased-router top-k" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
+    assert "biased-router top-k" in " ".join(graph_contract["system_scope"]["covered"])
     assert "expert-dispatch" in " ".join(graph_contract["system_scope"]["covered"])
     assert "HC post-mixing" in " ".join(graph_contract["system_scope"]["covered"])
     assert "indexer FP4 QDQ" in " ".join(graph_contract["system_scope"]["covered"])
@@ -1039,11 +1161,13 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "fail-closed greedy/target-adapted sampling" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "DSpark target verification and speculative acceptance" in (
-        graph_contract["system_scope"]["unresolved"]
+    assert (
+        "DSpark target verification and speculative acceptance"
+        in (graph_contract["system_scope"]["unresolved"])
     )
-    assert "fourteen remaining operator-complete target-precision references" in (
-        graph_contract["system_scope"]["unresolved"]
+    assert (
+        "fourteen remaining operator-complete target-precision references"
+        in (graph_contract["system_scope"]["unresolved"])
     )
 
 
@@ -1085,7 +1209,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "56953b69334f2f980430672cf2213f33065b995c47b19e3ac7dd003710778bd9"
+        "8357b3d82b443750c7849047997048438325a078cb9a8284408eb6ea2c05f27a"
     )
     assert "described 2136 nodes across 46 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

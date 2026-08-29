@@ -10,7 +10,7 @@ and bounded unmodified-method differential
 `c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`
 
 **Graph contract:**
-`56953b69334f2f980430672cf2213f33065b995c47b19e3ac7dd003710778bd9`
+`8357b3d82b443750c7849047997048438325a078cb9a8284408eb6ea2c05f27a`
 
 ## What is qualified
 
@@ -111,6 +111,14 @@ The audit loads and executes the unmodified official `Compressor.forward` and
 doubles isolate the APE/overlap/pool/BF16-conversion path; they do not replace
 the official operations under comparison.
 
+This differential has a deliberately narrower scope than the reference
+contracts above. It establishes the official APE identities and bounded
+ratio-four prefill APE/overlap/pool/BF16 behavior. It does not independently
+differential-test session-safe raw decode traces, compressed-cache address or
+validity traces, cursor/session transitions, lane retirement, or tombstones.
+Those state/cache behaviors are source-derived accelerator contracts with
+adversarial unit tests, not claims supported by this official-method audit.
+
 The governed environment was Python 3.10.12, PyTorch 2.10.0+cu128, CUDA 12.8,
 NVIDIA driver 595.71.05, and an RTX PRO 6000 Blackwell Workstation Edition at
 SM120.
@@ -165,10 +173,12 @@ differential, or report-hash drift. The expected output-file SHA-256 is
 
 ## Claim boundary
 
-This evidence establishes deterministic compressor target semantics, exact
-official APE identity and range, immutable causal raw-state and compressed-cache
-reference contracts, stale-capacity exclusion, and bounded behavior against the exact released methods under one
-declared development stack. It does not establish:
+The independent references establish deterministic compressor target semantics,
+immutable causal raw-state and compressed-cache contracts, and stale-capacity
+exclusion. The official-method audit separately establishes exact official APE
+identity and range plus bounded ratio-four prefill pool/BF16 behavior under one
+declared development stack. It does not extend that differential evidence to
+the state/cache transactions, and it does not establish:
 
 - checkpoint-derived compressor projection activations or a complete layer;
 - session-controller or service-engine execution of the transactions;

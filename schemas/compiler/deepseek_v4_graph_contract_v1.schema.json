@@ -273,6 +273,9 @@
           "type": "array",
           "uniqueItems": true
         },
+        "predicate_outputs": {
+          "$ref": "#/$defs/string_array"
+        },
         "state_reads": {
           "$ref": "#/$defs/string_array"
         },
@@ -293,6 +296,7 @@
         "optional_output_guards",
         "outputs",
         "phases",
+        "predicate_outputs",
         "state_reads",
         "state_writes",
         "tensor_roles"
