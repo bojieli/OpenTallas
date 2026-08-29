@@ -17,6 +17,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Credits | `ot_credit_manager.sv` | atomic reservation and conservation | DV-NOC-004 |
 | Sessions/commands | `ot_session_table.sv`, `ot_cmd_frontend.sv` | generation/transaction ownership, position/image/context/epoch/schedule validation, CRC/version/field legality | DV-CMD-001/002, DV-SESSION-001 |
 | Production tensor commands | `ot_ta_command_decoder.sv` | Registered admission of the 64-byte ABI 2.0–2.5 record, IEEE CRC32, opcode/engine/minor/field/index checks, and deterministic error priority | QW-RTL-CMD-001 |
+| Production BF16 residual add | `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv` | Command-decoded, backpressured `ADD_BF16` execution with exact external-SRAM byte addresses, RNE arithmetic, retirement counters, saturation, and fail-closed arithmetic faults | QW-RTL-ADD-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
@@ -43,3 +44,19 @@ the 924,386-command Qwen program with SHA-256
 This evidence covers record admission only: it does not execute a kernel or
 layer, correlate architectural counters, establish timing, or close
 `TA-RTL-6`.
+
+QW-RTL-ADD-001 is retained as vector set
+`e625aabe70b198319b76f8928d0b99ffe88d6d9e846eb8e0ddaeb3ba72eb7413`
+and campaign
+`d7cb9dec3e1bc84e5a5c9f1775a84ecb54c11d85790f8f395e2cbfadf4f0d24c`.
+It executes all 4,096 operand pairs from authentic layer-0 operation
+`node.0011`, command index 5,131, and checks the exact
+`layer.0.post_attention` payload SHA-256
+`f872ce6f57ca36a30edf6abccfa2877bbb7234a905fe9e1417d99ea89ee79ec3`.
+Icarus and Verilator independently reproduce every value and byte address under
+input and output backpressure, the completion and saturation counters, 20
+directed rounding/subnormal/saturation/error cases with commuted operands,
+130,560 finite-encoding identities, and two executor fault paths. This is one
+complete arithmetic command at an external SRAM ready/valid boundary. It does
+not instantiate or exercise a memory macro, execute a complete Qwen layer,
+establish timing or performance, or close `TA-RTL-6`.

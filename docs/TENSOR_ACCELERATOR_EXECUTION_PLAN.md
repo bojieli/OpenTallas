@@ -881,6 +881,47 @@ no timing, area, power, or physical claim. Representative complete generated
 kernels and a complete layer must still execute through RTL and match the
 architectural simulator before `TA-RTL-6` can close.
 
+### 1.14 First complete data-bearing Qwen command in RTL and its boundary
+
+QW-RTL-ADD-001 extends command admission through one authentic layer-0
+`ADD_BF16` residual command. The synthesizable executor admits the unchanged
+production record through `ot_ta_command_decoder`, exposes the decoded source
+and destination SRAM byte addresses, accepts two BF16 operand streams, and
+retires one RNE result stream with stable ready/valid behavior. It reports
+element and saturation counters and converts nonfinite-input and arithmetic-
+overflow conditions into fail-closed command completion errors.
+
+The command is index 5,131, kernel 11, operation `node.0011`; it consumes
+`hidden.0` and `layer.0.attention_projected` and produces
+`layer.0.post_attention`. The retained 4,096-element vector set ID is
+`e625aabe70b198319b76f8928d0b99ffe88d6d9e846eb8e0ddaeb3ba72eb7413`.
+It remains bound to the unchanged 924,386-command program SHA-256
+`f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec`
+and build
+`3460d88ce16f5ef0ca4d1277daf8ebb19ae555e88822f95d55deb4aa8cad290f`.
+The authentic input payload hashes are
+`6f57745a3765e8651c07b849d199577ec673d24cc40beb25bbaa72c6aadf73bb`
+and
+`341ef1b0843309008fd558042d0c56733b82bca5cc0753a80424338a29defae5`;
+the exact expected output payload hash is
+`f872ce6f57ca36a30edf6abccfa2877bbb7234a905fe9e1417d99ea89ee79ec3`.
+
+Icarus 11.0 and Verilator 4.038 both reproduce all 4,096 results and exact
+source/destination address progression under independent operand and result
+stalls. They also match completion and saturation counters, 20 directed
+rounding, subnormal, saturation, and error vectors in both operand orders,
+130,560 exhaustive finite-encoding checks for zero identity and exact-sign
+cancellation, and two executor fault cases. The retained campaign ID is
+`d7cb9dec3e1bc84e5a5c9f1775a84ecb54c11d85790f8f395e2cbfadf4f0d24c`.
+
+This is a complete arithmetic command only at an external SRAM stream
+boundary. Operand bytes are supplied by the campaign; no SRAM macro, DMA path,
+HBM path, or bank-conflict behavior executes. It is not a complete kernel
+sequence or Qwen layer, supplies no qualified cycle, timing, area, power, or
+performance result, and does not close `TA-RTL-6`. The next RTL horizon must add
+memory-bound command execution and correlate additional production kernels,
+then a complete generated layer, against the architectural simulator.
+
 ## 2. Meaning of production-grade
 
 Production-grade in this plan describes the quality of the compiler, simulator,
@@ -1981,7 +2022,7 @@ RTL, physical, and comparison gates remain open.
 | Command and capability ABI | ABI 2.5 and capability V6 admit bounded indexed SRAM selection with a strict schema and preserve older minor decoding; the complete 924,386-command program executes causally | Fixed request v1 remains immutable; add a separately versioned dynamic request/session contract. Routing, remaining vector operations, synchronization, timing, 8,192-plus context support, and the final hardware capability remain open |
 | Compiler and checker | **QW-FM1 closed at `74c0d59`; QW-FM2/QW-FM3 closed at `324f48d`; QW-FM4 closed at `c5b9578`.** Complete Qwen neutral lowering, streamed full-model HBM layout, SRAM lifetime allocation, command lowering, inverse reconstruction, and one target-precision execution are deterministic and retained | Preserve those artifacts unchanged while adding dynamic prefill/decode compilation; do not relabel one fixed transaction as generation or long-context acceptance |
 | Functional simulation | **Fixed one-step QW-FM4 closed at `c5b9578`.** The common simulator authenticates all 17 HBM shards, validates and executes all commands, commits all 36 states atomically, and produces exact complete logits and one token; a separate checkpoint-layout and algorithmic path matches it exactly | Execute at least 32 ordinary greedy steps through a versioned dynamic request/session path, then prove operational readiness for the exact 8,000-token run |
-| RTL correlation | QW-RTL-CMD-001 admits all 12 authentic production opcode records and rejects seven directed failures in Icarus and Verilator; campaign `43af672e...b6a2a` is deterministic and source-bound | Record admission is an initial sub-gate only. Execute representative generated kernels and a complete layer through RTL, correlate data/counters with the architectural simulator, and close robustness evidence before `TA-RTL-6` |
+| RTL correlation | QW-RTL-CMD-001 admits all 12 authentic production opcode records and rejects seven directed failures. QW-RTL-ADD-001 then executes all 4,096 authentic values of layer-0 residual operation `node.0011` with exact addresses, data, and counters in Icarus and Verilator; campaign `d7cb9dec...0d24c` is deterministic and source-bound | The ADD result is complete only at the external SRAM stream boundary. Add DMA/memory behavior and more representative generated kernels, then execute and correlate a complete layer before `TA-RTL-6`; no timing or physical claim follows |
 | Timing and physical evidence | No clock, latency, HBM timing, bandwidth, or energy value is qualified | No committed slice result may be used for a performance, power, or 130-nm comparison claim |
 | End-to-end execution | One complete 36-layer fixed request produces exact final logits, token `50994`, and committed state, but no multi-step generation or long-context common-simulator run has closed | `TA-QWEN-4` and `TA-DSV4-5` remain open; QW-FM4 cannot substitute for Qwen 8,000 or DeepSeek 200,000 |
 
