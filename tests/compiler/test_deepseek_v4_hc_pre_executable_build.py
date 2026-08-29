@@ -13,6 +13,7 @@ import pytest
 import compiler.checking.deepseek_v4_hc_pre_executable as executable_checker_module
 import compiler.vertical_slice.deepseek_v4_hc_pre_executable as executable_builder_module
 from compiler.canonical.application import apply_canonical_plan_records
+from compiler.cli.main import main as compiler_main
 from compiler.checking.deepseek_v4_hc_pre_executable import (
     DeepSeekV4HCPreExecutableCheckError,
     verify_deepseek_v4_hc_pre_executable_deployment,
@@ -328,6 +329,43 @@ def test_executable_package_is_deterministic_closed_and_independently_verified(
         first, hc_pre_application[2]
     )
     assert integrity["build_id"] == first_manifest["build_id"]
+    assert integrity["checked_artifact_count"] == 18
+
+
+def test_executable_package_cli_invokes_the_real_verified_builder(
+    hc_pre_application: tuple[Path, dict[str, Any], Path, dict[str, bytes]],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    snapshot, lock, application, _ = hc_pre_application
+    lock_path = tmp_path / "checkpoint.lock.json"
+    lock_path.write_bytes(canonical_json_bytes(lock))
+    output = tmp_path / "deployment"
+
+    assert (
+        compiler_main(
+            [
+                "package-deepseek-v4-hc-pre-executable",
+                "--snapshot",
+                str(snapshot),
+                "--lock",
+                str(lock_path),
+                "--application",
+                str(application),
+                "--output",
+                str(output),
+            ]
+        )
+        == 0
+    )
+    manifest = load_strict_json(output / "deployment_manifest.json")
+    assert manifest["status"] == DEPLOYMENT_STATUS
+    assert manifest["build_id"] in capsys.readouterr().out
+    integrity = verify_deepseek_v4_hc_pre_executable_deployment(
+        output,
+        application,
+    )
+    assert integrity["build_id"] == manifest["build_id"]
     assert integrity["checked_artifact_count"] == 18
 
 

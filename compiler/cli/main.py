@@ -65,6 +65,10 @@ from compiler.vertical_slice.deepseek_v4_hc_pre import (
     DeepSeekV4HCPreBuildError,
     build_deepseek_v4_hc_pre_deployment,
 )
+from compiler.vertical_slice.deepseek_v4_hc_pre_executable import (
+    DeepSeekV4HCPreExecutableBuildError,
+    build_deepseek_v4_hc_pre_executable_deployment,
+)
 from compiler.vertical_slice.deepseek_v4_lookup import (
     DeepSeekV4LookupBuildError,
     build_deepseek_v4_lookup_deployment,
@@ -219,6 +223,17 @@ def parser() -> argparse.ArgumentParser:
     hc_pre_parser.add_argument("--lock", required=True, type=Path)
     hc_pre_parser.add_argument("--application", required=True, type=Path)
     hc_pre_parser.add_argument("--output", required=True, type=Path)
+    hc_pre_executable_parser = subparsers.add_parser(
+        "package-deepseek-v4-hc-pre-executable",
+        help=(
+            "package the exact V4 layer-0 attention HC_PRE program, logical "
+            "schedule, interfaces, and verified learned parameters"
+        ),
+    )
+    hc_pre_executable_parser.add_argument("--snapshot", required=True, type=Path)
+    hc_pre_executable_parser.add_argument("--lock", required=True, type=Path)
+    hc_pre_executable_parser.add_argument("--application", required=True, type=Path)
+    hc_pre_executable_parser.add_argument("--output", required=True, type=Path)
     return result
 
 
@@ -473,6 +488,20 @@ def main(argv: list[str] | None = None) -> int:
                 f"({deployment['status']})"
             )
             return 0
+        if arguments.command == "package-deepseek-v4-hc-pre-executable":
+            lock = load_checkpoint_lock(arguments.lock)
+            deployment = build_deepseek_v4_hc_pre_executable_deployment(
+                snapshot=arguments.snapshot,
+                lock=lock,
+                application_root=arguments.application,
+                output=arguments.output,
+            )
+            print(
+                "built executable V4 HC_PRE package "
+                f"{deployment['build_id']} at {arguments.output.resolve()} "
+                f"({deployment['status']})"
+            )
+            return 0
     except (
         BuildError,
         IRValidationError,
@@ -490,6 +519,7 @@ def main(argv: list[str] | None = None) -> int:
         DeepSeekV4FP8LinearDifferentialError,
         DeepSeekV4FP8LinearBuildError,
         DeepSeekV4HCPreBuildError,
+        DeepSeekV4HCPreExecutableBuildError,
         DeepSeekV4LookupDifferentialError,
         DeepSeekV4LookupBuildError,
         OSError,
