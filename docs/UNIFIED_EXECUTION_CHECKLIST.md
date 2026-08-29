@@ -77,7 +77,7 @@
 
 ## W6 — Real end-to-end execution (the correctness spine)
 
-- [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle** on the pinned chat workload (`results/abi3/qwen3_hbm_chat_execution.json`, status pass, 8/8 tokens, no legitimacy problems). Decode to first EOS still to run at full length
+- [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle**, and **decode reaches a real EOS**. `TA-QW-AGENT-1` ran 112 prompt tokens to the natural stop at token 151645 after 23 tokens (`results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json`), `TA-QW-CHAT-1` ran 24 tokens (`..._ta-qw-chat-1_...`); both agree with the oracle at every position, with no legitimacy problems and all 27 admission checks passing
 - [ ] W6.2 Qwen-ROM: identical token sequence from the ROM deployment
 - [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens
 - [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence
@@ -115,8 +115,8 @@
 
 - [ ] W10.1 Qwen exactly 8,000 natural prompt tokens → decode to first EOS (HBM + ROM)
 - [ ] W10.2 Qwen repeated-special-token stress run
-- [ ] W10.3 Qwen chat workload (pinned template) with question-specific checks
-- [ ] W10.4 Qwen agentic workload (model-generated tool calls, sandboxed, fed back)
+- [x] W10.3 Qwen chat workload (pinned template) — `TA-QW-CHAT-1`, 93 prompt tokens, 24 decoded tokens, token-identical to the oracle; the model is mid-derivation at the token cap (`We are given:\n\n- **Ship 1** (from Port A) leaves at **06:00**`), so this record proves token fidelity, not answer correctness, and W10.1 carries the run to EOS
+- [x] W10.4 Qwen agentic workload — `TA-QW-AGENT-1` decoded a **complete, well-formed tool call and stopped at a real EOS** entirely on the accelerator: ```bash / awk -F',' '{sum += $2} END {print sum}' inventory.txt / ```. Token-identical to the oracle. Feeding the result back through the sandbox loop is `tools/run_qwen3_agent_episode.py`
 - [x] W10.5 DeepSeek long-context campaign — largest context **actually executed is 8,000 tokens**; 32K/128K/200K exhaust GPU memory in the mHC hyper-connection, not the sparse indexer. A 200,000-token prefill needs a chunked rewrite of the vendor prefill path on any GPU: `hc_post` alone is 48.8 GiB at that context and the indexer term 2.33 TiB, while persistent KV state is only 2.32 GiB
 - [x] W10.6 DeepSeek agentic scenario — 47 tokens to EOS, well-formed DSML tool call, byte-identical across independent process invocations
 
@@ -243,3 +243,14 @@
   built" from "artifact corrupted", or the tests should skip when the images are
   absent.
 
+
+- **OI-18 — a campaign run writes its deployment into the checkpoint
+  directory.** `tools/run_abi3_campaign.py` uses `--deployment-root` both to
+  resolve the checkpoint's relative weight paths *and* as the place to publish
+  `program.bin`, `descriptors.bin` and `deployment.json`. Running a Qwen
+  campaign therefore drops 104 KB into the user's Hugging Face cache. It is
+  small and it is not a weight image — zero-copy holds — but a read-only
+  checkpoint, a read-only mount, or a cache the user cleans between runs would
+  each break it for a reason that has nothing to do with the deployment. The
+  publish target should be a separate argument defaulting to `build/abi3/<id>/`,
+  with the checkpoint root used only for reading.

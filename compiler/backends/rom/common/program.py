@@ -233,6 +233,47 @@ def _binary32_bits(attributes: Mapping[str, Any], keys: Sequence[str]) -> int:
     return 0
 
 
+# ---------------------------------------------------------------------------
+# Operand geometry (TA-ABI3-OPCONV-1) and token blocking (amendment A13)
+# ---------------------------------------------------------------------------
+@dataclass(frozen=True, slots=True)
+class KernelShape:
+    """Everything an operator's views need that the kernel alone does not say."""
+
+    contraction: bool
+    #: Static leading extent of the principal operand: the token block when the
+    #: leading axis is a runtime symbol, otherwise the declared extent.
+    rows: int
+    cols: int
+    depth: int
+    transposed: bool
+    row_symbolic: bool
+    block: int
+    trip: int
+    symbol: int
+    principal: tuple[int, ...]
+
+
+#: Neutral symbol name -> the frozen runtime-symbol registry.
+SYMBOL_BY_NAME: Mapping[str, Symbol] = {
+    "span_tokens": Symbol.SPAN_TOKENS,
+    "context_tokens": Symbol.CONTEXT_LENGTH,
+    "position_start": Symbol.POSITION_START,
+    "position_end": Symbol.POSITION_END,
+    "generation_index": Symbol.GENERATION_INDEX,
+    "batch": Symbol.BATCH,
+}
+
+#: Contraction subopcodes: the operations whose operands are stated as matrices.
+CONTRACTION_SUBOPS = frozenset(
+    {
+        int(TensorOp.MATMUL),
+        int(TensorOp.GROUPED_MATMUL),
+        int(TensorOp.ROUTED_MATMUL),
+    }
+)
+
+
 class RomLoweringError(ValueError):
     """Raised when a neutral graph cannot be lowered onto a ROM target."""
 
@@ -506,6 +547,12 @@ class RomTargetPolicy:
     #: it spills the remainder to HBM.  Spilling is deterministic: buffers are
     #: considered in emission order.
     sram_budget_bytes: int = 1 << 24
+    #: Rows one iteration of a token-block loop covers.  Zero means one block
+    #: spanning the whole declared context, which is the fewest dispatches a
+    #: request can be served in; a smaller block trades dispatches for a smaller
+    #: live activation window.  Either way amendment A13 resolves the final
+    #: iteration to the rows the request actually has.
+    token_block_rows: int = 0
     tile_rows: int = 128
     tile_cols: int = 128
     tile_depth: int = 128
@@ -570,7 +617,9 @@ class RomLowering:
         self._state_descriptor: dict[str, int] = {}
         self._state_slot: dict[str, tuple[str, int]] = {}
         self._state_group_shape: dict[str, tuple[int, int, int]] = {}
-        self._state_tensor_offset: dict[str, int] = {}
+        self._state_column: dict[str, int] = {}
+        self._substituted_inputs: dict[str, str] = {}
+        self._position_input_cache: frozenset[str] | None = None
         self._state_owner: dict[str, str] = {}
         self._event_of_tensor: dict[str, int] = {}
         self._communications: list[tuple[str, int]] = []
@@ -1132,6 +1181,7 @@ class RomLowering:
         object_id: int,
         dtype: DType,
         dims: Sequence[int],
+        strides: Sequence[int] | None = None,
         element_offset: int = 0,
         dynamic: Sequence[DynamicTerm] = (),
         permissions: int = int(Permission.READ),
@@ -1150,6 +1200,7 @@ class RomLowering:
             object_id,
             int(dtype),
             tuple(dims),
+            tuple(strides) if strides is not None else None,
             element_offset,
             tuple((t.kind, t.index, t.stride) for t in dynamic),
             permissions,
@@ -1168,6 +1219,7 @@ class RomLowering:
             object_id=object_id,
             dtype=dtype,
             dims=list(dims),
+            strides=list(strides) if strides is not None else None,
             element_offset=element_offset,
             dynamic=list(dynamic),
             layout_class=layout,
@@ -1290,19 +1342,33 @@ class RomLowering:
         return object_id
 
     # -- state -----------------------------------------------------------
-    def _state_tensors(self) -> dict[str, list[str]]:
-        """Role=``state`` tensors bound to each declared state resource."""
-        order: dict[str, list[str]] = {}
+    def _state_tensors(self) -> dict[str, list[tuple[str, str]]]:
+        """Role=``state`` planes of each resource, with the direction they use.
+
+        A kernel that writes a resource defines the row layout; a kernel that
+        reads one addresses the planes those writes produced.  Both are recorded
+        so the column assignment can pair them.
+        """
+        order: dict[str, list[tuple[str, str]]] = {}
         owner: dict[str, str] = {}
         for kernel in self.graph.kernels:
             state_ids = kernel.state_reads or kernel.state_writes
             if not state_ids:
                 continue
-            for name in (*kernel.inputs, *kernel.outputs):
-                if self.tensors[name].role != "state" or name in owner:
-                    continue
-                owner[name] = state_ids[0]
-                order.setdefault(state_ids[0], []).append(name)
+            for direction, names in (("in", kernel.inputs), ("out", kernel.outputs)):
+                for name in names:
+                    tensor = self.tensors[name]
+                    declared = tensor.role == "state"
+                    writes = direction == "out" and bool(kernel.state_writes)
+                    if not (declared or writes) or name in owner:
+                        continue
+                    state_id = (
+                        kernel.state_writes[0]
+                        if writes and kernel.state_writes
+                        else state_ids[0]
+                    )
+                    owner[name] = state_id
+                    order.setdefault(state_id, []).append((name, direction))
         self._state_owner = owner
         return order
 
@@ -1317,7 +1383,12 @@ class RomLowering:
         """
         views = self._state_tensors()
         footprint = {
-            state_id: sum(self._bytes(self.tensors[n]) for n in names)
+            state_id: sum(
+                self._bytes(self.tensors[name])
+                for name, direction in names
+                if direction == "in"
+            )
+            or sum(self._bytes(self.tensors[name]) for name, _ in names)
             for state_id, names in views.items()
         }
         groups: dict[tuple[Any, ...], list[StateResource]] = {}
@@ -1406,60 +1477,97 @@ class RomLowering:
         self._plan_state_layout()
 
     def _plan_state_layout(self) -> None:
-        """Assign every role=``state`` tensor a byte offset inside a layer slot.
+        """Give every state operand a *column* inside its resource's row.
 
-        The IR names one state tensor per logical view per layer (a key history
-        and a value history, say).  Physically they are sub-ranges of one layer
-        slot of one merged state object, in first-use order, and the assignment
-        must be identical for every layer -- including layers in different loop
-        runs -- or the compressed body could not address them with one view.
+        A KV resource holds one fused row per position -- ``key`` then ``value``
+        -- and the graph names each plane as its own tensor.  So a plane is a
+        view with the resource's row width as its leading stride and its column
+        as the element offset: a description of half a row, never a copy of one.
+
+        Columns are assigned in first-use order within each direction, and the
+        k-th plane a resource *reads* is the k-th plane it *writes*.  That is
+        what pairs ``key_history`` with the append that produced it without the
+        backend knowing what a key is.
         """
         order = self._state_tensors()
-        # The layout is per *structural* position, so layer 0's key history and
-        # layer 7's key history land at the same offset inside their slots.
-        offsets: dict[str, int] = {}
+        columns: dict[str, int] = {}
         for state_id, names in order.items():
             group_key, _slot = self._state_slot.get(state_id, (None, 0))
             if group_key is None:
                 continue
-            slot_bytes = self._state_group_shape[group_key][0]
-            cursor = 0
-            for name in names:
-                size = self._bytes(self.tensors[name])
-                if cursor + size > slot_bytes:
+            row_elements = self._state_group_shape[group_key][2]
+            cursor = {"in": 0, "out": 0}
+            for name, direction in names:
+                width = self._plane_width(name)
+                if cursor[direction] + width > row_elements:
                     raise RomLoweringError(
-                        f"state tensors of {state_id!r} need {cursor + size} bytes "
-                        f"but a layer slot of group {group_key} is {slot_bytes}"
+                        f"state planes of {state_id!r} need "
+                        f"{cursor[direction] + width} elements but its row is "
+                        f"{row_elements}"
                     )
-                offsets[name] = cursor
-                cursor += size
-        self._state_tensor_offset = offsets
+                columns.setdefault(self._state_struct_key(name), cursor[direction])
+                cursor[direction] += width
+        self._state_column = columns
 
-    def _state_view(self, tensor_id: str) -> int | None:
-        """Bind a role=``state`` tensor to a slice of its physical state object."""
-        tensor = self.tensors[tensor_id]
-        if tensor.role != "state":
-            return None
+    def _plane_width(self, tensor_id: str) -> int:
+        """Elements one position contributes: the non-leading extents' product."""
+        dims = self._dims(self.tensors[tensor_id])
+        width = 1
+        for extent in dims[1:]:
+            width *= extent
+        return width
+
+    def _state_struct_key(self, tensor_id: str) -> str:
+        """Structural identity of a state operand, shared by every layer."""
+        placement = self.analysis.body_input.get(
+            tensor_id
+        ) or self.analysis.body_output.get(tensor_id)
+        if placement is not None:
+            run, position, slot = placement
+            return f"st.r{run}.p{position:03d}.s{slot}"
+        return f"st.g.{tensor_id}"
+
+    def _state_plane_view(
+        self, kernel: Kernel, tensor_id: str, direction: str, run: LayerRun | None
+    ) -> int | None:
+        """One plane of a merged state resource, moved by the layer loop.
+
+        The window is the resource's whole capacity rather than a token block:
+        attention reads the entire context, and an append addresses absolute
+        positions.  Both directions name the *prepared* image, because a
+        transaction attends the rows it has just appended; the committed image
+        is the durability record the commit publishes, not the buffer execution
+        runs against.
+        """
         state_id = self._state_owner.get(tensor_id)
+        if state_id is None and direction == "out" and kernel.state_writes:
+            state_id = kernel.state_writes[0]
         if state_id is None or state_id not in self._state_slot:
             return None
         group_key, slot = self._state_slot[state_id]
-        slot_bytes, _capacity, _row_elements = self._state_group_shape[group_key]
+        slot_bytes, capacity, row_elements = self._state_group_shape[group_key]
         prepared = self.builder.lookup(f"obj.{group_key}")
+        tensor = self.tensors[tensor_id]
         dtype = self._dtype(tensor.dtype)
         bits = DTYPE_BITS[dtype]
-        slot_elements = slot_bytes * 8 // bits
-        element_offset = (
-            slot * slot_elements + self._state_tensor_offset[tensor_id] * 8 // bits
-        )
+        window = slot_bytes * 8 // bits
+        column = self._state_column.get(self._state_struct_key(tensor_id), 0)
+        extents = list(self._dims(tensor))
+        if len(extents) < 2:
+            extents = [capacity, max(row_elements - column, 1)]
+        else:
+            extents[0] = capacity
+        strides = [1] * len(extents)
+        running = 1
+        for axis in range(len(extents) - 1, 0, -1):
+            strides[axis] = running
+            running *= extents[axis]
+        strides[0] = row_elements
         dynamic: list[DynamicTerm] = []
-        loop, advance = self._loop_for_state_slot(tensor_id)
-        # One loop iteration advances by however many slots of *this* group the
-        # period actually consumes.  In DeepSeek's period-2 stack only one of the
-        # two layers owns a given compressed-KV resource, so the advance is one
-        # slot per iteration even though the period is two layers.
-        stride = slot_elements * advance
+        loop, advance = self._loop_for_state_slot(tensor_id, run)
+        offset = slot * window + column
         if loop is not None:
+            stride = window * advance
             if stride > 0xFFFFFFFF:
                 raise RomLoweringError(
                     f"state group {group_key} needs a per-layer element stride of "
@@ -1467,31 +1575,40 @@ class RomLowering:
                     "field of ABI 3.0 tensor views"
                 )
             dynamic.append(DynamicTerm.loop(loop, stride))
+            offset = column
         return self._view(
             object_id=prepared,
             dtype=dtype,
-            dims=self._dims(tensor),
-            element_offset=element_offset,
+            dims=extents,
+            strides=strides,
+            element_offset=offset,
             dynamic=dynamic,
             permissions=int(Permission.READ | Permission.WRITE),
             label="view.state",
         )
 
-    def _loop_for_state_slot(self, tensor_id: str) -> tuple[int | None, int]:
+    def _loop_for_state_slot(
+        self, tensor_id: str, run: LayerRun | None
+    ) -> tuple[int | None, int]:
         """The loop that indexes this state operand, and its slot advance.
 
         The advance is measured, not assumed: it is the difference between the
-        state slots the successive groups of the run actually name.
+        state slots the successive groups of the run actually name.  In a
+        period-2 stack only one layer of the period may own a given resource,
+        so the advance is one slot per iteration even though the period is two.
         """
         placement = self.analysis.body_input.get(
             tensor_id
         ) or self.analysis.body_output.get(tensor_id)
         if placement is None:
             return None, 1
-        run = self.analysis.runs[placement[0]]
-        loop = self._loop_of_run.get(run.index)
+        loop = self._loop_of_run.get(placement[0])
         names = self.analysis.body_operand.get(placement)
         if names is None or len(names) < 2:
+            if run is None or run.groups < 2:
+                return loop, 1
+            names = None
+        if names is None:
             return loop, 1
         slots: list[int] = []
         for name in names:
@@ -1507,19 +1624,222 @@ class RomLowering:
             )
         return loop, steps.pop()
 
+    # -- token blocking and operand geometry ------------------------------
+    def _leading_symbol(self, tensor: Tensor) -> tuple[int | None, int]:
+        """The runtime symbol of a tensor's leading axis, and its multiplier."""
+        if not tensor.shape or not isinstance(tensor.shape[0], Symbolic):
+            return None, 1
+        axis = tensor.shape[0]
+        symbol = SYMBOL_BY_NAME.get(axis.symbol)
+        return (int(symbol) if symbol is not None else None), int(axis.multiplier or 1)
+
+    def _principal(self, kernel: Kernel) -> Tensor | None:
+        if kernel.outputs:
+            return self.tensors[kernel.outputs[0]]
+        if kernel.inputs:
+            return self.tensors[kernel.inputs[0]]
+        return None
+
+    def _shape_of(self, kernel: Kernel, engine) -> KernelShape:
+        """Derive one operator's matrix geometry and its token block."""
+        family = Major(engine.family)
+        contraction = family is Major.TENSOR and engine.sub in CONTRACTION_SUBOPS
+        principal = self._principal(kernel)
+        principal_dims = tuple(self._dims(principal)) if principal is not None else (1,)
+        symbol, multiplier = (
+            self._leading_symbol(principal) if principal is not None else (None, 1)
+        )
+        # A13 states the resolved leading extent as ``symbol - iteration *
+        # bound_divisor``.  A multiplied symbolic extent -- six routed copies of
+        # a span -- is not expressible that way, so such an operand keeps its
+        # full declared extent rather than silently presenting the wrong rows.
+        row_symbolic = symbol is not None and multiplier == 1
+        span_max = int(self.capability.limits["max_context_positions"])
+        configured = int(self.policy.token_block_rows or 0)
+        block = max(min(configured or span_max, span_max), 1)
+        declared_rows = principal_dims[0] if principal_dims else 1
+        trip = max(-(-declared_rows // block), 1) if row_symbolic else 1
+        rows = block if row_symbolic else max(declared_rows, 1)
+
+        cols = principal_dims[-1] if len(principal_dims) > 1 else 1
+        depth = 0
+        transposed = False
+        if contraction:
+            weight = self._contraction_weight(kernel)
+            activation = self.tensors[kernel.inputs[0]] if kernel.inputs else None
+            weight_dims = tuple(self._dims(weight)) if weight is not None else (1, 1)
+            act_dims = tuple(self._dims(activation)) if activation is not None else (1,)
+            depth = int(
+                self._extent(kernel.iteration_domain.get("reduction_width", 0)) or 0
+            )
+            if depth <= 1:
+                depth = act_dims[-1]
+            # TA-ABI3-OPCONV-1 section 2: in1 is n-major ``[N, K]``.  A
+            # checkpoint that stores ``[K, N]`` is presented n-major by swapping
+            # the view's strides, never by a relayout pass.
+            if len(weight_dims) >= 2 and weight_dims[-1] == depth:
+                cols, transposed = weight_dims[-2], False
+            elif len(weight_dims) >= 2 and weight_dims[-2] == depth:
+                cols, transposed = weight_dims[-1], True
+            else:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: weight {weight_dims} shares no "
+                    f"reduction axis with the activation {act_dims}"
+                )
+            # The output is the matrix ``[rows, N]`` whatever rank the graph
+            # gave it: a head-shaped result is the same bytes described three
+            # ways, and folding it costs nothing and moves nothing.
+            out_elements = 1
+            for extent in principal_dims:
+                out_elements *= extent
+            if row_symbolic:
+                out_elements = out_elements // max(declared_rows, 1) * rows
+            if cols and out_elements % cols:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: result of {out_elements} "
+                    f"elements is not a whole number of {cols}-wide rows"
+                )
+        return KernelShape(
+            contraction=contraction,
+            rows=rows,
+            cols=cols,
+            depth=depth,
+            transposed=transposed,
+            row_symbolic=row_symbolic,
+            block=block,
+            trip=trip,
+            symbol=symbol if symbol is not None else int(Symbol.SPAN_TOKENS),
+            principal=principal_dims,
+        )
+
+    def _contraction_weight(self, kernel: Kernel) -> Tensor | None:
+        if "expert_weight_tensors" in kernel.attributes:
+            names = list(kernel.attributes["expert_weight_tensors"])
+            return self.tensors[names[0]] if names else None
+        for name in kernel.inputs[1:]:
+            tensor = self.tensors[name]
+            if tensor.role in WEIGHT_ROLES:
+                return tensor
+        return self.tensors[kernel.inputs[1]] if len(kernel.inputs) > 1 else None
+
+    def _open_row_loop(self, kernel: Kernel, shape: KernelShape) -> int | None:
+        """Open this kernel's token-block loop, if its rows are a symbol.
+
+        The loop counts blocks -- step one, ``bound_divisor`` the block -- so a
+        view's row term advances by a whole block and amendment A13 reads the
+        induction value as the block index it is.  With one block over the whole
+        declared context the loop runs once and exists only to carry that
+        resolution; with a smaller block it also bounds the live window.
+        """
+        if not shape.row_symbolic:
+            return None
+        loop = self.builder.loop_control(
+            lower_bound=0,
+            upper_bound=shape.trip,
+            step=1,
+            max_iterations=shape.trip,
+            bound_symbol=Symbol(shape.symbol),
+            bound_divisor=shape.block,
+            counter_class_id=self._counter_class("instruction", Major.CONTROL),
+            key=f"loop.block.k{kernel.index:05d}",
+        )
+        self.builder.open_loop(loop)
+        return loop
+
+    @property
+    def _position_inputs(self) -> frozenset[str]:
+        """Declared inputs whose content is the request's position range.
+
+        A rank-one index vector over the token axis that no embedding reads
+        holds ``POSITION_START + i`` and nothing else.  ADR-003 binds that range
+        as a request symbol, so it is materialised from the frozen
+        ``arange_u32_v1`` generator and the view is offset by the symbol --
+        identical values, and no host window that nothing could fill.
+        """
+        cached = getattr(self, "_position_input_cache", None)
+        if cached is not None:
+            return cached
+        consumers: dict[str, list[str]] = {}
+        for kernel in self.graph.kernels:
+            for name in kernel.inputs:
+                consumers.setdefault(name, []).append(kernel.kind)
+        names = set()
+        for tensor in self.graph.tensors:
+            if tensor.role != "input" or tensor.dtype not in {"u32", "i32"}:
+                continue
+            if len(tensor.shape) != 1 or not isinstance(tensor.shape[0], Symbolic):
+                continue
+            kinds = consumers.get(tensor.tensor_id, [])
+            if not kinds or any(k == "EMBEDDING_LOOKUP" for k in kinds):
+                continue
+            names.add(tensor.tensor_id)
+        self._position_input_cache = frozenset(names)
+        return self._position_input_cache
+
+    def _position_object(self, tensor_id: str) -> int:
+        """The mask-programmed position range, materialised once."""
+        cached = self._generated_objects.get(tensor_id)
+        if cached is not None:
+            return cached
+        from runtime.sim.generators import GeneratorError, digest_of, generate
+
+        span_max = int(self.capability.limits["max_context_positions"])
+        parameters = {"count": max(2 * span_max, 1)}
+        try:
+            payload = generate("arange_u32_v1", parameters)
+            digest = digest_of("arange_u32_v1", parameters)
+        except GeneratorError as exc:  # pragma: no cover - frozen generator
+            raise RomLoweringError(f"position range {tensor_id!r}: {exc}") from None
+        object_id = self.builder.memory_object(
+            storage_class=self.weight_storage_class,
+            size_bytes=int(payload.nbytes),
+            source=ObjectSource.generated(
+                "arange_u32_v1", parameters, int(payload.nbytes), digest
+            ),
+            permissions=ROM_PERMISSIONS,
+            alignment_log2=12,
+            integrity_mode=IntegrityMode.CRC_AND_ECC,
+            content_digest=bytes.fromhex(digest),
+            key=f"obj.rom.positions.{tensor_id}",
+        )
+        self._generated_objects[tensor_id] = object_id
+        self._substituted_inputs[tensor_id] = "arange_u32_v1"
+        return object_id
+
     # -- operand views ---------------------------------------------------
-    def _operand_view(
-        self, tensor_id: str, *, run: LayerRun | None, writable: bool
+    def _row_term(self, tensor: Tensor, shape: KernelShape, loop: int | None):
+        """The block term that moves a view's leading axis, if it has one."""
+        if loop is None or not shape.row_symbolic:
+            return None
+        symbol, multiplier = self._leading_symbol(tensor)
+        if symbol is None or multiplier != 1:
+            return None
+        width = 1
+        for extent in self._dims(tensor)[1:]:
+            width *= extent
+        stride = shape.block * width
+        if stride > 0xFFFFFFFF:
+            raise RomLoweringError(
+                f"tensor {tensor.tensor_id!r} needs a token-block element stride "
+                f"of {stride}, which does not fit the 32-bit dynamic-term stride "
+                "field of ABI 3.0 tensor views; declare a smaller block"
+            )
+        return DynamicTerm.loop(loop, stride)
+
+    def _buffer_view(
+        self,
+        tensor: Tensor,
+        *,
+        dims: Sequence[int],
+        strides: Sequence[int] | None,
+        shape: KernelShape,
+        loop: int | None,
+        writable: bool,
+        blocked: bool = True,
     ) -> int:
-        tensor = self.tensors[tensor_id]
-        if tensor.role in WEIGHT_ROLES:
-            return self._weight_view(tensor_id, run=run)
-        state_view = self._state_view(tensor_id)
-        if state_view is not None:
-            return state_view
-        object_id = self._buffer(tensor_id)
-        permissions = int(Permission.READ | Permission.WRITE) if writable else int(
-            Permission.READ
+        object_id = self._buffer(tensor.tensor_id)
+        permissions = (
+            int(Permission.READ | Permission.WRITE) if writable else int(Permission.READ)
         )
         if tensor.role in {"input", "output"}:
             permissions |= int(Permission.HOST_VISIBLE)
@@ -1534,14 +1854,171 @@ class RomLowering:
                     if scale.role in WEIGHT_ROLES
                     else self._buffer(scale.tensor_id)
                 )
+        term = self._row_term(tensor, shape, loop) if blocked else None
         return self._view(
             object_id=object_id,
             dtype=self._dtype(tensor.dtype),
-            dims=self._dims(tensor),
+            dims=dims,
+            strides=strides,
+            dynamic=[term] if term is not None else (),
             permissions=permissions,
             scale_object_id=scale_object,
             scale_block_elements=block if scale_object != NO_ID else 0,
             label="view.buf",
+        )
+
+    def _blocked_dims(self, tensor: Tensor, shape: KernelShape) -> list[int]:
+        """The tensor's declared extents with its leading axis token-blocked."""
+        dims = list(self._dims(tensor))
+        symbol, multiplier = self._leading_symbol(tensor)
+        if dims and symbol is not None and multiplier == 1 and shape.row_symbolic:
+            dims[0] = min(shape.block, dims[0])
+        return dims
+
+    def _broadcast(
+        self, dims: list[int], shape: KernelShape
+    ) -> tuple[list[int], list[int] | None]:
+        """Insert the principal operand's missing middle axes at stride zero.
+
+        A rotary coefficient table holds one row per *token* while the tensor it
+        rotates holds one per ``(token, head)``: every head of a token shares the
+        row.  A zero stride says so, and nothing is copied to make it true.  The
+        rule is positional and model-blind -- one axis fewer, agreeing on the
+        leading extent -- so it never has to know what a head is.
+        """
+        principal = list(shape.principal)
+        if shape.row_symbolic and principal:
+            principal[0] = min(shape.block, principal[0])
+        if len(dims) < 2 or len(principal) != len(dims) + 1:
+            return dims, None
+        if principal[0] != dims[0]:
+            return dims, None
+        strides = [1] * len(dims)
+        running = 1
+        for axis in range(len(dims) - 1, -1, -1):
+            strides[axis] = running
+            running *= dims[axis]
+        inserted = list(principal[1:-1])
+        return (
+            [dims[0], *inserted, dims[-1]],
+            [strides[0], *([0] * len(inserted)), strides[-1]],
+        )
+
+    def _index_view(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        name: str,
+        loop: int | None,
+        *,
+        count: int,
+        absolute: bool,
+    ) -> int:
+        """A movement's index vector: one index per row the movement touches.
+
+        Absolute when what it addresses is indexed by position -- a rotary table
+        spans every admissible position, a KV window every row of the context --
+        and span-relative when it addresses the request's own rows.  Selecting
+        the final row of a span is ``SPAN_LAST_INDEX``; a view offsets by
+        ``selector * stride`` and cannot compute ``span - 1`` for itself.
+        """
+        tensor = self.tensors[name]
+        terms: list[DynamicTerm] = []
+        if absolute:
+            terms.append(DynamicTerm.symbol(Symbol.POSITION_START, 1))
+            if loop is not None and shape.row_symbolic:
+                terms.append(DynamicTerm.loop(loop, shape.block))
+        elif count == 1:
+            terms.append(DynamicTerm.symbol(Symbol.SPAN_LAST_INDEX, 1))
+        elif loop is not None and shape.row_symbolic:
+            terms.append(DynamicTerm.loop(loop, shape.block))
+        if name in self._position_inputs:
+            object_id = self._position_object(name)
+            permissions = int(Permission.READ)
+        else:
+            object_id = self._buffer(name)
+            permissions = int(Permission.READ)
+            if tensor.role in {"input", "output"}:
+                permissions |= int(Permission.HOST_VISIBLE)
+        return self._view(
+            object_id=object_id,
+            dtype=self._dtype(tensor.dtype),
+            dims=[max(count, 1)],
+            strides=[1],
+            dynamic=terms,
+            permissions=permissions,
+            label="view.index",
+        )
+
+    def _operand_view(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        *,
+        slot: int,
+        direction: str,
+        name: str,
+        run: LayerRun | None,
+        loop: int | None,
+        family: Major,
+        sub: int,
+    ) -> int:
+        tensor = self.tensors[name]
+        writable = direction == "out"
+        # A declared state effect is the authority: a kernel that writes a state
+        # resource writes into that resource's prepared image, even when the
+        # graph names the result as an ordinary activation.
+        if tensor.role == "state" or (writable and kernel.state_writes):
+            view = self._state_plane_view(kernel, name, direction, run)
+            if view is not None:
+                return view
+        if tensor.role in WEIGHT_ROLES:
+            return self._weight_view(name, run=run, shape=shape, slot=slot)
+        if family is Major.SELECTION:
+            # TA-ABI3-OPCONV-1 section 8: selection operands are one-dimensional
+            # and an ID is exactly one element.
+            elements = 1
+            if direction == "in" and sub == int(Selection.ARGMAX):
+                for extent in self._dims(tensor):
+                    elements *= extent
+            return self._buffer_view(
+                tensor,
+                dims=[max(elements, 1)],
+                strides=[1],
+                shape=shape,
+                loop=loop,
+                writable=writable,
+                blocked=False,
+            )
+        if shape.contraction and direction == "in" and slot == 0:
+            return self._buffer_view(
+                tensor,
+                dims=[shape.rows, shape.depth],
+                strides=[shape.depth, 1],
+                shape=shape,
+                loop=loop,
+                writable=False,
+            )
+        if shape.contraction and direction == "out" and slot == 0:
+            return self._buffer_view(
+                tensor,
+                dims=[shape.rows, shape.cols],
+                strides=[shape.cols, 1],
+                shape=shape,
+                loop=loop,
+                writable=True,
+            )
+        dims = self._blocked_dims(tensor, shape)
+        broadcast_dims, broadcast_strides = (
+            self._broadcast(dims, shape) if direction == "in" and slot > 0 else (dims, None)
+        )
+        return self._buffer_view(
+            tensor,
+            dims=broadcast_dims,
+            strides=broadcast_strides,
+            shape=shape,
+            loop=loop,
+            writable=writable,
         )
 
     def _region_object(self, tensor_id: str) -> int:
@@ -1593,26 +2070,40 @@ class RomLowering:
         self._generated_objects[tensor_id] = object_id
         return object_id
 
-    def _weight_view(self, tensor_id: str, *, run: LayerRun | None) -> int:
+    def _weight_view(
+        self,
+        tensor_id: str,
+        *,
+        run: LayerRun | None,
+        shape: KernelShape | None = None,
+        slot: int = 1,
+    ) -> int:
         if self.plan is None:  # pragma: no cover - programming error
             raise RomLoweringError("plan_regions() must run before lowering")
+        tensor = self.tensors[tensor_id]
+        dims: Sequence[int] = self._dims(tensor)
+        strides: Sequence[int] | None = None
+        if shape is not None and shape.contraction and slot == 1 and len(dims) >= 2:
+            # TA-ABI3-OPCONV-1 section 2: in1 is ``[N, K]``.  A checkpoint that
+            # stores ``[K, N]`` is presented n-major by swapping the view's
+            # strides -- a description, never a relayout pass.
+            dims = [shape.cols, shape.depth]
+            strides = [1, shape.cols] if shape.transposed else [shape.depth, 1]
         generated = self._generated_object(tensor_id)
         if generated is not None:
             # A derived constant has one mask-programmed object of its own and
             # no per-layer striping, so the view is the whole table.
-            tensor = self.tensors[tensor_id]
-            return self.builder.tensor_view(
+            return self._view(
                 object_id=generated,
                 dtype=self._dtype(tensor.dtype),
-                dims=self._dims(tensor),
+                dims=dims,
+                strides=strides,
                 permissions=int(Permission.READ),
-                key=f"view.rom.generated.{tensor_id}",
+                label="view.rom.generated",
             )
-        key, slot = self._region_of_tensor[tensor_id]
+        key, region_slot = self._region_of_tensor[tensor_id]
         region = self.plan.region(key)
-        tensor = self.tensors[tensor_id]
         dtype = self._dtype(tensor.dtype)
-        dims = self._dims(tensor)
         dynamic: list[DynamicTerm] = []
         element_offset = 0
         if region.slot_count > 1:
@@ -1631,12 +2122,13 @@ class RomLowering:
                 )
             dynamic.append(DynamicTerm.loop(loop, stride))
         else:
-            element_offset = slot * region.slot_element_stride
+            element_offset = region_slot * region.slot_element_stride
         scale_object, block = self._scale_binding(key)
         return self._view(
             object_id=region.object_id,
             dtype=dtype,
             dims=dims,
+            strides=strides,
             element_offset=element_offset,
             dynamic=dynamic,
             permissions=int(Permission.READ),
@@ -1758,12 +2250,18 @@ class RomLowering:
                 return [SCALE_SUBCASE.get(kernel.kind, 0)]
             return []
         if family is Major.ATTENTION:
-            group_size = int(
-                attributes.get(
-                    "group_size",
-                    domain.get("heads", 1) // max(domain.get("key_value_heads", 1), 1)
-                    or 1,
-                )
+            # The head map is a property of the operands, not of a name: the
+            # query carries the query heads and the KV history the KV heads, so
+            # the group size is read off the shapes and only overridden when the
+            # graph states it.
+            query_heads = int(
+                domain.get("query_heads", 0) or domain.get("heads", 0) or 0
+            ) or dim(inputs[0] if inputs else None, 1, 1)
+            kv_heads = int(
+                domain.get("key_value_heads", 0) or domain.get("kv_heads", 0) or 0
+            ) or dim(inputs[1] if len(inputs) > 1 else None, 1, 1)
+            group_size = int(attributes.get("group_size", 0)) or (
+                max(query_heads, 1) // max(kv_heads, 1)
             )
             mask_mode = 0 if attributes.get("mask_mode", "causal") == "causal" else 1
             if sub == int(Attention.SPARSE):
@@ -1820,6 +2318,112 @@ class RomLowering:
         return []
 
     # -- instructions ----------------------------------------------------
+    def _operand_order(self, kernel: Kernel, family: Major, sub: int) -> list[int]:
+        """The IR input order permuted into the frozen operand convention.
+
+        Two movements need it.  ``DMA.GATHER`` and ``DMA.SCATTER`` read
+        ``(index, source)`` while both exporters emit ``(source, index)``,
+        because the neutral IR states what is moved before it states where.
+        Permuting here keeps a backend concern out of the IR: the index is the
+        32-bit integer operand, which is model-blind and needs no name.
+        """
+        order = list(range(len(kernel.inputs)))
+        if family is not Major.DMA or sub not in (int(Dma.GATHER), int(Dma.SCATTER)):
+            return order
+        index = next(
+            (
+                slot
+                for slot in order
+                if self.tensors[kernel.inputs[slot]].dtype in {"u32", "i32"}
+            ),
+            None,
+        )
+        if index is None or index == 0:
+            return order
+        return [index] + [slot for slot in order if slot != index]
+
+    def _movement_views(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        order: Sequence[int],
+        run: LayerRun | None,
+        loop: int | None,
+        sub: int,
+    ) -> tuple[list[int], list[int]]:
+        """Views for a gather or a scatter: an index, a plane, a destination."""
+        index_name = kernel.inputs[order[0]]
+        source_name = kernel.inputs[order[1]] if len(order) > 1 else None
+        out_name = kernel.outputs[0] if kernel.outputs else None
+        gather = sub == int(Dma.GATHER)
+        addressed = source_name if not gather else out_name
+        subject = self.tensors[source_name] if source_name is not None else None
+        # An index is absolute when what it addresses spans every admissible
+        # position -- a rotary table, a KV window -- and span-relative when it
+        # addresses the rows of the request itself.
+        absolute = True
+        if gather and subject is not None:
+            symbol, _ = self._leading_symbol(subject)
+            absolute = symbol is None
+        count = 1
+        if addressed is not None:
+            dims = self._blocked_dims(self.tensors[addressed], shape)
+            if gather:
+                count = max(dims[0], 1)
+            else:
+                count = max(self._blocked_dims(self.tensors[source_name], shape)[0], 1)
+        views = [
+            self._index_view(
+                kernel, shape, index_name, loop, count=count, absolute=absolute
+            )
+        ]
+        if source_name is not None:
+            if gather:
+                # A gather addresses arbitrary rows of its source, so the source
+                # presents its whole declared extent rather than one block.
+                tensor = self.tensors[source_name]
+                views.append(
+                    self._buffer_view(
+                        tensor,
+                        dims=self._dims(tensor),
+                        strides=None,
+                        shape=shape,
+                        loop=loop,
+                        writable=False,
+                        blocked=False,
+                    )
+                )
+            else:
+                views.append(
+                    self._operand_view(
+                        kernel,
+                        shape,
+                        slot=1,
+                        direction="in",
+                        name=source_name,
+                        run=run,
+                        loop=loop,
+                        family=Major.DMA,
+                        sub=sub,
+                    )
+                )
+        outputs = []
+        if out_name is not None:
+            outputs.append(
+                self._operand_view(
+                    kernel,
+                    shape,
+                    slot=0,
+                    direction="out",
+                    name=out_name,
+                    run=run,
+                    loop=loop,
+                    family=Major.DMA,
+                    sub=sub,
+                )
+            )
+        return views, outputs
+
     def _emit_kernel(self, kernel: Kernel, *, run: LayerRun | None) -> None:
         if kernel.kind in {"STATE_PREPARE", "STATE_COMMIT"}:
             # Prepare and commit are emitted once, outside every loop, so the
@@ -1841,21 +2445,6 @@ class RomLowering:
                 source_operation_id=kernel.index,
             )
             return
-        inputs = [
-            self._operand_view(name, run=run, writable=False)
-            for name in kernel.inputs[:MAX_OPERATOR_INPUTS]
-        ]
-        if "expert_weight_tensors" in kernel.attributes:
-            # TA-ABI3-OPCONV-1 section 2: ROUTED_MATMUL reads
-            # (activations, routed weights, expert IDs, route weights).  The
-            # neutral IR names the bank in an attribute rather than an operand,
-            # so the backend places it and binds it to slot 1.
-            inputs.insert(1, self._expert_bank_view(kernel, run))
-            inputs = inputs[:MAX_OPERATOR_INPUTS]
-        outputs = [
-            self._operand_view(name, run=run, writable=True)
-            for name in kernel.outputs[:MAX_OPERATOR_OUTPUTS]
-        ]
         if len(kernel.inputs) > MAX_OPERATOR_INPUTS:
             raise RomLoweringError(
                 f"kernel {kernel.kernel_id!r} has {len(kernel.inputs)} inputs; an "
@@ -1866,6 +2455,49 @@ class RomLowering:
                 f"kernel {kernel.kernel_id!r} has {len(kernel.outputs)} outputs; an "
                 f"ABI 3.0 operator admits {MAX_OPERATOR_OUTPUTS}"
             )
+        shape = self._shape_of(kernel, engine)
+        loop = self._open_row_loop(kernel, shape)
+        order = self._operand_order(kernel, family, engine.sub)
+        if family is Major.DMA and engine.sub in (int(Dma.GATHER), int(Dma.SCATTER)):
+            inputs, outputs = self._movement_views(
+                kernel, shape, order, run, loop, engine.sub
+            )
+        else:
+            inputs = [
+                self._operand_view(
+                    kernel,
+                    shape,
+                    slot=abi_slot,
+                    direction="in",
+                    name=kernel.inputs[ir_slot],
+                    run=run,
+                    loop=loop,
+                    family=family,
+                    sub=engine.sub,
+                )
+                for abi_slot, ir_slot in enumerate(order[:MAX_OPERATOR_INPUTS])
+            ]
+            if "expert_weight_tensors" in kernel.attributes:
+                # TA-ABI3-OPCONV-1 section 2: ROUTED_MATMUL reads
+                # (activations, routed weights, expert IDs, route weights).  The
+                # neutral IR names the bank in an attribute rather than an
+                # operand, so the backend places it and binds it to slot 1.
+                inputs.insert(1, self._expert_bank_view(kernel, run))
+                inputs = inputs[:MAX_OPERATOR_INPUTS]
+            outputs = [
+                self._operand_view(
+                    kernel,
+                    shape,
+                    slot=abi_slot,
+                    direction="out",
+                    name=name,
+                    run=run,
+                    loop=loop,
+                    family=family,
+                    sub=engine.sub,
+                )
+                for abi_slot, name in enumerate(kernel.outputs[:MAX_OPERATOR_OUTPUTS])
+            ]
         operator = self.builder.operator(
             engine_family=family,
             engine_sub=engine.sub,
@@ -1893,6 +2525,8 @@ class RomLowering:
             signal_event_id=event,
             source_operation_id=kernel.index,
         )
+        if loop is not None:
+            self.builder.close_loop()
         # Only already-emitted producers enter a wait set, so a loop-carried
         # value is ordered by the loop body itself rather than by a wait on an
         # event the first iteration cannot yet have signalled.
