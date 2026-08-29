@@ -293,6 +293,32 @@
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
 
+- **OI-21 — prefill attention is a per-(token, head) Python loop, and it is
+  what blocks the mandatory 8,000-token workload.**
+  `runtime/sim/engines/attention.py::_execute_dense_gqa` iterates every (token,
+  head) pair, and inside the token loop it copies the whole K cache
+  (`np.ascontiguousarray(keys[:context, kv_head, :])`) though the copy depends
+  only on the head and the context. Measured on this machine, one (token, head)
+  score costs ~1.26 µs per context row, near-perfectly linear in context, so for
+  Qwen3-8B's 32 query heads over 36 layers a prefill of T tokens costs
+  `32 × 36 × 1.26 µs × T²/2` in score matmuls alone:
+
+  | T | score matmuls | with the value matmul |
+  |---:|---:|---:|
+  | 93 | 6.3 s | ~13 s |
+  | 1,000 | 726 s | ~24 min |
+  | 8,000 | 12.9 h | **~26 h** |
+
+  `TA-QW-8K-1` ran for 43 minutes and was still in prefill softmax. It and
+  `TA-QW-STRESS-1`, which has the same 8,000-token prompt, were stopped rather
+  than left to run for a day and a half each. **This is an implementation
+  problem, not an architectural one** — the ABI, the numeric contract and the
+  descriptors are all fine, and the arithmetic to be performed is unchanged. The
+  reduction runs over `head_dim`, which batching does not touch, so batched
+  query rows should be bit-identical; that is the property any fix has to prove
+  rather than assume, because a faster attention that changes one token is worse
+  than no change at all.
+
 - **OI-20 — the IR uses `CONCAT` for a broadcast along a new axis.** The
   DeepSeek mHC hyper-connection expansion is a `CONCAT` kernel whose four inputs
   are all the same tensor (`main.token_embed.output`, `[span_tokens, 4096]`) and
