@@ -529,7 +529,6 @@ class RomLowering:
         self.plan: RomImagePlan | None = None
         self._region_of_tensor: dict[str, tuple[str, int]] = {}
         self._scale_of_region: dict[str, tuple[str, int]] = {}
-        self._expert_bank: dict[str, tuple[int, tuple[int, ...]]] = {}
         self._buffer_object: dict[str, int] = {}
         self._buffer_place: dict[str, BufferPlacement] = {}
         self._buffer_root: dict[str, str] = {}
@@ -545,7 +544,7 @@ class RomLowering:
         self._state_group_shape: dict[str, tuple[int, int, int]] = {}
         self._state_tensor_offset: dict[str, int] = {}
         self._state_owner: dict[str, str] = {}
-        self._event_of_tensor: dict[str, tuple[int, int]] = {}
+        self._event_of_tensor: dict[str, int] = {}
         self._communications: list[tuple[str, int]] = []
         self._link_instruction_count = 0
         self._queue_cursor: dict[int, int] = {}
@@ -676,7 +675,10 @@ class RomLowering:
             scales = [
                 [self.tensors[t.scale_tensor_id] for t in column]
                 for column in columns
-                if all(t.scale_tensor_id for t in column)
+                if all(
+                    t.scale_tensor_id and t.scale_tensor_id in self.tensors
+                    for t in column
+                )
             ]
             if len(scales) != len(columns) or not scales:
                 return
@@ -697,13 +699,11 @@ class RomLowering:
             names = [
                 list(kernel.attributes["expert_weight_tensors"]) for kernel in columns
             ]
-            head = self.tensors[names[0][0]]
             place_operand(
                 key,
                 "expert_bank",
                 [[self.tensors[n] for n in group] for group in names],
             )
-            self._expert_bank[key] = (len(names[0]), self._dims(head))
 
         # -- prologue and epilogue weights: one slot each -----------------
         for kernel in (*self.analysis.prologue, *self.analysis.epilogue):
@@ -767,8 +767,12 @@ class RomLowering:
         binding = tensor.binding
         if binding is None:
             raise RomLoweringError(
-                f"weight {tensor.tensor_id!r} has no checkpoint binding; a ROM "
-                "region must name authenticated checkpoint bytes, never a copy"
+                f"weight {tensor.tensor_id!r} has no checkpoint binding.  A ROM "
+                "region names authenticated checkpoint bytes, never a private "
+                "copy.  A derived constant table would need "
+                "ObjectSource.generated, which the neutral IR cannot yet "
+                "express for a weight tensor; report the gap rather than "
+                "materialising the table here"
             )
         expected = self._bytes(tensor)
         if binding.bytes != expected:
@@ -1712,11 +1716,10 @@ class RomLowering:
             )
         family = Major(engine.family)
         if kernel.kind == "STATE_READ":
-            state = self._state_for(kernel)
-            index = self.builder.emit(
+            self.builder.emit(
                 family,
                 engine.sub,
-                descriptor_id=state,
+                descriptor_id=self._state_for(kernel),
                 source_operation_id=kernel.index,
             )
             return
@@ -1758,13 +1761,13 @@ class RomLowering:
             key=f"op.k{kernel.index:05d}",
         )
         producers = [
-            self._event_of_tensor[name][0]
+            self._event_of_tensor[name]
             for name in kernel.inputs
             if name in self._event_of_tensor
         ]
         wait = self._wait_set(producers)
         event = self.builder.new_event()
-        index = self.builder.emit(
+        self.builder.emit(
             family,
             engine.sub,
             descriptor_id=operator,
@@ -1772,8 +1775,11 @@ class RomLowering:
             signal_event_id=event,
             source_operation_id=kernel.index,
         )
+        # Only already-emitted producers enter a wait set, so a loop-carried
+        # value is ordered by the loop body itself rather than by a wait on an
+        # event the first iteration cannot yet have signalled.
         for name in kernel.outputs:
-            self._event_of_tensor[name] = (event, index)
+            self._event_of_tensor[name] = event
 
     def _state_for(self, kernel: Kernel) -> int:
         for state_id in (*kernel.state_writes, *kernel.state_reads):
@@ -1846,13 +1852,13 @@ class RomLowering:
             self.builder.close_loop()
         for kernel in analysis.epilogue:
             self._emit_kernel(kernel, run=None)
-        self._emit_selection_tail()
+        self._require_on_device_selection()
         for descriptor in state_descriptors:
             self.builder.emit(Major.STATE, State.COMMIT, descriptor_id=descriptor)
         self.builder.emit(Major.CONTROL, Control.COMPLETE)
 
-    def _emit_selection_tail(self) -> None:
-        """Guarantee on-device selection even if the graph omitted it."""
+    def _require_on_device_selection(self) -> None:
+        """ABI 3.0 mandates on-device selection; refuse a graph without it."""
         kinds = {k.kind for k in self.graph.kernels}
         if "ARGMAX" in kinds and "TOKEN_APPEND" in kinds:
             return

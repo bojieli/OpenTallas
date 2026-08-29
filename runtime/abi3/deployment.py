@@ -77,7 +77,7 @@ class Segment:
         return body
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class ObjectSource:
     """How a memory object's bytes are materialised.
 
@@ -90,12 +90,32 @@ class ObjectSource:
     size_bytes: int
     segments: tuple[Segment, ...] = ()
     fill: int = 0
+    generator: str = ""
+    parameters: Mapping[str, Any] = dc_field(default_factory=dict)
+    digest: str = ""
 
     def __post_init__(self) -> None:
-        if self.kind not in {"zero", "file", "segments"}:
+        if self.kind not in {"zero", "file", "segments", "generated"}:
             raise DeploymentError(f"unknown object source kind {self.kind!r}")
         if self.size_bytes < 0:
             raise DeploymentError("object size must be non-negative")
+        if self.kind == "generated":
+            # A derived constant -- a rotary coefficient table, a causal window
+            # index table -- exists in no checkpoint, so it cannot be a segment
+            # over authenticated bytes. It is instead named by a deterministic
+            # generator and bound by the digest of its *result*, which the
+            # device checks after materialising it. That keeps the "artifacts
+            # only" property: the table is derived from declared parameters,
+            # not injected, and a generator that drifts is caught.
+            if not self.generator:
+                raise DeploymentError("a generated object names no generator")
+            if len(self.digest) != 64:
+                raise DeploymentError(
+                    "a generated object must bind the SHA-256 of its result"
+                )
+            if self.segments:
+                raise DeploymentError("a generated object cannot declare segments")
+            return
         if self.kind == "zero":
             if self.segments:
                 raise DeploymentError("a zero object cannot declare segments")
@@ -116,6 +136,10 @@ class ObjectSource:
         body: dict[str, Any] = {"kind": self.kind, "size_bytes": self.size_bytes}
         if self.kind == "zero":
             body["fill"] = self.fill
+        elif self.kind == "generated":
+            body["generator"] = self.generator
+            body["parameters"] = {k: v for k, v in sorted(self.parameters.items())}
+            body["digest"] = self.digest
         else:
             body["segments"] = [seg.to_dict() for seg in self.segments]
         return body
@@ -125,6 +149,14 @@ class ObjectSource:
         kind = body["kind"]
         if kind == "zero":
             return cls("zero", int(body["size_bytes"]), (), int(body.get("fill", 0)))
+        if kind == "generated":
+            return cls(
+                "generated",
+                int(body["size_bytes"]),
+                generator=str(body["generator"]),
+                parameters=dict(body.get("parameters", {})),
+                digest=str(body["digest"]),
+            )
         segments = tuple(
             Segment(
                 path=str(s["path"]),
@@ -139,6 +171,18 @@ class ObjectSource:
     @staticmethod
     def zeros(size_bytes: int) -> "ObjectSource":
         return ObjectSource("zero", size_bytes)
+
+    @staticmethod
+    def generated(
+        generator: str, parameters: Mapping[str, Any], size_bytes: int, digest: str
+    ) -> "ObjectSource":
+        return ObjectSource(
+            "generated",
+            size_bytes,
+            generator=generator,
+            parameters=dict(parameters),
+            digest=digest,
+        )
 
 
 # ---------------------------------------------------------------------------

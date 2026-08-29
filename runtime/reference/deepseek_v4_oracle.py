@@ -806,6 +806,7 @@ class StreamingDeepSeekV4:
         self._install_streaming_hooks()
 
         self.peak_device_bytes = 0
+        self.generation_peak_device_bytes = 0
         self.layer_seconds = 0.0
 
     # -- construction -----------------------------------------------------
@@ -1037,8 +1038,17 @@ class StreamingDeepSeekV4:
             expert_modules.add(id(layer.ffn.shared_experts))
         self._expert_ids = expert_modules
 
-        block_forward = model_mod.Block.forward
-        expert_forward = model_mod.Expert.forward
+        # The vendor classes are module-level, so a second engine in the same
+        # process (the context ladder rebuilds one per rung) would otherwise
+        # wrap the *previous* engine's wrapper and route a new engine's blocks
+        # into a dead one's name tables.  Stash the pristine functions once and
+        # always wrap those.
+        if not hasattr(model_mod, "_opentallas_vendor_forwards"):
+            model_mod._opentallas_vendor_forwards = (
+                model_mod.Block.forward,
+                model_mod.Expert.forward,
+            )
+        block_forward, expert_forward = model_mod._opentallas_vendor_forwards
 
         def streaming_block_forward(self, *args, **kwargs):  # noqa: ANN001
             started = time.perf_counter()
@@ -1089,7 +1099,15 @@ class StreamingDeepSeekV4:
         self._release_names(self._block_dense_names(block))
 
     def _note_peak(self) -> None:
+        """Track the device peak for this generation and for the whole session.
+
+        ``torch.cuda.max_memory_allocated`` is reset at the start of every
+        generation, so the session maximum has to be carried separately or each
+        workload would report whatever the largest earlier one reached.
+        """
         allocated = self.torch.cuda.max_memory_allocated()
+        if allocated > self.generation_peak_device_bytes:
+            self.generation_peak_device_bytes = allocated
         if allocated > self.peak_device_bytes:
             self.peak_device_bytes = allocated
 
@@ -1194,6 +1212,7 @@ class StreamingDeepSeekV4:
 
         prompt = torch.tensor([ids], dtype=torch.long, device=self.device)
         torch.cuda.reset_peak_memory_stats()
+        self.generation_peak_device_bytes = 0
         started = time.perf_counter()
         with torch.inference_mode():
             vendor_ids, logits, _ = self.forward(prompt, 0)
@@ -1253,7 +1272,7 @@ class StreamingDeepSeekV4:
             "decode_steps": len(decode_seconds),
             "vendor_sample_agreements": vendor_agreements,
             "vendor_sample_disagreements": vendor_disagreements,
-            "peak_device_bytes": self.peak_device_bytes,
+            "peak_device_bytes": self.generation_peak_device_bytes,
         }
 
     def _select(self, logits, vendor_ids) -> tuple[int, int]:  # noqa: ANN001

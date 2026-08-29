@@ -108,6 +108,7 @@ NUMERIC_CONTRACT_BY_KIND: Mapping[str, str] = {
     "LAST_TOKEN_SELECT": "exact_index_select_v1",
     "MATMUL": "bf16_bf16_fp32_sequential_rne_v1",
     "RMS_NORM": "qwen3_rmsnorm_fp32_bf16_v1",
+    "GATHER": "exact_index_select_v1",
     "ROPE": "qwen3_rope_fp32_bf16_v1",
     "SILU_MUL": "qwen3_silu_mul_bf16_v1",
     "STATE_COMMIT": "bf16_byte_preserving_state_v1",
@@ -128,6 +129,7 @@ COUNTER_CLASS_BY_KIND: Mapping[str, str] = {
     "LAST_TOKEN_SELECT": "memory",
     "MATMUL": "tensor",
     "RMS_NORM": "vector_reduction",
+    "GATHER": "memory",
     "ROPE": "vector_reduction",
     "SILU_MUL": "vector_reduction",
     "STATE_COMMIT": "state",
@@ -165,6 +167,7 @@ KERNELS_PER_LAYER = 19
 #: abort expose a partially advanced token position.
 KERNEL_CENSUS: Mapping[str, int] = {
     "ADD": 72,
+    "GATHER": 1,
     "ARGMAX": 1,
     "ATTENTION_GQA": 36,
     "EMBEDDING_LOOKUP": 1,
@@ -182,8 +185,9 @@ KERNEL_CENSUS: Mapping[str, int] = {
 }
 KERNEL_COUNT = sum(KERNEL_CENSUS.values())
 
-#: 2 request inputs + 399 weights + 72 KV views + 652 activations + 2 outputs.
-TENSOR_TOTAL = 1127
+#: 2 request inputs + 399 weights + 1 generated rotary table + 72 KV views
+#: + 653 activations (652 plus the gathered coefficient rows) + 2 outputs.
+TENSOR_TOTAL = 1129
 
 GENERATION_POLICY_ID = "greedy_argmax_lowest_id_first_eos_v1"
 
@@ -475,6 +479,8 @@ class _Builder:
         shape: tuple[Any, ...],
         role: str,
         binding: CheckpointBinding | None = None,
+        generator: str = "",
+        generator_parameters: Mapping[str, Any] | None = None,
     ) -> str:
         if tensor_id in self._tensor_ids:
             raise Qwen3KernelIRError(f"duplicate tensor {tensor_id!r}")
@@ -486,6 +492,8 @@ class _Builder:
                 shape=shape,
                 role=role,
                 binding=binding,
+                generator=generator,
+                generator_parameters=dict(generator_parameters or {}),
             )
         )
         return tensor_id
@@ -601,7 +609,41 @@ def export_qwen3_kernel_graph(
 
     builder = _Builder()
     token_ids = builder.tensor("input.token_ids", TOKEN_DTYPE, (span,), "input")
-    positions = builder.tensor("input.positions", "i32", (span,), "input")
+    # Positions index the rotary table, so they are unsigned like every
+    # other index in ABI 3.0; a negative position is meaningless.
+    positions = builder.tensor("input.positions", "u32", (span,), "input")
+    # The rotary coefficient table exists in no checkpoint: it is a derived
+    # constant, computed from theta and head_dim. Declaring it with a generator
+    # is what lets VECTOR.ROPE's "coefficient rows" operand slot be filled at
+    # all -- previously the position vector was passed there, which is a
+    # different tensor of a different shape.
+    rope_table = builder.tensor(
+        "rope.coefficient_table",
+        "fp32",
+        (MAX_CONTEXT_TOKENS, 2 * head_dim),
+        "constant",
+        generator="rope_coefficients_v1",
+        generator_parameters={
+            "head_dim": head_dim,
+            "maximum_position": MAX_CONTEXT_TOKENS,
+            "theta": float(config["rope_theta"]),
+        },
+    )
+    rope_rows = builder.tensor(
+        "rope.coefficient_rows", "fp32", (span, 2 * head_dim), "activation"
+    )
+    builder.kernel(
+        "rope.coefficient_gather",
+        "GATHER",
+        (positions, rope_table),
+        (rope_rows,),
+        iteration_domain={"tokens": span, "width": 2 * head_dim},
+        attributes={
+            "coefficient_layout": "cos_head_dim_then_sin_head_dim",
+            "selector": "input.positions",
+        },
+        source_operation_id="qwen3.rotary_embedding.coefficient_rows",
+    )
 
     weight_shapes: dict[str, tuple[int, ...]] = {}
     for spec in specs:
@@ -819,7 +861,7 @@ def export_qwen3_kernel_graph(
             builder.kernel(
                 f"{prefix}.attention.{role}_rotation",
                 "ROPE",
-                (f"{prefix}.attention.{role}_normalized", positions),
+                (f"{prefix}.attention.{role}_normalized", rope_rows),
                 (output,),
                 iteration_domain={
                     "tokens": span,
@@ -831,7 +873,7 @@ def export_qwen3_kernel_graph(
                     "coefficient_layout": "cos_head_dim_then_sin_head_dim",
                     "interleaved": False,
                     "maximum_position": MAX_CONTEXT_TOKENS - 1,
-                    "position_input": "input.positions",
+                    "coefficient_source": "rope.coefficient_rows",
                     "rotation": "concat_neg_second_half_first_half",
                     "theta": rope_theta,
                 },

@@ -272,9 +272,10 @@ def _weighted_rms_norm(
             )
             codes = result.values
         else:
-            codes = _deepseek_rms_norm_binary32(
+            codes, saturations = _deepseek_rms_norm_binary32(
                 values, weights, epsilon_bits=int(profile.epsilon_bits)
             )
+            ctx.counters.add("vector.saturations", saturations)
     ctx.write(output_view, codes.reshape(output_view.dims))
 
     rows = values.shape[0]
@@ -323,7 +324,7 @@ def _rms_norm_contract(ctx: EngineContext, profile: NumericProfile) -> str:
 
 def _deepseek_rms_norm_binary32(
     input_codes: np.ndarray, weight_codes: np.ndarray, *, epsilon_bits: int
-) -> np.ndarray:
+) -> tuple[np.ndarray, int]:
     """``deepseek_rmsnorm_binary32_v1``: one rounding, at the output.
 
     Square, balanced row sum, divide by the width, add epsilon, correctly
@@ -369,7 +370,10 @@ def _deepseek_rms_norm_binary32(
     normalized = backend.multiply(values, backend.place(inverse[:, None]))
     weighted = backend.multiply(normalized, gains)
     narrowed = backend.narrow_rne(weighted)
-    return np.ascontiguousarray(backend.fetch(narrowed.codes), dtype=np.uint16)
+    return (
+        np.ascontiguousarray(backend.fetch(narrowed.codes), dtype=np.uint16),
+        int(narrowed.saturations),
+    )
 
 
 @register(Major.VECTOR, Vector.RMS_NORM)

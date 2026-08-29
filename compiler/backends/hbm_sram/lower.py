@@ -248,6 +248,7 @@ class _Emitter:
         self._waits: dict[tuple, int] = {}
         self._predicates: dict[tuple, int] = {}
         self._weight_object: dict[str, int] = {}
+        self._generated_object: dict[str, int] = {}
         self._arena_object: dict[str, int] = {}
         self._sram_object: dict[str, int] = {}
         self._host_object: dict[str, int] = {}
@@ -398,6 +399,23 @@ class _Emitter:
                 integrity_mode=IntegrityMode.CRC_AND_ECC,
                 content_digest=digest,
                 key=f"obj.weight.{group.group_id}",
+            )
+
+        for constant in self.plan.generated_constants:
+            self._generated_object[constant.tensor_id] = builder.memory_object(
+                storage_class=StorageClass.HBM,
+                size_bytes=constant.size_bytes,
+                source=ObjectSource.generated(
+                    constant.generator,
+                    constant.parameters,
+                    constant.size_bytes,
+                    constant.digest,
+                ),
+                permissions=int(Permission.READ | Permission.IMMUTABLE),
+                alignment_log2=12,
+                integrity_mode=IntegrityMode.CRC32C,
+                content_digest=bytes.fromhex(constant.digest),
+                key=f"obj.generated.{constant.tensor_id}",
             )
 
         for slot in self.plan.arena_slots:
@@ -740,6 +758,9 @@ class _Emitter:
         if operand.residence == "weight":
             placement = self.plan.placement(operand.tensor_id)
             return self._weight_object[placement.group_id], placement.element_offset
+        generated = self._generated_object.get(operand.tensor_id)
+        if generated is not None:
+            return generated, 0
         if operand.residence == "host":
             return self._host_object[operand.key], 0
         slot = self.plan.arena_of_key.get(operand.key)

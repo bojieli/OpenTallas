@@ -265,7 +265,7 @@ class CheckpointBinding:
         return body
 
 
-@dataclass(frozen=True, slots=True)
+@dataclass(frozen=True)
 class Tensor:
     """One neutral tensor."""
 
@@ -276,6 +276,7 @@ class Tensor:
     binding: CheckpointBinding | None = None
     scale_tensor_id: str | None = None
     scale_block_elements: int = 0
+    generator_parameters: Mapping[str, Any] = dc_field(default_factory=dict)
     generator: str = ""
     """Names a deterministic generator for a *derived* constant.
 
@@ -296,6 +297,9 @@ class Tensor:
         }
         if self.generator:
             body["generator"] = self.generator
+            body["generator_parameters"] = {
+                k: v for k, v in sorted(self.generator_parameters.items())
+            }
         if self.binding is not None:
             body["binding"] = self.binding.to_dict()
         if self.scale_tensor_id is not None:
@@ -570,6 +574,7 @@ def _tensor_from(body: Mapping[str, Any]) -> Tensor:
         scale_tensor_id=body.get("scale_tensor_id"),
         scale_block_elements=int(body.get("scale_block_elements", 0)),
         generator=body.get("generator", ""),
+        generator_parameters=dict(body.get("generator_parameters", {})),
     )
 
 

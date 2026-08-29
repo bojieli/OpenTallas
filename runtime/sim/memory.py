@@ -116,6 +116,26 @@ class MemoryObject:
         self._anonymous: np.ndarray | None = None
         if source.kind == "zero":
             self._anonymous = np.full(self.size_bytes, source.fill, dtype=np.uint8)
+        elif source.kind == "generated":
+            from runtime.sim.generators import generate_bytes
+            from runtime.abi3.crc import sha256_hex
+
+            payload = generate_bytes(source.generator, source.parameters)
+            if len(payload) != self.size_bytes:
+                raise MemoryError_(
+                    f"object {object_id}: generator {source.generator!r} produced "
+                    f"{len(payload)} bytes, the descriptor declares "
+                    f"{self.size_bytes}"
+                )
+            actual = sha256_hex(payload)
+            if actual != source.digest:
+                raise MemoryError_(
+                    f"object {object_id}: generator {source.generator!r} produced "
+                    f"digest {actual[:16]}, the deployment binds "
+                    f"{source.digest[:16]}; a drifting generator would silently "
+                    "change model outputs"
+                )
+            self._anonymous = np.frombuffer(payload, dtype=np.uint8).copy()
         else:
             cursor = 0
             for segment in source.segments:

@@ -868,52 +868,36 @@ def test_tiled_deployment_counter_agreement(storage: StorageClass, table: Path):
     assert body["timing"]["tile_launches"] > 0
 
 
-def test_abi3_fixture_cannot_be_timed_until_it_carries_tile_mappings():
-    """The ABI 3.0 fixture is missing three tile mappings; say so, do not guess.
-
-    ``runtime/abi3/fixture.py`` gives only its MATMUL a SCHEDULE descriptor.
-    Now that tiling lives in the schedule rather than in the program, its
-    REDUCTION and SELECTION operators cannot be timed at all, and the model must
-    refuse rather than invent a tile shape.
-    """
-    capability = fixture_capability()
-    deployment = build_fixture(storage_class=StorageClass.HBM, capability=capability)
-    with pytest.raises(ScheduleError) as strict:
-        CycleModel(deployment, capability, load_cost_table(BASELINE))
-    assert "REDUCTION.ORDERED_SUM" in str(strict.value)
-    assert "SELECTION.ARGMAX" in str(strict.value)
-
-    permissive = CycleModel(
-        deployment, capability, load_cost_table(BASELINE), strict_schedules=False
-    )
-    audit = permissive.schedule_audit
-    assert audit["complete"] is False
-    assert {f["reason"] for f in audit["findings"]} == {"absent_tile_mapping"}
-    assert [f["mnemonic"] for f in audit["findings"]] == [
-        "REDUCTION.ORDERED_SUM",
-        "SELECTION.ARGMAX",
-        "SELECTION.TOKEN_APPEND",
-    ]
-    with pytest.raises(ScheduleError, match="will not invent a tile shape"):
-        permissive.run(request())
-
-
-@pytest.mark.parametrize("storage", [StorageClass.HBM, StorageClass.ROM])
-def test_fixture_matmul_tile_mapping_is_read_from_the_schedule(
-    storage: StorageClass,
-):
+@pytest.mark.parametrize(
+    "storage,table",
+    [(StorageClass.HBM, BASELINE), (StorageClass.ROM, SKY130_ROM)],
+)
+def test_abi3_fixture_counter_agreement(storage: StorageClass, table: Path):
+    """The conformance fixture, timed and checked against the functional device."""
     capability = fixture_capability()
     deployment = build_fixture(storage_class=storage, capability=capability)
-    model = CycleModel(
-        deployment, capability, load_cost_table(BASELINE), strict_schedules=False
-    )
-    findings = {f["operator_id"] for f in model.schedule_audit["findings"]}
-    matmul = deployment.table.get(
-        deployment.table.ids_of_type(ExtendedDescriptorType.OPERATOR)[0],
-        ExtendedDescriptorType.OPERATOR,
-    )
-    assert matmul.payload["schedule_id"] != NO_ID
-    assert matmul.descriptor_id not in findings
+    req = request()
+    model = CycleModel(deployment, capability, load_cost_table(table))
+    assert model.schedule_audit["complete"], model.schedule_audit["findings"]
+    result = model.run(req)
+    body = result.to_dict()
+    assert body["execution"]["status"] == "SUCCESS"
+    assert result.architectural == functional_counters(deployment, capability, req)
+    assert body["timing"]["tile_launches"] > 0
+
+
+def test_every_fixture_operator_carries_a_tile_mapping():
+    """The audit is what makes an unmapped operator visible before a run."""
+    capability = fixture_capability()
+    deployment = build_fixture(storage_class=StorageClass.HBM, capability=capability)
+    model = CycleModel(deployment, capability, load_cost_table(BASELINE))
+    audit = model.schedule_audit
+    assert audit["complete"] is True
+    assert audit["findings"] == []
+    assert audit["operators_checked"] >= 4
+    for did in deployment.table.ids_of_type(ExtendedDescriptorType.OPERATOR):
+        operator = deployment.table[did]
+        assert operator.payload["schedule_id"] != NO_ID
 
 
 def test_synthetic_deployment_completes_and_agrees():
@@ -1680,7 +1664,7 @@ def test_cluster_reports_compute_link_collective_and_skew_separately():
             "link_cycles",
             "collective_cycles",
             "barrier_cycles",
-            "idle_cycles",
+            "engine_idle_cycles",
             "skew_cycles",
             "end_cycle",
         }
@@ -1859,10 +1843,21 @@ def test_cli_output_is_reproducible(tmp_path: Path):
     assert first.read_bytes() == second.read_bytes()
 
 
+def publish_unmapped(tmp_path: Path) -> Path:
+    """A deployment whose REDUCTION operator deliberately has no schedule."""
+    deployment, capability = synthetic_tiled_deployment(schedule_reduction=False)
+    root = tmp_path / "deployment-unmapped"
+    deployment.write(root)
+    (root / "capability.json").write_bytes(canonical_json(capability.to_dict()))
+    return root
+
+
 def test_cli_refuses_a_deployment_without_a_tile_mapping(tmp_path: Path):
+    root = publish_unmapped(tmp_path)
     out = tmp_path / "result.json"
     proc = run_cli(
-        "--fixture", "hbm",
+        "--deployment", str(root),
+        "--capability", str(root / "capability.json"),
         "--cost-table", str(BASELINE),
         *SYMBOLS,
         "--out", str(out),
@@ -1874,9 +1869,11 @@ def test_cli_refuses_a_deployment_without_a_tile_mapping(tmp_path: Path):
 
 
 def test_cli_permissive_schedules_still_fails_closed_at_timing(tmp_path: Path):
+    root = publish_unmapped(tmp_path)
     out = tmp_path / "result.json"
     proc = run_cli(
-        "--fixture", "hbm",
+        "--deployment", str(root),
+        "--capability", str(root / "capability.json"),
         "--cost-table", str(BASELINE),
         "--permissive-schedules",
         *SYMBOLS,

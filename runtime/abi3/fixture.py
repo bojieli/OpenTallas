@@ -194,12 +194,33 @@ def build_fixture(
         accumulator_dtype=DType.FP32,
         key="num.select",
     )
+    # Every engine operator carries a schedule. Tile mapping is what turns an
+    # operation into time in the cycle model, so an operator without one cannot
+    # be timed -- and the model rightly refuses rather than assuming a shape.
     tensor_schedule = builder.schedule(
         engine_family=Major.TENSOR,
         tile_rows=FIXTURE_ROWS,
         tile_cols=FIXTURE_COLS,
         tile_depth=FIXTURE_COLS,
+        bank_mask=0b11,
+        max_outstanding=2,
         key="sched.tensor",
+    )
+    reduce_schedule = builder.schedule(
+        engine_family=Major.REDUCTION,
+        tile_rows=FIXTURE_ROWS,
+        tile_cols=FIXTURE_COLS,
+        tile_depth=1,
+        bank_mask=0b01,
+        key="sched.reduce",
+    )
+    select_schedule = builder.schedule(
+        engine_family=Major.SELECTION,
+        tile_rows=1,
+        tile_cols=FIXTURE_COLS,
+        tile_depth=1,
+        bank_mask=0b01,
+        key="sched.select",
     )
 
     tile_loop = builder.loop_control(
@@ -283,6 +304,7 @@ def build_fixture(
         inputs=[output_view],
         outputs=[logits_view],
         numeric_profile_id=matmul_numeric,
+        schedule_id=reduce_schedule,
         source_kernel_id=1,
         key="op.reduce",
     )
@@ -292,6 +314,7 @@ def build_fixture(
         inputs=[logits_view],
         outputs=[selected_view],
         numeric_profile_id=select_numeric,
+        schedule_id=select_schedule,
         source_kernel_id=2,
         key="op.argmax",
     )
@@ -301,6 +324,7 @@ def build_fixture(
         inputs=[selected_view],
         outputs=[ring_view],
         numeric_profile_id=select_numeric,
+        schedule_id=select_schedule,
         source_kernel_id=3,
         key="op.append",
     )

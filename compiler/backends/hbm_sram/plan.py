@@ -293,6 +293,33 @@ class WeightGroup:
 
 
 @dataclass(frozen=True, slots=True)
+class GeneratedConstant:
+    """A derived constant materialised by a declared deterministic generator.
+
+    A rotary coefficient table exists in no checkpoint, so it cannot be a
+    segment over authenticated bytes. The plan records the generator, its
+    parameters and the digest of the result; the device materialises it and
+    checks that digest. The backend never computes model numerics itself --
+    ADR-003 section 15 forbids that -- it only carries the declaration through.
+    """
+
+    tensor_id: str
+    generator: str
+    parameters: Mapping[str, Any]
+    size_bytes: int
+    digest: str
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "tensor_id": self.tensor_id,
+            "generator": self.generator,
+            "parameters": {k: v for k, v in sorted(self.parameters.items())},
+            "size_bytes": self.size_bytes,
+            "digest": self.digest,
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class WeightPlacement:
     """Where one weight tensor sits inside its group object."""
 
@@ -619,6 +646,7 @@ class PhysicalPlan:
     span_max: int
     weight_groups: tuple[WeightGroup, ...]
     weight_placements: tuple[WeightPlacement, ...]
+    generated_constants: tuple[GeneratedConstant, ...]
     arena_slots: tuple[ArenaSlot, ...]
     activation_keys: Mapping[str, str]
     arena_of_key: Mapping[str, str]
@@ -668,6 +696,9 @@ class PhysicalPlan:
             "topology": self.topology.to_dict(),
             "span_max": self.span_max,
             "weight_groups": [g.to_dict() for g in self.weight_groups],
+            "generated_constants": [
+                c.to_dict() for c in self.generated_constants
+            ],
             "weight_placements": [p.to_dict() for p in self.weight_placements],
             "arena_slots": [a.to_dict() for a in self.arena_slots],
             "activation_keys": dict(sorted(self.activation_keys.items())),
@@ -894,6 +925,7 @@ def build_plan(
         topology=topology_plan,
         span_max=span_max,
         weight_groups=groups,
+        generated_constants=_generated_constants(graph),
         weight_placements=placements,
         arena_slots=arena_slots,
         activation_keys=activation_keys,
@@ -995,6 +1027,38 @@ def weight_roles(
                 claimed.update(members)
                 roles.append((f"b{band.band_id}.p{position}.i{slot}", tuple(members)))
     return roles
+
+
+def _generated_constants(graph: KernelGraph) -> tuple[GeneratedConstant, ...]:
+    """Collect every derived constant the graph declares a generator for."""
+    from runtime.sim.generators import GeneratorError, digest_of, generate
+
+    out: list[GeneratedConstant] = []
+    for tensor in graph.tensors:
+        if not tensor.generator:
+            continue
+        if tensor.role != "constant":
+            raise PlanError(
+                f"tensor {tensor.tensor_id} declares a generator but its role is "
+                f"{tensor.role!r}; only a constant may be derived"
+            )
+        try:
+            payload = generate(tensor.generator, tensor.generator_parameters)
+            digest = digest_of(tensor.generator, tensor.generator_parameters)
+        except GeneratorError as exc:
+            raise PlanError(
+                f"tensor {tensor.tensor_id}: {exc}"
+            ) from None
+        out.append(
+            GeneratedConstant(
+                tensor_id=tensor.tensor_id,
+                generator=tensor.generator,
+                parameters=dict(tensor.generator_parameters),
+                size_bytes=int(payload.nbytes),
+                digest=digest,
+            )
+        )
+    return tuple(sorted(out, key=lambda c: c.tensor_id))
 
 
 def _place_weights(

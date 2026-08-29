@@ -49,6 +49,7 @@ from __future__ import annotations
 import hashlib
 import os
 import platform
+import warnings
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
 from dataclasses import dataclass
@@ -647,7 +648,15 @@ class TorchBackend(Backend):
             host = host.view(np.int16)
         if not host.flags["C_CONTIGUOUS"]:
             host = np.ascontiguousarray(host)
-        return torch.from_numpy(host).to(self._device)
+        with warnings.catch_warnings():
+            # A weight is a read-only ``numpy.memmap`` over the authenticated
+            # checkpoint, and torch warns that it cannot guarantee nobody
+            # writes through the alias.  Nothing here does: a placed operand is
+            # only ever read, and every result is a freshly allocated tensor.
+            # Copying instead would give up the zero-copy mapping that makes a
+            # 16 GB deployment addressable at all.
+            warnings.filterwarnings("ignore", message=".*not writable.*")
+            return torch.from_numpy(host).to(self._device)
 
     def fetch(self, value: Any) -> np.ndarray:
         torch = self.torch
@@ -989,13 +998,19 @@ def selected_backend_name() -> str:
 
 @contextmanager
 def backend_scope(name: str | None) -> Iterator[Backend]:
-    """Temporarily fix the process-wide backend."""
+    """Temporarily fix the process-wide backend.
+
+    The selection is made *before* the body runs, so everything inside the
+    scope -- including engines that resolve the backend for themselves -- sees
+    it.  It is restored on the way out even if the body raises.
+    """
     global _selected
     previous = _selected
+    backend = get_backend(name)
+    if name is not None:
+        _selected = backend.name
     try:
-        yield get_backend(name) if name is not None else get_backend()
-        if name is not None:
-            _selected = name
+        yield backend
     finally:
         _selected = previous
 

@@ -262,6 +262,8 @@ def test_reference_oracle_report_shape(name: str) -> None:
         assert skipped["reason"] in {
             "time_budget_exhausted",
             "execution_failed",
+            "engine_build_failed",
+            "not_attempted",
         }
         assert skipped["detail"]
         assert workload_id not in report["results"]
@@ -282,3 +284,106 @@ def test_head_split_is_bitwise_identical_on_this_gpu() -> None:
     evidence = verify_head_split_identity(kernel_mod.sparse_attn)
     assert evidence["bitwise_identical"] is True
     assert evidence["max_abs_difference"] == 0.0
+
+
+@pytest.fixture(scope="module")
+def vendor_kernel():
+    from runtime.reference.deepseek_v4_oracle import import_vendor
+
+    _, kernel_mod, _, _ = import_vendor(DEFAULT_SNAPSHOT)
+    torch.set_default_dtype(torch.bfloat16)
+    torch.set_default_device("cuda")
+    yield kernel_mod
+    torch.set_default_device("cpu")
+    torch.set_default_dtype(torch.float32)
+
+
+@snapshot_available
+@cuda_available
+def test_act_quant_matches_a_torch_reference(vendor_kernel) -> None:
+    """Block FP8 quantisation must be exact, not merely close."""
+    generator = torch.Generator(device="cuda").manual_seed(31)
+    x = torch.randn(64, 4096, dtype=torch.bfloat16, device="cuda", generator=generator)
+    values, scales = vendor_kernel.act_quant(
+        x, 128, "ue8m0", torch.float8_e8m0fnu
+    )
+    blocks = x.float().view(-1, 4096 // 128, 128)
+    amax = blocks.abs().amax(-1).clamp_min(1e-4)
+    expected_scale = torch.pow(2.0, torch.ceil(torch.log2(amax / 448.0)))
+    expected = (blocks / expected_scale.unsqueeze(-1)).clamp(-448, 448).view(64, 4096)
+    assert torch.equal(scales.float(), expected_scale)
+    assert torch.equal(
+        values.float(), expected.to(torch.float8_e4m3fn).float()
+    )
+
+
+@snapshot_available
+@cuda_available
+def test_hc_split_sinkhorn_matches_a_torch_reference(vendor_kernel) -> None:
+    """The hyper-connection mixer feeds every block twice; it must be right."""
+    hc, iters, eps = 4, 20, 1e-6
+    generator = torch.Generator(device="cuda").manual_seed(32)
+    mixes = torch.randn(
+        1, 64, (2 + hc) * hc, dtype=torch.float32, device="cuda", generator=generator
+    )
+    scale = torch.randn(3, dtype=torch.float32, device="cuda", generator=generator)
+    base = torch.randn(
+        (2 + hc) * hc, dtype=torch.float32, device="cuda", generator=generator
+    )
+    pre, post, comb = vendor_kernel.hc_split_sinkhorn(
+        mixes, scale, base, hc, iters, eps
+    )
+
+    flat = mixes.reshape(-1, (2 + hc) * hc)
+    ref_pre = torch.sigmoid(flat[:, :hc] * scale[0] + base[:hc]) + eps
+    ref_post = 2 * torch.sigmoid(flat[:, hc : 2 * hc] * scale[1] + base[hc : 2 * hc])
+    ref_comb = (flat[:, 2 * hc :] * scale[2] + base[2 * hc :]).view(-1, hc, hc)
+    ref_comb = ref_comb.softmax(-1) + eps
+    ref_comb = ref_comb / (ref_comb.sum(-2, keepdim=True) + eps)
+    for _ in range(iters - 1):
+        ref_comb = ref_comb / (ref_comb.sum(-1, keepdim=True) + eps)
+        ref_comb = ref_comb / (ref_comb.sum(-2, keepdim=True) + eps)
+
+    assert (pre.flatten() - ref_pre.flatten()).abs().max() < 1e-5
+    assert (post.flatten() - ref_post.flatten()).abs().max() < 1e-5
+    assert (comb.reshape(-1, hc, hc) - ref_comb).abs().max() < 1e-5
+
+
+@snapshot_available
+@cuda_available
+def test_sparse_attn_matches_a_torch_reference(vendor_kernel) -> None:
+    """At the 16-head launch width the engine actually uses."""
+    heads, head_dim, kv_len, topk, queries = 16, 512, 256, 64, 3
+    generator = torch.Generator(device="cuda").manual_seed(33)
+    q = torch.randn(
+        1, queries, heads, head_dim, dtype=torch.bfloat16, device="cuda",
+        generator=generator,
+    )
+    kv = torch.randn(
+        1, kv_len, head_dim, dtype=torch.bfloat16, device="cuda", generator=generator
+    )
+    attn_sink = torch.randn(
+        heads, dtype=torch.float32, device="cuda", generator=generator
+    )
+    idxs = torch.randint(
+        -1, kv_len, (1, queries, topk), dtype=torch.int32, device="cuda",
+        generator=generator,
+    )
+    scale = head_dim**-0.5
+    got = vendor_kernel.sparse_attn(q, kv, attn_sink, idxs, scale)
+
+    expected = torch.empty_like(got)
+    for position in range(queries):
+        selected = idxs[0, position]
+        valid = selected >= 0
+        gathered = kv[0, selected.clamp_min(0).long()].float()
+        scores = (q[0, position].float() @ gathered.T) * scale
+        scores = scores.masked_fill(~valid.unsqueeze(0), float("-inf"))
+        top = scores.max(-1, keepdim=True).values
+        weights = torch.exp(scores - top)
+        denominator = weights.sum(-1) + torch.exp(attn_sink - top.squeeze(-1))
+        expected[0, position] = (
+            (weights @ gathered) / denominator.unsqueeze(-1)
+        ).to(q.dtype)
+    # One bfloat16 unit in the last place at the output magnitude.
+    assert (got.float() - expected.float()).abs().max() <= 2**-8

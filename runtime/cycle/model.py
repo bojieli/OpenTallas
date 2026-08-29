@@ -1056,7 +1056,7 @@ class _Queue:
 
     def admit(self, arrival: int, bound: int | None = None) -> tuple[int, int]:
         """Block until a credit is free; return ``(admit_cycle, stall)``."""
-        limit = self.bound if bound is None else max(1, min(bound, self.bound))
+        limit = self.bound_for(bound)
         self._drain(arrival)
         now = arrival
         while len(self._completions) >= limit:
@@ -2092,8 +2092,14 @@ class CycleModel:
                     "collective_cycles": node["collective_cycles"],
                     "barrier_cycles": node["barrier_cycles"],
                     "end_cycle": node["end_cycle"],
-                    "idle_cycles": max(
-                        0, node["end_cycle"] - node["engine_busy"]
+                    # Idle is summed over the node's engines, so it is directly
+                    # comparable with engine_busy_cycles; skew is what this node
+                    # waits for the slowest node, which is a different cost with
+                    # a different cause and is never folded into idle.
+                    "engine_idle_cycles": max(
+                        0,
+                        node["end_cycle"] * len(node["engines"])
+                        - node["engine_busy"],
                     ),
                     "skew_cycles": critical - node["end_cycle"],
                 }
@@ -2303,10 +2309,19 @@ class CycleModel:
         }
 
     def _rate_block(self, node: dict[str, Any], span: int) -> list[dict[str, Any]]:
-        """Every reported rate, with the provenance of every input it used."""
+        """Every reported rate, with the provenance of every input it used.
+
+        A rate over a simulated cycle count depends on *every* machine parameter
+        that produced that cycle count, not only on the clock that converts it to
+        seconds.  Pretending otherwise is how an assumed HBM latency ends up
+        inside a figure labelled ``characterized``, so the whole dependency set
+        is attached to any rate whose numerator or denominator came from the
+        simulation.
+        """
         clock = self.machine.clock_hz
         seconds = span / clock if clock else 0.0
         architectural = node["architectural"].snapshot()
+        simulated = sorted(self.machine.used())
         rates: list[dict[str, Any]] = []
 
         def emit(name: str, value: float, unit: str, inputs: list[str], note: str = ""):
@@ -2324,44 +2339,27 @@ class CycleModel:
             "transactions_per_second",
             (len(node["results"]) / seconds) if seconds else 0.0,
             "1/s",
-            ["clock.frequency_hz"],
+            simulated,
         )
         tokens = len(node["produced_tokens"])
         emit(
             "tokens_per_second",
             (tokens / seconds) if seconds and tokens else 0.0,
             "tokens/s",
-            ["clock.frequency_hz"],
+            simulated,
             "" if tokens else "no token was selected in this run",
         )
         emit(
             "instructions_per_cycle",
             architectural.get("instructions.retired", 0) / span if span else 0.0,
             "1/cycle",
-            ["clock.frequency_hz"],
+            simulated,
         )
-        for klass, prefix in (
-            ("hbm", "hbm"),
-            ("sram", "sram"),
-            ("rom", "rom"),
-        ):
+        for klass in ("hbm", "sram", "rom"):
             stats = node["memory"].stats[klass]
-            total = stats.bytes_read + stats.bytes_written
+            total = stats.transferred_read + stats.transferred_written
             params = self.memory_params.klass(StorageClass[klass.upper()])
-            inputs = ["clock.frequency_hz"]
-            for candidate in (
-                f"{prefix}.bytes_per_cycle_per_channel",
-                f"{prefix}.bytes_per_cycle_per_port",
-                f"{prefix}.bytes_per_cycle_per_array",
-                f"{prefix}.channels",
-                f"{prefix}.banks",
-                f"{prefix}.arrays",
-                f"{prefix}.read_latency_cycles",
-                f"{prefix}.transaction_bytes",
-                f"{prefix}.interleave_bytes",
-            ):
-                if candidate in self.machine.used():
-                    inputs.append(candidate)
+            inputs = simulated
             emit(
                 f"{klass}_bytes_per_second",
                 (total / seconds) if seconds else 0.0,

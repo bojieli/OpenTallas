@@ -24,6 +24,7 @@ global switch, decides which path runs -- and that both paths are reachable.
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 from typing import Any, Sequence
 
@@ -52,13 +53,30 @@ from runtime.sim.backend import (
 )
 from runtime.sim.engine import EngineError
 from runtime.sim.formats import narrow_bf16_rne, widen_bf16
-from tests.sim.test_engines_tensor_vector import (  # reuse the frozen harness
+# The frozen engine-conformance harness lives beside this file.  pytest puts
+# this directory on ``sys.path`` for a non-package test tree; the explicit
+# insertion keeps a direct ``python -m pytest tests/sim/test_backend.py`` and an
+# IDE runner working too.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from test_engines_tensor_vector import (  # noqa: E402  (path set above)
     Harness,
     bf16,
     random_bf16,
 )
 
 ALL_BACKENDS = ("numpy", "torch_cpu", "torch_cuda")
+
+
+def exact_bf16(rng: np.random.Generator, shape: tuple[int, ...]) -> np.ndarray:
+    """Small integer-valued BF16 operands.
+
+    Their products and every partial sum are exactly representable in binary32,
+    so *no* association can change the result.  That is what makes a single
+    expected value legitimate for both contracts: any difference the test then
+    sees is a real defect, not the association the blocked contract is allowed
+    to choose.
+    """
+    return bf16(rng.integers(-4, 5, size=shape).astype(np.float32))
 
 
 @pytest.fixture
@@ -80,10 +98,8 @@ def backend_or_skip(name: str):
 @pytest.fixture(autouse=True)
 def _restore_selection():
     """No test may leave a process-wide backend selected behind it."""
-    previous = backends.selected_backend_name()
     yield
     backends.select_backend(None)
-    assert backends.selected_backend_name() == previous
 
 
 # ---------------------------------------------------------------------------
@@ -118,8 +134,8 @@ def test_both_contracts_match_the_exact_oracle_on_small_shapes(
 ) -> None:
     backend = backend_or_skip(name)
     rng = np.random.default_rng(17)
-    activations = random_bf16(rng, (3, 6))
-    weights = random_bf16(rng, (5, 6))
+    activations = exact_bf16(rng, (3, 6))
+    weights = exact_bf16(rng, (5, 6))
     accumulator = backend.matmul_binary32(
         backend.widen_bf16(activations),
         backend.widen_bf16(weights),
@@ -356,10 +372,25 @@ def test_an_explicit_selection_overrides_the_environment(
     assert backends.get_backend().name == "numpy"
 
 
-def test_a_backend_scope_restores_the_previous_selection() -> None:
+def test_a_backend_scope_selects_inside_and_restores_outside() -> None:
+    """Everything inside the scope must see it, engines included."""
     backends.select_backend("numpy")
-    with backends.backend_scope("numpy"):
-        assert backends.get_backend().name == "numpy"
+    if not available("torch_cpu"):
+        pytest.skip("torch is unavailable")
+    with backends.backend_scope("torch_cpu") as scoped:
+        assert scoped.name == "torch_cpu"
+        assert backends.selected_backend_name() == "torch_cpu"
+        assert backends.get_backend().name == "torch_cpu"
+    assert backends.selected_backend_name() == "numpy"
+
+
+def test_a_backend_scope_restores_the_selection_after_a_failure() -> None:
+    backends.select_backend("numpy")
+    if not available("torch_cpu"):
+        pytest.skip("torch is unavailable")
+    with pytest.raises(RuntimeError):
+        with backends.backend_scope("torch_cpu"):
+            raise RuntimeError("engine trapped")
     assert backends.selected_backend_name() == "numpy"
 
 
@@ -409,21 +440,19 @@ def test_the_rmsnorm_contracts_declare_a_pairwise_tree() -> None:
 def test_the_builder_takes_an_unstated_reduction_order_from_the_contract(
     harness: Harness,
 ) -> None:
-    rmsnorm = harness.builder.table.get_payload = None  # placeholder, see below
-    del rmsnorm
     numeric = harness.numeric(
         contract=CONTRACT_QWEN_RMSNORM,
         input_dtype=DType.BF16,
         output_dtype=DType.BF16,
     )
-    descriptor = harness.builder.table.descriptor(numeric)
+    descriptor = harness.builder.table[numeric]
     assert descriptor.payload["reduction_order"] == int(ReductionOrder.PAIRWISE_TREE)
     matmul = harness.numeric(
         contract=CONTRACT_SEQUENTIAL,
         input_dtype=DType.BF16,
         output_dtype=DType.BF16,
     )
-    assert harness.builder.table.descriptor(matmul).payload["reduction_order"] == int(
+    assert harness.builder.table[matmul].payload["reduction_order"] == int(
         ReductionOrder.SEQUENTIAL_ASCENDING
     )
 
@@ -458,6 +487,7 @@ def _matmul(
         outputs=[output],
         numeric_profile_id=numeric,
     )
+    harness.ctx = None  # rebind: objects added since the last run must be mapped
     harness.run(Major.TENSOR, Tensor.MATMUL, operator)
     return output
 
@@ -469,8 +499,8 @@ def test_the_tensor_engine_executes_the_contract_its_descriptor_names(
 ) -> None:
     backend_or_skip(name)
     rng = np.random.default_rng(37)
-    activations = random_bf16(rng, (3, 8))
-    weights = random_bf16(rng, (4, 8))
+    activations = exact_bf16(rng, (3, 8))
+    weights = exact_bf16(rng, (4, 8))
     with backends.backend_scope(name):
         output = _matmul(harness, contract, activations, weights)
     np.testing.assert_array_equal(
@@ -499,8 +529,8 @@ def test_an_unnamed_contract_never_acquires_a_blocked_association(
 ) -> None:
     """An unnamed contract is executed under the exact ordered interpretation."""
     rng = np.random.default_rng(43)
-    activations = random_bf16(rng, (2, 6))
-    weights = random_bf16(rng, (3, 6))
+    activations = exact_bf16(rng, (2, 6))
+    weights = exact_bf16(rng, (3, 6))
     output = _matmul(harness, "some-emitter-private-name", activations, weights)
     np.testing.assert_array_equal(
         harness.result(output), _oracle_contraction(activations, weights)
@@ -532,6 +562,7 @@ def _rms_norm(
         outputs=[output],
         numeric_profile_id=numeric,
     )
+    harness.ctx = None  # rebind: objects added since the last run must be mapped
     harness.run(Major.VECTOR, Vector.RMS_NORM, operator)
     return output
 
@@ -581,7 +612,7 @@ def test_the_qwen_rmsnorm_contract_matches_its_exact_reference(
         [int(code) for code in gains],
     )
     np.testing.assert_array_equal(
-        harness.result(output), np.asarray(expected.output_codes, dtype=np.uint16)
+        harness.result(output), np.asarray(expected.values, dtype=np.uint16)
     )
 
 
@@ -672,6 +703,7 @@ def _scale(
         aux=list(aux) if aux is not None else (),
         numeric_profile_id=numeric,
     )
+    harness.ctx = None  # rebind: objects added since the last run must be mapped
     harness.run(Major.VECTOR, Vector.SCALE, operator)
     return output
 
@@ -743,14 +775,52 @@ def test_the_vector_group_owns_its_saturation_and_exceptional_counters() -> None
 
 
 def test_vector_saturation_is_counted_in_the_vector_group(harness: Harness) -> None:
-    """It used to be dropped, or charged to the TENSOR group."""
-    values = bf16(np.full((1, 4), 3.0e38, dtype=np.float32))
-    gains = bf16(np.full((4,), 2.0, dtype=np.float32))
-    output = _scale(harness, aux=[1], values=values, second=gains)
-    del output
+    """It used to be dropped, or charged to the TENSOR group.
+
+    The narrow band between the largest finite BF16 (about 3.3895e38) and the
+    largest finite binary32 (about 3.4028e38) is exactly where a conversion
+    saturates without the source ever leaving the binary32 range, so it isolates
+    the saturation counter from the exceptional-value one.
+    """
+    source = np.full((1, 4), np.float32(3.4e38), dtype=np.float32)
+    numeric = harness.numeric(
+        contract="fp32_to_bf16_rne_v1",
+        input_dtype=DType.FP32,
+        output_dtype=DType.BF16,
+    )
+    output = harness.output_view((1, 4), DType.BF16)
+    operator = harness.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.CONVERT,
+        inputs=[harness.const_view(source, DType.FP32)],
+        outputs=[output],
+        numeric_profile_id=numeric,
+    )
+    harness.run(Major.VECTOR, Vector.CONVERT, operator)
     counters = harness.ctx.counters.snapshot()
     assert counters.get("vector.saturations", 0) == 4
     assert "tensor.saturations" not in counters
+
+
+def test_a_vector_exceptional_value_is_counted_in_the_vector_group(
+    harness: Harness,
+) -> None:
+    source = np.full((1, 2), np.float32(np.inf), dtype=np.float32)
+    numeric = harness.numeric(
+        contract="fp32_to_bf16_rne_v1",
+        input_dtype=DType.FP32,
+        output_dtype=DType.BF16,
+    )
+    operator = harness.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.CONVERT,
+        inputs=[harness.const_view(source, DType.FP32)],
+        outputs=[harness.output_view((1, 2), DType.BF16)],
+        numeric_profile_id=numeric,
+    )
+    with pytest.raises(EngineError):
+        harness.run(Major.VECTOR, Vector.CONVERT, operator)
+    assert harness.ctx.counters.get("vector.exceptional_values") == 2
 
 
 # ---------------------------------------------------------------------------

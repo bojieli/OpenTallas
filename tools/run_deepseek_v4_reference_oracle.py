@@ -36,6 +36,7 @@ step's agreement or disagreement is recorded in ``vendor_sample_agreements`` /
 from __future__ import annotations
 
 import argparse
+import gc
 import json
 import os
 import platform
@@ -158,6 +159,16 @@ def main() -> int:
         help="do not retain block weights in host memory between steps",
     )
     parser.add_argument(
+        "--engine-per-workload",
+        action="store_true",
+        help=(
+            "rebuild the engine at each workload's own sequence length instead "
+            "of sizing the KV caches once from the longest one; this is what "
+            "the context ladder needs so a short rung is not charged for a "
+            "long rung's caches"
+        ),
+    )
+    parser.add_argument(
         "--time-budget-seconds",
         type=float,
         default=None,
@@ -193,33 +204,62 @@ def main() -> int:
         return 1
 
     bodies = {}
-    largest_total = 0
     for workload_id, entry in selected:
-        body = json.loads((args.workloads / entry["path"]).read_text())
-        bodies[workload_id] = body
-        new_tokens = args.max_new_tokens or entry["max_new_tokens"]
-        largest_total = max(largest_total, len(body["token_ids"]) + new_tokens)
+        bodies[workload_id] = json.loads(
+            (args.workloads / entry["path"]).read_text()
+        )
 
-    # max_seq_len sizes the KV caches and the RoPE tables for the whole run, so
-    # it is set once from the largest selected workload rather than per prompt.
-    max_seq_len = _round_up(largest_total, 128)
+    if args.engine_per_workload:
+        # Climb the ladder shortest first, so every rung that *can* run has
+        # already been recorded by the time a longer one exhausts the device.
+        selected.sort(key=lambda item: item[1]["prompt_token_count"])
+
+    entries = dict(selected)
+
+    def sequence_length_for(workload_ids: list[str]) -> int:
+        longest = 0
+        for workload_id in workload_ids:
+            entry = entries[workload_id]
+            new_tokens = args.max_new_tokens or entry["max_new_tokens"]
+            longest = max(
+                longest, len(bodies[workload_id]["token_ids"]) + new_tokens
+            )
+        return _round_up(longest, 128)
+
+    # max_seq_len sizes the KV caches and the RoPE tables, so a run that mixes a
+    # 1,000-token workload with a 200,000-token one would charge the small one
+    # for the big one's caches.  --engine-per-workload rebuilds the engine at
+    # each workload's own length, which is what the context ladder needs.
+    if args.engine_per_workload:
+        # Start at the first rung's own length rather than the tallest, which
+        # may not be allocatable at all.
+        max_seq_len = sequence_length_for([selected[0][0]])
+    else:
+        max_seq_len = sequence_length_for([wid for wid, _ in selected])
 
     os.environ.setdefault("PYTORCH_CUDA_ALLOC_CONF", "expandable_segments:True")
 
+    import torch
+
     started_all = time.perf_counter()
     tokenizer = load_verified_deepseek_v4_tokenizer(args.snapshot)
-    config = OracleConfig(
-        snapshot=args.snapshot,
-        max_seq_len=max_seq_len,
-        head_on_device=args.head_on_device,
-        host_cache_dense=not args.no_host_cache,
-    )
-    print(
-        f"building streaming engine (max_seq_len={max_seq_len}) ...",
-        flush=True,
-    )
-    engine = StreamingDeepSeekV4(config)
-    endpoints = engine.load_endpoints()
+
+    def build_engine(sequence_length: int):
+        config = OracleConfig(
+            snapshot=args.snapshot,
+            max_seq_len=sequence_length,
+            head_on_device=args.head_on_device,
+            host_cache_dense=not args.no_host_cache,
+        )
+        print(
+            f"building streaming engine (max_seq_len={sequence_length}) ...",
+            flush=True,
+        )
+        built = StreamingDeepSeekV4(config)
+        placement = built.load_endpoints()
+        return built, placement
+
+    engine, endpoints = build_engine(max_seq_len)
     setup_seconds = time.perf_counter() - started_all
     print(f"engine ready in {setup_seconds:.1f}s: {endpoints}", flush=True)
 
@@ -253,6 +293,7 @@ def main() -> int:
             f"lm_head on {endpoints['head_device']}"
         ),
         "max_seq_len": max_seq_len,
+        "engine_per_workload": bool(args.engine_per_workload),
         "mandatory_context_tokens": index.get("mandatory_context_tokens"),
         "context_ladder": index.get("context_ladder"),
         "adaptations": [dict(item) for item in ADAPTATIONS],
@@ -301,6 +342,40 @@ def main() -> int:
             f"max_new={new_tokens}) ===",
             flush=True,
         )
+
+        if args.engine_per_workload:
+            own_length = sequence_length_for([workload_id])
+            if own_length != engine.args.max_seq_len:
+                del engine
+                gc.collect()
+                torch.cuda.empty_cache()
+                try:
+                    engine, endpoints = build_engine(own_length)
+                except (OracleError, RuntimeError, MemoryError) as exc:
+                    report["not_executed"][workload_id] = {
+                        "kind": entry["kind"],
+                        "prompt_token_count": entry["prompt_token_count"],
+                        "reason": "engine_build_failed",
+                        "detail": f"{type(exc).__name__}: {exc}"[:2000],
+                        "requested_max_seq_len": own_length,
+                    }
+                    print(f"FAILED to build engine: {exc}"[:500], flush=True)
+                    # The ladder is sorted ascending, so nothing above this
+                    # rung can fit either; say so rather than leaving a gap.
+                    position = [wid for wid, _ in selected].index(workload_id)
+                    for taller_id, taller in selected[position + 1 :]:
+                        report["not_executed"][taller_id] = {
+                            "kind": taller["kind"],
+                            "prompt_token_count": taller["prompt_token_count"],
+                            "reason": "not_attempted",
+                            "detail": (
+                                f"a shorter rung ({workload_id}, "
+                                f"{entry['prompt_token_count']} tokens) already "
+                                "could not allocate its persistent state"
+                            ),
+                        }
+                    flush()
+                    break
 
         def progress(step: int, token_id: int, seconds: float) -> None:
             if step == 0 or (step + 1) % 16 == 0:
@@ -359,6 +434,8 @@ def main() -> int:
             "vendor_sample_agreements": outcome["vendor_sample_agreements"],
             "vendor_sample_disagreements": outcome["vendor_sample_disagreements"],
             "peak_device_bytes": int(outcome["peak_device_bytes"]),
+            "max_seq_len": int(engine.args.max_seq_len),
+            "expert_numeric_path": engine.expert_dtype,
             "checkpoint_bytes_read": int(engine.store.stats.bytes_read),
         }
         print(
