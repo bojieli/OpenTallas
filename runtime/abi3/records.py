@@ -565,6 +565,12 @@ class Completion:
         values = _open(COMPLETION, record)
         if values["abi_major"] != ABI_MAJOR:
             raise RecordError("unsupported completion ABI major version")
+        if values["abi_minor"] > ABI_MINOR:
+            raise RecordError(
+                f"completion declares ABI minor {values['abi_minor']}, "
+                f"implementation provides {ABI_MINOR}; a host must not read a "
+                "field it does not understand as if it were reserved"
+            )
         if values["record_bytes"] != COMPLETION_BYTES:
             raise RecordError("completion record_bytes is not 128")
         CompletionStatus(values["status"])

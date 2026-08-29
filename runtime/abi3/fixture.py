@@ -40,7 +40,7 @@ from .descriptors import Phase, SelectionMode, Symbol
 FIXTURE_ROWS = 4
 FIXTURE_COLS = 8
 FIXTURE_TILES = 4
-FIXTURE_VOCAB = 16
+FIXTURE_VOCAB = 8
 
 
 def fixture_capability(topology: TopologyClass = TopologyClass.SINGLE_CHIP) -> Capability:
@@ -148,15 +148,21 @@ def build_fixture(
     )
     logits = builder.memory_object(
         storage_class=StorageClass.SRAM,
-        size_bytes=FIXTURE_VOCAB * 2,
-        source=ObjectSource.zeros(FIXTURE_VOCAB * 2),
+        size_bytes=FIXTURE_COLS * 2,
+        source=ObjectSource.zeros(FIXTURE_COLS * 2),
         permissions=int(Permission.READ | Permission.WRITE),
         key="obj.logits",
     )
+    # Slot 0 holds the freshly selected ID; slots 1.. are the output ring,
+    # indexed by GENERATION_INDEX. The ring must therefore admit one entry per
+    # reachable generation index, which the capability bounds at
+    # max_context_positions -- the verifier proves exactly this and rejected an
+    # earlier ring that was one element short.
+    token_slots = 1 + capability.limits["max_context_positions"]
     tokens = builder.memory_object(
         storage_class=StorageClass.HOST,
-        size_bytes=64 * 4,
-        source=ObjectSource.zeros(64 * 4),
+        size_bytes=token_slots * 4,
+        source=ObjectSource.zeros(token_slots * 4),
         permissions=int(Permission.READ | Permission.WRITE | Permission.HOST_VISIBLE),
         key="obj.tokens",
     )
@@ -226,16 +232,27 @@ def build_fixture(
     logits_view = builder.tensor_view(
         object_id=logits,
         dtype=DType.BF16,
-        dims=[FIXTURE_VOCAB],
+        dims=[FIXTURE_COLS],
         permissions=int(Permission.READ | Permission.WRITE),
         key="view.logits",
     )
-    token_view = builder.tensor_view(
+    selected_view = builder.tensor_view(
         object_id=tokens,
         dtype=DType.U32,
-        dims=[64],
+        dims=[1],
         permissions=int(Permission.READ | Permission.WRITE),
-        key="view.tokens",
+        key="view.selected",
+    )
+    # The ring slot advances with the generation index, so one descriptor
+    # serves every decode step (wire-format amendment A4).
+    ring_view = builder.tensor_view(
+        object_id=tokens,
+        dtype=DType.U32,
+        dims=[1],
+        element_offset=1,
+        dynamic=[DynamicTerm.symbol(Symbol.GENERATION_INDEX, 1)],
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.ring",
     )
     kv_view = builder.tensor_view(
         object_id=kv_prepared,
@@ -273,7 +290,7 @@ def build_fixture(
         engine_family=Major.SELECTION,
         engine_sub=Selection.ARGMAX,
         inputs=[logits_view],
-        outputs=[token_view],
+        outputs=[selected_view],
         numeric_profile_id=select_numeric,
         source_kernel_id=2,
         key="op.argmax",
@@ -281,8 +298,8 @@ def build_fixture(
     append_op = builder.operator(
         engine_family=Major.SELECTION,
         engine_sub=Selection.TOKEN_APPEND,
-        inputs=[token_view],
-        outputs=[token_view],
+        inputs=[selected_view],
+        outputs=[ring_view],
         numeric_profile_id=select_numeric,
         source_kernel_id=3,
         key="op.append",

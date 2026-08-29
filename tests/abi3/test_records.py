@@ -544,17 +544,6 @@ def test_completion_rejects_bad_magic_major_and_size() -> None:
         Completion.decode(poke(record, COMPLETION, "record_bytes", 64))
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "DEFECT: records.Completion.decode never checks abi_minor, although "
-        "records.Submission.decode and records.ProgramHeader.decode both do and "
-        "wire format section 7 pins the completion ABI minor to 0.  A host "
-        "running ABI 3.0 silently accepts a completion that claims a future "
-        "minor version, so a field the host does not understand is read as if "
-        "it were reserved."
-    ),
-)
 def test_completion_rejects_a_newer_abi_minor() -> None:
     record = sample_completion().encode()
     with pytest.raises(RecordError):

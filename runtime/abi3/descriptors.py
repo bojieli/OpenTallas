@@ -538,6 +538,28 @@ PAYLOAD_LAYOUTS: dict[int, Layout] = {
 """Fixed-payload descriptor types.  ``ENTRYPOINT_TABLE`` is variable length."""
 
 
+#: Permissions that make a descriptor writable in any sense.
+WRITE_PERMISSIONS = (
+    Permission.WRITE | Permission.STATE_PREPARE | Permission.STATE_COMMIT
+)
+
+
+def _check_permission_conflict(permissions: int, descriptor_type: int) -> None:
+    """Reject a permission mask the wire format calls conflicting.
+
+    Applied on both encode and decode. Decode is the important direction: an
+    encoder only produces masks it is willing to produce, whereas a descriptor
+    table read from disk or from a hostile source is precisely where a
+    "writable immutable ROM" mask would appear.
+    """
+    if permissions & Permission.IMMUTABLE and permissions & WRITE_PERMISSIONS:
+        raise RecordError(
+            f"descriptor type {descriptor_type:#06x} declares IMMUTABLE together "
+            f"with a write permission ({Permission(permissions & WRITE_PERMISSIONS)!r}); "
+            "conflicting permissions fail admission"
+        )
+
+
 @dataclass(slots=True)
 class Descriptor:
     """One typed descriptor: common header plus decoded payload fields."""
@@ -572,10 +594,7 @@ class Descriptor:
         ExtendedDescriptorType(self.descriptor_type)
         if self.permissions & ~PERMISSION_MASK:
             raise RecordError("permission bits 8..31 are reserved and must be zero")
-        immutable = bool(self.permissions & Permission.IMMUTABLE)
-        writable = bool(self.permissions & (Permission.WRITE | Permission.STATE_COMMIT))
-        if immutable and writable:
-            raise RecordError("a descriptor cannot be both IMMUTABLE and writable")
+        _check_permission_conflict(self.permissions, self.descriptor_type)
         payload = self._payload_bytes()
         total = DESCRIPTOR_HEADER_BYTES + len(payload)
         padded = (total + DESCRIPTOR_ALIGNMENT - 1) // DESCRIPTOR_ALIGNMENT
@@ -651,6 +670,12 @@ class Descriptor:
             )
         if values["permissions"] & ~PERMISSION_MASK:
             raise RecordError("permission bits 8..31 are reserved")
+        # Wire format section 5: conflicting permissions fail admission. This
+        # must be enforced on decode as well as encode -- an edited or hostile
+        # descriptor table is exactly the case where it matters, and relying on
+        # the verifier is not enough because the verifier only inspects
+        # MEMORY_OBJECT descriptors.
+        _check_permission_conflict(values["permissions"], dtype)
         return cls(
             descriptor_id=descriptor_id,
             descriptor_type=dtype,

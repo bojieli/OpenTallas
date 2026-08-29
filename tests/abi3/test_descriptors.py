@@ -373,18 +373,6 @@ def test_every_documented_permission_bit_is_encodable_on_its_own() -> None:
         assert Descriptor.decode(descriptor.encode(), 0).permissions == int(permission)
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "DEFECT: descriptors.Descriptor.decode enforces the reserved permission "
-        "bits but not the IMMUTABLE-versus-writable conflict that "
-        "Descriptor.encode enforces, so an edited or hostile descriptor table "
-        "carries a permission mask the encoder would refuse to produce.  Wire "
-        "format section 5 says conflicting permissions fail admission, and the "
-        "verifier repairs this only for MEMORY_OBJECT descriptors -- a "
-        "TENSOR_VIEW, STATE or COMMUNICATION descriptor keeps the conflict."
-    ),
-)
 @pytest.mark.parametrize(
     "descriptor_type",
     [

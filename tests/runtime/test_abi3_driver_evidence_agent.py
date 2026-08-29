@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from runtime.abi3.constants import StorageClass
-from runtime.abi3.fixture import build_fixture, fixture_capability
+from runtime.abi3.fixture import FIXTURE_VOCAB, build_fixture, fixture_capability
 from runtime.agent import (
     AgentProtocolError,
     Sandbox,
@@ -133,8 +133,8 @@ def _fixture_device():
 def test_driver_resolves_the_generation_policy_and_eos_set():
     device, _ = _fixture_device()
     driver = GenerationDriver(device)
-    assert driver.vocabulary_size == 16
-    assert driver.eos_token_ids == (15,)
+    assert driver.vocabulary_size == FIXTURE_VOCAB
+    assert driver.eos_token_ids == (FIXTURE_VOCAB - 1,)
 
 
 def test_driver_rejects_an_empty_prompt():
@@ -148,7 +148,7 @@ def test_driver_rejects_an_out_of_vocabulary_prompt_token():
     device, _ = _fixture_device()
     driver = GenerationDriver(device)
     with pytest.raises(DriverError):
-        driver.generate([999])
+        driver.generate([FIXTURE_VOCAB + 991])
 
 
 def test_validate_token_ids_flags_illegal_ids():
