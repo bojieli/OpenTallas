@@ -232,6 +232,12 @@
         "attributes": {
           "type": "object"
         },
+        "guard": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
         "id": {
           "minLength": 1,
           "type": "string"
@@ -242,6 +248,16 @@
         "kind": {
           "minLength": 1,
           "type": "string"
+        },
+        "optional_inputs": {
+          "$ref": "#/$defs/string_array"
+        },
+        "optional_output_guards": {
+          "additionalProperties": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "object"
         },
         "outputs": {
           "$ref": "#/$defs/string_array"
@@ -269,9 +285,12 @@
       },
       "required": [
         "attributes",
+        "guard",
         "id",
         "inputs",
         "kind",
+        "optional_inputs",
+        "optional_output_guards",
         "outputs",
         "phases",
         "state_reads",
@@ -426,7 +445,7 @@
           "$ref": "#/$defs/string_array"
         },
         "request_boundary": {
-          "const": "token_ids_and_start_position"
+          "const": "token_ids_session_ids_and_start_position"
         },
         "unresolved": {
           "$ref": "#/$defs/string_array"

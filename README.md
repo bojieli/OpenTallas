@@ -10,8 +10,8 @@
 > macro, a full placed-and-routed chip or wafer, or fabricated OpenTallas silicon.
 > A deterministic exact-integer compiler/interpreter fixture now proves the first
 > artifact path. The official Flash front end additionally locks the expected
-> tensors, maps a 2,028-node source graph, and has independent target-format
-> references. Thirty of 44 graph operator kinds have unit-qualified executable
+> tensors, maps a 2,136-node source graph, and has independent target-format
+> references. Thirty-two of 46 graph operator kinds have unit-qualified executable
 > references; the other 14 references and all service-engine/RTL
 > implementations remain pending. Current speedups are conditional break-even
 > scenarios, not achieved implementation results.

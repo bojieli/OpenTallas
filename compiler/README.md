@@ -114,14 +114,14 @@ python3 -m compiler.cli describe-deepseek-v4-graph \
   --output /tmp/deepseek-v4-flash.graph-contract.json
 ```
 
-This expands 2,028 ordered prefill/decode nodes across the 43 main and three
+This expands 2,136 ordered prefill/decode nodes across the 43 main and three
 DSpark stages, assigns every checkpoint tensor to a layer-correct consumer, and
-gives all 44 operator kinds an explicit source anchor, lowering, state class,
-cost class, and implementation owner. Thirty operator references—dense FP8
+gives all 46 operator kinds an explicit source anchor, lowering, state class,
+cost class, and implementation owner. Thirty-two operator references—dense FP8
 linear, index-head BF16 linear, binary32 router-score, compressor, and
 DSpark-confidence projections, raw compressor-state update, deterministic
-compressor pooling, pooled-binary32 to BF16 conversion, committed-prefix
-compressed-KV write, learned sparse-index scoring, block-64 sparse
+compressor pooling, pooled-binary32 to BF16 conversion, session-bound
+compressed-KV write and valid-prefix view, learned sparse-index scoring, block-64 sparse
 attention with a learned sink and explicit mutable-KV traffic, weighted RMS
 normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4
 QDQ, indexer Hadamard rotation,
@@ -129,8 +129,9 @@ target-hidden HC capture, HC expansion, HC post-mixing, token
 embedding, hash-route lookup, ordinary window indices, compressed-dense
 indices, DSpark window indices, DSpark noise embedding/HC expansion,
 biased-router top-k, learned-index top-k, routed-weight normalization, expert
-dispatch, and expert reduction—are implemented and unit-qualified; the other 14
-reference kinds and all 44 service-engine/RTL kinds remain pending.
+dispatch, expert reduction, and fail-closed greedy/target-adapted sampling—are
+implemented and unit-qualified; the other 14
+reference kinds and all 46 service-engine/RTL kinds remain pending.
 Scalar and block-dot numeric primitives are tracked separately and do not make
 a matrix operator complete. The contract also records that the pinned local
 `generate.py` does not invoke DSpark and that speculative target verification

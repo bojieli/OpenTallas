@@ -10,7 +10,7 @@ and bounded unmodified-method differential
 `c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`
 
 **Graph contract:**
-`418eb748668a2714d1584a5846b10ad62fc4154b43637f2b8ffde68c15a8cbb8`
+`56953b69334f2f980430672cf2213f33065b995c47b19e3ac7dd003710778bd9`
 
 ## What is qualified
 
@@ -19,21 +19,25 @@ already-qualified learned projections:
 
 - `runtime/reference/compression_state.py` defines FP32 APE addition, raw
   incomplete-state update, ratio-four overlap assembly, ratio-128 grouping,
-  and the pool predicate;
+  the pool predicate, fresh-session reset, exact decode cursor, and monotonic
+  per-lane version;
 - `runtime/reference/compression_pool.py` defines deterministic FP32 stable
   softmax and weighted pooling;
 - `runtime/reference/conversion.py` defines the official post-pool
   `kv.to(dtype)` FP32-to-BF16 boundary; and
-- `runtime/reference/compressed_kv.py` defines BF16 complete-prefix commit and
-  explicit accelerator validity semantics after normalization, position
-  transformation, and activation QDQ.
+- `runtime/reference/compressed_kv.py` defines session-bound BF16
+  complete-prefix commit, causal cursor/version transitions, lane retirement,
+  and a view that exposes only the exact active sessions' valid prefixes after
+  normalization, position transformation, and activation QDQ.
 
 The official graph has 21 main ratio-four, 21 indexer ratio-four, and 20 main
 ratio-128 sites. It now contains 62 each of `COMPRESS_PROJECT`,
 `COMPRESS_STATE_UPDATE`, `COMPRESS_POOL`, `BINARY32_TO_BF16`, and
-`COMPRESS_KV_WRITE`. Main and indexer raw state and compressed caches use
-different namespaces. Learned index scoring consumes only committed index KV;
-sparse attention consumes only committed main KV.
+`COMPRESS_KV_WRITE`, and `COMPRESSED_KV_VALID_VIEW`. Main and indexer raw state
+and compressed caches use different namespaces. Learned index scoring consumes
+only a validated committed index prefix; sparse attention consumes only a
+validated committed main prefix through the still-pending complete attention-KV
+view.
 
 ## Official source behavior and target adaptations
 
@@ -57,12 +61,16 @@ Three target adaptations are explicit:
    exponential, NUM-6.1 balanced sums, binary32 RNE division/multiplication,
    preserved subnormals, and positive-zero canonicalization. PyTorch does not
    make one backend reduction tree or exponential approximation architectural.
-2. New-session raw compressor-state reset belongs to the session controller.
-   `Compressor.forward` itself overwrites only rows addressed by the call.
-3. Compressed KV has an explicit committed-prefix validity contract. The
-   released PyTorch object has payload storage but no validity bitmap; the
-   target prevents stale rows, gaps, or forged decode prefixes from becoming
-   visible.
+2. Raw compressor state carries canonical session identity, exact next position,
+   and monotonic version. Fresh prefill resets every active raw slot before
+   applying rows; stale-session, skipped, or replayed decode is rejected. The
+   released `Compressor.forward` itself overwrites only addressed rows and
+   trusts its caller for this causality.
+3. Compressed KV binds its contiguous prefix to active sessions, cursor, lane
+   status, and monotonic versions. Retired lanes keep their last identity as a
+   tombstone until reassignment, and a separate valid-view operation never
+   exposes payload beyond the authoritative prefix. The released PyTorch object
+   has payload storage but no equivalent causal metadata.
 
 Every reference validates the complete input and prior state before constructing
 and committing a new immutable result. Malformed shapes, nonfinite public values,
@@ -125,9 +133,10 @@ The deterministic report is
 ## Logical traffic boundary
 
 The references count source projection values, APE values and additions, raw
-state reads/writes, overlap fill, state rolls, pool operands and arithmetic,
-FP32-to-BF16 reads/writes, compressed BF16 payload reads/writes, preserved rows,
-and validity bits separately. These are logical source/operator counts. They are
+state reads/writes, resets, causal metadata records, overlap fill, state rolls,
+pool operands and arithmetic, FP32-to-BF16 reads/writes, compressed BF16 payload
+reads/writes, preserved rows, valid-prefix fields, session/cursor/version fields,
+and excluded capacity rows separately. These are logical source/operator counts. They are
 not HBM bursts, SRAM transactions, NoC packets, cache behavior, cycles, achieved
 bandwidth, latency, energy, area, or PPA.
 
@@ -157,8 +166,8 @@ differential, or report-hash drift. The expected output-file SHA-256 is
 ## Claim boundary
 
 This evidence establishes deterministic compressor target semantics, exact
-official APE identity and range, atomic raw-state and compressed-cache reference
-contracts, and bounded behavior against the exact released methods under one
+official APE identity and range, immutable causal raw-state and compressed-cache
+reference contracts, stale-capacity exclusion, and bounded behavior against the exact released methods under one
 declared development stack. It does not establish:
 
 - checkpoint-derived compressor projection activations or a complete layer;

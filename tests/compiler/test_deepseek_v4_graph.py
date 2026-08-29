@@ -57,19 +57,19 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "418eb748668a2714d1584a5846b10ad62fc4154b43637f2b8ffde68c15a8cbb8"
+        "56953b69334f2f980430672cf2213f33065b995c47b19e3ac7dd003710778bd9"
     )
     assert graph_contract["coverage"] == {
-        "catalog_kind_count": 44,
+        "catalog_kind_count": 46,
         "consumed_tensor_role_count": 63,
         "execution_status": "blocked_pending_reference_and_service_engine",
         "missing_cost_class_count": 0,
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
-        "node_count": 2028,
+        "node_count": 2136,
         "pending_reference_kind_count": 14,
-        "pending_rtl_kind_count": 44,
-        "pending_service_engine_kind_count": 44,
+        "pending_rtl_kind_count": 46,
+        "pending_service_engine_kind_count": 46,
         "unknown_kind_count": 0,
         "unmapped_tensor_role_count": 0,
     }
@@ -87,8 +87,11 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
 def test_graph_is_topological_and_phase_safe(graph_contract: dict) -> None:
     values = {
         "request.input_ids": {"prefill", "decode"},
+        "request.session_ids": {"prefill", "decode"},
         "request.start_pos": {"prefill", "decode"},
     }
+    value_guards: dict[str, str | None] = {value: None for value in values}
+    assert graph_contract["graph_inputs"] == sorted(values)
     node_ids: set[str] = set()
     for node in graph_contract["nodes"]:
         assert node["id"] not in node_ids
@@ -98,9 +101,30 @@ def test_graph_is_topological_and_phase_safe(graph_contract: dict) -> None:
         assert phases <= {"prefill", "decode"}
         assert all(value in values for value in node["inputs"])
         assert all(phases <= values[value] for value in node["inputs"])
+        guard = node["guard"]
+        if guard is not None:
+            assert guard in values
+            assert phases <= values[guard]
+        optional_inputs = node["optional_inputs"]
+        assert len(optional_inputs) == len(set(optional_inputs))
+        assert set(optional_inputs) <= set(node["inputs"])
+        for value in node["inputs"]:
+            value_guard = value_guards[value]
+            if value_guard is not None and guard != value_guard:
+                assert value in optional_inputs
+                assert value_guard in node["inputs"]
+
+        output_guards = node["optional_output_guards"]
+        assert set(output_guards) <= set(node["outputs"])
+        assert not (guard is not None and output_guards)
         for output in node["outputs"]:
             assert output not in values
             values[output] = phases
+        for output in node["outputs"]:
+            output_guard = guard or output_guards.get(output)
+            if output_guard is not None:
+                assert output_guard in values
+            value_guards[output] = output_guard
     assert all(output in values for output in graph_contract["graph_outputs"])
 
 
@@ -111,7 +135,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     counts = {record["kind"]: record["node_count"] for record in graph_contract["operator_counts"]}
 
     assert set(catalog) == set(counts)
-    assert sum(counts.values()) == 2028
+    assert sum(counts.values()) == 2136
     assert counts["HASH_ROUTE"] == 3
     assert counts["BIASED_TOPK_ROUTE"] == 43
     assert counts["FP4_QDQ"] == 42
@@ -126,6 +150,8 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
     assert counts["COMPRESS_POOL"] == 62
     assert counts["BINARY32_TO_BF16"] == 62
     assert counts["COMPRESS_KV_WRITE"] == 62
+    assert counts["COMPRESSED_KV_VALID_VIEW"] == 62
+    assert counts["ATTENTION_KV_VIEW"] == 46
     assert counts["DSPARK_PREFILL_KV"] == 3
     assert counts["MARKOV_AUTOREGRESSIVE_LOOP"] == 1
     qualified_references = {
@@ -139,6 +165,9 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "CONFIDENCE_SCORE": "runtime.reference.confidence.confidence_score_bf16",
         "COMPRESS_KV_WRITE": (
             "runtime.reference.compressed_kv.compressed_kv_write_bf16"
+        ),
+        "COMPRESSED_KV_VALID_VIEW": (
+            "runtime.reference.compressed_kv.compressed_kv_valid_view_bf16"
         ),
         "COMPRESS_POOL": "runtime.reference.compression_pool.compress_pool_f32",
         "COMPRESS_PROJECT": "runtime.reference.compression.compress_project_bf16",
@@ -175,6 +204,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "ROUTER_WEIGHT_NORMALIZE": (
             "runtime.reference.routing.normalize_routed_weight_codes"
         ),
+        "SAMPLE": "runtime.reference.sampling.deepseek_v4_sample_binary32",
         "SPARSE_ATTENTION": (
             "runtime.reference.sparse_attention.sparse_attention_bf16"
         ),
@@ -198,6 +228,27 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
             assert requirement["reference_status"] == "pending_implementation"
         assert requirement["service_engine_status"] == "pending_implementation"
         assert requirement["rtl_status"] == "pending_implementation"
+
+
+def test_sampling_contract_exposes_exact_and_blocked_numeric_boundaries(
+    graph_contract: dict,
+) -> None:
+    (node,) = [
+        node for node in graph_contract["nodes"] if node["kind"] == "SAMPLE"
+    ]
+    assert node["id"] == "main.sample"
+    assert node["attributes"] == {
+        "greedy_policy": "finite_binary32_first_index_argmax_exact",
+        "official_stochastic_replay": (
+            "blocked_unpinned_torch_cuda_rng_exponential_softmax_backend"
+        ),
+        "policy": "runtime_temperature_gumbel_or_argmax",
+        "target_stochastic_adaptation": (
+            "explicit_positive_binary32_exponential_draws_cr32_exp_balanced_softmax"
+        ),
+    }
+    assert node["inputs"] == ["main.lm_head.output"]
+    assert node["state_reads"] == node["state_writes"] == []
 
 
 def test_weighted_rms_norm_profile_and_numeric_contract_are_explicit(
@@ -461,8 +512,13 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
         for node in graph_contract["nodes"]
         if node["kind"] == "COMPRESS_KV_WRITE"
     ]
+    view_nodes = [
+        node
+        for node in graph_contract["nodes"]
+        if node["kind"] == "COMPRESSED_KV_VALID_VIEW"
+    ]
     assert len(state_nodes) == len(pool_nodes) == len(conversion_nodes) == 62
-    assert len(write_nodes) == 62
+    assert len(write_nodes) == len(view_nodes) == 62
     profile_counts = {
         ("indexer", 4, 128): 21,
         ("main", 4, 512): 21,
@@ -498,22 +554,30 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
             "decode_sequence_length": 1,
             "head_dim": width,
             "intermediate_overflow": "poison",
-            "new_session_prefill": (
-                "source_overwrites_only_addressed_rows_session_reset_external"
-            ),
+            "new_session_prefill": "reset_all_active_raw_slots_then_apply",
             "output": "optional_pool_kv_pool_scores_and_should_compress_predicate",
             "overlap": overlap,
             "positional_score_add_rounding": "binary32_rne",
             "projection_scope": attributes["projection_scope"],
             "ratio": ratio,
+            "session_identity": "per_active_batch_lowercase_sha256",
+            "session_prefill_transition": "fresh_identity_reset_then_apply",
             "state_dtype": "binary32",
+            "state_metadata": "session_id_next_position_monotonic_version",
             "state_slots": (2 if overlap else 1) * ratio,
             "state_transaction": (
-                "validate_prepare_atomic_commit_target_adaptation"
+                "causal_validate_prepare_immutable_commit_target_adaptation"
             ),
         }
-        assert node["inputs"][-1] == "request.start_pos"
+        assert node["inputs"][-2:] == [
+            "request.start_pos",
+            "request.session_ids",
+        ]
         assert node["outputs"][-1].endswith(".should_compress")
+        assert node["optional_output_guards"] == {
+            node["outputs"][0]: node["outputs"][2],
+            node["outputs"][1]: node["outputs"][2],
+        }
         assert node["state_reads"] == node["state_writes"]
         assert len(node["state_reads"]) == 1
         if attributes["projection_scope"] == "indexer":
@@ -565,6 +629,7 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
         assert node["inputs"][0].endswith(".pool_kv")
         assert node["inputs"][1].endswith(".pool_scores")
         assert node["inputs"][2].endswith(".should_compress")
+        assert node["guard"] == node["inputs"][2]
         assert node["tensor_roles"] == []
 
     assert Counter(node["attributes"]["width"] for node in conversion_nodes) == {
@@ -590,6 +655,7 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
         }
         assert node["inputs"][0].endswith("compress_pool.output")
         assert node["inputs"][1].endswith(".should_compress")
+        assert node["guard"] == node["inputs"][1]
 
     for node in write_nodes:
         attributes = node["attributes"]
@@ -603,21 +669,62 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
             "kv_head_count": 1,
             "layer": attributes["layer"],
             "new_session_prefill": "invalidate_then_commit_complete_prefix",
+            "optional_payload": "present_exactly_when_should_compress",
             "projection_scope": attributes["projection_scope"],
             "ratio": attributes["ratio"],
+            "retired_lane_identity": (
+                "preserved_tombstone_prevents_session_resurrection"
+            ),
+            "session_identity": "per_active_batch_lowercase_sha256",
+            "session_reuse": (
+                "fresh_prefill_identity_not_retained_by_any_lane"
+            ),
             "scope": attributes["scope"],
+            "state_metadata": (
+                "session_id_next_position_valid_prefix_monotonic_version"
+            ),
             "state_transaction": (
-                "valid_prefix_validate_prepare_atomic_commit_target_adaptation"
+                "causal_valid_prefix_validate_prepare_immutable_commit_target_adaptation"
             ),
         }
         assert node["inputs"][1].endswith(".should_compress")
         assert node["inputs"][2] == "request.start_pos"
-        assert node["outputs"][0].endswith(".committed_cache")
+        assert node["inputs"][3] == "request.session_ids"
+        assert node["optional_inputs"] == [node["inputs"][0]]
+        assert node["outputs"][0].endswith(".committed_state")
         assert node["state_reads"] == node["state_writes"]
         if attributes["projection_scope"] == "indexer":
             assert node["state_reads"][0].endswith(".index_compressed_kv")
         else:
             assert node["state_reads"][0].endswith(".compressed_kv")
+
+    assert Counter(
+        (
+            node["attributes"]["projection_scope"],
+            node["attributes"]["ratio"],
+            node["attributes"]["head_dim"],
+        )
+        for node in view_nodes
+    ) == profile_counts
+    for node in view_nodes:
+        attributes = node["attributes"]
+        assert attributes == {
+            "capacity_rows_exposed": False,
+            "head_dim": attributes["head_dim"],
+            "kv_head_count": 1,
+            "output": "active_batch_contiguous_valid_prefix_only",
+            "payload_dtype": "bf16",
+            "projection_scope": attributes["projection_scope"],
+            "ratio": attributes["ratio"],
+            "session_identity": "per_active_batch_lowercase_sha256",
+            "stale_invalid_payload": "never_exposed",
+            "validation": (
+                "session_cursor_prefix_and_payload_before_immutable_view"
+            ),
+        }
+        assert node["inputs"][0].endswith(".committed_state")
+        assert node["inputs"][1] == "request.session_ids"
+        assert node["state_reads"] == node["state_writes"] == []
 
     by_id = {node["id"]: node for node in graph_contract["nodes"]}
     assert by_id["main.layer02.compress_bf16"]["inputs"] == [
@@ -628,13 +735,16 @@ def test_compressor_state_pool_conversion_and_commit_are_explicit(
         "main.layer02.compress_bf16.output"
     ]
     assert by_id["main.layer02.index_score"]["inputs"][1] == (
-        "main.layer02.index_compress_kv_write.committed_cache"
+        "main.layer02.index_compress_kv_valid_view.output"
     )
-    assert by_id["main.layer02.sparse_attention"]["inputs"][-1] == (
-        "main.layer02.compress_kv_write.committed_cache"
+    assert by_id["main.layer02.attention_kv_view"]["inputs"][2] == (
+        "main.layer02.compress_kv_valid_view.output"
     )
-    assert by_id["main.layer03.sparse_attention"]["inputs"][-1] == (
-        "main.layer03.compress_kv_write.committed_cache"
+    assert by_id["main.layer03.attention_kv_view"]["inputs"][2] == (
+        "main.layer03.compress_kv_valid_view.output"
+    )
+    assert by_id["main.layer02.sparse_attention"]["inputs"][1] == (
+        "main.layer02.attention_kv_view.output"
     )
 
 
@@ -746,7 +856,8 @@ def test_sparse_attention_profile_numeric_and_kv_traffic_contract_are_explicit(
             "tail_padding": "implicit_negative_one_to_64_slot_block",
         }
         assert node["tensor_roles"] == ["attention.sink"]
-        assert node["state_reads"]
+        assert node["inputs"][1].endswith(".attention_kv_view.output")
+        assert node["state_reads"] == []
         assert node["state_writes"] == []
 
 
@@ -814,23 +925,27 @@ def test_layer_classes_and_mutable_state_sites_are_explicit(
         "dspark.layer00.main_kv_fp8_qdq.output"
     )
     assert by_id["dspark.layer00.sparse_attention"]["inputs"][1] == (
-        "dspark.layer00.kv_fp8_qdq.output"
+        "dspark.layer00.attention_kv_view.output"
     )
+    assert by_id["dspark.layer00.attention_kv_view"]["inputs"] == [
+        "dspark.layer00.main_kv_fp8_qdq.output",
+        "dspark.layer00.window_kv_write.committed_window",
+        "request.start_pos",
+        "request.session_ids",
+    ]
     mutable_nodes = [
         node
         for node in graph_contract["nodes"]
         if node["state_reads"] or node["state_writes"]
     ]
     assert mutable_nodes
-    read_only_kinds = {"INDEX_SCORE", "SPARSE_ATTENTION"}
-    assert all(
-        node["state_writes"]
-        for node in mutable_nodes
-        if node["kind"] not in read_only_kinds
-    )
-    assert {
-        node["kind"] for node in mutable_nodes if not node["state_writes"]
-    } == read_only_kinds
+    assert all(node["state_reads"] == node["state_writes"] for node in mutable_nodes)
+    assert {node["kind"] for node in mutable_nodes} == {
+        "COMPRESS_KV_WRITE",
+        "COMPRESS_STATE_UPDATE",
+        "DSPARK_PREFILL_KV",
+        "KV_WINDOW_WRITE",
+    }
 
 
 def test_system_gaps_include_dspark_acceptance_and_text_frontend(
@@ -847,16 +962,15 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "PyTorch softmax" in pool_adaptation["source_behavior"]
     assert "NUM-6.13" in pool_adaptation["target_contract"]
     reset_adaptation = adaptations[
-        "make new-session raw compressor-state reset an explicit controller "
-        "responsibility"
+        "make new-session raw compressor-state reset an explicit causal transaction"
     ]
     assert "overwrites only" in reset_adaptation["source_behavior"]
-    assert "session isolation" in reset_adaptation["target_contract"]
+    assert "resets every active raw slot" in reset_adaptation["target_contract"]
     validity_adaptation = adaptations[
-        "track an explicit committed-prefix validity contract for compressed KV"
+        "track a session-bound committed-prefix view for compressed KV"
     ]
-    assert "without a validity bitmap" in validity_adaptation["source_behavior"]
-    assert "stale compressed rows" in validity_adaptation["target_contract"]
+    assert "without validity" in validity_adaptation["source_behavior"]
+    assert "never exposes stale capacity rows" in validity_adaptation["target_contract"]
 
     issues = {record["id"]: record for record in graph_contract["open_semantic_issues"]}
     assert set(issues) == {
@@ -872,16 +986,16 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "thirty complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state" in (
+    assert "thirty-two complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state/control" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "Fourteen" in issues["DSV4-SEM-005"]["issue"]
-    assert "atomic raw compressor-state updates" in issues["DSV4-SEM-006"]["issue"]
+    assert "immutable causal raw compressor-state updates" in issues["DSV4-SEM-006"]["issue"]
     assert "operator-complete executor" in issues["DSV4-SEM-006"]["issue"]
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
     assert "atomic hash-locked applicator" in issues["DSV4-SEM-007"]["issue"]
     assert graph_contract["system_scope"]["request_boundary"] == (
-        "token_ids_and_start_position"
+        "token_ids_session_ids_and_start_position"
     )
     assert (
         "end-to-end binding of the verified host boundary to "
@@ -895,7 +1009,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, atomic raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, committed-prefix compressed-KV write, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
+    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score, compressor, and DSpark-confidence projections, causal raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, session-bound compressed-KV write and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
         " ".join(graph_contract["system_scope"]["covered"])
     )
     assert "block-64 sparse attention" in " ".join(
@@ -920,6 +1034,9 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         graph_contract["system_scope"]["covered"]
     )
     assert "routed-weight normalization" in " ".join(
+        graph_contract["system_scope"]["covered"]
+    )
+    assert "fail-closed greedy/target-adapted sampling" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
     assert "DSpark target verification and speculative acceptance" in (
@@ -968,7 +1085,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "418eb748668a2714d1584a5846b10ad62fc4154b43637f2b8ffde68c15a8cbb8"
+        "56953b69334f2f980430672cf2213f33065b995c47b19e3ac7dd003710778bd9"
     )
-    assert "described 2028 nodes across 44 operator kinds" in result.stdout
+    assert "described 2136 nodes across 46 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout
