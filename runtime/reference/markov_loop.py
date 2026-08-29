@@ -144,8 +144,10 @@ OFFICIAL_TOKEN0_SELECTED_W2_LOGITS_SHA256 = (
 )
 
 SOURCE_EXPRESSIONS = (
+    "temperature: float = 1",
     "self.markov_w1 = ParallelEmbedding(vocab_size, dspark_markov_rank)",
     "self.markov_w2 = ParallelHead(vocab_size, dspark_markov_rank)",
+    "self.temperature = args.temperature",
     "embed = self.markov_w1(token_ids)",
     "logits = self.markov_w2(embed, full_logits=True)",
     "output_ids[:, 0] = input_ids",

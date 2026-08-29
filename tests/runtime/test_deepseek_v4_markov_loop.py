@@ -188,6 +188,17 @@ def test_reference_is_bound_to_pinned_source_config_and_checkpoint() -> None:
     classes = {
         node.name: node for node in tree.body if isinstance(node, ast.ClassDef)
     }
+    model_args = classes["ModelArgs"]
+    temperature_fields = [
+        node
+        for node in model_args.body
+        if isinstance(node, ast.AnnAssign)
+        and isinstance(node.target, ast.Name)
+        and node.target.id == "temperature"
+    ]
+    assert len(temperature_fields) == 1
+    assert isinstance(temperature_fields[0].value, ast.Constant)
+    assert temperature_fields[0].value.value == 1
     markov_forward = next(
         node
         for node in classes["DSparkMarkovHead"].body
