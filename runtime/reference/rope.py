@@ -6,6 +6,13 @@ result back to BF16.  It uses the phasor conjugate for ``ROPE_INVERSE``.  Pure
 sliding-window layers select base RoPE with theta 10,000; compressed layers
 select theta 160,000 plus the committed YaRN interpolation.
 
+Ordinary query, KV, and attention-output calls consume consecutive phasor
+positions.  Compressor prefill instead slices the same table with its released
+ratio-four or ratio-128 stride; compressor decode supplies the absolute
+``start_pos + 1 - ratio`` row.  This module exposes those table-application
+semantics, but does not claim that a compiler or graph caller selected the
+right schedule.
+
 The development implementation computes powers and ``torch.polar`` on the
 active backend, so their final bits and complex contraction are not portable.
 This reference freezes those otherwise moving choices: mathematical powers
@@ -14,14 +21,18 @@ YaRN operations; sine and cosine are correctly rounded from exact rational
 intervals; complex products use separate binary32 RNE multiply and add/sub
 boundaries; subnormals are preserved; arithmetic zero is canonical positive;
 and an exceptional or overflowing transaction fails without a partial result.
+Logical counters reconcile only the application transaction; the source's
+one-time phasor-table construction is outside them.
 
 This is functional evidence for the two rotary operators only.  It is not a
-CUDA-equivalence, checkpoint-output, cycle, latency, or PPA claim.
+Torch/CUDA-equivalence, checkpoint or service execution, graph-position
+binding, cycle, latency, bandwidth, energy, area, routing, or PPA claim.
 """
 
 from __future__ import annotations
 
 from collections.abc import Sequence
+from dataclasses import dataclass
 from functools import lru_cache
 from fractions import Fraction
 from typing import Final, Literal, TypeAlias
@@ -44,22 +55,48 @@ MODEL_SOURCE_SHA256 = "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2
 INFERENCE_CONFIG_SHA256 = (
     "c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71"
 )
-ROPE_NUMERIC_PROFILE = "opentallas.deepseek_v4_rope_numeric.v1"
+GENERATE_SOURCE_SHA256 = (
+    "775fcfee2344e21a7b02c73161c517763e4348b84cf2eb266353e0857b9c8812"
+)
+ROPE_NUMERIC_PROFILE = "opentallas.deepseek_v4_rope_numeric.v2"
 
 ROPE_DIMENSION = 64
 ROPE_COMPLEX_PAIRS = ROPE_DIMENSION // 2
 MAX_BATCH_SIZE = 4
 MAX_HEAD_COUNT = 64
-MAX_SEQUENCE_LENGTH = 65_536
+BASE_ROPE_THETA = 10_000
+COMPRESSED_ROPE_THETA = 160_000
+YARN_ORIGINAL_SEQUENCE_LENGTH = 65_536
+YARN_FACTOR = 16
+YARN_BETA_FAST = 32
+YARN_BETA_SLOW = 1
+YARN_CORRECTION_LOW = 15
+YARN_CORRECTION_HIGH = 25
+MAX_SEQUENCE_LENGTH = YARN_ORIGINAL_SEQUENCE_LENGTH
 MAX_POSITION = MAX_SEQUENCE_LENGTH - 1
 SUPPORTED_HEAD_WIDTHS = frozenset({64, 128, 512})
+SUPPORTED_POSITION_STRIDES = frozenset({1, 4, 128})
 
 BASE_ROPE_PROFILE = "base"
 COMPRESSED_YARN_ROPE_PROFILE = "compressed_yarn"
 RopeProfile: TypeAlias = Literal["base", "compressed_yarn"]
+BF16Vector: TypeAlias = tuple[int, ...]
+BF16Rank3: TypeAlias = tuple[tuple[BF16Vector, ...], ...]
+BF16Rank4: TypeAlias = tuple[tuple[tuple[BF16Vector, ...], ...], ...]
+BF16RotaryTensor: TypeAlias = BF16Rank3 | BF16Rank4
+
+EXCLUDED_CLAIMS = (
+    "active_backend_torch_polar_bit_equivalence",
+    "cuda_or_accelerator_kernel_equivalence",
+    "checkpoint_execution",
+    "service_engine_execution",
+    "compiler_or_graph_position_binding",
+    "cycles_latency_throughput_bandwidth_energy_area_density_routing_ppa",
+    "end_to_end_model_execution",
+)
 
 _BINARY32_ONE = 0x3F800000
-_BINARY32_SIXTEEN = 0x41800000
+_BINARY32_YARN_FACTOR = 0x41800000
 _BINARY32_MAX_FINITE = 0x7F7FFFFF
 _INITIAL_TRANSCENDENTAL_PRECISION = 96
 
@@ -68,9 +105,59 @@ class RopeReferenceError(ValueError):
     """Raised when a complete rotary transaction must be rejected."""
 
 
-def _sequence(value: object, label: str) -> Sequence[object]:
-    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
-        raise RopeReferenceError(f"{label} must be a sequence")
+@dataclass(frozen=True)
+class RopeCounters:
+    """Exact logical work for one committed rotary tensor transaction."""
+
+    tensor_rank: int
+    batch_count: int
+    sequence_length: int
+    head_count: int
+    head_width: int
+    rope_dimension: int
+    complex_pairs_per_vector: int
+    position_stride: int
+    rotated_vector_count: int
+    input_bf16_values: int
+    prefix_bf16_values_preserved: int
+    rotated_input_bf16_values: int
+    logical_phasor_binary32_values_read: int
+    bf16_to_binary32_exact_widenings: int
+    binary32_multiplications: int
+    binary32_additions_or_subtractions: int
+    conjugated_sine_binary32_values: int
+    binary32_to_bf16_conversions: int
+    output_bf16_values: int
+    transaction_commits: int
+
+    def __post_init__(self) -> None:
+        """Reject forged reconciliation records at the public constructor."""
+
+        _validate_rope_counters(self)
+
+
+@dataclass(frozen=True)
+class RopeResult:
+    """Immutable output and logical reconciliation data for one direction."""
+
+    numeric_profile: str
+    profile: RopeProfile
+    inverse: bool
+    start_position: int
+    last_position: int
+    position_stride: int
+    output_bf16_codes: BF16RotaryTensor
+    counters: RopeCounters
+
+    def __post_init__(self) -> None:
+        """Require a complete immutable result that reconciles to its counters."""
+
+        _validate_rope_result(self)
+
+
+def _sequence(value: object, label: str) -> list[object] | tuple[object, ...]:
+    if type(value) not in {list, tuple}:
+        raise RopeReferenceError(f"{label} must be an exact list or tuple")
     return value
 
 
@@ -83,28 +170,266 @@ def _finite_bf16(code: object, label: str) -> int:
     return code
 
 
+def _counter_integer(value: object, label: str) -> int:
+    if type(value) is not int or value < 0:
+        raise RopeReferenceError(f"{label} must be a nonnegative exact integer")
+    return value
+
+
+def _validate_rope_counters(counters: RopeCounters) -> None:
+    """Validate every scalar and formula in a public counter record."""
+
+    if type(counters) is not RopeCounters:
+        raise RopeReferenceError("counter record must be an exact RopeCounters")
+    names = (
+        "tensor_rank",
+        "batch_count",
+        "sequence_length",
+        "head_count",
+        "head_width",
+        "rope_dimension",
+        "complex_pairs_per_vector",
+        "position_stride",
+        "rotated_vector_count",
+        "input_bf16_values",
+        "prefix_bf16_values_preserved",
+        "rotated_input_bf16_values",
+        "logical_phasor_binary32_values_read",
+        "bf16_to_binary32_exact_widenings",
+        "binary32_multiplications",
+        "binary32_additions_or_subtractions",
+        "conjugated_sine_binary32_values",
+        "binary32_to_bf16_conversions",
+        "output_bf16_values",
+        "transaction_commits",
+    )
+    values = {
+        name: _counter_integer(getattr(counters, name), f"counters.{name}")
+        for name in names
+    }
+    rank = values["tensor_rank"]
+    batch_count = values["batch_count"]
+    sequence_length = values["sequence_length"]
+    head_count = values["head_count"]
+    head_width = values["head_width"]
+    stride = values["position_stride"]
+    if rank not in {3, 4}:
+        raise RopeReferenceError("counters.tensor_rank must be exactly 3 or 4")
+    if not 1 <= batch_count <= MAX_BATCH_SIZE:
+        raise RopeReferenceError(
+            f"counters.batch_count must be in [1, {MAX_BATCH_SIZE}]"
+        )
+    if not 1 <= sequence_length <= MAX_SEQUENCE_LENGTH:
+        raise RopeReferenceError(
+            "counters.sequence_length must be in the pinned table bounds"
+        )
+    if rank == 3 and head_count != 1:
+        raise RopeReferenceError("rank-3 counters must have head_count equal to 1")
+    if rank == 4 and not 1 <= head_count <= MAX_HEAD_COUNT:
+        raise RopeReferenceError(
+            f"rank-4 counters.head_count must be in [1, {MAX_HEAD_COUNT}]"
+        )
+    if head_width not in SUPPORTED_HEAD_WIDTHS:
+        raise RopeReferenceError(
+            "counters.head_width must be an official RoPE call-site width"
+        )
+    if values["rope_dimension"] != ROPE_DIMENSION:
+        raise RopeReferenceError(f"counters.rope_dimension must equal {ROPE_DIMENSION}")
+    if values["complex_pairs_per_vector"] != ROPE_COMPLEX_PAIRS:
+        raise RopeReferenceError(
+            f"counters.complex_pairs_per_vector must equal {ROPE_COMPLEX_PAIRS}"
+        )
+    if stride not in SUPPORTED_POSITION_STRIDES:
+        raise RopeReferenceError(
+            "counters.position_stride must be exactly 1, 4, or 128"
+        )
+
+    vector_count = batch_count * sequence_length * head_count
+    total_values = vector_count * head_width
+    rotated_values = vector_count * ROPE_DIMENSION
+    pair_count = vector_count * ROPE_COMPLEX_PAIRS
+    expected = {
+        "rotated_vector_count": vector_count,
+        "input_bf16_values": total_values,
+        "prefix_bf16_values_preserved": (head_width - ROPE_DIMENSION) * vector_count,
+        "rotated_input_bf16_values": rotated_values,
+        "logical_phasor_binary32_values_read": pair_count * 2,
+        "bf16_to_binary32_exact_widenings": rotated_values,
+        "binary32_multiplications": pair_count * 4,
+        "binary32_additions_or_subtractions": pair_count * 2,
+        "binary32_to_bf16_conversions": rotated_values,
+        "output_bf16_values": total_values,
+        "transaction_commits": 1,
+    }
+    for name, expected_value in expected.items():
+        if values[name] != expected_value:
+            raise RopeReferenceError(
+                f"counters.{name} does not reconcile to the tensor dimensions"
+            )
+    allowed_conjugations = {0, sequence_length * ROPE_COMPLEX_PAIRS}
+    if values["conjugated_sine_binary32_values"] not in allowed_conjugations:
+        raise RopeReferenceError(
+            "counters.conjugated_sine_binary32_values does not reconcile to "
+            "a forward or inverse transaction"
+        )
+
+
+def _immutable_result_shape(value: object) -> tuple[int, ...]:
+    """Validate and shape an exact-tuple BF16 tensor without accepting aliases."""
+
+    if type(value) is not tuple:
+        raise RopeReferenceError(
+            "output_bf16_codes must be a deeply immutable exact-tuple tensor"
+        )
+
+    def visit(current: object, label: str, depth: int) -> tuple[int, ...]:
+        if type(current) is not tuple:
+            if isinstance(current, Sequence) and not isinstance(
+                current,
+                (str, bytes),
+            ):
+                raise RopeReferenceError(
+                    "output_bf16_codes must be deeply immutable exact tuples"
+                )
+            _finite_bf16(current, label)
+            return ()
+        if depth >= 4:
+            raise RopeReferenceError(
+                "output_bf16_codes must be a rank-3 or rank-4 tensor"
+            )
+        if not current:
+            raise RopeReferenceError(f"{label} must not be empty")
+        child_shape: tuple[int, ...] | None = None
+        for index, child in enumerate(current):
+            shape = visit(child, f"{label}[{index}]", depth + 1)
+            if child_shape is None:
+                child_shape = shape
+            elif shape != child_shape:
+                raise RopeReferenceError(
+                    "output_bf16_codes must be a rectangular tensor"
+                )
+        assert child_shape is not None
+        return (len(current), *child_shape)
+
+    shape = visit(value, "output_bf16_codes", 0)
+    if len(shape) not in {3, 4}:
+        raise RopeReferenceError("output_bf16_codes must be a rank-3 or rank-4 tensor")
+    return shape
+
+
+def _validate_rope_result(result: RopeResult) -> None:
+    """Validate public result authority independently of the evaluator path."""
+
+    if type(result) is not RopeResult:
+        raise RopeReferenceError("result record must be an exact RopeResult")
+    if type(result.numeric_profile) is not str or (
+        result.numeric_profile != ROPE_NUMERIC_PROFILE
+    ):
+        raise RopeReferenceError(f"numeric_profile must equal {ROPE_NUMERIC_PROFILE!r}")
+    profile = _profile_name(result.profile)
+    if type(result.inverse) is not bool:
+        raise RopeReferenceError("inverse must be an exact boolean")
+    start = _position(result.start_position, "start_position")
+    last = _position(result.last_position, "last_position")
+    stride = _position_stride(result.position_stride)
+    if stride != 1 and (profile != COMPRESSED_YARN_ROPE_PROFILE or result.inverse):
+        raise RopeReferenceError(
+            "nonunit result position_stride is admitted only for forward "
+            "compressed_yarn compressor-prefill rotation"
+        )
+    if type(result.counters) is not RopeCounters:
+        raise RopeReferenceError("counters must be an exact RopeCounters record")
+    _validate_rope_counters(result.counters)
+    shape = _immutable_result_shape(result.output_bf16_codes)
+    batch_count, sequence_length = shape[:2]
+    if batch_count > MAX_BATCH_SIZE:
+        raise RopeReferenceError(f"output batch size must not exceed {MAX_BATCH_SIZE}")
+    if sequence_length > MAX_SEQUENCE_LENGTH:
+        raise RopeReferenceError(
+            "output sequence length exceeds the pinned position table"
+        )
+    head_count = 1 if len(shape) == 3 else shape[2]
+    if len(shape) == 4 and head_count > MAX_HEAD_COUNT:
+        raise RopeReferenceError(f"output head count must not exceed {MAX_HEAD_COUNT}")
+    head_width = shape[-1]
+    if head_width not in SUPPORTED_HEAD_WIDTHS:
+        raise RopeReferenceError(
+            "output head width must be one of the official RoPE call-site widths"
+        )
+    expected_last = start + (sequence_length - 1) * stride
+    if expected_last > MAX_POSITION or last != expected_last:
+        raise RopeReferenceError(
+            "last_position does not reconcile to start, sequence, and stride"
+        )
+    counters = result.counters
+    dimensions = (
+        counters.tensor_rank,
+        counters.batch_count,
+        counters.sequence_length,
+        counters.head_count,
+        counters.head_width,
+        counters.position_stride,
+    )
+    expected_dimensions = (
+        len(shape),
+        batch_count,
+        sequence_length,
+        head_count,
+        head_width,
+        stride,
+    )
+    if dimensions != expected_dimensions:
+        raise RopeReferenceError(
+            "counters dimensions do not reconcile to output_bf16_codes"
+        )
+    expected_conjugations = (
+        sequence_length * ROPE_COMPLEX_PAIRS if result.inverse else 0
+    )
+    if counters.conjugated_sine_binary32_values != expected_conjugations:
+        raise RopeReferenceError(
+            "inverse direction does not reconcile to the conjugation counter"
+        )
+
+
 def _materialize_tensor(
     value: object,
-) -> tuple[tuple[object, ...], tuple[int, ...]]:
-    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
-        raise RopeReferenceError("input_bf16_codes must be a rank-3 or rank-4 sequence")
+) -> tuple[BF16RotaryTensor, tuple[int, ...]]:
+    if type(value) not in {list, tuple}:
+        raise RopeReferenceError(
+            "input_bf16_codes must be a rank-3 or rank-4 exact list or tuple"
+        )
 
     def visit(
         current: object,
         label: str,
         depth: int,
     ) -> tuple[object, tuple[int, ...]]:
-        if not isinstance(current, Sequence) or isinstance(
-            current, (str, bytes, bytearray)
-        ):
+        if type(current) not in {list, tuple}:
+            if isinstance(current, Sequence) and not isinstance(
+                current,
+                (str, bytes, bytearray),
+            ):
+                raise RopeReferenceError(f"{label} must be an exact list or tuple")
             return _finite_bf16(current, label), ()
         if depth >= 4:
             raise RopeReferenceError(
                 "input_bf16_codes must be a rank-3 or rank-4 tensor"
             )
-        raw = tuple(_sequence(current, label))
+        raw = _sequence(current, label)
         if not raw:
             raise RopeReferenceError(f"{label} must not be empty")
+        if depth == 0 and len(raw) > MAX_BATCH_SIZE:
+            raise RopeReferenceError(
+                f"batch size must not exceed the pinned maximum {MAX_BATCH_SIZE}"
+            )
+        if depth == 1 and len(raw) > MAX_SEQUENCE_LENGTH:
+            raise RopeReferenceError(
+                "sequence length exceeds the pinned 65,536-position table"
+            )
+        if depth in {2, 3} and len(raw) > max(SUPPORTED_HEAD_WIDTHS):
+            raise RopeReferenceError(
+                "input_bf16_codes has an axis larger than the pinned head width"
+            )
         children: list[object] = []
         child_shape: tuple[int, ...] | None = None
         for index, child in enumerate(raw):
@@ -122,7 +447,7 @@ def _materialize_tensor(
     materialized, shape = visit(value, "input_bf16_codes", 0)
     if type(materialized) is not tuple or len(shape) not in {3, 4}:
         raise RopeReferenceError("input_bf16_codes must be a rank-3 or rank-4 tensor")
-    return materialized, shape
+    return materialized, shape  # type: ignore[return-value]
 
 
 def _profile_name(value: object) -> RopeProfile:
@@ -137,6 +462,12 @@ def _profile_name(value: object) -> RopeProfile:
 def _position(value: object, label: str = "position") -> int:
     if type(value) is not int or not 0 <= value <= MAX_POSITION:
         raise RopeReferenceError(f"{label} must be an integer in [0, {MAX_POSITION}]")
+    return value
+
+
+def _position_stride(value: object) -> int:
+    if type(value) is not int or value not in SUPPORTED_POSITION_STRIDES:
+        raise RopeReferenceError("position_stride must be exactly 1, 4, or 128")
     return value
 
 
@@ -184,7 +515,7 @@ def _correctly_rounded_root_power(base: int, index: int) -> int:
 
 @lru_cache(maxsize=2)
 def _frequency_codes(profile: RopeProfile) -> tuple[int, ...]:
-    base = 10_000 if profile == BASE_ROPE_PROFILE else 160_000
+    base = BASE_ROPE_THETA if profile == BASE_ROPE_PROFILE else COMPRESSED_ROPE_THETA
     try:
         frequencies = tuple(
             binary32_divide(
@@ -197,12 +528,21 @@ def _frequency_codes(profile: RopeProfile) -> tuple[int, ...]:
             return frequencies
 
         # The pinned Python correction calculation yields low=15 and high=25
-        # for dim=64, theta=160000, original_seq_len=65536, beta_fast=32,
-        # and beta_slow=1.  Preserve the subsequent source operation order.
+        # for the constants above.  Preserve the subsequent source operation
+        # order after that host-side range selection.
         result: list[int] = []
         for index, frequency in enumerate(frequencies):
             ramp = encode_binary32_rne(
-                max(Fraction(0), min(Fraction(1), Fraction(index - 15, 10)))
+                max(
+                    Fraction(0),
+                    min(
+                        Fraction(1),
+                        Fraction(
+                            index - YARN_CORRECTION_LOW,
+                            YARN_CORRECTION_HIGH - YARN_CORRECTION_LOW,
+                        ),
+                    ),
+                )
             )
             smooth = binary32_add(_BINARY32_ONE, _negate_binary32(ramp))
             one_minus_smooth = binary32_add(
@@ -210,7 +550,7 @@ def _frequency_codes(profile: RopeProfile) -> tuple[int, ...]:
                 _negate_binary32(smooth),
             )
             interpolated = binary32_multiply(
-                binary32_divide(frequency, _BINARY32_SIXTEEN),
+                binary32_divide(frequency, _BINARY32_YARN_FACTOR),
                 one_minus_smooth,
             )
             original = binary32_multiply(frequency, smooth)
@@ -427,21 +767,29 @@ def _rotate_vector(
     return prefix + tuple(output)
 
 
-def apply_rotary_bf16(
+def apply_rotary_bf16_result(
     input_bf16_codes: object,
     start_position: int,
     *,
     profile: RopeProfile = BASE_ROPE_PROFILE,
     inverse: bool = False,
     rope_dimension: int = ROPE_DIMENSION,
-) -> tuple[object, ...]:
-    """Apply the exact pinned suffix rotation to a rank-3 or rank-4 tensor.
+    position_stride: int = 1,
+) -> RopeResult:
+    """Evaluate one exact, atomic suffix-rotation transaction.
 
     Accepted layouts are ``[batch, sequence, width]`` and
     ``[batch, sequence, heads, width]``.  Width is one of the three official
     call-site widths 64, 128, or 512; only its final 64 channels rotate.
-    ``start_position`` names sequence element zero, and positions must remain
-    within the official 65,536-token reference window.
+    ``start_position`` names sequence element zero.  A stride of one covers
+    ordinary query/KV/output calls; strides four and 128 cover the official
+    compressor-prefill frequency slices.  Compressor decode must supply its
+    already adjusted absolute position.  Every sampled position must remain
+    within the pinned 65,536-position interactive table.
+
+    Counters cover tensor application only.  The source constructs its phasor
+    table once at model initialization, so coefficient generation is not
+    charged to each application transaction.
     """
 
     if type(inverse) is not bool:
@@ -452,15 +800,22 @@ def apply_rotary_bf16(
         )
     selected_profile = _profile_name(profile)
     start = _position(start_position, "start_position")
+    stride = _position_stride(position_stride)
+    if stride != 1 and (selected_profile != COMPRESSED_YARN_ROPE_PROFILE or inverse):
+        raise RopeReferenceError(
+            "nonunit position_stride is admitted only for forward "
+            "compressed_yarn compressor-prefill rotation"
+        )
     tensor, shape = _materialize_tensor(input_bf16_codes)
     batch_size, sequence_length = shape[:2]
     if batch_size > MAX_BATCH_SIZE:
         raise RopeReferenceError(
             f"batch size must not exceed the pinned maximum {MAX_BATCH_SIZE}"
         )
-    if start + sequence_length > MAX_SEQUENCE_LENGTH:
+    last_position = start + (sequence_length - 1) * stride
+    if last_position > MAX_POSITION:
         raise RopeReferenceError(
-            "start_position plus sequence length exceeds the official window"
+            "sampled rotary positions exceed the pinned 65,536-position table"
         )
     if len(shape) == 4 and shape[2] > MAX_HEAD_COUNT:
         raise RopeReferenceError(
@@ -474,31 +829,97 @@ def apply_rotary_bf16(
         )
 
     if len(shape) == 3:
-        return tuple(
+        output: BF16RotaryTensor = tuple(
             tuple(
                 _rotate_vector(
                     row,  # type: ignore[arg-type]
-                    _phasors(start + sequence_index, selected_profile),
+                    _phasors(start + sequence_index * stride, selected_profile),
                     inverse=inverse,
                 )
                 for sequence_index, row in enumerate(batch)  # type: ignore[union-attr]
             )
             for batch in tensor
         )
-    return tuple(
-        tuple(
+        head_count = 1
+    else:
+        output = tuple(
             tuple(
-                _rotate_vector(
-                    row,  # type: ignore[arg-type]
-                    _phasors(start + sequence_index, selected_profile),
-                    inverse=inverse,
+                tuple(
+                    _rotate_vector(
+                        row,  # type: ignore[arg-type]
+                        _phasors(
+                            start + sequence_index * stride,
+                            selected_profile,
+                        ),
+                        inverse=inverse,
+                    )
+                    for row in heads  # type: ignore[union-attr]
                 )
-                for row in heads  # type: ignore[union-attr]
+                for sequence_index, heads in enumerate(batch)  # type: ignore[union-attr]
             )
-            for sequence_index, heads in enumerate(batch)  # type: ignore[union-attr]
+            for batch in tensor
         )
-        for batch in tensor
+        head_count = shape[2]
+
+    vector_count = batch_size * sequence_length * head_count
+    total_values = vector_count * width
+    rotated_values = vector_count * ROPE_DIMENSION
+    pair_count = vector_count * ROPE_COMPLEX_PAIRS
+    counters = RopeCounters(
+        tensor_rank=len(shape),
+        batch_count=batch_size,
+        sequence_length=sequence_length,
+        head_count=head_count,
+        head_width=width,
+        rope_dimension=ROPE_DIMENSION,
+        complex_pairs_per_vector=ROPE_COMPLEX_PAIRS,
+        position_stride=stride,
+        rotated_vector_count=vector_count,
+        input_bf16_values=total_values,
+        prefix_bf16_values_preserved=(width - ROPE_DIMENSION) * vector_count,
+        rotated_input_bf16_values=rotated_values,
+        logical_phasor_binary32_values_read=pair_count * 2,
+        bf16_to_binary32_exact_widenings=rotated_values,
+        binary32_multiplications=pair_count * 4,
+        binary32_additions_or_subtractions=pair_count * 2,
+        conjugated_sine_binary32_values=(
+            sequence_length * ROPE_COMPLEX_PAIRS if inverse else 0
+        ),
+        binary32_to_bf16_conversions=rotated_values,
+        output_bf16_values=total_values,
+        transaction_commits=1,
     )
+    return RopeResult(
+        numeric_profile=ROPE_NUMERIC_PROFILE,
+        profile=selected_profile,
+        inverse=inverse,
+        start_position=start,
+        last_position=last_position,
+        position_stride=stride,
+        output_bf16_codes=output,
+        counters=counters,
+    )
+
+
+def apply_rotary_bf16(
+    input_bf16_codes: object,
+    start_position: int,
+    *,
+    profile: RopeProfile = BASE_ROPE_PROFILE,
+    inverse: bool = False,
+    rope_dimension: int = ROPE_DIMENSION,
+    position_stride: int = 1,
+) -> BF16RotaryTensor:
+    """Return only the tensor output of :func:`apply_rotary_bf16_result`."""
+
+    return apply_rotary_bf16_result(
+        input_bf16_codes,
+        start_position,
+        profile=profile,
+        inverse=inverse,
+        rope_dimension=rope_dimension,
+        position_stride=position_stride,
+    ).output_bf16_codes
 
 
 def rope_apply_bf16(
@@ -507,7 +928,8 @@ def rope_apply_bf16(
     *,
     profile: RopeProfile = BASE_ROPE_PROFILE,
     rope_dimension: int = ROPE_DIMENSION,
-) -> tuple[object, ...]:
+    position_stride: int = 1,
+) -> BF16RotaryTensor:
     """Execute pinned ``ROPE_APPLY``."""
 
     return apply_rotary_bf16(
@@ -516,6 +938,7 @@ def rope_apply_bf16(
         profile=profile,
         inverse=False,
         rope_dimension=rope_dimension,
+        position_stride=position_stride,
     )
 
 
@@ -525,7 +948,8 @@ def rope_inverse_bf16(
     *,
     profile: RopeProfile = BASE_ROPE_PROFILE,
     rope_dimension: int = ROPE_DIMENSION,
-) -> tuple[object, ...]:
+    position_stride: int = 1,
+) -> BF16RotaryTensor:
     """Execute pinned ``ROPE_INVERSE`` with conjugate phasors."""
 
     return apply_rotary_bf16(
@@ -534,6 +958,7 @@ def rope_inverse_bf16(
         profile=profile,
         inverse=True,
         rope_dimension=rope_dimension,
+        position_stride=position_stride,
     )
 
 
@@ -544,13 +969,22 @@ _COMPRESSED_FREQUENCIES: Final = _frequency_codes(COMPRESSED_YARN_ROPE_PROFILE)
 if (
     len(_BASE_FREQUENCIES) != ROPE_COMPLEX_PAIRS
     or len(_COMPRESSED_FREQUENCIES) != ROPE_COMPLEX_PAIRS
+    or _BINARY32_YARN_FACTOR != encode_binary32_rne(YARN_FACTOR)
 ):  # pragma: no cover - committed-module invariant
     raise RuntimeError("committed DeepSeek V4 RoPE frequency closure differs")
 
 
 __all__ = [
     "BASE_ROPE_PROFILE",
+    "BASE_ROPE_THETA",
+    "BF16Rank3",
+    "BF16Rank4",
+    "BF16RotaryTensor",
+    "BF16Vector",
     "COMPRESSED_YARN_ROPE_PROFILE",
+    "COMPRESSED_ROPE_THETA",
+    "EXCLUDED_CLAIMS",
+    "GENERATE_SOURCE_SHA256",
     "INFERENCE_CONFIG_SHA256",
     "MAX_BATCH_SIZE",
     "MAX_HEAD_COUNT",
@@ -562,10 +996,20 @@ __all__ = [
     "ROPE_COMPLEX_PAIRS",
     "ROPE_DIMENSION",
     "ROPE_NUMERIC_PROFILE",
+    "RopeCounters",
     "RopeProfile",
     "RopeReferenceError",
+    "RopeResult",
     "SUPPORTED_HEAD_WIDTHS",
+    "SUPPORTED_POSITION_STRIDES",
+    "YARN_BETA_FAST",
+    "YARN_BETA_SLOW",
+    "YARN_CORRECTION_HIGH",
+    "YARN_CORRECTION_LOW",
+    "YARN_FACTOR",
+    "YARN_ORIGINAL_SEQUENCE_LENGTH",
     "apply_rotary_bf16",
+    "apply_rotary_bf16_result",
     "rope_apply_bf16",
     "rope_frequency_binary32_codes",
     "rope_inverse_bf16",
