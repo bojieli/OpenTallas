@@ -1,0 +1,36 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre/operator_coverage_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "execution_coverage": { "const": "none" },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "numeric_contract_coverage": { "const": "SPEC-NUM 1.1 NUM-6.10" },
+    "packaged_operator_kind": { "const": "HC_PRE" },
+    "parameter_coverage": { "const": "all_three_learned_resources_for_one_site" },
+    "schema": { "const": "opentallas.deepseek_v4_hc_pre_coverage.v1" },
+    "site": {
+      "additionalProperties": false,
+      "properties": {
+        "branch": { "const": "attention" },
+        "layer": { "const": 0 },
+        "scope": { "const": "main" }
+      },
+      "required": ["branch", "layer", "scope"],
+      "type": "object"
+    },
+    "status": { "const": "complete_operator_artifact_contract_not_execution_evidence" }
+  },
+  "required": [
+    "execution_coverage",
+    "model_id",
+    "numeric_contract_coverage",
+    "packaged_operator_kind",
+    "parameter_coverage",
+    "schema",
+    "site",
+    "status"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE artifact coverage v1",
+  "type": "object"
+}

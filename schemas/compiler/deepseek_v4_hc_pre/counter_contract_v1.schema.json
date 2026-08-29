@@ -1,0 +1,110 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre/counter_contract_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "command_scaling": {
+      "additionalProperties": false,
+      "properties": {
+        "fixed_counters": { "const": "per_token_coefficient_times_batch_times_sequence" },
+        "poisoned_command": { "const": "no_success_counter_commit" },
+        "saturation_counter": { "const": "exact_observed_final_bf16_clamp_count" }
+      },
+      "required": ["fixed_counters", "poisoned_command", "saturation_counter"],
+      "type": "object"
+    },
+    "data_dependent": {
+      "additionalProperties": false,
+      "properties": {
+        "hc_pre_branch_bf16_saturations": {
+          "additionalProperties": false,
+          "properties": {
+            "maximum_per_token": { "const": 4096 },
+            "minimum_per_token": { "const": 0 }
+          },
+          "required": ["maximum_per_token", "minimum_per_token"],
+          "type": "object"
+        }
+      },
+      "required": ["hc_pre_branch_bf16_saturations"],
+      "type": "object"
+    },
+    "evidence_boundary": {
+      "const": "Semantic reconciliation coefficients only; not instruction, traffic, cycle, throughput, energy, area, or PPA evidence."
+    },
+    "numeric_profile_id": { "const": "opentallas.deepseek_v4_hc_pre_numeric.v1" },
+    "per_successfully_committed_token": {
+      "additionalProperties": false,
+      "properties": {
+        "hc_pre_branch_bf16_conversions": { "const": 4096 },
+        "hc_pre_branch_coefficient_multiplies": { "const": 16384 },
+        "hc_pre_branch_reduction_adds": { "const": 12288 },
+        "hc_pre_coefficient_epsilon_adds": { "const": 4 },
+        "hc_pre_exp_evaluations": { "const": 16 },
+        "hc_pre_field_affine_adds": { "const": 24 },
+        "hc_pre_field_affine_multiplies": { "const": 24 },
+        "hc_pre_input_bf16_values": { "const": 16384 },
+        "hc_pre_post_factor_multiplies": { "const": 4 },
+        "hc_pre_projection_product_accumulates": { "const": 393216 },
+        "hc_pre_projection_rms_multiplies": { "const": 24 },
+        "hc_pre_residual_bf16_values_preserved": { "const": 16384 },
+        "hc_pre_rms_divides": { "const": 1 },
+        "hc_pre_rms_epsilon_adds": { "const": 1 },
+        "hc_pre_rms_reduction_adds": { "const": 16383 },
+        "hc_pre_rms_square_multiplies": { "const": 16384 },
+        "hc_pre_rsqrt_evaluations": { "const": 1 },
+        "hc_pre_sigmoid_evaluations": { "const": 8 },
+        "hc_pre_sinkhorn_column_reduction_adds": { "const": 240 },
+        "hc_pre_sinkhorn_column_stages": { "const": 20 },
+        "hc_pre_sinkhorn_divides": { "const": 640 },
+        "hc_pre_sinkhorn_epsilon_adds": { "const": 172 },
+        "hc_pre_sinkhorn_row_reduction_adds": { "const": 240 },
+        "hc_pre_sinkhorn_row_stages": { "const": 20 },
+        "hc_pre_softmax_max_comparisons": { "const": 12 },
+        "hc_pre_softmax_subtracts": { "const": 16 }
+      },
+      "required": [
+        "hc_pre_branch_bf16_conversions",
+        "hc_pre_branch_coefficient_multiplies",
+        "hc_pre_branch_reduction_adds",
+        "hc_pre_coefficient_epsilon_adds",
+        "hc_pre_exp_evaluations",
+        "hc_pre_field_affine_adds",
+        "hc_pre_field_affine_multiplies",
+        "hc_pre_input_bf16_values",
+        "hc_pre_post_factor_multiplies",
+        "hc_pre_projection_product_accumulates",
+        "hc_pre_projection_rms_multiplies",
+        "hc_pre_residual_bf16_values_preserved",
+        "hc_pre_rms_divides",
+        "hc_pre_rms_epsilon_adds",
+        "hc_pre_rms_reduction_adds",
+        "hc_pre_rms_square_multiplies",
+        "hc_pre_rsqrt_evaluations",
+        "hc_pre_sigmoid_evaluations",
+        "hc_pre_sinkhorn_column_reduction_adds",
+        "hc_pre_sinkhorn_column_stages",
+        "hc_pre_sinkhorn_divides",
+        "hc_pre_sinkhorn_epsilon_adds",
+        "hc_pre_sinkhorn_row_reduction_adds",
+        "hc_pre_sinkhorn_row_stages",
+        "hc_pre_softmax_max_comparisons",
+        "hc_pre_softmax_subtracts"
+      ],
+      "type": "object"
+    },
+    "schema": { "const": "opentallas.deepseek_v4_hc_pre_counter_contract.v1" },
+    "specification": { "const": "SPEC-NUM 1.1 NUM-6.10.6" }
+  },
+  "required": [
+    "command_scaling",
+    "data_dependent",
+    "evidence_boundary",
+    "numeric_profile_id",
+    "per_successfully_committed_token",
+    "schema",
+    "specification"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE semantic counter contract v1",
+  "type": "object"
+}
