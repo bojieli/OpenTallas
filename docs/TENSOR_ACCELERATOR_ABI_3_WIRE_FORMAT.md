@@ -431,6 +431,7 @@ remain normative.
 | A11 | the KV append operand row | operator conventions, section 15 |
 | A12 | `SPAN_LAST_INDEX` | this document, section 12.3 |
 | A13 | the partial final iteration of a block loop | this document, section 12.4 |
+| A14 | the scope of a collective's participants | this document, section 12.5 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a
@@ -494,3 +495,51 @@ program the two statements of the rule are provably the same rule.
 Nothing about the descriptor changes. A13 fixes the *interpretation* of an
 existing field combination that was previously unstated, which is why it is
 recorded here rather than left in one implementation's resolver.
+
+### 12.5 Amendment A14 — the scope of a collective's participants
+
+A `COMMUNICATION` descriptor gains a `participant_scope` at payload offset 80,
+one byte, taking `NODE = 0`, `RETICLE = 1`, `TILE = 2`. The reserved span
+shrinks from 48 bytes at offset 80 to 47 at offset 81.
+
+`_participants` derives a collective's member set from the admitted topology.
+Until now it derived that set from `node_count` alone, so participants were
+always nodes. That is right for a cluster and unusable for a wafer. A
+`WAFER_LOGICAL_DEVICE` is presented to the host as one device — that is what the
+topology class *means* — so it declares one node, and every collective on it is
+therefore a collective over a single participant, which the engine correctly
+refuses as degenerate. The DeepSeek wafer deployment builds, verifies and proves
+its inverse over all 156 GB, and cannot execute a single one of its five
+collective services.
+
+The descriptor already knew better than the engine did. `TOPOLOGY` carries
+`reticle_count` and `tiles_per_reticle` beside `node_count`, and
+`local_reticle_id` and `local_tile_id` beside `local_node_id`: the wafer's
+structure was modelled from the start. Only the participant derivation was
+node-only. So the member count is now
+
+```
+NODE     -> node_count
+RETICLE  -> reticle_count
+TILE     -> reticle_count * tiles_per_reticle
+```
+
+with `group_id` partitioning that set exactly as before, and the degenerate-set
+refusal unchanged: a collective over one participant is still an error at any
+scope, because a one-endpoint transfer is `LINK.SEND`.
+
+Two admission rules keep the field honest. A scope the topology cannot support
+is refused — `RETICLE` against a zero `reticle_count`, `TILE` against a zero
+`tiles_per_reticle`. And a `SINGLE_CHIP` topology admits only `NODE`, because a
+chip has no reticle or tile fabric to address.
+
+This is additive in the strict sense. Reserved bytes must be zero, checked on
+both encode and decode, so every program written before this amendment carries
+zero at offset 80 and therefore means `NODE` — the behaviour it already had. No
+existing deployment changes, and no byte of any existing program moves.
+
+The alternative was to declare the wafer's `node_count` to be its reticle count.
+That would make the collectives run and would delete the distinction the
+topology class exists to draw, leaving nothing in the deployment to say the
+thing is one logical device. Making the fabric addressable is the change that
+was actually needed; renaming its nodes is not.
