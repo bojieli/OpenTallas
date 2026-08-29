@@ -23,6 +23,8 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Production DMA/ADD sequencing | `ot_ta_dma_add_sequencer.sv` | One-command-at-a-time dispatch, monotonic submitted indices, shared SRAM write ownership, stable aggregate counters, explicit last-command completion, and fail-stop error handling | QW-RTL-DMA-ADD-001 |
 | Production RMSNorm arithmetic and SRAM control | `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv` | Finite FP32 RNE arithmetic, correctly rounded reciprocal square root, canonical 4,096-element balanced reduction, complete-pass buffered writeback, exact SRAM counters, and numeric-fault write suppression | QW-RTL-DMA-RMS-001 |
 | Production DMA/RMSNorm sequencing | `ot_ta_dma_rmsnorm_sequencer.sv` | Adjacent authentic command-1/command-2 dispatch, monotonic indices, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-RMS-001 |
+| Production BF16 MATMUL SRAM control | `ot_fp32_rne_pkg.sv`, `ot_ta_matmul_bf16_sram_engine.sv` | Signed finite FP32 RNE accumulation, fixed `1 x 64 x 256` initial tile, streamed weight validation, complete-tile buffered FP32 writeback, no non-final BF16 write, exact counters, and numeric-fault write suppression | QW-RTL-DMA-MATMUL-001 |
+| Production DMA/MATMUL sequencing | `ot_ta_dma_matmul_sequencer.sv` | Exact adjacent command-3/command-4 dispatch, strict two-command profile/order, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-MATMUL-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
@@ -114,7 +116,7 @@ header/body CRC, COMPLETE-command handling, timing, and `TA-RTL-6` remain open.
 QW-RTL-DMA-RMS-001 is retained as vector set
 `ce2a725cc574f334273dbfdc93e6fab7fc4da48df8d2d4087f22307635212d81`
 and campaign
-`5fd24c36de35d32aa390a732040cd7888d474e0a06416de13ca740a7191441fd`.
+`5868f7e4e0f4b80f74ec968a2a538380ac5409ffb45b9cc3e49a719b57247ae6`.
 It executes adjacent authentic Qwen command 1 and command 2. The DMA stages the
 exact 8,192-byte `model.layers.0.input_layernorm.weight` payload, then the new
 RMSNorm engine consumes it with the preloaded authentic `hidden.0` embedding
@@ -133,6 +135,25 @@ graph-valid RMSNorm operation only. `hidden.0` is behaviorally preloaded;
 embedding command 0, physical HBM/SRAM, banking, ECC, arbitration, program
 authentication/`COMPLETE`, a representative layer, timing, activity-derived
 power/IR, and `TA-RTL-6` remain open.
+
+QW-RTL-DMA-MATMUL-001 is retained as vector set
+`ad2d94e71e7a24d98e92cff7a097d616e3c84e3540d033650119d81dbaaa1dc5`
+and campaign
+`02733c4556fdeb9abac45735df80abd440bcbfc2edaf01998e3e0522c6588478`.
+It executes adjacent authentic Qwen commands 3 and 4. The DMA stages the first
+32,768-byte `q_proj` tile, and the MATMUL engine consumes 256 retained
+`attention_norm` values plus 16,384 BF16 weights to write 64 exact FP32
+accumulators. Both simulators first check 20,000 general signed FP32 additions,
+then reconcile all HBM/SRAM transactions and arithmetic events under stalls.
+Seven fail-stop cases cover CRC, HBM response, order, nonfinite operands, and
+multiply/add overflow; all numeric faults suppress both accumulator and
+auxiliary writes.
+
+Command 4 has `MATMUL_INIT` but not `MATMUL_FINAL`; its zero auxiliary-write
+count is required behavior. It is only the first of 1,024 tile pairs spanning
+commands 3 through 2,050 for `node.0002`. The complete Q projection, BF16
+finalization, physical HBM/SRAM, banking, ECC, arbitration, representative
+layer, timing, power/IR, and `TA-RTL-6` remain open.
 
 The bounded IHP SG13G2 physical campaign for
 `ot_ta_add_bf16_sram_engine` is retained as

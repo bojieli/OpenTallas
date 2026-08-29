@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_dma_matmul_campaign_v1.schema.json",
+  "title": "Qwen first q_proj DMA plus MATMUL RTL campaign v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "arithmetic_correlation",
+    "build_id",
+    "campaign_id",
+    "cases",
+    "claim_boundary",
+    "command_program_sha256",
+    "program_correlation",
+    "schema",
+    "simulators",
+    "source_sha256",
+    "status",
+    "tools",
+    "vector_set_id"
+  ],
+  "properties": {
+    "arithmetic_correlation": {
+      "const": {
+        "finite_success_cases": 19367,
+        "nonfinite_rejection_cases": 597,
+        "oracle": "independent_exact_scalar_fraction",
+        "overflow_rejection_cases": 36,
+        "seed_hex": "5157454e334d4154",
+        "signed_add_cases": 20000
+      }
+    },
+    "build_id": {
+      "const": "3460d88ce16f5ef0ca4d1277daf8ebb19ae555e88822f95d55deb4aa8cad290f"
+    },
+    "campaign_id": {"$ref": "#/$defs/sha256"},
+    "cases": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "prefixItems": [
+        {"$ref": "#/$defs/signed_add_iverilog_case"},
+        {"$ref": "#/$defs/signed_add_verilator_case"},
+        {"$ref": "#/$defs/program_iverilog_case"},
+        {"$ref": "#/$defs/program_verilator_case"}
+      ],
+      "items": false
+    },
+    "claim_boundary": {
+      "const": {
+        "activity_derived_power_or_timing": false,
+        "authentic_command_records": true,
+        "behavioral_hbm_and_sram": true,
+        "bf16_final_output_written": false,
+        "complete_layer_execution": false,
+        "complete_matmul_command": true,
+        "complete_q_projection_graph_operation": false,
+        "graph_valid_qwen_command_slice": true,
+        "preloaded_attention_norm_slice": true,
+        "program_order_and_fail_stop": true,
+        "qualified_hbm_phy": false,
+        "qualified_sram_macro": false,
+        "raw_fp32_accumulator_tile_written": true,
+        "signed_fp32_add_differential": true,
+        "ta_rtl_6_closed": false
+      }
+    },
+    "command_program_sha256": {
+      "const": "f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec"
+    },
+    "program_correlation": {
+      "const": {
+        "accumulator_payload_sha256": "c82ca04197419306b6bbc545be882163e3ccccfb013773107541d3441dee8776",
+        "accumulator_write_count": 64,
+        "auxiliary_write_count": 0,
+        "command_indices": [3, 4],
+        "crc_fail_stop_cases": 1,
+        "dma_hbm_bytes": 32768,
+        "dma_hbm_request_count": 512,
+        "dma_sram_write_count": 2048,
+        "graph_operation_id": "node.0002",
+        "hbm_response_fail_stop_cases": 1,
+        "input_payload_sha256": "3e95a6a07ba5eff942a866e767b856aeb6d83def5b7f12d55983acb2afdb2551",
+        "matmul_add_count": 16384,
+        "matmul_input_read_count": 256,
+        "matmul_multiply_count": 16384,
+        "matmul_weight_read_count": 16384,
+        "numeric_fail_stop_cases": 4,
+        "program_order_fail_stop_cases": 1,
+        "weight_tile_payload_sha256": "c9b6213f04cfd269acdb7124e76d3b9775965145d15defb663f02e21e34418bc",
+        "write_suppression_numeric_fault_cases": 4
+      }
+    },
+    "schema": {
+      "const": "opentallas.tensor_accelerator.qwen_rtl_dma_matmul_campaign.v1"
+    },
+    "simulators": {"const": ["iverilog", "verilator"]},
+    "source_sha256": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/sha256"},
+      "minProperties": 16
+    },
+    "status": {"enum": ["fail", "pass"]},
+    "tools": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["iverilog", "verilator"],
+      "properties": {
+        "iverilog": {"type": "string", "minLength": 1},
+        "verilator": {"type": "string", "minLength": 1}
+      }
+    },
+    "vector_set_id": {
+      "const": "ad2d94e71e7a24d98e92cff7a097d616e3c84e3540d033650119d81dbaaa1dc5"
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command", "compile_log", "compile_returncode", "log_sha256",
+        "name", "run_log", "run_returncode", "status"
+      ],
+      "properties": {
+        "command": {"type": "string", "minLength": 1},
+        "compile_log": {"type": "string"},
+        "compile_returncode": {"type": "integer"},
+        "log_sha256": {"$ref": "#/$defs/sha256"},
+        "name": {"type": "string"},
+        "run_log": {"type": "string"},
+        "run_returncode": {"type": ["integer", "null"]},
+        "status": {"enum": ["fail", "pass"]}
+      }
+    },
+    "signed_add_iverilog_case": {
+      "allOf": [
+        {"$ref": "#/$defs/case"},
+        {"properties": {"name": {"const": "signed_add_iverilog"}}}
+      ]
+    },
+    "signed_add_verilator_case": {
+      "allOf": [
+        {"$ref": "#/$defs/case"},
+        {"properties": {"name": {"const": "signed_add_verilator"}}}
+      ]
+    },
+    "program_iverilog_case": {
+      "allOf": [
+        {"$ref": "#/$defs/case"},
+        {"properties": {"name": {"const": "program_iverilog"}}}
+      ]
+    },
+    "program_verilator_case": {
+      "allOf": [
+        {"$ref": "#/$defs/case"},
+        {"properties": {"name": {"const": "program_verilator"}}}
+      ]
+    }
+  }
+}
