@@ -2,9 +2,12 @@ from __future__ import annotations
 
 import ast
 from copy import deepcopy
-from dataclasses import FrozenInstanceError, fields
+from dataclasses import FrozenInstanceError, fields, replace
 from fractions import Fraction
+import hashlib
+import json
 from pathlib import Path
+import re
 
 import pytest
 
@@ -31,6 +34,8 @@ from runtime.reference.hc_head import (
     HC_HEAD_NUMERIC_PROFILE,
     HC_MULTIPLIER,
     HIDDEN_SIZE,
+    INFERENCE_CONFIG_EXPECTED_FIELDS,
+    INFERENCE_CONFIG_PATH,
     INFERENCE_CONFIG_SHA256,
     MAX_TOKEN_COUNT,
     MIN_TOKEN_COUNT,
@@ -40,6 +45,7 @@ from runtime.reference.hc_head import (
     MODEL_SOURCE_SHA256,
     NORMALIZATION_EPSILON_BINARY32,
     PROJECTION_ROWS,
+    SOURCE_EXPRESSIONS,
     HCHeadCounters,
     HCHeadDiagnostics,
     HCHeadReferenceError,
@@ -101,6 +107,7 @@ def test_contract_is_bound_to_the_pinned_release_and_exact_shapes() -> None:
     assert MODEL_SOURCE_SHA256 == (
         "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
     )
+    assert INFERENCE_CONFIG_PATH == "inference/config.json"
     assert INFERENCE_CONFIG_SHA256 == (
         "c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71"
     )
@@ -112,9 +119,53 @@ def test_contract_is_bound_to_the_pinned_release_and_exact_shapes() -> None:
     assert FLATTENED_WIDTH_BINARY32 == 0x46800000
     assert NORMALIZATION_EPSILON_BINARY32 == HC_EPSILON_BINARY32 == 0x358637BD
     assert (BF16_BYTES, F32_BYTES) == (2, 4)
+    assert INFERENCE_CONFIG_EXPECTED_FIELDS == (("dim", 4096), ("hc_mult", 4))
+    assert SOURCE_EXPRESSIONS == (
+        "x = x.flatten(2).float()",
+        "rsqrt = torch.rsqrt(x.square().mean(-1, keepdim=True) + self.norm_eps)",
+        "mixes = F.linear(x, hc_fn) * rsqrt",
+        "pre = torch.sigmoid(mixes * hc_scale + hc_base) + self.hc_eps",
+        "y = torch.sum(pre.unsqueeze(-1) * x.view(shape), dim=2)",
+        "return y.to(dtype)",
+        "self.hc_head_fn = nn.Parameter(torch.empty(hc_mult, hc_dim))",
+        "self.hc_head_base = nn.Parameter(torch.empty(hc_mult))",
+        "self.hc_head_scale = nn.Parameter(torch.empty(1))",
+    )
 
 
-def test_production_reference_has_no_framework_host_float_or_compiler_dependency() -> None:
+def _compact_source(value: str) -> str:
+    return re.sub(r"[\s()]", "", value)
+
+
+def test_cached_official_source_and_inference_config_content_when_available() -> None:
+    snapshot = (
+        Path.home()
+        / ".cache/huggingface/hub"
+        / "models--deepseek-ai--DeepSeek-V4-Flash-0731"
+        / "snapshots"
+        / MODEL_REVISION
+    )
+    source_path = snapshot / MODEL_SOURCE_PATH
+    config_path = snapshot / INFERENCE_CONFIG_PATH
+    if not source_path.is_file() or not config_path.is_file():
+        pytest.skip("pinned official source/config are not in the local HF cache")
+
+    source_bytes = source_path.read_bytes()
+    config_bytes = config_path.read_bytes()
+    assert hashlib.sha256(source_bytes).hexdigest() == MODEL_SOURCE_SHA256
+    assert hashlib.sha256(config_bytes).hexdigest() == INFERENCE_CONFIG_SHA256
+    compact_source = _compact_source(source_bytes.decode("utf-8"))
+    for expression in SOURCE_EXPRESSIONS:
+        assert _compact_source(expression) in compact_source
+    config = json.loads(config_bytes)
+    for field, expected in INFERENCE_CONFIG_EXPECTED_FIELDS:
+        assert type(config[field]) is int
+        assert config[field] == expected
+
+
+def test_production_reference_has_no_framework_host_float_or_compiler_dependency() -> (
+    None
+):
     source_path = ROOT / "runtime/reference/hc_head.py"
     source = source_path.read_text(encoding="utf-8")
     tree = ast.parse(source)
@@ -145,6 +196,7 @@ def test_production_reference_has_no_framework_host_float_or_compiler_dependency
 def test_zero_transaction_fixes_every_numeric_boundary_and_counter() -> None:
     result = _execute()
     coefficient = 0x3F000011
+    assert result.numeric_profile == HC_HEAD_NUMERIC_PROFILE
     assert result.output_bf16_codes == (ZERO_STREAM,)
     assert result.coefficient_binary32_codes == ((coefficient,) * 4,)
     assert result.output_saturation_count == 0
@@ -317,10 +369,10 @@ def test_maximum_command_extent_and_counters_are_shape_derived() -> None:
     assert result.counters.transaction_commits == 1
 
 
-def test_signed_zero_and_subnormal_inputs_are_valid_and_caller_data_is_immutable() -> None:
-    token_lists = [
-        [[0] * HIDDEN_SIZE for _ in range(HC_MULTIPLIER)]
-    ]
+def test_signed_zero_and_subnormal_inputs_are_valid_and_caller_data_is_immutable() -> (
+    None
+):
+    token_lists = [[[0] * HIDDEN_SIZE for _ in range(HC_MULTIPLIER)]]
     token_lists[0][0][0] = 0x8000
     token_lists[0][1][0] = 0x0001
     before = deepcopy(token_lists)
@@ -356,7 +408,10 @@ def test_numeric_profile_cannot_be_overridden(kwargs: dict, match: str) -> None:
         (((ZERO_STREAM,) * 3,), "exactly 4 HC streams"),
         ((((0,) * (HIDDEN_SIZE - 1),) + (ZERO_STREAM,) * 3,), "exactly 4096"),
         ((((True,) + (0,) * (HIDDEN_SIZE - 1),) + (ZERO_STREAM,) * 3,), "16-bit BF16"),
-        ((((0x7F80,) + (0,) * (HIDDEN_SIZE - 1),) + (ZERO_STREAM,) * 3,), "finite BF16"),
+        (
+            (((0x7F80,) + (0,) * (HIDDEN_SIZE - 1),) + (ZERO_STREAM,) * 3,),
+            "finite BF16",
+        ),
     ],
 )
 def test_malformed_or_nonfinite_input_fails_closed(inputs: object, match: str) -> None:
@@ -389,7 +444,10 @@ def test_malformed_scale_or_base_fails_before_projection(
         ((), "exactly 4 rows"),
         ((ZERO_PROJECTION_ROW,) * 3, "exactly 4 rows"),
         (((0,) * (FLATTENED_WIDTH - 1),) + ZERO_PROJECTION[1:], "exactly 16384"),
-        (((0x7F800000,) + (0,) * (FLATTENED_WIDTH - 1),) + ZERO_PROJECTION[1:], "finite binary32"),
+        (
+            ((0x7F800000,) + (0,) * (FLATTENED_WIDTH - 1),) + ZERO_PROJECTION[1:],
+            "finite binary32",
+        ),
         ((range(FLATTENED_WIDTH),) + ZERO_PROJECTION[1:], "exact list or tuple"),
     ],
 )
@@ -407,8 +465,188 @@ def test_projection_overflow_poison_is_atomic() -> None:
     assert token == before
 
 
+def test_public_counter_constructor_validates_every_integer_and_formula() -> None:
+    counters = _execute().counters
+    for field in fields(counters):
+        with pytest.raises(HCHeadReferenceError, match="exact nonnegative integer"):
+            replace(counters, **{field.name: True})
+
+    for field in fields(counters):
+        if field.name == "output_bf16_saturations":
+            continue
+        with pytest.raises(HCHeadReferenceError):
+            replace(
+                counters,
+                **{field.name: getattr(counters, field.name) + 1},
+            )
+    with pytest.raises(HCHeadReferenceError, match="exceeds output conversions"):
+        replace(
+            counters,
+            output_bf16_saturations=counters.output_bf16_values + 1,
+        )
+
+
+def test_public_diagnostics_require_deeply_immutable_exact_shapes() -> None:
+    diagnostics = _execute().diagnostics
+    with pytest.raises(HCHeadReferenceError, match="deeply immutable"):
+        replace(
+            diagnostics,
+            mean_square_codes=list(diagnostics.mean_square_codes),
+        )
+    with pytest.raises(HCHeadReferenceError, match="deeply immutable"):
+        replace(
+            diagnostics,
+            projection_codes=(list(diagnostics.projection_codes[0]),),
+        )
+    with pytest.raises(HCHeadReferenceError, match="exactly 4 values"):
+        replace(
+            diagnostics,
+            projection_codes=(diagnostics.projection_codes[0][:-1],),
+        )
+    with pytest.raises(HCHeadReferenceError, match="32-bit binary32"):
+        replace(diagnostics, mean_square_codes=(True,))
+    with pytest.raises(HCHeadReferenceError, match="finite binary32"):
+        replace(diagnostics, affine_codes=((0x7F800000, 0, 0, 0),))
+
+
+def test_public_diagnostics_reconcile_every_retained_numeric_derivation() -> None:
+    diagnostics = _execute().diagnostics
+    with pytest.raises(HCHeadReferenceError, match="nonnegative"):
+        replace(diagnostics, mean_square_codes=(0x80000000,))
+    with pytest.raises(HCHeadReferenceError, match="positive"):
+        replace(diagnostics, inverse_rms_codes=(0,))
+    with pytest.raises(HCHeadReferenceError, match="inverse-RMS"):
+        replace(diagnostics, inverse_rms_codes=(ONE_F32,))
+    with pytest.raises(HCHeadReferenceError, match="normalized projections"):
+        replace(diagnostics, projection_codes=((ONE_F32, 0, 0, 0),))
+    with pytest.raises(HCHeadReferenceError, match="normalized projections"):
+        replace(
+            diagnostics,
+            normalized_projection_codes=((ONE_F32, 0, 0, 0),),
+        )
+    with pytest.raises(HCHeadReferenceError, match="sigmoid codes"):
+        replace(diagnostics, affine_codes=((ONE_F32, 0, 0, 0),))
+    with pytest.raises(HCHeadReferenceError, match="sigmoid codes"):
+        replace(diagnostics, sigmoid_codes=((0, 0x3F000000, 0x3F000000, 0x3F000000),))
+    with pytest.raises(HCHeadReferenceError, match="coefficient codes"):
+        replace(
+            diagnostics, coefficient_codes=((0, 0x3F000011, 0x3F000011, 0x3F000011),)
+        )
+
+
+@pytest.mark.parametrize("profile", [True, 0, "wrong.profile"])
+def test_public_result_binds_the_exact_numeric_profile(profile: object) -> None:
+    result = _execute()
+    assert result.numeric_profile == HC_HEAD_NUMERIC_PROFILE
+    with pytest.raises(HCHeadReferenceError, match="numeric_profile"):
+        replace(result, numeric_profile=profile)
+
+
+def test_public_result_requires_deeply_immutable_exact_shapes() -> None:
+    result = _execute()
+    with pytest.raises(HCHeadReferenceError, match="deeply immutable"):
+        replace(result, output_bf16_codes=[list(result.output_bf16_codes[0])])
+    with pytest.raises(HCHeadReferenceError, match="deeply immutable"):
+        replace(result, output_bf16_codes=(list(result.output_bf16_codes[0]),))
+    with pytest.raises(HCHeadReferenceError, match="deeply immutable"):
+        replace(
+            result,
+            coefficient_binary32_codes=[list(result.coefficient_binary32_codes[0])],
+        )
+    with pytest.raises(HCHeadReferenceError, match="deeply immutable"):
+        replace(
+            result,
+            coefficient_binary32_codes=(list(result.coefficient_binary32_codes[0]),),
+        )
+    with pytest.raises(HCHeadReferenceError, match="exactly 4096"):
+        replace(result, output_bf16_codes=(result.output_bf16_codes[0][:-1],))
+    with pytest.raises(HCHeadReferenceError, match="finite BF16"):
+        replace(
+            result,
+            output_bf16_codes=((0x7F80,) + result.output_bf16_codes[0][1:],),
+        )
+    with pytest.raises(HCHeadReferenceError, match="finite binary32"):
+        replace(
+            result,
+            coefficient_binary32_codes=(
+                (0x7F800000,) + result.coefficient_binary32_codes[0][1:],
+            ),
+        )
+
+
+def test_public_result_reconciles_diagnostics_counters_and_saturation() -> None:
+    result = _execute()
+    two_token_result = _execute((ZERO_TOKEN, ZERO_TOKEN))
+    coefficient = result.coefficient_binary32_codes[0]
+    with pytest.raises(HCHeadReferenceError, match="diagnostic coefficients"):
+        replace(
+            result,
+            coefficient_binary32_codes=((0,) + coefficient[1:],),
+        )
+    with pytest.raises(HCHeadReferenceError, match="diagnostics token count"):
+        replace(result, diagnostics=two_token_result.diagnostics)
+    with pytest.raises(HCHeadReferenceError, match="counter token count"):
+        replace(result, counters=two_token_result.counters)
+    with pytest.raises(HCHeadReferenceError, match="exact nonnegative integer"):
+        replace(result, output_saturation_count=True)
+    with pytest.raises(HCHeadReferenceError, match="maximum-finite"):
+        replace(result, output_saturation_count=1)
+    saturation_counter = replace(result.counters, output_bf16_saturations=1)
+    with pytest.raises(HCHeadReferenceError, match="saturation"):
+        replace(result, counters=saturation_counter)
+    with pytest.raises(HCHeadReferenceError, match="exact HCHeadDiagnostics"):
+        replace(result, diagnostics=object())
+    with pytest.raises(HCHeadReferenceError, match="exact HCHeadCounters"):
+        replace(result, counters=object())
+
+
+def test_public_records_reject_subclass_authority() -> None:
+    result = _execute()
+
+    class CounterSubclass(HCHeadCounters):
+        pass
+
+    class DiagnosticsSubclass(HCHeadDiagnostics):
+        pass
+
+    class ResultSubclass(HCHeadResult):
+        pass
+
+    counter_fields = {
+        field.name: getattr(result.counters, field.name)
+        for field in fields(result.counters)
+    }
+    diagnostic_fields = {
+        field.name: getattr(result.diagnostics, field.name)
+        for field in fields(result.diagnostics)
+    }
+    result_fields = {
+        field.name: getattr(result, field.name) for field in fields(result)
+    }
+    with pytest.raises(HCHeadReferenceError, match="exact HCHeadCounters"):
+        CounterSubclass(**counter_fields)
+    with pytest.raises(HCHeadReferenceError, match="exact HCHeadDiagnostics"):
+        DiagnosticsSubclass(**diagnostic_fields)
+    with pytest.raises(HCHeadReferenceError, match="exact HCHeadResult"):
+        ResultSubclass(**result_fields)
+
+
+def test_public_records_have_no_writable_instance_dictionary() -> None:
+    result = _execute()
+    for record in (result, result.diagnostics, result.counters):
+        assert not hasattr(record, "__dict__")
+        with pytest.raises(TypeError):
+            vars(record)
+
+    with pytest.raises(FrozenInstanceError):
+        result.numeric_profile = "forged"  # type: ignore[misc]
+    with pytest.raises(FrozenInstanceError):
+        result.counters.transaction_commits = 99  # type: ignore[misc]
+
+
 def test_result_and_counter_contracts_are_explicit_and_physically_agnostic() -> None:
     assert [field.name for field in fields(HCHeadResult)] == [
+        "numeric_profile",
         "output_bf16_codes",
         "coefficient_binary32_codes",
         "output_saturation_count",
@@ -429,7 +667,11 @@ def test_result_and_counter_contracts_are_explicit_and_physically_agnostic() -> 
     }
     assert not any(term in name for name in counter_names for term in prohibited)
     assert set(EXCLUDED_SYSTEM_CLAIMS) == {
+        "authenticated_transaction_provenance",
+        "complete_sequence_tiling_or_execution",
         "checkpoint_payload_identity",
+        "semantic_graph_qualification",
+        "full_model_execution",
         "service_engine_execution",
         "rtl_execution",
         "physical_schedule",
