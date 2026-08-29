@@ -43,7 +43,7 @@ EXPECTED_VECTOR_SET_ID = (
     "420ada71f902c8e43b9e5866d9c57ab8e3a1ced59e25c01b20793c94cf45b1a2"
 )
 EXPECTED_CAMPAIGN_ID = (
-    "43af672ea8fc7a43407ec38afb4424c6f3450ff47dddbce0f2777d190b4b6a2a"
+    "a058f6ce18a22a8d43625a4013f892e74464135d03406512b24fa190309277a5"
 )
 FIELD_NAMES = (
     "opcode",
@@ -215,6 +215,8 @@ def test_retained_campaign_is_schema_valid_and_source_bound() -> None:
     assert campaign["campaign_id"] == _body_id(campaign, "campaign_id")
     assert campaign["vector_set_id"] == EXPECTED_VECTOR_SET_ID
     assert campaign["status"] == "pass"
+    assert campaign["decoder_crc_bytes_per_cycle"] == 4
+    assert campaign["decoder_crc_latency_cycles"] == 15
     assert campaign["claim_boundary"] == {
         "complete_kernel_execution": False,
         "complete_layer_execution": False,
