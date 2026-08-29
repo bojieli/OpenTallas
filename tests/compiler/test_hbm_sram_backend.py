@@ -853,8 +853,13 @@ def test_state_views_bind_the_prepared_image(dense, single_chip):
     )
 
 
-def test_request_windows_are_addressed_from_position_start(dense, single_chip):
-    """A host window holds the session; the request begins at POSITION_START."""
+def test_the_ring_is_appended_past_the_staged_request(dense, single_chip):
+    """The host stages a request from element zero; the device appends past it.
+
+    Both halves matter: reading the window at an offset would look for a token
+    where the host wrote none, and appending at the generation counter would
+    overwrite the very token the host had just staged.
+    """
     deployment = lower_to_abi3(dense, single_chip)
     host_objects = {
         d.descriptor_id
@@ -873,10 +878,53 @@ def test_request_windows_are_addressed_from_position_start(dense, single_chip):
                 SelectorKind.RUNTIME_SYMBOL
             ):
                 offsets.add(descriptor.payload[f"term{slot}_index"])
-    assert int(Symbol.POSITION_START) in offsets
-    # The ring is written at the first free position, never at the generation
-    # counter, which would overwrite the prompt on the first decode step.
     assert int(Symbol.POSITION_END) in offsets
+    assert int(Symbol.POSITION_START) not in offsets
+    assert int(Symbol.GENERATION_INDEX) not in offsets
+
+
+def test_every_schedule_states_a_complete_tile_mapping(dense, moe, single_chip):
+    """A cycle model cannot time an operation whose tile shape says nothing.
+
+    An embedding lookup has no contraction axis and attention's depth is the
+    head dimension, so zero is a tempting default for both -- and it is the one
+    value that means "unstated".
+    """
+    for graph in (dense, moe):
+        deployment = lower_to_abi3(graph, single_chip)
+        schedules = [
+            d
+            for d in deployment.table.descriptors()
+            if d.descriptor_type == ExtendedDescriptorType.SCHEDULE
+        ]
+        assert schedules
+        for descriptor in schedules:
+            payload = descriptor.payload
+            for field in ("tile_rows", "tile_cols", "tile_depth"):
+                assert payload[field] > 0, (descriptor.descriptor_id, field)
+            assert payload["issue_window"] > 0
+            assert payload["resource_bound"] > 0
+            assert payload["max_outstanding"] > 0
+
+
+def test_every_resident_object_states_an_address(dense, single_chip):
+    """A cycle model that must invent an address reports its own placement."""
+    deployment, plan = lower_with_plan(dense, single_chip)
+    objects = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+    ]
+    addressed = [d for d in objects if d.payload["base_address"] > 0]
+    # Only the first object of each address space may legitimately sit at zero.
+    assert len(objects) - len(addressed) <= 3
+    spans = sorted(
+        (d.payload["base_address"], d.payload["size_bytes"])
+        for d in objects
+        if d.payload["storage_class"] == int(StorageClass.HBM)
+    )
+    for (base, size), (next_base, _) in zip(spans, spans[1:]):
+        assert base + size <= next_base, "two HBM objects overlap"
 
 
 # ---------------------------------------------------------------------------
