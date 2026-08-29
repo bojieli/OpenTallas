@@ -1,0 +1,31 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_fp8_linear/execution_request_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "build_id": { "$ref": "#/$defs/sha256" },
+    "input_bf16_codes": {
+      "items": {
+        "items": { "$ref": "#/$defs/bf16" },
+        "maxItems": 65536,
+        "minItems": 128,
+        "type": "array"
+      },
+      "maxItems": 4,
+      "minItems": 1,
+      "type": "array"
+    },
+    "model_id": { "const": "deepseek-v4-flash-0731" },
+    "schema": { "const": "opentallas.deepseek_v4_fp8_linear_request.v1" }
+  },
+  "required": ["build_id", "input_bf16_codes", "model_id", "schema"],
+  "title": "OpenTallas DeepSeek V4 selected-row FP8 execution request v1",
+  "type": "object",
+  "$defs": {
+    "bf16": { "maximum": 65535, "minimum": 0, "type": "integer" },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    }
+  }
+}

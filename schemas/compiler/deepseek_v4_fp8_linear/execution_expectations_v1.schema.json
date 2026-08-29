@@ -1,0 +1,77 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_fp8_linear/execution_expectations_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "counter_coefficients_per_input_row": {
+      "$ref": "#/$defs/coefficients"
+    },
+    "fixed_counters": {
+      "additionalProperties": false,
+      "properties": {
+        "completion_events": { "const": 1 },
+        "micro_ops_executed": { "const": 2 },
+        "semantic_operations_executed": { "const": 1 }
+      },
+      "required": [
+        "completion_events",
+        "micro_ops_executed",
+        "semantic_operations_executed"
+      ],
+      "type": "object"
+    },
+    "hardware_accounting": {
+      "additionalProperties": false,
+      "properties": {
+        "cycles": { "type": "null" },
+        "hbm_transactions": { "type": "null" },
+        "stalls": { "type": "null" },
+        "status": {
+          "const": "not modeled by the functional FP8 linear slice"
+        }
+      },
+      "required": ["cycles", "hbm_transactions", "stalls", "status"],
+      "type": "object"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_fp8_linear_expectations.v1"
+    }
+  },
+  "required": [
+    "counter_coefficients_per_input_row",
+    "fixed_counters",
+    "hardware_accounting",
+    "schema"
+  ],
+  "title": "OpenTallas DeepSeek V4 selected-row FP8 execution expectations v1",
+  "type": "object",
+  "$defs": {
+    "coefficients": {
+      "additionalProperties": false,
+      "properties": {
+        "activation_blocks_quantized": { "$ref": "#/$defs/nonnegative" },
+        "activation_values_quantized": { "$ref": "#/$defs/nonnegative" },
+        "bf16_outputs_written": { "$ref": "#/$defs/nonnegative" },
+        "binary32_block_reduction_adds": { "$ref": "#/$defs/nonnegative" },
+        "binary32_product_accumulates": { "$ref": "#/$defs/nonnegative" },
+        "logical_input_bytes_read": { "$ref": "#/$defs/nonnegative" },
+        "logical_output_bytes_written": { "$ref": "#/$defs/nonnegative" },
+        "logical_rom_bytes_read": { "$ref": "#/$defs/nonnegative" },
+        "matrix_block_dots": { "$ref": "#/$defs/nonnegative" }
+      },
+      "required": [
+        "activation_blocks_quantized",
+        "activation_values_quantized",
+        "bf16_outputs_written",
+        "binary32_block_reduction_adds",
+        "binary32_product_accumulates",
+        "logical_input_bytes_read",
+        "logical_output_bytes_written",
+        "logical_rom_bytes_read",
+        "matrix_block_dots"
+      ],
+      "type": "object"
+    },
+    "nonnegative": { "minimum": 0, "type": "integer" }
+  }
+}

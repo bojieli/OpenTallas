@@ -8,6 +8,13 @@ import sys
 
 from compiler.ir.model import IRValidationError, canonical_json_bytes, load_strict_json
 from compiler.microcode.isa import MicrocodeError
+from runtime.service_engine.deepseek_v4_fp8_linear import (
+    DEPLOYMENT_SCHEMA as DEEPSEEK_V4_FP8_LINEAR_DEPLOYMENT_SCHEMA,
+)
+from runtime.service_engine.deepseek_v4_fp8_linear import (
+    DeepSeekV4FP8LinearServiceEngineError,
+    execute_deepseek_v4_fp8_linear_deployment,
+)
 from runtime.service_engine.deepseek_v4_lookup import (
     DEPLOYMENT_SCHEMA as DEEPSEEK_V4_LOOKUP_DEPLOYMENT_SCHEMA,
 )
@@ -20,6 +27,8 @@ from runtime.service_engine.interpreter import ServiceEngineError, execute_deplo
 
 def _execute(deployment: Path, inputs: Path) -> dict[str, object]:
     manifest = load_strict_json(deployment / "deployment_manifest.json")
+    if manifest.get("schema") == DEEPSEEK_V4_FP8_LINEAR_DEPLOYMENT_SCHEMA:
+        return execute_deepseek_v4_fp8_linear_deployment(deployment, inputs)
     if manifest.get("schema") == DEEPSEEK_V4_LOOKUP_DEPLOYMENT_SCHEMA:
         return execute_deepseek_v4_lookup_deployment(deployment, inputs)
     return execute_deployment(deployment, inputs)
@@ -50,6 +59,7 @@ def main(argv: list[str] | None = None) -> int:
         result = _execute(arguments.deployment, arguments.inputs)
         _write_new(arguments.output, result)
     except (
+        DeepSeekV4FP8LinearServiceEngineError,
         DeepSeekV4LookupServiceEngineError,
         ServiceEngineError,
         IRValidationError,
