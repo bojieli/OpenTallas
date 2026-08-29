@@ -20,6 +20,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Production BF16 residual add | `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv` | Command-decoded, backpressured `ADD_BF16` execution with exact external-SRAM byte addresses, RNE arithmetic, retirement counters, saturation, and fail-closed arithmetic faults | QW-RTL-ADD-001 |
 | Production ADD SRAM control | `ot_ta_add_bf16_sram_engine.sv` | One-outstanding-read operand fetch, finite-only writeback retirement, exact transaction counters, stable completion, and fault write suppression | QW-RTL-ADD-SRAM-001 |
 | Production direct DMA | `ot_ta_dma_hbm_to_sram.sv` | One-outstanding 64-byte HBM request/response, four 16-byte SRAM writes per response, exact byte/transaction accounting, response-error fail-closed completion | QW-RTL-DMA-001 |
+| Production DMA/ADD sequencing | `ot_ta_dma_add_sequencer.sv` | One-command-at-a-time dispatch, monotonic submitted indices, shared SRAM write ownership, stable aggregate counters, explicit last-command completion, and fail-stop error handling | QW-RTL-DMA-ADD-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
@@ -89,6 +90,24 @@ error proves fail-closed completion with zero SRAM writes. HBM responses and
 SRAM contents are behavioral campaign models. HBM PHY/package behavior,
 production ECC/retry, physical SRAM, arbitration, multi-command scheduling,
 timing, performance, complete-layer execution, and `TA-RTL-6` remain open.
+
+QW-RTL-DMA-ADD-001 is retained as vector set
+`575ddc7ba55ddc76deec04f5747c661b7646baec13020ee29bb572d3f543cd3d`
+and campaign
+`6df5e663467f84893f3a92eaf01f3dc398a58cedfde134d66ceff4791991516d`.
+Icarus and Verilator each execute two unchanged Qwen command records through a
+single sequencing boundary. The authentic command-1 DMA writes its 8,192-byte
+checkpoint payload to SRAM address 2,097,152; the authentic command-5,131 ADD
+then consumes that exact SRAM range as its right operand and writes 4,096
+independently calculated BF16 results. Aggregate completion reconciles 128 HBM
+requests, 512 DMA writes, 8,192 ADD reads, 4,096 ADD writes, 4,096 elements,
+and all byte totals. CRC corruption, an HBM response failure, and a
+non-monotonic submitted index each stop the program before successor activity.
+Both records come from the frozen Qwen program, but they are intentionally
+composed across intervening operations to test the shared-memory dependency;
+the campaign is therefore not a graph-valid Qwen operation sequence or a
+complete layer. Behavioral HBM/SRAM, banking, ECC, arbitration, a program
+header/body CRC, COMPLETE-command handling, timing, and `TA-RTL-6` remain open.
 
 The bounded IHP SG13G2 physical campaign for
 `ot_ta_add_bf16_sram_engine` is retained as
