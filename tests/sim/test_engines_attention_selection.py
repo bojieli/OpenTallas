@@ -46,7 +46,7 @@ from runtime.tensor_accelerator.attention import (
 )
 
 # Importing an engine module registers its (family, subopcode) handlers.
-import runtime.sim.engines.attention  # noqa: F401
+import runtime.sim.engines.attention as engine_attention  # noqa: F401
 import runtime.sim.engines.selection  # noqa: F401
 
 
@@ -345,6 +345,61 @@ def test_gqa_matches_an_independent_binary32_attention():
         q, k, v, scale, lambda token: np.arange(base + token + 1)
     )
     assert np.allclose(widen(read(device, out_view)), expected, atol=0.02, rtol=0.02)
+
+
+def test_gqa_output_does_not_depend_on_the_contraction_pass_length(monkeypatch):
+    """The driver contracts a block of query rows at a time; that is scheduling.
+
+    Both contractions reduce over an axis the query row does not index -- the
+    head dimension for the scores, the bounded context for the values -- so
+    every query row is an independent output row and the pass length cannot
+    reach any element's reduction.  Shortening the pass to a single token, the
+    way the driver worked before it batched, must therefore reproduce the
+    batched answer bit for bit, and retire exactly the same counters.
+    """
+    rng = np.random.default_rng(0x9E11)
+    span, q_heads, kv_heads, dim, context = 40, 8, 2, 32, 40
+
+    def spread(shape):
+        """Operands whose products span enough binades that the order of the
+        reduction is observable; a one-binade operand set would sum the same in
+        any order and let a reordered contraction pass unnoticed."""
+        magnitude = rng.uniform(1.0, 2.0, size=shape) * 2.0 ** rng.integers(
+            -4, 5, size=shape
+        )
+        return narrow(
+            (rng.choice([-1.0, 1.0], size=shape) * magnitude).astype(np.float32)
+        )
+
+    q = spread((span, q_heads, dim))
+    k = spread((context, kv_heads, dim))
+    v = spread((context, kv_heads, dim))
+
+    def run():
+        build, out_view = build_attention(
+            sub=int(Attention.GQA), q=q, k=k, v=v, scale_bits=fp32_bits(0.25)
+        )
+        device = build.finish()
+        result = device.run_transaction(
+            device.create_session(), entrypoint_id=0, symbols={}
+        )
+        assert result.status == CompletionStatus.SUCCESS, result.message
+        return read(device, out_view), dict(result.counters)
+
+    expected_values, expected_counters = run()
+    group = q_heads // kv_heads
+    pass_lengths = set()
+    for max_rows in (group, 3 * group, 7 * group, 13 * group, 1 << 20):
+        monkeypatch.setattr(engine_attention, "_MAX_BLOCK_ROWS", max_rows)
+        pass_length = engine_attention._token_block(span, context, group)
+        pass_lengths.add(pass_length)
+        values, counters = run()
+        assert np.array_equal(values, expected_values), pass_length
+        assert counters == expected_counters, pass_length
+    # The sweep is only meaningful if it really spanned one token per pass to
+    # the whole span in one pass: a vacuous sweep must not report a pass.
+    assert 1 in pass_lengths and span in pass_lengths
+    assert len(pass_lengths) >= 4
 
 
 def test_gqa_is_causal_by_absolute_position():

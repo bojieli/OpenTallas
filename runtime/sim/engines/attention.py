@@ -11,6 +11,17 @@ BF16 rounding.  This module is the shape-generic driver over the frozen kernels
 in :mod:`runtime.tensor_accelerator.attention` and
 :mod:`runtime.tensor_accelerator.bf16`.
 
+The driver hands those kernels a *block* of query rows at a time -- a run of
+query tokens times the query heads sharing one KV head -- rather than one
+(token, head) pair.  That is scheduling, not arithmetic.  The score contraction
+reduces over ``head_dim`` and the value contraction reduces over the bounded
+context; neither reduction is indexed by the query token or by which head of a
+KV group a row belongs to, so each query row is an independent output row and
+blocking cannot reorder any element's reduction.  The mask, the scale, the
+softmax and the two roundings are elementwise or row-local for the same reason.
+Every masked-but-computed lane is still computed, so the retired-work counters
+are the same totals the per-token loop reported.
+
 ``SPARSE`` executes the DeepSeek-V4-Flash contract
 ``opentallas.deepseek_v4_sparse_attention_numeric.v1``, and drives
 :func:`runtime.reference.sparse_attention.sparse_attention_bf16` directly:
@@ -125,10 +136,22 @@ from runtime.tensor_accelerator.attention import (
 from runtime.tensor_accelerator.attention import _decode as _widen_bf16
 from runtime.tensor_accelerator.attention import _encode as _round_bf16
 from runtime.tensor_accelerator.attention import _softmax_bf16 as _softmax_bf16
+from runtime.tensor_accelerator.attention import _softmax_bf16_rows
 from runtime.tensor_accelerator.bf16 import BF16KernelError, dense_bf16_linear_bf16
 
 MASK_CAUSAL = 0
 MASK_FULL = 1
+
+#: Score-block budget, in binary32 elements, for one contraction pass.  A pass
+#: holds ``rows * context`` scores several times over -- codes, widened values,
+#: the mask, the exponentials and the binary64 guard copy -- so 2 Mi elements is
+#: roughly a 100 MiB working set at Qwen3-8B shapes.  A full 8000 x 8000 score
+#: block would be 256 MiB per head on its own.
+_SCORE_BLOCK_ELEMENTS = 1 << 21
+#: Upper bound on the query rows one pass contracts.  Past a couple of hundred
+#: rows the contraction is already bandwidth bound and a longer pass only grows
+#: the working set; measured on this machine, 256 rows is the flat top.
+_MAX_BLOCK_ROWS = 256
 
 PAD_INDEX = NO_ID
 """Sentinel in a sparse index view: the slot is padding and is not executed."""
@@ -293,53 +316,86 @@ def _execute_dense_gqa(ctx: EngineContext, descriptor: Descriptor, sub: int) -> 
     )
 
     outputs = np.empty((span, query_heads, head_dim), dtype=np.uint16)
-    visible_total = 0
-    score_products = 0
-    value_products = 0
-    kv_elements = 0
+
+    # Per-token visibility.  Every head of a token sees the same horizon, so
+    # this is head independent, and the counters below are closed forms of the
+    # per-token, per-head sums the scalar loop accumulated one term at a time.
+    if mask_mode == MASK_CAUSAL:
+        assert positions is not None
+        limits = positions.astype(np.int64) + np.int64(1)
+    else:
+        limits = np.full(span, context, dtype=np.int64)
+    visible_total = int(limits.sum())
+    kv_elements = 2 * visible_total * kv_heads * head_dim
+    # A masked-but-computed lane still costs a product: the datapath contracts
+    # the whole bounded context for every query token of every head.
+    score_products = span * query_heads * context * head_dim
+    value_products = score_products
+
+    # One contiguous key block and one contiguous transposed value block per KV
+    # head, hoisted out of the token loop: both depend only on the KV head and
+    # the context bound, and the scalar loop rebuilt them once per (token,
+    # head) pair.
+    key_rows = [
+        np.ascontiguousarray(keys[:context, kv_head, :]) for kv_head in range(kv_heads)
+    ]
+    value_rows = [
+        np.ascontiguousarray(values[:context, kv_head, :].T)
+        for kv_head in range(kv_heads)
+    ]
+    columns = np.arange(context, dtype=np.int64)
+    block = _token_block(span, context, group)
 
     try:
-        for token in range(span):
-            if mask_mode == MASK_CAUSAL:
-                assert positions is not None
-                limit = int(positions[token]) + 1
-            else:
-                limit = context
-            visible_total += limit
-            kv_elements += 2 * limit * kv_heads * head_dim
-            mask = np.zeros(context, dtype=np.uint16)
-            mask[limit:] = np.uint16(CAUSAL_MASK_BF16_CODE)
-            for head in range(query_heads):
-                kv_head = head // group
-                rows = np.ascontiguousarray(keys[:context, kv_head, :])
-                value_rows = np.ascontiguousarray(values[:context, kv_head, :].T)
-                width = context
-                score_products += width * head_dim
-                value_products += width * head_dim
+        for start in range(0, span, block):
+            stop = min(start + block, span)
+            # One contraction covers ``(stop - start) * group`` query rows,
+            # ordered ``(token, head within the KV group)``.  The mask is a
+            # function of the token alone, so it repeats across the group.
+            row_limits = np.repeat(limits[start:stop], group)
+            # ``mask[row, j]`` carries the pinned BF16 mask code exactly where
+            # the scalar loop's ``mask[limit:] = CAUSAL_MASK_BF16_CODE`` put it.
+            mask = np.where(
+                columns[None, :] >= row_limits[:, None],
+                np.uint16(CAUSAL_MASK_BF16_CODE),
+                np.uint16(0),
+            ).astype(np.uint16)
+            mask_values = _widen_bf16(mask)
+            for kv_head in range(kv_heads):
+                head = kv_head * group
+                # ``head // group == kv_head`` for exactly this contiguous run
+                # of query heads, so iterating KV head then group member visits
+                # the heads in the same order the scalar loop did.
+                block_queries = np.ascontiguousarray(
+                    queries[start:stop, head : head + group, :]
+                ).reshape((stop - start) * group, head_dim)
+                rows_in_pass = int(block_queries.shape[0])
                 scored = dense_bf16_linear_bf16(
-                    np.ascontiguousarray(queries[token, head])[None, :],
-                    rows,
-                    input_tile_rows=1,
-                    output_tile_rows=64,
+                    block_queries,
+                    key_rows[kv_head],
+                    input_tile_rows=rows_in_pass,
+                    output_tile_rows=context,
                 )
                 scaled, _ = _round_bf16(
-                    np.multiply(_widen_bf16(scored.values[0]), scale, dtype=np.float32)
+                    np.multiply(_widen_bf16(scored.values), scale, dtype=np.float32)
                 )
                 scaled, _ = _round_bf16(
                     np.add(
                         _widen_bf16(scaled),
-                        _widen_bf16(mask),
+                        mask_values,
                         dtype=np.float32,
                     )
                 )
-                probabilities, _ = _softmax_bf16(scaled)
-                context_row = dense_bf16_linear_bf16(
-                    probabilities[None, :],
-                    value_rows,
-                    input_tile_rows=1,
+                probabilities, _ = _softmax_bf16_rows(scaled)
+                context_block = dense_bf16_linear_bf16(
+                    probabilities,
+                    value_rows[kv_head],
+                    input_tile_rows=rows_in_pass,
                     output_tile_rows=head_dim,
                 )
-                outputs[token, head] = context_row.values[0]
+                outputs[start:stop, head : head + group] = context_block.values.reshape(
+                    stop - start, group, head_dim
+                )
     except (AttentionKernelError, BF16KernelError) as exc:
         raise EngineError(
             f"attention numeric contract violated: {exc}", trap_class=6
@@ -351,6 +407,25 @@ def _execute_dense_gqa(ctx: EngineContext, descriptor: Descriptor, sub: int) -> 
     ctx.counters.add("attention.score_multiplications", score_products)
     ctx.counters.add("attention.value_multiplications", value_products)
     ctx.counters.add("attention.kv_bytes_read", kv_elements * 2)
+
+
+def _token_block(span: int, context: int, group: int) -> int:
+    """How many query tokens one contraction pass covers.
+
+    Purely a scheduling choice.  The score contraction reduces over
+    ``head_dim`` and the value contraction reduces over the bounded context;
+    neither reduction is indexed by the query token or by which head of a KV
+    group a row belongs to, so every query row is an independent output row and
+    the pass length cannot reach any element's reduction.  The length is chosen
+    to bound the score block's working set while still giving the kernel enough
+    rows to amortise its per-call operand validation and widening.
+    """
+
+    if span <= 1:
+        return 1
+    width = max(1, group)
+    budget = max(1, _SCORE_BLOCK_ELEMENTS // max(1, context)) // width
+    return max(1, min(span, budget, _MAX_BLOCK_ROWS // width))
 
 
 def _positions(

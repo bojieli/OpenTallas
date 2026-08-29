@@ -446,25 +446,53 @@ def abort_kv_group(
     return tuple(committed_states)
 
 
+def _lanes8_sum_rows(
+    values: np.ndarray[Any, np.dtype[np.float32]],
+) -> np.ndarray[Any, np.dtype[np.float32]]:
+    """The eight-lane blocked denominator, evaluated for many rows at once.
+
+    One implementation, driven row-wise.  Lane ``i`` still accumulates
+    ``row[i], row[i+8], row[i+16], ...`` in ascending order and the lanes still
+    fold by the same 8-4-2-1 tree; the only change is that each of those adds
+    now runs across every row of the block in one binary32 operation.  Rows are
+    independent, so batching cannot move a single addend of a single row.
+    """
+
+    rows = np.ascontiguousarray(values, dtype=np.float32)
+    if (
+        rows.ndim != 2
+        or rows.shape[0] == 0
+        or rows.shape[1] == 0
+        or not np.all(np.isfinite(rows))
+    ):
+        raise AttentionKernelError("softmax reduction row must be nonempty and finite")
+    width = int(rows.shape[1])
+    if width < 8:
+        accumulator = np.ascontiguousarray(rows[:, 0], dtype=np.float32)
+        for index in range(1, width):
+            accumulator = np.add(accumulator, rows[:, index], dtype=np.float32)
+        return np.ascontiguousarray(accumulator, dtype=np.float32)
+    lanes = rows[:, :8].copy()
+    full = width - width % 8
+    for start in range(8, full, 8):
+        np.add(lanes, rows[:, start : start + 8], out=lanes)
+    tail = rows[:, full:]
+    if tail.shape[1]:
+        lanes[:, : tail.shape[1]] = np.add(
+            lanes[:, : tail.shape[1]], tail, dtype=np.float32
+        )
+    half = np.add(lanes[:, :4], lanes[:, 4:], dtype=np.float32)
+    quarter = np.add(half[:, :2], half[:, 2:], dtype=np.float32)
+    return np.ascontiguousarray(
+        np.add(quarter[:, 0], quarter[:, 1], dtype=np.float32), dtype=np.float32
+    )
+
+
 def _lanes8_sum(values: np.ndarray[Any, np.dtype[np.float32]]) -> np.float32:
     row = np.ascontiguousarray(values, dtype=np.float32)
     if row.ndim != 1 or row.size == 0 or not np.all(np.isfinite(row)):
         raise AttentionKernelError("softmax reduction row must be nonempty and finite")
-    if row.size < 8:
-        accumulator = row[0]
-        for item in row[1:]:
-            accumulator = np.add(accumulator, item, dtype=np.float32)
-        return np.float32(accumulator)
-    lanes = row[:8].copy()
-    full = row.size - row.size % 8
-    for start in range(8, full, 8):
-        lanes = np.add(lanes, row[start : start + 8], dtype=np.float32)
-    tail = row[full:]
-    if tail.size:
-        lanes[: tail.size] = np.add(lanes[: tail.size], tail, dtype=np.float32)
-    half = np.add(lanes[:4], lanes[4:], dtype=np.float32)
-    quarter = np.add(half[:2], half[2:], dtype=np.float32)
-    return np.float32(np.add(quarter[0], quarter[1], dtype=np.float32))
+    return np.float32(_lanes8_sum_rows(row[None, :])[0])
 
 
 def _exp_binary32_rne(
@@ -488,12 +516,27 @@ def _exp_binary32_rne(
     )
 
 
-def _softmax_bf16(
+def _softmax_bf16_rows(
     masked_codes: np.ndarray[Any, np.dtype[np.uint16]],
 ) -> tuple[np.ndarray[Any, np.dtype[np.uint16]], int]:
-    values = _decode(masked_codes)
-    maximum = np.max(values)
-    shifted = np.subtract(values, maximum, dtype=np.float32)
+    """The frozen binary32 softmax, evaluated for a ``[rows, width]`` block.
+
+    Every step of the contract is elementwise or row-local: the maximum, the
+    shift, the guard-precision exponential, the ``<= -104`` underflow branch,
+    the eight-lane denominator, the reciprocal and the single BF16 rounding.
+    None of them reads across rows, so a block of rows produces exactly the
+    values the rows produce one at a time.  ``_softmax_bf16`` is the one-row
+    entry into this same code, so the contract has one implementation.
+    """
+
+    codes = np.ascontiguousarray(masked_codes, dtype=np.uint16)
+    if codes.ndim != 2 or codes.shape[0] == 0 or codes.shape[1] == 0:
+        raise AttentionKernelError(
+            "softmax rows must be a nonempty [rows, width] block"
+        )
+    values = _decode(codes)
+    maximum = np.max(values, axis=1)
+    shifted = np.subtract(values, maximum[:, None], dtype=np.float32)
     previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
     try:
         exponentials = _exp_binary32_rne(shifted)
@@ -504,12 +547,22 @@ def _softmax_bf16(
     ).astype(np.float32, copy=False)
     if not np.all(np.isfinite(exponentials)):
         raise AttentionKernelError("softmax exponential produced NaN or infinity")
-    denominator = _lanes8_sum(exponentials)
-    if not np.isfinite(denominator) or denominator <= 0:
+    denominator = _lanes8_sum_rows(exponentials)
+    if not np.all(np.isfinite(denominator)) or bool(np.any(denominator <= 0)):
         raise AttentionKernelError("softmax denominator is not positive finite")
     inverse = np.divide(np.float32(1.0), denominator, dtype=np.float32)
-    probabilities = np.multiply(exponentials, inverse, dtype=np.float32)
+    probabilities = np.multiply(exponentials, inverse[:, None], dtype=np.float32)
     return _encode(probabilities)
+
+
+def _softmax_bf16(
+    masked_codes: np.ndarray[Any, np.dtype[np.uint16]],
+) -> tuple[np.ndarray[Any, np.dtype[np.uint16]], int]:
+    codes = np.ascontiguousarray(masked_codes, dtype=np.uint16)
+    if codes.ndim != 1:
+        raise AttentionKernelError("softmax reduction row must be nonempty and finite")
+    probabilities, saturations = _softmax_bf16_rows(codes[None, :])
+    return np.ascontiguousarray(probabilities[0]), saturations
 
 
 def gqa_causal_attention_bf16(
