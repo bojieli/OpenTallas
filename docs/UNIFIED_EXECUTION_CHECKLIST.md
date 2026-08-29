@@ -293,6 +293,33 @@
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
 
+- **OI-32 — one capability, two sources of truth, and they have now diverged.**
+  `configs/hardware/abi3_capability/hbm_sram_single_chip.json` and
+  `compiler.backends.hbm_sram.capability.PROFILES['single-chip']` both claim to
+  be the shared single chip. They no longer agree: the code-built profile lists
+  `deepseek_rmsnorm_binary32_v1` and the file on disk lists
+  `normalization_rms_norm_bf16_v1`, so their digests are `7afce65b…` and
+  `b2a1af21…`. The campaign runner takes the JSON; the tests and the checkers
+  take the code.
+
+  It surfaced because a byte-identity claim did not survive checking. Adopting
+  A8's frozen RMSNorm contract name in the DeepSeek exporter changed the derived
+  contract union, which changed the code-built capability, which changed **Qwen's
+  deployment digest** — `11d825368add0494` → `bd80131488912974` — while Qwen's
+  program body and descriptor table stayed byte-identical (all 75 instructions
+  equal, table digest `7d599fdcd8c017ce` on both sides). The agent that made the
+  change deliberately left the JSON alone *because* editing it would move Qwen's
+  digest, and the digest moved anyway through the other source. That is the
+  whole hazard in one sentence.
+
+  Nothing here is wrong in itself: a deployment binds the capability it was
+  admitted against, so a capability change *should* change its digest. What is
+  wrong is that there are two capabilities with one name, and a change to either
+  is invisible from the other. **One must be generated from the other, with a
+  check that fails when they drift** — the same discipline `loop_trip_count` now
+  enforces for the trip formula (OI-22) and for the same reason: two
+  restatements of one thing is how two of them come apart.
+
 - **OI-31 — a vector set can rot into agreeing with the implementation instead
   of checking it.** Refining A13 changed what `a13_nested_blocks` resolved to,
   and the obvious response — re-record the golden — would have been wrong: that
