@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/deployment_v1.schema.json",
+  "title": "OpenTallas executable Qwen3 deployment manifest v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["artifacts", "build_id", "compiler", "model", "runtime", "schema"],
+  "properties": {
+    "artifacts": {
+      "type": "array",
+      "minItems": 49,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "role", "sha256", "size_bytes"],
+        "properties": {
+          "path": {"minLength": 1, "type": "string"},
+          "role": {"minLength": 1, "type": "string"},
+          "sha256": {"$ref": "#/$defs/sha256"},
+          "size_bytes": {"minimum": 1, "type": "integer"}
+        }
+      }
+    },
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "compiler": {"type": "object"},
+    "model": {"type": "object"},
+    "runtime": {"type": "object"},
+    "schema": {"const": "opentallas.qwen3.deployment.v1"}
+  },
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}

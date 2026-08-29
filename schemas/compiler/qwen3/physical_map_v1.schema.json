@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/physical_map_v1.schema.json",
+  "title": "OpenTallas Qwen3 physical image map v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["coverage", "layout", "model", "physical_map_id", "schema", "stages"],
+  "properties": {
+    "coverage": {"type": "object"},
+    "layout": {"type": "object"},
+    "model": {"type": "object"},
+    "physical_map_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.qwen3.physical_map.v1"},
+    "stages": {"items": {"$ref": "#/$defs/stage"}, "maxItems": 36, "minItems": 36, "type": "array"}
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "tensor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dtype", "layer", "name", "offset_bytes", "payload_sha256", "role", "shape", "size_bytes"],
+      "properties": {
+        "dtype": {"const": "BF16"},
+        "layer": {"anyOf": [{"maximum": 35, "minimum": 0, "type": "integer"}, {"type": "null"}]},
+        "name": {"minLength": 1, "type": "string"},
+        "offset_bytes": {"minimum": 0, "type": "integer"},
+        "payload_sha256": {"$ref": "#/$defs/sha256"},
+        "role": {"minLength": 1, "type": "string"},
+        "shape": {"items": {"minimum": 1, "type": "integer"}, "minItems": 1, "type": "array"},
+        "size_bytes": {"minimum": 2, "type": "integer"}
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["image_path", "image_sha256", "image_size_bytes", "padding_bytes", "payload_bytes", "stage", "tensors"],
+      "properties": {
+        "image_path": {"pattern": "^images/qwen3-stage-[0-9]{2}\\.rom\\.bin$", "type": "string"},
+        "image_sha256": {"$ref": "#/$defs/sha256"},
+        "image_size_bytes": {"minimum": 1, "type": "integer"},
+        "padding_bytes": {"minimum": 0, "type": "integer"},
+        "payload_bytes": {"minimum": 1, "type": "integer"},
+        "stage": {"maximum": 35, "minimum": 0, "type": "integer"},
+        "tensors": {"items": {"$ref": "#/$defs/tensor"}, "minItems": 1, "type": "array"}
+      }
+    }
+  }
+}

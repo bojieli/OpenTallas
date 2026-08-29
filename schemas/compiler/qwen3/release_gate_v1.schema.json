@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/release_gate_v1.schema.json",
+  "title": "OpenTallas Qwen3 retained official-source release gate v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["attention_backend", "build_id", "checkpoint_lock_id", "chunked_prefill", "context_target_tokens", "cuda_version", "cudnn_version", "device_name", "generated_token_ids", "long_context", "passed", "release_runner_sha256", "report_id", "schema", "snapshot_reverified_against_lock", "spans", "torch_version", "transformers_version"],
+  "properties": {
+    "attention_backend": {"enum": ["eager", "sdpa"]},
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "checkpoint_lock_id": {"$ref": "#/$defs/sha256"},
+    "chunked_prefill": {"items": {"$ref": "#/$defs/span"}, "maxItems": 2, "minItems": 2, "type": "array"},
+    "context_target_tokens": {"const": 8000},
+    "cuda_version": {"anyOf": [{"minLength": 1, "type": "string"}, {"type": "null"}]},
+    "cudnn_version": {"anyOf": [{"minimum": 1, "type": "integer"}, {"type": "null"}]},
+    "device_name": {"minLength": 1, "type": "string"},
+    "generated_token_ids": {"items": {"maximum": 151935, "minimum": 0, "type": "integer"}, "maxItems": 256, "minItems": 32, "type": "array"},
+    "long_context": {"$ref": "#/$defs/span"},
+    "passed": {"const": true},
+    "release_runner_sha256": {"$ref": "#/$defs/sha256"},
+    "report_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.qwen3.release_gate.v1"},
+    "snapshot_reverified_against_lock": {"const": true},
+    "spans": {"items": {"$ref": "#/$defs/span"}, "maxItems": 256, "minItems": 32, "type": "array"},
+    "torch_version": {"minLength": 1, "type": "string"},
+    "transformers_version": {"const": "4.51.0"}
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["layer", "sha256", "shape"],
+      "properties": {
+        "layer": {"maximum": 36, "minimum": 1, "type": "integer"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "shape": {"items": {"minimum": 1, "type": "integer"}, "minItems": 3, "type": "array"}
+      }
+    },
+    "differential": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["argmax_match", "atol", "element_count", "maximum_absolute_error", "mean_absolute_error", "passed", "reference_sha256", "report_id", "schema", "service_sha256"],
+      "properties": {
+        "argmax_match": {"const": true},
+        "atol": {"const": 0},
+        "element_count": {"const": 151936},
+        "maximum_absolute_error": {"const": 0},
+        "mean_absolute_error": {"const": 0},
+        "passed": {"const": true},
+        "reference_sha256": {"$ref": "#/$defs/sha256"},
+        "report_id": {"$ref": "#/$defs/sha256"},
+        "schema": {"const": "opentallas.qwen3.logits_differential.v1"},
+        "service_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "span": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["all_layer_boundaries_match", "counter_reconciliation_exact", "final_context_tokens", "input_token_count", "input_token_sha256", "layer_boundaries", "layer_boundary_count_compared", "logits_differential", "reference_argmax_token_id", "reference_report_id", "service_argmax_token_id", "service_counters", "service_report_id"],
+      "properties": {
+        "all_layer_boundaries_match": {"const": true},
+        "counter_reconciliation_exact": {"const": true},
+        "final_context_tokens": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "input_token_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+        "input_token_sha256": {"$ref": "#/$defs/sha256"},
+        "layer_boundaries": {"items": {"$ref": "#/$defs/boundary"}, "maxItems": 36, "minItems": 36, "type": "array"},
+        "layer_boundary_count_compared": {"const": 36},
+        "logits_differential": {"$ref": "#/$defs/differential"},
+        "reference_argmax_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+        "reference_report_id": {"$ref": "#/$defs/sha256"},
+        "service_argmax_token_id": {"maximum": 151935, "minimum": 0, "type": "integer"},
+        "service_counters": {"type": "object"},
+        "service_report_id": {"$ref": "#/$defs/sha256"}
+      }
+    }
+  }
+}

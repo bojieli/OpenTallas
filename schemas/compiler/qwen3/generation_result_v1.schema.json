@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/generation_result_v1.schema.json",
+  "title": "OpenTallas Qwen3 greedy generation result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["build_id", "context_tokens_committed", "generated_token_ids", "mode", "prompt_token_count", "result_id", "schema", "spans", "termination"],
+  "properties": {
+    "build_id": {"$ref": "#/$defs/sha256"},
+    "context_tokens_committed": {"maximum": 8000, "minimum": 1, "type": "integer"},
+    "generated_text": {"anyOf": [{"type": "string"}, {"type": "null"}]},
+    "generated_token_ids": {"items": {"maximum": 151935, "minimum": 0, "type": "integer"}, "minItems": 1, "type": "array"},
+    "mode": {"const": "greedy"},
+    "prompt_token_count": {"maximum": 8000, "minimum": 1, "type": "integer"},
+    "result_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.qwen3.generation_result.v1"},
+    "spans": {"items": {"type": "object"}, "minItems": 1, "type": "array"},
+    "termination": {"enum": ["eos", "length"]}
+  },
+  "$defs": {"sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}}
+}

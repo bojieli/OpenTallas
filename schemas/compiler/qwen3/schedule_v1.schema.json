@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://opentallas.example/schemas/compiler/qwen3/schedule_v1.schema.json",
+  "title": "OpenTallas Qwen3 execution schedule v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["graph_id", "microcode_instruction_count", "model_id", "physical_map_id", "policy", "schedule_id", "schema", "slots", "summary"],
+  "properties": {
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "microcode_instruction_count": {"const": 617},
+    "model_id": {"const": "qwen3-8b"},
+    "physical_map_id": {"$ref": "#/$defs/sha256"},
+    "policy": {"type": "object"},
+    "schedule_id": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.qwen3.schedule.v1"},
+    "slots": {"items": {"$ref": "#/$defs/slot"}, "maxItems": 617, "minItems": 617, "type": "array"},
+    "summary": {"type": "object"}
+  },
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dependencies", "instruction_index", "kv_action", "layer", "node_id", "opcode", "reads", "slot", "stage", "weight", "writes"],
+      "properties": {
+        "dependencies": {"items": {"minimum": 0, "type": "integer"}, "type": "array"},
+        "instruction_index": {"maximum": 616, "minimum": 0, "type": "integer"},
+        "kv_action": {"enum": ["commit", "none", "read"]},
+        "layer": {"anyOf": [{"maximum": 35, "minimum": 0, "type": "integer"}, {"type": "null"}]},
+        "node_id": {"minLength": 1, "type": "string"},
+        "opcode": {"minLength": 1, "type": "string"},
+        "reads": {"items": {"minLength": 1, "type": "string"}, "maxItems": 2, "type": "array"},
+        "slot": {"maximum": 616, "minimum": 0, "type": "integer"},
+        "stage": {"maximum": 35, "minimum": 0, "type": "integer"},
+        "weight": {"anyOf": [{"minLength": 1, "type": "string"}, {"type": "null"}]},
+        "writes": {"items": {"minLength": 1, "type": "string"}, "maxItems": 2, "minItems": 1, "type": "array"}
+      }
+    }
+  }
+}
