@@ -657,8 +657,57 @@ class Verifier:
                     f"view {vid}: maximum element {last} needs {needed} bytes but "
                     f"object {obj.descriptor_id} is {obj.payload['size_bytes']} bytes"
                 )
+            self._verify_block_scale(vid, payload)
         self.checks.setdefault("view_bounds", True)
         self.checks.setdefault("block_extent", True)
+        self.checks.setdefault("block_scale", True)
+
+    def _verify_block_scale(self, vid: int, payload: Mapping[str, Any]) -> None:
+        """A block-scaled view's geometry must admit an exact scale index.
+
+        Amendment A15 (wire format section 12.6) addresses a scale with two
+        blocks -- ``scale_block_elements`` along the last axis and
+        ``scale_block_rows`` along the leading one -- and states three
+        requirements for the index to be exact: last-axis stride one,
+        ``cols % scale_block_elements == 0`` and ``rows % scale_block_rows == 0``.
+        A view that meets none of them has no defined scale for some of its
+        elements, so it is refused here rather than trapped mid-operator, where
+        it would already have read weights.  A zero row block is the amendment's
+        A8 case and means one, which every view divides.
+        """
+        if payload["scale_object_id"] == NO_ID:
+            return
+        rank = int(payload["rank"])
+        block = int(payload["scale_block_elements"])
+        if block <= 0:
+            self._fail(
+                f"view {vid}: names a scale object but no scale block size"
+            )
+            self.checks["block_scale"] = False
+            return
+        if int(payload[f"stride{rank - 1}"]) != 1:
+            self._fail(
+                f"view {vid}: a block-scaled view must have last-axis stride 1, "
+                f"not {payload[f'stride{rank - 1}']}"
+            )
+            self.checks["block_scale"] = False
+        width = int(payload[f"dim{rank - 1}"])
+        if width % block:
+            self._fail(
+                f"view {vid}: last axis {width} is not a multiple of its "
+                f"{block}-element scale block"
+            )
+            self.checks["block_scale"] = False
+        row_block = max(int(payload["scale_block_rows"]), 1)
+        rows = 1
+        for axis in range(rank - 1):
+            rows *= max(int(payload[f"dim{axis}"]), 1)
+        if rows % row_block:
+            self._fail(
+                f"view {vid}: leading extent {rows} is not a multiple of its "
+                f"{row_block}-row scale block"
+            )
+            self.checks["block_scale"] = False
 
     def _verify_block_extent(
         self,

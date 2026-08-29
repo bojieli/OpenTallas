@@ -679,6 +679,57 @@ def test_a_view_that_exceeds_its_object_is_rejected(capability: Capability) -> N
     )
 
 
+def test_a_block_scale_that_does_not_tile_the_view_is_rejected(
+    capability: Capability,
+) -> None:
+    """Amendment A15 requires both blocks to divide the view they scale.
+
+    A leading extent that is not a whole number of row blocks leaves some rows
+    with no defined scale, and the index arithmetic would silently read a
+    neighbour's code.  Refusing it at admission is cheaper than trapping in the
+    middle of an operator that has already read weights.
+    """
+
+    def program(builder: Any, ids: dict[str, int]) -> None:
+        builder.tensor_view(
+            object_id=ids["weights"],
+            dtype=DType.BF16,
+            dims=[3, 8],
+            scale_object_id=ids["weights"],
+            scale_block_elements=4,
+            scale_block_rows=2,
+        )
+        default_tail(builder, ids)
+
+    assert_rejected(
+        probe_deployment(capability, program=program),
+        capability,
+        r"leading extent 3 is not a multiple of its 2-row scale block",
+    )
+
+
+def test_a_block_scale_that_does_not_divide_the_last_axis_is_rejected(
+    capability: Capability,
+) -> None:
+    """The A8 half of the same requirement, unchanged by A15."""
+
+    def program(builder: Any, ids: dict[str, int]) -> None:
+        builder.tensor_view(
+            object_id=ids["weights"],
+            dtype=DType.BF16,
+            dims=[4, 6],
+            scale_object_id=ids["weights"],
+            scale_block_elements=4,
+        )
+        default_tail(builder, ids)
+
+    assert_rejected(
+        probe_deployment(capability, program=program),
+        capability,
+        r"last axis 6 is not a multiple of its 4-element scale block",
+    )
+
+
 def test_a_dynamic_term_can_push_a_view_past_its_object(
     capability: Capability,
 ) -> None:

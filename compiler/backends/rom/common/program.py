@@ -73,6 +73,7 @@ from runtime.abi3.constants import (
     Feature,
     Major,
     NO_ID,
+    ParticipantScope,
     Permission,
     ReductionOrder,
     Route,
@@ -167,6 +168,32 @@ MHC_SUBCASE: Mapping[str, int] = {
 }
 SCALE_SUBCASE: Mapping[str, int] = {"SCALE": 0, "MUL": 1, "SIGMOID": 2}
 
+#: Neutral kinds whose *whole* content is an ordered sum, and which therefore
+#: state their association in the graph rather than leaving it to a contract
+#: name.
+REDUCTION_KINDS = frozenset({"EXPERT_REDUCE", "ORDERED_SUM", "PARTITION_SUM"})
+
+#: Spellings the exporters use for a reduction association, and the frozen ABI
+#: order each names.  ``canonical_balanced_binary32_tree`` and ``pairwise_tree``
+#: are the same NUM-6.1 tree written by two exporters.
+DECLARED_REDUCTION_ORDER: Mapping[str, ReductionOrder] = {
+    "balanced_tree": ReductionOrder.PAIRWISE_TREE,
+    "canonical_balanced_binary32_tree": ReductionOrder.PAIRWISE_TREE,
+    "pairwise_tree": ReductionOrder.PAIRWISE_TREE,
+    "blocked_ascending": ReductionOrder.BLOCKED_ASCENDING,
+    "sequential_ascending": ReductionOrder.SEQUENTIAL_ASCENDING,
+}
+
+#: Neutral operand orders that differ from TA-ABI3-OPCONV-1's slot order, and
+#: the permutation that reconciles them.  The ``MHC`` row is
+#: ``(hidden, fn, base, scale)`` and both exporters emit
+#: ``(hidden, fn, scale, base)``.  This mirrors ``_SLOT_PERMUTATION`` in
+#: ``compiler/backends/hbm_sram/plan.py``: one convention, two backends.
+_SLOT_PERMUTATION: Mapping[str, tuple[int, ...]] = {
+    "HYPER_CONNECT_PRE": (0, 1, 3, 2),
+    "HYPER_CONNECT_HEAD": (0, 1, 3, 2),
+}
+
 #: Spellings a kernel *attribute* may use for a numeric format.  Tensor dtypes
 #: are checked against the neutral registry, but attributes are free text, and
 #: front ends legitimately write the IEEE names.
@@ -228,6 +255,15 @@ COUNTER_GROUP_BY_FAMILY: Mapping[int, CounterGroup] = {
     Major.LINK: CounterGroup.COMMUNICATION,
     Major.CONTROL: CounterGroup.INSTRUCTION,
 }
+
+
+def _narrow_bf16_rne(bits: int) -> int:
+    """Round a binary32 bit pattern to its BF16 code, ties to even."""
+    code = (int(bits) >> 16) & 0xFFFF
+    remainder = int(bits) & 0xFFFF
+    if remainder > 0x8000 or (remainder == 0x8000 and code & 1):
+        code = (code + 1) & 0xFFFF
+    return code
 
 
 def _binary32_bits(attributes: Mapping[str, Any], keys: Sequence[str]) -> int:
@@ -542,18 +578,33 @@ class BufferPlacement:
 
 @dataclass(slots=True)
 class LinkStep:
-    """One on-fabric operation inserted into a compressed body."""
+    """One on-fabric operation inserted into a compressed body.
+
+    ``participant_scope`` (amendment A14) says what the step's participants
+    *are*: nodes, reticles or tiles of the admitted topology.  The count is
+    then a *derivation*, not a declaration: ``_participant_count`` reads it out
+    of the TOPOLOGY descriptor this backend itself emitted, exactly as the LINK
+    engine will, so ``participant_count=None`` is the normal value.  A
+    point-to-point step, which has no participant set at all, states its two
+    endpoints explicitly.
+    """
 
     position: int
     where: str  # "before" or "after"
     link_sub: int
     collective_op: int
     label: str
-    participant_count: int
     byte_extent: int
+    participant_scope: ParticipantScope = ParticipantScope.NODE
+    participant_count: int | None = None
     route_class: int = 0
     group_id: int = NO_ID
     virtual_channel: int = 0
+    #: Numeric contract of an arithmetic collective.  An all-reduce reduces
+    #: real bytes under a real contract or it is not a reduction, so the step
+    #: names one; a movement collective needs none.
+    reduction_contract: str = ""
+    reduction_dtype: str = "bf16"
 
 
 @dataclass(slots=True)
@@ -625,7 +676,7 @@ class RomLowering:
         )
         self.plan: RomImagePlan | None = None
         self._region_of_tensor: dict[str, tuple[str, int]] = {}
-        self._scale_of_region: dict[str, tuple[str, int]] = {}
+        self._scale_of_region: dict[str, tuple[str, int, int]] = {}
         self._buffer_object: dict[str, int] = {}
         self._buffer_place: dict[str, BufferPlacement] = {}
         self._buffer_root: dict[str, str] = {}
@@ -645,7 +696,8 @@ class RomLowering:
         self._state_owner: dict[str, str] = {}
         self._event_of_tensor: dict[str, int] = {}
         self._communications: list[tuple[str, int]] = []
-        self._link_fanout: dict[str, int] = {}
+        self._link_endpoint_objects: dict[int, tuple[int, int]] = {}
+        self._link_numeric: dict[tuple[str, str], int] = {}
         self._link_instruction_count = 0
         self._queue_cursor: dict[int, int] = {}
         self._contract_substitutions: dict[str, str] = {}
@@ -805,6 +857,7 @@ class RomLowering:
             self._scale_of_region[key] = (
                 f"{key}.scale",
                 int(head.scale_block_elements or 0),
+                self._scale_block_rows(head),
             )
 
         def expert_bank(key: str, columns: Sequence[Sequence[Kernel]]) -> None:
@@ -882,6 +935,46 @@ class RomLowering:
             elements *= dim
         return elements
 
+    def _scale_block_rows(self, tensor: Tensor) -> int:
+        """How many leading rows one of this tensor's scale codes covers.
+
+        Amendment A15 states a block scale as two extents.  The neutral IR
+        names only the block along the reduction axis, because the scale
+        tensor's own declared shape carries the rest -- a ``[1024, 4096]`` FP8
+        weight with a 128-element block whose scale is ``[8, 32]`` is scaled in
+        128 x 128 tiles, and ``1024 / 8`` says so.  Reading it off the two
+        declared shapes is the whole derivation; nothing here is assumed, and a
+        shape that does not divide is refused rather than rounded.
+        """
+        block = int(tensor.scale_block_elements or 0)
+        scale_id = tensor.scale_tensor_id
+        if not block or not scale_id or scale_id not in self.tensors:
+            return 1
+        scale = self.tensors[scale_id]
+        dims = self._dims(tensor)
+        scale_dims = self._dims(scale)
+        width = dims[-1] if dims else 1
+        scale_width = scale_dims[-1] if scale_dims else 1
+        if width % block or scale_width != width // block:
+            raise RomLoweringError(
+                f"weight {tensor.tensor_id!r} is {list(dims)} with a {block}-element "
+                f"scale block, so its scale's last axis must be {width // block}; "
+                f"{scale_id!r} declares {list(scale_dims)}"
+            )
+        rows = 1
+        for extent in dims[:-1]:
+            rows *= extent
+        scale_rows = 1
+        for extent in scale_dims[:-1]:
+            scale_rows *= extent
+        if scale_rows <= 0 or rows % scale_rows:
+            raise RomLoweringError(
+                f"weight {tensor.tensor_id!r} has {rows} rows and its scale "
+                f"{scale_id!r} has {scale_rows}; a block scale covers a whole "
+                "number of rows per code"
+            )
+        return max(rows // scale_rows, 1)
+
     def _member(self, tensor: Tensor, slot: int, offset: int) -> RomMember:
         binding = tensor.binding
         if binding is None:
@@ -936,7 +1029,14 @@ class RomLowering:
         bits = DTYPE_BITS[dtype]
         return max(self.policy.layout.row_bytes * 8 // bits, 1)
 
-    def _schedule(self, kernel: Kernel, family: Major, sub: int) -> int:
+    def _schedule(
+        self,
+        kernel: Kernel,
+        family: Major,
+        sub: int,
+        *,
+        rows_override: int | None = None,
+    ) -> int:
         """Emit the SCHEDULE descriptor for one operator.
 
         ADR-003 section 6.2 puts tile mapping, bank/port use, NoC path, issue
@@ -957,7 +1057,15 @@ class RomLowering:
         outputs = [self.tensors[n] for n in kernel.outputs]
         weights = [t for t in inputs if t.role in WEIGHT_ROLES]
         lanes = self._lanes(family)
-        rows = domain.get("tokens") or (self._dims(outputs[0])[0] if outputs else 1)
+        # The rows *one dispatch* covers.  Normally that is the operator's
+        # token extent, but an operator issued once per token covers one row
+        # however many the iteration domain names, and a schedule that claimed
+        # otherwise would price a per-token dispatch as a whole block.
+        rows = (
+            rows_override
+            if rows_override is not None
+            else domain.get("tokens") or (self._dims(outputs[0])[0] if outputs else 1)
+        )
         rows = max(int(rows), 1)
         tile_rows = max(min(rows, self.policy.tile_rows), 1)
         tile_cols = max(self.policy.tile_cols, 1)
@@ -1134,13 +1242,13 @@ class RomLowering:
         )
         if contract != kernel.numeric_contract:
             self._contract_substitutions[kernel.numeric_contract] = contract
-        order = self._reduction_order(contract, kernel.kind)
+        order = self._reduction_order(contract, kernel.kind, attributes)
         # An engine reads its epsilon and its scale from the numeric
         # descriptor, so a kernel that declares either must have it carried
         # through. Omitting them produced a deployment the verifier admitted
         # and the RMSNorm engine then refused at execution, which is the worst
         # place for a missing field to surface.
-        epsilon_bits = _binary32_bits(attributes, ("epsilon_bits", "epsilon"))
+        epsilon_bits = self._epsilon_bits(kernel)
         scale_bits = _binary32_bits(
             attributes, ("scale_bits", "scale_bf16_code", "scale")
         )
@@ -1174,9 +1282,48 @@ class RomLowering:
         self._numeric_cache[key] = descriptor
         return descriptor
 
+    def _epsilon_bits(self, kernel: Kernel) -> int:
+        """The numeric descriptor's epsilon, in the encoding its opcode reads.
+
+        A NUMERIC descriptor's epsilon field is a binary32 pattern for every
+        contract that adds the epsilon in binary32.  The released *unweighted*
+        head RMSNorm is not one of them: its square, mean, epsilon and
+        reciprocal square root are all BF16-domain, so the engine requires a
+        BF16 epsilon code and refuses any other encoding rather than guess
+        which one a pattern is in.  The narrowing therefore belongs here, where
+        the operand arity that distinguishes the two head-norm contracts is
+        known; the weighted head norm -- Qwen's, which passes a gain vector --
+        keeps binary32.  This mirrors ``_epsilon_bits`` in
+        ``compiler/backends/hbm_sram/lower.py``: one convention, two backends.
+        """
+        bits = _binary32_bits(kernel.attributes, ("epsilon_bits", "epsilon"))
+        if kernel.kind != "HEAD_RMS_NORM" or not bits or len(kernel.inputs) != 1:
+            return bits
+        return _narrow_bf16_rne(bits)
+
     @staticmethod
-    def _reduction_order(contract: str, kind: str) -> ReductionOrder:
-        """Amendment A8: RMSNorm sums in a balanced tree, not sequentially."""
+    def _reduction_order(
+        contract: str, kind: str, attributes: Mapping[str, Any] = {}
+    ) -> ReductionOrder:
+        """Amendment A8: RMSNorm sums in a balanced tree, not sequentially.
+
+        A reduction operator is the one place where the association is the
+        whole content of the operation rather than an implementation detail of
+        one, and the neutral IR states it: the mHC branch reduction declares
+        ``pairwise_tree`` because its frozen reference reduces four binary32
+        products with the NUM-6.1 balanced tree.  Deriving that from the
+        contract *name* instead would have made it sequential, which is a
+        different number.  The declaration is honoured only for the reduction
+        kinds, because elsewhere the graph states the association of the
+        qualification oracle while execution declares amendment A7's blocked
+        substitute -- two names for a deliberate difference, not a drift.
+        """
+        if kind in REDUCTION_KINDS:
+            declared = DECLARED_REDUCTION_ORDER.get(
+                str(attributes.get("reduction_order", ""))
+            )
+            if declared is not None:
+                return declared
         if kind in {"RMS_NORM", "HEAD_RMS_NORM"} or "rmsnorm" in contract:
             return ReductionOrder.PAIRWISE_TREE
         if "blocked" in contract:
@@ -1211,6 +1358,7 @@ class RomLowering:
         permissions: int = int(Permission.READ),
         scale_object_id: int = NO_ID,
         scale_block_elements: int = 0,
+        scale_block_rows: int = 0,
         label: str = "view",
     ) -> int:
         # Amendment A8 freezes block-scale addressing: one scale byte per
@@ -1230,6 +1378,7 @@ class RomLowering:
             permissions,
             scale_object_id,
             scale_block_elements,
+            scale_block_rows,
             int(layout),
         )
         if key in self._view_cache:
@@ -1249,6 +1398,7 @@ class RomLowering:
             layout_class=layout,
             scale_object_id=scale_object_id,
             scale_block_elements=scale_block_elements,
+            scale_block_rows=scale_block_rows,
             permissions=permissions,
             key=f"{label}.{len(self._view_cache):05d}",
         )
@@ -1941,6 +2091,8 @@ class RomLowering:
         loop: int | None,
         writable: bool,
         blocked: bool = True,
+        element_offset: int = 0,
+        term: DynamicTerm | None = None,
     ) -> int:
         object_id = self._buffer(tensor.tensor_id)
         permissions = (
@@ -1950,6 +2102,7 @@ class RomLowering:
             permissions |= int(Permission.HOST_VISIBLE)
         scale_object = NO_ID
         block = 0
+        row_block = 0
         if tensor.scale_tensor_id and tensor.scale_tensor_id in self.tensors:
             scale = self.tensors[tensor.scale_tensor_id]
             block = int(tensor.scale_block_elements or 0)
@@ -1959,16 +2112,20 @@ class RomLowering:
                     if scale.role in WEIGHT_ROLES
                     else self._buffer(scale.tensor_id)
                 )
-        term = self._row_term(tensor, shape, loop) if blocked else None
+                row_block = self._scale_block_rows(tensor)
+        if term is None:
+            term = self._row_term(tensor, shape, loop) if blocked else None
         return self._view(
             object_id=object_id,
             dtype=self._dtype(tensor.dtype),
             dims=dims,
             strides=strides,
+            element_offset=element_offset,
             dynamic=[term] if term is not None else (),
             permissions=permissions,
             scale_object_id=scale_object,
             scale_block_elements=block if scale_object != NO_ID else 0,
+            scale_block_rows=row_block if scale_object != NO_ID else 0,
             label="view.buf",
         )
 
@@ -1979,6 +2136,80 @@ class RomLowering:
         if dims and symbol is not None and multiplier == 1 and shape.row_symbolic:
             dims[0] = min(shape.block, dims[0])
         return dims
+
+    @staticmethod
+    def _row_major_strides(dims: Sequence[int]) -> list[int]:
+        strides = [1] * len(dims)
+        running = 1
+        for axis in range(len(dims) - 1, -1, -1):
+            strides[axis] = running
+            running *= max(int(dims[axis]), 1)
+        return strides
+
+    def _inserted_broadcast_axis(
+        self, kernel: Kernel, dims: list[int]
+    ) -> tuple[list[int], list[int]]:
+        """Read a ``BROADCAST`` source through one axis of stride zero.
+
+        The neutral kernel states that its result is its source with ``extent``
+        inserted at ``axis``, every element of the new axis being the same
+        element.  A stride of zero *is* that statement: the view reaches no
+        further than the source does, costs no bytes, and the engine reads one
+        row ``extent`` times instead of holding ``extent`` copies of it.
+
+        Only the source is widened.  A zero stride on a writable view would
+        make every element of the axis the same *location*, which is an
+        aliasing write whose result is whichever copy landed last.
+        """
+        attributes = kernel.attributes
+        axis = int(attributes["axis"])
+        extent = int(attributes["extent"])
+        if not 0 <= axis <= len(dims):
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: BROADCAST axis {axis} is outside "
+                f"the rank-{len(dims)} source"
+            )
+        if extent <= 0:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: BROADCAST extent {extent} is not "
+                "positive"
+            )
+        strides = self._row_major_strides(dims)
+        return (
+            [*dims[:axis], extent, *dims[axis:]],
+            [*strides[:axis], 0, *strides[axis:]],
+        )
+
+    def _selected_plane(
+        self, kernel: Kernel, dims: list[int]
+    ) -> tuple[list[int], list[int], int]:
+        """Read one plane of a ``SELECT`` source: drop an axis, offset into it.
+
+        The mirror of :meth:`_inserted_broadcast_axis`.  A broadcast reads one
+        source through an axis of stride zero; a select reads one plane by
+        dropping the named axis and offsetting the view's element origin by
+        ``index`` of that axis's stride.  The destination keeps the rank the
+        graph declared, which is the source's rank minus one.
+        """
+        attributes = kernel.attributes
+        axis = int(attributes["axis"])
+        index = int(attributes["index"])
+        if not 0 <= axis < len(dims):
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: SELECT axis {axis} is outside the "
+                f"rank-{len(dims)} source"
+            )
+        if not 0 <= index < int(dims[axis]):
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: SELECT index {index} is outside "
+                f"the {dims[axis]} planes of axis {axis}"
+            )
+        strides = self._row_major_strides(dims)
+        return (
+            [*dims[:axis], *dims[axis + 1 :]],
+            [*strides[:axis], *strides[axis + 1 :]],
+            index * strides[axis],
+        )
 
     def _broadcast(
         self, dims: list[int], shape: KernelShape
@@ -2055,6 +2286,154 @@ class RomLowering:
             label="view.index",
         )
 
+    # -- REDUCTION.EXPERT_SUM --------------------------------------------
+    def _expert_sum_slots(self, kernel: Kernel) -> tuple[str, str | None, str | None]:
+        """Which neutral operand fills which slot of the frozen EXPERT_SUM row.
+
+        ``TA-ABI3-OPCONV-1`` section 6 reads (contributions, weights, optional
+        base), and amendment A10 makes the weights optional: an operator that
+        omits ``input_view_1`` declares the weight was applied earlier, which is
+        exactly what the released DeepSeek expert does -- it multiplies by the
+        routing weight before its down projection, so re-applying it at the
+        reduction would square it.
+
+        The neutral IR says which convention is in force rather than the
+        backend guessing.  A ``base_operand_index`` attribute names the base
+        operand, and a graph that names one has already applied its weights.
+        Everything else this kernel reads -- the routed rows' expert identity,
+        for one -- is a dataflow fact the ABI row has no slot for, so it is
+        dropped here rather than bound to the base slot it would otherwise
+        silently occupy with 32-bit integers.
+        """
+        attributes = kernel.attributes
+        contributions = kernel.inputs[0]
+        declared = attributes.get("base_operand_index")
+        if declared is not None:
+            index = int(declared)
+            if not 1 <= index < len(kernel.inputs):
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r} names base operand {index}, "
+                    f"which is not one of its {len(kernel.inputs)} inputs"
+                )
+            return contributions, None, kernel.inputs[index]
+        if len(kernel.inputs) > 1:
+            weights = self.tensors[kernel.inputs[1]]
+            if weights.dtype not in {"u32", "i32", "i64"}:
+                return contributions, kernel.inputs[1], None
+        return contributions, None, None
+
+    def _expert_sum_geometry(self, kernel: Kernel) -> tuple[int, int, int]:
+        """One token's contribution count, its width, and the output width.
+
+        The contribution axis is never the token axis, and the neutral IR
+        states it two ways.  The mHC branch reduction declares
+        ``[tokens, streams, width]``, so the count is the second axis; the MoE
+        reduction declares ``[top_k * tokens, width]`` -- a multiplied symbolic
+        extent -- so the count is the multiplier.  Both are read off the
+        operand rather than from a name.
+        """
+        contributions = self.tensors[kernel.inputs[0]]
+        dims = self._dims(contributions)
+        _symbol, multiplier = self._leading_symbol(contributions)
+        trailing = 1
+        for extent in dims[1:]:
+            trailing *= extent
+        if multiplier > 1:
+            count, width = multiplier, trailing
+        elif len(dims) > 2:
+            count = dims[1]
+            width = trailing // max(dims[1], 1)
+        else:
+            count, width = 1, trailing
+        out = self.tensors[kernel.outputs[0]] if kernel.outputs else contributions
+        out_width = 1
+        for extent in self._dims(out)[1:]:
+            out_width *= extent
+        return max(count, 1), max(width, 1), max(out_width, 1)
+
+    def _open_token_loop(self, kernel: Kernel) -> int:
+        """One iteration per token, for a reduction across a non-token axis.
+
+        ``REDUCTION.EXPERT_SUM`` reduces the *leading* axis of ``in0`` and takes
+        one weight per leading index.  Every reduction in either graph reduces
+        an axis that is not the token axis and weights it per token, so the
+        descriptor that says what the operator means presents one token: ``[c,
+        width]`` contributions against ``[c]`` weights.  The loop that walks the
+        tokens therefore has ``bound_divisor = 1``, and amendment A13's clamp
+        correctly does not reach it -- the loop steps by one token's row, not by
+        one whole block of the leading axis, which is the condition the resolver
+        and the verifier both derive.
+
+        The cost is one dispatch per token for this one operator.  It is bounded
+        by the capability's own loop maximum: a span longer than
+        ``max_loop_trip`` fails closed at the device with a trip-count trap
+        rather than reducing the wrong number of tokens.
+        """
+        symbol = Symbol.SPAN_TOKENS
+        if kernel.outputs:
+            named, multiplier = self._leading_symbol(self.tensors[kernel.outputs[0]])
+            if named is not None and multiplier == 1:
+                symbol = Symbol(named)
+        trip = max(
+            min(
+                self._symbolic_row_bound(kernel),
+                int(self.capability.limits["max_loop_trip"]),
+            ),
+            1,
+        )
+        loop = self.builder.loop_control(
+            lower_bound=0,
+            upper_bound=trip,
+            step=1,
+            max_iterations=trip,
+            bound_symbol=symbol,
+            bound_divisor=1,
+            counter_class_id=self._counter_class("instruction", Major.CONTROL),
+            key=f"loop.token.k{kernel.index:05d}",
+        )
+        self.builder.open_loop(loop)
+        return loop
+
+    def _expert_sum_views(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        run: LayerRun | None,
+        loop: int,
+    ) -> tuple[list[int], list[int]]:
+        """One token's operands for ``REDUCTION.EXPERT_SUM``."""
+        count, width, out_width = self._expert_sum_geometry(kernel)
+        contributions, weights, base = self._expert_sum_slots(kernel)
+
+        def per_token(name: str, dims: Sequence[int], *, writable: bool) -> int:
+            tensor = self.tensors[name]
+            stride = 1
+            for extent in dims:
+                stride *= extent
+            return self._buffer_view(
+                tensor,
+                dims=list(dims),
+                strides=self._row_major_strides(dims),
+                shape=shape,
+                loop=loop,
+                writable=writable,
+                blocked=False,
+                term=DynamicTerm.loop(loop, stride),
+            )
+
+        inputs = [per_token(contributions, [count, width], writable=False)]
+        if weights is not None:
+            span = 1
+            for extent in self._dims(self.tensors[weights])[1:]:
+                span *= extent
+            inputs.append(per_token(weights, [max(span, 1)], writable=False))
+        elif base is not None:
+            inputs.append(NO_ID)
+        if base is not None:
+            inputs.append(per_token(base, [out_width], writable=False))
+        outputs = [per_token(kernel.outputs[0], [out_width], writable=True)]
+        return inputs, outputs
+
     def _operand_view(
         self,
         kernel: Kernel,
@@ -2122,13 +2501,26 @@ class RomLowering:
                 writable=True,
             )
         dims = self._blocked_dims(tensor, shape)
-        broadcast_dims, broadcast_strides = (
-            self._broadcast(dims, shape) if direction == "in" and slot > 0 else (dims, None)
-        )
+        element_offset = 0
+        if direction == "in" and kernel.kind == "BROADCAST":
+            broadcast_dims, broadcast_strides = self._inserted_broadcast_axis(
+                kernel, dims
+            )
+        elif direction == "in" and kernel.kind == "SELECT":
+            broadcast_dims, broadcast_strides, element_offset = self._selected_plane(
+                kernel, dims
+            )
+        else:
+            broadcast_dims, broadcast_strides = (
+                self._broadcast(dims, shape)
+                if direction == "in" and slot > 0
+                else (dims, None)
+            )
         return self._buffer_view(
             tensor,
             dims=broadcast_dims,
             strides=broadcast_strides,
+            element_offset=element_offset,
             shape=shape,
             loop=loop,
             writable=writable,
@@ -2236,7 +2628,7 @@ class RomLowering:
             dynamic.append(DynamicTerm.loop(loop, stride))
         else:
             element_offset = region_slot * region.slot_element_stride
-        scale_object, block = self._scale_binding(key)
+        scale_object, block, row_block = self._scale_binding(key)
         return self._view(
             object_id=region.object_id,
             dtype=dtype,
@@ -2247,17 +2639,18 @@ class RomLowering:
             permissions=int(Permission.READ),
             scale_object_id=scale_object,
             scale_block_elements=block,
+            scale_block_rows=row_block,
             label="view.rom",
         )
 
-    def _scale_binding(self, region_key: str) -> tuple[int, int]:
+    def _scale_binding(self, region_key: str) -> tuple[int, int, int]:
         """The immutable block-scale object that scales ``region_key``."""
         if self.plan is None or region_key not in self._scale_of_region:
-            return NO_ID, 0
-        scale_key, block = self._scale_of_region[region_key]
+            return NO_ID, 0, 0
+        scale_key, block, row_block = self._scale_of_region[region_key]
         if not block:
-            return NO_ID, 0
-        return self.plan.region(scale_key).object_id, block
+            return NO_ID, 0, 0
+        return self.plan.region(scale_key).object_id, block, row_block
 
     def _expert_bank_view(self, kernel: Kernel, run: LayerRun | None) -> int:
         """One view over a layer's whole routed expert bank.
@@ -2287,7 +2680,7 @@ class RomLowering:
                     "field of ABI 3.0 tensor views; split the bank"
                 )
             dynamic.append(DynamicTerm.loop(self._loop_of_run[run.index], stride))
-        scale_object, block = self._scale_binding(key)
+        scale_object, block, row_block = self._scale_binding(key)
         return self._view(
             object_id=region.object_id,
             dtype=self._dtype(region.dtype),
@@ -2297,6 +2690,7 @@ class RomLowering:
             permissions=int(Permission.READ),
             scale_object_id=scale_object,
             scale_block_elements=block,
+            scale_block_rows=row_block,
             label="view.experts",
         )
 
@@ -2439,8 +2833,19 @@ class RomLowering:
         because the neutral IR states what is moved before it states where.
         Permuting here keeps a backend concern out of the IR: the index is the
         32-bit integer operand, which is model-blind and needs no name.
+
+        The hyper-connection rows need it by name.  ``VECTOR.MHC`` reads
+        ``(hidden, fn, base, scale)``; both exporters emit
+        ``(hidden, fn, scale, base)``, following the released module's own
+        argument order.  The neutral IR fixes *which* tensors an operation
+        reads and the convention fixes *which slot* each occupies, so the
+        reconciliation is a backend's job -- the same reasoning as amendment
+        A11's ``KV_APPEND`` permutation.
         """
         order = list(range(len(kernel.inputs)))
+        permutation = _SLOT_PERMUTATION.get(kernel.kind)
+        if permutation is not None and len(order) == len(permutation):
+            return [order[slot] for slot in permutation]
         if family is not Major.DMA or sub not in (int(Dma.GATHER), int(Dma.SCATTER)):
             return order
         index = next(
@@ -2573,6 +2978,25 @@ class RomLowering:
                 f"ABI 3.0 operator admits {MAX_OPERATOR_OUTPUTS}"
             )
         shape = self._shape_of(kernel, engine)
+        schedule_rows: int | None = None
+        if family is Major.REDUCTION and engine.sub == int(Reduction.EXPERT_SUM):
+            # A weighted reduction across a non-token axis is stated one token
+            # at a time; see _open_token_loop.  One dispatch covers one row, so
+            # the schedule is priced for one row rather than for the block the
+            # iteration domain names.
+            loop = self._open_token_loop(kernel)
+            inputs, outputs = self._expert_sum_views(kernel, shape, run, loop)
+            schedule_rows = 1
+            self._emit_operator(
+                kernel,
+                family,
+                engine.sub,
+                inputs,
+                outputs,
+                loop=loop,
+                schedule_rows=schedule_rows,
+            )
+            return
         loop = self._open_row_loop(kernel, shape)
         order = self._operand_order(kernel, family, engine.sub)
         if family is Major.DMA and engine.sub in (int(Dma.GATHER), int(Dma.SCATTER)):
@@ -2615,14 +3039,38 @@ class RomLowering:
                 )
                 for abi_slot, name in enumerate(kernel.outputs[:MAX_OPERATOR_OUTPUTS])
             ]
+        self._emit_operator(
+            kernel,
+            family,
+            engine.sub,
+            inputs,
+            outputs,
+            loop=loop,
+            schedule_rows=schedule_rows,
+        )
+
+    def _emit_operator(
+        self,
+        kernel: Kernel,
+        family: Major,
+        sub: int,
+        inputs: Sequence[int],
+        outputs: Sequence[int],
+        *,
+        loop: int | None,
+        schedule_rows: int | None = None,
+    ) -> None:
+        """Bind one operator descriptor, issue it, and close its loop."""
         operator = self.builder.operator(
             engine_family=family,
-            engine_sub=engine.sub,
+            engine_sub=sub,
             inputs=inputs,
             outputs=outputs,
-            aux=self._aux(kernel, family, engine.sub),
+            aux=self._aux(kernel, family, sub),
             numeric_profile_id=self._numeric(kernel),
-            schedule_id=self._schedule(kernel, family, engine.sub),
+            schedule_id=self._schedule(
+                kernel, family, sub, rows_override=schedule_rows
+            ),
             counter_class_id=self._counter_class(kernel.counter_class, family),
             source_kernel_id=kernel.index,
             key=f"op.k{kernel.index:05d}",
@@ -2636,7 +3084,7 @@ class RomLowering:
         event = self.builder.new_event()
         self.builder.emit(
             family,
-            engine.sub,
+            sub,
             descriptor_id=operator,
             wait_set_id=wait,
             signal_event_id=event,
@@ -2660,36 +3108,93 @@ class RomLowering:
         )
 
     # -- link fabric -----------------------------------------------------
+    def _admitted_topology(self) -> Mapping[str, int]:
+        """The one TOPOLOGY descriptor this lowering has already emitted."""
+        ids = self.builder.table.ids_of_type(int(ExtendedDescriptorType.TOPOLOGY))
+        if len(ids) != 1:
+            raise RomLoweringError(
+                f"the deployment declares {len(ids)} TOPOLOGY descriptors; an "
+                "on-fabric step is derived against exactly one admitted topology"
+            )
+        return self.builder.table[ids[0]].payload
+
+    def _participant_count(self, step: LinkStep) -> int:
+        """How many participants ``step`` addresses, derived, not declared.
+
+        Amendment A14 (wire format section 12.5) makes a collective's member
+        set a function of ``participant_scope`` and the admitted topology::
+
+            NODE     -> node_count
+            RETICLE  -> reticle_count
+            TILE     -> reticle_count * tiles_per_reticle
+
+        with ``route_group_count`` partitioning that set and ``group_id``
+        selecting one part.  The LINK engine derives exactly this and refuses a
+        descriptor whose ``participant_count`` disagrees, so the backend must
+        derive it too rather than assert a number of its own.  Before A14 the
+        derivation was ``node_count`` alone, and a wafer declares one node, so
+        every wafer collective came out degenerate however the backend counted.
+        """
+        if step.participant_count is not None:
+            return int(step.participant_count)
+        topology = self._admitted_topology()
+        reticles = int(topology["reticle_count"])
+        tiles = int(topology["tiles_per_reticle"])
+        scope = ParticipantScope(int(step.participant_scope))
+        if scope is ParticipantScope.NODE:
+            count = int(topology["node_count"])
+        elif scope is ParticipantScope.RETICLE:
+            count = reticles
+        else:
+            count = reticles * tiles
+        if count < 1:
+            raise RomLoweringError(
+                f"on-fabric step {step.label!r} is {scope.name}-scoped, and the "
+                f"admitted topology declares {reticles} reticles of {tiles} "
+                "tiles, so that fabric does not exist"
+            )
+        groups = int(topology["route_group_count"])
+        if step.group_id != NO_ID and groups > 1:
+            if count % groups:
+                raise RomLoweringError(
+                    f"on-fabric step {step.label!r} names route group "
+                    f"{step.group_id}, but {count} participants do not divide "
+                    f"into {groups} equal contiguous groups"
+                )
+            count //= groups
+        return count
+
     def _emit_links(self, run: LayerRun, steps: Iterable[LinkStep]) -> None:
         """Issue one compressed body's on-fabric steps.
 
-        ABI 3.0 counts a collective's participants in *nodes*: the engine
-        derives the participant set from the admitted topology's ``node_count``
-        partitioned by ``route_group_count``, and rejects a descriptor whose
-        declared count disagrees.  A wafer-scale logical accelerator is one
-        node by construction -- that is what "presented to the host as one
-        device" means -- so its tile-scoped collectives cannot state their true
-        fan-out in ``participant_count``.  The emitted count is therefore
-        derived from the topology, and the intended on-wafer fan-out is
-        recorded in the deployment notes instead of being asserted in a field
-        that means something else.  This is reported, not worked around.
+        ``participant_scope`` states which fabric each step addresses and the
+        count follows from the topology (:meth:`_participant_count`), so a
+        wafer's tile-scoped collectives now say what they mean instead of
+        borrowing the one node a ``WAFER_LOGICAL_DEVICE`` declares.
         """
-        nodes = max(int(self.capability.limits.get("max_nodes", 1)), 1)
         for step in steps:
-            local = self._link_local_object(run)
+            count = self._participant_count(step)
+            local, remote = self._link_endpoints(count, step.byte_extent)
             communication = self.builder.communication(
                 collective_op=step.collective_op,
                 local_object_id=local,
-                group_id=NO_ID,
+                remote_object_id=remote,
+                # ``local_tile_id`` of the admitted topology is this endpoint,
+                # and it is a member of the participant set the step names, so
+                # it can be the root of a multicast, gather or scatter.
+                source_node=0,
+                destination_node=0,
+                group_id=step.group_id,
                 route_class=step.route_class,
                 byte_extent=step.byte_extent,
-                participant_count=nodes,
+                participant_count=count,
+                participant_scope=ParticipantScope(int(step.participant_scope)),
+                reduction_numeric_id=self._link_reduction_numeric(step),
                 virtual_channel=step.virtual_channel,
                 counter_class_id=self._counter_class("communication", Major.LINK),
                 key=f"comm.r{run.index}.{step.label}",
             )
             self._communications.append((step.label, communication))
-            self._link_fanout[step.label] = step.participant_count
             self.builder.emit(
                 Major.LINK,
                 step.link_sub,
@@ -2698,17 +3203,70 @@ class RomLowering:
             )
             self._link_instruction_count += 1
 
-    def _link_local_object(self, run: LayerRun) -> int:
-        """The staging buffer an on-fabric step reads or writes."""
-        for position in range(run.positions):
-            for slot in range(2):
-                key = f"buf.r{run.index}.p{position:03d}.o{slot}"
-                root = self._buffer_root.get(key, key)
-                if root in self._buffer_object:
-                    return self._buffer_object[root]
-        if not self._buffer_object:  # pragma: no cover - defensive
-            raise RomLoweringError("no buffer exists to anchor an on-fabric step")
-        return self._buffer_object[sorted(self._buffer_object)[0]]
+    def _link_reduction_numeric(self, step: LinkStep) -> int:
+        """The numeric contract of an arithmetic collective, or ``NO_ID``.
+
+        A reduction's result lands in the same participant slot its
+        contributions came from, so the contract's input and output storage
+        formats are the same one, and the engine widens to binary32 and rounds
+        once under the contract's own reduction order.  A movement collective
+        reduces nothing and names nothing.
+        """
+        if not step.reduction_contract:
+            return NO_ID
+        key = (step.reduction_contract, step.reduction_dtype)
+        cached = self._link_numeric.get(key)
+        if cached is not None:
+            return cached
+        dtype = self._dtype(step.reduction_dtype)
+        descriptor = self.builder.numeric(
+            contract=step.reduction_contract,
+            input_dtype=dtype,
+            output_dtype=dtype,
+            accumulator_dtype=DType.FP32,
+            reduction_order=ReductionOrder.SEQUENTIAL_ASCENDING,
+            key=f"numeric.link.{len(self._link_numeric):02d}",
+        )
+        self._link_numeric[key] = descriptor
+        return descriptor
+
+    def _link_endpoints(self, count: int, extent: int) -> tuple[int, int]:
+        """The local slot array and the remote participant array of one step.
+
+        A collective's remote endpoint is the **participant array**: one slot of
+        ``byte_extent`` per participant, and participant ``k`` owns
+        ``[remote_offset + k * byte_extent, + byte_extent)``.  A gather or an
+        all-gather concatenates the same number of slots into the local
+        endpoint, so the two arrays are the same size.  Both are dedicated
+        staging objects rather than a borrowed activation buffer, because an
+        activation buffer is sized for one operand and a participant array is
+        sized for the fabric.
+
+        The remote array carries ``REMOTE``: there is no implicit coherent
+        global address space here, so an object another participant may touch
+        has to be explicitly exported.
+        """
+        nbytes = max(int(count) * int(extent), 64)
+        cached = self._link_endpoint_objects.get(nbytes)
+        if cached is not None:
+            return cached
+        index = len(self._link_endpoint_objects)
+        local = self.builder.memory_object(
+            storage_class=StorageClass.HBM,
+            size_bytes=nbytes,
+            source=ObjectSource.zeros(nbytes),
+            permissions=int(Permission.READ | Permission.WRITE),
+            key=f"obj.link.local.{index:02d}",
+        )
+        remote = self.builder.memory_object(
+            storage_class=StorageClass.HBM,
+            size_bytes=nbytes,
+            source=ObjectSource.zeros(nbytes),
+            permissions=int(Permission.READ | Permission.WRITE | Permission.REMOTE),
+            key=f"obj.link.remote.{index:02d}",
+        )
+        self._link_endpoint_objects[nbytes] = (local, remote)
+        return local, remote
 
     # -- program ---------------------------------------------------------
     def emit_program(self) -> None:
@@ -2891,7 +3449,6 @@ class RomLowering:
                 for run in self.analysis.runs
             ],
             "link_instruction_count": self._link_instruction_count,
-            "on_wafer_fanout": dict(sorted(self._link_fanout.items())),
             "numeric_contract_substitutions": dict(
                 sorted(self._contract_substitutions.items())
             ),

@@ -2310,6 +2310,40 @@ def _pass_depth(
     return 1
 
 
+def _scale_row_block(tensors: Mapping[str, Tensor], tensor_id: str) -> int:
+    """How many leading rows one of a weight's scale codes covers.
+
+    The neutral IR names the block along the reduction axis; the scale tensor's
+    own declared shape carries the block along the leading one, because a
+    ``[1024, 4096]`` weight with a 128-element block whose scale is ``[8, 32]``
+    is scaled in 128 x 128 tiles and ``1024 / 8`` says so.  A weight with no
+    scale, or a one-dimensional MXFP4 scale, gives one, which every extent
+    divides -- so this constrains nothing that amendment A8 already allowed.
+    """
+    tensor = tensors.get(tensor_id)
+    if tensor is None or not tensor.scale_tensor_id:
+        return 1
+    scale = tensors.get(tensor.scale_tensor_id)
+    block = int(tensor.scale_block_elements or 0)
+    if scale is None or block <= 0:
+        return 1
+
+    def extent(value: Any) -> int:
+        if isinstance(value, Symbolic):
+            return max(int(value.maximum or 1), 1)
+        return max(int(value), 1)
+
+    rows = 1
+    for value in tensor.shape[:-1]:
+        rows *= extent(value)
+    scale_rows = 1
+    for value in scale.shape[:-1]:
+        scale_rows *= extent(value)
+    if scale_rows <= 0 or rows % scale_rows:
+        return 1
+    return max(rows // scale_rows, 1)
+
+
 def _domain_extent(kernel: Kernel, keys: Sequence[str], span_max: int) -> int:
     """Read one iteration-domain extent, resolving a symbol to its maximum."""
     for key in keys:
@@ -2434,8 +2468,26 @@ def _plan_kernels(
                     f"output rows but the result declares {cols} columns; the "
                     "result shape wins"
                 )
+            # A block-scaled weight may not be cut finer than its scale tile.
+            # Amendment A15 states the scale index over whole tiles and refuses
+            # a view whose leading extent is not a multiple of the row block,
+            # because a partial tile has no code of its own; the released
+            # DeepSeek FP8 projections tile 128 x 128, so a 512-column
+            # projection over 32 nodes would ask for 16 rows of a 128-row tile.
+            # Replication is the existing answer to a column count a node count
+            # cannot cut, and it is the answer here too.
+            row_block = _scale_row_block(tensors, kernel.inputs[1])
             if node_count > 1 and cols % node_count == 0 and cols > node_count:
-                shard_columns = cols // node_count
+                if (cols // node_count) % row_block:
+                    warnings.append(
+                        f"kernel {kernel.kernel_id}: {cols} output columns over "
+                        f"{node_count} nodes is {cols // node_count} rows per "
+                        f"node, which is not a whole number of the weight's "
+                        f"{row_block}-row scale tiles; this contraction is "
+                        "replicated instead of sharded"
+                    )
+                else:
+                    shard_columns = cols // node_count
             elif node_count > 1:
                 warnings.append(
                     f"kernel {kernel.kernel_id}: {cols} output columns are not "

@@ -167,10 +167,13 @@ UNDERFILLED_OPERANDS = {
     "SWIGLU": (2, 1),
     # the released group split is contiguous and equal, so no group index view
     "GROUPED_MATMUL": (2, 1),
-    # Sinkhorn post and combination coefficients travel as one operand
-    "HYPER_CONNECT_POST": (3, 1),
     # mean over the hyper-connection streams needs no base
     "PARTITION_SUM": (1, 1),
+    # Two shapes by site: the MoE reduction is (routed contributions, shared
+    # base, routed row expert identity); the hyper-connection branch reduction
+    # is (streams, pre coefficients) with no base, because the branch input is
+    # a weighted stream sum and nothing is added to it.
+    "EXPERT_REDUCE": None,
     # variable by site
     "CONCAT": None,
     "SCALE": None,
@@ -482,7 +485,8 @@ def test_one_source_kind_maps_to_one_contract_family(graph, contract):
             node_kind[kernel.source_operation_id], set()
         ).add(kernel.numeric_contract)
     # a one-to-one lowering names exactly one contract
-    assert families["RMS_NORM"] == {"normalization_rms_norm_bf16_v1"}
+    # Amendment A8's frozen name, not a second identity for the same contract.
+    assert families["RMS_NORM"] == {"deepseek_rmsnorm_binary32_v1"}
     assert families["SPARSE_ATTENTION"] == {"sparse_attention_bf16_v1"}
     # a multi-kernel lowering qualifies each sub-operation distinctly
     assert families["MXFP4_SWIGLU"] == {

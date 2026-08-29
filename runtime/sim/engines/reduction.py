@@ -18,7 +18,10 @@ distinct, reproducible datapaths here, and an unknown order is a fault.
     ``input_view_2`` is an optional base (a shared-expert or residual term).
     The engine forms ``weight * contribution`` in binary32 and reduces in the
     declared order, which is what makes a MoE layer's output independent of
-    expert arrival order.
+    expert arrival order.  Amendment A10 makes ``input_view_1`` optional: an
+    operator that omits it declares the weight was applied before the
+    contribution was written, which is what the released DeepSeek expert does
+    ahead of its down projection.
 
 ``REDUCTION.VOCAB_GATHER``
     ``input_view_0`` is ``[partitions, width]`` of vocabulary-parallel logits,
@@ -269,29 +272,34 @@ def expert_sum(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     _check_operator(descriptor, int(Reduction.EXPERT_SUM))
     profile = ctx.numeric(descriptor.payload["numeric_profile_id"])
     values_view = ctx.input_view(descriptor, 0)
-    weight_view = ctx.input_view(descriptor, 1)
+    # Amendment A10: the weights are optional.  The released DeepSeek expert
+    # multiplies by its routing weight before the down projection, so an
+    # operator that leaves input_view_1 unbound is declaring that the weight
+    # has already been applied -- and one that re-applied it here would square
+    # it.  A weight vector that is present is still checked against the
+    # contribution count.
+    weight_view = ctx.optional_input(descriptor, 1)
     base_view = ctx.optional_input(descriptor, 2)
     out_view = ctx.output_view(descriptor, 0)
     _leading_reduction_shapes(values_view, out_view)
     experts = int(values_view.dims[0])
-    _require(
-        weight_view.element_count == experts,
-        f"EXPERT_SUM weight view {weight_view.descriptor_id} holds "
-        f"{weight_view.element_count} weights for {experts} contributions",
-    )
-    contributions = widen(ctx, values_view).reshape(
-        (experts, out_view.element_count)
-    )
-    weights = widen(ctx, weight_view).reshape((experts, 1))
-    previous = np.seterr(over="raise", invalid="raise")
-    try:
-        weighted = np.multiply(contributions, weights, dtype=np.float32)
-    except FloatingPointError as exc:
-        raise EngineError(
-            f"EXPERT_SUM weighting overflowed binary32: {exc}", trap_class=6
-        ) from exc
-    finally:
-        np.seterr(**previous)
+    weighted = widen(ctx, values_view).reshape((experts, out_view.element_count))
+    if weight_view is not None:
+        _require(
+            weight_view.element_count == experts,
+            f"EXPERT_SUM weight view {weight_view.descriptor_id} holds "
+            f"{weight_view.element_count} weights for {experts} contributions",
+        )
+        weights = widen(ctx, weight_view).reshape((experts, 1))
+        previous = np.seterr(over="raise", invalid="raise")
+        try:
+            weighted = np.multiply(weighted, weights, dtype=np.float32)
+        except FloatingPointError as exc:
+            raise EngineError(
+                f"EXPERT_SUM weighting overflowed binary32: {exc}", trap_class=6
+            ) from exc
+        finally:
+            np.seterr(**previous)
     base = None
     if base_view is not None:
         _require(

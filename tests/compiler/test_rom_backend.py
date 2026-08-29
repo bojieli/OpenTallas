@@ -55,6 +55,8 @@ from compiler.ir.v3.lowering import KERNEL_TO_ENGINE
 from runtime.abi3.constants import (
     Link,
     Major,
+    NO_ID,
+    ParticipantScope,
     Permission,
     StorageClass,
     Tensor as TensorOp,
@@ -2585,20 +2587,29 @@ def test_movement_operands_are_permuted_into_the_engine_order(qwen_build, qwen_g
         assert index["rank"] == 1
 
 
-def test_on_wafer_collectives_declare_a_topology_consistent_participant_count(
+def test_on_wafer_collectives_are_tile_scoped_and_not_degenerate(
     deepseek_build, deepseek_capability
 ):
-    """ABI 3.0 counts a collective's participants in nodes, not tiles.
+    """Amendment A14: a wafer collective addresses the tile fabric.
 
-    A wafer-scale logical accelerator is one node -- that is what "presented to
-    the host as one device" means -- so a tile-scoped collective cannot state
-    its true fan-out in ``participant_count``.  The emitted count is derived
-    from the admitted topology so the deployment is internally consistent, and
-    the intended fan-out is recorded in the notes.  The gap is reported here so
-    it cannot be closed by quietly declaring the wafer to be a cluster.
+    This replaces the check that pinned the pre-A14 workaround.  A wafer-scale
+    logical accelerator is one node -- that is what "presented to the host as
+    one device" means -- so while participants were counted in nodes, every
+    collective on it was a collective over a single participant and the LINK
+    engine refused all five as degenerate.  ``participant_scope`` says which
+    fabric a collective spans, and ``participant_count`` is then derived from
+    the admitted topology rather than asserted by the backend.
     """
     deployment, _plan = deepseek_build
     nodes = deepseek_capability.limits["max_nodes"]
+    topology = next(
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.TOPOLOGY
+    )
+    tiles = topology.payload["reticle_count"] * topology.payload["tiles_per_reticle"]
+    groups = topology.payload["route_group_count"]
+    assert tiles > nodes, "a wafer has more tiles than the one node it declares"
     communications = [
         d
         for d in deployment.table.descriptors()
@@ -2606,7 +2617,29 @@ def test_on_wafer_collectives_declare_a_topology_consistent_participant_count(
     ]
     assert communications
     for descriptor in communications:
-        assert descriptor.payload["participant_count"] == nodes
-    fanout = deployment.notes["rom_lowering"]["on_wafer_fanout"]
-    assert fanout, "the intended on-wafer fan-out must be recorded"
-    assert max(fanout.values()) > nodes
+        assert descriptor.payload["participant_scope"] == int(ParticipantScope.TILE)
+    collectives = [
+        d
+        for d in communications
+        if d.payload["group_id"] != NO_ID
+    ]
+    assert collectives
+    for descriptor in collectives:
+        # Derived, not declared: this is what the LINK engine will compute
+        # from the admitted topology, so the two cannot disagree.
+        expected = tiles // groups if groups > 1 else tiles
+        assert descriptor.payload["participant_count"] == expected
+        assert descriptor.payload["participant_count"] >= 2, (
+            "a collective over one participant is degenerate, which is the "
+            "failure amendment A14 exists to remove"
+        )
+        # A collective needs its participant array, and an array another
+        # participant may touch must be explicitly exported.
+        remote = deployment.table[descriptor.payload["remote_object_id"]]
+        assert remote.permissions & Permission.REMOTE
+        if descriptor.payload["byte_extent"]:
+            assert remote.payload["size_bytes"] >= (
+                descriptor.payload["participant_count"]
+                * descriptor.payload["byte_extent"]
+            )
+    assert "on_wafer_fanout" not in deployment.notes["rom_lowering"]

@@ -348,7 +348,7 @@ def moe_graph(
         act(f"{p}.res", (SPAN, hidden))
         layer = {"layer": index}
         emit("RMS_NORM", [previous, f"{p}.norm"], [f"{p}.n"],
-             "normalization_rms_norm_bf16_v1", **layer)
+             "deepseek_rmsnorm_binary32_v1", **layer)
         emit("ROUTER_SCORE", [f"{p}.n", f"{p}.router"], [f"{p}.scores"],
              "routing_router_score_bf16_v1", **layer)
         emit("BIASED_TOPK", [f"{p}.scores", f"{p}.bias"],
@@ -377,7 +377,7 @@ def moe_graph(
     act("token", (1, 1), "u32")
     act("tokens.out", (1, 1), "u32", role="output")
     emit("RMS_NORM", [previous, "norm.final"], ["hidden.final"],
-         "normalization_rms_norm_bf16_v1")
+         "deepseek_rmsnorm_binary32_v1")
     emit("LAST_TOKEN_SELECT", ["hidden.final", "last.index"], ["hidden.last"],
          "lookup_bf16_token_embedding_v1")
     emit("VOCAB_PROJECT", ["hidden.last", "lm_head"], ["logits"],
@@ -1434,3 +1434,236 @@ def test_a_broadcast_must_state_its_axis_and_extent():
     )
     errors = check_neutral(graph)
     assert any("'axis'" in e for e in errors)
+
+
+# ---------------------------------------------------------------------------
+# SELECT: the inverse of a broadcast
+# ---------------------------------------------------------------------------
+def _select_graph(*, axis: int = 1, index: int = 1, result_shape=None) -> KernelGraph:
+    """The smallest graph that carries one SELECT, for the neutral checks."""
+    span, planes, width = Symbolic("span_tokens", 1, 64), 2, 4
+    shape = result_shape if result_shape is not None else (span, width)
+    tensors = (
+        Tensor(tensor_id="tokens", dtype="u32", shape=(span, 1), role="input"),
+        Tensor(tensor_id="packed", dtype="fp32", shape=(span, planes, width),
+               role="activation"),
+        Tensor(tensor_id="plane", dtype="fp32", shape=shape, role="activation"),
+        Tensor(tensor_id="out", dtype="u32", shape=(1, 1), role="output"),
+    )
+    kernels = (
+        Kernel(index=0, kernel_id="k0", kind="SELECT", inputs=("packed",),
+               outputs=("plane",),
+               numeric_contract="hyper_connection_hc_pre_bf16_v1",
+               attributes={"axis": axis, "index": index}),
+    )
+    return KernelGraph(
+        model_id="synthetic-select",
+        source={"family": "select"},
+        symbols=(RuntimeSymbol("span_tokens", 1, 64, 1),),
+        tensors=tensors,
+        states=(),
+        kernels=kernels,
+        entrypoints=(
+            Entrypoint("prefill", ("tokens",), ("out",), ()),
+            Entrypoint("decode", ("tokens",), ("out",), ()),
+        ),
+        generation_policy={"eos_token_ids": [0], "max_new_tokens": 1,
+                           "vocabulary_size": 8},
+    )
+
+
+def test_a_well_formed_select_is_neutral():
+    assert check_neutral(_select_graph()) == []
+
+
+@pytest.mark.parametrize(
+    "axis, index, result_shape, fragment",
+    [
+        # the dropped axis is still in the result
+        (1, 0, None, None),
+        # index outside the axis
+        (1, 5, None, "outside axis"),
+        # axis outside the source rank
+        (7, 0, None, "outside the rank"),
+    ],
+)
+def test_select_rejects_an_index_or_axis_the_source_does_not_have(
+    axis, index, result_shape, fragment
+):
+    errors = check_neutral(
+        _select_graph(axis=axis, index=index, result_shape=result_shape)
+    )
+    if fragment is None:
+        assert errors == []
+        return
+    assert errors and any(fragment in e and "SELECT" in e for e in errors)
+
+
+def test_a_select_whose_result_keeps_the_dropped_axis_is_rejected():
+    span, planes, width = Symbolic("span_tokens", 1, 64), 2, 4
+    errors = check_neutral(_select_graph(result_shape=(span, planes, width)))
+    assert errors and any("SELECT of index" in e for e in errors)
+
+
+def test_a_select_may_not_drop_a_runtime_symbol():
+    span = Symbolic("span_tokens", 1, 64)
+    errors = check_neutral(_select_graph(axis=0, index=0, result_shape=(2, 4)))
+    assert errors and any("static extent" in e for e in errors)
+
+
+@pytest.mark.skipif(
+    not REAL_DEEPSEEK_IR.is_file(), reason="the DeepSeek neutral IR is not built"
+)
+def test_a_selected_coefficient_plane_is_an_offset_not_a_gather():
+    """The two mHC coefficient planes differ only by an element offset.
+
+    ``HYPER_CONNECT_PRE``'s first output view is the packed
+    ``[tokens, 2, streams]`` pre/post block the frozen ``VECTOR.MHC`` row
+    names.  Its two planes go to different consumers -- the pre plane weights
+    the branch reduction, the post plane is ``HYPER_CONNECT_POST``'s third
+    operand -- so the neutral IR has to be able to name one plane of a tensor.
+    On a machine whose operands are strided views that costs an offset and a
+    dropped axis, which is what this checks: same object, same strides, offsets
+    zero and ``streams``.
+    """
+    graph = read_kernel_graph(REAL_DEEPSEEK_IR)
+    capability = single_chip_capability()
+    deployment = lower_to_abi3(graph, capability)
+    require_admitted(deployment, capability)
+    index = {k.kernel_id: k.index for k in graph.kernels}
+    planes = {}
+    for name in ("pre_plane", "post_plane"):
+        kernel = graph.kernels[index[f"main.layer00.hc_attn_pre.{name}"]]
+        assert kernel.kind == "SELECT"
+        operators = [
+            d
+            for d in deployment.table.descriptors()
+            if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+            and d.payload["source_kernel_id"] == kernel.index
+        ]
+        assert len(operators) == 1
+        payload = operators[0].payload
+        assert payload["engine_family"] == int(Major.DMA)
+        planes[name] = deployment.table.get(
+            payload["input_view_0"], ExtendedDescriptorType.TENSOR_VIEW
+        )
+    pre, post = planes["pre_plane"], planes["post_plane"]
+    assert pre.primary_object_id == post.primary_object_id
+    assert pre.payload["rank"] == post.payload["rank"] == 2
+    for axis in range(2):
+        assert pre.payload[f"dim{axis}"] == post.payload[f"dim{axis}"]
+        assert pre.payload[f"stride{axis}"] == post.payload[f"stride{axis}"]
+    streams = pre.payload["dim1"]
+    assert pre.payload["element_offset"] == 0
+    assert post.payload["element_offset"] == streams
+    # The packed block's row is two planes wide, so one plane is strided.
+    assert pre.payload["stride0"] == 2 * streams
+
+
+@pytest.mark.skipif(
+    not REAL_DEEPSEEK_IR.is_file(), reason="the DeepSeek neutral IR is not built"
+)
+def test_an_axis_one_concatenation_is_one_movement_per_column_window():
+    """A width-axis join is stated in offsets, not performed by an operator.
+
+    ``REDUCTION.GROUPED_CONCAT`` joins on axis 0.  The index concatenations in
+    this graph join on axis 1 -- 128 window indices beside 512 selected indices
+    -- which axis 0 cannot express at all, because the two operands have
+    different widths.  The lowering is the idiom the fused KV append already
+    uses: one ``DMA.TRANSFER`` per input into its own column range of the
+    destination row.
+    """
+    graph = read_kernel_graph(REAL_DEEPSEEK_IR)
+    capability = single_chip_capability()
+    deployment = lower_to_abi3(graph, capability)
+    require_admitted(deployment, capability)
+    kernel = next(
+        k
+        for k in graph.kernels
+        if k.kernel_id == "main.layer02.index_topk.concat"
+    )
+    assert kernel.kind == "CONCAT" and kernel.attributes["axis"] == 1
+    operators = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and d.payload["source_kernel_id"] == kernel.index
+    ]
+    assert len(operators) == len(kernel.inputs)
+    destination_object = None
+    column = 0
+    for operator in operators:
+        payload = operator.payload
+        assert payload["engine_family"] == int(Major.DMA)
+        schedule = deployment.table.get(
+            payload["schedule_id"], ExtendedDescriptorType.SCHEDULE
+        )
+        assert schedule.payload["engine_family"] == int(Major.DMA)
+        source = deployment.table.get(
+            payload["input_view_0"], ExtendedDescriptorType.TENSOR_VIEW
+        )
+        window = deployment.table.get(
+            payload["output_view_0"], ExtendedDescriptorType.TENSOR_VIEW
+        )
+        if destination_object is None:
+            destination_object = window.primary_object_id
+        # Every input writes into the same result object, and the windows tile
+        # its row exactly once each.
+        assert window.primary_object_id == destination_object
+        assert window.payload["element_offset"] == column
+        assert window.payload["dim0"] == source.payload["dim0"]
+        assert window.payload["dim1"] == source.payload["dim1"]
+        # The source is dense in its own width; the window is strided by the
+        # result's width, which is what makes it a column range.
+        assert source.payload["stride0"] == source.payload["dim1"]
+        assert window.payload["stride0"] > window.payload["dim1"]
+        column += window.payload["dim1"]
+    assert column == window.payload["stride0"]
+
+
+@pytest.mark.skipif(
+    not REAL_DEEPSEEK_IR.is_file(), reason="the DeepSeek neutral IR is not built"
+)
+def test_the_hyper_connection_post_operands_keep_the_token_axis_leading():
+    """A batch axis is inserted after the tokens, never before them.
+
+    ``VECTOR.MHC``'s ``HYPER_CONNECT_POST`` row states ``[batch, span, ...]``
+    and the neutral IR is token-major, so the backend inserts the missing axis.
+    Putting it first would name the same elements but would defeat amendment
+    A13: a leading extent of one is never the partial final iteration's row
+    count, so a 104-token span would be presented as a whole 512-row block.
+    """
+    graph = read_kernel_graph(REAL_DEEPSEEK_IR)
+    capability = single_chip_capability()
+    deployment = lower_to_abi3(graph, capability)
+    require_admitted(deployment, capability)
+    kernel = next(
+        k for k in graph.kernels if k.kernel_id == "main.layer00.hc_attn_post"
+    )
+    assert len(kernel.inputs) == 4
+    operator = next(
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and d.payload["source_kernel_id"] == kernel.index
+    )
+    payload = operator.payload
+    loops = {
+        d.descriptor_id: d.payload
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.LOOP_CONTROL
+    }
+    view_ids = [payload[f"input_view_{s}"] for s in range(4)]
+    view_ids.append(payload["output_view_0"])
+    for view_id in view_ids:
+        view = deployment.table.get(
+            view_id, ExtendedDescriptorType.TENSOR_VIEW
+        ).payload
+        assert view["dim1"] == 1, "the batch axis is the second, not the first"
+        row = next(
+            loops[view[f"term{s}_index"]]
+            for s in range(view["dynamic_term_count"])
+            if view[f"term{s}_kind"] == int(SelectorKind.LOOP_INDUCTION)
+            and view[f"term{s}_index"] in loops
+        )
+        assert view["dim0"] == row["bound_divisor"]

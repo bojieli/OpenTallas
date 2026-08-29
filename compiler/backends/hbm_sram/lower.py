@@ -801,7 +801,7 @@ class _Emitter:
         self._numeric[key] = nid
         return nid
 
-    def _schedule_for(self, plan: KernelPlan) -> int:
+    def _schedule_for(self, plan: KernelPlan, family: int | None = None) -> int:
         """The tile mapping, bank/port use, issue window and resource bound.
 
         These numbers are the cycle model's direct input, so they are derived
@@ -809,7 +809,11 @@ class _Emitter:
         would produce a meaningless timing result, which is why the planner
         chooses divisor tiles rather than leaving the field at zero.
         """
-        family = plan.engine_family
+        # A kernel whose neutral kind lowers to more than one engine -- an
+        # axis-1 concatenation, which is a set of movements -- names the family
+        # its instructions actually carry, because a SCHEDULE descriptor is
+        # typed by engine family and the verifier checks the two agree.
+        family = plan.engine_family if family is None else int(family)
         mask, ports = self._bank_and_port_mask(family)
         key = (family, plan.tile_rows, plan.tile_cols, plan.tile_depth, mask, ports)
         if key in self._schedule:
@@ -887,6 +891,7 @@ class _Emitter:
         writable: bool = False,
         scale_object_id: int = NO_ID,
         scale_block_elements: int = 0,
+        scale_block_rows: int = 0,
     ) -> int:
         layout = (
             LayoutClass.BLOCK_SCALED if scale_object_id != NO_ID else LayoutClass.DENSE
@@ -901,6 +906,7 @@ class _Emitter:
             bool(writable),
             scale_object_id,
             scale_block_elements,
+            scale_block_rows,
         )
         if key in self._views:
             return self._views[key]
@@ -926,6 +932,7 @@ class _Emitter:
             layout_class=layout,
             scale_object_id=scale_object_id,
             scale_block_elements=scale_block_elements,
+            scale_block_rows=scale_block_rows,
             permissions=int(
                 Permission.READ | Permission.WRITE if writable else Permission.READ
             ),
@@ -953,21 +960,75 @@ class _Emitter:
             )
         return self._arena_object[slot], 0
 
-    def _scale_binding(self, operand: OperandPlan) -> tuple[int, int]:
-        """Amendment A8 block-scale addressing, when the tensor declares one."""
+    def _scale_binding(self, operand: OperandPlan) -> tuple[int, int, int]:
+        """Block-scale addressing, when the tensor declares one.
+
+        Amendment A15 states the block as two extents:
+        ``scale_block_elements`` along the last axis and ``scale_block_rows``
+        along the leading one.  The neutral IR names only the first, because
+        the scale tensor's own declared shape carries the second -- a
+        ``[1024, 4096]`` FP8 weight with a 128-element block whose scale is
+        ``[8, 32]`` is scaled in 128 x 128 tiles, and ``1024 / 8`` says so.  A
+        one-dimensional MXFP4 scale derives a row block of one and encodes the
+        A8 case unchanged.
+        """
         tensor = self.tensors[operand.tensor_id]
         if not tensor.scale_tensor_id:
-            return NO_ID, 0
+            return NO_ID, 0, 0
         placement = self.plan._weight_index.get(tensor.scale_tensor_id)
         if placement is None:
-            return NO_ID, 0
+            return NO_ID, 0, 0
         block = tensor.scale_block_elements
         if block <= 0 or operand.cols % block:
             raise LoweringError(
                 f"tensor {operand.tensor_id}: block-scale addressing requires "
                 f"K % scale_block_elements == 0, got {operand.cols} % {block}"
             )
-        return self._weight_object[placement.group_id], block
+        return (
+            self._weight_object[placement.group_id],
+            block,
+            self._scale_block_rows(tensor, operand),
+        )
+
+    def _scale_block_rows(self, tensor: Tensor, operand: OperandPlan) -> int:
+        """How many leading rows one of this tensor's scale codes covers."""
+        scale = self.tensors.get(tensor.scale_tensor_id or "")
+        if scale is None:
+            return 1
+        block = int(tensor.scale_block_elements or 0)
+        def extent(value: Any) -> int:
+            # A symbolic extent is the same symbol on both sides -- an
+            # activation scaled per token declares ``[span, K/block]`` against
+            # ``[span, K]`` -- so its maximum stands for it and the ratio comes
+            # out one, which is the A8 case.
+            if isinstance(value, Symbolic):
+                return max(int(value.maximum or 1), 1)
+            return max(int(value), 1)
+
+        data_dims = [extent(d) for d in tensor.shape]
+        scale_dims = [extent(d) for d in scale.shape]
+        if not data_dims or not scale_dims:
+            return 1
+        width = data_dims[-1]
+        if width % block or scale_dims[-1] != width // block:
+            raise LoweringError(
+                f"tensor {tensor.tensor_id}: a {block}-element scale block over "
+                f"{width} columns needs a scale whose last axis is "
+                f"{width // block}; {scale.tensor_id} declares {scale_dims}"
+            )
+        rows = 1
+        for extent in data_dims[:-1]:
+            rows *= extent
+        scale_rows = 1
+        for extent in scale_dims[:-1]:
+            scale_rows *= extent
+        if scale_rows <= 0 or rows % scale_rows:
+            raise LoweringError(
+                f"tensor {tensor.tensor_id} has {rows} rows and its scale "
+                f"{scale.tensor_id} has {scale_rows}; a block scale covers a "
+                "whole number of rows per code"
+            )
+        return max(rows // scale_rows, 1)
 
     def _operand_view(
         self,
@@ -998,6 +1059,19 @@ class _Emitter:
             )
         kernel = self.kernels[plan.index]
         writes_state = operand.direction == "out" and bool(kernel.state_writes)
+        if plan.kind == "SELECT" and operand.direction == "in" and (
+            operand.residence != "arena" or writes_state
+        ):
+            # A select is an element offset into the source, and only the arena
+            # path below applies that offset.  A state or host view builds its
+            # own extents, so it would present the *whole* source and silently
+            # move the wrong plane.  Refuse instead: an offset that is dropped
+            # is worse than a lowering that does not exist.
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: SELECT reads {operand.tensor_id!r}, "
+                f"which is {operand.residence}-resident; only an arena source "
+                "carries the selected plane's element offset"
+            )
         generated = self._generated_object.get(operand.tensor_id)
         if generated is not None and operand.tensor_id in self._position_inputs:
             return self._position_view(plan, operand, loops, generated)
@@ -1013,7 +1087,7 @@ class _Emitter:
             return self._selection_view(operand, writable=writable)
 
         object_id, base = self._object_for(operand)
-        scale_object, scale_block = self._scale_binding(operand)
+        scale_object, scale_block, scale_rows = self._scale_binding(operand)
         contraction_operand = plan.contraction and (
             (operand.direction == "in" and operand.slot in (0, 1))
             or (operand.direction == "out" and operand.slot == 0)
@@ -1071,11 +1145,12 @@ class _Emitter:
             dtype=dtype,
             dims=dims,
             strides=strides,
-            element_offset=base,
+            element_offset=base + self._select_offset(plan, operand),
             dynamic=terms,
             writable=writable,
             scale_object_id=scale_object,
             scale_block_elements=scale_block,
+            scale_block_rows=scale_rows,
         )
 
     def _position_view(
@@ -1174,7 +1249,9 @@ class _Emitter:
             dims[0] = plan.block_rows
         row_stride = dims[0] * strides[0]
         dims, strides = self._insert_broadcast_axis(plan, operand, dims, strides)
+        dims, strides = self._drop_selected_axis(plan, operand, dims, strides)
         dims, strides = self._broadcast_to_principal(plan, operand, dims, strides)
+        dims, strides = self._insert_batch_axis(plan, operand, dims, strides)
         return dims, strides, row_stride
 
     def _insert_broadcast_axis(
@@ -1212,6 +1289,80 @@ class _Emitter:
             [*dims[:axis], extent, *dims[axis:]],
             [*strides[:axis], 0, *strides[axis:]],
         )
+
+    def _drop_selected_axis(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        dims: list[int],
+        strides: list[int],
+    ) -> tuple[list[int], list[int]]:
+        """Read one plane of a ``SELECT`` source by dropping the named axis.
+
+        The mirror of :meth:`_insert_broadcast_axis`.  A broadcast reads one
+        source through an axis of stride zero; a select reads one plane of a
+        source by dropping an axis and offsetting into it.  The offset itself is
+        :meth:`_select_offset`, applied where the view's element offset is
+        assembled, because ``_declared_view`` states shape and not placement.
+
+        Only the source is narrowed.  The destination keeps the rank the graph
+        declared, which is the source's rank minus one.
+        """
+        if plan.kind != "SELECT" or operand.direction != "in":
+            return dims, strides
+        axis = int(self.kernels[plan.index].attributes["axis"])
+        if not 0 <= axis < len(dims):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: SELECT axis {axis} is outside the "
+                f"rank-{len(dims)} source"
+            )
+        return (
+            [*dims[:axis], *dims[axis + 1 :]],
+            [*strides[:axis], *strides[axis + 1 :]],
+        )
+
+    def _select_offset(self, plan: KernelPlan, operand: OperandPlan) -> int:
+        """Elements from the source's start to the selected plane."""
+        if plan.kind != "SELECT" or operand.direction != "in":
+            return 0
+        attributes = self.kernels[plan.index].attributes
+        axis = int(attributes["axis"])
+        index = int(attributes["index"])
+        tensor = self.tensors[operand.tensor_id]
+        stride = 1
+        for extent in tensor.shape[axis + 1 :]:
+            value, _ = _static_extent(extent, self.span_max)
+            stride *= max(int(value), 1)
+        return index * stride
+
+    def _insert_batch_axis(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        dims: list[int],
+        strides: list[int],
+    ) -> tuple[list[int], list[int]]:
+        """Present a token-major operand under an operand row that states a batch.
+
+        ``VECTOR.MHC``'s ``HYPER_CONNECT_POST`` sub-case states every operand as
+        ``[batch, span, ...]``: it is qualified against
+        ``runtime.reference.vector.hc_post_bf16``, whose signature carries a
+        batch axis.  The neutral IR has no batch concept -- ADR-003 section 15
+        gives it model semantics, and a batch is a deployment property -- so a
+        token-major ``[tokens, ...]`` operand is one rank short of its row.
+
+        The inserted axis goes *after* the token axis, not before it, and the
+        difference is not cosmetic.  The operation is pointwise in the token
+        index, so ``[tokens, 1, ...]`` and ``[1, tokens, ...]`` name the same
+        elements in the same order and the engine's ``batch * span`` site count
+        is ``tokens`` either way.  But amendment A13 clamps a view's *leading*
+        extent on a block loop's partial final iteration, so a leading axis of
+        one is never clamped and the view would present a whole 512-row block
+        for a 104-token span.  Keeping the token axis leading keeps A13 exact.
+        """
+        if plan.kind != "HYPER_CONNECT_POST" or not dims:
+            return dims, strides
+        return [dims[0], 1, *dims[1:]], [strides[0], strides[0], *strides[1:]]
 
     def _broadcast_to_principal(
         self,
@@ -1443,6 +1594,10 @@ class _Emitter:
             self._emit_state_append(plan, kernel)
             return
 
+        if self._is_column_concat(plan, kernel):
+            self._emit_column_concat(plan, kernel)
+            return
+
         builder = self.builder
         loops = self._open_loops(plan)
         inputs = [
@@ -1541,6 +1696,99 @@ class _Emitter:
                 source_operation_id=plan.index,
             )
             column += self._state_row_width(operand.tensor_id)
+        self._close_loops(loops, ["row"])
+        for name in kernel.outputs:
+            self._event_of_tensor[name] = event
+
+    def _is_column_concat(self, plan: KernelPlan, kernel: Kernel) -> bool:
+        """True when a ``CONCAT`` joins its inputs along the *width* axis.
+
+        ``REDUCTION.GROUPED_CONCAT`` joins along axis 0 -- that is its whole
+        row, and it is the right operation for the row-space compositions this
+        graph also has.  A concatenation along axis 1 is a different operation
+        and the engine correctly refuses to be it: joining
+        ``[tokens, 128]`` and ``[tokens, 512]`` on axis 0 gives
+        ``[2 * tokens, ...]`` with two different widths, which is not a tensor.
+
+        What an axis-1 concatenation *is*, on a machine whose operands are
+        strided views, is one write per input into its own column range of the
+        destination row -- exactly the ``key_then_value`` idiom
+        :meth:`_emit_state_append` already uses for a fused KV append, with an
+        arena object in place of a state resource.  So it needs no operator of
+        its own either: it is a movement stated in offsets.
+        """
+        if kernel.kind != "CONCAT" or len(kernel.outputs) != 1:
+            return False
+        if kernel.state_writes or int(kernel.attributes.get("axis", 0)) != 1:
+            return False
+        sources = [o for o in plan.operands if o.direction == "in"]
+        destination = next(
+            (o for o in plan.operands if o.direction == "out"), None
+        )
+        if destination is None or len(sources) < 2:
+            return False
+        return sum(o.cols for o in sources) == destination.cols
+
+    def _emit_column_concat(self, plan: KernelPlan, kernel: Kernel) -> None:
+        """Emit one movement per input into its column range of the result."""
+        builder = self.builder
+        destination = next(o for o in plan.operands if o.direction == "out")
+        object_id, base = self._object_for(destination)
+        row_width = destination.cols
+        loops = self._open_loops(plan)
+        numeric = self._kernel_numeric(plan)
+        schedule = self._schedule_for(plan, int(Major.DMA))
+        counter = self._counter_class(int(Major.DMA))
+        predicate = self._phase_predicate(plan.phases)
+        column = 0
+        event = NO_ID
+        for slot, operand in enumerate(
+            o for o in plan.operands if o.direction == "in"
+        ):
+            source = self._operand_view(plan, operand, loops, writable=False)
+            dims, _, _ = self._declared_view(plan, operand)
+            strides = [1] * len(dims)
+            running = 1
+            for axis in range(len(dims) - 1, 0, -1):
+                strides[axis] = running
+                running *= dims[axis]
+            strides[0] = row_width
+            terms: list[DynamicTerm] = []
+            row_loop = loops.get("row")
+            if row_loop is not None and "row" in operand.terms:
+                terms.append(DynamicTerm.loop(row_loop, dims[0] * row_width))
+            window = self._view(
+                object_id=object_id,
+                dtype=dtype_of(destination.dtype),
+                dims=list(dims),
+                strides=strides,
+                element_offset=base + column,
+                dynamic=terms,
+                writable=True,
+            )
+            operator = builder.operator(
+                engine_family=Major.DMA,
+                engine_sub=int(Dma.TRANSFER),
+                inputs=[source],
+                outputs=[window],
+                aux=[],
+                numeric_profile_id=numeric,
+                schedule_id=schedule,
+                counter_class_id=counter,
+                source_kernel_id=plan.index,
+                key=f"op.k{plan.index}.column{slot}",
+            )
+            event = builder.new_event()
+            builder.emit(
+                Major.DMA,
+                int(Dma.TRANSFER),
+                descriptor_id=operator,
+                wait_set_id=self._wait_set(self._producer_events(kernel)),
+                signal_event_id=event,
+                predicate_id=predicate,
+                source_operation_id=plan.index,
+            )
+            column += operand.cols
         self._close_loops(loops, ["row"])
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
@@ -1675,10 +1923,28 @@ class _Emitter:
             scale_bits=_binary32_bits(
                 kernel.attributes, ("scale_bits", "scale_bf16_code", "scale")
             ),
-            epsilon_bits=_binary32_bits(
-                kernel.attributes, ("epsilon_bits", "epsilon")
-            ),
+            epsilon_bits=self._epsilon_bits(plan, kernel),
         )
+
+    def _epsilon_bits(self, plan: KernelPlan, kernel: Kernel) -> int:
+        """The numeric descriptor's epsilon, in the encoding its opcode reads.
+
+        A NUMERIC descriptor's epsilon field is a binary32 pattern for every
+        contract that adds the epsilon in binary32.  The released *unweighted*
+        head RMSNorm is not one of them: it is qualified against
+        ``runtime.reference.normalization.head_rms_norm_bf16``, which takes a
+        BF16 epsilon code because the released kernel adds it to a BF16 mean,
+        and the engine refuses any other encoding rather than guess which one a
+        pattern is in.  So the narrowing belongs here, where the operand arity
+        that distinguishes the two head-norm contracts is known.  The weighted
+        head norm -- Qwen's, which passes a gain vector -- keeps binary32.
+        """
+        bits = _binary32_bits(kernel.attributes, ("epsilon_bits", "epsilon"))
+        if plan.kind != "HEAD_RMS_NORM" or not bits:
+            return bits
+        if sum(1 for o in plan.operands if o.direction == "in") != 1:
+            return bits
+        return _narrow_bf16_rne(bits)
 
     def _producer_events(self, kernel: Kernel) -> list[int]:
         return [
@@ -1794,6 +2060,15 @@ def _binary32_bits(attributes: Mapping[str, Any], keys: Sequence[str]) -> int:
     return 0
 
 
+def _narrow_bf16_rne(bits: int) -> int:
+    """Round a binary32 bit pattern to its BF16 code, ties to even."""
+    code = (int(bits) >> 16) & 0xFFFF
+    remainder = int(bits) & 0xFFFF
+    if remainder > 0x8000 or (remainder == 0x8000 and code & 1):
+        code = (code + 1) & 0xFFFF
+    return code
+
+
 def _reduction_order(contract: str) -> ReductionOrder:
     """The association a numeric contract's name declares.
 
@@ -1804,6 +2079,13 @@ def _reduction_order(contract: str) -> ReductionOrder:
     """
     lowered = contract.lower()
     if "rmsnorm" in lowered or "rms_norm" in lowered:
+        return ReductionOrder.PAIRWISE_TREE
+    # The frozen hyper-connection reference reduces with a balanced tree at
+    # every stage -- the width-16384 RMS sum, the Sinkhorn row and column sums,
+    # and the four-term branch reduction, which is the one of them a separate
+    # REDUCTION operator performs and therefore the one whose association has to
+    # be declared here rather than lived inside the MHC engine.
+    if "hc_pre" in lowered:
         return ReductionOrder.PAIRWISE_TREE
     if "blocked" in lowered:
         return ReductionOrder.BLOCKED_ASCENDING

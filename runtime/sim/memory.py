@@ -373,6 +373,10 @@ class ResolvedView:
     writable: bool
     scale_object_id: int = NO_ID
     scale_block_elements: int = 0
+    #: Amendment A15: the scale block along the *leading* axis.  Zero on the
+    #: wire means one, which is the one-dimensional case amendment A8 froze, so
+    #: this is resolved to one rather than carried as zero.
+    scale_block_rows: int = 1
 
     @property
     def element_count(self) -> int:
@@ -469,6 +473,7 @@ class ViewResolver:
             writable=bool(descriptor.permissions & Permission.WRITE),
             scale_object_id=payload["scale_object_id"],
             scale_block_elements=payload["scale_block_elements"],
+            scale_block_rows=max(int(payload["scale_block_rows"]), 1),
         )
 
     def _indexes_leading_axis(

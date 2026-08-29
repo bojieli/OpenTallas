@@ -56,6 +56,7 @@ from runtime.abi3.capability import Capability, canonical_json
 from runtime.abi3.constants import (
     Feature,
     Link,
+    ParticipantScope,
     StorageClass,
     TopologyClass,
 )
@@ -366,6 +367,16 @@ def _wafer_topology_factory(
     return emit
 
 
+#: Route group a layer's on-fabric steps address.  ``route_group_count`` is the
+#: reticle count, so group ``g`` is reticle ``g``'s tiles; the local endpoint is
+#: ``local_reticle_id``, which the emitted topology sets to zero.
+_LAYER_ROUTE_GROUP = 0
+
+#: Numeric contract of the on-wafer expert all-reduce.  It is the graph's own
+#: expert-reduction contract: the collective sums the same expert outputs the
+#: EXPERT_REDUCE kernels sum, so it reduces under the same rule.
+_COLLECTIVE_REDUCTION_CONTRACT = "dispatch_reduce_expert_outputs_bf16_v1"
+
 #: Kinds that anchor an on-wafer collective.
 _DISPATCH_KINDS = frozenset({"EXPERT_DISPATCH", "ROUTED_MATMUL"})
 _GATHER_KINDS = frozenset(
@@ -374,7 +385,7 @@ _GATHER_KINDS = frozenset(
 _REDUCE_KINDS = frozenset({"EXPERT_REDUCE", "PARTITION_SUM", "ORDERED_SUM"})
 
 
-def _wafer_link_plan_factory(*, participants: int, chunk_bytes: int):
+def _wafer_link_plan_factory(*, chunk_bytes: int):
     """The on-wafer critical path for one compressed layer body.
 
     Every step here is a LINK-family instruction against a COMMUNICATION
@@ -383,6 +394,30 @@ def _wafer_link_plan_factory(*, participants: int, chunk_bytes: int):
     reduction, sparse gather, expert dispatch and a bounded barrier.  Nothing on
     this path is host-orchestrated: the authenticated device program issues all
     of it inside the layer loop.
+
+    Every one of the five collectives is ``TILE``-scoped (amendment A14, wire
+    format section 12.5).  The tile is this product's placement resource --
+    :class:`_WaferPlacer` packs regions into tiles and tiles into reticles --
+    and it is also the endpoint the wafer cycle model addresses
+    (:class:`runtime.cycle.fabric.WaferFabric` counts its endpoints in tiles).
+    Before A14 there was no way to say so: participants were counted in nodes,
+    a ``WAFER_LOGICAL_DEVICE`` declares exactly one node, and every one of these
+    five was therefore a collective over a single participant, which the LINK
+    engine refuses as degenerate.
+
+    Each one addresses **one reticle field's tiles**, through route group
+    :data:`_LAYER_ROUTE_GROUP`.  The emitted topology already partitions the
+    fabric that way -- ``route_group_count`` is the reticle count -- and the
+    arithmetic says why: 156 GB of weights over 43 layers is about 3.6 GB a
+    layer, and one reticle field is ``tiles_per_reticle * tile_rom_bytes`` =
+    4 GiB, so a layer's weights occupy about one field.  The fabric a layer's
+    activation, index gather, expert dispatch, expert reduction and barrier
+    actually cross is therefore that field's tile mesh, and the fan-out is
+    ``tiles_per_reticle``.  ``participant_count`` is derived from the admitted
+    topology and the route group rather than asserted here.
+
+    The residual unicast is not a collective: it is ``LINK.SEND`` between two
+    tile endpoints, and it states those two endpoints itself.
     """
 
     def plan(run: LayerRun, kinds: Sequence[str]) -> list[LinkStep]:
@@ -393,7 +428,8 @@ def _wafer_link_plan_factory(*, participants: int, chunk_bytes: int):
                 link_sub=int(Link.MULTICAST),
                 collective_op=int(CollectiveOp.BROADCAST),
                 label="activation_multicast",
-                participant_count=participants,
+                participant_scope=ParticipantScope.TILE,
+                group_id=_LAYER_ROUTE_GROUP,
                 byte_extent=chunk_bytes,
                 route_class=0,
                 virtual_channel=0,
@@ -421,7 +457,8 @@ def _wafer_link_plan_factory(*, participants: int, chunk_bytes: int):
                 link_sub=int(Link.GATHER),
                 collective_op=int(CollectiveOp.ALL_GATHER),
                 label="sparse_index_gather",
-                participant_count=participants,
+                participant_scope=ParticipantScope.TILE,
+                group_id=_LAYER_ROUTE_GROUP,
                 byte_extent=chunk_bytes,
                 route_class=1,
                 virtual_channel=1,
@@ -435,7 +472,8 @@ def _wafer_link_plan_factory(*, participants: int, chunk_bytes: int):
                     link_sub=int(Link.SCATTER),
                     collective_op=int(CollectiveOp.CONCAT),
                     label="expert_dispatch",
-                    participant_count=participants,
+                    participant_scope=ParticipantScope.TILE,
+                    group_id=_LAYER_ROUTE_GROUP,
                     byte_extent=chunk_bytes,
                     route_class=2,
                     virtual_channel=2,
@@ -448,7 +486,9 @@ def _wafer_link_plan_factory(*, participants: int, chunk_bytes: int):
                 link_sub=int(Link.COLLECTIVE),
                 collective_op=int(CollectiveOp.SUM),
                 label="expert_reduction",
-                participant_count=participants,
+                participant_scope=ParticipantScope.TILE,
+                group_id=_LAYER_ROUTE_GROUP,
+                reduction_contract=_COLLECTIVE_REDUCTION_CONTRACT,
                 byte_extent=chunk_bytes,
                 route_class=2,
                 virtual_channel=2,
@@ -461,6 +501,7 @@ def _wafer_link_plan_factory(*, participants: int, chunk_bytes: int):
                 link_sub=int(Link.SEND),
                 collective_op=int(CollectiveOp.POINT_TO_POINT),
                 label="residual_unicast",
+                participant_scope=ParticipantScope.TILE,
                 participant_count=2,
                 byte_extent=chunk_bytes,
                 route_class=0,
@@ -474,7 +515,8 @@ def _wafer_link_plan_factory(*, participants: int, chunk_bytes: int):
                 link_sub=int(Link.BARRIER),
                 collective_op=int(CollectiveOp.POINT_TO_POINT),
                 label="layer_barrier",
-                participant_count=participants,
+                participant_scope=ParticipantScope.TILE,
+                group_id=_LAYER_ROUTE_GROUP,
                 byte_extent=0,
                 route_class=1,
                 virtual_channel=3,
@@ -529,9 +571,7 @@ def deepseek_v4_rom_policy(
             tile_rom_bytes=tile_rom_bytes,
             epoch=epoch,
         ),
-        link_plan=_wafer_link_plan_factory(
-            participants=tiles_per_reticle, chunk_bytes=chunk_bytes
-        ),
+        link_plan=_wafer_link_plan_factory(chunk_bytes=chunk_bytes),
         notes={
             "host_submission": "one submission targets the whole wafer",
             "partition": "expert_and_role_striped_tile_rom",

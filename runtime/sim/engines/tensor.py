@@ -222,12 +222,29 @@ def _element_bytes(view: ResolvedView, elements: int) -> int:
 def _block_scales(ctx: EngineContext, view: ResolvedView, dims: Sequence[int]) -> np.ndarray:
     """Read the E8M0 block scales of a block-scaled view.
 
-    The scale object holds one unsigned E8M0 code per block of
-    ``scale_block_elements`` elements, in the view's own logical row-major
-    order: block ``b`` of row ``r`` is code ``r * blocks_per_row + b``, and the
-    view's element offset shifts that index by ``element_offset // block``.
+    The scale object holds one unsigned E8M0 code per block of the view's own
+    logical row-major order.  Amendment A15 (wire format section 12.6) states
+    the block as two extents -- ``scale_block_elements`` along the last axis and
+    ``scale_block_rows`` along the leading one -- so the code for element
+    ``(row, col)`` of a view over ``cols`` columns is
+
+        (row // scale_block_rows) * (cols // scale_block_elements)
+      + (col // scale_block_elements)
+
+    Amendment A8 is the ``scale_block_rows = 1`` case of that, exactly:
+    substituting one gives ``row * (cols // block) + col // block``, which is
+    ``element_offset // block`` whenever the block divides the row, which A8
+    already requires.  The released DeepSeek FP8 weights need the general case
+    -- ``layers.0.attn.wq_a`` is ``[1024, 4096]`` with a 128-element block and
+    ships 256 codes shaped ``[8, 32]``, which is a 128 x 128 tiling -- and
+    MXFP4's 32-element blocks along the reduction axis are the A8 case
+    untouched.
+
+    The returned array is expanded to one scale per ``(row, block)``, because
+    that is what applies the scale; the object is read once per *tile*.
     """
     block = int(view.scale_block_elements)
+    row_block = max(int(view.scale_block_rows), 1)
     _require(
         block > 0,
         f"view {view.descriptor_id} names a scale object but no block size",
@@ -243,18 +260,27 @@ def _block_scales(ctx: EngineContext, view: ResolvedView, dims: Sequence[int]) -
         f"view {view.descriptor_id}: a block-scaled view must be contiguous in "
         "its last axis so that block index and element index agree",
     )
-    _require(
-        view.element_offset % block == 0,
-        f"view {view.descriptor_id}: element offset {view.element_offset} does "
-        f"not start on a {block}-element scale block",
-    )
     rows = 1
     for extent in dims[:-1]:
         rows *= int(extent)
+    _require(
+        rows % row_block == 0,
+        f"view {view.descriptor_id}: leading extent {rows} is not a multiple of "
+        f"its {row_block}-row scale block",
+    )
+    # The element offset is a position in the same row-major space, so it
+    # splits into a row and a column exactly as any element does.
+    row_origin, column_origin = divmod(int(view.element_offset), width)
+    _require(
+        column_origin % block == 0 and row_origin % row_block == 0,
+        f"view {view.descriptor_id}: element offset {view.element_offset} does "
+        f"not start on a {row_block} x {block} scale block",
+    )
     per_row = width // block
-    count = rows * per_row
+    tile_rows = rows // row_block
+    count = tile_rows * per_row
     obj = ctx.memory[view.scale_object_id]
-    offset = view.element_offset // block
+    offset = (row_origin // row_block) * per_row + column_origin // block
     _require(
         offset + count <= obj.size_bytes,
         f"view {view.descriptor_id}: scale object {view.scale_object_id} holds "
@@ -274,7 +300,10 @@ def _block_scales(ctx: EngineContext, view: ResolvedView, dims: Sequence[int]) -
             f"view {view.descriptor_id}: reserved E8M0 code 0xff poisons a block",
             trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
         )
-    return values.reshape(rows, per_row)
+    tiles = values.reshape(tile_rows, per_row)
+    if row_block == 1:
+        return tiles
+    return np.repeat(tiles, row_block, axis=0)
 
 
 def _operand(

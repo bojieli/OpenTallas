@@ -87,6 +87,7 @@ OPERATION_KINDS = frozenset(
         "COPY",
         "CONCAT",
         "BROADCAST",
+        "SELECT",
         # contraction
         "MATMUL",
         "GROUPED_MATMUL",
@@ -695,6 +696,8 @@ def check_neutral(graph: KernelGraph) -> list[str]:
                     )
         if kernel.kind == "BROADCAST":
             errors.extend(_check_broadcast(kernel, seen_tensor, where))
+        if kernel.kind == "SELECT":
+            errors.extend(_check_select(kernel, seen_tensor, where))
         if not kernel.numeric_contract:
             errors.append(f"{where}: no numeric contract named")
         if kernel.predicate:
@@ -785,6 +788,83 @@ def _check_broadcast(
             f"{where}: BROADCAST of {tuple(source.shape)} with extent {extent} "
             f"at axis {axis} is {expected}, but {result.tensor_id!r} declares "
             f"{tuple(result.shape)}"
+        )
+    return errors
+
+
+def _check_select(
+    kernel: "Kernel", tensors: Mapping[str, "Tensor"], where: str
+) -> list[str]:
+    """A ``SELECT`` names one index of one axis and drops that axis.
+
+    It is the exact inverse of ``BROADCAST``.  Where a broadcast states an
+    inserted axis every element of which is shared, a select states which single
+    index of an existing axis the result keeps.  Both exist for the same reason:
+    ABI 3.0 operands are strided views, so neither operation needs an opcode of
+    its own -- a broadcast reads one source through a zero stride, and a select
+    reads one plane of a source through an element offset.  The neutral IR still
+    has to *say* which plane, because a backend may not guess it.
+
+    The motivating case is the frozen ``VECTOR.MHC`` operand row.
+    ``HYPER_CONNECT_PRE`` writes its pre and post coefficients as one
+    ``[tokens, 2, streams]`` output -- the ABI gives it two output views and the
+    combination matrix takes the second -- while the two coefficient planes are
+    consumed by different later operations: the pre plane weights the branch
+    reduction and the post plane is ``HYPER_CONNECT_POST``'s third operand.
+    Without a select, the neutral IR could name the packed tensor but not either
+    half of it.
+    """
+    errors: list[str] = []
+    if len(kernel.inputs) != 1 or len(kernel.outputs) != 1:
+        errors.append(
+            f"{where}: SELECT takes exactly one input and one output, not "
+            f"{len(kernel.inputs)} and {len(kernel.outputs)}"
+        )
+        return errors
+    source = tensors.get(kernel.inputs[0])
+    result = tensors.get(kernel.outputs[0])
+    if source is None or result is None:
+        return errors  # already reported as an undeclared tensor
+    if source.dtype != result.dtype:
+        errors.append(
+            f"{where}: SELECT moves {source.dtype!r} into {result.dtype!r}; "
+            "selecting one plane of a tensor cannot convert its elements"
+        )
+    axis = kernel.attributes.get("axis")
+    index = kernel.attributes.get("index")
+    if not isinstance(axis, int) or isinstance(axis, bool):
+        errors.append(f"{where}: SELECT needs an integer 'axis' attribute")
+        return errors
+    if not isinstance(index, int) or isinstance(index, bool) or index < 0:
+        errors.append(
+            f"{where}: SELECT needs a non-negative integer 'index' attribute"
+        )
+        return errors
+    if not 0 <= axis < len(source.shape):
+        errors.append(
+            f"{where}: SELECT axis {axis} is outside the rank-"
+            f"{len(source.shape)} source"
+        )
+        return errors
+    extent = source.shape[axis]
+    if isinstance(extent, Symbolic):
+        errors.append(
+            f"{where}: SELECT axis {axis} of {source.tensor_id!r} is the runtime "
+            f"symbol {extent.symbol!r}; a selected axis must have a static extent"
+        )
+        return errors
+    if index >= int(extent):
+        errors.append(
+            f"{where}: SELECT index {index} is outside axis {axis} of "
+            f"{source.tensor_id!r}, which has extent {int(extent)}"
+        )
+        return errors
+    expected = tuple(source.shape[:axis]) + tuple(source.shape[axis + 1 :])
+    if tuple(result.shape) != expected:
+        errors.append(
+            f"{where}: SELECT of index {index} on axis {axis} of "
+            f"{tuple(source.shape)} is {expected}, but {result.tensor_id!r} "
+            f"declares {tuple(result.shape)}"
         )
     return errors
 

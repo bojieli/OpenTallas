@@ -129,6 +129,7 @@ class Harness:
         storage_class: StorageClass = StorageClass.HBM,
         scale_object_id: int = NO_ID,
         scale_block_elements: int = 0,
+        scale_block_rows: int = 0,
     ) -> int:
         payload = np.ascontiguousarray(array).tobytes()
         object_id = self.constant(payload, storage_class)
@@ -144,6 +145,7 @@ class Harness:
             ),
             scale_object_id=scale_object_id,
             scale_block_elements=scale_block_elements,
+            scale_block_rows=scale_block_rows,
         )
 
     def output_view(
@@ -412,6 +414,106 @@ def test_matmul_fp8_weights_use_their_block_scales(harness: Harness) -> None:
     )
     # Every scaled weight element costs one extra multiplication.
     assert harness.counters["tensor.multiplications"] == rows * cols * depth + cols * depth
+
+
+def test_matmul_fp8_weights_use_a_two_dimensional_block_scale(harness: Harness) -> None:
+    """Amendment A15: one scale code may cover a tile, not only a run.
+
+    The released DeepSeek FP8 weights are scaled in 128 x 128 tiles --
+    ``layers.0.attn.wq_a`` is ``[1024, 4096]`` with a 128-element block and
+    ships 256 codes shaped ``[8, 32]`` -- which amendment A8's one-dimensional
+    rule cannot address at all.  Here the same shape is checked at a size a
+    test can enumerate: four output columns in two row blocks of two, and a
+    scale of ``[2, 2]`` against a ``[4, 32]`` weight.
+    """
+    rng = np.random.default_rng(11)
+    depth, cols, rows, block, row_block = 32, 4, 2, 16, 2
+    activations = random_bf16(rng, (rows, depth), scale=0.5)
+    weight_codes = rng.integers(0, 0x7E, size=(cols, depth), dtype=np.uint8)
+    scale_codes = rng.integers(120, 130, size=(cols // row_block, depth // block),
+                               dtype=np.uint8)
+
+    scale_object = harness.constant(scale_codes.tobytes())
+    weight_view = harness.const_view(
+        weight_codes,
+        DType.FP8_E4M3FN,
+        scale_object_id=scale_object,
+        scale_block_elements=block,
+        scale_block_rows=row_block,
+    )
+    numeric = matmul_numeric(harness, second_input_dtype=DType.FP8_E4M3FN)
+    output = harness.output_view((rows, cols), DType.BF16)
+    operator = harness.operator(
+        engine_family=Major.TENSOR,
+        engine_sub=Tensor.MATMUL,
+        inputs=[harness.const_view(activations, DType.BF16), weight_view],
+        outputs=[output],
+        numeric_profile_id=numeric,
+    )
+    harness.run(Major.TENSOR, Tensor.MATMUL, operator)
+
+    expected_weights = []
+    for col in range(cols):
+        row_values = []
+        for index in range(depth):
+            value = exact.decode_e4m3fn(int(weight_codes[col, index]))
+            scale = exact.decode_e8m0(
+                int(scale_codes[col // row_block, index // block])
+            )
+            assert value.value is not None and scale.value is not None
+            row_values.append(value.value * scale.value)
+        expected_weights.append(row_values)
+    np.testing.assert_array_equal(
+        harness.result(output), oracle_scaled_matmul(activations, expected_weights)
+    )
+
+
+def test_a_unit_row_block_is_amendment_a8_exactly(harness: Harness) -> None:
+    """A15 with ``scale_block_rows`` of one, and of zero, is A8's own rule.
+
+    Zero is what every view written before the amendment carries, because the
+    field's bytes were reserved and reserved bytes must be zero.  A15 defines
+    zero to mean one, so all three spellings must produce the same numbers from
+    the same codes -- otherwise every existing program would change meaning.
+    """
+    rng = np.random.default_rng(13)
+    depth, cols, rows, block = 32, 4, 2, 16
+    activations = random_bf16(rng, (rows, depth), scale=0.5)
+    weight_codes = rng.integers(0, 0x7E, size=(cols, depth), dtype=np.uint8)
+    scale_codes = rng.integers(120, 130, size=(cols, depth // block), dtype=np.uint8)
+    numeric = matmul_numeric(harness, second_input_dtype=DType.FP8_E4M3FN)
+
+    scale_object = harness.constant(scale_codes.tobytes())
+    activation_view = harness.const_view(activations, DType.BF16)
+    built = []
+    for row_block in (0, 1):
+        output = harness.output_view((rows, cols), DType.BF16)
+        built.append(
+            (
+                output,
+                harness.operator(
+                    engine_family=Major.TENSOR,
+                    engine_sub=Tensor.MATMUL,
+                    inputs=[
+                        activation_view,
+                        harness.const_view(
+                            weight_codes,
+                            DType.FP8_E4M3FN,
+                            scale_object_id=scale_object,
+                            scale_block_elements=block,
+                            scale_block_rows=row_block,
+                        ),
+                    ],
+                    outputs=[output],
+                    numeric_profile_id=numeric,
+                ),
+            )
+        )
+    results = []
+    for output, operator in built:
+        harness.run(Major.TENSOR, Tensor.MATMUL, operator)
+        results.append(harness.result(output))
+    np.testing.assert_array_equal(results[0], results[1])
 
 
 def test_matmul_mxfp4_weights_use_their_block_scales(harness: Harness) -> None:

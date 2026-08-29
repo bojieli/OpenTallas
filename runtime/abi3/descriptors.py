@@ -284,7 +284,14 @@ TENSOR_VIEW_PAYLOAD = Layout(
                 Field(f"term{i}_stride", 76 + 8 * i, 4),
             )
         ],
-        Field("reserved", 104, 24, "reserved"),
+        # Amendment A15 (wire format section 12.6): ``scale_block_elements`` is
+        # the block along the *last* axis and this is the block along the
+        # *leading* one, so a scale may tile two axes.  It takes four bytes of
+        # what A8 left reserved, and reserved bytes must be zero, so every view
+        # written before A15 reads zero here -- which the amendment defines to
+        # mean one, the one-dimensional case A8 froze.
+        Field("scale_block_rows", 104, 4),
+        Field("reserved", 108, 20, "reserved"),
     ],
 )
 

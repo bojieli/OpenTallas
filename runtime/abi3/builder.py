@@ -213,6 +213,7 @@ class DeploymentBuilder:
         layout_class: LayoutClass = LayoutClass.DENSE,
         scale_object_id: int = NO_ID,
         scale_block_elements: int = 0,
+        scale_block_rows: int = 0,
         edge_mask_id: int = NO_ID,
         permissions: int = int(Permission.READ),
         key: str | None = None,
@@ -235,6 +236,11 @@ class DeploymentBuilder:
             "dynamic_term_count": len(dynamic),
             "scale_object_id": scale_object_id,
             "scale_block_elements": scale_block_elements,
+            # Amendment A15 defines a zero row block to mean one, so a view
+            # whose scale tiles a single row encodes zero and is byte-identical
+            # to the same view written before the amendment existed.  A caller
+            # may say either; only one of them is written.
+            "scale_block_rows": int(scale_block_rows) if scale_block_rows > 1 else 0,
             "edge_mask_id": edge_mask_id,
             "element_offset": element_offset,
         }

@@ -121,9 +121,11 @@ either, and follows the released semantics where they use fewer operands:
 ``HEAD_RMS_NORM`` takes one input because the released query head norm is
 unweighted; ``GROUPED_MATMUL`` takes no group-index view because the released
 group split is contiguous and equal; ``SWIGLU`` is binary per amendment A8,
-with the clamp limit in the numeric contract; ``HYPER_CONNECT_PRE`` packs the
-Sinkhorn post and combination coefficients into its second output because only
-two output views exist, so ``HYPER_CONNECT_POST`` reads three operands; and
+with the clamp limit in the numeric contract; ``HYPER_CONNECT_PRE`` fills both
+output views with what the ``VECTOR.MHC`` row names -- the pre/post coefficient
+block and the Sinkhorn combination matrix -- and the branch input the released
+``Block.hc_pre`` returns is emitted as the separate ``REDUCTION.EXPERT_SUM`` the
+ABI leaves it to, with one ``SELECT`` per coefficient plane between them; and
 ``COMPRESSED_DENSE_INDEX`` reuses ``WINDOW_INDEX`` parameterised by
 ``index_family``, since both enumerate causal indices from a position.
 ``ATTENTION_SPARSE`` follows amendment A6 exactly: query, fused KV, index,
@@ -312,7 +314,7 @@ LOWERING_PLAN: Mapping[str, tuple[str, ...]] = {
     "HC_EXPAND": ("BROADCAST",),
     "HC_HEAD": ("HYPER_CONNECT_HEAD",),
     "HC_POST": ("HYPER_CONNECT_POST",),
-    "HC_PRE": ("HYPER_CONNECT_PRE",),
+    "HC_PRE": ("HYPER_CONNECT_PRE", "SELECT", "SELECT", "EXPERT_REDUCE"),
     "HEAD_RMS_NORM": ("HEAD_RMS_NORM",),
     "INDEX_SCORE": ("INDEX_SCORE",),
     "INDEX_TOPK": ("INDEX_TOPK", "CONCAT"),
@@ -359,11 +361,16 @@ LOWERING_PLAN: Mapping[str, tuple[str, ...]] = {
 #: reference appends its sub-operation, so ``MXFP4_SWIGLU``'s gate contraction
 #: is ``mxfp4_swiglu_bf16_gate_contraction_v1``.
 #:
-#: Several of these differ from the Qwen contract of the same name in kind:
-#: ``normalization_rms_norm_bf16_v1`` stays in binary32 through the gain
-#: multiply where Qwen's ``qwen3_rmsnorm_fp32_bf16_v1`` materialises BF16
-#: first, and the two disagree by one ulp on roughly 27 % of elements.  They
-#: must never be collapsed onto one identity.
+#: Several of these differ from the Qwen contract of the same name in kind, and
+#: where the ABI has already frozen a name for that difference this table uses
+#: *that* name rather than a second one of its own.  Amendment A8 names the two
+#: RMSNorm contracts ``qwen3_rmsnorm_fp32_bf16_v1`` -- BF16 materialised before
+#: the gain multiply -- and ``deepseek_rmsnorm_binary32_v1``, which stays in
+#: binary32 through it; they disagree by one ulp on roughly 27 % of elements,
+#: and the engine dispatches on the name.  This export previously wrote
+#: ``normalization_rms_norm_bf16_v1``, which describes the same arithmetic under
+#: a name no engine recognises, so every RMSNorm in the graph was refused at
+#: execution.  A frozen contract identity is not an exporter's to restate.
 CONTRACT_VERSION = 1
 
 CONTRACT_BASE_BY_SOURCE_KIND: Mapping[str, str] = {
@@ -402,7 +409,10 @@ CONTRACT_BASE_BY_SOURCE_KIND: Mapping[str, str] = {
     "LM_HEAD": "lm_head_bf16",
     "MARKOV_AUTOREGRESSIVE_LOOP": "markov_loop_markov_autoregressive_loop_bf16",
     "MXFP4_SWIGLU": "mxfp4_swiglu_bf16",
-    "RMS_NORM": "normalization_rms_norm_bf16",
+    # Amendment A8's frozen identity for the binary32-through-the-gain-multiply
+    # RMSNorm.  It names a contract, not a model's implementation location, and
+    # the engine dispatches on it.
+    "RMS_NORM": "deepseek_rmsnorm_binary32",
     "ROPE_APPLY": "rope_apply_bf16",
     "ROPE_INVERSE": "rope_inverse_bf16",
     "ROUTER_SCORE": "routing_router_score_bf16",
@@ -455,6 +465,7 @@ COUNTER_CLASS_BY_KIND: Mapping[str, str] = {
     "ROUTED_MATMUL": "tensor",
     "ROUTER_SCORE": "route_expert",
     "SCALE": "vector_reduction",
+    "SELECT": "memory",
     "STATE_READ": "state",
     "SQRT_SOFTPLUS": "vector_reduction",
     "SWIGLU": "vector_reduction",
@@ -1322,20 +1333,35 @@ def export_deepseek_v4_kernel_graph(
             bind(out0, output)
 
         elif source_kind == "HC_PRE":
+            # TA-ABI3-OPCONV-1 section 3 gives ``VECTOR.MHC`` two output views
+            # and the ``HYPER_CONNECT_PRE`` sub-case spends them on the packed
+            # ``[tokens, 2, streams]`` pre/post coefficient block and the
+            # ``[tokens, streams, streams]`` Sinkhorn combination matrix.  The
+            # branch input the released ``Block.hc_pre`` returns is not one of
+            # them: it is the weighted stream reduction
+            # ``y[t,h] = sum_m pre[t,m] * x[t,m,h]``, which the frozen reference
+            # states as four binary32 products reduced by a balanced tree and
+            # converted once to BF16 -- exactly ``REDUCTION.EXPERT_SUM``.  This
+            # export therefore says what the ABI says: one MHC operator for the
+            # coefficients, one select per coefficient plane, and one reduction
+            # for the branch.  Packing the branch into an MHC output slot, as
+            # this export previously did, made the operand row a fiction and
+            # left ``HYPER_CONNECT_POST`` reading three operands where its row
+            # has four.
             hidden = operands[0]
             base = role_weight(roles[0], scope, layer)
             projection = role_weight(roles[1], scope, layer)
             scale = role_weight(roles[2], scope, layer)
             rows = rows_of(hidden)
-            branch = act(source_outputs[0], "bf16", (rows, HIDDEN))
-            coefficients = act(
-                f"{node_id}.coefficients", "fp32", (rows, HC_COEFFICIENTS)
+            weight_planes = act(f"{node_id}.weights", "fp32", (rows, 2, HC_MULT))
+            combination = act(
+                source_outputs[2], "fp32", (rows, HC_MULT, HC_MULT)
             )
             emit(
                 node_id,
                 "HYPER_CONNECT_PRE",
                 (hidden, projection, scale, base),
-                (branch, coefficients),
+                (weight_planes, combination),
                 iteration_domain={
                     "tokens": rows,
                     "hyper_streams": HC_MULT,
@@ -1344,7 +1370,7 @@ def export_deepseek_v4_kernel_graph(
                 },
                 attributes={
                     **attrs,
-                    "coefficient_layout": "post_then_combination",
+                    "coefficient_layout": "pre_then_post",
                     "coefficient_width": HC_COEFFICIENTS,
                     "combination_width": HC_MULT * HC_MULT,
                     "epsilon": RMS_EPSILON,
@@ -1353,12 +1379,64 @@ def export_deepseek_v4_kernel_graph(
                     "sinkhorn_iterations": int(config["hc_sinkhorn_iters"]),
                 },
             )
+            pre = act(f"{node_id}.pre", "fp32", (rows, HC_MULT))
+            emit(
+                f"{node_id}.pre_plane",
+                "SELECT",
+                (weight_planes,),
+                (pre,),
+                iteration_domain={"tokens": rows, "hyper_streams": HC_MULT},
+                attributes={
+                    **attrs,
+                    "axis": 1,
+                    "index": 0,
+                    "plane": "branch_weight",
+                },
+            )
+            post = act(source_outputs[1], "fp32", (rows, HC_MULT))
+            emit(
+                f"{node_id}.post_plane",
+                "SELECT",
+                (weight_planes,),
+                (post,),
+                iteration_domain={"tokens": rows, "hyper_streams": HC_MULT},
+                attributes={
+                    **attrs,
+                    "axis": 1,
+                    "index": 1,
+                    "plane": "residual_weight",
+                },
+            )
+            branch = act(source_outputs[0], "bf16", (rows, HIDDEN))
+            emit(
+                f"{node_id}.branch_reduce",
+                "EXPERT_REDUCE",
+                (hidden, pre),
+                (branch,),
+                iteration_domain={
+                    "tokens": rows,
+                    "hyper_streams": HC_MULT,
+                    "width": HIDDEN,
+                },
+                attributes={
+                    **attrs,
+                    "contribution_row_order": "ascending_hyper_stream",
+                    "reduction_axis": 1,
+                    "reduction_order": "pairwise_tree",
+                    "routing_weight_application": "applied_at_the_reduction",
+                    "stream_count": HC_MULT,
+                },
+            )
             bind(source_outputs[0], branch)
-            bind(source_outputs[1], coefficients)
-            bind(source_outputs[2], coefficients)
+            bind(source_outputs[1], post)
+            bind(source_outputs[2], combination)
             bind(source_outputs[3], hidden)
 
         elif source_kind == "HC_POST":
+            # Four operands, matching the frozen row: branch, residual streams,
+            # post coefficients, combination matrix.  They were three only while
+            # ``HYPER_CONNECT_PRE`` packed the post and combination coefficients
+            # into one tensor.
             inputs = dedupe(operands)
             rows = rows_of(inputs[0])
             output = act(out0, "bf16", (rows, HC_MULT, HIDDEN))
@@ -1374,7 +1452,7 @@ def export_deepseek_v4_kernel_graph(
                 },
                 attributes={
                     **attrs,
-                    "coefficient_layout": "post_then_combination",
+                    "coefficient_layout": "post_and_combination_are_separate",
                     "combination_width": HC_MULT * HC_MULT,
                     "post_width": HC_MULT,
                 },

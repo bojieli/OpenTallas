@@ -55,6 +55,17 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     # result; a backend that can alias the destination need not move anything
     # at all.
     "BROADCAST": EngineOp(Major.DMA, Dma.TRANSFER, 1, 1),
+    # A select is a broadcast read backwards.  ``unsqueeze(axis).repeat(extent)``
+    # is one source read through a stride-zero axis; ``t[..., index, ...]`` is
+    # one source read through an element offset with that axis dropped.  Neither
+    # needs an opcode: both are a movement whose whole content is the view, so
+    # both lower to ``DMA.TRANSFER`` and a backend that can alias the
+    # destination need move nothing at all.  The frozen ``VECTOR.MHC`` row is
+    # what asks for it -- ``HYPER_CONNECT_PRE`` packs its pre and post
+    # coefficients into one ``[tokens, 2, streams]`` output because the ABI
+    # gives the second output view to the combination matrix, and the two
+    # planes are then read by two different later operations.
+    "SELECT": EngineOp(Major.DMA, Dma.TRANSFER, 1, 1),
     # contraction
     "MATMUL": EngineOp(Major.TENSOR, TensorOp.MATMUL, 2, 1),
     "GROUPED_MATMUL": EngineOp(Major.TENSOR, TensorOp.GROUPED_MATMUL, 3, 1),
