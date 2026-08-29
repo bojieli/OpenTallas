@@ -158,16 +158,24 @@
 - **OI-6 — Yosys 0.68 cannot parse SystemVerilog packages**, so `rtl/abi3`
   cannot enter the repository's existing synthesis flow unchanged. The
   synthesis probe required textually inlining the package.
-- **OI-7 — DeepSeek 32-node HBM activation capacity does not fit.** The plan
-  reports `hbm_fits: False`: 172 GB per node against 96 GB. Weights are only
-  4.9 GB per node once sharded; 163 GB is activation arenas sized at a
-  262,144-token worst case with worst-case symbolic widths, of which
-  `index_score.output` at `[262144, 65536]` is 34 GB by itself. The plan
-  reports it rather than hiding it, which is right. Closing it needs an
-  architectural decision — arenas sized at the *deployment's* declared context
-  rather than the architectural capability endpoint, block-scoped liveness so
-  arenas are reused, and token-parallel arena sharding across nodes. Until then
-  no DeepSeek HBM cycle result is admissible.
+- **OI-7 — DeepSeek 32-node HBM capacity: diagnosed and largely closed.** The
+  reported overflow (172 GB per node against 96 GB) came from sizing activation
+  arenas at the *architectural* endpoint rather than the *deployment's* declared
+  context. Measured, at a declared context of 8,192 tokens — which is what
+  actually executes — the arenas are 3.64 GiB instead of 152.39 GiB, and the
+  32-node plan **fits at 4.65 GiB per node** against 96 GiB available. Sizing
+  arenas at the capability endpoint is the error; ADR-003 section 19 makes such
+  values capability fields precisely so a deployment can declare less.
+  Two things remain open at the mandatory context:
+  - **200,000 is not an admissible deployment context.** It must be a whole
+    number of 128-token sliding windows, so the nearest admissible value is
+    200,064. The workload contract should either adopt 200,064 or state that the
+    prompt is 200,000 within a 200,064 context.
+  - At 200,064 the plan fails earlier, in `main.layer00.routed_experts.gate`,
+    where a routed-expert weight multiply is being planned as a contraction:
+    operands `(1200384, 4096)` and `(1200384, 1)` share no depth axis. That is a
+    backend classification bug at scale, not a capacity result.
+
 - **OI-8 — `MEMORY_OBJECT.base_address` defaults to zero.** Every object can
   present at address zero, so the cycle model cannot map objects onto HBM
   channels or SRAM banks and substitutes a synthetic packed placement. Channel
