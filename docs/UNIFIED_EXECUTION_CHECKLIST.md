@@ -78,8 +78,8 @@
 ## W6 — Real end-to-end execution (the correctness spine)
 
 - [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle**, and **decode reaches a real EOS**. `TA-QW-AGENT-1` ran 112 prompt tokens to the natural stop at token 151645 after 23 tokens (`results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json`), `TA-QW-CHAT-1` ran 24 tokens (`..._ta-qw-chat-1_...`); both agree with the oracle at every position, with no legitimacy problems and all 27 admission checks passing
-- [~] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — **reported, being re-verified with persisted evidence** (the reporting run left no artifact in `results/`, so the claim below is not yet checkable in this repository) — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. Storage-class equivalence re-proved after every change: 18 descriptors differ, all `MEMORY_OBJECT`, all ROM→HBM, none beyond storage class
-- [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **no tokens yet, and two of the three remaining blockers are decisions, not bugs.** The deployment admits (996 instructions, 2,307 descriptors, work bound proved exactly) and `HYPER_CONNECT_PRE` now executes against the frozen `VECTOR.MHC` operand row. It stops at the branch reduction the ABI leaves to `REDUCTION.EXPERT_SUM`, which provably cannot carry per-token weights over a token block (**OI-28**). Behind that: the functional simulator binds no `NODE_ID`, so the mandated 32-node capability cannot execute at all (**OI-27**), and the `attention_kv_view` row space needs an extent no view can present (**OI-26**). Landed on the way: the mHC pre/post split, the axis-1 index concatenations (**OI-20**), and two contract-naming defects (**OI-29**)
+- [x] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — **re-verified with evidence in the repository** (`results/abi3/qwen3_rom_ta-qw-chat-1_execution.json`, status pass, 24 tokens, `reference_agreement` true, no divergence index). The 24 tokens are identical to `qwen3_hbm_ta-qw-chat-1_execution.json` position for position, which is the claim this item makes. Both admit at 75 instructions; the ROM lane emits 239 descriptors against HBM's 218 and declares 2,105 retired work against 22,715, because the two lanes block the token loop differently — see [OI-19] — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. Storage-class equivalence re-proved after every change: 18 descriptors differ, all `MEMORY_OBJECT`, all ROM→HBM, none beyond storage class
+- [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **no tokens yet, and two of the three remaining blockers are decisions, not bugs.** The deployment admits (996 instructions, 2,307 descriptors, work bound proved exactly) and `HYPER_CONNECT_PRE` now executes against the frozen `VECTOR.MHC` operand row. It stops at the branch reduction the ABI leaves to `REDUCTION.EXPERT_SUM`, which provably cannot carry per-token weights over a token block (**OI-28**). Behind that: the functional simulator binds no `NODE_ID`, so the mandated 32-node capability cannot execute at all (**OI-27**), and the `attention_kv_view` row space needs an extent no view can present (**OI-26**). Landed on the way: the mHC pre/post split, the axis-1 index concatenations (**OI-20**), and one epsilon-encoding defect (**OI-29**)
 - [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
 - [~] W6.6 Checkpoint/restart exactness on all four — **Qwen-HBM proven; the other three wait on W6.2-W6.4**. `tools/run_abi3_restart_exactness.py` runs one workload three times in three separate OS processes: uninterrupted; interrupted after N tokens with the device state serialised by `runtime/sim/checkpoint.py`; and finished in a fresh process that loads only that checkpoint. `TA-QW-CHAT-1` on `torch_cpu`, 93 prompt tokens, 6 new tokens split 3+3: both runs give `[1654, 525, 2661, 1447, 12, 3070]`, with identical retired work in every transaction and identical values for all 42 architectural counters (`results/abi3/restart_exactness.json`). Fifteen guards stand between the run and the word *pass* — three distinct PIDs, one deployment digest, one implementation identity, one runtime source digest, and explicit non-emptiness and length checks, because two empty lists are not a match. Two controls make the pass mean something: erasing the KV STATE images from the checkpoint diverges at the first resumed token, and erasing everything **except** the STATE images still reproduces the sequence, so what carries the generation is the STATE resources and the cursor, not activation scratch. The source-digest guard earned itself on its first run, refusing a token-identical result because a concurrent commit changed `runtime/` between two phases
@@ -316,30 +316,39 @@
   concurrent backend work has settled. Related to [OI-17], which is the same
   lane failing for a different reason.
 
-- **OI-29 — the measured DeepSeek prefill ladder, and two defects closed off
-  it.** Because OI-28 stops the real graph at the third kernel, the rest of the
+- **OI-29 — the measured DeepSeek prefill ladder beyond OI-28.** Because
+  OI-28 stops the real graph at the third kernel, the rest of the
   prefill was walked with a *diagnostic* graph in which the branch reduction is
   replaced by a `SELECT` of stream 0 — structurally identical, numerically
   wrong, never published — on the single-chip capability (OI-27 rules out the
   cluster). It admits (911 instructions, 2,114 descriptors) and fails in this
-  order:
+  order (steps 1 and 3 were walked with the mismatch patched locally and the
+  patch discarded; only step 2's fix is landed):
 
   1. `numeric profile 418 names no RMSNorm contract this engine implements` —
-     **closed.** Amendment A8 gives the vector engine two RMSNorm contracts and
-     it dispatches on the one the NUMERIC descriptor names. The DeepSeek
-     exporter names its own qualified source identity,
-     `normalization_rms_norm_bf16_v1`; the arithmetic it denotes is
-     `deepseek_rmsnorm_binary32_v1`, qualified in
-     `results/abi3/numeric_contract_qualification.json`. Naming the execution
-     contract is what `EXECUTION_CONTRACT` in the HBM lowering exists for.
-     Qwen names `qwen3_rmsnorm_fp32_bf16_v1` and is untouched.
+     **open, with the fix identified.** Amendment A8 gives the vector engine two
+     RMSNorm contracts, names them `qwen3_rmsnorm_fp32_bf16_v1` and
+     `deepseek_rmsnorm_binary32_v1`, and makes the engine dispatch on the one
+     the NUMERIC descriptor names. Qwen took its name; the DeepSeek exporter
+     still names `normalization_rms_norm_bf16`, which is not either of them, so
+     the engine refuses all 235 of its RMSNorms rather than guess. The fix is
+     the exporter adopting A8's name — one line in
+     `CONTRACT_BASE_BY_SOURCE_KIND` — plus adding the already-qualified
+     `deepseek_rmsnorm_binary32_v1` to the two HBM capability files and the ROM
+     one, and regenerating `spec/abi3/numeric_contract_union.json`. It is
+     deliberately **not** an `EXECUTION_CONTRACT` substitution in the HBM
+     lowering: that map is executable code, and
+     `test_lowering_never_names_a_model` correctly refuses to let a model name
+     reach it. Tried that way first; the test caught it, which is the test
+     working.
   2. `numeric profile 456 declares epsilon 0x358637bd; the unweighted head
      RMSNorm contract requires the BF16 encoding 0x3586` — **closed.** The
      released *unweighted* head norm is qualified against
      `head_rms_norm_bf16`, which takes a BF16 epsilon code because the kernel
      adds it to a BF16 mean. The NUMERIC field is otherwise a binary32 pattern,
      so the backend now narrows it for that one operand shape. Qwen's head norm
-     passes a gain vector, takes the weighted path, and keeps binary32.
+     passes a gain vector, takes the weighted path, and keeps binary32 — the
+     narrowing is keyed on the operand arity, not on a model.
   3. `RoPE coefficient view 461 has last axis 1; expected cosine then sine over
      512` — **open.** This is IR3-GAP-4, which amendment A9 resolved in the
      schema and the DeepSeek exporter has not yet taken up: `Tensor.generator`
