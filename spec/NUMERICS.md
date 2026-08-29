@@ -276,6 +276,12 @@ or infinity produced internally is a numeric exception and poisons rather than
 being silently emitted. Underflow follows IEEE gradual underflow and may produce
 BF16 subnormal or signed zero; output zero is canonicalized positive.
 
+Where an operation explicitly declares direct BF16 arithmetic, its exact finite
+result is rounded directly to BF16 under the same rule. It may not first round to
+binary32: that double-rounding path can select the wrong BF16 endpoint next to a
+BF16 midpoint. The independent reference therefore provides a direct exact-value
+BF16 encoder in addition to binary32-to-BF16 conversion.
+
 ### NUM-4.3 Integer DV mode
 
 `INT_DV` interprets activation and weight fields as two's-complement signed values
@@ -457,9 +463,9 @@ case producing target `0xbbd2` versus sequential-source `0xbbd3`.
 `RMS_NORM` consumes one or more finite-BF16 rows and one finite-BF16 checkpoint
 weight for every column. The qualified Flash graph contains 251 weighted sites:
 21 at width 128, 90 at width 512, 46 at width 1,024, and 94 at width 4,096.
-This contract does not qualify the separately catalogued unweighted
-`HEAD_RMS_NORM` operation or an RMS operation hidden inside another composite
-operator.
+This weighted contract is distinct from the separately qualified unweighted
+`HEAD_RMS_NORM` contract in NUM-6.9 and does not qualify an RMS operation hidden
+inside another composite operator.
 
 Checkpoint normalization weights are stored as BF16. The pinned source loads
 them into binary32 parameters; the target therefore widens every BF16 weight
@@ -495,6 +501,50 @@ After positive-zero canonicalization, the source expression differed in 22 of
 92,160 CPU BF16 outputs and zero CUDA BF16 outputs. These bounded observations
 justify keeping the deterministic target rules; they are not a promise of
 equivalence for untested inputs, backends, or overflow behavior.
+
+### NUM-6.9 Unweighted query-head RMS normalization
+
+`HEAD_RMS_NORM` consumes one or more finite-BF16 query-head rows of exactly 512
+columns and has no checkpoint weight. The qualified Flash graph contains 46
+sites: one after query expansion in each of 43 main blocks and three DSpark
+blocks. It is not an alias for the binary32 weighted operation in NUM-6.8.
+
+The pinned `fp8_gemm` wrapper returns the process default dtype, which the pinned
+model sets to BF16. At this source boundary, native CPU and CUDA checks confirm
+that `q.square()`, `.mean()`, addition of the Python literal `1e-6`,
+`torch.rsqrt`, and the in-place multiply all return BF16. The source epsilon at
+this boundary is therefore BF16 `0x3586`, not binary32 `0x358637bd`.
+
+For one row, the deterministic target executes these boundaries in order:
+
+1. square each original BF16 input and round the exact product directly to BF16;
+2. widen each squared BF16 value exactly and reduce the 512 columns with the
+   NUM-6.1 balanced binary32 tree;
+3. divide once by binary32 512 and convert the binary32 mean once to BF16;
+4. add BF16 epsilon `0x3586` and round the exact sum directly to BF16;
+5. compute the correctly rounded, ties-to-even BF16 reciprocal square root; and
+6. multiply each original BF16 input by that BF16 reciprocal RMS and round the
+   exact product directly to BF16.
+
+No square, mean conversion, epsilon add, reciprocal square root, or output
+multiply may be fused across these declared BF16 boundaries. Direct BF16
+rounding follows NUM-4.2 and must not pass through a binary32 intermediary.
+Subnormals are preserved, and output zero is canonical positive zero. Nonfinite
+input, binary32 reduction overflow, or finite saturation at a BF16 intermediate
+poisons. Finite saturation only at the final BF16 output remains sticky and is
+counted under NUM-5.1.
+
+PyTorch does not promise one cross-backend reduction order or correctly rounded
+BF16 reciprocal square root. A deterministic development audit used seed
+`0x48454144524d534e`, PyTorch 2.10.0+cu128, CUDA 12.8, and native SM120 over 16
+width-512 rows. The explicit target tree and the ordinary source mean both
+matched all 16 target mean-square codes on CPU and CUDA in this bounded corpus.
+Native BF16 reciprocal square root differed from the correctly rounded target
+in one CPU row and zero CUDA rows; the CPU result was one BF16 code away. The
+complete source expression consequently differed in 427 of 8,192 CPU BF16
+outputs and zero CUDA outputs, with every CPU difference an adjacent same-sign
+code after positive-zero canonicalization. These observations bound that
+development corpus only; the explicit rules above remain the target contract.
 
 ## NUM-7 Speculative decoding
 

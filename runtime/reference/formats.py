@@ -83,6 +83,7 @@ class QuantizedActivationBlock:
 ROUTED_REDUCTION_BLOCK = 32
 DENSE_REDUCTION_BLOCK = 128
 _BINARY32_MAX_FINITE = 0x7F7FFFFF
+_BF16_MAX_FINITE = 0x7F7F
 
 _E2M1_MAGNITUDES = (
     Fraction(0),
@@ -273,6 +274,54 @@ def encode_binary32_rne(value: Fraction | int) -> int:
     return sign | ((exponent + 127) << 23) | (significand - (1 << 23))
 
 
+def encode_bf16_rne(value: Fraction | int) -> QuantizedBF16:
+    """Round one exact finite value directly to BF16, ties to even.
+
+    The conversion is performed from the exact rational input rather than via
+    binary32, because an intermediate binary32 rounding can change the BF16
+    result at a BF16 midpoint. Finite overflow saturates to the signed maximum
+    finite encoding and is reported through the sticky ``saturated`` flag.
+    Output zero is canonicalized to positive zero.
+    """
+
+    exact = _fraction(value, "BF16 input")
+    if exact == 0:
+        return QuantizedBF16(0, False)
+    sign = 0x8000 if exact < 0 else 0
+    magnitude = abs(exact)
+    maximum = decode_bf16(_BF16_MAX_FINITE).value
+    if maximum is None:  # pragma: no cover - constant-format invariant
+        raise RuntimeError("BF16 maximum finite encoding is not finite")
+    if magnitude > maximum:
+        return QuantizedBF16(sign | _BF16_MAX_FINITE, True)
+
+    minimum_normal = _pow2(-126)
+    if magnitude < minimum_normal:
+        significand = _round_ties_to_even_integer(magnitude / _pow2(-133))
+        if significand == 0:
+            return QuantizedBF16(0, False)
+        if significand < 1 << 7:
+            return QuantizedBF16(sign | significand, False)
+        # Rounding the largest subnormal upward produces the smallest normal.
+        return QuantizedBF16(sign | (1 << 7), False)
+
+    exponent = _floor_log2(magnitude)
+    significand = _round_ties_to_even_integer(
+        magnitude / _pow2(exponent - 7)
+    )
+    if significand == 1 << 8:
+        significand = 1 << 7
+        exponent += 1
+    if exponent > 127:
+        return QuantizedBF16(sign | _BF16_MAX_FINITE, True)
+    if exponent < -126 or not (1 << 7) <= significand < (1 << 8):
+        raise RuntimeError("BF16 normal encoding invariant failed")
+    return QuantizedBF16(
+        sign | ((exponent + 127) << 7) | (significand - (1 << 7)),
+        False,
+    )
+
+
 def _finite_binary32_value(code: int, label: str) -> Fraction:
     decoded = decode_binary32(code)
     if not decoded.finite or decoded.value is None:
@@ -345,6 +394,57 @@ def binary32_rsqrt(value_code: int) -> int:
 
     upper_code = lower_code + 1
     upper = _finite_binary32_value(upper_code, "binary32 rsqrt upper candidate")
+    midpoint = (lower + upper) / 2
+    midpoint_product = midpoint * midpoint * value
+    if midpoint_product < 1:
+        return upper_code
+    if midpoint_product > 1:
+        return lower_code
+    return lower_code if lower_code & 1 == 0 else upper_code
+
+
+def bf16_rsqrt(value_code: int) -> int:
+    """Return correctly rounded BF16 ``1/sqrt(value)``.
+
+    Exact rational comparisons bracket the irrational result between adjacent
+    positive finite BF16 values. Comparing the exact input times the square of
+    their midpoint then selects round-to-nearest, with the encoding LSB
+    resolving an exact tie to even. No host square root or floating-point mode
+    participates.
+    """
+
+    decoded = decode_bf16(value_code)
+    if not decoded.finite or decoded.value is None:
+        raise NumericReferenceError("BF16 rsqrt input is NaN or infinity")
+    value = decoded.value
+    if value <= 0:
+        raise NumericReferenceError("BF16 rsqrt input must be positive")
+
+    lower_code = 0
+    upper_exclusive = _BF16_MAX_FINITE + 1
+    while lower_code + 1 < upper_exclusive:
+        candidate_code = (lower_code + upper_exclusive) // 2
+        candidate = decode_bf16(candidate_code).value
+        if candidate is None:  # pragma: no cover - bounded finite search
+            raise RuntimeError("BF16 rsqrt search reached a nonfinite candidate")
+        if candidate * candidate * value <= 1:
+            lower_code = candidate_code
+        else:
+            upper_exclusive = candidate_code
+
+    lower = decode_bf16(lower_code).value
+    if lower is None:  # pragma: no cover - bounded finite search
+        raise RuntimeError("BF16 rsqrt lower candidate is nonfinite")
+    lower_product = lower * lower * value
+    if lower_product == 1:
+        return lower_code
+    if lower_code == _BF16_MAX_FINITE:  # pragma: no cover - finite input bound
+        raise NumericReferenceError("BF16 rsqrt overflow")
+
+    upper_code = lower_code + 1
+    upper = decode_bf16(upper_code).value
+    if upper is None:  # pragma: no cover - bounded finite search
+        raise RuntimeError("BF16 rsqrt upper candidate is nonfinite")
     midpoint = (lower + upper) / 2
     midpoint_product = midpoint * midpoint * value
     if midpoint_product < 1:

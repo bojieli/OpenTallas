@@ -17,6 +17,7 @@ from runtime.reference.formats import (
     binary32_product_add,
     binary32_rsqrt,
     binary32_bits_to_bf16_rne,
+    bf16_rsqrt,
     decode_bf16,
     decode_binary32,
     decode_e2m1,
@@ -25,6 +26,7 @@ from runtime.reference.formats import (
     decode_mxfp4_block,
     decode_packed_e2m1,
     encode_binary32_rne,
+    encode_bf16_rne,
     encode_e2m1_rne,
     encode_e4m3fn_rne,
     fp8_fp8_block_dot,
@@ -236,6 +238,47 @@ def test_bf16_exhaustive_classification() -> None:
     assert decode_bf16(0x3F80).value == 1
 
 
+def test_direct_bf16_rne_round_trip_ties_saturation_and_no_double_rounding() -> None:
+    for code in range(1 << 16):
+        decoded = decode_bf16(code)
+        if not decoded.finite or decoded.value is None:
+            continue
+        canonical = 0 if decoded.zero else code
+        result = encode_bf16_rne(decoded.value)
+        assert result.code == canonical
+        assert not result.saturated
+
+    minimum_subnormal = Fraction(1, 1 << 133)
+    assert encode_bf16_rne(minimum_subnormal / 2).code == 0
+    assert encode_bf16_rne(3 * minimum_subnormal / 2).code == 0x0002
+    assert encode_bf16_rne(-3 * minimum_subnormal / 2).code == 0x8002
+
+    halfway_above_one = Fraction(1) + Fraction(1, 1 << 8)
+    halfway_above_next = Fraction(1) + Fraction(3, 1 << 8)
+    assert encode_bf16_rne(halfway_above_one).code == 0x3F80
+    assert encode_bf16_rne(halfway_above_next).code == 0x3F82
+
+    # This value is just above a BF16 midpoint but first rounds to that exact
+    # midpoint in binary32. Direct BF16 rounding must therefore avoid the
+    # double-rounding result selected by a binary32 intermediary.
+    just_above_midpoint = halfway_above_one + Fraction(1, 1 << 25)
+    assert encode_bf16_rne(just_above_midpoint).code == 0x3F81
+    binary32 = encode_binary32_rne(just_above_midpoint)
+    assert binary32_bits_to_bf16_rne(binary32).code == 0x3F80
+
+    maximum = decode_bf16(0x7F7F).value
+    assert maximum is not None
+    endpoint = encode_bf16_rne(maximum)
+    assert endpoint.code == 0x7F7F and not endpoint.saturated
+    positive_overflow = encode_bf16_rne(maximum + 1)
+    assert positive_overflow.code == 0x7F7F and positive_overflow.saturated
+    negative_overflow = encode_bf16_rne(-maximum - 1)
+    assert negative_overflow.code == 0xFF7F and negative_overflow.saturated
+
+    with pytest.raises(NumericReferenceError, match="exact integer or Fraction"):
+        encode_bf16_rne(True)
+
+
 def test_binary32_to_bf16_uses_rne_and_saturates_finite_overflow() -> None:
     assert binary32_bits_to_bf16_rne(0x3F800000).code == 0x3F80
     assert binary32_bits_to_bf16_rne(0x3F808000).code == 0x3F80
@@ -384,6 +427,72 @@ def test_binary32_rsqrt_is_correctly_rounded_and_fails_closed() -> None:
     for code in (0x7F800000, 0x7FC00000):
         with pytest.raises(NumericReferenceError, match="NaN or infinity"):
             binary32_rsqrt(code)
+
+
+def test_bf16_rsqrt_is_correctly_rounded_and_fails_closed() -> None:
+    assert bf16_rsqrt(0x3F80) == 0x3F80
+    assert bf16_rsqrt(0x4080) == 0x3F00
+    assert bf16_rsqrt(0x4000) == 0x3F35
+    assert bf16_rsqrt(0x3586) == 0x447A
+    assert bf16_rsqrt(0x0001) == 0x60B5
+    assert bf16_rsqrt(0x7F7F) == 0x1F80
+
+    generator = random.Random(0x5253_5152_5442_3136)
+    samples = {1, 0x007F, 0x0080, 0x3F80, 0x7F7F}
+    while len(samples) < 2_000:
+        code = generator.randrange(1, 0x7F80)
+        if decode_bf16(code).finite:
+            samples.add(code)
+    previous_input = 0
+    previous_result = 0x7F80
+    for input_code in sorted(samples):
+        result = bf16_rsqrt(input_code)
+        source = decode_bf16(input_code).value
+        rounded = decode_bf16(result).value
+        assert source is not None and rounded is not None and rounded > 0
+
+        product = source * rounded * rounded
+        if product < 1:
+            lower_code = result
+            upper_code = result + 1
+            lower = rounded
+            upper = decode_bf16(upper_code).value
+            assert upper is not None and source * upper * upper > 1
+            midpoint_product = source * ((lower + upper) / 2) ** 2
+            if midpoint_product < 1:
+                assert result == upper_code
+            elif midpoint_product == 1:
+                assert result == (lower_code if lower_code & 1 == 0 else upper_code)
+            else:
+                assert result == lower_code
+        elif product > 1:
+            upper_code = result
+            lower_code = result - 1
+            upper = rounded
+            lower = decode_bf16(lower_code).value
+            assert lower is not None and source * lower * lower < 1
+            midpoint_product = source * ((lower + upper) / 2) ** 2
+            if midpoint_product < 1:
+                assert result == upper_code
+            elif midpoint_product == 1:
+                assert result == (lower_code if lower_code & 1 == 0 else upper_code)
+            else:
+                assert result == lower_code
+
+        assert result <= previous_result
+        previous_input = input_code
+        previous_result = result
+    assert previous_input == max(samples)
+
+    for code in (0, 0x8000, 0xBF80):
+        with pytest.raises(NumericReferenceError, match="must be positive"):
+            bf16_rsqrt(code)
+    for code in (0x7F80, 0x7FC0):
+        with pytest.raises(NumericReferenceError, match="NaN or infinity"):
+            bf16_rsqrt(code)
+    for code in (True, -1, 1 << 16):
+        with pytest.raises(NumericReferenceError, match="unsigned 16-bit|outside 16 bits"):
+            bf16_rsqrt(code)
 
 
 def test_binary32_balanced_sum_uses_canonical_tree_not_linear_accumulation() -> None:

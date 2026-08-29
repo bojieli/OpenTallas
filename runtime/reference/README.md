@@ -13,8 +13,9 @@ rational scalar semantics for:
 - E8M0 scales, including the reserved `0xff` poison value;
 - FP8 E4M3FN classification and round-to-nearest-ties-to-even conversion;
 - BF16 classification and binary32-to-BF16 conversion;
-- exact IEEE binary32 decode/rounding, correctly rounded reciprocal square root,
-  and ordered fused-product accumulation;
+- direct exact-value BF16 RNE, exact IEEE binary32 decode/rounding, correctly
+  rounded BF16 and binary32 reciprocal square root, and ordered fused-product
+  accumulation;
 - packed MXFP4 block decoding; and
 - NUM-3.3 BF16 activation-block microscaling;
 - 32-value MXFP4×FP8 routed block dots; and
@@ -32,8 +33,8 @@ finite BF16 encodings with CUDA's native `cvt.rn.satfinite.e2m1x2.f32`. After
 the governed positive-zero canonicalization, there were zero differences.
 
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
-the qualified dense FP8 linear path, vector operators beyond weighted RMS
-normalization, target-hidden capture, and HC post-mixing, attention/routing
+the qualified dense FP8 linear path, vector operators beyond weighted and head
+RMS normalization, target-hidden capture, and HC post-mixing, attention/routing
 operators, real-checkpoint known answers, layer differentials, end-to-end
 logits, and task quality remain open.
 The earlier exact-integer evaluator remains fixture-only evidence.
@@ -56,7 +57,15 @@ rounded binary32 reciprocal square root, performs the two ordered pointwise
 multiplies, and converts once to BF16. Tests retain mean-square and inverse-RMS
 codes, cover signed zero, BF16 subnormals, finite saturation, overflow, every
 qualified width, and an independently assembled randomized composition.
-`HEAD_RMS_NORM` remains a distinct pending unweighted operator.
+
+The same module separately implements all 46 unweighted `HEAD_RMS_NORM` sites
+at width 512. It rounds squares immediately to BF16, widens them for the
+NUM-6.1 binary32 reduction, converts the mean once to BF16, adds BF16 epsilon
+`0x3586`, applies correctly rounded BF16 reciprocal square root, and rounds the
+final unweighted multiply directly to BF16. Tests cover exact BF16
+intermediates, direct-rounding behavior, signs, signed zero, subnormals,
+malformed/nonfinite input, intermediate overflow, an independently assembled
+composition, and native CPU/CUDA differentials.
 
 A deterministic development audit used seed `0x524d534e41554449`, PyTorch
 2.10.0+cu128, CUDA 12.8, and native SM120 on 16 rows per width. The explicit
@@ -67,6 +76,14 @@ one binary32 code. After positive-zero canonicalization, the complete source
 expression differed in 22 of 92,160 CPU BF16 outputs and zero CUDA outputs.
 These are bounded development observations, not a replacement for target RTL,
 full-checkpoint, layer, or task-quality qualification.
+
+For the head path, seed `0x48454144524d534e` covered 16 width-512 rows on the
+same software and hardware. Canonical and ordinary source means matched all 16
+target codes on CPU and CUDA. Native BF16 reciprocal square root differed in
+one CPU row and zero CUDA rows; the complete expression differed in 427 of
+8,192 CPU BF16 outputs and zero CUDA outputs. Every CPU difference was one
+same-sign BF16 code after zero canonicalization. This is likewise bounded
+development evidence, not a backend-equivalence guarantee.
 
 `quantization.py` implements the complete indexer `FP4_QDQ` boundary. It
 flattens leading dimensions into source-order rows, selects an independent

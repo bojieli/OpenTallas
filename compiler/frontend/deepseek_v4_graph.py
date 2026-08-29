@@ -74,6 +74,7 @@ _QUALIFIED_REFERENCE_OWNERS = {
     "HASH_ROUTE": "runtime.reference.lookup.hash_route_indices",
     "HC_EXPAND": "runtime.reference.structural.hc_expand_bf16",
     "HC_POST": "runtime.reference.vector.hc_post_bf16",
+    "HEAD_RMS_NORM": "runtime.reference.normalization.head_rms_norm_bf16",
     "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
     "RMS_NORM": "runtime.reference.normalization.rms_norm_bf16",
     "ROUTER_WEIGHT_NORMALIZE": (
@@ -166,7 +167,7 @@ _OPERATORS = (
     _op(
         "HEAD_RMS_NORM",
         "inference/model.py:Attention.forward",
-        "Unweighted per-head FP32 RMS normalization after query expansion.",
+        "Unweighted per-head BF16 square, mean conversion, epsilon add, reciprocal square root, and pointwise normalization after query expansion.",
         "RMSNORM",
         "vector.head_rmsnorm",
     ),
@@ -564,6 +565,25 @@ def _rms_norm_attributes(width: int) -> dict[str, Any]:
     }
 
 
+def _head_rms_norm_attributes() -> dict[str, Any]:
+    return {
+        "epsilon": 1e-6,
+        "epsilon_add_rounding": "bf16_rne",
+        "epsilon_bf16": "0x3586",
+        "head_dim": 512,
+        "input_dtype": "bf16",
+        "intermediate_overflow": "poison",
+        "mean_conversion": "binary32_rne_divide_then_bf16_rne",
+        "output_dtype": "bf16",
+        "output_zero": "canonical_positive",
+        "pointwise_multiply_rounding": "bf16_rne",
+        "reduction_tree": "num_6_1_balanced_binary32_rne",
+        "rsqrt_rounding": "correct_bf16_rne",
+        "square_rounding": "bf16_rne",
+        "subnormal_policy": "preserve",
+    }
+
+
 def _add_block_graph(
     graph: _GraphBuilder,
     hidden: str,
@@ -643,7 +663,7 @@ def _add_block_graph(
         "HEAD_RMS_NORM",
         (query,),
         phases=normal_phases,
-        attributes={"epsilon": 1e-6, "head_dim": 512},
+        attributes=_head_rms_norm_attributes(),
     )
     (query,) = graph.add(
         f"{root}.query_rope",
@@ -1453,7 +1473,7 @@ def build_official_graph_contract() -> dict[str, Any]:
             },
             {
                 "id": "DSV4-SEM-005",
-                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 linear, weighted RMS normalization, KV FP8 and indexer FP4 QDQ, and indexer Hadamard semantics, and eighteen complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion operator kinds. Matrix paths beyond dense FP8 linear, vector paths beyond weighted RMS normalization, HC expansion, target-hidden capture, and HC post-mixing, stateful attention, routing beyond qualified selection, weight normalization, and expert dispatch, and conversion boundaries beyond the qualified QDQ and Hadamard paths remain pending.",
+                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete dense FP8 linear, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 and indexer FP4 QDQ, and indexer Hadamard semantics, and nineteen complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion operator kinds. Matrix paths beyond dense FP8 linear, vector paths beyond the qualified normalization, HC expansion, target-hidden capture, and HC post-mixing paths, stateful attention, routing beyond qualified selection, weight normalization, and expert dispatch, and conversion boundaries beyond the qualified QDQ and Hadamard paths remain pending.",
                 "required_resolution": "Implement and qualify complete target-precision semantics for each graph operator before marking that operator executable; scalar and block-dot primitives alone do not close matrix or layer lowering.",
                 "severity": "blocking",
                 "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/model.py:RMSNorm.forward;inference/model.py:Transformer.forward;inference/model.py:Block.hc_post;inference/model.py:MoE.forward;runtime/reference/formats.py;runtime/reference/normalization.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py",
@@ -1501,7 +1521,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "hash-verified local tokenizer encode and decode behavior",
                 "target-only prefill/decode, EOS, and executor-commit control with synthetic transcripts",
                 "scalar target formats, activation microscaling, ordered accumulation, and official block-dot primitives",
-                "unit-qualified dense FP8 linear, weighted RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC expansion, HC post-mixing, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, learned-index top-k, routed-weight normalization, and expert-dispatch references",
+                "unit-qualified dense FP8 linear, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC expansion, HC post-mixing, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, learned-index top-k, routed-weight normalization, and expert-dispatch references",
                 "complete official-tensor canonical transform plan and independently checked transform primitives",
                 "atomic hash-locked canonical application and replay on an adversarial development fixture",
             ],
@@ -1511,7 +1531,7 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "exact stochastic replay for the unpinned Torch/CUDA RNG stack",
                 "DSpark target verification and speculative acceptance",
                 "full official-payload transform application and canonical output hashes",
-                "operator-complete target-precision references beyond dense FP8 linear, weighted RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC post-mixing, expert dispatch, and ten structural/index/lookup/selection/routing kinds",
+                "operator-complete target-precision references beyond dense FP8 linear, weighted and head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC post-mixing, expert dispatch, and ten structural/index/lookup/selection/routing kinds",
                 "transactional KV/compressor execution, service-engine operators, and microcode",
                 "physical placement, HBM/KV allocation, and static schedule",
             ],
