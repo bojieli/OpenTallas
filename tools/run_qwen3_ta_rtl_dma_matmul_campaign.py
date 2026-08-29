@@ -33,14 +33,15 @@ from runtime.reference.formats import (  # noqa: E402
 
 SCHEMA = "opentallas.tensor_accelerator.qwen_rtl_dma_matmul_campaign.v1"
 VECTOR_SCHEMA = "opentallas.tensor_accelerator.qwen_rtl_dma_matmul_vectors.v1"
-VECTOR_ID = "ad2d94e71e7a24d98e92cff7a097d616e3c84e3540d033650119d81dbaaa1dc5"
+VECTOR_ID = "4fe481b232112fe5b494cab1ca4445159b91a512a524471bee18267fe5525129"
 SIGNED_ADD_SEED = 0x5157454E334D4154
 SIGNED_ADD_COUNT = 20_000
 SIGNED_ADD_FINITE_SUCCESS_COUNT = 19_367
 SIGNED_ADD_NONFINITE_REJECTION_COUNT = 597
 SIGNED_ADD_OVERFLOW_REJECTION_COUNT = 36
-INPUTS = 256
+INPUTS = 4096
 OUTPUTS = 64
+K_TILES = 16
 WEIGHTS = INPUTS * OUTPUTS
 
 RTL_PATHS = (
@@ -279,15 +280,22 @@ def _signed_add_files() -> dict[str, str]:
 
 def _program_files(vectors: dict[str, Any]) -> dict[str, str]:
     return {
-        "matmul_expected.hex": "".join(
-            f"{value:08x}\n" for value in vectors["expected_accumulator_codes"]
+        "matmul_accumulators.hex": "".join(
+            f"{value:08x}\n"
+            for tile in vectors["expected_accumulator_tiles"]
+            for value in tile
+        ),
+        "matmul_commands.hex": "".join(
+            f"{command['record_hex']}\n" for command in vectors["commands"]
         ),
         "matmul_input.hex": "".join(
             f"{value:04x}\n" for value in vectors["input_codes"]
         ),
+        "matmul_output.hex": "".join(
+            f"{value:04x}\n" for value in vectors["expected_output_codes"]
+        ),
         "matmul_payload.hex": "".join(
-            f"{value:02x}\n"
-            for value in bytes.fromhex(vectors["weight_tile_payload_hex"])
+            f"{value:02x}\n" for value in bytes.fromhex(vectors["weight_payload_hex"])
         ),
     }
 
@@ -311,8 +319,8 @@ def run(vectors_path: Path) -> dict[str, Any]:
         "PASS: FP32 signed-add RTL differential cases=20000 seed=5157454e334d4154"
     )
     marker_program = (
-        "PASS: Qwen DMA+MATMUL RTL slice commands=2 inputs=256 "
-        "weights=16384 outputs=64 faults=7 "
+        "PASS: Qwen DMA+MATMUL RTL slice commands=32 k_tiles=16 "
+        "inputs=4096 weights=262144 accumulators=1024 bf16=64 faults=8 "
         f"vector_set={VECTOR_ID}"
     )
 
@@ -439,12 +447,13 @@ def run(vectors_path: Path) -> dict[str, Any]:
             "activity_derived_power_or_timing": False,
             "authentic_command_records": True,
             "behavioral_hbm_and_sram": True,
-            "bf16_final_output_written": False,
+            "bf16_final_output_written": True,
+            "complete_first_output_block": True,
             "complete_layer_execution": False,
-            "complete_matmul_command": True,
+            "complete_matmul_commands": True,
             "complete_q_projection_graph_operation": False,
             "graph_valid_qwen_command_slice": True,
-            "preloaded_attention_norm_slice": True,
+            "preloaded_attention_norm_row": True,
             "program_order_and_fail_stop": True,
             "qualified_hbm_phy": False,
             "qualified_sram_macro": False,
@@ -455,13 +464,16 @@ def run(vectors_path: Path) -> dict[str, Any]:
         "command_program_sha256": vectors["command_program_sha256"],
         "program_correlation": {
             "accumulator_payload_sha256": composition["accumulator_payload_sha256"],
-            "accumulator_write_count": OUTPUTS,
-            "auxiliary_write_count": 0,
+            "accumulator_read_count": (K_TILES - 1) * OUTPUTS * 2,
+            "accumulator_write_count": K_TILES * OUTPUTS,
+            "auxiliary_payload_sha256": composition["auxiliary_payload_sha256"],
+            "auxiliary_saturation_count": composition["auxiliary_saturation_count"],
+            "auxiliary_write_count": OUTPUTS,
             "command_indices": composition["submitted_command_indices"],
             "crc_fail_stop_cases": 1,
-            "dma_hbm_bytes": 32768,
-            "dma_hbm_request_count": 512,
-            "dma_sram_write_count": 2048,
+            "dma_hbm_bytes": 524288,
+            "dma_hbm_request_count": 8192,
+            "dma_sram_write_count": 32768,
             "graph_operation_id": composition["graph_operation_id"],
             "hbm_response_fail_stop_cases": 1,
             "input_payload_sha256": composition["input_payload_sha256"],
@@ -469,10 +481,10 @@ def run(vectors_path: Path) -> dict[str, Any]:
             "matmul_input_read_count": INPUTS,
             "matmul_multiply_count": WEIGHTS,
             "matmul_weight_read_count": WEIGHTS,
-            "numeric_fail_stop_cases": 4,
+            "numeric_fail_stop_cases": 5,
             "program_order_fail_stop_cases": 1,
-            "weight_tile_payload_sha256": composition["weight_tile_payload_sha256"],
-            "write_suppression_numeric_fault_cases": 4,
+            "weight_payload_sha256": composition["weight_payload_sha256"],
+            "write_suppression_numeric_fault_cases": 5,
         },
         "schema": SCHEMA,
         "simulators": ["iverilog", "verilator"],

@@ -29,13 +29,14 @@ executes adjacent authentic Qwen commands 1 and 2 and completes graph operation
 does not establish memory-macro, timing, power, complete-layer, or silicon
 qualification.
 
-The DMA/MATMUL campaign separately executes authentic commands 3 and 4: it
-stages the first 32,768-byte `q_proj` weight tile and produces the first 64 raw
-FP32 accumulators from 256 values of the retained command-2 output. Command 4 is
-complete, but it is only the first of 1,024 DMA/MATMUL tile pairs in
-`node.0002`; it is not a complete Q projection and, because `MATMUL_FINAL` is
-clear, it performs no BF16 auxiliary write. Its HBM and SRAM are also
-behavioral interfaces.
+The DMA/MATMUL campaign separately executes authentic commands 3 through 34:
+sixteen 32,768-byte `q_proj` weight tiles cover all 4,096 K elements for the
+first 64-output block. Commands 6 through 34 reload the FP32 accumulator through
+ordered 16-bit halfword reads, all sixteen MATMUL commands rewrite the complete
+64-lane accumulator tile, and command 34 performs the 64 BF16 auxiliary writes
+required by `MATMUL_FINAL`. This completes one of 64 output blocks, or 32 of the
+2,048 commands in `node.0002`; it is not a complete Q projection. Its HBM and
+SRAM remain behavioral interfaces.
 
 ## Fault and containment benches
 

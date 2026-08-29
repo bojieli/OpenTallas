@@ -1,13 +1,14 @@
 `timescale 1ns/1ps
-// Fail-stop program-order boundary for authentic Qwen commands 3 and 4:
-// DMA_HBM_TO_SRAM stages the first q_proj weight tile, then
-// MATMUL_BF16_TILE consumes that completed SRAM range and a preloaded slice of
-// command 2's RMSNorm output.  Only one command is dispatched at a time.  The
-// first command must be index 3/nonterminal and the second index 4/terminal.
+// Fail-stop program-order boundary for authentic Qwen commands 3 through 34.
+// Sixteen DMA_HBM_TO_SRAM / MATMUL_BF16_TILE pairs stage and accumulate all
+// 4,096 K elements for the first 64-output q_proj block.  Only one command is
+// dispatched at a time; odd indices are nonterminal DMA commands, even indices
+// are MATMUL commands, and only command 34 is terminal.
 //
-// This is a bounded two-command slice, not a complete command processor or a
-// complete q_proj operation.  Program-header/body authentication, queues,
-// timeouts, SRAM/HBM macros, and terminal COMPLETE handling remain external.
+// This is a bounded 32-command slice, not a complete command processor or the
+// complete 4,096-output q_proj operation.  Program-header/body authentication,
+// queues, timeouts, SRAM/HBM macros, and terminal COMPLETE handling remain
+// external.
 module ot_ta_dma_matmul_sequencer #(
     parameter [31:0] MAX_TRANSFER_BYTES = 32'd1048576
 ) (
@@ -59,13 +60,15 @@ module ot_ta_dma_matmul_sequencer #(
     output reg  [31:0]  program_done_sram_bytes_read,
     output reg  [31:0]  program_done_sram_write_count,
     output reg  [31:0]  program_done_sram_bytes_written,
+    output reg  [31:0]  program_done_matmul_accumulator_read_count,
     output reg  [31:0]  program_done_matmul_input_read_count,
     output reg  [31:0]  program_done_matmul_weight_read_count,
     output reg  [31:0]  program_done_matmul_multiply_count,
     output reg  [31:0]  program_done_matmul_add_count,
     output reg  [31:0]  program_done_matmul_output_count,
     output reg  [31:0]  program_done_matmul_accumulator_write_count,
-    output reg  [31:0]  program_done_matmul_auxiliary_write_count
+    output reg  [31:0]  program_done_matmul_auxiliary_write_count,
+    output reg  [31:0]  program_done_matmul_output_saturation_count
 );
     localparam [7:0] OP_DMA_DIRECT = 8'h01;
     localparam [7:0] OP_MATMUL = 8'h10;
@@ -96,12 +99,13 @@ module ot_ta_dma_matmul_sequencer #(
                             ? expected_command_index == 32'd3
                             : expected_command_index ==
                               last_accepted_index + 1'b1;
-    wire command_profile_order = first_command
-                                 ? ((command_record[7:0] == OP_DMA_DIRECT) &&
-                                    !cmd_last)
-                                 : ((program_done_commands_completed == 1) &&
-                                    (command_record[7:0] == OP_MATMUL) &&
-                                    cmd_last);
+    wire command_profile_order =
+        (expected_command_index >= 32'd3) &&
+        (expected_command_index <= 32'd34) &&
+        (expected_command_index[0]
+         ? command_record[7:0] == OP_DMA_DIRECT
+         : command_record[7:0] == OP_MATMUL) &&
+        (cmd_last == (expected_command_index == 32'd34));
     assign cmd_ready = (state == STATE_ACCEPT) && !program_done_valid;
     assign program_active = active_program;
 
@@ -128,6 +132,7 @@ module ot_ta_dma_matmul_sequencer #(
     wire mat_done_ready = state == STATE_WAIT_MAT;
     wire [7:0] mat_done_error;
     wire [31:0] mat_done_command_index;
+    wire [31:0] mat_done_accumulator_read_count;
     wire [31:0] mat_done_input_read_count;
     wire [31:0] mat_done_weight_read_count;
     wire [31:0] mat_done_multiply_count;
@@ -135,6 +140,7 @@ module ot_ta_dma_matmul_sequencer #(
     wire [31:0] mat_done_output_count;
     wire [31:0] mat_done_accumulator_write_count;
     wire [31:0] mat_done_auxiliary_write_count;
+    wire [31:0] mat_done_output_saturation_count;
     wire mat_sram_read_valid;
     wire mat_sram_read_ready;
     wire [63:0] mat_sram_read_address;
@@ -230,13 +236,15 @@ module ot_ta_dma_matmul_sequencer #(
         .done_ready(mat_done_ready),
         .done_error(mat_done_error),
         .done_command_index(mat_done_command_index),
+        .done_accumulator_read_count(mat_done_accumulator_read_count),
         .done_input_read_count(mat_done_input_read_count),
         .done_weight_read_count(mat_done_weight_read_count),
         .done_multiply_count(mat_done_multiply_count),
         .done_add_count(mat_done_add_count),
         .done_output_count(mat_done_output_count),
         .done_accumulator_write_count(mat_done_accumulator_write_count),
-        .done_auxiliary_write_count(mat_done_auxiliary_write_count)
+        .done_auxiliary_write_count(mat_done_auxiliary_write_count),
+        .done_output_saturation_count(mat_done_output_saturation_count)
     );
 
     always @(posedge clk or negedge rst_n) begin
@@ -262,6 +270,7 @@ module ot_ta_dma_matmul_sequencer #(
             program_done_sram_bytes_read <= 0;
             program_done_sram_write_count <= 0;
             program_done_sram_bytes_written <= 0;
+            program_done_matmul_accumulator_read_count <= 0;
             program_done_matmul_input_read_count <= 0;
             program_done_matmul_weight_read_count <= 0;
             program_done_matmul_multiply_count <= 0;
@@ -269,6 +278,7 @@ module ot_ta_dma_matmul_sequencer #(
             program_done_matmul_output_count <= 0;
             program_done_matmul_accumulator_write_count <= 0;
             program_done_matmul_auxiliary_write_count <= 0;
+            program_done_matmul_output_saturation_count <= 0;
         end else begin
             if (program_done_valid && program_done_ready) begin
                 program_done_valid <= 1'b0;
@@ -291,6 +301,7 @@ module ot_ta_dma_matmul_sequencer #(
                     program_done_sram_bytes_read <= 0;
                     program_done_sram_write_count <= 0;
                     program_done_sram_bytes_written <= 0;
+                    program_done_matmul_accumulator_read_count <= 0;
                     program_done_matmul_input_read_count <= 0;
                     program_done_matmul_weight_read_count <= 0;
                     program_done_matmul_multiply_count <= 0;
@@ -298,6 +309,7 @@ module ot_ta_dma_matmul_sequencer #(
                     program_done_matmul_output_count <= 0;
                     program_done_matmul_accumulator_write_count <= 0;
                     program_done_matmul_auxiliary_write_count <= 0;
+                    program_done_matmul_output_saturation_count <= 0;
                 end else begin
                     program_done_commands_accepted <=
                         program_done_commands_accepted + 1'b1;
@@ -380,10 +392,12 @@ module ot_ta_dma_matmul_sequencer #(
                 program_done_last_command_index <= mat_done_command_index;
                 program_done_sram_read_count <=
                     program_done_sram_read_count +
+                    mat_done_accumulator_read_count +
                     mat_done_input_read_count + mat_done_weight_read_count;
                 program_done_sram_bytes_read <=
                     program_done_sram_bytes_read +
-                    ((mat_done_input_read_count +
+                    ((mat_done_accumulator_read_count +
+                      mat_done_input_read_count +
                       mat_done_weight_read_count) << 1);
                 program_done_sram_write_count <=
                     program_done_sram_write_count +
@@ -393,18 +407,31 @@ module ot_ta_dma_matmul_sequencer #(
                     program_done_sram_bytes_written +
                     (mat_done_accumulator_write_count << 2) +
                     (mat_done_auxiliary_write_count << 1);
+                program_done_matmul_accumulator_read_count <=
+                    program_done_matmul_accumulator_read_count +
+                    mat_done_accumulator_read_count;
                 program_done_matmul_input_read_count <=
+                    program_done_matmul_input_read_count +
                     mat_done_input_read_count;
                 program_done_matmul_weight_read_count <=
+                    program_done_matmul_weight_read_count +
                     mat_done_weight_read_count;
                 program_done_matmul_multiply_count <=
+                    program_done_matmul_multiply_count +
                     mat_done_multiply_count;
-                program_done_matmul_add_count <= mat_done_add_count;
-                program_done_matmul_output_count <= mat_done_output_count;
+                program_done_matmul_add_count <=
+                    program_done_matmul_add_count + mat_done_add_count;
+                program_done_matmul_output_count <=
+                    program_done_matmul_output_count + mat_done_output_count;
                 program_done_matmul_accumulator_write_count <=
+                    program_done_matmul_accumulator_write_count +
                     mat_done_accumulator_write_count;
                 program_done_matmul_auxiliary_write_count <=
+                    program_done_matmul_auxiliary_write_count +
                     mat_done_auxiliary_write_count;
+                program_done_matmul_output_saturation_count <=
+                    program_done_matmul_output_saturation_count +
+                    mat_done_output_saturation_count;
                 if (mat_done_error != ERR_NONE) begin
                     program_done_valid <= 1'b1;
                     program_done_error <= mat_done_error;

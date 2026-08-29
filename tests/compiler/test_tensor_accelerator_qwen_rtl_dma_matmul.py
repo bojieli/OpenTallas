@@ -11,8 +11,15 @@ import numpy as np
 import pytest
 
 from compiler.tensor_accelerator.common import canonical_json_bytes, load_strict_json
-from runtime.reference.formats import binary32_add, binary32_multiply
-from runtime.tensor_accelerator.bf16 import accumulate_bf16_tile_fp32
+from runtime.reference.formats import (
+    binary32_add,
+    binary32_bits_to_bf16_rne,
+    binary32_multiply,
+)
+from runtime.tensor_accelerator.bf16 import (
+    accumulate_bf16_tile_fp32,
+    finalize_bf16_accumulator,
+)
 from tools import build_qwen3_ta_rtl_dma_matmul_vectors as vector_builder
 from tools import run_qwen3_ta_rtl_dma_matmul_campaign as campaign_runner
 
@@ -23,12 +30,12 @@ VECTORS = (
 )
 CAMPAIGN = ROOT / "results/tensor_accelerator/qwen3_rtl_dma_matmul_campaign.json"
 VECTOR_SCHEMA = (
-    ROOT / "schemas/compiler/tensor_accelerator/"
-    "qwen_rtl_dma_matmul_vectors_v1.schema.json"
+    ROOT
+    / "schemas/compiler/tensor_accelerator/qwen_rtl_dma_matmul_vectors_v1.schema.json"
 )
 CAMPAIGN_SCHEMA = (
-    ROOT / "schemas/compiler/tensor_accelerator/"
-    "qwen_rtl_dma_matmul_campaign_v1.schema.json"
+    ROOT
+    / "schemas/compiler/tensor_accelerator/qwen_rtl_dma_matmul_campaign_v1.schema.json"
 )
 COMMAND_VECTORS = (
     ROOT / "testdata/compiler/tensor_accelerator/qwen3_rtl_command_vectors.json"
@@ -37,12 +44,12 @@ RMSNORM_VECTORS = (
     ROOT / "testdata/compiler/tensor_accelerator/qwen3_rtl_dma_rmsnorm_vectors.json"
 )
 KERNEL_IR = (
-    ROOT / "results/tensor_accelerator/qwen3_full_model_physical/ir/"
-    "tensor_kernel_ir.json"
+    ROOT
+    / "results/tensor_accelerator/qwen3_full_model_physical/ir/tensor_kernel_ir.json"
 )
 PHYSICAL_PLAN = (
-    ROOT / "results/tensor_accelerator/qwen3_full_model_physical/physical/"
-    "physical_plan.json"
+    ROOT
+    / "results/tensor_accelerator/qwen3_full_model_physical/physical/physical_plan.json"
 )
 INTEGRATION = Path(
     "/home/ubuntu/OpenTallas-ta-integration/"
@@ -53,9 +60,9 @@ HBM_SHARD = (
     INTEGRATION / "memory/hbm/"
     "hbm.00001.656958bc279d27f01126b855c25daeddc42f37f69445e97c2df432cee6dffb37.bin"
 )
-EXPECTED_VECTOR_ID = "ad2d94e71e7a24d98e92cff7a097d616e3c84e3540d033650119d81dbaaa1dc5"
+EXPECTED_VECTOR_ID = "4fe481b232112fe5b494cab1ca4445159b91a512a524471bee18267fe5525129"
 EXPECTED_CAMPAIGN_ID = (
-    "02733c4556fdeb9abac45735df80abd440bcbfc2edaf01998e3e0522c6588478"
+    "c0dba5230a77daa1eecab33aa43960b2e41f198cd453e6ef139653ef1a14a298"
 )
 
 
@@ -84,37 +91,53 @@ def test_dma_matmul_vectors_are_exact_source_bound_and_boundary_scoped() -> None
     assert VECTORS.read_bytes() == canonical_json_bytes(vectors)
     assert vectors["vector_set_id"] == EXPECTED_VECTOR_ID
     assert vectors["vector_set_id"] == _identity(vectors, "vector_set_id")
-    assert [command["expected_index"] for command in vectors["commands"]] == [3, 4]
+    assert [command["expected_index"] for command in vectors["commands"]] == list(
+        range(3, 35)
+    )
     assert [
         command["expected_fields"]["opcode"] for command in vectors["commands"]
-    ] == [
-        1,
-        0x10,
+    ] == [1, 0x10] * 16
+    assert [
+        command["expected_fields"]["flags"]
+        for command in vectors["commands"]
+        if command["expected_fields"]["opcode"] == 0x10
+    ] == [1, *([0] * 14), 2]
+    assert [command["last"] for command in vectors["commands"]] == [
+        *([False] * 31),
+        True,
     ]
-    assert (
-        vectors["commands"][0]["expected_fields"]["destination"]
-        == vectors["commands"][1]["expected_fields"]["source1"]
+    assert all(
+        vectors["commands"][offset]["expected_fields"]["destination"]
+        == vectors["commands"][offset + 1]["expected_fields"]["source1"]
+        for offset in range(0, 32, 2)
     )
     assert vectors["composition"] == {
         "accumulator_address": 5_242_880,
         "accumulator_count": 64,
         "accumulator_payload_sha256": (
-            "c82ca04197419306b6bbc545be882163e3ccccfb013773107541d3441dee8776"
+            "9ca6beb437222939a843d9a12d2fc93440de926cf7e0a5b3af40ce2c63a28f49"
         ),
         "auxiliary_address": 6_291_456,
-        "auxiliary_write_count": 0,
+        "auxiliary_payload_sha256": (
+            "c485049ad6aa3e7c6e641defacfabee7de0c159cd8d45a65e74409493d17eb5e"
+        ),
+        "auxiliary_saturation_count": 0,
+        "auxiliary_write_count": 64,
         "dma_destination_address": 4_194_304,
         "graph_command_count": 2048,
         "graph_command_end": 2050,
         "graph_command_start": 3,
         "graph_operation_id": "node.0002",
+        "graph_output_block_count": 64,
         "input_address": 3_145_728,
-        "input_element_count": 256,
+        "input_element_count": 4096,
         "input_payload_sha256": (
-            "3e95a6a07ba5eff942a866e767b856aeb6d83def5b7f12d55983acb2afdb2551"
+            "976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58"
         ),
-        "matmul_add_count": 16384,
-        "matmul_multiply_count": 16384,
+        "k_tile_count": 16,
+        "matmul_add_count": 262_144,
+        "matmul_multiply_count": 262_144,
+        "output_block_count": 1,
         "output_tile_index": 0,
         "parent_deployed_weight_payload_sha256": (
             "27406586791294918cb04052d91f7d47c41aac1af56650c4b47f68ac00f1ff9b"
@@ -122,23 +145,24 @@ def test_dma_matmul_vectors_are_exact_source_bound_and_boundary_scoped() -> None
         "parent_source_weight_payload_sha256": (
             "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8"
         ),
-        "submitted_command_indices": [3, 4],
+        "submitted_command_indices": list(range(3, 35)),
         "weight_address": 4_194_304,
-        "weight_element_count": 16384,
-        "weight_tile_index": 0,
-        "weight_tile_payload_sha256": (
-            "c9b6213f04cfd269acdb7124e76d3b9775965145d15defb663f02e21e34418bc"
+        "weight_element_count": 262_144,
+        "weight_payload_sha256": (
+            "87bb7ad73d67888d91510a5443e2672172fcfccf52a5cd8b31acbe1f80c6be03"
         ),
+        "weight_tile_count": 16,
     }
     assert vectors["claim_boundary"] == {
         "authentic_command_records": True,
         "behavioral_hbm_and_sram": True,
-        "bf16_final_output_written": False,
+        "bf16_final_output_written": True,
+        "complete_first_output_block": True,
         "complete_layer_execution": False,
-        "complete_matmul_command": True,
+        "complete_matmul_commands": True,
         "complete_q_projection_graph_operation": False,
         "graph_valid_qwen_command_slice": True,
-        "preloaded_attention_norm_slice": True,
+        "preloaded_attention_norm_row": True,
         "program_order_and_fail_stop": True,
         "qualified_hbm_phy": False,
         "qualified_sram_macro": False,
@@ -147,46 +171,69 @@ def test_dma_matmul_vectors_are_exact_source_bound_and_boundary_scoped() -> None
         "timing_or_performance": False,
     }
 
-    input_payload = struct.pack("<256H", *vectors["input_codes"])
-    weight_payload = bytes.fromhex(vectors["weight_tile_payload_hex"])
+
+def test_dma_matmul_retained_payload_hashes_cover_every_k_tile() -> None:
+    vectors = load_strict_json(VECTORS)
+    input_payload = struct.pack("<4096H", *vectors["input_codes"])
+    weight_payload = bytes.fromhex(vectors["weight_payload_hex"])
     accumulator_payload = struct.pack("<64I", *vectors["expected_accumulator_codes"])
+    output_payload = struct.pack("<64H", *vectors["expected_output_codes"])
     assert _sha256(input_payload) == vectors["composition"]["input_payload_sha256"]
-    assert (
-        _sha256(weight_payload) == vectors["composition"]["weight_tile_payload_sha256"]
-    )
+    assert _sha256(weight_payload) == vectors["composition"]["weight_payload_sha256"]
     assert (
         _sha256(accumulator_payload)
         == vectors["composition"]["accumulator_payload_sha256"]
     )
+    assert _sha256(output_payload) == vectors["composition"]["auxiliary_payload_sha256"]
+    for tile, evidence in enumerate(vectors["tiles"]):
+        start = tile * 32_768
+        accumulator = struct.pack("<64I", *vectors["expected_accumulator_tiles"][tile])
+        assert (
+            _sha256(weight_payload[start : start + 32_768])
+            == evidence["weight_payload_sha256"]
+        )
+        assert _sha256(accumulator) == evidence["accumulator_payload_sha256"]
 
 
-def test_dma_matmul_accumulators_match_optimized_and_exact_scalar_paths() -> None:
+def test_dma_matmul_full_k_matches_optimized_and_exact_scalar_paths() -> None:
     vectors = load_strict_json(VECTORS)
     inputs = vectors["input_codes"]
-    weights = np.frombuffer(
-        bytes.fromhex(vectors["weight_tile_payload_hex"]), dtype="<u2"
-    ).reshape(64, 256)
-    optimized = (
-        accumulate_bf16_tile_fp32(
-            np.asarray(inputs, dtype=np.uint16).reshape(1, 256), weights
-        )
-        .values.reshape(-1)
-        .astype(int)
-        .tolist()
+    payload = bytes.fromhex(vectors["weight_payload_hex"])
+    optimized: np.ndarray[tuple[int, int], np.dtype[np.uint32]] | None = None
+    scalar = [0] * 64
+    for tile in range(16):
+        input_tile = np.asarray(
+            inputs[tile * 256 : (tile + 1) * 256], dtype=np.uint16
+        ).reshape(1, 256)
+        weights = np.frombuffer(
+            payload[tile * 32_768 : (tile + 1) * 32_768], dtype="<u2"
+        ).reshape(64, 256)
+        optimized = accumulate_bf16_tile_fp32(input_tile, weights, optimized).values
+        for output, row in enumerate(weights.astype(int).tolist()):
+            accumulator = scalar[output]
+            for left, right in zip(
+                input_tile.reshape(-1).astype(int).tolist(), row, strict=True
+            ):
+                accumulator = binary32_add(
+                    accumulator,
+                    binary32_multiply(left << 16, right << 16),
+                )
+            scalar[output] = accumulator
+        assert scalar == vectors["expected_accumulator_tiles"][tile]
+        assert optimized.reshape(-1).astype(int).tolist() == scalar
+    assert optimized is not None
+    finalized = finalize_bf16_accumulator(optimized)
+    exact_outputs = [binary32_bits_to_bf16_rne(code) for code in scalar]
+    assert [value.code for value in exact_outputs] == vectors["expected_output_codes"]
+    assert (
+        finalized.values.reshape(-1).astype(int).tolist()
+        == vectors["expected_output_codes"]
     )
-    scalar: list[int] = []
-    for row in weights.astype(int).tolist():
-        accumulator = 0
-        for left, right in zip(inputs, row, strict=True):
-            accumulator = binary32_add(
-                accumulator,
-                binary32_multiply(left << 16, right << 16),
-            )
-        scalar.append(accumulator)
-    assert scalar == optimized == vectors["expected_accumulator_codes"]
+    assert sum(int(value.saturated) for value in exact_outputs) == 0
+    assert finalized.output_saturated_element_count == 0
 
 
-def test_dma_matmul_sources_identify_first_node_0002_tile_pair() -> None:
+def test_dma_matmul_sources_identify_one_of_64_node_0002_output_blocks() -> None:
     vectors = load_strict_json(VECTORS)
     kernel_ir = load_strict_json(KERNEL_IR)
     physical_plan = load_strict_json(PHYSICAL_PLAN)
@@ -211,11 +258,11 @@ def test_dma_matmul_sources_identify_first_node_0002_tile_pair() -> None:
     )
     assert tensor["address"] == 1_244_692_480
     assert tensor["access_unit_bytes"] == 32_768
-    assert tensor["layout_details"]["tile_count"] == 1024
-    assert (
-        tensor["deployed_payload_sha256"]
-        == vectors["composition"]["parent_deployed_weight_payload_sha256"]
-    )
+    assert tensor["layout_details"]["k_tiles"] == 16
+    assert tensor["layout_details"]["n_tiles"] == 64
+    assert vectors["composition"]["k_tile_count"] == 16
+    assert vectors["composition"]["output_block_count"] == 1
+    assert vectors["composition"]["graph_output_block_count"] == 64
 
 
 @pytest.mark.skipif(
@@ -242,15 +289,20 @@ def test_dma_matmul_schemas_reject_claim_and_payload_overreach() -> None:
     with pytest.raises(ValidationError):
         Draft202012Validator(vector_schema).validate(false_graph_claim)
 
-    false_final_write = copy.deepcopy(vectors)
-    false_final_write["claim_boundary"]["bf16_final_output_written"] = True
+    false_layer_claim = copy.deepcopy(vectors)
+    false_layer_claim["claim_boundary"]["complete_layer_execution"] = True
     with pytest.raises(ValidationError):
-        Draft202012Validator(vector_schema).validate(false_final_write)
+        Draft202012Validator(vector_schema).validate(false_layer_claim)
 
-    missing_accumulator = copy.deepcopy(vectors)
-    missing_accumulator["expected_accumulator_codes"].pop()
+    false_block_count = copy.deepcopy(vectors)
+    false_block_count["composition"]["output_block_count"] = 64
     with pytest.raises(ValidationError):
-        Draft202012Validator(vector_schema).validate(missing_accumulator)
+        Draft202012Validator(vector_schema).validate(false_block_count)
+
+    missing_output = copy.deepcopy(vectors)
+    missing_output["expected_output_codes"].pop()
+    with pytest.raises(ValidationError):
+        Draft202012Validator(vector_schema).validate(missing_output)
 
     campaign = load_strict_json(CAMPAIGN)
     campaign_schema = load_strict_json(CAMPAIGN_SCHEMA)
@@ -271,23 +323,26 @@ def test_dma_matmul_campaign_is_schema_valid_and_boundary_scoped() -> None:
     assert campaign["vector_set_id"] == EXPECTED_VECTOR_ID
     assert campaign["status"] == "pass"
     assert campaign["arithmetic_correlation"] == {
-        "finite_success_cases": 19367,
+        "finite_success_cases": 19_367,
         "nonfinite_rejection_cases": 597,
         "oracle": "independent_exact_scalar_fraction",
         "overflow_rejection_cases": 36,
         "seed_hex": "5157454e334d4154",
-        "signed_add_cases": 20000,
+        "signed_add_cases": 20_000,
     }
-    assert campaign["program_correlation"]["command_indices"] == [3, 4]
-    assert campaign["program_correlation"]["dma_hbm_request_count"] == 512
-    assert campaign["program_correlation"]["matmul_input_read_count"] == 256
-    assert campaign["program_correlation"]["matmul_weight_read_count"] == 16384
-    assert campaign["program_correlation"]["matmul_multiply_count"] == 16384
-    assert campaign["program_correlation"]["matmul_add_count"] == 16384
-    assert campaign["program_correlation"]["accumulator_write_count"] == 64
-    assert campaign["program_correlation"]["auxiliary_write_count"] == 0
-    assert campaign["program_correlation"]["numeric_fail_stop_cases"] == 4
-    assert campaign["program_correlation"]["write_suppression_numeric_fault_cases"] == 4
+    correlation = campaign["program_correlation"]
+    assert correlation["command_indices"] == list(range(3, 35))
+    assert correlation["dma_hbm_request_count"] == 8192
+    assert correlation["accumulator_read_count"] == 1920
+    assert correlation["matmul_input_read_count"] == 4096
+    assert correlation["matmul_weight_read_count"] == 262_144
+    assert correlation["matmul_multiply_count"] == 262_144
+    assert correlation["matmul_add_count"] == 262_144
+    assert correlation["accumulator_write_count"] == 1024
+    assert correlation["auxiliary_write_count"] == 64
+    assert correlation["auxiliary_saturation_count"] == 0
+    assert correlation["numeric_fail_stop_cases"] == 5
+    assert correlation["write_suppression_numeric_fault_cases"] == 5
 
 
 def test_dma_matmul_campaign_logs_and_sources_are_reproducible() -> None:
@@ -296,8 +351,8 @@ def test_dma_matmul_campaign_logs_and_sources_are_reproducible() -> None:
         "PASS: FP32 signed-add RTL differential cases=20000 seed=5157454e334d4154"
     )
     program_marker = (
-        "PASS: Qwen DMA+MATMUL RTL slice commands=2 inputs=256 "
-        "weights=16384 outputs=64 faults=7 "
+        "PASS: Qwen DMA+MATMUL RTL slice commands=32 k_tiles=16 "
+        "inputs=4096 weights=262144 accumulators=1024 bf16=64 faults=8 "
         f"vector_set={EXPECTED_VECTOR_ID}"
     )
     for case in campaign["cases"]:

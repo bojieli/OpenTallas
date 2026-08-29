@@ -12,35 +12,26 @@
 
 namespace {
 
-constexpr uint32_t kInputs = 256U;
+constexpr uint32_t kTiles = 16U;
+constexpr uint32_t kCommands = 32U;
+constexpr uint32_t kInputsPerTile = 256U;
+constexpr uint32_t kInputs = 4096U;
 constexpr uint32_t kOutputs = 64U;
-constexpr uint32_t kWeights = 16384U;
-constexpr uint32_t kDmaBytes = 32768U;
-constexpr uint32_t kDmaWrites = 2048U;
+constexpr uint32_t kWeightsPerTile = 16384U;
+constexpr uint32_t kWeights = 262144U;
+constexpr uint32_t kDmaBytesPerTile = 32768U;
+constexpr uint32_t kDmaBytes = 524288U;
+constexpr uint32_t kDmaWritesPerTile = 2048U;
+constexpr uint32_t kDmaWrites = 32768U;
+constexpr uint32_t kAccumulatorReads = 1920U;
+constexpr uint32_t kAccumulatorWrites = 1024U;
 constexpr uint64_t kHbmBase = 1244692480ULL;
 constexpr uint64_t kInputBase = 3145728ULL;
 constexpr uint64_t kWeightBase = 4194304ULL;
 constexpr uint64_t kAccumulatorBase = 5242880ULL;
 constexpr uint64_t kAuxiliaryBase = 6291456ULL;
 
-constexpr std::array<uint32_t, 16> kDmaRecord = {{
-    0x00000101U, 0x00000003U, 0x00000002U, 0x4a308000U,
-    0x00000000U, 0x00000000U, 0x00000000U, 0x00400000U,
-    0x00000000U, 0x00000000U, 0x00000000U, 0x00008000U,
-    0x00000000U, 0x00000000U, 0x00000000U, 0xd9afea55U,
-}};
-constexpr std::array<uint32_t, 16> kMatmulRecord = {{
-    0x00010210U, 0x00000004U, 0x00000002U, 0x00300000U,
-    0x00000000U, 0x00400000U, 0x00000000U, 0x00500000U,
-    0x00000000U, 0x00600000U, 0x00000000U, 0x00000001U,
-    0x00000040U, 0x00000100U, 0x00000000U, 0xe3ec9df4U,
-}};
-constexpr std::array<uint32_t, 16> kBadCrcRecord = {{
-    0x00010210U, 0x00000004U, 0x00000002U, 0x00300000U,
-    0x00000000U, 0x00400000U, 0x00000000U, 0x00500000U,
-    0x00000000U, 0x00600000U, 0x00000000U, 0x00000001U,
-    0x00000040U, 0x00000100U, 0x00000000U, 0x63ec9df4U,
-}};
+using Record = std::array<uint32_t, 16>;
 
 enum class Fault {
     kNone,
@@ -49,6 +40,7 @@ enum class Fault {
     kWeightNonfinite,
     kMultiplyOverflow,
     kAddOverflow,
+    kAccumulatorNonfinite,
 };
 
 [[noreturn]] void fail(const std::string& message) {
@@ -100,6 +92,25 @@ std::vector<uint32_t> load_codes32(const char* path, size_t count) {
     return result;
 }
 
+std::vector<Record> load_records(const char* path, size_t count) {
+    std::ifstream stream(path);
+    if (!stream) fail(std::string("cannot open ") + path);
+    std::vector<Record> result;
+    std::string hex;
+    while (stream >> hex) {
+        require(hex.size() == 128U, "command record width differs");
+        Record record{};
+        for (unsigned word = 0; word < record.size(); ++word) {
+            const size_t offset = hex.size() - (word + 1U) * 8U;
+            record[word] = static_cast<uint32_t>(
+                std::stoul(hex.substr(offset, 8U), nullptr, 16));
+        }
+        result.push_back(record);
+    }
+    require(result.size() == count, std::string(path) + " count differs");
+    return result;
+}
+
 void eval_low(Vot_ta_dma_matmul_sequencer& dut) {
     dut.clk = 0;
     dut.eval();
@@ -114,9 +125,11 @@ uint16_t lane16(const std::array<uint32_t, 4>& words, unsigned lane) {
 struct Model {
     const std::vector<uint8_t>& payload;
     const std::vector<uint16_t>& inputs;
-    const std::vector<uint32_t>& expected;
+    const std::vector<uint32_t>& expected_accumulators;
+    const std::vector<uint16_t>& expected_outputs;
     std::vector<uint16_t> weights;
     std::vector<uint32_t> accumulators;
+    std::vector<uint16_t> outputs;
     Fault fault = Fault::kNone;
 
     bool pending_hbm = false;
@@ -136,6 +149,7 @@ struct Model {
     uint32_t hbm_requests = 0;
     uint32_t hbm_responses = 0;
     uint32_t dma_writes = 0;
+    uint32_t accumulator_reads = 0;
     uint32_t input_reads = 0;
     uint32_t weight_reads = 0;
     uint32_t sram_read_responses = 0;
@@ -147,17 +161,21 @@ struct Model {
 
     Model(const std::vector<uint8_t>& payload_value,
           const std::vector<uint16_t>& input_value,
-          const std::vector<uint32_t>& expected_value)
+          const std::vector<uint32_t>& expected_accumulator_value,
+          const std::vector<uint16_t>& expected_output_value)
         : payload(payload_value),
           inputs(input_value),
-          expected(expected_value),
-          weights(kWeights),
-          accumulators(kOutputs) {}
+          expected_accumulators(expected_accumulator_value),
+          expected_outputs(expected_output_value),
+          weights(kWeightsPerTile),
+          accumulators(kOutputs),
+          outputs(kOutputs) {}
 
     void reset(Fault selected_fault) {
         fault = selected_fault;
         std::fill(weights.begin(), weights.end(), 0);
         std::fill(accumulators.begin(), accumulators.end(), 0);
+        std::fill(outputs.begin(), outputs.end(), 0);
         pending_hbm = false;
         pending_hbm_burst = 0;
         pending_hbm_delay = 0;
@@ -173,6 +191,7 @@ struct Model {
         hbm_requests = 0;
         hbm_responses = 0;
         dma_writes = 0;
+        accumulator_reads = 0;
         input_reads = 0;
         weight_reads = 0;
         sram_read_responses = 0;
@@ -283,51 +302,68 @@ struct Model {
         }
 
         if (read_response_fire) {
-            require(sram_response_valid,
-                    "SRAM response fire without valid");
+            require(sram_response_valid, "SRAM response fire without valid");
             sram_response_valid = false;
             ++sram_read_responses;
         }
         if (read_fire) {
             require(!pending_read && !sram_response_valid,
                     "more than one SRAM read outstanding");
-            require(dma_writes == kDmaWrites,
-                    "MATMUL read bypassed incomplete DMA");
             if (read_address >= kInputBase &&
-                read_address < kInputBase + kInputs * 2U) {
+                read_address < kInputBase + kInputs * 2ULL) {
                 const uint32_t index = static_cast<uint32_t>(
                     (read_address - kInputBase) >> 1U);
                 require(index == input_reads, "input read order differs");
-                if (index == 0 && fault == Fault::kInputNonfinite)
+                require(dma_writes ==
+                            ((index / kInputsPerTile) + 1U) *
+                                kDmaWritesPerTile,
+                        "input read bypassed current DMA");
+                if (index == 0U && fault == Fault::kInputNonfinite)
                     pending_read_data = 0x7f80U;
-                else if (index == 0 &&
+                else if (index == 0U &&
                          (fault == Fault::kMultiplyOverflow ||
                           fault == Fault::kAddOverflow))
                     pending_read_data = 0x7f7fU;
-                else if (index == 1 && fault == Fault::kAddOverflow)
+                else if (index == 1U && fault == Fault::kAddOverflow)
                     pending_read_data = 0x7f7fU;
                 else
                     pending_read_data = inputs[index];
                 ++input_reads;
             } else if (read_address >= kWeightBase &&
-                       read_address < kWeightBase + kDmaBytes) {
+                       read_address < kWeightBase + kDmaBytesPerTile) {
                 const uint32_t index = static_cast<uint32_t>(
                     (read_address - kWeightBase) >> 1U);
-                require(index == weight_reads, "weight read order differs");
-                if (index == 0 && fault == Fault::kWeightNonfinite)
+                require(index == weight_reads % kWeightsPerTile,
+                        "weight read order differs");
+                if (weight_reads == 0U && fault == Fault::kWeightNonfinite)
                     pending_read_data = 0x7f80U;
-                else if (index == 0 && fault == Fault::kMultiplyOverflow)
+                else if (weight_reads == 0U &&
+                         fault == Fault::kMultiplyOverflow)
                     pending_read_data = 0x7f7fU;
-                else if (index < 2 && fault == Fault::kAddOverflow)
+                else if (weight_reads < 2U && fault == Fault::kAddOverflow)
                     pending_read_data = 0x3f80U;
                 else
                     pending_read_data = weights[index];
                 ++weight_reads;
+            } else if (read_address >= kAccumulatorBase &&
+                       read_address < kAccumulatorBase + kOutputs * 4ULL) {
+                const uint32_t index = static_cast<uint32_t>(
+                    (read_address - kAccumulatorBase) >> 1U);
+                require(index == accumulator_reads % 128U,
+                        "accumulator reload order differs");
+                if (index == 1U && fault == Fault::kAccumulatorNonfinite)
+                    pending_read_data = 0x7f80U;
+                else if ((index & 1U) == 0U)
+                    pending_read_data = accumulators[index >> 1U] & 0xffffU;
+                else
+                    pending_read_data = accumulators[index >> 1U] >> 16U;
+                ++accumulator_reads;
             } else {
                 fail("SRAM read outside MATMUL operands");
             }
             pending_read = true;
-            pending_read_delay = ((input_reads + weight_reads) % 3U) + 1U;
+            pending_read_delay =
+                ((input_reads + weight_reads + accumulator_reads) % 3U) + 1U;
         }
         if (had_pending_read) {
             if (pending_read_delay == 0 && !sram_response_valid) {
@@ -341,10 +377,12 @@ struct Model {
 
         if (write_fire) {
             if (write_address >= kWeightBase &&
-                write_address < kWeightBase + kDmaBytes) {
+                write_address < kWeightBase + kDmaBytesPerTile) {
+                const uint32_t transaction =
+                    dma_writes % kDmaWritesPerTile;
                 require(write_enable == 0xffffU,
                         "DMA SRAM byte enable differs");
-                require(write_address == kWeightBase + dma_writes * 16ULL,
+                require(write_address == kWeightBase + transaction * 16ULL,
                         "DMA SRAM write address differs");
                 for (unsigned lane = 0; lane < 8; ++lane) {
                     const uint32_t index = dma_writes * 8U + lane;
@@ -353,47 +391,54 @@ struct Model {
                         static_cast<uint16_t>(payload[index * 2U + 1U] << 8U);
                     require(lane16(write_words, lane) == code,
                             "DMA SRAM write data differs");
-                    weights[index] = code;
+                    weights[transaction * 8U + lane] = code;
                 }
                 ++dma_writes;
             } else if (write_address >= kAccumulatorBase &&
-                       write_address < kAccumulatorBase + kOutputs * 4U) {
+                       write_address < kAccumulatorBase + kOutputs * 4ULL) {
                 const uint32_t index = static_cast<uint32_t>(
                     (write_address - kAccumulatorBase) >> 2U);
-                require(input_reads == kInputs && weight_reads == kWeights,
-                        "accumulator write preceded full operand pass");
                 require(write_enable == 0x000fU,
                         "accumulator SRAM byte enable differs");
-                require(index == accumulator_writes,
+                require(index == accumulator_writes % kOutputs,
                         "accumulator write order differs");
-                require(write_words[0] == expected[index],
+                require(write_words[0] ==
+                            expected_accumulators[accumulator_writes],
                         "accumulator write data differs");
                 accumulators[index] = write_words[0];
                 ++accumulator_writes;
             } else if (write_address >= kAuxiliaryBase &&
-                       write_address < kAuxiliaryBase + kOutputs * 2U) {
+                       write_address < kAuxiliaryBase + kOutputs * 2ULL) {
+                const uint32_t index = static_cast<uint32_t>(
+                    (write_address - kAuxiliaryBase) >> 1U);
+                require(accumulator_writes == kAccumulatorWrites,
+                        "auxiliary write preceded final accumulator tile");
+                require(write_enable == 0x0003U,
+                        "auxiliary SRAM byte enable differs");
+                require(index == auxiliary_writes,
+                        "auxiliary write order differs");
+                require(lane16(write_words, 0) == expected_outputs[index],
+                        "auxiliary write data differs");
+                outputs[index] = lane16(write_words, 0);
                 ++auxiliary_writes;
-                fail("non-final MATMUL exposed auxiliary write");
             } else {
                 fail("SRAM write outside composed regions");
             }
         }
 
         ++cycles;
-        require(cycles <= 300000U, "campaign case timed out");
+        require(cycles <= 3000000U, "campaign case timed out");
         dut.clk = 0;
         dut.eval();
     }
 };
 
-void set_record(Vot_ta_dma_matmul_sequencer& dut,
-                const std::array<uint32_t, 16>& record) {
+void set_record(Vot_ta_dma_matmul_sequencer& dut, const Record& record) {
     for (unsigned word = 0; word < record.size(); ++word)
         dut.command_record[word] = record[word];
 }
 
-void reset_case(Vot_ta_dma_matmul_sequencer& dut, Model& model,
-                Fault fault) {
+void reset_case(Vot_ta_dma_matmul_sequencer& dut, Model& model, Fault fault) {
     model.reset(fault);
     dut.rst_n = 0;
     dut.cmd_valid = 0;
@@ -408,10 +453,9 @@ void reset_case(Vot_ta_dma_matmul_sequencer& dut, Model& model,
 }
 
 void submit(Vot_ta_dma_matmul_sequencer& dut, Model& model,
-            const std::array<uint32_t, 16>& record, uint32_t expected_index,
-            bool last) {
+            const Record& record, uint32_t expected_index, bool last) {
     for (unsigned wait = 0; !dut.cmd_ready; ++wait) {
-        require(wait < 300000U, "command ready timeout");
+        require(wait < 3000000U, "command ready timeout");
         model.cycle(dut);
     }
     set_record(dut, record);
@@ -424,7 +468,7 @@ void submit(Vot_ta_dma_matmul_sequencer& dut, Model& model,
 
 void await_done(Vot_ta_dma_matmul_sequencer& dut, Model& model) {
     for (unsigned wait = 0; !dut.program_done_valid; ++wait) {
-        require(wait < 300000U, "program completion timeout");
+        require(wait < 3000000U, "program completion timeout");
         model.cycle(dut);
     }
     require(!dut.cmd_ready && dut.program_active,
@@ -441,16 +485,6 @@ void acknowledge(Vot_ta_dma_matmul_sequencer& dut, Model& model) {
     dut.program_done_ready = 0;
 }
 
-void require_dma_success(const Vot_ta_dma_matmul_sequencer& dut,
-                         const Model& model) {
-    require(dut.program_done_hbm_request_count == 512U &&
-                dut.program_done_hbm_response_count == 512U &&
-                dut.program_done_hbm_bytes_read == kDmaBytes &&
-                model.hbm_requests == 512U && model.hbm_responses == 512U &&
-                model.dma_writes == kDmaWrites,
-            "successful DMA accounting differs");
-}
-
 void require_no_destination(const Vot_ta_dma_matmul_sequencer& dut,
                             const Model& model) {
     require(dut.program_done_matmul_accumulator_write_count == 0U &&
@@ -459,73 +493,71 @@ void require_no_destination(const Vot_ta_dma_matmul_sequencer& dut,
                 model.auxiliary_writes == 0U &&
                 std::all_of(model.accumulators.begin(),
                             model.accumulators.end(),
-                            [](uint32_t code) { return code == 0U; }),
+                            [](uint32_t code) { return code == 0U; }) &&
+                std::all_of(model.outputs.begin(), model.outputs.end(),
+                            [](uint16_t code) { return code == 0U; }),
             "fault exposed a MATMUL destination write");
 }
 
-void prove_success(Vot_ta_dma_matmul_sequencer& dut, Model& model) {
+void prove_success(Vot_ta_dma_matmul_sequencer& dut, Model& model,
+                   const std::vector<Record>& records) {
     reset_case(dut, model, Fault::kNone);
-    submit(dut, model, kDmaRecord, 3U, false);
-    submit(dut, model, kMatmulRecord, 4U, true);
+    for (uint32_t offset = 0; offset < kCommands; ++offset)
+        submit(dut, model, records[offset], 3U + offset,
+               offset == kCommands - 1U);
     await_done(dut, model);
-    require_dma_success(dut, model);
     require(dut.program_done_error == 0U &&
                 dut.program_done_failing_command_index == 0xffffffffU &&
-                dut.program_done_last_command_index == 4U &&
-                dut.program_done_commands_accepted == 2U &&
-                dut.program_done_commands_completed == 2U &&
-                dut.program_done_sram_read_count == 16640U &&
-                dut.program_done_sram_bytes_read == 33280U &&
-                dut.program_done_sram_write_count == 2112U &&
-                dut.program_done_sram_bytes_written == 33024U &&
+                dut.program_done_last_command_index == 34U &&
+                dut.program_done_commands_accepted == kCommands &&
+                dut.program_done_commands_completed == kCommands &&
+                dut.program_done_hbm_request_count == 8192U &&
+                dut.program_done_hbm_response_count == 8192U &&
+                dut.program_done_hbm_bytes_read == kDmaBytes &&
+                dut.program_done_sram_read_count == 268160U &&
+                dut.program_done_sram_bytes_read == 536320U &&
+                dut.program_done_sram_write_count == 33856U &&
+                dut.program_done_sram_bytes_written == 528512U &&
+                dut.program_done_matmul_accumulator_read_count ==
+                    kAccumulatorReads &&
                 dut.program_done_matmul_input_read_count == kInputs &&
                 dut.program_done_matmul_weight_read_count == kWeights &&
                 dut.program_done_matmul_multiply_count == kWeights &&
                 dut.program_done_matmul_add_count == kWeights &&
-                dut.program_done_matmul_output_count == kOutputs &&
-                dut.program_done_matmul_accumulator_write_count == kOutputs &&
-                dut.program_done_matmul_auxiliary_write_count == 0U &&
+                dut.program_done_matmul_output_count == kAccumulatorWrites &&
+                dut.program_done_matmul_accumulator_write_count ==
+                    kAccumulatorWrites &&
+                dut.program_done_matmul_auxiliary_write_count == kOutputs &&
+                dut.program_done_matmul_output_saturation_count == 0U &&
+                model.hbm_requests == 8192U &&
+                model.hbm_responses == 8192U &&
+                model.dma_writes == kDmaWrites &&
+                model.accumulator_reads == kAccumulatorReads &&
                 model.input_reads == kInputs &&
                 model.weight_reads == kWeights &&
-                model.sram_read_responses == 16640U &&
-                model.accumulator_writes == kOutputs &&
-                model.auxiliary_writes == 0U &&
+                model.sram_read_responses == 268160U &&
+                model.accumulator_writes == kAccumulatorWrites &&
+                model.auxiliary_writes == kOutputs &&
                 model.request_stalls != 0U && model.read_stalls != 0U &&
                 model.write_stalls != 0U && !model.pending_hbm &&
                 !model.pending_read && !model.hbm_response_valid &&
                 !model.sram_response_valid,
             "successful program accounting differs");
-    for (uint32_t index = 0; index < kWeights; ++index) {
-        const uint16_t code =
-            static_cast<uint16_t>(model.payload[index * 2U]) |
-            static_cast<uint16_t>(model.payload[index * 2U + 1U] << 8U);
-        require(model.weights[index] == code, "staged weight differs");
+    for (uint32_t index = 0; index < kOutputs; ++index) {
+        require(model.accumulators[index] ==
+                    model.expected_accumulators[
+                        (kTiles - 1U) * kOutputs + index],
+                "final accumulator payload differs");
+        require(model.outputs[index] == model.expected_outputs[index],
+                "final BF16 payload differs");
     }
-    for (uint32_t index = 0; index < kOutputs; ++index)
-        require(model.accumulators[index] == model.expected[index],
-                "accumulator payload differs");
     acknowledge(dut, model);
 }
 
-void prove_crc(Vot_ta_dma_matmul_sequencer& dut, Model& model) {
-    reset_case(dut, model, Fault::kNone);
-    submit(dut, model, kDmaRecord, 3U, false);
-    submit(dut, model, kBadCrcRecord, 4U, true);
-    await_done(dut, model);
-    require_dma_success(dut, model);
-    require(dut.program_done_error == 1U &&
-                dut.program_done_failing_command_index == 4U &&
-                dut.program_done_commands_accepted == 2U &&
-                dut.program_done_commands_completed == 1U &&
-                dut.program_done_sram_read_count == 0U,
-            "CRC fail-stop accounting differs");
-    require_no_destination(dut, model);
-    acknowledge(dut, model);
-}
-
-void prove_hbm(Vot_ta_dma_matmul_sequencer& dut, Model& model) {
+void prove_hbm(Vot_ta_dma_matmul_sequencer& dut, Model& model,
+               const std::vector<Record>& records) {
     reset_case(dut, model, Fault::kHbm);
-    submit(dut, model, kDmaRecord, 3U, false);
+    submit(dut, model, records[0], 3U, false);
     await_done(dut, model);
     require(dut.program_done_error == 11U &&
                 dut.program_done_failing_command_index == 3U &&
@@ -542,12 +574,31 @@ void prove_hbm(Vot_ta_dma_matmul_sequencer& dut, Model& model) {
     acknowledge(dut, model);
 }
 
-void prove_order(Vot_ta_dma_matmul_sequencer& dut, Model& model) {
+void prove_crc(Vot_ta_dma_matmul_sequencer& dut, Model& model,
+              const std::vector<Record>& records) {
     reset_case(dut, model, Fault::kNone);
-    submit(dut, model, kDmaRecord, 3U, false);
-    submit(dut, model, kMatmulRecord, 3U, true);
+    Record bad = records[1];
+    bad[15] ^= 0x80000000U;
+    submit(dut, model, records[0], 3U, false);
+    submit(dut, model, bad, 4U, false);
     await_done(dut, model);
-    require_dma_success(dut, model);
+    require(dut.program_done_error == 1U &&
+                dut.program_done_failing_command_index == 4U &&
+                dut.program_done_commands_accepted == 2U &&
+                dut.program_done_commands_completed == 1U &&
+                dut.program_done_hbm_request_count == 512U &&
+                dut.program_done_sram_read_count == 0U,
+            "CRC fail-stop accounting differs");
+    require_no_destination(dut, model);
+    acknowledge(dut, model);
+}
+
+void prove_order(Vot_ta_dma_matmul_sequencer& dut, Model& model,
+                const std::vector<Record>& records) {
+    reset_case(dut, model, Fault::kNone);
+    submit(dut, model, records[0], 3U, false);
+    submit(dut, model, records[1], 3U, false);
+    await_done(dut, model);
     require(dut.program_done_error == 12U &&
                 dut.program_done_failing_command_index == 3U &&
                 dut.program_done_commands_accepted == 2U &&
@@ -559,21 +610,21 @@ void prove_order(Vot_ta_dma_matmul_sequencer& dut, Model& model) {
 }
 
 void prove_numeric(Vot_ta_dma_matmul_sequencer& dut, Model& model,
-                   Fault fault, uint8_t error, uint32_t reads,
+                   const std::vector<Record>& records, Fault fault,
+                   uint8_t error, uint32_t reads,
                    uint32_t successful_arithmetic) {
     reset_case(dut, model, fault);
-    submit(dut, model, kDmaRecord, 3U, false);
-    submit(dut, model, kMatmulRecord, 4U, true);
+    submit(dut, model, records[0], 3U, false);
+    submit(dut, model, records[1], 4U, false);
     await_done(dut, model);
-    require_dma_success(dut, model);
     require(dut.program_done_error == error &&
                 dut.program_done_failing_command_index == 4U &&
                 dut.program_done_commands_accepted == 2U &&
                 dut.program_done_commands_completed == 1U &&
                 dut.program_done_sram_read_count == reads &&
                 dut.program_done_sram_bytes_read == reads * 2U &&
-                dut.program_done_sram_write_count == kDmaWrites &&
-                dut.program_done_sram_bytes_written == kDmaBytes &&
+                dut.program_done_sram_write_count == kDmaWritesPerTile &&
+                dut.program_done_sram_bytes_written == kDmaBytesPerTile &&
                 dut.program_done_matmul_multiply_count ==
                     successful_arithmetic &&
                 dut.program_done_matmul_add_count == successful_arithmetic &&
@@ -585,29 +636,71 @@ void prove_numeric(Vot_ta_dma_matmul_sequencer& dut, Model& model,
     acknowledge(dut, model);
 }
 
+void prove_accumulator_fault(Vot_ta_dma_matmul_sequencer& dut, Model& model,
+                             const std::vector<Record>& records) {
+    reset_case(dut, model, Fault::kAccumulatorNonfinite);
+    for (uint32_t offset = 0; offset < 4U; ++offset)
+        submit(dut, model, records[offset], 3U + offset, false);
+    await_done(dut, model);
+    require(dut.program_done_error == 9U &&
+                dut.program_done_failing_command_index == 6U &&
+                dut.program_done_commands_accepted == 4U &&
+                dut.program_done_commands_completed == 3U &&
+                dut.program_done_hbm_request_count == 1024U &&
+                dut.program_done_hbm_bytes_read == 65536U &&
+                dut.program_done_sram_read_count == 16642U &&
+                dut.program_done_sram_bytes_read == 33284U &&
+                dut.program_done_sram_write_count == 4160U &&
+                dut.program_done_sram_bytes_written == 65792U &&
+                dut.program_done_matmul_accumulator_read_count == 2U &&
+                dut.program_done_matmul_input_read_count == 256U &&
+                dut.program_done_matmul_weight_read_count == 16384U &&
+                dut.program_done_matmul_multiply_count == 16384U &&
+                dut.program_done_matmul_add_count == 16384U &&
+                dut.program_done_matmul_accumulator_write_count == 64U &&
+                dut.program_done_matmul_auxiliary_write_count == 0U &&
+                model.accumulator_reads == 2U &&
+                model.accumulator_writes == 64U &&
+                model.auxiliary_writes == 0U,
+            "accumulator reload fail-stop accounting differs");
+    for (uint32_t index = 0; index < kOutputs; ++index) {
+        require(model.accumulators[index] ==
+                    model.expected_accumulators[index],
+                "reload fault modified prior accumulator tile");
+        require(model.outputs[index] == 0U,
+                "reload fault exposed auxiliary output");
+    }
+    acknowledge(dut, model);
+}
+
 }  // namespace
 
 int main(int argc, char** argv) {
     Verilated::commandArgs(argc, argv);
+    const auto records = load_records("matmul_commands.hex", kCommands);
     const auto payload = load_bytes("matmul_payload.hex", kDmaBytes);
     const auto inputs = load_codes16("matmul_input.hex", kInputs);
-    const auto expected = load_codes32("matmul_expected.hex", kOutputs);
+    const auto accumulators =
+        load_codes32("matmul_accumulators.hex", kAccumulatorWrites);
+    const auto outputs = load_codes16("matmul_output.hex", kOutputs);
     Vot_ta_dma_matmul_sequencer dut;
-    Model model(payload, inputs, expected);
+    Model model(payload, inputs, accumulators, outputs);
 
-    prove_success(dut, model);
-    prove_crc(dut, model);
-    prove_hbm(dut, model);
-    prove_order(dut, model);
-    prove_numeric(dut, model, Fault::kInputNonfinite, 9U, 1U, 0U);
-    prove_numeric(dut, model, Fault::kWeightNonfinite, 9U, 257U, 0U);
-    prove_numeric(dut, model, Fault::kMultiplyOverflow, 10U, 257U, 0U);
-    prove_numeric(dut, model, Fault::kAddOverflow, 10U, 258U, 1U);
+    prove_success(dut, model, records);
+    prove_crc(dut, model, records);
+    prove_hbm(dut, model, records);
+    prove_order(dut, model, records);
+    prove_numeric(dut, model, records, Fault::kInputNonfinite, 9U, 1U, 0U);
+    prove_numeric(dut, model, records, Fault::kWeightNonfinite, 9U, 257U, 0U);
+    prove_numeric(dut, model, records, Fault::kMultiplyOverflow, 10U, 257U, 0U);
+    prove_numeric(dut, model, records, Fault::kAddOverflow, 10U, 258U, 1U);
+    prove_accumulator_fault(dut, model, records);
     dut.final();
     std::cout
-        << "PASS: Qwen DMA+MATMUL RTL slice commands=2 inputs=256 "
-        << "weights=16384 outputs=64 faults=7 vector_set="
-        << "ad2d94e71e7a24d98e92cff7a097d616e3c84e3540d033650119d81dbaaa1dc5"
+        << "PASS: Qwen DMA+MATMUL RTL slice commands=32 k_tiles=16 "
+        << "inputs=4096 weights=262144 accumulators=1024 bf16=64 faults=8 "
+        << "vector_set="
+        << "4fe481b232112fe5b494cab1ca4445159b91a512a524471bee18267fe5525129"
         << "\n";
     return 0;
 }
