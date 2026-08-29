@@ -362,6 +362,40 @@ def test_greedy_ties_select_first_index_and_do_not_consume_entropy() -> None:
     assert all(sample.next_entropy is entropy for sample in result.sampling_results)
 
 
+def test_projection_order_and_separate_binary32_bias_addition_are_frozen() -> None:
+    small = _bf16(Fraction(1, 1 << 12))
+    projection_weights = (((( _bf16(1), small, _bf16(-1)),),))
+    head_weights = (((( _bf16(1), small, _bf16(1)),),))
+    projection = markov.markov_autoregressive_loop_bf16(
+        _zero_logits(1, 1),
+        (0,),
+        projection_weights,
+        head_weights,
+        temperature_binary32=0,
+        tensor_parallel_world_size=1,
+    )
+    # The exact dot is 2^-24, but increasing-rank RNE rounds that term away
+    # between +1 and -1.  A one-round exact dot would therefore differ.
+    assert projection.markov_bias_binary32_codes == (((0,),) * 5,)
+    assert _f32(Fraction(1, 1 << 24)) == 0x33800000
+
+    addend_weights = (((_bf16(1),),),)
+    half_ulp_weights = (((_bf16(Fraction(1, 1 << 24)),),),)
+    base = tuple(tuple((0x3F800001,) for _ in range(5)) for _ in range(1))
+    addition = markov.markov_autoregressive_loop_bf16(
+        base,
+        (0,),
+        addend_weights,
+        half_ulp_weights,
+        temperature_binary32=0,
+        tensor_parallel_world_size=1,
+    )
+    assert addition.markov_bias_binary32_codes == (((0x33800000,),) * 5,)
+    # 1+2^-23 has an odd significand.  Adding half an ULP ties and rounds to
+    # the next even significand at the separate logit-add boundary.
+    assert addition.adjusted_logits_binary32_codes == (((0x3F800002,),) * 5,)
+
+
 def test_official_default_temperature_fails_closed_without_backend_contract() -> None:
     base, embedding, head = _small_identity_fixture(world_size=2)
     with pytest.raises(
