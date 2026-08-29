@@ -18,6 +18,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Sessions/commands | `ot_session_table.sv`, `ot_cmd_frontend.sv` | generation/transaction ownership, position/image/context/epoch/schedule validation, CRC/version/field legality | DV-CMD-001/002, DV-SESSION-001 |
 | Production tensor commands | `ot_ta_command_decoder.sv` | Registered admission of the 64-byte ABI 2.0–2.5 record, IEEE CRC32, opcode/engine/minor/field/index checks, and deterministic error priority | QW-RTL-CMD-001 |
 | Production BF16 residual add | `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv` | Command-decoded, backpressured `ADD_BF16` execution with exact external-SRAM byte addresses, RNE arithmetic, retirement counters, saturation, and fail-closed arithmetic faults | QW-RTL-ADD-001 |
+| Production ADD SRAM control | `ot_ta_add_bf16_sram_engine.sv` | One-outstanding-read operand fetch, finite-only writeback retirement, exact transaction counters, stable completion, and fault write suppression | QW-RTL-ADD-SRAM-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
@@ -60,3 +61,15 @@ directed rounding/subnormal/saturation/error cases with commuted operands,
 complete arithmetic command at an external SRAM ready/valid boundary. It does
 not instantiate or exercise a memory macro, execute a complete Qwen layer,
 establish timing or performance, or close `TA-RTL-6`.
+
+QW-RTL-ADD-SRAM-001 is retained as campaign
+`9f31ea12a383a0749e869835c541a62f621e0065a0a233c636ff4cad0a8da2c3`.
+The same authentic vector set executes through a single ordered read channel
+and a backpressured write channel in Icarus and Verilator. Each replay checks
+8,192 exact 16-bit read transactions, 4,096 exact write transactions, all
+addresses and values, completion stability, and architectural byte/count
+totals under request stalls, write stalls, and variable read-response latency.
+Two arithmetic-fault replays each retire after two reads and prove zero SRAM
+writes. The SRAM contents are behavioral campaign models: ECC, banking,
+arbitration, DMA, HBM, and a qualified physical memory macro do not execute.
+No cycle, timing, performance, complete-layer, or `TA-RTL-6` claim follows.
