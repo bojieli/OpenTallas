@@ -1,17 +1,26 @@
 `timescale 1ns/1ps
 // Fail-stop program-order boundary for one or more complete authentic Qwen
-// q_proj output blocks beginning at command 3.  Each block has sixteen
-// DMA_HBM_TO_SRAM / MATMUL_BF16_TILE pairs that accumulate all 4,096 K
-// elements for 64 outputs.  Only one command is dispatched at a time; odd
+// projection output blocks.  Each block has sixteen DMA_HBM_TO_SRAM /
+// MATMUL_BF16_TILE pairs that accumulate all 4,096 K elements for 64 outputs.
+// Up to three adjacent source kernels can be profiled without relaxing their
+// kernel-index boundaries.  Only one command is dispatched at a time; odd
 // indices are DMA commands, even indices are MATMUL commands, and only the
-// configured final MATMUL is terminal.  The default retains commands 3-34.
+// configured final MATMUL is terminal.  The default retains q_proj commands
+// 3-34 and kernel index 2.
 //
 // This remains a bounded kernel sequencer, not a complete command processor.
 // Program-header/body authentication, queues, timeouts, SRAM/HBM macros, and
 // terminal COMPLETE handling remain external.
 module ot_ta_dma_matmul_sequencer #(
     parameter [31:0] MAX_TRANSFER_BYTES = 32'd1048576,
-    parameter [31:0] LAST_COMMAND_INDEX = 32'd34
+    parameter [31:0] FIRST_COMMAND_INDEX = 32'd3,
+    parameter [31:0] LAST_COMMAND_INDEX = 32'd34,
+    parameter [31:0] KERNEL0_INDEX = 32'd2,
+    parameter [31:0] KERNEL0_LAST_COMMAND_INDEX = LAST_COMMAND_INDEX,
+    parameter [31:0] KERNEL1_INDEX = KERNEL0_INDEX,
+    parameter [31:0] KERNEL1_LAST_COMMAND_INDEX = LAST_COMMAND_INDEX,
+    parameter [31:0] KERNEL2_INDEX = KERNEL1_INDEX,
+    parameter [31:0] KERNEL2_LAST_COMMAND_INDEX = LAST_COMMAND_INDEX
 ) (
     input  wire         clk,
     input  wire         rst_n,
@@ -97,15 +106,17 @@ module ot_ta_dma_matmul_sequencer #(
     wire command_fire = cmd_valid && cmd_ready;
     wire first_command = !active_program;
     wire command_in_order = first_command
-                            ? expected_command_index == 32'd3
+                            ? expected_command_index == FIRST_COMMAND_INDEX
                             : expected_command_index ==
                               last_accepted_index + 1'b1;
     wire command_bound_legal =
-        (LAST_COMMAND_INDEX >= 32'd34) &&
+        (FIRST_COMMAND_INDEX[4:0] == 5'd3) &&
+        (LAST_COMMAND_INDEX >= FIRST_COMMAND_INDEX) &&
+        ((LAST_COMMAND_INDEX - FIRST_COMMAND_INDEX) >= 32'd31) &&
         (LAST_COMMAND_INDEX[4:0] == 5'd2);
     wire command_profile_order =
         command_bound_legal &&
-        (expected_command_index >= 32'd3) &&
+        (expected_command_index >= FIRST_COMMAND_INDEX) &&
         (expected_command_index <= LAST_COMMAND_INDEX) &&
         (expected_command_index[0]
          ? command_record[7:0] == OP_DMA_DIRECT
@@ -218,7 +229,14 @@ module ot_ta_dma_matmul_sequencer #(
     );
 
     ot_ta_matmul_bf16_sram_engine #(
-        .PROFILE_LAST_COMMAND_INDEX(LAST_COMMAND_INDEX)
+        .PROFILE_FIRST_COMMAND_INDEX(FIRST_COMMAND_INDEX),
+        .PROFILE_LAST_COMMAND_INDEX(LAST_COMMAND_INDEX),
+        .PROFILE_KERNEL0_INDEX(KERNEL0_INDEX),
+        .PROFILE_KERNEL0_LAST_COMMAND_INDEX(KERNEL0_LAST_COMMAND_INDEX),
+        .PROFILE_KERNEL1_INDEX(KERNEL1_INDEX),
+        .PROFILE_KERNEL1_LAST_COMMAND_INDEX(KERNEL1_LAST_COMMAND_INDEX),
+        .PROFILE_KERNEL2_INDEX(KERNEL2_INDEX),
+        .PROFILE_KERNEL2_LAST_COMMAND_INDEX(KERNEL2_LAST_COMMAND_INDEX)
     ) matmul_engine (
         .clk(clk),
         .rst_n(rst_n),
