@@ -158,3 +158,37 @@
 - **OI-6 — Yosys 0.68 cannot parse SystemVerilog packages**, so `rtl/abi3`
   cannot enter the repository's existing synthesis flow unchanged. The
   synthesis probe required textually inlining the package.
+- **OI-7 — DeepSeek 32-node HBM activation capacity does not fit.** The plan
+  reports `hbm_fits: False`: 172 GB per node against 96 GB. Weights are only
+  4.9 GB per node once sharded; 163 GB is activation arenas sized at a
+  262,144-token worst case with worst-case symbolic widths, of which
+  `index_score.output` at `[262144, 65536]` is 34 GB by itself. The plan
+  reports it rather than hiding it, which is right. Closing it needs an
+  architectural decision — arenas sized at the *deployment's* declared context
+  rather than the architectural capability endpoint, block-scoped liveness so
+  arenas are reused, and token-parallel arena sharding across nodes. Until then
+  no DeepSeek HBM cycle result is admissible.
+- **OI-8 — `MEMORY_OBJECT.base_address` defaults to zero.** Every object can
+  present at address zero, so the cycle model cannot map objects onto HBM
+  channels or SRAM banks and substitutes a synthetic packed placement. Channel
+  and bank conflict numbers from such a deployment are a property of the model,
+  not of the plan. Backends must assign real base addresses; `bank_or_tile` has
+  the same problem.
+- **OI-9 — `SCHEDULE.resource_bound` has no defined unit** and `priority` is
+  unmodelled. Both are recorded and explicitly not timed rather than silently
+  consumed. ABI 3.0 does not say whether `resource_bound` counts lanes, engine
+  instances or SRAM regions.
+- **OI-10 — `Symbolic.maximum` semantics were never frozen.** Qwen writes
+  `multiplier=1` so both readings agree; DeepSeek writes `multiplier=6,
+  maximum=1572864`, which only parses as the *extent* maximum. The ROM backend
+  took that reading; the other inflates the activation footprint six-fold
+  (2.14 TB against 916 GB). The contract should say which.
+- **OI-11 — `queue.max_occupancy` is an architectural-group counter no
+  functional model can fill.** It sits outside the timing group, so the cycle
+  model declines to write it rather than break the counter-agreement rule.
+  Either it belongs in the timing group or the rule needs a named exception.
+- **OI-12 — no capability advertises queue depth or issue width.** ADR-003
+  section 9 makes them capabilities rather than assumptions, but only
+  `max_outstanding_per_queue` exists; everything else comes from a cost table
+  and is labelled assumed.
+
