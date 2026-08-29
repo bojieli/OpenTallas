@@ -316,7 +316,17 @@
   admitted against, so a capability change *should* change its digest. What is
   wrong is that there are two capabilities with one name, and a change to either
   is invisible from the other. **One must be generated from the other, with a
-  check that fails when they drift** — the same discipline `loop_trip_count` now
+  check that fails when they drift** — `tools/publish_abi3_capabilities.py`,
+  added for this, makes the code profile the definition and the JSON a published
+  artifact. It currently reports both files drifted
+  (`hbm_sram_single_chip` profile `7afce65b…` against published `b2a1af21…`;
+  `hbm_sram_cluster_32` profile `93fe2c66…` against published `3afaa0fa…`).
+  **Republishing is deliberately deferred**: the two 8,000-token Qwen workloads
+  are executing against the published files right now, and rewriting them
+  mid-run would leave those records citing a capability digest the repository no
+  longer contains. It is a one-command step once they land, and it will change
+  the deployment digest of everything admitted against them — which is correct,
+  and is exactly why it should be a deliberate act rather than a silent one — the same discipline `loop_trip_count` now
   enforces for the trip formula (OI-22) and for the same reason: two
   restatements of one thing is how two of them come apart.
 
