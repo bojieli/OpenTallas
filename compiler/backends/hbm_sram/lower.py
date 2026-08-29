@@ -1590,8 +1590,14 @@ class _Emitter:
             return loops
         loop = self.builder.loop_control(
             lower_bound=0,
-            upper_bound=spec.trip * spec.divisor,
-            step=spec.divisor,
+            # The induction variable counts *blocks*, not rows, so the step is
+            # one.  Device.loop_trip_count already divides the symbol by
+            # bound_divisor: trip = ceil(ceil(span / divisor) / step).  A step
+            # of divisor divides twice, which yields one iteration at any span
+            # -- correct only while the whole prompt fits in a single block,
+            # and silently dropping every token past the first block above it.
+            upper_bound=spec.trip,
+            step=1,
             max_iterations=spec.trip,
             bound_symbol=Symbol.SPAN_TOKENS,
             bound_divisor=spec.divisor,
