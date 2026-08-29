@@ -61,6 +61,10 @@ from compiler.vertical_slice.deepseek_v4_fp8_linear import (
     build_deepseek_v4_fp8_linear_deployment,
     build_deepseek_v4_fp8_linear_full_deployment,
 )
+from compiler.vertical_slice.deepseek_v4_hc_pre import (
+    DeepSeekV4HCPreBuildError,
+    build_deepseek_v4_hc_pre_deployment,
+)
 from compiler.vertical_slice.deepseek_v4_lookup import (
     DeepSeekV4LookupBuildError,
     build_deepseek_v4_lookup_deployment,
@@ -204,6 +208,17 @@ def parser() -> argparse.ArgumentParser:
     fp8_check_parser.add_argument("--request", required=True, type=Path)
     fp8_check_parser.add_argument("--result", required=True, type=Path)
     fp8_check_parser.add_argument("--output", required=True, type=Path)
+    hc_pre_parser = subparsers.add_parser(
+        "package-deepseek-v4-hc-pre-parameters",
+        help=(
+            "package all learned parameters and the frozen numeric contract for "
+            "one verified V4 layer-0 attention HC_PRE site"
+        ),
+    )
+    hc_pre_parser.add_argument("--snapshot", required=True, type=Path)
+    hc_pre_parser.add_argument("--lock", required=True, type=Path)
+    hc_pre_parser.add_argument("--application", required=True, type=Path)
+    hc_pre_parser.add_argument("--output", required=True, type=Path)
     return result
 
 
@@ -254,9 +269,7 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if arguments.command == "validate-deepseek-v4":
             lock = load_checkpoint_lock(arguments.lock)
-            validation = validate_official_checkpoint_lock(
-                lock, load_official_config()
-            )
+            validation = validate_official_checkpoint_lock(lock, load_official_config())
             _write_new_json(arguments.output, validation)
             print(
                 f"validated {validation['tensor_count']} official tensors "
@@ -446,6 +459,20 @@ def main(argv: list[str] | None = None) -> int:
                 f"differential {report['differential_id']} ({report['status']})"
             )
             return 0
+        if arguments.command == "package-deepseek-v4-hc-pre-parameters":
+            lock = load_checkpoint_lock(arguments.lock)
+            deployment = build_deepseek_v4_hc_pre_deployment(
+                snapshot=arguments.snapshot,
+                lock=lock,
+                application_root=arguments.application,
+                output=arguments.output,
+            )
+            print(
+                "built complete-parameter V4 HC_PRE package "
+                f"{deployment['build_id']} at {arguments.output.resolve()} "
+                f"({deployment['status']})"
+            )
+            return 0
     except (
         BuildError,
         IRValidationError,
@@ -462,6 +489,7 @@ def main(argv: list[str] | None = None) -> int:
         DeepSeekV4ApplicationCheckError,
         DeepSeekV4FP8LinearDifferentialError,
         DeepSeekV4FP8LinearBuildError,
+        DeepSeekV4HCPreBuildError,
         DeepSeekV4LookupDifferentialError,
         DeepSeekV4LookupBuildError,
         OSError,

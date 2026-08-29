@@ -21,6 +21,7 @@ from compiler.checking.deepseek_v4_hc_pre_slice import (
     verify_deepseek_v4_hc_pre_deployment,
     verify_deepseek_v4_hc_pre_roundtrip,
 )
+from compiler.cli.main import main as compiler_main
 from compiler.frontend.checkpoint import (
     build_checkpoint_lock,
     validate_checkpoint_source,
@@ -403,6 +404,41 @@ def test_hc_pre_build_is_deterministic_content_addressed_and_memory_mappable(
     integrity = verify_deepseek_v4_hc_pre_deployment(first, application)
     assert integrity["build_id"] == first_manifest["build_id"]
     assert integrity["checked_artifact_count"] == 9
+
+
+def test_hc_pre_parameter_package_cli_executes_the_real_builder(
+    hc_pre_application: tuple[Path, dict[str, Any], Path, dict[str, bytes]],
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    snapshot, lock, application, _ = hc_pre_application
+    lock_path = tmp_path / "checkpoint.lock.json"
+    lock_path.write_bytes(canonical_json_bytes(lock))
+    output = tmp_path / "deployment"
+
+    assert (
+        compiler_main(
+            [
+                "package-deepseek-v4-hc-pre-parameters",
+                "--snapshot",
+                str(snapshot),
+                "--lock",
+                str(lock_path),
+                "--application",
+                str(application),
+                "--output",
+                str(output),
+            ]
+        )
+        == 0
+    )
+    manifest = load_strict_json(output / "deployment_manifest.json")
+    assert manifest["status"] == (
+        "development_fixture_complete_hc_pre_parameters_not_release_evidence"
+    )
+    assert manifest["build_id"] in capsys.readouterr().out
+    integrity = verify_deepseek_v4_hc_pre_deployment(output, application)
+    assert integrity["build_id"] == manifest["build_id"]
 
 
 def test_hc_pre_package_freezes_numeric_profile_counters_and_claim_boundaries(
