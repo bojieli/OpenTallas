@@ -59,7 +59,7 @@ import sys
 import tempfile
 import time
 from pathlib import Path
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
@@ -143,6 +143,32 @@ def _build_device(args: argparse.Namespace) -> tuple[Device, Any, Any, dict[str,
     }
 
 
+def _source_identity() -> dict[str, Any]:
+    """A digest over the Python that will execute, so drift is not silent.
+
+    Three processes minutes apart are three chances for the runtime to change
+    underneath the experiment -- this repository is worked on concurrently, and
+    a device or memory module edited between the interrupted run and the
+    resumed one would make the comparison meaningless without changing the
+    backend identity.  Each phase records this digest and the comparison
+    refuses to conclude anything if the three disagree.
+    """
+    files = sorted(
+        path
+        for root in ("runtime", "compiler")
+        for path in (REPO / root).rglob("*.py")
+        if "__pycache__" not in path.parts
+    )
+    digest = hashlib.sha256()
+    for path in files:
+        digest.update(str(path.relative_to(REPO)).encode())
+        digest.update(hashlib.sha256(path.read_bytes()).digest())
+    return {
+        "python_source_digest": digest.hexdigest(),
+        "python_file_count": len(files),
+    }
+
+
 def _implementation_identity() -> dict[str, Any]:
     from runtime.sim.backend import get_backend
 
@@ -163,6 +189,7 @@ def _phase_envelope(
         "topology_class": int(device.deployment.topology_class),
         "technology_view": device.capability.technology_view,
         "implementation_identity": _implementation_identity(),
+        "source_identity": _source_identity(),
         **extra,
     }
 
@@ -173,6 +200,27 @@ def _driver_identity(driver: GenerationDriver) -> dict[str, Any]:
         "vocabulary_size": driver.vocabulary_size,
         "eos_token_ids": list(driver.eos_token_ids),
     }
+
+
+def _tokenizer_digest(path: Path, workload: Mapping[str, Any]) -> str:
+    """The tokenizer SHA-256 this workload was rendered with.
+
+    It is a shared-identity field, so a record that leaves it empty cannot be
+    compared with one that fills it.  Per-workload files carry it only
+    sometimes; the workload index beside them always does, and it is accepted
+    only when the index names *this* workload with the digest about to run.
+    """
+    direct = str(workload.get("metadata", {}).get("tokenizer_sha256", ""))
+    if direct:
+        return direct
+    index = path.parent / "index.json"
+    if not index.exists():
+        return ""
+    body = json.loads(index.read_text())
+    entry = body.get("workloads", {}).get(workload["workload_id"])
+    if entry and entry.get("digest") == workload["digest"]:
+        return str(body.get("tokenizer_sha256", ""))
+    return ""
 
 
 def _write(path: Path, body: dict[str, Any]) -> None:
@@ -586,6 +634,9 @@ def orchestrate(args: argparse.Namespace) -> int:
     pids = [phases[phase]["pid"] for phase in PHASES]
     identities = [phases[phase]["implementation_identity"] for phase in PHASES]
     digests = [phases[phase]["deployment_digest"] for phase in PHASES]
+    sources = [
+        phases[phase]["source_identity"]["python_source_digest"] for phase in PHASES
+    ]
     expected_length = (
         len(baseline_tokens)
         if baseline["result"]["stop_reason"] == "eos"
@@ -597,10 +648,18 @@ def orchestrate(args: argparse.Namespace) -> int:
         "same_implementation_identity": all(
             digest_of(identity) == digest_of(identities[0]) for identity in identities
         ),
+        "same_runtime_source_tree": len(set(sources)) == 1,
         "baseline_non_empty": len(baseline_tokens) > 0,
         "baseline_reached_expected_length": len(baseline_tokens) == expected_length,
         "interrupt_produced_expected_prefix_length": (
             len(interrupt_tokens) == args.stop_after
+        ),
+        "interrupt_prefix_matches_baseline": (
+            len(interrupt_tokens) > 0
+            and interrupt_tokens == baseline_tokens[: len(interrupt_tokens)]
+        ),
+        "baseline_longer_than_the_interrupted_prefix": (
+            len(baseline_tokens) > len(interrupt_tokens)
         ),
         "resume_did_real_work": (
             int(resume["result"]["decode_steps"]) >= 1 and len(tail) >= 1
@@ -755,7 +814,7 @@ def orchestrate(args: argparse.Namespace) -> int:
             generation_policy_digest=baseline["generation_policy_digest"],
             numeric_profile=baseline["numeric_profile"],
             graph_id=baseline["graph_id"],
-            tokenizer_sha256=workload.get("metadata", {}).get("tokenizer_sha256", ""),
+            tokenizer_sha256=_tokenizer_digest(args.workload, workload),
         ),
         target=TargetIdentity(
             target_id=baseline["target_id"],
@@ -811,6 +870,9 @@ def orchestrate(args: argparse.Namespace) -> int:
             "restarted_token_ids": restarted_tokens,
             "resumed_tail_token_ids": tail,
             "process_ids": {phase: phases[phase]["pid"] for phase in PHASES},
+            "source_identity": {
+                phase: phases[phase]["source_identity"] for phase in PHASES
+            },
             "phase_stop_reasons": {
                 phase: phases[phase]["result"]["stop_reason"] for phase in PHASES
             },
