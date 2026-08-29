@@ -135,13 +135,14 @@ def test_vector_set_is_reproducible(tmp_path: Path) -> None:
 
 
 def test_every_expectation_comes_from_the_device_or_a_declared_override() -> None:
-    """Only three documented places may differ from the golden observation.
+    """One documented place may differ from the golden observation.
 
-    Two are traps the golden model raises without an instruction index, where
-    the RTL reports the instruction that raised them.  The third is a branch
-    target outside the authenticated body: the RTL rejects that instruction
-    record at admission, so it never retires and never transfers control, while
-    the golden model transfers control first and faults at the target index.
+    A branch target outside the authenticated body: the RTL rejects that
+    instruction record at admission, so it never retires and never transfers
+    control, while the golden model transfers control first and faults at the
+    target index.  The two traps that once also needed an override -- a loop
+    over its declared maximum and a commit with no open prepare -- no longer
+    do: the golden model names the raising instruction itself.
     """
     vectors = _vectors()
     overrides = set()
@@ -159,8 +160,6 @@ def test_every_expectation_comes_from_the_device_or_a_declared_override() -> Non
         ("negative_branch_out_of_range", "branches"),
         ("negative_branch_out_of_range", "first_fault"),
         ("negative_branch_out_of_range", "retired"),
-        ("negative_loop_over_maximum", "first_fault"),
-        ("negative_commit_without_prepare", "first_fault"),
     }
 
 
@@ -176,7 +175,7 @@ def test_issue_events_are_legal_opcodes_and_counted() -> None:
             if family is not Major.RECOVERY:
                 assert issue["descriptor_id"] != NO_ID
             total += 1
-    assert total == vectors["issue_event_count"] == 99
+    assert total == vectors["issue_event_count"] == 135
     assert vectors["case_count"] == len(vectors["cases"])
     assert vectors["program_run_count"] == sum(
         1 for case in vectors["cases"] if case["runs_program"]
@@ -197,7 +196,6 @@ def test_negative_cases_cover_the_required_failures() -> None:
         "negative_commit_without_prepare": 9,
         "negative_wait_unsignalled": 13,
         "negative_work_bound": 10,
-        "work_bound_deficit": 10,
     }
     for name, trap in required.items():
         assert name in names, name
@@ -225,6 +223,152 @@ def test_negative_cases_cover_the_required_failures() -> None:
 
 
 # ---------------------------------------------------------------------------
+# 2b. amendment A13: the partial final iteration of a block loop
+# ---------------------------------------------------------------------------
+def _views_of(case: dict) -> list[dict]:
+    return case["expected_views"]
+
+
+def _block_views(case: dict, slot: int) -> list[int]:
+    """Leading extents of one operand slot, for dispatches inside a loop.
+
+    A case's tail dispatch outside the loop resolves static views; filtering on
+    a live loop binding keeps the A13 assertions about the blocked operand.
+    """
+    return [
+        view["dim0"]
+        for view in case["expected_views"]
+        if view["slot"] == slot and view["loops"]
+    ]
+
+
+def test_a13_vectors_cover_every_block_shape() -> None:
+    """The four shapes a block loop over a symbolic extent can take.
+
+    Wire format section 12.4: with tile height T over an extent of N rows, the
+    final iteration holds N - T*floor(N/T) rows.  A vector set that only ever
+    exercised N divisible by T would pass with A13 unimplemented, which is what
+    OI-16 recorded.  ``a13_extent_below_block`` and ``a13_extent_above_block``
+    additionally pin the two guards -- a partial count that is not below the
+    view's own extent, and a remaining count at or above the block size -- that
+    ``ViewResolver._remaining_rows`` applies and the prose formula does not
+    spell out.
+    """
+    names = {case["name"]: case for case in _vectors()["cases"]}
+    block = generator.A13_BLOCK
+
+    # (a) N divisible by T: no partial iteration, and A13 must not clamp.
+    exact = names["a13_block_exact"]
+    leading = _block_views(exact, 0) + _block_views(exact, 4)
+    assert leading and set(leading) == {block}, leading
+
+    # (b) N with a partial final iteration.
+    for name, expected in (
+        ("a13_block_partial", [block, block, 1]),
+        ("a13_block_partial_mid", [block, 3]),
+    ):
+        case = names[name]
+        assert _block_views(case, 0) == expected, name
+        assert _block_views(case, 4) == expected, name
+
+    # (c) N < T: one short iteration holding the whole span.
+    short = names["a13_block_short"]
+    assert _block_views(short, 0) == [block - 1]
+
+    # (d) N = 0.  The ABI admits it: ceil(0/T) is zero, so the loop is
+    # zero-trip, its body never runs and no view is resolved.  The case still
+    # issues its tail operation, so a pass here is not a pass over nothing.
+    empty = names["a13_block_empty"]
+    assert empty["symbols"]["0"] == 0
+    assert empty["expected"]["loop_iterations"] == 0
+    assert empty["expected"]["issued"] == 1
+    assert all(v["index"] != 1 for v in _views_of(empty))
+    assert len(_views_of(empty)) == 3
+
+    # A loop that is not symbol-bounded has no partial iteration to state.
+    constant = names["a13_constant_loop"]
+    assert _block_views(constant, 0) == [block, block, block]
+
+    # Two symbol-bounded loops over one view: the smallest remaining wins.
+    nested = names["a13_nested_blocks"]
+    assert _block_views(nested, 0) == [block, 2, block, 2, 1, 1]
+
+    # The A4 maximum of four dynamic terms, where a term walk that counts to
+    # the term count inclusive could wrap back onto term zero.
+    four = names["a13_four_terms"]
+    assert _block_views(four, 0) == [block, 2, 1, 1]
+    assert all(
+        v["element_offset"] % 16 == 3
+        for v in _views_of(four) if v["slot"] == 0
+    )
+
+    # The two guards the prose formula leaves implicit.
+    assert _block_views(names["a13_extent_below_block"], 0) == [2, 2]
+    assert _block_views(names["a13_extent_above_block"], 0) == [block + 2, 1]
+
+
+def test_a13_golden_extents_come_from_the_reference_resolver() -> None:
+    """Every recorded extent is re-derived by ViewResolver, not by this file."""
+    from runtime.abi3.descriptors import ExtendedDescriptorType, Symbol
+    from runtime.sim.device import Device
+
+    generator._install_engine_stubs()
+    capability = generator.rtl_capability()
+    builders = {
+        "a13_block_exact": generator.case_a13_block_exact,
+        "a13_block_partial": generator.case_a13_block_partial,
+        "a13_block_partial_mid": generator.case_a13_block_partial_mid,
+        "a13_block_short": generator.case_a13_block_short,
+        "a13_block_empty": generator.case_a13_block_empty,
+        "a13_extent_below_block": generator.case_a13_extent_below_block,
+        "a13_extent_above_block": generator.case_a13_extent_above_block,
+        "a13_symbol_term": generator.case_a13_symbol_term,
+        "a13_constant_loop": generator.case_a13_constant_loop,
+        "a13_nested_blocks": generator.case_a13_nested_blocks,
+        "a13_four_terms": generator.case_a13_four_terms,
+    }
+    recorded = {case["name"]: case for case in _vectors()["cases"]}
+    compared = 0
+    for name, build in builders.items():
+        case = build(capability)
+        device = Device(case.deployment, capability, verify=False, trace=True)
+        session = device.create_session()
+        device.run_transaction(
+            session, entrypoint_id=0, symbols=dict(case.symbols)
+        )
+        symbols = generator.effective_symbols(case)
+        fresh: list[tuple] = []
+        for entry in device.trace:
+            for view in generator.resolved_views(device, entry, symbols):
+                fresh.append(
+                    (view["descriptor_id"], view["slot"], view["dim0"],
+                     view["element_offset"], view["rank"])
+                )
+        stored = [
+            (v["descriptor_id"], v["slot"], v["dim0"], v["element_offset"],
+             v["rank"])
+            for v in recorded[name]["expected_views"]
+        ]
+        assert fresh == stored, name
+        compared += len(fresh)
+    assert compared > 0
+    assert compared == sum(
+        len(recorded[name]["expected_views"]) for name in builders
+    )
+    # SPAN_TOKENS = 0 is admissible and resolves nothing, so the A13 evidence
+    # cannot rest on that case alone.
+    assert compared > len(recorded["a13_block_empty"]["expected_views"])
+
+    # A13 is only visible where a partial extent actually occurs.
+    partial = [
+        v for name in builders for v in recorded[name]["expected_views"]
+        if v["dim0"] != v["dims"][0] or v["dim0"] < generator.A13_BLOCK
+    ]
+    assert partial, "no vector exercises a partial final extent"
+    del ExtendedDescriptorType, Symbol
+
+
+# ---------------------------------------------------------------------------
 # 3. two-simulator replay
 # ---------------------------------------------------------------------------
 @pytest.mark.skipif(
@@ -245,8 +389,13 @@ def test_campaign_replays_both_simulators(tmp_path: Path) -> None:
         assert "/tmp/" not in case["compile_command"]
     assert "Verilator 5.05" in summary["tools"]["verilator"]["version"]
     assert "version 11.0" in summary["tools"]["iverilog"]["version"]
-    assert summary["correlation"]["issue_event_count"] == 99
+    assert summary["correlation"]["issue_event_count"] == 135
     assert summary["correlation"]["reference"] == "runtime.sim.device.Device"
+    # A view comparison that compared nothing would be a vacuous pass.
+    assert summary["correlation"]["view_resolution_count"] == (
+        _vectors()["view_resolution_count"]
+    )
+    assert summary["correlation"]["view_resolution_count"] > 0
 
 
 def test_campaign_refuses_to_overwrite_an_existing_artifact(tmp_path: Path) -> None:

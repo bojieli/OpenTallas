@@ -4,7 +4,7 @@
     "minor": 0
   },
   "capability_digest": "89f0b51783ed717486fda73553fc3ef9a130f4f6ced9a33447548338aba5058d",
-  "case_count": 40,
+  "case_count": 41,
   "cases": [
     {
       "admitted": true,
@@ -7964,6 +7964,316 @@
     },
     {
       "admitted": true,
+      "declared_retired_work": 42,
+      "descriptor_count": 20,
+      "descriptor_table_sha256": "a90bb8b9d48e2a28ed492365b872d64b1fd93696ff94e6a746de3fc8cec30d89",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 14,
+        "first_fault": 4294967295,
+        "issued": 4,
+        "loop_iterations": 6,
+        "predicated_off": 0,
+        "retired": 14,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 18,
+          "family": 32,
+          "index": 2,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 18,
+          "family": 32,
+          "index": 2,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 18,
+          "family": 32,
+          "index": 2,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 18,
+          "family": 32,
+          "index": 2,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 4,
+          "dims": [
+            4,
+            16
+          ],
+          "element_offset": 3,
+          "index": 2,
+          "loops": {
+            "14": 0,
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "index": 2,
+          "loops": {
+            "14": 0,
+            "15": 0
+          },
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            16
+          ],
+          "element_offset": 259,
+          "index": 2,
+          "loops": {
+            "14": 0,
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 2,
+          "dims": [
+            2,
+            16
+          ],
+          "element_offset": 19,
+          "index": 2,
+          "loops": {
+            "14": 0,
+            "15": 1
+          },
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "index": 2,
+          "loops": {
+            "14": 0,
+            "15": 1
+          },
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 2,
+          "dims": [
+            2,
+            16
+          ],
+          "element_offset": 275,
+          "index": 2,
+          "loops": {
+            "14": 0,
+            "15": 1
+          },
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            16
+          ],
+          "element_offset": 67,
+          "index": 2,
+          "loops": {
+            "14": 1,
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "index": 2,
+          "loops": {
+            "14": 1,
+            "15": 0
+          },
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            16
+          ],
+          "element_offset": 323,
+          "index": 2,
+          "loops": {
+            "14": 1,
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            16
+          ],
+          "element_offset": 83,
+          "index": 2,
+          "loops": {
+            "14": 1,
+            "15": 1
+          },
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "index": 2,
+          "loops": {
+            "14": 1,
+            "15": 1
+          },
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            16
+          ],
+          "element_offset": 339,
+          "index": 2,
+          "loops": {
+            "14": 1,
+            "15": 1
+          },
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 14,
+        "first_fault": 4294967295,
+        "issued": 4,
+        "loop_iterations": 6,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 14,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 6,
+        "engine.tensor.descriptors": 4,
+        "instructions.fetched": 14,
+        "instructions.issued": 4,
+        "instructions.retired": 14
+      },
+      "instruction_count": 6,
+      "name": "a13_four_terms",
+      "note": "four dynamic terms, the A4 maximum: two symbol-bounded block loops folded by min() and two runtime symbols that move the offset without bounding the extent",
+      "phase": 1,
+      "program_sha256": "fcf30e980244d968cde5b0b05d34d1490e52acea52fa56de74317ea38d0f7709",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 5,
+        "3": 6,
+        "4": 1,
+        "5": 2,
+        "7": 1
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
       "declared_retired_work": 2,
       "descriptor_count": 16,
       "descriptor_table_sha256": "6d940557d4b864059e71b7aacd014ba015477017a7ace23de668d184a58ee7fa",
@@ -8434,7 +8744,7 @@
       },
       "instruction_count": 5,
       "name": "negative_loop_over_maximum",
-      "note": "runtime trip 9 exceeds the verified maximum 4: capability trap. The golden model raises this trap without an instruction index; the RTL reports the LOOP_SETUP that raised it",
+      "note": "runtime trip 9 exceeds the verified maximum 4: capability trap, reported by both against the LOOP_SETUP that raised it",
       "phase": 1,
       "program_sha256": "636caaa04ad2216d6a51c490f6c059ee78ff92c272e7c92550d13cbf94320770",
       "python_rejects_image": null,
@@ -8653,7 +8963,7 @@
       },
       "instruction_count": 2,
       "name": "negative_commit_without_prepare",
-      "note": "state transaction trap: commit with no open prepare. The golden model raises it without an instruction index; the RTL reports the instruction that raised it",
+      "note": "state transaction trap: commit with no open prepare, reported by both against the instruction that raised it",
       "phase": 0,
       "program_sha256": "9c7c2cb8c9604f67c642d30d97579727e3fa2b81208b718da2e2b75bf3e0c9cf",
       "python_rejects_image": null,
@@ -9434,24 +9744,24 @@
     "view_stride": 6,
     "view_words": 8192
   },
-  "header_admission_count": 40,
+  "header_admission_count": 41,
   "image_sha256": {
-    "a3_case.hex": "dfff6b3da64e2816952cf209c81cdf4bf4c1ad1ba7d3c633b121d1dd9ed0156c",
-    "a3_descriptor.hex": "0ad6a7eeae0ade149f107c84e42ba41c25422c9582b966998de324581af637d7",
-    "a3_header.hex": "64475ee316f57cc93d1ddb86048ed0d12c0575c05b58400b0d943ffffaca5ef8",
-    "a3_issue.hex": "4657cc617ee18998f7e6a8ed48f230289e15d13bd1f6bcaabd1834082137d8e9",
-    "a3_meta.hex": "96f8305f4f5cfbf386c79612a09a2d0139f0eda61d0e3a6842807a1efdba195f",
-    "a3_program.hex": "d2b92ebc12ee0fd23eb5b9f449014e5779e054ec32f87dc0879f5c229b1bc194",
-    "a3_symbol.hex": "24c9f535a69b8c1b247955aaa7ed9ed8256fd13a472ac2eb9e42201c97a64607",
-    "a3_view.hex": "d3ee72e2ce3b126650e430c1e903b752a345f0c0befb0ea81e7063b186f4112b"
+    "a3_case.hex": "18692bdff032b1c45a0f0b667d14ddc602e7a2ab4dd5881f087203c8b74c997b",
+    "a3_descriptor.hex": "2ed74672bce7f63ce7fa49e866ab0b7f70fa36e262b694738d7f2e1c3b69ca65",
+    "a3_header.hex": "1189982809235ba341c42d98a6dd7e33cdc1650204b204458a84c0a1bceb1b69",
+    "a3_issue.hex": "71ea08adefca7d5636cf458dc935e708a7e882df5a6a82da9e7b6839c32a1f93",
+    "a3_meta.hex": "91975d6fa1877e40427cbb8d68b2337a4b5f5e937254ba4c168ef570afb9fd36",
+    "a3_program.hex": "ef67046995ff1e04c8130ffdd1fba6ccc0cae42193f863a1e3f55f3eda79d9fe",
+    "a3_symbol.hex": "f82fbe64f50cd43ae5ea792e61b945c0412c5abe63680293bb78f1f5d7d72d4a",
+    "a3_view.hex": "8b5db6713d5dfb1a7c1a4f63be192d3570cd137637aab45030d60642119a9ddf"
   },
-  "issue_event_count": 131,
+  "issue_event_count": 135,
   "negative_case_count": 17,
-  "positive_case_count": 23,
-  "program_run_count": 34,
-  "required_marker": "PASS: ABI3 RTL microsequencer cases=40 headers=40 programs=34 issues=131 views=342 traps=11",
+  "positive_case_count": 24,
+  "program_run_count": 35,
+  "required_marker": "PASS: ABI3 RTL microsequencer cases=41 headers=41 programs=35 issues=135 views=354 traps=11",
   "schema": "opentallas.rtl.abi3_vectors.v1",
   "trap_count": 11,
   "view_reference": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms) and A13 (partial final iteration of a block loop)",
-  "view_resolution_count": 342
+  "view_resolution_count": 354
 }

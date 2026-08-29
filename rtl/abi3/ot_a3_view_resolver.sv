@@ -110,20 +110,23 @@ module ot_a3_view_resolver
     reg [15:0] term_kind;
     reg [15:0] term_index;
     reg [31:0] term_stride;
-    reg [1:0]  slot;
+    // Three bits, not two: the walk runs to dynamic_term_count inclusive, so a
+    // view carrying the maximum four terms needs a slot counter that can reach
+    // four without wrapping back onto term zero.
+    reg [2:0]  slot;
     always @* begin
         case (slot)
-            2'd0: begin
+            3'd0: begin
                 term_kind   = payload[591:576];
                 term_index  = payload[607:592];
                 term_stride = payload[639:608];
             end
-            2'd1: begin
+            3'd1: begin
                 term_kind   = payload[655:640];
                 term_index  = payload[671:656];
                 term_stride = payload[703:672];
             end
-            2'd2: begin
+            3'd2: begin
                 term_kind   = payload[719:704];
                 term_index  = payload[735:720];
                 term_stride = payload[767:736];
@@ -191,7 +194,7 @@ module ot_a3_view_resolver
             out_dim0 <= 32'd0;
             loop_query_id <= A3_NO_ID;
             sym_index <= 4'd0;
-            slot <= 2'd0;
+            slot <= 3'd0;
             value <= 32'd0;
             value_is_loop <= 1'b0;
             loop_symbolic <= 1'b0;
@@ -216,7 +219,7 @@ module ot_a3_view_resolver
                             fault <= 1'b0;
                             trap_class <= A3_TRAP_NONE;
                             out_element_offset <= view_offset;
-                            slot <= 2'd0;
+                            slot <= 3'd0;
                             remain_valid <= 1'b0;
                             remain <= 32'd0;
                             state <= S_SELECT;
@@ -225,7 +228,7 @@ module ot_a3_view_resolver
                     // Drive the loop and symbol selects for this term; both
                     // reads are combinational and are consumed next cycle.
                     S_SELECT: begin
-                        if ({6'd0, slot} >= view_terms) begin
+                        if ({5'd0, slot} >= view_terms) begin
                             state <= S_FINISH;
                         end else begin
                             loop_query_id <= {16'd0, term_index};
@@ -278,7 +281,7 @@ module ot_a3_view_resolver
                             mul_b <= loop_divisor;
                             state <= S_REMAIN;
                         end else begin
-                            slot <= slot + 2'd1;
+                            slot <= slot + 3'd1;
                             state <= S_SELECT;
                         end
                     end
@@ -298,7 +301,7 @@ module ot_a3_view_resolver
                             remain <= remaining_rows;
                             remain_valid <= 1'b1;
                         end
-                        slot <= slot + 2'd1;
+                        slot <= slot + 3'd1;
                         state <= S_SELECT;
                     end
                     S_FINISH: begin

@@ -897,6 +897,58 @@ def case_a13_nested_blocks(cap: Capability) -> Case:
     )
 
 
+def case_a13_four_terms(cap: Capability) -> Case:
+    """A view carrying the maximum four dynamic terms, two of them block loops.
+
+    MAX_DYNAMIC_TERMS is the boundary where a term walk that counts to the term
+    count inclusive can wrap back onto term zero, so it is worth a vector of
+    its own rather than being left to the two- and one-term cases.
+    """
+    w = BlockWorkspace("a3-a13-four-terms", cap)
+    b = w.builder
+    outer = b.loop_control(
+        lower_bound=0, upper_bound=0, step=1,
+        bound_symbol=Symbol.SPAN_TOKENS, bound_divisor=A13_BLOCK,
+        max_iterations=A13_MAX_ITER, key="loop.outer",
+    )
+    inner = b.loop_control(
+        lower_bound=0, upper_bound=0, step=1,
+        bound_symbol=Symbol.CONTEXT_LENGTH, bound_divisor=A13_BLOCK,
+        max_iterations=A13_MAX_ITER, key="loop.inner",
+    )
+    view_in, view_out = w.block_views(
+        loop_ids=[outer, inner],
+        strides=[A13_BLOCK * A13_ROW_ELEMENTS, A13_ROW_ELEMENTS],
+        extra=[
+            DynamicTerm.symbol(Symbol.GENERATION_INDEX, 1),
+            DynamicTerm.symbol(Symbol.BATCH, 1),
+        ],
+    )
+    op = w.block_operator(view_in, view_out, key="op.block")
+    b.open_loop(outer)
+    b.open_loop(inner)
+    b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
+    b.close_loop()
+    b.close_loop()
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.DECODE)
+    return Case(
+        name="a13_four_terms",
+        deployment=w.finish(),
+        symbols={
+            int(Symbol.SPAN_TOKENS): A13_BLOCK + 1,
+            int(Symbol.CONTEXT_LENGTH): A13_BLOCK + 2,
+            int(Symbol.GENERATION_INDEX): 2,
+            int(Symbol.BATCH): 1,
+        },
+        note=(
+            "four dynamic terms, the A4 maximum: two symbol-bounded block "
+            "loops folded by min() and two runtime symbols that move the "
+            "offset without bounding the extent"
+        ),
+    )
+
+
 def _predicate_program(cap: Capability, name: str, phase: Phase, entry: int,
                        symbols: dict[int, int], note: str) -> Case:
     w = Workspace(name, cap)
@@ -1241,11 +1293,9 @@ def case_loop_over_maximum(cap: Capability) -> Case:
         name="negative_loop_over_maximum",
         deployment=w.finish(),
         symbols={int(Symbol.CONTEXT_LENGTH): 9},
-        reference={"first_fault": 1},
         note=(
-            "runtime trip 9 exceeds the verified maximum 4: capability trap. "
-            "The golden model raises this trap without an instruction index; "
-            "the RTL reports the LOOP_SETUP that raised it"
+            "runtime trip 9 exceeds the verified maximum 4: capability trap, "
+            "reported by both against the LOOP_SETUP that raised it"
         ),
     )
 
@@ -1280,11 +1330,9 @@ def case_commit_without_prepare(cap: Capability) -> Case:
         deployment=w.finish(),
         symbols={int(Symbol.SPAN_TOKENS): 2},
         expect_admitted=False,
-        reference={"first_fault": 0},
         note=(
-            "state transaction trap: commit with no open prepare. The golden "
-            "model raises it without an instruction index; the RTL reports the "
-            "instruction that raised it"
+            "state transaction trap: commit with no open prepare, reported by "
+            "both against the instruction that raised it"
         ),
     )
 
@@ -1510,6 +1558,7 @@ def build(argv: list[str] | None = None) -> int:
         case_a13_symbol_term(capability),
         case_a13_constant_loop(capability),
         case_a13_nested_blocks(capability),
+        case_a13_four_terms(capability),
     ]
     positives = len(cases)
     cases.extend(negative_instruction_cases(capability))
