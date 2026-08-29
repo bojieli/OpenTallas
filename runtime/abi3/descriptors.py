@@ -26,6 +26,25 @@ Three amendments were made when the contract was frozen; each is recorded in
     scalars that loop bounds, predicates and dynamic terms may read.  ADR-003
     section 5.2 lists these by prose; the registry gives them stable numbers.
 
+One later amendment changes a payload, and it is recorded in section 12.5 of
+the same document:
+
+Amendment A14
+    ``COMMUNICATION`` gains ``participant_scope`` at payload offset 80, one
+    byte, taking :class:`~runtime.abi3.constants.ParticipantScope`; the reserved
+    span shrinks from 48 bytes at offset 80 to 47 at offset 81.  A collective's
+    member set was derived from ``node_count`` alone, so its participants were
+    always nodes.  A ``WAFER_LOGICAL_DEVICE`` declares one node -- that is what
+    "presented to the host as one device" means -- so every collective on a
+    wafer was a collective over one participant, which the LINK engine
+    correctly refuses as degenerate.  The TOPOLOGY descriptor already carried
+    ``reticle_count`` and ``tiles_per_reticle``; only the participant
+    derivation was node-only.  This is additive in the strict sense: reserved
+    bytes must be zero on both encode and decode, so every program written
+    before the amendment carries zero at offset 80 and therefore means
+    ``NODE`` -- the behaviour it already had.  No byte of any existing program
+    moves.
+
 Every payload is a whole number of 64-byte units so that the header rule
 "total size is a positive multiple of 64 bytes" holds by construction.
 """
@@ -364,7 +383,11 @@ COMMUNICATION_PAYLOAD = Layout(
         Field("counter_class_id", 68, 4),
         Field("participant_count", 72, 4),
         Field("chunk_bytes", 76, 4),
-        Field("reserved", 80, 48, "reserved"),
+        # Amendment A14 (wire format section 12.5).  Additive: the byte it
+        # occupies was reserved-zero, and zero is ``ParticipantScope.NODE``,
+        # which is the participant derivation every pre-A14 program had.
+        Field("participant_scope", 80, 1),
+        Field("reserved", 81, 47, "reserved"),
     ],
 )
 

@@ -334,6 +334,31 @@ class Scope(enum.IntEnum):
     SYSTEM = 8
 
 
+class ParticipantScope(enum.IntEnum):
+    """Amendment A14: what a collective's participants *are*.
+
+    Wire format section 12.5.  ``COMMUNICATION.participant_scope`` selects the
+    quantity of the admitted TOPOLOGY descriptor that counts the members of a
+    collective:
+
+    ==============  ==========================================
+    ``NODE``        ``node_count``
+    ``RETICLE``     ``reticle_count``
+    ``TILE``        ``reticle_count * tiles_per_reticle``
+    ==============  ==========================================
+
+    Zero is ``NODE``, which is the derivation every pre-A14 program already
+    had, so a program written before the amendment carries the amendment's
+    default in its reserved zero and means exactly what it meant before.  This
+    registry is distinct from :class:`Scope`, which names a *memory and event*
+    scope; a participant scope names the fabric a collective spans.
+    """
+
+    NODE = 0
+    RETICLE = 1
+    TILE = 2
+
+
 class Ordering(enum.IntEnum):
     NONE = 0
     ACQUIRE = 1

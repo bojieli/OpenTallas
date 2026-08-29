@@ -25,6 +25,7 @@ from .constants import (
     NO_ID,
     NO_NODE,
     Ordering,
+    ParticipantScope,
     Permission,
     ReductionOrder,
     RoundingMode,
@@ -435,6 +436,7 @@ class DeploymentBuilder:
         reduction_numeric_id: int = NO_ID,
         counter_class_id: int = NO_ID,
         participant_count: int = 2,
+        participant_scope: ParticipantScope = ParticipantScope.NODE,
         chunk_bytes: int = 4096,
         ordering: Ordering = Ordering.RELEASE,
         integrity_mode: IntegrityMode = IntegrityMode.CRC32C,
@@ -465,6 +467,9 @@ class DeploymentBuilder:
                 "reduction_numeric_id": reduction_numeric_id,
                 "counter_class_id": counter_class_id,
                 "participant_count": participant_count,
+                # Amendment A14.  The default is the pre-amendment behaviour:
+                # a collective's participants are the topology's nodes.
+                "participant_scope": int(participant_scope),
                 "chunk_bytes": chunk_bytes,
             },
             primary_object_id=local_object_id,

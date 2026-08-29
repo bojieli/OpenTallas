@@ -26,11 +26,15 @@ engine's job under its own numeric contract.
     buffer.  For MULTICAST, GATHER, SCATTER and COLLECTIVE it holds one slot per
     participant: participant ``k`` owns
     ``[remote_offset + k * byte_extent, + byte_extent)``.  Participants are
-    ordered by ascending node id (see :func:`_participants`), so slot order is a
-    property of the descriptor and the admitted topology, never of arrival
-    order.
+    ordered by ascending participant id (see :func:`_participants`), so slot
+    order is a property of the descriptor and the admitted topology, never of
+    arrival order.
 ``byte_extent``
     The **per-participant** slot size, never the whole-collective payload.
+``participant_scope``
+    What a participant *is*: a ``NODE``, a ``RETICLE`` or a ``TILE`` of the
+    admitted topology (amendment A14, wire format section 12.5).  Zero is
+    ``NODE``, which is what every program written before the amendment means.
 ``group_id``
     Selects the participant set out of the admitted TOPOLOGY descriptor.
 ``collective_op``
@@ -124,6 +128,7 @@ from runtime.abi3.constants import (
     Link,
     Major,
     Ordering,
+    ParticipantScope,
     Permission,
     TopologyClass,
     TrapClass,
@@ -206,24 +211,78 @@ def _topology(ctx: EngineContext) -> Mapping[str, int]:
     return ctx.table.get(ids[0], ExtendedDescriptorType.TOPOLOGY).payload
 
 
+def _member_count(topology: Mapping[str, int], scope: int) -> tuple[int, str]:
+    """How many participants ``scope`` names in the admitted topology.
+
+    Amendment A14 (wire format section 12.5).  Until A14 the member set was
+    derived from ``node_count`` alone, so a collective's participants were
+    always nodes.  That is right for a cluster and unusable for a wafer: a
+    ``WAFER_LOGICAL_DEVICE`` is presented to the host as one device -- that is
+    what the topology class *means* -- so it declares one node, and every
+    collective on it came out as a collective over a single participant, which
+    the engine correctly refuses as degenerate.
+
+    The descriptor already knew better than the engine did.  ``TOPOLOGY``
+    carries ``reticle_count`` and ``tiles_per_reticle`` beside ``node_count``;
+    only the participant derivation was node-only.  So::
+
+        NODE     -> node_count
+        RETICLE  -> reticle_count
+        TILE     -> reticle_count * tiles_per_reticle
+
+    A scope the admitted topology cannot support is refused here as well as at
+    admission, because an engine that trusted admission for this would be
+    trusting a field it can check itself.
+    """
+    try:
+        participant_scope = ParticipantScope(int(scope))
+    except ValueError:
+        raise EngineError(
+            f"communication declares participant scope {int(scope)}, which is "
+            "not in the frozen registry",
+            trap_class=int(TrapClass.DESCRIPTOR_OR_ADDRESS),
+        ) from None
+    reticles = int(topology["reticle_count"])
+    tiles = int(topology["tiles_per_reticle"])
+    if participant_scope is ParticipantScope.NODE:
+        return int(topology["node_count"]), "node"
+    if participant_scope is ParticipantScope.RETICLE:
+        _require(
+            reticles >= 1,
+            "communication is RETICLE-scoped; the admitted topology declares "
+            f"{reticles} reticles, so it has no reticle fabric to address",
+        )
+        return reticles, "reticle"
+    _require(
+        reticles >= 1 and tiles >= 1,
+        "communication is TILE-scoped; the admitted topology declares "
+        f"{reticles} reticles of {tiles} tiles, so it has no tile fabric to "
+        "address",
+    )
+    return reticles * tiles, "tile"
+
+
 def _participants(
     ctx: EngineContext, topology: Mapping[str, int], payload: Mapping[str, int]
 ) -> tuple[int, ...]:
-    """The admitted participant set, in ascending node order.
+    """The admitted participant set, in ascending participant order.
 
-    ``route_group_count`` partitions the ``node_count`` nodes of the admitted
-    topology into equal contiguous groups, and ``group_id`` selects one.  A
-    deployment that declares no route groups, or a communication that names no
-    group, addresses every node.  The set is derived and then *checked* against
+    ``participant_scope`` (amendment A14) says what a participant *is* -- a
+    node, a reticle or a tile -- and :func:`_member_count` counts them out of
+    the admitted topology.  ``route_group_count`` then partitions that set into
+    equal contiguous groups and ``group_id`` selects one, exactly as it
+    partitioned the node set before the amendment.  A deployment that declares
+    no route groups, or a communication that names no group, addresses every
+    participant.  The set is derived and then *checked* against
     ``participant_count``: a descriptor whose declared participant count does
     not match the topology it was admitted against is a fault, not a hint.
     """
-    nodes = int(topology["node_count"])
-    _require(nodes >= 1, f"the admitted topology declares {nodes} nodes")
+    count, unit = _member_count(topology, int(payload["participant_scope"]))
+    _require(count >= 1, f"the admitted topology declares {count} {unit}s")
     groups = int(topology["route_group_count"])
     group_id = int(payload["group_id"])
     if group_id == NO_ID or groups <= 1:
-        members = tuple(range(nodes))
+        members = tuple(range(count))
     else:
         _require(
             0 <= group_id < groups,
@@ -231,17 +290,17 @@ def _participants(
             f"declares {groups} route groups",
         )
         _require(
-            nodes % groups == 0,
-            f"the admitted topology partitions {nodes} nodes into {groups} route "
-            "groups, which is not an equal contiguous partition",
+            count % groups == 0,
+            f"the admitted topology partitions {count} {unit}s into {groups} "
+            "route groups, which is not an equal contiguous partition",
         )
-        size = nodes // groups
+        size = count // groups
         members = tuple(range(group_id * size, (group_id + 1) * size))
     declared = int(payload["participant_count"])
     _require(
         declared == len(members),
         f"communication declares {declared} participants; route group "
-        f"{group_id} of the admitted topology has {len(members)}",
+        f"{group_id} of the admitted topology has {len(members)} {unit}s",
     )
     return members
 

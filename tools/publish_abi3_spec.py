@@ -106,6 +106,9 @@ def build() -> dict[str, dict]:
             "trap_classes": enum_record(constants.TrapClass),
             "topology_classes": enum_record(constants.TopologyClass),
             "scopes": enum_record(constants.Scope),
+            # Amendment A14: what a collective's participants are.  Distinct
+            # from "scopes", which names a memory and event scope.
+            "participant_scopes": enum_record(constants.ParticipantScope),
             "ordering": enum_record(constants.Ordering),
             "features": enum_record(constants.Feature),
             "counter_groups": enum_record(constants.CounterGroup),
