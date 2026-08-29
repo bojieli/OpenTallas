@@ -11,6 +11,7 @@ once to IEEE binary32 under round-to-nearest-ties-to-even.
 from __future__ import annotations
 
 from collections.abc import Sequence
+from fractions import Fraction
 from typing import TypeAlias
 
 from .formats import (
@@ -18,6 +19,8 @@ from .formats import (
     binary32_balanced_sum,
     binary32_divide,
     binary32_multiply,
+    binary32_ordered_dot,
+    decode_bf16,
     decode_binary32,
 )
 
@@ -25,6 +28,8 @@ from .formats import (
 MODEL_SOURCE_SHA256 = (
     "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
 )
+ROUTER_SCORE_INPUT_FEATURES = 4096
+ROUTER_SCORE_EXPERTS = 256
 
 Binary32Row: TypeAlias = tuple[int, ...]
 Binary32Matrix: TypeAlias = tuple[Binary32Row, ...]
@@ -40,6 +45,81 @@ def _sequence(value: object, label: str) -> Sequence[object]:
     if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
         raise RoutingReferenceError(f"{label} must be a sequence")
     return value
+
+
+def _finite_bf16_matrix(
+    value: object,
+    label: str,
+    *,
+    expected_width: int | None = None,
+) -> tuple[tuple[Fraction, ...], ...]:
+    raw_rows = _sequence(value, label)
+    if not raw_rows:
+        raise RoutingReferenceError(f"{label} must contain at least one row")
+    width = expected_width
+    result: list[tuple[Fraction, ...]] = []
+    for row_index, raw_row in enumerate(raw_rows):
+        row = _sequence(raw_row, f"{label}[{row_index}]")
+        if width is None:
+            width = len(row)
+            if width == 0:
+                raise RoutingReferenceError(
+                    f"{label} rows must contain at least one value"
+                )
+        elif len(row) != width:
+            raise RoutingReferenceError(
+                f"{label} must be rectangular with width {width}"
+            )
+        decoded_row: list[Fraction] = []
+        for column, code in enumerate(row):
+            element_label = f"{label}[{row_index}][{column}]"
+            if (
+                isinstance(code, bool)
+                or not isinstance(code, int)
+                or not 0 <= code < 1 << 16
+            ):
+                raise RoutingReferenceError(
+                    f"{element_label} must be a 16-bit BF16 encoding"
+                )
+            decoded = decode_bf16(code)
+            if not decoded.finite or decoded.value is None:
+                raise RoutingReferenceError(f"{element_label} must be finite BF16")
+            decoded_row.append(decoded.value)
+        result.append(tuple(decoded_row))
+    return tuple(result)
+
+
+def router_score_bf16(
+    input_codes: Sequence[Sequence[int]],
+    weight_codes: Sequence[Sequence[int]],
+) -> Binary32Matrix:
+    """Project BF16 token rows against BF16 expert weights into binary32.
+
+    This models the pinned ``linear(x.float(), weight.float())`` gate boundary.
+    BF16 values widen exactly, exact products accumulate in increasing logical K
+    order, and every fused product-add rounds once to binary32. There is no bias
+    and no final BF16 conversion.
+    """
+
+    inputs = _finite_bf16_matrix(input_codes, "input_codes")
+    weights = _finite_bf16_matrix(
+        weight_codes,
+        "weight_codes",
+        expected_width=len(inputs[0]),
+    )
+    output: list[Binary32Row] = []
+    for input_index, input_row in enumerate(inputs):
+        output_row: list[int] = []
+        for expert_index, weight_row in enumerate(weights):
+            try:
+                output_row.append(binary32_ordered_dot(input_row, weight_row))
+            except NumericReferenceError as exc:
+                raise RoutingReferenceError(
+                    f"router-score arithmetic failed at input row {input_index}, "
+                    f"expert {expert_index}: {exc}"
+                ) from exc
+        output.append(tuple(output_row))
+    return tuple(output)
 
 
 def _nonnegative_binary32(value: object, label: str) -> int:
@@ -183,10 +263,13 @@ def normalize_routed_weight_codes(
 
 __all__ = [
     "MODEL_SOURCE_SHA256",
+    "ROUTER_SCORE_EXPERTS",
+    "ROUTER_SCORE_INPUT_FEATURES",
     "Binary32Matrix",
     "Binary32Row",
     "IndexMatrix",
     "IndexRow",
     "RoutingReferenceError",
     "normalize_routed_weight_codes",
+    "router_score_bf16",
 ]

@@ -117,8 +117,11 @@ from .selection import (
     stable_topk_binary32,
 )
 from .routing import (
+    ROUTER_SCORE_EXPERTS,
+    ROUTER_SCORE_INPUT_FEATURES,
     RoutingReferenceError,
     normalize_routed_weight_codes,
+    router_score_bf16,
 )
 from .quantization import (
     FP4_AMAX_FLOOR,
@@ -160,6 +163,8 @@ __all__ = [
     "INT64_MAX",
     "MODEL_SOURCE_SHA256",
     "ROUTED_REDUCTION_BLOCK",
+    "ROUTER_SCORE_EXPERTS",
+    "ROUTER_SCORE_INPUT_FEATURES",
     "DecodedValue",
     "DenseFP8LinearResult",
     "DispatchReferenceError",
@@ -253,6 +258,7 @@ __all__ = [
     "normalize_routed_weight_codes",
     "quantize_bf16_activation_block",
     "rms_norm_bf16",
+    "router_score_bf16",
     "stable_topk_bf16",
     "stable_topk_binary32",
     "target_hidden_capture_bf16",

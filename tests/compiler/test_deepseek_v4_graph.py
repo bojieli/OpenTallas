@@ -57,7 +57,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "8d98120a74ea6cb2b647d15e90e9275dafd0c1e473066a206cc8eca0ff1837ab"
+        "a687bd121cea28df833308fcc5d0c658be8b03d5f15356d15d55df2f8223f79e"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 43,
@@ -67,7 +67,7 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 1924,
-        "pending_reference_kind_count": 23,
+        "pending_reference_kind_count": 22,
         "pending_rtl_kind_count": 43,
         "pending_service_engine_kind_count": 43,
         "unknown_kind_count": 0,
@@ -149,6 +149,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "HEAD_RMS_NORM": "runtime.reference.normalization.head_rms_norm_bf16",
         "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
         "RMS_NORM": "runtime.reference.normalization.rms_norm_bf16",
+        "ROUTER_SCORE": "runtime.reference.routing.router_score_bf16",
         "ROUTER_WEIGHT_NORMALIZE": (
             "runtime.reference.routing.normalize_routed_weight_codes"
         ),
@@ -258,6 +259,32 @@ def test_index_head_bf16_linear_profile_and_numeric_contract_are_explicit(
         }
 
 
+def test_router_score_profile_and_binary32_numeric_contract_are_explicit(
+    graph_contract: dict,
+) -> None:
+    nodes = [
+        node for node in graph_contract["nodes"] if node["kind"] == "ROUTER_SCORE"
+    ]
+    assert len(nodes) == 46
+    for node in nodes:
+        assert node["attributes"] == {
+            "accumulation_order": "increasing_reduction_index",
+            "accumulation_rounding": "binary32_rne_each_fused_product_add",
+            "accumulator_dtype": "binary32",
+            "bias": "none",
+            "checkpoint_weight_dtype": "bf16",
+            "experts": 256,
+            "in_features": 4096,
+            "input_compute_dtype": "binary32_exact_bf16_widen",
+            "input_dtype": "bf16",
+            "intermediate_overflow": "poison",
+            "output_dtype": "binary32",
+            "product": "exact_bf16_product",
+            "subnormal_policy": "preserve",
+            "weight_compute_dtype": "binary32_exact_bf16_widen",
+        }
+
+
 def test_layer_classes_and_mutable_state_sites_are_explicit(
     graph_contract: dict,
 ) -> None:
@@ -354,7 +381,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
     assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert "twenty complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion" in (
+    assert "twenty-one complete matrix/vector/normalization/structural/index/lookup/selection/routing/conversion" in (
         issues["DSV4-SEM-005"]["issue"]
     )
     assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
@@ -374,7 +401,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     assert "atomic hash-locked canonical application" in " ".join(
         graph_contract["system_scope"]["covered"]
     )
-    assert "unit-qualified dense FP8 linear, index-head BF16 linear, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
+    assert "unit-qualified dense FP8 linear, index-head BF16 linear, binary32 router-score projection, weighted RMS normalization, unweighted BF16 head RMS normalization, KV FP8 QDQ, indexer FP4 QDQ" in (
         " ".join(graph_contract["system_scope"]["covered"])
     )
     assert "indexer Hadamard rotation" in " ".join(
@@ -441,7 +468,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "8d98120a74ea6cb2b647d15e90e9275dafd0c1e473066a206cc8eca0ff1837ab"
+        "a687bd121cea28df833308fcc5d0c658be8b03d5f15356d15d55df2f8223f79e"
     )
     assert "described 1924 nodes across 43 operator kinds" in result.stdout
     assert "blocked_pending_reference_and_service_engine" in result.stdout

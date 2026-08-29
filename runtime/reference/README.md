@@ -180,6 +180,15 @@ Zero denominators, negative scores, nonfinite values, malformed indices, and
 overflow fail closed. This fixes a deterministic accelerator tree rather than
 claiming that all PyTorch backends use one reduction order.
 
+The same module separately implements all 46 `ROUTER_SCORE` projections.
+Official headers confirm every router matrix is `[256, 4096]` BF16. The target
+widens BF16 hidden state and weights exactly, executes increasing-K binary32 RNE
+fused product-adds, and retains the binary32 result for the following score
+function. Full-shape, order-sensitive, randomized, malformed, subnormal, and
+overflow tests are retained. On a governed 64-output full-width corpus, native
+CPU and SM120 reassociation differed from the explicit target in 63 and 62
+outputs respectively, without a sign change and by at most 290 binary32 codes.
+
 `dispatch.py` implements `EXPERT_DISPATCH`. It applies the source's row-major
 batch/sequence flattening, emits only nonempty expert groups in ascending
 logical expert-ID order, and orders each group's assignments by flattened token

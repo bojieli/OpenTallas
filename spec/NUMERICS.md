@@ -329,6 +329,39 @@ difference retained sign and was at most six BF16 encoding steps. These bounded
 results motivate an explicit increasing-index target and do not promise native
 backend equivalence outside the governed corpus.
 
+### NUM-4.5 Binary32 router-score projection
+
+`ROUTER_SCORE` is the bias-free gate projection at all 43 main blocks and three
+DSpark blocks. The qualified graph therefore contains 46 sites, all with 4,096
+input columns and 256 expert outputs. Official checkpoint headers independently
+contain 46 corresponding `ffn.gate.weight` tensors, each `[256, 4096]` BF16.
+The pinned gate calls `linear(x.float(), self.weight.float())`: both architectural
+BF16 inputs widen exactly, and `F.linear` returns binary32 scores before the
+separate score-function operator.
+
+For each flattened token and logical expert, the target:
+
+1. accepts finite BF16 hidden-state and checkpoint-weight encodings;
+2. widens both values exactly and forms an exact product at each increasing K;
+3. adds each product to binary32 positive zero with one RNE rounding per fused
+   product-add; and
+4. returns the completed finite binary32 encoding without a BF16 conversion.
+
+There is no bias, activation quantization, scale, or output saturation. BF16 and
+binary32 subnormals are preserved, output zero is canonical positive, and
+nonfinite input or intermediate binary32 overflow poisons. The reference accepts
+general rectangular matrices for independent testing; the graph qualifies the
+source-observed 4,096-to-256 profile.
+
+As with NUM-4.4, native GEMM tiling is not architectural. A deterministic audit
+used seed `0x524f555445525343`, PyTorch 2.10.0+cu128, CUDA 12.8, and 16 input
+rows by four weight rows at K=4,096. Inputs sampled finite BF16 signs,
+significands, and biased exponents 117 through 134. Native CPU differed from the
+increasing-K target in 63 of 64 binary32 outputs, by at most 250 encoding steps;
+native SM120 differed in 62, by at most 290 steps. No sign changed. These results
+are expected reassociation effects after cancellation, not evidence for adopting
+either backend tree as the target.
+
 ## NUM-5 Exceptional values and errors
 
 ### NUM-5.1 Classification
