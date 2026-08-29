@@ -156,6 +156,157 @@ package ot_fp32_rne_pkg;
         end
     endfunction
 
+    // General finite binary32 addition for signed MATMUL accumulators.  The
+    // larger-magnitude operand supplies the result sign for subtraction;
+    // exact cancellation and every signed-zero combination canonicalize to
+    // positive zero.  Three explicit rounding bits plus a jammed sticky bit
+    // retain the information required by round-to-nearest, ties-to-even.
+    function automatic [33:0] fp32_add_rne;
+        input [31:0] left_code;
+        input [31:0] right_code;
+        reg [1:0] error;
+        reg [31:0] result;
+        reg left_sign;
+        reg right_sign;
+        reg result_sign;
+        reg [7:0] left_field;
+        reg [7:0] right_field;
+        reg [7:0] left_exponent;
+        reg [7:0] right_exponent;
+        reg [7:0] large_exponent;
+        reg [7:0] small_exponent;
+        reg [23:0] left_mantissa;
+        reg [23:0] right_mantissa;
+        reg [23:0] large_mantissa;
+        reg [23:0] small_mantissa;
+        reg [27:0] large_extended;
+        reg [27:0] small_extended;
+        reg [27:0] arithmetic_extended;
+        reg [26:0] normalized;
+        reg [24:0] rounded_mantissa;
+        reg round_increment;
+        integer distance;
+        integer shift_count;
+        begin
+            error = FP_ERR_NONE;
+            result = 0;
+            left_sign = left_code[31];
+            right_sign = right_code[31];
+            result_sign = left_sign;
+            left_field = left_code[30:23];
+            right_field = right_code[30:23];
+            left_exponent = left_field == 0 ? 8'd1 : left_field;
+            right_exponent = right_field == 0 ? 8'd1 : right_field;
+            left_mantissa = left_field == 0
+                            ? {1'b0, left_code[22:0]}
+                            : {1'b1, left_code[22:0]};
+            right_mantissa = right_field == 0
+                             ? {1'b0, right_code[22:0]}
+                             : {1'b1, right_code[22:0]};
+            large_exponent = left_exponent;
+            small_exponent = right_exponent;
+            large_mantissa = left_mantissa;
+            small_mantissa = right_mantissa;
+            large_extended = 0;
+            small_extended = 0;
+            arithmetic_extended = 0;
+            normalized = 0;
+            rounded_mantissa = 0;
+            round_increment = 0;
+            distance = 0;
+            shift_count = 0;
+
+            if (left_field == 8'hff || right_field == 8'hff) begin
+                error = FP_ERR_NONFINITE;
+            end else if (left_mantissa == 0) begin
+                result = right_mantissa == 0 ? 32'b0 : right_code;
+            end else if (right_mantissa == 0) begin
+                result = left_code;
+            end else begin
+                if ((right_exponent > left_exponent) ||
+                    ((right_exponent == left_exponent) &&
+                     (right_mantissa > left_mantissa))) begin
+                    large_exponent = right_exponent;
+                    small_exponent = left_exponent;
+                    large_mantissa = right_mantissa;
+                    small_mantissa = left_mantissa;
+                    result_sign = right_sign;
+                end
+                distance = {24'b0, large_exponent};
+                distance = distance - {24'b0, small_exponent};
+                large_extended = {1'b0, large_mantissa, 3'b000};
+                small_extended = shift_right_jam_28(
+                    {1'b0, small_mantissa, 3'b000}, distance
+                );
+
+                if (left_sign == right_sign) begin
+                    arithmetic_extended = large_extended + small_extended;
+                    normalized = arithmetic_extended[26:0];
+                    if (arithmetic_extended[27]) begin
+                        normalized = arithmetic_extended[27:1];
+                        normalized[0] = normalized[0] |
+                                        arithmetic_extended[0];
+                        large_exponent = large_exponent + 1'b1;
+                    end
+                end else begin
+                    arithmetic_extended = large_extended - small_extended;
+                    if (arithmetic_extended == 0) begin
+                        result = 0;
+                    end else begin
+                        // Equal-exponent cancellation is exact before this
+                        // normalization; exponent-separated subtraction uses
+                        // the jam bit to preserve the final rounding decision.
+                        for (shift_count = 0; shift_count < 27;
+                             shift_count = shift_count + 1) begin
+                            if (!arithmetic_extended[26] &&
+                                (large_exponent > 1)) begin
+                                arithmetic_extended =
+                                    arithmetic_extended << 1;
+                                large_exponent = large_exponent - 1'b1;
+                            end
+                        end
+                        normalized = arithmetic_extended[26:0];
+                    end
+                end
+
+                if (arithmetic_extended != 0) begin
+                    if (large_exponent >= 8'hff) begin
+                        error = FP_ERR_OVERFLOW;
+                    end else begin
+                        rounded_mantissa = {1'b0, normalized[26:3]};
+                        round_increment = normalized[2] &&
+                                          ((|normalized[1:0]) ||
+                                           normalized[3]);
+                        if (round_increment)
+                            rounded_mantissa = rounded_mantissa + 1'b1;
+                        if (rounded_mantissa[24]) begin
+                            rounded_mantissa = rounded_mantissa >> 1;
+                            large_exponent = large_exponent + 1'b1;
+                        end
+                        if (large_exponent >= 8'hff) begin
+                            error = FP_ERR_OVERFLOW;
+                            result = 0;
+                        end else if ((large_exponent == 1) &&
+                                     !rounded_mantissa[23]) begin
+                            result = {
+                                result_sign, 8'b0,
+                                rounded_mantissa[22:0]
+                            };
+                        end else begin
+                            result = {
+                                result_sign, large_exponent,
+                                rounded_mantissa[22:0]
+                            };
+                        end
+                        if (result[30:0] == 0)
+                            result = 0;
+                    end
+                end
+            end
+            fp32_add_rne = {error, result};
+        end
+    endfunction
+
     function automatic [33:0] fp32_mul_rne;
         input [31:0] left_code;
         input [31:0] right_code;

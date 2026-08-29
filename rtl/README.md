@@ -13,7 +13,7 @@ compression, package, power-delivery, or thermal macros.
 | stage integration | `ot_stage_top.sv`, `ot_stage_controller.sv`, `ot_tile.sv` |
 | command/session/control | `ot_cmd_frontend.sv`, `ot_session_table.sv`, `ot_schedule_controller.sv`, `ot_credit_manager.sv`, `ot_csr_block.sv` |
 | data and numeric path | `ot_route_mask.sv`, `ot_rom_wrapper.sv`, `via_mask_rom.sv`, `ot_format_decode.sv`, `ot_numeric_dot.sv`, `ot_reduction_tree.sv` |
-| bounded tensor-accelerator path | `ot_ta_command_decoder.sv`, `ot_ta_dma_hbm_to_sram.sv`, `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv`, `ot_ta_add_bf16_sram_engine.sv`, `ot_ta_dma_add_sequencer.sv`, `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_rmsnorm_sequencer.sv` |
+| bounded tensor-accelerator path | `ot_ta_command_decoder.sv`, `ot_ta_dma_hbm_to_sram.sv`, `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv`, `ot_ta_add_bf16_sram_engine.sv`, `ot_ta_dma_add_sequencer.sv`, `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_rmsnorm_sequencer.sv`, `ot_ta_matmul_bf16_sram_engine.sv`, `ot_ta_dma_matmul_sequencer.sv` |
 | HBM and stage protocol | `ot_hbm_frontend.sv`, `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` |
 | RAS, power, and test | `ot_ras_controller.sv`, `ot_power_reset_controller.sv`, `ot_bist_controller.sv`, `ot_dft_controller.sv` |
 | CDC/protocol primitives | `lib/ot_reset_sync.sv`, `lib/ot_skid_buffer.sv`, `lib/ot_async_fifo.sv`, `lib/ot_cdc_mailbox.sv`, `lib/ot_sync_level.sv`, `lib/ot_sync_bits.sv`, and CRC helpers |
@@ -28,6 +28,14 @@ executes adjacent authentic Qwen commands 1 and 2 and completes graph operation
 `node.0001`, but uses behavioral HBM/SRAM and a preloaded `hidden.0` input. It
 does not establish memory-macro, timing, power, complete-layer, or silicon
 qualification.
+
+The DMA/MATMUL campaign separately executes authentic commands 3 and 4: it
+stages the first 32,768-byte `q_proj` weight tile and produces the first 64 raw
+FP32 accumulators from 256 values of the retained command-2 output. Command 4 is
+complete, but it is only the first of 1,024 DMA/MATMUL tile pairs in
+`node.0002`; it is not a complete Q projection and, because `MATMUL_FINAL` is
+clear, it performs no BF16 auxiliary write. Its HBM and SRAM are also
+behavioral interfaces.
 
 ## Fault and containment benches
 
