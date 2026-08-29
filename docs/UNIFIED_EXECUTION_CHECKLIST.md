@@ -402,6 +402,24 @@
   | 1,000 | 726 s | ~24 min |
   | 8,000 | 12.9 h | **~26 h** |
 
+  *Two corrections to that table, both from doing the work.* The `T²/2` is
+  optimistic: prefill runs as a **single** span-8000 transaction with
+  `context = 8000`, so every token contracts the full context and the cost is
+  `T²`. The real 8K prefill was about 21.5 h of attention. **Fixed:** the engine
+  now contracts a block of query rows per call rather than one (token, head)
+  pair, with key and value blocks hoisted per KV head, and the BF16 kernel picks
+  a K-major schedule for large tiles. Measured 8.5–10.3× on prefill and 2.0–2.2×
+  on decode, which is memory-bound and has little to batch. The 8K prefill is now
+  ~2.55 h.
+
+  The arithmetic did not move, and that was checked rather than argued: 168
+  engine comparisons against the pristine pre-change modules, bit-identical on
+  raw `uint16` codes with every counter equal, plus 916 kernel comparisons, an
+  adversarial operand pool of signed zeros and subnormals, and mutation testing
+  that catches a reversed reduction, a `np.tile`-for-`np.repeat` mask swap and a
+  transposed write-back. Both differentials refuse to report a pass at zero
+  comparisons.
+
   `TA-QW-8K-1` ran for 43 minutes and was still in prefill softmax. It and
   `TA-QW-STRESS-1`, which has the same 8,000-token prompt, were stopped rather
   than left to run for a day and a half each. **This is an implementation
