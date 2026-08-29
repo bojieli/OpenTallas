@@ -1,7 +1,8 @@
 # DeepSeek V4 compressor reference evidence
 
 **Evidence status:** operator-level target semantics, exact released APE payload,
-and bounded unmodified-method differential
+bounded unmodified-method differential, and one generated full-width
+post-projection transactional executable slice
 
 **Official source:** `deepseek-ai/DeepSeek-V4-Flash-0731` revision
 `7872f01b1d1fe23eabc4c98b48bffcef5a386062`
@@ -138,6 +139,88 @@ The deterministic report is
 `results/model-execution/deepseek-v4-compressor-audit.json`, SHA-256
 `d14c2b33d9cfc105af9ba3dc18c4ac3b749a203bd0a6b0d3f1d8592315651324`.
 
+## Generated post-projection executable slice
+
+The first stateful artifact-driven slice packages the complete official layer-2
+main-compressor APE and executes this declared boundary:
+
+```text
+caller-supplied finite FP32 wkv/wgate projection results
+  -> causal ratio-four raw-state prepare/update
+  -> conditional deterministic FP32 pool
+  -> conditional FP32-to-BF16 conversion
+  -> transactional compressed-cache harness commit
+  -> session-bound valid-prefix view
+  -> atomic immutable successor-state/result publication
+```
+
+The deployment is generated, content-addressed, independently checked without
+importing its builder, and consumed as artifacts by the service engine. Its six
+fixed semantic micro-ops have an independently reconstructed logical schedule
+and certificate. A schedule slot records only causality and order; it is not a
+cycle or physical pipeline stage.
+
+| Record | Identity or result |
+|---|---|
+| Complete canonical checkpoint application | `0f0f5177460c599059c971cbfd43e4299d6537f0cedb6055a83b77ecb52e16cb` |
+| Independent canonical verification | `b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28` |
+| Packaged tensor | `layers.2.attn.compressor.ape`, F32 `[4,1024]`, 16,384 bytes |
+| Packaged APE SHA-256 | `f93afef4a88371262663f89f026a48b79f7187bd9d6498742c1db2860ae73554` |
+| Deployment build | `74d36b1814c6279974ce30288df0862fffec828a6af3d57b5405b5ee8b467b63` |
+| Program SHA-256 | `7fba505367f95ce4c39155678fe299999e13445813781c8b0e45ba1e6525a1fc` |
+| Logical schedule SHA-256 | `5fe1e1e91b87458ef7c19a08b7248d6fb2a5b6f29afd084c682a7c1568e364b2` |
+| Known-answer record SHA-256 | `89920f941c0a2938fef9cfe15254bf2ce58341a8712a0a6ce5173b7cfdcdb80c` |
+| Initial state ID | `4af26c08a44ab99361023a8e64b6bbd24432d4ebc9c7bf2e5bfc59a6005f388c` |
+| Request ID | `0f2c322bc763d3561336d371af8112b65e4c2f117e2a18537b74a58d82249165` |
+| Transition ID | `9ecfce7cda6032b23d49a0d74a20c6823230371da31bc826a2bd9373a07de42f` |
+| Successor state ID | `077c6d5a97f55b79b69663bb22055c89c7532abbcdb75a08ac7c6a23f3d5825b` |
+| Machine-readable report SHA-256 | `69c585d6a048604cd0a69e2bc1c2e99927aa25023f2a9526e5c04f224a36cc51` |
+
+The known answer uses one active lane and four official-width projected rows.
+Each score code is the bitwise sign-negation of the packaged APE, so every
+post-addition finite score is exact positive zero. The four current KV halves
+are exact binary32 constants 1, 2, 3, and 4. The eight-lane overlap group
+therefore contains four excluded padding rows and four equally weighted finite
+rows, producing all 512 outputs as exact binary32 `2.5` (`0x40200000`). The
+conversion and valid view contain all 512 values as exact BF16 `2.5`
+(`0x4020`).
+
+| Output | Bytes | SHA-256 |
+|---|---:|---|
+| Pooled F32 `[1,1,512]` | 2,048 | `82e6cd231578fb0cf94081d02aea9c4532abcf21233eb80887ac2f041d12c019` |
+| Converted BF16 `[1,1,512]` | 1,024 | `da38a9ffc905c62b3f92ca9d3addabd2616e113c9a19434633651cc9820d09c7` |
+| Valid-prefix BF16 `[1,1,1,512]` | 1,024 | `da38a9ffc905c62b3f92ca9d3addabd2616e113c9a19434633651cc9820d09c7` |
+
+The exact logical accounting includes 8,192 APE reads/additions at the raw
+prepare boundary, 4,096 KV and 4,096 score pool operands, 2,048 finite
+exponentials, 512 pooled F32 writes, 512 BF16 conversions, one 512-value
+compressed-cache row write, and one 512-value valid-prefix row read. The
+governed JSON retains every reference counter rather than only these selected
+figures.
+
+State authority is entirely artifact-based. Every version hashes the raw
+payload, compressed payload, session IDs, active flags, cursors, valid-prefix
+lengths, versions, prior-state ID, and transition ID. A fresh engine can resume
+from the published successor without hidden process state. Downstream poison,
+replay, skipped position, stale session identity, retired-lane reactivation,
+payload mutation, and create-once collisions fail without mutating the supplied
+prior state or publishing a partial result. The whole successor state and
+result share one atomic create-once tree.
+
+Two boundaries must not be elided:
+
+- learned `wkv` and `wgate` projections are request inputs, so this is not a
+  checkpoint-derived activation or complete compressor invocation; and
+- the service commits the immediate BF16 conversion as a **transactional
+  harness payload**. Official compressor RMS normalization, rotary embedding,
+  and activation QDQ between conversion and attention-cache write are not in
+  this slice. Its output must not be represented as the final official
+  attention KV value.
+
+The machine-readable record is
+`results/model-execution/deepseek-v4-compressor-executable.json`. It contains no
+time measurement or inferred performance field.
+
 ## Logical traffic boundary
 
 The references count source projection values, APE values and additions, raw
@@ -171,18 +254,37 @@ The driver rejects source, index, tensor-profile, payload, environment,
 differential, or report-hash drift. The expected output-file SHA-256 is
 `d14c2b33d9cfc105af9ba3dc18c4ac3b749a203bd0a6b0d3f1d8592315651324`.
 
+The generated executable slice has a separate offline reproduction path from
+the complete canonical application:
+
+```bash
+python tools/audit_deepseek_v4_compressor_executable.py \
+  --ape /home/ubuntu/.cache/opentallas/deepseek-v4-flash-0731/canonical-mp4/ranks/rank-000/layers.2.attn.compressor.ape.bin \
+  --output /tmp/deepseek-v4-compressor-executable.json
+```
+
+It rejects APE, deployment, program, schedule, known-answer, output, state-chain,
+counter, or final-report drift. Its expected report SHA-256 is
+`69c585d6a048604cd0a69e2bc1c2e99927aa25023f2a9526e5c04f224a36cc51`.
+Ordinary CI builds a full-size synthetic APE through the same package, checker,
+state, request, service, and result path. The real-cache test is an optional
+gate and becomes active only when the official canonical payload is present.
+
 ## Claim boundary
 
 The independent references establish deterministic compressor target semantics,
 immutable causal raw-state and compressed-cache contracts, and stale-capacity
 exclusion. The official-method audit separately establishes exact official APE
 identity and range plus bounded ratio-four prefill pool/BF16 behavior under one
-declared development stack. It does not extend that differential evidence to
-the state/cache transactions, and it does not establish:
+declared development stack. The generated service slice establishes artifact-only
+execution of its explicitly narrower post-projection transactional harness. It
+does not extend the official-method differential to state/cache transactions,
+and it does not establish:
 
 - checkpoint-derived compressor projection activations or a complete layer;
-- session-controller or service-engine execution of the transactions;
-- generated microcode, a certified schedule, or RTL conformance;
+- official RMSNorm, RoPE, QDQ, or final attention-cache values in the executable
+  slice;
+- a physical certified schedule or RTL conformance;
 - cycles, physical bandwidth, storage placement, energy, area, or PPA;
 - complete-model prefill/decode correctness; or
 - OpenTallas throughput or superiority over any GPU.
