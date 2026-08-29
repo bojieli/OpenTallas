@@ -25,14 +25,26 @@
 //     remaining = symbol_value - iteration * bound_divisor
 //     dim0      = remaining if 0 < remaining < dim0 else dim0
 //
-// with two refinements the reference resolver applies and the prose summary
-// leaves implicit, both transcribed here:
+// with three refinements the reference resolver applies and the prose summary
+// leaves implicit, all transcribed here:
 //
+//   * the clamp reaches only a term that walks the *leading* axis, and which
+//     terms those are is derived rather than assumed: one iteration advances
+//     by one whole block of leading rows, so the term's stride is
+//     ``stride0 * bound_divisor`` (ViewResolver._indexes_leading_axis).  A view
+//     may perfectly well be indexed by a loop along some other axis -- the mHC
+//     branch reduction's leading axis is four hyper-connection streams while
+//     its loop steps over tokens -- and clamping that view would present four
+//     streams as one, which is not a partial final iteration of anything.
 //   * _remaining_rows treats a loop as partial only while
 //     0 < remaining < bound_divisor.  A remaining count at or above the block
 //     size is a full iteration and contributes no bound at all.
 //   * when more than one term indexes the view through a symbol-bounded loop,
 //     the smallest remaining count wins (``min(current, remaining)``).
+//
+// The leading-axis test is a property of one term and one loop, so it is
+// evaluated per term against that term's own stride and that loop's own
+// divisor: one view may carry a term that clamps and a term that does not.
 //
 // A loop that is not symbol-bounded, or whose bound symbol this request did not
 // bind, contributes no partial extent: its iterations are all full by
@@ -49,9 +61,12 @@
 //
 // One 32x32 product is unavoidable -- ``selector_value * element_stride`` is
 // the A4 term itself -- so a single multiplier is shared between the offset
-// term and the A13 ``iteration * bound_divisor`` product, evaluated in
-// successive cycles.  The block therefore has a bounded, data-independent cost
-// and no wide arithmetic in the caller's control path.
+// term, the A13 leading-axis test ``stride0 * bound_divisor`` and the A13
+// ``iteration * bound_divisor`` product, evaluated in successive cycles.  All
+// three are compared and accumulated at 64 bits, so a product that does not fit
+// in 32 fails the leading-axis test rather than wrapping into passing it.  The
+// block therefore has a bounded, data-independent cost and no wide arithmetic
+// in the caller's control path.
 // ---------------------------------------------------------------------------
 module ot_a3_view_resolver
     import ot_a3_pkg::*;
@@ -102,6 +117,9 @@ module ot_a3_view_resolver
     wire [7:0]  view_terms      = payload[31:24];
     wire [63:0] view_offset     = payload[191:128];
     wire [31:0] view_dim0       = payload[223:192];
+    // stride0 lives at payload offset 48 (Field("stride{i}", 48 + 4*i, 4)).
+    // A13's leading-axis test is stated in terms of it.
+    wire [31:0] view_stride0    = payload[415:384];
 
     assign out_rank       = view_rank;
     assign out_dtype      = view_dtype;
@@ -139,16 +157,17 @@ module ot_a3_view_resolver
         endcase
     end
 
-    localparam [2:0] S_IDLE    = 3'd0;
-    localparam [2:0] S_SELECT  = 3'd1;
-    localparam [2:0] S_READ    = 3'd2;
-    localparam [2:0] S_OFFSET  = 3'd3;
-    localparam [2:0] S_BLOCK   = 3'd4;
-    localparam [2:0] S_REMAIN  = 3'd5;
-    localparam [2:0] S_FOLD    = 3'd6;
-    localparam [2:0] S_FINISH  = 3'd7;
+    localparam [3:0] S_IDLE    = 4'd0;
+    localparam [3:0] S_SELECT  = 4'd1;
+    localparam [3:0] S_READ    = 4'd2;
+    localparam [3:0] S_OFFSET  = 4'd3;
+    localparam [3:0] S_BLOCK   = 4'd4;
+    localparam [3:0] S_AXIS    = 4'd5;
+    localparam [3:0] S_REMAIN  = 4'd6;
+    localparam [3:0] S_FOLD    = 4'd7;
+    localparam [3:0] S_FINISH  = 4'd8;
 
-    reg [2:0]  state;
+    reg [3:0]  state;
     reg [31:0] value;            // the selector's resolved value
     reg        value_is_loop;
     reg        loop_symbolic;
@@ -171,6 +190,13 @@ module ot_a3_view_resolver
     wire signed [64:0] divisor_s = $signed({33'd0, loop_divisor});
     wire remaining_partial = (remaining_s > 65'sd0) && (remaining_s < divisor_s);
     wire [31:0] remaining_rows = remaining_s[31:0];
+
+    // _indexes_leading_axis: this term walks the leading axis exactly when one
+    // iteration advances by one whole block of it.  ``product_w`` holds
+    // ``stride0 * bound_divisor`` while the walk is in S_AXIS; the comparison
+    // is 64 bits wide on both sides so a product too large for a 32-bit stride
+    // is unequal rather than truncated into equality.
+    wire indexes_leading_axis = (product_w == {32'd0, term_stride});
 
     task fail_closed;
         input [15:0] class_value;
@@ -277,6 +303,25 @@ module ot_a3_view_resolver
                     S_BLOCK: begin
                         out_element_offset <= out_element_offset + product;
                         if (value_is_loop && loop_symbolic) begin
+                            // Ask the leading-axis question first: this term
+                            // bounds the leading extent only if it walks that
+                            // axis, and the arithmetic answers it.
+                            mul_a <= view_stride0;
+                            mul_b <= loop_divisor;
+                            state <= S_AXIS;
+                        end else begin
+                            slot <= slot + 3'd1;
+                            state <= S_SELECT;
+                        end
+                    end
+                    S_AXIS: begin
+                        // product_w is stride0 * bound_divisor this cycle, and
+                        // term_stride is still this term's own stride: the
+                        // slot counter has not advanced.  A term along any
+                        // other axis is not a partial final iteration of the
+                        // leading one, so it contributes no bound and the walk
+                        // moves on without touching ``remain``.
+                        if (indexes_leading_axis) begin
                             mul_a <= value;
                             mul_b <= loop_divisor;
                             state <= S_REMAIN;

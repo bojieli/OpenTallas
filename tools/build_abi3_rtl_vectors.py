@@ -635,7 +635,20 @@ def case_zero_trip(cap: Capability) -> Case:
 # SPAN_TOKENS is N, so the loop runs ceil(N/T) times and the last iteration
 # holds N - T*floor(N/T) rows.  ``A13_MAX_ITER`` bounds the object the verifier
 # has to prove in range.
+#
+# A13 applies to a term only when that term walks the view's *leading* axis, and
+# section 12.4 derives which terms those are rather than assuming it: one
+# iteration advances by one whole block of leading rows, so
+# ``term_stride == stride0 * bound_divisor``.  Every view built here that means
+# to be clamped therefore states its loop's stride as
+# ``bound_divisor * A13_ROW_ELEMENTS``, which is exactly ``stride0 * divisor``
+# for a row-major ``[rows, A13_ROW_ELEMENTS]`` view.  ``A13_WIDE_BLOCK`` gives a
+# second, different block so that a view indexed by two block loops must
+# evaluate the condition against each loop's own divisor rather than one of
+# them twice.  ``case_a13_non_leading_axis`` and ``case_a13_mixed_axes`` are the
+# other side of the same rule.
 A13_BLOCK = 4
+A13_WIDE_BLOCK = 2 * A13_BLOCK
 A13_MAX_ITER = 4
 A13_ROW_ELEMENTS = COLS
 
@@ -869,7 +882,26 @@ def case_a13_constant_loop(cap: Capability) -> Case:
 
 
 def case_a13_nested_blocks(cap: Capability) -> Case:
-    """Two symbol-bounded block loops index one view: the smaller bound wins."""
+    """Two symbol-bounded block loops index one view: the smaller bound wins.
+
+    Both loops have to *walk the leading axis* for the fold to be reachable at
+    all, and section 12.4 makes that a property of the arithmetic: a term walks
+    the leading axis exactly when one iteration advances by one whole block of
+    it, ``term_stride == stride0 * bound_divisor``.  The two loops here use
+    different blocks -- ``A13_BLOCK`` over SPAN_TOKENS and ``A13_WIDE_BLOCK``
+    over CONTEXT_LENGTH -- and each states the stride its own block implies, so
+    the condition has to be evaluated against each loop's own divisor: reusing
+    one loop's divisor for both terms admits one of them wrongly.
+
+    The case was written with the inner loop stepping a single row, which under
+    the assumed rule still folded because *any* loop-induction term folded.
+    Under the derived rule that stride walks the second axis, not the leading
+    one, so the inner loop stopped contributing and the fold stopped happening:
+    the case no longer tested what it was written to test.  The repair is the
+    inner loop's block and stride, not the expectation -- the extents below are
+    the ones the reference resolver produced before the refinement and produces
+    again after it.
+    """
     w = BlockWorkspace("a3-a13-nested", cap)
     b = w.builder
     outer = b.loop_control(
@@ -879,12 +911,15 @@ def case_a13_nested_blocks(cap: Capability) -> Case:
     )
     inner = b.loop_control(
         lower_bound=0, upper_bound=0, step=1,
-        bound_symbol=Symbol.CONTEXT_LENGTH, bound_divisor=A13_BLOCK,
+        bound_symbol=Symbol.CONTEXT_LENGTH, bound_divisor=A13_WIDE_BLOCK,
         max_iterations=A13_MAX_ITER, key="loop.inner",
     )
     view_in, view_out = w.block_views(
         loop_ids=[outer, inner],
-        strides=[A13_BLOCK * A13_ROW_ELEMENTS, A13_ROW_ELEMENTS],
+        strides=[
+            A13_BLOCK * A13_ROW_ELEMENTS,
+            A13_WIDE_BLOCK * A13_ROW_ELEMENTS,
+        ],
     )
     op = w.block_operator(view_in, view_out, key="op.block")
     b.open_loop(outer)
@@ -899,12 +934,15 @@ def case_a13_nested_blocks(cap: Capability) -> Case:
         deployment=w.finish(),
         symbols={
             int(Symbol.SPAN_TOKENS): 2 * A13_BLOCK + 1,
-            int(Symbol.CONTEXT_LENGTH): A13_BLOCK + 2,
+            int(Symbol.CONTEXT_LENGTH): A13_WIDE_BLOCK + 2,
         },
         note=(
-            "two symbol-bounded loops index one view: _remaining_rows folds "
-            "them with min(), so the outer loop's last iteration (one row) wins "
-            "over the inner loop's (two rows)"
+            "two symbol-bounded loops walk one view's leading axis with "
+            "different blocks -- 4 rows over SPAN_TOKENS = 9, 8 rows over "
+            "CONTEXT_LENGTH = 10 -- so each term satisfies "
+            "term_stride = stride0 * bound_divisor for its own divisor.  "
+            "_remaining_rows folds them with min(): the outer loop's last "
+            "iteration (one row) wins over the inner loop's (two rows)"
         ),
     )
 
@@ -915,6 +953,14 @@ def case_a13_four_terms(cap: Capability) -> Case:
     MAX_DYNAMIC_TERMS is the boundary where a term walk that counts to the term
     count inclusive can wrap back onto term zero, so it is worth a vector of
     its own rather than being left to the two- and one-term cases.
+
+    Both block loops state the stride their block implies -- one whole block of
+    leading rows, ``stride0 * bound_divisor`` -- so both walk the leading axis
+    and both fold, which is what this case says it exercises.  The inner loop
+    previously stepped a single row and folded only because the assumed rule
+    folded every loop-induction term; under the derived rule of section 12.4
+    that is a walk along the second axis and it would silently stop
+    contributing.
     """
     w = BlockWorkspace("a3-a13-four-terms", cap)
     b = w.builder
@@ -930,7 +976,10 @@ def case_a13_four_terms(cap: Capability) -> Case:
     )
     view_in, view_out = w.block_views(
         loop_ids=[outer, inner],
-        strides=[A13_BLOCK * A13_ROW_ELEMENTS, A13_ROW_ELEMENTS],
+        strides=[
+            A13_BLOCK * A13_ROW_ELEMENTS,
+            A13_BLOCK * A13_ROW_ELEMENTS,
+        ],
         extra=[
             DynamicTerm.symbol(Symbol.GENERATION_INDEX, 1),
             DynamicTerm.symbol(Symbol.BATCH, 1),
@@ -955,8 +1004,213 @@ def case_a13_four_terms(cap: Capability) -> Case:
         },
         note=(
             "four dynamic terms, the A4 maximum: two symbol-bounded block "
-            "loops folded by min() and two runtime symbols that move the "
-            "offset without bounding the extent"
+            "loops that both walk the leading axis and are folded by min(), "
+            "and two runtime symbols that move the offset without bounding "
+            "the extent"
+        ),
+    )
+
+
+# ---------------------------------------------------------------------------
+# A13 and the axis a loop actually walks
+# ---------------------------------------------------------------------------
+# The other side of section 12.4's derived condition.  A13 clamps the leading
+# extent because a block loop's final iteration holds fewer rows than the
+# block; that is only a statement about the leading axis, and a view may
+# perfectly well be indexed by a loop along some other one.  The DeepSeek mHC
+# branch reduction is the shape that forced this to be derived rather than
+# assumed: its leading axis is the four hyper-connection streams while its loop
+# steps over tokens, so its term stride is one token block's rows rather than
+# one whole block of the leading axis.  Clamping it would present four streams
+# as one, and the admission rule -- which refuses dim0 > bound_divisor for a
+# clamped term -- would have refused the deployment outright.
+MHC_STREAMS = 4
+MHC_TOKEN_BLOCK = 2
+MHC_TOKENS = A13_MAX_ITER * MHC_TOKEN_BLOCK
+MHC_STREAM_PLANE = MHC_TOKENS * A13_ROW_ELEMENTS
+
+
+def case_a13_non_leading_axis(cap: Capability) -> Case:
+    """A block loop over an axis that is not the view's leading one.
+
+    The view is ``[4 streams, 2 tokens, 16 elements]`` over a buffer laid out
+    stream-major, so ``stride0`` is one stream's whole token plane.  The loop
+    blocks the *token* axis by ``MHC_TOKEN_BLOCK``, so its term stride is one
+    token block's rows -- ``MHC_TOKEN_BLOCK * A13_ROW_ELEMENTS``, far short of
+    ``stride0 * bound_divisor``.  The term therefore does not walk the leading
+    axis and A13 does not reach it: the resolved leading extent stays at four
+    streams on every iteration, including the final partial one, where
+    SPAN_TOKENS = 7 over a block of 2 leaves one token.
+
+    The case pins both halves of the refinement at once, because its leading
+    extent of 4 exceeds its block of 2.  Under the assumed rule the admission
+    check would have refused this deployment -- a leading extent above the
+    block -- and the resolver would have clamped four streams down to one.
+    Under the derived rule the deployment is admitted and nothing is clamped,
+    which is the framing the operator actually needs.
+    """
+    w = BlockWorkspace("a3-a13-mhc", cap)
+    b = w.builder
+    buffer_elements = MHC_STREAMS * MHC_STREAM_PLANE
+    size = buffer_elements * 2 * 2  # an input and an output buffer, bf16
+    branches = b.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=size,
+        source=ObjectSource.zeros(size),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.branches",
+    )
+    loop = b.loop_control(
+        lower_bound=0, upper_bound=0, step=1,
+        bound_symbol=Symbol.SPAN_TOKENS, bound_divisor=MHC_TOKEN_BLOCK,
+        max_iterations=A13_MAX_ITER, key="loop.tokens",
+    )
+    dims = [MHC_STREAMS, MHC_TOKEN_BLOCK, A13_ROW_ELEMENTS]
+    strides = [MHC_STREAM_PLANE, A13_ROW_ELEMENTS, 1]
+    terms = [DynamicTerm.loop(loop, MHC_TOKEN_BLOCK * A13_ROW_ELEMENTS)]
+    view_in = b.tensor_view(
+        object_id=branches,
+        dtype=DType.BF16,
+        dims=dims,
+        strides=strides,
+        dynamic=terms,
+        key="view.mhc.in",
+    )
+    view_out = b.tensor_view(
+        object_id=branches,
+        dtype=DType.BF16,
+        dims=dims,
+        strides=strides,
+        element_offset=buffer_elements,
+        dynamic=terms,
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.mhc.out",
+    )
+    op = b.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.MHC,
+        inputs=[view_in],
+        outputs=[view_out],
+        numeric_profile_id=w.numeric,
+        schedule_id=w.schedule_for(Major.VECTOR),
+        counter_class_id=w.counters,
+        source_kernel_id=0,
+        key="op.mhc",
+    )
+    tail = w.op(Major.VECTOR, Vector.ADD, key="op.tail")
+    b.open_loop(loop)
+    b.emit(Major.VECTOR, Vector.MHC, descriptor_id=op, source_operation_id=0)
+    b.close_loop()
+    b.emit(Major.VECTOR, Vector.ADD, descriptor_id=tail, source_operation_id=1)
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="a13_non_leading_axis",
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): MHC_TOKENS - 1},
+        note=(
+            "the mHC branch reduction: the leading axis is four "
+            "hyper-connection streams and the loop steps over tokens, so the "
+            "term stride is one token block's rows and not stride0 * "
+            "bound_divisor.  A13 does not apply -- the extent stays at four "
+            "streams through the final partial iteration -- and the "
+            "admission rule does not apply either, so a leading extent above "
+            "the block is admitted here rather than refused"
+        ),
+    )
+
+
+def case_a13_mixed_axes(cap: Capability) -> Case:
+    """One view, two block loops, and only one of them walks the leading axis.
+
+    Section 12.4 decides the question per *term*, not per view: the token loop
+    steps by one whole block of leading rows and clamps, while the expert loop
+    steps two streams within a row and does not, even though both are
+    symbol-bounded and both have a partial final iteration.  A resolver that
+    decided once for the whole view -- from the first term, or from any term --
+    would clamp the expert loop's two-stream slice down to one row and be wrong
+    on four of this case's six dispatches.
+    """
+    w = BlockWorkspace("a3-a13-mixed", cap)
+    b = w.builder
+    token_stride = MHC_STREAMS * A13_ROW_ELEMENTS   # one token, all streams
+    expert_block = 2
+    buffer_elements = A13_MAX_ITER * A13_BLOCK * token_stride
+    size = buffer_elements * 2 * 2
+    obj = b.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=size,
+        source=ObjectSource.zeros(size),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.mixed",
+    )
+    tokens = b.loop_control(
+        lower_bound=0, upper_bound=0, step=1,
+        bound_symbol=Symbol.SPAN_TOKENS, bound_divisor=A13_BLOCK,
+        max_iterations=A13_MAX_ITER, key="loop.tokens",
+    )
+    experts = b.loop_control(
+        lower_bound=0, upper_bound=0, step=1,
+        bound_symbol=Symbol.ACTIVE_EXPERT_COUNT, bound_divisor=expert_block,
+        max_iterations=expert_block, key="loop.experts",
+    )
+    dims = [A13_BLOCK, expert_block, A13_ROW_ELEMENTS]
+    strides = [token_stride, A13_ROW_ELEMENTS, 1]
+    terms = [
+        # stride0 * bound_divisor: one whole block of leading rows.  Clamps.
+        DynamicTerm.loop(tokens, A13_BLOCK * token_stride),
+        # two streams inside one row: not the leading axis.  Does not clamp.
+        DynamicTerm.loop(experts, expert_block * A13_ROW_ELEMENTS),
+    ]
+    view_in = b.tensor_view(
+        object_id=obj,
+        dtype=DType.BF16,
+        dims=dims,
+        strides=strides,
+        dynamic=terms,
+        key="view.mixed.in",
+    )
+    view_out = b.tensor_view(
+        object_id=obj,
+        dtype=DType.BF16,
+        dims=dims,
+        strides=strides,
+        element_offset=buffer_elements,
+        dynamic=terms,
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.mixed.out",
+    )
+    op = b.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.MHC,
+        inputs=[view_in],
+        outputs=[view_out],
+        numeric_profile_id=w.numeric,
+        schedule_id=w.schedule_for(Major.VECTOR),
+        counter_class_id=w.counters,
+        source_kernel_id=0,
+        key="op.mixed",
+    )
+    b.open_loop(tokens)
+    b.open_loop(experts)
+    b.emit(Major.VECTOR, Vector.MHC, descriptor_id=op, source_operation_id=0)
+    b.close_loop()
+    b.close_loop()
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="a13_mixed_axes",
+        deployment=w.finish(),
+        symbols={
+            int(Symbol.SPAN_TOKENS): 2 * A13_BLOCK + 1,
+            int(Symbol.ACTIVE_EXPERT_COUNT): 2 * expert_block - 1,
+        },
+        note=(
+            "one view indexed by two symbol-bounded block loops, both with a "
+            "partial final iteration, of which only the token loop walks the "
+            "leading axis: the expert loop steps two streams inside a row, so "
+            "its partial iteration bounds nothing.  The clamp is a per-term "
+            "decision and this is the vector that says so"
         ),
     )
 
@@ -1571,6 +1825,8 @@ def build(argv: list[str] | None = None) -> int:
         case_a13_constant_loop(capability),
         case_a13_nested_blocks(capability),
         case_a13_four_terms(capability),
+        case_a13_non_leading_axis(capability),
+        case_a13_mixed_axes(capability),
     ]
     positives = len(cases)
     cases.extend(negative_instruction_cases(capability))

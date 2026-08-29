@@ -4,7 +4,7 @@
     "minor": 0
   },
   "capability_digest": "89f0b51783ed717486fda73553fc3ef9a130f4f6ced9a33447548338aba5058d",
-  "case_count": 41,
+  "case_count": 43,
   "cases": [
     {
       "admitted": true,
@@ -7376,7 +7376,7 @@
       "admitted": true,
       "declared_retired_work": 42,
       "descriptor_count": 20,
-      "descriptor_table_sha256": "6c6d338d9198a7e509dba0375e61179d1d838ce7999e923a8c72d331725c0ad7",
+      "descriptor_table_sha256": "217ebaf20a48892f1a3af724d2a3e89624809e2f5e4c56e11ff4818cb741666b",
       "device_executed": true,
       "entrypoint_id": 0,
       "expected": {
@@ -7504,7 +7504,7 @@
             2,
             16
           ],
-          "element_offset": 16,
+          "element_offset": 128,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7538,7 +7538,7 @@
             2,
             16
           ],
-          "element_offset": 272,
+          "element_offset": 384,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7606,7 +7606,7 @@
             2,
             16
           ],
-          "element_offset": 80,
+          "element_offset": 192,
           "index": 2,
           "loops": {
             "14": 1,
@@ -7640,7 +7640,7 @@
             2,
             16
           ],
-          "element_offset": 336,
+          "element_offset": 448,
           "index": 2,
           "loops": {
             "14": 1,
@@ -7708,7 +7708,7 @@
             1,
             16
           ],
-          "element_offset": 144,
+          "element_offset": 256,
           "index": 2,
           "loops": {
             "14": 2,
@@ -7742,7 +7742,7 @@
             1,
             16
           ],
-          "element_offset": 400,
+          "element_offset": 512,
           "index": 2,
           "loops": {
             "14": 2,
@@ -7783,15 +7783,15 @@
       },
       "instruction_count": 6,
       "name": "a13_nested_blocks",
-      "note": "two symbol-bounded loops index one view: _remaining_rows folds them with min(), so the outer loop's last iteration (one row) wins over the inner loop's (two rows)",
+      "note": "two symbol-bounded loops walk one view's leading axis with different blocks -- 4 rows over SPAN_TOKENS = 9, 8 rows over CONTEXT_LENGTH = 10 -- so each term satisfies term_stride = stride0 * bound_divisor for its own divisor.  _remaining_rows folds them with min(): the outer loop's last iteration (one row) wins over the inner loop's (two rows)",
       "phase": 0,
-      "program_sha256": "28a967583888445d953eb05a1c446b76d8f6ac72386fe1ebb218db801c99c818",
+      "program_sha256": "f4119e5ccb96458edfae9087a1471d56972da14f6ca8079341b348c97b9b6bd7",
       "python_rejects_image": null,
       "runs_program": true,
       "state_descriptor_count": 1,
       "symbols": {
         "0": 9,
-        "3": 6,
+        "3": 10,
         "4": 0,
         "5": 0
       },
@@ -7801,7 +7801,7 @@
       "admitted": true,
       "declared_retired_work": 42,
       "descriptor_count": 20,
-      "descriptor_table_sha256": "a90bb8b9d48e2a28ed492365b872d64b1fd93696ff94e6a746de3fc8cec30d89",
+      "descriptor_table_sha256": "143c2e47c3feb2b8f6e96edc4770c8001f5de8a4a483d35ac9c95a6671f63d84",
       "device_executed": true,
       "entrypoint_id": 0,
       "expected": {
@@ -7915,7 +7915,7 @@
             2,
             16
           ],
-          "element_offset": 19,
+          "element_offset": 67,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7949,7 +7949,7 @@
             2,
             16
           ],
-          "element_offset": 275,
+          "element_offset": 323,
           "index": 2,
           "loops": {
             "14": 0,
@@ -8017,7 +8017,7 @@
             1,
             16
           ],
-          "element_offset": 83,
+          "element_offset": 131,
           "index": 2,
           "loops": {
             "14": 1,
@@ -8051,7 +8051,7 @@
             1,
             16
           ],
-          "element_offset": 339,
+          "element_offset": 387,
           "index": 2,
           "loops": {
             "14": 1,
@@ -8092,9 +8092,9 @@
       },
       "instruction_count": 6,
       "name": "a13_four_terms",
-      "note": "four dynamic terms, the A4 maximum: two symbol-bounded block loops folded by min() and two runtime symbols that move the offset without bounding the extent",
+      "note": "four dynamic terms, the A4 maximum: two symbol-bounded block loops that both walk the leading axis and are folded by min(), and two runtime symbols that move the offset without bounding the extent",
       "phase": 1,
-      "program_sha256": "fcf30e980244d968cde5b0b05d34d1490e52acea52fa56de74317ea38d0f7709",
+      "program_sha256": "4a9654e2e4a877d0a857c0034e215cdaaade9f0157ceda5f531f4c5bea0171eb",
       "python_rejects_image": null,
       "runs_program": true,
       "state_descriptor_count": 1,
@@ -8104,6 +8104,630 @@
         "4": 1,
         "5": 2,
         "7": 1
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 11,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "9ff602e821fa71e1e842f0884d417e12b4301c0d8c18cbe18379d3ef4a7ec1ac",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 11,
+        "first_fault": 4294967295,
+        "issued": 5,
+        "loop_iterations": 4,
+        "predicated_off": 0,
+        "retired": 11,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.MHC",
+          "sub": 9
+        },
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.MHC",
+          "sub": 9
+        },
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.MHC",
+          "sub": 9
+        },
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.MHC",
+          "sub": 9
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 3,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 0,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 3,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 512,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 3,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 32,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "input_view_0",
+          "rank": 3,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 544,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "output_view_0",
+          "rank": 3,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 64,
+          "index": 1,
+          "loops": {
+            "15": 2
+          },
+          "operand": "input_view_0",
+          "rank": 3,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 576,
+          "index": 1,
+          "loops": {
+            "15": 2
+          },
+          "operand": "output_view_0",
+          "rank": 3,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 96,
+          "index": 1,
+          "loops": {
+            "15": 3
+          },
+          "operand": "input_view_0",
+          "rank": 3,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 608,
+          "index": 1,
+          "loops": {
+            "15": 3
+          },
+          "operand": "output_view_0",
+          "rank": 3,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "index": 3,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 11,
+        "first_fault": 4294967295,
+        "issued": 5,
+        "loop_iterations": 4,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 11,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 4,
+        "engine.vector.descriptors": 5,
+        "instructions.fetched": 11,
+        "instructions.issued": 5,
+        "instructions.retired": 11
+      },
+      "instruction_count": 5,
+      "name": "a13_non_leading_axis",
+      "note": "the mHC branch reduction: the leading axis is four hyper-connection streams and the loop steps over tokens, so the term stride is one token block's rows and not stride0 * bound_divisor.  A13 does not apply -- the extent stays at four streams through the final partial iteration -- and the admission rule does not apply either, so a leading extent above the block is admitted here rather than refused",
+      "phase": 0,
+      "program_sha256": "0e842831ad3782af4ffc9b36a4f28f27fbe89a7dc53aa135a49fdc5dfb3024cc",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 7,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 26,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "f8734024325350890dc191b0eaf2d0766165effb5a2537f3968b773afe1e46d9",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 20,
+        "first_fault": 4294967295,
+        "issued": 6,
+        "loop_iterations": 9,
+        "predicated_off": 0,
+        "retired": 20,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 2,
+          "mnemonic": "VECTOR.MHC",
+          "sub": 9
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 2,
+          "mnemonic": "VECTOR.MHC",
+          "sub": 9
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 2,
+          "mnemonic": "VECTOR.MHC",
+          "sub": 9
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 2,
+          "mnemonic": "VECTOR.MHC",
+          "sub": 9
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 2,
+          "mnemonic": "VECTOR.MHC",
+          "sub": 9
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 2,
+          "mnemonic": "VECTOR.MHC",
+          "sub": 9
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 0,
+          "index": 2,
+          "loops": {
+            "15": 0,
+            "16": 0
+          },
+          "operand": "input_view_0",
+          "rank": 3,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 18,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 1024,
+          "index": 2,
+          "loops": {
+            "15": 0,
+            "16": 0
+          },
+          "operand": "output_view_0",
+          "rank": 3,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 32,
+          "index": 2,
+          "loops": {
+            "15": 0,
+            "16": 1
+          },
+          "operand": "input_view_0",
+          "rank": 3,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 18,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 1056,
+          "index": 2,
+          "loops": {
+            "15": 0,
+            "16": 1
+          },
+          "operand": "output_view_0",
+          "rank": 3,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 256,
+          "index": 2,
+          "loops": {
+            "15": 1,
+            "16": 0
+          },
+          "operand": "input_view_0",
+          "rank": 3,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 18,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 1280,
+          "index": 2,
+          "loops": {
+            "15": 1,
+            "16": 0
+          },
+          "operand": "output_view_0",
+          "rank": 3,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 288,
+          "index": 2,
+          "loops": {
+            "15": 1,
+            "16": 1
+          },
+          "operand": "input_view_0",
+          "rank": 3,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 18,
+          "dim0": 4,
+          "dims": [
+            4,
+            2,
+            16
+          ],
+          "element_offset": 1312,
+          "index": 2,
+          "loops": {
+            "15": 1,
+            "16": 1
+          },
+          "operand": "output_view_0",
+          "rank": 3,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            16
+          ],
+          "element_offset": 512,
+          "index": 2,
+          "loops": {
+            "15": 2,
+            "16": 0
+          },
+          "operand": "input_view_0",
+          "rank": 3,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 18,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            16
+          ],
+          "element_offset": 1536,
+          "index": 2,
+          "loops": {
+            "15": 2,
+            "16": 0
+          },
+          "operand": "output_view_0",
+          "rank": 3,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            16
+          ],
+          "element_offset": 544,
+          "index": 2,
+          "loops": {
+            "15": 2,
+            "16": 1
+          },
+          "operand": "input_view_0",
+          "rank": 3,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 18,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            16
+          ],
+          "element_offset": 1568,
+          "index": 2,
+          "loops": {
+            "15": 2,
+            "16": 1
+          },
+          "operand": "output_view_0",
+          "rank": 3,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 20,
+        "first_fault": 4294967295,
+        "issued": 6,
+        "loop_iterations": 9,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 20,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 9,
+        "engine.vector.descriptors": 6,
+        "instructions.fetched": 20,
+        "instructions.issued": 6,
+        "instructions.retired": 20
+      },
+      "instruction_count": 6,
+      "name": "a13_mixed_axes",
+      "note": "one view indexed by two symbol-bounded block loops, both with a partial final iteration, of which only the token loop walks the leading axis: the expert loop steps two streams inside a row, so its partial iteration bounds nothing.  The clamp is a per-term decision and this is the vector that says so",
+      "phase": 0,
+      "program_sha256": "16e0e70e70f198b706f77a4ce5c26cc792ec0c1ed2ad4048ad00748a289383cd",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 9,
+        "10": 3,
+        "4": 0,
+        "5": 0
       },
       "verifier_errors": []
     },
@@ -9579,24 +10203,24 @@
     "view_stride": 6,
     "view_words": 8192
   },
-  "header_admission_count": 41,
+  "header_admission_count": 43,
   "image_sha256": {
-    "a3_case.hex": "a1e10d2b851294fe69e4944ec227d304336cf17af98b93516afcb8620640cacb",
-    "a3_descriptor.hex": "2ed74672bce7f63ce7fa49e866ab0b7f70fa36e262b694738d7f2e1c3b69ca65",
-    "a3_header.hex": "1189982809235ba341c42d98a6dd7e33cdc1650204b204458a84c0a1bceb1b69",
-    "a3_issue.hex": "b7893bc0213244d26e7299d9a64b4a18cfe418d9fb86111f4e0e544a3756fe7a",
-    "a3_meta.hex": "08caa29da31f801510210927d66edae3042e4438cf548be09702f3817f23641f",
-    "a3_program.hex": "ef67046995ff1e04c8130ffdd1fba6ccc0cae42193f863a1e3f55f3eda79d9fe",
-    "a3_symbol.hex": "f82fbe64f50cd43ae5ea792e61b945c0412c5abe63680293bb78f1f5d7d72d4a",
-    "a3_view.hex": "150e7d3ae2c834eb46d02754a54b9515747bf4a05cfd1800233b10c99bdca0c1"
+    "a3_case.hex": "c3b446e15a9687aa4fec7f74f1c17ddcd55749535279711d72846b123794409c",
+    "a3_descriptor.hex": "3a248e87b31779e8acc5da6ae68a6bda1994e861bed3cf5870874afe688eff78",
+    "a3_header.hex": "f5bce6eecd61af6b604cfe1745413413754e244780260afacc2579f9639d938e",
+    "a3_issue.hex": "d61eff056ca955201d4344c1573586bac7036dae42443d612495fd893ccb6a48",
+    "a3_meta.hex": "3dbb70124c28667f7cac1d58c1c8c951e4fce73dcc9b505f9a6f8880f539c2af",
+    "a3_program.hex": "3f5e36e494036271bf823b16b29b5023e4100fc6b32ccb3e0a81ea549b5a9fdb",
+    "a3_symbol.hex": "b041f5ddc0926627410f8164f5f3b6008968c4eadabec2b499cdd78935be6c40",
+    "a3_view.hex": "5c253bded2133cbc53f03a6cb44de7a0e97be6f5a2d742157aee2b073e8b1724"
   },
-  "issue_event_count": 132,
+  "issue_event_count": 143,
   "negative_case_count": 17,
-  "positive_case_count": 24,
-  "program_run_count": 34,
-  "required_marker": "PASS: ABI3 RTL microsequencer cases=41 headers=41 programs=34 issues=132 views=345 traps=11",
+  "positive_case_count": 26,
+  "program_run_count": 36,
+  "required_marker": "PASS: ABI3 RTL microsequencer cases=43 headers=43 programs=36 issues=143 views=368 traps=11",
   "schema": "opentallas.rtl.abi3_vectors.v1",
   "trap_count": 11,
   "view_reference": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms) and A13 (partial final iteration of a block loop)",
-  "view_resolution_count": 345
+  "view_resolution_count": 368
 }

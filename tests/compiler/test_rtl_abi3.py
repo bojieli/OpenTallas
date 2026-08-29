@@ -184,7 +184,7 @@ def test_issue_events_are_legal_opcodes_and_counted() -> None:
             if family is not Major.RECOVERY:
                 assert issue["descriptor_id"] != NO_ID
             total += 1
-    assert total == vectors["issue_event_count"] == 132
+    assert total == vectors["issue_event_count"] == 143
     assert vectors["case_count"] == len(vectors["cases"])
     assert vectors["program_run_count"] == sum(
         1 for case in vectors["cases"] if case["runs_program"]
@@ -263,6 +263,13 @@ def test_a13_vectors_cover_every_block_shape() -> None:
     ``a13_extent_above_block`` pins the complementary decision -- a leading
     extent above the block is refused at admission, because that inequality is
     the only one on which the two statements of A13 disagree.
+
+    ``a13_non_leading_axis`` and ``a13_mixed_axes`` pin the question that comes
+    before all of those: *whether* a term is walking the leading axis at all.
+    Section 12.4 derives it -- one iteration advances by one whole block of the
+    leading axis, ``term_stride == stride0 * bound_divisor`` -- rather than
+    assuming that a loop-induction term does.  Both the clamp and the admission
+    rule apply only to terms that satisfy it.
     """
     names = {case["name"]: case for case in _vectors()["cases"]}
     block = generator.A13_BLOCK
@@ -300,6 +307,11 @@ def test_a13_vectors_cover_every_block_shape() -> None:
     assert _block_views(constant, 0) == [block, block, block]
 
     # Two symbol-bounded loops over one view: the smallest remaining wins.
+    # Both walk the leading axis -- each states the stride its own block
+    # implies, ``stride0 * bound_divisor`` -- because a term that does not walk
+    # it contributes no bound at all and the fold would never happen.  The two
+    # blocks differ, so the condition has to be evaluated against each loop's
+    # own divisor rather than one of them twice.
     nested = names["a13_nested_blocks"]
     assert _block_views(nested, 0) == [block, 2, block, 2, 1, 1]
 
@@ -314,6 +326,44 @@ def test_a13_vectors_cover_every_block_shape() -> None:
 
     # A leading extent below the block: the guard the prose leaves implicit.
     assert _block_views(names["a13_extent_below_block"], 0) == [2, 2]
+
+    # A loop over an axis that is *not* the view's leading one.  Section 12.4
+    # derives which terms walk the leading axis rather than assuming that any
+    # loop-induction term does: one iteration advances by one whole block of
+    # it, so ``term_stride == stride0 * bound_divisor``.  The mHC branch
+    # reduction is the shape that forced the derivation -- its leading axis is
+    # four hyper-connection streams while its loop steps over tokens -- and
+    # clamping it would present four streams as one.
+    mhc = names["a13_non_leading_axis"]
+    streams = generator.MHC_STREAMS
+    token_block = generator.MHC_TOKEN_BLOCK
+    assert mhc["admitted"] is True
+    assert _block_views(mhc, 0) == [streams] * generator.A13_MAX_ITER
+    assert _block_views(mhc, 4) == [streams] * generator.A13_MAX_ITER
+    # The final iteration *is* partial -- SPAN_TOKENS is not a multiple of the
+    # block -- so the extent above is a decision, not an absence of one.
+    assert mhc["symbols"]["0"] % token_block != 0
+    # A4 still applies where A13 does not: the window advances by one token
+    # block per iteration even though the extent never moves.
+    assert [
+        view["element_offset"]
+        for view in _views_of(mhc) if view["slot"] == 0 and view["loops"]
+    ] == [
+        index * token_block * generator.A13_ROW_ELEMENTS
+        for index in range(generator.A13_MAX_ITER)
+    ]
+    # And the admission rule follows the same condition: this leading extent is
+    # above its loop's block, which is refused only for a term that clamps.
+    assert streams > token_block
+
+    # One view, two symbol-bounded block loops, both with a partial final
+    # iteration, and only the token loop walks the leading axis.  The clamp is
+    # a per-term decision: a resolver that decided once for the whole view
+    # would clamp the expert loop's two-stream slice as well.
+    mixed = names["a13_mixed_axes"]
+    assert mixed["admitted"] is True
+    assert _block_views(mixed, 0) == [block, block, block, block, 1, 1]
+    assert _block_views(mixed, 4) == [block, block, block, block, 1, 1]
 
     # A leading extent *above* the block is refused at admission rather than
     # resolved.  It is the one shape on which section 12.4's formula and
@@ -344,6 +394,8 @@ def test_a13_golden_extents_come_from_the_reference_resolver() -> None:
         "a13_constant_loop": generator.case_a13_constant_loop,
         "a13_nested_blocks": generator.case_a13_nested_blocks,
         "a13_four_terms": generator.case_a13_four_terms,
+        "a13_non_leading_axis": generator.case_a13_non_leading_axis,
+        "a13_mixed_axes": generator.case_a13_mixed_axes,
     }
     recorded = {case["name"]: case for case in _vectors()["cases"]}
     compared = 0
@@ -414,7 +466,7 @@ def test_campaign_replays_both_simulators(tmp_path: Path) -> None:
         assert "/tmp/" not in case["compile_command"]
     assert "Verilator 5.05" in summary["tools"]["verilator"]["version"]
     assert "version 11.0" in summary["tools"]["iverilog"]["version"]
-    assert summary["correlation"]["issue_event_count"] == 132
+    assert summary["correlation"]["issue_event_count"] == 143
     assert summary["correlation"]["reference"] == "runtime.sim.device.Device"
     # A view comparison that compared nothing would be a vacuous pass.
     assert summary["correlation"]["view_resolution_count"] == (
