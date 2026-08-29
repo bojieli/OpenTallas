@@ -95,12 +95,12 @@
 
 ## W8 — RTL 3.0
 
-- [x] W8.1 Microsequencer RTL (fetch/decode/loop/predicate/event/trap/complete) — `rtl/abi3/ot_a3_microsequencer.sv`
+- [x] W8.1 Microsequencer RTL (fetch/decode/loop/predicate/event/trap/complete) — `rtl/abi3/ot_a3_microsequencer.sv`; operand tensor-view resolution (A4 dynamic terms, A13 partial final extent) — `rtl/abi3/ot_a3_view_resolver.sv`
 - [x] W8.2 Queue/event/state controller RTL — `rtl/abi3/ot_a3_event_scoreboard.sv`, `ot_a3_state_controller.sv`
 - [~] W8.3 Representative engine datapaths (DMA, tensor MAC array, vector, selection)
 - [~] W8.4 Inter-chip endpoint RTL (packets, credits, retry, collectives)
 - [~] W8.5 ROM service RTL (Qwen chip, DeepSeek wafer tile)
-- [x] W8.6 Verilator co-simulation vs functional simulator on generated programs — 30 cases, 99 issue events, 12 traps matched on two simulators
+- [x] W8.6 Verilator co-simulation vs functional simulator on generated programs — 41 cases, 135 issue events, 354 resolved tensor views (amendments A4 and A13), 11 traps matched on two simulators, 2,903 checks each
 - [x] W8.7 Fault/stall/backpressure/reset campaigns — 17 negative cases incl. CRC, illegal opcode, loop overrun, mid-transaction trap
 
 ## W9 — Physical (SKY130 implementation view, ASAP7 predictive view)
@@ -226,13 +226,51 @@
   genuinely varies — layers, and token *blocks* if an SRAM working set needs
   bounding. Expected effect is roughly 90x fewer dispatches, which is what makes
   the 8,000-token campaign feasible.
-- **OI-16 — RTL does not yet implement amendment A13.** The microsequencer
-  issues descriptors; it does not resolve tensor views, so the partial
-  final-iteration extent rule has no effect there today and the correlation
-  campaign is unaffected. It becomes normative for RTL the moment an engine
-  datapath resolves a view, and a mismatch would show up as an engine reading
-  the block size where the request has fewer rows. The rule is stated in wire
-  format section 12.4 so the RTL lane inherits it rather than rediscovering it.
+- **OI-16 — closed. RTL implements amendment A13.** `rtl/abi3/ot_a3_view_resolver.sv`
+  resolves a tensor view's A4 dynamic index terms and its A13 partial final
+  extent, and `ot_a3_microsequencer.sv` runs it over every operand view of an
+  OPERATOR-family instruction before that instruction issues, publishing the
+  resolved extent and element offset on a view port. The descriptor image now
+  carries 192 bytes per record rather than 128, because a TENSOR_VIEW's dynamic
+  terms start at payload offset 72 and a 128-byte prefix stopped one block
+  short. The correlation campaign compares 354 resolved views against
+  `runtime.sim.memory.ViewResolver.resolve` — the functional device's own
+  resolver, evaluated against the loop bindings the device recorded at each
+  issue — over eleven new vectors covering N divisible by T, N with a partial
+  final iteration, N < T, N = 0, a constant-bounded loop, nested block loops
+  folded by `min()`, and the A4 maximum of four dynamic terms. Three deliberate
+  mutations of the RTL rule — removing the clamp, using the prose formula of
+  section 12.4 verbatim, and narrowing the term counter so a four-term view
+  wraps — are each rejected by both simulators, so the vectors are not
+  vacuous.
+- **OI-16a — wire format section 12.4's prose formula is narrower than the
+  reference resolver, and the resolver is normative.** Section 12.4 states
+  `dim0 = remaining if 0 < remaining < dim0 else dim0`.
+  `ViewResolver._remaining_rows` additionally requires `remaining <
+  bound_divisor` before a loop bounds anything, and folds several
+  symbol-bounded loops over one view with `min()`. The two disagree only when a
+  view's leading extent exceeds the block size: with `bound_divisor = 4`,
+  `dim0 = 6` and `SPAN_TOKENS = 5`, the resolver leaves `dim0 = 6` and the
+  prose formula gives 5. The RTL follows the resolver, and vector
+  `a13_extent_above_block` pins the disagreement so it cannot drift silently.
+  Nothing in `runtime/abi3/` was changed; if the intent is the prose reading,
+  the resolver is the place to decide it.
+- **OI-16b — the RTL lagged commit 46b6fb5 on abort accounting.** That commit
+  made an abort discard the whole *declared* prepared state set
+  (`counters.add("state.discards", len(session.states))`), which the RTL's
+  state controller did not do: it counted only STATE.DISCARD instructions. The
+  divergence was invisible because the checked-in vectors predated the commit
+  and nobody had regenerated them. `ot_a3_state_controller.sv` now takes a
+  `session_state_count` and adds it on `discard_all`, and the case record
+  carries the deployment's STATE-descriptor count.
+- **OI-16c — the vector generator could not regenerate its own vectors.** Since
+  the verifier gained its schedule-completeness proof, `Workspace` in
+  `tools/build_abi3_rtl_vectors.py` was rejected for reusing one TENSOR
+  SCHEDULE descriptor across every engine family. It now creates one schedule
+  per family. Separately, `case_work_bound_deficit` documented a work-bound
+  deficit that `DeploymentBuilder._proved_work` has since repaired, so the case
+  no longer traps; the work-bound trap is still covered by
+  `case_work_bound`.
 - **OI-17 — the ABI 2.5 retained deployment cannot load in a fresh checkout.**
   Four `tests/runtime` tests fail with "deployment file set differs from the
   final manifest": the manifest names 31 files and 13 are present, the missing
@@ -254,6 +292,22 @@
   each break it for a reason that has nothing to do with the deployment. The
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
+
+- **OI-20 — the IR uses `CONCAT` for a broadcast along a new axis.** The
+  DeepSeek mHC hyper-connection expansion is a `CONCAT` kernel whose four inputs
+  are all the same tensor (`main.token_embed.output`, `[span_tokens, 4096]`) and
+  whose output is `main.hc_expand.output`, `[span_tokens, 4, 4096]`. The ABI's
+  `REDUCTION.GROUPED_CONCAT` concatenates along axis 0, giving `[416, 4096]` for
+  a 104-token span, so the engine refuses — correctly — and the DeepSeek HBM
+  deployment cannot prefill. Two things are worth recording beyond the fix.
+  First, the engine's `np.concatenate(...).reshape(out_dims)` would have
+  produced numerically wrong data had the shape check not stopped it, placing
+  four consecutive *tokens* where four *streams* belong; the fail-closed check
+  is the only thing between that and a plausible wrong answer. Second, since all
+  four inputs are the same tensor, this is a broadcast, and ABI 3.0 views carry
+  per-axis strides — a zero-stride axis expresses it with no operator and no
+  data movement at all. The other 84 `CONCAT` kernels in the graph are genuine
+  axis-0 concatenations and must not be disturbed.
 
 - **OI-19 — the storage-class equivalence proof is narrower than the claim
   resting on it.** `tools/prove_storage_class_equivalence.py` builds the same
