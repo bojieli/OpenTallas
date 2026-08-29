@@ -1,0 +1,504 @@
+{
+  "$defs": {
+    "identity": {
+      "additionalProperties": false,
+      "properties": {
+        "abi_magic_ascii": {
+          "const": "OTEQ"
+        },
+        "abi_major": {
+          "const": 1
+        },
+        "abi_minor": {
+          "const": 0
+        },
+        "instruction_record_bytes": {
+          "const": 60
+        },
+        "model_id": {
+          "const": "deepseek-v4-flash-0731"
+        },
+        "program_bytes": {
+          "const": 136
+        },
+        "program_contract_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "program_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "register_table_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "resource_table_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "token_count_maximum": {
+          "const": 4
+        },
+        "token_count_minimum": {
+          "const": 1
+        }
+      },
+      "required": [
+        "abi_magic_ascii",
+        "abi_major",
+        "abi_minor",
+        "instruction_record_bytes",
+        "model_id",
+        "program_bytes",
+        "program_contract_id",
+        "program_sha256",
+        "register_table_sha256",
+        "resource_table_sha256",
+        "token_count_maximum",
+        "token_count_minimum"
+      ],
+      "type": "object"
+    },
+    "nullable_integer": {
+      "oneOf": [
+        {
+          "minimum": 0,
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullable_sha256": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "ordering_policy": {
+      "additionalProperties": false,
+      "properties": {
+        "completion_rule": {
+          "const": "terminal COMPLETE depends on every preceding logical slot"
+        },
+        "dependency_rule": {
+          "const": "every consumed register is external or produced by a lower-numbered slot"
+        },
+        "resource_rule": {
+          "const": "resource IDs resolve exactly through the committed HC_PRE resource contract"
+        },
+        "slot_rule": {
+          "const": "one microinstruction per monotonically increasing logical slot"
+        }
+      },
+      "required": [
+        "completion_rule",
+        "dependency_rule",
+        "resource_rule",
+        "slot_rule"
+      ],
+      "type": "object"
+    },
+    "register": {
+      "additionalProperties": false,
+      "properties": {
+        "consumer_slots": {
+          "items": {
+            "maximum": 1,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "dtype": {
+          "enum": [
+            "BF16",
+            "F32"
+          ]
+        },
+        "evidence_observable": {
+          "type": "boolean"
+        },
+        "live_at_complete": {
+          "type": "boolean"
+        },
+        "producer_kind": {
+          "enum": [
+            "external",
+            "slot"
+          ]
+        },
+        "producer_slot": {
+          "$ref": "#/$defs/nullable_integer"
+        },
+        "register_id": {
+          "maximum": 7,
+          "minimum": 2,
+          "type": "integer"
+        },
+        "register_name": {
+          "enum": [
+            "HC_HIDDEN",
+            "ATTENTION_INPUT",
+            "ATTENTION_PRE",
+            "ATTENTION_POST",
+            "ATTENTION_COMBINATION",
+            "ATTENTION_RESIDUAL"
+          ]
+        },
+        "token_major_shape_suffix": {
+          "items": {
+            "maximum": 16384,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array"
+        }
+      },
+      "required": [
+        "consumer_slots",
+        "dtype",
+        "evidence_observable",
+        "live_at_complete",
+        "producer_kind",
+        "producer_slot",
+        "register_id",
+        "register_name",
+        "token_major_shape_suffix"
+      ],
+      "type": "object"
+    },
+    "resource": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_derived": {
+          "const": true
+        },
+        "content_sha256": {
+          "$ref": "#/$defs/nullable_sha256"
+        },
+        "dtype": {
+          "const": "F32"
+        },
+        "rank": {
+          "$ref": "#/$defs/nullable_integer"
+        },
+        "resource_id": {
+          "maximum": 6,
+          "minimum": 4,
+          "type": "integer"
+        },
+        "resource_name": {
+          "enum": [
+            "HC_ATTN_BASE",
+            "HC_ATTN_PROJECTION",
+            "HC_ATTN_SCALE"
+          ]
+        },
+        "role": {
+          "enum": [
+            "hyper_connection.attn.base",
+            "hyper_connection.attn.projection",
+            "hyper_connection.attn.scale"
+          ]
+        },
+        "row_start": {
+          "$ref": "#/$defs/nullable_integer"
+        },
+        "row_stop": {
+          "$ref": "#/$defs/nullable_integer"
+        },
+        "shape": {
+          "items": {
+            "maximum": 16384,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "maxItems": 2,
+          "minItems": 1,
+          "type": "array"
+        },
+        "size_bytes": {
+          "maximum": 1572864,
+          "minimum": 12,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "checkpoint_derived",
+        "content_sha256",
+        "dtype",
+        "rank",
+        "resource_id",
+        "resource_name",
+        "role",
+        "row_start",
+        "row_stop",
+        "shape",
+        "size_bytes"
+      ],
+      "type": "object"
+    },
+    "sha256": {
+      "pattern": "^[0-9a-f]{64}$",
+      "type": "string"
+    },
+    "slot": {
+      "additionalProperties": false,
+      "properties": {
+        "dependency_slots": {
+          "items": {
+            "maximum": 0,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "destination_register_ids": {
+          "items": {
+            "maximum": 7,
+            "minimum": 3,
+            "type": "integer"
+          },
+          "maxItems": 5,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "external_input_register_ids": {
+          "items": {
+            "const": 2
+          },
+          "maxItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "flags": {
+          "const": 0
+        },
+        "immediates": {
+          "items": {
+            "maximum": 4294967295,
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 4,
+          "minItems": 4,
+          "type": "array"
+        },
+        "instruction_index": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "instruction_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "opcode": {
+          "enum": [
+            "HC_PRE",
+            "COMPLETE"
+          ]
+        },
+        "opcode_code": {
+          "enum": [
+            19,
+            255
+          ]
+        },
+        "resource_ids": {
+          "items": {
+            "maximum": 6,
+            "minimum": 4,
+            "type": "integer"
+          },
+          "maxItems": 3,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "slot": {
+          "maximum": 1,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "source_register_ids": {
+          "items": {
+            "const": 2
+          },
+          "maxItems": 1,
+          "type": "array",
+          "uniqueItems": true
+        },
+        "terminal": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "dependency_slots",
+        "destination_register_ids",
+        "external_input_register_ids",
+        "flags",
+        "immediates",
+        "instruction_index",
+        "instruction_sha256",
+        "opcode",
+        "opcode_code",
+        "resource_ids",
+        "slot",
+        "source_register_ids",
+        "terminal"
+      ],
+      "type": "object"
+    },
+    "summary": {
+      "additionalProperties": false,
+      "properties": {
+        "checkpoint_parameter_bytes": {
+          "const": 1572972
+        },
+        "complete_count": {
+          "const": 1
+        },
+        "dependency_edge_count": {
+          "const": 1
+        },
+        "evidence_observable_register_count": {
+          "const": 5
+        },
+        "external_input_register_count": {
+          "const": 1
+        },
+        "hc_pre_count": {
+          "const": 1
+        },
+        "instruction_count": {
+          "const": 2
+        },
+        "live_at_complete_register_count": {
+          "const": 4
+        },
+        "produced_register_count": {
+          "const": 5
+        },
+        "register_count": {
+          "const": 6
+        },
+        "resource_count": {
+          "const": 3
+        },
+        "resource_read_count": {
+          "const": 3
+        },
+        "slot_count": {
+          "const": 2
+        }
+      },
+      "required": [
+        "checkpoint_parameter_bytes",
+        "complete_count",
+        "dependency_edge_count",
+        "evidence_observable_register_count",
+        "external_input_register_count",
+        "hc_pre_count",
+        "instruction_count",
+        "live_at_complete_register_count",
+        "produced_register_count",
+        "register_count",
+        "resource_count",
+        "resource_read_count",
+        "slot_count"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "https://opentallas.org/schemas/compiler/deepseek_v4_hc_pre_executable/logical_schedule_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "claim_boundary": {
+      "const": "Deterministic logical instruction, register, and resource ordering for the exact HC_PRE fragment only; this is not execution, timing, bandwidth, physical-topology, numeric-correctness, or PPA evidence."
+    },
+    "identity": {
+      "$ref": "#/$defs/identity"
+    },
+    "ordering_policy": {
+      "$ref": "#/$defs/ordering_policy"
+    },
+    "registers": {
+      "items": {
+        "$ref": "#/$defs/register"
+      },
+      "maxItems": 6,
+      "minItems": 6,
+      "type": "array"
+    },
+    "required_nonclaims": {
+      "const": [
+        "attention_completion",
+        "bandwidth",
+        "checkpoint_execution",
+        "cycle_accuracy",
+        "cycle_latency",
+        "execution_evidence",
+        "full_model_execution",
+        "nvidia_comparison",
+        "numeric_correctness",
+        "physical_topology",
+        "ppa",
+        "query_projection",
+        "transformer_block_completion",
+        "weighted_rms_norm"
+      ]
+    },
+    "resources": {
+      "items": {
+        "$ref": "#/$defs/resource"
+      },
+      "maxItems": 3,
+      "minItems": 3,
+      "type": "array"
+    },
+    "schedule_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "schema": {
+      "const": "opentallas.deepseek_v4_hc_pre_logical_schedule.v1"
+    },
+    "slots": {
+      "items": {
+        "$ref": "#/$defs/slot"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "status": {
+      "const": "logical_schedule_only"
+    },
+    "summary": {
+      "$ref": "#/$defs/summary"
+    }
+  },
+  "required": [
+    "claim_boundary",
+    "identity",
+    "ordering_policy",
+    "registers",
+    "required_nonclaims",
+    "resources",
+    "schedule_id",
+    "schema",
+    "slots",
+    "status",
+    "summary"
+  ],
+  "title": "OpenTallas DeepSeek V4 HC_PRE logical schedule v1",
+  "type": "object"
+}
