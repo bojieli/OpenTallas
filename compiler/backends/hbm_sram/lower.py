@@ -41,7 +41,7 @@ from __future__ import annotations
 
 from typing import Any, Iterable, Mapping, Sequence
 
-from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Tensor
+from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Symbolic, Tensor
 from compiler.ir.v3.lowering import engine_for
 from runtime.abi3.builder import BuildError, DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
@@ -90,6 +90,7 @@ from .plan import (
     bytes_for,
     dtype_of,
     matrix_shape,
+    round_up as _round_up,
 )
 
 BACKEND_ID = "hbm-sram-abi3"
@@ -803,30 +804,36 @@ class _Emitter:
 
         object_id, base = self._object_for(operand)
         scale_object, scale_block = self._scale_binding(operand)
+        contraction_operand = plan.contraction and (
+            (operand.direction == "in" and operand.slot in (0, 1))
+            or (operand.direction == "out" and operand.slot == 0)
+        )
         contraction_weight = (
             plan.contraction and operand.direction == "in" and operand.slot == 1
         )
-        if contraction_weight:
-            # Presented n-major as ``[N, K]``; a checkpoint stored ``[K, N]`` is
-            # transposed by swapping strides, never by a relayout pass.
-            if operand.transposed:
+        if contraction_operand:
+            # TA-ABI3-OPCONV-1 section 2 states a contraction's operands as
+            # matrices: ``[rows, K]``, ``[N, K]`` and ``[rows, N]``.  A
+            # checkpoint stored ``[K, N]`` is presented n-major by swapping the
+            # view's strides, never by a relayout pass.
+            if contraction_weight and operand.transposed:
                 strides = [1, operand.cols]
                 node_stride = plan.shard_columns
-            else:
+            elif contraction_weight:
                 strides = [operand.cols, 1]
                 node_stride = plan.shard_columns * operand.cols
+            else:
+                strides = [operand.cols, 1]
+                node_stride = plan.shard_columns
+            dims = [max(operand.tile_rows, 1), max(operand.tile_cols, 1)]
+            row_stride = dims[0] * strides[0]
         else:
-            strides = [operand.cols, 1]
+            # Everything else keeps the rank the graph declared.  An engine that
+            # reads ``[.., heads, dim]`` or one gain per reduction element
+            # rejects a view whose axes have been folded into a matrix, so the
+            # folding is confined to the contraction operands that ask for it.
+            dims, strides, row_stride = self._declared_view(plan, operand)
             node_stride = plan.shard_columns
-        dims = [max(operand.tile_rows, 1), max(operand.tile_cols, 1)]
-        row_stride = dims[0] * strides[0]
-        if len(tensor.shape) == 1 and not contraction_weight:
-            # A rank-1 tensor keeps rank 1.  An engine that reads one gain per
-            # reduction element, or one position per token, rejects a view that
-            # has grown a degenerate axis, and a dynamic term moves the window
-            # by offsetting the view rather than by adding an axis to it.
-            dims = [dims[0] * dims[1]]
-            strides = [1]
 
         terms: list[DynamicTerm] = []
         for term in operand.terms:
@@ -856,6 +863,30 @@ class _Emitter:
             scale_object_id=scale_object,
             scale_block_elements=scale_block,
         )
+
+    def _declared_view(
+        self, plan: KernelPlan, operand: OperandPlan
+    ) -> tuple[list[int], list[int], int]:
+        """Dims, strides and row-term stride for a view of the declared rank."""
+        tensor = self.tensors[operand.tensor_id]
+        extents: list[int] = []
+        for axis in tensor.shape:
+            value, _ = _static_extent(axis, self.span_max)
+            extents.append(max(int(value), 1))
+        if not extents:
+            extents = [1]
+        lead_symbolic = bool(tensor.shape) and isinstance(tensor.shape[0], Symbolic)
+        if lead_symbolic:
+            extents[0] = _round_up(extents[0], plan.block_rows)
+        strides = [1] * len(extents)
+        running = 1
+        for axis in range(len(extents) - 1, -1, -1):
+            strides[axis] = running
+            running *= extents[axis]
+        dims = list(extents)
+        if lead_symbolic and "row" in operand.terms:
+            dims[0] = plan.block_rows
+        return dims, strides, dims[0] * strides[0]
 
     def _selection_view(self, operand: OperandPlan, *, writable: bool) -> int:
         """TA-ABI3-OPCONV-1 section 8: selection operands are one-dimensional."""
@@ -1095,8 +1126,12 @@ class _Emitter:
             in_dtype,
             out_dtype,
             second,
-            scale_bits=int(kernel.attributes.get("scale_bits", 0)),
-            epsilon_bits=int(kernel.attributes.get("epsilon_bits", 0)),
+            scale_bits=_binary32_bits(
+                kernel.attributes, ("scale_bits", "scale_bf16_code", "scale")
+            ),
+            epsilon_bits=_binary32_bits(
+                kernel.attributes, ("epsilon_bits", "epsilon")
+            ),
         )
 
     def _producer_events(self, kernel: Kernel) -> list[int]:
@@ -1169,6 +1204,31 @@ class _Emitter:
         )
         self._link_instructions += 1
         return event
+
+
+def _binary32_bits(attributes: Mapping[str, Any], keys: Sequence[str]) -> int:
+    """Read a numeric-descriptor constant as a binary32 bit pattern.
+
+    A graph may state such a constant three ways: already as a bit pattern, as
+    a BF16 code (the model's own storage form, which widens exactly by a
+    sixteen-bit shift), or as a real number.  The descriptor field is a binary32
+    pattern, so all three are converted here rather than at three call sites.
+    """
+    import struct
+
+    for key in keys:
+        if key not in attributes:
+            continue
+        value = attributes[key]
+        if key.endswith("_bits"):
+            return int(value) & 0xFFFFFFFF
+        if key.endswith("_bf16_code"):
+            return (int(value) & 0xFFFF) << 16
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, (int, float)):
+            return int.from_bytes(struct.pack("<f", float(value)), "little")
+    return 0
 
 
 def _reduction_order(contract: str) -> ReductionOrder:

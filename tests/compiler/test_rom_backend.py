@@ -224,7 +224,7 @@ def qwen_shaped_graph(
     span = Symbolic("span_tokens", 1, span_max)
     context = Symbolic("context_tokens", 1, span_max)
 
-    token_ids = builder.value("input.token_ids", "i64", (span,), "input")
+    token_ids = builder.value("input.token_ids", "u32", (span,), "input")
     positions = builder.value("input.positions", "i32", (span,), "input")
     embed = builder.weight("model.embed_tokens.weight", "bf16", (vocabulary, hidden))
     residual = builder.value("sequence.embedding", "bf16", (span, hidden), "activation")
@@ -234,7 +234,7 @@ def qwen_shaped_graph(
         (token_ids, embed),
         (residual,),
         contract="bf16_payload_lookup_v1",
-        attributes={"input_dtype": "i64", "output_dtype": "bf16"},
+        attributes={"input_dtype": "u32", "output_dtype": "bf16"},
     )
 
     states = tuple(
@@ -489,7 +489,7 @@ def qwen_shaped_graph(
         (logits,),
         contract="bf16_bf16_fp32_sequential_rne_v1",
     )
-    selected = builder.value("output.selected", "i32", (1,), "activation")
+    selected = builder.value("output.selected", "u32", (1,), "activation")
     builder.kernel(
         "token_selection",
         "ARGMAX",
@@ -498,7 +498,7 @@ def qwen_shaped_graph(
         contract="greedy_lowest_token_id_argmax_v1",
         attributes={"input_dtype": "bf16", "output_dtype": "u32"},
     )
-    next_token = builder.value("output.next_token", "i64", (1,), "output")
+    next_token = builder.value("output.next_token", "u32", (1,), "output")
     builder.kernel(
         "token_append",
         "TOKEN_APPEND",
@@ -549,7 +549,7 @@ def deepseek_shaped_graph(
     context = Symbolic("context_tokens", 1, span_max)
     layers = len(sequence)
 
-    token_ids = builder.value("input.token_ids", "i64", (span,), "input")
+    token_ids = builder.value("input.token_ids", "u32", (span,), "input")
     positions = builder.value("input.positions", "i32", (span,), "input")
     embed = builder.weight("model.embed_tokens.weight", "bf16", (vocabulary, hidden))
     residual = builder.value("sequence.embedding", "bf16", (span, hidden), "activation")
@@ -559,7 +559,7 @@ def deepseek_shaped_graph(
         (token_ids, embed),
         (residual,),
         contract="bf16_payload_lookup_v1",
-        attributes={"input_dtype": "i64", "output_dtype": "bf16"},
+        attributes={"input_dtype": "u32", "output_dtype": "bf16"},
     )
     states = tuple(
         StateResource(
@@ -874,7 +874,7 @@ def deepseek_shaped_graph(
         (logits,),
         contract="bf16_bf16_fp32_sequential_rne_v1",
     )
-    selected = builder.value("output.selected", "i32", (1,), "activation")
+    selected = builder.value("output.selected", "u32", (1,), "activation")
     builder.kernel(
         "token_selection",
         "ARGMAX",
@@ -883,7 +883,7 @@ def deepseek_shaped_graph(
         contract="greedy_lowest_token_id_argmax_v1",
         attributes={"input_dtype": "bf16", "output_dtype": "u32"},
     )
-    next_token = builder.value("output.next_token", "i64", (1,), "output")
+    next_token = builder.value("output.next_token", "u32", (1,), "output")
     builder.kernel(
         "token_append",
         "TOKEN_APPEND",

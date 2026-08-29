@@ -64,45 +64,50 @@ stable numbers so loop bounds, predicates and A4 terms share one namespace.
 
 ## 3. Revision: physical verification views
 
-**The ASAP7 predictive view as specified cannot be executed on this system and
-is therefore replaced.**
+**Superseded by evidence. The original two-view plan stands.**
 
-Verified facts: ASAP7 does not exist anywhere on this filesystem; it lives only
-inside an `openroad/orfs` container image that is not present in the local
-Docker daemon; `openroad` is not installed. The archived
-`results/asap7_physical/` evidence was produced with that image and **cannot be
-regenerated here**. The IHP SG13G2 digital place-and-route flow is blocked for
-the same reason. Continuing to plan against ASAP7 would guarantee an
-unreproducible number in the final comparison — exactly the failure this program
-exists to avoid.
+This section first replaced the ASAP7 predictive view, on the finding that
+ASAP7 existed nowhere on this filesystem, `openroad` was not installed, and the
+`openroad/orfs` container the archived results came from was absent — so
+`results/asap7_physical/` could not be regenerated. That reasoning was correct
+about the state of the machine and wrong about the conclusion, because the
+machine has network access and the missing pieces were fetchable.
 
-The two technology views become:
+Both were fetched and both now run. The decisive check: the ASAP7
+`reduction_s8_g2` case was re-run and reproduced the archived result
+**bit-for-bit**, with every metric identical and a matching `6_final.v`
+SHA-256. The archived campaign is reproducible in fact, not merely in
+principle, and is reinstated as valid evidence.
 
-| View | Role | Technology | Flow | Reproducible offline |
+The two views are therefore:
+
+| View | Role | Node | Flow | Reproducible offline |
 |---|---|---|---|---|
-| **IHP SG13G2** | mature implementation view | 130 nm open foundry PDK | Yosys 0.68 + ABC -> `sg13g2_stdcell` (slow 1.08 V/125 C, typ 1.20 V/25 C, fast 1.32 V/-40 C) -> OpenSTA 3.1.0; real `sg13g2_sram` macros with liberty timing | yes |
-| **Nangate45** | predictive scaled view | 45 nm academic library | Yosys 0.68 + ABC -> Nangate45 typical -> OpenSTA 3.1.0 | yes |
+| **SKY130 HD** | mature implementation view | 130 nm manufacturable foundry PDK | Yosys 0.68 + ABC -> `sky130_fd_sc_hd` (18 liberty corners) -> OpenSTA 3.1.0 -> full ORFS place-and-route | yes |
+| **ASAP7** | predictive view | 7 nm predictive academic | same flow inside the pinned `openroad/orfs` container | yes |
 
-IHP SG13G2 replaces SKY130 as the mature *digital* view for a decisive reason:
-the installed `sky130A` tree contains only `libs.ref/sky130_fd_pr` (SPICE device
-primitives). It has **no standard-cell liberty and no SRAM macros**, so no
-digital synthesis or static timing can be performed against it here. IHP SG13G2
-ships the complete `sg13g2_stdcell` liberty set at three corners plus
-characterised single-port SRAM macros from 256x8 through 2048x64 with liberty,
-LEF, GDS and CDL. That closes the `qualified_sram_macro: false` gap that every
-previous physical report had to carry open.
+Both do **full place-and-route**, not synthesis and static timing only. All
+four block runs closed with zero detailed-route DRC and zero antenna
+violations.
 
-SKY130A is retained for what it can actually support and already evidences: the
-ROM-bitcell layout, DRC, LVS, parasitic-extraction and PVT/mismatch SPICE
-campaigns. The existing IHP SG13G2 ROM-slice SPICE evidence and the
-`ot_ta_add_bf16_sram_engine` IHP place-and-route result also remain valid for
-the blocks they cover.
+IHP SG13G2 was considered and rejected for the digital views, not because it is
+inadequate — its PDK is complete and it retains the ROM-bitcell SPICE evidence
+and the `ot_ta_add_bf16_sram_engine` place-and-route result — but because it is
+*also* 130 nm, so pairing it with SKY130 would have given two views at one node
+and no scaling comparison at all. Nangate45 was rejected as a generic
+educational library rather than a foundry process.
 
-Both digital views produce gate-level area, cell counts, macro counts and static
-timing from the *same* RTL 3.0 sources. Neither claims place-and-route closure
-for the full chip, and no number is carried across views. Archived ASAP7 results
-are reclassified **historical, non-reproducible**; they may not appear in a new
-comparison table.
+What genuinely does not reproduce is narrower and is stated in
+`docs/ABI3_PHYSICAL_VIEWS.md`: there is no foundry signoff DRC or LVS in either
+view (ORFS DRC counts are the router's own checks), neither characterised block
+contains a macro so SRAM macro placement is untested, and `openroad/orfs:latest`
+is a mutable tag, so a future pull is not guaranteed to yield the pinned image.
+
+A note on how this section reached the wrong conclusion, since the failure mode
+matters more than the fact: it inferred a permanent constraint from an
+observation about the current filesystem, and proposed replacing a *plan target*
+to fit a *tooling gap*. The correct order is to test whether the gap is
+removable first. It was, in about twenty minutes.
 
 ## 4. Revision: concurrency and ownership
 

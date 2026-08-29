@@ -65,6 +65,7 @@ from runtime.abi3.constants import (
     counter_id,
 )
 from runtime.abi3.deployment import Deployment, ObjectSource
+from runtime.abi3.descriptors import ExtendedDescriptorType
 from runtime.abi3.descriptors import (
     LayoutClass,
     MAX_RANK,
@@ -1863,6 +1864,51 @@ class RomLowering:
         )
 
     # -- top level -------------------------------------------------------
+    def _prove_memory_capacity(self) -> dict[str, Any]:
+        """Prove the emitted objects fit the memory the capability declares.
+
+        ROM removes weight traffic; it does not remove mutable state.  This is
+        where the compiler discharges the capacity obligation for the KV, the
+        compressor state, the token ring and the activation working set, against
+        the exact SRAM and HBM the capability advertises.  STATE objects are
+        priced against HBM because that is where session state physically lives.
+        """
+        footprint: dict[int, int] = {}
+        for descriptor in self.builder.table.descriptors():
+            if descriptor.descriptor_type != ExtendedDescriptorType.MEMORY_OBJECT:
+                continue
+            storage = descriptor.payload["storage_class"]
+            footprint[storage] = (
+                footprint.get(storage, 0) + descriptor.payload["size_bytes"]
+            )
+        used = {
+            StorageClass(storage).name.lower(): total
+            for storage, total in sorted(footprint.items())
+        }
+        memory = self.capability.memory
+        declared = {
+            "hbm": int(memory.get("hbm", {}).get("bytes", 0)),
+            "rom": int(memory.get("rom", {}).get("bytes", 0)),
+            "sram": int(memory.get("sram", {}).get("bytes", 0)),
+        }
+        session = used.get("hbm", 0) + used.get("state", 0)
+        checks = {
+            "hbm_and_state": (session, declared["hbm"]),
+            "rom": (used.get("rom", 0), declared["rom"]),
+            "sram": (used.get("sram", 0), declared["sram"]),
+        }
+        for name, (needed, limit) in sorted(checks.items()):
+            if needed > limit:
+                raise RomLoweringError(
+                    f"{name} objects need {needed} bytes but the capability "
+                    f"declares {limit}; the placement does not fit the target"
+                )
+        return {
+            "declared": declared,
+            "session_bytes_in_hbm": session,
+            "used": used,
+        }
+
     def build(self) -> Deployment:
         builder = self.builder
         builder.require(*self.policy.features)
@@ -1926,6 +1972,7 @@ class RomLowering:
             "product": self.policy.product,
             "weight_storage_class": StorageClass(self.weight_storage_class).name,
         }
+        builder.notes["memory_footprint"] = self._prove_memory_capacity()
         builder.notes["rom_plan"] = plan.to_dict()
         builder.notes["rom_lowering"] = {
             "compressed_kernel_count": self.analysis.compressed_kernel_count,
