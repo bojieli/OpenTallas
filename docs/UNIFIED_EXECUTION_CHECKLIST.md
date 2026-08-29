@@ -78,7 +78,7 @@
 ## W6 — Real end-to-end execution (the correctness spine)
 
 - [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle**, and **decode reaches a real EOS**. `TA-QW-AGENT-1` ran 112 prompt tokens to the natural stop at token 151645 after 23 tokens (`results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json`), `TA-QW-CHAT-1` ran 24 tokens (`..._ta-qw-chat-1_...`); both agree with the oracle at every position, with no legitimacy problems and all 27 admission checks passing
-- [ ] W6.2 Qwen-ROM: identical token sequence from the ROM deployment
+- [x] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. Storage-class equivalence re-proved after every change: 18 descriptors differ, all `MEMORY_OBJECT`, all ROM→HBM, none beyond storage class
 - [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens
 - [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
