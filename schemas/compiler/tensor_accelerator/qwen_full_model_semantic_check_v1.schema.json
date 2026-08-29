@@ -1,0 +1,40 @@
+{
+  "$id": "https://opentallas.org/schemas/compiler/tensor_accelerator/qwen_full_model_semantic_check_v1.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capability_id": {"$ref": "#/$defs/sha256"},
+    "check_id": {"$ref": "#/$defs/sha256"},
+    "checks": {
+      "additionalProperties": false,
+      "properties": {
+        "artifact_identities": {"const": true},
+        "backend_neutral": {"const": true},
+        "dynamic_shapes": {"const": true},
+        "kernel_indices_contiguous": {"const": true},
+        "numeric_contracts_exact": {"const": true},
+        "operation_coverage_exact": {"const": true},
+        "qualification_references_complete": {"const": true},
+        "state_coverage_exact": {"const": true},
+        "tensor_coverage_exact": {"const": true}
+      },
+      "required": ["artifact_identities", "backend_neutral", "dynamic_shapes", "kernel_indices_contiguous", "numeric_contracts_exact", "operation_coverage_exact", "qualification_references_complete", "state_coverage_exact", "tensor_coverage_exact"],
+      "type": "object"
+    },
+    "coverage_report_id": {"$ref": "#/$defs/sha256"},
+    "graph_id": {"$ref": "#/$defs/sha256"},
+    "kernel_ir_id": {"$ref": "#/$defs/sha256"},
+    "operation_count": {"const": 617},
+    "operation_ids_sha256": {"$ref": "#/$defs/sha256"},
+    "schema": {"const": "opentallas.tensor_accelerator.qwen_full_model_semantic_check.v1"},
+    "state_resource_count": {"const": 36},
+    "state_resource_ids_sha256": {"$ref": "#/$defs/sha256"},
+    "status": {"const": "pass"}
+  },
+  "required": ["capability_id", "check_id", "checks", "coverage_report_id", "graph_id", "kernel_ir_id", "operation_count", "operation_ids_sha256", "schema", "state_resource_count", "state_resource_ids_sha256", "status"],
+  "title": "OpenTallas Qwen3-8B complete semantic independent check v1",
+  "type": "object",
+  "$defs": {
+    "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"}
+  }
+}

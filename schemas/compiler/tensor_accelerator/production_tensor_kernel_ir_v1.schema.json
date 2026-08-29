@@ -152,8 +152,10 @@
         "attributes": {
           "additionalProperties": false,
           "properties": {
+            "index_conversion": {"const": "checked_nonnegative_u32"},
             "index_dtype": {"const": "u32"},
             "output_dtype": {"const": "bf16"},
+            "source_index_dtype": {"const": "i64"},
             "source_index_max_exclusive": {"minimum": 1, "type": "integer"},
             "source_index_min": {"const": 0}
           },
@@ -237,7 +239,7 @@
           "additionalProperties": false,
           "properties": {
             "reduction_width": {"minimum": 1, "type": "integer"},
-            "rows": {"minimum": 1, "type": "integer"},
+            "rows": {"$ref": "#/$defs/row_extent"},
             "width": {"minimum": 1, "type": "integer"}
           },
           "required": ["reduction_width", "rows", "width"],
@@ -289,6 +291,8 @@
             "coefficient_layout": {"const": "cos_head_dim_then_sin_head_dim"},
             "key_value_heads": {"minimum": 1, "type": "integer"},
             "max_positions": {"minimum": 1, "type": "integer"},
+            "position_count_symbol": {"$ref": "#/$defs/identifier"},
+            "position_progression": {"const": "consecutive_from_start"},
             "position_symbol": {"$ref": "#/$defs/identifier"},
             "query_heads": {"minimum": 1, "type": "integer"},
             "rotation": {"const": "concat_neg_second_half_first_half"}
@@ -320,6 +324,21 @@
       },
       "required": ["attributes", "index", "inputs", "kind", "numeric_contract", "outputs", "shape", "source_operation_id"],
       "type": "object"
+    },
+    "row_extent": {
+      "oneOf": [
+        {"minimum": 1, "type": "integer"},
+        {
+          "additionalProperties": false,
+          "properties": {
+            "maximum": {"minimum": 1, "type": "integer"},
+            "multiplier": {"minimum": 1, "type": "integer"},
+            "symbol": {"$ref": "#/$defs/identifier"}
+          },
+          "required": ["maximum", "multiplier", "symbol"],
+          "type": "object"
+        }
+      ]
     },
     "sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
     "silu_mul": {
@@ -398,7 +417,7 @@
     },
     "vector_shape": {
       "additionalProperties": false,
-      "properties": {"rows": {"minimum": 1, "type": "integer"}, "width": {"minimum": 1, "type": "integer"}},
+      "properties": {"rows": {"$ref": "#/$defs/row_extent"}, "width": {"minimum": 1, "type": "integer"}},
       "required": ["rows", "width"],
       "type": "object"
     }
