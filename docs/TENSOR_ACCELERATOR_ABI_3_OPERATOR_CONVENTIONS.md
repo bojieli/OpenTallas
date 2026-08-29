@@ -287,6 +287,13 @@ out in the view's logical row-major order, addressed at
 `element_offset // scale_block_elements`. It requires last-axis stride 1 and
 `K % scale_block_elements == 0`; anything else fails closed.
 
+> **Generalised by amendment A15** (wire format, section 12.6). The rule above
+> addresses one axis, and the released DeepSeek FP8 weights scale 128 × 128
+> *tiles* — 256 codes where this rule demands 32,768. A15 adds
+> `scale_block_rows` and makes the statement above its `scale_block_rows = 1`
+> case, exactly; no program written against this paragraph changes meaning.
+
+
 ---
 
 ## 13. Amendment A9 — neutral IR gaps found by lowering a second model

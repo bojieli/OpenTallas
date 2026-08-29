@@ -392,6 +392,48 @@ for `RUNTIME_SYMBOL` it is a value from the registry in section 12.2.
 A loop bound and a predicate operand may name any of these. Unassigned values
 are reserved.
 
+### 12.6 Amendment A15 — a block scale may tile two axes
+
+A `TENSOR_VIEW` gains `scale_block_rows` at payload offset 104, four bytes; the
+reserved span shrinks from 24 bytes at 104 to 20 at 108.
+
+Amendment A8 froze block-scale addressing as one E8M0 byte per
+`scale_block_elements`, in the view's logical row-major order, addressed at
+`element_offset // scale_block_elements`. That is a one-dimensional rule, and it
+cannot describe the released DeepSeek-V4-Flash checkpoint. `layers.0.attn.wq_a`
+is a `[1024, 4096]` fp8_e4m3fn weight with a 128-element block, so A8 demands
+`1024 × 4096 / 128 = 32,768` scale codes. The checkpoint ships **256**, shaped
+`[8, 32]`, which is `1024/128 × 4096/128`: the scales are 128 × 128 *tiles*, not
+runs along a row. Block-scaled FP8 is normally laid out this way, and no rule
+that addresses a single axis can express it.
+
+So `scale_block_elements` is the block along the **last** axis, and
+`scale_block_rows` is the block along the **leading** one. The scale index for
+element `(row, col)` of a rank-2 view over `cols` columns is
+
+```
+scale_index = (row / scale_block_rows) * (cols / scale_block_elements)
+            + (col / scale_block_elements)
+```
+
+with integer division, requiring last-axis stride 1,
+`cols % scale_block_elements == 0` and `rows % scale_block_rows == 0`; anything
+else fails closed, as before.
+
+**A8 is the `scale_block_rows = 1` case of this rule, exactly.** Substituting 1
+gives `row * (cols / scale_block_elements) + col / scale_block_elements`, which
+is `element_offset // scale_block_elements` whenever the block divides the row —
+which A8 already requires. So no existing program changes meaning, and reserved
+bytes must be zero, so every view written before this amendment reads
+`scale_block_rows = 0`, which is defined to mean 1. MXFP4's 32-element blocks
+along the reduction axis stay one-dimensional and untouched.
+
+The alternative was to materialise the 256 codes into 32,768 by repetition. That
+would fabricate a layout the checkpoint does not have, and it would break the
+zero-copy inverse proof over all 156 GB, which is one of the few things in this
+program that is proved rather than argued. Describing the real layout is the
+change that was needed.
+
 ## 13. Amendments made at the architecture freeze
 
 The draft of this document disagreed with `TA-ADR-003` in five places. All five
@@ -432,6 +474,7 @@ remain normative.
 | A12 | `SPAN_LAST_INDEX` | this document, section 12.3 |
 | A13 | the partial final iteration of a block loop | this document, section 12.4 |
 | A14 | the scope of a collective's participants | this document, section 12.5 |
+| A15 | a block scale may tile two axes | this document, section 12.6 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a
