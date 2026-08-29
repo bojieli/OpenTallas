@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://opentallas.example/schemas/compiler/tensor_accelerator/qwen_rtl_dma_matmul_vectors_v1.schema.json",
-  "title": "Qwen source-bound first q_proj DMA plus MATMUL RTL vectors v1",
+  "title": "Qwen first full-K q_proj output-block RTL vectors v1",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -12,6 +12,8 @@
     "commands",
     "composition",
     "expected_accumulator_codes",
+    "expected_accumulator_tiles",
+    "expected_output_codes",
     "graph_id",
     "hbm_shard",
     "input_codes",
@@ -20,8 +22,9 @@
     "physical_plan_id",
     "rmsnorm_source_vector_id",
     "schema",
+    "tiles",
     "vector_set_id",
-    "weight_tile_payload_hex"
+    "weight_payload_hex"
   ],
   "properties": {
     "build_id": {
@@ -31,12 +34,13 @@
       "const": {
         "authentic_command_records": true,
         "behavioral_hbm_and_sram": true,
-        "bf16_final_output_written": false,
+        "bf16_final_output_written": true,
+        "complete_first_output_block": true,
         "complete_layer_execution": false,
-        "complete_matmul_command": true,
+        "complete_matmul_commands": true,
         "complete_q_projection_graph_operation": false,
         "graph_valid_qwen_command_slice": true,
-        "preloaded_attention_norm_slice": true,
+        "preloaded_attention_norm_row": true,
         "program_order_and_fail_stop": true,
         "qualified_hbm_phy": false,
         "qualified_sram_macro": false,
@@ -53,42 +57,53 @@
     },
     "commands": {
       "type": "array",
-      "minItems": 2,
-      "maxItems": 2,
-      "prefixItems": [
-        {"$ref": "#/$defs/dma_command"},
-        {"$ref": "#/$defs/matmul_command"}
-      ],
-      "items": false
+      "minItems": 32,
+      "maxItems": 32,
+      "items": {"$ref": "#/$defs/command"}
     },
     "composition": {
       "const": {
         "accumulator_address": 5242880,
         "accumulator_count": 64,
-        "accumulator_payload_sha256": "c82ca04197419306b6bbc545be882163e3ccccfb013773107541d3441dee8776",
+        "accumulator_payload_sha256": "9ca6beb437222939a843d9a12d2fc93440de926cf7e0a5b3af40ce2c63a28f49",
         "auxiliary_address": 6291456,
-        "auxiliary_write_count": 0,
+        "auxiliary_payload_sha256": "c485049ad6aa3e7c6e641defacfabee7de0c159cd8d45a65e74409493d17eb5e",
+        "auxiliary_saturation_count": 0,
+        "auxiliary_write_count": 64,
         "dma_destination_address": 4194304,
         "graph_command_count": 2048,
         "graph_command_end": 2050,
         "graph_command_start": 3,
         "graph_operation_id": "node.0002",
+        "graph_output_block_count": 64,
         "input_address": 3145728,
-        "input_element_count": 256,
-        "input_payload_sha256": "3e95a6a07ba5eff942a866e767b856aeb6d83def5b7f12d55983acb2afdb2551",
-        "matmul_add_count": 16384,
-        "matmul_multiply_count": 16384,
+        "input_element_count": 4096,
+        "input_payload_sha256": "976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58",
+        "k_tile_count": 16,
+        "matmul_add_count": 262144,
+        "matmul_multiply_count": 262144,
+        "output_block_count": 1,
         "output_tile_index": 0,
         "parent_deployed_weight_payload_sha256": "27406586791294918cb04052d91f7d47c41aac1af56650c4b47f68ac00f1ff9b",
         "parent_source_weight_payload_sha256": "fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8",
-        "submitted_command_indices": [3, 4],
+        "submitted_command_indices": [
+          3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+          19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34
+        ],
         "weight_address": 4194304,
-        "weight_element_count": 16384,
-        "weight_tile_index": 0,
-        "weight_tile_payload_sha256": "c9b6213f04cfd269acdb7124e76d3b9775965145d15defb663f02e21e34418bc"
+        "weight_element_count": 262144,
+        "weight_payload_sha256": "87bb7ad73d67888d91510a5443e2672172fcfccf52a5cd8b31acbe1f80c6be03",
+        "weight_tile_count": 16
       }
     },
     "expected_accumulator_codes": {"$ref": "#/$defs/accumulator_codes"},
+    "expected_accumulator_tiles": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {"$ref": "#/$defs/accumulator_codes"}
+    },
+    "expected_output_codes": {"$ref": "#/$defs/output_codes"},
     "graph_id": {
       "const": "989ab0d4dae37c783e2eff349e1ed1fe16279288e12a19a94975f43b0254426f"
     },
@@ -98,10 +113,16 @@
         "path": "memory/hbm/hbm.00001.656958bc279d27f01126b855c25daeddc42f37f69445e97c2df432cee6dffb37.bin",
         "sha256": "656958bc279d27f01126b855c25daeddc42f37f69445e97c2df432cee6dffb37",
         "size_bytes": 1073741824,
-        "tile_offset_bytes": 170950656
+        "slice_offset_bytes": 170950656,
+        "slice_size_bytes": 524288
       }
     },
-    "input_codes": {"$ref": "#/$defs/input_codes"},
+    "input_codes": {
+      "type": "array",
+      "minItems": 4096,
+      "maxItems": 4096,
+      "items": {"type": "integer", "minimum": 0, "maximum": 65535}
+    },
     "kernel_ir_id": {
       "const": "270b7609f2ea101593b3870a498bda3320336c94b27862dca7f991352727e050"
     },
@@ -115,10 +136,18 @@
     "schema": {
       "const": "opentallas.tensor_accelerator.qwen_rtl_dma_matmul_vectors.v1"
     },
-    "vector_set_id": {"$ref": "#/$defs/sha256"},
-    "weight_tile_payload_hex": {
+    "tiles": {
+      "type": "array",
+      "minItems": 16,
+      "maxItems": 16,
+      "items": {"$ref": "#/$defs/tile"}
+    },
+    "vector_set_id": {
+      "const": "4fe481b232112fe5b494cab1ca4445159b91a512a524471bee18267fe5525129"
+    },
+    "weight_payload_hex": {
       "type": "string",
-      "pattern": "^[0-9a-f]{65536}$"
+      "pattern": "^[0-9a-f]{1048576}$"
     }
   },
   "$defs": {
@@ -126,17 +155,17 @@
       "type": "string",
       "pattern": "^[0-9a-f]{64}$"
     },
-    "input_codes": {
-      "type": "array",
-      "minItems": 256,
-      "maxItems": 256,
-      "items": {"type": "integer", "minimum": 0, "maximum": 65535}
-    },
     "accumulator_codes": {
       "type": "array",
       "minItems": 64,
       "maxItems": 64,
       "items": {"type": "integer", "minimum": 0, "maximum": 4294967295}
+    },
+    "output_codes": {
+      "type": "array",
+      "minItems": 64,
+      "maxItems": 64,
+      "items": {"type": "integer", "minimum": 0, "maximum": 65535}
     },
     "fields": {
       "type": "object",
@@ -149,20 +178,20 @@
       "properties": {
         "auxiliary": {"type": "integer", "minimum": 0},
         "destination": {"type": "integer", "minimum": 0},
-        "engine": {"type": "integer", "minimum": 0},
-        "flags": {"type": "integer", "minimum": 0},
-        "index": {"type": "integer", "minimum": 0},
-        "kernel_index": {"type": "integer", "minimum": 0},
-        "opcode": {"type": "integer", "minimum": 0},
-        "size0": {"type": "integer", "minimum": 0},
+        "engine": {"enum": [1, 2]},
+        "flags": {"enum": [0, 1, 2]},
+        "index": {"type": "integer", "minimum": 3, "maximum": 34},
+        "kernel_index": {"const": 2},
+        "opcode": {"enum": [1, 16]},
+        "size0": {"type": "integer", "minimum": 1},
         "size1": {"type": "integer", "minimum": 0},
         "size2": {"type": "integer", "minimum": 0},
-        "size3": {"type": "integer", "minimum": 0},
+        "size3": {"const": 0},
         "source0": {"type": "integer", "minimum": 0},
         "source1": {"type": "integer", "minimum": 0}
       }
     },
-    "command_base": {
+    "command": {
       "type": "object",
       "additionalProperties": false,
       "required": [
@@ -174,75 +203,33 @@
         "abi_minor": {"const": 5},
         "expected_error": {"const": 0},
         "expected_fields": {"$ref": "#/$defs/fields"},
-        "expected_index": {"type": "integer", "minimum": 0},
+        "expected_index": {"type": "integer", "minimum": 3, "maximum": 34},
         "last": {"type": "boolean"},
-        "name": {"type": "string", "minLength": 1},
+        "name": {
+          "type": "string",
+          "pattern": "^(dma_q_proj_weight_tile|matmul_bf16_tile)_k(0[0-9]|1[0-5])$"
+        },
         "record_hex": {"type": "string", "pattern": "^[0-9a-f]{128}$"}
       }
     },
-    "dma_command": {
-      "allOf": [
-        {"$ref": "#/$defs/command_base"},
-        {
-          "properties": {
-            "expected_fields": {
-              "const": {
-                "auxiliary": 0,
-                "destination": 4194304,
-                "engine": 1,
-                "flags": 0,
-                "index": 3,
-                "kernel_index": 2,
-                "opcode": 1,
-                "size0": 32768,
-                "size1": 0,
-                "size2": 0,
-                "size3": 0,
-                "source0": 1244692480,
-                "source1": 0
-              }
-            },
-            "expected_index": {"const": 3},
-            "last": {"const": false},
-            "name": {"const": "dma_q_proj_weight_tile"},
-            "record_hex": {
-              "const": "d9afea5500000000000000000000000000008000000000000000000000000000004000000000000000000000000000004a308000000000020000000300000101"
-            }
-          }
-        }
-      ]
-    },
-    "matmul_command": {
-      "allOf": [
-        {"$ref": "#/$defs/command_base"},
-        {
-          "properties": {
-            "expected_fields": {
-              "const": {
-                "auxiliary": 6291456,
-                "destination": 5242880,
-                "engine": 2,
-                "flags": 1,
-                "index": 4,
-                "kernel_index": 2,
-                "opcode": 16,
-                "size0": 1,
-                "size1": 64,
-                "size2": 256,
-                "size3": 0,
-                "source0": 3145728,
-                "source1": 4194304
-              }
-            },
-            "expected_index": {"const": 4},
-            "last": {"const": true},
-            "name": {"const": "matmul_bf16_tile"},
-            "record_hex": {
-              "const": "e3ec9df4000000000000010000000040000000010000000000600000000000000050000000000000004000000000000000300000000000020000000400010210"
-            }
-          }
-        }
-      ]
+    "tile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accumulator_payload_sha256", "dma_command_index",
+        "dma_source_address", "flags", "input_address", "k_tile_index",
+        "matmul_command_index", "weight_payload_sha256"
+      ],
+      "properties": {
+        "accumulator_payload_sha256": {"$ref": "#/$defs/sha256"},
+        "dma_command_index": {"type": "integer", "minimum": 3, "maximum": 33},
+        "dma_source_address": {"type": "integer", "minimum": 1244692480},
+        "flags": {"enum": [0, 1, 2]},
+        "input_address": {"type": "integer", "minimum": 3145728},
+        "k_tile_index": {"type": "integer", "minimum": 0, "maximum": 15},
+        "matmul_command_index": {"type": "integer", "minimum": 4, "maximum": 34},
+        "weight_payload_sha256": {"$ref": "#/$defs/sha256"}
+      }
     }
   }
 }

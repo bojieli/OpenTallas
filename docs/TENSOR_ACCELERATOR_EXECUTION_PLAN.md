@@ -1128,56 +1128,69 @@ reliability, yield, and silicon evidence remain separate gates.
 
 ### 1.20 First authentic Q-projection DMA/MATMUL tile pair
 
-QW-RTL-DMA-MATMUL-001 implements the next adjacent production records without
-claiming the complete projection. Command 3 stages the first 32,768-byte tile
-of `model.layers.0.self_attn.q_proj.weight` from HBM address 1,244,692,480 to
-SRAM address 4,194,304. Command 4 is `MATMUL_BF16_TILE` with
-`MATMUL_INIT`, shape `1 x 64 x 256`, input address 3,145,728, FP32 accumulator
-address 5,242,880, and eventual BF16 auxiliary address 6,291,456. The command
-does not carry `MATMUL_FINAL`, so the bounded engine writes exactly 64 raw FP32
-accumulator codes and performs zero BF16 auxiliary writes.
+QW-RTL-DMA-MATMUL-001 now implements authentic production commands 3 through
+34 without claiming the complete projection. Sixteen alternating
+`DMA_HBM_TO_SRAM` and `MATMUL_BF16_TILE` pairs cover all 4,096 K elements for
+the first 64-output q-projection block. Each DMA stages 32,768 bytes at SRAM
+address 4,194,304. Command 4 carries `MATMUL_INIT`; commands 6 through 32 carry
+neither accumulation flag; command 34 carries `MATMUL_FINAL`. Every MATMUL has
+shape `1 x 64 x 256`, advances its input by 512 bytes, uses FP32 accumulator
+address 5,242,880, and names BF16 auxiliary address 6,291,456.
 
-The tile is extracted from immutable HBM shard SHA-256
+The contiguous 524,288-byte weight slice is extracted from immutable HBM shard
+SHA-256
 `656958bc279d27f01126b855c25daeddc42f37f69445e97c2df432cee6dffb37`
 at shard offset 170,950,656. Its SHA-256 is
-`c9b6213f04cfd269acdb7124e76d3b9775965145d15defb663f02e21e34418bc`.
+`87bb7ad73d67888d91510a5443e2672172fcfccf52a5cd8b31acbe1f80c6be03`;
+all sixteen constituent tile hashes are retained separately.
 The deployed parent q-projection tensor hash is
 `27406586791294918cb04052d91f7d47c41aac1af56650c4b47f68ac00f1ff9b`;
 its source checkpoint payload hash is
 `fd56b85bf301661c8655ed517928304d25df7d6b3ea3d9be85c021159d61bad8`.
-The 256-element input is the first slice of the retained command-2 RMSNorm
-output and has hash
-`3e95a6a07ba5eff942a866e767b856aeb6d83def5b7f12d55983acb2afdb2551`.
+The 4,096-element input is the complete retained command-2 RMSNorm output row
+and has hash
+`976d6de1a3ed91a066c7efed4354e578edf366a3b51a7e6077d68282981ffa58`.
 
 The arithmetic contract is `bf16_bf16_fp32_sequential_rne_v1`: BF16 operands
 widen exactly, each product rounds once to binary32, and each output accumulates
 in strictly increasing K order with one binary32 RNE rounding per addition.
+For each non-init command, the engine reloads all 64 FP32 lanes as ordered low-
+then-high 16-bit SRAM reads before reading the next input and weight segments.
 The optimized NumPy implementation and the independent exact-Fraction scalar
-oracle agree on all 64 codes; the little-endian accumulator payload SHA-256 is
-`c82ca04197419306b6bbc545be882163e3ccccfb013773107541d3441dee8776`.
+oracle agree after every K tile. The final little-endian accumulator payload
+SHA-256 is
+`9ca6beb437222939a843d9a12d2fc93440de926cf7e0a5b3af40ce2c63a28f49`.
+Command 34 validates and buffers all final conversions before writing the FP32
+tile followed by 64 BF16 values. The BF16 payload SHA-256 is
+`c485049ad6aa3e7c6e641defacfabee7de0c159cd8d45a65e74409493d17eb5e`;
+its saturation count is zero.
 A new general signed finite binary32 adder is independently checked in Icarus
 and Verilator over 20,000 directed, cancellation-heavy, subnormal, overflow,
 nonfinite, and random pairs before it is used by the MATMUL engine.
 
 The retained vector-set ID is
-`ad2d94e71e7a24d98e92cff7a097d616e3c84e3540d033650119d81dbaaa1dc5`;
+`4fe481b232112fe5b494cab1ca4445159b91a512a524471bee18267fe5525129`;
 the campaign ID is
-`02733c4556fdeb9abac45735df80abd440bcbfc2edaf01998e3e0522c6588478`.
-Both simulators reconcile 512 HBM requests/responses, 2,048 16-byte DMA
-writes, 256 input reads, 16,384 weight reads, 16,384 products, 16,384 ordered
-additions, and 64 four-byte accumulator writes under independent
-backpressure. CRC, HBM-response, command-order, input-nonfinite,
-weight-nonfinite, multiplication-overflow, and accumulation-overflow cases all
-fail stop. Every numeric fault performs zero accumulator and auxiliary writes.
+`c0dba5230a77daa1eecab33aa43960b2e41f198cd453e6ef139653ef1a14a298`.
+Both simulators reconcile 8,192
+HBM requests/responses, 32,768 16-byte DMA writes, 1,920 accumulator halfword
+reads, 4,096 input reads, 262,144 weight reads, 262,144 products, 262,144
+ordered additions, 1,024 four-byte accumulator writes, and 64 two-byte BF16
+writes under independent backpressure. CRC, HBM-response, command-order,
+input-nonfinite, weight-nonfinite, multiplication-overflow,
+accumulation-overflow, and reloaded-accumulator-nonfinite cases all fail stop.
+A failing command performs zero destination writes; the reload fault also
+proves that the already retired prior accumulator tile remains intact.
 
 Neutral graph operation `node.0002` spans commands 3 through 2,050: 1,024
 DMA/MATMUL pairs covering 16 K tiles by 64 N tiles. This evidence executes only
-the first pair. Therefore it closes one authentic MATMUL command and one raw
-accumulator tile, not the Q-projection graph operation, a BF16 Q output, a
-complete layer, or `TA-RTL-6`. Behavioral memories, the preloaded RMSNorm
-slice, the remaining 1,023 pairs and finalization, memory banking/ECC,
-arbitration, program authentication, timing, power/IR, thermal, foundry,
-package, reliability, yield, and silicon remain separate gates.
+the first output block's sixteen pairs. Therefore it closes 32 authentic
+commands, all K accumulation for 64 outputs, and one BF16 Q-output block. It
+does not close the other 63 output blocks, the Q-projection graph operation, a
+complete layer, or `TA-RTL-6`. Behavioral memories, the preloaded RMSNorm row,
+the remaining 1,008 pairs, memory banking/ECC, arbitration, program
+authentication, timing, power/IR, thermal, foundry, package, reliability,
+yield, and silicon remain separate gates.
 
 ## 2. Meaning of production-grade
 
@@ -2279,7 +2292,7 @@ RTL, physical, and comparison gates remain open.
 | Command and capability ABI | ABI 2.5 and capability V6 admit bounded indexed SRAM selection with a strict schema and preserve older minor decoding; the complete 924,386-command program executes causally | Fixed request v1 remains immutable; add a separately versioned dynamic request/session contract. Routing, remaining vector operations, synchronization, timing, 8,192-plus context support, and the final hardware capability remain open |
 | Compiler and checker | **QW-FM1 closed at `74c0d59`; QW-FM2/QW-FM3 closed at `324f48d`; QW-FM4 closed at `c5b9578`.** Complete Qwen neutral lowering, streamed full-model HBM layout, SRAM lifetime allocation, command lowering, inverse reconstruction, and one target-precision execution are deterministic and retained | Preserve those artifacts unchanged while adding dynamic prefill/decode compilation; do not relabel one fixed transaction as generation or long-context acceptance |
 | Functional simulation | **Fixed one-step QW-FM4 closed at `c5b9578`.** The common simulator authenticates all 17 HBM shards, validates and executes all commands, commits all 36 states atomically, and produces exact complete logits and one token; a separate checkpoint-layout and algorithmic path matches it exactly | Execute at least 32 ordinary greedy steps through a versioned dynamic request/session path, then prove operational readiness for the exact 8,000-token run |
-| RTL correlation | QW-RTL-CMD-001 admits all production records; QW-RTL-ADD-001 and ADD-SRAM-001 execute authentic residual data; QW-RTL-DMA-001 moves an authentic weight; QW-RTL-DMA-RMS-001 executes adjacent commands 1 and 2 and completes `node.0001`; QW-RTL-DMA-MATMUL-001 executes commands 3 and 4, including the first authentic 64-lane q-projection accumulator tile. Campaigns pass Icarus and Verilator with arithmetic differential and fail-stop checks | `node.0002` still requires the other 1,023 DMA/MATMUL pairs and BF16 finalization. Add those, subsequent kernels, program authentication, banking/ECC/arbitration, and a representative complete layer before `TA-RTL-6` |
+| RTL correlation | QW-RTL-CMD-001 admits all production records; QW-RTL-ADD-001 and ADD-SRAM-001 execute authentic residual data; QW-RTL-DMA-001 moves an authentic weight; QW-RTL-DMA-RMS-001 executes adjacent commands 1 and 2 and completes `node.0001`; QW-RTL-DMA-MATMUL-001 executes commands 3 through 34, including all 16 K tiles and final BF16 writeback for the first authentic 64-output q-projection block. Campaigns pass Icarus and Verilator with arithmetic differential and fail-stop checks | `node.0002` still requires the other 63 output blocks, or 1,008 DMA/MATMUL pairs. Add those, subsequent kernels, program authentication, banking/ECC/arbitration, and a representative complete layer before `TA-RTL-6` |
 | Timing and physical evidence | Bounded macro-free ADD-SRAM RTL-to-GDS feasibility passes on pinned public IHP SG13G2 at a 20 ns target: campaign `0af6cbe8...b316` has positive extracted setup/hold slack at slow, typical, and fast corners, zero internal route/antenna violations, 18,101 post-route cells, and no unconstrained endpoints | This is one control/compute slice with an external behavioral SRAM. Formal equivalence, SRAM macro, activity-derived power/IR, thermal, foundry DRC/LVS, HBM/package, complete-layer timing, performance per watt, reliability, yield, and silicon remain open; `TA-PHY-7` is not closed |
 | End-to-end execution | One complete 36-layer fixed request produces exact final logits, token `50994`, and committed state, but no multi-step generation or long-context common-simulator run has closed | `TA-QWEN-4` and `TA-DSV4-5` remain open; QW-FM4 cannot substitute for Qwen 8,000 or DeepSeek 200,000 |
 

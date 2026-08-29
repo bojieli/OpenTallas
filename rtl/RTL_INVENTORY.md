@@ -23,8 +23,8 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Production DMA/ADD sequencing | `ot_ta_dma_add_sequencer.sv` | One-command-at-a-time dispatch, monotonic submitted indices, shared SRAM write ownership, stable aggregate counters, explicit last-command completion, and fail-stop error handling | QW-RTL-DMA-ADD-001 |
 | Production RMSNorm arithmetic and SRAM control | `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv` | Finite FP32 RNE arithmetic, correctly rounded reciprocal square root, canonical 4,096-element balanced reduction, complete-pass buffered writeback, exact SRAM counters, and numeric-fault write suppression | QW-RTL-DMA-RMS-001 |
 | Production DMA/RMSNorm sequencing | `ot_ta_dma_rmsnorm_sequencer.sv` | Adjacent authentic command-1/command-2 dispatch, monotonic indices, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-RMS-001 |
-| Production BF16 MATMUL SRAM control | `ot_fp32_rne_pkg.sv`, `ot_ta_matmul_bf16_sram_engine.sv` | Signed finite FP32 RNE accumulation, fixed `1 x 64 x 256` initial tile, streamed weight validation, complete-tile buffered FP32 writeback, no non-final BF16 write, exact counters, and numeric-fault write suppression | QW-RTL-DMA-MATMUL-001 |
-| Production DMA/MATMUL sequencing | `ot_ta_dma_matmul_sequencer.sv` | Exact adjacent command-3/command-4 dispatch, strict two-command profile/order, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-MATMUL-001 |
+| Production BF16 MATMUL SRAM control | `ot_fp32_rne_pkg.sv`, `ot_ta_matmul_bf16_sram_engine.sv` | Signed finite FP32 RNE accumulation over fixed `1 x 64 x 256` segments, ordered 16-bit halfword reload of FP32 state, complete-tile buffered accumulator writeback, buffered `MATMUL_FINAL` BF16 conversion/writeback, exact counters, and numeric-fault write suppression | QW-RTL-DMA-MATMUL-001 |
+| Production DMA/MATMUL sequencing | `ot_ta_dma_matmul_sequencer.sv` | Exact command-3-through-34 dispatch for sixteen DMA/MATMUL pairs, strict alternating profile/order, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-MATMUL-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
@@ -137,23 +137,25 @@ authentication/`COMPLETE`, a representative layer, timing, activity-derived
 power/IR, and `TA-RTL-6` remain open.
 
 QW-RTL-DMA-MATMUL-001 is retained as vector set
-`ad2d94e71e7a24d98e92cff7a097d616e3c84e3540d033650119d81dbaaa1dc5`
+`4fe481b232112fe5b494cab1ca4445159b91a512a524471bee18267fe5525129`
 and campaign
-`02733c4556fdeb9abac45735df80abd440bcbfc2edaf01998e3e0522c6588478`.
-It executes adjacent authentic Qwen commands 3 and 4. The DMA stages the first
-32,768-byte `q_proj` tile, and the MATMUL engine consumes 256 retained
-`attention_norm` values plus 16,384 BF16 weights to write 64 exact FP32
-accumulators. Both simulators first check 20,000 general signed FP32 additions,
-then reconcile all HBM/SRAM transactions and arithmetic events under stalls.
-Seven fail-stop cases cover CRC, HBM response, order, nonfinite operands, and
-multiply/add overflow; all numeric faults suppress both accumulator and
-auxiliary writes.
+`c0dba5230a77daa1eecab33aa43960b2e41f198cd453e6ef139653ef1a14a298`.
+It executes authentic Qwen commands 3
+through 34. Sixteen DMAs stage 524,288 bytes of `q_proj` weights, and sixteen
+MATMUL commands consume the complete 4,096-element retained `attention_norm`
+row. Non-init commands reload 64 FP32 accumulators through two ordered 16-bit
+reads per lane; every command rewrites the complete accumulator tile; command
+34 buffers and writes 64 final BF16 values. Both simulators first check 20,000
+general signed FP32 additions, then reconcile all HBM/SRAM transactions and
+arithmetic events under stalls.
 
-Command 4 has `MATMUL_INIT` but not `MATMUL_FINAL`; its zero auxiliary-write
-count is required behavior. It is only the first of 1,024 tile pairs spanning
-commands 3 through 2,050 for `node.0002`. The complete Q projection, BF16
-finalization, physical HBM/SRAM, banking, ECC, arbitration, representative
-layer, timing, power/IR, and `TA-RTL-6` remain open.
+Eight fail-stop cases cover CRC, HBM response, order, nonfinite input/weight/
+accumulator state, and multiply/add overflow. A failing command emits no
+destination writes, and the reload fault preserves the prior retired tile.
+This completes all K tiles for one of 64 output blocks, or 32 of the 2,048
+commands spanning `node.0002`. The other 63 blocks, complete Q projection,
+physical HBM/SRAM, banking, ECC, arbitration, representative layer, timing,
+power/IR, and `TA-RTL-6` remain open.
 
 The bounded IHP SG13G2 physical campaign for
 `ot_ta_add_bf16_sram_engine` is retained as
