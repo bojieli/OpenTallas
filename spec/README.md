@@ -1,7 +1,9 @@
 # OpenTallas architecture and specification baseline
 
-Version 1.0 freezes a public-reference architecture that may be implemented with
-non-NDA tools. It is a logical and digital-design contract, not the current
+Version 1.1 retains the version-1.0 public-reference architecture and adds the
+deterministic DeepSeek V4 `HC_PRE` numeric contract required by the executable
+compiler recovery program. The package may be implemented with non-NDA tools.
+It is a logical and digital-design contract, not the current
 analytical product envelope, a tapeout release, or evidence that wafer-scale ROM,
 HBM beachfront, frequency, power, yield, or packaging is manufacturable.
 

@@ -155,3 +155,25 @@ post-route proofs pass from deterministic clean commit `34a0d2ec…`. The replay
 also rechecked 386 referenced artifacts after archival and retained the prior
 dirty-tree run separately. Any change to a fingerprinted RTL source, CDC
 inventory, implementation contract, or campaign runner invalidates that result.
+
+### CC-4.6 Executable HC_PRE numeric-contract extension
+
+Specification package 1.1 adds deterministic DeepSeek V4 hyper-connection
+pre-mixing semantics without changing any version-1.0 record field or opcode
+meaning. `NUM-6.10` freezes the width-16,384 RMS and projection order, correctly
+rounded sigmoid and exponential boundaries, exact 20-stage Sinkhorn sequence,
+balanced branch reduction, exceptional-value policy, atomic commit, and semantic
+counters. It explicitly does not claim equivalence to an unspecified CUDA math
+backend, model execution, cycle accuracy, PPA, or RTL closure.
+
+Compatibility: existing firmware, version-1.0 images, record encodings, and RTL
+retain their prior meaning. A compiler, service engine, checker, schedule, model
+image, or RTL implementation may claim `HC_PRE` only after satisfying
+`SYS-NUM-007`, `DV-NUM-003`, and the complete executable-model gate
+`DV-EXEC-001`. Reference and service arithmetic must be independently
+implemented; nonlinear known answers require independent correctly rounded
+oracles; and generated artifacts must keep the numeric-profile identity visible.
+Owner: compiler/numerics/DV. Any change to the frozen arithmetic order,
+transcendental result, Sinkhorn count, matrix orientation, poison behavior, or
+commit boundary requires numeric-profile version review and requalification of
+the reference, service, compiler, model images, schedules, and affected RTL.

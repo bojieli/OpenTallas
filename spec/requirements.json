@@ -461,6 +461,16 @@
       "verification_refs": ["DV-NUM-002", "DV-POWER-001"]
     },
     {
+      "allocations": ["compiler", "reference_model", "service_engine", "vector_unit"],
+      "architecture_refs": ["NUM-6.10"],
+      "basis": "derived",
+      "id": "SYS-NUM-007",
+      "priority": "must",
+      "statement": "DeepSeek V4 hyper-connection pre-mixing shall use the frozen width-16384 RMS, increasing-index projection, correctly rounded transcendental, 20-stage Sinkhorn, balanced branch-reduction, poison, and atomic-commit semantics before it can be included in executable-model evidence.",
+      "status": "specified",
+      "verification_refs": ["DV-EXEC-001", "DV-NUM-003"]
+    },
+    {
       "allocations": ["host_interface", "static_noc", "tile_interfaces", "telemetry"],
       "architecture_refs": ["RAS-2.1", "ICD-1.3"],
       "basis": "derived",

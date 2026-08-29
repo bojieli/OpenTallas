@@ -1,6 +1,6 @@
 # Numerical-format and determinism specification
 
-**Document:** SPEC-NUM 1.0
+**Document:** SPEC-NUM 1.1
 
 The numerical contract is architectural. A different encoding, reduction tree,
 rounding point, saturation rule, or exceptional-value policy is an externally
@@ -613,6 +613,359 @@ outputs and zero CUDA outputs, with every CPU difference an adjacent same-sign
 code after positive-zero canonicalization. These observations bound that
 development corpus only; the explicit rules above remain the target contract.
 
+### NUM-6.10 Hyper-connection pre-mixing
+
+`HC_PRE` is the composite numeric boundary before each attention and FFN branch.
+The source-mapped DeepSeek V4 Flash graph enumerates 92 such sites: two in each
+of 43 main blocks and two in each of three DSpark blocks. This section freezes
+the deterministic target arithmetic for those sites. It does not qualify
+`HC_HEAD`, which has a related but distinct source expression and requires its
+own contract.
+
+For positive batch and sequence extents, let `T = batch * sequence`. Every token
+is independent; no reduction crosses a batch or sequence axis. The pinned profile
+has:
+
+```text
+hc_mult = H = 4
+width = D = 4096
+flattened_width = K = H * D = 16384
+mix_fields = M = (2 + H) * H = 24
+sinkhorn_iterations = 20
+norm_epsilon = binary32 0x358637bd
+hc_epsilon = binary32 0x358637bd
+```
+
+The two epsilon roles are separately bound manifest and microcode fields even
+though this profile gives them the same bits. Silently substituting one field for
+the other, or accepting a different encoding, is a profile mismatch.
+
+The inputs are finite BF16 hidden state `x[batch, sequence, H, D]`, finite
+binary32 projection `hc_fn[M, K]`, finite binary32 `hc_scale[3]`, and finite
+binary32 `hc_base[M]`. The flattening order is exactly
+`k = source_stream * D + hidden_column`; projection output row is the outer
+dimension of `hc_fn`. The architectural results and retained state are:
+
+```text
+branch       BF16 [batch, sequence, D]
+post         F32  [batch, sequence, H]
+comb         F32  [batch, sequence, H, H]  # [source][destination]
+residual     BF16 [batch, sequence, H, D]  # bit-preserving input capture
+```
+
+An independent checker shall additionally expose binary32 RMS mean and inverse
+in `[batch, sequence]`, the 24 projection accumulators and 24 RMS-scaled mixes in
+`[batch, sequence, M]`, and the four `pre` coefficients in
+`[batch, sequence, H]`. These are evidence observables, not additional HC_POST
+inputs.
+`residual` is an architectural pass-through: its BF16 payload is preserved while
+signed zero in that payload canonicalizes positive when a later arithmetic
+operator consumes it. The arithmetic path below canonicalizes either input-zero
+sign positive at its first checked boundary.
+
+In this section, `RN32` means one IEEE binary32 round-to-nearest-ties-to-even
+operation with gradual underflow. `CR32(f(...))` means the correctly rounded
+binary32 value of the exact real mathematical function, with no visible
+intermediate approximation boundary. Ordinary multiply and add expressions are
+separate `RN32` operations unless fused-product-add semantics are explicitly
+stated.
+
+#### NUM-6.10.1 Internal RMS and projection
+
+For each flattened token row `X[0:K]`, widen finite BF16 exactly to binary32 and
+execute:
+
+```text
+square[k] = RN32(X[k] * X[k])
+square_sum = NUM-6.1-balanced-sum(square[0:K])
+mean = RN32(square_sum / binary32(K))
+biased_mean = RN32(mean + norm_epsilon)
+rms_inverse = CR32(1 / sqrt(biased_mean))
+```
+
+The width-16,384 reduction has exactly 14 balanced levels and 16,383 additions.
+It is not covered by, or permitted to inherit an implementation from, a weighted
+`RMS_NORM` site without separately proving these exact boundaries.
+
+For projection field `q = 0..23`, start with binary32 positive zero and traverse
+`k = 0..16383` in increasing order:
+
+```text
+acc = +0
+acc = RN32(acc + exact(X[k] * hc_fn[q][k]))  # for each increasing k
+projection[q] = acc
+mix[q] = RN32(projection[q] * rms_inverse)
+```
+
+Each projection step has the fused-product semantics of NUM-4.1: the product is
+exact and the product-add rounds once. There is no separately rounded product,
+TF32 truncation, reassociation, tensor-core-dependent tree, chunk accumulation,
+or one-round exact dot product. Multiplication by `rms_inverse` occurs only after
+the completed dot product and is a separate binary32 operation.
+
+#### NUM-6.10.2 Field transforms
+
+Fields `0..3` are `pre`, fields `4..7` are `post`, and fields `8..23` are the
+row-major combination matrix. For source `i` and destination `j` in `0..3`,
+first compute:
+
+```text
+pre_z[j] = RN32(RN32(mix[j] * hc_scale[0]) + hc_base[j])
+post_z[j] = RN32(RN32(mix[4+j] * hc_scale[1]) + hc_base[4+j])
+comb_z[i][j] = RN32(
+    RN32(mix[8 + 4*i + j] * hc_scale[2])
+    + hc_base[8 + 4*i + j]
+)
+```
+
+The multiply and add in each affine transform are two rounding boundaries and
+must not contract. Define the target logistic primitive as:
+
+```text
+SIGMOID32(z) = CR32(1 / (1 + exp(-z)))
+pre[j] = RN32(SIGMOID32(pre_z[j]) + hc_epsilon)
+post[j] = RN32(binary32(2) * SIGMOID32(post_z[j]))
+```
+
+`SIGMOID32` is one correctly rounded mathematical-function boundary. A table,
+polynomial, or other implementation is conforming only when its returned code is
+identical for every legal binary32 input; an error-bounded but bit-different
+approximation requires a separately named numeric profile.
+
+#### NUM-6.10.3 Stable softmax and 20-stage Sinkhorn
+
+The first row-normalization stage is the stabilized softmax. For each source row
+`i`, select the maximum finite binary32 value and execute:
+
+```text
+delta[i][j] = RN32(comb_z[i][j] - row_max[i])
+e[i][j] = CR32(exp(delta[i][j]))
+row_sum[i] = NUM-6.1-balanced-sum(e[i][0:4])
+comb[i][j] = RN32(RN32(e[i][j] / row_sum[i]) + hc_epsilon)
+```
+
+`CR32(exp(...))` is the correctly rounded mathematical exponential. Stabilized
+arguments are nonpositive after a successful finite subtraction, so exponential
+overflow is impossible. Correct underflow to a binary32 subnormal or positive
+zero is legal. At least the maximum element produces exact `exp(0) = 1`, making
+the initial row denominator nonzero.
+
+Immediately perform the first column-normalization stage:
+
+```text
+col_sum[j] = NUM-6.1-balanced-sum((comb[0][j], ..., comb[3][j]))
+col_denom[j] = RN32(col_sum[j] + hc_epsilon)
+comb[i][j] = RN32(comb[i][j] / col_denom[j])
+```
+
+Then perform exactly 19 serial repetitions of a row stage followed by a column
+stage:
+
+```text
+row_sum[i] = NUM-6.1-balanced-sum(comb[i][0:4])
+row_denom[i] = RN32(row_sum[i] + hc_epsilon)
+comb[i][j] = RN32(comb[i][j] / row_denom[i])
+
+col_sum[j] = NUM-6.1-balanced-sum((comb[0][j], ..., comb[3][j]))
+col_denom[j] = RN32(col_sum[j] + hc_epsilon)
+comb[i][j] = RN32(comb[i][j] / col_denom[j])
+```
+
+Consequently, source `sinkhorn_iterations = 20` means exactly 20 row stages and
+20 column stages. The stable-softmax division is row stage one; it adds epsilon
+after each element division. Row stages 2 through 20 add epsilon once to each
+row denominator. All 20 column stages add epsilon once to each column
+denominator. An implementation that performs 20 repetitions after the initial
+softmax/column pair executes the wrong contract.
+
+Every four-element sum above is the NUM-6.1 specialization
+`RN32(RN32(v0+v1) + RN32(v2+v3))`. A left fold, warp-arrival order, or reduction
+intrinsic with an unspecified tree is not conforming. Matrix orientation remains
+`comb[source][destination]` throughout.
+
+#### NUM-6.10.4 Branch reduction and conversion
+
+For hidden column `d`, multiply the final `pre` coefficient by the corresponding
+original widened HC stream and reduce source streams in increasing order:
+
+```text
+p0 = RN32(pre[0] * X[0,d])
+p1 = RN32(pre[1] * X[1,d])
+p2 = RN32(pre[2] * X[2,d])
+p3 = RN32(pre[3] * X[3,d])
+left = RN32(p0 + p1)
+right = RN32(p2 + p3)
+y32 = RN32(left + right)
+branch[d] = BF16_RNE_SAT(y32)
+```
+
+The final conversion follows NUM-4.2. It preserves gradual underflow,
+canonicalizes output zero positive, and makes finite BF16 saturation sticky and
+countable. The reduction must not become a left fold or `X * sum(pre)`, even at
+layer 0 where `HC_EXPAND` initially makes the four streams bit-identical.
+
+#### NUM-6.10.5 Poison and atomic commit
+
+Malformed shapes; nonfinite BF16 `x`; nonfinite binary32 projection, scale, or
+base; a profile/epsilon mismatch; binary32 overflow or nonfinite output at an
+ordinary arithmetic boundary; or a zero/nonfinite division denominator poisons
+the complete homogeneous command under NUM-5. Subnormal BF16 and binary32 values
+are preserved; FTZ and DAZ are not allowed. A correctly rounded exponential or
+sigmoid result that underflows to positive zero is not poison. Sigmoid rounding
+to `1.0` is not saturation. Finite saturation exists only at the final BF16
+branch conversion.
+
+Poison is atomic across all `T` rows. No branch, post, combination, residual-state
+advance, diagnostic intermediate, downstream RMS/query result, or success counter
+may commit from a poisoned command. An implementation may continue protocol
+drain behavior as allowed by NUM-5.2, but a valid-looking partial result must not
+escape.
+
+#### NUM-6.10.6 Logical counters
+
+For each successfully committed token, the semantic schedule counters are exact:
+
+| Counter identifier | Per-token value |
+|---|---:|
+| `hc_pre_input_bf16_values` | 16,384 |
+| `hc_pre_rms_square_multiplies` | 16,384 |
+| `hc_pre_rms_reduction_adds` | 16,383 |
+| `hc_pre_rms_divides` | 1 |
+| `hc_pre_rms_epsilon_adds` | 1 |
+| `hc_pre_rsqrt_evaluations` | 1 |
+| `hc_pre_projection_product_accumulates` | 393,216 |
+| `hc_pre_projection_rms_multiplies` | 24 |
+| `hc_pre_field_affine_multiplies` | 24 |
+| `hc_pre_field_affine_adds` | 24 |
+| `hc_pre_sigmoid_evaluations` | 8 |
+| `hc_pre_coefficient_epsilon_adds` | 4 |
+| `hc_pre_post_factor_multiplies` | 4 |
+| `hc_pre_softmax_max_comparisons` | 12 |
+| `hc_pre_softmax_subtracts` | 16 |
+| `hc_pre_exp_evaluations` | 16 |
+| `hc_pre_sinkhorn_row_stages` | 20 |
+| `hc_pre_sinkhorn_column_stages` | 20 |
+| `hc_pre_sinkhorn_row_reduction_adds` | 240 |
+| `hc_pre_sinkhorn_column_reduction_adds` | 240 |
+| `hc_pre_sinkhorn_divides` | 640 |
+| `hc_pre_sinkhorn_epsilon_adds` | 172 |
+| `hc_pre_branch_coefficient_multiplies` | 16,384 |
+| `hc_pre_branch_reduction_adds` | 12,288 |
+| `hc_pre_branch_bf16_conversions` | 4,096 |
+| `hc_pre_residual_bf16_values_preserved` | 16,384 |
+
+The command values are these coefficients multiplied by `T`. The
+`hc_pre_branch_bf16_saturations` counter is data-dependent in `0..4096*T` and
+shall equal the exact number of finite binary32 results clamped by NUM-4.2. One
+correctly rounded sigmoid or exponential counts as one logical evaluation
+regardless of its physical implementation. These are semantic reconciliation
+counters, not physical tensor-core operations, instruction counts, ROM/HBM
+traffic, cycles, area, energy, throughput, or PPA evidence.
+
+#### NUM-6.10.7 Conformance anchors and source boundary
+
+The following all-zero anchor has independently reproducible exact results. Set
+all BF16 `x` encodings and all `hc_fn`, `hc_scale`, and `hc_base` values to
+positive zero. Required binary32 codes are:
+
+```text
+RMS mean                         0x00000000
+RMS inverse                      0x447a0000
+all projection and mix fields    0x00000000
+each pre coefficient             0x3f000011
+each post coefficient            0x3f800000
+each stable-softmax-plus-epsilon  0x3e800022
+each final combination element   0x3e7ffff0
+```
+
+The branch and residual are all BF16 `0x0000`, and branch saturation count is
+zero.
+
+The increasing-index projection rule has a second algebraic anchor. In one
+projection row set the first three `(X, hc_fn)` pairs to
+`(1,1)`, `(2^-12,2^-12)`, and `(-1,1)`, with every later pair zero. The target
+accumulator is binary32 `0x00000000`: adding `2^-24` to `1` is an exact midpoint
+that ties to the even encoding `1`, after which adding `-1` gives zero. A dot
+product rounded only once at its end would instead retain `2^-24`, code
+`0x33800000`. The checker shall expose the projection accumulator so downstream
+rounding cannot conceal this distinction.
+
+The pinned source fixes tensor shapes, field splitting, expression order, and the
+20-stage loop structure. It does not make bit-exact the `F.linear` reduction,
+FMA contraction, RMS reduction, `torch.rsqrt`, TileLang reductions,
+`T.sigmoid`/`T.exp`, compiler math mode, or device FTZ behavior. Therefore the
+rules in NUM-6.10 are deterministic OpenTallas target adaptations, not a claim of
+universal bit identity with PyTorch, TileLang, CUDA, or any particular NVIDIA
+GPU. No official-CUDA bit corpus is promoted into this contract. A separately
+pinned backend audit may report differences, but those observations neither
+change the target nor constitute accelerator conformance.
+
+Before HC_PRE implementation status may become qualified, evidence must add an
+independently generated correctly-rounded sigmoid/exponential corpus, an
+asymmetric matrix distinguishing pass 19 from pass 20 and proving
+source/destination orientation, a balanced-versus-left-fold branch sentinel,
+poison and atomic-commit mutations, and exact locked-checkpoint comparisons for
+`T = 1..4`. No asymmetric nonlinear expected-bit matrix is frozen in SPEC-NUM
+1.1 because it has not yet been reproduced by two independent oracles. This
+remaining evidence obligation is not permission to select backend-dependent
+bits at implementation time.
+
+### NUM-6.11 Routed-expert and shared-expert reduction
+
+`EXPERT_REDUCE` is the final arithmetic boundary in every MoE block. The
+source-mapped Flash graph contains 46 sites: one in each of 43 main blocks and
+one in each of three DSpark blocks. The qualified Flash profile has hidden width
+4,096, 256 routed experts, top-k six, and one shared expert. Inputs are the
+qualified NUM-6.6 dispatch, one finite-BF16 output row for every dispatched
+selected slot, and one finite-BF16 shared-expert tensor in
+`[batch, sequence, 4096]` order. Routed rows align one-for-one with the dispatch
+groups and assignments. The route weight has already been consumed inside the
+routed expert before its down projection; this boundary must not multiply it a
+second time.
+
+For each flattened token and hidden column, execute the following logical
+operation independent of physical rank ownership or arrival time:
+
+1. For each selected logical expert, collect all of that token's routed BF16
+   outputs in ascending selected-slot order. Duplicate expert IDs remain
+   separate contributions. Widen each BF16 encoding exactly to binary32 and
+   reduce the slots with the NUM-6.1 tree.
+2. Order the resulting distinct-expert partials by ascending logical expert ID
+   and reduce them with a second NUM-6.1 tree. A repaired or tensor-parallel
+   implementation must map physical sources back to this global logical order;
+   an incidental collective tree is not architectural.
+3. Widen the corresponding shared-expert BF16 value exactly and add it to the
+   completed routed sum with one binary32 RNE addition. The shared contribution
+   is always last and is not a leaf of either routed tree.
+4. Convert the result once to BF16 under NUM-4.2.
+
+There is no BF16 rounding between either routed tree and the shared add. BF16
+and binary32 subnormals are preserved, and output zero canonicalizes positive.
+Malformed dispatch invariants or shapes, missing or repeated token/slot records,
+misaligned expert groups, nonfinite input, or intermediate binary32 overflow
+poisons. Finite saturation is permitted only at the final BF16 conversion and
+is sticky and counted.
+
+The pinned source initializes binary32 `y`, executes
+`y[idx] += expert(...)` for experts in ascending ID, performs a distributed sum
+when tensor parallelism is active, adds the shared BF16 expert, and finally
+converts to the input BF16 dtype. This fixes the shared-add-last boundary but
+does not define duplicate-index collision or cross-backend reduction order.
+PyTorch 2.10 documents that indexed mutation is equivalent to `index_put_` and
+that, with accumulation disabled, behavior is undefined when indices contain
+duplicates. On PyTorch 2.10.0+cu128, a bounded witness with token indices
+`[0, 0, 1]` and BF16 contributions `[1, 2, 3]` retained `[2, 3]` on CPU and
+`[1, 3]` on native SM120; both discarded one legal routed slot instead of the
+required `[3, 3]`.
+
+A separate deterministic development audit used seed `0x4558505245445543`, 16
+tokens, width 128, eight experts, and six unique selected experts per token. The
+target matched both CPU and native SM120 after BF16 conversion in all 2,048
+outputs. This no-collision agreement is a bounded observation, not a relaxation
+of the explicit target tree. Preserving every selected slot is the governed
+architectural rule because inheriting the released advanced-index collision
+would make valid model behavior backend-dependent.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension
@@ -639,10 +992,12 @@ Target numerical closure requires:
 - differential random matrix blocks against an independently implemented reference;
 - exact tensor-layout and scale-orientation tests from pinned checkpoint metadata;
 - layer/operator comparisons against the public model implementation;
+- HC_PRE transcendental, pass-count, orientation, poison, and atomic-commit
+  evidence required by NUM-6.10.7;
 - end-to-end logits, acceptance, and task-quality qualification on representative
   workloads, including saturation and long-context cases.
 
-The first five are possible in public infrastructure once payload subsets are
+The first six are possible in public infrastructure once payload subsets are
 obtained. Full model quality and production kernel equivalence may require external
 compute/traces. Until target-format RTL and these tests pass, analytical operation
 counts and `INT_DV` behavior are not numerical implementation evidence.

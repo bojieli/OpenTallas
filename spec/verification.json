@@ -183,6 +183,12 @@
       "name": "dot-product and reduction bit-exactness"
     },
     {
+      "environments": ["ENV-COMPILER", "ENV-UNIT", "ENV-STAGE"],
+      "id": "DV-NUM-003",
+      "methods": ["independent_oracle", "known_answer", "differential_random", "mutation", "atomicity"],
+      "name": "HC_PRE transcendental, Sinkhorn, state, and atomic-commit conformance"
+    },
+    {
       "environments": ["ENV-UNIT", "ENV-STAGE", "ENV-FORMAL"],
       "id": "DV-RAS-001",
       "methods": ["exhaustive_syndrome", "fault_injection", "formal"],
