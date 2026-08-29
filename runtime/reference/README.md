@@ -39,7 +39,8 @@ paths, vector operators beyond the SwiGLU nonlinear section, weighted and head
 RMS normalization,
 target-hidden capture, and HC post-mixing, attention operators
 beyond the qualified learned index scoring/top-k and sparse-attention boundary,
-mutable attention-state operations, remaining routing and nonlinear operators,
+mutable attention-state operations beyond the qualified circular-window and
+compressed-KV transactions, remaining routing and nonlinear operators,
 real-checkpoint known answers, layer differentials, end-to-end logits, and task
 quality remain open.
 The earlier exact-integer evaluator remains fixture-only evidence.
@@ -179,6 +180,22 @@ circular-window order, compression-completion boundary, offsets, padding, and
 DSpark history/draft address split. Inputs and signed-int32 output bounds fail
 closed. These structural references do not implement learned index scoring,
 top-k tie order, KV mutation, sparse attention, or any service-engine lowering.
+
+`kv_window.py` implements every `KV_WINDOW_WRITE` site and the target-owned
+retirement/valid-view operations needed to make the released circular cache
+safe across requests. It preserves the official prefill split assignments and
+decode slot `start_pos % 128`, while binding every fixed-capacity lane to an
+exact lowercase SHA-256 session identity, active/tombstone status, absolute
+next position, and monotonic uint64 version. Prefill establishes a fresh
+session epoch, decode requires exact full-capacity version authority and one
+shared active-prefix cursor, and removal retires only a trailing active suffix.
+The valid view returns exactly `[max(0,N-128),N)` in chronological order and
+excludes unused, inactive, or preserved stale capacity. Public result records
+retain the complete prior state and source activation, reconstruct the exact
+successor/view relation, and reconcile payload plus metadata counters. This is
+a pure immutable semantic reference: it does not supply atomic service-level
+compare-and-swap, `ATTENTION_KV_VIEW` composition, HBM placement, schedules,
+cycles, RTL, or checkpoint-derived attention output.
 
 `lookup.py` implements the two pinned pure-gather paths. `TOKEN_EMBED` selects
 global embedding rows while carrying BF16 as exact 16-bit encodings; this is

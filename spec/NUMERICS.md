@@ -1729,6 +1729,89 @@ operator/resource ordering only. They do not establish artifact-driven
 execution, `wo_b`, a tensor-parallel collective, a complete attention or block,
 RTL, a physical schedule, timing, bandwidth, PPA, model decode, or performance.
 
+### NUM-6.15 Session-bound circular KV window
+
+`KV_WINDOW_WRITE` is pinned to the circular assignments in
+`Attention.forward` and `DSparkAttention.forward` from
+`deepseek-ai/DeepSeek-V4-Flash-0731` revision
+`7872f01b1d1fe23eabc4c98b48bffcef5a386062`. The official cache has shape
+`[B,128,512]`: it is one latent KV row shared by 64 query heads, not a 64-head
+KV cache. The target reference represents the row as `[H,V]` with official
+`H=1,V=512`; smaller factorizations with `H*V <= 512` are structural test
+profiles only.
+
+The architectural position ceiling is the hash-pinned top-level
+`config.json:max_position_embeddings = 1,048,576`. This is an address bound,
+not evidence that the standalone inference driver runs that length: its source
+default is 4,096 and its interactive override is 65,536.
+
+#### NUM-6.15.1 Payload transition
+
+For fresh prefill at `start_pos == 0`, input sequence length `S`, and window
+size `W=128`:
+
+- if `S <= W`, write every input row to slots `[0,S)`;
+- if `S > W`, retain only the final `W` rows and place absolute position `p`
+  at slot `p mod W`, preserving the exact two-slice assignment order; and
+- expose the committed absolute range `[max(0,S-W),S)`.
+
+Decode requires `S == 1`, exact `start_pos == next_position` for every active
+lane, and writes the row to slot `start_pos mod W`. Its successor cursor is
+`start_pos + 1`. All BF16 payload values must be finite. Complete input, prior
+state, metadata authority, bounds, and address segments validate before the
+new immutable state is assembled; no failed transition exposes a partial
+write.
+
+#### NUM-6.15.2 Session, retirement, and version authority
+
+Each fixed-capacity batch lane carries:
+
+```text
+{session_id, lane_active, next_position, uint64 version}
+```
+
+Session IDs are exactly 64 lowercase hexadecimal digits. Active lanes form a
+contiguous prefix and share one cursor. A never-initialized lane has no session,
+zero cursor, zero version, and positive-zero payload. A retired lane retains
+its session identity and payload as a tombstone, resets its cursor to zero, and
+advances its version. Every write, retirement, and view requires equality with
+the complete current capacity-wide version vector. Decode additionally
+requires exact active-session identity. Removed lanes are retired only as a
+trailing active suffix; each affected lane advances its version once.
+
+A session ID may be reused after its current tombstone is deliberately replaced
+under current version authority. Stale authority, skipped/replayed position,
+duplicate identity, non-prefix activity, version overflow, or cross-session
+decode poisons before transition. This pure reference defines deterministic
+compare-and-version semantics but does not claim atomic compare-and-swap across
+independent service requests.
+
+#### NUM-6.15.3 Chronological valid view and counters
+
+For an active lane with next position `N`, the valid view returns precisely
+`[max(0,N-W),N)` in increasing absolute-position order, mapping each position
+through `position mod W`. It returns the absolute start, exclusive next
+position, session, and exact version. Unused active capacity, all inactive
+capacity, and preserved tombstone payload are counted as excluded and cannot
+enter a later `ATTENTION_KV_VIEW`.
+
+The write/retire/view records reconcile logical BF16 source and state rows,
+bytes, preserved capacity, modulo evaluations, valid rows before/invalidated/
+after, session IDs, active flags, cursors, versions, and immutable commit count.
+These are semantic counts only. They do not identify SRAM or HBM traffic,
+bursts, banking, caches, NoC flits, cycles, latency, bandwidth, energy, area,
+routing, PPA, or model throughput. Window KV is mutable and may never be
+assigned to mask ROM.
+
+The conformance suite covers both official default axes and bounded exhaustive
+profiles; wraparound prefill/decode, `S<W`, `S=W`, and `S>W`; lane shrink,
+retirement, tombstone replacement, session reuse, version overflow, stale
+authority, maximum position, deep immutability, constructor forgery, malformed
+and nonfinite data, counter reconciliation, and randomized physical/causal
+oracles. This qualifies `KV_WINDOW_WRITE` target semantics. It does not qualify
+projection, RMSNorm, RoPE, QDQ, combined `ATTENTION_KV_VIEW`, compiler/service
+lowering, RTL, checkpoint-derived values, long-context quality, or performance.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension
