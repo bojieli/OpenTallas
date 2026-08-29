@@ -34,9 +34,9 @@ the governed positive-zero canonicalization, there were zero differences.
 
 This closes neither `M1` nor numerical qualification. Matrix operators beyond
 the qualified routed-MXFP4/shared-FP8 SwiGLU, dense FP8, index-head BF16,
-router-score, compressor, confidence, and grouped attention-output projection
-paths, vector operators beyond the SwiGLU nonlinear section, weighted and head
-RMS normalization,
+router-score, compressor, confidence, grouped attention-output, and DSpark
+main-conditioning projection paths, vector operators beyond the SwiGLU
+nonlinear section, weighted and head RMS normalization,
 target-hidden capture, and HC post-mixing, attention operators
 beyond the qualified learned index scoring/top-k and sparse-attention boundary,
 mutable attention-state operations beyond the qualified circular-window and
@@ -96,6 +96,18 @@ and exact agreement with a separately implemented service arithmetic lane.
 The locked corpus uses deterministic synthetic attention outputs and selected
 weight rows; it is not complete `wo_a`, downstream `wo_b`, a collective, a
 checkpoint-derived activation, physical execution, or performance evidence.
+
+`dspark_main_project.py` implements the single `DSPARK_MAIN_PROJECT` graph
+site. It fixes capture order 40→41→42, BF16 concatenation to width 12,288, the
+complete `[4096,12288]` E4M3FN/E8M0 projection, and width-4,096 weighted RMS
+normalization. Every resource code validates before exact-zero acceleration,
+and counters retain the full declared semantic work. A separately implemented
+service arithmetic lane matches a nonzero full-shape synthetic composition,
+complete official resources at zero input for `T=1..4`, and real official
+projection rows 0, 127, 128, and 4,095. None of those corpora is a
+checkpoint-derived nonzero captured activation or artifact-driven service
+execution, and logical counters are not physical bytes, cycles, bandwidth,
+latency, throughput, energy, area, or PPA.
 
 `normalization.py` implements the weighted `RMS_NORM` operation at all 251
 Flash graph sites and all four observed widths. It widens BF16 input and BF16

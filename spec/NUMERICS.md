@@ -1812,6 +1812,70 @@ oracles. This qualifies `KV_WINDOW_WRITE` target semantics. It does not qualify
 projection, RMSNorm, RoPE, QDQ, combined `ATTENTION_KV_VIEW`, compiler/service
 lowering, RTL, checkpoint-derived values, long-context quality, or performance.
 
+### NUM-6.16 DSpark main-conditioning projection
+
+`DSPARK_MAIN_PROJECT` is pinned to `Transformer.forward` and
+`DSparkBlock.forward_embed` in `deepseek-ai/DeepSeek-V4-Flash-0731` revision
+`7872f01b1d1fe23eabc4c98b48bffcef5a386062`. The source captures BF16 hidden
+rows after main layers 40, 41, and 42, concatenates those three width-4,096
+rows in exactly that order, applies `mtp.0.main_proj`, and then applies
+`mtp.0.main_norm`. This boundary consumes the already-captured tensors;
+`TARGET_HIDDEN_CAPTURE` remains a separate qualified graph operation.
+
+The released projection has E4M3FN weight shape `[4096,12288]`, E8M0 scale
+shape `[32,96]`, no bias, and the ordinary dense-FP8 numeric contract. For
+each token:
+
+1. concatenate source 40, then 41, then 42 without conversion or arithmetic;
+2. quantize the BF16 activation in 96 increasing 128-value blocks under
+   NUM-3.3;
+3. evaluate all 4,096 projection rows with output scale tile
+   `floor(output_row/128)`, increasing-K block dots, and the NUM-6.1 padded
+   reduction of 96 binary32 partials;
+4. convert each finite projection accumulator once to BF16; and
+5. execute NUM-6.8 weighted RMS normalization at width 4,096 with BF16
+   `mtp.0.main_norm.weight` and epsilon binary32 `0x358637bd`.
+
+The canonical padded tree performs 96 cross-block additions per projection
+output. This differs from an unpadded algebraic 95-add tree because the
+three-element intermediate level is padded with positive zero before its two
+final levels. That operation count and reduction order are part of the target
+profile.
+
+All 50,331,648 projection-weight bytes, 3,072 scale bytes, finite norm weights,
+capture axes, and `B*S` bound `1..4` validate before arithmetic or exact-zero
+acceleration. E4M3FN NaN, reserved E8M0 `0xff`, nonfinite BF16, binary32
+overflow, malformed shape, or inconsistent public record poisons the complete
+transaction. Exact zero activation and byte-exact zero weight rows may skip
+mathematically redundant host work, but every complete semantic counter remains
+at the declared shape. Public records are deeply immutable and reconstruct the
+retained projection-to-RMS relationship; because they omit projection resources
+and captures, their constructors do not authenticate projection provenance.
+
+For `T=B*S`, the principal logical counts are:
+
+```text
+capture_values             = T * 12,288
+activation_blocks          = T * 96
+projection_block_dots      = T * 4,096 * 96
+projection_products        = T * 4,096 * 12,288
+projection_tree_adds       = T * 4,096 * 96
+projection_conversions     = T * 4,096
+rms_squares                = T * 4,096
+rms_tree_adds              = T * 4,095
+rms_pointwise_multiplies   = T * 8,192
+transaction_commits        = 1
+```
+
+The independent reference/service differential covers a nonzero full-shape
+synthetic composition, complete official resources at zero input for
+`T=1..4`, and real official projection rows 0, 127, 128, and 4,095 at full
+reduction width. The governed identities and precise claim separation are in
+`docs/DEEPSEEK_V4_DSPARK_MAIN_PROJECT_EVIDENCE.md`. This qualifies target
+reference semantics only. Logical values and operations are not physical
+ROM/SRAM/HBM bytes, cycles, bandwidth, latency, throughput, energy, area, PPA,
+or GPU-comparison evidence.
+
 ## NUM-7 Speculative decoding
 
 ### NUM-7.1 Candidate dimension

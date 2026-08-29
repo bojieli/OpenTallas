@@ -502,12 +502,12 @@ row must not be read as milestone closure.
 | Gate | Current direct evidence | Status |
 |---|---|---|
 | M0 | Repository baseline and additive compiler/runtime layout are committed on `main`; large generated payloads remain outside Git | Ongoing because concurrent model and simulation work may keep the worktree active |
-| M1 | The pinned official graph has a complete 2,136-node/46-kind ledger; 41 kinds now have qualified target references, including all routed-MXFP4/shared-FP8 SwiGLU, sqrt-softplus router activation, session-bound circular-window KV transition/view, complete grouped attention-output projection, base/YaRN RoPE application and inverse, complete HC pre-mixing/final-head reduction, compressor transaction/view, sparse-attention, and fail-closed greedy/target-adapted sampling sites | Partial: five operator references and operator-complete semantics remain open |
+| M1 | The pinned official graph has a complete 2,136-node/46-kind ledger; 42 kinds now have qualified target references, including all routed-MXFP4/shared-FP8 SwiGLU, sqrt-softplus router activation, session-bound circular-window KV transition/view, complete grouped attention-output projection, DSpark main-conditioning projection, base/YaRN RoPE application and inverse, complete HC pre-mixing/final-head reduction, compressor transaction/view, sparse-attention, and fail-closed greedy/target-adapted sampling sites | Partial: four operator references and operator-complete semantics remain open |
 | M2 | The official 72,317-tensor checkpoint is locked; the complete 77,116-assignment MP=4 application was independently re-read with verification `b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28` | Checkpoint/canonical payload gate achieved; this does not imply executable operators |
 | M3 | Lookup and complete-output query-A deployments have content-addressed images and independent payload roundtrips | Partial: complete stage placement, capacity, repair, and physical-address legality remain open |
 | M4 | Artifact-only fixed-microcode paths execute official lookup tensors and all 1,024 Query-A FP8 outputs. The real HC_PRE→Query-A chain ends at artifact-only result `d30df5494e60c3f261cc6bec15320680ee3e87d867873e1d0fc100f7776336c0`. A separate official-width layer-2 ratio-four post-projection compressor harness executes immutable causal raw/compressed state, conditional pool/conversion, abort, retirement, commit, and valid-view semantics under a controlled APE-cancellation known answer | Partial: the compressor request is not a checkpoint-derived activation, starts after learned projection, and its direct BF16 cache payload omits official RMSNorm/RoPE/QDQ; neither path yet completes attention, a transformer block, complete graph-to-microcode lowering, or full-model execution |
 | M5 | No certified physical schedule exists | Open |
-| M6 | Official lookup differential `830f0d8a0730d012e6be41eb1507f10ef1b70f1829efbbad7b3e50cd2b3e2a95`, selected-row FP8 differential `9b4cacd415df0fbd77b08c24bbb4b48b737f0b3305abfd08ba719d4302e3b800`, and complete-output FP8 differential `f8d95b84c683b9772755b6146da0af84955987e19e0ea05fe4a5ad05c7f0c499` are exact; the official-APE compressor package has a separately classified controlled known answer | Partial: these isolated paths do not establish a checkpoint-derived complete layer or all layer classes |
+| M6 | Official lookup differential `830f0d8a0730d012e6be41eb1507f10ef1b70f1829efbbad7b3e50cd2b3e2a95`, selected-row FP8 differential `9b4cacd415df0fbd77b08c24bbb4b48b737f0b3305abfd08ba719d4302e3b800`, complete-output FP8 differential `f8d95b84c683b9772755b6146da0af84955987e19e0ea05fe4a5ad05c7f0c499`, and DSpark main-projection official-resource extent differential `d478a402269b768d8ddc4b00ffa4ae6076bbef009fc50690dc174bbaca868dde` are exact; the official-APE compressor package has a separately classified controlled known answer | Partial: the DSpark official-resource extent uses zero activation, its nonzero official audit covers four selected rows, and these isolated paths do not establish a checkpoint-derived complete layer or all layer classes |
 | M7 | No generated-artifact RTL controller/operator integration evidence | Open |
 | M8 | No complete DeepSeek V4 Flash prefill/decode execution | Open |
 | M9 | No schedule-driven performance closure or same-scope NVIDIA comparison | Open |
@@ -522,6 +522,8 @@ and
 [`DEEPSEEK_V4_GROUPED_OUTPUT_EVIDENCE.md`](DEEPSEEK_V4_GROUPED_OUTPUT_EVIDENCE.md),
 and
 [`DEEPSEEK_V4_KV_WINDOW_EVIDENCE.md`](DEEPSEEK_V4_KV_WINDOW_EVIDENCE.md),
+and
+[`DEEPSEEK_V4_DSPARK_MAIN_PROJECT_EVIDENCE.md`](DEEPSEEK_V4_DSPARK_MAIN_PROJECT_EVIDENCE.md),
 and
 [`DEEPSEEK_V4_SWIGLU_EVIDENCE.md`](DEEPSEEK_V4_SWIGLU_EVIDENCE.md),
 and
