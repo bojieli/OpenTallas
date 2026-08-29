@@ -1,4 +1,4 @@
-.PHONY: abi3-equivalence abi3 abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: abi3-failclosed abi3-equivalence abi3 abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -138,3 +138,6 @@ abi3-equivalence:
 	PYTHONPATH=. python3 tools/prove_storage_class_equivalence.py \
 	  --ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json --product deepseek_v4 \
 	  --output results/abi3/storage_class_equivalence_deepseek_v4.json --force
+
+abi3-failclosed:
+	PYTHONPATH=. python3 tools/run_abi3_failclosed_campaign.py --force

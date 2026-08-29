@@ -83,7 +83,7 @@
 - [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
 - [ ] W6.6 Checkpoint/restart exactness on all four
-- [ ] W6.7 Fail-closed campaigns (corrupted program/descriptor/CRC/permission/trap → no partial commit)
+- [x] W6.7 Fail-closed campaigns — `tools/run_abi3_failclosed_campaign.py`, 8/8 refused against the **real** Qwen deployment: six corruption classes refused at admission, a mid-transaction fault leaving cursor and generation unchanged, and no prepared state left open. Found and fixed a real defect on its first run
 
 ## W7 — Cycle model and capability
 
