@@ -1285,6 +1285,18 @@ class _Emitter:
             extents = [state.capacity_rows, max(width, 1)]
         else:
             extents[0] = state.capacity_rows
+            width = 1
+            for extent in extents[1:]:
+                width *= extent
+            if width > state.row_elements - column:
+                # The tensor's per-position width does not fit the plane this
+                # resource reserves for it.  Presenting the declared rank anyway
+                # would read past the row; fall back to the plane the resource
+                # actually holds and let the engine reject a shape it cannot
+                # use, rather than emitting a view that runs off the object.
+                extents = [
+                    state.capacity_rows, max(state.row_elements - column, 1)
+                ]
         strides = [1] * len(extents)
         running = 1
         for axis in range(len(extents) - 1, 0, -1):
