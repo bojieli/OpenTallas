@@ -192,6 +192,21 @@ overflow tests are retained. On a governed 64-output full-width corpus, native
 CPU and SM120 reassociation differed from the explicit target in 63 and 62
 outputs respectively, without a sign change and by at most 290 binary32 codes.
 
+`sampling.py` implements the complete target contract for `SAMPLE` without
+inventing an unrecorded CUDA RNG state. For finite binary32 logits and zero
+temperature, it exactly applies the released first-index argmax rule. The
+nonzero-temperature PyTorch/CUDA path fails closed when source equivalence is
+requested because the release pins only `torch>=2.10.0`, not the generator,
+post-`exponential_(1)` mapping, softmax implementation, or reduction order. A
+separately named deterministic target adaptation accepts immutable positive
+binary32 post-exponential draws, consumes them in row-major order, and freezes
+every division, exponential, balanced softmax reduction, and race comparison.
+Its entropy continuation, intermediate-array digests, numeric profile, and
+logical work counters are immutable and atomically reconciled. This qualifies
+the accelerator's explicit sampling boundary; it does not claim bit-exact
+stochastic replay of the official CUDA program, RNG generation, a complete
+generation loop, DSpark acceptance, checkpoint logits, or physical behavior.
+
 `confidence.py` implements the single `CONFIDENCE_SCORE` projection. It
 concatenates each BF16 final-DSpark hidden row before its BF16 Markov embedding,
 widens the official `[1, 4352]` BF16 checkpoint weight exactly, and executes an
