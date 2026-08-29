@@ -1,8 +1,13 @@
 from __future__ import annotations
 
+import ast
 from copy import deepcopy
-from dataclasses import asdict
+from dataclasses import FrozenInstanceError, asdict, fields, replace
 from fractions import Fraction
+import hashlib
+import json
+from pathlib import Path
+import re
 
 import pytest
 
@@ -16,17 +21,30 @@ from runtime.reference.formats import (
     encode_binary32_rne,
 )
 from runtime.reference.hyper_connection import (
+    EXCLUDED_SYSTEM_CLAIMS,
     FLATTENED_WIDTH,
     HC_MULTIPLIER,
     HIDDEN_SIZE,
+    INFERENCE_CONFIG_EXPECTED_FIELDS,
+    INFERENCE_CONFIG_PATH,
+    INFERENCE_CONFIG_SHA256,
+    KERNEL_SOURCE_EXPRESSIONS,
+    KERNEL_SOURCE_PATH,
     KERNEL_SOURCE_SHA256,
     MIX_PARAMETER_COUNT,
+    MODEL_SOURCE_EXPRESSIONS,
+    MODEL_SOURCE_PATH,
     MODEL_SOURCE_SHA256,
     NORMALIZATION_EPSILON_BINARY32,
     NUMERIC_PROFILE,
+    OFFICIAL_REPOSITORY,
+    OFFICIAL_REVISION,
     SINKHORN_EPSILON_BINARY32,
     SINKHORN_ITERATIONS,
+    HCPreCounters,
     HCPreReferenceError,
+    HCPreResult,
+    TranscendentalRounding,
     binary32_exp_rne,
     binary32_exp_rne_with_diagnostics,
     binary32_sigmoid_rne,
@@ -35,6 +53,8 @@ from runtime.reference.hyper_connection import (
     hc_split_sinkhorn_binary32,
 )
 
+
+ROOT = Path(__file__).resolve().parents[2]
 
 ZERO_STREAM = (0,) * HIDDEN_SIZE
 ZERO_TOKEN = (ZERO_STREAM,) * HC_MULTIPLIER
@@ -108,17 +128,94 @@ def _independent_sinkhorn_stages(
 
 
 def test_hc_pre_profile_is_bound_to_pinned_sources_and_dimensions() -> None:
+    assert OFFICIAL_REPOSITORY == "deepseek-ai/DeepSeek-V4-Flash-0731"
+    assert OFFICIAL_REVISION == "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
+    assert MODEL_SOURCE_PATH == "inference/model.py"
     assert MODEL_SOURCE_SHA256 == (
         "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
     )
+    assert KERNEL_SOURCE_PATH == "inference/kernel.py"
     assert KERNEL_SOURCE_SHA256 == (
         "59b325083d7103975cba025bd0d60ea343bb82d8fff53088afb7c04bd380c0c2"
+    )
+    assert INFERENCE_CONFIG_PATH == "inference/config.json"
+    assert INFERENCE_CONFIG_SHA256 == (
+        "c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71"
     )
     assert NUMERIC_PROFILE == "opentallas.deepseek_v4_hc_pre_numeric.v1"
     assert (HC_MULTIPLIER, HIDDEN_SIZE, FLATTENED_WIDTH) == (4, 4096, 16384)
     assert MIX_PARAMETER_COUNT == 24
     assert SINKHORN_ITERATIONS == 20
     assert NORMALIZATION_EPSILON_BINARY32 == SINKHORN_EPSILON_BINARY32 == 0x358637BD
+    assert INFERENCE_CONFIG_EXPECTED_FIELDS == (
+        ("dim", 4096),
+        ("hc_mult", 4),
+        ("hc_sinkhorn_iters", 20),
+    )
+
+
+def _compact_source(value: str) -> str:
+    return re.sub(r"\s+", "", value)
+
+
+def test_cached_official_source_kernel_and_configuration_when_available() -> None:
+    snapshot = (
+        Path.home()
+        / ".cache/huggingface/hub"
+        / "models--deepseek-ai--DeepSeek-V4-Flash-0731"
+        / "snapshots"
+        / OFFICIAL_REVISION
+    )
+    paths = {
+        "model": snapshot / MODEL_SOURCE_PATH,
+        "kernel": snapshot / KERNEL_SOURCE_PATH,
+        "config": snapshot / INFERENCE_CONFIG_PATH,
+    }
+    if not all(path.is_file() for path in paths.values()):
+        pytest.skip("pinned official source/config are not in the local HF cache")
+    payloads = {name: path.read_bytes() for name, path in paths.items()}
+    assert hashlib.sha256(payloads["model"]).hexdigest() == MODEL_SOURCE_SHA256
+    assert hashlib.sha256(payloads["kernel"]).hexdigest() == KERNEL_SOURCE_SHA256
+    assert hashlib.sha256(payloads["config"]).hexdigest() == INFERENCE_CONFIG_SHA256
+    compact_model = _compact_source(payloads["model"].decode("utf-8"))
+    compact_kernel = _compact_source(payloads["kernel"].decode("utf-8"))
+    for expression in MODEL_SOURCE_EXPRESSIONS:
+        assert _compact_source(expression) in compact_model
+    for expression in KERNEL_SOURCE_EXPRESSIONS:
+        assert _compact_source(expression) in compact_kernel
+    config = json.loads(payloads["config"])
+    for field, expected in INFERENCE_CONFIG_EXPECTED_FIELDS:
+        assert type(config[field]) is type(expected)
+        assert config[field] == expected
+
+
+def test_production_reference_has_no_framework_host_float_or_compiler_dependency() -> (
+    None
+):
+    source = (ROOT / "runtime/reference/hyper_connection.py").read_text(
+        encoding="utf-8"
+    )
+    tree = ast.parse(source)
+    imported_roots = {
+        alias.name.split(".")[0]
+        for node in ast.walk(tree)
+        if isinstance(node, ast.Import)
+        for alias in node.names
+    }
+    imported_roots.update(
+        node.module.split(".")[0]
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.module is not None
+    )
+    assert imported_roots.isdisjoint(
+        {"compiler", "decimal", "math", "mpmath", "numpy", "torch"}
+    )
+    assert not any(
+        isinstance(node, ast.Call)
+        and isinstance(node.func, ast.Name)
+        and node.func.id == "float"
+        for node in ast.walk(tree)
+    )
 
 
 @pytest.mark.parametrize(
@@ -248,6 +345,7 @@ def test_all_zero_hc_pre_known_answer_and_exact_counters() -> None:
         ZERO_BASE,
     )
 
+    assert result.numeric_profile == NUMERIC_PROFILE
     assert result.diagnostics.mean_square_codes == (0x00000000,)
     assert result.diagnostics.inverse_rms_codes == (0x447A0000,)
     assert result.diagnostics.projection_codes == ((0,) * 24,)
@@ -588,3 +686,209 @@ def test_late_parameter_poison_does_not_expose_partial_result() -> None:
     with pytest.raises(HCPreReferenceError, match="finite binary32"):
         hc_pre_bf16(mutable_input, projection, ZERO_SCALE, ZERO_BASE)
     assert mutable_input == before
+
+
+def _zero_result() -> HCPreResult:
+    return hc_pre_bf16(
+        (ZERO_TOKEN,),
+        ZERO_PROJECTION,
+        ZERO_SCALE,
+        ZERO_BASE,
+    )
+
+
+def test_public_transcendental_record_rejects_forged_resource_accounting() -> None:
+    valid = binary32_sigmoid_rne_with_diagnostics(0xC2C80000)
+    assert valid == TranscendentalRounding(0x0000001B, 3, 192)
+    with pytest.raises(HCPreReferenceError, match="exact nonnegative integer"):
+        replace(valid, interval_evaluations=True)
+    with pytest.raises(HCPreReferenceError, match="both be zero or nonzero"):
+        replace(valid, final_precision_bits=0)
+    with pytest.raises(HCPreReferenceError, match="does not reconcile"):
+        replace(valid, final_precision_bits=96)
+    with pytest.raises(HCPreReferenceError, match="finite binary32"):
+        replace(valid, code=0x7F800000)
+
+
+def test_public_counter_constructor_validates_every_integer_and_formula() -> None:
+    counters = _zero_result().counters
+    for field in fields(counters):
+        with pytest.raises(HCPreReferenceError, match="exact nonnegative integer"):
+            replace(counters, **{field.name: True})
+    for field in fields(counters):
+        if field.name == "hc_pre_branch_bf16_saturations":
+            continue
+        with pytest.raises(HCPreReferenceError, match="reconcile|token count"):
+            replace(counters, **{field.name: getattr(counters, field.name) + 1})
+    with pytest.raises(HCPreReferenceError, match="exceed BF16 conversions"):
+        replace(
+            counters,
+            hc_pre_branch_bf16_saturations=(
+                counters.hc_pre_branch_bf16_conversions + 1
+            ),
+        )
+
+
+def test_public_records_require_deeply_immutable_exact_tuple_payloads() -> None:
+    result = _zero_result()
+
+    class WritableInteger(int):
+        pass
+
+    writable_code = WritableInteger(0)
+    writable_code.state = []
+    with pytest.raises(HCPreReferenceError, match="exact 32-bit"):
+        replace(result.diagnostics, mean_square_codes=(writable_code,))
+    with pytest.raises(HCPreReferenceError, match="deeply immutable"):
+        replace(result, branch_bf16_codes=[list(result.branch_bf16_codes[0])])
+    with pytest.raises(HCPreReferenceError, match="deeply immutable"):
+        replace(
+            result,
+            residual_bf16_codes=(
+                [list(stream) for stream in result.residual_bf16_codes[0]],
+            ),
+        )
+    with pytest.raises(HCPreReferenceError, match="deeply immutable"):
+        replace(
+            result.diagnostics,
+            projection_codes=(list(result.diagnostics.projection_codes[0]),),
+        )
+    with pytest.raises(HCPreReferenceError, match="deeply immutable"):
+        replace(
+            result.diagnostics.split,
+            comb_affine_codes=(
+                [list(row) for row in result.diagnostics.split.comb_affine_codes[0]],
+            ),
+        )
+
+
+def test_public_diagnostics_reconcile_retained_numeric_boundaries() -> None:
+    result = _zero_result()
+    diagnostics = result.diagnostics
+    split = diagnostics.split
+    with pytest.raises(HCPreReferenceError, match="nonnegative"):
+        replace(diagnostics, mean_square_codes=(0x80000000,))
+    with pytest.raises(HCPreReferenceError, match="inverse RMS"):
+        replace(diagnostics, inverse_rms_codes=(0x3F800000,))
+    with pytest.raises(HCPreReferenceError, match="normalized projections"):
+        replace(
+            diagnostics,
+            normalized_projection_codes=((0x3F800000,) + (0,) * 23,),
+        )
+    with pytest.raises(HCPreReferenceError, match="pre-sigmoid"):
+        replace(
+            split,
+            pre_sigmoid_codes=((0,) + split.pre_sigmoid_codes[0][1:],),
+        )
+    changed_stage = list(split.sinkhorn_stage_codes[-1][0][0])
+    changed_stage[0] ^= 1
+    changed_stages = list(split.sinkhorn_stage_codes)
+    last_tokens = list(changed_stages[-1])
+    last_matrix = list(last_tokens[0])
+    last_matrix[0] = tuple(changed_stage)
+    last_tokens[0] = tuple(last_matrix)
+    changed_stages[-1] = tuple(last_tokens)
+    with pytest.raises(HCPreReferenceError, match="Sinkhorn stages"):
+        replace(split, sinkhorn_stage_codes=tuple(changed_stages))
+
+
+def test_public_result_binds_profile_shapes_diagnostics_and_counters() -> None:
+    result = _zero_result()
+    with pytest.raises(HCPreReferenceError, match="numeric_profile"):
+        replace(result, numeric_profile="forged")
+    with pytest.raises(HCPreReferenceError, match="exactly 4096"):
+        replace(result, branch_bf16_codes=(result.branch_bf16_codes[0][:-1],))
+    with pytest.raises(HCPreReferenceError, match="finite BF16"):
+        replace(
+            result,
+            branch_bf16_codes=(
+                (0x7F80,) + result.branch_bf16_codes[0][1:],
+            ),
+        )
+    with pytest.raises(HCPreReferenceError, match="maximum-finite"):
+        replace(result, branch_output_saturation_count=1)
+    with pytest.raises(HCPreReferenceError, match="branch output"):
+        replace(
+            result,
+            branch_bf16_codes=((0x0001,) + result.branch_bf16_codes[0][1:],),
+        )
+    changed_residual = list(result.residual_bf16_codes[0])
+    changed_stream = list(changed_residual[0])
+    changed_stream[0] = 0x3F80
+    changed_residual[0] = tuple(changed_stream)
+    with pytest.raises(HCPreReferenceError, match="RMS diagnostics"):
+        replace(result, residual_bf16_codes=(tuple(changed_residual),))
+    with pytest.raises(HCPreReferenceError, match="architectural coefficients"):
+        replace(
+            result,
+            pre_binary32_codes=((0,) + result.pre_binary32_codes[0][1:],),
+        )
+    two = hc_pre_bf16(
+        (ZERO_TOKEN, ZERO_TOKEN),
+        ZERO_PROJECTION,
+        ZERO_SCALE,
+        ZERO_BASE,
+    )
+    with pytest.raises(HCPreReferenceError, match="token count does not match"):
+        replace(result, diagnostics=two.diagnostics)
+    with pytest.raises(HCPreReferenceError, match="counter token count"):
+        replace(result, counters=two.counters)
+
+
+def test_public_records_reject_subclass_authority_and_writable_state() -> None:
+    result = _zero_result()
+
+    class ResultSubclass(HCPreResult):
+        pass
+
+    values = {field.name: getattr(result, field.name) for field in fields(result)}
+    with pytest.raises(HCPreReferenceError, match="exact HCPreResult"):
+        ResultSubclass(**values)
+    for record in (
+        result,
+        result.counters,
+        result.diagnostics,
+        result.diagnostics.split,
+        result.diagnostics.split.pre_sigmoid_rounding[0][0],
+    ):
+        assert not hasattr(record, "__dict__")
+        with pytest.raises(TypeError):
+            vars(record)
+    with pytest.raises(FrozenInstanceError):
+        result.numeric_profile = "forged"  # type: ignore[misc]
+    with pytest.raises(FrozenInstanceError):
+        result.counters.hc_pre_token_count = 4  # type: ignore[misc]
+
+
+def test_result_and_counter_contracts_are_physically_agnostic() -> None:
+    assert [field.name for field in fields(HCPreResult)] == [
+        "numeric_profile",
+        "branch_bf16_codes",
+        "pre_binary32_codes",
+        "post_binary32_codes",
+        "comb_binary32_codes",
+        "residual_bf16_codes",
+        "branch_output_saturation_count",
+        "diagnostics",
+        "counters",
+    ]
+    assert {field.name for field in fields(HCPreCounters)} == {
+        field.name for field in fields(_zero_result().counters)
+    }
+    prohibited = {"cycle", "latency", "bandwidth", "energy", "area", "ppa"}
+    assert not any(
+        term in field.name
+        for field in fields(HCPreCounters)
+        for term in prohibited
+    )
+    assert set(EXCLUDED_SYSTEM_CLAIMS) == {
+        "authenticated_transaction_provenance",
+        "complete_sequence_tiling_or_execution",
+        "official_backend_bit_equivalence",
+        "full_model_execution",
+        "service_engine_execution",
+        "rtl_execution",
+        "physical_schedule",
+        "cycles_bandwidth_latency_energy_area_ppa",
+        "gpu_performance_advantage",
+    }

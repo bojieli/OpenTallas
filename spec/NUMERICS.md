@@ -1128,15 +1128,19 @@ GPU. No official-CUDA bit corpus is promoted into this contract. A separately
 pinned backend audit may report differences, but those observations neither
 change the target nor constitute accelerator conformance.
 
-Before HC_PRE implementation status may become qualified, evidence must add an
-independently generated correctly-rounded sigmoid/exponential corpus, an
-asymmetric matrix distinguishing pass 19 from pass 20 and proving
-source/destination orientation, a balanced-versus-left-fold branch sentinel,
-poison and atomic-commit mutations, and exact locked-checkpoint comparisons for
-`T = 1..4`. No asymmetric nonlinear expected-bit matrix is frozen in SPEC-NUM
-1.1 because it has not yet been reproduced by two independent oracles. This
-remaining evidence obligation is not permission to select backend-dependent
-bits at implementation time.
+The reference qualification evidence in
+`docs/DEEPSEEK_V4_HC_PRE_EVIDENCE.md` now supplies an independently regenerated
+correctly-rounded sigmoid/exponential corpus, a separate Decimal-based service
+oracle, asymmetric matrices distinguishing pass 19 from pass 20 and proving
+source/destination orientation, balanced-versus-left-fold RMS/softmax/branch
+sentinels, poison and atomic-commit mutations, and exact reference/service
+comparisons for `T = 1..4` using hash-locked layer-0 attention HC parameters.
+The extent corpus deliberately repeats one independently verified official
+tokenizer/lookup-derived token so that transaction extent is isolated from value
+variation; heterogeneous sparse-value differential corpora are qualified
+separately. These results qualify the target reference boundary only. They do
+not select backend-dependent bits or establish compiler, service integration,
+RTL, timing, PPA, or full-model execution.
 
 ### NUM-6.11 Routed-expert and shared-expert reduction
 
