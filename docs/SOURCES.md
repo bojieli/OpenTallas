@@ -2,7 +2,7 @@
 
 **Status:** analytical-baseline source register
 
-**Last checked:** 2026-08-28 UTC
+**Last checked:** 2026-08-29 UTC
 **Scope:** public, non-NDA evidence only
 
 This register records the primary evidence used by the executable analytical
@@ -45,6 +45,7 @@ published or simulated result to measured product evidence.
 
 | ID | Primary artifact | Immutable pin | Evidence used |
 |---|---|---|---|
+| SRC-DSV4-FLASH-MARKOV | [DeepSeek-V4-Flash-0731 inference model](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/inference/model.py), [conversion source](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/inference/convert.py), and [safetensors index](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/model.safetensors.index.json) | same revision; model SHA-256 `c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`; conversion SHA-256 `6efe65ebc66b18c9f2656816608f941cacfe20da79c2dee19040ecbee8b42bfe`; index SHA-256 `98efab455cf08dfbbbaaba6f570e1bf10bf927d2b4c3c453a59c2f6f0e3be92b` | `DSparkBlock.forward_head` fixes five causal lookup/project/add/sample dependencies. Conversion slices both Markov vocabulary axes into equal contiguous shards. The index places BF16 `[129280,256]` `mtp.2.markov_head.markov_w1.weight` and `markov_w2.weight` in shard 48; their complete 66,191,360-byte payload hashes are respectively `966bd0507046347754d0f4bf3addd6df6c179ff16243d63998258b3987e4b2f5` and `40ac7e99651c5c6aab8d2555ff65d247931f318414cf94baedc6da2d3bf7c175`. |
 | SRC-DSV4-REPORT | [DeepSeek-V4 technical report, arXiv:2606.19348v1](https://arxiv.org/abs/2606.19348v1) | arXiv v1, published 2026-04-26 | Flash 284B total/13B active; Pro 1.6T total/49B active; one-million-token context; CSA/HCA architecture; routed experts use MXFP4 weights with FP8 activations; dense/shared matrices remain FP8-class; the report explicitly says current hardware executes FP4×FP8 at the FP8×FP8 peak, while a future native implementation could theoretically be one-third more efficient. |
 | SRC-DSV4-FLASH-CARD | [DeepSeek-V4-Flash-0731 model card](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/README.md) | `7872f01b1d1fe23eabc4c98b48bffcef5a386062` | Official release identity; attached DSpark module; serving recipe uses FP8 KV and FP4 indexer cache; target and draft are in the same checkpoint. |
 | SRC-DSV4-FLASH-CONFIG | [DeepSeek-V4-Flash-0731 config](https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash-0731/blob/7872f01b1d1fe23eabc4c98b48bffcef5a386062/config.json) | same revision; local SHA-256 `6c8f3d2d3b48707541b88f32f22ef3f0f8a6b57d8523281e2b8d3cdb0ae9a023` | 43-layer compression sequence, hidden dimensions, expert count/top-k, index dimensions/top-k, context limit, and sliding window. |
@@ -196,6 +197,7 @@ are in `docs/OPEN_PDK_SELECTION.md`.
 
 | ID | Artifact | Class | Boundary |
 |---|---|---|---|
+| GEN-DSV4-MARKOV-LOOP | `docs/DEEPSEEK_V4_MARKOV_LOOP_EVIDENCE.md` | exact target reference, complete official payload/partition audit, and bounded independent selected-row differential | The five-step transaction freezes causal token lookup, increasing-rank BF16 projection, a separate binary32 bias addition, first-index greedy selection, and explicit immutable entropy continuation. Both complete official matrices and all four MP=4 intervals are hash-verified and finite. Projecting official W1 row zero against eight full-rank official W2 rows crossing every MP boundary yields stream SHA-256 `cd2d68aff994647705aee41fd16a5f13f8219fe61ee824eae6f054d43127470d`. This is not a complete vocabulary projection, checkpoint-derived base logits, source-CUDA stochastic replay, artifact-driven service execution, a physical collective, or performance evidence. |
 | GEN-INVENTORY | `data/inventory/*.json` | measured from pinned public metadata | Exact encoded storage only; no model execution. |
 | GEN-ANALYTICAL-LEGACY | `results/standard/analytical.json`, `sweep.csv`, `REPORT.md`, and `QWEN3_8B_ADDENDUM.md` | simulated/derived | Superseded single-midpoint exploration. Retained for provenance and control behavior; not an authoritative technology comparison. |
 | GEN-ROUTING | `results/routing/*.json` | synthetic/simulated | Uniform and correlated stress routing; not production activation traces. |

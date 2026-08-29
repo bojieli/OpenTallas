@@ -98,6 +98,9 @@ _QUALIFIED_REFERENCE_OWNERS = {
     "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
     "KV_WINDOW_WRITE": "runtime.reference.kv_window.kv_window_write_bf16",
     "LM_HEAD": "runtime.reference.lm_head.lm_head_bf16",
+    "MARKOV_AUTOREGRESSIVE_LOOP": (
+        "runtime.reference.markov_loop.markov_autoregressive_loop_bf16"
+    ),
     "RMS_NORM": "runtime.reference.normalization.rms_norm_bf16",
     "ROPE_APPLY": "runtime.reference.rope.rope_apply_bf16",
     "ROPE_INVERSE": "runtime.reference.rope.rope_inverse_bf16",
@@ -482,8 +485,8 @@ _OPERATORS = (
     ),
     _op(
         "MARKOV_AUTOREGRESSIVE_LOOP",
-        "inference/model.py:DSparkBlock.forward_head",
-        "Run five ordered Markov embedding/head additions and token samples, carrying each sampled token forward.",
+        "inference/model.py:DSparkMarkovHead.forward;inference/model.py:DSparkBlock.forward_head",
+        "Run five ordered BF16 Markov lookup/head projections, binary32 logit additions, and samples; return the carried tokens, adjusted logits, embeddings, and entropy continuation.",
         "LOOP",
         "control.dspark_markov_loop",
     ),
@@ -538,14 +541,20 @@ class _GraphBuilder:
         self.nodes: list[GraphNode] = []
         self.node_ids: set[str] = set()
         self.values: set[str] = {
+            "request.explicit_exponential_entropy",
             "request.input_ids",
             "request.session_ids",
             "request.start_pos",
+            "request.temperature_binary32",
         }
         self.value_phases: dict[str, frozenset[str]] = {
+            "request.explicit_exponential_entropy": frozenset(
+                {"prefill", "decode"}
+            ),
             "request.input_ids": frozenset({"prefill", "decode"}),
             "request.session_ids": frozenset({"prefill", "decode"}),
             "request.start_pos": frozenset({"prefill", "decode"}),
+            "request.temperature_binary32": frozenset({"prefill", "decode"}),
         }
         self.value_guards: dict[str, str | None] = {
             value: None for value in self.values
@@ -918,6 +927,48 @@ def _lm_head_attributes(*, full_logits: bool) -> dict[str, Any]:
     if full_logits:
         attributes.update({"block_size": 5, "shared_main_head": True})
     return attributes
+
+
+def _markov_loop_attributes() -> dict[str, Any]:
+    return {
+        "adjusted_logits_output_dtype": "binary32",
+        "base_logits_input_dtype": "binary32",
+        "bias_add_rounding": "separate_binary32_rne",
+        "block_size": 5,
+        "causal_order": "increasing_step_0_to_4",
+        "embedding_checkpoint_dtype": "bf16",
+        "embedding_output_dtype": "bf16",
+        "entropy_continuation": (
+            "main_sample_to_five_step_loop_to_graph_output"
+        ),
+        "entropy_order": "step_then_batch_then_vocabulary",
+        "greedy_policy": "finite_binary32_first_index_argmax_exact",
+        "head_accumulator_dtype": "binary32",
+        "head_checkpoint_dtype": "bf16",
+        "head_product": "exact_bf16_product",
+        "head_reduction_order": "increasing_markov_rank",
+        "head_reduction_rounding": "binary32_rne_each_fused_product_add",
+        "head_runtime_weight_dtype": "binary32_exact_bf16_widen",
+        "initial_token_output_column": 0,
+        "intermediate_overflow": "poison_complete_transaction",
+        "markov_rank": 256,
+        "official_default_temperature_binary32": "0x3f800000",
+        "official_stochastic_replay": (
+            "blocked_unpinned_torch_cuda_rng_exponential_softmax_backend"
+        ),
+        "output_token_count": 6,
+        "partition_axis": "vocabulary",
+        "partition_rule": "equal_contiguous_rank_order",
+        "reference_profile": "opentallas.deepseek_v4_markov_loop_binary32.v1",
+        "sampled_token_carry": "output_column_i_plus_1_is_lookup_at_step_i_plus_1",
+        "subnormal_policy": "preserve",
+        "target_stochastic_adaptation": (
+            "explicit_positive_binary32_exponential_draws_cr32_exp_balanced_softmax"
+        ),
+        "temperature_input": "request.temperature_binary32",
+        "tensor_parallel_world_sizes": [1, 2, 4, 8],
+        "vocabulary_size": 129280,
+    }
 
 
 def _compress_project_attributes(
@@ -2119,12 +2170,21 @@ def build_official_graph_contract() -> dict[str, Any]:
         attributes=_lm_head_attributes(full_logits=False),
         tensor_roles=("model.lm_head.weight",),
     )
-    (main_token,) = graph.add(
+    main_token, main_entropy_continuation = graph.add(
         "main.sample",
         "SAMPLE",
-        (main_logits,),
+        (
+            main_logits,
+            "request.temperature_binary32",
+            "request.explicit_exponential_entropy",
+        ),
+        ("tokens", "entropy_continuation"),
         attributes={
+            "entropy_input": "request.explicit_exponential_entropy",
+            "entropy_order": "batch_then_vocabulary",
+            "entropy_output": "immutable_continuation",
             "greedy_policy": "finite_binary32_first_index_argmax_exact",
+            "official_default_temperature_binary32": "0x3f800000",
             "official_stochastic_replay": (
                 "blocked_unpinned_torch_cuda_rng_exponential_softmax_backend"
             ),
@@ -2132,6 +2192,7 @@ def build_official_graph_contract() -> dict[str, Any]:
             "target_stochastic_adaptation": (
                 "explicit_positive_binary32_exponential_draws_cr32_exp_balanced_softmax"
             ),
+            "temperature_input": "request.temperature_binary32",
         },
     )
 
@@ -2191,13 +2252,23 @@ def build_official_graph_contract() -> dict[str, Any]:
         attributes=_lm_head_attributes(full_logits=True),
         tensor_roles=("model.lm_head.weight",),
     )
-    draft_tokens, markov_embeddings = graph.add(
+    (
+        draft_tokens,
+        adjusted_draft_logits,
+        markov_embeddings,
+        markov_entropy_continuation,
+    ) = graph.add(
         "dspark.markov_loop",
         "MARKOV_AUTOREGRESSIVE_LOOP",
-        (draft_logits, main_token),
-        ("tokens", "embeddings"),
+        (
+            draft_logits,
+            main_token,
+            "request.temperature_binary32",
+            main_entropy_continuation,
+        ),
+        ("tokens", "adjusted_logits", "embeddings", "entropy_continuation"),
         phases=("decode",),
-        attributes={"block_size": 5, "markov_rank": 256},
+        attributes=_markov_loop_attributes(),
         tensor_roles=(
             "dspark.markov_embedding.weight",
             "dspark.markov_head.weight",
@@ -2248,13 +2319,18 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "source_behavior": "the released PyTorch cache object exposes payload storage without validity, session, cursor, retirement, or generation metadata",
                 "target_contract": "causal writes bind a contiguous valid prefix to the exact active sessions, cursor, and monotonic versions; retired lanes retain tombstones; the qualified view never exposes stale capacity rows",
             },
+            {
+                "decision": "make sampling temperature and entropy continuation explicit",
+                "source_behavior": "the released graph reads a model temperature attribute and consumes implicit process-global PyTorch/CUDA generator state at the main and five causal Markov sampling sites",
+                "target_contract": "the graph accepts one finite binary32 temperature and one immutable explicit post-exponential entropy stream, chains the main continuation through all five Markov steps, preserves it unchanged for greedy execution, and fails closed when exact unpinned PyTorch/CUDA replay is requested",
+            },
         ],
         "coverage": {
             "catalog_kind_count": len(OPERATOR_CATALOG),
             "consumed_tensor_role_count": len(
                 {role for node in graph.nodes for role in node.tensor_roles}
             ),
-            "execution_status": "blocked_pending_reference_and_service_engine",
+            "execution_status": "blocked_pending_service_engine",
             "missing_cost_class_count": 0,
             "missing_lowering_count": 0,
             "missing_reference_owner_count": 0,
@@ -2269,11 +2345,21 @@ def build_official_graph_contract() -> dict[str, Any]:
             "unmapped_tensor_role_count": 0,
         },
         "graph_inputs": [
+            "request.explicit_exponential_entropy",
             "request.input_ids",
             "request.session_ids",
             "request.start_pos",
+            "request.temperature_binary32",
         ],
-        "graph_outputs": [main_token, main_logits, draft_tokens, confidence],
+        "graph_outputs": [
+            main_token,
+            main_logits,
+            main_entropy_continuation,
+            draft_tokens,
+            adjusted_draft_logits,
+            confidence,
+            markov_entropy_continuation,
+        ],
         "model_id": MODEL_ID,
         "nodes": [node.to_dict() for node in graph.nodes],
         "open_semantic_issues": [
@@ -2300,10 +2386,10 @@ def build_official_graph_contract() -> dict[str, Any]:
             },
             {
                 "id": "DSV4-SEM-005",
-                "issue": "Independent references now define E2M1, E8M0, E4M3FN, BF16, activation microscaling, ordered binary32 accumulation, official 32-value routed and 128-value dense block dots, complete routed-MXFP4 and shared-FP8 SwiGLU, complete dense FP8 and BF16 linear, binary32 router-score, sqrt-softplus router activation, compressor, and DSpark confidence projections, causal raw compressor-state updates, deterministic compressor pooling, explicit pooled-binary32 to BF16 conversion, session-bound circular-window KV transition/retirement/valid-view semantics, session-bound compressed-KV prefix commit and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, complete grouped attention-output projection, base/YaRN RoPE application and inverse, weighted RMS normalization, unweighted BF16 head RMS normalization, complete HC pre-mixing and final HC-head reduction, KV FP8 and indexer FP4 QDQ, indexer Hadamard semantics, and fail-closed greedy/target-adapted sampling, comprising forty-one complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state/control operator kinds. Five matrix, KV-view, and speculative-control operator kinds remain pending even though every kind has a source, lowering, and cost-class ledger entry.",
-                "required_resolution": "Implement and qualify complete target-precision semantics for each graph operator before marking that operator executable; scalar and block-dot primitives alone do not close matrix or layer lowering.",
+                "issue": "All 46 graph operator kinds now have pinned, unit-qualified target-precision references, including the shared BF16 vocabulary head and the five-step Markov loop with explicit adjusted logits and entropy continuation. The graph still has no complete graph-to-microcode lowering or artifact-driven service-engine executor, so unit-reference completeness cannot be reported as executable model semantics.",
+                "required_resolution": "Lower all 2,136 nodes and their state/control dependencies into generated deployment artifacts, execute them through the functional service engine, and reconcile every qualified boundary before marking the graph executable.",
                 "severity": "blocking",
-                "source_anchor": "inference/kernel.py:act_quant_kernel;inference/kernel.py:fp4_quant_kernel;inference/kernel.py:fp8_gemm_kernel;inference/kernel.py:fp4_gemm_kernel;inference/kernel.py:sparse_attn_kernel;inference/kernel.py:hc_split_sinkhorn_kernel;inference/model.py:RMSNorm.forward;inference/model.py:Attention.forward;inference/model.py:Compressor.forward;inference/model.py:Indexer.forward;inference/model.py:Transformer.forward;inference/model.py:Block.hc_pre;inference/model.py:Block.hc_head;inference/model.py:Block.hc_post;inference/model.py:Gate.forward;inference/model.py:MoE.forward;inference/model.py:Expert.forward;inference/model.py:apply_rotary_emb;inference/model.py:sample;runtime/reference/formats.py;runtime/reference/transcendental.py;runtime/reference/compression.py;runtime/reference/compression_state.py;runtime/reference/compression_pool.py;runtime/reference/conversion.py;runtime/reference/compressed_kv.py;runtime/reference/grouped_output.py;runtime/reference/hyper_connection.py;runtime/reference/hc_head.py;runtime/reference/index_score.py;runtime/reference/rope.py;runtime/reference/sparse_attention.py;runtime/reference/sqrt_softplus.py;runtime/reference/normalization.py;runtime/reference/quantization.py;runtime/reference/vector.py;runtime/reference/dispatch.py;runtime/reference/swiglu.py;runtime/reference/sampling.py",
+                "source_anchor": "compiler/frontend/deepseek_v4_graph.py;runtime/reference;compiler/microcode;runtime/service_engine",
             },
             {
                 "id": "DSV4-SEM-006",
@@ -2311,13 +2397,6 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "required_resolution": "Implement service-engine and session-controller integration for the qualified window-KV and compressor transactions, then bind reset, abort, commit, bounds, isolation, and state hashes to generation invocations.",
                 "severity": "blocking",
                 "source_anchor": "inference/model.py:Attention.forward;inference/model.py:Compressor.forward;compiler/frontend/deepseek_v4_generation.py;runtime/reference/kv_window.py;runtime/reference/compression_state.py;runtime/reference/compressed_kv.py",
-            },
-            {
-                "id": "DSV4-SEM-007",
-                "issue": "A deterministic plan covers all 72,317 official tensors, and an atomic hash-locked applicator plus independent replay checker is qualified on identity, slicing, native MXFP4, and wo_a BF16 fixture paths. The 166.9-GB official payload has not yet been streamed through that machinery or bound to canonical output hashes.",
-                "required_resolution": "Apply the plan to every hash-locked official payload byte, emit per-rank canonical tensor hashes, and pass independent full-payload transform checks before image generation.",
-                "severity": "blocking",
-                "source_anchor": "inference/convert.py:main;compiler/canonical/deepseek_v4.py;compiler/canonical/plan.py;compiler/checking/deepseek_v4_transforms.py",
             },
         ],
         "operator_catalog": operator_catalog,
@@ -2348,17 +2427,15 @@ def build_official_graph_contract() -> dict[str, Any]:
                 "hash-verified local tokenizer encode and decode behavior",
                 "target-only prefill/decode, EOS, and executor-commit control with synthetic transcripts",
                 "scalar target formats, activation microscaling, ordered accumulation, and official block-dot primitives",
-                "unit-qualified routed-MXFP4 and shared-FP8 SwiGLU, dense FP8 linear, index-head BF16 linear, binary32 router-score, sqrt-softplus router activation, compressor, and DSpark-confidence projections, causal raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, session-bound circular-window KV write/retirement/chronological view, session-bound compressed-KV write and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, complete grouped attention-output projection, base/YaRN RoPE application and inverse, weighted RMS normalization, unweighted BF16 head RMS normalization, complete HC pre-mixing, final HC-head reduction, KV FP8 QDQ, indexer FP4 QDQ, indexer Hadamard rotation, target-hidden capture, HC expansion, HC post-mixing, token embedding, hash-route, window, compressed-dense, DSpark index/noise-embedding, biased-router top-k, learned-index top-k, routed-weight normalization, expert-dispatch, expert-reduction, and fail-closed greedy/target-adapted sampling references",
-                "complete official-tensor canonical transform plan and independently checked transform primitives",
-                "atomic hash-locked canonical application and replay on an adversarial development fixture",
+                "all 46 operator kinds have unit-qualified target references, including routed-MXFP4/shared-FP8 SwiGLU, stateful KV/compressor semantics, exact attention row-space composition, the shared BF16 vocabulary head, the five-step causal Markov loop with adjusted logits and entropy continuation, and fail-closed greedy/target-adapted sampling",
+                "complete official 72,317-tensor, 77,116-assignment MP=4 canonical application with independent replay identity b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28",
             ],
-            "request_boundary": "token_ids_session_ids_and_start_position",
+            "request_boundary": "token_ids_session_ids_start_position_temperature_and_explicit_entropy",
             "unresolved": [
                 "end-to-end binding of the verified host boundary to checkpoint-derived logits",
                 "exact stochastic replay for the unpinned Torch/CUDA RNG stack",
                 "DSpark target verification and speculative acceptance",
-                "full official-payload transform application and canonical output hashes",
-                "five remaining operator-complete target-precision references",
+                "graph-to-microcode and artifact-driven service-engine execution for all 46 unit-qualified reference kinds",
                 "service-engine integration of qualified window-KV, raw-compressor, and compressed-KV transactions, session control, and microcode",
                 "physical placement, HBM/KV allocation, and static schedule",
             ],

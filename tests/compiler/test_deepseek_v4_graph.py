@@ -58,17 +58,17 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
     second = build_official_graph_contract()
     assert second == graph_contract
     assert graph_contract["graph_contract_id"] == (
-        "5c7f52fefc72c306d27f0fd86d4bc0c18ad003a31983213d06a0bae173c54322"
+        "7c811fc63038c76fd5268facbbb12244fab2e7fbf75bd7cf7598bd20da239122"
     )
     assert graph_contract["coverage"] == {
         "catalog_kind_count": 46,
         "consumed_tensor_role_count": 63,
-        "execution_status": "blocked_pending_reference_and_service_engine",
+        "execution_status": "blocked_pending_service_engine",
         "missing_cost_class_count": 0,
         "missing_lowering_count": 0,
         "missing_reference_owner_count": 0,
         "node_count": 2136,
-        "pending_reference_kind_count": 1,
+        "pending_reference_kind_count": 0,
         "pending_rtl_kind_count": 46,
         "pending_service_engine_kind_count": 46,
         "unknown_kind_count": 0,
@@ -87,9 +87,11 @@ def test_graph_is_deterministic_complete_but_explicitly_not_executable(
 
 def test_graph_is_topological_and_phase_safe(graph_contract: dict) -> None:
     values = {
+        "request.explicit_exponential_entropy": {"prefill", "decode"},
         "request.input_ids": {"prefill", "decode"},
         "request.session_ids": {"prefill", "decode"},
         "request.start_pos": {"prefill", "decode"},
+        "request.temperature_binary32": {"prefill", "decode"},
     }
     value_guards: dict[str, str | None] = {value: None for value in values}
     predicate_values: set[str] = set()
@@ -369,6 +371,9 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
         "INDEX_TOPK": "runtime.reference.selection.index_topk_indices",
         "KV_WINDOW_WRITE": "runtime.reference.kv_window.kv_window_write_bf16",
         "LM_HEAD": "runtime.reference.lm_head.lm_head_bf16",
+        "MARKOV_AUTOREGRESSIVE_LOOP": (
+            "runtime.reference.markov_loop.markov_autoregressive_loop_bf16"
+        ),
         "RMS_NORM": "runtime.reference.normalization.rms_norm_bf16",
         "ROPE_APPLY": "runtime.reference.rope.rope_apply_bf16",
         "ROPE_INVERSE": "runtime.reference.rope.rope_inverse_bf16",
@@ -404,9 +409,7 @@ def test_operator_ledger_has_no_implicit_or_zero_cost_kind(
             assert requirement["reference_status"] == "pending_implementation"
         assert requirement["service_engine_status"] == "pending_implementation"
         assert requirement["rtl_status"] == "pending_implementation"
-    assert set(catalog).difference(qualified_references) == {
-        "MARKOV_AUTOREGRESSIVE_LOOP"
-    }
+    assert set(catalog) == set(qualified_references)
 
 
 def test_sampling_contract_exposes_exact_and_blocked_numeric_boundaries(
@@ -415,7 +418,11 @@ def test_sampling_contract_exposes_exact_and_blocked_numeric_boundaries(
     (node,) = [node for node in graph_contract["nodes"] if node["kind"] == "SAMPLE"]
     assert node["id"] == "main.sample"
     assert node["attributes"] == {
+        "entropy_input": "request.explicit_exponential_entropy",
+        "entropy_order": "batch_then_vocabulary",
+        "entropy_output": "immutable_continuation",
         "greedy_policy": "finite_binary32_first_index_argmax_exact",
+        "official_default_temperature_binary32": "0x3f800000",
         "official_stochastic_replay": (
             "blocked_unpinned_torch_cuda_rng_exponential_softmax_backend"
         ),
@@ -423,9 +430,93 @@ def test_sampling_contract_exposes_exact_and_blocked_numeric_boundaries(
         "target_stochastic_adaptation": (
             "explicit_positive_binary32_exponential_draws_cr32_exp_balanced_softmax"
         ),
+        "temperature_input": "request.temperature_binary32",
     }
-    assert node["inputs"] == ["main.lm_head.output"]
+    assert node["inputs"] == [
+        "main.lm_head.output",
+        "request.temperature_binary32",
+        "request.explicit_exponential_entropy",
+    ]
+    assert node["outputs"] == [
+        "main.sample.tokens",
+        "main.sample.entropy_continuation",
+    ]
     assert node["state_reads"] == node["state_writes"] == []
+
+
+def test_markov_loop_causality_adjusted_logits_and_entropy_are_explicit(
+    graph_contract: dict,
+) -> None:
+    (node,) = [
+        node
+        for node in graph_contract["nodes"]
+        if node["kind"] == "MARKOV_AUTOREGRESSIVE_LOOP"
+    ]
+    assert node["id"] == "dspark.markov_loop"
+    assert node["inputs"] == [
+        "dspark.lm_head.output",
+        "main.sample.tokens",
+        "request.temperature_binary32",
+        "main.sample.entropy_continuation",
+    ]
+    assert node["outputs"] == [
+        "dspark.markov_loop.tokens",
+        "dspark.markov_loop.adjusted_logits",
+        "dspark.markov_loop.embeddings",
+        "dspark.markov_loop.entropy_continuation",
+    ]
+    assert node["attributes"] == {
+        "adjusted_logits_output_dtype": "binary32",
+        "base_logits_input_dtype": "binary32",
+        "bias_add_rounding": "separate_binary32_rne",
+        "block_size": 5,
+        "causal_order": "increasing_step_0_to_4",
+        "embedding_checkpoint_dtype": "bf16",
+        "embedding_output_dtype": "bf16",
+        "entropy_continuation": (
+            "main_sample_to_five_step_loop_to_graph_output"
+        ),
+        "entropy_order": "step_then_batch_then_vocabulary",
+        "greedy_policy": "finite_binary32_first_index_argmax_exact",
+        "head_accumulator_dtype": "binary32",
+        "head_checkpoint_dtype": "bf16",
+        "head_product": "exact_bf16_product",
+        "head_reduction_order": "increasing_markov_rank",
+        "head_reduction_rounding": "binary32_rne_each_fused_product_add",
+        "head_runtime_weight_dtype": "binary32_exact_bf16_widen",
+        "initial_token_output_column": 0,
+        "intermediate_overflow": "poison_complete_transaction",
+        "markov_rank": 256,
+        "official_default_temperature_binary32": "0x3f800000",
+        "official_stochastic_replay": (
+            "blocked_unpinned_torch_cuda_rng_exponential_softmax_backend"
+        ),
+        "output_token_count": 6,
+        "partition_axis": "vocabulary",
+        "partition_rule": "equal_contiguous_rank_order",
+        "reference_profile": "opentallas.deepseek_v4_markov_loop_binary32.v1",
+        "sampled_token_carry": (
+            "output_column_i_plus_1_is_lookup_at_step_i_plus_1"
+        ),
+        "subnormal_policy": "preserve",
+        "target_stochastic_adaptation": (
+            "explicit_positive_binary32_exponential_draws_cr32_exp_balanced_softmax"
+        ),
+        "temperature_input": "request.temperature_binary32",
+        "tensor_parallel_world_sizes": [1, 2, 4, 8],
+        "vocabulary_size": 129280,
+    }
+    assert node["tensor_roles"] == [
+        "dspark.markov_embedding.weight",
+        "dspark.markov_head.weight",
+    ]
+    assert node["phases"] == ["decode"]
+    assert node["state_reads"] == node["state_writes"] == []
+    assert "dspark.markov_loop.adjusted_logits" in graph_contract["graph_outputs"]
+    assert (
+        "dspark.markov_loop.entropy_continuation"
+        in graph_contract["graph_outputs"]
+    )
 
 
 def test_shared_vocabulary_head_profile_and_binary32_contract_are_explicit(
@@ -1225,7 +1316,7 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     adaptations = {
         record["decision"]: record for record in graph_contract["adaptations"]
     }
-    assert len(adaptations) == 4
+    assert len(adaptations) == 5
     pool_adaptation = adaptations[
         "freeze compressor pooling arithmetic rather than inherit "
         "backend-dependent reduction and exponential behavior"
@@ -1242,6 +1333,11 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
     ]
     assert "without validity" in validity_adaptation["source_behavior"]
     assert "never exposes stale capacity rows" in validity_adaptation["target_contract"]
+    sampling_adaptation = adaptations[
+        "make sampling temperature and entropy continuation explicit"
+    ]
+    assert "process-global PyTorch/CUDA" in sampling_adaptation["source_behavior"]
+    assert "chains the main continuation" in sampling_adaptation["target_contract"]
 
     issues = {record["id"]: record for record in graph_contract["open_semantic_issues"]}
     assert set(issues) == {
@@ -1250,90 +1346,51 @@ def test_system_gaps_include_dspark_acceptance_and_text_frontend(
         "DSV4-SEM-004",
         "DSV4-SEM-005",
         "DSV4-SEM-006",
-        "DSV4-SEM-007",
     }
     assert all(record["severity"] == "blocking" for record in issues.values())
     assert "never invokes forward_spec" in issues["DSV4-SEM-001"]["issue"]
     assert "token IDs" in issues["DSV4-SEM-004"]["issue"]
     assert "exact local tokenizer" in issues["DSV4-SEM-004"]["issue"]
-    assert "official 32-value routed" in issues["DSV4-SEM-005"]["issue"]
-    assert (
-        "forty-one complete matrix/vector/normalization/structural/index/lookup/selection/routing/attention/conversion/state/control"
-        in (issues["DSV4-SEM-005"]["issue"])
-    )
-    assert "Five" in issues["DSV4-SEM-005"]["issue"]
+    assert "All 46 graph operator kinds" in issues["DSV4-SEM-005"]["issue"]
+    assert "five-step Markov loop" in issues["DSV4-SEM-005"]["issue"]
+    assert "graph-to-microcode" in issues["DSV4-SEM-005"]["issue"]
     assert (
         "immutable causal raw compressor-state updates"
         in issues["DSV4-SEM-006"]["issue"]
     )
     assert "session-bound circular-window KV" in issues["DSV4-SEM-006"]["issue"]
     assert "operator-complete executor" in issues["DSV4-SEM-006"]["issue"]
-    assert "all 72,317 official tensors" in issues["DSV4-SEM-007"]["issue"]
-    assert "atomic hash-locked applicator" in issues["DSV4-SEM-007"]["issue"]
     assert graph_contract["system_scope"]["request_boundary"] == (
-        "token_ids_session_ids_and_start_position"
+        "token_ids_session_ids_start_position_temperature_and_explicit_entropy"
     )
     assert (
         "end-to-end binding of the verified host boundary to checkpoint-derived logits"
     ) in (graph_contract["system_scope"]["unresolved"])
+    covered = set(graph_contract["system_scope"]["covered"])
+    assert "hash-verified local tokenizer encode and decode behavior" in covered
     assert (
-        "hash-verified local tokenizer encode and decode behavior"
-        in (graph_contract["system_scope"]["covered"])
-    )
-    assert "atomic hash-locked canonical application" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
+        "all 46 operator kinds have unit-qualified target references, including "
+        "routed-MXFP4/shared-FP8 SwiGLU, stateful KV/compressor semantics, exact "
+        "attention row-space composition, the shared BF16 vocabulary head, the "
+        "five-step causal Markov loop with adjusted logits and entropy continuation, "
+        "and fail-closed greedy/target-adapted sampling"
+    ) in covered
     assert (
-        "unit-qualified routed-MXFP4 and shared-FP8 SwiGLU, dense FP8 linear, index-head BF16 linear, binary32 router-score, sqrt-softplus router activation, compressor, and DSpark-confidence projections, causal raw compressor-state update, deterministic compressor pool, pooled-binary32 to BF16 conversion, session-bound circular-window KV write/retirement/chronological view, session-bound compressed-KV write and valid-prefix view, learned sparse-index scoring, block-64 sparse attention with learned sink and explicit mutable-KV traffic, complete grouped attention-output projection, base/YaRN RoPE application and inverse, weighted RMS normalization, unweighted BF16 head RMS normalization, complete HC pre-mixing, final HC-head reduction, KV FP8 QDQ, indexer FP4 QDQ"
-        in (" ".join(graph_contract["system_scope"]["covered"]))
-    )
-    assert "block-64 sparse attention" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "complete grouped attention-output projection" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "indexer Hadamard rotation" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "weighted RMS normalization" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "unweighted BF16 head RMS normalization" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "sqrt-softplus router activation" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "base/YaRN RoPE application and inverse" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "final HC-head reduction" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "complete HC pre-mixing" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "biased-router top-k" in " ".join(graph_contract["system_scope"]["covered"])
-    assert "expert-dispatch" in " ".join(graph_contract["system_scope"]["covered"])
-    assert "HC post-mixing" in " ".join(graph_contract["system_scope"]["covered"])
-    assert "indexer FP4 QDQ" in " ".join(graph_contract["system_scope"]["covered"])
-    assert "DSpark index/noise-embedding" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "routed-weight normalization" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
-    assert "fail-closed greedy/target-adapted sampling" in " ".join(
-        graph_contract["system_scope"]["covered"]
-    )
+        "complete official 72,317-tensor, 77,116-assignment MP=4 canonical "
+        "application with independent replay identity "
+        "b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28"
+    ) in covered
     assert (
         "DSpark target verification and speculative acceptance"
         in (graph_contract["system_scope"]["unresolved"])
     )
     assert (
-        "five remaining operator-complete target-precision references"
+        "graph-to-microcode and artifact-driven service-engine execution for all 46 unit-qualified reference kinds"
         in (graph_contract["system_scope"]["unresolved"])
+    )
+    assert not any(
+        "remaining operator-complete" in item
+        for item in graph_contract["system_scope"]["unresolved"]
     )
 
 
@@ -1375,7 +1432,7 @@ def test_graph_cli_emits_open_coverage_ledger(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     value = json.loads(output.read_text(encoding="ascii"))
     assert value["graph_contract_id"] == (
-        "5c7f52fefc72c306d27f0fd86d4bc0c18ad003a31983213d06a0bae173c54322"
+        "7c811fc63038c76fd5268facbbb12244fab2e7fbf75bd7cf7598bd20da239122"
     )
     assert "described 2136 nodes across 46 operator kinds" in result.stdout
-    assert "blocked_pending_reference_and_service_engine" in result.stdout
+    assert "blocked_pending_service_engine" in result.stdout

@@ -144,7 +144,7 @@
           "type": "integer"
         },
         "execution_status": {
-          "const": "blocked_pending_reference_and_service_engine"
+          "const": "blocked_pending_service_engine"
         },
         "missing_cost_class_count": {
           "const": 0
@@ -160,8 +160,7 @@
           "type": "integer"
         },
         "pending_reference_kind_count": {
-          "minimum": 1,
-          "type": "integer"
+          "const": 0
         },
         "pending_rtl_kind_count": {
           "minimum": 1,
@@ -449,7 +448,7 @@
           "$ref": "#/$defs/string_array"
         },
         "request_boundary": {
-          "const": "token_ids_session_ids_and_start_position"
+          "const": "token_ids_session_ids_start_position_temperature_and_explicit_entropy"
         },
         "unresolved": {
           "$ref": "#/$defs/string_array"

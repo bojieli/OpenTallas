@@ -58,10 +58,15 @@ OFFICIAL_REPOSITORY = "deepseek-ai/DeepSeek-V4-Flash-0731"
 OFFICIAL_REVISION = "7872f01b1d1fe23eabc4c98b48bffcef5a386062"
 MODEL_SOURCE_PATH = "inference/model.py"
 MODEL_SOURCE_SHA256 = "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
+CONVERT_SOURCE_PATH = "inference/convert.py"
+CONVERT_SOURCE_SHA256 = (
+    "6efe65ebc66b18c9f2656816608f941cacfe20da79c2dee19040ecbee8b42bfe"
+)
 INFERENCE_CONFIG_PATH = "inference/config.json"
 INFERENCE_CONFIG_SHA256 = (
     "c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71"
 )
+CHECKPOINT_INDEX_PATH = "model.safetensors.index.json"
 CHECKPOINT_INDEX_SHA256 = (
     "98efab455cf08dfbbbaaba6f570e1bf10bf927d2b4c3c453a59c2f6f0e3be92b"
 )
@@ -157,6 +162,12 @@ SOURCE_EXPRESSIONS = (
     "output_ids[:, i + 1] = sample(logits[:, i], self.temperature)",
     "markov_embed = torch.stack(markov_embeds, dim=1)",
     "return output_ids, logits, confidence",
+)
+CONVERT_SOURCE_EXPRESSIONS = (
+    '"markov_w1": ("markov_w1", 0),',
+    '"markov_w2": ("markov_w2", 0),',
+    "shard_size = param.size(dim) // mp",
+    "new_param = param.narrow(dim, i * shard_size, shard_size).contiguous()",
 )
 SOURCE_EQUIVALENCE_BOUNDARY = (
     "The five lookup/project/add/control dependencies match the pinned DSparkBlock.forward_head source order.",
@@ -1074,9 +1085,13 @@ def markov_autoregressive_loop_bf16(
 
 
 __all__ = [
+    "CHECKPOINT_INDEX_PATH",
     "CHECKPOINT_INDEX_SHA256",
     "CHECKPOINT_LOCK_ID",
     "CHECKPOINT_SHARD",
+    "CONVERT_SOURCE_EXPRESSIONS",
+    "CONVERT_SOURCE_PATH",
+    "CONVERT_SOURCE_SHA256",
     "EXCLUDED_CLAIMS",
     "INFERENCE_CONFIG_PATH",
     "INFERENCE_CONFIG_SHA256",

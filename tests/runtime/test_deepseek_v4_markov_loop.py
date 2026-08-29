@@ -156,9 +156,15 @@ def test_reference_is_bound_to_pinned_source_config_and_checkpoint() -> None:
     assert markov.MODEL_SOURCE_SHA256 == (
         "c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f"
     )
+    assert markov.CONVERT_SOURCE_PATH == "inference/convert.py"
+    assert markov.CONVERT_SOURCE_SHA256 == (
+        "6efe65ebc66b18c9f2656816608f941cacfe20da79c2dee19040ecbee8b42bfe"
+    )
+    assert markov.INFERENCE_CONFIG_PATH == "inference/config.json"
     assert markov.INFERENCE_CONFIG_SHA256 == (
         "c90861f3d10a9e4ef5954f8f1a34c529d480da1c5799f84660028f4e38e14e71"
     )
+    assert markov.CHECKPOINT_INDEX_PATH == "model.safetensors.index.json"
     assert markov.CHECKPOINT_INDEX_SHA256 == (
         "98efab455cf08dfbbbaaba6f570e1bf10bf927d2b4c3c453a59c2f6f0e3be92b"
     )
@@ -169,20 +175,44 @@ def test_reference_is_bound_to_pinned_source_config_and_checkpoint() -> None:
         "opentallas.deepseek_v4_markov_loop_binary32.v1"
     )
 
-    model_path = _SNAPSHOT / markov.MODEL_SOURCE_PATH
-    config_path = _SNAPSHOT / markov.INFERENCE_CONFIG_PATH
-    if not model_path.is_file() or not config_path.is_file():
+    pinned_files = (
+        (markov.MODEL_SOURCE_PATH, markov.MODEL_SOURCE_SHA256),
+        (markov.CONVERT_SOURCE_PATH, markov.CONVERT_SOURCE_SHA256),
+        (markov.INFERENCE_CONFIG_PATH, markov.INFERENCE_CONFIG_SHA256),
+        (markov.CHECKPOINT_INDEX_PATH, markov.CHECKPOINT_INDEX_SHA256),
+    )
+    paths = tuple(
+        (_SNAPSHOT / relative, digest) for relative, digest in pinned_files
+    )
+    if any(not path.is_file() for path, _ in paths):
         pytest.skip("local pinned DeepSeek source snapshot is unavailable")
+    for path, expected_digest in paths:
+        assert hashlib.sha256(path.read_bytes()).hexdigest() == expected_digest
+    model_path = _SNAPSHOT / markov.MODEL_SOURCE_PATH
+    convert_path = _SNAPSHOT / markov.CONVERT_SOURCE_PATH
+    config_path = _SNAPSHOT / markov.INFERENCE_CONFIG_PATH
+    index_path = _SNAPSHOT / markov.CHECKPOINT_INDEX_PATH
     model_payload = model_path.read_bytes()
+    convert_payload = convert_path.read_bytes()
     config_payload = config_path.read_bytes()
-    assert hashlib.sha256(model_payload).hexdigest() == markov.MODEL_SOURCE_SHA256
-    assert hashlib.sha256(config_payload).hexdigest() == markov.INFERENCE_CONFIG_SHA256
     source = model_payload.decode("utf-8")
+    convert_source = convert_payload.decode("utf-8")
     assert all(expression in source for expression in markov.SOURCE_EXPRESSIONS)
+    assert all(
+        expression in convert_source
+        for expression in markov.CONVERT_SOURCE_EXPRESSIONS
+    )
     config = json.loads(config_payload)
     assert config["vocab_size"] == markov.OFFICIAL_VOCABULARY_SIZE
     assert config["dspark_markov_rank"] == markov.OFFICIAL_MARKOV_RANK
     assert config["dspark_block_size"] == markov.OFFICIAL_BLOCK_SIZE
+    index = json.loads(index_path.read_bytes())
+    assert index["weight_map"][markov.OFFICIAL_W1_TENSOR_NAME] == (
+        markov.CHECKPOINT_SHARD
+    )
+    assert index["weight_map"][markov.OFFICIAL_W2_TENSOR_NAME] == (
+        markov.CHECKPOINT_SHARD
+    )
 
     tree = ast.parse(source)
     classes = {

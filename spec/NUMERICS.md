@@ -2150,6 +2150,92 @@ positions and only after the whole command passes integrity. Rejected/uncommitte
 candidate state is discarded by generation. Draft arithmetic, if implemented,
 uses separately manifest-declared numeric tensors and status.
 
+### NUM-7.2 DSpark five-step Markov autoregressive loop
+
+`MARKOV_AUTOREGRESSIVE_LOOP` begins after the DSpark `LM_HEAD` has produced
+five binary32 base-logit rows and after the main `SAMPLE` has produced one
+initial token plus an explicit entropy continuation. For the graph-qualified
+profile, vocabulary size `V` is 129,280, Markov rank `R` is 256, and block size
+is exactly five. Inputs are finite binary32 base logits `[B,5,V]`, initial token
+IDs `[B]`, BF16 `markov_w1` and `markov_w2` tables `[V,R]`, one finite binary32
+temperature, and an immutable entropy value. The official tensors are
+`mtp.2.markov_head.markov_w1.weight` and
+`mtp.2.markov_head.markov_w2.weight`.
+
+The transaction retains the initial token in output column zero and executes
+steps `i=0..4` strictly in increasing order:
+
+1. token `tokens[:,i]` selects one complete BF16 row of `markov_w1` per batch;
+2. every selected embedding widens exactly and projects through every global
+   `markov_w2` vocabulary row, starting from binary32 positive zero and
+   traversing Markov columns `0..R-1` in increasing order;
+3. each exact BF16 product enters one binary32 RNE fused product-add;
+4. the completed finite Markov bias is added to `base_logits[:,i,:]` with one
+   **separate** binary32 RNE addition, with no intervening BF16 conversion; and
+5. `SAMPLE` consumes that adjusted row and writes `tokens[:,i+1]`, which is the
+   lookup index for the next step.
+
+This dependency forbids reordering, parallel token decisions, or using the
+initial token for more than step zero. The immutable successful result exposes
+tokens `[B,6]`, adjusted logits `[B,5,V]`, BF16 Markov embeddings `[B,5,R]`,
+and the entropy continuation after step four. It also retains the copied base
+logits, five projected bias rows, per-step sampling records, source identities,
+and exact logical counters for reconciliation. Every input, both complete
+weight tables, and all arithmetic results validate before the result commits;
+malformed shape/partition, out-of-range token, nonfinite operand, overflow,
+entropy exhaustion, or a later-step error poisons the whole transaction without
+mutating caller data or exposing a partial token sequence.
+
+Tensor parallelism admits world sizes 1, 2, 4, and 8. Both vocabulary axes use
+equal contiguous intervals. A W1 lookup reads the one rank that owns the token;
+W2 produces local vocabulary intervals that concatenate in increasing rank
+order without a numerical cross-rank reduction. This is a logical topology
+contract, not an implementation of the physical lookup routing or gather.
+
+Binary32 positive or negative zero temperature applies finite-binary32
+first-index argmax at every step and consumes no entropy. At nonzero
+temperature, exact source equivalence fails closed by default: the pinned
+release specifies only `torch>=2.10.0` and does not fix the PyTorch/CUDA
+generator state, seed-to-word mapping, `exponential_(1)` mapping, exponential,
+or reduction implementation. A separately selected target adaptation accepts
+immutable positive-finite binary32 values representing post-`exponential_(1)`
+draws. It consumes them in step-major, then batch-major, then vocabulary-major
+order; each step receives the prior step's continuation, and success consumes
+exactly `5*B*V` draws. This adaptation freezes deterministic target arithmetic
+without claiming stochastic source bit identity or RNG quality.
+
+Principal successful semantic counts are:
+
+```text
+initial token reads/writes          = B
+causal token reads                  = 5 * B
+base binary32 logits read           = 5 * B * V
+W1 / W2 BF16 values validated       = V * R each
+embedding row lookups               = 5 * B
+embedding BF16 values read/written  = 5 * B * R
+exact product-accumulates           = 5 * B * V * R
+binary32 accumulation roundings     = 5 * B * V * R
+separate binary32 bias additions    = 5 * B * V
+adjusted binary32 logits produced   = 5 * B * V
+sampling calls                      = 5
+sampling logits read                = 5 * B * V
+argmax comparisons                  = 5 * B * (V - 1)
+entropy draws                       = 0 or 5 * B * V
+sampled / complete tokens written   = 5 * B / 6 * B
+transaction commits                 = 1
+```
+
+These are logical coverage counters. Complete official payload hashes, MP=4
+interval hashes, bounded complete causal corpora, rounding sentinels, and eight
+full-rank official selected-row projections qualify the reference boundary.
+They do not establish checkpoint-derived DSpark hidden state or base logits, a
+complete official vocabulary projection, exact nonzero-temperature CUDA replay,
+target verification or speculative acceptance, full generation, graph-to-
+microcode lowering, artifact-driven service execution, a physical collective,
+ROM/SRAM/HBM placement or traffic, schedules, RTL, cycles, latency, bandwidth,
+throughput, power, energy, area, PPA, manufacturability, task quality, or GPU
+advantage.
+
 ## NUM-8 Qualification boundary
 
 ### NUM-8.1 Required evidence

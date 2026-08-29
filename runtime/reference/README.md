@@ -141,6 +141,27 @@ official vocabulary execution, physical collective, artifact-driven service
 path, or physical traffic/performance evidence. See
 `docs/DEEPSEEK_V4_LM_HEAD_EVIDENCE.md` for the exact claim boundary.
 
+`markov_loop.py` implements the single `MARKOV_AUTOREGRESSIVE_LOOP` site as one
+atomic five-step causal transaction. Starting from the main sampled token, each
+step selects the corresponding BF16 row of the official `[129280,256]`
+`markov_w1`, projects it through BF16 `markov_w2` with increasing-rank
+binary32 fused-product accumulation, adds that bias to one DSpark base-logit
+row with a separate binary32 RNE operation, and samples the next token. The
+result retains all six tokens, five adjusted-logit rows, five Markov embeddings,
+and the immutable entropy continuation. Equal contiguous vocabulary shards are
+reassembled in increasing tensor-parallel rank order. Zero temperature uses
+source-exact first-index argmax without consuming entropy; nonzero-temperature
+source replay fails closed because the release does not pin the Torch/CUDA RNG
+stack, while the separately named target adaptation consumes explicit
+post-exponential draws in step/batch/vocabulary order. Tests hash both complete
+66,191,360-byte official matrices and their MP=4 shards, cross every shard
+boundary with eight full-rank rows, freeze projection and later bias-add
+rounding independently, and cover causal histories, poison atomicity,
+immutability, counters, and randomized complete fixtures. This does not provide
+checkpoint-derived base logits, a complete official vocabulary projection,
+artifact-driven service execution, a physical collective, or performance
+evidence. See `docs/DEEPSEEK_V4_MARKOV_LOOP_EVIDENCE.md` for the exact boundary.
+
 `normalization.py` implements the weighted `RMS_NORM` operation at all 251
 Flash graph sites and all four observed widths. It widens BF16 input and BF16
 checkpoint weights exactly, squares with binary32 RNE, reduces with the NUM-6.1
