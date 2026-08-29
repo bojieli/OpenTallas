@@ -116,7 +116,19 @@ class MemoryObject:
         self._segments: list[_MappedSegment] = []
         self._anonymous: np.ndarray | None = None
         if source.kind == "zero":
-            self._anonymous = np.full(self.size_bytes, source.fill, dtype=np.uint8)
+            if source.fill:
+                self._anonymous = np.full(self.size_bytes, source.fill, dtype=np.uint8)
+            else:
+                # ``np.zeros`` is calloc-backed, so the kernel hands back
+                # lazily faulted zero pages and only the bytes a request
+                # actually touches are ever committed.  ``np.full`` writes
+                # every byte, which commits the whole object up front: the
+                # DeepSeek cluster deployment declares a 160 GiB activation
+                # arena sized by the *maximum* span, so a 104-token prefill
+                # was paying 160 GiB of resident anonymous memory to use a
+                # fraction of a percent of it, and was OOM-killed for it on a
+                # 188 GiB machine.  The contents are identical either way.
+                self._anonymous = np.zeros(self.size_bytes, dtype=np.uint8)
         elif source.kind == "generated":
             from runtime.sim.generators import generate_bytes
             from runtime.abi3.crc import sha256_hex

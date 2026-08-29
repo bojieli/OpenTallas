@@ -236,6 +236,68 @@ def test_transfer_moves_codes_without_conversion():
     assert result.counters["dma.transfers"] == 1
 
 
+def test_transfer_reads_a_stride_zero_axis_as_a_shared_broadcast():
+    """A ``DMA.TRANSFER`` whose source axis has stride zero repeats one row.
+
+    This is how ``unsqueeze(axis).repeat(extent)`` is expressed without a new
+    opcode and without four copies of the source in memory: the verifier bounds
+    a view by ``(dim - 1) * stride``, so a zero-stride axis reaches no further
+    than the source does, and the engine reads the same elements once per step
+    of that axis.  ``REDUCTION.GROUPED_CONCAT`` cannot say this -- joining four
+    copies of ``[tokens, width]`` on axis 0 gives ``[4 * tokens, width]``, four
+    consecutive *tokens* where four *streams* belong.
+    """
+    tokens, streams, width = 3, 4, 5
+    source = (np.arange(tokens * width, dtype=np.uint16) + 0x3F00).reshape(
+        tokens, width
+    )
+    build = Build()
+    src = build.view(
+        build.object_of(source),
+        DType.BF16,
+        (tokens, streams, width),
+        strides=[width, 0, 1],
+    )
+    dst = build.output_view((tokens, streams, width), DType.BF16, 2)
+    emit_op(build, Major.DMA, Dma.TRANSFER, [src], [dst])
+    device = build.finish()
+    result = run(device)
+    assert result.status == CompletionStatus.SUCCESS, result.message
+    expected = np.repeat(source[:, None, :], streams, axis=1)
+    assert np.array_equal(read(device, dst), expected)
+    # Every stream holds the token's own row, not the next token's.
+    for stream in range(streams):
+        assert np.array_equal(read(device, dst)[:, stream, :], source)
+
+
+def test_grouped_concat_would_have_misplaced_a_broadcast():
+    """The engine's shape check is the only thing between reshape and nonsense.
+
+    Four copies of a ``[tokens, width]`` tensor concatenated on axis 0 are
+    ``[4 * tokens, width]``.  Reshaping that to ``[tokens, 4, width]`` -- which
+    is exactly what a lenient implementation would do -- yields four
+    *consecutive tokens* in the four stream slots of token 0.  The check refuses
+    it, and this records what the refusal is protecting against.
+    """
+    tokens, streams, width = 3, 4, 5
+    source = (np.arange(tokens * width, dtype=np.uint16) + 0x3F00).reshape(
+        tokens, width
+    )
+    build = Build()
+    views = [build.input_view(source, DType.BF16) for _ in range(streams)]
+    out = build.output_view((tokens, streams, width), DType.BF16, 2)
+    emit_op(build, Major.REDUCTION, Reduction.GROUPED_CONCAT, views, [out])
+    result = run(build.finish())
+    assert result.status == CompletionStatus.FAILED
+    assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
+    assert "differ from the concatenation" in result.message
+    reshaped = np.concatenate([source] * streams, axis=0).reshape(
+        tokens, streams, width
+    )
+    broadcast = np.repeat(source[:, None, :], streams, axis=1)
+    assert not np.array_equal(reshaped, broadcast)
+
+
 def test_transfer_refuses_a_storage_conversion():
     build = Build()
     src = build.input_view(np.arange(4, dtype=np.uint16), DType.BF16)

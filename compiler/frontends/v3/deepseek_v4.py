@@ -309,7 +309,7 @@ LOWERING_PLAN: Mapping[str, tuple[str, ...]] = {
     "GROUPED_OUTPUT_PROJECT": ("GROUPED_MATMUL",),
     "HADAMARD_ROTATE": ("HADAMARD",),
     "HASH_ROUTE": ("HASH_ROUTE",),
-    "HC_EXPAND": ("CONCAT",),
+    "HC_EXPAND": ("BROADCAST",),
     "HC_HEAD": ("HYPER_CONNECT_HEAD",),
     "HC_POST": ("HYPER_CONNECT_POST",),
     "HC_PRE": ("HYPER_CONNECT_PRE",),
@@ -422,6 +422,7 @@ COUNTER_CLASS_BY_KIND: Mapping[str, str] = {
     "ARGMAX": "selection_eos",
     "ATTENTION_SPARSE": "attention",
     "BIASED_TOPK": "route_expert",
+    "BROADCAST": "memory",
     "CONCAT": "vector_reduction",
     "SCATTER": "memory",
     "CONVERT": "vector_reduction",
@@ -1299,16 +1300,23 @@ def export_deepseek_v4_kernel_graph(
             bind(out0, output)
 
         elif source_kind == "HC_EXPAND":
+            # ``unsqueeze(2).repeat(1, 1, hc_mult, 1)``: one hidden state read
+            # once per hyper-connection stream.  Emitting it as four inputs to a
+            # CONCAT said "join four tensors", which on axis 0 -- the only axis
+            # REDUCTION.GROUPED_CONCAT has -- is ``[4 * tokens, width]``, four
+            # consecutive tokens where four streams belong.  BROADCAST states
+            # the inserted axis instead, so a backend reads the one source
+            # through a stride-zero axis rather than materialising four copies.
             source = operands[0]
             output = act(out0, "bf16", (span, HC_MULT, HIDDEN))
             emit(
                 node_id,
-                "CONCAT",
-                (source,) * HC_MULT,
+                "BROADCAST",
+                (source,),
                 (output,),
                 iteration_domain={"tokens": span, "hyper_streams": HC_MULT,
                                   "width": HIDDEN},
-                attributes={**attrs, "axis": 1, "copies": HC_MULT,
+                attributes={**attrs, "axis": 1, "extent": HC_MULT,
                             "source_replication": "single_embedding"},
             )
             bind(out0, output)

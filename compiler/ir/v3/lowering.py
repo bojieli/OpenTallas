@@ -45,6 +45,16 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "SCATTER": EngineOp(Major.DMA, Dma.SCATTER, 2, 1),
     "COPY": EngineOp(Major.DMA, Dma.TRANSFER, 1, 1),
     "CONCAT": EngineOp(Major.REDUCTION, Reduction.GROUPED_CONCAT, 4, 1),
+    # A broadcast is not a concatenation.  ``REDUCTION.GROUPED_CONCAT`` joins
+    # along axis 0, so four copies of ``[tokens, width]`` become
+    # ``[4 * tokens, width]`` -- four consecutive *tokens* where four *streams*
+    # belong.  What ``unsqueeze(axis).repeat(extent)`` actually is, on a machine
+    # whose operands are strided views, is one source read through an axis of
+    # stride zero.  That is a movement, so it lowers to ``DMA.TRANSFER`` with
+    # in0 the stride-zero reading of the source and out0 the materialised
+    # result; a backend that can alias the destination need not move anything
+    # at all.
+    "BROADCAST": EngineOp(Major.DMA, Dma.TRANSFER, 1, 1),
     # contraction
     "MATMUL": EngineOp(Major.TENSOR, TensorOp.MATMUL, 2, 1),
     "GROUPED_MATMUL": EngineOp(Major.TENSOR, TensorOp.GROUPED_MATMUL, 3, 1),

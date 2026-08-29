@@ -86,6 +86,7 @@ OPERATION_KINDS = frozenset(
         "SCATTER",
         "COPY",
         "CONCAT",
+        "BROADCAST",
         # contraction
         "MATMUL",
         "GROUPED_MATMUL",
@@ -692,6 +693,8 @@ def check_neutral(graph: KernelGraph) -> list[str]:
                         f"{token.dtype!r}, but a token identifier is "
                         f"{TOKEN_DTYPE!r} in ABI 3.0"
                     )
+        if kernel.kind == "BROADCAST":
+            errors.extend(_check_broadcast(kernel, seen_tensor, where))
         if not kernel.numeric_contract:
             errors.append(f"{where}: no numeric contract named")
         if kernel.predicate:
@@ -720,6 +723,68 @@ def check_neutral(graph: KernelGraph) -> list[str]:
     if phases != set(PHASES):
         errors.append(
             f"entrypoints cover {sorted(phases)}, expected {sorted(PHASES)}"
+        )
+    return errors
+
+
+def _check_broadcast(
+    kernel: "Kernel", tensors: Mapping[str, "Tensor"], where: str
+) -> list[str]:
+    """A ``BROADCAST`` states an inserted axis every element of which is shared.
+
+    It is not a concatenation.  ``REDUCTION.GROUPED_CONCAT`` joins along axis 0
+    and cannot express ``unsqueeze(axis).repeat(extent)``: four copies of a
+    ``[tokens, width]`` tensor joined on axis 0 are ``[4 * tokens, width]``,
+    which places four consecutive *tokens* where four *streams* belong.  So the
+    operation gets its own kind, and the checks below are what let a backend
+    read the source through one stride-zero axis instead of materialising four
+    copies of it.
+
+    The output is the input with ``extent`` inserted at ``axis``; nothing else
+    changes, including the dtype.  A backend is free to realise this as a view
+    rather than as movement, so an output that some kernel also *writes* would
+    alias the source through the zero stride.  Single assignment already forbids
+    two producers; what this adds is the shape and dtype agreement that makes
+    the zero-stride reading sound.
+    """
+    errors: list[str] = []
+    if len(kernel.inputs) != 1 or len(kernel.outputs) != 1:
+        errors.append(
+            f"{where}: BROADCAST takes exactly one input and one output, not "
+            f"{len(kernel.inputs)} and {len(kernel.outputs)}"
+        )
+        return errors
+    source = tensors.get(kernel.inputs[0])
+    result = tensors.get(kernel.outputs[0])
+    if source is None or result is None:
+        return errors  # already reported as an undeclared tensor
+    if source.dtype != result.dtype:
+        errors.append(
+            f"{where}: BROADCAST moves {source.dtype!r} into {result.dtype!r}; "
+            "a broadcast shares elements and cannot convert them"
+        )
+    axis = kernel.attributes.get("axis")
+    extent = kernel.attributes.get("extent")
+    if not isinstance(axis, int) or isinstance(axis, bool):
+        errors.append(f"{where}: BROADCAST needs an integer 'axis' attribute")
+        return errors
+    if not isinstance(extent, int) or isinstance(extent, bool) or extent < 1:
+        errors.append(
+            f"{where}: BROADCAST needs a positive integer 'extent' attribute"
+        )
+        return errors
+    if not 0 <= axis <= len(source.shape):
+        errors.append(
+            f"{where}: BROADCAST axis {axis} is outside the inserted range "
+            f"0..{len(source.shape)}"
+        )
+        return errors
+    expected = tuple(source.shape[:axis]) + (extent,) + tuple(source.shape[axis:])
+    if tuple(result.shape) != expected:
+        errors.append(
+            f"{where}: BROADCAST of {tuple(source.shape)} with extent {extent} "
+            f"at axis {axis} is {expected}, but {result.tensor_id!r} declares "
+            f"{tuple(result.shape)}"
         )
     return errors
 
