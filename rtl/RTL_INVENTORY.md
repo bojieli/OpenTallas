@@ -23,6 +23,8 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Production DMA/ADD sequencing | `ot_ta_dma_add_sequencer.sv` | One-command-at-a-time dispatch, monotonic submitted indices, shared SRAM write ownership, stable aggregate counters, explicit last-command completion, and fail-stop error handling | QW-RTL-DMA-ADD-001 |
 | Production RMSNorm arithmetic and SRAM control | `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv` | Finite FP32 RNE arithmetic, correctly rounded reciprocal square root, canonical 4,096-element balanced reduction, complete-pass buffered writeback, exact SRAM counters, and numeric-fault write suppression | QW-RTL-DMA-RMS-001 |
 | Production DMA/RMSNorm sequencing | `ot_ta_dma_rmsnorm_sequencer.sv` | Adjacent authentic command-1/command-2 dispatch, monotonic indices, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-RMS-001 |
+| Production per-head RMSNorm arithmetic and SRAM control | `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_head_rmsnorm_bf16_sram_engine.sv` | Exact 128-element balanced reduction over as many as 32 rows, independent correctly rounded reciprocal square roots, BF16 normalization and weighting boundaries, complete-operation buffered writeback, exact SRAM counters, and numeric-fault write suppression | QW-RTL-HEAD-RMS-001 |
+| Production DMA/per-head-RMSNorm sequencing | `ot_ta_dma_head_rmsnorm_sequencer.sv` | Exact four-command Q-weight-DMA/Q-RMS/K-weight-DMA/K-RMS dispatch, kernel/profile enforcement, monotonic indices, unique terminal command, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-HEAD-RMS-001 |
 | Production BF16 MATMUL SRAM control | `ot_fp32_rne_pkg.sv`, `ot_ta_matmul_bf16_sram_engine.sv` | Signed finite FP32 RNE accumulation over fixed `1 x 64 x 256` segments, ordered 16-bit halfword reload of FP32 state, complete-tile buffered accumulator writeback, buffered `MATMUL_FINAL` BF16 conversion/writeback, exact counters, and numeric-fault write suppression | QW-RTL-DMA-MATMUL-001 |
 | Production DMA/MATMUL sequencing | `ot_ta_dma_matmul_sequencer.sv` | Parameter-bounded first-through-final dispatch for complete 32-command output blocks across as many as three exact adjacent kernel-index ranges, strict alternating profile/order, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-MATMUL-001/QW-RTL-Q-PROJ-001/QW-RTL-KV-PROJ-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
@@ -220,6 +222,36 @@ preparation, a layer, or `TA-RTL-6`. The Q and K per-head RMSNorm operations,
 RoPE, KV preparation, attention, state, vector kernels, program authentication,
 physical memories/interconnect, and all characterized physical claims remain
 open.
+
+QW-RTL-HEAD-RMS-001 is retained as vector set
+`9d6ff4c9ad10e03592d02ec3edebaf6bc341285fac8c69bc09b7daa7891ee791`
+and campaign
+`d7153d61372e1470310e578d71fda690ccda2fe361a30386399a60d6f0b36c37`.
+It executes authentic commands 3,075 through 3,078 and completes graph
+operations `node.0005` and `node.0006`: direct DMA of the 128-element Q weight,
+32-by-128 Q per-head RMSNorm, direct DMA of the 128-element K weight, and
+8-by-128 K per-head RMSNorm. The compact retained artifact authenticates the
+combined 512-byte weight payload as
+`8de1e5fb0a491567ccbb301547a3ef8d4c826f702cab737dd6eeb3a216017dd1`.
+
+Icarus and Verilator each reconcile eight HBM requests, 32 DMA writes, 5,120
+input reads, 5,120 weight reads, 5,080 balanced-reduction additions, 40
+correctly rounded reciprocal square roots, and 5,120 output writes. Both match
+the complete Q output SHA-256
+`bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c`
+and K output SHA-256
+`71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66`
+with zero normalization or output saturation. The engine validates and buffers
+the complete multi-row result before writeback; an early-terminal case proves
+program-order fail-stop before successor activity. Pinned Yosys 0.68 reports
+zero structural problems, and both simulator front ends are warning-free.
+
+This closes the two per-head RMSNorm graph operations only. Q and K projection
+inputs remain behaviorally preloaded from independently qualified campaigns;
+HBM and SRAM remain behavioral interfaces. RoPE, complete QKV preparation, KV
+state preparation, attention, state and vector kernels, program authentication,
+physical memories/interconnect, a representative complete RTL layer, timing,
+activity-derived power/IR, and `TA-RTL-6` remain open.
 
 The bounded IHP SG13G2 physical campaign for
 `ot_ta_add_bf16_sram_engine` is retained as
