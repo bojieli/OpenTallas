@@ -154,7 +154,8 @@ Descriptor types are `MEMORY_OBJECT=0x0001`, `TENSOR_VIEW=0x0002`,
 `COMMUNICATION=0x0006`, `STATE=0x0007`, `EVENT_WAIT_SET=0x0008`,
 `LOOP_CONTROL=0x0009`, `OPERATOR=0x000a`,
 `GENERATION_POLICY=0x000b`, `COUNTER_CLASS=0x000c`,
-`ENTRYPOINT_TABLE=0x000d`, and `SIGNATURE_METADATA=0x000e`.
+`ENTRYPOINT_TABLE=0x000d`, `SIGNATURE_METADATA=0x000e`, and
+`PREDICATE=0x000f`.
 
 Access-permission bits are `READ=bit0`, `WRITE=bit1`, `EXECUTE=bit2`,
 `STATE_PREPARE=bit3`, `STATE_COMMIT=bit4`, `REMOTE=bit5`,
@@ -236,8 +237,17 @@ Completion rings contain fixed 128-byte records aligned to 128 bytes.
 | 76 | 4 | trace ID or `NO_ID` |
 | 80 | 8 | completion timestamp in device cycles |
 | 88 | 16 | echoed idempotency key |
-| 104 | 20 | reserved, zero |
+| 104 | 4 | final selected token ID, `NO_ID` when none was produced |
+| 108 | 1 | EOS reason |
+| 109 | 3 | reserved, zero |
+| 112 | 8 | retired work |
+| 120 | 4 | reserved, zero |
 | 124 | 4 | record CRC32C |
+
+EOS reason is `NONE=0`, `OFFICIAL_EOS=1`, `MAX_NEW_TOKENS=2`,
+`TERMINATED_BY_TRAP=3`, and `HOST_BOUND=4`. Retired work is the count the
+microsequencer actually retired and is checked against the program header's
+proved maximum.
 
 Completion status is `SUCCESS=0`, `FAILED=1`, `ABORTED=2`, or
 `RESET_RECOVERED=3`. `SUCCESS` requires a terminal state commit. A reset may use
@@ -318,3 +328,82 @@ count, and performance values remain capability fields selected through
 compiler legality and separate SKY130/ASAP7 characterization. A capability may
 change those quantitative values without changing ABI semantics, but a program
 must bind the exact capability and topology/health digests used to compile it.
+
+## 12. Typed descriptor payloads
+
+Section 5 freezes the descriptor header and the type registry. The typed
+payloads are frozen here, under the header's own `type_major` / `type_minor`
+fields. Every payload is a whole number of 64-byte units, so the header rule
+"total size is a positive multiple of 64 bytes" holds by construction.
+
+| Type | Payload bytes | Total record bytes |
+|---|---:|---:|
+| `MEMORY_OBJECT` | 64 | 128 |
+| `TENSOR_VIEW` | 128 | 192 |
+| `NUMERIC` | 64 | 128 |
+| `SCHEDULE` | 64 | 128 |
+| `TOPOLOGY` | 192 | 256 |
+| `COMMUNICATION` | 128 | 192 |
+| `STATE` | 128 | 192 |
+| `EVENT_WAIT_SET` | 64 | 128 |
+| `LOOP_CONTROL` | 64 | 128 |
+| `OPERATOR` | 64 | 128 |
+| `GENERATION_POLICY` | 64 | 128 |
+| `COUNTER_CLASS` | 64 | 128 |
+| `PREDICATE` | 64 | 128 |
+| `SIGNATURE_METADATA` | 128 | 192 |
+| `ENTRYPOINT_TABLE` | 16 + 16 per entry, padded | variable |
+
+The normative field tables for each payload are published as machine-readable
+layout records in `spec/abi3/descriptor_payloads.json`, generated from and
+checked against the encoder in `runtime/abi3/descriptors.py`. A layout record
+names every field's offset, size, kind and reserved status, and the generator
+proves the fields are gap-free and naturally aligned.
+
+### 12.1 Tensor-view dynamic index terms
+
+A tensor view carries `dynamic_term_count` (0 through 4) terms. Each term is
+`{ uint16 selector_kind, uint16 selector_index, uint32 element_stride }` and
+contributes `selector_value * element_stride` elements to the view's element
+offset. `selector_kind` is `LOOP_INDUCTION=0`, `RUNTIME_SYMBOL=1`, or
+`CONSTANT=2`. For `LOOP_INDUCTION` the index is a loop-control descriptor ID;
+for `RUNTIME_SYMBOL` it is a value from the registry in section 12.2.
+
+### 12.2 Runtime-symbol registry
+
+| Value | Symbol |
+|---:|---|
+| 0 | `SPAN_TOKENS` |
+| 1 | `POSITION_START` |
+| 2 | `POSITION_END` |
+| 3 | `CONTEXT_LENGTH` |
+| 4 | `PHASE` |
+| 5 | `GENERATION_INDEX` |
+| 6 | `MAX_NEW_TOKENS` |
+| 7 | `BATCH` |
+| 8 | `NODE_ID` |
+| 9 | `NODE_COUNT` |
+| 10 | `ACTIVE_EXPERT_COUNT` |
+| 11 | `SPARSE_INDEX_COUNT` |
+| 12 | `LAYER_COUNT` |
+| 13 | `VOCABULARY_PARTITIONS` |
+
+A loop bound and a predicate operand may name any of these. Unassigned values
+are reserved.
+
+## 13. Amendments made at the architecture freeze
+
+The draft of this document disagreed with `TA-ADR-003` in five places. All five
+were repaired before release rather than carried as debt; each is recorded here
+because a decoder written against the pre-freeze draft would be wrong.
+
+| ID | Change | Reason |
+|---|---|---|
+| `TA-A3-ARCH-0-A1` | completion bytes 104-108 carry the final selected token ID and the EOS reason | ADR-003 6.3 requires both and the draft had no field for either |
+| `TA-A3-ARCH-0-A2` | completion bytes 112-119 carry retired work | the header proves a maximum retired-work bound, which was otherwise unobservable |
+| `TA-A3-ARCH-0-A3` | descriptor type `PREDICATE = 0x000f` is assigned | every instruction has a predicate ID and ADR-003 5.2 mandates predicates, but no descriptor defined one |
+| `TA-A3-ARCH-0-A4` | tensor views carry up to four dynamic index terms | ADR-003 5.1 requires loop-compressed programs; a loop over tiles cannot move its window unless a descriptor can be a function of the induction variable. Without this, ABI 3.0 would reproduce the ABI 2.5 failure of 924,386 flat records per forward step |
+| `TA-A3-ARCH-0-A5` | the runtime-symbol registry in section 12.2 is frozen | ADR-003 5.2 names these scalars in prose only; loop bounds, predicates and A4 terms need one shared numbering |
+
+Assigning a previously unused descriptor type, reserved byte range, or symbol
+value is additive. None of these amendments changes an already-assigned value.
