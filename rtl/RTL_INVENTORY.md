@@ -24,7 +24,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Production RMSNorm arithmetic and SRAM control | `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv` | Finite FP32 RNE arithmetic, correctly rounded reciprocal square root, canonical 4,096-element balanced reduction, complete-pass buffered writeback, exact SRAM counters, and numeric-fault write suppression | QW-RTL-DMA-RMS-001 |
 | Production DMA/RMSNorm sequencing | `ot_ta_dma_rmsnorm_sequencer.sv` | Adjacent authentic command-1/command-2 dispatch, monotonic indices, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-RMS-001 |
 | Production BF16 MATMUL SRAM control | `ot_fp32_rne_pkg.sv`, `ot_ta_matmul_bf16_sram_engine.sv` | Signed finite FP32 RNE accumulation over fixed `1 x 64 x 256` segments, ordered 16-bit halfword reload of FP32 state, complete-tile buffered accumulator writeback, buffered `MATMUL_FINAL` BF16 conversion/writeback, exact counters, and numeric-fault write suppression | QW-RTL-DMA-MATMUL-001 |
-| Production DMA/MATMUL sequencing | `ot_ta_dma_matmul_sequencer.sv` | Exact command-3-through-34 dispatch for sixteen DMA/MATMUL pairs, strict alternating profile/order, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-MATMUL-001 |
+| Production DMA/MATMUL sequencing | `ot_ta_dma_matmul_sequencer.sv` | Parameter-bounded command-3-through-final dispatch for complete 32-command output blocks, strict alternating profile/order, shared SRAM ownership, stable aggregate completion, and fail-stop propagation | QW-RTL-DMA-MATMUL-001/QW-RTL-Q-PROJ-001 |
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
@@ -153,9 +153,40 @@ Eight fail-stop cases cover CRC, HBM response, order, nonfinite input/weight/
 accumulator state, and multiply/add overflow. A failing command emits no
 destination writes, and the reload fault preserves the prior retired tile.
 This completes all K tiles for one of 64 output blocks, or 32 of the 2,048
-commands spanning `node.0002`. The other 63 blocks, complete Q projection,
-physical HBM/SRAM, banking, ECC, arbitration, representative layer, timing,
-power/IR, and `TA-RTL-6` remain open.
+commands spanning `node.0002`. It remains the independently retained arithmetic
+and fail-stop boundary for the generalized engine. Complete Q projection closes
+separately in QW-RTL-Q-PROJ-001 below.
+
+QW-RTL-Q-PROJ-001 is retained as vector set
+`32dbdaa446fc4192f31a0a26394e04094e74c6459858d8a6b0135c11fc9e324b`
+and campaign
+`af8c787f6c6995527ca0b75ab813b06f9ed05f9c18066ccf3e05ea1fa4d69603`.
+It executes every authentic production command from 3 through 2,050: 1,024
+alternating DMA/MATMUL pairs, 64 output blocks, all 16 K tiles per block, and
+all 4,096 BF16 values of graph operation `node.0002`. The immutable 32 MiB
+deployed weight slice has SHA-256
+`27406586791294918cb04052d91f7d47c41aac1af56650c4b47f68ac00f1ff9b`;
+it is authenticated from the pinned HBM shard and staged only in temporary
+campaign directories, not retained as repository payload.
+
+Icarus and Verilator each reconcile 524,288 HBM requests/responses, 2,097,152
+DMA writes, 122,880 FP32 halfword reload reads, 262,144 input reads, 16,777,216
+weight reads, products, and ordered additions, 65,536 FP32 accumulator writes,
+and 4,096 BF16 writes with zero saturation. Both match every retained
+intermediate accumulator tile and the final `layer.0.q_raw` payload SHA-256
+`b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff`,
+which is bound to the full-model simulator event and independently checked
+row-major reference. An early terminal assertion on command 3 fails before any
+HBM or SRAM activity. The first-block campaign continues to supply eight
+numeric, CRC, HBM, order, and reload fail-stop cases plus 20,000 signed-FP32
+differential cases.
+
+This completes one authentic Q-projection graph operation, not a complete
+layer or `TA-RTL-6`. The input `attention_norm` row remains behaviorally
+preloaded. Physical HBM/SRAM, banking, ECC, arbitration, program authentication
+and `COMPLETE`, subsequent Q/K/V, RoPE, attention, vector, state, and layer
+sequencing, characterized timing, activity-derived power/IR, thermal, foundry,
+package, reliability, yield, and silicon remain open.
 
 The bounded IHP SG13G2 physical campaign for
 `ot_ta_add_bf16_sram_engine` is retained as

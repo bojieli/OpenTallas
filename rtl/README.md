@@ -29,14 +29,24 @@ executes adjacent authentic Qwen commands 1 and 2 and completes graph operation
 does not establish memory-macro, timing, power, complete-layer, or silicon
 qualification.
 
-The DMA/MATMUL campaign separately executes authentic commands 3 through 34:
-sixteen 32,768-byte `q_proj` weight tiles cover all 4,096 K elements for the
+The first DMA/MATMUL campaign separately executes authentic commands 3 through
+34: sixteen 32,768-byte `q_proj` weight tiles cover all 4,096 K elements for the
 first 64-output block. Commands 6 through 34 reload the FP32 accumulator through
 ordered 16-bit halfword reads, all sixteen MATMUL commands rewrite the complete
-64-lane accumulator tile, and command 34 performs the 64 BF16 auxiliary writes
-required by `MATMUL_FINAL`. This completes one of 64 output blocks, or 32 of the
-2,048 commands in `node.0002`; it is not a complete Q projection. Its HBM and
-SRAM remain behavioral interfaces.
+64-lane accumulator tile, and command 34 performs the first 64 BF16 auxiliary
+writes required by `MATMUL_FINAL`.
+
+The complete Q-projection campaign extends the same synthesizable engines over
+authentic commands 3 through 2,050. All 1,024 DMA/MATMUL pairs execute in
+`n_tile_then_k_tile` order and write all 4,096 `layer.0.q_raw` BF16 values. The
+32 MiB deployed weight slice is authenticated and streamed only into temporary
+simulator inputs; it is not retained in the repository. Icarus and Verilator
+match every accumulator rewrite, all aggregate counters, and the independently
+checked architectural output SHA-256
+`b900b79fd38ff6a9bff470ac27e9672b0c3724b84f6a1f7e964c2ec0918ea0ff`.
+This completes graph operation `node.0002`, not a complete layer. HBM and SRAM
+remain behavioral interfaces, and timing, power, memory-macro, and `TA-RTL-6`
+gates remain open.
 
 ## Fault and containment benches
 
