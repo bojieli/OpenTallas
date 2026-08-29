@@ -3,20 +3,20 @@
 **Document status:** active working execution plan; architecture-review approval
 and gate closure remain evidence controlled
 
-**Plan version:** 1.8
+**Plan version:** 1.9
 
 **Initial issue:** 2026-08-28
 
 **Last reconciled:** 2026-08-29 against the committed `main` baseline, the
 concurrent-session working trees, and the isolated `ta-integration` worktree
 
-**Reconciled committed heads:** `main@3baf87c` and
-`ta-integration@324f48d`; dirty and untracked implementation files in either
-worktree remain working state, not release evidence. Commit `c07331b` is the
-coherent connected-layer implementation handoff, and `1f4e52f` reconciles its
-evidence boundary into this plan. The connected implementation links the
-previously qualified embedding, attention, transactional-KV, residual, and MLP
-paths in one generated full-width Qwen layer deployment and closes neutral
+**Reconciled implementation heads:** `main@3baf87c` and admitted accelerator
+implementation `ta-integration@324f48d`; dirty and untracked implementation
+files in either worktree remain working state, not release evidence. Commit
+`c07331b` is the coherent connected-layer implementation handoff, and `1f4e52f`
+reconciles its evidence boundary into this plan. The connected implementation
+links the previously qualified embedding, attention, transactional-KV, residual,
+and MLP paths in one generated full-width Qwen layer deployment and closes neutral
 lowering, ABI 2.4 commands, 16-bank SRAM and tiled-HBM planning, independent
 reconstruction, causal artifact-only execution, strict schemas, corruption
 rejection, full compiler/runtime regression, strict ABI 2.0 through 2.3 replay,
@@ -1070,16 +1070,17 @@ fault reserve.
 
 The current IR answer is deliberately split. Production Model Graph IR v2
 already exists and is the backend-neutral semantic graph boundary. It is suitable
-for both targets in structure, but Qwen and DeepSeek still require separate
-coverage proofs against their pinned ordinary execution paths. A production
-Tensor Kernel IR also exists for the qualified lookup, ordered BF16 matrix,
-RMSNorm, RoPE, KV-prepare, GQA-attention, state-commit, residual-add, and
-materialized-SiLU-multiply records. It is a real backend-neutral lowering
-boundary and covers the declared Qwen transformer-layer operation union, but it
-does not yet cover Qwen final-output/vocabulary execution or DeepSeek's complete
-ordinary-path operation and state union. Closed slice schemas and evidence must
-not be mistaken for a complete cross-model Kernel IR or a complete-model
-deployment.
+for both targets in structure, but Qwen and DeepSeek require separate coverage
+proofs against their pinned ordinary execution paths. The production Tensor
+Kernel IR now represents every operation in the complete 617-operation Qwen
+graph, including lookup, ordered BF16 matrix, RMSNorm, RoPE, KV prepare,
+GQA attention, residual add, materialized SiLU-multiply, final normalization,
+last-row selection, vocabulary projection, and terminal transactional commit.
+This is a real backend-neutral lowering boundary and closes Qwen neutral-semantic
+coverage. It does not yet cover DeepSeek's complete ordinary-path operation,
+numeric-format, routing, expert, sparse-attention, compressor, and state union.
+Complete Qwen neutral coverage and physical compilation must not be mistaken for
+a complete cross-model Kernel IR or complete-model execution.
 
 The compiler therefore evolves additively from the existing Model Graph v2
 contract. It does not adopt a private Qwen service IR, copy a dirty concurrent
@@ -1538,7 +1539,7 @@ comparison:
 shared semantics and numeric contracts
   -> causal real-checkpoint compiler/simulator slice
   -> connected Qwen layer
-  -> full Qwen assembly, exact logits, and short generation
+  -> full Qwen artifact-only execution, exact logits, and short generation
   -> Qwen 8,000-token common-simulator gate
   -> DeepSeek distinct layer classes and ordinary generation
   -> representative RTL correlation
@@ -1962,30 +1963,33 @@ premature hardware freeze.
 **Horizon exit decision:** satisfied at `c07331b`. The actual layer deployment is
 deterministic, independently reconstructable, fully causal, artifact-only,
 bit-exact at all declared boundaries, and complete in state and counter
-accounting. Work therefore advances to complete-model Qwen assembly without
-relabeling this layer result as `TA-QWEN-4`.
+accounting. That closure authorized complete-model Qwen assembly without
+relabeling the layer result as `TA-QWEN-4`; QW-FM2 and QW-FM3 have since closed,
+so the active work is QW-FM4 artifact-only execution.
 
-### 19.3 Active horizon: full Qwen assembly and one-step logits
+### 19.3 Active horizon: full Qwen artifact-only execution and one-step logits
 
 The active outcome is one complete Qwen forward execution from an actual short
 prompt to exact final-position logits and the frozen host greedy-token decision.
 The entry evidence is the connected layer at `c07331b`, final-output-family
-qualification at `2222f76`, and complete neutral-semantic bundle at `74c0d59`;
-their numeric contracts, checker independence, and causal simulator rules remain
-unchanged. The full-model result must execute the real 617-operation Model Graph
-IR, all 36 transactional KV resources, and actual checkpoint payloads. Repeating
-a retained layer result or injecting an activation between layers is not
-execution.
+qualification at `2222f76`, complete neutral-semantic bundle at `74c0d59`, and
+the deterministic full-model deployment plus independent physical reconstruction
+at `324f48d`; their numeric contracts, checker independence, and causal simulator
+rules remain unchanged. The full-model result must execute the real 617-operation
+Model Graph IR, all 36 transactional KV resources, and actual checkpoint
+payloads. Repeating a retained layer result or injecting an activation between
+layers is not execution.
 
-The compiler applies the neutral layer pattern to all 36 distinct layer
-instances, then lowers `node.0613` final RMSNorm, `node.0614`
+The admitted deployment applies the neutral layer pattern to all 36 distinct
+layer instances, then lowers `node.0613` final RMSNorm, `node.0614`
 `LAST_TOKEN_SELECT`, `node.0615` vocabulary `MATMUL`, and the terminal
 36-resource `STATE_COMMIT`. `LAST_TOKEN_SELECT` selects the final sequence
 position inside model-forward execution; greedy argmax remains the frozen host
-policy at the system boundary in Section 3.1. Existing generic kernels are reused
-where their contracts are sufficient. Any necessary IR or ABI extension must be
-bounded, model-neutral, checked against the DeepSeek capability union, and pass
-strict backward replay before admission.
+policy at the system boundary in Section 3.1. Artifact-only execution must use
+those existing generic kernels and exact command ranges. Any necessary IR or ABI
+extension discovered during execution must be bounded, model-neutral, checked
+against the DeepSeek capability union, and pass strict backward replay before
+admission.
 
 The active horizon is organized as four dependent evidence work packages:
 
