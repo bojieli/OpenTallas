@@ -293,6 +293,23 @@
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
 
+- **OI-26 — two agents worked the DeepSeek lane at once and the evidence file
+  became a moving target.** `results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json`
+  was written at 20:02:11 describing one failure, while the exporter that
+  produced it was edited at 20:03:02 and the IR rebuilt at 20:03:31. The record
+  on disk is therefore stale against the very tree that wrote it, and a second
+  run would have captured a third transient state rather than correcting it. The
+  file currently reads `reduction output view 413 holds 425984 elements, expected
+  16384` — a shape mismatch in the new reduction path, `104 × 4096` against an
+  expected `4 × 4096`.
+
+  This is a coordination failure of mine, not a defect in anyone's code. I gave
+  two agents overlapping ownership of one lane, and the visible cost is a
+  results file that cannot be trusted to describe any state the repository ever
+  had. Evidence files are single-writer artifacts; a lane needs one owner at a
+  time. Their *code* did not conflict — the broadcast work, the slot
+  permutation, the aux ids and the arena fix all survived — only the record did.
+
 - **OI-25 — fourteen test files still validate the retired ABI 2.5 lane, and
   one of them fails.** `tests/compiler/test_tensor_accelerator_qwen_rtl_rope.py`
   fails `test_rope_builder_reproduces_retained_artifact` — and it fails on a
@@ -406,13 +423,18 @@
     ABI change and therefore not ours to make.
 
   Until one is chosen the DeepSeek HBM prefill stops at
-  `main.layer00.hc_attn_pre.branch_reduce`. Everything before it now runs:
-  `HYPER_CONNECT_PRE` executes and writes both frozen output views.
+  `main.layer00.hc_attn_pre.branch_reduce`. Everything before it now runs, and
+  the counters say so rather than the absence of an error:
+  `vector.mhc_sites = 104` for a 104-token prompt (so `HYPER_CONNECT_PRE`
+  executed over exactly the span, with A13's clamp doing its job on a 512-row
+  block), `dma.transfers = 3` (the hyper-connection expansion plus the two
+  coefficient-plane selects) and `engine.reduction.descriptors = 1` — the one
+  that trapped.
 
 - **OI-27 — no multi-node deployment can execute functionally: `NODE_ID` is
   never bound.** The 32-node capability makes every large contraction
-  column-sharded (`shard_columns = cols // 32`), and the resulting views carry a
-  `RUNTIME_SYMBOL` term on `NODE_ID`. `runtime/driver.py` binds `SPAN_TOKENS`,
+  column-sharded (`shard_columns = cols // 32`), and 96 of the resulting tensor
+  views carry a `RUNTIME_SYMBOL` term on `NODE_ID`. `runtime/driver.py` binds `SPAN_TOKENS`,
   `POSITION_START`, `POSITION_END` and `CONTEXT_LENGTH`; `runtime/sim/device.py`
   adds `PHASE` and `GENERATION_INDEX`. Nothing binds `NODE_ID` or `NODE_COUNT` —
   only the verifier and the cycle model do — so the first sharded matmul traps
