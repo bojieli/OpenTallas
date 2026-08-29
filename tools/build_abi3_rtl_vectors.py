@@ -709,6 +709,7 @@ def _a13_block_case(
     span: int,
     dim0: int = A13_BLOCK,
     divisor: int = A13_BLOCK,
+    expect_admitted: bool = True,
     note: str,
 ) -> Case:
     """A block loop over SPAN_TOKENS with loop-indexed operand views."""
@@ -742,6 +743,9 @@ def _a13_block_case(
         name=name,
         deployment=w.finish(),
         symbols={int(Symbol.SPAN_TOKENS): span},
+        expect_admitted=expect_admitted,
+        run_program=expect_admitted,
+        device_runs=expect_admitted,
         note=note,
     )
 
@@ -798,12 +802,20 @@ def case_a13_extent_below_block(cap: Capability) -> Case:
 def case_a13_extent_above_block(cap: Capability) -> Case:
     return _a13_block_case(
         cap, "a13_extent_above_block", span=A13_BLOCK + 1, dim0=A13_BLOCK + 2,
+        expect_admitted=False,
         note=(
-            "leading extent 6 over a block of 4.  ViewResolver._remaining_rows "
-            "bounds a loop only while remaining < bound_divisor, so the first "
-            "iteration's five remaining rows leave dim0 at 6; the prose formula "
-            "in wire format 12.4, which compares remaining against dim0 alone, "
-            "would give 5.  The reference resolver is normative here"
+            "leading extent 6 over a block of 4: refused at admission.  This is "
+            "the one shape on which wire format 12.4's formula and "
+            "ViewResolver._remaining_rows disagree -- the prose compares "
+            "remaining against dim0 alone and gives 5, the resolver bounds the "
+            "clamp by bound_divisor and leaves 6.  Checked exhaustively over "
+            "divisors 1-8, extents 1-11, bounds 0-19 and iterations 0-5, every "
+            "one of the 1,027 disagreements has dim0 > bound_divisor and none "
+            "is without it, so refusing that inequality makes the two "
+            "statements of A13 the same rule.  The program is malformed "
+            "independently of the clamp: iteration i covers bound_divisor rows, "
+            "and a view indexed by the loop claiming more is claiming the next "
+            "iteration's rows"
         ),
     )
 

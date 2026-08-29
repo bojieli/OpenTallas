@@ -6938,21 +6938,21 @@
       "verifier_errors": []
     },
     {
-      "admitted": true,
+      "admitted": false,
       "declared_retired_work": 11,
       "descriptor_count": 21,
       "descriptor_table_sha256": "0c6dc9970d3403acbcd6c26be0d96eb864271f8bc94fae7eab4d63fcdb2fcbe8",
-      "device_executed": true,
+      "device_executed": false,
       "entrypoint_id": 0,
       "expected": {
         "branches": 0,
-        "complete": true,
-        "fetched": 7,
+        "complete": false,
+        "fetched": 0,
         "first_fault": 4294967295,
-        "issued": 3,
-        "loop_iterations": 2,
+        "issued": 0,
+        "loop_iterations": 0,
         "predicated_off": 0,
-        "retired": 7,
+        "retired": 0,
         "state_commits": 0,
         "state_commits_applied": 0,
         "state_discards": 0,
@@ -6960,185 +6960,24 @@
         "state_prepares": 0,
         "state_reads": 0,
         "state_rows_committed": 0,
-        "status": 0,
+        "status": 1,
         "trap_class": 0,
         "wait_events": 0
       },
       "expected_header_legal": true,
       "expected_header_trap_class": 0,
-      "expected_issues": [
-        {
-          "descriptor_id": 17,
-          "family": 32,
-          "index": 1,
-          "mnemonic": "TENSOR.MATMUL",
-          "sub": 0
-        },
-        {
-          "descriptor_id": 17,
-          "family": 32,
-          "index": 1,
-          "mnemonic": "TENSOR.MATMUL",
-          "sub": 0
-        },
-        {
-          "descriptor_id": 19,
-          "family": 48,
-          "index": 3,
-          "mnemonic": "VECTOR.ADD",
-          "sub": 3
-        }
-      ],
-      "expected_views": [
-        {
-          "descriptor_id": 15,
-          "dim0": 6,
-          "dims": [
-            6,
-            16
-          ],
-          "element_offset": 0,
-          "index": 1,
-          "loops": {
-            "14": 0
-          },
-          "operand": "input_view_0",
-          "rank": 2,
-          "slot": 0
-        },
-        {
-          "descriptor_id": 9,
-          "dim0": 16,
-          "dims": [
-            16,
-            16
-          ],
-          "element_offset": 0,
-          "index": 1,
-          "loops": {
-            "14": 0
-          },
-          "operand": "input_view_1",
-          "rank": 2,
-          "slot": 1
-        },
-        {
-          "descriptor_id": 16,
-          "dim0": 6,
-          "dims": [
-            6,
-            16
-          ],
-          "element_offset": 256,
-          "index": 1,
-          "loops": {
-            "14": 0
-          },
-          "operand": "output_view_0",
-          "rank": 2,
-          "slot": 4
-        },
-        {
-          "descriptor_id": 15,
-          "dim0": 1,
-          "dims": [
-            1,
-            16
-          ],
-          "element_offset": 64,
-          "index": 1,
-          "loops": {
-            "14": 1
-          },
-          "operand": "input_view_0",
-          "rank": 2,
-          "slot": 0
-        },
-        {
-          "descriptor_id": 9,
-          "dim0": 16,
-          "dims": [
-            16,
-            16
-          ],
-          "element_offset": 0,
-          "index": 1,
-          "loops": {
-            "14": 1
-          },
-          "operand": "input_view_1",
-          "rank": 2,
-          "slot": 1
-        },
-        {
-          "descriptor_id": 16,
-          "dim0": 1,
-          "dims": [
-            1,
-            16
-          ],
-          "element_offset": 320,
-          "index": 1,
-          "loops": {
-            "14": 1
-          },
-          "operand": "output_view_0",
-          "rank": 2,
-          "slot": 4
-        },
-        {
-          "descriptor_id": 7,
-          "dim0": 8,
-          "dims": [
-            8,
-            16
-          ],
-          "element_offset": 0,
-          "index": 3,
-          "loops": {},
-          "operand": "input_view_0",
-          "rank": 2,
-          "slot": 0
-        },
-        {
-          "descriptor_id": 9,
-          "dim0": 16,
-          "dims": [
-            16,
-            16
-          ],
-          "element_offset": 0,
-          "index": 3,
-          "loops": {},
-          "operand": "input_view_1",
-          "rank": 2,
-          "slot": 1
-        },
-        {
-          "descriptor_id": 8,
-          "dim0": 8,
-          "dims": [
-            8,
-            16
-          ],
-          "element_offset": 128,
-          "index": 3,
-          "loops": {},
-          "operand": "output_view_0",
-          "rank": 2,
-          "slot": 4
-        }
-      ],
+      "expected_issues": [],
+      "expected_views": [],
       "golden": {
         "branches": 0,
-        "complete": true,
-        "fetched": 7,
+        "complete": false,
+        "fetched": 0,
         "first_fault": 4294967295,
-        "issued": 3,
-        "loop_iterations": 2,
-        "message": "",
+        "issued": 0,
+        "loop_iterations": 0,
+        "message": "not executable by the golden model",
         "predicated_off": 0,
-        "retired": 7,
+        "retired": 0,
         "state_commits": 0,
         "state_commits_applied": 0,
         "state_discards": 0,
@@ -7146,32 +6985,28 @@
         "state_prepares": 0,
         "state_reads": 0,
         "state_rows_committed": 0,
-        "status": 0,
+        "status": 1,
         "trap_class": 0,
         "wait_events": 0
       },
-      "golden_counters": {
-        "control.loop_iterations": 2,
-        "engine.tensor.descriptors": 2,
-        "engine.vector.descriptors": 1,
-        "instructions.fetched": 7,
-        "instructions.issued": 3,
-        "instructions.retired": 7
-      },
+      "golden_counters": {},
       "instruction_count": 5,
       "name": "a13_extent_above_block",
-      "note": "leading extent 6 over a block of 4.  ViewResolver._remaining_rows bounds a loop only while remaining < bound_divisor, so the first iteration's five remaining rows leave dim0 at 6; the prose formula in wire format 12.4, which compares remaining against dim0 alone, would give 5.  The reference resolver is normative here",
+      "note": "leading extent 6 over a block of 4: refused at admission.  This is the one shape on which wire format 12.4's formula and ViewResolver._remaining_rows disagree -- the prose compares remaining against dim0 alone and gives 5, the resolver bounds the clamp by bound_divisor and leaves 6.  Checked exhaustively over divisors 1-8, extents 1-11, bounds 0-19 and iterations 0-5, every one of the 1,027 disagreements has dim0 > bound_divisor and none is without it, so refusing that inequality makes the two statements of A13 the same rule.  The program is malformed independently of the clamp: iteration i covers bound_divisor rows, and a view indexed by the loop claiming more is claiming the next iteration's rows",
       "phase": 0,
       "program_sha256": "9c98912cf71add9a563341517e1dfc1e582453553f78e67f7fd7376cbde0d42d",
       "python_rejects_image": null,
-      "runs_program": true,
+      "runs_program": false,
       "state_descriptor_count": 1,
       "symbols": {
         "0": 5,
         "4": 0,
         "5": 0
       },
-      "verifier_errors": []
+      "verifier_errors": [
+        "view 15: leading extent 6 exceeds the block 4 of loop 14, which indexes it; iteration i of that loop covers 4 rows, so the view claims rows belonging to the next iteration, and amendment A13's clamp is ambiguous on exactly this shape",
+        "view 16: leading extent 6 exceeds the block 4 of loop 14, which indexes it; iteration i of that loop covers 4 rows, so the view claims rows belonging to the next iteration, and amendment A13's clamp is ambiguous on exactly this shape"
+      ]
     },
     {
       "admitted": true,
@@ -9746,22 +9581,22 @@
   },
   "header_admission_count": 41,
   "image_sha256": {
-    "a3_case.hex": "18692bdff032b1c45a0f0b667d14ddc602e7a2ab4dd5881f087203c8b74c997b",
+    "a3_case.hex": "a1e10d2b851294fe69e4944ec227d304336cf17af98b93516afcb8620640cacb",
     "a3_descriptor.hex": "2ed74672bce7f63ce7fa49e866ab0b7f70fa36e262b694738d7f2e1c3b69ca65",
     "a3_header.hex": "1189982809235ba341c42d98a6dd7e33cdc1650204b204458a84c0a1bceb1b69",
-    "a3_issue.hex": "71ea08adefca7d5636cf458dc935e708a7e882df5a6a82da9e7b6839c32a1f93",
-    "a3_meta.hex": "91975d6fa1877e40427cbb8d68b2337a4b5f5e937254ba4c168ef570afb9fd36",
+    "a3_issue.hex": "b7893bc0213244d26e7299d9a64b4a18cfe418d9fb86111f4e0e544a3756fe7a",
+    "a3_meta.hex": "08caa29da31f801510210927d66edae3042e4438cf548be09702f3817f23641f",
     "a3_program.hex": "ef67046995ff1e04c8130ffdd1fba6ccc0cae42193f863a1e3f55f3eda79d9fe",
     "a3_symbol.hex": "f82fbe64f50cd43ae5ea792e61b945c0412c5abe63680293bb78f1f5d7d72d4a",
-    "a3_view.hex": "8b5db6713d5dfb1a7c1a4f63be192d3570cd137637aab45030d60642119a9ddf"
+    "a3_view.hex": "150e7d3ae2c834eb46d02754a54b9515747bf4a05cfd1800233b10c99bdca0c1"
   },
-  "issue_event_count": 135,
+  "issue_event_count": 132,
   "negative_case_count": 17,
   "positive_case_count": 24,
-  "program_run_count": 35,
-  "required_marker": "PASS: ABI3 RTL microsequencer cases=41 headers=41 programs=35 issues=135 views=354 traps=11",
+  "program_run_count": 34,
+  "required_marker": "PASS: ABI3 RTL microsequencer cases=41 headers=41 programs=34 issues=132 views=345 traps=11",
   "schema": "opentallas.rtl.abi3_vectors.v1",
   "trap_count": 11,
   "view_reference": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms) and A13 (partial final iteration of a block loop)",
-  "view_resolution_count": 354
+  "view_resolution_count": 345
 }

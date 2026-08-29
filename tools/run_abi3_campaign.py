@@ -30,6 +30,7 @@ if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
 from runtime.abi3.capability import Capability, canonical_json, digest_of  # noqa: E402
+from runtime.abi3.constants import TopologyClass  # noqa: E402
 from runtime.abi3.deployment import Deployment  # noqa: E402
 from runtime.abi3.verifier import verify_deployment  # noqa: E402
 from runtime.driver import GenerationDriver, validate_token_ids  # noqa: E402
@@ -76,7 +77,18 @@ def main() -> int:
             "without crashing is not evidence of a correct token."
         ),
     )
-    parser.add_argument("--topology", default=None)
+    parser.add_argument(
+        "--topology",
+        type=int,
+        default=None,
+        choices=[t.value for t in TopologyClass],
+        help=(
+            "topology class as its ABI value ("
+            + ", ".join(f"{t.value}={t.name}" for t in TopologyClass)
+            + ").  Omit to use the capability's own topology_class, which is "
+            "normally what you want -- the capability already names it."
+        ),
+    )
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--trace", action="store_true")
     args = parser.parse_args()

@@ -623,6 +623,8 @@ class Verifier:
                         )
                         continue
                     last += (trip - 1) * stride
+                    if slot == 0:
+                        self._verify_block_extent(vid, sel, payload["dim0"])
                 elif kind == SelectorKind.RUNTIME_SYMBOL:
                     try:
                         maximum = symbol_max[Symbol(sel)]
@@ -655,6 +657,50 @@ class Verifier:
                     f"object {obj.descriptor_id} is {obj.payload['size_bytes']} bytes"
                 )
         self.checks.setdefault("view_bounds", True)
+        self.checks.setdefault("block_extent", True)
+
+    def _verify_block_extent(self, vid: int, loop_id: int, dim0: int) -> None:
+        """A block-loop-indexed leading axis may not exceed the block.
+
+        Amendment A13 clamps a view's leading extent in the final iteration of
+        a symbol-bounded block loop.  Section 12.4 states the clamp as
+        ``dim0 = remaining if 0 < remaining < dim0``; ``ViewResolver`` applies
+        it only while ``remaining < bound_divisor``.  The two are the same
+        function on every program where ``dim0 <= bound_divisor`` and differ on
+        every program where it does not -- checked exhaustively over divisors
+        1..8, extents 1..11, bounds 0..19 and iterations 0..5: 1,027
+        disagreements, every one of them with ``dim0 > bound_divisor``, and none
+        without.
+
+        Rather than pick a winner between two formulations of the same
+        intent, this refuses the programs that can tell them apart.  Such a
+        program is malformed anyway: iteration *i* of a block loop covers rows
+        ``[i*divisor, (i+1)*divisor)``, so a view indexed by that loop claiming
+        more than ``divisor`` rows is claiming rows belonging to the next
+        iteration.  With this check the wire format's rule and the resolver's
+        implementation are provably the same rule.
+        """
+        try:
+            loop = self.deployment.table.get(
+                loop_id, ExtendedDescriptorType.LOOP_CONTROL
+            )
+        except Exception:  # not a loop descriptor: _verify_views said so
+            return
+        payload = loop.payload
+        if payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
+            return
+        divisor = int(payload["bound_divisor"])
+        if divisor <= 0:
+            return
+        if dim0 > divisor:
+            self._fail(
+                f"view {vid}: leading extent {dim0} exceeds the block "
+                f"{divisor} of loop {loop_id}, which indexes it; iteration i "
+                f"of that loop covers {divisor} rows, so the view claims rows "
+                "belonging to the next iteration, and amendment A13's clamp is "
+                "ambiguous on exactly this shape"
+            )
+            self.checks["block_extent"] = False
 
     # -- schedule completeness ----------------------------------------------
     def _verify_schedules(self) -> None:

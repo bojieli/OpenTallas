@@ -475,6 +475,22 @@ it a backend must emit one dispatch per token to stay correct, which is exactly
 the retired-work failure ABI 3.0 exists to remove: with the rule, a 93-token
 Qwen prefill issues about 700 engine dispatches; without it, about 63,600.
 
+**`dim0` may not exceed `bound_divisor`, and that is what makes the rule
+unambiguous.** The functional reference applies the clamp only while
+`remaining < bound_divisor`; the formula above does not mention the divisor.
+Writing an RTL implementation against both surfaced the difference. They are the
+same function on every program where `dim0 ≤ bound_divisor`, and they differ on
+every program where it does not — checked exhaustively over divisors 1–8,
+extents 1–11, bounds 0–19 and iterations 0–5: 1,027 disagreements, every one of
+them with `dim0 > bound_divisor`, and none without.
+
+So the resolution is not to pick a formulation. Iteration *i* of a block loop
+covers rows `[i·bound_divisor, (i+1)·bound_divisor)`; a view indexed by that
+loop and claiming more than `bound_divisor` leading rows is claiming rows that
+belong to the next iteration, which is malformed however the clamp is written.
+A deployment containing one is **refused at admission**, and on every admissible
+program the two statements of the rule are provably the same rule.
+
 Nothing about the descriptor changes. A13 fixes the *interpretation* of an
 existing field combination that was previously unstated, which is why it is
 recorded here rather than left in one implementation's resolver.

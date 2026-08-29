@@ -35,6 +35,7 @@ from runtime.abi3.constants import (  # noqa: E402
     TrapClass,
 )
 from runtime.abi3.descriptors import PREDICATE_TYPE  # noqa: E402
+from runtime.abi3.verifier import verify_deployment  # noqa: E402
 from tools import build_abi3_rtl_vectors as generator  # noqa: E402
 from tools import rtl_abi3_campaign as campaign  # noqa: E402
 
@@ -148,9 +149,17 @@ def test_every_expectation_comes_from_the_device_or_a_declared_override() -> Non
     overrides = set()
     for case in vectors["cases"]:
         if not case["device_executed"]:
-            # Images the normative decoder rejects outright cannot be executed
-            # by the golden model; each one must say why in Python's own words.
-            assert case["python_rejects_image"], case["name"]
+            # Two distinct reasons a case never reaches the golden model, and
+            # they must not be allowed to stand in for each other.  Either the
+            # normative decoder rejects the image outright, in which case the
+            # rejection must be stated in Python's own words; or the verifier
+            # refuses the deployment at admission, in which case the image is
+            # well-formed and the case exists to pin the refusal.
+            if case["admitted"]:
+                assert case["python_rejects_image"], case["name"]
+            else:
+                assert case["python_rejects_image"] is None, case["name"]
+                assert case["note"], case["name"]
             continue
         for key, value in case["expected"].items():
             if key in case["golden"] and case["golden"][key] != value:
@@ -175,7 +184,7 @@ def test_issue_events_are_legal_opcodes_and_counted() -> None:
             if family is not Major.RECOVERY:
                 assert issue["descriptor_id"] != NO_ID
             total += 1
-    assert total == vectors["issue_event_count"] == 135
+    assert total == vectors["issue_event_count"] == 132
     assert vectors["case_count"] == len(vectors["cases"])
     assert vectors["program_run_count"] == sum(
         1 for case in vectors["cases"] if case["runs_program"]
@@ -248,11 +257,12 @@ def test_a13_vectors_cover_every_block_shape() -> None:
     Wire format section 12.4: with tile height T over an extent of N rows, the
     final iteration holds N - T*floor(N/T) rows.  A vector set that only ever
     exercised N divisible by T would pass with A13 unimplemented, which is what
-    OI-16 recorded.  ``a13_extent_below_block`` and ``a13_extent_above_block``
-    additionally pin the two guards -- a partial count that is not below the
-    view's own extent, and a remaining count at or above the block size -- that
-    ``ViewResolver._remaining_rows`` applies and the prose formula does not
-    spell out.
+    OI-16 recorded.  ``a13_extent_below_block`` pins the guard that
+    ``ViewResolver._remaining_rows`` applies and the prose does not spell out: a
+    remaining count that is not below the view's own extent leaves it alone.
+    ``a13_extent_above_block`` pins the complementary decision -- a leading
+    extent above the block is refused at admission, because that inequality is
+    the only one on which the two statements of A13 disagree.
     """
     names = {case["name"]: case for case in _vectors()["cases"]}
     block = generator.A13_BLOCK
@@ -302,9 +312,17 @@ def test_a13_vectors_cover_every_block_shape() -> None:
         for v in _views_of(four) if v["slot"] == 0
     )
 
-    # The two guards the prose formula leaves implicit.
+    # A leading extent below the block: the guard the prose leaves implicit.
     assert _block_views(names["a13_extent_below_block"], 0) == [2, 2]
-    assert _block_views(names["a13_extent_above_block"], 0) == [block + 2, 1]
+
+    # A leading extent *above* the block is refused at admission rather than
+    # resolved.  It is the one shape on which section 12.4's formula and
+    # ViewResolver._remaining_rows disagree, and every such disagreement has
+    # dim0 > bound_divisor, so refusing that inequality makes the two
+    # statements of A13 the same rule.  A refused case resolves no views.
+    above = names["a13_extent_above_block"]
+    assert above["admitted"] is False
+    assert _views_of(above) == []
 
 
 def test_a13_golden_extents_come_from_the_reference_resolver() -> None:
@@ -331,6 +349,13 @@ def test_a13_golden_extents_come_from_the_reference_resolver() -> None:
     compared = 0
     for name, build in builders.items():
         case = build(capability)
+        if not case.expect_admitted:
+            # A refused deployment never reaches a device, so it has no
+            # resolved views to compare.  What it has to prove is that the
+            # verifier refuses it, which is the whole point of the case.
+            assert not verify_deployment(case.deployment, capability).admitted, name
+            assert recorded[name]["expected_views"] == []
+            continue
         device = Device(case.deployment, capability, verify=False, trace=True)
         session = device.create_session()
         device.run_transaction(
@@ -389,7 +414,7 @@ def test_campaign_replays_both_simulators(tmp_path: Path) -> None:
         assert "/tmp/" not in case["compile_command"]
     assert "Verilator 5.05" in summary["tools"]["verilator"]["version"]
     assert "version 11.0" in summary["tools"]["iverilog"]["version"]
-    assert summary["correlation"]["issue_event_count"] == 135
+    assert summary["correlation"]["issue_event_count"] == 132
     assert summary["correlation"]["reference"] == "runtime.sim.device.Device"
     # A view comparison that compared nothing would be a vacuous pass.
     assert summary["correlation"]["view_resolution_count"] == (
