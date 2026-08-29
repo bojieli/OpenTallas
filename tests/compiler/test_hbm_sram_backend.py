@@ -752,6 +752,42 @@ def test_symbolic_token_extents_are_bound(dense, single_chip):
     assert symbol_views, "at least one view must be a function of a runtime symbol"
 
 
+def test_token_loop_steps_by_the_block_it_advances(dense, single_chip):
+    """A view's row term advances by exactly one block of its loop.
+
+    The device bounds a partial final iteration from the loop's divisor, so the
+    divisor and the stride a view moves by have to describe the same block.  If
+    they disagreed the last iteration of a request would read the wrong rows,
+    and the disagreement would be silent.
+    """
+    deployment = lower_to_abi3(dense, single_chip)
+    loops = {
+        d.descriptor_id: d.payload
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.LOOP_CONTROL
+    }
+    checked = 0
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.TENSOR_VIEW:
+            continue
+        payload = descriptor.payload
+        for slot in range(payload["dynamic_term_count"]):
+            if payload[f"term{slot}_kind"] != int(SelectorKind.LOOP_INDUCTION):
+                continue
+            loop = loops.get(payload[f"term{slot}_index"])
+            if loop is None or loop["bound_selector_kind"] != int(
+                SelectorKind.RUNTIME_SYMBOL
+            ):
+                continue
+            block = loop["bound_divisor"]
+            assert loop["step"] == block
+            # dim0 is one block of rows, and the term moves by one block.
+            assert payload["dim0"] == block, (payload["dim0"], block)
+            assert payload[f"term{slot}_stride"] == block * payload["stride0"]
+            checked += 1
+    assert checked, "no token-loop view to check"
+
+
 def test_alternating_layer_structures_band_with_period_two(single_chip):
     """A model that alternates two layer forms compresses without reordering.
 

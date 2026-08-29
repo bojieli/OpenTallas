@@ -481,8 +481,15 @@ class Device:
         if fault is not None:
             counters.add("fault.traps")
             counters.add("fault.poisoned_transactions")
-            for commit in pending:
-                commit.resource.open_prepare = False
+            # ADR-003 8.6: an abort discards prepared state. Clearing only the
+            # resources that reached a staged commit left a resource that was
+            # prepared and then faulted before its commit still marked open,
+            # which would refuse a legitimate retry as a double prepare. The
+            # whole declared state set is discarded, which is what "one atomic
+            # architectural transition" means in the failing direction too.
+            for resource in session.states.values():
+                resource.open_prepare = False
+            counters.add("state.discards", len(session.states))
             self.counters.merge(counters)
             return TransactionResult(
                 status=CompletionStatus.FAILED,
