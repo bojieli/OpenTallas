@@ -409,6 +409,36 @@ because a decoder written against the pre-freeze draft would be wrong.
 Assigning a previously unused descriptor type, reserved byte range, or symbol
 value is additive. None of these amendments changes an already-assigned value.
 
+## 14. Complete amendment index
+
+Amendments after A5 were made during implementation, each because a real model
+or a real backend could not express something the architecture requires. They
+are listed here so a reader has one place to find them; the numbered sections
+remain normative.
+
+| ID | Subject | Defined in |
+|---|---|---|
+| A1 | completion carries the final token and EOS reason | this document, section 7 |
+| A2 | completion carries retired work | this document, section 7 |
+| A3 | descriptor type `PREDICATE = 0x000f` | this document, section 5 |
+| A4 | tensor views carry dynamic index terms | this document, section 12.1 |
+| A5 | the runtime-symbol registry | this document, section 12.2 |
+| A6 | the sparse-attention operand mapping | operator conventions, section 4.1 |
+| A7 | two numeric contracts and the execution backend | operator conventions, section 11 |
+| A8 | five resolved operand ambiguities | operator conventions, section 12 |
+| A9 | predicated kernels, banked weights, derived constants | operator conventions, section 13 |
+| A10 | optional expert-sum weights; unused biased-topk output | operator conventions, section 14 |
+| A11 | the KV append operand row | operator conventions, section 15 |
+| A12 | `SPAN_LAST_INDEX` | this document, section 12.3 |
+| A13 | the partial final iteration of a block loop | this document, section 12.4 |
+
+Two of these carry more weight than the rest. **A4** and **A13** together are
+what make a loop-compressed program possible at all: A4 lets a descriptor be a
+function of an induction variable, and A13 lets a block loop state how many rows
+its final iteration actually holds. Without either, a backend that wants to stay
+correct must emit one dispatch per element or per token, which is precisely the
+ABI 2.5 failure this version exists to remove.
+
 ### 12.3 Amendment A12 — `SPAN_LAST_INDEX`
 
 Runtime symbol `14` is `SPAN_LAST_INDEX`, defined as `span_tokens - 1`.
