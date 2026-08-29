@@ -3,15 +3,15 @@
 **Document status:** active working execution plan; architecture-review approval
 and gate closure remain evidence controlled
 
-**Plan version:** 2.8
+**Plan version:** 3.0
 
 **Initial issue:** 2026-08-28
 
-**Last reconciled:** 2026-08-29 against the committed `main` baseline, the
+**Last reconciled:** 2026-08-29 against `origin/main@f9bb181`, the
 concurrent-session working trees, and the isolated `ta-integration` worktree
 
-**Reconciled implementation heads:** `main@3baf87c` and admitted accelerator
-implementation `ta-integration@a9bb0e7`; dirty and untracked implementation
+**Reconciled implementation heads:** ROM/source work inspected read-only and
+accelerator implementation through `087b374`; dirty and untracked implementation
 files in either worktree remain working state, not release evidence. Commit
 `c07331b` is the coherent connected-layer implementation handoff, and `1f4e52f`
 reconciles its evidence boundary into this plan. The connected implementation
@@ -116,6 +116,33 @@ evidence identities. The 8,192 allocation is headroom for the 8,031-row
 acceptance chain; it does not pass or replace the separate Qwen 8,192 resident
 context qualification. No release report may infer that boundary test merely
 from allocation capacity.
+
+**Natural-workload decision record `TA-NATURAL-2026-08-29`:** repeated special
+tokens remain a useful deterministic numerical and capacity stress fixture, but
+they are not natural-language, reasoning, EOS-quality, or agent-behavior
+evidence. Qwen semantic acceptance additionally uses the ROM lane's exact
+official chat template, tokenizer, six-question natural EOS suite, and strict
+bash-only agent protocol. The imported workload manifest binds the source-file
+hashes, rendered prompt text and token IDs, template hash, tools JSON, EOS IDs,
+expected greedy token sequences, decoded text, tool calls, environment
+transitions, and task-test results before accelerator output is inspected. The
+ROM and HBM/SRAM lanes must consume that same manifest. EOS is retained as the
+final generated token, no later model-forward request may be issued, and any
+selected model-head row absent from the authenticated tokenizer fails closed.
+
+The initial ROM authority is the committed Qwen workload at source commit
+`3a985ff` and agent workload at `8753d6f`. Its frozen identities include EOS
+suite SHA-256 `5e9ac173a7eb23cb8dca3e91dcc53050cc81a3b19d9e3f5ede6549ab06872424`,
+agent-suite SHA-256
+`d7d6ff43a2983ecb7551b84b531cc6420bfc3748808e62a8b16a0cad7a17f492`,
+official chat-template SHA-256
+`a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8`,
+and TerminalBench revision `d28711d0da2675d0bb1d56de45ae5df6082438a3`.
+These committed ROM results are the golden-source baseline, not evidence that
+the tensor-accelerator lane has passed. At this reconciliation all natural chat,
+reasoning, and agentic accelerator gates remain open. Section 1.29 records the
+subsequent working-state tensor-accelerator campaign without promoting its
+uncommitted artifacts to release evidence.
 
 ## Executive recommendation
 
@@ -978,7 +1005,7 @@ one-token prompt and 32 generated decisions. It does not establish the exact
 release equivalence, acceptable natural-language quality, timing, cycles,
 bandwidth, RTL, 130-nm characterization, DeepSeek execution, or the governed
 ROM comparison. At that closure the next Qwen work was authenticated
-checkpoint/restart and measured long-prefill readiness. Section 1.15 now closes
+checkpoint/restart and measured long-prefill readiness. Section 1.27 now closes
 the first item; growing-position readiness, the exact 8,000-token prompt plus
 at least 32 generated tokens, and a separately governed official/golden check
 remain open.
@@ -1621,7 +1648,7 @@ row 8,192, and proves that both execution implementations can load and execute
 the V7 artifacts. It does not prove a resident 8,192-token execution, execute
 the 8,000-token acceptance prompt, produce
 acceptance tokens or text, establish official/golden quality, or make timing,
-RTL, 130-nm, DeepSeek, or ROM-comparison claims. Section 1.15 subsequently
+RTL, 130-nm, DeepSeek, or ROM-comparison claims. Section 1.27 subsequently
 qualifies checkpoint/restart at steps 1 and 2; the exact long session remains
 open.
 
@@ -1705,6 +1732,156 @@ readiness, including report-volume and checkpoint-cost controls, followed by the
 exact 8,031-transaction common-simulator run. Independent long-session replay
 and the governed official/golden comparison remain mandatory before
 `TA-QWEN-4`; the separate resident-8,192 boundary remains later and distinct.
+
+### 1.28 Open Qwen natural-chat diagnostic
+
+A bounded working-state diagnostic now proves that the existing dynamic
+artifact path can consume one exact ROM-governed natural prompt and produce a
+legitimate complete answer. It rendered the non-thinking arithmetic question
+through the pinned official template as 28 tokens:
+
+~~~text
+<|im_start|>user
+What is 17 multiplied by 23? Give only the number.<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+~~~
+
+Its canonical token-list SHA-256 is
+`a25f049ae770c0857774b904717a7554420c12bc1ad5edc860e7652810d8460a`,
+exactly the committed ROM campaign identity. Thirty-one complete
+617-operation/924,386-command transactions consumed all 28 prompt tokens and
+three causal decode inputs. The four selected generated IDs were
+`[18, 24, 16, 151645]`; the authenticated tokenizer resolves them as
+`["3", "9", "1", "<|im_end|>"]`, raw decoding is
+`391<|im_end|>`, visible decoding is `391`, and re-encoding is exact. This is a
+correct answer to 17 multiplied by 23 and exactly matches the ROM golden token
+sequence, text, EOS, and final committed context length 31.
+
+The terminal report ID is
+`1e2381277fb631f69e36e38ccf01e1ee2666549a5e9af88d6d112276c647aa23`.
+Its selected token is EOS ID 151645, all 36 state resources have generation
+and length 31, and neither request nor execution step 31 exists. Report steps 0
+through 30 and their requests independently pass their dynamic schemas and
+causal validators. The observed mean interval between report 0 and report 30
+was 24.291461 seconds, or 0.041167 host-simulated transactions per second. This
+is functional-simulator throughput, not accelerator timing.
+
+This diagnostic does not close `TA-QW-NAT-4A`. Dynamic session v1 freezes
+`unexpected_early_eos: fail`, so the runner intentionally exited after
+publishing the EOS transaction and did not create a canonical session
+aggregate. The run directory is uncommitted working evidence, the session does
+not yet bind the source messages and template identity in one imported workload
+manifest, and the other five natural questions and both live agent tasks have
+not run through the tensor-accelerator path. Production promotion therefore
+requires the separately versioned first-EOS controller, token-legitimacy
+records, controlled aggregate, governed workload import, adversarial tests,
+independent comparison, and complete natural/agentic campaigns described below.
+
+### 1.29 Paused controlled Qwen natural and live-agent campaign
+
+The required control plane now exists in the isolated `ta-integration` working
+tree. It does not mutate dynamic session v1 or the admitted long-session restart
+format. A single shared workload artifact imports and authenticates the six ROM
+natural questions and five ROM agent turns, reproduces every official-template
+prompt byte and token ID, and freezes goldens before accelerator execution. Its
+workload ID is
+`6e416e625cc278a50c392aa7500163ac5c8b1670756f3519a658c70529c2e998`.
+
+The separately versioned dynamic generation controller includes EOS as the
+last generated token, stops before any request can consume it, rejects model
+head rows 151,669 through 151,935 because the authenticated tokenizer cannot
+decode them, records raw and visible decoding for every selected token, and
+retains ROM mismatches as failures. The controlled aggregate independently
+reconstructs the complete request/report/state-metadata chain, prompt and
+generated-token causality, 70-counter sums, all 36 final K/V state records,
+tokenizer evidence, first divergence, and exact ROM comparison. Strict schemas
+cover the shared workload, control, controlled session, checkpoint V2, live
+agent task result, and coherent natural/agent campaign. Adversarial tests cover
+first-decision EOS, later EOS,
+maximum-length stop, post-EOS continuation, padded rows, prompt/source drift,
+malformed token evidence, causal-step forgery, protocol ambiguity, action
+causality, isolation arguments, checkpoint corruption, and V1 replay.
+
+Arbitrary dynamic sessions use runtime checkpoint V2 at 8,000-row capacity.
+The existing 8,192-row long-acceptance checkpoint V1 remains unchanged and
+retains its exact identities. An authentic arithmetic differential interrupted
+after transaction 0, restored its full 36-layer K/V image, executed transaction
+1, and matched an uninterrupted two-transaction comparator byte for byte. The
+two report IDs are
+`c51e674d8b459c3d3d0caf6541935d78ef3e338784fc7c7c6731340a813da386`
+and
+`8b04c1bfdd0c9f8f7857a2f34ee702c65de2de13c22962a2023811dde06bc21b`;
+both paths produced checkpoint ID
+`c4cfea11f5ac0fad1892a9b43b3cd0ca4ecc1bffe3805da2d714f2f20a1bdbf8`
+and K/V shard SHA-256
+`edf455431df54b3a27b32566cc248b13cb16d141f9115fbeba229863a96ec7b7`.
+
+The arithmetic workload has now passed the production controller. Thirty-one
+complete model transactions produced exact IDs `[18, 24, 16, 151645]`, visible
+text `391`, terminal EOS, no post-EOS request, and controlled execution ID
+`9978ab442c8c0d7f0732df6e9b40a51e072cd190a7ec793bae2e9ba6a3b7a19b`.
+The resumed 29-transaction invocation observed 723.468509 host seconds, or
+0.040085 full-model transactions per host second. This is functional-simulator
+wall time and does not characterize accelerator cycles, latency, or throughput.
+
+The geography workload has also passed. Thirty-two complete model transactions
+produced exact IDs `[785, 6722, 315, 6323, 374, 26194, 13, 151645]`, visible
+text `The capital of Japan is Tokyo.`, terminal EOS, no post-EOS request, and
+controlled execution ID
+`08bcc77d9d3fb61aea5bf242f6dfacd1847b0a3f4887ae0d89df2c9daa4c66b2`.
+
+The science workload completed but correctly published `status: fail` and is
+preserved as first-divergence evidence. It stopped on legitimate EOS after 44
+generated tokens and produced the semantically valid visible answer “Ice
+floats on liquid water because it is less dense than liquid water. This occurs
+due to the unique hydrogen bonding in water, which creates a hexagonal lattice
+structure in ice, making it less compact than liquid water.” The frozen ROM
+golden has 46 generated tokens and includes “an open, hexagonal lattice
+structure”; the first token mismatch is generated index 27, selecting
+transaction 53. Exact ROM comparison is therefore false. The failed controlled
+execution ID is
+`c597f9715e47a8b30b0731f3d7fb7910bea6cc619b39eb1def5052aa62572c81`.
+Semantic plausibility cannot replace exact target execution, so this failure
+blocks `TA-QW-NAT-4A` until its numerical, state, command-execution, or golden-
+provenance cause is isolated and a separately rooted rerun passes.
+
+A separately versioned campaign aggregate now requires all six ordered natural
+cases, both ordered live tasks, and all five agent turn aggregates before it can
+publish. It revalidates every child session, controller, controlled execution,
+and task report; embeds the actual rendered prompts, generated IDs and decoded
+text; reconciles agent generations with causal container actions and withheld
+tests; requires unique child identities and one build/graph identity; and
+reconstructs transaction/token totals. It fails closed while any child is
+missing and explicitly fixes exact-8,000, DeepSeek-200,000, timing, target-
+precision-reference, and release-admission claims to false. The focused campaign
+and strict-schema tests pass 10/10, and the strict schema inventory is 94.
+
+All ABI 2.5 executions are now paused by architecture decision. The
+computer-science, practical-advice, reasoning, hello-world-agent, and
+fix-permissions-agent runs retain their completed append-only transactions and
+authenticated checkpoints; interrupted in-flight transactions are not
+evidence. They must not resume until the production ABI 3.0 controller,
+microsequencer, instruction, queue/event, trap, and architectural-state
+boundary is frozen and ABI-equivalence criteria are approved. Each agent turn
+is compiled as a
+fresh official-template conversation; only the accelerator-produced output is
+parsed, only a strict `bash(command: string)` call may execute, the action runs
+inside the frozen networkless/capability-dropped TerminalBench image, and the
+actual tool response becomes the next prompt. The final evidence contract binds
+all turn aggregates, calls, actions/results, image and isolation identities,
+final answer, and withheld test output. ROM commands are goldens for comparison,
+not inputs to or substitutes for model generation.
+
+This committed tranche narrows but does not close `TA-QW-NAT-4A` or
+`TA-QW-AGENT-4B`: science is an exact-comparison failure, the other three
+natural cases and both complete live tasks remain incomplete, and the coherent
+campaign must pass full regression, reproducibility, review, and ABI 3.0
+admission. It does not close either exact-8,000 Qwen workload, DeepSeek 200,000,
+timing, RTL, 130-nm, or ROM-comparison gates.
 
 ## 2. Meaning of production-grade
 
@@ -1797,6 +1974,19 @@ report must use one of the following scope-qualified descriptions:
   executed and matched the independent target-precision reference, with
   complete operation, memory, counter, and state reconciliation.
 
+For a natural chat execution, “full” additionally means the official template
+was rendered and tokenized, generation stopped immediately after recording the
+first EOS, every output token was decodable, and the complete visible response
+passed its frozen semantic checks. For a live agentic execution, “full” covers
+all model turns, model-generated tool envelopes, isolated tool actions and
+results, rerendered follow-up contexts, terminal answer, and withheld task
+tests. Host tokenization, EOS control, strict protocol parsing, and isolated
+tool execution are explicit system-boundary services; they do not weaken the
+artifact-only claim because every model-forward activation, logit, and state
+transition still comes from the accelerator artifacts. An injected golden
+token, replayed model response, or replayed tool call cannot close either full
+semantic claim.
+
 For Qwen, the last term requires exactly 8,000 resident prompt tokens followed
 by at least 32 greedy generated tokens unless the manifest declares an expected
 earlier EOS. For DeepSeek, it requires exactly 200,000 resident prompt tokens
@@ -1808,7 +1998,7 @@ The closed QW-FM4 evidence in Section 1.12 is an authentic artifact-only
 full-model transaction: all 36 Qwen layers, complete logits, one greedy-token
 decision, and all 36 transactional state resources executed from real
 artifacts. It is not short end-to-end generation and is not full end-to-end
-acceptance execution. Section 1.13 separately closes a 32-decision short
+acceptance execution. Section 1.25 separately closes a 32-decision short
 target-precision diagnostic, but full acceptance remains open because the exact
 8,000-token resident prompt and official/golden comparison have not closed.
 Functional full end-to-end acceptance also does
@@ -1878,6 +2068,56 @@ The initial acceptance manifest freezes:
 
 Passing a short Qwen prompt does not close the 8,000-token gate.
 
+#### 4.1.1 Natural chat, reasoning, and agentic acceptance
+
+Qwen release evidence has three governed workload classes; none substitutes for
+another:
+
+1. the existing 8,000 repeated-`<|endoftext|>` fixture is a numerical,
+   state-growth, restart, and capacity stress gate only;
+2. natural chat and reasoning use the exact six committed ROM questions,
+   official chat-template rendering, greedy decoding, first-EOS termination,
+   and complete decoded responses; and
+3. agentic behavior uses the exact ROM system prompt, one strict
+   `bash(command: string)` tool, official `<tool_call>` and `<tool_response>`
+   envelopes, pinned TerminalBench tasks, and the same isolated execution and
+   withheld-test boundary.
+
+The frozen agent system message is: “You are a terminal task agent working
+inside an isolated container. Use the bash tool to inspect and modify only that
+container. When using a tool, emit only the official `<tool_call>` block. Verify
+your work with bash, then give a concise final answer.” The exact JSON tool
+schema has SHA-256
+`20db37645f7d9121702a56109d908145bfe3823de8aeb10b099e728b5611fd41`;
+free-form host shell access is not part of the model interface.
+
+The natural suite includes direct arithmetic, geography, science, computer
+science, practical advice, and thinking-mode reasoning. The committed ROM
+golden for the train question must calculate 120 kilometers in 90 minutes as
+80 kilometers per hour and terminate with token 151645. Every accelerator
+response must retain all generated token IDs including EOS, prove each ID is
+present in the pinned 151,669-entry tokenizer, decode both with and without
+special tokens, and undergo exact-token plus question-specific semantic checks.
+A valid ID sequence containing gibberish is a failed semantic result.
+
+The agent suite begins each task with the identical rendered prompt. On every
+turn, the live model output is parsed fail-closed: malformed, duplicate, nested,
+or unknown tool calls are rejected; no command runs until parsing succeeds.
+The command executes only in the bounded no-network task container, its
+canonical result is rendered through the official template, and the next prompt
+is compiled as a new causal model session. Acceptance requires valid per-turn
+EOS, legitimate decoded tokens, legal tool calls, expected filesystem/process
+transitions, passing withheld task tests, and a coherent final answer. A replay
+of the ROM tool calls without model-generated calls is differential test input,
+not live agentic acceptance.
+
+In addition to the short natural suite, the release workload contains one
+exactly 8,000-token natural chat-template prompt assembled deterministically
+from a pinned natural-text corpus and an answerable query. Corpus identity,
+assembly rule, final rendered text, token IDs, and expected ROM output are
+frozen before tensor-accelerator execution. This natural 8,000-token run and the
+repeated-special-token stress run are reported separately and both must pass.
+
 ### 4.2 DeepSeek-V4 Flash target
 
 The mandatory DeepSeek gate uses the exact
@@ -1912,6 +2152,15 @@ qualification profile; the project must not claim one-million-token end-to-end
 correctness until that path has actually executed under its declared state,
 numerical, and performance policy.
 
+The 200,000-token fixture must be a governed natural prompt rendered by the
+pinned DeepSeek message encoder; repeated, random, or special-token-only input
+may be retained only as a separate stress fixture. Before the long run, a short
+natural chat/reasoning suite and a strict tool-use suite must close the same
+token-legitimacy, first-EOS, decoded-text, protocol, and semantic boundaries as
+Qwen using DeepSeek's official grammar. ROM and HBM/SRAM executions for each
+DeepSeek workload consume one identical manifest; Qwen's chat template is not
+substituted for DeepSeek's model-specific encoding.
+
 ### 4.3 Meaning of one dynamic accelerator
 
 One dynamic accelerator means one RTL hierarchy, capability ABI, and instruction
@@ -1941,7 +2190,9 @@ capacity certificate must make the 200,000-token DeepSeek path legal.
 | TA-SEM-1 | Complete neutral graphs and independent target-precision semantics for both models; zero unknown operations | Semantic coverage |
 | TA-COMP-2 | Deterministic HBM/SRAM deployment, complete payload coverage, legal physical plan, command stream, and independent reconstruction/checking | Compiler correctness for declared profiles |
 | TA-SIM-3 | Artifact-only functional and cycle/event simulation; exact state/counter reconciliation; no framework or host-compute fallback | Executable architecture correctness |
-| TA-QWEN-4 | Actual checkpoint, full 36-layer prefill/decode, 8,000-token prompt, exact target logits/tokens/text and state | Qwen3-8B 8K end-to-end correctness |
+| TA-QW-NAT-4A | Actual checkpoint and exact ROM-governed natural chat/reasoning suite; official template, first-EOS stop, legitimate decoded tokens, exact golden outputs, and semantic checks | Qwen natural chat and reasoning correctness |
+| TA-QW-AGENT-4B | Actual checkpoint and exact ROM-governed bash-only tasks; model-generated legal tool calls, isolated environment transitions, EOS-terminated final answers, and passing withheld tests | Qwen live agentic correctness |
+| TA-QWEN-4 | TA-QW-NAT-4A and TA-QW-AGENT-4B closed; actual checkpoint and full 36-layer execution for both the exact 8,000-token repeated-special-token stress prompt and a separately frozen exact 8,000-token natural prompt; exact target logits/tokens/text and state | Qwen3-8B 8K end-to-end correctness |
 | TA-DSV4-5 | Actual complete checkpoint, all ordinary-path layers/operators, exactly 200,000 resident prompt tokens plus frozen decode, exact target logits/tokens/text, routes, and state | DeepSeek-V4 Flash 200K end-to-end correctness |
 | TA-RTL-6 | Generated programs execute representative complete kernels/layers through RTL co-simulation and match the architectural simulator | RTL correlation for tested scope |
 | TA-PHY-7 | 130-nm characterized compute, SRAM, control, and interconnect feed the frozen capability model; timing and energy are traceable | Public-PDK physical-proxy performance |
@@ -2398,7 +2649,9 @@ removed from the suite.
 | Operator | Target formats and representative shapes | Every scalar/vector/tensor/state kernel | Exhaustive boundaries and randomized target-reference differential |
 | Full-dimension slice | Real checkpoint values, unreduced dimensions | Representative Qwen layer and all DeepSeek layer classes | Inputs, intermediate tensors, routes, indices, state, outputs, bytes, and cycles |
 | Short full model | Complete real checkpoint | Prompt prefill plus at least 32 decode steps or expected EOS | Every layer checkpoint, logits, token IDs, state, and text |
-| Qwen 8,000 | Complete Qwen checkpoint | Exact 8,000-token prompt plus decode | Bit-exact target results and exact golden tokens/text |
+| Natural Qwen chat/reasoning | Complete Qwen checkpoint and ROM-governed templates | All six prompts through first EOS | Exact rendered prompts, logits/tokens/state, decodable text, and answer-specific semantics |
+| Live Qwen agent | Complete Qwen checkpoint, strict bash tool, and isolated pinned tasks | Every model turn, parsed call, environment action/result, and final answer | Exact initial prompts and accelerator results plus protocol validity, environment transitions, and withheld tests |
+| Qwen 8,000 | Complete Qwen checkpoint | Separate exact 8,000-token repeated-special-token stress and natural-template prompts plus decode | Bit-exact target results; natural run additionally requires exact golden tokens/text and semantic checks |
 | DeepSeek 200,000 | Complete DeepSeek checkpoint | Exact 200,000-token prompt plus at least 32 ordinary greedy decode steps or expected EOS | Bit-exact target results, routing/state, and exact golden tokens/text |
 | Beyond-target qualification | Complete checkpoint and declared state | Qwen 8,192 boundary; DeepSeek 1,048,576 or other separately declared profiles | Capacity, state, correctness, timing, and quality for each claimed context |
 | Fault/degraded | Valid deployment plus injected faults | Representative commands and sessions | Containment, no bad commit, exact diagnostics, drain, and recovery |
@@ -2407,6 +2660,8 @@ removed from the suite.
 
 For every release golden run:
 
+- prompt messages, template bytes, rendered text, prompt token IDs, and their
+  hashes match the governed workload manifest;
 - tokenizer input and output token IDs match the pinned tokenizer;
 - the simulator consumes only compiled artifacts;
 - zero graph operations are unknown, skipped, or executed by a framework fallback;
@@ -2414,6 +2669,10 @@ For every release golden run:
 - prefill and every decode step complete through the accelerator command path;
 - logits match the target reference exactly at the declared output boundary;
 - selected token IDs and decoded text match the frozen golden result;
+- EOS is recorded as the terminal generated token and no subsequent
+  model-forward request exists;
+- no selected padded output-head row is accepted as a token, and tokenizer-valid
+  gibberish cannot satisfy a natural-language gate;
 - KV, compressor, route, sparse-index, and session state hashes match;
 - expected and observed tensor operations, HBM bytes, SRAM bytes, NoC traffic,
   stalls, and cycles reconcile with no unexplained difference;
@@ -2682,11 +2941,15 @@ and decode loop without MoE control complexity.
 The progression is:
 
 1. short prompt, one generated token, every layer traced;
-2. short prompt, at least 32 generated tokens or expected EOS;
-3. 8,000-token prefill and first decode token;
-4. 8,000-token prefill and the frozen generation length;
-5. 8,192-token boundary and capacity stress; and
-6. seeded sampling only after greedy closure.
+2. exact ROM natural chat/reasoning prompts through first EOS, with legitimate
+   decoded tokens and answer-specific semantic checks;
+3. exact ROM agent prompts through model-generated tool actions, environment
+   transitions, terminal answer, and withheld tests;
+4. repeated-special-token 8,000-token stress prefill and first decode token;
+5. complete repeated-special-token stress generation plus the separate frozen
+   natural-template 8,000-token generation;
+6. 8,192-token boundary and capacity stress; and
+7. seeded sampling only after greedy closure.
 
 **Exit gate:** TA-QWEN-4. The actual checkpoint produces exact target logits,
 tokens, state, and text in artifact-driven data-bearing simulation, with complete
@@ -2844,7 +3107,7 @@ at `2222f76`. Complete Qwen neutral-semantic coverage closes narrowly at
 `74c0d59`, complete physical compilation plus reconstruction close at
 `324f48d`, fixed one-step complete-model execution closes at `c5b9578`, and the
 32-decision target-precision diagnostic session closes at `720cb2a`. Their exact
-evidence boundaries are recorded in Sections 1.2 through 1.13 and below. The
+evidence boundaries are recorded in Sections 1.2 through 1.29 and below. The
 separately versioned 8,192-row graph, semantic IR, capability, physical plan,
 HBM/SRAM deployment, and independent reconstruction are retained in Section
 1.14. The program is not complete: exact Qwen 8,000-token execution and official/golden
@@ -2853,7 +3116,8 @@ RTL, physical, and comparison gates remain open.
 
 | Program decision surface | Current state | Consequence |
 |---|---|---|
-| Integration governance | `a9bb0e7` is the current admitted implementation head; the separately retained restart tranche in Section 1.15 is the next coherent commit candidate; concurrent Qwen/DeepSeek files on `main` remain dirty or untracked | Only committed, reproduced handoffs become release evidence. Long-context work remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
+| Integration governance | `087b374` is the current accelerator implementation handoff and includes the governed natural/agent workload, control, checkpoint, execution, schema, and fail-closed campaign foundation; concurrent Qwen/DeepSeek work on `main` remains read-only input until a coherent committed handoff is imported | Only committed, reproduced handoffs become release evidence. Long-context work remains isolated and may consume committed or immutable source artifacts without absorbing unrelated concurrent-session state |
+| Natural/agentic workloads | The ROM lane has committed six-question EOS and two-task bash-agent evidence. Section 1.29 imports workload ID `6e416e...e998`, closes first-EOS/token legitimacy and dynamic restart V2 at tested implementation scope, passes arithmetic and geography, and preserves science as an exact-comparison failure. Three natural and both live-agent campaigns are paused behind the ABI 3.0 architecture gate; no complete natural or agentic gate is admitted | Diagnose the science divergence, freeze and implement ABI 3.0, prove ABI 2.5 functional-reference equivalence, then resume the incomplete campaigns under new run roots where required; repeated special tokens remain stress-only evidence |
 | Neutral graph semantics | Model Graph IR v2 and a real Qwen graph exist; committed DeepSeek references continue to accumulate | The semantic graph boundary is retained, but `TA-SEM-1` remains open until both complete ordinary graphs have zero unknown operations |
 | Neutral kernel semantics | **QW-FM1 closed at `74c0d59`.** One retained dynamic-shape neutral artifact maps all 617 Qwen operations and 36 state resources exactly once, including final output and terminal commit, and an independent checker reconstructs all source, numeric, tensor, state, and qualification bindings without backend leakage | Preserve the admitted Qwen semantic artifact through physical execution; separately close the remaining DeepSeek operation/state union before `TA-SEM-1` |
 | Target arithmetic | **Dynamic target-precision diagnostic closed at `720cb2a`.** The row-major checkpoint reference independently reproduces 32 complete transactions, all 19,744 operation events, 1,152 layer boundaries, complete logits/ties/tokens, zero saturation, and 2,240 counter comparisons; the first failed softmax campaign is preserved and the corrected target is adversarially covered | Preserve first-divergence evidence and qualify the official/golden comparison plus every remaining DeepSeek ordinary-path contract |
@@ -3093,7 +3357,7 @@ layer output, every prepared state, final normalization, selected row, complete
 logits, and token decision—without injecting any of those values. The first
 divergence would have stopped promotion and remained a retained diagnostic. The
 exact complete one-step result authorized the 32-decision diagnostic campaign,
-which closes at `720cb2a` after the fail-fast softmax repair in Section 1.13.
+which closes at `720cb2a` after the fail-fast softmax repair in Section 1.25.
 That diagnostic plus measured simulator feasibility authorizes work toward the
 exact 8,000-token gate; it does not close it. The separate 8,192 boundary is run
 after, and is never substituted for, the mandatory 8,000-token workload.
@@ -3109,8 +3373,10 @@ comparison open. The release route preserves the following ordered decisions:
 |---|---|---|
 | Full model, one step | Short actual prompt, full prefill, one generated-token decision | Every layer/state checkpoint matches; no payload or operation is unassigned; final logits and selected token are exact |
 | Short target-precision diagnostic — **closed at `720cb2a`** | One-token prompt plus exactly 32 generated decisions | All 32 full-model transactions, logits/ties/tokens, KV generations, decoded text, saturation, and counters match the independent target-precision reference; this does not establish official release quality |
-| Long prefill readiness — checkpoint correctness closed in Section 1.15; growing-position scaling open | Representative growing contexts plus authenticated checkpoint/restart | Simulator wall-clock, host-memory, report-volume, and checkpoint-cost measurements show the data-bearing run is operationally feasible without changing architectural ordering or results |
-| Mandatory Qwen gate | Exactly 8,000 resident prompt tokens followed by the frozen decode length | Common-simulator artifact-only execution matches exact target logits, state, token IDs, and text and reconciles all operations, bytes, stalls, cycles, and state |
+| Natural chat/reasoning — **paused; arithmetic/geography pass, science fail, gate open** | Exact ROM-governed official-template questions through first EOS | Prompt token hashes, complete logits/state/token chains, terminal EOS, tokenizer legitimacy, decoded answers, and semantic checks match the frozen golden for all six cases |
+| Live bash agent — **paused; gate open** | Exact ROM-governed task prompts, model-generated tool turns, and terminal answer | Strict parser accepts every call; isolated actions/results are causal; no post-EOS forward occurs; final answer is coherent and withheld tests pass for both tasks |
+| Long prefill readiness — checkpoint correctness closed in Section 1.27; growing-position scaling open | Representative growing contexts plus authenticated checkpoint/restart | Simulator wall-clock, host-memory, report-volume, and checkpoint-cost measurements show the data-bearing run is operationally feasible without changing architectural ordering or results |
+| Mandatory Qwen gate | Separate exactly 8,000-token repeated-special-token stress and natural-template prompts followed by their frozen decode lengths | Common-simulator artifact-only execution matches exact target logits, state, token IDs, and text and reconciles all operations, bytes, stalls, cycles, and state; only the natural run supports semantic claims |
 | Capacity boundary | Separate 8,192-token fixture | Correct capacity and boundary behavior is reported separately and never substituted for the 8,000-token acceptance fixture |
 
 Optimized host kernels, deterministic parallelism, memory mapping, streaming, and
@@ -3125,7 +3391,7 @@ readiness` plus the governed official/golden acceptance definition. Fixed
 request v1 remains immutable; long-acceptance request/session v1 separately
 binds changing token IDs, position spans, expected state generations, committed
 KV lengths, transaction identities, and prefill/decode phase transitions.
-Section 1.15 proves checkpoint/restart authentication and reproduction at steps
+Section 1.27 proves checkpoint/restart authentication and reproduction at steps
 1 and 2. Representative later positions must still demonstrate feasible
 attention, report, and checkpoint scaling before the exact 8,000-token campaign
 is treated as operationally ready.
