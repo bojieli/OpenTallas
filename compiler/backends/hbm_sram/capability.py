@@ -51,7 +51,16 @@ TECHNOLOGY_VIEW = "shared-hbm-sram-chip-v3"
 #: blocked execution contract, which no exporter names because it is what the
 #: *backend* declares on an execution operator while the graph names the
 #: sequential oracle.
-EXECUTION_ONLY_CONTRACTS: tuple[str, ...] = ("bf16_bf16_fp32_blocked_rne_v1",)
+#: Amendment A7 declares two exact contracts for the same contraction: the
+#: strictly ascending one is the scalar oracle used for numeric qualification,
+#: the blocked one is what execution declares.  The chip implements both, so
+#: both are advertised even in the periods when no published graph names one of
+#: them -- a capability states what the implementation can do, not what the
+#: current exporters happen to ask for.
+EXECUTION_ONLY_CONTRACTS: tuple[str, ...] = (
+    "bf16_bf16_fp32_blocked_rne_v1",
+    "bf16_bf16_fp32_sequential_rne_v1",
+)
 
 #: Used only when no neutral graph has been published yet, so that the module
 #: remains importable and testable on a bare checkout.

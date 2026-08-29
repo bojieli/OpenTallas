@@ -580,6 +580,7 @@ class Verifier:
             Symbol.SPARSE_INDEX_COUNT: self.capability.limits["max_context_positions"],
             Symbol.LAYER_COUNT: 1024,
             Symbol.VOCABULARY_PARTITIONS: 1024,
+            Symbol.SPAN_LAST_INDEX: self.capability.limits["max_context_positions"],
         }
         for descriptor in self.table.descriptors():
             if descriptor.descriptor_type != ExtendedDescriptorType.TENSOR_VIEW:

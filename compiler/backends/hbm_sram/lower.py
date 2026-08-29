@@ -90,6 +90,7 @@ from .plan import (
     bytes_for,
     dtype_of,
     matrix_shape,
+    position_inputs,
     round_up as _round_up,
 )
 
@@ -265,6 +266,7 @@ class _Emitter:
         self._transaction_source: dict[tuple[str, str], int] = {}
         self.token_ring_tensor: str | None = None
         self.token_input_tensor: str | None = None
+        self._position_inputs = frozenset(position_inputs(graph))
         self.token_ring_object: int = NO_ID
         self.commit_token_object: int = NO_ID
 
@@ -353,6 +355,7 @@ class _Emitter:
                 "numeric_contract_substitutions": dict(
                     sorted(self._substitutions.items())
                 ),
+                "derived_position_inputs": sorted(self._position_inputs),
                 "plan_warnings": list(self.plan.warnings),
                 "sram_regions": [
                     {
@@ -932,6 +935,19 @@ class _Emitter:
             )
         kernel = self.kernels[plan.index]
         writes_state = operand.direction == "out" and bool(kernel.state_writes)
+        generated = self._generated_object.get(operand.tensor_id)
+        if generated is not None and operand.tensor_id in self._position_inputs:
+            # The request's position range: ascending indices read from
+            # POSITION_START.  One descriptor serves prefill and every decode
+            # step because the start is a bound symbol, not a stored value.
+            dims, _, _ = self._declared_view(plan, operand)
+            return self._view(
+                object_id=generated,
+                dtype=dtype_of(operand.dtype),
+                dims=[max(dims[0], 1)],
+                strides=[1],
+                dynamic=[DynamicTerm.symbol(Symbol.POSITION_START, 1)],
+            )
         if operand.residence == "state" or writes_state:
             # A declared state effect is the authority: a kernel that writes a
             # state resource writes into that resource's prepared image, even

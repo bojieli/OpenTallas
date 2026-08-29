@@ -258,6 +258,7 @@ class GenerationDriver:
             int(Symbol.MAX_NEW_TOKENS): limit,
             int(Symbol.BATCH): 1,
             int(Symbol.GENERATION_INDEX): 0,
+            int(Symbol.SPAN_LAST_INDEX): len(prompt) - 1,
         }
         completion, result = self._submit(
             session,
@@ -299,6 +300,7 @@ class GenerationDriver:
                 int(Symbol.MAX_NEW_TOKENS): limit,
                 int(Symbol.BATCH): 1,
                 int(Symbol.GENERATION_INDEX): len(generated),
+                int(Symbol.SPAN_LAST_INDEX): 0,
             }
             completion, result = self._submit(
                 session,

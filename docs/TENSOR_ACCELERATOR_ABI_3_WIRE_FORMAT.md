@@ -387,6 +387,7 @@ for `RUNTIME_SYMBOL` it is a value from the registry in section 12.2.
 | 11 | `SPARSE_INDEX_COUNT` |
 | 12 | `LAYER_COUNT` |
 | 13 | `VOCABULARY_PARTITIONS` |
+| 14 | `SPAN_LAST_INDEX` |
 
 A loop bound and a predicate operand may name any of these. Unassigned values
 are reserved.
@@ -407,3 +408,17 @@ because a decoder written against the pre-freeze draft would be wrong.
 
 Assigning a previously unused descriptor type, reserved byte range, or symbol
 value is additive. None of these amendments changes an already-assigned value.
+
+### 12.3 Amendment A12 — `SPAN_LAST_INDEX`
+
+Runtime symbol `14` is `SPAN_LAST_INDEX`, defined as `span_tokens - 1`.
+
+Selecting the final row of the current span is an ordinary operation — it is how
+a prefill hands one hidden state to the vocabulary projection — but it was not
+expressible. A tensor view offsets by `selector_value * element_stride`, and the
+registry had no symbol meaning "one before the end", so the index view resolved
+to the whole span. The alternative was arithmetic inside a descriptor, which
+ABI 3.0 deliberately does not have: a descriptor states a binding, it does not
+compute one.
+
+Assigning a previously unassigned symbol value is additive.

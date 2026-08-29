@@ -880,7 +880,18 @@ def build_plan(
     bands, warnings_bands = _build_bands(graph, tensors)
     warnings.extend(warnings_bands)
     groups, placements = _place_weights(graph, bands, span_max)
-    generated = _generated_constants(graph)
+    positions = position_inputs(graph)
+    generated = _generated_constants(
+        graph,
+        int(capability.limits["max_context_positions"]),
+        headroom=max(min(tile.block, round_up(span_max, tile.rows)), tile.rows, span_max),
+    )
+    for name in positions:
+        warnings.append(
+            f"input {name} is materialised from arange_u32_v1 and offset by "
+            "POSITION_START; the request's position range is a bound symbol, "
+            "not host data"
+        )
 
     units, body_position, band_of_kernel = _emission_order(graph, bands)
     # One token block for the whole plan: the arena padding, the loop divisor
@@ -1066,11 +1077,58 @@ def weight_roles(
     return roles
 
 
-def _generated_constants(graph: KernelGraph) -> tuple[GeneratedConstant, ...]:
-    """Collect every derived constant the graph declares a generator for."""
+def position_inputs(graph: KernelGraph) -> tuple[str, ...]:
+    """Declared inputs whose content is the request's position range.
+
+    A rank-one index vector over the token axis, read only as an index, holds
+    ``POSITION_START + i`` and nothing else -- ADR-003 binds that range as a
+    request symbol, and the submission carries it.  No accelerator moves such a
+    vector across the host boundary per request: the address generator derives
+    it.  The planner therefore materialises it from the frozen ``arange_u32_v1``
+    generator and offsets the view by the ``POSITION_START`` symbol, which is
+    the same values by construction and removes a host window that nothing
+    could fill.  The substitution is recorded in the plan's warnings and in the
+    deployment notes, because silently overriding a declared input is exactly
+    how an exporter defect would hide.
+    """
+    consumers: dict[str, list[str]] = {}
+    for kernel in graph.kernels:
+        for name in kernel.inputs:
+            consumers.setdefault(name, []).append(kernel.kind)
+    out: list[str] = []
+    for tensor in graph.tensors:
+        if tensor.role != "input" or tensor.dtype not in {"u32", "i32"}:
+            continue
+        if len(tensor.shape) != 1 or not isinstance(tensor.shape[0], Symbolic):
+            continue
+        kinds = consumers.get(tensor.tensor_id, [])
+        if not kinds or any(k == "EMBEDDING_LOOKUP" for k in kinds):
+            continue  # the token stream, not a position range
+        out.append(tensor.tensor_id)
+    return tuple(sorted(out))
+
+
+def _generated_constants(
+    graph: KernelGraph, context_max: int = 0, headroom: int = 0
+) -> tuple[GeneratedConstant, ...]:
+    """Collect every derived constant, declared or implied by a position range."""
     from runtime.sim.generators import GeneratorError, digest_of, generate
 
     out: list[GeneratedConstant] = []
+    for tensor_id in position_inputs(graph):
+        # The window starts at POSITION_START and is a whole block wide, so the
+        # table must reach one window past the last admissible start.
+        count = max(int(context_max) + max(int(headroom), 1), 1)
+        parameters = {"count": count}
+        out.append(
+            GeneratedConstant(
+                tensor_id=tensor_id,
+                generator="arange_u32_v1",
+                parameters=parameters,
+                size_bytes=int(generate("arange_u32_v1", parameters).nbytes),
+                digest=digest_of("arange_u32_v1", parameters),
+            )
+        )
     for tensor in graph.tensors:
         if not tensor.generator:
             continue
@@ -1599,8 +1657,9 @@ def _place_activations(
             else:
                 keys[name] = f"b{band_id}.p{body_position[kernel.index]}.o{slot}"
 
+    derived = set(position_inputs(graph))
     for tensor in graph.tensors:
-        if tensor.role == "input":
+        if tensor.role == "input" and tensor.tensor_id not in derived:
             keys.setdefault(tensor.tensor_id, f"host.in.{tensor.tensor_id}")
         elif tensor.role == "output":
             keys.setdefault(tensor.tensor_id, f"host.out.{tensor.tensor_id}")

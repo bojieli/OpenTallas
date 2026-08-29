@@ -107,6 +107,16 @@ class Symbol(enum.IntEnum):
     SPARSE_INDEX_COUNT = 11
     LAYER_COUNT = 12
     VOCABULARY_PARTITIONS = 13
+    SPAN_LAST_INDEX = 14
+    """``span_tokens - 1``: the index of the final row of the current span.
+
+    Selecting the last logical row is an ordinary operation -- it is how a
+    prefill hands one hidden state to the vocabulary projection -- but it was
+    not expressible. A tensor view can offset by ``symbol * stride`` and the
+    registry had no symbol for "one before the end", so the index view came out
+    as the whole span. The alternative was arithmetic in the descriptor, which
+    the ABI deliberately does not have.
+    """
 
 
 class Phase(enum.IntEnum):

@@ -166,7 +166,9 @@ def check_deployment(
         for d in immutable
         if (deployment.objects.get(d.descriptor_id) or _NO_SOURCE).kind == "generated"
     ]
-    _check_generated_constants(graph, deployment, generated, require, errors)
+    _check_generated_constants(
+        graph, deployment, generated, require, errors, capability
+    )
     immutable = [d for d in immutable if d not in generated]
     actual_groups: list[list[tuple[str, int, int, str | None]]] = []
     seen_ranges: dict[tuple[str, int, int], int] = {}
@@ -471,12 +473,32 @@ class _NoSource:
 _NO_SOURCE = _NoSource()
 
 
+def _position_inputs(graph: KernelGraph) -> tuple[str, ...]:
+    """Declared inputs whose content is the request's position range."""
+    consumers: dict[str, list[str]] = {}
+    for kernel in graph.kernels:
+        for name in kernel.inputs:
+            consumers.setdefault(name, []).append(kernel.kind)
+    out = []
+    for tensor in graph.tensors:
+        if tensor.role != "input" or tensor.dtype not in {"u32", "i32"}:
+            continue
+        if len(tensor.shape) != 1 or not isinstance(tensor.shape[0], Symbolic):
+            continue
+        kinds = consumers.get(tensor.tensor_id, [])
+        if not kinds or "EMBEDDING_LOOKUP" in kinds:
+            continue
+        out.append(tensor.tensor_id)
+    return tuple(sorted(out))
+
+
 def _check_generated_constants(
     graph: KernelGraph,
     deployment: Deployment,
     generated: Sequence[Any],
     require: Any,
     errors: list[str],
+    capability: Capability,
 ) -> None:
     """Prove every derived constant is declared, reproducible and digest-bound.
 
@@ -493,6 +515,13 @@ def _check_generated_constants(
         for tensor in graph.tensors
         if getattr(tensor, "generator", "")
     }
+    # One generator is legitimately *implied* rather than declared: a rank-one
+    # index input over the token axis holds the request's position range, which
+    # ADR-003 binds as a symbol.  The rule is re-derived here from the graph so
+    # that a backend cannot pass off any other fabricated table as this one.
+    positions = _position_inputs(graph)
+    if positions:
+        declared.setdefault("arange_u32_v1", None)
     for descriptor in generated:
         source = deployment.objects[descriptor.descriptor_id]
         oid = descriptor.descriptor_id
@@ -503,12 +532,24 @@ def _check_generated_constants(
             "constant in the graph declares",
         ):
             continue
-        require(
-            "generated_parameters_match",
-            dict(source.parameters) == declared[source.generator],
-            f"object {oid} declares parameters {dict(source.parameters)}, the "
-            f"graph declares {declared[source.generator]}",
-        )
+        expected = declared[source.generator]
+        if expected is None:
+            # The implied position table: its only parameter is a count, and it
+            # must reach at least one context beyond the last admissible start.
+            require(
+                "generated_position_extent",
+                int(source.parameters.get("count", 0))
+                > int(capability.limits["max_context_positions"]),
+                f"object {oid} holds {source.parameters.get('count')} positions; "
+                "a window starting at the last admissible position runs past it",
+            )
+        else:
+            require(
+                "generated_parameters_match",
+                dict(source.parameters) == expected,
+                f"object {oid} declares parameters {dict(source.parameters)}, the "
+                f"graph declares {expected}",
+            )
         try:
             from runtime.sim.generators import digest_of as _generator_digest
 
