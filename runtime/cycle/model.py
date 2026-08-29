@@ -104,6 +104,15 @@ def _round(value: float) -> float:
     return round(float(value), FLOAT_DIGITS)
 
 
+#: Seconds are tiny at any plausible clock, so they get their own precision;
+#: six decimals would round a whole transaction to zero.
+TIME_DIGITS = 15
+
+
+def _round_seconds(value: float) -> float:
+    return round(float(value), TIME_DIGITS)
+
+
 def architectural_counters(snapshot: Mapping[str, int]) -> dict[str, int]:
     """The counters on which the functional device and the cycle model agree."""
     return {k: int(v) for k, v in sorted(snapshot.items()) if not is_timing_counter(k)}
@@ -1452,7 +1461,7 @@ class CycleModel:
         return {
             "total_cycles": span,
             "clock_frequency_hz": clock,
-            "seconds": _round(span / clock),
+            "seconds": _round_seconds(span / clock),
             "transaction_cycles": totals["transaction_cycles"],
             "issue_cycles": totals["issue_cycles"],
             "sequencer_fetch_cycles": totals["fetch_cycles"],

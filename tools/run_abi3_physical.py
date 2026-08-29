@@ -678,6 +678,14 @@ PNR_ARTIFACTS_LIGHT = [
 ]
 PNR_ARTIFACTS_HEAVY = ["6_final.def", "6_final.gds", "6_final.odb", "6_final.spef"]
 
+# Metrics whose metadata value is a time in the SDC/liberty time unit.
+PNR_TIMING_METRICS_NS = {
+    "setup_wns_ns",
+    "setup_tns_ns",
+    "hold_wns_ns",
+    "hold_tns_ns",
+}
+
 PNR_METRIC_KEYS = {
     "setup_wns_ns": "finish__timing__setup__ws",
     "setup_tns_ns": "finish__timing__setup__tns",
@@ -783,6 +791,7 @@ def run_pnr(
     core_utilization: int,
     place_density: float,
     keep_heavy: bool,
+    artifact_dir: Path,
 ) -> dict[str, Any]:
     pnr = view["pnr"]
     platform_name = pnr["platform"]
@@ -891,14 +900,25 @@ def run_pnr(
         raise FlowError(f"ORFS produced no metadata.json at {metadata_path}")
     metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
 
+    # ORFS reports slack in the SDC's own time unit, which is the liberty time
+    # unit: nanoseconds for sky130hd but PICOSECONDS for asap7.  Convert the
+    # timing metrics into nanoseconds and keep the raw values alongside.
     metrics: dict[str, Any] = {}
     missing: list[str] = []
+    raw_timing: dict[str, Any] = {}
     for name, key in sorted(PNR_METRIC_KEYS.items()):
-        if key in metadata:
-            metrics[name] = metadata[key]
-        else:
+        if key not in metadata:
             missing.append(key)
+            continue
+        value = metadata[key]
+        if name in PNR_TIMING_METRICS_NS:
+            raw_timing[name] = value
+            metrics[name] = float(value) * time_unit_ns
+        else:
+            metrics[name] = value
     metrics["missing_metadata_keys"] = missing
+    metrics["raw_timing_library_units"] = raw_timing
+    metrics["library_time_unit_ns"] = time_unit_ns
 
     flow_errors = {
         key: metadata[key]
@@ -913,7 +933,7 @@ def run_pnr(
     artifacts: dict[str, Any] = {}
     search_dirs = [results_dir, reports_dir, logs_dir, case]
     wanted = list(PNR_ARTIFACTS_LIGHT) + (PNR_ARTIFACTS_HEAVY if keep_heavy else [])
-    out_dir = work / "pnr_artifacts"
+    out_dir = artifact_dir
     out_dir.mkdir(parents=True, exist_ok=True)
     for name in wanted:
         for directory in search_dirs:
@@ -1152,6 +1172,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.core_utilization,
                 args.place_density,
                 args.keep_heavy_artifacts,
+                output.parent / f"{output.stem}_artifacts",
             )
             record["stages_completed"].append("pnr")
 

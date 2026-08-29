@@ -164,3 +164,97 @@ section 12.
 `tests/sim/` asserts each engine rejects an operator whose family, subopcode or
 operand shape does not match its row. A backend that emits a non-conforming
 operator is rejected at execution, not silently reinterpreted.
+
+---
+
+## 11. Amendment A7 — numeric contracts and the execution backend
+
+Measured on this machine at Qwen3-8B shapes (`[8,4096] x [4096,4096]^T`):
+
+| Path | Rate | One 8,000-token Qwen prefill (6.06e13 MAC) |
+|---|---:|---:|
+| exact scalar sequential-K kernel | 0.15 GMAC/s | ~112 hours |
+| NumPy binary32 matmul | 1.1 GMAC/s | ~15 hours |
+| Torch CPU binary32 matmul | 5.0 GMAC/s | ~3.4 hours |
+| Torch CUDA binary32 matmul | 970 GMAC/s (30 TMAC/s at prefill shapes) | ~2 seconds of contraction |
+
+The exact sequential kernel cannot execute the mandatory workloads. That is not
+a tooling inconvenience; it decides whether this program can produce real tokens
+at all. Two things follow.
+
+**`SEQUENTIAL_ASCENDING` was never the hardware contract.** It is an artifact of
+a scalar simulator. The accelerator being designed contracts a 4,096-element
+reduction on a lane array; it forms a tree across the lane width and accumulates
+partial sums across passes. A strictly sequential 4,096-step dependency chain is
+the one thing such hardware provably does *not* do. Declaring a blocked
+reduction is therefore more faithful to the design, not a concession to
+simulation speed.
+
+**Two contracts are declared, and both are exact.**
+
+`bf16_bf16_fp32_sequential_rne_v1`
+    BF16 operands widened exactly to binary32, exact products, strictly
+    ascending-K binary32 accumulation, one RNE output rounding. Reproducible on
+    any machine. Used for **numeric qualification** at small shapes and as the
+    scalar oracle.
+
+`bf16_bf16_fp32_blocked_rne_v1`
+    BF16 operands widened exactly to binary32, exact products, binary32
+    accumulation in the executing implementation's declared deterministic
+    blocked association, one RNE output rounding. Used for **execution**.
+
+The blocked contract's association is fixed by an *implementation identity* —
+library, version, device and shape — which every execution report records. Two
+runs of the same implementation are bit-identical; this was verified, and the
+contract does not claim portability across implementations. That is a weaker
+guarantee than the sequential contract and is stated as such wherever it is
+used.
+
+Three consequences make it sound for this program's purposes:
+
+1. **ROM versus HBM stays bit-exact.** Both targets execute on the same
+   implementation with the same descriptors, so a token difference between them
+   is a real difference, never an artifact of association.
+2. **Correctness is still checked against something we did not compute.** The
+   acceptance gate is token-level agreement with the external reference oracle,
+   which runs the vendor modelling code.
+3. **The gap between the two contracts is measured, not assumed.** A
+   qualification report records the observed difference at representative
+   shapes; it is not asserted to be zero.
+
+Anything that claims bit-exactness must name which of the two contracts it
+means. A report that says only "exact" is incomplete.
+
+## 12. Amendment A8 — resolved operand ambiguities
+
+The engine workers found five places where the frozen tables under-specified an
+operation. Each is resolved here rather than left to local reading.
+
+**`VECTOR.SCALE` sub-case moves to `aux_id_0`.** The first implementation
+inferred the sub-case from `scale_bits != 0`, which makes a legitimate scale of
+zero unrepresentable. `aux_id_0` now names it: `0` multiply by the profile's
+`scale_bits`, `1` elementwise multiply by `input_view_1`, `2` logistic sigmoid.
+This matches the `COMPRESS`/`MHC` pattern already in section 3.
+
+**Two RMSNorm contracts coexist and are both correct.** The Qwen contract
+materialises the normalised value in BF16 before the gain multiply; the DeepSeek
+contract stays in binary32. They disagree by one ulp on roughly 27 % of
+elements, so they are genuinely different operations and get different names:
+`qwen3_rmsnorm_fp32_bf16_v1` and `deepseek_rmsnorm_binary32_v1`. The engine
+dispatches on the numeric descriptor's contract digest. Silently picking one
+would corrupt whichever model did not get it.
+
+**RMSNorm declares `PAIRWISE_TREE`.** The frozen kernel's row sum is a balanced
+tree, so `SEQUENTIAL_ASCENDING` — the builder's default — contradicted it. The
+enum already had the right value; the builder was wrong to default it.
+
+**`SWIGLU` takes two operands, not three.** `lowering.py` gave it three inputs,
+but no three-operand contract exists and the engine correctly refuses it. The
+neutral kind lowers to `VECTOR.SILU_MUL` with `(gate, up)`; a separate limit, if
+a model needs one, belongs in the numeric descriptor.
+
+**Block-scale addressing is frozen.** `scale_object_id` names an object, which
+carries no shape, so the rule is: one E8M0 byte per `scale_block_elements`, laid
+out in the view's logical row-major order, addressed at
+`element_offset // scale_block_elements`. It requires last-axis stride 1 and
+`K % scale_block_elements == 0`; anything else fails closed.

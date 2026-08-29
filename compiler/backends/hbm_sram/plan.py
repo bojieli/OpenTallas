@@ -979,7 +979,14 @@ def weight_roles(
                         members = []
                         break
                     member = peer.inputs[slot]
-                    if member in claimed or tensors[member].binding is None:
+                    if (
+                        member in claimed
+                        or member in members
+                        or tensors[member].binding is None
+                    ):
+                        # Already placed, or one tensor shared by every layer:
+                        # either way this operand carries no per-layer stride and
+                        # is left to the adjacency grouping below.
                         members = []
                         break
                     members.append(member)
@@ -1292,14 +1299,16 @@ def _uniform_weight_extents(
                         f"operand {position}.{slot} of layer {layer} has no "
                         "checkpoint binding"
                     )
-                if peer.inputs[slot] in seen:
-                    return False, (
-                        f"operand {position}.{slot} names the same tensor in two "
-                        "layers, so it cannot carry a per-layer stride"
-                    )
                 seen.add(peer.inputs[slot])
                 extents.add(
                     (member.binding.bytes, member.dtype, tuple(map(str, member.shape)))
+                )
+            if len(seen) == 1:
+                continue  # one tensor shared by every layer: stride zero
+            if len(seen) != len(run):
+                return False, (
+                    f"operand {position}.{slot} is shared by some layers and "
+                    "private to others"
                 )
             if len(extents) != 1:
                 return False, (
@@ -1387,7 +1396,7 @@ def _place_activations(
         band_id = band_of_kernel.get(kernel.index)
         for slot, name in enumerate(kernel.outputs):
             tensor = tensors[name]
-            if tensor.role in {"weight", "constant"}:
+            if tensor.role in {"weight", "constant", "state"}:
                 continue
             if band_id is None:
                 keys[name] = f"k{kernel.index}.o{slot}"
@@ -1693,19 +1702,31 @@ def _plan_kernels(
             a_rows, a_cols, _ = matrix_shape(tensors[kernel.inputs[0]], span_max)
             w_rows, w_cols, _ = matrix_shape(tensors[kernel.inputs[1]], span_max)
             depth = a_cols
+            groups = 1
             if w_rows == depth:
                 transposed = False
                 weight_cols = w_cols
             elif w_cols == depth:
                 transposed = True
                 weight_cols = w_rows
+            elif w_rows % depth == 0:
+                # A grouped or routed weight stack: [group, depth, cols].  The
+                # engine selects the group from its index operand, so the view
+                # spans one group's block and the depth axis is unchanged.
+                transposed = False
+                weight_cols = w_cols
+                groups = w_rows // depth
+            elif w_cols % depth == 0:
+                transposed = True
+                weight_cols = w_rows
+                groups = w_cols // depth
             else:
                 raise PlanError(
                     f"kernel {kernel.kernel_id}: contraction operand shapes "
                     f"{(a_rows, a_cols)} and {(w_rows, w_cols)} do not share a "
                     "depth axis"
                 )
-            if weight_cols != cols:
+            if groups == 1 and weight_cols != cols:
                 warnings.append(
                     f"kernel {kernel.kernel_id}: weight declares {weight_cols} "
                     f"output columns but the result declares {cols}; the result "
@@ -1864,6 +1885,9 @@ def _operand_plan(
     if placement is not None:
         residence = "weight"
         key = placement.group_id
+    elif tensor.role == "state":
+        residence = "state"
+        key = name
     elif tensor.role in {"input", "output"}:
         residence = "host"
         key = activation_keys.get(name, f"host.{direction}.{name}")

@@ -69,7 +69,6 @@ that the planned ROM bytes fit the ROM capacity the capability declares.
 
 from __future__ import annotations
 
-from dataclasses import replace
 from typing import Any, Mapping, Sequence
 
 from compiler.ir.v3.kernel_ir import KernelGraph
@@ -83,7 +82,7 @@ from .common.image import (
     RomImagePlan,
     RomLayoutPolicy,
 )
-from .common.program import LinkStep, RomTargetPolicy, lower
+from .common.program import RomLowering, RomTargetPolicy
 
 PRODUCT = "qwen3-8b-rom"
 TARGET_ID = "qwen3-8b-rom-single-chip"
@@ -314,9 +313,10 @@ def build_qwen3_rom_deployment(
     policy = qwen3_rom_policy(
         defects=defects, alignment_bytes=alignment_bytes, notes=notes
     )
-    deployment, plan = lower(
+    lowering = RomLowering(
         graph, capability, policy, weight_storage_class=weight_storage_class
     )
+    plan = lowering.plan_regions()
     declared = int(capability.memory["rom"]["bytes"])
     if plan.rom_bytes > declared:
         raise Qwen3RomError(
@@ -324,49 +324,16 @@ def build_qwen3_rom_deployment(
             f"capability declares {declared}; a second chip is not an option for "
             "this product"
         )
-    area = qwen3_area_accounting(plan.rom_bytes)
-    deployment.notes["rom_area_accounting"] = area
-    deployment.notes["rom_capacity"] = {
+    lowering.builder.notes["rom_area_accounting"] = qwen3_area_accounting(
+        plan.rom_bytes
+    )
+    lowering.builder.notes["rom_capacity"] = {
         "declared_rom_bytes": declared,
         "largest_bank_bytes": plan.largest_region_bytes,
         "planned_rom_bytes": plan.rom_bytes,
         "rom_bank_count": plan.resource_count,
     }
-    # The manifest digest covers ``notes``; rebuild the program header so it
-    # keeps binding the manifest after the accounting is attached.
-    _rebind(deployment)
-    return deployment, plan
-
-
-def _rebind(deployment: Deployment) -> None:
-    """Re-stamp the program header after late manifest notes are attached."""
-    from runtime.abi3.records import ProgramHeader, decode_body, split_program
-    from runtime.abi3.records import build_program
-
-    header, body = split_program(deployment.program)
-    instructions = decode_body(body)
-    deployment.program = build_program(
-        instructions,
-        entrypoint_count=header.entrypoint_count,
-        required_features=header.required_features,
-        deployment_digest=bytes(32),
-        descriptor_table_digest=header.descriptor_table_digest,
-        topology_digest=header.topology_digest,
-        max_retired_work=header.max_retired_work,
-        watchdog_class=header.watchdog_class,
-        entrypoint_table_descriptor=header.entrypoint_table_descriptor,
-    )
-    deployment.program = build_program(
-        instructions,
-        entrypoint_count=header.entrypoint_count,
-        required_features=header.required_features,
-        deployment_digest=deployment.deployment_digest,
-        descriptor_table_digest=header.descriptor_table_digest,
-        topology_digest=header.topology_digest,
-        max_retired_work=header.max_retired_work,
-        watchdog_class=header.watchdog_class,
-        entrypoint_table_descriptor=header.entrypoint_table_descriptor,
-    )
+    return lowering.build(), plan
 
 
 __all__ = [

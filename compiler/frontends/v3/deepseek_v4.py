@@ -1606,6 +1606,12 @@ def export_deepseek_v4_kernel_graph(
             source = operands[0]
             head_width = int(attrs["head_dim"])
             node_ratio = int(attrs["ratio"])
+            family = (
+                "compressed_key_value"
+                if attrs["projection_scope"] == "main"
+                else "index_compressed_key_value"
+            )
+            reads = (ensure_state(f"{family}.{scope}.layer.{layer}"),)
             output = view(out0, "bf16", (committed_groups[node_ratio], head_width))
             emit(
                 node_id,
@@ -1616,3 +1622,984 @@ def export_deepseek_v4_kernel_graph(
                                   "width": head_width},
             )
             bind(out0, output)
+
+        # -- attention row space and selection ---------------------------
+        elif source_kind == "ATTENTION_KV_VIEW":
+            sources = tuple(operands[:-2])
+            rows = (
+                SLIDING_WINDOW + DRAFT_BLOCK
+                if scope == "dspark"
+                else attention_rows[ratio]
+            )
+            output = view(out0, "bf16", (rows, HEAD_DIM))
+            emit(
+                node_id,
+                "CONCAT",
+                sources,
+                (output,),
+                iteration_domain={"rows": rows, "width": HEAD_DIM},
+                attributes={
+                    **attrs,
+                    "axis": 0,
+                    "segment_order": (
+                        "current_then_committed_window_then_valid_compressed_prefix"
+                    ),
+                },
+            )
+            bind(out0, output)
+
+        elif source_kind == "INDEX_SCORE":
+            query, key_value, head_weights = operands[0], operands[1], operands[2]
+            rows = rows_of(query)
+            output = act(out0, "bf16", (rows, committed_groups[4]))
+            emit(
+                node_id,
+                "INDEX_SCORE",
+                (query, key_value, head_weights),
+                (output,),
+                iteration_domain={
+                    "tokens": rows,
+                    "candidates": committed_groups[4],
+                    "heads": INDEX_HEADS,
+                    "width": INDEX_HEAD_DIM,
+                },
+            )
+            bind(out0, output)
+
+        elif source_kind == "INDEX_TOPK":
+            score = operands[0]
+            window_indices = operands[1]
+            rows = rows_of(score)
+            selected = act(f"{node_id}.selected", "i32", (rows, INDEX_TOPK))
+            emit(
+                f"{node_id}.select",
+                "INDEX_TOPK",
+                (score,),
+                (selected,),
+                step="masked_topk",
+                iteration_domain={"tokens": rows, "top_k": INDEX_TOPK},
+                attributes={
+                    **attrs,
+                    "causal_mask": "compressed_group_completed_before_position",
+                    "order": "score_descending_then_index_ascending",
+                    "padding_index": -1,
+                },
+            )
+            width = SLIDING_WINDOW + INDEX_TOPK
+            output = act(out0, "i32", (rows, width))
+            emit(
+                f"{node_id}.concat",
+                "CONCAT",
+                (window_indices, selected),
+                (output,),
+                step="window_then_compressed_indices",
+                iteration_domain={"tokens": rows, "width": width},
+                attributes={
+                    **attrs,
+                    "axis": 1,
+                    "segment_widths": [SLIDING_WINDOW, INDEX_TOPK],
+                },
+            )
+            bind(out0, output)
+
+        elif source_kind == "COMPRESSED_DENSE_INDEX":
+            window_indices = operands[0]
+            node_ratio = int(attrs["ratio"])
+            dense = act(f"{node_id}.dense", "i32", (span, groups[node_ratio]))
+            emit(
+                f"{node_id}.enumerate",
+                "WINDOW_INDEX",
+                (ten("request.start_pos"),),
+                (dense,),
+                step="causal_compressed_enumeration",
+                iteration_domain={"tokens": span, "width": groups[node_ratio]},
+                attributes={
+                    **attrs,
+                    "index_family": "causal_compressed_dense",
+                    "padding_index": -1,
+                },
+            )
+            output = act(out0, "i32", (span, selected_rows_128))
+            emit(
+                f"{node_id}.concat",
+                "CONCAT",
+                (window_indices, dense),
+                (output,),
+                step="window_then_compressed_indices",
+                iteration_domain={"tokens": span, "width": selected_rows_128},
+                attributes={**attrs, "axis": 1},
+            )
+            bind(out0, output)
+
+        elif source_kind == "SPARSE_ATTENTION":
+            query, key_value, indices = operands[0], operands[1], operands[2]
+            sink = role_weight(roles[0], scope, layer)
+            rows = rows_of(query)
+            output = act(out0, "bf16", (rows, HEADS, HEAD_DIM))
+            emit(
+                node_id,
+                "ATTENTION_SPARSE",
+                (query, key_value, sink, indices),
+                (output,),
+                iteration_domain={
+                    "tokens": rows,
+                    "heads": HEADS,
+                    "width": HEAD_DIM,
+                    "candidates": builder.shape[indices][-1],
+                },
+            )
+            bind(out0, output)
+
+        elif source_kind == "GROUPED_OUTPUT_PROJECT":
+            source = operands[0]
+            weight = role_weight(roles[0], scope, layer)
+            rows = rows_of(source)
+            output = act(out0, "bf16", (rows, O_GROUPS * O_RANK))
+            emit(
+                node_id,
+                "GROUPED_MATMUL",
+                (source, weight),
+                (output,),
+                iteration_domain={
+                    "tokens": rows,
+                    "groups": O_GROUPS,
+                    "output_width": O_RANK,
+                    "reduction_width": HEADS * HEAD_DIM // O_GROUPS,
+                },
+                attributes={
+                    **attrs,
+                    "accumulator_dtype": "fp32",
+                    "input_dtype": "bf16",
+                    "output_dtype": "bf16",
+                    "weight_dequantization": "block_scaled_fp8_to_bf16",
+                    "weight_group_layout": "groups_by_rank_by_reduction",
+                },
+            )
+            bind(out0, output)
+
+        # -- routing and experts ----------------------------------------
+        elif source_kind == "ROUTER_SCORE":
+            source = operands[0]
+            weight = role_weight(roles[0], scope, layer)
+            rows = rows_of(source)
+            output = act(out0, "fp32", (rows, ROUTED_EXPERTS))
+            emit(
+                node_id,
+                "ROUTER_SCORE",
+                (source, weight),
+                (output,),
+                iteration_domain={"tokens": rows, "experts": ROUTED_EXPERTS,
+                                  "reduction_width": HIDDEN},
+            )
+            bind(out0, output)
+
+        elif source_kind == "SQRT_SOFTPLUS":
+            source = operands[0]
+            rows = rows_of(source)
+            output = act(out0, "fp32", (rows, ROUTED_EXPERTS))
+            emit(
+                node_id,
+                "SQRT_SOFTPLUS",
+                (source,),
+                (output,),
+                iteration_domain={"tokens": rows, "experts": ROUTED_EXPERTS},
+            )
+            bind(out0, output)
+
+        elif source_kind == "HASH_ROUTE":
+            table = role_weight(roles[0], scope, layer)
+            rows = rows_of(operands[0])
+            output = act(out0, "i32", (rows, TOP_K))
+            emit(
+                node_id,
+                "HASH_ROUTE",
+                (ten("request.input_ids"), table),
+                (output,),
+                iteration_domain={"tokens": rows, "top_k": TOP_K},
+                attributes={**attrs, "table_dtype": "i64",
+                            "table_rows": VOCABULARY},
+            )
+            bind(out0, output)
+
+        elif source_kind == "BIASED_TOPK_ROUTE":
+            score = operands[0]
+            bias = role_weight(roles[0], scope, layer)
+            rows = rows_of(score)
+            indices = act(out0, "i32", (rows, TOP_K))
+            values = act(f"{node_id}.selected_score", "fp32", (rows, TOP_K))
+            emit(
+                node_id,
+                "BIASED_TOPK",
+                (score, bias),
+                (indices, values),
+                iteration_domain={"tokens": rows, "experts": ROUTED_EXPERTS,
+                                  "top_k": TOP_K},
+                attributes={
+                    **attrs,
+                    "bias_scope": "selection_only",
+                    "order": "score_descending_then_index_ascending",
+                },
+            )
+            bind(out0, indices)
+
+        elif source_kind == "ROUTER_WEIGHT_NORMALIZE":
+            score, indices = operands[0], operands[1]
+            rows = rows_of(score)
+            selected = act(f"{node_id}.gathered", "fp32", (rows, TOP_K))
+            emit(
+                f"{node_id}.gather",
+                "GATHER",
+                (score, indices),
+                (selected,),
+                step="unbiased_score_gather",
+                iteration_domain={"tokens": rows, "top_k": TOP_K},
+            )
+            normalized = act(f"{node_id}.normalized", "fp32", (rows, TOP_K))
+            emit(
+                f"{node_id}.normalize",
+                "WEIGHT_NORMALIZE",
+                (selected,),
+                (normalized,),
+                step="selected_sum_normalize",
+                iteration_domain={"tokens": rows, "top_k": TOP_K},
+            )
+            output = act(out0, "fp32", (rows, TOP_K))
+            emit(
+                f"{node_id}.scale",
+                "SCALE",
+                (normalized,),
+                (output,),
+                step="route_scale",
+                iteration_domain={"tokens": rows, "top_k": TOP_K},
+                attributes={**attrs, "factor": ROUTE_SCALE,
+                            "factor_dtype": "fp32"},
+            )
+            bind(out0, output)
+            context_of[root]["route_weights"] = output
+
+        elif source_kind == "EXPERT_DISPATCH":
+            source, indices = operands[0], operands[1]
+            rows = rows_of(source)
+            routed_rows = (
+                dispatch_rows if isinstance(rows, Symbolic) else rows * TOP_K
+            )
+            output = act(out0, "bf16", (routed_rows, HIDDEN))
+            expert_rows = act(f"{node_id}.expert_ids", "i32", (routed_rows,))
+            emit(
+                node_id,
+                "EXPERT_DISPATCH",
+                (source, indices),
+                (output, expert_rows),
+                iteration_domain={"tokens": rows, "top_k": TOP_K,
+                                  "routed_rows": routed_rows, "width": HIDDEN},
+                attributes={
+                    **attrs,
+                    "group_order": "ascending_expert_then_ascending_token",
+                    "routed_row_expert_output": True,
+                },
+            )
+            bind(out0, output)
+            context_of[root]["expert_rows"] = expert_rows
+            context_of[root]["dispatch"] = output
+
+        elif source_kind in {"MXFP4_SWIGLU", "FP8_SWIGLU"}:
+            routed = source_kind == "MXFP4_SWIGLU"
+            source = operands[0]
+            rows = rows_of(source)
+            if routed:
+                gate_weights = role_weight_family(roles[0], scope, layer)
+                down_weights = role_weight_family(roles[2], scope, layer)
+                up_weights = role_weight_family(roles[4], scope, layer)
+                expert_rows = context_of[root]["expert_rows"]
+                route_weights = context_of[root]["route_weights"]
+                weight_attributes = {
+                    "expert_count": ROUTED_EXPERTS,
+                    "expert_weight_block_elements": FP4_BLOCK,
+                    "expert_weight_dtype": "mxfp4_e2m1",
+                    "expert_weight_order": "ascending_logical_expert_id",
+                }
+            else:
+                gate_weight = role_weight(roles[0], scope, layer)
+                down_weight = role_weight(roles[2], scope, layer)
+                up_weight = role_weight(roles[4], scope, layer)
+                weight_attributes = {}
+            payload, scale = quantize(
+                source,
+                block=ACTIVATION_BLOCK,
+                dtype="fp8_e4m3fn",
+                width=None,
+                source_operation_id=node_id,
+                source_kind=source_kind,
+                contract=_contract(source_kind, "activation_quantize"),
+                attributes={
+                    "block_size": ACTIVATION_BLOCK,
+                    "output_dtype": "fp8_e4m3fn",
+                    "rounding": "rne",
+                    "scale_format": "ue8m0",
+                    "source_operation_kind": source_kind,
+                },
+                layer=layer,
+                phases=phases,
+            )
+            gate = act(f"{node_id}.gate", "bf16", (rows, MOE_INTERMEDIATE))
+            up = act(f"{node_id}.up", "bf16", (rows, MOE_INTERMEDIATE))
+            contraction = {
+                "rows": rows,
+                "output_width": MOE_INTERMEDIATE,
+                "reduction_width": HIDDEN,
+            }
+            for name, output_id, family_key in (
+                ("gate", gate, "gate"),
+                ("up", up, "up"),
+            ):
+                family = gate_weights if family_key == "gate" else up_weights
+                if routed:
+                    emit(
+                        f"{node_id}.{name}",
+                        "ROUTED_MATMUL",
+                        (payload, expert_rows),
+                        (output_id,),
+                        step=f"{name}_contraction",
+                        iteration_domain=contraction,
+                        attributes={
+                            **attrs,
+                            **weight_attributes,
+                            "expert_weight_tensors": family,
+                            "projection": name,
+                        },
+                    )
+                else:
+                    emit(
+                        f"{node_id}.{name}",
+                        "MATMUL",
+                        (payload, gate_weight if name == "gate" else up_weight),
+                        (output_id,),
+                        step=f"{name}_contraction",
+                        iteration_domain=contraction,
+                        attributes={**attrs, "projection": name,
+                                    "weight_block_elements": FP8_WEIGHT_BLOCK},
+                    )
+            activated = act(f"{node_id}.activated", "bf16",
+                            (rows, MOE_INTERMEDIATE))
+            emit(
+                f"{node_id}.activate",
+                "SWIGLU",
+                (gate, up),
+                (activated,),
+                step="clamped_silu_product",
+                iteration_domain={"rows": rows, "width": MOE_INTERMEDIATE},
+                attributes={
+                    **attrs,
+                    "clamp": "gate_upper_and_up_symmetric",
+                    "compute_dtype": "fp32",
+                    "swiglu_limit": SWIGLU_LIMIT,
+                },
+            )
+            if routed:
+                weighted = act(f"{node_id}.weighted", "bf16",
+                               (rows, MOE_INTERMEDIATE))
+                emit(
+                    f"{node_id}.route_weight",
+                    "MUL",
+                    (activated, route_weights),
+                    (weighted,),
+                    step="routing_weight_product",
+                    iteration_domain={"rows": rows, "width": MOE_INTERMEDIATE},
+                    attributes={**attrs,
+                                "broadcast": "routed_row_to_intermediate_width"},
+                )
+                activated = weighted
+            down_payload, _ = quantize(
+                activated,
+                block=ACTIVATION_BLOCK,
+                dtype="fp8_e4m3fn",
+                width=None,
+                source_operation_id=node_id,
+                source_kind=source_kind,
+                contract=_contract(source_kind, "activation_quantize"),
+                attributes={
+                    "block_size": ACTIVATION_BLOCK,
+                    "output_dtype": "fp8_e4m3fn",
+                    "rounding": "rne",
+                    "scale_format": "ue8m0",
+                    "source_operation_kind": source_kind,
+                },
+                layer=layer,
+                phases=phases,
+            )
+            output = act(out0, "bf16", (rows, HIDDEN))
+            if routed:
+                emit(
+                    f"{node_id}.down",
+                    "ROUTED_MATMUL",
+                    (down_payload, expert_rows),
+                    (output,),
+                    step="down_contraction",
+                    iteration_domain={"rows": rows, "output_width": HIDDEN,
+                                      "reduction_width": MOE_INTERMEDIATE},
+                    attributes={
+                        **attrs,
+                        **weight_attributes,
+                        "expert_weight_tensors": down_weights,
+                        "projection": "down",
+                    },
+                )
+            else:
+                emit(
+                    f"{node_id}.down",
+                    "MATMUL",
+                    (down_payload, down_weight),
+                    (output,),
+                    step="down_contraction",
+                    iteration_domain={"rows": rows, "output_width": HIDDEN,
+                                      "reduction_width": MOE_INTERMEDIATE},
+                    attributes={**attrs, "projection": "down",
+                                "weight_block_elements": FP8_WEIGHT_BLOCK},
+                )
+            bind(out0, output)
+
+        elif source_kind == "EXPERT_REDUCE":
+            routed_output, shared_output = operands[1], operands[2]
+            expert_rows = context_of[root]["expert_rows"]
+            rows = rows_of(shared_output)
+            output = act(out0, "bf16", (rows, HIDDEN))
+            emit(
+                node_id,
+                "EXPERT_REDUCE",
+                (routed_output, shared_output, expert_rows),
+                (output,),
+                iteration_domain={"tokens": rows, "top_k": TOP_K,
+                                  "width": HIDDEN},
+            )
+            bind(out0, output)
+
+        # -- head and selection -----------------------------------------
+        elif source_kind == "LM_HEAD":
+            source = operands[0]
+            weight = role_weight(roles[0], scope, layer)
+            if attrs["full_logits"]:
+                selected = source
+                rows = rows_of(source)
+            else:
+                rows = 1
+                selected = act(f"{node_id}.final_position", "bf16", (1, HIDDEN))
+                emit(
+                    f"{node_id}.select",
+                    "LAST_TOKEN_SELECT",
+                    (source, ten("request.start_pos")),
+                    (selected,),
+                    step="final_source_position",
+                    iteration_domain={"rows": 1, "width": HIDDEN},
+                )
+            output = act(out0, "fp32", (rows, VOCABULARY))
+            emit(
+                f"{node_id}.project",
+                "VOCAB_PROJECT",
+                (selected, weight),
+                (output,),
+                step="vocabulary_projection",
+                iteration_domain={"rows": rows, "output_width": VOCABULARY,
+                                  "reduction_width": HIDDEN},
+            )
+            bind(out0, output)
+
+        elif source_kind == "SAMPLE":
+            logits = operands[0]
+            rows = rows_of(logits)
+            scaled = act(f"{node_id}.scaled_logits", "fp32", (rows, VOCABULARY))
+            emit(
+                f"{node_id}.temperature",
+                "SCALE",
+                (logits, ten("request.temperature_binary32")),
+                (scaled,),
+                step="temperature",
+                iteration_domain={"rows": rows, "width": VOCABULARY},
+                attributes={**attrs, "operation": "reciprocal_temperature_product"},
+            )
+            token = act(f"{node_id}.argmax", "i32", (rows,))
+            emit(
+                f"{node_id}.select",
+                "ARGMAX",
+                (scaled,),
+                (token,),
+                step="greedy_argmax",
+                iteration_domain={"rows": rows, "width": VOCABULARY},
+                attributes={**attrs, "tie_rule": "lowest_token_id"},
+            )
+            appended = act(source_outputs[0], "i32", (rows,))
+            emit(
+                f"{node_id}.append",
+                "TOKEN_APPEND",
+                (token,),
+                (appended,),
+                step="token_append",
+                iteration_domain={"rows": rows},
+                attributes={**attrs, "eos_token_id": EOS_TOKEN_ID},
+            )
+            bind(source_outputs[0], appended)
+            bind(source_outputs[1], ten("request.explicit_exponential_entropy"))
+
+        # -- speculative profile ----------------------------------------
+        elif source_kind == "TARGET_HIDDEN_CAPTURE":
+            source = operands[0]
+            rows = rows_of(source)
+            summed = act(f"{node_id}.stream_sum", "fp32", (rows, HIDDEN))
+            emit(
+                f"{node_id}.sum",
+                "PARTITION_SUM",
+                (source,),
+                (summed,),
+                step="hyper_stream_sum",
+                iteration_domain={"tokens": rows, "hyper_streams": HC_MULT,
+                                  "width": HIDDEN},
+            )
+            output = act(out0, "bf16", (rows, HIDDEN))
+            emit(
+                f"{node_id}.mean",
+                "SCALE",
+                (summed,),
+                (output,),
+                step="hyper_stream_mean",
+                iteration_domain={"tokens": rows, "width": HIDDEN},
+                attributes={**attrs, "factor": 1.0 / HC_MULT,
+                            "factor_dtype": "fp32"},
+            )
+            bind(out0, output)
+
+        elif source_kind == "DSPARK_NOISE_EMBED":
+            weight = role_weight(roles[0], scope, layer)
+            draft_ids = act(f"{node_id}.draft_token_ids", "i32", (DRAFT_BLOCK,))
+            emit(
+                f"{node_id}.compose",
+                "SCATTER",
+                (operands[0],),
+                (draft_ids,),
+                step="noise_block",
+                iteration_domain={"rows": DRAFT_BLOCK},
+                attributes={
+                    **attrs,
+                    "carried_position": 0,
+                    "fill_token_id": int(config["dspark_noise_token_id"]),
+                },
+            )
+            embedded = act(f"{node_id}.embedded", "bf16", (DRAFT_BLOCK, HIDDEN))
+            emit(
+                f"{node_id}.lookup",
+                "EMBEDDING_LOOKUP",
+                (draft_ids, weight),
+                (embedded,),
+                step="draft_embedding",
+                iteration_domain={"rows": DRAFT_BLOCK, "width": HIDDEN},
+            )
+            output = act(out0, "bf16", (DRAFT_BLOCK, HC_MULT, HIDDEN))
+            emit(
+                f"{node_id}.expand",
+                "CONCAT",
+                (embedded,) * HC_MULT,
+                (output,),
+                step="hyper_stream_expand",
+                iteration_domain={"rows": DRAFT_BLOCK, "hyper_streams": HC_MULT,
+                                  "width": HIDDEN},
+                attributes={**attrs, "axis": 1, "copies": HC_MULT},
+            )
+            bind(out0, output)
+
+        elif source_kind == "DSPARK_PREFILL_KV":
+            source = operands[0]
+            weight = role_weight(roles[0], scope, layer)
+            norm_weight = role_weight(roles[2], scope, layer)
+            rows = rows_of(source)
+            payload, scale = quantize(
+                source,
+                block=ACTIVATION_BLOCK,
+                dtype="fp8_e4m3fn",
+                width=None,
+                source_operation_id=node_id,
+                source_kind=source_kind,
+                contract=_contract(source_kind, "activation_quantize"),
+                attributes={"block_size": ACTIVATION_BLOCK,
+                            "output_dtype": "fp8_e4m3fn",
+                            "scale_format": "ue8m0",
+                            "source_operation_kind": source_kind},
+                layer=layer,
+                phases=phases,
+            )
+            projected = act(f"{node_id}.projection", "bf16", (rows, HEAD_DIM))
+            emit(
+                f"{node_id}.project",
+                "MATMUL",
+                (payload, weight),
+                (projected,),
+                step="key_value_projection",
+                iteration_domain={"rows": rows, "output_width": HEAD_DIM,
+                                  "reduction_width": HIDDEN},
+                state=False,
+            )
+            normalized = act(f"{node_id}.normalized", "bf16", (rows, HEAD_DIM))
+            emit(
+                f"{node_id}.norm",
+                "RMS_NORM",
+                (projected, norm_weight),
+                (normalized,),
+                step="key_value_norm",
+                iteration_domain={"rows": rows, "width": HEAD_DIM},
+                state=False,
+            )
+            rotated = act(f"{node_id}.rotated", "bf16", (rows, HEAD_DIM))
+            emit(
+                f"{node_id}.rope",
+                "ROPE",
+                (normalized, ten("request.start_pos")),
+                (rotated,),
+                step="key_value_rope",
+                iteration_domain={"rows": rows, "width": ROPE_DIM},
+                attributes={**attrs, **rope_attributes(0, inverse=False)},
+                state=False,
+            )
+            kv_payload, kv_scale = quantize(
+                rotated,
+                block=KV_QUANT_BLOCK,
+                dtype="fp8_e4m3fn",
+                width=NOPE_DIM,
+                source_operation_id=node_id,
+                source_kind=source_kind,
+                contract=_contract(source_kind, "quantize"),
+                attributes={"block_size": KV_QUANT_BLOCK,
+                            "output_dtype": "fp8_e4m3fn",
+                            "quantized_width": NOPE_DIM,
+                            "scale_format": "ue8m0",
+                            "source_operation_kind": source_kind},
+                layer=layer,
+                phases=phases,
+            )
+            reconstructed = act(f"{node_id}.key_value", "bf16", (rows, HEAD_DIM))
+            emit(
+                f"{node_id}.reconstruct",
+                "DEQUANTIZE",
+                (kv_payload, kv_scale, rotated),
+                (reconstructed,),
+                step="reconstruct",
+                iteration_domain={"rows": rows, "width": HEAD_DIM,
+                                  "block": KV_QUANT_BLOCK},
+                attributes={**attrs, "carried_width": ROPE_DIM,
+                            "reconstructed_width": NOPE_DIM},
+                state=False,
+            )
+            committed = view(out0, "bf16", (SLIDING_WINDOW, HEAD_DIM))
+            emit(
+                f"{node_id}.commit",
+                "KV_APPEND",
+                (reconstructed, ten("request.start_pos")),
+                (committed,),
+                step="window_commit",
+                iteration_domain={"rows": rows, "width": HEAD_DIM,
+                                  "capacity": SLIDING_WINDOW},
+            )
+            bind(out0, committed)
+
+        elif source_kind == "MARKOV_AUTOREGRESSIVE_LOOP":
+            draft_logits = operands[0]
+            embedding_weight = role_weight(roles[0], scope, layer)
+            head_weight = role_weight(roles[1], scope, layer)
+            carried = operands[1]
+            embeds: list[str] = []
+            adjusted: list[str] = []
+            for step_index in range(DRAFT_BLOCK):
+                embed = act(
+                    f"{node_id}.step{step_index}.embedding", "bf16", (1, MARKOV_RANK)
+                )
+                emit(
+                    f"{node_id}.step{step_index}.lookup",
+                    "EMBEDDING_LOOKUP",
+                    (carried, embedding_weight),
+                    (embed,),
+                    step=f"step{step_index}_lookup",
+                    iteration_domain={"rows": 1, "width": MARKOV_RANK},
+                )
+                bias = act(
+                    f"{node_id}.step{step_index}.bias", "fp32", (1, VOCABULARY)
+                )
+                emit(
+                    f"{node_id}.step{step_index}.project",
+                    "VOCAB_PROJECT",
+                    (embed, head_weight),
+                    (bias,),
+                    step=f"step{step_index}_head",
+                    iteration_domain={"rows": 1, "output_width": VOCABULARY,
+                                      "reduction_width": MARKOV_RANK},
+                )
+                row = act(
+                    f"{node_id}.step{step_index}.logits", "fp32", (1, VOCABULARY)
+                )
+                emit(
+                    f"{node_id}.step{step_index}.add",
+                    "ADD",
+                    (draft_logits, bias),
+                    (row,),
+                    step=f"step{step_index}_logit_bias",
+                    iteration_domain={"rows": 1, "width": VOCABULARY},
+                    attributes={**attrs, "left_row_index": step_index},
+                )
+                token = act(f"{node_id}.step{step_index}.token", "i32", (1,))
+                emit(
+                    f"{node_id}.step{step_index}.select",
+                    "ARGMAX",
+                    (row,),
+                    (token,),
+                    step=f"step{step_index}_argmax",
+                    iteration_domain={"rows": 1, "width": VOCABULARY},
+                    attributes={**attrs, "tie_rule": "lowest_token_id"},
+                )
+                carried_next = act(
+                    f"{node_id}.step{step_index}.carried", "i32", (1,)
+                )
+                emit(
+                    f"{node_id}.step{step_index}.append",
+                    "TOKEN_APPEND",
+                    (token,),
+                    (carried_next,),
+                    step=f"step{step_index}_append",
+                    iteration_domain={"rows": 1},
+                    attributes={**attrs, "draft_token_ring_width": DRAFT_BLOCK + 1,
+                                "draft_token_ring_position": step_index + 1},
+                )
+                carried = carried_next
+                embeds.append(embed)
+                adjusted.append(row)
+            embed_head = act(f"{node_id}.embedding_head", "bf16", (4, MARKOV_RANK))
+            emit(
+                f"{node_id}.embedding_head",
+                "CONCAT",
+                tuple(embeds[:4]),
+                (embed_head,),
+                step="embedding_concat_head",
+                iteration_domain={"rows": 4, "width": MARKOV_RANK},
+                attributes={**attrs, "axis": 0},
+            )
+            embed_all = act(
+                source_outputs[2], "bf16", (DRAFT_BLOCK, MARKOV_RANK)
+            )
+            emit(
+                f"{node_id}.embedding_all",
+                "CONCAT",
+                (embed_head, embeds[4]),
+                (embed_all,),
+                step="embedding_concat_tail",
+                iteration_domain={"rows": DRAFT_BLOCK, "width": MARKOV_RANK},
+                attributes={**attrs, "axis": 0},
+            )
+            logit_head = act(f"{node_id}.logit_head", "fp32", (4, VOCABULARY))
+            emit(
+                f"{node_id}.logit_head",
+                "CONCAT",
+                tuple(adjusted[:4]),
+                (logit_head,),
+                step="logit_concat_head",
+                iteration_domain={"rows": 4, "width": VOCABULARY},
+                attributes={**attrs, "axis": 0},
+            )
+            logit_all = act(
+                source_outputs[1], "fp32", (DRAFT_BLOCK, VOCABULARY)
+            )
+            emit(
+                f"{node_id}.logit_all",
+                "CONCAT",
+                (logit_head, adjusted[4]),
+                (logit_all,),
+                step="logit_concat_tail",
+                iteration_domain={"rows": DRAFT_BLOCK, "width": VOCABULARY},
+                attributes={**attrs, "axis": 0},
+            )
+            bind(source_outputs[0], carried)
+            bind(source_outputs[1], logit_all)
+            bind(source_outputs[2], embed_all)
+            bind(source_outputs[3], ten("request.explicit_exponential_entropy"))
+
+        elif source_kind == "CONFIDENCE_SCORE":
+            hidden_value, markov_value = operands[0], operands[1]
+            weight = role_weight(roles[0], scope, layer)
+            width = HIDDEN + MARKOV_RANK
+            joined = act(f"{node_id}.joined", "bf16", (DRAFT_BLOCK, width))
+            emit(
+                f"{node_id}.concat",
+                "CONCAT",
+                (hidden_value, markov_value),
+                (joined,),
+                step="hidden_then_markov",
+                iteration_domain={"rows": DRAFT_BLOCK, "width": width},
+                attributes={**attrs, "axis": 1,
+                            "segment_widths": [HIDDEN, MARKOV_RANK]},
+            )
+            output = act(out0, "fp32", (DRAFT_BLOCK, 1))
+            emit(
+                f"{node_id}.project",
+                "MATMUL",
+                (joined, weight),
+                (output,),
+                step="confidence_projection",
+                iteration_domain={"rows": DRAFT_BLOCK, "output_width": 1,
+                                  "reduction_width": width},
+            )
+            bind(out0, output)
+
+        else:  # pragma: no cover - the catalogue is closed and covered
+            raise DeepSeekV4KernelIRError(
+                f"source operator kind {source_kind!r} has no neutral lowering; "
+                "adding one requires a versioned change to "
+                "compiler/ir/v3/kernel_ir.py and compiler/ir/v3/lowering.py"
+            )
+
+    # ------------------------------------------------------------------
+    # Assemble
+    # ------------------------------------------------------------------
+    declared_symbols = {symbol.name for symbol in symbols}
+    for tensor in builder.tensors:
+        for extent in tensor.shape:
+            if isinstance(extent, Symbolic) and extent.symbol not in declared_symbols:
+                raise DeepSeekV4KernelIRError(
+                    f"tensor {tensor.tensor_id} uses undeclared symbol "
+                    f"{extent.symbol!r}"
+                )
+    for kernel in builder.kernels:
+        for extent in kernel.iteration_domain.values():
+            if isinstance(extent, Symbolic) and extent.symbol not in declared_symbols:
+                raise DeepSeekV4KernelIRError(
+                    f"kernel {kernel.kernel_id} uses undeclared symbol "
+                    f"{extent.symbol!r}"
+                )
+
+    missing_kinds = sorted(set(OPERATOR_CATALOG) - set(emitted_source_kinds))
+    if include_speculative and missing_kinds:
+        raise DeepSeekV4KernelIRError(
+            f"speculative export omitted source kinds {missing_kinds}"
+        )
+
+    outputs: list[str] = [
+        value_tensor["main.sample.tokens"],
+        value_tensor["main.lm_head.output"],
+    ]
+    if include_speculative:
+        outputs.extend(
+            (
+                value_tensor["dspark.markov_loop.tokens"],
+                value_tensor["dspark.markov_loop.adjusted_logits"],
+                value_tensor["dspark.confidence.output"],
+            )
+        )
+    inputs = (token_ids, position_offset, session_ids, temperature, entropy)
+    state_ids = tuple(resource.state_id for resource in builder.states)
+
+    generation_policy = {
+        "bos_token_id": BOS_TOKEN_ID,
+        "eos_token_ids": [EOS_TOKEN_ID],
+        "eos_source": "generation_config.json",
+        "include_eos_in_output": True,
+        "maximum_new_tokens": int(maximum_new_tokens),
+        "policy_id": GENERATION_POLICY_ID,
+        "selection_mode": "greedy_argmax_lowest_id",
+        "speculative_profile": bool(include_speculative),
+        "stochastic_sampling": (
+            "not_expressible_in_the_frozen_neutral_registry; the released "
+            "sample() draws Gumbel-max noise and no neutral kind produces or "
+            "consumes an entropy stream, so this export declares the greedy "
+            "boundary and carries the entropy input unchanged"
+        ),
+        "stop_condition": "first_official_eos_or_maximum_new_tokens",
+        "tie_rule": "lowest_token_id",
+        "vocabulary_size": VOCABULARY,
+    }
+
+    graph = KernelGraph(
+        model_id=MODEL_ID,
+        source={
+            "architectural_max_context": ARCHITECTURAL_MAX_CONTEXT,
+            "checkpoint_lock_id": lock["lock_id"],
+            "checkpoint_payload_bytes": PAYLOAD_BYTES,
+            "checkpoint_tensor_count": TENSOR_COUNT,
+            "deployment_context_tokens": context_tokens,
+            "graph_contract_id": contract["graph_contract_id"],
+            "inference_config_sha256": INFERENCE_CONFIG_SHA256,
+            "kernel_source_sha256": KERNEL_SOURCE_SHA256,
+            "model_source_sha256": MODEL_SOURCE_SHA256,
+            "profile": (
+                "target_and_speculative" if include_speculative else "target_only"
+            ),
+            "repository": REPOSITORY,
+            "revision": REVISION,
+            "source_node_count": len(nodes),
+            "tensor_structure_sha256": TENSOR_STRUCTURE_SHA256,
+        },
+        symbols=symbols,
+        tensors=tuple(builder.tensors),
+        states=tuple(builder.states),
+        kernels=tuple(builder.kernels),
+        entrypoints=(
+            Entrypoint(
+                phase="prefill",
+                inputs=inputs,
+                outputs=tuple(outputs),
+                states=state_ids,
+                generation_policy=GENERATION_POLICY_ID,
+            ),
+            Entrypoint(
+                phase="decode",
+                inputs=inputs,
+                outputs=tuple(outputs),
+                states=state_ids,
+                generation_policy=GENERATION_POLICY_ID,
+            ),
+        ),
+        numeric_profile=NUMERIC_PROFILE,
+        generation_policy=generation_policy,
+    )
+    errors = check_neutral(graph)
+    if errors:
+        raise DeepSeekV4KernelIRError(
+            "neutral IR rejected:\n  " + "\n  ".join(errors[:40])
+        )
+    return graph
+
+
+def graph_census(graph: KernelGraph) -> dict[str, Any]:
+    """Return the auditable census the release report quotes."""
+
+    by_kind: Counter = Counter(kernel.kind for kernel in graph.kernels)
+    by_source: Counter = Counter(
+        kernel.source_operation_id.split(".")[0] for kernel in graph.kernels
+    )
+    roles: Counter = Counter(tensor.role for tensor in graph.tensors)
+    dtypes: Counter = Counter(tensor.dtype for tensor in graph.tensors)
+    bound = [t for t in graph.tensors if t.binding is not None]
+    return {
+        "bound_weight_bytes": sum(t.binding.bytes for t in bound),  # type: ignore[union-attr]
+        "bound_weight_tensors": len(bound),
+        "entrypoints": [e.phase for e in graph.entrypoints],
+        "graph_id": graph.graph_id,
+        "kernel_count": len(graph.kernels),
+        "kernels_by_kind": dict(sorted(by_kind.items())),
+        "kernels_by_scope": dict(sorted(by_source.items())),
+        "model_id": graph.model_id,
+        "state_count": len(graph.states),
+        "states_by_class": dict(
+            sorted(Counter(s.state_class for s in graph.states).items())
+        ),
+        "symbol_count": len(graph.symbols),
+        "tensor_count": len(graph.tensors),
+        "tensors_by_dtype": dict(sorted(dtypes.items())),
+        "tensors_by_role": dict(sorted(roles.items())),
+    }
+
+
+__all__ = [
+    "ARCHITECTURAL_MAX_CONTEXT",
+    "DEFAULT_CHECKPOINT_LOCK",
+    "DEFAULT_CONTEXT_TOKENS",
+    "DEFAULT_SNAPSHOT",
+    "DeepSeekV4KernelIRError",
+    "LOWERING_PLAN",
+    "NUMERIC_PROFILE",
+    "export_deepseek_v4_kernel_graph",
+    "graph_census",
+    "read_checkpoint_bindings",
+    "verify_checkpoint_bindings",
+]

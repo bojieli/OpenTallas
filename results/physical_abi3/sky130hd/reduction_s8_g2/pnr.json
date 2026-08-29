@@ -1,6 +1,6 @@
 {
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-08-29T15:59:29.981979+00:00",
+  "completed_at": "2026-08-29T16:10:07.127535+00:00",
   "corner": {
     "liberty": [
       {
@@ -36,11 +36,144 @@
     ],
     "top": "ot_reduction_endpoint"
   },
-  "error": "FlowError: ORFS place-and-route failed with exit 2:\n30_fd_sc_hd__lpflow_isobufsrc_2 -dont_use sky130_fd_sc_hd__lpflow_isobufsrc_4 -dont_use sky130_fd_sc_hd__lpflow_isobufsrc_8 -dont_use sky130_fd_sc_hd__lpflow_isobufsrckapwr_16 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_hl_isowell_tap_1 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_hl_isowell_tap_2 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_hl_isowell_tap_4 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_isowell_4 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_isowell_tap_1 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_isowell_tap_2 -dont_use sky130_fd_sc_hd__lpflow_lsbuf_lh_isowell_tap_4 -constr /work/objects/sky130hd/opentallas_reduction_s8_g2_sky130hd/base/abc.constr -D 20\n15. Executing ABC pass (technology mapping using ABC).\n15.1. Extracting gate netlist of module `\\ot_reduction_endpoint' to `<abc-temp-dir>/input.blif'..\n15.1.1. Executed ABC.\n15.1.2. Re-integrating ABC results.\n16. Executing SPLITNETS pass (splitting up multi-bit signals).\n17. Executing OPT_CLEAN pass (remove unused cells and wires).\n18. Executing HILOMAP pass (mapping to constant drivers).\n19. Executing INSBUF pass (insert buffer cells for connected wires).\n20. Executing CHECK pass (checking for obvious problems).\n21. Printing statistics.\n22. Executing CHECK pass (checking for obvious problems).\n23. Executing Verilog backend.\n23.1. Executing BMUXMAP pass.\n23.2. Executing DEMUXMAP pass.\nWarnings: 2 unique messages, 2 total\nEnd of script. Logfile hash: 7dc1fe5421, time: 4.74s, user: 1.43s, system: 0.14s, MEM: 72.73 MB peak\nYosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)\nTime spent: 67% 1x abc (3 sec), 12% 1x extract_fa (0 sec), ...\nLog                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)\n1_2_yosys                 .v              4             74 03421e66b02dfe890d57\ncp /work/constraint.sdc /work/results/sky130hd/opentallas_reduction_s8_g2_sky130hd/base/1_2_yosys.sdc\ntouch -r /work/constraint.sdc /work/results/sky130hd/opentallas_reduction_s8_g2_sky130hd/base/1_2_yosys.sdc\nOpenROAD 26Q3-1510-g6cb3f2b704 \nFeatures included (+) or not (-): +GPU +GUI +Python\nThis program is licensed under the BSD-3 license. See the LICENSE file for details.\nComponents of this program may be licensed under more restrictive licenses which must be honored.\n[INFO ORD-0030] Using 32 thread(s).\nmkdir -p /work/objects/sky130hd/opentallas_reduction_s8_g2_sky130hd/base\n/OpenROAD-flow-scripts/flow/scripts/flow.sh 1_synth synth_odb\nRunning synth_odb.tcl, stage 1_synth\nread_liberty /OpenROAD-flow-scripts/flow/platforms/sky130hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd.tlef, created 13 layers, 25 vias\n[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/sky130hd/lef/sky130_fd_sc_hd_merged.lef, created 441 library cells\n[ERROR STA-0171] /work/results/sky130hd/opentallas_reduction_s8_g2_sky130hd/base/1_2_yosys.v line 19, syntax error\nError: synth_odb.tcl, 4 STA-0171\n\nElapsed time: 0:00.17[h:]min:sec. CPU time: user 0.15 sys 0.02 (99%). Peak memory: 59136KB.\nElapsed time: 0:04.75[h:]min:sec. CPU time: user 4.64 sys 0.17 (101%). Peak memory: 76012KB.\nElapsed time: 0:00.27[h:]min:sec. CPU time: user 0.25 sys 0.02 (98%). Peak memory: 120944KB.\nmake[1]: *** [Makefile:445: do-1_synth] Error 1\nmake: *** [Makefile:445: /work/results/sky130hd/opentallas_reduction_s8_g2_sky130hd/base/1_synth.odb] Error 2\n",
-  "generated_at": "2026-08-29T15:59:23.428943+00:00",
+  "elapsed_seconds": 553.923,
+  "generated_at": "2026-08-29T16:00:53.204072+00:00",
   "git": {
-    "commit": "9e5969d5de4e212bd46aac0997870d495634d870",
+    "commit": "df0e3beec2cdd551c143170f46632a61d89eda93",
     "worktree_dirty": true
+  },
+  "place_and_route": {
+    "artifact_dir": "/tmp/abi3-physical-qlie73b5/pnr_artifacts",
+    "artifacts": {
+      "1_2_yosys.v": {
+        "retained": true,
+        "sha256": "fef77dac078628e21f5630bafe38dde4629cd4c54e31a5c160f04a6b17f3adf4",
+        "size_bytes": 824146
+      },
+      "5_route_drc.rpt": {
+        "retained": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0
+      },
+      "6_final.def": {
+        "retained": false,
+        "sha256": "fe9b753d64055c44609145f22b4e619f5df4d3e2df6e4090bf6f029487801658",
+        "size_bytes": 6479202
+      },
+      "6_final.gds": {
+        "retained": false,
+        "sha256": "de2c2e5c41f18f16a18b4302f90db99ed0967abb5a4f3ce2cb057922ec8c539e",
+        "size_bytes": 7156826
+      },
+      "6_final.odb": {
+        "retained": false,
+        "sha256": "f2d4b6844edf06fa6f4c669a4083a765e576759b6db6051fd024415bcf85932a",
+        "size_bytes": 14698151
+      },
+      "6_final.spef": {
+        "retained": false,
+        "sha256": "2911573e9e581da82701a77dd68620fc1f435a967d763398265ae46da073f8a8",
+        "size_bytes": 5686287
+      },
+      "6_final.v": {
+        "retained": true,
+        "sha256": "19c694ba1afd1bbf7e0072ac17c74981aec96869cb6e823cbbc9b90c8ecd413a",
+        "size_bytes": 602737
+      },
+      "6_finish.rpt": {
+        "retained": true,
+        "sha256": "2fb479656209c8e01077e35d159f7deb79ba39fd60dd1f25f34965a74d0814df",
+        "size_bytes": 50683
+      },
+      "config.mk": {
+        "retained": true,
+        "sha256": "fd60510d713c85d46f38ff12d3cdfe92b66e9111371fcdd572a24ac3d7cefc8b",
+        "size_bytes": 704
+      },
+      "constraint.sdc": {
+        "retained": true,
+        "sha256": "f8e52108303aa7e7d1d1eef96936f89f90ab296dcd7bcef57318a9e95110b1c4",
+        "size_bytes": 377
+      },
+      "metadata.json": {
+        "retained": true,
+        "sha256": "9b6e28efd89ac059cd5a340d72bd8cdfa7f78b9b9fec6504a12e17a8b24f0f28",
+        "size_bytes": 24368
+      }
+    },
+    "clock_period_ns": 20.0,
+    "core_utilization_percent": 35,
+    "design_nickname": "opentallas_reduction_s8_g2_sky130hd",
+    "metrics": {
+      "antenna_violating_nets": 0,
+      "antenna_violating_pins": 0,
+      "clock_count": 1,
+      "core_area_um2": 137152,
+      "die_area_um2": 140993,
+      "drc_errors": 0,
+      "flow_error_counts": {
+        "cts__flow__errors__count": 0,
+        "detailedplace__flow__errors__count": 0,
+        "detailedroute__flow__errors__count": 0,
+        "finish__flow__errors__count": 0,
+        "floorplan__flow__errors__count": 0,
+        "globalplace__flow__errors__count": 0,
+        "globalroute__flow__errors__count": 0,
+        "placeopt__flow__errors__count": 0,
+        "synth__flow__errors__count": 0
+      },
+      "fmax_hz": 67040300.0,
+      "hold_tns_ns": 0,
+      "hold_violations": 0,
+      "hold_wns_ns": 0.459484,
+      "instance_count": 20716,
+      "macro_area_um2": 0,
+      "macro_count": 0,
+      "missing_metadata_keys": [],
+      "power_total_w": 0.0228968,
+      "routed_nets": 5678,
+      "routed_wirelength_um": 174411,
+      "sequential_area_um2": 18077.3,
+      "sequential_cell_count": 620,
+      "setup_tns_ns": 0,
+      "setup_violations": 0,
+      "setup_wns_ns": 5.08361,
+      "standard_cell_area_um2": 54459.7,
+      "standard_cell_count": 7035,
+      "utilization_fraction": 0.397077,
+      "vias": 39744
+    },
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "fef77dac078628e21f5630bafe38dde4629cd4c54e31a5c160f04a6b17f3adf4",
+      "note": "declaration-attribute-only edit on the ORFS-synthesised gate netlist; no cell, net, port or connectivity change",
+      "raw_netlist_sha256": "248c7a5cc9d03dc55878f97e01dc0015c4025cac9039e725dc509fc111cd2259",
+      "signed_declarations_stripped": 4
+    },
+    "place_density": 0.6,
+    "platform": "sky130hd",
+    "platform_file_sha256": {
+      "config.mk": "1a36b8fbd58ee4b6b961bc14f3ca44e7b44a4ea47faf6f116f827eb5177509d5",
+      "lef/sky130_fd_sc_hd.tlef": "8e99b4e8b016db0713029ebcae6b2cc2aedd9c2c49682e2f23521dd0b1a2085e",
+      "lef/sky130_fd_sc_hd_merged.lef": "44180aaa0068b1fcb0789f128b090304c01ad48f511d3f7afa66c90b3e176ec5",
+      "lef/sky130io_fill.lef": "8c398d048875934de75cd3c0054b8049390c4d33afee84b9ca72b4acac58df83",
+      "lib/sky130_dummy_io.lib": "6b7589ec90fb90deffe4a79eb24e1f9bf127cf2238887101ee15e3dda25c6be2",
+      "lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+    },
+    "sdc_clock_period_library_units": 20.0,
+    "toolchain": {
+      "binary_sha256": {
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+        "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92"
+      },
+      "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+      "image_id_matches_archived_asap7_lock": true,
+      "image_reference": "openroad/orfs:latest",
+      "openroad_version": "26Q3-1510-g6cb3f2b704",
+      "repo_digests": [
+        "openroad/orfs@sha256:d995618be9f2bcdfa5538b885123463070dfbf178bea1818716d4652fe0fa380"
+      ],
+      "yosys_version": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)"
+    }
   },
   "runner": {
     "argv": [
@@ -54,10 +187,6 @@
       "--stages",
       "pnr",
       "--force",
-      "--core-utilization",
-      "35",
-      "--place-density",
-      "0.6",
       "--output",
       "results/physical_abi3/sky130hd/reduction_s8_g2/pnr.json"
     ],
@@ -65,11 +194,13 @@
     "python": "3.10.12"
   },
   "schema_version": 1,
-  "stages_completed": [],
+  "stages_completed": [
+    "pnr"
+  ],
   "stages_requested": [
     "pnr"
   ],
-  "status": "fail",
+  "status": "pass",
   "target_clock_period_ns": 20.0,
   "tools": {},
   "view": {
