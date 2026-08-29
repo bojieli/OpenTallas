@@ -7,6 +7,8 @@
 **Model:** Qwen/Qwen3-8B at b968826d9c46dd6066d109eabc6255188de91218
 
 **Mandatory context:** exactly 8,000 natural prompt tokens
+
+**Physical topology:** one conventional reticle-bounded ROM accelerator chip
 **Issue date:** 2026-08-29
 
 ## 1. Mission
@@ -17,9 +19,18 @@ Qwen-specialized datapath, physical partition, netlist, and mask set. It does
 not need to run DeepSeek and must not be reported as the shared programmable
 HBM/SRAM tensor accelerator.
 
+The first release is exactly one conventional reticle-bounded ROM accelerator
+chip/package with external HBM for mutable state. It is the chip-versus-chip
+peer of one conventional Qwen HBM/SRAM accelerator node. Wafer-scale or
+multi-accelerator execution may not be credited to the Qwen comparison. If the
+complete immutable payload cannot close the one-chip capacity, repair, power,
+yield, or timing gates, the release fails and returns to architecture review
+rather than silently becoming a wafer or cluster.
+
 The Qwen ROM design must nevertheless preserve the common model semantics,
 numeric contracts, session/state behavior, workload, EOS rules, evidence
-schemas, and same-process comparison boundary used by the Qwen HBM deployment.
+schemas, and same-technology-view comparison boundary used by the Qwen HBM
+deployment.
 
 Completion means:
 
@@ -33,7 +44,8 @@ Completion means:
 - complete natural and agentic decoding produces legitimate output;
 - representative complete programs execute through ROM RTL/co-simulation;
 - the exact 8,000-token natural and separate stress workloads pass; and
-- a same-node physical report can be compared with Qwen HBM/SRAM.
+- separate SKY130 and ASAP7 physical reports can be compared with the one-node
+  Qwen HBM/SRAM reports in the matching technology view.
 
 ## 2. Retained baseline and exact limitations
 
@@ -71,9 +83,10 @@ The existing qwen3-stage-00 through qwen3-stage-35 image names mean one image pe
 model layer in that deployment compiler. They do not establish 36 physical
 chips or stages. The older architecture document separately says Qwen payload
 capacity fits one public-reference stage. This lane must resolve the terminology
-and physical partition from capacity, bandwidth, timing, power, and yield
-evidence. New artifacts will distinguish logical layer image, ROM region,
-physical stage, and package device.
+and physical partition inside one conventional chip from capacity, bandwidth,
+timing, power, and yield evidence. New artifacts will distinguish logical layer
+image, ROM region, on-chip partition, and package device. A logical image file
+or internal pipeline region is not a separate chip or cluster node.
 
 ## 3. Product boundary
 
@@ -91,7 +104,7 @@ physical stage, and package device.
 - on-device deterministic argmax, token append, and EOS;
 - pinned chat and simple tool-use templates;
 - checkpoint/restart, abort, reset, counters, and trace; and
-- public 130-nm implementation methodology.
+- separate SKY130 implementation and ASAP7 predictive methodologies.
 
 ### 3.2 Separate extensions
 
@@ -114,7 +127,7 @@ host and shared management/session boundary
                     |
 Qwen ROM microprogram controller and generation loop
                     |
-physical Qwen stage pipeline chosen by the compiler
+one conventional reticle-bounded Qwen ROM chip
                     |
 +-------------------+---------------------+
 | immutable BF16 ROM tensor regions       |
@@ -125,7 +138,7 @@ physical Qwen stage pipeline chosen by the compiler
 | vocabulary reduction, argmax, and EOS   |
 +-------------------+---------------------+
                     |
-stage link if the physical plan has multiple stages
+external HBM controller/PHY boundary for mutable state
 ~~~
 
 ### 4.1 Control reuse
@@ -146,7 +159,7 @@ controller.
 
 Every weight tensor is compiled into:
 
-- physical stage and ROM-region ownership;
+- one-chip physical partition and ROM-region ownership;
 - macro, bank, wordline, bit/nibble, and scale location as applicable;
 - alignment, padding, integrity, spare, and repair allocation;
 - logical row/tile mapping;
@@ -210,25 +223,24 @@ graph/kernel.
 
 The plan records:
 
-- physical stage count and layer interval per stage;
+- the mandatory one-chip topology and on-chip layer/region partition;
 - ROM macro/region geometry and tensor placement;
 - scale, padding, integrity, repair, and test regions;
 - tensor-lane and reduction topology;
 - activation/SRAM allocation and lifetime;
 - HBM KV layout and state transactions;
-- stage-link and local schedule;
+- on-chip NoC and local schedule;
 - program/event/queue mapping;
 - vocabulary partition and argmax reduction;
 - capacity, timing, power, repair, and yield assumptions; and
 - exact expected operation, ROM, HBM, SRAM, link, and state counters.
 
-Stage count is a compiler/physical result. The plan must compare at least:
-
-- one physical stage if capacity, wiring, power, and yield are legal;
-- a layer-pipelined multi-stage option; and
-- the minimum feasible stage count after repair and reserve.
-
-The selected topology is versioned and does not inherit the old image-file count.
+Physical chip count is frozen at one. The compiler must prove that all payload,
+padding, integrity, repair reserve, datapath, SRAM, control, HBM interface, power,
+clock, and route requirements fit that conventional boundary. It may explore
+internal pipeline and floorplan partitions, but it may not emit a second chip,
+wafer fabric, or cluster schedule. The selected on-chip topology is versioned
+and does not inherit the old image-file count.
 
 ### 5.3 Independent checks
 
@@ -268,7 +280,7 @@ The cycle model adds:
 - tensor/vector pipeline issue and stalls;
 - SRAM ports, banking, arbitration, ECC, and occupancy;
 - actual GQA KV HBM traffic and response timing;
-- stage/link transfers and credits;
+- on-chip NoC transfers, credits, and HBM-interface traffic;
 - microprogram/events/state retirement;
 - selection/EOS latency; and
 - activity-derived counters for physical feedback.
@@ -289,8 +301,8 @@ The sequence is:
 6. residual, SiLU-gate, and final RMSNorm;
 7. vocabulary partition/reduction, argmax, token append, and EOS;
 8. one connected real checkpoint layer;
-9. one complete reduced-stage program;
-10. selected production-parameter stage/pipeline correlation; and
+9. one complete chip program;
+10. selected production-parameter on-chip pipeline correlation; and
 11. reset, repair, fault, power, CDC/RDC, formal, and coverage closure.
 
 Existing general ROM shell blocks may be reused only when their command,
@@ -343,20 +355,23 @@ bash command schema. The action runs in the frozen isolated environment, its
 actual result becomes the next prompt, and withheld tests run only after model
 termination. No action or token is preselected by the test harness.
 
-## 9. 130-nm physical plan
+## 9. SKY130 and ASAP7 physical plan
 
-The Qwen ROM design uses the same selected public 130-nm process, PVT policy,
-clock-view policy, SRAM methodology, and external HBM assumptions as the Qwen
-HBM design.
+The Qwen ROM design is evaluated twice. SKY130 is the mature open 130-nm
+implementation/verification baseline. ASAP7 is a separate academic predictive
+7-nm projection, not production foundry signoff. Within each view, the Qwen ROM
+chip uses the same PVT, clock-view, SRAM methodology, external HBM/link boundary,
+workload, and evidence class as the one-node Qwen HBM design. Values are never
+mixed across views.
 
 Physical work proceeds through:
 
 1. ROM bitcell/macro methodology and extracted slice;
 2. representative tensor/vector/ROM tile;
 3. SRAM/ROM/control integration;
-4. stage floorplan, clock, route, congestion, IR/power, and thermal proxy;
+4. one-chip floorplan, clock, route, congestion, IR/power, and thermal proxy;
 5. repair, spare, BIST, DFT, and yield model;
-6. stage-link/package boundary if multi-stage;
+6. conventional package and external-HBM boundary;
 7. executed-activity power analysis; and
 8. compiler/capability feedback and recompilation.
 
@@ -369,13 +384,14 @@ yield, HBM package closure, or commercial signoff. Those gaps remain explicit.
 |---|---|---|
 | QROM-A0 | architecture/control reuse accepted | TA-A3-ARCH-0 plus Qwen lane review |
 | QROM-C1 | common-IR migration | exact coverage and retained-boundary equivalence |
-| QROM-P2 | physical plan and images | all 399 tensors inverse-reconstruct; stage/capacity/repair legal |
+| QROM-P2 | physical plan and images | all 399 tensors inverse-reconstruct; one-chip capacity/repair legal |
 | QROM-F3 | artifact-only full short model | no framework fallback; exact logits/state/tokens/EOS |
 | QROM-S4 | data-bearing cycle model | causal ROM/HBM/SRAM/link timing and counters |
 | QROM-R5 | representative ROM RTL | generated program, connected layer, state and selection correlation |
 | QROM-N6 | natural and agent campaign | six prompts and two agent tasks reproduce accepted goldens |
 | QROM-8K7 | exact mandatory context | natural 8K plus separate stress, legitimate text and EOS |
-| QROM-PHY8 | same-node physical convergence | characterized capability, recompile, rerun |
+| QROM-PHY8-SKY | SKY130 physical convergence | one-chip characterized capability, recompile, rerun |
+| QROM-PHY8-A7 | ASAP7 predictive convergence | separate academic one-chip projection, recompile, rerun, limitations |
 | QROM-REL9 | Qwen ROM release | reproducible artifacts/evidence and governed Qwen ROM-versus-HBM report |
 
 ## 11. Agent ownership and handoff
@@ -389,7 +405,7 @@ Every handoff records:
 
 - main baseline and delivered commit;
 - common schema and Qwen source/checkpoint/workload identities;
-- stage/topology decision and physical-plan identity;
+- one-chip topology decision and physical-plan identity;
 - ROM image, inverse report, program, and schedule identities;
 - functional/cycle/RTL report identities;
 - exact test and campaign scope;
@@ -403,7 +419,7 @@ The first Qwen ROM task is a migration audit, not a new full campaign:
 
 1. classify each current Qwen graph, microcode, image, schedule, service, and
    report field against the common IR and ABI 3.0 architecture;
-2. resolve the logical-layer-image versus physical-stage terminology;
+2. resolve logical-layer-image versus one-chip physical-partition terminology;
 3. define the Qwen ROM Physical Plan IR and independent inverse obligations;
 4. lower one embedding-through-first-RMSNorm slice without PyTorch execution;
 5. compare exact retained values and counters; and

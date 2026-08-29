@@ -4,7 +4,7 @@
 
 **Status:** active planning baseline; implementation paused at TA-A3-ARCH-0
 
-**Baseline:** main at 39a607ee0c05313c8040df79971463c78b7e70f3
+**Planning baseline:** main at b6c38ee74b695145898c54c65a2a0f9eec3c281c
 
 **Issue date:** 2026-08-29
 **Program owner:** integration and evidence owner
@@ -15,7 +15,8 @@ This document converts the unified repository into separable work packages for
 four executable model/backend targets:
 
 1. Qwen3-8B on the shared HBM/SRAM tensor accelerator;
-2. DeepSeek-V4 Flash on the same shared HBM/SRAM tensor accelerator;
+2. DeepSeek-V4 Flash on a 32-node cluster of the same HBM/SRAM accelerator chip
+   used by Qwen;
 3. Qwen3-8B on a Qwen-specific immutable-ROM design; and
 4. DeepSeek-V4 Flash on a DeepSeek-specific immutable-ROM design.
 
@@ -43,9 +44,10 @@ TA-ADR-003 control new work.
 ## 2. Current unified baseline
 
 The authoritative checkout was fast-forward checked against origin/main on
-2026-08-29. It was already current and clean at 39a607e. The unified baseline
-contains all stopped colleague handoffs, including the preserved DeepSeek
-attention-preparation work at 16fe72d.
+2026-08-29. The stopped colleague handoffs were unified at 39a607e, including
+the preserved DeepSeek attention-preparation work at 16fe72d. The first ABI 3.0
+four-lane planning bundle was then committed at b6c38ee; this topology refresh
+uses that clean main commit as its planning baseline.
 
 No regression suite was run during this reconciliation. Earlier focused suites
 and targeted numeric/accelerator suites have retained passing evidence. A broad
@@ -93,27 +95,37 @@ bounded Qwen operations, not a complete controller.
 
 | Lane | Retained evidence | Open boundary |
 |---|---|---|
-| Qwen ROM | complete checkpoint images, graph, 617-record semantic microprogram, artifact-driven PyTorch service execution, exact differential, EOS campaign, and two agent tasks | service arithmetic is framework-backed; the 36 image files are layer images rather than a qualified physical 36-chip topology; operator-complete RTL and same-node physical closure are open |
+| Qwen ROM | complete checkpoint images, graph, 617-record semantic microprogram, artifact-driven PyTorch service execution, exact differential, EOS campaign, and two agent tasks | service arithmetic is framework-backed; the 36 image files are layer images rather than a qualified one-chip topology; operator-complete RTL and matching SKY130/ASAP7 physical closure are open |
 | Qwen HBM | complete graph/kernel/physical artifacts, 924,386 ABI 2.5 commands, full-model functional execution, short exact generation, restart, and bounded RTL slices | ABI 3.0, production controller/cycle model, exact 8,000 natural and stress runs, full natural/agent campaign, complete RTL, and physical closure are open; science remains an exact failure |
 | DeepSeek ROM | complete source/checkpoint lock, 2,136-node/46-kind graph, qualified operator references, canonical checkpoint assignment, and several executable vertical slices | complete graph-to-microcode, service engine, physical placement/schedule, transformer block, full model, RTL, and 200,000-token execution are open |
 | DeepSeek HBM | the DeepSeek semantic/reference work can seed the common backend | no common-IR export, HBM physical plan, ABI 3.0 program, full functional simulator execution, RTL execution, or 200,000-token run exists |
 
 ## 3. Product target matrix
 
-| Target ID | Model | Weight tier | Mutable state | Hardware identity | Mandatory context |
+| Target ID | Model | Weight tier | Physical topology | Hardware identity | Mandatory context |
 |---|---|---|---|---|---:|
-| TA-QW-HBM | Qwen3-8B | external HBM with SRAM tiling | HBM/SRAM KV | shared RTL 3.0 | exactly 8,000 natural prompt tokens; separate repeated-special stress |
-| TA-DS-HBM | DeepSeek-V4 Flash | external HBM with SRAM tiling | HBM/SRAM KV/compressor state | the same shared RTL 3.0 | exactly 200,000 natural prompt tokens |
-| TA-QW-ROM | Qwen3-8B | mask ROM | HBM/SRAM KV | Qwen-specific netlist and masks | the same Qwen workload contract |
-| TA-DS-ROM | DeepSeek-V4 Flash | mask ROM | HBM/SRAM KV/compressor state | DeepSeek-specific netlist and masks | the same DeepSeek workload contract |
+| TA-QW-HBM | Qwen3-8B | external HBM with SRAM tiling | one conventional chip/package | shared HBM/SRAM chip RTL 3.0 and netlist | exactly 8,000 natural prompt tokens; separate repeated-special stress |
+| TA-DS-HBM | DeepSeek-V4 Flash | node-local external HBM with SRAM tiling | exactly 32 accelerator nodes over an NVLink-class fabric | 32 copies of the identical TA-QW-HBM chip/netlist | exactly 200,000 natural prompt tokens |
+| TA-QW-ROM | Qwen3-8B | mask ROM plus HBM/SRAM KV | one conventional chip/package | Qwen-specific conventional netlist and masks | the same Qwen workload contract |
+| TA-DS-ROM | DeepSeek-V4 Flash | distributed mask ROM plus HBM/SRAM mutable state | one wafer-scale logical accelerator | DeepSeek-specific wafer-scale netlist, stitching, and masks | the same DeepSeek workload contract |
 
-The two HBM rows are two deployments and verification targets, not two hardware
-designs. A model change may select programs, descriptors, numeric profiles, and
-memory images. It may not require resynthesis.
+The two HBM rows use one conventional accelerator-chip design. Qwen uses one
+node; DeepSeek uses exactly 32 identical nodes. The chip therefore contains the
+DeepSeek-capable tensor/vector/route/state modes and a production inter-chip
+fabric endpoint even when a Qwen deployment does not exercise them. A model may
+select programs, descriptors, numeric profiles, memory images, and a one-node or
+32-node topology. It may not select a different chip elaboration or netlist.
 
-The two ROM rows are separate physical products. They may share source-level
-blocks, but no plan may report one ROM netlist as dynamically supporting both
-models unless a later architecture decision explicitly proves it.
+The two ROM rows are separate physical products and scale classes. Qwen-ROM is
+the conventional chip-versus-chip comparison. DeepSeek-ROM is mandatory
+wafer-scale and is compared with the 32-node HBM cluster. It is not legal to
+replace the DeepSeek ROM wafer with a conventional multi-chip stage pipeline or
+to describe the HBM cluster as one oversized chip.
+
+Every row has two separately reported physical verification views: SKY130 is
+the mature open 130-nm baseline, and ASAP7 is an academic predictive 7-nm
+projection. Same-model ROM/HBM comparisons are performed independently inside
+each view; numbers from the two technology views are never mixed.
 
 ## 4. Shared evidence stack
 
@@ -130,15 +142,15 @@ source + checkpoint + tokenizer + generation policy
                     |
      +--------------+----------------+
      |                               |
-HBM/SRAM Physical Plan IR       ROM Physical Plan IR
+HBM/SRAM chip/cluster Plan IR   ROM chip/wafer Plan IR
      |                               |
 ABI 3.0 deployment/program       ROM image/program/schedule
      |                               |
 functional + cycle simulator     functional + cycle simulator
      |                               |
-shared RTL 3.0                   model-specific ROM RTL
+shared chip RTL 3.0              model-specific ROM RTL
      |                               |
-130-nm characterized result and same-workload comparison
+SKY130 implementation view + ASAP7 projection and same-workload comparison
 ~~~
 
 Shared source artifacts are immutable inputs to each backend build. Backend
@@ -151,8 +163,13 @@ Every agent and lane must preserve these invariants:
 
 - “tensor accelerator” is the programmable HBM/SRAM product name;
 - “RTL 3.0” is the implementation of ABI 3.0, not a model or separate ISA;
-- HBM Qwen and HBM DeepSeek run on one hardware capability without resynthesis;
-- ROM Qwen and ROM DeepSeek are allowed separate hardware;
+- HBM Qwen uses one node and HBM DeepSeek uses exactly 32 nodes of one identical
+  conventional chip capability/netlist without resynthesis;
+- every HBM/SRAM chip includes the digital inter-chip endpoint, remote DMA,
+  packet queues/credits, collectives, integrity/retry, faults, and counters
+  required for causal 32-node execution;
+- Qwen ROM is conventional single-chip and DeepSeek ROM is mandatory
+  wafer-scale hardware;
 - Qwen acceptance uses exactly 8,000 natural prompt tokens, plus a separate
   repeated-special-token stress workload;
 - DeepSeek acceptance uses exactly 200,000 natural prompt tokens;
@@ -167,8 +184,10 @@ Every agent and lane must preserve these invariants:
 - no framework fallback, injected activation, precomputed route/logit, host
   argmax, or Python per-command sequencing closes production execution;
 - HBM and ROM comparisons use the same model, prompt IDs, numerics, state,
-  generation policy, process, PVT scope, external-memory assumptions, and
-  measurement boundary; and
+  generation policy, technology view, PVT scope, external-memory assumptions,
+  and measurement boundary; topology cost remains explicit rather than forced
+  equal; and
+- SKY130 implementation evidence and ASAP7 predictive evidence remain separate;
 - no performance claim precedes correct end-to-end execution.
 
 ## 6. Dependency and parallelism policy
@@ -180,6 +199,8 @@ TA-A3-ARCH-0 is a serial barrier. Before it closes, agents may:
 - audit and annotate existing artifacts;
 - review the proposed ABI decision;
 - enumerate model operator/capability requirements;
+- source-lock the public NVLink/NVL72-class and Cerebras-class reference
+  envelopes and derive, but do not yet implement, trace-based fabric targets;
 - prepare independent known-answer and workload definitions; and
 - refine lane plans without changing implementation contracts.
 
@@ -246,8 +267,9 @@ record.
 
 ### 7.2 Shared HBM/SRAM agent
 
-**Objective:** implement one common backend, simulator, and RTL 3.0 hierarchy
-that runs both models without resynthesis.
+**Objective:** implement one conventional HBM/SRAM accelerator chip, backend,
+simulator, and RTL 3.0 hierarchy; run Qwen on one node and DeepSeek on exactly 32
+identical nodes without chip resynthesis.
 
 **Owns after the common schema release:**
 
@@ -255,8 +277,13 @@ that runs both models without resynthesis.
 - weight/state allocation, tiling, DMA, schedule, and descriptor lowering;
 - common functional and cycle simulator;
 - management/microsequencer and HBM/SRAM engine RTL;
+- synthesizable inter-chip endpoint, remote DMA, packet/collective engines,
+  credits, integrity/retry, RAS, counters, and cluster control contracts;
+- 32-node functional and data-bearing cycle simulation with real routing,
+  contention, collectives, HBM locality, and failures;
 - Qwen and DeepSeek HBM deployment profiles; and
-- shared 130-nm digital characterization.
+- separate SKY130 and ASAP7 chip characterization plus externally classified
+  cluster-fabric/PHY assumptions.
 
 **Must not own:** model graph semantics, tokenizer goldens, ROM placement, or
 common-schema versioning.
@@ -268,7 +295,7 @@ model.
 ### 7.3 Qwen ROM agent
 
 **Objective:** transform the retained complete Qwen functional ROM path into a
-causal model-specific ROM hardware and simulator path.
+causal model-specific conventional single-chip ROM hardware and simulator path.
 
 **Owns:** Qwen ROM physical partition, images, repair map, Qwen ROM schedules,
 ROM tensor/vector/attention integration, Qwen ROM simulator, Qwen ROM RTL and
@@ -277,26 +304,27 @@ physical reports, and Qwen ROM workload results.
 **Must not own:** DeepSeek paths, shared ABI/IR schemas, HBM backend algorithms,
 or common Qwen semantic goldens.
 
-**Handoff:** full Qwen ROM deployment, inverse proof, schedule certificate,
-artifact-only and cycle execution, RTL correlation, exact 8K/chat/agent evidence,
-and same-node physical result.
+**Handoff:** full one-chip Qwen ROM deployment, inverse proof, schedule
+certificate, artifact-only and cycle execution, RTL correlation, exact
+8K/chat/agent evidence, and separate SKY130/ASAP7 physical results.
 
 ### 7.4 DeepSeek ROM agent
 
 **Objective:** close the recovery-plan gaps from the complete semantic/reference
-ledger through a causal DeepSeek-specific ROM hardware path.
+ledger through a causal DeepSeek-specific wafer-scale ROM hardware path.
 
-**Owns:** DeepSeek target-only graph export, ROM placement/images/repair,
-DeepSeek schedules and service lowering, mixed-format/MoE/sparse/compressor/mHC
-ROM integration, DeepSeek ROM simulator and RTL, and DeepSeek ROM workload
-results.
+**Owns:** DeepSeek target-only graph export, wafer reticle/tile ROM
+placement/images/repair, on-wafer schedules and service lowering,
+mixed-format/MoE/sparse/compressor/mHC ROM integration, distributed-HBM state,
+wafer-fabric simulation and RTL, and DeepSeek ROM workload results.
 
 **Must not own:** shared schemas, Qwen semantics, HBM backend lowering, or
 speculative DSpark acceptance in the first ordinary-target release.
 
-**Handoff:** complete target-only deployment, inverse and schedule proofs,
-end-to-end functional and cycle execution, representative RTL, exact 200K
-ordinary generation, and same-node physical result.
+**Handoff:** complete target-only wafer deployment, inverse and schedule proofs,
+end-to-end functional and on-wafer cycle execution, representative RTL and
+reticle closure, exact 200K ordinary generation, and SKY130/ASAP7 physical
+views.
 
 ### 7.5 Independent verification agent
 
@@ -373,7 +401,8 @@ Every handoff names:
 
 **Work:** review TA-ADR-003, freeze ordinary-path model profiles, exact workload
 boundaries, ABI layering, control responsibilities, state, EOS, traps, counters,
-and minimum capability union.
+minimum capability union, one-node/32-node HBM topology, inter-chip endpoint,
+DeepSeek ROM wafer boundary, and dual technology-view policy.
 
 **Exit:** TA-A3-ARCH-0.
 
@@ -391,8 +420,8 @@ passes, state rollback is exact, and no backend field appears in neutral IR.
 
 **Work:** establish Qwen ABI 2.5-to-3.0 semantic/state equivalence; lower one
 connected Qwen layer and representative DeepSeek dense, route, sparse-attention,
-and state slices. In parallel, ROM lanes map the same source/kernel boundaries
-to their physical plans.
+state, remote-DMA, and collective slices. In parallel, ROM lanes map the same
+source/kernel boundaries to conventional Qwen and wafer-scale DeepSeek plans.
 
 **Exit:** TA-A3-SLICE-2. Independent references, artifact-only execution,
 counters, and failure semantics match for every declared slice.
@@ -409,10 +438,11 @@ not close long context, timing, or RTL.
 
 ### Phase E — RTL 3.0 and ROM RTL correlation
 
-**Work:** implement the microsequencer, queues/events/traps/state controller, and
-representative engines. Drive generated programs through RTL/co-simulation with
-stalls, faults, resets, and backpressure. ROM lanes integrate their
-model-specific weight service and schedules.
+**Work:** implement the microsequencer, queues/events/traps/state controller,
+inter-chip endpoint, wafer endpoint, and representative engines. Drive generated
+programs through RTL/co-simulation with stalls, faults, resets, link retries,
+and backpressure. ROM lanes integrate their model-specific weight service and
+physical schedules.
 
 **Exit:** TA-RTL-4 for each hardware family. Simulator and RTL agree on results,
 architectural state, faults, and counters for representative complete programs.
@@ -432,15 +462,18 @@ diagnostics.
 **Exit:** TA-QW-8K-5 and TA-DS-200K-5 for both backends. Same-model ROM and HBM
 outputs meet the frozen numerical/token policy.
 
-### Phase G — 130-nm convergence
+### Phase G — SKY130 and ASAP7 convergence
 
-**Work:** select one primary public 130-nm flow, characterize exact RTL blocks,
-SRAM views, interconnect, and control, feed capability/cost tables back into the
-compiler, recompile, and rerun both models. HBM dies/PHY/package remain separate
-external components with common sourced assumptions.
+**Work:** characterize exact RTL blocks, SRAM/ROM views, interconnect, and
+control first in the mature SKY130 130-nm flow and separately in the academic
+ASAP7 7-nm flow. Feed separately versioned capability/cost tables back into the
+compiler, recompile, and rerun both models in each view. HBM dies, high-speed
+PHYs, cluster switches, packages, and wafer-specific non-digital components
+remain separately sourced boundary assumptions.
 
-**Exit:** TA-PHY-6. All four target reports use one process/flow/corner policy.
-SKY130A and IHP SG13G2 evidence are never mixed into one result.
+**Exit:** TA-PHY-6-SKY130 and TA-PHY-6-ASAP7. Every comparison report names one
+technology/flow/corner policy; no area, frequency, energy, density, link, or
+thermal value is borrowed across views. ASAP7 remains predictive evidence.
 
 ### Phase H — governed comparison
 
@@ -448,8 +481,9 @@ SKY130A and IHP SG13G2 evidence are never mixed into one result.
 identical workload and evidence boundaries. Report latency, throughput, energy,
 area, memory, utilization, stalls, capacity, uncertainty, and correctness.
 
-**Exit:** TA-CMP-7. Every number traces to executed counters and characterized
-implementation or is visibly labeled external/assumed.
+**Exit:** TA-CMP-7-SKY130 and TA-CMP-7-ASAP7. Every number traces to executed
+counters and characterized implementation in the same view or is visibly
+labeled external/assumed; no cross-view composite is admitted.
 
 ## 11. End-to-end acceptance contract
 
@@ -487,13 +521,17 @@ Each pair freezes:
 - graph and numerical profiles;
 - context, batch, concurrency, EOS and generation limits;
 - output and latency boundaries;
-- process, voltage, temperature, clock-view policy, SRAM methodology, and
-  external HBM source;
+- technology view, voltage, temperature, clock-view policy, SRAM/ROM
+  methodology, and external HBM/fabric source;
 - correctness and evidence class; and
 - reporting definitions.
 
-The HBM design is the standard programmable tensor-accelerator comparison, not
-a claimed reproduction of a commercial GPU. Measured NVIDIA hardware remains a
+For Qwen, the comparison boundary is one HBM/SRAM chip versus one Qwen ROM chip.
+For DeepSeek, it is the complete 32-node HBM/SRAM cluster versus one DeepSeek
+ROM wafer-scale accelerator, including all fabric endpoints, links, switches,
+distributed HBM, wafer fabric, and system power. The HBM design is not a claimed
+reproduction of a commercial GPU. Public NVIDIA NVLink/NVL72-class data must be
+a source-locked link-envelope reference, and measured NVIDIA hardware remains a
 separate external comparator.
 
 ## 13. Current schedule
@@ -509,7 +547,7 @@ separate external comparator.
 | 7 | DeepSeek ROM hardware path | audit-ready; implementation blocked | shared semantic/control freeze |
 | 8 | short end-to-end campaigns | blocked | complete functional deployments |
 | 9 | exact Qwen 8K and DeepSeek 200K | blocked | short closure and scalability proof |
-| 10 | 130-nm convergence and comparison | blocked | correct cycle and RTL execution |
+| 10 | SKY130/ASAP7 convergence and comparison | blocked | correct cycle and RTL execution |
 
 ## 14. Immediate next decision
 
@@ -520,6 +558,9 @@ The next user/reviewer action is to review TA-ADR-003, especially:
 - mandatory on-device argmax/EOS generation control;
 - host/deployment/micro-ISA separation;
 - the HBM/ROM reuse boundary; and
+- the one-chip Qwen, 32-node DeepSeek-HBM, and wafer-scale DeepSeek-ROM
+  topologies, including inter-chip/on-wafer communication contracts;
+- the separate SKY130 and ASAP7 evidence views; and
 - the minimum DeepSeek capability union.
 
 No implementation agent should be instructed to “build ABI 3.0” until that
@@ -596,12 +637,15 @@ Provide the agent:
 
 Use this task statement:
 
-> Act as the shared HBM/SRAM tensor-accelerator owner. One RTL 3.0 hardware
-> hierarchy must run Qwen and DeepSeek without resynthesis. Work only in the
-> allocated HBM/SRAM compiler, simulator, RTL, and evidence paths. Consume the
-> released common contracts without privately changing them. Begin with the
-> declared vertical slice and independent-checker handoff; do not resume long
-> ABI 2.5 campaigns or make performance claims.
+> Act as the shared HBM/SRAM tensor-accelerator owner. Implement one conventional
+> RTL 3.0 chip/netlist: Qwen uses one node and DeepSeek uses exactly 32 identical
+> nodes without chip resynthesis. The chip must include the inter-chip endpoint,
+> remote DMA, packet queues/credits, collectives, integrity/retry, RAS, and
+> counters needed for causal cluster execution. Work only in the allocated
+> HBM/SRAM compiler, simulator, RTL, and evidence paths. Consume released common
+> contracts without privately changing them. Begin with the declared vertical
+> slice and independent-checker handoff; do not resume long ABI 2.5 campaigns or
+> make performance claims.
 
 This agent may start an audit in Wave 1, but writes implementation only after
 TA-A3-IR-1.
@@ -619,9 +663,10 @@ Provide the agent:
 
 Use this task statement:
 
-> Act as the Qwen3-8B ROM hardware owner. Build a Qwen-specific immutable-weight
-> physical design and causal artifact-driven execution path. Resolve logical
-> layer images versus physical stages before implementation. Work only in
+> Act as the Qwen3-8B ROM hardware owner. Build a Qwen-specific conventional
+> single-chip immutable-weight physical design and causal artifact-driven
+> execution path. Resolve logical layer images versus internal one-chip physical
+> partitions before implementation. Work only in
 > allocated Qwen-ROM paths. Preserve common Qwen semantics, numerics, workloads,
 > EOS, and evidence contracts; do not edit shared ABI/IR or HBM lowering. Start
 > with the migration audit and first connected vertical slice defined by the
@@ -641,11 +686,14 @@ Provide the agent:
 Use this task statement:
 
 > Act as the DeepSeek-V4 Flash ROM hardware owner. Build the ordinary target-only
-> immutable-weight path first; keep DSpark/speculative execution separate. Work
-> only in allocated DeepSeek-ROM paths. Export complete ordinary semantics into
-> released common contracts without model-specific shared opcodes. Begin with
-> one checkpoint-derived connected route/state vertical slice, then follow the
-> lane gates toward exact 200,000-token execution.
+> wafer-scale immutable-weight path first; keep DSpark/speculative execution
+> separate. The critical model path must use a causal on-wafer fabric and
+> distributed HBM state, with topology, collectives, repair, quarantine, and
+> yield-aware recompilation. Work only in allocated DeepSeek-ROM paths. Export
+> complete ordinary semantics into released common contracts without
+> model-specific shared opcodes. Begin with one checkpoint-derived connected
+> route/state/communication vertical slice, then follow the lane gates toward
+> exact 200,000-token execution.
 
 ### 15.6 Required per-agent scope declaration
 

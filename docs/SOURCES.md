@@ -113,6 +113,38 @@ load-balance, clock, and synchronization efficiencies. Published 14.4 TB/s NVLin
 is retained as a source fact but is **not** substituted directly for the assumed
 effective collective payload bandwidth or per-layer latency.
 
+### ABI 3.0 chip/cluster source-use boundary
+
+The ABI 3.0 implementation plans freeze an OpenTallas topology rather than an
+NVIDIA SKU: Qwen uses one conventional HBM/SRAM accelerator chip and DeepSeek
+uses exactly 32 byte-identical copies of that chip. The cluster's high-speed
+fabric is described as **NVLink-class/NVL72-style**, not NVLink-compatible.
+`SRC-NV-B200` and `SRC-NV-B300` seed the public bandwidth, HBM, system-power,
+and sensitivity envelope already available in this repository. Before
+`TA-A3-ARCH-0` closes, the exact additional NVLink/NVL72-class public documents,
+publication dates, downloaded identities where applicable, topology facts, and
+allowed derivations must be locked here.
+
+The 32-node count is a project architecture requirement; it is not attributed
+to a vendor product. No aggregate vendor bandwidth is divided, multiplied, or
+copied into the OpenTallas capability without an explicit topology and units.
+Effective point-to-point, bisection, multicast, reduction, and collective
+requirements are derived from compiled DeepSeek communication traces. The
+simulator separately models endpoint queues, serialization, switch/link/PHY
+latency, contention, credits, congestion, retry, and failures.
+
+The DeepSeek ROM comparator is one wafer-scale logical accelerator. The
+`SRC-CEREBRAS-WSE3` values below seed a contemporary public wafer-scale envelope,
+not an OpenTallas achievement. OpenTallas on-wafer bandwidth, latency, topology,
+HBM attachment, repair/yield, power, and thermal requirements are separately
+derived and characterized. The historical 8-by-8/4,096-tile proxy in
+`spec/ARCHITECTURE.md` is not promoted into the ABI 3.0 physical target.
+
+Both architectures are evaluated in two independent technology views:
+`SRC-PDK-SKY130` governs the mature open 130-nm implementation baseline and
+`SRC-PDK-ASAP7` governs the academic predictive 7-nm view. Their values are
+never mixed into one result.
+
 Model storage dtype and matrix operand dtype are kept separate. In particular,
 DeepSeek's routed weights occupy MXFP4 storage, but their GEMMs consume FP8
 activations. Following the DeepSeek report, B200/B300 therefore apply the dense

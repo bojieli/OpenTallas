@@ -8,11 +8,11 @@ and gate closure remain evidence controlled
 **Initial issue:** 2026-08-28
 
 **Last reconciled:** 2026-08-29 against clean, fast-forward-current
-`main`/`origin/main@39a607e` after all concurrent sessions stopped and pushed
-their partial handoffs
+`main`/`origin/main@b6c38ee` after all concurrent sessions stopped, pushed their
+partial handoffs, and the initial ABI 3.0 four-lane planning bundle was merged
 
 **Reconciled implementation heads:** the authoritative merged baseline is
-`main@39a607e`; all earlier worktree and branch identities below are retained as
+`main@b6c38ee`; all earlier worktree and branch identities below are retained as
 historical evidence anchors, not active integration heads. Commit
 `c07331b` is the coherent connected-layer implementation handoff, and `1f4e52f`
 reconciles its evidence boundary into this plan. The connected implementation
@@ -69,10 +69,12 @@ through the gate and handoff rules in those documents and Sections 16 and 17.
 **Primary targets:** Qwen3-8B at exactly 8,000 resident prompt tokens and
 DeepSeek-V4-Flash-0731 at exactly 200,000 resident prompt tokens
 
-**Primary architecture:** programmable tensor accelerator with HBM-resident
-weights and mutable state, plus banked on-chip SRAM
+**Primary architecture:** one programmable conventional HBM/SRAM accelerator
+chip used as one node for Qwen and as 32 identical NVLink-class-connected nodes
+for DeepSeek
 
-**Comparison architecture:** OpenTallas ROM-resident-weight design
+**Comparison architecture:** one conventional Qwen ROM chip and one mandatory
+DeepSeek wafer-scale ROM accelerator
 
 **Primary outcome:** compile and execute each complete pinned model through an
 artifact-driven simulator and produce verified autoregressive decoding results
@@ -150,10 +152,13 @@ uncommitted artifacts to release evidence.
 
 **Post-unification architecture decision record
 `TA-4LANE-A3-2026-08-29`:** the program now has four verification targets but
-three hardware families: one shared HBM/SRAM tensor-accelerator RTL 3.0 hierarchy
-must run Qwen and DeepSeek without resynthesis, while Qwen-ROM and DeepSeek-ROM
-are separate model-personalized hardware, netlist, and mask lanes. “RTL 3.0”
-means the RTL implementation of ABI 3.0; it is not another ISA or target.
+three hardware families. One conventional HBM/SRAM accelerator chip/netlist is
+shared: Qwen uses one node and DeepSeek uses exactly 32 identical nodes over an
+NVLink-class fabric, without chip resynthesis. Qwen-ROM is a conventional
+single-chip lane and DeepSeek-ROM is a mandatory wafer-scale lane. “RTL 3.0”
+means the RTL implementation of ABI 3.0; it is not another ISA or target. The
+HBM chip includes the inter-chip endpoint, remote DMA, queues/credits,
+collectives, integrity/retry, RAS, and counters required by the DeepSeek cluster.
 All ABI 2.5 model campaigns remain paused. No ABI 3.0 compiler, simulator, or
 RTL implementation begins until architecture gate `TA-A3-ARCH-0` in
 TA-ADR-003 is reviewed and closed. After closure, work follows the separate
@@ -161,15 +166,29 @@ TA-ADR-003 is reviewed and closed. After closure, work follows the separate
 [Qwen ROM](QWEN3_ROM_HARDWARE_IMPLEMENTATION_PLAN.md), and
 [DeepSeek ROM](DEEPSEEK_V4_ROM_HARDWARE_IMPLEMENTATION_PLAN.md) lane plans.
 
+**Physical-topology and technology-view decision record
+`TA-PHYS-2026-08-29`:** Qwen compares one conventional HBM/SRAM chip with one
+conventional Qwen ROM chip. DeepSeek compares a 32-node cluster of that same HBM
+chip with one DeepSeek wafer-scale ROM accelerator. The cluster fabric must be
+governed by a source-locked NVIDIA NVLink/NVL72-class public envelope; the wafer
+fabric uses the existing contemporary Cerebras WSE-3 source envelope. The exact
+additional NVL72-class source lock is a `TA-A3-ARCH-0` deliverable. Neither
+vendor envelope is an achieved OpenTallas number. Physical verification has two
+separate views: SKY130 is the mature open 130-nm baseline and ASAP7 is the
+academic predictive 7-nm projection. Results are compared within, never mixed
+across, technology views.
+
 ## Executive recommendation
 
 Build the HBM-plus-banked-SRAM design as a programmable **tensor accelerator**,
-not as a simplified general-purpose graphics processor. One hardware hierarchy,
-capability ABI, and instruction set must accept separately compiled Qwen3-8B and
-DeepSeek-V4 Flash deployments without resynthesis. The design is dynamic where
-the models require it—sequence position, masks, sparse indices, expert choices,
-addresses, queue occupancy, and state generations—but every dynamic dimension
-has an explicit hardware bound and a fail-closed compiler or runtime check.
+not as a simplified general-purpose graphics processor. One conventional chip
+netlist, capability ABI, and instruction set must accept Qwen3-8B as a one-node
+deployment and DeepSeek-V4 Flash as an exactly 32-node deployment without chip
+resynthesis. Inter-chip communication is an architectural engine and RTL block,
+not an analytical overlay. The design is dynamic where the models require
+it—sequence position, masks, sparse indices, expert choices, addresses, queue
+occupancy, and state generations—but every dynamic dimension has an explicit
+hardware bound and a fail-closed compiler or runtime check.
 
 All prior Qwen and DeepSeek sessions are stopped and their partial work is merged
 on `main`. New agents receive separate common-ABI, shared-HBM/SRAM, Qwen-ROM, or
@@ -206,13 +225,14 @@ DeepSeek's mandatory release gate is exactly 200,000 resident prompt tokens
 followed by its frozen ordinary greedy-decode campaign; an 8,000-token DeepSeek
 run is diagnostic bring-up evidence only and cannot substitute for that gate.
 
-Treat functional correctness, modeled timing, RTL correlation, and 130-nm
-physical characterization as separate evidence gates. HBM remains external to
-the 130-nm synthesized boundary. A ROM-versus-HBM/SRAM result is publishable only
-after both backends use the same pinned checkpoint, tokenizer, graph semantics,
-numeric profile, workload, process/PVT scope, HBM assumptions, output boundary,
-and evidence class. Until then, accelerator runs are implementation evidence,
-not performance claims.
+Treat functional correctness, modeled timing, RTL correlation, SKY130 physical
+implementation, and ASAP7 projection as separate evidence gates. HBM dies and
+high-speed analog PHYs remain outside the synthesized digital boundary; digital
+HBM and inter-chip endpoints remain inside it. A ROM-versus-HBM/SRAM result is
+publishable only after both backends use the same pinned checkpoint, tokenizer,
+graph semantics, numeric profile, workload, technology/PVT scope, HBM/fabric
+assumptions, output boundary, and evidence class. Until then, accelerator runs
+are implementation evidence, not performance claims.
 
 ## 1. Purpose and decision
 
@@ -286,13 +306,15 @@ well short of an end-to-end accelerator claim. The baseline at this revision is:
 | Compiler/simulator slice | Commit `324f48d` compiles and independently reconstructs all 36 Qwen layers, final normalization, selection, vocabulary projection, and terminal commit in one deterministic physical deployment. Commit `c5b9578` executes its 924,386-command program artifact-only and reproduces every operation through a separately implemented target-precision path | Introduce a separately versioned dynamic request/session ABI, close at least 32 greedy decode steps, and then execute the exact 8,000-token Qwen workload; do not broaden fixed request v1 silently |
 | Qwen model-specific execution | The concurrent Qwen service path has passed deterministic deployment and an exact 8,000-token prefill plus 32-token release gate | This is reference evidence, not `TA-QWEN-4`; rerun the same workload through the common HBM/SRAM command simulator with no model-specific service fallback |
 | DeepSeek reference coverage | Graph extraction and several exact numeric, routing, lookup, indexing, structural, and selected linear paths exist | Close every ordinary target-only operator, state transition, layer class, and generation path; keep DSpark/speculation in a separate profile |
-| Physical evidence | Repository flows can support public-node exploration | Characterize the frozen accelerator at 130 nm; all current development capabilities and cycle costs remain explicitly uncharacterized |
+| Physical evidence | Repository flows can support public-node exploration | Characterize the frozen conventional chip and ROM hierarchies separately in SKY130 and ASAP7; close the 32-node cluster and wafer assembly models without mixing technology views |
 
-The integration baseline is the isolated `ta-integration` branch. Work in the
-dirty shared `main` worktree belongs to the concurrent Qwen and DeepSeek sessions
-and is neither copied nor rewritten. Integration rebases only onto coherent,
-committed `main` history. Locally cached checkpoints are referenced by immutable
-identity and are not duplicated into another worktree or deployment tree.
+The authoritative baseline is clean, committed `main`. The formerly isolated
+`ta-integration` history cited below is retained as implementation provenance,
+not as the active integration branch. All pre-unification Qwen, DeepSeek, and
+accelerator sessions have stopped; new work starts from current `main`, uses
+isolated ownership boundaries, and hands off only coherent commits. Locally
+cached checkpoints are referenced by immutable identity and are not duplicated
+into another worktree or deployment tree.
 
 The integration worktree now contains committed segmented-K BF16 support,
 production command ABIs 2.0 through 2.5, strict uncharacterized development
@@ -382,7 +404,7 @@ reordered, malformed, corrupted, over-claimed, or incompletely covered work is
 rejected or causally changes the result. These facts close the slice-level
 instances of compiler and functional-simulator evidence only. Complete neutral
 kernel coverage, timing simulation, Qwen and DeepSeek end-to-end execution, RTL,
-130-nm characterization, and the governed comparison remain open.
+SKY130/ASAP7 characterization, and the governed comparison remain open.
 
 ### 1.4 Closed embedding-through-RMSNorm evidence and its boundary
 
@@ -449,7 +471,7 @@ retained.
 This closes only connected Q/K/V preparation for one authentic token at
 position 7,999. It does not execute attention, prepare or commit KV state,
 complete a layer, generate a token, establish timing, correlate RTL, provide
-130-nm characterization, or enable a performance or architecture-comparison
+SKY130/ASAP7 characterization, or enable a performance or architecture-comparison
 claim.
 
 ### 1.6 Closed attention and transactional-KV evidence and its boundary
@@ -509,7 +531,7 @@ This closes one authentic attention and one-resource transactional-KV
 qualification slice. The one-resource commit is explicitly a subset of the
 Qwen graph's terminal 36-resource model-forward commit; it is not evidence for
 a complete layer, all-layer atomicity, full prefill/decode, cycle timing, RTL,
-130-nm behavior, or a ROM comparison. The capability remains
+SKY130/ASAP7 behavior, or a ROM comparison. The capability remains
 `uncharacterized_development`, so the slice authorizes no latency, bandwidth,
 energy, or performance claim.
 
@@ -527,7 +549,7 @@ address, SRAM bank, or command opcode.
 Command ABI 2.4 additively introduces bounded `ADD_BF16` and
 `SILU_MUL_BF16` while retaining exact ABI 2.0 through 2.3 replay. Development
 capability V5 remains `uncharacterized_development`, retains external HBM at the
-130-nm boundary, and admits the declared 1-by-16,384 maximum vector shape. The
+synthesized digital boundary, and admits the declared 1-by-16,384 maximum vector shape. The
 compiler assigns 13 distinct SRAM banks and tiles all four authentic projection
 weights into a 335,568,896-byte HBM image. The measured legal program contains
 20,488 commands: 10,240 weight-tile DMAs, three direct DMAs, 10,240 ordered
@@ -582,10 +604,10 @@ ABI 2.0 through 2.3 compatibility campaign pass.
 This closes only the bounded post-attention/MLP slice. Its retained attention
 output is an authenticated handoff artifact, not a command-connected predecessor
 inside the same deployment. It therefore does not close a complete Qwen layer,
-all-layer KV atomicity, model generation, timing, RTL, 130-nm characterization,
-or the governed ROM comparison. The required connected deployment is now closed
-separately at `c07331b` and recorded in Section 1.8; the boundary stated here
-continues to apply to the historical slice evidence.
+all-layer KV atomicity, model generation, timing, RTL, SKY130/ASAP7
+characterization, or the governed ROM comparison. The required connected
+deployment is now closed separately at `c07331b` and recorded in Section 1.8;
+the boundary stated here continues to apply to the historical slice evidence.
 
 ### 1.8 Closed connected-layer evidence and its boundary
 
@@ -665,8 +687,8 @@ regression, and strict ABI 2.0 through 2.3 compatibility replay pass.
 This evidence closes one connected layer only. It does not execute the other 35
 layers, final RMSNorm, vocabulary projection, logits, token selection, prefill,
 or decode. It supplies no characterized clock, cycle, bandwidth, energy, RTL,
-130-nm, or ROM-comparison evidence and therefore closes none of `TA-QWEN-4`,
-`TA-RTL-6`, `TA-PHY-7`, or `TA-CMP-8`.
+SKY130/ASAP7, or ROM-comparison evidence and therefore closes none of `TA-QWEN-4`,
+`TA-RTL-6`, either `TA-PHY-7-*`, or either `TA-CMP-8-*` gate.
 
 ### 1.9 Admitted final-output-family evidence and its boundary
 
@@ -833,7 +855,7 @@ shards. It contains 16,381,470,720 immutable checkpoint-weight bytes,
 1,179,648,000 bytes of zero-initialized K/V capacity for all 36 layers at 8,000
 tokens, a 4,096,000-byte authenticated RoPE table, two 2,304-byte state tables,
 and 7,870,464 alignment/padding bytes. HBM remains external to the synthesized
-130-nm boundary. The no-host-paging capacity certificate leaves
+digital boundary in either technology view. The no-host-paging certificate leaves
 257,304,817,152 bytes of declared HBM margin.
 
 The SRAM plan has 18 reusable slots across the 16 one-MiB banks, 617 tensor
@@ -876,9 +898,10 @@ the 17 HBM shards before execution, consumes only the retained deployment,
 fixed request v1, capability, and memory/device artifacts, validates every one
 of the 924,386 ABI 2.5 commands causally, and executes one complete 617-operation
 Qwen forward transaction from token ID 0 at position 0 through all 36 layers,
-complete logits, unique host greedy selection, and atomic commit of all 36 KV
-resources. It imports neither the physical compiler nor its checker, framework
-model execution, scalar oracle, expected activations, or a precomputed logit.
+complete logits, the historical unique host-controlled greedy selection, and
+atomic commit of all 36 KV resources. It imports neither the physical compiler
+nor its checker, framework model execution, scalar oracle, expected activations,
+or a precomputed logit.
 
 The retained execution identities are:
 
@@ -937,7 +960,7 @@ metadata, trace, or timing replay. It is also not `TA-QWEN-4`: request v1 cannot
 be reused silently for changing positions or generations; at that commit no
 32-step generation had closed, and no 8,000-token prefill had run through the
 common simulator.
-Qwen 8,192 remains a separate capacity boundary. Timing, RTL, 130-nm
+Qwen 8,192 remains a separate capacity boundary. Timing, RTL, SKY130/ASAP7
 characterization, DeepSeek execution, and the governed ROM comparison remain
 open. The active Qwen work therefore moves to a separately versioned dynamic
 request/session contract and at least 32 ordinary greedy decode steps. That
@@ -1017,8 +1040,8 @@ This closure proves complete artifact-only target-precision execution for this
 one-token prompt and 32 generated decisions. It does not establish the exact
 8,000-token resident-prompt workload, Qwen 8,192 capacity, official/golden
 release equivalence, acceptable natural-language quality, timing, cycles,
-bandwidth, RTL, 130-nm characterization, DeepSeek execution, or the governed
-ROM comparison. At that closure the next Qwen work was authenticated
+bandwidth, RTL, SKY130/ASAP7 characterization, DeepSeek execution, or the
+governed ROM comparison. At that closure the next Qwen work was authenticated
 checkpoint/restart and measured long-prefill readiness. Section 1.27 now closes
 the first item; growing-position readiness, the exact 8,000-token prompt plus
 at least 32 generated tokens, and a separately governed official/golden check
@@ -1203,10 +1226,11 @@ inferred latches, zero residual processes, and the mapped cell count but is
 explicitly not formal equivalence. No execution-derived switching activity was
 supplied; vectorless ORFS power and dependent IR observations are excluded.
 OpenROAD route checks and KLayout stream merge are not foundry DRC or LVS.
-Consequently `TA-RTL-6`, `TA-PHY-7`, SRAM-macro qualification, activity-based
-power/IR, thermal, package, reliability, yield, tapeout, and silicon gates all
-remain open. The exact lock, artifact hashes, constraints, measurements, and
-nonclaims are retained in [QWEN3_RTL_IHP_PHYSICAL.md](QWEN3_RTL_IHP_PHYSICAL.md)
+Consequently `TA-RTL-6`, both `TA-PHY-7-*` gates, SRAM-macro qualification,
+activity-based power/IR, thermal, package, reliability, yield, tapeout, and
+silicon gates all remain open. The exact lock, artifact hashes, constraints, and
+measurements are retained in
+[QWEN3_RTL_IHP_PHYSICAL.md](QWEN3_RTL_IHP_PHYSICAL.md)
 and its bound JSON report.
 
 ### 1.18 Ordered DMA-to-ADD shared-SRAM execution and fail-stop behavior
@@ -1662,7 +1686,7 @@ row 8,192, and proves that both execution implementations can load and execute
 the V7 artifacts. It does not prove a resident 8,192-token execution, execute
 the 8,000-token acceptance prompt, produce
 acceptance tokens or text, establish official/golden quality, or make timing,
-RTL, 130-nm, DeepSeek, or ROM-comparison claims. Section 1.27 subsequently
+RTL, SKY130/ASAP7, DeepSeek, or ROM-comparison claims. Section 1.27 subsequently
 qualifies checkpoint/restart at steps 1 and 2; the exact long session remains
 open.
 
@@ -1895,7 +1919,7 @@ This committed tranche narrows but does not close `TA-QW-NAT-4A` or
 natural cases and both complete live tasks remain incomplete, and the coherent
 campaign must pass full regression, reproducibility, review, and ABI 3.0
 admission. It does not close either exact-8,000 Qwen workload, DeepSeek 200,000,
-timing, RTL, 130-nm, or ROM-comparison gates.
+timing, RTL, SKY130/ASAP7, or ROM-comparison gates.
 
 ## 2. Meaning of production-grade
 
@@ -1918,10 +1942,11 @@ verification, and release process. It requires:
 - performance and energy claims derived from executed schedules and characterized
   hardware events rather than unpriced operators or inserted ceilings.
 
-The public 130-nm work can apply production-grade methodology, but it cannot be
-called foundry production signoff. Qualified HBM PHY IP, production SRAM
-compilers, proprietary timing and reliability decks, package extraction, and
-silicon correlation remain external gates.
+The SKY130 work can apply production-grade methodology, but it cannot be called
+foundry production signoff. ASAP7 is an academic predictive view. Qualified HBM
+and link PHY IP, production SRAM/ROM compilers, proprietary timing and
+reliability decks, package/wafer extraction, and silicon correlation remain
+external gates.
 
 ## 3. System boundary
 
@@ -1929,9 +1954,10 @@ silicon correlation remain external gates.
 
 The release boundary begins with text or a canonical token-ID fixture and ends
 with generated token IDs and decoded text. The host performs pinned tokenization,
-generation-loop control, and token selection. The tensor accelerator performs
-every model-forward operation used by prefill and decode. The simulator must not
-call the official model or a framework model between tokens.
+one bounded generation submission, and final text decoding. The accelerator
+performs every model-forward operation, deterministic argmax, token append,
+generation-loop control, and first-EOS stop. The simulator must not call the
+official model or a framework model between tokens.
 
 The complete path is:
 
@@ -1942,11 +1968,11 @@ prompt text
   -> accelerator prefill
   -> committed model and KV state
   -> final-position logits
-  -> frozen host token-selection policy
+  -> on-device frozen token-selection policy
   -> selected token
-  -> accelerator decode step
+  -> on-device token append and accelerator decode step
   -> repeated logits and state commits
-  -> stop/EOS handling
+  -> on-device first-EOS/maximum-bound stop
   -> pinned text decoder
   -> output text
 ~~~
@@ -1965,9 +1991,10 @@ request, and prior architectural state; executes the commanded arithmetic and
 memory/state effects; and constructs the resulting activations, logits,
 counters, and committed state. It is not a metadata replay, a saved-trace
 replay, a precomputed-output lookup, or an invocation of the official model.
-The pinned tokenizer, frozen generation-loop control, token-selection policy,
-and text decoder remain permitted host functions at the explicit system
-boundary in Section 3.1; none may perform a model-forward operation.
+The pinned tokenizer, bounded request submission, and text decoder remain
+permitted host functions at the explicit system boundary in Section 3.1; none
+may perform model-forward, token-selection, token-append, generation-loop, or EOS
+work.
 
 “Artifact-only” alone does not say how much work ran. Every execution claim and
 report must use one of the following scope-qualified descriptions:
@@ -1994,10 +2021,11 @@ first EOS, every output token was decodable, and the complete visible response
 passed its frozen semantic checks. For a live agentic execution, “full” covers
 all model turns, model-generated tool envelopes, isolated tool actions and
 results, rerendered follow-up contexts, terminal answer, and withheld task
-tests. Host tokenization, EOS control, strict protocol parsing, and isolated
-tool execution are explicit system-boundary services; they do not weaken the
+tests. Host tokenization, strict protocol parsing, and isolated tool execution
+are explicit system-boundary services; they do not weaken the
 artifact-only claim because every model-forward activation, logit, and state
-transition still comes from the accelerator artifacts. An injected golden
+transition, selected token, and EOS stop still comes from the accelerator
+artifacts. An injected golden
 token, replayed model response, or replayed tool call cannot close either full
 semantic claim.
 
@@ -2016,7 +2044,7 @@ acceptance execution. Section 1.25 separately closes a 32-decision short
 target-precision diagnostic, but full acceptance remains open because the exact
 8,000-token resident prompt and official/golden comparison have not closed.
 Functional full end-to-end acceptance also does
-not imply timing qualification, RTL correlation, 130-nm physical
+not imply timing qualification, RTL correlation, SKY130/ASAP7 physical
 characterization, or the governed ROM-versus-HBM/SRAM comparison; those remain
 separate evidence gates.
 
@@ -2033,8 +2061,8 @@ The first release includes:
   and mixed-format execution required by the pinned ordinary path;
 - HBM storage for weights and large mutable state;
 - SRAM tiling, buffering, staging, and metadata;
-- one hardware capability set that accepts separately compiled deployments for
-  either model; and
+- one conventional chip capability set that accepts a one-node Qwen deployment
+  and an exact 32-node DeepSeek deployment, including inter-chip execution; and
 - batch-one correctness, with bounded multi-session and larger-batch behavior
   specified and tested separately.
 
@@ -2049,7 +2077,7 @@ The first closure does not silently include:
   profile is enabled;
 - host paging of active weights during a measured decode;
 - a claim of end-to-end correctness at an unexecuted context length;
-- a production HBM PHY synthesized from the public 130-nm PDK; or
+- a production HBM or link PHY synthesized from SKY130 or ASAP7; or
 - task-quality equivalence inferred only from one prompt.
 
 These may be added through versioned profiles after the ordinary decode path is
@@ -2175,26 +2203,31 @@ Qwen using DeepSeek's official grammar. ROM and HBM/SRAM executions for each
 DeepSeek workload consume one identical manifest; Qwen's chat template is not
 substituted for DeepSeek's model-specific encoding.
 
-### 4.3 Meaning of one dynamic accelerator
+### 4.3 Meaning of one dynamic accelerator-chip design
 
-One dynamic accelerator means one RTL hierarchy, capability ABI, and instruction
-set supports both models without resynthesis or hardware regeneration. Each model
-may have its own compiled program, tensor layouts, schedules, and deployment
-manifest. Model selection occurs between jobs by loading and validating a new
-deployment.
+One dynamic accelerator means one conventional chip RTL hierarchy, elaboration,
+signoff netlist, capability ABI, and instruction set supports both model
+deployments without chip resynthesis or hardware regeneration. Qwen uses one
+chip. DeepSeek uses exactly 32 byte-identical copies of that chip connected by a
+declared NVLink-class fabric. Each model may have its own compiled program,
+tensor layouts, schedules, sharding, and deployment manifest. Model selection
+occurs between jobs by loading and validating a new deployment.
 
 Runtime-dynamic values include sequence length within a declared bound, current
 position, active sessions, masks, expert selections, sparse indices, HBM
-addresses, and buffer occupancy. Hardware bounds such as instruction fields,
-tensor dimensions, top-k, expert count, tag count, SRAM capacity, and context
-address width are explicit capabilities. A compiler error, not undefined
-behavior, results when a deployment exceeds them.
+addresses, node destinations, collective membership, and buffer occupancy.
+Hardware bounds such as instruction fields, tensor dimensions, top-k, expert
+count, tag count, SRAM capacity, context address width, node count, virtual
+channels, credits, and outstanding remote operations are explicit capabilities.
+A compiler error, not undefined behavior, results when a deployment exceeds
+them.
 
-The release hardware/capability ABI must accept both Qwen's exact 8,000-token
-profile and DeepSeek's exact 200,000-token profile without resynthesis. The two
-models may use different state layouts and compiled schedules, but the context
-address fields, memory protection, queues, state generations, and external-HBM
-capacity certificate must make the 200,000-token DeepSeek path legal.
+The release chip/capability ABI must accept Qwen's exact 8,000-token one-node
+profile and DeepSeek's exact 200,000-token 32-node profile without resynthesis.
+The two models may use different state layouts and compiled schedules, but the
+context/address fields, memory protection, queues, state generations, node-local
+HBM certificates, inter-chip endpoint, communication descriptors, and global
+commit rules must make the 200,000-token DeepSeek path legal.
 
 ## 5. Definition of done and hard program gates
 
@@ -2202,15 +2235,17 @@ capacity certificate must make the 200,000-token DeepSeek path legal.
 |---|---|---|
 | TA-GOV-0 | Reconciled session commits, source ownership, clean integration worktree, pinned tools and inputs | Common implementation may begin |
 | TA-SEM-1 | Complete neutral graphs and independent target-precision semantics for both models; zero unknown operations | Semantic coverage |
-| TA-COMP-2 | Deterministic HBM/SRAM deployment, complete payload coverage, legal physical plan, command stream, and independent reconstruction/checking | Compiler correctness for declared profiles |
-| TA-SIM-3 | Artifact-only functional and cycle/event simulation; exact state/counter reconciliation; no framework or host-compute fallback | Executable architecture correctness |
+| TA-COMP-2 | Deterministic one-node Qwen and 32-node DeepSeek HBM/SRAM deployments, complete payload coverage, legal sharding/communication plans, command streams, and independent reconstruction/checking | Compiler correctness for declared profiles |
+| TA-SIM-3 | Artifact-only functional and cycle/event simulation, including causal inter-chip/on-wafer communication; exact state/counter reconciliation; no framework or host-compute fallback | Executable architecture correctness |
 | TA-QW-NAT-4A | Actual checkpoint and exact ROM-governed natural chat/reasoning suite; official template, first-EOS stop, legitimate decoded tokens, exact golden outputs, and semantic checks | Qwen natural chat and reasoning correctness |
 | TA-QW-AGENT-4B | Actual checkpoint and exact ROM-governed bash-only tasks; model-generated legal tool calls, isolated environment transitions, EOS-terminated final answers, and passing withheld tests | Qwen live agentic correctness |
 | TA-QWEN-4 | TA-QW-NAT-4A and TA-QW-AGENT-4B closed; actual checkpoint and full 36-layer execution for both the exact 8,000-token repeated-special-token stress prompt and a separately frozen exact 8,000-token natural prompt; exact target logits/tokens/text and state | Qwen3-8B 8K end-to-end correctness |
-| TA-DSV4-5 | Actual complete checkpoint, all ordinary-path layers/operators, exactly 200,000 resident prompt tokens plus frozen decode, exact target logits/tokens/text, routes, and state | DeepSeek-V4 Flash 200K end-to-end correctness |
+| TA-DSV4-5 | Actual complete checkpoint, all ordinary-path layers/operators, exactly 200,000 resident prompt tokens plus frozen decode on the exact 32-node HBM topology and wafer-scale ROM topology, exact target logits/tokens/text, routes, communication, and state | DeepSeek-V4 Flash 200K end-to-end correctness |
 | TA-RTL-6 | Generated programs execute representative complete kernels/layers through RTL co-simulation and match the architectural simulator | RTL correlation for tested scope |
-| TA-PHY-7 | 130-nm characterized compute, SRAM, control, and interconnect feed the frozen capability model; timing and energy are traceable | Public-PDK physical-proxy performance |
-| TA-CMP-8 | ROM and HBM/SRAM backends use identical model, numeric, workload, process, and reporting scopes | Governed architecture comparison |
+| TA-PHY-7-SKY130 | SKY130-characterized compute, SRAM/ROM, control, chip/wafer interconnect, and fabric endpoints feed the frozen capability model | Mature open 130-nm implementation view |
+| TA-PHY-7-ASAP7 | Separately characterized ASAP7 compute, SRAM/ROM, control, chip/wafer interconnect, and fabric endpoints feed a predictive capability model | Academic predictive 7-nm view |
+| TA-CMP-8-SKY130 | ROM and HBM/SRAM backends use identical model, numeric, workload, SKY130/PVT, external-boundary, and reporting scopes | Governed SKY130 architecture comparison |
+| TA-CMP-8-ASAP7 | ROM and HBM/SRAM backends use identical model, numeric, workload, ASAP7/PVT, external-boundary, and reporting scopes | Governed predictive 7-nm comparison |
 
 No gate closes through document status alone. Every gate requires machine-readable
 evidence, commands, hashes, tests, and a reviewed report.
@@ -2229,11 +2264,11 @@ pinned checkpoint ----> neutral Model Graph IR <---- target reference oracle
                                       |
                      +----------------+----------------+
                      |                                 |
-              ROM physical plan                HBM/SRAM physical plan
+         chip/wafer ROM physical plans    chip/cluster HBM/SRAM physical plans
                      |                                 |
-             ROM command program             DMA/tensor/vector program
+          ROM chip/wafer programs        DMA/tensor/vector/fabric programs
                      |                                 |
-              ROM execution model          tensor-accelerator simulator
+        chip/wafer ROM simulators       one-node/32-node accelerator simulator
                      +----------------+----------------+
                                       |
                          common differential harness
@@ -2263,9 +2298,12 @@ The baseline consists of:
 5. a banked SRAM scratchpad complex;
 6. HBM request, response, protection, and address-mapping machinery;
 7. an on-chip interconnect with bounded queues and backpressure;
-8. session, KV, compressor, and generation state control;
-9. telemetry, performance counters, poison/abort, ECC, and watchdog behavior; and
-10. a versioned host and firmware ABI.
+8. a digital inter-chip endpoint with remote DMA, messages, collectives,
+   credits, integrity/replay, RAS, and counters;
+9. session, KV, compressor, and generation state control;
+10. telemetry, performance counters, poison/abort, ECC, and watchdog behavior;
+    and
+11. a versioned host and firmware ABI.
 
 ### 7.2 Tensor-compute cluster
 
@@ -2298,9 +2336,10 @@ contract.
 
 ### 7.4 HBM and SRAM hierarchy
 
-HBM stores immutable weights, large KV/state regions, deployment images, and
-spillable activations. SRAM stores active tiles, double buffers, reductions,
-metadata, route/index results, and hot KV/state windows selected by the compiler.
+Node-local HBM stores immutable weights, large KV/state regions, deployment
+images, and spillable activations. SRAM stores active tiles, double buffers,
+reductions, metadata, route/index results, and hot KV/state windows selected by
+the compiler.
 
 The hardware exposes:
 
@@ -2319,7 +2358,32 @@ The first implementation should prefer compiler-managed SRAM over a transparent
 cache because placement and traffic then remain reproducible and independently
 checkable. A cache may be evaluated later as a versioned alternative.
 
-### 7.5 Dense and MoE execution
+### 7.5 Inter-chip cluster communication
+
+Every conventional HBM/SRAM chip contains the same synthesizable digital fabric
+endpoint. The endpoint implements bounded remote DMA, send/receive,
+packetization/reassembly, virtual channels, queues, credits, arbitration,
+backpressure, multicast, gather, scatter, reductions, barriers, CRC/integrity,
+bounded replay/retry, duplicate suppression, timeout, poison, abort, node/link
+reset handling, and exact communication counters. High-speed analog PHYs and
+external switches are sourced system boundaries; their digital interaction is
+not replaced by a host model shortcut.
+
+The DeepSeek HBM deployment binds exactly 32 byte-identical nodes, node-local
+HBM object windows, shard/replica ownership, routes, collectives, global events,
+and state/token commit. Its model program—not host firmware—causes expert
+dispatch, sparse gather, activation movement, reductions, vocabulary
+aggregation, argmax, token append, and EOS. There is no implicit coherent global
+cache and no direct zero-cost access to another node's HBM.
+
+The functional simulator executes each transfer and collective causally; the
+cycle simulator additionally models serialization, switch/link/PHY latency,
+contention, credits, congestion, retries, and faults. Once locked at
+`TA-A3-ARCH-0`, the public NVLink/NVL72-class specifications provide a
+sensitivity envelope, not a claim of OpenTallas wire compatibility or achieved
+bandwidth.
+
+### 7.6 Dense and MoE execution
 
 Qwen uses predictable dense weight streams. The compiler can channel-stripe
 weights, double-buffer tiles, overlap HBM reads with compute, and retain
@@ -2332,13 +2396,15 @@ compiled templates and runtime descriptors, with bounded queues and a worst-case
 resource certificate. The simulator must consume the actual selected experts and
 model their actual addresses and contention.
 
-### 7.6 Capacity policy
+### 7.7 Capacity policy
 
-The release configuration must hold the complete active checkpoint and required
-state within its declared HBM capacity. If one package cannot hold DeepSeek plus
-the selected context state, the architecture must either define a deterministic
-multi-package sharding topology or reject the profile. Host paging is not counted
-as HBM execution and cannot be hidden in a performance result.
+The Qwen release configuration must hold its complete active checkpoint and
+required state in one node's declared HBM capacity. The DeepSeek release
+configuration must hold its complete checkpoint and required state across
+exactly 32 node-local HBM domains under the frozen sharding/replication plan.
+Per-node and aggregate capacity must both pass. A different node count, an
+undeclared 33rd capacity node, or host paging cannot be hidden in a performance
+result.
 
 Capacity includes payloads, scales, padding, alignment, command images, metadata,
 ECC/integrity overhead, KV/state, buffering reserve, allocator fragmentation, and
@@ -2440,8 +2506,12 @@ The tensor-accelerator backend binds kernels and tensors to:
 - DMA prefetch, double-buffer, gather/scatter, and spill operations;
 - KV/state regions and transactional commit generations;
 - runtime expert/index descriptor bounds;
-- NoC routes and collective membership;
-- expected operation, byte, queue, and cycle-accounting classes; and
+- one-node or exact 32-node topology identity, node-local object ownership,
+  sharding/replication, and remote windows;
+- NoC/inter-chip routes, communication descriptors, virtual channels, credits,
+  collective membership, and global commit;
+- expected operation, byte, packet, flit, queue, and cycle-accounting classes;
+  and
 - capability and fault/degraded-resource identities.
 
 The planner must prove capacity, non-aliasing, initialization, liveness, bank-port
@@ -2458,6 +2528,8 @@ The command stream contains explicit families for:
 - vector, attention, normalization, conversion, and nonlinear work;
 - route, top-k, expert dispatch, and selection;
 - state and KV read, prepare, commit, discard, and generation advance;
+- inter-chip remote DMA, send/receive, multicast, gather/scatter, collectives,
+  barriers, and global completion;
 - telemetry and assertion checkpoints; and
 - poison, abort, drain, and error reporting.
 
@@ -2474,6 +2546,8 @@ A release build emits at least:
 - Tensor Kernel IR and transformation certificate;
 - canonical tensor index and content hashes;
 - sharded HBM image and address map;
+- node/topology manifest, per-node HBM maps, communication plan, routes,
+  collective groups, and link expectations for a clustered deployment;
 - SRAM allocation and liveness plan;
 - DMA, kernel, and state schedules;
 - command binaries and disassembly;
@@ -2528,6 +2602,13 @@ Checkpoint/restart, deterministic partitioning, trace filtering, and optimized
 target-numeric kernels make that run tractable; they do not change architectural
 results.
 
+For DeepSeek-HBM, all modes instantiate exactly 32 node-local address spaces and
+the declared fabric topology. Functional mode may omit physical link cycles but
+still executes every remote transfer and collective. Data-bearing timing mode
+models the endpoint, link, switch, collective, contention, retry, and failure
+path. Direct cross-node memory access or a precombined reduction is not an
+artifact-driven execution.
+
 ### 9.2 Artifact-only execution
 
 The simulator accepts only deployment artifacts, runtime inputs, capability data,
@@ -2580,6 +2661,8 @@ The timing model represents:
 - SRAM bank and port arbitration, latency, ECC, conflicts, and backpressure;
 - DMA queues, descriptor fetch, bursts, gathers, scatters, and completion events;
 - NoC links, routes, widths, credits, buffering, arbitration, and contention;
+- inter-chip endpoint queues, packetization, routes, switch/link/PHY latency,
+  serialization, virtual channels, collectives, congestion, retry, and faults;
 - barriers, reductions, routing decisions, and state commits;
 - queue high-water marks, blocked reasons, deadlock watchdogs, and poison drain;
   and
@@ -2591,10 +2674,10 @@ completion or change the result, rather than merely decrement a counter.
 
 ### 9.5 HBM timing
 
-The HBM model consumes real physical addresses and represents channels,
-pseudo-channels, banks, rows, bursts, command timing, refresh, queue policy,
-turnaround, outstanding requests, interleaving, and backpressure. A pinned,
-qualified external DRAM timing engine may be integrated, but its version,
+Each node-local HBM model consumes real physical addresses and represents
+channels, pseudo-channels, banks, rows, bursts, command timing, refresh, queue
+policy, turnaround, outstanding requests, interleaving, and backpressure. A
+pinned, qualified external DRAM timing engine may be integrated, but its version,
 configuration, patches, and validation vectors become release inputs.
 
 Published bandwidth alone is not an HBM simulator. The model must expose useful
@@ -2629,6 +2712,11 @@ ordering or simulated cycles.
 Large release campaigns support checkpoint/restart with a checkpoint identity
 covering simulator version, deployment hash, runtime request, architectural state,
 memory state, pending events, and counter state.
+
+The DeepSeek scalability gate measures all 32 nodes, fabric event rate,
+checkpoint and trace growth, and simulated cycles per host second. A one-node
+capacity projection or timing-only fabric extrapolation cannot close the exact
+200,000-token run.
 
 ## 10. Independent correctness oracles
 
@@ -2665,8 +2753,8 @@ removed from the suite.
 | Short full model | Complete real checkpoint | Prompt prefill plus at least 32 decode steps or expected EOS | Every layer checkpoint, logits, token IDs, state, and text |
 | Natural Qwen chat/reasoning | Complete Qwen checkpoint and ROM-governed templates | All six prompts through first EOS | Exact rendered prompts, logits/tokens/state, decodable text, and answer-specific semantics |
 | Live Qwen agent | Complete Qwen checkpoint, strict bash tool, and isolated pinned tasks | Every model turn, parsed call, environment action/result, and final answer | Exact initial prompts and accelerator results plus protocol validity, environment transitions, and withheld tests |
-| Qwen 8,000 | Complete Qwen checkpoint | Separate exact 8,000-token repeated-special-token stress and natural-template prompts plus decode | Bit-exact target results; natural run additionally requires exact golden tokens/text and semantic checks |
-| DeepSeek 200,000 | Complete DeepSeek checkpoint | Exact 200,000-token prompt plus at least 32 ordinary greedy decode steps or expected EOS | Bit-exact target results, routing/state, and exact golden tokens/text |
+| Qwen 8,000 | Complete Qwen checkpoint | One-node HBM/SRAM chip and one-chip ROM execute separate exact 8,000-token repeated-special-token stress and natural-template prompts plus decode | Bit-exact target results; natural run additionally requires exact golden tokens/text and semantic checks |
+| DeepSeek 200,000 | Complete DeepSeek checkpoint | Exact 32-node HBM/SRAM cluster and one wafer-scale ROM accelerator each execute the exact 200,000-token prompt plus at least 32 ordinary greedy decode steps or expected EOS | Bit-exact target results, routing/state, remote and on-wafer communication counters, global commits, and exact golden tokens/text |
 | Beyond-target qualification | Complete checkpoint and declared state | Qwen 8,192 boundary; DeepSeek 1,048,576 or other separately declared profiles | Capacity, state, correctness, timing, and quality for each claimed context |
 | Fault/degraded | Valid deployment plus injected faults | Representative commands and sessions | Containment, no bad commit, exact diagnostics, drain, and recovery |
 
@@ -2689,7 +2777,9 @@ For every release golden run:
   gibberish cannot satisfy a natural-language gate;
 - KV, compressor, route, sparse-index, and session state hashes match;
 - expected and observed tensor operations, HBM bytes, SRAM bytes, NoC traffic,
-  stalls, and cycles reconcile with no unexplained difference;
+  remote useful/transferred bytes, packets, flits, collectives, on-wafer
+  traffic, queue/credit/retry events, stalls, and cycles reconcile with no
+  unexplained difference for every applicable topology;
 - two clean executions produce identical architectural results and canonical
   reports; and
 - task-quality regression thresholds pass on the frozen evaluation set.
@@ -2719,7 +2809,13 @@ stable. It covers:
 - HBM request/response, tags, reordering, errors, and backpressure;
 - tensor and vector kernels or qualified functional-macro boundaries;
 - router/top-k and state prepare/commit;
-- NoC flow control, barriers, reductions, poison, and recovery; and
+- NoC flow control, barriers, reductions, poison, and recovery;
+- inter-chip endpoint remote DMA and send/receive, packetization/reassembly,
+  routes, virtual channels, credits/backpressure, multicast and collectives,
+  integrity/retry/fault handling, architectural communication counters, and
+  cluster-global session/state/token commit;
+- on-wafer multicast, expert dispatch, sparse gather, reduction, global commit,
+  backpressure, quarantine, repair, and degraded-topology behavior; and
 - performance counters and trace checkpoints.
 
 Representative complete Qwen layers and every structurally distinct DeepSeek
@@ -2732,42 +2828,49 @@ Full-model gate-level simulation is not required to establish the functional
 model path, but a timing-only simulator cannot replace the representative RTL
 correlation gate.
 
-## 13. 130-nm implementation and calibration
+## 13. SKY130 and ASAP7 implementation and calibration
 
-### 13.1 Primary process methodology
+### 13.1 Separate technology methodologies
 
-One public 130-nm flow is selected as the primary digital comparison baseline
-after a tool/library audit. SKY130A is the natural primary candidate for the
-digital accelerator because of its existing repository integration. IHP SG13G2
-may provide an independent methodology cross-check, but data from two PDKs must
-not be mixed into one same-node result.
+Two physical verification views are mandatory. SKY130 is the mature open
+130-nm implementation baseline. ASAP7 is an academic predictive 7-nm projection
+and is not production foundry signoff. Each has its own libraries, PVT/corner
+policy, macro assumptions, capability/cost tables, compiled deployments,
+simulator runs, and reports. No SKY130 area, density, timing, energy,
+interconnect, or thermal value is combined with an ASAP7 value.
 
-The primary flow characterizes:
+Each flow characterizes, at its declared evidence class:
 
 - tensor and vector arithmetic;
 - command/control, queue, NoC, and HBM-controller logic;
 - SRAM macro or compiler views at declared sizes and aspect ratios;
 - clocking assumptions and legal operating corners;
-- placed-and-routed representative tiles and top-level hierarchy;
+- placed-and-routed conventional-chip tiles/top level and hierarchical ROM
+  tile/reticle/wafer elements;
 - dynamic activity from executed model traces;
 - leakage, internal, switching, SRAM, and interconnect energy; and
 - timing at declared process, voltage, temperature, and extraction corner.
 
-### 13.2 HBM boundary
+### 13.2 HBM and cluster-fabric boundary
 
-HBM DRAM dies and a production high-speed PHY are not synthesized as 130-nm
-standard-cell logic. The comparison reports:
+HBM DRAM dies, production HBM/link PHYs, cluster switches, and cables/board or
+package fabric are not synthesized as ordinary accelerator standard-cell logic.
+The comparison reports:
 
-- 130-nm on-chip controller and digital interface logic;
-- separately sourced PHY area, latency, power, and package assumptions;
+- on-chip HBM-controller logic and the complete digital inter-chip endpoint;
+- separately sourced HBM/link PHY, switch, link, area, latency, bandwidth,
+  power, topology, and package assumptions;
 - external HBM stack capacity, timing, refresh, and energy;
-- package/interposer resources; and
+- one-node or 32-node package/interposer/switch/link resources; and
 - on-chip area and energy separately from external memory/package terms.
 
 This is especially important because the ROM architecture also uses mutable
 HBM/SRAM state. The two designs share identical HBM model sources and interface
 assumptions where their functions overlap; the tensor accelerator additionally
-pays its measured weight traffic.
+pays measured weight and, for DeepSeek, inter-node traffic. The DeepSeek report
+must include all 32 accelerator packages/nodes and the complete cluster fabric;
+the ROM report must include the complete wafer fabric and distributed HBM
+attachment.
 
 ### 13.3 Characterization feedback loop
 
@@ -2775,7 +2878,7 @@ Physical implementation and compilation form a controlled loop:
 
 ~~~text
 candidate architecture
-  -> synthesize, place, route, and characterize at 130 nm
+  -> synthesize, place, route, and characterize separately in SKY130 and ASAP7
   -> publish versioned hardware capabilities and cost tables
   -> recompile both complete models
   -> execute data-bearing cycle simulation
@@ -2797,8 +2900,10 @@ The comparison uses:
 - the same prompt token IDs and generation policy;
 - the same semantic graph and target numerical profile;
 - the same context, batch, concurrency, stop boundary, and output boundary;
-- the same process node, PVT corner, evidence classification, and external HBM
-  source;
+- the same technology view (SKY130 or ASAP7), PVT corner, evidence
+  classification, and external HBM/fabric source;
+- the frozen topology boundary: one chip versus one chip for Qwen, and a
+  complete 32-node HBM cluster versus one complete ROM wafer for DeepSeek;
 - independently legal backend-specific physical plans;
 - actual generated schedules and execution counters;
 - the same quality and correctness gates; and
@@ -2812,6 +2917,8 @@ It reports at least:
 - joules per prompt and joules per generated token;
 - on-chip area, SRAM area, controller/compute area, and external memory/package
   resources separately;
+- HBM-node count, cluster switches/links/PHYs/endpoints, or wafer area,
+  stitched fabric, distributed-HBM attachments, repair reserve, and yield model;
 - HBM useful and transferred bytes, bandwidth, latency, row behavior, and energy;
 - SRAM reads/writes, conflicts, occupancy, and energy;
 - compute, vector, routing, NoC, memory, and synchronization utilization;
@@ -2824,8 +2931,15 @@ Two clock views are retained: a same-frequency architecture-attribution view and
 an independently closed-frequency view. Neither may borrow the other design's
 timing closure.
 
+Two technology views are also retained. SKY130 and ASAP7 are complete separate
+tables and conclusions; neither may borrow the other view's density, frequency,
+energy, interconnect, or thermal result. For DeepSeek, topology is intentionally
+different and fully costed rather than normalized away.
+
 The tensor accelerator is not described as a clean-room implementation of any
-branded general-purpose processor. Measured NVIDIA hardware remains a separate
+branded general-purpose processor or a wire-compatible NVLink implementation.
+Public NVLink/NVL72-class and Cerebras-class specifications must be separately
+source-locked as envelopes; measured NVIDIA hardware remains a separate
 external product comparator under its own governed methodology.
 
 ## 15. Execution phases
@@ -2839,9 +2953,10 @@ shared semantics and numeric contracts
   -> connected Qwen layer
   -> full Qwen artifact-only execution, exact logits, and short generation
   -> Qwen 8,000-token common-simulator gate
-  -> DeepSeek distinct layer classes and ordinary generation
+  -> DeepSeek distinct layer classes, cluster/wafer communication,
+     and ordinary generation
   -> representative RTL correlation
-  -> 130-nm characterization and recompilation
+  -> separate SKY130 and ASAP7 characterization and recompilation
   -> governed ROM-versus-HBM/SRAM comparison
 ~~~
 
@@ -2881,9 +2996,11 @@ numeric acceptance rules; hardware field and capacity bounds; and end-to-end
 golden-generation procedures.
 
 Candidate HBM channel/stack counts, SRAM capacities, tensor tile shapes, engine
-mixes, and package topology are screened against exact model bytes and operation
-shapes. Values remain candidates until a legal compiler plan and physical
-characterization agree.
+mixes, inter-chip endpoint limits, exact 32-node switch/link topology, and ROM
+wafer topology are screened against exact model bytes, operations, and compiled
+communication traces. Values remain candidates until a legal compiler plan and
+separate SKY130/ASAP7 characterization agree. The one-node Qwen, 32-node
+DeepSeek-HBM, and wafer-scale DeepSeek-ROM scale classes themselves are frozen.
 
 **Exit gate:** every required workload, output, context definition, numeric rule,
 and architectural bound is explicit; no unresolved term can change what
@@ -2912,12 +3029,17 @@ original phase numbering lists semantic audit first. TA-ADR-003 specifies the
 RV32 management boundary, deterministic microsequencer, three ABI layers,
 tensor/vector/attention/route/reduce/selection engines, SRAM hierarchy, HBM
 frontend, NoC, state machinery, events, queues, traps, counters, errors, and
-versioning. The selected ABI 3.0 capability supports the union of the two model
-contracts.
+versioning. It also specifies the synthesizable inter-chip endpoint, remote DMA,
+messages, collectives, credits, integrity/replay, cluster events, global commit,
+faults, and counters. The selected ABI 3.0 capability supports the union of the
+two model contracts.
 
-The architecture review explicitly tests DeepSeek data-dependent experts and
-sparse indices; a design that only supports a compile-time dense schedule does
-not pass.
+The architecture review explicitly tests DeepSeek data-dependent experts,
+sparse indices, node-local HBM, remote movement, collectives, and global state
+commit across exactly 32 identical nodes. A design that only supports a
+compile-time dense schedule or host-sequenced cluster does not pass. It also
+freezes the wafer-scale ROM topology contract and the separate SKY130/ASAP7
+evidence policy.
 
 **Exit gate:** TA-A3-ARCH-0. All externally visible records, engine contracts,
 numeric modes, memory rules, dynamic bounds, errors, and counters are versioned
@@ -2931,9 +3053,11 @@ artifact chain. It emits HBM images, SRAM plans, DMA/kernel/state programs,
 manifests, expected counters, and independent reports. Corruption and illegal
 capacity cases fail closed.
 
-The slice is then replaced by one real full-dimension Qwen block and
-representative full-dimension DeepSeek layer classes using actual checkpoint
-values.
+The slice is then extended through two identical fabric endpoints and replaced
+by one real full-dimension Qwen block and representative full-dimension DeepSeek
+layer classes using actual checkpoint values. DeepSeek slices include remote
+DMA, expert/sparse traffic, a collective, and global state commit before the
+complete 32-node plan.
 
 **Exit gate:** TA-COMP-2 for the declared slices. Every logical byte reconstructs,
 every allocation and command is legal, and two clean builds are byte-identical.
@@ -2984,37 +3108,44 @@ ordinary target-only generation loop.
 The progression is:
 
 1. every distinct layer class with actual payloads;
-2. complete model, one decode step from a valid state;
-3. complete short prefill and at least 32 decode steps or expected EOS;
-4. complete 200,000-token prefill and frozen ordinary generation;
-5. the separate 1,048,576-token capacity/qualification profile only after its
+2. two-node communication and collective fixtures, then a 32-node
+   route/reduce/state-commit slice;
+3. complete 32-node model, one decode step from a valid state;
+4. complete 32-node short prefill and at least 32 decode steps or expected EOS;
+5. complete 32-node 200,000-token prefill and frozen ordinary generation;
+6. the separate 1,048,576-token capacity/qualification profile only after its
    state, capacity, and runtime costs are legal; and
-6. speculative execution as a separately versioned extension.
+7. speculative execution as a separately versioned extension.
 
-**Exit gate:** TA-DSV4-5. All ordinary-path operations execute, routes and sparse
-indices match, state commits match, and final tokens/text pass the frozen
-acceptance suite.
+**Exit gate:** TA-DSV4-5. All ordinary-path operations execute on the exact
+topology, routes, sparse indices, remote transfers, collectives, and global state
+commits match, and final tokens/text pass the frozen acceptance suite. The ROM
+side closes the same workload on its mandatory wafer topology.
 
 ### Phase 8 — RTL correlation and robustness closure
 
 Generated programs drive RTL blocks and co-simulation. Static checks, formal
-properties, constrained-random stalls, HBM interleaving, fault injection, ECC,
-abort/drain, reset, and degraded-resource tests cover the accelerator-specific
-requirements. Simulator cycles and counters are correlated at command and
+properties, constrained-random stalls, HBM interleaving, inter-chip/on-wafer
+backpressure, credit loss, retry, link/node/tile faults, ECC, abort/drain, reset,
+and degraded-resource tests cover the accelerator-specific requirements.
+Simulator cycles and counters are correlated at command, communication, and
 representative layer scope.
 
 **Exit gate:** TA-RTL-6 plus zero open severity-one or severity-two defects, closed
 must-bin coverage, reviewed waivers, and retained reproducible campaigns.
 
-### Phase 9 — 130-nm calibration and architecture convergence
+### Phase 9 — SKY130 and ASAP7 calibration and architecture convergence
 
-The selected public-PDK flow characterizes engines, SRAM, control, and
-interconnect. Executed Qwen and DeepSeek activity drives power estimation.
-Characterized capabilities feed recompilation and simulation until physical,
-compiler, and timing assumptions converge.
+SKY130 first characterizes engines, SRAM/ROM, control, digital HBM/fabric
+endpoints, conventional chips, representative reticles, and hierarchical wafer
+interconnect at the mature 130-nm evidence boundary. ASAP7 independently repeats
+the controlled predictive 7-nm view. Executed Qwen and DeepSeek activity drives
+power estimation. Per-view capabilities feed recompilation and simulation until
+physical, compiler, and timing assumptions converge.
 
-**Exit gate:** TA-PHY-7. Every reported on-chip cycle and energy term traces to a
-characterized element or is visibly labeled external/assumed.
+**Exit gates:** TA-PHY-7-SKY130 and TA-PHY-7-ASAP7. Every reported cycle and
+energy term traces to an element characterized in the same view or is visibly
+labeled external/assumed. The ASAP7 result remains academic predictive evidence.
 
 ### Phase 10 — governed comparison and release
 
@@ -3022,9 +3153,10 @@ Both backends compile the same frozen workload manifests. All correctness gates
 run before performance comparison. Reports expose raw counters, attribution,
 uncertainty, limitations, and separate on-chip/external-memory terms.
 
-**Exit gate:** TA-CMP-8. A second clean release build and execution reproduce
-canonical artifacts and architectural results. Only evidence-supported claims are
-promoted.
+**Exit gates:** TA-CMP-8-SKY130 and TA-CMP-8-ASAP7. A second clean release build
+and execution reproduce canonical artifacts and architectural results in each
+view. Only evidence-supported claims are promoted, and cross-view composite
+results are prohibited.
 
 ## 16. CI, regression, and release policy
 
@@ -3066,12 +3198,14 @@ One integration owner controls:
 - the common simulator and engine interface contracts; and
 - cross-model release gates.
 
-The shared HBM/SRAM owner controls its backend physical planner, functional and
-cycle simulator implementations, and one RTL 3.0 hierarchy. The Qwen-ROM and
-DeepSeek-ROM owners control their respective physical plans, model-specific ROM
-simulators, RTL, and physical evidence. Qwen and DeepSeek semantic owners retain
-their adapters, official-source evidence, independent references, golden traces,
-and model-specific tests. No backend owner forks the common IR or ABI.
+The shared HBM/SRAM owner controls its backend physical planner, one-node and
+32-node functional/cycle simulator implementations, one conventional-chip RTL
+3.0 hierarchy, and the digital inter-chip endpoint. The Qwen-ROM owner controls
+its conventional one-chip plan; the DeepSeek-ROM owner controls its wafer plan,
+on-wafer fabric, distributed-HBM mapping, simulator, RTL, and hierarchical
+physical evidence. Qwen and DeepSeek semantic owners retain their adapters,
+official-source evidence, independent references, golden traces, and
+model-specific tests. No backend owner forks the common IR or ABI.
 
 Independent checkers remain separate modules and receive review from someone
 other than the corresponding generator owner whenever staffing permits.
@@ -3100,11 +3234,14 @@ can be replayed from a clean baseline.
 |---|---|---|
 | Backend-specific semantics leak into the common IR | Neutrality tests and separate physical plans | Model graph requires ROM or HBM operations to express semantics |
 | Exact simulation is too slow for full models | Native checked kernels, streaming, deterministic parallelism, checkpoint/restart | End-to-end data-bearing execution cannot be completed or reproduced |
-| DeepSeek weights/state exceed the package | Exact compiler capacity proof and explicit sharding study | Required profile depends on undeclared host paging |
+| DeepSeek exceeds node-local capacity | Exact 32-node sharding/replication and per-node capacity proof | Required profile depends on a 33rd node or undeclared host paging |
+| Inter-chip execution is an analytical overlay | First-class ABI/RTL endpoint and causal 32-node simulation | Host sequences model work or transfers/collectives bypass the fabric |
+| NVLink-class communication dominates | Trace-derived topology and bandwidth/latency sensitivity | No legal exact-32-node schedule reaches a useful bound |
+| DeepSeek ROM wafer cannot behave as one device | Causal on-wafer fabric, distributed HBM, topology/RAS/repair proof | Correct execution requires an ordinary off-package stage pipeline |
 | Dynamic experts defeat static scheduling | Runtime descriptors, bounded queues, actual-route simulation | No deadlock-free bounded dispatch plan exists |
 | Target arithmetic changes model output | Independent bit reference and predeclared golden/quality suite | Frozen quality or token gates fail |
 | SRAM banking or HBM traffic erases utilization | Physical allocator and causal cycle simulation | Conservative implementation-derived bound is not competitive |
-| 130-nm frequency, area, or power is infeasible | Early P&R and activity-driven feedback | Required capability cannot close declared physical limits |
+| SKY130 or ASAP7 physical view is infeasible | Early per-view P&R/hierarchical analysis and activity feedback | Required capability cannot close declared per-view physical limits |
 | Public HBM/PHY data is insufficient | Separate external assumptions and sensitivity bounds | A result depends on untraceable PHY or package values |
 | Compiler and checker share the same defect | Separate implementations, adversarial fixtures, inverse proofs | Independence audit finds shared expected-result logic |
 | Concurrent sessions overwrite shared work | Scoped commits, reserved surfaces, isolated worktree | Baseline cannot be reproduced or attributed |
@@ -3134,7 +3271,7 @@ RTL, physical, and comparison gates remain open.
 
 | Program decision surface | Current state | Consequence |
 |---|---|---|
-| Integration governance | `main@39a607e` is the clean merged baseline. TA-ADR-003 and the four-target master/lane plans define the proposed post-unification architecture, ownership, dependencies, and handoffs; ABI 3.0 implementation is not started | Review and close `TA-A3-ARCH-0`, then launch one common owner and the three backend roles in dependency waves. Only committed, reproduced handoffs become release evidence |
+| Integration governance | `main@b6c38ee` is the clean planning baseline. TA-ADR-003 and the four-target master/lane plans define the proposed post-unification architecture, ownership, dependencies, and handoffs; ABI 3.0 implementation is not started | Review and close `TA-A3-ARCH-0`, then launch one common owner and the three backend roles in dependency waves. Only committed, reproduced handoffs become release evidence |
 | Natural/agentic workloads | The ROM lane has committed six-question EOS and two-task bash-agent evidence. Section 1.29 imports workload ID `6e416e...e998`, closes first-EOS/token legitimacy and dynamic restart V2 at tested implementation scope, passes arithmetic and geography, and preserves science as an exact-comparison failure. Three natural and both live-agent campaigns are paused behind the ABI 3.0 architecture gate; no complete natural or agentic gate is admitted | Diagnose the science divergence, freeze and implement ABI 3.0, prove ABI 2.5 functional-reference equivalence, then resume the incomplete campaigns under new run roots where required; repeated special tokens remain stress-only evidence |
 | Neutral graph semantics | Model Graph IR v2 and a real Qwen graph exist; committed DeepSeek references continue to accumulate | The semantic graph boundary is retained, but `TA-SEM-1` remains open until both complete ordinary graphs have zero unknown operations |
 | Neutral kernel semantics | **QW-FM1 closed at `74c0d59`.** One retained dynamic-shape neutral artifact maps all 617 Qwen operations and 36 state resources exactly once, including final output and terminal commit, and an independent checker reconstructs all source, numeric, tensor, state, and qualification bindings without backend leakage | Preserve the admitted Qwen semantic artifact through physical execution; separately close the remaining DeepSeek operation/state union before `TA-SEM-1` |
@@ -3143,7 +3280,7 @@ RTL, physical, and comparison gates remain open.
 | Compiler and checker | **QW-FM1 through QW-FM4 remain closed; dynamic diagnostic closed at `720cb2a`; long physical capacity and restart close in Sections 1.26 and 1.27.** Forward and inverse V7 planners agree on the complete graph, HBM/SRAM layout, 399 checkpoint weights, 36 expanded state resources, and command program | Preserve V6 and V7 artifacts while adding independent long-session checking and the final official/golden comparison; do not relabel two restart transactions as acceptance execution |
 | Functional simulation | **32-decision diagnostic closed at `720cb2a`; V7 checkpoint/restart differential closed in Section 1.27.** The common simulator carries and atomically commits all 36 KV resources; the interrupted/restored step following checkpoint 1 is byte-identical to uninterrupted execution, including full reports and the step-2 checkpoint | Measure representative growing positions, optimize without changing arithmetic ordering, then execute the exact 8,000-token resident prompt plus at least 32 generated tokens and compare with the governed official/golden result |
 | RTL correlation | QW-RTL-CMD-001 admits all production records; QW-RTL-DMA-RMS-001 executes adjacent commands 1 and 2 and completes `node.0001`; QW-RTL-DMA-MATMUL-001 retains focused first-block arithmetic/fail-stop evidence; QW-RTL-Q-PROJ-001 executes all commands 3 through 2,050 and all 4,096 BF16 values of `node.0002`; QW-RTL-KV-PROJ-001 executes all commands 2,051 through 3,074 and all 2,048 BF16 values of `node.0003` and `node.0004`; **QW-RTL-HEAD-RMS-001 executes commands 3,075 through 3,078 and all 5,120 BF16 values of per-head RMSNorm operations `node.0005` and `node.0006` in Icarus and Verilator, matching independent scalar outputs, exact counters, zero saturation, complete-operation atomic writeback, and fail-stop behavior** | Q, K, and V projections plus Q/K per-head RMSNorm are closed at the RTL/software-correlation boundary. Add indexed coefficient DMA and RoPE to close QKV preparation, then KV prepare, attention, state and vector kernels, program authentication, banking/ECC/arbitration, and a representative complete layer before `TA-RTL-6` |
-| Timing and physical evidence | Bounded macro-free ADD-SRAM RTL-to-GDS feasibility passes on pinned public IHP SG13G2 at a 20 ns target: campaign `0af6cbe8...b316` has positive extracted setup/hold slack at slow, typical, and fast corners, zero internal route/antenna violations, 18,101 post-route cells, and no unconstrained endpoints | This is one control/compute slice with an external behavioral SRAM. Formal equivalence, SRAM macro, activity-derived power/IR, thermal, foundry DRC/LVS, HBM/package, complete-layer timing, performance per watt, reliability, yield, and silicon remain open; `TA-PHY-7` is not closed |
+| Timing and physical evidence | Bounded macro-free ADD-SRAM RTL-to-GDS feasibility passes on pinned public IHP SG13G2 at a 20 ns target: campaign `0af6cbe8...b316` has positive extracted setup/hold slack at slow, typical, and fast corners, zero internal route/antenna violations, 18,101 post-route cells, and no unconstrained endpoints | This is one historical control/compute slice with an external behavioral SRAM. Formal equivalence, SRAM macro, activity-derived power/IR, thermal, foundry DRC/LVS, HBM/package, complete-layer timing, performance per watt, reliability, yield, and silicon remain open; neither `TA-PHY-7-SKY130` nor `TA-PHY-7-ASAP7` is closed |
 | End-to-end execution | A one-token-prompt, 32-generated-decision target-precision session is independently exact, and the V7 long path has two authentic byte-exact restart-qualified transactions; neither uses the exact 8,000-token prompt | `TA-QWEN-4` and `TA-DSV4-5` remain open; short or two-step evidence cannot substitute for Qwen 8,000 or DeepSeek 200,000 |
 
 ### 19.2 Closed horizon: one complete connected Qwen layer
@@ -3193,7 +3330,7 @@ SRAM plan, command program, independent reconstruction, causal execution report,
 strict schemas, corruption and compatibility campaign, two clean reproductions,
 and scoped commit agree.
 The capability remains explicitly uncharacterized and enables no timing, energy,
-RTL, or 130-nm claim.
+RTL, SKY130, or ASAP7 claim.
 
 The attention and transactional-KV stage is now closed at `d353f9d`. It begins
 with the authentic rotary Q, rotary K, and V values and a bounded nonempty causal
@@ -3267,11 +3404,11 @@ review.
 
 The development capability is versioned whenever a new engine, format, field
 bound, SRAM rule, or state primitive becomes visible. Such a version remains
-uncharacterized until RTL and 130-nm evidence supplies its costs. DeepSeek's
-declared type, routing, sparse-index, expert, and state requirements are checked
-against every shared field-width and queue-bound decision even though Qwen is the
-first data-bearing layer bring-up. This prevents a Qwen-only ABI from becoming a
-premature hardware freeze.
+uncharacterized until RTL plus separate SKY130 and ASAP7 evidence supplies its
+costs. DeepSeek's declared type, routing, sparse-index, expert, and state
+requirements are checked against every shared field-width and queue-bound
+decision even though Qwen is the first data-bearing layer bring-up. This
+prevents a Qwen-only ABI from becoming a premature hardware freeze.
 
 **Horizon exit decision:** satisfied at `c07331b`. The actual layer deployment is
 deterministic, independently reconstructable, fully causal, artifact-only,
@@ -3283,8 +3420,10 @@ closed at `324f48d`, and QW-FM4 subsequently closed at `c5b9578`.
 ### 19.3 Closed horizon: full Qwen artifact-only execution and one-step logits
 
 The closed outcome is one complete Qwen forward execution from a fixed actual
-token request to exact final-position logits and the frozen host greedy-token
-decision.
+token request to exact final-position logits plus the historical ABI 2.5
+host-controlled greedy-token decision. That retained result is authentic at its
+declared boundary, but it cannot close ABI 3.0 acceptance, which requires
+on-device argmax, token append, generation-loop control, and first-EOS stop.
 The entry evidence is the connected layer at `c07331b`, final-output-family
 qualification at `2222f76`, complete neutral-semantic bundle at `74c0d59`, and
 the deterministic full-model deployment plus independent physical reconstruction
@@ -3298,12 +3437,13 @@ The admitted deployment applies the neutral layer pattern to all 36 distinct
 layer instances, then lowers `node.0613` final RMSNorm, `node.0614`
 `LAST_TOKEN_SELECT`, `node.0615` vocabulary `MATMUL`, and the terminal
 36-resource `STATE_COMMIT`. `LAST_TOKEN_SELECT` selects the final sequence
-position inside model-forward execution; greedy argmax remains the frozen host
-policy at the system boundary in Section 3.1. Artifact-only execution must use
-those existing generic kernels and exact command ranges. Any necessary IR or ABI
-extension discovered during execution must be bounded, model-neutral, checked
-against the DeepSeek capability union, and pass strict backward replay before
-admission.
+position inside model-forward execution. Greedy argmax was a host policy at
+this retired evidence boundary; ABI 3.0 migration must move it and the remaining
+generation control into the accelerator as required by Section 3.1.
+Artifact-only execution must use those existing generic kernels and exact
+command ranges. Any necessary IR or ABI extension discovered during execution
+must be bounded, model-neutral, checked against the DeepSeek capability union,
+and pass strict backward replay before admission.
 
 The horizon was organized as four dependent evidence work packages:
 
@@ -3340,10 +3480,11 @@ The SRAM planner reuses the 16 one-MiB banks across proven non-overlapping
 lifetimes. Layer scratch does not scale by 36; hidden-state storage alternates
 between checked producer and consumer regions, while final-output selection is
 performed from the live tile containing the logical final row. Immutable weights
-and persistent KV/state remain in declared external-HBM regions; HBM remains
-outside the synthesized 130-nm boundary. Capacity reporting includes the
-complete checkpoint, alignment and padding, program and metadata, all 36 KV
-resources at the declared context, allocator reserve, and integrity overhead.
+and persistent KV/state remain in declared external-HBM regions; HBM dies remain
+outside the synthesized SKY130/ASAP7 digital boundary. Capacity reporting
+includes the complete checkpoint, alignment and padding, program and metadata,
+all 36 KV resources at the declared context, allocator reserve, and integrity
+overhead.
 The plan rejects an allocator that relies on implicit activation retention,
 undeclared spill, whole-sequence SRAM residency, or host paging.
 
@@ -3422,6 +3563,14 @@ contracts, known answers, and coverage reports are integrated at reviewed
 handoffs. Dirty working-tree implementations are never copied. DSpark and
 speculative execution remain outside the first DeepSeek deployment profile.
 
+The physical deployment boundaries are frozen before implementation:
+DeepSeek-HBM is exactly 32 copies of the same conventional chip/netlist used by
+Qwen, connected through the ABI 3.0 inter-chip subsystem and the required
+source-locked NVLink-class external fabric model; DeepSeek-ROM is one wafer-scale
+logical accelerator using a causal on-wafer fabric and distributed HBM state.
+Neither boundary may be replaced with host orchestration or a different node
+count to make a failing campaign pass.
+
 Before the complete command ABI freezes, a capability-union review proves that
 the shared fields and bounded engine families can represent DeepSeek FP8,
 MXFP4/E8M0, routing, expert dispatch, sparse-index, attention, compressor, and
@@ -3442,6 +3591,10 @@ the implementation:
   operation to express mathematical semantics;
 - a Qwen-oriented field or queue bound cannot represent the declared DeepSeek
   union;
+- the identical HBM chip lacks endpoint, remote-DMA, collective, credit, retry,
+  fault, or counter behavior needed for exact 32-node execution;
+- the DeepSeek ROM compiler or simulator requires off-package stage sequencing
+  instead of the declared wafer-global control/fabric boundary;
 - removing a required command, memory response, or state commit does not prevent
   completion or affect the architectural result;
 - the independent checker must import compiler allocation, scheduling, lowering,
@@ -3451,8 +3604,8 @@ the implementation:
   duplicate checkpoint copy;
 - cycle or energy claims require a value absent from the frozen characterized
   capability; or
-- a ROM-versus-HBM/SRAM result changes model, arithmetic, workload, process,
-  external-memory, or evidence scope between the two backends.
+- a ROM-versus-HBM/SRAM result changes model, arithmetic, workload, technology
+  view, external-memory/fabric, or evidence scope between the two backends.
 
 The program preserves vertical completeness at every horizon. Broader operation
 coverage is valuable only when every admitted operation has source semantics,

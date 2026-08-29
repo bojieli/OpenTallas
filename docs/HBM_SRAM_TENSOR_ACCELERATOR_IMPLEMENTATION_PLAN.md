@@ -4,23 +4,27 @@
 
 **Status:** implementation blocked on TA-A3-ARCH-0
 
-**Hardware products:** one programmable tensor accelerator
+**Hardware product:** one programmable conventional accelerator chip
 
-**Deployment targets:** Qwen3-8B and DeepSeek-V4 Flash
+**Deployment targets:** one chip for Qwen3-8B; exactly 32 identical chips for
+DeepSeek-V4 Flash
 **Issue date:** 2026-08-29
 
 ## 1. Mission and definition of done
 
-This lane builds one production-quality HBM/SRAM tensor accelerator, compiler,
-functional simulator, cycle simulator, and RTL 3.0 hierarchy. The identical
-elaborated hardware must run:
+This lane builds one production-quality conventional HBM/SRAM accelerator chip,
+compiler, functional simulator, cycle simulator, and RTL 3.0 hierarchy. The
+identical elaborated chip/netlist must run:
 
-- Qwen3-8B at the exact 8,000-token acceptance context; and
-- DeepSeek-V4 Flash at the exact 200,000-token acceptance context.
+- Qwen3-8B on one node at the exact 8,000-token acceptance context; and
+- DeepSeek-V4 Flash across exactly 32 identical nodes at the exact 200,000-token
+  acceptance context.
 
 Different checkpoint images, descriptors, programs, numeric profiles, and
 firmware-approved deployments are allowed. Model-selected RTL parameters,
-generated model modules, hard-coded layer counts, and resynthesis are not.
+generated model modules, hard-coded layer counts, a DeepSeek-only chip
+elaboration, and resynthesis are not. Each chip includes the inter-chip digital
+endpoint and DeepSeek engine modes even when deployed alone for Qwen.
 
 The lane is complete only when both checkpoints:
 
@@ -31,7 +35,10 @@ The lane is complete only when both checkpoints:
 5. match the frozen target numerical/token policy;
 6. correlate representative complete programs with RTL 3.0;
 7. reconcile execution and timing counters; and
-8. recompile and execute against one characterized 130-nm capability.
+8. execute DeepSeek through a causal 32-node fabric model with real data,
+   routing, collectives, link contention, and fail-stop behavior;
+9. recompile and execute against separately characterized SKY130 and ASAP7
+   capabilities.
 
 The design is called a tensor accelerator. It is not a GPU, does not implement
 SIMT threads or warps, and is not represented as a reproduction of an NVIDIA
@@ -68,6 +75,8 @@ The current implementation is not the target system:
 - no common DeepSeek graph or Kernel IR export exists;
 - no DeepSeek HBM deployment or full execution exists;
 - no one-hardware capability proof covers the combined model union;
+- no ABI 3.0 inter-chip endpoint, cluster physical plan, or causal 32-node
+  functional/cycle execution exists;
 - the functional simulator is not a production cycle model;
 - current RTL slices are individually bounded and partly command-range-specific;
   and
@@ -78,7 +87,7 @@ appear complete.
 
 ## 3. Hardware architecture
 
-The planned hierarchy is:
+The planned per-chip hierarchy is:
 
 ~~~text
 host transport / IOMMU
@@ -93,14 +102,20 @@ deterministic microsequencer
         |
 event scoreboard and engine queues
         |
-+-------+---------+----------+----------+----------+----------+
-| DMA/HBM | tensor | vector | attention | route/reduce | state/select |
-+-------+---------+----------+----------+----------+----------+
++-------+---------+----------+----------+----------+----------+----------+
+| DMA/HBM | tensor | vector | attention | route/reduce | state/select | fabric |
++-------+---------+----------+----------+----------+----------+----------+
         |
 banked SRAM scratchpad + deterministic NoC
-        |
-external HBM controller/PHY boundary
+        +--------------------+
+        |                    |
+external HBM boundary   inter-chip digital endpoint
+                             |
+                   external PHY/switch/link model
 ~~~
+
+One node forms the Qwen system. Exactly 32 copies of this hierarchy plus the
+versioned external fabric form the DeepSeek HBM system.
 
 ### 3.1 Management and command processing
 
@@ -140,7 +155,10 @@ Host demand paging and unreported framework memory are illegal.
 The HBM frontend supports multiple channels/pseudo-channels, tagged requests,
 out-of-order responses, integrity/error status, bounded retries, backpressure,
 and per-object accounting. Channel count and timing are capability values
-selected after physical and package review.
+selected after physical and package review. In the DeepSeek cluster, HBM is
+node-local. Remote data movement is explicit inter-chip DMA or messaging and is
+accounted separately; no simulator may flatten 32 node memories into a
+zero-cost uniform address space.
 
 ### 3.3 SRAM hierarchy
 
@@ -192,6 +210,42 @@ The release build must prove:
 
 Conditional behavior comes only from legal descriptors and capability bits.
 
+Within each technology view, the proof uses one chip for Qwen and 32
+byte-identical netlist copies for DeepSeek. It does not require the Qwen
+one-node system to hold the complete DeepSeek image, and it does not permit a
+wider DeepSeek-only chip.
+
+### 3.6 Inter-chip communication subsystem
+
+Inter-chip communication is part of the accelerator RTL and ABI. Every chip
+implements:
+
+- a versioned fabric endpoint and topology/epoch registers;
+- bounded remote DMA and message send/receive engines;
+- packetization, reassembly, sequencing, and transaction tagging;
+- virtual channels, ingress/egress queues, credits, arbitration, and
+  backpressure;
+- multicast, broadcast, gather, scatter, reduction, and barrier participation;
+- ordered expert-dispatch, sparse-gather, activation, vocabulary, and
+  state-commit traffic classes;
+- CRC/integrity, bounded retry/replay, duplicate suppression, timeout, poison,
+  abort, and link/node-reset handling; and
+- bytes, packets, flits, retries, latency histograms, congestion, occupancy,
+  collective, and fault counters.
+
+Descriptors bind source/destination node or admitted group, local/remote object
+windows, byte extents, route/ordering class, virtual channel, retry bound,
+completion event, and timeout. There is no implicit global cache coherence and
+no firmware per-layer cluster loop. A cluster transaction either reaches its
+declared global state/token commit or fails without exposing partial progress.
+
+The high-speed analog PHY, switches, cables/board or package fabric remain
+external sourced boundaries. The digital endpoint, queues, flow control,
+collective participation, faults, and counters are synthesized and correlated.
+Public NVIDIA NVLink/NVL72-class specifications define a source-locked reference
+envelope and sensitivity range; OpenTallas does not claim wire compatibility or
+copy unsourced headline bandwidth into its capability.
+
 ## 4. Compiler implementation
 
 ### 4.1 Common frontend dependency
@@ -215,6 +269,11 @@ The backend emits a versioned physical plan containing:
 - tensor tile and vector chunk definitions;
 - state prepare/commit extents;
 - engine and queue assignment;
+- one-node or exact 32-node topology identity;
+- node-local HBM ownership, sharding/replication, remote object windows, and
+  communication placement;
+- point-to-point, multicast, gather, reduction, barrier, and global-commit
+  descriptors with link counter expectations;
 - event dependency graph;
 - compact loop/control descriptors;
 - static capacity and worst-case outstanding-work proofs;
@@ -237,10 +296,12 @@ The deterministic lowering sequence is:
 6. schedule DMA and engines with explicit events;
 7. construct state transactions and generation control;
 8. emit typed descriptors and ABI 3.0 programs;
-9. emit HBM images/shards, manifests, and expected counters;
-10. run independent inverse, liveness, capacity, and command legality checks;
-    and
-11. reproduce the build byte-for-byte in a second clean directory.
+9. for DeepSeek, partition the program and objects over exactly 32 identical
+   node capabilities and schedule explicit communication/collectives;
+10. emit HBM images/shards, manifests, and expected local/fabric counters;
+11. run independent inverse, liveness, capacity, communication, collective,
+    and command legality checks; and
+12. reproduce the build byte-for-byte in a second clean directory.
 
 ### 4.4 Independent checker
 
@@ -252,6 +313,8 @@ code. It independently:
 - proves every SRAM interval, lifetime, bank, and port use;
 - validates descriptor and program integrity;
 - reconstructs loop work, events, queue occupancy, and absence of cyclic waits;
+- reconstructs node ownership, remote transfers, routes, collective membership,
+  credit bounds, global commits, and cluster deadlock freedom;
 - proves state prepare/commit/discard closure;
 - derives expected operation and byte counters; and
 - rejects out-of-range, overlap, missing-work, unknown-feature, and corrupted
@@ -288,6 +351,11 @@ The functional device:
   counter; and
 - supports authenticated checkpoint/restart without changing results.
 
+For DeepSeek, functional mode instantiates 32 node-local object spaces and
+executes every remote transfer and collective causally. It may omit physical
+link cycles in this mode, but it may not replace communication with direct
+cross-node memory reads or precombined reductions.
+
 Optimized compiled kernels and deterministic parallel execution are permitted
 when every optimized kernel is bit-differentially qualified against the scalar
 target reference. Optimization may change wall time, not operation ordering
@@ -304,6 +372,8 @@ results. It models:
 - HBM channels, bursts, row behavior, outstanding tags, responses, refresh,
   errors, and retries;
 - NoC links, credits, contention, and backpressure;
+- 32-node endpoint queues, serialization, PHY/link/switch latency, routes,
+  virtual channels, credits, retries, collectives, congestion, and failures;
 - engine pipeline latency and initiation interval;
 - state prepare/commit/drain behavior;
 - clock/power states and watchdogs; and
@@ -325,6 +395,10 @@ publish:
 - a two-times resource margin against the authorized campaign host; and
 - evidence that trace compression or native kernels preserve exact results.
 
+The DeepSeek projection additionally measures 32-node host RAM, event count,
+fabric-event rate, checkpoint size, trace growth, and simulated cycles per host
+second. A one-node or timing-only extrapolation cannot close the campaign.
+
 If the projection is infeasible, optimize and requalify the simulator. Do not
 replace the required context with a smaller one.
 
@@ -345,9 +419,11 @@ The initial RTL work packages are:
 5. state prepare/commit/discard and recovery;
 6. DMA/HBM and banked-SRAM arbitration;
 7. tensor/vector/attention/route/reduce/selection engine adapters;
-8. trace and counter blocks;
-9. RAS, reset, power, CDC/RDC, and test integration; and
-10. generated-program top-level harness.
+8. inter-chip endpoint, remote DMA, packet queues, virtual channels, credits,
+   collectives, integrity/replay, global commit, RAS, and fabric counters;
+9. trace and counter blocks;
+10. RAS, reset, power, CDC/RDC, and test integration; and
+11. one-node and 32-node generated-program top-level harnesses.
 
 ### 6.2 Reuse criteria for existing slices
 
@@ -374,10 +450,12 @@ RTL bring-up proceeds through:
 4. Qwen ABI 2.5-equivalent full-width operation slices;
 5. one connected Qwen layer;
 6. one DeepSeek mixed-format route/state slice;
-7. on-device vocabulary argmax, token append, and EOS;
-8. one complete short generation transaction;
-9. multi-session backpressure, error, abort, and reset; and
-10. representative layer/program cycle correlation.
+7. two-node remote-DMA and collective slice with link stalls/faults;
+8. 32-node DeepSeek route/reduce/state-commit slice;
+9. on-device vocabulary argmax, token append, and EOS;
+10. one complete short generation transaction;
+11. multi-session backpressure, error, abort, reset, and link retry; and
+12. representative layer/program cycle correlation.
 
 ## 7. Qwen deployment track
 
@@ -411,6 +489,9 @@ Qwen closure requires:
 Only the natural run supports language-quality claims. Repeated-special input is
 capacity/stress evidence.
 
+All Qwen acceptance evidence uses exactly one conventional accelerator node.
+Cluster resources may not be credited to the Qwen chip-versus-chip comparison.
+
 ## 8. DeepSeek deployment track
 
 ### 8.1 Ordinary target profile
@@ -424,6 +505,12 @@ greedy selection.
 The common capability must represent optional DSpark extensions, but the
 ordinary target profile is closed before enabling them.
 
+The deployment topology is exactly 32 copies of the Qwen HBM/SRAM chip. Compiler
+partitioning may use tensor, pipeline, expert, sequence, or hybrid sharding only
+when all communication and state semantics remain explicit. Diagnostics may use
+2, 4, 8, or 16 nodes, but only the 32-node artifact and execution close the
+DeepSeek HBM gates.
+
 ### 8.2 Bring-up order
 
 DeepSeek progresses through:
@@ -433,20 +520,23 @@ DeepSeek progresses through:
 3. routed MXFP4 dispatch and expert reduction;
 4. sparse attention and index selection;
 5. compressor, window-KV, compressed-KV, and mHC transactions;
-6. one complete checkpoint-derived transformer block;
-7. complete one-step model execution;
-8. short natural generation through EOS;
-9. simple agentic/tool-template generation;
-10. exactly 200,000 natural prompt tokens plus ordinary decode; and
-11. optional DSpark/speculative extension after target closure.
+6. inter-node expert dispatch, sparse gather, activation movement, reductions,
+   global state commit, and vocabulary aggregation;
+7. one complete checkpoint-derived transformer block across the cluster;
+8. complete one-step 32-node model execution;
+9. short natural generation through EOS;
+10. simple agentic/tool-template generation;
+11. exactly 200,000 natural prompt tokens plus ordinary decode; and
+12. optional DSpark/speculative extension after target closure.
 
 ### 8.3 Long-context requirements
 
 All 200,000 positions are represented with ordinary 32-bit position and 64-bit
-state/object fields. The compiler proves HBM capacity for model, scales,
-metadata, KV, compressor, output, reserve, and integrity. The simulator executes
-actual state reads/writes and sparse indices; it may not use an analytical
-attention/KV shortcut.
+state/object fields. The compiler proves per-node and aggregate HBM capacity for
+model, scales, metadata, KV, compressor, output, reserve, and integrity, plus
+all sharding and replication overhead. The simulator executes actual state
+reads/writes, sparse indices, remote movement, and collectives; it may not use
+an analytical attention/KV or fabric shortcut.
 
 ## 9. Verification strategy
 
@@ -470,25 +560,33 @@ Every milestone includes:
 
 No skipped or interrupted suite is a pass.
 
-## 10. 130-nm implementation and HBM boundary
+## 10. SKY130/ASAP7 implementation and HBM/fabric boundary
 
-One public 130-nm flow is selected for the comparison after the existing
-SKY130A/IHP audit. All HBM and ROM results in a comparison pair use the same
-selected process, libraries, PVT policy, clock-view policy, SRAM methodology,
-and evidence class. Evidence from different PDKs is not numerically mixed.
+Two separately governed technology views are mandatory:
 
-The 130-nm implementation includes:
+- SKY130 is the mature open 130-nm implementation and verification baseline;
+- ASAP7 is the academic predictive 7-nm projection and is never described as
+  production foundry signoff.
+
+Within a view, same-model HBM and ROM reports use common PVT, clock-view, SRAM,
+external HBM, link-boundary, and evidence policies. SKY130 and ASAP7 values are
+never numerically mixed.
+
+Each chip implementation includes:
 
 - management and microsequencer logic;
 - engine datapaths and local control;
 - banked SRAM macro/compiler views or explicitly labeled proxies;
-- NoC, queue, state, RAS, power, and test logic; and
-- the digital HBM controller/interface boundary.
+- NoC, queue, state, RAS, power, and test logic;
+- the digital HBM controller/interface boundary; and
+- the digital inter-chip endpoint, queues, flow control, integrity/replay,
+  collective participation, RAS, and counters.
 
-HBM DRAM, high-speed PHY, interposer/package, and stacks are external. Their
-area, latency, power, capacity, and energy are separately sourced and reported.
-The HBM accelerator pays all executed weight traffic; ROM designs still pay
-their mutable-state HBM traffic.
+HBM DRAM, high-speed HBM/link PHYs, cluster switches, cables/board or package
+fabric, interposer/package, and stacks are external. Their area, latency, power,
+capacity, and energy are separately sourced and reported. The HBM accelerator
+pays all executed weight and inter-node traffic; ROM designs still pay their
+mutable-state HBM traffic.
 
 Characterization feeds exact engine latency, initiation interval, queue/port
 rules, frequency, and energy events into a versioned capability. Both models are
@@ -503,12 +601,14 @@ then recompiled and rerun. Hand-entered peak throughput cannot close the loop.
 | HBM-Q2 | Qwen ABI equivalence | full-width retained goldens, state/token equivalence, compact-loop proof |
 | HBM-D2 | DeepSeek representative union | dense, routed, sparse, and state slices from actual checkpoint payloads |
 | HBM-E3 | both complete short models | artifact-only prefill/decode, on-device argmax/EOS, legitimate text and exact state |
-| HBM-S4 | data-bearing cycle closure | causal HBM/SRAM/NoC/queue timing and reconciled counters for both models |
+| HBM-CL3 | cluster communication closure | same chip endpoint at 2 then 32 nodes; remote DMA, collectives, credits, faults, and global commit correlate |
+| HBM-S4 | data-bearing cycle closure | causal HBM/SRAM/NoC/32-node-fabric timing and reconciled counters for both models |
 | HBM-R5 | RTL 3.0 representative closure | same generated ABI programs, two-simulator/formal/fault evidence |
 | HBM-Q8K6 | Qwen mandatory context | exact natural 8K plus separate stress, chat and agent results |
 | HBM-D200K6 | DeepSeek mandatory context | exact natural 200K plus ordinary decode and short agent result |
-| HBM-P7 | 130-nm converged capability | characterized RTL, recompilation, rerun, activity-derived reports |
-| HBM-REL8 | shared hardware release | one netlist/capability admits both deployment releases |
+| HBM-P7-SKY | SKY130 converged capability | characterized RTL, recompilation, rerun, activity-derived reports |
+| HBM-P7-A7 | ASAP7 predictive capability | separate academic characterization, recompilation, rerun, and limitations |
+| HBM-REL8 | shared chip release | one conventional chip netlist/capability admits Qwen as one node and DeepSeek as 32 identical nodes |
 
 ## 12. Agent handoff requirements
 
@@ -532,7 +632,9 @@ lowering pass. It returns a contract-change request to the common owner.
 
 | Risk | Required response | Redesign trigger |
 |---|---|---|
-| DeepSeek union makes the shared datapath impractical | compile and characterize representative slices early | one netlist cannot legally or competitively support both models |
+| DeepSeek union makes the shared chip impractical | compile and characterize representative slices early | one identical chip netlist cannot legally support Qwen-one-node and DeepSeek-32-node deployments |
+| fabric endpoint is treated as an external shortcut | make communication an ABI engine, RTL block, and causal simulator resource | DeepSeek completion depends on host sequencing or unmodeled zero-cost transfers |
+| 32-node communication dominates | trace-derived sharding and causal NVLink-class sensitivity | no legal 32-node schedule reaches a competitive bound |
 | command/control remains too verbose | compact verified loops and descriptor reuse | program/control traffic dominates useful execution |
 | long simulation is infeasible | native exact kernels, event-driven timing, checkpoint/restart | full data-bearing target cannot finish reproducibly |
 | SRAM conflicts erase tensor use | bank-aware allocation and causal cycle model | legal schedules cannot reach a useful bound |
@@ -540,7 +642,7 @@ lowering pass. It returns a contract-change request to the common owner.
 | mixed formats fail numeric quality | exact references and frozen quality gates | tokens/quality fail under implementable rules |
 | dynamic routing deadlocks queues | bounded occupancy proof and randomized stress | no finite deadlock-free schedule exists |
 | state failure partially advances a session | atomic prepare/commit/discard | any fault exposes partial token state |
-| model logic leaks into RTL | same-netlist audit and adversarial deployment | a new model requires HDL change or resynthesis |
+| model logic leaks into RTL | same-netlist audit and adversarial deployment | DeepSeek requires a different chip elaboration or resynthesis |
 
 ## 14. Immediate work after architecture approval
 
@@ -550,8 +652,10 @@ The first implementation is not a complete Qwen rerun. It is:
 2. build the HBM/SRAM Physical Plan IR and independent checker for that fixture;
 3. execute it through the functional microsequencer including loop, event,
    state, argmax, and EOS behavior;
-4. correlate the controller path in reduced RTL; and
-5. only then migrate one retained Qwen operation and one representative
+4. correlate the controller path in reduced RTL;
+5. extend the fixture through two identical endpoints with remote DMA,
+   collective, stalls, retry, failure, and global-commit checking; and
+6. only then migrate one retained Qwen operation and one representative
    DeepSeek operation.
 
 This order makes the production controller and evidence boundary real before

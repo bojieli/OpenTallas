@@ -7,14 +7,26 @@
 **Model profile:** DeepSeek-V4-Flash-0731 ordinary target-only inference
 
 **Mandatory context:** exactly 200,000 natural prompt tokens
+
+**Physical topology:** one wafer-scale logical ROM accelerator with distributed
+HBM mutable-state attachment
 **Issue date:** 2026-08-29
 
 ## 1. Mission
 
 This lane builds a DeepSeek-V4 Flash-specific immutable-weight ROM compiler,
 artifact-driven simulator, cycle model, RTL hierarchy, and physical plan. It may
-use a different tensor-lane mix, stage topology, netlist, and masks from the
+use a different tensor-lane mix, wafer partition, netlist, and masks from the
 Qwen ROM product. It does not need to run Qwen dynamically.
+
+Wafer scale is mandatory for this lane, not one candidate discovered after
+compilation. The complete ordinary model is distributed across a reticle/tile
+hierarchy with a very-low-latency, very-high-bandwidth on-wafer fabric and
+distributed HBM attachment for mutable state. The host sees one logical
+accelerator and does not sequence a pipeline of conventional chips. If this
+wafer boundary cannot meet capacity, communication, power, thermal, yield,
+repair, timing, or correctness gates, the architecture is redesigned or
+rejected rather than silently becoming an off-package cluster.
 
 The first release executes the complete ordinary target-model prefill/decode
 path. DSpark draft generation and speculative acceptance are separate
@@ -32,8 +44,11 @@ The lane is complete only when:
   match independent references;
 - the first official EOS stops ordinary decode with legitimate token output;
 - the exact 200,000-token natural context executes end to end;
+- all required on-wafer transfers, multicast, sparse gather, expert dispatch,
+  collectives, reductions, HBM locality, and synchronization execute causally;
 - representative generated programs execute through ROM RTL/co-simulation; and
-- a same-node physical report can be compared with the DeepSeek HBM deployment.
+- separate SKY130 and ASAP7 wafer reports can be compared with the DeepSeek
+  32-node HBM deployment in the matching technology view.
 
 ## 2. Retained baseline
 
@@ -80,12 +95,14 @@ The repository still lacks:
 - complete graph-to-hardware lowering;
 - full immutable physical placement and capacity proof;
 - a certified complete physical schedule;
+- a frozen wafer reticle/tile topology, distributed-HBM plan, or causal
+  on-wafer-fabric model;
 - an operator-complete artifact-driven service engine;
 - a checkpoint-derived complete transformer block;
 - complete ordinary prefill/decode;
 - generated-artifact RTL controller/operator integration;
 - exact 200,000-token execution; and
-- execution-derived performance and same-node comparison.
+- execution-derived performance and same-technology-view comparison.
 
 The structural hardware descriptor ISA draft maps the 46 semantic kinds to
 macro-op families, but has no bound descriptors or complete executor. Its
@@ -128,14 +145,16 @@ acceptance semantics are pinned and executed.
 
 ## 4. Architecture
 
-The candidate DeepSeek ROM hierarchy is:
+The mandatory DeepSeek ROM hierarchy is:
 
 ~~~text
 host and reviewed management/session boundary
                     |
 DeepSeek target microprogram and generation controller
                     |
-model-specific multi-stage pipeline selected by physical compiler
+wafer-global control/event/session boundary
+                    |
+reticle/tile hierarchy over a stitched on-wafer fabric
                     |
 +---------------------+------------------------------+
 | immutable ROM regions and scale ROM               |
@@ -148,14 +167,14 @@ model-specific multi-stage pipeline selected by physical compiler
 | HBM KV/compressor/compressed-state service         |
 +---------------------+------------------------------+
                     |
-deterministic stage links, credits, integrity, state
+distributed HBM controllers/PHY attachment for mutable state
 ~~~
 
 ### 4.1 Control architecture
 
 The ROM lane reuses the accepted ABI 3.0 management, session, state,
 trap/recovery, counter, trace, and EOS semantics where compatible. The
-model-specific sequencer may exploit static stage and ROM schedules, but must
+model-specific sequencer may exploit static on-wafer and ROM schedules, but must
 still:
 
 - execute an authenticated bounded program;
@@ -169,6 +188,10 @@ still:
 
 Neither management firmware nor Python may compute an omitted operator, route,
 logit, or token.
+
+Global control uses one deployment/session/transaction namespace. Reticle-local
+sequencers may issue admitted subprograms, but no firmware or host loop may
+sequence model layers, experts, or collectives across the wafer.
 
 ### 4.2 Immutable tensor service
 
@@ -220,6 +243,11 @@ The compiler proves capacity and addresses for exactly 200,000 prompt positions
 plus the frozen decode allowance. State views never expose stale capacity rows.
 Abort, reset, timeout, invalid route/index, or numeric failure advances neither
 position nor committed state.
+
+HBM is physically distributed around the wafer/package boundary. The compiler
+binds every state object to one or more attachment/locality domains and prices
+all access and replication. A single zero-latency uniform HBM abstraction is
+illegal in cycle or physical acceptance.
 
 ## 5. Common IR migration
 
@@ -279,36 +307,43 @@ The deterministic compiler performs:
 1. source/checkpoint/common-IR validation;
 2. ordinary-profile tensor and operation closure;
 3. canonical format/scale/layout conversion;
-4. candidate stage partition and capacity analysis;
+4. mandatory wafer reticle/tile partition and capacity analysis;
 5. ROM macro/region placement with repair and reserve;
 6. tensor/vector/route/reduce/state engine assignment;
 7. SRAM activation/index/accumulator allocation;
 8. HBM state layout for the declared context;
-9. deterministic NoC/stage-link schedule and credit proof;
+9. deterministic local/on-wafer schedule, collective plan, and credit proof;
 10. compact program, descriptor, event, and queue emission;
 11. known-answer, counter, capacity, and trace contracts;
 12. image/manifest publication;
 13. independent inverse and schedule checking; and
 14. byte-identical second clean build.
 
-### 6.1 Stage topology
+### 6.1 Wafer topology and communication contract
 
-The current public-reference proxy uses a two-stage Flash partition, while
-technology-envelope studies may choose another count. Neither is assumed by the
-new compiler.
+The compiler selects quantitative reticle/tile counts, placement, routes, and
+HBM attachment points inside the mandatory wafer-scale boundary. It does not
+inherit the historical two-stage partition, 8-by-8 reticle grid, 4,096-tile
+proxy, 100-TB/s proxy, or stage-link assumptions from `spec/ARCHITECTURE.md`.
 
-Candidate partitions are evaluated with exact:
+Candidate wafer partitions are evaluated with exact:
 
-- post-padding/scale/integrity/repair ROM bytes;
-- largest indivisible layer/tensor region;
-- routed and dense bandwidth;
-- cross-stage activation and collective traffic;
-- local SRAM and HBM state capacity;
-- clock, wire, power, thermal, and yield constraints; and
-- complete schedule legality.
+- post-padding/scale/integrity/repair ROM bytes and largest indivisible region;
+- reticle/tile capacity, local SRAM, and distributed HBM state capacity;
+- dense, routed, sparse, activation, multicast, reduction, collective, and
+  vocabulary traffic derived from compiled execution;
+- on-wafer path length, bisection bandwidth, serialization, hop/switch latency,
+  credits, buffers, congestion, retry, and synchronization bounds;
+- clock, reset, power, thermal, fault-containment, stitching, and yield domains;
+- spare tiles/links, quarantine, degraded topology, repair maps, and
+  yield-aware recompilation; and
+- complete schedule legality and deadlock freedom.
 
-The selected stage count is one physical-design result for this DeepSeek ROM
-release. It does not constrain the Qwen ROM or shared HBM hardware.
+Public contemporary Cerebras-class specifications are source-locked as a
+reference envelope and sensitivity point. They are not copied as achieved
+OpenTallas bandwidth or latency. The release capability freezes its own minimum
+bisection/collective bandwidth and maximum communication latency from compiled
+DeepSeek traces plus the selected SKY130 or ASAP7 methodology.
 
 ### 6.2 Independent image checker
 
@@ -317,7 +352,7 @@ The checker independently:
 - reopens the complete canonical checkpoint application;
 - reconstructs every included logical tensor and scale from ROM images;
 - checks format packing, padding, integrity, spares, and repair remaps;
-- proves unique placement and legal capacity per physical stage;
+- proves unique placement and legal capacity per reticle, tile, and wafer;
 - verifies excluded extension tensors cannot be addressed;
 - reconstructs HBM/SRAM object bounds and state capacity;
 - checks program/descriptors against graph/kernel IDs; and
@@ -331,7 +366,7 @@ The schedule checker reconstructs:
 - ROM bank/tensor-lane/vector/route/reduce use;
 - SRAM bank/port/occupancy conflicts;
 - runtime route and sparse-index bounds;
-- NoC and stage-link paths, slots, credits, and retry buffers;
+- local and on-wafer paths, slots, collectives, credits, and retry buffers;
 - event producers, wait sets, queue occupancy, and deadlock freedom;
 - state transaction order; and
 - expected work, byte, flit, and stall counter bounds.
@@ -366,6 +401,12 @@ The simulator must not:
 - skip non-selected experts without executing the route that selected them; or
 - call the current structural lowering table as if it were an executor.
 
+Functional mode instantiates the declared reticle/tile topology, distributed
+object ownership, and HBM locality. It executes every cross-tile transfer and
+collective causally. It may omit physical link cycles in this mode, but it may
+not replace communication with direct global-memory access or a precombined
+reduction.
+
 ### 7.2 State and generation
 
 One request:
@@ -391,6 +432,8 @@ Before 200K, execute increasing natural contexts and publish:
 - host RAM, accelerator-state image, temporary disk, and trace growth;
 - checkpoint/restart time and identity;
 - actual sparse/routed work distributions;
+- on-wafer event/flit rates, communication critical path, and distributed-HBM
+  locality;
 - projected 200K completion time and resource margin; and
 - exact differential evidence for every simulator optimization.
 
@@ -407,7 +450,8 @@ The data-bearing cycle model includes:
 - sparse-index gather and attention work;
 - vector/compression/mHC pipelines;
 - SRAM banks/ports/ECC/arbitration and HBM state timing;
-- NoC and stage-link credits, retries, and contention;
+- local/on-wafer routes, serialization, credits, retries, collectives,
+  congestion, and contention;
 - prepare/commit/discard and error drain;
 - vocabulary/argmax/EOS latency;
 - power/thermal throttle events; and
@@ -429,10 +473,11 @@ RTL integration proceeds vertically:
 7. compressor and mHC representative transactions;
 8. target vocabulary gather/argmax/token/EOS;
 9. one complete checkpoint-derived transformer block;
-10. multi-stage generated schedule with backpressure;
-11. abort, reset, retry, repair degradation, and recovery;
-12. representative complete target program correlation; and
-13. formal, coverage, CDC/RDC, DFT, power, and physical entry.
+10. reticle-local and cross-reticle generated schedules with backpressure;
+11. wafer multicast/collective, distributed-HBM, and global-commit paths;
+12. abort, reset, retry, tile/link quarantine, repair degradation, and recovery;
+13. representative complete target program correlation; and
+14. formal, coverage, CDC/RDC, DFT, power, and hierarchical physical entry.
 
 The existing ot_stage_* shell may seed lifecycle, session, link, RAS, power, and
 test behavior. Its abstract functional macro cannot remain in an acceptance path.
@@ -491,22 +536,33 @@ and final output is checked independently. The workload remains separate from
 the 200K natural-language quality claim unless a 200K agent prompt is explicitly
 frozen.
 
-## 11. 130-nm physical plan
+## 11. SKY130 and ASAP7 wafer-scale physical plan
 
-The DeepSeek ROM and DeepSeek HBM comparison uses one selected public 130-nm
-process and common PVT, clock-view, SRAM, HBM, and evidence policies.
+The DeepSeek ROM wafer is evaluated in two separate technology views. SKY130 is
+the mature open 130-nm implementation/verification baseline. ASAP7 is the
+academic predictive 7-nm projection and is not production foundry signoff.
+Within each view, DeepSeek ROM and the 32-node DeepSeek HBM cluster use common
+PVT, clock-view, SRAM, external HBM/fabric-boundary, workload, and evidence
+policies. Values are never mixed between SKY130 and ASAP7.
 
 Physical convergence includes:
 
 - format-specific ROM macro/slice characterization;
 - FP8 and MXFP4/E8M0 tensor tiles;
 - vector/route/reduce/state/control tiles;
-- representative stage floorplan and deterministic NoC;
+- representative tile and reticle floorplans plus deterministic local/on-wafer
+  NoC;
 - clock, route, congestion, EM/IR proxy, power, and thermal analysis;
 - repair/spare/BIST/DFT and yield sensitivity;
-- stage-link and package assumptions;
+- reticle stitching, wafer clock/power/reset, distributed-HBM/package, on-wafer
+  link, cluster-link comparator, and thermal assumptions;
 - actual execution activity; and
 - compiler/capability feedback followed by recompilation and rerun.
+
+Closure is hierarchical: characterize exact service tiles, close representative
+reticle regions, extract cross-reticle links, then assemble wafer-level timing,
+power, clock, thermal, repair, and yield models. A tile-only P&R result or an
+ideal stitched-wire assumption cannot close the wafer gate.
 
 HBM state, HBM PHY, package, and production mask-ROM evidence remain separately
 classified. A public PDK result is methodology evidence, not target foundry
@@ -518,14 +574,15 @@ signoff.
 |---|---|---|
 | DROM-A0 | architecture/profile accepted | TA-A3-ARCH-0 and ordinary/speculative split review |
 | DROM-I1 | common-IR export | zero unknown/unpriced operations, complete ordinary tensor/state/numeric coverage |
-| DROM-P2 | complete ROM physical plan | all included tensors inverse-reconstruct; stage/capacity/repair/schedule legal |
+| DROM-P2 | complete wafer physical plan | all included tensors inverse-reconstruct; reticle/tile/wafer capacity, repair, fabric, and schedule legal |
 | DROM-V3 | complete checkpoint block | artifact-only dense/routed/sparse/state block exact against independent references |
 | DROM-F4 | complete short target model | ordinary prefill/decode, target argmax/EOS, legitimate output, no fallback |
-| DROM-S5 | data-bearing cycle closure | causal mixed-format/route/state timing and reconciled counters |
-| DROM-R6 | representative ROM RTL | generated program and complete block correlate under faults/stalls |
+| DROM-S5 | data-bearing cycle closure | causal mixed-format/route/state/on-wafer timing and reconciled counters |
+| DROM-R6 | representative ROM RTL | generated program, complete block, reticle and fabric paths correlate under faults/stalls |
 | DROM-C7 | chat and agent context | natural output and causal tool protocol pass |
 | DROM-200K8 | exact mandatory context | 200,000 natural tokens plus ordinary decode, state/token/counter evidence |
-| DROM-PHY9 | same-node physical convergence | characterized capability, recompile, rerun |
+| DROM-PHY9-SKY | SKY130 wafer convergence | hierarchical characterized capability, recompile, rerun |
+| DROM-PHY9-A7 | ASAP7 wafer projection | separate academic hierarchical projection, recompile, rerun, limitations |
 | DROM-REL10 | DeepSeek ROM release | reproducible release and governed DeepSeek ROM-versus-HBM comparison |
 
 ## 13. Agent ownership and handoff
@@ -539,6 +596,8 @@ Every handoff records:
 - main baseline and delivered commit;
 - source/checkpoint/tokenizer/common-schema identities;
 - ordinary versus speculative profile coverage;
+- wafer topology, reticle/tile/repair map, distributed-HBM, and fabric
+  capability identities;
 - graph/kernel/physical/program/schedule identities;
 - image inverse and schedule certificate identities;
 - functional/cycle/RTL report identities;
@@ -555,7 +614,8 @@ The first DeepSeek ROM implementation tranche is:
 1. define the ordinary target-only graph slice and explicit DSpark exclusions;
 2. export a small but connected source region into the common IR;
 3. bind one checkpoint-derived path that includes dense compute, a runtime
-   predicate or route, and a transactional state effect;
+   predicate or route, a cross-tile/on-wafer transfer, and a transactional state
+   effect;
 4. lower it to a ROM Physical Plan and bound descriptors;
 5. execute it through the common control/state semantics without caller-supplied
    intermediates;

@@ -18,6 +18,18 @@ All pre-unification sessions are stopped at `main@39a607e`. Existing milestone
 evidence remains historical input, while new compiler, simulator, or RTL work
 is blocked until `TA-A3-ARCH-0` closes.
 
+The post-unification physical boundary is mandatory: DeepSeek-ROM is one
+wafer-scale logical accelerator with a causal on-wafer fabric and distributed
+HBM mutable-state attachment. Its HBM/SRAM comparator is exactly 32 copies of
+the conventional accelerator chip used by Qwen, connected through the ABI 3.0
+inter-chip endpoint and a source-lock-required NVLink-class external fabric
+model. The exact additional NVL72-class source identity is an architecture-gate
+deliverable.
+
+Physical results are published separately for SKY130 (mature open 130-nm
+baseline) and ASAP7 (academic predictive 7-nm view); cross-view mixing is
+prohibited.
+
 ## 1. Decision and purpose
 
 OpenTallas has not yet validated an executable model-to-chip system. The current
@@ -43,6 +55,7 @@ pinned official source and checkpoint
   -> legal physical ROM/HBM placement
   -> microcode and certified schedules
   -> functional service-engine execution
+  -> causal on-wafer communication and distributed-HBM execution
   -> RTL/co-simulation execution
   -> matching operators, layers, state transitions, and logits
   -> reconciled byte/operation/stall/cycle counters
@@ -62,9 +75,12 @@ Until `COMP-01` closes:
 - ROM density, bandwidth, clock, power, repair, and yield inputs remain governed
   assumptions unless supported by the declared evidence class;
 - SKY130A and IHP SG13G2 results establish local ROM topology and verification
-  methodology only;
-- ASAP7 results establish predictive behavior for the exact implemented digital
-  proxy only;
+  methodology only; IHP is retained historical/cross-check evidence, not one of
+  the two active release technology views;
+- SKY130 results form the mature 130-nm implementation view only to the exact
+  scope implemented and characterized;
+- ASAP7 results form a separate academic predictive 7-nm view for the exact
+  implemented digital proxy only;
 - integer-DV results establish enumerated control, ordering, and fault behavior,
   not target numerical correctness;
 - NVIDIA superiority, product readiness, and target-node manufacturability claims
@@ -89,8 +105,8 @@ The following work remains part of the program:
 | Analytical capacity/traffic model | Constraint screening and break-even analysis | Legal placement, scheduling, or silicon performance |
 | Command/session/schedule/RAS RTL | Control-shell and protocol evidence for enumerated configurations | A transformer layer was executed |
 | Integer-DV tile and synthetic ROM image | Local control, routing-mask, reduction, and fault methodology | DeepSeek numerical execution |
-| SKY130A/IHP ROM slices | Public-PDK layout, extraction, SPICE, and programming-method evidence | Target-node macro density or yield |
-| ASAP7 digital campaign | Predictive timing/congestion evidence for exact proxy RTL | Foundry N7/N4 closure or missing operators |
+| SKY130A/IHP ROM slices | Historical public-PDK layout, extraction, SPICE, and programming-method evidence; SKY130 is the selected mature 130-nm plan view | Complete wafer macro density, yield, or system closure |
+| ASAP7 digital campaign | Academic predictive timing/congestion evidence for exact proxy RTL | Foundry N7/N4 closure, production signoff, or missing operators |
 | GPU measurements and public specifications | External comparison anchors under declared scope | An OpenTallas speedup without the executable path |
 
 ### 3.2 Critical missing artifacts
@@ -101,7 +117,7 @@ The recovery program must produce all of the following:
 2. an independent target-precision semantic reference;
 3. complete checkpoint-payload ingestion and validation;
 4. canonical tensor and scale conversion;
-5. legal stage/tile/macro/row/column placement;
+5. legal wafer/reticle/tile/macro/row/column placement;
 6. emitted ROM, scale, integrity, microcode, schedule, and KV artifacts;
 7. an inverse image reconstruction checker;
 8. an executable software service engine consuming those artifacts;
@@ -111,15 +127,29 @@ The recovery program must produce all of the following:
 12. layer, state, routing, and logits differential evidence; and
 13. counters derived from execution rather than inserted analytical ceilings.
 
+The new DeepSeek release additionally requires a legal wafer reticle/tile
+topology, on-wafer routes/collectives, distributed-HBM mapping, fault/repair map,
+degraded-topology recompilation proof, and hierarchical SKY130/ASAP7 physical
+evidence. Historical stage artifacts remain migration inputs, not the release
+topology.
+
 ## 4. Program scope and target lock
 
 ### 4.1 Product boundary
 
-The initial executable product boundary is decode from an input hidden state and
-session state through final logits. Host-side token sampling is out of the first
-hardware boundary. Prefill, speculative decoding, fleet scheduling, and training
-are separately versioned extensions and may not be silently included in a decode
-claim.
+The mandatory executable product boundary begins with authenticated prompt token
+IDs and ends with legitimate generated token IDs, first-EOS stop, and committed
+session state. It includes complete prefill, ordinary decode, target vocabulary
+logits, on-device deterministic argmax, token append, and generation control.
+Host tokenization and final text decoding remain outside the model datapath;
+host-side token selection or per-layer wafer sequencing is illegal. DSpark
+speculation, fleet scheduling, and training are separately versioned extensions.
+
+The physical product is one wafer-scale logical ROM accelerator. Its ordinary
+critical path is distributed across reticles/tiles over an on-wafer fabric. HBM
+for KV/compressor and other mutable state is attached through declared
+distributed locality domains. An off-package multi-chip pipeline does not close
+this product boundary.
 
 ### 4.2 Target progression
 
@@ -131,9 +161,10 @@ Implementation proceeds through three targets:
 2. **Real checkpoint vertical slice.** Full-size tensor dimensions and real
    checkpoint values for representative DeepSeek Flash layer classes exercise
    the actual formats, routes, attention state, and placement rules.
-3. **Complete pinned model.** The complete released checkpoint is compiled and
-   executed in the functional architecture model, with representative complete
-   layers executed in RTL/co-simulation.
+3. **Complete pinned model.** The complete released checkpoint is compiled into
+   the wafer topology and executed in the functional and data-bearing cycle
+   models, with representative complete layers, reticle/fabric paths, and global
+   state/selection control executed in RTL/co-simulation.
 
 The fixture cannot close a real-model milestone. Reduced tensor dimensions cannot
 close the vertical-slice milestone.
@@ -164,7 +195,7 @@ compiler/
   frontend/       # source locks, graph import, checkpoint payload readers
   ir/             # versioned semantic and physical IR types/validation
   canonical/      # dtype, scale, packing, padding, and tensor transforms
-  placement/      # stage/reticle/tile/macro/row/column mapping
+  placement/      # mandatory wafer/reticle/tile/macro/row/column mapping
   microcode/      # lowering, encoding, disassembly, and static verification
   schedule/       # schedule generation and certificate emission
   image/          # ROM/scale/integrity image construction and manifests
@@ -286,15 +317,16 @@ model.ir.json
 operator_coverage.json
 tensor_manifest.json
 canonical_tensor_index.json
-stage_partition.json
+wafer_topology.json
+distributed_hbm_map.json
 physical_map.json
-rom_stageNN_image.bin
-rom_stageNN_image.hex          # optional development view
-scale_stageNN_image.bin
-integrity_stageNN_image.bin
-microcode_stageNN.bin
-microcode_stageNN.disasm
-schedule_stageNN.bin
+rom_reticleNN_image.bin
+rom_reticleNN_image.hex        # optional development view
+scale_reticleNN_image.bin
+integrity_reticleNN_image.bin
+microcode_reticleNN.bin
+microcode_reticleNN.disasm
+schedule_reticleNN.bin
 schedule_certificate.json
 kv_layout.json
 known_answers.json
@@ -329,7 +361,10 @@ The compiler fails closed on:
 - insufficient repair or integrity reserve;
 - HBM/KV allocation overflow;
 - buffer, credit, schedule, or macro-latency overflow;
-- route conflicts, cycles, nontermination, or disabled-resource use; and
+- wafer topology, reticle crossing, HBM locality, bisection, clock/power/fault
+  domain, or repair/yield constraint failure;
+- route conflicts, cycles, nontermination, collective mismatch, or
+  disabled-resource use; and
 - any required tensor or operation lacking an explicit execution role.
 
 Warnings do not legalize an image. Every release-relevant warning has a reviewed,
@@ -344,17 +379,18 @@ The versioned logical key is:
  reduction_block, element, scale_or_data}
 ```
 
-The physical key is:
+The release physical key is:
 
 ```text
-{stage, reticle, tile, macro, logical_row, logical_column,
+{wafer_device, reticle, tile, macro, logical_row, logical_column,
  nibble_or_byte_lane, scale_address, integrity_block}
 ```
 
-Mapping accounts for decoder/periphery regions, block and row alignment, padding,
-integrity data, repair reserves, fragmentation, immutable microprogram storage,
-and physically indivisible units. Dense, shared, routed, scale, metadata, and
-diagnostic regions cannot alias.
+Mapping accounts for reticle boundaries, on-wafer links and stitching, HBM
+attachment/locality, decoder/periphery regions, block and row alignment,
+padding, integrity data, repair reserves, fragmentation, immutable microprogram
+storage, and physically indivisible units. Dense, shared, routed, scale,
+metadata, and diagnostic regions cannot alias.
 
 The independent inverse checker reconstructs every canonical tensor and scale
 from physical images, verifies padding and integrity data, and compares the full
@@ -410,10 +446,11 @@ returns `done` cannot close an executable milestone.
 
 ## 11. Schedule compilation and checking
 
-The schedule compiler consumes the actual physical graph, logical placement,
-operator dependencies, payload sizes, macro latencies, link widths, buffers,
-credits, and repair/quarantine map. It emits per-slot selections, expected
-valid/type/sequence data, collective membership, and a certificate.
+The schedule compiler consumes the actual wafer physical graph, logical
+placement, operator dependencies, payload sizes, macro latencies, local and
+on-wafer link widths/latencies, distributed-HBM locality, buffers, credits, and
+repair/quarantine map. It emits per-slot selections, routes, multicast and
+collective membership, expected valid/type/sequence data, and a certificate.
 
 The independent checker proves or reconstructs:
 
@@ -426,13 +463,16 @@ The independent checker proves or reconstructs:
 - per-buffer occupancy trace and maximum;
 - credit conservation and bounds;
 - absence of disabled or quarantined resources; and
+- bounded global synchronization, collective completion, and no zero-latency
+  wafer transfer;
 - schedule identity, epoch length, and CRC.
 
-The key architecture hypothesis—that dynamic expert IDs alter local ROM masks
-rather than global physical routes—must be demonstrated by generated placement and
-schedule evidence. If real routing or sparse-attention behavior requires arbitrary
-data-dependent global paths, the static-NoC architecture must be redesigned or
-rejected.
+Runtime expert IDs and sparse indices may select among compiler-admitted
+on-wafer route and collective classes; they cannot be compile-time constants.
+Generated placement and schedule evidence must prove that every legal dynamic
+choice has bounded buffers, credits, routes, and completion. If real behavior
+requires an unbounded route or no deadlock-free admitted topology exists, the
+wafer fabric is redesigned or rejected.
 
 ## 12. Validation ladder
 
@@ -484,6 +524,8 @@ The abstract service boundary is replaced or backed by an executable engine that
 - fetches and decodes generated microcode;
 - reads generated ROM and scale images;
 - issues and consumes modeled HBM traffic;
+- issues and consumes causal on-wafer messages, multicast, gather, reductions,
+  collectives, and global state/selection events;
 - invokes exact RTL operators or bit-exact qualified models;
 - enforces schedule, tag, backpressure, poison, and commit semantics; and
 - produces the same visible state and counters as the functional engine.
@@ -492,17 +534,20 @@ The abstract service boundary is replaced or backed by an executable engine that
 
 - Compile every payload byte of the pinned checkpoint
 - Hash every physical image and descriptor
-- Prove all local capacity and inverse reconstruction
-- Execute at least one complete decode step in the functional engine
+- Prove all reticle/tile/wafer capacity, repair, distributed-HBM locality, and
+  inverse reconstruction
+- Execute at least one complete decode step in the functional and data-bearing
+  on-wafer engines
 - Compare every declared layer boundary, route, KV transition, and final logits
 - Run representative complete layers and error paths in RTL/co-simulation
 - Qualify task quality and long-context numerical behavior
 
 ### 12.6 Level F: implementation re-entry
 
-Only execution-qualified RTL and generated activity enter renewed synthesis, P&R,
-NoC, HBM, power, and thermal analysis. Proxy results remain archived but do not
-silently supply missing operator costs or clocks.
+Only execution-qualified RTL and generated activity enter separate SKY130 and
+ASAP7 synthesis, P&R, local/on-wafer NoC, HBM, power, and thermal analysis.
+Proxy results remain archived but do not silently supply missing operator costs,
+links, or clocks.
 
 ## 13. Milestones and hard exit gates
 
@@ -516,13 +561,13 @@ row must not be read as milestone closure.
 | M0 | Repository baseline and additive compiler/runtime layout are committed on `main`; all pre-unification sessions stopped and merged at `39a607e`; large generated payloads remain outside Git | Handoff/governance baseline achieved; new implementation remains blocked on `TA-A3-ARCH-0` |
 | M1 | The pinned official graph has a complete 2,136-node/46-kind ledger; all 46 kinds have qualified target references, including routed-MXFP4/shared-FP8 SwiGLU, sqrt-softplus routing, session-bound KV/compressor transactions and views, exact main/DSpark attention row-space composition, grouped attention-output projection, DSpark main-conditioning and prefill-KV transactions, the shared BF16-storage/binary32-runtime vocabulary head, the five-step causal Markov loop with adjusted logits and entropy continuation, RoPE, HC paths, sparse attention, and fail-closed greedy/target-adapted sampling | Semantic/operator-reference gate achieved; this does not imply graph-to-microcode, artifact-driven service-engine, or RTL execution |
 | M2 | The official 72,317-tensor checkpoint is locked; the complete 77,116-assignment MP=4 application was independently re-read with verification `b20ac53d48714c2328470b45f44b06aed11bed4c6dc7ef48f27185c5ba813f28` | Checkpoint/canonical payload gate achieved; this does not imply executable operators |
-| M3 | Lookup and complete-output query-A deployments have content-addressed images and independent payload roundtrips | Partial: complete stage placement, capacity, repair, and physical-address legality remain open |
+| M3 | Lookup and complete-output query-A deployments have content-addressed images and independent payload roundtrips | Partial: complete wafer placement, capacity, repair, fabric, distributed-HBM, and physical-address legality remain open |
 | M4 | Artifact-only fixed-microcode paths execute official lookup tensors and all 1,024 Query-A FP8 outputs. The real HC_PRE→Query-A chain ends at artifact-only result `d30df5494e60c3f261cc6bec15320680ee3e87d867873e1d0fc100f7776336c0`. A separate official-width layer-2 ratio-four post-projection compressor harness executes immutable causal raw/compressed state, conditional pool/conversion, abort, retirement, commit, and valid-view semantics under a controlled APE-cancellation known answer. The DSpark Markov path now has a frozen 388-byte/21-record causal microprogram, an independent wire/contract checker, and a reference-independent bounded service lane covering all five lookup/project/add/sample steps and entropy continuation | Partial: Markov weights and base logits are caller-supplied rather than authenticated deployment artifacts; the compressor request is not a checkpoint-derived activation, starts after learned projection, and omits official upstream RMSNorm/RoPE/QDQ. No path yet completes attention, a checkpoint-derived transformer block, complete graph-to-microcode lowering, or full-model execution |
 | M5 | No certified physical schedule exists | Open |
 | M6 | Official lookup differential `830f0d8a0730d012e6be41eb1507f10ef1b70f1829efbbad7b3e50cd2b3e2a95`, selected-row FP8 differential `9b4cacd415df0fbd77b08c24bbb4b48b737f0b3305abfd08ba719d4302e3b800`, complete-output FP8 differential `f8d95b84c683b9772755b6146da0af84955987e19e0ea05fe4a5ad05c7f0c499`, DSpark main-projection official-resource extent differential `d478a402269b768d8ddc4b00ffa4ae6076bbef009fc50690dc174bbaca868dde`, DSpark prefill-KV official-resource extent differential `b46f98c555cbf8c7c04fbf35116c66de63e77af82e75067bc48e21a58c6b4459`, eight-row full-width official LM-head output `39eee776802412be8ad32c2d9ac21b76c8eac8385d7112cb6caa4acc64536514`, and the eight-logit official Markov selected-row stream `cd2d68aff994647705aee41fd16a5f13f8219fe61ee824eae6f054d43127470d` are exact. The Markov microprogram service reproduces that selected stream and matches the reference on complete bounded greedy/explicit-entropy causal transactions; the official-APE compressor package has a separately classified controlled known answer | Partial: both DSpark official-resource extent corpora use zero activation, each nonzero DSpark projection audit covers four selected rows, the LM-head audit uses a synthetic hidden row with eight official vocabulary rows, and the Markov audit projects official W1 row zero against only eight official W2 rows without a real base-logit row. These isolated paths do not establish a checkpoint-derived complete layer or all layer classes |
 | M7 | No generated-artifact RTL controller/operator integration evidence | Open |
 | M8 | No complete DeepSeek V4 Flash prefill/decode execution | Open |
-| M9 | No schedule-driven performance closure or same-scope NVIDIA comparison | Open |
+| M9 | No schedule-driven wafer performance closure, 32-node HBM comparison, or separate SKY130/ASAP7 comparison | Open |
 
 The governed evidence records are
 [`DEEPSEEK_V4_LOOKUP_EVIDENCE.md`](DEEPSEEK_V4_LOOKUP_EVIDENCE.md) and
@@ -590,17 +635,20 @@ Deliverables:
 Exit: complete payload coverage and canonical hash equality; synthetic weights are
 absent from acceptance tests.
 
-### M3 — image and placement compiler
+### M3 — wafer image and placement compiler
 
 Deliverables:
 
-- stage partition and physical placement;
+- wafer/reticle/tile partition and physical placement;
+- on-wafer topology, distributed-HBM map, repair/quarantine map, and degraded
+  topology profiles;
 - ROM/scale/integrity images;
 - address descriptors and manifest; and
 - independent inverse checker.
 
 Exit: every logical element has one legal physical location and every emitted
-image reconstructs to the canonical hash.
+image reconstructs to the canonical hash; required traffic has a legal admitted
+wafer path and HBM locality.
 
 ### M4 — executable service engine
 
@@ -609,7 +657,8 @@ Deliverables:
 - micro-op schema, assembler, disassembler, and verifier;
 - graph-to-microcode lowering;
 - artifact-driven functional interpreter;
-- KV prepare/commit and error semantics; and
+- distributed KV prepare/commit, on-device argmax/EOS, on-wafer communication,
+  and error semantics; and
 - reconciled counter report.
 
 Exit: a real checkpoint-derived transformer block executes from generated
@@ -624,8 +673,8 @@ Deliverables:
 - independent schedule checker; and
 - real placement/routing traces.
 
-Exit: conflict, path, occupancy, credit, quarantine, and count checks pass for the
-vertical slice.
+Exit: local/on-wafer conflict, path, collective, occupancy, credit, quarantine,
+global-commit, and count checks pass for the vertical slice.
 
 ### M6 — real-model vertical slice
 
@@ -644,6 +693,8 @@ Deliverables:
 
 - microprogram controller;
 - executable ROM/HBM/operator service path;
+- on-wafer endpoint, queues/credits, multicast/collective, distributed-HBM, and
+  global commit path;
 - generated-artifact RTL testbench; and
 - software/RTL differential evidence.
 
@@ -656,7 +707,7 @@ Deliverables:
 
 - all target arithmetic and vector operators;
 - complete-model compilation;
-- full functional decode execution; and
+- full functional and data-bearing on-wafer decode execution; and
 - representative RTL layer closure.
 
 Exit: end-to-end logits, KV state, routing, numeric status, and task quality meet
@@ -666,11 +717,12 @@ the frozen acceptance policy.
 
 Deliverables:
 
-- generated-schedule-driven cycle model;
+- generated-schedule-driven wafer cycle model;
 - exact operator PPA and activity;
-- updated NoC/HBM/power/thermal analysis;
-- measured same-scope GPU baseline; and
-- governed comparison report.
+- updated local/on-wafer NoC, distributed-HBM, repair/yield, power, and thermal
+  analysis;
+- exact 32-node HBM/SRAM comparator with inter-chip fabric costs; and
+- separate governed SKY130 and ASAP7 comparison reports.
 
 Exit: every reported performance term traces to execution or characterized
 implementation evidence. Target-node feasibility remains open until foundry,
@@ -688,10 +740,14 @@ memory, package, and signoff evidence closes it.
 6. The functional service engine consumes only generated deployment artifacts.
 7. Representative real full-dimension layers match routes, state, and outputs.
 8. The complete model executes at least one declared decode step functionally.
-9. Representative complete layers execute through RTL/co-simulation.
-10. Operations, ROM bytes, HBM bytes, flits, stalls, and cycles reconcile exactly.
+9. Representative complete layers and on-wafer paths execute through
+   RTL/co-simulation.
+10. Operations, ROM bytes, distributed-HBM bytes, wafer flits, collectives,
+    stalls, and cycles reconcile exactly.
 11. Numerical and task-quality acceptance criteria pass.
-12. All residual abstraction boundaries are enumerated and priced; none hides a
+12. The exact 200,000-token natural prompt and ordinary decode execute through
+    on-device selection/EOS on the wafer-scale topology.
+13. All residual abstraction boundaries are enumerated and priced; none hides a
     required operation or state transition.
 
 Closing `COMP-01` establishes executable architecture correctness for the tested
@@ -700,20 +756,28 @@ commercial superiority.
 
 ## 15. Comparator strategy
 
-The primary commercial comparison remains measured execution of the same pinned
-model, arithmetic/quality policy, context, batch/concurrency, and latency boundary
-on actual NVIDIA hardware.
+The architectural comparator is no longer an optional analytical
+counterfactual. It is the complete ABI 3.0 HBM/SRAM backend deployed on exactly
+32 copies of the same conventional accelerator chip used by Qwen. The compiler
+shards the identical DeepSeek model and 200,000-token state over node-local HBM;
+the simulator executes the chip's remote-DMA/message/collective endpoint and the
+external NVLink-class fabric causally. Host paging, a 33rd compute/capacity node,
+or a zero-cost uniform memory model is prohibited.
 
-After the common semantic IR and service engine work, an HBM-weight backend may be
-added as an architectural counterfactual. It reuses model semantics, operators,
-microcode where legal, KV layout, correctness vectors, and counters while replacing
-local immutable reads with DMA/cache/prefetch operations. It is not represented as
-a clean-room NVIDIA GPU.
+DeepSeek ROM versus HBM compares the complete wafer accelerator—including
+on-wafer fabric, distributed HBM, repair/yield reserve, package and system
+power—with the complete 32-node cluster—including all chips, HBM stacks,
+digital endpoints, PHY/link/switch assumptions, and system power. The existing
+Cerebras WSE-3 sources and NVIDIA B200/B300 sources seed the
+sensitivity envelopes. The exact additional NVLink/NVL72-class documents must
+be source-locked at the architecture gate. None is an achieved OpenTallas value
+or a claim of vendor compatibility.
 
-An SRAM backend begins as a generated capacity/bandwidth bound. Full implementation
-is justified only if that bound can affect an architecture decision. ROM bitcell
-density alone does not settle model lifetime, repair, stage count, routing, and
-system cost, but it does not require an immediate full Graphcore reproduction.
+The comparison is run twice: once wholly within the SKY130 view and once wholly
+within the ASAP7 predictive view. Model, arithmetic, workload, PVT policy,
+external-memory/fabric sources, output boundary, and evidence class match within
+each view. No number is borrowed across views. Measured NVIDIA execution remains
+a separate commercial comparator under its own governed methodology.
 
 ## 16. Architecture kill and redesign criteria
 
@@ -724,14 +788,19 @@ The program stops or returns to architecture design if:
   possible;
 - exact model quality fails under implementable numerical rules;
 - physical placement fails after padding, integrity, repair, and fragmentation;
+- the mandatory wafer cannot close reticle stitching, on-wafer bandwidth or
+  latency, distributed-HBM locality, clock/power/thermal, repair, or yield;
 - instruction, descriptor, buffer, credit, or schedule bounds cannot represent the
   model;
-- dynamic expert or sparse-attention behavior breaks the static-route premise;
+- dynamic expert or sparse-attention behavior has no bounded deadlock-free
+  admitted wafer route/collective class;
 - vector, attention, routing, or state costs erase the local-weight advantage;
-- KV/HBM, reductions, or stage transport dominate the decode interval;
+- KV/HBM, reductions, or on-wafer transport dominate the decode interval;
 - a characterized target ROM cannot meet density, simultaneous-read, power,
   repair, timing, or yield requirements;
-- package, PDN, thermal, or yield requirements fail; or
+- package, PDN, thermal, or yield requirements fail;
+- the exact 32-node HBM comparator cannot execute without host orchestration,
+  undeclared paging, or a different accelerator-chip netlist; or
 - measured GPU behavior beats the conservative implementation-derived upper bound.
 
 A failed gate is a useful result and must be preserved. Parameters are not relaxed
@@ -795,9 +864,13 @@ implementation.
 7. Implement a tiny end-to-end fixture through IR, microcode, service execution,
    and known-answer comparison.
 8. Replace fixture weights with a real checkpoint slice and retain full dimensions.
-9. Add placement, physical images, inverse checking, and schedule certification.
-10. Integrate the first generated program with RTL only after the software ABI and
-    vertical-slice behavior are stable.
+9. Add wafer placement, physical images, distributed-HBM mapping, inverse
+   checking, on-wafer routes/collectives, and schedule certification.
+10. Extend the fixture across at least two tile/reticle endpoints and prove
+    credits, backpressure, collective completion, link failure, and global state
+    commit.
+11. Integrate the first generated program with RTL only after the software ABI
+    and vertical-slice behavior are stable.
 
 The first implementation milestone is intentionally narrow but complete: one
 deterministic program must travel from semantic IR through generated artifacts to

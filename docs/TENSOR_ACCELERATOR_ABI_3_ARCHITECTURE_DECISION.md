@@ -5,9 +5,9 @@
 **Status:** proposed for architecture review; implementation gate closed
 
 **Issue date:** 2026-08-29
-**Applies to:** the shared HBM/SRAM tensor accelerator, its compiler and
-simulator, and reusable control blocks in the Qwen3 and DeepSeek-V4 ROM
-families
+**Applies to:** the shared HBM/SRAM tensor-accelerator chip and cluster
+profiles, their compiler and simulator, and the Qwen3 conventional and
+DeepSeek-V4 wafer-scale ROM families
 
 ## 1. Decision
 
@@ -48,18 +48,31 @@ Qwen and DeepSeek source/checkpoint adapters
                     |
           +---------+---------+
           |                   |
- shared HBM/SRAM backend   ROM backend family
-          |                   |
- one ABI 3.0 device       +---+----------------+
- one RTL 3.0 hierarchy    |                    |
- Qwen + DeepSeek          Qwen ROM       DeepSeek ROM
- deployments              hardware       hardware
+ shared HBM/SRAM backend                 ROM backend family
+          |                                     |
+ one conventional-chip RTL         +------------+------------+
+          |                         |                         |
+    +-----+------+           Qwen conventional       DeepSeek wafer-scale
+    |            |           ROM chip                ROM accelerator
+ one chip    32-chip cluster
+ for Qwen    for DeepSeek
 ~~~
 
-The HBM/SRAM hardware must run Qwen3-8B and DeepSeek-V4 Flash without
-resynthesis. Qwen-ROM and DeepSeek-ROM may, and currently are expected to, use
-different immutable images, tensor datapaths, stage partitions, netlists, and
-masks.
+The HBM/SRAM backend has one ABI 3.0, one programmable tile/controller
+architecture, one engine-interface set, one numerical contract, one compiler
+backend, one simulator, and one conventional accelerator-chip netlist. Qwen3-8B
+uses one such HBM/SRAM chip. DeepSeek-V4 Flash uses exactly 32 nodes of that same
+chip, connected by a separately modeled high-bandwidth, low-latency,
+NVLink-class cluster fabric. No model-specific chip RTL, datapath, or micro-ISA
+fork is permitted. Each node implements the union of required Qwen and DeepSeek
+engine modes; DeepSeek capacity and work are sharded by the compiler across the
+32 identical nodes.
+
+Qwen-ROM and DeepSeek-ROM are different physical products. Qwen-ROM is a
+conventional reticle-bounded chip/package. DeepSeek-ROM is a mandatory
+wafer-scale accelerator with an on-wafer fabric and distributed HBM attachment.
+The DeepSeek comparison is therefore wafer-scale ROM versus a 32-node
+HBM/SRAM-chip cluster, not wafer versus wafer and not one oversized HBM chip.
 
 ## 2. Why a new boundary is required
 
@@ -109,23 +122,97 @@ Qwen-HBM and DeepSeek-HBM share:
 
 - one capability ABI and feature-discovery mechanism;
 - one management complex and microsequencer;
-- one HBM/SRAM hierarchy and address model;
+- one node-local HBM/SRAM hierarchy and address model plus one versioned
+  32-node cluster address/topology extension;
 - one set of tensor, vector, attention, route, reduce, state, and selection
   engine interfaces;
 - one event, queue, trap, counter, and recovery model;
-- one causal functional simulator and one cycle model; and
-- one synthesizable RTL hierarchy.
+- one causal functional simulator and one cycle-model implementation; and
+- one synthesized conventional-chip RTL/netlist and one cluster-fabric protocol
+  and endpoint architecture.
 
 Model identity may choose descriptors and programs. It may not select hidden
 model-specific RTL behavior.
 
-### 3.3 ROM specialization
+Within either technology view, the Qwen and DeepSeek HBM deployments use the
+same chip RTL, elaboration parameters, capability record, and signoff netlist.
+Only the deployment topology differs: one node for Qwen and 32 identical nodes
+for DeepSeek. The cluster switches, cables/board or package fabric, link PHYs,
+and system RAS are external system components with separately versioned
+assumptions.
+
+### 3.3 Mandatory physical scale profiles
+
+The four targets use three non-interchangeable physical topologies:
+
+| Physical topology | Required target | Physical boundary |
+|---|---|---|
+| Conventional single chip | Qwen-HBM and Qwen-ROM | one reticle-bounded accelerator chip/package per backend |
+| 32-node conventional-chip cluster | DeepSeek-HBM | 32 copies of the Qwen HBM/SRAM chip connected by an NVLink-class fabric |
+| Wafer-scale logical accelerator | DeepSeek-ROM | distributed reticle/tile ROM assembly presented to the host as one accelerator device |
+
+The DeepSeek topology choices are mandatory, not optional capacity escapes.
+DeepSeek-HBM is compiled across exactly 32 identical accelerator nodes; its
+critical inter-node path uses the modeled cluster fabric and may not be replaced
+by host paging or host sequencing of operators. DeepSeek-ROM is compiled across
+a wafer-scale reticle/tile hierarchy; its critical model path uses on-wafer
+communication, not a host-orchestrated collection of ROM chips or an ordinary
+off-package stage pipeline.
+
+The 32-node HBM cluster contract requires:
+
+- a versioned node/switch/link topology, node-local and global object mapping,
+  and deterministic shard/replica ownership;
+- collective, multicast, point-to-point, expert-dispatch, sparse-gather, and
+  reduction descriptors with bounded credits and explicit completion;
+- actual link latency, serialization, switch contention, bandwidth, retry,
+  congestion, and failure modeling in data-bearing cycle simulation;
+- per-node HBM capacity/locality and explicit remote-traffic accounting;
+- coordinated session, transaction, state-commit, token-selection, and EOS
+  semantics without a host per-layer execution loop; and
+- node/link isolation, retry, abort, restart, and fail-stop behavior. The first
+  release need not continue after losing a node, but it must never return a
+  successful partially sharded result.
+
+The wafer-scale contract requires:
+
+- a versioned reticle/tile topology and physical-coordinate descriptor;
+- one global logical deployment, address, event, transaction, session, and
+  counter namespace over the distributed tiles;
+- low-latency, high-bandwidth on-wafer unicast, multicast, reduction,
+  sparse-gather, and expert-dispatch services with bounded credits;
+- distributed HBM controllers and PHY attachment points around the
+  wafer/package boundary, with explicit channel locality, capacity, bandwidth,
+  latency, and failure domains;
+- bounded global barriers and collectives, deadlock freedom, deterministic
+  routing/ordering where architecturally visible, and complete congestion
+  accounting;
+- clock, reset, power, thermal, RAS, and fault-containment domains;
+- tile/link quarantine, spare activation, degraded-topology discovery, and
+  yield-aware recompilation; and
+- host submission to one logical accelerator; firmware may manage health and
+  recovery but may not sequence model stages across the wafer.
+
+Public contemporary Cerebras-class wafer-scale specifications and public
+NVIDIA NVLink/NVL72-class specifications are sourced reference envelopes and
+sensitivity points, not achieved OpenTallas values. The architecture review
+must source-lock the exact public vendor documents and dates. OpenTallas
+minimum bisection bandwidth, collective throughput, and maximum communication
+latency are then derived from compiled DeepSeek communication traces and each
+physical methodology; they are not copied from vendor headlines.
+
+The historical 8-by-8 reticle and 4,096-tile public proxy in
+`spec/ARCHITECTURE.md` remains historical evidence. It does not silently define
+the new wafer dimensions, tile count, bandwidth, latency, or physical closure.
+
+### 3.4 ROM specialization
 
 Qwen-ROM and DeepSeek-ROM separately own:
 
 - immutable weight and scale images;
 - physical ROM placement, repair, and mask personalization;
-- model-specific stage partitions and schedule topology;
+- model-specific physical partitions and schedule topology within the mandatory
+  scale profile;
 - model-specific compute-lane mix where justified;
 - physical signoff, production netlist, and mask release; and
 - separate end-to-end qualification.
@@ -133,6 +220,31 @@ Qwen-ROM and DeepSeek-ROM separately own:
 They may reuse ABI 3.0 host/session records, management firmware, state engines,
 link blocks, integrity logic, and microsequencer structures only where the
 resulting behavior is explicitly requirement-compatible.
+
+### 3.5 Physical verification views
+
+Every target is evaluated in two separate technology views:
+
+1. **SKY130:** the mature open 130-nm implementation and verification baseline.
+   It carries synthesized, placed-and-routed, extracted, and activity-derived
+   evidence to the extent supported by the available libraries and macro views.
+2. **ASAP7:** an academic predictive 7-nm projection. It provides a controlled
+   scaling and architecture-sensitivity view, not foundry signoff or production
+   manufacturability evidence.
+
+Within each technology view, Qwen-HBM is compared only with Qwen-ROM and
+DeepSeek-HBM only with DeepSeek-ROM under common PVT, clock-view, SRAM, external
+HBM, link-boundary, workload, and evidence-class rules. SKY130 and ASAP7 area,
+frequency, energy, density, interconnect, or thermal values are never combined
+into one result. Passing ASAP7 does not close a SKY130 gate, and passing SKY130
+does not validate a commercial 7-nm product.
+
+The wafer-scale ROM methodology is hierarchical in both views: characterize a
+tile, close a representative reticle region, model the on-wafer stitched fabric,
+then assemble wafer-level power, clock, thermal, yield, repair, and timing
+evidence. The 32-node HBM methodology closes the conventional chip once per
+technology view and separately models the cluster switches, PHYs, links, and
+system behavior.
 
 ## 4. Management processor
 
@@ -251,6 +363,7 @@ decisions. A program header binds:
 - instruction width and count;
 - required capability bits;
 - deployment and descriptor-table digests;
+- physical topology, active-resource, and topology-epoch digests;
 - program body SHA-256;
 - entrypoint table;
 - declared maximum work and watchdog class; and
@@ -274,6 +387,8 @@ Descriptor families are:
 | Tensor view | dtype, layout, rank, dimensions, strides, offsets, scale objects, and edge masks |
 | Numeric | input, accumulator, output, rounding, reduction order, saturation, NaN, and conversion rules |
 | Schedule | engine queue, tile mapping, bank/port use, NoC path, issue window, and resource bound |
+| Topology | one-chip, exact 32-node cluster, or wafer profile; node/reticle/tile coordinates, active/quarantined resources, HBM locality, link classes, route groups, and epoch |
+| Communication | source/destination objects and nodes/groups, byte extent, route/virtual channel, ordering, integrity/retry, collective/reduction contract, credit bound, timeout, and completion event |
 | State | state class, session binding, generation, committed/prepared objects, cursor, capacity, and commit policy |
 | Event/wait set | producer set, completion condition, timeout class, and memory-order scope |
 | Loop/control | lower bound, upper bound, step, induction bindings, predicate, and maximum iteration product |
@@ -319,6 +434,12 @@ Mandatory host operations are:
 - quiesce and resume; and
 - administrator-controlled reset and diagnostics.
 
+One host request targets one logical accelerator deployment. For DeepSeek-HBM,
+the admitted 32-node topology has one coordinator-visible request/completion
+boundary; for DeepSeek-ROM, the wafer has one such boundary. Internal node or
+reticle submissions are generated by the authenticated device program. Host
+software does not submit one model-layer request per node or reticle.
+
 ## 7. Device Micro-ISA families
 
 The mandatory instruction families are:
@@ -335,12 +456,18 @@ The mandatory instruction families are:
 | Reduction | ISSUE_REDUCE |
 | Selection | ISSUE_ARGMAX, ISSUE_TOPK, ISSUE_TOKEN_APPEND |
 | State | STATE_READ, STATE_PREPARE, STATE_COMMIT, STATE_DISCARD |
-| Pipeline/link | ISSUE_SEND, ISSUE_RECEIVE |
+| Pipeline/link | ISSUE_SEND, ISSUE_RECEIVE, ISSUE_REMOTE_DMA, ISSUE_MULTICAST, ISSUE_COLLECTIVE |
 
 Engine operation details live in typed descriptors, not in an expanding set of
 model-semantic opcodes. For example, the neutral kernel operation MATMUL may
 bind either an HBM weight view or a ROM weight view. ROM_MATMUL is not a
 backend-neutral operation.
+
+For the 32-node cluster and wafer-scale profiles, the pipeline/link family
+additionally includes bounded multicast and collective launch descriptors.
+These descriptors name admitted topology groups, routing classes, reduction
+contracts, byte counts, credit limits, and completion events; they do not expose
+arbitrary packet injection or a scalar network-programming fallback.
 
 Greedy argmax and token append are mandatory ABI 3.0 device operations. Sampling
 is an optional capability with an explicitly versioned RNG and probability
@@ -413,6 +540,33 @@ A GENERATE request stops on the first official EOS token or the declared
 maximum-new-token bound. EOS is included in the returned token sequence. No
 post-EOS model transaction may execute.
 
+### 8.8 Inter-chip and on-wafer communication
+
+Inter-chip communication is a first-class accelerator engine, not a simulator
+annotation. Every conventional HBM/SRAM chip contains the same synthesizable
+digital fabric endpoint, remote-DMA path, packet queues, virtual channels,
+credit accounting, integrity/replay logic, collective participation logic,
+interrupt/fault reporting, and architectural counters. The high-speed analog
+PHY and external switches may remain sourced boundary components, but the chip
+cannot rely on host software to emulate their protocol or sequence model work.
+
+Link descriptors bind source and destination nodes or topology groups, local and
+remote object windows, byte ranges, ordering class, transaction and sequence
+IDs, virtual channel, integrity mode, retry bound, completion event, timeout,
+and exact counter class. Remote access is explicit DMA or message movement;
+there is no implicit coherent global cache. Collectives bind their participant
+set, reduction numeric contract and order, tree/route class, buffer ownership,
+and terminal completion.
+
+The 32-node HBM cluster must execute DeepSeek sharding, expert dispatch, sparse
+gather, activation transfer, reductions, vocabulary aggregation, coordinated
+state commit, argmax, token append, and EOS without a host per-layer loop. The
+wafer-scale ROM fabric implements the same architectural communication meaning
+with a separate on-wafer physical endpoint. Link CRC/error, duplicate packet,
+retry exhaustion, credit loss, node reset, stale epoch, and timeout all produce
+declared fail-stop or recovery behavior and cannot commit partial generation
+state.
+
 ## 9. Events, queues, and memory ordering
 
 Each engine has one or more bounded submission/completion queues. Queue depth,
@@ -428,6 +582,12 @@ and engine-local storage.
 Programs may have multiple independent operations in flight. The verifier and
 cycle simulator must prove bounded queue occupancy and absence of cyclic waits
 for every admitted schedule.
+
+Distributed events and fences have explicit tile, reticle, node, HBM-region,
+cluster, and wafer-device scopes as applicable. A global operation is legal
+only when its participant set, tree or route class, maximum skew, buffering,
+timeout, and failure behavior are bound in the deployment. Neither simulator
+may model a global barrier or collective as zero-latency.
 
 ## 10. Architectural state
 
@@ -543,6 +703,12 @@ The capability union must represent, even before every engine is implemented:
 - the existing public architectural capacity endpoint of 1,048,576 positions
   without requiring that endpoint for the first full execution.
 
+Capabilities also report topology class, node/tile/reticle coordinates,
+destination widths, link classes, collective limits, HBM locality, fault
+domains, and active/quarantined resources. A program is admitted only against
+the exact chip, cluster or wafer topology and health digest for which it was
+compiled.
+
 Minimum field widths are 64-bit memory addresses and byte sizes, 32-bit
 descriptor IDs and loop counts, 32-bit token positions, 32-bit session IDs with
 separate generation, 16-bit layer IDs, 16-bit expert IDs, and 8-bit top-k counts.
@@ -574,7 +740,7 @@ An immutable logical weight object has the same graph and kernel identity in bot
 backends.
 
 - The HBM/SRAM backend binds it to authenticated HBM extents and emits DMA,
-  SRAM-tile, tensor, and eviction descriptors.
+  SRAM-tile, tensor, topology-aware communication, and eviction descriptors.
 - A ROM backend binds it to immutable ROM regions, repair maps, local tensor
   issue, and static route descriptors.
 
@@ -615,9 +781,15 @@ ABI 3.0 implementation begins with one tiny deterministic fixture, then:
 5. complete DeepSeek short ordinary generation through first EOS;
 6. microsequencer and representative engine RTL correlation;
 7. exact Qwen 8,000-natural-token and separate repeated-special-token runs;
-8. exact DeepSeek 200,000-natural-token run;
-9. chat and agentic workloads with legitimate decoded token evidence; and
-10. same-process ROM-versus-HBM/SRAM comparison.
+8. causal DeepSeek 32-node cluster bring-up with real routes, contention,
+   collectives, per-node HBM traffic, and link faults;
+9. causal DeepSeek ROM wafer-fabric bring-up with real routes, contention,
+   collectives, distributed HBM state traffic, faults, and degraded topology;
+10. exact DeepSeek 200,000-natural-token execution on both frozen topologies;
+11. chat and agentic workloads with legitimate decoded token evidence;
+12. separate SKY130 and ASAP7 physical convergence; and
+13. same-model, same-technology-view, topology-complete
+    ROM-versus-HBM/SRAM comparison.
 
 “Artifact-only execution” means complete functional numerical execution driven
 only by compiled deployment artifacts. It is a full model execution at the
@@ -632,17 +804,21 @@ decode returned token IDs.
 
 ## 19. Decisions deliberately deferred
 
-The following are selected only after compiler legality and 130-nm
+The qualitative single-chip, 32-node cluster, and wafer-scale split is not
+deferred. The following quantitative choices are selected only after compiler
+legality, execution-derived communication analysis, and SKY130/ASAP7
 characterization:
 
 - HBM channel and stack count;
 - SRAM bank count, capacity, macro organization, and ECC geometry;
 - tensor/vector/attention/route engine counts and lane widths;
-- NoC topology and physical queue depths;
+- exact local and on-wafer NoC topology, wafer reticle/tile count, cluster
+  switch topology, link widths, routing classes, and physical queue depths;
 - operating frequency and voltage;
-- Qwen-ROM and DeepSeek-ROM physical stage counts;
+- Qwen-ROM conventional partition count and DeepSeek-ROM wafer partitioning;
 - ROM macro geometry and repair overhead; and
-- package, HBM PHY, and high-speed link implementation.
+- conventional-package details, 32-node NVLink-class fabric/PHY realization,
+  wafer-scale HBM attachment, stitching, and high-speed link implementation.
 
 These are capability values, not ABI semantics. Changing them within advertised
 bounds does not change the model programming contract.
@@ -652,12 +828,23 @@ bounds does not change the model programming contract.
 TA-A3-ARCH-0 closes only when review records confirm:
 
 - the four target boundaries and reuse rules are accepted;
+- Qwen single-chip, DeepSeek 32-node HBM cluster, and DeepSeek wafer-scale ROM
+  profiles are accepted, including proof that both HBM deployments use the same
+  conventional accelerator-chip netlist;
 - management firmware and microsequencer responsibilities are unambiguous;
 - host, deployment/descriptor, and micro-ISA layers are separate and complete;
 - instruction families, loops, predicates, events, queues, ordering, state, EOS,
   traps, recovery, counters, security, and versioning are requirement-traced;
 - the Qwen and DeepSeek capability union has no unrepresented ordinary-path
   operation or state class;
+- the cluster and wafer topology, global address/event/session model, HBM
+  locality, collectives, synchronization, fault domains, repair, and degraded
+  behavior are versioned and requirement-traced;
+- the public Cerebras-class and NVLink/NVL72-class reference envelopes are
+  source-locked and clearly separated from execution-derived OpenTallas
+  bandwidth/latency requirements;
+- SKY130 is defined as the mature 130-nm implementation view and ASAP7 as the
+  academic predictive 7-nm view, with no cross-technology-view mixing;
 - ROM and HBM lowering do not leak into the neutral IR;
 - ABI 2.5 migration and equivalence criteria are approved;
 - the exact Qwen 8,000 and DeepSeek 200,000 acceptance boundaries are retained;
