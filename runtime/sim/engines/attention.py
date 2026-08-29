@@ -1,50 +1,89 @@
 """ATTENTION engine family: ``DENSE``, ``GQA`` and ``SPARSE``.
 
-The numeric contract executed here is ``qwen3_gqa_fp32_softmax_bf16_v1``: BF16
-operands widen to binary32, the QK product accumulates in ordered binary32, the
-scaled score rounds once to BF16, the causal mask is a BF16 *addition* of
-``0xff7f``, the softmax runs in binary32 with an eight-lane blocked denominator
-and the probability-times-value product accumulates in ordered binary32 before
-one final BF16 rounding.
+Two frozen numeric contracts live here, and neither is re-derived.
 
-None of that arithmetic is re-derived here.  This module is the *shape-generic
-driver* over the frozen kernels in :mod:`runtime.tensor_accelerator.attention`
-and :mod:`runtime.tensor_accelerator.bf16`; the tests assert that an operator
-descriptor carrying Qwen3 shapes reproduces ``gqa_causal_attention_bf16``
-bit for bit.  Re-deriving the rounding, the exponential or the reduction order
+``DENSE`` and ``GQA`` execute ``qwen3_gqa_fp32_softmax_bf16_v1``: BF16 operands
+widen to binary32, the QK product accumulates in ordered binary32, the scaled
+score rounds once to BF16, the causal mask is a BF16 *addition* of ``0xff7f``,
+the softmax runs in binary32 with an eight-lane blocked denominator and the
+probability-times-value product accumulates in ordered binary32 before one final
+BF16 rounding.  This module is the shape-generic driver over the frozen kernels
+in :mod:`runtime.tensor_accelerator.attention` and
+:mod:`runtime.tensor_accelerator.bf16`.
+
+``SPARSE`` executes the DeepSeek-V4-Flash contract
+``opentallas.deepseek_v4_sparse_attention_numeric.v1``, and drives
+:func:`runtime.reference.sparse_attention.sparse_attention_bf16` directly:
+block-64 gather with an online softmax, the score scale ``0x3d3504f3``, a
+NUM-6.1 balanced 64-lane score sum, exactly one binary32-to-BF16 probability
+conversion before the AV product, and the learned per-head binary32 attention
+sink added to the denominator *after* every block.  Re-deriving any of that
 inside the engine would create a second numeric implementation of one frozen
 contract, which is exactly what ADR-003 forbids.
 
 Operand and attribute convention (ABI 3.0 ``OPERATOR`` payload)
 --------------------------------------------------------------
-``input_view_0``
-    Queries, BF16, ``[span, query_heads, head_dim]``.
-``input_view_1``
-    Keys, BF16, ``[kv_rows, kv_heads, head_dim]``.
-``input_view_2``
-    Values, BF16, ``[kv_rows, kv_heads, head_dim]``.
-``input_view_3``
-    ``DENSE`` / ``GQA``: optional U32 absolute query positions ``[span]``.
-    ``SPARSE``: required U32 selected KV positions, ``[span, slots]`` (shared
-    by every head) or ``[span, kv_heads, slots]``.  ``0xffffffff`` is the
-    padding sentinel and is never executed.
-``output_view_0``
-    Context, BF16, ``[span, query_heads, head_dim]``.
-``aux_id_0``
-    Query heads per KV head.  ``NO_ID`` derives ``query_heads // kv_heads``.
-``aux_id_1``
-    Mask mode: ``0`` causal by absolute position, ``1`` full visibility.
-    ``NO_ID`` means causal.
-``aux_id_2``
-    Runtime symbol ID bounding the valid KV rows of the key/value views (a KV
-    cache view spans its capacity, not its filled length).  ``NO_ID`` uses the
-    key view's leading extent.
-``aux_id_3``
-    Runtime symbol ID holding the absolute position of query ``0``.  ``NO_ID``
-    derives ``context_length - span``.
+``SPARSE`` deliberately uses a **different** operand mapping from ``DENSE`` and
+``GQA`` -- amendment A6 of ``docs/TENSOR_ACCELERATOR_ABI_3_OPERATOR_CONVENTIONS``
+section 4.1.  DeepSeek attends with one KV head over a fused ``[rows, 512]`` KV
+tensor, so ``query, kv, indices, sink`` is exactly four operands and fits the
+frozen record unchanged.  The engine therefore dispatches its operand reading on
+the subopcode and refuses a ``SPARSE`` operator carrying a dense-shaped operand
+set.
+
+``DENSE`` / ``GQA``
+    ``input_view_0``
+        Queries, BF16, ``[span, query_heads, head_dim]``.
+    ``input_view_1``
+        Keys, BF16, ``[kv_rows, kv_heads, head_dim]``.
+    ``input_view_2``
+        Values, BF16, ``[kv_rows, kv_heads, head_dim]``.
+    ``input_view_3``
+        Optional U32 absolute query positions ``[span]``.
+    ``output_view_0``
+        Context, BF16, ``[span, query_heads, head_dim]``.
+    ``aux_id_0``
+        Query heads per KV head.  ``NO_ID`` derives ``query_heads // kv_heads``.
+    ``aux_id_1``
+        Mask mode: ``0`` causal by absolute position, ``1`` full visibility.
+        ``NO_ID`` means causal.
+    ``aux_id_2``
+        Runtime symbol ID bounding the valid KV rows of the key/value views (a
+        KV cache view spans its capacity, not its filled length).  ``NO_ID``
+        uses the key view's leading extent.
+    ``aux_id_3``
+        Runtime symbol ID holding the absolute position of query ``0``.
+        ``NO_ID`` derives ``context_length - span``.
+
+``SPARSE``
+    ``input_view_0``
+        Queries, BF16, ``[span, query_heads, head_dim]``.
+    ``input_view_1``
+        Fused KV, BF16, ``[kv_rows, head_dim]`` -- rank 2, one KV head.
+    ``input_view_2``
+        Selected KV rows, U32, ``[span, slots]``, ascending and tail-padded with
+        ``0xffffffff``.  Padding is never executed.
+    ``input_view_3``
+        Per-head attention-sink logits, FP32, ``[query_heads]``.
+    ``output_view_0``
+        Context, BF16, ``[span, query_heads, head_dim]``.
+    ``aux_id_0``
+        Group size.  One KV head means every query head is in the group, so a
+        declared value must equal ``query_heads``.  ``NO_ID`` derives it.
+    ``aux_id_1``
+        Source block width.  The reference is frozen at 64, so a declared value
+        must be 64.  ``NO_ID`` uses 64.
+    ``aux_id_2``
+        Runtime symbol ID bounding the valid KV rows.  ``NO_ID`` uses the KV
+        view's leading extent.
+    ``aux_id_3``
+        Runtime symbol ID holding the absolute position of query ``0``.  It does
+        not place a mask -- the index list already carries visibility -- but the
+        span it implies is checked against the bounded context.
 
 The scale is the numeric profile's ``scale_bits`` read as a binary32 pattern;
-a non-positive or non-finite scale is a descriptor fault, never a default.
+a non-positive or non-finite scale is a descriptor fault, never a default.  For
+``SPARSE`` the qualified profile fixes it at ``0x3d3504f3``.
 
 Counter semantics (frozen registry, ``runtime/sim/counters.py``)
 ---------------------------------------------------------------
@@ -52,7 +91,9 @@ Counter semantics (frozen registry, ``runtime/sim/counters.py``)
     Head passes executed: ``span * query_heads``.
 ``attention.score_multiplications`` / ``attention.value_multiplications``
     Products the datapath actually formed, so a masked-but-computed lane counts
-    and a sparse lane that was never gathered does not.
+    and a sparse lane that was never gathered does not.  The sparse reference
+    additionally reports the padded block lanes it executes against zero; those
+    are its own accounting and are deliberately not folded into these two.
 ``attention.context_positions``
     Visible KV positions per query token, summed over the span (not multiplied
     by the head count).
@@ -70,6 +111,11 @@ import numpy as np
 
 from runtime.abi3.constants import Attention, DType, Major, NO_ID
 from runtime.abi3.descriptors import Descriptor
+from runtime.reference.sparse_attention import (
+    SPARSE_ATTENTION_BLOCK_SIZE,
+    SparseAttentionReferenceError,
+    sparse_attention_bf16,
+)
 from runtime.sim.engine import EngineContext, EngineError, NumericProfile, register
 from runtime.sim.memory import ResolvedView
 from runtime.tensor_accelerator.attention import (
@@ -87,6 +133,9 @@ MASK_FULL = 1
 PAD_INDEX = NO_ID
 """Sentinel in a sparse index view: the slot is padding and is not executed."""
 
+SPARSE_PAD = -1
+"""How the frozen sparse reference spells :data:`PAD_INDEX` as a signed index."""
+
 
 # ---------------------------------------------------------------------------
 # descriptor decoding
@@ -101,17 +150,23 @@ def _aux(descriptor: Descriptor, slot: int) -> int | None:
     return None if value == NO_ID else value
 
 
-def _rank3(view: ResolvedView, label: str, dtype: int = int(DType.BF16)) -> None:
+def _ranked(
+    view: ResolvedView, label: str, rank: int, dtype: int = int(DType.BF16)
+) -> None:
     _require(
         view.dtype == dtype,
         f"attention {label} view {view.descriptor_id} is dtype "
         f"{view.dtype:#04x}, expected {dtype:#04x}",
     )
     _require(
-        len(view.dims) == 3,
+        len(view.dims) == rank,
         f"attention {label} view {view.descriptor_id} has rank "
-        f"{len(view.dims)}, expected 3",
+        f"{len(view.dims)}, expected {rank}",
     )
+
+
+def _rank3(view: ResolvedView, label: str, dtype: int = int(DType.BF16)) -> None:
+    _ranked(view, label, 3, dtype)
 
 
 def _scale(profile: NumericProfile) -> np.float32:
@@ -130,10 +185,10 @@ def _symbol_value(ctx: EngineContext, symbol_id: int | None, default: int) -> in
     return int(ctx.symbol(symbol_id))
 
 
-# ---------------------------------------------------------------------------
-# shared execution
-# ---------------------------------------------------------------------------
-def _execute(ctx: EngineContext, descriptor: Descriptor, sub: int) -> None:
+def _preamble(
+    ctx: EngineContext, descriptor: Descriptor, sub: int
+) -> tuple[NumericProfile, np.float32]:
+    """Check the operator's identity and decode its numeric contract."""
     payload = descriptor.payload
     _require(
         int(payload["engine_family"]) == int(Major.ATTENTION)
@@ -148,7 +203,26 @@ def _execute(ctx: EngineContext, descriptor: Descriptor, sub: int) -> None:
         f"numeric profile {profile.descriptor_id}: the attention contract is "
         "BF16 in and BF16 out",
     )
-    scale = _scale(profile)
+    return profile, _scale(profile)
+
+
+def _context_bound(
+    ctx: EngineContext, descriptor: Descriptor, view: ResolvedView, kv_rows: int
+) -> int:
+    context = _symbol_value(ctx, _aux(descriptor, 2), kv_rows)
+    _require(
+        0 < context <= kv_rows,
+        f"attention: context length {context} is outside the {kv_rows} KV rows "
+        f"addressed by view {view.descriptor_id}",
+    )
+    return context
+
+
+# ---------------------------------------------------------------------------
+# DENSE and GQA
+# ---------------------------------------------------------------------------
+def _execute_dense_gqa(ctx: EngineContext, descriptor: Descriptor, sub: int) -> None:
+    _, scale = _preamble(ctx, descriptor, sub)
 
     query_view = ctx.input_view(descriptor, 0)
     key_view = ctx.input_view(descriptor, 1)
@@ -204,84 +278,42 @@ def _execute(ctx: EngineContext, descriptor: Descriptor, sub: int) -> None:
         f"attention: unknown mask mode {mask_mode}",
     )
 
-    context = _symbol_value(ctx, _aux(descriptor, 2), kv_rows)
-    _require(
-        0 < context <= kv_rows,
-        f"attention: context length {context} is outside the {kv_rows} KV rows "
-        f"addressed by view {key_view.descriptor_id}",
-    )
+    context = _context_bound(ctx, descriptor, key_view, kv_rows)
 
     queries = ctx.read(query_view)
     keys = ctx.read(key_view)
     values = ctx.read(value_view)
 
-    if sub == int(Attention.SPARSE):
-        _require(
-            extra_view is not None,
-            "ATTENTION.SPARSE requires a sparse index view in input slot 3",
-        )
-        assert extra_view is not None
-        indices = _sparse_indices(ctx, extra_view, span, kv_heads, context)
-        positions = None
-    else:
-        indices = None
-        # Absolute positions exist to place the causal horizon.  Full-visibility
-        # attention needs none, and must not be constrained by one.
-        positions = (
-            _positions(ctx, descriptor, extra_view, span, context)
-            if mask_mode == MASK_CAUSAL or extra_view is not None
-            else None
-        )
+    # Absolute positions exist to place the causal horizon.  Full-visibility
+    # attention needs none, and must not be constrained by one.
+    positions = (
+        _positions(ctx, descriptor, extra_view, span, context)
+        if mask_mode == MASK_CAUSAL or extra_view is not None
+        else None
+    )
 
     outputs = np.empty((span, query_heads, head_dim), dtype=np.uint16)
     visible_total = 0
-    executed_indices = 0
     score_products = 0
     value_products = 0
     kv_elements = 0
 
     try:
         for token in range(span):
-            if indices is None:
-                if mask_mode == MASK_CAUSAL:
-                    assert positions is not None
-                    limit = int(positions[token]) + 1
-                else:
-                    limit = context
-                visible_total += limit
-                kv_elements += 2 * limit * kv_heads * head_dim
-                mask = np.zeros(context, dtype=np.uint16)
-                mask[limit:] = np.uint16(CAUSAL_MASK_BF16_CODE)
+            if mask_mode == MASK_CAUSAL:
+                assert positions is not None
+                limit = int(positions[token]) + 1
             else:
-                mask = None
+                limit = context
+            visible_total += limit
+            kv_elements += 2 * limit * kv_heads * head_dim
+            mask = np.zeros(context, dtype=np.uint16)
+            mask[limit:] = np.uint16(CAUSAL_MASK_BF16_CODE)
             for head in range(query_heads):
                 kv_head = head // group
-                first_of_kv_head = head % group == 0
-                if indices is None:
-                    rows = np.ascontiguousarray(keys[:context, kv_head, :])
-                    value_rows = np.ascontiguousarray(values[:context, kv_head, :].T)
-                    width = context
-                else:
-                    index_rows = indices[token]
-                    row_index = kv_head if len(index_rows) > 1 else 0
-                    selected = index_rows[row_index]
-                    width = int(selected.size)
-                    _require(
-                        width > 0,
-                        f"ATTENTION.SPARSE: query {token} head {head} selects no "
-                        "KV row; an empty softmax has no defined value",
-                        trap_class=6,
-                    )
-                    rows = np.ascontiguousarray(keys[selected, kv_head, :])
-                    value_rows = np.ascontiguousarray(values[selected, kv_head, :].T)
-                    if first_of_kv_head:
-                        # Every KV head reads its own gathered rows.
-                        kv_elements += 2 * width * head_dim
-                        if len(index_rows) > 1 or kv_head == 0:
-                            # One accounting event per distinct executed index
-                            # list, taken from the executed rows themselves.
-                            executed_indices += width
-                            visible_total += width
+                rows = np.ascontiguousarray(keys[:context, kv_head, :])
+                value_rows = np.ascontiguousarray(values[:context, kv_head, :].T)
+                width = context
                 score_products += width * head_dim
                 value_products += width * head_dim
                 scored = dense_bf16_linear_bf16(
@@ -293,14 +325,13 @@ def _execute(ctx: EngineContext, descriptor: Descriptor, sub: int) -> None:
                 scaled, _ = _round_bf16(
                     np.multiply(_widen_bf16(scored.values[0]), scale, dtype=np.float32)
                 )
-                if mask is not None:
-                    scaled, _ = _round_bf16(
-                        np.add(
-                            _widen_bf16(scaled),
-                            _widen_bf16(mask),
-                            dtype=np.float32,
-                        )
+                scaled, _ = _round_bf16(
+                    np.add(
+                        _widen_bf16(scaled),
+                        _widen_bf16(mask),
+                        dtype=np.float32,
                     )
+                )
                 probabilities, _ = _softmax_bf16(scaled)
                 context_row = dense_bf16_linear_bf16(
                     probabilities[None, :],
@@ -320,8 +351,6 @@ def _execute(ctx: EngineContext, descriptor: Descriptor, sub: int) -> None:
     ctx.counters.add("attention.score_multiplications", score_products)
     ctx.counters.add("attention.value_multiplications", value_products)
     ctx.counters.add("attention.kv_bytes_read", kv_elements * 2)
-    if indices is not None:
-        ctx.counters.add("attention.sparse_indices", executed_indices)
 
 
 def _positions(
@@ -360,53 +389,193 @@ def _positions(
     return positions
 
 
-def _sparse_indices(
+# ---------------------------------------------------------------------------
+# SPARSE (amendment A6)
+# ---------------------------------------------------------------------------
+def _execute_sparse(ctx: EngineContext, descriptor: Descriptor) -> None:
+    profile, _ = _preamble(ctx, descriptor, int(Attention.SPARSE))
+
+    query_view = ctx.input_view(descriptor, 0)
+    kv_view = ctx.input_view(descriptor, 1)
+    index_view = ctx.optional_input(descriptor, 2)
+    sink_view = ctx.optional_input(descriptor, 3)
+    out_view = ctx.output_view(descriptor, 0)
+
+    _rank3(query_view, "query")
+    _rank3(out_view, "output")
+    # Amendment A6: the sparse operand set is q / fused KV / indices / sinks.
+    # A dense-shaped operator puts rank-3 keys in slot 1 and rank-3 BF16 values
+    # in slot 2; both are refused here rather than reinterpreted.
+    _require(
+        len(kv_view.dims) == 2 and kv_view.dtype == int(DType.BF16),
+        f"ATTENTION.SPARSE input 1 (view {kv_view.descriptor_id}) is "
+        f"{DType(kv_view.dtype).name} rank {len(kv_view.dims)}; amendment A6 "
+        "requires a fused BF16 KV tensor [kv_rows, head_dim] with a single KV "
+        "head, not a dense key view",
+    )
+    _require(
+        index_view is not None,
+        "ATTENTION.SPARSE input 2 is unbound; amendment A6 requires the U32 "
+        "sparse index array there, not in the dense mask slot",
+    )
+    assert index_view is not None
+    _require(
+        index_view.dtype == int(DType.U32) and len(index_view.dims) == 2,
+        f"ATTENTION.SPARSE input 2 (view {index_view.descriptor_id}) is "
+        f"{DType(index_view.dtype).name} rank {len(index_view.dims)}; amendment "
+        "A6 requires a U32 [span, slots] sparse index array",
+    )
+    _require(
+        sink_view is not None,
+        "ATTENTION.SPARSE input 3 is unbound; amendment A6 requires the "
+        "per-head attention-sink logits there",
+    )
+    assert sink_view is not None
+    _require(
+        sink_view.dtype == int(DType.FP32) and len(sink_view.dims) == 1,
+        f"ATTENTION.SPARSE input 3 (view {sink_view.descriptor_id}) is "
+        f"{DType(sink_view.dtype).name} rank {len(sink_view.dims)}; amendment A6 "
+        "requires FP32 [query_heads] attention-sink logits",
+    )
+
+    span, query_heads, head_dim = query_view.dims
+    kv_rows, kv_dim = kv_view.dims
+    _require(
+        kv_dim == head_dim,
+        f"attention head dimension {head_dim} differs from the fused KV "
+        f"dimension {kv_dim}",
+    )
+    _require(
+        out_view.dims == (span, query_heads, head_dim),
+        f"attention output view {out_view.descriptor_id} dims {out_view.dims} "
+        f"differ from the required {(span, query_heads, head_dim)}",
+    )
+    _require(
+        index_view.dims[0] == span,
+        f"sparse index view {index_view.descriptor_id} covers "
+        f"{index_view.dims[0]} query rows, expected {span}",
+    )
+    _require(
+        sink_view.dims[0] == query_heads,
+        f"attention-sink view {sink_view.descriptor_id} holds "
+        f"{sink_view.dims[0]} logits for {query_heads} query heads",
+    )
+
+    declared_group = _aux(descriptor, 0)
+    group = query_heads if declared_group is None else declared_group
+    _require(
+        group == query_heads,
+        f"ATTENTION.SPARSE attends one fused KV head, so the group size is "
+        f"{query_heads}; the operator declares {group}",
+    )
+    declared_block = _aux(descriptor, 1)
+    block = SPARSE_ATTENTION_BLOCK_SIZE if declared_block is None else declared_block
+    _require(
+        block == SPARSE_ATTENTION_BLOCK_SIZE,
+        f"ATTENTION.SPARSE declares block width {block}; the qualified DeepSeek "
+        f"contract is frozen at {SPARSE_ATTENTION_BLOCK_SIZE}",
+    )
+
+    context = _context_bound(ctx, descriptor, kv_view, kv_rows)
+    base_symbol = _aux(descriptor, 3)
+    if base_symbol is not None:
+        base = _symbol_value(ctx, base_symbol, context - span)
+        _require(
+            0 <= base and base + span <= context,
+            f"attention: query span {span} at absolute position {base} does not "
+            f"fit in a context of {context} positions",
+        )
+
+    indices, gathered = _sparse_index_rows(ctx, index_view, span, context)
+    queries = np.ascontiguousarray(ctx.read(query_view))
+    fused_kv = np.ascontiguousarray(ctx.read(kv_view))[:context]
+    sinks = np.ascontiguousarray(ctx.read(sink_view)).view(np.uint32)
+
+    try:
+        result = sparse_attention_bf16(
+            [queries.tolist()],
+            [fused_kv.tolist()],
+            [int(code) for code in sinks],
+            [indices],
+            scale_binary32=int(profile.scale_bits),
+        )
+    except SparseAttentionReferenceError as exc:
+        raise EngineError(
+            f"sparse attention numeric contract violated: {exc}", trap_class=6
+        ) from exc
+
+    outputs = np.asarray(result.values[0], dtype=np.uint16)
+    ctx.write(out_view, outputs.reshape(out_view.dims))
+
+    counters = result.counters
+    ctx.counters.add("attention.heads", span * query_heads)
+    ctx.counters.add("attention.context_positions", gathered)
+    ctx.counters.add(
+        "attention.score_multiplications", counters.qk_valid_product_accumulates
+    )
+    # The AV product is formed for every gathered row of every head, exactly as
+    # the QK product is.  The reference additionally executes padded block lanes
+    # against zero; those are its own accounting, not products over data.
+    ctx.counters.add(
+        "attention.value_multiplications", counters.qk_valid_product_accumulates
+    )
+    ctx.counters.add("attention.kv_bytes_read", counters.selected_kv_read_bytes)
+    ctx.counters.add("attention.sparse_indices", counters.valid_selected_rows)
+
+
+def _sparse_index_rows(
     ctx: EngineContext,
     view: ResolvedView,
     span: int,
-    kv_heads: int,
     context: int,
-) -> list[list[np.ndarray]]:
-    """Decode and range-check the executed sparse index list per query row."""
-    _require(
-        view.dtype == int(DType.U32),
-        f"sparse index view {view.descriptor_id} must be U32",
-    )
-    _require(
-        len(view.dims) in (2, 3),
-        f"sparse index view {view.descriptor_id} has rank {len(view.dims)}, "
-        "expected [span, slots] or [span, kv_heads, slots]",
-    )
-    raw = np.asarray(ctx.read(view), dtype=np.uint64)
-    if len(view.dims) == 2:
-        _require(
-            view.dims[0] == span,
-            f"sparse index view {view.descriptor_id} covers {view.dims[0]} query "
-            f"rows, expected {span}",
-        )
-        raw = raw.reshape(span, 1, view.dims[1])
-    else:
-        _require(
-            view.dims[0] == span and view.dims[1] == kv_heads,
-            f"sparse index view {view.descriptor_id} dims {view.dims} do not "
-            f"match [{span}, {kv_heads}, slots]",
-        )
-    out: list[list[np.ndarray]] = []
+) -> tuple[list[list[int]], int]:
+    """Decode a ``[span, slots]`` U32 index array into signed reference rows.
+
+    Amendment A6 fixes the array as ascending and tail-padded with
+    ``0xffffffff``.  Both properties are checked: padding that is not a suffix,
+    or a descending pair, is a malformed operand rather than something to
+    reinterpret.  Returns the rows in the reference's ``-1``-padded signed form
+    and the number of rows actually gathered.
+    """
+    raw = np.asarray(ctx.read(view), dtype=np.uint64).reshape(span, view.dims[1])
+    rows: list[list[int]] = []
+    gathered = 0
     for token in range(span):
-        per_head: list[np.ndarray] = []
-        for group_index in range(raw.shape[1]):
-            row = raw[token, group_index]
-            executed = row[row != np.uint64(PAD_INDEX)]
-            if executed.size and int(executed.max()) >= context:
+        row = raw[token]
+        valid = row != np.uint64(PAD_INDEX)
+        count = int(np.count_nonzero(valid))
+        _require(
+            bool(np.all(valid[:count])),
+            f"sparse index view {view.descriptor_id}: query {token} interleaves "
+            "padding with selected rows; amendment A6 fixes padding as a "
+            "trailing run",
+        )
+        executed = row[:count]
+        if count:
+            if int(executed.max()) >= context:
                 bad = int(executed.max())
                 raise EngineError(
                     f"sparse index view {view.descriptor_id}: query {token} "
                     f"selects KV row {bad}, outside the {context} valid rows",
                     trap_class=3,
                 )
-            per_head.append(executed.astype(np.intp))
-        out.append(per_head)
-    return out
+            _require(
+                bool(np.all(np.diff(executed.astype(np.int64)) >= 0)),
+                f"sparse index view {view.descriptor_id}: query {token} is not "
+                "ascending; amendment A6 fixes the selected rows as ascending",
+            )
+        _require(
+            count > 0,
+            f"ATTENTION.SPARSE: query {token} selects no KV row; an empty "
+            "softmax has no defined value",
+            trap_class=6,
+        )
+        gathered += count
+        rows.append(
+            [int(value) for value in executed]
+            + [SPARSE_PAD] * (int(view.dims[1]) - count)
+        )
+    return rows, gathered
 
 
 # ---------------------------------------------------------------------------
@@ -414,17 +583,25 @@ def _sparse_indices(
 # ---------------------------------------------------------------------------
 @register(Major.ATTENTION, Attention.DENSE)
 def dense(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
-    _execute(ctx, descriptor, int(Attention.DENSE))
+    _execute_dense_gqa(ctx, descriptor, int(Attention.DENSE))
 
 
 @register(Major.ATTENTION, Attention.GQA)
 def gqa(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
-    _execute(ctx, descriptor, int(Attention.GQA))
+    _execute_dense_gqa(ctx, descriptor, int(Attention.GQA))
 
 
 @register(Major.ATTENTION, Attention.SPARSE)
 def sparse(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
-    _execute(ctx, descriptor, int(Attention.SPARSE))
+    _execute_sparse(ctx, descriptor)
 
 
-__all__ = ["MASK_CAUSAL", "MASK_FULL", "PAD_INDEX", "dense", "gqa", "sparse"]
+__all__ = [
+    "MASK_CAUSAL",
+    "MASK_FULL",
+    "PAD_INDEX",
+    "SPARSE_PAD",
+    "dense",
+    "gqa",
+    "sparse",
+]

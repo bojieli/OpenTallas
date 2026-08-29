@@ -1266,6 +1266,7 @@ def build(argv: list[str] | None = None) -> int:
         records.append({
             "name": case.name,
             "note": case.note,
+            "runs_program": case.run_program,
             "entrypoint_id": case.entrypoint_id,
             "phase": int(entry["phase"]),
             "symbols": {str(k): int(v) for k, v in sorted(symbols.items())},
@@ -1293,6 +1294,11 @@ def build(argv: list[str] | None = None) -> int:
         })
 
     total_issues = sum(len(r["expected_issues"]) for r in records)
+    program_runs = sum(1 for r in records if r["runs_program"])
+    trap_runs = sum(
+        1 for r in records
+        if r["runs_program"] and int(r["expected"]["trap_class"]) != 0
+    )
     meta = [len(cases), total_issues, positives, len(cases) - positives, 0, 0, 0, 0]
 
     files = {
@@ -1315,6 +1321,14 @@ def build(argv: list[str] | None = None) -> int:
         "positive_case_count": positives,
         "negative_case_count": len(cases) - positives,
         "issue_event_count": total_issues,
+        "header_admission_count": len(cases),
+        "program_run_count": program_runs,
+        "trap_count": trap_runs,
+        "required_marker": (
+            f"PASS: ABI3 RTL microsequencer cases={len(cases)} "
+            f"headers={len(cases)} programs={program_runs} "
+            f"issues={total_issues} traps={trap_runs}"
+        ),
         "geometry": {
             "program_words": PROGRAM_WORDS,
             "header_words": HEADER_WORDS,

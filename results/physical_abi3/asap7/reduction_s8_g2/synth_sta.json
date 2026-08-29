@@ -1,6 +1,25 @@
 {
+  "acceptance": {
+    "checks": [
+      {
+        "hold_met": true,
+        "hold_violating_paths": 0,
+        "hold_wns_ns": 0.05295744766664513,
+        "met": true,
+        "scope": "pre-layout, ideal clock",
+        "setup_met": true,
+        "setup_violating_paths": 0,
+        "setup_wns_ns": 0.27297186842295856,
+        "stage": "static_timing"
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires zero DRC and zero antenna violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
   "campaign_id": "opentallas-abi3-physical-v1",
-  "completed_at": "2026-08-29T16:04:55.887431+00:00",
+  "completed_at": "2026-08-29T16:19:01.145979+00:00",
   "corner": {
     "liberty": [
       {
@@ -56,12 +75,15 @@
     ],
     "top": "ot_reduction_endpoint"
   },
-  "elapsed_seconds": 25.946,
-  "generated_at": "2026-08-29T16:04:29.941716+00:00",
+  "elapsed_seconds": 12.22,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-08-29T16:18:48.925849+00:00",
   "git": {
-    "commit": "8f971bcec0b78c2270604fda406857eb33b78bc9",
+    "commit": "8ffd5ec3c6a32e90f1498278287ac0f961ae231e",
     "worktree_dirty": true
   },
+  "purpose": "signoff_target",
   "runner": {
     "argv": [
       "tools/run_abi3_physical.py",
@@ -75,6 +97,8 @@
       "synth,sta",
       "--fmax-search",
       "--force",
+      "--purpose",
+      "signoff_target",
       "--output",
       "results/physical_abi3/asap7/reduction_s8_g2/synth_sta.json"
     ],
@@ -187,6 +211,7 @@
     "unmapped_cell_types": []
   },
   "target_clock_period_ns": 2.25,
+  "target_semantics": "the target clock period is the intended operating point",
   "tools": {
     "abc": {
       "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys-abc",

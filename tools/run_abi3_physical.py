@@ -982,6 +982,102 @@ def run_pnr(
 
 
 # --------------------------------------------------------------------------
+# Engineering verdict
+# --------------------------------------------------------------------------
+#
+# ``status`` is the ENGINEERING result, not "the script finished".  Whether the
+# flow ran to completion is reported separately as ``flow_completed``.  A run
+# whose timing did not close must never be emitted as ``pass``: a downstream
+# report generator reads ``status``, and a slow corner that fails to close at
+# the target period would otherwise silently become a claim that the block
+# closes at that period.
+
+STATUS_PASS = "pass"
+STATUS_NOT_MET = "not_met"
+STATUS_NOT_EVALUATED = "not_evaluated"
+STATUS_ERROR = "error"
+
+
+def evaluate_verdict(record: dict[str, Any]) -> dict[str, Any]:
+    """Derive the engineering verdict from whatever stages actually ran."""
+    checks: list[dict[str, Any]] = []
+
+    sta = record.get("static_timing")
+    if sta:
+        setup_ok = sta["setup_wns_ns"] >= 0.0 and sta["setup_violating_paths"] == 0
+        hold_ok = sta["hold_wns_ns"] >= 0.0 and sta["hold_violating_paths"] == 0
+        checks.append(
+            {
+                "stage": "static_timing",
+                "scope": "pre-layout, ideal clock",
+                "met": bool(setup_ok and hold_ok),
+                "setup_met": bool(setup_ok),
+                "hold_met": bool(hold_ok),
+                "setup_wns_ns": sta["setup_wns_ns"],
+                "setup_violating_paths": sta["setup_violating_paths"],
+                "hold_wns_ns": sta["hold_wns_ns"],
+                "hold_violating_paths": sta["hold_violating_paths"],
+            }
+        )
+
+    pnr = record.get("place_and_route")
+    if pnr:
+        m = pnr["metrics"]
+
+        def number(key: str) -> float | None:
+            value = m.get(key)
+            return None if value is None else float(value)
+
+        setup_wns = number("setup_wns_ns")
+        hold_wns = number("hold_wns_ns")
+        setup_viol = number("setup_violations")
+        hold_viol = number("hold_violations")
+        drc = number("drc_errors")
+        ant_nets = number("antenna_violating_nets")
+        ant_pins = number("antenna_violating_pins")
+        timing_ok = (
+            setup_wns is not None
+            and hold_wns is not None
+            and setup_wns >= 0.0
+            and hold_wns >= 0.0
+            and setup_viol == 0
+            and hold_viol == 0
+        )
+        clean_ok = drc == 0 and ant_nets == 0 and ant_pins == 0
+        checks.append(
+            {
+                "stage": "place_and_route",
+                "scope": "post-route, extracted parasitics",
+                "met": bool(timing_ok and clean_ok),
+                "timing_met": bool(timing_ok),
+                "physically_clean": bool(clean_ok),
+                "setup_wns_ns": setup_wns,
+                "setup_violations": setup_viol,
+                "hold_wns_ns": hold_wns,
+                "hold_violations": hold_viol,
+                "drc_errors": drc,
+                "antenna_violating_nets": ant_nets,
+                "antenna_violating_pins": ant_pins,
+            }
+        )
+
+    if not checks:
+        return {
+            "status": STATUS_NOT_EVALUATED,
+            "reason": "no timing-bearing stage ran; nothing to accept or reject",
+            "checks": checks,
+        }
+    failed = [c["stage"] for c in checks if not c["met"]]
+    if failed:
+        return {
+            "status": STATUS_NOT_MET,
+            "reason": f"did not meet in: {', '.join(failed)}",
+            "checks": checks,
+        }
+    return {"status": STATUS_PASS, "reason": "all evaluated stages met", "checks": checks}
+
+
+# --------------------------------------------------------------------------
 # Driver
 # --------------------------------------------------------------------------
 
@@ -1006,6 +1102,24 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--core-utilization", type=int, default=35)
     parser.add_argument("--place-density", type=float, default=0.60)
     parser.add_argument("--keep-heavy-artifacts", action="store_true")
+    parser.add_argument(
+        "--purpose",
+        default="characterization",
+        choices=["characterization", "signoff_target"],
+        help=(
+            "characterization: this target period is a probe, not a claim that "
+            "the block must close at it.  signoff_target: this period is the "
+            "intended operating point."
+        ),
+    )
+    parser.add_argument(
+        "--expected-not-met",
+        action="store_true",
+        help=(
+            "record that this corner is deliberately expected not to close at "
+            "the target period; does not change status, only documents intent"
+        ),
+    )
     parser.add_argument("--output", required=True)
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--keep-workdir", default=None, help="directory to retain intermediate files in")
@@ -1125,8 +1239,18 @@ def main(argv: list[str] | None = None) -> int:
             ],
         },
         "target_clock_period_ns": args.clock_period_ns,
+        "purpose": args.purpose,
+        "expected_not_met": bool(args.expected_not_met),
+        "target_semantics": (
+            "the target clock period is a characterisation probe, not an "
+            "operating-point requirement"
+            if args.purpose == "characterization"
+            else "the target clock period is the intended operating point"
+        ),
         "stages_requested": stages,
         "stages_completed": [],
+        "flow_completed": False,
+        "status": STATUS_ERROR,
     }
 
     try:
@@ -1176,9 +1300,10 @@ def main(argv: list[str] | None = None) -> int:
             )
             record["stages_completed"].append("pnr")
 
-        record["status"] = "pass"
-    except Exception as exc:  # noqa: BLE001 - recorded, then re-raised as failure
-        record["status"] = "fail"
+        record["flow_completed"] = True
+    except Exception as exc:  # noqa: BLE001 - recorded, then reported as an error
+        record["flow_completed"] = False
+        record["status"] = STATUS_ERROR
         record["error"] = f"{type(exc).__name__}: {exc}"
         record["completed_at"] = datetime.now(timezone.utc).isoformat()
         canonical_dump(record, output)
@@ -1188,6 +1313,22 @@ def main(argv: list[str] | None = None) -> int:
             workdir_ctx.cleanup()
         return 1
 
+    verdict = evaluate_verdict(record)
+    record["status"] = verdict["status"]
+    record["acceptance"] = {
+        "status": verdict["status"],
+        "reason": verdict["reason"],
+        "checks": verdict["checks"],
+        "criterion": (
+            "pass requires every timing-bearing stage that ran to meet setup "
+            "and hold with zero violating paths; place-and-route additionally "
+            "requires zero DRC and zero antenna violations"
+        ),
+        "note": (
+            "status is the engineering result, not whether the script "
+            "finished; see flow_completed for that"
+        ),
+    }
     record["completed_at"] = datetime.now(timezone.utc).isoformat()
     record["elapsed_seconds"] = round(
         (datetime.now(timezone.utc) - started).total_seconds(), 3
@@ -1200,7 +1341,10 @@ def main(argv: list[str] | None = None) -> int:
     synth = record.get("synthesis", {})
     sta = record.get("static_timing", {})
     pnr = record.get("place_and_route", {})
-    print(f"view={args.view} corner={corner_name} block={block_name} top={block['top']}")
+    print(
+        f"view={args.view} corner={corner_name} block={block_name} "
+        f"top={block['top']} purpose={args.purpose}"
+    )
     if synth:
         print(
             f"  synth: cells={synth['cell_count']} area={synth['cell_area_um2']:.3f} um2 "
@@ -1218,6 +1362,12 @@ def main(argv: list[str] | None = None) -> int:
             f"DRC={m.get('drc_errors')} antenna_nets={m.get('antenna_violating_nets')} "
             f"Fmax={float(m.get('fmax_hz', 0)) / 1e6:.2f} MHz"
         )
+    verdict_line = f"  STATUS: {record['status'].upper()} ({verdict['reason']})"
+    if record["status"] != STATUS_PASS:
+        verdict_line += "  <-- did NOT meet timing"
+        if args.expected_not_met:
+            verdict_line += " (expected for this corner)"
+    print(verdict_line)
     print(f"  wrote {output}")
     return 0
 

@@ -12,7 +12,6 @@ from __future__ import annotations
 import hashlib
 import json
 from collections import Counter
-from pathlib import Path
 
 import pytest
 
@@ -514,3 +513,74 @@ def test_a_missing_checkpoint_lock_is_rejected(tmp_path):
         export_deepseek_v4_kernel_graph(
             checkpoint_lock_path=tmp_path / "absent.lock.json"
         )
+
+
+def test_source_attribute_keys_with_a_backend_term_are_renamed(graph):
+    """Renamed, never dropped: the source semantics must survive."""
+
+    keys = {key for kernel in graph.kernels for key in kernel.attributes}
+    assert "cache_slot" not in keys and "cache_row" in keys
+    assert "state_slots" not in keys and "state_rows" in keys
+    assert "stages" not in keys and "butterfly_levels" in keys
+    assert "duplicate_slot_order" not in keys
+    assert "duplicate_selection_order" in keys
+    assert "kv_read_bytes_per_valid_row" in keys
+
+
+def test_conditional_compression_carries_an_execution_predicate(graph):
+    """The frozen ``Kernel`` has no predicate field, so the source guard is
+    carried as an attribute; see the front end's contract-change note."""
+
+    guarded = [
+        kernel
+        for kernel in graph.kernels
+        if "execution_predicate" in kernel.attributes
+    ]
+    assert guarded
+    for kernel in guarded:
+        assert kernel.attributes["execution_predicate"].endswith("should_compress")
+    kinds = {kernel.kind for kernel in guarded}
+    assert {"COMPRESS_POOL", "CONVERT", "RMS_NORM", "KV_APPEND"} <= kinds
+
+
+# ---------------------------------------------------------------------------
+# Speculative profile
+# ---------------------------------------------------------------------------
+@pytest.fixture(scope="module")
+def speculative_graph():
+    return export_deepseek_v4_kernel_graph(include_speculative=True)
+
+
+def test_speculative_profile_covers_every_source_kind(
+    speculative_graph, graph, contract, specs
+):
+    assert check_neutral(speculative_graph) == []
+    node_kind = {node["id"]: node["kind"] for node in contract["nodes"]}
+    covered = {k.source_operation_id for k in speculative_graph.kernels}
+    assert covered == set(node_kind)
+    assert {node_kind[name] for name in covered} == set(OPERATOR_CATALOG)
+    assert len(speculative_graph.kernels) > len(graph.kernels)
+
+    bound = {t.tensor_id for t in speculative_graph.tensors if t.binding is not None}
+    assert bound == {spec.name for spec in specs}
+    assert len(bound) == TENSOR_COUNT
+    total = sum(
+        t.binding.bytes for t in speculative_graph.tensors if t.binding is not None
+    )
+    assert total == PAYLOAD_BYTES
+    assert speculative_graph.generation_policy["speculative_profile"] is True
+    assert speculative_graph.graph_id != graph.graph_id
+
+
+def test_speculative_profile_keeps_the_ordinary_kernels_intact(
+    speculative_graph, graph
+):
+    ordinary = {
+        (k.kernel_id, k.kind, k.inputs, k.outputs)
+        for k in graph.kernels
+    }
+    extended = {
+        (k.kernel_id, k.kind, k.inputs, k.outputs)
+        for k in speculative_graph.kernels
+    }
+    assert ordinary <= extended

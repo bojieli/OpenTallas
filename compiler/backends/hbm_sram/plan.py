@@ -74,13 +74,19 @@ from compiler.ir.v3.kernel_ir import (
 from compiler.ir.v3.lowering import engine_for
 from runtime.abi3.capability import Capability, canonical_json, digest_of
 from runtime.abi3.constants import (
+    Attention,
+    Dma,
     DTYPE_BITS,
     DType,
     Major,
+    Route,
+    Selection,
     StateClass,
     Tensor as TensorOp,
     TopologyClass,
+    Vector,
 )
+from runtime.abi3.descriptors import Symbol
 
 PLAN_SCHEMA = "opentallas.hbm_sram.physical_plan.v3"
 PLAN_VERSION = "3.0.0"
@@ -208,14 +214,28 @@ def _as_json(value: Any) -> Any:
 # ---------------------------------------------------------------------------
 @dataclass(frozen=True, slots=True)
 class TileConfig:
-    """Target tile shape.  Actual tiles are the largest divisors below these."""
+    """Tile and block shapes.
+
+    ``rows``/``cols``/``depth`` are the *hardware* tile the SCHEDULE descriptor
+    carries: how one engine operation is decomposed across lanes, banks and
+    passes.  ``block`` is the *program* token block, the only one of the four
+    that becomes a loop, because the number of tokens is the thing that
+    genuinely varies at runtime.  Actual tiles are the largest divisors of the
+    real extents not exceeding these targets, so no tile is ever partial.
+    """
 
     rows: int = 64
     cols: int = 128
     depth: int = 128
+    block: int = 512
 
     def to_dict(self) -> dict[str, Any]:
-        return {"rows": self.rows, "cols": self.cols, "depth": self.depth}
+        return {
+            "rows": self.rows,
+            "cols": self.cols,
+            "depth": self.depth,
+            "block": self.block,
+        }
 
 
 @dataclass(frozen=True, slots=True)
@@ -512,17 +532,19 @@ class KernelPlan:
     layer: int | None
     body_position: int
     contraction: bool
-    staged: bool
+    block_rows: int
     tile_rows: int
     tile_cols: int
     tile_depth: int
     row_loop: LoopPlan | None
-    column_loop: LoopPlan | None
-    depth_loop: LoopPlan | None
     operands: tuple[OperandPlan, ...]
+    aux: tuple[int, ...]
+    slot_order: tuple[int, ...]
+    groups: int
     phases: tuple[str, ...]
     link_class: str
     shard_columns: int
+    depth: int
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -536,17 +558,19 @@ class KernelPlan:
             "layer": self.layer,
             "body_position": self.body_position,
             "contraction": self.contraction,
-            "staged": self.staged,
+            "block_rows": self.block_rows,
             "tile_rows": self.tile_rows,
             "tile_cols": self.tile_cols,
             "tile_depth": self.tile_depth,
             "row_loop": self.row_loop.to_dict() if self.row_loop else None,
-            "column_loop": self.column_loop.to_dict() if self.column_loop else None,
-            "depth_loop": self.depth_loop.to_dict() if self.depth_loop else None,
             "operands": [o.to_dict() for o in self.operands],
+            "aux": list(self.aux),
+            "slot_order": list(self.slot_order),
+            "groups": self.groups,
             "phases": list(self.phases),
             "link_class": self.link_class,
             "shard_columns": self.shard_columns,
+            "depth": self.depth,
         }
 
 
@@ -851,8 +875,11 @@ def build_plan(
     groups, placements = _place_weights(graph, bands, span_max)
 
     units, body_position, band_of_kernel = _emission_order(graph, bands)
+    # One token block for the whole plan: the arena padding, the loop divisor
+    # and every row-tiled view must agree on it.
+    block = max(min(tile.block, round_up(span_max, tile.rows)), tile.rows)
     activation_keys, arena_slots, arena_of_key, host_objects = _place_activations(
-        graph, tensors, bands, units, body_position, band_of_kernel, span_max, tile
+        graph, tensors, bands, units, body_position, band_of_kernel, span_max, block
     )
     states, state_of_resource, warn_state = _place_states(
         graph, bands, band_of_kernel, span_max
@@ -870,6 +897,7 @@ def build_plan(
         body_position,
         span_max,
         tile,
+        block,
         node_count,
         capability,
     )
@@ -1363,7 +1391,7 @@ def _place_activations(
     body_position: Mapping[int, int],
     band_of_kernel: Mapping[int, int],
     span_max: int,
-    tile: TileConfig,
+    block: int,
 ) -> tuple[
     dict[str, str], tuple[ArenaSlot, ...], dict[str, str], dict[str, dict[str, Any]]
 ]:
@@ -1425,7 +1453,7 @@ def _place_activations(
             tensor = tensors[name]
             rows, cols, symbolic = matrix_shape(tensor, span_max)
             if symbolic:
-                rows = round_up(rows, tile.rows)
+                rows = round_up(rows, block)
             size = bytes_for(rows * cols, tensor.dtype)
             previous = sizes.get(key)
             if previous is None or size > previous[0]:
@@ -1443,7 +1471,7 @@ def _place_activations(
                 tensor = tensors[name]
                 rows, cols, symbolic = matrix_shape(tensor, span_max)
                 if symbolic:
-                    rows = round_up(rows, tile.rows)
+                    rows = round_up(rows, block)
                 sizes[key] = (
                     bytes_for(rows * cols, tensor.dtype),
                     rows,
@@ -1642,6 +1670,166 @@ def _place_states(
 
 
 # -- kernels ----------------------------------------------------------------
+#: Sub-case selectors that TA-ABI3-OPCONV-1 sections 3 and 12 put in ``aux0``
+#: because several neutral kinds share one subopcode.
+_SUBCASE: Mapping[str, int] = {
+    "SCALE": 0,
+    "MUL": 1,
+    "SIGMOID": 2,
+    "COMPRESS_PROJECT": 0,
+    "COMPRESS_POOL": 1,
+    "COMPRESS_STATE_UPDATE": 2,
+    "HYPER_CONNECT_PRE": 0,
+    "HYPER_CONNECT_POST": 1,
+    "HYPER_CONNECT_HEAD": 2,
+}
+
+#: Subopcodes whose first operand is an index vector rather than a payload
+#: (TA-ABI3-OPCONV-1 sections 2 and 7).
+_INDEX_FIRST = {
+    (int(Major.TENSOR), int(TensorOp.EMBED_LOOKUP)),
+    (int(Major.DMA), int(Dma.GATHER)),
+    (int(Major.DMA), int(Dma.SCATTER)),
+}
+
+#: Maximum input views TA-ABI3-OPCONV-1 allows per subopcode, where it is
+#: tighter than the frozen record's four.  ``SILU_MUL`` is amendment A8: the
+#: engine takes ``(gate, up)`` and refuses a third operand even though
+#: ``KERNEL_TO_ENGINE`` gives ``SWIGLU`` an arity of three.
+_MAX_INPUTS: Mapping[tuple[int, int], int] = {
+    (int(Major.VECTOR), int(Vector.SILU_MUL)): 2,
+    (int(Major.SELECTION), int(Selection.ARGMAX)): 1,
+    (int(Major.SELECTION), int(Selection.TOKEN_APPEND)): 1,
+}
+
+_INDEX_DTYPES = frozenset({"u32", "i32", "u64", "i64"})
+
+
+def _conforming_input_order(
+    kernel: Kernel, engine: Any, tensors: Mapping[str, Tensor]
+) -> tuple[list[int], list[int]]:
+    """Return ``(ABI slot order, dropped IR slots)`` for one kernel's inputs.
+
+    The neutral IR fixes *which* tensors an operation reads; TA-ABI3-OPCONV-1
+    fixes *which slot* each one occupies.  Reconciling the two is the backend's
+    job -- an engine rejects a non-conforming operator rather than guessing.
+    """
+    order = list(range(len(kernel.inputs)))
+    key = (int(engine.family), int(engine.sub))
+    if key in _INDEX_FIRST and len(order) >= 2:
+        first = kernel.inputs[order[0]]
+        if tensors[first].dtype not in _INDEX_DTYPES:
+            for position, slot in enumerate(order):
+                if tensors[kernel.inputs[slot]].dtype in _INDEX_DTYPES:
+                    order.insert(0, order.pop(position))
+                    break
+    limit = _MAX_INPUTS.get(key, 4)
+    dropped = order[limit:]
+    return order[:limit], dropped
+
+
+def _aux_ids(
+    kernel: Kernel,
+    engine: Any,
+    tensors: Mapping[str, Tensor],
+    graph: KernelGraph,
+    span_max: int,
+    groups: int,
+) -> tuple[int, ...]:
+    """Auxiliary IDs required by TA-ABI3-OPCONV-1 for this subopcode."""
+    attributes = dict(kernel.attributes)
+    family, sub = int(engine.family), int(engine.sub)
+    aux: list[int] = []
+
+    def out_cols(slot: int = 0) -> int:
+        if slot >= len(kernel.outputs):
+            return 0
+        return matrix_shape(tensors[kernel.outputs[slot]], span_max)[1]
+
+    def in_cols(slot: int) -> int:
+        if slot >= len(kernel.inputs):
+            return 0
+        return matrix_shape(tensors[kernel.inputs[slot]], span_max)[1]
+
+    if kernel.kind in _SUBCASE and family in (int(Major.VECTOR),):
+        aux = [_SUBCASE[kernel.kind]]
+    elif family == int(Major.ATTENTION):
+        aux = [
+            int(attributes.get("group_size", 1)),
+            int(attributes.get("mask_mode", 0)),
+            int(Symbol.CONTEXT_LENGTH),
+            int(Symbol.POSITION_START),
+        ]
+        if sub == int(Attention.SPARSE):
+            aux[1] = int(attributes.get("block_width", 1))
+    elif family == int(Major.ROUTE):
+        if sub in (int(Route.TOPK), int(Route.BIASED_TOPK)):
+            aux = [int(attributes.get("top_k", out_cols()))]
+        elif sub == int(Route.EXPERT_DISPATCH):
+            experts = attributes.get("expert_count")
+            if experts is None:
+                experts = _infer_expert_count(kernel, graph, tensors, span_max)
+            if not experts:
+                raise PlanError(
+                    f"kernel {kernel.kernel_id}: EXPERT_DISPATCH requires an "
+                    "expert bound in aux0 (TA-ABI3-OPCONV-1 section 5) and the "
+                    "graph declares none; an unbounded expert ID is a memory "
+                    "safety problem, not a routing detail"
+                )
+            aux = [int(experts)]
+        elif sub == int(Route.INDEX_TOPK):
+            aux = [
+                int(attributes.get("top_k", out_cols())),
+                int(attributes.get("mask_mode", 0)),
+                int(Symbol.CONTEXT_LENGTH),
+                int(Symbol.POSITION_START),
+            ]
+        elif sub == int(Route.WINDOW_INDEX):
+            aux = [
+                int(attributes.get("window", out_cols())),
+                int(attributes.get("mask_mode", 0)),
+                int(Symbol.CONTEXT_LENGTH),
+            ]
+    elif family == int(Major.TENSOR):
+        if sub == int(TensorOp.GROUPED_MATMUL):
+            aux = [int(attributes.get("group_count", groups))]
+        elif sub == int(TensorOp.ROUTED_MATMUL):
+            aux = [int(attributes.get("expert_count", groups))]
+    elif family == int(Major.VECTOR):
+        if sub == int(Vector.ROPE):
+            aux = [int(attributes.get("rotary_width", in_cols(1)))]
+        elif sub == int(Vector.HEAD_RMS_NORM):
+            aux = [int(attributes.get("head_count", 1))]
+        elif sub == int(Vector.SOFTMAX):
+            aux = [int(attributes.get("axis", 1))]
+        elif sub == int(Vector.HADAMARD):
+            aux = [int(attributes.get("block_width", in_cols(0)))]
+    return tuple(a for a in aux)
+
+
+def _infer_expert_count(
+    kernel: Kernel,
+    graph: KernelGraph,
+    tensors: Mapping[str, Tensor],
+    span_max: int,
+) -> int:
+    """Derive the expert bound from the routed contraction in the same layer."""
+    for peer in graph.kernels:
+        if peer.layer != kernel.layer:
+            continue
+        if peer.kind not in {"ROUTED_MATMUL", "GROUPED_MATMUL"}:
+            continue
+        if len(peer.inputs) < 2:
+            continue
+        a_rows, a_cols, _ = matrix_shape(tensors[peer.inputs[0]], span_max)
+        w_rows, w_cols, _ = matrix_shape(tensors[peer.inputs[1]], span_max)
+        if a_cols and w_rows % a_cols == 0:
+            return w_rows // a_cols
+        if a_cols and w_cols % a_cols == 0:
+            return w_cols // a_cols
+    return 0
+
+
 def _plan_kernels(
     graph: KernelGraph,
     tensors: Mapping[str, Tensor],
@@ -1653,9 +1841,22 @@ def _plan_kernels(
     body_position: Mapping[int, int],
     span_max: int,
     tile: TileConfig,
+    block: int,
     node_count: int,
     capability: Capability,
 ) -> tuple[tuple[KernelPlan, ...], list[str]]:
+    """Plan one engine operation per kernel.
+
+    ADR-003 section 6.2 puts the tile mapping in the SCHEDULE descriptor, not in
+    the program: a loop nest exists for work that genuinely varies -- layers,
+    token blocks, experts, vocabulary partitions -- while the decomposition of
+    one contraction into row, column and depth tiles is a property of *how* the
+    engine runs it.  Making tiles program loops instead would retire hundreds of
+    thousands of engine dispatches for one forward step, which is the shape of
+    failure ABI 3.0 exists to remove.  So this planner emits one operator per
+    kernel and records the tile shape, the bank mask and the port mask for the
+    schedule descriptor to carry.
+    """
     warnings: list[str] = []
     placement_by_tensor = {p.tensor_id: p for p in placements}
     plans: list[KernelPlan] = []
@@ -1665,15 +1866,18 @@ def _plan_kernels(
         if kernel.layer is not None and kernel.layer not in emitted_layers:
             continue
         engine = engine_for(kernel.kind)
-        if len(kernel.inputs) > 4:
-            raise PlanError(
-                f"kernel {kernel.kernel_id}: {len(kernel.inputs)} inputs exceed "
-                "the frozen ABI 3.0 operator limit of four input views"
-            )
         if len(kernel.outputs) > 2:
             raise PlanError(
                 f"kernel {kernel.kernel_id}: {len(kernel.outputs)} outputs exceed "
                 "the frozen ABI 3.0 operator limit of two output views"
+            )
+        slot_order, dropped = _conforming_input_order(kernel, engine, tensors)
+        if dropped:
+            warnings.append(
+                f"kernel {kernel.kernel_id}: operand(s) "
+                f"{[kernel.inputs[s] for s in dropped]} are not in the "
+                f"{Major(engine.family).name}.{int(engine.sub)} operand "
+                "convention and are not emitted"
             )
         band_id = band_of_kernel.get(kernel.index)
         contraction = (
@@ -1686,54 +1890,46 @@ def _plan_kernels(
         else:
             rows, cols, symbolic = 1, 1, False
         if symbolic:
-            rows = round_up(rows, tile.rows)
-            tile_rows = tile.rows
-        else:
-            tile_rows = choose_tile(rows, tile.rows)
+            rows = round_up(rows, block)
 
         shard_columns = cols
-        tile_cols = cols
-        tile_depth = 0
-        column_loop = None
-        depth_loop = None
-        transposed = False
         depth = 0
+        groups = 1
+        transposed = False
         if contraction and len(kernel.inputs) >= 2:
             a_rows, a_cols, _ = matrix_shape(tensors[kernel.inputs[0]], span_max)
             w_rows, w_cols, _ = matrix_shape(tensors[kernel.inputs[1]], span_max)
             depth = a_cols
-            groups = 1
-            if w_rows == depth:
+            # TA-ABI3-OPCONV-1 section 2: in1 is n-major ``[N, K]``.  A
+            # checkpoint that stores ``[K, N]`` is presented n-major by swapping
+            # the view's strides -- a description, never a relayout pass.
+            if w_cols == depth:
                 transposed = False
-                weight_cols = w_cols
-            elif w_cols == depth:
+                weight_rows = w_rows
+            elif w_rows == depth:
                 transposed = True
-                weight_cols = w_rows
-            elif w_rows % depth == 0:
-                # A grouped or routed weight stack: [group, depth, cols].  The
-                # engine selects the group from its index operand, so the view
-                # spans one group's block and the depth axis is unchanged.
+                weight_rows = w_cols
+            elif depth and w_cols % depth == 0:
                 transposed = False
-                weight_cols = w_cols
-                groups = w_rows // depth
-            elif w_cols % depth == 0:
-                transposed = True
-                weight_cols = w_rows
+                weight_rows = w_rows
                 groups = w_cols // depth
+            elif depth and w_rows % depth == 0:
+                transposed = True
+                weight_rows = w_cols
+                groups = w_rows // depth
             else:
                 raise PlanError(
                     f"kernel {kernel.kernel_id}: contraction operand shapes "
                     f"{(a_rows, a_cols)} and {(w_rows, w_cols)} do not share a "
                     "depth axis"
                 )
-            if groups == 1 and weight_cols != cols:
+            if groups == 1 and weight_rows != cols:
                 warnings.append(
-                    f"kernel {kernel.kernel_id}: weight declares {weight_cols} "
-                    f"output columns but the result declares {cols}; the result "
-                    "shape wins"
+                    f"kernel {kernel.kernel_id}: weight declares {weight_rows} "
+                    f"output rows but the result declares {cols} columns; the "
+                    "result shape wins"
                 )
-            shard_columns = cols
-            if node_count > 1 and cols % node_count == 0:
+            if node_count > 1 and cols % node_count == 0 and cols > node_count:
                 shard_columns = cols // node_count
             elif node_count > 1:
                 warnings.append(
@@ -1741,84 +1937,63 @@ def _plan_kernels(
                     f"divisible by {node_count} nodes; this contraction is "
                     "replicated instead of sharded"
                 )
-            tile_cols = choose_tile(shard_columns, tile.cols)
-            tile_depth = choose_tile(depth, tile.depth)
-            column_loop = LoopPlan(
-                loop_key=f"k{kernel.index}.col",
-                kind="column",
-                trip=shard_columns // tile_cols,
-                symbol="",
-                divisor=1,
-            )
-            depth_loop = LoopPlan(
-                loop_key=f"k{kernel.index}.depth",
-                kind="depth",
-                trip=depth // tile_depth,
-                symbol="",
-                divisor=1,
-            )
+
+        # Tile shape for the SCHEDULE descriptor.  These are hardware tiles, not
+        # program loops: the engine decomposes one operator this way and the
+        # cycle model costs it from exactly these numbers.
+        tile_rows = choose_tile(max(rows, 1), tile.rows) if not symbolic else tile.rows
+        tile_cols = choose_tile(max(shard_columns, 1), tile.cols)
+        tile_depth = choose_tile(depth, tile.depth) if depth else 0
 
         row_loop = None
         if symbolic:
             row_loop = LoopPlan(
-                loop_key=f"k{kernel.index}.row",
+                loop_key=f"k{kernel.index}.block",
                 kind="row",
-                trip=max(rows // tile_rows, 1),
+                trip=max(rows // block, 1),
                 symbol="span_tokens",
-                divisor=tile_rows,
-            )
-        elif rows > tile_rows:
-            row_loop = LoopPlan(
-                loop_key=f"k{kernel.index}.row",
-                kind="row",
-                trip=rows // tile_rows,
-                symbol="",
-                divisor=1,
+                divisor=block,
             )
 
         operands: list[OperandPlan] = []
-        for slot, name in enumerate(kernel.inputs):
+        for abi_slot, ir_slot in enumerate(slot_order):
             operands.append(
                 _operand_plan(
-                    slot,
+                    abi_slot,
                     "in",
-                    name,
+                    kernel.inputs[ir_slot],
                     tensors,
                     placement_by_tensor,
                     activation_keys,
                     span_max,
-                    tile,
                     contraction=contraction,
                     row_loop=row_loop is not None,
                     kernel_rows=rows,
-                    tile_rows=tile_rows,
-                    tile_cols=tile_cols,
-                    tile_depth=tile_depth,
+                    block=block,
                     transposed=transposed,
                     node_count=node_count,
                     shard_columns=shard_columns,
+                    depth=depth,
                 )
             )
-        for slot, name in enumerate(kernel.outputs):
+        for abi_slot, name in enumerate(kernel.outputs):
             operands.append(
                 _operand_plan(
-                    slot,
+                    abi_slot,
                     "out",
                     name,
                     tensors,
                     placement_by_tensor,
                     activation_keys,
                     span_max,
-                    tile,
                     contraction=contraction,
                     row_loop=row_loop is not None,
                     kernel_rows=rows,
-                    tile_rows=tile_rows,
-                    tile_cols=tile_cols,
-                    tile_depth=tile_depth,
+                    block=block,
                     transposed=transposed,
                     node_count=node_count,
                     shard_columns=shard_columns,
+                    depth=depth,
                 )
             )
 
@@ -1841,17 +2016,19 @@ def _plan_kernels(
                 layer=kernel.layer,
                 body_position=body_position.get(kernel.index, -1),
                 contraction=contraction,
-                staged=contraction,
+                block_rows=block,
                 tile_rows=tile_rows,
                 tile_cols=tile_cols,
                 tile_depth=tile_depth,
                 row_loop=row_loop,
-                column_loop=column_loop,
-                depth_loop=depth_loop,
                 operands=tuple(operands),
+                aux=_aux_ids(kernel, engine, tensors, graph, span_max, groups),
+                slot_order=tuple(slot_order),
+                groups=groups,
                 phases=tuple(kernel.phases),
                 link_class=link_class,
                 shard_columns=shard_columns,
+                depth=depth,
             )
         )
     return tuple(plans), warnings
@@ -1865,22 +2042,20 @@ def _operand_plan(
     placement_by_tensor: Mapping[str, WeightPlacement],
     activation_keys: Mapping[str, str],
     span_max: int,
-    tile: TileConfig,
     *,
     contraction: bool,
     row_loop: bool,
     kernel_rows: int,
-    tile_rows: int,
-    tile_cols: int,
-    tile_depth: int,
+    block: int,
     transposed: bool,
     node_count: int,
     shard_columns: int,
+    depth: int,
 ) -> OperandPlan:
     tensor = tensors[name]
     rows, cols, symbolic = matrix_shape(tensor, span_max)
     if symbolic:
-        rows = round_up(rows, tile.rows)
+        rows = round_up(rows, block)
     placement = placement_by_tensor.get(name)
     if placement is not None:
         residence = "weight"
@@ -1897,38 +2072,26 @@ def _operand_plan(
 
     terms: list[str] = []
     view_rows, view_cols = rows, cols
-    if contraction and direction == "in" and slot == 0:
-        # activation matrix: [tile_rows, tile_depth]
-        view_rows = tile_rows if row_loop else min(rows, tile_rows)
-        view_cols = tile_depth or cols
-        if row_loop:
-            terms.append("row")
-        if tile_depth:
-            terms.append("depth")
-    elif contraction and direction == "in" and slot == 1:
-        # weight matrix: [tile_depth, tile_cols]
-        view_rows = tile_depth or rows
-        view_cols = tile_cols
+    if contraction and direction == "in" and slot == 1:
+        # in1 is the weight, presented n-major as ``[N, K]``.
+        view_rows = shard_columns
+        view_cols = depth or cols
         if placement is not None and placement.layer_stride_elements:
             terms.append("layer")
-        if node_count > 1 and shard_columns * node_count == max(cols, rows):
+        if node_count > 1 and shard_columns * node_count <= max(rows, cols):
             terms.append("node")
-        terms.append("column")
-        if tile_depth:
-            terms.append("depth")
     elif contraction and direction == "out" and slot == 0:
-        view_rows = tile_rows if row_loop else min(rows, tile_rows)
-        view_cols = tile_cols
+        view_cols = shard_columns
         if row_loop:
+            view_rows = block
             terms.append("row")
         if node_count > 1 and shard_columns != cols:
             terms.append("node")
-        terms.append("column")
     else:
         if placement is not None and placement.layer_stride_elements:
             terms.append("layer")
-        if row_loop and rows == kernel_rows and rows > tile_rows:
-            view_rows = tile_rows
+        if row_loop and symbolic:
+            view_rows = block
             terms.append("row")
     return OperandPlan(
         slot=slot,
@@ -1939,8 +2102,8 @@ def _operand_plan(
         dtype=tensor.dtype,
         rows=rows,
         cols=cols,
-        tile_rows=view_rows,
-        tile_cols=view_cols,
+        tile_rows=max(view_rows, 1),
+        tile_cols=max(view_cols, 1),
         transposed=transposed and contraction and direction == "in" and slot == 1,
         terms=tuple(terms),
     )
@@ -2121,20 +2284,19 @@ def _prove(
         "hbm_available_per_node": hbm_available,
         "hbm_fits": resident <= hbm_available,
         "node_count": node_count,
+        "token_block_rows": max((k.block_rows for k in kernels), default=0),
         "layers_covered": proved_layers,
         "bands": len(bands),
         "degraded_bands": sum(1 for b in bands if b.degraded),
         "kernels_planned": len(kernels),
         "max_loop_depth": max(
             (
-                1 * (1 if k.band_id is not None else 0)
-                + (1 if k.row_loop else 0)
-                + (1 if k.column_loop else 0)
-                + (1 if k.depth_loop else 0)
+                (1 if k.band_id is not None else 0) + (1 if k.row_loop else 0)
                 for k in kernels
             ),
             default=0,
         ),
+        "tile_mapping_in_schedule": True,
         "capability_loop_depth": int(capability.limits["max_loop_depth"]),
         "zero_copy_weights": True,
     }

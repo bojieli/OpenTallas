@@ -166,11 +166,20 @@ def make_head_split_sparse_attn(
         pieces = []
         for start in range(0, heads, heads_per_launch):
             stop = min(start + heads_per_launch, heads)
+            # ``.contiguous()`` is not enough: at decode the query is
+            # [1, 1, 64, 512], so a head slice keeps stride 32768 on the
+            # size-1 sequence axis and still counts as contiguous, while the
+            # kernel's signature check demands the canonical 8192.  A
+            # contiguous-format clone forces the canonical strides.
             pieces.append(
                 vendor_sparse_attn(
-                    q[:, :, start:stop].contiguous(),
+                    q[:, :, start:stop].clone(
+                        memory_format=torch.contiguous_format
+                    ),
                     kv,
-                    attn_sink[start:stop].contiguous(),
+                    attn_sink[start:stop].clone(
+                        memory_format=torch.contiguous_format
+                    ),
                     topk_idxs,
                     softmax_scale,
                 )

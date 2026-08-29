@@ -181,6 +181,32 @@ class Verifier:
             self.header.max_retired_work <= limits["max_retired_work"],
             "declared maximum retired work exceeds the capability bound",
         )
+        events = {
+            i.signal_event_id
+            for i in self.instructions
+            if i.signal_event_id != NO_ID
+        }
+        self._check(
+            "event_count_bound",
+            len(events) <= limits["max_events"],
+            f"program signals {len(events)} distinct events, capability admits "
+            f"{limits['max_events']}",
+        )
+        for did in self.table.ids_of_type(ExtendedDescriptorType.GENERATION_POLICY):
+            payload = self.table[did].payload
+            if payload["vocabulary_size"] > limits["max_vocabulary"]:
+                self._fail(
+                    f"generation policy {did} declares vocabulary "
+                    f"{payload['vocabulary_size']}, capability admits "
+                    f"{limits['max_vocabulary']}"
+                )
+            if payload["max_new_tokens"] > limits["max_context_positions"]:
+                self._fail(
+                    f"generation policy {did} admits {payload['max_new_tokens']} "
+                    f"new tokens, capability context bound is "
+                    f"{limits['max_context_positions']}"
+                )
+        self.checks.setdefault("generation_policy_bounds", True)
         self._check(
             "descriptor_table_digest",
             self.header.descriptor_table_digest == self.table.digest,
@@ -391,6 +417,30 @@ class Verifier:
 
     # -- 7. events -------------------------------------------------------
     def _verify_events(self) -> None:
+        signal_index: dict[int, int] = {}
+        for index, instruction in enumerate(self.instructions):
+            if instruction.signal_event_id != NO_ID:
+                signal_index.setdefault(instruction.signal_event_id, index)
+        # A wait whose only producer is a later instruction deadlocks.  Control
+        # flow is forward-only apart from LOOP_NEXT back edges, so requiring the
+        # producer to precede the wait is both sound and sufficient to prove the
+        # absence of cyclic waits that ADR-003 section 9 demands.
+        for index, instruction in enumerate(self.instructions):
+            if instruction.wait_set_id == NO_ID:
+                continue
+            wait = self.table.get(
+                instruction.wait_set_id, ExtendedDescriptorType.EVENT_WAIT_SET
+            )
+            for slot in range(wait.payload["producer_count"]):
+                event = wait.payload[f"producer_{slot}"]
+                producer = signal_index.get(event)
+                if producer is not None and producer > index:
+                    self._fail(
+                        f"instruction {index} waits on event {event}, whose only "
+                        f"producer is instruction {producer}; the wait can never "
+                        "be satisfied"
+                    )
+        self.checks.setdefault("wait_ordering", True)
         for descriptor in self.table.descriptors():
             if descriptor.descriptor_type != ExtendedDescriptorType.EVENT_WAIT_SET:
                 continue
@@ -599,6 +649,102 @@ class Verifier:
                 )
         self.checks.setdefault("view_bounds", True)
 
+    # -- engine write paths ------------------------------------------------
+    def _verify_engine_write_paths(self) -> None:
+        """Every engine output must name a writable, mutable destination.
+
+        Without this the ROM immutability claim is unenforced: a TENSOR.MATMUL
+        may name a view over an IMMUTABLE or ROM object as its destination and
+        still be admitted.  Object permissions alone do not catch it, because
+        nothing else connects an operator's output view to the object behind
+        it.
+        """
+        for index, instruction in enumerate(self.instructions):
+            family = Major(instruction.major)
+            if family not in ENGINE_FAMILIES or family in (Major.STATE, Major.LINK):
+                continue
+            descriptor = self._descriptor(
+                instruction.descriptor_id,
+                ExtendedDescriptorType.OPERATOR,
+                f"instruction {index} operator",
+            )
+            if descriptor is None:
+                continue
+            for slot in range(2):
+                view_id = descriptor.payload[f"output_view_{slot}"]
+                if view_id == NO_ID:
+                    continue
+                view = self._descriptor(
+                    view_id,
+                    ExtendedDescriptorType.TENSOR_VIEW,
+                    f"instruction {index} output view",
+                )
+                if view is None:
+                    continue
+                if not view.permissions & Permission.WRITE:
+                    self._fail(
+                        f"instruction {index} ({instruction.mnemonic}): output "
+                        f"view {view_id} has no WRITE permission"
+                    )
+                obj = self._descriptor(
+                    view.primary_object_id,
+                    ExtendedDescriptorType.MEMORY_OBJECT,
+                    f"instruction {index} output object",
+                )
+                if obj is None:
+                    continue
+                storage = obj.payload["storage_class"]
+                if storage == StorageClass.ROM:
+                    self._fail(
+                        f"instruction {index} ({instruction.mnemonic}): writes "
+                        f"into object {obj.descriptor_id}, which is immutable "
+                        "ROM; ROM has no functional write path"
+                    )
+                if obj.permissions & Permission.IMMUTABLE:
+                    self._fail(
+                        f"instruction {index} ({instruction.mnemonic}): writes "
+                        f"into IMMUTABLE object {obj.descriptor_id}"
+                    )
+                if not obj.permissions & (
+                    Permission.WRITE | Permission.STATE_PREPARE | Permission.STATE_COMMIT
+                ):
+                    self._fail(
+                        f"instruction {index} ({instruction.mnemonic}): object "
+                        f"{obj.descriptor_id} grants no write permission"
+                    )
+        self.checks.setdefault("engine_write_paths", True)
+
+    # -- scope and optional-feature flags -----------------------------------
+    def _verify_flags(self) -> None:
+        """Wire format section 3: a scope flag inconsistent with its descriptor
+        is illegal, and an OPTIONAL_FEATURE instruction needs an alternative."""
+        for index, instruction in enumerate(self.instructions):
+            family = Major(instruction.major)
+            if instruction.flags & InstructionFlag.GLOBAL_SCOPE:
+                if family is not Major.LINK:
+                    self._fail(
+                        f"instruction {index} ({instruction.mnemonic}): "
+                        "the GLOBAL_SCOPE flag names a cluster or wafer "
+                        "participant set, and only a link communication "
+                        "descriptor carries one; this scope flag is "
+                        "inconsistent with its descriptor"
+                    )
+                elif self.deployment.topology_class == int(TopologyClass.SINGLE_CHIP):
+                    self._fail(
+                        f"instruction {index}: the GLOBAL_SCOPE scope flag has "
+                        "no participant set on a single-chip topology"
+                    )
+            if instruction.flags & InstructionFlag.OPTIONAL_FEATURE:
+                # The alternative path is the predicated-off path, so the
+                # instruction must be predicated for one to exist at all.
+                if not instruction.flags & InstructionFlag.PREDICATED:
+                    self._fail(
+                        f"instruction {index} ({instruction.mnemonic}): "
+                        "OPTIONAL_FEATURE requires an authenticated alternative "
+                        "path, so the instruction must be predicated"
+                    )
+        self.checks.setdefault("flag_consistency", True)
+
     # -- entrypoints ------------------------------------------------------
     def _verify_entrypoints(self) -> None:
         eid = self.header.entrypoint_table_descriptor
@@ -613,6 +759,34 @@ class Verifier:
             len(entries) == self.header.entrypoint_count,
             "entrypoint table length does not match the program header",
         )
+        # The manifest and the authenticated descriptor table are separately
+        # digest-bound, so a divergence between them survives a disk round trip.
+        # Left unchecked, a bundle whose table declares a generation policy and
+        # whose manifest declares NO_ID is admitted with no on-device selection
+        # at all -- the host-side-argmax path ADR-003 8.7 forbids.
+        manifest = list(self.deployment.entrypoints)
+        if len(manifest) != len(entries):
+            self._fail(
+                f"manifest declares {len(manifest)} entrypoints, the "
+                f"authenticated table declares {len(entries)}"
+            )
+        else:
+            for position, (declared, authenticated) in enumerate(
+                zip(manifest, entries)
+            ):
+                for field in (
+                    "entrypoint_id",
+                    "first_instruction",
+                    "phase",
+                    "generation_policy_id",
+                ):
+                    if int(declared.get(field, NO_ID)) != int(authenticated[field]):
+                        self._fail(
+                            f"entrypoint {position}: manifest {field}="
+                            f"{declared.get(field)} disagrees with the "
+                            f"authenticated table's {authenticated[field]}"
+                        )
+        self.checks.setdefault("entrypoint_manifest_agreement", True)
         for entry in entries:
             first = entry["first_instruction"]
             if not 0 <= first < len(self.instructions):
@@ -662,6 +836,8 @@ class Verifier:
         self._verify_events()
         self._verify_state()
         self._verify_permissions()
+        self._verify_engine_write_paths()
+        self._verify_flags()
         self._verify_views()
         self._verify_entrypoints()
         self._verify_selection()

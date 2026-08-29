@@ -1061,17 +1061,6 @@ def test_an_illegal_opcode_in_the_body_fails_before_verification(
 # ---------------------------------------------------------------------------
 # proofs the verifier claims but does not make
 # ---------------------------------------------------------------------------
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "DEFECT: the verifier module docstring claims 'no engine output into a "
-        "read-only object', but verifier._verify_permissions only inspects "
-        "MEMORY_OBJECT permission bits.  No proof connects an OPERATOR's "
-        "output_view_N to the permissions of the view or of the object behind "
-        "it, so a tensor operation may name a view over an IMMUTABLE (or ROM) "
-        "object as its destination and be admitted."
-    ),
-)
 def test_an_operator_writing_into_a_read_only_object_is_rejected(
     capability: Capability,
 ) -> None:
@@ -1094,17 +1083,6 @@ def test_an_operator_writing_into_a_read_only_object_is_rejected(
     )
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "DEFECT: nothing compares the JSON manifest's 'entrypoints' with the "
-        "authenticated ENTRYPOINT_TABLE descriptor.  verifier._verify_selection "
-        "reads deployment.entrypoints (the manifest), so a bundle whose "
-        "descriptor table declares a generation policy and whose manifest "
-        "declares NO_ID is admitted with no on-device selection at all -- the "
-        "host-side-argmax path ADR-003 8.7 forbids."
-    ),
-)
 def test_the_manifest_entrypoints_must_match_the_authenticated_table(
     capability: Capability,
 ) -> None:
@@ -1120,16 +1098,6 @@ def test_the_manifest_entrypoints_must_match_the_authenticated_table(
     assert_rejected(restamp(deployment), capability, "entrypoint")
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "DEFECT: 'max_events' is a mandatory capability limit "
-        "(capability.Capability.REQUIRED_LIMITS) and ADR-003 section 9 makes the "
-        "event count a capability rather than an assumption, but the verifier "
-        "never compares the number of signalled events with it.  A program that "
-        "needs more events than the scoreboard has is admitted."
-    ),
-)
 def test_a_program_over_the_event_bound_is_rejected() -> None:
     capability = probe_capability(max_events=2)
 
@@ -1147,16 +1115,6 @@ def test_a_program_over_the_event_bound_is_rejected() -> None:
     assert_rejected(deployment, capability, "event")
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "DEFECT: wire format section 3 says 'scope flags inconsistent with the "
-        "descriptor ... is illegal', and GLOBAL_SCOPE means 'descriptor names a "
-        "cluster/wafer participant set'.  Neither Instruction.validate nor the "
-        "verifier looks at GLOBAL_SCOPE, so a single-chip tensor instruction "
-        "whose descriptor is a plain OPERATOR may claim cluster scope."
-    ),
-)
 def test_global_scope_on_a_non_communication_descriptor_is_rejected(
     capability: Capability,
 ) -> None:
@@ -1174,17 +1132,6 @@ def test_global_scope_on_a_non_communication_descriptor_is_rejected(
     )
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "DEFECT: wire format section 3 says OPTIONAL_FEATURE means 'admission "
-        "requires an authenticated alternative path', and ADR-003 section 14 "
-        "says an unsupported optional feature fails admission unless the bundle "
-        "carries a separately authenticated legal alternative.  The flag is "
-        "decoded and then ignored, so an instruction can claim optionality "
-        "without any alternative existing."
-    ),
-)
 def test_optional_feature_without_an_alternative_path_is_rejected(
     capability: Capability,
 ) -> None:
@@ -1202,17 +1149,6 @@ def test_optional_feature_without_an_alternative_path_is_rejected(
     )
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason=(
-        "DEFECT: verifier._verify_events proves only that some instruction "
-        "somewhere signals each awaited event; it does not prove the signal can "
-        "happen before the wait.  A wait whose only producer is a later "
-        "instruction deadlocks, which ADR-003 section 9 ('absence of cyclic "
-        "waits for every admitted schedule') and section 5.1 ('every wait refers "
-        "to an event that can be produced') both forbid."
-    ),
-)
 def test_a_wait_before_its_only_producer_is_rejected(capability: Capability) -> None:
     def program(builder: Any, ids: dict[str, int]) -> None:
         event = builder.new_event()

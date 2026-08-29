@@ -42,23 +42,29 @@ from compiler.ir.v3.lowering import KERNEL_TO_ENGINE, EngineOp
 from runtime.abi3.builder import BuildError, DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
+    Attention,
     Control,
     CounterGroup,
     DTYPE_BITS,
     DType,
+    Dma,
     Feature,
     Major,
     NO_ID,
     Permission,
+    ReductionOrder,
+    Route,
     Selection,
     State,
     StateClass,
     StorageClass,
+    Tensor as TensorOp,
     TopologyClass,
+    Vector,
     counter_id,
 )
 from runtime.abi3.deployment import Deployment, ObjectSource
-from runtime.abi3.descriptors import MAX_RANK, Phase, SelectionMode
+from runtime.abi3.descriptors import MAX_RANK, Phase, SelectionMode, Symbol
 
 from .image import (
     DTYPE_BY_NAME,
@@ -78,6 +84,58 @@ MAX_OPERATOR_OUTPUTS = 2
 MAX_WAIT_PRODUCERS = 12
 
 WEIGHT_ROLES = frozenset({"weight", "constant"})
+
+#: ``TA-ABI3-OPCONV-1`` amendment A7: the sequential contract is the scalar
+#: oracle used for numeric qualification; execution declares the blocked
+#: contract.  The substitution is applied identically for ROM and HBM, so the
+#: two deployments stay bit-comparable, and it is recorded in the manifest.
+EXECUTION_CONTRACT: Mapping[str, str] = {
+    "bf16_bf16_fp32_sequential_rne_v1": "bf16_bf16_fp32_blocked_rne_v1",
+}
+
+#: What limits an operator's rate.  The cycle model reads this out of the
+#: SCHEDULE descriptor together with the tile mapping.
+class ResourceBound:
+    ROM_READ = 1
+    TENSOR_LANES = 2
+    MEMORY_PORT = 3
+    STATE_TRANSACTION = 4
+    LINK = 5
+    SELECTION = 6
+
+
+#: On-fabric route class of an operator's operands.
+class RouteClass:
+    LOCAL = 0
+    INTRA_RETICLE = 1
+    INTER_RETICLE = 2
+
+
+ENGINE_KEY_BY_FAMILY: Mapping[int, str] = {
+    Major.DMA: "dma",
+    Major.TENSOR: "tensor",
+    Major.VECTOR: "vector",
+    Major.ATTENTION: "attention",
+    Major.ROUTE: "route",
+    Major.REDUCTION: "reduction",
+    Major.SELECTION: "selection",
+    Major.STATE: "state",
+    Major.LINK: "link",
+}
+
+#: ``aux0`` sub-case values for the subopcodes several neutral kinds share
+#: (``TA-ABI3-OPCONV-1`` sections 3 and 12).
+COMPRESS_SUBCASE: Mapping[str, int] = {
+    "COMPRESS_PROJECT": 0,
+    "COMPRESS_POOL": 1,
+    "COMPRESS_STATE_UPDATE": 2,
+}
+MHC_SUBCASE: Mapping[str, int] = {
+    "HYPER_CONNECT_PRE": 0,
+    "HYPER_CONNECT_POST": 1,
+    "HYPER_CONNECT_HEAD": 2,
+}
+SCALE_SUBCASE: Mapping[str, int] = {"SCALE": 0, "MUL": 1, "SIGMOID": 2}
 
 STATE_CLASS_BY_NAME: Mapping[str, StateClass] = {
     "kv_cache": StateClass.KV_CACHE,

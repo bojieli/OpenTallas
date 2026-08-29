@@ -299,3 +299,114 @@ def test_two_technology_views_are_separated_by_node():
     assert predictive, "no predictive view registered"
     nodes = {v["node_nm"] for v in flow.VIEWS.values()}
     assert len(nodes) == len(flow.VIEWS), "views must not share a process node"
+
+
+# ---------------------------------------------------------------------------
+# Result-artifact integrity
+# ---------------------------------------------------------------------------
+#
+# `status` is what a report generator reads.  It must carry the ENGINEERING
+# result, never "the script finished".  A run whose timing did not close must
+# not be emitted as `pass`, or a slow corner silently becomes a claim that the
+# block closes at the target period.
+
+
+def test_verdict_rejects_unmet_setup_timing():
+    record = {
+        "static_timing": {
+            "setup_wns_ns": -129.32,
+            "setup_violating_paths": 618,
+            "hold_wns_ns": 0.4,
+            "hold_violating_paths": 0,
+        }
+    }
+    verdict = flow.evaluate_verdict(record)
+    assert verdict["status"] == flow.STATUS_NOT_MET
+
+
+def test_verdict_rejects_unmet_hold_timing():
+    record = {
+        "static_timing": {
+            "setup_wns_ns": 1.0,
+            "setup_violating_paths": 0,
+            "hold_wns_ns": -0.05,
+            "hold_violating_paths": 3,
+        }
+    }
+    assert flow.evaluate_verdict(record)["status"] == flow.STATUS_NOT_MET
+
+
+def test_verdict_accepts_fully_met_timing():
+    record = {
+        "static_timing": {
+            "setup_wns_ns": 2.49,
+            "setup_violating_paths": 0,
+            "hold_wns_ns": 0.41,
+            "hold_violating_paths": 0,
+        }
+    }
+    assert flow.evaluate_verdict(record)["status"] == flow.STATUS_PASS
+
+
+def test_verdict_rejects_route_with_drc_or_antenna_violations():
+    base = {
+        "setup_wns_ns": 5.0,
+        "setup_violations": 0,
+        "hold_wns_ns": 0.4,
+        "hold_violations": 0,
+        "drc_errors": 0,
+        "antenna_violating_nets": 0,
+        "antenna_violating_pins": 0,
+    }
+    assert flow.evaluate_verdict({"place_and_route": {"metrics": dict(base)}})[
+        "status"
+    ] == flow.STATUS_PASS
+    for dirty in ("drc_errors", "antenna_violating_nets", "antenna_violating_pins"):
+        metrics = dict(base)
+        metrics[dirty] = 7
+        verdict = flow.evaluate_verdict({"place_and_route": {"metrics": metrics}})
+        assert verdict["status"] == flow.STATUS_NOT_MET, f"{dirty} was not rejected"
+
+
+def test_verdict_does_not_invent_a_result_without_timing():
+    """Synthesis alone accepts nothing; it must not report pass."""
+    verdict = flow.evaluate_verdict({"synthesis": {"cell_count": 100}})
+    assert verdict["status"] == flow.STATUS_NOT_EVALUATED
+
+
+@pytest.mark.parametrize(
+    "path",
+    sorted((ROOT / "results/physical_abi3").rglob("*.json"))
+    if (ROOT / "results/physical_abi3").is_dir()
+    else [],
+    ids=lambda p: str(p.relative_to(ROOT)),
+)
+def test_emitted_results_do_not_claim_pass_without_meeting_timing(path):
+    record = json.loads(path.read_text(encoding="utf-8"))
+    if "status" not in record:
+        pytest.skip(f"{path} is not a result record")
+    status = record["status"]
+    assert status in {
+        flow.STATUS_PASS,
+        flow.STATUS_NOT_MET,
+        flow.STATUS_NOT_EVALUATED,
+        flow.STATUS_ERROR,
+    }, f"{path}: unknown status {status!r}"
+    assert "flow_completed" in record, (
+        f"{path}: must report flow completion separately from the verdict"
+    )
+    if status != flow.STATUS_PASS:
+        return
+    sta = record.get("static_timing")
+    if sta:
+        assert sta["setup_wns_ns"] >= 0.0, f"{path}: pass with negative setup WNS"
+        assert sta["setup_violating_paths"] == 0, f"{path}: pass with setup violations"
+        assert sta["hold_wns_ns"] >= 0.0, f"{path}: pass with negative hold WNS"
+        assert sta["hold_violating_paths"] == 0, f"{path}: pass with hold violations"
+    pnr = record.get("place_and_route")
+    if pnr:
+        m = pnr["metrics"]
+        assert float(m["setup_wns_ns"]) >= 0.0, f"{path}: pass with post-route setup WNS < 0"
+        assert float(m["hold_wns_ns"]) >= 0.0, f"{path}: pass with post-route hold WNS < 0"
+        assert float(m["drc_errors"]) == 0, f"{path}: pass with DRC errors"
+        assert float(m["antenna_violating_nets"]) == 0, f"{path}: pass with antenna violations"

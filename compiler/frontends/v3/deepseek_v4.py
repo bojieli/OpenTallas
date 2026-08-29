@@ -50,6 +50,68 @@ ADR-003 section 18 sequences ordinary DeepSeek generation before speculative
 execution, and the DSpark verification/acceptance contract is still open
 (DSV4-SEM-001).  Setting the flag adds the three ``mtp.*`` DSpark blocks, the
 DSpark conditioning projection, the Markov draft head and the confidence head.
+
+Required contract changes
+-------------------------
+Three source behaviours cannot be expressed in the frozen neutral registry.
+No opcode is invented here; each is reported so it can be added through a
+versioned change to ``compiler/ir/v3/kernel_ir.py`` and
+``compiler/ir/v3/lowering.py``, never privately.
+
+**IR3-GAP-1, stochastic token selection.**  ``inference/model.py:sample``
+divides by an exponential draw and takes the argmax (Gumbel-max).  No neutral
+kind produces or consumes randomness, so only the greedy branch is
+expressible; this export emits ``SCALE`` + ``ARGMAX`` + ``TOKEN_APPEND`` and
+declares the boundary in ``generation_policy``.  ``input.entropy_stream`` is
+declared and carried unchanged so a later graph can bind it.  Proposal: add
+``CATEGORICAL_SAMPLE`` taking (logits, temperature, entropy) and producing
+(token, entropy_continuation), lowered to a new ``Selection`` subopcode.
+Both-model impact: Qwen3 needs the same kind for any non-greedy request, so
+until it exists both lanes are pinned to greedy argmax and neither can honour
+the released ``do_sample: true`` generation configuration.
+
+**IR3-GAP-2, predicated execution.**  ``Compressor.forward`` runs its pooling,
+normalisation, rotation, quantize/dequantize and compressed-KV commit only at
+a ratio-derived boundary, and the source graph carries that as a first-class
+node ``guard`` over a boolean predicate value.  :class:`Kernel` has no
+predicate field and no neutral kind produces a ``bool`` tensor, so this export
+carries the guard in the ``execution_predicate`` attribute, which a backend is
+not obliged to honour.  Proposal: add ``predicate: str = ""`` to ``Kernel``,
+let ``COMPRESS_STATE_UPDATE`` declare a ``bool`` predicate output, and have
+``check_neutral`` require a predicate to be an earlier kernel's output.  ABI
+3.0 already carries ``predicate_id`` on its loop descriptor, so the neutral IR
+is the only layer missing the concept.  Both-model impact: Qwen3 has no
+data-dependent predicate today, but every conditional, early-exit or
+speculative profile in either lane needs one, including this model's own
+speculative profile.
+
+**IR3-GAP-3, banked weights.**  ``ROUTED_MATMUL`` is lowered with four operand
+slots, which reads as (activation, weight bank, scale bank, expert index), but
+:class:`CheckpointBinding` names exactly one contiguous byte range and the
+released checkpoint interleaves the 256 experts of a layer, so no single range
+covers a bank.  This export therefore declares all 66,048 routed expert weight
+tensors individually -- each with its real shard, offset, length and SHA-256 --
+and names the ordered family in the ``expert_weight_tensors`` attribute.
+Proposal: add a segmented binding (an ordered list of ranges plus the SHA-256
+of the assembled payload) or an explicit ``TensorBank`` whose members are
+declared tensors, so a bank can be an operand instead of an attribute.
+Both-model impact: Qwen3-8B has no expert bank and is unaffected today, but any
+banked weight -- mixture-of-experts, stacked adapters, or a tensor-parallel
+shard set -- hits the same wall.
+
+Arity notes
+-----------
+``KERNEL_TO_ENGINE`` records a nominal operand arity per kind.  Where the
+released semantics differ, this export follows the semantics and stays inside
+the ABI 3.0 descriptor limits (at most four input views and two output views,
+``runtime/abi3/builder.py``): ``HEAD_RMS_NORM`` takes one input because the
+released query head norm is unweighted; ``STATE_READ`` takes one input and
+produces one output because a valid-prefix view must yield a tensor;
+``EXPERT_DISPATCH`` produces two outputs, the permuted rows and the per-row
+expert identity; ``HYPER_CONNECT_PRE`` packs the Sinkhorn post and combination
+coefficients into one output because only two output views exist; and
+``COMPRESSED_DENSE_INDEX`` reuses ``WINDOW_INDEX`` parameterised by
+``index_family``, since both enumerate causal indices from a position.
 """
 
 from __future__ import annotations

@@ -842,67 +842,7 @@ class _Emitter:
         if kernel.kind in {"STATE_PREPARE", "STATE_COMMIT", "STATE_READ"}:
             self._emit_state_kernel(plan, kernel)
             return
-        if plan.contraction:
-            self._emit_contraction(plan, kernel)
-        else:
-            self._emit_simple(plan, kernel)
 
-    def _emit_state_kernel(self, plan: KernelPlan, kernel: Kernel) -> None:
-        names = (*kernel.state_writes, *kernel.state_reads)
-        physical = []
-        for name in names:
-            mapping = self.plan.state_of_resource.get(name)
-            if mapping and mapping[0] not in physical:
-                physical.append(mapping[0])
-        sub = {
-            "STATE_PREPARE": State.PREPARE,
-            "STATE_COMMIT": State.COMMIT,
-            "STATE_READ": State.READ,
-        }[kernel.kind]
-        for physical_id in physical:
-            self.builder.emit(
-                Major.STATE,
-                sub,
-                descriptor_id=self._state_descriptor[physical_id],
-                source_operation_id=plan.index,
-            )
-
-    def _open_loops(self, plan: KernelPlan) -> dict[str, int]:
-        """Open this kernel's loop nest and return the live loop descriptors."""
-        loops: dict[str, int] = {}
-        if self._layer_loop is not None:
-            loops["layer"] = self._layer_loop
-        builder = self.builder
-        if plan.row_loop is not None:
-            spec = plan.row_loop
-            if spec.symbol:
-                loop = builder.loop_control(
-                    lower_bound=0,
-                    upper_bound=spec.trip * spec.divisor,
-                    step=spec.divisor,
-                    max_iterations=spec.trip,
-                    bound_symbol=Symbol.SPAN_TOKENS,
-                    bound_divisor=spec.divisor,
-                    counter_class_id=self._counter_class(plan.engine_family),
-                    key=f"loop.{spec.loop_key}",
-                )
-            else:
-                loop = builder.loop_control(
-                    lower_bound=0,
-                    upper_bound=spec.trip,
-                    step=1,
-                    key=f"loop.{spec.loop_key}",
-                )
-            builder.open_loop(loop)
-            loops["row"] = loop
-        return loops
-
-    def _close_loops(self, loops: Mapping[str, int], keys: Sequence[str]) -> None:
-        for key in keys:
-            if key in loops:
-                self.builder.close_loop()
-
-    def _emit_simple(self, plan: KernelPlan, kernel: Kernel) -> None:
         builder = self.builder
         loops = self._open_loops(plan)
         inputs = [
@@ -915,14 +855,14 @@ class _Emitter:
             for o in plan.operands
             if o.direction == "out"
         ]
-        numeric = self._kernel_numeric(plan)
         operator = builder.operator(
             engine_family=Major(plan.engine_family),
             engine_sub=plan.engine_sub,
             inputs=inputs,
             outputs=outputs,
-            numeric_profile_id=numeric,
-            schedule_id=self._schedule_for(plan, plan.engine_family),
+            aux=list(plan.aux),
+            numeric_profile_id=self._kernel_numeric(plan),
+            schedule_id=self._schedule_for(plan),
             counter_class_id=self._counter_class(plan.engine_family),
             source_kernel_id=plan.index,
             key=f"op.k{plan.index}",
@@ -942,168 +882,57 @@ class _Emitter:
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
 
-    def _emit_contraction(self, plan: KernelPlan, kernel: Kernel) -> None:
-        builder = self.builder
-        operands = {(o.direction, o.slot): o for o in plan.operands}
-        a_operand = operands[("in", 0)]
-        w_operand = operands[("in", 1)]
-        c_operand = operands[("out", 0)]
-        numeric = self._kernel_numeric(plan)
-        schedule_tensor = self._schedule_for(plan, plan.engine_family)
-        schedule_dma = self._schedule_for(plan, int(Major.DMA))
-        dma_counter = self._counter_class(int(Major.DMA))
-
-        loops = self._open_loops(plan)
-        column = plan.column_loop
-        depth = plan.depth_loop
-        if column is not None:
-            loop = builder.loop_control(
-                lower_bound=0,
-                upper_bound=column.trip,
-                step=1,
-                key=f"loop.{column.loop_key}",
+    def _emit_state_kernel(self, plan: KernelPlan, kernel: Kernel) -> None:
+        names = (*kernel.state_writes, *kernel.state_reads)
+        physical: list[str] = []
+        for name in names:
+            mapping = self.plan.state_of_resource.get(name)
+            if mapping and mapping[0] not in physical:
+                physical.append(mapping[0])
+        sub = {
+            "STATE_PREPARE": State.PREPARE,
+            "STATE_COMMIT": State.COMMIT,
+            "STATE_READ": State.READ,
+        }[kernel.kind]
+        for physical_id in physical:
+            self.builder.emit(
+                Major.STATE,
+                sub,
+                descriptor_id=self._state_descriptor[physical_id],
+                source_operation_id=plan.index,
             )
-            builder.open_loop(loop)
-            loops["column"] = loop
-        if depth is not None:
-            loop = builder.loop_control(
-                lower_bound=0,
-                upper_bound=depth.trip,
-                step=1,
-                counter_class_id=self._counter_class(plan.engine_family),
-                key=f"loop.{depth.loop_key}",
-            )
-            builder.open_loop(loop)
-            loops["depth"] = loop
 
-        a_dtype = dtype_of(a_operand.dtype)
-        w_dtype = dtype_of(w_operand.dtype)
-        c_dtype = dtype_of(c_operand.dtype)
-        a_hbm = self._operand_view(plan, a_operand, loops, writable=False)
-        w_hbm = self._operand_view(plan, w_operand, loops, writable=False)
-        a_sram = self._sram_view(
-            "sram.activation_stage",
-            a_dtype,
-            [a_operand.tile_rows, a_operand.tile_cols],
-            writable=True,
-        )
-        w_sram = self._sram_view(
-            "sram.weight_stage",
-            w_dtype,
-            [w_operand.tile_rows, w_operand.tile_cols],
-            writable=True,
-        )
-        accumulator = self._sram_view(
-            "sram.accumulator",
-            DType.FP32,
-            [c_operand.tile_rows, c_operand.tile_cols],
-            writable=True,
-        )
+    def _open_loops(self, plan: KernelPlan) -> dict[str, int]:
+        """Open this kernel's token-block loop and return the live loops.
 
-        stage_a = builder.operator(
-            engine_family=Major.DMA,
-            engine_sub=Dma.TRANSFER,
-            inputs=[a_hbm],
-            outputs=[a_sram],
-            numeric_profile_id=numeric,
-            schedule_id=schedule_dma,
-            counter_class_id=dma_counter,
-            source_kernel_id=plan.index,
-            key=f"op.k{plan.index}.stage_a",
-        )
-        stage_w = builder.operator(
-            engine_family=Major.DMA,
-            engine_sub=Dma.TRANSFER,
-            inputs=[w_hbm],
-            outputs=[w_sram],
-            numeric_profile_id=numeric,
-            schedule_id=schedule_dma,
-            counter_class_id=dma_counter,
-            source_kernel_id=plan.index,
-            key=f"op.k{plan.index}.stage_w",
-        )
-        event_a = builder.new_event()
-        event_w = builder.new_event()
-        predicate = self._phase_predicate(plan.phases)
-        builder.emit(
-            Major.DMA,
-            Dma.TRANSFER,
-            descriptor_id=stage_a,
-            wait_set_id=self._wait_set(self._producer_events(kernel)),
-            signal_event_id=event_a,
-            predicate_id=predicate,
-            source_operation_id=plan.index,
-        )
-        builder.emit(
-            Major.DMA,
-            Dma.TRANSFER,
-            descriptor_id=stage_w,
-            signal_event_id=event_w,
-            predicate_id=predicate,
-            source_operation_id=plan.index,
-        )
-
-        extra = [
-            self._operand_view(plan, operands[("in", slot)], loops, writable=False)
-            for slot in (2, 3)
-            if ("in", slot) in operands
-        ]
-        matmul = builder.operator(
-            engine_family=Major(plan.engine_family),
-            engine_sub=plan.engine_sub,
-            inputs=[a_sram, w_sram, *extra],
-            outputs=[accumulator],
-            numeric_profile_id=numeric,
-            schedule_id=schedule_tensor,
+        Layers are carried by the enclosing band loop; tiles are carried by the
+        schedule descriptor.  The only per-kernel loop is the token block, and
+        it exists because the token count is a runtime symbol.
+        """
+        loops: dict[str, int] = {}
+        if self._layer_loop is not None:
+            loops["layer"] = self._layer_loop
+        spec = plan.row_loop
+        if spec is None:
+            return loops
+        loop = self.builder.loop_control(
+            lower_bound=0,
+            upper_bound=spec.trip * spec.divisor,
+            step=spec.divisor,
+            max_iterations=spec.trip,
+            bound_symbol=Symbol.SPAN_TOKENS,
+            bound_divisor=spec.divisor,
             counter_class_id=self._counter_class(plan.engine_family),
-            source_kernel_id=plan.index,
-            key=f"op.k{plan.index}",
+            key=f"loop.{spec.loop_key}",
         )
-        event_m = builder.new_event()
-        builder.emit(
-            Major(plan.engine_family),
-            plan.engine_sub,
-            descriptor_id=matmul,
-            wait_set_id=self._wait_set([event_a, event_w]),
-            signal_event_id=event_m,
-            predicate_id=predicate,
-            source_operation_id=plan.index,
-        )
-        if depth is not None:
-            builder.close_loop()
-            loops.pop("depth")
+        self.builder.open_loop(loop)
+        loops["row"] = loop
+        return loops
 
-        # The accumulator lands in the output tile; the numeric contract's
-        # accumulator dtype is what makes this the contract's rounding step.
-        c_hbm = self._operand_view(plan, c_operand, loops, writable=True)
-        writeback = builder.operator(
-            engine_family=Major.DMA,
-            engine_sub=Dma.TRANSFER,
-            inputs=[accumulator],
-            outputs=[c_hbm],
-            numeric_profile_id=numeric,
-            schedule_id=schedule_dma,
-            counter_class_id=dma_counter,
-            source_kernel_id=plan.index,
-            key=f"op.k{plan.index}.writeback",
-        )
-        event_c = builder.new_event()
-        builder.emit(
-            Major.DMA,
-            Dma.TRANSFER,
-            descriptor_id=writeback,
-            wait_set_id=self._wait_set([event_m]),
-            signal_event_id=event_c,
-            predicate_id=predicate,
-            source_operation_id=plan.index,
-        )
-        if column is not None:
-            builder.close_loop()
-            loops.pop("column")
-        self._close_loops(loops, ["row"])
-        event_c = self._maybe_link(plan, event_c)
-        for name in kernel.outputs:
-            self._event_of_tensor[name] = event_c
+    def _close_loops(self, loops: Mapping[str, int], keys: Sequence[str]) -> None:
+        for key in keys:
+            if key in loops:
+                self.builder.close_loop()
 
     def _kernel_numeric(self, plan: KernelPlan) -> int:
         inputs = [o for o in plan.operands if o.direction == "in"]
@@ -1111,7 +940,10 @@ class _Emitter:
         in_dtype = dtype_of(inputs[0].dtype) if inputs else DType.BF16
         second = dtype_of(inputs[1].dtype) if len(inputs) > 1 else in_dtype
         out_dtype = dtype_of(outputs[0].dtype) if outputs else in_dtype
-        return self._numeric_profile(plan.numeric_contract, in_dtype, out_dtype, second)
+        contract = EXECUTION_CONTRACT.get(plan.numeric_contract, plan.numeric_contract)
+        if contract != plan.numeric_contract:
+            self._substitutions[plan.numeric_contract] = contract
+        return self._numeric_profile(contract, in_dtype, out_dtype, second)
 
     def _producer_events(self, kernel: Kernel) -> list[int]:
         return [

@@ -275,9 +275,9 @@ def probe_deployment(
         element_dtype=DType.BF16,
     )
     ids["policy"] = builder.generation_policy(
-        eos_token_ids=[15],
+        eos_token_ids=[capability.limits["max_vocabulary"] - 1],
         max_new_tokens=8,
-        vocabulary_size=16,
+        vocabulary_size=capability.limits["max_vocabulary"],
         token_ring_object_id=ids["tokens"],
         selection_mode=SelectionMode.GREEDY_ARGMAX_LOWEST_ID,
     )

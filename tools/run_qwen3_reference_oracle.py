@@ -32,6 +32,45 @@ DEFAULT_SNAPSHOT = Path(
 )
 
 
+
+def _chunked_greedy(model, input_ids, *, max_new_tokens, chunk, eos_ids):
+    """Greedy decode with a chunked prefill.
+
+    Feeding an 8,000-token prompt in one pass materialises an activation
+    working set this GPU does not have spare beside its other tenants.  Chunking
+    carries the KV cache forward instead, which bounds the working set to one
+    chunk while producing exactly the same result: attention still attends over
+    the full accumulated cache.
+    """
+    import torch
+
+    device = model.device
+    ids = input_ids.to(device)
+    past = None
+    with torch.inference_mode():
+        for start in range(0, ids.shape[1], chunk):
+            piece = ids[:, start : start + chunk]
+            out = model(input_ids=piece, past_key_values=past, use_cache=True)
+            past = out.past_key_values
+            if start % (chunk * 8) == 0:
+                print(
+                    f"  prefill {min(start + chunk, ids.shape[1])}/{ids.shape[1]}",
+                    flush=True,
+                )
+        generated: list[int] = []
+        logits = out.logits[:, -1, :]
+        for _ in range(max_new_tokens):
+            token = int(torch.argmax(logits[0]).item())
+            generated.append(token)
+            if token in eos_ids:
+                break
+            step = torch.tensor([[token]], dtype=torch.long, device=device)
+            out = model(input_ids=step, past_key_values=past, use_cache=True)
+            past = out.past_key_values
+            logits = out.logits[:, -1, :]
+    return generated
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT)
@@ -56,6 +95,17 @@ def main() -> int:
     )
     parser.add_argument("--cpu-gib", type=int, default=80)
     parser.add_argument("--force", action="store_true")
+    parser.add_argument(
+        "--prefill-chunk",
+        type=int,
+        default=0,
+        help=(
+            "Feed the prompt in chunks of this many tokens, carrying the KV "
+            "cache between chunks. Zero uses one pass. Chunking bounds the "
+            "activation working set, which is what makes an 8,000-token "
+            "prefill fit beside other tenants on this GPU."
+        ),
+    )
     args = parser.parse_args()
 
     if args.output.exists() and not args.force:
@@ -125,21 +175,33 @@ def main() -> int:
         )
         input_ids = torch.tensor([ids], dtype=torch.long)
         step_started = time.perf_counter()
-        with torch.inference_mode():
-            out = model.generate(
-                input_ids=input_ids.to(model.device),
+        eos_set = {151645, 151643}
+        if tokenizer.eos_token_id is not None:
+            eos_set.add(int(tokenizer.eos_token_id))
+        if args.prefill_chunk:
+            generated = _chunked_greedy(
+                model,
+                input_ids,
                 max_new_tokens=entry["max_new_tokens"],
-                do_sample=False,
-                num_beams=1,
-                temperature=None,
-                top_p=None,
-                top_k=None,
-                pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
-                return_dict_in_generate=True,
-                output_scores=False,
+                chunk=args.prefill_chunk,
+                eos_ids=eos_set,
             )
+        else:
+            with torch.inference_mode():
+                out = model.generate(
+                    input_ids=input_ids.to(model.device),
+                    max_new_tokens=entry["max_new_tokens"],
+                    do_sample=False,
+                    num_beams=1,
+                    temperature=None,
+                    top_p=None,
+                    top_k=None,
+                    pad_token_id=tokenizer.pad_token_id or tokenizer.eos_token_id,
+                    return_dict_in_generate=True,
+                    output_scores=False,
+                )
+            generated = out.sequences[0][len(ids) :].tolist()
         elapsed = time.perf_counter() - step_started
-        generated = out.sequences[0][len(ids) :].tolist()
         text = tokenizer.decode(generated, skip_special_tokens=False)
         visible = tokenizer.decode(generated, skip_special_tokens=True)
         eos_ids = set(
