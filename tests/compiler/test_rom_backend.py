@@ -64,7 +64,15 @@ from runtime.abi3.descriptors import ExtendedDescriptorType
 from runtime.abi3.records import decode_body, split_program
 from runtime.abi3.verifier import VerificationError, require_admitted
 
-DTYPE_BYTES = {"bf16": 2, "fp8_e4m3fn": 1, "e8m0": 1, "i32": 4, "i64": 8, "u32": 4}
+DTYPE_BITS_BY_NAME = {
+    "bf16": 16,
+    "fp8_e4m3fn": 8,
+    "e8m0": 8,
+    "mxfp4_e2m1": 4,
+    "i32": 32,
+    "i64": 64,
+    "u32": 32,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -93,7 +101,7 @@ class _GraphBuilder:
         elements = 1
         for dim in shape:
             elements *= dim
-        size = elements * DTYPE_BYTES[dtype]
+        size = (elements * DTYPE_BITS_BY_NAME[dtype] + 7) // 8
         offset = len(self.blob)
         payload = self._payload(size)
         self.blob.extend(payload)
@@ -616,9 +624,7 @@ def deepseek_shaped_graph(
             "INDEX_SCORE",
             (
                 query,
-                builder.value(f"{prefix}.compressed", "bf16", (span, kv_width), "activation")
-                if False
-                else f"{prefix}.compressed",
+                f"{prefix}.compressed",
                 builder.weight(f"{base}.indexer.weight", "bf16", (kv_width, hidden)),
             ),
             (scores,),

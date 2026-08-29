@@ -12,6 +12,22 @@ Driver: `tools/run_abi3_physical.py`
 Results: `results/physical_abi3/`
 Environment test: `tests/test_abi3_physical_env.py`
 
+## Summary answer: which flows do full place-and-route?
+
+**Both chosen views do full place-and-route. Neither is synthesis+STA only.**
+
+| View | Synthesis | Static timing | Full place-and-route | Proven by |
+|---|---|---|---|---|
+| `sky130hd` (130 nm, mature) | yes | yes, 4 corners | **yes** — ORFS `sky130hd` | routed, DRC 0, antenna 0 |
+| `asap7` (7 nm, predictive) | yes | yes, 1 corner | **yes** — ORFS `asap7` | routed, DRC 0, antenna 0 |
+| `ihp-sg13g2` (130 nm) | available | available | available (ORFS platform ships) | **not run** |
+| `nangate45` (45 nm) | available | available | available (ORFS platform ships) | **not run** |
+
+ASAP7 did not need replacing. It place-and-routes, and it reproduced the
+archived ASAP7 campaign bit-for-bit (§6). The rows marked *not run* are
+genuinely available in the same container but were not exercised by this work;
+they are capability statements about the tooling, not results.
+
 ---
 
 ## 1. The two chosen views
@@ -186,6 +202,27 @@ Blocks are existing RTL already in the tree. Both map to standard cells only —
 instantiates no macros, so `macro_count` is 0 in every run below and no macro
 placement was exercised.
 
+### 5.0 How to read `status` in these artifacts
+
+Every record carries two separate fields, and they mean different things:
+
+* **`flow_completed`** — did the script run to completion without erroring.
+* **`status`** — the **engineering** result. `pass` only when every
+  timing-bearing stage that ran met setup *and* hold with zero violating paths,
+  and, for place-and-route, zero DRC and zero antenna violations. Otherwise
+  `not_met`. `not_evaluated` when nothing timing-bearing ran (synthesis alone),
+  and `error` when the flow itself failed.
+
+A run that did not close timing is emitted as `not_met`, never as `pass`. The
+`acceptance` block records the criterion and the per-stage checks that produced
+the verdict. Records also carry `purpose`: `signoff_target` means the target
+period is the intended operating point, `characterization` means it is a probe.
+`expected_not_met` documents that a corner was deliberately swept past its
+closing point; it annotates intent and does **not** soften `status`.
+
+`tests/test_abi3_physical_env.py` walks every emitted artifact and fails if any
+of them claims `pass` while carrying unmet timing, DRC or antenna violations.
+
 ### 5.1 Synthesis + pre-layout STA
 
 Typical corner, pinned Yosys + pinned OpenSTA, ideal clock.
@@ -209,15 +246,28 @@ not the library, is what sets its frequency.
 
 `ot_reduction_endpoint`, same mapped netlist, four corners:
 
-| Corner | V | T | Min period | Fmax |
-|---|---|---|---|---|
-| `ff` | 1.95 V | −40 °C | 9.624 ns | 103.91 MHz |
-| `tt` | 1.80 V | 25 °C | 17.520 ns | 57.08 MHz |
-| `ss` | 1.60 V | 100 °C | 37.383 ns | 26.75 MHz |
-| `ss_lv` | 1.28 V | −40 °C | 149.403 ns | 6.69 MHz |
+All four runs use a 20 ns target period, so the two slow corners are being
+swept past their closing point deliberately. Their `status` is `not_met`, and
+that is the correct and useful engineering result: **`ot_reduction_endpoint`
+does not close at 20 ns at either SKY130 slow corner.**
 
-This spread is available only in the mature view; the local ASAP7 copy has a
-single TT corner.
+| Corner | V | T | Setup WNS @ 20 ns | Violating paths | Meets 20 ns? | Min period | Fmax |
+|---|---|---|---|---|---|---|---|
+| `ff` | 1.95 V | −40 °C | +10.3787 ns | 0 | **yes** (`pass`) | 9.624 ns | 103.91 MHz |
+| `tt` | 1.80 V | 25 °C | +2.4873 ns | 0 | **yes** (`pass`) | 17.520 ns | 57.08 MHz |
+| `ss` | 1.60 V | 100 °C | −17.3770 ns | 21 | **no** (`not_met`) | 37.383 ns | 26.75 MHz |
+| `ss_lv` | 1.28 V | −40 °C | −129.3212 ns | 618 | **no** (`not_met`) | 149.403 ns | 6.69 MHz |
+
+The block closes at 20 ns at `tt` and `ff` only. To close at the conventional
+slow corner `ss` it would need a target period of at least 37.4 ns, i.e. a
+26.75 MHz operating point; at the extreme low-voltage corner `ss_lv`
+(1.28 V, −40 °C) it needs 149.4 ns. A design intended to run at 20 ns across
+PVT would therefore have to be re-pipelined — the 32-bit ripple-carry chain in
+the reduction path is the limiter.
+
+This corner spread is available only in the mature view; the local ASAP7 copy
+has a single TT corner, so the predictive view carries no slow-corner evidence
+at all.
 
 ### 5.3 Place-and-route
 

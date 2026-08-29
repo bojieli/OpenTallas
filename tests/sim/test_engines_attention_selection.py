@@ -30,6 +30,10 @@ from runtime.abi3.constants import (
 from runtime.abi3.deployment import ObjectSource
 from runtime.abi3.descriptors import Phase, SelectionMode, Symbol
 from runtime.abi3.records import EosReason
+from runtime.reference.sparse_attention import (
+    SPARSE_ATTENTION_SCALE_BINARY32,
+    sparse_attention_bf16,
+)
 from runtime.sim.device import Device
 from runtime.tensor_accelerator.attention import (
     HEAD_DIM,
@@ -466,44 +470,114 @@ def test_dense_matches_an_independent_binary32_attention():
     assert result.counters["attention.context_positions"] == span * context
 
 
-def test_sparse_executes_only_the_listed_indices():
-    rng = np.random.default_rng(13)
-    span, q_heads, kv_heads, dim, context = 2, 2, 1, 4, 6
-    q = bf16_uniform(rng, (span, q_heads, dim))
-    k = bf16_uniform(rng, (context, kv_heads, dim))
-    v = bf16_uniform(rng, (context, kv_heads, dim))
-    indices = np.array([[0, 2, NO_ID], [1, 3, 5]], dtype=np.uint32)
-    build, out_view = build_attention(
-        sub=int(Attention.SPARSE),
-        q=q,
-        k=k,
-        v=v,
-        extra=indices,
-        scale_bits=fp32_bits(0.5),
+# ---------------------------------------------------------------------------
+# SPARSE (amendment A6: query / fused KV / index array / per-head sink)
+# ---------------------------------------------------------------------------
+def build_sparse(
+    *,
+    q: np.ndarray,
+    kv: np.ndarray,
+    indices: np.ndarray,
+    sinks: np.ndarray,
+    scale_bits: int = SPARSE_ATTENTION_SCALE_BINARY32,
+    aux=(),
+):
+    """A conforming ATTENTION.SPARSE operator under amendment A6."""
+    build = Build()
+    span, heads, dim = q.shape
+    q_view = build.view(build.object_of(q), DType.BF16, q.shape)
+    kv_view = build.view(build.object_of(kv), DType.BF16, kv.shape)
+    index_view = build.view(build.object_of(indices), DType.U32, indices.shape)
+    sink_view = build.view(build.object_of(sinks), DType.FP32, sinks.shape)
+    out_view = build.view(
+        build.scratch(span * heads * dim * 2), DType.BF16, q.shape, writable=True
     )
+    op = build.builder.operator(
+        engine_family=Major.ATTENTION,
+        engine_sub=Attention.SPARSE,
+        inputs=[q_view, kv_view, index_view, sink_view],
+        outputs=[out_view],
+        aux=list(aux),
+        numeric_profile_id=attention_numeric(build, scale_bits),
+    )
+    build.builder.emit(Major.ATTENTION, Attention.SPARSE, descriptor_id=op)
+    return build, out_view
+
+
+def sparse_case(seed: int, span: int, heads: int, dim: int, rows: int):
+    rng = np.random.default_rng(seed)
+    q = bf16_uniform(rng, (span, heads, dim))
+    kv = bf16_uniform(rng, (rows, dim))
+    sinks = rng.uniform(-1.0, 1.0, size=heads).astype(np.float32)
+    return q, kv, sinks
+
+
+def test_sparse_reproduces_the_deepseek_reference_bit_exactly():
+    q, kv, sinks = sparse_case(13, span=2, heads=2, dim=4, rows=6)
+    # Ascending, tail-padded with 0xffffffff, as amendment A6 fixes it.
+    indices = np.array([[0, 2, NO_ID], [1, 3, 5]], dtype=np.uint32)
+
+    build, out_view = build_sparse(q=q, kv=kv, indices=indices, sinks=sinks)
     device = build.finish()
     result = device.run_transaction(
         device.create_session(), entrypoint_id=0, symbols={}
     )
     assert result.status == CompletionStatus.SUCCESS, result.message
-    selected = [np.array([0, 2]), np.array([1, 3, 5])]
-    expected = reference_attention(q, k, v, 0.5, lambda token: selected[token])
-    assert np.allclose(widen(read(device, out_view)), expected, atol=0.02, rtol=0.02)
-    # Counted from the rows the datapath gathered, padding excluded.
-    assert result.counters["attention.sparse_indices"] == 5
-    assert result.counters["attention.context_positions"] == 5
-    assert (
-        result.counters["attention.score_multiplications"]
-        == (2 + 3) * q_heads * dim
+
+    expected = sparse_attention_bf16(
+        [q.tolist()],
+        [kv.tolist()],
+        [int(code) for code in sinks.view(np.uint32)],
+        [[[0, 2, -1], [1, 3, 5]]],
+        scale_binary32=SPARSE_ATTENTION_SCALE_BINARY32,
+    )
+    assert np.array_equal(
+        read(device, out_view), np.asarray(expected.values[0], dtype=np.uint16)
     )
 
+    counters = result.counters
+    # Five rows were gathered; the padding slot is neither executed nor counted.
+    assert counters["attention.sparse_indices"] == 5
+    assert counters["attention.context_positions"] == 5
+    assert counters["attention.heads"] == 2 * 2
+    assert counters["attention.score_multiplications"] == 5 * 2 * 4
+    assert (
+        counters["attention.value_multiplications"]
+        == counters["attention.score_multiplications"]
+    )
+    assert counters["attention.kv_bytes_read"] == 5 * 4 * 2
 
-def test_sparse_rejects_an_out_of_range_index():
-    rng = np.random.default_rng(17)
-    q = bf16_uniform(rng, (1, 1, 4))
-    k = bf16_uniform(rng, (3, 1, 4))
-    v = bf16_uniform(rng, (3, 1, 4))
-    indices = np.array([[0, 9]], dtype=np.uint32)
+
+def test_sparse_counts_duplicate_selections_as_separate_rows():
+    """A duplicate index is another logical read and another contribution."""
+    q, kv, sinks = sparse_case(31, span=1, heads=1, dim=4, rows=4)
+    indices = np.array([[1, 1, 2]], dtype=np.uint32)
+    build, out_view = build_sparse(q=q, kv=kv, indices=indices, sinks=sinks)
+    device = build.finish()
+    result = device.run_transaction(
+        device.create_session(), entrypoint_id=0, symbols={}
+    )
+    assert result.status == CompletionStatus.SUCCESS, result.message
+    expected = sparse_attention_bf16(
+        [q.tolist()],
+        [kv.tolist()],
+        [int(code) for code in sinks.view(np.uint32)],
+        [[[1, 1, 2]]],
+        scale_binary32=SPARSE_ATTENTION_SCALE_BINARY32,
+    )
+    assert np.array_equal(
+        read(device, out_view), np.asarray(expected.values[0], dtype=np.uint16)
+    )
+    assert result.counters["attention.sparse_indices"] == 3
+
+
+def test_sparse_refuses_a_dense_shaped_operand_set():
+    """The pre-A6 mapping (q/k/v/mask) is refused, not reinterpreted."""
+    rng = np.random.default_rng(37)
+    q = bf16_uniform(rng, (2, 2, 4))
+    k = bf16_uniform(rng, (6, 1, 4))
+    v = bf16_uniform(rng, (6, 1, 4))
+    indices = np.array([[0, 2, NO_ID], [1, 3, 5]], dtype=np.uint32)
     build, _ = build_attention(
         sub=int(Attention.SPARSE),
         q=q,
@@ -515,6 +589,102 @@ def test_sparse_rejects_an_out_of_range_index():
     device = build.finish()
     result = device.run_transaction(
         device.create_session(), entrypoint_id=0, symbols={}
+    )
+    assert result.status == CompletionStatus.FAILED
+    assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
+    assert "amendment A6" in result.message
+    assert "fused BF16 KV" in result.message
+
+
+def test_sparse_refuses_a_missing_attention_sink():
+    """Without the per-head sink there is no denominator term to add."""
+    q, kv, _ = sparse_case(41, span=1, heads=1, dim=4, rows=4)
+    indices = np.array([[0, 1]], dtype=np.uint32)
+    build = Build()
+    span, heads, dim = q.shape
+    q_view = build.view(build.object_of(q), DType.BF16, q.shape)
+    kv_view = build.view(build.object_of(kv), DType.BF16, kv.shape)
+    index_view = build.view(build.object_of(indices), DType.U32, indices.shape)
+    out_view = build.view(
+        build.scratch(span * heads * dim * 2), DType.BF16, q.shape, writable=True
+    )
+    op = build.builder.operator(
+        engine_family=Major.ATTENTION,
+        engine_sub=Attention.SPARSE,
+        inputs=[q_view, kv_view, index_view],
+        outputs=[out_view],
+        numeric_profile_id=attention_numeric(
+            build, SPARSE_ATTENTION_SCALE_BINARY32
+        ),
+    )
+    build.builder.emit(Major.ATTENTION, Attention.SPARSE, descriptor_id=op)
+    device = build.finish()
+    result = device.run_transaction(
+        device.create_session(), entrypoint_id=0, symbols={}
+    )
+    assert result.status == CompletionStatus.FAILED
+    assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
+    assert "attention-sink" in result.message
+
+
+def test_sparse_rejects_a_block_width_other_than_the_frozen_one():
+    q, kv, sinks = sparse_case(43, span=1, heads=1, dim=4, rows=4)
+    indices = np.array([[0, 1]], dtype=np.uint32)
+    build, _ = build_sparse(
+        q=q, kv=kv, indices=indices, sinks=sinks, aux=[NO_ID, 32]
+    )
+    device = build.finish()
+    result = device.run_transaction(
+        device.create_session(), entrypoint_id=0, symbols={}
+    )
+    assert result.status == CompletionStatus.FAILED
+    assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
+    assert "block width" in result.message
+
+
+def test_sparse_rejects_interleaved_padding():
+    q, kv, sinks = sparse_case(47, span=1, heads=1, dim=4, rows=4)
+    indices = np.array([[0, NO_ID, 2]], dtype=np.uint32)
+    build, _ = build_sparse(q=q, kv=kv, indices=indices, sinks=sinks)
+    device = build.finish()
+    result = device.run_transaction(
+        device.create_session(), entrypoint_id=0, symbols={}
+    )
+    assert result.status == CompletionStatus.FAILED
+    assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
+    assert "trailing run" in result.message
+
+
+def test_sparse_rejects_an_out_of_range_index():
+    q, kv, sinks = sparse_case(17, span=1, heads=1, dim=4, rows=3)
+    indices = np.array([[0, 9]], dtype=np.uint32)
+    build, _ = build_sparse(q=q, kv=kv, indices=indices, sinks=sinks)
+    device = build.finish()
+    result = device.run_transaction(
+        device.create_session(), entrypoint_id=0, symbols={}
+    )
+    assert result.status == CompletionStatus.FAILED
+    assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
+    assert "outside" in result.message
+
+
+def test_sparse_bounds_the_kv_view_with_a_runtime_symbol():
+    """A fused KV view spans its capacity; only the filled rows may be read."""
+    q, kv, sinks = sparse_case(53, span=1, heads=1, dim=4, rows=6)
+    kv[4:] = narrow(np.full((2, 4), 9.0, dtype=np.float32))
+    indices = np.array([[0, 4]], dtype=np.uint32)
+    build, _ = build_sparse(
+        q=q,
+        kv=kv,
+        indices=indices,
+        sinks=sinks,
+        aux=[NO_ID, NO_ID, int(Symbol.CONTEXT_LENGTH)],
+    )
+    device = build.finish()
+    result = device.run_transaction(
+        device.create_session(),
+        entrypoint_id=0,
+        symbols={int(Symbol.CONTEXT_LENGTH): 4},
     )
     assert result.status == CompletionStatus.FAILED
     assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS

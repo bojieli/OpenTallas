@@ -553,7 +553,6 @@ class _Builder:
         self.dtype: dict[str, str] = {}
         self.kernels_by_source_kind: Counter = Counter()
         self.kernels_by_kind: Counter = Counter()
-        self.bound_bytes = 0
 
     def tensor(
         self,
@@ -582,8 +581,6 @@ class _Builder:
         )
         self.shape[tensor_id] = tuple(shape)
         self.dtype[tensor_id] = dtype
-        if binding is not None:
-            self.bound_bytes += binding.bytes
         return tensor_id
 
     def has_tensor(self, tensor_id: str) -> bool:

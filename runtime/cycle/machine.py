@@ -597,6 +597,12 @@ class MachineModel:
             ),
             bytes_per_cycle=self.number(f"engine.{family}.bytes_per_cycle", minimum=1e-9),
             minimum_cycles=self.integer(f"engine.{family}.minimum_cycles", minimum=1),
+            tile_issue_cycles=self.integer(
+                f"engine.{family}.tile_issue_cycles", minimum=1
+            ),
+            tile_pipeline_depth=self.integer(
+                f"engine.{family}.tile_pipeline_depth.default", minimum=1
+            ),
         )
 
     # -- memory ----------------------------------------------------------
@@ -801,6 +807,8 @@ class EngineParams:
     fixed_latency_cycles: int
     bytes_per_cycle: float
     minimum_cycles: int
+    tile_issue_cycles: int = 1
+    tile_pipeline_depth: int = 1
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -813,6 +821,8 @@ class EngineParams:
             "fixed_latency_cycles": self.fixed_latency_cycles,
             "bytes_per_cycle": self.bytes_per_cycle,
             "minimum_cycles": self.minimum_cycles,
+            "tile_issue_cycles": self.tile_issue_cycles,
+            "tile_pipeline_depth_default": self.tile_pipeline_depth,
         }
 
 

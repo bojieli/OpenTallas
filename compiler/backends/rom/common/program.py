@@ -43,6 +43,7 @@ from runtime.abi3.builder import BuildError, DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     Attention,
+    Reduction,
     Control,
     CounterGroup,
     DTYPE_BITS,
@@ -310,11 +311,12 @@ def _make_run(
 # ---------------------------------------------------------------------------
 @dataclass(slots=True)
 class BufferPlacement:
-    """Where a non-ROM tensor buffer lives."""
+    """Where a non-ROM tensor buffer lives, and which memory port serves it."""
 
     storage: StorageClass
     size_bytes: int
     permissions: int
+    port: int = 0
 
 
 @dataclass(slots=True)
@@ -412,6 +414,9 @@ class RomLowering:
         self._event_of_tensor: dict[str, tuple[int, int]] = {}
         self._communications: list[tuple[str, int]] = []
         self._link_instruction_count = 0
+        self._queue_cursor: dict[int, int] = {}
+        self._contract_substitutions: dict[str, str] = {}
+        self._port_cursor = 0
         self._unify_buffers()
 
     # -- sizes ----------------------------------------------------------
@@ -588,6 +593,200 @@ class RomLowering:
         )
 
     # -- descriptor helpers ----------------------------------------------
+    def _engine_spec(self, family: Major) -> Mapping[str, int]:
+        key = ENGINE_KEY_BY_FAMILY[int(family)]
+        return self.capability.engines.get(key, {})
+
+    def _lanes(self, family: Major) -> int:
+        return max(int(self._engine_spec(family).get("lanes", 0)) or 64, 1)
+
+    def _queues(self, family: Major) -> int:
+        return max(int(self._engine_spec(family).get("queues", 1)), 1)
+
+    def _row_elements(self, dtype: DType) -> int:
+        """Weight elements one ROM macro row read returns."""
+        bits = DTYPE_BITS[dtype]
+        return max(self.policy.layout.row_bytes * 8 // bits, 1)
+
+    def _schedule(self, kernel: Kernel, family: Major, sub: int) -> int:
+        """Emit the SCHEDULE descriptor for one operator.
+
+        ADR-003 section 6.2 puts tile mapping, bank/port use, NoC path, issue
+        window and resource bound in this descriptor -- *not* in program loops.
+        A program loop expresses what varies the work (layers, token blocks,
+        experts, vocabulary partitions); the schedule expresses how one engine
+        instruction is decomposed on the hardware.  Making output-tile and
+        K-tile loops into program loops would retire on the order of 258,000
+        dispatches per Qwen forward step, which is the failure mode ABI 3.0
+        exists to prevent.
+
+        The cycle model reads these fields directly, so every one of them is
+        derived from the operator's iteration domain, the engine's lane count
+        and the ROM macro read granularity.  None is a placeholder.
+        """
+        domain = {k: self._extent(v) for k, v in kernel.iteration_domain.items()}
+        inputs = [self.tensors[n] for n in kernel.inputs]
+        outputs = [self.tensors[n] for n in kernel.outputs]
+        weights = [t for t in inputs if t.role in WEIGHT_ROLES]
+        lanes = self._lanes(family)
+        rows = domain.get("tokens") or (self._dims(outputs[0])[0] if outputs else 1)
+        rows = max(int(rows), 1)
+        tile_rows = max(min(rows, self.policy.tile_rows), 1)
+        tile_cols = max(self.policy.tile_cols, 1)
+        tile_depth = 1
+        bound = ResourceBound.MEMORY_PORT
+
+        if weights:
+            weight_dims = self._dims(weights[0])
+            row_elements = self._row_elements(self._dtype(weights[0].dtype))
+            width = weight_dims[0]
+            reduction = weight_dims[-1]
+            if family is Major.TENSOR and sub != int(TensorOp.EMBED_LOOKUP):
+                tile_cols = max(min(width, lanes), 1)
+                tile_depth = max(min(reduction, row_elements), 1)
+                bound = ResourceBound.ROM_READ
+            else:
+                tile_cols = max(min(reduction, lanes), 1)
+                tile_depth = max(min(reduction, row_elements), 1)
+                bound = (
+                    ResourceBound.ROM_READ
+                    if family is Major.TENSOR
+                    else ResourceBound.MEMORY_PORT
+                )
+        elif outputs:
+            tile_cols = max(min(self._dims(outputs[0])[-1], lanes), 1)
+
+        if family is Major.ATTENTION:
+            head_dim = int(
+                domain.get("head_dim", self._dims(outputs[0])[-1] if outputs else lanes)
+            )
+            tile_cols = max(min(head_dim, lanes), 1)
+            tile_depth = max(
+                min(
+                    int(kernel.attributes.get("block_width", 64)),
+                    self.capability.limits["max_context_positions"],
+                ),
+                1,
+            )
+            bound = ResourceBound.MEMORY_PORT
+        elif family is Major.SELECTION:
+            bound = ResourceBound.SELECTION
+        elif family is Major.ROUTE:
+            bound = ResourceBound.TENSOR_LANES
+        elif family is Major.STATE:
+            bound = ResourceBound.STATE_TRANSACTION
+
+        tiles = self._tile_count(kernel, tile_rows, tile_cols, tile_depth, rows)
+        max_outstanding = max(
+            min(tiles, self.capability.limits["max_outstanding_per_queue"]), 1
+        )
+        issue_window = min(max_outstanding, 0xFFFF)
+        bank_mask = self._bank_mask(kernel)
+        port_mask = self._port_mask(kernel)
+        route_class = self._route_class(kernel)
+        queues = self._queues(family)
+        queue_index = self._queue_cursor.get(int(family), 0) % queues
+        self._queue_cursor[int(family)] = queue_index + 1
+
+        payload = (
+            int(family),
+            queue_index,
+            issue_window,
+            tile_rows,
+            tile_cols,
+            tile_depth,
+            bank_mask,
+            port_mask,
+            route_class,
+            bound,
+            max_outstanding,
+        )
+        if payload in self._schedule_cache:
+            return self._schedule_cache[payload]
+        descriptor = self.builder.schedule(
+            engine_family=family,
+            queue_index=queue_index,
+            issue_window=issue_window,
+            tile_rows=tile_rows,
+            tile_cols=tile_cols,
+            tile_depth=tile_depth,
+            bank_mask=bank_mask,
+            port_mask=port_mask,
+            noc_route_class=route_class,
+            resource_bound=bound,
+            max_outstanding=max_outstanding,
+            key=f"sched.{Major(family).name.lower()}.{len(self._schedule_cache):04d}",
+        )
+        self._schedule_cache[payload] = descriptor
+        return descriptor
+
+    def _tile_count(
+        self, kernel: Kernel, tile_rows: int, tile_cols: int, tile_depth: int, rows: int
+    ) -> int:
+        inputs = [self.tensors[n] for n in kernel.inputs]
+        weights = [t for t in inputs if t.role in WEIGHT_ROLES]
+        if weights:
+            dims = self._dims(weights[0])
+            width, reduction = dims[0], dims[-1]
+        else:
+            outputs = [self.tensors[n] for n in kernel.outputs]
+            width = self._dims(outputs[0])[-1] if outputs else 1
+            reduction = 1
+        return (
+            -(-rows // tile_rows)
+            * -(-max(width, 1) // tile_cols)
+            * -(-max(reduction, 1) // tile_depth)
+        )
+
+    def _bank_mask(self, kernel: Kernel) -> int:
+        """Which immutable ROM banks or tiles this operator reads."""
+        mask = 0
+        if self.plan is None:
+            return 0
+        for name in kernel.inputs:
+            if self.tensors[name].role not in WEIGHT_ROLES:
+                continue
+            placement = self._region_of_tensor.get(name)
+            if placement is None:
+                continue
+            for shard in self.plan.region(placement[0]).shards:
+                index = shard.coordinate.tile or shard.coordinate.bank
+                mask |= 1 << (index % 32)
+        return mask
+
+    def _port_mask(self, kernel: Kernel) -> int:
+        """Which mutable memory ports this operator's activations occupy."""
+        mask = 0
+        for name in (*kernel.inputs, *kernel.outputs):
+            if self.tensors[name].role in WEIGHT_ROLES:
+                continue
+            placement = self._buffer_place.get(self._buffer_key(name))
+            if placement is None:
+                continue
+            mask |= 1 << (placement.port % 32)
+        return mask
+
+    def _route_class(self, kernel: Kernel) -> int:
+        """Local, intra-reticle or inter-reticle, from the operand placement."""
+        if self.plan is None:
+            return RouteClass.LOCAL
+        reticles: set[int] = set()
+        tiles: set[int] = set()
+        for name in kernel.inputs:
+            if self.tensors[name].role not in WEIGHT_ROLES:
+                continue
+            placement = self._region_of_tensor.get(name)
+            if placement is None:
+                continue
+            for shard in self.plan.region(placement[0]).shards:
+                reticles.add(shard.coordinate.reticle)
+                tiles.add(shard.coordinate.tile)
+        if len(reticles) > 1:
+            return RouteClass.INTER_RETICLE
+        if len(tiles) > 1:
+            return RouteClass.INTRA_RETICLE
+        return RouteClass.LOCAL
+
     def _numeric(self, kernel: Kernel) -> int:
         attributes = kernel.attributes
         inputs = [self.tensors[n] for n in kernel.inputs]
@@ -602,43 +801,46 @@ class RomLowering:
             attributes.get("output_dtype", outputs[0].dtype if outputs else first)
         )
         accumulator = str(attributes.get("accumulator_dtype", "fp32"))
+        contract = EXECUTION_CONTRACT.get(
+            kernel.numeric_contract, kernel.numeric_contract
+        )
+        if contract != kernel.numeric_contract:
+            self._contract_substitutions[kernel.numeric_contract] = contract
+        order = self._reduction_order(contract, kernel.kind)
         input_dtype = self._dtype(first)
         second_dtype = self._dtype(second)
         output_dtype = self._dtype(result)
         accumulator_dtype = self._dtype(accumulator)
         key = (
-            kernel.numeric_contract,
+            contract,
             int(input_dtype),
             int(second_dtype),
             int(output_dtype),
             int(accumulator_dtype),
+            int(order),
         )
         if key in self._numeric_cache:
             return self._numeric_cache[key]
         descriptor = self.builder.numeric(
-            contract=kernel.numeric_contract,
+            contract=contract,
             input_dtype=input_dtype,
             second_input_dtype=second_dtype,
             output_dtype=output_dtype,
             accumulator_dtype=accumulator_dtype,
+            reduction_order=order,
             key=f"num.{len(self._numeric_cache):04d}",
         )
         self._numeric_cache[key] = descriptor
         return descriptor
 
-    def _schedule(self, family: Major) -> int:
-        key = (int(family), 0)
-        if key in self._schedule_cache:
-            return self._schedule_cache[key]
-        descriptor = self.builder.schedule(
-            engine_family=family,
-            tile_rows=self.policy.tile_rows,
-            tile_cols=self.policy.tile_cols,
-            tile_depth=self.policy.tile_depth,
-            key=f"sched.{Major(family).name.lower()}",
-        )
-        self._schedule_cache[key] = descriptor
-        return descriptor
+    @staticmethod
+    def _reduction_order(contract: str, kind: str) -> ReductionOrder:
+        """Amendment A8: RMSNorm sums in a balanced tree, not sequentially."""
+        if kind in {"RMS_NORM", "HEAD_RMS_NORM"} or "rmsnorm" in contract:
+            return ReductionOrder.PAIRWISE_TREE
+        if "blocked" in contract:
+            return ReductionOrder.BLOCKED_ASCENDING
+        return ReductionOrder.SEQUENTIAL_ASCENDING
 
     def _counter_class(self, kernel_counter: str, family: Major) -> int:
         group = COUNTER_GROUP_BY_FAMILY[int(family)]
@@ -784,15 +986,19 @@ class RomLowering:
                 self._sram_used += size
             else:
                 storage = StorageClass.HBM
+        ports = max(int(self.capability.memory.get("sram", {}).get("banks", 8)), 1)
+        port = self._port_cursor % min(ports, 32)
+        self._port_cursor += 1
         object_id = self.builder.memory_object(
             storage_class=storage,
             size_bytes=size,
             source=ObjectSource.zeros(size),
             permissions=permissions,
+            bank_or_tile=port,
             key=key,
         )
         self._buffer_object[key] = object_id
-        self._buffer_place[key] = BufferPlacement(storage, size, permissions)
+        self._buffer_place[key] = BufferPlacement(storage, size, permissions, port)
         return object_id
 
     # -- state -----------------------------------------------------------
@@ -1013,6 +1219,130 @@ class RomLowering:
             label="view.rom",
         )
 
+    # -- operand conventions (TA-ABI3-OPCONV-1) --------------------------
+    def _aux(self, kernel: Kernel, family: Major, sub: int) -> list[int]:
+        """The auxiliary IDs the frozen operand convention requires.
+
+        ``aux`` is not a spare field: ``TA-ABI3-OPCONV-1`` gives it a meaning per
+        subopcode, and an engine rejects an operator whose slots do not match its
+        row.  ``EXPERT_DISPATCH`` in particular *requires* ``aux0``, because an
+        unbounded expert ID is a memory-safety problem.
+        """
+        domain = {k: self._extent(v) for k, v in kernel.iteration_domain.items()}
+        attributes = kernel.attributes
+        inputs = [self.tensors[n] for n in kernel.inputs]
+        outputs = [self.tensors[n] for n in kernel.outputs]
+        weights = [t for t in inputs if t.role in WEIGHT_ROLES]
+
+        def dim(tensor: Tensor | None, axis: int, default: int) -> int:
+            if tensor is None:
+                return default
+            dims = self._dims(tensor)
+            return dims[axis] if -len(dims) <= axis < len(dims) else default
+
+        if family is Major.TENSOR:
+            if sub == int(TensorOp.GROUPED_MATMUL):
+                return [int(attributes.get("group_count", domain.get("groups", 1)))]
+            if sub == int(TensorOp.ROUTED_MATMUL):
+                experts = int(
+                    attributes.get(
+                        "expert_count",
+                        domain.get(
+                            "experts", dim(weights[0] if weights else None, 0, 1)
+                        ),
+                    )
+                )
+                return [experts]
+            return []
+        if family is Major.VECTOR:
+            if sub == int(Vector.HEAD_RMS_NORM):
+                return [int(attributes.get("head_count", domain.get("heads", 1)))]
+            if sub == int(Vector.ROPE):
+                return [
+                    int(
+                        attributes.get(
+                            "rotary_width",
+                            domain.get("head_dim", dim(outputs[0] if outputs else None, -1, 1)),
+                        )
+                    )
+                ]
+            if sub == int(Vector.SOFTMAX):
+                return [int(attributes.get("axis", 0))]
+            if sub == int(Vector.HADAMARD):
+                return [int(attributes.get("block_width", 32))]
+            if sub == int(Vector.COMPRESS):
+                return [COMPRESS_SUBCASE[kernel.kind]]
+            if sub == int(Vector.MHC):
+                return [
+                    MHC_SUBCASE[kernel.kind],
+                    int(attributes.get("sinkhorn_iterations", 0)),
+                    int(attributes.get("hc_mult", 1)),
+                ]
+            if sub == int(Vector.SCALE):
+                return [SCALE_SUBCASE.get(kernel.kind, 0)]
+            return []
+        if family is Major.ATTENTION:
+            group_size = int(
+                attributes.get(
+                    "group_size",
+                    domain.get("heads", 1) // max(domain.get("key_value_heads", 1), 1)
+                    or 1,
+                )
+            )
+            mask_mode = 0 if attributes.get("mask_mode", "causal") == "causal" else 1
+            if sub == int(Attention.SPARSE):
+                second = int(attributes.get("block_width", 64))
+            else:
+                second = mask_mode
+            return [
+                max(group_size, 1),
+                second,
+                int(Symbol.CONTEXT_LENGTH),
+                int(Symbol.POSITION_START),
+            ]
+        if family is Major.ROUTE:
+            if sub in (int(Route.TOPK), int(Route.BIASED_TOPK)):
+                return [
+                    int(
+                        attributes.get(
+                            "k", dim(outputs[0] if outputs else None, -1, 1)
+                        )
+                    )
+                ]
+            if sub == int(Route.EXPERT_DISPATCH):
+                experts = int(
+                    attributes.get("expert_count", domain.get("experts", 0))
+                ) or self.capability.limits["max_expert_ids"]
+                if experts <= 0:
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r} is an EXPERT_DISPATCH with no "
+                        "expert bound; TA-ABI3-OPCONV-1 requires aux0"
+                    )
+                return [experts]
+            if sub == int(Route.INDEX_TOPK):
+                return [
+                    int(
+                        attributes.get(
+                            "k", dim(outputs[0] if outputs else None, -1, 1)
+                        )
+                    ),
+                    0 if attributes.get("mask_mode", "causal") == "causal" else 1,
+                    int(Symbol.CONTEXT_LENGTH),
+                    int(Symbol.POSITION_START),
+                ]
+            if sub == int(Route.WINDOW_INDEX):
+                return [
+                    int(attributes.get("window", domain.get("window", 128))),
+                    0 if attributes.get("mask_mode", "causal") == "causal" else 1,
+                    int(Symbol.CONTEXT_LENGTH),
+                ]
+            return []
+        if family is Major.REDUCTION and sub == int(Reduction.PARTITION_SUM):
+            return [int(Symbol.VOCABULARY_PARTITIONS)]
+        if family is Major.DMA and sub == int(Dma.FILL):
+            return [int(attributes.get("fill_code", 0))]
+        return []
+
     # -- instructions ----------------------------------------------------
     def _emit_kernel(self, kernel: Kernel, *, run: LayerRun | None) -> None:
         if kernel.kind in {"STATE_PREPARE", "STATE_COMMIT"}:
@@ -1054,21 +1384,14 @@ class RomLowering:
                 f"kernel {kernel.kernel_id!r} has {len(kernel.outputs)} outputs; an "
                 f"ABI 3.0 operator admits {MAX_OPERATOR_OUTPUTS}"
             )
-        aux = [
-            self._state_descriptor[state_id]
-            for state_id in dict.fromkeys(
-                (*kernel.state_reads, *kernel.state_writes)
-            )
-            if state_id in self._state_descriptor
-        ][:4]
         operator = self.builder.operator(
             engine_family=family,
             engine_sub=engine.sub,
             inputs=inputs,
             outputs=outputs,
-            aux=aux,
+            aux=self._aux(kernel, family, engine.sub),
             numeric_profile_id=self._numeric(kernel),
-            schedule_id=self._schedule(family),
+            schedule_id=self._schedule(kernel, family, engine.sub),
             counter_class_id=self._counter_class(kernel.counter_class, family),
             source_kernel_id=kernel.index,
             key=f"op.k{kernel.index:05d}",
@@ -1254,8 +1577,13 @@ class RomLowering:
                 for run in self.analysis.runs
             ],
             "link_instruction_count": self._link_instruction_count,
+            "numeric_contract_substitutions": dict(
+                sorted(self._contract_substitutions.items())
+            ),
+            "schedule_descriptor_count": len(self._schedule_cache),
             "source_kernel_count": len(self.graph.kernels),
             "state_groups": len(set(self._state_descriptor.values())),
+            "tile_mapping_owner": "schedule_descriptor",
         }
         return builder.finish()
 

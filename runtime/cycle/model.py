@@ -81,6 +81,7 @@ from runtime.cycle.fabric import (
 )
 from runtime.cycle.machine import (
     ENGINE_FAMILY_NAMES,
+    FAMILY_BY_NAME,
     FAMILY_WORK_COUNTERS,
     CostTable,
     EngineParams,
@@ -128,13 +129,26 @@ def timing_counters(snapshot: Mapping[str, int]) -> dict[str, int]:
 # ---------------------------------------------------------------------------
 @dataclass(slots=True)
 class MemoryAccess:
-    """One engine-visible memory access, with a real address."""
+    """One engine-visible memory access, with a real address.
+
+    ``nbytes`` is the *useful* extent -- what the functional device counted.
+    ``amplification`` is how many times a tiled schedule actually fetches that
+    extent: an operand re-read once per tile of the orthogonal axis moves more
+    bytes over the wire than the operation logically consumes.  The two are kept
+    apart because tiling changes cycles, never architectural bytes.
+    """
 
     object_id: int
     storage_class: int
     address: int
     nbytes: int
     write: bool
+    view_id: int = NO_ID
+    amplification: int = 1
+
+    @property
+    def transferred_bytes(self) -> int:
+        return self.nbytes * self.amplification
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -142,6 +156,8 @@ class MemoryAccess:
             "storage_class": StorageClass(self.storage_class).name,
             "address": self.address,
             "bytes": self.nbytes,
+            "transferred_bytes": self.transferred_bytes,
+            "amplification": self.amplification,
             "write": self.write,
         }
 
@@ -165,10 +181,21 @@ class TraceStep:
     accesses: list[MemoryAccess] = dc_field(default_factory=list)
     trapped: bool = False
     predicate_taken: bool | None = None
+    operator_id: int = NO_ID
+    schedule_id: int = NO_ID
+    schedule: dict[str, int] | None = None
+    operand_dims: dict[str, tuple[int, ...]] = dc_field(default_factory=dict)
+    operand_objects: dict[str, int] = dc_field(default_factory=dict)
+    numeric_profile_id: int = NO_ID
+    contract_digest: str = ""
 
     @property
     def bytes_moved(self) -> int:
         return sum(access.nbytes for access in self.accesses)
+
+    @property
+    def bytes_transferred(self) -> int:
+        return sum(access.transferred_bytes for access in self.accesses)
 
 
 def effective_symbols(

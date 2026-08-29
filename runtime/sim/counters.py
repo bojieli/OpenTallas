@@ -159,6 +159,10 @@ COUNTERS: dict[int, str] = dict(
         _reg(CounterGroup.LATENCY, 22, "latency.barrier_cycles"),
         _reg(CounterGroup.LATENCY, 23, "latency.node_skew_cycles"),
         _reg(CounterGroup.LATENCY, 24, "latency.sequencer_fetch_cycles"),
+        _reg(CounterGroup.LATENCY, 25, "latency.tile_launches"),
+        _reg(CounterGroup.LATENCY, 26, "latency.tile_issue_cycles"),
+        _reg(CounterGroup.LATENCY, 27, "latency.tile_pipeline_stall_cycles"),
+        _reg(CounterGroup.LATENCY, 28, "latency.tile_padding_work"),
     ]
 )
 
