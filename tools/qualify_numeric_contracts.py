@@ -319,12 +319,39 @@ def _determinism(backend, repeats: int) -> dict[str, Any]:
     }
 
 
+def _contraction_only(backend, activations, weights, contract: str) -> float:
+    """Seconds for the contraction alone, operands already on the device.
+
+    The end-to-end figure includes widening the weights and rounding the
+    result, which at decode shapes is most of the work and none of the
+    arithmetic.  Both are reported because both are true and they answer
+    different questions: this one is the rate a resident-weight machine would
+    see, the end-to-end one is the rate this simulator actually achieves while
+    streaming weights.
+    """
+    left = backend.widen_bf16(activations)
+    right = backend.widen_bf16(weights)
+    backend.fetch(backend.matmul_binary32(left, right, contract=contract))
+    started = time.perf_counter()
+    result = backend.matmul_binary32(left, right, contract=contract)
+    backend.fetch(result)
+    return time.perf_counter() - started
+
+
 def _throughput(names: Sequence[str], rows: int) -> dict[str, Any]:
     """Measured rate of both contracts on every requested backend."""
     shape = {"rows": rows, "k": 4096, "n": 4096}
     activations, weights = _operands(rows, 4096, 4096, seed=11)
     macs = rows * 4096 * 4096
-    out: dict[str, Any] = {"shape": shape, "backends": {}}
+    out: dict[str, Any] = {
+        "shape": shape,
+        "note": (
+            "end_to_end times widen -> contract -> round -> fetch, which is "
+            "what the engine performs; contraction_only times the contraction "
+            "with both operands already resident"
+        ),
+        "backends": {},
+    }
     for name in names:
         try:
             backend = backends.get_backend(name)
@@ -335,6 +362,10 @@ def _throughput(names: Sequence[str], rows: int) -> dict[str, Any]:
         _run(backend, activations, weights, CONTRACT_BLOCKED)
         _, _, _, blocked_s = _run(backend, activations, weights, CONTRACT_BLOCKED)
         _, _, _, sequential_s = _run(backend, activations, weights, CONTRACT_SEQUENTIAL)
+        blocked_only = _contraction_only(backend, activations, weights, CONTRACT_BLOCKED)
+        sequential_only = _contraction_only(
+            backend, activations, weights, CONTRACT_SEQUENTIAL
+        )
         out["backends"][name] = {
             "available": True,
             "implementation_identity": backend.implementation_identity(),
@@ -342,12 +373,105 @@ def _throughput(names: Sequence[str], rows: int) -> dict[str, Any]:
                 "sequential": round(_rate(macs, sequential_s), 4),
                 "blocked": round(_rate(macs, blocked_s), 4),
             },
+            "contraction_only_gmac_per_second": {
+                "sequential": round(_rate(macs, sequential_only), 4),
+                "blocked": round(_rate(macs, blocked_only), 4),
+            },
             "seconds": {
                 "sequential": round(sequential_s, 6),
                 "blocked": round(blocked_s, 6),
+                "sequential_contraction_only": round(sequential_only, 6),
+                "blocked_contraction_only": round(blocked_only, 6),
             },
         }
     return out
+
+
+#: One Qwen3-8B decoder layer's contractions, as ``(name, K, N)``.
+QWEN_LAYER_CONTRACTIONS = (
+    ("q_proj", QWEN["hidden"], QWEN["hidden"]),
+    ("k_proj", QWEN["hidden"], QWEN["kv_width"]),
+    ("v_proj", QWEN["hidden"], QWEN["kv_width"]),
+    ("o_proj", QWEN["hidden"], QWEN["hidden"]),
+    ("gate_proj", QWEN["hidden"], QWEN["intermediate"]),
+    ("up_proj", QWEN["hidden"], QWEN["intermediate"]),
+    ("down_proj", QWEN["intermediate"], QWEN["hidden"]),
+)
+
+
+def _forward_contractions(
+    backend, *, tokens: int, row_tile: int, contract: str
+) -> dict[str, Any]:
+    """Time every contraction of one Qwen3-8B forward pass, for real.
+
+    This is not a projection.  It runs all 36 layers' seven projections plus
+    the vocabulary head at the true shapes, streaming a weight of the true size
+    for each one, and reports the wall time.  Weights are re-presented from one
+    buffer per geometry rather than read from the 16 GB checkpoint: the bytes
+    moved across the bus and the arithmetic performed are exactly those of the
+    real shape sequence, and the point being measured is the rate, not the
+    values.
+
+    Each weight is placed on the device once and every row tile of the
+    activation is contracted against it before the next weight arrives, which
+    is the order a streaming implementation must use: the alternative
+    re-uploads 15 GB per tile.
+    """
+    rng = np.random.default_rng(4242)
+    macs = 0
+    weight_bytes = 0
+    started = time.perf_counter()
+    for _ in range(QWEN["layers"]):
+        for _name, depth, cols in QWEN_LAYER_CONTRACTIONS:
+            activations = _bf16_codes(
+                rng.standard_normal((min(tokens, row_tile), depth)).astype(np.float32)
+            )
+            weights = _bf16_codes(
+                (rng.standard_normal((cols, depth)) / np.sqrt(depth)).astype(np.float32)
+            )
+            weight_bytes += weights.nbytes
+            right = backend.widen_bf16(weights)
+            for start in range(0, tokens, row_tile):
+                span = min(row_tile, tokens - start)
+                left = backend.widen_bf16(activations[:span])
+                out = backend.matmul_binary32(left, right, contract=contract)
+                backend.fetch(backend.narrow_rne(out).codes)
+                macs += span * depth * cols
+            del right
+    # The vocabulary head runs on the final token row only, which is what a
+    # prefill actually needs: the logits of the position being sampled.
+    head_weights = _bf16_codes(
+        (
+            rng.standard_normal((QWEN["vocabulary"], QWEN["hidden"]))
+            / np.sqrt(QWEN["hidden"])
+        ).astype(np.float32)
+    )
+    weight_bytes += head_weights.nbytes
+    head_activation = _bf16_codes(
+        rng.standard_normal((1, QWEN["hidden"])).astype(np.float32)
+    )
+    out = backend.matmul_binary32(
+        backend.widen_bf16(head_activation),
+        backend.widen_bf16(head_weights),
+        contract=contract,
+    )
+    backend.fetch(backend.narrow_rne(out).codes)
+    macs += QWEN["hidden"] * QWEN["vocabulary"]
+    seconds = time.perf_counter() - started
+    return {
+        "tokens": tokens,
+        "row_tile": row_tile,
+        "contract": contract,
+        "layers": QWEN["layers"],
+        "multiply_accumulates": macs,
+        "weight_bytes_streamed": weight_bytes,
+        "seconds": round(seconds, 4),
+        "gmac_per_second": round(_rate(macs, seconds), 4),
+        "weight_stream_gigabytes_per_second": round(
+            weight_bytes / seconds / 1e9, 4
+        ),
+        "measured": True,
+    }
 
 
 def _prefill_projection(throughput: dict[str, Any]) -> dict[str, Any]:
@@ -372,17 +496,31 @@ def _prefill_projection(throughput: dict[str, Any]) -> dict[str, Any]:
         "prefill_multiply_accumulates": total,
         "backends": {},
     }
+    def projected(rate: float) -> dict[str, Any]:
+        if not rate:
+            return {"gmac_per_second": rate, "prefill_seconds": None,
+                    "prefill_hours": None}
+        seconds = total / (rate * 1e9)
+        return {
+            "gmac_per_second": rate,
+            "prefill_seconds": round(seconds, 3),
+            "prefill_hours": round(seconds / 3600, 4),
+        }
+
     for name, record in throughput["backends"].items():
         if not record.get("available"):
             continue
-        rates = record["gmac_per_second"]
         body["backends"][name] = {
-            contract: {
-                "gmac_per_second": rate,
-                "prefill_seconds": round(total / (rate * 1e9), 3) if rate else None,
-                "prefill_hours": round(total / (rate * 1e9) / 3600, 4) if rate else None,
-            }
-            for contract, rate in rates.items()
+            "end_to_end": {
+                contract: projected(rate)
+                for contract, rate in record["gmac_per_second"].items()
+            },
+            "contraction_only": {
+                contract: projected(rate)
+                for contract, rate in record[
+                    "contraction_only_gmac_per_second"
+                ].items()
+            },
         }
     return body
 
@@ -408,6 +546,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         action="store_true",
         help="skip the vocabulary heads, which dominate the runtime",
     )
+    parser.add_argument(
+        "--forward-tokens",
+        type=int,
+        default=0,
+        help=(
+            "measure every contraction of a real Qwen3-8B forward pass at this "
+            "token count (0 skips it; 8000 is the mandatory prefill)"
+        ),
+    )
+    parser.add_argument(
+        "--row-tile",
+        type=int,
+        default=1024,
+        help="activation rows contracted per weight residency (default 1024)",
+    )
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     args = parser.parse_args(argv)
 
@@ -422,6 +575,17 @@ def main(argv: Sequence[str] | None = None) -> int:
             for index, case in enumerate(_vocabulary_cases())
         ]
     throughput = _throughput(backends.available_backends(), args.rows)
+    forward: dict[str, Any] = {}
+    if args.forward_tokens:
+        forward["decode_one_token"] = _forward_contractions(
+            backend, tokens=1, row_tile=1, contract=CONTRACT_BLOCKED
+        )
+        forward["prefill"] = _forward_contractions(
+            backend,
+            tokens=int(args.forward_tokens),
+            row_tile=int(args.row_tile),
+            contract=CONTRACT_BLOCKED,
+        )
 
     changed = sum(
         case.get("argmax", {}).get("bf16_logits", {}).get(
@@ -445,6 +609,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         "vocabulary_argmax_changes": changed,
         "throughput": throughput,
         "prefill_projection": _prefill_projection(throughput),
+        "measured_forward_contractions": forward,
         "disclosure": (
             "The two contracts are not equal.  Every difference above was "
             "measured by running both on the same operands in this process; "
@@ -454,10 +619,20 @@ def main(argv: Sequence[str] | None = None) -> int:
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_bytes(canonical_json(body))
-    print(f"wrote {args.output.relative_to(REPO)}")
+    try:
+        printable = args.output.resolve().relative_to(REPO)
+    except ValueError:
+        printable = args.output
+    print(f"wrote {printable}")
     print(f"  backend                  {backend.name} on {backend.device}")
     print(f"  blocked determinism      {body['determinism']['bit_identical']}")
     print(f"  vocabulary argmax changes {changed}")
+    for name, record in forward.items():
+        print(
+            f"  {name:<24} {record['seconds']:.3f} s  "
+            f"{record['gmac_per_second']:.1f} GMAC/s  "
+            f"{record['weight_stream_gigabytes_per_second']:.2f} GB/s of weights"
+        )
     for case in cases:
         out = case["output_bf16"]
         print(

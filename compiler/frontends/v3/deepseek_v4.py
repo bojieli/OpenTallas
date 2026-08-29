@@ -2299,7 +2299,7 @@ def export_deepseek_v4_kernel_graph(
                 iteration_domain={"rows": rows, "width": VOCABULARY},
                 attributes={**attrs, "operation": "reciprocal_temperature_product"},
             )
-            token = act(f"{node_id}.argmax", "i32", (rows,))
+            token = act(f"{node_id}.argmax", TOKEN_DTYPE, (rows,))
             emit(
                 f"{node_id}.select",
                 "ARGMAX",
@@ -2309,7 +2309,7 @@ def export_deepseek_v4_kernel_graph(
                 iteration_domain={"rows": rows, "width": VOCABULARY},
                 attributes={**attrs, "tie_rule": "lowest_token_id"},
             )
-            appended = act(source_outputs[0], "i32", (rows,))
+            appended = act(source_outputs[0], TOKEN_DTYPE, (rows,))
             emit(
                 f"{node_id}.append",
                 "TOKEN_APPEND",
@@ -2523,7 +2523,7 @@ def export_deepseek_v4_kernel_graph(
                     iteration_domain={"rows": 1, "width": VOCABULARY},
                     attributes={**attrs, "left_row_index": step_index},
                 )
-                token = act(f"{node_id}.step{step_index}.token", "i32", (1,))
+                token = act(f"{node_id}.step{step_index}.token", TOKEN_DTYPE, (1,))
                 emit(
                     f"{node_id}.step{step_index}.select",
                     "ARGMAX",
@@ -2534,7 +2534,7 @@ def export_deepseek_v4_kernel_graph(
                     attributes={**attrs, "tie_rule": "lowest_token_id"},
                 )
                 carried_next = act(
-                    f"{node_id}.step{step_index}.carried", "i32", (1,)
+                    f"{node_id}.step{step_index}.carried", TOKEN_DTYPE, (1,)
                 )
                 emit(
                     f"{node_id}.step{step_index}.append",

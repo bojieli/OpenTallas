@@ -1,0 +1,265 @@
+{
+  "acceptance": {
+    "checks": [
+      {
+        "antenna_violating_nets": 0.0,
+        "antenna_violating_pins": 0.0,
+        "drc_errors": 0.0,
+        "hold_violations": 0.0,
+        "hold_wns_ns": 0.474334,
+        "met": true,
+        "physically_clean": true,
+        "scope": "post-route, extracted parasitics",
+        "setup_violations": 0.0,
+        "setup_wns_ns": 2.2315,
+        "stage": "place_and_route",
+        "timing_met": true
+      }
+    ],
+    "criterion": "pass requires every timing-bearing stage that ran to meet setup and hold with zero violating paths; place-and-route additionally requires zero DRC and zero antenna violations",
+    "note": "status is the engineering result, not whether the script finished; see flow_completed for that",
+    "reason": "all evaluated stages met",
+    "status": "pass"
+  },
+  "campaign_id": "opentallas-abi3-physical-v1",
+  "completed_at": "2026-08-29T16:34:33.572867+00:00",
+  "corner": {
+    "liberty": [
+      {
+        "path": "/home/ubuntu/.local/opentallas-pdk-full/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib",
+        "sha256": "8e78e14442062dba34d414fca6490b2f6b96038d4510d1438ca44fee31487135",
+        "size_bytes": 12841637
+      }
+    ],
+    "name": "tt",
+    "process": "typical",
+    "temperature_c": 25.0,
+    "voltage_v": 1.8
+  },
+  "design": {
+    "block": "add_bf16_sram_engine",
+    "clock_port": "clk",
+    "description": "Memory-bound ADD_BF16 stream executor: command decode, RNE bf16 adder and ordered SRAM read/write control.  SRAM arrays are external, so the block maps to standard cells only.",
+    "false_path_from_ports": [
+      "rst_n"
+    ],
+    "parameters": {},
+    "sources": [
+      {
+        "path": "rtl/ot_ta_add_bf16_sram_engine.sv",
+        "sha256": "6ea266a72e66454f57f601a593b08d9af6e493b4589ba2c857df7f0cae51e373",
+        "size_bytes": 6686
+      },
+      {
+        "path": "rtl/ot_ta_command_decoder.sv",
+        "sha256": "181fa72b55c77c41a4cbf368a395afdb3f40d3beea94b245f019eaff4f460908",
+        "size_bytes": 11949
+      },
+      {
+        "path": "rtl/ot_bf16_add_rne.sv",
+        "sha256": "4ad5938dcd02ec99e08358067e0c755b45d82634642896d7e01fbe20a1cd7233",
+        "size_bytes": 7208
+      },
+      {
+        "path": "rtl/ot_ta_add_bf16_executor.sv",
+        "sha256": "609759d82677ee3e8d486157eb30c5aa3888c942b5aba3343154413a135b68ef",
+        "size_bytes": 8580
+      }
+    ],
+    "top": "ot_ta_add_bf16_sram_engine"
+  },
+  "elapsed_seconds": 556.209,
+  "expected_not_met": false,
+  "flow_completed": true,
+  "generated_at": "2026-08-29T16:25:17.363614+00:00",
+  "git": {
+    "commit": "b31854b34d18cbb56990129632ec697d5860530c",
+    "worktree_dirty": true
+  },
+  "place_and_route": {
+    "artifact_dir": "results/physical_abi3/sky130hd/add_bf16_sram_engine/pnr_artifacts",
+    "artifacts": {
+      "1_2_yosys.v": {
+        "retained": true,
+        "sha256": "b61f4be346becf99dc1f3c41631d3e4ce9988050c06e4e54c92ed8f9ce507470",
+        "size_bytes": 2257702
+      },
+      "5_route_drc.rpt": {
+        "retained": true,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "size_bytes": 0
+      },
+      "6_final.def": {
+        "retained": false,
+        "sha256": "b611ec2d90ccdec9b88eb6f973571a23108f7ac50f652b1aa890b6d404efe2c2",
+        "size_bytes": 15250429
+      },
+      "6_final.gds": {
+        "retained": false,
+        "sha256": "4840c42ca46d0eace95dc2e55a661d0957b9362881b236e0e98090cb0812310e",
+        "size_bytes": 16428370
+      },
+      "6_final.odb": {
+        "retained": false,
+        "sha256": "298d80bb045489bedeeee3d158320f2af467ddcef468668d98a97e7503c2dd70",
+        "size_bytes": 31635646
+      },
+      "6_final.spef": {
+        "retained": false,
+        "sha256": "db2468fd8d83d004c7fe3b97d5cb82e7c0f701fdad9761b85af52db0fd6b53d3",
+        "size_bytes": 13920122
+      },
+      "6_final.v": {
+        "retained": true,
+        "sha256": "1a4112cde95ed6b992ce830e1f07fc74d27007c1a32a2da527e26e9c778e7e7b",
+        "size_bytes": 1619593
+      },
+      "6_finish.rpt": {
+        "retained": true,
+        "sha256": "55a1606921a6f807f25b7ec67dfbf17594f15705dbea66e4fb12a82c3683ca63",
+        "size_bytes": 70404
+      },
+      "config.mk": {
+        "retained": true,
+        "sha256": "0ba2fc70ad295f7c0b1d89d980e32c88f2370e691dd9247c08c8c14734b099be",
+        "size_bytes": 755
+      },
+      "constraint.sdc": {
+        "retained": true,
+        "sha256": "b96144c2631c8b506a1de4558e1c34051f99c7ef6acc4db59ac1076d3dff7b0b",
+        "size_bytes": 377
+      },
+      "metadata.json": {
+        "retained": true,
+        "sha256": "17546556a8a432d57ee79210b9e8a3fa24f5c44371133ff8ef947400d773e280",
+        "size_bytes": 24487
+      }
+    },
+    "clock_period_ns": 28.0,
+    "core_utilization_percent": 35,
+    "design_nickname": "opentallas_add_bf16_sram_engine_sky130hd",
+    "metrics": {
+      "antenna_violating_nets": 0,
+      "antenna_violating_pins": 0,
+      "clock_count": 1,
+      "core_area_um2": 324261,
+      "die_area_um2": 330366,
+      "drc_errors": 0,
+      "flow_error_counts": {
+        "cts__flow__errors__count": 0,
+        "detailedplace__flow__errors__count": 0,
+        "detailedroute__flow__errors__count": 0,
+        "finish__flow__errors__count": 0,
+        "floorplan__flow__errors__count": 0,
+        "globalplace__flow__errors__count": 0,
+        "globalroute__flow__errors__count": 0,
+        "placeopt__flow__errors__count": 0,
+        "synth__flow__errors__count": 0
+      },
+      "fmax_hz": 38807100.0,
+      "hold_tns_ns": 0.0,
+      "hold_violations": 0,
+      "hold_wns_ns": 0.474334,
+      "instance_count": 48021,
+      "library_time_unit_ns": 1.0,
+      "macro_area_um2": 0,
+      "macro_count": 0,
+      "missing_metadata_keys": [],
+      "power_total_w": 0.0463223,
+      "raw_timing_library_units": {
+        "hold_tns_ns": 0,
+        "hold_wns_ns": 0.474334,
+        "setup_tns_ns": 0,
+        "setup_wns_ns": 2.2315
+      },
+      "routed_nets": 13956,
+      "routed_wirelength_um": 479089,
+      "sequential_area_um2": 38227.9,
+      "sequential_cell_count": 1526,
+      "setup_tns_ns": 0.0,
+      "setup_violations": 0,
+      "setup_wns_ns": 2.2315,
+      "standard_cell_area_um2": 134763,
+      "standard_cell_count": 16523,
+      "utilization_fraction": 0.4156,
+      "vias": 89091
+    },
+    "netlist_normalization": {
+      "normalized_netlist_sha256": "b61f4be346becf99dc1f3c41631d3e4ce9988050c06e4e54c92ed8f9ce507470",
+      "note": "declaration-attribute-only edit on the ORFS-synthesised gate netlist; no cell, net, port or connectivity change",
+      "raw_netlist_sha256": "b61f4be346becf99dc1f3c41631d3e4ce9988050c06e4e54c92ed8f9ce507470",
+      "signed_declarations_stripped": 0
+    },
+    "place_density": 0.6,
+    "platform": "sky130hd",
+    "platform_file_sha256": {
+      "config.mk": "1a36b8fbd58ee4b6b961bc14f3ca44e7b44a4ea47faf6f116f827eb5177509d5",
+      "lef/sky130_fd_sc_hd.tlef": "8e99b4e8b016db0713029ebcae6b2cc2aedd9c2c49682e2f23521dd0b1a2085e",
+      "lef/sky130_fd_sc_hd_merged.lef": "44180aaa0068b1fcb0789f128b090304c01ad48f511d3f7afa66c90b3e176ec5",
+      "lef/sky130io_fill.lef": "8c398d048875934de75cd3c0054b8049390c4d33afee84b9ca72b4acac58df83",
+      "lib/sky130_dummy_io.lib": "6b7589ec90fb90deffe4a79eb24e1f9bf127cf2238887101ee15e3dda25c6be2",
+      "lib/sky130_fd_sc_hd__tt_025C_1v80.lib": "ec0e1067a35c8bf20b11e58d1e8ac53326067e4dac84a125cc1b917a3518d0d9"
+    },
+    "sdc_clock_period_library_units": 28.0,
+    "toolchain": {
+      "binary_sha256": {
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad": "21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846",
+        "/OpenROAD-flow-scripts/tools/install/yosys/bin/yosys": "5cd52bc790d39b1e59a88112e9132ef8de338c2a26e4b0df8222d937e65bab92"
+      },
+      "image_id": "sha256:af971398d91e5d154ec40d3df26554efd8790107268a4c7f1e6bb8f222979d34",
+      "image_id_matches_archived_asap7_lock": true,
+      "image_reference": "openroad/orfs:latest",
+      "openroad_version": "26Q3-1510-g6cb3f2b704",
+      "repo_digests": [
+        "openroad/orfs@sha256:d995618be9f2bcdfa5538b885123463070dfbf178bea1818716d4652fe0fa380"
+      ],
+      "yosys_version": "Yosys 0.68+post (git sha1 UNKNOWN, Release, GNU /usr/local/bin/wrapped-cc/g++ 11.4.0)"
+    }
+  },
+  "purpose": "signoff_target",
+  "runner": {
+    "argv": [
+      "tools/run_abi3_physical.py",
+      "--view",
+      "sky130hd",
+      "--block",
+      "add_bf16_sram_engine",
+      "--clock-period-ns",
+      "28",
+      "--stages",
+      "pnr",
+      "--force",
+      "--purpose",
+      "signoff_target",
+      "--output",
+      "results/physical_abi3/sky130hd/add_bf16_sram_engine/pnr.json"
+    ],
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "schema_version": 1,
+  "stages_completed": [
+    "pnr"
+  ],
+  "stages_requested": [
+    "pnr"
+  ],
+  "status": "pass",
+  "target_clock_period_ns": 28.0,
+  "target_semantics": "the target clock period is the intended operating point",
+  "tools": {},
+  "view": {
+    "cell_library": "sky130_fd_sc_hd",
+    "description": "SkyWater SKY130 high-density standard cells; open manufacturable 130 nm foundry PDK.  Mature implementation view.",
+    "evidence_class": "mature open foundry PDK (manufacturable)",
+    "flows_supported": [
+      "synth",
+      "sta",
+      "pnr"
+    ],
+    "name": "sky130hd",
+    "node_nm": 130,
+    "pdk_lock": "configs/pdk/sky130_full_physical_lock.json",
+    "predictive": false
+  }
+}

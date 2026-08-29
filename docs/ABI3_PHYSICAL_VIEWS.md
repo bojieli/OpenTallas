@@ -271,7 +271,49 @@ at all.
 
 ### 5.3 Place-and-route
 
-<!-- PNR_RESULTS -->
+Full RTL-to-routed-layout through the pinned ORFS container. All four runs
+completed and **all four met timing with zero DRC errors and zero antenna
+violations** (`status: pass`).
+
+Placement and routing quality:
+
+| View | Block | Target | Std cells | Macros | Std-cell area (µm²) | Sequential area (µm²) | Die area (µm²) | Utilisation |
+|---|---|---|---|---|---|---|---|---|
+| `sky130hd` | `ot_reduction_endpoint` | 20 ns | 7 035 | 0 | 54 459.7 | 18 077.3 | 140 993.0 | 0.397 |
+| `sky130hd` | `ot_ta_add_bf16_sram_engine` | 28 ns | 16 523 | 0 | 134 763.0 | 38 227.9 | 330 366.0 | 0.416 |
+| `asap7` | `ot_reduction_endpoint` | 2.25 ns | 7 507 | 0 | 845.5 | 190.2 | 2 651.2 | 0.377 |
+| `asap7` | `ot_ta_add_bf16_sram_engine` | 4.4 ns | 17 617 | 0 | 2 008.3 | 578.5 | 5 844.0 | 0.385 |
+
+Routing, post-route timing and violations:
+
+| View | Block | Routed wire length | Vias | Routed nets | DRC | Antenna nets | Antenna pins | Setup WNS | Hold WNS | Fmax | Power | Status |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| `sky130hd` | `ot_reduction_endpoint` | 174 411 µm | 39 744 | 5 678 | **0** | **0** | **0** | +5.0836 ns | +0.4595 ns | 67.04 MHz | 22.9 mW | `pass` |
+| `sky130hd` | `ot_ta_add_bf16_sram_engine` | 479 089 µm | 89 091 | 13 956 | **0** | **0** | **0** | +2.2315 ns | +0.4743 ns | 38.81 MHz | 46.3 mW | `pass` |
+| `asap7` | `ot_reduction_endpoint` | 22 184 µm | 61 473 | 7 546 | **0** | **0** | **0** | +0.0535 ns | +0.0558 ns | 455.26 MHz | 25.8 mW | `pass` |
+| `asap7` | `ot_ta_add_bf16_sram_engine` | 64 571 µm | 139 656 | 18 698 | **0** | **0** | **0** | +0.2175 ns | +0.0565 ns | 239.09 MHz | 31.2 mW | `pass` |
+
+Post-route Fmax is *higher* than the pre-layout figure in §5.1 for the SKY130
+runs (67.04 vs 57.08 MHz for the reduction endpoint; 38.81 vs 37.74 MHz for the
+bf16 engine). That is not an inconsistency: ORFS performs timing-driven
+resizing, buffering and clock-tree synthesis that the plain local
+Yosys/ABC mapping does not, and it reads a different liberty file (§3.3).
+The local synthesis+STA lane is the cheaper screen; the ORFS lane is the
+stronger result.
+
+ORFS reports slack in the SDC's own time unit — nanoseconds for `sky130hd` but
+**picoseconds** for `asap7`. The driver converts to nanoseconds and retains the
+raw values under `metrics.raw_timing_library_units`.
+
+**DRC counts here come from the detailed router's own rule checks, not from a
+foundry signoff deck.** Zero DRC in this table means the router believes it
+routed legally; it is not a signoff DRC clean.
+
+Retained artifacts per run are in `<output>_artifacts/` next to each
+`pnr.json`: `config.mk`, `constraint.sdc`, `metadata.json`, `1_2_yosys.v`,
+`6_final.v`, `6_finish.rpt`, `5_route_drc.rpt`. The heavy outputs
+(`6_final.def`, `.gds`, `.odb`, `.spef`) are hashed and recorded but not
+retained by default; `--keep-heavy-artifacts` retains them.
 
 ---
 
@@ -282,11 +324,36 @@ at all.
 `tools/run_asap7_physical.py` and locked by
 `configs/pdk/asap7_physical_lock.json`.
 
-**These results are reproducible now.** The ORFS image pulled for this work has
-image ID `sha256:af971398d91e…`, which is exactly the `image_id` recorded in
-`configs/pdk/asap7_physical_lock.json`. The ASAP7 platform files inside it
-still hash to the values that lock records — verified for all five RVT TT NLDM
-liberty objects during extraction, all matching.
+**These results are reproducible now, and one of the three cases was actually
+reproduced bit-for-bit.**
+
+The ORFS image pulled for this work has image ID `sha256:af971398d91e…`, which
+is exactly the `image_id` recorded in `configs/pdk/asap7_physical_lock.json`.
+The ASAP7 platform files inside it still hash to the values that lock records —
+verified for all five RVT TT NLDM liberty objects during extraction, all
+matching.
+
+Beyond that identity argument, the `asap7` / `reduction_s8_g2` place-and-route
+run performed here — driven by the *new* `tools/run_abi3_physical.py`, with its
+own config and SDC — landed on **numerically identical** results to the
+archived `reduction_s8_g2_tc` case:
+
+| Metric | This flow | Archived campaign |
+|---|---|---|
+| Routed wire length | 22 184 µm | 22 184 µm |
+| Vias | 61 473 | 61 473 |
+| DRC errors | 0 | 0 |
+| Antenna violating nets / pins | 0 / 0 | 0 / 0 |
+| Fmax | 455 262 000 Hz | 455 262 000 Hz |
+| Setup WNS | 53.4617 ps | 53.4617 ps |
+| Core / die area | 2 240.22 / 2 651.22 µm² | 2 240.22 / 2 651.22 µm² |
+| Standard-cell area | 845.509 µm² | 845.509 µm² |
+| Utilisation | 0.377423 | 0.377423 |
+| **`6_final.v` sha256** | `ed82979b637ef255…` | `ed82979b637ef255…` |
+
+The final routed netlist is **byte-identical**. The archived ASAP7 campaign is
+therefore not merely reproducible in principle; its routed result was
+regenerated exactly on this machine.
 
 Two qualifications, stated precisely:
 
@@ -297,19 +364,20 @@ Two qualifications, stated precisely:
    digest (image ID) matches exactly, which is the identity that determines
    tool behaviour. The tag `latest` is mutable, so a future pull may not yield
    this image — the image ID, not the tag, is what must be checked.
-2. **The archived campaign itself was not re-executed.** This work established
-   a new flow and proved it on `ot_reduction_endpoint` and
-   `ot_ta_add_bf16_sram_engine`; it did not re-run
-   `tools/run_asap7_physical.py` over its three cases. The claim above is that
-   the toolchain and PDK inputs are byte-identical, not that a re-run was
-   performed and compared.
+2. **Only one of the three archived cases was reproduced.**
+   `reduction_s8_g2_tc` was matched byte-for-byte as shown above. The other two
+   cases, `numeric_e1_l16_tc` and `numeric_e4_l16_tc`, were **not run**.
+   `tools/run_asap7_physical.py` itself was not re-executed, so the archived
+   campaign's formal equivalence checking and unconstrained-endpoint audit were
+   not re-run either — this flow does not perform those checks at all.
 
-Note that `results/asap7_physical/reduction_s8_g2_tc` and the `asap7`
-`reduction_s8_g2` results here are the **same RTL block at the same target
-period (2.25 ns)** but are *not* the same experiment: the archived campaign ran
-formal equivalence checking and an unconstrained-endpoint audit that this flow
-does not, and the two use different synthesis front ends (ORFS's own Yosys
-versus the pinned host Yosys) for the synthesis/STA lane.
+The two are the same RTL block at the same target period (2.25 ns) and, for the
+place-and-route lane, the same computation — hence the identical netlist hash.
+They are still not the same *campaign*: the archived one additionally ran formal
+equivalence checking and an unconstrained-endpoint audit that this flow does
+not. The separate synthesis+STA lane here also uses a different front end (the
+pinned host Yosys rather than ORFS's own), which is why §5.1's pre-layout
+numbers differ from §5.3's post-route numbers.
 
 ---
 
@@ -368,26 +436,46 @@ python3 tools/run_abi3_physical.py --view asap7 --block add_bf16_sram_engine \
     --output results/physical_abi3/asap7/add_bf16_sram_engine/synth_sta.json
 ```
 
-SKY130 corner sweep:
+(The four commands above each add `--purpose signoff_target`, since their target
+period is the intended operating point.)
+
+SKY130 corner sweep. The two slow corners are known not to close at 20 ns and
+are marked as deliberate characterisation:
 
 ```
-for c in tt ss ff ss_lv; do
+for c in tt ff; do
   python3 tools/run_abi3_physical.py --view sky130hd --block reduction_s8_g2 \
       --corner $c --clock-period-ns 20 --stages synth,sta --fmax-search \
+      --purpose characterization \
+      --output results/physical_abi3/sky130hd/reduction_s8_g2/corner_$c.json
+done
+
+for c in ss ss_lv; do
+  python3 tools/run_abi3_physical.py --view sky130hd --block reduction_s8_g2 \
+      --corner $c --clock-period-ns 20 --stages synth,sta --fmax-search \
+      --purpose characterization --expected-not-met \
       --output results/physical_abi3/sky130hd/reduction_s8_g2/corner_$c.json
 done
 ```
 
-Full place-and-route:
+Full place-and-route, all four runs (each takes roughly 5-15 minutes):
 
 ```
 python3 tools/run_abi3_physical.py --view sky130hd --block reduction_s8_g2 \
-    --clock-period-ns 20 --stages pnr \
+    --clock-period-ns 20 --stages pnr --purpose signoff_target \
     --output results/physical_abi3/sky130hd/reduction_s8_g2/pnr.json
 
+python3 tools/run_abi3_physical.py --view sky130hd --block add_bf16_sram_engine \
+    --clock-period-ns 28 --stages pnr --purpose signoff_target \
+    --output results/physical_abi3/sky130hd/add_bf16_sram_engine/pnr.json
+
 python3 tools/run_abi3_physical.py --view asap7 --block reduction_s8_g2 \
-    --clock-period-ns 2.25 --stages pnr \
+    --clock-period-ns 2.25 --stages pnr --purpose signoff_target \
     --output results/physical_abi3/asap7/reduction_s8_g2/pnr.json
+
+python3 tools/run_abi3_physical.py --view asap7 --block add_bf16_sram_engine \
+    --clock-period-ns 4.4 --stages pnr --purpose signoff_target \
+    --output results/physical_abi3/asap7/add_bf16_sram_engine/pnr.json
 ```
 
 An RTL top not in the built-in registry — for the ABI 3.0 blocks landing in

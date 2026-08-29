@@ -111,10 +111,11 @@ def check_deployment(
     tensors = {t.tensor_id: t for t in graph.tensors}
     bands = _reconstruct_bands(graph, tensors)
     expected_groups = _reconstruct_weight_groups(graph, tensors, bands)
+    first_iteration = {
+        b["layers"][offset] for b in bands for offset in range(b["period"])
+    }
     representative = {
-        k.index
-        for k in graph.kernels
-        if k.layer is None or any(k.layer == b["first_layer"] for b in bands)
+        k.index for k in graph.kernels if k.layer is None or k.layer in first_iteration
     }
     emitted_kernels = {k for k in representative if graph.kernels[k].kind not in _TRANSACTION_KINDS}
 
@@ -262,7 +263,7 @@ def check_deployment(
         f"kernels and {prologue} prologue kernels; the compact-control-flow "
         f"bound is {ceiling}",
     )
-    total_layers = sum(b["layer_count"] for b in bands)
+    total_layers = sum(b["layer_count"] * b["period"] for b in bands)
     require(
         "instructions_independent_of_depth",
         len(instructions) <= ceiling,
@@ -508,7 +509,13 @@ def _signature(
 def _reconstruct_bands(
     graph: KernelGraph, tensors: Mapping[str, Tensor]
 ) -> list[dict[str, Any]]:
-    """Independently recompute the layer bands from kernel structure."""
+    """Independently recompute the layer bands from kernel structure.
+
+    A band is a repeating block of ``period`` layers.  The search here is
+    written the other way round from the planner's -- it grows the period until
+    the signature sequence repeats, rather than testing candidate periods -- so
+    that agreement between the two is evidence rather than a shared bug.
+    """
     produced = {n: k.index for k in graph.kernels for n in k.outputs}
     by_layer: dict[int, list[Kernel]] = {}
     for kernel in graph.kernels:
@@ -517,64 +524,98 @@ def _reconstruct_bands(
     if not by_layer:
         return []
     layers = sorted(by_layer)
-    signatures = {l: _signature(by_layer[l], tensors, produced) for l in layers}
-
-    runs: list[list[int]] = []
-    for layer in layers:
-        if runs and signatures[layer] == signatures[runs[-1][-1]] and layer == runs[-1][-1] + 1:
-            runs[-1].append(layer)
-        else:
-            runs.append([layer])
+    signatures = [_signature(by_layer[l], tensors, produced) for l in layers]
 
     bands: list[dict[str, Any]] = []
-    for run in runs:
-        if len(run) > 1 and not _uniform(run, by_layer, tensors):
-            for layer in run:
-                bands.append(
-                    {
-                        "first_layer": layer,
-                        "layer_count": 1,
-                        "layers": [layer],
-                        "body": list(by_layer[layer]),
-                    }
-                )
+    cursor = 0
+    while cursor < len(layers):
+        best_period, best_iterations = 1, 1
+        for period in range(1, min(_MAX_PERIOD, len(layers) - cursor) + 1):
+            iterations = 1
+            while True:
+                start = cursor + iterations * period
+                if start + period > len(layers):
+                    break
+                if any(
+                    signatures[start + offset] != signatures[cursor + offset]
+                    or layers[start + offset] != layers[cursor + offset] + iterations * period
+                    for offset in range(period)
+                ):
+                    break
+                iterations += 1
+            while iterations >= 2 and not _uniform(
+                by_layer, layers, cursor, period, iterations, tensors
+            ):
+                iterations -= 1
+            if iterations >= 2 and period * iterations > best_period * best_iterations:
+                best_period, best_iterations = period, iterations
+        if best_iterations < 2:
+            bands.append(
+                {
+                    "first_layer": layers[cursor],
+                    "layer_count": 1,
+                    "period": 1,
+                    "layers": [layers[cursor]],
+                    "body": list(by_layer[layers[cursor]]),
+                }
+            )
+            cursor += 1
             continue
+        covered = layers[cursor : cursor + best_period * best_iterations]
+        body: list[Kernel] = []
+        for layer in covered[:best_period]:
+            body.extend(by_layer[layer])
         bands.append(
             {
-                "first_layer": run[0],
-                "layer_count": len(run),
-                "layers": list(run),
-                "body": list(by_layer[run[0]]),
+                "first_layer": covered[0],
+                "layer_count": best_iterations,
+                "period": best_period,
+                "layers": covered,
+                "body": body,
             }
         )
+        cursor += best_period * best_iterations
     return bands
 
 
+#: Must match the planner's bound; a disagreement here is itself a finding.
+_MAX_PERIOD = 8
+
+
 def _uniform(
-    run: Sequence[int],
     by_layer: Mapping[int, Sequence[Kernel]],
+    layers: Sequence[int],
+    cursor: int,
+    period: int,
+    iterations: int,
     tensors: Mapping[str, Tensor],
 ) -> bool:
-    body = by_layer[run[0]]
-    if any(len(by_layer[l]) != len(body) for l in run):
+    blocks = []
+    for iteration in range(iterations):
+        block: list[Kernel] = []
+        for offset in range(period):
+            block.extend(by_layer[layers[cursor + iteration * period + offset]])
+        blocks.append(block)
+    body = blocks[0]
+    if any(len(block) != len(body) for block in blocks):
         return False
     for position, kernel in enumerate(body):
         for slot, name in enumerate(kernel.inputs):
             if tensors[name].role not in {"weight", "constant"}:
                 continue
             names, extents = [], set()
-            for layer in run:
-                peer = by_layer[layer][position]
+            for block in blocks:
+                peer = block[position]
                 if slot >= len(peer.inputs):
                     return False
                 member = tensors[peer.inputs[slot]]
                 if member.binding is None:
                     return False
                 names.append(peer.inputs[slot])
-                extents.add(member.binding.bytes)
+                extents.add((member.binding.bytes, member.dtype))
             if len(set(names)) == 1:
                 continue
-            if len(set(names)) != len(run) or len(extents) != 1:
+            if len(set(names)) != iterations or len(extents) != 1:
                 return False
     return True
 
@@ -595,14 +636,24 @@ def _reconstruct_weight_groups(
     groups: dict[str, list[tuple[str, int, int, str]]] = {}
     claimed: set[str] = set()
     for band in bands:
+        period = band["period"]
+        blocks = []
+        for iteration in range(band["layer_count"]):
+            block: list[Kernel] = []
+            for offset in range(period):
+                block.extend(by_layer[band["layers"][iteration * period + offset]])
+            blocks.append(block)
         for position, kernel in enumerate(band["body"]):
             for slot, name in enumerate(kernel.inputs):
                 tensor = tensors[name]
                 if tensor.role not in {"weight", "constant"} or tensor.binding is None:
                     continue
                 members: list[str] = []
-                for layer in band["layers"]:
-                    peer = by_layer[layer][position]
+                for block in blocks:
+                    if position >= len(block):
+                        members = []
+                        break
+                    peer = block[position]
                     if slot >= len(peer.inputs):
                         members = []
                         break

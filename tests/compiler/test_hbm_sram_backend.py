@@ -399,6 +399,91 @@ def moe_graph(
     )
 
 
+def alternating_graph(*, pairs: int = 4, hidden: int = 256, span_max: int = 512):
+    """A stack that alternates two layer structures, as a sparse/dense model does."""
+    ck = _Checkpoint(1)
+    tensors: list[Tensor] = []
+    kernels: list[Kernel] = []
+
+    def weight(name, shape):
+        elements = 1
+        for dim in shape:
+            elements *= dim
+        tensors.append(
+            Tensor(name, "bf16", shape, "weight", binding=ck.bind(name, elements))
+        )
+
+    def act(name, shape, dtype="bf16", role="activation"):
+        tensors.append(Tensor(name, dtype, shape, role))
+
+    def emit(kind, ins, outs, contract, **kw):
+        kernels.append(
+            Kernel(
+                index=len(kernels),
+                kernel_id=f"k{len(kernels):04d}.{kind.lower()}",
+                kind=kind,
+                inputs=tuple(ins),
+                outputs=tuple(outs),
+                numeric_contract=contract,
+                **kw,
+            )
+        )
+
+    act("tokens", (SPAN, 1), "u32", role="input")
+    weight("embed", (512, hidden))
+    act("hidden0", (SPAN, hidden))
+    emit("EMBEDDING_LOOKUP", ["tokens", "embed"], ["hidden0"],
+         "lookup_bf16_token_embedding_v1")
+    previous = "hidden0"
+    for index in range(2 * pairs):
+        p = f"l{index}"
+        weight(f"{p}.norm", (hidden,))
+        weight(f"{p}.w", (hidden, hidden))
+        act(f"{p}.n", (SPAN, hidden))
+        act(f"{p}.y", (SPAN, hidden))
+        act(f"{p}.res", (SPAN, hidden))
+        layer = {"layer": index}
+        emit("RMS_NORM", [previous, f"{p}.norm"], [f"{p}.n"],
+             "qwen3_rmsnorm_fp32_bf16_v1", **layer)
+        emit("MATMUL", [f"{p}.n", f"{p}.w"], [f"{p}.y"],
+             "bf16_bf16_fp32_sequential_rne_v1", **layer)
+        if index % 2 == 1:
+            # the odd layers carry one extra elementwise stage
+            act(f"{p}.y2", (SPAN, hidden))
+            emit("SILU_MUL", [f"{p}.y", f"{p}.n"], [f"{p}.y2"],
+                 "qwen3_silu_mul_bf16_v1", **layer)
+            emit("ADD", [previous, f"{p}.y2"], [f"{p}.res"], "bf16_add_rne_v1", **layer)
+        else:
+            emit("ADD", [previous, f"{p}.y"], [f"{p}.res"], "bf16_add_rne_v1", **layer)
+        previous = f"{p}.res"
+    act("logits", (1, 512))
+    act("token", (1, 1), "u32")
+    act("out", (1, 1), "u32", role="output")
+    weight("index", (1, 1))
+    weight("lm_head", (hidden, 512))
+    act("last", (1, hidden))
+    emit("LAST_TOKEN_SELECT", [previous, "index"], ["last"],
+         "lookup_bf16_token_embedding_v1")
+    emit("VOCAB_PROJECT", ["last", "lm_head"], ["logits"],
+         "lm_head_bf16_vocabulary_projection_v1")
+    emit("ARGMAX", ["logits"], ["token"], "greedy_lowest_token_id_argmax_v1")
+    emit("TOKEN_APPEND", ["token"], ["out"], "exact_token_append_eos_v1")
+    return KernelGraph(
+        model_id=f"synthetic-alternating-{pairs}",
+        source={"family": "alternating"},
+        symbols=(RuntimeSymbol("span_tokens", 1, span_max, 1),),
+        tensors=tuple(tensors),
+        states=(),
+        kernels=tuple(kernels),
+        entrypoints=(
+            Entrypoint("prefill", ("tokens",), ("out",), ()),
+            Entrypoint("decode", ("tokens",), ("out",), ()),
+        ),
+        generation_policy={"eos_token_ids": [511], "max_new_tokens": 8,
+                           "vocabulary_size": 512},
+    )
+
+
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -471,6 +556,7 @@ def test_plan_bands_the_layers(dense, single_chip):
     assert plan.to_dict()["schema"] == PLAN_SCHEMA
     assert len(plan.bands) == 1
     assert plan.bands[0].layer_count == 4
+    assert plan.bands[0].period == 1
     assert not plan.bands[0].degraded
     assert plan.proofs["sram_fits"]
     assert plan.proofs["hbm_fits"]
@@ -650,6 +736,24 @@ def test_symbolic_token_extents_are_bound(dense, single_chip):
         )
     ]
     assert symbol_views, "at least one view must be a function of a runtime symbol"
+
+
+def test_alternating_layer_structures_band_with_period_two(single_chip):
+    """A model that alternates two layer forms compresses without reordering.
+
+    Two interleaved single-layer bands would run every even layer before every
+    odd one and break the residual chain, so the repeating unit has to be the
+    *pair*.
+    """
+    graph = alternating_graph(pairs=4)
+    plan = build_plan(graph, single_chip)
+    assert [b.period for b in plan.bands] == [2]
+    assert plan.bands[0].layer_count == 4
+    assert plan.proofs["layers_covered"] == 8
+    deployment = lower_to_abi3(graph, single_chip)
+    report = require_admitted(deployment, single_chip)
+    assert report.instruction_count < 120
+    assert check_deployment(graph, deployment, single_chip)["ok"]
 
 
 # ---------------------------------------------------------------------------

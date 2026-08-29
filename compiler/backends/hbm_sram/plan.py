@@ -959,7 +959,10 @@ def weight_roles(
     roles: list[tuple[str, tuple[str, ...]]] = []
     claimed: set[str] = set()
     for band in bands:
-        layers = [band.first_layer + i for i in range(band.layer_count)]
+        blocks = [
+            _block_kernels(by_layer, band.first_layer + i * band.period, band.period)
+            for i in range(band.layer_count)
+        ]
         body = [by_index[i] for i in band.body_kernels]
         for position, kernel in enumerate(body):
             for slot, name in enumerate(kernel.inputs):
@@ -967,8 +970,11 @@ def weight_roles(
                 if tensor.role not in {"weight", "constant"} or tensor.binding is None:
                     continue
                 members: list[str] = []
-                for layer in layers:
-                    peer = by_layer[layer][position]
+                for block in blocks:
+                    if position >= len(block):
+                        members = []
+                        break
+                    peer = block[position]
                     if slot >= len(peer.inputs):
                         members = []
                         break
@@ -1176,20 +1182,31 @@ def _layer_signature(
     return ";".join(parts)
 
 
+def _block_kernels(
+    by_layer: Mapping[int, Sequence[Kernel]], first: int, period: int
+) -> list[Kernel]:
+    """The kernels of one iteration: ``period`` consecutive layers, in order."""
+    body: list[Kernel] = []
+    for offset in range(period):
+        body.extend(by_layer.get(first + offset, ()))
+    return body
+
+
 def _build_bands(
     graph: KernelGraph, tensors: Mapping[str, Tensor]
 ) -> tuple[tuple[LayerBand, ...], list[str]]:
-    """Fold structurally identical, uniformly sized layers into bands.
+    """Fold repeating blocks of layers into bands.
 
-    Two conditions make a run of layers one band:
+    A band is the largest run of layers that repeats with some period: the same
+    kernel sequence modulo the layer index, and the same weight extents at every
+    operand, so the role object built in :func:`_place_weights` has a constant
+    stride.  Period one is the ordinary homogeneous stack; period two is a model
+    that alternates two attention forms.  Searching for a period rather than for
+    a run of identical layers is what keeps such a model compressed *without*
+    reordering it -- two interleaved single-layer bands would run every even
+    layer before every odd one and break the residual chain.
 
-    * their kernel sequences are identical modulo the layer index -- same
-      kinds, same numeric contracts, same operand classes, same phases and the
-      same state effects, in the same order; and
-    * for every weight operand, every layer's payload has the same byte extent,
-      so the role object built in :func:`_place_weights` has a constant stride.
-
-    A run that fails either test is emitted one layer per band.  That is a
+    A run that admits no period is emitted one layer per band.  That is a
     correctness-preserving fallback, not a workaround: it is reported in the
     plan's warnings and shows up immediately as a larger instruction count.
     """
@@ -1213,95 +1230,160 @@ def _build_bands(
                 f"layer {layer} kernels are not a contiguous index block; the "
                 "emitted body follows kernel order within the layer"
             )
+    if layers != list(range(layers[0], layers[0] + len(layers))):
+        warnings.append("layer indices are not contiguous; bands stop at each gap")
 
     signatures = {
         layer: _layer_signature(by_layer[layer], tensors, producer) for layer in layers
     }
 
-    runs: list[list[int]] = []
-    for layer in layers:
-        if (
-            runs
-            and signatures[layer] == signatures[runs[-1][-1]]
-            and layer == runs[-1][-1] + 1
-        ):
-            runs[-1].append(layer)
-        else:
-            runs.append([layer])
-
     bands: list[LayerBand] = []
-    for run in runs:
-        uniform, reason = _uniform_weight_extents(run, by_layer, tensors)
-        if uniform or len(run) == 1:
+    cursor = 0
+    while cursor < len(layers):
+        first = layers[cursor]
+        period, iterations = _longest_period(
+            layers, cursor, signatures, by_layer, tensors
+        )
+        covered = period * iterations
+        if iterations > 1:
             bands.append(
                 LayerBand(
                     band_id=len(bands),
-                    first_layer=run[0],
-                    layer_count=len(run),
-                    signature=signatures[run[0]],
-                    body_kernels=tuple(k.index for k in by_layer[run[0]]),
+                    first_layer=first,
+                    layer_count=iterations,
+                    period=period,
+                    signature=";".join(
+                        signatures[first + offset] for offset in range(period)
+                    ),
+                    body_kernels=tuple(
+                        k.index for k in _block_kernels(by_layer, first, period)
+                    ),
                     degraded=False,
                 )
             )
-            continue
-        warnings.append(
-            f"layers {run[0]}..{run[-1]} share a structure but not a uniform "
-            f"weight extent ({reason}); they are emitted one layer per band"
-        )
-        for layer in run:
-            bands.append(
-                LayerBand(
-                    band_id=len(bands),
-                    first_layer=layer,
-                    layer_count=1,
-                    signature=signatures[layer],
-                    body_kernels=tuple(k.index for k in by_layer[layer]),
-                    degraded=True,
-                    reason=reason,
+        else:
+            for offset in range(max(covered, 1)):
+                layer = first + offset
+                bands.append(
+                    LayerBand(
+                        band_id=len(bands),
+                        first_layer=layer,
+                        layer_count=1,
+                        period=1,
+                        signature=signatures[layer],
+                        body_kernels=tuple(k.index for k in by_layer[layer]),
+                        degraded=True,
+                        reason="no repeating block starts at this layer",
+                    )
                 )
-            )
+        cursor += max(covered, 1)
     return tuple(bands), warnings
 
 
+#: The largest repeating block the planner will look for.  A period beyond this
+#: is more likely a structural irregularity than a design, and searching further
+#: costs more than the compression it could win.
+MAX_BAND_PERIOD = 8
+
+
+def _longest_period(
+    layers: Sequence[int],
+    cursor: int,
+    signatures: Mapping[int, str],
+    by_layer: Mapping[int, Sequence[Kernel]],
+    tensors: Mapping[str, Tensor],
+) -> tuple[int, int]:
+    """Return ``(period, iterations)`` for the band starting at ``layers[cursor]``."""
+    first = layers[cursor]
+    remaining = len(layers) - cursor
+    best = (1, 1)
+    for period in range(1, min(MAX_BAND_PERIOD, remaining) + 1):
+        if any(first + offset not in signatures for offset in range(period)):
+            break
+        iterations = 1
+        while (period * (iterations + 1)) <= remaining and _block_matches(
+            first, period, iterations, layers, cursor, signatures
+        ):
+            iterations += 1
+        if iterations < 2:
+            continue
+        uniform, reason = _uniform_weight_extents(
+            first, period, iterations, by_layer, tensors
+        )
+        while not uniform and iterations > 1:
+            iterations -= 1
+            if iterations < 2:
+                break
+            uniform, reason = _uniform_weight_extents(
+                first, period, iterations, by_layer, tensors
+            )
+        if iterations >= 2 and period * iterations > best[0] * best[1]:
+            best = (period, iterations)
+    return best
+
+
+def _block_matches(
+    first: int,
+    period: int,
+    iteration: int,
+    layers: Sequence[int],
+    cursor: int,
+    signatures: Mapping[int, str],
+) -> bool:
+    for offset in range(period):
+        position = cursor + iteration * period + offset
+        if position >= len(layers):
+            return False
+        layer = layers[position]
+        if layer != first + iteration * period + offset:
+            return False
+        if signatures.get(layer) != signatures[first + offset]:
+            return False
+    return True
+
+
 def _uniform_weight_extents(
-    run: Sequence[int],
+    first: int,
+    period: int,
+    iterations: int,
     by_layer: Mapping[int, Sequence[Kernel]],
     tensors: Mapping[str, Tensor],
 ) -> tuple[bool, str]:
-    """Every layer's payload for a given weight role must have one byte extent."""
-    if len(run) < 2:
+    """Every iteration's payload for a weight role must have one byte extent."""
+    if iterations < 2:
         return True, ""
-    body = by_layer[run[0]]
+    blocks = [
+        _block_kernels(by_layer, first + i * period, period) for i in range(iterations)
+    ]
+    body = blocks[0]
+    if any(len(block) != len(body) for block in blocks):
+        return False, "iterations declare different kernel counts"
     for position, kernel in enumerate(body):
-        if any(len(by_layer[layer]) != len(body) for layer in run):
-            return False, "layers declare different kernel counts"
         for slot, name in enumerate(kernel.inputs):
             tensor = tensors[name]
             if tensor.role not in {"weight", "constant"}:
                 continue
             if tensor.binding is None:
                 return False, f"operand {position}.{slot} has no checkpoint binding"
-            extents: set[tuple[int, str, tuple[Any, ...]]] = set()
+            extents: set[tuple[int, str]] = set()
             seen: set[str] = set()
-            for layer in run:
-                peer = by_layer[layer][position]
+            for block in blocks:
+                peer = block[position]
                 if slot >= len(peer.inputs):
-                    return False, f"operand {position}.{slot} is missing in layer {layer}"
+                    return False, f"operand {position}.{slot} is missing in a block"
                 member = tensors[peer.inputs[slot]]
                 if member.binding is None:
                     return False, (
-                        f"operand {position}.{slot} of layer {layer} has no "
+                        f"operand {position}.{slot} of a later block has no "
                         "checkpoint binding"
                     )
                 seen.add(peer.inputs[slot])
-                extents.add(
-                    (member.binding.bytes, member.dtype, tuple(map(str, member.shape)))
-                )
+                extents.add((member.binding.bytes, member.dtype))
             if len(seen) == 1:
-                continue  # one tensor shared by every layer: stride zero
-            if len(seen) != len(run):
+                continue  # one tensor shared by every iteration: stride zero
+            if len(seen) != iterations:
                 return False, (
-                    f"operand {position}.{slot} is shared by some layers and "
+                    f"operand {position}.{slot} is shared by some iterations and "
                     "private to others"
                 )
             if len(extents) != 1:
@@ -1324,16 +1406,21 @@ def _emission_order(
     for kernel in graph.kernels:
         if kernel.layer is not None:
             by_layer.setdefault(kernel.layer, []).append(kernel)
-    # Every layer's kernels get the body position of their band's body, so a
-    # tensor produced at position p of layer L and consumed at position q of
-    # layer L+1 resolves to the same buffer -- which is exactly what makes the
+    # Every iteration's kernels get the body position of their band's body, so a
+    # tensor produced at position p of one iteration and consumed at position q
+    # of the next resolves to the same buffer -- which is exactly what makes the
     # residual stream legal across a layer-loop iteration.
+    for band in bands:
+        band_layers[band.band_id] = set(band.layers)
+        for iteration in range(band.layer_count):
+            position = 0
+            for layer in band.iteration_layers(iteration):
+                for kernel in by_layer.get(layer, ()):
+                    body_position[kernel.index] = position
+                    position += 1
     for layer, kernels in by_layer.items():
         for position, kernel in enumerate(kernels):
-            body_position[kernel.index] = position
-    for band in bands:
-        layers = set(range(band.first_layer, band.first_layer + band.layer_count))
-        band_layers[band.band_id] = layers
+            body_position.setdefault(kernel.index, position)
     layer_to_band = {
         layer: band.band_id for band in bands for layer in band_layers[band.band_id]
     }
@@ -1349,8 +1436,6 @@ def _emission_order(
         if band_id in emitted_bands:
             continue
         band = bands[band_id]
-        if kernel.layer != band.first_layer:
-            continue
         if kernel.index == band.body_kernels[0]:
             units.append(EmissionUnit("band", band_id))
             emitted_bands.add(band_id)
@@ -1549,16 +1634,20 @@ def _place_states(
     resources = {s.state_id: s for s in graph.states}
     by_index = {k.index: k for k in graph.kernels}
 
-    # Which states does each layer of each band touch, in kernel order?
-    band_states: dict[int, dict[int, list[str]]] = {}
+    # Which states does each *iteration* of each band touch, in kernel order?
+    by_layer: dict[int, list[Kernel]] = {}
     for kernel in graph.kernels:
-        band_id = band_of_kernel.get(kernel.index)
-        if band_id is None or kernel.layer is None:
-            continue
-        seen = band_states.setdefault(band_id, {}).setdefault(kernel.layer, [])
-        for name in (*kernel.state_reads, *kernel.state_writes):
-            if name not in seen:
-                seen.append(name)
+        if kernel.layer is not None:
+            by_layer.setdefault(kernel.layer, []).append(kernel)
+    band_states: dict[int, dict[int, list[str]]] = {}
+    for band in bands:
+        for iteration in range(band.layer_count):
+            seen = band_states.setdefault(band.band_id, {}).setdefault(iteration, [])
+            for layer in band.iteration_layers(iteration):
+                for kernel in by_layer.get(layer, ()):
+                    for name in (*kernel.state_reads, *kernel.state_writes):
+                        if name not in seen:
+                            seen.append(name)
 
     placements: list[StatePlacement] = []
     state_of_resource: dict[str, list[Any]] = {}
@@ -1566,12 +1655,12 @@ def _place_states(
 
     for band in bands:
         layer_map = band_states.get(band.band_id, {})
-        layers = [band.first_layer + i for i in range(band.layer_count)]
-        role_count = max((len(layer_map.get(l, [])) for l in layers), default=0)
+        iterations = list(range(band.layer_count))
+        role_count = max((len(layer_map.get(i, [])) for i in iterations), default=0)
         for role in range(role_count):
             members: list[str] = []
-            for layer in layers:
-                names = layer_map.get(layer, [])
+            for iteration in iterations:
+                names = layer_map.get(iteration, [])
                 if role < len(names):
                     members.append(names[role])
             if not members:
@@ -1900,7 +1989,11 @@ def _plan_kernels(
     warnings: list[str] = []
     placement_by_tensor = {p.tensor_id: p for p in placements}
     plans: list[KernelPlan] = []
-    emitted_layers = {band.first_layer for band in bands}
+    # The emitted body is the *first iteration* of each band, which spans the
+    # band's period rather than a single layer.
+    emitted_layers = {
+        layer for band in bands for layer in band.iteration_layers(0)
+    }
 
     for kernel in graph.kernels:
         if kernel.layer is not None and kernel.layer not in emitted_layers:
@@ -2324,7 +2417,7 @@ def _prove(
                 overlap = True
         masks.append(region.bank_mask)
 
-    proved_layers = sum(b.layer_count for b in bands)
+    proved_layers = sum(b.layer_count * b.period for b in bands)
     return {
         "weight_bytes": weight_bytes,
         "weight_objects": len(groups),

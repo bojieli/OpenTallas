@@ -819,6 +819,14 @@ class _Emitter:
             strides = [operand.cols, 1]
             node_stride = plan.shard_columns
         dims = [max(operand.tile_rows, 1), max(operand.tile_cols, 1)]
+        row_stride = dims[0] * strides[0]
+        if len(tensor.shape) == 1 and not contraction_weight:
+            # A rank-1 tensor keeps rank 1.  An engine that reads one gain per
+            # reduction element, or one position per token, rejects a view that
+            # has grown a degenerate axis, and a dynamic term moves the window
+            # by offsetting the view rather than by adding an axis to it.
+            dims = [dims[0] * dims[1]]
+            strides = [1]
 
         terms: list[DynamicTerm] = []
         for term in operand.terms:
@@ -832,7 +840,7 @@ class _Emitter:
                 loop = loops.get("row")
                 if loop is None:
                     continue
-                terms.append(DynamicTerm.loop(loop, dims[0] * strides[0]))
+                terms.append(DynamicTerm.loop(loop, row_stride))
             elif term == "node":
                 if self.node_count <= 1:
                     continue

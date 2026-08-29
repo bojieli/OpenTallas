@@ -144,6 +144,29 @@ MHC_SUBCASE: Mapping[str, int] = {
 }
 SCALE_SUBCASE: Mapping[str, int] = {"SCALE": 0, "MUL": 1, "SIGMOID": 2}
 
+#: Spellings a kernel *attribute* may use for a numeric format.  Tensor dtypes
+#: are checked against the neutral registry, but attributes are free text, and
+#: front ends legitimately write the IEEE names.
+DTYPE_ALIASES: Mapping[str, str] = {
+    "bfloat16": "bf16",
+    "binary16": "fp16",
+    "binary32": "fp32",
+    "binary64": "fp32",
+    "e8m0_scale": "e8m0",
+    "float16": "fp16",
+    "float32": "fp32",
+    "float8_e4m3fn": "fp8_e4m3fn",
+    "float8_e5m2": "fp8_e5m2",
+    "fp4_e2m1": "mxfp4_e2m1",
+    "int32": "i32",
+    "int64": "i64",
+    "int8": "i8",
+    "mxfp4": "mxfp4_e2m1",
+    "uint32": "u32",
+    "uint64": "u64",
+    "uint8": "u8",
+}
+
 #: Neutral state-class name -> frozen ABI 3.0 :class:`StateClass`.
 #:
 #: ``compressor_window`` has no exact value in the frozen registry.  It is
@@ -534,9 +557,19 @@ class RomLowering:
 
     # -- sizes ----------------------------------------------------------
     def _extent(self, value: Any) -> int:
+        """Resolve a possibly symbolic extent to the largest value it can take.
+
+        ``Symbolic.maximum`` is the maximum of the *extent*, already including
+        ``multiplier`` -- the DeepSeek front end writes ``multiplier=6,
+        maximum=1572864`` for six routed copies of a 262,144-token span.  The
+        multiplier is only used when no maximum is declared, where the
+        capability's context bound stands in.
+        """
         if isinstance(value, Symbolic):
-            maximum = value.maximum or self.capability.limits["max_context_positions"]
-            return max(int(maximum) * int(value.multiplier or 1), 1)
+            if value.maximum:
+                return max(int(value.maximum), 1)
+            bound = self.capability.limits["max_context_positions"]
+            return max(bound * int(value.multiplier or 1), 1)
         return max(int(value), 1)
 
     def _dims(self, tensor: Tensor) -> tuple[int, ...]:
@@ -548,10 +581,13 @@ class RomLowering:
         return dims
 
     def _dtype(self, name: str) -> DType:
+        resolved = DTYPE_ALIASES.get(name, name)
         try:
-            return DTYPE_BY_NAME[name]
+            return DTYPE_BY_NAME[resolved]
         except KeyError:
-            raise RomLoweringError(f"dtype {name!r} has no ABI 3.0 storage type") from None
+            raise RomLoweringError(
+                f"dtype {name!r} has no ABI 3.0 storage type"
+            ) from None
 
     def _bytes(self, tensor: Tensor) -> int:
         elements = 1
@@ -1351,10 +1387,12 @@ class RomLowering:
             slot * slot_elements + self._state_tensor_offset[tensor_id] * 8 // bits
         )
         dynamic: list[DynamicTerm] = []
-        loop, period = self._loop_for_state_slot(tensor_id)
-        # One loop iteration advances by a whole period of layers, so the state
-        # stride is the period's worth of slots, not one slot.
-        stride = slot_elements * period
+        loop, advance = self._loop_for_state_slot(tensor_id)
+        # One loop iteration advances by however many slots of *this* group the
+        # period actually consumes.  In DeepSeek's period-2 stack only one of the
+        # two layers owns a given compressed-KV resource, so the advance is one
+        # slot per iteration even though the period is two layers.
+        stride = slot_elements * advance
         if loop is not None:
             if stride > 0xFFFFFFFF:
                 raise RomLoweringError(
@@ -1374,14 +1412,34 @@ class RomLowering:
         )
 
     def _loop_for_state_slot(self, tensor_id: str) -> tuple[int | None, int]:
-        """The loop that indexes this state operand, and its layer period."""
-        placement = self.analysis.body_output.get(
+        """The loop that indexes this state operand, and its slot advance.
+
+        The advance is measured, not assumed: it is the difference between the
+        state slots the successive groups of the run actually name.
+        """
+        placement = self.analysis.body_input.get(
             tensor_id
-        ) or self.analysis.body_input.get(tensor_id)
-        if placement is not None:
-            run = self.analysis.runs[placement[0]]
-            return self._loop_of_run.get(run.index), run.period
-        return None, 1
+        ) or self.analysis.body_output.get(tensor_id)
+        if placement is None:
+            return None, 1
+        run = self.analysis.runs[placement[0]]
+        loop = self._loop_of_run.get(run.index)
+        names = self.analysis.body_operand.get(placement)
+        if names is None or len(names) < 2:
+            return loop, 1
+        slots: list[int] = []
+        for name in names:
+            state_id = self._state_owner.get(name)
+            if state_id is None or state_id not in self._state_slot:
+                return loop, 1
+            slots.append(self._state_slot[state_id][1])
+        steps = {second - first for first, second in zip(slots, slots[1:])}
+        if len(steps) != 1:
+            raise RomLoweringError(
+                f"state operand {tensor_id!r} moves by {sorted(steps)} slots "
+                "between loop iterations; a single dynamic term needs one stride"
+            )
+        return loop, steps.pop()
 
     # -- operand views ---------------------------------------------------
     def _operand_view(

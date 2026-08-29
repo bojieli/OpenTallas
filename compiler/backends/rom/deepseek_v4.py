@@ -237,7 +237,7 @@ def deepseek_v4_layout_policy(
 # ---------------------------------------------------------------------------
 def deepseek_v4_rom_capability(
     *,
-    max_context_positions: int = 204800,
+    max_context_positions: int = 262144,
     vocabulary_size: int = 129280,
     expert_count: int = 256,
     experts_per_token: int = 6,
