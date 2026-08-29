@@ -13,7 +13,7 @@ compression, package, power-delivery, or thermal macros.
 | stage integration | `ot_stage_top.sv`, `ot_stage_controller.sv`, `ot_tile.sv` |
 | command/session/control | `ot_cmd_frontend.sv`, `ot_session_table.sv`, `ot_schedule_controller.sv`, `ot_credit_manager.sv`, `ot_csr_block.sv` |
 | data and numeric path | `ot_route_mask.sv`, `ot_rom_wrapper.sv`, `via_mask_rom.sv`, `ot_format_decode.sv`, `ot_numeric_dot.sv`, `ot_reduction_tree.sv` |
-| bounded tensor-accelerator path | `ot_ta_command_decoder.sv`, `ot_ta_dma_hbm_to_sram.sv`, `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv`, `ot_ta_add_bf16_sram_engine.sv`, `ot_ta_dma_add_sequencer.sv`, `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_rmsnorm_sequencer.sv`, `ot_ta_head_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_head_rmsnorm_sequencer.sv`, `ot_ta_matmul_bf16_sram_engine.sv`, `ot_ta_dma_matmul_sequencer.sv` |
+| bounded tensor-accelerator path | `ot_ta_command_decoder.sv`, `ot_ta_dma_hbm_to_sram.sv`, `ot_ta_dma_hbm_indexed_to_sram.sv`, `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv`, `ot_ta_add_bf16_sram_engine.sv`, `ot_ta_dma_add_sequencer.sv`, `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_rmsnorm_sequencer.sv`, `ot_ta_head_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_head_rmsnorm_sequencer.sv`, `ot_ta_rope_bf16_sram_engine.sv`, `ot_ta_dma_rope_sequencer.sv`, `ot_ta_matmul_bf16_sram_engine.sv`, `ot_ta_dma_matmul_sequencer.sv` |
 | HBM and stage protocol | `ot_hbm_frontend.sv`, `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` |
 | RAS, power, and test | `ot_ras_controller.sv`, `ot_power_reset_controller.sv`, `ot_bist_controller.sv`, `ot_dft_controller.sv` |
 | CDC/protocol primitives | `lib/ot_reset_sync.sv`, `lib/ot_skid_buffer.sv`, `lib/ot_async_fifo.sv`, `lib/ot_cdc_mailbox.sv`, `lib/ot_sync_level.sv`, `lib/ot_sync_bits.sv`, and CRC helpers |
@@ -72,9 +72,29 @@ outputs. The Q and K output SHA-256 values are respectively
 `bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c`
 and
 `71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66`.
-This completes graph operations `node.0005` and `node.0006`, not complete QKV
-preparation. RoPE, KV preparation, attention, state, vector kernels,
-complete-layer sequencing, and the physical gates remain open.
+This completes graph operations `node.0005` and `node.0006`. Their projection
+inputs remain preloaded from independently qualified campaigns, so this is not
+one connected QKV-preparation program.
+
+The indexed RoPE campaign then executes authentic commands 3,079 and 3,080.
+The first command reads a little-endian 32-bit position from SRAM, validates it
+against the 8,000-row bound, selects one 512-byte row from the authenticated
+4,096,000-byte HBM coefficient table, and buffers all eight HBM responses before
+writing SRAM. The second command consumes `cos[128] || sin[128]`, performs the
+exact BF16-bounded binary32 rotary contract for 32 query heads and eight key
+heads, and buffers all 5,120 results before its first destination write.
+Independent Icarus and Verilator schedules reproduce positions 0 and 7,999,
+including the non-identity position-7,999 Q and K SHA-256 values
+`a846335c825cf9fb06213220acf157c6a805376b1324a7cec09d6fa4621e718d`
+and
+`ce427ae533331720b9b58dde633e3ca352fa9fe0d3dd09d8cab222b799963858`.
+Range, HBM-response, and early-terminal failures perform no coefficient or
+output writes beyond the explicitly proven boundary. This closes graph
+operation `node.0007` and means all QKV-preparation graph operations are
+individually closed; it still does not connect the separately preloaded
+projection/RMSNorm inputs into one commands-3-through-3,080 RTL program. KV
+preparation, attention, state, vector kernels, complete-layer sequencing,
+physical memories/interconnect, and the remaining physical gates stay open.
 
 ## Fault and containment benches
 

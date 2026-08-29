@@ -342,7 +342,7 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
     tmp_path: Path,
 ) -> None:
     schemas = _schemas()
-    assert len(schemas) == 93
+    assert len(schemas) == 95
     by_name = {schema["$id"].rsplit("/", 1)[-1]: schema for schema in schemas}
     assert set(by_name) == {
         "attention_deployment_v1.schema.json",
@@ -428,6 +428,8 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
         "qwen_rtl_physical_campaign_v1.schema.json",
         "qwen_rtl_q_proj_campaign_v1.schema.json",
         "qwen_rtl_q_proj_vectors_v1.schema.json",
+        "qwen_rtl_rope_campaign_v1.schema.json",
+        "qwen_rtl_rope_vectors_v1.schema.json",
         "rmsnorm_deployment_v1.schema.json",
         "rmsnorm_execution_v1.schema.json",
         "rmsnorm_expectations_v1.schema.json",
@@ -679,6 +681,18 @@ def test_tensor_accelerator_schemas_are_strict_and_cover_artifacts(
                 ROOT
                 / "testdata/compiler/tensor_accelerator/"
                 "qwen3_rtl_q_proj_vectors.json"
+            )
+        ],
+        "qwen_rtl_rope_campaign_v1.schema.json": [
+            load_strict_json(
+                ROOT / "results/tensor_accelerator/qwen3_rtl_rope_campaign.json"
+            )
+        ],
+        "qwen_rtl_rope_vectors_v1.schema.json": [
+            load_strict_json(
+                ROOT
+                / "testdata/compiler/tensor_accelerator/"
+                "qwen3_rtl_rope_vectors.json"
             )
         ],
         "production_tensor_kernel_ir_v1.schema.json": [

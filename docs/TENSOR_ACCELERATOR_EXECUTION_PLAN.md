@@ -1337,16 +1337,79 @@ and
 Icarus observes 63,589 cycles and Verilator 69,900 cycles under their distinct
 deterministic backpressure schedules; these are correlation observations, not
 characterized performance. An early-terminal case proves fail-stop behavior.
-The complete Qwen RTL regression, strict 93-schema inventory, warning-free
+The complete Qwen RTL regression, strict 95-schema inventory, warning-free
 Verilator and Icarus front ends, and pinned-Yosys 0.68 structural check pass.
 
 This closes complete RTL execution and architectural correlation for graph
-operations `node.0005` and `node.0006`. It does not close complete QKV
-preparation because indexed coefficient DMA and RoPE commands 3,079–3,080 have
-not yet executed in RTL. KV preparation, attention, state and vector kernels,
-program authentication/`COMPLETE`, physical memories/interconnect, a
-representative complete RTL layer, characterized timing or power, and
-`TA-RTL-6` remain open.
+operations `node.0005` and `node.0006`. The indexed coefficient DMA and RoPE
+closure follows in Section 1.24. Projection and RMSNorm inputs are still
+preloaded across independently qualified campaign boundaries rather than one
+connected command stream.
+
+### 1.24 Complete authentic indexed RoPE execution in RTL
+
+QW-RTL-ROPE-001 implements the exact two-command boundary for graph operation
+`node.0007`. Authentic command 3,079, `DMA_HBM_INDEXED_TO_SRAM`, reads the
+little-endian 32-bit runtime position from two 16-bit SRAM responses at
+addresses 4 and 6, rejects positions at or above 8,000, calculates the selected
+HBM row without wraparound, fetches eight 64-byte bursts, and buffers the entire
+row before its first 16-byte coefficient write. Authentic command 3,080,
+`ROPE_BF16`, consumes the selected row as `cos[128] || sin[128]` for 32 query
+heads and eight key heads.
+
+The arithmetic follows `qwen3_rope_fp32_bf16_v1` exactly: the direct and
+half-rotated binary32 products independently round to BF16, those BF16 results
+decode into a signed binary32 addition, and the sum rounds once more to BF16.
+The rotation is `concat(-second_half, first_half)` and signed zero is
+canonicalized. All 5,120 results are validated and buffered before the first Q
+or K destination write, so a late operand or arithmetic fault cannot partially
+replace either output.
+
+The source-bound vector-set ID is
+`7a55f9aba5c3e329e571e2a5564beeb666964cd774a868d5ba448470574206d7`;
+the dual-simulator campaign ID is
+`1706f1e27f36411a30e621c2acbefc979f7719d694357d25eba1920d7109c754`.
+The builder authenticates the 924,386-command program as
+`f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec`
+and the full 4,096,000-byte coefficient table as
+`82b9d0c0dc0c98906ced230591852dbd27d73760de42df8de253ae29243034b9`
+inside immutable shard
+`4cc984816239b7b9215743b405300e1ecfe26ac1bb62177f2874c20b3889b62b`.
+The repository retains only the two 512-byte rows needed for the directed
+proof, not the 1 GiB shard or full table.
+
+Icarus and Verilator independently execute legal positions 0 and 7,999 under
+different request, response-latency, read, and write backpressure schedules.
+Per successful program they reconcile two index reads, eight HBM requests and
+responses, 512 HBM bytes, 32 coefficient writes, 256 coefficient reads, 4,096
+Q reads, 1,024 K reads, 5,120 output writes, 10,240 multiplications, 5,120
+additions, and zero saturation. Position 0 proves the authentic identity row:
+its Q/K output hashes remain
+`bf01d5254a7616bfffac6f789fbae1b94c68c5201944c8faf297b803987a401c`
+and
+`71af5033456b74d137d248f4019f848aedb8c8f758f952612082ad48d50f6a66`.
+Position 7,999 proves non-identity rotary behavior with Q/K hashes
+`a846335c825cf9fb06213220acf157c6a805376b1324a7cec09d6fa4621e718d`
+and
+`ce427ae533331720b9b58dde633e3ca352fa9fe0d3dd09d8cab222b799963858`.
+All 10,240 campaign outputs match both the optimized and separate scalar
+oracles.
+
+An early-terminal case fails before memory activity; position 8,000 performs
+exactly two index reads but no HBM request or write; and an injected error on
+the fourth HBM response produces no coefficient write, proving complete-row
+fault atomicity. Icarus observes 37,707 cycles and Verilator 43,445 cycles under
+their deterministic schedules. These observations correlate control behavior
+only and do not establish latency or performance.
+
+This closes complete RTL execution and architectural correlation for RoPE and
+makes every QKV-preparation graph operation individually closed. It explicitly
+does not claim one connected commands-3-through-3,080 program, because the
+projection and RMSNorm campaign outputs are preloaded at the later boundaries.
+KV preparation, attention, state and vector kernels, program authentication/
+`COMPLETE`, physical SRAM/HBM/interconnect, a representative connected complete
+RTL layer, characterized timing or activity-derived power, and `TA-RTL-6`
+remain open.
 
 ## 2. Meaning of production-grade
 
