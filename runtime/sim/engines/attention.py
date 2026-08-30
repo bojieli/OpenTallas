@@ -561,19 +561,30 @@ def _execute_sparse(ctx: EngineContext, descriptor: Descriptor) -> None:
         f"contract is frozen at {SPARSE_ATTENTION_BLOCK_SIZE}",
     )
 
-    context = _context_bound(ctx, descriptor, kv_view, kv_rows)
+    # Amendment A19: the fused KV operand is a **row space**, not a position
+    # space.  ``ROUTE.INDEX_TOPK`` emits rows of the join the operand is -- the
+    # request's own rows, then the window, then the compressed rows -- and no
+    # count of tokens names how many of those there are: a 104-token request
+    # produces 104 + 128 + 26 of them.  So the index is bounded by the operand's
+    # own resolved extent, which A13 and A18 already make the request's size,
+    # and ``aux_id_2`` bounds the *positions* the causal base check uses.  Read
+    # as a row count it truncated a joined KV to its token count and then
+    # refused every rebased index, which is the refusal A19 exists to make
+    # unnecessary.  DENSE and GQA are unchanged: their KV view is indexed by
+    # position, so there the two numbers are the same one.
+    positions = _context_bound(ctx, descriptor, kv_view, kv_rows)
     base_symbol = _aux(descriptor, 3)
     if base_symbol is not None:
-        base = _symbol_value(ctx, base_symbol, context - span)
+        base = _symbol_value(ctx, base_symbol, max(positions - span, 0))
         _require(
-            0 <= base and base + span <= context,
+            0 <= base and base + span <= positions,
             f"attention: query span {span} at absolute position {base} does not "
-            f"fit in a context of {context} positions",
+            f"fit in a context of {positions} positions",
         )
 
-    indices, gathered = _sparse_index_rows(ctx, index_view, span, context)
+    indices, gathered = _sparse_index_rows(ctx, index_view, span, kv_rows)
     queries = np.ascontiguousarray(ctx.read(query_view))
-    fused_kv = np.ascontiguousarray(ctx.read(kv_view))[:context]
+    fused_kv = np.ascontiguousarray(ctx.read(kv_view))
     sinks = np.ascontiguousarray(ctx.read(sink_view)).view(np.uint32)
 
     try:
@@ -620,6 +631,19 @@ def _sparse_index_rows(
     or a descending pair, is a malformed operand rather than something to
     reinterpret.  Returns the rows in the reference's ``-1``-padded signed form
     and the number of rows actually gathered.
+
+    These two checks are stricter than the reference beneath them, and
+    deliberately so.  ``runtime.reference.sparse_attention`` accepts a ``-1`` at
+    any slot in any order -- it counts ``explicit_padding_slots`` apart from
+    ``implicit_tail_padding_lanes`` precisely because the released kernel does,
+    reading each lane as ``idxs[i] != -1`` with no order imposed.  Until
+    amendment A19 there was no producer that could satisfy A6, so this gate was
+    strictness with nothing behind it; ``ROUTE.INDEX_TOPK`` now emits the joined
+    array compacted and ascending, and the gate checks a property something is
+    responsible for.  It is kept rather than relaxed because after A19 an array
+    that interleaves padding can only come from a producer that failed to
+    compact, and every index in it names a real KV row -- which is a silently
+    wrong token, not a visible fault, if this absorbs it.
     """
     raw = np.asarray(ctx.read(view), dtype=np.uint64).reshape(span, view.dims[1])
     rows = np.full((span, int(view.dims[1])), SPARSE_PAD, dtype=np.int64)

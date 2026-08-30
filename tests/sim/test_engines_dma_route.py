@@ -912,6 +912,159 @@ def test_index_topk_selects_causally_and_emits_ascending_padded_slots():
     assert result.counters["route.topk_candidates"] == 1 + 2 + 3 + 4
 
 
+def test_index_topk_joins_rebases_and_compacts_under_a19():
+    """Amendment A19: one operator produces the array ATTENTION.SPARSE gathers.
+
+    The window block is deliberately short in its early rows, which is where
+    the interior padding used to come from, and the candidate axis is
+    compressed by four, which is where the wrong causal horizon used to come
+    from.  Both expectations below are computed here in plain Python from the
+    released model's own rules.
+    """
+    ratio = 4
+    span, window, candidates, top_k = 8, 4, 2, 2
+    scores = np.array(
+        [[1.0, 9.0] for _ in range(span)],
+        dtype=np.float32,
+    )
+    # A short window row is tail-padded inside its own block; joining anything
+    # behind it is what used to interleave padding.
+    window_block = np.full((span, window), NO_ID, dtype=np.uint32)
+    for token in range(span):
+        low = max(0, token - window + 1)
+        window_block[token, : token - low + 1] = np.arange(low, token + 1)
+
+    build = Build()
+    src = build.input_view(scores, DType.FP32)
+    win = build.input_view(window_block, DType.U32)
+    ratio_view = build.input_view(np.array([ratio], dtype=np.uint32), DType.U32)
+    out = build.output_view((span, window + top_k), DType.U32, 4)
+    emit_op(
+        build,
+        Major.ROUTE,
+        Route.INDEX_TOPK,
+        [src, win, ratio_view],
+        [out],
+        aux=[top_k, 0, int(Symbol.CONTEXT_LENGTH), int(Symbol.POSITION_START)],
+    )
+    device = build.finish()
+    result = run(
+        device,
+        symbols={
+            int(Symbol.CONTEXT_LENGTH): span,
+            int(Symbol.POSITION_START): 0,
+        },
+    )
+    assert result.status == CompletionStatus.SUCCESS, result.message
+
+    expected = np.full((span, window + top_k), NO_ID, dtype=np.uint32)
+    for token in range(span):
+        visible = min((token + 1) // ratio, candidates)
+        # score 9.0 at column 1 wins whenever column 1 is visible.
+        order = sorted(range(visible), key=lambda c: (-scores[token, c], c))
+        chosen = [c + span + window for c in order[:top_k]]
+        rows = sorted(
+            [int(v) for v in window_block[token] if v != NO_ID] + chosen
+        )
+        expected[token, : len(rows)] = rows
+    assert np.array_equal(read(device, out), expected)
+    # Never a pad before a row: A6's clause, satisfied by the producer.
+    got = read(device, out)
+    for token in range(span):
+        valid = got[token] != NO_ID
+        assert bool(np.all(valid[: int(np.count_nonzero(valid))]))
+    assert result.counters["route.topk_candidates"] == sum(
+        min((t + 1) // ratio, candidates) for t in range(span)
+    )
+
+
+@pytest.mark.parametrize(
+    "base,span,context",
+    [(0, 24, 24), (0, 104, 104), (37, 1, 38), (511, 1, 512)],
+)
+def test_index_topk_matches_the_qualified_selection_reference(base, span, context):
+    """A19's one causal rule reproduces both branches of the released Indexer.
+
+    ``index_topk_indices`` is the qualified reference and carries the released
+    model's two branches: a ``(s + 1) // ratio`` mask at ``start_pos == 0`` and
+    the whole cache otherwise.  A19 states one rule over the absolute position,
+    and these cases are prefill and decode of that reference, run on the device.
+    """
+    from runtime.reference.selection import index_topk_indices
+
+    ratio, top_k, window = 4, 3, 2
+    candidates = context // ratio
+    rng = np.random.default_rng(1000 + context)
+    scores = widen(narrow(rng.uniform(-1.0, 1.0, size=(span, candidates)).astype(np.float32)))
+
+    build = Build()
+    src = build.input_view(narrow(scores), DType.BF16)
+    win = build.input_view(
+        np.tile(np.arange(window, dtype=np.uint32), (span, 1)), DType.U32
+    )
+    ratio_view = build.input_view(np.array([ratio], dtype=np.uint32), DType.U32)
+    out = build.output_view((span, window + top_k), DType.U32, 4)
+    emit_op(
+        build,
+        Major.ROUTE,
+        Route.INDEX_TOPK,
+        [src, win, ratio_view],
+        [out],
+        aux=[top_k, 0, int(Symbol.CONTEXT_LENGTH), int(Symbol.POSITION_START)],
+    )
+    device = build.finish()
+    result = run(
+        device,
+        symbols={
+            int(Symbol.CONTEXT_LENGTH): context,
+            int(Symbol.POSITION_START): base,
+        },
+    )
+    assert result.status == CompletionStatus.SUCCESS, result.message
+
+    codes = narrow(scores)
+    reference = index_topk_indices(
+        [tuple(tuple(int(c) for c in row) for row in codes)],
+        top_k=top_k,
+        compression_ratio=ratio,
+        start_position=base,
+        offset=span + window,
+    )[0]
+    got = read(device, out)
+    for token in range(span):
+        rows = sorted(int(v) for v in got[token] if v != NO_ID)
+        expected = sorted(
+            [int(v) for v in range(window)]
+            + [g for g in reference[token] if g != -1]
+        )
+        assert rows == expected, token
+
+
+def test_index_topk_refuses_a_multi_element_compression_ratio():
+    build = Build()
+    src = build.input_view(np.ones((2, 2), dtype=np.float32), DType.FP32)
+    win = build.input_view(np.zeros((2, 1), dtype=np.uint32), DType.U32)
+    bad = build.input_view(np.array([4, 4], dtype=np.uint32), DType.U32)
+    out = build.output_view((2, 3), DType.U32, 4)
+    emit_op(
+        build, Major.ROUTE, Route.INDEX_TOPK, [src, win, bad], [out], aux=[2]
+    )
+    result = run(build.finish())
+    assert result.status == CompletionStatus.FAILED
+    assert "expected one" in result.message
+
+
+def test_index_topk_refuses_a_window_block_of_the_wrong_span():
+    build = Build()
+    src = build.input_view(np.ones((3, 2), dtype=np.float32), DType.FP32)
+    win = build.input_view(np.zeros((2, 1), dtype=np.uint32), DType.U32)
+    out = build.output_view((3, 3), DType.U32, 4)
+    emit_op(build, Major.ROUTE, Route.INDEX_TOPK, [src, win], [out], aux=[2])
+    result = run(build.finish())
+    assert result.status == CompletionStatus.FAILED
+    assert "query rows" in result.message
+
+
 def test_hash_route_uses_the_frozen_mixer():
     def mix32(key: int) -> int:
         mask = 0xFFFFFFFF

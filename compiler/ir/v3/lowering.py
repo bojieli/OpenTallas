@@ -109,7 +109,10 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "TOPK": EngineOp(Major.ROUTE, Route.TOPK, 1, 2),
     "BIASED_TOPK": EngineOp(Major.ROUTE, Route.BIASED_TOPK, 2, 2),
     "HASH_ROUTE": EngineOp(Major.ROUTE, Route.HASH_ROUTE, 2, 1),
-    "INDEX_TOPK": EngineOp(Major.ROUTE, Route.INDEX_TOPK, 1, 1),
+    # Amendment A19: INDEX_TOPK selects, rebases and joins.  in0 the index
+    # scores, in1 the sliding-window index block it is joined to, in2 the
+    # one-element compression ratio of the candidate axis.
+    "INDEX_TOPK": EngineOp(Major.ROUTE, Route.INDEX_TOPK, 3, 1),
     "WEIGHT_NORMALIZE": EngineOp(Major.ROUTE, Route.WEIGHT_NORMALIZE, 1, 1),
     # Two outputs: the dispatched activations and the expert IDs they were
     # dispatched under. Re-emitting the IDs keeps the dataflow into

@@ -1394,6 +1394,25 @@ def export_deepseek_v4_kernel_graph(
             source_kind="ROPE_COEFFICIENT_ROWS",
         )
 
+    # Amendment A19: ``ROUTE.INDEX_TOPK``'s compression ratio arrives in an
+    # input view, because ``aux_id_0..3`` are spent on ``k``, the mask mode and
+    # the two request symbols and an operator has no other channel for a
+    # scalar.  It is a pinned property of the layer rather than of the request,
+    # so it is a mask-programmed constant and one tensor serves every layer of
+    # that ratio.
+    def compression_ratio_constant(value: int) -> str:
+        name = f"index.compression_ratio.{value}"
+        if builder.has_tensor(name):
+            return name
+        return builder.tensor(
+            name,
+            "u32",
+            (1,),
+            "constant",
+            generator="constant_u32_v1",
+            generator_parameters={"value": value, "count": 1},
+        )
+
     value_tensor: dict[str, str] = {
         "request.input_ids": token_ids,
         "request.start_pos": position_offset,
@@ -2673,45 +2692,60 @@ def export_deepseek_v4_kernel_graph(
             score = operands[0]
             window_indices = operands[1]
             rows = rows_of(score)
-            selected = act(f"{node_id}.selected", "u32", (rows, INDEX_TOPK))
+            width = SLIDING_WINDOW + INDEX_TOPK
+            output = act(out0, "u32", (rows, width))
+            # Amendment A19.  This used to be two kernels -- a selection whose
+            # indices were columns of the *score view*, and a feature-axis
+            # CONCAT that put a window block in front of them -- and the pair
+            # produced an index array with three defects the device found in
+            # order: interior padding where the window block ran short, no
+            # rebase onto the KV rows the selection actually names, and a causal
+            # horizon counted in tokens on an axis measured in compression
+            # groups.  The released model does all three at one place
+            # (``Attention.forward`` concatenates *after* ``Indexer.forward``
+            # has already added its offset), so the export does too: one
+            # operator, in0 the scores, in1 the window block, in2 the pinned
+            # compression ratio of the candidate axis.
             emit(
-                f"{node_id}.select",
+                node_id,
                 "INDEX_TOPK",
-                (score,),
-                (selected,),
+                (score, window_indices, compression_ratio_constant(ratio)),
+                (output,),
                 step="masked_topk",
-                iteration_domain={"tokens": rows, "top_k": INDEX_TOPK},
+                iteration_domain={
+                    "tokens": rows,
+                    "top_k": INDEX_TOPK,
+                    "window": SLIDING_WINDOW,
+                    "width": width,
+                },
                 attributes={
                     **attrs,
                     "causal_mask": "compressed_group_completed_before_position",
                     "order": "score_descending_then_index_ascending",
                     "padding_index": -1,
-                    # A18: the score it selects over leads with
-                    # ``context_groups_ratio4``; with no committed group there
-                    # is nothing to select and the operator is not issued.
-                    "execution_predicate": _nonempty(committed_groups[4]),
-                },
-            )
-            width = SLIDING_WINDOW + INDEX_TOPK
-            output = act(out0, "u32", (rows, width))
-            emit(
-                f"{node_id}.concat",
-                "CONCAT",
-                (window_indices, selected),
-                (output,),
-                step="window_then_compressed_indices",
-                iteration_domain={"tokens": rows, "width": width},
-                attributes={
-                    **attrs,
-                    "axis": 1,
+                    "compression_ratio": ratio,
+                    # ``k`` is the selection width, not the operand width: the
+                    # output is the join, so its last extent is
+                    # ``window + k`` and a backend that reads ``k`` off the
+                    # output would declare 640 where 512 belongs.
+                    "k": INDEX_TOPK,
                     "segment_widths": [SLIDING_WINDOW, INDEX_TOPK],
-                    # This join is not itself predicated -- its own extents are
-                    # static -- but input 1 is produced under a predicate, so
-                    # the join states which operand is present and when.  The
-                    # released model joins the same way and its compressed
-                    # block is ``[seqlen, 0]`` at a context below one group.
+                    "segment_order": "window_then_rebased_compressed",
+                    # The join's own extents are static and its window operand
+                    # is always present, so unlike the two kernels it replaces
+                    # this one is issued for every request: below one whole
+                    # compression group the causal rule selects nothing and the
+                    # result is the window block alone, which is exactly what
+                    # the released model computes when ``kv_compress`` is
+                    # ``None`` and the compressed block is ``[seqlen, 0]``.
+                    # What does vanish there is the score operand -- its
+                    # candidate axis is ``context_groups_ratioN`` and floors --
+                    # so the operator names it rather than being predicated off
+                    # as its producer is.  That is the difference A19 buys: a
+                    # branch that used to reach the join now stops at an
+                    # operand.
                     "operand_present_predicate": {
-                        "1": _nonempty(committed_groups[4]),
+                        "0": _nonempty(committed_groups[ratio]),
                     },
                 },
             )

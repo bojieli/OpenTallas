@@ -35,14 +35,28 @@ rules hold across all seven subopcodes:
     engine that cannot state the bound cannot prove the ID is inside it.
 
 ``ROUTE.INDEX_TOPK``
-    Lightning-indexer selection.  ``input_view_0`` index scores
-    ``[span, context]``; ``output_view_0`` U32 selected KV positions
-    ``[span, k]``, **sorted ascending** and tail-padded with ``0xffffffff`` so
-    that ATTENTION.SPARSE gathers in address order and never executes a pad.
+    Lightning-indexer selection, and -- amendment A19 -- the join that puts its
+    result into the KV row space.  ``input_view_0`` index scores
+    ``[span, candidates]``; ``input_view_1`` the sliding-window index block
+    ``[span, window]`` U32 this selection is joined to, or ``NO_ID`` for no
+    join; ``input_view_2`` a one-element U32 view naming the **compression
+    ratio** of the candidate axis, or ``NO_ID`` for an uncompressed axis.
+    ``output_view_0`` U32 KV rows ``[span, window + k]``, **compacted and
+    sorted ascending**, tail-padded with ``0xffffffff``, so that
+    ATTENTION.SPARSE gathers in address order and never executes a pad.
     ``aux_id_0`` immediate ``k`` (``NO_ID`` uses the output extent),
     ``aux_id_1`` mask mode (``0`` causal, ``1`` full), ``aux_id_2`` the runtime
-    symbol bounding the context, ``aux_id_3`` the symbol holding the absolute
-    position of query ``0``.
+    symbol bounding the context **in the symbol's own units**, ``aux_id_3`` the
+    symbol holding the absolute position of query ``0``, in the same units.
+
+    With a compression ratio ``r`` the candidate axis holds ``context // r``
+    groups, group ``g`` completes at absolute position ``r * (g + 1) - 1``, and
+    a causal query at absolute position ``p`` therefore sees ``(p + 1) // r`` of
+    them -- which is the released ``Indexer``'s mask in prefill and its whole
+    cache in decode, from one rule rather than two branches.  A selected group
+    ``g`` names KV row ``span + window + g``: the KV operand ``ATTENTION.SPARSE``
+    gathers from is the request's own rows, then the window, then the compressed
+    rows, so the compressed segment begins after the first two.
 
 ``ROUTE.HASH_ROUTE``
     ``input_view_0`` U32/U64 keys ``[n]``, ``input_view_1`` a U32 route table
@@ -313,58 +327,163 @@ def _mask_mode(descriptor: Descriptor, slot: int) -> int:
 
 @register(Major.ROUTE, Route.INDEX_TOPK)
 def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    """Select, rebase and join, as amendment A19 fixes the operator.
+
+    Three things happen here that used to be three different producers'
+    problems, and the released model does all three at this one boundary:
+
+    * the causal horizon is on the **candidate** axis, and a candidate is a
+      compression group, so a query at absolute position ``p`` sees
+      ``(p + 1) // ratio`` of them and not ``p + 1``;
+    * the selected group is a *score-view* column, and the KV row it names is
+      that column plus the rows the join puts before the compressed segment;
+    * the window block and the compressed block are one index array by the time
+      ``sparse_attn`` sees them.
+
+    The result is compacted and sorted so that amendment A6's ordering rule is
+    something the producer satisfies rather than something the consumer hopes
+    for.  Reordering is safe because the released kernel reads the array as a
+    *set*: ``kernel.sparse_attn`` treats every ``-1`` slot as an absent lane at
+    any position, with no ordering requirement.
+    """
     _check_operator(descriptor, int(Route.INDEX_TOPK))
     score_view = ctx.input_view(descriptor, 0)
+    window_view = ctx.optional_input(descriptor, 1)
+    ratio_view = ctx.optional_input(descriptor, 2)
     out_view = ctx.output_view(descriptor, 0)
     _u32_out(out_view, "index")
     span, width = _groups(score_view, "index score")
     out_span, slots = _groups(out_view, "index")
-    declared = _aux(descriptor, 0)
-    topk_count = slots if declared is None else declared
     _require(
         out_span == span,
         f"ROUTE.INDEX_TOPK output view {out_view.descriptor_id} covers "
         f"{out_span} query rows, expected {span}",
     )
+
+    # -- the joined window block (A19 in1) -------------------------------
+    window = 0
+    window_rows: np.ndarray | None = None
+    if window_view is not None:
+        _u32_out(window_view, "window index")
+        window_span, window = _groups(window_view, "window index")
+        _require(
+            window_span == span,
+            f"ROUTE.INDEX_TOPK window view {window_view.descriptor_id} covers "
+            f"{window_span} query rows, expected {span}",
+        )
+        window_rows = np.asarray(ctx.read(window_view), dtype=np.uint64).reshape(
+            span, window
+        )
+
+    declared = _aux(descriptor, 0)
+    topk_count = slots - window if declared is None else declared
     _require(
-        0 < topk_count <= slots,
-        f"ROUTE.INDEX_TOPK selects {topk_count} positions into {slots} slots",
+        0 < topk_count and topk_count + window <= slots,
+        f"ROUTE.INDEX_TOPK selects {topk_count} positions and joins a "
+        f"{window}-slot window into {slots} slots",
     )
+
+    # -- the compressed candidate axis (A19 in2) -------------------------
+    ratio = 1
+    if ratio_view is not None:
+        _u32_out(ratio_view, "compression ratio")
+        _require(
+            int(ratio_view.element_count) == 1,
+            f"ROUTE.INDEX_TOPK compression-ratio view "
+            f"{ratio_view.descriptor_id} holds "
+            f"{ratio_view.element_count} elements, expected one",
+        )
+        ratio = int(np.asarray(ctx.read(ratio_view), dtype=np.uint64).reshape(1)[0])
+        _require(
+            ratio > 0,
+            f"ROUTE.INDEX_TOPK compression-ratio view "
+            f"{ratio_view.descriptor_id} names ratio {ratio}; a compression "
+            "ratio is at least one",
+        )
+
     mode = _mask_mode(descriptor, 1)
-    context = _symbol_value(ctx, _aux(descriptor, 2), width)
+    # ``aux_id_2`` and ``aux_id_3`` are read in the *symbol's own units*, which
+    # for DeepSeek is tokens.  The candidate axis is counted in groups, so the
+    # ratio is what converts between them; before A19 the two were silently the
+    # same number and a compressed axis had no way to say otherwise.
+    context = _symbol_value(ctx, _aux(descriptor, 2), width * ratio)
+    candidates = context // ratio
+    # Zero candidates is not a fault.  A context shorter than one compression
+    # group has completed no group, and the released model runs that layer as
+    # pure sliding-window attention: ``get_compress_topk_idxs`` returns a
+    # ``[seqlen, 0]`` block and the concatenation behind it is a no-op.  With a
+    # window operand the joined result is that window, which is exactly what
+    # ``sparse_attn`` receives there.
     _require(
-        0 < context <= width,
-        f"ROUTE.INDEX_TOPK: context {context} is outside the {width} scored "
-        f"positions of view {score_view.descriptor_id}",
+        0 <= candidates <= width,
+        f"ROUTE.INDEX_TOPK: a context of {context} at compression ratio "
+        f"{ratio} is {candidates} candidates, outside the {width} scored "
+        f"columns of view {score_view.descriptor_id}",
+    )
+    _require(
+        candidates > 0 or window_view is not None,
+        f"ROUTE.INDEX_TOPK: a context of {context} at compression ratio "
+        f"{ratio} completes no candidate and no window block is joined, so "
+        "the operator has nothing to select and nothing to emit",
     )
     base = _symbol_value(ctx, _aux(descriptor, 3), context - span)
     _require(
-        base >= 0,
-        f"ROUTE.INDEX_TOPK: a span of {span} does not fit in {context} "
-        "positions",
+        base >= 0 and base + span <= context,
+        f"ROUTE.INDEX_TOPK: a span of {span} at absolute position {base} does "
+        f"not fit in {context} positions",
     )
-    scores = widen(ctx, score_view).reshape(span, width)
-    _require(
-        bool(np.all(np.isfinite(scores[:, :context]))),
-        f"ROUTE.INDEX_TOPK: index score view {score_view.descriptor_id} "
-        "contains a NaN or infinite value",
-        trap_class=6,
-    )
-    selected = np.full((span, slots), np.uint32(PAD_INDEX), dtype=np.uint32)
-    candidates = 0
-    for row in range(span):
-        limit = base + row + 1 if mode == MASK_CAUSAL else context
+    # The compressed rows sit behind the request's own rows and the window in
+    # the KV operand ATTENTION.SPARSE gathers from, so a selected group names a
+    # KV row that far along.  With no compressed axis there is no compressed
+    # segment and a candidate is already a KV row.
+    rebase = span + window if ratio_view is not None else 0
+
+    if candidates:
+        scores = widen(ctx, score_view).reshape(span, width)
         _require(
-            0 < limit <= context,
-            f"ROUTE.INDEX_TOPK: query {row} at absolute position "
-            f"{base + row} is outside {context} positions",
+            bool(np.all(np.isfinite(scores[:, :candidates]))),
+            f"ROUTE.INDEX_TOPK: index score view {score_view.descriptor_id} "
+            "contains a NaN or infinite value",
+            trap_class=6,
         )
-        candidates += limit
+    else:
+        scores = np.zeros((span, width), dtype=np.float32)
+    selected = np.full((span, slots), np.uint32(PAD_INDEX), dtype=np.uint32)
+    considered = 0
+    for row in range(span):
+        if mode == MASK_CAUSAL:
+            limit = min((base + row + 1) // ratio, candidates)
+        else:
+            limit = candidates
+        _require(
+            0 <= limit <= candidates,
+            f"ROUTE.INDEX_TOPK: query {row} at absolute position "
+            f"{base + row} sees {limit} of {candidates} candidates",
+        )
+        considered += limit
         take = min(topk_count, limit)
-        order = _rank_descending(scores[row, :limit])[:take]
-        selected[row, :take] = np.sort(order).astype(np.uint32)
+        chosen = (
+            _rank_descending(scores[row, :limit])[:take].astype(np.int64) + rebase
+            if take
+            else np.zeros(0, dtype=np.int64)
+        )
+        if window_rows is None:
+            joined = chosen
+        else:
+            block = window_rows[row]
+            joined = np.concatenate(
+                (block[block != np.uint64(PAD_INDEX)].astype(np.int64), chosen)
+            )
+        _require(
+            joined.size > 0,
+            f"ROUTE.INDEX_TOPK: query {row} selects no KV row; an empty "
+            "softmax has no defined value",
+            trap_class=6,
+        )
+        joined.sort()
+        selected[row, : joined.size] = joined.astype(np.uint32)
     ctx.write(out_view, selected.reshape(out_view.dims))
-    ctx.counters.add("route.topk_candidates", candidates)
+    ctx.counters.add("route.topk_candidates", considered)
 
 
 @register(Major.ROUTE, Route.WINDOW_INDEX)

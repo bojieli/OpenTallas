@@ -2,7 +2,7 @@
 
 **Contract ID:** TA-ABI3-OPCONV-1
 
-**Status:** frozen at `TA-A3-ARCH-0` plus amendments A6-A11 and A16-A17
+**Status:** frozen at `TA-A3-ARCH-0` plus amendments A6-A11 and A16-A19
 
 **Depends on:** `TA-ABI3-WIRE-1` section 12 (OPERATOR payload)
 
@@ -85,7 +85,12 @@ subopcode and reject a `SPARSE` operator carrying a dense-shaped operand set.
 
 Sparse index arrays are ascending and tail-padded with `0xffffffff`. Padding is
 never executed and never counted: `attention.sparse_indices` counts the rows
-actually gathered.
+actually gathered. That clause stands as written; amendment A19 (section 19)
+moves the obligation onto the producer, which is `ROUTE.INDEX_TOPK` and has the
+window block, the compression ratio and the KV row space it needs to satisfy
+it. The released kernel imposes no order and accepts a `-1` at any slot, so this
+is OpenTallas's canonical form for the array rather than the model's, chosen so
+that a consumer can check what reaches it.
 
 ## 5. Route family
 
@@ -95,7 +100,7 @@ actually gathered.
 | `BIASED_TOPK` | scores | selection bias | — | selected IDs | weights | `aux0` `k` |
 | `WEIGHT_NORMALIZE` | weights | — | — | normalised | — | — |
 | `EXPERT_DISPATCH` | activations | selected IDs | — | dispatched `[groups * k, width]` in `(group, slot)` order | — | `aux0` expert count, **required** |
-| `INDEX_TOPK` | scores | — | — | ascending indices | — | `aux0` `k`, `aux1` mask mode, `aux2` context *symbol*, `aux3` position-base *symbol* |
+| `INDEX_TOPK` | scores | window index (A19) | compression ratio (A19) | joined KV rows, compacted and ascending | — | `aux0` `k`, `aux1` mask mode, `aux2` context *symbol*, `aux3` position-base *symbol* |
 | `HASH_ROUTE` | token IDs | hash table | — | expert IDs | — | — |
 | `WINDOW_INDEX` | positions | — | — | ascending indices | — | `aux0` window, `aux1` mask mode, `aux2` context *symbol* |
 
@@ -589,3 +594,75 @@ say so under A18, and A17 then confirms that what it said is the sum.
 behaves exactly as it did. All four are zero on every view written before this
 amendment, and that is axis 0, the bound symbol's own value, and no bias —
 which is amendment A13, unchanged.
+
+## 19. Amendment A19 — `ROUTE.INDEX_TOPK` selects, rebases and joins
+
+Wire format section 12.9 is normative; this section states what it means for an
+operand row and what it obliges a backend to do.
+
+| Subopcode | in0 | in1 | in2 | in3 | out0 | aux |
+|---|---|---|---|---|---|---|
+| `INDEX_TOPK`, unjoined | scores `[span, C]` | `NO_ID` | `NO_ID` | — | ascending indices `[span, k]` | `aux0` `k`, `aux1` mask mode, `aux2` context *symbol*, `aux3` position-base *symbol* |
+| `INDEX_TOPK`, joined | scores `[span, C]` | window index `[span, W]` U32 | compression ratio `[1]` U32 | — | joined KV rows `[span, W + k]` U32, compacted, ascending, `0xffffffff`-padded | as above |
+
+`aux2` and `aux3` are read **in the symbol's own units**. For DeepSeek that is
+tokens, and the candidate axis is counted in compression groups, so `in2` is
+what converts between the two. Before A19 they were silently the same number
+and a compressed axis had no way to say otherwise; that is the whole of defect
+three.
+
+`in2` is a **one-element U32 view**, not an immediate: `aux0..aux3` are spent
+on this operator and an operator has four. It reads a mask-programmed constant
+because a compression ratio is a property of the layer, not of the request.
+
+**What an engine must do.** Dispatch on the presence of the two slots. With
+`in1` absent there is no window segment and `W` is zero; with `in2` absent the
+ratio is one and a candidate is already a KV row, which is the operator as it
+stood. With both present:
+
+* the visible candidate count for the query at absolute position `p` is
+  `(p + 1) / r`, floored, clamped to `context / r`;
+* a selected candidate `g` names KV row `span + W + g`;
+* the emitted row is the window block and the rebased selection, with every
+  `0xffffffff` removed, sorted ascending and tail-padded back to `W + k`.
+
+Refuse a window block whose leading extent is not the span, an `in2` that is not
+one U32 element, and an output narrower than `W + k`. `aux0` is the selection
+width and not the operand width: the output is the join, so `W + k` is its last
+extent and `k` alone is what the operator selects.
+
+`context / r == 0` is **not** a fault. Below one whole compression group the
+released model runs that layer as pure sliding-window attention, so the
+operator selects nothing and emits the window block alone. Refuse it only when
+there is no window block either, because then there is nothing to emit.
+
+**What `ATTENTION.SPARSE` must do with the result.** Bound the index by the
+fused KV operand's own resolved leading extent, and read `aux_id_2` as a bound
+on *positions* only. A19 makes the index name rows of a join — the request's
+rows, the window, then the compressed rows — and a context length in tokens
+counts none of those. `DENSE` and `GQA` keep `aux_id_2` as a row bound because
+their KV view is indexed by position; for them the two numbers are the same
+one. A fused KV buffer presented at capacity still says how much of itself the
+request filled, through its view's extent, which is amendment A13.
+
+**What a backend must do.** Fill both slots and stop emitting the axis-1
+`REDUCTION.GROUPED_CONCAT` that used to follow. The neutral kernel states the
+ratio as an operand rather than as an attribute, so a backend that drops it
+loses an operand rather than silently defaulting to one.
+
+**What it does not change.** Amendment A6's ordering clause stands exactly as
+written: a sparse index array is ascending and tail-padded, padding is never
+executed and never counted. A19 does not relax it — it moves the obligation to
+the producer that can actually satisfy it. `ATTENTION.SPARSE` still refuses an
+index that interleaves padding or descends, and it should: after A19 such an
+array can only come from a producer that failed to compact, and a malformed
+index that names real KV rows is exactly the failure a consumer must not
+absorb.
+
+**Where the ordering comes from.** The released kernel is indifferent to it —
+`kernel.sparse_attn` reads `topk_idxs` as a set of `-1`-or-row lanes — so
+ascending order is OpenTallas's choice, not the model's, and it is made once,
+here, by the operator that has all the pieces. The reference this operator
+implements, `runtime/reference/selection.py::index_topk_indices`, already takes
+`compression_ratio`, `start_position` and `offset`; the operator is a strict
+subset of its own contract, and the join is the only thing it adds.

@@ -560,12 +560,20 @@ def build_sparse(
     sinks: np.ndarray,
     scale_bits: int = SPARSE_ATTENTION_SCALE_BINARY32,
     aux=(),
+    kv_dims=None,
 ):
-    """A conforming ATTENTION.SPARSE operator under amendment A6."""
+    """A conforming ATTENTION.SPARSE operator under amendment A6.
+
+    ``kv_dims`` presents the fused KV object through a shorter view than the
+    object holds, which is how a capacity buffer states how many of its rows
+    the request has filled -- amendment A13's clamp, not an auxiliary symbol.
+    """
     build = Build()
     span, heads, dim = q.shape
     q_view = build.view(build.object_of(q), DType.BF16, q.shape)
-    kv_view = build.view(build.object_of(kv), DType.BF16, kv.shape)
+    kv_view = build.view(
+        build.object_of(kv), DType.BF16, kv_dims if kv_dims else kv.shape
+    )
     index_view = build.view(build.object_of(indices), DType.U32, indices.shape)
     sink_view = build.view(build.object_of(sinks), DType.FP32, sinks.shape)
     out_view = build.view(
@@ -791,6 +799,14 @@ def test_sparse_rejects_a_block_width_other_than_the_frozen_one():
 
 
 def test_sparse_rejects_interleaved_padding():
+    """A6's ordering clause is kept, and amendment A19 is why it can be.
+
+    Before A19 nothing could produce a compacted joined index, so this refusal
+    fired on the released model's own array shape.  A19 makes
+    ``ROUTE.INDEX_TOPK`` emit the join compacted and ascending, which leaves
+    this case reachable only from a producer that did not, and an index that
+    interleaves padding still names real KV rows -- so it is still refused.
+    """
     q, kv, sinks = sparse_case(47, span=1, heads=1, dim=4, rows=4)
     indices = np.array([[0, NO_ID, 2]], dtype=np.uint32)
     build, _ = build_sparse(q=q, kv=kv, indices=indices, sinks=sinks)
@@ -816,12 +832,49 @@ def test_sparse_rejects_an_out_of_range_index():
     assert "outside" in result.message
 
 
-def test_sparse_bounds_the_kv_view_with_a_runtime_symbol():
-    """A fused KV view spans its capacity; only the filled rows may be read."""
+def test_sparse_bounds_the_kv_index_by_the_operand_extent():
+    """A fused KV view spans its capacity; only the rows it resolves are rows.
+
+    Amendment A19 makes this the operand's own extent rather than ``aux_id_2``.
+    The KV operand of a sparse attention is a *joined row space* -- the
+    request's rows, the window, then the compressed rows -- and no count of
+    tokens says how many rows that is, so a context length cannot bound it.
+    The capacity-versus-filled distinction is the view's, which is what A13 and
+    A18 are for: the object below holds six rows and the view presents four.
+    """
     q, kv, sinks = sparse_case(53, span=1, heads=1, dim=4, rows=6)
     kv[4:] = narrow(np.full((2, 4), 9.0, dtype=np.float32))
     indices = np.array([[0, 4]], dtype=np.uint32)
     build, _ = build_sparse(
+        q=q,
+        kv=kv,
+        indices=indices,
+        sinks=sinks,
+        kv_dims=(4, 4),
+        aux=[NO_ID, NO_ID, int(Symbol.CONTEXT_LENGTH)],
+    )
+    device = build.finish()
+    result = device.run_transaction(
+        device.create_session(),
+        entrypoint_id=0,
+        symbols={int(Symbol.CONTEXT_LENGTH): 4},
+    )
+    assert result.status == CompletionStatus.FAILED
+    assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
+    assert "outside the 4 valid rows" in result.message
+
+
+def test_sparse_accepts_a_row_beyond_the_context_symbol():
+    """A19: a joined KV operand has more rows than the context has tokens.
+
+    Six KV rows and a context of four is exactly the released decode shape --
+    a 128-row window and the compressed groups behind it are rows no token
+    count reaches.  Before A19 this was refused and the rebased index it
+    refused was correct.
+    """
+    q, kv, sinks = sparse_case(53, span=1, heads=1, dim=4, rows=6)
+    indices = np.array([[0, 5]], dtype=np.uint32)
+    build, out_view = build_sparse(
         q=q,
         kv=kv,
         indices=indices,
@@ -834,9 +887,17 @@ def test_sparse_bounds_the_kv_view_with_a_runtime_symbol():
         entrypoint_id=0,
         symbols={int(Symbol.CONTEXT_LENGTH): 4},
     )
-    assert result.status == CompletionStatus.FAILED
-    assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
-    assert "outside" in result.message
+    assert result.status == CompletionStatus.SUCCESS, result.message
+    expected = sparse_attention_bf16(
+        [q.tolist()],
+        [kv.tolist()],
+        [int(code) for code in sinks.view(np.uint32)],
+        [[[0, 5]]],
+        scale_binary32=SPARSE_ATTENTION_SCALE_BINARY32,
+    )
+    assert np.array_equal(
+        read(device, out_view), np.asarray(expected.values[0], dtype=np.uint16)
+    )
 
 
 def test_attention_rejects_a_non_positive_scale():

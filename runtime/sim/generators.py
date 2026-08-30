@@ -268,6 +268,25 @@ def arange_u32_v1(parameters: Mapping[str, Any]) -> np.ndarray:
     return np.arange(count, dtype=np.uint32)
 
 
+@register("constant_u32_v1")
+def constant_u32_v1(parameters: Mapping[str, Any]) -> np.ndarray:
+    """``count`` copies of one unsigned parameter.
+
+    Amendment A19 gives ``ROUTE.INDEX_TOPK`` a compression ratio, and an
+    operator can only be handed one through an input view.  The ratio is a
+    pinned property of the layer, not of the request, so the view reads a
+    mask-programmed constant -- declared here rather than smuggled in as the
+    extent of some operand that happens to be that long.
+    """
+    value = int(_require(parameters, "value"))
+    count = int(parameters.get("count", 1))
+    if count <= 0:
+        raise GeneratorError("count must be positive")
+    if not 0 <= value <= 0xFFFFFFFF:
+        raise GeneratorError("value must be an unsigned 32-bit integer")
+    return np.full(count, value, dtype=np.uint32)
+
+
 def generate(name: str, parameters: Mapping[str, Any]) -> np.ndarray:
     try:
         function = _REGISTRY[name]

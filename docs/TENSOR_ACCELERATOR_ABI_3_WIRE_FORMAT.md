@@ -685,6 +685,31 @@ extent that is genuinely a sum of terms over two *different* symbols in one
 phase is outside this amendment, and would need a further one rather than a
 reinterpretation of these fields.
 
+**One released operand is on the far side of that boundary, measured.**
+`main.layerNN.attention_kv_view` on a compressed layer joins three operands
+whose resolved leading extents are `SPAN_TOKENS`, a static 128, and
+`CONTEXT_LENGTH / ratio`. Its output is therefore
+`SPAN_TOKENS + 128 + CONTEXT_LENGTH / ratio`, a sum over **two** bound symbols
+in one phase, and neither the table above nor the ROM backend states it: the
+table spells the symbol `5 * CONTEXT_LENGTH / 4 + 128` and the backend emits
+`5 * SPAN_TOKENS / 4 + 128`, which are the same number only where
+`span == context`. Resolving the deployed views under three request shapes
+gives A17's sum check as
+
+```text
+prefill, span == context == 104   : 104 + 128 + 26     = 258 vs 258   pass
+prefill, span 65,536, context 100,000: 65,536 + 128 + 25,000 = 90,664 vs 82,048 fail
+decode,  span 1, context 105      : 1 + 128 + 26       = 155 vs 129   fail
+```
+
+so it holds only in a prefill that is one whole tile, and the first decode step
+after that prefill is already outside it. The two-operand window join beside it
+— `SPAN_TOKENS + 128`, one symbol — passes in both phases, which is what says
+the boundary is exactly the second symbol and not the join. This is recorded
+here rather than repaired here: the repair is a further amendment giving an
+extent a *second* affine term over a second bound symbol, and A18's fields
+cannot be reinterpreted into one.
+
 **An extent that floors to zero is not a clamp.** Three tokens contain no whole
 group of four, so `extent` is zero at `b = 0` and `dim[a]` keeps its block.
 That is deliberate: ABI 3.0 has no zero-extent view — the verifier refuses one
@@ -740,6 +765,197 @@ divider over a 64-bit numerator, the same structure `ot_a3_loop_stack.sv`
 already runs for `bound_divisor`; a numerator and unit of one bypass it, so the
 A13 path costs exactly the cycles it always did.
 
+### 12.9 Amendment A19 — a sparse index is produced joined, rebased and compacted
+
+`ROUTE.INDEX_TOPK` gains two operands out of the three input slots it left
+empty. `input_view_1` is the **sliding-window index block** `[span, window]`
+its result is joined to, and `input_view_2` is a one-element U32 view naming
+the **compression ratio** of its candidate axis. `output_view_0` becomes the
+joined array `[span, window + k]`, **compacted and ascending**, tail-padded
+with `0xffffffff`. `NO_ID` in either slot is the operator this has always
+been: no window segment, ratio one, no rebase.
+
+With a compression ratio `r`, the candidate axis holds `context / r` groups,
+group `g` completes at absolute position `r * (g + 1) - 1`, and a causal query
+at absolute position `p` therefore sees
+
+```
+visible = (p + 1) / r        candidates, floored
+row(g)  = span + window + g  the KV row a selected candidate names
+```
+
+and the operator writes `sort(compact(window_row, rebased_selection))`.
+
+**Why the ABI needed this.** This was three defects at one boundary, and every
+one of them was read off the device rather than argued about. The ROM
+deployment's `ROUTE.INDEX_TOPK` operator carried
+`in = [scores, NO_ID, NO_ID, NO_ID]` and `aux = [512, 0, CONTEXT_LENGTH,
+POSITION_START]`, its result was joined to a window block by a separate
+`REDUCTION.GROUPED_CONCAT` on axis 1, and `ATTENTION.SPARSE` refused what
+arrived:
+
+```text
+prefill failed: sparse index view 1425: query 0 interleaves padding with
+selected rows; amendment A6 fixes padding as a trailing run
+```
+
+*The padding was interior.* A sliding window shorter than its 128 slots is
+tail-padded inside its own block, so joining a second block behind it puts
+padding in the middle of the row. That is the refusal above.
+
+*The selection was not rebased.* The operator emitted columns of the score
+view. Column 0 is compression group 0, which lives at KV row `span + 128` of
+the operand `ATTENTION.SPARSE` gathers from — the join is the request's own
+rows, then the window, then the compressed rows. Unrebased, slot 128 of the
+joined array named KV row 0, which is a real row, so nothing refused it.
+
+*The causal horizon was counted in the wrong unit.* `aux_id_1 = 0` is
+`MASK_CAUSAL`, and the engine's causal rule was `limit = base + row + 1`: one
+new candidate per token. On a compressed axis a candidate is a group of `r`
+tokens and one completes every `r` tokens. For the 104-token prompt that is 26
+candidates where the operator offered up to 104, so the selection ranged over
+78 groups the request does not have. This is the operative error in the failing
+tile; the missing rebase is the one that would have been operative next.
+
+**The contract was already written; only the engine had it wrong.** The
+qualified reference this operator implements,
+`runtime/reference/selection.py::index_topk_indices`, already takes
+`compression_ratio`, `start_position` and `offset`, and already applies exactly
+the mask above. The qualified consumer,
+`runtime/reference/sparse_attention.py`, already accepts `-1` at **any** slot
+with no ordering requirement, and counts `explicit_padding_slots` separately
+from `implicit_tail_padding_lanes` — it *expects* padding that is not a
+suffix. Both mirror the released model:
+`inference/model.py::Attention.forward` concatenates the window and compressed
+indices into one `sparse_attn` call, `inference/kernel.py::sparse_attn` reads
+each slot as `idxs[i] != -1` with no order imposed, and `Indexer.forward`
+returns `topk_idxs + offset` for `offset = kv.size(1) if start_pos == 0 else
+win`. The rebase is in the producer in the released model too.
+
+**One rule replaces the released model's two branches.** `Indexer.forward`
+masks with `(s + 1) // ratio` when `start_pos == 0` and exposes its whole cache
+otherwise. Substituting the absolute position `p = base + row` into A19's rule
+gives `(row + 1) / r` at `base = 0`, which is the first branch, and
+`(p + 1) / r = context / r`, every cached group, at a span of one — which is
+the second. A tiled prefill, which the released implementation never performs
+and neither branch describes, is the general case in between, and it is the
+case OpenTallas actually runs.
+
+**Nothing on the wire changes.** `input_view_1` and `input_view_2` are assigned
+u32 fields at payload bytes 28 and 32, not reserved bytes, and
+`DeploymentBuilder.operator` fills an unnamed operand slot with `NO_ID`, so
+every `INDEX_TOPK` written before this amendment carries `NO_ID` in both and
+therefore means the un-joined, ratio-one operator it already was. This is the
+same class of change as A6, which gave `ATTENTION.SPARSE` a fourth operand
+without moving a byte, and as A17, which fixed the interpretation of an
+assigned field for one subopcode.
+
+**Why an input slot and not an auxiliary one.** `aux_id_0` through `aux_id_3`
+are all spent on this operator — `k`, the mask mode, the context symbol and the
+position-base symbol — and an operator has exactly four. The compression ratio
+is a scalar, so the temptation is to assign it an undefined *value* of
+`aux_id_1` the way A12 assigned an unused symbol number. That is refused here:
+`aux_id_1` means "mask mode" for four subopcodes across two engine families,
+and a field that means one thing for `WINDOW_INDEX` and two things for
+`INDEX_TOPK` is the divergence this document exists to remove. An input view is
+the channel an operator has for a value it did not compute, and the ratio is
+pinned per layer, so it reads a one-element mask-programmed constant declared
+by the `constant_u32_v1` generator.
+
+**Why the ordering clause of A6 stands.** The weaker repair was to retract it:
+let a sparse index carry padding anywhere and be unordered, as the released
+kernel does. That closes the first defect and neither of the other two, and it
+leaves the two the device cannot see — an unrebased index and a horizon in the
+wrong unit both name real KV rows and produce a silently wrong token. A6 is
+kept and the producer is made to satisfy it, which turns all three into
+something a consumer can check.
+
+**What a backend must do.** Emit the window block into `input_view_1` and the
+ratio constant into `input_view_2`, and stop emitting the axis-1
+`GROUPED_CONCAT` behind them. A join that A19 folds into its producer is one
+operator with two spellings the moment one backend folds it and the other does
+not, which is what A17 abolished for the axis and A18 for the extent.
+
+**And the consumer bounds the row space, not the token count.** A19 defines
+what a sparse index names, so it has to say what checks it. `ATTENTION.SPARSE`
+read `aux_id_2` as a count of KV rows, truncated its fused KV operand to that
+many, and refused every index beyond it. On a joined operand that is wrong in
+both directions: the operand had 258 rows for a 104-token request and lost 154
+of them, and the first correctly rebased index was refused —
+
+```text
+prefill failed: sparse index view 1419: query 3 selects KV row 232, outside
+the 104 valid rows
+```
+
+— where 232 is `span 104 + window 128 + group 0`, exactly right. The fused KV
+operand is a **row space**: the request's rows, the window, then the compressed
+rows, and no count of tokens says how many that is. Its own resolved extent
+does, which A13 and A18 already make the request's size. So for `SPARSE`,
+`aux_id_2` bounds the *positions* the causal base check uses and the operand's
+leading extent bounds the *rows*. `DENSE` and `GQA` are untouched: their KV view
+is indexed by position, so for them the two are the same number. A capacity
+buffer still states how much of itself is filled — through its view, which is
+what A13's clamp is for.
+
+**Zero candidates is not a fault.** A context shorter than one compression
+group has completed none, and the released model runs that layer as pure
+sliding-window attention: `get_compress_topk_idxs` returns a `[seqlen, 0]`
+block and the concatenation behind it is a no-op. So `context / r == 0` selects
+nothing and the operator emits the window block alone. That is what keeps A19's
+operator *unconditional* where the two kernels it replaces were not: the
+selection used to be predicated off and the join used to name an absent
+operand, and now the only thing that vanishes is a score operand the operator
+already knows how to have none of. It is refused only when there is also no
+window block, because then the operator has nothing to emit and an empty
+softmax has no value.
+
+**Refusals.** Three, before the operator reads a score:
+
+- an `input_view_1` whose leading extent is not the score view's span;
+- an `input_view_2` that is not a single U32 element; and
+- an `output_view_0` narrower than `window + k`.
+
+`aux_id_0` is the **selection** width, not the operand width. The output is the
+join, so its last extent is `window + k` and a backend that reads `k` off the
+output declares `640` where `512` belongs — measured, on the first run of this
+amendment:
+
+```text
+prefill failed: ROUTE.INDEX_TOPK selects 640 positions and joins a 128-slot
+window into 640 slots
+```
+
+**How far it gets.** With A19 the DeepSeek-V4-Flash ROM wafer deployment
+executes the whole ratio-4 sparse path of `TA-DS-CHAT-1` — the indexer's
+selection, the rebase, the join and the sparse attention behind it — and runs
+514 seconds against the 343 the A6 refusal used to reach. It stops in a
+different layer, on a different question:
+
+```text
+prefill failed: COMPRESS_STATE_UPDATE span 104 contains no complete group of
+128; the should-compress predicate is false and the operation must not be
+issued
+```
+
+That is section 12.8's own trap, at ratio 128 instead of ratio 4: a 104-token
+request completes no whole group of 128, so the compressed half of that layer
+does not exist for this request and the released model runs it as pure
+sliding-window attention. The neutral graph states the predicate; nothing on
+either lane yet acts on one. That is the next amendment's subject, not this
+one's.
+
+**RTL 3.0.** Not involved, for the same reason A17 was not, and the proof is
+the same line. `ot_a3_microsequencer.sv`'s operand walk is a six-way multiplexer
+over `op_payload[223:192]` through `op_payload[383:352]` — `input_view_0..3` and
+`output_view_0..1`, payload bytes 24 through 47 — selected by a slot counter and
+not by the subopcode, and every value above bit 383 is dark to it. A19 puts a
+real descriptor ID where an operator previously carried `NO_ID` in a slot the
+sequencer already walks, and changes nothing about how it walks it. The
+microsequencer has never read `aux_id_0..3` at bits 511:384 either, which is
+why the alternative above would also have been invisible to it — invisibility to
+the sequencer is not the argument for a change, only a bound on its cost.
+
 ## 13. Amendments made at the architecture freeze
 
 The draft of this document disagreed with `TA-ADR-003` in five places. All five
@@ -784,6 +1000,7 @@ remain normative.
 | A16 | two rotary contracts; the carried plane of a partial dequantisation; the expert sum's trailing base | operator conventions, section 16 |
 | A17 | a concatenation states the axis it joins | this document, section 12.7; operator conventions, section 17 |
 | A18 | an extent may be an affine function of a bound symbol, at a named axis | this document, section 12.8; operator conventions, section 18 |
+| A19 | a sparse index is produced joined, rebased and compacted | this document, section 12.9; operator conventions, section 19 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a
