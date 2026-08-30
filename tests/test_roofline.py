@@ -2696,3 +2696,60 @@ def test_report_lists_every_assumed_input(generated) -> None:
         report = (first / study_id / "REPORT.md").read_text()
         for path in result["graded_inputs"]["assumed"]:
             assert f"`{path}`" in report
+
+
+def test_the_latency_correction_may_fall_on_either_side_of_one(generated) -> None:
+    """The throughput view was wrong in two opposite directions, not one.
+
+    It is tempting to assume the latency separation can only make a machine
+    slower per user, and an audit rule saying so would look reasonable. It would
+    be wrong, and the two regimes are worth naming because a future reader will
+    reach for that rule again:
+
+    * where a term does NOT scale with batch -- a weight read, which happens once
+      per step however many users are in flight -- the old view divided it across
+      every device while a token visits them in sequence. The correction is the
+      slot count and is greater than one.
+    * where a term DOES scale with batch -- KV, which is per user -- the old view
+      charged one user the whole batch's traffic. A slot serves only
+      ``batch / token_slots`` users, so the correction is less than one. The
+      largest instance in the study is a 672-GPU hybrid at batch 256, where 84
+      slots each serve 3.05 users: 202 tok/s per user becomes 516.
+
+    What must hold unconditionally is the one-slot case, because a machine with a
+    single slot has no separation to make.
+    """
+
+    _, results, _, _ = generated
+    points = [
+        point
+        for result in results.values()
+        for point in result["points"]
+        if point["feasible"] and point.get("latency_correction_x") is not None
+    ]
+    assert points, "no feasible points carry a latency correction"
+
+    single = [p for p in points if p["token_slots"] == 1]
+    assert single, "the study must contain single-slot machines"
+    for point in single:
+        assert point["latency_correction_x"] == pytest.approx(1.0, abs=1e-12), (
+            "a one-slot machine serves every user from the same resources, so the"
+            " two views must coincide exactly"
+        )
+
+    multi = [p for p in points if p["token_slots"] > 1]
+    above = [p for p in multi if p["latency_correction_x"] > 1 + 1e-9]
+    below = [p for p in multi if p["latency_correction_x"] < 1 - 1e-9]
+    assert above and below, (
+        "both regimes must be represented, or the study is not exercising the"
+        " separation it claims to model"
+    )
+
+    # Whichever side it falls on, the three rates stay consistent with each other.
+    for point in points:
+        assert point["delivered_tokens_s"] == pytest.approx(
+            point["batch_size"] * point["per_user_tokens_s"], rel=1e-9
+        )
+        assert point["aggregate_tokens_s"] == pytest.approx(
+            point["pipeline_fill_users"] * point["per_user_tokens_s"], rel=1e-9
+        )

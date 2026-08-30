@@ -305,6 +305,7 @@ def _finish(
     span_max: int,
     inputs: tuple[str, ...],
     outputs: tuple[str, ...],
+    extra_symbols: tuple[RuntimeSymbol, ...] = (),
 ) -> KernelGraph:
     builder.write()
     state_ids = tuple(s.state_id for s in states)
@@ -314,6 +315,7 @@ def _finish(
         symbols=(
             RuntimeSymbol(name="span_tokens", minimum=1, maximum=span_max),
             RuntimeSymbol(name="context_tokens", minimum=1, maximum=span_max),
+            *extra_symbols,
         ),
         tensors=tuple(builder.tensors),
         states=states,
@@ -758,6 +760,13 @@ def deepseek_shaped_graph(
     )
     span = Symbolic("span_tokens", 1, span_max)
     context = Symbolic("context_tokens", 1, span_max)
+    # The compressor emits one row per group of ``ratio`` tokens, and the
+    # released exporter declares that axis as a *derived* symbol the frozen A5
+    # registry does not name.  Amendment A18 resolves it as ``SPAN_TOKENS`` in
+    # units of the ratio, so the fixture has to carry the axis for the lowering
+    # to have anything to state about it.
+    compression_ratio = 4
+    groups = Symbolic("span_groups_ratio4", 1, max(span_max // compression_ratio, 1))
     layers = len(sequence)
 
     token_ids = builder.value("input.token_ids", "u32", (span,), "input")
@@ -838,7 +847,7 @@ def deepseek_shaped_graph(
             ),
             (
                 builder.value(
-                    f"{prefix}.compressed", "bf16", (span, kv_width), "activation"
+                    f"{prefix}.compressed", "bf16", (groups, kv_width), "activation"
                 ),
             ),
             contract="deepseek_v4_compress_fp32_bf16_v1",
@@ -1153,6 +1162,14 @@ def deepseek_shaped_graph(
         span_max=span_max,
         inputs=(token_ids, positions),
         outputs=(logits, next_token),
+        extra_symbols=(
+            RuntimeSymbol(
+                name="span_groups_ratio4",
+                minimum=0,
+                maximum=max(span_max // compression_ratio, 1),
+                binding="derived",
+            ),
+        ),
     )
 
 
@@ -2124,6 +2141,91 @@ def test_routed_matmul_declares_its_expert_count(deepseek_build):
     assert operators
     for descriptor in operators:
         assert descriptor.payload["aux_id_0"] == 8
+
+
+def test_the_derived_group_names_resolve_to_a_symbol_and_a_ratio() -> None:
+    """Amendment A18: a group count is a registered symbol divided by a ratio.
+
+    The released DeepSeek exporter declares eight derived runtime symbols the
+    frozen A5 registry does not name, and four of them are a division of one it
+    does: ``span_groups_ratio4`` is ``SPAN_TOKENS / 4``.  Before A18 there was
+    no way to say that, and every tensor leading with one presented its declared
+    maximum -- 65,536 groups for a four-token request.  The other four are
+    ``REDUCTION.GROUPED_CONCAT`` output extents, which A17 already makes the sum
+    of the join's inputs, and naming them here would state that sum twice.
+    """
+    from compiler.backends.rom.common.program import SYMBOL_BY_NAME
+    from runtime.abi3.descriptors import Symbol
+
+    assert SYMBOL_BY_NAME["span_groups_ratio4"].symbol == Symbol.SPAN_TOKENS
+    assert SYMBOL_BY_NAME["span_groups_ratio4"].unit == 4
+    assert SYMBOL_BY_NAME["span_groups_ratio128"].unit == 128
+    assert SYMBOL_BY_NAME["context_groups_ratio4"].symbol == Symbol.CONTEXT_LENGTH
+    assert SYMBOL_BY_NAME["context_groups_ratio4"].unit == 4
+    # A token axis is the amendment's unit-one case, which encodes as zero.
+    assert SYMBOL_BY_NAME["span_tokens"].unit == 1
+    for name in (
+        "attention_rows_window",
+        "attention_rows_ratio4",
+        "attention_rows_ratio128",
+        "selected_rows_ratio128",
+    ):
+        assert name not in SYMBOL_BY_NAME
+
+
+def test_every_declared_request_extent_has_a_term_that_walks_it(
+    qwen_build, deepseek_build
+):
+    """Amendment A18's walk test is an identity the backend has to maintain.
+
+    A view naming an axis and a unit is resolved only by a term for which
+    ``term_stride * unit == stride[axis] * bound_divisor``; the loop counts the
+    symbol's units and the axis counts its own.  Get the conversion wrong and
+    nothing shortens the operand -- it silently keeps its declared maximum,
+    which is the 65,536-candidate failure the amendment exists to remove.  The
+    verifier refuses such a view, so this asserts the arithmetic directly rather
+    than relying on the refusal to be reached.
+    """
+    from runtime.abi3.descriptors import SelectorKind
+
+    for deployment, _plan in (qwen_build, deepseek_build):
+        checked = 0
+        for descriptor in deployment.table.descriptors():
+            if descriptor.descriptor_type != ExtendedDescriptorType.TENSOR_VIEW:
+                continue
+            payload = descriptor.payload
+            axis = int(payload["extent_axis"])
+            unit = max(int(payload["extent_unit"]), 1)
+            assert axis < int(payload["rank"])
+            assert int(payload["extent_unit"]) != 1, "a unit of one encodes as zero"
+            walked = False
+            for slot in range(int(payload["dynamic_term_count"])):
+                if payload[f"term{slot}_kind"] != SelectorKind.LOOP_INDUCTION:
+                    continue
+                loop = deployment.table.get(
+                    int(payload[f"term{slot}_index"]),
+                    ExtendedDescriptorType.LOOP_CONTROL,
+                )
+                if loop.payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
+                    continue
+                divisor = max(int(loop.payload["bound_divisor"]), 1)
+                if divisor % unit:
+                    continue
+                if int(payload[f"term{slot}_stride"]) * unit == (
+                    int(payload[f"stride{axis}"]) * divisor
+                ):
+                    walked = True
+                    # Iteration i covers [i*block, (i+1)*block) of that axis.
+                    assert int(payload[f"dim{axis}"]) <= divisor // unit
+            if axis or int(payload["extent_unit"]):
+                assert walked, (
+                    f"view {descriptor.descriptor_id} declares axis {axis} in "
+                    f"units of {unit} and no term walks it"
+                )
+                checked += 1
+        # Qwen states every extent in tokens, so it declares none of this and
+        # its deployment is byte-identical to the one written before A18.
+        assert checked or deployment.table.digest
 
 
 def test_compressor_operators_carry_the_ratio_and_the_start_position(deepseek_build):

@@ -94,6 +94,7 @@ from runtime.abi3.descriptors import (
     MAX_RANK,
     Phase,
     SelectionMode,
+    SelectorKind,
     Symbol,
 )
 # The frozen compression ratios, from the module that defines them rather than
@@ -273,22 +274,27 @@ ABI_EMPTY_INPUT_SLOTS: Mapping[str, tuple[int, ...]] = {
 #: has to be: the arithmetic is independent per leading position, so
 #: ``batch * span`` is the count either way.
 #:
-#: The exception is the state update, and it is not a placement this backend
-#: gets to choose.  Its groups are formed *along* ``S`` and its overlap reaches
-#: across ``G``, so its request-dependent extent has to sit at axis 1, behind
-#: the batch -- which is the one axis A13 cannot clamp.  It is listed here
-#: because the rank is still the operator's to state and stating it makes the
-#: operator fail closed, in the engine's own words, on the extent it cannot be
-#: given.  See :meth:`_token_as_batch`.  This mirrors ``_batched_operand`` in
+#: See :meth:`_token_as_batch`.  This mirrors ``_batched_operand`` in
 #: ``compiler/backends/hbm_sram/lower.py``: one convention, two backends.
-TOKEN_AS_BATCH_KINDS = frozenset(
-    {
-        "HYPER_CONNECT_POST",
-        "COMPRESS_PROJECT",
-        "COMPRESS_POOL",
-        "COMPRESS_STATE_UPDATE",
-    }
-)
+TOKEN_AS_BATCH_KINDS = frozenset({"HYPER_CONNECT_POST", "COMPRESS_PROJECT"})
+
+#: The rows that need the *other* placement: batch leading at extent one, and
+#: the request-dependent extent behind it at axis 1.
+#:
+#: ``VECTOR.COMPRESS``'s state update forms its groups *along* ``S`` --
+#: ``groups = span // ratio`` -- and its overlap transform reaches across ``G``
+#: (``pool[:, 1:, :ratio] = groups[:, :-1, :, :head_dim]``), so neither extent
+#: can be the batch and both sit at axis 1.  Its pool reads the operands the
+#: state update writes, in the same shape.
+#:
+#: Until amendment A18 this was not a placement at all, because A13 clamped
+#: ``dim0`` only: ``[T, 1, 2, W]`` put the tokens in the batch and the engine
+#: refused it with ``span 1 contains no complete group of 4``, and
+#: ``[1, T_max, 2, W]`` was never clamped and read 262,144 rows of zeros.  A18
+#: lets the view name the axis, and name the unit its elements are counted in,
+#: so the group axis is ``SPAN_TOKENS`` in units of the compression ratio.
+#: See :meth:`_batch_leads`.
+BATCH_LEADS_KINDS = frozenset({"COMPRESS_POOL", "COMPRESS_STATE_UPDATE"})
 
 MHC_SUBCASE: Mapping[str, int] = {
     "HYPER_CONNECT_PRE": 0,
@@ -459,23 +465,55 @@ class KernelShape:
     #: multiple of a token it holds -- six routed copies for a dispatched
     #: activation, one for the token that produced them.  See ``_shape_of``.
     per_token: bool = False
+    #: Amendment A18's unit: how many of ``symbol``'s units one element of the
+    #: blocked axis holds.  ``rows``, ``block`` and every view extent are in the
+    #: *axis's* units; the loop's ``bound_divisor`` is in the symbol's, so it is
+    #: ``block * unit``.  One for a token axis, four for a ratio-4 group axis.
+    unit: int = 1
 
 
 #: Neutral symbol name -> the frozen runtime-symbol registry.
-SYMBOL_BY_NAME: Mapping[str, Symbol] = {
-    "span_tokens": Symbol.SPAN_TOKENS,
+@dataclass(frozen=True)
+class RequestAxis:
+    """A neutral axis name resolved to an A5 symbol and an A18 unit.
+
+    ``unit`` is how many of the symbol's units one element of the axis holds:
+    a compressed group of four tokens is ``SPAN_TOKENS`` in units of four.
+    Amendment A18 (wire format section 12.8) put the unit on the view rather
+    than in the registry, and section 4 is why -- ``span_groups_ratio4`` names
+    one model's compression ratio, and the frozen registries do not name a
+    model.  A division of a symbol already in the registry is not a new symbol.
+    """
+
+    symbol: Symbol
+    unit: int = 1
+
+
+SYMBOL_BY_NAME: Mapping[str, RequestAxis] = {
+    "span_tokens": RequestAxis(Symbol.SPAN_TOKENS),
     # The two exporters spell the context extent differently -- Qwen's graph
     # declares ``context_tokens`` and DeepSeek's declares ``context_length`` --
     # and an unrecognised name is not an error here, it is silence: the operand
     # keeps its declared maximum and no block loop is opened, so a 4-token
     # request would address the whole 262,144-row context.  Both names are
     # listed rather than one being assumed.
-    "context_tokens": Symbol.CONTEXT_LENGTH,
-    "context_length": Symbol.CONTEXT_LENGTH,
-    "position_start": Symbol.POSITION_START,
-    "position_end": Symbol.POSITION_END,
-    "generation_index": Symbol.GENERATION_INDEX,
-    "batch": Symbol.BATCH,
+    "context_tokens": RequestAxis(Symbol.CONTEXT_LENGTH),
+    "context_length": RequestAxis(Symbol.CONTEXT_LENGTH),
+    "position_start": RequestAxis(Symbol.POSITION_START),
+    "position_end": RequestAxis(Symbol.POSITION_END),
+    "generation_index": RequestAxis(Symbol.GENERATION_INDEX),
+    "batch": RequestAxis(Symbol.BATCH),
+    # The compressor's group counts.  Each is a registered symbol divided by a
+    # pinned compression ratio, which is exactly what an A18 unit states; before
+    # the amendment there was no way to say it and all 704 tensors leading with
+    # one of these presented their declared maximum -- 65,536 groups for a
+    # 4-token request.  The ``attention_rows_*`` and ``selected_rows_*`` names
+    # are deliberately absent: they are ``REDUCTION.GROUPED_CONCAT`` output
+    # extents, and A17 already makes a join's output the sum of its inputs.
+    "span_groups_ratio4": RequestAxis(Symbol.SPAN_TOKENS, 4),
+    "span_groups_ratio128": RequestAxis(Symbol.SPAN_TOKENS, 128),
+    "context_groups_ratio4": RequestAxis(Symbol.CONTEXT_LENGTH, 4),
+    "context_groups_ratio128": RequestAxis(Symbol.CONTEXT_LENGTH, 128),
 }
 
 #: Contraction subopcodes: the operations whose operands are stated as matrices.
@@ -1617,6 +1655,8 @@ class RomLowering:
         scale_object_id: int = NO_ID,
         scale_block_elements: int = 0,
         scale_block_rows: int = 0,
+        extent_axis: int = 0,
+        extent_unit: int = 0,
         label: str = "view",
     ) -> int:
         # Amendment A8 freezes block-scale addressing: one scale byte per
@@ -1638,6 +1678,8 @@ class RomLowering:
             scale_block_elements,
             scale_block_rows,
             int(layout),
+            extent_axis,
+            extent_unit,
         )
         if key in self._view_cache:
             return self._view_cache[key]
@@ -1657,6 +1699,8 @@ class RomLowering:
             scale_object_id=scale_object_id,
             scale_block_elements=scale_block_elements,
             scale_block_rows=scale_block_rows,
+            extent_axis=extent_axis,
+            extent_unit=extent_unit,
             permissions=permissions,
             key=f"{label}.{len(self._view_cache):05d}",
         )
@@ -2096,13 +2140,15 @@ class RomLowering:
         return loop, steps.pop()
 
     # -- token blocking and operand geometry ------------------------------
-    def _leading_symbol(self, tensor: Tensor) -> tuple[int | None, int]:
-        """The runtime symbol of a tensor's leading axis, and its multiplier."""
+    def _leading_symbol(self, tensor: Tensor) -> tuple[int | None, int, int]:
+        """The runtime symbol of a tensor's leading axis, its multiplier, unit."""
         if not tensor.shape or not isinstance(tensor.shape[0], Symbolic):
-            return None, 1
+            return None, 1, 1
         axis = tensor.shape[0]
-        symbol = SYMBOL_BY_NAME.get(axis.symbol)
-        return (int(symbol) if symbol is not None else None), int(axis.multiplier or 1)
+        request = SYMBOL_BY_NAME.get(axis.symbol)
+        if request is None:
+            return None, int(axis.multiplier or 1), 1
+        return int(request.symbol), int(axis.multiplier or 1), int(request.unit)
 
     def _principal(self, kernel: Kernel) -> Tensor | None:
         """The operand whose leading extent sets this operator's row geometry.
@@ -2132,8 +2178,10 @@ class RomLowering:
         contraction = family is Major.TENSOR and engine.sub in CONTRACTION_SUBOPS
         principal = self._principal(kernel)
         principal_dims = tuple(self._dims(principal)) if principal is not None else (1,)
-        symbol, multiplier = (
-            self._leading_symbol(principal) if principal is not None else (None, 1)
+        symbol, multiplier, unit = (
+            self._leading_symbol(principal)
+            if principal is not None
+            else (None, 1, 1)
         )
         # A13 states the resolved leading extent as ``symbol - iteration *
         # bound_divisor``, so a *multiplied* symbolic extent -- six routed
@@ -2151,7 +2199,9 @@ class RomLowering:
         # give one operand a shorter maximum than the capability's context
         # bound, and a view that presented the capability's rows would run off
         # that operand's object.
-        rows_bound = self._symbolic_row_bound(kernel)
+        rows_bound = self._symbolic_row_bound(
+            kernel, symbol if symbol is not None else -1, unit
+        )
         configured = int(self.policy.token_block_rows or 0)
         block = max(min(configured or rows_bound, rows_bound), 1)
         # A view's row term advances by ``block * row width`` elements and that
@@ -2238,18 +2288,27 @@ class RomLowering:
             symbol=symbol if symbol is not None else int(Symbol.SPAN_TOKENS),
             principal=principal_dims,
             per_token=per_token,
+            unit=unit,
         )
 
-    def _symbolic_row_bound(self, kernel: Kernel) -> int:
-        """The smallest leading extent any symbolic-leading operand declares."""
+    def _symbolic_row_bound(self, kernel: Kernel, symbol: int, unit: int) -> int:
+        """The smallest leading extent any operand on *this* axis declares.
+
+        An extent is only comparable with another stated in the same symbol and
+        the same A18 unit.  A kernel may hold both -- ``INDEX_SCORE`` reads a
+        token-major query and a group-major key -- and taking the smaller of
+        65,536 groups and 262,144 tokens would bound a token axis by a count of
+        groups, which is the shape of arithmetic A18 exists to stop the backend
+        doing implicitly.
+        """
         span_max = int(self.capability.limits["max_context_positions"])
-        bound = span_max
+        bound = span_max // max(unit, 1)
         for name in (*kernel.inputs, *kernel.outputs):
             tensor = self.tensors.get(name)
             if tensor is None or tensor.role in WEIGHT_ROLES:
                 continue
-            symbol, multiplier = self._leading_symbol(tensor)
-            if symbol is None or multiplier != 1:
+            leading, multiplier, operand_unit = self._leading_symbol(tensor)
+            if leading != symbol or operand_unit != unit or multiplier != 1:
                 continue
             bound = min(bound, self._dims(tensor)[0])
         return max(bound, 1)
@@ -2291,7 +2350,13 @@ class RomLowering:
             step=1,
             max_iterations=shape.trip,
             bound_symbol=Symbol(shape.symbol),
-            bound_divisor=shape.block,
+            # The loop counts the *symbol's* units and the blocked axis counts
+            # its own, ``unit`` symbol units each, so one iteration of a block
+            # of ``block`` axis elements advances the symbol by ``block *
+            # unit``.  Amendment A18's walk test and its clamp both read the
+            # divisor in the symbol's units; with unit one this is what A13
+            # always wrote.
+            bound_divisor=shape.block * shape.unit,
             counter_class_id=self._counter_class("instruction", Major.CONTROL),
             key=f"loop.block.k{kernel.index:05d}",
         )
@@ -2464,13 +2529,14 @@ class RomLowering:
         """The block term that moves a view's leading axis, if it has one."""
         if loop is None or not shape.row_symbolic:
             return None
-        symbol, multiplier = self._leading_symbol(tensor)
+        symbol, multiplier, unit = self._leading_symbol(tensor)
         if symbol is None or (multiplier != 1 and not shape.per_token):
             return None
         width = 1
         for extent in self._dims(tensor)[1:]:
             width *= extent
-        stride = shape.block * width * (multiplier if shape.per_token else 1)
+        block = self._axis_block(shape, unit)
+        stride = block * width * (multiplier if shape.per_token else 1)
         if stride > 0xFFFFFFFF:
             raise RomLoweringError(
                 f"tensor {tensor.tensor_id!r} needs a token-block element stride "
@@ -2491,6 +2557,7 @@ class RomLowering:
         blocked: bool = True,
         element_offset: int = 0,
         term: DynamicTerm | None = None,
+        extent_axis: int = 0,
     ) -> int:
         object_id = self._buffer(tensor.tensor_id)
         permissions = (
@@ -2513,6 +2580,14 @@ class RomLowering:
                 row_block = self._scale_block_rows(tensor)
         if term is None:
             term = self._row_term(tensor, shape, loop) if blocked else None
+        # Amendment A18: the view says which axis the request determines and in
+        # what unit, and the verifier refuses a declaration nothing resolves --
+        # rightly, because an unresolvable one silently presents the declared
+        # maximum.  So the fields are written only alongside the term that
+        # walks that axis, and the unit is the tensor's own.
+        _symbol, _multiplier, unit = self._leading_symbol(tensor)
+        if term is None:
+            extent_axis, unit = 0, 1
         return self._view(
             object_id=object_id,
             dtype=self._dtype(tensor.dtype),
@@ -2524,6 +2599,8 @@ class RomLowering:
             scale_object_id=scale_object,
             scale_block_elements=block if scale_object != NO_ID else 0,
             scale_block_rows=row_block if scale_object != NO_ID else 0,
+            extent_axis=extent_axis,
+            extent_unit=unit,
             label="view.buf",
         )
 
@@ -2558,18 +2635,62 @@ class RomLowering:
         # row-major from the axis it splits.
         return [dims[0], 1, *dims[1:]], [strides[0], strides[0], *strides[1:]]
 
+    def _axis_block(self, shape: KernelShape, unit: int) -> int:
+        """The kernel's token block, counted in an operand axis's own units.
+
+        ``shape.block`` is in the *principal's* units.  A kernel may hold
+        operands in two -- the compressor's state update reads a token-major
+        packed row and writes group-major pools -- and one block of the loop is
+        one span of the symbol either way, so the same block is
+        ``block * shape.unit`` symbol units and ``block * shape.unit / unit``
+        elements of an axis counted in units of ``unit``.  Converting here is
+        what keeps A18's walk test an identity: the term stride this produces
+        and the divisor the loop carries are the same quantity in two units.
+        """
+        symbol_units = int(shape.block) * int(shape.unit)
+        divisor = max(int(unit), 1)
+        if symbol_units % divisor:
+            raise RomLoweringError(
+                f"a token block of {shape.block} in units of {shape.unit} is "
+                f"{symbol_units} symbol units, which is not a whole number of "
+                f"{divisor}-unit elements; amendment A18 needs one iteration to "
+                "be a whole number of the axis it walks"
+            )
+        return max(symbol_units // divisor, 1)
+
+    def _batch_leads(
+        self, tensor: Tensor, shape: KernelShape
+    ) -> tuple[list[int], list[int]]:
+        """An operand presented as ``[1, rows, ...]``: the A18 placement.
+
+        The mirror of :meth:`_token_as_batch`.  Where that one keeps the token
+        axis leading so A13 can clamp it, this one puts a batch of one in front
+        because the operator's own arithmetic needs the request-dependent extent
+        at axis 1 -- and amendment A18 is what makes that extent resolvable, by
+        letting the view name the axis instead of assuming the leading one.
+
+        The inserted axis has one element, so its stride never moves an address.
+        It takes the whole span of the axis it fronts, which keeps the view
+        row-major and leaves ``stride[1]`` equal to one element of the blocked
+        axis -- the stride A18's walk test reads.
+        """
+        dims = self._blocked_dims(tensor, shape)
+        strides = self._row_major_strides(dims)
+        return [1, *dims], [dims[0] * strides[0], *strides]
+
     def _blocked_dims(self, tensor: Tensor, shape: KernelShape) -> list[int]:
         """The tensor's declared extents with its leading axis token-blocked."""
         dims = list(self._dims(tensor))
-        symbol, multiplier = self._leading_symbol(tensor)
+        symbol, multiplier, unit = self._leading_symbol(tensor)
         if not dims or symbol is None or not shape.row_symbolic:
             return dims
+        block = self._axis_block(shape, unit)
         if shape.per_token:
             # One token's worth of *this* operand: six routed rows, or the one
             # token they came from.
-            dims[0] = min(shape.block * multiplier, dims[0])
+            dims[0] = min(block * multiplier, dims[0])
         elif multiplier == 1:
-            dims[0] = min(shape.block, dims[0])
+            dims[0] = min(block, dims[0])
         return dims
 
     @staticmethod
@@ -2801,6 +2922,12 @@ class RomLowering:
             permissions = int(Permission.READ)
             if tensor.role in {"input", "output"}:
                 permissions |= int(Permission.HOST_VISIBLE)
+        # Amendment A18: ``count`` is in the principal's axis units, so the
+        # index vector is shortened in those units too -- one index per row the
+        # movement touches, and a compressor's row is a group of four tokens.
+        # Declared only alongside the loop term that resolves it, which is what
+        # the amendment's third admission rule requires.
+        walked = any(t.kind == int(SelectorKind.LOOP_INDUCTION) for t in terms)
         return self._view(
             object_id=object_id,
             dtype=dtype,
@@ -2808,6 +2935,7 @@ class RomLowering:
             strides=[stride],
             dynamic=terms,
             permissions=permissions,
+            extent_unit=shape.unit if walked else 0,
             label="view.index",
         )
 
@@ -2859,7 +2987,7 @@ class RomLowering:
         """
         contributions = self.tensors[kernel.inputs[0]]
         dims = self._dims(contributions)
-        _symbol, multiplier = self._leading_symbol(contributions)
+        _symbol, multiplier, _unit = self._leading_symbol(contributions)
         trailing = 1
         for extent in dims[1:]:
             trailing *= extent
@@ -2895,13 +3023,16 @@ class RomLowering:
         rather than reducing the wrong number of tokens.
         """
         symbol = Symbol.SPAN_TOKENS
+        unit = 1
         if kernel.outputs:
-            named, multiplier = self._leading_symbol(self.tensors[kernel.outputs[0]])
+            named, multiplier, named_unit = self._leading_symbol(
+                self.tensors[kernel.outputs[0]]
+            )
             if named is not None and multiplier == 1:
-                symbol = Symbol(named)
+                symbol, unit = Symbol(named), named_unit
         trip = max(
             min(
-                self._symbolic_row_bound(kernel),
+                self._symbolic_row_bound(kernel, int(symbol), unit),
                 int(self.capability.limits["max_loop_trip"]),
             ),
             1,
@@ -2912,7 +3043,12 @@ class RomLowering:
             step=1,
             max_iterations=trip,
             bound_symbol=symbol,
-            bound_divisor=1,
+            # One iteration is one element of the blocked axis, which is
+            # ``unit`` of the symbol's own units -- one token, or one compressed
+            # group of four.  A18's walk test needs the divisor to be a whole
+            # number of axis elements, and A13's ``bound_divisor = 1`` is this
+            # with a unit of one.
+            bound_divisor=unit,
             counter_class_id=self._counter_class("instruction", Major.CONTROL),
             key=f"loop.token.k{kernel.index:05d}",
         )
@@ -2992,8 +3128,8 @@ class RomLowering:
         index = self.tensors[kernel.inputs[1]]
         if index.dtype not in INDEX_DTYPES:
             return False
-        source_symbol, source_multiplier = self._leading_symbol(source)
-        index_symbol, index_multiplier = self._leading_symbol(index)
+        source_symbol, source_multiplier, _ = self._leading_symbol(source)
+        index_symbol, index_multiplier, _ = self._leading_symbol(index)
         return (
             source_symbol is not None
             and source_symbol == index_symbol
@@ -3134,6 +3270,21 @@ class RomLowering:
                     loop=loop,
                     writable=writable,
                 )
+        if kernel.kind in BATCH_LEADS_KINDS:
+            # The batch leads at extent one and the request moves axis 1.  The
+            # weights of a state update -- its position embedding -- are
+            # ``[ratio, W]`` with no batch axis and have already returned
+            # through the weight branch above.
+            dims, strides = self._batch_leads(tensor, shape)
+            return self._buffer_view(
+                tensor,
+                dims=dims,
+                strides=strides,
+                shape=shape,
+                loop=loop,
+                writable=writable,
+                extent_axis=1,
+            )
         if kernel.kind in TOKEN_AS_BATCH_KINDS:
             # The operand row states a batch axis the graph does not declare.
             # See TOKEN_AS_BATCH_KINDS: the weights of a compressor projection
@@ -3682,7 +3833,7 @@ class RomLowering:
         # addresses the rows of the request itself.
         absolute = True
         if gather and subject is not None:
-            symbol, _ = self._leading_symbol(subject)
+            symbol, _, _ = self._leading_symbol(subject)
             absolute = symbol is None
         # One index per row the movement touches: the rows it writes for a
         # gather, the rows it reads for a scatter.
