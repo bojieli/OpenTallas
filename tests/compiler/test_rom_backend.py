@@ -9,6 +9,7 @@ rather than trusting a recorded digest.
 from __future__ import annotations
 
 import ast
+import dataclasses
 import hashlib
 import json
 from pathlib import Path
@@ -28,11 +29,18 @@ from compiler.backends.rom.common.inverse import (
     InverseProofError,
     check_rom_inverse,
 )
-from compiler.backends.rom.common.program import RomLoweringError, analyze
+from compiler.backends.rom.common.program import (
+    RomLowering,
+    RomLoweringError,
+    SYMBOL_BY_NAME,
+    _rewrite_comparison,
+    analyze,
+)
 from compiler.backends.rom.deepseek_v4 import (
     MAX_RETICLES,
     build_deepseek_v4_rom_deployment,
     deepseek_v4_rom_capability,
+    deepseek_v4_rom_policy,
     wafer_geometry,
 )
 from compiler.backends.rom.qwen3 import (
@@ -59,11 +67,16 @@ from runtime.abi3.constants import (
     NO_ID,
     ParticipantScope,
     Permission,
+    Route,
     StorageClass,
     Tensor as TensorOp,
     TopologyClass,
 )
-from runtime.abi3.descriptors import ExtendedDescriptorType
+from runtime.abi3.descriptors import (
+    ExtendedDescriptorType,
+    SelectorKind,
+    Symbol,
+)
 from runtime.abi3.records import decode_body, split_program
 from runtime.abi3.verifier import VerificationError, require_admitted
 
@@ -1280,6 +1293,17 @@ def _rom_objects(deployment):
 def _instructions(deployment):
     _header, body = split_program(deployment.program)
     return decode_body(body)
+
+
+def _lowering(graph, capability) -> RomLowering:
+    """A DeepSeek ROM lowering, for the parts of it worth testing alone."""
+    lowering = RomLowering(
+        graph,
+        capability,
+        deepseek_v4_rom_policy(tile_rom_bytes=1 << 16, tiles_per_reticle=8),
+    )
+    lowering.plan_regions()
+    return lowering
 
 
 # ---------------------------------------------------------------------------
@@ -3067,3 +3091,453 @@ def test_on_wafer_collectives_are_tile_scoped_and_not_degenerate(
                 * descriptor.payload["byte_extent"]
             )
     assert "on_wafer_fanout" not in deployment.notes["rom_lowering"]
+
+
+# ---------------------------------------------------------------------------
+# Predicated execution (amendment A3)
+# ---------------------------------------------------------------------------
+#
+# The neutral graph states three conditional shapes and ABI 3.0 states one:
+# ``predicate_id`` plus the ``PREDICATED``/``PREDICATE_INVERT`` flags against a
+# ``PREDICATE`` descriptor.  A declared predicate that no backend lowers is the
+# worst kind of defect available here, because it is *invisible*: the operator
+# issues where the source skips it and either an engine refuses it -- the good
+# case -- or it computes against an operand the request does not have and
+# nothing complains.  These tests pin the mapping and, as importantly, pin what
+# the backend refuses to guess.
+def _predicated_kernels(graph):
+    """``graph`` with one kernel of each declared conditional shape."""
+    kernels = []
+    for kernel in graph.kernels:
+        attributes = dict(kernel.attributes)
+        layer = kernel.kernel_id.split(".")[1] if "." in kernel.kernel_id else ""
+        value = f"decoder.{layer}.compression.should_compress"
+        if kernel.kind == "COMPRESS_PROJECT":
+            attributes["predicate_output"] = value
+            attributes["conditional_outputs"] = {
+                name: value for name in kernel.outputs
+            }
+            attributes["predicate_condition"] = {
+                "prefill": "span_groups_ratio4 > 0",
+                "decode": "context_length % 4 == 0",
+            }
+        elif kernel.kind == "INDEX_SCORE":
+            # A consumer of a conditionally produced value carries the same
+            # predicate, exactly as the released compressor chain does; a
+            # consumer guarded differently would wait on an event its producer
+            # was suppressed from signalling.
+            attributes["execution_predicate"] = value
+        elif kernel.kind == "INDEX_TOPK":
+            attributes["operand_present_predicate"] = {"0": value}
+        kernels.append(dataclasses.replace(kernel, attributes=attributes))
+    return dataclasses.replace(graph, kernels=tuple(kernels))
+
+
+@pytest.fixture(scope="module")
+def predicated_graph(workspace) -> KernelGraph:
+    root = workspace / "predicated"
+    root.mkdir(parents=True, exist_ok=True)
+    return _predicated_kernels(deepseek_shaped_graph(root))
+
+
+@pytest.fixture(scope="module")
+def predicated_build(predicated_graph, deepseek_capability):
+    return build_deepseek_v4_rom_deployment(
+        predicated_graph,
+        capability=deepseek_capability,
+        tile_rom_bytes=1 << 16,
+        tiles_per_reticle=8,
+    )
+
+
+def _predicates(deployment):
+    return {
+        d.descriptor_id: d.payload
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.PREDICATE
+    }
+
+
+def test_a_group_count_predicate_is_a_comparison_on_the_symbol_it_derives_from():
+    """``span_groups_ratio128 > 0`` is ``SPAN_TOKENS >= 128``, not ``> 0``.
+
+    A18 makes a group count an affine image of a registered symbol and A3
+    compares the *symbol*, so the condition has to be moved onto the symbol.
+    Moving it by the wrong amount is not a rounding difference: reading
+    ``span_groups_ratio128 > 0`` as ``SPAN_TOKENS > 0`` makes the predicate true
+    for every non-empty request, which issues the compressor for a span of one
+    -- exactly the operator the predicate exists to suppress.
+    """
+    from runtime.abi3.descriptors import Comparison
+
+    assert _rewrite_comparison(SYMBOL_BY_NAME["span_groups_ratio128"], ">", 0) == (
+        Comparison.GE,
+        128,
+    )
+    assert _rewrite_comparison(SYMBOL_BY_NAME["context_groups_ratio4"], ">", 0) == (
+        Comparison.GE,
+        4,
+    )
+    # The identity axis is the ordinary case and must not gain a unit.
+    assert _rewrite_comparison(SYMBOL_BY_NAME["span_tokens"], ">", 0) == (
+        Comparison.GE,
+        1,
+    )
+    # A bias moves the target, never the unit: the KV join's 128-row window is
+    # there for a span of one, so "more than the window" is "at least one row".
+    assert _rewrite_comparison(SYMBOL_BY_NAME["attention_rows_window"], ">", 128) == (
+        Comparison.GE,
+        1,
+    )
+    assert _rewrite_comparison(SYMBOL_BY_NAME["context_groups_ratio4"], "<", 1) == (
+        Comparison.LT,
+        4,
+    )
+
+
+def test_a_modulus_condition_is_refused_rather_than_approximated(predicated_graph,
+                                                                 deepseek_capability):
+    """The compressor's decode condition, and the line this backend will not cross.
+
+    ``(start_pos + 1) % ratio == 0`` is the released decode predicate.  The
+    frozen ``comparisons`` registry has ``==``, ``!=``, ``<``, ``<=``, ``>``
+    and ``>=`` over a symbol and an immediate, and no arithmetic at all;
+    ``BOOLEAN_OBJECT`` reads a *statically* indexed word, so it cannot read
+    ``ring[start_pos]`` either.  Expressing it would need a new predicate kind,
+    which is an ABI change and not a backend's to make, so the backend says so
+    instead of approximating.
+    """
+    lowering = _lowering(predicated_graph, deepseek_capability)
+    with pytest.raises(RomLoweringError) as excinfo:
+        lowering._symbol_condition("context_length % 4 == 0")
+    assert "modulus" in str(excinfo.value)
+    # And the same refusal when the condition names something unresolvable,
+    # because an unrecognised name would silently predicate nothing.
+    with pytest.raises(RomLoweringError):
+        lowering._symbol_condition("not_a_symbol > 0")
+
+
+def test_the_unrepresentable_half_of_a_predicate_is_reported_not_dropped(
+    predicated_build,
+):
+    """What the lowering could not state, said out loud in the manifest.
+
+    The compressor's predicate has two phases and only prefill is expressible.
+    Lowering the prefill half and saying nothing would leave a decode-time
+    divergence that nothing on the device or in the artifact records; the note
+    is what makes it a known wall instead of a silent one.
+    """
+    deployment, _plan = predicated_build
+    report = deployment.notes["rom_predicates"]
+    refused = report["unrepresentable_predicates"]
+    assert refused, "a graph with a modulus predicate reported none"
+    for value, entry in refused.items():
+        assert value.endswith(".should_compress")
+        assert entry["lowered"] == "span_groups_ratio4 > 0"
+        assert "modulus" in entry["refused.decode"]
+
+
+def test_a_declared_execution_predicate_reaches_the_instruction(predicated_build):
+    """``execution_predicate`` becomes one predicated instruction."""
+    from runtime.abi3.constants import InstructionFlag
+    from runtime.abi3.descriptors import Comparison, PredicateKind
+
+    deployment, _plan = predicated_build
+    predicates = _predicates(deployment)
+    assert predicates, "no PREDICATE descriptor was emitted"
+    for payload in predicates.values():
+        assert payload["predicate_kind"] == int(PredicateKind.COMPARE_SYMBOL)
+        assert payload["selector_kind"] == int(SelectorKind.RUNTIME_SYMBOL)
+    # ``span_groups_ratio4 > 0`` is ``SPAN_TOKENS >= 4``, and one condition is
+    # one descriptor however many operators declare it.
+    stated = {
+        (p["selector_index"], p["comparison"], p["immediate"])
+        for p in predicates.values()
+    }
+    assert stated == {(int(Symbol.SPAN_TOKENS), int(Comparison.GE), 4)}
+    predicated = [
+        instruction
+        for instruction in _instructions(deployment)
+        if instruction.flags & InstructionFlag.PREDICATED
+    ]
+    assert predicated
+    for instruction in predicated:
+        assert instruction.predicate_id in predicates
+
+
+def test_qwen_declares_no_predicate_and_emits_none(qwen_build):
+    """The other half of the property, and the one a default would break.
+
+    Qwen's graph is unconditional, so a predicate appearing here would mean the
+    lowering had invented one -- and a predicate defaulting the wrong way
+    silences real work rather than announcing itself.
+    """
+    from runtime.abi3.constants import InstructionFlag
+
+    deployment, _plan = qwen_build
+    assert not _predicates(deployment)
+    assert "rom_predicates" not in deployment.notes
+    for instruction in _instructions(deployment):
+        assert not instruction.flags & InstructionFlag.PREDICATED
+        assert instruction.predicate_id == NO_ID
+
+
+def test_conditional_outputs_predicate_the_whole_operator(predicated_build,
+                                                          predicated_graph):
+    """Every output conditional on one value is the operator's own predicate.
+
+    ABI 3.0 predicates an instruction, not an output.  ``COMPRESS_STATE_UPDATE``
+    declares its two pooled results conditional because the released
+    ``Compressor.forward`` also writes a raw window; on this ABI that write is
+    not part of the operator -- ``VECTOR.COMPRESS`` binds no STATE resource in
+    the state-update sub-case and the engine refuses one -- so once both
+    declared outputs are conditional there is nothing unconditional left and the
+    instruction carries the predicate.
+    """
+    from runtime.abi3.constants import InstructionFlag
+
+    deployment, _plan = predicated_build
+    conditional = {
+        kernel.index
+        for kernel in predicated_graph.kernels
+        if kernel.attributes.get("conditional_outputs")
+    }
+    assert conditional
+    operators = {
+        d.payload["source_kernel_id"]: d.descriptor_id
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+    }
+    issued = {
+        instruction.descriptor_id: instruction
+        for instruction in _instructions(deployment)
+        if instruction.descriptor_id in set(operators.values())
+    }
+    seen = 0
+    for index in conditional:
+        descriptor = operators.get(index)
+        if descriptor is None:
+            continue
+        instruction = issued[descriptor]
+        assert instruction.flags & InstructionFlag.PREDICATED, (
+            "an operator whose every output is conditional was issued "
+            "unconditionally"
+        )
+        seen += 1
+    assert seen
+
+
+def test_a_partly_conditional_output_set_is_refused(deepseek_graph,
+                                                    deepseek_capability):
+    """One conditional output beside an unconditional one has no lowering.
+
+    Half-lowering it -- predicating the instruction anyway -- would drop a
+    result the source produces; ignoring it would write a result the source does
+    not.  Both are silent, so the backend refuses.
+    """
+    kernels = []
+    for kernel in deepseek_graph.kernels:
+        attributes = dict(kernel.attributes)
+        if kernel.kind == "EXPERT_DISPATCH":
+            attributes["conditional_outputs"] = {
+                kernel.outputs[0]: "span_groups_ratio4 > 0"
+            }
+        kernels.append(dataclasses.replace(kernel, attributes=attributes))
+    graph = dataclasses.replace(deepseek_graph, kernels=tuple(kernels))
+    with pytest.raises(RomLoweringError) as excinfo:
+        build_deepseek_v4_rom_deployment(
+            graph,
+            capability=deepseek_capability,
+            tile_rom_bytes=1 << 16,
+            tiles_per_reticle=8,
+        )
+    assert "conditional outputs" in str(excinfo.value)
+
+
+def test_a_conditionally_present_operand_becomes_two_complementary_paths(
+    predicated_build, predicated_graph
+):
+    """``operand_present_predicate`` is a pair of instructions and a join.
+
+    The operator issues either way and one operand is there only under a
+    condition, which ABI 3.0 cannot say on an operand.  So the full row is
+    issued under the condition and the reduced row under its inverse, and an
+    unpredicated ``CONTROL.NOP`` publishes the event the result is ordered by --
+    events are single-assignment, so the two paths cannot share one, and a
+    consumer that waited on the path that did not run would fault on an
+    unsignalled event.
+    """
+    from runtime.abi3.constants import Control, InstructionFlag
+
+    deployment, _plan = predicated_build
+    conditional = {
+        kernel.index
+        for kernel in predicated_graph.kernels
+        if kernel.attributes.get("operand_present_predicate")
+    }
+    assert conditional
+    operators = {}
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
+            continue
+        operators.setdefault(descriptor.payload["source_kernel_id"], []).append(
+            descriptor.descriptor_id
+        )
+    instructions = _instructions(deployment)
+    pairs = 0
+    for index in conditional:
+        issued = [
+            (position, instruction)
+            for position, instruction in enumerate(instructions)
+            if instruction.descriptor_id in set(operators.get(index, ()))
+        ]
+        if len(issued) != 2:
+            continue
+        (first_at, first), (second_at, second) = issued
+        assert first.predicate_id == second.predicate_id != NO_ID
+        assert first.flags & InstructionFlag.PREDICATED
+        assert second.flags & InstructionFlag.PREDICATED
+        assert not first.flags & InstructionFlag.PREDICATE_INVERT
+        assert second.flags & InstructionFlag.PREDICATE_INVERT
+        assert first.signal_event_id != second.signal_event_id
+        join = instructions[second_at + 1]
+        assert (join.major, join.sub) == (int(Major.CONTROL), int(Control.NOP))
+        assert not join.flags & InstructionFlag.PREDICATED
+        assert join.signal_event_id != NO_ID
+        pairs += 1
+    assert pairs
+
+
+def test_no_instruction_waits_on_an_event_only_a_predicate_can_signal(
+    predicated_build,
+):
+    """The property that turns a mislowered predicate into a device fault.
+
+    A predicated-off instruction signals nothing, and a wait on an unsignalled
+    event is an ``INTERNAL_INVARIANT`` trap rather than a stall.  So no wait set
+    may name an event whose every producer is predicated -- which is also why
+    the alternative-path pair needs its unpredicated join.
+    """
+    from runtime.abi3.constants import InstructionFlag
+
+    deployment, _plan = predicated_build
+
+    def guard(instruction) -> tuple[int, bool]:
+        if not instruction.flags & InstructionFlag.PREDICATED:
+            return (NO_ID, False)
+        return (
+            instruction.predicate_id,
+            bool(instruction.flags & InstructionFlag.PREDICATE_INVERT),
+        )
+
+    signaller: dict[int, tuple[int, bool]] = {}
+    for instruction in _instructions(deployment):
+        if instruction.signal_event_id != NO_ID:
+            signaller[instruction.signal_event_id] = guard(instruction)
+    for instruction in _instructions(deployment):
+        if instruction.wait_set_id == NO_ID:
+            continue
+        payload = deployment.table.get(
+            instruction.wait_set_id, ExtendedDescriptorType.EVENT_WAIT_SET
+        ).payload
+        for slot in range(payload["producer_count"]):
+            produced = signaller[payload[f"producer_{slot}"]]
+            if produced == (NO_ID, False):
+                continue
+            # A conditional producer may only be waited on by a consumer the
+            # *same* predicate governs, in the same polarity: then either both
+            # run or neither does.  Anything else is a wait that survives its
+            # producer's suppression.
+            assert produced == guard(instruction), (
+                f"event {payload[f'producer_{slot}']} is signalled under "
+                f"{produced} and waited on under {guard(instruction)}"
+            )
+
+
+def test_a_reduced_join_states_the_extent_its_remaining_operands_supply(
+    predicated_graph, deepseek_capability
+):
+    """A17's sum, recomputed for the path where one segment is absent.
+
+    The attention KV join is ``span + 128 + context/ratio`` rows.  Drop the
+    compressed segment and it is ``span + 128`` -- the sliding window is a bias
+    and the span is the identity -- which is exactly ``attention_rows_window``.
+    Leaving the full extent on the reduced path would declare rows no operand
+    supplies, and a view that cannot resolve presents its declared maximum.
+    """
+    lowering = _lowering(predicated_graph, deepseek_capability)
+    lowering.tensors["join.current"] = Tensor(
+        tensor_id="join.current",
+        dtype="bf16",
+        shape=(Symbolic("span_tokens", 1, 64), 512),
+        role="activation",
+    )
+    lowering.tensors["join.window"] = Tensor(
+        tensor_id="join.window",
+        dtype="bf16",
+        shape=(128, 512),
+        role="activation",
+    )
+    lowering.tensors["join.compressed"] = Tensor(
+        tensor_id="join.compressed",
+        dtype="bf16",
+        shape=(Symbolic("context_groups_ratio128", 1, 16), 512),
+        role="activation",
+    )
+    reduced, static = lowering._join_extent(
+        ["join.current", "join.window"], 0
+    )
+    assert static == 0
+    assert reduced == SYMBOL_BY_NAME["attention_rows_window"]
+    # And a join of two operands counted in different units has no single
+    # affine image, so the full row is refused rather than guessed.
+    with pytest.raises(RomLoweringError):
+        lowering._join_extent(
+            ["join.current", "join.window", "join.compressed"], 0
+        )
+
+
+def test_an_index_family_the_frozen_operator_cannot_produce_is_named(
+    predicated_graph, deepseek_capability
+):
+    """The silent shape: a name the ABI does not read, over an operator that
+    does something else.
+
+    ``ROUTE.WINDOW_INDEX`` writes ``arange(first, last + 1)`` over absolute
+    positions of a causal window and nothing else.  The DeepSeek export's
+    ratio-128 layers declare ``index_family = "causal_compressed_dense"``,
+    whose released form is ``arange(0, context // ratio) + offset`` -- an
+    enumeration of completed compression *groups*, in a different unit and
+    rebased onto the joined KV rows.  No engine reads ``index_family``, so the
+    difference produces a second copy of the sliding-window position list and
+    every index in it is a legal KV row: no operand check, no bound check and
+    no numeric check can see it.  A backend cannot add the operator, so it
+    names the mismatch on the artifact instead of taking it as the identity.
+    """
+    from compiler.backends.rom.common.program import IMPLEMENTED_INDEX_FAMILIES
+
+    assert "causal_compressed_dense" not in IMPLEMENTED_INDEX_FAMILIES
+    lowering = _lowering(predicated_graph, deepseek_capability)
+    kernel = dataclasses.replace(
+        predicated_graph.kernels[0],
+        kernel_id="probe.enumerate",
+        kind="WINDOW_INDEX",
+        inputs=(),
+        outputs=(),
+        iteration_domain={},
+        attributes={"index_family": "causal_compressed_dense"},
+    )
+    lowering._aux(kernel, Major.ROUTE, int(Route.WINDOW_INDEX))
+    assert lowering._unimplemented_index_families == {
+        "causal_compressed_dense": ["probe.enumerate"]
+    }
+    # And a family the operator does produce is not reported.
+    lowering._unimplemented_index_families.clear()
+    lowering._aux(
+        dataclasses.replace(
+            kernel, attributes={"index_family": "causal_circular_window"}
+        ),
+        Major.ROUTE,
+        int(Route.WINDOW_INDEX),
+    )
+    assert lowering._unimplemented_index_families == {}

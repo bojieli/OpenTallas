@@ -90,10 +90,12 @@ from runtime.abi3.constants import IntegrityMode
 from runtime.abi3.deployment import Deployment, ObjectSource
 from runtime.abi3.descriptors import ExtendedDescriptorType
 from runtime.abi3.descriptors import (
+    Comparison,
     iteration_extent,
     LayoutClass,
     MAX_RANK,
     Phase,
+    PredicateKind,
     SelectionMode,
     SelectorKind,
     Symbol,
@@ -566,6 +568,87 @@ SYMBOL_BY_NAME: Mapping[str, RequestAxis] = {
     "selected_rows_ratio128": RequestAxis(Symbol.SPAN_TOKENS, 128, 1, 128),
 }
 
+#: Amendment A3's frozen ``comparisons`` registry, as the exporter's
+#: symbol-comparison grammar spells it.  ``"<symbol> <op> <integer>"`` is the
+#: whole grammar; an operator outside this table is refused rather than guessed
+#: at, because a predicate that is read wrongly is a predicate that silently
+#: enables or disables an operator.
+PREDICATE_COMPARISONS: Mapping[str, Comparison] = {
+    "==": Comparison.EQ,
+    "!=": Comparison.NE,
+    "<": Comparison.LT,
+    "<=": Comparison.LE,
+    ">": Comparison.GT,
+    ">=": Comparison.GE,
+}
+
+
+def _rewrite_comparison(
+    axis: RequestAxis, operator: str, immediate: int
+) -> tuple[Comparison, int]:
+    """State ``f(S) <op> K`` as a comparison on the bound symbol itself.
+
+    A18 makes a declared axis an affine image of a registered symbol,
+    ``numerator * S / unit + bias`` with the division flooring, and A3's
+    ``COMPARE_SYMBOL`` compares the *symbol* against an immediate.  So a
+    condition written over the derived name has to be moved onto the symbol,
+    and moved **exactly**: ``span_groups_ratio128 > 0`` is ``S // 128 > 0`` is
+    ``S >= 128``, not ``S > 0``.  Getting that wrong by one unit is the whole
+    defect class this lowering exists to close -- a predicate that reads true
+    where the source reads false issues the operator the source skips.
+
+    Only ``numerator == 1`` is rewritten.  A numerator above one makes the
+    image non-surjective and an equality over it names a set of symbol values
+    no single comparison states; rather than approximate it, this refuses.
+    """
+    unit = max(int(axis.unit), 1)
+    numerator = int(axis.numerator)
+    bias = int(axis.bias)
+    if numerator != 1:
+        raise RomLoweringError(
+            f"predicate over an axis whose A18 numerator is {numerator}: a "
+            "comparison on the derived value is not a comparison on the "
+            "symbol, and this backend will not approximate one"
+        )
+    # ``S // unit <op> target`` with ``target = immediate - bias``.  ``S`` is a
+    # count and is never negative, which is what makes each rewrite exact.
+    target = int(immediate) - bias
+    if operator == ">":
+        return Comparison.GE, max(unit * (target + 1), 0)
+    if operator == ">=":
+        return Comparison.GE, max(unit * target, 0)
+    if operator == "<":
+        return Comparison.LT, max(unit * target, 0)
+    if operator == "<=":
+        return Comparison.LT, max(unit * (target + 1), 0)
+    if unit == 1:
+        return PREDICATE_COMPARISONS[operator], target
+    raise RomLoweringError(
+        f"predicate {operator!r} against an axis in units of {unit}: an "
+        "equality on a floored quotient names a range of symbol values and "
+        "``COMPARE_SYMBOL`` states one comparison; this backend will not "
+        "approximate it"
+    )
+
+
+#: The index families ``ROUTE.WINDOW_INDEX`` actually produces.
+#:
+#: The engine writes ``arange(first, last + 1)`` over *absolute positions* of a
+#: causal window, tail-padded -- that and nothing else.  A graph may name a
+#: different family, and the DeepSeek export does: the ratio-128 layers declare
+#: ``causal_compressed_dense``, whose released form is
+#: ``arange(0, context // ratio) + offset`` -- an enumeration of completed
+#: *compression groups*, in a different unit, rebased onto the joined KV rows.
+#: No frozen operator produces that, and ``index_family`` is read by no engine,
+#: so lowering it to ``WINDOW_INDEX`` emits a second copy of the sliding-window
+#: position list under a name that says otherwise.  That is not a fault
+#: anything can catch -- every index it names is a legal KV row -- so the
+#: mismatch is recorded on the deployment instead of being taken as the
+#: identity.  Adding the operator, or restating the plan, is a change to the
+#: frozen table and to the exporter, not to a backend.
+IMPLEMENTED_INDEX_FAMILIES = frozenset({"causal_circular_window"})
+
+
 #: Contraction subopcodes: the operations whose operands are stated as matrices.
 CONTRACTION_SUBOPS = frozenset(
     {
@@ -948,6 +1031,12 @@ class RomLowering:
         self._state_class_aliases: dict[str, str] = {}
         self._state_row_widenings: dict[str, dict[str, int]] = {}
         self._port_cursor = 0
+        self._predicate_cache: dict[tuple[int, int, int], int] = {}
+        self._predicate_values: dict[str, str] | None = None
+        self._predicated_operators: dict[str, str] = {}
+        self._operand_alternatives: dict[str, str] = {}
+        self._unrepresentable_predicates: dict[str, dict[str, str]] = {}
+        self._unimplemented_index_families: dict[str, list[str]] = {}
         self._unify_buffers()
 
     # -- sizes ----------------------------------------------------------
@@ -3933,8 +4022,25 @@ class RomLowering:
                     int(Symbol.POSITION_START),
                 ]
             if sub == int(Route.WINDOW_INDEX):
+                family = str(attributes.get("index_family", ""))
+                if family and family not in IMPLEMENTED_INDEX_FAMILIES:
+                    self._unimplemented_index_families.setdefault(
+                        family, []
+                    ).append(kernel.kernel_id)
+                # ``window_size`` is the name both exporters use; ``window``
+                # was read here and is declared by neither, so every window
+                # index fell through to the 128 default and was right only
+                # because 128 is what the released model uses.  A model with a
+                # different window would have got 128 with nothing to say so.
                 return [
-                    int(attributes.get("window", domain.get("window", 128))),
+                    int(
+                        attributes.get(
+                            "window",
+                            attributes.get(
+                                "window_size", domain.get("window", 128)
+                            ),
+                        )
+                    ),
                     0 if attributes.get("mask_mode", "causal") == "causal" else 1,
                     int(Symbol.CONTEXT_LENGTH),
                 ]
@@ -4363,6 +4469,459 @@ class RomLowering:
         group_key, _slot = self._state_slot[state_id]
         return self._state_group_shape[group_key][2]
 
+    # -- predicates (amendment A3) ---------------------------------------
+    #
+    # The neutral graph states three different conditional shapes and ABI 3.0
+    # states exactly one thing about an instruction: ``predicate_id`` plus the
+    # ``PREDICATED``/``PREDICATE_INVERT`` flags, resolved against a
+    # ``PREDICATE`` descriptor (type ``0x000f``, amendment A3).  So each shape
+    # has to be *mapped* onto that, and the mapping is written out here rather
+    # than inferred at each site:
+    #
+    # ``execution_predicate``
+    #     the whole operator vanishes -- one predicated instruction.
+    # ``conditional_outputs``
+    #     the operator issues and some outputs vanish.  ABI 3.0 has no
+    #     per-output predicate, so this is only expressible when *every*
+    #     output is conditional on one value, which is then the operator's own
+    #     predicate; anything else is refused rather than half-lowered.
+    # ``operand_present_predicate``
+    #     the operator issues and one operand vanishes.  ABI 3.0 has no
+    #     per-operand predicate either, so this becomes a *pair* of
+    #     instructions on complementary predicates -- the full operand row
+    #     under the condition, the reduced row under its inverse -- which is
+    #     what the ``OPTIONAL_FEATURE`` flag's "authenticated alternative path"
+    #     already assumes exists.  Events are single-assignment, so the pair
+    #     cannot share one and an unpredicated ``CONTROL.NOP`` behind them
+    #     publishes the event the result is ordered by.
+    #
+    # A predicate that is declared and not lowered is invisible: the operator
+    # issues where the source skips it, and either an engine refuses it or it
+    # computes against an operand the request does not have.  ``instructions
+    # .predicated_off`` is the measurement that says the mapping is live.
+    def _symbol_condition(self, condition: str) -> tuple[Symbol, Comparison, int]:
+        """Parse one declared condition into an A3 ``COMPARE_SYMBOL`` triple."""
+        parts = str(condition).split()
+        if len(parts) != 3 or parts[1] not in PREDICATE_COMPARISONS:
+            raise RomLoweringError(
+                f"predicate condition {condition!r} is not the declared "
+                "'<symbol> <comparison> <integer>' statement over a runtime "
+                "symbol.  ABI 3.0's frozen predicate kinds state a comparison "
+                "and nothing else: there is no arithmetic in a PREDICATE "
+                "payload and in particular no modulus"
+            )
+        name, operator, literal = parts
+        axis = SYMBOL_BY_NAME.get(name)
+        if axis is None:
+            raise RomLoweringError(
+                f"predicate condition {condition!r} names {name!r}, which is "
+                "not a runtime symbol this backend resolves; an unrecognised "
+                "name would silently predicate nothing"
+            )
+        try:
+            immediate = int(literal)
+        except ValueError:
+            raise RomLoweringError(
+                f"predicate condition {condition!r} compares against "
+                f"{literal!r}, which is not an integer immediate"
+            ) from None
+        comparison, value = _rewrite_comparison(axis, operator, immediate)
+        return Symbol(int(axis.symbol)), comparison, value
+
+    def _predicate_conditions(self) -> Mapping[str, str]:
+        """``predicate_output`` value name -> the condition this target states.
+
+        A kernel that computes a boolean names it in ``predicate_output`` and
+        says what it means in ``predicate_condition``, one entry per phase.  No
+        neutral kind produces a ``bool`` and ABI 3.0 has no operator that could
+        write one, so the value itself cannot exist on the device: what a
+        backend can do is state the *condition* the value stands for, and only
+        where a frozen predicate kind states it.
+
+        The released compressor's condition has two phases and only one of them
+        is expressible.  Prefill is ``span_groups_ratioN > 0`` -- a comparison
+        over a declared symbol, which ``COMPARE_SYMBOL`` states exactly.
+        Decode is ``(start_pos + 1) % ratio == 0``, and the frozen
+        ``comparisons`` registry has no modulus, no masking and no arithmetic;
+        ``BOOLEAN_OBJECT`` reads a *statically* indexed word, so it cannot read
+        ``ring[start_pos]`` either.  Inventing a predicate kind for it would be
+        an ABI change and is not a backend's to make, so the decode form is
+        recorded as unrepresentable and reported in the deployment notes rather
+        than approximated.
+        """
+        if self._predicate_values is not None:
+            return self._predicate_values
+        values: dict[str, str] = {}
+        for kernel in self.graph.kernels:
+            name = kernel.attributes.get("predicate_output")
+            if not name:
+                continue
+            declared = kernel.attributes.get("predicate_condition")
+            if declared is None:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r} declares predicate output "
+                    f"{name!r} and no ``predicate_condition``; a value no "
+                    "instruction can compute and no condition can state is a "
+                    "predicate a backend would have to guess"
+                )
+            forms = (
+                {"": str(declared)}
+                if isinstance(declared, str)
+                else {str(k): str(v) for k, v in dict(declared).items()}
+            )
+            usable: dict[str, str] = {}
+            refused: dict[str, str] = {}
+            for phase, condition in forms.items():
+                try:
+                    self._symbol_condition(condition)
+                except RomLoweringError as exc:
+                    refused[phase] = f"{condition} -- {exc}"
+                else:
+                    usable[phase] = condition
+            if not usable:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r} declares predicate output "
+                    f"{name!r} whose every phase is outside ABI 3.0's frozen "
+                    f"predicate kinds: {refused}"
+                )
+            order = [p for p in ("prefill", "", "decode") if p in usable]
+            chosen = usable[order[0] if order else sorted(usable)[0]]
+            if refused:
+                self._unrepresentable_predicates[str(name)] = {
+                    "lowered": chosen,
+                    **{f"refused.{phase}": text for phase, text in refused.items()},
+                }
+            values[str(name)] = chosen
+        self._predicate_values = values
+        return values
+
+    def _condition_of(self, declared: str, where: str) -> str:
+        """One declared predicate, as a condition over a runtime symbol."""
+        conditions = self._predicate_conditions()
+        if declared in conditions:
+            return conditions[declared]
+        if len(str(declared).split()) != 3:
+            raise RomLoweringError(
+                f"{where}: predicate {declared!r} is neither a symbol "
+                "comparison nor the ``predicate_output`` of a kernel in this "
+                "graph; a predicate a backend cannot resolve is a predicate it "
+                "would silently drop"
+            )
+        return str(declared)
+
+    def _predicate_descriptor(self, condition: str, where: str) -> int:
+        symbol, comparison, immediate = self._symbol_condition(condition)
+        key = (int(symbol), int(comparison), int(immediate))
+        cached = self._predicate_cache.get(key)
+        if cached is not None:
+            return cached
+        descriptor = self.builder.predicate(
+            kind=PredicateKind.COMPARE_SYMBOL,
+            comparison=comparison,
+            selector_kind=SelectorKind.RUNTIME_SYMBOL,
+            selector_index=int(symbol),
+            immediate=int(immediate),
+            key=(
+                f"pred.{symbol.name.lower()}."
+                f"{comparison.name.lower()}.{immediate}"
+            ),
+        )
+        self._predicate_cache[key] = descriptor
+        return descriptor
+
+    def _kernel_condition(self, kernel: Kernel) -> str | None:
+        """The one condition under which this kernel's operator is issued."""
+        declared: list[str] = []
+        attribute = kernel.attributes.get("execution_predicate")
+        if attribute:
+            declared.append(str(attribute))
+        if getattr(kernel, "predicate", ""):
+            declared.append(str(kernel.predicate))
+        conditional = kernel.attributes.get("conditional_outputs")
+        if conditional:
+            names = {str(v) for v in dict(conditional).values()}
+            # ``COMPRESS_STATE_UPDATE`` is the one kernel that declares this,
+            # and the exporter's reason is that the released
+            # ``Compressor.forward`` writes its raw window on every step, so
+            # only the two pooled results are conditional.  On this ABI the
+            # raw window is not part of the operator at all: ``VECTOR.COMPRESS``
+            # binds no STATE resource in this sub-case and the engine says so
+            # ("the decode path rolls the compressor's raw slots, which is a
+            # STATE resource this operator's arity does not bind").  Both of
+            # the operator's declared outputs are the pooled ones, so once they
+            # are conditional there is nothing unconditional left for it to do
+            # and the whole instruction carries the predicate.  That equality
+            # is checked rather than assumed: a kernel with an unconditional
+            # output beside a conditional one is refused, because ABI 3.0 has
+            # no per-output predicate and half-lowering one would write a
+            # result the source did not produce.
+            if len(names) != 1 or len(conditional) != len(kernel.outputs):
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r} declares "
+                    f"{len(conditional)} conditional outputs of "
+                    f"{len(kernel.outputs)} on {len(names)} distinct "
+                    "predicates; ABI 3.0 predicates an instruction, not an "
+                    "output, so only an operator whose every output is "
+                    "conditional on one value is expressible"
+                )
+            declared.append(next(iter(names)))
+        resolved = {self._condition_of(d, kernel.kernel_id) for d in declared}
+        if not resolved:
+            return None
+        if len(resolved) > 1:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} names {len(resolved)} distinct "
+                f"predicates {sorted(resolved)}; an ABI 3.0 instruction "
+                "carries one ``predicate_id`` and there is no conjunction"
+            )
+        return next(iter(resolved))
+
+    def _prove_run_predicates_agree(self) -> None:
+        """Every layer a loop body stands for must state the same predicate.
+
+        A run is emitted once and executed once per group, so the body carries
+        the *first* group's kernel at each position.  The fold identity is
+        structural -- kind, contract, operand roles, dtypes, weight extents --
+        and says nothing about attributes, so two layers with different
+        conditions could share a body and one layer's predicate would silently
+        govern the other's execution.  Nothing downstream could see it: the
+        program is admitted, every operand is in bounds, and the wrong layer is
+        simply skipped or issued.  So it is checked here, where the fold is
+        known, rather than assumed from the fact that the released stack
+        alternates in step with its compression ratios.
+        """
+        for run in self.analysis.runs:
+            for position, column in enumerate(run.body):
+                conditions = {self._kernel_condition(k) for k in column}
+                if len(conditions) > 1:
+                    raise RomLoweringError(
+                        f"run {run.index} position {position} folds layers "
+                        f"{[k.kernel_id for k in column]} whose execution "
+                        f"predicates differ ({sorted(map(str, conditions))}); a "
+                        "loop body states one predicate and would govern every "
+                        "layer it stands for with it"
+                    )
+                # Compared after resolution, not as declared: each layer names
+                # its own predicate value, and two layers stating the same
+                # condition through different names are the same predicate.
+                operands = {self._operand_present(k) for k in column}
+                if len(operands) > 1:
+                    raise RomLoweringError(
+                        f"run {run.index} position {position} folds layers "
+                        f"{[k.kernel_id for k in column]} whose conditionally "
+                        "present operands differ; one loop body cannot state "
+                        "two alternative paths"
+                    )
+
+    def _prove_predicates_lowered(self, emitted: Sequence[Kernel]) -> None:
+        """Nothing the graph declared conditional was issued unconditionally.
+
+        This is the check the whole section exists for.  A predicate that is
+        declared and not lowered leaves no trace at runtime: the instruction
+        issues where the source skips it, and either an engine refuses it or it
+        computes against an operand the request does not have and nothing
+        complains.  So the lowering proves, against the kernels it actually
+        emitted, that every declared condition reached an instruction.
+        """
+        missing: list[str] = []
+        for kernel in emitted:
+            attributes = kernel.attributes
+            declares = bool(
+                attributes.get("execution_predicate")
+                or attributes.get("conditional_outputs")
+                or getattr(kernel, "predicate", "")
+            )
+            if declares and kernel.kernel_id not in self._predicated_operators:
+                missing.append(f"{kernel.kernel_id} ({kernel.kind}): execution")
+            if (
+                attributes.get("operand_present_predicate")
+                and kernel.kernel_id not in self._operand_alternatives
+            ):
+                missing.append(f"{kernel.kernel_id} ({kernel.kind}): operand")
+        if missing:
+            raise RomLoweringError(
+                "these kernels declare a condition that reached no "
+                f"instruction: {missing}.  A declared predicate that is not "
+                "lowered is invisible -- the operator issues where the source "
+                "skips it -- so the lowering refuses rather than emitting it"
+            )
+
+    def _predicate_report(self) -> dict[str, Any]:
+        """What this lowering predicated, and what it could not state."""
+        report: dict[str, Any] = {}
+        if self._predicated_operators:
+            report["predicated_operators"] = len(self._predicated_operators)
+            report["predicated_conditions"] = {
+                condition: sum(
+                    1
+                    for value in self._predicated_operators.values()
+                    if value == condition
+                )
+                for condition in sorted(set(self._predicated_operators.values()))
+            }
+        if self._operand_alternatives:
+            report["operand_alternative_paths"] = len(self._operand_alternatives)
+            report["operand_alternative_conditions"] = {
+                condition: sum(
+                    1
+                    for value in self._operand_alternatives.values()
+                    if value == condition
+                )
+                for condition in sorted(set(self._operand_alternatives.values()))
+            }
+        if self._unrepresentable_predicates:
+            report["unrepresentable_predicates"] = dict(
+                sorted(self._unrepresentable_predicates.items())
+            )
+        return report
+
+    def _join_extent(
+        self, names: Sequence[str], axis: int
+    ) -> tuple[RequestAxis | None, int]:
+        """The join-axis extent of a set of operands, as one affine statement.
+
+        Amendment A17 makes a join's output extent the sum of its inputs', so
+        the reduced path's output is the sum over the operands that remain.
+        Static extents add into the bias -- a 128-row sliding window is there
+        for a span of one -- and symbolic ones add their numerators.  Two
+        symbolic operands counted in *different* units, or over different
+        symbols, have no single affine image and are refused rather than
+        approximated: the full attention join is exactly that case, which is
+        why the exporter states its fused form itself and only the reduced one
+        is derived here.
+        """
+        symbol: Symbol | None = None
+        unit = 1
+        numerator = 0
+        bias = 0
+        for name in names:
+            tensor = self.tensors[name]
+            entry = tensor.shape[axis] if axis < len(tensor.shape) else None
+            if not isinstance(entry, Symbolic):
+                bias += int(self._dims(tensor)[axis])
+                continue
+            request = SYMBOL_BY_NAME.get(entry.symbol)
+            if request is None or int(entry.multiplier or 1) != 1:
+                raise RomLoweringError(
+                    f"join operand {name!r} leads on axis {axis} with "
+                    f"{entry.symbol!r}, which this backend cannot state as an "
+                    "A18 affine image; the reduced path's extent would be a "
+                    "guess"
+                )
+            if symbol is None:
+                symbol, unit = Symbol(int(request.symbol)), int(request.unit)
+            elif (int(symbol), unit) != (int(request.symbol), int(request.unit)):
+                raise RomLoweringError(
+                    f"a join of operands counted in different units "
+                    f"({symbol.name}/{unit} and "
+                    f"{Symbol(int(request.symbol)).name}/{request.unit}) has no "
+                    "single A18 extent; this backend refuses to invent one"
+                )
+            numerator += int(request.numerator)
+            bias += int(request.bias)
+        if symbol is None:
+            return None, bias
+        return RequestAxis(symbol, unit, numerator, bias), 0
+
+    def _reduced_join_output(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        *,
+        loop: int | None,
+        join_axis: int,
+        present: Sequence[str],
+    ) -> int:
+        """``out0`` of the path where one join operand is absent."""
+        tensor = self.tensors[kernel.outputs[0]]
+        declared = list(self._dims(tensor))
+        dims = self._blocked_dims(tensor, shape)
+        axis, static = self._join_extent(present, join_axis)
+        if join_axis == 0:
+            if axis is None:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: with operand "
+                    "absent the join has no request-determined extent, so its "
+                    "output would present its declared maximum"
+                )
+            width = 1
+            for extent in declared[1:]:
+                width *= extent
+            term = (
+                DynamicTerm.loop(loop, self._axis_step(shape, axis) * width)
+                if loop is not None and shape.row_symbolic
+                else None
+            )
+            dims[0] = min(self._axis_block(shape, axis), declared[0])
+            return self._buffer_view(
+                tensor,
+                dims=dims,
+                strides=None,
+                shape=shape,
+                loop=loop,
+                writable=True,
+                term=term,
+                extent_axis=0,
+                extent_unit=axis.unit if term is not None else 0,
+                extent_numerator=axis.numerator if term is not None else 0,
+                extent_bias=axis.bias if term is not None else 0,
+            )
+        # A17's feature join.  The segments the join keeps are a prefix of the
+        # destination's columns, so the reduced path is the same buffer read
+        # with a shorter extent on that axis and the buffer's own row stride.
+        if axis is not None:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: the reduced feature join still "
+                "has a request-determined width, and amendment A18 gives a "
+                "view one extent axis, which the token axis already holds"
+            )
+        dims[join_axis] = min(static, declared[join_axis])
+        return self._buffer_view(
+            tensor,
+            dims=dims,
+            strides=self._row_major_strides(declared),
+            shape=shape,
+            loop=loop,
+            writable=True,
+        )
+
+    def _kernel_predicate(self, kernel: Kernel) -> int:
+        condition = self._kernel_condition(kernel)
+        if condition is None:
+            return NO_ID
+        descriptor = self._predicate_descriptor(condition, kernel.kernel_id)
+        self._predicated_operators[kernel.kernel_id] = condition
+        return descriptor
+
+    def _operand_present(self, kernel: Kernel) -> tuple[int, str] | None:
+        """The operand slot that vanishes, and the condition that keeps it."""
+        declared = kernel.attributes.get("operand_present_predicate")
+        if not declared:
+            return None
+        entries = dict(declared)
+        if len(entries) != 1:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} names {len(entries)} operands "
+                "whose presence the request decides; two independent operands "
+                "need four alternative paths and ABI 3.0 gives an instruction "
+                "one predicate, so this backend refuses rather than picking "
+                "one"
+            )
+        slot, condition = next(iter(entries.items()))
+        index = int(slot)
+        if not 0 <= index < len(kernel.inputs):
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} names operand {index} as "
+                f"conditionally present; it has {len(kernel.inputs)} inputs"
+            )
+        if self._kernel_condition(kernel) is not None:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} is both predicated and names a "
+                "conditionally present operand; that is four paths on one "
+                "``predicate_id``"
+            )
+        return index, self._condition_of(str(condition), kernel.kernel_id)
+
     def _emit_kernel(self, kernel: Kernel, *, run: LayerRun | None) -> None:
         if kernel.kind in {"STATE_PREPARE", "STATE_COMMIT"}:
             # Prepare and commit are emitted once, outside every loop, so the
@@ -4392,10 +4951,17 @@ class RomLowering:
             engine = EngineOp(Major.TENSOR, TensorOp.MATMUL, 2, 1)
         family = Major(engine.family)
         if kernel.kind == "STATE_READ":
+            # A state read is one instruction and no operator descriptor, so it
+            # takes the kernel's predicate directly.  This is the shape A18
+            # names: the compressed-KV valid view leads with
+            # ``context_groups_ratioN``, which is zero until the context holds
+            # one whole group, and a zero-extent view is refused -- so the read
+            # must not be issued rather than issued against nothing.
             self.builder.emit(
                 family,
                 engine.sub,
                 descriptor_id=self._state_for(kernel),
+                predicate_id=self._kernel_predicate(kernel),
                 source_operation_id=kernel.index,
             )
             return
@@ -4506,16 +5072,153 @@ class RomLowering:
                 )
                 for abi_slot, name in enumerate(kernel.outputs[:MAX_OPERATOR_OUTPUTS])
             ]
-        self._emit_operator(
+        innermost = context if context is not None else loop
+        closes = 1 if context is not None and loop is not None else 0
+        present = self._operand_present(kernel)
+        if present is None:
+            self._emit_operator(
+                kernel,
+                family,
+                engine.sub,
+                inputs,
+                outputs,
+                loop=innermost,
+                schedule_rows=schedule_rows,
+                extra_close=closes,
+            )
+            return
+        self._emit_alternative_paths(
             kernel,
+            shape,
             family,
             engine.sub,
             inputs,
             outputs,
-            loop=context if context is not None else loop,
+            order=order,
+            absent=present[0],
+            condition=present[1],
+            loop=innermost,
+            row_loop=loop,
             schedule_rows=schedule_rows,
-            extra_close=1 if context is not None and loop is not None else 0,
+            extra_close=closes,
         )
+
+    def _emit_alternative_paths(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        family: Major,
+        sub: int,
+        inputs: Sequence[int],
+        outputs: Sequence[int],
+        *,
+        order: Sequence[int],
+        absent: int,
+        condition: str,
+        loop: int | None,
+        row_loop: int | None,
+        schedule_rows: int | None,
+        extra_close: int,
+    ) -> None:
+        """One operator, two complementary paths, one event.
+
+        ``operand_present_predicate`` says the operator issues either way and
+        one *operand* is there only under a condition.  ABI 3.0 predicates an
+        instruction, not an operand, so the pair is the lowering: the full
+        operand row under the condition, the reduced row under its inverse.
+        The two paths cannot share an event -- ABI 3.0 events are
+        single-assignment and the verifier says so -- and a consumer cannot
+        wait on the path that did not run, because a wait on an unsignalled
+        event is a device fault.  So the pair is followed by an unpredicated
+        ``CONTROL.NOP`` that publishes the event the *result* is ordered by: it
+        is the join of the two paths, it retires whichever path ran, and it is
+        what keeps the consumer's dependency real rather than dropped.
+
+        Two things change on the reduced path and both matter.  The wait set
+        drops the vanished operand's producer -- that producer is predicated
+        off by the same condition and will never signal, and a wait on an
+        unsignalled event is a device fault, not a stall.  And, for a join, the
+        output's extent drops that operand's contribution: A17 makes the output
+        the sum of the inputs, so a path that keeps the full extent would
+        declare rows no operand supplies.
+
+        Which slots may actually be emptied is not a guess.
+        ``REDUCTION.GROUPED_CONCAT`` reads its four input slots through
+        ``optional_input`` and joins whatever is bound, so an absent operand is
+        ``NO_ID`` there.  Every other frozen operand row is mandatory -- 
+        ``ROUTE.INDEX_TOPK`` reads its score view's *shape* even where the
+        request completes no candidate and it reads no value from it, which is
+        exactly what amendment A19 says the operator does below one compression
+        group -- so on those the reduced path keeps the operand bound and drops
+        only the ordering dependency.  Emptying a mandatory slot would produce
+        a path that cannot execute, which is a worse answer than a path that
+        binds a view nothing reads.
+        """
+        predicate = self._predicate_descriptor(condition, kernel.kernel_id)
+        slots = self._abi_input_slots(kernel, order)
+        abi_slot = next(
+            (index for index, ir in enumerate(slots) if ir == absent), None
+        )
+        optional = family is Major.REDUCTION and sub == int(Reduction.GROUPED_CONCAT)
+        reduced_inputs = list(inputs)
+        reduced_outputs = list(outputs)
+        if optional:
+            if abi_slot is None or abi_slot >= len(reduced_inputs):
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r} names input {absent} as "
+                    "conditionally present, and no ABI slot carries it"
+                )
+            reduced_inputs[abi_slot] = NO_ID
+            reduced_outputs[0] = self._reduced_join_output(
+                kernel,
+                shape,
+                loop=row_loop,
+                join_axis=int(kernel.attributes.get("axis", 0)),
+                present=[
+                    name
+                    for index, name in enumerate(kernel.inputs)
+                    if index != absent
+                ],
+            )
+        self._operand_alternatives[kernel.kernel_id] = condition
+        self._emit_operator(
+            kernel,
+            family,
+            sub,
+            inputs,
+            outputs,
+            loop=None,
+            schedule_rows=schedule_rows,
+            predicate_id=predicate,
+        )
+        self._emit_operator(
+            kernel,
+            family,
+            sub,
+            reduced_inputs,
+            reduced_outputs,
+            loop=None,
+            schedule_rows=schedule_rows,
+            suffix=".absent",
+            predicate_id=predicate,
+            invert_predicate=True,
+            wait_inputs=[
+                name for index, name in enumerate(kernel.inputs) if index != absent
+            ],
+        )
+        join = self.builder.new_event()
+        self.builder.emit(
+            Major.CONTROL,
+            Control.NOP,
+            signal_event_id=join,
+            source_operation_id=kernel.index,
+        )
+        for name in kernel.outputs:
+            self._event_of_tensor[name] = join
+        if loop is not None:
+            self.builder.close_loop()
+        for _ in range(extra_close):
+            self.builder.close_loop()
 
     def _emit_operator(
         self,
@@ -4529,8 +5232,21 @@ class RomLowering:
         schedule_rows: int | None = None,
         suffix: str = "",
         extra_close: int = 0,
+        predicate_id: int | None = None,
+        invert_predicate: bool = False,
+        wait_inputs: Sequence[str] | None = None,
+        event: int | None = None,
     ) -> None:
         """Bind one operator descriptor, issue it, and close its loop.
+
+        ``predicate_id`` defaults to the kernel's own declared predicate;
+        passing one states an alternative path explicitly.  ``wait_inputs``
+        narrows the producers this instruction waits on -- the reduced path of
+        a conditionally present operand must not wait on the producer that
+        vanished with it, because that producer is predicated off by the same
+        condition and will never signal.  ``event`` lets both paths of such a
+        pair publish the *same* event, so a consumer waits on one producer and
+        exactly one of the two paths signals it.
 
         ``extra_close`` closes further enclosing loops, innermost first, for an
         operator that needed more than one -- ``INDEX_SCORE`` needs a token loop
@@ -4558,17 +5274,22 @@ class RomLowering:
         )
         producers = [
             self._event_of_tensor[name]
-            for name in kernel.inputs
+            for name in (kernel.inputs if wait_inputs is None else wait_inputs)
             if name in self._event_of_tensor
         ]
         wait = self._wait_set(producers)
-        event = self.builder.new_event()
+        if event is None:
+            event = self.builder.new_event()
+        if predicate_id is None:
+            predicate_id = self._kernel_predicate(kernel)
         self.builder.emit(
             family,
             sub,
             descriptor_id=operator,
             wait_set_id=wait,
             signal_event_id=event,
+            predicate_id=predicate_id,
+            invert_predicate=invert_predicate,
             source_operation_id=kernel.index,
         )
         if loop is not None:
@@ -4754,10 +5475,13 @@ class RomLowering:
     # -- program ---------------------------------------------------------
     def emit_program(self) -> None:
         analysis = self.analysis
+        self._prove_run_predicates_agree()
+        emitted: list[Kernel] = []
         state_descriptors = sorted(set(self._state_descriptor.values()))
         for descriptor in state_descriptors:
             self.builder.emit(Major.STATE, State.PREPARE, descriptor_id=descriptor)
         for kernel in analysis.prologue:
+            emitted.append(kernel)
             self._emit_kernel(kernel, run=None)
         for run in analysis.runs:
             steps = list(
@@ -4772,11 +5496,14 @@ class RomLowering:
             self.builder.open_loop(self._loop_of_run[run.index])
             for position, column in enumerate(run.body):
                 self._emit_links(run, before.get(position, ()))
+                emitted.append(column[0])
                 self._emit_kernel(column[0], run=run)
                 self._emit_links(run, after.get(position, ()))
             self.builder.close_loop()
         for kernel in analysis.epilogue:
+            emitted.append(kernel)
             self._emit_kernel(kernel, run=None)
+        self._prove_predicates_lowered(emitted)
         self._require_on_device_selection()
         for descriptor in state_descriptors:
             self.builder.emit(Major.STATE, State.COMMIT, descriptor_id=descriptor)
@@ -4916,6 +5643,35 @@ class RomLowering:
             "product": self.policy.product,
             "weight_storage_class": StorageClass(self.weight_storage_class).name,
         }
+        # Amendment A3.  What was predicated, on what condition, and what the
+        # frozen predicate kinds could not state.  A declared predicate that is
+        # not lowered is invisible at runtime -- the operator issues where the
+        # source skips it -- so this is published beside the program rather
+        # than left to be inferred from ``instructions.predicated_off``.  A
+        # graph that declares no predicate says nothing here and its manifest
+        # is byte-identical to the one it had before predicates existed, which
+        # is what keeps the Qwen deployment digest a fixed point of this
+        # change.
+        predicates = self._predicate_report()
+        if predicates:
+            builder.notes["rom_predicates"] = predicates
+        if self._unimplemented_index_families:
+            # See IMPLEMENTED_INDEX_FAMILIES.  Named on the artifact because an
+            # index family the frozen operator cannot produce is not a fault
+            # any engine can raise: the rows it names are legal.
+            builder.notes["rom_unimplemented_index_families"] = {
+                family: {
+                    "sites": len(sites),
+                    "engine": "ROUTE.WINDOW_INDEX",
+                    "produces": (
+                        "a causal window of absolute positions, tail-padded"
+                    ),
+                    "example": sorted(sites)[0],
+                }
+                for family, sites in sorted(
+                    self._unimplemented_index_families.items()
+                )
+            }
         builder.notes["memory_footprint"] = self._prove_memory_capacity()
         builder.notes["rom_plan"] = plan.to_dict()
         builder.notes["rom_lowering"] = {
