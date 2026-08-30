@@ -43,6 +43,8 @@ from runtime.abi3.capability import canonical_json  # noqa: E402
 #: weight bytes than the model has weights means the machine did not do the work.
 TOLERANCE_OVER = 0.15
 TOLERANCE_UNDER = 0.01
+#: The KV term admits no such allowance in either direction.
+TOLERANCE_KV = 0.001
 
 
 def _steps(record: dict[str, Any]) -> int:
@@ -57,6 +59,32 @@ def _steps(record: dict[str, Any]) -> int:
 def _positions(record: dict[str, Any], prompt_tokens: int) -> int:
     """Token positions the machine actually computed: the prompt plus decodes."""
     return prompt_tokens + max(0, int(record.get("generated_token_count", 1)) - 1)
+
+
+def _causal_position_reads(prompt_tokens: int, decode_steps: int) -> int:
+    """Every (query, key) position pair a causal attention must visit, per layer.
+
+    Prefill is the triangle: query *i* attends to the *i* positions at or before
+    it.  Each decode step then attends to the whole context that exists when it
+    runs.  This is not an approximation of the machine -- it is what causal
+    attention *is*, and a deployment that reports a different number is either
+    recomputing, caching across queries, or skipping work.
+    """
+
+    prefill = prompt_tokens * (prompt_tokens + 1) // 2
+    decode = sum(prompt_tokens + step for step in range(1, decode_steps + 1))
+    return prefill + decode
+
+
+def _kv_bytes_per_layer_position(model: ModelProfile, context_tokens: int) -> float:
+    """Mean KV bytes one layer reads for one context position.
+
+    Derived from the profile's own traffic model rather than restated here, so
+    that a change to the profile cannot silently pass this check.
+    """
+
+    reads = kv_traffic(model, context_tokens).read_bytes
+    return reads / (model.num_layers * context_tokens)
 
 
 def main() -> int:
@@ -131,6 +159,50 @@ def main() -> int:
                 counters.get("attention.context_positions", 0)
             ),
         }
+
+        # The KV term is where the ROM argument is won or lost, and at long
+        # context it dominates.  Unlike weight traffic it admits no allowance:
+        # there are no scales or index tables riding along with a KV row, so
+        # prediction and measurement should agree to the byte.
+        decode_steps = max(0, int(record.get("generated_token_count", 1)) - 1)
+        predicted_positions = model.num_layers * _causal_position_reads(
+            prompt, decode_steps
+        )
+        measured_positions = int(counters.get("attention.context_positions", 0))
+        entry_bytes = _kv_bytes_per_layer_position(model, args.context)
+        predicted_kv_bytes = entry_bytes * measured_positions
+        measured_kv_bytes = int(counters.get("attention.kv_bytes_read", 0))
+        lane["kv"] = {
+            "measured_context_positions": measured_positions,
+            "predicted_context_positions": predicted_positions,
+            "position_ratio": (
+                measured_positions / predicted_positions if predicted_positions else 0.0
+            ),
+            "measured_bytes_read": measured_kv_bytes,
+            "predicted_bytes_read": predicted_kv_bytes,
+            "byte_ratio": (
+                measured_kv_bytes / predicted_kv_bytes if predicted_kv_bytes else 0.0
+            ),
+            "measured_bytes_per_layer_position": (
+                measured_kv_bytes / measured_positions if measured_positions else 0.0
+            ),
+            "profile_bytes_per_layer_position": entry_bytes,
+        }
+        if measured_positions:
+            if abs(lane["kv"]["position_ratio"] - 1.0) > TOLERANCE_KV:
+                problems.append(
+                    f"{path.name}: attention visited {measured_positions:,} "
+                    f"(layer, position) pairs where causal attention over a "
+                    f"{prompt:,}-token prompt and {decode_steps} decode steps "
+                    f"requires {predicted_positions:,}"
+                )
+            if abs(lane["kv"]["byte_ratio"] - 1.0) > TOLERANCE_KV:
+                problems.append(
+                    f"{path.name}: KV read traffic is "
+                    f"{lane['kv']['byte_ratio']:.4f} of the profile's, and the KV"
+                    " term carries no scales or index tables that could explain a"
+                    " difference"
+                )
         if ratio < 1.0 - TOLERANCE_UNDER:
             problems.append(
                 f"{path.name}: measured weight traffic is {ratio:.3f} of predicted; "
@@ -175,6 +247,11 @@ def main() -> int:
         "scope": [
             "Validates the QUANTITIES a roofline consumes: weight bytes, KV bytes,"
             " arithmetic. Does not validate time; the functional device has no clock.",
+            "The KV check has two halves. The (layer, position) pair count is"
+            " compared against the causal triangle the prompt and decode steps"
+            " require, which catches a machine that recomputes or skips. The byte"
+            " count is then compared against the profile's own entry size, which"
+            " catches a machine reading a KV row at the wrong precision or width.",
             "A measured excess over prediction is expected and bounded: a real"
             " deployment also moves scales, index tables, rotary coefficients and"
             " activations, which the analytical weight model does not count.",
@@ -190,6 +267,15 @@ def main() -> int:
         w = lane["weight_bytes"]
         print(f"  {lane['backend']:<18} measured/step {w['measured_per_step']:>18,.0f}"
               f"  ratio {w['ratio']:.3f}")
+        kv = lane.get("kv")
+        if kv and kv["measured_context_positions"]:
+            print(f"  {'':<18} KV bytes      {kv['measured_bytes_read']:>18,}"
+                  f"  ratio {kv['byte_ratio']:.4f}"
+                  f"  ({kv['measured_bytes_per_layer_position']:,.0f} B per layer"
+                  f"-position vs profile {kv['profile_bytes_per_layer_position']:,.0f})")
+            print(f"  {'':<18} causal pairs  "
+                  f"{kv['measured_context_positions']:>18,}"
+                  f"  ratio {kv['position_ratio']:.4f}")
     if arithmetic_agreement is not None:
         print(f"  arithmetic identical across lanes: {arithmetic_agreement}")
     print(f"  status {out['status']} -> {args.output}")
