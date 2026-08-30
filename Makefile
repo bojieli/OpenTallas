@@ -1,4 +1,4 @@
-.PHONY: abi3-failclosed abi3-equivalence abi3 abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: roofline abi3-failclosed abi3-equivalence abi3 abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -10,6 +10,9 @@ simulate:
 iso-node:
 	python3 tools/build_iso_node_studies.py --write
 	python3 tools/run_iso_node_studies.py
+
+roofline:
+	python3 tools/run_roofline_studies.py --force
 
 model-traffic:
 	python3 tools/run_model_traffic_screen.py

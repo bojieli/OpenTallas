@@ -1,0 +1,731 @@
+{
+  "schema_version": 1,
+  "purpose": "Graded technology primitives for the area-constrained roofline model. Every entry is a primitive input; capacities, bandwidths and compute roofs are derived from these by src/opentallas/roofline.py and are never stated here.",
+  "units": "areas mm^2 unless a field name says um2; bytes and bits decimal SI; times seconds; energy joules",
+  "grade_definitions": {
+    "measured": "taken from fabricated silicon reported in a peer-reviewed venue",
+    "published": "stated by the vendor or standards body for a shipping part or process",
+    "derived": "computed from published/measured entries by a formula stated in the note",
+    "assumed": "no published value found; a stated judgement that must be swept"
+  },
+  "nodes": {
+    "N7": {
+      "process": "TSMC N7",
+      "sram_hd_bitcell_um2": {
+        "value": 0.027,
+        "grade": "published",
+        "source": "https://sst.semiconductor-digest.com/chipworks_real_chips_blog/2017/01/18/iedm-2016-setting-the-stage-for-75-nm/",
+        "note": "TSMC IEDM 2016 7nm platform, 0.027 um2 high-density 6T SRAM bitcell"
+      },
+      "logic_density_vs_n7": {
+        "value": 1.0,
+        "grade": "published",
+        "source": "https://pr.tsmc.com/english/news/1989",
+        "note": "N7 is the density baseline for this table by definition"
+      }
+    },
+    "N6": {
+      "process": "TSMC N6",
+      "sram_hd_bitcell_um2": {
+        "value": 0.027,
+        "grade": "derived",
+        "source": "https://pr.tsmc.com/english/news/1989",
+        "note": "TSMC states N6 design rules are fully compatible with N7; the 6T HD bitcell is therefore carried over from N7 unchanged. The 18% N6 gain is a logic-standard-cell gain, not an SRAM bitcell gain."
+      },
+      "logic_density_vs_n7": {
+        "value": 1.18,
+        "grade": "published",
+        "source": "https://pr.tsmc.com/english/news/1989",
+        "note": "TSMC: N6 delivers 18% higher logic density than N7"
+      }
+    },
+    "N5": {
+      "process": "TSMC N5",
+      "sram_hd_bitcell_um2": {
+        "value": 0.021,
+        "grade": "published",
+        "source": "https://semiwiki.com/semiconductor-manufacturers/tsmc/283487-tsmcs-5nm-0-021um2-sram-cell-using-euv-and-high-mobility-channel-with-write-assist-at-isscc2020/",
+        "note": "TSMC ISSCC 2020: 0.021 um2 high-density 6T SRAM bitcell at N5"
+      },
+      "logic_density_vs_n7": {
+        "value": 1.8,
+        "grade": "published",
+        "source": "https://en.wikichip.org/wiki/5_nm_lithography_process",
+        "note": "TSMC states N5 delivers ~1.8x the logic density of N7"
+      }
+    },
+    "4NP": {
+      "process": "TSMC 4NP (custom N4P for NVIDIA Blackwell)",
+      "sram_hd_bitcell_um2": {
+        "value": 0.021,
+        "grade": "derived",
+        "source": "https://en.wikichip.org/wiki/5_nm_lithography_process",
+        "note": "N4/N4P is an N5-family optical shrink; TSMC has not published an SRAM bitcell shrink over N5, so the N5 cell is carried over"
+      },
+      "logic_density_vs_n7": {
+        "value": 1.98,
+        "grade": "derived",
+        "source": "https://en.wikichip.org/wiki/5_nm_lithography_process",
+        "note": "N5 1.80x N7 multiplied by an assumed 1.10x N5->N4P logic-density step; the step itself is the assumed part"
+      }
+    }
+  },
+  "sram": {
+    "array_efficiency": {
+      "value": 0.65,
+      "grade": "assumed",
+      "source": "no vendor macro floorplan published for the target arrays",
+      "note": "bitcell area divided by total macro area including decoders, sense amplifiers, write drivers and redundancy. Published foundry macros land between 0.55 and 0.75; sweep that range."
+    },
+    "read_bandwidth_anchor": {
+      "part": "Cerebras WSE-2",
+      "node": "N7",
+      "aggregate_sram_read_bytes_s": {
+        "value": 2e+16,
+        "grade": "published",
+        "source": "https://www.cerebras.ai/chip",
+        "note": "20 PB/s aggregate on-wafer SRAM bandwidth"
+      },
+      "die_area_mm2": {
+        "value": 46225.0,
+        "grade": "published",
+        "source": "https://www.cerebras.ai/chip",
+        "note": "215 mm x 215 mm wafer-scale die"
+      },
+      "attribution_note": "The derived density is charged against WHOLE-die area but is then applied only to the SRAM array area of a modelled design. WSE-2's SRAM occupies a minority of its die, so this is a conservative (low) bandwidth density for an SRAM array.",
+      "scaling_rule": {
+        "value": "sram_hd_bitcell_area_ratio",
+        "grade": "derived",
+        "source": "published 6T HD bitcell areas at N7 and at the target node",
+        "note": "as the ROM rule; the anchor is at N7 so the N7 and N6 ratios are 1.00"
+      }
+    }
+  },
+  "rom": {
+    "cell_to_sram_cell_area_ratio": {
+      "value": 0.2,
+      "grade": "assumed",
+      "source": "no fabricated leading-node mask-ROM bitcell has been published for this program",
+      "note": "A contact/via-programmed NOR mask-ROM bit is one transistor with no write port, no write assist and no write redundancy, against a 6T SRAM bit. 1/6 to 1/4 brackets the plausible cell-area ratio; 1/5 is the stated point. This is the single most load-bearing assumption in the ROM capacity chain and must be swept."
+    },
+    "array_efficiency": {
+      "value": 0.7,
+      "grade": "assumed",
+      "source": "no published mask-ROM macro floorplan at a leading node",
+      "note": "Taken above the SRAM array efficiency because a ROM macro carries no write drivers and no write-assist circuitry. Sweep 0.60 to 0.80."
+    },
+    "read_bandwidth_anchor": {
+      "macro": "YOLoC ROM-CIM macro",
+      "node_nm": 28.0,
+      "macro_area_mm2": {
+        "value": 0.24,
+        "grade": "published",
+        "source": "https://doi.org/10.1145/3489517.3530576",
+        "note": "simulated, not fabricated; carried over from configs/hardware/technology_inputs.json"
+      },
+      "operations_s": {
+        "value": 28800000000.0,
+        "grade": "published",
+        "source": "https://doi.org/10.1145/3489517.3530576",
+        "note": "simulated macro operation rate"
+      },
+      "operations_per_weight": {
+        "value": 2.0,
+        "grade": "published",
+        "source": "counting convention: one multiply plus one add is two operations",
+        "note": "one stored weight participates in one multiply-add per dense matrix-vector pass"
+      },
+      "weight_bits": {
+        "value": 8.0,
+        "grade": "published",
+        "source": "https://doi.org/10.1145/3489517.3530576",
+        "note": "8-bit weights in the anchor macro"
+      },
+      "anchor_node_sram_hd_bitcell_um2": {
+        "value": 0.127,
+        "grade": "published",
+        "source": "https://en.wikichip.org/wiki/28_nm_lithography_process",
+        "note": "TSMC 28 nm HKMG high-density 6T SRAM bitcell, 0.127 um2. Used to scale the 28 nm ROM-CIM read-bandwidth density to the target node by published array-density ratio."
+      }
+    },
+    "cross_checks": [
+      {
+        "name": "fabricated 28 nm hybrid SRAM/ROM-CIM macro density",
+        "value": 8928000.0,
+        "grade": "measured",
+        "source": "https://doi.org/10.1109/JSSC.2025.3556008",
+        "note": "8.928 Mbit/mm2 at 28 nm on fabricated silicon. It is a compute-in-memory macro, so its density is a lower bound on a pure storage ROM array. Scaled to N6 by the same published bitcell-area ratio this model uses elsewhere (4.70x) it gives 42.0 Mbit/mm2 = 5.2 MB/mm2, against the 16.2 MB/mm2 this model derives for a storage-only array -- consistent with a CIM macro spending most of its area on compute. Cross-check only; not an input."
+      },
+      {
+        "name": "3D-METRO transistorless 3D-metal ROM density",
+        "value": 20700000.0,
+        "grade": "published",
+        "source": "https://doi.org/10.1145/3658617.3697570",
+        "note": "20.7 MB/mm2 from a simulated evaluation, not fabricated silicon. Upper cross-check on the 16.2 MB/mm2 this model derives at N6 for a planar array. Cross-check only; not an input."
+      }
+    ],
+    "read_bandwidth_scaling_rule": {
+      "value": "sram_hd_bitcell_area_ratio",
+      "grade": "derived",
+      "source": "published 6T HD bitcell areas at 28 nm and at the target node",
+      "note": "Read-bandwidth density is scaled by (anchor-node bitcell area / target-node bitcell area): the same macro throughput in proportionally less area. No clock-frequency bonus is applied on top. For 28 nm -> N6 this ratio is 4.70x, which corresponds to an effective density-scaling exponent of 1.005 on (28/6) -- the wire/periphery-limited CONSERVATIVE end of the 1.0-2.0 bracket documented in src/opentallas/technology.py. src/opentallas/technology.py documents 1.0-2.0 as the plausible exponent bracket; this rule sits at its conservative end."
+    }
+  },
+  "compute": {
+    "anchor_part": "a100_sxm_80gb",
+    "anchor_note": "Compute density per mm2 is derived from one published GPU's dense tensor roofs divided by its published whole-die area, then scaled by the node logic-density ratio. Applying a whole-die-derived density to a modelled design's COMPUTE-ONLY area is the model's stated compute assumption: it is conservative in that an A100 die spends area on HBM PHY, L2 and schedulers that the density is nevertheless charged for, and optimistic in that NVIDIA's tensor cores are a highly tuned datapath. Newer parts are denser: B200 achieves 2.81e12 FP8 ops/s/mm2 at 4NP against 1.50e12 predicted by scaling A100 INT8, so this anchor understates a 2026 design by roughly 1.9x.",
+    "format_roofs_ops_s": {
+      "bf16": {
+        "value": 312000000000000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "A100 80GB SXM, 312 TFLOPS dense BF16 tensor (624 with structured sparsity, not used)"
+      },
+      "fp8": {
+        "value": 624000000000000.0,
+        "grade": "derived",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "A100 publishes 624 TOPS dense INT8. An FP8 e4m3 multiply-accumulate is taken as the same datapath area as INT8; A100 itself has no FP8 unit, so this is a density transfer, not a claim about Ampere."
+      },
+      "fp4": {
+        "value": 1248000000000000.0,
+        "grade": "derived",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "A100 publishes 1248 TOPS dense INT4; FP4 e2m1 is taken as the same datapath area as INT4"
+      },
+      "fp32": {
+        "value": 19500000000000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "A100 non-tensor FP32, 19.5 TFLOPS"
+      }
+    },
+    "w4a8_density_rule": {
+      "value": "geometric_mean_of_fp8_and_fp4",
+      "grade": "derived",
+      "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+      "note": "A 4-bit-weight by 8-bit-activation multiply-accumulate is bounded below by the w8a8 datapath (no narrowing credit taken) and above by the w4a4 datapath. NVIDIA publishes both endpoints on one die, so the bracket is published and only the interpolation is a judgement. Both endpoints are also reported so the bracket, not the midpoint, is what the reader checks."
+    },
+    "model_format_map": {
+      "bf16_x_bf16": "bf16",
+      "fp8_e4m3_x_fp8_e4m3": "fp8",
+      "mxfp4_e2m1_x_fp8_e4m3": "w4a8",
+      "mxfp4_e2m1_x_mxfp8_e4m3": "w4a8",
+      "fp4_e2m1_x_fp4_e2m1": "fp4",
+      "fp32_x_fp32": "fp32",
+      "w4a8_mixed_3_6_bit": "w4a8"
+    }
+  },
+  "links": {
+    "on_wafer": {
+      "hop_latency_s": {
+        "value": 1e-07,
+        "grade": "assumed",
+        "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md",
+        "note": "100 ns per on-wafer reticle-to-reticle hop; a stitched on-wafer link has no SerDes, no packet framing and no switch, so it is well under a package hop. Not measured."
+      },
+      "bytes_s": {
+        "value": 2.675e+16,
+        "grade": "published",
+        "source": "https://www.cerebras.ai/chip",
+        "note": "Cerebras WSE-3 aggregate fabric bandwidth, 26.75 PB/s, used as the on-wafer payload-serialisation ceiling"
+      }
+    },
+    "on_package": {
+      "hop_latency_s": {
+        "value": 3e-07,
+        "grade": "assumed",
+        "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md",
+        "note": "300 ns per organic/silicon-interposer chiplet hop. Not measured."
+      },
+      "bytes_s": {
+        "value": 10000000000000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "NVIDIA Blackwell die-to-die link, 10 TB/s"
+      }
+    },
+    "nvlink": {
+      "hop_latency_s": {
+        "value": 1.5e-06,
+        "grade": "assumed",
+        "source": "https://www.thundercompute.com/blog/what-is-nvlink",
+        "note": "NVLink point-to-point sits around 1 us for small messages. A real all-reduce is two phases through a switch plus launch and synchronisation overhead, so 1.5 us is optimistic; 3-10 us is common in practice. Sweep upward, never downward."
+      },
+      "bytes_s": {
+        "value": 900000000000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/en-us/data-center/nvlink/",
+        "note": "NVLink 4/5 class unidirectional payload rate per GPU, taken as half of the quoted 1.8 TB/s bidirectional"
+      }
+    },
+    "ethernet": {
+      "hop_latency_s": {
+        "value": 5e-06,
+        "grade": "assumed",
+        "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md",
+        "note": "InfiniBand/Ethernet class scale-out hop. Not measured."
+      },
+      "bytes_s": {
+        "value": 50000000000.0,
+        "grade": "assumed",
+        "source": "400 GbE class NIC per device",
+        "note": "50 GB/s per device payload rate"
+      }
+    },
+    "none": {
+      "hop_latency_s": {
+        "value": 0.0,
+        "grade": "derived",
+        "source": "single-device design has no inter-device hop",
+        "note": "identity link used by single-chip and single-wafer designs"
+      },
+      "bytes_s": {
+        "value": 1e+30,
+        "grade": "derived",
+        "source": "single-device design has no inter-device link",
+        "note": "unbounded so the payload serialisation term vanishes"
+      }
+    }
+  },
+  "hbm": {
+    "hbm2e": {
+      "stack_capacity_bytes": {
+        "value": 16000000000.0,
+        "grade": "derived",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "A100 80GB carries five active HBM2e stacks; 80 GB / 5"
+      },
+      "stack_bandwidth_bytes_s": {
+        "value": 407800000000.0,
+        "grade": "derived",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "2039 GB/s / 5 stacks"
+      },
+      "stack_beachfront_mm": {
+        "value": 12.0,
+        "grade": "assumed",
+        "source": "no published keep-out dimension",
+        "note": "11 mm HBM package edge plus routing keep-out; carried over from configs/hardware/technology_inputs.json"
+      },
+      "phy_area_mm2_per_stack": {
+        "value": 10.0,
+        "grade": "assumed",
+        "source": "no vendor-published HBM PHY macro area",
+        "note": "A 1024-bit HBM PHY plus controller is commonly quoted between 8 and 15 mm2 at 7 nm class. Sweep that range."
+      },
+      "max_beachfront_utilization": {
+        "value": 0.6,
+        "grade": "derived",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf ; https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "A100 80GB places five HBM2e stacks on an 826 mm2 die: 5 x 12 mm of pitch against a 115 mm perimeter, or 52%. Shipping parts therefore use roughly 50-60% of the die edge for HBM, the rest going to host, scale-up and power. 0.60 is taken as the ceiling, which makes a modelled ROM part's HBM beachfront no more aggressive than NVIDIA's own. This matters: at equal die area both sides then have the SAME KV bandwidth ceiling, and the ROM part's advantage is only that it does not also spend that bandwidth on weights."
+      }
+    },
+    "hbm3e": {
+      "stack_capacity_bytes": {
+        "value": 22500000000.0,
+        "grade": "derived",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "B200 SXM ships 180 GB across eight HBM3E stacks: 180 GB / 8. Micron's published HBM3E 12-high part is 36 GB per stack (https://www.micron.com/about/blog/applications/ai/micron-continues-memory-industry-leadership-with-hbm3e-12-high-36gb), so this is the SHIPPING-SYSTEM figure rather than the densest available die stack. Deriving it from the reference GPU keeps both sides of the iso-area comparison on identical memory technology, which is the point."
+      },
+      "stack_bandwidth_bytes_s": {
+        "value": 1000000000000.0,
+        "grade": "derived",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "B200 SXM delivers 8 TB/s across eight HBM3E stacks: 8 TB/s / 8. Micron publishes over 1.2 TB/s per HBM3E stack at full pin speed (https://www.micron.com/products/memory/hbm/hbm3e), so 1.0 TB/s is the rate a shipping system actually clocks and is the conservative choice."
+      },
+      "stack_beachfront_mm": {
+        "value": 12.0,
+        "grade": "assumed",
+        "source": "https://www.micron.com/products/memory/hbm/hbm3e",
+        "note": "11 mm x 11 mm HBM3E package plus routing keep-out"
+      },
+      "phy_area_mm2_per_stack": {
+        "value": 10.0,
+        "grade": "assumed",
+        "source": "no vendor-published HBM PHY macro area",
+        "note": "as hbm2e"
+      },
+      "max_beachfront_utilization": {
+        "value": 0.6,
+        "grade": "derived",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf ; https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "B200 places eight HBM3E stacks on a ~1600 mm2 package: 8 x 12 mm against a 160 mm perimeter, or 60%. Shipping parts therefore use roughly 50-60% of the die edge for HBM, the rest going to host, scale-up and power. 0.60 is taken as the ceiling, which makes a modelled ROM part's HBM beachfront no more aggressive than NVIDIA's own. This matters: at equal die area both sides then have the SAME KV bandwidth ceiling, and the ROM part's advantage is only that it does not also spend that bandwidth on weights."
+      },
+      "published_stack_ceiling": {
+        "value": 1200000000000.0,
+        "grade": "published",
+        "source": "https://www.micron.com/products/memory/hbm/hbm3e",
+        "note": "Micron HBM3E: over 1.2 TB/s per stack, 24 GB at 8-high and 36 GB at 12-high. Retained as the upper cross-check on the shipping-system-derived values above; not used by the model."
+      }
+    }
+  },
+  "energy": {
+    "mac_energy_j_per_op": {
+      "bf16": {
+        "value": 1e-13,
+        "grade": "assumed",
+        "source": "Horowitz, Computing's Energy Problem, ISSCC 2014, scaled to a 7 nm-class node",
+        "note": "0.1 pJ per operation for a 16-bit multiply-accumulate datapath"
+      },
+      "fp8": {
+        "value": 3e-14,
+        "grade": "assumed",
+        "source": "Horowitz, Computing's Energy Problem, ISSCC 2014, scaled to a 7 nm-class node",
+        "note": "0.03 pJ per operation for an 8-bit multiply-accumulate datapath"
+      },
+      "w4a8": {
+        "value": 2e-14,
+        "grade": "assumed",
+        "source": "Horowitz, Computing's Energy Problem, ISSCC 2014, scaled to a 7 nm-class node",
+        "note": "0.02 pJ per operation for a 4-bit-weight by 8-bit-activation datapath"
+      },
+      "fp4": {
+        "value": 1.5e-14,
+        "grade": "assumed",
+        "source": "Horowitz, Computing's Energy Problem, ISSCC 2014, scaled to a 7 nm-class node",
+        "note": "0.015 pJ per operation for a 4-bit multiply-accumulate datapath"
+      },
+      "fp32": {
+        "value": 4e-13,
+        "grade": "assumed",
+        "source": "Horowitz, Computing's Energy Problem, ISSCC 2014, scaled to a 7 nm-class node",
+        "note": "0.4 pJ per operation for a 32-bit floating-point datapath"
+      }
+    },
+    "rom_read_j_per_byte": {
+      "value": 5e-13,
+      "grade": "assumed",
+      "source": "no fabricated leading-node mask-ROM macro energy published",
+      "note": "0.5 pJ/byte, carried over from src/opentallas/schema.py defaults. A ROM read has no restore and no refresh, so it is well below SRAM."
+    },
+    "sram_read_j_per_byte": {
+      "value": 1e-12,
+      "grade": "assumed",
+      "source": "no vendor macro energy published for the target arrays",
+      "note": "1 pJ/byte for an on-die SRAM array read at a 7 nm-class node"
+    },
+    "hbm_j_per_byte": {
+      "value": 3.12e-11,
+      "grade": "published",
+      "source": "O'Connor et al., Fine-Grained DRAM, MICRO 2017",
+      "note": "3.9 pJ/bit for HBM2 access energy, converted to 31.2 pJ/byte. Cross-check: A100 at its full 2039 GB/s implies 63.6 W of HBM access power, consistent with published board-level HBM power."
+    }
+  },
+  "efficiencies": {
+    "compute": {
+      "value": 0.55,
+      "grade": "assumed",
+      "source": "carried over from src/opentallas/schema.py ArchitectureProfile default",
+      "note": "fraction of the peak tensor roof a real decode kernel sustains, covering pipeline bubbles, tail effects and non-tensor interleave"
+    },
+    "rom_read_bandwidth": {
+      "value": 0.75,
+      "grade": "assumed",
+      "source": "no fabricated array to measure",
+      "note": "Fraction of the ROM array's peak sweep rate sustained in practice. A mask-ROM sweep is the most regular access pattern available -- a compile-time-fixed linear walk of the whole array with no arbitration, no conflicts and no refresh -- so 0.75 is a conservative charge and 0.90-1.00 is arguable. The study reports the underated ceiling alongside it because this derate moves the ROM answer directly."
+    },
+    "sram_read_bandwidth": {
+      "value": 0.75,
+      "grade": "assumed",
+      "source": "no fabricated array to measure",
+      "note": "fraction of the SRAM array's peak read rate sustained by a real gather pattern"
+    },
+    "hbm_bandwidth": {
+      "value": 0.85,
+      "grade": "assumed",
+      "source": "commonly measured STREAM-class fraction of HBM peak on datacentre GPUs",
+      "note": "applied to both weight and KV traffic on an HBM device"
+    },
+    "hbm_capacity": {
+      "value": 0.9,
+      "grade": "assumed",
+      "source": "carried over from src/opentallas/schema.py ArchitectureProfile default",
+      "note": "fraction of physical HBM available to checkpoint and KV after runtime workspace, allocator and safety reserve"
+    },
+    "stage_balance": {
+      "value": 0.9,
+      "grade": "assumed",
+      "source": "no measured layer-to-device partition for the modelled designs",
+      "note": "penalty applied to a multi-device pipeline for imperfect layer balance across devices"
+    },
+    "no_clock_derate_rationale": {
+      "value": 1.0,
+      "grade": "derived",
+      "source": "every density in this table is derived from an ACHIEVED shipping-silicon figure",
+      "note": "No separate clock-efficiency derate is applied anywhere in this model. A100's 312 TFLOPS, WSE-2's 20 PB/s and the HBM bandwidths are achieved rates at shipping clocks, not timing-signoff targets, so charging a further clock derate on top would double-count. The only derates applied are the sustained-fraction ones named above."
+    }
+  },
+  "thermal": {
+    "cooling_limit_w_per_mm2": {
+      "value": 0.5,
+      "grade": "derived",
+      "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+      "note": "A100 SXM dissipates 400 W over an 826 mm2 die, 0.484 W/mm2, rounded to 0.50. Cross-checks: Taalas HC1 at a reported 250 W over 815 mm2 is 0.31 W/mm2, and a 15-23 kW wafer over 46,225 mm2 is 0.32-0.50 W/mm2."
+    }
+  },
+  "reticle": {
+    "area_mm2": {
+      "value": 815.0,
+      "grade": "published",
+      "source": "https://taalas.com/products/",
+      "note": "Taalas HC1 die area, used as the reticle-class chip area for array designs so the array and the anchor are the same unit of silicon"
+    }
+  },
+  "wafer": {
+    "area_mm2": {
+      "value": 46225.0,
+      "grade": "published",
+      "source": "https://www.cerebras.ai/chip",
+      "note": "215 mm x 215 mm wafer-scale die"
+    },
+    "perimeter_mm": {
+      "value": 860.0,
+      "grade": "derived",
+      "source": "https://www.cerebras.ai/chip",
+      "note": "4 x 215 mm"
+    },
+    "reticle_regions": {
+      "value": 57.0,
+      "grade": "derived",
+      "source": "https://www.cerebras.ai/chip",
+      "note": "46,225 mm2 divided by the 815 mm2 reticle field; sets the on-wafer pipeline hop count"
+    }
+  },
+  "reference_parts": {
+    "a100_sxm_80gb": {
+      "node": "N7",
+      "die_area_mm2": {
+        "value": 826.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "GA100 die"
+      },
+      "dies_per_package": {
+        "value": 1.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "monolithic"
+      },
+      "transistors": {
+        "value": 54200000000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "54.2 billion"
+      },
+      "hbm_generation": "hbm2e",
+      "hbm_stacks": {
+        "value": 5.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "five active HBM2e stacks on the 80GB part"
+      },
+      "hbm_capacity_bytes": {
+        "value": 80000000000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "80 GB"
+      },
+      "hbm_bandwidth_bytes_s": {
+        "value": 2039000000000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "2039 GB/s on the 80GB SXM part"
+      },
+      "power_w": {
+        "value": 400.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/a100/pdf/nvidia-a100-datasheet-nvidia-us-2188504-web.pdf",
+        "note": "400 W SXM"
+      },
+      "native_formats": [
+        "bf16",
+        "fp32"
+      ],
+      "emulated_formats": {
+        "fp8": "bf16",
+        "w4a8": "bf16",
+        "fp4": "bf16"
+      },
+      "link": "nvlink"
+    },
+    "b200_sxm": {
+      "node": "4NP",
+      "die_area_mm2": {
+        "value": 1600.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "two reticle-limited dies in one package, ~1600 mm2 of silicon per package"
+      },
+      "dies_per_package": {
+        "value": 2.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "counted per package for iso-area comparison"
+      },
+      "transistors": {
+        "value": 208000000000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "208 billion"
+      },
+      "hbm_generation": "hbm3e",
+      "hbm_stacks": {
+        "value": 8.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "eight HBM3E stacks"
+      },
+      "hbm_capacity_bytes": {
+        "value": 180000000000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "180 GB per B200 SXM"
+      },
+      "hbm_bandwidth_bytes_s": {
+        "value": 8000000000000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "8 TB/s per B200 SXM"
+      },
+      "power_w": {
+        "value": 1000.0,
+        "grade": "published",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "note": "1000 W per B200 SXM"
+      },
+      "published_format_roofs_ops_s": {
+        "bf16": {
+          "value": 2250000000000000.0,
+          "grade": "published",
+          "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+          "note": "2.25 PFLOPS dense BF16"
+        },
+        "fp8": {
+          "value": 4500000000000000.0,
+          "grade": "published",
+          "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+          "note": "4.5 PFLOPS dense FP8/INT8"
+        },
+        "fp4": {
+          "value": 9000000000000000.0,
+          "grade": "published",
+          "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+          "note": "9 PFLOPS dense FP4"
+        }
+      },
+      "native_formats": [
+        "bf16",
+        "fp8",
+        "fp4",
+        "w4a8",
+        "fp32"
+      ],
+      "emulated_formats": {},
+      "link": "nvlink"
+    },
+    "taalas_hc1": {
+      "node": "N6",
+      "die_area_mm2": {
+        "value": 815.0,
+        "grade": "published",
+        "source": "https://taalas.com/products/",
+        "note": "815 mm2"
+      },
+      "transistors": {
+        "value": 53000000000.0,
+        "grade": "published",
+        "source": "https://www.cnx-software.com/2026/02/22/taalas-hc1-hardwired-llama-3-1-8b-ai-accelerator-delivers-up-to-17000-tokens-s/",
+        "note": "53 billion"
+      },
+      "model": "Llama-3.1-8B",
+      "published_tokens_s_per_user": {
+        "value": 16960.0,
+        "grade": "published",
+        "source": "https://taalas.com/products/ ; docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md",
+        "note": "16,960 tokens/s per user on Llama 3.1 8B at 1k input / 1k output. Every figure is self-run by Taalas; there is no MLPerf or third-party measurement, and the batch size is stated nowhere. The rounded '17k' on the product page is the same number."
+      },
+      "input_tokens": {
+        "value": 1024.0,
+        "grade": "published",
+        "source": "https://taalas.com/products/",
+        "note": "1K input sequence length"
+      },
+      "output_tokens": {
+        "value": 1024.0,
+        "grade": "published",
+        "source": "https://wavect.io/blog/taalas-hc1-llm-asic-review/",
+        "note": "1K output sequence length; the quoted rate is sustained to a final context of 2048 tokens"
+      },
+      "batch_size": {
+        "value": 1.0,
+        "grade": "assumed",
+        "source": "not published by Taalas; checked taalas.com, CNX Software, Wavect and Kaitchup",
+        "note": "The figure is quoted per user, so batch is modelled as 1 for the anchor. On this model's ROM weight path the anchor rate is batch-independent for a dense model, so the assumption does not move the anchor; it does move the aggregate throughput and the SRAM KV area."
+      },
+      "weight_bits_per_parameter": {
+        "value": 3.5,
+        "grade": "assumed",
+        "source": "https://www.cnx-software.com/2026/02/22/taalas-hc1-hardwired-llama-3-1-8b-ai-accelerator-delivers-up-to-17000-tokens-s/",
+        "note": "Taalas publishes a custom 3-bit base type with a mixture of 3-bit and 6-bit parameters but no mix ratio. 3.5 bits/parameter is the stated point; sweep 3.0 to 6.0."
+      },
+      "power_w": {
+        "value": 250.0,
+        "grade": "published",
+        "source": "https://kaitchup.substack.com/p/taalas-hc1-absurdly-fast-per-user",
+        "note": "reported around 250 W per PCIe card; a ten-card server is quoted at 2.5 kW"
+      },
+      "weight_store": "rom",
+      "kv_store": "sram",
+      "link": "none",
+      "execution_format": {
+        "value": 1.0,
+        "grade": "derived",
+        "source": "https://www.cnx-software.com/2026/02/22/taalas-hc1-hardwired-llama-3-1-8b-ai-accelerator-delivers-up-to-17000-tokens-s/",
+        "note": "canonical execution format 'w4a8'. Taalas publishes a custom 3-bit base type with a 3/6-bit mixture for weights; the activation width is not published and 8 bits is assumed. A model-specific ASIC freezes one datapath at manufacture, so the checkpoint's released BF16 arithmetic is NOT what this part executes and must not be priced at the BF16 roof."
+      },
+      "execution_format_name": "w4a8",
+      "weight_amortization": {
+        "value": 1.0,
+        "grade": "assumed",
+        "source": "Bajic, quoted in docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md",
+        "note": "Policy name 'per_stream'. Bajic describes one transistor that both stores four bits and performs the multiply related to it. If a second concurrent stream therefore needs a second pass through the fabric, a compute-in-ROM part cannot amortise weight access across a batch and its aggregate per-die throughput equals its per-user throughput. This is UNRESOLVED and it does not move the batch-1 anchor at all, where the two policies are identical; it moves every aggregate number above batch 1. Both policies are modelled and both are reported."
+      }
+    },
+    "cerebras_wse3": {
+      "node": "N5",
+      "die_area_mm2": {
+        "value": 46225.0,
+        "grade": "published",
+        "source": "https://www.cerebras.ai/chip",
+        "note": "wafer-scale die, used only as the wafer area and fabric anchor"
+      },
+      "sram_bytes": {
+        "value": 44000000000.0,
+        "grade": "published",
+        "source": "https://www.cerebras.ai/chip",
+        "note": "44 GB on-wafer SRAM"
+      },
+      "sram_bandwidth_bytes_s": {
+        "value": 2.1e+16,
+        "grade": "published",
+        "source": "https://www.cerebras.ai/chip",
+        "note": "21 PB/s"
+      }
+    }
+  },
+  "floorplan": {
+    "overhead_area_fraction": {
+      "value": 0.1,
+      "grade": "assumed",
+      "source": "no published floorplan for a mask-ROM inference die",
+      "note": "host/PCIe PHY, clocking and PLLs, power delivery structures, control, DFT and scan. Sweep 0.06 to 0.15."
+    },
+    "interconnect_area_fraction": {
+      "value": 0.08,
+      "grade": "assumed",
+      "source": "no published floorplan for a mask-ROM inference die",
+      "note": "on-die network and the bank-to-compute fabric that multiplexes ROM banks onto the shared compute array. Sweep 0.05 to 0.15."
+    }
+  }
+}
