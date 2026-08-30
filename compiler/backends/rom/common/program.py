@@ -96,6 +96,10 @@ from runtime.abi3.descriptors import (
     SelectionMode,
     Symbol,
 )
+# The frozen compression ratios, from the module that defines them rather than
+# restated here: ``VECTOR.COMPRESS``'s ``aux_id_1`` must name one of them and
+# the engine refuses anything else.
+from runtime.reference.compression_pool import PINNED_COMPRESSION_RATIOS
 
 from .image import (
     DTYPE_BY_NAME,
@@ -248,6 +252,43 @@ ENGINE_OVERRIDE: Mapping[str, EngineOp] = {
 ABI_EMPTY_INPUT_SLOTS: Mapping[str, tuple[int, ...]] = {
     "COMPRESS_STATE_UPDATE": (1,),
 }
+
+#: Neutral kinds whose TA-ABI3-OPCONV-1 row states an explicit batch axis that
+#: the neutral IR does not declare.  ADR-003 section 15 gives the neutral IR
+#: model semantics and no batch concept -- a batch is a deployment property --
+#: so a token-major ``[tokens, ...]`` operand is exactly one rank short of its
+#: row and the backend has to insert the missing axis.
+#:
+#: ``VECTOR.MHC``'s post sub-case reads ``[B, S, ...]`` off every operand;
+#: ``VECTOR.COMPRESS``'s project sub-case reads ``[B, S, K]`` in and
+#: ``[B, S, 2, N]`` out; its pool sub-case reads ``[B, G, P, D]`` in and
+#: ``[B, G, D]`` out; its state-update sub-case reads ``[B, S, 2, W]`` in and
+#: writes two ``[B, G, P, D]``.
+#:
+#: The inserted axis goes *after* the leading one.  Amendment A13 clamps a
+#: view's **leading** extent on a block loop's partial final iteration, so a
+#: leading axis of one is never clamped and the operand would present a whole
+#: declared block -- 262,144 rows -- for a 4-token request.  ``[rows, 1, ...]``
+#: keeps A13 exact.  For every row here but one that is also all the placement
+#: has to be: the arithmetic is independent per leading position, so
+#: ``batch * span`` is the count either way.
+#:
+#: The exception is the state update, and it is not a placement this backend
+#: gets to choose.  Its groups are formed *along* ``S`` and its overlap reaches
+#: across ``G``, so its request-dependent extent has to sit at axis 1, behind
+#: the batch -- which is the one axis A13 cannot clamp.  It is listed here
+#: because the rank is still the operator's to state and stating it makes the
+#: operator fail closed, in the engine's own words, on the extent it cannot be
+#: given.  See :meth:`_token_as_batch`.  This mirrors ``_batched_operand`` in
+#: ``compiler/backends/hbm_sram/lower.py``: one convention, two backends.
+TOKEN_AS_BATCH_KINDS = frozenset(
+    {
+        "HYPER_CONNECT_POST",
+        "COMPRESS_PROJECT",
+        "COMPRESS_POOL",
+        "COMPRESS_STATE_UPDATE",
+    }
+)
 
 MHC_SUBCASE: Mapping[str, int] = {
     "HYPER_CONNECT_PRE": 0,
@@ -423,7 +464,14 @@ class KernelShape:
 #: Neutral symbol name -> the frozen runtime-symbol registry.
 SYMBOL_BY_NAME: Mapping[str, Symbol] = {
     "span_tokens": Symbol.SPAN_TOKENS,
+    # The two exporters spell the context extent differently -- Qwen's graph
+    # declares ``context_tokens`` and DeepSeek's declares ``context_length`` --
+    # and an unrecognised name is not an error here, it is silence: the operand
+    # keeps its declared maximum and no block loop is opened, so a 4-token
+    # request would address the whole 262,144-row context.  Both names are
+    # listed rather than one being assumed.
     "context_tokens": Symbol.CONTEXT_LENGTH,
+    "context_length": Symbol.CONTEXT_LENGTH,
     "position_start": Symbol.POSITION_START,
     "position_end": Symbol.POSITION_END,
     "generation_index": Symbol.GENERATION_INDEX,
@@ -1743,7 +1791,7 @@ class RomLowering:
                 for name in names:
                     tensor = self.tensors[name]
                     declared = tensor.role == "state"
-                    writes = direction == "out" and bool(kernel.state_writes)
+                    writes = direction == "out" and self._writes_resource(kernel, name)
                     if not (declared or writes) or name in owner:
                         continue
                     state_id = (
@@ -1893,6 +1941,41 @@ class RomLowering:
                 cursor[direction] += width
         self._state_column = columns
 
+    def _writes_resource(self, kernel: Kernel, name: str) -> bool:
+        """Is this output of a state-writing kernel *the resource*, or a value?
+
+        A kernel that declares a state effect does not thereby make every result
+        it produces a plane of that resource.  ``DMA.CACHE_APPEND``'s
+        destination is the cache, and Qwen declares it ``role: activation``, so
+        the role alone cannot decide it.  ``VECTOR.COMPRESS``'s state-update
+        sub-case is the counter-example: it rolls the compressor's raw slots --
+        which is a real state effect, and which the operand convention binds to
+        no operand at all -- while its two results are the pool operands
+        ``COMPRESS_POOL`` reads next.
+
+        The graph already separates them.  A resource plane is written and not
+        read again as an operand; a value is produced to be consumed.  Routing a
+        consumed value into the state image writes it to a different object from
+        the one its reader addresses, which loses it silently -- 62 compressor
+        pools per token step, read back as zeros.
+        """
+        if not kernel.state_writes:
+            return False
+        if self.tensors[name].role == "state":
+            return True
+        return name not in self._value_reads
+
+    @property
+    def _value_reads(self) -> frozenset[str]:
+        """Tensors some kernel reads as an ordinary operand."""
+        cached = getattr(self, "_value_reads_cache", None)
+        if cached is None:
+            cached = frozenset(
+                name for kernel in self.graph.kernels for name in kernel.inputs
+            )
+            self._value_reads_cache = cached
+        return cached
+
     def _plane_width(self, tensor_id: str) -> int:
         """Elements one position contributes: the non-leading extents' product."""
         dims = self._dims(self.tensors[tensor_id])
@@ -1924,7 +2007,11 @@ class RomLowering:
         runs against.
         """
         state_id = self._state_owner.get(tensor_id)
-        if state_id is None and direction == "out" and kernel.state_writes:
+        if (
+            state_id is None
+            and direction == "out"
+            and self._writes_resource(kernel, tensor_id)
+        ):
             state_id = kernel.state_writes[0]
         if state_id is None or state_id not in self._state_slot:
             return None
@@ -2445,11 +2532,15 @@ class RomLowering:
     ) -> tuple[list[int], list[int]]:
         """A token-blocked operand presented as ``[tokens, 1, ...]``.
 
-        ``VECTOR.MHC``'s post sub-case is the one row in TA-ABI3-OPCONV-1 whose
-        operands carry an explicit batch axis: ``in0`` is ``[B, S, H]``, ``in1``
-        ``[B, S, M, H]``, and the engine reads ``B`` and ``S`` off ``in0``.  The
-        graph declares one sequence per request and no batch axis at all, so the
-        backend has to say which axis is which.
+        Several TA-ABI3-OPCONV-1 rows carry an explicit batch axis.
+        ``VECTOR.MHC``'s post sub-case is one -- ``in0`` is ``[B, S, H]``,
+        ``in1`` ``[B, S, M, H]``, and the engine reads ``B`` and ``S`` off
+        ``in0`` -- and ``VECTOR.COMPRESS``'s project sub-case is another, with
+        ``in0`` ``[B, S, K]`` and ``out0`` ``[B, S, 2, N]``.  The graph declares
+        one sequence per request and no batch axis at all, so the backend has to
+        say which axis is which.  ``TOKEN_AS_BATCH_KINDS`` lists the rows that
+        need it, and records which of them this placement is also *sufficient*
+        for.
 
         Naming the token axis ``B`` and giving ``S`` extent one is the only
         placement that stays correct under token blocking.  The alternative --
@@ -3043,7 +3134,12 @@ class RomLowering:
                     loop=loop,
                     writable=writable,
                 )
-        if kernel.kind == "HYPER_CONNECT_POST":
+        if kernel.kind in TOKEN_AS_BATCH_KINDS:
+            # The operand row states a batch axis the graph does not declare.
+            # See TOKEN_AS_BATCH_KINDS: the weights of a compressor projection
+            # are ``[N, K]`` with no batch axis at all, and they have already
+            # returned through the weight branch above, so only the activation
+            # operands reach here.
             dims, strides = self._token_as_batch(tensor, shape)
             return self._buffer_view(
                 tensor,
@@ -3384,7 +3480,29 @@ class RomLowering:
             if sub == int(Vector.HADAMARD):
                 return [int(attributes.get("block_width", 32))]
             if sub == int(Vector.COMPRESS):
-                return [COMPRESS_SUBCASE[kernel.kind]]
+                # TA-ABI3-OPCONV-1 section 3: ``aux0`` is the sub-case,
+                # ``aux1`` the compression ratio and ``aux2`` the runtime symbol
+                # holding the start position.  ``aux1`` is not decoration -- the
+                # pool and the state update read the ratio to know how many
+                # candidates a group pools and whether the groups overlap, and
+                # the engine refuses any value that is not a pinned ratio.
+                # ``aux2`` is what makes the operator's prefill-only guard real:
+                # the compressor's raw slots roll on the decode path and this
+                # operator's arity does not bind them, so an unbound ``aux2``
+                # would let a decode step read the guard as position zero and
+                # execute anyway.
+                ratio = int(attributes.get("ratio", 0))
+                if ratio not in PINNED_COMPRESSION_RATIOS:
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r} declares compression ratio "
+                        f"{attributes.get('ratio')!r}; VECTOR.COMPRESS pins the "
+                        f"ratio to one of {sorted(PINNED_COMPRESSION_RATIOS)}"
+                    )
+                return [
+                    COMPRESS_SUBCASE[kernel.kind],
+                    ratio,
+                    int(Symbol.POSITION_START),
+                ]
             if sub == int(Vector.MHC):
                 return [
                     MHC_SUBCASE[kernel.kind],

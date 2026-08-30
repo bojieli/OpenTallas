@@ -842,6 +842,12 @@ def deepseek_shaped_graph(
                 ),
             ),
             contract="deepseek_v4_compress_fp32_bf16_v1",
+            # TA-ABI3-OPCONV-1 section 3 gives ``VECTOR.COMPRESS`` a compression
+            # ratio in ``aux_id_1`` and the engine refuses any value that is not
+            # a pinned one, so a graph that omits it describes an operator that
+            # cannot be issued.  The released exporter states it on all 62 of
+            # its compressor kernels; this fixture states it too.
+            attributes={"ratio": 4},
             layer=layer,
             state_writes=(state_id,),
         )
@@ -2118,6 +2124,77 @@ def test_routed_matmul_declares_its_expert_count(deepseek_build):
     assert operators
     for descriptor in operators:
         assert descriptor.payload["aux_id_0"] == 8
+
+
+def test_compressor_operators_carry_the_ratio_and_the_start_position(deepseek_build):
+    """TA-ABI3-OPCONV-1 section 3 gives ``VECTOR.COMPRESS`` three aux slots.
+
+    ``aux0`` selects the sub-case, ``aux1`` names the compression ratio and
+    ``aux2`` names the runtime symbol holding the start position.  The last two
+    are load-bearing: the pool and the state update read the ratio to know how
+    many candidates a group pools and whether groups overlap, and the engine
+    reads ``aux2`` to refuse a decode step, whose raw-slot roll this operator's
+    arity does not bind.  Left unbound, the guard reads every step as position
+    zero and the operator executes where the contract says it must not.
+    """
+    from runtime.abi3.constants import Vector
+    from runtime.abi3.descriptors import Symbol
+
+    deployment, _plan = deepseek_build
+    operators = _operators(deployment, Major.VECTOR, int(Vector.COMPRESS))
+    assert operators
+    for descriptor in operators:
+        assert descriptor.payload["aux_id_1"] in (4, 128)
+        assert descriptor.payload["aux_id_2"] == int(Symbol.POSITION_START)
+
+
+def test_a_consumed_result_of_a_state_writing_kernel_stays_a_value(
+    deepseek_build, deepseek_graph
+):
+    """A state effect does not make every result of the kernel a state plane.
+
+    The fixture's compressor declares a state effect -- the released model rolls
+    the compressor's raw slots, which is a STATE resource ``VECTOR.COMPRESS``'s
+    arity binds to no operand -- and separately *produces* the compressed rows
+    ``INDEX_SCORE`` reads next.  Routing that produced value into the state
+    image gives the producer and the consumer two different objects, and the
+    consumer then reads zeros: silently, because nothing in the deployment is
+    malformed and admission has nothing to object to.  The property that catches
+    it is that a value's writer and its reader address the same object.
+    """
+    from runtime.abi3.constants import Vector
+
+    deployment, _plan = deepseek_build
+    compressor = next(
+        k for k in deepseek_graph.kernels if k.kind == "COMPRESS_PROJECT"
+    )
+    reader = next(
+        k
+        for k in deepseek_graph.kernels
+        if k.kind == "INDEX_SCORE" and compressor.outputs[0] in k.inputs
+    )
+    assert compressor.state_writes
+
+    def operator(kernel):
+        return next(
+            d
+            for d in deployment.table.descriptors()
+            if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+            and int(d.payload["source_kernel_id"]) == kernel.index
+        )
+
+    def object_of(view_id):
+        assert view_id != NO_ID
+        return deployment.table.get(
+            view_id, ExtendedDescriptorType.TENSOR_VIEW
+        ).primary_object_id
+
+    # Neither row is permuted, so the graph's slot is the ABI's slot here.
+    written = object_of(operator(compressor).payload["output_view_0"])
+    slot = reader.inputs.index(compressor.outputs[0])
+    read = object_of(operator(reader).payload[f"input_view_{slot}"])
+    assert read == written
+    assert _operators(deployment, Major.VECTOR, int(Vector.COMPRESS))
 
 
 def test_attention_operators_carry_the_four_aux_slots(qwen_build, deepseek_build):
