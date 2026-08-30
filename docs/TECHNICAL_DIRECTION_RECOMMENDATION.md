@@ -1,5 +1,31 @@
 # Which road to take
 
+> **PROVISIONAL — one headline claim in this document is RETRACTED.**
+>
+> The "compute-in-ROM beats ROM+MAC by 1.60x" result is an artefact of a
+> modelling error I made, not a property of the architecture. `balanced_area_split`
+> applied the 1.6x compute-in-ROM cell multiplier to **area only**, and then
+> `weight_read = rom_mm2 x bandwidth_density` credited that larger area with the
+> *storage-cell* bandwidth density. The design was charged for a bigger cell and
+> handed the bandwidth of an array without one.
+>
+> The correct physics cancels. Both densities derive from `1/bitcell_area`, and
+> bandwidth per mm² is cells-activated per mm² per cycle — so a 1.6x larger cell
+> means 1.6x fewer cells per mm² and 1.6x *less* bandwidth per mm². The extra area
+> is select transistors; it adds no bitlines and no sense amps. The corrected sweep
+> is **57.4 µs either way**, so the two machines are equal on throughput
+> (17,400 vs 17,417 tok/s).
+>
+> What is unaffected: the per-region activation argument, which changes sweep
+> *depth* rather than sweep *rate*. What is understated: compute-in-ROM's real
+> advantages — it does not spend a third of the die on a MAC array running at 47%
+> duty, and it moves no weights, which is an energy argument the model may not
+> represent at all.
+>
+> A completeness audit is running to find whether other terms are similarly wrong
+> before this is rewritten. Treat every number below as unverified.
+
+
 Every number here comes from `src/opentallas/roofline.py` and the studies under
 `results/roofline/`, not from hand arithmetic. The model reproduces two shipping
 parts: an A100 weight-bound decode to the digit, and Taalas HC1 within 1.23×.
