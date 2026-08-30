@@ -72,13 +72,6 @@ Mixture-of-experts models add a useful wrinkle: only selected experts are active
 for a token. OpenTallas keeps expert identity and routing explicit rather than
 pretending that every expert is read on every step.
 
-> **This figure is stale and carries a retracted number.**
-> `docs/assets/why-rom.svg` was last rendered at commit `a1eb32e` on 2026-08-28
-> and still shows `113.2×` and `99.10 MB / token`. Both were retracted on
-> 2026-08-30. Read the corrected table below, not the image. Regenerate the
-> image with `python3 tools/render_public_assets.py`, which reads
-> `results/model-traffic/sweep.csv` directly.
-
 ![Why immutable-weight ROM can change decode traffic](assets/why-rom.svg)
 
 ### A concrete traffic example
@@ -281,11 +274,6 @@ measurements of either proposed or vendor hardware.
 > never appeared as a token anywhere — it was stated decomposed, as
 > `14,436 / 1,666`, which is why a grep for `8.67` found nothing and it survived
 > the correction that killed it.
-
-> **This figure is stale.** `docs/assets/throughput-at-200k.svg` was last
-> rendered at commit `a1eb32e` on 2026-08-28 and still plots `B=1 15.2×` and
-> `B=1 8.7×`. Both are retracted; the current values are 13.10× and 7.65×.
-> Regenerate with `python3 tools/render_public_assets.py`.
 
 ![Central analytical throughput at 200K context](assets/throughput-at-200k.svg)
 
