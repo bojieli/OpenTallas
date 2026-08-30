@@ -23,8 +23,8 @@ One decode step on the whole system costs::
 
     t_memory  = t_weight + t_kv          if weights and KV share one memory system
     t_memory  = max(t_weight, t_kv)      if they are physically separate arrays
-    t_service = max(t_memory, t_compute)
-    t_token   = t_service / stage_balance + t_link
+    t_service = max(t_memory, t_compute)          on the machine's AGGREGATE
+    t_token   = token_slots * t_service / stage_balance + t_link
     t_token  *= thermal_scale
 
 and the four rules behind it, each of which is a modelling choice rather than a
@@ -46,22 +46,42 @@ derivation, are:
    activation has arrived.  Inter-device latency is therefore added to the
    critical path at every batch size, including batch 1, where a pipelined
    array supplies no parallelism whatsoever.
-4. **Per-user latency is the full serial traversal, and aggregate throughput is
-   ``batch / per-user latency``.**  A pipelined array of N devices does not make
-   one user's token faster; it only lets other users occupy the stages this
-   user is not in.  Computing the service time on the *aggregate* resources and
-   adding the hops is exactly the balanced-pipeline traversal, and it keeps the
-   identity ``aggregate = batch x per_user_rate`` true by construction.
+4. **Per-user latency and aggregate throughput are separate quantities and are
+   both reported.**  The service time above is computed on the machine's
+   *aggregate* resources -- every byte of array bandwidth, every operation of
+   compute roof.  That is the right denominator only for partitions that are
+   all working on the same token at the same instant, which is what tensor
+   parallelism is.  A token under pipeline parallelism is served by one stage's
+   silicon at a time and must visit every stage in turn, so::
 
-   **This rule is the largest known defect in the model and it is stated here
-   rather than hidden.**  It is right for tensor parallelism, where every
-   partition works on the same layer at once.  It is not right for pipeline
-   parallelism: a token at stage *i* is served by stage *i*'s silicon alone, so
-   a balanced ``S``-stage pipeline's per-user latency is ``S`` times what this
-   computes.  The model therefore gives a pipeline a throughput-view service
-   time and a latency-view hop count.  The bias runs the same way on both
-   families and grows with device count.  Fixing it means separating per-user
-   latency from aggregate throughput, which breaks the identity above.
+       t_per_user = token_slots x t_service_on_the_whole_machine + t_link
+
+   where ``token_slots = partitions / tensor_group``.  The two factors in a
+   pipeline cancel exactly -- each of N stages holds ``1/N`` of the weights and
+   reads them at ``1/N`` of the bandwidth -- so **adding devices under pipeline
+   parallelism buys aggregate throughput and buys one user nothing**, and the
+   answer is the same as one device holding the whole model at one device's
+   bandwidth.  Tensor parallelism is different in kind: ``token_slots`` is one,
+   the whole machine is on the token, and the price is two all-reduces per
+   layer, charged in ``t_link``.
+
+   Aggregate throughput is then the same serial path with **every slot
+   occupied**: ``aggregate = fill_users / t_per_user`` where ``fill_users`` is
+   ``max(batch, token_slots)``, capped by the users whose KV the machine can
+   actually hold.  ``aggregate = batch x per_user_rate`` is therefore true only
+   when the machine has at least as many concurrent users as slots; below that
+   the surplus slots idle and what the machine delivers at the requested
+   concurrency is reported separately as ``delivered_tokens_s``.  Fill and
+   drain are not charged: decode is a continuous stream of steps and the
+   pipeline is assumed to be in steady state, which flatters a deep pipeline by
+   at most one traversal per request.
+
+   **This rule was the largest known defect in the model.**  Until it was fixed
+   the model charged a pipeline's service time on the aggregate view and its
+   hops on the latency view, reporting a balanced ``S``-stage pipeline as ``S``
+   times faster per user than it is.  Every point now carries
+   ``per_user_tokens_s_throughput_view`` -- the number the defect produced --
+   so the size of this correction stays separable from every other one.
 
 The fabric model
 ----------------
@@ -153,7 +173,27 @@ from .workload import (
 )
 
 
-GRADES = ("measured", "published", "derived", "assumed")
+GRADES = ("measured", "executed", "published", "derived", "assumed")
+"""Evidence classes, ordered strongest to weakest.
+
+The order is load-bearing: ``_weakest_grade`` takes the largest index, so a
+derivation inherits the weakest evidence that went into it.
+
+``executed`` is the class this program mostly lives in and it was missing until
+`configs/hardware/technology.json` named it: **we ran it, in this repository,
+and the artifact holding the numbers is committed.** It is deliberately
+distinct from ``measured``, which means fabricated silicon reported in a
+peer-reviewed venue -- almost nothing here is that. Its absence was pushing
+executed values into ``measured`` (too strong) or ``published`` (the wrong
+category), and this file rejected the grade outright, which would have crashed
+the study the first time a config entry used it.
+
+It sits above ``published`` because a number obtained by running the released
+artefact is first-hand evidence about that artefact, where a vendor figure is a
+claim about it. This program has twice found implementation-derived constants
+wrong -- DeepSeek's 583-byte KV entry and the sparse-index threshold -- while
+the executed counts held.
+"""
 BITS_PER_BYTE = 8.0
 UM2_PER_MM2 = 1.0e6
 
@@ -1611,6 +1651,37 @@ class Topology:
             return self.partitions
         return max(1, math.ceil(self.partitions / group))
 
+    @property
+    def token_slots(self) -> int:
+        """Independent groups the machine is cut into for one token's purposes.
+
+        A token is served by exactly **one** of these at a time, so this is the
+        factor between the machine's aggregate service time and one user's
+        latency.  It is ``partitions / tensor_group``: the partitions that work
+        on the same token simultaneously divide out, and everything else
+        multiplies the serial path.
+
+        * A single chip has one slot.
+        * A **tensor**-parallel machine has one slot however many partitions it
+          holds, because they are all on the same token.  That is what tensor
+          parallelism buys and what its two all-reduces per layer pay for.
+        * A **pipeline** of ``P`` partitions has ``P`` slots.  Adding devices
+          under pipeline parallelism buys aggregate throughput and buys one user
+          nothing: each stage holds ``1/P`` of the weights and reads them with
+          ``1/P`` of the bandwidth, so the two cancel and the token's latency is
+          the same as on one device that held everything.
+        * A **hybrid** machine has one slot per tensor group.
+
+        This is the same quantity as ``pipeline_stages``, before the layer cap.
+        The cap belongs to ``link_events``, which counts *boundaries a token
+        crosses*; beyond the layer count the surplus partitions hold replicas of
+        a stage, and a replica adds no boundary and no speed -- it serves a
+        different user.  Both readings give the same latency, which is why the
+        cap can differ between the two without either being wrong.
+        """
+
+        return self.pipeline_stages
+
     def stages_for(self, num_layers: int) -> int:
         """Serially dependent stages a token actually traverses."""
 
@@ -2102,10 +2173,18 @@ def gpu_device_budget(
 class RooflineStep:
     """One evaluated operating point.
 
-    ``component_times_s`` are the four terms of the roofline before the overlap
-    rule is applied; ``step_time_s`` is after it.  ``binding_constraint`` names
-    the term that actually sets the answer, so no result can be read without
-    knowing why it came out that way.
+    ``component_times_s`` are the terms of the roofline before the overlap rule
+    is applied, each **on one user's critical path**: the three service terms
+    are already multiplied by the slots a token traverses, so the largest of
+    them is the one that actually sets ``step_time_s``.  ``binding_constraint``
+    names it, so no result can be read without knowing why it came out that way.
+
+    ``step_time_s`` is one user's latency and ``per_user_tokens_s`` is its
+    reciprocal.  ``aggregate_tokens_s`` is the machine's rate with every slot
+    occupied and is **not** ``batch_size * per_user_tokens_s``; that quantity is
+    ``metrics["delivered_tokens_s"]``.  ``metrics["token_slots"]`` is what
+    separates them, and ``metrics["per_user_tokens_s_throughput_view"]`` is the
+    single number this model reported for both before they were separated.
     """
 
     design: str
@@ -2198,53 +2277,67 @@ def _compute_time(
             continue
         times[canonical] = count / (roof * efficiency)
     return sum(times.values()), times, reasons
+@dataclass(frozen=True)
+class ServiceTerms:
+    """The batch-dependent half of one step, evaluated at one effective batch.
+
+    ``evaluate`` needs this at two different batches and the two answers mean
+    different things:
+
+    * at the **microbatch one pipeline slot holds**, it is what a single user's
+      token actually costs at each stage it visits, and multiplying by the slot
+      count gives that user's latency;
+    * at the **whole batch**, it is the throughput view -- what the machine's
+      aggregate resources cost if every device were working on every token at
+      once, which is true only under tensor parallelism.
+
+    The model used to compute the second and report it as the first.  Sharing
+    one implementation between them is what stops the two drifting apart again.
+    """
+
+    effective_batch: float
+    weight_time_s: float
+    kv_time_s: float
+    compute_time_s: float
+    memory_time_s: float
+    service_time_s: float
+    link_time_s: float
+    energy_j: float
+    overlap_rule: str
+    reasons: tuple[str, ...]
+    detail: Mapping[str, Any]
 
 
-def evaluate(
+def _service_terms(
     budget: DeviceBudget,
     model: ModelProfile,
+    technology: Technology,
     *,
     context_tokens: int,
-    batch_size: int,
-    technology: Technology,
-    weight_bits_per_parameter: float | None = None,
-    weight_traffic_policy: str = "decode_streamed",
-    execution_format: str | None = None,
-    measured_expert_coverage: float | None = None,
-) -> RooflineStep:
-    """Evaluate one decode step against an area-derived resource budget."""
+    effective_batch: float,
+    stored_weight_bytes: float,
+    representation_scale: float,
+    weight_traffic_policy: str,
+    execution_format: str | None,
+    measured_expert_coverage: float | None,
+    kv: Any,
+    kv_inflation: float,
+) -> ServiceTerms:
+    """One pass of the whole model over ``effective_batch`` concurrent tokens.
 
-    if weight_traffic_policy not in WEIGHT_TRAFFIC_POLICIES:
-        raise ValidationError(
-            f"weight_traffic_policy must be one of {WEIGHT_TRAFFIC_POLICIES}"
-        )
-    if batch_size < 1:
-        raise ValidationError("batch_size must be at least 1")
-    if context_tokens > model.max_context_tokens:
-        raise ValidationError(
-            f"context {context_tokens} exceeds {model.name} maximum "
-            f"{model.max_context_tokens}"
-        )
+    Every resource here is the machine's **aggregate** -- the full array
+    bandwidth, the full compute roof.  That is the right denominator for a set
+    of partitions that all work on the same token at the same time, which is
+    what tensor parallelism is.  It is the wrong denominator for a token that
+    visits its partitions in sequence, and ``evaluate`` is where that
+    distinction is applied: it multiplies this by the number of slots the
+    machine is cut into.  Nothing in this function knows about that factor.
+    """
 
-    reasons: list[str] = list(budget.reasons)
-
-    # -- representation ---------------------------------------------------
-    # A mask ROM freezes the stored representation at manufacture, so it is a
-    # design variable rather than an inherited constant.  Rescaling the whole
-    # checkpoint uniformly keeps the deployment story auditable.
-    if weight_bits_per_parameter is None:
-        representation_scale = 1.0
-        stored_weight_bytes = model.checkpoint_bytes
-    else:
-        stored_weight_bytes = (
-            model.total_parameters * weight_bits_per_parameter / BITS_PER_BYTE
-        )
-        representation_scale = stored_weight_bytes / model.checkpoint_bytes
-
-    # -- model-side accounting (reused, not reimplemented) ----------------
-    kv = kv_traffic(model, context_tokens)
+    reasons: list[str] = []
+    devices = budget.topology.device_count
     traffic = weight_traffic(
-        model, batch_size, measured_coverage=measured_expert_coverage
+        model, effective_batch, measured_coverage=measured_expert_coverage
     )
     coverage = traffic.routed_expert_coverage
     if weight_traffic_policy == "full_checkpoint":
@@ -2252,49 +2345,17 @@ def evaluate(
     else:
         engaged_weight_bytes = traffic.total_bytes * representation_scale
     operations = _scaled_operations(
-        model, technology, context_tokens, float(batch_size), execution_format
+        model, technology, context_tokens, effective_batch, execution_format
     )
-
-    resident_kv_bytes = kv.storage_bytes_per_user * batch_size
-    native_kv_transfer_bytes = (kv.read_bytes + kv.write_bytes) * batch_size
-    kv_inflation, kv_granularity_detail, kv_granularity_provenance = (
-        kv_access_granularity(
-            technology,
-            model,
-            context_tokens=context_tokens,
-            store=budget.kv_store,
-        )
-    )
-    # Granularity inflates what the memory MOVES, not what the cache HOLDS, so
-    # the resident footprint and every capacity check stay on native bytes.
+    resident_kv_bytes = kv.storage_bytes_per_user * effective_batch
+    native_kv_transfer_bytes = (kv.read_bytes + kv.write_bytes) * effective_batch
     kv_transfer_bytes = native_kv_transfer_bytes * kv_inflation
 
-    # -- capacity ---------------------------------------------------------
-    if stored_weight_bytes > budget.weight_capacity_bytes + 1.0:
-        reasons.append(
-            f"CAPACITY: stored weights {stored_weight_bytes:,.0f} B exceed weight "
-            f"capacity {budget.weight_capacity_bytes:,.0f} B"
-        )
-    if budget.shared_memory_path:
-        remaining = budget.kv_capacity_bytes - stored_weight_bytes
-    else:
-        remaining = budget.kv_capacity_bytes
-    if resident_kv_bytes > remaining + 1.0:
-        reasons.append(
-            f"CAPACITY: resident KV {resident_kv_bytes:,.0f} B exceeds available KV "
-            f"capacity {max(0.0, remaining):,.0f} B at batch {batch_size}"
-        )
-    max_resident_users = (
-        int(max(0.0, remaining) // kv.storage_bytes_per_user)
-        if kv.storage_bytes_per_user > 0
-        else 0
-    )
-
     # -- weight read ------------------------------------------------------
-    devices = budget.topology.device_count
     region_sweeps = 1.0
     mean_region_passes: float | None = None
     mean_engaged_devices: float | None = None
+    engaged_devices = float(devices)
     if budget.weight_store == "rom":
         # ROM locality: an unselected region's read ports cannot be borrowed, so
         # the engaged bandwidth is the engaged fraction of the array's.  The
@@ -2319,18 +2380,11 @@ def evaluate(
             #
             # With B tokens each selecting k of N experts, the array is not
             # finished when the AVERAGE engaged region has drained: it is
-            # finished when the BUSIEST one has.  The model used to charge
-            # B*k / (N*coverage) -- the mean engaged region's load -- and then
-            # divide by a flat 0.85 whose own documentation said "the sweep
-            # depth is set by the busiest region rather than the mean".  The
-            # code did not do what its parameter documented, and the gap is not
-            # a constant: it runs from 1.0x at batch 1 to about 2.6x at batch
-            # 32-64 and back toward 2.0x by batch 256.
-            #
-            # ``expected_max_region_load`` computes the busiest region directly.
-            # The router-quality multiplier is what is LEFT for a derate: the
-            # residual imbalance of a trained router against the uniform-random
-            # draw that statistic assumes.
+            # finished when the BUSIEST one has.  ``expected_max_region_load``
+            # computes the busiest region directly, and the router-quality
+            # multiplier is what is LEFT for a derate: the residual imbalance of
+            # a trained router against the uniform-random draw that statistic
+            # assumes.
             #
             # A dense model has one region by construction, so every token lands
             # on it and this reduces to per_stream -- correctly, because a dense
@@ -2341,18 +2395,18 @@ def evaluate(
             mean_region_passes = max(
                 1.0,
                 min(
-                    (batch_size * experts_per_token) / mean_engaged_regions,
-                    float(batch_size),
+                    (effective_batch * experts_per_token) / mean_engaged_regions,
+                    float(effective_batch),
                 ),
             )
             passes = expected_max_region_load(
-                num_experts, batch_size, experts_per_token
+                num_experts, effective_batch, experts_per_token
             )
             router_imbalance = technology.efficiency("expert_router_imbalance").value
             passes *= max(router_imbalance, 1e-9)
             # A per-region fabric can never be worse than a global broadcast --
             # in the limit every token lands on one region, which is per_stream.
-            passes = min(max(1.0, passes), float(batch_size))
+            passes = min(max(1.0, passes), float(effective_batch))
             region_sweeps = passes
 
             per_stream_traffic = weight_traffic(model, 1)
@@ -2382,7 +2436,7 @@ def evaluate(
             per_stream_bytes = per_stream_traffic.total_bytes * representation_scale
             if weight_traffic_policy == "full_checkpoint":
                 per_stream_bytes = stored_weight_bytes
-            engaged_weight_bytes = per_stream_bytes * batch_size
+            engaged_weight_bytes = per_stream_bytes * effective_batch
             engaged_fraction = (
                 per_stream_bytes / stored_weight_bytes
                 if stored_weight_bytes > 0
@@ -2394,6 +2448,7 @@ def evaluate(
                 if effective_weight_bw > 0
                 else math.inf
             )
+            region_sweeps = float(effective_batch)
     else:
         # Global bandwidth: only the engaged bytes are fetched, and for an
         # expert-parallel cluster only the devices holding a selected expert
@@ -2465,8 +2520,7 @@ def evaluate(
     # one flat hop cost for a whole machine is what let a 672-partition
     # pipeline look like 671 NVLink hops and a 681-region all-reduce look like
     # two on-wafer hops; neither is a machine anyone builds.
-    hops, hop_semantics = budget.topology.hop_events(model.num_layers)
-    activation_bytes = batch_size * model.hidden_size * 2.0
+    activation_bytes = effective_batch * model.hidden_size * 2.0
     link_time, link_breakdown, link_payload_bytes = technology.link_time_s(
         budget.topology, model.num_layers, activation_bytes=activation_bytes
     )
@@ -2479,16 +2533,6 @@ def evaluate(
         model.num_layers,
         activation_bytes=activation_bytes,
         stage_cap=False,
-    )
-    hop_latency, link_bytes_s = technology.link(budget.topology.link)
-    payload_bytes = link_payload_bytes / hops if hops > 0 else 0.0
-
-    # -- the per-layer serial floor ---------------------------------------
-    # Decode is sequential across layers, and each layer has dependencies that
-    # no bandwidth removes.  Before this term a single_chip design had no fixed
-    # cost whatsoever on its critical path.
-    fixed_latency, fixed_latency_detail, fixed_latency_provenance = (
-        layer_fixed_latency(technology, model)
     )
 
     # -- the roofline combination ----------------------------------------
@@ -2520,9 +2564,8 @@ def evaluate(
     apply_balance = devices > 1 and budget.topology.parallelism != "none"
     if apply_balance:
         service_time /= balance
-    raw_step_time = service_time + link_time + fixed_latency
 
-    # -- power and thermal ------------------------------------------------
+    # -- energy -----------------------------------------------------------
     energy_j = 0.0
     if budget.weight_store == "rom":
         energy_j += (
@@ -2544,67 +2587,11 @@ def evaluate(
         )
     for canonical, count in operations.items():
         energy_j += count * technology.mac_energy_j_per_op(canonical).value
-    dynamic_power = energy_j / max(raw_step_time, 1e-30)
-    thermal_scale = max(1.0, dynamic_power / max(budget.cooling_limit_w, 1e-30))
-    step_time = raw_step_time * thermal_scale
-    power = energy_j / max(step_time, 1e-30)
 
-    fused_compute = (
-        budget.weight_store == "rom"
-        and budget.weight_amortization in COMPUTE_IN_ROM_POLICIES
-    )
-    component_times = {
-        "weight_read": weight_time,
-        "kv_read": kv_time,
-        # In a compute-in-ROM fabric the arithmetic is the sweep, so reporting a
-        # separate compute time would name a component that cannot bind and
-        # would break the invariant that the step is at least its largest part.
-        # The MACs still happen; they take exactly as long as the walk.
-        "compute": weight_time if fused_compute else compute_time,
-        "link_latency": link_time,
-        "layer_fixed_latency": fixed_latency,
-    }
-    if reasons:
-        binding = "capacity_or_format"
-        per_user = 0.0
-        aggregate = 0.0
-    else:
-        if thermal_scale > 1.0 + 1e-12:
-            binding = "thermal"
-        else:
-            binding = max(component_times, key=lambda key: component_times[key])
-        per_user = 1.0 / step_time
-        aggregate = batch_size * per_user
-
-    metrics: dict[str, Any] = {
-        "overlap_rule": overlap_rule,
-        "latency_rule": (
-            "hop and collective latency is added to the critical path, never "
-            "overlapped; per-user latency is the full serial traversal and "
-            "aggregate = batch x per-user rate"
-        ),
-        "hop_events_per_token": hops,
-        "hop_semantics": hop_semantics,
-        "hop_latency_s": hop_latency.value,
-        "link": budget.topology.link,
-        "intra_link": budget.topology.inner_link,
-        "intra_domain_size": budget.topology.intra_domain_size,
-        "tensor_group": budget.topology.tensor_group,
-        "pipeline_stages": budget.topology.stages_for(model.num_layers),
-        "pipeline_stages_uncapped": budget.topology.pipeline_stages,
-        "link_breakdown": link_breakdown,
-        "link_latency_without_stage_cap_s": link_time_without_stage_cap,
-        "link_payload_bytes_per_event": float(payload_bytes),
-        "link_payload_bytes_per_token": float(link_payload_bytes),
-        "stored_weight_bytes": stored_weight_bytes,
-        "representation_scale_vs_checkpoint": representation_scale,
-        "weight_traffic_policy": weight_traffic_policy,
-        "weight_amortization": budget.weight_amortization,
-        "execution_format": execution_format or "checkpoint-declared",
+    detail: dict[str, Any] = {
         "engaged_weight_bytes": engaged_weight_bytes,
         "engaged_weight_fraction": engaged_fraction,
         "effective_weight_read_bytes_s": effective_weight_bw,
-        "peak_weight_read_bytes_s": budget.weight_read_bytes_s,
         "expert_coverage": coverage,
         "distinct_experts_per_layer": traffic.distinct_experts_per_layer,
         "engaged_devices": (
@@ -2621,10 +2608,347 @@ def evaluate(
             else 1.0
         ),
         "kv_native_transfer_bytes_per_step": native_kv_transfer_bytes,
-        "kv_access_granularity": kv_granularity_detail,
-        "kv_access_granularity_inflation": kv_inflation,
+        "kv_transfer_bytes_per_step": kv_transfer_bytes,
+        "resident_kv_bytes_this_pass": resident_kv_bytes,
         "kv_bank_occupancy": kv_bank_occupancy,
         "kv_read_s_under_bank_locality": kv_time_under_bank_locality,
+        "operations_by_canonical_format": dict(operations),
+        "compute_times_s_by_format": compute_by_format,
+        "link_breakdown": link_breakdown,
+        "link_latency_without_stage_cap_s": link_time_without_stage_cap,
+        "link_payload_bytes_per_token": float(link_payload_bytes),
+        "region_sweeps": region_sweeps,
+        "mean_region_passes": mean_region_passes,
+        "stage_balance_applied": apply_balance,
+    }
+    return ServiceTerms(
+        effective_batch=float(effective_batch),
+        weight_time_s=weight_time,
+        kv_time_s=kv_time,
+        compute_time_s=compute_time,
+        memory_time_s=memory_time,
+        service_time_s=service_time,
+        link_time_s=link_time,
+        energy_j=energy_j,
+        overlap_rule=overlap_rule,
+        reasons=tuple(reasons),
+        detail=detail,
+    )
+
+
+def evaluate(
+    budget: DeviceBudget,
+    model: ModelProfile,
+    *,
+    context_tokens: int,
+    batch_size: int,
+    technology: Technology,
+    weight_bits_per_parameter: float | None = None,
+    weight_traffic_policy: str = "decode_streamed",
+    execution_format: str | None = None,
+    measured_expert_coverage: float | None = None,
+) -> RooflineStep:
+    """Evaluate one decode step against an area-derived resource budget.
+
+    Two rates come out of this and they are **not** the same number divided by
+    the batch:
+
+    ``per_user_tokens_s``
+        One user's token rate: the reciprocal of the full serial path that
+        user's token takes through the machine, including every slot it must
+        visit in turn and every collective its tensor group must complete.
+
+    ``aggregate_tokens_s``
+        The machine's total rate **with every slot occupied**.  A machine cut
+        into ``S`` slots needs ``S`` concurrent users before it reaches this;
+        below that its slots idle and what it actually delivers is
+        ``batch_size x per_user_tokens_s``, reported as ``delivered_tokens_s``.
+
+    They coincide only when the machine has one slot -- a single chip, or a
+    tensor-parallel group that spans every partition.
+    """
+
+    if weight_traffic_policy not in WEIGHT_TRAFFIC_POLICIES:
+        raise ValidationError(
+            f"weight_traffic_policy must be one of {WEIGHT_TRAFFIC_POLICIES}"
+        )
+    if batch_size < 1:
+        raise ValidationError("batch_size must be at least 1")
+    if context_tokens > model.max_context_tokens:
+        raise ValidationError(
+            f"context {context_tokens} exceeds {model.name} maximum "
+            f"{model.max_context_tokens}"
+        )
+
+    reasons: list[str] = list(budget.reasons)
+
+    # -- representation ---------------------------------------------------
+    # A mask ROM freezes the stored representation at manufacture, so it is a
+    # design variable rather than an inherited constant.  Rescaling the whole
+    # checkpoint uniformly keeps the deployment story auditable.
+    if weight_bits_per_parameter is None:
+        representation_scale = 1.0
+        stored_weight_bytes = model.checkpoint_bytes
+    else:
+        stored_weight_bytes = (
+            model.total_parameters * weight_bits_per_parameter / BITS_PER_BYTE
+        )
+        representation_scale = stored_weight_bytes / model.checkpoint_bytes
+
+    # -- model-side accounting (reused, not reimplemented) ----------------
+    kv = kv_traffic(model, context_tokens)
+    kv_inflation, kv_granularity_detail, kv_granularity_provenance = (
+        kv_access_granularity(
+            technology,
+            model,
+            context_tokens=context_tokens,
+            store=budget.kv_store,
+        )
+    )
+    resident_kv_bytes = kv.storage_bytes_per_user * batch_size
+
+    # -- capacity ---------------------------------------------------------
+    if stored_weight_bytes > budget.weight_capacity_bytes + 1.0:
+        reasons.append(
+            f"CAPACITY: stored weights {stored_weight_bytes:,.0f} B exceed weight "
+            f"capacity {budget.weight_capacity_bytes:,.0f} B"
+        )
+    if budget.shared_memory_path:
+        remaining = budget.kv_capacity_bytes - stored_weight_bytes
+    else:
+        remaining = budget.kv_capacity_bytes
+    if resident_kv_bytes > remaining + 1.0:
+        reasons.append(
+            f"CAPACITY: resident KV {resident_kv_bytes:,.0f} B exceeds available KV "
+            f"capacity {max(0.0, remaining):,.0f} B at batch {batch_size}"
+        )
+    max_resident_users = (
+        int(max(0.0, remaining) // kv.storage_bytes_per_user)
+        if kv.storage_bytes_per_user > 0
+        else 0
+    )
+
+    # -- the two views ----------------------------------------------------
+    # ``token_slots`` is the number of independent groups the machine is cut
+    # into: partitions divided by the partitions that work on one token at
+    # once.  A single chip has one.  A tensor-parallel machine has one, however
+    # many partitions it holds, because they are all on the same token.  A
+    # 672-way pipeline has 672, and a token is served by exactly one of them at
+    # a time.
+    slots = float(budget.topology.token_slots)
+    # Users sharing one weight pass inside one slot.  Below one slot's worth of
+    # users the pass still happens, so the microbatch floors at one and the
+    # surplus slots idle.
+    microbatch = max(1.0, batch_size / slots) if slots > 0 else float(batch_size)
+
+    terms = _service_terms(
+        budget,
+        model,
+        technology,
+        context_tokens=context_tokens,
+        effective_batch=microbatch,
+        stored_weight_bytes=stored_weight_bytes,
+        representation_scale=representation_scale,
+        weight_traffic_policy=weight_traffic_policy,
+        execution_format=execution_format,
+        measured_expert_coverage=measured_expert_coverage,
+        kv=kv,
+        kv_inflation=kv_inflation,
+    )
+    reasons.extend(terms.reasons)
+    if math.isclose(microbatch, float(batch_size), rel_tol=1e-12):
+        throughput_view = terms
+    else:
+        throughput_view = _service_terms(
+            budget,
+            model,
+            technology,
+            context_tokens=context_tokens,
+            effective_batch=float(batch_size),
+            stored_weight_bytes=stored_weight_bytes,
+            representation_scale=representation_scale,
+            weight_traffic_policy=weight_traffic_policy,
+            execution_format=execution_format,
+            measured_expert_coverage=measured_expert_coverage,
+            kv=kv,
+            kv_inflation=kv_inflation,
+        )
+
+    # -- the per-layer serial floor ---------------------------------------
+    # Decode is sequential across layers, and each layer has dependencies that
+    # no bandwidth removes.  Before this term a single_chip design had no fixed
+    # cost whatsoever on its critical path.
+    fixed_latency, fixed_latency_detail, fixed_latency_provenance = (
+        layer_fixed_latency(technology, model)
+    )
+
+    # -- the serial path --------------------------------------------------
+    # **The correction.**  A token is served by one slot at a time, so it gets
+    # ``1/slots`` of the machine's aggregate resource and must visit every slot
+    # before its step is done.  The two factors do not cancel: they multiply the
+    # service time by ``slots``.  Charging the aggregate service time and then
+    # adding the hops -- which is what this model did -- is a throughput view of
+    # the silicon wearing a latency view of the fabric, and it reported a
+    # balanced S-stage pipeline as S times faster per user than it is.
+    #
+    # Tensor parallelism is the exception and that is the whole point of it:
+    # every partition works on the same token, ``slots`` is one, and the
+    # multiplier disappears.  What the tensor group pays instead is two
+    # all-reduces per layer, already priced in ``link_time_s``.
+    service_time = terms.service_time_s * slots
+    raw_step_time = service_time + terms.link_time_s + fixed_latency
+    # The number this model used to report as per-user latency, kept on every
+    # point so the size of this correction is separable from every other one.
+    throughput_view_step_time = (
+        throughput_view.service_time_s
+        + throughput_view.link_time_s
+        + fixed_latency
+    )
+
+    # -- power and thermal ------------------------------------------------
+    # Energy per token, times the rate the machine actually produces tokens at.
+    # ``terms.energy_j`` is one pass over ``microbatch`` users, so dividing by
+    # the microbatch gives the energy one token costs, and a machine with every
+    # slot busy produces ``fill_users`` tokens per serial path.  On a single
+    # chip ``slots`` and ``fill_users/batch`` are both one and this is exactly
+    # the previous expression.
+    fill_users = max(float(batch_size), slots * microbatch)
+    if max_resident_users and fill_users > max_resident_users:
+        # A slot cannot be occupied by a user whose KV the machine cannot hold.
+        fill_users = max(float(batch_size), float(max_resident_users))
+        fill_limit = "kv_capacity"
+    elif slots * microbatch > batch_size:
+        fill_limit = "pipeline_slots"
+    else:
+        fill_limit = "batch"
+    energy_per_token = terms.energy_j / max(microbatch, 1e-30)
+    energy_j = energy_per_token * fill_users
+    dynamic_power = energy_j / max(raw_step_time, 1e-30)
+    thermal_scale = max(1.0, dynamic_power / max(budget.cooling_limit_w, 1e-30))
+    step_time = raw_step_time * thermal_scale
+    power = energy_j / max(step_time, 1e-30)
+
+    fused_compute = (
+        budget.weight_store == "rom"
+        and budget.weight_amortization in COMPUTE_IN_ROM_POLICIES
+    )
+    # Every term here is on **one user's critical path**: the service terms are
+    # the per-slot cost multiplied by the slots the token traverses, and the
+    # link and fixed terms are already counted per token.  Scaling the three
+    # service terms together leaves the overlap rule intact, because max() and
+    # + both commute with a positive scalar.
+    component_times = {
+        "weight_read": terms.weight_time_s * slots,
+        "kv_read": terms.kv_time_s * slots,
+        # In a compute-in-ROM fabric the arithmetic is the sweep, so reporting a
+        # separate compute time would name a component that cannot bind and
+        # would break the invariant that the step is at least its largest part.
+        # The MACs still happen; they take exactly as long as the walk.
+        "compute": (terms.weight_time_s if fused_compute else terms.compute_time_s)
+        * slots,
+        "link_latency": terms.link_time_s,
+        "layer_fixed_latency": fixed_latency,
+    }
+    if reasons:
+        binding = "capacity_or_format"
+        per_user = 0.0
+        aggregate = 0.0
+        delivered = 0.0
+        throughput_view_rate = 0.0
+    else:
+        if thermal_scale > 1.0 + 1e-12:
+            binding = "thermal"
+        else:
+            binding = max(component_times, key=lambda key: component_times[key])
+        per_user = 1.0 / step_time
+        # **No longer batch x per_user.**  The machine reaches this rate only
+        # when every slot has a user in it; with fewer users the surplus slots
+        # idle and the machine delivers ``delivered_tokens_s`` instead.
+        aggregate = fill_users * per_user
+        delivered = batch_size * per_user
+        throughput_view_rate = (
+            1.0 / (throughput_view_step_time * thermal_scale)
+            if throughput_view_step_time > 0
+            else math.inf
+        )
+
+    hops, hop_semantics = budget.topology.hop_events(model.num_layers)
+    hop_latency, link_bytes_s = technology.link(budget.topology.link)
+    link_payload_bytes = terms.detail["link_payload_bytes_per_token"]
+    payload_bytes = link_payload_bytes / hops if hops > 0 else 0.0
+    devices = budget.topology.device_count
+
+    metrics: dict[str, Any] = {
+        "overlap_rule": terms.overlap_rule,
+        "latency_rule": (
+            "per-user latency is the full serial path: the service time on one "
+            "slot's share of the machine, multiplied by the slots a token must "
+            "traverse, plus every hop and collective on that path, none of "
+            "which overlaps anything. Aggregate throughput is that latency with "
+            "every slot occupied, which needs token_slots concurrent users; it "
+            "is no longer batch x per-user rate"
+        ),
+        "token_slots": slots,
+        "microbatch_per_slot": microbatch,
+        "pipeline_fill_users": fill_users,
+        "pipeline_fill_fraction": (
+            min(1.0, batch_size / fill_users) if fill_users > 0 else 1.0
+        ),
+        "pipeline_fill_limited_by": fill_limit,
+        "delivered_tokens_s": delivered,
+        "serial_slot_multiplier": slots,
+        "service_time_per_slot_s": terms.service_time_s,
+        "service_time_s": service_time,
+        "service_time_throughput_view_s": throughput_view.service_time_s,
+        "step_time_throughput_view_s": throughput_view_step_time * thermal_scale,
+        "per_user_tokens_s_throughput_view": throughput_view_rate,
+        "latency_correction_x": (
+            throughput_view_rate / per_user if per_user > 0 else 1.0
+        ),
+        "hop_events_per_token": hops,
+        "hop_semantics": hop_semantics,
+        "hop_latency_s": hop_latency.value,
+        "link": budget.topology.link,
+        "intra_link": budget.topology.inner_link,
+        "intra_domain_size": budget.topology.intra_domain_size,
+        "tensor_group": budget.topology.tensor_group,
+        "pipeline_stages": budget.topology.stages_for(model.num_layers),
+        "pipeline_stages_uncapped": budget.topology.pipeline_stages,
+        "link_breakdown": terms.detail["link_breakdown"],
+        "link_latency_without_stage_cap_s": terms.detail[
+            "link_latency_without_stage_cap_s"
+        ],
+        "link_payload_bytes_per_event": float(payload_bytes),
+        "link_payload_bytes_per_token": float(link_payload_bytes),
+        "stored_weight_bytes": stored_weight_bytes,
+        "representation_scale_vs_checkpoint": representation_scale,
+        "weight_traffic_policy": weight_traffic_policy,
+        "weight_amortization": budget.weight_amortization,
+        "execution_format": execution_format or "checkpoint-declared",
+        "engaged_weight_bytes": terms.detail["engaged_weight_bytes"],
+        "engaged_weight_fraction": terms.detail["engaged_weight_fraction"],
+        "effective_weight_read_bytes_s": terms.detail[
+            "effective_weight_read_bytes_s"
+        ],
+        "peak_weight_read_bytes_s": budget.weight_read_bytes_s,
+        "expert_coverage": terms.detail["expert_coverage"],
+        "distinct_experts_per_layer": terms.detail["distinct_experts_per_layer"],
+        "engaged_devices": terms.detail["engaged_devices"],
+        "mean_engaged_devices_uncorrected": terms.detail[
+            "mean_engaged_devices_uncorrected"
+        ],
+        "engaged_device_max_over_mean_correction": terms.detail[
+            "engaged_device_max_over_mean_correction"
+        ],
+        "kv_native_transfer_bytes_per_step": terms.detail[
+            "kv_native_transfer_bytes_per_step"
+        ],
+        "kv_access_granularity": kv_granularity_detail,
+        "kv_access_granularity_inflation": kv_inflation,
+        "kv_bank_occupancy": terms.detail["kv_bank_occupancy"],
+        "kv_read_s_under_bank_locality": terms.detail[
+            "kv_read_s_under_bank_locality"
+        ],
         "layer_fixed_latency_s": fixed_latency,
         "layer_fixed_latency": fixed_latency_detail,
         "layer_fixed_latency_fraction_of_step": (
@@ -2633,7 +2957,10 @@ def evaluate(
         "kv_read_bytes_per_user_token": kv.read_bytes,
         "kv_write_bytes_per_user_token": kv.write_bytes,
         "kv_storage_bytes_per_user": kv.storage_bytes_per_user,
-        "kv_transfer_bytes_per_step": kv_transfer_bytes,
+        "kv_transfer_bytes_per_step": terms.detail["kv_transfer_bytes_per_step"],
+        "kv_transfer_bytes_per_step_throughput_view": throughput_view.detail[
+            "kv_transfer_bytes_per_step"
+        ],
         "resident_kv_bytes": resident_kv_bytes,
         "max_resident_users": float(max_resident_users),
         "weight_capacity_bytes": budget.weight_capacity_bytes,
@@ -2645,18 +2972,21 @@ def evaluate(
                 **kv_granularity_provenance,
             }.items()
         },
-        "operations_by_canonical_format": dict(operations),
-        "compute_times_s_by_format": compute_by_format,
+        "operations_by_canonical_format": dict(
+            terms.detail["operations_by_canonical_format"]
+        ),
+        "compute_times_s_by_format": terms.detail["compute_times_s_by_format"],
         "compute_roofs_ops_s": dict(budget.compute_ops_s),
-        "memory_time_s": memory_time,
-        "service_time_s": service_time,
-        "stage_balance_applied": apply_balance,
+        "memory_time_s": terms.memory_time_s * slots,
+        "stage_balance_applied": terms.detail["stage_balance_applied"],
         "raw_step_time_before_thermal_s": raw_step_time,
         "energy_j_per_step": energy_j,
+        "energy_j_per_token": energy_per_token,
         "dynamic_power_w_before_throttle": dynamic_power,
         "cooling_limit_w": budget.cooling_limit_w,
         "weight_to_kv_read_ratio": (
-            engaged_weight_bytes / (kv.read_bytes * batch_size)
+            terms.detail["engaged_weight_bytes"]
+            / (kv.read_bytes * microbatch)
             if kv.read_bytes > 0
             else math.inf
         ),
@@ -2665,19 +2995,18 @@ def evaluate(
     }
     if budget.weight_store == "rom":
         if budget.weight_amortization == "per_stream":
-            sweeps = float(batch_size)
+            sweeps = float(microbatch)
         elif budget.weight_amortization == "per_region":
             # The busiest expert region's queue depth, not the batch and not the
             # mean region: disjoint regions run together, only co-located tokens
             # serialise, and the array waits for the deepest queue.
-            sweeps = float(region_sweeps)
+            sweeps = float(terms.detail["region_sweeps"])
+            mean_region_passes = terms.detail["mean_region_passes"]
             metrics["region_sweep_depth_mean_uncorrected"] = (
                 mean_region_passes if mean_region_passes is not None else 1.0
             )
             metrics["region_sweep_depth_max_over_mean"] = (
-                region_sweeps / mean_region_passes
-                if mean_region_passes
-                else 1.0
+                sweeps / mean_region_passes if mean_region_passes else 1.0
             )
         else:
             sweeps = 1.0
@@ -2692,14 +3021,19 @@ def evaluate(
             if stored_weight_bytes > 0
             else 1.0
         )
+        # The sweep a single slot performs.  A token traverses ``token_slots``
+        # of them, which is what ``component_times_s["weight_read"]`` reports.
         metrics["rom_full_array_sweep_time_s"] = (
             sweeps * stored_weight_bytes / budget.weight_read_bytes_s
             if budget.weight_read_bytes_s > 0
             else math.inf
         )
+        metrics["rom_serial_sweep_time_s"] = (
+            metrics["rom_full_array_sweep_time_s"] * slots
+        )
         metrics["rom_sweep_ceiling_tokens_s"] = (
-            1.0 / metrics["rom_full_array_sweep_time_s"]
-            if metrics["rom_full_array_sweep_time_s"] > 0
+            1.0 / metrics["rom_serial_sweep_time_s"]
+            if metrics["rom_serial_sweep_time_s"] > 0
             else math.inf
         )
 
@@ -2720,7 +3054,6 @@ def evaluate(
         thermal_scale=thermal_scale,
         metrics=metrics,
     )
-
 
 # --------------------------------------------------------------------------
 # topology crossover

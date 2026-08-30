@@ -6,8 +6,10 @@ the same root: a configured number was treated as ground truth.
 
 It has since been amended four more times, for the same reason each time.
 Sections 2b through 2f are the amendments, and the largest of them is a
-retraction of this document's own headline: **the iso-area advantage for
-DeepSeek-V4-Pro at 554,700 mm² was published as 54.2x and is 35.4x.**
+retraction of this document's own headline, twice over: **the iso-area advantage
+for DeepSeek-V4-Pro at 554,700 mm² was published as 54.2x, was corrected to
+35.4x when the interconnect was rebuilt (section 2c), and is 8.6x now that
+per-user latency has been separated from aggregate throughput (section 2d).**
 
 ## 1. The anchor
 
@@ -92,7 +94,9 @@ not yet chosen between them.
 ## 2b. The comparison was not symmetric, and the asymmetry inflated our own number
 
 **RETRACTED: the published iso-area ratio of 54.2x for DeepSeek-V4-Pro at 1M
-context, batch 1, at 554,700 mm2. The model now says 35.4x.** Everything below
+context, batch 1, at 554,700 mm2. The model said 35.4x when this section was
+written and says 8.6x now; section 2d supersedes every per-user rate below.**
+Everything below
 is emitted by `src/opentallas/roofline.py` and read out of
 `results/roofline/n6_vs_a100/analytical.json`.
 
@@ -185,8 +189,11 @@ bitcell area ratio.
 The consequence is that **on-wafer tensor parallelism no longer reaches
 Taalas-class rates**, and the previously published claim that it does -- "hard
 ceilings of 116,278 and 81,966 tok/s per user" -- is retracted. It reaches
-5,000-9,000 tok/s, and the model consequently chooses pipeline over tensor
-parallelism on the wafer at every operating point in both studies.
+5,000-9,000 tok/s. When this section was written that made the model choose
+pipeline over tensor parallelism on the wafer at every operating point;
+**section 2d reverses that**, because the pipeline it was being compared against
+was itself overstated by its slot count. Wafer-scale tensor parallelism now wins
+at batch 1 on both families, at those same 5,000-9,000 tok/s.
 
 The ordering survives but the margin is smaller than the framing implied. Like
 for like -- the same model's collective on one wafer against the same model's on
@@ -201,26 +208,149 @@ NVLink island, not a property of the wafer.**
 study was charged NVLink-5 bandwidth, 900 GB/s, against an A100 whose published
 NVLink 3 rate is 300 GB/s. Each study now charges one fabric to both sides.
 
-## 2d. What is still wrong, stated because it is now the largest thing left
+## 2d. The pipeline service-time defect is FIXED, and this document's headline falls again
 
-Giving the GPU the topology sweep changed almost nothing on its own, and the
-reason is structural rather than physical. **This model computes the service
-time on the machine's aggregate memory bandwidth and compute roof whatever the
-parallelism.** For tensor parallelism that is right -- every partition works on
-the same layer at once. For pipeline parallelism it is not: a token at stage *i*
-is served by stage *i*'s silicon alone, so a balanced `S`-stage pipeline's
-per-user latency is `S` times what this model charges. The model therefore
-gives pipeline parallelism a throughput-view service time and a latency-view hop
-count, and pipeline consequently wins on both sides at every size above one
-device.
+**RETRACTED: 35.4x for DeepSeek-V4-Pro at 1M context, batch 1, at 554,700 mm2.
+The model now says 8.6x.** The previous version of this section named the defect
+and left it open. It is closed here, and closing it was worth more than either
+of the two corrections that preceded it.
 
-The direction of the bias is the same on both families and it grows with device
-count, so it inflates the ROM's twelve-wafer number and the GPU's 672-device
-number together. Whether it cancels in the ratio is not established, and it is
-not assumed here. Fixing it means separating per-user latency from aggregate
-throughput, which breaks the `aggregate = batch x per-user` identity the whole
-study is built on. **It is the largest known defect in this model and it is not
-fixed.**
+**What was wrong.** The model computed the service time on the machine's
+*aggregate* memory bandwidth and compute roof whatever the parallelism, and then
+added the hops a single token crosses. That is a throughput view of the silicon
+wearing a latency view of the fabric. It is right for tensor parallelism, where
+every partition is on the same token at the same instant. It is not right for
+pipeline parallelism: a token at stage *i* is served by stage *i*'s silicon
+alone and has to visit every stage, so a balanced `S`-stage pipeline's per-user
+latency is `S` times what the model charged.
+
+**The fix.** `token_slots = partitions / tensor_group` counts the independent
+groups a machine is cut into; a token is served by one of them at a time. One
+user's latency is
+
+```
+t_user = token_slots x t_service(microbatch) / stage_balance + t_link
+```
+
+and the machine's aggregate rate is that latency with a user in every slot,
+`fill_users / t_user`, where `fill_users = max(batch, token_slots)` capped by
+the users whose KV the machine can hold. **`aggregate = batch x per-user` is
+gone**, and what a machine delivers at the requested concurrency is reported
+separately as `delivered_tokens_s`.
+
+The physics the fix encodes is worth stating plainly, because it is the whole
+argument: under pipeline parallelism each of `N` stages holds `1/N` of the
+weights and reads them with `1/N` of the bandwidth. **The two cancel exactly.
+Adding devices under pipeline parallelism buys aggregate throughput and buys one
+user nothing.** Tensor parallelism is different in kind rather than in degree --
+it is the only arrangement that puts the whole machine on one token -- and what
+it pays for that is two all-reduces per layer.
+
+**Both validation gates are unchanged to the digit**: A100 weight-bound at
+253.91 tok/s (ratio 1.0000) and Taalas HC1 at 0.7213x of 16,960. Both are
+single-device machines, `token_slots` is 1 for both, and a correct separation
+cannot reach them. That they did not move is the check that this touched only
+what it claimed to.
+
+**It did not cancel in the ratio.** The tempting argument -- that both families
+are pipelines of similar depth at iso-area, so the `N` cancels -- is false, and
+the seven-rung area ladder shows why. Per-user tok/s at batch 1,
+`n6_vs_a100`, from `The latency separation, before and after` in the study
+report:
+
+| model | mm2 | ROM before | ROM after | /x | GPU n | GPU before | GPU after | /x | ratio before | **ratio after** | change |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Qwen3-8B | 46,225 | 53,701 | 7,936 | 6.8x | 56 | 3,852 | 891 | 4.3x | 13.94x | **8.91x** | 0.64x |
+| Qwen3-8B | 92,450 | 50,885 | 7,023 | 7.2x | 112 | 6,022 | 967 | 6.2x | 8.45x | **7.26x** | 0.86x |
+| Qwen3-8B | 138,675 | 50,885 | 6,339 | 8.0x | 168 | 7,414 | 995 | 7.4x | 6.86x | **6.37x** | 0.93x |
+| Qwen3-8B | 184,900 | 50,885 | 5,777 | 8.8x | 224 | 8,383 | 1,010 | 8.3x | 6.07x | **5.72x** | 0.94x |
+| Qwen3-8B | 277,350 | 50,885 | 4,906 | 10.4x | 336 | 9,644 | 616 | 15.7x | 5.28x | **7.96x** | 1.51x |
+| Qwen3-8B | 369,800 | 50,885 | 4,263 | 11.9x | 448 | 10,428 | 619 | 16.9x | 4.88x | **6.89x** | 1.41x |
+| Qwen3-8B | 554,700 | 59,341 | 3,811 | 15.6x | 672 | 11,351 | 622 | 18.3x | 5.23x | **6.13x** | 1.17x |
+| Flash @200K | 46,225 | 18,841 | 5,515 | 3.4x | 56 | 1,572 | 600 | 2.6x | 11.98x | **9.19x** | 0.77x |
+| Flash @200K | 92,450 | 28,141 | 5,249 | 5.4x | 112 | 1,818 | 631 | 2.9x | 15.48x | **8.33x** | 0.54x |
+| Flash @200K | 138,675 | 35,354 | 5,116 | 6.9x | 168 | 1,923 | 642 | 3.0x | 18.39x | **7.97x** | 0.43x |
+| Flash @200K | 184,900 | 40,534 | 4,988 | 8.1x | 224 | 1,981 | 648 | 3.1x | 20.46x | **7.70x** | 0.38x |
+| Flash @200K | 277,350 | 47,475 | 4,750 | 10.0x | 336 | 2,043 | 434 | 4.7x | 23.24x | **10.94x** | 0.47x |
+| Flash @200K | 369,800 | 51,913 | 4,533 | 11.5x | 448 | 2,076 | 436 | 4.8x | 25.00x | **10.41x** | 0.42x |
+| Flash @200K | 554,700 | 57,260 | 4,152 | 13.8x | 672 | 2,111 | 437 | 4.8x | 27.13x | **9.50x** | 0.35x |
+| Pro @1M | 92,450 | 9,107 | 2,654 | 3.4x | 112 | 544 | 295 | 1.8x | 16.73x | **9.01x** | 0.54x |
+| Pro @1M | 138,675 | 9,633 | 2,227 | 4.3x | 168 | 579 | 304 | 1.9x | 16.64x | **7.33x** | 0.44x |
+| Pro @1M | 184,900 | 11,960 | 2,211 | 5.4x | 224 | 598 | 309 | 1.9x | 20.00x | **7.15x** | 0.36x |
+| Pro @1M | 277,350 | 15,728 | 2,173 | 7.2x | 336 | 619 | 234 | 2.6x | 25.41x | **9.30x** | 0.37x |
+| Pro @1M | 369,800 | 18,568 | 2,127 | 8.7x | 448 | 630 | 235 | 2.7x | 29.47x | **9.04x** | 0.31x |
+| Pro @1M | 554,700 | 22,686 | 2,042 | 11.1x | 672 | 642 | 237 | 2.7x | 35.35x | **8.63x** | 0.24x |
+
+`before` is not a memory of an earlier run. Every point in the study now carries
+`per_user_tokens_s_throughput_view`, the number the old rule produced, and each
+side is ranked by it, so the `before` column reproduces the previous topology
+choice as well as the previous rate and the two corrections stay separable.
+
+**The change runs from 0.24x to 1.51x, and it changes sign.** Three mechanisms
+put it there and none of them cancels:
+
+1. **The two families reach iso-area at very different slot counts.** At 554,700
+   mm2 the ROM side is twelve wafers spanning 681 reticle fields and the GPU
+   side is 672 devices. Under `pipeline` both are charged their own slot count,
+   which is why the raw corrections are 15.6x and 18.3x on Qwen -- close. But
+   the correction is not applied to a fixed topology.
+2. **It changes which topology wins, and the winner is chosen per design.** Both
+   families abandon pipeline at batch 1. The GPU goes to `tensor` -- one slot,
+   the whole cluster on one token, 122 all-reduces per token. The ROM side goes
+   to `wafer-tensor` at one wafer and to `wafer-hybrid` above it: tensor-parallel
+   across the 57-to-84 reticle fields of each wafer, pipeline-parallel across the
+   wafers, so `token_slots` is the wafer count rather than the field count.
+3. **The two sides pay very different prices for that switch.** A wafer's mesh
+   collective is cheap enough that a ROM design can afford a 57-way tensor group;
+   a GPU cluster large enough to hold DeepSeek-Pro spans 84 NVLink islands, so
+   most of its all-reduce crosses InfiniBand. On Qwen at 277,350 mm2 the GPU's
+   correction (15.7x) exceeds the ROM's (10.4x) and the ratio **rises** to
+   7.96x; on Pro at 554,700 mm2 the ROM's (11.1x) exceeds the GPU's (2.7x) and
+   the ratio falls to 8.63x.
+
+**The batch curves change shape, and for the sparse models they change sign.**
+Per-user tok/s at equal silicon, best design on each side at each batch:
+
+| batch | Qwen3-8B @8K | DeepSeek-Flash @200K | DeepSeek-Pro @1M |
+|---:|---:|---:|---:|
+| 1 | 8.91x | 9.19x | 9.01x |
+| 8 | 7.04x | 12.61x | 15.73x |
+| 32 | 4.13x | 21.60x | 19.37x |
+| 64 | 2.60x | 26.69x | 18.89x |
+| 256 | **0.92x** | **36.52x** | **17.33x** |
+
+Under the old rule every one of these fell with batch, and "the advantage erodes
+with batch" was a standing finding of this document. **It survives only for the
+dense model.** For both sparse models the ratio now rises, because the GPU's
+per-user rate collapses faster than the ROM's: a cluster large enough to hold
+DeepSeek-Flash must choose between a pipeline whose slots multiply its latency
+and a tensor group whose collective it cannot afford. Qwen is the counter-case
+and the honest one -- at batch 256 the GPU wins outright, 516 against 475,
+because a dense model's KV read is per-user, never amortises, and is what binds a
+ROM machine at batch.
+
+**What survives.** The direction at batch 1 is intact -- at equal silicon a ROM
+design is still faster per user than a GPU cluster at every rung of the ladder,
+by 5.7x to 10.9x. What is gone is the claim that the advantage *grows* with silicon. It
+does not: on the corrected model the ROM side's per-user rate **falls** with
+area under every topology it can run, from 7,936 tok/s on one wafer to 3,811 on
+twelve for Qwen, because more silicon means either more slots to traverse or a
+wider collective to complete. **The best per-user ROM machine is the smallest one
+that holds the model**, which is the opposite of what this document previously
+recommended.
+
+**What is assumed.** Aggregate throughput is reported at steady state; fill and
+drain are not charged, so a request short compared with the slot count pays up to
+one extra traversal that is not billed. The weight replication a pipeline deeper
+than the layer count implies -- the surplus partitions hold replicas of a stage,
+each needing its own copy of that stage's weights -- is not charged against
+capacity. Both favour the deepest pipelines, which after this correction are on
+the GPU side of the comparison. Running the other way,
+`efficiencies.stage_balance` (0.9) is applied when `device_count > 1` rather than
+when the machine has more than one partition, so a **one-wafer** tensor-parallel
+design escapes it while a twelve-wafer one does not -- 1.11x in favour of the
+design that now wins at batch 1 for two of the three models. All three are stated
+in `TECHNICAL_DIRECTION_RECOMMENDATION.md` section 0.12 and none is fixed here.
 
 ## 2e. The DeepSeek KV profiles were read, not run, and they were 3.2x low
 

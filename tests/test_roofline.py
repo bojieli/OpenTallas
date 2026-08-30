@@ -312,6 +312,32 @@ ASSUMED_INPUTS = frozenset(
 )
 
 
+def test_the_grade_vocabulary_matches_the_config_that_defines_it() -> None:
+    """**A latent crash, caught before it fired.**
+
+    `configs/hardware/technology.json` names the evidence classes in
+    `grade_definitions`; this module enforces them in ``GRADES``. When the
+    config gained ``executed`` -- we ran it, in this repository, artifact
+    committed -- this module still rejected it, so the first config entry to
+    use the grade would have raised ``ValidationError`` out of ``Graded`` and
+    taken the whole study down. The two lists must not drift.
+    """
+
+    defined = set(json.loads(TECHNOLOGY_PATH.read_text())["grade_definitions"])
+    assert defined == set(GRADES), (
+        f"grade vocabulary drift: config defines {sorted(defined)}, "
+        f"roofline.GRADES accepts {sorted(GRADES)}"
+    )
+    # Strongest to weakest, because _weakest_grade indexes into it.
+    assert GRADES.index("measured") < GRADES.index("executed")
+    assert GRADES.index("executed") < GRADES.index("published")
+    assert GRADES.index("derived") < GRADES.index("assumed")
+    # And a value carrying the new grade actually constructs.
+    entry = Graded(value=1.0, grade="executed", source="a run", note="")
+    assert entry.grade == "executed"
+    assert derived(2.0, (entry,), "2x", "").grade == "derived"
+
+
 def test_the_assumed_inputs_are_the_ones_we_expect(technology) -> None:
     """Pin the assumption surface so a new one cannot be added silently."""
 
@@ -873,7 +899,16 @@ def test_tensor_parallel_is_much_worse_than_pipeline_on_nvlink(
     )
 
 
-def test_aggregate_is_batch_times_per_user(technology, qwen) -> None:
+def test_aggregate_is_batch_times_per_user_on_a_one_slot_machine(
+    technology, qwen
+) -> None:
+    """The identity survives exactly where it is true: a machine with one slot.
+
+    A single chip has one slot, so there is no pipeline to under-fill and the
+    aggregate rate is the batch over the latency.  On a machine cut into slots
+    it is not, which is the next test.
+    """
+
     budget = _rom_chip(
         technology, qwen, area_mm2=46225.0, context=8192, batch=1, bits=8.0
     )
@@ -889,10 +924,332 @@ def test_aggregate_is_batch_times_per_user(technology, qwen) -> None:
         )
         if not step.feasible:
             continue
+        assert step.metrics["token_slots"] == 1
         assert step.aggregate_tokens_s == pytest.approx(
             batch * step.per_user_tokens_s
         )
         assert step.per_user_tokens_s == pytest.approx(1.0 / step.step_time_s)
+        # One slot means no correction: the throughput view and the latency
+        # view are the same number, which is why both validation gates are
+        # untouched by the separation.
+        assert step.metrics["per_user_tokens_s_throughput_view"] == pytest.approx(
+            step.per_user_tokens_s
+        )
+        assert step.metrics["latency_correction_x"] == pytest.approx(1.0)
+
+
+# --------------------------------------------------------------------------
+# per-user latency against aggregate throughput
+#
+# The defect this section exists to pin down: the model charged a pipeline's
+# service time on the machine's AGGREGATE resources -- the throughput view --
+# and its hops on the single-token path, so a balanced S-stage pipeline came
+# out S times faster per user than it is.
+# --------------------------------------------------------------------------
+
+
+def test_token_slots_is_partitions_over_the_tensor_group() -> None:
+    """A token is served by one slot at a time, and this counts them."""
+
+    assert (
+        Topology(
+            kind="single_chip", device_count=1, parallelism="none", link="none"
+        ).token_slots
+        == 1
+    )
+    # Pipeline: every partition is its own slot.
+    assert (
+        Topology(
+            kind="array", device_count=64, parallelism="pipeline", link="nvlink"
+        ).token_slots
+        == 64
+    )
+    # Tensor: one slot however many partitions, because they are all on the
+    # same token.  That is what the two all-reduces per layer buy.
+    assert (
+        Topology(
+            kind="array", device_count=64, parallelism="tensor", link="nvlink"
+        ).token_slots
+        == 1
+    )
+    # Hybrid: one slot per tensor group.
+    assert (
+        Topology(
+            kind="array",
+            device_count=64,
+            parallelism="hybrid",
+            link="infiniband_hdr",
+            intra_link="nvlink3",
+            intra_domain_size=8,
+            tensor_group_size=8,
+        ).token_slots
+        == 8
+    )
+    # A wafer's slots are counted in reticle fields, not in wafers.
+    assert (
+        Topology(
+            kind="wafer",
+            device_count=2,
+            parallelism="pipeline",
+            link="inter_wafer",
+            intra_link="on_wafer",
+            on_wafer_regions=114,
+        ).token_slots
+        == 114
+    )
+
+
+def test_pipeline_parallelism_buys_one_user_nothing(technology, llama) -> None:
+    """The correction, stated as the physics that forced it.
+
+    Under pipeline parallelism each of N stages holds 1/N of the weights and
+    reads them with 1/N of the machine's bandwidth.  On a cluster of published
+    parts, where every device brings its own fixed HBM bandwidth, the two
+    factors cancel exactly and **one user's latency is flat in the device
+    count** -- the same as on a single device holding everything, minus what
+    the hops cost.  The model used to divide the whole checkpoint by the whole
+    cluster's bandwidth and report the result as a single user's rate, which is
+    N times too fast; that number is kept beside the corrected one and here it
+    is shown rising with N while the real one does not.
+    """
+
+    corrected: dict[int, float] = {}
+    throughput_view: dict[int, float] = {}
+    for devices in (1, 2, 4, 8, 16):
+        topology = (
+            _single_chip()
+            if devices == 1
+            else Topology(
+                kind="array",
+                device_count=devices,
+                parallelism="pipeline",
+                link="nvlink",
+            )
+        )
+        budget = gpu_device_budget(
+            technology,
+            part="a100_sxm_80gb",
+            topology=topology,
+            name=f"a100-x{devices}",
+        )
+        step = evaluate(
+            budget,
+            llama,
+            context_tokens=2048,
+            batch_size=1,
+            technology=technology,
+        )
+        assert step.feasible, step.reasons
+        assert step.metrics["token_slots"] == devices
+        corrected[devices] = step.per_user_tokens_s
+        throughput_view[devices] = step.metrics["per_user_tokens_s_throughput_view"]
+
+    # Flat, to within what the hops take off it: sixteen stages is not sixteen
+    # times one stage, and it is not faster than one device either.
+    assert corrected[16] <= corrected[1] * (1 + 1e-9)
+    assert corrected[16] >= corrected[1] * 0.85
+    # The number the defect produced rises almost linearly with the device
+    # count, which is the whole of the error.
+    assert throughput_view[16] / throughput_view[1] > 10.0
+    for devices in (2, 4, 8, 16):
+        assert throughput_view[devices] / corrected[devices] == pytest.approx(
+            devices, rel=0.15
+        )
+
+
+def test_a_rom_pipeline_gives_a_user_less_than_the_same_silicon_undivided(
+    technology, qwen
+) -> None:
+    """The same rule on the other family, where it bites harder still.
+
+    A ROM array is sized to the bytes it holds, so cutting a design into N
+    pipeline stages does not add array bandwidth the way adding GPUs adds HBM
+    channels -- it subdivides the array that was already there.  Each stage
+    then takes a full technology sweep time for its share, and the token pays N
+    of them.  A pipelined ROM machine is therefore *worse* per user than the
+    same silicon undivided, not merely no better.
+    """
+
+    stored = qwen.checkpoint_bytes
+    resident = kv_traffic(qwen, 8192).storage_bytes_per_user
+    rates: dict[int, float] = {}
+    for devices in (1, 2, 4, 8, 16):
+        topology = (
+            _single_chip()
+            if devices == 1
+            else Topology(
+                kind="array",
+                device_count=devices,
+                parallelism="pipeline",
+                link="nvlink",
+            )
+        )
+        budget = rom_device_budget(
+            technology,
+            name=f"rom-x{devices}",
+            node="N6",
+            area_mm2_per_device=3_000.0,
+            topology=topology,
+            stored_weight_bytes=stored,
+            resident_kv_bytes=resident,
+            kv_store="sram",
+        )
+        step = evaluate(
+            budget,
+            qwen,
+            context_tokens=8192,
+            batch_size=1,
+            technology=technology,
+            execution_format="fp8",
+        )
+        assert step.feasible, step.reasons
+        rates[devices] = step.per_user_tokens_s
+        assert step.metrics["latency_correction_x"] == pytest.approx(
+            step.metrics["token_slots"], rel=0.35
+        )
+    ordered = [rates[devices] for devices in sorted(rates)]
+    assert ordered == sorted(ordered, reverse=True)
+    assert rates[16] < rates[1] / 10
+
+
+def test_tensor_parallelism_does_reduce_one_users_latency(technology, qwen) -> None:
+    """The other half: tensor parallelism is different in kind, not degree.
+
+    Every partition works on the same token, so the whole machine's bandwidth
+    is on that token's critical path.  What it pays is two all-reduces per
+    layer, and on a slow enough fabric that price exceeds the gain -- which is
+    a result the model should be able to produce, not one it should assume.
+    """
+
+    stored = qwen.checkpoint_bytes
+    resident = kv_traffic(qwen, 8192).storage_bytes_per_user
+    steps = {}
+    for parallelism in ("pipeline", "tensor"):
+        budget = rom_device_budget(
+            technology,
+            name=f"rom-8-{parallelism}",
+            node="N6",
+            area_mm2_per_device=815.0,
+            topology=Topology(
+                kind="array",
+                device_count=8,
+                parallelism=parallelism,
+                link="nvlink",
+            ),
+            stored_weight_bytes=stored,
+            resident_kv_bytes=resident,
+            kv_store="sram",
+        )
+        steps[parallelism] = evaluate(
+            budget,
+            qwen,
+            context_tokens=8192,
+            batch_size=1,
+            technology=technology,
+            execution_format="fp8",
+        )
+    assert steps["tensor"].metrics["token_slots"] == 1
+    assert steps["pipeline"].metrics["token_slots"] == 8
+    assert (
+        steps["tensor"].per_user_tokens_s > steps["pipeline"].per_user_tokens_s
+    )
+    # The collective is on the critical path and is charged.
+    assert steps["tensor"].component_times_s["link_latency"] > (
+        steps["pipeline"].component_times_s["link_latency"]
+    )
+
+
+def test_aggregate_and_per_user_are_no_longer_one_number(technology, qwen) -> None:
+    """``aggregate = batch x per_user`` is gone, and its removal is the point.
+
+    A machine cut into slots reaches its aggregate rate only with a user in
+    every slot.  At batch 1 a 16-slot pipeline delivers one user's rate and has
+    fifteen idle slots; its aggregate rate is what it would do if they were
+    full, and the difference is reported rather than folded away.
+    """
+
+    budget = rom_device_budget(
+        technology,
+        name="rom-x16",
+        node="N6",
+        area_mm2_per_device=3_000.0,
+        topology=Topology(
+            kind="array", device_count=16, parallelism="pipeline", link="nvlink"
+        ),
+        stored_weight_bytes=qwen.checkpoint_bytes,
+        resident_kv_bytes=kv_traffic(qwen, 8192).storage_bytes_per_user * 32,
+        kv_store="sram",
+    )
+    step = evaluate(
+        budget,
+        qwen,
+        context_tokens=8192,
+        batch_size=1,
+        technology=technology,
+        execution_format="fp8",
+    )
+    assert step.feasible
+    slots = step.metrics["token_slots"]
+    assert slots == 16
+    assert step.metrics["delivered_tokens_s"] == pytest.approx(
+        step.per_user_tokens_s
+    )
+    assert step.aggregate_tokens_s == pytest.approx(
+        step.metrics["pipeline_fill_users"] * step.per_user_tokens_s
+    )
+    assert step.aggregate_tokens_s > step.metrics["delivered_tokens_s"]
+    assert step.metrics["pipeline_fill_fraction"] < 1.0
+    # At a batch that fills the machine the two views meet again.
+    full = evaluate(
+        budget,
+        qwen,
+        context_tokens=8192,
+        batch_size=32,
+        technology=technology,
+        execution_format="fp8",
+    )
+    if full.feasible:
+        assert full.metrics["pipeline_fill_fraction"] == pytest.approx(1.0)
+        assert full.aggregate_tokens_s == pytest.approx(
+            32 * full.per_user_tokens_s
+        )
+
+
+def test_the_fill_a_machine_claims_is_capped_by_the_kv_it_can_hold(
+    technology, qwen
+) -> None:
+    """A slot cannot hold a user whose KV the machine has nowhere to put."""
+
+    budget = rom_device_budget(
+        technology,
+        name="rom-x64-tight-kv",
+        node="N6",
+        area_mm2_per_device=3_000.0,
+        topology=Topology(
+            kind="array", device_count=64, parallelism="pipeline", link="nvlink"
+        ),
+        stored_weight_bytes=qwen.checkpoint_bytes,
+        resident_kv_bytes=kv_traffic(qwen, 8192).storage_bytes_per_user,
+        kv_store="sram",
+    )
+    step = evaluate(
+        budget,
+        qwen,
+        context_tokens=8192,
+        batch_size=1,
+        technology=technology,
+        execution_format="fp8",
+    )
+    if not step.feasible:
+        pytest.skip("design infeasible at batch 1")
+    assert step.metrics["pipeline_fill_users"] <= max(
+        1.0, step.metrics["max_resident_users"]
+    )
+    assert step.metrics["pipeline_fill_limited_by"] in {
+        "batch",
+        "pipeline_slots",
+        "kv_capacity",
+    }
 
 
 def test_binding_constraint_is_the_largest_component(technology, qwen) -> None:
@@ -925,10 +1282,15 @@ def test_rom_weight_time_is_the_full_array_sweep_at_every_batch(
 
     stored = flash.checkpoint_bytes
     resident = kv_traffic(flash, 200_000).storage_bytes_per_user * 64
+    # **Tensor-parallel across the wafer's fields, not pipelined across them.**
+    # The sweep floor is a property of one slot's array pass, and a pipelined
+    # wafer has 57 slots, so a token there pays 57 passes.  That factor is the
+    # subject of its own test; this one is about the pass itself, so the
+    # topology is the one-slot machine where the two coincide.
     topology = Topology(
         kind="wafer",
         device_count=1,
-        parallelism="pipeline",
+        parallelism="tensor",
         link="on_wafer",
         on_wafer_regions=57,
     )
@@ -952,6 +1314,8 @@ def test_rom_weight_time_is_the_full_array_sweep_at_every_batch(
             batch_size=batch,
             technology=technology,
         )
+        assert step.metrics["token_slots"] == 1
+        assert step.metrics["rom_full_array_sweep_time_s"] == pytest.approx(sweep)
         times.append(step.component_times_s["weight_read"])
     assert all(value == pytest.approx(sweep) for value in times)
 
@@ -987,10 +1351,14 @@ def test_rom_sweep_time_does_not_depend_on_model_size(technology, qwen, flash) -
 
 def test_moe_engagement_follows_the_coverage_formula(technology, flash) -> None:
     stored = flash.checkpoint_bytes
+    # One slot: tensor-parallel across the fields, so the batch this test varies
+    # is the batch one array pass actually serves.  On a pipelined wafer the
+    # batch is spread across 57 slots and each pass sees a fifty-seventh of it,
+    # which is a different (and separately tested) statement.
     topology = Topology(
         kind="wafer",
         device_count=1,
-        parallelism="pipeline",
+        parallelism="tensor",
         link="on_wafer",
         on_wafer_regions=57,
     )
@@ -1035,10 +1403,14 @@ def test_moe_sparsity_raises_aggregate_but_not_per_user_rate(
     """The central ROM/HBM asymmetry, checked rather than asserted in prose."""
 
     stored = flash.checkpoint_bytes
+    # One slot: tensor-parallel across the fields, so the batch this test varies
+    # is the batch one array pass actually serves.  On a pipelined wafer the
+    # batch is spread across 57 slots and each pass sees a fifty-seventh of it,
+    # which is a different (and separately tested) statement.
     topology = Topology(
         kind="wafer",
         device_count=1,
-        parallelism="pipeline",
+        parallelism="tensor",
         link="on_wafer",
         on_wafer_regions=57,
     )
@@ -1106,7 +1478,9 @@ def _flash_wafer(technology, flash, amortization: str):
         topology=Topology(
             kind="wafer",
             device_count=1,
-            parallelism="pipeline",
+            # One slot: tensor-parallel across the fields, so ``batch_size`` is
+            # the batch one array pass actually serves.
+            parallelism="tensor",
             link="on_wafer",
             on_wafer_regions=57,
         ),
@@ -1776,7 +2150,9 @@ def test_the_sram_kv_credit_is_reported_against_its_locality_bound(
         topology=Topology(
             kind="wafer",
             device_count=1,
-            parallelism="pipeline",
+            # One slot, so the KV bound below is read against the same pass the
+            # component time reports.
+            parallelism="tensor",
             link="on_wafer",
             on_wafer_regions=57,
         ),

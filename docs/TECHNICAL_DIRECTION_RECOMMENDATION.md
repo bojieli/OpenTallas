@@ -25,18 +25,27 @@ Both are single-device figures, so no topology change can reach them; that they
 are unchanged to the last digit is the check that the rebuild touched only what
 it claimed to touch.
 
-**Three published claims fell.** Read them separately; they are three different
-corrections that happen to land in one re-run.
+**Four published claims fell.** Read them separately; they are four different
+corrections that happen to land across two re-runs.
 
-1. **The iso-area advantage for DeepSeek-V4-Pro at 554,700 mm², batch 1, was
-   54.2× and is now 35.4×** (band 24.5–42.5×). The comparison let the ROM side
-   choose its parallelism and not the GPU, and charged both sides a serial
-   pipeline deeper than the model has layers. Section 0.9.
-2. **DeepSeek-Flash's weight-to-KV read ratio at 200K was 113.2:1 and is
-   35.3:1**, and its aggregate advantage at batch 256 falls from 9.4× to 4.0×.
-   Two KV entry sizes had been read off the implementation instead of measured
-   while running it. Section 0.10.
-3. **Every watt this program has ever reported is wrong by 7–9×**, against both
+1. **Per-user latency and aggregate throughput were one number, and separating
+   them is the largest correction this program has made.** The model charged a
+   pipeline's service time on the machine's *aggregate* resources and its hops
+   on the single-token path — a throughput view of the silicon wearing a latency
+   view of the fabric. **The iso-area advantage for DeepSeek-V4-Pro at
+   554,700 mm², batch 1, was 35.4× and is now 8.6×**, and `aggregate = batch ×
+   per-user` is gone. It did **not** cancel in the ratio: across the seven-rung
+   area ladder the ratio moves by between 0.24× and 1.51×, and it changes sign.
+   Section 0.12.
+2. **The iso-area advantage for DeepSeek-V4-Pro at 554,700 mm², batch 1, was
+   54.2× and became 35.4×** (band 24.5–42.5×) before item 1 took it to 8.6×. The
+   comparison let the ROM side choose its parallelism and not the GPU, and
+   charged both sides a serial pipeline deeper than the model has layers.
+   Section 0.9.
+3. **DeepSeek-Flash's weight-to-KV read ratio at 200K was 113.2:1 and is
+   35.3:1**. Two KV entry sizes had been read off the implementation instead of
+   measured while running it. Section 0.10.
+4. **Every watt this program has ever reported is wrong by 7–9×**, against both
    published parts, and is not fixed here. No *rate* depends on it — that is
    shown structurally, not asserted. Section 0.11.
 
@@ -53,10 +62,11 @@ tables and activations the analytical weight model does not count.
 ## 0. What was retracted, and why
 
 Seven terms were audited for completeness. Five were wrong, and two more
-problems in the study harness were found while fixing them. Three further
+problems in the study harness were found while fixing them. Four further
 defects have landed since: the interconnect asymmetry (0.9), the DeepSeek-Flash
-KV entry sizes (0.10) and the power model (0.11, characterised but **not**
-fixed). Each correction that is in the model is tabulated in
+KV entry sizes (0.10), the power model (0.11, characterised but **not** fixed)
+and the pipeline service-time rule (0.12, the largest of all of them). Each
+correction that is in the model is tabulated in
 `results/roofline/n6_vs_a100/REPORT.md` under *What the completeness corrections
 cost* and *The floorplan sweep*.
 
@@ -319,7 +329,8 @@ interval is quoted.
 
 **The N5-versus-B200 study moves the same way and further.** At 554,700 mm² the
 per-user ratio there is **13.1×** against 27.3× under the old serial-depth
-accounting, and the B200's own published NVLink domain sensitivity — 8 GPUs on
+accounting — and **4.62× after the latency separation of section 0.12**, which
+supersedes both. The B200's own published NVLink domain sensitivity — 8 GPUs on
 an HGX B200 baseboard against 72 in a GB200 NVL72 rack — is worth a further
 3–4% to the GPU at every cluster size, reported rather than borrowed because the
 part this study prices is a B200 SXM module and not a GB200 superchip.
@@ -350,23 +361,15 @@ A third, smaller: a ROM array in the N6-vs-A100 study was charged NVLink-5
 bandwidth, 900 GB/s, against an A100 whose published NVLink 3 rate is 300 GB/s.
 Each study now charges one fabric to both sides.
 
-**0.9.4 What this exposed and did not fix, which is now the largest known
-defect.** Giving the GPU the topology sweep changed almost nothing because
-**this model computes the service time on the machine's aggregate memory
-bandwidth and compute roof whatever the parallelism.** That is right for tensor
-parallelism, where every partition works on the same layer at once. It is not
-right for pipeline parallelism: a token at stage *i* is served by stage *i*'s
-silicon alone, so a balanced `S`-stage pipeline's per-user latency is `S` times
-what this model charges. The model gives pipeline a *throughput-view* service
-time and a *latency-view* hop count, and pipeline consequently wins on both
-sides at every size above one device — which is why the topology sweep is inert.
-
-The bias runs the same way on both families and grows with device count, so it
-inflates the ROM's twelve-wafer number and the GPU's 672-device number together.
-Whether it cancels in the ratio is **not established and is not assumed here**.
-Fixing it means separating per-user latency from aggregate throughput, which
-breaks the `aggregate = batch × per-user` identity the study is built on and
-every number in this document with it. It is named here rather than fixed.
+**0.9.4 What this exposed and did not fix at the time.** Giving the GPU the
+topology sweep changed almost nothing because **the model computed the service
+time on the machine's aggregate memory bandwidth and compute roof whatever the
+parallelism.** That is right for tensor parallelism and wrong for pipeline
+parallelism, and it made pipeline win on both sides at every size above one
+device — which is why the topology sweep was inert. **This has since been fixed;
+see section 0.12.** It did not cancel in the ratio, the topology sweep is no
+longer inert, and every number in section 0.9 that is a per-user rate has moved
+again. The 35.4× in this section is superseded by 8.6×.
 
 
 ---
@@ -405,6 +408,9 @@ GPU is almost untouched throughout — every GPU figure below moves by less than
 
 Flash, aggregate tokens/s on the best feasible design at each batch:
 
+*(Both tables below predate section 0.12: their `aggregate` column is the old
+`batch x per-user` quantity, and their ratios are superseded.)*
+
 | B | ROM aggregate before | after | ratio before | ratio after | ROM binds on |
 |---:|---:|---:|---:|---:|---|
 | 1 | 57,266 | 57,260 | 27.1× | **27.1×** | layer_fixed_latency |
@@ -414,8 +420,11 @@ Flash, aggregate tokens/s on the best feasible design at each batch:
 | 64 | 983,395 | 456,796 | 21.6× | **10.1×** | kv_read |
 | 256 | 1,170,513 | 493,437 | 9.4× | **4.0×** | kv_read |
 
-Pro, the same. Its batch-1 iso-area ratio is untouched at 35.4x because both
-machines are weight-bound there; everything above batch 1 moves:
+Pro, the same. Its batch-1 iso-area ratio was untouched at 35.4x by *this*
+correction because both machines are weight-bound there — section 0.12 has since
+taken it to 8.6x, and every aggregate figure in the two tables in this section is
+on the old `batch x per-user` definition. Everything above batch 1 moves here
+too:
 
 | B | ROM aggregate before | after | ratio before | ratio after |
 |---:|---:|---:|---:|---:|
@@ -524,51 +533,257 @@ operand-delivery energy per MAC) and reported at both ends of every assumed
 range. That is comparable in size to the interconnect rebuild in section 0.9,
 and it is handed back rather than half-done.
 
+---
+
+### 0.12 Per-user latency and aggregate throughput were one number. Separating them is the largest correction this program has made
+
+**RETRACTED: every per-user rate in every previous version of this document at
+every multi-device operating point.** The headline case: DeepSeek-V4-Pro at 1M
+context, batch 1, at 554,700 mm² was published as 54.2×, corrected to 35.4× by
+the interconnect rebuild, and is **8.6×** now. This is not a refinement of that
+correction; it is a different error that the interconnect rebuild uncovered and
+section 0.9.4 named without fixing.
+
+**The defect.** The service time was computed on the machine's *aggregate*
+memory bandwidth and compute roof, and the hops a single token crosses were then
+added to it. That mixes two views. The aggregate denominator is correct only for
+partitions that are all working on the same token at the same instant — which is
+what tensor parallelism is. Under pipeline parallelism a token is served by one
+stage's silicon at a time and has to visit every stage in turn, so a balanced
+`S`-stage pipeline's per-user latency is `S` times what was charged.
+
+**The physics, because it is the whole argument.** Under pipeline parallelism
+each of `N` stages holds `1/N` of the weights and reads them with `1/N` of the
+machine's bandwidth. **The two cancel exactly.** One user's latency on an
+`N`-device pipeline is what it would be on a single device holding the whole
+model at one device's bandwidth, minus whatever the hops take off it. *Adding
+devices under pipeline parallelism buys aggregate throughput and buys one user
+nothing.* Tensor parallelism is different in kind rather than in degree: every
+partition is on the same token, so the whole machine's bandwidth is on that
+token's critical path, and the price is two all-reduces per layer.
+
+**The fix.** `token_slots = partitions / tensor_group` counts the independent
+groups the machine is cut into. One user's latency is
+
+```
+t_user = token_slots × t_service(microbatch) / stage_balance + t_link + t_layer
+```
+
+where `microbatch = max(1, batch / token_slots)` is the users sharing one weight
+pass inside one slot. The machine's aggregate rate is that same latency with a
+user in **every** slot:
+
+```
+aggregate_tokens_s = fill_users / t_user,  fill_users = max(batch, token_slots)
+```
+
+capped by the users whose KV the machine can actually hold — the cap is reported
+per point as `pipeline_fill_limited_by`. **`aggregate = batch × per-user` no
+longer holds**, and what a machine delivers at the requested concurrency is
+reported separately as `delivered_tokens_s`. The identity survives exactly where
+it is true: a one-slot machine, which is a single chip or a tensor group
+spanning every partition.
+
+**Both validation gates are unchanged to the digit.** A100 weight-bound at
+253.91 tok/s (ratio 1.0000) and Taalas HC1 at 12,232.40 against 16,960, ratio
+0.7213. Both are single-device machines with `token_slots = 1`, so a correct
+separation cannot reach them; the consistency audit now asserts that a one-slot
+machine has a latency correction of exactly 1.0, at all 99,147 checks.
+
+**What is not charged.** Three things, and the first two flatter the deep
+pipeline while the third flatters the machine this correction promoted.
+
+*Fill and drain cost nothing.* Aggregate throughput is the steady-state rate, so
+a request short compared with the slot count pays up to one traversal that is
+not billed.
+
+*A deep pipeline's implied weight replication is not charged against capacity.*
+Past the layer count the surplus partitions hold replicas of a stage, each
+needing its own copy of that stage's weights; the capacity check still credits
+the machine with holding the model once. With fill/drain, this favours the
+deepest pipelines, which after this correction are on the GPU side, so charging
+them would widen the ROM ratios rather than narrow them.
+
+*The `stage_balance` derate is applied per **device**, not per partition.*
+`efficiencies.stage_balance` (0.9, assumed) charges a multi-device machine for
+imperfect layer balance, and the model applies it when `device_count > 1`. A
+single wafer partitioned into 57 tensor-parallel reticle fields has
+`device_count = 1` and escapes it; a twelve-wafer machine does not. That is a
+**1.11× bias in favour of the one-wafer design that now wins at batch 1 for two
+of the three models**, and it runs the opposite way to the two above. It is left
+as it is rather than changed, because whether a monolithic co-designed floorplan
+deserves the same balance derate as a model cut across parts nobody co-designed
+is a modelling judgement and not an arithmetic slip — but the direction is stated
+here so it is not mistaken for a result.
+
+**It did not cancel in the ratio.** The tempting argument is that both families
+are pipelines of similar depth at iso-area, so the `N` cancels. It does not.
+Per-user tok/s at batch 1 on the same seven-rung area ladder, `n6_vs_a100`, from
+`The latency separation, before and after` in the study report. `before` is not a
+memory of an earlier run: every point now carries
+`per_user_tokens_s_throughput_view`, the number the old rule produced, and each
+side is ranked by it, so the `before` column reproduces the previous *topology
+choice* as well as the previous rate:
+
+| model | mm² | ROM before → after | ROM topology before → after | GPU n | GPU before → after | GPU topology | ratio before | **ratio now** | change |
+|---|---:|---:|---|---:|---:|---|---:|---:|---:|
+| Qwen3-8B | 46,225 | 53,701 → 7,936 | wafer-pipeline → wafer-tensor | 56 | 3,852 → 891 | pipeline → tensor | 13.94× | **8.91×** | 0.64× |
+| Qwen3-8B | 92,450 | 50,885 → 7,023 | wafer-pipeline → wafer-hybrid | 112 | 6,022 → 967 | pipeline → tensor | 8.45× | **7.26×** | 0.86× |
+| Qwen3-8B | 138,675 | 50,885 → 6,339 | wafer-pipeline → wafer-hybrid | 168 | 7,414 → 995 | pipeline → tensor | 6.86× | **6.37×** | 0.93× |
+| Qwen3-8B | 184,900 | 50,885 → 5,777 | wafer-pipeline → wafer-hybrid | 224 | 8,383 → 1,010 | pipeline → tensor | 6.07× | **5.72×** | 0.94× |
+| Qwen3-8B | 277,350 | 50,885 → 4,906 | wafer-pipeline → wafer-hybrid | 336 | 9,644 → 616 | pipeline → tensor | 5.28× | **7.96×** | 1.51× |
+| Qwen3-8B | 369,800 | 50,885 → 4,263 | wafer-pipeline → wafer-hybrid | 448 | 10,428 → 619 | pipeline → tensor | 4.88× | **6.89×** | 1.41× |
+| Qwen3-8B | 554,700 | 59,341 → 3,811 | wafer-pipeline → wafer-hybrid | 672 | 11,351 → 622 | pipeline → tensor | 5.23× | **6.13×** | 1.17× |
+| Flash @200K | 46,225 | 18,841 → 5,515 | wafer-pipeline → wafer-tensor | 56 | 1,572 → 600 | pipeline → tensor | 11.98× | **9.19×** | 0.77× |
+| Flash @200K | 92,450 | 28,141 → 5,249 | wafer-pipeline → wafer-hybrid | 112 | 1,818 → 631 | pipeline → tensor | 15.48× | **8.33×** | 0.54× |
+| Flash @200K | 138,675 | 35,354 → 5,116 | wafer-pipeline → wafer-hybrid | 168 | 1,923 → 642 | pipeline → tensor | 18.39× | **7.97×** | 0.43× |
+| Flash @200K | 184,900 | 40,534 → 4,988 | wafer-pipeline → wafer-hybrid | 224 | 1,981 → 648 | pipeline → tensor | 20.46× | **7.70×** | 0.38× |
+| Flash @200K | 277,350 | 47,475 → 4,750 | wafer-pipeline → wafer-hybrid | 336 | 2,043 → 434 | pipeline → tensor | 23.24× | **10.94×** | 0.47× |
+| Flash @200K | 369,800 | 51,913 → 4,533 | wafer-pipeline → wafer-hybrid | 448 | 2,076 → 436 | pipeline → tensor | 25.00× | **10.41×** | 0.42× |
+| Flash @200K | 554,700 | 57,260 → 4,152 | wafer-pipeline → wafer-hybrid | 672 | 2,111 → 437 | pipeline → tensor | 27.13× | **9.50×** | 0.35× |
+| Pro @1M | 92,450 | 9,107 → 2,654 | wafer-pipeline → wafer-hybrid | 112 | 544 → 295 | pipeline → tensor | 16.73× | **9.01×** | 0.54× |
+| Pro @1M | 138,675 | 9,633 → 2,227 | wafer-pipeline → wafer-hybrid | 168 | 579 → 304 | pipeline → tensor | 16.64× | **7.33×** | 0.44× |
+| Pro @1M | 184,900 | 11,960 → 2,211 | wafer-pipeline → wafer-hybrid | 224 | 598 → 309 | pipeline → tensor | 20.00× | **7.15×** | 0.36× |
+| Pro @1M | 277,350 | 15,728 → 2,173 | wafer-pipeline → wafer-hybrid | 336 | 619 → 234 | pipeline → tensor | 25.41× | **9.30×** | 0.37× |
+| Pro @1M | 369,800 | 18,568 → 2,127 | wafer-pipeline → wafer-hybrid | 448 | 630 → 235 | pipeline → tensor | 29.47× | **9.04×** | 0.31× |
+| Pro @1M | 554,700 | 22,686 → 2,042 | wafer-pipeline → wafer-hybrid | 672 | 642 → 237 | pipeline → tensor | 35.35× | **8.63×** | 0.24× |
+
+The N5-versus-B200 study moves the same way: Pro at 554,700 mm² goes from
+**13.06× to 4.62×**, and every rung of that ladder falls (0.35×–1.03×).
+
+**Three mechanisms put the change where it is, and none of them cancels.**
+
+1. *The two families reach iso-area at very different slot counts.* At
+   554,700 mm² the ROM side is twelve wafers spanning 681 reticle fields; the
+   GPU side is 672 devices. Charged as pipelines those raw corrections are close
+   — 15.6× against 18.3× on Qwen. But the correction is not applied to a fixed
+   topology, which is mechanism 2.
+2. *It changes which topology wins, and the winner is chosen per design.* **Both
+   families abandon pipeline at batch 1.** The GPU goes to `tensor`: one slot,
+   the whole cluster on one token, 122 all-reduces per token for Pro. The ROM
+   side goes to `wafer-tensor` on one wafer and `wafer-hybrid` above it —
+   tensor-parallel across each wafer's reticle fields, pipeline-parallel across
+   wafers, so its slot count is the *wafer* count rather than the field count.
+   That is the finding section 0.9.4 predicted would appear and could not
+   produce: the topology sweep is no longer inert, and tensor parallelism is now
+   the right choice at batch 1 on both sides.
+3. *The two sides pay very different prices for that switch.* A wafer's mesh
+   collective is cheap enough to afford a 57-to-84-way tensor group; a GPU
+   cluster large enough to hold DeepSeek-Pro spans 84 NVLink islands, so most of
+   its all-reduce crosses InfiniBand. Where the GPU's correction exceeds the
+   ROM's the ratio **rises** — Qwen at 277,350 mm², 5.28× to 7.96×. Where the
+   ROM's exceeds the GPU's it falls — Pro at 554,700 mm², 35.35× to 8.63×.
+
+**The batch curves change shape, and for the sparse models they change sign.**
+Per-user tok/s at equal silicon, best design on each side at each batch:
+
+| batch | Qwen3-8B @8K | DeepSeek-Flash @200K | DeepSeek-Pro @1M |
+|---:|---:|---:|---:|
+| 1 | 8.91× | 9.19× | 9.01× |
+| 8 | 7.04× | 12.61× | 15.73× |
+| 32 | 4.13× | 21.60× | 19.37× |
+| 64 | 2.60× | 26.69× | 18.89× |
+| 256 | **0.92×** | **36.52×** | **17.33×** |
+
+Under the old rule every one of these fell with batch — Flash from 27.1× at
+batch 1 to 4.0× at 256 — and "the advantage erodes with batch" was one of this
+document's standing findings. **It survives only for the dense model.** For both
+sparse models the per-user ratio now *rises* with batch, because the GPU's
+per-user rate collapses faster than the ROM's: a GPU cluster large enough to
+hold DeepSeek-Flash has to choose between a pipeline whose slots multiply its
+latency and a tensor group whose collective it cannot afford, and at batch 256
+the best it can do is 38 tok/s per user against the ROM machine's 1,399. Qwen is
+the counter-case and the honest one: at batch 256 the GPU wins outright, 516
+against 475, because a dense model's KV read is per-user, never amortises, and is
+what binds a ROM machine at batch.
+
+**What survives and what does not.** The *direction* at batch 1 survives
+everywhere: at equal silicon a ROM design is still faster per user than a GPU
+cluster at every rung, by 5.7× to 10.9× on N6-vs-A100 and 3.5× to 6.8× on
+N5-vs-B200. What is
+gone is the claim that the advantage **grows** with silicon. It does not. The
+ROM side's per-user rate now *falls* monotonically with area under every topology
+it can run — 7,936 tok/s on one wafer to 3,811 on twelve for Qwen — because more
+silicon means either more slots for a token to traverse or a wider collective for
+it to wait on. **The best per-user ROM machine is the smallest one that holds the
+model.** That inverts section 2.3 as it was written.
 
 ---
 
 ## 1. The result
 
-Aggregate tokens/s, best feasible design per policy at a **matched floorplan**,
-N6 ROM silicon, from `The batch-amortisation fork` in the study report. `spare =
-sram` sizes the array to the stored bytes and gives the rest to KV store or MAC
-array; `spare = rom` grows the array into that silicon as replicated copies.
+**This table now has two halves and they select different machines.** Since
+section 0.12 the study reports per-user latency and aggregate throughput as
+separate quantities, and the design that maximises one is usually not the design
+that maximises the other: the throughput-optimal ROM machine is a deep pipeline
+with a poor per-user rate, and the latency-optimal one is the smallest machine
+that holds the model with a tensor group across it. Reading one number as the
+other is the error section 0.12 retracts.
+
+Best feasible design per policy at a **matched floorplan**, N6 ROM silicon,
+against the best iso-area GPU cluster, from `The batch-amortisation fork` and the
+points behind it. `spare = sram` sizes the array to the stored bytes and gives the
+rest to KV store or MAC array; `spare = rom` grows the array into that silicon as
+replicated copies.
+
+**Aggregate tokens/s — the machine's rate with every slot occupied:**
 
 | model | B | spare | ROM+MAC | compute-in-ROM | + per-region | best GPU at equal area |
-|---|---:|---|---:|---:|---:|---:|
-| Qwen3-8B @8K | 1 | sram | 11,641 | 11,641 | 11,641 | 3,852 |
-| | 1 | rom | 59,341 | 53,701 | 53,701 | 11,351 |
-| | 64 | sram | **130,702** | 13,038 | 13,038 | 215,770 |
-| | 64 | rom | 130,702 | 44,129 | 44,129 | 215,770 |
-| DeepSeek-Flash @200K | 1 | sram | 11,059 | 11,059 | 11,059 | 1,572 |
-| | 1 | rom | 57,260 | 42,778 | 42,778 | 2,111 |
-| | 8 | sram | **80,865** | 12,774 | 45,147 | 7,899 |
-| | 64 | sram | **456,796** | 13,026 | 96,968 | 45,229 |
-| | 64 | rom | **456,796** | 102,003 | 163,027 | 45,229 |
-| | 256 | sram | **493,437** | 13,054 | 109,418 | 122,361 |
-| DeepSeek-Pro @1M | 1 | sram | **9,107** | 9,107 | 9,107 | 544 |
-| | 64 | sram | **70,451** | 11,691 | 55,177 | 12,201 |
-| | 256 | sram | **71,914** | 11,730 | 60,018 | 32,465 |
+|---|---:|---|---:|---:|---:|---|
+| Qwen3-8B @8K | 1 | sram | 12,313 | 13,035 | 13,035 | 5,307 (pipeline) |
+| | 1 | rom | **133,002** | 24,132 | 24,132 | 63,690 (pipeline) |
+| | 64 | sram | 73,121 | 13,038 | 13,038 | 42,460 (pipeline) |
+| | 64 | rom | **133,002** | 12,315 | 12,315 | 63,690 (hybrid) |
+| DeepSeek-Flash @200K | 1 | sram | 13,021 | 13,021 | 13,021 | 1,827 (pipeline) |
+| | 1 | rom | **273,946** | 28,772 | 28,772 | 2,607 (pipeline) |
+| | 8 | sram | 25,598 | 13,021 | 26,192 | 2,645 (tensor) |
+| | 64 | sram | **118,863** | 13,026 | 46,493 | 7,656 (tensor) |
+| | 64 | rom | **273,946** | 28,794 | 57,740 | 7,344 (tensor) |
+| | 256 | sram | **270,399** | 13,054 | 94,029 | 9,772 (tensor) |
+| DeepSeek-Pro @1M | 1 | sram | 11,752 | 11,745 | 11,745 | 701 (pipeline) |
+| | 64 | sram | **49,885** | 11,745 | 27,433 | 2,973 (tensor) |
+| | 256 | sram | **67,551** | 11,745 | 55,455 | 3,898 (tensor) |
 
-The previous version of this table had compute-in-ROM winning at batch 1 by
-1.54× on every model, and per-region reaching 562,709 tok/s on Flash at batch 64.
-Neither survives.
+**Per-user tokens/s — one user's rate on the same designs:**
 
-**Two independent corrections have moved every figure in this table since it
-was last published, and they must not be read as one.**
+| model | B | spare | ROM+MAC | compute-in-ROM | + per-region | best GPU at equal area |
+|---|---:|---|---:|---:|---:|---|
+| Qwen3-8B @8K | 1 | sram | 216 | 229 | 229 | 891 (tensor) |
+| | 1 | rom | 195 | **4,022** | **4,022** | 622 (tensor) |
+| | 64 | sram | **1,143** | 204 | 204 | 581 (hybrid) |
+| | 64 | rom | 195 | 192 | 192 | 586 (hybrid) |
+| DeepSeek-Flash @200K | 1 | sram | 228 | 228 | 228 | 600 (tensor) |
+| | 1 | rom | 402 | 505 | 505 | 437 (tensor) |
+| | 8 | sram | 3,200 | 228 | **3,274** | 331 (tensor) |
+| | 64 | sram | **1,857** | 204 | 726 | 120 (tensor) |
+| | 64 | rom | 402 | 450 | **902** | 115 (tensor) |
+| | 256 | sram | **1,056** | 51 | 367 | 38 (tensor) |
+| DeepSeek-Pro @1M | 1 | sram | 17 | **41** | **41** | 237 (tensor) |
+| | 64 | sram | **779** | 41 | 429 | 46 (tensor) |
+| | 256 | sram | **264** | 41 | 217 | 15 (tensor) |
+
+**Read the second table before quoting the first.** Several rows where the ROM
+side's aggregate is an order of magnitude ahead are rows where its *per-user*
+rate is behind the GPU's — DeepSeek-Pro at batch 1 on the `sram` floorplan is
+11,752 aggregate against 701, and 17 tok/s per user against 237. That machine is
+a 681-slot pipeline. It is a throughput machine and it is not a latency machine,
+and the previous version of this table could not say so because it reported one
+number for both.
+
+**Three independent corrections have moved figures in this table since it was
+last published, and they must not be read as one.**
+
+*The latency separation* (section 0.12) redefined both columns. The aggregate
+column is now the machine's rate with every slot occupied rather than
+`batch × per-user`, and the per-user column is the full serial path. It is the
+largest of the three and it is the reason the two tables disagree about which
+machine to build.
 
 *The interconnect rebuild* (section 0.9) moved every multi-device design on both
-sides, because link latency is on the critical path of all of them. The GPU
-column moved most: it is 2.1–3.1× its previous values at the largest areas, and
-Qwen at batch 64 is now a row where the GPU wins outright at equal area —
-215,770 against 130,702.
+sides, because link latency is on the critical path of all of them.
 
 *The DeepSeek-Flash KV measurement* (section 0.10) moved the Flash rows and
-nothing else. It is invisible at batch 1 and decisive above it: Flash at
-batch 8 falls from 88,471 to 80,865 aggregate, at batch 64 from 646,913 to
-456,796, and at batch 256 from 1,170,513 to 493,437. The GPU column for Flash
-moves by less than 2% at every batch, so **the whole of that change is the ROM
-side losing an advantage it did not have.**
+nothing else. It is invisible at batch 1 and decisive above it.
 
 ---
 
@@ -579,9 +794,14 @@ side losing an advantage it did not have.**
 The previous recommendation was "build compute-in-ROM, not ROM feeding a MAC
 array — it wins at batch 1 on every model by ~1.5×". That 1.5× was the cell
 multiplier applied to area and not to bandwidth. With the correction the two
-machines are **within 1% of each other at batch 1 on every model**, in both
-floorplans, and above batch 1 the amortising machine leads on the `sram`
-floorplan by up to 8.80×.
+machines are **the same machine at batch 1 for the same budget**: at one user
+per slot each policy sweeps its array once, and `rom_sweeps_per_step` is 1 for
+both. What separates them at batch 1 in the tables above is not the amortisation
+rule but the *floorplan* it forces — a compute-in-ROM cell is 1.6× the area, so
+the two policies solve to different area splits and the sizing sweep can pick
+different machines. On the `sram` floorplan at batch 1 that is worth 6% to
+compute-in-ROM on Qwen (229 against 216 tok/s per user) and nothing on either
+DeepSeek model.
 
 Do not restate the win as a bandwidth argument. Whatever case exists is about
 **area**: the multiply moves into the array and the MAC array's silicon is
@@ -604,8 +824,16 @@ of what it wants at one weight byte per multiply-accumulate. That is the honest
 argument, and the corrected model tests it directly: give both machines the
 option of spending spare silicon on a replicated array instead, and the
 amortising machine's balanced floorplan — MAC array sized to consume exactly
-what the array beside it can read — closes most of the gap. On Flash at batch 64
-with `spare = rom` both reach 372,307 tok/s and both bind on `kv_read`.
+what the array beside it can read — closes most of the gap.
+
+**The convergence this section previously claimed is retracted.** It said that
+on Flash at batch 64 with `spare = rom` both machines reach 372,307 tok/s and
+both bind on `kv_read`. Under the separated views they do not converge: the
+amortising machine reaches 273,946 aggregate and compute-in-ROM 28,794, because
+the throughput-optimal amortising design is a twelve-wafer pipeline whose slots
+are all occupied and the compute-in-ROM design is a single wafer. The two
+policies converge on *per-user* rate there instead — 402 against 450 tok/s — and
+that is the comparison the earlier sentence should have been making.
 
 The second surviving argument, that compute-in-ROM moves no weights and
 therefore burns no transport energy, **this model does not represent at all**:
@@ -617,8 +845,8 @@ machines on throughput; it ties them at batch 1 and splits above it depending on
 the floorplan. If the choice is to be made on energy or on throughput per mm², it
 must be made with an instrument that measures those — and the study already
 reports `tok/s/mm2` in the floorplan sweep, where the replicated-array designs
-are *worse* per unit silicon (Flash at batch 8: 1.885 tok/s/mm² on one wafer
-against 1.155 on four). Replication buys per-user latency and costs throughput
+are *worse* per unit silicon (Flash at batch 8: 0.554 tok/s/mm² on one wafer
+against 0.494 on twelve). Replication buys sweep time and costs throughput
 density. That trade is the real content of this section.
 
 ### 2.2 Per-region activation is still the highest-value departure from what Taalas built — at a third of the claimed value
@@ -628,57 +856,88 @@ changes sweep *depth*, not sweep *rate*. What changed is how deep the sweep
 actually is. At a matched floorplan, per-region over a global activation
 broadcast:
 
-| model | B=1 | B=8 | B=64 | B=256 |
-|---|---:|---:|---:|---:|
-| DeepSeek-Flash @200K | 1.00× | 3.53× | **7.44×** | 8.38× |
-| DeepSeek-Pro @1M | 1.00× | 2.44× | **4.72×** | 5.12× |
-| Qwen3-8B @8K (dense) | 1.00× | 1.00× | 1.00× | 1.00× |
+| model | B=1 | B=8 | B=32 | B=64 | B=256 |
+|---|---:|---:|---:|---:|---:|
+| DeepSeek-Flash @200K | 1.00× | 2.01× | 5.46× | 3.57× | **7.20×** |
+| DeepSeek-Pro @1M | 1.00× | 1.02× | 2.13× | 2.34× | **4.72×** |
+| Qwen3-8B @8K (dense) | 1.00× | 1.00× | 1.00× | 1.00× | 1.00× |
 
-The retracted figure was 27× at batch 64, and the figure this document then
-published in its place was 10.65×. With the measured KV entry sizes it is
-**7.44×**, because per-region activation recovers idle *weight* regions and the
-KV term it now has to compete with is three times larger. **The dense row is not
-a disappointment, it is the mechanism working**: per-region recovers ROM regions
+The retracted figure was 27× at batch 64; this document then published 10.65×,
+then 7.44×. It is now **3.57× at batch 64 and 7.20× at batch 256**, and the peak
+has moved up the batch axis because of section 0.12: on a machine cut into slots,
+the batch is spread across them and each slot sees `batch / token_slots` users,
+so the region-collision statistic that per-region activation exploits does not
+begin to bite until the batch exceeds the slot count. **The dense row is not a
+disappointment, it is the mechanism working**: per-region recovers ROM regions
 that a sparse router left idle, and Qwen has no experts, so there is nothing to
 recover. Any claim that a dense model benefits from per-region activation is
 wrong on the face of the design.
 
-Against the amortising machine at a matched floorplan, per-region wins at 26 of
-30 operating points and loses at 4 — Flash at batch 8 (44,793 against 87,123)
-and Pro at batch 1 (9,009 against 9,082) among them. The previous version of this
-document reported it as never losing.
+Against the amortising machine at a matched floorplan, per-region now **loses at
+43 of 48 operating points**. The previous version of this document reported it as
+losing at 4 of 30 and, before that, as never losing. Two corrections put it
+there: the busiest-region statistic replacing the mean, and the separation of
+per-user latency from aggregate throughput, which lets the amortising machine
+occupy a deep pipeline's slots with users that a compute-in-ROM machine would
+have to sweep for one at a time.
 
 The design and its sizing are in `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md`. The
 pre-compute block is 2.0% of a region; the activation distribution network is the
 real cost and neither document prices it.
 
-### 2.3 Array or wafer: the array case is weaker than reported, and for DeepSeek-Pro it is gone
+### 2.3 Array or wafer, and pipeline or tensor: both answers change once per-user latency is charged honestly
 
-The previous version said "a composable array is viable for all three models",
-supporting it with "Qwen needs no distribution at all (416 mm² of ROM in FP8, one
-chip), Flash costs 4.4% of its budget over ten chips, Pro 8.4% over fifty-three".
-**None of those six numbers is in the study, at this commit or the previous one.**
-What the study actually sizes and computes at batch 1:
+**The previous version of this section is superseded, and so is the version
+before it.** It said the array case was weaker than reported and that the model
+"chooses pipeline over tensor parallelism on the wafer at every operating point".
+The second half is now false and the first half is true for a different reason.
 
-| design | devices | step | link latency | share | binds on |
-|---|---:|---:|---:|---:|---|
-| Qwen3-8B, FP8, SRAM KV | 2 | 92.43 µs | 1.53 µs | 1.7% | weight_read |
-| DeepSeek-Flash, SRAM KV | 18 | 127.30 µs | 32.56 µs | 25.6% | weight_read |
-| DeepSeek-Pro, SRAM KV | 94 | 239.88 µs | 117.55 µs | **49.0%** | **link_latency** |
+What the study chooses at batch 1, on per-user rate, after section 0.12:
 
-An array remains right for Qwen3-8B and defensible for DeepSeek-Flash. **For
-DeepSeek-Pro the array is still the binding constraint at batch 1**, though at
-49.0% rather than 55.5%: the layer-count cap of section 0.9.3 removes the hops
-that a 91-die pipeline never had, and the two-tier fabric adds back the eleven
-inter-node boundaries it was never charged. On per-user rate at equal area the
-wafer wins every batch-1 operating point.
+| model | best design | mm² | per-user tok/s | binds on | best array design | array tok/s | wafer over array |
+|---|---|---:|---:|---|---|---:|---:|
+| Qwen3-8B @8K | `wafer-tensor` ×1 romfill | 46,225 | **7,936** | link_latency | `array-pipeline` ×5 romfill | 6,747 | 1.18× |
+| DeepSeek-Flash @200K | `wafer-tensor` ×1 romfill | 46,225 | **5,515** | link_latency | `array-hybrid` ×18 | 1,856 | 2.97× |
+| DeepSeek-Pro @1M | `wafer-hybrid` ×2 | 92,450 | **2,654** | link_latency | `array-hybrid` ×96 | 680 | 3.90× |
 
-**The tensor-parallelism argument is RETRACTED in its published form.** It said:
-*"two all-reduces per layer per token cost 131.35 µs on NVLink for Flash and
-188.83 µs for Pro, against 8.60 µs and 12.20 µs on-wafer — hard ceilings of
-7,613 and 5,296 tok/s per user against 116,278 and 81,966."* The on-wafer half
-was wrong by an order of magnitude, because a mesh collective was charged one
-flat hop however far it reached. What the model says now:
+Three things changed and they are worth separating.
+
+**1. Tensor parallelism is now the right choice, and it was the correction that
+made it so.** The previous section dismissed on-wafer tensor parallelism because
+its collective ceiling — 9,019 tok/s on Qwen, 7,551 on Flash, 5,322 on Pro — sat
+an order of magnitude below the ~50,000 tok/s a wafer-scale pipeline appeared to
+deliver. That 50,000 was the defect: it was the whole wafer's ROM bandwidth
+credited to a single token that only ever touched one reticle field at a time.
+With the pipeline charged honestly, **the tensor ceiling is the best rate
+available**, and every winning design above sits within 12–50% of it and binds
+on `link_latency`. Wafer-scale tensor parallelism is an argument for wafer-scale
+again — not because the collective got cheaper, but because the alternative
+turned out to be far more expensive than it looked.
+
+**2. The wafer still wins on per-user rate, by more than before, and for a
+different reason.** It wins 24 of 24 batch-1 operating points. The mechanism is
+no longer "a hop latency an array cannot match" in a pipeline; it is that a
+stitched mesh can carry a 57-to-84-way all-reduce at 1.1× its diameter while a
+GPU-class or package-class fabric cannot, so **a wafer can afford a tensor group
+wide enough to put the whole machine on one token and an array cannot.** On
+tokens per second per square millimetre the array still wins 20 of 24 points; a
+wafer is not faster per unit silicon, it is faster because a wafer is one
+collective domain.
+
+**3. More silicon no longer buys per-user speed on either side.** This is the
+inversion. The ROM per-user rate falls monotonically with area at batch 1 —
+7,936 → 3,811 tok/s for Qwen from one wafer to twelve — because past one wafer
+the only ways to spend silicon are more slots to traverse or a wider collective
+to wait on. **The right latency machine is the smallest one that holds the
+model**: one wafer for Qwen and Flash, two for Pro. Twelve-wafer machines remain
+the right *throughput* machines and the study still reports them as such, at
+133,002 and 273,946 aggregate tokens/s — but at 195 and 402 tokens/s per user.
+The two objectives now select different machines and the study no longer
+pretends otherwise.
+
+**The tensor-parallelism cost table stands.** Two all-reduces per layer per
+token, like for like — the same model's collective on one wafer against the same
+model's on NVLink plus InfiniBand:
 
 | model | collectives/token | on NVLink 3 | on-wafer (57 regions) | on-wafer ceiling |
 |---|---:|---:|---:|---:|
@@ -686,28 +945,11 @@ flat hop however far it reached. What the model says now:
 | DeepSeek-V4-Flash | 86 | 1,094.5 µs | **132.4 µs** | 7,551 tok/s |
 | DeepSeek-V4-Pro | 122 | 1,671.7 µs | **187.9 µs** | 5,322 tok/s |
 
-The NVLink figures are larger than before because a cluster big enough to hold
-these models spans more than one eight-GPU NVLink domain, so most of its
-collective crosses InfiniBand: for Pro, 381 µs on NVLink plus 1,290 µs on the
-fabric. The on-wafer figures are an order of magnitude larger than published
-because the mesh diameter is now charged.
-
-**The ordering survives and the margin does not.** Like for like — the same
-model's collective on one wafer against the same model's on NVLink — the wafer
-is **2.0× cheaper on Qwen, 8.3× on Flash and 8.9× on Pro**. The Qwen figure is
-the instructive one: a four-GPU Qwen cluster fits inside a single eight-GPU
-NVLink domain, where a collective costs two switch traversals and nothing else,
-and against that a 57-reticle mesh's 15.4 traversals is barely better. **The
-wafer's collective advantage is not a property of the wafer; it is a property of
-the cluster having outgrown its NVLink island.**
-
-And the absolute claim is gone. Wafer-scale tensor parallelism reaches
-5,000–9,000 tok/s per user, not the 82,000–116,000 published, so the model
-chooses pipeline over tensor parallelism on the wafer at **every** operating
-point in both studies. Tensor parallelism is no longer an argument for
-wafer-scale in this model. What is left of the wafer case is the pipeline hop
-cost: 60 stage boundaries cost 11.0 µs on a twelve-wafer machine against
-117.5 µs on 672 GPUs, a 10.7× advantage that survives everything above.
+The published claim that on-wafer tensor parallelism reaches 82,000–116,000
+tok/s per user remains **retracted**: it came from charging a stitched 2-D mesh
+one flat hop however far the collective reached. What has changed since that
+retraction is only that 5,000–9,000 tok/s is now the number to beat rather than
+a number to dismiss.
 
 ### 2.4 KV in SRAM for the dense small model, HBM for the sparse large ones — unchanged, with one new and cheap action
 
@@ -755,6 +997,16 @@ regime in which ROM helps.
 Nothing else in this recommendation is touched by it. It is the only one of the
 five original recommendations that comes through intact in direction, and the
 only one whose *magnitude* has now been cut by a measurement.
+
+**Section 0.12 strengthens it, and this is the one place that correction helps.**
+With per-user latency charged honestly, the per-user ratio at equal silicon now
+*rises* with batch on both sparse models — Flash from 9.2× at batch 1 to 36.5× at
+256, Pro from 9.0× to 17.3× — and *falls* on the dense one, where the GPU wins
+outright at batch 256. The mechanism is that a GPU cluster large enough to hold a
+sparse long-context model has no cheap topology left: pipeline multiplies its
+per-user latency by the slot count and tensor parallelism costs it 122
+all-reduces that mostly cross InfiniBand. **Sparse plus long context is now the
+ROM-favourable regime at every batch, not only at batch 1.**
 
 ---
 
@@ -813,12 +1065,27 @@ ledger lists all 43 of them.
   exposed input: it is `assumed`, sourced as "no fabricated leading-node
   mask-ROM macro energy published", and it alone could account for the whole HC1
   shortfall.
-- **The pipeline service-time rule** — not a config parameter, which is why it
-  is last and why it is the most serious. Section 0.9.4: this model charges a
-  pipeline's service time on the machine's aggregate resources, which is the
-  steady-state throughput view, while charging its hops on the single-token
-  latency view. A balanced `S`-stage pipeline's per-user latency is `S` times
-  what is reported here. It biases both families the same way and grows with
-  device count. Nothing in this document is safe from it.
+- **The pipeline service-time rule — FIXED, section 0.12.** It was listed here
+  as the most serious item and it was. A pipeline's service time was charged on
+  the machine's aggregate resources while its hops were charged on the
+  single-token path, making a balanced `S`-stage pipeline look `S` times faster
+  per user than it is. Per-user latency and aggregate throughput are now separate
+  quantities and every rate in this document has moved. It did not cancel in the
+  ratio.
+
+Two modelling choices replace it on this list, both stated in section 0.12 and
+both favouring the deepest pipeline in a comparison:
+
+- **Fill and drain are not charged.** Aggregate throughput is the steady-state
+  rate with every slot occupied. A request short compared with the slot count
+  pays up to one extra traversal that is not billed.
+- **A deep pipeline's implied weight replication is not charged against
+  capacity.** Past the layer count the surplus partitions hold replicas of a
+  stage, each needing its own copy of that stage's weights, and the capacity
+  check still credits the machine with holding the model once.
+- **`efficiencies.stage_balance` (0.9) is applied per device rather than per
+  partition**, so a one-wafer tensor-parallel design escapes it and a
+  twelve-wafer one does not — worth 1.11× to the design that now wins at batch 1
+  for Qwen and DeepSeek-Flash, and it runs the other way to the two items above.
 
 Each is falsifiable. None of them was chosen by looking at the answer.

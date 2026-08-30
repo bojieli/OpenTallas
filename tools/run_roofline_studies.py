@@ -703,8 +703,26 @@ def _step_row(
         "silicon_area_mm2_per_device": budget.silicon_area_mm2_per_device,
         "feasible": step.feasible,
         "reasons": list(step.reasons),
+        # **Two rates, and they are not the same number times the batch.**
+        # ``per_user_tokens_s`` is one user's token rate on the full serial
+        # path; ``aggregate_tokens_s`` is the machine's rate with every slot
+        # occupied, which needs ``token_slots`` concurrent users;
+        # ``delivered_tokens_s`` is what the machine actually produces at the
+        # requested concurrency.  ``*_throughput_view`` is the single number
+        # this study reported for both before the two were separated.
         "per_user_tokens_s": step.per_user_tokens_s,
         "aggregate_tokens_s": step.aggregate_tokens_s,
+        "delivered_tokens_s": metrics["delivered_tokens_s"],
+        "per_user_tokens_s_throughput_view": metrics[
+            "per_user_tokens_s_throughput_view"
+        ],
+        "latency_correction_x": metrics["latency_correction_x"],
+        "token_slots": metrics["token_slots"],
+        "microbatch_per_slot": metrics["microbatch_per_slot"],
+        "pipeline_fill_users": metrics["pipeline_fill_users"],
+        "pipeline_fill_fraction": metrics["pipeline_fill_fraction"],
+        "pipeline_fill_limited_by": metrics["pipeline_fill_limited_by"],
+        "service_time_per_slot_s": metrics["service_time_per_slot_s"],
         "step_time_s": _finite(step.step_time_s),
         "binding_constraint": step.binding_constraint,
         "component_times_s": dict(step.component_times_s),
@@ -1892,6 +1910,10 @@ def _simulate_study(
             "hbm_generation": hbm_generation,
             "design_batch": DESIGN_BATCH,
             "provision_batch": PROVISION_BATCH,
+            "wafer_area_mm2": wafer_area,
+            "reticle_area_mm2": reticle_area,
+            "rom_area_ladder_wafers": list(ROM_AREA_LADDER),
+            "gpu_area_ladder_wafers": list(GPU_AREA_LADDER),
             "counting_convention": (
                 "one multiply plus one add equals two operations"
             ),
@@ -1920,6 +1942,7 @@ def _simulate_study(
         "floorplan_sweep": floorplan_sweep,
         "latency_crossovers": crossovers,
     }
+    result["latency_correction_ladder"] = _latency_correction_ladder(result)
     result["consistency_audit"] = _consistency_audit(result)
     return result
 
@@ -2004,6 +2027,99 @@ def _technology_derivations(
 # --------------------------------------------------------------------------
 
 
+def _latency_correction_ladder(result: dict[str, Any]) -> list[dict[str, Any]]:
+    """Before and after the latency separation, on the fixed area ladder.
+
+    The **before** column is not a memory of an earlier run: every point in this
+    study carries ``per_user_tokens_s_throughput_view``, the number the model
+    produced when it charged a pipeline's service time on the machine's
+    aggregate resources and its hops on the single-token path.  Ranking each
+    side by that column reproduces the previous study's choice of topology as
+    well as its rate, so the two corrections -- the ranking and the rate -- are
+    visible separately.
+
+    Both sides are read at the same seven rungs of silicon, so a correction that
+    moves one family's preferred machine cannot move the area the comparison is
+    read at.
+    """
+
+    inputs = result["inputs"]
+    wafer_area = inputs["wafer_area_mm2"]
+    ladder = [wafer_area * count for count in inputs["rom_area_ladder_wafers"]]
+    points = [row for row in result["points"] if row["batch_size"] == 1]
+    rom = [
+        row
+        for row in points
+        if row["family"] == "rom"
+        and row["weight_amortization"] == "batched"
+        and row["feasible"]
+    ]
+    gpu = [row for row in points if row["family"] == "gpu" and row["feasible"]]
+    rows: list[dict[str, Any]] = []
+    for summary in result["model_summaries"]:
+        model = summary["model"]
+        for wafers, area in zip(inputs["rom_area_ladder_wafers"], ladder):
+            rom_here = [
+                row
+                for row in rom
+                if row["model"] == model
+                and abs(row["silicon_area_mm2"] - area) <= 1.0
+            ]
+            gpu_all = [row for row in gpu if row["model"] == model]
+            if not rom_here or not gpu_all:
+                continue
+            closest = min(
+                abs(row["silicon_area_mm2"] - area) for row in gpu_all
+            )
+            gpu_here = [
+                row
+                for row in gpu_all
+                if abs(row["silicon_area_mm2"] - area) <= closest + 1e-6
+            ]
+            record: dict[str, Any] = {
+                "model": model,
+                "wafer_equivalents": wafers,
+                "silicon_area_mm2": area,
+                "gpu_silicon_area_mm2": gpu_here[0]["silicon_area_mm2"],
+                "gpu_device_count": gpu_here[0]["device_count"],
+            }
+            for label, key in (
+                ("before", "per_user_tokens_s_throughput_view"),
+                ("after", "per_user_tokens_s"),
+            ):
+                best_rom = max(rom_here, key=lambda row: row[key])
+                best_gpu = max(gpu_here, key=lambda row: row[key])
+                record[f"rom_{label}_tokens_s"] = best_rom[key]
+                record[f"rom_{label}_topology"] = (
+                    f"{best_rom['topology_kind']}-{best_rom['parallelism']}"
+                )
+                record[f"rom_{label}_device_count"] = best_rom["device_count"]
+                record[f"rom_{label}_token_slots"] = best_rom["token_slots"]
+                record[f"gpu_{label}_tokens_s"] = best_gpu[key]
+                record[f"gpu_{label}_topology"] = best_gpu["parallelism"]
+                record[f"gpu_{label}_token_slots"] = best_gpu["token_slots"]
+                record[f"ratio_{label}"] = (
+                    best_rom[key] / best_gpu[key] if best_gpu[key] > 0 else None
+                )
+            record["ratio_change_x"] = (
+                record["ratio_after"] / record["ratio_before"]
+                if record["ratio_before"]
+                else None
+            )
+            record["rom_correction_x"] = (
+                record["rom_before_tokens_s"] / record["rom_after_tokens_s"]
+                if record["rom_after_tokens_s"] > 0
+                else None
+            )
+            record["gpu_correction_x"] = (
+                record["gpu_before_tokens_s"] / record["gpu_after_tokens_s"]
+                if record["gpu_after_tokens_s"] > 0
+                else None
+            )
+            rows.append(record)
+    return rows
+
+
 def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
     errors: list[str] = []
     checks = 0
@@ -2033,13 +2149,71 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
             close(row["per_user_tokens_s"], 1.0 / row["step_time_s"]),
             f"per-user rate identity {key}",
         )
+        # **The identity that used to be here is gone, and its removal is the
+        # point.**  ``aggregate = batch x per_user`` held by construction only
+        # because the model charged one number for both.  A machine cut into
+        # ``token_slots`` slots reaches its aggregate rate only when every slot
+        # has a user in it, so the aggregate is over ``pipeline_fill_users``,
+        # which is the batch when the batch is large enough to fill the machine
+        # and the slot count when it is not.  What the machine delivers at the
+        # requested concurrency is the weaker ``delivered_tokens_s``, and *that*
+        # is the quantity the old identity was about.
         check(
             close(
                 row["aggregate_tokens_s"],
+                row["pipeline_fill_users"] * row["per_user_tokens_s"],
+            ),
+            f"aggregate = fill x per-user identity {key}",
+        )
+        check(
+            close(
+                row["delivered_tokens_s"],
                 row["batch_size"] * row["per_user_tokens_s"],
             ),
-            f"aggregate = batch x per-user identity {key}",
+            f"delivered = batch x per-user identity {key}",
         )
+        check(
+            row["pipeline_fill_users"] >= row["batch_size"] - 1e-9,
+            f"fill below the requested batch {key}",
+        )
+        check(
+            row["aggregate_tokens_s"] >= row["delivered_tokens_s"] * (1 - 1e-9),
+            f"aggregate below delivered {key}",
+        )
+        # A single-slot machine -- one chip, or a tensor group spanning every
+        # partition -- is the one case where the two views coincide, and the
+        # correction must be exactly 1.0 there.  Both validation gates are such
+        # machines, which is why a correct fix leaves them untouched.
+        if row["token_slots"] <= 1.0 + 1e-12:
+            check(
+                close(
+                    row["per_user_tokens_s_throughput_view"],
+                    row["per_user_tokens_s"],
+                ),
+                f"single-slot machine must have no latency correction {key}",
+            )
+        elif row["microbatch_per_slot"] >= row["batch_size"] - 1e-9:
+            # Below one user per slot the two views see the same microbatch and
+            # the same activation payload on every hop, so the correction is
+            # exactly the extra service the serial path pays: never below one.
+            # **Above it the correction can fall below one, and that is not a
+            # bug.** The throughput view charged the whole batch's activations
+            # across each hop while calling the result one user's latency; the
+            # serial path charges one slot's microbatch, which is smaller. On a
+            # KV-bound pipeline at high batch the service terms scale with the
+            # batch and cancel exactly, leaving only that payload difference, so
+            # the old number comes out *slower* than the corrected one. The
+            # regime the ROM case is made in is batch 1, where the check bites.
+            check(
+                row["latency_correction_x"] >= 1.0 - 1e-9,
+                f"latency correction below one {key}",
+            )
+        else:
+            check(
+                row["latency_correction_x"] > 0.0
+                and math.isfinite(row["latency_correction_x"]),
+                f"latency correction not a positive finite number {key}",
+            )
         components = row["component_times_s"]
         service = max(
             components["weight_read"], components["kv_read"], components["compute"]
@@ -2093,21 +2267,24 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
             # arithmetic here would make this a copy that can drift from it --
             # which is exactly how the policy list came apart.
             policy = row["weight_amortization"]
-            batch = row["batch_size"]
             if policy == "batched":
                 check(sweeps == 1, f"batched must sweep once {key}")
             elif policy == "per_stream":
+                # One sweep per concurrent stream **in one slot**.  A slot holds
+                # the microbatch, not the whole batch: on a machine cut into
+                # slots the batch is spread across them and each slot sweeps for
+                # the users it actually holds.
                 check(
-                    sweeps == batch,
-                    f"per_stream must sweep once per stream {key}",
+                    close(sweeps, row["microbatch_per_slot"]),
+                    f"per_stream must sweep once per stream in a slot {key}",
                 )
             elif policy == "per_region":
                 # Disjoint regions run together, so the sweep depth is the
                 # busiest region's queue: never below one, never worse than
-                # every token landing on the same region.
+                # every token in the slot landing on the same region.
                 check(
-                    1.0 - 1e-9 <= sweeps <= batch + 1e-9,
-                    f"per_region sweep depth outside [1, batch] {key}",
+                    1.0 - 1e-9 <= sweeps <= row["microbatch_per_slot"] + 1e-9,
+                    f"per_region sweep depth outside [1, microbatch] {key}",
                 )
             else:
                 check(False, f"unknown amortisation policy {policy!r} {key}")
@@ -2135,15 +2312,16 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
                 row["rom_full_array_sweep_time_s"] is not None,
                 f"ROM point without a sweep floor {key}",
             )
+            # The sweep floor is per slot; a token traverses ``token_slots`` of
+            # them, and ``component_times_s`` is the serial path.
+            serial_sweep = row["rom_full_array_sweep_time_s"] * row["token_slots"]
             check(
-                components["weight_read"]
-                <= row["rom_full_array_sweep_time_s"] * (1 + 1e-9),
-                f"ROM weight time above the full-array sweep floor {key}",
+                components["weight_read"] <= serial_sweep * (1 + 1e-9),
+                f"ROM weight time above the serial full-array sweep floor {key}",
             )
             check(
-                components["weight_read"]
-                >= row["rom_full_array_sweep_time_s"] * (1 - 1e-9),
-                f"ROM weight time below the full-array sweep floor {key}",
+                components["weight_read"] >= serial_sweep * (1 - 1e-9),
+                f"ROM weight time below the serial full-array sweep floor {key}",
             )
 
     for row in result["comparisons"]:
@@ -2276,10 +2454,22 @@ def _render_corrections(result: dict[str, Any]) -> list[str]:
         "divide it by a flat 0.85 whose own note said the depth is set by the",
         "busiest region. The busiest region is now computed from the routing",
         "distribution. The correction is not a constant: it is a function of",
-        "batch.",
+        "how many users one array pass actually serves.",
         "",
-        "| Model | B | Mean engaged region | Busiest region | Correction |",
-        "|---|---:|---:|---:|---:|",
+        "**Read the `Users per slot` column, not the batch.** Since per-user",
+        "latency was separated from aggregate throughput, a machine cut into",
+        "`token_slots` slots spreads its batch across them, and the region",
+        "collisions this correction is about happen inside **one** slot. Where",
+        "the design the sweep chose has more slots than the batch has users, one",
+        "pass serves one user, no two tokens can collide on a region, and the",
+        "correction is 1.00x by construction rather than by accident. The",
+        "statistic itself is unchanged and is checked against a Monte Carlo of",
+        "the routing in `tests/test_roofline.py`; what moved is which point on it",
+        "these designs sit at.",
+        "",
+        "| Model | B | Slots | Users per slot | Mean engaged region | "
+        "Busiest region | Correction |",
+        "|---|---:|---:|---:|---:|---:|---:|",
     ]
     seen: set[tuple[str, int]] = set()
     for row in points:
@@ -2292,6 +2482,8 @@ def _render_corrections(result: dict[str, Any]) -> list[str]:
         seen.add(key)
         lines.append(
             f"| {row['model']} | {row['batch_size']} | "
+            f"{row['token_slots']:,.0f} | "
+            f"{row['microbatch_per_slot']:,.2f} | "
             f"{row['region_sweep_depth_mean_uncorrected']:,.3f} | "
             f"{row['rom_sweeps_per_step']:,.3f} | "
             f"{_fmt_ratio(depth)} |"
@@ -2454,9 +2646,13 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
         "```",
         "t_memory  = t_weight + t_kv        weights and KV share one memory system",
         "t_memory  = max(t_weight, t_kv)    weights and KV are separate arrays",
-        "t_service = max(t_memory, t_compute)",
-        "t_token   = t_service / stage_balance + t_link",
-        "t_token  *= thermal_scale",
+        "t_service = max(t_memory, t_compute)      on the AGGREGATE machine",
+        "t_user    = token_slots * t_service / stage_balance + t_link",
+        "t_user   *= thermal_scale",
+        "",
+        "per_user_tokens_s  = 1 / t_user",
+        "aggregate_tokens_s = fill_users / t_user      fill_users = max(batch, slots)",
+        "delivered_tokens_s = batch / t_user",
         "```",
         "",
         "Compute overlaps memory. Weight and KV traffic **add** on a GPU because they",
@@ -2465,9 +2661,33 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
         "is most of the architectural difference and it is stated rather than hidden",
         "in an efficiency factor. Hop and collective latency is **added** to the",
         "critical path at every batch size, because decode is sequential across",
-        "layers and a pipelined array supplies no parallelism at batch 1. Per-user",
-        "latency is the full serial traversal, so `aggregate = batch x per-user rate`",
-        "holds by construction.",
+        "layers.",
+        "",
+        "`t_service` is computed on the machine's **aggregate** resources: all of the",
+        "array bandwidth, all of the compute roof. That denominator is correct only",
+        "for partitions that are working on the same token at the same instant, which",
+        "is what tensor parallelism is. `token_slots = partitions / tensor_group` is",
+        "how many independent groups the machine is cut into, and a token is served by",
+        "exactly one of them at a time, so its latency is `token_slots` service times",
+        "long. **Under pipeline parallelism the two factors cancel exactly** -- each of",
+        "N stages holds 1/N of the weights and reads them with 1/N of the bandwidth --",
+        "so adding devices buys aggregate throughput and buys one user nothing.",
+        "Tensor parallelism is different in kind: every partition is on the same token,",
+        "`token_slots` is 1, and the price is two all-reduces per layer, charged in",
+        "`t_link`.",
+        "",
+        "**`aggregate = batch x per-user rate` no longer holds and its removal is the",
+        "point.** The aggregate rate is the machine's rate with every slot occupied,",
+        "which needs `token_slots` concurrent users; below that the surplus slots idle",
+        "and the machine delivers `delivered_tokens_s` instead. The fill is capped by",
+        "the users whose KV the machine can hold, reported per point as",
+        "`pipeline_fill_limited_by`. Fill and drain are not charged: decode is a",
+        "continuous stream of steps and the pipeline is taken to be in steady state,",
+        "which flatters a deep pipeline by at most one traversal per request.",
+        "",
+        "Every point also carries `per_user_tokens_s_throughput_view`: the single",
+        "number this study reported for both quantities before they were separated, so",
+        "the size of this correction is separable from every other one.",
         "",
         "## Validation gates",
         "",
@@ -2650,6 +2870,71 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             f"{summary['weight_to_kv_read_ratio_b1']:,.1f} |"
         )
 
+    ladder = result.get("latency_correction_ladder") or []
+    if ladder:
+        lines.extend(
+            [
+                "",
+                "## The latency separation, before and after, at batch 1",
+                "",
+                "Per-user latency and aggregate throughput used to be one number in",
+                "this study. The service time was computed on the machine's",
+                "**aggregate** resources -- the throughput view -- and the hops were",
+                "added on the single-token path, which is the latency view. A token",
+                "under pipeline parallelism is served by one stage's silicon at a time",
+                "and has to visit every stage, so its latency is that service time",
+                "multiplied by the slot count, not divided by anything.",
+                "",
+                "**Before** is not a memory of an earlier run. Every point carries",
+                "`per_user_tokens_s_throughput_view`, the number the old rule produced,",
+                "and each side is ranked by it -- so the before column reproduces the",
+                "previous topology choice as well as the previous rate, and the two",
+                "corrections stay separable. Both sides are read at the same seven",
+                "rungs of silicon.",
+                "",
+                "| Model | Wafer-eq | mm2 | ROM before | topo | ROM after | topo | ROM /x |"
+                " GPU before | topo | GPU after | topo | GPU /x | Ratio before |"
+                " Ratio after | Ratio change |",
+                "|---|---:|---:|---:|---|---:|---|---:|---:|---|---:|---|---:|---:|---:|---:|",
+            ]
+        )
+        for row in ladder:
+            lines.append(
+                f"| {row['model']} | {row['wafer_equivalents']} | "
+                f"{_fmt_area(row['silicon_area_mm2'])} | "
+                f"{_fmt(row['rom_before_tokens_s'])} | "
+                f"{row['rom_before_topology']} | "
+                f"{_fmt(row['rom_after_tokens_s'])} | "
+                f"{row['rom_after_topology']} | "
+                f"{_fmt_ratio(row['rom_correction_x'])} | "
+                f"{_fmt(row['gpu_before_tokens_s'])} | "
+                f"{row['gpu_before_topology']} | "
+                f"{_fmt(row['gpu_after_tokens_s'])} | "
+                f"{row['gpu_after_topology']} | "
+                f"{_fmt_ratio(row['gpu_correction_x'])} | "
+                f"{_fmt_ratio(row['ratio_before'])} | "
+                f"{_fmt_ratio(row['ratio_after'])} | "
+                f"{_fmt_ratio(row['ratio_change_x'])} |"
+            )
+        changes = [
+            row["ratio_change_x"] for row in ladder if row.get("ratio_change_x")
+        ]
+        if changes:
+            lines.extend(
+                [
+                    "",
+                    "**Did the error cancel in the ratio?** If it had, `Ratio change`"
+                    " would be 1.00x on every row. It runs from"
+                    f" {min(changes):.2f}x to {max(changes):.2f}x across this ladder."
+                    " It does not cancel, for the reason the two families reach equal"
+                    " area at very different device counts and therefore at very"
+                    " different slot counts, and because the correction changes which"
+                    " topology each side picks -- a change that lands on whichever"
+                    " side was relying on depth.",
+                    "",
+                ]
+            )
+
     lines.extend(
         [
             "",
@@ -2669,6 +2954,17 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "is allowed to cross more stage boundaries than the model has layers --",
             "which is what this study charged before. That column, not the topology",
             "sweep, is where the previously published ratios came from.",
+            "",
+            "**`user tok/s` and `aggregate tok/s` are different quantities and no",
+            "longer differ by the batch.** `user tok/s` is one user's token rate on",
+            "the full serial path through the machine. `aggregate tok/s` is the",
+            "machine's total rate with a user in every slot, which needs",
+            "`token_slots` concurrent users; where the batch is smaller than that,",
+            "the surplus slots idle and what the machine actually delivers at the",
+            "stated batch is `batch x user tok/s`, carried per point as",
+            "`delivered_tokens_s`. Read the per-user ratio for a latency claim and",
+            "the aggregate ratio for a throughput claim; reading either as the other",
+            "is the error this study made.",
             "",
             "| Model | B | Pick | ROM design | ROM mm2 | ROM user tok/s | "
             "ROM aggregate tok/s | ROM binds on | GPU | GPU mm2 | Area ratio | "
@@ -2795,11 +3091,18 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
                 "## The GPU's own topology choice, at batch 1",
                 "",
                 "Every cluster size in the study, under each parallelism it can",
-                "actually run. `pipeline` is what this study charged the GPU before,",
-                "at every size; `hybrid` is tensor-parallel inside the NVLink domain",
-                "and pipeline-parallel across it, which is what a real deployment of",
-                "this size runs. A blank cell is a topology that collapses onto",
-                "another at that size and is not emitted twice.",
+                "actually run, at **per-user** rate. `pipeline` is what this study",
+                "charged the GPU before, at every size; `hybrid` is tensor-parallel",
+                "inside the NVLink domain and pipeline-parallel across it, which is",
+                "what a real deployment of this size runs. A blank cell is a topology",
+                "that collapses onto another at that size and is not emitted twice.",
+                "",
+                "**This table is where the latency separation shows up most",
+                "plainly.** A pipeline column is now a machine cut into as many slots",
+                "as it has GPUs, and a token visits every one of them; the whole",
+                "cluster's HBM bandwidth is on that token's path only under `tensor`,",
+                "which is why a 672-GPU pipeline reads as fractions of a token per",
+                "second while the same silicon tensor-parallel reads in the hundreds.",
                 "",
                 "| Model | GPUs | mm2 | Pipeline tok/s | Tensor tok/s | Hybrid tok/s | "
                 "Best | Best link us | Link share | Binds on |",
@@ -3211,13 +3514,18 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "  x thermal_scale` is the only path from power to any other quantity, no",
             "  tokens/s in this report depends on the energy model -- and no watt or",
             "  joule-per-token in it should be quoted.",
-            "- **A pipeline's service time is charged on the machine's aggregate",
-            "  resources, which is the steady-state throughput view, while its hops are",
-            "  charged on the single-token latency view.** A balanced S-stage",
-            "  pipeline's per-user latency is S times what is reported. The bias runs",
-            "  the same way on both families and grows with device count, and it is why",
-            "  the topology sweep above ranks pipeline first at every size. Whether it",
-            "  cancels in the iso-area ratio is not established.",
+            "- **Aggregate throughput is reported at steady state with every slot",
+            "  occupied, and fill and drain are not charged.** A request that is short",
+            "  compared with the slot count pays up to one extra traversal that this",
+            "  model does not bill, which flatters a deep pipeline. The delivered rate",
+            "  at the requested concurrency is reported separately and is not affected.",
+            "- **The weight replication a deep pipeline implies is not charged against",
+            "  capacity.** Beyond the layer count the surplus partitions hold replicas",
+            "  of a stage, and each replica needs its own copy of that stage's weights;",
+            "  the capacity check credits the machine with holding the model once. This",
+            "  favours the deepest pipelines, which are on the GPU side of this",
+            "  comparison, so correcting it would widen the ROM ratios rather than",
+            "  narrow them.",
             "- Prefill, speculative decoding and cost are out of scope for this model.",
             "",
         ]
@@ -3259,6 +3567,43 @@ def _findings(result: dict[str, Any]) -> list[str]:
         "scaling buys a ROM design capacity, not per-token speed.",
     ]
 
+    # The latency separation, stated first because it moved every other number
+    # in this report and because the correction is not symmetric between the
+    # two families.
+    corrections: dict[str, list[dict[str, Any]]] = {"rom": [], "gpu": []}
+    for row in result["points"]:
+        if row["batch_size"] != 1 or not row["feasible"]:
+            continue
+        corrections.setdefault(row["family"], []).append(row)
+    if corrections["rom"] and corrections["gpu"]:
+        parts = []
+        for family, label in (("rom", "ROM"), ("gpu", "GPU")):
+            rows = corrections[family]
+            worst = max(rows, key=lambda row: row["latency_correction_x"])
+            winner = _pick_best(rows, "per_user_tokens_s", "silicon_area_mm2")
+            parts.append(
+                f"On the {label} side the correction reaches "
+                f"{worst['latency_correction_x']:,.0f}x "
+                f"({worst['design'].split('/')[-1]}, {worst['token_slots']:,.0f} "
+                f"slots), and the batch-1 design that now wins -- the smallest "
+                f"silicon within "
+                f"{BEST_DESIGN_TOLERANCE:.0%} of the best per-user rate -- runs "
+                f"`{winner['parallelism']}` on "
+                f"{winner['device_count']:,} device"
+                f"{'s' if winner['device_count'] != 1 else ''}"
+            )
+        findings.append(
+            "**Per-user latency and aggregate throughput are now separate "
+            "quantities, and separating them is the largest correction in this "
+            "report.** A token under pipeline parallelism is served by one stage's "
+            "silicon at a time and must visit every stage, so its latency is the "
+            "aggregate service time multiplied by `token_slots`, not divided by "
+            "anything. The two factors cancel exactly: **adding devices under "
+            "pipeline parallelism buys aggregate throughput and buys one user "
+            "nothing.** " + ". ".join(parts) + ". Both validation gates are "
+            "single-slot machines and are unchanged to the digit."
+        )
+
     batch_one = [
         row
         for row in result["comparisons"]
@@ -3295,6 +3640,13 @@ def _findings(result: dict[str, Any]) -> list[str]:
         and row["iso_area_gpu_feasible"]
         and row.get("per_user_speed_ratio_without_stage_cap") is not None
         and row.get("per_user_speed_ratio") is not None
+        # Read the cap off a comparator it actually binds on. Once per-user
+        # latency is charged honestly the iso-area GPU usually picks a tensor
+        # group, which has one stage and no boundary for the cap to remove, and
+        # quoting that row would describe the correction with a machine it does
+        # not apply to.
+        and row["iso_area_gpu_pipeline_stages_uncapped"]
+        > row["iso_area_gpu_pipeline_stages"]
     ]
     if symmetry:
         # The largest absolute fall, which is the one a headline is read off,
@@ -3328,6 +3680,20 @@ def _findings(result: dict[str, Any]) -> list[str]:
             "spans 681 reticle fields."
         )
 
+    if not symmetry:
+        findings.append(
+            "**The layer cap on serial stage boundaries is still applied and is "
+            "no longer visible in the headline, because no comparator it binds on "
+            "wins any more.** A token cannot cross more stage boundaries than the "
+            "model has layers, and this study charges at most that many. With "
+            "per-user latency separated from aggregate throughput, both families "
+            "now pick a topology with a tensor group at batch 1, and a tensor "
+            "group has one stage and no boundary for the cap to remove. The "
+            "`Ratio without the layer cap` column in the iso-area table therefore "
+            "equals the stated ratio wherever the winner is tensor-parallel; it "
+            "still differs wherever a pipeline wins."
+        )
+
     choice = [
         row
         for row in result["comparisons"]
@@ -3345,27 +3711,18 @@ def _findings(result: dict[str, Any]) -> list[str]:
                 f"{gain:.2f}x to it.** At "
                 f"{best_gain['rom_silicon_area_mm2']:,.0f} mm2 on "
                 f"{best_gain['model']} the pipeline-only GPU delivers "
-                f"{best_gain['pipeline_only_gpu_per_user_tokens_s']:,.0f} tok/s and "
+                f"{best_gain['pipeline_only_gpu_per_user_tokens_s']:,.2f} tok/s and "
                 f"the same silicon running "
                 f"{best_gain['iso_area_gpu_parallelism']} delivers "
                 f"{best_gain['iso_area_gpu_per_user_tokens_s']:,.0f} tok/s."
             )
         else:
             findings.append(
-                "**Giving the GPU the same topology sweep the ROM side gets changes "
-                "almost nothing, and that is itself a result about this model.** "
-                "Pipeline, tensor and hybrid are all evaluated at every cluster size "
-                f"and the best is never more than {gain:.2f}x the pipeline-only "
-                "answer. The reason is structural: this model computes the service "
-                "time on the machine's **aggregate** memory bandwidth and compute "
-                "roof whatever the parallelism, so tensor parallelism buys a token "
-                "nothing here and only costs it two all-reduces per layer. The "
-                "asymmetry that mattered was never the choice of topology -- it was "
-                "the serial depth each topology was charged, and that is what the "
-                "layer cap above fixes. A model that priced a pipeline stage's "
-                "service time on that stage's own silicon would rank these "
-                "topologies differently, and this one does not; see the open item on "
-                "the pipeline service-time rule."
+                "**Giving the GPU the same topology sweep the ROM side gets is worth "
+                f"at most {gain:.2f}x to it at this batch.** Pipeline, tensor and "
+                "hybrid are evaluated at every cluster size and the best is taken. "
+                "Where the gain is small the cluster is small enough that its single "
+                "stage already holds the model."
             )
 
     high_batch = [
@@ -3413,10 +3770,16 @@ def _findings(result: dict[str, Any]) -> list[str]:
             f"{low['engaged_weight_fraction'] * 100:.1f}% of its ROM array at batch 1 "
             f"and {high['engaged_weight_fraction'] * 100:.1f}% at batch "
             f"{high['batch_size']}, while the weight-read time is identical at both. "
-            f"Aggregate throughput rises from {low['aggregate_tokens_s']:,.0f} to "
-            f"{high['aggregate_tokens_s']:,.0f} tok/s on the same machine. An "
-            "unselected expert's read ports cannot be borrowed, so its idle "
-            "bandwidth is only recovered by giving the sweep more users."
+            f"What the machine delivers rises from "
+            f"{low['delivered_tokens_s']:,.0f} to {high['delivered_tokens_s']:,.0f} "
+            f"tok/s, and its rate with every slot occupied from "
+            f"{low['aggregate_tokens_s']:,.0f} to {high['aggregate_tokens_s']:,.0f}. "
+            "The second rises far less than the first because the batch-1 figure "
+            "is already a full-machine number -- this design has "
+            f"{low['token_slots']:,.0f} slots -- so most of what batching adds "
+            "there is coverage rather than occupancy. An unselected expert's read "
+            "ports cannot be borrowed, so its idle bandwidth is only recovered by "
+            "giving the sweep more users."
         )
         break
 
@@ -3492,8 +3855,11 @@ def _findings(result: dict[str, Any]) -> list[str]:
             "81,966 tok/s came from charging a stitched 2-D mesh one flat hop "
             "however many reticle fields the collective spanned. A mesh has no "
             "switch, so an all-reduce costs about 1.1 times its diameter, and the "
-            "model now charges that. Both studies consequently choose pipeline "
-            "over tensor parallelism on the wafer at every operating point."
+            "model now charges that. What the collective buys is what makes it "
+            "worth paying: with per-user latency separated from aggregate "
+            "throughput, a tensor group is the only arrangement that puts the "
+            "whole machine on one token, and the topology tables below show both "
+            "families choosing one at batch 1 in spite of this cost."
         )
     findings.append(
         "**Which topology wins depends entirely on what is being maximised, and "
@@ -3697,6 +4063,13 @@ CSV_FIELDS = (
     "feasible",
     "per_user_tokens_s",
     "aggregate_tokens_s",
+    "delivered_tokens_s",
+    "per_user_tokens_s_throughput_view",
+    "latency_correction_x",
+    "token_slots",
+    "microbatch_per_slot",
+    "pipeline_fill_users",
+    "pipeline_fill_limited_by",
     "step_time_s",
     "binding_constraint",
     "power_w",

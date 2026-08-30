@@ -7,7 +7,9 @@ and did not do it, and section 1 is the retraction that resulted.
 
 The model reproduces an A100's weight-bound decode exactly (253.91 tok/s against
 253.91) and the Taalas HC1 at **0.72×** of its published 16,960 tok/s per user,
-within a 2× gate that is not relaxed anywhere in this program. The KV accounting
+within a 2× gate that is not relaxed anywhere in this program. Both gates are
+single-device machines and neither moved when per-user latency was separated
+from aggregate throughput; every *multi-device* number in this document did. The KV accounting
 is validated against executed hardware to a ratio of exactly 1.0000 on both Qwen
 lanes in `results/roofline/qwen3_execution_validation.json`.
 
@@ -153,7 +155,9 @@ range where the per-region argument is made.)
 
 From the model, DeepSeek-V4-Flash:
 
-| B | mean engaged region | busiest region | correction |
+DeepSeek-Flash, 256 experts, 6 per token:
+
+| users in one array pass | mean engaged region | busiest region | correction |
 |---:|---:|---:|---:|
 | 1 | 1.000 | 1.000 | 1.00× |
 | 8 | 1.085 | 2.134 | 1.97× |
@@ -161,8 +165,19 @@ From the model, DeepSeek-V4-Flash:
 | 64 | 1.921 | 5.831 | **3.04×** |
 | 256 | 6.014 | 13.844 | 2.30× |
 
-At B=1 the depth is exactly one pass, which is why all three machines agree at
-batch 1 and why the published anchor cannot choose between them.
+**The left column is users in one array pass, and it is not the batch on a
+distributed machine.** Since per-user latency was separated from aggregate
+throughput (`TECHNICAL_DIRECTION_RECOMMENDATION.md` §0.12), a design cut into
+`token_slots` slots spreads its batch across them and one pass serves
+`batch / token_slots` users. On a 57-region wafer running as a pipeline that is
+one user per pass up to batch 57, no two tokens can collide on a region, and the
+sweep depth is 1.00 whatever the batch. The statistic above is unchanged — it is
+checked against a Monte Carlo of the routing in `tests/test_roofline.py` — but
+**where a given design sits on it moved, and that is what cut the per-region
+value in section 3.**
+
+At one user per pass the depth is exactly one, which is why all three machines
+agree at batch 1 and why the published anchor cannot choose between them.
 
 `expert_load_balance` is retired. Its replacement,
 `efficiencies.expert_router_imbalance`, is a multiplier applied **on top of** the
@@ -219,6 +234,14 @@ N6 against iso-area A100. Matching the floorplan matters: comparing a per-region
 machine that replicated its array against a broadcast one that did not would mix
 the amortisation question with the allocation question and hide both.
 
+`Aggregate` here means what the study now means by it: **the machine's rate with
+a user in every slot**, not `batch × per-user rate`. The two stopped being the
+same number in `TECHNICAL_DIRECTION_RECOMMENDATION.md` §0.12, and the design
+that maximises aggregate throughput is frequently not the design that gives one
+user the best latency. Per-region activation is a throughput mechanism, so
+aggregate is the right column for it — but it is the wrong column for any claim
+about time to first token.
+
 | model | B | spare | ROM+MAC | CIM broadcast | **CIM per-region** | per-region over broadcast |
 |---|---:|---|---:|---:|---:|---:|
 | Qwen3-8B @8K (dense) | 1 | sram | 11,364 | 11,364 | 11,364 | **1.00×** |
@@ -247,17 +270,25 @@ any claim that a dense model benefits from per-region activation is wrong on the
 face of the design. Differentiation can only appear on the MoE models, which is
 why the sizing fault in section 2 was the one that decided the question.
 
-**It is not free ground.** Against the amortising ROM-plus-MAC machine at a
-matched floorplan, per-region wins 26 of 30 operating points and **loses 4** —
-DeepSeek-Flash at batch 8 (44,793 against 87,123) is the clearest. The previous
-version of this document reported it as never losing.
+**It is not free ground, and it is now losing ground.** Against the amortising
+ROM-plus-MAC machine at a matched floorplan, per-region **loses at 43 of 48
+operating points.** The previous version of this document reported it as losing
+at 4 of 30, and the version before that as never losing. Two corrections put it
+there: the busiest-region statistic replacing the mean, and the separation of
+per-user latency from aggregate throughput, which lets an amortising machine
+fill a deep pipeline's slots with users that a compute-in-ROM machine has to
+sweep for one at a time.
 
-**Under a replicated array the two converge, because neither is weight-bound any
-more.** At `spare = rom` on Flash at batch 64 both reach 372,307 tok/s and both
-bind on `kv_read`. Per-region's value is specifically in the regime where the
-array sweep is what binds; buy your way out of that regime with silicon and the
-per-region port earns nothing. That is a design boundary, and it is the one the
-study is most useful for finding.
+**RETRACTED: "under a replicated array the two converge."** That said both reach
+372,307 tok/s on Flash at batch 64 with `spare = rom` and both bind on
+`kv_read`. They do not converge on aggregate any more — 273,946 against 57,740
+— because the throughput-optimal amortising design at that point is a
+twelve-wafer pipeline with every slot occupied while the per-region design is a
+single wafer. What is true, and is what that sentence should have said, is that
+per-region's value is specifically in the regime where the array sweep binds:
+buy your way out of that regime with silicon and the per-region port earns
+nothing. That is a design boundary and it is the one the study is most useful
+for finding.
 
 ---
 
