@@ -90,6 +90,7 @@ from runtime.abi3.constants import IntegrityMode
 from runtime.abi3.deployment import Deployment, ObjectSource
 from runtime.abi3.descriptors import ExtendedDescriptorType
 from runtime.abi3.descriptors import (
+    iteration_extent,
     LayoutClass,
     MAX_RANK,
     Phase,
@@ -445,6 +446,46 @@ def _binary32_bits(attributes: Mapping[str, Any], keys: Sequence[str]) -> int:
 # ---------------------------------------------------------------------------
 # Operand geometry (TA-ABI3-OPCONV-1) and token blocking (amendment A13)
 # ---------------------------------------------------------------------------
+@dataclass(frozen=True)
+class RequestAxis:
+    """A neutral axis name resolved to an A5 symbol and an A18 unit.
+
+    Amendment A18 states an axis's extent as an affine function of one bound
+    symbol, ``numerator * value / unit + bias``: ``unit`` is how many of the
+    symbol's units one element of the axis holds, and ``bias`` is elements the
+    operand carries whatever the request is.  A compressed group of four tokens
+    is ``SPAN_TOKENS`` in units of four; a KV join carrying a 128-row sliding
+    window beside the span is ``SPAN_TOKENS`` with a bias of 128.
+
+    A18 put this on the view rather than in the registry, and section 4 is why
+    -- ``span_groups_ratio4`` names one model's compression ratio, and the
+    frozen registries do not name a model.  An affine image of a symbol already
+    in the registry is not a new symbol.
+    """
+
+    symbol: Symbol
+    unit: int = 1
+    numerator: int = 1
+    bias: int = 0
+
+    @property
+    def is_identity(self) -> bool:
+        """Is the extent the symbol's own value, unscaled and unbiased?
+
+        This asks about the *function*, not about which symbol it reads.  A KV
+        cache counting one row per context token is the identity in
+        ``CONTEXT_LENGTH`` and needs nothing A13 did not already do; comparing
+        the whole description instead would call it non-identity because the
+        symbol differs from the span, and hand it a resolving loop it does not
+        need.  Qwen's every state plane is that case.
+        """
+        return self.numerator == 1 and self.unit == 1 and self.bias == 0
+
+
+#: A13's own affine function: the axis counts the symbol's own units.
+IDENTITY_AXIS = RequestAxis(Symbol.SPAN_TOKENS)
+
+
 @dataclass(frozen=True, slots=True)
 class KernelShape:
     """Everything an operator's views need that the kernel alone does not say."""
@@ -465,29 +506,19 @@ class KernelShape:
     #: multiple of a token it holds -- six routed copies for a dispatched
     #: activation, one for the token that produced them.  See ``_shape_of``.
     per_token: bool = False
-    #: Amendment A18's unit: how many of ``symbol``'s units one element of the
-    #: blocked axis holds.  ``rows``, ``block`` and every view extent are in the
-    #: *axis's* units; the loop's ``bound_divisor`` is in the symbol's, so it is
-    #: ``block * unit``.  One for a token axis, four for a ratio-4 group axis.
-    unit: int = 1
+    #: Amendment A18's affine description of the *principal's* leading axis.
+    #: ``rows``, ``block`` and every view extent are in an axis's own elements;
+    #: ``divisor`` is the loop's block in the bound symbol's units, and each
+    #: operand derives its own step from it through its own affine function.
+    axis: RequestAxis = IDENTITY_AXIS
+    #: The loop's ``bound_divisor``: how many of ``symbol``'s units one
+    #: iteration advances.  Deriving every operand's block from this, rather
+    #: than from the principal's declared maximum, is what lets two operands of
+    #: a *join* disagree about their maxima and still be blocked consistently.
+    divisor: int = 1
 
 
 #: Neutral symbol name -> the frozen runtime-symbol registry.
-@dataclass(frozen=True)
-class RequestAxis:
-    """A neutral axis name resolved to an A5 symbol and an A18 unit.
-
-    ``unit`` is how many of the symbol's units one element of the axis holds:
-    a compressed group of four tokens is ``SPAN_TOKENS`` in units of four.
-    Amendment A18 (wire format section 12.8) put the unit on the view rather
-    than in the registry, and section 4 is why -- ``span_groups_ratio4`` names
-    one model's compression ratio, and the frozen registries do not name a
-    model.  A division of a symbol already in the registry is not a new symbol.
-    """
-
-    symbol: Symbol
-    unit: int = 1
-
 
 SYMBOL_BY_NAME: Mapping[str, RequestAxis] = {
     "span_tokens": RequestAxis(Symbol.SPAN_TOKENS),
@@ -503,17 +534,36 @@ SYMBOL_BY_NAME: Mapping[str, RequestAxis] = {
     "position_end": RequestAxis(Symbol.POSITION_END),
     "generation_index": RequestAxis(Symbol.GENERATION_INDEX),
     "batch": RequestAxis(Symbol.BATCH),
-    # The compressor's group counts.  Each is a registered symbol divided by a
-    # pinned compression ratio, which is exactly what an A18 unit states; before
-    # the amendment there was no way to say it and all 704 tensors leading with
-    # one of these presented their declared maximum -- 65,536 groups for a
-    # 4-token request.  The ``attention_rows_*`` and ``selected_rows_*`` names
-    # are deliberately absent: they are ``REDUCTION.GROUPED_CONCAT`` output
-    # extents, and A17 already makes a join's output the sum of its inputs.
+    # The compressor's group counts: a registered symbol divided by a pinned
+    # compression ratio, which is what an A18 unit states.
     "span_groups_ratio4": RequestAxis(Symbol.SPAN_TOKENS, 4),
     "span_groups_ratio128": RequestAxis(Symbol.SPAN_TOKENS, 128),
     "context_groups_ratio4": RequestAxis(Symbol.CONTEXT_LENGTH, 4),
     "context_groups_ratio128": RequestAxis(Symbol.CONTEXT_LENGTH, 128),
+    # The attention KV join's output rows.  These were left undeclared on the
+    # reading that A17 already makes a join's output the sum of its inputs.
+    # That reading is wrong, and section 18 of the operand conventions says so
+    # in terms: A17 names the axis a join consumes and is a *check* evaluated
+    # against what the operands resolve to, not a derivation -- a view's extent
+    # is the view's own statement and no operator rewrites one.  Undeclared,
+    # every operand of the join presented its maximum, the sums agreed, A17
+    # passed, and layer 2's attention read 327,808 rows of mostly zeros for a
+    # 4-token request with nothing refusing it.  Measured, not reasoned: the
+    # resolved operands were (262144, 128, 65536) summing to the output's
+    # 327,808 when the request had 133 rows.
+    #
+    # ``window`` is the span joined to a 128-row sliding window, which is the
+    # bias: those rows are there for a span of one.  The compressed layers add
+    # ``context / ratio`` more, and in *prefill* the context is the span, so
+    # ratio-4 is ``5 * span / 4 + 128`` and ratio-128 is ``129 * span / 128 +
+    # 128``.  Decode binds the two symbols apart and A18 is exact for an affine
+    # function of one, so a decode of a compressed layer needs a phase split
+    # that prefill does not; it is not solved here because it is not needed
+    # here, and stating it speculatively would state it wrong.
+    "attention_rows_window": RequestAxis(Symbol.SPAN_TOKENS, 1, 1, 128),
+    "attention_rows_ratio4": RequestAxis(Symbol.SPAN_TOKENS, 4, 5, 128),
+    "attention_rows_ratio128": RequestAxis(Symbol.SPAN_TOKENS, 128, 129, 128),
+    "selected_rows_ratio128": RequestAxis(Symbol.SPAN_TOKENS, 128, 1, 128),
 }
 
 #: Contraction subopcodes: the operations whose operands are stated as matrices.
@@ -1663,6 +1713,8 @@ class RomLowering:
         scale_block_rows: int = 0,
         extent_axis: int = 0,
         extent_unit: int = 0,
+        extent_numerator: int = 0,
+        extent_bias: int = 0,
         label: str = "view",
     ) -> int:
         # Amendment A8 freezes block-scale addressing: one scale byte per
@@ -1686,6 +1738,8 @@ class RomLowering:
             int(layout),
             extent_axis,
             extent_unit,
+            extent_numerator,
+            extent_bias,
         )
         if key in self._view_cache:
             return self._view_cache[key]
@@ -1707,6 +1761,8 @@ class RomLowering:
             scale_block_rows=scale_block_rows,
             extent_axis=extent_axis,
             extent_unit=extent_unit,
+            extent_numerator=extent_numerator,
+            extent_bias=extent_bias,
             permissions=permissions,
             key=f"{label}.{len(self._view_cache):05d}",
         )
@@ -1991,6 +2047,29 @@ class RomLowering:
                 cursor[direction] += width
         self._state_column = columns
 
+    def _request_sized_planes(self, kernel: Kernel) -> list[str]:
+        """Operands that are state planes whose leading extent the request sets.
+
+        A state plane presents the resource's whole capacity, which is right for
+        a KV window addressed by absolute position and wrong for a *compressed*
+        cache: its capacity counts one row per group of ``ratio`` context
+        tokens, so a request that has filled one of 65,536 groups must present
+        one.  Nothing shortened them, so the attention join summed 65,668 rows
+        for a request with 133 -- A17's check passed, because it is a check on
+        what the operands say and they all said their maximum.
+        """
+        named: list[str] = []
+        for name in (*kernel.inputs, *kernel.outputs):
+            tensor = self.tensors.get(name)
+            if tensor is None or tensor.role != "state":
+                continue
+            symbol, _multiplier, axis = self._leading_symbol(tensor)
+            if symbol is None or axis.is_identity:
+                continue
+            if self._state_owner.get(name) is not None:
+                named.append(name)
+        return named
+
     def _writes_resource(self, kernel: Kernel, name: str) -> bool:
         """Is this output of a state-writing kernel *the resource*, or a value?
 
@@ -2054,6 +2133,8 @@ class RomLowering:
         batch_lead: bool = False,
         extent_axis: int = 0,
         extent_unit: int = 0,
+        extent_numerator: int = 0,
+        extent_bias: int = 0,
         extra_terms: Sequence[DynamicTerm] = (),
     ) -> int | None:
         """One plane of a merged state resource, moved by the layer loop.
@@ -2132,6 +2213,8 @@ class RomLowering:
             permissions=int(Permission.READ | Permission.WRITE),
             extent_axis=extent_axis,
             extent_unit=extent_unit,
+            extent_numerator=extent_numerator,
+            extent_bias=extent_bias,
             label="view.state",
         )
 
@@ -2173,15 +2256,17 @@ class RomLowering:
         return loop, steps.pop()
 
     # -- token blocking and operand geometry ------------------------------
-    def _leading_symbol(self, tensor: Tensor) -> tuple[int | None, int, int]:
-        """The runtime symbol of a tensor's leading axis, its multiplier, unit."""
+    def _leading_symbol(
+        self, tensor: Tensor
+    ) -> tuple[int | None, int, RequestAxis]:
+        """The runtime symbol of a tensor's leading axis, multiplier and affine."""
         if not tensor.shape or not isinstance(tensor.shape[0], Symbolic):
-            return None, 1, 1
+            return None, 1, IDENTITY_AXIS
         axis = tensor.shape[0]
         request = SYMBOL_BY_NAME.get(axis.symbol)
         if request is None:
-            return None, int(axis.multiplier or 1), 1
-        return int(request.symbol), int(axis.multiplier or 1), int(request.unit)
+            return None, int(axis.multiplier or 1), IDENTITY_AXIS
+        return int(request.symbol), int(axis.multiplier or 1), request
 
     def _principal(self, kernel: Kernel) -> Tensor | None:
         """The operand whose leading extent sets this operator's row geometry.
@@ -2211,10 +2296,10 @@ class RomLowering:
         contraction = family is Major.TENSOR and engine.sub in CONTRACTION_SUBOPS
         principal = self._principal(kernel)
         principal_dims = tuple(self._dims(principal)) if principal is not None else (1,)
-        symbol, multiplier, unit = (
+        symbol, multiplier, axis = (
             self._leading_symbol(principal)
             if principal is not None
-            else (None, 1, 1)
+            else (None, 1, IDENTITY_AXIS)
         )
         # A13 states the resolved leading extent as ``symbol - iteration *
         # bound_divisor``, so a *multiplied* symbolic extent -- six routed
@@ -2232,30 +2317,41 @@ class RomLowering:
         # give one operand a shorter maximum than the capability's context
         # bound, and a view that presented the capability's rows would run off
         # that operand's object.
-        rows_bound = self._symbolic_row_bound(
-            kernel, symbol if symbol is not None else -1, unit
-        )
+        # The loop's block is stated in the *bound symbol's* units and the trip
+        # follows from the symbol's own maximum.  Taking either from the
+        # principal's declared extent is what gave a group axis a quarter of the
+        # iterations it needs and an attention join one block too many -- the
+        # extra block being exactly its 128-row window, which is a bias and not
+        # a step.
+        symbol_max = int(self.capability.limits["max_context_positions"])
         configured = int(self.policy.token_block_rows or 0)
-        block = max(min(configured or rows_bound, rows_bound), 1)
-        # A view's row term advances by ``block * row width`` elements and that
+        divisor = max(min(configured or symbol_max, symbol_max), 1)
+        # A view's row term advances by ``step * row width`` elements and that
         # stride is a 32-bit field, so the block is halved until every operand's
         # stride fits.  Halving costs iterations, never correctness; refusing
         # would cost the whole compression.
         widest = self._widest_row(kernel)
-        while block > 1 and block * widest > 0xFFFFFFFF:
-            block //= 2
+        while divisor > 1 and divisor * widest > 0xFFFFFFFF:
+            divisor //= 2
         declared_rows = principal_dims[0] if principal_dims else 1
-        trip = max(-(-rows_bound // block), 1) if row_symbolic else 1
-        rows = min(block, rows_bound) if row_symbolic else max(declared_rows, 1)
+        trip = max(-(-symbol_max // divisor), 1) if row_symbolic else 1
         if per_token:
             # One token per iteration, and the loop counts tokens rather than
             # blocks.  The trip is the capability's loop bound because that is
             # the most tokens one instruction may walk; a longer span needs a
             # second dispatch, not a longer loop.
-            block = 1
+            divisor = 1
             trip = max(
-                min(rows_bound, int(self.capability.limits["max_loop_trip"])), 1
+                min(symbol_max, int(self.capability.limits["max_loop_trip"])), 1
             )
+        probe = KernelShape(
+            contraction=False, rows=1, cols=1, depth=0, transposed=False,
+            row_symbolic=row_symbolic, block=1, trip=trip, symbol=0,
+            principal=(), per_token=per_token, axis=axis, divisor=divisor,
+        )
+        block = self._axis_block(probe, axis) if row_symbolic else 1
+        rows = min(block, declared_rows) if row_symbolic else max(declared_rows, 1)
+        if per_token:
             rows = multiplier
 
         cols = principal_dims[-1] if len(principal_dims) > 1 else 1
@@ -2321,7 +2417,8 @@ class RomLowering:
             symbol=symbol if symbol is not None else int(Symbol.SPAN_TOKENS),
             principal=principal_dims,
             per_token=per_token,
-            unit=unit,
+            axis=axis,
+            divisor=divisor,
         )
 
     def _symbolic_row_bound(self, kernel: Kernel, symbol: int, unit: int) -> int:
@@ -2340,8 +2437,8 @@ class RomLowering:
             tensor = self.tensors.get(name)
             if tensor is None or tensor.role in WEIGHT_ROLES:
                 continue
-            leading, multiplier, operand_unit = self._leading_symbol(tensor)
-            if leading != symbol or operand_unit != unit or multiplier != 1:
+            leading, multiplier, operand_axis = self._leading_symbol(tensor)
+            if leading != symbol or operand_axis.unit != unit or multiplier != 1:
                 continue
             bound = min(bound, self._dims(tensor)[0])
         return max(bound, 1)
@@ -2389,14 +2486,16 @@ class RomLowering:
             # unit``.  Amendment A18's walk test and its clamp both read the
             # divisor in the symbol's units; with unit one this is what A13
             # always wrote.
-            bound_divisor=shape.block * shape.unit,
+            bound_divisor=shape.divisor,
             counter_class_id=self._counter_class("instruction", Major.CONTROL),
             key=f"loop.block.k{kernel.index:05d}",
         )
         self.builder.open_loop(loop)
         return loop
 
-    def _open_context_loop(self, kernel: Kernel, capacity: int, unit: int) -> int:
+    def _open_context_loop(
+        self, kernel: Kernel, capacity: int, axis: RequestAxis
+    ) -> int:
         """A loop whose only job is to resolve a *context*-sized axis.
 
         Amendment A18 shortens an axis only through a loop term that walks it,
@@ -2415,8 +2514,8 @@ class RomLowering:
             upper_bound=trip,
             step=1,
             max_iterations=trip,
-            bound_symbol=Symbol.CONTEXT_LENGTH,
-            bound_divisor=capacity * unit,
+            bound_symbol=Symbol(axis.symbol),
+            bound_divisor=capacity * axis.unit // max(axis.numerator, 1),
             counter_class_id=self._counter_class("instruction", Major.CONTROL),
             key=f"loop.context.k{kernel.index:05d}",
         )
@@ -2589,14 +2688,16 @@ class RomLowering:
         """The block term that moves a view's leading axis, if it has one."""
         if loop is None or not shape.row_symbolic:
             return None
-        symbol, multiplier, unit = self._leading_symbol(tensor)
+        symbol, multiplier, axis = self._leading_symbol(tensor)
         if symbol is None or (multiplier != 1 and not shape.per_token):
             return None
         width = 1
         for extent in self._dims(tensor)[1:]:
             width *= extent
-        block = self._axis_block(shape, unit)
-        stride = block * width * (multiplier if shape.per_token else 1)
+        # The *step*, not the block: A18's walk test reads what one iteration
+        # advances, and a bias advances nothing.
+        step = self._axis_step(shape, axis)
+        stride = step * width * (multiplier if shape.per_token else 1)
         if stride > 0xFFFFFFFF:
             raise RomLoweringError(
                 f"tensor {tensor.tensor_id!r} needs a token-block element stride "
@@ -2620,6 +2721,8 @@ class RomLowering:
         extra_terms: Sequence[DynamicTerm] = (),
         extent_axis: int = 0,
         extent_unit: int | None = None,
+        extent_numerator: int = 0,
+        extent_bias: int = 0,
     ) -> int:
         object_id = self._buffer(tensor.tensor_id)
         permissions = (
@@ -2652,8 +2755,10 @@ class RomLowering:
             # By default the declared extent is the tensor's *leading* axis, in
             # that axis's own unit, resolved by the row term.  A view with no
             # term declares nothing: A18 refuses a declaration nothing resolves.
-            _symbol, _multiplier, unit = self._leading_symbol(tensor)
-            extent_unit = unit if terms else 0
+            _symbol, _multiplier, declared = self._leading_symbol(tensor)
+            extent_unit = declared.unit if terms else 0
+            extent_numerator = declared.numerator if terms else 0
+            extent_bias = declared.bias if terms else 0
             if not terms:
                 extent_axis = 0
         return self._view(
@@ -2669,6 +2774,8 @@ class RomLowering:
             scale_block_rows=row_block if scale_object != NO_ID else 0,
             extent_axis=extent_axis,
             extent_unit=extent_unit,
+            extent_numerator=extent_numerator,
+            extent_bias=extent_bias,
             label="view.buf",
         )
 
@@ -2703,28 +2810,33 @@ class RomLowering:
         # row-major from the axis it splits.
         return [dims[0], 1, *dims[1:]], [strides[0], strides[0], *strides[1:]]
 
-    def _axis_block(self, shape: KernelShape, unit: int) -> int:
-        """The kernel's token block, counted in an operand axis's own units.
+    def _axis_step(self, shape: KernelShape, axis: RequestAxis) -> int:
+        """Elements of *this* operand's axis one loop iteration advances.
 
-        ``shape.block`` is in the *principal's* units.  A kernel may hold
-        operands in two -- the compressor's state update reads a token-major
-        packed row and writes group-major pools -- and one block of the loop is
-        one span of the symbol either way, so the same block is
-        ``block * shape.unit`` symbol units and ``block * shape.unit / unit``
-        elements of an axis counted in units of ``unit``.  Converting here is
-        what keeps A18's walk test an identity: the term stride this produces
-        and the divisor the loop carries are the same quantity in two units.
+        Amendment A18's ``iteration_extent``: ``numerator * bound_divisor /
+        unit``.  Every operand derives its own step from the one divisor the
+        loop carries, which is why two operands of a join may declare different
+        maxima and still be blocked consistently -- the old rule compared their
+        maxima to the kernel's and blocked only the one that agreed, which is
+        how a join's output came to clamp while its inputs did not.
+
+        The bias is deliberately not here.  It is elements the operand carries
+        whatever the request is -- a KV join's 128-row sliding window is present
+        for a span of one -- so it belongs to the extent, not to the step.
         """
-        symbol_units = int(shape.block) * int(shape.unit)
-        divisor = max(int(unit), 1)
-        if symbol_units % divisor:
+        step = iteration_extent(shape.divisor, axis.numerator, axis.unit)
+        if step is None:
             raise RomLoweringError(
-                f"a token block of {shape.block} in units of {shape.unit} is "
-                f"{symbol_units} symbol units, which is not a whole number of "
-                f"{divisor}-unit elements; amendment A18 needs one iteration to "
-                "be a whole number of the axis it walks"
+                f"a loop block of {shape.divisor} symbol units is not a whole "
+                f"number of elements of an axis counted as {axis.numerator}/"
+                f"{axis.unit}; amendment A18 needs one iteration to be a whole "
+                "number of the axis it walks"
             )
-        return max(symbol_units // divisor, 1)
+        return max(step, 1)
+
+    def _axis_block(self, shape: KernelShape, axis: RequestAxis) -> int:
+        """The operand's declared extent for one iteration: step plus bias."""
+        return self._axis_step(shape, axis) + int(axis.bias)
 
     def _batch_leads(
         self, tensor: Tensor, shape: KernelShape
@@ -2749,10 +2861,10 @@ class RomLowering:
     def _blocked_dims(self, tensor: Tensor, shape: KernelShape) -> list[int]:
         """The tensor's declared extents with its leading axis token-blocked."""
         dims = list(self._dims(tensor))
-        symbol, multiplier, unit = self._leading_symbol(tensor)
+        symbol, multiplier, axis = self._leading_symbol(tensor)
         if not dims or symbol is None or not shape.row_symbolic:
             return dims
-        block = self._axis_block(shape, unit)
+        block = self._axis_block(shape, axis)
         if shape.per_token:
             # One token's worth of *this* operand: six routed rows, or the one
             # token they came from.
@@ -3003,7 +3115,9 @@ class RomLowering:
             strides=[stride],
             dynamic=terms,
             permissions=permissions,
-            extent_unit=shape.unit if walked else 0,
+            extent_unit=shape.axis.unit if walked else 0,
+            extent_numerator=shape.axis.numerator if walked else 0,
+            extent_bias=shape.axis.bias if walked else 0,
             label="view.index",
         )
 
@@ -3055,7 +3169,7 @@ class RomLowering:
         """
         contributions = self.tensors[kernel.inputs[0]]
         dims = self._dims(contributions)
-        _symbol, multiplier, _unit = self._leading_symbol(contributions)
+        _symbol, multiplier, _axis = self._leading_symbol(contributions)
         trailing = 1
         for extent in dims[1:]:
             trailing *= extent
@@ -3093,11 +3207,11 @@ class RomLowering:
         symbol = Symbol.SPAN_TOKENS
         unit = 1
         if kernel.outputs:
-            named, multiplier, named_unit = self._leading_symbol(
+            named, multiplier, named_axis = self._leading_symbol(
                 self.tensors[kernel.outputs[0]]
             )
             if named is not None and multiplier == 1:
-                symbol, unit = Symbol(named), named_unit
+                symbol, unit = Symbol(named), named_axis.unit
         trip = max(
             min(
                 self._symbolic_row_bound(kernel, int(symbol), unit),
@@ -3287,6 +3401,7 @@ class RomLowering:
         loop: int | None,
         family: Major,
         sub: int,
+        context: int | None = None,
     ) -> int:
         tensor = self.tensors[name]
         writable = direction == "out"
@@ -3294,7 +3409,28 @@ class RomLowering:
         # resource writes into that resource's prepared image, even when the
         # graph names the result as an ordinary activation.
         if tensor.role == "state" or (writable and kernel.state_writes):
-            view = self._state_plane_view(kernel, name, direction, run)
+            plane_axis = IDENTITY_AXIS
+            terms: tuple[DynamicTerm, ...] = ()
+            if context is not None:
+                symbol, _multiplier, declared = self._leading_symbol(tensor)
+                if symbol is not None and not declared.is_identity:
+                    plane_axis = declared
+                    terms = (
+                        DynamicTerm.loop(
+                            context,
+                            self._plane_row(tensor) * self._dims(tensor)[0],
+                        ),
+                    )
+            view = self._state_plane_view(
+                kernel,
+                name,
+                direction,
+                run,
+                extent_unit=plane_axis.unit if terms else 0,
+                extent_numerator=plane_axis.numerator if terms else 0,
+                extent_bias=plane_axis.bias if terms else 0,
+                extra_terms=terms,
+            )
             if view is not None:
                 return view
         if tensor.role in WEIGHT_ROLES:
@@ -4136,7 +4272,8 @@ class RomLowering:
         result = self.tensors[kernel.outputs[0]]
         heads, head_dim = self._dims(query)[1], self._dims(query)[2]
         candidates = self._dims(result)[1]
-        _symbol, _multiplier, unit = self._leading_symbol(key)
+        _symbol, _multiplier, key_axis = self._leading_symbol(key)
+        unit = key_axis.unit
         if unit <= 1:
             raise RomLoweringError(
                 f"kernel {kernel.kernel_id!r}: the index key leads with "
@@ -4145,7 +4282,7 @@ class RomLowering:
             )
         shape = self._shape_of(kernel, EngineOp(Major.VECTOR, Vector.INDEX_SCORE, 3, 1))
         token = self._open_token_loop(kernel)
-        context = self._open_context_loop(kernel, candidates, unit)
+        context = self._open_context_loop(kernel, candidates, key_axis)
 
         def token_term(width: int) -> DynamicTerm:
             return DynamicTerm.loop(token, width)
@@ -4313,6 +4450,18 @@ class RomLowering:
             )
             return
         loop = self._open_row_loop(kernel, shape)
+        # A state plane whose leading extent the request sets needs a loop that
+        # resolves it -- one block over the whole capacity, running once.  A18
+        # refuses a declaration nothing walks, and leaving it undeclared is what
+        # let the attention join read its maximum.
+        planes = self._request_sized_planes(kernel)
+        context = None
+        if planes:
+            plane = self.tensors[planes[0]]
+            _s, _m, plane_axis = self._leading_symbol(plane)
+            context = self._open_context_loop(
+                kernel, self._dims(plane)[0], plane_axis
+            )
         if kernel.kind == "EXPERT_DISPATCH" and len(kernel.outputs) > 1:
             self._emit_routed_row_identity(kernel, shape, loop)
         order = self._operand_order(kernel, family, engine.sub)
@@ -4335,6 +4484,7 @@ class RomLowering:
                         loop=loop,
                         family=family,
                         sub=engine.sub,
+                        context=context,
                     )
                 )
                 for abi_slot, ir_slot in enumerate(
@@ -4352,6 +4502,7 @@ class RomLowering:
                     loop=loop,
                     family=family,
                     sub=engine.sub,
+                    context=context,
                 )
                 for abi_slot, name in enumerate(kernel.outputs[:MAX_OPERATOR_OUTPUTS])
             ]
@@ -4361,8 +4512,9 @@ class RomLowering:
             engine.sub,
             inputs,
             outputs,
-            loop=loop,
+            loop=context if context is not None else loop,
             schedule_rows=schedule_rows,
+            extra_close=1 if context is not None and loop is not None else 0,
         )
 
     def _emit_operator(

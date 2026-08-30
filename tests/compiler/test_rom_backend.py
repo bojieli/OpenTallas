@@ -2207,15 +2207,92 @@ def test_the_derived_group_names_resolve_to_a_symbol_and_a_ratio() -> None:
     assert SYMBOL_BY_NAME["span_groups_ratio128"].unit == 128
     assert SYMBOL_BY_NAME["context_groups_ratio4"].symbol == Symbol.CONTEXT_LENGTH
     assert SYMBOL_BY_NAME["context_groups_ratio4"].unit == 4
-    # A token axis is the amendment's unit-one case, which encodes as zero.
-    assert SYMBOL_BY_NAME["span_tokens"].unit == 1
-    for name in (
-        "attention_rows_window",
-        "attention_rows_ratio4",
-        "attention_rows_ratio128",
-        "selected_rows_ratio128",
-    ):
-        assert name not in SYMBOL_BY_NAME
+    # A token axis is the amendment's identity case, which encodes as zero.
+    assert SYMBOL_BY_NAME["span_tokens"].is_identity
+
+    # The attention join's output rows are declared too, and this assertion
+    # used to say the opposite -- that A17 already derives a join's output from
+    # its inputs, so the extent need not be stated.  Section 18 of the operand
+    # conventions says A17 is a *check* on what the operands resolve to and not
+    # a derivation, and the cost of the other reading was measured: every
+    # operand of the join presented its maximum, the sums agreed, and layer 2
+    # read 327,808 KV rows for a request with 133.
+    #
+    # A join carries its window whatever the request is, so the window rows are
+    # a bias; the compressed layers add ``context / ratio`` more, which in
+    # prefill is the span and folds into the numerator.
+    window = SYMBOL_BY_NAME["attention_rows_window"]
+    assert (window.numerator, window.unit, window.bias) == (1, 1, 128)
+    ratio4 = SYMBOL_BY_NAME["attention_rows_ratio4"]
+    assert (ratio4.numerator, ratio4.unit, ratio4.bias) == (5, 4, 128)
+    ratio128 = SYMBOL_BY_NAME["attention_rows_ratio128"]
+    assert (ratio128.numerator, ratio128.unit, ratio128.bias) == (129, 128, 128)
+    for name, request in SYMBOL_BY_NAME.items():
+        assert request.unit >= 1 and request.numerator >= 1, name
+
+
+def test_an_operand_whose_extent_follows_the_request_declares_it(
+    deepseek_build, deepseek_graph
+):
+    """The other half of A18, and the half whose failure is silent.
+
+    ``test_every_declared_request_extent_has_a_term_that_walks_it`` checks that
+    a declaration can be resolved.  This checks the converse: that an operand
+    whose extent the request decides *has* one.  Undeclared, nothing shortens
+    it and it presents its declared maximum -- and if every operand of a join
+    does that, A17's sum still agrees and the deployment is admitted, executed
+    and wrong.  That is not hypothetical: the attention KV join was left
+    undeclared on the reading that A17 derives a join's output, and layer 2 read
+    327,808 rows for a request with 133 with nothing refusing it.  Section 18 of
+    the operand conventions settles the reading -- A17 is a check on what the
+    operands resolve to, not a derivation -- and this is that rule as a test.
+
+    Only a non-identity extent needs the amendment: an axis counting the bound
+    symbol's own units is A13, which has always shortened the leading axis.
+    """
+    from compiler.backends.rom.common.program import SYMBOL_BY_NAME
+
+    deployment, _plan = deepseek_build
+    kernels = {k.index: k for k in deepseek_graph.kernels}
+    tensors = {t.tensor_id: t for t in deepseek_graph.tensors}
+    checked = 0
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
+            continue
+        kernel = kernels.get(int(descriptor.payload["source_kernel_id"]))
+        if kernel is None:
+            continue
+        slots = [
+            (f"input_view_{i}", name) for i, name in enumerate(kernel.inputs[:4])
+        ] + [
+            (f"output_view_{i}", name) for i, name in enumerate(kernel.outputs[:2])
+        ]
+        for field, name in slots:
+            view_id = int(descriptor.payload[field])
+            if view_id == NO_ID:
+                continue
+            tensor = tensors.get(name)
+            if tensor is None or not tensor.shape:
+                continue
+            axis = tensor.shape[0]
+            request = SYMBOL_BY_NAME.get(getattr(axis, "symbol", ""))
+            if request is None or request.is_identity:
+                continue
+            payload = deployment.table.get(
+                view_id, ExtendedDescriptorType.TENSOR_VIEW
+            ).payload
+            declared = (
+                int(payload["extent_unit"])
+                or int(payload["extent_numerator"])
+                or int(payload["extent_bias"])
+            )
+            assert declared, (
+                f"{name} leads with {axis.symbol!r}, whose extent the request "
+                f"decides, and view {view_id} declares no A18 extent: it will "
+                "present its declared maximum and nothing will refuse it"
+            )
+            checked += 1
+    assert checked, "the fixture exercises no request-sized extent"
 
 
 def test_every_declared_request_extent_has_a_term_that_walks_it(
