@@ -515,6 +515,25 @@ def _position_inputs(graph: KernelGraph) -> tuple[str, ...]:
     return tuple(sorted(out))
 
 
+def _ring_moduli(graph: KernelGraph) -> set[int]:
+    """Every ring capacity the graph's cache writes address.
+
+    Re-derived from the kernel attributes rather than from the planner: a
+    destination-row map of ``absolute_position_mod_window`` says the write
+    wraps, and ``window_size`` says at what.  Any other map -- including one
+    this checker does not recognise -- implies no ring, so a table that claims
+    a modulus the graph never asks for is reported rather than accepted.
+    """
+    moduli: set[int] = set()
+    for kernel in graph.kernels:
+        if str(kernel.attributes.get("cache_row", "")) != "absolute_position_mod_window":
+            continue
+        window = int(kernel.attributes.get("window_size", 0) or 0)
+        if window > 0:
+            moduli.add(window)
+    return moduli
+
+
 def _check_generated_constants(
     graph: KernelGraph,
     deployment: Deployment,
@@ -533,45 +552,73 @@ def _check_generated_constants(
     that fabricates a table, one that binds a stale digest, and a generator
     that has drifted since the deployment was built.
     """
-    declared = {
-        tensor.generator: dict(tensor.generator_parameters)
+    # Declared as (generator, parameters) *pairs*, not as a map from generator
+    # name to parameters.  One generator name legitimately serves several
+    # constants -- DeepSeek states its rotary table twice, once unscaled and
+    # once with YaRN, both through ``deepseek_rope_coefficients_v1`` -- and
+    # keying by name kept whichever came last, so the correctly built table was
+    # reported as declaring the other one's parameters.
+    declared = [
+        (tensor.generator, dict(tensor.generator_parameters))
         for tensor in graph.tensors
         if getattr(tensor, "generator", "")
-    }
-    # One generator is legitimately *implied* rather than declared: a rank-one
-    # index input over the token axis holds the request's position range, which
-    # ADR-003 binds as a symbol.  The rule is re-derived here from the graph so
-    # that a backend cannot pass off any other fabricated table as this one.
+    ]
+    declared_names = {name for name, _ in declared}
+    # Two generators are legitimately *implied* by the graph rather than
+    # declared on a tensor.  Each rule is re-derived here from the graph so
+    # that a backend cannot pass off any other fabricated table as one of them.
+    #
+    #  * a rank-one index input over the token axis holds the request's
+    #    position range, which ADR-003 binds as a symbol; and
+    #  * a cache write whose destination-row map is
+    #    ``absolute_position_mod_window`` addresses a ring of ``window_size``
+    #    rows, and a view can offset an index vector by a symbol but cannot
+    #    reduce one, so the reduction has to be tabulated.
     positions = _position_inputs(graph)
-    if positions:
-        declared.setdefault("arange_u32_v1", None)
+    moduli = _ring_moduli(graph)
+    reach = int(capability.limits["max_context_positions"])
     for descriptor in generated:
         source = deployment.objects[descriptor.descriptor_id]
         oid = descriptor.descriptor_id
-        if not require(
-            "generated_is_declared",
-            source.generator in declared,
-            f"object {oid} names generator {source.generator!r}, which no "
-            "constant in the graph declares",
-        ):
-            continue
-        expected = declared[source.generator]
-        if expected is None:
-            # The implied position table: its only parameter is a count, and it
-            # must reach at least one context beyond the last admissible start.
+        parameters = dict(source.parameters)
+        if source.generator == "arange_u32_v1" and positions:
+            # Its only parameter is a count, and it must reach at least one
+            # context beyond the last admissible start.
             require(
                 "generated_position_extent",
-                int(source.parameters.get("count", 0))
-                > int(capability.limits["max_context_positions"]),
-                f"object {oid} holds {source.parameters.get('count')} positions; "
+                int(parameters.get("count", 0)) > reach,
+                f"object {oid} holds {parameters.get('count')} positions; "
+                "a window starting at the last admissible position runs past it",
+            )
+        elif source.generator == "ring_indices_v1" and moduli:
+            require(
+                "generated_ring_modulus",
+                int(parameters.get("modulus", 0)) in moduli,
+                f"object {oid} tabulates a ring of "
+                f"{parameters.get('modulus')} rows; the graph's window caches "
+                f"ring at {sorted(moduli)}",
+            )
+            require(
+                "generated_position_extent",
+                int(parameters.get("count", 0)) > reach,
+                f"object {oid} holds {parameters.get('count')} ring rows; "
                 "a window starting at the last admissible position runs past it",
             )
         else:
+            if not require(
+                "generated_is_declared",
+                source.generator in declared_names,
+                f"object {oid} names generator {source.generator!r}, which no "
+                "constant in the graph declares",
+            ):
+                continue
             require(
                 "generated_parameters_match",
-                dict(source.parameters) == expected,
-                f"object {oid} declares parameters {dict(source.parameters)}, the "
-                f"graph declares {expected}",
+                (source.generator, parameters) in declared,
+                f"object {oid} declares parameters {parameters}; no constant in "
+                f"the graph declares {source.generator!r} with them -- it "
+                f"declares "
+                f"{[p for name, p in declared if name == source.generator]}",
             )
         try:
             from runtime.sim.generators import digest_of as _generator_digest
@@ -745,19 +792,27 @@ def _uniform(
         for slot, name in enumerate(kernel.inputs):
             if tensors[name].role not in {"weight", "constant"}:
                 continue
-            names, extents = [], set()
+            names = []
             for block in blocks:
                 peer = block[position]
                 if slot >= len(peer.inputs):
                     return False
-                member = tensors[peer.inputs[slot]]
+                names.append(peer.inputs[slot])
+            if len(set(names)) == 1:
+                # One tensor for the whole run reads from one address in every
+                # iteration, so it carries no per-layer stride and needs no
+                # checkpoint binding to state one.  A generated constant -- the
+                # rope coefficient table -- has no binding and never will.
+                continue
+            if len(set(names)) != iterations:
+                return False
+            extents = set()
+            for member_id in names:
+                member = tensors[member_id]
                 if member.binding is None:
                     return False
-                names.append(peer.inputs[slot])
                 extents.add((member.binding.bytes, member.dtype))
-            if len(set(names)) == 1:
-                continue
-            if len(set(names)) != iterations or len(extents) != 1:
+            if len(extents) != 1:
                 return False
     return True
 

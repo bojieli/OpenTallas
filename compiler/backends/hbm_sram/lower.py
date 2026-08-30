@@ -105,8 +105,31 @@ BACKEND_ID = "hbm-sram-abi3"
 #: implementation can run at model scale.  Every substitution this table makes
 #: is recorded in the deployment notes -- a report that says only "exact" is
 #: incomplete, so the artifact names which contract it means.
+#:
+#: A7 admits *both* associations as contracts, so this is a choice between two
+#: declared associations rather than between right and wrong.  The rule for
+#: entering a key here is narrow and is about the operation, not the model: the
+#: contract must name a **plain contraction** -- a sum of products with nothing
+#: else folded into the accumulation -- because that is the only operation for
+#: which the two associations are the two A7 defines.  An exporter that pins a
+#: reference owner in the name instead of naming an A7 contract gets no library
+#: association by accident (``tensor._execution_contract`` falls back to the
+#: sequential oracle), which is correct as a default and is why the mapping has
+#: to be stated rather than inferred.
 EXECUTION_CONTRACT: Mapping[str, str] = {
     "bf16_bf16_fp32_sequential_rne_v1": "bf16_bf16_fp32_blocked_rne_v1",
+    # Plain contractions whose names pin a reference owner.  Each is a
+    # ``[rows, K] x [N, K]`` sum of products with no nonlinearity, no gating
+    # and no accumulation-order requirement of its own; the block scaling in
+    # the fourth is applied to the *operands* before the contraction, so it
+    # leaves the association untouched.
+    "matrix_bf16_linear_bf16_v1": "bf16_bf16_fp32_blocked_rne_v1",
+    "grouped_output_project_bf16_v1": "bf16_bf16_fp32_blocked_rne_v1",
+    "lm_head_bf16_vocabulary_projection_v1": "bf16_bf16_fp32_blocked_rne_v1",
+    "matrix_dense_fp8_linear_bf16_block_scaled_contraction_v1": (
+        "bf16_bf16_fp32_blocked_rne_v1"
+    ),
+    "routing_router_score_bf16_v1": "bf16_bf16_fp32_blocked_rne_v1",
 }
 
 #: Which counter namespace observes which engine family.
@@ -863,10 +886,11 @@ class _Emitter:
         would produce a meaningless timing result, which is why the planner
         chooses divisor tiles rather than leaving the field at zero.
         """
-        # A kernel whose neutral kind lowers to more than one engine -- an
-        # axis-1 concatenation, which is a set of movements -- names the family
-        # its instructions actually carry, because a SCHEDULE descriptor is
-        # typed by engine family and the verifier checks the two agree.
+        # A kernel whose neutral kind lowers to more than one engine -- a
+        # sharded contraction, whose all-gather is a pack, a collective and an
+        # unpack -- names the family its instructions actually carry, because a
+        # SCHEDULE descriptor is typed by engine family and the verifier checks
+        # the two agree.
         family = plan.engine_family if family is None else int(family)
         mask, ports = self._bank_and_port_mask(family)
         key = (family, plan.tile_rows, plan.tile_cols, plan.tile_depth, mask, ports)
@@ -1789,10 +1813,6 @@ class _Emitter:
             self._emit_state_append(plan, kernel)
             return
 
-        if self._is_column_concat(plan, kernel):
-            self._emit_column_concat(plan, kernel)
-            return
-
         builder = self.builder
         loops = self._open_loops(plan)
         # Positional, not packed: an operand carries the ABI slot the operand
@@ -1901,99 +1921,6 @@ class _Emitter:
                 source_operation_id=plan.index,
             )
             column += self._state_row_width(operand.tensor_id)
-        self._close_loops(loops, ["row"])
-        for name in kernel.outputs:
-            self._event_of_tensor[name] = event
-
-    def _is_column_concat(self, plan: KernelPlan, kernel: Kernel) -> bool:
-        """True when a ``CONCAT`` joins its inputs along the *width* axis.
-
-        ``REDUCTION.GROUPED_CONCAT`` joins along axis 0 -- that is its whole
-        row, and it is the right operation for the row-space compositions this
-        graph also has.  A concatenation along axis 1 is a different operation
-        and the engine correctly refuses to be it: joining
-        ``[tokens, 128]`` and ``[tokens, 512]`` on axis 0 gives
-        ``[2 * tokens, ...]`` with two different widths, which is not a tensor.
-
-        What an axis-1 concatenation *is*, on a machine whose operands are
-        strided views, is one write per input into its own column range of the
-        destination row -- exactly the ``key_then_value`` idiom
-        :meth:`_emit_state_append` already uses for a fused KV append, with an
-        arena object in place of a state resource.  So it needs no operator of
-        its own either: it is a movement stated in offsets.
-        """
-        if kernel.kind != "CONCAT" or len(kernel.outputs) != 1:
-            return False
-        if kernel.state_writes or int(kernel.attributes.get("axis", 0)) != 1:
-            return False
-        sources = [o for o in plan.operands if o.direction == "in"]
-        destination = next(
-            (o for o in plan.operands if o.direction == "out"), None
-        )
-        if destination is None or len(sources) < 2:
-            return False
-        return sum(o.cols for o in sources) == destination.cols
-
-    def _emit_column_concat(self, plan: KernelPlan, kernel: Kernel) -> None:
-        """Emit one movement per input into its column range of the result."""
-        builder = self.builder
-        destination = next(o for o in plan.operands if o.direction == "out")
-        object_id, base = self._object_for(destination)
-        row_width = destination.cols
-        loops = self._open_loops(plan)
-        numeric = self._kernel_numeric(plan)
-        schedule = self._schedule_for(plan, int(Major.DMA))
-        counter = self._counter_class(int(Major.DMA))
-        predicate = self._phase_predicate(plan.phases)
-        column = 0
-        event = NO_ID
-        for slot, operand in enumerate(
-            o for o in plan.operands if o.direction == "in"
-        ):
-            source = self._operand_view(plan, operand, loops, writable=False)
-            dims, _, _ = self._declared_view(plan, operand)
-            strides = [1] * len(dims)
-            running = 1
-            for axis in range(len(dims) - 1, 0, -1):
-                strides[axis] = running
-                running *= dims[axis]
-            strides[0] = row_width
-            terms: list[DynamicTerm] = []
-            row_loop = loops.get("row")
-            if row_loop is not None and "row" in operand.terms:
-                terms.append(DynamicTerm.loop(row_loop, dims[0] * row_width))
-            window = self._view(
-                object_id=object_id,
-                dtype=dtype_of(destination.dtype),
-                dims=list(dims),
-                strides=strides,
-                element_offset=base + column,
-                dynamic=terms,
-                writable=True,
-            )
-            operator = builder.operator(
-                engine_family=Major.DMA,
-                engine_sub=int(Dma.TRANSFER),
-                inputs=[source],
-                outputs=[window],
-                aux=[],
-                numeric_profile_id=numeric,
-                schedule_id=schedule,
-                counter_class_id=counter,
-                source_kernel_id=plan.index,
-                key=f"op.k{plan.index}.column{slot}",
-            )
-            event = builder.new_event()
-            builder.emit(
-                Major.DMA,
-                int(Dma.TRANSFER),
-                descriptor_id=operator,
-                wait_set_id=self._wait_set(self._producer_events(kernel)),
-                signal_event_id=event,
-                predicate_id=predicate,
-                source_operation_id=plan.index,
-            )
-            column += operand.cols
         self._close_loops(loops, ["row"])
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
@@ -2315,13 +2242,13 @@ class _Emitter:
             dynamic=[DynamicTerm.symbol(Symbol.NODE_ID, block * shard)],
             writable=True,
         )
-        # Two events for the site, which is the budget the capability admits:
-        # 4,096 events over a program whose kernels already spend 3,230 of
-        # them.  They are spent where the dependency matters most -- the
-        # collective's input and the collective's completion -- so nothing can
-        # be scheduled across the transfer itself.  The unpack signals no event
-        # of its own; it is the instruction immediately after the collective it
-        # waits on, and the microsequencer is in order.
+        # Two events for the site.  An event is a physical resource -- the
+        # scoreboard's ``signalled`` vector is one flop per event and nothing
+        # recycles an ID -- so they are spent where the dependency matters
+        # most: the collective's input and the collective's completion, so
+        # nothing can be scheduled across the transfer itself.  The unpack
+        # signals no event of its own; it is the instruction immediately after
+        # the collective it waits on, and the microsequencer is in order.
         packed = builder.new_event()
         self._emit_move(
             plan, pack_source, pack_destination, numeric, schedule, counter,

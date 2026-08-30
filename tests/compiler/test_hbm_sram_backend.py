@@ -50,6 +50,7 @@ from runtime.abi3.constants import (
     Major,
     NO_ID,
     Permission,
+    Reduction,
     StorageClass,
     TopologyClass,
 )
@@ -480,8 +481,8 @@ def movement_graph(
 
     Four backend properties are about *movement*: a broadcast that shares one
     row across an inserted axis, a select that is an offset rather than a
-    gather, a width-axis concatenation that becomes one transfer per column
-    window, and a hyper-connection whose token axis stays leading.  Each is a
+    gather, a width-axis concatenation that names its join axis (amendment
+    A17), and a hyper-connection whose token axis stays leading.  Each is a
     property of the lowering, not of any model, so each is exercised here on
     the smallest graph that has the shape -- rather than through a 3,000-kernel
     published IR, where an unrelated refusal anywhere upstream takes all four
@@ -1901,14 +1902,24 @@ def test_a_state_update_leaves_the_projection_slot_empty():
     assert [position[f"dim{a}"] for a in range(position["rank"])] == list(ape.shape)
 
 
-def test_an_axis_one_concatenation_is_one_movement_per_column_window():
-    """A width-axis join is stated in offsets, not performed by an operator.
+def test_an_axis_one_concatenation_is_one_operator_naming_its_join_axis():
+    """A width-axis join is one operator that states the axis, not a movement.
 
-    ``REDUCTION.GROUPED_CONCAT`` joined on axis 0.  A width-axis join puts two
-    operands of *different widths* side by side, which axis 0 cannot express at
-    all.  This backend's lowering is the idiom the fused KV append already
-    uses: one ``DMA.TRANSFER`` per input into its own column range of the
-    destination row.
+    This test used to assert the opposite -- one ``DMA.TRANSFER`` per column
+    window -- because ``REDUCTION.GROUPED_CONCAT`` joined on axis 0 only, and a
+    width join puts operands of *different widths* side by side, which axis 0
+    cannot express at all.  Amendment A17 gives the operator a join axis in
+    ``aux_id_0``, so the hand-expansion is no longer the spelling: it is one
+    lane emitting transfers where the other emits ``REDUCTION.3``, which is the
+    divergence the shared IR exists to prevent.
+
+    The property the movement form was protecting has not gone away, so it is
+    asserted here of the operator instead: input *i* occupies its own column
+    range of the result, in **input-slot order**, the ranges tile the row
+    exactly once, and no row is duplicated.  Under A17 that is a consequence of
+    the descriptor rather than of a traversal -- the operand widths sum to the
+    output's and every operand agrees on the axis the join does not consume --
+    which is precisely why it is now checkable at admission.
     """
     graph = movement_graph()
     capability = single_chip_capability()
@@ -1922,36 +1933,39 @@ def test_an_axis_one_concatenation_is_one_movement_per_column_window():
         if d.descriptor_type == ExtendedDescriptorType.OPERATOR
         and d.payload["source_kernel_id"] == kernel.index
     ]
-    assert len(operators) == len(kernel.inputs)
-    destination_object = None
-    column = 0
-    for operator in operators:
-        payload = operator.payload
-        assert payload["engine_family"] == int(Major.DMA)
-        schedule = deployment.table.get(
-            payload["schedule_id"], ExtendedDescriptorType.SCHEDULE
-        )
-        assert schedule.payload["engine_family"] == int(Major.DMA)
-        source = deployment.table.get(
-            payload["input_view_0"], ExtendedDescriptorType.TENSOR_VIEW
-        )
-        window = deployment.table.get(
-            payload["output_view_0"], ExtendedDescriptorType.TENSOR_VIEW
-        )
-        if destination_object is None:
-            destination_object = window.primary_object_id
-        # Every input writes into the same result object, and the windows tile
-        # its row exactly once each.
-        assert window.primary_object_id == destination_object
-        assert window.payload["element_offset"] == column
-        assert window.payload["dim0"] == source.payload["dim0"]
-        assert window.payload["dim1"] == source.payload["dim1"]
-        # The source is dense in its own width; the window is strided by the
-        # result's width, which is what makes it a column range.
-        assert source.payload["stride0"] == source.payload["dim1"]
-        assert window.payload["stride0"] > window.payload["dim1"]
-        column += window.payload["dim1"]
-    assert column == window.payload["stride0"]
+    assert len(operators) == 1, "one join is one operator, not one per input"
+    payload = operators[0].payload
+    assert payload["engine_family"] == int(Major.REDUCTION)
+    assert payload["engine_sub"] == int(Reduction.GROUPED_CONCAT)
+    # The whole of A17: the axis travels in aux_id_0, and an unstated axis
+    # would be read as a row join -- silently the wrong operation.
+    assert payload["aux_id_0"] == 1
+
+    def view(view_id: int):
+        return deployment.table.get(
+            view_id, ExtendedDescriptorType.TENSOR_VIEW
+        ).payload
+
+    slots = [payload[f"input_view_{s}"] for s in range(4)]
+    assert [s != NO_ID for s in slots] == [True, True, False, False]
+    sources = [view(s) for s in slots[: len(kernel.inputs)]]
+    result = view(payload["output_view_0"])
+    tensors = {t.tensor_id: t for t in graph.tensors}
+
+    # Slot order is the graph's input order, so the descriptor states the
+    # column order and no backend has to choose one.
+    widths = [tensors[name].shape[1] for name in kernel.inputs]
+    assert [s["dim1"] for s in sources] == widths
+    # The ranges tile the result's row exactly once: the sum of the inputs'
+    # widths is the output's, which is what makes each input's block one
+    # contiguous run and nothing a duplicate.
+    assert result["dim1"] == sum(widths)
+    assert result["dim1"] == tensors[kernel.outputs[0]].shape[1]
+    # Every operand agrees on the extent the join does not consume.
+    assert {s["dim0"] for s in sources} == {result["dim0"]}
+    # Rank 2 on every operand -- A17 defines a feature join for nothing else.
+    assert {s["rank"] for s in sources} == {2}
+    assert result["rank"] == 2
 
 
 def test_the_hyper_connection_post_operands_keep_the_token_axis_leading():

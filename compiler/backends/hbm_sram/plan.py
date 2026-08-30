@@ -81,6 +81,7 @@ from runtime.abi3.constants import (
     DType,
     Major,
     NO_ID,
+    Reduction,
     Route,
     Selection,
     StateClass,
@@ -1715,32 +1716,41 @@ def _uniform_weight_extents(
         return False, "iterations declare different kernel counts"
     for position, kernel in enumerate(body):
         for slot, name in enumerate(kernel.inputs):
-            tensor = tensors[name]
-            if tensor.role not in {"weight", "constant"}:
+            if tensors[name].role not in {"weight", "constant"}:
                 continue
-            if tensor.binding is None:
-                return False, f"operand {position}.{slot} has no checkpoint binding"
-            extents: set[tuple[int, str]] = set()
-            seen: set[str] = set()
+            seen: list[str] = []
             for block in blocks:
                 peer = block[position]
                 if slot >= len(peer.inputs):
                     return False, f"operand {position}.{slot} is missing in a block"
-                member = tensors[peer.inputs[slot]]
-                if member.binding is None:
-                    return False, (
-                        f"operand {position}.{slot} of a later block has no "
-                        "checkpoint binding"
-                    )
-                seen.add(peer.inputs[slot])
-                extents.add((member.binding.bytes, member.dtype))
+                if peer.inputs[slot] not in seen:
+                    seen.append(peer.inputs[slot])
             if len(seen) == 1:
-                continue  # one tensor shared by every iteration: stride zero
+                # One tensor read by every iteration: stride zero.  Its address
+                # does not move with the layer, so it needs no role object and
+                # no checkpoint binding -- :func:`_place_weights` says so in the
+                # same words.  A *generated* constant is exactly this case (the
+                # rope coefficient table is one tensor for the whole stack), and
+                # asking for its binding first refused a forty-layer band on the
+                # one operand for which the question does not arise.
+                continue
             if len(seen) != iterations:
                 return False, (
                     f"operand {position}.{slot} is shared by some iterations and "
                     "private to others"
                 )
+            extents: set[tuple[int, str]] = set()
+            for member_id in seen:
+                member = tensors[member_id]
+                if member.binding is None:
+                    # A per-iteration payload really does need one: the role
+                    # object's stride is the extent, and an unbound tensor
+                    # states none.
+                    return False, (
+                        f"operand {position}.{slot} is private to each iteration "
+                        "but has no checkpoint binding"
+                    )
+                extents.add((member.binding.bytes, member.dtype))
             if len(extents) != 1:
                 return False, (
                     f"operand {position}.{slot} has {len(extents)} distinct "
@@ -2524,6 +2534,15 @@ def _aux_ids(
                 or _domain_extent(kernel, ("experts",), span_max)
                 or groups
             ]
+    elif family == int(Major.REDUCTION):
+        if sub == int(Reduction.GROUPED_CONCAT):
+            # Amendment A17: a concatenation states the axis it joins.  The
+            # graph carries it as an attribute and ``aux_id_0`` is where the
+            # ABI reads it; an unstated axis is read as 0, which is a *row*
+            # join and silently the wrong operation for the two index joins
+            # and the block-diagonal projection this model emits.  Emitting it
+            # is the whole of what A17 asks a backend to do.
+            aux = [int(attributes.get("axis", 0))]
     elif family == int(Major.VECTOR):
         if sub == int(Vector.ROPE):
             aux = [int(attributes.get("rotary_width", in_cols(1)))]
