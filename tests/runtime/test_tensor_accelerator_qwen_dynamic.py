@@ -1,3 +1,17 @@
+"""Dynamic sessions against the retained ABI 2.5 Qwen physical deployment.
+
+This file belongs to the ABI 2.5 tensor-accelerator lane that ABI 3.0
+superseded -- the lane inventoried in ``tests/compiler/README_RETIRED_LANE.md``
+and tracked as OI-25.  A green tick here is not evidence for ABI 3.0.
+
+The one test that loads the deployment through ``QwenFullModelSimulator``
+needs the payload the manifest declares -- seventeen HBM shards and
+``program/commands.bin`` -- which ``.gitignore`` excludes because it is tens of
+gigabytes.  It is preconditioned on that payload and skips with the reason
+stated when it is absent; everything else here runs from the committed
+descriptors.
+"""
+
 from __future__ import annotations
 
 import copy
@@ -40,10 +54,40 @@ ROOT = Path(__file__).resolve().parents[2]
 DEPLOYMENT = ROOT / "results/tensor_accelerator/qwen3_full_model_physical"
 RETAINED_SESSION = ROOT / "results/tensor_accelerator/qwen3_short_generation_v1"
 DYNAMIC_SCHEMA_ROOT = ROOT / "schemas/compiler/tensor_accelerator"
-HAS_DEPLOYMENT = (DEPLOYMENT / "deployment_manifest.json").is_file()
+
+
+def _retained_deployment_is_complete(root: Path) -> bool:
+    """Whether every artifact the deployment manifest declares is on disk.
+
+    ``deployment_manifest.json`` is committed; the payload it declares -- the
+    seventeen HBM shards under ``memory/hbm/`` and ``program/commands.bin`` --
+    is excluded by ``.gitignore`` in the same commit that published the
+    deployment, because it is tens of gigabytes.  So testing for the manifest
+    alone answers "available" on every checkout, including the ones on which
+    ``QwenFullModelSimulator.load`` cannot get past its own file-set check.
+    The precondition these tests need is the artifact set, not the manifest.
+    """
+
+    manifest = root / "deployment_manifest.json"
+    if not manifest.is_file():
+        return False
+    try:
+        artifacts = json.loads(manifest.read_text(encoding="utf-8"))["artifacts"]
+        return all((root / record["path"]).is_file() for record in artifacts)
+    except (OSError, ValueError, KeyError, TypeError):
+        return False
+
+
+HAS_DEPLOYMENT = _retained_deployment_is_complete(DEPLOYMENT)
 AUTHENTIC = pytest.mark.skipif(
     not HAS_DEPLOYMENT,
-    reason="retained complete Qwen physical deployment is unavailable",
+    reason=(
+        "the retained ABI 2.5 Qwen physical deployment is incomplete: its "
+        "HBM shards and program/commands.bin are excluded by .gitignore and "
+        "cannot be reproduced from this repository. This is the retired ABI "
+        "2.5 lane of tests/compiler/README_RETIRED_LANE.md (OI-25), not ABI "
+        "3.0 coverage"
+    ),
 )
 HAS_RETAINED_SESSION = (RETAINED_SESSION / "reference.json").is_file()
 RETAINED = pytest.mark.skipif(

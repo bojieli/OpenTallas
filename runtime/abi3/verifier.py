@@ -22,7 +22,10 @@ The proofs performed are:
 9.  every terminal path reaches exactly one COMPLETE;
 10. permission agreement -- no write to an immutable object, no engine output
     into a read-only object, no ROM write path; and
-11. tensor-view bounds under the maximum value of every dynamic index term.
+11. tensor-view bounds under the maximum value of every dynamic index term;
+    and
+12. the join axis and operand geometry of every ``REDUCTION.GROUPED_CONCAT``
+    (amendment A17).
 """
 
 from __future__ import annotations
@@ -41,6 +44,7 @@ from .constants import (
     Major,
     ParticipantScope,
     Permission,
+    Reduction,
     Selection,
     State,
     StorageClass,
@@ -63,6 +67,45 @@ from .records import Instruction, decode_body, split_program
 
 class VerificationError(Exception):
     """Raised when a deployment fails an admission proof."""
+
+
+#: Amendment A17: the join axes ``REDUCTION.GROUPED_CONCAT`` defines.  Zero is
+#: the axis it has always joined on; one is the feature join.  The set is
+#: closed, so an axis outside it is refused rather than interpreted.
+JOIN_AXES: tuple[int, ...] = (0, 1)
+
+#: The operand rank each join axis requires, or ``None`` for "any rank".  A
+#: feature join is defined on rank-2 operands only: on a higher-rank operand an
+#: input's block is not one contiguous run of the output, and A17 refuses the
+#: shape rather than compute one no released model emits.
+JOIN_RANK: Mapping[int, int | None] = {0: None, 1: 2}
+
+
+def _view_dims(payload: Mapping[str, Any]) -> tuple[int, ...]:
+    return tuple(int(payload[f"dim{axis}"]) for axis in range(int(payload["rank"])))
+
+
+def _join_frame(axis: int, payload: Mapping[str, Any]) -> tuple[int, ...]:
+    """Every extent of a view except the one a join on ``axis`` consumes."""
+    dims = _view_dims(payload)
+    return dims[:axis] + dims[axis + 1 :]
+
+
+def _comparable(
+    dims: Sequence[int], removed_axis: int, leading_is_static: bool
+) -> tuple[int, ...]:
+    """The extents of ``dims`` that the descriptor alone settles.
+
+    Only axis 0 of a view can differ at issue from the value the descriptor
+    states, and only through amendment A13's clamp.  ``removed_axis`` says which
+    axis a join has already consumed from ``dims`` (``-1`` for none), so that
+    "axis 0 of the view" is identified correctly in a frame that has had an
+    earlier axis removed.
+    """
+    if leading_is_static or removed_axis == 0:
+        return tuple(int(d) for d in dims)
+    return tuple(int(d) for d in dims[1:])
+
 
 
 @dataclass
@@ -898,6 +941,153 @@ class Verifier:
                     )
         self.checks.setdefault("engine_write_paths", True)
 
+    # -- join axis (amendment A17) -----------------------------------------
+    def _verify_join_axis(self) -> None:
+        """Wire format section 12.7: a concatenation states the axis it joins.
+
+        ``REDUCTION.GROUPED_CONCAT`` reads its join axis from ``aux_id_0``.
+        ``NO_ID`` -- what :class:`runtime.abi3.builder.DeploymentBuilder` writes
+        into an unnamed auxiliary slot -- and ``0`` both mean axis 0, so every
+        program written before A17 keeps exactly the behaviour it had.  Axis 1
+        joins rank-2 operands on their feature axis.
+
+        Four things are refused here rather than trapped in an engine that has
+        already read operands: an axis A17 does not define; a join axis at or
+        beyond an operand's rank; a feature join on an operand that is not rank
+        2; and a join whose operands disagree about a *statically known* extent.
+
+        The last qualification is not a loophole, it is amendments A4 and A13.
+        A view's ``dim0`` is a function of the live loop and symbol bindings --
+        the resolver clamps it in a block loop's final iteration, and nothing
+        else about a view's extents ever moves -- so ``dim0`` is compared here
+        only when no operand carries a term that walks it, and the engine
+        compares the resolved value at every issue regardless.  Every other axis
+        is static in the descriptor and is compared unconditionally.
+        """
+        for index, instruction in enumerate(self.instructions):
+            if (
+                Major(instruction.major) is not Major.REDUCTION
+                or instruction.sub != int(Reduction.GROUPED_CONCAT)
+            ):
+                continue
+            descriptor = self._descriptor(
+                instruction.descriptor_id,
+                ExtendedDescriptorType.OPERATOR,
+                f"instruction {index} operator",
+            )
+            if descriptor is None:
+                continue
+            where = f"instruction {index} (GROUPED_CONCAT)"
+            aux = descriptor.payload["aux_id_0"]
+            axis = 0 if aux == NO_ID else int(aux)
+            if axis not in JOIN_AXES:
+                self._fail(
+                    f"{where}: aux_id_0 names join axis {axis}; amendment A17 "
+                    f"defines {', '.join(str(a) for a in JOIN_AXES)} and "
+                    "nothing else"
+                )
+                continue
+            inputs: list[Mapping[str, Any]] = []
+            for slot in range(4):
+                vid = descriptor.payload[f"input_view_{slot}"]
+                if vid == NO_ID:
+                    continue
+                view = self._descriptor(
+                    vid, ExtendedDescriptorType.TENSOR_VIEW, f"{where} input view"
+                )
+                if view is not None:
+                    inputs.append(view.payload)
+            out_id = descriptor.payload["output_view_0"]
+            out = (
+                None
+                if out_id == NO_ID
+                else self._descriptor(
+                    out_id, ExtendedDescriptorType.TENSOR_VIEW, f"{where} output view"
+                )
+            )
+            if not inputs or out is None:
+                self._fail(f"{where}: names no input view or no output view")
+                continue
+            operands = [*inputs, out.payload]
+            if not all(self._join_rank_ok(where, axis, payload) for payload in operands):
+                continue
+            # Axis 0 is the one A13 can move, so it is compared only when no
+            # operand is indexed along it.
+            leading_is_static = not any(
+                self._walks_leading_axis(payload) for payload in operands
+            )
+            frame = _join_frame(axis, inputs[0])
+            joined = 0
+            for payload in inputs:
+                other = _join_frame(axis, payload)
+                if _comparable(frame, axis, leading_is_static) != _comparable(
+                    other, axis, leading_is_static
+                ):
+                    self._fail(
+                        f"{where}: input views disagree on the extents the join "
+                        f"does not touch -- {other} against {frame}; a "
+                        f"concatenation on axis {axis} is defined only when "
+                        "every other axis matches"
+                    )
+                    break
+                joined += int(payload[f"dim{axis}"])
+            else:
+                if axis == 0 and not leading_is_static:
+                    continue
+                expected = frame[:axis] + (joined,) + frame[axis:]
+                actual = _view_dims(out.payload)
+                if _comparable(actual, -1, leading_is_static) != _comparable(
+                    expected, -1, leading_is_static
+                ):
+                    self._fail(
+                        f"{where}: output view {out.descriptor_id} is {actual} "
+                        f"but the axis-{axis} concatenation of its inputs is "
+                        f"{expected}"
+                    )
+        self.checks.setdefault("join_axis", True)
+
+    def _join_rank_ok(self, where: str, axis: int, payload: Mapping[str, Any]) -> bool:
+        rank = int(payload["rank"])
+        if axis >= rank:
+            self._fail(
+                f"{where}: joins on axis {axis} but an operand has rank {rank}"
+            )
+            return False
+        required = JOIN_RANK[axis]
+        if required is not None and rank != required:
+            self._fail(
+                f"{where}: joins on axis {axis}, which amendment A17 defines for "
+                f"rank-{required} operands only, but an operand has rank {rank}"
+            )
+            return False
+        return True
+
+    def _walks_leading_axis(self, payload: Mapping[str, Any]) -> bool:
+        """True when a loop term steps this view along its leading axis.
+
+        The same derivation :meth:`_verify_block_extent` and the functional
+        resolver use: one iteration advances by one whole block of leading rows,
+        so the term stride is ``stride0 * bound_divisor``.  Such a view's
+        ``dim0`` is the block, not the extent, and A13 shortens it at the live
+        binding.
+        """
+        for slot in range(int(payload["dynamic_term_count"])):
+            if payload[f"term{slot}_kind"] != SelectorKind.LOOP_INDUCTION:
+                continue
+            try:
+                loop = self.deployment.table.get(
+                    int(payload[f"term{slot}_index"]),
+                    ExtendedDescriptorType.LOOP_CONTROL,
+                )
+            except Exception:  # not a loop descriptor: _verify_views said so
+                continue
+            divisor = int(loop.payload["bound_divisor"])
+            if divisor > 0 and int(payload[f"term{slot}_stride"]) == int(
+                payload["stride0"]
+            ) * divisor:
+                return True
+        return False
+
     # -- scope and optional-feature flags -----------------------------------
     def _verify_flags(self) -> None:
         """Wire format section 3: a scope flag inconsistent with its descriptor
@@ -1105,6 +1295,7 @@ class Verifier:
         self._verify_schedules()
         self._verify_flags()
         self._verify_views()
+        self._verify_join_axis()
         self._verify_participant_scope()
         self._verify_entrypoints()
         self._verify_selection()

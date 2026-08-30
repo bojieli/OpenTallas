@@ -50,12 +50,15 @@ from runtime.abi3.constants import (  # noqa: E402
     DType,
     Dma,
     Feature,
+    Link,
     Major,
     NO_ID,
     Observation,
+    ParticipantScope,
     Permission,
     Recovery,
     Reduction,
+    Route,
     Selection,
     State,
     StateClass,
@@ -70,6 +73,7 @@ from runtime.abi3.builder import DeploymentBuilder, DynamicTerm  # noqa: E402
 from runtime.abi3.crc import record_crc, sha256  # noqa: E402
 from runtime.abi3.deployment import Deployment, ObjectSource  # noqa: E402
 from runtime.abi3.descriptors import (  # noqa: E402
+    CollectiveOp,
     Comparison,
     ExtendedDescriptorType,
     Phase,
@@ -1215,6 +1219,555 @@ def case_a13_mixed_axes(cap: Capability) -> Case:
     )
 
 
+# ---------------------------------------------------------------------------
+# Amendment A14 - the scope of a collective's participants
+# ---------------------------------------------------------------------------
+# Wire format section 12.5 gives COMMUNICATION a ``participant_scope`` at
+# payload offset 80, one byte, NODE = 0 / RETICLE = 1 / TILE = 2, taken out of a
+# span that was reserved-zero before the amendment.  Nothing in the RTL reads
+# it: a LINK instruction's whole admission in ot_a3_microsequencer.sv is the
+# S_ENG_WAIT type check ``desc_type != expected_type`` against
+# ``a3_family_descriptor_type(A3_MAJOR_LINK) = A3_DESC_COMMUNICATION``, after
+# which the record goes straight to S_ISSUE and the payload is the fabric
+# engine's business.  That is a claim about the RTL, and until these cases
+# existed the vector set could not test it, because it issued no LINK at all.
+#
+# So the pair below emits the *same* LINK program twice -- once with the
+# pre-amendment encoding (NODE, byte 80 zero) and once with the two scopes the
+# amendment adds (RETICLE and TILE, byte 80 nonzero) -- and both must produce
+# the identical issue sequence.  A resolver or decoder that had folded that byte
+# into anything would separate them.  The descriptor image the simulators load
+# is 192 bytes per record, so payload offset 80 is really in the memory both
+# read; it is not elided by the prefix.
+A14_RETICLES = 4
+A14_TILES_PER_RETICLE = 8
+A14_LINK_BYTES = 256
+A14_LINK_EXTENT = 64
+
+
+def _a14_link_object(builder: DeploymentBuilder) -> int:
+    """A remote-addressable buffer for a collective to name."""
+    return builder.memory_object(
+        storage_class=StorageClass.HBM,
+        size_bytes=A14_LINK_BYTES,
+        source=ObjectSource.zeros(A14_LINK_BYTES),
+        permissions=int(
+            Permission.READ | Permission.WRITE | Permission.REMOTE
+        ),
+        key="obj.link",
+    )
+
+
+def _a14_link_program(b: DeploymentBuilder, collective: int, barrier: int,
+                      matmul: int) -> None:
+    """One collective, one compute dispatch, one barrier, in that order."""
+    b.emit(Major.LINK, Link.COLLECTIVE, descriptor_id=collective,
+           source_operation_id=0)
+    b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=matmul,
+           source_operation_id=1)
+    b.emit(Major.LINK, Link.BARRIER, descriptor_id=barrier,
+           source_operation_id=2)
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+
+
+def case_a14_link_node_scope(cap: Capability) -> Case:
+    """A collective over nodes: the encoding every pre-A14 program carries."""
+    w = Workspace("a3-a14-node", cap)
+    b = w.builder
+    buf = _a14_link_object(b)
+    collective = b.communication(
+        collective_op=CollectiveOp.ALL_GATHER,
+        local_object_id=buf,
+        remote_object_id=buf,
+        byte_extent=A14_LINK_EXTENT,
+        participant_count=2,
+        participant_scope=ParticipantScope.NODE,
+        key="comm.collective",
+    )
+    barrier = b.communication(
+        collective_op=CollectiveOp.POINT_TO_POINT,
+        local_object_id=buf,
+        remote_object_id=buf,
+        byte_extent=A14_LINK_EXTENT,
+        participant_count=2,
+        participant_scope=ParticipantScope.NODE,
+        key="comm.barrier",
+    )
+    matmul = w.op(Major.TENSOR, Tensor.MATMUL, key="op.matmul")
+    _a14_link_program(b, collective, barrier, matmul)
+    return Case(
+        name="a14_link_node_scope",
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): 4},
+        note=(
+            "the first LINK instructions in the vector set: a collective and a "
+            "barrier naming COMMUNICATION descriptors whose participant_scope "
+            "is NODE, which is byte 80 = 0 and therefore byte-identical to the "
+            "same program written before A14 existed.  It fixes the RTL's LINK "
+            "admission -- the family-to-descriptor-type check -- and it is the "
+            "control against which a14_link_wafer_scopes is read"
+        ),
+    )
+
+
+def case_a14_link_wafer_scopes(cap: Capability) -> Case:
+    """The same program on a wafer, scoped to reticles and to tiles.
+
+    A ``WAFER_LOGICAL_DEVICE`` is presented to the host as one device, so it
+    declares one node; before A14 every collective on it was a collective over
+    a single participant and the fabric refused it as degenerate.  Here the
+    collective is TILE-scoped over ``reticle_count * tiles_per_reticle`` = 32
+    participants and the barrier is RETICLE-scoped over four, so byte 80 holds
+    2 and 1 rather than 0.
+
+    The instruction stream is character-for-character the one
+    ``a14_link_node_scope`` emits.  Both cases must therefore record the same
+    issue sequence, which is the whole claim: the scope byte reaches the
+    fabric, not the microsequencer.
+    """
+    b = DeploymentBuilder(
+        target_id="a3-a14-wafer",
+        model_id="abi3-rtl3",
+        backend="rtl3",
+        capability=cap,
+        # The deployment's own class, not the capability's.  Section 12.5's
+        # admission rules read the TOPOLOGY descriptor the deployment carries,
+        # and this one carries a wafer; the capability describes the machine
+        # that admits it and is not an input to those two rules.
+        topology_class=int(TopologyClass.WAFER_LOGICAL_DEVICE),
+    )
+    b.require(Feature.BF16_TENSOR)
+    b.topology(
+        topology_class=TopologyClass.WAFER_LOGICAL_DEVICE,
+        node_count=1,
+        reticle_count=A14_RETICLES,
+        tiles_per_reticle=A14_TILES_PER_RETICLE,
+        hbm_bytes_per_node=cap.memory["hbm"]["bytes"],
+        sram_bytes_per_node=cap.memory["sram"]["bytes"],
+        key="topology",
+    )
+    buf = _a14_link_object(b)
+    collective = b.communication(
+        collective_op=CollectiveOp.ALL_GATHER,
+        local_object_id=buf,
+        remote_object_id=buf,
+        byte_extent=A14_LINK_EXTENT,
+        participant_count=A14_RETICLES * A14_TILES_PER_RETICLE,
+        participant_scope=ParticipantScope.TILE,
+        key="comm.collective",
+    )
+    barrier = b.communication(
+        collective_op=CollectiveOp.POINT_TO_POINT,
+        local_object_id=buf,
+        remote_object_id=buf,
+        byte_extent=A14_LINK_EXTENT,
+        participant_count=A14_RETICLES,
+        participant_scope=ParticipantScope.RETICLE,
+        key="comm.barrier",
+    )
+    act_bytes = ROWS * COLS * 2
+    activations = b.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=act_bytes * 2,
+        source=ObjectSource.zeros(act_bytes * 2),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.activations",
+    )
+    weight_bytes = 4 * COLS * COLS * 2
+    weights = b.memory_object(
+        storage_class=StorageClass.HBM,
+        size_bytes=weight_bytes,
+        source=ObjectSource.zeros(weight_bytes),
+        permissions=int(Permission.READ | Permission.IMMUTABLE),
+        key="obj.weights",
+    )
+    view_in = b.tensor_view(
+        object_id=activations, dtype=DType.BF16, dims=[ROWS, COLS],
+        key="view.in",
+    )
+    view_weights = b.tensor_view(
+        object_id=weights, dtype=DType.BF16, dims=[COLS, COLS],
+        key="view.weights",
+    )
+    view_out = b.tensor_view(
+        object_id=activations, dtype=DType.BF16, dims=[ROWS, COLS],
+        element_offset=ROWS * COLS,
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.out",
+    )
+    matmul = b.operator(
+        engine_family=Major.TENSOR,
+        engine_sub=Tensor.MATMUL,
+        inputs=[view_in, view_weights],
+        outputs=[view_out],
+        numeric_profile_id=b.numeric(
+            contract="bf16_bf16_fp32_sequential_rne_v1",
+            input_dtype=DType.BF16,
+            output_dtype=DType.BF16,
+            key="num.matmul",
+        ),
+        schedule_id=b.schedule(
+            engine_family=Major.TENSOR, tile_rows=ROWS, tile_cols=COLS,
+            tile_depth=COLS, key="sched.tensor",
+        ),
+        counter_class_id=b.counter_class(
+            int(CounterGroup.TENSOR), [counter_id(CounterGroup.TENSOR, 1)],
+            key="ctr.tensor",
+        ),
+        source_kernel_id=0,
+        key="op.matmul",
+    )
+    _a14_link_program(b, collective, barrier, matmul)
+    return Case(
+        name="a14_link_wafer_scopes",
+        deployment=b.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): 4},
+        note=(
+            "the same LINK program on a WAFER_LOGICAL_DEVICE with a TILE-scoped "
+            "collective over 32 participants and a RETICLE-scoped barrier over "
+            "four: participant_scope holds 2 and 1 at payload offset 80, a byte "
+            "that was reserved-zero before A14.  The issue sequence must match "
+            "a14_link_node_scope exactly, because the RTL admits a LINK on its "
+            "descriptor type and hands the payload to the fabric"
+        ),
+    )
+
+
+def case_a14_scope_unsupported(cap: Capability) -> Case:
+    """RETICLE on a single chip: refused at admission, not at the instruction.
+
+    Section 12.5's two admission rules both fire here -- a SINGLE_CHIP topology
+    admits only NODE, and this one declares no reticles for a RETICLE scope to
+    address.  A deployment that cannot run its own collectives is refused before
+    it is activated, so this case reaches no device and resolves no view; what
+    it pins is that the refusal happens at all.
+    """
+    w = Workspace("a3-a14-unsupported", cap)
+    b = w.builder
+    buf = _a14_link_object(b)
+    collective = b.communication(
+        collective_op=CollectiveOp.ALL_GATHER,
+        local_object_id=buf,
+        remote_object_id=buf,
+        byte_extent=A14_LINK_EXTENT,
+        participant_count=A14_RETICLES,
+        participant_scope=ParticipantScope.RETICLE,
+        key="comm.collective",
+    )
+    b.emit(Major.LINK, Link.COLLECTIVE, descriptor_id=collective,
+           source_operation_id=0)
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="a14_scope_unsupported",
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): 4},
+        expect_admitted=False,
+        run_program=False,
+        device_runs=False,
+        note=(
+            "a RETICLE-scoped collective on a SINGLE_CHIP topology declaring no "
+            "reticles: refused at admission by both of section 12.5's rules, "
+            "so the deployment never reaches a device"
+        ),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Amendment A15 - a block scale may tile two axes
+# ---------------------------------------------------------------------------
+# Wire format section 12.6 gives TENSOR_VIEW a ``scale_block_rows`` at payload
+# offset 104, four bytes, taken out of a span that was reserved-zero before the
+# amendment.  ot_a3_view_resolver.sv reads dtype at 0, rank at 1,
+# dynamic_term_count at 3, element_offset at 16, dim0 at 24, stride0 at 48 and
+# four eight-byte terms at 72..103; the scale binding belongs to an engine
+# datapath and the block reads none of it.  Offset 104 is the first byte past
+# the term array, which makes it the exact place a resolver that walked one
+# term too far would land -- and the slot counter is three bits precisely so
+# that a walk to ``dynamic_term_count`` inclusive cannot wrap onto term zero.
+#
+# So the case below puts a two-dimensional block scale on a view that A13 also
+# clamps, and carries an unscaled sibling with the identical geometry in the
+# next operand slot.  Both must resolve to the same extents on every iteration.
+A15_SCALE_BLOCK_ELEMENTS = A13_ROW_ELEMENTS // 2
+A15_SCALE_BLOCK_ROWS = 2
+
+
+def _a15_case(cap: Capability, name: str, *, scale_block_rows: int,
+              expect_admitted: bool, note: str) -> Case:
+    w = BlockWorkspace(f"a3-{name}", cap)
+    b = w.builder
+    code_bytes = A13_MAX_ITER * A13_BLOCK * A13_ROW_ELEMENTS
+    codes = b.memory_object(
+        storage_class=StorageClass.HBM,
+        size_bytes=code_bytes,
+        source=ObjectSource.zeros(code_bytes),
+        permissions=int(Permission.READ | Permission.IMMUTABLE),
+        key="obj.codes",
+    )
+    # One E8M0 byte per (scale_block_rows x scale_block_elements) tile, which is
+    # the layout the released DeepSeek checkpoint actually ships and the reason
+    # A15 exists: A8's one-dimensional rule would demand ``scale_block_rows``
+    # times as many codes as the file holds.
+    scale_bytes = (
+        (A13_MAX_ITER * A13_BLOCK) // max(scale_block_rows, 1)
+    ) * (A13_ROW_ELEMENTS // A15_SCALE_BLOCK_ELEMENTS)
+    scales = b.memory_object(
+        storage_class=StorageClass.HBM,
+        size_bytes=max(scale_bytes, 1),
+        source=ObjectSource.zeros(max(scale_bytes, 1)),
+        permissions=int(Permission.READ | Permission.IMMUTABLE),
+        key="obj.scales",
+    )
+    loop = b.loop_control(
+        lower_bound=0,
+        upper_bound=0,
+        step=1,
+        bound_symbol=Symbol.SPAN_TOKENS,
+        bound_divisor=A13_BLOCK,
+        max_iterations=A13_MAX_ITER,
+        key="loop.block",
+    )
+    term = DynamicTerm.loop(loop, A13_BLOCK * A13_ROW_ELEMENTS)
+    view_codes = b.tensor_view(
+        object_id=codes,
+        dtype=DType.FP8_E4M3FN,
+        dims=[A13_BLOCK, A13_ROW_ELEMENTS],
+        dynamic=[term],
+        scale_object_id=scales,
+        scale_block_elements=A15_SCALE_BLOCK_ELEMENTS,
+        scale_block_rows=scale_block_rows,
+        key="view.codes",
+    )
+    view_plain = b.tensor_view(
+        object_id=w.tokens,
+        dtype=DType.BF16,
+        dims=[A13_BLOCK, A13_ROW_ELEMENTS],
+        dynamic=[term],
+        key="view.plain",
+    )
+    view_out = b.tensor_view(
+        object_id=w.tokens,
+        dtype=DType.BF16,
+        dims=[A13_BLOCK, A13_ROW_ELEMENTS],
+        element_offset=w.token_out_offset,
+        dynamic=[term],
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.out",
+    )
+    convert = b.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.CONVERT,
+        inputs=[view_codes, view_plain],
+        outputs=[view_out],
+        numeric_profile_id=w.numeric,
+        schedule_id=w.schedule_for(Major.VECTOR),
+        counter_class_id=w.counters,
+        source_kernel_id=0,
+        key="op.convert",
+    )
+    b.open_loop(loop)
+    b.emit(Major.VECTOR, Vector.CONVERT, descriptor_id=convert,
+           source_operation_id=0)
+    b.close_loop()
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name=name,
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): 2 * A13_BLOCK + 1},
+        expect_admitted=expect_admitted,
+        run_program=expect_admitted,
+        device_runs=expect_admitted,
+        note=note,
+    )
+
+
+def case_a15_block_scale_rows(cap: Capability) -> Case:
+    return _a15_case(
+        cap, "a15_block_scale_rows",
+        scale_block_rows=A15_SCALE_BLOCK_ROWS,
+        expect_admitted=True,
+        note=(
+            "a 2 x 8 block scale on a view A13 also clamps: scale_block_rows "
+            "holds 2 at payload offset 104, the first bytes past the dynamic "
+            "term array and reserved-zero before A15.  The unscaled sibling in "
+            "operand slot 1 states the identical geometry, so the two must "
+            "resolve to the same extents -- 4, 4, 1 over a span of nine -- on "
+            "every iteration"
+        ),
+    )
+
+
+def case_a15_scale_rows_indivisible(cap: Capability) -> Case:
+    return _a15_case(
+        cap, "a15_scale_rows_indivisible",
+        scale_block_rows=3,
+        expect_admitted=False,
+        note=(
+            "a three-row scale block over a four-row leading extent: section "
+            "12.6 requires rows % scale_block_rows == 0 for the scale index to "
+            "be exact, so the view is refused at admission rather than trapped "
+            "inside an operator that has already read weights"
+        ),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Amendment A16 - operand slots the conventions make load-bearing
+# ---------------------------------------------------------------------------
+# A16 is a statement about engine datapaths -- which rotary contract an engine
+# dispatches on, what a partial dequantisation carries, where an expert sum
+# joins its base -- and the ABI 3.0 microsequencer has no datapath.  What it
+# does have is the operand walk, ot_a3_microsequencer.sv's S_VIEW_SCAN over
+# input_view_0..3 and output_view_0..1, and A16 is the first convention that
+# needs the slots past the second input and the first output.  Until these two
+# cases existed every operator in the vector set named two inputs and one
+# output, so three of the six arms of that walk's multiplexer were never
+# populated and a view resolved through them was never compared.
+A16_NARROW_ELEMENTS = COLS // 2
+A16_TOPK = 4
+
+
+def case_a16_convert_carried_plane(cap: Capability) -> Case:
+    """Operator conventions 16.2: a partial dequantisation reads three inputs.
+
+    DeepSeek quantises the 448 non-rotary channels of a 512-wide KV vector and
+    keeps the 64 rotary channels in BF16, so reconstructing the vector reads
+    codes, block scales and a carried plane, and ``in2``'s presence is what
+    selects the sub-case.  ``in0``'s last axis is a proper prefix of ``out0``'s
+    and the carried plane matches the destination exactly, which is the shape
+    reproduced here at 8 of 16 channels.
+    """
+    w = Workspace("a3-a16-convert", cap)
+    b = w.builder
+    code_bytes = ROWS * A16_NARROW_ELEMENTS
+    codes = b.memory_object(
+        storage_class=StorageClass.HBM,
+        size_bytes=code_bytes,
+        source=ObjectSource.zeros(code_bytes),
+        permissions=int(Permission.READ | Permission.IMMUTABLE),
+        key="obj.codes",
+    )
+    scale_bytes = ROWS * (A16_NARROW_ELEMENTS // A15_SCALE_BLOCK_ELEMENTS)
+    scales = b.memory_object(
+        storage_class=StorageClass.HBM,
+        size_bytes=scale_bytes,
+        source=ObjectSource.zeros(scale_bytes),
+        permissions=int(Permission.READ | Permission.IMMUTABLE),
+        key="obj.scales",
+    )
+    view_codes = b.tensor_view(
+        object_id=codes,
+        dtype=DType.FP8_E4M3FN,
+        dims=[ROWS, A16_NARROW_ELEMENTS],
+        scale_object_id=scales,
+        scale_block_elements=A15_SCALE_BLOCK_ELEMENTS,
+        key="view.codes",
+    )
+    view_scales = b.tensor_view(
+        object_id=scales,
+        dtype=DType.E8M0_SCALE,
+        dims=[ROWS, A16_NARROW_ELEMENTS // A15_SCALE_BLOCK_ELEMENTS],
+        key="view.scales",
+    )
+    convert = b.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.CONVERT,
+        # in0 codes, in1 block scales, in2 the carried plane; out0 the whole
+        # reconstructed row.  Slot 2 is the one no operator had ever named.
+        inputs=[view_codes, view_scales, w.view_in],
+        outputs=[w.view_out],
+        numeric_profile_id=w.numeric,
+        schedule_id=w.schedule_for(Major.VECTOR),
+        counter_class_id=w.counters,
+        source_kernel_id=0,
+        key="op.convert",
+    )
+    b.emit(Major.VECTOR, Vector.CONVERT, descriptor_id=convert,
+           source_operation_id=0)
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="a16_convert_carried_plane",
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): 4},
+        note=(
+            "a partial dequantisation: codes, block scales and a carried plane "
+            "in input slots 0, 1 and 2.  It is the first operator in the set "
+            "to name input_view_2, so it is the first to walk that arm of the "
+            "RTL's operand multiplexer and resolve a view through it"
+        ),
+    )
+
+
+def case_a16_route_biased_topk(cap: Capability) -> Case:
+    """Operator conventions 14: BIASED_TOPK writes two outputs and reads aux0.
+
+    The ``noaux_tc`` gate selects on ``scores + bias`` and re-gathers weights
+    from the unbiased scores, so the operator states two inputs, two outputs and
+    ``aux0 = k``.  The second output is the last arm of the RTL's operand walk,
+    and ``aux_id_0`` -- which amendment A16.1 makes load-bearing for the
+    rotary width -- sits at operator payload offset 48, immediately past the
+    view slots the walk reads at 24..47.
+    """
+    w = Workspace("a3-a16-topk", cap)
+    b = w.builder
+    ids_bytes = ROWS * A16_TOPK * 4
+    ids = b.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=ids_bytes,
+        source=ObjectSource.zeros(ids_bytes),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.ids",
+    )
+    weight_bytes = ROWS * A16_TOPK * 2
+    weights = b.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=weight_bytes,
+        source=ObjectSource.zeros(weight_bytes),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.weights.topk",
+    )
+    view_ids = b.tensor_view(
+        object_id=ids, dtype=DType.U32, dims=[ROWS, A16_TOPK],
+        permissions=int(Permission.READ | Permission.WRITE), key="view.ids",
+    )
+    view_weights = b.tensor_view(
+        object_id=weights, dtype=DType.BF16, dims=[ROWS, A16_TOPK],
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.topk.weights",
+    )
+    topk = b.operator(
+        engine_family=Major.ROUTE,
+        engine_sub=Route.BIASED_TOPK,
+        inputs=[w.view_in, w.view_weights],
+        outputs=[view_ids, view_weights],
+        aux=[A16_TOPK],
+        numeric_profile_id=w.numeric,
+        schedule_id=w.schedule_for(Major.ROUTE),
+        counter_class_id=w.counters,
+        source_kernel_id=0,
+        key="op.topk",
+    )
+    b.emit(Major.ROUTE, Route.BIASED_TOPK, descriptor_id=topk,
+           source_operation_id=0)
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="a16_route_biased_topk",
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): 4},
+        note=(
+            "two inputs, two outputs and a populated aux_id_0: the first "
+            "operator in the set to name output_view_1, and the first to put a "
+            "nonzero word immediately past the view slots the RTL's operand "
+            "walk reads"
+        ),
+    )
+
+
 def _predicate_program(cap: Capability, name: str, phase: Phase, entry: int,
                        symbols: dict[int, int], note: str) -> Case:
     w = Workspace(name, cap)
@@ -1262,6 +1815,142 @@ def _predicate_program(cap: Capability, name: str, phase: Phase, entry: int,
         entrypoint_id=entry,
         symbols=symbols,
         note=note,
+    )
+
+
+# ---------------------------------------------------------------------------
+# Amendment A17 - the join axis a concatenation names in aux_id_0
+# ---------------------------------------------------------------------------
+# A17 is decoded nowhere in RTL 3.0, and these cases are here to prove that
+# rather than to assume it.  ``ot_a3_microsequencer.sv``'s operand walk reads
+# ``op_payload[223:192]`` through ``op_payload[383:352]`` -- OPERATOR payload
+# bytes 24 through 47, the four input views and the two output views -- and no
+# module in ``rtl/abi3`` indexes an operator payload above bit 383.  ``aux_id_0``
+# begins at byte 48, bit 384.  So a program whose only distinguishing feature is
+# a non-zero ``aux_id_0`` must issue and resolve views *identically* to the same
+# program without one, and the pair below is what says so: same operands, same
+# four-input walk, different join axis, and the golden control plane is
+# recorded for each.
+#
+# The third case is the refusal.  A17's illegal axes are admission failures, so
+# the vector set carries one the verifier must reject, in the same way
+# ``a15_scale_rows_indivisible`` does: the header still has to be judged legal
+# and the program still must never run.
+A17_BLOCK_COLUMNS = COLS // 4
+
+
+def _a17_case(
+    cap: Capability,
+    name: str,
+    *,
+    axis: int,
+    expect_admitted: bool,
+    note: str,
+) -> Case:
+    """One four-input ``REDUCTION.GROUPED_CONCAT`` joining on ``axis``."""
+    w = Workspace(f"a3-{name}", cap)
+    b = w.builder
+    if axis == 1:
+        # Four ``[ROWS, COLS/4]`` column blocks of one row-major buffer, joined
+        # back into the ``[ROWS, COLS]`` row they came from: the shape of
+        # DeepSeek's block-diagonal output projection, at four groups instead of
+        # eight.
+        blocks = [
+            b.tensor_view(
+                object_id=w.activations,
+                dtype=DType.BF16,
+                dims=[ROWS, A17_BLOCK_COLUMNS],
+                strides=[COLS, 1],
+                element_offset=index * A17_BLOCK_COLUMNS,
+                key=f"view.block{index}",
+            )
+            for index in range(4)
+        ]
+        out_dims = [ROWS, COLS]
+    else:
+        # The axis-0 join, which is what ``aux_id_0 = 0`` and an absent
+        # ``aux_id_0`` both mean: four row blocks stacked into one.
+        blocks = [
+            b.tensor_view(
+                object_id=w.activations,
+                dtype=DType.BF16,
+                dims=[ROWS // 4, COLS],
+                element_offset=index * (ROWS // 4) * COLS,
+                key=f"view.block{index}",
+            )
+            for index in range(4)
+        ]
+        out_dims = [ROWS, COLS]
+    joined = b.tensor_view(
+        object_id=w.activations,
+        dtype=DType.BF16,
+        dims=out_dims,
+        element_offset=ROWS * COLS,
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.joined",
+    )
+    concat = b.operator(
+        engine_family=Major.REDUCTION,
+        engine_sub=Reduction.GROUPED_CONCAT,
+        inputs=blocks,
+        outputs=[joined],
+        aux=[axis],
+        numeric_profile_id=w.numeric,
+        schedule_id=w.schedule_for(Major.REDUCTION),
+        counter_class_id=w.counters,
+        source_kernel_id=0,
+        key="op.concat",
+    )
+    b.emit(Major.REDUCTION, Reduction.GROUPED_CONCAT, descriptor_id=concat,
+           source_operation_id=0)
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name=name,
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): ROWS},
+        expect_admitted=expect_admitted,
+        run_program=expect_admitted,
+        device_runs=expect_admitted,
+        note=note,
+    )
+
+
+def case_a17_join_axis_zero(cap: Capability) -> Case:
+    return _a17_case(
+        cap, "a17_join_axis_zero", axis=0, expect_admitted=True,
+        note=(
+            "four row blocks joined on axis 0 with aux_id_0 stated as 0 "
+            "explicitly.  This is the operator REDUCTION.3 has always been, and "
+            "it is the control against which the feature join is compared: the "
+            "two differ only in operator payload byte 48"
+        ),
+    )
+
+
+def case_a17_join_axis_one(cap: Capability) -> Case:
+    return _a17_case(
+        cap, "a17_join_axis_one", axis=1, expect_admitted=True,
+        note=(
+            "four column blocks joined on the feature axis with aux_id_0 = 1 "
+            "(amendment A17).  The sequencer walks the same four input views "
+            "and the same output view as the axis-zero sibling and resolves "
+            "them to the same extents; aux_id_0 lives at operator payload byte "
+            "48 and the operand walk stops at byte 47, so the join axis reaches "
+            "the engine and never reaches the microsequencer"
+        ),
+    )
+
+
+def case_a17_join_axis_undefined(cap: Capability) -> Case:
+    return _a17_case(
+        cap, "a17_join_axis_undefined", axis=2, expect_admitted=False,
+        note=(
+            "aux_id_0 = 2 on a rank-2 operand set: A17 defines join axes 0 and "
+            "1 and nothing else, so the deployment is refused at admission "
+            "rather than trapped inside an engine that has already read "
+            "operands"
+        ),
     )
 
 
@@ -1827,6 +2516,16 @@ def build(argv: list[str] | None = None) -> int:
         case_a13_four_terms(capability),
         case_a13_non_leading_axis(capability),
         case_a13_mixed_axes(capability),
+        case_a14_link_node_scope(capability),
+        case_a14_link_wafer_scopes(capability),
+        case_a14_scope_unsupported(capability),
+        case_a15_block_scale_rows(capability),
+        case_a15_scale_rows_indivisible(capability),
+        case_a16_convert_carried_plane(capability),
+        case_a16_route_biased_topk(capability),
+        case_a17_join_axis_zero(capability),
+        case_a17_join_axis_one(capability),
+        case_a17_join_axis_undefined(capability),
     ]
     positives = len(cases)
     cases.extend(negative_instruction_cases(capability))

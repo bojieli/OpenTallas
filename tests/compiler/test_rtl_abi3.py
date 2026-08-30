@@ -184,7 +184,7 @@ def test_issue_events_are_legal_opcodes_and_counted() -> None:
             if family is not Major.RECOVERY:
                 assert issue["descriptor_id"] != NO_ID
             total += 1
-    assert total == vectors["issue_event_count"] == 143
+    assert total == vectors["issue_event_count"] == 156
     assert vectors["case_count"] == len(vectors["cases"])
     assert vectors["program_run_count"] == sum(
         1 for case in vectors["cases"] if case["runs_program"]
@@ -446,6 +446,273 @@ def test_a13_golden_extents_come_from_the_reference_resolver() -> None:
 
 
 # ---------------------------------------------------------------------------
+# 2c. amendments A14, A15 and A16 -- fields the RTL must *not* read
+# ---------------------------------------------------------------------------
+def _communication_scopes(case) -> list[int]:
+    """Every COMMUNICATION descriptor's participant scope, in table order."""
+    from runtime.abi3.descriptors import ExtendedDescriptorType
+
+    table = case.deployment.table
+    return [
+        int(table[did].payload["participant_scope"])
+        for did in table.ids_of_type(ExtendedDescriptorType.COMMUNICATION)
+    ]
+
+
+def _payload_bytes(case, descriptor_id: int, offset: int, length: int) -> bytes:
+    """Raw encoded bytes of one descriptor's payload.
+
+    The images both simulators load are 192-byte record prefixes -- a 64-byte
+    header and both 64-byte payload blocks -- so a byte read here is a byte the
+    RTL really has in memory, not one the prefix elides.
+    """
+    record = case.deployment.table._records[descriptor_id]  # noqa: SLF001
+    assert len(record) >= 64 + offset + length
+    return bytes(record[64 + offset : 64 + offset + length])
+
+
+def test_a14_scope_byte_is_encoded_and_changes_nothing_the_rtl_sees() -> None:
+    """Wire format 12.5: ``participant_scope`` reaches the fabric, not the
+    microsequencer.
+
+    A LINK instruction's whole admission in ``ot_a3_microsequencer.sv`` is the
+    S_ENG_WAIT check ``desc_type != expected_type`` against
+    ``a3_family_descriptor_type(A3_MAJOR_LINK) = A3_DESC_COMMUNICATION``; the
+    payload is never loaded.  Two cases state that as evidence rather than as a
+    reading of the source: the same LINK program with byte 80 at zero and with
+    byte 80 at 2 and 1 must leave the *identical* observation.  Before these
+    cases the vector set issued no LINK at all, so the claim was untested.
+    """
+    capability = generator.rtl_capability()
+    node = generator.case_a14_link_node_scope(capability)
+    wafer = generator.case_a14_link_wafer_scopes(capability)
+    refused = generator.case_a14_scope_unsupported(capability)
+
+    # The scopes are really in the payload, at the offset the amendment names.
+    assert _communication_scopes(node) == [0, 0]
+    assert _communication_scopes(wafer) == [2, 1]
+    from runtime.abi3.descriptors import ExtendedDescriptorType
+
+    for case, expected in ((node, (0, 0)), (wafer, (2, 1))):
+        ids = case.deployment.table.ids_of_type(
+            ExtendedDescriptorType.COMMUNICATION
+        )
+        for did, scope in zip(ids, expected):
+            assert _payload_bytes(case, did, 80, 1) == bytes([scope])
+            # A14 shrank the reserved span to 47 bytes at offset 81; the rest
+            # of it is still zero, so the only difference between the two
+            # programs' communication payloads is the scope byte itself.
+            assert _payload_bytes(case, did, 81, 47) == bytes(47)
+
+    recorded = {case["name"]: case for case in _vectors()["cases"]}
+    a = recorded["a14_link_node_scope"]
+    b = recorded["a14_link_wafer_scopes"]
+    assert a["expected"] == b["expected"]
+    # The two deployments name their descriptors in different orders, so the
+    # comparison is the issue *sequence* -- family, subopcode and instruction
+    # index -- rather than the identifiers those two tables happened to assign.
+    assert [
+        (i["family"], i["sub"], i["index"], i["mnemonic"])
+        for i in a["expected_issues"]
+    ] == [
+        (i["family"], i["sub"], i["index"], i["mnemonic"])
+        for i in b["expected_issues"]
+    ]
+    assert [
+        (v["slot"], v["dim0"], v["dims"], v["element_offset"], v["rank"])
+        for v in a["expected_views"]
+    ] == [
+        (v["slot"], v["dim0"], v["dims"], v["element_offset"], v["rank"])
+        for v in b["expected_views"]
+    ]
+    # And the LINK family really issues: a pass over an empty issue list would
+    # say nothing about the descriptor-type check.
+    families = {(i["family"], i["sub"]) for i in a["expected_issues"]}
+    assert (int(Major.LINK), 6) in families
+    assert (int(Major.LINK), 7) in families
+
+    # The two admission rules of section 12.5 both fire on a single chip.
+    assert not verify_deployment(refused.deployment, capability).admitted
+    assert recorded["a14_scope_unsupported"]["admitted"] is False
+    assert recorded["a14_scope_unsupported"]["expected_views"] == []
+    errors = " ".join(recorded["a14_scope_unsupported"]["verifier_errors"])
+    assert "RETICLE-scoped" in errors and "SINGLE_CHIP" in errors
+
+
+def test_a15_block_scale_rows_does_not_move_a_resolved_extent() -> None:
+    """Wire format 12.6: ``scale_block_rows`` at payload offset 104.
+
+    Offset 104 is the first word past the four eight-byte dynamic terms, which
+    is exactly where a resolver that walked one term too far would land.
+    ``ot_a3_view_resolver.sv`` reads nothing beyond bit 831 -- term three's
+    stride -- so a nonzero word there must be inert.  The case carries a scaled
+    view and an unscaled sibling of identical geometry through a block loop, so
+    the two are compared under A13's clamp rather than only at rest.
+    """
+    capability = generator.rtl_capability()
+    case = generator.case_a15_block_scale_rows(capability)
+    from runtime.abi3.descriptors import ExtendedDescriptorType
+
+    views = case.deployment.table.ids_of_type(ExtendedDescriptorType.TENSOR_VIEW)
+    scaled = [
+        vid for vid in views
+        if int(case.deployment.table[vid].payload["scale_block_rows"]) > 1
+    ]
+    assert len(scaled) == 1
+    assert _payload_bytes(case, scaled[0], 104, 4) == (2).to_bytes(4, "little")
+    # The rest of the span A15 shortened is still reserved-zero.
+    assert _payload_bytes(case, scaled[0], 108, 20) == bytes(20)
+
+    recorded = {c["name"]: c for c in _vectors()["cases"]}["a15_block_scale_rows"]
+    per_slot: dict[int, list[tuple]] = {}
+    for view in recorded["expected_views"]:
+        per_slot.setdefault(view["slot"], []).append(
+            (view["dim0"], view["dims"], view["element_offset"], view["rank"])
+        )
+    # Slot 0 is the block-scaled operand, slot 1 the unscaled sibling: same
+    # dims, same terms, same loop.  A13 clamps the last iteration of both.
+    assert per_slot[0] == per_slot[1]
+    assert [row[0] for row in per_slot[0]] == [
+        generator.A13_BLOCK, generator.A13_BLOCK, 1
+    ]
+
+    # And the divisibility rule is an admission rule, not an engine fault.
+    indivisible = generator.case_a15_scale_rows_indivisible(capability)
+    assert not verify_deployment(indivisible.deployment, capability).admitted
+    refused = {c["name"]: c for c in _vectors()["cases"]}[
+        "a15_scale_rows_indivisible"
+    ]
+    assert refused["admitted"] is False
+    assert refused["expected_views"] == []
+    assert any(
+        "scale block" in error for error in refused["verifier_errors"]
+    ), refused["verifier_errors"]
+
+
+OPERATOR_PAYLOAD_BITS = re.compile(r"op_payload\s*\[\s*(\d+)\s*:\s*(\d+)\s*\]")
+OPERATOR_PAYLOAD_PLUS = re.compile(r"op_payload\s*\[\s*(\d+)\s*\+:\s*(\d+)\s*\]")
+
+
+def test_a17_join_axis_never_reaches_the_microsequencer() -> None:
+    """Wire format 12.7: ``aux_id_0`` reaches the engine, not the sequencer.
+
+    A17 gives ``REDUCTION.GROUPED_CONCAT`` a join axis in ``aux_id_0``, which
+    the OPERATOR payload places at byte 48 -- bits 384 and up. The
+    microsequencer's whole reading of an operator payload is the operand walk:
+    ``input_view_0..3`` and ``output_view_0..1``, payload bytes 24 through 47,
+    bits 192 through 383. So the amendment cannot change anything RTL 3.0 does,
+    and this states that as evidence rather than as a reading of the source.
+
+    Three things are checked. The axis really is at byte 48 and really differs
+    between the two programs; the two programs issue the same instruction
+    sequence and walk the same operand slots; and no module under ``rtl/abi3``
+    indexes an operator payload at or above bit 384 at all.
+    """
+    from runtime.abi3.descriptors import ExtendedDescriptorType
+
+    capability = generator.rtl_capability()
+    zero = generator.case_a17_join_axis_zero(capability)
+    one = generator.case_a17_join_axis_one(capability)
+    refused = generator.case_a17_join_axis_undefined(capability)
+
+    # 1. The join axis is where the amendment says it is, and it is the only
+    #    auxiliary slot either program names.
+    for case, axis in ((zero, 0), (one, 1)):
+        ids = case.deployment.table.ids_of_type(ExtendedDescriptorType.OPERATOR)
+        assert len(ids) == 1
+        did = ids[0]
+        assert _payload_bytes(case, did, 48, 4) == axis.to_bytes(4, "little")
+        assert _payload_bytes(case, did, 52, 12) == bytes([0xFF]) * 12
+        assert verify_deployment(case.deployment, capability).admitted
+
+    recorded = {case["name"]: case for case in _vectors()["cases"]}
+    a = recorded["a17_join_axis_zero"]
+    b = recorded["a17_join_axis_one"]
+
+    # 2. The same instruction stream and the same operand walk. The four input
+    #    views necessarily have different extents -- a row join and a column
+    #    join of one buffer are different rectangles -- but the sequencer's
+    #    behaviour is the slots it walks and the order it walks them in, and the
+    #    output view, which both programs share, resolves identically.
+    assert [
+        (i["family"], i["sub"], i["index"], i["mnemonic"])
+        for i in a["expected_issues"]
+    ] == [
+        (i["family"], i["sub"], i["index"], i["mnemonic"])
+        for i in b["expected_issues"]
+    ]
+    assert {(int(Major.REDUCTION), 3)} == {
+        (i["family"], i["sub"]) for i in a["expected_issues"]
+    }
+    assert [(v["slot"], v["rank"], v["operand"]) for v in a["expected_views"]] == [
+        (v["slot"], v["rank"], v["operand"]) for v in b["expected_views"]
+    ]
+    assert len(a["expected_views"]) == 5
+    out_a = next(v for v in a["expected_views"] if v["operand"] == "output_view_0")
+    out_b = next(v for v in b["expected_views"] if v["operand"] == "output_view_0")
+    for key in ("dim0", "dims", "element_offset", "rank"):
+        assert out_a[key] == out_b[key]
+    assert a["expected"] == b["expected"]
+
+    # 3. Nothing in the RTL indexes an operator payload above the operand walk.
+    highest = 0
+    for source in sorted(Path(ROOT / "rtl/abi3").glob("*.sv")):
+        text = source.read_text(encoding="utf-8")
+        for match in OPERATOR_PAYLOAD_BITS.finditer(text):
+            highest = max(highest, int(match.group(1)))
+        for match in OPERATOR_PAYLOAD_PLUS.finditer(text):
+            highest = max(highest, int(match.group(1)) + int(match.group(2)) - 1)
+    assert highest == 383, highest
+
+    # 4. An axis A17 does not define is an admission refusal, so the vector set
+    #    carries one the verifier must reject and the RTL must never run.
+    assert not verify_deployment(refused.deployment, capability).admitted
+    assert recorded["a17_join_axis_undefined"]["admitted"] is False
+    assert recorded["a17_join_axis_undefined"]["expected_views"] == []
+    errors = " ".join(recorded["a17_join_axis_undefined"]["verifier_errors"])
+    assert "join axis 2" in errors and "A17" in errors
+
+
+def test_every_operand_slot_of_the_rtl_walk_is_exercised() -> None:
+    """``S_VIEW_SCAN`` walks six operand slots; all six must be populated.
+
+    Amendment A16 is the convention that first needed the slots past two inputs
+    and one output -- a partial dequantisation carries a third input plane, and
+    the ``noaux_tc`` gate writes a second output -- and until those two cases
+    existed three arms of the RTL's operand multiplexer had never selected a
+    real view.  ``input_view_3`` was the last one left: no operator in the set
+    named four inputs until amendment A17's four-block concatenations did.  A
+    resolver reached through an arm nothing populates is a resolver nothing
+    checks, and now none of the six is such an arm.
+    """
+    slots = {
+        view["slot"]
+        for case in _vectors()["cases"]
+        for view in case["expected_views"]
+    }
+    assert slots == {0, 1, 2, 3, 4, 5}, slots
+    joined = {case["name"]: case for case in _vectors()["cases"]}
+    for name in ("a17_join_axis_zero", "a17_join_axis_one"):
+        assert [v["slot"] for v in joined[name]["expected_views"]] == [0, 1, 2, 3, 4]
+    recorded = {case["name"]: case for case in _vectors()["cases"]}
+    convert = recorded["a16_convert_carried_plane"]
+    assert [v["slot"] for v in convert["expected_views"]] == [0, 1, 2, 4]
+    topk = recorded["a16_route_biased_topk"]
+    assert [v["slot"] for v in topk["expected_views"]] == [0, 1, 4, 5]
+    # aux_id_0 sits immediately past the view slots the walk reads, so a
+    # populated one is the nearest thing to an overrun this payload allows.
+    capability = generator.rtl_capability()
+    case = generator.case_a16_route_biased_topk(capability)
+    from runtime.abi3.descriptors import ExtendedDescriptorType
+
+    operators = case.deployment.table.ids_of_type(ExtendedDescriptorType.OPERATOR)
+    aux = [
+        int(case.deployment.table[oid].payload["aux_id_0"]) for oid in operators
+    ]
+    assert generator.A16_TOPK in aux
+
+
+# ---------------------------------------------------------------------------
 # 3. two-simulator replay
 # ---------------------------------------------------------------------------
 @pytest.mark.skipif(
@@ -466,7 +733,7 @@ def test_campaign_replays_both_simulators(tmp_path: Path) -> None:
         assert "/tmp/" not in case["compile_command"]
     assert "Verilator 5.05" in summary["tools"]["verilator"]["version"]
     assert "version 11.0" in summary["tools"]["iverilog"]["version"]
-    assert summary["correlation"]["issue_event_count"] == 143
+    assert summary["correlation"]["issue_event_count"] == 156
     assert summary["correlation"]["reference"] == "runtime.sim.device.Device"
     # A view comparison that compared nothing would be a vacuous pass.
     assert summary["correlation"]["view_resolution_count"] == (

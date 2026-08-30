@@ -163,12 +163,24 @@ class MemoryAccess:
         }
 
 
+#: ``TraceStep.node`` for a step the device issues once for the whole cluster
+#: rather than once per node: CONTROL, PREDICATE, LINK, STATE and COMMIT.
+CLUSTER_WIDE = -1
+
+
 @dataclass(slots=True)
 class TraceStep:
     """One architectural step observed while the functional device executed."""
 
     index: int
     kind: str  # PREDICATE | CONTROL | ENGINE | COMMIT
+    #: The logical node this step issued for, or ``CLUSTER_WIDE`` for a step
+    #: the device issues once for the whole cluster.  The functional device
+    #: replays every compute instruction once per node, so a cluster
+    #: transaction leaves ``node_count`` steps per instruction and only one of
+    #: them belongs to the node being timed.  CONTROL, PREDICATE, LINK, STATE
+    #: and COMMIT issue once and are timed on whichever node is being timed.
+    node: int = CLUSTER_WIDE
     pc: int = NO_ID
     major: int = NO_ID
     sub: int = NO_ID
@@ -410,7 +422,17 @@ class TracingDevice(Device):
         super().__init__(deployment, capability, root=root, verify=verify, trace=False)
         self.addresses = AddressMap(deployment)
         self._recorder = _AccessRecorder(deployment, self.addresses)
-        self.views = _RecordingViews(deployment, self.memory, self._recorder)
+        # The device holds one resolver per logical node and rebinds
+        # ``ctx.views`` to ``node_views[node]`` at every engine issue, so
+        # instrumenting ``self.views`` alone would be overwritten before the
+        # engine reads anything and would record no traffic at all.  Every
+        # node's resolver is replaced, and ``self.views`` stays node zero's, as
+        # the device's own contract requires.
+        self.node_views = tuple(
+            _RecordingViews(deployment, memory, self._recorder)
+            for memory in self.node_memories
+        )
+        self.views = self.node_views[0]
         self.steps: list[TraceStep] = []
         self._pc_index = {id(ins): i for i, ins in enumerate(self.instructions)}
 
@@ -524,8 +546,18 @@ class TracingDevice(Device):
 
     def _issue(self, ctx, instruction, family):  # type: ignore[override]
         before = ctx.counters.snapshot()
+        # ``Device._issue_nodes`` fans a compute instruction out over the nodes
+        # and binds NODE_ID before each issue; LINK and STATE it issues once
+        # for the cluster, leaving NODE_ID alone.  The step is tagged the same
+        # way, so that timing one node reads exactly that node's share.
+        fanned_out = family is not Major.LINK and family is not Major.STATE
         step = self._new_step(
             "ENGINE",
+            node=(
+                int(ctx.symbols.get(int(Symbol.NODE_ID), 0))
+                if fanned_out
+                else CLUSTER_WIDE
+            ),
             pc=self._pc_index.get(id(instruction), NO_ID),
             major=int(instruction.major),
             sub=int(instruction.sub),
@@ -1565,7 +1597,14 @@ class CycleModel:
             produced.extend(result.produced_tokens)
             for name, value in result.counters.items():
                 architectural.add(name, value)
-            steps = device.steps[step_cursor:]
+            # The device replays every compute instruction once per logical
+            # node inside one transaction; this model times one node at a
+            # time, so it reads that node's steps and the cluster-wide ones.
+            steps = [
+                step
+                for step in device.steps[step_cursor:]
+                if step.node in (CLUSTER_WIDE, node_id)
+            ]
             step_cursor = len(device.steps)
             events.clear()  # events are single-assignment *within* a transaction
             seq_free, end_cycle = self._time_steps(
@@ -2079,6 +2118,20 @@ class CycleModel:
                 "separately; there is deliberately no single blended cluster "
                 "number, because the four costs have different physical causes"
             ),
+            "reporting_scope": {
+                "timing": "one node",
+                "engines": "one node",
+                "queues": "one node",
+                "memory": "one node",
+                "counters.architectural": "the whole cluster",
+                "note": (
+                    "the functional device counts the architectural work of "
+                    "every node in one transaction and the agreement rule "
+                    "binds the model to that value, so the architectural "
+                    "counters are cluster totals while every timing and "
+                    "memory-traffic figure is one node's share"
+                ),
+            },
             "per_node": [
                 {
                     "node": node["node_id"],

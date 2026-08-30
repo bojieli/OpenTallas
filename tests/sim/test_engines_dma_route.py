@@ -29,6 +29,7 @@ from runtime.abi3.constants import (
     TrapClass,
 )
 from runtime.abi3.deployment import ObjectSource
+from runtime.abi3.verifier import verify_deployment
 from runtime.abi3.descriptors import Phase, Symbol
 from runtime.sim.device import Device
 
@@ -160,6 +161,24 @@ class Build:
         return device
 
 
+def admission(build: Build):
+    """Verify without constructing a Device.
+
+    :class:`Device` calls ``require_admitted`` in its constructor, so a case
+    whose whole point is a refusal at admission cannot go through
+    :meth:`Build.finish`.  This closes the program the same way and returns the
+    verifier's report instead of a device.
+    """
+    build.builder.emit(Major.CONTROL, Control.COMPLETE)
+    build.builder.entrypoint(
+        entrypoint_id=0,
+        first_instruction=0,
+        phase=Phase.PREFILL,
+        generation_policy_id=NO_ID,
+    )
+    return verify_deployment(build.builder.finish(), build.capability)
+
+
 def read(device: Device, view_id: int, symbols=None) -> np.ndarray:
     view = device.views.resolve(view_id, {}, symbols or {})
     return np.array(device.views.read_array(view))
@@ -271,13 +290,17 @@ def test_transfer_reads_a_stride_zero_axis_as_a_shared_broadcast():
 
 
 def test_grouped_concat_would_have_misplaced_a_broadcast():
-    """The engine's shape check is the only thing between reshape and nonsense.
+    """Admission is the only thing between reshape and nonsense.
 
     Four copies of a ``[tokens, width]`` tensor concatenated on axis 0 are
     ``[4 * tokens, width]``.  Reshaping that to ``[tokens, 4, width]`` -- which
     is exactly what a lenient implementation would do -- yields four
-    *consecutive tokens* in the four stream slots of token 0.  The check refuses
-    it, and this records what the refusal is protecting against.
+    *consecutive tokens* in the four stream slots of token 0.
+
+    Amendment A17 moves the refusal one step earlier: the join's geometry is now
+    an admission proof (wire format 12.7), so this deployment never reaches an
+    engine at all.  The engine keeps the same check, because a resolved extent
+    is not the declared one under A13.
     """
     tokens, streams, width = 3, 4, 5
     source = (np.arange(tokens * width, dtype=np.uint16) + 0x3F00).reshape(
@@ -287,15 +310,115 @@ def test_grouped_concat_would_have_misplaced_a_broadcast():
     views = [build.input_view(source, DType.BF16) for _ in range(streams)]
     out = build.output_view((tokens, streams, width), DType.BF16, 2)
     emit_op(build, Major.REDUCTION, Reduction.GROUPED_CONCAT, views, [out])
-    result = run(build.finish())
-    assert result.status == CompletionStatus.FAILED
-    assert result.trap_class == TrapClass.DESCRIPTOR_OR_ADDRESS
-    assert "differ from the concatenation" in result.message
+    report = admission(build)
+    assert not report.admitted
+    assert any(
+        "the axis-0 concatenation of its inputs is (12, 5)" in error
+        for error in report.errors
+    ), report.errors
     reshaped = np.concatenate([source] * streams, axis=0).reshape(
         tokens, streams, width
     )
     broadcast = np.repeat(source[:, None, :], streams, axis=1)
     assert not np.array_equal(reshaped, broadcast)
+
+
+def test_grouped_concat_joins_the_feature_axis_under_a17():
+    """Amendment A17: ``aux_id_0 = 1`` joins rank-2 operands on their columns.
+
+    Three blocks of a block-diagonal projection, 2, 3 and 4 columns wide over
+    the same four rows.  Block *i* has to land in columns
+    ``[sum(C_<i), sum(C_<i) + C_i)`` of a nine-wide result, which is exactly the
+    placement no axis-0 join and no strided output view can produce.
+    """
+    rows = 4
+    blocks = [
+        (np.arange(rows * cols, dtype=np.uint16) + base).reshape(rows, cols)
+        for cols, base in ((2, 0x3F00), (3, 0x4000), (4, 0x4100))
+    ]
+    build = Build()
+    views = [build.input_view(block, DType.BF16) for block in blocks]
+    out = build.output_view((rows, 9), DType.BF16, 2)
+    emit_op(
+        build, Major.REDUCTION, Reduction.GROUPED_CONCAT, views, [out], aux=[1]
+    )
+    device = build.finish()
+    result = run(device)
+    assert result.status == CompletionStatus.SUCCESS, result.message
+    assert np.array_equal(read(device, out), np.concatenate(blocks, axis=1))
+    # The axis-0 reading of the same operands is a different tensor, and it is
+    # not even the right shape: this is what the amendment buys.
+    assert sum(block.shape[0] for block in blocks) != rows
+
+
+def test_grouped_concat_axis_zero_is_what_no_aux_already_meant():
+    """``aux_id_0 = 0`` and an unnamed ``aux_id_0`` are the same operator.
+
+    A17's compatibility claim is that a program written before the amendment --
+    which carries ``NO_ID`` in the slot, because that is what the builder writes
+    into an unnamed auxiliary -- keeps exactly the behaviour it had.  Two
+    deployments differing only in that slot must therefore produce the same
+    bytes.
+    """
+    rows, width = 3, 5
+    source = (np.arange(rows * width, dtype=np.uint16) + 0x3F00).reshape(rows, width)
+    results = []
+    for aux in ((), (0,)):
+        build = Build()
+        views = [build.input_view(source, DType.BF16) for _ in range(2)]
+        out = build.output_view((2 * rows, width), DType.BF16, 2)
+        emit_op(
+            build, Major.REDUCTION, Reduction.GROUPED_CONCAT, views, [out], aux=aux
+        )
+        device = build.finish()
+        assert run(device).status == CompletionStatus.SUCCESS
+        results.append(read(device, out))
+    assert np.array_equal(results[0], np.concatenate([source, source], axis=0))
+    assert np.array_equal(results[0], results[1])
+
+
+@pytest.mark.parametrize(
+    "aux, dims, out_dims, fragment",
+    [
+        # An axis A17 does not define.
+        ((2,), (2, 3), (2, 6), "amendment A17 defines 0, 1 and nothing else"),
+        # A feature join of rank-3 operands: refused rather than computed.
+        ((1,), (2, 3, 4), (2, 6, 4), "defines for rank-2 operands only"),
+    ],
+)
+def test_grouped_concat_refuses_a_join_a17_does_not_define(
+    aux, dims, out_dims, fragment
+):
+    build = Build()
+    payload = np.zeros(dims, dtype=np.uint16)
+    views = [build.input_view(payload, DType.BF16) for _ in range(2)]
+    out = build.output_view(out_dims, DType.BF16, 2)
+    emit_op(build, Major.REDUCTION, Reduction.GROUPED_CONCAT, views, [out], aux=aux)
+    report = admission(build)
+    assert not report.admitted
+    assert any(fragment in error for error in report.errors), report.errors
+
+
+def test_grouped_concat_refuses_disagreeing_non_join_extents():
+    """A17: every operand must agree on every axis the join does not consume."""
+    build = Build()
+    left = build.input_view(np.zeros((4, 2), dtype=np.uint16), DType.BF16)
+    right = build.input_view(np.zeros((5, 3), dtype=np.uint16), DType.BF16)
+    out = build.output_view((4, 5), DType.BF16, 2)
+    emit_op(
+        build,
+        Major.REDUCTION,
+        Reduction.GROUPED_CONCAT,
+        [left, right],
+        [out],
+        aux=[1],
+    )
+    report = admission(build)
+    assert not report.admitted
+    assert any(
+        "disagree on the extents the join does not touch" in error
+        for error in report.errors
+    ), report.errors
 
 
 def test_transfer_refuses_a_storage_conversion():

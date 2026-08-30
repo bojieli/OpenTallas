@@ -246,6 +246,173 @@ def test_node_id_is_bound_per_node_and_zero_outside_an_issue():
         assert _read(device, node, destination, 1)[0] == 100 + node
 
 
+def test_a_transaction_reports_cluster_totals_and_the_per_node_split():
+    """A transaction is the cluster's work, and it says which is which.
+
+    ``Device.run_transaction`` runs the whole program on every node, so its
+    architectural counters are the sum over all of them -- not one node's share,
+    and not something a consumer may divide by ``node_count`` to get one, since
+    the collectives and the state bookkeeping are issued once for the cluster
+    and belong to no node.  The cycle model was exactly such a consumer and was
+    wrong by thirty-two.  So the result carries both: ``counters`` are the
+    totals and ``node_counters`` is the split, and the two reconcile.
+    """
+    build = Build(nodes=NODES)
+    destination = build.scratch(NODES * 4)
+    source = build.object_of(np.arange(NODES, dtype=np.uint32) + 100)
+    view = build.builder.tensor_view
+    build.builder.emit(
+        Major.DMA,
+        Dma.TRANSFER,
+        descriptor_id=build.builder.operator(
+            engine_family=Major.DMA,
+            engine_sub=int(Dma.TRANSFER),
+            inputs=[
+                view(
+                    object_id=source,
+                    dtype=DType.U32,
+                    dims=[1],
+                    strides=[1],
+                    dynamic=[DynamicTerm.symbol(Symbol.NODE_ID, 1)],
+                )
+            ],
+            outputs=[
+                view(
+                    object_id=destination,
+                    dtype=DType.U32,
+                    dims=[1],
+                    strides=[1],
+                    permissions=int(Permission.READ | Permission.WRITE),
+                )
+            ],
+            schedule_id=build.builder.schedule(
+                engine_family=Major.DMA, tile_rows=1, tile_cols=1, tile_depth=1
+            ),
+        ),
+    )
+    device = build.finish()
+    result = run(device)
+    assert result.status == CompletionStatus.SUCCESS, result.message
+
+    # One transfer per node, so the totals are thirty-two of them and every
+    # node's share is exactly one.
+    assert len(result.node_counters) == NODES
+    assert result.counters["dma.transfers"] == NODES
+    for share in result.node_counters:
+        assert share["dma.transfers"] == 1
+        assert share["engine.dma.descriptors"] == 1
+
+    # The split reconciles: every counter is the sum of the node shares plus
+    # what the cluster did once.  ``instructions.retired`` is in the second
+    # group -- one instruction retires once however many nodes ran it -- and
+    # ``dma.transfers`` is entirely in the first.
+    engine_only = {"dma.transfers", "engine.dma.descriptors", "sram.bytes_read",
+                   "sram.bytes_written"}
+    for name in engine_only:
+        assert result.counters[name] == sum(
+            share.get(name, 0) for share in result.node_counters
+        ), name
+    assert result.counters["instructions.retired"] == 2  # the transfer, COMPLETE
+    for share in result.node_counters:
+        assert "instructions.retired" not in share
+
+    # The device's own history is the same statement across transactions.
+    assert len(device.node_counters) == NODES
+    assert device.counters["dma.transfers"] == NODES
+    assert device.node_counters[7]["dma.transfers"] == 1
+
+
+def test_an_engine_issue_restores_the_node_id_its_caller_bound():
+    """``_issue_nodes`` must put back what it found, not a constant.
+
+    It used to restore ``NODE_ID = 0`` unconditionally, which is right only
+    because ``run_transaction`` happens to bind zero.  Anything else binding the
+    symbol -- a caller, a nested fan-out, a device that presents itself as one
+    node of a larger machine -- was silently zeroed after the first engine
+    instruction, and every later reader of the symbol saw 0 instead of the
+    binding.  The fix is to save and restore, and this is the test that says so
+    without depending on ``run_transaction``'s choice of zero.
+    """
+    from runtime.sim.counters import CounterSet
+    from runtime.sim.engine import EngineContext
+
+    build = Build(nodes=NODES)
+    destination = build.scratch(NODES * 4)
+    source = build.object_of(np.arange(NODES, dtype=np.uint32) + 100)
+    view = build.builder.tensor_view
+    operator = build.builder.operator(
+        engine_family=Major.DMA,
+        engine_sub=int(Dma.TRANSFER),
+        inputs=[
+            view(
+                object_id=source,
+                dtype=DType.U32,
+                dims=[1],
+                strides=[1],
+                dynamic=[DynamicTerm.symbol(Symbol.NODE_ID, 1)],
+            )
+        ],
+        outputs=[
+            view(
+                object_id=destination,
+                dtype=DType.U32,
+                dims=[1],
+                strides=[1],
+                permissions=int(Permission.READ | Permission.WRITE),
+            )
+        ],
+        schedule_id=build.builder.schedule(
+            engine_family=Major.DMA, tile_rows=1, tile_cols=1, tile_depth=1
+        ),
+    )
+    build.builder.emit(Major.DMA, Dma.TRANSFER, descriptor_id=operator)
+    device = build.finish()
+    instruction = next(
+        ins for ins in device.instructions if Major(ins.major) is Major.DMA
+    )
+
+    marker = 19
+    symbols = {int(Symbol.NODE_COUNT): NODES, int(Symbol.NODE_ID): marker}
+    counters = CounterSet()
+    ctx = EngineContext(
+        table=device.deployment.table,
+        memory=device.memory,
+        views=device.views,
+        counters=counters,
+        loops={},
+        symbols=symbols,
+        session=device.create_session(),
+        device=device,
+        node_memories=device.node_memories,
+    )
+    ctx.notes["produced_tokens"] = []
+    ctx.notes["selection"] = {}
+    device._issue_nodes(  # noqa: SLF001
+        ctx,
+        instruction,
+        Major.DMA,
+        [[] for _ in range(NODES)],
+        [{} for _ in range(NODES)],
+        tuple(CounterSet() for _ in range(NODES)),
+    )
+    assert symbols[int(Symbol.NODE_ID)] == marker
+    assert ctx.counters is counters
+    assert ctx.memory is device.memory
+    assert ctx.views is device.views
+
+    # And a context that never named the symbol does not acquire one.
+    del symbols[int(Symbol.NODE_ID)]
+    device._issue_nodes(  # noqa: SLF001
+        ctx,
+        instruction,
+        Major.DMA,
+        [[] for _ in range(NODES)],
+        [{} for _ in range(NODES)],
+        tuple(CounterSet() for _ in range(NODES)),
+    )
+    assert int(Symbol.NODE_ID) not in symbols
+
+
 # ---------------------------------------------------------------------------
 # the exchange
 # ---------------------------------------------------------------------------

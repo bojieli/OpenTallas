@@ -148,11 +148,32 @@ class TransactionResult:
     selected_token: int = NO_ID
     eos_reason: int = EosReason.NONE
     produced_tokens: tuple[int, ...] = ()
+    #: **Cluster totals.**  One transaction executes the whole program on every
+    #: logical node, so these are the sum over all of them plus the work the
+    #: cluster does once -- the collectives and the state bookkeeping.  On a
+    #: 32-node topology every architectural quantity here is therefore
+    #: thirty-two nodes' worth, not one node's; a consumer that wants one
+    #: node's share must read :attr:`node_counters`, not divide.
     counters: dict[str, int] = dc_field(default_factory=dict)
+    #: One snapshot per logical node, indexed by ``NODE_ID``, holding exactly
+    #: the work that node's engines did.  ``LINK`` and ``STATE`` are issued once
+    #: for the cluster and appear in no node's share, so
+    #: ``sum(node_counters) + cluster-only == counters`` for every additive
+    #: counter.  A single-chip transaction has one entry and it is everything.
+    node_counters: tuple[dict[str, int], ...] = ()
     message: str = ""
     wall_seconds: float = 0.0
 
     def to_dict(self) -> dict[str, Any]:
+        """The recorded form of one transaction.
+
+        ``counters`` here is :attr:`counters` -- the **cluster totals**.  The
+        per-node split is deliberately not serialised: every recorded artifact
+        in this repository is a single-chip run, where the split is one entry
+        holding everything, and adding a key would move evidence that has to
+        stay byte-identical to say anything.  A consumer that needs the split
+        reads it from the result object.
+        """
         return {
             "status": int(self.status),
             "status_name": CompletionStatus(self.status).name,
@@ -202,7 +223,19 @@ def loop_trip_count(
 
 
 class Device:
-    """One activated ABI 3.0 deployment on one logical accelerator."""
+    """One activated ABI 3.0 deployment on one logical accelerator.
+
+    **A transaction is the cluster's, not a node's.**  A 32-node deployment is
+    one logical accelerator: :meth:`run_transaction` runs the whole program on
+    every node, and :attr:`counters` and
+    :attr:`TransactionResult.counters` are therefore *cluster totals* -- the sum
+    over all thirty-two nodes plus the work the cluster does once.  They are not
+    one node's share and dividing them by ``node_count`` is not one either,
+    because the collectives and the state bookkeeping issue once for the whole
+    device and belong to no node.  :attr:`node_counters` and
+    :attr:`TransactionResult.node_counters` are the per-node split, indexed by
+    ``NODE_ID``; a consumer that wants one node's work reads that.
+    """
 
     def __init__(
         self,
@@ -232,7 +265,17 @@ class Device:
         #: definite node rather than whichever one ran last.
         self.memory = self.node_memories[0]
         self.views = self.node_views[0]
+        #: Cluster totals across every transaction this device has run.  See the
+        #: class docstring: on a multi-node topology these are every node's work
+        #: added together, plus the cluster-wide families.
         self.counters = CounterSet()
+        #: The same history split by logical node, indexed by ``NODE_ID``.  A
+        #: ``LINK`` or ``STATE`` instruction issues once for the cluster and is
+        #: in none of these, which is why they sum to less than
+        #: :attr:`counters` rather than to it exactly.
+        self.node_counters: tuple[CounterSet, ...] = tuple(
+            CounterSet() for _ in range(self.node_count)
+        )
         self.sessions: dict[int, Session] = {}
         self.trace_enabled = trace
         self.trace: list[dict[str, Any]] = []
@@ -461,7 +504,15 @@ class Device:
         # control flow, state bookkeeping, and the collectives themselves.
         symbols[int(Symbol.NODE_COUNT)] = self.node_count
         symbols[int(Symbol.NODE_ID)] = 0
+        # ``counters`` holds only what the *cluster* does once -- control flow,
+        # the collectives and the state bookkeeping.  Engine work is accounted
+        # to the node that did it and merged in at the end, so the totals this
+        # transaction reports are identical to the ones it reported before the
+        # split, and the split itself is available beside them.
         counters = CounterSet()
+        node_counters: tuple[CounterSet, ...] = tuple(
+            CounterSet() for _ in range(self.node_count)
+        )
         loops: dict[int, int] = {}
         pending: list[PendingCommit] = []
         signalled: set[int] = set()
@@ -568,7 +619,12 @@ class Device:
                 counters.add("instructions.issued")
                 try:
                     self._issue_nodes(
-                        ctx, instruction, family, node_produced, node_selection
+                        ctx,
+                        instruction,
+                        family,
+                        node_produced,
+                        node_selection,
+                        node_counters,
                     )
                 except DeviceTrap as trap:
                     if trap.instruction == NO_ID:
@@ -604,6 +660,23 @@ class Device:
             fault = DeviceTrap(str(exc), trap_class, pc)
 
         wall = time.perf_counter() - started
+
+        def _totals() -> CounterSet:
+            """Fold the node sets into the cluster totals, once, at the end.
+
+            Every counter is additive -- nothing in the registry is a maximum
+            that any engine writes -- so summing the per-node sets into the
+            cluster-only set reproduces exactly the totals a single shared set
+            produced before the split.  It is done here rather than per issue so
+            that the split costs one merge per transaction rather than one per
+            instruction per node.
+            """
+            for share in node_counters:
+                counters.merge(share)
+            for node, share in enumerate(node_counters):
+                self.node_counters[node].merge(share)
+            return counters
+
         if fault is not None:
             counters.add("fault.traps")
             counters.add("fault.poisoned_transactions")
@@ -616,7 +689,8 @@ class Device:
             for resource in session.states.values():
                 resource.open_prepare = False
             counters.add("state.discards", len(session.states))
-            self.counters.merge(counters)
+            shares = tuple(share.snapshot() for share in node_counters)
+            self.counters.merge(_totals())
             return TransactionResult(
                 status=CompletionStatus.FAILED,
                 trap_class=fault.trap_class,
@@ -625,6 +699,7 @@ class Device:
                 fetched=fetched,
                 predicated_off=predicated_off,
                 counters=counters.snapshot(),
+                node_counters=shares,
                 message=str(fault),
                 wall_seconds=wall,
             )
@@ -637,7 +712,8 @@ class Device:
                 counters.add("fault.poisoned_transactions")
                 for resource in session.states.values():
                     resource.open_prepare = False
-                self.counters.merge(counters)
+                shares = tuple(share.snapshot() for share in node_counters)
+                self.counters.merge(_totals())
                 return TransactionResult(
                     status=CompletionStatus.FAILED,
                     trap_class=TrapClass.INTERNAL_INVARIANT,
@@ -646,6 +722,7 @@ class Device:
                     fetched=fetched,
                     predicated_off=predicated_off,
                     counters=counters.snapshot(),
+                    node_counters=shares,
                     message=fault,
                     wall_seconds=wall,
                 )
@@ -663,7 +740,8 @@ class Device:
             session.eos_reason = eos_reason
             counters.add("selection.eos_stops")
         session.position = symbols.get(int(Symbol.POSITION_END), session.position)
-        self.counters.merge(counters)
+        shares = tuple(share.snapshot() for share in node_counters)
+        self.counters.merge(_totals())
         self._device_cycle += retired
         return TransactionResult(
             status=CompletionStatus.SUCCESS,
@@ -674,6 +752,7 @@ class Device:
             eos_reason=eos_reason,
             produced_tokens=tuple(produced),
             counters=counters.snapshot(),
+            node_counters=shares,
             wall_seconds=wall,
         )
 
@@ -764,6 +843,7 @@ class Device:
         family: Major,
         node_produced: list[list[int]],
         node_selection: list[dict[str, Any]],
+        node_counters: Sequence[CounterSet],
     ) -> None:
         """Issue one instruction on every logical node, or once for the cluster.
 
@@ -789,24 +869,48 @@ class Device:
         every node has retired every instruction before it.  Nothing in the
         program can observe the difference, because a node's only window onto
         another node is a LINK instruction.
+
+        Each node's engine work is accounted to ``node_counters[node]``, which
+        is what makes :attr:`TransactionResult.node_counters` a real split
+        rather than a division: the collectives and the state bookkeeping above
+        are issued once and stay in the cluster-only set.
+
+        Everything this rebinds is restored to **what the caller had**, not to
+        node zero.  Restoring a constant was a defect: a caller that had bound
+        ``NODE_ID`` itself -- to run a transaction as some particular node --
+        found it silently zeroed after the first engine instruction, and every
+        later reader of the symbol saw 0 instead of the binding.
         """
         if family is Major.LINK or family is Major.STATE:
             self._issue(ctx, instruction, family)
             return
-        for node in range(self.node_count):
-            ctx.memory = self.node_memories[node]
-            ctx.views = self.node_views[node]
-            ctx.symbols[int(Symbol.NODE_ID)] = node
-            ctx.notes["produced_tokens"] = node_produced[node]
-            ctx.notes["selection"] = node_selection[node]
-            try:
+        previous_memory = ctx.memory
+        previous_views = ctx.views
+        previous_counters = ctx.counters
+        previous_produced = ctx.notes.get("produced_tokens")
+        previous_selection = ctx.notes.get("selection")
+        had_node_id = int(Symbol.NODE_ID) in ctx.symbols
+        previous_node_id = ctx.symbols.get(int(Symbol.NODE_ID))
+        try:
+            for node in range(self.node_count):
+                ctx.memory = self.node_memories[node]
+                ctx.views = self.node_views[node]
+                ctx.counters = node_counters[node]
+                ctx.symbols[int(Symbol.NODE_ID)] = node
+                ctx.notes["produced_tokens"] = node_produced[node]
+                ctx.notes["selection"] = node_selection[node]
                 self._issue(ctx, instruction, family)
-            finally:
-                ctx.memory = self.memory
-                ctx.views = self.views
-                ctx.symbols[int(Symbol.NODE_ID)] = 0
-                ctx.notes["produced_tokens"] = node_produced[0]
-                ctx.notes["selection"] = node_selection[0]
+        finally:
+            ctx.memory = previous_memory
+            ctx.views = previous_views
+            ctx.counters = previous_counters
+            ctx.notes["produced_tokens"] = previous_produced
+            ctx.notes["selection"] = previous_selection
+            if had_node_id:
+                assert previous_node_id is not None
+                ctx.symbols[int(Symbol.NODE_ID)] = previous_node_id
+            else:
+                ctx.symbols.pop(int(Symbol.NODE_ID), None)
 
     def _node_agreement(
         self,

@@ -1433,6 +1433,86 @@ def test_rom_and_hbm_route_the_same_weight_traffic_to_different_classes():
     assert hbm_counters == rom_counters
 
 
+def test_memory_report_accounts_for_every_byte_the_device_moved():
+    """The memory report is the functional device's traffic, not a sample of it.
+
+    The cycle model instruments the device's view resolvers to learn which
+    object each engine touched, and buckets those accesses by storage class.
+    The architectural byte counters are produced independently, by the frozen
+    device, so the two are an end-to-end check on the instrumentation: if a
+    change to ``runtime/sim`` moves where an engine reads from, the report goes
+    quiet and this test says so rather than the study silently resting on
+    zero-byte timing.
+
+    HBM, ROM and HOST reconcile exactly.  SRAM carries the state resource as
+    well, because ADR-003 leaves a STATE object's placement open and the
+    machine model backs it with SRAM: the atomic commit reads the prepared
+    image and writes the committed one, which is ``state.bytes_written`` in
+    each direction and appears in no architectural SRAM counter.
+    """
+    deployment, capability = synthetic_tiled_deployment(storage_class=StorageClass.HBM)
+    result = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(request())
+    body = result.to_dict()
+    arch = result.architectural
+    assert body["memory"]["state_backing_storage_class"] == "SRAM"
+
+    for klass in ("hbm", "rom", "host"):
+        block = body["memory"][klass]
+        assert block["bytes_read"] == arch.get(f"{klass}.bytes_read", 0), klass
+        assert block["bytes_written"] == arch.get(f"{klass}.bytes_written", 0), klass
+
+    state_bytes = arch.get("state.bytes_written", 0)
+    assert state_bytes > 0
+    assert body["memory"]["sram"]["bytes_read"] == arch["sram.bytes_read"] + state_bytes
+    assert (
+        body["memory"]["sram"]["bytes_written"]
+        == arch["sram.bytes_written"] + state_bytes
+    )
+    # And the weight traffic really is on the wire, not merely in a counter.
+    assert body["memory"]["hbm"]["bytes_read"] > 0
+    assert body["memory"]["hbm"]["busy_cycles"] > 0
+
+
+def test_cluster_timing_is_one_node_and_says_so():
+    """A node's share is a node's share, not thirty-two nodes' work.
+
+    The functional device replays every compute instruction once per logical
+    node inside a single transaction, so its architectural counters are cluster
+    totals.  The cycle model times one node and replays it, so its timing and
+    its memory traffic must be that one node's -- otherwise every per-node
+    figure, and the critical path built from them, is inflated by the node
+    count.  The result states which of the two scopes each block carries.
+    """
+    capability = cycle_capability(TopologyClass.CLUSTER_32)
+    deployment, _ = synthetic_tiled_deployment(capability)
+    req = request()
+    body = CycleModel(deployment, capability, load_cost_table(CLUSTER32)).run(
+        req
+    ).to_dict()
+    nodes = body["cluster"]["nodes"]
+    assert nodes == 32
+    arch = body["counters"]["architectural"]
+    # The device counted thirty-two nodes' weight reads; the model timed one.
+    assert arch["hbm.bytes_read"] == nodes * body["memory"]["hbm"]["bytes_read"]
+    assert body["memory"]["hbm"]["bytes_read"] > 0
+    scope = body["cluster"]["reporting_scope"]
+    assert scope["memory"] == "one node"
+    assert scope["timing"] == "one node"
+    assert scope["counters.architectural"] == "the whole cluster"
+
+    # One node's compute is what a single chip running the same program spends,
+    # which is the strongest available statement that the replay is a replay.
+    single_capability = cycle_capability()
+    single, _ = synthetic_tiled_deployment(single_capability)
+    single_body = CycleModel(
+        single, single_capability, load_cost_table(CLUSTER32)
+    ).run(req).to_dict()
+    assert (
+        body["cluster"]["per_node"][0]["compute_cycles"]
+        == single_body["timing"]["compute_cycles"]
+    )
+
+
 def test_memory_bandwidth_and_latency_move_the_total(tmp_path: Path):
     """A slower memory really does make the same program take longer."""
     body = json.loads(BASELINE.read_text())

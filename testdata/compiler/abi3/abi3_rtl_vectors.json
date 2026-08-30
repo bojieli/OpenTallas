@@ -4,7 +4,7 @@
     "minor": 0
   },
   "capability_digest": "89f0b51783ed717486fda73553fc3ef9a130f4f6ced9a33447548338aba5058d",
-  "case_count": 43,
+  "case_count": 53,
   "cases": [
     {
       "admitted": true,
@@ -8733,6 +8733,1316 @@
     },
     {
       "admitted": true,
+      "declared_retired_work": 4,
+      "descriptor_count": 18,
+      "descriptor_table_sha256": "7834840d55b6aa219ac0e7e04fba21392f784425781161558ce4f29fe0e549ed",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 4,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 4,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 14,
+          "family": 144,
+          "index": 0,
+          "mnemonic": "LINK.COLLECTIVE",
+          "sub": 6
+        },
+        {
+          "descriptor_id": 16,
+          "family": 32,
+          "index": 1,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 15,
+          "family": 144,
+          "index": 2,
+          "mnemonic": "LINK.BARRIER",
+          "sub": 7
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "index": 1,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "index": 1,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "index": 1,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 4,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 0,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 4,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "engine.link.descriptors": 2,
+        "engine.tensor.descriptors": 1,
+        "instructions.fetched": 4,
+        "instructions.issued": 3,
+        "instructions.retired": 4
+      },
+      "instruction_count": 4,
+      "name": "a14_link_node_scope",
+      "note": "the first LINK instructions in the vector set: a collective and a barrier naming COMMUNICATION descriptors whose participant_scope is NODE, which is byte 80 = 0 and therefore byte-identical to the same program written before A14 existed.  It fixes the RTL's LINK admission -- the family-to-descriptor-type check -- and it is the control against which a14_link_wafer_scopes is read",
+      "phase": 0,
+      "program_sha256": "143544f5bbc33933bb58db9fdf6e54cf2a59daf923e06520d920dd8c477b2e3f",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 4,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 4,
+      "descriptor_count": 14,
+      "descriptor_table_sha256": "2dc0f9a6c68c207c5fe007d81f8f568d4c7bc58cce412f6ba17ff022be320eac",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 4,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 4,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 2,
+          "family": 144,
+          "index": 0,
+          "mnemonic": "LINK.COLLECTIVE",
+          "sub": 6
+        },
+        {
+          "descriptor_id": 12,
+          "family": 32,
+          "index": 1,
+          "mnemonic": "TENSOR.MATMUL",
+          "sub": 0
+        },
+        {
+          "descriptor_id": 3,
+          "family": 144,
+          "index": 2,
+          "mnemonic": "LINK.BARRIER",
+          "sub": 7
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 6,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "index": 1,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "index": 1,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "index": 1,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 4,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 0,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 4,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "engine.link.descriptors": 2,
+        "engine.tensor.descriptors": 1,
+        "instructions.fetched": 4,
+        "instructions.issued": 3,
+        "instructions.retired": 4
+      },
+      "instruction_count": 4,
+      "name": "a14_link_wafer_scopes",
+      "note": "the same LINK program on a WAFER_LOGICAL_DEVICE with a TILE-scoped collective over 32 participants and a RETICLE-scoped barrier over four: participant_scope holds 2 and 1 at payload offset 80, a byte that was reserved-zero before A14.  The issue sequence must match a14_link_node_scope exactly, because the RTL admits a LINK on its descriptor type and hands the payload to the fabric",
+      "phase": 0,
+      "program_sha256": "77c64885519f0983e17fe4c6c1fb2595f3033fbb7d8e6084c7c488c18ad2e954",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 0,
+      "symbols": {
+        "0": 4,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": false,
+      "declared_retired_work": 2,
+      "descriptor_count": 16,
+      "descriptor_table_sha256": "ae444bb668dd0fd2f391c719208555453b6ba81134c8a4d76bd4f687a9353ca2",
+      "device_executed": false,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": false,
+        "fetched": 0,
+        "first_fault": 4294967295,
+        "issued": 0,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 0,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 1,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [],
+      "expected_views": [],
+      "golden": {
+        "branches": 0,
+        "complete": false,
+        "fetched": 0,
+        "first_fault": 4294967295,
+        "issued": 0,
+        "loop_iterations": 0,
+        "message": "not executable by the golden model",
+        "predicated_off": 0,
+        "retired": 0,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 1,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {},
+      "instruction_count": 2,
+      "name": "a14_scope_unsupported",
+      "note": "a RETICLE-scoped collective on a SINGLE_CHIP topology declaring no reticles: refused at admission by both of section 12.5's rules, so the deployment never reaches a device",
+      "phase": 0,
+      "program_sha256": "88837c2aadbc4267da3633d24a4006109c795107e5622cf2e58642946794152b",
+      "python_rejects_image": null,
+      "runs_program": false,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 4,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": [
+        "COMMUNICATION descriptor 14 is RETICLE-scoped; the admitted topology declares 0 reticles, so it has no reticle fabric to address",
+        "COMMUNICATION descriptor 14 is RETICLE-scoped on a SINGLE_CHIP topology; a chip has no reticle or tile fabric, so a single-chip deployment admits only NODE"
+      ]
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 10,
+      "descriptor_count": 23,
+      "descriptor_table_sha256": "0a7d43b774181f08cd7502a133f1d6d2d5857e54618277059599a83884d4e713",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 8,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 3,
+        "predicated_off": 0,
+        "retired": 8,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 21,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.CONVERT",
+          "sub": 5
+        },
+        {
+          "descriptor_id": 21,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.CONVERT",
+          "sub": 5
+        },
+        {
+          "descriptor_id": 21,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.CONVERT",
+          "sub": 5
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            16
+          ],
+          "element_offset": 0,
+          "index": 1,
+          "loops": {
+            "16": 0
+          },
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 18,
+          "dim0": 4,
+          "dims": [
+            4,
+            16
+          ],
+          "element_offset": 0,
+          "index": 1,
+          "loops": {
+            "16": 0
+          },
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 19,
+          "dim0": 4,
+          "dims": [
+            4,
+            16
+          ],
+          "element_offset": 256,
+          "index": 1,
+          "loops": {
+            "16": 0
+          },
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 4,
+          "dims": [
+            4,
+            16
+          ],
+          "element_offset": 64,
+          "index": 1,
+          "loops": {
+            "16": 1
+          },
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 18,
+          "dim0": 4,
+          "dims": [
+            4,
+            16
+          ],
+          "element_offset": 64,
+          "index": 1,
+          "loops": {
+            "16": 1
+          },
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 19,
+          "dim0": 4,
+          "dims": [
+            4,
+            16
+          ],
+          "element_offset": 320,
+          "index": 1,
+          "loops": {
+            "16": 1
+          },
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            16
+          ],
+          "element_offset": 128,
+          "index": 1,
+          "loops": {
+            "16": 2
+          },
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 18,
+          "dim0": 1,
+          "dims": [
+            1,
+            16
+          ],
+          "element_offset": 128,
+          "index": 1,
+          "loops": {
+            "16": 2
+          },
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 19,
+          "dim0": 1,
+          "dims": [
+            1,
+            16
+          ],
+          "element_offset": 384,
+          "index": 1,
+          "loops": {
+            "16": 2
+          },
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 8,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 3,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 8,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 3,
+        "engine.vector.descriptors": 3,
+        "instructions.fetched": 8,
+        "instructions.issued": 3,
+        "instructions.retired": 8
+      },
+      "instruction_count": 4,
+      "name": "a15_block_scale_rows",
+      "note": "a 2 x 8 block scale on a view A13 also clamps: scale_block_rows holds 2 at payload offset 104, the first bytes past the dynamic term array and reserved-zero before A15.  The unscaled sibling in operand slot 1 states the identical geometry, so the two must resolve to the same extents -- 4, 4, 1 over a span of nine -- on every iteration",
+      "phase": 0,
+      "program_sha256": "139f669a9af65f8ba375f4fe18bb07e78737e878d6ec1fa4d4db2606a9bb2cc1",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 9,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": false,
+      "declared_retired_work": 10,
+      "descriptor_count": 23,
+      "descriptor_table_sha256": "441f839b9f4a3192906bfd5d201f5f86df1d0d5148fc856131e6d708a1175196",
+      "device_executed": false,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": false,
+        "fetched": 0,
+        "first_fault": 4294967295,
+        "issued": 0,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 0,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 1,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [],
+      "expected_views": [],
+      "golden": {
+        "branches": 0,
+        "complete": false,
+        "fetched": 0,
+        "first_fault": 4294967295,
+        "issued": 0,
+        "loop_iterations": 0,
+        "message": "not executable by the golden model",
+        "predicated_off": 0,
+        "retired": 0,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 1,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {},
+      "instruction_count": 4,
+      "name": "a15_scale_rows_indivisible",
+      "note": "a three-row scale block over a four-row leading extent: section 12.6 requires rows % scale_block_rows == 0 for the scale index to be exact, so the view is refused at admission rather than trapped inside an operator that has already read weights",
+      "phase": 0,
+      "program_sha256": "020cc3c0d43919e53aa1d0869d29b8e470958d0216bf49b26b4544e4393563d9",
+      "python_rejects_image": null,
+      "runs_program": false,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 9,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": [
+        "view 17: leading extent 4 is not a multiple of its 3-row scale block"
+      ]
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 2,
+      "descriptor_count": 20,
+      "descriptor_table_sha256": "fc493cd3685c3ba077680b6fd9b6c7ff307897c5acd670cae1321002fd9b993c",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2,
+        "first_fault": 4294967295,
+        "issued": 1,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 2,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 18,
+          "family": 48,
+          "index": 0,
+          "mnemonic": "VECTOR.CONVERT",
+          "sub": 5
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 15,
+          "dim0": 8,
+          "dims": [
+            8,
+            8
+          ],
+          "element_offset": 0,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 8,
+          "dims": [
+            8,
+            1
+          ],
+          "element_offset": 0,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_2",
+          "rank": 2,
+          "slot": 2
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "index": 0,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2,
+        "first_fault": 4294967295,
+        "issued": 1,
+        "loop_iterations": 0,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 2,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "engine.vector.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2
+      },
+      "instruction_count": 2,
+      "name": "a16_convert_carried_plane",
+      "note": "a partial dequantisation: codes, block scales and a carried plane in input slots 0, 1 and 2.  It is the first operator in the set to name input_view_2, so it is the first to walk that arm of the RTL's operand multiplexer and resolve a view through it",
+      "phase": 0,
+      "program_sha256": "ee01d2d142434f38add05aa98b6c6eda23334ba6599cd22e250405bed412e598",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 4,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 2,
+      "descriptor_count": 20,
+      "descriptor_table_sha256": "91553c372513a65ac62f31808c6f2308b95c3be11103efc86fd3b1284e42b5c6",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2,
+        "first_fault": 4294967295,
+        "issued": 1,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 2,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 18,
+          "family": 80,
+          "index": 0,
+          "mnemonic": "ROUTE.BIASED_TOPK",
+          "sub": 1
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 15,
+          "dim0": 8,
+          "dims": [
+            8,
+            4
+          ],
+          "element_offset": 0,
+          "index": 0,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 8,
+          "dims": [
+            8,
+            4
+          ],
+          "element_offset": 0,
+          "index": 0,
+          "loops": {},
+          "operand": "output_view_1",
+          "rank": 2,
+          "slot": 5
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2,
+        "first_fault": 4294967295,
+        "issued": 1,
+        "loop_iterations": 0,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 2,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2
+      },
+      "instruction_count": 2,
+      "name": "a16_route_biased_topk",
+      "note": "two inputs, two outputs and a populated aux_id_0: the first operator in the set to name output_view_1, and the first to put a nonzero word immediately past the view slots the RTL's operand walk reads",
+      "phase": 0,
+      "program_sha256": "cb601a5512c384d9df2afbe630d01fbfb45fe76e459dd99bb7f16a74199efe8e",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 4,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 2,
+      "descriptor_count": 21,
+      "descriptor_table_sha256": "47a87f64667ea6ba690c3d37ddc9ed17d9a530c6d949c791f3ca57e0bbef14f8",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2,
+        "first_fault": 4294967295,
+        "issued": 1,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 2,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 96,
+          "index": 0,
+          "mnemonic": "REDUCTION.GROUPED_CONCAT",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 13,
+          "dim0": 2,
+          "dims": [
+            2,
+            16
+          ],
+          "element_offset": 0,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 14,
+          "dim0": 2,
+          "dims": [
+            2,
+            16
+          ],
+          "element_offset": 32,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 15,
+          "dim0": 2,
+          "dims": [
+            2,
+            16
+          ],
+          "element_offset": 64,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_2",
+          "rank": 2,
+          "slot": 2
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 2,
+          "dims": [
+            2,
+            16
+          ],
+          "element_offset": 96,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_3",
+          "rank": 2,
+          "slot": 3
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "index": 0,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2,
+        "first_fault": 4294967295,
+        "issued": 1,
+        "loop_iterations": 0,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 2,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "engine.reduction.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2
+      },
+      "instruction_count": 2,
+      "name": "a17_join_axis_zero",
+      "note": "four row blocks joined on axis 0 with aux_id_0 stated as 0 explicitly.  This is the operator REDUCTION.3 has always been, and it is the control against which the feature join is compared: the two differ only in operator payload byte 48",
+      "phase": 0,
+      "program_sha256": "c03ebe8ea2f3c65abdf038d64fe2950d10120e3f1465a451f21c62fed4ffde27",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 8,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 2,
+      "descriptor_count": 21,
+      "descriptor_table_sha256": "af77c2462a9be64cce2598ba350de426bd4eefff91cb5b446f6aaa217e367ac5",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2,
+        "first_fault": 4294967295,
+        "issued": 1,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 2,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 96,
+          "index": 0,
+          "mnemonic": "REDUCTION.GROUPED_CONCAT",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 13,
+          "dim0": 8,
+          "dims": [
+            8,
+            4
+          ],
+          "element_offset": 0,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 14,
+          "dim0": 8,
+          "dims": [
+            8,
+            4
+          ],
+          "element_offset": 4,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 15,
+          "dim0": 8,
+          "dims": [
+            8,
+            4
+          ],
+          "element_offset": 8,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_2",
+          "rank": 2,
+          "slot": 2
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 8,
+          "dims": [
+            8,
+            4
+          ],
+          "element_offset": 12,
+          "index": 0,
+          "loops": {},
+          "operand": "input_view_3",
+          "rank": 2,
+          "slot": 3
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "index": 0,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2,
+        "first_fault": 4294967295,
+        "issued": 1,
+        "loop_iterations": 0,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 2,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "engine.reduction.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2
+      },
+      "instruction_count": 2,
+      "name": "a17_join_axis_one",
+      "note": "four column blocks joined on the feature axis with aux_id_0 = 1 (amendment A17).  The sequencer walks the same four input views and the same output view as the axis-zero sibling and resolves them to the same extents; aux_id_0 lives at operator payload byte 48 and the operand walk stops at byte 47, so the join axis reaches the engine and never reaches the microsequencer",
+      "phase": 0,
+      "program_sha256": "9f1c69e68dc81d6ff17eb1807d93b99385855f9de39cefc7065306ede4358b12",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 8,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": false,
+      "declared_retired_work": 2,
+      "descriptor_count": 21,
+      "descriptor_table_sha256": "aea28f9f652e07833e44596c9eae9f3b5c8e8c75dfab6d6030ad47376017025b",
+      "device_executed": false,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": false,
+        "fetched": 0,
+        "first_fault": 4294967295,
+        "issued": 0,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 0,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 1,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [],
+      "expected_views": [],
+      "golden": {
+        "branches": 0,
+        "complete": false,
+        "fetched": 0,
+        "first_fault": 4294967295,
+        "issued": 0,
+        "loop_iterations": 0,
+        "message": "not executable by the golden model",
+        "predicated_off": 0,
+        "retired": 0,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 1,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {},
+      "instruction_count": 2,
+      "name": "a17_join_axis_undefined",
+      "note": "aux_id_0 = 2 on a rank-2 operand set: A17 defines join axes 0 and 1 and nothing else, so the deployment is refused at admission rather than trapped inside an engine that has already read operands",
+      "phase": 0,
+      "program_sha256": "70d4750239187bac5b7b2b4a02d6880e5f160e74b8fad2e26667caef68ed48f1",
+      "python_rejects_image": null,
+      "runs_program": false,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 8,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": [
+        "instruction 0 (GROUPED_CONCAT): aux_id_0 names join axis 2; amendment A17 defines 0, 1 and nothing else"
+      ]
+    },
+    {
+      "admitted": true,
       "declared_retired_work": 2,
       "descriptor_count": 16,
       "descriptor_table_sha256": "6d940557d4b864059e71b7aacd014ba015477017a7ace23de668d184a58ee7fa",
@@ -10203,24 +11513,24 @@
     "view_stride": 6,
     "view_words": 8192
   },
-  "header_admission_count": 43,
+  "header_admission_count": 53,
   "image_sha256": {
-    "a3_case.hex": "c3b446e15a9687aa4fec7f74f1c17ddcd55749535279711d72846b123794409c",
-    "a3_descriptor.hex": "3a248e87b31779e8acc5da6ae68a6bda1994e861bed3cf5870874afe688eff78",
-    "a3_header.hex": "f5bce6eecd61af6b604cfe1745413413754e244780260afacc2579f9639d938e",
-    "a3_issue.hex": "d61eff056ca955201d4344c1573586bac7036dae42443d612495fd893ccb6a48",
-    "a3_meta.hex": "3dbb70124c28667f7cac1d58c1c8c951e4fce73dcc9b505f9a6f8880f539c2af",
-    "a3_program.hex": "3f5e36e494036271bf823b16b29b5023e4100fc6b32ccb3e0a81ea549b5a9fdb",
-    "a3_symbol.hex": "b041f5ddc0926627410f8164f5f3b6008968c4eadabec2b499cdd78935be6c40",
-    "a3_view.hex": "5c253bded2133cbc53f03a6cb44de7a0e97be6f5a2d742157aee2b073e8b1724"
+    "a3_case.hex": "a56a53f81da3cbdf3a4aec2358093ddd5001c5e7ed614d847fb8b73cab841ec7",
+    "a3_descriptor.hex": "a6b68fb529b93f0d2c0f6ea932adc1dd0a70fe9c4180b3128cabbcb7cef4985f",
+    "a3_header.hex": "a064d7007430875fcdf7c59b9462c9b3dc6fb30c097bbe1cd6434eae90dc8b5e",
+    "a3_issue.hex": "561ef5938a49cd77e408f6a2546579c04ce17880df93e34fde23d378d44e8057",
+    "a3_meta.hex": "92b0c521b1a073fcde0cd466e74cacee0fa7fb844f817ce264862e1df73cafbc",
+    "a3_program.hex": "c7f26eb6d4f32c21de5841d536750a66aed7b902579982f2796a735f4ea3a8f9",
+    "a3_symbol.hex": "5ebb2fbd18cef5f566c20298a3ab3badd533207955220a6f89aa999953089930",
+    "a3_view.hex": "687594b2959938a6cd6c2fbb4e8ec598fe100334293b158bcc73295a565496eb"
   },
-  "issue_event_count": 143,
+  "issue_event_count": 156,
   "negative_case_count": 17,
-  "positive_case_count": 26,
-  "program_run_count": 36,
-  "required_marker": "PASS: ABI3 RTL microsequencer cases=43 headers=43 programs=36 issues=143 views=368 traps=11",
+  "positive_case_count": 36,
+  "program_run_count": 43,
+  "required_marker": "PASS: ABI3 RTL microsequencer cases=53 headers=53 programs=43 issues=156 views=401 traps=11",
   "schema": "opentallas.rtl.abi3_vectors.v1",
   "trap_count": 11,
   "view_reference": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms) and A13 (partial final iteration of a block loop)",
-  "view_resolution_count": 368
+  "view_resolution_count": 401
 }

@@ -32,6 +32,62 @@ _FENCE = re.compile(r"```bash[ \t]*\r?\n(?P<body>.*?)\r?\n?```", re.DOTALL)
 #: The terminating answer line.
 _ANSWER = re.compile(r"^ANSWER:[ \t]*(?P<answer>.*)$", re.MULTILINE)
 
+#: Qwen3's thinking delimiters.  ``<think>`` is emitted by the *model* when the
+#: chat template is rendered with ``enable_thinking=True``; when it is rendered
+#: with ``enable_thinking=False`` the template instead appends a pre-closed
+#: ``<think>\n\n</think>\n\n`` to the prompt, which is what prevents the
+#: model from reasoning at all.
+THINK_OPEN = "<think>"
+THINK_CLOSE = "</think>"
+THINK_OPEN_TOKEN_ID = 151667
+THINK_CLOSE_TOKEN_ID = 151668
+
+
+def split_thinking(text: str) -> tuple[str | None, str]:
+    """Separate a turn's reasoning block from the content it is reasoning towards.
+
+    Returns ``(thinking, visible)``.  ``thinking`` is ``None`` when the turn
+    carries no closed thinking block, which is the case both when reasoning is
+    disabled and when a generation was cut off mid-thought -- and those two are
+    deliberately not distinguished here, because a truncated thought is not a
+    turn the protocol can act on either way.
+
+    The split matters for parsing.  A reasoning model routinely *drafts* a
+    command inside its thinking block before committing to one, so a parser run
+    over the whole turn would see two fenced blocks and fail the episode for a
+    protocol violation the model did not commit.  The action is what the model
+    emits after it stops thinking.
+    """
+    close = text.find(THINK_CLOSE)
+    if close == -1:
+        return None, text
+    open_at = text.find(THINK_OPEN)
+    start = open_at + len(THINK_OPEN) if 0 <= open_at < close else 0
+    return text[start:close].strip(), text[close + len(THINK_CLOSE) :].lstrip("\n")
+
+
+def render_agent_context(
+    tokenizer, messages: Sequence[Mapping[str, str]], *, enable_thinking: bool
+) -> tuple[str, list[int]]:
+    """Render an episode's message history through the official chat template.
+
+    Both the accelerator episode and the external oracle episode call this, so
+    a turn-by-turn comparison between them compares decoded tokens rather than
+    two different renderings of the same conversation.
+
+    The history carries each assistant turn's *raw* text, thinking block
+    included; the official Qwen3 template drops prior-turn reasoning itself
+    when it re-renders, and reproducing that stripping here would be a second,
+    divergent implementation of the template's own rule.
+    """
+    text = tokenizer.apply_chat_template(
+        list(messages),
+        tokenize=False,
+        add_generation_prompt=True,
+        enable_thinking=enable_thinking,
+    )
+    return text, list(tokenizer.encode(text, add_special_tokens=False))
+
 
 class AgentProtocolError(Exception):
     """Raised when model output does not satisfy the frozen protocol."""

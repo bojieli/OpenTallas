@@ -434,6 +434,89 @@ zero-copy inverse proof over all 156 GB, which is one of the few things in this
 program that is proved rather than argued. Describing the real layout is the
 change that was needed.
 
+### 12.7 Amendment A17 — a concatenation states the axis it joins
+
+`REDUCTION.GROUPED_CONCAT` reads a **join axis** from `aux_id_0` of its OPERATOR
+descriptor (payload offset 48, already u32, already assigned). `NO_ID` and `0`
+both mean **axis 0**, which is the operator this has always been; `1` joins
+rank-2 operands on their feature axis. No other value is defined.
+
+With axis 1, *N* inputs of `[R, C_i]` produce `[R, sum(C_i)]`, and input *i*
+occupies columns `[sum(C_<i), sum(C_<i) + C_i)`. The operand order is the input
+slot order, so the column order is stated by the descriptor and not by a
+backend's traversal.
+
+Four things are **refused at admission**, not trapped inside an engine that has
+already read operands:
+
+- an `aux_id_0` outside `{0, 1, NO_ID}`;
+- a join axis at or beyond an operand's rank;
+- a feature join on an operand that is not rank 2; and
+- a join whose **non-join extents disagree** — every operand, inputs and output
+  alike, must state the same extent on every axis the join does not consume, and
+  the output's joined extent must be the sum of the inputs'.
+
+The third of those is a deliberate narrowing rather than an oversight. On a
+rank-3 operand a feature join's block is not one contiguous run of the output,
+so the destination window becomes a strided rectangle whose correctness depends
+on the stride the *producer* chose; nothing in either released model needs it,
+and A17 refuses a shape rather than compute one nobody has asked for. Widening
+the rank later is additive in exactly the way this amendment is.
+
+**Why the ABI needed this.** DeepSeek-V4-Flash's attention output projection is
+`einsum("bsgd,grd->bsgr")`: block diagonal over *features*, eight groups, each
+reading its own 4,096-column block of a `[tokens, 32768]` activation and writing
+its own 1,024-column block of a `[tokens, 8192]` result. Stated as the graph it
+is — eight contractions and a join — the join is on the feature axis, and
+before this amendment ABI 3.0 had no operator that could perform one. That was
+established by executing the expansion rather than by arguing about it: the
+program reached zero arity faults, both backends emitted exactly the right
+operand views, and the device then refused the result. An OPERATOR names four
+input views, so eight blocks join as a tree — two joins of four and one of two
+— and the first of those joins is where it stopped:
+
+```text
+GROUPED_CONCAT output view 725 dims (104, 4096) differ from the concatenation (416, 1024)
+```
+
+Four `[104, 1024]` blocks joined on axis 0 are `[416, 1024]`, and all eight are
+`[832, 1024]`: group-major, where the `[104, 8192]` token-major row belongs.
+
+**No strided output view repairs it.** Group *g* of token *t* begins at
+`t * 8192 + g * 1024`, and a rank-2 view has one row stride: a view that walks
+groups cannot also walk tokens. The remaining spelling is eight kernels writing
+disjoint column ranges of one tensor, which is eight producers of one tensor —
+forbidden by single assignment, and rightly.
+
+**The gap was already open elsewhere, and the two lanes already disagreed about
+it.** `main.layerNN.index_topk.concat` and `compressed_dense_indices.concat`
+join a sliding-window index block to a compressed-index block on axis 1 and
+predate the grouped projection entirely. The shared HBM/SRAM planner
+re-expressed them as one `DMA.TRANSFER` per column window — and its own
+independent checker then objected that the kernel never reached `REDUCTION.3` —
+while the ROM backend emitted the frozen operator and the engine refused the
+shape. Two lanes disagreeing about one operator is the divergence this ABI
+exists to remove, so the amendment closes a defect that predates its motivating
+case.
+
+**Nothing on the wire changes.** `aux_id_0` is an assigned u32 field, not a
+reserved byte, and `DeploymentBuilder.operator` fills an unnamed auxiliary slot
+with `NO_ID`, so every `GROUPED_CONCAT` written before this amendment carries
+`NO_ID` there and therefore means axis 0 — the behaviour it already had. A17
+fixes the *interpretation* of an existing field for one subopcode, which is why
+it is recorded here beside A13 rather than left in one implementation's engine.
+It is also invisible to RTL 3.0: the microsequencer's operand walk reads
+`input_view_0..3` and `output_view_0..1` at payload bytes 24 through 47
+(`rtl/abi3/ot_a3_microsequencer.sv`, the `view_slot_id` multiplexer) and never
+indexes past them, so no auxiliary slot has ever reached the sequencer's contact
+surface.
+
+The alternative was a new subopcode for a feature join. That would leave two
+concatenations in the registry differing only in an axis, and it would not have
+closed the two axis-one sites that were already emitting one operator on one
+lane and a stream of transfers on the other. Naming the axis is the change that
+was actually needed; a second operator is not.
+
 ## 13. Amendments made at the architecture freeze
 
 The draft of this document disagreed with `TA-ADR-003` in five places. All five
@@ -475,6 +558,8 @@ remain normative.
 | A13 | the partial final iteration of a block loop | this document, section 12.4 |
 | A14 | the scope of a collective's participants | this document, section 12.5 |
 | A15 | a block scale may tile two axes | this document, section 12.6 |
+| A16 | two rotary contracts; the carried plane of a partial dequantisation; the expert sum's trailing base | operator conventions, section 16 |
+| A17 | a concatenation states the axis it joins | this document, section 12.7; operator conventions, section 17 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a

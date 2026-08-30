@@ -2,7 +2,7 @@
 
 **Contract ID:** TA-ABI3-OPCONV-1
 
-**Status:** frozen at `TA-A3-ARCH-0` plus amendment A6
+**Status:** frozen at `TA-A3-ARCH-0` plus amendments A6-A11 and A16-A17
 
 **Depends on:** `TA-ABI3-WIRE-1` section 12 (OPERATOR payload)
 
@@ -117,7 +117,7 @@ an implementation choice.
 | `ORDERED_SUM` | terms `[terms, ...]` | optional base | — | `[...]` | — |
 | `EXPERT_SUM` | contributions `[experts, ...]` | weights `[experts]` | optional base | `[...]` | — |
 | `VOCAB_GATHER` | partition logits `[partitions, width]` | optional partition order (U32) | — | `[partitions * width]` | — |
-| `GROUPED_CONCAT` | up to four inputs concatenated on axis 0 | | | output | — |
+| `GROUPED_CONCAT` | up to four inputs concatenated on the join axis | | | output | `aux0` join axis (`NO_ID` and `0` are axis 0; amendment A17) |
 | `PARTITION_SUM` | partials `[partitions, ...]` | optional base | — | `[...]` | `aux0` active-partition *symbol* (`NO_ID` reduces all) |
 
 An optional base enters the ordered sum **first**, as an accumulator's initial
@@ -382,3 +382,143 @@ Qwen appends the key plane and the value plane as two independent movements
 rather than one fused operation, which is what the hardware does — two DMA
 descriptors into two extents of the prepared state. Its per-layer kernel count
 is therefore twenty rather than nineteen.
+
+---
+
+## 16. Amendment A16 — three conventions the DeepSeek wafer needed
+
+**Frozen.** Nothing here changes a record, a field or a byte of
+`runtime/abi3/`; all three are statements about slots and contract names that
+the frozen wire format already carries, in the same class as amendment A8. They
+are written down because the engines implement them and an undocumented
+convention is how two components come apart.
+
+### 16.1 `VECTOR.ROPE` has two contracts, and `aux_id_0` is load-bearing
+
+Section 3's `ROPE` row already reads *`aux0` rotary width*. Until now no
+operator used it: Qwen rotates the whole last axis, so its rotary width and its
+head width are the same number and leaving the slot at `NO_ID` said nothing
+false. DeepSeek-V4-Flash rotates 64 channels of a 512- or 128-wide head, so the
+slot has to mean what the row says it means.
+
+An engine therefore dispatches `ROPE` on the numeric descriptor's contract
+digest, exactly as amendment A8 has it dispatch `RMS_NORM`:
+
+| contract | channels | pairing | rounding |
+|---|---|---|---|
+| `qwen3_rope_fp32_bf16_v1` | the whole last axis | `i` with `i + width / 2` | each product to BF16, then the sum |
+| `rope_apply_bf16_v1` | the final `aux0` | `2p` with `2p + 1` | binary32 through both products and the sum, one BF16 rounding at the output |
+| `rope_inverse_bf16_v1` | as above, conjugate phasor | as above | as above |
+
+Three things separate them and any one of them alone would corrupt a model:
+which channels move, which channel each is paired with, and where the
+arithmetic rounds. An engine that recognises neither contract must refuse the
+operator rather than pick one.
+
+The partial rotation **cannot** be expressed as the whole-axis contract over an
+identity-padded table. Under `qwen3_rope_fp32_bf16_v1` channel `i` is paired
+with `i + 256`, so rotating channels 448–511 of a 512-wide head necessarily
+moves channels 192–255 with them; identity coefficients on the untouched
+channels do not prevent that, because those channels are the *partners* of the
+rotated ones, not bystanders. Nor is a strided sub-block view over the rotated
+channels enough on its own: within any sub-block the frozen kernel still splits
+in half, and DeepSeek pairs adjacently. `aux_id_0` plus a contract that names
+the pairing is what expresses it; the untouched prefix is carried by the same
+operator, which is what the reference's `prefix_bf16_values_preserved` counter
+reconciles.
+
+`in1` is `cos[rotary_width] || sin[rotary_width]` — the row spans the *rotated*
+channels, and pair `p`'s coefficient is repeated at `2p` and `2p + 1` so the row
+reads channel-for-channel against the block it multiplies. That keeps section
+3's "cosine then sine" layout and keeps the pair folding in the table rather
+than in the engine.
+
+### 16.2 `VECTOR.CONVERT` takes a carried plane for a partial dequantisation
+
+`compiler/ir/v3/lowering.py` already gives `DEQUANTIZE` three inputs and says
+why: DeepSeek quantises the 448 non-rotary channels of a 512-wide KV vector to
+E4M3FN and keeps the 64 rotary channels in BF16, because those channels carry
+position. Reconstructing the vector reads two sources.
+
+| sub-case | in0 | in1 | in2 | out0 |
+|---|---|---|---|---|
+| whole-row dequantise | codes | block scales | — | converted, same shape as in0 |
+| partial dequantise | codes `[.., narrow]` | block scales | carried plane `[.., full]` | `[.., full]` |
+
+The carried channels are **moved, not converted**: their codes reach the output
+unchanged and are not counted as conversions. `in2` present is what selects the
+sub-case; `in0`'s last axis must be a proper prefix of `out0`'s, and the carried
+plane must match the destination exactly. The alternative — a two-operand
+dequantise plus a concatenation — is not available, because
+`REDUCTION.GROUPED_CONCAT` joins one whole axis of equal-framed operands and
+this splits one axis into a converted prefix and a carried suffix — even under
+amendment A17, whose feature join still requires every operand to agree on every
+axis it does not consume.
+
+The mirror case needs no new slot, only a view: a `QUANTIZE` whose code output
+is narrower than its source quantises a prefix of each row, and the backend
+presents `in0` with the same row stride and fewer elements of it. The output
+shape is the authority; a declared `quantized_width` is checked against it
+rather than trusted.
+
+### 16.3 `REDUCTION.EXPERT_SUM`'s base may join after the terms
+
+Section 6 reads (contributions, weights, optional base) and places the base
+*first*, which is the residual convention: the base is one more term and it
+associates with the rest. `runtime.reference.dispatch.reduce_expert_outputs_bf16`
+does something different — it reduces the routed contributions with the NUM-6.1
+balanced tree and *then* adds the shared expert with one further binary32
+addition.
+
+With six routed terms and a balanced tree these are different numbers, not two
+spellings of one: a base folded in as a seventh leaf meets the routed sum at the
+second level of the tree, and a base added afterwards meets the completed sum.
+The contract name selects the placement — `dispatch_reduce_expert_outputs_bf16_v1`
+adds the base after the terms — and every other contract keeps section 6's
+first-term placement.
+
+The association itself is a separate statement and travels in the numeric
+descriptor's `reduction_order`, which the neutral kernel declares. A reduction
+that states no order is encoded as sequential, which for this operation is also
+a different number; the exporter says `pairwise_tree` because the reference's
+tree is what the model is.
+
+## 17. Amendment A17 — `REDUCTION.GROUPED_CONCAT` names its join axis
+
+Wire format section 12.7 is normative; this section states what it means for an
+operand row and what it obliges a backend to do.
+
+| Subopcode | in0 | in1 | in2 | in3 | out0 | aux |
+|---|---|---|---|---|---|---|
+| `GROUPED_CONCAT`, axis 0 | `[L_0, ...]` | `[L_1, ...]` | `[L_2, ...]` | `[L_3, ...]` | `[sum(L_i), ...]` | `aux0` = `0` or `NO_ID` |
+| `GROUPED_CONCAT`, axis 1 | `[R, C_0]` | `[R, C_1]` | `[R, C_2]` | `[R, C_3]` | `[R, sum(C_i)]` | `aux0` = `1` |
+
+Unused input slots are `NO_ID` and contribute nothing, as before. Input *i*
+occupies `[sum(C_<i), sum(C_<i) + C_i)` of the output's feature axis, in slot
+order: the descriptor states the column order, so no backend has to choose one.
+
+`aux0` here is an **immediate**, not a runtime symbol. That is the same reading
+`VECTOR.ROPE`'s rotary width and `ROUTE.TOPK`'s `k` already have, and it is the
+opposite of `REDUCTION.PARTITION_SUM`'s `aux0`, which is a symbol; the row above
+is the authority for which, exactly as section 1 requires.
+
+**What an engine must do.** Dispatch the operand reading on the axis, refuse an
+axis the amendment does not define, refuse a feature join on an operand that is
+not rank 2, and refuse a set of operands that disagree on any extent the join
+does not consume. All four are also admission refusals, so an engine that sees
+one is seeing a program that reached it without being verified.
+
+**What a backend must do.** Emit the axis. A neutral `CONCAT` kernel carries its
+join axis as an attribute — the DeepSeek export states one on every
+concatenation it emits, and Qwen3-8B emits none at all — and that attribute is
+what `aux0` must carry; a backend that drops it silently re-labels a feature
+join as a row join. A backend that previously *re-expressed* an axis-one
+concatenation as one movement per column window must stop: the operator exists
+now, the movement form costs one event per input where the operator costs one
+per kernel, and a lane that emits transfers where the other lane emits
+`REDUCTION.3` is the divergence this contract exists to prevent.
+
+**What it does not change.** Axis 0 behaves exactly as it did, including the
+trailing-shape agreement rule, which is the `axis = 0` case of the non-join
+extent rule stated in general. No existing program's bytes move, because an
+unnamed `aux0` is `NO_ID` and `NO_ID` is axis 0.

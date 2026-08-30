@@ -31,8 +31,14 @@ distinct, reproducible datapaths here, and an unknown order is a fault.
     partition.
 
 ``REDUCTION.GROUPED_CONCAT``
-    Up to four inputs concatenated along axis 0 into ``output_view_0``.  Every
-    input shares the trailing shape and the output dtype.
+    Up to four inputs concatenated into ``output_view_0`` along the axis
+    ``aux_id_0`` names (amendment A17).  ``NO_ID`` and ``0`` both mean axis 0 --
+    the behaviour this operator has always had -- and ``1`` joins on the feature
+    axis of rank-2 operands.  Every non-join extent must agree across the inputs
+    and with the output, every input shares the output dtype, and the output's
+    join extent is the sum of the inputs'.  No other axis is defined: an axis at
+    or beyond an operand's rank, and a feature join on an operand that is not
+    rank 2, are refused at admission and are a fault here.
 
 ``REDUCTION.PARTITION_SUM``
     ``input_view_0`` is ``[partitions, ...]`` partial results and
@@ -43,6 +49,8 @@ distinct, reproducible datapaths here, and an unknown order is a fault.
 """
 
 from __future__ import annotations
+
+from typing import Mapping
 
 import numpy as np
 
@@ -348,6 +356,53 @@ def expert_sum(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
 # ---------------------------------------------------------------------------
 # movement: VOCAB_GATHER and GROUPED_CONCAT
 # ---------------------------------------------------------------------------
+#: The join axes amendment A17 defines for ``REDUCTION.GROUPED_CONCAT``.  Zero
+#: is the axis the operator has always joined on; one is the feature join a
+#: block-diagonal projection needs.  The set is closed: an axis outside it is a
+#: refusal, never a computed guess.
+JOIN_AXES: tuple[int, ...] = (0, 1)
+
+#: A feature join is defined on rank-2 operands only.  On a higher-rank operand
+#: the columns of one input are not one contiguous run of the output, and the
+#: rule that makes a join checkable -- one extent replaced, the rest identical --
+#: stops being the whole story a backend needs.  Rather than compute something
+#: for a shape no released model emits, A17 refuses it.
+JOIN_RANK: Mapping[int, int | None] = {0: None, 1: 2}
+
+
+def _join_axis(descriptor: Descriptor) -> int:
+    """``aux_id_0`` as a join axis (amendment A17).
+
+    ``NO_ID`` is what every program written before A17 carries in this slot --
+    :meth:`runtime.abi3.builder.DeploymentBuilder.operator` fills unnamed
+    auxiliary slots with it -- and ``0`` is what a program that names the axis
+    explicitly carries.  Both mean axis 0, so no existing program changes.
+    """
+    value = _aux(descriptor, 0)
+    if value is None:
+        return 0
+    _require(
+        value in JOIN_AXES,
+        f"GROUPED_CONCAT operator {descriptor.descriptor_id} names join axis "
+        f"{value} in aux_id_0; amendment A17 defines "
+        f"{', '.join(str(a) for a in JOIN_AXES)} and nothing else",
+    )
+    return int(value)
+
+
+def _require_join_rank(axis: int, rank: int, where: str) -> None:
+    _require(
+        axis < rank,
+        f"GROUPED_CONCAT joins on axis {axis} but {where} has rank {rank}",
+    )
+    required = JOIN_RANK[axis]
+    _require(
+        required is None or rank == required,
+        f"GROUPED_CONCAT joins on axis {axis}, which amendment A17 defines for "
+        f"rank-{required} operands only, but {where} has rank {rank}",
+    )
+
+
 @register(Major.REDUCTION, Reduction.VOCAB_GATHER)
 def vocab_gather(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     _check_operator(descriptor, int(Reduction.VOCAB_GATHER))
@@ -397,11 +452,27 @@ def vocab_gather(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
 
 @register(Major.REDUCTION, Reduction.GROUPED_CONCAT)
 def grouped_concat(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
+    """Join up to four inputs along the axis ``aux_id_0`` names.
+
+    Amendment A17.  ``aux_id_0`` absent (``NO_ID``) or zero is the operator this
+    has always been: a join on axis 0, whose output extent is the sum of the
+    inputs' leading extents and whose inputs share their trailing shape.  A
+    ``1`` joins rank-2 operands on their feature axis instead: ``N`` inputs of
+    ``[R, C_i]`` produce ``[R, sum(C_i)]``, input ``i`` occupying columns
+    ``[sum(C_<i), sum(C_<i) + C_i)``.
+
+    Nothing else is defined.  ``JOIN_AXES`` is the whole domain, a feature join
+    demands rank 2 exactly, and an axis outside an operand's rank is refused --
+    the verifier refuses such a program at admission, and this is the same
+    refusal one dispatch later, for a program that reached an engine without
+    passing one.
+    """
     _check_operator(descriptor, int(Reduction.GROUPED_CONCAT))
+    axis = _join_axis(descriptor)
     out_view = ctx.output_view(descriptor, 0)
     parts: list[np.ndarray] = []
-    rows = 0
-    trailing: tuple[int, ...] | None = None
+    joined_extent = 0
+    frame: tuple[int, ...] | None = None
     for slot in range(MAX_INPUTS):
         view = ctx.optional_input(descriptor, slot)
         if view is None:
@@ -411,24 +482,30 @@ def grouped_concat(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None
             f"GROUPED_CONCAT input view {view.descriptor_id} is dtype "
             f"{view.dtype:#04x} but the output is {out_view.dtype:#04x}",
         )
-        tail = tuple(view.dims[1:])
-        if trailing is None:
-            trailing = tail
+        _require_join_rank(axis, len(view.dims), f"input view {view.descriptor_id}")
+        # The frame is every extent except the joined one.  On axis 0 that is
+        # the trailing shape, which is what this operator always compared; on
+        # any other axis it is the same statement with a different hole in it.
+        rest = tuple(view.dims[:axis]) + tuple(view.dims[axis + 1 :])
+        if frame is None:
+            frame = rest
         _require(
-            tail == trailing,
-            f"GROUPED_CONCAT input view {view.descriptor_id} has trailing shape "
-            f"{tail}, expected {trailing}",
+            rest == frame,
+            f"GROUPED_CONCAT input view {view.descriptor_id} has non-join "
+            f"extents {rest}, expected {frame}",
         )
-        rows += int(view.dims[0])
+        joined_extent += int(view.dims[axis])
         parts.append(np.array(ctx.read(view)))
     _require(bool(parts), "GROUPED_CONCAT names no input view")
-    assert trailing is not None
+    assert frame is not None
+    _require_join_rank(axis, len(out_view.dims), f"output view {out_view.descriptor_id}")
+    expected = frame[:axis] + (joined_extent,) + frame[axis:]
     _require(
-        out_view.dims == (rows,) + trailing,
+        out_view.dims == expected,
         f"GROUPED_CONCAT output view {out_view.descriptor_id} dims "
-        f"{out_view.dims} differ from the concatenation {(rows,) + trailing}",
+        f"{out_view.dims} differ from the axis-{axis} concatenation {expected}",
     )
-    joined = np.concatenate(parts, axis=0)
+    joined = np.concatenate(parts, axis=axis)
     ctx.write(out_view, joined.reshape(out_view.dims))
     ctx.counters.add("reduction.elements", int(joined.size))
 

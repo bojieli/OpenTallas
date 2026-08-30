@@ -449,7 +449,7 @@ module tb_qwen_ta_rope;
         prove_success(0);
         prove_success(7999);
         $display(
-            "PASS: Qwen indexed RoPE RTL commands=2 positions=2 elements=10240 multiplications=20480 additions=10240 outputs=10240 faults=3 cycles=%0d request_stalls=%0d read_stalls=%0d write_stalls=%0d vector_set=7a55f9aba5c3e329e571e2a5564beeb666964cd774a868d5ba448470574206d7",
+            "PASS: Qwen indexed RoPE RTL commands=2 positions=2 elements=10240 multiplications=20480 additions=10240 outputs=10240 faults=3 cycles=%0d request_stalls=%0d read_stalls=%0d write_stalls=%0d vector_set=3a792b0dec8dd7277540841409accca66521f2f05f977c1cd6b6d9e5361f4f76",
             cycle_count, request_stalls, read_stalls, write_stalls
         );
         $finish;

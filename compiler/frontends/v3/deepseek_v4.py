@@ -85,33 +85,76 @@ data-dependent predicate today, but every conditional, early-exit or
 speculative profile in either lane needs one, including this model's own
 speculative profile.
 
-**IR3-GAP-3, banked weights.**  ``ROUTED_MATMUL`` is lowered with four operand
-slots, which reads as (activation, weight bank, scale bank, expert index), but
-:class:`CheckpointBinding` names exactly one contiguous byte range and the
-released checkpoint interleaves the 256 experts of a layer, so no single range
-covers a bank.  This export therefore declares all 66,048 routed expert weight
-tensors individually -- each with its real shard, offset, length and SHA-256 --
-and names the ordered family in the ``expert_weight_tensors`` attribute.
-Proposal: add a segmented binding (an ordered list of ranges plus the SHA-256
-of the assembled payload) or an explicit ``TensorBank`` whose members are
-declared tensors, so a bank can be an operand instead of an attribute.
-Both-model impact: Qwen3-8B has no expert bank and is unaffected today, but any
-banked weight -- mixture-of-experts, stacked adapters, or a tensor-parallel
-shard set -- hits the same wall.
+**IR3-GAP-3, stacked weights (closed by the segmented binding).**
+``TENSOR.ROUTED_MATMUL``'s operand row is (activations, routed weights, expert
+IDs, route weights), so the ``[E, N, K]`` stack is a *mandatory operand*.
+:class:`CheckpointBinding` used to name exactly one contiguous byte range and
+the released checkpoint interleaves the 256 experts of a layer, so no single
+range covered a stack; this export therefore declared all 66,048 routed expert
+tensors individually and named the ordered family in an
+``expert_weight_tensors`` attribute.  An attribute is not an operand: the
+weight slot stayed empty, the expert IDs sat in it, and every routed
+contraction named two of the three operands its engine requires.
+:class:`CheckpointBinding` now carries ``segments``, so a stack is one declared
+tensor whose payload is an ordered list of authenticated ranges -- each keeping
+its own digest, so verification stays incremental rather than needing the
+assembled 1 GiB image -- and the operand row is filled from the graph.  A
+backend reads the per-expert structure back out of ``binding.segments``, which
+names every member tensor, its shard, its offset and its digest.
+Both-model impact: Qwen3-8B has no expert stack and is unaffected, but any
+stacked weight -- mixture-of-experts, stacked adapters, or a tensor-parallel
+shard set -- now has an operand instead of an attribute.
 
-**IR3-GAP-4, computed constants.**  ``check_neutral`` requires every tensor
-whose role is ``constant`` to carry a :class:`CheckpointBinding`, so a table
-that is *derived* rather than stored -- the YaRN rotary coefficient rows, the
-causal window index table, the compressed-group enumeration -- cannot be
-declared at all.  TA-ABI3-OPCONV-1 nevertheless gives ``VECTOR.ROPE`` a
-"coefficient rows" operand in ``in1``.  This export therefore feeds ``ROPE``
-the position offset and declares every rotary parameter (theta, YaRN factor,
-beta_fast, beta_slow, original max position, rotary width) as attributes, so
-the coefficient rows are reproducible but never an operand.  Proposal: allow
-``role="constant"`` with ``binding=None`` when the tensor names a declared
-deterministic generator, or add a ``derived`` role with the generator and its
-parameters.  Both-model impact: Qwen3 has the same rotary table and the same
-``in1`` slot, so both exporters are currently unable to name it.
+**IR3-GAP-4, computed constants (closed by amendment A9).**  ``check_neutral``
+used to require every tensor whose role is ``constant`` to carry a
+:class:`CheckpointBinding`, so a table that is *derived* rather than stored --
+the YaRN rotary coefficient rows, the causal window index table, the
+compressed-group enumeration -- could not be declared at all, and
+TA-ABI3-OPCONV-1's ``VECTOR.ROPE`` ``in1`` "coefficient rows" slot went to the
+position offset instead.  :class:`Tensor` now carries ``generator`` and
+``generator_parameters``, so this export declares two rotary tables -- theta
+10,000 unscaled for the pure sliding-window layers, theta 160,000 with the
+committed YaRN interpolation for the compressed ones -- names
+``deepseek_rope_coefficients_v1``, and gathers the rows an operator actually
+reads.  The deployment binds the SHA-256 of the generator's output and the
+device re-derives and re-checks it at load, so nothing is injected and nothing
+is taken on trust.
+
+The rows are ``cos[rotary_width] || sin[rotary_width]``, not
+``cos[head_dim] || sin[head_dim]``: DeepSeek's rotation is *partial*.  Only the
+final 64 channels of a 512- or 128-wide head rotate, and they rotate as 32
+adjacent complex pairs rather than as a half-split, so the row spans the
+rotated channels and repeats each pair's coefficient across the two channels it
+multiplies.  ``aux_id_0`` -- which the frozen operand row already reserves for
+the rotary width -- is what tells the engine how much of the axis moves; the
+untouched prefix is carried through by the same operator rather than by a
+separate movement, which is what the released kernel does and what the
+reference's ``prefix_bf16_values_preserved`` counter reconciles.
+
+**IR3-GAP-5, feature-axis concatenation (closed by amendment A17).**
+``CONCAT`` lowers to ``REDUCTION.GROUPED_CONCAT``, which used to join on **axis
+0** only: it took its output extent from the sum of its inputs' *leading*
+extents and required every input to share the trailing shape.  Several sites in
+this graph join on the feature axis instead -- the sparse-attention index
+assembly (``COMPRESSED_DENSE_INDEX`` and ``INDEX_TOPK``, ``[span, 128] ++
+[span, 384] -> [span, 512]``) and DSpark's target-hidden assembly -- and there
+was no operator that did it.  The two backends disagreed about what to do, which
+is the usual symptom: the shared HBM/SRAM planner re-expressed an axis-one
+concatenation as one ``DMA.TRANSFER`` per column window (and its own independent
+checker then objected that the kernel did not reach ``REDUCTION.3``), while the
+ROM backend emitted the frozen operator and the engine refused the shape.
+
+``REDUCTION.GROUPED_CONCAT`` now reads a join axis from ``aux_id_0``; ``NO_ID``
+and ``0`` are the axis-0 join it always was, and ``1`` joins rank-2 operands on
+their feature axis.  Every ``CONCAT`` this export emits states its axis, and the
+one that did not -- ``DSPARK_MAIN_PROJECT``'s target-hidden assembly, a feature
+join every reader was defaulting to a join of rows -- now does.  The change also
+retired one kernel that was not a concatenation at all: DSpark's noise-embedding
+expansion joined four copies of ``[rows, hidden]`` into ``[rows, 4, hidden]``,
+which is a ``BROADCAST``, and is what ``HC_EXPAND`` had already been corrected
+to.
+
+This is also what makes ``GROUPED_OUTPUT_PROJECT`` sayable; see below.
 
 Arity notes
 -----------
@@ -119,8 +162,7 @@ Arity notes
 TA-ABI3-OPCONV-1 freezes what each slot means.  This export never exceeds
 either, and follows the released semantics where they use fewer operands:
 ``HEAD_RMS_NORM`` takes one input because the released query head norm is
-unweighted; ``GROUPED_MATMUL`` takes no group-index view because the released
-group split is contiguous and equal; ``SWIGLU`` is binary per amendment A8,
+unweighted; ``SWIGLU`` is binary per amendment A8,
 with the clamp limit in the numeric contract; ``HYPER_CONNECT_PRE`` fills both
 output views with what the ``VECTOR.MHC`` row names -- the pre/post coefficient
 block and the Sinkhorn combination matrix -- and the branch input the released
@@ -130,6 +172,25 @@ ABI leaves it to, with one ``SELECT`` per coefficient plane between them; and
 ``index_family``, since both enumerate causal indices from a position.
 ``ATTENTION_SPARSE`` follows amendment A6 exactly: query, fused KV, index,
 per-head sink.
+
+Two operations were previously emitted as an operator that does not do what the
+released model does, and each is now emitted as the one that does.  Neither
+needed an amendment.
+
+* The **compressor projection** is one operator over *both* matrices writing a
+  packed ``[.., 2, N]`` row, and the state update adds the absolute position
+  embedding itself.  Emitting two one-projection kernels and a separate
+  ``VECTOR.ADD`` left the mandatory gate slot empty and would have added the
+  position twice; the ``ADD`` was unexecutable in any case, because
+  ``VECTOR.ADD`` implements ``bf16_add_rne_v1`` and that addition is binary32
+  against a cyclic ``[ratio, W]`` table.
+* The **token-to-expert route** reads ``tid2eid[token_id]`` over the shipped
+  ``[129280, 6]`` table and keeps all six rows.  ``ROUTE.HASH_ROUTE`` computes
+  ``table[mix32(key) % slots]`` and returns one destination; the exact row
+  gather is ``TENSOR.EMBED_LOOKUP``, so the neutral kind is
+  ``EMBEDDING_LOOKUP``.  Every entry is an expert ID in ``[0, 255]`` in the low
+  word of a little-endian int64, which the ``table_element_reading`` attribute
+  states, so a 32-bit reading of the table is exact.
 
 One cross-lane observation: the frozen ``REDUCTION.EXPERT_SUM`` row reads
 (contributions, weights, optional base), but the released DeepSeek expert
@@ -180,6 +241,7 @@ from compiler.frontend.deepseek_v4_graph import (
 )
 from compiler.ir.v3.kernel_ir import (
     TOKEN_DTYPE,
+    BindingSegment,
     CheckpointBinding,
     Entrypoint,
     Kernel,
@@ -224,6 +286,9 @@ BOS_TOKEN_ID = 0
 HIDDEN = 4096
 HC_MULT = 4
 HEADS = 64
+#: One *fused* KV head: the released model keeps key and value in one 512-wide
+#: tensor per position, so every query head attends the same KV row.
+KV_HEADS = 1
 HEAD_DIM = 512
 ROPE_DIM = 64
 NOPE_DIM = HEAD_DIM - ROPE_DIM
@@ -280,11 +345,11 @@ LOWERING_PLAN: Mapping[str, tuple[str, ...]] = {
     "COMPRESSED_KV_VALID_VIEW": ("STATE_READ",),
     "COMPRESS_KV_WRITE": ("KV_APPEND",),
     "COMPRESS_POOL": ("COMPRESS_POOL",),
-    "COMPRESS_PROJECT": ("COMPRESS_PROJECT", "COMPRESS_PROJECT"),
-    "COMPRESS_STATE_UPDATE": ("ADD", "COMPRESS_STATE_UPDATE"),
+    "COMPRESS_PROJECT": ("COMPRESS_PROJECT",),
+    "COMPRESS_STATE_UPDATE": ("COMPRESS_STATE_UPDATE",),
     "CONFIDENCE_SCORE": ("CONCAT", "MATMUL"),
     "DSPARK_MAIN_PROJECT": ("CONCAT", "QUANTIZE", "MATMUL", "RMS_NORM"),
-    "DSPARK_NOISE_EMBED": ("SCATTER", "EMBEDDING_LOOKUP", "CONCAT"),
+    "DSPARK_NOISE_EMBED": ("SCATTER", "EMBEDDING_LOOKUP", "BROADCAST"),
     "DSPARK_PREFILL_KV": (
         "QUANTIZE",
         "MATMUL",
@@ -308,9 +373,15 @@ LOWERING_PLAN: Mapping[str, tuple[str, ...]] = {
         "QUANTIZE",
         "MATMUL",
     ),
-    "GROUPED_OUTPUT_PROJECT": ("GROUPED_MATMUL",),
+    # Amendment A17.  The released projection is block diagonal over features,
+    # which is eight contractions over eight column blocks and a feature-axis
+    # join, not one ``GROUPED_MATMUL`` over a row partition that does not exist.
+    # Eight blocks and four input views make the join a tree of three.
+    "GROUPED_OUTPUT_PROJECT": (
+        ("COPY",) + ("SELECT", "MATMUL") * O_GROUPS + ("CONCAT",) * 3
+    ),
     "HADAMARD_ROTATE": ("HADAMARD",),
-    "HASH_ROUTE": ("HASH_ROUTE",),
+    "HASH_ROUTE": ("EMBEDDING_LOOKUP",),
     "HC_EXPAND": ("BROADCAST",),
     "HC_HEAD": ("HYPER_CONNECT_HEAD",),
     "HC_POST": ("HYPER_CONNECT_POST",),
@@ -339,7 +410,11 @@ LOWERING_PLAN: Mapping[str, tuple[str, ...]] = {
         "ROUTED_MATMUL",
     ),
     "RMS_NORM": ("RMS_NORM",),
-    "ROPE_APPLY": ("ROPE",),
+    # The compressor rotates one row per pooled group and the released prefill
+    # strides the coefficient table by the compression ratio, so its rows are
+    # gathered under the rotation's own predicate; every other call site shares
+    # one span-indexed gather emitted once for the whole graph.
+    "ROPE_APPLY": ("GATHER", "ROPE"),
     "ROPE_INVERSE": ("ROPE_INVERSE",),
     "ROUTER_SCORE": ("ROUTER_SCORE",),
     "ROUTER_WEIGHT_NORMALIZE": ("GATHER", "WEIGHT_NORMALIZE", "SCALE"),
@@ -434,6 +509,7 @@ COUNTER_CLASS_BY_KIND: Mapping[str, str] = {
     "BIASED_TOPK": "route_expert",
     "BROADCAST": "memory",
     "CONCAT": "vector_reduction",
+    "COPY": "memory",
     "SCATTER": "memory",
     "CONVERT": "vector_reduction",
     "COMPRESS_POOL": "attention",
@@ -579,6 +655,82 @@ def read_checkpoint_bindings(
     return bindings
 
 
+def split_binding_by_leading_groups(
+    snapshot: Path, binding: CheckpointBinding, groups: int, rows: int
+) -> tuple[CheckpointBinding, ...]:
+    """Split one contiguous binding into ``groups`` equal leading-axis ranges.
+
+    A block-diagonal projection reads one group's rows of a stacked weight, and
+    a group of a row-major ``[rows, ...]`` tensor is a *contiguous* byte range,
+    so every group is an ordinary :class:`CheckpointBinding` -- same shard, same
+    transform, its own offset and length.  What it does not have is a digest,
+    because the checkpoint lock only knows the whole tensor.
+
+    So the digests are derived here, in one sequential pass: each group's range
+    is hashed as it is read and the whole tensor is hashed alongside it, and the
+    split is accepted only when the whole-tensor digest reproduces the locked
+    one.  That is what makes a per-group binding as authenticated as the tensor
+    it comes from -- the group digests are not asserted, they are computed from
+    the same bytes that reproduce a hash this repository did not choose.
+    """
+    if groups < 1 or rows % groups:
+        raise DeepSeekV4KernelIRError(
+            f"{binding.source_name!r}: {rows} rows do not divide into {groups} "
+            "groups"
+        )
+    if binding.segments:
+        raise DeepSeekV4KernelIRError(
+            f"{binding.source_name!r}: a segmented binding has no single range "
+            "to split"
+        )
+    if binding.bytes % groups:
+        raise DeepSeekV4KernelIRError(
+            f"{binding.source_name!r}: {binding.bytes} bytes do not divide into "
+            f"{groups} groups"
+        )
+    extent = binding.bytes // groups
+    whole = hashlib.sha256()
+    parts: list[CheckpointBinding] = []
+    path = Path(snapshot) / binding.path
+    try:
+        with path.open("rb") as handle:
+            handle.seek(binding.offset)
+            for group in range(groups):
+                digest = hashlib.sha256()
+                remaining = extent
+                while remaining:
+                    chunk = handle.read(min(remaining, 1 << 23))
+                    if not chunk:
+                        raise DeepSeekV4KernelIRError(
+                            f"short read for {binding.source_name!r} group {group}"
+                        )
+                    digest.update(chunk)
+                    whole.update(chunk)
+                    remaining -= len(chunk)
+                parts.append(
+                    CheckpointBinding(
+                        # The source name stays the checkpoint tensor's: these
+                        # are ranges *of* it, not tensors the checkpoint has.
+                        source_name=binding.source_name,
+                        path=binding.path,
+                        offset=binding.offset + group * extent,
+                        bytes=extent,
+                        sha256=digest.hexdigest(),
+                        transform=binding.transform,
+                    )
+                )
+    except OSError as exc:
+        raise DeepSeekV4KernelIRError(
+            f"cannot read {binding.source_name!r} from {binding.path!r}: {exc}"
+        ) from exc
+    if whole.hexdigest() != binding.sha256:
+        raise DeepSeekV4KernelIRError(
+            f"{binding.source_name!r}: the {groups} group ranges reassemble to "
+            "a payload whose SHA-256 differs from the locked checkpoint's"
+        )
+    return tuple(parts)
+
+
 def verify_checkpoint_bindings(
     snapshot: Path,
     graph: KernelGraph,
@@ -597,23 +749,66 @@ def verify_checkpoint_bindings(
     count = max(1, min(sample, len(bound)))
     step = max(1, len(bound) // count)
     records: list[dict[str, Any]] = []
-    for tensor in bound[:: step][:count]:
-        binding = tensor.binding
-        assert binding is not None
-        path = Path(snapshot) / binding.path
+    def _range_digest(path: Path, offset: int, length: int, label: str) -> str:
         digest = hashlib.sha256()
-        remaining = binding.bytes
+        remaining = length
         with path.open("rb") as handle:
-            handle.seek(binding.offset)
+            handle.seek(offset)
             while remaining:
                 chunk = handle.read(min(remaining, 1 << 24))
                 if not chunk:
-                    raise DeepSeekV4KernelIRError(
-                        f"short read for {binding.source_name!r}"
-                    )
+                    raise DeepSeekV4KernelIRError(f"short read for {label!r}")
                 digest.update(chunk)
                 remaining -= len(chunk)
-        observed = digest.hexdigest()
+        return digest.hexdigest()
+
+    for tensor in bound[:: step][:count]:
+        binding = tensor.binding
+        assert binding is not None
+        if binding.segments:
+            # A segmented binding has no single range to re-read: its payload is
+            # the ordered concatenation of the segments and its own digest binds
+            # their order, so each segment is verified against its own SHA-256
+            # and the composite is recomputed from those.  Verifying the whole
+            # assembled image instead would read the stack twice for no more
+            # assurance.
+            composite = hashlib.sha256()
+            for segment in binding.segments:
+                observed = _range_digest(
+                    Path(snapshot) / segment.path,
+                    segment.offset,
+                    segment.bytes,
+                    segment.source_name,
+                )
+                if observed != segment.sha256:
+                    raise DeepSeekV4KernelIRError(
+                        f"{segment.source_name!r} payload differs from its "
+                        "recorded SHA-256"
+                    )
+                composite.update(bytes.fromhex(observed))
+            observed = composite.hexdigest()
+            if observed != binding.sha256:
+                raise DeepSeekV4KernelIRError(
+                    f"{binding.source_name!r} segment order differs from its "
+                    "recorded composite SHA-256"
+                )
+            records.append(
+                {
+                    "bytes": binding.bytes,
+                    "offset": binding.offset,
+                    "path": binding.path,
+                    "segments": len(binding.segments),
+                    "sha256": observed,
+                    "tensor_id": tensor.tensor_id,
+                }
+            )
+            continue
+        observed = _range_digest(
+            Path(snapshot) / binding.path,
+            binding.offset,
+            binding.bytes,
+            binding.source_name,
+        )
         if observed != binding.sha256:
             raise DeepSeekV4KernelIRError(
                 f"{binding.source_name!r} payload differs from its recorded SHA-256"
@@ -666,6 +861,8 @@ class _Builder:
         binding: CheckpointBinding | None = None,
         scale_tensor_id: str | None = None,
         scale_block_elements: int = 0,
+        generator: str = "",
+        generator_parameters: Mapping[str, Any] | None = None,
     ) -> str:
         if tensor_id in self._tensor_ids:
             raise DeepSeekV4KernelIRError(f"duplicate tensor {tensor_id!r}")
@@ -679,6 +876,8 @@ class _Builder:
                 binding=binding,
                 scale_tensor_id=scale_tensor_id,
                 scale_block_elements=scale_block_elements,
+                generator=generator,
+                generator_parameters=dict(generator_parameters or {}),
             )
         )
         self.shape[tensor_id] = tuple(shape)
@@ -730,6 +929,8 @@ class _Builder:
                 f"{kernel_id!r} declares {len(outputs)} outputs; an ABI 3.0 "
                 "operator admits at most two output views"
             )
+        if kind == "CONCAT":
+            self._check_join(kernel_id, inputs, outputs, attributes)
         self.kernels.append(
             Kernel(
                 index=len(self.kernels),
@@ -750,6 +951,79 @@ class _Builder:
         )
         self.kernels_by_kind[kind] += 1
         self.kernels_by_source_kind[source_kind] += 1
+
+
+    def _check_join(
+        self,
+        kernel_id: str,
+        inputs: Sequence[str],
+        outputs: Sequence[str],
+        attributes: Mapping[str, Any],
+    ) -> None:
+        """A ``CONCAT`` must state the axis it joins, and mean it.
+
+        Amendment A17 makes the join axis an operand-row field, which a backend
+        reads from the kernel's ``axis`` attribute and writes into ``aux_id_0``.
+        Before it, a concatenation that omitted the attribute was silently read
+        as a join of rows, and two sites in this export were doing exactly that
+        -- one joining features and one that was a broadcast wearing a
+        concatenation's name.  Neither was caught by anything until a device
+        refused the shape, so the shape is checked here, where it is written.
+
+        Symbolic extents are skipped rather than guessed: a span-sized axis is
+        the request's, and comparing two of them is comparing two names.
+        """
+        axis = attributes.get("axis")
+        if not isinstance(axis, int) or isinstance(axis, bool):
+            raise DeepSeekV4KernelIRError(
+                f"{kernel_id!r}: a CONCAT must declare an integer 'axis'; "
+                "amendment A17 puts it in aux_id_0 and an unstated axis is read "
+                "as a join of rows by every reader"
+            )
+        if len(outputs) != 1:
+            raise DeepSeekV4KernelIRError(
+                f"{kernel_id!r}: a CONCAT writes exactly one result"
+            )
+        shapes = [self.shape[name] for name in inputs]
+        result = self.shape[outputs[0]]
+        for shape in shapes:
+            if len(shape) != len(result):
+                raise DeepSeekV4KernelIRError(
+                    f"{kernel_id!r}: joins operands of rank {len(shape)} into a "
+                    f"rank-{len(result)} result; a concatenation keeps the rank"
+                )
+        if not 0 <= axis < len(result):
+            raise DeepSeekV4KernelIRError(
+                f"{kernel_id!r}: join axis {axis} is outside the rank-"
+                f"{len(result)} result"
+            )
+        if axis and len(result) != 2:
+            raise DeepSeekV4KernelIRError(
+                f"{kernel_id!r}: amendment A17 defines a join on axis {axis} "
+                f"for rank-2 operands only, and this result is rank {len(result)}"
+            )
+
+        def _static(value: Any) -> int | None:
+            return None if isinstance(value, Symbolic) else int(value)
+
+        for index in range(len(result)):
+            extents = [_static(shape[index]) for shape in shapes]
+            declared = _static(result[index])
+            if declared is None or any(e is None for e in extents):
+                continue
+            if index == axis:
+                total = sum(extents)  # type: ignore[arg-type]
+                if total != declared:
+                    raise DeepSeekV4KernelIRError(
+                        f"{kernel_id!r}: axis {axis} of the operands sums to "
+                        f"{total}, the result declares {declared}"
+                    )
+            elif any(e != declared for e in extents):
+                raise DeepSeekV4KernelIRError(
+                    f"{kernel_id!r}: axis {index} is {extents} across the "
+                    f"operands and {declared} in the result; a join on axis "
+                    f"{axis} leaves every other axis alone"
+                )
 
 
 def _split_node_id(node_id: str) -> tuple[str, int | None, str]:
@@ -856,6 +1130,7 @@ def export_deepseek_v4_kernel_graph(
         ("hidden_size", HIDDEN),
         ("hc_mult", HC_MULT),
         ("num_attention_heads", HEADS),
+        ("num_key_value_heads", KV_HEADS),
         ("head_dim", HEAD_DIM),
         ("qk_rope_head_dim", ROPE_DIM),
         ("q_lora_rank", Q_RANK),
@@ -989,6 +1264,84 @@ def export_deepseek_v4_kernel_graph(
     temperature = builder.tensor("input.temperature", "fp32", (1,), "input")
     entropy = builder.tensor("input.entropy_stream", "fp32", (1, VOCABULARY), "input")
 
+    # ------------------------------------------------------------------
+    # Rotary coefficient rows
+    # ------------------------------------------------------------------
+    # ``TA-ABI3-OPCONV-1`` section 3 gives ``VECTOR.ROPE``'s ``in1`` to the
+    # coefficient rows and its ``aux_id_0`` to the rotary width.  This export
+    # used to feed the position offset into that slot and carry the rotary
+    # parameters as attributes, because amendment A9's derived-constant tensor
+    # did not exist yet.  It does now, so the table is a declared constant with
+    # a named generator, the deployment binds the SHA-256 of its output, and the
+    # device re-derives and re-checks it at load.
+    #
+    # Two tables, because the released model uses two rotary profiles: the pure
+    # sliding-window layers rotate at theta 10,000 with no position scaling, and
+    # the compressed layers rotate at theta 160,000 with the committed YaRN
+    # interpolation.  Collapsing them onto one table would give whichever layers
+    # did not get their own the wrong frequencies.
+    #
+    # The rows are ``cos[rotary_width] || sin[rotary_width]``, not
+    # ``cos[head_dim] || sin[head_dim]``: the rotation is partial.  Only the
+    # final 64 channels of a 512- or 128-wide head move, and they move as 32
+    # adjacent complex pairs, so the coefficient row spans the rotated channels
+    # and repeats each pair's value across the two channels it multiplies.
+    rope_tables: dict[str, str] = {}
+    rope_rows: dict[str, str] = {}
+    for profile, theta, scaling in (
+        ("base", float(config["rope_theta"]), "none"),
+        ("yarn", float(config["compress_rope_theta"]), "yarn"),
+    ):
+        parameters: dict[str, Any] = {
+            "maximum_position": context_tokens,
+            "position_scaling": scaling,
+            "rotary_width": ROPE_DIM,
+            "theta": theta,
+        }
+        if scaling == "yarn":
+            parameters.update(
+                {
+                    "beta_fast": int(config["rope_scaling"]["beta_fast"]),
+                    "beta_slow": int(config["rope_scaling"]["beta_slow"]),
+                    "factor": float(config["rope_scaling"]["factor"]),
+                    "original_max_position": int(
+                        config["rope_scaling"]["original_max_position_embeddings"]
+                    ),
+                }
+            )
+        rope_tables[profile] = builder.tensor(
+            f"rope.coefficient_table.{profile}",
+            "fp32",
+            (context_tokens, 2 * ROPE_DIM),
+            "constant",
+            generator="deepseek_rope_coefficients_v1",
+            generator_parameters=parameters,
+        )
+        rope_rows[profile] = builder.tensor(
+            f"rope.coefficient_rows.{profile}",
+            "fp32",
+            (span, 2 * ROPE_DIM),
+            "activation",
+        )
+        builder.kernel(
+            f"rope.coefficient_gather.{profile}",
+            "GATHER",
+            (position_offset, rope_tables[profile]),
+            (rope_rows[profile],),
+            numeric_contract="exact_index_select_v1",
+            iteration_domain={"rows": span, "width": 2 * ROPE_DIM},
+            attributes={
+                "coefficient_layout": "cos_rotary_width_then_sin_rotary_width",
+                "pair_layout": "adjacent_complex",
+                "position_scaling": scaling,
+                "rotary_width": ROPE_DIM,
+                "selector": "input.position_offset",
+                "theta": theta,
+            },
+            source_operation_id=f"deepseek_v4.rotary_embedding.{profile}_rows",
+            source_kind="ROPE_COEFFICIENT_ROWS",
+        )
+
     value_tensor: dict[str, str] = {
         "request.input_ids": token_ids,
         "request.start_pos": position_offset,
@@ -1040,6 +1393,72 @@ def export_deepseek_v4_kernel_graph(
             scale_block_elements=block,
         )
 
+    group_weights: dict[tuple[str, int], str] = {}
+
+    def group_weight(spec: TensorSpec, group: int, groups: int) -> str:
+        """Declare one group's rows of a stacked weight as its own tensor.
+
+        The released ``wo_a`` is ``[groups * rank, reduction]`` fp8 with a
+        ``[groups * rank / 128, reduction / 128]`` E8M0 tile scale (amendment
+        A15), and group ``g`` of a block-diagonal projection contracts against
+        rows ``[g * rank, (g + 1) * rank)`` of it.  Those rows are a contiguous
+        byte range and so are their scale rows, so each group is one ordinary
+        binding whose digest :func:`split_binding_by_leading_groups` derives and
+        checks against the locked whole-tensor SHA-256.
+
+        The whole tensor stays declared: this adds names for its parts, it does
+        not replace it.
+        """
+        key = (spec.name, group)
+        if key in group_weights:
+            return group_weights[key]
+        binding = bindings.get(spec.name)
+        if binding is None:
+            raise DeepSeekV4KernelIRError(
+                f"checkpoint has no payload for {spec.name!r}"
+            )
+        ranges = split_binding_by_leading_groups(
+            snapshot, binding, groups, int(spec.shape[0])
+        )
+        scale_spec = scale_of.get(spec.name)
+        scale_ranges: Sequence[CheckpointBinding] = ()
+        if scale_spec is not None:
+            scale_binding = bindings.get(scale_spec.name)
+            if scale_binding is None:
+                raise DeepSeekV4KernelIRError(
+                    f"checkpoint has no payload for {scale_spec.name!r}"
+                )
+            scale_ranges = split_binding_by_leading_groups(
+                snapshot, scale_binding, groups, int(scale_spec.shape[0])
+            )
+        dtype = _STORAGE_DTYPE[spec.storage_dtype]
+        rows = int(spec.shape[0]) // groups
+        for index in range(groups):
+            member = (spec.name, index)
+            if member in group_weights:
+                continue
+            scale_id: str | None = None
+            block = 0
+            if scale_spec is not None:
+                scale_id = builder.tensor(
+                    f"{scale_spec.name}.group{index}",
+                    _STORAGE_DTYPE[scale_spec.storage_dtype],
+                    (int(scale_spec.shape[0]) // groups, int(scale_spec.shape[1])),
+                    "weight",
+                    binding=scale_ranges[index],
+                )
+                block = FP8_WEIGHT_BLOCK
+            group_weights[member] = builder.tensor(
+                f"{spec.name}.group{index}",
+                dtype,
+                (rows, int(spec.shape[1])),
+                "weight",
+                binding=ranges[index],
+                scale_tensor_id=scale_id,
+                scale_block_elements=block,
+            )
+        return group_weights[key]
+
     def role_specs(role: str, scope: str, layer: int | None) -> list[TensorSpec]:
         for key in ((scope, layer, role), ("global", None, role)):
             if key in spec_index:
@@ -1058,8 +1477,121 @@ def export_deepseek_v4_kernel_graph(
             )
         return declare_weight(found[0])
 
-    def role_weight_family(role: str, scope: str, layer: int | None) -> list[str]:
-        return [declare_weight(spec) for spec in role_specs(role, scope, layer)]
+    def _stacked_id(spec: TensorSpec) -> str:
+        """The family name with the expert index removed.
+
+        ``layers.0.ffn.experts.7.w1.weight`` names one expert's matrix;
+        ``layers.0.ffn.experts.w1.weight`` names the stacked ``[E, N, K]``
+        tensor the routed contraction actually reads.
+        """
+        parts = spec.name.split(".")
+        marker = str(spec.expert)
+        for index in range(len(parts) - 1, -1, -1):
+            if parts[index] == marker:
+                del parts[index]
+                break
+        else:  # pragma: no cover - the family is expert-indexed by construction
+            raise DeepSeekV4KernelIRError(
+                f"{spec.name!r} carries no expert index to stack over"
+            )
+        return ".".join(parts)
+
+    def _stack_binding(
+        tensor_id: str, members: Sequence[TensorSpec]
+    ) -> CheckpointBinding:
+        """One segmented binding over an ordered family of checkpoint ranges.
+
+        A stack of expert weights is an operand, not an attribute.  The
+        released checkpoint interleaves the 256 experts of a layer, so no single
+        range covers the stack, and until :class:`CheckpointBinding` grew
+        ``segments`` the only way to name it was a list of tensor names in an
+        attribute -- which is not an operand, so the mandatory ``[E, N, K]``
+        slot of ``TENSOR.ROUTED_MATMUL`` went unfilled.  The segments are the same
+        authenticated ranges the individual tensors had, in ascending logical
+        expert order; each keeps its own digest so verification stays
+        incremental, and the binding's own digest binds their order.
+        """
+        segments: list[BindingSegment] = []
+        for member in members:
+            binding = bindings.get(member.name)
+            if binding is None:
+                raise DeepSeekV4KernelIRError(
+                    f"checkpoint has no payload for {member.name!r}"
+                )
+            if binding.bytes != member.size_bytes:
+                raise DeepSeekV4KernelIRError(
+                    f"{member.name!r} byte length differs from the derived contract"
+                )
+            segments.append(
+                BindingSegment(
+                    source_name=binding.source_name,
+                    path=binding.path,
+                    offset=binding.offset,
+                    bytes=binding.bytes,
+                    sha256=binding.sha256,
+                )
+            )
+        digest = hashlib.sha256()
+        for segment in segments:
+            digest.update(bytes.fromhex(segment.sha256))
+        return CheckpointBinding(
+            source_name=tensor_id,
+            path=segments[0].path,
+            offset=segments[0].offset,
+            bytes=sum(segment.bytes for segment in segments),
+            sha256=digest.hexdigest(),
+            transform="identity",
+            segments=tuple(segments),
+        )
+
+    def role_weight_stack(role: str, scope: str, layer: int | None) -> str:
+        """Declare the stacked ``[E, N, K]`` tensor one routed matmul reads."""
+        members = role_specs(role, scope, layer)
+        if len(members) < 2 or any(m.expert is None for m in members):
+            raise DeepSeekV4KernelIRError(
+                f"role {role!r} in scope {scope!r} layer {layer!r} is not an "
+                "expert-indexed family and cannot be stacked"
+            )
+        tensor_id = _stacked_id(members[0])
+        if builder.has_tensor(tensor_id):
+            return tensor_id
+        head = members[0]
+        dtype = _STORAGE_DTYPE[head.storage_dtype]
+        member_shape: tuple[int, ...] = tuple(head.shape)
+        if head.logical_dtype == "MXFP4_E2M1_X2":
+            dtype = "mxfp4_e2m1"
+            member_shape = (head.shape[0], head.shape[1] * 2)
+        if any(tuple(m.shape) != tuple(head.shape) for m in members):
+            raise DeepSeekV4KernelIRError(
+                f"expert family {tensor_id!r} is not uniformly shaped"
+            )
+        scale_id: str | None = None
+        block = 0
+        scale_members = [scale_of[m.name] for m in members if m.name in scale_of]
+        if scale_members:
+            if len(scale_members) != len(members):
+                raise DeepSeekV4KernelIRError(
+                    f"expert family {tensor_id!r} is partially block-scaled"
+                )
+            scale_id = _stacked_id(scale_members[0])
+            scale_head = scale_members[0]
+            builder.tensor(
+                scale_id,
+                _STORAGE_DTYPE[scale_head.storage_dtype],
+                (len(scale_members), *scale_head.shape),
+                "weight",
+                binding=_stack_binding(scale_id, scale_members),
+            )
+            block = FP4_BLOCK if dtype == "mxfp4_e2m1" else FP8_WEIGHT_BLOCK
+        return builder.tensor(
+            tensor_id,
+            dtype,
+            (len(members), *member_shape),
+            "weight",
+            binding=_stack_binding(tensor_id, members),
+            scale_tensor_id=scale_id,
+            scale_block_elements=block,
+        )
 
     def ten(value: str) -> str:
         try:
@@ -1297,6 +1829,69 @@ def export_deepseek_v4_kernel_graph(
                 state_writes=writes if state else (),
             )
 
+        def concat_feature_axis(
+            result_id: str,
+            blocks: Sequence[str],
+            rows: Any,
+            width: int,
+            *,
+            prefix: str = "join",
+        ) -> str:
+            """Join equal-width column blocks into one row, four at a time.
+
+            Amendment A17 gives ``REDUCTION.GROUPED_CONCAT`` a join axis, and
+            this is the shape that needs it: ``N`` blocks of ``[rows, width]``
+            becoming ``[rows, N * width]``, block ``i`` at columns
+            ``[i * width, (i + 1) * width)``.
+
+            An OPERATOR names four input views, so more than four blocks are a
+            tree, and the tree is built so that every interior node is full:
+            eight blocks are two joins of four and one of two, which is ten
+            operands over three kernels and the fewest a four-slot record
+            admits.  Each level's intermediate is itself a legal feature join,
+            so the shape is checked at every step rather than only at the end.
+            """
+            # ``(tensor, width)`` rather than one width for the level: a level
+            # whose last group is short carries a narrower member into the next
+            # one, and a single running width would mis-state its segment.
+            level: list[tuple[str, int]] = [(name, width) for name in blocks]
+            if not level:
+                raise DeepSeekV4KernelIRError(
+                    f"{result_id!r}: a concatenation needs at least one block"
+                )
+            stage = 0
+            while len(level) > 1:
+                joined: list[tuple[str, int]] = []
+                for index in range(0, len(level), 4):
+                    members = level[index : index + 4]
+                    if len(members) == 1:
+                        joined.append(members[0])
+                        continue
+                    widths = [w for _, w in members]
+                    out_width = sum(widths)
+                    name = (
+                        result_id
+                        if len(level) <= 4
+                        else f"{node_id}.{prefix}{stage}.{index // 4}"
+                    )
+                    tensor_id = act(name, "bf16", (rows, out_width))
+                    emit(
+                        f"{node_id}.{prefix}{stage}.{index // 4}",
+                        "CONCAT",
+                        tuple(member for member, _ in members),
+                        (tensor_id,),
+                        iteration_domain={"tokens": rows, "width": out_width},
+                        attributes={
+                            **attrs,
+                            "axis": 1,
+                            "segment_widths": widths,
+                        },
+                    )
+                    joined.append((tensor_id, out_width))
+                level = joined
+                stage += 1
+            return level[0][0]
+
         # -- movement, normalisation and dense contraction ---------------
         if source_kind == "TOKEN_EMBED":
             weight = role_weight(roles[0], scope, layer)
@@ -1526,6 +2121,14 @@ def export_deepseek_v4_kernel_graph(
                     step="target_hidden_concat",
                     iteration_domain={"tokens": rows,
                                       "width": HIDDEN * len(operands)},
+                    # ``[rows, hidden]`` blocks becoming one ``[rows, n*hidden]``
+                    # row is a join on the *feature* axis.  This kernel named no
+                    # axis at all, so every reader defaulted it to zero and read
+                    # a join of rows -- a shape with a different extent and a
+                    # different meaning.  Amendment A17 makes the axis an
+                    # operand-row field, so it is stated here.
+                    attributes={**attrs, "axis": 1,
+                                "segment_widths": [HIDDEN] * len(operands)},
                 )
                 source = joined
                 weight = role_weight(roles[0], scope, layer)
@@ -1621,10 +2224,45 @@ def export_deepseek_v4_kernel_graph(
             shape = builder.shape[source]
             output = act(out0, "bf16", shape)
             inverse = source_kind == "ROPE_INVERSE"
+            profile = "yarn" if ratio else "base"
+            if attrs.get("compressed"):
+                # The compressor rotates one row per *group*, and the released
+                # prefill slices the same table with the compression ratio as
+                # its stride -- group ``g`` carries the position of the first
+                # token it pools.  A shared span-indexed row block cannot say
+                # that, so the compressor gathers its own rows, under the same
+                # predicate as the rotation they feed.
+                coefficients = act(
+                    f"{node_id}.coefficients", "fp32", (shape[0], 2 * ROPE_DIM)
+                )
+                builder.kernel(
+                    f"{node_id}.coefficient_gather",
+                    "GATHER",
+                    (ten("request.start_pos"), rope_tables[profile]),
+                    (coefficients,),
+                    numeric_contract="exact_index_select_v1",
+                    iteration_domain={"rows": shape[0], "width": 2 * ROPE_DIM},
+                    attributes={
+                        **attrs,
+                        "coefficient_layout": (
+                            "cos_rotary_width_then_sin_rotary_width"
+                        ),
+                        "pair_layout": "adjacent_complex",
+                        "position_stride": int(attrs["ratio"]),
+                        "rotary_width": ROPE_DIM,
+                        "selector": "input.position_offset",
+                    },
+                    source_operation_id=node_id,
+                    source_kind=source_kind,
+                    phases=phases,
+                    layer=layer,
+                )
+            else:
+                coefficients = rope_rows[profile]
             emit(
                 node_id,
                 "ROPE_INVERSE" if inverse else "ROPE",
-                (source, ten("request.start_pos")),
+                (source, coefficients),
                 (output,),
                 iteration_domain={"rows": shape[0], "width": ROPE_DIM},
                 attributes={**attrs, **rope_attributes(ratio, inverse=inverse)},
@@ -1690,7 +2328,7 @@ def export_deepseek_v4_kernel_graph(
 
         # -- window and compression state --------------------------------
         elif source_kind == "WINDOW_INDEX":
-            output = act(out0, "i32", (span, SLIDING_WINDOW))
+            output = act(out0, "u32", (span, SLIDING_WINDOW))
             emit(
                 node_id,
                 "WINDOW_INDEX",
@@ -1705,7 +2343,7 @@ def export_deepseek_v4_kernel_graph(
 
         elif source_kind == "DSPARK_WINDOW_INDEX":
             width = SLIDING_WINDOW + DRAFT_BLOCK
-            output = act(out0, "i32", (DRAFT_BLOCK, width))
+            output = act(out0, "u32", (DRAFT_BLOCK, width))
             emit(
                 node_id,
                 "WINDOW_INDEX",
@@ -1731,58 +2369,68 @@ def export_deepseek_v4_kernel_graph(
                 (committed,),
                 iteration_domain={"rows": rows_of(source), "width": HEAD_DIM,
                                   "capacity": SLIDING_WINDOW},
+                attributes={
+                    **attrs,
+                    # The sliding-window cache is a *ring*: the released model
+                    # writes ``start_pos % window`` on a decode step and rotates
+                    # the prefill's final window into the same alignment, so
+                    # absolute position p lives at row p mod window in both
+                    # directions.  Saying so is what stops the append from
+                    # addressing the window with an absolute position, which is
+                    # a row the window does not have as soon as the context
+                    # passes 128 tokens.
+                    "cache_row": "absolute_position_mod_window",
+                    "window_size": SLIDING_WINDOW,
+                },
             )
             bind(out0, committed)
 
         elif source_kind == "COMPRESS_PROJECT":
+            # One operator over *both* compressor matrices, which is what the
+            # frozen ``VECTOR.COMPRESS`` project sub-case is: in0 hidden, in1 the
+            # KV projection, in2 the gate projection, out0 the packed
+            # ``[.., 2, N]`` binary32 result whose penultimate index 0 is the KV
+            # row and 1 the learned pooling score -- the frozen
+            # ``projection_order: kv_then_gate``.  This export used to emit two
+            # kernels of two operands each, one projection and an unpacked
+            # result apiece, which is not the operation the ABI names: the
+            # operator would have carried NO_ID in its mandatory gate slot and
+            # the state update downstream would have had no packed row to read.
             source = operands[0]
             key_value_weight = role_weight(roles[0], scope, layer)
             gate_weight = role_weight(roles[1], scope, layer)
             width = int(attrs["output_features"])
             rows = rows_of(source)
-            key_value = act(source_outputs[0], "fp32", (rows, width))
-            score = act(source_outputs[1], "fp32", (rows, width))
+            packed = act(f"{node_id}.packed", "fp32", (rows, 2, width))
             emit(
-                f"{node_id}.key_value",
+                node_id,
                 "COMPRESS_PROJECT",
-                (source, key_value_weight),
-                (key_value,),
-                step="key_value_projection",
+                (source, key_value_weight, gate_weight),
+                (packed,),
                 iteration_domain={"tokens": rows, "output_width": width,
-                                  "reduction_width": HIDDEN},
+                                  "reduction_width": HIDDEN, "projections": 2},
             )
-            emit(
-                f"{node_id}.score",
-                "COMPRESS_PROJECT",
-                (source, gate_weight),
-                (score,),
-                step="score_projection",
-                iteration_domain={"tokens": rows, "output_width": width,
-                                  "reduction_width": HIDDEN},
-            )
-            bind(source_outputs[0], key_value)
-            bind(source_outputs[1], score)
+            # Both source values name the same packed row; which plane a reader
+            # takes is the penultimate index the frozen order fixes.
+            bind(source_outputs[0], packed)
+            bind(source_outputs[1], packed)
 
         elif source_kind == "COMPRESS_STATE_UPDATE":
-            key_value, score = operands[0], operands[1]
+            # The frozen ``COMPRESS_STATE_UPDATE`` sub-case adds the absolute
+            # position embedding *itself*: in0 is the packed projection, in1 is
+            # NO_ID (a state update has no projection matrix) and in2 is the APE
+            # table.  This export used to emit a separate ``VECTOR.ADD`` of the
+            # same table first, so a backend honouring both would have added the
+            # position twice -- and that ADD was unexecutable anyway, because
+            # ``VECTOR.ADD`` implements ``bf16_add_rne_v1`` while this addition
+            # is binary32 over a cyclic ``[ratio, W]`` table against
+            # ``[span, W]``, which no stride presents.  The operator does it.
+            packed = operands[0]
             position_weight = role_weight(roles[0], scope, layer)
             node_ratio = int(attrs["ratio"])
             head_width = int(attrs["head_dim"])
             candidates = 2 * node_ratio if attrs["overlap"] else node_ratio
-            rows = rows_of(score)
-            biased = act(
-                f"{node_id}.positional_score", "fp32", builder.shape[score]
-            )
-            emit(
-                f"{node_id}.positional_score",
-                "ADD",
-                (score, position_weight),
-                (biased,),
-                step="positional_score_add",
-                iteration_domain={"tokens": rows,
-                                  "width": builder.shape[score][-1]},
-                state=False,
-            )
+            rows = rows_of(packed)
             group_rows = groups[node_ratio]
             pool_key_value = act(
                 source_outputs[0], "fp32", (group_rows, candidates, head_width)
@@ -1793,10 +2441,11 @@ def export_deepseek_v4_kernel_graph(
             emit(
                 node_id,
                 "COMPRESS_STATE_UPDATE",
-                (key_value, biased),
+                (packed, position_weight),
                 (pool_key_value, pool_score),
                 step="raw_window_transaction",
-                iteration_domain={"groups": group_rows, "candidates": candidates,
+                iteration_domain={"tokens": rows, "groups": group_rows,
+                                  "candidates": candidates,
                                   "width": head_width},
             )
             bind(source_outputs[0], pool_key_value)
@@ -1915,7 +2564,7 @@ def export_deepseek_v4_kernel_graph(
             score = operands[0]
             window_indices = operands[1]
             rows = rows_of(score)
-            selected = act(f"{node_id}.selected", "i32", (rows, INDEX_TOPK))
+            selected = act(f"{node_id}.selected", "u32", (rows, INDEX_TOPK))
             emit(
                 f"{node_id}.select",
                 "INDEX_TOPK",
@@ -1931,7 +2580,7 @@ def export_deepseek_v4_kernel_graph(
                 },
             )
             width = SLIDING_WINDOW + INDEX_TOPK
-            output = act(out0, "i32", (rows, width))
+            output = act(out0, "u32", (rows, width))
             emit(
                 f"{node_id}.concat",
                 "CONCAT",
@@ -1950,7 +2599,7 @@ def export_deepseek_v4_kernel_graph(
         elif source_kind == "COMPRESSED_DENSE_INDEX":
             window_indices = operands[0]
             node_ratio = int(attrs["ratio"])
-            dense = act(f"{node_id}.dense", "i32", (span, groups[node_ratio]))
+            dense = act(f"{node_id}.dense", "u32", (span, groups[node_ratio]))
             emit(
                 f"{node_id}.enumerate",
                 "WINDOW_INDEX",
@@ -1964,7 +2613,7 @@ def export_deepseek_v4_kernel_graph(
                     "padding_index": -1,
                 },
             )
-            output = act(out0, "i32", (span, selected_rows_128))
+            output = act(out0, "u32", (span, selected_rows_128))
             emit(
                 f"{node_id}.concat",
                 "CONCAT",
@@ -1990,40 +2639,149 @@ def export_deepseek_v4_kernel_graph(
                 iteration_domain={
                     "tokens": rows,
                     "heads": HEADS,
+                    "key_value_heads": KV_HEADS,
                     "width": HEAD_DIM,
                     "candidates": builder.shape[indices][-1],
+                },
+                attributes={
+                    **attrs,
+                    # Amendment A6: DeepSeek attends one *fused* KV head, so the
+                    # KV operand is ``[rows, 512]`` and its head count cannot be
+                    # read off an axis -- axis 1 of a fused tensor is the head
+                    # width, not a head count.  Every query head shares that one
+                    # KV head, which is a group size of 64.  The graph states it
+                    # rather than leaving a backend to divide 64 by 512.
+                    "group_size": HEADS // KV_HEADS,
+                    "key_value_heads": KV_HEADS,
                 },
             )
             bind(out0, output)
 
         elif source_kind == "GROUPED_OUTPUT_PROJECT":
+            # ``einsum("bsgd,grd->bsgr")`` is *block diagonal over features*:
+            # group ``g`` reads its own 4,096-column block of the head-major
+            # activation and writes its own 1,024-column block of the result,
+            # and every token passes through every group.
+            #
+            # ``TENSOR.GROUPED_MATMUL`` is the other grouped contraction, and it
+            # is not this one: ``in2`` is a per-group *row* count and its groups
+            # partition the activation's rows in ascending order, so no row
+            # partition of a token-major buffer presents the released operation.
+            # Emitting it anyway left ``in2`` empty -- a mandatory slot naming
+            # ``NO_ID``, which every backend's arity gate correctly refuses.
+            #
+            # The faithful form is the one below: eight contractions over eight
+            # column blocks, joined back into one token-major row.  That join is
+            # on the *feature* axis, which amendment A17 is what makes sayable;
+            # before it, ``REDUCTION.GROUPED_CONCAT`` joined on axis 0 only, and
+            # eight ``[tokens, 1024]`` blocks joined that way are
+            # ``[8 * tokens, 1024]`` -- group major where token major belongs.
+            # No strided output view repairs that, because group ``g`` of token
+            # ``t`` lives at ``t * 8192 + g * 1024`` and a rank-2 view has one
+            # row stride; and eight kernels writing column ranges of one tensor
+            # is eight producers of one tensor, which single assignment forbids
+            # and should.
+            #
+            # The weight is split the same way the contraction is.  Group ``g``
+            # contracts against rows ``[1024g, 1024(g+1))`` of the released
+            # ``[8192, 4096]`` fp8 matrix and the matching eight rows of its
+            # ``[64, 32]`` tile scale; both are contiguous byte ranges, so each
+            # group is one ordinary checkpoint binding whose digest is derived
+            # from the checkpoint and accepted only when the eight of them
+            # reassemble to the locked whole-tensor SHA-256.
             source = operands[0]
-            weight = role_weight(roles[0], scope, layer)
+            spec = role_specs(roles[0], scope, layer)
+            if len(spec) != 1:
+                raise DeepSeekV4KernelIRError(
+                    f"role {roles[0]!r} resolves to {len(spec)} tensors, expected one"
+                )
+            weight_spec = spec[0]
             rows = rows_of(source)
-            output = act(out0, "bf16", (rows, O_GROUPS * O_RANK))
+            reduction = HEADS * HEAD_DIM // O_GROUPS
+            if int(weight_spec.shape[0]) != O_GROUPS * O_RANK or int(
+                weight_spec.shape[1]
+            ) != reduction:
+                raise DeepSeekV4KernelIRError(
+                    f"{weight_spec.name!r} is {tuple(weight_spec.shape)}, not the "
+                    f"{(O_GROUPS * O_RANK, reduction)} the grouped projection reads"
+                )
+
+            # One movement that says where the group axis is.  ``SELECT`` names
+            # one index of one *existing* axis, and the attention output is
+            # ``[tokens, groups * reduction]``: the axis has to exist before a
+            # group of it can be named.  A backend that can alias a reshape
+            # moves nothing here -- the element order is unchanged.
+            grouped = act(
+                f"{node_id}.group_axis", "bf16", (rows, O_GROUPS, reduction)
+            )
             emit(
-                node_id,
-                "GROUPED_MATMUL",
-                (source, weight),
-                (output,),
+                f"{node_id}.group_axis",
+                "COPY",
+                (source,),
+                (grouped,),
                 iteration_domain={
                     "tokens": rows,
                     "groups": O_GROUPS,
-                    "output_width": O_RANK,
-                    "reduction_width": HEADS * HEAD_DIM // O_GROUPS,
+                    "reduction_width": reduction,
                 },
                 attributes={
                     **attrs,
-                    "accumulator_dtype": "fp32",
-                    "input_dtype": "bf16",
-                    "output_dtype": "bf16",
-                    "weight_dequantization": "block_scaled_fp8_to_bf16",
-                    "weight_group_layout": "groups_by_rank_by_reduction",
+                    "group_axis": 1,
+                    "group_count": O_GROUPS,
+                    "row_order": "token_major_group_minor",
                 },
             )
+
+            blocks: list[str] = []
+            for group in range(O_GROUPS):
+                columns = act(
+                    f"{node_id}.group{group}.columns", "bf16", (rows, reduction)
+                )
+                emit(
+                    f"{node_id}.group{group}.select",
+                    "SELECT",
+                    (grouped,),
+                    (columns,),
+                    iteration_domain={"tokens": rows, "reduction_width": reduction},
+                    attributes={
+                        **attrs,
+                        "axis": 1,
+                        "index": group,
+                        "plane": "attention_output_group",
+                    },
+                )
+                partial = act(
+                    f"{node_id}.group{group}.projection", "bf16", (rows, O_RANK)
+                )
+                emit(
+                    f"{node_id}.group{group}.project",
+                    "MATMUL",
+                    (columns, group_weight(weight_spec, group, O_GROUPS)),
+                    (partial,),
+                    iteration_domain={
+                        "tokens": rows,
+                        "output_width": O_RANK,
+                        "reduction_width": reduction,
+                    },
+                    attributes={
+                        **attrs,
+                        "accumulator_dtype": "fp32",
+                        "group_index": group,
+                        "input_dtype": "bf16",
+                        "output_dtype": "bf16",
+                        "weight_dequantization": "block_scaled_fp8_to_bf16",
+                    },
+                )
+                blocks.append(partial)
+
+            # The join.  An OPERATOR names four input views, so eight blocks are
+            # two joins of four and one of two -- ten operands over three
+            # kernels, which is the fewest a four-slot record admits.  Every one
+            # of them joins on the feature axis, and the column order is the
+            # operand order.
+            output = concat_feature_axis(out0, blocks, rows, O_RANK)
             bind(out0, output)
 
-        # -- routing and experts ----------------------------------------
         elif source_kind == "ROUTER_SCORE":
             source = operands[0]
             weight = role_weight(roles[0], scope, layer)
@@ -2053,17 +2811,36 @@ def export_deepseek_v4_kernel_graph(
             bind(out0, output)
 
         elif source_kind == "HASH_ROUTE":
+            # The released routing is a *table read*, not a hash.
+            # ``src/opentallas/routing.py`` evaluates ``tid2eid[token_id]`` over
+            # the shipped ``[129280, 6]`` int64 table and keeps all six rows; a
+            # consistent-hash route computes ``table[mix32(key) % slots]`` and
+            # returns one destination.  ``TENSOR.EMBED_LOOKUP`` is the exact row
+            # gather from a table indexed by a 32-bit ID -- no arithmetic and
+            # therefore no conversion -- which is the operation exactly, down to
+            # the bound check on the ID.  The neutral kind is therefore
+            # ``EMBEDDING_LOOKUP``; ``ROUTE.HASH_ROUTE`` named an operator that
+            # does not do this and no amendment is needed to stop naming it.
             table = role_weight(roles[0], scope, layer)
             rows = rows_of(operands[0])
-            output = act(out0, "i32", (rows, TOP_K))
+            output = act(out0, "u32", (rows, TOP_K))
             emit(
                 node_id,
-                "HASH_ROUTE",
+                "EMBEDDING_LOOKUP",
                 (ten("request.input_ids"), table),
                 (output,),
                 iteration_domain={"tokens": rows, "top_k": TOP_K},
-                attributes={**attrs, "table_dtype": "i64",
-                            "table_rows": VOCABULARY},
+                attributes={
+                    **attrs,
+                    # Every entry is a logical expert ID in [0, 255] stored in
+                    # the low word of a little-endian int64, so the gathered row
+                    # is exact under a 32-bit reading of the table and the
+                    # result is the U32 the rest of the routing path expects.
+                    "table_dtype": "i64",
+                    "table_element_reading": "low_u32_of_i64",
+                    "table_rows": VOCABULARY,
+                    "table_value_maximum": ROUTED_EXPERTS - 1,
+                },
             )
             bind(out0, output)
             context_of[root]["expert_indices"] = output
@@ -2072,7 +2849,7 @@ def export_deepseek_v4_kernel_graph(
             score = operands[0]
             bias = role_weight(roles[0], scope, layer)
             rows = rows_of(score)
-            indices = act(out0, "i32", (rows, TOP_K))
+            indices = act(out0, "u32", (rows, TOP_K))
             values = act(f"{node_id}.selected_score", "fp32", (rows, TOP_K))
             emit(
                 node_id,
@@ -2135,7 +2912,7 @@ def export_deepseek_v4_kernel_graph(
                 dispatch_rows if isinstance(rows, Symbolic) else rows * TOP_K
             )
             output = act(out0, "bf16", (routed_rows, HIDDEN))
-            expert_rows = act(f"{node_id}.expert_ids", "i32", (routed_rows,))
+            expert_rows = act(f"{node_id}.expert_ids", "u32", (routed_rows,))
             emit(
                 node_id,
                 "EXPERT_DISPATCH",
@@ -2158,9 +2935,15 @@ def export_deepseek_v4_kernel_graph(
             source = operands[0]
             rows = rows_of(source)
             if routed:
-                gate_weights = role_weight_family(roles[0], scope, layer)
-                down_weights = role_weight_family(roles[2], scope, layer)
-                up_weights = role_weight_family(roles[4], scope, layer)
+                # TA-ABI3-OPCONV-1 section 2: ROUTED_MATMUL reads
+                # (activations, routed weights, expert IDs, route weights).  The
+                # routed weights are one stacked ``[E, N, K]`` tensor, not 256
+                # names in an attribute.  An attribute is not an operand: while
+                # the stack travelled as one, the engine's mandatory weight slot
+                # was empty and the expert IDs sat in it.
+                gate_stack = role_weight_stack(roles[0], scope, layer)
+                down_stack = role_weight_stack(roles[2], scope, layer)
+                up_stack = role_weight_stack(roles[4], scope, layer)
                 expert_rows = context_of[root]["expert_rows"]
                 route_weights = context_of[root]["route_weights"]
                 weight_attributes = {
@@ -2203,19 +2986,18 @@ def export_deepseek_v4_kernel_graph(
                 ("gate", gate, "gate"),
                 ("up", up, "up"),
             ):
-                family = gate_weights if family_key == "gate" else up_weights
                 if routed:
+                    stack = gate_stack if family_key == "gate" else up_stack
                     emit(
                         f"{node_id}.{name}",
                         "ROUTED_MATMUL",
-                        (payload, expert_rows),
+                        (payload, stack, expert_rows),
                         (output_id,),
                         step=f"{name}_contraction",
                         iteration_domain=contraction,
                         attributes={
                             **attrs,
                             **weight_attributes,
-                            "expert_weight_tensors": family,
                             "projection": name,
                         },
                     )
@@ -2283,7 +3065,7 @@ def export_deepseek_v4_kernel_graph(
                 emit(
                     f"{node_id}.down",
                     "ROUTED_MATMUL",
-                    (down_payload, expert_rows),
+                    (down_payload, down_stack, expert_rows),
                     (output,),
                     step="down_contraction",
                     iteration_domain={"rows": rows, "output_width": HIDDEN,
@@ -2291,7 +3073,6 @@ def export_deepseek_v4_kernel_graph(
                     attributes={
                         **attrs,
                         **weight_attributes,
-                        "expert_weight_tensors": down_weights,
                         "projection": "down",
                     },
                 )
@@ -2327,6 +3108,15 @@ def export_deepseek_v4_kernel_graph(
                     "contribution_row_order": (
                         "ascending_token_then_ascending_selection"
                     ),
+                    # The reduction's association is the whole content of the
+                    # operation, not an implementation detail of it.  The
+                    # released reference reduces the six routed contributions
+                    # with the NUM-6.1 balanced binary32 tree, which the source
+                    # graph already records as ``reduction_tree``; saying it
+                    # again in the frozen vocabulary is what makes it reach the
+                    # numeric descriptor, because a kernel that states no order
+                    # is encoded as sequential -- a different number.
+                    "reduction_order": "pairwise_tree",
                     # The released expert multiplies by the routing weight
                     # before its down projection, so the reduction must not
                     # apply it again: runtime/reference/swiglu.py takes
@@ -2461,15 +3251,25 @@ def export_deepseek_v4_kernel_graph(
                 iteration_domain={"rows": DRAFT_BLOCK, "width": HIDDEN},
             )
             output = act(out0, "bf16", (DRAFT_BLOCK, HC_MULT, HIDDEN))
+            # One embedding read once per hyper-connection stream.  This was a
+            # ``CONCAT`` of four copies with ``axis: 1``, which is neither what
+            # it is nor a legal join: four ``[rows, hidden]`` inputs joined on
+            # the feature axis are ``[rows, 4 * hidden]``, not the
+            # ``[rows, 4, hidden]`` this writes, and amendment A17 refuses the
+            # rank mismatch at admission rather than reshaping past it.  It is
+            # the same operation ``HC_EXPAND`` already states correctly: an
+            # inserted axis every element of which is shared, which a backend
+            # reads through one stride-zero axis.
             emit(
                 f"{node_id}.expand",
-                "CONCAT",
-                (embedded,) * HC_MULT,
+                "BROADCAST",
+                (embedded,),
                 (output,),
                 step="hyper_stream_expand",
                 iteration_domain={"rows": DRAFT_BLOCK, "hyper_streams": HC_MULT,
                                   "width": HIDDEN},
-                attributes={**attrs, "axis": 1, "copies": HC_MULT},
+                attributes={**attrs, "axis": 1, "extent": HC_MULT,
+                            "source_replication": "single_draft_embedding"},
             )
             bind(out0, output)
 
@@ -2518,7 +3318,7 @@ def export_deepseek_v4_kernel_graph(
             emit(
                 f"{node_id}.rope",
                 "ROPE",
-                (normalized, ten("request.start_pos")),
+                (normalized, rope_rows["base"]),
                 (rotated,),
                 step="key_value_rope",
                 iteration_domain={"rows": rows, "width": ROPE_DIM},
@@ -2563,6 +3363,8 @@ def export_deepseek_v4_kernel_graph(
                 step="window_commit",
                 iteration_domain={"rows": rows, "width": HEAD_DIM,
                                   "capacity": SLIDING_WINDOW},
+                attributes={**attrs, "cache_row": "absolute_position_mod_window",
+                            "window_size": SLIDING_WINDOW},
             )
             bind(out0, committed)
 

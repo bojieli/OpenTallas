@@ -1569,9 +1569,9 @@ or K destination write, so a late operand or arithmetic fault cannot partially
 replace either output.
 
 The source-bound vector-set ID is
-`7a55f9aba5c3e329e571e2a5564beeb666964cd774a868d5ba448470574206d7`;
+`3a792b0dec8dd7277540841409accca66521f2f05f977c1cd6b6d9e5361f4f76`;
 the dual-simulator campaign ID is
-`1706f1e27f36411a30e621c2acbefc979f7719d694357d25eba1920d7109c754`.
+`c9c8f6c90f6bdeaf52d1185157d0a235ab66307c47bf6941342b3bcb21968603`.
 The builder authenticates the 924,386-command program as
 `f0ce6b50b01f462f837a28504e6ff9a024a24d24abf339f924875d0c2059bcec`
 and the full 4,096,000-byte coefficient table as
