@@ -4,8 +4,8 @@
     {
       "compression_ratio": 1,
       "count": 2,
-      "entry_bytes": 583,
-      "evidence": "derived from official config and serving recipe",
+      "entry_bytes": 1024,
+      "evidence": "measured on the released implementation: the reference oracle reports 1,024 bytes per (layer, context position) at both 32,000 and 128,000 tokens, which is the 512-wide latent at BF16. The previous 583 was read off the implementation rather than measured while running it",
       "index_entry_bytes": 0.0,
       "kind": "window",
       "label": "window",
@@ -17,9 +17,9 @@
     {
       "compression_ratio": 4,
       "count": 21,
-      "entry_bytes": 583,
-      "evidence": "derived from official inference implementation",
-      "index_entry_bytes": 68.0,
+      "entry_bytes": 1024,
+      "evidence": "measured on the released implementation: the reference oracle reports 1,024 bytes per (layer, context position) at both 32,000 and 128,000 tokens, which is the 512-wide latent at BF16. The previous 583 was read off the implementation rather than measured while running it; measured on the released implementation: 256 bytes per scanned index entry at both 32,000 and 128,000 tokens. The previous 68 was read off the implementation rather than measured while running it",
+      "index_entry_bytes": 256.0,
       "kind": "compressed_sparse",
       "label": "csa",
       "recurrent_state_bytes": 0.0,
@@ -30,8 +30,8 @@
     {
       "compression_ratio": 128,
       "count": 20,
-      "entry_bytes": 583,
-      "evidence": "derived from official inference implementation",
+      "entry_bytes": 1024,
+      "evidence": "measured on the released implementation: the reference oracle reports 1,024 bytes per (layer, context position) at both 32,000 and 128,000 tokens, which is the 512-wide latent at BF16. The previous 583 was read off the implementation rather than measured while running it",
       "index_entry_bytes": 0.0,
       "kind": "compressed_dense",
       "label": "hca-128",
@@ -295,6 +295,14 @@
     "index_topk": 512,
     "kv_cache_policy": "FP8 main + BF16 RoPE; FP4 index",
     "kv_cache_policy_status": "published serving recipe plus derived scale overhead",
+    "kv_entry_measurement": {
+      "note": "The structure of the profile was already correct and is unchanged: csa reads top_k + window main entries and scans context/4 index entries, hca reads context/128 + window, window reads 128. Only the two per-entry byte sizes were wrong. A deployment that chose an FP8 KV latent would read 512 bytes rather than 1,024; that is a design choice and must then be applied to both sides of any comparison, so it is not assumed here.",
+      "rungs_validated": [
+        32000,
+        128000
+      ],
+      "source": "results/abi3/deepseek_v4_reference_oracle_context_ladder.json"
+    },
     "num_hash_layers": 3,
     "operator_accounting_source": "official config, pinned safetensors tensor shapes/dtypes, and pinned DeepSeek inference/model.py",
     "operator_config": {

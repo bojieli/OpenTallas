@@ -127,3 +127,68 @@ def test_the_check_fails_when_attention_skips_context_positions(tmp_path) -> Non
     code, out = _run(tmp_path, tampered)
     assert code == 2
     assert any("causal attention" in problem for problem in out["problems"])
+
+
+# --- the sparse KV model, against the engine that ran it ----------------------
+
+DS_ORACLE = ROOT / "results/abi3/deepseek_v4_reference_oracle_context_ladder.json"
+DS_MODEL = ROOT / "configs/models/deepseek-v4-flash-0731.json"
+KV_TOOL = ROOT / "tools/validate_kv_model_against_oracle.py"
+
+
+def _run_kv(tmp_path: Path, model: Path, oracle: Path) -> tuple[int, dict]:
+    out = tmp_path / "kv.json"
+    proc = subprocess.run(
+        [sys.executable, str(KV_TOOL), "--model", str(model), "--oracle", str(oracle),
+         "--output", str(out), "--force"],
+        capture_output=True, text=True, cwd=ROOT,
+        env={"PYTHONPATH": f"{ROOT}:{ROOT / 'src'}", "PATH": "/usr/bin:/bin"},
+    )
+    return proc.returncode, json.loads(out.read_text()) if out.exists() else {}
+
+
+@pytest.mark.skipif(not DS_ORACLE.is_file(), reason="no measured DeepSeek ladder")
+def test_the_sparse_kv_model_matches_the_engine_at_every_measured_context(tmp_path) -> None:
+    """The term the ROM argument rests on, checked where it is hardest.
+
+    A dense model's KV traffic is arithmetic. A sparse model's is whatever its
+    own routing selected, so this is the profile field most likely to be wrong
+    and least likely to be noticed -- and it was wrong by 2.7-3.1x until it was
+    measured rather than read off the implementation.
+    """
+
+    code, body = _run_kv(tmp_path, DS_MODEL, DS_ORACLE)
+    assert code == 0, body.get("problems")
+    assert body["status"] == "pass"
+    assert len(body["rungs"]) >= 2, "one rung cannot distinguish a scale error from a slope error"
+    for rung in body["rungs"]:
+        assert rung["ratio"] == pytest.approx(1.0, abs=0.01)
+
+
+@pytest.mark.skipif(not DS_ORACLE.is_file(), reason="no measured DeepSeek ladder")
+def test_the_check_fails_on_the_entry_sizes_it_was_built_to_catch(tmp_path) -> None:
+    """Restore the pre-measurement constants; the check must reject them.
+
+    This is the actual historical defect, not an invented one: 583 bytes per KV
+    entry and 68 per index entry, which under-predicted by 2.7x at 32,000 tokens
+    and 3.1x at 128,000 -- growing with context, because the index term carried
+    the larger error and grows fastest.
+    """
+
+    profile = json.loads(DS_MODEL.read_text())
+    for group in profile["attention_groups"]:
+        group["entry_bytes"] = 583
+        if group["index_entry_bytes"]:
+            group["index_entry_bytes"] = 68.0
+    stale = tmp_path / "stale_profile.json"
+    stale.write_text(json.dumps(profile))
+
+    code, body = _run_kv(tmp_path, stale, DS_ORACLE)
+    assert code == 2
+    assert body["status"] == "fail"
+    assert len(body["problems"]) == len(body["rungs"])
+    ratios = {r["context_tokens"]: r["ratio"] for r in body["rungs"]}
+    assert min(ratios.values()) > 2.5
+    # The error grows with context; a pure scale error would not.
+    ordered = [ratios[c] for c in sorted(ratios)]
+    assert ordered == sorted(ordered)
