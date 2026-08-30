@@ -1158,6 +1158,57 @@ def position_inputs(graph: KernelGraph) -> tuple[str, ...]:
     return tuple(sorted(out))
 
 
+#: Synthetic tensor id prefix for a ring-index table, one per modulus.
+RING_INDEX_PREFIX = "generated.ring_indices."
+
+#: Destination-row maps a neutral ``cache_row`` attribute may name.  A map this
+#: backend does not implement is a compile error rather than an identity: the
+#: identity is itself one of the maps, so guessing it is indistinguishable from
+#: implementing it.
+CACHE_ROW_MAPS = frozenset(
+    {
+        "absolute_position",
+        "absolute_position_mod_window",
+        "completed_absolute_position_floor_div_ratio",
+    }
+)
+
+
+def ring_modulus(kernel: Kernel) -> int:
+    """The ring capacity this kernel's destination rows wrap at, or 0.
+
+    ``absolute_position_mod_window`` is a ring of ``window_size`` rows.  The
+    other two maps read the position range unchanged -- ``absolute_position``
+    because that is what it says, and
+    ``completed_absolute_position_floor_div_ratio`` because a compressed
+    group's row *is* its group ordinal, counted from the start of the request.
+    """
+    declared = kernel.attributes.get("cache_row")
+    if declared is None:
+        return 0
+    name = str(declared)
+    if name not in CACHE_ROW_MAPS:
+        raise PlanError(
+            f"kernel {kernel.kernel_id}: destination-row map {name!r} is not "
+            f"one of {', '.join(sorted(CACHE_ROW_MAPS))}; a map this backend "
+            "does not implement must not be taken as the identity"
+        )
+    if name != "absolute_position_mod_window":
+        return 0
+    window = int(kernel.attributes.get("window_size", 0) or 0)
+    if window <= 0:
+        raise PlanError(
+            f"kernel {kernel.kernel_id}: addresses a ring but declares "
+            f"window_size {window}"
+        )
+    return window
+
+
+def ring_moduli(graph: KernelGraph) -> set[int]:
+    """Every distinct ring capacity the graph's cache writes address."""
+    return {m for m in (ring_modulus(k) for k in graph.kernels) if m}
+
+
 def _generated_constants(
     graph: KernelGraph, context_max: int = 0, headroom: int = 0
 ) -> tuple[GeneratedConstant, ...]:
@@ -1177,6 +1228,26 @@ def _generated_constants(
                 parameters=parameters,
                 size_bytes=int(generate("arange_u32_v1", parameters).nbytes),
                 digest=digest_of("arange_u32_v1", parameters),
+            )
+        )
+    for modulus in sorted(ring_moduli(graph)):
+        # A sliding-window KV cache holds the last ``modulus`` positions in a
+        # ring, so absolute position ``p`` lives at row ``p % modulus``.  A
+        # tensor view can offset an index vector by a runtime symbol but cannot
+        # reduce one, so the reduction lives in the table: reading it at
+        # ``POSITION_START + i`` yields ``(POSITION_START + i) % modulus`` with
+        # no arithmetic in the descriptor.  The graph says which appends need
+        # it, in ``cache_row``; ignoring that attribute made every window
+        # append address an absolute position in a 128-row cache.
+        count = max(int(context_max) + max(int(headroom), 1), 1)
+        parameters = {"count": count, "modulus": int(modulus)}
+        out.append(
+            GeneratedConstant(
+                tensor_id=f"{RING_INDEX_PREFIX}{int(modulus)}",
+                generator="ring_indices_v1",
+                parameters=parameters,
+                size_bytes=int(generate("ring_indices_v1", parameters).nbytes),
+                digest=digest_of("ring_indices_v1", parameters),
             )
         )
     for tensor in graph.tensors:
@@ -2105,6 +2176,11 @@ _INDEX_FIRST = {
     (int(Major.TENSOR), int(TensorOp.EMBED_LOOKUP)),
     (int(Major.DMA), int(Dma.GATHER)),
     (int(Major.DMA), int(Dma.SCATTER)),
+    # TA-ABI3-OPCONV-1 section 5: ``ROUTE.EXPERT_DISPATCH`` reads the expert
+    # IDs in ``in0`` and the tokens in ``in1``.  Both exporters emit
+    # ``(tokens, ids)`` -- the released module's own argument order -- so
+    # without this the engine reads the activations as U32 expert IDs.
+    (int(Major.ROUTE), int(Route.EXPERT_DISPATCH)),
 }
 
 #: Maximum input views TA-ABI3-OPCONV-1 allows per subopcode, where it is
@@ -2131,6 +2207,83 @@ _SLOT_PERMUTATION: Mapping[str, tuple[int, ...]] = {
     "HYPER_CONNECT_PRE": (0, 1, 3, 2),
     "HYPER_CONNECT_HEAD": (0, 1, 3, 2),
 }
+
+
+#: Trailing input slots TA-ABI3-OPCONV-1 leaves optional, by neutral kind.
+#: Everything not named here must fill every slot its engine row declares.
+#: The numbers come from the engines themselves: a slot read through
+#: ``optional_input`` is optional and a slot read through ``input_view`` is
+#: not, and they are trailing in every case, which is what lets one integer
+#: state it.
+_OPTIONAL_INPUTS: Mapping[str, int] = {
+    # REDUCTION.GROUPED_CONCAT joins one to four sources.
+    "CONCAT": 3,
+    # A10 makes the routing weight optional (it may be applied earlier), and
+    # the shared-expert base has always been.
+    "EXPERT_REDUCE": 2,
+    "ORDERED_SUM": 1,
+    "PARTITION_SUM": 1,
+    # ROUTED_MATMUL's routing weights; the expert IDs in in2 are not optional.
+    "ROUTED_MATMUL": 1,
+    # The carried plane of a *partial* dequantisation.
+    "DEQUANTIZE": 1,
+    # The unweighted DeepSeek head norm passes no gain vector.
+    "HEAD_RMS_NORM": 1,
+    # VECTOR.SCALE sub-case 0 takes its constant from the numeric profile.
+    "SCALE": 1,
+    # The dense and grouped attention mask, and the sparse index and sink
+    # arrays, which amendment A6 nonetheless requires for SPARSE.
+    "ATTENTION_DENSE": 1,
+    "ATTENTION_GQA": 1,
+    "ATTENTION_SPARSE": 2,
+}
+
+
+def _check_operand_arity(
+    kernel: Kernel, engine: Any, bound: Sequence[int]
+) -> str | None:
+    """Does this kernel fill every mandatory ABI input slot?  Report if not.
+
+    Nothing in this program compared the operands a kernel *has* against the
+    operands its engine row *requires*, so a graph that named two of the three
+    a subopcode reads produced an operator with ``NO_ID`` in a mandatory slot
+    and the defect surfaced as a runtime trap in the simulator, one site at a
+    time, hundreds of kernels after the compile that could have named all of
+    them at once.
+
+    The comparison is against the frozen table in ``compiler/ir/v3/lowering.py``
+    -- the one table the exporters, the backends and the engines all read -- so
+    it cannot drift from what an engine will actually ask for.  Slots the
+    operand convention makes optional are named in ``_OPTIONAL_INPUTS`` and are
+    always trailing; everything else must be present.  ``bound`` is what this
+    backend will really put in the operator, after its own slot permutation and
+    after any operand it synthesises, because an operand the backend supplies
+    is not missing.
+    """
+    limit = int(engine.inputs)
+    optional = int(_OPTIONAL_INPUTS.get(kernel.kind, 0))
+    required = limit - optional
+    count = len(bound)
+    if count > limit:
+        return (
+            f"{kernel.kernel_id} ({kernel.kind}): binds {count} input views "
+            f"where {Major(engine.family).name}.{int(engine.sub)} takes {limit}"
+        )
+    if count < required:
+        return (
+            f"{kernel.kernel_id} ({kernel.kind}): binds {count} input views "
+            f"where {Major(engine.family).name}.{int(engine.sub)} requires "
+            f"{required}"
+            + (f" (and admits {limit})" if limit != required else "")
+        )
+    if len(kernel.outputs) > int(engine.outputs):
+        return (
+            f"{kernel.kernel_id} ({kernel.kind}): declares "
+            f"{len(kernel.outputs)} outputs where "
+            f"{Major(engine.family).name}.{int(engine.sub)} writes "
+            f"{int(engine.outputs)}"
+        )
+    return None
 
 
 def _conforming_input_order(
@@ -2191,7 +2344,18 @@ def _aux_ids(
         # unstated stream count is a shape the engine cannot check the operands
         # against, which is exactly what the aux slots exist to prevent.
         aux = [_SUBCASE[kernel.kind]]
-        if sub == int(Vector.MHC):
+        if sub == int(Vector.SCALE):
+            # ``VECTOR.SCALE`` has three sub-cases and the kind name settles
+            # only two of them.  A kernel named ``SCALE`` that binds a second
+            # operand is the elementwise product, not a constant scale: the
+            # engine refuses sub-case 0 with ``input_view_1`` bound, and it is
+            # right to -- the constant is in the numeric profile and the
+            # operand would be ignored.  The operand map is the authority.
+            if len(kernel.inputs) >= 2:
+                aux = [1]
+            elif kernel.kind != "SIGMOID":
+                aux = [0]
+        elif sub == int(Vector.MHC):
             aux.append(int(attributes.get("sinkhorn_iterations", NO_ID)))
             aux.append(int(attributes.get("hc_mult", NO_ID)))
         elif sub == int(Vector.COMPRESS):
@@ -2204,7 +2368,19 @@ def _aux_ids(
             int(Symbol.POSITION_START),
         ]
         if sub == int(Attention.SPARSE):
-            aux[1] = int(attributes.get("block_width", 1))
+            # The neutral attribute is ``block_size``; reading ``block_width``
+            # found nothing and declared a one-wide block, which the frozen
+            # DeepSeek sparse contract refuses -- it is 64.
+            aux[1] = int(
+                attributes.get("block_size", attributes.get("block_width", 0))
+                or 0
+            )
+            if aux[1] <= 0:
+                raise PlanError(
+                    f"kernel {kernel.kernel_id}: ATTENTION.SPARSE must declare "
+                    "its block width; the engine checks it against the frozen "
+                    "contract and cannot infer it from the operands"
+                )
     elif family == int(Major.ROUTE):
         if sub in (int(Route.TOPK), int(Route.BIASED_TOPK)):
             aux = [int(attributes.get("top_k", out_cols()))]
@@ -2256,6 +2432,33 @@ def _aux_ids(
         elif sub == int(Vector.HADAMARD):
             aux = [int(attributes.get("block_width", in_cols(0)))]
     return tuple(a for a in aux)
+
+
+def _lead_reduction_axis(kernel: Kernel, engine: Any) -> int:
+    """The axis a reduction's contributions must be re-led by, or 0 for none.
+
+    Every ``REDUCTION`` subopcode reduces ``input_view_0``'s **leading** axis
+    and, for ``EXPERT_SUM``, takes exactly one weight per leading index.  A
+    neutral reduction that names some other axis is not a different operation:
+    it is the same arithmetic over a permuted *presentation* of the same
+    elements, which is precisely what a strided view is for.  The mHC branch
+    reduction is the case -- ``y[t,h] = sum_m pre[t,m] * x[t,m,h]`` names axis
+    1, the four hyper-connection streams, because its operands are token-major
+    -- and both the resolver and the verifier already anticipate it by name.
+
+    Returning the axis here rather than in the emitter keeps one consequence
+    visible where it is decided: a stream-major leading axis is not the token
+    axis, so amendment A13's clamp no longer reaches the contributions view,
+    and the token block must therefore be one row.
+    """
+    if int(engine.family) != int(Major.REDUCTION):
+        return 0
+    axis = int(kernel.attributes.get("reduction_axis", 0) or 0)
+    if axis < 0:
+        raise PlanError(
+            f"kernel {kernel.kernel_id}: reduction_axis {axis} is negative"
+        )
+    return axis
 
 
 def _group_size(
@@ -2399,6 +2602,7 @@ def _plan_kernels(
     schedule descriptor to carry.
     """
     warnings: list[str] = []
+    arity_faults: list[str] = []
     placement_by_tensor = {p.tensor_id: p for p in placements}
     plans: list[KernelPlan] = []
     # The emitted body is the *first iteration* of each band, which spans the
@@ -2417,6 +2621,17 @@ def _plan_kernels(
                 "the frozen ABI 3.0 operator limit of two output views"
             )
         slot_order, dropped = _conforming_input_order(kernel, engine, tensors)
+        if not kernel.state_writes and kernel.kind != "CONCAT":
+            # Two kernels are re-expressed by the emitter rather than emitted
+            # as their table row: a state append becomes one write per source
+            # into its own column range of the state row, and an axis-one
+            # concatenation becomes one movement per column window.  Both bind
+            # an operand row this planner's slot order does not describe, so
+            # the row they would have had is not the row they get, and
+            # checking it here would be checking the wrong thing.
+            complaint = _check_operand_arity(kernel, engine, slot_order)
+            if complaint is not None:
+                arity_faults.append(complaint)
         if dropped:
             warnings.append(
                 f"kernel {kernel.kernel_id}: operand(s) "
@@ -2429,13 +2644,42 @@ def _plan_kernels(
             engine.family == int(Major.TENSOR) and engine.sub in _CONTRACTION_SUBOPS
         )
 
+        # A reduction whose reduced axis is not the leading one is emitted one
+        # token at a time.  ``REDUCTION.EXPERT_SUM`` reduces ``input_view_0``'s
+        # leading axis, so the mHC branch reduction -- which reduces the four
+        # hyper-connection streams while its operands put tokens first -- is
+        # presented stream-major.  A stream-major view's leading axis is then
+        # not the token axis, so amendment A13's clamp does not reach it (the
+        # resolver derives that from the term stride and says so), and a block
+        # larger than one token would present a whole block of tokens against
+        # an output clamped to the rows the request actually has.  One token per
+        # descriptor makes the two agree exactly, at every span, with no
+        # partial final iteration to clamp.
+        kernel_block = 1 if _lead_reduction_axis(kernel, engine) else block
+
         out_name = kernel.outputs[0] if kernel.outputs else None
         if out_name is not None:
             rows, cols, symbolic = matrix_shape(tensors[out_name], span_max)
         else:
             rows, cols, symbolic = 1, 1, False
+        if not symbolic and int(engine.family) == int(Major.DMA) and int(
+            engine.sub
+        ) == int(Dma.SCATTER):
+            # A scatter's output is the cache it *addresses*, whose extent is
+            # fixed; what it iterates is the value operand, one row per token.
+            # Taking the iteration from the destination gave the operation no
+            # token-block loop at all, so its value view claimed every row the
+            # declared context could ever hold and its index vector was the
+            # whole position range rather than this request's rows.
+            for name in kernel.inputs:
+                value_rows, _, value_symbolic = matrix_shape(
+                    tensors[name], span_max
+                )
+                if value_symbolic:
+                    rows, symbolic = value_rows, True
+                    break
         if symbolic:
-            rows = round_up(rows, block)
+            rows = round_up(rows, kernel_block)
 
         shard_columns = cols
         depth = 0
@@ -2530,9 +2774,9 @@ def _plan_kernels(
             row_loop = LoopPlan(
                 loop_key=f"k{kernel.index}.block",
                 kind="row",
-                trip=max(rows // block, 1),
+                trip=max(rows // kernel_block, 1),
                 symbol="span_tokens",
-                divisor=block,
+                divisor=kernel_block,
             )
 
         operands: list[OperandPlan] = []
@@ -2550,7 +2794,7 @@ def _plan_kernels(
                     contraction=contraction,
                     row_loop=row_loop is not None,
                     kernel_rows=rows,
-                    block=block,
+                    block=kernel_block,
                     transposed=transposed,
                     node_count=node_count,
                     shard_columns=shard_columns,
@@ -2572,7 +2816,7 @@ def _plan_kernels(
                     contraction=contraction,
                     row_loop=row_loop is not None,
                     kernel_rows=rows,
-                    block=block,
+                    block=kernel_block,
                     transposed=transposed,
                     node_count=node_count,
                     shard_columns=shard_columns,
@@ -2600,7 +2844,7 @@ def _plan_kernels(
                 layer=kernel.layer,
                 body_position=body_position.get(kernel.index, -1),
                 contraction=contraction,
-                block_rows=block,
+                block_rows=kernel_block,
                 tile_rows=tile_rows,
                 tile_cols=tile_cols,
                 tile_depth=tile_depth,
@@ -2614,6 +2858,17 @@ def _plan_kernels(
                 shard_columns=shard_columns,
                 depth=depth,
             )
+        )
+    if arity_faults:
+        shown = arity_faults[:12]
+        more = len(arity_faults) - len(shown)
+        raise PlanError(
+            f"{len(arity_faults)} kernel(s) do not fill the operand row their "
+            "engine declares in the frozen lowering table, so the emitted "
+            "operator would name NO_ID in a mandatory slot and the engine "
+            "would refuse it at issue time:\n  "
+            + "\n  ".join(shown)
+            + (f"\n  ... and {more} more" if more else "")
         )
     return tuple(plans), warnings
 

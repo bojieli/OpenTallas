@@ -663,7 +663,10 @@ def test_sparse_output_does_not_depend_on_the_query_row_tile(monkeypatch):
     the same counters.
     """
     rng = np.random.default_rng(0x5A9E)
-    span, heads, dim, rows, slots = 9, 3, 6, 20, 70
+    # More than 64 selected rows on some query tokens and fewer on others, so
+    # the operator spans two source blocks: the online rescale, the running
+    # maximum and the carried denominator only exist across a block boundary.
+    span, heads, dim, rows, slots = 9, 3, 6, 80, 129
     # Operands spanning several binades: a one-binade operand set sums the same
     # in any order and would let a reordered reduction pass unnoticed.
     def spread(shape):
@@ -677,7 +680,7 @@ def test_sparse_output_does_not_depend_on_the_query_row_tile(monkeypatch):
     sinks = rng.uniform(-2.5, 2.5, size=heads).astype(np.float32)
     indices = np.full((span, slots), NO_ID, dtype=np.uint32)
     for token in range(span):
-        width = min(token + 2, slots, rows)
+        width = min(8 * token + 2, slots, rows)
         indices[token, :width] = np.sort(
             rng.choice(rows, size=width, replace=False)
         ).astype(np.uint32)

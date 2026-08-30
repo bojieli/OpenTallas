@@ -83,6 +83,7 @@ from runtime.reference.hadamard import (
 )
 from runtime.reference.normalization import (
     HEAD_RMS_NORM_EPSILON_BF16,
+    HEAD_RMS_NORM_WIDTH,
     head_rms_norm_bf16,
 )
 from runtime.reference.sqrt_softplus import binary32_sqrt_softplus_rne
@@ -385,6 +386,209 @@ def _vector_rms_norm(ctx: EngineContext, sub: int, operator: Descriptor) -> None
     _weighted_rms_norm(ctx, operator, "vector.norm_rows")
 
 
+#: The 127 positive finite E4M3FN values in ascending encoding order, and the
+#: midpoints between neighbours.  ``runtime.reference.formats.encode_e4m3fn_rne``
+#: is a ``bisect_left`` over exactly this table followed by a nearer-neighbour
+#: choice, so the rounding is a search rather than a bit trick -- and a search
+#: over a sorted table of 127 entries is ``np.searchsorted``.  Every entry is a
+#: small dyadic rational, so binary64 holds it and every midpoint exactly: a
+#: midpoint of two adjacent encodings needs one bit more than an encoding has.
+_E4M3FN_TABLE = np.array(
+    [float(value) for value in exact._E4M3FN_POSITIVE], dtype=np.float64
+)
+_E4M3FN_MIDPOINTS = (_E4M3FN_TABLE[:-1] + _E4M3FN_TABLE[1:]) / np.float64(2.0)
+_E4M3FN_MAXIMUM = np.float64(448.0)
+
+
+def _quantize_activation_blocks(
+    codes: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, int]:
+    """The NUM-3.3 BF16 -> E4M3FN/E8M0 activation rule, over whole blocks.
+
+    ``codes`` is ``[blocks, width]`` of BF16 encodings; the result is the
+    ``[blocks, width]`` E4M3FN codes, the ``[blocks]`` E8M0 scale codes and the
+    saturated-element count.  This is
+    ``runtime.reference.formats.quantize_bf16_activation_block`` element for
+    element, and it is exact rather than merely close for reasons that are
+    worth stating, because "vectorised" is otherwise indistinguishable from
+    "approximated":
+
+    * a BF16 value is a binary64 value exactly, so decoding is exact;
+    * the scale is a power of two, so ``value / scale`` is an exponent
+      adjustment and binary64 performs it exactly -- the extremes are
+      ``2**-133 / 2**127`` and ``2**128 / 2**-127``, both far inside binary64's
+      range;
+    * the rounding decision compares the scaled magnitude against the midpoint
+      between two adjacent encodings, which is the same decision as the
+      reference's two subtractions and is exact because both operands are;
+    * ties go to the even *encoding*, which is what the reference's comment
+      says the LSB means, and adjacent encodings have adjacent significands.
+
+    ``tests/sim/test_engines_vector_exactness.py`` states the equality against
+    the reference as a test rather than leaving it as this paragraph's claim.
+    """
+    values = widen_bf16(codes).astype(np.float64)
+    if not bool(np.all(np.isfinite(values))):
+        raise exact.NumericReferenceError(
+            "activation BF16 element is NaN or infinity"
+        )
+    magnitudes = np.abs(values)
+    maxima = magnitudes.max(axis=1)
+    empty = maxima == 0.0
+
+    # The reference takes the *first* code whose ``448 * 2**(code - 127)``
+    # covers the block maximum.  Deriving the exponent and then confirming it
+    # against its neighbours keeps the answer the search's answer: the
+    # confirmation is the definition, and the derivation only says where to
+    # look.
+    safe = np.where(empty, np.float64(1.0), maxima)
+    _, exponent = np.frexp(safe / _E4M3FN_MAXIMUM)
+    scale_codes = np.clip(exponent.astype(np.int64) + 127, 0, 0xFE)
+    for _ in range(3):
+        covers = safe <= np.ldexp(_E4M3FN_MAXIMUM, scale_codes - 127)
+        lower = np.maximum(scale_codes - 1, 0)
+        smaller = safe <= np.ldexp(_E4M3FN_MAXIMUM, lower - 127)
+        scale_codes = np.where(
+            ~covers, np.minimum(scale_codes + 1, 0xFE), np.where(smaller, lower, scale_codes)
+        )
+    if not bool(
+        np.all(safe <= np.ldexp(_E4M3FN_MAXIMUM, scale_codes - 127))
+    ):
+        raise exact.NumericReferenceError(
+            "activation requires an unrepresentable E8M0 scale"
+        )
+
+    scaled = magnitudes * np.ldexp(np.float64(1.0), 127 - scale_codes)[:, None]
+    index = np.searchsorted(_E4M3FN_TABLE, scaled, side="left")
+    hit = (index < _E4M3FN_TABLE.size) & (
+        _E4M3FN_TABLE[np.minimum(index, _E4M3FN_TABLE.size - 1)] == scaled
+    )
+    lower_code = np.clip(index - 1, 0, _E4M3FN_MIDPOINTS.size - 1)
+    midpoint = _E4M3FN_MIDPOINTS[lower_code]
+    upper_code = lower_code + 1
+    rounded = np.where(
+        scaled < midpoint,
+        lower_code,
+        np.where(
+            scaled > midpoint,
+            upper_code,
+            np.where(lower_code % 2 == 0, lower_code, upper_code),
+        ),
+    )
+    selected = np.where(hit, np.minimum(index, _E4M3FN_TABLE.size - 1), rounded)
+    saturated = scaled > _E4M3FN_MAXIMUM
+    selected = np.where(saturated, 0x7E, selected).astype(np.uint8)
+    negative = (values < 0) & (selected != 0) & ~empty[:, None]
+    block_codes = np.where(negative, selected | np.uint8(0x80), selected).astype(
+        np.uint8
+    )
+    block_codes = np.where(empty[:, None], np.uint8(0), block_codes).astype(np.uint8)
+    scale_out = np.where(empty, np.uint8(0x7F), scale_codes.astype(np.uint8)).astype(
+        np.uint8
+    )
+    saturations = int(np.count_nonzero(saturated & ~empty[:, None]))
+    return block_codes, scale_out, saturations
+
+
+#: ``bf16_rsqrt`` and the epsilon-biased mean are a map from one BF16 encoding
+#: to another, so evaluating the exact reference once per *distinct* mean code
+#: is the same function bounded by the code space rather than by the tensor.
+@lru_cache(maxsize=1 << 16)
+def _head_rms_inverse_from_mean(mean_code: int, epsilon_bf16: int) -> int:
+    epsilon = exact.decode_bf16(epsilon_bf16).value
+    mean_value = exact.decode_bf16(mean_code).value
+    if epsilon is None or mean_value is None:  # pragma: no cover - invariant
+        raise RuntimeError("HEAD_RMS_NORM operand is not finite BF16")
+    biased = exact.encode_bf16_rne(mean_value + epsilon)
+    if biased.saturated:
+        raise exact.NumericReferenceError("finite BF16 epsilon add overflow")
+    return exact.bf16_rsqrt(biased.code)
+
+
+def _head_rms_norm_rows(codes: np.ndarray, epsilon_bf16: int) -> np.ndarray:
+    """The unweighted BF16 head RMSNorm, row-block at a time.
+
+    Identical, code for code, to
+    ``runtime.reference.normalization.head_rms_norm_bf16`` -- which is a
+    ``fractions.Fraction`` evaluation per element and therefore not something a
+    43-layer prefill can afford.  Each stage is reproduced in the domain the
+    contract names, and each is exact there:
+
+    ``x * x``       both operands are BF16, so the product needs sixteen
+                    significand bits and binary32 holds it exactly whenever the
+                    result is normal.  The subnormal case is not assumed away:
+                    it is checked, and falls back to the reference.
+    balanced sum    the contract's own domain is binary32, so a binary32
+                    pairwise tree over the same pairs *is* the definition.
+    mean, epsilon,  a map from one BF16 encoding to another, memoised over the
+    rsqrt           distinct encodings by calling the reference itself.
+    ``x * inv``     BF16 times BF16 again, under the same guard.
+    """
+    values = widen_bf16(codes)
+    if not bool(np.all(np.isfinite(values))):
+        raise exact.NumericReferenceError("head RMSNorm input is NaN or infinity")
+    squares = _exact_bf16_product(values, values, "head RMSNorm square")
+    square_codes, saturations = narrow_bf16_rne(squares)
+    if saturations:
+        raise exact.NumericReferenceError("finite BF16 square overflow")
+    widened = widen_bf16(square_codes)
+    total = _balanced_binary32_sum(widened)
+    mean_binary32 = np.divide(
+        total, np.float32(HEAD_RMS_NORM_WIDTH), dtype=np.float32
+    )
+    mean_codes, mean_saturations = narrow_bf16_rne(mean_binary32)
+    if mean_saturations:
+        raise exact.NumericReferenceError("finite BF16 mean-square overflow")
+    inverse_codes = np.fromiter(
+        (
+            _head_rms_inverse_from_mean(int(code), int(epsilon_bf16))
+            for code in mean_codes
+        ),
+        dtype=np.uint16,
+        count=mean_codes.size,
+    )
+    inverse = widen_bf16(inverse_codes)[:, None]
+    scaled = _exact_bf16_product(values, inverse, "head RMSNorm product")
+    output, _ = narrow_bf16_rne(scaled)
+    return output
+
+
+def _exact_bf16_product(
+    left: np.ndarray, right: np.ndarray, label: str
+) -> np.ndarray:
+    """``left * right`` for BF16-valued binary32 arrays, exactly.
+
+    Two eight-bit significands make a sixteen-bit product, so binary32 carries
+    it with eight bits to spare -- but only while the result is normal.  Below
+    ``2**-126`` binary32 loses bits the product has, and rounding twice is not
+    rounding once.  Comparing the binary32 product against the binary64 one,
+    which is exact over the whole BF16 range, decides that rather than assumes
+    it, and a disagreement raises instead of returning a plausible number.
+    """
+    product32 = np.multiply(left, right, dtype=np.float32)
+    product64 = np.multiply(
+        left.astype(np.float64), right.astype(np.float64), dtype=np.float64
+    )
+    if not np.array_equal(product32.astype(np.float64), product64):
+        raise exact.NumericReferenceError(
+            f"{label}: a BF16 product fell below the binary32 normal range, "
+            "where rounding to binary32 and then to BF16 is not the contract's "
+            "single rounding"
+        )
+    return product32
+
+
+def _balanced_binary32_sum(values: np.ndarray) -> np.ndarray:
+    """The NUM-6.1 balanced binary32 tree over the last axis."""
+    level = np.ascontiguousarray(values, dtype=np.float32)
+    while level.shape[-1] > 1:
+        if level.shape[-1] & 1:
+            pad = np.zeros(level.shape[:-1] + (1,), dtype=np.float32)
+            level = np.concatenate((level, pad), axis=-1)
+        level = np.add(level[..., 0::2], level[..., 1::2], dtype=np.float32)
+    return np.ascontiguousarray(level[..., 0], dtype=np.float32)
+
+
 @register(Major.VECTOR, Vector.HEAD_RMS_NORM)
 def _vector_head_rms_norm(
     ctx: EngineContext, sub: int, operator: Descriptor
@@ -419,13 +623,15 @@ def _vector_head_rms_norm(
         TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE,
     )
     width = int(input_view.dims[-1])
+    _require(
+        width == HEAD_RMS_NORM_WIDTH,
+        f"head RMSNorm view {input_view.descriptor_id} has width {width}; the "
+        f"qualified contract is {HEAD_RMS_NORM_WIDTH}-wide",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
     values = _read_rows(ctx, input_view, width)
     with _numeric_guard("deepseek_v4 head RMSNorm"):
-        rows = head_rms_norm_bf16(
-            [tuple(int(code) for code in row) for row in values],
-            epsilon_bf16=int(profile.epsilon_bits),
-        )
-    codes = np.asarray(rows.output_codes, dtype=np.uint16)
+        codes = _head_rms_norm_rows(values, int(profile.epsilon_bits))
     ctx.write(output_view, codes.reshape(output_view.dims))
     ctx.counters.add("vector.norm_rows", int(values.shape[0]))
     ctx.counters.add("vector.elements", int(values.size))
@@ -941,19 +1147,11 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
         f"expected {rows} rows of block scales dividing {width}",
     )
     block = width // blocks
-    source = _read_rows(ctx, source_view, width).reshape(rows, blocks, block)
-    codes = np.empty((rows, blocks, block), dtype=np.uint8)
-    scales = np.empty((rows, blocks), dtype=np.uint8)
-    saturations = 0
+    source = _read_rows(ctx, source_view, width).reshape(rows * blocks, block)
     with _numeric_guard("block activation quantisation"):
-        for row in range(rows):
-            for index in range(blocks):
-                quantized = exact.quantize_bf16_activation_block(
-                    int(code) for code in source[row, index]
-                )
-                codes[row, index] = np.asarray(quantized.value_codes, dtype=np.uint8)
-                scales[row, index] = np.uint8(quantized.scale_code)
-                saturations += int(quantized.saturated)
+        flat_codes, flat_scales, saturations = _quantize_activation_blocks(source)
+    codes = flat_codes.reshape(rows, blocks, block)
+    scales = flat_scales.reshape(rows, blocks)
     ctx.write(code_view, codes.reshape(code_view.dims))
     ctx.write(scale_view, scales.reshape(scale_view.dims))
     ctx.counters.add("vector.elements", int(source.size))

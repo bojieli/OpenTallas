@@ -81,6 +81,7 @@ from runtime.abi3.descriptors import (
 
 from .plan import (
     KernelPlan,
+    RING_INDEX_PREFIX,
     _extent_value as _static_extent,
     as_kernel_graph,
     OperandPlan,
@@ -92,6 +93,7 @@ from .plan import (
     dtype_of,
     matrix_shape,
     position_inputs,
+    ring_modulus,
     round_up as _round_up,
 )
 
@@ -1198,7 +1200,15 @@ class _Emitter:
             (o for o in plan.operands if o.direction == "in" and o is not operand),
             None,
         )
-        if is_gather:
+        if is_gather or source is None:
+            # A gather addresses the rows it writes.  So does an operation
+            # whose *only* input is the position vector: ``ROUTE.WINDOW_INDEX``
+            # takes one absolute position per query row and nothing else, so
+            # the rows it addresses are the rows of its own output.  Reading
+            # the count from a second input that does not exist left the view
+            # holding a single position for a whole block of queries, which the
+            # engine refuses -- it has one position per row or it has nothing
+            # to build a window from.
             addressed = next(
                 (o for o in plan.operands if o.direction == "out"), None
             )
@@ -1254,6 +1264,21 @@ class _Emitter:
         # was describing a window that no longer exists, and an index view is
         # ``U32``: the engines that read one say so, and a signed index is not
         # an index.
+        #
+        # A write into a *circular* cache reads the ring table instead.  The
+        # graph says so in ``cache_row``: a sliding window of ``W`` rows holds
+        # absolute position ``p`` at row ``p % W``, and a view can offset an
+        # index vector by a runtime symbol but cannot reduce one, so the
+        # reduction is in the table rather than in the descriptor.
+        modulus = ring_modulus(self.kernels[plan.index])
+        if modulus:
+            ring = self._generated_object.get(f"{RING_INDEX_PREFIX}{modulus}")
+            if ring is None:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: addresses a {modulus}-row ring "
+                    "and the plan materialised no ring-index table for it"
+                )
+            object_id = ring
         return self._view(
             object_id=object_id,
             dtype=DType.U32,
@@ -1289,7 +1314,95 @@ class _Emitter:
         dims, strides = self._drop_selected_axis(plan, operand, dims, strides)
         dims, strides = self._broadcast_to_principal(plan, operand, dims, strides)
         dims, strides = self._insert_batch_axis(plan, operand, dims, strides)
+        dims, strides = self._lead_reduced_axis(plan, operand, dims, strides)
+        dims = self._narrow_partial_quantiser(plan, operand, dims)
         return dims, strides, row_stride
+
+    def _narrow_partial_quantiser(
+        self, plan: KernelPlan, operand: OperandPlan, dims: list[int]
+    ) -> list[int]:
+        """Read only the part of a row a partial block quantiser converts.
+
+        A quantiser whose code output is narrower than its source quantises a
+        *prefix* of each row and leaves the rest alone: DeepSeek converts the
+        448 non-rotary channels of a 512-wide KV vector to E4M3FN and keeps the
+        64 rotary ones in BF16, because the rotary channels carry position and
+        cannot afford the format.  ``VECTOR.CONVERT`` reads the source and the
+        codes as one shape, so the narrowing has to live in the *view*: the
+        same row stride, fewer elements of it.  Leaving it out presents a
+        512-wide source against a 448-wide code output, which the engine
+        refuses -- correctly, because the alternative is quantising the rotary
+        channels by accident.
+
+        The code output's own width is the authority; a declared
+        ``quantized_width`` that disagrees with it is a contradiction in the
+        graph, not a preference between two numbers.
+        """
+        if plan.kind != "QUANTIZE" or operand.direction != "in" or operand.slot != 0:
+            return dims
+        kernel = self.kernels[plan.index]
+        if not kernel.outputs or not dims:
+            return dims
+        codes = self.tensors[kernel.outputs[0]]
+        if not codes.shape:
+            return dims
+        width, _ = _static_extent(codes.shape[-1], self.span_max)
+        width = int(width)
+        if width == int(dims[-1]):
+            return dims
+        if not 0 < width < int(dims[-1]):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: the quantiser writes {width} codes "
+                f"per {dims[-1]}-element row, which is not a prefix of it"
+            )
+        declared = kernel.attributes.get("quantized_width")
+        if declared is not None and int(declared) != width:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: declares quantized_width "
+                f"{int(declared)} and writes a {width}-wide code output"
+            )
+        return [*dims[:-1], width]
+
+    def _lead_reduced_axis(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        dims: list[int],
+        strides: list[int],
+    ) -> tuple[list[int], list[int]]:
+        """Present a reduction's contributions with the reduced axis leading.
+
+        The ``REDUCTION`` family reduces ``input_view_0``'s leading axis.  A
+        neutral reduction that names another axis -- the mHC branch reduction
+        names axis 1, the four hyper-connection streams, because the graph is
+        token-major -- describes the same elements in a different order, and a
+        strided view is exactly how a machine whose operands are descriptions
+        states that.  Moving the axis to the front costs nothing and copies
+        nothing: the same object, the same offsets, the strides permuted.
+
+        The planner already gave such a kernel a one-token block, because a
+        stream-major leading axis is not the token axis and amendment A13's
+        clamp therefore does not reach this view.  With one token per
+        descriptor there is no partial final iteration to clamp.
+        """
+        if plan.engine_family != int(Major.REDUCTION):
+            return dims, strides
+        if operand.direction != "in" or operand.slot != 0:
+            return dims, strides
+        axis = int(
+            self.kernels[plan.index].attributes.get("reduction_axis", 0) or 0
+        )
+        if axis == 0:
+            return dims, strides
+        if axis >= len(dims):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: reduction_axis {axis} is outside the "
+                f"rank-{len(dims)} contributions operand"
+            )
+        return (
+            [dims[axis], *dims[:axis], *dims[axis + 1 :]],
+            [strides[axis], *strides[:axis], *strides[axis + 1 :]],
+        )
 
     def _insert_broadcast_axis(
         self,
@@ -1422,6 +1535,11 @@ class _Emitter:
         the leading axis, the missing middle axes are inserted with stride zero.
         """
         if operand.direction != "in" or operand.slot == 0 or len(dims) < 2:
+            return dims, strides
+        if plan.engine_family == int(Major.REDUCTION):
+            # A reduction states its own operand extents: ``EXPERT_SUM``'s
+            # weight is one per reduced index and a base carries the output
+            # shape, so neither is a lower-rank operand awaiting broadcast.
             return dims, strides
         principal = self._principal_extents(plan)
         if principal is None or len(principal) != len(dims) + 1:
