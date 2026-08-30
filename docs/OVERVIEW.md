@@ -88,9 +88,9 @@ tokens and batch one, the hardware-independent inventory reports:
 
 | Per generated token | Checked traffic | previously published |
 |---|---:|---:|
-| Expected active weight read | 11.2176 GB | 11.2176 GB (unchanged) |
-| KV read | **317.4564 MB** | ~~99.1018 MB~~ |
-| Weight/KV-read ratio | **35.3358×** | ~~113.2×~~ |
+| Expected active weight read | 11.2176 GB | 11.2176 GB (unchanged) | <!-- figure: 11.2176 src="results/model-traffic/sweep.csv#active_weight_read_bytes_per_step" where="model=DeepSeek-V4-Flash-0731;context_tokens=200000;batch_size=1" scale="1e-9" name="Flash weight read/token, GB" -->
+| KV read | **317.4564 MB** | ~~99.1018 MB~~ | <!-- figure: 317.4564 src="results/model-traffic/sweep.csv#kv_read_bytes_per_user_token" where="model=DeepSeek-V4-Flash-0731;context_tokens=200000;batch_size=1" scale="1e-6" name="Flash KV read/token, MB" -->
+| Weight/KV-read ratio | **35.3358×** | ~~113.2×~~ | <!-- figure: 35.3358 src="results/model-traffic/sweep.csv#weight_to_kv_read_ratio" where="model=DeepSeek-V4-Flash-0731;context_tokens=200000;batch_size=1" name="Flash W:KV at 200K, B=1" -->
 
 Those values come directly from
 [`results/model-traffic/sweep.csv`](../results/model-traffic/sweep.csv) — row
@@ -107,8 +107,8 @@ Regenerate both with `make model-traffic`.
 > to 35.3×. The corrected figure is independently confirmed by an **execution**
 > of the released implementation at 200,000 tokens:
 > [`results/abi3/deepseek_v4_reference_oracle_context_ladder.json`](../results/abi3/deepseek_v4_reference_oracle_context_ladder.json)
-> → `context_ladder_summary.rungs[4]` measured 317,435,904 KV bytes per decode
-> step and reports `weight_to_kv_read_ratio_at_this_context` = 35.335.
+> → `context_ladder_summary.rungs[4]` measured 317,435,904 KV bytes per decode <!-- figure: 317,435,904 src="results/abi3/deepseek_v4_reference_oracle_context_ladder.json#context_ladder_summary.rungs[workload=TA-DS-CTX-200K-1].measured_kv_bytes_per_decode_step" name="executed KV bytes per decode step at 200K" -->
+> step and reports `weight_to_kv_read_ratio_at_this_context` = 35.335. <!-- figure: 35.335 src="results/abi3/deepseek_v4_reference_oracle_context_ladder.json#context_ladder_summary.rungs[workload=TA-DS-CTX-200K-1].weight_to_kv_read_ratio_at_this_context" name="executed W:KV at 200K" -->
 
 The 35.3× ratio is **not** a 35.3× speedup claim. It only identifies an unusually
 large traffic term that a local immutable store could attack. The full result
@@ -209,7 +209,7 @@ require target physical design.
 > The derivation's *form* was and is correct; one of its five inputs was stale.
 > The HBM KV service term was 13.106 µs and is **41.979 µs** — 3.20× larger,
 > from the same KV-constant correction that moved the traffic ratio above — so
-> the interval is 124.222 µs and the rate is **8,050.1 tokens/s**. The
+> the interval is 124.222 µs and the rate is **8,050.1 tokens/s**. The <!-- figure: 124.222 src="results/iso-node/n7_architecture_attribution/analytical.json#points[architecture=ROM-wafer-N7-HBM2e-central,model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_size=1].per_user_token_latency_s" scale="1e6" tol="0.001" name="N7 central per-token interval, us" why="the document re-derives this from the rounded component times it prints just above -- (41.979 + 69.821) / 0.90 = 124.222 -- where the artifact carries 124.2215. The tolerance is the rounding of the displayed inputs, not slack." -->
 > comparison figures below moved with it. A step-by-step derivation is worse
 > than a bare number when it goes stale, because a reader can check the
 > arithmetic and it will be self-consistent while being wrong; that is what
@@ -225,11 +225,11 @@ Its `component_times_s` block contains:
 
 | Component | `component_times_s` key | Service time | Meaning |
 |---|---|---:|---|
-| ROM weight service | `rom_full_array_read_C4` | 7.828 µs | Time implied by active weight bytes and the configured central ROM service envelope |
-| HBM KV service | `kv_beachfront_C8` | **41.979 µs** (was ~~13.106~~) | Time implied by mutable KV traffic and the configured HBM beachfront |
-| Compute service | `compute_C5` | 25.932 µs | Time implied by exact format-specific operation counts and configured arithmetic roofs |
-| Layer collectives | `collective_floor_C6` | 69.821 µs | Serialized topology/payload-derived reduction service |
-| Pipeline efficiency | `configs/hardware/n7_architecture_attribution.json` → `pipeline_efficiency` | 0.90 | Explicit deterministic scenario input |
+| ROM weight service | `rom_full_array_read_C4` | 7.828 µs | Time implied by active weight bytes and the configured central ROM service envelope | <!-- figure: 7.828 src="results/iso-node/n7_architecture_attribution/analytical.json#points[architecture=ROM-wafer-N7-HBM2e-central,model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_size=1].component_times_s.rom_full_array_read_C4" scale="1e6" name="ROM weight service, us" -->
+| HBM KV service | `kv_beachfront_C8` | **41.979 µs** (was ~~13.106~~) | Time implied by mutable KV traffic and the configured HBM beachfront | <!-- figure: 41.979 src="results/iso-node/n7_architecture_attribution/analytical.json#points[architecture=ROM-wafer-N7-HBM2e-central,model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_size=1].component_times_s.kv_beachfront_C8" scale="1e6" name="HBM KV service, us" -->
+| Compute service | `compute_C5` | 25.932 µs | Time implied by exact format-specific operation counts and configured arithmetic roofs | <!-- figure: 25.932 src="results/iso-node/n7_architecture_attribution/analytical.json#points[architecture=ROM-wafer-N7-HBM2e-central,model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_size=1].component_times_s.compute_C5" scale="1e6" name="compute service, us" -->
+| Layer collectives | `collective_floor_C6` | 69.821 µs | Serialized topology/payload-derived reduction service | <!-- figure: 69.821 src="results/iso-node/n7_architecture_attribution/analytical.json#points[architecture=ROM-wafer-N7-HBM2e-central,model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_size=1].component_times_s.collective_floor_C6" scale="1e6" name="layer collective floor, us" -->
+| Pipeline efficiency | `configs/hardware/n7_architecture_attribution.json` → `pipeline_efficiency` | 0.90 | Explicit deterministic scenario input | <!-- figure: 0.90 src="configs/hardware/n7_architecture_attribution.json#wafer_architectures[name=ROM-wafer-N7-HBM2e-central].pipeline_efficiency" name="N7 central pipeline efficiency" -->
 
 Weight, KV, and compute service are modeled as independent and overlap where
 legal. The layer collective is then serialized. Therefore:
@@ -266,12 +266,12 @@ section did not notice: it used to be compute at 25.932 µs and it is now KV
 beachfront at 41.979 µs. The explanation and its own arithmetic had drifted
 apart.
 
-At this point, the N7 central envelope gives **8,050.1** per-user tokens/s versus
-**614.4** tokens/s for the fastest feasible same-batch candidate in the allowed
+At this point, the N7 central envelope gives **8,050.1** per-user tokens/s versus <!-- figure: 8,050.1 src="results/iso-node/n7_architecture_attribution/REPORT.md#ROM user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N7 central ROM user tok/s" -->
+**614.4** tokens/s for the fastest feasible same-batch candidate in the allowed <!-- figure: 614.4 src="results/iso-node/n7_architecture_attribution/REPORT.md#GPU user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N7 same-batch A100 user tok/s" -->
 A100 set (`NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x16`), a same-batch ratio
-of **13.10×**. The N4-class central envelope gives **12,629.3** tokens/s versus
-**1,650.7** tokens/s for its B300 candidate (`NVIDIA-B300-x8`), a ratio of
-**7.65×**
+of **13.10×**. The N4-class central envelope gives **12,629.3** tokens/s versus <!-- figure: 13.10 src="results/iso-node/n7_architecture_attribution/REPORT.md#Same-B ratio" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N7 same-batch ratio" --> <!-- figure: 12,629.3 src="results/iso-node/leading_node_market/REPORT.md#ROM user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N4 central ROM user tok/s" -->
+**1,650.7** tokens/s for its B300 candidate (`NVIDIA-B300-x8`), a ratio of <!-- figure: 1,650.7 src="results/iso-node/leading_node_market/REPORT.md#GPU user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N4 same-batch B300 user tok/s" -->
+**7.65×** <!-- figure: 7.65 src="results/iso-node/leading_node_market/REPORT.md#Same-B ratio" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N4 same-batch ratio" -->
 ([`results/iso-node/leading_node_market/REPORT.md`](../results/iso-node/leading_node_market/REPORT.md)
 → "Central-envelope 200K results", same row and columns). Those comparison
 values answer a precisely declared analytical question; they are not lab
@@ -298,8 +298,8 @@ of each study:
 
 | Flash, 200K, B1 | Central envelope | Deterministic low–high | Same-batch GPU point | previously published |
 |---|---:|---:|---:|---|
-| N7/HBM2e-era study | **8,050.1 tok/s** | **1,287.0–23,767.7 tok/s** | **614.4 tok/s** | ~~9,399 / 1,299–35,829 / 618~~ |
-| N4-class/HBM3e study | **12,629.3 tok/s** | **1,637.9–42,373.7 tok/s** | **1,650.7 tok/s** | ~~14,436 / 1,666–56,884 / 1,666~~ |
+| N7/HBM2e-era study | **8,050.1 tok/s** | **1,287.0–23,767.7 tok/s** | **614.4 tok/s** | ~~9,399 / 1,299–35,829 / 618~~ | <!-- figure: 1,287.0 src="results/iso-node/n7_architecture_attribution/analytical.json#uncertainty_bands[model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_per_stage=1].rom_per_user_tokens_s_low" name="N7 band low" --> <!-- figure: 23,767.7 src="results/iso-node/n7_architecture_attribution/analytical.json#uncertainty_bands[model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_per_stage=1].rom_per_user_tokens_s_high" name="N7 band high" -->
+| N4-class/HBM3e study | **12,629.3 tok/s** | **1,637.9–42,373.7 tok/s** | **1,650.7 tok/s** | ~~14,436 / 1,666–56,884 / 1,666~~ | <!-- figure: 1,637.9 src="results/iso-node/leading_node_market/analytical.json#uncertainty_bands[model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_per_stage=1].rom_per_user_tokens_s_low" name="N4 band low" --> <!-- figure: 42,373.7 src="results/iso-node/leading_node_market/analytical.json#uncertainty_bands[model=DeepSeek-V4-Flash-0731,context_tokens=200000,batch_per_stage=1].rom_per_user_tokens_s_high" name="N4 band high" -->
 
 The low–high span is not a confidence interval: the project has no statistical
 distribution for future silicon. It is the range across three explicit hardware

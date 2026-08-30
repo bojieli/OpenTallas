@@ -63,7 +63,7 @@ the price of `t_link` on a wafer.
 
 | per-user rate | budget per token |
 |---:|---:|
-| **16,960 tok/s** (Taalas HC1, published) | **58.96 µs** |
+| **16,960 tok/s** (Taalas HC1, published) | **58.96 µs** | <!-- figure: 16,960 src="configs/hardware/technology.json#reference_parts.taalas_hc1.published_tokens_s_per_user.value" name="Taalas HC1 published per-user rate (input echo)" -->
 | 10,000 | 100 µs |
 | 3,000 | 333 µs |
 | 1,000 | 1,000 µs |
@@ -80,11 +80,11 @@ conclusion was measured against, so that the comparison is like for like.
 
 | link | `hop_latency_s` | grade | swept range |
 |---|---:|---|---|
-| `on_wafer` | **100 ns** | assumed | 30–500 ns |
-| `nvlink5` | **1.5 µs** | assumed | 1.0–5.5 µs |
-| `infiniband_ndr` | **4.5 µs** | published | 3.7–5.7 µs |
-| `inter_wafer` | **5.0 µs** | assumed | 1.0–10.0 µs |
-| `ethernet` | **5.0 µs** | assumed | 2.0–10.0 µs |
+| `on_wafer` | **100 ns** | assumed | 30–500 ns | <!-- figure: 100 src="configs/hardware/technology.json#links.on_wafer.hop_latency_s.value" scale="1e9" name="on_wafer hop latency, ns" -->
+| `nvlink5` | **1.5 µs** | assumed | 1.0–5.5 µs | <!-- figure: 1.5 src="configs/hardware/technology.json#links.nvlink5.hop_latency_s.value" scale="1e6" name="nvlink5 hop latency, us" -->
+| `infiniband_ndr` | **4.5 µs** | published | 3.7–5.7 µs | <!-- figure: 4.5 src="configs/hardware/technology.json#links.infiniband_ndr.hop_latency_s.value" scale="1e6" name="infiniband_ndr hop latency, us" -->
+| `inter_wafer` | **5.0 µs** | assumed | 1.0–10.0 µs | <!-- figure: 5.0 src="configs/hardware/technology.json#links.inter_wafer.hop_latency_s.value" scale="1e6" name="inter_wafer hop latency, us" -->
+| `ethernet` | **5.0 µs** | assumed | 2.0–10.0 µs | <!-- figure: 5.0 src="configs/hardware/technology.json#links.ethernet.hop_latency_s.value" scale="1e6" name="ethernet hop latency, us" -->
 
 Two of these rows cite *this document* as their source (`on_wafer` and
 `ethernet`), so its inputs are load-bearing in the model even though its
@@ -112,11 +112,11 @@ Measured rows, B200 pipeline on Qwen3-8B, `nvlink5` inside an 8-GPU domain and
 
 | design | devices | hops/token | link latency/token | % of 58.8 µs | viable to (10% budget) | hard ceiling |
 |---|---:|---:|---:|---:|---:|---:|
-| `Qwen3-8B/b200_sxm-x2-pipeline` | 2 | 1 | 1.51 µs | 3% | 66,264.6 tok/s | 662,645.6 tok/s |
-| `Qwen3-8B/b200_sxm-x4-pipeline` | 4 | 3 | 4.53 µs | 8% | 22,088.2 tok/s | 220,881.9 tok/s |
-| `Qwen3-8B/b200_sxm-x29-pipeline` | 29 | 28 | 51.72 µs | 88% | 1,933.5 tok/s | 19,335.2 tok/s |
-| `Qwen3-8B/b200_sxm-x58-pipeline` | 58 | **35 (capped)** | 65.44 µs | **111%** | 1,528.2 tok/s | 15,281.8 tok/s |
-| `Qwen3-8B/b200_sxm-x347-pipeline` | 347 | **35 (capped)** | 65.44 µs | **111%** | 1,528.2 tok/s | 15,281.8 tok/s |
+| `Qwen3-8B/b200_sxm-x2-pipeline` | 2 | 1 | 1.51 µs | 3% | 66,264.6 tok/s | 662,645.6 tok/s | <!-- figure: 1.51 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x2-pipeline" name="B200 x2 pipeline link latency/token" --> <!-- figure: 66,264.6 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x2-pipeline" name="B200 x2 pipeline viable to" --> <!-- figure: 662,645.6 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x2-pipeline" name="B200 x2 pipeline hard ceiling" -->
+| `Qwen3-8B/b200_sxm-x4-pipeline` | 4 | 3 | 4.53 µs | 8% | 22,088.2 tok/s | 220,881.9 tok/s | <!-- figure: 4.53 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x4-pipeline" name="B200 x4 pipeline link latency/token" --> <!-- figure: 22,088.2 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x4-pipeline" name="B200 x4 pipeline viable to" --> <!-- figure: 220,881.9 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x4-pipeline" name="B200 x4 pipeline hard ceiling" -->
+| `Qwen3-8B/b200_sxm-x29-pipeline` | 29 | 28 | 51.72 µs | 88% | 1,933.5 tok/s | 19,335.2 tok/s | <!-- figure: 51.72 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x29-pipeline" name="B200 x29 pipeline link latency/token" --> <!-- figure: 1,933.5 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x29-pipeline" name="B200 x29 pipeline viable to" --> <!-- figure: 19,335.2 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x29-pipeline" name="B200 x29 pipeline hard ceiling" -->
+| `Qwen3-8B/b200_sxm-x58-pipeline` | 58 | **35 (capped)** | 65.44 µs | **111%** | 1,528.2 tok/s | 15,281.8 tok/s | <!-- figure: 65.44 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x58-pipeline" name="B200 x58 pipeline link latency/token" --> <!-- figure: 1,528.2 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x58-pipeline" name="B200 x58 pipeline viable to" --> <!-- figure: 15,281.8 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x58-pipeline" name="B200 x58 pipeline hard ceiling" -->
+| `Qwen3-8B/b200_sxm-x347-pipeline` | 347 | **35 (capped)** | 65.44 µs | **111%** | 1,528.2 tok/s | 15,281.8 tok/s | <!-- figure: 65.44 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x347-pipeline" name="B200 x347 pipeline link latency/token" --> <!-- figure: 1,528.2 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x347-pipeline" name="B200 x347 pipeline viable to" --> <!-- figure: 15,281.8 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x347-pipeline" name="B200 x347 pipeline hard ceiling" -->
 
 The qualitative claim survives and the numbers move. At Taalas-class speed a
 56-chip array is still not available on a pipeline — but the overrun is
@@ -135,9 +135,9 @@ how few devices it is spread over*. That much is unchanged, and it is
 
 | model | layers | collectives/token | **on-wafer** | **NVLink array** | on-wafer as % of 58.8 µs |
 |---|---:|---:|---:|---:|---:|
-| Qwen3-8B | 36 | 72 | **110.88 µs** | **217.31 µs** | **189%** |
-| DeepSeek-V4-Flash | 43 | 86 | **132.44 µs** | **1,055.19 µs** | **225%** |
-| DeepSeek-V4-Pro | 61 | 122 | **187.88 µs** (on-wafer term only) | **1,562.38 µs** | **319%** |
+| Qwen3-8B | 36 | 72 | **110.88 µs** | **217.31 µs** | **189%** | <!-- figure: 110.88 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Qwen on-wafer tensor link latency/token" --> <!-- figure: 217.31 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-tensor-x3" name="Qwen NVLink tensor link latency/token" -->
+| DeepSeek-V4-Flash | 43 | 86 | **132.44 µs** | **1,055.19 µs** | **225%** | <!-- figure: 132.44 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Flash on-wafer tensor link latency/token" --> <!-- figure: 1,055.19 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-tensor-x14" name="Flash NVLink tensor link latency/token" -->
+| DeepSeek-V4-Pro | 61 | 122 | **187.88 µs** (on-wafer term only) | **1,562.38 µs** | **319%** | <!-- figure: 1,562.38 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-tensor-x72" name="Pro NVLink tensor link latency/token" -->
 
 On-wafer rows: `Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1`,
 `DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1`,
@@ -151,7 +151,7 @@ spells out the arithmetic, e.g. `72 x all_reduce span 57 on on_wafer
 **Pro does not fit on one wafer, and the honest total is worse than the table
 suggests.** Its ROM array is 52.6 reticle fields at N5 (§4), so a tensor group
 spans two wafers and pays `inter_wafer` as well: 187.88 µs on-wafer **plus**
-1,237.49 µs across the wafer boundary = **1,425.37 µs**, a hard ceiling of
+1,237.49 µs across the wafer boundary = **1,425.37 µs**, a hard ceiling of <!-- figure: 1,425.37 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-wafer-tensor-x2" name="Pro two-wafer tensor link latency/token" -->
 **701.6 tok/s**. Charging that link the on-wafer 100 ns hop — which this study
 previously did — is the ROM-side mirror of charging a GPU cluster a 672-way
 pipeline.
@@ -162,9 +162,9 @@ hard ceilings are:
 
 | | on-wafer hard ceiling | NVLink-array hard ceiling |
 |---|---:|---:|
-| Qwen3-8B | 9,018.8 tok/s | 4,601.7 tok/s |
-| DeepSeek-V4-Flash | 7,550.6 tok/s | 947.7 tok/s |
-| DeepSeek-V4-Pro | 701.6 tok/s | 640.0 tok/s |
+| Qwen3-8B | 9,018.8 tok/s | 4,601.7 tok/s | <!-- figure: 9,018.8 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Qwen on-wafer tensor hard ceiling" --> <!-- figure: 4,601.7 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-tensor-x3" name="Qwen NVLink tensor hard ceiling" -->
+| DeepSeek-V4-Flash | 7,550.6 tok/s | 947.7 tok/s | <!-- figure: 7,550.6 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Flash on-wafer tensor hard ceiling" --> <!-- figure: 947.7 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-tensor-x14" name="Flash NVLink tensor hard ceiling" -->
+| DeepSeek-V4-Pro | 701.6 tok/s | 640.0 tok/s | <!-- figure: 701.6 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-wafer-tensor-x2" name="Pro two-wafer tensor hard ceiling" --> <!-- figure: 640.0 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-tensor-x72" name="Pro NVLink tensor hard ceiling" -->
 
 That band — **5,000–9,000 tok/s** for the two models that fit on one wafer — is
 the replacement for the retracted 116,278 / 81,966 tok/s. The report states the
@@ -194,9 +194,9 @@ Checkpoint bytes and bits/parameter are
 
 | model | checkpoint | bits/param | ROM array @N5 | reticles | array design the study builds | array viable to |
 |---|---:|---:|---:|---:|---|---:|
-| Qwen3-8B | 16.4 GB | 16.00 | 786 mm² | **1.0** | `…array-pipeline-x3`, 3 devices, 2 hops, 3.02 µs | **33,132.3 tok/s** |
-| DeepSeek-V4-Flash | 166.9 GB | 4.70 | 8,010 mm² | **9.8** | `…array-pipeline-x14`, 14 devices, 13 hops, 22.77 µs | **4,391.2 tok/s** |
-| DeepSeek-V4-Pro | 892.7 GB | 4.46 | 42,852 mm² | **52.6** | `…array-pipeline-x74`, 74 devices, 60 hops, 113.85 µs | **878.3 tok/s** |
+| Qwen3-8B | 16.4 GB | 16.00 | 786 mm² | **1.0** | `…array-pipeline-x3`, 3 devices, 2 hops, 3.02 µs | **33,132.3 tok/s** | <!-- figure: 16.4 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=Qwen3-8B].checkpoint_bytes" scale="1e-9" name="Qwen checkpoint, GB" --> <!-- figure: 16.00 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=Qwen3-8B].native_bits_per_parameter" name="Qwen bits/param" --> <!-- figure: 3.02 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x3" name="Qwen array pipeline link latency/token" --> <!-- figure: 33,132.3 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x3" name="Qwen array pipeline viable to" -->
+| DeepSeek-V4-Flash | 166.9 GB | 4.70 | 8,010 mm² | **9.8** | `…array-pipeline-x14`, 14 devices, 13 hops, 22.77 µs | **4,391.2 tok/s** | <!-- figure: 166.9 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].checkpoint_bytes" scale="1e-9" name="Flash checkpoint, GB" --> <!-- figure: 4.70 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].native_bits_per_parameter" name="Flash bits/param" --> <!-- figure: 22.77 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-pipeline-x14" name="Flash array pipeline link latency/token" --> <!-- figure: 4,391.2 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-pipeline-x14" name="Flash array pipeline viable to" -->
+| DeepSeek-V4-Pro | 892.7 GB | 4.46 | 42,852 mm² | **52.6** | `…array-pipeline-x74`, 74 devices, 60 hops, 113.85 µs | **878.3 tok/s** | <!-- figure: 892.7 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].checkpoint_bytes" scale="1e-9" name="Pro checkpoint, GB" --> <!-- figure: 4.46 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].native_bits_per_parameter" name="Pro bits/param" --> <!-- figure: 113.85 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-pipeline-x74" name="Pro array pipeline link latency/token" --> <!-- figure: 878.3 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-pipeline-x74" name="Pro array pipeline viable to" -->
 
 The device counts are larger than the ROM area alone implies because a design
 also has to carry compute, KV store and beachfront; they are the counts the
@@ -233,9 +233,9 @@ per-user ratio directly, at batch 1, each side on its own best design
 
 | | N5 vs B200 | N6 vs A100 |
 |---|---:|---:|
-| Qwen3-8B | **1.61×** | **2.15×** |
-| DeepSeek-V4-Flash | **2.61×** | **2.97×** |
-| DeepSeek-V4-Pro | **3.39×** | **3.91×** |
+| Qwen3-8B | **1.61×** | **2.15×** | <!-- figure: 1.61 src="results/roofline/n5_vs_b200/REPORT.md#Wafer/array" table="Topology choice" where="Model=Qwen3-8B;B=1" name="Qwen wafer/array at N5, B=1" --> <!-- figure: 2.15 src="results/roofline/n6_vs_a100/REPORT.md#Wafer/array" table="Topology choice" where="Model=Qwen3-8B;B=1" name="Qwen wafer/array at N6, B=1" -->
+| DeepSeek-V4-Flash | **2.61×** | **2.97×** | <!-- figure: 2.61 src="results/roofline/n5_vs_b200/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Flash-0731;B=1" name="Flash wafer/array at N5, B=1" --> <!-- figure: 2.97 src="results/roofline/n6_vs_a100/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Flash-0731;B=1" name="Flash wafer/array at N6, B=1" -->
+| DeepSeek-V4-Pro | **3.39×** | **3.91×** | <!-- figure: 3.39 src="results/roofline/n5_vs_b200/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Pro-0813;B=1" name="Pro wafer/array at N5, B=1" --> <!-- figure: 3.91 src="results/roofline/n6_vs_a100/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Pro-0813;B=1" name="Pro wafer/array at N6, B=1" -->
 
 On collective cost alone, like for like, the report states the wafer is *"at
 least 2.0× cheaper"* (finding 8). The per-model collective ratios follow from

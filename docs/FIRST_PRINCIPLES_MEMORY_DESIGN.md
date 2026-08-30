@@ -67,12 +67,12 @@ moved.
 | model | context | weight read/token | KV read/token | **W:KV** | was | evidence |
 |---|---:|---:|---:|---:|---:|---|
 | Qwen3-8B | 1,024 | 15.137 GB | 0.1510 GB | **100.3** | 100 | derived |
-| Qwen3-8B | 8,192 | 15.137 GB | 1.2080 GB | **12.5** | 12.5 | derived ✓ artifact |
+| Qwen3-8B | 8,192 | 15.137 GB | 1.2080 GB | **12.5** | 12.5 | derived ✓ artifact | <!-- figure: 1.2080 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=Qwen3-8B].kv_read_bytes_per_user_token" scale="1e-9" name="Qwen KV read/token at 8K, GB" --> <!-- figure: 12.5 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=Qwen3-8B].weight_to_kv_read_ratio_b1" name="Qwen W:KV at 8K" -->
 | Qwen3-8B | 32,768 | 15.137 GB | 4.8318 GB | **3.1** | 3.1 | derived |
-| DeepSeek-V4-Flash | 200,000 | 11.218 GB | **0.3175 GB** | **35.3** | ~~113~~ | **executed** |
+| DeepSeek-V4-Flash | 200,000 | 11.218 GB | **0.3175 GB** | **35.3** | ~~113~~ | **executed** | <!-- figure: 11.218 src="results/model-traffic/sweep.csv#active_weight_read_bytes_per_step" where="model=DeepSeek-V4-Flash-0731;context_tokens=200000;batch_size=1" scale="1e-9" name="Flash weight read/token, GB" --> <!-- figure: 0.3175 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].kv_read_bytes_per_user_token" scale="1e-9" name="Flash KV read/token at 200K, GB" --> <!-- figure: 35.3 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].weight_to_kv_read_ratio_b1" name="Flash W:KV at 200K" -->
 | DeepSeek-V4-Flash | 1,000,000 | 11.218 GB | **1.5207 GB** | **7.4** | ~~24.5~~ | derived |
 | DeepSeek-V4-Pro | 200,000 | 39.667 GB | **0.4731 GB** | **83.8** | ~~260~~ | derived |
-| DeepSeek-V4-Pro | 1,000,000 | 39.667 GB | **2.2075 GB** | **18.0** | ~~59~~ | derived ✓ artifact |
+| DeepSeek-V4-Pro | 1,000,000 | 39.667 GB | **2.2075 GB** | **18.0** | ~~59~~ | derived ✓ artifact | <!-- figure: 39.667 src="results/model-traffic/sweep.csv#active_weight_read_bytes_per_step" where="model=DeepSeek-V4-Pro-0813;context_tokens=1000000;batch_size=1" scale="1e-9" name="Pro weight read/token, GB" --> <!-- figure: 2.2075 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].kv_read_bytes_per_user_token" scale="1e-9" name="Pro KV read/token at 1M, GB" --> <!-- figure: 18.0 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].weight_to_kv_read_ratio_b1" name="Pro W:KV at 1M" -->
 
 Every row: the command above.
 Artifact confirmation for the two ticked rows:
@@ -114,12 +114,12 @@ advantage is a **short-context** advantage. Those three rows are unchanged.
 
 On-die SRAM area to hold the KV cache. The previous version used a hand-entered
 0.024 µm²/bit at 60% array efficiency. The model derives the density instead:
-**3.009 MB/mm² at N6**, from a 0.027 µm² 6T HD bitcell (`configs/hardware/technology.json`
+**3.009 MB/mm² at N6**, from a 0.027 µm² 6T HD bitcell (`configs/hardware/technology.json` <!-- figure: 3.009 src="results/roofline/n6_vs_a100/REPORT.md#Value" table="Derived technology at N6" where="Quantity=SRAM capacity density" name="SRAM capacity density at N6" -->
 → `nodes.N6.sram_hd_bitcell_um2`, `derived` from the published N7 cell) at 65%
 array efficiency (`sram.array_efficiency`, `assumed`, swept 0.55–0.75), and the
 result is reported at
 [`results/roofline/n6_vs_a100/REPORT.md`](../results/roofline/n6_vs_a100/REPORT.md)
-→ "Derived technology at N6". One reticle die is **815 mm²**
+→ "Derived technology at N6". One reticle die is **815 mm²** <!-- figure: 815 src="configs/hardware/technology.json#reticle.area_mm2.value" name="reticle area" -->
 (`configs/hardware/technology.json` → `reticle.area_mm2`, the published Taalas
 HC1 die area). Bytes are decimal SI throughout (`technology.json` → `units`).
 
@@ -128,10 +128,10 @@ Area = `KV/user × batch / 3.009 MB/mm²`; dies = `area / 815 mm²`.
 | model | context | KV/user | B=1 | B=8 | B=64 | was (B=1 / B=8 / B=64) |
 |---|---:|---:|---:|---:|---:|---|
 | Qwen3-8B | 1,024 | 0.1510 GB | 50 mm² | 401 mm² | 3.9 dies | 48 / 387 mm² / 4 dies |
-| Qwen3-8B | 8,192 | 1.2080 GB | **401 mm²** | 3.9 dies | 31.5 dies | 387 mm² / 4 / 30 dies |
+| Qwen3-8B | 8,192 | 1.2080 GB | **401 mm²** | 3.9 dies | 31.5 dies | 387 mm² / 4 / 30 dies | <!-- figure: 1.2080 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=Qwen3-8B].kv_storage_bytes_per_user" scale="1e-9" name="Qwen KV/user at 8K, GB" -->
 | Qwen3-8B | 32,768 | 4.8318 GB | 2.0 dies | 15.8 dies | 126.1 dies | 2 / 15 / 121 dies |
-| DeepSeek-V4-Flash | 200,000 | **1.3816 GB** | **459 mm²** | **4.5 dies** | **36.1 dies** | ~~226 mm² / 2 / 18 dies~~ |
-| DeepSeek-V4-Pro | 1,000,000 | **9.8560 GB** | **4.0 dies** | **32.2 dies** | **257.2 dies** | ~~2 / 16 / 126 dies~~ |
+| DeepSeek-V4-Flash | 200,000 | **1.3816 GB** | **459 mm²** | **4.5 dies** | **36.1 dies** | ~~226 mm² / 2 / 18 dies~~ | <!-- figure: 1.3816 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].kv_storage_bytes_per_user" scale="1e-9" name="Flash KV/user at 200K, GB" -->
+| DeepSeek-V4-Pro | 1,000,000 | **9.8560 GB** | **4.0 dies** | **32.2 dies** | **257.2 dies** | ~~2 / 16 / 126 dies~~ | <!-- figure: 9.8560 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].kv_storage_bytes_per_user" scale="1e-9" name="Pro KV/user at 1M, GB" -->
 
 The Qwen rows move only by the density change (19.7→16.2 for ROM, 0.024 µm²/60%
 → 0.027 µm²/65% for SRAM); the DeepSeek rows move by that *and* by the ~2× KV
@@ -172,20 +172,20 @@ weaker than it was stated to be:
 ## 5. Why the big models need a wafer — and it is the weights, not the KV
 
 ROM array area at the **released packing only**. ROM capacity density is derived,
-not entered: **16.204 MB/mm² at N6** and **20.833 MB/mm² at N5**, from the same
+not entered: **16.204 MB/mm² at N6** and **20.833 MB/mm² at N5**, from the same <!-- figure: 16.204 src="results/roofline/n6_vs_a100/REPORT.md#Value" table="Derived technology at N6" where="Quantity=ROM capacity density" name="ROM capacity density at N6" --> <!-- figure: 20.833 src="results/roofline/n5_vs_b200/REPORT.md#Value" table="Derived technology at N5" where="Quantity=ROM capacity density" name="ROM capacity density at N5" -->
 6T HD bitcell scaled by an assumed 0.2 ROM-to-SRAM cell-area ratio at 70% array
 efficiency (`configs/hardware/technology.json` → `rom.cell_to_sram_cell_area_ratio`,
 `rom.array_efficiency`; both `assumed`, both swept). Reported at
 `n6_vs_a100/REPORT.md` and `n5_vs_b200/REPORT.md` → "Derived technology at N6/N5".
 Checkpoint bytes and bits/parameter are `n6_vs_a100/REPORT.md` → "Models and
-their work". Wafer = 46,225 mm², reticle = 815 mm²
+their work". Wafer = 46,225 mm², reticle = 815 mm² <!-- figure: 46,225 src="configs/hardware/technology.json#wafer.area_mm2.value" name="wafer area (input echo)" -->
 (`technology.json` → `wafer.area_mm2`, `reticle.area_mm2`).
 
 | model | representation | checkpoint | bits/param | ROM array @N6 | @N5 | reticles @N5 | wafer @N5 |
 |---|---|---:|---:|---:|---:|---:|---:|
-| Qwen3-8B | released BF16 | 16.4 GB | 16.00 | 1,011 mm² | 786 mm² | **1.0** | 1.7% |
-| DeepSeek-V4-Flash | released MXFP4+FP8 | 166.9 GB | 4.70 | 10,299 mm² | 8,010 mm² | **9.8** | 17.3% |
-| DeepSeek-V4-Pro | released MXFP4+FP8 | 892.7 GB | 4.46 | 55,093 mm² | 42,852 mm² | **52.6** | **92.7%** |
+| Qwen3-8B | released BF16 | 16.4 GB | 16.00 | 1,011 mm² | 786 mm² | **1.0** | 1.7% | <!-- figure: 16.4 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=Qwen3-8B].checkpoint_bytes" scale="1e-9" name="Qwen checkpoint, GB" --> <!-- figure: 16.00 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=Qwen3-8B].native_bits_per_parameter" name="Qwen bits/param" -->
+| DeepSeek-V4-Flash | released MXFP4+FP8 | 166.9 GB | 4.70 | 10,299 mm² | 8,010 mm² | **9.8** | 17.3% | <!-- figure: 166.9 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].checkpoint_bytes" scale="1e-9" name="Flash checkpoint, GB" --> <!-- figure: 4.70 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].native_bits_per_parameter" name="Flash bits/param" -->
+| DeepSeek-V4-Pro | released MXFP4+FP8 | 892.7 GB | 4.46 | 55,093 mm² | 42,852 mm² | **52.6** | **92.7%** | <!-- figure: 892.7 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].checkpoint_bytes" scale="1e-9" name="Pro checkpoint, GB" --> <!-- figure: 4.46 src="results/roofline/n6_vs_a100/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].native_bits_per_parameter" name="Pro bits/param" -->
 
 > **The FP8 rows are retracted.** The previous version of this table offered
 > every model a hypothetical FP8 re-encoding — Qwen at 416 mm², Flash at
@@ -199,7 +199,7 @@ their work". Wafer = 46,225 mm², reticle = 815 mm²
 > BF16; and re-encoding BF16 to FP8 is a *quantisation*, not a repacking, so it
 > would produce different tokens by an unmeasured amount. Half of every feasible
 > Qwen comparison was being won by such a design, the best at **30.79×**; with
-> the option removed, the best Qwen batch-1 iso-area ratio is **10.89×**
+> the option removed, the best Qwen batch-1 iso-area ratio is **10.89×** <!-- figure: 10.89 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=1;Pick=smallest silicon" name="best Qwen batch-1 iso-area ratio" -->
 > (`n6_vs_a100/REPORT.md`, iso-area table, row `Qwen3-8B | 1 | smallest silicon`).
 > The rule is pinned by
 > `tests/test_roofline.py::test_no_design_stores_weights_at_a_precision_the_release_does_not_have`.
@@ -259,7 +259,7 @@ finding"*. The finding is intact and the headline is not: **sparsity plus long
 context is the ROM-favourable regime, not the adverse one** remains true, and
 the number attached to it was 3.1× too large for a year of write-ups. A W:KV
 ratio is also not a speedup — the iso-area studies put the batch-1 advantage at
-**8.63×** for Pro and **9.50×** for Flash at 554,700 mm²
+**8.63×** for Pro and **9.50×** for Flash at 554,700 mm² <!-- figure: 8.63 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after" table="latency separation" where="Model=DeepSeek-V4-Pro-0813;mm2=554700" name="Pro batch-1 iso-area ratio at 554,700 mm2" --> <!-- figure: 9.50 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after" table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" name="Flash batch-1 iso-area ratio at 554,700 mm2" -->
 (`n6_vs_a100/REPORT.md`, "The latency separation, before and after, at batch 1",
 `Ratio after` column), and every one of those is bounded by ROM service, KV
 service, compute, collectives, capacity, power and cooling, none of which a

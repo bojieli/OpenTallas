@@ -1,4 +1,4 @@
-.PHONY: roofline abi3-failclosed abi3-equivalence abi3 abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -36,6 +36,18 @@ legacy-sensitivity:
 spec-check:
 	python3 tools/check_spec.py
 
+# Evidence checks. `check-evidence-grades` reads the grade vocabulary in one
+# JSON file; `check-prose-figures` reads the numbers in the documents. Until the
+# second existed, nothing anywhere read a figure in prose -- which is how 80 of
+# 108 load-bearing figures went stale unnoticed (docs/EVIDENCE_LEDGER.md).
+check-evidence-grades:
+	python3 tools/check_evidence_grades.py
+
+check-prose-figures:
+	python3 tools/check_prose_figures.py
+
+check-figures: check-evidence-grades check-prose-figures
+
 formal:
 	python3 tools/rtl_campaign.py --formal
 
@@ -72,6 +84,7 @@ test:
 
 pre-synth-verify:
 	$(MAKE) spec-check
+	$(MAKE) check-figures
 	$(MAKE) test
 	$(MAKE) -C rtl pre-synth-verify
 

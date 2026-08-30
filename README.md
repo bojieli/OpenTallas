@@ -11,14 +11,14 @@
 > artifacts through the microsequencer and engines with on-device token
 > selection. **That claim has a horizon and the horizon is part of the claim:**
 > at 192 tokens on the longer `TA-QW-8K-1` workload the HBM lane diverges from
-> the oracle at index **137**
+> the oracle at index **137** <!-- figure: 137 src="results/abi3/qwen3_hbm_ta-qw-8k-1_execution_192.json#record.notes.first_divergence_index" name="TA-QW-8K-1 HBM-vs-oracle divergence index at 192 tokens" -->
 > ([`results/abi3/qwen3_hbm_ta-qw-8k-1_execution_192.json`](results/abi3/qwen3_hbm_ta-qw-8k-1_execution_192.json),
 > `status: "diverged"`, `notes.first_divergence_index: 137`), and on the agentic
-> workload the accelerator-versus-oracle divergence is at index **286**
+> workload the accelerator-versus-oracle divergence is at index **286** <!-- figure: 286 src="results/abi3/qwen3_hbm_ta-qw-agent-2_episode.json#turns[turn=0].oracle_comparison.first_generated_divergence_index" name="TA-QW-AGENT-2 divergence index, turn 0" -->
 > ([`results/abi3/qwen3_hbm_ta-qw-agent-2_episode.json`](results/abi3/qwen3_hbm_ta-qw-agent-2_episode.json),
 > `oracle_comparison.first_generated_divergence_index`). The 24-token identity is
 > `results/abi3/comparison_qwen_rom_vs_hbm.json` →
-> `token_agreement {identical: true, common_prefix_length: 24}`. Both real models
+> `token_agreement {identical: true, common_prefix_length: 24}`. Both real models <!-- figure: 24 src="results/abi3/comparison_qwen_rom_vs_hbm.json#token_agreement.common_prefix_length" name="ROM-vs-HBM token identity horizon" -->
 > compile, and all four deployments are admitted by an independent verifier. It
 > does **not** yet have accelerator results at the mandatory contexts, a
 > ROM-versus-HBM comparison, a fabricated chip or wafer, a full-chip
@@ -48,13 +48,13 @@ the 69 contradicted a figure of 75 stated 25 lines further down this same file.
 
 | Target | Instructions | Descriptors | Weights bound | Execution record |
 |---|---:|---:|---:|---|
-| Qwen3-8B HBM | **75** | **218** | 16.38 GB | `qwen3_hbm_ta-qw-chat-1_execution.json` |
-| Qwen3-8B ROM | **75** | **239** | 16.38 GB | `qwen3_rom_ta-qw-chat-1_execution.json` |
-| DeepSeek-V4-Flash HBM | **11,049** | **23,297** | 156.0 GB | `deepseek_v4_hbm_ta-ds-chat-1_execution.json` |
-| DeepSeek-V4-Flash ROM | **881** | **2,883** | 156.0 GB | `deepseek_v4_rom_ta-ds-chat-1_execution.json` |
+| Qwen3-8B HBM | **75** | **218** | 16.38 GB | `qwen3_hbm_ta-qw-chat-1_execution.json` | <!-- figure: 75 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.notes.verification.instruction_count" name="Qwen HBM instructions" --> <!-- figure: 218 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen HBM descriptors" -->
+| Qwen3-8B ROM | **75** | **239** | 16.38 GB | `qwen3_rom_ta-qw-chat-1_execution.json` | <!-- figure: 75 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.instruction_count" name="Qwen ROM instructions" --> <!-- figure: 239 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen ROM descriptors" -->
+| DeepSeek-V4-Flash HBM | **11,049** | **23,297** | 156.0 GB | `deepseek_v4_hbm_ta-ds-chat-1_execution.json` | <!-- figure: 11,049 src="results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json#record.notes.verification.instruction_count" name="DeepSeek HBM instructions" --> <!-- figure: 23,297 src="results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json#record.notes.verification.descriptor_count" name="DeepSeek HBM descriptors" -->
+| DeepSeek-V4-Flash ROM | **881** | **2,883** | 156.0 GB | `deepseek_v4_rom_ta-ds-chat-1_execution.json` | <!-- figure: 881 src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.notes.verification.instruction_count" name="DeepSeek ROM instructions" --> <!-- figure: 2,883 src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.notes.verification.descriptor_count" name="DeepSeek ROM descriptors" -->
 
 Weights bound are `results/abi3/program_status.json` →
-`neutral_ir.<model>.bound_weight_bytes` = 16,381,470,720 and 156,015,698,140,
+`neutral_ir.<model>.bound_weight_bytes` = 16,381,470,720 and 156,015,698,140, <!-- figure: 16,381,470,720 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.bound_weight_bytes" name="Qwen bound weight bytes" --> <!-- figure: 156,015,698,140 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.bound_weight_bytes" name="DeepSeek bound weight bytes" -->
 both unchanged by the corrections. The two DeepSeek records currently carry
 `status: "failed"`; they are the admitted programs, not passing executions, and
 the counts are the verifier's, not a completed run's.
@@ -63,15 +63,15 @@ A *different* build — the same graph lowered twice through one backend, varyin
 only where the immutable weights live — reports smaller and equal counts, and
 those two must not be confused:
 [`results/abi3/storage_class_equivalence_qwen3.json`](results/abi3/storage_class_equivalence_qwen3.json)
-gives `instruction_count {hbm: 31, rom: 31}` and `descriptor_count {hbm: 210,
+gives `instruction_count {hbm: 31, rom: 31}` and `descriptor_count {hbm: 210, <!-- figure: 31 src="results/abi3/storage_class_equivalence_qwen3.json#instruction_count.hbm" name="Qwen storage-class-equivalent instructions" --> <!-- figure: 210 src="results/abi3/storage_class_equivalence_qwen3.json#descriptor_count.hbm" name="Qwen storage-class-equivalent descriptors" -->
 rom: 210}`, and its DeepSeek twin gives 322 and 2,206. **The 322 in the old table
 above was that number, filed in the wrong row.**
 
 The backend-neutral IR behind them
 ([`build/ir-v3/`](build/ir-v3/), also summarised in `program_status.json`):
-Qwen3-8B **728 kernels / 1,165 tensors / 36 states**, graph
-`88496d70b772…`; DeepSeek-V4-Flash **3,976 kernels / 7,066 tensors / 229
-states**, graph `e9b960ffcb19…`. `docs/PROGRAM_STATUS.md` still reports the
+Qwen3-8B **728 kernels / 1,165 tensors / 36 states**, graph <!-- figure: 728 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.kernels" name="Qwen IR kernels" --> <!-- figure: 1,165 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.tensors" name="Qwen IR tensors" --> <!-- figure: 36 src="results/abi3/program_status.json#neutral_ir.qwen3-8b.states" name="Qwen IR states" -->
+`88496d70b772…`; DeepSeek-V4-Flash **3,976 kernels / 7,066 tensors / 229 <!-- figure: "88496d70b772…" src="results/abi3/program_status.json#neutral_ir.qwen3-8b.graph_id" name="Qwen IR graph id" --> <!-- figure: 3,976 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.kernels" name="DeepSeek IR kernels" --> <!-- figure: 7,066 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.tensors" name="DeepSeek IR tensors" -->
+states**, graph `e9b960ffcb19…`. `docs/PROGRAM_STATUS.md` still reports the <!-- figure: "e9b960ffcb19…" src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.graph_id" name="DeepSeek IR graph id" -->
 DeepSeek row as 3,003 / 71,278 / `572431f15e65`, which is 100+ commits old.
 
 Three properties are worth stating plainly because the program exists to
@@ -124,8 +124,8 @@ targets produced different tokens.
   the derivation's five inputs, the HBM KV service term, was 3.20× low. The
   corrected value is
   [`results/iso-node/n7_architecture_attribution/REPORT.md`](results/iso-node/n7_architecture_attribution/REPORT.md)
-  → "Central-envelope 200K results", column `ROM user tok/s` = 8,050.1, against
-  614.4 for the same-batch A100 point, a ratio of 13.10×.)
+  → "Central-envelope 200K results", column `ROM user tok/s` = 8,050.1, against <!-- figure: 8,050.1 src="results/iso-node/n7_architecture_attribution/REPORT.md#ROM user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N7 central ROM user tok/s" -->
+  614.4 for the same-batch A100 point, a ratio of 13.10×.) <!-- figure: 614.4 src="results/iso-node/n7_architecture_attribution/REPORT.md#GPU user tok/s" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N7 same-batch A100 user tok/s" --> <!-- figure: 13.10 src="results/iso-node/n7_architecture_attribution/REPORT.md#Same-B ratio" table="Central-envelope" where="Model=DeepSeek-V4-Flash-0731;B/stage=1" name="N7 same-batch ratio" -->
 - **Using a figure?** Read the
   [`visual asset provenance contract`](docs/assets/README.md). It labels each
   image as conceptual, simulation-derived, or rendered from archived physical
@@ -184,8 +184,8 @@ generation, and there are **four** of them in two pairs:
   [`results/roofline/n5_vs_b200/REPORT.md`](results/roofline/n5_vs_b200/REPORT.md):
   the area-constrained pair, in which silicon area is the primary input on both
   sides and each side chooses its own parallelism. Both are gated against a
-  shipping mask-ROM part — **Taalas HC1, 16,960 tok/s per user published against
-  12,232.4 modelled, 0.72×** — and against A100 at 1.00×
+  shipping mask-ROM part — **Taalas HC1, 16,960 tok/s per user published against <!-- figure: 16,960 src="results/roofline/n6_vs_a100/REPORT.md#Published" table="Validation gates" where="Gate=Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user" name="Taalas HC1 published anchor (input echo)" -->
+  12,232.4 modelled, 0.72×** — and against A100 at 1.00× <!-- figure: 12,232.4 src="results/roofline/n6_vs_a100/REPORT.md#Modelled" table="Validation gates" where="Gate=Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user" name="HC1 gate modelled rate" --> <!-- figure: 0.72 src="results/roofline/n6_vs_a100/REPORT.md#Ratio" table="Validation gates" where="Gate=Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user" name="HC1 gate ratio" -->
   (each report's "Validation gates" table). The anchor is registered at
   `SRC-TAALAS-HC1` in [`docs/SOURCES.md`](docs/SOURCES.md); it had no register
   entry at all until 2026-08-30, while serving as the gate for the whole model.
