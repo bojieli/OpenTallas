@@ -165,6 +165,7 @@
   "grade_definitions": {
     "assumed": "no published value found; a stated judgement that must be swept",
     "derived": "computed from published/measured entries by a formula stated in the note",
+    "executed": "obtained by running something in this repository -- the reference oracle, a deployment, a campaign -- with the artifact holding the numbers committed and named in the entry's `artifact` field. Distinct from `measured`, which means fabricated silicon in a peer-reviewed venue; almost nothing this program does is that, and its absence was pushing executed values into grades that fitted them worse.",
     "measured": "taken from fabricated silicon reported in a peer-reviewed venue",
     "published": "stated by the vendor or standards body for a shipping part or process"
   },
@@ -1004,9 +1005,9 @@
       },
       "node_nm": 28.0,
       "operations_per_weight": {
-        "grade": "published",
+        "grade": "derived",
         "note": "one stored weight participates in one multiply-add per dense matrix-vector pass",
-        "source": "counting convention: one multiply plus one add is two operations",
+        "source": "definition, not a publication: one stored weight participates in one multiply and one add per dense matrix-vector pass, and the FLOP convention counts those as two operations. Regraded from `published` -- nobody published this, it is how the unit is defined, and calling a definition a publication is the same error class as calling a reading of an implementation a derivation.",
         "value": 2.0
       },
       "operations_s": {
