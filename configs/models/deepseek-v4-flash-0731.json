@@ -302,8 +302,8 @@
       "why_it_was_wrong": "An instrumentation gap, not a behaviour. The oracle's --measure-kv wrapped Attention.forward but left Indexer.forward unwrapped, so a rung that did not tile its prefill recorded no index reads at all. The 1,001 and 8,001 rungs were untiled and reported zero; the longer rungs tiled and went through the wrapped path. The threshold was the boundary of the instrumentation, not of the model."
     },
     "index_topk": 512,
-    "kv_cache_policy": "FP8 main + BF16 RoPE; FP4 index",
-    "kv_cache_policy_status": "published serving recipe plus derived scale overhead",
+    "kv_cache_policy": "MEASURED: BF16 main latent (1,024 B) + 256 B index entry, at five contexts from 1,001 to 200,001 tokens. The vendor's own source states the alternative twice (model.py:425 and :532): 'kv could also use fp8 format, though current implementation uses bf16'. The earlier value of this field -- 'FP8 main + BF16 RoPE; FP4 index' -- described the recipe the serving notes suggest, not what the released code does, and the two disagree by 3.2x on the weight-to-KV ratio.",
+    "kv_cache_policy_status": "executed; see kv_precision_sensitivity",
     "kv_entry_measurement": {
       "note": "The structure of the profile was already correct and is unchanged: csa reads top_k + window main entries and scans context/4 index entries, hca reads context/128 + window, window reads 128. Only the two per-entry byte sizes were wrong. A deployment that chose an FP8 KV latent would read 512 bytes rather than 1,024; that is a design choice and must then be applied to both sides of any comparison, so it is not assumed here.",
       "rungs_validated": [
@@ -311,6 +311,24 @@
         128000
       ],
       "source": "results/abi3/deepseek_v4_reference_oracle_context_ladder.json"
+    },
+    "kv_precision_sensitivity": {
+      "hypothetical_fp8": {
+        "entry_bytes": 512,
+        "grade": "assumed",
+        "index_entry_bytes": 128,
+        "note": "half of the measured widths; not measured, and not adopted",
+        "weight_to_kv_at_200k": 70.6
+      },
+      "measured_bf16": {
+        "artifact": "testdata/roofline/deepseek_v4_kv_measurement_snapshot.json",
+        "entry_bytes": 1024,
+        "grade": "executed",
+        "index_entry_bytes": 256,
+        "weight_to_kv_at_200k": 35.3
+      },
+      "rule_if_adopted": "An FP8 KV latent is a design choice, not a discovery. If a study adopts it, it must apply to BOTH sides of the comparison -- a ROM machine reading FP8 KV against a GPU reading BF16 is not an iso-anything comparison. The conservative choice is the measured one, and it is what the profile carries.",
+      "why_this_is_not_settled": "A measurement of the reference implementation says what THAT code reads. It does not say what a production deployment would choose, and the vendor explicitly leaves FP8 open. This is the single largest unresolved factor in the DeepSeek half of this program's headline claim."
     },
     "num_hash_layers": 3,
     "operator_accounting_source": "official config, pinned safetensors tensor shapes/dtypes, and pinned DeepSeek inference/model.py",

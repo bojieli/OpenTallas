@@ -41,9 +41,17 @@ def test_a100_cache_expansion_is_derived_from_official_dimensions() -> None:
 
     assert sparse.entry_bytes == 2 * 512
     assert sparse.index_entry_bytes == 2 * 128
-    assert kv_traffic(expanded, 200_000).read_bytes > kv_traffic(
+
+    # The expansion is now the IDENTITY for KV, and that is a result rather than a
+    # regression. This assertion used to require a strict increase, on the reading
+    # that the released checkpoint served a narrower KV than BF16. Measuring the
+    # implementation at five contexts showed it already reads 2*512 and 2*128 -- the
+    # exact widths this policy expands to -- so a BF16-expanding deployment moves no
+    # extra KV byte. What the policy still expands is weights, not cache.
+    assert kv_traffic(expanded, 200_000).read_bytes == kv_traffic(
         packed, 200_000
     ).read_bytes
+    assert expanded.checkpoint_bytes > packed.checkpoint_bytes
 
 
 @pytest.mark.parametrize("slug", ["deepseek-v4-flash-0731", "deepseek-v4-pro-0813"])
