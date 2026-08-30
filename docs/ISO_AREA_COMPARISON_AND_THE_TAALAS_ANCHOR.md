@@ -16,7 +16,11 @@ acquisition of the company in August 2026.
 | transistors | **53 billion** |
 | weights | mask ROM on-die |
 | KV cache | on-die SRAM |
-| throughput | **~17,000 tokens/s per user**, Llama 3.1 8B |
+| throughput | **16,960 tokens/s per user**, Llama 3.1 8B |
+| qualification | **1k input / 1k output** (~2k context). **Batch size is stated nowhere** |
+| weight format | custom **3-bit base mixed with 6-bit**, with acknowledged quality loss |
+| KV concurrency | ~365–1,130 MB of SRAM → **1.4–8 concurrent users** at 2k context |
+| validation | all figures self-run by Taalas; no MLPerf or third-party measurement |
 
 Sources: [ServeTheHome](https://www.servethehome.com/amd-to-acquire-taalas-for-model-specific-ai-inference-chips/),
 [The Register](https://www.theregister.com/systems/2026/08/06/amd-acquires-ai-chip-startup-taalas-to-boost-inference-performance-by-etching-models-into-silicon/5284344),
@@ -40,10 +44,45 @@ essentially the same die as HC1, one node apart. That is the comparison:
 | 8B model, batch 1 | **17,000 tok/s** | 254 tok/s (FP8) · 127 (BF16) |
 | ratio | | **67× · 134×** |
 
-HC1's implied compute is ~273 TFLOPS on 815 mm², against A100's published 312
-TFLOPS on 826 mm². So HC1 is **not** compute-starved and **not** weight-bound:
-it carries GPU-class compute and simply does not pay for weight traffic. That is
-the thesis, in silicon.
+The anchor reproduces exactly. Llama 3.1 8B is 8.0300 B parameters from its
+published config, so decode costs `2N` = 16.060 GFLOP/token; times 16,960 tok/s
+is **272.4 TFLOP/s** on 815 mm² at N6.
+
+**But calling that "GPU-class compute" was wrong, and the error flatters the
+design.** HC1's 272 TFLOP/s is *4-bit* work. An A100 at matched INT4 does 1,248
+TOPS dense, so HC1 has roughly **0.22× an A100's 4-bit arithmetic throughput** —
+and still wins 67× at batch 1. **The mechanism is the absence of weight fetch,
+not a compute surplus.** Stating it as a compute surplus overstates what the
+architecture does and misplaces the reason it works.
+
+**The per-user and aggregate ratios are very different, and the difference is
+the open question.** Each ROM cell performs its own multiply — Bajic: *"we can
+store four bits away and do the multiply related to it – everything – with a
+single transistor."* If that means a second concurrent stream needs a second
+pass through the fabric, then a compute-in-ROM part **cannot amortise weight
+access across a batch the way a GPU does**, aggregate per-die throughput equals
+per-user throughput, and the iso-area comparison splits:
+
+| | HC1 | A100 826 mm² | ratio |
+|---|---:|---:|---:|
+| per-user latency, batch 1 | 16,960 tok/s | 254 tok/s | **66.8×** |
+| aggregate per die | ~16,960 tok/s | ~7,771 tok/s (40% MFU) | **~2.2×** |
+
+That is derived, not published, and **it is the most important thing to resolve
+before any wafer-scale or high-batch claim rests on this anchor.** It also forks
+the architecture this project should design:
+
+- **Compute-in-ROM**, as Taalas built it: one transistor stores and multiplies.
+  Extraordinary density (~0.0023–0.0040 µm²/bit, genuinely DRAM-class) and
+  extraordinary power (only ~136,000 of 8.03 B cells fire per cycle, 0.0017%
+  activation, which is what allows 200–250 W). But no batch amortisation.
+- **ROM as storage with a separate MAC array**: weights read out of ROM into a
+  compute fabric. Batch amortises the read exactly as on a GPU, so aggregate
+  throughput rises with batch — the behaviour the sparse-MoE argument depends on
+  — at the cost of the density and the activation-energy advantage.
+
+These are different machines with different scaling laws, and the project has
+not yet chosen between them.
 
 **Every comparison in this program must state the silicon area on both sides.**
 
