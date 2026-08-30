@@ -582,9 +582,9 @@
       },
       "weight_amortization": {
         "grade": "assumed",
-        "note": "Policy name 'per_stream'. Bajic describes one transistor that both stores four bits and performs the multiply related to it. If a second concurrent stream therefore needs a second pass through the fabric, a compute-in-ROM part cannot amortise weight access across a batch and its aggregate per-die throughput equals its per-user throughput. This is UNRESOLVED and it does not move the batch-1 anchor at all, where the two policies are identical; it moves every aggregate number above batch 1. Both policies are modelled and both are reported.",
-        "source": "Bajic, quoted in docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md",
-        "value": 1.0
+        "note": "HC1 is a compute-in-ROM part: Bajic describes one transistor storing four bits and doing the multiply for them. Llama-3.1-8B is dense, so every token engages the whole array and per_stream and per_region are the same machine here. Evaluating the anchor as 'batched' would model a MAC array the part does not have, which matters now that the floorplan depends on the policy.",
+        "source": "Taalas publishes no batch size and no microarchitecture",
+        "value": "per_stream"
       },
       "weight_bits_per_parameter": {
         "grade": "assumed",
@@ -615,6 +615,18 @@
       "note": "A contact/via-programmed NOR mask-ROM bit is one transistor with no write port, no write assist and no write redundancy, against a 6T SRAM bit. 1/6 to 1/4 brackets the plausible cell-area ratio; 1/5 is the stated point. This is the single most load-bearing assumption in the ROM capacity chain and must be swept.",
       "source": "no fabricated leading-node mask-ROM bitcell has been published for this program",
       "value": 0.2
+    },
+    "cim_cell_area_multiplier": {
+      "grade": "assumed",
+      "note": "area of a compute-in-ROM cell relative to a storage-only mask-ROM cell. A compute-in-ROM cell carries a pass transistor and the product-line wiring that lets it select one pre-computed partial product, on top of the via programming that stores its bits. Taalas describes one transistor per 4-bit parameter doing both, so the multiplier is small but cannot be 1.0. This is the second most load-bearing assumption in this file after the ROM-to-SRAM cell ratio, and it decides the storage-versus-compute-in-ROM comparison.",
+      "source": "no published compute-in-ROM bitcell at any node",
+      "value": 1.6
+    },
+    "cim_precompute_area_fraction": {
+      "grade": "assumed",
+      "note": "fraction of die area a compute-in-ROM part spends on the pre-computation block that forms every product of one activation with the small weight alphabet. At 3-bit weights that is 8 values, built from shifts and carry-save adders, and it replaces the dedicated MAC array entirely. Small by construction, which is the point of the architecture.",
+      "source": "derived shape only: 2^b shift-add units per activation-broadcast region",
+      "value": 0.02
     },
     "cross_checks": [
       {

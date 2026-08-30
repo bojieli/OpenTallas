@@ -15,9 +15,9 @@ bandwidth and compute roof are derived from it.
 4. **Sparse MoE buys aggregate throughput on a ROM machine, not latency.** DeepSeek-V4-Flash-0731 engages 6.7% of its ROM array at batch 1 and 92.6% at batch 256, while the weight-read time is identical at both. Aggregate throughput rises from 9,457 to 11,585 tok/s on the same machine. An unselected expert's read ports cannot be borrowed, so its idle bandwidth is only recovered by giving the sweep more users.
 5. **Tensor parallelism is a latency argument for wafer-scale, and it is the sharpest one.** Two all-reduces per layer per token cost up to 189 us over NVLink, capping per-user decode at 5,296 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 12.2 us and cap it at 81,966 tok/s.
 6. **Which topology wins depends entirely on what is being maximised, and the study reports both rather than choosing.** On per-user rate at equal area a wafer wins 15 of 15 operating points and an array 0; on tokens per second per square millimetre the same points go 6 to the array and 9 to the wafer. A wafer is not faster per unit silicon -- it is faster because it is more silicon, plus a hop latency an array cannot match.
-7. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 64 of 341 feasible points.
-8. **The largest open question is not in this model's inputs but in the architecture, and the anchor cannot settle it.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 256 that costs up to 28.0x of aggregate throughput (DeepSeek-V4-Flash-0731). The machines are identical at batch 1, which is where the published anchor sits, so no amount of validation against it resolves the fork.
-9. **A third machine sits between them, and for a sparse model it recovers most of what compute-in-ROM gives up.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise. At batch 256 that closes the gap to 1.00x of the amortising machine (DeepSeek-V4-Flash-0731), against 28.0x for a global activation broadcast. A dense model has one region, so it gains nothing — the disjointness is what sparsity buys.
+7. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 104 of 329 feasible points.
+8. **The largest open question is not in this model's inputs but in the architecture, and the anchor cannot settle it.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 256 that costs up to 17.5x of aggregate throughput (DeepSeek-V4-Flash-0731). The machines are identical at batch 1, which is where the published anchor sits, so no amount of validation against it resolves the fork.
+9. **A third machine sits between them, and for a sparse model it recovers most of what compute-in-ROM gives up.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise. At batch 256 that closes the gap to 1.00x of the amortising machine (DeepSeek-V4-Flash-0731), against 17.5x for a global activation broadcast. A dense model has one region, so it gains nothing — the disjointness is what sparsity buys.
 10. **Every number here is conditional on the assumed inputs listed in the evidence ledger below.** The ROM cell-area ratio and the ROM read bandwidth density are the two that move the answer most, and neither has been measured at N5.
 
 ## The overlap and serialisation rule
@@ -44,22 +44,22 @@ holds by construction.
 
 | Gate | Published | Modelled | Ratio | Tolerance | Result |
 |---|---:|---:|---:|---:|---|
-| Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user | 16,960.0 tok/s | 13,062.9 tok/s | 0.77x | within 2x | PASS |
+| Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user | 16,960.0 tok/s | 20,900.6 tok/s | 1.23x | within 2x | PASS |
 | A100 80GB weight-bound, Llama-3.1-8B FP8 batch 1 on 826 mm2 | 253.91 tok/s | 253.91 tok/s | 1.00x | within 1% | PASS |
 
-HC1 binds on `weight_read`. Its component times are weight_read 76.55 us, kv_read 9.28 us, compute 59.75 us, link_latency 0.00 us.
+HC1 binds on `weight_read`. Its component times are weight_read 47.85 us, kv_read 2.71 us, compute 47.85 us, link_latency 0.00 us.
 
-The model **under**-predicts the shipping part by 1.30x. Rather than tune the densities until the anchor
+The model **under**-predicts the shipping part by 0.81x. Rather than tune the densities until the anchor
 is hit, the gate back-derives what each input would have to be for the
 model to land exactly on 17,000 tok/s:
 
 | Derived input | This model | Required by the shipping part | Shortfall |
 |---|---:|---:|---:|
-| ROM read bandwidth density (B/s/mm2) | 2.822e+11 | 3.664e+11 | 1.30x |
-| Compute density (ops/s/mm2) | 1.261e+12 | 1.278e+12 | 1.01x |
+| ROM read bandwidth density (B/s/mm2) | 2.822e+11 | 2.290e+11 | 0.81x |
+| Compute density (ops/s/mm2) | 1.261e+12 | 2.840e+13 | 22.52x |
 
 The compute density derived from A100's published dense roofs and die
-area is within 1.3% of what the shipping part must have. The ROM read-bandwidth density derived from a
+area is within 2152.4% of what the shipping part must have. The ROM read-bandwidth density derived from a
 28 nm simulated ROM-CIM macro is the input that is short, and the
 required value is still below the SRAM read-bandwidth density derived
 from Cerebras WSE-2 (5.563e+11 B/s/mm2), so it is physically unremarkable. That is a falsifiable
@@ -69,17 +69,17 @@ statement about one technology input, which is what a gate is for.
 
 | Stored bits/parameter | Modelled tok/s | Ratio | Binds on |
 |---:|---:|---:|---|
-| 3.0 | 13,062.9 | 0.77x | weight_read |
-| 3.5 | 13,062.9 | 0.77x | weight_read |
-| 4.0 | 13,062.9 | 0.77x | weight_read |
-| 5.0 | 12,442.8 | 0.73x | compute |
-| 6.0 | 9,581.2 | 0.56x | compute |
+| 3.0 | 20,900.6 | 1.23x | weight_read |
+| 3.5 | 20,900.6 | 1.23x | weight_read |
+| 4.0 | 20,900.6 | 1.23x | weight_read |
+| 5.0 | 20,900.6 | 1.23x | weight_read |
+| 6.0 | 0.0 | 0.00x | capacity_or_format |
 
 | Anchor context | Modelled tok/s | Ratio | Binds on |
 |---:|---:|---:|---|
-| 1,024 | 13,062.9 | 0.77x | weight_read |
-| 1,536 | 13,062.9 | 0.77x | weight_read |
-| 2,048 | 13,062.9 | 0.77x | weight_read |
+| 1,024 | 20,900.6 | 1.23x | weight_read |
+| 1,536 | 20,900.6 | 1.23x | weight_read |
+| 2,048 | 20,900.6 | 1.23x | weight_read |
 
 ## Derived technology at N5
 
@@ -235,21 +235,21 @@ variant.
 
 | Model | B | Batched user tok/s | Batched aggregate | Per-stream user tok/s | Per-stream aggregate | Aggregate penalty | Batched binds on | Per-stream binds on |
 |---|---:|---:|---:|---:|---:|---:|---|---|
-| Qwen3-8B | 1 | 12,172.4 | 12,172.4 | 12,172.4 | 12,172.4 | 1.00x | weight_read | weight_read |
-| Qwen3-8B | 8 | 3,703.3 | 29,626.5 | 1,618.1 | 12,944.5 | 2.29x | kv_read | weight_read |
-| Qwen3-8B | 32 | 940.5 | 30,094.6 | 407.3 | 13,033.1 | 2.31x | kv_read | weight_read |
-| Qwen3-8B | 64 | 471.5 | 30,174.0 | 203.9 | 13,047.9 | 2.31x | kv_read | weight_read |
-| Qwen3-8B | 256 | 118.1 | 30,233.9 | 51.0 | 13,059.1 | 2.32x | kv_read | weight_read |
-| DeepSeek-V4-Flash-0731 | 1 | 12,172.4 | 12,172.4 | 12,172.4 | 12,172.4 | 1.00x | weight_read | weight_read |
-| DeepSeek-V4-Flash-0731 | 8 | 12,172.4 | 97,379.2 | 1,618.1 | 12,944.5 | 7.52x | weight_read | weight_read |
-| DeepSeek-V4-Flash-0731 | 32 | 10,823.6 | 346,355.9 | 407.3 | 13,033.1 | 26.58x | kv_read | weight_read |
-| DeepSeek-V4-Flash-0731 | 64 | 5,580.9 | 357,180.7 | 203.9 | 13,047.9 | 27.37x | kv_read | weight_read |
-| DeepSeek-V4-Flash-0731 | 256 | 1,428.7 | 365,754.0 | 51.0 | 13,059.1 | 28.01x | kv_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 1 | 10,377.9 | 10,377.9 | 10,377.9 | 10,377.9 | 1.00x | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 8 | 10,377.8 | 83,022.6 | 1,445.6 | 11,564.5 | 7.18x | weight_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 32 | 2,949.9 | 94,398.0 | 365.9 | 11,708.0 | 8.06x | kv_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 64 | 1,500.0 | 95,998.0 | 183.3 | 11,732.2 | 8.18x | kv_read | weight_read |
-| DeepSeek-V4-Pro-0813 | 256 | 379.8 | 97,234.1 | 45.9 | 11,750.5 | 8.27x | kv_read | weight_read |
+| Qwen3-8B | 1 | 12,172.4 | 12,172.4 | 18,710.6 | 18,710.6 | 0.65x | weight_read | weight_read |
+| Qwen3-8B | 8 | 3,703.3 | 29,626.5 | 2,574.9 | 20,599.2 | 1.44x | kv_read | weight_read |
+| Qwen3-8B | 32 | 940.5 | 30,094.6 | 650.8 | 20,824.4 | 1.45x | kv_read | weight_read |
+| Qwen3-8B | 64 | 471.5 | 30,174.0 | 326.0 | 20,862.4 | 1.45x | kv_read | weight_read |
+| Qwen3-8B | 256 | 118.1 | 30,233.9 | 81.6 | 20,891.0 | 1.45x | kv_read | weight_read |
+| DeepSeek-V4-Flash-0731 | 1 | 12,172.4 | 12,172.4 | 18,710.6 | 18,710.6 | 0.65x | weight_read | weight_read |
+| DeepSeek-V4-Flash-0731 | 8 | 12,172.4 | 97,379.2 | 2,574.9 | 20,599.2 | 4.73x | weight_read | weight_read |
+| DeepSeek-V4-Flash-0731 | 32 | 10,823.6 | 346,355.9 | 650.8 | 20,824.4 | 16.63x | kv_read | weight_read |
+| DeepSeek-V4-Flash-0731 | 64 | 5,580.9 | 357,180.7 | 326.0 | 20,862.4 | 17.12x | kv_read | weight_read |
+| DeepSeek-V4-Flash-0731 | 256 | 1,428.7 | 365,754.0 | 81.6 | 20,891.0 | 17.51x | kv_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 1 | 10,377.9 | 10,377.9 | 15,513.1 | 15,513.1 | 0.67x | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 8 | 10,377.8 | 83,022.6 | 2,290.5 | 18,323.6 | 4.53x | weight_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 32 | 2,949.9 | 94,398.0 | 583.9 | 18,686.4 | 5.05x | kv_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 64 | 1,500.0 | 95,998.0 | 292.9 | 18,748.2 | 5.12x | kv_read | weight_read |
+| DeepSeek-V4-Pro-0813 | 256 | 379.8 | 97,234.1 | 73.4 | 18,794.9 | 5.17x | kv_read | weight_read |
 
 ## Sparse-MoE engagement on a ROM machine
 
@@ -287,22 +287,23 @@ reduces the bytes fetched.
 | gpu | infeasible | 2 |
 | gpu | kv_read | 10 |
 | gpu | weight_read | 43 |
-| rom | compute | 51 |
-| rom | infeasible | 192 |
-| rom | kv_read | 54 |
-| rom | link_latency | 30 |
-| rom | weight_read | 153 |
+| rom | compute | 17 |
+| rom | infeasible | 204 |
+| rom | kv_read | 94 |
+| rom | link_latency | 18 |
+| rom | weight_read | 147 |
 
 Why the infeasible points are infeasible:
 
 | Family | Reason class | Points |
 |---|---|---:|
 | gpu | CAPACITY | 2 |
-| rom | CAPACITY | 192 |
+| rom | AREA | 80 |
+| rom | CAPACITY | 156 |
 
 ## Mechanical consistency audit
 
-**PASS** over 7,206 checks.
+**PASS** over 7,026 checks.
 
 - Generated arithmetic identities, area-accounting identities and the ROM full-array sweep floor only.
 - A passing audit is not evidence for ROM macro timing, array read bandwidth at a leading node, NoC timing, package, power delivery, yield, or model accuracy.
@@ -315,7 +316,7 @@ Why the infeasible points are infeasible:
 | measured | 1 |
 | published | 48 |
 | derived | 21 |
-| assumed | 31 |
+| assumed | 33 |
 
 Every `assumed` input, in full, because an ungraded assumption is the
 failure mode this program exists to prevent:
@@ -350,6 +351,8 @@ failure mode this program exists to prevent:
 - `reference_parts.taalas_hc1.weight_bits_per_parameter`
 - `rom.array_efficiency`
 - `rom.cell_to_sram_cell_area_ratio`
+- `rom.cim_cell_area_multiplier`
+- `rom.cim_precompute_area_fraction`
 - `sram.array_efficiency`
 
 ## Interpretation boundary

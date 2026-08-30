@@ -129,6 +129,9 @@ WEIGHT_STORES = ("rom", "hbm", "sram")
 KV_STORES = ("sram", "hbm")
 PARALLELISMS = ("none", "pipeline", "tensor")
 WEIGHT_AMORTIZATIONS = ("batched", "per_stream", "per_region")
+#: Policies where the cell selects a partial product, so the multiply lives
+#: in the array and there is no separate MAC block.
+COMPUTE_IN_ROM_POLICIES = ("per_stream", "per_region")
 
 
 # --------------------------------------------------------------------------
@@ -515,6 +518,7 @@ def balanced_area_split(
     resident_kv_bytes: float,
     hbm_stacks: int = 0,
     hbm_generation: str = "hbm3e",
+    weight_amortization: str = "batched",
 ) -> AreaSplit:
     """Solve the split from the workload rather than guessing fractions.
 
@@ -523,6 +527,26 @@ def balanced_area_split(
     stack count; compute takes the remainder.  A negative remainder is returned
     as a reason rather than silently clamped, because a design that cannot fit
     its own weights is the result, not an error.
+
+    **The floorplan depends on the amortisation policy, because the policies are
+    different machines and not one machine with different arithmetic.**
+
+    ``batched`` is ROM as storage feeding a separate MAC array.  Its ROM cell
+    holds bits and nothing else, and the compute block is a real MAC array that
+    takes whatever area is left.
+
+    ``per_stream`` and ``per_region`` are compute-in-ROM.  There **is no MAC
+    array**: the cell selects a pre-computed partial product, so the multiply
+    lives in the array itself.  Two things follow, and both were missing when
+    this function ignored the policy.  The cell is larger, because it carries a
+    pass transistor and the product-line wiring on top of its via programming.
+    And the compute block shrinks to the pre-computation logic that forms every
+    product of one activation with the weight alphabet -- a couple of percent of
+    the die, not the remainder of it.
+
+    Handing a compute-in-ROM design the leftover area as a MAC array, as this
+    function did before, gives it arithmetic it does not have and takes silicon
+    from the array that is its whole point.
     """
 
     overhead_fraction = technology.graded("floorplan", "overhead_area_fraction")
@@ -531,10 +555,16 @@ def balanced_area_split(
     )
     reasons: list[str] = []
 
+    compute_in_rom = weight_amortization in COMPUTE_IN_ROM_POLICIES
     rom_mm2 = 0.0
+    cell_multiplier = 1.0
     if weight_store == "rom":
         density = technology.rom_bits_per_mm2(node).value / BITS_PER_BYTE
-        rom_mm2 = stored_weight_bytes / density
+        if compute_in_rom:
+            cell_multiplier = technology.graded(
+                "rom", "cim_cell_area_multiplier"
+            ).value
+        rom_mm2 = stored_weight_bytes * cell_multiplier / density
 
     sram_mm2 = 0.0
     if kv_store == "sram":
@@ -549,6 +579,46 @@ def balanced_area_split(
     overhead_mm2 = overhead_fraction.value * total_mm2
     interconnect_mm2 = interconnect_fraction.value * total_mm2
     fixed = rom_mm2 + sram_mm2 + hbm_phy_mm2 + overhead_mm2 + interconnect_mm2
+    if compute_in_rom and weight_store == "rom":
+        # No MAC array.  The compute block is only the pre-computation logic;
+        # whatever area is left over belongs to the ROM array, because more
+        # array is more parameters and more parallel selection.
+        precompute_fraction = technology.graded(
+            "rom", "cim_precompute_area_fraction"
+        ).value
+        compute_mm2 = precompute_fraction * total_mm2
+        leftover = total_mm2 - (fixed + compute_mm2)
+        if leftover > 0:
+            # Spare area becomes SRAM, not more ROM.  The array is sized by the
+            # weights it holds; making it larger than that would buy read
+            # bandwidth for bits that do not exist, which is how an earlier
+            # version of this function modelled the anchor as twice as fast as
+            # the shipping part.  Taalas describes exactly this split -- a mask
+            # ROM recall fabric beside an SRAM recall fabric for KV and adapters
+            # -- so the spare silicon has a real job.
+            sram_mm2 += leftover
+        elif leftover < 0:
+            reasons.append(
+                f"AREA: compute-in-ROM needs ROM {rom_mm2:,.0f} + SRAM "
+                f"{sram_mm2:,.0f} + HBM PHY {hbm_phy_mm2:,.0f} + pre-compute "
+                f"{compute_mm2:,.0f} + overhead {overhead_mm2:,.0f} + "
+                f"interconnect {interconnect_mm2:,.0f} mm2, over {total_mm2:,.0f}"
+            )
+        return AreaSplit(
+            total_mm2=total_mm2,
+            rom_mm2=rom_mm2,
+            compute_mm2=compute_mm2,
+            sram_mm2=sram_mm2,
+            interconnect_mm2=interconnect_mm2,
+            hbm_phy_mm2=hbm_phy_mm2,
+            overhead_mm2=overhead_mm2,
+            policy=(
+                f"compute-in-ROM: cells {cell_multiplier:g}x a storage-only bit, "
+                "no MAC array, pre-compute block only, all remaining area to the "
+                "array"
+            ),
+            reasons=tuple(reasons),
+        )
     compute_mm2 = total_mm2 - fixed
     if compute_mm2 <= 0:
         reasons.append(
@@ -747,6 +817,7 @@ def rom_device_budget(
             resident_kv_bytes=resident_kv_bytes / devices,
             hbm_stacks=hbm_stacks,
             hbm_generation=hbm_generation,
+            weight_amortization=weight_amortization,
         )
 
     rom_capacity_density = technology.rom_bits_per_mm2(node)
@@ -1309,7 +1380,24 @@ def evaluate(
     else:
         memory_time = max(weight_time, kv_time)
         overlap_rule = "weights and KV are physically separate arrays: their times overlap"
-    service_time = max(memory_time, compute_time)
+    if (
+        budget.weight_store == "rom"
+        and budget.weight_amortization in COMPUTE_IN_ROM_POLICIES
+    ):
+        # In a compute-in-ROM fabric the multiply *is* the sweep: every cell the
+        # pass selects contributes one product, so there is no arithmetic that
+        # can proceed while the array is being walked and none that continues
+        # after it.  Putting compute in a max() against the weight read would
+        # model two independent units, which is exactly the machine this policy
+        # says does not exist.  The KV path is genuinely separate and still
+        # overlaps.
+        service_time = max(weight_time, kv_time)
+        overlap_rule = (
+            "compute-in-ROM: the multiply is the array sweep, so weight read and "
+            "compute are one term; KV is a separate array and overlaps"
+        )
+    else:
+        service_time = max(memory_time, compute_time)
     balance = technology.efficiency("stage_balance").value
     apply_balance = devices > 1 and budget.topology.parallelism != "none"
     if apply_balance:
@@ -1343,10 +1431,18 @@ def evaluate(
     step_time = raw_step_time * thermal_scale
     power = energy_j / max(step_time, 1e-30)
 
+    fused_compute = (
+        budget.weight_store == "rom"
+        and budget.weight_amortization in COMPUTE_IN_ROM_POLICIES
+    )
     component_times = {
         "weight_read": weight_time,
         "kv_read": kv_time,
-        "compute": compute_time,
+        # In a compute-in-ROM fabric the arithmetic is the sweep, so reporting a
+        # separate compute time would name a component that cannot bind and
+        # would break the invariant that the step is at least its largest part.
+        # The MACs still happen; they take exactly as long as the walk.
+        "compute": weight_time if fused_compute else compute_time,
         "link_latency": link_time,
     }
     if reasons:
@@ -1587,6 +1683,10 @@ def taalas_hc1_anchor(
         stored_weight_bytes=stored,
         resident_kv_bytes=resident_kv,
         kv_store=str(spec["kv_store"]),
+        # Read raw: Graded coerces to float and this is a categorical choice.
+        # It is still graded in the config, and still an assumption -- Taalas
+        # publishes no microarchitecture, and the whole floorplan now turns on it.
+        weight_amortization=str(spec["weight_amortization"]["value"]),
     )
     step = evaluate(
         budget,
