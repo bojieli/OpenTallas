@@ -1544,6 +1544,12 @@ class RomLowering:
             (
                 "scale_bits",
                 "score_scale_binary32",
+                # ``VECTOR.INDEX_SCORE``'s learned-index scale, as the released
+                # DeepSeek exporter spells it.  The engine reads it off the
+                # numeric descriptor and refuses a scale that is not a positive
+                # finite binary32, so an unrecognised spelling is not a missing
+                # optimisation -- it is an operator that cannot be issued.
+                "head_weight_scale_binary32",
                 "scale_bf16_code",
                 "scale",
             ),
@@ -2039,7 +2045,16 @@ class RomLowering:
         return f"st.g.{tensor_id}"
 
     def _state_plane_view(
-        self, kernel: Kernel, tensor_id: str, direction: str, run: LayerRun | None
+        self,
+        kernel: Kernel,
+        tensor_id: str,
+        direction: str,
+        run: LayerRun | None,
+        *,
+        batch_lead: bool = False,
+        extent_axis: int = 0,
+        extent_unit: int = 0,
+        extra_terms: Sequence[DynamicTerm] = (),
     ) -> int | None:
         """One plane of a merged state resource, moved by the layer loop.
 
@@ -2049,6 +2064,15 @@ class RomLowering:
         transaction attends the rows it has just appended; the committed image
         is the durability record the commit publishes, not the buffer execution
         runs against.
+
+        A *compressed* cache is the exception, and amendment A18 is what lets it
+        be said.  Its capacity counts one row per group of ``ratio`` context
+        tokens, so a request that has filled 1 of 65,536 groups must present 1
+        -- and before A18 there was no way to state that, because the extent is
+        a division of ``CONTEXT_LENGTH`` and A13 clamped only in the symbol's
+        own units.  ``extent_unit`` says the division and ``extra_terms``
+        carries the loop that resolves it; ``batch_lead`` fronts the plane with
+        a batch of one where the operand row asks for ``[B, C, D]``.
         """
         state_id = self._state_owner.get(tensor_id)
         if (
@@ -2091,6 +2115,13 @@ class RomLowering:
                 )
             dynamic.append(DynamicTerm.loop(loop, stride))
             offset = column
+        if batch_lead:
+            # The inserted axis holds one element, so its stride never moves an
+            # address; it takes the whole plane so the view stays row-major and
+            # ``stride[1]`` remains one row of the axis A18's walk test reads.
+            extents = [1, *extents]
+            strides = [extents[1] * strides[0], *strides]
+        dynamic.extend(extra_terms)
         return self._view(
             object_id=prepared,
             dtype=dtype,
@@ -2099,6 +2130,8 @@ class RomLowering:
             element_offset=offset,
             dynamic=dynamic,
             permissions=int(Permission.READ | Permission.WRITE),
+            extent_axis=extent_axis,
+            extent_unit=extent_unit,
             label="view.state",
         )
 
@@ -2363,6 +2396,33 @@ class RomLowering:
         self.builder.open_loop(loop)
         return loop
 
+    def _open_context_loop(self, kernel: Kernel, capacity: int, unit: int) -> int:
+        """A loop whose only job is to resolve a *context*-sized axis.
+
+        Amendment A18 shortens an axis only through a loop term that walks it,
+        so an operand whose extent the request decides needs a loop even when
+        nothing about it iterates.  One block over the whole declared capacity
+        is that loop: it runs once, and the resolution it carries is the point
+        of it.  ``_open_row_loop`` says the same thing about the token axis.
+
+        The divisor is in ``CONTEXT_LENGTH``'s own units, so it is the capacity
+        times the compression ratio: 65,536 groups of four is the whole
+        262,144-position context, and one iteration covers all of it.
+        """
+        trip = 1
+        loop = self.builder.loop_control(
+            lower_bound=0,
+            upper_bound=trip,
+            step=1,
+            max_iterations=trip,
+            bound_symbol=Symbol.CONTEXT_LENGTH,
+            bound_divisor=capacity * unit,
+            counter_class_id=self._counter_class("instruction", Major.CONTROL),
+            key=f"loop.context.k{kernel.index:05d}",
+        )
+        self.builder.open_loop(loop)
+        return loop
+
     @property
     def _position_inputs(self) -> frozenset[str]:
         """Declared inputs whose content is the request's position range.
@@ -2557,7 +2617,9 @@ class RomLowering:
         blocked: bool = True,
         element_offset: int = 0,
         term: DynamicTerm | None = None,
+        extra_terms: Sequence[DynamicTerm] = (),
         extent_axis: int = 0,
+        extent_unit: int | None = None,
     ) -> int:
         object_id = self._buffer(tensor.tensor_id)
         permissions = (
@@ -2585,22 +2647,28 @@ class RomLowering:
         # rightly, because an unresolvable one silently presents the declared
         # maximum.  So the fields are written only alongside the term that
         # walks that axis, and the unit is the tensor's own.
-        _symbol, _multiplier, unit = self._leading_symbol(tensor)
-        if term is None:
-            extent_axis, unit = 0, 1
+        terms = [*([term] if term is not None else ()), *extra_terms]
+        if extent_unit is None:
+            # By default the declared extent is the tensor's *leading* axis, in
+            # that axis's own unit, resolved by the row term.  A view with no
+            # term declares nothing: A18 refuses a declaration nothing resolves.
+            _symbol, _multiplier, unit = self._leading_symbol(tensor)
+            extent_unit = unit if terms else 0
+            if not terms:
+                extent_axis = 0
         return self._view(
             object_id=object_id,
             dtype=self._dtype(tensor.dtype),
             dims=dims,
             strides=strides,
             element_offset=element_offset,
-            dynamic=[term] if term is not None else (),
+            dynamic=terms,
             permissions=permissions,
             scale_object_id=scale_object,
             scale_block_elements=block if scale_object != NO_ID else 0,
             scale_block_rows=row_block if scale_object != NO_ID else 0,
             extent_axis=extent_axis,
-            extent_unit=unit,
+            extent_unit=extent_unit,
             label="view.buf",
         )
 
@@ -4041,6 +4109,123 @@ class RomLowering:
                 suffix=f".g{group:02d}",
             )
 
+    def _emit_index_score(self, kernel: Kernel, run: LayerRun | None) -> None:
+        """``VECTOR.INDEX_SCORE``: the row with two request-dependent extents.
+
+        TA-ABI3-OPCONV-1 gives it ``in0 [B,S,Hd,D]``, ``in1 [B,C,D]``,
+        ``in2 [B,S,Hd]`` and ``out0 [B,S,C]``, and the engine requires
+        ``kv_batch == batch``.  ``S`` is the request's span and ``C`` its
+        compressed context, so under *every* assignment of ``B`` at least one of
+        them lands on a non-leading axis -- which is the second case the wire
+        format's section 12.8 cites for amendment A18.
+
+        A18 lets a view name one such axis, deliberately, and ``out0`` has two.
+        The one that becomes a loop is the span: a per-token dispatch makes
+        ``S`` a static one, leaving ``C`` as the only extent the request moves,
+        which is exactly the shape the amendment says is expressible.  The cost
+        is one dispatch per token for this operator, the same trade the routed
+        contraction already makes, and it is bounded by the capability's loop
+        trip rather than by the context.
+
+        The candidate axis is then resolved by a context loop that runs once.
+        Both the key and the score row count *groups*, so both declare the
+        compression ratio as their unit; the key's leading batch is the plane
+        fronting that the operand row asks for.
+        """
+        query, key, weights = (self.tensors[name] for name in kernel.inputs[:3])
+        result = self.tensors[kernel.outputs[0]]
+        heads, head_dim = self._dims(query)[1], self._dims(query)[2]
+        candidates = self._dims(result)[1]
+        _symbol, _multiplier, unit = self._leading_symbol(key)
+        if unit <= 1:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: the index key leads with "
+                f"{key.shape[0]!r}, which states no compression ratio; "
+                "VECTOR.INDEX_SCORE scores compressed groups"
+            )
+        shape = self._shape_of(kernel, EngineOp(Major.VECTOR, Vector.INDEX_SCORE, 3, 1))
+        token = self._open_token_loop(kernel)
+        context = self._open_context_loop(kernel, candidates, unit)
+
+        def token_term(width: int) -> DynamicTerm:
+            return DynamicTerm.loop(token, width)
+
+        query_view = self._buffer_view(
+            query,
+            dims=[1, 1, heads, head_dim],
+            strides=[heads * head_dim, heads * head_dim, head_dim, 1],
+            shape=shape,
+            loop=token,
+            writable=False,
+            term=token_term(heads * head_dim),
+        )
+        # The key is ``[B, C, D]`` wherever it lives.  In the released graph it
+        # is a plane of the compressed cache, which is a STATE resource; a graph
+        # that keeps it as an ordinary activation states the same operand.
+        key_term = DynamicTerm.loop(context, self._plane_row(key) * candidates)
+        key_view = self._state_plane_view(
+            kernel,
+            kernel.inputs[1],
+            "in",
+            run,
+            batch_lead=True,
+            extent_axis=1,
+            extent_unit=unit,
+            extra_terms=(key_term,),
+        )
+        if key_view is None:
+            key_width = self._plane_width(key.tensor_id)
+            key_view = self._buffer_view(
+                key,
+                dims=[1, candidates, key_width],
+                strides=[candidates * key_width, key_width, 1],
+                shape=shape,
+                loop=context,
+                writable=False,
+                term=DynamicTerm.loop(context, key_width * candidates),
+                extent_axis=1,
+                extent_unit=unit,
+            )
+        weight_view = self._buffer_view(
+            weights,
+            dims=[1, 1, heads],
+            strides=[heads, heads, 1],
+            shape=shape,
+            loop=token,
+            writable=False,
+            term=token_term(heads),
+        )
+        score_view = self._buffer_view(
+            result,
+            dims=[1, 1, candidates],
+            strides=[candidates, candidates, 1],
+            shape=shape,
+            loop=token,
+            writable=True,
+            term=token_term(candidates),
+            extra_terms=(DynamicTerm.loop(context, candidates),),
+            extent_axis=2,
+            extent_unit=unit,
+        )
+        self._emit_operator(
+            kernel,
+            Major.VECTOR,
+            int(Vector.INDEX_SCORE),
+            [query_view, key_view, weight_view],
+            [score_view],
+            loop=context,
+            schedule_rows=1,
+            extra_close=1,
+        )
+
+    def _plane_row(self, tensor: Tensor) -> int:
+        """Elements between successive rows of a state plane's merged struct."""
+        state_id = self._state_owner.get(tensor.tensor_id)
+        if state_id is None or state_id not in self._state_slot:
+            return self._plane_width(tensor.tensor_id)
+        group_key, _slot = self._state_slot[state_id]
+        return self._state_group_shape[group_key][2]
+
     def _emit_kernel(self, kernel: Kernel, *, run: LayerRun | None) -> None:
         if kernel.kind in {"STATE_PREPARE", "STATE_COMMIT"}:
             # Prepare and commit are emitted once, outside every loop, so the
@@ -4110,6 +4295,9 @@ class RomLowering:
                 loop=loop,
                 schedule_rows=schedule_rows,
             )
+            return
+        if kernel.kind == "INDEX_SCORE":
+            self._emit_index_score(kernel, run)
             return
         if family is Major.DMA and self._is_row_local_gather(kernel, engine.sub):
             loop = self._open_token_loop(kernel)
@@ -4188,8 +4376,14 @@ class RomLowering:
         loop: int | None,
         schedule_rows: int | None = None,
         suffix: str = "",
+        extra_close: int = 0,
     ) -> None:
         """Bind one operator descriptor, issue it, and close its loop.
+
+        ``extra_close`` closes further enclosing loops, innermost first, for an
+        operator that needed more than one -- ``INDEX_SCORE`` needs a token loop
+        and a context loop because its output has a request-dependent extent on
+        two axes and amendment A18 gives a view one.
 
         ``suffix`` distinguishes several operators emitted for one kernel --
         the block-diagonal groups of a feature-grouped contraction -- so that
@@ -4226,6 +4420,8 @@ class RomLowering:
             source_operation_id=kernel.index,
         )
         if loop is not None:
+            self.builder.close_loop()
+        for _ in range(extra_close):
             self.builder.close_loop()
         # Only already-emitted producers enter a wait set, so a loop-carried
         # value is ordered by the loop body itself rather than by a wait on an
