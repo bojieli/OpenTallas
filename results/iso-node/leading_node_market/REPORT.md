@@ -35,7 +35,7 @@ separate. The SRAM-rich control uses a static 70% weight / 30% KV split.
 
 | Status | Checks | Max weight/shared-HBM service | Max KV service | Max compute service | Max cooling |
 |---|---:|---:|---:|---:|---:|
-| PASS | 9,086 | 100.0% | 95.0% | 65.1% | 100.0% |
+| PASS | 9,056 | 100.0% | 95.0% | 57.1% | 100.0% |
 
 The service columns are component-time occupancy divided by the final
 thermal-adjusted interval. GPU weight and KV time are added because
@@ -55,14 +55,14 @@ arithmetic, but it is not a measured vendor-cost or profitability result.
 
 | Model | B/stage | Stages | Residents | ROM user tok/s | GPU | GPU user tok/s | Same-B ratio | Resident-matched ratio | ROM $/M tok | Bind |
 |---|---:|---:|---:|---:|---|---:|---:|---:|---:|---|
-| DeepSeek-V4-Flash-0731 | 1 | 1 | 1 | 14,435.9 | NVIDIA-B300-x8 | 1,665.9 | 8.67× | 8.67× | 0.1833 | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 8 | 1 | 8 | 7,911.5 | NVIDIA-B300-x16 | 1,029.2 | 7.69× | 7.69× | 0.0418 | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 32 | 1 | 32 | 3,073.7 | NVIDIA-B300-x16 | 530.6 | 5.79× | 5.79× | 0.0269 | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 64 | 1 | 64 | 1,693.3 | NVIDIA-B300-x16 | 379.7 | 4.46× | 4.46× | 0.0244 | kv_beachfront_C8 |
-| DeepSeek-V4-Pro-0813 | 1 | 4 | 4 | 8,283.1 | NVIDIA-B300-x16 | 653.2 | 12.68× | 16.03× | 0.2149 | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | 8 | 4 | 32 | 4,343.2 | NVIDIA-B300-x16 | 390.4 | 11.12× | 26.95× | 0.0515 | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | 32 | 4 | 128 | 1,539.8 | NVIDIA-B300-x16 | 161.2 | 9.55× | 20.56× | 0.0364 | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | 64 | 4 | 256 | 827.5 | NVIDIA-B300-x16 | 104.4 | 7.93× | 13.80× | 0.0339 | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | 1 | 1 | 1 | 12,629.3 | NVIDIA-B300-x8 | 1,650.7 | 7.65× | 7.65× | 0.2096 | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | 8 | 1 | 8 | 4,698.7 | NVIDIA-B300-x16 | 1,006.3 | 4.67× | 4.67× | 0.0704 | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 32 | 1 | 32 | 1,490.2 | NVIDIA-B300-x16 | 506.8 | 2.94× | 2.94× | 0.0555 | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 64 | 1 | 64 | 780.0 | NVIDIA-B300-x16 | 355.8 | 2.19× | 2.19× | 0.0530 | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | 1 | 4 | 4 | 8,211.7 | NVIDIA-B300-x16 | 651.5 | 12.60× | 16.02× | 0.2168 | collective_floor_C6 |
+| DeepSeek-V4-Pro-0813 | 8 | 4 | 32 | 2,879.3 | NVIDIA-B300-x16 | 385.5 | 7.47× | 18.24× | 0.0778 | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | 32 | 4 | 128 | 881.5 | NVIDIA-B300-x16 | 157.9 | 5.58× | 12.23× | 0.0637 | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | 64 | 4 | 256 | 457.9 | NVIDIA-B300-x16 | 101.6 | 4.51× | 8.11× | 0.0613 | kv_beachfront_C8 |
 
 ## Unpriced auxiliary-path break-even requirements at 200K
 
@@ -81,22 +81,22 @@ token rates and ROM/GPU ratios remain conditional on this gate.
 
 | Model | B | Architecture | Attention scores | Index scores | Normalization | Nonlinear | Top-k candidates | Sinkhorn element-iterations |
 |---|---:|---|---:|---:|---:|---:|---:|---:|
-| DeepSeek-V4-Flash-0731 | 1 | ROM-wafer-N4-class-HBM3e-central | 43.88 Gitem/s | 970.09 Gitem/s | 26.44 Gitem/s | 9.06 Gitem/s | 15.16 Gitem/s | 397.27 Mitem/s |
-| DeepSeek-V4-Flash-0731 | 1 | NVIDIA-B300-x8 | 5.06 Gitem/s | 111.95 Gitem/s | 3.05 Gitem/s | 1.05 Gitem/s | 1.75 Gitem/s | 45.85 Mitem/s |
-| DeepSeek-V4-Flash-0731 | 8 | ROM-wafer-N4-class-HBM3e-central | 192.39 Gitem/s | 4.25 Titem/s | 115.91 Gitem/s | 39.71 Gitem/s | 66.46 Gitem/s | 1.74 Gitem/s |
-| DeepSeek-V4-Flash-0731 | 8 | NVIDIA-B300-x16 | 25.03 Gitem/s | 553.30 Gitem/s | 15.08 Gitem/s | 5.17 Gitem/s | 8.65 Gitem/s | 226.59 Mitem/s |
-| DeepSeek-V4-Flash-0731 | 32 | ROM-wafer-N4-class-HBM3e-central | 298.99 Gitem/s | 6.61 Titem/s | 180.14 Gitem/s | 61.72 Gitem/s | 103.28 Gitem/s | 2.71 Gitem/s |
-| DeepSeek-V4-Flash-0731 | 32 | NVIDIA-B300-x16 | 51.62 Gitem/s | 1.14 Titem/s | 31.10 Gitem/s | 10.65 Gitem/s | 17.83 Gitem/s | 467.29 Mitem/s |
-| DeepSeek-V4-Flash-0731 | 64 | ROM-wafer-N4-class-HBM3e-central | 329.42 Gitem/s | 7.28 Titem/s | 198.47 Gitem/s | 68.00 Gitem/s | 113.79 Gitem/s | 2.98 Gitem/s |
-| DeepSeek-V4-Flash-0731 | 64 | NVIDIA-B300-x16 | 73.87 Gitem/s | 1.63 Titem/s | 44.50 Gitem/s | 15.25 Gitem/s | 25.52 Gitem/s | 668.75 Mitem/s |
-| DeepSeek-V4-Pro-0813 | 1 | ROM-wafer-N4-class-HBM3e-central | 99.68 Gitem/s | 856.56 Gitem/s | 43.86 Gitem/s | 11.72 Gitem/s | 13.38 Gitem/s | 342.63 Mitem/s |
-| DeepSeek-V4-Pro-0813 | 1 | NVIDIA-B300-x16 | 7.27 Gitem/s | 62.71 Gitem/s | 3.27 Gitem/s | 872.15 Mitem/s | 979.82 Mitem/s | 25.50 Mitem/s |
-| DeepSeek-V4-Pro-0813 | 8 | ROM-wafer-N4-class-HBM3e-central | 416.17 Gitem/s | 3.58 Titem/s | 183.11 Gitem/s | 48.92 Gitem/s | 55.88 Gitem/s | 1.43 Gitem/s |
-| DeepSeek-V4-Pro-0813 | 8 | NVIDIA-B300-x16 | 34.76 Gitem/s | 299.84 Gitem/s | 15.63 Gitem/s | 4.17 Gitem/s | 4.68 Gitem/s | 121.93 Mitem/s |
-| DeepSeek-V4-Pro-0813 | 32 | ROM-wafer-N4-class-HBM3e-central | 588.21 Gitem/s | 5.05 Titem/s | 258.80 Gitem/s | 69.15 Gitem/s | 78.98 Gitem/s | 2.02 Gitem/s |
-| DeepSeek-V4-Pro-0813 | 32 | NVIDIA-B300-x16 | 57.40 Gitem/s | 495.15 Gitem/s | 25.81 Gitem/s | 6.89 Gitem/s | 7.74 Gitem/s | 201.36 Mitem/s |
-| DeepSeek-V4-Pro-0813 | 64 | ROM-wafer-N4-class-HBM3e-central | 631.74 Gitem/s | 5.43 Titem/s | 277.95 Gitem/s | 74.26 Gitem/s | 84.82 Gitem/s | 2.17 Gitem/s |
-| DeepSeek-V4-Pro-0813 | 64 | NVIDIA-B300-x16 | 74.33 Gitem/s | 641.14 Gitem/s | 33.42 Gitem/s | 8.92 Gitem/s | 10.02 Gitem/s | 260.73 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 1 | ROM-wafer-N4-class-HBM3e-central | 38.39 Gitem/s | 848.69 Gitem/s | 23.13 Gitem/s | 7.92 Gitem/s | 13.26 Gitem/s | 347.56 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 1 | NVIDIA-B300-x8 | 5.02 Gitem/s | 110.93 Gitem/s | 3.02 Gitem/s | 1.04 Gitem/s | 1.73 Gitem/s | 45.43 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 8 | ROM-wafer-N4-class-HBM3e-central | 114.26 Gitem/s | 2.53 Titem/s | 68.84 Gitem/s | 23.59 Gitem/s | 39.47 Gitem/s | 1.03 Gitem/s |
+| DeepSeek-V4-Flash-0731 | 8 | NVIDIA-B300-x16 | 24.47 Gitem/s | 540.97 Gitem/s | 14.74 Gitem/s | 5.05 Gitem/s | 8.45 Gitem/s | 221.54 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 32 | ROM-wafer-N4-class-HBM3e-central | 144.95 Gitem/s | 3.20 Titem/s | 87.33 Gitem/s | 29.92 Gitem/s | 50.07 Gitem/s | 1.31 Gitem/s |
+| DeepSeek-V4-Flash-0731 | 32 | NVIDIA-B300-x16 | 49.30 Gitem/s | 1.09 Titem/s | 29.70 Gitem/s | 10.18 Gitem/s | 17.03 Gitem/s | 446.32 Mitem/s |
+| DeepSeek-V4-Flash-0731 | 64 | ROM-wafer-N4-class-HBM3e-central | 151.75 Gitem/s | 3.35 Titem/s | 91.43 Gitem/s | 31.32 Gitem/s | 52.42 Gitem/s | 1.37 Gitem/s |
+| DeepSeek-V4-Flash-0731 | 64 | NVIDIA-B300-x16 | 69.21 Gitem/s | 1.53 Titem/s | 41.70 Gitem/s | 14.29 Gitem/s | 23.91 Gitem/s | 626.62 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 1 | ROM-wafer-N4-class-HBM3e-central | 98.81 Gitem/s | 849.11 Gitem/s | 43.47 Gitem/s | 11.62 Gitem/s | 13.27 Gitem/s | 339.64 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 1 | NVIDIA-B300-x16 | 7.25 Gitem/s | 62.54 Gitem/s | 3.26 Gitem/s | 869.84 Mitem/s | 977.23 Mitem/s | 25.43 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 8 | ROM-wafer-N4-class-HBM3e-central | 275.42 Gitem/s | 2.37 Titem/s | 121.18 Gitem/s | 32.38 Gitem/s | 36.98 Gitem/s | 946.70 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 8 | NVIDIA-B300-x16 | 34.33 Gitem/s | 296.08 Gitem/s | 15.43 Gitem/s | 4.12 Gitem/s | 4.63 Gitem/s | 120.41 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 32 | ROM-wafer-N4-class-HBM3e-central | 336.48 Gitem/s | 2.89 Titem/s | 148.04 Gitem/s | 39.55 Gitem/s | 45.18 Gitem/s | 1.16 Gitem/s |
+| DeepSeek-V4-Pro-0813 | 32 | NVIDIA-B300-x16 | 56.23 Gitem/s | 485.00 Gitem/s | 25.28 Gitem/s | 6.75 Gitem/s | 7.58 Gitem/s | 197.23 Mitem/s |
+| DeepSeek-V4-Pro-0813 | 64 | ROM-wafer-N4-class-HBM3e-central | 349.39 Gitem/s | 3.00 Titem/s | 153.72 Gitem/s | 41.07 Gitem/s | 46.91 Gitem/s | 1.20 Gitem/s |
+| DeepSeek-V4-Pro-0813 | 64 | NVIDIA-B300-x16 | 72.37 Gitem/s | 624.21 Gitem/s | 32.54 Gitem/s | 8.68 Gitem/s | 9.75 Gitem/s | 253.85 Mitem/s |
 
 ## ROM component timing and occupancy at 200K
 
@@ -109,22 +109,22 @@ time divided by the final interval, not silicon performance counters.
 
 | Model | Envelope | B/stage | Stages | Final interval ms | User latency ms | Weight ms | KV ms | Compute ms | Collective ms | Cross-stage ms | Weight util | KV util | Compute util | Thermal × | Bind |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| DeepSeek-V4-Flash-0731 | central | 1 | 1 | 0.0693 | 0.0693 | 0.0052 | 0.0044 | 0.0024 | 0.0571 | — | 7.5% | 6.4% | 3.5% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | central | 8 | 1 | 0.1264 | 0.1264 | 0.0154 | 0.0353 | 0.0194 | 0.0784 | — | 12.2% | 27.9% | 15.4% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | central | 32 | 1 | 0.3253 | 0.3253 | 0.0400 | 0.1412 | 0.0777 | 0.1516 | — | 12.3% | 43.4% | 23.9% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | central | 64 | 1 | 0.5906 | 0.5906 | 0.0571 | 0.2825 | 0.1554 | 0.2490 | — | 9.7% | 47.8% | 26.3% | 1.000 | kv_beachfront_C8 |
-| DeepSeek-V4-Flash-0731 | aggressive | 1 | 1 | 0.0176 | 0.0176 | 0.0022 | 0.0026 | 0.0011 | 0.0141 | — | 12.4% | 14.8% | 6.1% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | aggressive | 8 | 1 | 0.0457 | 0.0457 | 0.0064 | 0.0208 | 0.0086 | 0.0226 | — | 14.1% | 45.4% | 18.9% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | aggressive | 32 | 1 | 0.1421 | 0.1421 | 0.0167 | 0.0831 | 0.0345 | 0.0519 | — | 11.7% | 58.5% | 24.3% | 1.000 | kv_beachfront_C8 |
-| DeepSeek-V4-Flash-0731 | aggressive | 64 | 1 | 0.2706 | 0.2706 | 0.0238 | 0.1661 | 0.0689 | 0.0910 | — | 8.8% | 61.4% | 25.5% | 1.000 | kv_beachfront_C8 |
-| DeepSeek-V4-Pro-0813 | central | 1 | 4 | 0.0299 | 0.1207 | 0.0048 | 0.0018 | 0.0020 | 0.0221 | 0.0001 | 16.1% | 5.9% | 6.9% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | central | 8 | 4 | 0.0573 | 0.2302 | 0.0151 | 0.0141 | 0.0164 | 0.0360 | 0.0011 | 26.4% | 24.6% | 28.6% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | central | 32 | 4 | 0.1621 | 0.6495 | 0.0430 | 0.0563 | 0.0656 | 0.0836 | 0.0046 | 26.5% | 34.7% | 40.5% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | central | 64 | 4 | 0.3018 | 1.2084 | 0.0669 | 0.1125 | 0.1311 | 0.1470 | 0.0092 | 22.2% | 37.3% | 43.4% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | aggressive | 1 | 2 | 0.0155 | 0.0314 | 0.0039 | 0.0020 | 0.0017 | 0.0108 | 0.0001 | 25.2% | 13.0% | 11.0% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | aggressive | 8 | 2 | 0.0397 | 0.0798 | 0.0122 | 0.0161 | 0.0137 | 0.0216 | 0.0011 | 30.8% | 40.6% | 34.4% | 1.000 | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | aggressive | 32 | 2 | 0.1294 | 0.2592 | 0.0347 | 0.0644 | 0.0546 | 0.0585 | 0.0046 | 26.8% | 49.8% | 42.2% | 1.000 | kv_beachfront_C8 |
-| DeepSeek-V4-Pro-0813 | aggressive | 64 | 2 | 0.2491 | 0.4985 | 0.0540 | 0.1288 | 0.1092 | 0.1078 | 0.0092 | 21.7% | 51.7% | 43.8% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | central | 1 | 1 | 0.0792 | 0.0792 | 0.0052 | 0.0141 | 0.0024 | 0.0571 | — | 6.6% | 17.9% | 3.1% | 1.000 | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | central | 8 | 1 | 0.2128 | 0.2128 | 0.0154 | 0.1131 | 0.0194 | 0.0784 | — | 7.3% | 53.1% | 9.1% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | central | 32 | 1 | 0.6711 | 0.6711 | 0.0400 | 0.4524 | 0.0777 | 0.1516 | — | 6.0% | 67.4% | 11.6% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | central | 64 | 1 | 1.2820 | 1.2820 | 0.0571 | 0.9048 | 0.1554 | 0.2490 | — | 4.5% | 70.6% | 12.1% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | aggressive | 1 | 1 | 0.0236 | 0.0236 | 0.0022 | 0.0083 | 0.0011 | 0.0141 | — | 9.2% | 35.2% | 4.6% | 1.000 | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | aggressive | 8 | 1 | 0.0939 | 0.0939 | 0.0064 | 0.0665 | 0.0086 | 0.0226 | — | 6.9% | 70.9% | 9.2% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | aggressive | 32 | 1 | 0.3347 | 0.3347 | 0.0167 | 0.2661 | 0.0345 | 0.0519 | — | 5.0% | 79.5% | 10.3% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | aggressive | 64 | 1 | 0.6559 | 0.6559 | 0.0238 | 0.5322 | 0.0689 | 0.0910 | — | 3.6% | 81.1% | 10.5% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | central | 1 | 4 | 0.0301 | 0.1218 | 0.0048 | 0.0055 | 0.0020 | 0.0221 | 0.0001 | 16.0% | 18.3% | 6.8% | 1.000 | collective_floor_C6 |
+| DeepSeek-V4-Pro-0813 | central | 8 | 4 | 0.0865 | 0.3473 | 0.0151 | 0.0442 | 0.0164 | 0.0360 | 0.0011 | 17.5% | 51.0% | 18.9% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | central | 32 | 4 | 0.2833 | 1.1345 | 0.0430 | 0.1766 | 0.0656 | 0.0836 | 0.0046 | 15.2% | 62.3% | 23.1% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | central | 64 | 4 | 0.5457 | 2.1840 | 0.0669 | 0.3533 | 0.1311 | 0.1470 | 0.0092 | 12.3% | 64.7% | 24.0% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | aggressive | 1 | 2 | 0.0179 | 0.0363 | 0.0039 | 0.0062 | 0.0017 | 0.0108 | 0.0001 | 21.7% | 34.7% | 9.5% | 1.000 | collective_floor_C6 |
+| DeepSeek-V4-Pro-0813 | aggressive | 8 | 2 | 0.0751 | 0.1506 | 0.0122 | 0.0497 | 0.0137 | 0.0216 | 0.0011 | 16.3% | 66.2% | 18.2% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | aggressive | 32 | 2 | 0.2711 | 0.5425 | 0.0347 | 0.1990 | 0.0546 | 0.0585 | 0.0046 | 12.8% | 73.4% | 20.1% | 1.000 | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | aggressive | 64 | 2 | 0.5324 | 1.0651 | 0.0540 | 0.3980 | 0.1092 | 0.1078 | 0.0092 | 10.1% | 74.8% | 20.5% | 1.000 | kv_beachfront_C8 |
 
 ## B300 full-FP32 roof sensitivity at 200K
 
@@ -137,14 +137,14 @@ B300 cluster's per-user token rate at the stated active batch.
 
 | Model | B | FP32 op share | 19.5 TOP/s | 45 TOP/s | 90 TOP/s | 180 TOP/s | Fastest cluster(s) | Binding(s) | Central ROM/GPU ratio range |
 |---|---:|---:|---:|---:|---:|---:|---|---|---:|
-| DeepSeek-V4-Flash-0731 | 1 | 0.136% | 1,665.9 | 1,665.9 | 1,665.9 | 1,665.9 | NVIDIA-B300-x8 | gpu_weight_memory_C3 | 8.67×–8.67× |
-| DeepSeek-V4-Flash-0731 | 8 | 0.136% | 1,029.2 | 1,029.2 | 1,029.2 | 1,029.2 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 7.69×–7.69× |
-| DeepSeek-V4-Flash-0731 | 32 | 0.136% | 530.6 | 530.6 | 530.6 | 530.6 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 5.79×–5.79× |
-| DeepSeek-V4-Flash-0731 | 64 | 0.136% | 379.7 | 379.7 | 379.7 | 379.7 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 4.46×–4.46× |
-| DeepSeek-V4-Pro-0813 | 1 | 0.116% | 653.2 | 653.2 | 653.2 | 653.2 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 12.68×–12.68× |
-| DeepSeek-V4-Pro-0813 | 8 | 0.116% | 390.4 | 390.4 | 390.4 | 390.4 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 11.12×–11.12× |
-| DeepSeek-V4-Pro-0813 | 32 | 0.116% | 161.2 | 161.2 | 161.2 | 161.2 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 9.55×–9.55× |
-| DeepSeek-V4-Pro-0813 | 64 | 0.116% | 104.4 | 104.4 | 104.4 | 104.4 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 7.93×–7.93× |
+| DeepSeek-V4-Flash-0731 | 1 | 0.136% | 1,650.7 | 1,650.7 | 1,650.7 | 1,650.7 | NVIDIA-B300-x8 | gpu_weight_memory_C3 | 7.65×–7.65× |
+| DeepSeek-V4-Flash-0731 | 8 | 0.136% | 1,006.3 | 1,006.3 | 1,006.3 | 1,006.3 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 4.67×–4.67× |
+| DeepSeek-V4-Flash-0731 | 32 | 0.136% | 506.8 | 506.8 | 506.8 | 506.8 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 2.94×–2.94× |
+| DeepSeek-V4-Flash-0731 | 64 | 0.136% | 355.8 | 355.8 | 355.8 | 355.8 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 2.19×–2.19× |
+| DeepSeek-V4-Pro-0813 | 1 | 0.116% | 651.5 | 651.5 | 651.5 | 651.5 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 12.60×–12.60× |
+| DeepSeek-V4-Pro-0813 | 8 | 0.116% | 385.5 | 385.5 | 385.5 | 385.5 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 7.47×–7.47× |
+| DeepSeek-V4-Pro-0813 | 32 | 0.116% | 157.9 | 157.9 | 157.9 | 157.9 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 5.58×–5.58× |
+| DeepSeek-V4-Pro-0813 | 64 | 0.116% | 101.6 | 101.6 | 101.6 | 101.6 | NVIDIA-B300-x16 | gpu_weight_memory_C3 | 4.51×–4.51× |
 
 ## Central-envelope achieved byte rates at 200K
 
@@ -154,22 +154,22 @@ the proposed wafer. GPU HBM carries both deployed weights and KV.
 
 | Model | B | Architecture | Deployed weight read | KV read+write | Total HBM | Tensor operations |
 |---|---:|---|---:|---:|---:|---:|
-| DeepSeek-V4-Flash-0731 | 1 | ROM-wafer-N4-class-HBM3e-central | 161.94 TB/s | 1.431 TB/s | 1.43 TB/s | 0.72 Pop/s |
-| DeepSeek-V4-Flash-0731 | 1 | NVIDIA-B300-x8 | 18.69 TB/s | 0.165 TB/s | 18.85 TB/s | 0.08 Pop/s |
-| DeepSeek-V4-Flash-0731 | 8 | ROM-wafer-N4-class-HBM3e-central | 262.68 TB/s | 6.274 TB/s | 6.27 TB/s | 3.16 Pop/s |
-| DeepSeek-V4-Flash-0731 | 8 | NVIDIA-B300-x16 | 34.17 TB/s | 0.816 TB/s | 34.99 TB/s | 0.41 Pop/s |
-| DeepSeek-V4-Flash-0731 | 32 | ROM-wafer-N4-class-HBM3e-central | 264.46 TB/s | 9.750 TB/s | 9.75 TB/s | 4.91 Pop/s |
-| DeepSeek-V4-Flash-0731 | 32 | NVIDIA-B300-x16 | 45.65 TB/s | 1.683 TB/s | 47.34 TB/s | 0.85 Pop/s |
-| DeepSeek-V4-Flash-0731 | 64 | ROM-wafer-N4-class-HBM3e-central | 207.74 TB/s | 10.743 TB/s | 10.74 TB/s | 5.41 Pop/s |
-| DeepSeek-V4-Flash-0731 | 64 | NVIDIA-B300-x16 | 46.58 TB/s | 2.409 TB/s | 48.99 TB/s | 1.21 Pop/s |
-| DeepSeek-V4-Pro-0813 | 1 | ROM-wafer-N4-class-HBM3e-central | 1,327.23 TB/s | 5.111 TB/s | 5.11 TB/s | 4.85 Pop/s |
-| DeepSeek-V4-Pro-0813 | 1 | NVIDIA-B300-x16 | 25.91 TB/s | 0.100 TB/s | 26.01 TB/s | 0.09 Pop/s |
-| DeepSeek-V4-Pro-0813 | 8 | ROM-wafer-N4-class-HBM3e-central | 2,167.62 TB/s | 21.339 TB/s | 21.34 TB/s | 20.27 Pop/s |
-| DeepSeek-V4-Pro-0813 | 8 | NVIDIA-B300-x16 | 48.46 TB/s | 0.477 TB/s | 48.94 TB/s | 0.45 Pop/s |
-| DeepSeek-V4-Pro-0813 | 32 | ROM-wafer-N4-class-HBM3e-central | 2,173.41 TB/s | 30.160 TB/s | 30.16 TB/s | 28.64 Pop/s |
-| DeepSeek-V4-Pro-0813 | 32 | NVIDIA-B300-x16 | 56.78 TB/s | 0.788 TB/s | 57.56 TB/s | 0.75 Pop/s |
-| DeepSeek-V4-Pro-0813 | 64 | ROM-wafer-N4-class-HBM3e-central | 1,818.53 TB/s | 32.392 TB/s | 32.39 TB/s | 30.76 Pop/s |
-| DeepSeek-V4-Pro-0813 | 64 | NVIDIA-B300-x16 | 57.27 TB/s | 1.020 TB/s | 58.29 TB/s | 0.97 Pop/s |
+| DeepSeek-V4-Flash-0731 | 1 | ROM-wafer-N4-class-HBM3e-central | 141.67 TB/s | 4.010 TB/s | 4.01 TB/s | 0.63 Pop/s |
+| DeepSeek-V4-Flash-0731 | 1 | NVIDIA-B300-x8 | 18.52 TB/s | 0.524 TB/s | 19.04 TB/s | 0.08 Pop/s |
+| DeepSeek-V4-Flash-0731 | 8 | ROM-wafer-N4-class-HBM3e-central | 156.01 TB/s | 11.935 TB/s | 11.93 TB/s | 1.88 Pop/s |
+| DeepSeek-V4-Flash-0731 | 8 | NVIDIA-B300-x16 | 33.41 TB/s | 2.556 TB/s | 35.97 TB/s | 0.40 Pop/s |
+| DeepSeek-V4-Flash-0731 | 32 | ROM-wafer-N4-class-HBM3e-central | 128.21 TB/s | 15.141 TB/s | 15.14 TB/s | 2.38 Pop/s |
+| DeepSeek-V4-Flash-0731 | 32 | NVIDIA-B300-x16 | 43.61 TB/s | 5.149 TB/s | 48.75 TB/s | 0.81 Pop/s |
+| DeepSeek-V4-Flash-0731 | 64 | ROM-wafer-N4-class-HBM3e-central | 95.70 TB/s | 15.851 TB/s | 15.85 TB/s | 2.49 Pop/s |
+| DeepSeek-V4-Flash-0731 | 64 | NVIDIA-B300-x16 | 43.65 TB/s | 7.229 TB/s | 50.88 TB/s | 1.14 Pop/s |
+| DeepSeek-V4-Pro-0813 | 1 | ROM-wafer-N4-class-HBM3e-central | 1,315.67 TB/s | 15.693 TB/s | 15.69 TB/s | 4.81 Pop/s |
+| DeepSeek-V4-Pro-0813 | 1 | NVIDIA-B300-x16 | 25.84 TB/s | 0.308 TB/s | 26.15 TB/s | 0.09 Pop/s |
+| DeepSeek-V4-Pro-0813 | 8 | ROM-wafer-N4-class-HBM3e-central | 1,434.51 TB/s | 43.742 TB/s | 43.74 TB/s | 13.41 Pop/s |
+| DeepSeek-V4-Pro-0813 | 8 | NVIDIA-B300-x16 | 47.86 TB/s | 1.459 TB/s | 49.32 TB/s | 0.45 Pop/s |
+| DeepSeek-V4-Pro-0813 | 32 | ROM-wafer-N4-class-HBM3e-central | 1,243.26 TB/s | 53.440 TB/s | 53.44 TB/s | 16.38 Pop/s |
+| DeepSeek-V4-Pro-0813 | 32 | NVIDIA-B300-x16 | 55.61 TB/s | 2.390 TB/s | 58.00 TB/s | 0.73 Pop/s |
+| DeepSeek-V4-Pro-0813 | 64 | ROM-wafer-N4-class-HBM3e-central | 1,005.75 TB/s | 55.490 TB/s | 55.49 TB/s | 17.01 Pop/s |
+| DeepSeek-V4-Pro-0813 | 64 | NVIDIA-B300-x16 | 55.76 TB/s | 3.076 TB/s | 58.84 TB/s | 0.94 Pop/s |
 
 ## ROM uncertainty bands across context and batch
 
@@ -179,38 +179,38 @@ lows are reported only when every envelope is feasible.
 
 | Model | Context | B/stage | Feasible envelopes | ROM user tok/s low–high | Same-B ROM/GPU low–high | Binding terms across envelopes |
 |---|---:|---:|---:|---:|---:|---|
-| DeepSeek-V4-Flash-0731 | 8,192 | 1 | 3/3 | 1,666.2–58,362.1 | 1.00×–34.91× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 8,192 | 8 | 3/3 | 1,460.6–32,673.5 | 1.41×–31.46× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 8,192 | 32 | 3/3 | 971.3–12,479.8 | 1.80×–23.08× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 8,192 | 64 | 3/3 | 661.4–6,816.8 | 1.70×–17.48× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 32,768 | 1 | 3/3 | 1,666.2–58,362.1 | 1.00×–34.92× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 32,768 | 8 | 3/3 | 1,452.6–32,673.5 | 1.40×–31.50× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 32,768 | 32 | 3/3 | 957.3–12,267.8 | 1.78×–22.75× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 32,768 | 64 | 3/3 | 647.6–6,690.5 | 1.67×–17.21× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 200,000 | 1 | 3/3 | 1,666.2–56,884.0 | 1.00×–34.15× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 200,000 | 8 | 3/3 | 1,400.3–21,883.3 | 1.36×–21.26× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 200,000 | 32 | 3/3 | 867.1–7,037.4 | 1.63×–13.26× | collective_floor_C6, kv_beachfront_C8 |
-| DeepSeek-V4-Flash-0731 | 200,000 | 64 | 3/3 | 567.3–3,695.0 | 1.49×–9.73× | compute_C5, kv_beachfront_C8 |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | 3/3 | 1,594.9–36,414.5 | 0.97×–22.19× | collective_floor_C6 |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | 3/3 | 968.1–8,015.9 | 0.98×–8.08× | collective_floor_C6, kv_beachfront_C8 |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | 3/3 | 400.0–2,181.9 | 0.81×–4.43× | kv_beachfront_C8 |
-| DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | 3/3 | 224.4–1,107.3 | 0.66×–3.24× | kv_beachfront_C8 |
-| DeepSeek-V4-Pro-0813 | 8,192 | 1 | 3/3 | 1,082.6–31,846.4 | 1.66×–48.70× | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | 8,192 | 8 | 3/3 | 769.3–13,969.0 | 1.96×–35.60× | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | 8,192 | 32 | 3/3 | 364.4–4,684.1 | 2.24×–28.82× | collective_floor_C6, compute_C5 |
-| DeepSeek-V4-Pro-0813 | 8,192 | 64 | 3/3 | 214.2–2,455.9 | 2.03×–23.29× | collective_floor_C6, compute_C5 |
-| DeepSeek-V4-Pro-0813 | 32,768 | 1 | 3/3 | 1,082.6–31,846.4 | 1.66×–48.71× | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | 32,768 | 8 | 3/3 | 764.5–13,969.0 | 1.95×–35.63× | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | 32,768 | 32 | 3/3 | 360.2–4,622.8 | 2.22×–28.48× | collective_floor_C6, compute_C5 |
-| DeepSeek-V4-Pro-0813 | 32,768 | 64 | 3/3 | 211.2–2,423.1 | 2.01×–23.01× | collective_floor_C6, compute_C5 |
-| DeepSeek-V4-Pro-0813 | 200,000 | 1 | 3/3 | 1,082.6–31,846.4 | 1.66×–48.75× | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | 200,000 | 8 | 3/3 | 733.9–12,535.5 | 1.88×–32.11× | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | 200,000 | 32 | 3/3 | 334.0–3,857.3 | 2.07×–23.93× | collective_floor_C6, compute_C5, kv_beachfront_C8 |
-| DeepSeek-V4-Pro-0813 | 200,000 | 64 | 3/3 | 193.4–2,005.8 | 1.85×–19.22× | collective_floor_C6, compute_C5, kv_beachfront_C8 |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | 3/3 | 1,082.6–23,872.8 | 1.66×–36.70× | collective_floor_C6 |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | 3/3 | 612.5–5,116.0 | 1.60×–13.37× | collective_floor_C6, kv_beachfront_C8 |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | 3/3 | 245.4–1,385.0 | 1.57×–8.89× | kv_beachfront_C8 |
-| DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | 3/3 | 136.4–702.2 | 1.36×–7.03× | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 8,192 | 1 | 3/3 | 1,666.2–58,362.1 | 1.00×–34.93× | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | 8,192 | 8 | 3/3 | 1,460.6–32,673.5 | 1.41×–31.51× | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | 8,192 | 32 | 3/3 | 971.3–12,461.0 | 1.80×–23.13× | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | 8,192 | 64 | 3/3 | 661.4–6,805.6 | 1.70×–17.54× | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | 32,768 | 1 | 3/3 | 1,666.2–58,362.1 | 1.00×–34.98× | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | 32,768 | 8 | 3/3 | 1,452.6–26,051.1 | 1.41×–25.22× | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | 32,768 | 32 | 3/3 | 957.3–8,860.9 | 1.79×–16.58× | collective_floor_C6, kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 32,768 | 64 | 3/3 | 647.6–4,713.7 | 1.69×–12.29× | collective_floor_C6, kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 200,000 | 1 | 3/3 | 1,637.9–42,373.7 | 0.99×–25.67× | collective_floor_C6 |
+| DeepSeek-V4-Flash-0731 | 200,000 | 8 | 3/3 | 1,117.2–10,654.6 | 1.11×–10.59× | collective_floor_C6, kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 200,000 | 32 | 3/3 | 514.9–2,987.4 | 1.02×–5.89× | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 200,000 | 64 | 3/3 | 299.4–1,524.6 | 0.84×–4.29× | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 1 | 3/3 | 1,333.4–17,615.7 | 0.85×–11.21× | collective_floor_C6, kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 8 | 3/3 | 474.5–2,784.0 | 0.53×–3.11× | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 32 | 3/3 | 147.1–716.3 | 0.36×–1.76× | kv_beachfront_C8 |
+| DeepSeek-V4-Flash-0731 | 1,000,000 | 64 | 3/3 | 76.6–359.9 | 0.29×–1.36× | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | 8,192 | 1 | 3/3 | 1,082.6–31,846.4 | 1.66×–48.71× | collective_floor_C6 |
+| DeepSeek-V4-Pro-0813 | 8,192 | 8 | 3/3 | 769.3–13,969.0 | 1.96×–35.64× | collective_floor_C6 |
+| DeepSeek-V4-Pro-0813 | 8,192 | 32 | 3/3 | 364.4–4,684.1 | 2.25×–28.88× | collective_floor_C6, compute_C5 |
+| DeepSeek-V4-Pro-0813 | 8,192 | 64 | 3/3 | 214.2–2,455.9 | 2.04×–23.34× | collective_floor_C6, compute_C5 |
+| DeepSeek-V4-Pro-0813 | 32,768 | 1 | 3/3 | 1,082.6–31,846.4 | 1.66×–48.74× | collective_floor_C6 |
+| DeepSeek-V4-Pro-0813 | 32,768 | 8 | 3/3 | 764.5–13,969.0 | 1.96×–35.72× | collective_floor_C6 |
+| DeepSeek-V4-Pro-0813 | 32,768 | 32 | 3/3 | 360.2–4,514.4 | 2.23×–27.93× | collective_floor_C6, compute_C5 |
+| DeepSeek-V4-Pro-0813 | 32,768 | 64 | 3/3 | 211.2–2,363.7 | 2.02×–22.57× | collective_floor_C6, compute_C5 |
+| DeepSeek-V4-Pro-0813 | 200,000 | 1 | 3/3 | 1,082.6–27,563.5 | 1.66×–42.31× | collective_floor_C6 |
+| DeepSeek-V4-Pro-0813 | 200,000 | 8 | 3/3 | 700.1–6,640.4 | 1.82×–17.22× | collective_floor_C6, kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | 200,000 | 32 | 3/3 | 307.0–1,843.2 | 1.94×–11.67× | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | 200,000 | 64 | 3/3 | 175.5–938.9 | 1.73×–9.24× | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 1 | 3/3 | 878.0–11,866.9 | 1.37×–18.48× | collective_floor_C6, kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | 3/3 | 295.9–1,870.9 | 0.82×–5.18× | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | 3/3 | 90.4–481.2 | 0.64×–3.39× | kv_beachfront_C8 |
+| DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | 3/3 | 46.9–241.8 | 0.53×–2.72× | kv_beachfront_C8 |
 | Qwen3-8B | 8,192 | 1 | 3/3 | 1,625.2–21,865.9 | 0.91×–12.21× | collective_floor_C6, kv_beachfront_C8 |
 | Qwen3-8B | 8,192 | 8 | 3/3 | 602.2–3,491.8 | 0.42×–2.43× | kv_beachfront_C8 |
 | Qwen3-8B | 8,192 | 32 | 3/3 | 190.7–899.7 | 0.22×–1.05× | kv_beachfront_C8 |
