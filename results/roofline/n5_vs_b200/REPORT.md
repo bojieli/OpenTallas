@@ -18,10 +18,11 @@ bandwidth and compute roof are derived from it.
 7. **Sparse MoE buys aggregate throughput on a ROM machine, not latency.** DeepSeek-V4-Flash-0731 engages 6.7% of its ROM array at batch 1 and 35.7% at batch 256, while the weight-read time is identical at both. What the machine delivers rises from 808 to 11,591 tok/s, and its rate with every slot occupied from 11,307 to 11,591. The second rises far less than the first because the batch-1 figure is already a full-machine number -- this design has 14 slots -- so most of what batching adds there is coverage rather than occupancy. An unselected expert's read ports cannot be borrowed, so its idle bandwidth is only recovered by giving the sweep more users.
 8. **Tensor parallelism is better on a wafer than on NVLink and is not good anywhere, and the published claim that it reaches Taalas-class rates on-wafer is RETRACTED.** Two all-reduces per layer per token cost up to 1,572 us over NVLink, capping per-user decode at 636 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 1,431.2 us and cap it at 699 tok/s. The ordering survives, and on a like-for-like comparison -- the same model's collective on one wafer against the same model's on NVLink -- the wafer is at least 2.0x cheaper. But the previous figures of 116,278 and 81,966 tok/s came from charging a stitched 2-D mesh one flat hop however many reticle fields the collective spanned. A mesh has no switch, so an all-reduce costs about 1.1 times its diameter, and the model now charges that. What the collective buys is what makes it worth paying: with per-user latency separated from aggregate throughput, a tensor group is the only arrangement that puts the whole machine on one token, and the topology tables below show both families choosing one at batch 1 in spite of this cost.
 9. **Which topology wins depends entirely on what is being maximised, and the study reports both rather than choosing.** On per-user rate at equal area a wafer wins 24 of 24 operating points and an array 0; on tokens per second per square millimetre the same points go 11 to the array and 13 to the wafer. A wafer is not faster per unit silicon -- it is faster because it is more silicon, plus a hop latency an array cannot match.
-10. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 318 of 3016 feasible points.
+10. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 243 of 3016 feasible points.
 11. **The largest open question is not in this model's inputs but in the architecture, and the anchor cannot settle it.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 256 that costs up to 28.5x of aggregate throughput (DeepSeek-V4-Flash-0731). The machines are identical at batch 1, which is where the published anchor sits, so no amount of validation against it resolves the fork.
 12. **A third machine sits between them, and for a sparse model it recovers part of what compute-in-ROM gives up -- less than the mean-region arithmetic used to say.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise, and the sweep waits for the BUSIEST region rather than the average engaged one. The largest gain over a global broadcast is 8.77x, on DeepSeek-V4-Flash-0731 at batch 256, where the busiest region carries 3.02x the load of the mean engaged one. It is not free ground: per-region still loses to the amortising ROM-plus-MAC machine at 44 of 48 operating points. A dense model has one region, so it gains nothing -- the disjointness is what sparsity buys.
 13. **Every number here is conditional on the assumed inputs listed in the evidence ledger below.** The ROM cell-area ratio and the ROM read bandwidth density are the two that move the answer most, and neither has been measured at N5.
+14. **The cooling limit binds, and not where a uniform correction said it would.** 100 of 3,016 feasible points (3.3%) are power-limited now that leakage, clock distribution and a measured clocked-idle floor are charged per mm2 per second rather than per byte moved. The worst is `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4` at batch 8 on 3,260 mm2, throttled 1.35x from 1,557 to 1,151 tok/s per user. **No wafer is throttled anywhere in this study**: a ROM sweep is a fixed cost spread over far more silicon, so wafer-scale is power-sparse. And HBM KV is what melts the arrays -- the worst point's dynamic energy is 97% kv read against 0.5% weight read. The ROM sweep is not what melts it.
 
 ## The overlap and serialisation rule
 
@@ -77,6 +78,8 @@ the size of this correction is separable from every other one.
 |---|---:|---:|---:|---:|---|
 | Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user | 16,960.0 tok/s | 12,232.4 tok/s | 0.72x | within 2x | PASS |
 | A100 80GB weight-bound, Llama-3.1-8B FP8 batch 1 on 826 mm2 | 253.91 tok/s | 253.91 tok/s | 1.00x | within 1% | PASS |
+| A100 80GB at its published TDP, saturating load | 400.0 W | 389.9 W | 0.97x | within 2x | PASS |
+| Taalas HC1 card power at its published operating point | 200.0-250.0 W | 70.2 W | 0.28x | within 2x | FAIL |
 
 HC1 binds on `weight_read`. Its component times are weight_read 76.55 us, kv_read 2.71 us, compute 76.55 us, link_latency 0.00 us, layer_fixed_latency 5.20 us.
 
@@ -132,6 +135,209 @@ published figure is **-549.7 ns/layer**. It is negative, which means the model i
 | 1,024 | 12,232.4 | 0.72x | weight_read |
 | 1,536 | 12,232.4 | 0.72x | weight_read |
 | 2,048 | 12,232.4 | 0.72x | weight_read |
+
+### The two power gates, and the residual they leave
+
+Two gates in the shape of the two above, added because every watt this
+program reported was 7-9x low against both published parts and because
+`thermal_scale` was exactly 1.0 at every feasible point, so no rate
+depended on the energy model at all. **Nothing was tuned to close
+either of them.** Six power terms were derived from primitives and
+adversarially verified; every one was sent back with a correction, and
+the corrections are what is applied. Two of them move power up and two
+move it down.
+
+The A100 gate is evaluated at a **saturating** operating point --
+2.039 TB/s of published HBM
+bandwidth and 312 T ops/s of published
+dense roof at 1,410 MHz, both at
+once -- because a TDP is what a part is built to shed under load, not
+what a decode step draws. The HC1 gate is evaluated at exactly the point
+its throughput gate already uses, read off that gate's own step so the
+two cannot drift apart.
+
+| Gate | Published | Modelled | Ratio | Result |
+|---|---:|---:|---:|---|
+| A100 at TDP, saturating | 400.0 W | 389.9 W | 0.97x | PASS |
+| Taalas HC1 card power | 200.0-250.0 W | 70.2 W | 0.28x | FAIL |
+
+**Where the watts come from.**
+
+| Term | A100 at TDP | Taalas HC1 |
+|---|---:|---:|
+| memory / array traffic (weights) | 213.9 W | 3.2 W |
+| KV traffic | n/a: one saturating HBM stream | 3.3 W |
+| operand delivery | 0.5 W | 10.0 W |
+| arithmetic | 31.2 W | 3.7 W |
+| static: leakage | 31.4 W | 11.3 W |
+| static: clock distribution | 99.0 W | 22.2 W |
+| static: memory-interface idle | 14.0 W | 0.0 W |
+| **static charged** (max of the enumeration and the measured clocked-idle floor) | 144.4 W | 50.0 W |
+| **total** | 389.9 W | 70.2 W |
+
+On HC1 the enumerated static power is 33.5 W and the measured clocked-idle floor is 50.0 W, so **the floor binds**: the bottom-up enumeration of this part's leakage and clock tree is below what a shipping clocked device is measured to draw, and the floor is charged instead. The two are combined with `max` and never added, because a measured clocked-idle reading IS mostly leakage and clock tree.
+
+**The band.** Every term in the power block bar one is `assumed`, and
+two of them -- the fabric clock and the array clock multiplier --
+multiply, so the gates are reported at both ends of the whole band
+with every term moved together. Moving one at a time would report a
+sensitivity that is really a bias.
+
+| Power band | A100 at TDP | Ratio | HC1 card | Ratio to 250 W | Ratio to 200 W |
+|---|---:|---:|---:|---:|---:|
+| low | 267.1 W | 0.67x | 54.3 W | 0.22x | 0.27x |
+| stated | 389.9 W | 0.97x | 70.2 W | 0.28x | 0.35x |
+| high | 626.6 W | 1.57x | 267.1 W | 1.07x | 1.34x |
+
+**The outcome, stated as an outcome.** The A100 gate lands at 0.97x of its published TDP. The HC1 gate lands at 0.28x of the top of its published band, **3.56x low**, against 2.85x low at the bottom of it. The asymmetry is the finding and it should not be smoothed over.
+
+**Why the A100 gate is the weaker of the two, and must not be quoted
+as independent.** `power.clock_energy_j_per_mm2_per_cycle` was
+calibrated as 20-45% of a shipping GPU's published TDP density. It is
+a different GPU -- P100 and GV100 at 16FF+/12FFN, not this part -- but
+it is still a GPU TDP, so adding that term to the others and comparing
+the sum with a GPU's TDP is partly checking an input against its own
+family. What the gate does test is that the traffic terms, the
+arithmetic and the static terms are mutually consistent in size, and
+it would fail loudly if any were an order of magnitude out. The HC1
+gate has no such circularity: nothing on the ROM side was calibrated
+on a Taalas figure, because Taalas publishes no microarchitecture and
+no energy at all. **It is the stronger gate and it is the one that
+fails.**
+
+**Energy per token at the two anchors.** Both parts serve the same workload -- Llama-3.1-8B at batch 1 -- so this is the cleanest statement the model can make about the ROM argument, and it could not be made at all until the power terms existed:
+
+| Part | J/token | W | tok/s |
+|---|---:|---:|---:|
+| Taalas HC1 (modelled reconstruction) | 0.005736 | 70.2 | 12,232.4 |
+| A100 80GB, weight-bound gate, same model and batch | 1.462191 | 358.8 | 245.4 |
+
+That is a factor of 255 in tokens per joule, and **it is a ceiling on the ROM advantage, not a measurement of it**, for three reasons that all point the same way. The GPU is at batch 1, which is a GPU's worst operating point -- it re-reads the whole checkpoint from DRAM for one token, and the batched rows in the table below are the fair comparison. The ROM side's read energy is `assumed` over a 17x bracket. And the HC1 power gate says this model's ROM total is 2.9-3.6x below the shipping part's published card power, so the ROM joules here are a lower bound by roughly that factor.
+
+**Where the remaining HC1 shortfall could live, none of it fitted.**
+The ROM array is charged **zero** leakage, because the companion term
+for it was refuted as underived; at the top of its reconstructed
+bracket it would add 10.4 W,
+which does not close the gate either. `energy.rom_read_j_per_byte`
+moved from 0.5 to 0.08 pJ/B on the evidence, which made this gate
+**worse by about 4x on that term alone** and was adopted anyway. The
+honest reading is that a compute-in-ROM part's energy has never been
+published at any node, and this model's ROM side is built from macros
+that are mostly simulated, at 28-130 nm, with boundaries that do not
+match the term they are being asked to supply.
+
+
+## Power, dark silicon and energy per token
+
+**The thermal limit binds here, and this is the first version of this
+study in which it could.**
+Static power is charged per mm2 per second whether or not a byte moves,
+so the coolable step time solves
+`t >= E_dynamic / (cooling_limit - P_static)` rather than dividing the
+total energy by the total limit. Under the old rule stretching a step
+always reduced modelled power, so every design was coolable at some speed
+and `thermal_scale` was exactly 1.0 at all 11,747 feasible points across
+both studies.
+
+- **100 of 3,016 feasible points (3.3%) are power-limited.**
+- 0 points are uncoolable at any speed (static power alone at or above the cooling budget).
+- By family: gpu 1, rom 99.
+- By area class: large array (5,000-40,000 mm2) 31, small array (1,600-5,000 mm2) 69.
+- By KV store: hbm 100.
+- By batch: B=1 9, B=2 9, B=4 9, B=8 9, B=16 11, B=32 16, B=64 18, B=256 19.
+
+The cooling limit binds, and it binds where a uniform multiplier on the old traffic-proportional model said it would NOT. It is not the wafers: wafer-scale ROM silicon is power-sparse, because a ROM sweep is a fixed cost spread over far more silicon, and the busiest one here reaches 46% of its budget. It is the SMALL, DENSE ARRAYS, and specifically the ones that put KV in HBM: the worst point's dynamic energy is dominated by KV traffic and not by the ROM sweep at all. The batch dependence the earlier uniform-multiplier analysis predicted does NOT survive -- static power does not scale with traffic, so batch 1 throttles too, and the worst point here is at batch 8.
+
+| Family | Area class | Points | Throttled | Median power / budget | Worst power / budget | Peak W/mm2 | Median static share |
+|---|---|---:|---:|---:|---:|---:|---:|
+| gpu | large array (5,000-40,000 mm2) | 168 | 0 | 64.8% | 100.0% | 0.625 | 54% |
+| gpu | small array (1,600-5,000 mm2) | 30 | 1 | 99.2% | 100.0% | 0.625 | 36% |
+| gpu | wafer (>=40,000 mm2) | 696 | 0 | 45.7% | 98.7% | 0.617 | 77% |
+| rom | large array (5,000-40,000 mm2) | 330 | 31 | 17.8% | 100.0% | 0.500 | 73% |
+| rom | small array (1,600-5,000 mm2) | 112 | 68 | 100.0% | 100.0% | 0.500 | 21% |
+| rom | wafer (>=40,000 mm2) | 1,680 | 0 | 20.7% | 46.4% | 0.232 | 86% |
+
+### The points that cannot be cooled at full speed
+
+| Design | Model | B | mm2 | KV | Throttle | Power / budget | Static share | tok/s | tok/s unthrottled |
+|---|---|---:|---:|---|---:|---|---:|---:|---:|
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4` | Qwen3-8B | 8 | 3,260 | hbm | 1.353x | 1,630.0 / 1,630.0 W | 26% | 1,151.5 | 1,557.4 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4` | Qwen3-8B | 16 | 3,260 | hbm | 1.351x | 1,630.0 / 1,630.0 W | 26% | 580.9 | 785.0 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4` | Qwen3-8B | 32 | 3,260 | hbm | 1.351x | 1,630.0 / 1,630.0 W | 26% | 291.8 | 394.1 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4` | Qwen3-8B | 64 | 3,260 | hbm | 1.350x | 1,630.0 / 1,630.0 W | 26% | 146.2 | 197.5 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4` | Qwen3-8B | 256 | 3,260 | hbm | 1.350x | 1,630.0 / 1,630.0 W | 26% | 36.6 | 49.4 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4` | Qwen3-8B | 256 | 3,260 | hbm | 1.311x | 1,630.0 / 1,630.0 W | 26% | 36.6 | 48.0 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4` | Qwen3-8B | 64 | 3,260 | hbm | 1.271x | 1,630.0 / 1,630.0 W | 26% | 146.5 | 186.2 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4-romfill` | Qwen3-8B | 1 | 3,260 | hbm | 1.265x | 1,630.0 / 1,630.0 W | 21% | 2,422.5 | 3,065.4 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4-romfill` | Qwen3-8B | 2 | 3,260 | hbm | 1.265x | 1,630.0 / 1,630.0 W | 21% | 2,422.5 | 3,065.4 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4-romfill` | Qwen3-8B | 4 | 3,260 | hbm | 1.265x | 1,630.0 / 1,630.0 W | 21% | 2,422.5 | 3,065.4 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4-romfill` | Qwen3-8B | 8 | 3,260 | hbm | 1.263x | 1,630.0 / 1,630.0 W | 21% | 1,233.0 | 1,557.4 |
+| `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4-romfill` | Qwen3-8B | 16 | 3,260 | hbm | 1.262x | 1,630.0 / 1,630.0 W | 21% | 622.1 | 785.0 |
+
+The worst point's dynamic energy is kv read 96.8%, operand delivery 1.5%, arithmetic 1.2%, weight read 0.5%. **The ROM sweep is not what melts it.** A mask-ROM array
+reads its weights for almost nothing; what it still pays for, at
+the same rate a GPU does, is KV traffic to DRAM. That is an
+argument for keeping KV on die, and it is visible here only
+because the power model now distinguishes the two.
+
+### Energy per token, both sides, at equal area
+
+**This number has been unpublishable until now.** Not paying DRAM
+access energy for weights is much of the ROM argument, and the
+model could not state it while every watt in it was 7-9x low. The
+figures below include the static share amortised over the tokens
+the step actually produces, so a machine that is fast and leaky is
+not flattered against one that is slow and cool.
+
+One row per (model, batch). The ROM design is the smallest silicon within 5% of the fastest per-user rate -- the same rule the report uses everywhere it says 'best' -- and the GPU beside it is the iso-area comparator that comparison already chose. Listing every comparison instead buries the answer under wafers serving one user.
+
+| Model | B | mm2 | ROM design | ROM J/token | ROM W | ROM binds | iso-area GPU | GPU J/token | GPU W | GPU binds | ROM tokens/joule |
+|---|---:|---:|---|---:|---:|---|---|---:|---:|---|---:|
+| DeepSeek-V4-Flash-0731 | 1 | 46,225 | `DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 0.649271 | 3,811.9 | link_latency | `DSV4-Flash/b200_sxm-x29-hybrid` | 3.732630 | 15,059.9 | weight_read | 5.75x |
+| DeepSeek-V4-Flash-0731 | 2 | 46,225 | `DSV4-Flash/ROM-N5-native-HBMKV-wafer-tensor-x1-romfill` | 0.373555 | 4,384.9 | link_latency | `DSV4-Flash/b200_sxm-x29-hybrid` | 3.732630 | 15,059.9 | weight_read | 9.99x |
+| DeepSeek-V4-Flash-0731 | 4 | 46,225 | `DSV4-Flash/ROM-N5-native-HBMKV-wafer-tensor-x1-romfill` | 0.210883 | 4,769.5 | link_latency | `DSV4-Flash/b200_sxm-x29-hybrid` | 3.732630 | 15,059.9 | weight_read | 17.70x |
+| DeepSeek-V4-Flash-0731 | 8 | 92,450 | `DSV4-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 0.219860 | 9,459.4 | link_latency | `DSV4-Flash/b200_sxm-x58-hybrid` | 4.779410 | 27,244.4 | weight_read | 21.74x |
+| DeepSeek-V4-Flash-0731 | 16 | 138,675 | `DSV4-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 0.187256 | 14,674.4 | link_latency | `DSV4-Flash/b200_sxm-x87-hybrid` | 4.476265 | 38,775.3 | weight_read | 23.90x |
+| DeepSeek-V4-Flash-0731 | 32 | 277,350 | `DSV4-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 0.199027 | 28,943.2 | link_latency | `DSV4-Flash/b200_sxm-x173-tensor` | 5.603640 | 64,265.0 | link_latency | 28.16x |
+| DeepSeek-V4-Flash-0731 | 64 | 369,800 | `DSV4-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 0.162917 | 40,509.6 | link_latency | `DSV4-Flash/b200_sxm-x231-hybrid` | 5.931216 | 92,886.8 | weight_read | 36.41x |
+| DeepSeek-V4-Flash-0731 | 256 | 554,700 | `DSV4-Flash/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 0.112445 | 69,223.3 | link_latency | `DSV4-Flash/b200_sxm-x347-hybrid` | 4.397170 | 137,830.5 | weight_read | 39.11x |
+| DeepSeek-V4-Pro-0813 | 1 | 92,450 | `DSV4-Pro/ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 2.814876 | 7,469.7 | link_latency | `DSV4-Pro/b200_sxm-x58-tensor` | 46.770062 | 22,441.0 | link_latency | 16.62x |
+| DeepSeek-V4-Pro-0813 | 2 | 138,675 | `DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 1.752475 | 13,840.3 | link_latency | `DSV4-Pro/b200_sxm-x87-tensor` | 37.617794 | 33,119.6 | link_latency | 21.47x |
+| DeepSeek-V4-Pro-0813 | 4 | 138,675 | `DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 1.375026 | 14,476.7 | link_latency | `DSV4-Pro/b200_sxm-x87-tensor` | 22.772155 | 33,852.6 | link_latency | 16.56x |
+| DeepSeek-V4-Pro-0813 | 8 | 138,675 | `DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 0.825008 | 16,875.9 | link_latency | `DSV4-Pro/b200_sxm-x87-tensor` | 14.760651 | 34,912.3 | link_latency | 17.89x |
+| DeepSeek-V4-Pro-0813 | 16 | 277,350 | `DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 0.848386 | 33,363.4 | link_latency | `DSV4-Pro/b200_sxm-x173-tensor` | 18.031636 | 66,604.7 | link_latency | 21.25x |
+| DeepSeek-V4-Pro-0813 | 32 | 554,700 | `DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 0.895142 | 65,340.7 | link_latency | `DSV4-Pro/b200_sxm-x347-tensor` | 24.674095 | 128,898.0 | link_latency | 27.56x |
+| DeepSeek-V4-Pro-0813 | 64 | 554,700 | `DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 0.703218 | 72,572.9 | kv_read | `DSV4-Pro/b200_sxm-x347-tensor` | 19.937421 | 128,983.5 | link_latency | 28.35x |
+| DeepSeek-V4-Pro-0813 | 256 | 554,700 | `DSV4-Pro/ROM-N5-native-HBMKV-wafer-hybrid-x12` | 0.751046 | 112,390.5 | kv_read | `DSV4-Pro/b200_sxm-x347-hybrid` | 16.038194 | 139,168.5 | weight_read | 21.35x |
+| Qwen3-8B | 1 | 46,225 | `Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 0.484661 | 3,846.5 | link_latency | `Qwen3-8B/b200_sxm-x29-hybrid` | 3.259024 | 21,514.0 | weight_read | 6.72x |
+| Qwen3-8B | 2 | 92,450 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill` | 0.760019 | 9,589.7 | link_latency | `Qwen3-8B/b200_sxm-x58-hybrid` | 3.306422 | 42,349.9 | weight_read | 4.35x |
+| Qwen3-8B | 4 | 138,675 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 0.653548 | 14,866.8 | link_latency | `Qwen3-8B/b200_sxm-x87-hybrid` | 3.404380 | 61,604.0 | weight_read | 5.21x |
+| Qwen3-8B | 8 | 277,350 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill` | 0.698684 | 29,255.2 | link_latency | `Qwen3-8B/b200_sxm-x173-hybrid` | 3.541451 | 117,845.0 | link_latency | 5.07x |
+| Qwen3-8B | 16 | 369,800 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill` | 0.577599 | 40,902.1 | link_latency | `Qwen3-8B/b200_sxm-x231-hybrid` | 3.644061 | 153,280.1 | link_latency | 6.31x |
+| Qwen3-8B | 32 | 554,700 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 0.532534 | 62,820.7 | link_latency | `Qwen3-8B/b200_sxm-x347-hybrid` | 3.724464 | 225,894.9 | link_latency | 6.99x |
+| Qwen3-8B | 64 | 554,700 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 0.404322 | 69,785.1 | kv_read | `Qwen3-8B/b200_sxm-x347-hybrid` | 2.628781 | 227,286.3 | link_latency | 6.50x |
+| Qwen3-8B | 256 | 554,700 | `Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill` | 0.308163 | 81,494.6 | kv_read | `Qwen3-8B/b200_sxm-x347-hybrid` | 0.820904 | 238,273.4 | link_latency | 2.66x |
+
+**Read this with the power gates beside it.** The ROM side's energy
+rests on `energy.rom_read_j_per_byte`, which is `assumed` over a
+17x-wide bracket, and on an operand-delivery scalar that is the
+tile-local floor with no long-path ladder in it. The HC1 power gate
+says the ROM side's total is several times below a shipping part's
+published card power, so **every ROM joule-per-token here is a
+lower bound and should be quoted as one.** The GPU side rests on
+a measured, peer-reviewed HBM figure and on a gate that lands
+within a few percent of a published TDP, so the two sides are not
+equally well founded and the ratio inherits the weaker of them.
+
+**A dense model gives the energy advantage back as batch rises and
+a sparse one does not.** A GPU amortises one weight read over the
+whole batch, so its joules per token fall roughly as 1/batch until
+KV takes over; the ROM part's weight read was already nearly free,
+so it has nothing to amortise. On a sparse model the GPU cannot
+amortise -- batching engages more experts -- so the ROM advantage
+grows instead. Quoting a dense model's batch-1 number without its
+batch-256 number beside it is quoting the best case as the case.
+
 
 ## Derived technology at N5
 
@@ -238,19 +444,19 @@ is the error this study made.
 | Qwen3-8B | 1 | fastest | Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill | 46,225 | 7,936.4 | 7,936.4 | link_latency | Qwen3-8B/b200_sxm-x29-hybrid | 46,400 | 1.00x | hybrid | 231.71 | 1,650.3 | 6,601.4 | weight_read | 4.81x | 1.20x | 21.65x | 4.81x |
 | Qwen3-8B | 1 | smallest silicon | Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x3 | 2,445 | 3,787.3 | 3,787.3 | weight_read | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 0.76x | tensor | 216.98 | 641.8 | 641.8 | weight_read | 5.90x | 5.90x | 10.14x | 5.90x |
 | Qwen3-8B | 2 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill | 92,450 | 6,308.8 | 12,617.7 | link_latency | Qwen3-8B/b200_sxm-x58-hybrid | 92,800 | 1.00x | hybrid | 250.37 | 1,601.0 | 12,808.4 | weight_read | 3.94x | 0.99x | 17.30x | 3.94x |
-| Qwen3-8B | 2 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4-romfill | 3,260 | 3,065.4 | 12,261.7 | kv_read | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 217.97 | 603.2 | 1,206.4 | weight_read | 5.08x | 10.16x | 8.21x | 5.08x |
+| Qwen3-8B | 2 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4 | 3,260 | 2,612.9 | 5,225.8 | link_latency | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 217.97 | 603.2 | 1,206.4 | weight_read | 4.33x | 4.33x | 7.00x | 4.33x |
 | Qwen3-8B | 4 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x4-romfill | 184,900 | 5,930.6 | 23,722.4 | link_latency | Qwen3-8B/b200_sxm-x116-hybrid | 185,600 | 1.00x | hybrid | 283.01 | 1,576.8 | 23,651.3 | weight_read | 3.76x | 1.00x | 16.26x | 3.76x |
-| Qwen3-8B | 4 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4-romfill | 3,260 | 3,065.4 | 12,261.7 | kv_read | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 219.93 | 538.4 | 2,153.7 | weight_read | 5.69x | 5.69x | 8.81x | 5.69x |
+| Qwen3-8B | 4 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4-romfill | 3,260 | 2,422.5 | 9,690.0 | thermal | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 219.93 | 538.4 | 2,153.7 | weight_read | 4.50x | 4.50x | 6.97x | 4.50x |
 | Qwen3-8B | 8 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill | 369,800 | 5,295.6 | 42,365.0 | link_latency | Qwen3-8B/b200_sxm-x231-hybrid | 369,600 | 1.00x | hybrid | 348.31 | 1,450.4 | 42,063.0 | link_latency | 3.65x | 1.01x | 14.52x | 3.65x |
-| Qwen3-8B | 8 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4 | 3,260 | 1,557.4 | 12,459.3 | kv_read | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 223.86 | 443.3 | 3,546.1 | weight_read | 3.51x | 3.51x | 5.09x | 3.51x |
+| Qwen3-8B | 8 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4-romfill | 3,260 | 1,233.0 | 9,863.7 | thermal | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 223.86 | 443.3 | 3,546.1 | weight_read | 2.78x | 2.78x | 4.03x | 2.78x |
 | Qwen3-8B | 16 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 4,514.8 | 72,236.0 | link_latency | Qwen3-8B/b200_sxm-x347-hybrid | 555,200 | 1.00x | hybrid | 380.95 | 1,378.4 | 60,651.7 | link_latency | 3.28x | 1.19x | 12.38x | 3.44x |
-| Qwen3-8B | 16 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4 | 3,260 | 785.0 | 12,560.5 | kv_read | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 231.73 | 327.5 | 5,239.9 | kv_read | 2.40x | 2.40x | 3.19x | 2.40x |
+| Qwen3-8B | 16 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4-romfill | 3,260 | 626.3 | 10,021.0 | thermal | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 231.73 | 327.5 | 5,239.9 | kv_read | 1.91x | 1.91x | 2.54x | 1.91x |
 | Qwen3-8B | 32 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 3,686.4 | 117,965.7 | link_latency | Qwen3-8B/b200_sxm-x347-hybrid | 555,200 | 1.00x | hybrid | 380.95 | 1,378.4 | 60,651.7 | link_latency | 2.67x | 1.94x | 10.11x | 2.81x |
-| Qwen3-8B | 32 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4 | 3,260 | 394.1 | 12,611.7 | kv_read | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 247.46 | 215.1 | 6,884.1 | kv_read | 1.83x | 1.83x | 2.22x | 1.83x |
+| Qwen3-8B | 32 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4-romfill | 3,260 | 313.5 | 10,032.4 | thermal | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 247.46 | 215.1 | 6,884.1 | kv_read | 1.46x | 1.46x | 1.77x | 1.46x |
 | Qwen3-8B | 64 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 2,696.8 | 172,597.9 | kv_read | Qwen3-8B/b200_sxm-x347-hybrid | 555,200 | 1.00x | hybrid | 384.34 | 1,350.9 | 86,460.7 | link_latency | 2.00x | 2.00x | 7.39x | 2.10x |
-| Qwen3-8B | 64 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4 | 3,260 | 197.5 | 12,637.5 | kv_read | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 278.91 | 127.6 | 8,165.0 | kv_read | 1.55x | 1.55x | 1.74x | 1.55x |
+| Qwen3-8B | 64 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4-romfill | 3,260 | 156.8 | 10,038.1 | thermal | Qwen3-8B/b200_sxm-x2-tensor | 3,200 | 1.02x | tensor | 278.91 | 127.6 | 8,165.0 | kv_read | 1.23x | 1.23x | 1.38x | 1.23x |
 | Qwen3-8B | 256 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 1,033.0 | 264,453.1 | kv_read | Qwen3-8B/b200_sxm-x347-hybrid | 555,200 | 1.00x | hybrid | 416.87 | 1,133.8 | 290,257.3 | link_latency | 0.91x | 0.91x | 2.83x | 0.96x |
-| Qwen3-8B | 256 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4 | 3,260 | 49.4 | 12,656.9 | kv_read | Qwen3-8B/b200_sxm-x2-pipeline | 3,200 | 1.02x | pipeline | 2.67 | infeasible | — | capacity_or_format | — | — | — | — |
+| Qwen3-8B | 256 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4-romfill | 3,260 | 39.2 | 10,042.4 | thermal | Qwen3-8B/b200_sxm-x2-pipeline | 3,200 | 1.02x | pipeline | 2.67 | infeasible | — | capacity_or_format | — | — | — | — |
 | DeepSeek-V4-Flash-0731 | 1 | fastest | DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill | 46,225 | 5,871.0 | 5,871.0 | link_latency | DSV4-Flash/b200_sxm-x29-hybrid | 46,400 | 1.00x | hybrid | 274.05 | 1,008.7 | 4,034.7 | weight_read | 5.82x | 1.46x | 30.48x | 5.82x |
 | DeepSeek-V4-Flash-0731 | 1 | smallest silicon | DSV4-Flash/ROM-N5-native-SRAMKV-array-hybrid-x14 | 11,410 | 2,249.7 | 4,499.4 | link_latency | DSV4-Flash/b200_sxm-x7-tensor | 11,200 | 1.02x | tensor | 260.01 | 1,526.3 | 1,526.3 | weight_read | 1.47x | 2.95x | 6.11x | 1.47x |
 | DeepSeek-V4-Flash-0731 | 2 | fastest | DSV4-Flash/ROM-N5-native-HBMKV-wafer-tensor-x1-romfill | 46,225 | 5,869.1 | 11,738.2 | link_latency | DSV4-Flash/b200_sxm-x29-hybrid | 46,400 | 1.00x | hybrid | 274.05 | 1,008.7 | 4,034.7 | weight_read | 5.82x | 2.91x | 30.47x | 5.82x |
@@ -314,7 +520,7 @@ number, it is an interval.
 | DeepSeek-V4-Pro-0813 | 369,800 | 6.76x | 4.88x | 2.72x |
 | DeepSeek-V4-Pro-0813 | 554,700 | 6.60x | 4.62x | 2.62x |
 | Qwen3-8B | 2,445 | 6.29x | 5.90x | 9.63x |
-| Qwen3-8B | 3,260 | 6.45x | 5.15x | 6.31x |
+| Qwen3-8B | 3,260 | 6.45x | 5.15x | 5.17x |
 | Qwen3-8B | 4,075 | — | 5.50x | 7.73x |
 | Qwen3-8B | 5,705 | 4.60x | 4.45x | — |
 | Qwen3-8B | 6,520 | 4.29x | 3.39x | — |
@@ -603,12 +809,12 @@ given more silicon.
 |---|---:|---|---|---|---:|---:|---:|---:|---:|---:|---|
 | Qwen3-8B | 1 | wafer | array | Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill | 46,225 | 7,936.4 | 0.172 | 4,935.4 (4,075) | 7,936.4 (46,225) | 1.61x | link_latency |
 | Qwen3-8B | 2 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x2-romfill | 92,450 | 6,308.8 | 0.068 | 3,286.8 (6,520) | 6,308.8 (92,450) | 1.92x | link_latency |
-| Qwen3-8B | 4 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill | 138,675 | 5,687.0 | 0.041 | 3,065.4 (3,260) | 5,687.0 (138,675) | 1.86x | link_latency |
-| Qwen3-8B | 8 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill | 277,350 | 5,234.0 | 0.019 | 3,009.7 (6,520) | 5,234.0 (277,350) | 1.74x | link_latency |
-| Qwen3-8B | 16 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill | 369,800 | 4,425.9 | 0.012 | 1,542.8 (6,520) | 4,425.9 (369,800) | 2.87x | link_latency |
-| Qwen3-8B | 32 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 3,686.4 | 0.007 | 781.3 (6,520) | 3,686.4 (554,700) | 4.72x | link_latency |
-| Qwen3-8B | 64 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 2,696.8 | 0.005 | 393.1 (6,520) | 2,696.8 (554,700) | 6.86x | kv_read |
-| Qwen3-8B | 256 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 1,033.0 | 0.002 | 98.8 (6,520) | 1,033.0 (554,700) | 10.46x | kv_read |
+| Qwen3-8B | 4 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill | 138,675 | 5,687.0 | 0.041 | 2,586.3 (6,520) | 5,687.0 (138,675) | 2.20x | link_latency |
+| Qwen3-8B | 8 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x6-romfill | 277,350 | 5,234.0 | 0.019 | 2,422.5 (6,520) | 5,234.0 (277,350) | 2.16x | link_latency |
+| Qwen3-8B | 16 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x8-romfill | 369,800 | 4,425.9 | 0.012 | 1,233.0 (6,520) | 4,425.9 (369,800) | 3.59x | link_latency |
+| Qwen3-8B | 32 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 3,686.4 | 0.007 | 627.0 (6,520) | 3,686.4 (554,700) | 5.88x | link_latency |
+| Qwen3-8B | 64 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 2,696.8 | 0.005 | 313.7 (6,520) | 2,696.8 (554,700) | 8.60x | kv_read |
+| Qwen3-8B | 256 | wafer | array | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 1,033.0 | 0.002 | 78.5 (6,520) | 1,033.0 (554,700) | 13.17x | kv_read |
 | DeepSeek-V4-Flash-0731 | 1 | wafer | array | DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill | 46,225 | 5,871.0 | 0.127 | 2,249.7 (11,410) | 5,871.0 (46,225) | 2.61x | link_latency |
 | DeepSeek-V4-Flash-0731 | 2 | wafer | array | DSV4-Flash/ROM-N5-native-HBMKV-wafer-tensor-x1-romfill | 46,225 | 5,869.1 | 0.127 | 2,238.9 (11,410) | 5,869.1 (46,225) | 2.62x | link_latency |
 | DeepSeek-V4-Flash-0731 | 4 | wafer | array | DSV4-Flash/ROM-N5-native-HBMKV-wafer-tensor-x1-romfill | 46,225 | 5,654.2 | 0.122 | 1,610.0 (11,410) | 5,654.2 (46,225) | 3.51x | link_latency |
@@ -1289,14 +1495,14 @@ reduces the bytes fetched.
 
 | Model | B | Expert coverage | Engaged weight bytes | Engaged fraction | Effective ROM read | Peak ROM read | Per-user tok/s | Aggregate tok/s |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Qwen3-8B | 1 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 2,852.2 | 11,408.7 |
-| Qwen3-8B | 2 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 2,852.2 | 11,408.7 |
-| Qwen3-8B | 4 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 2,852.2 | 11,408.7 |
-| Qwen3-8B | 8 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 1,557.4 | 12,459.3 |
-| Qwen3-8B | 16 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 785.0 | 12,560.5 |
-| Qwen3-8B | 32 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 394.1 | 12,611.7 |
-| Qwen3-8B | 64 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 197.5 | 12,637.5 |
-| Qwen3-8B | 256 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 49.4 | 12,656.9 |
+| Qwen3-8B | 1 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 2,262.3 | 9,049.4 |
+| Qwen3-8B | 2 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 2,262.3 | 9,049.4 |
+| Qwen3-8B | 4 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 2,262.3 | 9,049.4 |
+| Qwen3-8B | 8 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 1,151.5 | 9,211.7 |
+| Qwen3-8B | 16 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 580.9 | 9,295.0 |
+| Qwen3-8B | 32 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 291.8 | 9,337.2 |
+| Qwen3-8B | 64 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 146.2 | 9,358.5 |
+| Qwen3-8B | 256 | 100.00% | 15.1 GB | 92.40% | 197.73 TB/s | 213.99 TB/s | 36.6 | 9,374.5 |
 | DeepSeek-V4-Flash-0731 | 1 | 2.34% | 11.2 GB | 6.72% | 146.53 TB/s | 2,179.91 TB/s | 807.6 | 11,306.8 |
 | DeepSeek-V4-Flash-0731 | 2 | 2.34% | 11.2 GB | 6.72% | 146.53 TB/s | 2,179.91 TB/s | 807.6 | 11,306.8 |
 | DeepSeek-V4-Flash-0731 | 4 | 2.34% | 11.2 GB | 6.72% | 146.53 TB/s | 2,179.91 TB/s | 807.6 | 11,306.8 |
@@ -1319,14 +1525,16 @@ reduces the bytes fetched.
 | Family | Binding constraint | Points |
 |---|---|---:|
 | gpu | infeasible | 2 |
-| gpu | kv_read | 22 |
+| gpu | kv_read | 21 |
 | gpu | link_latency | 295 |
+| gpu | thermal | 1 |
 | gpu | weight_read | 577 |
 | rom | compute | 80 |
 | rom | infeasible | 1574 |
-| rom | kv_read | 296 |
+| rom | kv_read | 222 |
 | rom | link_latency | 787 |
-| rom | weight_read | 959 |
+| rom | thermal | 99 |
+| rom | weight_read | 934 |
 
 Why the infeasible points are infeasible:
 
@@ -1337,7 +1545,7 @@ Why the infeasible points are infeasible:
 
 ## Mechanical consistency audit
 
-**PASS** over 77,307 checks.
+**PASS** over 95,503 checks.
 
 - Generated arithmetic identities, area-accounting identities and the ROM full-array sweep floor only.
 - A passing audit is not evidence for ROM macro timing, array read bandwidth at a leading node, NoC timing, package, power delivery, yield, or model accuracy.
@@ -1347,10 +1555,10 @@ Why the infeasible points are infeasible:
 
 | Grade | Inputs |
 |---|---:|
-| measured | 1 |
+| measured | 2 |
 | published | 67 |
-| derived | 30 |
-| assumed | 53 |
+| derived | 31 |
+| assumed | 64 |
 
 Every `assumed` input, in full, because an ungraded assumption is the
 failure mode this program exists to prevent:
@@ -1367,6 +1575,7 @@ failure mode this program exists to prevent:
 - `energy.mac_energy_j_per_op.fp4`
 - `energy.mac_energy_j_per_op.fp8`
 - `energy.mac_energy_j_per_op.w4a8`
+- `energy.operand_delivery_j_per_byte`
 - `energy.rom_read_j_per_byte`
 - `energy.sram_read_j_per_byte`
 - `floorplan.interconnect_area_fraction`
@@ -1400,6 +1609,16 @@ failure mode this program exists to prevent:
 - `links.on_package.fabric`
 - `links.on_package.hop_latency_s`
 - `links.on_wafer.hop_latency_s`
+- `power.clock_energy_j_per_mm2_per_cycle`
+- `power.clock_region_multiplier.rom_array`
+- `power.clock_region_multiplier.sram_array`
+- `power.fabric_clock_hz`
+- `power.gpu_logic_area_fraction`
+- `power.memory_interface_idle_w_per_stack`
+- `power.static_leakage_w_per_mm2.logic`
+- `power.static_leakage_w_per_mm2.rom_array`
+- `power.static_leakage_w_per_mm2.sram_array`
+- `reference_parts.b200_sxm.clock_frequency_hz`
 - `reference_parts.taalas_hc1.batch_size`
 - `reference_parts.taalas_hc1.weight_amortization`
 - `reference_parts.taalas_hc1.weight_bits_per_parameter`
@@ -1423,17 +1642,26 @@ failure mode this program exists to prevent:
   payload queueing beyond the modelled serialisation, and pipeline fill
   at batch 1. Each of those makes an array worse, never better, so the
   reported array crossovers are upper bounds.
-- **Power is wrong by 7-9x and every rate above is independent of it.**
-  The model counts memory bytes and MACs and nothing else, so it gives
-  54.2 W for an A100 at batch 1 against a published 400 W and 27.0 W for
-  Taalas HC1 against a published 200-250 W. It is not an activity-factor
-  error: driven at peak HBM bandwidth AND the peak BF16 roof at once the
-  model still gives 85.3 W. Leakage, clock distribution, operand delivery
-  and control logic are not modelled at all. `thermal_scale` is therefore
-  exactly 1.0 at every feasible point, and since `step_time = raw_step_time
-  x thermal_scale` is the only path from power to any other quantity, no
-  tokens/s in this report depends on the energy model -- and no watt or
-  joule-per-token in it should be quoted.
+- **Power is now enumerated, and it is right on one published part and
+  2.9-3.6x low on the other.** Leakage, clock distribution, operand
+  delivery and a measured clocked-idle floor are charged per mm2 per
+  second whether or not a byte moves, and the HBM traffic energy is a
+  measured SC 2025 figure rather than an HBM2-era model. The A100 lands
+  at 0.97x of its published TDP under a saturating load; the Taalas HC1
+  lands at 0.28x of its published card power. **The second one FAILS its
+  gate and the failure is reported rather than tuned away.** The A100
+  gate is also the weaker of the two, because the clock term inside it
+  was calibrated as a fraction of a shipping GPU's TDP density -- read
+  the power-gate section before quoting it. Every ROM watt and every ROM
+  joule-per-token here is a LOWER BOUND by roughly the HC1 gate's
+  shortfall.
+- **`thermal_scale` now binds, which it never did before.** Static power
+  does not fall when a step is stretched, so the coolable step time
+  solves `t >= E_dynamic / (cooling_limit - P_static)` rather than
+  dividing total energy by the total limit. Some designs are power-
+  limited and their rates are reduced accordingly; the power-and-energy
+  section names every one of them. Rates on unthrottled points are
+  unchanged, so the two validation gates above are untouched by this.
 - **Aggregate throughput is reported at steady state with every slot
   occupied, and fill and drain are not charged.** A request that is short
   compared with the slot count pays up to one extra traversal that this

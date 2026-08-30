@@ -9,6 +9,7 @@ technology input that turns out to be wrong rather than a broken assertion.
 
 from __future__ import annotations
 
+from dataclasses import replace
 import importlib.util
 import json
 import math
@@ -24,6 +25,7 @@ from opentallas.roofline import (
     Graded,
     Technology,
     Topology,
+    a100_power_anchor,
     a100_weight_bound_anchor,
     balanced_area_split,
     derived,
@@ -35,8 +37,10 @@ from opentallas.roofline import (
     latency_crossover,
     layer_fixed_latency,
     max_hbm_stacks_per_device,
+    device_static_power,
     rom_device_budget,
     taalas_hc1_anchor,
+    taalas_hc1_power_anchor,
 )
 from opentallas.schema import ModelProfile, ValidationError
 from opentallas.workload import (
@@ -197,6 +201,305 @@ def test_gate_a100_bf16_is_half_the_fp8_rate(technology, llama) -> None:
     assert check.modelled_value == pytest.approx(126.96, abs=0.5)
 
 
+def test_the_two_throughput_gates_are_untouched_by_the_power_model(
+    technology, llama
+) -> None:
+    """A power change must not reach a throughput gate, and this pins both.
+
+    ``step_time = raw_step_time x thermal_scale`` is the only path from power to
+    any rate, so as long as a gate's operating point is not thermally limited
+    its rate is independent of every watt in the model.  Both gates are far
+    below their cooling budgets, so both must be bit-identical to the figures
+    that stood before the power terms existed.  **If either of these moves, the
+    power work has touched something it should not have.**
+    """
+
+    hc1 = taalas_hc1_anchor(technology, llama)
+    assert hc1.modelled_value == pytest.approx(12232.4028, abs=1e-3)
+    assert hc1.ratio == pytest.approx(0.721250, abs=1e-6)
+    assert hc1.detail["step"]["thermal_scale"] == 1.0
+
+    a100 = a100_weight_bound_anchor(technology, llama)
+    assert a100.modelled_value == pytest.approx(253.9145, abs=1e-3)
+    assert a100.ratio == pytest.approx(1.000000, abs=1e-9)
+    assert a100.detail["step"]["thermal_scale"] == 1.0
+
+
+def test_gate_a100_tdp_power_is_reproduced_under_a_saturating_load(
+    technology,
+) -> None:
+    """A TDP is what a part sheds under load, so the gate saturates it.
+
+    This gate is deliberately the WEAKER of the two power gates and the test
+    says so: ``power.clock_energy_j_per_mm2_per_cycle`` is 20-45% of a shipping
+    GPU's published TDP density, so a sum containing it, compared with a GPU's
+    TDP, is partly an input checked against its own family.  What it does test
+    is that no term is an order of magnitude out.
+    """
+
+    check = a100_power_anchor(technology)
+    assert check.published_value == 400.0
+    assert check.passed, (
+        f"A100 TDP power gate drifted: {check.modelled_value:,.1f} W against a "
+        f"published {check.published_value:,.1f} W ({check.ratio:.3f}x). Terms: "
+        f"{check.detail['terms_w']}"
+    )
+    assert 0.5 <= check.ratio <= 1.5
+    terms = check.detail["terms_w"]
+    # Every term must be present and positive: a gate that passes because a
+    # term silently evaluated to zero is worse than one that fails.
+    for name in (
+        "hbm_traffic",
+        "operand_delivery",
+        "arithmetic",
+        "static_leakage",
+        "static_clock",
+        "static_memory_interface",
+    ):
+        assert terms[name] > 0.0, name
+    assert check.detail["circularity_warning"]
+
+
+def test_gate_taalas_hc1_card_power_fails_and_the_failure_is_the_result(
+    technology, llama
+) -> None:
+    """The stronger power gate, and it does not pass. That is the finding.
+
+    Nothing on the ROM side was calibrated on a Taalas figure -- Taalas
+    publishes no microarchitecture and no energy -- so this gate is genuinely
+    independent, and it says the model is several times below the shipping
+    part's published card power.  **This test asserts the SHORTFALL, not a
+    pass.**  If someone closes it by tuning a term, this test fails and asks
+    them to say which term and why.
+    """
+
+    check = taalas_hc1_power_anchor(technology, llama)
+    assert check.published_value == 250.0
+    assert check.detail["published_band_w"] == [200.0, 250.0]
+    assert not check.passed, (
+        "the HC1 power gate now passes. That is only good news if a term moved "
+        "for a reason. Say which, and check it was not chosen to close this."
+    )
+    assert 0.15 <= check.ratio <= 0.45, (
+        f"HC1 power gate moved out of its reported range: "
+        f"{check.modelled_value:,.1f} W ({check.ratio:.3f}x)"
+    )
+    # The ROM array is charged zero leakage, and the study must keep saying so.
+    assert check.detail["rom_array_leakage_charged_w"] == 0.0
+    assert check.detail["rom_array_leakage_if_reconstructed_w"] > 0.0
+    # Even at the top of the refuted companion's bracket it does not close.
+    closed = check.modelled_value + check.detail[
+        "rom_array_leakage_if_reconstructed_w"
+    ]
+    assert closed < check.detail["published_band_w"][0]
+
+
+def test_the_power_band_brackets_both_gates_and_is_monotone(technology, llama) -> None:
+    """Every power term is monotone increasing in power, so the band is a band.
+
+    ``at_power_bound`` claims that ``high`` really is the top of the envelope.
+    That is a property of the terms rather than of the method, so it is checked
+    here instead of assumed there.
+    """
+
+    low = technology.at_power_bound("low")
+    high = technology.at_power_bound("high")
+    for anchor in (
+        lambda tech: a100_power_anchor(tech).modelled_value,
+        lambda tech: taalas_hc1_power_anchor(tech, llama).modelled_value,
+    ):
+        assert anchor(low) < anchor(technology) < anchor(high)
+    # The band must actually contain the published figures, or it is not a
+    # statement about uncertainty -- it is a statement that the model is wrong.
+    hc1_low = taalas_hc1_power_anchor(low, llama).modelled_value
+    hc1_high = taalas_hc1_power_anchor(high, llama).modelled_value
+    assert hc1_low < 200.0 <= hc1_high
+    a_low = a100_power_anchor(low).modelled_value
+    a_high = a100_power_anchor(high).modelled_value
+    assert a_low < 400.0 < a_high
+
+
+def test_static_power_is_charged_whether_or_not_traffic_flows(
+    technology, llama
+) -> None:
+    """The property that makes the whole rebuild worth doing.
+
+    A machine with almost no traffic still burns leakage and still clocks, so
+    its power must not fall to nothing.  Before this the model's power was
+    exactly proportional to bytes moved, which is why an idle wafer drew zero.
+    """
+
+    budget = _rom_chip(technology, llama, bits=3.5)
+    step = evaluate(
+        budget, llama, context_tokens=2048, batch_size=1,
+        technology=technology,
+        weight_bits_per_parameter=3.5,
+    )
+    static = step.metrics["static_power_w"]
+    assert static > 0.0
+    assert step.power_w > static - 1e-9
+    # Static is a real share of the total, not a rounding correction.
+    assert 0.2 < step.metrics["static_power_fraction_of_total"] < 1.0
+    # And it is max(enumeration, measured floor), never their sum.
+    detail = step.metrics["static_power"]
+    assert static == pytest.approx(max(detail["enumerated_w"], detail["floor_w"]))
+    assert static < detail["enumerated_w"] + detail["floor_w"]
+    assert detail["enumerated_w"] == pytest.approx(
+        detail["leakage_w"] + detail["clock_w"] + detail["memory_interface_w"]
+    )
+
+
+def test_leakage_follows_the_area_split_and_a_rom_array_is_charged_none(
+    technology, llama
+) -> None:
+    """Leakage is per mm2 of standard-cell region, not per mm2 of die.
+
+    That unit was the worst defect in the submitted leakage term and it is
+    load-bearing here: a compute-in-ROM part is mostly array, so charging a
+    logic leakage density over its whole die would roughly triple its leakage.
+    """
+
+    budget = _rom_chip(technology, llama, bits=3.5)
+    detail = budget.static_power.detail
+    logic = detail["logic_mm2_per_device"]
+    rom = detail["rom_array_mm2_per_device"]
+    sram = detail["sram_array_mm2_per_device"]
+    assert rom > 0 and logic > 0
+    leak_logic = technology.graded(
+        "power", "static_leakage_w_per_mm2", "logic"
+    ).value
+    leak_sram = technology.graded(
+        "power", "static_leakage_w_per_mm2", "sram_array"
+    ).value
+    assert budget.static_power.leakage_w == pytest.approx(
+        logic * leak_logic + sram * leak_sram
+    )
+    # The ROM array contributes nothing, deliberately, and that is an
+    # under-charge on the side this study is arguing for.
+    assert technology.graded(
+        "power", "static_leakage_w_per_mm2", "rom_array"
+    ).value == 0.0
+    assert budget.static_power.leakage_w < (logic + rom + sram) * leak_logic
+
+
+def test_the_throttle_solves_against_static_headroom_not_total_power(
+    technology, llama
+) -> None:
+    """The old rule made every design coolable; this one does not.
+
+    Under ``thermal_scale = total_power / limit`` stretching a step reduced the
+    modelled power, so any power was coolable at some speed.  Static power does
+    not fall when a step is stretched, so the coolable step time solves against
+    the headroom the static power leaves.  A part whose leakage and clock alone
+    exceed its budget is not slow -- it does not exist.
+    """
+
+    budget = _rom_chip(technology, llama, bits=3.5)
+    limit = budget.cooling_limit_w
+    static = budget.static_power.total_w
+    assert static < limit
+
+    # Squeeze the budget until the same design is thermally limited, by handing
+    # it a cooling limit just above its static power.  Nothing about the design
+    # changes; only what it is allowed to shed.
+    squeezed = replace(budget, cooling_limit_w=static * 1.02)
+    step = evaluate(
+        squeezed, llama, context_tokens=2048, batch_size=1,
+        technology=technology,
+        weight_bits_per_parameter=3.5,
+    )
+    assert step.thermal_scale > 1.0
+    assert step.binding_constraint == "thermal"
+    # A throttled point sits exactly ON its limit: that is what the throttle
+    # solves for, and under the old rule it could not.
+    assert step.power_w == pytest.approx(squeezed.cooling_limit_w, rel=1e-9)
+    # And the static share does not shrink as the step is stretched.
+    assert step.metrics["static_power_w"] == pytest.approx(static)
+
+
+def test_a_design_whose_static_power_exceeds_its_budget_does_not_exist(
+    technology, llama
+) -> None:
+    """Dark silicon in its strongest form, which the model could not express.
+
+    If leakage and the clock tree alone meet the cooling budget, no step time
+    makes the part coolable.  The honest answer is that the design is
+    infeasible, not that it runs slowly.
+    """
+
+    budget = _rom_chip(technology, llama, bits=3.5)
+    starved = replace(
+        budget, cooling_limit_w=budget.static_power.total_w * 0.9
+    )
+    step = evaluate(
+        starved, llama, context_tokens=2048, batch_size=1,
+        technology=technology,
+        weight_bits_per_parameter=3.5,
+    )
+    assert not step.feasible
+    assert step.binding_constraint == "cooling"
+    assert any(reason.startswith("COOLING:") for reason in step.reasons)
+    assert step.per_user_tokens_s == 0.0
+    # The violation is reported at its true size rather than as an infinity.
+    assert math.isfinite(step.power_w)
+    assert step.power_w > starved.cooling_limit_w
+
+
+def test_energy_per_token_includes_the_static_share(technology, llama) -> None:
+    """Joules per token is only comparable across machines if it is total.
+
+    A machine that is fast and leaky must not be flattered against one that is
+    slow and cool, so the static power is amortised over the tokens the step
+    actually produces rather than left out of the numerator.
+    """
+
+    budget = _rom_chip(technology, llama, bits=3.5)
+    step = evaluate(
+        budget, llama, context_tokens=2048, batch_size=1,
+        technology=technology,
+        weight_bits_per_parameter=3.5,
+    )
+    total = step.metrics["energy_j_per_token"]
+    dynamic = step.metrics["dynamic_energy_j_per_token"]
+    assert total > dynamic > 0
+    assert total == pytest.approx(
+        step.power_w * step.step_time_s / step.metrics["pipeline_fill_users"]
+    )
+    # And the breakdown of the dynamic half sums to it.
+    assert sum(step.metrics["dynamic_energy_breakdown_j"].values()) == pytest.approx(
+        dynamic * step.metrics["microbatch_per_slot"]
+    )
+
+
+def test_operand_delivery_is_charged_on_every_byte_that_moves(
+    technology, llama
+) -> None:
+    """The term the model priced at zero: getting a byte to the arithmetic.
+
+    A Horowitz-class MAC energy is the ALU, and ``rom_read_j_per_byte``'s stated
+    boundary stops at the macro output latch, so without this term nothing at
+    all was charged for the distance between them.
+    """
+
+    budget = _rom_chip(technology, llama, bits=3.5)
+    step = evaluate(
+        budget, llama, context_tokens=2048, batch_size=1,
+        technology=technology,
+        weight_bits_per_parameter=3.5,
+    )
+    breakdown = step.metrics["dynamic_energy_breakdown_j"]
+    per_byte = technology.graded("energy", "operand_delivery_j_per_byte").value
+    moved = (
+        step.metrics["engaged_weight_bytes"]
+        + step.metrics["kv_transfer_bytes_per_step"]
+    )
+    assert breakdown["operand_delivery_j"] == pytest.approx(moved * per_byte)
+    # On a ROM part it is LARGER than the array read it accompanies, which is
+    # the consequence of moving rom_read_j_per_byte from 0.5 to 0.08 pJ/B and
+    # is why that correction made the HC1 power gate worse rather than better.
+    assert breakdown["operand_delivery_j"] > breakdown["weight_read_j"]
+
+
 # --------------------------------------------------------------------------
 # graded inputs
 # --------------------------------------------------------------------------
@@ -261,10 +564,34 @@ ASSUMED_INPUTS = frozenset(
         "energy.mac_energy_j_per_op.fp4",
         "energy.mac_energy_j_per_op.fp8",
         "energy.mac_energy_j_per_op.w4a8",
+        # The term the model priced at zero: getting a byte from the array that
+        # holds it to the arithmetic that consumes it.
+        "energy.operand_delivery_j_per_byte",
         "energy.rom_read_j_per_byte",
         "energy.sram_read_j_per_byte",
         "floorplan.interconnect_area_fraction",
         "floorplan.overhead_area_fraction",
+        # The power block. Every term in it bar the clocked-idle floor (which is
+        # `executed`, with its artifact committed) and the logic clock
+        # multiplier (which is 1.0 by definition of the calibration region) is
+        # a judgement over a stated range, and two of them -- the fabric clock
+        # and the array clock multipliers -- MULTIPLY, which is why the power
+        # gates are reported at both ends of the whole band rather than at a
+        # point inside their product.
+        "power.clock_energy_j_per_mm2_per_cycle",
+        "power.clock_region_multiplier.rom_array",
+        "power.clock_region_multiplier.sram_array",
+        "power.fabric_clock_hz",
+        "power.gpu_logic_area_fraction",
+        "power.memory_interface_idle_w_per_stack",
+        "power.static_leakage_w_per_mm2.logic",
+        # Held at ZERO. The submitted companion was refuted as underived, and
+        # the ROM array is most of a compute-in-ROM die, so this is an
+        # under-charge on the side the study argues for.
+        "power.static_leakage_w_per_mm2.rom_array",
+        "power.static_leakage_w_per_mm2.sram_array",
+        # NVIDIA publishes no B200 clock in any first-party document.
+        "reference_parts.b200_sxm.clock_frequency_hz",
         "hbm.hbm2e.phy_area_mm2_per_stack",
         "hbm.hbm2e.stack_beachfront_mm",
         "hbm.hbm3e.phy_area_mm2_per_stack",
@@ -2661,6 +2988,9 @@ def test_every_point_names_a_binding_constraint(generated) -> None:
         "link_latency",
         "layer_fixed_latency",
         "thermal",
+        # Static power alone at or above the cooling budget: a design that no
+        # step time makes coolable, which the model could not express before.
+        "cooling",
         "capacity_or_format",
     }
     for result in results.values():
@@ -2668,6 +2998,103 @@ def test_every_point_names_a_binding_constraint(generated) -> None:
             assert row["binding_constraint"] in allowed
             if not row["feasible"]:
                 assert row["reasons"]
+
+
+def test_the_thermal_limit_actually_binds_somewhere(generated) -> None:
+    """Dark silicon exists in the study, and this is the guard that it stays.
+
+    Before static power was charged per second, ``thermal_scale`` was exactly
+    1.0 at all 11,747 feasible points in both studies, so ``step_time =
+    raw_step_time x thermal_scale`` -- the only path from power to any rate --
+    was inert and the model did not express dark silicon at all.  If this test
+    starts failing, either the power terms have been quietly shrunk or the
+    throttle has gone back to dividing total energy by the total limit.
+    """
+
+    _, results, _, _ = generated
+    throttled = [
+        row
+        for result in results.values()
+        for row in result["points"]
+        if row["feasible"] and row["thermal_scale"] > 1.0 + 1e-12
+    ]
+    assert throttled, (
+        "no point in either study is power-limited. thermal_scale is inert "
+        "again and the power model has stopped reaching any rate."
+    )
+    for row in throttled:
+        # A throttled point sits exactly on its cooling limit, which is what
+        # the throttle solves for.
+        assert row["power_w"] == pytest.approx(row["cooling_limit_w"], rel=1e-6)
+        assert row["binding_constraint"] == "thermal"
+        assert row["static_power_w"] < row["cooling_limit_w"]
+
+
+def test_dark_silicon_hits_dense_arrays_and_not_wafers(generated) -> None:
+    """The shape of the answer, which is not the intuitive one.
+
+    A wafer is power-SPARSE: a ROM sweep is a fixed cost spread over far more
+    silicon.  The earlier analysis under a uniform multiplier predicted the
+    worst points would be small dense arrays rather than wafers, and that half
+    survives a correct static term.  What does NOT survive is its batch
+    dependence -- static power does not scale with traffic, so batch 1 is
+    throttled too.
+    """
+
+    _, results, _, _ = generated
+    throttled = [
+        row
+        for result in results.values()
+        for row in result["points"]
+        if row["feasible"] and row["thermal_scale"] > 1.0 + 1e-12
+    ]
+    assert throttled
+    assert all(row["silicon_area_mm2"] < 40_000 for row in throttled), (
+        "a wafer is now power-limited, which reverses the study's reading that "
+        "wafer-scale is power-sparse. Say why before accepting it."
+    )
+    # Scoped to the ROM family: "46,225 mm2" on the GPU side is a 56-die
+    # CLUSTER, not one piece of silicon, and each of those dies is at its own
+    # published TDP by construction. The wafer-is-power-sparse claim is about
+    # wafer-scale silicon.
+    wafer_headroom = max(
+        row["power_headroom_fraction"] or 0.0
+        for result in results.values()
+        for row in result["points"]
+        if row["feasible"]
+        and row["family"] == "rom"
+        and row["silicon_area_mm2"] >= 40_000
+    )
+    assert wafer_headroom < 0.75, (
+        f"a wafer-scale ROM design now reaches {wafer_headroom:.0%} of its "
+        "cooling budget; the study's wafer-is-power-sparse reading needs "
+        "revisiting before it is repeated"
+    )
+    assert min(row["batch_size"] for row in throttled) == 1, (
+        "no batch-1 point is throttled, which is what a purely "
+        "traffic-proportional power model would give. Static power is supposed "
+        "to be charged whether or not traffic flows."
+    )
+
+
+def test_every_point_reports_energy_per_token_on_both_sides(generated) -> None:
+    """The number that was unpublishable while every watt was 7-9x low."""
+
+    _, results, _, _ = generated
+    for result in results.values():
+        for row in result["points"]:
+            if not row["feasible"]:
+                continue
+            assert row["energy_j_per_token"] > 0
+            assert row["energy_j_per_token"] >= row["dynamic_energy_j_per_token"]
+        rows = result["power_and_energy"]["energy_per_token"]
+        assert rows, "no energy-per-token comparison was produced"
+        for row in rows:
+            assert row["rom_energy_j_per_token"] > 0
+            assert row["gpu_energy_j_per_token"] > 0
+            assert row["tokens_per_joule_advantage_x"] == pytest.approx(
+                row["gpu_energy_j_per_token"] / row["rom_energy_j_per_token"]
+            )
 
 
 def test_json_csv_and_report_are_mutually_consistent(generated) -> None:

@@ -881,6 +881,90 @@ class Technology:
                 }
         return replace(self, raw=raw)
 
+    #: The energy terms that are part of the POWER band rather than the
+    #: latency band.  They are swept with the ``power`` block because a power
+    #: gate that moved the leakage but not the traffic energy would report a
+    #: band narrower than the one the reader is actually asked to believe.
+    POWER_ENERGY_TERMS = (
+        "hbm_j_per_byte",
+        "rom_read_j_per_byte",
+        "operand_delivery_j_per_byte",
+        "sram_read_j_per_byte",
+    )
+
+    def power_terms(self) -> dict[str, Graded]:
+        """Every graded leaf of the ``power`` block, flattened for reporting."""
+
+        found: dict[str, Graded] = {}
+
+        def walk(node: Any, path: tuple[str, ...]) -> None:
+            if isinstance(node, Mapping):
+                if "grade" in node and "value" in node:
+                    found[".".join(path)] = Graded.from_dict(node)
+                    return
+                for key, value in node.items():
+                    walk(value, path + (str(key),))
+
+        walk(self.raw["power"], ())
+        return found
+
+    def at_power_bound(self, bound: str) -> "Technology":
+        """A copy with every power term at one end of its stated range.
+
+        Every term in the ``power`` block is ``assumed`` bar one, and the two
+        that decide the ROM side's answer -- ``fabric_clock_hz`` and the array
+        ``clock_region_multiplier`` -- multiply, so a point value inside their
+        product invites exactly the misreading the latency band was built to
+        prevent.  The two power gates are therefore reported at BOTH ends as
+        well as at the stated value, and the band is what the reader is asked
+        to believe rather than the point.
+
+        Every term here is monotone increasing in power, so ``high`` really is
+        the top of the envelope and ``low`` really is the bottom.  That is a
+        property of the terms and not of this method, and it is checked in the
+        test suite rather than assumed here.
+        """
+
+        if bound not in ("low", "high"):
+            raise ValidationError("power bound must be 'low' or 'high'")
+        key = "range_low" if bound == "low" else "range_high"
+        raw = json.loads(json.dumps(self.raw))
+
+        def move(node: Any) -> Any:
+            if isinstance(node, Mapping):
+                if "grade" in node and "value" in node:
+                    return {**node, "value": node[key]} if key in node else dict(node)
+                return {name: move(value) for name, value in node.items()}
+            return node
+
+        raw["power"] = move(raw["power"])
+        for name in self.POWER_ENERGY_TERMS:
+            node = raw["energy"].get(name)
+            if isinstance(node, Mapping) and key in node:
+                raw["energy"][name] = {**node, "value": node[key]}
+        for part in raw["reference_parts"].values():
+            clock = part.get("clock_frequency_hz")
+            if isinstance(clock, Mapping) and key in clock:
+                part["clock_frequency_hz"] = {**clock, "value": clock[key]}
+        return replace(self, raw=raw)
+
+    def clock_frequency_hz(self, part: str | None = None) -> Graded:
+        """The clock the clock-energy term is evaluated at.
+
+        ``clock_energy_j_per_mm2_per_cycle`` has units of joules per mm2 per
+        CYCLE, and before this there was no clock frequency anywhere in the
+        technology table or in this module -- so the term could not be applied
+        at all without one.  A published part states its own; a modelled design
+        falls back on ``power.fabric_clock_hz``, which is the clock the
+        ``latency`` block was already reasoning at without ever saying so.
+        """
+
+        if part is not None:
+            spec = self.reference_part(part)
+            if "clock_frequency_hz" in spec:
+                return Graded.from_dict(spec["clock_frequency_hz"])
+        return self.graded("power", "fabric_clock_hz")
+
     def mac_energy_j_per_op(self, canonical_format: str) -> Graded:
         table = self.raw["energy"]["mac_energy_j_per_op"]
         if canonical_format not in table:
@@ -1199,6 +1283,175 @@ def kv_access_granularity(
         ),
     }
     return inflation, detail, provenance
+
+
+# --------------------------------------------------------------------------
+# the power a machine spends whether or not a byte moves
+# --------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class StaticPower:
+    """Traffic-independent power, charged per mm2 per second.
+
+    This is the term the model did not have.  Before it, ``energy_j`` counted
+    memory bytes and multiply-accumulates and nothing else, so power was
+    exactly proportional to traffic: an idle machine drew zero and a throttled
+    one drew less the more it was throttled.  Both are wrong in the same way,
+    and the second one is why ``thermal_scale`` could never bind -- stretching
+    a step made the modelled power fall, so any power was coolable.
+
+    Leakage and the clock network do not care whether a byte moves.  They are
+    charged against the AREA SPLIT: leakage per mm2 of standard-cell region and
+    per mm2 of SRAM array, clock energy per mm2 per cycle scaled by a
+    region-class multiplier, times the clock frequency.  A ROM array is charged
+    no leakage at all, which is an under-charge and is documented as one in
+    ``power.static_leakage_w_per_mm2.rom_array``.
+
+    ``total_w`` is ``max(enumerated_w, floor_w)`` rather than their sum.  The
+    measured clocked-idle floor of a shipping device IS mostly its leakage and
+    its clock tree, so adding a bottom-up enumeration of those to a measurement
+    of them double-counts.  Taking the larger charges whichever estimate is
+    higher, never both, and reporting the two side by side says how far apart
+    they are -- which on a GPU is a long way, and that gap is a finding rather
+    than an embarrassment.
+    """
+
+    leakage_w: float
+    clock_w: float
+    memory_interface_w: float
+    enumerated_w: float
+    floor_w: float
+    total_w: float
+    clock_frequency_hz: float
+    detail: Mapping[str, Any]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "leakage_w": self.leakage_w,
+            "clock_w": self.clock_w,
+            "memory_interface_w": self.memory_interface_w,
+            "enumerated_w": self.enumerated_w,
+            "floor_w": self.floor_w,
+            "total_w": self.total_w,
+            "floor_binds": self.floor_w > self.enumerated_w,
+            "clock_frequency_hz": self.clock_frequency_hz,
+            "detail": dict(self.detail),
+        }
+
+
+def device_static_power(
+    technology: Technology,
+    *,
+    logic_mm2: float,
+    sram_array_mm2: float,
+    rom_array_mm2: float,
+    unallocated_mm2: float = 0.0,
+    devices: int = 1,
+    hbm_stacks_per_device: float = 0.0,
+    clock: Graded | None = None,
+) -> tuple[StaticPower, dict[str, Graded]]:
+    """Leakage, clock distribution and memory-interface idle for one machine.
+
+    Areas are **per device** and the result is for the whole machine, because
+    every other resource in this model is stated that way.  ``unallocated_mm2``
+    is reported and charged nothing: silicon the area split did not assign is
+    silicon the model cannot say is populated, and inventing a population for
+    it would be inventing power.
+    """
+
+    if clock is None:
+        clock = technology.clock_frequency_hz()
+    leak_logic = technology.graded("power", "static_leakage_w_per_mm2", "logic")
+    leak_sram = technology.graded("power", "static_leakage_w_per_mm2", "sram_array")
+    leak_rom = technology.graded("power", "static_leakage_w_per_mm2", "rom_array")
+    clock_energy = technology.graded("power", "clock_energy_j_per_mm2_per_cycle")
+    mult_logic = technology.graded("power", "clock_region_multiplier", "logic")
+    mult_sram = technology.graded("power", "clock_region_multiplier", "sram_array")
+    mult_rom = technology.graded("power", "clock_region_multiplier", "rom_array")
+    floor = technology.graded("power", "clocked_idle_floor_w_per_device")
+    memory_idle = technology.graded("power", "memory_interface_idle_w_per_stack")
+
+    leakage_per_device = (
+        logic_mm2 * leak_logic.value
+        + sram_array_mm2 * leak_sram.value
+        + rom_array_mm2 * leak_rom.value
+    )
+    clock_w_per_mm2 = clock_energy.value * clock.value
+    clock_per_device = clock_w_per_mm2 * (
+        logic_mm2 * mult_logic.value
+        + sram_array_mm2 * mult_sram.value
+        + rom_array_mm2 * mult_rom.value
+    )
+    memory_per_device = hbm_stacks_per_device * memory_idle.value
+
+    leakage_w = devices * leakage_per_device
+    clock_w = devices * clock_per_device
+    memory_interface_w = devices * memory_per_device
+    enumerated_w = leakage_w + clock_w + memory_interface_w
+    floor_w = devices * floor.value
+    total_w = max(enumerated_w, floor_w)
+
+    detail = {
+        "logic_mm2_per_device": logic_mm2,
+        "sram_array_mm2_per_device": sram_array_mm2,
+        "rom_array_mm2_per_device": rom_array_mm2,
+        "unallocated_mm2_per_device_charged_nothing": unallocated_mm2,
+        "devices": float(devices),
+        "hbm_stacks_per_device": hbm_stacks_per_device,
+        "leakage_w_per_device": leakage_per_device,
+        "clock_w_per_device": clock_per_device,
+        "memory_interface_w_per_device": memory_per_device,
+        "clock_w_per_mm2_of_logic": clock_w_per_mm2 * mult_logic.value,
+        "clock_w_per_mm2_of_array": clock_w_per_mm2 * mult_rom.value,
+        "static_w_per_mm2_of_logic": leak_logic.value + clock_w_per_mm2 * mult_logic.value,
+        "static_w_per_mm2_of_rom_array": leak_rom.value + clock_w_per_mm2 * mult_rom.value,
+        "static_w_per_mm2_of_sram_array": leak_sram.value + clock_w_per_mm2 * mult_sram.value,
+        "total_w_per_mm2": (
+            total_w / (devices * (logic_mm2 + sram_array_mm2 + rom_array_mm2 + unallocated_mm2))
+            if (logic_mm2 + sram_array_mm2 + rom_array_mm2 + unallocated_mm2) > 0
+            else 0.0
+        ),
+        "rule": (
+            "static = max(leakage + clock + memory-interface idle, clocked-idle "
+            "floor). The floor is a measured whole-device reading and the "
+            "enumeration is a bottom-up estimate OF THE SAME PHYSICS, so they are "
+            "combined with max and never added"
+        ),
+    }
+    provenance = {
+        "static_leakage_w_per_mm2_logic": leak_logic,
+        "static_leakage_w_per_mm2_sram_array": leak_sram,
+        "static_leakage_w_per_mm2_rom_array": leak_rom,
+        "clock_energy_j_per_mm2_per_cycle": clock_energy,
+        "clock_frequency_hz": clock,
+        "clock_region_multiplier_logic": mult_logic,
+        "clock_region_multiplier_sram_array": mult_sram,
+        "clock_region_multiplier_rom_array": mult_rom,
+        "clocked_idle_floor_w_per_device": floor,
+        "memory_interface_idle_w_per_stack": memory_idle,
+        "device_static_power_w": derived(
+            total_w,
+            (leak_logic, leak_sram, clock_energy, clock, floor, memory_idle),
+            "max(leakage_per_mm2 . area + clock_j_per_mm2_per_cycle * f . area * "
+            "class_multiplier + stacks * memory_idle, devices * clocked_idle_floor)",
+            "traffic-independent power for the whole machine, charged per second "
+            "whether or not a byte moves",
+        ),
+    }
+    return (
+        StaticPower(
+            leakage_w=leakage_w,
+            clock_w=clock_w,
+            memory_interface_w=memory_interface_w,
+            enumerated_w=enumerated_w,
+            floor_w=floor_w,
+            total_w=total_w,
+            clock_frequency_hz=clock.value,
+            detail=detail,
+        ),
+        provenance,
+    )
 
 
 # --------------------------------------------------------------------------
@@ -1838,6 +2091,7 @@ class DeviceBudget:
     compute_ops_s: Mapping[str, float]
     shared_memory_path: bool
     cooling_limit_w: float
+    static_power: StaticPower
     hbm_stacks: int
     hbm_generation: str
     native_formats: tuple[str, ...]
@@ -1864,6 +2118,8 @@ class DeviceBudget:
             "compute_ops_s": dict(self.compute_ops_s),
             "shared_memory_path": self.shared_memory_path,
             "cooling_limit_w": self.cooling_limit_w,
+            "static_power_w": self.static_power.total_w,
+            "static_power": self.static_power.to_dict(),
             "hbm_stacks": self.hbm_stacks,
             "hbm_generation": self.hbm_generation,
             "native_formats": list(self.native_formats),
@@ -2010,6 +2266,30 @@ def rom_device_budget(
         weight_amortization
     )
 
+    # -- traffic-independent power ---------------------------------------
+    # Charged against the SOLVED area split, so a design that spends its
+    # silicon differently pays differently.  Compute, interconnect, HBM PHY and
+    # overhead are all standard-cell-class regions; the ROM and SRAM arrays are
+    # not, and are charged at the array leakage and array clock multipliers.
+    # HBM PHY is deliberately NOT charged at zero clock: the argument that its
+    # power is already inside ``energy.hbm_j_per_byte`` is wrong, because that
+    # term is a per-byte access energy and carries no idle floor.
+    static_power, static_provenance = device_static_power(
+        technology,
+        logic_mm2=(
+            split.compute_mm2
+            + split.interconnect_mm2
+            + split.hbm_phy_mm2
+            + split.overhead_mm2
+        ),
+        sram_array_mm2=split.sram_mm2,
+        rom_array_mm2=split.rom_mm2,
+        unallocated_mm2=split.slack_mm2,
+        devices=devices,
+        hbm_stacks_per_device=float(hbm_stacks) if kv_store == "hbm" else 0.0,
+    )
+    provenance.update(static_provenance)
+
     return DeviceBudget(
         name=name,
         node=node,
@@ -2027,6 +2307,7 @@ def rom_device_budget(
         compute_ops_s=compute,
         shared_memory_path=False,
         cooling_limit_w=cooling.value * total_area,
+        static_power=static_power,
         hbm_stacks=hbm_stacks,
         hbm_generation=hbm_generation if kv_store == "hbm" else "",
         native_formats=_canonical_formats(technology),
@@ -2137,6 +2418,51 @@ def gpu_device_budget(
         policy="published part: die area is stated for the iso-area comparison, "
         "not allocated by this model; capacity, bandwidth and roofs are published",
     )
+
+    # -- traffic-independent power ---------------------------------------
+    # This model does not floorplan a published part -- its area is STATED for
+    # the iso-area comparison, not solved -- so the one number a per-mm2-of-
+    # standard-cell leakage density needs is stated too, as
+    # ``power.gpu_logic_area_fraction``, rather than smuggled in by charging
+    # logic leakage over 40 MB of L2 and five HBM PHYs.  The clock term needs
+    # no such split: it was calibrated on a GPU's WHOLE-die TDP density, so the
+    # whole die is its reference region and carries multiplier 1.0.
+    logic_fraction = technology.graded("power", "gpu_logic_area_fraction")
+    clock = technology.clock_frequency_hz(part)
+    static_power, static_provenance = device_static_power(
+        technology,
+        logic_mm2=area.value * logic_fraction.value,
+        sram_array_mm2=area.value * (1.0 - logic_fraction.value),
+        rom_array_mm2=0.0,
+        devices=devices,
+        hbm_stacks_per_device=stacks.value,
+        clock=clock,
+    )
+    # The clock term's calibration region is the whole die, so the array-class
+    # multiplier must not be applied to a GPU's non-logic area.  Recompute the
+    # clock leg over the full die and keep the leakage split.
+    clock_energy = technology.graded("power", "clock_energy_j_per_mm2_per_cycle")
+    clock_w = devices * area.value * clock_energy.value * clock.value
+    enumerated = static_power.leakage_w + clock_w + static_power.memory_interface_w
+    static_power = replace(
+        static_power,
+        clock_w=clock_w,
+        enumerated_w=enumerated,
+        total_w=max(enumerated, static_power.floor_w),
+        detail={
+            **static_power.detail,
+            "clock_w_per_device": clock_w / devices,
+            "clock_region_note": (
+                "clock charged over the WHOLE die at multiplier 1.0, because "
+                "power.clock_energy_j_per_mm2_per_cycle is calibrated on a GPU's "
+                "whole-die TDP density and this is that reference region"
+            ),
+            "gpu_logic_area_fraction": logic_fraction.value,
+        },
+    )
+    provenance.update(static_provenance)
+    provenance["gpu_logic_area_fraction"] = logic_fraction
+
     return DeviceBudget(
         name=name or f"{part}-x{devices}",
         node=node,
@@ -2154,6 +2480,7 @@ def gpu_device_budget(
         compute_ops_s=compute,
         shared_memory_path=True,
         cooling_limit_w=devices * power.value,
+        static_power=static_power,
         hbm_stacks=int(stacks.value * devices),
         hbm_generation=hbm_generation,
         native_formats=tuple(spec.get("native_formats", ())),
@@ -2566,27 +2893,44 @@ def _service_terms(
         service_time /= balance
 
     # -- energy -----------------------------------------------------------
-    energy_j = 0.0
+    # DYNAMIC energy only: what one pass over ``effective_batch`` users costs
+    # in bytes moved and arithmetic done.  Everything that costs power whether
+    # or not a byte moves lives in ``budget.static_power`` and is charged per
+    # second in ``evaluate``, not per byte here.
     if budget.weight_store == "rom":
-        energy_j += (
-            engaged_weight_bytes
-            * technology.graded("energy", "rom_read_j_per_byte").value
-        )
+        weight_energy_term = technology.graded("energy", "rom_read_j_per_byte")
     else:
-        energy_j += (
-            engaged_weight_bytes * technology.graded("energy", "hbm_j_per_byte").value
-        )
+        weight_energy_term = technology.graded("energy", "hbm_j_per_byte")
     if budget.kv_store == "sram":
-        energy_j += (
-            kv_transfer_bytes
-            * technology.graded("energy", "sram_read_j_per_byte").value
-        )
+        kv_energy_term = technology.graded("energy", "sram_read_j_per_byte")
     else:
-        energy_j += (
-            kv_transfer_bytes * technology.graded("energy", "hbm_j_per_byte").value
-        )
-    for canonical, count in operations.items():
-        energy_j += count * technology.mac_energy_j_per_op(canonical).value
+        kv_energy_term = technology.graded("energy", "hbm_j_per_byte")
+    # Getting a byte from the array that holds it to the arithmetic that
+    # consumes it.  A Horowitz-class MAC energy is the ALU and
+    # ``rom_read_j_per_byte``'s stated boundary stops at the macro output
+    # latch, so without this term the model charges nothing at all for the
+    # distance between them.  It is the TILE-LOCAL floor: the long-path ladder
+    # -- HBM to L2 to register file is a further 8-10 pJ/B on an A100 -- is not
+    # represented, and charging one scalar to both sides penalises the ROM side
+    # about 1.6x on its dominant term against about 1.01x on the GPU's, which
+    # is the safe direction for this comparison.
+    operand_delivery = technology.graded("energy", "operand_delivery_j_per_byte")
+    weight_energy_j = engaged_weight_bytes * weight_energy_term.value
+    kv_energy_j = kv_transfer_bytes * kv_energy_term.value
+    operand_energy_j = (
+        engaged_weight_bytes + kv_transfer_bytes
+    ) * operand_delivery.value
+    mac_energy_j = sum(
+        count * technology.mac_energy_j_per_op(canonical).value
+        for canonical, count in operations.items()
+    )
+    energy_j = weight_energy_j + kv_energy_j + operand_energy_j + mac_energy_j
+    energy_breakdown = {
+        "weight_read_j": weight_energy_j,
+        "kv_read_j": kv_energy_j,
+        "operand_delivery_j": operand_energy_j,
+        "arithmetic_j": mac_energy_j,
+    }
 
     detail: dict[str, Any] = {
         "engaged_weight_bytes": engaged_weight_bytes,
@@ -2620,6 +2964,7 @@ def _service_terms(
         "region_sweeps": region_sweeps,
         "mean_region_passes": mean_region_passes,
         "stage_balance_applied": apply_balance,
+        "dynamic_energy_breakdown_j": energy_breakdown,
     }
     return ServiceTerms(
         effective_batch=float(effective_batch),
@@ -2821,12 +3166,57 @@ def evaluate(
         fill_limit = "pipeline_slots"
     else:
         fill_limit = "batch"
-    energy_per_token = terms.energy_j / max(microbatch, 1e-30)
-    energy_j = energy_per_token * fill_users
-    dynamic_power = energy_j / max(raw_step_time, 1e-30)
-    thermal_scale = max(1.0, dynamic_power / max(budget.cooling_limit_w, 1e-30))
-    step_time = raw_step_time * thermal_scale
-    power = energy_j / max(step_time, 1e-30)
+    dynamic_energy_per_token = terms.energy_j / max(microbatch, 1e-30)
+    dynamic_energy_j = dynamic_energy_per_token * fill_users
+    dynamic_power = dynamic_energy_j / max(raw_step_time, 1e-30)
+
+    # **The throttle rule, and it is not the old one.**  Static power does not
+    # fall when a step is stretched -- that is what makes it static -- so the
+    # coolable step time is set by the DYNAMIC energy against the headroom the
+    # static power leaves, not by the total power against the whole budget:
+    #
+    #     P(t) = P_static + E_dyn / t <= cooling_limit
+    #     t    >= E_dyn / (cooling_limit - P_static)
+    #
+    # The old expression divided the total energy by the total limit, so
+    # throttling always reduced modelled power and every design was coolable at
+    # some speed.  With a static term that is false, and it is false in a way
+    # that matters: if the leakage and the clock tree alone exceed the cooling
+    # budget the part cannot be run at ANY speed, and the honest answer is that
+    # the design does not exist rather than that it runs slowly.  That is dark
+    # silicon in its strongest form and the model can now express it.
+    static_power_w = budget.static_power.total_w
+    cooling_headroom_w = budget.cooling_limit_w - static_power_w
+    cooling_infeasible = cooling_headroom_w <= 0.0
+    if cooling_infeasible:
+        reasons.append(
+            f"COOLING: traffic-independent power {static_power_w:,.1f} W (leakage "
+            f"{budget.static_power.leakage_w:,.1f} W + clock "
+            f"{budget.static_power.clock_w:,.1f} W + memory interface "
+            f"{budget.static_power.memory_interface_w:,.1f} W) already meets or "
+            f"exceeds the {budget.cooling_limit_w:,.1f} W this silicon can shed, "
+            "so no step time makes this design coolable"
+        )
+        # Reported unthrottled, because throttling cannot help: the numbers
+        # below are what the design WOULD draw, and the point is that they are
+        # above the budget at every step time.  Reporting infinities instead
+        # would hide the size of the violation, which is the only interesting
+        # thing about it.
+        thermal_scale = 1.0
+        step_time = raw_step_time
+        power = static_power_w + dynamic_energy_j / max(step_time, 1e-30)
+        energy_j = power * step_time
+        energy_per_token = energy_j / max(fill_users, 1e-30)
+    else:
+        thermal_floor_s = dynamic_energy_j / cooling_headroom_w
+        thermal_scale = max(1.0, thermal_floor_s / max(raw_step_time, 1e-30))
+        step_time = raw_step_time * thermal_scale
+        power = static_power_w + dynamic_energy_j / max(step_time, 1e-30)
+        # Energy per token now includes the static share amortised over the
+        # tokens the step actually produces, which is the only definition that
+        # is comparable across two machines with different fixed costs.
+        energy_j = power * step_time
+        energy_per_token = energy_j / max(fill_users, 1e-30)
 
     fused_compute = (
         budget.weight_store == "rom"
@@ -2850,7 +3240,7 @@ def evaluate(
         "layer_fixed_latency": fixed_latency,
     }
     if reasons:
-        binding = "capacity_or_format"
+        binding = "cooling" if cooling_infeasible else "capacity_or_format"
         per_user = 0.0
         aggregate = 0.0
         delivered = 0.0
@@ -2982,8 +3372,31 @@ def evaluate(
         "raw_step_time_before_thermal_s": raw_step_time,
         "energy_j_per_step": energy_j,
         "energy_j_per_token": energy_per_token,
+        "dynamic_energy_j_per_step": dynamic_energy_j,
+        "dynamic_energy_j_per_token": dynamic_energy_per_token,
+        "dynamic_energy_breakdown_j": terms.detail["dynamic_energy_breakdown_j"],
         "dynamic_power_w_before_throttle": dynamic_power,
+        "static_power_w": static_power_w,
+        "static_power": budget.static_power.to_dict(),
+        "static_power_fraction_of_total": (
+            static_power_w / power if power > 0 else 0.0
+        ),
         "cooling_limit_w": budget.cooling_limit_w,
+        "cooling_headroom_w": cooling_headroom_w,
+        "cooling_infeasible": cooling_infeasible,
+        "power_density_w_per_mm2": (
+            power / budget.silicon_area_mm2_total
+            if budget.silicon_area_mm2_total > 0
+            else 0.0
+        ),
+        "static_power_density_w_per_mm2": (
+            static_power_w / budget.silicon_area_mm2_total
+            if budget.silicon_area_mm2_total > 0
+            else 0.0
+        ),
+        "power_headroom_fraction": (
+            power / budget.cooling_limit_w if budget.cooling_limit_w > 0 else math.inf
+        ),
         "weight_to_kv_read_ratio": (
             terms.detail["engaged_weight_bytes"]
             / (kv.read_bytes * microbatch)
@@ -3385,5 +3798,208 @@ def a100_weight_bound_anchor(
             "component_times_s": dict(step.component_times_s),
             "full_step_per_user_tokens_s": step.per_user_tokens_s,
             "step": step.to_dict(),
+        },
+    )
+
+
+def a100_power_anchor(
+    technology: Technology,
+    *,
+    part: str = "a100_sxm_80gb",
+    roof_format: str = "bf16",
+    tolerance: float = 2.0,
+) -> AnchorCheck:
+    """A published GPU against its published TDP, under a saturating load.
+
+    A TDP is not a decode step's draw; it is what the part is built to shed
+    when something is driving it hard.  The operating point is therefore
+    synthetic and stated rather than taken from a workload: **every byte of
+    published HBM bandwidth moving and the published dense tensor roof issuing,
+    at the same time, for one second**, on top of the traffic-independent
+    power.  That is the same check
+    ``docs/TECHNICAL_DIRECTION_RECOMMENDATION.md`` 0.11 used to show the old
+    power model's shortfall was structural rather than an activity factor: it
+    produced 85.3 W against 400 W then, and an activity-factor error would have
+    closed at peak.
+
+    **This gate is weaker than it looks and the reason must travel with it.**
+    ``power.clock_energy_j_per_mm2_per_cycle`` was calibrated as 20-45% of a
+    shipping GPU's published TDP density.  It is a different GPU -- P100 and
+    GV100, not this part -- but it is still a GPU TDP, so a gate that adds that
+    term to the others and compares the sum with a GPU TDP is partly checking
+    an input against its own family.  What it does test independently is
+    whether the traffic terms, the arithmetic and the static terms are
+    mutually consistent in SIZE, and it would fail loudly if any of them were
+    an order of magnitude out.  The Taalas gate beside it has no such
+    circularity and is the stronger of the two.
+    """
+
+    ideal = technology.ideal()
+    topology = Topology(
+        kind="single_chip", device_count=1, parallelism="none", link="none"
+    )
+    budget = gpu_device_budget(ideal, part=part, topology=topology, name=f"{part}-x1")
+    spec = technology.reference_part(part)
+    published = Graded.from_dict(spec["power_w"])
+
+    hbm_energy = technology.graded("energy", "hbm_j_per_byte")
+    operand = technology.graded("energy", "operand_delivery_j_per_byte")
+    mac = technology.mac_energy_j_per_op(roof_format)
+    saturating_bytes_s = budget.weight_read_bytes_s
+    roof_ops_s = budget.compute_ops_s[roof_format]
+
+    traffic_w = saturating_bytes_s * hbm_energy.value
+    operand_w = saturating_bytes_s * operand.value
+    arithmetic_w = roof_ops_s * mac.value
+    static = budget.static_power
+    modelled = traffic_w + operand_w + arithmetic_w + static.total_w
+    ratio = modelled / published.value if published.value else math.inf
+
+    return AnchorCheck(
+        name="a100_tdp_power_w",
+        published_value=published.value,
+        modelled_value=modelled,
+        ratio=ratio,
+        tolerance=tolerance,
+        passed=(1.0 / tolerance) <= ratio <= tolerance,
+        detail={
+            "part": part,
+            "die_area_mm2": budget.silicon_area_mm2_total,
+            "operating_point": (
+                f"saturating: {saturating_bytes_s:,.0f} B/s of published HBM "
+                f"bandwidth and {roof_ops_s:,.0f} ops/s of published dense "
+                f"{roof_format} roof, simultaneously"
+            ),
+            "saturating_bytes_s": saturating_bytes_s,
+            "roof_ops_s": roof_ops_s,
+            "terms_w": {
+                "hbm_traffic": traffic_w,
+                "operand_delivery": operand_w,
+                "arithmetic": arithmetic_w,
+                "static_leakage": static.leakage_w,
+                "static_clock": static.clock_w,
+                "static_memory_interface": static.memory_interface_w,
+                "static_total_charged": static.total_w,
+            },
+            "static_power": static.to_dict(),
+            "power_density_w_per_mm2": modelled / budget.silicon_area_mm2_total,
+            "published_power_density_w_per_mm2": (
+                published.value / budget.silicon_area_mm2_total
+            ),
+            "clock_frequency_hz": static.clock_frequency_hz,
+            "circularity_warning": (
+                "power.clock_energy_j_per_mm2_per_cycle is 20-45% of a shipping "
+                "GPU's published TDP density evaluated at that part's published "
+                "clock. Comparing a sum containing that term with a GPU's TDP is "
+                "not a fully independent test, and this gate must never be quoted "
+                "as one."
+            ),
+        },
+    )
+
+
+def taalas_hc1_power_anchor(
+    technology: Technology,
+    model: ModelProfile,
+    *,
+    tolerance: float = 2.0,
+    published_low_w: float | None = None,
+) -> AnchorCheck:
+    """The shipping Taalas HC1's published card power at its published point.
+
+    This one has no circularity in it: nothing in the ROM side's power -- the
+    ROM read primitive, the operand-delivery scalar, the array clock multiplier
+    or the leakage over a solved area split -- was calibrated on a Taalas
+    figure, because Taalas publishes no microarchitecture and no energy at all.
+    It is therefore the stronger of the two power gates and it is the one that
+    fails.
+
+    The operating point is not chosen either: it is exactly the point the
+    throughput gate already evaluates, obtained by reading that gate's own step
+    rather than rebuilding it, so the two cannot drift apart.
+    """
+
+    throughput = taalas_hc1_anchor(technology, model)
+    step = throughput.detail["step"]
+    spec = technology.reference_part("taalas_hc1")
+    published = Graded.from_dict(spec["power_w"])
+    low = (
+        published_low_w
+        if published_low_w is not None
+        else float(spec["power_w"].get("range_low", published.value))
+    )
+    modelled = float(step["power_w"])
+    ratio = modelled / published.value if published.value else math.inf
+
+    metrics = step["metrics"]
+    static = metrics["static_power"]
+    return AnchorCheck(
+        name="taalas_hc1_card_power_w",
+        published_value=published.value,
+        modelled_value=modelled,
+        ratio=ratio,
+        tolerance=tolerance,
+        passed=(1.0 / tolerance) <= ratio <= tolerance,
+        detail={
+            "published_band_w": [low, published.value],
+            "ratio_to_band_low": modelled / low if low else math.inf,
+            "ratio_to_band_high": ratio,
+            "shortfall_x_against_band": [
+                published.value / modelled if modelled else math.inf,
+                low / modelled if modelled else math.inf,
+            ],
+            "operating_point": (
+                "the same point the HC1 throughput gate evaluates: "
+                f"{throughput.detail['context_tokens']} tokens of context at batch "
+                f"{throughput.detail['batch_size']}, "
+                f"{throughput.detail['weight_bits_per_parameter']} bits per "
+                f"parameter, {throughput.detail['execution_format']}"
+            ),
+            "modelled_tokens_s": throughput.modelled_value,
+            "energy_j_per_token": metrics["energy_j_per_token"],
+            "terms_w": {
+                "dynamic_total": modelled - metrics["static_power_w"],
+                "static_total_charged": metrics["static_power_w"],
+                "static_leakage": static["leakage_w"],
+                "static_clock": static["clock_w"],
+                "static_memory_interface": static["memory_interface_w"],
+                "static_enumerated": static["enumerated_w"],
+                "static_clocked_idle_floor": static["floor_w"],
+                "static_floor_binds": static["floor_binds"],
+            },
+            "dynamic_energy_breakdown_j_per_step": metrics[
+                "dynamic_energy_breakdown_j"
+            ],
+            # The same breakdown as watts, so the report is not the only place
+            # that division happens and the figures in it are checkable against
+            # an artifact rather than against a renderer.  One step's energy
+            # covers ``microbatch_per_slot`` users and the machine produces
+            # ``pipeline_fill_users`` of them per step time.
+            "dynamic_power_w_by_term": {
+                name: value
+                * metrics["pipeline_fill_users"]
+                / max(metrics["microbatch_per_slot"], 1e-30)
+                / max(float(step["step_time_s"]), 1e-30)
+                for name, value in metrics["dynamic_energy_breakdown_j"].items()
+            },
+            "power_density_w_per_mm2": metrics["power_density_w_per_mm2"],
+            "cooling_limit_w": metrics["cooling_limit_w"],
+            "area_split_mm2": throughput.detail["area_split_mm2"],
+            "rom_array_leakage_charged_w": 0.0,
+            "rom_array_leakage_if_reconstructed_w": (
+                throughput.detail["area_split_mm2"]["rom_mm2"]
+                * float(
+                    technology.raw["power"]["static_leakage_w_per_mm2"]["rom_array"][
+                        "range_high"
+                    ]
+                )
+            ),
+            "note": (
+                "The ROM array is charged ZERO leakage, which is an under-charge "
+                "on this side and is documented as one. At the top of the "
+                "reconstructed bracket it would add the watts reported in "
+                "'rom_array_leakage_if_reconstructed_w', which does not close "
+                "this gate either."
+            ),
         },
     )

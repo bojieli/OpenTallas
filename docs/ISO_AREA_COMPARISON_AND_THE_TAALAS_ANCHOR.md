@@ -406,45 +406,136 @@ This is the same failure as section 2b and 2c in a different costume, and it is
 worth naming as a rule rather than as three incidents. **A number derived by
 reading an implementation is a hypothesis. A number derived by running it is a
 measurement.** 583 bytes was a hypothesis. So was "an on-wafer all-reduce costs
-one hop". So is every watt this model currently reports.
+one hop". So was every watt this model reported until section 2f, where six
+power terms were derived from primitives, adversarially verified, and all six
+refuted -- one of them by re-running the measurement it rested on and finding it
+was the decay tail of a preceding workload rather than a steady state.
 
-## 2f. The power numbers in this document are wrong by 7-9x, and none of the speed numbers depend on them
+## 2f. The power model was rebuilt. It is right on the A100, 2.9-3.6x low on HC1, and the ROM joules here are lower bounds
 
-Characterised, not fixed. The model reproduces **54.21 W** for an A100 running
-Llama-3.1-8B at batch 1 against a published 400 W, and **27.04 W** for Taalas
-HC1 at its published operating point against a published 200-250 W.
+**Superseded.** The previous version of this section said the power numbers in
+this document were wrong by 7-9x, that `thermal_scale` was exactly 1.0 at all
+11,747 feasible points, and that the dark-silicon question could not be
+answered. All three statements were true of the model as it then stood and none
+of them is true now.
 
-The model counts three things -- bytes out of a memory, bytes out of a KV store,
-and multiply-accumulates -- and nothing else. Drive the A100 at its published
-peak HBM bandwidth **and** its published BF16 roof at the same time and the
-model still produces only **85.3 W against a 400 W TDP**, so this is not an
-activity-factor error: it is power the model does not enumerate at all --
-leakage, clock distribution, operand delivery, control, NoC, memory-controller
-floor.
+Six power terms were derived from graded primitives and adversarially verified.
+**All six were refuted** and all six are applied at their verifiers' corrected
+values -- including the two that move power *down*, which is the direction that
+makes this document's own thesis harder to argue.
 
-**Nothing in section 2 depends on it.** `thermal_scale` is exactly 1.0 at all
-11,747 feasible points in both studies, and `step_time = raw_step_time x
-thermal_scale` is the only path by which power reaches any other quantity. That
-is a structural statement rather than an empirical one. Every tokens/s in this
-document survives; every watt and every joule-per-token in it is unpublishable.
+**Where the two published parts now land.**
 
-**The dark-silicon question this program was asked cannot currently be
-answered.** The cooling limit is sound -- 0.50 W/mm2 derived from the A100's own
-400 W over 826 mm2 -- and modelled power density peaks at 0.181 W/mm2 anywhere
-in either study, so the limit never binds. Scaling every point by the observed
-shortfall as a bound rather than a result, 2.9-8.4% of feasible points would
-exceed the cooling limit, and **the worst of them at every multiplier is a small
-dense array at high batch, not a wafer.** A wafer is power-sparse because a ROM
-sweep is a fixed cost spread over far more silicon. If that survives a correct
-power term, it is an argument for wafer-scale this document has not yet made.
+| gate | published | modelled | ratio | result |
+|---|---:|---:|---:|---|
+| A100 80GB at its TDP, under a saturating load | 400 W | 389.9 W | 0.97x | PASS (within 2x) | <!-- figure: 0.97 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_tdp_power.ratio" name="A100 TDP power gate ratio" -->
+| Taalas HC1 card power at its published operating point | 200-250 W | 70.2 W | 0.28x | **FAIL** | <!-- figure: 0.28 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.ratio" name="HC1 card power gate ratio" -->
 
-**Do not close this with one multiplier.** The two shortfalls are nearly equal
-and that is most likely a coincidence: the A100's survives at simultaneous peak
-and is therefore structural, while HC1's could be entirely inside
-`energy.rom_read_j_per_byte` -- 0.5 pJ/byte, graded `assumed`, sourced as *"no
-fabricated leading-node mask-ROM macro energy published"*. Reaching 250 W needs
-about 4.6-5.8 pJ/byte from that one term, which is not obviously wrong for an
-array whose read **is** the multiply.
+Reported at both ends of the whole power band, every term moved together:
+
+| power band | A100 | ratio | HC1 | ratio to 250 W | ratio to 200 W |
+|---|---:|---:|---:|---:|---:|
+| low | 267.1 W | 0.67x | 54.3 W | 0.22x | 0.27x | <!-- figure: 267.1 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.power_gate_band.low.a100_tdp_power_w" name="A100 TDP power, band low" -->
+| **stated** | **389.9 W** | **0.97x** | **70.2 W** | **0.28x** | **0.35x** | <!-- figure: 70.2 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.modelled_value" name="HC1 card power, stated" -->
+| high | 626.6 W | 1.57x | 267.1 W | 1.07x | 1.34x | <!-- figure: 1.57 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.power_gate_band.high.a100_ratio_to_published" name="A100 TDP power ratio, band high" -->
+
+**The A100 gate is the weaker of the two and this document must not quote it as
+independent.** The clock term inside it was calibrated as 20-45% of a shipping
+GPU's published TDP density -- a different GPU, but still a GPU TDP -- so a sum
+containing it, compared with a GPU's TDP, is partly an input checked against its
+own family. The HC1 gate has no such circularity, because Taalas publishes no
+microarchitecture and no energy at all, and **it is the one that fails.**
+
+**The previous version's own competing explanation was tested and it went the
+other way.** That section said HC1's shortfall could be entirely inside
+`energy.rom_read_j_per_byte` -- 0.5 pJ/byte, `assumed` -- and that reaching
+250 W needed about 4.6-5.8 pJ/byte from that one term. The evidence moved that
+term to **0.08 pJ/byte**, six times *lower*, which made this gate worse by about
+4x on that term alone. It was adopted anyway. The consequence is that operand
+delivery is now the **largest** dynamic term on HC1 -- 10.0 W against 3.2 W of <!-- figure: 10.0 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.dynamic_power_w_by_term.operand_delivery_j" name="HC1 operand-delivery power" -->
+array read -- which is the physically sensible picture for a mask-ROM array: it
+reads its weights for almost nothing, and what it pays for is getting those
+bytes to the arithmetic.
+
+**Dark silicon, which this document could not previously express at all.** The
+old throttle divided total energy by the total limit, so stretching a step
+always reduced modelled power and every design was coolable at some speed.
+Static power does not fall when a step is stretched, so the coolable step time
+now solves `t >= E_dynamic / (cooling_limit - P_static)`, and a part whose
+leakage and clock alone meet its budget does not exist rather than running
+slowly.
+
+<!-- figure: 100 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.thermally_throttled_points" name="power-limited points, N5/B200" -->
+**100 of 6,180 feasible points are power-limited** -- all of them in the
+N5/B200 study, 99 ROM designs and one B200 cluster, the worst throttled 1.35x.
+The prediction this section made under a uniform multiplier half survives:
+
+- **It survives on shape.** Every throttled point is a small or large array.
+  **No wafer is throttled**, and no wafer-scale ROM design exceeds 46% of its
+  cooling budget against a median of 21%. A ROM sweep is a fixed cost spread
+  over far more silicon, so wafer-scale is power-sparse -- and that is now an
+  argument this document *can* make, from a correct power term rather than from
+  a bound.
+- **It does not survive on batch.** A uniform multiplier on a
+  traffic-proportional model necessarily peaks at high batch. Static power does
+  not scale with traffic, so **batch 1 is throttled too**, and the worst point
+  in either study is at **batch 8**.
+- **And it produced a design conclusion the bound could not have.** Every one of
+  the 100 throttled points puts its KV in HBM, and the worst point's dynamic
+  energy is **96.8% KV read against 0.5% weight read**. The ROM sweep is not
+  what melts it. Every SRAM-KV ROM design in both studies stays under budget.
+  **Keep the KV on die.**
+
+## 2g. Energy per token, on both sides, which this document could not state before
+
+Not paying DRAM access energy for weights is much of this document's argument,
+and it could not be quantified while every watt in the model was 7-9x low. The
+figures below include the static share amortised over the tokens the step
+actually produces, so a machine that is fast and leaky is not flattered against
+one that is slow and cool.
+
+**At the two anchors, same workload -- Llama-3.1-8B at batch 1:**
+
+| part | J/token | W | tok/s |
+|---|---:|---:|---:|
+| Taalas HC1 (modelled reconstruction) | 0.005736 | 70.2 | 12,232 | <!-- figure: 0.005736 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.energy_j_per_token" name="HC1 J/token" -->
+| A100 80GB, weight-bound gate | 1.462191 | 358.8 | 245 | <!-- figure: 1.462191 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_weight_bound.detail.step.metrics.energy_j_per_token" name="A100 J/token at the weight-bound gate" -->
+
+255x in tokens per joule -- and it is a **ceiling on the ROM advantage, not a
+measurement of it.** The GPU is at batch 1, which is a GPU's worst operating
+point; the ROM read energy is `assumed` over a 17x bracket; and the HC1 power
+gate says the ROM total is 2.9-3.6x below a shipping part, so the ROM joules
+are a lower bound by roughly that factor.
+
+**At equal area, on the study's own best designs, it is far smaller and it moves
+with batch in the direction the architecture predicts:**
+
+| study | model | batch 1 | batch 256 |
+|---|---|---:|---:|
+| N6 vs A100 | Qwen3-8B (dense) | 21.2x | **1.7x** | <!-- figure: 21.2 src="results/roofline/n6_vs_a100/analytical.json#power_and_energy.energy_per_token[model=Qwen3-8B,batch_size=1].tokens_per_joule_advantage_x" name="Qwen3-8B tokens/joule advantage at batch 1, N6" -->
+| N6 vs A100 | DeepSeek-V4-Flash (sparse) | 18.5x | **57.1x** |
+| N6 vs A100 | DeepSeek-V4-Pro (sparse) | 27.3x | 18.9x |
+| N5 vs B200 | Qwen3-8B (dense) | 6.7x | **2.7x** |
+| N5 vs B200 | DeepSeek-V4-Flash (sparse) | 5.8x | **39.1x** |
+| N5 vs B200 | DeepSeek-V4-Pro (sparse) | 16.6x | 21.4x | <!-- figure: 21.4 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.energy_per_token[model=DeepSeek-V4-Pro-0813,batch_size=256].tokens_per_joule_advantage_x" name="Pro tokens/joule advantage at batch 256, N5" -->
+
+**A dense model gives the energy advantage back as batch rises; a sparse one
+does not.** A GPU amortises one weight read over the whole batch, so its joules
+per token fall roughly as 1/batch until KV takes over. The ROM part's weight
+read was already nearly free, so it has nothing to amortise. On a sparse model
+the GPU cannot amortise -- batching engages more experts -- so the ROM advantage
+*grows*. **The batch-1 headline is the weakest form of this argument on a dense
+model and the strongest on a sparse one, and quoting the dense batch-1 number
+without the batch-256 number beside it would be quoting the best case as the
+case.**
+
+**What is still uncharged, on both sides.** L1/L2 traversal, which the same
+SC 2025 measurement puts at a further 6.30 pJ/bit on an A100 for streaming
+traffic. The long-path operand ladder -- the term applied here is the
+*tile-local floor*, and HBM to L2 to register file is 8-10 pJ/B further.
+ROM-array leakage, held at zero because its companion term was refuted as
+underived; at the top of its reconstructed bracket it would add 10.4 W to HC1
+and still not reach 200 W.
 
 **Every comparison in this program must state the silicon area on both sides.**
 
@@ -484,7 +575,12 @@ does not use for that data.
    number. Grade every figure published / derived / measured / assumed, with a
    source.
 4. **Validate against a shipping part** before predicting one that does not
-   exist.
+   exist -- and report the gate's outcome rather than tuning to it. There are
+   four gates now: the HC1 throughput gate at 0.72x, the A100 weight-bound gate
+   at 1.000x, the A100 TDP power gate at 0.97x, and the HC1 card-power gate at
+   0.28x, **which fails**. A failing gate that is reported is worth more than a
+   passing one that was fitted, and the residual is stated with its size in
+   section 2f.
 5. **Compare at equal area**, and say the area on both sides.
 
 The failure mode this replaces is not arithmetic error. It is accepting a number

@@ -90,9 +90,29 @@ for both machines. What compute-in-ROM contributes is that it starts with ~300
 mm² per device already free.
 
 The third argument — compute-in-ROM moves no weights, so it burns no transport
-energy — **is not represented in this model at all**. Its energy term charges
-`rom_read_j_per_byte` against engaged bytes identically for both policies. Do not
-read that silence as support.
+energy — **is now represented, and the model says the opposite of what the
+argument assumes for the term that was missing.** `energy.operand_delivery_j_per_byte`
+(0.23 pJ/B, `assumed`, range 1.5e-13 to 8.0e-13) charges what it costs to get a
+byte from the array that holds it to the arithmetic that consumes it, which is
+exactly the transport this argument claims to avoid. Two consequences, and
+neither favours this document:
+
+- **It is charged identically to both amortisation policies**, because the model
+  has no per-policy transport distance. A per-region machine plausibly pays less
+  of it than a global-broadcast one — that is the argument — but the model does
+  not price the difference, and inventing a discount for the policy this
+  document is advocating would be exactly the failure the study exists to avoid.
+- **On a mask-ROM part it is now the LARGEST dynamic energy term.** At the Taalas
+  HC1 anchor it is 10.0 W against 3.2 W of array read, <!-- figure: 10.0 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.dynamic_power_w_by_term.operand_delivery_j" name="HC1 operand-delivery power" -->
+  because
+  `energy.rom_read_j_per_byte` moved from 0.5 to 0.08 pJ/B on the evidence. So
+  transport energy is not a rounding error on a ROM machine that could be waved
+  away; it is the dominant dynamic cost, and the question of how much of it a
+  per-region fabric actually removes is now the most valuable open question in
+  this document.
+
+The activation-distribution network in section 2 is the other half of the same
+term and is still **not** priced. Do not read either silence as support.
 
 ---
 
@@ -206,11 +226,28 @@ From `Sizing one expert region` in the study, at the compute-in-ROM array densit
 A region is tens to hundreds of mm². Eight shift-add units are negligible against
 that. The real cost is not the pre-compute block; it is the **activation
 distribution network** that must deliver B activations to R regions, plus a small
-activation queue per region. **This model does not price that network**, and no
-number in this document should be read as if it did. Local product lines are
-shorter than global ones, so their capacitance and drive energy fall — a
-second-order gain that partly offsets the distribution cost, and one the model
-does not represent either.
+activation queue per region. **This model does not price that network's area or
+its latency**, and no number in this document should be read as if it did.
+
+What the model *does* now price, and did not before, is the **energy** of moving
+an operand: `energy.operand_delivery_j_per_byte` at 0.23 pJ/B, built as one
+register-file access (0.091 pJ/B at N7) plus 0.40 pJ/B/mm over a 0.35 mm tile
+pitch. **That constant is explicitly the tile-local floor.** A 56.8 mm² region is
+7.5 mm on a side and a 211.4 mm² region is 14.5 mm — one to two orders of
+magnitude beyond the pitch the constant was built for — so the distribution
+network across a region is *not* in it, and the long-path ladder that would cover
+it (8–10 pJ/B on an A100-class HBM→L2→RF path) is not represented anywhere in the
+model. Local product lines *inside* a region are shorter than global ones, so
+their capacitance and drive energy fall; that second-order gain is not
+represented either. **The two omissions run in opposite directions and the model
+does not claim to know which is larger.**
+
+**The power gates say how much room there is for this.** The Taalas HC1
+card-power gate lands at 70.2 W against a published 200–250 W — 2.9–3.6× low — <!-- figure: 70.2 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.modelled_value" name="HC1 card power gate" -->
+so there are roughly 130–180 W of unmodelled power on a shipping compute-in-ROM
+part at its published operating point. An activation-distribution network is one
+of the few candidates large enough to matter at that scale, and this document is
+the natural place for it to be derived. It has not been.
 
 ### One cost the design does carry, which was previously hidden
 
@@ -300,7 +337,11 @@ for finding.
    comparable is published at any node.
 2. **Whether per-region activation is realisable at the assumed wiring cost.** A
    circuit question this analysis cannot answer. The 2.0% is the pre-compute block
-   only, not the distribution network, and the model prices the network at zero.
+   only, not the distribution network, whose *area* and *latency* the model still
+   prices at zero. Its *energy* is now partly priced, by
+   `energy.operand_delivery_j_per_byte` — but that constant is the tile-local
+   floor at a 0.35 mm pitch, and a region is 7.5–14.5 mm on a side, so the
+   region-crossing part of the network is not in it either.
 3. **`efficiencies.expert_router_imbalance` (assumed 1.0, range 1.0–1.5).** One
    measured routing trace settles it, and every number in section 3 is exactly
    linear in it.
@@ -317,6 +358,19 @@ for finding.
 5. **`reference_parts.taalas_hc1.batch_size` (assumed 1).** Published nowhere. If
    HC1's 16,960 tok/s is not a batch-1 figure, the anchor means something
    different and every ratio here moves.
+6. **The whole `power` block, and the 2.9–3.6× the HC1 card-power gate leaves
+   open.** The model now charges leakage, clock distribution, operand delivery
+   and a measured clocked-idle floor per mm² per second, and it reproduces an
+   A100's published TDP to 0.97× under a saturating load. On Taalas HC1 it
+   reproduces 70.2 W against a published 200–250 W. **That gate fails and the
+   failure is reported rather than closed.** Two of this document's own
+   unpriced terms — the activation-distribution network and the region-crossing
+   half of operand delivery — sit inside that residual, and deriving either one
+   would move this document from asserting a transport-energy advantage to
+   quantifying it. Note also that the ROM array is charged **zero** leakage,
+   because the companion term for it was refuted as underived: that is an
+   under-charge on the side this document argues for, and at the top of its
+   reconstructed bracket it adds only 10.4 W.
 
-All five are graded `assumed` in `configs/hardware/technology.json` with their
-reasons, alongside the other 38 the study's evidence ledger lists.
+All six are graded `assumed` in `configs/hardware/technology.json` with their
+reasons, alongside the others the study's evidence ledger lists.

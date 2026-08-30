@@ -98,10 +98,12 @@
   },
   "energy": {
     "hbm_j_per_byte": {
-      "grade": "published",
-      "note": "3.9 pJ/bit for HBM2 access energy, converted to 31.2 pJ/byte. Cross-check: A100 at its full 2039 GB/s implies 63.6 W of HBM access power, consistent with published board-level HBM power.",
-      "source": "O'Connor et al., Fine-Grained DRAM, MICRO 2017",
-      "value": 3.12e-11
+      "grade": "measured",
+      "note": "13.11 pJ/bit = 104.88 pJ/byte at the HBM level on a shipping A100 40GB (N7, Perlmutter), measured by microbenchmark regression and published at SC'25. VERIFIER-CORRECTED, 3.36x UP from the 31.2 pJ/B this entry used to carry. The incumbent was O'Connor's HBM2-era DRAM-DEVICE-ONLY model figure; this one is measured and its boundary is the whole HBM path -- DRAM device, TSV, interposer, processor-side PHY and the memory controller (the paper's Fig. 1 caption states verbatim that 'memory controller energy is tabulated with HBM energy'). Scope is beyond-L2 only: the paper subtracts separately-extracted L1 and L2 parameters (its Eq. 8), so per-byte SM front-end and address-generation overheads cancel out of this number rather than hiding inside it. 65% of the A100 figure (8.47 of 13.11 pJ/bit) is CONTROL PLANE -- controllers, addresses, row decoders, tag lookups -- so charging a non-GPU memory subsystem a GPU's control plane is an extrapolation and the range must be swept, not asserted. The range is the spread across the paper's four measured parts (GH200 11.68, A100 13.11, MI250X GCD 13.64, MI300A 14.72 pJ/bit); it is NOT an uncertainty band for a non-GPU part. Two further costs this term does NOT carry and the model still does not charge: L1/L2 traversal (a further 6.30 pJ/bit on the A100 for streaming traffic, same paper) and the device's traffic-independent power (the same paper's Table 2 publishes P_const = 54 W for the A100, which is what power.clocked_idle_floor_w_per_device now carries).",
+      "range_high": 1.1776e-10,
+      "range_low": 9.344e-11,
+      "source": "https://escholarship.org/content/qt6189368s/qt6189368s.pdf -- Measuring the Energy of Data Movement on Modern GPU Systems, SC 2025, doi:10.1145/3712285.3759815, Table 3",
+      "value": 1.0488e-10
     },
     "mac_energy_j_per_op": {
       "bf16": {
@@ -135,11 +137,21 @@
         "value": 2e-14
       }
     },
+    "operand_delivery_j_per_byte": {
+      "grade": "assumed",
+      "note": "0.23 pJ/byte to get one byte from the array that holds it to the arithmetic that consumes it, at a 7 nm-class node. This is the term docs/TECHNICAL_DIRECTION_RECOMMENDATION.md 0.11 named as missing: a Horowitz-class MAC energy is the ALU, not the cost of delivering its operands, and rom_read_j_per_byte's stated boundary stops at the macro output latch. VERIFIER-CORRECTED, 1.5x DOWN from the submitted 3.43e-13 -- the submitted wire constant used alpha x C x V^2 with alpha = 0.5 transitions/bit, which double-counts the transition: supply energy for one full 0->1->0 cycle is C*V^2, so energy per transition is (1/2)C*V^2 and the correct coefficient for random data is 0.25, not 0.5. The corrected form is anchored, not chosen: 0.25 x 0.2 pF/mm x (0.75 V)^2 x 1.6 repeater overhead = 0.045 pJ/bit/mm, and the same formula run at 45 nm/1.0 V returns 0.080 pJ/bit/mm against Dally's published 45 nm figure of 6 pJ to move 64 bits 1 mm = 0.094 pJ/bit/mm, an 18% agreement the submitted form missed by 1.7x. Point = one register-file/operand-collector access at N7 (0.091 pJ/B, Horowitz 45 nm scaled by 5.49x) + 0.40 pJ/B/mm over a 0.35 mm tile pitch. BOUNDARY, and the writer must not lose it: this scalar is the TILE-LOCAL FLOOR. The long-path ladder -- HBM to L2 to register file on an A100 is 8.3-10.0 pJ/B over 10-14.4 mm -- is NOT represented. Applied uniformly to weight and KV bytes it charges the ROM side ~1.6x on its dominant term and the GPU side ~1.01x on its dominant term, so the single number penalises the ROM side; that is the safe direction and it is why a scalar is shippable. The 5.49x 45nm->N7 node factor is the geometric mean of ratios implied by this file's own mac_energy_j_per_op entries, every one of which is graded `assumed`: an assumption resting on assumptions, and SRAM energy scales worse than logic, so if anything this understates the storage-level terms.",
+      "range_high": 8e-13,
+      "range_low": 1.5e-13,
+      "source": "Horowitz, Computing's Energy Problem, ISSCC 2014 (register-file and cache access energies at 45 nm) ; Dally, published 45 nm wire energy, 64 bits x 1 mm = 6 pJ ; repeatered global wire C ~= 0.2 pF/mm at a leading node. NOT sourced to Sze et al. arXiv:1703.09039: that paper's Fig. 22 is NORMALISED ONLY (ALU 1x, RF 1x, NoC 2x, buffer 6x, DRAM 200x) and contains no pJ figure, so it cannot support any absolute constant and the earlier citation of it was a misreading.",
+      "value": 2.3e-13
+    },
     "rom_read_j_per_byte": {
       "grade": "assumed",
-      "note": "0.5 pJ/byte, carried over from src/opentallas/schema.py defaults. A ROM read has no restore and no refresh, so it is well below SRAM.",
-      "source": "no fabricated leading-node mask-ROM macro energy published",
-      "value": 5e-13
+      "note": "0.08 pJ/byte at N6 for the ROM read primitive -- address decode, wordline, bitline develop, sense/sample and macro output latch -- excluding the arithmetic, which roofline.py charges separately as mac_energy_j_per_op. VERIFIER-CORRECTED grade, not value: submitted as `derived` at 8e-14 and REGRADED to `assumed`, because the derivation behind it did not survive. It rests on the geometric centre of two methods that disagree by ~5x over a 17x-wide bracket (~0.02 to ~0.35 pJ/B), which is a point estimate, not a derivation. What the bracket is built from: (a) six published ROM/compute-in-ROM macros' TOPS/W scaled by node and V^2 -- but at most THREE of the six are fabricated silicon (BitROM is post-layout, YOLoC is SPICE with peripherals estimated from a different paper and publishes NO supply voltage at all, DCiROM claims no measurement), and a CiM macro's TOPS/W includes the arithmetic this boundary excludes, so that method measures something strictly LARGER than the term; (b) a 130 nm mask-ROM tile read of 1.20 pJ per sensed ternary weight = 4.80 pJ/B, scaled by (0.75/1.80)^2 and by a cell-to-cell area ratio of 14.3, giving ~0.02-0.09 pJ/B at N6. THE DIRECTION MATTERS: this is 6.25x BELOW the 0.5 pJ/byte this entry used to carry, so adopting it makes the Taalas HC1 power gate WORSE, not better. It is adopted anyway because the evidence points there. The 0.5 pJ/B it replaces was a schema default with no evidence at all.",
+      "range_high": 5e-13,
+      "range_low": 2e-14,
+      "source": "Yin et al., JSSC 2023 and JSSC 2025 (doi:10.1109/JSSC.2025.3556008); Cheong et al., A-SSCC 2024; YOLoC, GLSVLSI 2022 (doi:10.1145/3489517.3530576, simulated, supply voltage unpublished); BitROM, ASP-DAC 2026 (post-layout); Ankhdjet 130 nm mask-ROM tile read, arXiv:2608.26206 Table VII (1.20 pJ per ternary weight at tt/27C/1.80V). No fabricated leading-node mask-ROM macro reports read energy at the macro boundary separately from compute.",
+      "value": 8e-14
     },
     "sram_read_j_per_byte": {
       "grade": "assumed",
@@ -717,9 +729,109 @@
       }
     }
   },
+  "power": {
+    "clock_energy_j_per_mm2_per_cycle": {
+      "grade": "assumed",
+      "note": "8.5e-11 J per mm2 per clock cycle for the clock network -- the distribution tree, its buffers and the clock pins it drives -- charged on every clocked mm2 whether or not a byte moves. VERIFIER-CORRECTED, 15% DOWN from the submitted 1.0e-10, which violated its own stated selection rule ('take the estimator that closes less of the gap' yields 8.48e-11 and the submission rounded up past it). WHAT THIS NUMBER ACTUALLY IS, and the note must say it plainly: clock distribution taken as 20-45% of a shipping NON-ANCHOR GPU's published TDP density, applied at that part's published clock. P100 is 300 W over 610 mm2 at 1480 MHz = 0.492 W/mm2 = 3.32e-10 J/mm2/cycle; GV100 is 300 W over 815 mm2 at 1530 MHz = 0.368 W/mm2 = 2.41e-10; 30% of each, geometric mean, is 8.5e-11. No node correction from 16FF+/12FFN to N7/N6 and no modern-clock-gating discount is applied, and the 20-45% band itself comes from 1992-2004 CPUs (Alpha 21064/21164, MCORE, XScale) with little fine-grain gating. THE SUBMITTED BOTTOM-UP ROUTE IS NOT A SECOND ESTIMATOR AND MUST NOT BE SOLD AS ONE: rebuilt on measured 7 nm primitives instead of its invented capacitance scaling (ASAP7 DFFHQNx1 measures 1.095 fJ/cycle against the Nangate45 DFF_X1's 3.626, a ratio of 0.302 where the submission assumed 0.116) and on this repository's own post-route SPEF-extracted clock tree (4.329 mW of clock group against 0.987 mW of raw CK pin load, a 4.39x distribution multiplier where the submission asserted 1.925x), it returns 578 W on an A100 rated at 400 W. It is reported as a CEILING CHECK THAT FAILS. What the A100's TDP actually bounds is the product of flip-flop areal density and enabled fraction, to about 63k/mm2 against the 435k x 0.59 = 257k the bottom-up assumed; that 4x is the honest statement of what is unknown here. WHAT WOULD SETTLE IT: a published or measured clock-network power fraction for a post-2015 clock-gated GPU or accelerator (AccelWattch/GPUWattch-class validated breakdown, or a vendor statement). Range 3e-11 to 1.6e-10 spans ~12% (an aggressively gated part at a memory-bound decode step, XScale's 17% being the cited low outlier) to 45%, the top of the published band.",
+      "range_high": 1.6e-10,
+      "range_low": 3e-11,
+      "source": "NVIDIA Ampere architecture whitepaper, die area / TDP / clock table for P100 (610 mm2, 300 W, 1480 MHz, 16FF+) and GV100 (815 mm2, 300 W, 1530 MHz, 12FFN), verified verbatim ; the 20-45% clock-network power fraction band from Dobberpuhl 1992, Restle 2001 and Donno 2004, which could not be re-fetched and is the single load-bearing input",
+      "value": 8.5e-11
+    },
+    "clock_region_multiplier": {
+      "logic": {
+        "grade": "derived",
+        "note": "1.0 by definition: clock_energy_j_per_mm2_per_cycle is calibrated on a GPU's whole-die TDP density, and a GPU die is the reference clocked-logic region. Compute, interconnect, HBM PHY and overhead area all carry this multiplier. HBM and SerDes PHY is explicitly NOT set to zero: the argument that its energy is already inside energy.hbm_j_per_byte is wrong, because that term is a per-byte access energy and carries no idle PHY or controller floor.",
+        "source": "definition of the calibration region for the clock term",
+        "value": 1.0
+      },
+      "rom_array": {
+        "grade": "assumed",
+        "note": "0.15 -- a mask-ROM array's clocked leaf count per mm2 against a logic region's. VERIFIER'S CAUTION CARRIED, AND IT IS THE REASON THE RANGE REACHES 0.5: 0.15 was derived from a LEAF COUNT, but the measured post-route decomposition in this repository shows distribution -- largely wire, whose length is set by AREA and not by leaf count -- at ~3.4x the leaf pin load. Array-region clock power should therefore scale SUB-LINEARLY with leaf density, so 0.15 is likely optimistic for the ROM side and its low end needs a wire argument rather than a latch count. This multiplier and power.fabric_clock_hz multiply, and together they set the W/mm2 asymmetry between the two sides of the comparison this study exists to make, so they are swept jointly and never asserted.",
+        "range_high": 0.5,
+        "range_low": 0.05,
+        "source": "no published clock-network power for a mask-ROM or compute-in-ROM array; leaf-count argument against the measured wire-dominated distribution at rtl/build/implementation_campaign (post-route, SPEF-extracted)",
+        "value": 0.15
+      },
+      "sram_array": {
+        "grade": "assumed",
+        "note": "0.15, the same class as a ROM array and for the same reason: an SRAM macro's clocked elements are its periphery -- decoders, sense-amp timing, output latches -- and not a flip-flop field over the bitcell area. Swept 0.05-0.5 jointly with the ROM multiplier and the fabric clock.",
+        "range_high": 0.5,
+        "range_low": 0.05,
+        "source": "no vendor SRAM macro clock-power breakdown published",
+        "value": 0.15
+      }
+    },
+    "clocked_idle_floor_w_per_device": {
+      "artifact": "results/roofline/gpu_clocked_idle_floor.json",
+      "grade": "executed",
+      "note": "50 W per device of traffic-independent power, applied as a FLOOR on the enumerated static terms and not as an addend -- static power is max(leakage + clock + memory-interface idle, this) -- because leakage and clock ARE most of the physics inside a measured clocked-idle reading and adding both would double-count it. VERIFIER-CORRECTED, from 52 W and, more importantly, on SCOPE: the submission named this gpu_device_fixed_overhead_w and charged it to GPU-class devices only, which is the same class of error as a fitted multiplier and harder to see -- the evidence assembled for it says the floor is clock distribution plus memory-interface clocking on a large clocked die, and a compute-in-ROM part at 815 mm2 with a clocked ROM array and SRAM KV has both. It is charged to BOTH sides here. The value is the mean of four parts' clocked-idle fraction of TDP applied to 400 W: H100 SXM 72.5 W of 700 W = 10.357% (measured, NREL-class facility study); A100 SXM ~50 W of 400 W = 12.5%; B200 140 W of 1000 W = 14.0%; RTX PRO 6000 Blackwell 77.03 W of 600 W = 12.84%, which is EXECUTED HERE and is the artifact named above. The submission's 84.6 W reading was REFUTED as an instrumentation artifact -- it averaged a window 4-10 s after a 411 W load stopped, which straddles the decay tail (t+0 s = 116.72 W, t+5 s = 76.95 W in the committed trace) -- and the replicated steady clocked-idle state is 77.03 W across 22 samples at 2610 MHz SM / 13365 MHz memory, util 0. Note what 'clocked' means: the same board at a genuinely idle P-state drops to 7.8 W median, so this is the floor for a device that is up and serving, not a power-gated one. Two caveats the submission hid: the two 'methods' were one, because the low-bandwidth sweep points were produced by duty-cycling and so return clocked-idle power by construction; and the P8 decomposition drops the memory clock 33x at the same time as the SM clock, so roughly 30 W of the 69 W delta is the memory subsystem, which is why memory_interface_idle_w_per_stack is a separate term. The published cross-check is independent and close: SC'25 Table 2 measures P_const = 54 W for the A100 (72 W GH200, 88 W MI250X GCD, 69 W MI300A). The 100 W upper end the submission proposed was REJECTED -- the A100's 100 W Min Power Limit is the lowest cap the driver will enforce, a policy floor and not a consumption measurement. The defensible top is the clocked-and-issuing figure, 80 W.",
+      "range_high": 80.0,
+      "range_low": 40.0,
+      "source": "Executed on this machine: NVIDIA RTX PRO 6000 Blackwell Workstation Edition, 600 W, 1,141 nvidia-smi samples, artifact committed at results/roofline/gpu_clocked_idle_floor.json. Published legs: Vercellino et al., Measurement of Generative AI Workload Power Profiles for Whole-Facility Data Center Infrastructure Planning, arXiv:2604.07345 (2026), Appendix A, 'each idle GPU spent 72.5 W on average' on 700 W H100 SXM ; Measuring the Energy of Data Movement on Modern GPU Systems, SC'25, doi:10.1145/3712285.3759815, Table 2 P_const = 54 W for the A100, as the independent cross-check",
+      "value": 50.0
+    },
+    "fabric_clock_hz": {
+      "grade": "assumed",
+      "note": "1.0 GHz for a modelled design that has no published clock. THIS IS A MANDATORY COMPANION TO THE CLOCK TERM, not an extra: clock_energy_j_per_mm2_per_cycle has units of J per mm2 per CYCLE, there was no clock frequency anywhere in this file or in roofline.py, and applying the term without one is impossible. It is also NOT new to the model, only newly visible -- the latency block already reasons at '32 stages at a 1 GHz fabric clock' and 'a few cycles at a ~1 GHz fabric clock' without ever stating the clock as an input. The modelled ROM side's clock power is exactly linear in this, and it multiplies with clock_region_multiplier to set the W/mm2 asymmetry between the two sides of the comparison, so the two are swept together. Sweep 0.5-2.0 GHz.",
+      "range_high": 2000000000.0,
+      "range_low": 500000000.0,
+      "source": "no clock published for any mask-ROM or compute-in-ROM inference die; Taalas publishes no microarchitecture and no frequency",
+      "value": 1000000000.0
+    },
+    "gpu_logic_area_fraction": {
+      "grade": "assumed",
+      "note": "0.6 of a published GPU die is standard-cell logic; the remaining 0.4 is on-die SRAM, register files, HBM PHY and analogue, and is charged at the SRAM leakage density instead. This model does not allocate a published part's floorplan -- its area is stated for the iso-area comparison, not solved -- so the ONE number needed to apply a per-mm2-of-logic leakage density to a die it did not floorplan is stated here rather than hidden. 0.6 x 826 = 496 mm2 of A100 logic, which is the verifier's own independent estimate of ~500 mm2. Sweep 0.4-0.8: at 0.4 the A100's leakage is 21.5 W and at 0.8 it is 41.4 W, so this parameter is worth about 20 W on a 400 W part. It does not touch the modelled ROM designs, whose regions come from a solved area split.",
+      "range_high": 0.8,
+      "range_low": 0.4,
+      "source": "no vendor floorplan published for any datacentre GPU die; an A100 spends area on HBM PHY, 40 MB of L2, register files and schedulers that a standard-cell leakage density must not be charged over",
+      "value": 0.6
+    },
+    "memory_interface_idle_w_per_stack": {
+      "grade": "assumed",
+      "note": "2.8 W per HBM stack of traffic-independent DRAM device, PHY and controller power -- standby, refresh and an up-and-trained interface -- charged whether or not a byte moves. The submitted companion to the HBM energy term was filed as `measured` at 3.7 W/stack with a range of 3.27-4.27 and BOTH WERE REFUTED. The grade could not stand: its only source is an anonymous artifact-evaluation drop for a paper still under review -- no authors, no venue, no DOI -- and this file's own vocabulary reserves `measured` for fabricated silicon in a peer-reviewed venue. The range was false precision: both endpoints were the same 6.40 W measurement times two similar ratios, so they could not disagree. The honest interval is 1.2 W (DRAM device standby plus refresh, capacity-scaled from real HBM2 stack IDD2/IDD3N1 measurements of 272/246 mA at 1.2 V after subtracting a per-chip no-HBM baseline) to 6.40 W (a measured H200 memory-rail idle per stack, if HBM2e's subsystem idle is no lower than HBM3e's) -- a 5x band whose geometric centre is 2.8. This term is why clocked_idle_floor_w_per_device is a floor and not an addend: on the A100 the two describe overlapping physics, and SC'25's published P_const of 54 W is the whole traffic-independent draw that both are estimating. WHAT WOULD SETTLE IT: an Ampere-generation memory-rail measurement (Ampere does not expose the field), a vendor HBM2e stack IDD specification, or A100 baseboard rail telemetry.",
+      "range_high": 6.4,
+      "range_low": 1.2,
+      "source": "HBM2 stack IDD2/IDD3N1/IDD5B measurements and an H200 memory-rail idle reading, both from the CMU-SAFARI/HBM-Power artifact drop (2026) for a paper under review -- no venue, no DOI, so this cannot be graded above `assumed` ; cross-checked against Measuring the Energy of Data Movement on Modern GPU Systems, SC'25, doi:10.1145/3712285.3759815, Table 2",
+      "value": 2.8
+    },
+    "purpose": "Power a machine spends whether or not a byte moves. Before this block the model counted memory bytes and multiply-accumulates and nothing else, so it gave 54.21 W for an A100 against a published 400 W and 27.04 W for a Taalas HC1 against a published 200-250 W, and -- because step_time = raw_step_time x thermal_scale is the only path from power to any other quantity -- thermal_scale was exactly 1.0 at all 11,747 feasible points and no rate in the study depended on the energy model at all. Every term here is charged PER MM2 PER SECOND against the area split, not against traffic, which is what makes the thermal limit capable of binding. EVERY TERM IN THIS BLOCK WAS ADVERSARIALLY VERIFIED AND EVERY ONE WAS SENT BACK: the values below are the verifiers' corrections, not the submissions, and each note says which way the correction moved. Two of the corrections move power UP and two move it DOWN; none of them was chosen with a gate in view.",
+    "static_leakage_w_per_mm2": {
+      "logic": {
+        "grade": "assumed",
+        "note": "0.06 W per mm2 of STANDARD-CELL (logic) region at a 7 nm-class node, at 0.70-0.75 V and 85-105 C junction, on a mix weighted toward RVT. THE UNIT IS LOAD-BEARING AND WAS THE SUBMISSION'S worst defect: it is per mm2 of standard-cell region, NOT per mm2 of die, so on a part that is mostly array this term is charged over the logic only. VERIFIER-CORRECTED, 2x UP from the submitted 0.03. The chain is: an executed ASAP7 place-and-route base of 0.74e-3 W/mm2 of 100%-filled cell area at 25 C/0.70 V typical (from this repository's own results/physical_abi3/asap7 metadata, cross-checked three ways against the liberty's 1 pW leakage unit and against real-scale ASAP7 cell areas), times a threshold-flavour mix, a temperature factor and a voltage factor. The correction is in the threshold ladder: the submission put RELATIVE per-flavour offsets (SLVT 0, LVT 0.071, RVT 0.142 V) inside an exponential that needs the ABSOLUTE saturation threshold, and a device with Vth = 0 is not off. That ladder predicts a 25->100 C ratio of 12.69x at typical/nominal, which is BELOW the 13.82x ASAP7's own SS liberty measures at a slower process AND a lower voltage -- impossible. Re-anchoring to absolute Vth_sat (RVT 0.24, LVT 0.169, SLVT 0.098 V, the lowest ladder clearing that floor) moves the combined mix x T x V factor from 14.8 to 25.3 at the low end and 62.4 to 114.8 at the point. The submission's structural claim that leakier flavours scale less steeply, so mix and temperature partly cancel, is separately FALSIFIED by the same library: measured INVx1 FF/TT ratios are 0.638 / 0.546 / 0.646 across RVT/LVT/SLVT -- flat and non-monotonic -- where the model needs a 1.5x spread. The high end 0.20 is CAPPED BY MEASUREMENT, NOT BY THE CHAIN: the chain's own 40/40/20 mix at 105 C and 0.85 V gives 0.43 W/mm2, which is 86% of thermal.cooling_limit_w_per_mm2 and is not physical for a shipping part; 0.19-0.20 is where an A100 lands at ~39% of TDP, the top of ReGate's measured 30-72% static-power band. Grade stays `assumed` and correctly so: ASAP7 is a predictive academic PDK, no datacentre die's Vt mix is published anywhere, and the absolute threshold ladder is inferred from Ioff-per-micron rather than read off a datasheet. WHAT WOULD SETTLE IT: a foundry N7/N6 leakage-per-mm2 figure at a stated PVT, or an ASAP7 SRAM-flavour and LVT/SLVT SS liberty.",
+        "range_high": 0.2,
+        "range_low": 0.011,
+        "source": "ASAP7 7.5-track predictive PDK NLDM libraries (RVT/LVT/SLVT TT and SS corners) and this repository's executed ASAP7 place-and-route leakage at results/physical_abi3/asap7/add_bf16_sram_engine/pnr_artifacts/metadata.json ; ReGate, MICRO 2025, arXiv:2508.02536, which reports static power at 30-72% of NPU energy",
+        "value": 0.06
+      },
+      "rom_array": {
+        "grade": "assumed",
+        "note": "ZERO, DELIBERATELY, AND THIS IS AN UNDER-CHARGE ON THE ROM SIDE. The submitted companion of 0.006 W/mm2 of array was REFUTED AND REJECTED: the paragraph that derived the SRAM companion completely -- bits/mm2, off-device count, per-cell current, a 64 MB cross-check -- gave the ROM companion no cell density, no device count and no current, and 0.006 is the floor of its own reconstructed 0.006-0.03 bracket with nothing shown. Reconstructing it from this file's own primitives (24.07 Mbit/mm2 usable SRAM, rom.cell_to_sram_cell_area_ratio 0.2, rom.array_efficiency 0.70 against sram.array_efficiency 0.65, giving ~130 Mbit/mm2, with one off device per NOR mask-ROM cell against 3-4 in a 6T) gives 0.006-0.03 W/mm2, which is recorded as range_high so a reader can sweep it. It is held at zero rather than at that reconstruction because a companion nobody derived is not evidence. THE DIRECTION IS THE REASON THIS IS SAFE TO SHIP: the ROM array is most of a compute-in-ROM die, so charging it zero leakage makes the modelled ROM power LOWER and the Taalas HC1 power gate's residual LARGER. At the reconstruction's high end it would add roughly 18 W to HC1 -- reported as a sensitivity in the study, never as the value.",
+        "range_high": 0.03,
+        "range_low": 0.0,
+        "source": "no derivation survived verification; bracket reconstructed from rom.cell_to_sram_cell_area_ratio and rom.array_efficiency in this file against the verified SRAM companion",
+        "value": 0.0
+      },
+      "sram_array": {
+        "grade": "assumed",
+        "note": "0.005 W per mm2 of SRAM ARRAY at a 7 nm-class node. This companion's chain VERIFIED and is carried at the verifier's value, one third below the 0.015 that the same submission's 'of array' companion implied. 0.65 array efficiency over a 0.027 um2 N7 6T bitcell is 24.07 Mbit/mm2 of usable cells; at 0.05-1.0 nA of off current per cell and 0.8 V that is 0.96-19.3 mW/mm2, and the point sits at the geometric-centre end of it. Cross-check that reproduces: 537 Mbit at that density is 22.3 mm2 and 0.021-0.43 W. Charged over SRAM array area only -- the KV store on a ROM part, and the non-logic share of a published GPU die.",
+        "range_high": 0.019,
+        "range_low": 0.001,
+        "source": "TSMC N7 0.027 um2 6T HD bitcell (this file, nodes.N7) at sram.array_efficiency, times a per-cell off current of 0.05-1.0 nA at 0.8 V; no vendor SRAM macro leakage published for the target arrays",
+        "value": 0.005
+      }
+    }
+  },
   "purpose": "Graded technology primitives for the area-constrained roofline model. Every entry is a primitive input; capacities, bandwidths and compute roofs are derived from these by src/opentallas/roofline.py and are never stated here.",
   "reference_parts": {
     "a100_sxm_80gb": {
+      "clock_frequency_hz": {
+        "grade": "published",
+        "note": "1410 MHz boost clock, from the same NVIDIA Ampere whitepaper table the clock-energy term is calibrated on. Used only to turn power.clock_energy_j_per_mm2_per_cycle into watts.",
+        "source": "https://images.nvidia.com/aem-dam/en-zz/Solutions/data-center/nvidia-ampere-architecture-whitepaper.pdf",
+        "value": 1410000000.0
+      },
       "die_area_mm2": {
         "grade": "published",
         "note": "GA100 die",
@@ -776,6 +888,14 @@
       }
     },
     "b200_sxm": {
+      "clock_frequency_hz": {
+        "grade": "assumed",
+        "note": "NVIDIA publishes no B200 clock in any first-party document; 1.965 GHz is the commonly cited boost figure and is graded `assumed` rather than `published` for exactly that reason. Sweep 1.4-2.0 GHz. It enters only power.clock_energy_j_per_mm2_per_cycle and no rate depends on it.",
+        "range_high": 2000000000.0,
+        "range_low": 1400000000.0,
+        "source": "no first-party NVIDIA statement of a B200 clock frequency",
+        "value": 1965000000.0
+      },
       "die_area_mm2": {
         "grade": "published",
         "note": "two reticle-limited dies in one package, ~1600 mm2 of silicon per package",
@@ -909,7 +1029,9 @@
       },
       "power_w": {
         "grade": "published",
-        "note": "reported around 250 W per PCIe card; a ten-card server is quoted at 2.5 kW",
+        "note": "Reported around 250 W per PCIe card; a ten-card server is quoted at 2.5 kW. Taalas states no TDP directly, and the figures in circulation put the card between 200 and 250 W, so the range is the published BAND and the power gate reports against both ends of it. The value stays at the top of the band, which is the harder end for a model that lands below it, and quoting the harder end as the headline is the reading that does not flatter the model.",
+        "range_high": 250.0,
+        "range_low": 200.0,
         "source": "https://kaitchup.substack.com/p/taalas-hc1-absurdly-fast-per-user",
         "value": 250.0
       },

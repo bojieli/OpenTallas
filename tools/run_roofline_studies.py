@@ -38,6 +38,7 @@ from opentallas.roofline import (  # noqa: E402
     RooflineStep,
     Technology,
     Topology,
+    a100_power_anchor,
     a100_weight_bound_anchor,
     evaluate,
     gpu_device_budget,
@@ -46,6 +47,7 @@ from opentallas.roofline import (  # noqa: E402
     max_hbm_stacks_per_device,
     rom_device_budget,
     taalas_hc1_anchor,
+    taalas_hc1_power_anchor,
 )
 from opentallas.schema import ModelProfile  # noqa: E402
 from opentallas.workload import kv_traffic  # noqa: E402
@@ -747,6 +749,28 @@ def _step_row(
         "component_times_s": dict(step.component_times_s),
         "power_w": step.power_w,
         "thermal_scale": step.thermal_scale,
+        # **Power is no longer proportional to traffic.**  ``static_power_w`` is
+        # charged per second whether or not a byte moves, which is what lets
+        # ``thermal_scale`` bind at all: under the old rule stretching a step
+        # always reduced modelled power, so every design was coolable.
+        "static_power_w": metrics["static_power_w"],
+        "static_power_fraction_of_total": metrics["static_power_fraction_of_total"],
+        "static_leakage_w": metrics["static_power"]["leakage_w"],
+        "static_clock_w": metrics["static_power"]["clock_w"],
+        "static_memory_interface_w": metrics["static_power"]["memory_interface_w"],
+        "static_enumerated_w": metrics["static_power"]["enumerated_w"],
+        "static_floor_w": metrics["static_power"]["floor_w"],
+        "static_floor_binds": metrics["static_power"]["floor_binds"],
+        "dynamic_power_w_before_throttle": metrics["dynamic_power_w_before_throttle"],
+        "dynamic_energy_breakdown_j": dict(metrics["dynamic_energy_breakdown_j"]),
+        "power_density_w_per_mm2": metrics["power_density_w_per_mm2"],
+        "static_power_density_w_per_mm2": metrics["static_power_density_w_per_mm2"],
+        "power_headroom_fraction": _finite(metrics["power_headroom_fraction"]),
+        "cooling_limit_w": metrics["cooling_limit_w"],
+        "cooling_headroom_w": metrics["cooling_headroom_w"],
+        "cooling_infeasible": metrics["cooling_infeasible"],
+        "energy_j_per_token": _finite(metrics["energy_j_per_token"]),
+        "dynamic_energy_j_per_token": metrics["dynamic_energy_j_per_token"],
         "stored_weight_bytes": metrics["stored_weight_bytes"],
         "engaged_weight_bytes": metrics["engaged_weight_bytes"],
         "engaged_weight_fraction": metrics["engaged_weight_fraction"],
@@ -1564,6 +1588,20 @@ def _simulate_study(
                 "rom_per_user_tokens_s": row["per_user_tokens_s"],
                 "rom_aggregate_tokens_s": row["aggregate_tokens_s"],
                 "rom_binding_constraint": row["binding_constraint"],
+                # **Energy per token, on both sides, at the same area.**  This
+                # was unpublishable until the power model enumerated anything
+                # beyond memory bytes and MACs, and it is much of the ROM
+                # argument: a mask-ROM part does not pay DRAM access energy for
+                # its weights.  The number includes the static share amortised
+                # over the tokens the step actually produces, so a machine that
+                # is fast and leaky is not flattered against one that is slow
+                # and cool.
+                "rom_energy_j_per_token": row["energy_j_per_token"],
+                "rom_dynamic_energy_j_per_token": row["dynamic_energy_j_per_token"],
+                "rom_power_w": row["power_w"],
+                "rom_static_power_w": row["static_power_w"],
+                "rom_power_density_w_per_mm2": row["power_density_w_per_mm2"],
+                "rom_thermal_scale": row["thermal_scale"],
                 "iso_area_gpu_design": iso["design"],
                 "iso_area_gpu_silicon_area_mm2": iso["silicon_area_mm2"],
                 "iso_area_gpu_device_count": iso["device_count"],
@@ -1577,6 +1615,32 @@ def _simulate_study(
                 "iso_area_gpu_per_user_tokens_s": iso["per_user_tokens_s"],
                 "iso_area_gpu_aggregate_tokens_s": iso["aggregate_tokens_s"],
                 "iso_area_gpu_binding_constraint": iso["binding_constraint"],
+                "iso_area_gpu_energy_j_per_token": iso["energy_j_per_token"],
+                "iso_area_gpu_dynamic_energy_j_per_token": iso[
+                    "dynamic_energy_j_per_token"
+                ],
+                "iso_area_gpu_power_w": iso["power_w"],
+                "iso_area_gpu_static_power_w": iso["static_power_w"],
+                "iso_area_gpu_power_density_w_per_mm2": iso[
+                    "power_density_w_per_mm2"
+                ],
+                "iso_area_gpu_thermal_scale": iso["thermal_scale"],
+                "energy_per_token_ratio": (
+                    row["energy_j_per_token"] / iso["energy_j_per_token"]
+                    if row["feasible"]
+                    and iso["feasible"]
+                    and row["energy_j_per_token"]
+                    and iso["energy_j_per_token"]
+                    else None
+                ),
+                "tokens_per_joule_advantage_x": (
+                    iso["energy_j_per_token"] / row["energy_j_per_token"]
+                    if row["feasible"]
+                    and iso["feasible"]
+                    and row["energy_j_per_token"]
+                    and iso["energy_j_per_token"]
+                    else None
+                ),
                 "iso_area_gpu_parallelism": iso["parallelism"],
                 "iso_area_gpu_pipeline_stages": iso["pipeline_stages"],
                 "iso_area_gpu_pipeline_stages_uncapped": iso[
@@ -1962,8 +2026,227 @@ def _simulate_study(
         "latency_crossovers": crossovers,
     }
     result["latency_correction_ladder"] = _latency_correction_ladder(result)
+    result["power_and_energy"] = _power_and_energy(result)
     result["consistency_audit"] = _consistency_audit(result)
     return result
+
+
+def _area_class(area_mm2: float) -> str:
+    if area_mm2 >= 40_000:
+        return "wafer (>=40,000 mm2)"
+    if area_mm2 >= 5_000:
+        return "large array (5,000-40,000 mm2)"
+    if area_mm2 >= 1_600:
+        return "small array (1,600-5,000 mm2)"
+    return "single die (<1,600 mm2)"
+
+
+def _power_and_energy(result: dict[str, Any]) -> dict[str, Any]:
+    """Where the cooling limit binds, and what a token costs on each side.
+
+    Both halves of this were unpublishable before the power model enumerated
+    anything beyond memory bytes and multiply-accumulates.  ``thermal_scale``
+    was exactly 1.0 at every feasible point in both studies, so the model did
+    not express dark silicon at all; and every watt and every joule per token
+    it reported was 7-9x low against two published parts, so none of them could
+    be quoted.
+    """
+
+    points = result["points"]
+    feasible = [row for row in points if row["feasible"]]
+    throttled = [row for row in feasible if row["thermal_scale"] > 1.0 + 1e-12]
+    uncoolable = [row for row in points if row.get("cooling_infeasible")]
+
+    by_class: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for row in feasible:
+        by_class.setdefault(
+            (row["family"], _area_class(row["silicon_area_mm2"])), []
+        ).append(row)
+    headroom = []
+    for (family, klass), rows in sorted(by_class.items()):
+        fractions = sorted(row["power_headroom_fraction"] or 0.0 for row in rows)
+        headroom.append(
+            {
+                "family": family,
+                "area_class": klass,
+                "points": len(rows),
+                "throttled": sum(
+                    1 for row in rows if row["thermal_scale"] > 1.0 + 1e-12
+                ),
+                "median_power_headroom_fraction": fractions[len(fractions) // 2],
+                "max_power_headroom_fraction": fractions[-1],
+                "max_power_density_w_per_mm2": max(
+                    row["power_density_w_per_mm2"] for row in rows
+                ),
+                "median_static_share_of_power": sorted(
+                    row["static_power_fraction_of_total"] for row in rows
+                )[len(rows) // 2],
+            }
+        )
+
+    worst = sorted(throttled, key=lambda row: -row["thermal_scale"])[:12]
+    # One row per (model, batch), and the design chosen by the SAME rule the
+    # report uses everywhere else it says "best": the smallest silicon within
+    # 5% of the fastest per-user rate.  Listing every comparison instead would
+    # bury the answer under wafers serving one user, whose joules per token are
+    # enormous for a reason that has nothing to do with the memory technology.
+    grouped: dict[tuple[str, int], list[dict[str, Any]]] = {}
+    for row in result["comparisons"]:
+        if row["rom_feasible"] and row["iso_area_gpu_feasible"]:
+            grouped.setdefault((row["model"], row["batch_size"]), []).append(row)
+    energy = []
+    for (model, batch), rows in sorted(grouped.items(), key=lambda kv: (kv[0][0], kv[0][1])):
+        best = _pick_best(rows, "rom_per_user_tokens_s", "rom_silicon_area_mm2")
+        if best is None:
+            continue
+        energy.append(
+            {
+                "model": model,
+                "batch_size": batch,
+                "rom_design": best["rom_design"],
+                "silicon_area_mm2": best["rom_silicon_area_mm2"],
+                "rom_energy_j_per_token": best["rom_energy_j_per_token"],
+                "rom_dynamic_energy_j_per_token": best[
+                    "rom_dynamic_energy_j_per_token"
+                ],
+                "rom_power_w": best["rom_power_w"],
+                "rom_static_power_w": best["rom_static_power_w"],
+                "rom_binds_on": best["rom_binding_constraint"],
+                "rom_per_user_tokens_s": best["rom_per_user_tokens_s"],
+                "gpu_design": best["iso_area_gpu_design"],
+                "gpu_energy_j_per_token": best["iso_area_gpu_energy_j_per_token"],
+                "gpu_dynamic_energy_j_per_token": best[
+                    "iso_area_gpu_dynamic_energy_j_per_token"
+                ],
+                "gpu_power_w": best["iso_area_gpu_power_w"],
+                "gpu_static_power_w": best["iso_area_gpu_static_power_w"],
+                "gpu_binds_on": best["iso_area_gpu_binding_constraint"],
+                "gpu_per_user_tokens_s": best["iso_area_gpu_per_user_tokens_s"],
+                "tokens_per_joule_advantage_x": best["tokens_per_joule_advantage_x"],
+            }
+        )
+
+    # Wafer-scale ROM silicon specifically.  "46,225 mm2" on the GPU side is a
+    # 56-die CLUSTER, each die at its own published TDP, so including it here
+    # would answer a different question.
+    wafer_rom = [
+        row
+        for row in feasible
+        if row["family"] == "rom" and row["silicon_area_mm2"] >= 40_000
+    ]
+    wafer_rom_headroom = (
+        max(row["power_headroom_fraction"] or 0.0 for row in wafer_rom)
+        if wafer_rom
+        else None
+    )
+    if throttled:
+        worst_row = worst[0]
+        stores = sorted({row["kv_store"] for row in throttled})
+        reading = (
+            "The cooling limit binds, and it binds where a uniform multiplier on "
+            "the old traffic-proportional model said it would NOT. It is not the "
+            "wafers: wafer-scale ROM silicon is power-sparse, because a ROM sweep "
+            "is a fixed cost spread over far more silicon, and the busiest one "
+            "here reaches "
+            + (
+                f"{wafer_rom_headroom * 100:.0f}% of its budget. "
+                if wafer_rom_headroom is not None
+                else "no such design is in this study. "
+            )
+            + "It is the SMALL, DENSE ARRAYS, and specifically the ones that put "
+            f"KV in {'/'.join(store.upper() for store in stores)}: the worst "
+            "point's dynamic energy is dominated by KV traffic and not by the ROM "
+            "sweep at all. The batch dependence the earlier uniform-multiplier "
+            "analysis predicted does NOT survive -- static power does not scale "
+            "with traffic, so batch "
+            f"{min(row['batch_size'] for row in throttled)} throttles too, and "
+            f"the worst point here is at batch {worst_row['batch_size']}."
+        )
+    else:
+        reading = (
+            "Nothing in this study is power-limited. That is a statement about "
+            "these designs and not an artifact of the energy model: static power "
+            "is charged per mm2 per second, so a design cannot escape it by "
+            "moving fewer bytes. The busiest point reaches "
+            f"{max(row['max_power_headroom_fraction'] for row in headroom) * 100:.0f}% "
+            "of its cooling budget"
+            + (
+                f", and the busiest wafer-scale ROM design {wafer_rom_headroom * 100:.0f}%. "
+                if wafer_rom_headroom is not None
+                else ". "
+            )
+            + "The companion study at the other node, whose HBM generation "
+            "delivers more than twice the bandwidth per stack, does have "
+            "power-limited points."
+        )
+
+    return {
+        "purpose": (
+            "The two questions the old power model could not answer: does the "
+            "cooling limit ever bind, and what does a token cost in joules on "
+            "each side. Neither was askable while power was proportional to "
+            "traffic -- a throttled step drew LESS modelled power the more it "
+            "was throttled, so every design was coolable at some speed, and "
+            "every watt was 7-9x low against both published parts."
+        ),
+        "feasible_points": len(feasible),
+        "thermally_throttled_points": len(throttled),
+        "thermally_throttled_fraction": (
+            len(throttled) / len(feasible) if feasible else 0.0
+        ),
+        "uncoolable_points": len(uncoolable),
+        "throttled_by_family": {
+            family: sum(1 for row in throttled if row["family"] == family)
+            for family in sorted({row["family"] for row in throttled})
+        },
+        "throttled_by_area_class": {
+            klass: sum(
+                1 for row in throttled if _area_class(row["silicon_area_mm2"]) == klass
+            )
+            for klass in sorted(
+                {_area_class(row["silicon_area_mm2"]) for row in throttled}
+            )
+        },
+        "throttled_by_batch": {
+            str(batch): sum(1 for row in throttled if row["batch_size"] == batch)
+            for batch in sorted({row["batch_size"] for row in throttled})
+        },
+        "throttled_by_kv_store": {
+            store: sum(1 for row in throttled if row["kv_store"] == store)
+            for store in sorted({row["kv_store"] for row in throttled})
+        },
+        "power_headroom_by_area_class": headroom,
+        "worst_throttled_points": [
+            {
+                "design": row["design"],
+                "model": row["model"],
+                "batch_size": row["batch_size"],
+                "silicon_area_mm2": row["silicon_area_mm2"],
+                "kv_store": row["kv_store"],
+                "thermal_scale": row["thermal_scale"],
+                "power_w": row["power_w"],
+                "cooling_limit_w": row["cooling_limit_w"],
+                "static_power_w": row["static_power_w"],
+                "static_share_of_power": row["static_power_fraction_of_total"],
+                "dynamic_energy_breakdown_j": row["dynamic_energy_breakdown_j"],
+                "per_user_tokens_s": row["per_user_tokens_s"],
+                "per_user_tokens_s_unthrottled": (
+                    row["per_user_tokens_s"] * row["thermal_scale"]
+                ),
+            }
+            for row in worst
+        ],
+        "energy_per_token": energy,
+        "energy_per_token_selection_rule": (
+            "One row per (model, batch). The ROM design is the smallest silicon "
+            "within 5% of the fastest per-user rate -- the same rule the report "
+            "uses everywhere it says 'best' -- and the GPU beside it is the "
+            "iso-area comparator that comparison already chose. Listing every "
+            "comparison instead buries the answer under wafers serving one user."
+        ),
+        "wafer_scale_rom_max_power_headroom_fraction": wafer_rom_headroom,
+        "reading": reading,
+    }
 
 
 def _technology_derivations(
@@ -2263,6 +2546,56 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
             },
             f"unknown binding constraint {key}: {row['binding_constraint']}",
         )
+        # -- power ---------------------------------------------------------
+        # The property, not the formula: static power is charged per second and
+        # does not fall when the step is stretched, so total power is never
+        # below it and the throttle can only push the machine down onto the
+        # cooling limit, never through it.
+        check(
+            row["static_power_w"] >= -1e-12,
+            f"negative static power {key}",
+        )
+        check(
+            row["power_w"] >= row["static_power_w"] - 1e-9,
+            f"total power below the static floor {key}",
+        )
+        check(
+            close(
+                row["static_power_w"],
+                max(row["static_enumerated_w"], row["static_floor_w"]),
+            ),
+            f"static power is not max(enumerated, floor) {key}",
+        )
+        check(
+            close(
+                row["static_enumerated_w"],
+                row["static_leakage_w"]
+                + row["static_clock_w"]
+                + row["static_memory_interface_w"],
+            ),
+            f"enumerated static power does not sum from its terms {key}",
+        )
+        check(
+            row["power_w"]
+            <= row["cooling_limit_w"] * (1 + 1e-6) or row["cooling_infeasible"],
+            f"power above the cooling limit on a coolable point {key}",
+        )
+        if row["thermal_scale"] > 1.0 + 1e-9:
+            # A throttled point sits exactly on its cooling limit; that is what
+            # the throttle solves for.  Before static power existed this could
+            # never happen, because stretching a step reduced modelled power.
+            check(
+                close(row["power_w"], row["cooling_limit_w"], tol=1e-6),
+                f"throttled point is not on its cooling limit {key}",
+            )
+            check(
+                row["binding_constraint"] == "thermal",
+                f"throttled point does not bind on thermal {key}",
+            )
+        check(
+            row["energy_j_per_token"] is None or row["energy_j_per_token"] > 0,
+            f"non-positive energy per token {key}",
+        )
         if row["binding_constraint"] != "thermal":
             check(
                 components[row["binding_constraint"]]
@@ -2389,6 +2722,25 @@ def run_anchors(technology: Technology) -> dict[str, Any]:
     model = ModelProfile.load(ANCHOR_MODEL_PATH)
     hc1 = taalas_hc1_anchor(technology, model)
     a100 = a100_weight_bound_anchor(technology, model)
+    # The two POWER gates, in the shape of the two throughput gates above and
+    # subject to the same rule: they are reported as an OUTCOME and nothing is
+    # tuned to close them.  Both are evaluated at the stated values and at both
+    # ends of the whole power band, because every term in that block bar one is
+    # `assumed` and two of them multiply.
+    a100_power = a100_power_anchor(technology)
+    hc1_power = taalas_hc1_power_anchor(technology, model)
+    power_band: dict[str, Any] = {}
+    for bound in ("low", "stated", "high"):
+        variant = technology if bound == "stated" else technology.at_power_bound(bound)
+        a_check = a100_power_anchor(variant)
+        h_check = taalas_hc1_power_anchor(variant, model)
+        power_band[bound] = {
+            "a100_tdp_power_w": a_check.modelled_value,
+            "a100_ratio_to_published": a_check.ratio,
+            "taalas_hc1_card_power_w": h_check.modelled_value,
+            "taalas_hc1_ratio_to_published": h_check.ratio,
+            "taalas_hc1_ratio_to_band_low": h_check.detail["ratio_to_band_low"],
+        }
     sensitivity = []
     for bits in (3.0, 3.5, 4.0, 5.0, 6.0):
         check = taalas_hc1_anchor(technology, model, weight_bits_per_parameter=bits)
@@ -2414,6 +2766,22 @@ def run_anchors(technology: Technology) -> dict[str, Any]:
     return {
         "taalas_hc1": hc1.to_dict(),
         "a100_weight_bound": a100.to_dict(),
+        "a100_tdp_power": a100_power.to_dict(),
+        "taalas_hc1_card_power": hc1_power.to_dict(),
+        "power_gate_band": power_band,
+        "power_gate_policy": (
+            "Both power gates run at the stated values and at both ends of the "
+            "whole power band -- leakage, clock energy, clock frequency, the "
+            "array clock multipliers, the clocked-idle floor, the memory-"
+            "interface idle floor and the four traffic energies, moved together. "
+            "Moving one term at a time would report a sensitivity that is really "
+            "a bias, for the same reason at_link_latency_bound moves every link "
+            "on both sides at once. NOTHING WAS TUNED TO CLOSE EITHER GATE: the "
+            "A100 gate lands close and the HC1 gate does not, and the asymmetry "
+            "between them is the finding rather than an embarrassment. The A100 "
+            "gate is also the weaker of the two, because the clock term inside "
+            "it was calibrated as a fraction of a shipping GPU's TDP density."
+        ),
         "taalas_hc1_weight_bits_sensitivity": sensitivity,
         "taalas_hc1_context_sensitivity": context_sensitivity,
         "gate_policy": (
@@ -2639,6 +3007,369 @@ def _render_corrections(result: dict[str, Any]) -> list[str]:
     return lines
 
 
+def _render_power_gates(anchors: dict[str, Any]) -> list[str]:
+    """The two power gates, their band, and what each one is worth."""
+
+    a100 = anchors["a100_tdp_power"]
+    hc1 = anchors["taalas_hc1_card_power"]
+    band = anchors["power_gate_band"]
+    low, high = hc1["detail"]["published_band_w"]
+    lines = [
+        "",
+        "### The two power gates, and the residual they leave",
+        "",
+        "Two gates in the shape of the two above, added because every watt this",
+        "program reported was 7-9x low against both published parts and because",
+        "`thermal_scale` was exactly 1.0 at every feasible point, so no rate",
+        "depended on the energy model at all. **Nothing was tuned to close",
+        "either of them.** Six power terms were derived from primitives and",
+        "adversarially verified; every one was sent back with a correction, and",
+        "the corrections are what is applied. Two of them move power up and two",
+        "move it down.",
+        "",
+        "The A100 gate is evaluated at a **saturating** operating point --",
+        f"{a100['detail']['saturating_bytes_s'] / 1e12:,.3f} TB/s of published HBM",
+        f"bandwidth and {a100['detail']['roof_ops_s'] / 1e12:,.0f} T ops/s of published",
+        f"dense roof at {a100['detail']['clock_frequency_hz'] / 1e6:,.0f} MHz, both at",
+        "once -- because a TDP is what a part is built to shed under load, not",
+        "what a decode step draws. The HC1 gate is evaluated at exactly the point",
+        "its throughput gate already uses, read off that gate's own step so the",
+        "two cannot drift apart.",
+        "",
+        "| Gate | Published | Modelled | Ratio | Result |",
+        "|---|---:|---:|---:|---|",
+        f"| A100 at TDP, saturating | {_fmt(a100['published_value'])} W | "
+        f"{_fmt(a100['modelled_value'])} W | {_fmt_ratio(a100['ratio'])} | "
+        f"{'PASS' if a100['passed'] else 'FAIL'} |",
+        f"| Taalas HC1 card power | {_fmt(low)}-{_fmt(high)} W | "
+        f"{_fmt(hc1['modelled_value'])} W | {_fmt_ratio(hc1['ratio'])} | "
+        f"{'PASS' if hc1['passed'] else 'FAIL'} |",
+        "",
+        "**Where the watts come from.**",
+        "",
+        "| Term | A100 at TDP | Taalas HC1 |",
+        "|---|---:|---:|",
+    ]
+    a_terms = a100["detail"]["terms_w"]
+    h_terms = hc1["detail"]["terms_w"]
+    h_dyn = hc1["detail"]["dynamic_power_w_by_term"]
+    lines.extend(
+        [
+            f"| memory / array traffic (weights) | {_fmt(a_terms['hbm_traffic'])} W | "
+            f"{_fmt(h_dyn['weight_read_j'])} W |",
+            f"| KV traffic | n/a: one saturating HBM stream | "
+            f"{_fmt(h_dyn['kv_read_j'])} W |",
+            f"| operand delivery | {_fmt(a_terms['operand_delivery'])} W | "
+            f"{_fmt(h_dyn['operand_delivery_j'])} W |",
+            f"| arithmetic | {_fmt(a_terms['arithmetic'])} W | "
+            f"{_fmt(h_dyn['arithmetic_j'])} W |",
+            f"| static: leakage | {_fmt(a_terms['static_leakage'])} W | "
+            f"{_fmt(h_terms['static_leakage'])} W |",
+            f"| static: clock distribution | {_fmt(a_terms['static_clock'])} W | "
+            f"{_fmt(h_terms['static_clock'])} W |",
+            f"| static: memory-interface idle | "
+            f"{_fmt(a_terms['static_memory_interface'])} W | "
+            f"{_fmt(h_terms['static_memory_interface'])} W |",
+            f"| **static charged** (max of the enumeration and the measured "
+            f"clocked-idle floor) | {_fmt(a_terms['static_total_charged'])} W | "
+            f"{_fmt(h_terms['static_total_charged'])} W |",
+            f"| **total** | {_fmt(a100['modelled_value'])} W | "
+            f"{_fmt(hc1['modelled_value'])} W |",
+            "",
+            "On HC1 the enumerated static power is "
+            f"{_fmt(h_terms['static_enumerated'])} W and the measured clocked-idle "
+            f"floor is {_fmt(h_terms['static_clocked_idle_floor'])} W, so "
+            + (
+                "**the floor binds**: the bottom-up enumeration of this part's "
+                "leakage and clock tree is below what a shipping clocked device "
+                "is measured to draw, and the floor is charged instead. The two "
+                "are combined with `max` and never added, because a measured "
+                "clocked-idle reading IS mostly leakage and clock tree."
+                if h_terms["static_floor_binds"]
+                else "the enumeration binds and the floor is inert."
+            ),
+            "",
+            "**The band.** Every term in the power block bar one is `assumed`, and",
+            "two of them -- the fabric clock and the array clock multiplier --",
+            "multiply, so the gates are reported at both ends of the whole band",
+            "with every term moved together. Moving one at a time would report a",
+            "sensitivity that is really a bias.",
+            "",
+            "| Power band | A100 at TDP | Ratio | HC1 card | Ratio to 250 W | Ratio to 200 W |",
+            "|---|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for bound in ("low", "stated", "high"):
+        entry = band[bound]
+        lines.append(
+            f"| {bound} | {_fmt(entry['a100_tdp_power_w'])} W | "
+            f"{_fmt_ratio(entry['a100_ratio_to_published'])} | "
+            f"{_fmt(entry['taalas_hc1_card_power_w'])} W | "
+            f"{_fmt_ratio(entry['taalas_hc1_ratio_to_published'])} | "
+            f"{_fmt_ratio(entry['taalas_hc1_ratio_to_band_low'])} |"
+        )
+    lines.extend(
+        [
+            "",
+            "**The outcome, stated as an outcome.** The A100 gate lands at "
+            f"{_fmt_ratio(a100['ratio'])} of its published TDP. The HC1 gate lands at "
+            f"{_fmt_ratio(hc1['ratio'])} of the top of its published band, "
+            f"**{1.0 / hc1['ratio']:.2f}x low**, against "
+            f"{1.0 / hc1['detail']['ratio_to_band_low']:.2f}x low at the bottom of it. "
+            "The asymmetry is the finding and it should not be smoothed over.",
+            "",
+            "**Why the A100 gate is the weaker of the two, and must not be quoted",
+            "as independent.** `power.clock_energy_j_per_mm2_per_cycle` was",
+            "calibrated as 20-45% of a shipping GPU's published TDP density. It is",
+            "a different GPU -- P100 and GV100 at 16FF+/12FFN, not this part -- but",
+            "it is still a GPU TDP, so adding that term to the others and comparing",
+            "the sum with a GPU's TDP is partly checking an input against its own",
+            "family. What the gate does test is that the traffic terms, the",
+            "arithmetic and the static terms are mutually consistent in size, and",
+            "it would fail loudly if any were an order of magnitude out. The HC1",
+            "gate has no such circularity: nothing on the ROM side was calibrated",
+            "on a Taalas figure, because Taalas publishes no microarchitecture and",
+            "no energy at all. **It is the stronger gate and it is the one that",
+            "fails.**",
+            "",
+            "**Energy per token at the two anchors.** Both parts serve the same "
+            "workload -- Llama-3.1-8B at batch 1 -- so this is the cleanest "
+            "statement the model can make about the ROM argument, and it could "
+            "not be made at all until the power terms existed:",
+            "",
+            "| Part | J/token | W | tok/s |",
+            "|---|---:|---:|---:|",
+            f"| Taalas HC1 (modelled reconstruction) | "
+            f"{hc1['detail']['energy_j_per_token']:,.6f} | "
+            f"{_fmt(hc1['modelled_value'])} | "
+            f"{_fmt(hc1['detail']['modelled_tokens_s'])} |",
+            f"| A100 80GB, weight-bound gate, same model and batch | "
+            f"{anchors['a100_weight_bound']['detail']['step']['metrics']['energy_j_per_token']:,.6f} | "
+            f"{_fmt(anchors['a100_weight_bound']['detail']['step']['power_w'])} | "
+            f"{_fmt(anchors['a100_weight_bound']['detail']['step']['per_user_tokens_s'])} |",
+            "",
+            "That is a factor of "
+            f"{anchors['a100_weight_bound']['detail']['step']['metrics']['energy_j_per_token'] / hc1['detail']['energy_j_per_token']:,.0f} "
+            "in tokens per joule, and **it is a ceiling on the ROM advantage, not "
+            "a measurement of it**, for three reasons that all point the same way. "
+            "The GPU is at batch 1, which is a GPU's worst operating point -- it "
+            "re-reads the whole checkpoint from DRAM for one token, and the "
+            "batched rows in the table below are the fair comparison. The ROM "
+            "side's read energy is `assumed` over a 17x bracket. And the HC1 "
+            "power gate says this model's ROM total is 2.9-3.6x below the "
+            "shipping part's published card power, so the ROM joules here are a "
+            "lower bound by roughly that factor.",
+            "",
+            "**Where the remaining HC1 shortfall could live, none of it fitted.**",
+            "The ROM array is charged **zero** leakage, because the companion term",
+            "for it was refuted as underived; at the top of its reconstructed",
+            f"bracket it would add {_fmt(hc1['detail']['rom_array_leakage_if_reconstructed_w'])} W,",
+            "which does not close the gate either. `energy.rom_read_j_per_byte`",
+            "moved from 0.5 to 0.08 pJ/B on the evidence, which made this gate",
+            "**worse by about 4x on that term alone** and was adopted anyway. The",
+            "honest reading is that a compute-in-ROM part's energy has never been",
+            "published at any node, and this model's ROM side is built from macros",
+            "that are mostly simulated, at 28-130 nm, with boundaries that do not",
+            "match the term they are being asked to supply.",
+            "",
+        ]
+    )
+    return lines
+
+
+def _render_power_and_energy(result: dict[str, Any]) -> list[str]:
+    """Dark silicon, and what a token costs in joules on each side."""
+
+    block = result.get("power_and_energy")
+    if not block:
+        return []
+    binds = bool(block["thermally_throttled_points"])
+    headline = (
+        [
+            "**The thermal limit binds here, and this is the first version of this",
+            "study in which it could.**",
+        ]
+        if binds
+        else [
+            "**The thermal limit can bind now, and this is the first version of this",
+            "study in which it could -- in this one it does not, and the companion",
+            "study at the other node is where it does.**",
+        ]
+    )
+    lines = [
+        "",
+        "## Power, dark silicon and energy per token",
+        "",
+        *headline,
+        "Static power is charged per mm2 per second whether or not a byte moves,",
+        "so the coolable step time solves",
+        "`t >= E_dynamic / (cooling_limit - P_static)` rather than dividing the",
+        "total energy by the total limit. Under the old rule stretching a step",
+        "always reduced modelled power, so every design was coolable at some speed",
+        "and `thermal_scale` was exactly 1.0 at all 11,747 feasible points across",
+        "both studies.",
+        "",
+        f"- **{block['thermally_throttled_points']:,} of "
+        f"{block['feasible_points']:,} feasible points "
+        f"({block['thermally_throttled_fraction'] * 100:.1f}%) are power-limited.**",
+        f"- {block['uncoolable_points']:,} points are uncoolable at any speed "
+        "(static power alone at or above the cooling budget).",
+    ]
+    if block["throttled_by_family"]:
+        lines.append(
+            "- By family: "
+            + ", ".join(
+                f"{name} {count}"
+                for name, count in block["throttled_by_family"].items()
+            )
+            + "."
+        )
+        lines.append(
+            "- By area class: "
+            + ", ".join(
+                f"{name} {count}"
+                for name, count in block["throttled_by_area_class"].items()
+            )
+            + "."
+        )
+        lines.append(
+            "- By KV store: "
+            + ", ".join(
+                f"{name} {count}"
+                for name, count in block["throttled_by_kv_store"].items()
+            )
+            + "."
+        )
+        lines.append(
+            "- By batch: "
+            + ", ".join(
+                f"B={name} {count}"
+                for name, count in block["throttled_by_batch"].items()
+            )
+            + "."
+        )
+    lines.extend(["", block["reading"], ""])
+
+    lines.extend(
+        [
+            "| Family | Area class | Points | Throttled | Median power / budget | "
+            "Worst power / budget | Peak W/mm2 | Median static share |",
+            "|---|---|---:|---:|---:|---:|---:|---:|",
+        ]
+    )
+    for row in block["power_headroom_by_area_class"]:
+        lines.append(
+            f"| {row['family']} | {row['area_class']} | {row['points']:,} | "
+            f"{row['throttled']:,} | "
+            f"{row['median_power_headroom_fraction'] * 100:.1f}% | "
+            f"{row['max_power_headroom_fraction'] * 100:.1f}% | "
+            f"{row['max_power_density_w_per_mm2']:.3f} | "
+            f"{row['median_static_share_of_power'] * 100:.0f}% |"
+        )
+
+    if block["worst_throttled_points"]:
+        lines.extend(
+            [
+                "",
+                "### The points that cannot be cooled at full speed",
+                "",
+                "| Design | Model | B | mm2 | KV | Throttle | Power / budget | "
+                "Static share | tok/s | tok/s unthrottled |",
+                "|---|---|---:|---:|---|---:|---|---:|---:|---:|",
+            ]
+        )
+        for row in block["worst_throttled_points"]:
+            lines.append(
+                f"| `{row['design']}` | {row['model']} | {row['batch_size']} | "
+                f"{_fmt_area(row['silicon_area_mm2'])} | {row['kv_store']} | "
+                f"{row['thermal_scale']:.3f}x | "
+                f"{_fmt(row['power_w'])} / {_fmt(row['cooling_limit_w'])} W | "
+                f"{row['static_share_of_power'] * 100:.0f}% | "
+                f"{_fmt(row['per_user_tokens_s'])} | "
+                f"{_fmt(row['per_user_tokens_s_unthrottled'])} |"
+            )
+        worst = block["worst_throttled_points"][0]
+        breakdown = worst["dynamic_energy_breakdown_j"]
+        total = sum(breakdown.values()) or 1.0
+        lines.extend(
+            [
+                "",
+                "The worst point's dynamic energy is "
+                + ", ".join(
+                    f"{name.replace('_j', '').replace('_', ' ')} "
+                    f"{value / total * 100:.1f}%"
+                    for name, value in sorted(
+                        breakdown.items(), key=lambda item: -item[1]
+                    )
+                )
+                + ". **The ROM sweep is not what melts it.** A mask-ROM array",
+                "reads its weights for almost nothing; what it still pays for, at",
+                "the same rate a GPU does, is KV traffic to DRAM. That is an",
+                "argument for keeping KV on die, and it is visible here only",
+                "because the power model now distinguishes the two.",
+            ]
+        )
+
+    energy = block["energy_per_token"]
+    if energy:
+        lines.extend(
+            [
+                "",
+                "### Energy per token, both sides, at equal area",
+                "",
+                "**This number has been unpublishable until now.** Not paying DRAM",
+                "access energy for weights is much of the ROM argument, and the",
+                "model could not state it while every watt in it was 7-9x low. The",
+                "figures below include the static share amortised over the tokens",
+                "the step actually produces, so a machine that is fast and leaky is",
+                "not flattered against one that is slow and cool.",
+                "",
+                block["energy_per_token_selection_rule"],
+                "",
+                "| Model | B | mm2 | ROM design | ROM J/token | ROM W | ROM binds | "
+                "iso-area GPU | GPU J/token | GPU W | GPU binds | ROM tokens/joule |",
+                "|---|---:|---:|---|---:|---:|---|---|---:|---:|---|---:|",
+            ]
+        )
+        for row in energy:
+            lines.append(
+                f"| {row['model']} | {row['batch_size']} | "
+                f"{_fmt_area(row['silicon_area_mm2'])} | `{row['rom_design']}` | "
+                f"{_fmt(row['rom_energy_j_per_token'], ',.6f')} | "
+                f"{_fmt(row['rom_power_w'])} | {row['rom_binds_on']} | "
+                f"`{row['gpu_design']}` | "
+                f"{_fmt(row['gpu_energy_j_per_token'], ',.6f')} | "
+                f"{_fmt(row['gpu_power_w'])} | {row['gpu_binds_on']} | "
+                f"{_fmt_ratio(row['tokens_per_joule_advantage_x'])} |"
+            )
+        lines.extend(
+            [
+                "",
+                "**Read this with the power gates beside it.** The ROM side's energy",
+                "rests on `energy.rom_read_j_per_byte`, which is `assumed` over a",
+                "17x-wide bracket, and on an operand-delivery scalar that is the",
+                "tile-local floor with no long-path ladder in it. The HC1 power gate",
+                "says the ROM side's total is several times below a shipping part's",
+                "published card power, so **every ROM joule-per-token here is a",
+                "lower bound and should be quoted as one.** The GPU side rests on",
+                "a measured, peer-reviewed HBM figure and on a gate that lands",
+                "within a few percent of a published TDP, so the two sides are not",
+                "equally well founded and the ratio inherits the weaker of them.",
+                "",
+                "**A dense model gives the energy advantage back as batch rises and",
+                "a sparse one does not.** A GPU amortises one weight read over the",
+                "whole batch, so its joules per token fall roughly as 1/batch until",
+                "KV takes over; the ROM part's weight read was already nearly free,",
+                "so it has nothing to amortise. On a sparse model the GPU cannot",
+                "amortise -- batching engages more experts -- so the ROM advantage",
+                "grows instead. Quoting a dense model's batch-1 number without its",
+                "batch-256 number beside it is quoting the best case as the case.",
+                "",
+            ]
+        )
+    return lines
+
+
 def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
     study_id = result["study_id"]
     derivations = result["technology_derivations"]
@@ -2714,6 +3445,9 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
 
     hc1 = anchors["taalas_hc1"]
     a100 = anchors["a100_weight_bound"]
+    a100_power = anchors["a100_tdp_power"]
+    hc1_power = anchors["taalas_hc1_card_power"]
+    power_band = anchors["power_gate_band"]
     requirements = hc1["detail"]["back_derived_requirements"]
     lines.extend(
         [
@@ -2729,6 +3463,19 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             f"{_fmt(a100['modelled_value'],',.2f')} tok/s | "
             f"{_fmt_ratio(a100['ratio'])} | within {a100['tolerance']*100:.0f}% | "
             f"{'PASS' if a100['passed'] else 'FAIL'} |",
+            f"| A100 80GB at its published TDP, saturating load | "
+            f"{_fmt(a100_power['published_value'])} W | "
+            f"{_fmt(a100_power['modelled_value'])} W | "
+            f"{_fmt_ratio(a100_power['ratio'])} | "
+            f"within {a100_power['tolerance']:.0f}x | "
+            f"{'PASS' if a100_power['passed'] else 'FAIL'} |",
+            f"| Taalas HC1 card power at its published operating point | "
+            f"{_fmt(hc1_power['detail']['published_band_w'][0])}-"
+            f"{_fmt(hc1_power['published_value'])} W | "
+            f"{_fmt(hc1_power['modelled_value'])} W | "
+            f"{_fmt_ratio(hc1_power['ratio'])} | "
+            f"within {hc1_power['tolerance']:.0f}x | "
+            f"{'PASS' if hc1_power['passed'] else 'FAIL'} |",
             "",
             f"HC1 binds on `{hc1['detail']['binding_constraint']}`. Its component times are "
             + ", ".join(
@@ -2830,6 +3577,9 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             f"| {row['context_tokens']:,} | {_fmt(row['modelled_tokens_s'])} | "
             f"{_fmt_ratio(row['ratio_to_published'])} | {row['binding_constraint']} |"
         )
+
+    lines.extend(_render_power_gates(anchors))
+    lines.extend(_render_power_and_energy(result))
 
     lines.extend(
         [
@@ -3522,17 +4272,26 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "  payload queueing beyond the modelled serialisation, and pipeline fill",
             "  at batch 1. Each of those makes an array worse, never better, so the",
             "  reported array crossovers are upper bounds.",
-            "- **Power is wrong by 7-9x and every rate above is independent of it.**",
-            "  The model counts memory bytes and MACs and nothing else, so it gives",
-            "  54.2 W for an A100 at batch 1 against a published 400 W and 27.0 W for",
-            "  Taalas HC1 against a published 200-250 W. It is not an activity-factor",
-            "  error: driven at peak HBM bandwidth AND the peak BF16 roof at once the",
-            "  model still gives 85.3 W. Leakage, clock distribution, operand delivery",
-            "  and control logic are not modelled at all. `thermal_scale` is therefore",
-            "  exactly 1.0 at every feasible point, and since `step_time = raw_step_time",
-            "  x thermal_scale` is the only path from power to any other quantity, no",
-            "  tokens/s in this report depends on the energy model -- and no watt or",
-            "  joule-per-token in it should be quoted.",
+            "- **Power is now enumerated, and it is right on one published part and",
+            "  2.9-3.6x low on the other.** Leakage, clock distribution, operand",
+            "  delivery and a measured clocked-idle floor are charged per mm2 per",
+            "  second whether or not a byte moves, and the HBM traffic energy is a",
+            "  measured SC 2025 figure rather than an HBM2-era model. The A100 lands",
+            "  at 0.97x of its published TDP under a saturating load; the Taalas HC1",
+            "  lands at 0.28x of its published card power. **The second one FAILS its",
+            "  gate and the failure is reported rather than tuned away.** The A100",
+            "  gate is also the weaker of the two, because the clock term inside it",
+            "  was calibrated as a fraction of a shipping GPU's TDP density -- read",
+            "  the power-gate section before quoting it. Every ROM watt and every ROM",
+            "  joule-per-token here is a LOWER BOUND by roughly the HC1 gate's",
+            "  shortfall.",
+            "- **`thermal_scale` now binds, which it never did before.** Static power",
+            "  does not fall when a step is stretched, so the coolable step time",
+            "  solves `t >= E_dynamic / (cooling_limit - P_static)` rather than",
+            "  dividing total energy by the total limit. Some designs are power-",
+            "  limited and their rates are reduced accordingly; the power-and-energy",
+            "  section names every one of them. Rates on unthrottled points are",
+            "  unchanged, so the two validation gates above are untouched by this.",
             "- **Aggregate throughput is reported at steady state with every slot",
             "  occupied, and fill and drain are not charged.** A request that is short",
             "  compared with the slot count pays up to one extra traversal that this",
@@ -3984,6 +4743,43 @@ def _findings(result: dict[str, Any]) -> list[str]:
         "bandwidth density are the two that move the answer most, and neither has "
         f"been measured at {node}."
     )
+    power = result.get("power_and_energy") or {}
+    if power.get("thermally_throttled_points"):
+        worst = power["worst_throttled_points"][0]
+        breakdown = worst["dynamic_energy_breakdown_j"]
+        total = sum(breakdown.values()) or 1.0
+        biggest = max(breakdown, key=lambda name: breakdown[name])
+        findings.append(
+            "**The cooling limit binds, and not where a uniform correction said "
+            f"it would.** {power['thermally_throttled_points']:,} of "
+            f"{power['feasible_points']:,} feasible points "
+            f"({power['thermally_throttled_fraction'] * 100:.1f}%) are "
+            "power-limited now that leakage, clock distribution and a measured "
+            "clocked-idle floor are charged per mm2 per second rather than per "
+            "byte moved. The worst is "
+            f"`{worst['design']}` at batch {worst['batch_size']} on "
+            f"{worst['silicon_area_mm2']:,.0f} mm2, throttled "
+            f"{worst['thermal_scale']:.2f}x from "
+            f"{worst['per_user_tokens_s_unthrottled']:,.0f} to "
+            f"{worst['per_user_tokens_s']:,.0f} tok/s per user. **No wafer is "
+            "throttled anywhere in this study**: a ROM sweep is a fixed cost "
+            "spread over far more silicon, so wafer-scale is power-sparse. And "
+            f"{worst['kv_store'].upper()} KV is what melts the arrays -- the "
+            f"worst point's dynamic energy is {breakdown[biggest] / total * 100:.0f}% "
+            f"{biggest.replace('_j', '').replace('_', ' ')} against "
+            f"{breakdown['weight_read_j'] / total * 100:.1f}% weight read. The ROM "
+            "sweep is not what melts it."
+        )
+    elif power:
+        findings.append(
+            "**No point in this study is power-limited.** Static power is charged "
+            "per mm2 per second, so this is a statement about the designs rather "
+            "than an artifact of a traffic-proportional energy model: the worst "
+            "point here reaches "
+            f"{max(row['max_power_headroom_fraction'] for row in power['power_headroom_by_area_class']) * 100:.0f}% "
+            "of its cooling budget. The companion study at the other node does "
+            "have power-limited points."
+        )
     return findings
 
 
@@ -4092,6 +4888,12 @@ CSV_FIELDS = (
     "step_time_s",
     "binding_constraint",
     "power_w",
+    "static_power_w",
+    "static_power_fraction_of_total",
+    "power_density_w_per_mm2",
+    "power_headroom_fraction",
+    "cooling_limit_w",
+    "energy_j_per_token",
     "thermal_scale",
     "stored_weight_bytes",
     "engaged_weight_bytes",
@@ -4171,13 +4973,21 @@ def main(argv: list[str] | None = None) -> int:
         )
         print((args.output / study_id / "REPORT.md").resolve())
     gates = next(iter(results.values()))["validation_gates"]
-    for name in ("taalas_hc1", "a100_weight_bound"):
+    for name in (
+        "taalas_hc1",
+        "a100_weight_bound",
+        "a100_tdp_power",
+        "taalas_hc1_card_power",
+    ):
         gate = gates[name]
         print(
             f"gate {name}: modelled {gate['modelled_value']:,.2f} vs published "
             f"{gate['published_value']:,.2f} ({gate['ratio']:.3f}x) "
             f"{'PASS' if gate['passed'] else 'FAIL'}"
         )
+    # A failing gate is reported, not swallowed, and it is not an error exit:
+    # the residual IS the result, and turning it into a non-zero exit code
+    # would create pressure to tune it away.
     return 0
 
 
