@@ -4,9 +4,9 @@
     {
       "compression_ratio": 4,
       "count": 30,
-      "entry_bytes": 583,
-      "evidence": "derived from official inference implementation",
-      "index_entry_bytes": 68.0,
+      "entry_bytes": 1024,
+      "evidence": "entry sizes corrected by architectural analogy with DeepSeek-V4-Flash-0731, where the same 583/68 constants were MEASURED wrong against the released implementation (2.72x low at 32,000 tokens, 3.13x at 128,000). The two models share the compressed sparse/dense attention family and the 512-wide KV latent. NOT independently measured: no Pro rung has been executed, so this is a graded assumption, not a measurement, and every Pro KV number inherits that grade",
+      "index_entry_bytes": 256.0,
       "kind": "compressed_sparse",
       "label": "csa",
       "recurrent_state_bytes": 0.0,
@@ -17,8 +17,8 @@
     {
       "compression_ratio": 128,
       "count": 31,
-      "entry_bytes": 583,
-      "evidence": "derived from official inference implementation",
+      "entry_bytes": 1024,
+      "evidence": "entry sizes corrected by architectural analogy with DeepSeek-V4-Flash-0731, where the same 583/68 constants were MEASURED wrong against the released implementation (2.72x low at 32,000 tokens, 3.13x at 128,000). The two models share the compressed sparse/dense attention family and the 512-wide KV latent. NOT independently measured: no Pro rung has been executed, so this is a graded assumption, not a measurement, and every Pro KV number inherits that grade",
       "index_entry_bytes": 0.0,
       "kind": "compressed_dense",
       "label": "hca-128",
@@ -372,6 +372,13 @@
     "index_topk": 1024,
     "kv_cache_policy": "FP8 main + BF16 RoPE; FP4 index",
     "kv_cache_policy_status": "published serving recipe plus derived scale overhead",
+    "kv_entry_provenance": {
+      "grade": "assumed_by_analogy",
+      "measured_evidence": "results/roofline/deepseek_v4_kv_model_validation.json",
+      "measured_sibling": "configs/models/deepseek-v4-flash-0731.json",
+      "root_cause": "The 583/68 pair is an FP8 KV assumption: 576 elements (512 latent + 64 rope) at one byte plus scale bytes. The released implementation reads the 512-wide latent at BF16, which is 1,024 bytes. This is a KV precision disagreement, not a transcription error, and a deployment that genuinely stored an FP8 latent would read 512 bytes -- a design choice that must then apply to both sides of any comparison.",
+      "to_retire_this_assumption": "execute a Pro rung on the reference oracle and re-run tools/validate_kv_model_against_oracle.py against it"
+    },
     "num_hash_layers": 3,
     "operator_accounting_source": "official config, pinned safetensors tensor shapes/dtypes, and pinned DeepSeek inference/model.py",
     "operator_config": {
