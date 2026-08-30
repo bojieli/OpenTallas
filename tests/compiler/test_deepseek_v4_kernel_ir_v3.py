@@ -785,18 +785,85 @@ def test_source_attribute_keys_with_a_backend_term_are_renamed(graph):
 
 def test_conditional_compression_carries_an_execution_predicate(graph):
     """The frozen ``Kernel`` has no predicate field, so the source guard is
-    carried as an attribute; see the front end's contract-change note."""
+    carried as an attribute; see the front end's contract-change note.
 
+    Two forms, and the grammar is checked rather than assumed: a value name,
+    which is the compressor's computed ``should_compress``; and a comparison
+    over a *declared* runtime symbol, which is what amendment A18's
+    floors-to-zero rule needs and which no computed value can state, because
+    there is no operator that produces one.
+    """
+
+    declared = {symbol.name for symbol in graph.symbols}
     guarded = [
         kernel
         for kernel in graph.kernels
         if "execution_predicate" in kernel.attributes
     ]
     assert guarded
+    value_form = 0
+    symbol_form = 0
     for kernel in guarded:
-        assert kernel.attributes["execution_predicate"].endswith("should_compress")
+        predicate = kernel.attributes["execution_predicate"]
+        assert isinstance(predicate, str) and predicate
+        if predicate.endswith("should_compress"):
+            value_form += 1
+            continue
+        symbol, comparison, bound = predicate.split()
+        assert symbol in declared, f"{symbol!r} is not a declared runtime symbol"
+        assert comparison in ("==", "!=", "<", "<=", ">", ">=")
+        int(bound)
+        symbol_form += 1
+    assert value_form and symbol_form
     kinds = {kernel.kind for kernel in guarded}
     assert {"COMPRESS_POOL", "CONVERT", "RMS_NORM", "KV_APPEND"} <= kinds
+
+
+def test_every_extent_that_floors_to_zero_declares_its_own_predicate(graph):
+    """Amendment A18: an extent that floors to zero is a predicate question.
+
+    A zero-extent view is refused, so every kernel leading with a symbol that
+    can resolve to zero must say when it is not to be issued -- on itself, not
+    on a neighbour a backend would have to read across.  Three declarations
+    satisfy that and this test accepts exactly those three, so a kernel that
+    grows a floorable extent and says nothing fails here rather than in a
+    backend.
+    """
+
+    floorable = {
+        symbol.name for symbol in graph.symbols if symbol.minimum == 0
+    }
+    assert floorable, "the request-derived group counts should floor to zero"
+    shapes = {tensor.tensor_id: tensor.shape for tensor in graph.tensors}
+
+    def leads_with_a_floorable_extent(kernel):
+        for name in tuple(kernel.inputs) + tuple(kernel.outputs):
+            for extent in shapes.get(name, ()):  # constants are plain ints
+                symbol = getattr(extent, "symbol", None)
+                if symbol in floorable:
+                    return True
+        return False
+
+    undeclared = []
+    for kernel in graph.kernels:
+        if not leads_with_a_floorable_extent(kernel):
+            continue
+        attributes = kernel.attributes
+        if attributes.get("execution_predicate"):
+            continue
+        # A join whose own extent carries A18's bias is never empty and is
+        # always issued; what vanishes is an operand, and it names which.
+        if attributes.get("operand_present_predicate"):
+            continue
+        # The compressor's raw-window transaction runs on every step and only
+        # its pooled outputs are conditional, which it names.
+        if attributes.get("conditional_outputs"):
+            continue
+        undeclared.append(kernel.kernel_id)
+    assert not undeclared, (
+        f"{len(undeclared)} kernel(s) lead with an extent that floors to zero "
+        f"and declare no predicate: {sorted(undeclared)[:5]}"
+    )
 
 
 # ---------------------------------------------------------------------------

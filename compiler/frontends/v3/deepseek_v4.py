@@ -76,7 +76,26 @@ a ratio-derived boundary, and the source graph carries that as a first-class
 node ``guard`` over a boolean predicate value.  :class:`Kernel` has no
 predicate field and no neutral kind produces a ``bool`` tensor, so this export
 carries the guard in the ``execution_predicate`` attribute, which a backend is
-not obliged to honour.  Proposal: add ``predicate: str = ""`` to ``Kernel``,
+not obliged to honour.
+
+Amendment A18 widened that from one chain to a rule.  Four of this graph's ten
+runtime symbols floor to zero at a legal request, and A18 settles what that
+means: *"an extent that floors to zero is not a clamp ... ABI 3.0 has no
+zero-extent view -- the verifier refuses one -- so 'the request has none of
+this axis' is a* predicate *question, and the operator must be predicated off
+rather than issued against an empty operand."*  Every kernel whose own extent
+can floor is therefore declared here with its condition, in
+``SYMBOL_PREDICATE_OPERATORS``' grammar, **including where the condition
+repeats a neighbour's** -- a repeated declaration is checkable, and a predicate
+a backend infers from a sibling kernel's attribute is not.  Two kernels are
+deliberately *not* predicated and each says why on itself:
+``ATTENTION_KV_VIEW`` and the two index joins carry A18's bias, so their own
+extent is never zero and they are always issued -- what vanishes is one
+*operand*, which they name in ``operand_present_predicate``; and
+``COMPRESS_STATE_UPDATE`` writes its raw window on every step, so only its two
+pooled outputs are conditional, which it names in ``conditional_outputs``.
+
+Proposal: add ``predicate: str = ""`` to ``Kernel``,
 let ``COMPRESS_STATE_UPDATE`` declare a ``bool`` predicate output, and have
 ``check_neutral`` require a predicate to be an earlier kernel's output.  ABI
 3.0 already carries ``predicate_id`` on its loop descriptor, so the neutral IR
@@ -313,6 +332,39 @@ RMS_EPSILON = 1e-6
 #: coefficients.
 HC_MIX = (2 + HC_MULT) * HC_MULT
 HC_COEFFICIENTS = HC_MULT + HC_MULT * HC_MULT
+
+
+#: Grammar for ``execution_predicate``.  Two forms, both a plain string so the
+#: attribute keeps one type:
+#:
+#: * a **value name** -- the ``kernel_id.output`` of an earlier kernel that
+#:   declares a predicate output.  ``main.layerNN.compress_state.should_compress``
+#:   is the only one this model produces, and it carries the released
+#:   ``(start_pos + 1) % ratio == 0`` decode condition, which no comparison over
+#:   the declared symbols can state.
+#: * a **symbol comparison** -- ``"<symbol> <op> <integer>"`` over a declared
+#:   runtime symbol, with ``<op>`` drawn from the frozen ``comparisons``
+#:   registry (``==``, ``!=``, ``<``, ``<=``, ``>``, ``>=``).  It lowers to ABI
+#:   3.0 predicate kind ``COMPARE_SYMBOL`` and needs no operand and no engine.
+#:
+#: Amendment A18 is what forces the second form: "an extent that floors to zero
+#: is not a clamp ... ABI 3.0 has no zero-extent view -- the verifier refuses
+#: one -- so 'the request has none of this axis' is a *predicate* question, and
+#: the operator must be predicated off rather than issued against an empty
+#: operand."  Four of this graph's ten runtime symbols floor to zero at a legal
+#: request -- ``span_groups_ratio4``, ``span_groups_ratio128``,
+#: ``context_groups_ratio4`` and ``context_groups_ratio128`` -- and every
+#: kernel that leads with one of them is a kernel that must say when it is not
+#: to be issued.  The exporter says it on **each** such kernel, including where
+#: the condition repeats a neighbour's, because a repeated declaration is
+#: checkable and an inference from a sibling's attribute is not.
+SYMBOL_PREDICATE_OPERATORS = ("==", "!=", "<", "<=", ">", ">=")
+
+
+def _nonempty(extent: Symbolic) -> str:
+    """The ``execution_predicate`` for a kernel whose extent can floor to zero."""
+
+    return f"{extent.symbol} > 0"
 
 #: Dynamic activation quantization block used by ``inference/kernel.py``.
 ACTIVATION_BLOCK = 128
@@ -2447,6 +2499,34 @@ def export_deepseek_v4_kernel_graph(
                 iteration_domain={"tokens": rows, "groups": group_rows,
                                   "candidates": candidates,
                                   "width": head_width},
+                # This is the one kernel in the graph that leads with a
+                # zero-capable extent and is still issued unconditionally, and
+                # it says why rather than leaving the exception to be noticed.
+                # The released ``Compressor.forward`` writes its raw window on
+                # every step -- the remainder branch at ``start_pos == 0`` and
+                # the ring write at decode both run before the
+                # ``if not should_compress: return`` -- and only the *pooled*
+                # outputs are conditional.  So the operator is not predicated;
+                # its two outputs are, on the predicate it computes here.
+                #
+                # That predicate cannot be a ``COMPARE_SYMBOL``: its prefill
+                # form is ``span_tokens >= ratio``, which a comparison states,
+                # but its decode form is ``(start_pos + 1) % ratio == 0``, and
+                # the frozen ``comparisons`` registry has no modulus.  That is
+                # why it is a computed predicate value and why every consumer
+                # names it rather than a symbol.
+                attributes={
+                    **attrs,
+                    "predicate_output": f"{node_id}.should_compress",
+                    "conditional_outputs": {
+                        "pool_kv": f"{node_id}.should_compress",
+                        "pool_scores": f"{node_id}.should_compress",
+                    },
+                    "predicate_condition": {
+                        "prefill": _nonempty(group_rows),
+                        "decode": f"context_length % {node_ratio} == 0",
+                    },
+                },
             )
             bind(source_outputs[0], pool_key_value)
             bind(source_outputs[1], pool_score)
@@ -2514,6 +2594,15 @@ def export_deepseek_v4_kernel_graph(
                 (output,),
                 iteration_domain={"rows": committed_groups[node_ratio],
                                   "width": head_width},
+                # A18: this view leads with ``context_groups_ratioN``, which is
+                # zero until the context holds one whole group.  A zero-extent
+                # view is refused, so the read states the condition under which
+                # it must not be issued rather than leaving a backend to notice
+                # that its extent resolved to nothing.
+                attributes={
+                    **attrs,
+                    "execution_predicate": _nonempty(committed_groups[node_ratio]),
+                },
             )
             bind(out0, output)
 
@@ -2526,19 +2615,33 @@ def export_deepseek_v4_kernel_graph(
                 else attention_rows[ratio]
             )
             output = view(out0, "bf16", (rows, HEAD_DIM))
+            join_attributes: dict[str, Any] = {
+                **attrs,
+                "axis": 0,
+                "segment_order": (
+                    "current_then_committed_window_then_valid_compressed_prefix"
+                ),
+            }
+            # The join's own extent carries A18's bias -- ``span + 128`` for the
+            # window layers, ``+ context_groups_ratioN`` on top for a compressed
+            # one -- so it never floors to zero and the join itself is always
+            # issued: "a join of no current rows and a 128-row window is 128
+            # rows".  Its *third* operand does floor, because the compressed KV
+            # state has no committed group until the context holds one, and a
+            # zero-extent view is refused.  The join names the operand and the
+            # condition; the released model takes the same branch, joining
+            # ``kv_compress`` only when the compressor returned one.
+            if len(sources) == 3:
+                join_attributes["operand_present_predicate"] = {
+                    "2": _nonempty(committed_groups[ratio]),
+                }
             emit(
                 node_id,
                 "CONCAT",
                 sources,
                 (output,),
                 iteration_domain={"rows": rows, "width": HEAD_DIM},
-                attributes={
-                    **attrs,
-                    "axis": 0,
-                    "segment_order": (
-                        "current_then_committed_window_then_valid_compressed_prefix"
-                    ),
-                },
+                attributes=join_attributes,
             )
             bind(out0, output)
 
@@ -2556,6 +2659,12 @@ def export_deepseek_v4_kernel_graph(
                     "candidates": committed_groups[4],
                     "heads": INDEX_HEADS,
                     "width": INDEX_HEAD_DIM,
+                },
+                # A18: the candidate axis is ``context_groups_ratio4`` and
+                # floors to zero for a context shorter than one group.
+                attributes={
+                    **attrs,
+                    "execution_predicate": _nonempty(committed_groups[4]),
                 },
             )
             bind(out0, output)
@@ -2577,6 +2686,10 @@ def export_deepseek_v4_kernel_graph(
                     "causal_mask": "compressed_group_completed_before_position",
                     "order": "score_descending_then_index_ascending",
                     "padding_index": -1,
+                    # A18: the score it selects over leads with
+                    # ``context_groups_ratio4``; with no committed group there
+                    # is nothing to select and the operator is not issued.
+                    "execution_predicate": _nonempty(committed_groups[4]),
                 },
             )
             width = SLIDING_WINDOW + INDEX_TOPK
@@ -2592,6 +2705,14 @@ def export_deepseek_v4_kernel_graph(
                     **attrs,
                     "axis": 1,
                     "segment_widths": [SLIDING_WINDOW, INDEX_TOPK],
+                    # This join is not itself predicated -- its own extents are
+                    # static -- but input 1 is produced under a predicate, so
+                    # the join states which operand is present and when.  The
+                    # released model joins the same way and its compressed
+                    # block is ``[seqlen, 0]`` at a context below one group.
+                    "operand_present_predicate": {
+                        "1": _nonempty(committed_groups[4]),
+                    },
                 },
             )
             bind(out0, output)
@@ -2599,18 +2720,32 @@ def export_deepseek_v4_kernel_graph(
         elif source_kind == "COMPRESSED_DENSE_INDEX":
             window_indices = operands[0]
             node_ratio = int(attrs["ratio"])
-            dense = act(f"{node_id}.dense", "u32", (span, groups[node_ratio]))
+            # The released ``get_compress_topk_idxs`` enumerates the groups the
+            # *context* has completed, not the ones this span contributes: its
+            # decode branch is ``arange(0, (start_pos + 1) // ratio) + offset``
+            # at a span of one, which is ``context_groups_ratioN`` and is zero
+            # only while the context is shorter than one group.  This export
+            # used to declare ``span_groups_ratioN`` here, which is that number
+            # only in a single-call prefill and is zero for every tile of a
+            # tiled one -- so the operand could not resolve, a backend left it
+            # at its declared maximum, and the join's A17 check then compared a
+            # sum of maxima against a request-sized output.
+            groups_here = committed_groups[node_ratio]
+            dense = act(f"{node_id}.dense", "u32", (span, groups_here))
             emit(
                 f"{node_id}.enumerate",
                 "WINDOW_INDEX",
                 (ten("request.start_pos"),),
                 (dense,),
                 step="causal_compressed_enumeration",
-                iteration_domain={"tokens": span, "width": groups[node_ratio]},
+                iteration_domain={"tokens": span, "width": groups_here},
                 attributes={
                     **attrs,
                     "index_family": "causal_compressed_dense",
                     "padding_index": -1,
+                    # A18: zero committed groups is a predicate question, not a
+                    # clamp.
+                    "execution_predicate": _nonempty(groups_here),
                 },
             )
             output = act(out0, "u32", (span, selected_rows_128))
@@ -2621,7 +2756,16 @@ def export_deepseek_v4_kernel_graph(
                 (output,),
                 step="window_then_compressed_indices",
                 iteration_domain={"tokens": span, "width": selected_rows_128},
-                attributes={**attrs, "axis": 1},
+                # ``selected_rows_ratio128`` is ``CONTEXT_LENGTH / 128 + 128``,
+                # so with the enumeration now stated in the same units the A17
+                # sum is ``128 + context_groups_ratio128`` on both sides.  Input
+                # 1 is still absent below one whole group, and the join says so.
+                attributes={
+                    **attrs,
+                    "axis": 1,
+                    "segment_widths": [SLIDING_WINDOW, groups_here.symbol],
+                    "operand_present_predicate": {"1": _nonempty(groups_here)},
+                },
             )
             bind(out0, output)
 
