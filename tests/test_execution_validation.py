@@ -131,6 +131,10 @@ def test_the_check_fails_when_attention_skips_context_positions(tmp_path) -> Non
 
 # --- the sparse KV model, against the engine that ran it ----------------------
 
+#: The live ladder is rebuilt as rungs are added, so a test that reads it races a
+#: running oracle. The pinned snapshot is what justified the profile correction and
+#: does not move; the live ladder is checked separately, when it carries measurements.
+DS_SNAPSHOT = ROOT / "testdata/roofline/deepseek_v4_kv_measurement_snapshot.json"
 DS_ORACLE = ROOT / "results/abi3/deepseek_v4_reference_oracle_context_ladder.json"
 DS_MODEL = ROOT / "configs/models/deepseek-v4-flash-0731.json"
 KV_TOOL = ROOT / "tools/validate_kv_model_against_oracle.py"
@@ -147,7 +151,19 @@ def _run_kv(tmp_path: Path, model: Path, oracle: Path) -> tuple[int, dict]:
     return proc.returncode, json.loads(out.read_text()) if out.exists() else {}
 
 
-@pytest.mark.skipif(not DS_ORACLE.is_file(), reason="no measured DeepSeek ladder")
+def _ladder_has_kv() -> bool:
+    """The ladder is rebuilt as rungs are added, so it may transiently carry none."""
+
+    if not DS_ORACLE.is_file():
+        return False
+    body = json.loads(DS_ORACLE.read_text())
+    return any(
+        (rung.get("kv_measurement") or {}).get("decode_steps")
+        for rung in body.get("results", {}).values()
+    )
+
+
+@pytest.mark.skipif(not DS_SNAPSHOT.is_file(), reason="no pinned KV snapshot")
 def test_the_sparse_kv_model_matches_the_engine_at_every_measured_context(tmp_path) -> None:
     """The term the ROM argument rests on, checked where it is hardest.
 
@@ -157,7 +173,7 @@ def test_the_sparse_kv_model_matches_the_engine_at_every_measured_context(tmp_pa
     measured rather than read off the implementation.
     """
 
-    code, body = _run_kv(tmp_path, DS_MODEL, DS_ORACLE)
+    code, body = _run_kv(tmp_path, DS_MODEL, DS_SNAPSHOT)
     assert code == 0, body.get("problems")
     assert body["status"] == "pass"
     assert len(body["rungs"]) >= 2, "one rung cannot distinguish a scale error from a slope error"
@@ -165,7 +181,7 @@ def test_the_sparse_kv_model_matches_the_engine_at_every_measured_context(tmp_pa
         assert rung["ratio"] == pytest.approx(1.0, abs=0.01)
 
 
-@pytest.mark.skipif(not DS_ORACLE.is_file(), reason="no measured DeepSeek ladder")
+@pytest.mark.skipif(not DS_SNAPSHOT.is_file(), reason="no pinned KV snapshot")
 def test_the_check_fails_on_the_entry_sizes_it_was_built_to_catch(tmp_path) -> None:
     """Restore the pre-measurement constants; the check must reject them.
 
@@ -183,7 +199,7 @@ def test_the_check_fails_on_the_entry_sizes_it_was_built_to_catch(tmp_path) -> N
     stale = tmp_path / "stale_profile.json"
     stale.write_text(json.dumps(profile))
 
-    code, body = _run_kv(tmp_path, stale, DS_ORACLE)
+    code, body = _run_kv(tmp_path, stale, DS_SNAPSHOT)
     assert code == 2
     assert body["status"] == "fail"
     assert len(body["problems"]) == len(body["rungs"])
@@ -219,3 +235,18 @@ def test_the_decode_share_is_separated_from_prefill(tmp_path) -> None:
     layers = 36
     prefill_pairs = layers * (prompt * (prompt + 1) // 2)
     assert prefill_pairs + decode["pairs"] == kv["predicted_context_positions"]
+
+
+@pytest.mark.skipif(not _ladder_has_kv(), reason="the live ladder carries no KV measurement yet")
+def test_the_live_ladder_agrees_with_the_profile_wherever_it_has_measured(tmp_path) -> None:
+    """The pinned snapshot must not become a place where a stale number hides.
+
+    Whenever the reference oracle has measured a rung, the profile must match it
+    too -- so a later re-run that disagrees with the snapshot surfaces here
+    rather than being masked by the pin.
+    """
+
+    code, body = _run_kv(tmp_path, DS_MODEL, DS_ORACLE)
+    assert code == 0, body.get("problems")
+    for rung in body["rungs"]:
+        assert rung["ratio"] == pytest.approx(1.0, abs=0.01)
