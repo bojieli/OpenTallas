@@ -1,0 +1,458 @@
+# Evidence ledger: every load-bearing number, and whether anything still produces it
+
+**Audited at commit `a782530` (2026-08-30 13:16 UTC).** The working tree was
+moving during the audit — five agents and a workflow are editing this
+repository — so `results/rtl/abi3_campaign.json`,
+`spec/abi3/numeric_contract_union.json`, `compiler/`, `runtime/` and two ABI 3.0
+documents were uncommitted-modified when their numbers were read. Rows that
+depend on those files are marked **(tree)**.
+
+This ledger exists because of a specific failure mode. Tonight the headline
+moved from 54.2× to 8.6× across five independent corrections. Each was applied
+to the code and to the generated artifacts. **Prose is not regenerated**, and
+`docs/` holds 47 hand-written markdown files carrying roughly 1,100 unit-bearing
+numeric tokens. Exactly one file in `docs/` is generated
+(`PROGRAM_STATUS.md`, by `tools/build_program_status.py`) and it has not rerun
+in 108 commits. Nothing anywhere checks a number in prose against the artifact
+that produces it.
+
+## How to read this
+
+**"What produces it"** is a runnable command plus a named artifact field, or it
+is the finding. `make roofline` = `python3 tools/run_roofline_studies.py --force`;
+`make iso-node` = `python3 tools/build_iso_node_studies.py --write && python3 tools/run_iso_node_studies.py`.
+
+**Grade** uses the vocabulary defined in `configs/hardware/technology.json`
+(`grade_definitions`) and enforced by `tools/check_evidence_grades.py`:
+
+| grade | means |
+|---|---|
+| `measured` | fabricated silicon reported in a peer-reviewed venue |
+| `published` | stated by a vendor or standards body for a shipping part |
+| `executed` | obtained by running something in this repository, with the artifact committed |
+| `derived` | computed from published/measured entries by a stated formula |
+| `assumed` | a stated judgement that must be swept |
+| **`prose`** | *added by this ledger*: asserted in text only; no artifact, no command, no test |
+
+**Current?** was checked against the regenerated artifact in every case, never
+assumed. Where a number appears in prose and in an artifact, both are quoted.
+
+---
+
+# 1. Stale load-bearing claims, ranked by consequence
+
+Ranked by how much of the project's argument rests on the number. Rank 1–5 are
+headline claims: a reader who lifts one of them lifts a retracted figure.
+
+## Rank 1 — `docs/WAFER_VERSUS_ARRAY_LATENCY.md` §3: the retracted on-wafer ceiling, unmarked, as the document's sharpest conclusion
+
+This is the worst finding in the repository. The document is the *origin* of the
+retracted `116,278` and `81,966 tok/s` figures — they are the reciprocals of its
+own §3 numbers (1/8.6 µs = 116,279; 1/12.2 µs = 81,967) — and it carries no
+retraction marker anywhere. Its §3 conclusion is stated as
+*"**This is the sharpest argument for wafer-scale**"*.
+
+The defect is nameable and isolated: §3 charges an on-wafer all-reduce **one**
+hop traversal. The corrected model charges ~1.1 × the mesh diameter, which for a
+57-region span is **15.4** traversals. The 100 ns hop input is unchanged; only
+the traversal count moved.
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| `7.2 µs` on-wafer TP, Qwen3-8B | `docs/WAFER_VERSUS_ARRAY_LATENCY.md:52` | `make roofline` → `results/roofline/n5_vs_b200/REPORT.md:460`, topology row `Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1` = **110.88 µs** (`72 x all_reduce span 57 on on_wafer (traversals 15.4)`) | `derived` | **NO — 15.4× low** |
+| `8.6 µs` on-wafer TP, Flash | `docs/WAFER_VERSUS_ARRAY_LATENCY.md:53` | same, `:503` = **132.44 µs** | `derived` | **NO — 15.4× low** |
+| `12.2 µs` on-wafer TP, Pro | `docs/WAFER_VERSUS_ARRAY_LATENCY.md:54` | same, `:550` on-wafer term = **187.88 µs** | `derived` | **NO — 15.4× low** |
+| "on-wafer costs 7.2–12.2 µs, or **12–21% of the budget, and fits**" | `docs/WAFER_VERSUS_ARRAY_LATENCY.md:58` | against the doc's own 58.8 µs budget (`:18`), 110.88 µs is **189%** of it | `prose` | **NO — inverts the conclusion** |
+| "**Wafer** — **15× the latency headroom**, tensor parallelism available" | `docs/WAFER_VERSUS_ARRAY_LATENCY.md:92` | `results/roofline/n5_vs_b200/REPORT.md:19` finding 8: *"the wafer is **at least 2.0x** cheaper"*; per-model 2.0×/8.3×/8.9× | `prose` | **NO — 15× → 2.0–8.9×** |
+| implied per-user ceilings `116,278` / `81,966 tok/s` (= 1/8.6 µs, 1/12.2 µs) | `docs/WAFER_VERSUS_ARRAY_LATENCY.md:52–54` (as reciprocals) | `results/roofline/n5_vs_b200/REPORT.md` aggregate column: Qwen `:460` = **9,018.8**, Flash `:503` = **7,550.6**, Pro `:552` (hybrid) = **5,182.0**. Pro under *pure* tensor spans two wafers and falls to **701.6** (`:550`), because the inter-wafer link is charged too. The replacement band is **5,000–9,000** | `derived` | **NO — RETRACTED** |
+
+The corrected claim is pinned by a test:
+`tests/test_roofline.py:844 test_on_wafer_tensor_parallelism_no_longer_reaches_taalas_rates`.
+The document predates it and does not know it exists.
+
+## Rank 2 — `docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md`: the whole document, including the figure it nominates as the project's headline
+
+The document's own framing is *"This should be stated as the headline of any
+write-up, because it is counter-intuitive and it is the project's actual
+finding"* (`:123–125`). The figure so nominated is 3.1× too high. Every
+DeepSeek row descends from the retracted `entry_bytes 583` / `index_entry_bytes
+68` constants. **The three Qwen rows are unaffected and correct** — Qwen's KV
+constants never moved.
+
+Recomputed under the current model. There is no command in the repository that
+emits this table, so here is one that does — it is the closest thing to a
+producer this document has:
+
+```sh
+PYTHONPATH=src python3 -c '
+from opentallas import workload as W
+from opentallas.schema import ModelProfile
+for name, ctxs in [("deepseek-v4-flash-0731",[200000,1000000]),
+                   ("deepseek-v4-pro-0813",[200000,1000000]),
+                   ("qwen3-8b",[1024,8192,32768])]:
+    m = ModelProfile.load(f"configs/models/{name}.json")
+    wt = W.weight_traffic(m, 1); wb = wt.dense_bytes + wt.routed_bytes
+    for c in ctxs:
+        kv = W.kv_traffic(m, c)
+        print(f"{name:24} ctx={c:>9,} W={wb/1e9:7.3f} GB KVread={kv.read_bytes/1e9:6.3f} GB "
+              f"KV/user={kv.storage_bytes_per_user/1e9:6.3f} GB W:KV={wb/kv.read_bytes:6.1f}")'
+```
+
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| **260:1** W:KV, Pro @200K — *"the project's actual finding"* | `docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md:32,118` | `opentallas.workload.kv_traffic` on `configs/models/deepseek-v4-pro-0813.json` = **83.8** | `derived` | **NO — 3.10× high** |
+| **113** W:KV, Flash @200K | `:30` | `make roofline` → `results/roofline/n5_vs_b200/REPORT.md:162` col `W:KV at B=1` = **35.3**; and `executed` at `results/abi3/deepseek_v4_reference_oracle_context_ladder.json` → `context_ladder_summary.rungs[4].weight_to_kv_read_ratio_at_this_context` = **35.34** | `executed` | **NO — RETRACTED (113.2:1)** |
+| **59** W:KV, Pro @1M | `:33` | `results/roofline/n5_vs_b200/REPORT.md:163` = **18.0** | `derived` (Pro is *not* executed — see §5) | **NO — RETRACTED (58.9:1)** |
+| **24.5** W:KV, Flash @1M | `:31` | `opentallas.workload` = **7.4** | `derived` | **NO — 3.31× high** |
+| `0.099 GB` KV read/token, Flash @200K | `:30` | `results/roofline/n5_vs_b200/REPORT.md:162` col `KV read/token` = **0.317 GB**; executed **317,435,904 B** at ladder rung 200,000 | `executed` | **NO — 3.20× low** |
+| `0.674 GB` KV read/token, Pro @1M | `:33` | `results/roofline/n5_vs_b200/REPORT.md:163` = **2.207 GB** | `derived` | **NO — 3.27× low** |
+| `0.70 GB` KV/user, Flash @200K | `:54` | `results/roofline/n5_vs_b200/REPORT.md:162` col `KV/user` = **1.382 GB** | `derived` | **NO — 1.97× low** |
+| `5.03 GB` KV/user, Pro @1M | `:55` | `:163` = **9.856 GB** | `derived` | **NO — 1.96× low** |
+| die counts `226 mm² / 2 / 18 / 2 / 16 / 126 dies` | `:54–55` | derived from the KV/user above; all ~2× low | `derived` | **NO** |
+| `0.65 TB/s` KV BW, Flash @200K @6,600 tok/s | `:66` | 0.317 GB × 6,600 = **2.09 TB/s** (1.7 stacks, not 0.5) | `derived` | **NO — 3.2× low** |
+| `2.02 TB/s` KV BW, Pro @1M @3,000 tok/s | `:67` | 2.207 GB × 3,000 = **6.62 TB/s** (5.5 stacks, not 1.7) | `derived` | **NO — 3.3× low** |
+| `45 GB` / `322 GB` KV capacity at B=64 | `:66–67` | **88.4 GB** / **631 GB** | `derived` | **NO — ~2× low** |
+| Qwen rows `100 / 12.5 / 3.1` and `0.15 / 1.21 / 4.83 GB` | `:27–29`, `:51–53` | `opentallas.workload` = **100.2 / 12.5 / 3.1**; storage **0.151 / 1.208 / 4.832 GB** | `derived` | **YES** |
+
+§4's qualitative conclusion (*"Dense Qwen is KV-bandwidth-bound; sparse DeepSeek
+is KV-capacity-bound"*) survives, but its margin narrows from 3.8× to 2.2×.
+§5's ROM-area table (`:86–91`) is weight-side only and is unaffected.
+
+## Rank 3 — `docs/OVERVIEW.md`: the front-door document, stale in both its headline derivations
+
+`README.md:71–73` sends every new reader here. Two whole sections are
+pre-correction, and one of them is a step-by-step derivation — which is worse
+than a bare number, because a reader can check the arithmetic and it will be
+self-consistent while being wrong.
+
+### 3a. The `113.2×` traffic table — the retracted figure stated live, twice, plus once in a rendered figure
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| **113.2×** Weight/KV-read ratio | `docs/OVERVIEW.md:86` (table) and `:92` (twice in one sentence) | `make model-traffic` → `results/model-traffic/sweep.csv`, `weight_to_kv_read_ratio` = **35.3358** | `executed` | **NO — RETRACTED** |
+| `99.1018 MB` KV read/token | `docs/OVERVIEW.md:85` | same file, `kv_read_bytes` = **317,456,384** | `executed` | **NO — 3.20× low** |
+| `11.2176 GB` weight read/token | `docs/OVERVIEW.md:84` | same file = `11,217,572,060` B | `executed` | **YES** |
+| **113.2×** and `99.10 MB / token` as rendered labels | `docs/assets/why-rom.svg`, embedded at `docs/OVERVIEW.md:76` | `python3 tools/render_public_assets.py`; last built commit `a1eb32e` **2026-08-28** | `executed`, stale | **NO** |
+
+`docs/OVERVIEW.md:88–91` says *"Those values come directly from
+`results/model-traffic/sweep.csv`"*. Two of the three rows no longer match the
+file they cite, so this is a mis-citation as well as a stale number.
+
+### 3b. The `9,399 tokens/s` derivation and the `8.67×` iso-node ratio
+
+The retracted **8.67×** does not appear as a token anywhere — the document states
+it **decomposed**, as `14,436 / 1,666`. A grep for `8.67` finds nothing; that is
+why it survived.
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| `13.106 µs` HBM KV service | `docs/OVERVIEW.md:194` | `make iso-node` → `results/iso-node/n7_architecture_attribution/analytical.json`, `kv_beachfront_C8` = **41.979 µs** | `derived` | **NO — 3.20× low (same KV correction)** |
+| `106.392 µs` interval | `docs/OVERVIEW.md:204–205` | recomputing the doc's own formula with the corrected max: **124.222 µs** | `derived` | **NO** |
+| **`9,399 tok/s`** N7 central, Flash @200K B=1 | `docs/OVERVIEW.md:184` (heading), `:209`, `:226`, `:242`; pointed at by `README.md:73` | `results/iso-node/n7_architecture_attribution/REPORT.md:74`, `ROM user tok/s` = **8,050.1** | `derived` | **NO** |
+| `618 tok/s` A100 same-batch | `docs/OVERVIEW.md:226`, `:242` | same row, `GPU user tok/s` = **614.4** | `derived` | **NO** |
+| implied N7 ratio `15.2×` | `docs/OVERVIEW.md:226`; rendered as `B=1  15.2×` in `docs/assets/throughput-at-200k.svg` | same row, `Same-B ratio` = **13.10×** | `derived` | **NO** |
+| **`14,436 tok/s`** N4-class central | `docs/OVERVIEW.md:228`, `:243` | `results/iso-node/leading_node_market/REPORT.md:58`, `ROM user tok/s` = **12,629.3** | `derived` | **NO** |
+| `1,666 tok/s` B300 same-batch | `docs/OVERVIEW.md:228`, `:243` | same row, `GPU user tok/s` = **1,650.7** | `derived` | **NO** |
+| implied N4 ratio **`8.67×`** (14,436/1,666 = 8.665) | `docs/OVERVIEW.md:228`, `:243`; rendered as `B=1  8.7×` in `docs/assets/throughput-at-200k.svg` | same row, `Same-B ratio` = **7.65×** | `derived` | **NO — RETRACTED** |
+| band `1,299–35,829 tok/s` | `docs/OVERVIEW.md:242` | `results/iso-node/n7_architecture_attribution/REPORT.md:186` = **1,287.0–23,767.7** | `derived` | **NO** |
+| band `1,666–56,884 tok/s` | `docs/OVERVIEW.md:243` | `results/iso-node/leading_node_market/REPORT.md:190` = **1,637.9–42,373.7** | `derived` | **NO** |
+| the same bands, plotted | `docs/assets/uncertainty-at-200k.svg`, embedded `docs/OVERVIEW.md:250` | `tools/render_public_assets.py`, last built 2026-08-28 | `executed`, stale | **NO** |
+
+`docs/OVERVIEW.md:218–219` — *"The binding term is the collective floor—not the
+ROM read"* — is still true by the artifact's `binding_constraint` label, but the
+`max()` term inside the derivation has silently changed identity from **compute**
+to **KV beachfront**. The explanation no longer matches its own arithmetic.
+
+## Rank 4 — `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md`: every row of the results table, in a document that opens by promising it did not hand-compute
+
+`:3–5` states *"Every figure below is emitted by `src/opentallas/roofline.py` and
+read out of `results/roofline/n6_vs_a100/REPORT.md` and `analytical.json`.
+Nothing is recomputed in prose — the previous version of this document said the
+same thing and did not do it, and section 1 is the retraction that resulted."*
+It has done it again.
+
+Ground truth is `make roofline` → `results/roofline/n6_vs_a100/REPORT.md:687–730`,
+column `Per-region over broadcast`.
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| **10.65×** per-region over broadcast, Flash @200K b64 sram | `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md:252` | `n6_vs_a100/REPORT.md:711` = **3.57×** (aggregate 138,631 → **46,493.0**) | `derived` | **NO — RETRACTED** |
+| `15.20×` at b256 | `:253` | `:712` = **7.20×** (198,349 → **94,029.5**) | `derived` | **NO** |
+| `3.51×` at b8 | `:251` | `:708` = **2.01×** | `derived` | **NO** |
+| `3.68×` at b64 rom | `:254` | `:719` = **2.01×** | `derived` | **NO** |
+| `6.84×` Pro @1M b64 sram | `:255` | `:727` = **2.34×** | `derived` | **NO** |
+| `12.01×` Pro @1M b256 | `:256` | `:728` = **4.72×** | `derived` | **NO** |
+| Qwen `11,364 / 12,310 / 44,017` and Flash b1 `10,890` | `:247–250` | `:689,695,703,705` = `12,312.6 / 73,121.2 / 133,002.4 / 13,021.5` | `derived` | **NO** (the `1.00×` ratios are right; the magnitudes are not) |
+| floorplan-sweep table: `87,122.5 / 213,473.6 / 1.885 / 1.155` etc. | `:82–85` | `n6_vs_a100/REPORT.md:831–836` — different designs, different rates, different binding terms | `derived` | **NO — every cell** |
+| `43 of 48 operating points` lost | `:274` | `n6_vs_a100/REPORT.md:23` finding 12 | `derived` | **YES** |
+| §1 replacement table `216.8 / 346.9 / 451.5 / 16.3 / 305.1 mm²`, `0.41×`, `76.55 µs` | `:38–48` | `n6_vs_a100/REPORT.md:625–634` | `derived` | **YES** |
+| region sizing `56.8 / 211.4 mm²`, `2.0%`, `16,478 / 88,150 mm²` | `:197–204` | `n6_vs_a100/REPORT.md:660–663` | `derived` | **YES** |
+| `253.91` A100 gate, `0.72×` HC1 gate, `1.0000` KV validation ratio | `:8–14` | `n6_vs_a100/REPORT.md:78–79`; `results/roofline/qwen3_execution_validation.json` → `lanes[*].kv.byte_ratio = 1.0` | `executed` | **YES** |
+
+## Rank 5 — retracted claims still live in `src/` and in the one config the grade checker enforces
+
+These matter more than a stale document, because the code is what the next
+regeneration reads, and `configs/hardware/technology.json` is the *only* file
+`tools/check_evidence_grades.py` guards — and it passes while carrying retracted
+constants in its prose notes.
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| *"**Measured, not assumed**: the released DeepSeek implementation reads no index at 1,001 or **8,001** tokens (251 and 2,001 compressed entries)"* | `src/opentallas/schema.py:53–58` (docstring of `index_scan_min_compressed_entries`) | `configs/models/deepseek-v4-{flash-0731,pro-0813}.json` now set the field to **0**, with a full retraction record at `deepseek-v4-pro-0813.json:373–378`; `tools/check_evidence_grades.py:14–15` names it *"an instrumentation artifact"* | claims `measured`, evidence supports **none** | **NO — RETRACTED, and over-graded** |
+| *"charging the scan there **overstates** KV traffic — **by 1.60x at 8,001 tokens** on DeepSeek-V4-Flash"* | `src/opentallas/workload.py:139–144` | `configs/models/deepseek-v4-flash-0731.json:23`: *"With the threshold at 8,001 the profile **under**-predicted the measured rungs by 1.12x at 1,000 tokens and 1.60x at 8,000"* | `prose` | **NO — retracted, and the sign is inverted** |
+| *"**72%** of the KV read is a scan of 50,000 index entries of **68 bytes** each"* | `src/opentallas/roofline.py:1072` | recomputed at the current `index_entry_bytes = 256`: 21 × 50,000 × 256 = 268,800,000 B of 317,435,904 B = **84.7%** | `derived` | **NO** |
+| *"each index entry sits beside the **583-byte** payload entry … **96 of 68** useful bytes at a 32-byte HBM granule, **128** at a 128-byte SRAM row"* | `src/opentallas/roofline.py:1081–1085` | current config is `entry_bytes 1024`, `index_entry_bytes 256`. **256/32 = 8 exactly; 256/128 = 2 exactly** — zero granule waste | `derived` | **NO** |
+| *"the two layouts **differ by more than 1.6x**"* | `src/opentallas/roofline.py:1074–1075` **and** `configs/hardware/technology.json` → `kv.index_layout.note` | `make roofline` → `results/roofline/n5_vs_b200/REPORT.md:1254–1259`, `Inflation` column = **1.00x on all six rows** | `assumed` (grade passes; the note is false) | **NO — the layout choice is now a no-op** |
+| *"A **68-byte** index entry therefore costs **96 bytes**"* | `configs/hardware/technology.json` → `kv.access_granularity_bytes.hbm.note` | same — a 256 B entry costs 256 B | `assumed` | **NO** |
+| *"a narrower 64-byte macro halves the waste on a **68-byte** entry"* | `configs/hardware/technology.json` → `kv.access_granularity_bytes.sram.note` | same | `assumed` | **NO** |
+| `81,218 mm²` / `45,316 mm²` ROM array, and every weight-side figure | `docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md:86–91` | weight-side only; untouched by the KV corrections | `derived` | **YES** |
+
+`tools/check_evidence_grades.py` reports *"every graded entry names a defined
+grade and a source it can support"* across 151 entries. It is right, and it is
+not enough: it checks grade vocabulary and citation resolvability, never whether
+the note's arithmetic still holds.
+
+---
+
+# 2. Corrections that themselves went stale
+
+The most dangerous category, because a retraction notice is the form a reader
+trusts most. Each of these correctly retracts a number and then names a
+replacement that has since been superseded.
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| *"**RETRACTED**: '27× over a global broadcast at batch 64.' The model now says **10.65×**"* | `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md:258–259` | `results/roofline/n6_vs_a100/REPORT.md:711` = **3.57×**. `10.65×` is an intermediate value | `derived` | **NO — the correction is two generations behind** |
+| *"'per-region beats a global broadcast by up to 27× at batch 64' is retracted. At a matched floorplan the model said **10.65×**, and … it now says **7.44×**"* | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:115–117` | same, = **3.57×**. The **same document** states 3.57× correctly at `:865–866`, 750 lines later | `derived` | **NO — and the file now states two different current values for one quantity** |
+| *"**RETRACTED**: 54.2× … The model now says **35.4×**, with a band of **24.5–42.5×**"* | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:263–264` | `results/roofline/n6_vs_a100/REPORT.md:203` = **8.63×**, band **4.46–11.82×** (`:317`) | `derived` | **NO** — rescued only at `:372`, 108 lines later |
+| *"**The headline iso-area ratio at 554,700 mm² spans 24.5–42.5×**"* | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:1058–1059` | same: **4.46–11.82×** (n6) / **2.62–6.60×** (n5) | `derived` | **NO — a live, bolded, unmarked headline; §0.12's correction never reached §3** |
+| a table column headed literally **`ratio now`** carrying `35.4×` | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:316,324` and `docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md:135,143` | `n6_vs_a100/REPORT.md:203` = **8.63×** | `derived` | **NO** — both files banner the section (TDR `:372`, ISO `:96–98`), but the column header still says "now" |
+| *"OI-38 **Closed** … the marker moved to `cases=50 … views=391`, checks from 3,017 to **3,282**"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md:1298–1300` | `results/rtl/abi3_campaign.json` **(tree)**: `cases=63 headers=63 programs=51 issues=177 views=451 traps=11 checks=4331` | `executed` | **NO — a closed correction that is itself stale** |
+
+There is a coincidence worth knowing before anyone bulk-edits: `docs/ISO_AREA_…:138`
+and `docs/TECHNICAL_DIRECTION_…:319` contain a **`8.6×`** that is *not* the
+headline — it is the ratio at the 79,870 mm² rung of the superseded table. And
+`tools/run_roofline_studies.py:3508` contains a `54.2` that is a **watt**, not
+the retracted iso-area ratio.
+
+---
+
+# 3. Stale supporting numbers
+
+Lower consequence individually; they matter because they are the evidence
+attached to `[x]` checklist items, which is what a reader checks when they doubt
+a headline.
+
+## 3a. `docs/UNIFIED_EXECUTION_CHECKLIST.md` — `[x]` items whose evidence no longer holds
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| `[x]` W8.6 *"41 cases, 135 issue events, 354 resolved tensor views, 11 traps, 2,903 checks"* | `:103` | `make abi3-rtl` → `results/rtl/abi3_campaign.json` **(tree)** = **63 / 177 / 451 / 11 / 4,331** | `executed` | **NO** |
+| OI-16 *"compares 354 resolved views"* | `:528` | same = **451** | `executed` | **NO** |
+| `[x]` W2.4 *"691 kernels, 1127 tensors … graph_id `65eb209f`"* | `:40` | `make abi3-ir` → `build/ir-v3/qwen3-8b/kernel_ir.v3.json` = **728 kernels, 1165 tensors, graph_id `88496d70b772`** (399 bindings and 16,381,470,720 B are correct) | `executed` | **NO** |
+| `[x]` W2.5 *"3003 kernels, 71278 tensors"* | `:41` | `build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json` = **3976 kernels, 7066 tensors** (229 states and 156,015,698,140 B correct) | `executed` | **NO — tensors off ~10×** |
+| `[x]` W2.6 *"union published … (71 contracts)"* | `:42` | `spec/abi3/numeric_contract_union.json` **(tree)** → `contract_count` = **68** | `executed` | **NO** |
+| `[x]` W4.3 *"Qwen 69 instructions from 691 kernels"* | `:64` | admitted Qwen records all carry `instruction_count` **75** | `executed` | **NO** |
+| `[x]` W5.2 *"Qwen ROM 29 instructions"* | `:73` | `results/abi3/storage_class_equivalence_qwen3.json` → `instruction_count {hbm: 31, rom: 31}`; the ROM execution record carries 75 | `executed` | **NO — neither reading** |
+| `[x]` W6.2 *"18 descriptors differ, all `MEMORY_OBJECT`"* | `:81` | same file → `differing_descriptor_count` = **17**, `{"MEMORY_OBJECT": 17}` | `executed` | **NO** |
+| `94 counters` / `115-counter registry` / `115 counters` | `:29`, `:57`, `:417` | `PYTHONPATH=. python3 -c "from runtime.sim.counters import COUNTERS; print(len(COUNTERS))"` = **121** | `executed` | **NO — three mutually inconsistent figures, none matching the registry** |
+| `[x]` W10.5 *"largest context **actually executed is 8,000 tokens**; 32K/128K/200K exhaust GPU memory"* | `:120`, restated in OI-39 at `:199–200` | `results/abi3/deepseek_v4_reference_oracle_context_ladder.json` → `largest_natural_context_executed` = **200000**; `context_ladder_summary.executed = [1000, 8000, 32000, 128000, 200000]` | `executed` | **NO — all five rungs ran** |
+| `[ ]` W13.5 *"the recorded runs are 23 and 24 tokens, which is not a reasoning task"* | `:137–138` | `results/abi3/qwen3_hbm_ta-qw-reason-1_execution.json` = **512 tokens, status pass, `reference_agreement: true`** | `executed` | **NO — an open box whose blocking rationale is refuted by a committed artifact** |
+| `[ ]` W13.6 *"A tool call that is never executed is not an agentic task"* | `:139–141` | `results/abi3/qwen3_hbm_ta-qw-agent-1_episode.json` → `executed_command_count: 1`, `answer: "239"` = `expected_total` | `executed` | **NO — the loop is closed** |
+| `[ ]` W6.3 *"12,100 instructions, 25,129 descriptors, work 50,339,327"* | `:82` | `results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json` = **11,049 / 23,297 / 6,177,966** | `executed` | **NO** |
+| `[ ]` W6.4 *"retires 5,883 instructions (2,974 issued) … the residual-add wall **is gone**"* | `:83` | `results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json` = **5,789 / 2,952**, failure = *"the residual add contract is BF16 in and BF16 out"* — **the wall it says is gone** | `executed` | **NO** |
+| OI-26 / OI-28 *"reduction output view 413"* | `:842–844`, `:930` | artifact says **view 2327** | `executed` | **NO — stale view id** |
+| W12 correction table, all six rows | `:266–273` | 54.2→35.4→**8.6×**; 113.2→**35.3**; 58.9→**18.0**; 116,278→**5,000–9,000**; 27.3→**4.62×**; 27→**3.57×** | `derived` | **YES — the only place in the repository where all five corrections land correctly** |
+| `[~]` W11.1, the 24-vs-192 token horizon | `:392–417` | `results/abi3/comparison_qwen_rom_vs_hbm.json` → `token_agreement {identical: true, common_prefix_length: 24}`; `results/abi3/qwen3_hbm_ta-qw-8k-1_execution_192.json` → `status: "diverged"`, `notes.first_divergence_index: 137`, `reference_agreement: false` | `executed` | **YES — the model entry in the file** |
+
+## 3b. Token-identity claims that are true but unscoped
+
+The retraction is *"the two lanes produce identical tokens" — true at 24 tokens,
+false at 192*. `docs/UNIFIED_EXECUTION_CHECKLIST.md:411` states the rule:
+*"A token-identity claim between two backends has a horizon and the horizon must
+be stated."* Three summary-level claims state the identity without the horizon.
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| *"**The Qwen3-8B accelerator produces output token-identical to an independent reference** over the pinned chat workload"* | `README.md:9` (research-status banner) | true for `TA-QW-CHAT-1` (24 tokens). At 192 tokens on `TA-QW-8K-1` the HBM lane diverges from the oracle at index **137** (`results/abi3/qwen3_hbm_ta-qw-8k-1_execution_192.json`) | `executed` | **narrowly YES; the scope qualifier is load-bearing and the horizon is not stated** |
+| `[x]` W13.2 *"24 tokens, oracle-identical, and identical to the HBM lane position for position"*, under a heading *"stated plainly"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md:130–131` | same | `executed` | **YES at 24; should carry W11.1's "false at 192"** |
+| `[x]` W6.2 *"The 24 tokens are identical … which is the claim this item makes"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md:81` | same | `executed` | **YES — correctly scoped, but carries no pointer to the horizon** |
+| *"the horizon must be stated: 137 tokens here, **286 on the agentic workload**"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md:411` | `results/abi3/qwen3_hbm_ta-qw-agent-2_episode.json` → `oracle_comparison.first_generated_divergence_index: 286` — an **accelerator-vs-oracle** divergence on an **HBM-only** episode. There is no ROM agentic record, so it is not a two-backend horizon | `executed` | **misattributed** |
+| *"the weight side comes in at **1.007–1.008×** of prediction on those lanes"* | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:56–58` | `results/roofline/qwen3_execution_validation.json` (24 tokens) = 1.00829 / 1.00709 ✓. The newer `results/roofline/qwen3_8k_execution_validation.json` (192 tokens) reports **1.0235 (ROM)** and **1.1059 (HBM, `status: diverged`)**, and is cited nowhere in the document | `executed` | **YES at 24; the 192-token artifact is uncited** |
+
+## 3c. `docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` §2e — a table labelled "after" that predates §2d of the same file
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| `27.1× / 26.0× / 10.1× / 4.0×` under a column headed **`ratio after`** | `:381–386` | `results/roofline/n6_vs_a100/REPORT.md:260,264,266,268` = **12.61× / 21.60× / 26.69× / 36.52×** | `derived` | **NO** |
+| *"Pro's aggregate ratio at batch 256 falls from 5.2x to **3.0x**"* | `:388–389` | `n6_vs_a100/REPORT.md:284` = **17.33×** | `derived` | **NO** |
+| *"the aggregate comparison at serving batch is **halved**"* | `:378–379` | the corrected model says the ratio **rises** with batch for both sparse models — which `:322–330` of the same file states | `prose` | **NO — the direction is inverted, and the file contradicts itself** |
+| *"GPU rising 449 → 526 → **642** tok/s"* | `:149–156` | `n6_vs_a100/REPORT.md:203` corrected GPU at 554,700 = **236.7** | `derived` | **NO** |
+| §2d ladder, all 20 cells | `:263–282` | `n6_vs_a100/REPORT.md:299–331` | `derived` | **YES — cell for cell** |
+| §2f watts (`54.21 W`, `27.04 W`, `85.3 W`), stated only as evidence the power model is broken, with *"every watt … is unpublishable"* at `:429` | `:411–447` | `results/roofline/n5_vs_b200/REPORT.md:1438–1447` | `assumed`, disclosed | **YES — correct handling** |
+| `5,000–9,000 tok/s` on-wafer replacement | `:191–196` | `results/roofline/n5_vs_b200/REPORT.md:460,503,552` aggregate column | `derived` | **YES** |
+
+## 3d. `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md` — one live figure outside its own coverage note
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| *"ratio from **27.1×** to 27.1×"* | `:405` — above the *"(Both tables below predate section 0.12…)"* disclaimer at `:411–412`, which scopes itself to *the tables below* | `n6_vs_a100/REPORT.md:197` corrected Flash @200K per-user ratio at 554,700 = **9.50×** | `derived` | **NO** — the claim's *point* (the KV correction is invariant at batch 1) survives; the number does not |
+| `84.7% for Flash and 87.0% for Pro, up from 72%` (index share of KV read) | `:188` | I recomputed it: 21 × 50,000 × 256 = 268,800,000 B of 317,435,904 B = **84.7%** ✓ | `derived` — but **prose-only**, see §5 | **YES, and nothing emits it** |
+| `4.62×` N5-vs-B200 for Pro, `13.1× against 27.3×`, `8.63×`, `35.3:1`, `18.0:1`, the whole latency-separation ladder at `:628–649` | `:330–332`, `:399–401`, `:628–649` | `n5_vs_b200/REPORT.md:203,315`; `n6_vs_a100/REPORT.md:184–203`; `n5_vs_b200/REPORT.md:162–163` | `derived` | **YES** |
+
+---
+
+# 4. Generated artifacts: which generator actually reran
+
+`results/**/REPORT.md` is generated and therefore current *by construction only
+if the generator ran after the correction*. Two did not.
+
+| artifact | produced by | last regenerated | current? |
+|---|---|---|---|
+| `results/roofline/n5_vs_b200/REPORT.md` | `make roofline` | `fc9b7b1` 2026-08-30 10:13 — the fifth correction itself | **YES.** No commit touches `src/opentallas/roofline.py` after `fc9b7b1` |
+| `results/roofline/n6_vs_a100/REPORT.md` | `make roofline` | `fc9b7b1` 2026-08-30 10:13 | **YES** |
+| `results/iso-node/leading_node_market/REPORT.md` | `make iso-node` | `a782530` 2026-08-30 13:16 — HEAD, *"regenerate against tonight's corrected model"* | **YES** |
+| `results/iso-node/n7_architecture_attribution/REPORT.md` | `make iso-node` | `a782530` | **YES** |
+| `results/model-traffic/REPORT.md` + `sweep.csv` | `make model-traffic` | `de5c34c` 2026-08-30 09:23 | **YES** |
+| `results/abi3/*` (30 artifacts) | the ABI 3.0 targets | up to `2dff29d` 2026-08-30 11:30 | **YES** |
+| **`docs/PROGRAM_STATUS.md`** | `make abi3-status` → `tools/build_program_status.py` | `ca0c36d` **2026-08-29 17:50** | **NO — 108 commits and 19.5 hours stale** |
+| **`docs/assets/why-rom.svg`, `throughput-at-200k.svg`, `uncertainty-at-200k.svg`** | `python3 tools/render_public_assets.py` | `a1eb32e` **2026-08-28 11:01** | **NO — see Rank 3** |
+| `results/standard/`, `results/sensitivity/` | `make legacy-sim`, `make sensitivity` | 2026-08-28 | **stale but honestly bannered** *"Legacy/superseded"* in both REPORTs, in `README.md:160` and `SOURCES.md:238` |
+| `results/spice/*`, `results/asap7_physical/`, `results/gpu/*`, `results/noc/` | `make spice-pdk`, `make noc`, … | 2026-08-27/28 | **YES — circuit- and fabric-level, untouched by tonight's model corrections** |
+
+### `docs/PROGRAM_STATUS.md` in detail
+
+It is the only generated file in `docs/`, and it is the file `README.md:17`
+points to for *"generated status"*. It states `**Commit:** 3abe9cd3f15e`.
+
+| number | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| *"58 done, 7 in progress, 13 not started"* | `docs/PROGRAM_STATUS.md:8` | `tools/build_program_status.py:195–197` counts `- [x] ` / `- [~] ` / `- [ ] ` in `docs/UNIFIED_EXECUTION_CHECKLIST.md`. Run today: **71 / 11 / 10** | `executed` | **NO** |
+| deepseek-v4-flash IR row `3003 \| 71278 \| 229 \| 572431f15e65` | `:21` | `build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json` = **3976 / 7066 / 229 / `e9b960ffcb19`** | `executed` | **NO** |
+| qwen3-8b IR row `728 \| 1165 \| 36 \| 88496d70b772` | `:20` | `build/ir-v3/qwen3-8b/kernel_ir.v3.json` | `executed` | **YES** |
+| *"30 cases, 24 programs executed, 99 engine-issue events and 12 traps"* | `:58` | `results/rtl/abi3_campaign.json` **(tree)** = **63 cases, 51 programs, 177 issues, 11 traps** | `executed` | **NO** |
+| oracle table, `TA-DS-CTX-8K-1 \| 8 \| max_new_tokens` as the deepest DeepSeek rung | `:29–30` | `results/abi3/deepseek_v4_reference_oracle_context_ladder.json` now runs to **200,000** | `executed` | **NO — the table has no 32K/128K/200K rows** |
+| `failclosed_campaign \| None \| None \| None` | `:69` | `results/abi3/failclosed_campaign.json` exists | `executed` | **NO — reported absent while present** |
+
+`make abi3-status` regenerates it in one command. Nothing runs it.
+
+---
+
+# 5. Numbers nothing produces
+
+**This is the most durable part of the audit.** A stale number can be corrected;
+a number with no producer will go stale again the next time the model moves, and
+nothing will notice. The correlation is exact and worth stating plainly:
+
+> Of the priority documents, `PER_REGION` and `TECHNICAL_DIRECTION` cite
+> artifacts — and their errors were *caught and retracted*. `FIRST_PRINCIPLES`,
+> `WAFER_VERSUS_ARRAY` and `COMPUTE_IN_ROM_MECHANISM` cite **nothing** — and
+> their errors are still live and unmarked. Provenance is what made the
+> difference, not care.
+
+Measured over the priority documents (`grep -c` for `results/`, `tools/|make |python3 `, `src/opentallas`):
+
+| document | numeric tokens | `results/` refs | command refs | `src/` refs |
+|---|---:|---:|---:|---:|
+| `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md` | 421 | 4 | 2 | 2 |
+| `docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` | 262 | 2 | 2 | 1 |
+| `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md` | 73 | 2 | 0 | 1 |
+| `docs/OVERVIEW.md` | 17 | 7 | 9 | 0 |
+| `docs/ASSUMPTIONS.md` | 63 | 1 | 0 | 1 |
+| **`docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md`** | **56** | **0** | **0** | **0** |
+| **`docs/WAFER_VERSUS_ARRAY_LATENCY.md`** | **58** | **0** | **0** | **0** |
+| **`docs/COMPUTE_IN_ROM_MECHANISM.md`** | **16** | **0** | **0** | **0** |
+| **`docs/METHODOLOGY.md`** | **9** | **0** | **0** | **0** |
+
+## 5a. Whole documents nothing produces
+
+| number(s) | where | what produces it | grade |
+|---|---|---|---|
+| all 58 figures in `docs/WAFER_VERSUS_ARRAY_LATENCY.md` — the hop-latency budget table, the pipeline-cost table, the tensor-parallel table, the per-model crossover rates (`7,400` / `1,280 tok/s`) | whole file | **nothing.** No script, no artifact, no test. The roofline study now models all of it and disagrees | `prose` |
+| all 56 figures in `docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md` | whole file | **nothing.** `:5–6` claims *"Every figure comes from `configs/models/*.json` through `opentallas.workload`"* — but `src/opentallas/workload.py` has **no `main`, no CLI and no argparse**, and no artifact writes this table. The claim names a module, not a command | `prose` |
+| all 16 figures in `docs/COMPUTE_IN_ROM_MECHANISM.md` — including `66.8×` per-user, `~2.2×` aggregate, `~7,771 tok/s (40% MFU)`, and the closing *"the per-user and aggregate ratios differ by **30×**"* | whole file | **nothing.** The roofline study now quantifies the same fork at *"up to **28.5x** of aggregate throughput"* (`results/roofline/n5_vs_b200/REPORT.md:22`), from a different derivation. The `40% MFU` assumption appears in no config | `prose` |
+| `docs/METHODOLOGY.md` in full | whole file | nothing; it is a normative contract, and `:13` still says *"The repository maintains **two** independent studies"* when there are now four — the roofline pair, where tonight's headline lives, is not governed by it | `prose` |
+| SHA-256 known-answer digests and element counts across the **16** `docs/DEEPSEEK_V4_*_EVIDENCE.md` files | whole family | 14 of 16 cite no `results/` path, and **none names a reproduction command**. Hash-anchored, so they cannot silently drift numerically — but nothing regenerates or verifies them either | `prose` |
+
+## 5b. Individual figures nothing emits
+
+| number | where it is stated | what produces it | grade |
+|---|---|---|---|
+| `16,960 tok/s` Taalas HC1 per user — **the validation gate for the entire model** | `docs/COMPUTE_IN_ROM_MECHANISM.md:117`, `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:16`, the roofline gate table, and `configs/hardware/technology.json` | the *gate* is produced (`n6_vs_a100/REPORT.md:78`). The *anchor* is cited to three secondary press reports in `docs/ISO_AREA_…:15–34`, and **`docs/SOURCES.md` contains zero occurrences of "Taalas" or "HC1"** — while `SOURCES.md:26–27` forbids secondary press for a value | claims `published`, **not in the source register** |
+| `46,225 mm²` WSE-2 wafer area — the numerator of the N7 compute roof | `docs/SOURCES.md:169` (`SRC-CEREBRAS-WSE2`), used at `docs/ASSUMPTIONS.md:185` | cited as *"Cerebras WSE-2 public product disclosures"* — **no URL, no document, no date, no hash**. Its sibling `SRC-CEREBRAS-WSE3` carries a URL, a byte size and a SHA-256 | claims `published`, **unresolvable** |
+| `823 mm²` GC200 die and `47.5 TB/s` — the denominator of the same roof | `docs/SOURCES.md:170` (`SRC-GC200`), second sentence | *"Public GC200 architecture disclosures"* — **no URL**. The first sentence of the same cell *is* backed by the linked product page | claims `published`, **unresolvable** |
+| `60 GB/s/mm²` ROM read-bandwidth density (YOLoC) and `20.7 MB/mm²` (3D-METRO) — the two most load-bearing ROM constants | `docs/SOURCES.md:200–201`, used at `docs/ASSUMPTIONS.md:159–164` | DOIs present, but `SOURCES.md:36–40` discloses that both resolvers returned **HTTP 403** and *"this run does not claim fresh access to or content validation of the ACM papers"* | correctly graded non-fabricated; **unverified** |
+| `84.7%` / `87.0%` index share of the KV read | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:188` | I recomputed it by hand and it is **right**. It appears in no artifact | `prose` |
+| `290.4 ns` per compressed-sparse layer, and the fixed-latency share table `55.4 / 38.7 / 34.7 / 6.6 / 2.0 / 0.9%` | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:141–157` | nothing | `prose` |
+| `11,747 feasible points`, and the uniform-multiplier table `0.181 / 0.851 / 1.340 / 1.684 W/mm²`, `339 / 581 / 987` | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:496,508,515–518` | nothing; `11,747` is a cross-study sum with no stated derivation | `prose` |
+| corrections `1.02× to 3.14×` over `125 GPU points`; `3.69 devices engaged, 2.53 effective, 1.46×` | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:127–130` | nothing | `prose` |
+| the entire per-user results table `216 / 229 / 4,022 / 1,143 / 1,857 / 1,056 / 17 / 41 / 779 / 264 …` | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:749–763` | sourced to *"`The batch-amortisation fork` and the points behind it"* — that table (`n6_vs_a100/REPORT.md:687–736`) carries **aggregate only**. None of these values is in it | `prose` |
+| *"a 4,000-trial Monte Carlo … agreement within 3% at every batch"* | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:100` | the test **does** exist — `tests/test_roofline.py:1631 test_expected_max_region_load_matches_a_monte_carlo_of_the_routing`, `trials=4000`, `rel=0.03` — but the document names no test, no file and no artifact | `executed`, **uncited** |
+| *"the measured speed-of-light all-reduce floor on GB200"*, `1.4 µs` | `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md:300`, `:1051` | nothing. Conspicuous next to `:301–302` (Rocki SC20) and `:1054–1056` (De Sensi SC24), which *are* cited | claims `measured`, **no source** |
+| `100.4 mm² of an 815 mm² die at N6` | `docs/UNIFIED_EXECUTION_CHECKLIST.md:376` | nothing — `grep -rn "100.4 mm" results/` is empty. The byte figure beside it (`1,207,959,552 B`) *is* produced | `prose` |
+| *"all **27 distinct prefill kernels** diffed kernel-by-kernel through the `on_issue` hook: bit-identical"* | `docs/UNIFIED_EXECUTION_CHECKLIST.md:81` | nothing — no artifact path, no tool named, not reproducible from the repository | claims `executed`, **no artifact** |
+| the wafer is `8.3×` cheaper on Flash and `8.9×` on Pro | `docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md:200` | the artifact states only *"**at least** 2.0x cheaper"*; the per-model values appear in neither study report | `prose` |
+| `26 dies against 18`, `138 against 93` | `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md:218–219` | no die-count table in either report carries these | `prose` |
+| `299 mm²` MAC-array area recovered; `0.41×` feed fraction; *"the mean understates the sweep by **1.6x to 2.7x**"* | `src/opentallas/roofline.py:1341`, `:1364`, `:373` | nothing computes or prints them. The last sits directly under the per-region argument whose headline moved 27× → 3.57× | `prose` |
+| `46,225 mm²` wafer; `681 reticle fields`; `1.4x`; the watts `54.2 W / 27.0 W / 85.3 W` | `tools/run_roofline_studies.py:3539`, `:3680`, `:3654`, `:3508–3511` | **hard-coded strings inside otherwise fully f-string findings.** The watts sit under `## Interpretation boundary` and are a disclosure, not a claim — but if the power model moves, the disclosure will quote stale evidence for a true conclusion | `prose` |
+| *"A 681-region all-reduce is **5.72 microseconds**, not **0.20**"* | `tools/check_evidence_grades.py:12–13` | nothing recomputes it. Consistent in direction with the retraction | `prose` |
+| `17,000 tok/s` vs `16,960 tok/s` | `tools/run_roofline_studies.py:2724` and `:2402` vs `:3298`; `src/opentallas/roofline.py:3168,3173` | the config value is **16,960** (`configs/hardware/technology.json`). One file quotes both | `published`, inconsistently rounded |
+| `results/roofline/*` and `results/abi3/*` | — | **no `GEN-*` row in `docs/SOURCES.md`.** Its 23 `GEN-*` rows index `results/standard`, `routing`, `noc`, `model-traffic`, `model-execution`, `sensitivity`, `spice`, `rtl` and `configs/hardware` — but not the two newest and most-cited result families, which is where every number in §1 of this ledger is produced | — |
+
+---
+
+# 6. What enforces what
+
+| mechanism | scope | gap |
+|---|---|---|
+| `tools/check_evidence_grades.py` | **`configs/hardware/technology.json` only** — 151 graded entries. Invoked only by `tests/test_evidence_grades.py::test_the_checked_in_technology_passes`; it has **no `make` target** | Does not read `configs/models/*.json` (3 graded entries, unchecked) unless `--also` is passed, which nothing does. Checks grade vocabulary and citation resolvability, **never whether a note's arithmetic still holds** — which is why Rank 5's retracted `583`/`68` constants sit inside the one file it guards, and it passes |
+| `tests/test_roofline.py` | pins the corrected model: the mesh-diameter collective (`:824`), the retracted on-wafer rates (`:844`), the layer cap (`:715`), the pipeline rule (`:1002`) | pins the **model**, never the **prose**. No test reads a `docs/*.md` number |
+| `tools/build_program_status.py` | the only generator writing into `docs/` | must be run by hand; nothing runs it; 108 commits stale |
+| `tools/render_public_assets.py` | the only generator writing `docs/assets/` | same; 2 days stale, and 3 of its SVGs carry retracted figures into the two most-read documents |
+| `docs/SOURCES.md` | 23 `GEN-*` rows + external citations | no row for `results/roofline/` or `results/abi3/`; zero mentions of the Taalas anchor |
+| **nothing** | **`docs/*.md` prose** | 47 files, ~1,100 unit-bearing numbers, no linter, no test, no generator |
+
+**The one durable fix.** Every stale number in §1 and §2 would have been caught
+by a checker that reads a fenced provenance annotation next to each load-bearing
+figure — `<!-- from: results/roofline/n6_vs_a100/REPORT.md#L711 col="Per-region over broadcast" -->` —
+re-reads the artifact and diffs. That is roughly what
+`tools/check_evidence_grades.py` does for `technology.json`, applied to prose.
+Until something like it exists, the documents in §5a will go stale again on the
+next correction, silently, exactly as they did on this one.
+
+---
+
+## Counts
+
+Reconcilable with the tables above; every figure here is a row count.
+
+| | |
+|---|---:|
+| Load-bearing figures carrying an explicit **current?** verdict (§1–§4) | **108** |
+|  of which **stale** | **80** |
+|  of which **verified current** | **26** |
+|  of which qualified (narrowly true / misattributed) | 2 |
+| Entries in §5 naming a figure **nothing produces** | **25** |
+|  whole-document groups (§5a), covering 4 documents ≈ 139 numeric tokens + the 16-file `DEEPSEEK_V4_*_EVIDENCE` family | 5 |
+|  individual figures (§5b) | 20 |
+
+Breaking the 80 stale down by kind:
+
+| kind | count | where |
+|---|---:|---|
+| retracted figures, or their direct descendants, stated as **live** claims | **47** | §1 |
+| **corrections whose own replacement has been superseded** | **6** | §2 |
+| supporting figures contradicted by a regenerated artifact | 20 | §3 |
+| generated artifacts whose generator did not rerun | 7 | §4 |
+
+The swept universe was larger than the ledger: roughly **1,100 unit-bearing
+numeric tokens** across the 13 priority documents (measured by `grep -oE` for a
+number followed by `× x :1 tok/s mm² µs GB TB/s W %`), plus
+`src/opentallas/*.py`, the audited `tools/*.py`, `configs/`, the 21 generated
+`REPORT.md` files and `docs/assets/`. Figures that merely repeat a value already
+in the table, and worked-example arithmetic that carries no claim, were not given
+their own row.
+
+Every "current?" verdict was checked against the artifact that produces it, or
+recomputed from `configs/` through `opentallas.workload`. None was assumed.

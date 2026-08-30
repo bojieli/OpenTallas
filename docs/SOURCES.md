@@ -3,12 +3,29 @@
 **Status:** analytical-baseline source register
 
 **Last checked:** 2026-08-29 UTC
+**Last amended:** 2026-08-30 UTC — added `SRC-TAALAS-HC1`, `GEN-ROOFLINE` and
+`GEN-ABI3`; qualified two unresolvable citations; added the power moratorium.
+The amendments of 2026-08-30 record values already in `configs/` and `results/`
+and **did not re-fetch any external URL**, so the "Last checked" date above is
+unchanged and no claim of fresh reachability is made for the rows added that day.
+
 **Scope:** public, non-NDA evidence only
 
 This register records the primary evidence used by the executable analytical
 model. `rom-inference-brief.md` is an input hypothesis, not a source. A value is
 not considered published merely because it appeared in that brief or in an
 earlier generated report.
+
+### No watt is publishable
+
+The project's power model under-reports by **7–9×** and is being rebuilt. Vendor
+TDPs and system-power envelopes recorded below (A100 400 W, DGX B200/B300 kW
+ratings, the Taalas card figure) are **inputs**, graded where they appear, and
+they stay. **No watt, joule-per-token or W/mm² figure produced by this
+repository's power model may be quoted as a result** until a replacement model
+lands. The watts that appear in `results/roofline/*/REPORT.md` sit under
+"Interpretation boundary" and are disclosures that the model is broken; they are
+not results. See `docs/METHODOLOGY.md` §7a.
 
 ## Evidence classes
 
@@ -166,13 +183,62 @@ brief.
 |---|---|---|---|
 | SRC-NV-A100 | [NVIDIA A100 product page](https://www.nvidia.com/en-us/data-center/a100/) and [NVIDIA Ampere Architecture whitepaper](https://images.nvidia.com/aem-dam/en-zz/Solutions/data-center/nvidia-ampere-architecture-whitepaper.pdf) | A100 uses TSMC N7; the 80-GB SXM part provides 2,039 GB/s HBM2e, 312 dense BF16 Tensor-Core TFLOP/s, 19.5 FP32 TFLOP/s, 600 GB/s NVLink, and 400 W TDP. The published Tensor Core formats do not include floating FP8 or FP4. | DeepSeek FP8/MXFP4/FP4 tensors are expanded offline to BF16; cluster collective efficiency and acquisition cost remain assumptions. The exact expanded bytes are generated tensor-role by tensor-role. |
 | SRC-CEREBRAS-NODE | Cerebras Systems Form S-1 filed 2026-04-17, `cerebras-sx1april2026.htm` | WSE-2 was manufactured on TSMC 7 nm; WSE-3 on TSMC 5 nm. | Establishes wafer-scale fabrication by node only. It does not establish this project's ROM density, HBM integration, or inference throughput. |
-| SRC-CEREBRAS-WSE2 | Cerebras WSE-2 public product disclosures | 46,225-mm² wafer-scale silicon, 850,000 cores, 40 GB on-wafer SRAM, and 20 PB/s advertised local memory bandwidth. | Used as an N7 physical-feasibility/storage-tier anchor. The proposed ROM design does not inherit WSE-2 bandwidth, compute, topology efficiency, yield, or power. |
-| SRC-GC200 | [Graphcore GC200 product page](https://www.graphcore.ai/products/ipu) | TSMC 7 nm, 900 MB in-processor SRAM, 1,472 cores, and 250 FP16 TFLOP/s. Public GC200 architecture disclosures give an approximately 823-mm² die and 47.5 TB/s aggregate local-memory bandwidth. | Product values are area-scaled at fixed composition solely to create an iso-node SRAM-rich storage control. The resulting wafer is not a Graphcore product or measured Graphcore performance. |
+| SRC-CEREBRAS-WSE2 | Cerebras WSE-2 public product disclosures — **no URL, no document, no date, no hash** | 46,225-mm² wafer-scale silicon, 850,000 cores, 40 GB on-wafer SRAM, and 20 PB/s advertised local memory bandwidth. | Used as an N7 physical-feasibility/storage-tier anchor, and the **46,225 mm² is the numerator of the N7 compute roof** and of `wafer.area_mm2`. **This citation does not resolve** and is flagged as such: its sibling `SRC-CEREBRAS-WSE3` carries a URL, a byte size, a CDN last-modified date and a SHA-256, and this row carries none of them. The 46,225 mm² and the 20 PB/s are independently restated in the hashed WSE-3 white paper locked at `SRC-CEREBRAS-WSE3` (as 46,225 mm² and 21 PB/s at N5), which is what a reader should check until this row is given a primary artifact. Tracked as an open provenance gap. The proposed ROM design does not inherit WSE-2 bandwidth, compute, topology efficiency, yield, or power. |
+| SRC-GC200 | [Graphcore GC200 product page](https://www.graphcore.ai/products/ipu) | TSMC 7 nm, 900 MB in-processor SRAM, 1,472 cores, and 250 FP16 TFLOP/s. A second sentence in this row — *"public GC200 architecture disclosures give an approximately 823-mm² die and 47.5 TB/s aggregate local-memory bandwidth"* — has **no URL and does not resolve**, and those two values are the denominator of the SRAM-rich iso-node control. They are flagged rather than removed, because the control is built from them; the first sentence's values are backed by the linked product page and the second sentence's are not. Tracked as an open provenance gap. | Product values are area-scaled at fixed composition solely to create an iso-node SRAM-rich storage control. The resulting wafer is not a Graphcore product or measured Graphcore performance. |
 
 The A100 deployment is not a lossy re-quantization. It expands the released
 quantized values and scale tensors into BF16 storage ahead of service, then maps
 logical FP8/MXFP4 operations to A100's native BF16 Tensor Core roof. This is the
 primary compatibility case because it does not assume free just-in-time unpacking.
+
+## The shipping mask-ROM part: the anchor the model is gated against
+
+This section did not exist until 2026-08-30. An audit found that `docs/SOURCES.md`
+contained **zero occurrences of "Taalas" or "HC1"** while a Taalas figure was
+serving as the validation gate for the entire analytical model, and while
+`docs/COMPUTE_IN_ROM_MECHANISM.md`, `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md`
+and `configs/hardware/technology.json` all quoted it. A value used as a gate must
+be in this register before it is used.
+
+**Taalas HC1** is a shipping mask-ROM inference accelerator; AMD announced an
+acquisition of the company in August 2026. Every value below is recorded in
+`configs/hardware/technology.json` → `reference_parts.taalas_hc1` with its own
+grade and source string, and the values are used by
+`results/roofline/*/REPORT.md` → "Validation gates".
+
+**The rows do not share a source, and this register's rule against secondary
+press for a value applies to some of them.** The die area, the token rate and the
+sequence lengths are on the vendor's own product page. The transistor count, the
+weight format and the card power are from secondary press with no primary
+equivalent found; they are marked, and none of them is an input to a headline
+result.
+
+| ID | Field | Value | Grade | Primary artifact | Boundary |
+|---|---|---:|---|---|---|
+| SRC-TAALAS-HC1 | `published_tokens_s_per_user` | **16,960 tok/s** per user, Llama 3.1 8B | published | [Taalas products page](https://taalas.com/products/) | **The validation gate.** Self-run by Taalas; no MLPerf or third-party measurement; batch size stated nowhere. The rounded "17k" on the same page is this number. |
+| SRC-TAALAS-HC1 | `die_area_mm2` | **815 mm²**, TSMC N6 | published | [Taalas products page](https://taalas.com/products/) | Also used as `reticle.area_mm2`, so array designs and the anchor are the same unit of silicon. |
+| SRC-TAALAS-HC1 | `input_tokens` / `output_tokens` | **1,024 / 1,024** (~2k final context) | published | [Taalas products page](https://taalas.com/products/); output detail via [Wavect review](https://wavect.io/blog/taalas-hc1-llm-asic-review/) | The gate is evaluated at 1,024–2,048 context; the sensitivity table shows the ratio is flat across that span. |
+| SRC-TAALAS-HC1 | `transistors` | **53 billion** | published | [CNX Software, 2026-02-22](https://www.cnx-software.com/2026/02/22/taalas-hc1-hardwired-llama-3-1-8b-ai-accelerator-delivers-up-to-17000-tokens-s/) | **Secondary press.** No primary Taalas statement located. Not an input to any roof; used only as a plausibility cross-check against the 815 mm² die. |
+| SRC-TAALAS-HC1 | `weight_bits_per_parameter` | custom **3-bit base mixed with 6-bit**; modelled at **3.5**, swept 3.0–6.0 | assumed | [CNX Software](https://www.cnx-software.com/2026/02/22/taalas-hc1-hardwired-llama-3-1-8b-ai-accelerator-delivers-up-to-17000-tokens-s/) | **Secondary press, and the mix ratio is not published at all.** Graded `assumed` for that reason. The anchor sensitivity table reports the gate at 3.0/3.5/4.0/5.0/6.0. |
+| SRC-TAALAS-HC1 | `power_w` | **~250 W** per PCIe card | published | [Kaitchup](https://kaitchup.substack.com/p/taalas-hc1-absurdly-fast-per-user) | **Secondary press**, and a watt. Retained as a register input only. It is **not quotable as a result** under the moratorium above, and it appears in `technology.json` only inside a cross-check note for `thermal.cooling_limit_w_per_mm2`. |
+| SRC-TAALAS-HC1 | `batch_size` | **1** | assumed | not published; `technology.json` records *"checked taalas.com, CNX Software, Wavect and Kaitchup"* | The figure is quoted per user, so batch is modelled as 1. On this model's ROM weight path the anchor rate is batch-independent for a dense model, so the assumption does not move the gate; it does move aggregate throughput and the SRAM KV area. |
+| SRC-TAALAS-HC1 | `weight_amortization` | `per_stream` (compute-in-ROM) | assumed | Taalas publishes no microarchitecture | Llama-3.1-8B is dense, so per-stream and per-region are the same machine at the anchor. Evaluating the anchor as `batched` would model a MAC array the part does not have. |
+| SRC-TAALAS-HC1 | acquisition, context | AMD announced an acquisition, August 2026 | published | [ServeTheHome](https://www.servethehome.com/amd-to-acquire-taalas-for-model-specific-ai-inference-chips/), [The Register](https://www.theregister.com/systems/2026/08/06/amd-acquires-ai-chip-startup-taalas-to-boost-inference-performance-by-etching-models-into-silicon/5284344) | Context only. No number in this repository derives from either report. |
+
+**How the gate reads today** (`results/roofline/n6_vs_a100/REPORT.md` →
+"Validation gates"): published 16,960 tok/s, modelled **12,232.4 tok/s**, ratio
+**0.72×**, tolerance within 2×, **PASS**. The model *under*-predicts the shipping
+part by 1.39×. The study deliberately does not tune inputs to close that; it
+back-derives what each input would have to be and reports the shortfall (ROM read
+bandwidth density 1.30×, compute density 22.52×). The paired A100 gate reads
+253.91 tok/s published and modelled, **1.00×**.
+
+**Two things the anchor cannot do.** It cannot distinguish compute-in-ROM from
+ROM-plus-MAC, because those two machines are identical at batch 1 and the anchor
+is a batch-1 figure. And a rounded `17,000` appears in `tools/run_roofline_studies.py`
+and `src/opentallas/roofline.py` alongside the configured `16,960`; the config
+value is authoritative and the rounding is cosmetic, but the two spellings are a
+known inconsistency.
 
 ## Wafer-scale and leading-node anchors
 
@@ -239,6 +305,8 @@ are in `docs/OPEN_PDK_SELECTION.md`.
 | GEN-ROUTING | `results/routing/*.json` | synthetic/simulated | Uniform and correlated stress routing; not production activation traces. |
 | GEN-NOC | `results/noc/*` | simulated | Purpose-built topology/serialization model; not placed-and-routed timing. |
 | GEN-ISO-NODE | `configs/hardware/n7_architecture_attribution.json` and `leading_node_market.json` | derived/assumed envelopes | Exact arithmetic from cited macro/product facts plus visible scaling and floorplan inputs. No target-node ROM measurement. |
+| **GEN-ROOFLINE** | `results/roofline/n6_vs_a100/` and `results/roofline/n5_vs_b200/` (`REPORT.md`, `analytical.json`, `sweep.csv`), plus `results/roofline/qwen3_execution_validation.json`, `qwen3_8k_execution_validation.json` and `deepseek_v4_kv_model_validation.json` | simulated/derived, with two published validation gates | **This row did not exist until 2026-08-30, and the project's current headline figures are produced here.** `make roofline` = `python3 tools/run_roofline_studies.py --force`, emitted by `src/opentallas/roofline.py` from `configs/hardware/technology.json` and the released model profiles. Silicon area is the primary input; capacity, bandwidth and compute roofs are derived from it, and both sides are held to equal, stated area with each choosing its own parallelism. Gated against Taalas HC1 (`SRC-TAALAS-HC1`, 0.72×) and A100 80 GB (`SRC-NV-A100`, 1.00×). Carries its own retractions in its "What the model says" list, including the on-wafer tensor-parallel rates of 116,278 and 81,966 tok/s. **Boundary:** every figure is conditional on assumed inputs, chief among them the ROM cell-area ratio and the ROM read-bandwidth density, neither of which has been measured at N5 or N6. **No watt from this family is publishable**; the watts under "Interpretation boundary" are disclosures that the power model is broken. |
+| **GEN-ABI3** | `results/abi3/` (30 artifacts: reference-oracle ladders, per-target execution records, storage-class equivalence proofs, comparisons, fail-closed and numeric-contract campaigns) and `results/rtl/abi3_campaign.json` | executed, on a functional device from compiled artifacts | **This row did not exist until 2026-08-30.** Produced by the ABI 3.0 targets; `docs/UNIFIED_EXECUTION_CHECKLIST.md` names the per-item commands. Contains the only *executed* KV measurements in the repository: `deepseek_v4_reference_oracle_context_ladder.json` runs the released DeepSeek implementation at 1,000 / 8,000 / 32,000 / 128,000 / 200,000 tokens and reports measured KV bytes per decode step against the profile's prediction (317,435,904 against 317,461,760 at 200,000 — 0.008%). **Boundary:** functional and counter evidence only. No cycle-accurate timing, no physical implementation, no fabricated silicon. Token-identity claims from this family have a **horizon** and the horizon must be stated with them: identical to an independent reference over 24 tokens on the pinned chat workload, and divergent at index 137 over 192 tokens on `TA-QW-8K-1`. |
 | GEN-MODEL-TRAFFIC | `results/model-traffic/` | derived | Hardware-independent active-weight/KV traffic matrices for Flash, Pro, and Kimi; not a speedup prediction. |
 | GEN-DSV4-SPARSE-ATTN | `results/model-execution/deepseek-v4-sparse-attention-tilelang018.json` and `docs/DEEPSEEK_V4_SPARSE_ATTENTION_EVIDENCE.md` | exact target reference plus bounded official-kernel execution | The unmodified pinned kernel ran through TileLang 0.1.8 on PyTorch 2.10.0+cu128, CUDA 12.8, and SM120 with hash-locked transitive wheels. One 8,192-output exact-eighths corpus matched; a broader finite-BF16 corpus differed at three outputs by one same-sign BF16 code. The audit also locks all 2,944 real checkpoint sink values and separates valid selected-KV bytes from padded lanes. It does not establish real Q/KV layer outputs, service/RTL execution, cycles, PPA, or GPU performance. |
 | GEN-DSV4-COMPRESSOR | `results/model-execution/deepseek-v4-compressor-audit.json`, `results/model-execution/deepseek-v4-compressor-executable.json`, and `docs/DEEPSEEK_V4_COMPRESSOR_EVIDENCE.md` | exact target references, checkpoint payload audit, bounded official-method execution, and generated post-projection controlled service known answer | All 62 released FP32 APE tensors contain 1,418,240 finite values and 5,672,960 bytes with aggregate SHA-256 `ad6333d91c83b72c3fc426ea712b91446ef4020eac1dc39a299d9e56ab288ea4`. The unmodified pinned method matched all 1,024 BF16 outputs on an APE-cancelled corpus and differed at one output by one BF16 code on a broad exact-eighth corpus. Separately, a generated package consumes the complete official layer-2 `[4,1024]` APE through causal raw state, conditional pool/conversion, compressed harness commit, and valid view under a controlled APE-cancellation input. That package proves the parameter identity and harness behavior, not checkpoint-derived activations or model execution. Projection inputs and the official RMSNorm/RoPE/QDQ middle remain outside the slice. Its counters are logical only; it establishes no physical bytes, cycles, PPA, or GPU advantage. |

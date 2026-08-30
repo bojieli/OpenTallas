@@ -72,6 +72,13 @@ Mixture-of-experts models add a useful wrinkle: only selected experts are active
 for a token. OpenTallas keeps expert identity and routing explicit rather than
 pretending that every expert is read on every step.
 
+> **This figure is stale and carries a retracted number.**
+> `docs/assets/why-rom.svg` was last rendered at commit `a1eb32e` on 2026-08-28
+> and still shows `113.2×` and `99.10 MB / token`. Both were retracted on
+> 2026-08-30. Read the corrected table below, not the image. Regenerate the
+> image with `python3 tools/render_public_assets.py`, which reads
+> `results/model-traffic/sweep.csv` directly.
+
 ![Why immutable-weight ROM can change decode traffic](assets/why-rom.svg)
 
 ### A concrete traffic example
@@ -79,17 +86,31 @@ pretending that every expert is read on every step.
 For the checked DeepSeek V4 Flash representation at 200,000 resident context
 tokens and batch one, the hardware-independent inventory reports:
 
-| Per generated token | Checked traffic |
-|---|---:|
-| Expected active weight read | 11.2176 GB |
-| KV read | 99.1018 MB |
-| Weight/KV-read ratio | 113.2× |
+| Per generated token | Checked traffic | previously published |
+|---|---:|---:|
+| Expected active weight read | 11.2176 GB | 11.2176 GB (unchanged) |
+| KV read | **317.4564 MB** | ~~99.1018 MB~~ |
+| Weight/KV-read ratio | **35.3358×** | ~~113.2×~~ |
 
 Those values come directly from
-[`results/model-traffic/sweep.csv`](../results/model-traffic/sweep.csv), with the
-derivation explained in
-[`results/model-traffic/REPORT.md`](../results/model-traffic/REPORT.md). The
-113.2× ratio is **not** a 113.2× speedup claim. It only identifies an unusually
+[`results/model-traffic/sweep.csv`](../results/model-traffic/sweep.csv) — row
+`DeepSeek-V4-Flash-0731, 200000, 1`, columns `active_weight_read_bytes_per_step`
+= 11,217,572,060, `kv_read_bytes_per_user_token` = 317,456,384 and
+`weight_to_kv_read_ratio` = 35.33578981 — with the derivation explained in
+[`results/model-traffic/REPORT.md`](../results/model-traffic/REPORT.md).
+Regenerate both with `make model-traffic`.
+
+> **RETRACTED: 113.2×.** The KV model's per-entry constants were corrected on
+> 2026-08-30 (`entry_bytes` 583 → 1,024, `index_entry_bytes` 68 → 256) and an
+> index-scan threshold at 8,001 tokens was withdrawn as an instrumentation
+> artifact. DeepSeek KV read per token rose 3.20×, so the ratio fell from 113.2×
+> to 35.3×. The corrected figure is independently confirmed by an **execution**
+> of the released implementation at 200,000 tokens:
+> [`results/abi3/deepseek_v4_reference_oracle_context_ladder.json`](../results/abi3/deepseek_v4_reference_oracle_context_ladder.json)
+> → `context_ladder_summary.rungs[4]` measured 317,435,904 KV bytes per decode
+> step and reports `weight_to_kv_read_ratio_at_this_context` = 35.335.
+
+The 35.3× ratio is **not** a 35.3× speedup claim. It only identifies an unusually
 large traffic term that a local immutable store could attack. The full result
 still has to satisfy ROM service, HBM service, computation, communication,
 capacity, power, cooling, and pipeline constraints.
@@ -181,33 +202,54 @@ graph. Static schedules also make ordering and containment easier to reason abou
 although real timing, congestion, repair paths, clocking, and power delivery still
 require target physical design.
 
-## Where “9,399 tokens/s” comes from
+## Where “8,050 tokens/s” comes from
+
+> **CORRECTION, 2026-08-30.** This section previously derived **9,399 tokens/s**
+> and was pointed at from `README.md` as *"the exact 9,399-tokens/s derivation"*.
+> The derivation's *form* was and is correct; one of its five inputs was stale.
+> The HBM KV service term was 13.106 µs and is **41.979 µs** — 3.20× larger,
+> from the same KV-constant correction that moved the traffic ratio above — so
+> the interval is 124.222 µs and the rate is **8,050.1 tokens/s**. The
+> comparison figures below moved with it. A step-by-step derivation is worse
+> than a bare number when it goes stale, because a reader can check the
+> arithmetic and it will be self-consistent while being wrong; that is what
+> happened here.
 
 The often surprising number is an output of a deterministic analytical envelope,
 not a benchmark. Consider the N7 central scenario for DeepSeek V4 Flash at 200K
-context and batch one. The checked point contains these bottleneck-stage service
-times:
+context and batch one. The checked point is
+[`results/iso-node/n7_architecture_attribution/analytical.json`](../results/iso-node/n7_architecture_attribution/analytical.json)
+→ the `points` record with `architecture = "ROM-wafer-N7-HBM2e-central"`,
+`model = "DeepSeek-V4-Flash-0731"`, `context_tokens = 200000`, `batch_size = 1`.
+Its `component_times_s` block contains:
 
-| Component | Service time | Meaning |
-|---|---:|---|
-| ROM weight service | 7.828 µs | Time implied by active weight bytes and the configured central ROM service envelope |
-| HBM KV service | 13.106 µs | Time implied by mutable KV traffic and the configured HBM beachfront |
-| Compute service | 25.932 µs | Time implied by exact format-specific operation counts and configured arithmetic roofs |
-| Layer collectives | 69.821 µs | Serialized topology/payload-derived reduction service |
-| Pipeline efficiency | 0.90 | Explicit deterministic scenario input |
+| Component | `component_times_s` key | Service time | Meaning |
+|---|---|---:|---|
+| ROM weight service | `rom_full_array_read_C4` | 7.828 µs | Time implied by active weight bytes and the configured central ROM service envelope |
+| HBM KV service | `kv_beachfront_C8` | **41.979 µs** (was ~~13.106~~) | Time implied by mutable KV traffic and the configured HBM beachfront |
+| Compute service | `compute_C5` | 25.932 µs | Time implied by exact format-specific operation counts and configured arithmetic roofs |
+| Layer collectives | `collective_floor_C6` | 69.821 µs | Serialized topology/payload-derived reduction service |
+| Pipeline efficiency | `configs/hardware/n7_architecture_attribution.json` → `pipeline_efficiency` | 0.90 | Explicit deterministic scenario input |
 
 Weight, KV, and compute service are modeled as independent and overlap where
 legal. The layer collective is then serialized. Therefore:
 
 ```text
 interval
-  = (max(7.828, 13.106, 25.932) + 69.821) / 0.90
-  = 106.392 µs per generated token
+  = (max(7.828, 41.979, 25.932) + 69.821) / 0.90
+  = 124.222 µs per generated token          # point.per_user_token_latency_s
 
 per-user throughput
-  = 1 / 106.392 µs
-  = 9,399 tokens/s
+  = 1 / 124.222 µs
+  = 8,050.1 tokens/s                          # point.per_user_tokens_s
 ```
+
+Regenerate with `make iso-node`
+(`python3 tools/build_iso_node_studies.py --write && python3 tools/run_iso_node_studies.py`).
+The rate is also tabulated at
+[`results/iso-node/n7_architecture_attribution/REPORT.md`](../results/iso-node/n7_architecture_attribution/REPORT.md)
+→ "Central-envelope 200K results", row `DeepSeek-V4-Flash-0731 | 1`, column
+`ROM user tok/s`.
 
 The large rate comes from **spatial parallelism across sharded ROM banks and
 compute tiles**, not from one ROM cell somehow reading an entire model at once.
@@ -215,19 +257,35 @@ The analytical model divides exact bytes and operations by declared aggregate
 service roofs, applies topology-derived communication service, and then takes the
 bottleneck. Every aggregate roof still needs physical implementation evidence.
 
-The binding term is the collective floor—not the ROM read. That distinction is
-important: removing HBM weight traffic exposes other bottlenecks rather than
-making them disappear. The exact unrounded fields are in the selected `points`
-record of
-[`results/iso-node/n7_architecture_attribution/analytical.json`](../results/iso-node/n7_architecture_attribution/analytical.json),
-and the report's “ROM component timing and occupancy” table presents the same
-calculation in milliseconds.
+The binding term is still the collective floor — the point's
+`binding_constraint` field reads `collective_floor_C6` — and not the ROM read.
+That distinction is important: removing HBM weight traffic exposes other
+bottlenecks rather than making them disappear. **But the identity of the `max()`
+term inside the derivation has changed**, and the previous version of this
+section did not notice: it used to be compute at 25.932 µs and it is now KV
+beachfront at 41.979 µs. The explanation and its own arithmetic had drifted
+apart.
 
-At this point, the N7 central envelope gives 9,399 per-user tokens/s versus 618
-tokens/s for the fastest feasible same-batch candidate in the allowed A100 set.
-The N4-class central envelope gives 14,436 tokens/s versus 1,666 tokens/s for its
-B300 candidate. Those comparison values answer a precisely declared analytical
-question; they are not lab measurements of either proposed or vendor hardware.
+At this point, the N7 central envelope gives **8,050.1** per-user tokens/s versus
+**614.4** tokens/s for the fastest feasible same-batch candidate in the allowed
+A100 set (`NVIDIA-A100-SXM-80GB-packed-HBM-BF16-execute-x16`), a same-batch ratio
+of **13.10×**. The N4-class central envelope gives **12,629.3** tokens/s versus
+**1,650.7** tokens/s for its B300 candidate (`NVIDIA-B300-x8`), a ratio of
+**7.65×**
+([`results/iso-node/leading_node_market/REPORT.md`](../results/iso-node/leading_node_market/REPORT.md)
+→ "Central-envelope 200K results", same row and columns). Those comparison
+values answer a precisely declared analytical question; they are not lab
+measurements of either proposed or vendor hardware.
+
+> **RETRACTED: 9,399 / 618 / 15.2× and 14,436 / 1,666 / 8.67×.** The N4 ratio
+> never appeared as a token anywhere — it was stated decomposed, as
+> `14,436 / 1,666`, which is why a grep for `8.67` found nothing and it survived
+> the correction that killed it.
+
+> **This figure is stale.** `docs/assets/throughput-at-200k.svg` was last
+> rendered at commit `a1eb32e` on 2026-08-28 and still plots `B=1 15.2×` and
+> `B=1 8.7×`. Both are retracted; the current values are 13.10× and 7.65×.
+> Regenerate with `python3 tools/render_public_assets.py`.
 
 ![Central analytical throughput at 200K context](assets/throughput-at-200k.svg)
 
@@ -235,17 +293,24 @@ question; they are not lab measurements of either proposed or vendor hardware.
 
 The target ROM array, compute implementation, NoC, package, and cooling system do
 not exist yet. The studies therefore preserve conservative, central, and
-aggressive deterministic scenarios:
+aggressive deterministic scenarios. Bands are the `REPORT.md` uncertainty tables
+of each study:
 
-| Flash, 200K, B1 | Central envelope | Deterministic low–high | Same-batch GPU point |
-|---|---:|---:|---:|
-| N7/HBM2e-era study | 9,399 tok/s | 1,299–35,829 tok/s | 618 tok/s |
-| N4-class/HBM3e study | 14,436 tok/s | 1,666–56,884 tok/s | 1,666 tok/s |
+| Flash, 200K, B1 | Central envelope | Deterministic low–high | Same-batch GPU point | previously published |
+|---|---:|---:|---:|---|
+| N7/HBM2e-era study | **8,050.1 tok/s** | **1,287.0–23,767.7 tok/s** | **614.4 tok/s** | ~~9,399 / 1,299–35,829 / 618~~ |
+| N4-class/HBM3e study | **12,629.3 tok/s** | **1,637.9–42,373.7 tok/s** | **1,650.7 tok/s** | ~~14,436 / 1,666–56,884 / 1,666~~ |
 
 The low–high span is not a confidence interval: the project has no statistical
 distribution for future silicon. It is the range across three explicit hardware
-assumption sets. The central value should be read as a reproducible scenario, not
-as the most likely production result.
+assumption sets — for the N7 study, `ROM-wafer-N7-HBM2e-{conservative,central,aggressive}`,
+whose per-user rates are 1,287.0 / 8,050.1 / 23,767.7 in the same `analytical.json`.
+The central value should be read as a reproducible scenario, not as the most
+likely production result.
+
+> **This figure is stale.** `docs/assets/uncertainty-at-200k.svg` plots the
+> retracted bands and was last rendered 2026-08-28. Regenerate with
+> `python3 tools/render_public_assets.py`.
 
 ![Deterministic throughput envelopes](assets/uncertainty-at-200k.svg)
 
@@ -257,7 +322,7 @@ cannot be substituted for one another.
 | Layer | Repository evidence | What it establishes | What it does not establish |
 |---|---|---|---|
 | Model accounting | Pinned configs, exact tensor-role inventories, operator shapes, KV and active-weight traffic | Reproducible work and storage counts for declared representations | Model quality, production routing traces, or achieved utilization |
-| Architecture model | N7/A100 and N4/B300 iso-node sweeps over model, context, batch, and deterministic hardware envelopes | Arithmetic consistency and sensitivity of the proposed dataflow | Measured ROM, GPU, package, thermal, cost, or product throughput |
+| Architecture model | N7/A100 and N4/B300 iso-node sweeps over model, context, batch, and deterministic hardware envelopes (`results/iso-node/`), plus the N6/A100 and N5/B200 area-constrained roofline pair (`results/roofline/`), where both sides are held to equal silicon area and each chooses its own parallelism | Arithmetic consistency and sensitivity of the proposed dataflow; two validation gates against shipping parts | Measured ROM, GPU, package, thermal, cost, or product throughput. **No watt from either family is publishable**: the power model is 7–9× low and is being rebuilt |
 | NoC model | Cycle-approximate placement and hierarchical collective studies | Consequences of declared topology, payload, and schedule assumptions | Placed-and-routed target interconnect timing |
 | Public RTL | Synthesizable `ot_*` hierarchy; Icarus and Verilator simulation; nine formal harnesses; static CDC/RDC checks; code/functional/FSM coverage; 87 directed RTL fault sites | Control, protocol, scheduling, integrity, containment, and reduced numeric-path behavior in the public-reference scope | A full target stage, macro integration, target formats, ATPG, or physical signoff |
 | Open-PDK ROM method | SKY130A and IHP SG13G2 two-column layouts with local DRC/LVS/PEX, extracted PVT, and detailed-RC campaigns | A controlled-via ROM programming method can be laid out, extracted, and simulated in two public processes | Compact array density, target-node behavior, random-defect yield, or whole-wafer operation |
@@ -364,10 +429,24 @@ The analytical path is CPU-capable and does not download full model checkpoints:
 ```bash
 python3 -m pip install -e .
 python3 tools/profile_hf.py --all
-python3 tools/build_iso_node_studies.py --write
-python3 tools/run_iso_node_studies.py
-PYTHONPATH=src pytest -q tests/test_iso_node_studies.py
+
+make model-traffic     # results/model-traffic/  -- the traffic table above
+make iso-node          # results/iso-node/       -- the 8,050 tok/s derivation
+make roofline          # results/roofline/       -- the area-constrained pair
+
+PYTHONPATH=src pytest -q tests/test_iso_node_studies.py tests/test_roofline.py
 ```
+
+`make iso-node` expands to
+`python3 tools/build_iso_node_studies.py --write && python3 tools/run_iso_node_studies.py`;
+`make roofline` expands to `python3 tools/run_roofline_studies.py --force`.
+
+**Every figure in this document is cited to one of those artifacts, by file and
+by field or table-column name.** That is a rule now, not a habit:
+[`docs/METHODOLOGY.md`](METHODOLOGY.md) §0. An audit on 2026-08-30 found 80 of
+108 load-bearing figures across `docs/` stale, and found that the documents
+which cited artifacts had self-corrected while the documents which cited nothing
+had not.
 
 Regenerate this visual gallery from the checked artifacts with:
 
@@ -393,9 +472,13 @@ For a non-specialist:
 1. this overview;
 2. the visual [`asset provenance contract`](assets/README.md);
 3. the hardware-independent
-   [`weight/KV traffic report`](../results/model-traffic/REPORT.md); and
+   [`weight/KV traffic report`](../results/model-traffic/REPORT.md);
 4. the N7 [`architecture-attribution report`](../results/iso-node/n7_architecture_attribution/REPORT.md)
-   or N4-class [`market study`](../results/iso-node/leading_node_market/REPORT.md).
+   or N4-class [`market study`](../results/iso-node/leading_node_market/REPORT.md); and
+5. the area-constrained roofline pair,
+   [`n6_vs_a100`](../results/roofline/n6_vs_a100/REPORT.md) and
+   [`n5_vs_b200`](../results/roofline/n5_vs_b200/REPORT.md), each of which opens
+   with a numbered "What the model says" list including its own retractions.
 
 For an implementer:
 

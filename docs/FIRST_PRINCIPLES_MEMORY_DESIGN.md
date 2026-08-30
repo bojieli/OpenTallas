@@ -1,9 +1,50 @@
 # What the weight-to-KV ratio and the KV capacity decide
 
-Before any simulation, the architecture follows from two quantities computed
-from the released checkpoints. This document derives them and states what design
-each one forces. Every figure comes from `configs/models/*.json` through
-`opentallas.workload`; nothing here is an assumed hardware number.
+> **CORRECTION, 2026-08-30.** Every DeepSeek row of this document was wrong, in
+> the same direction, by the same cause. The KV model's `entry_bytes` and
+> `index_entry_bytes` constants were retracted (583 → 1,024 and 68 → 256), and
+> an index-scan threshold at 8,001 tokens was retracted as an instrumentation
+> artifact. DeepSeek KV read/token rose ~3.2× and KV/user ~2.0×, so every
+> weight-to-KV ratio in §2 fell by ~3.2× and every DeepSeek area in §3–§4 roughly
+> doubled. **The figure §7 nominated as "the project's actual finding" — 260:1
+> for Pro at 200,000 tokens — is 3.10× too high and is now 83.8:1.** The three
+> Qwen rows never moved and are correct as published.
+>
+> Separately, the FP8 rows of §5 are **retracted**: the study no longer prices a
+> re-encoding of a released checkpoint on either side, and the ROM density they
+> used (19.7 MB/mm²) is not the density the model derives.
+>
+> **The document's reasoning survives its numbers.** Sparsity plus long context
+> is still the ROM-favourable regime; the margin is smaller and §4's qualitative
+> split narrows from 3.8× to 2.1×. The claims that depended on the *magnitude*
+> are rewritten in §7.
+
+The previous version of this document opened by saying *"Every figure comes from
+`configs/models/*.json` through `opentallas.workload`"*. That was not a
+provenance claim a reader could act on: `src/opentallas/workload.py` has **no
+`main`, no CLI and no argparse**, and no artifact in this repository emitted this
+table. Naming a module is not naming a command. Here is the command, and every
+table below states which of its columns it produces:
+
+```sh
+PYTHONPATH=src python3 -c '
+from opentallas import workload as W
+from opentallas.schema import ModelProfile
+for name, ctxs in [("qwen3-8b",[1024,8192,32768]),
+                   ("deepseek-v4-flash-0731",[200000,1000000]),
+                   ("deepseek-v4-pro-0813",[200000,1000000])]:
+    m = ModelProfile.load(f"configs/models/{name}.json")
+    wt = W.weight_traffic(m, 1); wb = wt.dense_bytes + wt.routed_bytes
+    for c in ctxs:
+        kv = W.kv_traffic(m, c)
+        print(f"{name:24} ctx={c:>9,} W={wb/1e9:8.3f} GB KVread={kv.read_bytes/1e9:7.4f} GB "
+              f"KV/user={kv.storage_bytes_per_user/1e9:7.4f} GB W:KV={wb/kv.read_bytes:7.2f}")'
+```
+
+Three rows are independently confirmed by generated artifacts, and one is
+confirmed by an **execution** of the released DeepSeek implementation; those are
+marked in place. Nothing here is an assumed hardware number except where §3 and
+§5 name a density, and those are cited to the study that derives them.
 
 ## 1. The two quantities
 
@@ -18,108 +59,220 @@ a sparsely-attended cache is still a full cache.
 
 Those are different constraints and they push in different directions. The first
 sets how much a ROM weight path is worth. The second sets whether the KV can
-live on-die.
+live on-die. That reasoning is unchanged by the correction; only the constants
+moved.
 
 ## 2. The weight-to-KV read ratio
 
-| model | context | weight read/token | KV read/token | **W:KV** |
-|---|---:|---:|---:|---:|
-| Qwen3-8B | 1,024 | 15.14 GB | 0.151 GB | **100** |
-| Qwen3-8B | 8,192 | 15.14 GB | 1.208 GB | **12.5** |
-| Qwen3-8B | 32,768 | 15.14 GB | 4.832 GB | **3.1** |
-| DeepSeek-V4-Flash | 200,000 | 11.22 GB | 0.099 GB | **113** |
-| DeepSeek-V4-Flash | 1,000,000 | 11.22 GB | 0.458 GB | **24.5** |
-| DeepSeek-V4-Pro | 200,000 | 39.67 GB | 0.153 GB | **260** |
-| DeepSeek-V4-Pro | 1,000,000 | 39.67 GB | 0.674 GB | **59** |
+| model | context | weight read/token | KV read/token | **W:KV** | was | evidence |
+|---|---:|---:|---:|---:|---:|---|
+| Qwen3-8B | 1,024 | 15.137 GB | 0.1510 GB | **100.3** | 100 | derived |
+| Qwen3-8B | 8,192 | 15.137 GB | 1.2080 GB | **12.5** | 12.5 | derived ✓ artifact |
+| Qwen3-8B | 32,768 | 15.137 GB | 4.8318 GB | **3.1** | 3.1 | derived |
+| DeepSeek-V4-Flash | 200,000 | 11.218 GB | **0.3175 GB** | **35.3** | ~~113~~ | **executed** |
+| DeepSeek-V4-Flash | 1,000,000 | 11.218 GB | **1.5207 GB** | **7.4** | ~~24.5~~ | derived |
+| DeepSeek-V4-Pro | 200,000 | 39.667 GB | **0.4731 GB** | **83.8** | ~~260~~ | derived |
+| DeepSeek-V4-Pro | 1,000,000 | 39.667 GB | **2.2075 GB** | **18.0** | ~~59~~ | derived ✓ artifact |
 
-**The result is the opposite of the intuition that long context erodes the ROM
-case.** Sparse attention keeps DeepSeek's KV read tiny: at 200,000 tokens Flash
-reads 99 MB of KV against 11.2 GB of weights. The models that need wafer-scale
-are precisely the ones where the weight path dominates *most*.
+Every row: the command above.
+Artifact confirmation for the two ticked rows:
+[`results/roofline/n6_vs_a100/REPORT.md`](../results/roofline/n6_vs_a100/REPORT.md)
+→ "Models and their work", columns `KV read/token` and `W:KV at B=1`
+(Qwen @8,192 = 1.208 GB / 12.5; Pro @1M = 2.207 GB / 18.0). Regenerate with
+`make roofline`.
+
+**The Flash @200,000 row is executed, not derived**, and it is the strongest
+evidence in this document.
+[`results/abi3/deepseek_v4_reference_oracle_context_ladder.json`](../results/abi3/deepseek_v4_reference_oracle_context_ladder.json)
+→ `context_ladder_summary.rungs[4]` ran the released implementation at 200,000
+tokens and measured `measured_kv_bytes_per_decode_step = 317,435,904` against a
+profile prediction of `317,461,760` — agreement to 0.008% — and reports
+`weight_to_kv_read_ratio_at_this_context = 35.335`. The same file's
+`context_ladder_summary.executed` lists all five rungs
+`[1000, 8000, 32000, 128000, 200000]` as run. It also gives the ratio's whole
+executed curve: **894.1 → 390.9 → 173.1 → 53.6 → 35.3** at 1K / 8K / 32K / 128K
+/ 200K.
+
+The independently generated hardware-free sweep agrees:
+[`results/model-traffic/sweep.csv`](../results/model-traffic/sweep.csv), row
+`DeepSeek-V4-Flash-0731, 200000, 1`, `weight_to_kv_read_ratio = 35.33578981`,
+`kv_read_bytes_per_user_token = 317,456,384`, `active_weight_read_bytes_per_step
+= 11,217,572,060`. Regenerate with `make model-traffic`.
+
+**The result is still the opposite of the intuition that long context erodes the
+ROM case, and the retraction did not change its direction.** Sparse attention
+keeps DeepSeek's KV read small: at 200,000 tokens Flash reads 317 MB of KV
+against 11.2 GB of weights. The models that need wafer-scale are precisely the
+ones where the weight path dominates *most*. What changed is the size of the
+gap: 113:1 was wrong, 35:1 is right, and 35:1 is still an order of magnitude.
 
 Dense attention behaves the other way. Qwen3-8B falls from 100:1 at 1K to 3.1:1
 at 32K, because it rereads the whole cache every token. A dense 8B model's ROM
-advantage is a **short-context** advantage.
+advantage is a **short-context** advantage. Those three rows are unchanged.
 
 ## 3. KV capacity, and where SRAM stops working
 
-On-die SRAM area to hold the KV cache, at N6 (0.024 µm²/bit, 60% array
-efficiency). One reticle die is 815–858 mm².
+On-die SRAM area to hold the KV cache. The previous version used a hand-entered
+0.024 µm²/bit at 60% array efficiency. The model derives the density instead:
+**3.009 MB/mm² at N6**, from a 0.027 µm² 6T HD bitcell (`configs/hardware/technology.json`
+→ `nodes.N6.sram_hd_bitcell_um2`, `derived` from the published N7 cell) at 65%
+array efficiency (`sram.array_efficiency`, `assumed`, swept 0.55–0.75), and the
+result is reported at
+[`results/roofline/n6_vs_a100/REPORT.md`](../results/roofline/n6_vs_a100/REPORT.md)
+→ "Derived technology at N6". One reticle die is **815 mm²**
+(`configs/hardware/technology.json` → `reticle.area_mm2`, the published Taalas
+HC1 die area). Bytes are decimal SI throughout (`technology.json` → `units`).
 
-| model | context | KV/user | B=1 | B=8 | B=64 |
-|---|---:|---:|---:|---:|---:|
-| Qwen3-8B | 1,024 | 0.15 GB | 48 mm² | 387 mm² | 4 dies |
-| Qwen3-8B | 8,192 | 1.21 GB | **387 mm²** | 4 dies | 30 dies |
-| Qwen3-8B | 32,768 | 4.83 GB | 2 dies | 15 dies | 121 dies |
-| DeepSeek-V4-Flash | 200,000 | 0.70 GB | 226 mm² | 2 dies | 18 dies |
-| DeepSeek-V4-Pro | 1,000,000 | 5.03 GB | 2 dies | 16 dies | 126 dies |
+Area = `KV/user × batch / 3.009 MB/mm²`; dies = `area / 815 mm²`.
+
+| model | context | KV/user | B=1 | B=8 | B=64 | was (B=1 / B=8 / B=64) |
+|---|---:|---:|---:|---:|---:|---|
+| Qwen3-8B | 1,024 | 0.1510 GB | 50 mm² | 401 mm² | 3.9 dies | 48 / 387 mm² / 4 dies |
+| Qwen3-8B | 8,192 | 1.2080 GB | **401 mm²** | 3.9 dies | 31.5 dies | 387 mm² / 4 / 30 dies |
+| Qwen3-8B | 32,768 | 4.8318 GB | 2.0 dies | 15.8 dies | 126.1 dies | 2 / 15 / 121 dies |
+| DeepSeek-V4-Flash | 200,000 | **1.3816 GB** | **459 mm²** | **4.5 dies** | **36.1 dies** | ~~226 mm² / 2 / 18 dies~~ |
+| DeepSeek-V4-Pro | 1,000,000 | **9.8560 GB** | **4.0 dies** | **32.2 dies** | **257.2 dies** | ~~2 / 16 / 126 dies~~ |
+
+The Qwen rows move only by the density change (19.7→16.2 for ROM, 0.024 µm²/60%
+→ 0.027 µm²/65% for SRAM); the DeepSeek rows move by that *and* by the ~2× KV
+storage correction. `kv_traffic(...).storage_bytes_per_user` is the field;
+1.382 GB and 9.856 GB are also printed in `n6_vs_a100/REPORT.md` → "Models and
+their work", column `KV/user`.
 
 SRAM holds the KV only for a small model, at short context, at low batch. That
 is exactly the Taalas HC1 regime, and it is why its published figure is quoted
-**per user**.
+**per user**. That conclusion is unaffected; it got stronger, because the
+DeepSeek caches are twice as large as this document used to say.
 
 ## 4. Bandwidth versus capacity: they bind different machines
 
-| target | KV bandwidth demand | stacks for BW | KV capacity at B=64 | stacks for capacity |
-|---|---:|---:|---:|---:|
-| Qwen3-8B @8K, 10,000 tok/s | **12.08 TB/s** | 10.1 | 77 GB | 3.2 |
-| DeepSeek-Flash @200K, 6,600 tok/s | 0.65 TB/s | 0.5 | 45 GB | **1.9** |
-| DeepSeek-Pro @1M, 3,000 tok/s | 2.02 TB/s | 1.7 | 322 GB | **13.4** |
+HBM3E is taken at 24 GB and ~1.2 TB/s per stack. Demand columns are
+`kv_traffic(...).read_bytes × rate` and
+`kv_traffic(...).storage_bytes_per_user × 64` from the command in the header.
 
-(HBM3E: 24 GB and ~1.2 TB/s per stack.)
+| target | KV bandwidth demand | stacks for BW | KV capacity at B=64 | stacks for capacity | binds on |
+|---|---:|---:|---:|---:|---|
+| Qwen3-8B @8K, 10,000 tok/s | **12.08 TB/s** | **10.1** | 77.3 GB | 3.2 | **bandwidth**, 3.2× |
+| DeepSeek-Flash @200K, 6,600 tok/s | ~~0.65~~ **2.10 TB/s** | 1.7 | ~~45~~ **88.4 GB** | **3.7** | **capacity**, 2.1× |
+| DeepSeek-Pro @1M, 3,000 tok/s | ~~2.02~~ **6.62 TB/s** | 5.5 | ~~322~~ **630.8 GB** | **26.3** | **capacity**, 4.8× |
 
 **Dense Qwen is KV-bandwidth-bound; sparse DeepSeek is KV-capacity-bound.** That
-single distinction determines the memory technology:
+distinction survives and still determines the memory technology. Its margin for
+Flash narrows from **3.8× to 2.1×** — capacity still binds, but it is now within
+a factor of two of bandwidth rather than a factor of four, so the conclusion is
+weaker than it was stated to be:
 
-- Qwen at 8K needs 12 TB/s of KV bandwidth. Ten HBM stacks would supply it; a
+- Qwen at 8K needs 12.08 TB/s of KV bandwidth. Ten HBM stacks would supply it; a
   few hundred mm² of SRAM supplies it trivially. **SRAM is chosen for
   bandwidth**, and the capacity limit is what caps context and batch.
-- DeepSeek at 200K needs only 0.65 TB/s but tens to hundreds of GB. **HBM is
-  chosen for capacity**, and its bandwidth is never the constraint.
+- DeepSeek at 200K needs 2.10 TB/s and tens to hundreds of GB. **HBM is chosen
+  for capacity**, and its bandwidth is not the constraint — but at 1.7 stacks
+  against 3.7 it is no longer negligible either.
 
 ## 5. Why the big models need a wafer — and it is the weights, not the KV
 
-ROM array area the weights demand, at the derived N6/N7 density of 19.7 MB/mm²:
+ROM array area at the **released packing only**. ROM capacity density is derived,
+not entered: **16.204 MB/mm² at N6** and **20.833 MB/mm² at N5**, from the same
+6T HD bitcell scaled by an assumed 0.2 ROM-to-SRAM cell-area ratio at 70% array
+efficiency (`configs/hardware/technology.json` → `rom.cell_to_sram_cell_area_ratio`,
+`rom.array_efficiency`; both `assumed`, both swept). Reported at
+`n6_vs_a100/REPORT.md` and `n5_vs_b200/REPORT.md` → "Derived technology at N6/N5".
+Checkpoint bytes and bits/parameter are `n6_vs_a100/REPORT.md` → "Models and
+their work". Wafer = 46,225 mm², reticle = 815 mm²
+(`technology.json` → `wafer.area_mm2`, `reticle.area_mm2`).
 
-| model | representation | ROM array | reticles | wafer |
-|---|---|---:|---:|---:|
-| Qwen3-8B | native BF16 | 832 mm² | 1.0 | 1.8% |
-| Qwen3-8B | FP8 | 416 mm² | 0.5 | 0.9% |
-| DeepSeek-V4-Flash | native (MXFP4+FP8) | 8,471 mm² | 9.9 | 18.3% |
-| DeepSeek-V4-Flash | FP8 | 14,416 mm² | 16.8 | 31.2% |
-| DeepSeek-V4-Pro | native | 45,316 mm² | 52.8 | **98.0%** |
-| DeepSeek-V4-Pro | FP8 | 81,218 mm² | 94.7 | **175.7%** |
+| model | representation | checkpoint | bits/param | ROM array @N6 | @N5 | reticles @N5 | wafer @N5 |
+|---|---|---:|---:|---:|---:|---:|---:|
+| Qwen3-8B | released BF16 | 16.4 GB | 16.00 | 1,011 mm² | 786 mm² | **1.0** | 1.7% |
+| DeepSeek-V4-Flash | released MXFP4+FP8 | 166.9 GB | 4.70 | 10,299 mm² | 8,010 mm² | **9.8** | 17.3% |
+| DeepSeek-V4-Pro | released MXFP4+FP8 | 892.7 GB | 4.46 | 55,093 mm² | 42,852 mm² | **52.6** | **92.7%** |
 
-Qwen3-8B is a **single reticle-class chip** — half a die of ROM in FP8. Flash
-needs ~10 reticles, so a wafer. Pro in its native MXFP4 representation consumes
-a whole wafer in ROM alone, leaving nothing for compute; in FP8 it needs two.
-**That is where the area balance genuinely binds, and it is why the stored
-representation is a design variable rather than an inherited constant** — mask
-ROM freezes it at manufacture.
+> **The FP8 rows are retracted.** The previous version of this table offered
+> every model a hypothetical FP8 re-encoding — Qwen at 416 mm², Flash at
+> 14,416 mm², Pro at 81,218 mm² — and used the Qwen row to claim a
+> single-half-reticle part. The study has since removed that option
+> (`4c24730 fix(roofline): price every design at the release's own packing,
+> nothing else`) for three compounding reasons: it was offered to the ROM side
+> only, so an 8-bit ROM machine competed against a 16-bit GPU; no executed lane
+> validates it, since `rom_qwen3` declares BF16 contracts and no FP8 contract at
+> all, and the oracle-identical tokens this program rests on were produced at
+> BF16; and re-encoding BF16 to FP8 is a *quantisation*, not a repacking, so it
+> would produce different tokens by an unmeasured amount. Half of every feasible
+> Qwen comparison was being won by such a design, the best at **30.79×**; with
+> the option removed, the best Qwen batch-1 iso-area ratio is **10.89×**
+> (`n6_vs_a100/REPORT.md`, iso-area table, row `Qwen3-8B | 1 | smallest silicon`).
+> The rule is pinned by
+> `tests/test_roofline.py::test_no_design_stores_weights_at_a_precision_the_release_does_not_have`.
+> Only Qwen3-8B was affected; Flash and Pro ship at 4.70 and 4.46 bits and were
+> already below the 8.5-bit threshold.
+
+Qwen3-8B is **one reticle field of ROM at N5, and two at N6** — the released
+BF16 packing, not the retracted FP8 half-die. Flash needs ~10 reticles, so a
+wafer. Pro in its released representation consumes 93% of a wafer in ROM alone
+at N5 and **119% at N6**, leaving nothing for compute at either node; a Pro
+machine is therefore at least two wafers, and pays an inter-wafer link for it
+(see [`docs/WAFER_VERSUS_ARRAY_LATENCY.md`](WAFER_VERSUS_ARRAY_LATENCY.md) §3).
+**That is where the area balance genuinely binds.** The claim that the stored
+representation is therefore a design variable is *still true of a mask ROM* —
+but it is a claim about manufacturing, not a licence to price a re-encoding no
+execution has validated, and this document made that mistake.
 
 ## 6. The architecture this forces
 
 | | Qwen3-8B | DeepSeek-V4-Flash | DeepSeek-V4-Pro |
 |---|---|---|---|
-| part | one reticle chip | wafer | 2+ wafers |
-| weights | ROM, 416 mm² | ROM, ~10 reticles | ROM, ~53 reticles |
+| part | one reticle chip at N5 | wafer | 2+ wafers |
+| weights | ROM, 786 mm² @N5 | ROM, ~10 reticles | ROM, ~53 reticles |
 | KV | **SRAM** (bandwidth) | **HBM** (capacity) | **HBM** (capacity) |
 | binds at low batch | KV bandwidth | weight read | weight read |
 | binds at high batch | KV capacity | KV capacity | KV capacity |
-| compared against | **one** GPU die | ~56 GPU dies | ~112 GPU dies |
 
-The hybrid is not a compromise; each memory is chosen for the quantity that
-actually binds. Weights go to ROM in every case, because W:KV is between 3 and
-260 and never inverts. KV goes wherever the binding quantity — bandwidth for
-dense, capacity for sparse — can be met.
+Each memory is chosen for the quantity that actually binds. Weights go to ROM in
+every case, because W:KV is between **3.1 and 100** and never inverts.
+
+Two qualifications the previous version did not carry. First, the old row
+*"compared against **one** / ~56 / ~112 GPU dies"* is removed: it was a
+device-count assertion with no producer, and the studies now report the GPU
+cluster each design is actually compared against, at stated equal area, in their
+iso-area tables. Second, the binding-constraint rows are the *model's* language
+and the model reports them per point — the census is at `n5_vs_b200/REPORT.md`
+→ "Binding constraint census".
 
 ## 7. What this means for the comparison
 
-The ROM advantage is largest exactly where W:KV is largest: **DeepSeek-V4-Pro at
-200,000 tokens, at 260:1**. It is smallest for a dense model at long context,
-where it falls to 3:1 and the machine becomes a KV engine that happens to have
-its weights on-die.
+**RETRACTED:** *"The ROM advantage is largest exactly where W:KV is largest:
+DeepSeek-V4-Pro at 200,000 tokens, at 260:1."* The ratio there is **83.8:1**.
+And it is a **derived** figure, not an executed one — the executed context ladder
+covers Flash, not Pro, and no Pro row in this repository is measured.
 
-This should be stated as the headline of any write-up, because it is
-counter-intuitive and it is the project's actual finding: **sparsity plus long
-context is the ROM-favourable regime, not the adverse one.**
+The corrected statement:
+
+> The ROM advantage is largest where W:KV is largest — **DeepSeek-V4-Pro at
+> 200,000 tokens, at 83.8:1 (derived)** and **DeepSeek-V4-Flash at 200,000
+> tokens, at 35.3:1 (executed)**. It is smallest for a dense model at long
+> context, where it falls to 3.1:1 and the machine becomes a KV engine that
+> happens to have its weights on-die.
+
+The previous version said this *"should be stated as the headline of any
+write-up, because it is counter-intuitive and it is the project's actual
+finding"*. The finding is intact and the headline is not: **sparsity plus long
+context is the ROM-favourable regime, not the adverse one** remains true, and
+the number attached to it was 3.1× too large for a year of write-ups. A W:KV
+ratio is also not a speedup — the iso-area studies put the batch-1 advantage at
+**8.63×** for Pro and **9.50×** for Flash at 554,700 mm²
+(`n6_vs_a100/REPORT.md`, "The latency separation, before and after, at batch 1",
+`Ratio after` column), and every one of those is bounded by ROM service, KV
+service, compute, collectives, capacity, power and cooling, none of which a
+traffic ratio prices.
+
+## What nothing produces
+
+- **`weight_traffic` for Qwen returns 15.137 GB against a 16.381 GB checkpoint.**
+  The difference is real and explicable (untied embeddings and resident-only
+  tensors are not read per decode step), but no artifact states the
+  reconciliation, and this document does not assert one.
+- **No artifact emits the tables in this document.** The command in the header
+  reproduces §2 and §4; §3 and §5 are my arithmetic on two densities and two
+  byte counts that *are* cited. Until something writes this table to
+  `results/`, it will go stale again the next time the KV model moves — which is
+  precisely how it went stale this time.
