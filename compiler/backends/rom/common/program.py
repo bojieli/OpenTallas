@@ -116,6 +116,10 @@ MAX_WAIT_PRODUCERS = 12
 
 WEIGHT_ROLES = frozenset({"weight", "constant"})
 
+#: Integer operand types.  These carry indices and identifiers, never values a
+#: broadcast could share between heads.
+INDEX_DTYPES = frozenset({"u32", "i32", "u64", "i64"})
+
 #: ``TA-ABI3-OPCONV-1`` amendment A7: the sequential contract is the scalar
 #: oracle used for numeric qualification; execution declares the blocked
 #: contract.  The substitution is applied identically for ROM and HBM, so the
@@ -280,7 +284,13 @@ def _binary32_bits(attributes: Mapping[str, Any], keys: Sequence[str]) -> int:
         if key not in attributes:
             continue
         value = attributes[key]
-        if key.endswith("_bits"):
+        if key.endswith("_bits") or key.endswith("_binary32"):
+            # A binary32 pattern, written as an integer or as the hexadecimal
+            # string a frozen reference states it in.  Both name the same 32
+            # bits; parsing the string here is what keeps the graph from having
+            # to restate the constant a second way for a backend's benefit.
+            if isinstance(value, str):
+                return int(value, 0) & 0xFFFFFFFF
             return int(value) & 0xFFFFFFFF
         if key.endswith("_bf16_code"):
             return (int(value) & 0xFFFF) << 16
@@ -1250,7 +1260,13 @@ class RomLowering:
         # place for a missing field to surface.
         epsilon_bits = self._epsilon_bits(kernel)
         scale_bits = _binary32_bits(
-            attributes, ("scale_bits", "scale_bf16_code", "scale")
+            attributes,
+            (
+                "scale_bits",
+                "score_scale_binary32",
+                "scale_bf16_code",
+                "scale",
+            ),
         )
         input_dtype = self._dtype(first)
         second_dtype = self._dtype(second)
@@ -1808,6 +1824,21 @@ class RomLowering:
         return (int(symbol) if symbol is not None else None), int(axis.multiplier or 1)
 
     def _principal(self, kernel: Kernel) -> Tensor | None:
+        """The operand whose leading extent sets this operator's row geometry.
+
+        Normally the result: how many rows an operation produces is what a
+        token block has to cover.  A movement into a *cache* is the exception.
+        Its destination extent is the cache's capacity -- 128 rows of sliding
+        window, or every compressed group the context admits -- and has nothing
+        to do with how many rows the request moves into it.  Taking the
+        capacity as the row count made an append declare an index vector as
+        long as the whole cache, which is how a 104-token prefill came to name
+        row 262,143 of a 128-row window.  A kernel that says how its
+        destination row is addressed is saying its destination is a cache, so
+        the rows moved are the source's.
+        """
+        if kernel.attributes.get("cache_row") and kernel.inputs:
+            return self.tensors[kernel.inputs[0]]
         if kernel.outputs:
             return self.tensors[kernel.outputs[0]]
         if kernel.inputs:
@@ -2031,6 +2062,78 @@ class RomLowering:
                 return tensor.tensor_id
         return None
 
+    #: Frozen vocabulary for a movement's destination-row map.  A backend that
+    #: met an addressing it does not implement would otherwise write a request's
+    #: rows to whatever the identity map named.
+    CACHE_ROW_MAPS = frozenset(
+        {
+            "absolute_position",
+            "absolute_position_mod_window",
+            "completed_absolute_position_floor_div_ratio",
+        }
+    )
+
+    def _cache_row_modulus(self, kernel: Kernel) -> int | None:
+        """The ring modulus a movement's destination-row map declares, if any.
+
+        ``absolute_position_mod_window`` is a ring of ``window_size`` rows and
+        resolves to a ring index table.  ``absolute_position`` and
+        ``completed_absolute_position_floor_div_ratio`` both read the position
+        range unchanged: the first because that is what it says, the second
+        because a compressed group's row *is* its group ordinal and the graph
+        indexes it from the start of the request.  Anything else is refused
+        rather than silently taken as the identity.
+        """
+        declared = kernel.attributes.get("cache_row")
+        if declared is None:
+            return None
+        name = str(declared)
+        if name not in self.CACHE_ROW_MAPS:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares destination-row map "
+                f"{name!r}, which this backend does not implement; the frozen "
+                f"maps are {', '.join(sorted(self.CACHE_ROW_MAPS))}"
+            )
+        if name != "absolute_position_mod_window":
+            return None
+        window = int(kernel.attributes.get("window_size", 0))
+        if window <= 0:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} addresses a ring but declares "
+                f"window_size {window}"
+            )
+        return window
+
+    def _ring_object(self, modulus: int) -> int:
+        """The ``position mod modulus`` range, materialised once per modulus."""
+        key = f"ring.{modulus}"
+        cached = self._generated_objects.get(key)
+        if cached is not None:
+            return cached
+        from runtime.sim.generators import GeneratorError, digest_of, generate
+
+        span_max = int(self.capability.limits["max_context_positions"])
+        parameters = {"count": max(2 * span_max, 1), "modulus": int(modulus)}
+        try:
+            payload = generate("ring_indices_v1", parameters)
+            digest = digest_of("ring_indices_v1", parameters)
+        except GeneratorError as exc:  # pragma: no cover - frozen generator
+            raise RomLoweringError(f"ring index range: {exc}") from None
+        object_id = self.builder.memory_object(
+            storage_class=self.weight_storage_class,
+            size_bytes=int(payload.nbytes),
+            source=ObjectSource.generated(
+                "ring_indices_v1", parameters, int(payload.nbytes), digest
+            ),
+            permissions=ROM_PERMISSIONS,
+            alignment_log2=12,
+            integrity_mode=IntegrityMode.CRC_AND_ECC,
+            content_digest=bytes.fromhex(digest),
+            key=f"obj.rom.ring.{modulus}",
+        )
+        self._generated_objects[key] = object_id
+        return object_id
+
     def _position_object(self, tensor_id: str) -> int:
         """The mask-programmed position range, materialised once."""
         cached = self._generated_objects.get(tensor_id)
@@ -2146,6 +2249,49 @@ class RomLowering:
             running *= max(int(dims[axis]), 1)
         return strides
 
+    def _quantized_prefix(
+        self, kernel: Kernel, dims: list[int], *, slot: int, direction: str
+    ) -> tuple[list[int], list[int]] | None:
+        """A block quantiser that converts only the leading part of each row.
+
+        A quantiser whose code output is narrower than its source is quantising
+        a *prefix* of the row and leaving the rest alone -- DeepSeek quantises
+        the 448 non-rotary channels of a 512-wide KV vector and keeps the 64
+        rotary ones in BF16, because the rotary channels carry position and
+        cannot afford E4M3FN.  The engine reads the source and the codes as one
+        shape, so the narrowing has to be in the *view*: the same row stride,
+        fewer elements of it.
+
+        The output shape is the authority rather than an attribute, so a graph
+        that says the same thing twice cannot say it two different ways; the
+        declared ``quantized_width`` is checked against it instead of trusted.
+        Returns ``None`` for every operand this does not apply to, which is all
+        of them but a partial quantiser's source.
+        """
+        if kernel.kind != "QUANTIZE" or direction != "in" or slot != 0:
+            return None
+        if not kernel.outputs or not dims:
+            return None
+        codes = self._dims(self.tensors[kernel.outputs[0]])
+        if not codes:
+            return None
+        width = int(codes[-1])
+        if width == int(dims[-1]):
+            return None
+        if not 0 < width < int(dims[-1]):
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} quantises {width} of a "
+                f"{dims[-1]}-wide row, which is not a prefix of it"
+            )
+        declared = kernel.attributes.get("quantized_width")
+        if declared is not None and int(declared) != width:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares quantized_width "
+                f"{int(declared)} but its code output is {width} wide"
+            )
+        strides = self._row_major_strides(dims)
+        return [*dims[:-1], width], strides
+
     def _inserted_broadcast_axis(
         self, kernel: Kernel, dims: list[int]
     ) -> tuple[list[int], list[int]]:
@@ -2249,6 +2395,8 @@ class RomLowering:
         *,
         count: int,
         absolute: bool,
+        stride: int = 1,
+        modulus: int | None = None,
     ) -> int:
         """A movement's index vector: one index per row the movement touches.
 
@@ -2257,20 +2405,46 @@ class RomLowering:
         and span-relative when it addresses the request's own rows.  Selecting
         the final row of a span is ``SPAN_LAST_INDEX``; a view offsets by
         ``selector * stride`` and cannot compute ``span - 1`` for itself.
+
+        ``stride`` is how many positions one row of the movement advances.  It
+        is one wherever a movement touches consecutive rows, and a pooled row
+        that stands for several positions declares the number it stands for; a
+        view whose element stride says so reaches the same range without an
+        index vector anyone has to materialise.  The stride multiplies the loop
+        induction too, because a block of rows spans ``block * stride``
+        positions rather than ``block`` of them.
         """
         tensor = self.tensors[name]
+        if stride < 1:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: index stride {stride} is not "
+                "positive"
+            )
         terms: list[DynamicTerm] = []
         if absolute:
             terms.append(DynamicTerm.symbol(Symbol.POSITION_START, 1))
             if loop is not None and shape.row_symbolic:
-                terms.append(DynamicTerm.loop(loop, shape.block))
+                terms.append(DynamicTerm.loop(loop, shape.block * stride))
         elif count == 1:
             terms.append(DynamicTerm.symbol(Symbol.SPAN_LAST_INDEX, 1))
         elif loop is not None and shape.row_symbolic:
-            terms.append(DynamicTerm.loop(loop, shape.block))
+            terms.append(DynamicTerm.loop(loop, shape.block * stride))
+        dtype = self._dtype(tensor.dtype)
         if name in self._position_inputs:
-            object_id = self._position_object(name)
+            object_id = (
+                self._position_object(name)
+                if modulus is None
+                else self._ring_object(modulus)
+            )
             permissions = int(Permission.READ)
+            # The materialised range is ``arange_u32_v1``, so the view over it
+            # is U32 whatever word the graph used for "an integer position".  A
+            # graph that declares the offset as I32 is not declaring a second
+            # object with a second element type; ABI 3.0 indices are unsigned
+            # because a negative position is meaningless, and reading the same
+            # bytes through a signed view is how a movement's index came out
+            # refused for a difference that does not exist.
+            dtype = DType.U32
         else:
             object_id = self._buffer(name)
             permissions = int(Permission.READ)
@@ -2278,9 +2452,9 @@ class RomLowering:
                 permissions |= int(Permission.HOST_VISIBLE)
         return self._view(
             object_id=object_id,
-            dtype=self._dtype(tensor.dtype),
+            dtype=dtype,
             dims=[max(count, 1)],
-            strides=[1],
+            strides=[stride],
             dynamic=terms,
             permissions=permissions,
             label="view.index",
@@ -2502,6 +2676,16 @@ class RomLowering:
             )
         dims = self._blocked_dims(tensor, shape)
         element_offset = 0
+        narrowed = self._quantized_prefix(kernel, dims, slot=slot, direction=direction)
+        if narrowed is not None:
+            return self._buffer_view(
+                tensor,
+                dims=narrowed[0],
+                strides=narrowed[1],
+                shape=shape,
+                loop=loop,
+                writable=writable,
+            )
         if direction == "in" and kernel.kind == "BROADCAST":
             broadcast_dims, broadcast_strides = self._inserted_broadcast_axis(
                 kernel, dims
@@ -2510,12 +2694,22 @@ class RomLowering:
             broadcast_dims, broadcast_strides, element_offset = self._selected_plane(
                 kernel, dims
             )
+        elif (
+            direction == "in"
+            and slot > 0
+            and tensor.dtype not in INDEX_DTYPES
+        ):
+            # An index is not broadcast.  ``_broadcast`` inserts the principal's
+            # missing middle axes at stride zero so that a coefficient row held
+            # per *token* reaches a tensor held per ``(token, head)``; that is a
+            # statement about values every head shares.  An index array names
+            # rows, and the operand rows that read it say how many -- amendment
+            # A6's sparse index is ``[span, slots]`` and stays rank two however
+            # many heads the query has.  Widening it produced a rank-three index
+            # the attention engine correctly refused.
+            broadcast_dims, broadcast_strides = self._broadcast(dims, shape)
         else:
-            broadcast_dims, broadcast_strides = (
-                self._broadcast(dims, shape)
-                if direction == "in" and slot > 0
-                else (dims, None)
-            )
+            broadcast_dims, broadcast_strides = dims, None
         return self._buffer_view(
             tensor,
             dims=broadcast_dims,
@@ -2764,9 +2958,19 @@ class RomLowering:
             query_heads = int(
                 domain.get("query_heads", 0) or domain.get("heads", 0) or 0
             ) or dim(inputs[0] if inputs else None, 1, 1)
-            kv_heads = int(
-                domain.get("key_value_heads", 0) or domain.get("kv_heads", 0) or 0
-            ) or dim(inputs[1] if len(inputs) > 1 else None, 1, 1)
+            if sub == int(Attention.SPARSE):
+                # SPARSE takes a *fused* rank-2 KV, [kv_rows, head_dim], so its
+                # axis 1 is a head width and not a head count -- reading it gave
+                # 512 and a group size of 64 // 512, which the engine then
+                # refused ("the group size is 64; the operator declares 1").
+                # The fused form has one KV head by construction.
+                kv_heads = int(
+                    domain.get("key_value_heads", 0) or domain.get("kv_heads", 0) or 1
+                )
+            else:
+                kv_heads = int(
+                    domain.get("key_value_heads", 0) or domain.get("kv_heads", 0) or 0
+                ) or dim(inputs[1] if len(inputs) > 1 else None, 1, 1)
             group_size = int(attributes.get("group_size", 0)) or (
                 max(query_heads, 1) // max(kv_heads, 1)
             )
@@ -2891,7 +3095,14 @@ class RomLowering:
             count = max(self._blocked_dims(self.tensors[counted], shape)[0], 1)
         views = [
             self._index_view(
-                kernel, shape, index_name, loop, count=count, absolute=absolute
+                kernel,
+                shape,
+                index_name,
+                loop,
+                count=count,
+                absolute=absolute,
+                stride=int(kernel.attributes.get("position_stride", 1)),
+                modulus=self._cache_row_modulus(kernel),
             )
         ]
         if source_name is not None:
