@@ -90,6 +90,19 @@ def save_device_state(
     device cannot reconstruct it, and a restart that guesses it is not a
     restart.
     """
+    if getattr(device, "node_count", 1) > 1:
+        # Every node of a cluster has its own arena and its own state images,
+        # and this walks one of them.  A checkpoint that saved node zero and
+        # restored thirty-two would resume a generation from thirty-one empty
+        # KV caches and produce tokens from a computation that never happened,
+        # which is exactly what "a checkpoint that omits writable state is not a
+        # checkpoint" already says below.  So it fails closed until it walks
+        # every arena.
+        raise CheckpointError(
+            f"this device has {device.node_count} nodes and this checkpoint "
+            "serialises one arena; a multi-node checkpoint must carry every "
+            "node's state"
+        )
     path = Path(path)
     (path / "objects").mkdir(parents=True, exist_ok=True)
 

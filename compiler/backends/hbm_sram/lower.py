@@ -305,6 +305,17 @@ class _Emitter:
         self._position_inputs = frozenset(position_inputs(graph))
         self.token_ring_object: int = NO_ID
         self.commit_token_object: int = NO_ID
+        #: Participant arrays for the cluster's all-gathers, one per distinct
+        #: ``(dtype, element count)`` shape.  A site's array is dead the moment
+        #: its unpack has run, and the program is sequential, so sites of the
+        #: same shape share one.
+        self._exchange_object: dict[tuple[str, int], int] = {}
+        #: Traffic classes whose kernels turned out to be replicated, counted so
+        #: that "this cluster performs no expert-dispatch transfer" is a fact
+        #: the deployment states rather than one a reader has to infer.
+        self._replicated_links: dict[str, int] = {}
+        #: HBM cursor for objects the plan's address map does not name.
+        self._extra_address: int = 0
 
     # -- entry point -----------------------------------------------------
     def run(self) -> Deployment:
@@ -353,7 +364,7 @@ class _Emitter:
         # A cluster commits its state as one coordinated transaction: the
         # barrier is the point at which every node agrees the step happened.
         if self.node_count > 1:
-            self._emit_link("coordinated_commit", "commit", None, wait=None)
+            self._emit_barrier("coordinated_commit", "commit", wait=None)
         for physical_id in sorted(self._state_descriptor):
             if physical_id not in committed:
                 builder.emit(
@@ -388,6 +399,7 @@ class _Emitter:
                     for b in self.plan.bands
                 ],
                 "link_instructions": self._link_instructions,
+                "replicated_link_sites": dict(sorted(self._replicated_links.items())),
                 "numeric_contract_substitutions": dict(
                     sorted(self._substitutions.items())
                 ),
@@ -601,18 +613,26 @@ class _Emitter:
                 key="obj.token_ring",
             )
 
+        self._extra_address = _round_up(
+            int(self.plan.proofs.get("hbm_address_span", 0)), 4096
+        )
         if self.node_count > 1:
-            span = int(self.plan.proofs.get("hbm_address_span", 0))
             self.commit_token_object = builder.memory_object(
                 storage_class=StorageClass.HBM,
                 size_bytes=64,
                 source=ObjectSource.zeros(64),
                 permissions=int(Permission.READ | Permission.WRITE),
-                base_address=_round_up(span, 4096),
+                base_address=self._extra_hbm(64),
                 bank_or_tile=0,
                 alignment_log2=12,
                 key="obj.commit_token",
             )
+
+    def _extra_hbm(self, size_bytes: int) -> int:
+        """Reserve ``size_bytes`` of HBM past the plan's addressed span."""
+        base = self._extra_address
+        self._extra_address = _round_up(base + max(int(size_bytes), 1), 4096)
+        return base
 
     def _declare_states(self) -> None:
         builder = self.builder
@@ -1204,6 +1224,17 @@ class _Emitter:
             count = max(dims[0], 1)
         terms: list[DynamicTerm] = []
         row_loop = loops.get("row") if "row" in operand.terms else None
+        if row_loop is None and count > 1 and operand.rows <= 1:
+            # A range declared as its single base element -- the ``[1]`` form --
+            # has no token axis of its own, so the planner gave it no row term.
+            # It still addresses a whole block: the positions this movement
+            # touches are ``POSITION_START + block*count + i``.  Taking the loop
+            # from the movement rather than from the operand's declared shape is
+            # what makes the two forms of the same range lower to the same view,
+            # and it is also what makes amendment A13 clamp this view to the
+            # rows the request has -- without it the index vector would be a
+            # whole block wide against a partial final block of rows.
+            row_loop = loops.get("row")
         if is_gather and span_domain:
             # Selecting rows of the request itself: the final row is
             # ``SPAN_LAST_INDEX``, which is the reason that symbol exists -- a
@@ -1217,9 +1248,15 @@ class _Emitter:
             terms.append(DynamicTerm.symbol(Symbol.POSITION_START, 1))
             if row_loop is not None:
                 terms.append(DynamicTerm.loop(row_loop, count))
+        # The object under this view is the ``arange_u32_v1`` table the planner
+        # materialised, not the host window the graph declared, so its storage
+        # type is the generator's.  An exporter that declared the range ``i32``
+        # was describing a window that no longer exists, and an index view is
+        # ``U32``: the engines that read one say so, and a signed index is not
+        # an index.
         return self._view(
             object_id=object_id,
-            dtype=dtype_of(operand.dtype),
+            dtype=DType.U32,
             dims=[count],
             strides=[1],
             dynamic=terms,
@@ -1632,8 +1669,13 @@ class _Emitter:
             predicate_id=self._phase_predicate(plan.phases),
             source_operation_id=plan.index,
         )
+        # The exchange is *inside* the token-block loop.  A COMMUNICATION
+        # descriptor carries no dynamic index terms, so a collective addresses
+        # one fixed buffer of one fixed extent; the only way to exchange a span
+        # that a runtime symbol sizes is to exchange it one block at a time, and
+        # the block is what the loop already iterates.
+        event = self._maybe_link(plan, event, loops)
         self._close_loops(loops, ["row"])
-        event = self._maybe_link(plan, event)
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
 
@@ -1921,7 +1963,13 @@ class _Emitter:
             out_dtype,
             second,
             scale_bits=_binary32_bits(
-                kernel.attributes, ("scale_bits", "scale_bf16_code", "scale")
+                kernel.attributes,
+                (
+                    "scale_bits",
+                    "score_scale_binary32",
+                    "scale_bf16_code",
+                    "scale",
+                ),
             ),
             epsilon_bits=self._epsilon_bits(plan, kernel),
         )
@@ -1954,39 +2002,286 @@ class _Emitter:
         ]
 
     # -- cluster traffic ---------------------------------------------------
-    def _maybe_link(self, plan: KernelPlan, event: int) -> int:
+    def _maybe_link(
+        self, plan: KernelPlan, event: int, loops: Mapping[str, int]
+    ) -> int:
+        """Emit this kernel's cluster traffic, if it has any.
+
+        Two kinds of kernel declare a traffic class and they need opposite
+        things.
+
+        A **node-sharded contraction** really does have to move bytes: node *k*
+        computed columns ``[k*S, (k+1)*S)`` of the result and nothing else, and
+        every consumer wants the whole row.  That is an all-gather, and
+        :meth:`_emit_all_gather` emits it as one.
+
+        Every **other** class -- expert dispatch, sparse gather, the ordered
+        sums -- names a kernel this plan *replicates*: every node holds the same
+        operands and computes the same result, because the plan's only shard
+        axis is a contraction's output columns.  Such a kernel moves nothing and
+        waits for nothing: its inputs are node-local and so are its outputs.  So
+        it emits no traffic, and the site is recorded in
+        ``replicated_link_sites`` instead.
+
+        Emitting a collective there would gather thirty-two identical buffers
+        into a destination nothing reads, and emitting a barrier would cost the
+        fabric's barrier messages for a synchronisation the dependency has
+        already provided.  Either would put bytes and messages into a comparison
+        that no operand needed, which is the failure this program exists to
+        remove -- and the number of transfers a machine performs is one of the
+        two numbers the whole comparison turns on.
+
+        The gap this leaves is worth stating plainly: a 256-expert MoE whose
+        experts are *not* distributed across the cluster has no expert-dispatch
+        traffic, and that is a property of this plan's sharding, not of the
+        model.  Declaring dispatch traffic that no operand needs would hide it.
+        """
         if self.node_count <= 1 or not plan.link_class:
             return event
-        return self._emit_link(plan.link_class, f"k{plan.index}", plan, wait=event)
+        out = next(
+            (o for o in plan.operands if o.direction == "out" and o.slot == 0), None
+        )
+        sharded = (
+            plan.contraction
+            and out is not None
+            and out.residence == "arena"
+            and plan.shard_columns not in (0, out.cols)
+        )
+        if sharded:
+            return self._emit_all_gather(plan, out, loops, event)
+        self._replicated_links[plan.link_class] = (
+            self._replicated_links.get(plan.link_class, 0) + 1
+        )
+        return event
 
-    def _emit_link(
+    def _participant_array(self, elements: int, dtype: str) -> int:
+        """The symmetric receive buffer of an ``elements``-element exchange.
+
+        Every node holds the whole ``participant_count``-slot array and arrives
+        at the collective with its own slot filled; the all-gather fills in the
+        other thirty-one from the other thirty-one arenas.  That is the ordinary
+        way an all-gather is posted, and it is what makes ``remote_offset +
+        k * byte_extent`` name participant *k*'s contribution on a distributed
+        device exactly as it does on a single one.
+        """
+        key = (dtype, int(elements))
+        existing = self._exchange_object.get(key)
+        if existing is not None:
+            return existing
+        size = bytes_for(elements, dtype)
+        oid = self.builder.memory_object(
+            storage_class=StorageClass.HBM,
+            size_bytes=size,
+            source=ObjectSource.zeros(size),
+            # REMOTE is what exports the object to the fabric.  Nothing else in
+            # the deployment carries it, so nothing else can be the endpoint of
+            # a transfer -- which is the property that keeps a node's arena
+            # private.
+            permissions=int(Permission.READ | Permission.WRITE | Permission.REMOTE),
+            base_address=self._extra_hbm(size),
+            bank_or_tile=0,
+            alignment_log2=12,
+            key=f"obj.exchange.{dtype}.{elements}",
+        )
+        self._exchange_object[key] = oid
+        return oid
+
+    def _emit_all_gather(
+        self,
+        plan: KernelPlan,
+        out: OperandPlan,
+        loops: Mapping[str, int],
+        wait: int,
+    ) -> int:
+        """Pack this node's column band, gather all thirty-two, unpack them.
+
+        The contraction has written ``[B, S]`` into columns ``[k*S, (k+1)*S)``
+        of node *k*'s own copy of a ``[rows, cols]`` activation buffer.  A
+        column band is not a contiguous byte range -- its rows are ``cols``
+        apart -- and a COMMUNICATION descriptor moves a byte extent, so the
+        exchange is the three steps a real all-gather is:
+
+        1. **pack**: the band into slot ``NODE_ID`` of a participant array laid
+           out ``[node][B][S]``, where it *is* contiguous;
+        2. **gather**: ``LINK.COLLECTIVE ALL_GATHER`` over the array, which
+           reads slot *k* out of node *k*'s arena and lands all thirty-two slots
+           in every node's copy;
+        3. **unpack**: the gathered ``[node][B][S]`` back into the ``[B, cols]``
+           block of the activation buffer, on every node.
+
+        Both DMAs are stated as rank-3/rank-2 views whose *leading* axis is not
+        the token axis.  That is deliberate: amendment A13 clamps a view's
+        leading extent when a symbol-bounded block loop walks it, and the two
+        endpoints of a transfer would then disagree on the final partial block
+        -- the activation buffer's view would clamp to the rows the request has
+        and the fixed-extent staging buffer's would not.  Presenting both sides
+        column-major keeps the block whole on both, so the transfer always moves
+        one whole block.  The rows past the span carry whatever the buffer held;
+        they are never read, because every consumer's view is clamped.
+        """
+        builder = self.builder
+        dtype = dtype_of(out.dtype)
+        object_id, base = self._object_for(out)
+        cols = max(out.cols, 1)
+        shard = max(plan.shard_columns, 1)
+        block = max(out.tile_rows, 1)
+        nodes = self.node_count
+        exchange = self._participant_array(nodes * block * shard, out.dtype)
+        row_loop = loops.get("row") if "row" in out.terms else None
+        row_term = (
+            [DynamicTerm.loop(row_loop, cols * block)] if row_loop is not None else []
+        )
+        numeric = self._kernel_numeric(plan)
+        schedule = self._schedule_for(plan, int(Major.DMA))
+        counter = self._counter_class(int(Major.DMA))
+        predicate = self._phase_predicate(plan.phases)
+
+        pack_source = self._view(
+            object_id=object_id,
+            dtype=dtype,
+            dims=[shard, block],
+            strides=[1, cols],
+            element_offset=base,
+            dynamic=[DynamicTerm.symbol(Symbol.NODE_ID, shard), *row_term],
+        )
+        pack_destination = self._view(
+            object_id=exchange,
+            dtype=dtype,
+            dims=[shard, block],
+            strides=[1, shard],
+            dynamic=[DynamicTerm.symbol(Symbol.NODE_ID, block * shard)],
+            writable=True,
+        )
+        # Two events for the site, which is the budget the capability admits:
+        # 4,096 events over a program whose kernels already spend 3,230 of
+        # them.  They are spent where the dependency matters most -- the
+        # collective's input and the collective's completion -- so nothing can
+        # be scheduled across the transfer itself.  The unpack signals no event
+        # of its own; it is the instruction immediately after the collective it
+        # waits on, and the microsequencer is in order.
+        packed = builder.new_event()
+        self._emit_move(
+            plan, pack_source, pack_destination, numeric, schedule, counter,
+            predicate, wait, packed, "pack",
+        )
+
+        _sub, _collective, route_class = _LINK_OP[plan.link_class]
+        gathered = builder.new_event()
+        comm = builder.communication(
+            collective_op=CollectiveOp.ALL_GATHER,
+            local_object_id=exchange,
+            remote_object_id=exchange,
+            local_offset=0,
+            remote_offset=0,
+            # The *per-participant* slot, never the whole payload.
+            byte_extent=bytes_for(block * shard, out.dtype),
+            # Every node participates: ``group_id`` selects a subset of the
+            # participant set and this collective wants all of it.  The traffic
+            # class is ``route_class`` and its virtual channel, which is what
+            # TA-HBM-3.0 section 3.6 orders.
+            group_id=NO_ID,
+            route_class=route_class,
+            credit_bound=self.plan.topology.credit_bound,
+            retry_bound=self.plan.topology.retry_bound,
+            completion_event_id=gathered,
+            counter_class_id=self._counter_class(int(Major.LINK)),
+            participant_count=nodes,
+            chunk_bytes=self.plan.topology.chunk_bytes,
+            ordering=Ordering.ACQUIRE_RELEASE,
+            integrity_mode=IntegrityMode.CRC32C,
+            virtual_channel=route_class % max(self.plan.topology.virtual_channels, 1),
+            key=f"comm.{plan.link_class}.k{plan.index}",
+        )
+        builder.require(Feature.INTER_CHIP_ENDPOINT)
+        builder.emit(
+            Major.LINK,
+            Link.COLLECTIVE,
+            descriptor_id=comm,
+            wait_set_id=self._wait_set([packed]),
+            signal_event_id=gathered,
+            predicate_id=predicate,
+            source_operation_id=plan.index,
+        )
+        self._link_instructions += 1
+
+        unpack_source = self._view(
+            object_id=exchange,
+            dtype=dtype,
+            dims=[nodes, shard, block],
+            strides=[block * shard, 1, shard],
+        )
+        unpack_destination = self._view(
+            object_id=object_id,
+            dtype=dtype,
+            dims=[nodes, shard, block],
+            strides=[shard, 1, cols],
+            element_offset=base,
+            dynamic=row_term,
+            writable=True,
+        )
+        self._emit_move(
+            plan, unpack_source, unpack_destination, numeric, schedule, counter,
+            predicate, gathered, NO_ID, "unpack",
+        )
+        return gathered
+
+    def _emit_move(
+        self,
+        plan: KernelPlan,
+        source: int,
+        destination: int,
+        numeric: int,
+        schedule: int,
+        counter: int,
+        predicate: int,
+        wait: int,
+        signal: int,
+        tag: str,
+    ) -> None:
+        """One DMA.TRANSFER between two views, waiting on ``wait``."""
+        operator = self.builder.operator(
+            engine_family=Major.DMA,
+            engine_sub=int(Dma.TRANSFER),
+            inputs=[source],
+            outputs=[destination],
+            aux=[],
+            numeric_profile_id=numeric,
+            schedule_id=schedule,
+            counter_class_id=counter,
+            source_kernel_id=plan.index,
+            key=f"op.k{plan.index}.{tag}",
+        )
+        self.builder.emit(
+            Major.DMA,
+            Dma.TRANSFER,
+            descriptor_id=operator,
+            wait_set_id=self._wait_set([wait]) if wait != NO_ID else NO_ID,
+            signal_event_id=signal,
+            predicate_id=predicate,
+            source_operation_id=plan.index,
+        )
+
+    def _emit_barrier(
         self,
         link_class: str,
         tag: str,
-        plan: KernelPlan | None,
         *,
         wait: int | None,
+        source: int = NO_ID,
     ) -> int:
+        """A costed, payload-free synchronisation of the whole participant set."""
         builder = self.builder
-        sub, collective, route_class = _LINK_OP[link_class]
-        if plan is not None:
-            operand = next((o for o in plan.operands if o.direction == "out"), None)
-            if operand is None:
-                return wait if wait is not None else NO_ID
-            object_id, _ = self._object_for(operand)
-            extent = bytes_for(
-                max(operand.rows, 1) * max(plan.shard_columns, 1), operand.dtype
-            )
-        else:
-            object_id = self.commit_token_object
-            extent = 8
+        _sub, collective, route_class = _LINK_OP[link_class]
         event = builder.new_event()
         comm = builder.communication(
             collective_op=collective,
-            local_object_id=object_id,
-            group_id=route_class,
+            local_object_id=self.commit_token_object,
+            remote_object_id=NO_ID,
+            group_id=NO_ID,
             route_class=route_class,
-            byte_extent=extent,
+            # A barrier carries no operand payload, and the engine refuses one
+            # that claims to.
+            byte_extent=0,
             credit_bound=self.plan.topology.credit_bound,
             retry_bound=self.plan.topology.retry_bound,
             completion_event_id=event,
@@ -1996,23 +2291,16 @@ class _Emitter:
             ordering=Ordering.ACQUIRE_RELEASE,
             integrity_mode=IntegrityMode.CRC32C,
             virtual_channel=route_class % max(self.plan.topology.virtual_channels, 1),
-            reduction_numeric_id=(
-                self._numeric_profile(
-                    "bf16_ordered_sum_fp32_v1", DType.BF16, DType.BF16, DType.BF16
-                )
-                if collective is CollectiveOp.SUM
-                else NO_ID
-            ),
             key=f"comm.{link_class}.{tag}",
         )
         builder.require(Feature.INTER_CHIP_ENDPOINT)
         builder.emit(
             Major.LINK,
-            sub,
+            Link.BARRIER,
             descriptor_id=comm,
             wait_set_id=self._wait_set([wait]) if wait is not None else NO_ID,
             signal_event_id=event,
-            source_operation_id=plan.index if plan is not None else NO_ID,
+            source_operation_id=source,
         )
         self._link_instructions += 1
         return event
@@ -2049,7 +2337,13 @@ def _binary32_bits(attributes: Mapping[str, Any], keys: Sequence[str]) -> int:
         if key not in attributes:
             continue
         value = attributes[key]
-        if key.endswith("_bits"):
+        if key.endswith("_bits") or key.endswith("_binary32"):
+            # A binary32 pattern, written as an integer or as the hexadecimal
+            # string a frozen reference states it in.  Both name the same 32
+            # bits; parsing the string here is what keeps the graph from having
+            # to restate the constant a second way for a backend's benefit.
+            if isinstance(value, str):
+                return int(value, 0) & 0xFFFFFFFF
             return int(value) & 0xFFFFFFFF
         if key.endswith("_bf16_code"):
             return (int(value) & 0xFFFF) << 16

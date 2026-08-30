@@ -209,7 +209,7 @@ class GenerationDriver:
     # -- input staging ----------------------------------------------------
     def _write_input_tokens(self, token_ids: Sequence[int], offset: int) -> None:
         """Write prompt token IDs into the authenticated input window."""
-        obj = self.device.memory[self.input_object_id]
+        obj = self.device.host_object(self.input_object_id)
         payload = np.asarray(token_ids, dtype=np.uint32).tobytes()
         byte_offset = offset * 4
         if byte_offset + len(payload) > obj.size_bytes:
@@ -223,7 +223,10 @@ class GenerationDriver:
                     f"token {token} is outside the declared vocabulary "
                     f"{self.vocabulary_size}"
                 )
-        obj.write(byte_offset, payload)
+        # Every node of the cluster reads the request out of its own input
+        # window, so the window is staged on every node.  On a single chip this
+        # is the one write it always was.
+        self.device.host_write(self.input_object_id, byte_offset, payload)
 
     # -- generation -------------------------------------------------------
     def generate(

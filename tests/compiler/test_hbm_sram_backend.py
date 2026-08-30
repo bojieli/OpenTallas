@@ -673,9 +673,33 @@ def test_cluster_emits_link_traffic_and_single_chip_does_not(moe, cluster, singl
         assert descriptor.descriptor_type == ExtendedDescriptorType.COMMUNICATION
         classes.add(descriptor.payload["route_class"])
         assert descriptor.payload["participant_count"] == 32
-    # expert dispatch, sparse/route gather, activation transfer, reduction and
-    # the coordinated commit must all be represented.
-    assert len(classes) >= 4
+    # Every traffic class the plan declares is accounted for, and a class is
+    # accounted for in one of two ways: it emitted a transfer, or the kernels
+    # that named it turned out to be replicated on every node and had nothing
+    # to move.  The second is not silence -- the deployment says so, with a
+    # count -- because "this cluster performs no expert-dispatch transfer" is a
+    # fact a comparison of two machines has to be able to read off.
+    from compiler.backends.hbm_sram.lower import _LINK_OP
+    from compiler.backends.hbm_sram.plan import build_plan
+
+    route_class = {name: spec[2] for name, spec in _LINK_OP.items()}
+    replicated = clustered.notes["replicated_link_sites"]
+    assert replicated, "a plan that shards only output columns replicates most kernels"
+    declared = {
+        plan.link_class
+        for plan in build_plan(moe, cluster).kernels
+        if plan.link_class
+    }
+    unaccounted = {
+        name
+        for name in declared
+        if route_class[name] not in classes and name not in replicated
+    }
+    assert not unaccounted, sorted(unaccounted)
+    # The transfer that does happen is the one that has to: a node-sharded
+    # contraction's output columns, gathered back into a whole row.
+    assert route_class["activation_transfer"] in classes
+    assert route_class["coordinated_commit"] in classes
 
 
 # ---------------------------------------------------------------------------

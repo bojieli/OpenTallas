@@ -88,7 +88,10 @@ from runtime.reference.normalization import (
 from runtime.reference.sqrt_softplus import binary32_sqrt_softplus_rne
 from runtime.sim.backend import (
     CONTRACT_DEEPSEEK_RMSNORM,
+    CONTRACT_DEEPSEEK_ROPE,
+    CONTRACT_DEEPSEEK_ROPE_INVERSE,
     CONTRACT_QWEN_RMSNORM,
+    CONTRACT_QWEN_ROPE,
     BackendError,
     declared_contract,
     get_backend,
@@ -437,9 +440,18 @@ def _vector_rope(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
     """Rotary position embedding over the last axis.
 
     ``input 0`` is ``[..., head_dim]``, ``input 1`` is the coefficient row
-    ``cos[head_dim] || sin[head_dim]``: rank 1 to apply one position to every
-    row, or ``[rows, 2 * head_dim]`` to apply one coefficient row per input
-    row.  ``output 0`` has the input's shape.
+    ``cos[rotary_width] || sin[rotary_width]``: rank 1 to apply one position to
+    every row, or ``[rows, 2 * rotary_width]`` to apply one coefficient row per
+    input row.  ``output 0`` has the input's shape.  ``aux_id_0`` is the rotary
+    width the frozen operand row already gives it.
+
+    Two contracts live here and the engine dispatches on the digest, exactly as
+    ``RMS_NORM`` does.  They are different operations, not two spellings of one:
+    ``qwen3_rope_fp32_bf16_v1`` rotates the whole axis, pairs channel ``i`` with
+    ``i + head_dim / 2``, and rounds each product to BF16 before the sum;
+    ``rope_apply_bf16_v1`` rotates only the final ``rotary_width`` channels,
+    pairs ``2p`` with ``2p + 1`` as a complex number, and stays in binary32
+    through the product and the sum, rounding once at the output.
     """
     profile = _profile(ctx, operator)
     input_view = ctx.input_view(operator, 0)
@@ -454,6 +466,17 @@ def _vector_rope(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
         TrapClass.CAPABILITY_OR_RESOURCE,
     )
     _same_shape(input_view, output_view, "RoPE output shape")
+    contract = _rope_contract(ctx, profile)
+    if contract in _DEEPSEEK_ROPE_CONTRACTS:
+        _deepseek_rope(ctx, operator, profile, contract)
+        return
+    # ``qwen3_rope_fp32_bf16_v1`` rotates the whole last axis by definition, so
+    # ``aux_id_0`` carries nothing this path needs -- and the two backends that
+    # emit it do not agree about what it holds: the ROM backend writes the head
+    # dimension and the HBM/SRAM backend writes the coefficient row's width,
+    # which is twice that.  Reading it here would refuse deployments that are
+    # correct.  The slot is load-bearing only where the rotation is partial,
+    # and the partial contracts are the ones that read it.
     width = int(input_view.dims[-1])
     values = _read_rows(ctx, input_view, width)
     raw = ctx.read(coefficient_view)
@@ -500,6 +523,173 @@ def _vector_rope(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
     ctx.counters.add("vector.elements", int(values.size))
     # Direct product, rotated product and their sum each round once.
     ctx.counters.add("vector.conversions", 3 * int(values.size))
+
+
+#: The two rotary contracts that rotate a *suffix* of the axis as adjacent
+#: complex pairs.  They differ from each other only in the sign of the sine.
+_DEEPSEEK_ROPE_CONTRACTS = (CONTRACT_DEEPSEEK_ROPE, CONTRACT_DEEPSEEK_ROPE_INVERSE)
+
+
+def _rope_contract(ctx: EngineContext, profile: NumericProfile) -> str:
+    """Which rotary contract this descriptor names.
+
+    Fails closed on a digest that names none.  The rotations disagree about
+    which channels move and about where the arithmetic rounds, so a descriptor
+    that names neither cannot be assigned to one of them.
+    """
+    contract = declared_contract(ctx.table, profile.descriptor_id)
+    _require(
+        contract in (CONTRACT_QWEN_ROPE, *_DEEPSEEK_ROPE_CONTRACTS),
+        f"numeric profile {profile.descriptor_id} names no rotary contract this "
+        f"engine implements; expected {CONTRACT_QWEN_ROPE} (whole axis, "
+        f"half-split pairing, BF16 products) or {CONTRACT_DEEPSEEK_ROPE} / "
+        f"{CONTRACT_DEEPSEEK_ROPE_INVERSE} (suffix, adjacent complex pairs, "
+        "binary32 products)",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    profile.contract = contract
+    return contract
+
+
+def _rotary_width(operator: Descriptor, width: int) -> int:
+    """``aux_id_0``: how many trailing channels this operator rotates.
+
+    ``TA-ABI3-OPCONV-1`` section 3 already gives ``VECTOR.ROPE``'s ``aux_id_0``
+    to the rotary width; an operator that leaves it unset is declaring that the
+    rotation covers the whole axis.
+    """
+    declared = int(operator.payload["aux_id_0"])
+    rotary = width if declared == NO_ID else declared
+    _require(
+        0 < rotary <= width and rotary % 2 == 0,
+        f"operator {operator.descriptor_id} declares rotary width {rotary} in "
+        f"aux_id_0; it must be positive, even, and no wider than the {width}-"
+        "wide axis it rotates",
+    )
+    return rotary
+
+
+def _deepseek_rope(
+    ctx: EngineContext,
+    operator: Descriptor,
+    profile: NumericProfile,
+    contract: str,
+) -> None:
+    """``rope_apply_bf16_v1``: rotate the final ``aux_id_0`` channels.
+
+    The released model rotates only the last ``rotary_width`` channels of each
+    head and reads them as ``rotary_width / 2`` adjacent complex pairs -- pair
+    ``p`` is ``(x[2p], x[2p + 1])``, not ``(x[p], x[p + half])``.  The leading
+    channels are carried through unchanged; the reference counts them as
+    ``prefix_bf16_values_preserved`` rather than as rotated values, and this
+    engine moves exactly those bits.
+
+    Arithmetic, from ``runtime.reference.rope``: each BF16 code widens exactly
+    to binary32, the four products and the two sums are binary32 with one
+    rounding each, and the pair converts to BF16 once at the end.  That single
+    output rounding is the whole difference from the Qwen kernel, which rounds
+    each product to BF16 before summing.
+
+    ``input 1`` is ``cos[rotary_width] || sin[rotary_width]`` with pair ``p``'s
+    coefficient repeated at ``2p`` and ``2p + 1``, so the coefficient row reads
+    channel-for-channel against the block it rotates and the engine never has
+    to know how the table was folded.
+    """
+    input_view = ctx.input_view(operator, 0)
+    coefficient_view = ctx.input_view(operator, 1)
+    output_view = ctx.output_view(operator, 0)
+    width = int(input_view.dims[-1])
+    rotary = _rotary_width(operator, width)
+    _require(
+        coefficient_view.dtype == DType.FP32,
+        f"RoPE coefficient view {coefficient_view.descriptor_id} stores "
+        f"{DType(coefficient_view.dtype).name}; {contract} applies its phasor "
+        "in binary32 and takes a binary32 table",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    values = _read_rows(ctx, input_view, width)
+    raw = ctx.read(coefficient_view)
+    coefficients = (
+        np.ascontiguousarray(raw).reshape(1, -1)
+        if raw.ndim == 1
+        else _read_rows(ctx, coefficient_view, 2 * rotary)
+    )
+    _require(
+        coefficients.shape[-1] == 2 * rotary,
+        f"RoPE coefficient view {coefficient_view.descriptor_id} has last axis "
+        f"{coefficients.shape[-1]}; expected cosine then sine over the "
+        f"{rotary} rotated channels",
+    )
+    _require(
+        coefficients.shape[0] in (1, values.shape[0]),
+        f"RoPE coefficient view {coefficient_view.descriptor_id} has "
+        f"{coefficients.shape[0]} rows; the input has {values.shape[0]}",
+    )
+    with _numeric_guard(contract):
+        rotated = deepseek_rope_binary32(
+            values,
+            np.ascontiguousarray(coefficients, dtype=np.float32),
+            rotary_width=rotary,
+            inverse=contract == CONTRACT_DEEPSEEK_ROPE_INVERSE,
+        )
+    ctx.write(output_view, rotated.reshape(output_view.dims))
+    rows = int(values.shape[0])
+    pairs = rows * (rotary // 2)
+    ctx.counters.add("vector.rope_pairs", pairs)
+    ctx.counters.add("vector.elements", int(values.size))
+    # One conversion per rotated value, and none for the preserved prefix:
+    # the reference's ``binary32_to_bf16_conversions`` is exactly this.
+    ctx.counters.add("vector.conversions", rows * rotary)
+
+
+def deepseek_rope_binary32(
+    values: np.ndarray,
+    coefficients: np.ndarray,
+    *,
+    rotary_width: int,
+    inverse: bool,
+) -> np.ndarray:
+    """The data-bearing form of ``runtime.reference.rope``'s suffix rotation.
+
+    ``values`` are BF16 codes ``[rows, width]``; ``coefficients`` are binary32
+    ``[rows or 1, 2 * rotary_width]``.  Returns BF16 codes of the input's shape.
+    """
+    rows, width = values.shape
+    prefix = width - rotary_width
+    suffix = values[:, prefix:]
+    real = widen_bf16(np.ascontiguousarray(suffix[:, 0::2]))
+    imaginary = widen_bf16(np.ascontiguousarray(suffix[:, 1::2]))
+    cosine = np.ascontiguousarray(coefficients[:, 0:rotary_width:2], dtype=np.float32)
+    sine = np.ascontiguousarray(coefficients[:, rotary_width::2], dtype=np.float32)
+    if inverse:
+        # The conjugate phasor.  Negating the stored sine is exact, and it is
+        # what ``freqs_cis.conj()`` does.  Zero negates to *positive* zero,
+        # which is the reference's canonical arithmetic zero rather than a
+        # sign flip -- a negated zero would carry its sign into the product.
+        sine = np.where(sine == 0, np.float32(0.0), -sine).astype(np.float32)
+    real_output = np.subtract(
+        np.multiply(real, cosine, dtype=np.float32),
+        np.multiply(imaginary, sine, dtype=np.float32),
+        dtype=np.float32,
+    )
+    imaginary_output = np.add(
+        np.multiply(real, sine, dtype=np.float32),
+        np.multiply(imaginary, cosine, dtype=np.float32),
+        dtype=np.float32,
+    )
+    if not np.all(np.isfinite(real_output)) or not np.all(
+        np.isfinite(imaginary_output)
+    ):
+        raise ValueError("rotary binary32 arithmetic produced NaN or infinity")
+    real_codes, real_saturated = narrow_bf16_rne(real_output)
+    imaginary_codes, imaginary_saturated = narrow_bf16_rne(imaginary_output)
+    if real_saturated or imaginary_saturated:
+        raise ValueError("rotary BF16 conversion overflowed")
+    rotated = np.empty((rows, width), dtype=np.uint16)
+    rotated[:, :prefix] = values[:, :prefix]
+    rotated[:, prefix::2] = real_codes
+    rotated[:, prefix + 1 :: 2] = imaginary_codes
+    return rotated
 
 
 # ---------------------------------------------------------------------------
@@ -636,7 +826,46 @@ def _convert_dequantize(ctx: EngineContext, operator: Descriptor) -> None:
     code_view = ctx.input_view(operator, 0)
     scale_view = ctx.input_view(operator, 1)
     output_view = ctx.output_view(operator, 0)
-    _same_shape(code_view, output_view, "DEQUANTIZE output shape")
+    carried_view = (
+        ctx.input_view(operator, 2)
+        if operator.payload["input_view_2"] != NO_ID
+        else None
+    )
+    if carried_view is None:
+        _same_shape(code_view, output_view, "DEQUANTIZE output shape")
+    else:
+        # A *partial* dequantisation.  DeepSeek quantises the 448 non-rotary
+        # channels of a 512-wide KV vector and keeps the 64 rotary ones in
+        # BF16, because the rotary channels carry position and cannot afford
+        # E4M3FN.  Reconstructing the vector therefore reads two sources, which
+        # is why the shared lowering table gives ``DEQUANTIZE`` three inputs:
+        # the codes, their scales, and the plane the untouched channels come
+        # from.  Expressing it as a two-operand dequantize plus a concatenation
+        # would need an axis ``REDUCTION.GROUPED_CONCAT`` does not have -- it
+        # joins on axis 0, and this joins on the last one.
+        _same_shape(carried_view, output_view, "DEQUANTIZE carried plane shape")
+        _require(
+            carried_view.dtype == output_view.dtype,
+            f"DEQUANTIZE carried view {carried_view.descriptor_id} stores "
+            f"{DType(carried_view.dtype).name} and the destination stores "
+            f"{DType(output_view.dtype).name}; the carried channels are moved, "
+            "not converted",
+            TrapClass.CAPABILITY_OR_RESOURCE,
+        )
+        _require(
+            output_view.dtype == DType.BF16,
+            "the partial dequantisation contract reconstructs into BF16",
+            TrapClass.CAPABILITY_OR_RESOURCE,
+        )
+        _require(
+            len(code_view.dims) == len(output_view.dims)
+            and tuple(code_view.dims[:-1]) == tuple(output_view.dims[:-1])
+            and 0 < int(code_view.dims[-1]) < int(output_view.dims[-1]),
+            f"DEQUANTIZE code view {code_view.descriptor_id} is {code_view.dims} "
+            f"and the destination is {output_view.dims}; a partial "
+            "dequantisation reconstructs a prefix of each row and carries the "
+            "rest",
+        )
     width = int(code_view.dims[-1])
     rows = _rows(code_view.dims)
     scale_rows = _rows(scale_view.dims)
@@ -660,9 +889,25 @@ def _convert_dequantize(ctx: EngineContext, operator: Descriptor) -> None:
     _finite(ctx, scales, f"DEQUANTIZE scale view {scale_view.descriptor_id}")
     scaled = np.multiply(values, scales[:, :, None], dtype=np.float32)
     _finite(ctx, scaled, "DEQUANTIZE product")
-    _, conversions = _write_rows(ctx, output_view, scaled.reshape(code_view.dims))
+    if carried_view is None:
+        _, conversions = _write_rows(ctx, output_view, scaled.reshape(code_view.dims))
+        ctx.counters.add("vector.elements", int(values.size))
+        ctx.counters.add("vector.conversions", conversions)
+        return
+    full = int(output_view.dims[-1])
+    with _numeric_guard(f"output view {output_view.descriptor_id}"):
+        reconstructed, saturations = narrow_bf16_rne(scaled.reshape(rows, width))
+    ctx.counters.add("vector.saturations", int(saturations))
+    carried = _read_rows(ctx, carried_view, full)
+    output = np.empty((rows, full), dtype=np.uint16)
+    output[:, :width] = reconstructed
+    # The carried channels are copied, not converted: the reference preserves
+    # their codes exactly, and a round trip through binary32 would count a
+    # conversion the architecture never performs.
+    output[:, width:] = carried[:, width:]
+    ctx.write(output_view, output.reshape(output_view.dims))
     ctx.counters.add("vector.elements", int(values.size))
-    ctx.counters.add("vector.conversions", conversions)
+    ctx.counters.add("vector.conversions", int(reconstructed.size))
 
 
 def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:

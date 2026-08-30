@@ -55,6 +55,7 @@ from runtime.abi3.constants import (
 )
 from runtime.abi3.descriptors import Descriptor
 from runtime.sim import formats
+from runtime.sim.backend import CONTRACT_DEEPSEEK_EXPERT_SUM, declared_contract
 from runtime.sim.engine import EngineContext, EngineError, register
 from runtime.sim.memory import ResolvedView
 
@@ -168,13 +169,34 @@ def _reduce_and_write(
     base: np.ndarray | None,
     out_view: ResolvedView,
     order: int,
+    base_after_terms: bool = False,
 ) -> None:
-    stack = terms if base is None else np.concatenate(
-        (base.reshape((1,) + terms.shape[1:]), terms), axis=0
-    )
+    """Reduce ``terms`` in the declared order and write one rounding.
+
+    ``TA-ABI3-OPCONV-1`` section 6 puts the optional base *first*, which is the
+    residual convention: the base is one more term and it associates with the
+    rest.  ``base_after_terms`` states the other placement -- reduce the terms,
+    then add the base with one further binary32 addition -- because that is a
+    different number rather than the same number written differently.  With
+    seven leaves and a balanced tree, a base folded in as a seventh leaf meets
+    the routed sum at the second level; a base added afterwards meets the
+    completed sum.  The released DeepSeek expert reduction is the second, and
+    the contract's name is what selects it.
+    """
+    stack = terms
+    trailing = None
+    if base is not None:
+        if base_after_terms:
+            trailing = base.reshape(terms.shape[1:])
+        else:
+            stack = np.concatenate(
+                (base.reshape((1,) + terms.shape[1:]), terms), axis=0
+            )
     previous = np.seterr(over="raise", invalid="raise")
     try:
         total = ordered_sum(stack, order)
+        if trailing is not None:
+            total = np.add(total, trailing, dtype=np.float32)
     except FloatingPointError as exc:
         raise EngineError(
             f"reduction overflowed binary32: {exc}", trap_class=6
@@ -310,7 +332,17 @@ def expert_sum(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         )
         base = widen(ctx, base_view).reshape(out_view.element_count)
     ctx.counters.add("route.expert_reductions", experts)
-    _reduce_and_write(ctx, weighted, base, out_view, profile.reduction_order)
+    _reduce_and_write(
+        ctx,
+        weighted,
+        base,
+        out_view,
+        profile.reduction_order,
+        base_after_terms=(
+            declared_contract(ctx.table, descriptor.payload["numeric_profile_id"])
+            == CONTRACT_DEEPSEEK_EXPERT_SUM
+        ),
+    )
 
 
 # ---------------------------------------------------------------------------

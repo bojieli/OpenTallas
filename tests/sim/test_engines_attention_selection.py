@@ -48,6 +48,7 @@ from runtime.tensor_accelerator.attention import (
 # Importing an engine module registers its (family, subopcode) handlers.
 import runtime.sim.engines.attention as engine_attention  # noqa: F401
 import runtime.sim.engines.selection  # noqa: F401
+from runtime.tensor_accelerator import sparse_attention as sparse_attention_kernel
 
 
 # ---------------------------------------------------------------------------
@@ -648,6 +649,70 @@ def test_sparse_counts_duplicate_selections_as_separate_rows():
         read(device, out_view), np.asarray(expected.values[0], dtype=np.uint16)
     )
     assert result.counters["attention.sparse_indices"] == 3
+
+
+def test_sparse_output_does_not_depend_on_the_query_row_tile(monkeypatch):
+    """The engine drives a kernel that tiles query rows; that is scheduling.
+
+    A sparse-attention query row resets the running maximum, the denominator
+    and the output accumulator, so every row is an independent transaction and
+    no tile length can reach any element's reduction -- not the ascending QK
+    dot, not the ascending 64-lane AV accumulation, not the online rescale.
+    Tiling one row at a time, which is the shape the exact reference executes,
+    must therefore reproduce the batched answer bit for bit and retire exactly
+    the same counters.
+    """
+    rng = np.random.default_rng(0x5A9E)
+    span, heads, dim, rows, slots = 9, 3, 6, 20, 70
+    # Operands spanning several binades: a one-binade operand set sums the same
+    # in any order and would let a reordered reduction pass unnoticed.
+    def spread(shape):
+        magnitude = rng.uniform(1.0, 2.0, size=shape) * 2.0 ** rng.integers(
+            -6, 7, size=shape
+        )
+        return narrow((rng.choice([-1.0, 1.0], size=shape) * magnitude).astype(np.float32))
+
+    q = spread((span, heads, dim))
+    kv = spread((rows, dim))
+    sinks = rng.uniform(-2.5, 2.5, size=heads).astype(np.float32)
+    indices = np.full((span, slots), NO_ID, dtype=np.uint32)
+    for token in range(span):
+        width = min(token + 2, slots, rows)
+        indices[token, :width] = np.sort(
+            rng.choice(rows, size=width, replace=False)
+        ).astype(np.uint32)
+
+    def run():
+        build, out_view = build_sparse(q=q, kv=kv, indices=indices, sinks=sinks)
+        device = build.finish()
+        result = device.run_transaction(
+            device.create_session(), entrypoint_id=0, symbols={}
+        )
+        assert result.status == CompletionStatus.SUCCESS, result.message
+        return read(device, out_view), dict(result.counters)
+
+    baseline_output, baseline_counters = run()
+    # The reference answers for the same operands, so this pins the contract
+    # and not merely the kernel's self-consistency.
+    expected = sparse_attention_bf16(
+        [q.tolist()],
+        [kv.tolist()],
+        [int(code) for code in sinks.view(np.uint32)],
+        [[[-1 if slot == NO_ID else int(slot) for slot in row] for row in indices]],
+        scale_binary32=SPARSE_ATTENTION_SCALE_BINARY32,
+    )
+    assert np.array_equal(
+        baseline_output, np.asarray(expected.values[0], dtype=np.uint16)
+    )
+
+    observed = 0
+    for budget in (1, 8, 1 << 8, 1 << 18):
+        monkeypatch.setattr(sparse_attention_kernel, "_ROW_TILE_ELEMENTS", budget)
+        output, counters = run()
+        assert np.array_equal(output, baseline_output), budget
+        assert counters == baseline_counters, budget
+        observed += 1
+    assert observed == 4
 
 
 def test_sparse_refuses_a_dense_shaped_operand_set():

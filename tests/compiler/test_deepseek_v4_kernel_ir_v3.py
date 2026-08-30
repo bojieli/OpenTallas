@@ -205,7 +205,11 @@ def test_sparse_attention_uses_the_frozen_operand_order(graph):
         query, key_value, index, sink = kernel.inputs
         assert by_id[query].shape[1:] == (64, 512)
         assert by_id[key_value].shape[1] == 512
-        assert by_id[index].dtype == "i32"
+        # ABI 3.0 index and identifier operands are unsigned -- section 4's
+        # SPARSE row says "sparse index (U32)" and the engines refuse anything
+        # else -- so the neutral tensor is declared U32 rather than converted
+        # at the operand.
+        assert by_id[index].dtype == "u32"
         assert by_id[sink].role == "weight"
         assert by_id[sink].shape == (64,)
 
@@ -424,9 +428,60 @@ def test_entrypoints_cover_both_phases(graph):
 # ---------------------------------------------------------------------------
 # Source coverage
 # ---------------------------------------------------------------------------
+#: Kernels that materialise a *declared constant* rather than lowering a source
+#: node.  Amendment A9 lets the neutral IR declare a derived constant with a
+#: generator, and the rows ``VECTOR.ROPE`` reads are gathered from that constant
+#: once for the whole graph.  There is no source node to attribute them to: the
+#: released model builds its rotary table at construction time, not in the
+#: forward pass.  They are named for the model's rotary embedding rather than
+#: for a graph position, and every one of them is a movement.
+DERIVED_CONSTANT_PREFIX = "deepseek_v4."
+
+#: Kinds whose whole content is the view they move through, so their numeric
+#: contract is the exact selection rather than the arithmetic they feed.
+MOVEMENT_KINDS = frozenset({"GATHER"})
+
+#: The contract a pure index selection names when it qualifies as itself.
+EXACT_SELECTION_CONTRACT = "exact_index_select_v1"
+
+
+def source_kernels(graph):
+    """Kernels that lower a source node, which is what these tests are about."""
+    return [
+        kernel
+        for kernel in graph.kernels
+        if not kernel.source_operation_id.startswith(DERIVED_CONSTANT_PREFIX)
+    ]
+
+
+def test_derived_constant_kernels_are_movements_from_a_declared_generator(graph):
+    """The coefficient rows come from a generator, and nowhere else."""
+
+    by_id = {t.tensor_id: t for t in graph.tensors}
+    derived = [
+        kernel
+        for kernel in graph.kernels
+        if kernel.source_operation_id.startswith(DERIVED_CONSTANT_PREFIX)
+    ]
+    assert derived
+    for kernel in derived:
+        assert kernel.kind == "GATHER"
+        assert kernel.numeric_contract == "exact_index_select_v1"
+        table = by_id[kernel.inputs[1]]
+        assert table.role == "constant"
+        assert table.generator == "deepseek_rope_coefficients_v1"
+        assert table.binding is None
+        assert set(table.generator_parameters) >= {
+            "maximum_position",
+            "position_scaling",
+            "rotary_width",
+            "theta",
+        }
+
+
 def test_the_first_release_is_the_ordinary_target_path(graph, contract):
     node_kind = {node["id"]: node["kind"] for node in contract["nodes"]}
-    covered = {kernel.source_operation_id for kernel in graph.kernels}
+    covered = {kernel.source_operation_id for kernel in source_kernels(graph)}
     assert covered <= set(node_kind)
     assert all(not name.startswith("dspark.") for name in covered)
     emitted_kinds = {node_kind[name] for name in covered}
@@ -441,14 +496,14 @@ def test_every_ordinary_source_node_is_lowered(graph, contract):
         if not node["id"].startswith("dspark.")
         and node["kind"] not in SPECULATIVE_SOURCE_KINDS
     }
-    covered = {kernel.source_operation_id for kernel in graph.kernels}
+    covered = {kernel.source_operation_id for kernel in source_kernels(graph)}
     assert covered == ordinary
 
 
 def test_emitted_kinds_follow_the_declared_lowering_plan(graph, contract):
     node_kind = {node["id"]: node["kind"] for node in contract["nodes"]}
     observed: dict[str, set[str]] = {}
-    for kernel in graph.kernels:
+    for kernel in source_kernels(graph):
         source_kind = node_kind[kernel.source_operation_id]
         observed.setdefault(source_kind, set()).add(kernel.kind)
     for source_kind, kinds in observed.items():
@@ -459,12 +514,20 @@ def test_numeric_contracts_are_canonical_semantic_identifiers(graph, contract):
     """ADR-003 section 15: the neutral IR must not name an implementation."""
 
     node_kind = {node["id"]: node["kind"] for node in contract["nodes"]}
-    for kernel in graph.kernels:
+    for kernel in source_kernels(graph):
         name = kernel.numeric_contract
         assert CONTRACT_PATTERN.match(name), name
         assert not is_implementation_path(name), name
         assert canonical_contract_id(name) == name
         base = CONTRACT_BASE_BY_SOURCE_KIND[node_kind[kernel.source_operation_id]]
+        if kernel.kind in MOVEMENT_KINDS and name == EXACT_SELECTION_CONTRACT:
+            # A movement may qualify under its source kind -- the router's
+            # weight gather does, because which rows it takes is part of the
+            # routing contract -- or it may name the exact selection itself.
+            # Gathering a rotary coefficient row is the second: it is the same
+            # movement in both models, and naming it after the rotation it
+            # feeds would claim a numeric identity it does not have.
+            continue
         assert name.startswith(f"{base}_"), (name, base)
 
 
@@ -480,7 +543,7 @@ def test_the_frozen_contract_table_is_complete_and_distinct():
 def test_one_source_kind_maps_to_one_contract_family(graph, contract):
     node_kind = {node["id"]: node["kind"] for node in contract["nodes"]}
     families: dict[str, set[str]] = {}
-    for kernel in graph.kernels:
+    for kernel in source_kernels(graph):
         families.setdefault(
             node_kind[kernel.source_operation_id], set()
         ).add(kernel.numeric_contract)
@@ -652,7 +715,7 @@ def test_speculative_profile_covers_every_source_kind(
 ):
     assert check_neutral(speculative_graph) == []
     node_kind = {node["id"]: node["kind"] for node in contract["nodes"]}
-    covered = {k.source_operation_id for k in speculative_graph.kernels}
+    covered = {k.source_operation_id for k in source_kernels(speculative_graph)}
     assert covered == set(node_kind)
     assert {node_kind[name] for name in covered} == set(OPERATOR_CATALOG)
     assert len(speculative_graph.kernels) > len(graph.kernels)

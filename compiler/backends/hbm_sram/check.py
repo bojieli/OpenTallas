@@ -474,7 +474,15 @@ _NO_SOURCE = _NoSource()
 
 
 def _position_inputs(graph: KernelGraph) -> tuple[str, ...]:
-    """Declared inputs whose content is the request's position range."""
+    """Declared inputs whose content is the request's position range.
+
+    Rank one, an index storage type, consumed by something other than the
+    embedding lookup: that is a position range, whether the exporter declared it
+    over the whole span or as the single base element the consumer adds its row
+    to.  Both are ``POSITION_START`` plus an offset, and neither is host data,
+    because ADR-003 carries the position in the submission rather than in a
+    window.
+    """
     consumers: dict[str, list[str]] = {}
     for kernel in graph.kernels:
         for name in kernel.inputs:
@@ -483,7 +491,10 @@ def _position_inputs(graph: KernelGraph) -> tuple[str, ...]:
     for tensor in graph.tensors:
         if tensor.role != "input" or tensor.dtype not in {"u32", "i32"}:
             continue
-        if len(tensor.shape) != 1 or not isinstance(tensor.shape[0], Symbolic):
+        if len(tensor.shape) != 1:
+            continue
+        leading = tensor.shape[0]
+        if not isinstance(leading, Symbolic) and int(leading) != 1:
             continue
         kinds = consumers.get(tensor.tensor_id, [])
         if not kinds or "EMBEDDING_LOOKUP" in kinds:

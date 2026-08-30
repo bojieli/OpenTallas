@@ -20,7 +20,10 @@ transfer is a byte movement: reinterpreting the payload is the receiving
 engine's job under its own numeric contract.
 
 ``local_object_id`` / ``local_offset``
-    The endpoint on this node.
+    The endpoint on this node.  It is *symmetric*: the same object at the same
+    offset on every node, so a result that every participant must hold -- an
+    all-reduce's reduced value, an all-gather's concatenation -- is written
+    into every participant's own arena at that one offset.
 ``remote_object_id`` / ``remote_offset``
     The **participant array**.  For a point-to-point transfer it is the peer's
     buffer.  For MULTICAST, GATHER, SCATTER and COLLECTIVE it holds one slot per
@@ -29,6 +32,23 @@ engine's job under its own numeric contract.
     ordered by ascending participant id (see :func:`_participants`), so slot
     order is a property of the descriptor and the admitted topology, never of
     arrival order.
+
+    **Where that slot lives** depends on how many memories the device has, and
+    that is the whole of the difference between a chip and a cluster here.  A
+    single-node device -- a chip, and a wafer, which is one logical device and
+    declares one node -- has one arena, so the whole array is materialised in
+    it.  An N-node cluster has one arena per node, so under ``NODE`` scope the
+    array is *distributed*: participant ``k`` is node ``k``, and its slot is
+    that same offset in **node k's own arena**.  Every node holds the whole
+    array and arrives with its own slot filled; the collective is what fills in
+    the other thirty-one, out of the other thirty-one arenas.  ``RETICLE`` and
+    ``TILE`` scopes always take the single-memory reading, because a wafer's
+    reticles and tiles share the one node's memory.
+
+    This is one rule with two realisations, not two rules, and the
+    single-memory realisation is the behaviour that was frozen before there was
+    a node dimension -- byte for byte, which is what keeps a single-chip Qwen
+    deployment and the DeepSeek wafer unchanged.
 ``byte_extent``
     The **per-participant** slot size, never the whole-collective payload.
 ``participant_scope``
@@ -323,21 +343,23 @@ def _member_index(members: Sequence[int], node: int, role: str) -> int:
 # ---------------------------------------------------------------------------
 # Byte movement
 # ---------------------------------------------------------------------------
-def _object(ctx: EngineContext, object_id: int, role: str) -> MemoryObject:
+def _object(
+    ctx: EngineContext, object_id: int, role: str, node: int = 0
+) -> MemoryObject:
     _require(
         object_id != NO_ID,
         f"communication names no {role} object",
         int(TrapClass.DESCRIPTOR_OR_ADDRESS),
     )
     try:
-        return ctx.memory[object_id]
+        return ctx.node_memory(node)[object_id]
     except MemoryError_ as exc:
         raise EngineError(str(exc), trap_class=int(TrapClass.LINK_OR_NOC)) from exc
 
 
-def _remote(ctx: EngineContext, object_id: int) -> MemoryObject:
+def _remote(ctx: EngineContext, object_id: int, node: int = 0) -> MemoryObject:
     """Resolve the remote endpoint, refusing an object without REMOTE."""
-    obj = _object(ctx, object_id, "remote")
+    obj = _object(ctx, object_id, "remote", node)
     _require(
         bool(obj.permissions & int(Permission.REMOTE)),
         f"object {object_id} is addressed as a remote endpoint but does not "
@@ -345,6 +367,49 @@ def _remote(ctx: EngineContext, object_id: int) -> MemoryObject:
         "so a remote object must be explicitly exported",
     )
     return obj
+
+
+# ---------------------------------------------------------------------------
+# Distributed endpoints
+# ---------------------------------------------------------------------------
+def _read_slot(ctx: EngineContext, transfer: "_Transfer", index: int) -> bytes:
+    """Participant ``index``'s contribution, out of the arena that holds it."""
+    obj = _remote(
+        ctx, int(transfer.payload["remote_object_id"]), transfer.nodes[index]
+    )
+    return _fetch(ctx, obj, transfer.slot(index), transfer.extent)
+
+
+def _write_slot(
+    ctx: EngineContext, transfer: "_Transfer", index: int, data: bytes
+) -> None:
+    """Deliver ``data`` into participant ``index``'s own slot."""
+    obj = _remote(
+        ctx, int(transfer.payload["remote_object_id"]), transfer.nodes[index]
+    )
+    _store(ctx, obj, transfer.slot(index), data)
+
+
+def _read_local(
+    ctx: EngineContext, transfer: "_Transfer", offset: int, node: int
+) -> bytes:
+    obj = _object(ctx, int(transfer.payload["local_object_id"]), "local", node)
+    return _fetch(ctx, obj, offset, transfer.extent)
+
+
+def _write_local_everywhere(
+    ctx: EngineContext, transfer: "_Transfer", offset: int, data: bytes
+) -> None:
+    """Land ``data`` in the local buffer of every node the collective spans.
+
+    The local endpoint is symmetric -- the same object at the same offset on
+    every node -- so a result that every participant must hold is written into
+    every participant's own arena.  On a single-node device that is the one
+    write it has always been.
+    """
+    for node in transfer.endpoints():
+        obj = _object(ctx, int(transfer.payload["local_object_id"]), "local", node)
+        _store(ctx, obj, offset, data)
 
 
 def _account_memory(ctx: EngineContext, obj: MemoryObject, nbytes: int, write: bool) -> None:
@@ -574,9 +639,38 @@ def _reduce(
 # Shared preamble
 # ---------------------------------------------------------------------------
 class _Transfer:
-    """One decoded LINK transfer: descriptor, topology and participant set."""
+    """One decoded LINK transfer: descriptor, topology and participant set.
 
-    __slots__ = ("payload", "topology", "members", "extent", "count")
+    Where a participant's slot *lives* is the one thing that changes when the
+    device has more than one node.  The participant array has one slot per
+    participant either way; the question is whether those slots are laid out
+    consecutively in one memory or held one per memory.
+
+    * On a **single-node** device -- a chip, and a wafer, which is presented to
+      the host as one logical device and declares one node -- there is one
+      arena, so the whole array is materialised in it and participant ``k``
+      owns ``[remote_offset + k*byte_extent, +byte_extent)``.  That is also the
+      case for every ``RETICLE``- and ``TILE``-scoped collective, because a
+      wafer's reticles and tiles share the one node's memory.
+    * On an **N-node cluster** each node has its own arena, so the array is
+      distributed: participant ``k`` is a node, and its slot is that same
+      offset ``remote_offset + k*byte_extent`` *in node k's own arena*.  Each
+      node holds the whole participant array and arrives with its own slot
+      filled; the collective is what fills in the rest.
+
+    One rule, and the single-node case of it is the behaviour that was already
+    frozen, byte for byte.
+    """
+
+    __slots__ = (
+        "payload",
+        "topology",
+        "members",
+        "extent",
+        "count",
+        "nodes",
+        "distributed",
+    )
 
     def __init__(self, ctx: EngineContext, descriptor: Descriptor, *, collective: bool):
         self.payload = _communication(descriptor)
@@ -594,13 +688,33 @@ class _Transfer:
                 f"a collective over {self.count} participant(s) is degenerate; a "
                 "one-endpoint transfer is LINK.SEND",
             )
+            scope = int(self.payload["participant_scope"])
+            self.distributed = (
+                ctx.node_count > 1 and scope == int(ParticipantScope.NODE)
+            )
+            # Under NODE scope a member *is* a node id, so the participant set
+            # is the node set of this route group.  Otherwise every participant
+            # lives on the one node this program is running as.
+            self.nodes = (
+                tuple(int(m) for m in self.members)
+                if self.distributed
+                else (0,) * self.count
+            )
         else:
             self.topology = {}
             self.members = ()
             self.count = 0
+            self.nodes = ()
+            self.distributed = False
 
     def slot(self, index: int) -> int:
         return int(self.payload["remote_offset"]) + index * self.extent
+
+    def endpoints(self) -> tuple[int, ...]:
+        """The nodes that hold a copy of this collective's local buffer."""
+        if not self.distributed:
+            return (0,)
+        return tuple(sorted(set(self.nodes)))
 
 
 # ---------------------------------------------------------------------------
@@ -680,12 +794,12 @@ def multicast(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     """
     transfer = _Transfer(ctx, descriptor, collective=True)
     payload = transfer.payload
-    local = _object(ctx, int(payload["local_object_id"]), "local")
-    remote = _remote(ctx, int(payload["remote_object_id"]))
-    _member_index(transfer.members, int(payload["source_node"]), "source")
-    data = _fetch(ctx, local, int(payload["local_offset"]), transfer.extent)
+    root = _member_index(transfer.members, int(payload["source_node"]), "source")
+    data = _read_local(
+        ctx, transfer, int(payload["local_offset"]), transfer.nodes[root]
+    )
     for index in range(transfer.count):
-        _store(ctx, remote, transfer.slot(index), data)
+        _write_slot(ctx, transfer, index, data)
     messages, moved = collective_traffic(
         int(CollectiveOp.BROADCAST), transfer.count, transfer.extent
     )
@@ -703,12 +817,15 @@ def gather(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     """
     transfer = _Transfer(ctx, descriptor, collective=True)
     payload = transfer.payload
-    local = _object(ctx, int(payload["local_object_id"]), "local")
-    remote = _remote(ctx, int(payload["remote_object_id"]))
-    _member_index(transfer.members, int(payload["destination_node"]), "destination")
+    root = _member_index(
+        transfer.members, int(payload["destination_node"]), "destination"
+    )
+    local = _object(
+        ctx, int(payload["local_object_id"]), "local", transfer.nodes[root]
+    )
     base = int(payload["local_offset"])
     for index in range(transfer.count):
-        data = _fetch(ctx, remote, transfer.slot(index), transfer.extent)
+        data = _read_slot(ctx, transfer, index)
         _store(ctx, local, base + index * transfer.extent, data)
     messages, moved = collective_traffic(
         int(CollectiveOp.CONCAT), transfer.count, transfer.extent
@@ -726,13 +843,14 @@ def scatter(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     """
     transfer = _Transfer(ctx, descriptor, collective=True)
     payload = transfer.payload
-    local = _object(ctx, int(payload["local_object_id"]), "local")
-    remote = _remote(ctx, int(payload["remote_object_id"]))
-    _member_index(transfer.members, int(payload["source_node"]), "source")
+    root = _member_index(transfer.members, int(payload["source_node"]), "source")
+    local = _object(
+        ctx, int(payload["local_object_id"]), "local", transfer.nodes[root]
+    )
     base = int(payload["local_offset"])
     for index in range(transfer.count):
         data = _fetch(ctx, local, base + index * transfer.extent, transfer.extent)
-        _store(ctx, remote, transfer.slot(index), data)
+        _write_slot(ctx, transfer, index, data)
     messages, moved = collective_traffic(
         int(CollectiveOp.CONCAT), transfer.count, transfer.extent
     )
@@ -773,8 +891,6 @@ def collective(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         "LINK.SEND, LINK.RECEIVE or LINK.REMOTE_DMA",
     )
     collective_op = CollectiveOp(op)
-    local = _object(ctx, int(payload["local_object_id"]), "local")
-    remote = _remote(ctx, int(payload["remote_object_id"]))
     base = int(payload["local_offset"])
     extent = transfer.extent
     count = transfer.count
@@ -782,20 +898,24 @@ def collective(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     if op in _MOVEMENT_COLLECTIVES:
         if collective_op is CollectiveOp.BROADCAST:
             root = _member_index(transfer.members, int(payload["source_node"]), "source")
-            data = _fetch(ctx, remote, transfer.slot(root), extent)
+            data = _read_slot(ctx, transfer, root)
             for index in range(count):
                 if index != root:
-                    _store(ctx, remote, transfer.slot(index), data)
-            _store(ctx, local, base, data)
+                    _write_slot(ctx, transfer, index, data)
+            _write_local_everywhere(ctx, transfer, base, data)
         else:
-            for index in range(count):
-                data = _fetch(ctx, remote, transfer.slot(index), extent)
-                _store(ctx, local, base + index * extent, data)
+            # Read every contribution before writing any of it.  The
+            # participant array and the local buffer are allowed to be the same
+            # object -- a symmetric receive buffer that a node arrives at with
+            # its own slot already filled is the ordinary way to post an
+            # all-gather -- and a read-after-write over an aliased buffer would
+            # make the result depend on traversal order.
+            slots = [_read_slot(ctx, transfer, index) for index in range(count)]
+            for index, data in enumerate(slots):
+                _write_local_everywhere(ctx, transfer, base + index * extent, data)
     else:
         profile, itemsize = _reduction_profile(ctx, payload, extent)
-        slots = [
-            _fetch(ctx, remote, transfer.slot(index), extent) for index in range(count)
-        ]
+        slots = [_read_slot(ctx, transfer, index) for index in range(count)]
         reduced = _reduce(slots, op, profile)
         if collective_op is CollectiveOp.REDUCE_SCATTER:
             _require(
@@ -805,15 +925,37 @@ def collective(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
             )
             shard = extent // count
             for index in range(count):
-                _store(ctx, remote, transfer.slot(index), reduced[index * shard : (index + 1) * shard])
-            mine = _member_index(
-                transfer.members, int(payload["destination_node"]), "destination"
-            )
-            _store(ctx, local, base, reduced[mine * shard : (mine + 1) * shard])
+                _write_slot(
+                    ctx,
+                    transfer,
+                    index,
+                    reduced[index * shard : (index + 1) * shard],
+                )
+            if transfer.distributed:
+                # Each node keeps the shard of the participant it *is*.
+                for index in range(count):
+                    local = _object(
+                        ctx,
+                        int(payload["local_object_id"]),
+                        "local",
+                        transfer.nodes[index],
+                    )
+                    _store(
+                        ctx,
+                        local,
+                        base,
+                        reduced[index * shard : (index + 1) * shard],
+                    )
+            else:
+                mine = _member_index(
+                    transfer.members, int(payload["destination_node"]), "destination"
+                )
+                local = _object(ctx, int(payload["local_object_id"]), "local")
+                _store(ctx, local, base, reduced[mine * shard : (mine + 1) * shard])
         else:
             for index in range(count):
-                _store(ctx, remote, transfer.slot(index), reduced)
-            _store(ctx, local, base, reduced)
+                _write_slot(ctx, transfer, index, reduced)
+            _write_local_everywhere(ctx, transfer, base, reduced)
 
     messages, moved = collective_traffic(op, count, extent)
     _account_link(ctx, messages, moved)

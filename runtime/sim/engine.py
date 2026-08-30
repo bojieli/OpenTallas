@@ -92,6 +92,37 @@ class EngineContext:
     session: Any = None
     device: Any = None
     notes: dict[str, Any] = dc_field(default_factory=dict)
+    node_memories: tuple[DeviceMemory, ...] = ()
+    """Every logical node's arena, in ascending node order.
+
+    A single-node deployment leaves this empty and :attr:`memory` is the whole
+    device.  A cluster deployment fills it, and :attr:`memory` is whichever
+    node the microsequencer is currently issuing for.  Only the LINK engine
+    reads it: every other engine sees exactly one node's memory, which is what
+    makes an inter-node transfer expressible only as a LINK instruction.
+    """
+
+    # -- node access ------------------------------------------------------
+    @property
+    def node_count(self) -> int:
+        return len(self.node_memories) or 1
+
+    def node_memory(self, node: int) -> DeviceMemory:
+        """The arena of logical node ``node``.
+
+        With one node -- or with participants that are not nodes, which is what
+        a wafer's reticles and tiles are -- there is one arena and every
+        participant lives in it.
+        """
+        if not self.node_memories:
+            return self.memory
+        if not 0 <= node < len(self.node_memories):
+            raise EngineError(
+                f"node {node} is outside the {len(self.node_memories)} admitted "
+                "nodes",
+                trap_class=11,
+            )
+        return self.node_memories[node]
 
     # -- descriptor access ----------------------------------------------
     def operator(self, descriptor_id: int) -> Descriptor:

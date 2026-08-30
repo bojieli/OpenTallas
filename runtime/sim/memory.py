@@ -320,16 +320,35 @@ def _map_range(
 
 
 class DeviceMemory:
-    """All memory objects of one activated deployment."""
+    """All memory objects of one activated deployment, on one node.
 
-    def __init__(self, deployment: Deployment, *, root: Path | None = None) -> None:
+    A cluster deployment has one of these per logical node.  ``share_from``
+    builds a sibling arena against an existing one: an object with no write
+    permission is *shared* by reference, because it is immutable and every node
+    addresses its own shard of it through the view's ``NODE_ID`` term, so a
+    private copy would be thirty-two identical mappings of the same checkpoint
+    bytes.  Everything writable -- the activation arena, the state images, the
+    host windows -- is built fresh, which is what makes a node's activations
+    node-local and a collective the only way one node can see another's.
+    """
+
+    def __init__(
+        self,
+        deployment: Deployment,
+        *,
+        root: Path | None = None,
+        share_from: "DeviceMemory | None" = None,
+    ) -> None:
         self.deployment = deployment
         self.root = root if root is not None else deployment.root
         self.objects: dict[int, MemoryObject] = {}
         # One whole-file mapping shared by every object that reads from it.
         # Held on the instance so the mappings outlive the loop below and die
-        # with this deployment rather than with the process.
-        self._mappings: dict[Path, np.ndarray] = {}
+        # with this deployment rather than with the process.  A sibling node
+        # shares the cache: the checkpoint is mapped once for the cluster.
+        self._mappings: dict[Path, np.ndarray] = (
+            share_from._mappings if share_from is not None else {}
+        )
         for descriptor in deployment.table.descriptors():
             if descriptor.descriptor_type != ExtendedDescriptorType.MEMORY_OBJECT:
                 continue
@@ -337,6 +356,17 @@ class DeviceMemory:
             source = deployment.objects.get(oid)
             if source is None:
                 raise MemoryError_(f"object {oid} has no declared source")
+            if share_from is not None:
+                existing = share_from.objects[oid]
+                if not existing.writable:
+                    self.objects[oid] = existing
+                    continue
+                if existing._segments:
+                    raise MemoryError_(
+                        f"object {oid} is writable and file-backed; a per-node "
+                        "private copy of a mapped object is not expressible "
+                        "without relaying out the checkpoint"
+                    )
             self.objects[oid] = MemoryObject(
                 oid, descriptor, source, self.root, mappings=self._mappings
             )

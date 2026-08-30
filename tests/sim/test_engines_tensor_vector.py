@@ -992,6 +992,194 @@ def test_rope_applies_one_coefficient_row_per_input_row(harness: Harness) -> Non
     np.testing.assert_array_equal(harness.result(output), expected)
 
 
+def oracle_partial_rope(
+    values: np.ndarray, coefficients: np.ndarray, rotary: int, *, inverse: bool
+) -> np.ndarray:
+    """The suffix rotation written out directly, in Python, per element.
+
+    Deliberately not the engine's formulation: this walks pairs one at a time
+    with ``fractions``-free binary32 NumPy scalars, so it agrees with the engine
+    only if both agree about which channels rotate, which channel each is paired
+    with, and where the arithmetic rounds.
+    """
+    rows, width = values.shape
+    prefix = width - rotary
+    output = np.array(values, dtype=np.uint16, copy=True)
+    for row in range(rows):
+        coefficient_row = coefficients[row if coefficients.shape[0] > 1 else 0]
+        for pair in range(rotary // 2):
+            real = widen_bf16(values[row, prefix + 2 * pair : prefix + 2 * pair + 1])[0]
+            imaginary = widen_bf16(
+                values[row, prefix + 2 * pair + 1 : prefix + 2 * pair + 2]
+            )[0]
+            cosine = np.float32(coefficient_row[2 * pair])
+            sine = np.float32(coefficient_row[rotary + 2 * pair])
+            if inverse:
+                sine = np.float32(-sine)
+            real_output = np.float32(
+                np.float32(real * cosine) - np.float32(imaginary * sine)
+            )
+            imaginary_output = np.float32(
+                np.float32(real * sine) + np.float32(imaginary * cosine)
+            )
+            codes, _ = narrow_bf16_rne(
+                np.array([real_output, imaginary_output], dtype=np.float32)
+            )
+            output[row, prefix + 2 * pair] = codes[0]
+            output[row, prefix + 2 * pair + 1] = codes[1]
+    return output
+
+
+def partial_rope_operator(
+    harness: Harness,
+    values: np.ndarray,
+    coefficients: np.ndarray,
+    *,
+    rotary: int,
+    contract: str,
+) -> tuple[int, int]:
+    numeric = harness.numeric(
+        contract=contract,
+        input_dtype=DType.BF16,
+        second_input_dtype=DType.FP32,
+        output_dtype=DType.BF16,
+    )
+    output = harness.output_view(values.shape, DType.BF16)
+    operator = harness.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.ROPE,
+        inputs=[
+            harness.const_view(values, DType.BF16),
+            harness.const_view(coefficients, DType.FP32),
+        ],
+        outputs=[output],
+        aux=[rotary],
+        numeric_profile_id=numeric,
+    )
+    return output, operator
+
+
+@pytest.mark.parametrize("contract", ("rope_apply_bf16_v1", "rope_inverse_bf16_v1"))
+def test_rope_rotates_only_the_suffix_aux0_declares(
+    harness: Harness, contract: str
+) -> None:
+    """``aux_id_0`` is the rotary width the frozen operand row already names.
+
+    The untouched prefix is the point: DeepSeek rotates 64 of a head's 512
+    channels, and the channels it does not rotate are the *partners* the Qwen
+    kernel would have paired them with, so a padded full-width table cannot
+    stand in for a narrow one.
+    """
+    rng = np.random.default_rng(53)
+    rows, width, rotary = 3, 16, 8
+    values = random_bf16(rng, (rows, width))
+    coefficients = rng.standard_normal((rows, 2 * rotary)).astype(np.float32)
+    output, operator = partial_rope_operator(
+        harness, values, coefficients, rotary=rotary, contract=contract
+    )
+    harness.run(Major.VECTOR, Vector.ROPE, operator)
+
+    produced = harness.result(output)
+    np.testing.assert_array_equal(
+        produced,
+        oracle_partial_rope(
+            values, coefficients, rotary, inverse=contract.endswith("inverse_bf16_v1")
+        ),
+    )
+    np.testing.assert_array_equal(
+        produced[:, : width - rotary], values[:, : width - rotary]
+    )
+    assert harness.counters["vector.rope_pairs"] == rows * (rotary // 2)
+    # One BF16 conversion per rotated value; the prefix crosses no boundary.
+    assert harness.counters["vector.conversions"] == rows * rotary
+
+
+def test_rope_broadcasts_one_partial_coefficient_row_over_every_row(
+    harness: Harness,
+) -> None:
+    rng = np.random.default_rng(59)
+    rows, width, rotary = 4, 16, 8
+    values = random_bf16(rng, (rows, width))
+    coefficients = rng.standard_normal((2 * rotary,)).astype(np.float32)
+    output, operator = partial_rope_operator(
+        harness,
+        values,
+        coefficients,
+        rotary=rotary,
+        contract="rope_apply_bf16_v1",
+    )
+    harness.run(Major.VECTOR, Vector.ROPE, operator)
+    np.testing.assert_array_equal(
+        harness.result(output),
+        oracle_partial_rope(
+            values, coefficients.reshape(1, -1), rotary, inverse=False
+        ),
+    )
+
+
+def test_rope_ignores_aux0_under_the_whole_axis_contract(harness: Harness) -> None:
+    """``qwen3_rope_fp32_bf16_v1`` rotates the whole axis and reads no width.
+
+    Not a convenience: the ROM backend writes the head dimension into
+    ``aux_id_0`` and the HBM/SRAM backend writes the coefficient row's width,
+    which is twice it, and both deployments are correct because the whole-axis
+    contract's rotation does not depend on the slot.  An engine that read it
+    here would refuse one of them.  Where the rotation *is* partial the slot is
+    read and checked, which is what the other tests in this section cover.
+    """
+    rng = np.random.default_rng(61)
+    width = 8
+    values = random_bf16(rng, (2, width))
+    coefficients = random_bf16(rng, (2 * width,), scale=0.5)
+    numeric = harness.numeric(
+        contract="qwen3_rope_fp32_bf16_v1",
+        input_dtype=DType.BF16,
+        output_dtype=DType.BF16,
+    )
+    output = harness.output_view((2, width), DType.BF16)
+    operator = harness.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.ROPE,
+        inputs=[
+            harness.const_view(values, DType.BF16),
+            harness.const_view(coefficients, DType.BF16),
+        ],
+        outputs=[output],
+        aux=[2 * width],
+        numeric_profile_id=numeric,
+    )
+    harness.run(Major.VECTOR, Vector.ROPE, operator)
+    np.testing.assert_array_equal(
+        harness.result(output), oracle_rope(values, coefficients)
+    )
+
+
+def test_rope_refuses_a_numeric_profile_naming_no_rotary_contract(
+    harness: Harness,
+) -> None:
+    rng = np.random.default_rng(67)
+    width = 8
+    values = random_bf16(rng, (2, width))
+    coefficients = random_bf16(rng, (2 * width,), scale=0.5)
+    numeric = harness.numeric(
+        contract="some_other_rope_v1",
+        input_dtype=DType.BF16,
+        output_dtype=DType.BF16,
+    )
+    operator = harness.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.ROPE,
+        inputs=[
+            harness.const_view(values, DType.BF16),
+            harness.const_view(coefficients, DType.BF16),
+        ],
+        outputs=[harness.output_view((2, width), DType.BF16)],
+        numeric_profile_id=numeric,
+    )
+    with pytest.raises(EngineError, match="names no rotary contract"):
+        harness.run(Major.VECTOR, Vector.ROPE, operator)
+
+
 # ---------------------------------------------------------------------------
 # VECTOR.ADD and VECTOR.SILU_MUL
 # ---------------------------------------------------------------------------

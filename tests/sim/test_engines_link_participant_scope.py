@@ -287,8 +287,17 @@ def test_a_node_scope_still_counts_nodes():
     result = run(device)
     assert result.status == CompletionStatus.SUCCESS, result.message
     assert result.counters["link.messages_sent"] == 3
+    # A NODE-scoped participant is a node, so with four nodes its slot lives in
+    # its own arena rather than in a four-slot array on node zero.
     assert np.array_equal(
-        read_object(device, remote, np.uint32, len(payload), offset=3 * SLOT_BYTES),
+        read_object(
+            device,
+            remote,
+            np.uint32,
+            len(payload),
+            offset=3 * SLOT_BYTES,
+            node=3,
+        ),
         payload,
     )
 

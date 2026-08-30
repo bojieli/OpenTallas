@@ -1123,6 +1123,20 @@ def position_inputs(graph: KernelGraph) -> tuple[str, ...]:
     could fill.  The substitution is recorded in the plan's warnings and in the
     deployment notes, because silently overriding a declared input is exactly
     how an exporter defect would hide.
+
+    **A one-element index input is the same tensor with the span factored out.**
+    Where one exporter declares ``[span_tokens]`` holding ``POSITION_START + i``,
+    another declares ``[1]`` holding ``POSITION_START`` and lets the consumer
+    add the row -- DeepSeek-V4-Flash's ``input.position_offset`` is the second
+    form, read by its rotary gather, its KV append, its window index and its
+    final-row select, which is precisely the set of positional selectors.  It is
+    the range's base, so it is derived the same way: element zero of the arange,
+    offset by ``POSITION_START``.  Leaving it declared meant a host window the
+    driver has no permission to fill -- the position is a *request symbol*, and
+    a host that wrote it would be supplying an operand -- so every KV append in
+    the program addressed row zero, and the ``i32`` the exporter chose for it is
+    not the ``U32`` an index view is.  Both defects are the same defect: the
+    tensor was never host data.
     """
     consumers: dict[str, list[str]] = {}
     for kernel in graph.kernels:
@@ -1132,7 +1146,10 @@ def position_inputs(graph: KernelGraph) -> tuple[str, ...]:
     for tensor in graph.tensors:
         if tensor.role != "input" or tensor.dtype not in {"u32", "i32"}:
             continue
-        if len(tensor.shape) != 1 or not isinstance(tensor.shape[0], Symbolic):
+        if len(tensor.shape) != 1:
+            continue
+        leading = tensor.shape[0]
+        if not isinstance(leading, Symbolic) and int(leading) != 1:
             continue
         kinds = consumers.get(tensor.tensor_id, [])
         if not kinds or any(k == "EMBEDDING_LOOKUP" for k in kinds):

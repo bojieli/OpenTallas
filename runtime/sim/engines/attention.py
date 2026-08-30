@@ -23,14 +23,24 @@ Every masked-but-computed lane is still computed, so the retired-work counters
 are the same totals the per-token loop reported.
 
 ``SPARSE`` executes the DeepSeek-V4-Flash contract
-``opentallas.deepseek_v4_sparse_attention_numeric.v1``, and drives
-:func:`runtime.reference.sparse_attention.sparse_attention_bf16` directly:
-block-64 gather with an online softmax, the score scale ``0x3d3504f3``, a
-NUM-6.1 balanced 64-lane score sum, exactly one binary32-to-BF16 probability
-conversion before the AV product, and the learned per-head binary32 attention
-sink added to the denominator *after* every block.  Re-deriving any of that
-inside the engine would create a second numeric implementation of one frozen
-contract, which is exactly what ADR-003 forbids.
+``opentallas.deepseek_v4_sparse_attention_numeric.v1``: block-64 gather with an
+online softmax, the score scale ``0x3d3504f3``, a NUM-6.1 balanced 64-lane score
+sum, exactly one binary32-to-BF16 probability conversion before the AV product,
+and the learned per-head binary32 attention sink added to the denominator
+*after* every block.  None of that is re-derived here either.  The engine is a
+shape-generic driver over :mod:`runtime.tensor_accelerator.sparse_attention`,
+the data-bearing kernel for that contract, exactly as it is over
+:mod:`runtime.tensor_accelerator.attention` for the dense one.
+
+That kernel schedules the frozen operations differently -- the QK reduction runs
+K-major and the AV accumulation runs lane-major, over a tile of query rows -- and
+schedules nothing else.  Where it cannot prove its schedule equivalent, which is
+an underflowing BF16 product landing in a near-zero accumulator, it refers those
+whole query rows back to
+:func:`runtime.reference.sparse_attention.sparse_attention_bf16`; query rows are
+independent transactions, so a referred row is exactly the row the reference
+would have produced.  A poisoned transaction is referred the same way and raises
+with the reference's own message.
 
 Operand and attribute convention (ABI 3.0 ``OPERATOR`` payload)
 --------------------------------------------------------------
@@ -125,7 +135,6 @@ from runtime.abi3.descriptors import Descriptor
 from runtime.reference.sparse_attention import (
     SPARSE_ATTENTION_BLOCK_SIZE,
     SparseAttentionReferenceError,
-    sparse_attention_bf16,
 )
 from runtime.sim.engine import EngineContext, EngineError, NumericProfile, register
 from runtime.sim.memory import ResolvedView
@@ -138,6 +147,7 @@ from runtime.tensor_accelerator.attention import _encode as _round_bf16
 from runtime.tensor_accelerator.attention import _softmax_bf16 as _softmax_bf16
 from runtime.tensor_accelerator.attention import _softmax_bf16_rows
 from runtime.tensor_accelerator.bf16 import BF16KernelError, dense_bf16_linear_bf16
+from runtime.tensor_accelerator.sparse_attention import sparse_attention_bf16_codes
 
 MASK_CAUSAL = 0
 MASK_FULL = 1
@@ -567,11 +577,11 @@ def _execute_sparse(ctx: EngineContext, descriptor: Descriptor) -> None:
     sinks = np.ascontiguousarray(ctx.read(sink_view)).view(np.uint32)
 
     try:
-        result = sparse_attention_bf16(
-            [queries.tolist()],
-            [fused_kv.tolist()],
-            [int(code) for code in sinks],
-            [indices],
+        result = sparse_attention_bf16_codes(
+            queries,
+            fused_kv,
+            sinks,
+            indices,
             scale_binary32=int(profile.scale_bits),
         )
     except SparseAttentionReferenceError as exc:
@@ -579,8 +589,7 @@ def _execute_sparse(ctx: EngineContext, descriptor: Descriptor) -> None:
             f"sparse attention numeric contract violated: {exc}", trap_class=6
         ) from exc
 
-    outputs = np.asarray(result.values[0], dtype=np.uint16)
-    ctx.write(out_view, outputs.reshape(out_view.dims))
+    ctx.write(out_view, result.values.reshape(out_view.dims))
 
     counters = result.counters
     ctx.counters.add("attention.heads", span * query_heads)
@@ -603,7 +612,7 @@ def _sparse_index_rows(
     view: ResolvedView,
     span: int,
     context: int,
-) -> tuple[list[list[int]], int]:
+) -> tuple[np.ndarray, int]:
     """Decode a ``[span, slots]`` U32 index array into signed reference rows.
 
     Amendment A6 fixes the array as ascending and tail-padded with
@@ -613,7 +622,7 @@ def _sparse_index_rows(
     and the number of rows actually gathered.
     """
     raw = np.asarray(ctx.read(view), dtype=np.uint64).reshape(span, view.dims[1])
-    rows: list[list[int]] = []
+    rows = np.full((span, int(view.dims[1])), SPARSE_PAD, dtype=np.int64)
     gathered = 0
     for token in range(span):
         row = raw[token]
@@ -646,10 +655,7 @@ def _sparse_index_rows(
             trap_class=6,
         )
         gathered += count
-        rows.append(
-            [int(value) for value in executed]
-            + [SPARSE_PAD] * (int(view.dims[1]) - count)
-        )
+        rows[token, :count] = executed.astype(np.int64)
     return rows, gathered
 
 

@@ -16,6 +16,8 @@ on what a message is.
 
 from __future__ import annotations
 
+from typing import Sequence
+
 import numpy as np
 import pytest
 
@@ -116,6 +118,7 @@ class Build:
             sram_bytes_per_node=1 << 24,
         )
         self._initial: dict[int, bytes] = {}
+        self._staged: list[tuple[int, int, int, bytes]] = []
 
     def object_of(self, values: np.ndarray, *, permissions: int = LOCAL) -> int:
         data = np.ascontiguousarray(values).tobytes()
@@ -131,6 +134,24 @@ class Build:
             permissions=permissions,
         )
 
+    def participants(
+        self, slots: np.ndarray, members: Sequence[int] | None = None
+    ) -> int:
+        """A participant array whose slot ``k`` is staged in node ``k``'s arena.
+
+        This is what makes these cases prove something.  The engine must reach
+        the contribution where the contributing node actually holds it; an
+        implementation that read every slot out of one arena would see slot
+        zero and seven zeroed slots, and every assertion below would fail.
+        """
+        members = list(range(len(slots))) if members is None else list(members)
+        oid = self.scratch(len(slots) * SLOT_BYTES, permissions=REMOTE)
+        for index, node in enumerate(members):
+            self._staged.append(
+                (node, oid, index * SLOT_BYTES, np.ascontiguousarray(slots[index]).tobytes())
+            )
+        return oid
+
     def finish(self) -> Device:
         self.builder.emit(Major.CONTROL, Control.COMPLETE)
         self.builder.entrypoint(
@@ -138,7 +159,11 @@ class Build:
         )
         device = Device(self.builder.finish(), self.capability)
         for oid, data in self._initial.items():
-            device.memory[oid].write(0, data)
+            # A local endpoint is symmetric: the same object at the same offset
+            # on every node, so initial content is staged on every node.
+            device.host_write(oid, 0, data)
+        for node, oid, offset, data in self._staged:
+            device.node_memories[node][oid].write(offset, data)
         return device
 
 
@@ -146,11 +171,23 @@ def run(device: Device):
     return device.run_transaction(device.create_session(), entrypoint_id=0, symbols={})
 
 
-def read_object(device: Device, oid: int, dtype, count: int, offset: int = 0):
+def read_object(
+    device: Device, oid: int, dtype, count: int, offset: int = 0, node: int = 0
+):
     itemsize = np.dtype(dtype).itemsize
     return np.frombuffer(
-        device.memory[oid].read(offset, count * itemsize), dtype=dtype
+        device.node_memories[node][oid].read(offset, count * itemsize), dtype=dtype
     ).copy()
+
+
+def read_slots(device: Device, oid: int, count: int, members: Sequence[int]):
+    """Slot ``k`` of the participant array, out of the arena that holds it."""
+    return np.stack(
+        [
+            read_object(device, oid, np.float32, count, offset=index * SLOT_BYTES, node=node)
+            for index, node in enumerate(members)
+        ]
+    )
 
 
 def fp32_numeric(build: Build, order: ReductionOrder) -> int:
@@ -360,13 +397,14 @@ def build_collective(
     participant_count: int | None = None,
     group_id: int = NO_ID,
     route_groups: int = 0,
+    members: Sequence[int] | None = None,
 ):
     build = Build(nodes=nodes, route_groups=route_groups)
     remote_bytes = nodes * SLOT_BYTES if slots is None else slots.nbytes
     if slots is None:
         remote = build.scratch(remote_bytes, permissions=REMOTE)
     else:
-        remote = build.object_of(slots, permissions=REMOTE)
+        remote = build.participants(slots, members)
     if local is None:
         local_object = build.scratch(max(local_slots * SLOT_BYTES, 4))
     else:
@@ -402,7 +440,9 @@ def test_multicast_reaches_every_participant_slot():
     device = build.finish()
     result = run(device)
     assert result.status == CompletionStatus.SUCCESS, result.message
-    arrived = read_object(device, remote, np.float32, NODES * SLOT).reshape(NODES, SLOT)
+    # Every participant's slot carries the payload, and every participant's
+    # slot is in that participant's own arena.
+    arrived = read_slots(device, remote, SLOT, range(NODES))
     assert np.array_equal(arrived, np.broadcast_to(source, (NODES, SLOT)))
     messages, moved = collective_traffic(
         int(CollectiveOp.BROADCAST), NODES, SLOT_BYTES
@@ -424,10 +464,14 @@ def test_gather_and_scatter_are_mirror_images():
     device = build.finish()
     result = run(device)
     assert result.status == CompletionStatus.SUCCESS, result.message
+    # The root holds the concatenation; a node that is not the root does not.
     assert np.array_equal(
-        read_object(device, local, np.float32, NODES * SLOT).reshape(NODES, SLOT),
+        read_object(device, local, np.float32, NODES * SLOT, node=3).reshape(
+            NODES, SLOT
+        ),
         slots,
     )
+    assert not np.any(read_object(device, local, np.float32, NODES * SLOT, node=0))
     assert result.counters["link.messages_sent"] == NODES - 1
 
     build, _, remote = build_collective(
@@ -441,10 +485,7 @@ def test_gather_and_scatter_are_mirror_images():
     device = build.finish()
     result = run(device)
     assert result.status == CompletionStatus.SUCCESS, result.message
-    assert np.array_equal(
-        read_object(device, remote, np.float32, NODES * SLOT).reshape(NODES, SLOT),
-        slots,
-    )
+    assert np.array_equal(read_slots(device, remote, SLOT, range(NODES)), slots)
     assert result.counters["link.messages_sent"] == NODES - 1
 
 
@@ -482,7 +523,10 @@ def test_a_participant_count_that_contradicts_the_topology_is_refused():
 
 
 def test_a_route_group_selects_a_contiguous_participant_set():
-    slots = (np.arange(NODES * SLOT, dtype=np.float32) + 1.0).reshape(NODES, SLOT)
+    group = list(range(NODES // 2, NODES))
+    slots = (np.arange(len(group) * SLOT, dtype=np.float32) + 1.0).reshape(
+        len(group), SLOT
+    )
     build, local, _ = build_collective(
         Link.GATHER,
         op=CollectiveOp.CONCAT,
@@ -493,14 +537,15 @@ def test_a_route_group_selects_a_contiguous_participant_set():
         participant_count=NODES // 2,
         group_id=1,
         route_groups=2,
+        members=group,
     )
     device = build.finish()
     result = run(device)
     assert result.status == CompletionStatus.SUCCESS, result.message
     # Group 1 of two over eight nodes is nodes 4..7, and its slots are the
     # first four slots of the participant array, in ascending participant order.
-    gathered = read_object(device, local, np.float32, (NODES // 2) * SLOT)
-    assert np.array_equal(gathered.reshape(NODES // 2, SLOT), slots[: NODES // 2])
+    gathered = read_object(device, local, np.float32, (NODES // 2) * SLOT, node=5)
+    assert np.array_equal(gathered.reshape(NODES // 2, SLOT), slots)
     assert result.counters["link.messages_sent"] == NODES // 2 - 1
 
 
@@ -552,12 +597,14 @@ def test_collective_sum_is_the_declared_ascending_reduction():
     # The case is not vacuous: the reversed order is a different binary32 value.
     assert not np.array_equal(expected, sequential_sum(slots[::-1]))
 
-    assert np.array_equal(read_object(device, local, np.float32, SLOT), expected)
-    # An all-reduce leaves the result in every participant slot.
-    everywhere = read_object(device, remote, np.float32, NODES * SLOT)
-    assert np.array_equal(
-        everywhere.reshape(NODES, SLOT), np.broadcast_to(expected, (NODES, SLOT))
-    )
+    # An all-reduce leaves the result in every node's local buffer and in
+    # every participant's own slot.
+    for node in range(NODES):
+        assert np.array_equal(
+            read_object(device, local, np.float32, SLOT, node=node), expected
+        )
+    everywhere = read_slots(device, remote, SLOT, range(NODES))
+    assert np.array_equal(everywhere, np.broadcast_to(expected, (NODES, SLOT)))
     assert result.counters["link.collectives"] == 1
 
 
@@ -588,7 +635,7 @@ def test_collective_sum_does_not_depend_on_the_order_the_slots_were_filled():
         build.builder.emit(Major.LINK, Link.COLLECTIVE, descriptor_id=comm)
         device = build.finish()
         for slot in order:
-            device.memory[remote].write(
+            device.node_memories[slot][remote].write(
                 slot * SLOT_BYTES, np.ascontiguousarray(slots[slot]).tobytes()
             )
         outcome = run(device)
@@ -654,10 +701,15 @@ def test_all_gather_concatenates_in_ascending_participant_order():
     device = build.finish()
     result = run(device)
     assert result.status == CompletionStatus.SUCCESS, result.message
-    assert np.array_equal(
-        read_object(device, local, np.float32, NODES * SLOT).reshape(NODES, SLOT),
-        slots,
-    )
+    # Every node ends holding every participant's contribution, and each one
+    # came out of a different arena.
+    for node in range(NODES):
+        assert np.array_equal(
+            read_object(device, local, np.float32, NODES * SLOT, node=node).reshape(
+                NODES, SLOT
+            ),
+            slots,
+        )
     assert result.counters["link.messages_sent"] == NODES * (NODES - 1)
 
 
@@ -674,9 +726,12 @@ def test_broadcast_copies_the_root_slot_everywhere():
     device = build.finish()
     result = run(device)
     assert result.status == CompletionStatus.SUCCESS, result.message
-    assert np.array_equal(read_object(device, local, np.float32, SLOT), slots[2])
+    for node in range(NODES):
+        assert np.array_equal(
+            read_object(device, local, np.float32, SLOT, node=node), slots[2]
+        )
     assert np.array_equal(
-        read_object(device, remote, np.float32, NODES * SLOT).reshape(NODES, SLOT),
+        read_slots(device, remote, SLOT, range(NODES)),
         np.broadcast_to(slots[2], (NODES, SLOT)),
     )
 
@@ -715,11 +770,15 @@ def test_reduce_scatter_over_two_nodes_shards_the_reduced_vector():
     assert result.status == CompletionStatus.SUCCESS, result.message
     reduced = sequential_sum(slots)
     shard = SLOT // 2
-    array = read_object(device, remote, np.float32, 2 * SLOT).reshape(2, SLOT)
+    array = read_slots(device, remote, SLOT, range(2))
     assert np.array_equal(array[0, :shard], reduced[:shard])
     assert np.array_equal(array[1, :shard], reduced[shard:])
+    # Each node keeps the shard of the participant it is.
     assert np.array_equal(
-        read_object(device, local, np.float32, shard), reduced[shard:]
+        read_object(device, local, np.float32, shard, node=0), reduced[:shard]
+    )
+    assert np.array_equal(
+        read_object(device, local, np.float32, shard, node=1), reduced[shard:]
     )
 
 

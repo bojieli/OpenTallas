@@ -221,8 +221,17 @@ class Device:
             self.report = require_admitted(deployment, capability)
         self.header, body = split_program(deployment.program)
         self.instructions = decode_body(body)
-        self.memory = DeviceMemory(deployment, root=root)
-        self.views = ViewResolver(deployment, self.memory)
+        self.node_count = self._declared_node_count()
+        self.node_memories: tuple[DeviceMemory, ...] = self._build_node_memories(root)
+        self.node_views: tuple[ViewResolver, ...] = tuple(
+            ViewResolver(deployment, memory) for memory in self.node_memories
+        )
+        #: Node zero's arena and resolver.  Every non-LINK engine issue rebinds
+        #: these to the node it is issuing for; they are node zero between
+        #: instructions so that a host read, a checkpoint or a trace sees a
+        #: definite node rather than whichever one ran last.
+        self.memory = self.node_memories[0]
+        self.views = self.node_views[0]
         self.counters = CounterSet()
         self.sessions: dict[int, Session] = {}
         self.trace_enabled = trace
@@ -242,6 +251,57 @@ class Device:
         self._device_cycle = 0
 
     # -- setup -----------------------------------------------------------
+    def _declared_node_count(self) -> int:
+        """How many logical nodes the admitted TOPOLOGY declares.
+
+        The node count is a property of the deployment, not of the host: a
+        32-node cluster program addresses thirty-two arenas whoever submits it,
+        and a single chip addresses one.  It is read from the descriptor rather
+        than from the capability so that the device executes the topology it
+        was admitted against.
+        """
+        ids = self.deployment.table.ids_of_type(ExtendedDescriptorType.TOPOLOGY)
+        if len(ids) != 1:
+            raise DeviceTrap(
+                f"the deployment declares {len(ids)} TOPOLOGY descriptors; a "
+                "logical accelerator has exactly one",
+                TrapClass.DESCRIPTOR_OR_ADDRESS,
+            )
+        count = int(self.deployment.table[ids[0]].payload["node_count"])
+        limit = int(self.capability.limits["max_nodes"])
+        if not 1 <= count <= limit:
+            raise DeviceTrap(
+                f"the admitted topology declares {count} nodes; the capability "
+                f"admits {limit}",
+                TrapClass.CAPABILITY_OR_RESOURCE,
+            )
+        return count
+
+    def _build_node_memories(self, root: Path | None) -> tuple[DeviceMemory, ...]:
+        """One arena per logical node.
+
+        ADR-003 section 3.3 makes the 32-node cluster a real topology and
+        section 8.8 makes the fabric a first-class engine, which together say
+        what memory has to look like: node-private state and no implicit
+        coherent global address space.  So each node gets its own arena, its own
+        activation buffers and its own state images, and the *only* way bytes
+        cross from one to another is a LINK instruction naming a COMMUNICATION
+        descriptor.  Immutable objects -- the mapped checkpoint above all -- are
+        shared by reference, because they are the same bytes on every node and
+        each node addresses its own shard of them through the ``NODE_ID`` term
+        of a tensor view.  A private copy would be thirty-two mappings of one
+        156 GB checkpoint and would prove nothing.
+        """
+        base = DeviceMemory(self.deployment, root=root)
+        if self.node_count == 1:
+            return (base,)
+        arenas = [base]
+        for _node in range(1, self.node_count):
+            arenas.append(
+                DeviceMemory(self.deployment, root=root, share_from=base)
+            )
+        return tuple(arenas)
+
     def _load_entrypoints(self) -> dict[int, dict[str, int]]:
         descriptor = self.deployment.table.get(
             self.header.entrypoint_table_descriptor,
@@ -300,18 +360,39 @@ class Device:
             loop = self.deployment.table[payload["selector_index"]]
             trip = self._loop_trip(loop, symbols)
             return loops.get(payload["selector_index"], -1) == trip - 1
-        if kind is PredicateKind.BOOLEAN_OBJECT:
-            obj = self.memory[payload["object_id"]]
-            raw = obj.read(payload["element_index"] * 4, 4)
-            return int.from_bytes(raw, "little") != 0
-        if kind is PredicateKind.EOS_MEMBER:
-            obj = self.memory[payload["object_id"]]
-            raw = obj.read(payload["element_index"] * 4, 4)
-            return int.from_bytes(raw, "little") != 0
+        if kind in (PredicateKind.BOOLEAN_OBJECT, PredicateKind.EOS_MEMBER):
+            return self._object_predicate(descriptor)
         raise DeviceTrap(
             f"predicate kind {kind.name} is not implemented",
             TrapClass.CAPABILITY_OR_RESOURCE,
         )
+
+    def _object_predicate(self, descriptor: Descriptor) -> bool:
+        """A predicate whose truth is a word in device memory.
+
+        Control flow is one program, not thirty-two, so a predicate has one
+        answer for the whole device.  Every node is asked and every node must
+        give the same answer: a data-dependent branch that came out differently
+        on two nodes would mean the nodes are no longer running the same
+        program, and continuing would produce a token from a computation that
+        never happened on thirty-one of them.
+        """
+        payload = descriptor.payload
+        offset = int(payload["element_index"]) * 4
+        answer: bool | None = None
+        for node, memory in enumerate(self.node_memories):
+            obj = memory[payload["object_id"]]
+            taken = int.from_bytes(obj.read(offset, 4), "little") != 0
+            if answer is None:
+                answer = taken
+            elif taken != answer:
+                raise DeviceTrap(
+                    f"predicate {descriptor.descriptor_id} reads "
+                    f"{answer} on node 0 and {taken} on node {node}; control "
+                    "flow is one program and cannot diverge across nodes",
+                    TrapClass.INTERNAL_INVARIANT,
+                )
+        return bool(answer)
 
     def _loop_trip(self, loop: Descriptor, symbols: Mapping[int, int]) -> int:
         payload = loop.payload
@@ -374,12 +455,28 @@ class Device:
         symbols = dict(symbols)
         symbols.setdefault(int(Symbol.PHASE), entry["phase"])
         symbols.setdefault(int(Symbol.GENERATION_INDEX), len(session.generated))
+        # The node dimension.  NODE_COUNT is the admitted topology's and does
+        # not change; NODE_ID is rebound by the microsequencer at every engine
+        # issue, and is zero for everything that is not one node's work --
+        # control flow, state bookkeeping, and the collectives themselves.
+        symbols[int(Symbol.NODE_COUNT)] = self.node_count
+        symbols[int(Symbol.NODE_ID)] = 0
         counters = CounterSet()
         loops: dict[int, int] = {}
         pending: list[PendingCommit] = []
         signalled: set[int] = set()
         produced: list[int] = []
         selection: dict[str, Any] = {}
+        # One token ring and one selection record per node.  Every node runs
+        # the whole program and selects its own token; they are required to
+        # agree at the end of the transaction, which is the check that says the
+        # collectives actually delivered the same activations everywhere.
+        node_produced: list[list[int]] = [produced] + [
+            [] for _ in range(self.node_count - 1)
+        ]
+        node_selection: list[dict[str, Any]] = [selection] + [
+            {} for _ in range(self.node_count - 1)
+        ]
         ctx = EngineContext(
             table=self.deployment.table,
             memory=self.memory,
@@ -389,6 +486,7 @@ class Device:
             symbols=symbols,
             session=session,
             device=self,
+            node_memories=self.node_memories if self.node_count > 1 else (),
         )
         ctx.notes["produced_tokens"] = produced
         ctx.notes["selection"] = selection
@@ -469,7 +567,9 @@ class Device:
                 # -- engine issue
                 counters.add("instructions.issued")
                 try:
-                    self._issue(ctx, instruction, family)
+                    self._issue_nodes(
+                        ctx, instruction, family, node_produced, node_selection
+                    )
                 except DeviceTrap as trap:
                     if trap.instruction == NO_ID:
                         trap.instruction = pc
@@ -528,6 +628,27 @@ class Device:
                 message=str(fault),
                 wall_seconds=wall,
             )
+
+        # -- every node must have selected the same token
+        if self.node_count > 1:
+            fault = self._node_agreement(node_produced, node_selection)
+            if fault is not None:
+                counters.add("fault.traps")
+                counters.add("fault.poisoned_transactions")
+                for resource in session.states.values():
+                    resource.open_prepare = False
+                self.counters.merge(counters)
+                return TransactionResult(
+                    status=CompletionStatus.FAILED,
+                    trap_class=TrapClass.INTERNAL_INVARIANT,
+                    first_fault_instruction=pc,
+                    retired=retired,
+                    fetched=fetched,
+                    predicated_off=predicated_off,
+                    counters=counters.snapshot(),
+                    message=fault,
+                    wall_seconds=wall,
+                )
 
         # -- atomic commit of the whole declared state set
         for commit in pending:
@@ -636,6 +757,90 @@ class Device:
         Major.LINK: "engine.link.descriptors",
     }
 
+    def _issue_nodes(
+        self,
+        ctx: EngineContext,
+        instruction: Instruction,
+        family: Major,
+        node_produced: list[list[int]],
+        node_selection: list[dict[str, Any]],
+    ) -> None:
+        """Issue one instruction on every logical node, or once for the cluster.
+
+        A compute engine sees exactly one node: its arena, its state images, and
+        ``NODE_ID`` bound to it.  Thirty-two nodes therefore run the same
+        program over thirty-two private memories, which is what a cluster is,
+        and a node cannot read another's activation because it cannot address
+        it.
+
+        Two families are issued once rather than per node.  **LINK** is the
+        fabric itself: a collective is one architectural operation over the
+        whole participant set, and :mod:`runtime.sim.engines.link` reaches every
+        node's arena through :attr:`EngineContext.node_memories` to perform it.
+        **STATE** is session bookkeeping -- a prepare, a staged commit, a
+        generation advance -- and the bytes it moves are applied per node in
+        :meth:`_apply_commit`; running the bookkeeping thirty-two times would
+        stage thirty-two commits of the same rows.
+
+        Issuing node by node inside one instruction is a stronger
+        synchronisation than the machine needs -- it is a barrier at every
+        instruction rather than at every collective -- and it is the reason the
+        collectives are trivially well-defined: when a LINK instruction issues,
+        every node has retired every instruction before it.  Nothing in the
+        program can observe the difference, because a node's only window onto
+        another node is a LINK instruction.
+        """
+        if family is Major.LINK or family is Major.STATE:
+            self._issue(ctx, instruction, family)
+            return
+        for node in range(self.node_count):
+            ctx.memory = self.node_memories[node]
+            ctx.views = self.node_views[node]
+            ctx.symbols[int(Symbol.NODE_ID)] = node
+            ctx.notes["produced_tokens"] = node_produced[node]
+            ctx.notes["selection"] = node_selection[node]
+            try:
+                self._issue(ctx, instruction, family)
+            finally:
+                ctx.memory = self.memory
+                ctx.views = self.views
+                ctx.symbols[int(Symbol.NODE_ID)] = 0
+                ctx.notes["produced_tokens"] = node_produced[0]
+                ctx.notes["selection"] = node_selection[0]
+
+    def _node_agreement(
+        self,
+        node_produced: Sequence[Sequence[int]],
+        node_selection: Sequence[Mapping[str, Any]],
+    ) -> str | None:
+        """Refuse a transaction whose nodes did not select the same token.
+
+        Every node runs the whole program, so every node reaches the vocabulary
+        projection and every node selects.  They agree only if the collectives
+        actually delivered the same activations to all of them; a collective
+        that had degenerated into a node-local copy would leave each node
+        holding one thirty-second of the logits and they would not.  So this is
+        not a defensive check on an invariant that is obviously true -- it is
+        the observation that says the fabric ran.
+        """
+        first = list(node_produced[0])
+        for node, tokens in enumerate(node_produced[1:], start=1):
+            if list(tokens) != first:
+                return (
+                    f"node 0 produced {first} and node {node} produced "
+                    f"{list(tokens)}; the nodes of one logical accelerator "
+                    "must select the same token, so the collectives did not "
+                    "deliver the same activations to every node"
+                )
+        base = node_selection[0].get("token", NO_ID)
+        for node, record in enumerate(node_selection[1:], start=1):
+            if record.get("token", NO_ID) != base:
+                return (
+                    f"node 0 selected token {base} and node {node} selected "
+                    f"{record.get('token', NO_ID)}"
+                )
+        return None
+
     def _issue(self, ctx: EngineContext, instruction: Instruction, family: Major) -> None:
         counter = self._FAMILY_COUNTER.get(family)
         if counter:
@@ -723,18 +928,47 @@ class Device:
         )
 
     def _apply_commit(self, commit: PendingCommit, counters: CounterSet) -> None:
+        """Apply one staged state commit on every node.
+
+        The resource's cursor and generation are session bookkeeping and advance
+        once; the bytes are node-local and are copied in each node's own arena,
+        which is what a sharded KV cache is.  Counting the rows and bytes per
+        node is deliberate: thirty-two nodes really do write thirty-two state
+        images, and the byte counters are what the comparison reads.
+        """
         resource = commit.resource
         rows = commit.rows
-        prepared = self.memory[resource.prepared_object_id]
-        committed = self.memory[resource.committed_object_id]
         nbytes = rows * resource.row_bytes
-        payload = prepared.read(0, nbytes)
-        committed.write(resource.cursor_rows * resource.row_bytes, payload)
+        for memory in self.node_memories:
+            prepared = memory[resource.prepared_object_id]
+            committed = memory[resource.committed_object_id]
+            payload = prepared.read(0, nbytes)
+            committed.write(resource.cursor_rows * resource.row_bytes, payload)
+            counters.add("state.rows_committed", rows)
+            counters.add("state.bytes_written", nbytes)
         resource.cursor_rows += rows
         resource.generation += 1
         resource.open_prepare = False
-        counters.add("state.rows_committed", rows)
-        counters.add("state.bytes_written", nbytes)
+
+    # -- host boundary -----------------------------------------------------
+    def host_write(self, object_id: int, byte_offset: int, payload: bytes) -> None:
+        """Stage host bytes into ``object_id`` on every node.
+
+        The authenticated input window is the one thing the host may write, and
+        a request is submitted to the *device*, not to a node of it.  Every node
+        of a cluster runs the whole program, so every node reads the request's
+        tokens out of its own input window; staging them on node zero alone
+        would leave thirty-one nodes prefilling a window of zeros.  The
+        alternative -- a program-emitted broadcast from node zero -- is a
+        collective the deployment does not declare, and inventing one here
+        would be the host sequencing a device operation.
+        """
+        for memory in self.node_memories:
+            memory[object_id].write(byte_offset, payload)
+
+    def host_object(self, object_id: int):
+        """Node zero's instance of ``object_id``, for a host-side read."""
+        return self.memory[object_id]
 
     # -- host queue --------------------------------------------------------
     def submit(self, record: bytes) -> bytes:

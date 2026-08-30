@@ -90,6 +90,26 @@ CONTRACT_QWEN_RMSNORM = "qwen3_rmsnorm_fp32_bf16_v1"
 #: RMSNorm stays in binary32 through the gain multiply, rounding once.
 CONTRACT_DEEPSEEK_RMSNORM = "deepseek_rmsnorm_binary32_v1"
 
+#: RoPE over the whole last axis: channel ``i`` pairs with ``i + width / 2`` and
+#: each product is rounded to BF16 before the sum.
+CONTRACT_QWEN_ROPE = "qwen3_rope_fp32_bf16_v1"
+#: RoPE over the final ``aux_id_0`` channels only: ``2p`` pairs with ``2p + 1``
+#: as a complex number and the product and sum stay in binary32, rounding once
+#: at the output.  The two rotary contracts differ in which channels move, in
+#: which channel each one is paired with, and in where the arithmetic rounds, so
+#: an engine that guessed between them would corrupt whichever model did not get
+#: its own -- the same reasoning amendment A8 applies to the two RMSNorms.
+CONTRACT_DEEPSEEK_ROPE = "rope_apply_bf16_v1"
+#: The same rotation with the conjugate phasor, which de-rotates.
+CONTRACT_DEEPSEEK_ROPE_INVERSE = "rope_inverse_bf16_v1"
+
+#: The MoE reduction whose optional base joins *after* the term reduction.
+#: ``runtime.reference.dispatch.reduce_expert_outputs_bf16`` reduces the routed
+#: contributions with the NUM-6.1 balanced tree and then adds the shared expert
+#: with one binary32 addition; folding the shared term into the tree as a
+#: seventh leaf mixes it in at the second level and is a different number.
+CONTRACT_DEEPSEEK_EXPERT_SUM = "dispatch_reduce_expert_outputs_bf16_v1"
+
 #: Contract names some emitters still spell as the reference owner they pin.
 #: These are aliases, not separate contracts: the arithmetic is identical, so
 #: resolving them here is what stops a DeepSeek deployment from silently
@@ -106,6 +126,10 @@ KNOWN_CONTRACTS: frozenset[str] = frozenset(
         CONTRACT_BLOCKED,
         CONTRACT_QWEN_RMSNORM,
         CONTRACT_DEEPSEEK_RMSNORM,
+        CONTRACT_QWEN_ROPE,
+        CONTRACT_DEEPSEEK_ROPE,
+        CONTRACT_DEEPSEEK_ROPE_INVERSE,
+        CONTRACT_DEEPSEEK_EXPERT_SUM,
         *CONTRACT_ALIASES,
     }
 )
@@ -1065,7 +1089,11 @@ __all__ = [
     "CONTRACT_ALIASES",
     "CONTRACT_BLOCKED",
     "CONTRACT_DEEPSEEK_RMSNORM",
+    "CONTRACT_DEEPSEEK_ROPE",
+    "CONTRACT_DEEPSEEK_EXPERT_SUM",
+    "CONTRACT_DEEPSEEK_ROPE_INVERSE",
     "CONTRACT_QWEN_RMSNORM",
+    "CONTRACT_QWEN_ROPE",
     "CONTRACT_SEQUENTIAL",
     "DEFAULT_BACKEND",
     "KNOWN_CONTRACTS",
