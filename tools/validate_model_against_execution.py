@@ -172,7 +172,27 @@ def main() -> int:
         entry_bytes = _kv_bytes_per_layer_position(model, args.context)
         predicted_kv_bytes = entry_bytes * measured_positions
         measured_kv_bytes = int(counters.get("attention.kv_bytes_read", 0))
+        # A roofline models a DECODE step, so the quantity it consumes is the
+        # decode share of this traffic, not the total.  Prefill's causal triangle
+        # dominates the logical count at long context -- 1,152,144,000 of the
+        # 1,208,107,008 pairs in the 8,000-token record -- and a real prefill
+        # blocks its KV reads, so logical and physical diverge there.  For a
+        # decode step they coincide: one query reads the whole cache once.
+        prefill_pairs = model.num_layers * (prompt * (prompt + 1) // 2)
+        decode_pairs = predicted_positions - prefill_pairs
         lane["kv"] = {
+            "decode_only": {
+                "pairs": decode_pairs,
+                "bytes": entry_bytes * decode_pairs,
+                "share_of_total_pairs": (
+                    decode_pairs / measured_positions if measured_positions else 0.0
+                ),
+                "note": (
+                    "the quantity a roofline divides by KV bandwidth; for a decode"
+                    " step the logical and physical reads coincide, which is not"
+                    " true of prefill"
+                ),
+            },
             "measured_context_positions": measured_positions,
             "predicted_context_positions": predicted_positions,
             "position_ratio": (
@@ -247,6 +267,11 @@ def main() -> int:
         "scope": [
             "Validates the QUANTITIES a roofline consumes: weight bytes, KV bytes,"
             " arithmetic. Does not validate time; the functional device has no clock.",
+            "attention.kv_bytes_read is LOGICAL traffic: it counts every (query,"
+            " key) pair. For a decode step that equals the physical read, because one"
+            " query reads the whole cache once. For prefill it does not, because a"
+            " real implementation blocks its KV reads over a query tile. The"
+            " decode_only figures are therefore the ones a roofline consumes.",
             "The KV check has two halves. The (layer, position) pair count is"
             " compared against the causal triangle the prompt and decode steps"
             " require, which catches a machine that recomputes or skips. The byte"
@@ -273,6 +298,9 @@ def main() -> int:
                   f"  ratio {kv['byte_ratio']:.4f}"
                   f"  ({kv['measured_bytes_per_layer_position']:,.0f} B per layer"
                   f"-position vs profile {kv['profile_bytes_per_layer_position']:,.0f})")
+            dec = kv["decode_only"]
+            print(f"  {'':<18} decode KV     {dec['bytes']:>18,}"
+                  f"  ({dec['share_of_total_pairs']:.1%} of pairs; the roofline's quantity)")
             print(f"  {'':<18} causal pairs  "
                   f"{kv['measured_context_positions']:>18,}"
                   f"  ratio {kv['position_ratio']:.4f}")

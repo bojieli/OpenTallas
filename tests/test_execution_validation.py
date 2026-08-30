@@ -192,3 +192,30 @@ def test_the_check_fails_on_the_entry_sizes_it_was_built_to_catch(tmp_path) -> N
     # The error grows with context; a pure scale error would not.
     ordered = [ratios[c] for c in sorted(ratios)]
     assert ordered == sorted(ordered)
+
+
+@pytest.mark.skipif(not CHAT_HBM.is_file(), reason="no executed record")
+def test_the_decode_share_is_separated_from_prefill(tmp_path) -> None:
+    """A roofline models a decode step, so it must be told which bytes those are.
+
+    The logical KV count is dominated by prefill's causal triangle at long
+    context, and prefill's logical and physical reads diverge because a real
+    implementation blocks. For a decode step they coincide. Reporting only the
+    total would invite a reader to divide the wrong number by KV bandwidth.
+    """
+
+    code, body = _run(tmp_path, CHAT_HBM)
+    assert code == 0
+    kv = body["lanes"][0]["kv"]
+    decode = kv["decode_only"]
+    assert 0 < decode["pairs"] < kv["measured_context_positions"]
+    assert decode["bytes"] == pytest.approx(
+        decode["pairs"] * kv["profile_bytes_per_layer_position"]
+    )
+    # Prefill and decode must partition the causal pairs exactly, with nothing
+    # left over: that is what makes the split a decomposition and not an estimate.
+    body_record = json.loads(CHAT_HBM.read_text())["record"]
+    prompt = int(body_record["workload"]["prompt_token_count"])
+    layers = 36
+    prefill_pairs = layers * (prompt * (prompt + 1) // 2)
+    assert prefill_pairs + decode["pairs"] == kv["predicted_context_positions"]
