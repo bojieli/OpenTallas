@@ -59,7 +59,7 @@ from compiler.ir.v3.kernel_ir import (
     Tensor,
     require_neutral,
 )
-from compiler.ir.v3.lowering import KERNEL_TO_ENGINE
+from compiler.ir.v3.lowering import EngineOp, KERNEL_TO_ENGINE
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
@@ -120,6 +120,11 @@ WEIGHT_ROLES = frozenset({"weight", "constant"})
 #: broadcast could share between heads.
 INDEX_DTYPES = frozenset({"u32", "i32", "u64", "i64"})
 
+#: Index types a checkpoint stores at 64 bits and every ABI 3.0 operator reads
+#: at 32.  The values are small enough that the low word *is* the value, so the
+#: reconciliation is a view's element type and stride, not a conversion.
+WIDE_INDEX_DTYPES = frozenset({"u64", "i64"})
+
 #: ``TA-ABI3-OPCONV-1`` amendment A7: the sequential contract is the scalar
 #: oracle used for numeric qualification; execution declares the blocked
 #: contract.  The substitution is applied identically for ROM and HBM, so the
@@ -165,6 +170,29 @@ COMPRESS_SUBCASE: Mapping[str, int] = {
     "COMPRESS_POOL": 1,
     "COMPRESS_STATE_UPDATE": 2,
 }
+#: Neutral kinds whose entry in the frozen lowering table names an ABI 3.0
+#: operator that does not perform the operation the released model performs.
+#:
+#: ``HASH_ROUTE`` is the one this backend has met.  DeepSeek-V4-Flash selects a
+#: token's six experts by *reading a table with the token ID*:
+#: ``routes = tid2eid[token_id]`` over a ``[129280, 6]`` int64 table shipped in
+#: the checkpoint, which is what ``src/opentallas/routing.py`` executes and what
+#: the graph's own ``table_rows`` attribute states.  ``ROUTE.HASH_ROUTE``
+#: computes something else entirely -- ``table[mix32(key) % slots]``, the
+#: frozen consistent-hash destination lookup a fabric uses to decide which node
+#: owns a key -- and would return one destination per key rather than six.  The
+#: name collided; the operation did not.
+#:
+#: ABI 3.0 already has this operator and needs no amendment for it:
+#: ``TENSOR.EMBED_LOOKUP`` is "exact row gather from a table indexed by a 32-bit
+#: ID, no arithmetic and therefore no conversion", which is the operation
+#: exactly, down to the bound check on the ID.  The substitution belongs in the
+#: exporter -- the kernel kind should be ``EMBEDDING_LOOKUP`` -- and is recorded
+#: here because this backend must execute the graph as published.
+ENGINE_OVERRIDE: Mapping[str, EngineOp] = {
+    "HASH_ROUTE": EngineOp(Major.TENSOR, TensorOp.EMBED_LOOKUP, 2, 1),
+}
+
 MHC_SUBCASE: Mapping[str, int] = {
     "HYPER_CONNECT_PRE": 0,
     "HYPER_CONNECT_POST": 1,
@@ -196,6 +224,16 @@ DECLARED_REDUCTION_ORDER: Mapping[str, ReductionOrder] = {
 _SLOT_PERMUTATION: Mapping[str, tuple[int, ...]] = {
     "HYPER_CONNECT_PRE": (0, 1, 3, 2),
     "HYPER_CONNECT_HEAD": (0, 1, 3, 2),
+    # ``ROUTE.EXPERT_DISPATCH`` reads (expert IDs, activations).  Both exporters
+    # emit (activations, expert IDs), following TA-ABI3-OPCONV-1 section 5,
+    # whose row reads "in0 activations | in1 selected IDs" -- and the executing
+    # engine reads the opposite: ``runtime/sim/engines/route.py`` takes
+    # ``input_view_0`` as the U32 expert-ID array and ``input_view_1`` as the
+    # tokens, and refuses the documented order outright because the ID slot must
+    # be U32.  The two cannot both be right; the doc and the engine have to be
+    # reconciled by whoever owns them.  Until they are, this backend emits what
+    # executes, because the alternative is a lane that cannot run at all.
+    "EXPERT_DISPATCH": (1, 0),
 }
 
 #: Spellings a kernel *attribute* may use for a numeric format.  Tensor dtypes
@@ -320,6 +358,10 @@ class KernelShape:
     trip: int
     symbol: int
     principal: tuple[int, ...]
+    #: True when the block is *one token* and each operand presents whatever
+    #: multiple of a token it holds -- six routed copies for a dispatched
+    #: activation, one for the token that produced them.  See ``_shape_of``.
+    per_token: bool = False
 
 
 #: Neutral symbol name -> the frozen runtime-symbol registry.
@@ -1238,9 +1280,16 @@ class RomLowering:
         inputs = [self.tensors[n] for n in kernel.inputs]
         outputs = [self.tensors[n] for n in kernel.outputs]
         first = str(attributes.get("input_dtype", inputs[0].dtype if inputs else "bf16"))
+        # ``in1`` is the *weight*.  A routed contraction names its weight bank in
+        # an attribute rather than as an operand -- the backend places the bank
+        # and binds it to slot 1 -- so the IR's second input is the expert ID
+        # array, and reading the profile's second dtype off it declared a U32
+        # weight for an MXFP4 bank.  The bank states its own format.
         second = str(
             attributes.get(
-                "second_input_dtype", inputs[1].dtype if len(inputs) > 1 else first
+                "second_input_dtype",
+                attributes.get("expert_weight_dtype")
+                or (inputs[1].dtype if len(inputs) > 1 else first),
             )
         )
         result = str(
@@ -1855,10 +1904,16 @@ class RomLowering:
             self._leading_symbol(principal) if principal is not None else (None, 1)
         )
         # A13 states the resolved leading extent as ``symbol - iteration *
-        # bound_divisor``.  A multiplied symbolic extent -- six routed copies of
-        # a span -- is not expressible that way, so such an operand keeps its
-        # full declared extent rather than silently presenting the wrong rows.
-        row_symbolic = symbol is not None and multiplier == 1
+        # bound_divisor``, so a *multiplied* symbolic extent -- six routed
+        # copies of a span -- cannot be a token block: no static block and no
+        # single clamp presents ``6 * span`` rows.  One token at a time does
+        # present it, and exactly: iteration ``t`` covers routed rows
+        # ``6t .. 6t+5`` and the token ``t`` they came from, so each operand
+        # shows whatever multiple of a token it holds and the loop bound is the
+        # span itself.  Leaving the extent unblocked instead is what made the
+        # routed path address 1,572,864 rows of a 104-token request.
+        per_token = symbol is not None and multiplier > 1
+        row_symbolic = symbol is not None and (multiplier == 1 or per_token)
         # The rows a block loop may walk are bounded by the *smallest* extent
         # any of the kernel's symbolic-leading operands declares.  A graph may
         # give one operand a shorter maximum than the capability's context
@@ -1877,6 +1932,16 @@ class RomLowering:
         declared_rows = principal_dims[0] if principal_dims else 1
         trip = max(-(-rows_bound // block), 1) if row_symbolic else 1
         rows = min(block, rows_bound) if row_symbolic else max(declared_rows, 1)
+        if per_token:
+            # One token per iteration, and the loop counts tokens rather than
+            # blocks.  The trip is the capability's loop bound because that is
+            # the most tokens one instruction may walk; a longer span needs a
+            # second dispatch, not a longer loop.
+            block = 1
+            trip = max(
+                min(rows_bound, int(self.capability.limits["max_loop_trip"])), 1
+            )
+            rows = multiplier
 
         cols = principal_dims[-1] if len(principal_dims) > 1 else 1
         depth = 0
@@ -1940,6 +2005,7 @@ class RomLowering:
             trip=trip,
             symbol=symbol if symbol is not None else int(Symbol.SPAN_TOKENS),
             principal=principal_dims,
+            per_token=per_token,
         )
 
     def _symbolic_row_bound(self, kernel: Kernel) -> int:
@@ -2170,12 +2236,12 @@ class RomLowering:
         if loop is None or not shape.row_symbolic:
             return None
         symbol, multiplier = self._leading_symbol(tensor)
-        if symbol is None or multiplier != 1:
+        if symbol is None or (multiplier != 1 and not shape.per_token):
             return None
         width = 1
         for extent in self._dims(tensor)[1:]:
             width *= extent
-        stride = shape.block * width
+        stride = shape.block * width * (multiplier if shape.per_token else 1)
         if stride > 0xFFFFFFFF:
             raise RomLoweringError(
                 f"tensor {tensor.tensor_id!r} needs a token-block element stride "
@@ -2232,11 +2298,44 @@ class RomLowering:
             label="view.buf",
         )
 
+    def _token_as_batch(
+        self, tensor: Tensor, shape: KernelShape
+    ) -> tuple[list[int], list[int]]:
+        """A token-blocked operand presented as ``[tokens, 1, ...]``.
+
+        ``VECTOR.MHC``'s post sub-case is the one row in TA-ABI3-OPCONV-1 whose
+        operands carry an explicit batch axis: ``in0`` is ``[B, S, H]``, ``in1``
+        ``[B, S, M, H]``, and the engine reads ``B`` and ``S`` off ``in0``.  The
+        graph declares one sequence per request and no batch axis at all, so the
+        backend has to say which axis is which.
+
+        Naming the token axis ``B`` and giving ``S`` extent one is the only
+        placement that stays correct under token blocking.  The alternative --
+        a leading batch of one with the tokens second -- would put the blocked
+        axis in position 1, and amendment A13's partial final extent clamps
+        ``dim0`` only, so a 104-token request would present the whole declared
+        block instead.  The operation is independent per ``(b, s)`` site, so
+        which of the two axes carries the sequence changes nothing, and
+        ``vector.mhc_sites`` counts ``batch * span`` either way.
+        """
+        dims = self._blocked_dims(tensor, shape)
+        strides = self._row_major_strides(dims)
+        # The inserted axis has one element, so its stride never moves an
+        # address; it takes the leading stride so the view still reads
+        # row-major from the axis it splits.
+        return [dims[0], 1, *dims[1:]], [strides[0], strides[0], *strides[1:]]
+
     def _blocked_dims(self, tensor: Tensor, shape: KernelShape) -> list[int]:
         """The tensor's declared extents with its leading axis token-blocked."""
         dims = list(self._dims(tensor))
         symbol, multiplier = self._leading_symbol(tensor)
-        if dims and symbol is not None and multiplier == 1 and shape.row_symbolic:
+        if not dims or symbol is None or not shape.row_symbolic:
+            return dims
+        if shape.per_token:
+            # One token's worth of *this* operand: six routed rows, or the one
+            # token they came from.
+            dims[0] = min(shape.block * multiplier, dims[0])
+        elif multiplier == 1:
             dims[0] = min(shape.block, dims[0])
         return dims
 
@@ -2367,10 +2466,29 @@ class RomLowering:
         row.  A zero stride says so, and nothing is copied to make it true.  The
         rule is positional and model-blind -- one axis fewer, agreeing on the
         leading extent -- so it never has to know what a head is.
+
+        Under a per-token routed block there is a second shape of the same
+        statement: one value per *routed row* against a tensor held per
+        ``(routed row, channel)``.  The routing weight is that -- six binary32
+        numbers, one for each expert this token selected, multiplying six
+        2,048-wide rows -- and the engines that take a second operand require it
+        to cover the trailing axes rather than a prefix of them, so the value is
+        broadcast along the channels with a zero stride and again nothing is
+        copied.
         """
         principal = list(shape.principal)
         if shape.row_symbolic and principal:
-            principal[0] = min(shape.block, principal[0])
+            block = shape.rows if shape.per_token else shape.block
+            principal[0] = min(block, principal[0])
+        if shape.per_token and len(principal) > 1:
+            elements = 1
+            for extent in dims:
+                elements *= extent
+            if elements == principal[0] and list(dims) != principal:
+                return (
+                    list(principal),
+                    [1, *([0] * (len(principal) - 1))],
+                )
         if len(dims) < 2 or len(principal) != len(dims) + 1:
             return dims, None
         if principal[0] != dims[0]:
@@ -2568,6 +2686,118 @@ class RomLowering:
         self.builder.open_loop(loop)
         return loop
 
+    def _emit_routed_row_identity(
+        self, kernel: Kernel, shape: KernelShape, loop: int | None
+    ) -> None:
+        """Materialise the routed-row expert identity a dispatch declares.
+
+        The neutral ``EXPERT_DISPATCH`` kernel declares two results: the
+        dispatched activations and, per its ``routed_row_expert_output``
+        attribute, which expert each routed row belongs to.  The frozen
+        ``ROUTE.EXPERT_DISPATCH`` writes only the first -- section 5's row has
+        one output -- so the second has to be stated separately or the routed
+        matmul downstream reads an unwritten buffer and contracts every row
+        against expert zero, which no check would catch.
+
+        It is a movement, not a computation: routed row ``6t + k`` belongs to
+        expert ``ids[t, k]``, which is the dispatch's own ID operand read in
+        routed-row order, the same bytes in the same order.  One
+        ``DMA.TRANSFER`` per token says exactly that.
+        """
+        ids = self.tensors[kernel.inputs[1]]
+        routed = self.tensors[kernel.outputs[1]]
+        slots = 1
+        for extent in self._dims(ids)[1:]:
+            slots *= extent
+
+        def per_token(tensor: Tensor, *, writable: bool) -> int:
+            return self._buffer_view(
+                tensor,
+                dims=[slots],
+                strides=[1],
+                shape=shape,
+                loop=loop,
+                writable=writable,
+                blocked=False,
+                term=(
+                    DynamicTerm.loop(loop, slots) if loop is not None else None
+                ),
+            )
+
+        self._emit_operator(
+            kernel,
+            Major.DMA,
+            int(Dma.TRANSFER),
+            [per_token(ids, writable=False)],
+            [per_token(routed, writable=True)],
+            loop=None,
+            schedule_rows=1,
+            suffix=".ids",
+        )
+
+    def _is_row_local_gather(self, kernel: Kernel, sub: int) -> bool:
+        """Does this gather address *inside* a row rather than across rows?
+
+        ``DMA.GATHER`` moves whole rows of its source: ``out[i] = src[idx[i]]``.
+        Two different movements in this graph spell themselves ``GATHER``.  The
+        rotary coefficient gather is the row form -- its source is a constant
+        table with no token axis, and each index names a table row.  The routing
+        weight gather is not: ``gathered[t, k] = scores[t, ids[t, k]]`` picks one
+        element *within* token ``t``'s own score row, and the index values run
+        over the 256 experts rather than over the tokens.
+
+        The operands say which it is.  A source whose leading axis is the same
+        span symbol the index carries is addressed within a row, because its
+        rows are the request's tokens and the index is not a token number.  That
+        form is emitted one token at a time -- the source view is that token's
+        row, the index view that token's slots -- which is the frozen row form
+        applied to one row, not a second kind of movement.
+        """
+        if sub != int(Dma.GATHER) or len(kernel.inputs) < 2 or not kernel.outputs:
+            return False
+        source = self.tensors[kernel.inputs[0]]
+        index = self.tensors[kernel.inputs[1]]
+        if index.dtype not in INDEX_DTYPES:
+            return False
+        source_symbol, source_multiplier = self._leading_symbol(source)
+        index_symbol, index_multiplier = self._leading_symbol(index)
+        return (
+            source_symbol is not None
+            and source_symbol == index_symbol
+            and source_multiplier == index_multiplier == 1
+            and len(self._dims(source)) == 2
+            and len(self._dims(index)) == 2
+        )
+
+    def _row_local_gather_views(
+        self, kernel: Kernel, shape: KernelShape, loop: int
+    ) -> tuple[list[int], list[int]]:
+        """One token's operands for a within-row gather."""
+        source = self.tensors[kernel.inputs[0]]
+        index = self.tensors[kernel.inputs[1]]
+        result = self.tensors[kernel.outputs[0]]
+
+        def per_token(tensor: Tensor, *, writable: bool) -> int:
+            width = 1
+            for extent in self._dims(tensor)[1:]:
+                width *= extent
+            return self._buffer_view(
+                tensor,
+                dims=[width],
+                strides=[1],
+                shape=shape,
+                loop=loop,
+                writable=writable,
+                blocked=False,
+                term=DynamicTerm.loop(loop, width),
+            )
+
+        # TA-ABI3-OPCONV-1 section 7: the index is in0 and the source in1.
+        return (
+            [per_token(index, writable=False), per_token(source, writable=False)],
+            [per_token(result, writable=True)],
+        )
+
     def _expert_sum_views(
         self,
         kernel: Kernel,
@@ -2631,7 +2861,48 @@ class RomLowering:
             if view is not None:
                 return view
         if tensor.role in WEIGHT_ROLES:
-            return self._weight_view(name, run=run, shape=shape, slot=slot)
+            # The route table ships as int64 and every reader of it -- the
+            # engine, the result tensor, the released model's own use of it --
+            # is 32-bit.  See ENGINE_OVERRIDE.
+            narrow = (
+                DType.U32
+                if kernel.kind == "HASH_ROUTE"
+                and slot == 1
+                and tensor.dtype in WIDE_INDEX_DTYPES
+                else None
+            )
+            return self._weight_view(
+                name, run=run, shape=shape, slot=slot, narrow_dtype=narrow
+            )
+        if kernel.kind == "ROUTED_MATMUL" and tensor.dtype in INDEX_DTYPES:
+            # TA-ABI3-OPCONV-1 section 2: the expert-ID operand is
+            # ``[rows, topk]``.  DeepSeek resolves the routing *before* the
+            # contraction -- ``ROUTE.EXPERT_DISPATCH`` has already made six
+            # rows of one token, each belonging to exactly one expert -- so the
+            # graph carries one ID per row and ``topk`` is one.  That is the
+            # frozen matrix with a single column, not a different operand: the
+            # engine's slot loop runs once and there is nothing to combine,
+            # which is precisely what a pre-dispatched row means.
+            rows = self._blocked_dims(tensor, shape)
+            if len(rows) == 1:
+                return self._buffer_view(
+                    tensor,
+                    dims=[rows[0], 1],
+                    strides=[1, 1],
+                    shape=shape,
+                    loop=loop,
+                    writable=writable,
+                )
+        if kernel.kind == "HYPER_CONNECT_POST":
+            dims, strides = self._token_as_batch(tensor, shape)
+            return self._buffer_view(
+                tensor,
+                dims=dims,
+                strides=strides,
+                shape=shape,
+                loop=loop,
+                writable=writable,
+            )
         if name in self._position_inputs:
             # The request's position range is a bound symbol, not host data:
             # every operand that reads it reads the same materialised range
@@ -2776,33 +3047,78 @@ class RomLowering:
         run: LayerRun | None,
         shape: KernelShape | None = None,
         slot: int = 1,
+        group_rows: int = 0,
+        group: int = 0,
+        narrow_dtype: DType | None = None,
     ) -> int:
+        """One weight operand's view.
+
+        ``group_rows`` narrows the view to one block-diagonal group of a
+        feature-grouped contraction: the same reduction width, ``group_rows``
+        of the ``N`` axis, starting ``group * group_rows`` rows in.  The offset
+        is stated in the view rather than performed by a movement, and it lands
+        on a whole scale block because the group boundary is a multiple of the
+        block-scale row tiling -- amendment A15's addressing reads the block
+        index straight off ``element_offset``.
+        """
         if self.plan is None:  # pragma: no cover - programming error
             raise RomLoweringError("plan_regions() must run before lowering")
         tensor = self.tensors[tensor_id]
         dims: Sequence[int] = self._dims(tensor)
         strides: Sequence[int] | None = None
+        group_offset = 0
         if shape is not None and shape.contraction and slot == 1 and len(dims) >= 2:
             # TA-ABI3-OPCONV-1 section 2: in1 is ``[N, K]``.  A checkpoint that
             # stores ``[K, N]`` is presented n-major by swapping the view's
             # strides -- a description, never a relayout pass.
             dims = [shape.cols, shape.depth]
             strides = [1, shape.cols] if shape.transposed else [shape.depth, 1]
+            if group_rows:
+                if shape.transposed:
+                    raise RomLoweringError(
+                        f"weight {tensor_id!r} is stored K-major, so a grouped "
+                        "row range is not a contiguous element offset; the "
+                        "group would have to be a stride, which a view's "
+                        "leading axis already is"
+                    )
+                dims = [group_rows, shape.depth]
+                group_offset = group * group_rows * shape.depth
+        # A narrowed view reads the *same bytes* through a smaller element
+        # type.  The int64 route table holds expert IDs below 256, so each of
+        # its little-endian words is a U32 followed by a zero U32, and a view
+        # with twice the stride reads exactly the value the engine wants -- a
+        # description, never a conversion pass, the same reasoning that
+        # presents a K-major weight n-major by swapping strides.
+        ratio = 1
+        if narrow_dtype is not None:
+            wide = DTYPE_BITS[self._dtype(tensor.dtype)]
+            narrow = DTYPE_BITS[narrow_dtype]
+            if narrow > wide or wide % narrow:
+                raise RomLoweringError(
+                    f"weight {tensor_id!r} is {wide}-bit and cannot be read "
+                    f"through a {narrow}-bit view"
+                )
+            ratio = wide // narrow
+            if strides is None:
+                strides = self._row_major_strides(dims)
+            strides = [extent * ratio for extent in strides]
+            group_offset *= ratio
         generated = self._generated_object(tensor_id)
         if generated is not None:
             # A derived constant has one mask-programmed object of its own and
             # no per-layer striping, so the view is the whole table.
             return self._view(
                 object_id=generated,
-                dtype=self._dtype(tensor.dtype),
+                dtype=narrow_dtype or self._dtype(tensor.dtype),
                 dims=dims,
                 strides=strides,
+                element_offset=group_offset,
                 permissions=int(Permission.READ),
                 label="view.rom.generated",
             )
         key, region_slot = self._region_of_tensor[tensor_id]
         region = self.plan.region(key)
-        dtype = self._dtype(tensor.dtype)
+        dtype = narrow_dtype or self._dtype(tensor.dtype)
         dynamic: list[DynamicTerm] = []
         element_offset = 0
         if region.slot_count > 1:
@@ -2812,7 +3128,7 @@ class RomLowering:
                     f"{key!r} but is read outside a compressed layer body"
                 )
             loop = self._loop_of_run[run.index]
-            stride = region.slot_element_stride
+            stride = region.slot_element_stride * ratio
             if stride > 0xFFFFFFFF:
                 raise RomLoweringError(
                     f"region {key!r} needs a per-layer element stride of {stride}, "
@@ -2821,7 +3137,8 @@ class RomLowering:
                 )
             dynamic.append(DynamicTerm.loop(loop, stride))
         else:
-            element_offset = region_slot * region.slot_element_stride
+            element_offset = region_slot * region.slot_element_stride * ratio
+        element_offset += group_offset
         scale_object, block, row_block = self._scale_binding(key)
         return self._view(
             object_id=region.object_id,
@@ -3157,6 +3474,142 @@ class RomLowering:
             )
         return views, outputs
 
+    def _feature_group_count(
+        self, kernel: Kernel, family: Major, sub: int, shape: KernelShape
+    ) -> int:
+        """How many *feature* groups a grouped contraction splits into.
+
+        There are two grouped contractions and they are different operators.
+        ABI 3.0's ``TENSOR.GROUPED_MATMUL`` is the ragged-row one: ``input 2``
+        is a per-group row count, the groups partition the activation *rows* in
+        ascending order, and every group shares one reduction width and one
+        output width (``runtime/sim/engines/tensor.py``, and
+        TA-ABI3-OPCONV-1 section 2's "group index").  DeepSeek's grouped output
+        projection is the block-diagonal one --
+        ``einsum("bsgd,grd->bsgr")`` in the released ``Attention.forward`` --
+        where group ``g`` reads its own 4,096 columns of a 32,768-wide
+        activation and writes its own 1,024 columns of an 8,192-wide result,
+        and *every* token passes through *every* group.
+
+        No row partition of a token-major buffer presents the second as the
+        first.  Group ``g`` would own the rows ``{t * G + g}``, which are
+        strided by the group count, and a rank-2 view has one row stride; the
+        group-major order that would make them contiguous needs a group stride
+        of ``span * width``, and ``span`` is a runtime symbol, not a static
+        stride.
+
+        ABI 3.0 expresses the block-diagonal form exactly, and with no
+        amendment: it is one ``TENSOR.MATMUL`` per group over views that offset
+        into the shared operands.  That is what
+        :meth:`_emit_feature_grouped_contraction` emits.  This returns the
+        group count when the kernel is that form, and ``1`` otherwise -- a
+        ragged-row grouped matmul still lowers to ``TENSOR.GROUPED_MATMUL``.
+        """
+        if family is not Major.TENSOR or sub != int(TensorOp.GROUPED_MATMUL):
+            return 1
+        if not shape.contraction or len(kernel.inputs) < 2 or not kernel.outputs:
+            return 1
+        declared = (
+            kernel.attributes.get("groups")
+            or kernel.attributes.get("group_count")
+            or kernel.iteration_domain.get("groups")
+            or 0
+        )
+        groups = self._extent(declared) if declared else 0
+        if groups <= 1:
+            return 1
+        activation = self.tensors[kernel.inputs[0]]
+        width = 1
+        for extent in self._dims(activation)[1:]:
+            width *= extent
+        if width != groups * shape.depth:
+            # The activation carries one reduction width, so the groups are a
+            # row partition after all and the frozen operator says it.
+            return 1
+        if shape.cols % groups:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares {groups} feature groups "
+                f"but a result width of {shape.cols}, which is not a whole "
+                "number of groups"
+            )
+        out_width = 1
+        for extent in self._dims(self.tensors[kernel.outputs[0]])[1:]:
+            out_width *= extent
+        if out_width != shape.cols:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} is a {groups}-group block-diagonal "
+                f"contraction writing {shape.cols} columns, but its result is "
+                f"{out_width} wide"
+            )
+        return groups
+
+    def _emit_feature_grouped_contraction(
+        self, kernel: Kernel, shape: KernelShape, run: LayerRun | None, groups: int
+    ) -> None:
+        """One ``TENSOR.MATMUL`` per block-diagonal group.
+
+        Group ``g`` contracts the activation columns
+        ``[g * depth, (g + 1) * depth)`` against the weight rows
+        ``[g * rank, (g + 1) * rank)`` into the result columns
+        ``[g * rank, (g + 1) * rank)``.  Every operand keeps its buffer's own
+        row stride, so each view still walks whole rows of the tensor it names
+        and A13's partial final extent still clamps the last token block --
+        which the folded ``[rows, depth]`` view the generic contraction path
+        builds would not have done, because its row stride is the reduction
+        width rather than the row.
+
+        The groups write disjoint column ranges of one result and are ordered
+        only by the sequencer, which issues them in program order; the
+        consumer waits on the last of them.
+        """
+        activation = self.tensors[kernel.inputs[0]]
+        result = self.tensors[kernel.outputs[0]]
+        act_width = 1
+        for extent in self._dims(activation)[1:]:
+            act_width *= extent
+        out_width = shape.cols
+        rank = shape.cols // groups
+        # One token-block loop covers all the groups: they read the same block
+        # of rows, so opening a loop per group would retire eight loop headers
+        # to walk one axis once.
+        loop = self._open_row_loop(kernel, shape)
+        for group in range(groups):
+            source = self._buffer_view(
+                activation,
+                dims=[shape.rows, shape.depth],
+                strides=[act_width, 1],
+                element_offset=group * shape.depth,
+                shape=shape,
+                loop=loop,
+                writable=False,
+            )
+            weight = self._weight_view(
+                kernel.inputs[1],
+                run=run,
+                shape=shape,
+                slot=1,
+                group_rows=rank,
+                group=group,
+            )
+            destination = self._buffer_view(
+                result,
+                dims=[shape.rows, rank],
+                strides=[out_width, 1],
+                element_offset=group * rank,
+                shape=shape,
+                loop=loop,
+                writable=True,
+            )
+            self._emit_operator(
+                kernel,
+                Major.TENSOR,
+                int(TensorOp.MATMUL),
+                [source, weight],
+                [destination],
+                loop=loop if group == groups - 1 else None,
+                suffix=f".g{group:02d}",
+            )
+
     def _emit_kernel(self, kernel: Kernel, *, run: LayerRun | None) -> None:
         if kernel.kind in {"STATE_PREPARE", "STATE_COMMIT"}:
             # Prepare and commit are emitted once, outside every loop, so the
@@ -3169,6 +3622,21 @@ class RomLowering:
                 "entry in the frozen lowering table; a backend may not invent an "
                 "opcode"
             )
+        engine = ENGINE_OVERRIDE.get(kernel.kind, engine)
+        if kernel.kind == "COMPRESS_PROJECT" and len(kernel.inputs) == 2:
+            # The frozen ``VECTOR.COMPRESS`` project sub-case is one operator
+            # over *both* compressor matrices: in0 hidden, in1 the KV
+            # projection, in2 the gate projection, out0 the packed
+            # ``[B, S, 2, N]``.  This export splits it into two kernels of two
+            # operands each -- ``compress_project.key_value`` and
+            # ``compress_project.score`` -- and each of those is a plain
+            # contraction: ``[span, 4096] x [1024, 4096]^T`` accumulated in
+            # increasing reduction index, which is what its own attributes say
+            # and what ``TENSOR.MATMUL`` executes under the sequential
+            # contract.  For BF16 operands the two spellings are bit-identical:
+            # the product is exact in binary32 either way, so a materialised
+            # product and a fused product-add round at the same place.
+            engine = EngineOp(Major.TENSOR, TensorOp.MATMUL, 2, 1)
         family = Major(engine.family)
         if kernel.kind == "STATE_READ":
             self.builder.emit(
@@ -3190,6 +3658,10 @@ class RomLowering:
             )
         shape = self._shape_of(kernel, engine)
         schedule_rows: int | None = None
+        groups = self._feature_group_count(kernel, family, engine.sub, shape)
+        if groups > 1:
+            self._emit_feature_grouped_contraction(kernel, shape, run, groups)
+            return
         if family is Major.REDUCTION and engine.sub == int(Reduction.EXPERT_SUM):
             # A weighted reduction across a non-token axis is stated one token
             # at a time; see _open_token_loop.  One dispatch covers one row, so
@@ -3208,7 +3680,22 @@ class RomLowering:
                 schedule_rows=schedule_rows,
             )
             return
+        if family is Major.DMA and self._is_row_local_gather(kernel, engine.sub):
+            loop = self._open_token_loop(kernel)
+            inputs, outputs = self._row_local_gather_views(kernel, shape, loop)
+            self._emit_operator(
+                kernel,
+                family,
+                engine.sub,
+                inputs,
+                outputs,
+                loop=loop,
+                schedule_rows=1,
+            )
+            return
         loop = self._open_row_loop(kernel, shape)
+        if kernel.kind == "EXPERT_DISPATCH" and len(kernel.outputs) > 1:
+            self._emit_routed_row_identity(kernel, shape, loop)
         order = self._operand_order(kernel, family, engine.sub)
         if family is Major.DMA and engine.sub in (int(Dma.GATHER), int(Dma.SCATTER)):
             inputs, outputs = self._movement_views(
@@ -3270,8 +3757,15 @@ class RomLowering:
         *,
         loop: int | None,
         schedule_rows: int | None = None,
+        suffix: str = "",
     ) -> None:
-        """Bind one operator descriptor, issue it, and close its loop."""
+        """Bind one operator descriptor, issue it, and close its loop.
+
+        ``suffix`` distinguishes several operators emitted for one kernel --
+        the block-diagonal groups of a feature-grouped contraction -- so that
+        each gets its own descriptor key while every one of them still names
+        the kernel it came from.
+        """
         operator = self.builder.operator(
             engine_family=family,
             engine_sub=sub,
@@ -3284,7 +3778,7 @@ class RomLowering:
             ),
             counter_class_id=self._counter_class(kernel.counter_class, family),
             source_kernel_id=kernel.index,
-            key=f"op.k{kernel.index:05d}",
+            key=f"op.k{kernel.index:05d}{suffix}",
         )
         producers = [
             self._event_of_tensor[name]
