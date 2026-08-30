@@ -389,7 +389,32 @@ lanes are a precondition for it, not the product. These items are the product.
 
 ## W11 — Governed comparison and release
 
-- [~] W11.1 Qwen ROM vs HBM — **produced, and it is the storage-class thesis in executed counters** (`results/abi3/comparison_qwen_rom_vs_hbm.json`). Both lanes decoded 24 tokens matching the oracle, the two token sequences are identical, evidence class `functional_artifact_only`, `depends_on_assumption` false. **Five counters differ and all five are memory traffic**: the ROM target reads 363,485,791,728 B from ROM and the HBM target reads 366,294,894,160 B from HBM, and the ROM target moves 437 MB / 61 MB through SRAM where the HBM target moves none. Nothing else in 115 counters differs. That is the claim — *the two deployments differ only in where the bytes live* — demonstrated on executed counters rather than argued. The DeepSeek half waits on W6.3/W6.4
+- [~] W11.1 Qwen ROM vs HBM — **produced at 24 tokens, and QUALIFIED at 192.** At the
+  8,000-token sweet spot with a matched 192-token budget the two lanes **disagree**:
+  ROM matches the reference oracle on all 192, HBM diverges at index 137, emitting
+  " world" where ROM and the oracle emit " universe". The mechanism is countable
+  rather than speculative. The two lanes perform the same arithmetic to the
+  operation — `tensor.multiplications` 57,012,268,302,336 on both, identical
+  `attention.context_positions`, `kv_bytes_read` and `vector.elements` — while
+  `control.loop_iterations` differs, 138,816 against 149,121. Same operations,
+  different tiling, different accumulation order, different last-ULP logits: A7
+  working as specified, since the blocked association is fixed by (library,
+  version, device, **shape**, thread count) and the storage class determines the
+  shape. What decides index 137 is `selection.tie_multiplicity` — 192 over 192
+  tokens on ROM, **193 over 192 on HBM**. Exactly one HBM token has two candidates
+  at the argmax and the tie rule takes the lowest id, 1879 over 15494.
+
+  **So the thesis holds for traffic and arithmetic and does not extend to the
+  token stream at long context.** *"The two deployments differ only in where the
+  bytes live"* is demonstrated at 24 tokens and false at 192, because where the
+  bytes live determines the tiling. A token-identity claim between two backends
+  has a horizon and the horizon must be stated: 137 tokens here, 286 on the
+  agentic workload. This is a qualification of the claim, not a defect in either
+  lane — both are correct under their declared contracts, and the analytical model
+  validates against both at ratio 1.0000 on KV traffic and causal pairs.
+
+  The original 24-token result stands as recorded: **produced, and it is the
+  storage-class thesis in executed counters** (`results/abi3/comparison_qwen_rom_vs_hbm.json`). Both lanes decoded 24 tokens matching the oracle, the two token sequences are identical, evidence class `functional_artifact_only`, `depends_on_assumption` false. **Five counters differ and all five are memory traffic**: the ROM target reads 363,485,791,728 B from ROM and the HBM target reads 366,294,894,160 B from HBM, and the ROM target moves 437 MB / 61 MB through SRAM where the HBM target moves none. Nothing else in 115 counters differs. That is the claim — *the two deployments differ only in where the bytes live* — demonstrated on executed counters rather than argued. The DeepSeek half waits on W6.3/W6.4
 - [ ] W11.2 TA-CMP-7-ASAP7: same, predictive view, no cross-view mixing
 - [~] W11.3 Evidence ledger: every number traced to executed counters or labeled external
 - [ ] W11.4 Final status report and README update
