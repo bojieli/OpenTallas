@@ -170,7 +170,20 @@ def _record(
     workload_digest="wd",
     quantities=(),
     failure=None,
+    generation_policy=None,
 ):
+    # A comparison of two token streams is meaningless without knowing the two
+    # runs stopped by the same rule, so the gate refuses a record that carries
+    # no generation policy.  These fixtures predate that rule and were passing
+    # by omission; every real record carries one.
+    if generation_policy is None:
+        generation_policy = {
+            "selection_mode": "greedy_argmax_lowest_id",
+            "tie_rule": "lowest_token_id",
+            "eos_count": 1,
+            "eos_token_0": 511,
+            "vocabulary_size": 512,
+        }
     return ExecutionRecord(
         evidence_class=evidence,
         workload=WorkloadIdentity(
@@ -180,6 +193,7 @@ def _record(
             prompt_token_count=4,
             max_new_tokens=8,
             generation_policy_digest="gp",
+            generation_policy=dict(generation_policy),
             numeric_profile="np",
             graph_id="gi",
             tokenizer_sha256="tk",
@@ -224,11 +238,34 @@ def test_comparison_refuses_a_different_workload():
         build_comparison(left, right, comparison_id="c")
 
 
-def test_comparison_refuses_to_cross_technology_views():
-    left = _record(deployment_digest="aa", technology_view="view-x")
-    right = _record(deployment_digest="bb", technology_view="view-y")
+def test_technology_views_may_differ_for_tokens_and_may_not_for_characterised_numbers():
+    """The rule is about characterised numbers, not about tokens.
+
+    Memory technology is this study's independent variable: a ROM target and an
+    HBM target *have* to declare different technology views, and refusing that
+    outright forbade the very comparison this module exists to govern. What may
+    never cross a view is a number characterised against one -- synthesis, place
+    and route, SPICE -- because such a number means nothing outside the view it
+    was measured in. A functional token comparison carries no such number.
+    """
+
+    left = _record(deployment_digest="aa", technology_view="single_chip_rom_declared_v1")
+    right = _record(deployment_digest="bb", technology_view="shared-hbm-sram-chip-v3")
+    body = build_comparison(left, right, comparison_id="c")
+    assert body["token_agreement"]["identical"] is True
+
+    characterised = _record(
+        deployment_digest="cc",
+        technology_view="single_chip_rom_declared_v1",
+        evidence=EvidenceClass.SYNTHESIS,
+    )
+    other_view = _record(
+        deployment_digest="dd",
+        technology_view="shared-hbm-sram-chip-v3",
+        evidence=EvidenceClass.SYNTHESIS,
+    )
     with pytest.raises(ComparisonError, match="technology views differ"):
-        build_comparison(left, right, comparison_id="c")
+        build_comparison(characterised, other_view, comparison_id="c")
 
 
 def test_comparison_refuses_when_tokens_diverge():
