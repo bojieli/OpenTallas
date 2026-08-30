@@ -609,12 +609,13 @@ def movement_graph(
          attributes={"window_size": window, "padding_index": -1})
     emit("WINDOW_INDEX", ["position"], ["window.b"], "indexing_window_indices_v1",
          attributes={"window_size": selected, "padding_index": -1})
-    # Amendment A19 folded the index-selection join into ``ROUTE.INDEX_TOPK``,
-    # so the contract that named it is no longer in the graph's union.  The
-    # compressed *dense* index still joins a window block on the feature axis
-    # and still names one, which is what this case is about.
+    # A19 folded the ranked index join into ``ROUTE.INDEX_TOPK`` and A20 folded
+    # the dense one, so *no* published graph names a feature-axis index-join
+    # contract any more and the two that did have left the capability union.
+    # The case is about the operator, not about either model's contract, so it
+    # names one the chip does implement and keeps testing the join axis.
     emit("CONCAT", ["window.a", "window.b"], ["joined"],
-         "indexing_compressed_dense_indices_window_then_compressed_indices_v1",
+         "attention_kv_view_bf16_v1",
          attributes={"axis": 1, "segment_widths": [window, selected]})
 
     # -- an epilogue, so the graph is a program ---------------------------

@@ -177,9 +177,101 @@ def required_reduction_order(contract: str) -> int | None:
 # ---------------------------------------------------------------------------
 # Shared exact kernels
 # ---------------------------------------------------------------------------
-#: Bounded work tile of the frozen sequential kernel.
+#: Bounded work tile of the frozen sequential kernel's K-last schedule.
 SEQUENTIAL_ROW_TILE = 8
 SEQUENTIAL_COL_TILE = 64
+
+#: Output elements a tile must hold before the K-major schedule is worth its
+#: per-reduction-index call overhead.  Below this the K-last schedule wins:
+#: ``np.add.accumulate`` costs one pass whatever the tile, while K-major pays
+#: ``K`` ufunc dispatches whose fixed cost a small tile cannot amortise.
+#: Measured crossover on this machine sits between 4,096 and 16,384 elements.
+SEQUENTIAL_KMAJOR_MIN_TILE = 1 << 13
+#: Column tile of the K-major schedule, which holds a transposed ``[K, cols]``
+#: weight block plus two ``[rows, cols]`` binary32 planes.
+SEQUENTIAL_KMAJOR_COL_TILE = 1 << 10
+
+
+def _sequential_k_last(
+    left: np.ndarray, right: np.ndarray, output: np.ndarray
+) -> None:
+    """The K-last schedule: materialise ``[rows, cols, K]`` and accumulate.
+
+    ``np.add.accumulate`` walks the contiguous reduction axis as a scalar C
+    loop, which is why this form loses on a large tile and wins on a small one:
+    it pays no per-reduction-index dispatch at all.
+    """
+    rows, cols = left.shape[0], right.shape[0]
+    for row_start in range(0, rows, SEQUENTIAL_ROW_TILE):
+        row_end = min(row_start + SEQUENTIAL_ROW_TILE, rows)
+        row_tile = left[row_start:row_end]
+        for col_start in range(0, cols, SEQUENTIAL_COL_TILE):
+            col_end = min(col_start + SEQUENTIAL_COL_TILE, cols)
+            col_tile = right[col_start:col_end]
+            products = np.multiply(
+                row_tile[:, None, :], col_tile[None, :, :], dtype=np.float32
+            )
+            if not np.all(np.isfinite(products)):
+                raise BackendError("contraction product left the binary32 range")
+            products[products == 0] = np.float32(0.0)
+            final = np.add.accumulate(products, axis=2, dtype=np.float32)[:, :, -1]
+            if not np.all(np.isfinite(final)):
+                raise BackendError("contraction sum left the binary32 range")
+            output[row_start:row_end, col_start:col_end] = final
+
+
+def _sequential_k_major(
+    left: np.ndarray, right: np.ndarray, output: np.ndarray
+) -> None:
+    """The K-major schedule: one rank-1 product plane per reduction index.
+
+    Every output element still accumulates *its own* ``K`` products in strictly
+    ascending reduction index -- that is the contract, and it is untouched.
+    What moves is which output element is worked on when: the reduction index
+    walks on the outside and each pass forms the whole ``[rows, cols]`` plane of
+    products for one ``k``, which vectorises, where the K-last form leaves the
+    reduction to a scalar loop.  This is the schedule
+    :func:`runtime.tensor_accelerator.bf16.dense_bf16_linear_bf16` already uses
+    for the same contract.
+
+    Three properties make the two schedules bit-identical rather than merely
+    close:
+
+    * the accumulator starts at ``+0.0`` rather than at the first product,
+      which is the same value because ``+0.0 + p == p`` for every finite ``p``
+      once ``-0.0`` has been canonicalised away, exactly as the K-last form
+      canonicalises it;
+    * every product is formed by one ``np.multiply`` into a binary32 buffer, so
+      no host FMA can carry extra precision into the sum; and
+    * the set of products the finiteness check sees is the same set, so a
+      contraction that overflows raises from both schedules.  A partial sum
+      that reaches an infinity can never come back, because every term added
+      after it is finite, so checking the final accumulator is equivalent to
+      checking every partial one.
+    """
+    rows, cols = left.shape[0], right.shape[0]
+    depth = left.shape[1]
+    for col_start in range(0, cols, SEQUENTIAL_KMAJOR_COL_TILE):
+        col_end = min(col_start + SEQUENTIAL_KMAJOR_COL_TILE, cols)
+        # [K, tile_cols], contiguous along the columns so that one reduction
+        # index is one contiguous row of weights.
+        transposed = np.ascontiguousarray(right[col_start:col_end].T)
+        accumulator = np.zeros((rows, col_end - col_start), dtype=np.float32)
+        products = np.empty_like(accumulator)
+        for index in range(depth):
+            np.multiply(
+                left[:, index, None],
+                transposed[index][None, :],
+                out=products,
+                dtype=np.float32,
+            )
+            if not np.all(np.isfinite(products)):
+                raise BackendError("contraction product left the binary32 range")
+            products[products == 0] = np.float32(0.0)
+            np.add(accumulator, products, out=accumulator, dtype=np.float32)
+        if not np.all(np.isfinite(accumulator)):
+            raise BackendError("contraction sum left the binary32 range")
+        output[:, col_start:col_end] = accumulator
 
 
 def sequential_matmul_binary32(
@@ -188,11 +280,18 @@ def sequential_matmul_binary32(
     """``[M,K] @ [N,K]^T`` under ``bf16_bf16_fp32_sequential_rne_v1``.
 
     The products are materialised so the host cannot contract them into an
-    FMA, every exact zero is canonicalised before accumulation, and
-    ``np.add.accumulate`` performs the strictly ordered binary32 reduction.
+    FMA, every exact zero is canonicalised before accumulation, and the
+    strictly ordered binary32 reduction runs in ascending reduction index.
     This runs on the host for every backend: the sequential contract is defined
     to be reproducible on any machine, so it must not depend on which backend
     is selected.
+
+    Two schedules compute it and the tile size picks between them.  Neither
+    reorders any element's reduction -- they differ only in which output
+    element is worked on when, which the contract does not constrain -- so the
+    choice is a performance decision and never a numeric one.  It is also not
+    a decision the caller can influence: the threshold is a function of the
+    operand shapes alone, so one shape always takes one schedule.
     """
     left = np.ascontiguousarray(activations, dtype=np.float32)
     right = np.ascontiguousarray(weights, dtype=np.float32)
@@ -205,22 +304,11 @@ def sequential_matmul_binary32(
     output = np.empty((rows, cols), dtype=np.float32)
     previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
     try:
-        for row_start in range(0, rows, SEQUENTIAL_ROW_TILE):
-            row_end = min(row_start + SEQUENTIAL_ROW_TILE, rows)
-            row_tile = left[row_start:row_end]
-            for col_start in range(0, cols, SEQUENTIAL_COL_TILE):
-                col_end = min(col_start + SEQUENTIAL_COL_TILE, cols)
-                col_tile = right[col_start:col_end]
-                products = np.multiply(
-                    row_tile[:, None, :], col_tile[None, :, :], dtype=np.float32
-                )
-                if not np.all(np.isfinite(products)):
-                    raise BackendError("contraction product left the binary32 range")
-                products[products == 0] = np.float32(0.0)
-                final = np.add.accumulate(products, axis=2, dtype=np.float32)[:, :, -1]
-                if not np.all(np.isfinite(final)):
-                    raise BackendError("contraction sum left the binary32 range")
-                output[row_start:row_end, col_start:col_end] = final
+        tile = rows * min(cols, SEQUENTIAL_KMAJOR_COL_TILE)
+        if tile >= SEQUENTIAL_KMAJOR_MIN_TILE:
+            _sequential_k_major(left, right, output)
+        else:
+            _sequential_k_last(left, right, output)
     finally:
         np.seterr(**previous)
     return output

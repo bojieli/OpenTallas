@@ -100,9 +100,14 @@ that a consumer can check what reaches it.
 | `BIASED_TOPK` | scores | selection bias | — | selected IDs | weights | `aux0` `k` |
 | `WEIGHT_NORMALIZE` | weights | — | — | normalised | — | — |
 | `EXPERT_DISPATCH` | activations | selected IDs | — | dispatched `[groups * k, width]` in `(group, slot)` order | — | `aux0` expert count, **required** |
-| `INDEX_TOPK` | scores | window index (A19) | compression ratio (A19) | joined KV rows, compacted and ascending | — | `aux0` `k`, `aux1` mask mode, `aux2` context *symbol*, `aux3` position-base *symbol* |
+| `INDEX_TOPK` | scores, or `NO_ID` for the dense form (A20) | window index (A19) | compression ratio (A19) | joined KV rows, compacted and ascending | — | `aux0` `k`, `aux1` mask mode, `aux2` context *symbol*, `aux3` position-base *symbol* |
 | `HASH_ROUTE` | token IDs | hash table | — | expert IDs | — | — |
 | `WINDOW_INDEX` | positions | — | — | ascending indices | — | `aux0` window, `aux1` mask mode, `aux2` context *symbol* |
+
+`WINDOW_INDEX` writes `arange(first, last + 1)` over the **absolute positions**
+of a causal window and nothing else. Amendment A20 (section 20) makes that a
+checkable claim rather than a description: a neutral kernel that names an
+`index_family` this operator does not produce is refused at admission.
 
 `EXPERT_DISPATCH` requires `aux0`: an engine that cannot state the expert bound
 cannot prove a routed ID is inside it, and an unbounded expert ID is a memory
@@ -666,3 +671,87 @@ here, by the operator that has all the pieces. The reference this operator
 implements, `runtime/reference/selection.py::index_topk_indices`, already takes
 `compression_ratio`, `start_position` and `offset`; the operator is a strict
 subset of its own contract, and the join is the only thing it adds.
+
+## 20. Amendment A20 — `ROUTE.INDEX_TOPK` without a score operand, and a frozen index-family registry
+
+Wire format section 12.10 is normative; this section states what it means for an
+operand row and what it obliges a backend to do.
+
+| Subopcode | in0 | in1 | in2 | out0 | aux |
+|---|---|---|---|---|---|
+| `INDEX_TOPK`, ranked | scores `[span, C]` | window index `[span, W]` U32 | compression ratio `[1]` U32 | joined KV rows `[span, W + k]` U32 | `aux0` `k` selected, `aux1` mask mode, `aux2` context *symbol*, `aux3` position-base *symbol* |
+| `INDEX_TOPK`, **dense** | `NO_ID` | window index `[span, W]` U32 | compression ratio `[1]` U32 | joined KV rows `[span, W + k]` U32 | `aux0` `k` **capacity**, `aux1..3` as above |
+
+The two rows are one operator. The released model's two producers for the
+compressed half of a sparse index — `Indexer.forward` and
+`get_compress_topk_idxs` — count the same causal horizon on the same axis in
+the same units, add the same `offset`, and meet at the same concatenation in
+`Attention.forward`. One ranks the candidates that horizon admits and the other
+takes all of them, so the dense family is the ranked one with `in0` removed.
+
+**What an engine must do.** With `in0` absent:
+
+* read the span from `out0` — the operator writes one row per query either way,
+  so the dense form loses an operand and not a dimension;
+* bound the candidate count by `aux0` rather than by the scored columns. It is
+  the same statement in both forms: no more groups may be named than the
+  compressed segment can hold. A context that completes more is a refusal, not
+  a truncation;
+* emit, for the query at absolute position `p`,
+  `arange(0, min((p + 1) / r, candidates))` rebased by `span + W`, in ascending
+  group order.
+
+Everything after the selection is A19 unchanged: rebase, join to the window
+block, compact away the padding, sort ascending, tail-pad to `W + k`.
+
+**`aux0` is read the same way in both rows.** `NO_ID` derives it as the output's
+last extent minus `W`, which is the compressed segment's own width, so a dense
+operator may state its capacity or leave the output to state it. A19's caution
+still applies in both rows and is the one that bites: `aux0` is the segment,
+never the operand, so a backend that copies the output's last extent into it
+declares `W + k` where `k` belongs and is refused.
+
+**How a neutral kernel says a slot is empty.** The `absent_operands` attribute
+names the ABI input slots the kernel leaves `NO_ID`. It is the static
+counterpart of `operand_present_predicate`: one says an operand is present under
+a condition, the other says it is not there at all. Operands are placed **either
+side** of the hole and never packed down, so the window block stays in `in1` and
+the ratio in `in2` — the same rule `VECTOR.COMPRESS` sub-case 2 already needed
+for its empty `in1`, now stated per kernel in the shared contract instead of per
+kind in each backend. Which slots a kind may leave empty is frozen in
+`compiler/ir/v3/lowering.py::OPTIONAL_INPUT_SLOTS`; a kind absent from that
+table may not declare the attribute at all.
+
+**An index family is refused where it is not implemented.** `index_family` named
+which released helper a kernel reproduces and nothing read it, which is exactly
+how twenty layers came to declare `causal_compressed_dense` while lowering to an
+operator that emits a sliding-window position list. Every index that
+substitution named was a legal KV row, so nothing downstream could refuse it.
+The families each operator produces are therefore a frozen registry,
+`compiler/ir/v3/lowering.py::INDEX_FAMILIES`, and an unknown one is refused at
+neutral admission — one rule both backends inherit, rather than a rule each
+backend has to remember. `ROUTE.WINDOW_INDEX` produces `causal_circular_window`;
+that is the list.
+
+The rule's first catch was not the case it was written for.
+`causal_window_then_current_draft`, DSpark's draft window, is the released
+`get_dspark_topk_idxs`: every draft query gets the same row,
+`arange(0, min(window, p + 1))` then the draft block at `window + arange(block)`.
+At window 128, block 5, position 200 that is KV rows 0..132; `WINDOW_INDEX`
+emits 73..200 and five pads — 60 rows in common and none of the five draft
+rows, which are the whole reason a draft block has an index of its own.
+
+**What a backend must do.** Place operands with
+`compiler/ir/v3/lowering.py::abi_input_slots`, which returns the IR input for
+each ABI slot and `None` for a declared hole, and bind `NO_ID` where it returns
+`None`. Stop treating `ROUTE.INDEX_TOPK`'s `in0` as mandatory — A19's rule that
+every frozen operand row but `GROUPED_CONCAT`'s is mandatory no longer holds for
+this slot. Drop any private per-kind table of empty operand slots for this kind
+in favour of the kernel's own declaration, because a hole one backend places and
+the other packs down is one operator with two spellings, which is what A17
+abolished for the axis, A18 for the extent and A19 for the join.
+
+**What it does not change.** A6's ordering clause, A19's three refusals, the
+zero-candidate case, and the meaning of every other slot. A ranked
+`INDEX_TOPK` written before this amendment carries a real descriptor ID in
+`in0` and is the operator it always was.

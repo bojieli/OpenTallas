@@ -341,9 +341,10 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "branches taken and wait-set evaluations",
                 "engine issue sequence: family, subopcode, descriptor ID",
                 "resolved operand tensor views in operand order: descriptor, "
-                "slot, leading extent, element offset and rank -- amendment A4 "
-                "dynamic index terms and amendment A13 partial final extent, "
-                "against runtime.sim.memory.ViewResolver.resolve",
+                "slot, resolved extent, element offset, rank and the axis that "
+                "extent belongs to -- amendment A4 dynamic index terms, "
+                "amendment A13 partial final extent and amendment A18 extent "
+                "axis and unit, against runtime.sim.memory.ViewResolver.resolve",
                 "state prepare, commit, discard, read and advance counts",
                 "state commit applied or discarded, and rows committed",
                 "trap class and first faulting instruction",
@@ -357,9 +358,11 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
             "subopcode and descriptor ID, and the view port carries the "
             "resolved extents an engine would read; no engine arithmetic is "
             "modelled on either side",
-            "view resolution covers the leading extent and the element offset. "
-            "Trailing extents, strides and the scale binding are copied from "
-            "the descriptor unchanged and are not republished",
+            "view resolution covers the element offset and the extent of the "
+            "one axis amendment A18 lets a view name, which is the leading axis "
+            "unless the view says otherwise. The view's other extents, its "
+            "strides and its scale binding are copied from the descriptor "
+            "unchanged and are not republished",
             "descriptor record CRC32C and the header's SHA-256 digests are not "
             "checked in RTL; instruction and header CRC32C are",
             "predicate kinds that require an engine or a memory read "

@@ -824,3 +824,83 @@ def test_mhc_refuses_an_hc_mult_that_contradicts_the_operands():
     assert result.status == CompletionStatus.FAILED
     assert result.trap_class == int(TrapClass.DESCRIPTOR_OR_ADDRESS)
     assert "hc_mult" in result.message
+
+
+# ---------------------------------------------------------------------------
+# The compressor-pool exponential
+# ---------------------------------------------------------------------------
+# ``_pool`` evaluates ``CR32(exp(x))`` once per pooled lane.  Reaching that
+# through ``runtime.reference.transcendental.binary32_exp_general_rne`` one
+# ``fractions.Fraction`` scalar at a time is the same defect OI-41 names in
+# ``ATTENTION.SPARSE``, and it is 6.7 % of a DeepSeek prefill.  The engine now
+# reaches it through ``exp_cr32``, which is the *same function* computed
+# differently: a binary64 candidate, a two-sided perturbation that proves which
+# binary32 it rounds to, and a referral to the exact reference for anything the
+# proof does not settle.
+#
+# These two tests are what make that takeable: the vectorised form agrees with
+# the scalar reference across the domain a pooling delta can hold, and the one
+# input where the two disagree -- a non-finite delta, which the reference
+# refuses and the vectorised form would answer -- still goes to the reference.
+def test_the_pool_exponential_agrees_with_the_scalar_reference():
+    """Same value as ``binary32_exp_general_rne``, over the pooling domain.
+
+    A pooling delta is ``score - max(score)``, so it is non-positive.  The
+    sweep covers every binary32 exponent field on that side of zero, a dense
+    band through the magnitudes a softmax actually forms, and the underflow
+    edge near -103.97 where the exponential leaves the binary32 range.
+    """
+    from runtime.reference.transcendental import binary32_exp_general_rne
+    from runtime.sim.engines.deepseek_vector import _exponentials
+
+    rng = np.random.default_rng(0x4558)
+    sampled = [np.uint32(0x80000000), np.uint32(0x00000000)]
+    for exponent in range(0, 255):
+        significands = rng.integers(0, 1 << 23, 24, dtype=np.uint32)
+        significands[0] = 0
+        significands[1] = (1 << 23) - 1
+        sampled.append(
+            (np.uint32(1) << 31) | (np.uint32(exponent) << 23) | significands
+        )
+    for exponent in range(100, 134):  # 2**-27 .. 2**7, where the softmax lives
+        sampled.append(
+            (np.uint32(1) << 31)
+            | (np.uint32(exponent) << 23)
+            | np.arange(0, 1 << 23, 1 << 16, dtype=np.uint32)
+        )
+    codes = np.unique(np.concatenate([np.atleast_1d(part) for part in sampled]))
+    values = codes.astype(np.uint32).view(np.float32)
+    values = np.ascontiguousarray(values[np.isfinite(values) & (values <= 0)])
+
+    observed = np.ascontiguousarray(_exponentials(values)).view(np.uint32)
+    source = values.view(np.uint32)
+    compared = 0
+    for index in range(values.size):
+        assert int(observed[index]) == binary32_exp_general_rne(int(source[index])), (
+            float(values[index]),
+            hex(int(observed[index])),
+        )
+        compared += 1
+    assert compared > 5000, compared
+
+
+def test_a_non_finite_pool_delta_still_reaches_the_exact_reference():
+    """The vectorised exponential answers ``exp(-inf) = 0``; the reference refuses.
+
+    A non-finite delta cannot come from a well-formed operand, so rather than
+    decide what it means the engine keeps sending it to the scalar path -- the
+    one that raised on it before.  Without that guard the fast path would
+    silently accept an operand the contract rejects.
+    """
+    from runtime.reference.transcendental import TranscendentalReferenceError
+    from runtime.sim.engines.deepseek_vector import _exponentials
+    from runtime.tensor_accelerator.sparse_attention import exp_cr32
+
+    delta = np.asarray([-np.inf, np.float32(-1.0)], dtype=np.float32)
+    assert float(exp_cr32(delta)[0]) == 0.0
+    try:
+        _exponentials(delta)
+    except Exception as exc:  # the reference's own refusal, whatever it spells
+        assert isinstance(exc, TranscendentalReferenceError), exc
+    else:  # pragma: no cover - a silent acceptance is the defect
+        raise AssertionError("a non-finite pool delta was accepted")

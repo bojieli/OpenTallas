@@ -37,17 +37,21 @@ rules hold across all seven subopcodes:
 ``ROUTE.INDEX_TOPK``
     Lightning-indexer selection, and -- amendment A19 -- the join that puts its
     result into the KV row space.  ``input_view_0`` index scores
-    ``[span, candidates]``; ``input_view_1`` the sliding-window index block
+    ``[span, candidates]``, or -- amendment A20 -- ``NO_ID`` for the **dense**
+    form, which takes every candidate the causal rule admits instead of the top
+    ``k`` by score; ``input_view_1`` the sliding-window index block
     ``[span, window]`` U32 this selection is joined to, or ``NO_ID`` for no
     join; ``input_view_2`` a one-element U32 view naming the **compression
     ratio** of the candidate axis, or ``NO_ID`` for an uncompressed axis.
     ``output_view_0`` U32 KV rows ``[span, window + k]``, **compacted and
     sorted ascending**, tail-padded with ``0xffffffff``, so that
     ATTENTION.SPARSE gathers in address order and never executes a pad.
-    ``aux_id_0`` immediate ``k`` (``NO_ID`` uses the output extent),
-    ``aux_id_1`` mask mode (``0`` causal, ``1`` full), ``aux_id_2`` the runtime
-    symbol bounding the context **in the symbol's own units**, ``aux_id_3`` the
-    symbol holding the absolute position of query ``0``, in the same units.
+    ``aux_id_0`` immediate ``k`` (``NO_ID`` uses the output extent), which with
+    ``in0`` absent is the **capacity** of the compressed segment rather than a
+    selection width; ``aux_id_1`` mask mode (``0`` causal, ``1`` full),
+    ``aux_id_2`` the runtime symbol bounding the context **in the symbol's own
+    units**, ``aux_id_3`` the symbol holding the absolute position of query
+    ``0``, in the same units.
 
     With a compression ratio ``r`` the candidate axis holds ``context // r``
     groups, group ``g`` completes at absolute position ``r * (g + 1) - 1``, and
@@ -57,6 +61,13 @@ rules hold across all seven subopcodes:
     ``g`` names KV row ``span + window + g``: the KV operand ``ATTENTION.SPARSE``
     gathers from is the request's own rows, then the window, then the compressed
     rows, so the compressed segment begins after the first two.
+
+    That horizon is the *whole* of the dense form.  ``Indexer.forward`` is
+    ``get_compress_topk_idxs`` with a ranking in front of it: both count groups
+    with ``(p + 1) // r``, both add the same ``offset``, and both end at the
+    same concatenation in ``Attention.forward``.  So the dense path is this
+    operator with ``in0`` removed, and the span it can no longer read off the
+    score view it reads off ``output_view_0`` instead.
 
 ``ROUTE.HASH_ROUTE``
     ``input_view_0`` U32/U64 keys ``[n]``, ``input_view_1`` a U32 route table
@@ -345,20 +356,35 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     for.  Reordering is safe because the released kernel reads the array as a
     *set*: ``kernel.sparse_attn`` treats every ``-1`` slot as an absent lane at
     any position, with no ordering requirement.
+
+    Amendment A20 makes ``in0`` optional.  With no score view there is no
+    ranking, and the operator emits **every** candidate the causal rule above
+    admits, in ascending group order -- which is the released
+    ``get_compress_topk_idxs``.  Nothing else moves: the horizon, the rebase,
+    the compaction, the order and the zero-candidate case are the same three
+    lines they are for a ranked selection, because the dense family *is* this
+    operator with the selection removed.
     """
     _check_operator(descriptor, int(Route.INDEX_TOPK))
-    score_view = ctx.input_view(descriptor, 0)
+    score_view = ctx.optional_input(descriptor, 0)
     window_view = ctx.optional_input(descriptor, 1)
     ratio_view = ctx.optional_input(descriptor, 2)
     out_view = ctx.output_view(descriptor, 0)
     _u32_out(out_view, "index")
-    span, width = _groups(score_view, "index score")
     out_span, slots = _groups(out_view, "index")
-    _require(
-        out_span == span,
-        f"ROUTE.INDEX_TOPK output view {out_view.descriptor_id} covers "
-        f"{out_span} query rows, expected {span}",
-    )
+    # A20: the span comes off the score view when there is one and off the
+    # output otherwise.  Both name the same number -- the operator writes one
+    # row per query either way -- so the dense form loses an operand and not a
+    # dimension.
+    span = out_span
+    width: int | None = None
+    if score_view is not None:
+        span, width = _groups(score_view, "index score")
+        _require(
+            out_span == span,
+            f"ROUTE.INDEX_TOPK output view {out_view.descriptor_id} covers "
+            f"{out_span} query rows, expected {span}",
+        )
 
     # -- the joined window block (A19 in1) -------------------------------
     window = 0
@@ -406,7 +432,12 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     # for DeepSeek is tokens.  The candidate axis is counted in groups, so the
     # ratio is what converts between them; before A19 the two were silently the
     # same number and a compressed axis had no way to say otherwise.
-    context = _symbol_value(ctx, _aux(descriptor, 2), width * ratio)
+    # A20: what bounds the candidate axis is the scored columns when a score
+    # view states them and the compressed segment's own capacity when it does
+    # not.  It is one statement either way -- you cannot name more groups than
+    # there is somewhere to put them.
+    capacity = topk_count if width is None else width
+    context = _symbol_value(ctx, _aux(descriptor, 2), capacity * ratio)
     candidates = context // ratio
     # Zero candidates is not a fault.  A context shorter than one compression
     # group has completed no group, and the released model runs that layer as
@@ -414,11 +445,17 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     # ``[seqlen, 0]`` block and the concatenation behind it is a no-op.  With a
     # window operand the joined result is that window, which is exactly what
     # ``sparse_attn`` receives there.
+    held_by = (
+        f"slots aux_id_0 gives the compressed segment of output view "
+        f"{out_view.descriptor_id}"
+        if score_view is None
+        else f"scored columns of view {score_view.descriptor_id}"
+    )
     _require(
-        0 <= candidates <= width,
+        0 <= candidates <= capacity,
         f"ROUTE.INDEX_TOPK: a context of {context} at compression ratio "
-        f"{ratio} is {candidates} candidates, outside the {width} scored "
-        f"columns of view {score_view.descriptor_id}",
+        f"{ratio} is {candidates} candidates, outside the {capacity} "
+        f"{held_by}",
     )
     _require(
         candidates > 0 or window_view is not None,
@@ -438,16 +475,18 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
     # segment and a candidate is already a KV row.
     rebase = span + window if ratio_view is not None else 0
 
-    if candidates:
-        scores = widen(ctx, score_view).reshape(span, width)
-        _require(
-            bool(np.all(np.isfinite(scores[:, :candidates]))),
-            f"ROUTE.INDEX_TOPK: index score view {score_view.descriptor_id} "
-            "contains a NaN or infinite value",
-            trap_class=6,
-        )
-    else:
-        scores = np.zeros((span, width), dtype=np.float32)
+    scores: np.ndarray | None = None
+    if score_view is not None:
+        if candidates:
+            scores = widen(ctx, score_view).reshape(span, width)
+            _require(
+                bool(np.all(np.isfinite(scores[:, :candidates]))),
+                f"ROUTE.INDEX_TOPK: index score view {score_view.descriptor_id} "
+                "contains a NaN or infinite value",
+                trap_class=6,
+            )
+        else:
+            scores = np.zeros((span, int(width or 0)), dtype=np.float32)
     selected = np.full((span, slots), np.uint32(PAD_INDEX), dtype=np.uint32)
     considered = 0
     for row in range(span):
@@ -462,11 +501,19 @@ def index_topk(ctx: EngineContext, sub: int, descriptor: Descriptor) -> None:
         )
         considered += limit
         take = min(topk_count, limit)
-        chosen = (
-            _rank_descending(scores[row, :limit])[:take].astype(np.int64) + rebase
-            if take
-            else np.zeros(0, dtype=np.int64)
-        )
+        if not take:
+            chosen = np.zeros(0, dtype=np.int64)
+        elif scores is None:
+            # A20's dense case.  ``take == limit`` here -- the causal rule has
+            # already been clamped to ``candidates`` and ``candidates`` cannot
+            # exceed the capacity ``topk_count`` states -- so this is the whole
+            # admitted prefix of the candidate axis, ascending, and the ranking
+            # is the only thing that is gone.
+            chosen = np.arange(take, dtype=np.int64) + rebase
+        else:
+            chosen = (
+                _rank_descending(scores[row, :limit])[:take].astype(np.int64) + rebase
+            )
         if window_rows is None:
             joined = chosen
         else:

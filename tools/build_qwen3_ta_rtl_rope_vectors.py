@@ -34,7 +34,9 @@ from runtime.reference.tensor_accelerator_rope import (  # noqa: E402
     rope_bf16 as reference_rope,
 )
 from runtime.tensor_accelerator.rope import (  # noqa: E402
+    MAX_POSITIONS,
     NUMERIC_CONTRACT,
+    coefficient_table_bf16,
     rope_bf16,
 )
 
@@ -330,6 +332,34 @@ def build(
         table_payload = handle.read(TABLE_BYTES)
     if len(table_payload) != TABLE_BYTES or _sha256(table_payload) != TABLE_SHA256:
         raise ValueError("deployed RoPE coefficient table differs")
+    # The deployed table is not only hash-pinned: it is byte-for-byte what
+    # ``runtime.tensor_accelerator.rope.coefficient_table_bf16`` generates
+    # today.  That distinction is the whole point of the check.  This artifact
+    # binds ``rope.py`` by digest, and a digest says *that* the oracle moved,
+    # never whether it still produces the bytes the shard holds.  The table is
+    # a function of the frozen inverse-frequency codes, of ``MAX_POSITIONS``
+    # and of the four near-midpoint corrections, so an edit to any of them --
+    # OI-34 raised the bound from 8,000 to 8,192 -- either reproduces the
+    # deployed 8,000 rows or does not, and until now nothing here asked.
+    #
+    # ``TABLE_ROWS`` is 8,000 because that is how many rows the immutable shard
+    # carries and how many the kernel IR and the DMA's ``size2`` bound declare.
+    # A raised ``MAX_POSITIONS`` widens what the *kernel* will qualify; it does
+    # not extend this deployment's table, so 8,191 is not a position this
+    # program can address and 7,999 remains the domain edge these vectors sit
+    # at.  ``coefficient_table_bf16`` refuses a request above its own bound, so
+    # the call also states that the bound still covers the deployed rows.
+    generated = coefficient_table_bf16(TABLE_ROWS)
+    if TABLE_ROWS > MAX_POSITIONS or generated.shape != (
+        TABLE_ROWS,
+        2 * HEAD_WIDTH,
+    ):
+        raise ValueError("generated RoPE coefficient table has the wrong shape")
+    if generated.astype("<u2", copy=False).tobytes() != table_payload:
+        raise ValueError(
+            "the deployed RoPE coefficient table is no longer what "
+            "runtime.tensor_accelerator.rope.coefficient_table_bf16 generates"
+        )
 
     q_codes = [int(value) for value in head_vectors["q_output_codes"]]
     k_codes = [int(value) for value in head_vectors["k_output_codes"]]

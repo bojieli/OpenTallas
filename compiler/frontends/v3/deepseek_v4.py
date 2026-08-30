@@ -173,6 +173,12 @@ expansion joined four copies of ``[rows, hidden]`` into ``[rows, 4, hidden]``,
 which is a ``BROADCAST``, and is what ``HC_EXPAND`` had already been corrected
 to.
 
+Amendments A19 and A20 have since folded both *index* joins into
+``ROUTE.INDEX_TOPK`` itself -- A19 the ratio-4 one, A20 the ratio-128 one -- so
+the feature-axis joins this export still emits are DSpark's.  The axis is stated
+on every one of them; what changed is that there are fewer of them to state it
+on.
+
 This is also what makes ``GROUPED_OUTPUT_PROJECT`` sayable; see below.
 
 Arity notes
@@ -187,8 +193,17 @@ output views with what the ``VECTOR.MHC`` row names -- the pre/post coefficient
 block and the Sinkhorn combination matrix -- and the branch input the released
 ``Block.hc_pre`` returns is emitted as the separate ``REDUCTION.EXPERT_SUM`` the
 ABI leaves it to, with one ``SELECT`` per coefficient plane between them; and
-``COMPRESSED_DENSE_INDEX`` reuses ``WINDOW_INDEX`` parameterised by
-``index_family``, since both enumerate causal indices from a position.
+``COMPRESSED_DENSE_INDEX`` is ``ROUTE.INDEX_TOPK`` with its score operand
+absent, which is amendment A20: the dense family is the top-k family with the
+ranking removed, and everything else about it -- the causal horizon counted in
+compression groups, the rebase onto the joined KV rows, the compaction, the
+ascending order -- is what A19 already put in that operator.  It used to reuse
+``WINDOW_INDEX`` parameterised by ``index_family``, on the reasoning that both
+enumerate causal indices from a position.  They do not: ``WINDOW_INDEX``
+enumerates *absolute positions* of a sliding window and the dense family
+enumerates *completed compression groups*, so the substitution emitted the
+sliding-window block twice and nothing downstream could tell, every index it
+named being a legal KV row.
 ``ATTENTION_SPARSE`` follows amendment A6 exactly: query, fused KV, index,
 per-head sink.
 
@@ -393,7 +408,9 @@ LOWERING_PLAN: Mapping[str, tuple[str, ...]] = {
     "BF16_LINEAR": ("MATMUL",),
     "BINARY32_TO_BF16": ("CONVERT",),
     "BIASED_TOPK_ROUTE": ("BIASED_TOPK",),
-    "COMPRESSED_DENSE_INDEX": ("WINDOW_INDEX", "CONCAT"),
+    # Amendment A20: the dense compressed index is ``ROUTE.INDEX_TOPK`` with
+    # its score operand absent, not a window enumeration joined to a window.
+    "COMPRESSED_DENSE_INDEX": ("INDEX_TOPK",),
     "COMPRESSED_KV_VALID_VIEW": ("STATE_READ",),
     "COMPRESS_KV_WRITE": ("KV_APPEND",),
     "COMPRESS_POOL": ("COMPRESS_POOL",),
@@ -1269,9 +1286,6 @@ def export_deepseek_v4_kernel_graph(
             context_tokens + SLIDING_WINDOW + context_tokens // 128,
         ),
     }
-    selected_rows_128 = Symbolic(
-        "selected_rows_ratio128", 1, SLIDING_WINDOW + context_tokens // 128
-    )
     symbols = (
         RuntimeSymbol("span_tokens", 1, context_tokens, 1, "request"),
         RuntimeSymbol("context_length", 1, context_tokens, 1, "request"),
@@ -1295,13 +1309,6 @@ def export_deepseek_v4_kernel_graph(
             "attention_rows_ratio128",
             1,
             context_tokens + SLIDING_WINDOW + context_tokens // 128,
-            1,
-            "derived",
-        ),
-        RuntimeSymbol(
-            "selected_rows_ratio128",
-            1,
-            SLIDING_WINDOW + context_tokens // 128,
             1,
             "derived",
         ),
@@ -2754,51 +2761,68 @@ def export_deepseek_v4_kernel_graph(
         elif source_kind == "COMPRESSED_DENSE_INDEX":
             window_indices = operands[0]
             node_ratio = int(attrs["ratio"])
-            # The released ``get_compress_topk_idxs`` enumerates the groups the
-            # *context* has completed, not the ones this span contributes: its
-            # decode branch is ``arange(0, (start_pos + 1) // ratio) + offset``
-            # at a span of one, which is ``context_groups_ratioN`` and is zero
-            # only while the context is shorter than one group.  This export
-            # used to declare ``span_groups_ratioN`` here, which is that number
-            # only in a single-call prefill and is zero for every tile of a
-            # tiled one -- so the operand could not resolve, a backend left it
-            # at its declared maximum, and the join's A17 check then compared a
-            # sum of maxima against a request-sized output.
-            groups_here = committed_groups[node_ratio]
-            dense = act(f"{node_id}.dense", "u32", (span, groups_here))
+            # Amendment A20.  This was a ``WINDOW_INDEX`` enumeration joined to
+            # the sliding window by an axis-1 ``CONCAT``, and the enumeration
+            # was a substitution: ``ROUTE.WINDOW_INDEX`` emits
+            # ``arange(first, last + 1)`` over the *absolute positions* of a
+            # causal window, which is a second copy of the sliding window and
+            # not the completed compression groups this family names.  Nothing
+            # downstream could refuse it -- every index it names is a legal KV
+            # row -- so twenty ratio-128 layers would have attended their window
+            # twice, fluently and wrongly.
+            #
+            # The operator that does name them is the one next door.
+            # ``get_compress_topk_idxs`` and ``Indexer.forward`` count the same
+            # horizon on the same axis in the same units, add the same
+            # ``offset``, and end at the same concatenation in
+            # ``Attention.forward``; the only difference is that one ranks the
+            # admitted candidates and the other takes them all.  So the dense
+            # family is ``ROUTE.INDEX_TOPK`` with ``in0`` absent, and the group
+            # horizon, the rebase onto the joined KV rows, the compaction, the
+            # ascending order and the zero-candidate case are the ones A19
+            # already built.
+            capacity = context_tokens // node_ratio
+            width = SLIDING_WINDOW + capacity
+            output = act(out0, "u32", (span, width))
             emit(
-                f"{node_id}.enumerate",
-                "WINDOW_INDEX",
-                (ten("request.start_pos"),),
-                (dense,),
-                step="causal_compressed_enumeration",
-                iteration_domain={"tokens": span, "width": groups_here},
-                attributes={
-                    **attrs,
-                    "index_family": "causal_compressed_dense",
-                    "padding_index": -1,
-                    # A18: zero committed groups is a predicate question, not a
-                    # clamp.
-                    "execution_predicate": _nonempty(groups_here),
-                },
-            )
-            output = act(out0, "u32", (span, selected_rows_128))
-            emit(
-                f"{node_id}.concat",
-                "CONCAT",
-                (window_indices, dense),
+                node_id,
+                "INDEX_TOPK",
+                (window_indices, compression_ratio_constant(node_ratio)),
                 (output,),
-                step="window_then_compressed_indices",
-                iteration_domain={"tokens": span, "width": selected_rows_128},
-                # ``selected_rows_ratio128`` is ``CONTEXT_LENGTH / 128 + 128``,
-                # so with the enumeration now stated in the same units the A17
-                # sum is ``128 + context_groups_ratio128`` on both sides.  Input
-                # 1 is still absent below one whole group, and the join says so.
+                iteration_domain={
+                    "tokens": span,
+                    "top_k": capacity,
+                    "window": SLIDING_WINDOW,
+                    "width": capacity,
+                },
                 attributes={
                     **attrs,
-                    "axis": 1,
-                    "segment_widths": [SLIDING_WINDOW, groups_here.symbol],
-                    "operand_present_predicate": {"1": _nonempty(groups_here)},
+                    # ``in0`` is not conditionally present, it is not there.
+                    # The operands are placed either side of the hole rather
+                    # than packed down, so the window block stays in ``in1``
+                    # and the ratio in ``in2``.
+                    "absent_operands": [0],
+                    "causal_mask": "compressed_group_completed_before_position",
+                    "order": "index_ascending",
+                    "padding_index": -1,
+                    "compression_ratio": node_ratio,
+                    # With ``in0`` absent ``aux0`` is the *capacity* of the
+                    # compressed segment rather than a selection width, and the
+                    # causal rule still bounds what is taken: a query at
+                    # absolute position ``p`` admits ``(p + 1) // ratio`` groups
+                    # and no more than this many can be named.  It is a
+                    # constant, which is the point -- the output is
+                    # ``[span, 128 + k]`` with one request-determined axis
+                    # where the join it replaces had two.
+                    "k": capacity,
+                    "segment_widths": [SLIDING_WINDOW, capacity],
+                    "segment_order": "window_then_rebased_compressed",
+                    # No ``operand_present_predicate``.  The score operand that
+                    # used to vanish below one whole compression group is gone
+                    # for every request, not only for those, and the window
+                    # operand is always present -- so unlike the pair it
+                    # replaces this kernel is issued unconditionally and has no
+                    # alternative operand path for a backend to get wrong.
                 },
             )
             bind(out0, output)

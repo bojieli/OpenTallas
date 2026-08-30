@@ -26,7 +26,15 @@ from compiler.ir.v3.kernel_ir import (
     ROLES,
     FORBIDDEN_TERMS,
 )
-from compiler.ir.v3.lowering import KERNEL_TO_ENGINE, check_table_complete
+from compiler.ir.v3.lowering import (
+    INDEX_FAMILIES,
+    abi_input_slots,
+    KERNEL_TO_ENGINE,
+    OPTIONAL_INPUT_SLOTS,
+    check_index_family,
+    check_operand_slots,
+    check_table_complete,
+)
 
 REPO = Path(__file__).resolve().parents[2]
 MODELS = ("qwen3-8b", "deepseek-v4-flash-0731")
@@ -205,3 +213,119 @@ def test_the_two_models_share_operation_kinds_where_they_overlap() -> None:
     assert "HYPER_CONNECT_POST" in deepseek and "ADD" not in deepseek
     assert not (qwen - OPERATION_KINDS)
     assert not (deepseek - OPERATION_KINDS)
+
+
+# ---------------------------------------------------------------------------
+# Amendment A20: the two rules the frozen table owns
+# ---------------------------------------------------------------------------
+def test_a_declared_absent_operand_is_checked_against_the_frozen_row() -> None:
+    """``absent_operands`` is a statement about the ABI row, not a hint.
+
+    It is the static counterpart of ``operand_present_predicate``, and it exists
+    so that a hole is placed rather than packed: the compressed-dense index
+    leaves ``ROUTE.INDEX_TOPK``'s ``in0`` empty and keeps the window block in
+    ``in1`` and the ratio in ``in2``.  A backend that packed them down would
+    hand the engine a window block where the scores belong.  Which slots may be
+    empty is frozen, so an exporter cannot widen it privately.
+    """
+    assert OPTIONAL_INPUT_SLOTS["INDEX_TOPK"] == frozenset({0, 1, 2})
+    assert check_operand_slots("INDEX_TOPK", ("window", "ratio"), {}) == []
+    assert (
+        check_operand_slots(
+            "INDEX_TOPK", ("window", "ratio"), {"absent_operands": [0]}
+        )
+        == []
+    )
+    # A kind the table does not list may not declare the attribute at all.
+    refused = check_operand_slots("WINDOW_INDEX", (), {"absent_operands": [0]})
+    assert refused and "does not make them optional" in refused[0]
+    # And the slots plus the operands may not exceed the row.
+    too_many = check_operand_slots(
+        "INDEX_TOPK", ("a", "b", "c"), {"absent_operands": [0]}
+    )
+    assert too_many and "3 input slots" in too_many[0]
+    # A slot named twice is a malformed statement, not a duplicate no-op.
+    twice = check_operand_slots("INDEX_TOPK", ("w",), {"absent_operands": [0, 0]})
+    assert twice and "names a slot twice" in twice[0]
+
+
+def test_an_index_family_the_operator_does_not_produce_is_refused() -> None:
+    """One rule at admission, so neither backend has to remember it.
+
+    ``index_family`` was a comment that read like a contract: it named which
+    released helper a kernel reproduces, and no engine, verifier or backend read
+    it.  That is how twenty ratio-128 layers came to declare
+    ``causal_compressed_dense`` while lowering to ``ROUTE.WINDOW_INDEX``, which
+    emits a sliding-window position list -- every index of it a legal KV row, so
+    no operand, bound or numeric check could see the substitution.
+    """
+    assert INDEX_FAMILIES["WINDOW_INDEX"] == frozenset({"causal_circular_window"})
+    assert check_index_family("WINDOW_INDEX", {}) == []
+    assert (
+        check_index_family(
+            "WINDOW_INDEX", {"index_family": "causal_circular_window"}
+        )
+        == []
+    )
+    for family in ("causal_compressed_dense", "causal_window_then_current_draft"):
+        refused = check_index_family("WINDOW_INDEX", {"index_family": family})
+        assert refused, family
+        # The refusal has to name the family and the operator, or it sends the
+        # reader looking for a defect in the wrong layer.
+        assert family in refused[0]
+        assert "WINDOW_INDEX" in refused[0]
+        assert "causal_circular_window" in refused[0]
+    # A kind that produces no index family may not claim one either.
+    stray = check_index_family("MATMUL", {"index_family": "causal_circular_window"})
+    assert stray and "no index family is" in stray[0]
+
+
+def test_a_published_graph_declares_only_families_the_abi_implements(
+    graph: dict,
+) -> None:
+    for kernel in graph["kernels"]:
+        assert check_index_family(kernel["kind"], kernel["attributes"]) == [], (
+            kernel["kernel_id"]
+        )
+        assert (
+            check_operand_slots(
+                kernel["kind"], kernel["inputs"], kernel["attributes"]
+            )
+            == []
+        ), kernel["kernel_id"]
+
+
+def test_a_declared_hole_is_placed_and_never_packed_down() -> None:
+    """One placement function, so both lanes put the hole in the same slot.
+
+    The failure this prevents was measured: with the operands packed down, the
+    ROM lane handed ``ROUTE.INDEX_TOPK`` the window block where the scores
+    belong and the compression ratio where the window block belongs, and the
+    engine said so -- "window view 2084 covers 1 query rows, expected 104".
+    """
+    assert abi_input_slots("INDEX_TOPK", ("scores", "win", "ratio"), {}) == [
+        "scores",
+        "win",
+        "ratio",
+    ]
+    assert abi_input_slots(
+        "INDEX_TOPK", ("win", "ratio"), {"absent_operands": [0]}
+    ) == [None, "win", "ratio"]
+    # The rule is not specific to A20's slot: ``VECTOR.COMPRESS`` sub-case 2
+    # has an empty ``in1`` for the same structural reason, and both backends
+    # keep that one in a private per-kind table today.
+    assert abi_input_slots(
+        "COMPRESS_STATE_UPDATE", ("packed", "ape"), {"absent_operands": [1]}
+    ) == ["packed", None, "ape"]
+
+
+def test_every_published_kernel_places_its_operands_the_same_way(graph: dict) -> None:
+    for kernel in graph["kernels"]:
+        slots = abi_input_slots(
+            kernel["kind"], kernel["inputs"], kernel["attributes"]
+        )
+        # Every declared operand appears exactly once, in order, and the holes
+        # are the ones the kernel declared.
+        assert [s for s in slots if s is not None] == list(kernel["inputs"])
+        holes = [i for i, s in enumerate(slots) if s is None]
+        assert holes == list(kernel["attributes"].get("absent_operands", []))

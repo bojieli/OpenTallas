@@ -869,3 +869,260 @@ def test_the_device_cache_is_off_unless_an_operator_opts_in(
     monkeypatch.setenv("OPENTALLAS_ABI3_DEVICE_CACHE_BYTES", "not-a-number")
     with pytest.raises(BackendError):
         backend.device_cache_bytes()
+
+
+# ---------------------------------------------------------------------------
+# The two schedules of the sequential contraction
+# ---------------------------------------------------------------------------
+# ``bf16_bf16_fp32_sequential_rne_v1`` fixes each output element's reduction:
+# its own K products, formed exactly, accumulated in strictly ascending
+# reduction index in binary32.  It fixes nothing about *which* output element is
+# worked on when, and ``sequential_matmul_binary32`` uses that freedom: a K-last
+# schedule that materialises ``[rows, cols, K]`` and lets ``np.add.accumulate``
+# walk the contiguous reduction axis, and a K-major schedule that walks the
+# reduction on the outside and forms one rank-1 plane of products per reduction
+# index.  K-last pays no per-index dispatch and wins on a small tile; K-major
+# vectorises the reduction and wins on a large one, measured at 4.6-5.7x at the
+# DeepSeek dense shapes.
+#
+# The tests below are the reason that choice is takeable: the two schedules are
+# differentially identical on raw binary32 codes, both answer to the exact
+# rational oracle, and the mutations that would make either one a different
+# association are caught.
+def _schedule_operands(
+    rng: np.random.Generator, shape: tuple[int, int], kind: str
+) -> np.ndarray:
+    """BF16-exact operands of three kinds, all representable without rounding."""
+    if kind == "unit":
+        return bf16(rng.normal(0.0, 1.0, shape).astype(np.float32))
+    if kind == "wide":
+        # Sixty binades of spread, so partial sums cross magnitudes and an
+        # out-of-order accumulation would round differently.  The bound keeps
+        # every product inside binary32 -- an operand pool that overflows would
+        # test the refusal, not the association.
+        scale = np.float32(2.0) ** rng.integers(-30, 30, shape).astype(np.float32)
+        return bf16((rng.normal(0.0, 1.0, shape).astype(np.float32) * scale))
+    if kind == "edge":
+        pool = bf16(
+            np.asarray(
+                [
+                    0.0,
+                    -0.0,
+                    1.0,
+                    -1.0,
+                    float(np.float32(2.0) ** -126),
+                    -float(np.float32(2.0) ** -126),
+                    float(np.float32(2.0) ** -140),
+                    float(np.float32(2.0) ** -63),
+                    float(np.float32(2.0) ** 30),
+                    float(np.float32(2.0) ** 50),
+                ],
+                dtype=np.float32,
+            )
+        )
+        return pool[rng.integers(0, pool.size, shape)]
+    raise AssertionError(kind)
+
+
+def _run_schedule(schedule, left: np.ndarray, right: np.ndarray) -> np.ndarray:
+    output = np.empty((left.shape[0], right.shape[0]), dtype=np.float32)
+    previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
+    try:
+        schedule(
+            np.ascontiguousarray(left, dtype=np.float32),
+            np.ascontiguousarray(right, dtype=np.float32),
+            output,
+        )
+    finally:
+        np.seterr(**previous)
+    return output
+
+
+#: Shapes straddling the schedule threshold, including the DeepSeek-V4-Flash
+#: dense and routed contraction shapes and the Qwen3-8B projection shape.
+_SCHEDULE_SHAPES = (
+    (1, 1, 1),
+    (1, 1, 64),
+    (1, 2048, 65),
+    (2, 2048, 33),
+    (3, 63, 64),
+    (5, 65, 7),
+    (8, 1024, 63),
+    (9, 1023, 64),
+    (13, 1025, 65),
+    (16, 512, 128),
+    (64, 64, 64),
+    (104, 512, 129),
+    (104, 1024, 64),
+    (104, 2048, 33),
+    (128, 65, 2),
+    (257, 3, 513),
+)
+
+
+def test_the_two_sequential_schedules_are_bit_identical() -> None:
+    """Same contract, two schedules, no bit between them.
+
+    Every element's reduction is untouched by the schedule; only the order in
+    which independent output elements are visited moves.  This is the check
+    that says so on raw ``uint32`` codes rather than approximately, over shapes
+    on both sides of the threshold and over operand pools chosen to make an
+    out-of-order accumulation visible: sixty binades of spread, signed zeros,
+    subnormals, and products that underflow.
+    """
+    rng = np.random.default_rng(0x5EED)
+    compared = 0
+    kmajor = klast = 0
+    for rows, cols, depth in _SCHEDULE_SHAPES:
+        for kind in ("unit", "wide", "edge"):
+            left = _schedule_operands(rng, (rows, depth), kind)
+            right = _schedule_operands(rng, (cols, depth), kind)
+            widened_left = widen_bf16(left)
+            widened_right = widen_bf16(right)
+            k_last = _run_schedule(
+                backends._sequential_k_last, widened_left, widened_right
+            )
+            k_major = _run_schedule(
+                backends._sequential_k_major, widened_left, widened_right
+            )
+            dispatched = backends.sequential_matmul_binary32(
+                widened_left, widened_right
+            )
+            np.testing.assert_array_equal(
+                k_major.view(np.uint32), k_last.view(np.uint32),
+                err_msg=f"{(rows, cols, depth)} {kind}",
+            )
+            np.testing.assert_array_equal(
+                dispatched.view(np.uint32), k_last.view(np.uint32),
+                err_msg=f"{(rows, cols, depth)} {kind}",
+            )
+            compared += 1
+            tile = rows * min(cols, backends.SEQUENTIAL_KMAJOR_COL_TILE)
+            if tile >= backends.SEQUENTIAL_KMAJOR_MIN_TILE:
+                kmajor += 1
+            else:
+                klast += 1
+    assert compared == len(_SCHEDULE_SHAPES) * 3
+    # A differential that only ever exercised one schedule would pass without
+    # having compared anything, so the coverage is asserted rather than hoped
+    # for.
+    assert kmajor > 0 and klast > 0, (kmajor, klast)
+
+
+def test_the_k_major_schedule_answers_to_the_exact_rational_oracle() -> None:
+    """Not just "the same as the other schedule" -- the same as the contract.
+
+    The shape is above the threshold, so the dispatcher reaches K-major, and
+    small enough that the ``fractions.Fraction`` oracle can enumerate it.
+    """
+    rng = np.random.default_rng(0x0AC1)
+    activations = exact_bf16(rng, (9, 3))
+    weights = exact_bf16(rng, (1024, 3))
+    assert (
+        activations.shape[0] * min(weights.shape[0], backends.SEQUENTIAL_KMAJOR_COL_TILE)
+        >= backends.SEQUENTIAL_KMAJOR_MIN_TILE
+    ), "this shape must reach the K-major schedule for the test to mean anything"
+    accumulator = backends.sequential_matmul_binary32(
+        widen_bf16(activations), widen_bf16(weights)
+    )
+    codes, _ = narrow_bf16_rne(accumulator)
+    np.testing.assert_array_equal(codes, _oracle_contraction(activations, weights))
+
+
+def test_the_schedule_threshold_cannot_change_a_bit(monkeypatch) -> None:
+    """The threshold is a performance knob, so moving it must change nothing.
+
+    Driving one shape through both settings is the direct statement that the
+    dispatcher's choice is not load-bearing -- which is what makes it safe for
+    a later measurement to move it.
+    """
+    rng = np.random.default_rng(0xB0A7)
+    activations = widen_bf16(_schedule_operands(rng, (16, 96), "wide"))
+    weights = widen_bf16(_schedule_operands(rng, (512, 96), "wide"))
+    results = []
+    for threshold in (0, 1 << 40):
+        monkeypatch.setattr(backends, "SEQUENTIAL_KMAJOR_MIN_TILE", threshold)
+        results.append(backends.sequential_matmul_binary32(activations, weights))
+    monkeypatch.undo()
+    np.testing.assert_array_equal(
+        results[0].view(np.uint32), results[1].view(np.uint32)
+    )
+    for tile in (1, 7, 64, 1024):
+        monkeypatch.setattr(backends, "SEQUENTIAL_KMAJOR_COL_TILE", tile)
+        monkeypatch.setattr(backends, "SEQUENTIAL_KMAJOR_MIN_TILE", 0)
+        np.testing.assert_array_equal(
+            backends.sequential_matmul_binary32(activations, weights).view(np.uint32),
+            results[0].view(np.uint32),
+            err_msg=f"column tile {tile}",
+        )
+        monkeypatch.undo()
+
+
+def test_reversing_the_k_major_reduction_is_caught() -> None:
+    """The mutation the differential exists to refuse.
+
+    Reversing the reduction index is still a sum of the same products, and it
+    is a *different number* in binary32.  If this ever stops differing, the
+    operand pool has gone soft and the differential above has stopped proving
+    anything.
+    """
+    rng = np.random.default_rng(0xDEC0)
+    left = widen_bf16(_schedule_operands(rng, (16, 512), "wide"))
+    right = widen_bf16(_schedule_operands(rng, (512, 512), "wide"))
+    expected = backends.sequential_matmul_binary32(left, right)
+
+    rows, cols = left.shape[0], right.shape[0]
+    observed = np.empty((rows, cols), dtype=np.float32)
+    previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
+    try:
+        for col_start in range(0, cols, backends.SEQUENTIAL_KMAJOR_COL_TILE):
+            col_end = min(col_start + backends.SEQUENTIAL_KMAJOR_COL_TILE, cols)
+            transposed = np.ascontiguousarray(right[col_start:col_end].T)
+            accumulator = np.zeros((rows, col_end - col_start), dtype=np.float32)
+            products = np.empty_like(accumulator)
+            for index in reversed(range(left.shape[1])):  # the mutation
+                np.multiply(
+                    left[:, index, None],
+                    transposed[index][None, :],
+                    out=products,
+                    dtype=np.float32,
+                )
+                products[products == 0] = np.float32(0.0)
+                np.add(accumulator, products, out=accumulator, dtype=np.float32)
+            observed[:, col_start:col_end] = accumulator
+    finally:
+        np.seterr(**previous)
+    assert not np.array_equal(expected.view(np.uint32), observed.view(np.uint32))
+
+
+def test_a_contraction_that_overflows_names_the_product_not_the_sum() -> None:
+    """Both schedules must refuse the same operand with the same message.
+
+    A product that leaves the binary32 range is a different fault from a sum
+    that does, and folding one into the other would report the wrong cause.
+    The K-major schedule reaches its finiteness checks in a different order
+    from the K-last one -- per reduction index rather than per tile -- so the
+    two shapes here drive one case through each.
+    """
+
+    def contraction(rows: int, cols: int, left_value: float, right_value: float):
+        left = bf16(np.full((rows, 4), left_value, dtype=np.float32))
+        right = bf16(np.full((cols, 4), right_value, dtype=np.float32))
+        return widen_bf16(left), widen_bf16(right)
+
+    # 2**120 x 2**120 = 2**240: every product is out of range.
+    for rows, cols in ((16, 1024), (1, 2)):
+        tile = rows * min(cols, backends.SEQUENTIAL_KMAJOR_COL_TILE)
+        assert (tile >= backends.SEQUENTIAL_KMAJOR_MIN_TILE) == (rows == 16)
+        with pytest.raises(BackendError, match="product left the binary32 range"):
+            backends.sequential_matmul_binary32(
+                *contraction(rows, cols, float(np.float32(2.0) ** 120),
+                             float(np.float32(2.0) ** 120))
+            )
+    # 2**100 x 2**27 = 2**127, finite; four of them sum past the binary32 top.
+    for rows, cols in ((16, 1024), (1, 2)):
+        with pytest.raises(BackendError, match="sum left the binary32 range"):
+            backends.sequential_matmul_binary32(
+                *contraction(rows, cols, float(np.float32(2.0) ** 100),
+                             float(np.float32(2.0) ** 27))
+            )

@@ -29,7 +29,7 @@ from compiler.tensor_accelerator.common import (  # noqa: E402
 
 SCHEMA = "opentallas.tensor_accelerator.qwen_rtl_rope_campaign.v1"
 VECTOR_SCHEMA = "opentallas.tensor_accelerator.qwen_rtl_rope_vectors.v1"
-VECTOR_ID = "7a55f9aba5c3e329e571e2a5564beeb666964cd774a868d5ba448470574206d7"
+VECTOR_ID = "3a792b0dec8dd7277540841409accca66521f2f05f977c1cd6b6d9e5361f4f76"
 HEAD_RMS_CAMPAIGN_ID = (
     "d7153d61372e1470310e578d71fda690ccda2fe361a30386399a60d6f0b36c37"
 )

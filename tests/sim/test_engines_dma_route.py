@@ -1040,6 +1040,110 @@ def test_index_topk_matches_the_qualified_selection_reference(base, span, contex
         assert rows == expected, token
 
 
+@pytest.mark.parametrize(
+    "base,span,context",
+    [(0, 24, 24), (0, 512, 512), (127, 1, 128), (1023, 1, 1024), (60, 4, 64)],
+)
+def test_index_topk_with_no_score_operand_is_the_released_dense_family(
+    base, span, context
+):
+    """Amendment A20: ``in0`` absent is ``get_compress_topk_idxs``.
+
+    The released model has two ways of naming compressed KV rows and they meet
+    at one concatenation in ``Attention.forward``: ``Indexer.forward`` ranks the
+    candidates the causal rule admits, and ``get_compress_topk_idxs`` takes all
+    of them -- ``arange(0, (start_pos + 1) // ratio) + offset`` in decode.  So
+    the dense family is this operator with the ranking removed, and the
+    expectation below is the qualified reference for that helper, not a
+    restatement of the engine.
+    """
+    from runtime.reference.indexing import compressed_dense_indices
+
+    ratio, window = 4, 2
+    capacity = context // ratio
+
+    build = Build()
+    win = build.input_view(
+        np.tile(np.arange(window, dtype=np.uint32), (span, 1)), DType.U32
+    )
+    ratio_view = build.input_view(np.array([ratio], dtype=np.uint32), DType.U32)
+    out = build.output_view((span, window + capacity), DType.U32, 4)
+    emit_op(
+        build,
+        Major.ROUTE,
+        Route.INDEX_TOPK,
+        [NO_ID, win, ratio_view],
+        [out],
+        aux=[capacity, 0, int(Symbol.CONTEXT_LENGTH), int(Symbol.POSITION_START)],
+    )
+    device = build.finish()
+    result = run(
+        device,
+        symbols={
+            int(Symbol.CONTEXT_LENGTH): context,
+            int(Symbol.POSITION_START): base,
+        },
+    )
+    assert result.status == CompletionStatus.SUCCESS, result.message
+
+    got = read(device, out)
+    for token in range(span):
+        position = base + token
+        # The reference carries the released helper's own two branches; either
+        # branch, read at this query's absolute position, is the row A20 emits.
+        (matrix,) = compressed_dense_indices(
+            ratio,
+            1,
+            position + 1,
+            position if base or span == 1 else 0,
+            span + window,
+        )
+        reference = matrix[0] if len(matrix) == 1 else matrix[position]
+        expected = sorted(
+            list(range(window)) + [g for g in reference if g != -1]
+        )
+        rows = sorted(int(v) for v in got[token] if v != NO_ID)
+        assert rows == expected, (token, position)
+        # A6's clause: padding is a trailing run, never interior.
+        valid = got[token] != NO_ID
+        assert bool(np.all(valid[: int(np.count_nonzero(valid))]))
+    assert result.counters["route.topk_candidates"] == sum(
+        min((base + t + 1) // ratio, capacity) for t in range(span)
+    )
+
+
+def test_index_topk_with_no_score_operand_bounds_groups_by_the_segment():
+    """``aux_id_0`` is the compressed segment's capacity when ``in0`` is absent.
+
+    With a score view the candidate axis is bounded by the scored columns.
+    With none there is no such axis, so the bound is the one thing that still
+    states how many groups can be named: the slots ``aux_id_0`` gives the
+    compressed segment.  A context that completes more groups than fit is
+    refused rather than truncated.
+    """
+    build = Build()
+    win = build.input_view(np.zeros((1, 2), dtype=np.uint32), DType.U32)
+    ratio_view = build.input_view(np.array([4], dtype=np.uint32), DType.U32)
+    out = build.output_view((1, 5), DType.U32, 4)
+    emit_op(
+        build,
+        Major.ROUTE,
+        Route.INDEX_TOPK,
+        [NO_ID, win, ratio_view],
+        [out],
+        aux=[3, 0, int(Symbol.CONTEXT_LENGTH), int(Symbol.POSITION_START)],
+    )
+    result = run(
+        build.finish(),
+        symbols={
+            int(Symbol.CONTEXT_LENGTH): 64,  # 16 groups into a 3-slot segment
+            int(Symbol.POSITION_START): 0,
+        },
+    )
+    assert result.status == CompletionStatus.FAILED
+    assert "16 candidates, outside the 3" in result.message
+
+
 def test_index_topk_refuses_a_multi_element_compression_ratio():
     build = Build()
     src = build.input_view(np.ones((2, 2), dtype=np.float32), DType.FP32)

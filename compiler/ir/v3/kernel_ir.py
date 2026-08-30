@@ -27,6 +27,7 @@ import json
 from dataclasses import dataclass, field as dc_field
 from typing import Any, Iterable, Mapping, Sequence
 
+from compiler.ir.v3.lowering import check_index_family, check_operand_slots
 from runtime.abi3.capability import canonical_json, digest_of
 
 MODEL_GRAPH_SCHEMA = "opentallas.model_graph.v3"
@@ -698,6 +699,19 @@ def check_neutral(graph: KernelGraph) -> list[str]:
             errors.extend(_check_broadcast(kernel, seen_tensor, where))
         if kernel.kind == "SELECT":
             errors.extend(_check_select(kernel, seen_tensor, where))
+        # The two rules the frozen lowering table owns.  They are checked here,
+        # once, because both backends admit a graph through this function and
+        # neither should have to remember a contract the other also depends on.
+        errors.extend(
+            f"{where}: {problem}"
+            for problem in check_operand_slots(
+                kernel.kind, kernel.inputs, kernel.attributes
+            )
+        )
+        errors.extend(
+            f"{where}: {problem}"
+            for problem in check_index_family(kernel.kind, kernel.attributes)
+        )
         if not kernel.numeric_contract:
             errors.append(f"{where}: no numeric contract named")
         if kernel.predicate:

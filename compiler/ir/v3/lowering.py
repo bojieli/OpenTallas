@@ -13,7 +13,7 @@ errors".
 
 from __future__ import annotations
 
-from typing import Mapping, NamedTuple
+from typing import Mapping, NamedTuple, Sequence
 
 from runtime.abi3.constants import (
     Attention,
@@ -111,7 +111,9 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     "HASH_ROUTE": EngineOp(Major.ROUTE, Route.HASH_ROUTE, 2, 1),
     # Amendment A19: INDEX_TOPK selects, rebases and joins.  in0 the index
     # scores, in1 the sliding-window index block it is joined to, in2 the
-    # one-element compression ratio of the candidate axis.
+    # one-element compression ratio of the candidate axis.  Amendment A20 makes
+    # in0 optional -- see ``OPTIONAL_INPUT_SLOTS`` -- so the same operator, with
+    # the ranking removed, is the dense compressed-index family.
     "INDEX_TOPK": EngineOp(Major.ROUTE, Route.INDEX_TOPK, 3, 1),
     "WEIGHT_NORMALIZE": EngineOp(Major.ROUTE, Route.WEIGHT_NORMALIZE, 1, 1),
     # Two outputs: the dispatched activations and the expert IDs they were
@@ -144,6 +146,169 @@ KERNEL_TO_ENGINE: Mapping[str, EngineOp] = {
     # a backend concern into the neutral IR.
     "KV_APPEND": EngineOp(Major.DMA, Dma.SCATTER, 2, 1),
 }
+
+
+#: Attribute naming the ABI **input slots** a kernel leaves ``NO_ID``.
+#:
+#: The static counterpart of ``operand_present_predicate``.  That attribute says
+#: an operand is present under a condition; this one says an operand is not
+#: there at all, so a backend places the remaining operands *either side* of the
+#: hole rather than packing them down.  The values are ABI slot numbers, not IR
+#: input indices, because the operand this names is absent from ``inputs`` and
+#: an index into a list it is not in would mean nothing.
+ABSENT_OPERANDS = "absent_operands"
+
+
+#: ABI input slots a neutral kind may declare statically absent, by kind.
+#:
+#: Frozen, and deliberately short.  A slot is in this table only because the
+#: wire format says the operator reads it optionally and an exporter has a real
+#: reason to leave it empty; a kind that is not here may not declare
+#: ``absent_operands`` at all.  Growing it is an amendment, not a backend's
+#: private decision -- which is the whole difference between this table and a
+#: hole table each backend keeps for itself.
+#:
+#: ``INDEX_TOPK`` is the only entry.  Amendment A19 made ``in1`` (the joined
+#: window block) and ``in2`` (the compression ratio) optional -- ``NO_ID`` in
+#: both is the un-joined, ratio-one operator ``ROUTE.INDEX_TOPK`` has always
+#: been.  Amendment A20 made ``in0`` (the index scores) optional: with no score
+#: view there is no ranking, and the operator emits every candidate the causal
+#: rule admits in ascending group order, which is the released
+#: ``get_compress_topk_idxs``.
+OPTIONAL_INPUT_SLOTS: Mapping[str, frozenset[int]] = {
+    "INDEX_TOPK": frozenset({0, 1, 2}),
+}
+
+
+#: The index families each neutral kind's frozen operator actually produces.
+#:
+#: A gate, not a label.  ``index_family`` began as a comment -- it named which
+#: released helper a kernel reproduces, and no engine, verifier or backend read
+#: it -- and that is precisely the shape that let twenty ratio-128 layers
+#: declare ``causal_compressed_dense`` while lowering to an operator that emits
+#: a sliding-window position list.  Every index the substitution named was a
+#: legal KV row, so the operand checks passed, the bound checks passed and the
+#: numeric checks passed; the layers would have attended their window twice and
+#: never a compressed group, fluently and wrongly.
+#:
+#: So the attribute either had to be refused where it is not implemented or
+#: cease to exist, and it is refused -- **here**, at neutral admission, so that
+#: it is one rule both backends inherit rather than two backends each
+#: remembering.  ``ROUTE.WINDOW_INDEX`` writes ``arange(first, last + 1)`` over
+#: the absolute positions of a causal window, tail-padded; that is the whole of
+#: what it produces, and ``causal_circular_window`` is the whole of what may be
+#: claimed for it.
+#:
+#: Two families are therefore refused and both refusals are load-bearing:
+#:
+#: * ``causal_compressed_dense`` -- ``arange(0, context // ratio) + offset``,
+#:   counted in compression groups and rebased onto the joined KV rows.  After
+#:   amendment A20 nothing emits it against ``WINDOW_INDEX``: it is
+#:   ``ROUTE.INDEX_TOPK`` with ``in0`` absent, where the group horizon, the
+#:   rebase and the compaction already live.
+#: * ``causal_window_then_current_draft`` -- the released
+#:   ``get_dspark_topk_idxs``, ``arange(0, min(window, p + 1))`` followed by the
+#:   draft block at ``window + arange(block)``.  Two segments in a disjoint
+#:   address range, identical for every draft query, with no sliding.
+#:   ``WINDOW_INDEX`` produces a *sliding* window ending at each query and pads
+#:   the rest, so the substitution is the same defect a second time, latent
+#:   behind a profile the first release does not build.
+INDEX_FAMILIES: Mapping[str, frozenset[str]] = {
+    "WINDOW_INDEX": frozenset({"causal_circular_window"}),
+}
+
+
+def check_operand_slots(
+    kind: str, inputs: Sequence[str], attributes: Mapping[str, object]
+) -> list[str]:
+    """Check a kernel's ``absent_operands`` against the frozen operand row."""
+    declared = attributes.get(ABSENT_OPERANDS)
+    if declared is None:
+        return []
+    if not isinstance(declared, (list, tuple)) or not all(
+        isinstance(slot, int) and not isinstance(slot, bool) for slot in declared
+    ):
+        return [f"{ABSENT_OPERANDS} must be a list of ABI input slot numbers"]
+    slots = tuple(int(slot) for slot in declared)
+    errors: list[str] = []
+    if len(set(slots)) != len(slots):
+        errors.append(f"{ABSENT_OPERANDS} names a slot twice: {list(slots)}")
+    optional = OPTIONAL_INPUT_SLOTS.get(kind, frozenset())
+    unstated = sorted(set(slots) - optional)
+    if unstated:
+        errors.append(
+            f"{ABSENT_OPERANDS} leaves input slot(s) {unstated} of {kind} empty, "
+            "and the frozen operand row does not make them optional; the slots "
+            f"that may be absent are {sorted(optional) or 'none'}"
+        )
+    engine = KERNEL_TO_ENGINE.get(kind)
+    if engine is not None and len(inputs) + len(slots) > engine.inputs:
+        errors.append(
+            f"{kind} takes {engine.inputs} input slots and this kernel accounts "
+            f"for {len(inputs) + len(slots)}: {len(inputs)} operand(s) and "
+            f"{len(slots)} declared absent"
+        )
+    return errors
+
+
+def abi_input_slots(
+    kind: str, inputs: Sequence[str], attributes: Mapping[str, object]
+) -> list[str | None]:
+    """The IR input each ABI input slot carries; ``None`` for a declared hole.
+
+    One function so that a hole is placed identically on both lanes.  A slot a
+    kernel declares absent is not a missing operand, it is a stated one, and the
+    remaining operands go *either side* of it: the compressed-dense index leaves
+    ``ROUTE.INDEX_TOPK``'s ``in0`` empty and keeps the window block in ``in1``
+    and the compression ratio in ``in2``.  A backend that packed them down would
+    hand the engine a window block where the scores belong -- which is exactly
+    what the engine then says:
+
+        ROUTE.INDEX_TOPK window view 2084 covers 1 query rows, expected 104
+
+    ``check_operand_slots`` has already refused a declaration the frozen row
+    does not allow, so this only has to place what it is given.
+    """
+    declared = attributes.get(ABSENT_OPERANDS) or ()
+    holes = {int(slot) for slot in declared}  # type: ignore[union-attr]
+    if not holes:
+        return list(inputs)
+    slots: list[str | None] = []
+    remaining = list(inputs)
+    position = 0
+    while remaining or position in holes:
+        if position in holes:
+            slots.append(None)
+            holes.discard(position)
+        else:
+            slots.append(remaining.pop(0))
+        position += 1
+    return slots
+
+
+def check_index_family(kind: str, attributes: Mapping[str, object]) -> list[str]:
+    """Refuse an ``index_family`` the frozen operator does not produce."""
+    family = attributes.get("index_family")
+    if family is None:
+        return []
+    implemented = INDEX_FAMILIES.get(kind)
+    if implemented is None:
+        return [
+            f"{kind} declares index_family {family!r}, and no index family is "
+            "frozen for this kind; the attribute names what an operator "
+            "produces and only an operator that produces index families may "
+            "carry it"
+        ]
+    if family not in implemented:
+        return [
+            f"index_family {str(family)!r} is not one this ABI implements for "
+            f"{kind}. No engine, verifier or backend can read the difference "
+            "back out of a lowered operator -- every index a substitution "
+            "names is a legal KV row -- so the graph is refused here rather "
+            "than executed as something it does not say. The frozen families "
+            f"are {', '.join(sorted(implemented))}"
+        ]
+    return []
 
 
 def engine_for(kind: str) -> EngineOp:

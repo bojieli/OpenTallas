@@ -664,7 +664,14 @@ ninth.
 | `attention_rows_window` | `CONTEXT_LENGTH + 128` |
 | `attention_rows_ratio4` | `5 * CONTEXT_LENGTH / 4 + 128` |
 | `attention_rows_ratio128` | `129 * CONTEXT_LENGTH / 128 + 128` |
-| `selected_rows_ratio128` | `CONTEXT_LENGTH / 128 + 128` |
+| `selected_rows_ratio128` | `CONTEXT_LENGTH / 128 + 128` (retired by A20) |
+
+Amendment A20 has since retired the eighth. `selected_rows_ratio128` sized the
+feature axis of a join that no longer exists — the dense compressed index is one
+`ROUTE.INDEX_TOPK` whose output is `[span, 128 + k]` for a constant `k` — so the
+exporter declares seven derived symbols and the graph nine in all. The row is
+kept above because A18's argument is about the *form*, and the form is what
+carries the other seven.
 
 The two with a numerator are exact rather than approximate:
 `floor(5c/4) = c + floor(c/4)` because `5c/4 = c + c/4` and `c` is an integer,
@@ -956,6 +963,226 @@ microsequencer has never read `aux_id_0..3` at bits 511:384 either, which is
 why the alternative above would also have been invisible to it — invisibility to
 the sequencer is not the argument for a change, only a bound on its cost.
 
+### 12.10 Amendment A20 — a dense index is a selection with the selection removed
+
+`ROUTE.INDEX_TOPK`'s `input_view_0` becomes **optional**. Present, it is the
+index scores and the operator takes the top `aux_id_0` of the candidates the
+causal rule admits, which is the operator A19 defines. `NO_ID`, and the operator
+takes **every** candidate that rule admits, in ascending group order. Nothing
+else moves.
+
+| slot | ranked (A19) | dense (A20) |
+|---|---|---|
+| `in0` | index scores `[span, C]` | **`NO_ID`** |
+| `in1` | window block `[span, W]` U32, tail-padded | unchanged |
+| `in2` | compression ratio, one U32 element | unchanged |
+| `out0` | `[span, W + k]` U32, compacted, ascending, `0xffffffff`-padded | unchanged |
+| `aux0` | `k`, the selection width | `k`, the **capacity** of the compressed segment |
+| `aux1..3` | mask mode, context symbol, position-base symbol | unchanged |
+
+For the query at absolute position `p = base + row`, with ratio `r`:
+
+```
+sort(window_row minus padding) ++ (arange(0, min((p + 1) / r, candidates)) + span + W)
+```
+
+**No opcode is added.** The dense family was being lowered to
+`ROUTE.WINDOW_INDEX`, which emits `arange(first, last + 1)` over the absolute
+positions of a causal window — a position list, not an enumeration of completed
+compression groups — and the ROM backend refused to build the graph rather than
+emit it:
+
+```text
+kernel 'main.layer03.compressed_dense_indices.enumerate' declares index family
+'causal_compressed_dense', which this backend does not implement.
+```
+
+That refusal was right and the repair is not a seventh route subopcode, because
+the operator that *does* produce the family is already next door and already
+does every hard part of it.
+
+**The released implementation says they are one function.** In the pinned
+snapshot `inference/model.py`, SHA-256
+`c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`,
+`Attention.forward` chooses between exactly two producers for the compressed
+half of its index and concatenates either one to the same window block:
+
+```python
+compress_topk_idxs = self.indexer(x, qr, start_pos, offset).int()   # ratio 4
+...
+compress_topk_idxs = get_compress_topk_idxs(ratio, bsz, seqlen, start_pos, offset)
+topk_idxs = torch.cat([topk_idxs, compress_topk_idxs], dim=-1)
+```
+
+and the two differ by a ranking and nothing else:
+
+```python
+# Indexer.forward, decode
+topk_idxs = index_score.topk(min(self.index_topk, end_pos // ratio), -1)[1] + offset
+# get_compress_topk_idxs, decode
+matrix = torch.arange(0, (start_pos + 1) // ratio) + offset
+```
+
+`end_pos // ratio` at a span of one is `(start_pos + 1) // ratio`: the same
+horizon, on the same axis, in the same units, rebased by the same `offset`, and
+joined at the same concatenation. One takes the best `k` of them and the other
+takes all of them. A19 put the horizon, the rebase, the compaction, the
+ascending order and the zero-candidate case into `ROUTE.INDEX_TOPK`; A20 is the
+observation that the score operand is the *only* thing the second producer does
+not have.
+
+**What the engine does differently.** Three statements, and each is the one it
+already made read through the operand that is left. The span comes off `out0`
+instead of the score view — the operator writes one row per query either way, so
+the dense form loses an operand and not a dimension. The candidate axis is
+bounded by `aux_id_0` instead of by the scored columns — the same statement,
+that no more groups may be named than the compressed segment can hold. And the
+per-row selection is `arange(0, take)` instead of a rank, where `take` is the
+limit the causal rule already computed. Everything after the selection —
+rebase, join, compact, sort, pad — is untouched.
+
+**Why this removes a wall rather than adding machinery.** The pair A20 retires
+declared a `[span, selected_rows_ratio128]` array: **two** request-determined
+axes, where A18 gives a view one, so a backend had to resolve a symbol on the
+row axis and a second on the feature axis of the same operand. The dense
+operator's output is `[span, 128 + k]` with `k = CONTEXT_LENGTH_max / 128` a
+constant the operator pads out — `[span, 2176]` for the 262,144-token
+deployment, exactly as the ratio-4 array is `[span, 640]`. Measured on the
+published graph, the count of tensors declaring two symbolic extents falls from
+**61 to 21**, and the 21 that remain are `INDEX_SCORE`'s
+`[span_tokens, context_groups_ratio4]` output, which is a different operand with
+a different reason. `selected_rows_ratio128` — the eighth of the derived
+runtime symbols section 12.8 lists — is retired with the join that needed it,
+leaving seven derived and nine runtime symbols in all.
+
+It also deletes an intermediate tensor and an `operand_present_predicate` per
+compressed-dense layer. The score operand does not become conditionally absent,
+it becomes *statically* absent, which is one fewer alternative operand path for
+a backend to get wrong. The published graph loses 20 `WINDOW_INDEX` kernels and
+20 axis-1 `CONCAT`s and gains 20 `INDEX_TOPK`s: 3,976 kernels to 3,956, 7,066
+tensors to 7,047.
+
+**How a neutral graph says a slot is empty.** `absent_operands` names the ABI
+input slots a kernel leaves `NO_ID`, and it is the static counterpart of
+`operand_present_predicate`: the operands are placed either side of the hole
+rather than packed down, so the window block stays in `in1` and the ratio in
+`in2`. Which slots may be named is frozen in
+`compiler/ir/v3/lowering.py::OPTIONAL_INPUT_SLOTS` and checked at neutral
+admission — a kind that is not in that table may not declare the attribute at
+all. This replaces two private per-kind hole tables, one in each backend, with
+one per-kernel statement both of them read.
+
+**Refusals.** A19's three stand, and `aux_id_0` behaves exactly as it did:
+`NO_ID` derives it as `slots - W`, which for a joined output is the compressed
+segment's own width, so a dense operator may state its capacity or let the
+output state it. What changes is what the number is *used* for. With a score
+view it bounds a selection; with none it bounds the candidate axis, so a context
+that completes more groups than the segment holds is refused rather than
+truncated:
+
+```text
+ROUTE.INDEX_TOPK: a context of 64 at compression ratio 4 is 16 candidates,
+outside the 3 slots aux_id_0 gives the compressed segment of output view 5
+```
+
+**`index_family` becomes a gate or ceases to exist; it becomes a gate.** The
+attribute named which released helper a kernel reproduces and no engine,
+verifier or backend read it. That shape is what produced this defect: twenty
+layers declared `causal_compressed_dense` while lowering to an operator that
+emits a sliding-window position list, and every index the substitution named was
+a legal KV row, so the operand checks passed, the bound checks passed and the
+numeric checks passed. A comment that reads like a contract is worse than no
+comment, because a reader believes it.
+
+So the families each frozen operator produces are now a registry —
+`compiler/ir/v3/lowering.py::INDEX_FAMILIES` — and an unknown one is refused at
+**neutral admission**, which both backends already call before they lower
+anything. One rule, not two backends each remembering. `ROUTE.WINDOW_INDEX`
+produces `causal_circular_window` and that is the whole list.
+
+The first thing the rule caught was not the defect it was written for. DSpark's
+draft window declares `causal_window_then_current_draft`, and the released
+`get_dspark_topk_idxs` gives every draft query the same row —
+`arange(0, min(window, p + 1))` followed by the draft block at
+`window + arange(block)`. At window 128, block 5 and position 200 that is KV
+rows 0 through 132, all 133 of them; `ROUTE.WINDOW_INDEX` emits 73 through 200
+and five pads. Sixty rows in common, and **not one of the five draft rows** —
+which are the entire point of a draft block's index. It is the same
+substitution a second time, latent behind a profile the first release does not
+build, and it is now a refusal at export instead of a silently wrong token in
+whatever build turns the profile on.
+
+**What a backend must do.** Read `absent_operands` and leave the named slot
+`NO_ID`, placing the remaining operands either side of it —
+`compiler/ir/v3/lowering.py::abi_input_slots` does the placement, so adopting
+this is one call rather than a per-kind hole table, and the same call also
+expresses `VECTOR.COMPRESS` sub-case 2's empty `in1`, which both backends
+presently keep privately. Stop treating
+`ROUTE.INDEX_TOPK`'s `in0` as mandatory: A19's note that "every other frozen
+operand row is mandatory — `ROUTE.INDEX_TOPK` reads its score view's *shape*
+even where the request completes no candidate" is no longer true of `in0`, and
+a backend that keeps a private per-kind hole table has to learn this one from
+the shared table instead. The compressed-dense numeric contract loses its two
+step qualifiers and becomes `indexing_compressed_dense_indices_v1`, so
+`spec/abi3/numeric_contract_union.json` and
+`configs/hardware/abi3_capability/*.json` are republished with this amendment:
+the union drops `indexing_compressed_dense_indices_causal_compressed_enumeration_v1`,
+`indexing_compressed_dense_indices_window_then_compressed_indices_v1` and A19's
+`selection_index_topk_indices_window_then_compressed_indices_v1`, and gains the
+one contract that replaces all three. Republishing the capability moves the
+digest of every deployment admitted against it, which is why it is done here,
+once, with the amendment that causes it rather than as quiet drift: the shared
+single-chip capability moves from `e50fd317…` to `afdb2245…` and Qwen's HBM
+deployment with it, from `d7ef6810…` to `05bf410b…`. Nothing else about Qwen
+moves — 75 instructions, 218 descriptors, 22,715 retired work, the same eight
+tokens, and the ROM lane untouched at `a60d8500…`, because the ROM capability
+does not read this union.
+
+**How far it gets.** The ROM backend's refusal stops firing on its own: with
+nothing emitting `causal_compressed_dense`, `IMPLEMENTED_INDEX_FAMILIES` has
+nothing to reject, the DeepSeek-V4-Flash graph builds on both storage classes at
+1,156 instructions and 3,389 descriptors, and the ROM-versus-HBM storage-class
+equivalence proof — skipped since the refusal landed — holds again for DeepSeek:
+318 descriptors differ, all `MEMORY_OBJECT`, all ROM to HBM, nothing beyond
+storage class.
+
+What it then stops on is the backend obligation above, and it stops loudly,
+which is the property the amendment is for. Neither backend yet reads
+`absent_operands`, so the ROM lane packs the two operands down into `in0` and
+`in1` and the engine refuses at issue —
+
+```text
+prefill failed: ROUTE.INDEX_TOPK window view 2084 covers 1 query rows,
+expected 104
+```
+
+— where view 2084 is the one-element compression-ratio constant being read as
+the window block, and the HBM lane refuses at plan time, "binds 2 input views
+where ROUTE.4 requires 3". Both are the same one-call adoption, and neither can
+produce a wrong index while it is outstanding.
+
+**RTL 3.0.** Not involved, and this time the proof is a line written for it.
+`ot_a3_microsequencer.sv`'s operand walk is the six-way multiplexer over
+`op_payload[223:192]` through `op_payload[383:352]` that A17 and A19 were also
+invisible to, driven by a slot counter and never by the subopcode — and its scan
+state already has the branch A20 needs:
+
+```systemverilog
+S_VIEW_SCAN: begin
+    if (view_next_slot >= 3'd6) begin
+        state <= S_ISSUE;
+    end else if (view_slot_id == A3_NO_ID) begin
+        view_next_slot <= view_next_slot + 3'd1;
+    end else begin ...
+```
+
+The module header states the same thing in prose — views are published "in
+operand order (inputs 0..3 then outputs 0..1, **skipping NO_ID**)". A20 puts
+`NO_ID` in slot 0, which is the one position the walk has never treated
+specially, and the skip is unconditional on which slot it is. A19 put a real
+descriptor ID where an operator carried `NO_ID`; A20 does the reverse, on the
+same walk, through the same branch.
+
 ## 13. Amendments made at the architecture freeze
 
 The draft of this document disagreed with `TA-ADR-003` in five places. All five
@@ -1001,6 +1228,7 @@ remain normative.
 | A17 | a concatenation states the axis it joins | this document, section 12.7; operator conventions, section 17 |
 | A18 | an extent may be an affine function of a bound symbol, at a named axis | this document, section 12.8; operator conventions, section 18 |
 | A19 | a sparse index is produced joined, rebased and compacted | this document, section 12.9; operator conventions, section 19 |
+| A20 | a dense index is a selection with the selection removed; an index family is refused where it is not implemented | this document, section 12.10; operator conventions, section 20 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a

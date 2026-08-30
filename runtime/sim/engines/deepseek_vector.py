@@ -149,6 +149,7 @@ from runtime.reference.hyper_connection import (
 )
 from runtime.reference.transcendental import binary32_exp_general_rne
 from runtime.sim.engine import EngineContext, EngineError, NumericProfile, register
+from runtime.tensor_accelerator.sparse_attention import exp_cr32
 from runtime.sim.formats import narrow_bf16_rne, widen_bf16
 from runtime.sim.memory import ResolvedView
 
@@ -437,6 +438,36 @@ def _compress_project(
     ctx.counters.add("vector.elements", int(packed.size))
 
 
+def _exponentials(delta: np.ndarray) -> np.ndarray:
+    """``CR32(exp(x))`` over a pooling delta, vectorised where that is proved.
+
+    The contract is the correctly rounded binary32 exponential frozen by
+    :func:`runtime.reference.transcendental.binary32_exp_general_rne`, and it
+    does not move.  What moves is how it is reached.  Evaluating it one
+    ``fractions.Fraction`` scalar at a time is what put ``ATTENTION.SPARSE`` at
+    159 hours a prefill (OI-41), and the compressor pool inherits the same cost
+    from the same reference: every pooled group of every layer runs one softmax
+    through it.
+
+    :func:`runtime.tensor_accelerator.sparse_attention.exp_cr32` is the
+    qualified vectorised form of that same function -- it takes the host's
+    binary64 exponential, *proves* the binary32 it rounds to by a two-sided
+    perturbation some four thousand times the binary64 error, and refers any
+    element the proof does not settle to the exact reference.  It is therefore
+    the reference's value on every input, not an approximation of it, and it
+    was validated by an exhaustive scan of every binary32 in ``[-104, -0.0]``:
+    1,120,927,745 comparisons, zero disagreements.
+
+    A pooling delta is ``score - max(score)``, so it is non-positive by
+    construction and lands inside that domain.  A non-finite delta cannot come
+    from a well-formed operand, and rather than decide what it means here it
+    goes to the scalar reference, which is what raised on it before.
+    """
+    if not bool(np.all(np.isfinite(delta))):
+        return _values(_map_codes(_bits(delta), binary32_exp_general_rne))
+    return exp_cr32(delta)
+
+
 def _pool(kv: np.ndarray, scores: np.ndarray) -> np.ndarray:
     """The frozen compressor-pool softmax over the pooling axis.
 
@@ -455,7 +486,7 @@ def _pool(kv: np.ndarray, scores: np.ndarray) -> np.ndarray:
     maximum = np.max(finite, axis=-1, keepdims=True)
     delta = np.subtract(finite, maximum, dtype=np.float32)
     delta = np.where(sentinel, np.float32(0.0), delta)
-    exponentials = _values(_map_codes(_bits(delta), binary32_exp_general_rne))
+    exponentials = _exponentials(delta)
     exponentials = np.where(sentinel, np.float32(0.0), exponentials)
     _finite(exponentials, "compressor-pool exponential")
     denominator = _balanced_sum(exponentials)
