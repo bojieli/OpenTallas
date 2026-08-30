@@ -28,9 +28,19 @@ from runtime.reference.normalization import (
     HEAD_RMS_NORM_WIDTH,
     head_rms_norm_bf16,
 )
+from runtime.reference.quantization import (
+    FP4_AMAX_FLOOR,
+    FP4_MAXIMUM,
+    _BINARY32_RECIPROCAL_SIX,
+    _ceil_log2,
+    _finite_bf16_matrix,
+    _power_of_two,
+)
+from runtime.reference import formats as exact_formats
 from runtime.sim.engines.vector import (
     _head_rms_norm_rows,
     _quantize_activation_blocks,
+    _quantize_fp4_qdq_blocks,
 )
 
 #: BF16 encodings that are finite: everything but the NaN and infinity band.
@@ -166,3 +176,99 @@ class TestActivationQuantiserExactness:
             )
             assert int(produced_scales[row]) == expected.scale_code
             assert produced_codes[row].tolist() == list(expected.value_codes)
+
+
+def _fp4_quantise_block(values: tuple) -> tuple[int, tuple[int, ...]]:
+    """``runtime.reference.quantization._block_qdq``, quantise half only.
+
+    The reference performs the *dequantise* half in the same function and fails
+    closed when the reconstruction overflows binary32 -- which it does for a
+    block of BF16 maxima.  ``VECTOR.CONVERT`` splits the two: ``QUANTIZE``
+    produces codes and scales and ``DEQUANTIZE`` reconstructs, so the overflow
+    belongs to the other operator.  This is the reference's own arithmetic with
+    the second half left where it belongs, and nothing here shares code with the
+    engine.
+    """
+    maximum = max(max(abs(value) for value in values), FP4_AMAX_FLOOR)
+    maximum_code = exact_formats.encode_binary32_rne(maximum)
+    ratio_code = exact_formats.binary32_multiply(
+        maximum_code, _BINARY32_RECIPROCAL_SIX
+    )
+    ratio = exact_formats.decode_binary32(ratio_code)
+    exponent = _ceil_log2(ratio.value)
+    scale_code = exponent + 127
+    assert 1 <= scale_code <= 253
+    scale_binary32 = exact_formats.encode_binary32_rne(_power_of_two(exponent))
+    codes = []
+    for value in values:
+        quotient = exact_formats.decode_binary32(
+            exact_formats.binary32_divide(
+                exact_formats.encode_binary32_rne(value), scale_binary32
+            )
+        )
+        clamped = max(-FP4_MAXIMUM, min(FP4_MAXIMUM, quotient.value))
+        codes.append(exact_formats.encode_e2m1_rne(clamped).code)
+    return scale_code, tuple(codes)
+
+
+class TestFP4ActivationQuantiserExactness:
+    """``quantization_fp4_qdq_bf16_quantize_v1``, code for code.
+
+    This is a *different rule* from the block activation quantiser above, not a
+    variant of it: the scale is derived by one binary32 multiply and a
+    ceil(log2) rather than searched for, the amax has a floor, and the quotient
+    is clamped by contract instead of raising.  The engine lacked it entirely,
+    which is why a DeepSeek indexer quantisation refused with "QUANTIZE code
+    view stores MXFP4_E2M1; expected FP8_E4M3FN" while the graph, the numeric
+    profile, the view and the backend descriptor all agreed on MXFP4.
+    """
+
+    def _check(self, codes: np.ndarray) -> None:
+        produced, scales, clamps = _quantize_fp4_qdq_blocks(codes)
+        rows = _finite_bf16_matrix(tuple(tuple(int(c) for c in row) for row in codes))
+        for index, row in enumerate(rows):
+            scale_code, expected = _fp4_quantise_block(row)
+            assert int(scales[index]) == scale_code, index
+            assert produced[index].tolist() == list(expected), index
+        # The scale is derived *from* the amax, so no quotient can exceed six:
+        # the clamp in the contract is a guard, and this says it stays one.
+        assert clamps == 0
+
+    @pytest.mark.parametrize("blocks", [1, 8, 64])
+    def test_matches_the_reference_on_random_blocks(self, blocks: int) -> None:
+        rng = np.random.default_rng(4004 + blocks)
+        self._check(_finite_bf16_codes(blocks * 32, rng).reshape(blocks, 32))
+
+    def test_matches_the_reference_on_the_awkward_blocks(self) -> None:
+        """Zero, the extremes, the ties, and one whole exponent sweep.
+
+        A block of all zeros takes the ``6 * 2**-126`` amax floor rather than a
+        searched scale, which is the branch a random draw never reaches.
+        """
+        extremes = [0x0001, 0x0080, 0x7F7F, 0xFF7F, 0x0000, 0x8000]
+        ties = [0x3F40, 0x3FC0, 0x4020, 0xBF40]
+        rows = [
+            [0] * 32,
+            list(range(0x3F00, 0x3F20)),
+            [0x8000 | code for code in range(0x3F00, 0x3F20)],
+            extremes + ties + [0x3F80] * 22,
+        ]
+        self._check(np.array(rows, dtype=np.uint16))
+
+    def test_matches_the_reference_across_every_binary32_scale(self) -> None:
+        """One block per attainable BF16 exponent, driven by its own maximum."""
+        rows = []
+        for exponent in range(0, 255):
+            if exponent == 0xFF:
+                continue
+            rows.append([((exponent << 7) | ((i * 7) % 128)) for i in range(32)])
+            rows.append(
+                [0x8000 | ((exponent << 7) | ((i * 13) % 128)) for i in range(32)]
+            )
+        self._check(np.array(rows, dtype=np.uint16))
+
+    def test_refuses_a_nonfinite_activation_rather_than_scaling_it(self) -> None:
+        with pytest.raises(NumericReferenceError):
+            _quantize_fp4_qdq_blocks(np.full((1, 32), 0x7F80, dtype=np.uint16))
+        with pytest.raises(NumericReferenceError):
+            _quantize_fp4_qdq_blocks(np.full((1, 32), 0x7FC0, dtype=np.uint16))

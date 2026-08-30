@@ -517,6 +517,229 @@ closed the two axis-one sites that were already emitting one operator on one
 lane and a stream of transfers on the other. Naming the axis is the change that
 was actually needed; a second operator is not.
 
+### 12.8 Amendment A18 — an extent may be an affine function of a bound symbol
+
+A `TENSOR_VIEW` gains four fields out of the span A15 left reserved:
+`extent_unit` at payload offset 108, `extent_numerator` at 112 and
+`extent_bias` at 116, each four bytes, and `extent_axis` at 120, one byte. The
+reserved span shrinks from 20 bytes at 108 to 7 at 121.
+
+`extent_axis` is the axis whose extent the request determines, and the other
+three give the function that determines it. Writing `a` for the axis, `n` for
+the numerator, `u` for the unit, `b` for the bias, and `d` for the
+`bound_divisor` of a symbol-bounded loop whose induction value is `i` and whose
+bound symbol resolves to `S`:
+
+```
+step   = n * d / u                     elements of a per whole iteration
+tokens = S - i * d                     the symbol's units this iteration has
+extent = n * tokens / u + b            elements of a this iteration has
+dim[a] = extent if 0 < extent < dim[a] else dim[a]
+```
+
+A term of that loop walks axis `a` in blocks exactly when
+
+```
+term_stride == stride[a] * step
+```
+
+Both divisions floor, and `u` must divide `n * d`, or one iteration is not a
+whole number of that axis's elements and the term walks nothing. The bias is
+added **after** the division and is not part of `step`: it is a count the
+operand carries whatever the request is, not one an iteration advances by,
+which is what lets a join state `span + 128` for a sliding window that is
+present for a span of one.
+
+**A13 is the `axis = 0, n = 1, u = 1, b = 0` case of this rule, exactly.**
+Substituting gives `step = d`, the test `term_stride == stride0 * d`,
+`extent = tokens`, and `dim0 = tokens if 0 < tokens < dim0` — which is section
+12.4 word for word, including its refinement that a term walking some *other*
+axis contributes no bound at all. Reserved bytes must be zero, checked on both
+encode and decode, so every view written before this amendment reads zero in
+all four fields, and a zero numerator and a zero unit are both defined to mean
+one. No existing program changes meaning and no byte of any existing program
+moves.
+
+That is verified rather than asserted, three times. All 53 pre-A18 RTL vector
+cases resolve their 401 operand views to the same extents under the new rule as
+under the old one, the mHC non-leading-axis case among them. The two
+formulations were compared exhaustively over the parameter space section 12.4
+already cites — divisors 1–8, extents 1–11, bounds 0–19 and iterations 0–5,
+10,560 combinations, no disagreement. And on the released model the check is
+stronger than either: the DeepSeek-V4-Flash ROM wafer deployment, lowered by a
+backend that declares none of the four fields, produces byte-identical
+descriptors and instructions with this amendment implemented and without it —
+3,333 descriptors, 1,051 instructions, work bound 4,417,598 — and stops in the
+same place, at the same 685 retired instructions.
+
+#### What could not be expressed
+
+Three released operands need this, and none of them is a special case of the
+other two. Each was established by executing the lowering and reading the
+engine's refusal, not by inspecting a shape.
+
+**A request-dependent extent behind the batch.**
+`VECTOR.COMPRESS` sub-case 2 forms its groups along `S` —
+`groups = span // ratio` — and its overlap transform reaches across `G`
+(`pool[:, 1:, :ratio] = groups[:, :-1, :, :head_dim]`), so the operand's
+request-dependent extent must sit at **axis 1**. A13 clamps `dim0` only, and
+the engine refused correctly:
+
+```text
+prefill failed: COMPRESS_STATE_UPDATE span 1 contains no complete group of 4;
+the should-compress predicate is false and the operation must not be issued
+```
+
+Every alternative was tried and each failed on execution. `[T, 1, 2, W]` puts
+the tokens in the batch and gives span 1. `[1, T_max, 2, W]` is not clamped at
+all and reads 262,144 rows of zeros. Per-group dispatch loses the cross-group
+overlap the transform *is*. A two-group sliding window needs a descending loop
+and a negative offset at `g = 0`. `VECTOR.INDEX_SCORE` makes the same point
+independently, which is what says this is a rule and not one operator: its row
+is `in0 [B,S,Hd,D]`, `in1 [B,C,D]`, `in2 [B,S,Hd]`, `out0 [B,S,C]`, and the
+engine requires `kv_batch == batch`, so under every assignment of `B` at least
+one of `S` and `C` lands at a non-leading axis.
+
+**An extent counted in groups rather than in the symbol's own units.** A13's
+clamp is in the bound symbol's units, so a loop blocking 512 tokens over a
+group axis of ratio 4 produced an extent four times too long. The *count* was
+already expressible — a block loop's trip is `ceil(symbol / bound_divisor)` —
+and only the *extent* was not.
+
+**An extent longer than the request's rows.**
+`main.layerNN.attention_kv_view` joins the current KV rows to a 128-row sliding
+window on axis 0, so its output extent is `span + 128`. A clamp can only
+*shorten* a declared extent to a bound symbol's remainder, so this number had
+no spelling at all, and the HBM lane stopped after 299 instructions:
+
+```text
+prefill failed: GROUPED_CONCAT output view 678 dims (104, 512) differ from
+the axis-0 concatenation (262272, 512)
+```
+
+This is an **axis-0** join, so it is not what A17 fixed; A17 named the axis a
+join consumes, and this is the extent the join produces. It is the case that
+turns the amendment from a clamp with two more knobs into an affine function:
+`b` is not a refinement of `n` and `u`, it is the third independent thing an
+extent can be.
+
+There is a mechanically available workaround — expressing the join as one
+movement per row block with a symbol-offset destination window, exactly as the
+all-gather already does for `NODE_ID`. It is refused here for the same reason
+A17 refused it on axis 1: it is one operator with two spellings across two
+backends, and a lane that emits transfers where the other emits `REDUCTION.3`
+is the divergence this ABI exists to remove.
+
+#### Why an affine function, and not eight more symbols
+
+The DeepSeek exporter declares eight derived runtime symbols the frozen A5
+registry cannot name: `span_groups_ratio4`, `span_groups_ratio128`,
+`context_groups_ratio4`, `context_groups_ratio128`, `attention_rows_window`,
+`attention_rows_ratio4`, `attention_rows_ratio128` and
+`selected_rows_ratio128`. 704 released tensors lead with one of them, and every
+one is presently presented at its declared maximum: `COMPRESS_POOL` at 65,536
+groups, `INDEX_SCORE`'s key at 65,536 candidates, the attention `CONCAT`
+summing 262,272 rows.
+
+Assigning eight more registry values would have been additive, in the strict
+sense A12 used. It is refused here for two reasons, and the first is the
+document's own rule.
+
+*The names are model-specific and section 4 forbids that.* `ratio4` and
+`ratio128` are DeepSeek-V4-Flash's two compression ratios. Section 4 says the
+frozen registries do not name Qwen, DeepSeek, ROM, HBM, a model layer or a
+framework callback. A symbol called `span_groups_ratio128` breaks that where
+the document is most explicit about it, and the next model's ratio would need a
+ninth.
+
+*The names were never the gap; the arithmetic was.* Every one of the eight is
+`n * S / u + b` over a symbol the registry already has:
+
+| declared symbol | as an affine function |
+|---|---|
+| `span_groups_ratio4` | `SPAN_TOKENS / 4` |
+| `span_groups_ratio128` | `SPAN_TOKENS / 128` |
+| `context_groups_ratio4` | `CONTEXT_LENGTH / 4` |
+| `context_groups_ratio128` | `CONTEXT_LENGTH / 128` |
+| `attention_rows_window` | `CONTEXT_LENGTH + 128` |
+| `attention_rows_ratio4` | `5 * CONTEXT_LENGTH / 4 + 128` |
+| `attention_rows_ratio128` | `129 * CONTEXT_LENGTH / 128 + 128` |
+| `selected_rows_ratio128` | `CONTEXT_LENGTH / 128 + 128` |
+
+The two with a numerator are exact rather than approximate:
+`floor(5c/4) = c + floor(c/4)` because `5c/4 = c + c/4` and `c` is an integer,
+and likewise for 129/128. That is what the numerator is for — it lets one
+symbol state both a count of rows and a count of groups derived from those same
+rows, which is what a compressed layer's KV join is.
+
+**The boundary, stated rather than left to be discovered.** The form is exact
+for an extent affine in **one** bound symbol. A compressed layer's KV join in
+*decode* is `1 + 128 + CONTEXT_LENGTH / 128` — a constant span and a symbolic
+context — and that is `CONTEXT_LENGTH / 128 + 129`, still one symbol, so it is
+expressible; but it needs *different* coefficients from the same join in
+prefill, where `span == context` makes it `129 * CONTEXT_LENGTH / 128 + 128`.
+A program whose prefill and decode share one view descriptor for that operand
+cannot state both. Prefill and decode are separate entrypoints and a backend
+may give the operand a view per phase, which is how this is meant to be met; an
+extent that is genuinely a sum of terms over two *different* symbols in one
+phase is outside this amendment, and would need a further one rather than a
+reinterpretation of these fields.
+
+**An extent that floors to zero is not a clamp.** Three tokens contain no whole
+group of four, so `extent` is zero at `b = 0` and `dim[a]` keeps its block.
+That is deliberate: ABI 3.0 has no zero-extent view — the verifier refuses one
+— so "the request has none of this axis" is a *predicate* question, and the
+operator must be predicated off rather than issued against an empty operand. It
+is the same question the compressor's own should-compress predicate asks, and
+the engine's refusal quoted above is the trap for a program that did not ask
+it. With `b > 0` the extent is never zero, which is right: a join of no current
+rows and a 128-row window is 128 rows.
+
+**One axis per view, deliberately.** A view names one request-dependent extent.
+`INDEX_SCORE`'s output is `[B,S,C]` with two of them, and it is expressible
+because placing the tokens in the batch — the placement the token-as-batch rule
+already makes for this family — leaves `C` as the only axis the request moves.
+Nothing in either released model needs two, and a second declaration is
+additive in exactly the way this amendment is. This is the same deliberate
+narrowing A17 made when it defined a feature join for rank-2 operands only.
+
+#### Admission
+
+Three rules keep the fields honest, all refusals rather than engine faults,
+because a deployment whose operand can never be resolved should be refused
+before it is activated:
+
+- an `extent_axis` at or beyond the view's rank;
+- an `extent_unit` or `extent_numerator` of exactly 1, which is a value the
+  encoding does not assign — one is written as zero, so that a view not using
+  the amendment is byte-identical to the same view written before it; and
+- a view that declares any of the four fields and carries **no term that walks
+  it**. Without that rule the operand silently keeps its declared maximum,
+  which is the 65,536-candidate failure this amendment exists to remove, and a
+  silent wrong extent is worse than a refusal.
+
+The admission rule A13 already had generalises with the rest: `dim[a]` may not
+exceed `step + b`, because iteration *i* covers exactly that many elements of
+that axis and a view claiming more is claiming elements belonging to the next
+iteration. With `a = 0, n = 1, u = 1, b = 0` that is section 12.4's `dim0 ≤ d`
+unchanged, and its exhaustive result — 1,027 disagreements between the two
+formulations, every one with `dim0 > bound_divisor` — carries over because the
+substitution is an identity.
+
+#### RTL 3.0
+
+This is the first amendment since A13 that reaches the microsequencer. A14, A15
+and A17 all touched bytes it never reads; this one does not.
+`ot_a3_view_resolver.sv` read `dim0` at payload bits 223:192 and `stride0` at
+415:384 and published one extent, `out_dim0` — dims and strides 1 through 5 were
+dark, and so was everything above bit 831. A18 needs `dim[a]` and `stride[a]`
+for a declared *a*, so the resolver gains a six-way mux over those two fields,
+reads the four new fields at bits 895:864, 927:896, 959:928 and 967:960, and
+publishes the axis beside the extent. The two divisions by `u` use one restoring
+divider over a 64-bit numerator, the same structure `ot_a3_loop_stack.sv`
+already runs for `bound_divisor`; a numerator and unit of one bypass it, so the
+A13 path costs exactly the cycles it always did.
+
 ## 13. Amendments made at the architecture freeze
 
 The draft of this document disagreed with `TA-ADR-003` in five places. All five
@@ -560,13 +783,17 @@ remain normative.
 | A15 | a block scale may tile two axes | this document, section 12.6 |
 | A16 | two rotary contracts; the carried plane of a partial dequantisation; the expert sum's trailing base | operator conventions, section 16 |
 | A17 | a concatenation states the axis it joins | this document, section 12.7; operator conventions, section 17 |
+| A18 | an extent may be an affine function of a bound symbol, at a named axis | this document, section 12.8; operator conventions, section 18 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a
 function of an induction variable, and A13 lets a block loop state how many rows
 its final iteration actually holds. Without either, a backend that wants to stay
 correct must emit one dispatch per element or per token, which is precisely the
-ABI 2.5 failure this version exists to remove.
+ABI 2.5 failure this version exists to remove. **A18** is the same statement
+made general: the axis a block loop resolves, and the affine function of the
+bound symbol that resolves it, are the view's to declare rather than the rule's
+to assume, and A13 is its identity case.
 
 ### 12.3 Amendment A12 — `SPAN_LAST_INDEX`
 

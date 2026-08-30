@@ -95,9 +95,9 @@ OUTPUT_DIR = ROOT / "testdata/compiler/abi3"
 # simulators read a fully initialised memory.
 PROGRAM_WORDS = 2048      # 256-bit instruction records
 HEADER_WORDS = 4096       # 32-bit words, 64 per case
-DESC_WORDS = 2048         # 1536-bit descriptor prefixes
+DESC_WORDS = 4096         # 1536-bit descriptor prefixes
 SYMBOL_WORDS = 1024       # 32-bit words, 16 per case
-CASE_WORDS = 2048         # 32-bit words, CASE_STRIDE per case
+CASE_WORDS = 4096         # 32-bit words, CASE_STRIDE per case
 ISSUE_WORDS = 2048        # 32-bit words, 2 per issue
 VIEW_WORDS = 8192         # 32-bit words, VIEW_STRIDE per resolved view
 META_WORDS = 8
@@ -105,7 +105,7 @@ META_WORDS = 8
 CASE_STRIDE = 35
 SYMBOL_STRIDE = 16
 HEADER_STRIDE = 64
-VIEW_STRIDE = 6
+VIEW_STRIDE = 7
 
 # Header (64) plus *both* 64-byte payload blocks.  A TENSOR_VIEW payload is 128
 # bytes and its amendment-A4 dynamic terms begin at payload offset 72, so a
@@ -1215,6 +1215,312 @@ def case_a13_mixed_axes(cap: Capability) -> Case:
             "leading axis: the expert loop steps two streams inside a row, so "
             "its partial iteration bounds nothing.  The clamp is a per-term "
             "decision and this is the vector that says so"
+        ),
+    )
+
+
+# ---------------------------------------------------------------------------
+# Amendment A18 - the axis the request determines, and the unit it counts in
+# ---------------------------------------------------------------------------
+# Section 12.8 lets a view name the axis whose extent the request decides and
+# the number of the bound symbol's units one element of that axis holds.  A13 is
+# the ``extent_axis = 0, extent_unit = 1`` case of it, which is why every case
+# above is also an A18 case and none of them moves.
+#
+# The shape here is the DeepSeek compressor's pool operand: a batch of one, a
+# *group* axis behind it, and a group that is ``A18_RATIO`` tokens wide.  The
+# loop counts tokens, ``A18_TOKEN_BLOCK`` of them per iteration, so one
+# iteration advances ``A18_TOKEN_BLOCK / A18_RATIO`` groups and the term stride
+# is that many of the group axis's rows -- which is the product form of the
+# walk test, ``term_stride * unit == stride[axis] * bound_divisor``, and is what
+# makes the axis derivable rather than assumed.
+A18_RATIO = 4
+A18_TOKEN_BLOCK = 8
+A18_GROUP_BLOCK = A18_TOKEN_BLOCK // A18_RATIO   # 2 groups per iteration
+A18_CANDIDATES = 2
+A18_HEAD_DIM = 4
+#: Row-major ``[1, groups, candidates, head_dim]``.
+A18_GROUP_ROW = A18_CANDIDATES * A18_HEAD_DIM
+A18_MAX_ITER = 4
+#: A sliding window joined to every block: the bias, in miniature.  The released
+#: attention KV view carries 128 rows here.
+A18_WINDOW = 3
+#: The buffer is sized by the widest axis any case walks -- one token per row
+#: for the unit-one case -- so every case addresses the same object.
+A18_MAX_ROWS = A18_MAX_ITER * (A18_TOKEN_BLOCK + A18_GROUP_BLOCK + A18_WINDOW)
+A18_POOL_ELEMENTS = A18_MAX_ROWS * A18_GROUP_ROW
+
+
+def _a18_pool_case(
+    cap: Capability,
+    name: str,
+    *,
+    span: int,
+    unit: int = A18_RATIO,
+    numerator: int = 0,
+    bias: int = 0,
+    axis: int = 1,
+    groups: int = A18_GROUP_BLOCK,
+    divisor: int = A18_TOKEN_BLOCK,
+    term_stride: int | None = None,
+    expect_admitted: bool = True,
+    note: str,
+) -> Case:
+    """A token-block loop over a pool whose second axis counts groups."""
+    w = BlockWorkspace(f"a3-{name}", cap)
+    b = w.builder
+    size = A18_POOL_ELEMENTS * 2 * 4  # an input and an output pool, fp32
+    pool = b.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=size,
+        source=ObjectSource.zeros(size),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.pool",
+    )
+    loop = b.loop_control(
+        lower_bound=0, upper_bound=0, step=1,
+        bound_symbol=Symbol.SPAN_TOKENS, bound_divisor=divisor,
+        max_iterations=A18_MAX_ITER, key="loop.tokens",
+    )
+    dims = [1, groups, A18_CANDIDATES, A18_HEAD_DIM]
+    strides = [A18_POOL_ELEMENTS, A18_GROUP_ROW, A18_HEAD_DIM, 1]
+    # One iteration advances ``numerator * divisor / unit`` elements of the
+    # declared axis; the bias is not part of the step, because it is a count
+    # every iteration carries rather than one an iteration advances by.
+    elements = max(numerator, 1) * divisor // max(unit, 1)
+    step = strides[axis] * elements
+    terms = [DynamicTerm.loop(loop, step if term_stride is None else term_stride)]
+    view_in = b.tensor_view(
+        object_id=pool,
+        dtype=DType.FP32,
+        dims=dims,
+        strides=strides,
+        dynamic=terms,
+        extent_axis=axis,
+        extent_unit=unit,
+        extent_numerator=numerator,
+        extent_bias=bias,
+        key="view.pool.in",
+    )
+    view_out = b.tensor_view(
+        object_id=pool,
+        dtype=DType.FP32,
+        dims=dims,
+        strides=strides,
+        element_offset=A18_POOL_ELEMENTS,
+        dynamic=terms,
+        extent_axis=axis,
+        extent_unit=unit,
+        extent_numerator=numerator,
+        extent_bias=bias,
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.pool.out",
+    )
+    op = b.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.COMPRESS,
+        inputs=[view_in],
+        outputs=[view_out],
+        numeric_profile_id=w.numeric,
+        schedule_id=w.schedule_for(Major.VECTOR),
+        counter_class_id=w.counters,
+        source_kernel_id=0,
+        key="op.pool",
+    )
+    tail = w.op(Major.VECTOR, Vector.ADD, key="op.tail")
+    b.open_loop(loop)
+    b.emit(Major.VECTOR, Vector.COMPRESS, descriptor_id=op, source_operation_id=0)
+    b.close_loop()
+    b.emit(Major.VECTOR, Vector.ADD, descriptor_id=tail, source_operation_id=1)
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name=name,
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): span},
+        expect_admitted=expect_admitted,
+        run_program=expect_admitted,
+        device_runs=expect_admitted,
+        note=note,
+    )
+
+
+def case_a18_group_axis_exact(cap: Capability) -> Case:
+    return _a18_pool_case(
+        cap, "a18_group_axis_exact", span=2 * A18_TOKEN_BLOCK,
+        note=(
+            "16 tokens of 4, blocked 8 at a time: both iterations hold a whole "
+            "block of two groups, so the group axis stays at two and the unit "
+            "changes nothing when nothing is partial"
+        ),
+    )
+
+
+def case_a18_group_axis_partial(cap: Capability) -> Case:
+    return _a18_pool_case(
+        cap, "a18_group_axis_partial", span=A18_TOKEN_BLOCK + A18_RATIO,
+        note=(
+            "12 tokens of 4, blocked 8: the second iteration has four tokens "
+            "left, which is one whole group, so axis 1 resolves to 1 and not "
+            "to 4.  This is the case A13 could not state -- its clamp is in the "
+            "bound symbol's units, so it would have presented four groups for "
+            "four tokens, and it clamps dim0, which here is the batch"
+        ),
+    )
+
+
+def case_a18_group_axis_short(cap: Capability) -> Case:
+    return _a18_pool_case(
+        cap, "a18_group_axis_short", span=A18_RATIO + 1,
+        note=(
+            "five tokens of 4 in one iteration: one whole group and one token "
+            "over, so the group axis resolves to one.  The floor is the "
+            "operator's own rule -- a partial group is not a group"
+        ),
+    )
+
+
+def case_a18_group_axis_no_whole_group(cap: Capability) -> Case:
+    return _a18_pool_case(
+        cap, "a18_group_axis_no_whole_group", span=A18_RATIO - 1,
+        note=(
+            "three tokens of 4: the request contains no whole group, the "
+            "floored extent is zero, and A18 does not clamp to zero.  A view "
+            "has no zero extent -- the verifier refuses one -- so 'the request "
+            "has none of this axis' is a predicate question and not a view "
+            "question, and the operand keeps its declared block while the "
+            "should-compress predicate keeps the operator from issuing"
+        ),
+    )
+
+
+def case_a18_axis_unit_one(cap: Capability) -> Case:
+    """The compressor's *input*: a token axis behind a batch of one."""
+    return _a18_pool_case(
+        cap, "a18_axis_unit_one", span=A18_TOKEN_BLOCK + 1,
+        unit=1, groups=A18_TOKEN_BLOCK, divisor=A18_TOKEN_BLOCK,
+        note=(
+            "axis 1 in the symbol's own unit: nine tokens blocked eight at a "
+            "time, presented as [1, tokens, ...] because the operator groups "
+            "along the token axis and cannot have the batch there.  A13 "
+            "clamps dim0 only, so before A18 this operand was the whole "
+            "declared block on its final iteration"
+        ),
+    )
+
+
+def case_a18_biased_extent(cap: Capability) -> Case:
+    """The attention KV join: the request's rows *plus* a sliding window.
+
+    ``main.layerNN.attention_kv_view`` joins the current KV rows to a 128-row
+    sliding window on axis 0, so its output extent is ``span + 128``.  A clamp
+    can only shorten a declared extent to a bound symbol's remainder, so before
+    A18 the extent had no spelling at all and the engine refused the shape.  The
+    bias is added after the division and is not part of the step: the window is
+    there for a span of one.
+    """
+    return _a18_pool_case(
+        cap, "a18_biased_extent", span=A18_TOKEN_BLOCK + A18_RATIO,
+        unit=0, axis=1, bias=A18_WINDOW,
+        groups=A18_TOKEN_BLOCK + A18_WINDOW, divisor=A18_TOKEN_BLOCK,
+        note=(
+            "12 tokens blocked eight at a time, joined to a 3-row window: the "
+            "first iteration holds eight rows and the window and is full at "
+            "eleven, and the second holds four and the window, so axis 1 "
+            "resolves to seven.  A13 could state neither number -- its clamp "
+            "only ever shortens, and span + window is longer than span"
+        ),
+    )
+
+
+def case_a18_biased_extent_single_block(cap: Capability) -> Case:
+    """The released shape: one block, a short span, and the window still there."""
+    return _a18_pool_case(
+        cap, "a18_biased_extent_single_block", span=A18_RATIO,
+        unit=0, axis=1, bias=A18_WINDOW,
+        groups=A18_TOKEN_BLOCK + A18_WINDOW, divisor=A18_TOKEN_BLOCK,
+        note=(
+            "four tokens in one block of eight, joined to a 3-row window: "
+            "seven rows, which is what the 104-token DeepSeek prefill needs "
+            "when it asks for 104 + 128 = 232 of a declared 512 + 128"
+        ),
+    )
+
+
+def case_a18_numerator_and_bias(cap: Capability) -> Case:
+    """A compressed layer's join: current rows, the window, and the groups.
+
+    ``context + window + context/4`` is ``floor(5 * context / 4) + window``,
+    exactly, because ``5c/4 = c + c/4`` and ``c`` is an integer.  One affine
+    function of one symbol states all three parts, which is what makes this a
+    rule rather than a third special case.
+    """
+    return _a18_pool_case(
+        cap, "a18_numerator_and_bias", span=A18_TOKEN_BLOCK + A18_RATIO,
+        unit=A18_RATIO, numerator=A18_RATIO + 1, bias=A18_WINDOW,
+        axis=1, groups=A18_TOKEN_BLOCK + A18_GROUP_BLOCK + A18_WINDOW,
+        divisor=A18_TOKEN_BLOCK,
+        note=(
+            "12 tokens of 4 blocked eight at a time, joined to a 3-row window "
+            "and a compressed prefix: floor(5 * 12 / 4) + 3 = 18 on the first "
+            "iteration, which is the whole block, and floor(5 * 4 / 4) + 3 = 8 "
+            "on the second.  The numerator is what lets one symbol state both "
+            "the rows and the groups derived from them"
+        ),
+    )
+
+
+def case_a18_axis_beyond_rank(cap: Capability) -> Case:
+    """An extent axis the view does not have is refused at admission."""
+    w = BlockWorkspace("a3-a18-rank", cap)
+    b = w.builder
+    loop = b.loop_control(
+        lower_bound=0, upper_bound=0, step=1,
+        bound_symbol=Symbol.SPAN_TOKENS, bound_divisor=A13_BLOCK,
+        max_iterations=A13_MAX_ITER, key="loop.block",
+    )
+    view_in, view_out = w.block_views(
+        loop_ids=[loop], strides=[A13_BLOCK * A13_ROW_ELEMENTS]
+    )
+    # A rank-2 view claiming axis 3.  ``DeploymentBuilder`` refuses this, so the
+    # descriptor is edited after the fact: the point of the case is that the
+    # *verifier* refuses the record, not that one encoder declines to write it.
+    b.table.get(view_in, ExtendedDescriptorType.TENSOR_VIEW).payload[
+        "extent_axis"
+    ] = 3
+    op = w.block_operator(view_in, view_out, key="op.block")
+    b.open_loop(loop)
+    b.emit(Major.TENSOR, Tensor.MATMUL, descriptor_id=op, source_operation_id=0)
+    b.close_loop()
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="a18_axis_beyond_rank",
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): 2 * A13_BLOCK},
+        expect_admitted=False,
+        run_program=False,
+        device_runs=False,
+        note=(
+            "a rank-2 view declaring extent axis 3: there is no such axis to "
+            "resolve, so the deployment is refused rather than resolved "
+            "against an extent that does not exist"
+        ),
+    )
+
+
+def case_a18_unit_does_not_divide_block(cap: Capability) -> Case:
+    return _a18_pool_case(
+        cap, "a18_unit_does_not_divide_block", span=2 * A18_TOKEN_BLOCK,
+        unit=3, term_stride=A18_GROUP_ROW * A18_GROUP_BLOCK,
+        expect_admitted=False,
+        note=(
+            "a unit of three against a block of eight: one iteration is not a "
+            "whole number of that axis's elements, so no term walks the axis "
+            "and nothing would ever shorten it.  A declaration nothing can "
+            "resolve is refused, because the alternative is the operand "
+            "silently presenting its declared maximum -- which is the failure "
+            "A18 exists to remove"
         ),
     )
 
@@ -2389,6 +2695,16 @@ def resolved_views(
             "slot": slot,
             "operand": field,
             "descriptor_id": view_id,
+            # Amendment A18: the resolved extent is the extent of the axis the
+            # view declares, and the axis is published beside it.  Every view
+            # written before A18 declares axis zero, so this is the leading
+            # extent A13 always published, under a name that stays true when
+            # the axis is not zero.
+            "extent_axis": int(resolved.extent_axis),
+            "extent": int(resolved.dims[int(resolved.extent_axis)]),
+            "extent_unit": int(resolved.extent_unit),
+            "extent_numerator": int(resolved.extent_numerator),
+            "extent_bias": int(resolved.extent_bias),
             "dim0": int(resolved.dims[0]),
             "dims": [int(d) for d in resolved.dims],
             "element_offset": int(resolved.element_offset),
@@ -2526,6 +2842,16 @@ def build(argv: list[str] | None = None) -> int:
         case_a17_join_axis_zero(capability),
         case_a17_join_axis_one(capability),
         case_a17_join_axis_undefined(capability),
+        case_a18_group_axis_exact(capability),
+        case_a18_group_axis_partial(capability),
+        case_a18_group_axis_short(capability),
+        case_a18_group_axis_no_whole_group(capability),
+        case_a18_axis_unit_one(capability),
+        case_a18_biased_extent(capability),
+        case_a18_biased_extent_single_block(capability),
+        case_a18_numerator_and_bias(capability),
+        case_a18_axis_beyond_rank(capability),
+        case_a18_unit_does_not_divide_block(capability),
     ]
     positives = len(cases)
     cases.extend(negative_instruction_cases(capability))
@@ -2624,10 +2950,11 @@ def build(argv: list[str] | None = None) -> int:
         for view in expectation["views"]:
             view_words.append(view["descriptor_id"] & 0xFFFFFFFF)
             view_words.append(view["slot"])
-            view_words.append(view["dim0"] & 0xFFFFFFFF)
+            view_words.append(view["extent"] & 0xFFFFFFFF)
             view_words.append(view["element_offset"] & 0xFFFFFFFF)
             view_words.append((view["element_offset"] >> 32) & 0xFFFFFFFF)
             view_words.append(view["rank"])
+            view_words.append(view["extent_axis"])
 
         entry = next(
             e for e in case.deployment.entrypoints
@@ -2774,8 +3101,9 @@ def build(argv: list[str] | None = None) -> int:
         "view_reference": (
             "runtime.sim.memory.ViewResolver.resolve, evaluated against the "
             "loop bindings runtime.sim.device.Device recorded at each issue; "
-            "amendments A4 (dynamic index terms) and A13 (partial final "
-            "iteration of a block loop)"
+            "amendments A4 (dynamic index terms), A13 (partial final "
+            "iteration of a block loop) and A18 (the axis that iteration is "
+            "partial in, and the unit it counts)"
         ),
         "header_admission_count": len(cases),
         "program_run_count": program_runs,

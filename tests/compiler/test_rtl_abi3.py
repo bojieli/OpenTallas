@@ -184,7 +184,7 @@ def test_issue_events_are_legal_opcodes_and_counted() -> None:
             if family is not Major.RECOVERY:
                 assert issue["descriptor_id"] != NO_ID
             total += 1
-    assert total == vectors["issue_event_count"] == 156
+    assert total == vectors["issue_event_count"] == 177
     assert vectors["case_count"] == len(vectors["cases"])
     assert vectors["program_run_count"] == sum(
         1 for case in vectors["cases"] if case["runs_program"]
@@ -373,6 +373,191 @@ def test_a13_vectors_cover_every_block_shape() -> None:
     above = names["a13_extent_above_block"]
     assert above["admitted"] is False
     assert _views_of(above) == []
+
+
+def test_a18_vectors_reach_a_non_leading_axis_and_a_group_unit() -> None:
+    """Wire format section 12.8: the axis and the unit the view declares.
+
+    A13 clamps ``dim0`` in the bound symbol's own units.  The DeepSeek
+    compressor's pool has neither: its request-dependent extent counts *groups*
+    of four tokens and it sits at axis 1, behind the batch.  These cases pin
+    both halves against the reference resolver's answer.
+    """
+    names = {case["name"]: case for case in _vectors()["cases"]}
+    ratio = generator.A18_RATIO
+    groups_per_block = generator.A18_GROUP_BLOCK
+
+    def group_extents(case: dict, slot: int) -> list[int]:
+        return [
+            view["extent"]
+            for view in case["expected_views"]
+            if view["slot"] == slot and view["loops"] and view["extent_axis"] == 1
+        ]
+
+    # (a) every iteration full: the unit changes nothing when nothing is partial.
+    exact = names["a18_group_axis_exact"]
+    assert group_extents(exact, 0) == [groups_per_block, groups_per_block]
+
+    # (b) the case A13 could not state.  Twelve tokens of four, blocked eight:
+    # the second iteration has four tokens left, which is one group.  A13's
+    # clamp is in tokens, so it would have said four; and it clamps dim0, which
+    # here is the batch.
+    partial = names["a18_group_axis_partial"]
+    assert group_extents(partial, 0) == [groups_per_block, 1]
+    assert group_extents(partial, 4) == [groups_per_block, 1]
+    assert partial["symbols"]["0"] == generator.A18_TOKEN_BLOCK + ratio
+
+    # (c) one whole group and one token over: the floor is the operator's rule.
+    assert group_extents(names["a18_group_axis_short"], 0) == [1]
+
+    # (d) no whole group at all.  The floored extent is zero and A18 does not
+    # clamp to zero: a view has no zero extent, so "the request has none of
+    # this axis" is a predicate question and the operand keeps its block.
+    none = names["a18_group_axis_no_whole_group"]
+    assert none["symbols"]["0"] < ratio
+    assert group_extents(none, 0) == [groups_per_block]
+
+    # (e) a non-leading axis in the symbol's own unit -- the compressor's
+    # *input*, which is [1, tokens, ...] because the operator groups along the
+    # token axis and cannot have the batch there.
+    unit_one = names["a18_axis_unit_one"]
+    assert group_extents(unit_one, 0) == [generator.A18_TOKEN_BLOCK, 1]
+
+    # (e2) the third shape: an extent that is *longer* than the request's rows.
+    # The attention KV join carries a sliding window, so its extent is
+    # ``span + window`` -- and a clamp can only ever shorten, so before A18 the
+    # number had no spelling and the engine refused it.  The bias is added
+    # after the division and is not part of the step, which is why the window
+    # is there for the short final iteration too.
+    window = generator.A18_WINDOW
+    block = generator.A18_TOKEN_BLOCK
+    biased = names["a18_biased_extent"]
+    assert group_extents(biased, 0) == [block + window, ratio + window]
+    single = names["a18_biased_extent_single_block"]
+    assert group_extents(single, 0) == [ratio + window]
+
+    # (e3) all three parts of a compressed layer's join in one affine function:
+    # ``context + window + context/4`` is ``floor(5 * context / 4) + window``
+    # exactly, because ``5c/4 = c + c/4`` and ``c`` is an integer.  This is the
+    # case that says the numerator earns its four bytes.
+    both = names["a18_numerator_and_bias"]
+    span = block + ratio
+    assert group_extents(both, 0) == [
+        (ratio + 1) * block // ratio + window,          # full iteration
+        (ratio + 1) * (span - block) // ratio + window,  # partial
+    ]
+
+    # (f) two admission refusals, both because a declaration that cannot be
+    # resolved would leave the operand at its declared maximum -- the
+    # 65,536-candidate failure the amendment exists to remove.  The refusal has
+    # to name the thing it refused, so the reason is checked and not just the
+    # verdict.
+    generator._install_engine_stubs()
+    capability = generator.rtl_capability()
+    reasons = {
+        "a18_axis_beyond_rank": (
+            generator.case_a18_axis_beyond_rank,
+            "extent axis 3 is outside the rank-2 view",
+        ),
+        "a18_unit_does_not_divide_block": (
+            generator.case_a18_unit_does_not_divide_block,
+            "no dynamic term walks that axis in that unit",
+        ),
+    }
+    assert generator.A18_WINDOW > 0
+    for name, (build, reason) in reasons.items():
+        assert names[name]["admitted"] is False, name
+        assert _views_of(names[name]) == [], name
+        report = verify_deployment(build(capability).deployment, capability)
+        assert not report.admitted, name
+        assert any(reason in error for error in report.errors), (name, report.errors)
+
+
+def test_a18_leaves_every_pre_amendment_view_where_it_was() -> None:
+    """A13 is the ``extent_axis = 0, extent_unit = 1`` case, checked not asserted.
+
+    Section 12.8 claims the substitution is an identity.  Rather than trust the
+    algebra, this re-derives A13's own rule -- the pre-amendment resolver, five
+    lines of it -- and requires it to agree with the shipped resolver on the
+    exhaustive parameter space section 12.4 already cites: divisors 1..8,
+    extents 1..11, bounds 0..19 and iterations 0..5.
+    """
+    from runtime.sim.memory import ViewResolver
+
+    def pre_a18(dim0: int, divisor: int, bound: int, iteration: int) -> int:
+        """ViewResolver as it stood before A18, for a term that walks axis 0."""
+        remaining = bound - iteration * divisor
+        if remaining <= 0 or remaining >= divisor:
+            return dim0
+        return remaining if 0 < remaining < dim0 else dim0
+
+    def post_a18(dim0: int, divisor: int, bound: int, iteration: int) -> int:
+        """The shipped rule at numerator 1, unit 1, bias 0 -- all four zeros."""
+        numerator, unit, bias = 1, 1, 0
+        block = (numerator * divisor) // unit
+        tokens = bound - iteration * divisor
+        if tokens <= 0:
+            return dim0
+        extent = (numerator * tokens) // unit + bias
+        if extent <= 0 or extent >= block + bias:
+            return dim0
+        return extent if 0 < extent < dim0 else dim0
+
+    compared = 0
+    for divisor in range(1, 9):
+        for dim0 in range(1, 12):
+            for bound in range(0, 20):
+                for iteration in range(0, 6):
+                    assert pre_a18(dim0, divisor, bound, iteration) == post_a18(
+                        dim0, divisor, bound, iteration
+                    ), (dim0, divisor, bound, iteration)
+                    compared += 1
+    assert compared == 8 * 11 * 20 * 6
+
+    # And the walk test: at numerator 1 and unit 1 the step is the divisor, so
+    # ``term_stride == stride0 * step`` is ``term_stride == stride0 * divisor``,
+    # which is what A13 wrote.
+    from runtime.abi3.descriptors import iteration_extent
+
+    assert ViewResolver._walks_extent_axis.__doc__
+    for divisor in range(1, 9):
+        assert iteration_extent(divisor, 1, 1) == divisor
+
+
+def test_a18_vector_images_move_no_pre_amendment_extent() -> None:
+    """Every view the pre-A18 vector set resolved resolves to the same numbers.
+
+    The claim in section 12.8 is that no existing program changes meaning.  The
+    401 operand views the 53 pre-A18 cases resolved are all still in the image,
+    all with extent axis zero, and all with the extent they had -- the seven new
+    cases only add to the set.
+    """
+    recorded = _vectors()
+    views = [
+        view
+        for case in recorded["cases"]
+        for view in case["expected_views"]
+    ]
+    assert len(views) == recorded["view_resolution_count"]
+    # Every view of a case that is not an A18 case declares axis zero, and its
+    # resolved extent is its leading extent -- which is what A13 published.
+    legacy = [
+        view
+        for case in recorded["cases"]
+        if not case["name"].startswith("a18")
+        for view in case["expected_views"]
+    ]
+    assert len(legacy) == 401
+    assert all(view["extent_axis"] == 0 for view in legacy)
+    assert all(view["extent"] == view["dim0"] for view in legacy)
+    # And the A18 cases are the only place a non-zero axis appears at all.
+    a18 = [
+        view
+        for case in recorded["cases"]
+        if case["name"].startswith("a18")
+        for view in case["expected_views"]
+    ]
+    assert a18 and any(view["extent_axis"] == 1 for view in a18)
 
 
 def test_a13_golden_extents_come_from_the_reference_resolver() -> None:
@@ -733,7 +918,7 @@ def test_campaign_replays_both_simulators(tmp_path: Path) -> None:
         assert "/tmp/" not in case["compile_command"]
     assert "Verilator 5.05" in summary["tools"]["verilator"]["version"]
     assert "version 11.0" in summary["tools"]["iverilog"]["version"]
-    assert summary["correlation"]["issue_event_count"] == 156
+    assert summary["correlation"]["issue_event_count"] == 177
     assert summary["correlation"]["reference"] == "runtime.sim.device.Device"
     # A view comparison that compared nothing would be a vacuous pass.
     assert summary["correlation"]["view_resolution_count"] == (

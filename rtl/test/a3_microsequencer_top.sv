@@ -28,7 +28,7 @@ module ot_a3_microsequencer_top
 #(
     parameter integer PROGRAM_WORDS = 2048,
     parameter integer HEADER_WORDS  = 4096,
-    parameter integer DESC_WORDS    = 2048,
+    parameter integer DESC_WORDS    = 4096,
     parameter integer SYMBOL_WORDS  = 1024
 ) (
     input  wire        clk,
@@ -77,7 +77,8 @@ module ot_a3_microsequencer_top
     output wire        view_valid,
     output wire [31:0] view_descriptor_id,
     output wire [2:0]  view_slot,
-    output wire [31:0] view_dim0,
+    output wire [31:0] view_extent,
+    output wire [7:0]  view_extent_axis,
     output wire [63:0] view_element_offset,
     output wire [7:0]  view_rank,
     output wire [31:0] count_views_resolved,
@@ -258,7 +259,8 @@ module ot_a3_microsequencer_top
         .view_valid(view_valid),
         .view_descriptor_id(view_descriptor_id),
         .view_slot(view_slot),
-        .view_dim0(view_dim0),
+        .view_extent(view_extent),
+        .view_extent_axis(view_extent_axis),
         .view_element_offset(view_element_offset),
         .view_rank(view_rank),
         .count_views_resolved(count_views_resolved),

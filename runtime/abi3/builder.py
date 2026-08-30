@@ -214,6 +214,10 @@ class DeploymentBuilder:
         scale_object_id: int = NO_ID,
         scale_block_elements: int = 0,
         scale_block_rows: int = 0,
+        extent_axis: int = 0,
+        extent_unit: int = 0,
+        extent_numerator: int = 0,
+        extent_bias: int = 0,
         edge_mask_id: int = NO_ID,
         permissions: int = int(Permission.READ),
         key: str | None = None,
@@ -241,9 +245,22 @@ class DeploymentBuilder:
             # to the same view written before the amendment existed.  A caller
             # may say either; only one of them is written.
             "scale_block_rows": int(scale_block_rows) if scale_block_rows > 1 else 0,
+            # Amendment A18, on the same principle: a numerator and a unit of
+            # one and a bias of zero are A13's own affine function, so they
+            # encode as zero and a view that does not need the amendment is
+            # byte-identical to the same view written before it.
+            "extent_axis": int(extent_axis),
+            "extent_unit": int(extent_unit) if extent_unit > 1 else 0,
+            "extent_numerator": int(extent_numerator) if extent_numerator > 1 else 0,
+            "extent_bias": int(extent_bias),
             "edge_mask_id": edge_mask_id,
             "element_offset": element_offset,
         }
+        if not 0 <= int(extent_axis) < rank:
+            raise BuildError(
+                f"amendment A18 extent axis {extent_axis} is outside the "
+                f"rank-{rank} view it is declared on"
+            )
         for axis in range(MAX_RANK):
             payload[f"dim{axis}"] = dims[axis] if axis < rank else 0
             payload[f"stride{axis}"] = strides[axis] if axis < rank else 0

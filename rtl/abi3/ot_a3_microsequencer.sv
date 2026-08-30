@@ -91,14 +91,15 @@ module ot_a3_microsequencer
     output reg  [31:0]   issue_descriptor_id,
     output reg  [31:0]   issue_index,
 
-    // -- resolved tensor views (amendments A4 and A13) -----------------
+    // -- resolved tensor views (amendments A4, A13 and A18) ------------
     // One single-cycle pulse per operand view of the instruction about to
     // issue, in operand order.  Observation only: it carries no back-pressure
     // because it states what the issue already means.
     output reg           view_valid,
     output reg  [31:0]   view_descriptor_id,
     output reg  [2:0]    view_slot,
-    output reg  [31:0]   view_dim0,
+    output reg  [31:0]   view_extent,
+    output reg  [7:0]    view_extent_axis,
     output reg  [63:0]   view_element_offset,
     output reg  [7:0]    view_rank,
     output reg  [31:0]   count_views_resolved,
@@ -386,7 +387,8 @@ module ot_a3_microsequencer
     wire         res_fault;
     wire [15:0]  res_trap_class;
     wire [63:0]  res_element_offset;
-    wire [31:0]  res_dim0;
+    wire [31:0]  res_extent;
+    wire [7:0]   res_extent_axis;
     wire [7:0]   res_rank;
     wire [31:0]  res_loop_query_id;
     wire [3:0]   res_sym_index;
@@ -408,7 +410,8 @@ module ot_a3_microsequencer
         .fault(res_fault),
         .trap_class(res_trap_class),
         .out_element_offset(res_element_offset),
-        .out_dim0(res_dim0),
+        .out_extent(res_extent),
+        .out_extent_axis(res_extent_axis),
         .out_rank(res_rank),
         .out_dtype(),
         .out_term_count(),
@@ -521,7 +524,8 @@ module ot_a3_microsequencer
             view_valid <= 1'b0;
             view_descriptor_id <= A3_NO_ID;
             view_slot <= 3'd0;
-            view_dim0 <= 32'd0;
+            view_extent <= 32'd0;
+            view_extent_axis <= 8'd0;
             view_element_offset <= 64'd0;
             view_rank <= 8'd0;
             count_views_resolved <= 32'd0;
@@ -919,7 +923,8 @@ module ot_a3_microsequencer
                         end else begin
                             view_valid <= 1'b1;
                             view_slot <= view_next_slot;
-                            view_dim0 <= res_dim0;
+                            view_extent <= res_extent;
+                            view_extent_axis <= res_extent_axis;
                             view_element_offset <= res_element_offset;
                             view_rank <= res_rank;
                             count_views_resolved <=

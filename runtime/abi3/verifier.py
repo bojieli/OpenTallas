@@ -61,6 +61,7 @@ from .descriptors import (
     SelectorKind,
     Symbol,
     decode_entrypoint_table,
+    iteration_extent,
 )
 from .records import Instruction, decode_body, split_program
 
@@ -655,6 +656,8 @@ class Verifier:
             if terms > MAX_DYNAMIC_TERMS:
                 self._fail(f"view {vid}: {terms} dynamic terms exceed the maximum")
                 continue
+            walked = False
+            self._verify_extent_declaration(vid, payload, rank)
             for slot in range(terms):
                 kind = payload[f"term{slot}_kind"]
                 sel = payload[f"term{slot}_index"]
@@ -668,7 +671,8 @@ class Verifier:
                         )
                         continue
                     last += (trip - 1) * stride
-                    self._verify_block_extent(vid, sel, payload, stride)
+                    if self._verify_block_extent(vid, sel, payload, stride):
+                        walked = True
                 elif kind == SelectorKind.RUNTIME_SYMBOL:
                     try:
                         maximum = symbol_max[Symbol(sel)]
@@ -685,6 +689,7 @@ class Verifier:
                     or payload[f"term{slot}_stride"]
                 ):
                     self._fail(f"view {vid}: dynamic term beyond declared count")
+            self._verify_extent_reachable(vid, payload, walked)
             obj = self._descriptor(
                 descriptor.primary_object_id,
                 ExtendedDescriptorType.MEMORY_OBJECT,
@@ -704,6 +709,7 @@ class Verifier:
         self.checks.setdefault("view_bounds", True)
         self.checks.setdefault("block_extent", True)
         self.checks.setdefault("block_scale", True)
+        self.checks.setdefault("extent_axis", True)
 
     def _verify_block_scale(self, vid: int, payload: Mapping[str, Any]) -> None:
         """A block-scaled view's geometry must admit an exact scale index.
@@ -752,13 +758,78 @@ class Verifier:
             )
             self.checks["block_scale"] = False
 
+    def _verify_extent_declaration(
+        self, vid: int, payload: Mapping[str, Any], rank: int
+    ) -> None:
+        """Amendment A18: an extent declaration must name an axis this view has.
+
+        Both fields are zero on every view written before the amendment, which
+        is axis 0 in the bound symbol's own units -- amendment A13's rule
+        exactly -- so this refuses only a declaration that could not be
+        resolved at all.
+        """
+        axis = int(payload["extent_axis"])
+        if not 0 <= axis < rank:
+            self._fail(
+                f"view {vid}: amendment A18 extent axis {axis} is outside the "
+                f"rank-{rank} view that declares it"
+            )
+            self.checks["extent_axis"] = False
+        for name in ("extent_unit", "extent_numerator"):
+            if int(payload[name]) == 1:
+                self._fail(
+                    f"view {vid}: amendment A18 encodes a {name.split('_')[1]} "
+                    "of one as zero, so a declared one is a value the wire "
+                    "format does not assign; write zero"
+                )
+                self.checks["extent_axis"] = False
+
+    def _verify_extent_reachable(
+        self, vid: int, payload: Mapping[str, Any], walked: bool
+    ) -> None:
+        """A declared request-dependent extent must have a loop that resolves it.
+
+        A view that names an axis, a unit, a numerator or a bias is saying the
+        request decides that extent.  If no term walks the axis, nothing sets it
+        and
+        the operand silently presents its declared maximum -- which is the
+        failure this amendment exists to remove, not a shape to admit: the
+        DeepSeek index key presented 65,536 candidates and the attention join
+        262,272 rows, and both executed.  So a declaration nothing can resolve
+        is refused here rather than discovered as a wrong answer.
+
+        A view that declares neither field is untouched: axis 0 and unit one is
+        A13, and A13 has always been silent about views no loop indexes.
+        """
+        declared = any(
+            int(payload[name])
+            for name in (
+                "extent_axis",
+                "extent_unit",
+                "extent_numerator",
+                "extent_bias",
+            )
+        )
+        if not declared or walked:
+            return
+        self._fail(
+            f"view {vid}: amendment A18 declares axis "
+            f"{int(payload['extent_axis'])} as "
+            f"{max(int(payload['extent_numerator']), 1)} * symbol / "
+            f"{max(int(payload['extent_unit']), 1)} + "
+            f"{int(payload['extent_bias'])}, but no dynamic term walks that "
+            "axis in that unit, so the request cannot set it and the operand "
+            "would present its declared maximum"
+        )
+        self.checks["extent_axis"] = False
+
     def _verify_block_extent(
         self,
         vid: int,
         loop_id: int,
         payload: Mapping[str, Any],
         term_stride: int,
-    ) -> None:
+    ) -> bool:
         """A block-loop-indexed leading axis may not exceed the block.
 
         Amendment A13 clamps a view's leading extent in the final iteration of
@@ -784,32 +855,43 @@ class Verifier:
                 loop_id, ExtendedDescriptorType.LOOP_CONTROL
             )
         except Exception:  # not a loop descriptor: _verify_views said so
-            return
+            return False
         loop_payload = loop.payload
         if loop_payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
-            return
+            return False
         divisor = int(loop_payload["bound_divisor"])
         if divisor <= 0:
-            return
-        # Only a loop that walks the *leading* axis can clamp it, and the
+            return False
+        # Amendment A18: the axis, the unit, the numerator and the bias are the
+        # view's to declare; all zero is axis 0, the symbol's own value and no
+        # bias, which is A13.
+        axis = int(payload["extent_axis"])
+        unit = max(int(payload["extent_unit"]), 1)
+        numerator = max(int(payload["extent_numerator"]), 1)
+        bias = int(payload["extent_bias"])
+        step = iteration_extent(divisor, numerator, unit)
+        if step is None:
+            return False
+        # Only a loop that walks the *clamped* axis can clamp it, and the
         # arithmetic says which loops those are: one iteration advances by one
-        # whole block of leading rows, so the term stride is
-        # ``stride0 * bound_divisor``.  A view indexed along some other axis --
-        # the mHC branch reduction steps over tokens while its leading axis is
-        # the four hyper-connection streams -- is not a partial final iteration
-        # of anything, and neither the clamp nor this rule applies to it.
-        if int(term_stride) != int(payload["stride0"]) * divisor:
-            return
-        dim0 = int(payload["dim0"])
-        if dim0 > divisor:
+        # whole block of that axis.  A view indexed along some other axis -- the
+        # mHC branch reduction steps over tokens while its leading axis is the
+        # four hyper-connection streams -- is not a partial final iteration of
+        # anything, and neither the clamp nor this rule applies to it.
+        if int(term_stride) != int(payload[f"stride{axis}"]) * step:
+            return False
+        block = step + bias
+        extent = int(payload[f"dim{axis}"])
+        if extent > block:
             self._fail(
-                f"view {vid}: leading extent {dim0} exceeds the block "
-                f"{divisor} of loop {loop_id}, which indexes it; iteration i "
-                f"of that loop covers {divisor} rows, so the view claims rows "
-                "belonging to the next iteration, and amendment A13's clamp is "
-                "ambiguous on exactly this shape"
+                f"view {vid}: axis-{axis} extent {extent} exceeds the {block} "
+                f"element(s) one iteration of loop {loop_id} covers, and that "
+                "loop indexes it; iteration i covers exactly those, so the "
+                "view claims elements belonging to the next iteration, and "
+                "amendment A13's clamp is ambiguous on exactly this shape"
             )
             self.checks["block_extent"] = False
+        return True
 
     # -- schedule completeness ----------------------------------------------
     def _verify_schedules(self) -> None:
@@ -1011,10 +1093,12 @@ class Verifier:
             operands = [*inputs, out.payload]
             if not all(self._join_rank_ok(where, axis, payload) for payload in operands):
                 continue
-            # Axis 0 is the one A13 can move, so it is compared only when no
-            # operand is indexed along it.
+            # An axis a block loop moves is compared only when no operand is
+            # indexed along it.  Under A18 that axis is the one each operand
+            # declares, so the question is asked about axis 0 -- the axis a join
+            # on the feature axis holds constant -- rather than assumed of it.
             leading_is_static = not any(
-                self._walks_leading_axis(payload) for payload in operands
+                self._walks_clamped_axis(payload, 0) for payload in operands
             )
             frame = _join_frame(axis, inputs[0])
             joined = 0
@@ -1062,15 +1146,19 @@ class Verifier:
             return False
         return True
 
-    def _walks_leading_axis(self, payload: Mapping[str, Any]) -> bool:
-        """True when a loop term steps this view along its leading axis.
+    def _walks_clamped_axis(self, payload: Mapping[str, Any], axis: int) -> bool:
+        """True when a loop term steps this view along ``axis`` in blocks.
 
         The same derivation :meth:`_verify_block_extent` and the functional
-        resolver use: one iteration advances by one whole block of leading rows,
-        so the term stride is ``stride0 * bound_divisor``.  Such a view's
-        ``dim0`` is the block, not the extent, and A13 shortens it at the live
-        binding.
+        resolver use: one iteration advances by one whole block of that axis, so
+        the term stride is ``stride[axis] * (numerator * bound_divisor / unit)``.
+        Such a view's ``dim[axis]`` is the block, not the extent, and A13/A18
+        set it at the live binding.
         """
+        if int(payload["extent_axis"]) != axis:
+            return False
+        unit = max(int(payload["extent_unit"]), 1)
+        numerator = max(int(payload["extent_numerator"]), 1)
         for slot in range(int(payload["dynamic_term_count"])):
             if payload[f"term{slot}_kind"] != SelectorKind.LOOP_INDUCTION:
                 continue
@@ -1082,9 +1170,14 @@ class Verifier:
             except Exception:  # not a loop descriptor: _verify_views said so
                 continue
             divisor = int(loop.payload["bound_divisor"])
-            if divisor > 0 and int(payload[f"term{slot}_stride"]) == int(
-                payload["stride0"]
-            ) * divisor:
+            if divisor <= 0:
+                continue
+            step = iteration_extent(divisor, numerator, unit)
+            if step is None:
+                continue
+            if int(payload[f"term{slot}_stride"]) == int(
+                payload[f"stride{axis}"]
+            ) * step:
                 return True
         return False
 

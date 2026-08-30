@@ -767,6 +767,7 @@ def deepseek_shaped_graph(
     # to have anything to state about it.
     compression_ratio = 4
     groups = Symbolic("span_groups_ratio4", 1, max(span_max // compression_ratio, 1))
+    index_heads = 2
     layers = len(sequence)
 
     token_ids = builder.value("input.token_ids", "u32", (span,), "input")
@@ -860,17 +861,61 @@ def deepseek_shaped_graph(
             layer=layer,
             state_writes=(state_id,),
         )
-        scores = builder.value(f"{prefix}.index_scores", "bf16", (span, span_max), "activation")
+        # TA-ABI3-OPCONV-1 states ``VECTOR.INDEX_SCORE`` as in0 query
+        # ``[B,S,Hd,D]``, in1 key ``[B,C,D]`` and in2 head weights ``[B,S,Hd]``,
+        # and the engine requires the key's head dimension to match the query's.
+        # A token-major query and a projection matrix in the head-weight slot
+        # are not that row, so the fixture states the row the backends lower.
+        index_query = builder.value(
+            f"{prefix}.index_query", "bf16", (span, index_heads, kv_width), "activation"
+        )
+        builder.kernel(
+            f"{prefix}.index_query_projection",
+            "MATMUL",
+            (
+                norm,
+                builder.weight(
+                    f"{base}.indexer.weight", "bf16", (index_heads * kv_width, hidden)
+                ),
+            ),
+            (index_query,),
+            contract="matrix_bf16_linear_bf16_v1",
+            layer=layer,
+        )
+        index_weights = builder.value(
+            f"{prefix}.index_head_weights", "bf16", (span, index_heads), "activation"
+        )
+        builder.kernel(
+            f"{prefix}.index_head_weight_projection",
+            "MATMUL",
+            (
+                norm,
+                builder.weight(
+                    f"{base}.indexer.head_weight", "bf16", (index_heads, hidden)
+                ),
+            ),
+            (index_weights,),
+            contract="matrix_bf16_linear_bf16_v1",
+            layer=layer,
+        )
+        scores = builder.value(
+            f"{prefix}.index_scores", "bf16", (span, groups), "activation"
+        )
         builder.kernel(
             f"{prefix}.index_score",
             "INDEX_SCORE",
             (
-                query,
+                index_query,
                 f"{prefix}.compressed",
-                builder.weight(f"{base}.indexer.weight", "bf16", (kv_width, hidden)),
+                index_weights,
             ),
             (scores,),
             contract="deepseek_v4_sparse_attention_fp32_softmax_v1",
+            # The learned-index scale, as the released exporter spells it.  The
+            # engine reads it off the numeric descriptor and refuses a scale
+            # that is not positive finite, so a spelling the backend does not
+            # recognise is an operator that cannot be issued.
+            attributes={"head_weight_scale_binary32": "0x3c3504f3"},
             layer=layer,
         )
         indices = builder.value(f"{prefix}.indices", "u32", (span, span_max), "activation")
@@ -2226,6 +2271,30 @@ def test_every_declared_request_extent_has_a_term_that_walks_it(
         # Qwen states every extent in tokens, so it declares none of this and
         # its deployment is byte-identical to the one written before A18.
         assert checked or deployment.table.digest
+
+
+def test_the_index_score_profile_carries_the_learned_index_scale(
+    deepseek_build, deepseek_graph
+):
+    """``VECTOR.INDEX_SCORE`` reads its scale off the numeric descriptor.
+
+    The engine refuses a scale that is not a positive finite binary32, so a
+    graph attribute the backend does not recognise does not degrade the
+    operator -- it stops it, at execution, with nothing wrong at admission.
+    """
+    from runtime.abi3.constants import Vector
+
+    deployment, _plan = deepseek_build
+    kernel = next(k for k in deepseek_graph.kernels if k.kind == "INDEX_SCORE")
+    declared = int(kernel.attributes["head_weight_scale_binary32"], 16)
+    operators = _operators(deployment, Major.VECTOR, int(Vector.INDEX_SCORE))
+    assert operators
+    for descriptor in operators:
+        profile = deployment.table.get(
+            int(descriptor.payload["numeric_profile_id"]),
+            ExtendedDescriptorType.NUMERIC,
+        )
+        assert int(profile.payload["scale_bits"]) == declared
 
 
 def test_compressor_operators_carry_the_ratio_and_the_start_position(deepseek_build):

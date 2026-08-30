@@ -4,7 +4,7 @@
     "minor": 0
   },
   "capability_digest": "89f0b51783ed717486fda73553fc3ef9a130f4f6ced9a33447548338aba5058d",
-  "case_count": 53,
+  "case_count": 63,
   "cases": [
     {
       "admitted": true,
@@ -88,6 +88,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_0",
@@ -102,6 +107,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_1",
@@ -116,6 +126,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "output_view_0",
@@ -130,6 +145,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "input_view_0",
@@ -144,6 +164,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "input_view_1",
@@ -158,6 +183,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "output_view_0",
@@ -172,6 +202,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -186,6 +221,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -200,6 +240,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -214,6 +259,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {},
           "operand": "input_view_0",
@@ -228,6 +278,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {},
           "operand": "input_view_1",
@@ -242,6 +297,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {},
           "operand": "output_view_0",
@@ -382,6 +442,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0
@@ -398,6 +463,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0
@@ -414,6 +484,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0
@@ -430,6 +505,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1
@@ -446,6 +526,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1
@@ -462,6 +547,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1
@@ -478,6 +568,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 2
@@ -494,6 +589,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 2
@@ -510,6 +610,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 2
@@ -526,6 +631,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 3
@@ -542,6 +652,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 3
@@ -558,6 +673,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 3
@@ -802,6 +922,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 0
@@ -818,6 +943,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 0
@@ -834,6 +964,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 0
@@ -850,6 +985,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -868,6 +1008,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -886,6 +1031,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -904,6 +1054,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -922,6 +1077,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -940,6 +1100,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -958,6 +1123,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -976,6 +1146,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -994,6 +1169,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -1012,6 +1192,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -1030,6 +1215,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -1048,6 +1238,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -1066,6 +1261,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -1084,6 +1284,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -1102,6 +1307,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -1120,6 +1330,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -1138,6 +1353,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -1156,6 +1376,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -1174,6 +1399,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 1
@@ -1190,6 +1420,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 1
@@ -1206,6 +1441,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 1
@@ -1222,6 +1462,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1240,6 +1485,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1258,6 +1508,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1276,6 +1531,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1294,6 +1554,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1312,6 +1577,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1330,6 +1600,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1348,6 +1623,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1366,6 +1646,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1384,6 +1669,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1402,6 +1692,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1420,6 +1715,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1438,6 +1738,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1456,6 +1761,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1474,6 +1784,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1492,6 +1807,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1510,6 +1830,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1528,6 +1853,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -1546,6 +1876,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 2
@@ -1562,6 +1897,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 2
@@ -1578,6 +1918,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 2
@@ -1594,6 +1939,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1612,6 +1962,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1630,6 +1985,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1648,6 +2008,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1666,6 +2031,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1684,6 +2054,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1702,6 +2077,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1720,6 +2100,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1738,6 +2123,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1756,6 +2146,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1774,6 +2169,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1792,6 +2192,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1810,6 +2215,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1828,6 +2238,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1846,6 +2261,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1864,6 +2284,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1882,6 +2307,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -1900,6 +2330,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -2015,6 +2450,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -2031,6 +2471,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -2047,6 +2492,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -2063,6 +2513,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -2079,6 +2534,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -2095,6 +2555,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -2111,6 +2576,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 2
@@ -2127,6 +2597,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 2
@@ -2143,6 +2618,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 2
@@ -2382,6 +2862,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 0
@@ -2398,6 +2883,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 0
@@ -2414,6 +2904,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 0
@@ -2430,6 +2925,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2448,6 +2948,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2466,6 +2971,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2484,6 +2994,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2502,6 +3017,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2520,6 +3040,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2538,6 +3063,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2556,6 +3086,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2574,6 +3109,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2592,6 +3132,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2610,6 +3155,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2628,6 +3178,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2646,6 +3201,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2664,6 +3224,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2682,6 +3247,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2700,6 +3270,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2718,6 +3293,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2736,6 +3316,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 0,
@@ -2754,6 +3339,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 1
@@ -2770,6 +3360,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 1
@@ -2786,6 +3381,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 1
@@ -2802,6 +3402,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -2820,6 +3425,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -2838,6 +3448,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -2856,6 +3471,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -2874,6 +3494,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -2892,6 +3517,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -2910,6 +3540,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -2928,6 +3563,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -2946,6 +3586,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -2964,6 +3609,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -2982,6 +3632,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -3000,6 +3655,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -3018,6 +3678,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -3036,6 +3701,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -3054,6 +3724,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -3072,6 +3747,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -3090,6 +3770,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -3108,6 +3793,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 1,
@@ -3126,6 +3816,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 2
@@ -3142,6 +3837,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 2
@@ -3158,6 +3858,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 2
@@ -3174,6 +3879,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3192,6 +3902,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3210,6 +3925,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3228,6 +3948,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3246,6 +3971,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3264,6 +3994,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3282,6 +4017,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3300,6 +4040,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3318,6 +4063,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3336,6 +4086,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3354,6 +4109,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3372,6 +4132,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3390,6 +4155,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3408,6 +4178,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3426,6 +4201,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3444,6 +4224,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3462,6 +4247,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3480,6 +4270,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "16": 2,
@@ -3581,6 +4376,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -3595,6 +4395,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -3609,6 +4414,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -3740,6 +4550,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_0",
@@ -3754,6 +4569,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_1",
@@ -3768,6 +4588,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "output_view_0",
@@ -3782,6 +4607,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "input_view_0",
@@ -3796,6 +4626,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "input_view_1",
@@ -3810,6 +4645,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "output_view_0",
@@ -3824,6 +4664,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "18": 0
@@ -3840,6 +4685,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "18": 0
@@ -3856,6 +4706,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "18": 0
@@ -3872,6 +4727,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 2
@@ -3888,6 +4748,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 2
@@ -3904,6 +4769,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 2
@@ -3920,6 +4790,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 5,
           "loops": {
             "18": 3
@@ -3936,6 +4811,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 5,
           "loops": {
             "18": 3
@@ -3952,6 +4832,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 5,
           "loops": {
             "18": 3
@@ -3968,6 +4853,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 3
@@ -3984,6 +4874,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 3
@@ -4000,6 +4895,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 3
@@ -4130,6 +5030,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_0",
@@ -4144,6 +5049,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_1",
@@ -4158,6 +5068,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "output_view_0",
@@ -4172,6 +5087,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "18": 0
@@ -4188,6 +5108,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "18": 0
@@ -4204,6 +5129,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "18": 0
@@ -4220,6 +5150,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 2
@@ -4236,6 +5171,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 2
@@ -4252,6 +5192,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 2
@@ -4268,6 +5213,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 5,
           "loops": {
             "18": 3
@@ -4284,6 +5234,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 5,
           "loops": {
             "18": 3
@@ -4300,6 +5255,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 5,
           "loops": {
             "18": 3
@@ -4316,6 +5276,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 3
@@ -4332,6 +5297,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 3
@@ -4348,6 +5318,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {
             "18": 3
@@ -4456,6 +5431,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_0",
@@ -4470,6 +5450,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_1",
@@ -4484,6 +5469,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "output_view_0",
@@ -4498,6 +5488,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {},
           "operand": "input_view_0",
@@ -4512,6 +5507,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {},
           "operand": "input_view_1",
@@ -4526,6 +5526,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {},
           "operand": "output_view_0",
@@ -4664,6 +5669,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -4678,6 +5688,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -4692,6 +5707,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -4817,6 +5837,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "input_view_0",
@@ -4831,6 +5856,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "input_view_1",
@@ -4845,6 +5875,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "output_view_0",
@@ -4969,6 +6004,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_0",
@@ -4983,6 +6023,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_1",
@@ -4997,6 +6042,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "output_view_0",
@@ -5011,6 +6061,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_0",
@@ -5025,6 +6080,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_1",
@@ -5039,6 +6099,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "output_view_0",
@@ -5053,6 +6118,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "input_view_0",
@@ -5067,6 +6137,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "input_view_1",
@@ -5081,6 +6156,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "output_view_0",
@@ -5095,6 +6175,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -5109,6 +6194,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -5123,6 +6213,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -5137,6 +6232,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 5,
           "loops": {},
           "operand": "input_view_0",
@@ -5151,6 +6251,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 5,
           "loops": {},
           "operand": "input_view_1",
@@ -5165,6 +6270,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 5,
           "loops": {},
           "operand": "output_view_0",
@@ -5311,6 +6421,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_0",
@@ -5325,6 +6440,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_1",
@@ -5339,6 +6459,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "output_view_0",
@@ -5353,6 +6478,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {
             "20": 0
@@ -5369,6 +6499,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {
             "20": 0
@@ -5385,6 +6520,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {
             "20": 0
@@ -5401,6 +6541,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {
             "20": 1
@@ -5417,6 +6562,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {
             "20": 1
@@ -5433,6 +6583,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {
             "20": 1
@@ -5449,6 +6604,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {
             "20": 2
@@ -5465,6 +6625,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {
             "20": 2
@@ -5481,6 +6646,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {
             "20": 2
@@ -5497,6 +6667,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "20": 2
@@ -5513,6 +6688,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "20": 2
@@ -5529,6 +6709,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 4,
           "loops": {
             "20": 2
@@ -5545,6 +6730,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {},
           "operand": "input_view_0",
@@ -5559,6 +6749,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {},
           "operand": "input_view_1",
@@ -5573,6 +6768,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 6,
           "loops": {},
           "operand": "output_view_0",
@@ -5694,6 +6894,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -5710,6 +6915,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -5726,6 +6936,11 @@
             16
           ],
           "element_offset": 256,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -5742,6 +6957,11 @@
             16
           ],
           "element_offset": 64,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -5758,6 +6978,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -5774,6 +6999,11 @@
             16
           ],
           "element_offset": 320,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -5790,6 +7020,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -5804,6 +7039,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -5818,6 +7058,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -5937,6 +7182,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -5953,6 +7203,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -5969,6 +7224,11 @@
             16
           ],
           "element_offset": 256,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -5985,6 +7245,11 @@
             16
           ],
           "element_offset": 64,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -6001,6 +7266,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -6017,6 +7287,11 @@
             16
           ],
           "element_offset": 320,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -6033,6 +7308,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 2
@@ -6049,6 +7329,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 2
@@ -6065,6 +7350,11 @@
             16
           ],
           "element_offset": 384,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 2
@@ -6081,6 +7371,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -6095,6 +7390,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -6109,6 +7409,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -6221,6 +7526,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -6237,6 +7547,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -6253,6 +7568,11 @@
             16
           ],
           "element_offset": 256,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -6269,6 +7589,11 @@
             16
           ],
           "element_offset": 64,
+          "extent": 3,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -6285,6 +7610,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -6301,6 +7631,11 @@
             16
           ],
           "element_offset": 320,
+          "extent": 3,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -6317,6 +7652,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -6331,6 +7671,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -6345,6 +7690,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -6450,6 +7800,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 3,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -6466,6 +7821,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -6482,6 +7842,11 @@
             16
           ],
           "element_offset": 256,
+          "extent": 3,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -6498,6 +7863,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -6512,6 +7882,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -6526,6 +7901,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -6624,6 +8004,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -6638,6 +8023,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -6652,6 +8042,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -6762,6 +8157,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -6778,6 +8178,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -6794,6 +8199,11 @@
             16
           ],
           "element_offset": 256,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -6810,6 +8220,11 @@
             16
           ],
           "element_offset": 64,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -6826,6 +8241,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -6842,6 +8262,11 @@
             16
           ],
           "element_offset": 320,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -6858,6 +8283,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -6872,6 +8302,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -6886,6 +8321,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -7004,8 +8444,8 @@
         "5": 0
       },
       "verifier_errors": [
-        "view 15: leading extent 6 exceeds the block 4 of loop 14, which indexes it; iteration i of that loop covers 4 rows, so the view claims rows belonging to the next iteration, and amendment A13's clamp is ambiguous on exactly this shape",
-        "view 16: leading extent 6 exceeds the block 4 of loop 14, which indexes it; iteration i of that loop covers 4 rows, so the view claims rows belonging to the next iteration, and amendment A13's clamp is ambiguous on exactly this shape"
+        "view 15: axis-0 extent 6 exceeds the 4 element(s) one iteration of loop 14 covers, and that loop indexes it; iteration i covers exactly those, so the view claims elements belonging to the next iteration, and amendment A13's clamp is ambiguous on exactly this shape",
+        "view 16: axis-0 extent 6 exceeds the 4 element(s) one iteration of loop 14 covers, and that loop indexes it; iteration i covers exactly those, so the view claims elements belonging to the next iteration, and amendment A13's clamp is ambiguous on exactly this shape"
       ]
     },
     {
@@ -7055,6 +8495,11 @@
             16
           ],
           "element_offset": 48,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_0",
@@ -7069,6 +8514,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_1",
@@ -7083,6 +8533,11 @@
             16
           ],
           "element_offset": 304,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "output_view_0",
@@ -7192,6 +8647,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -7208,6 +8668,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -7224,6 +8689,11 @@
             16
           ],
           "element_offset": 256,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 0
@@ -7240,6 +8710,11 @@
             16
           ],
           "element_offset": 64,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -7256,6 +8731,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -7272,6 +8752,11 @@
             16
           ],
           "element_offset": 320,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 1
@@ -7288,6 +8773,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 2
@@ -7304,6 +8794,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 2
@@ -7320,6 +8815,11 @@
             16
           ],
           "element_offset": 384,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "14": 2
@@ -7454,6 +8954,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7471,6 +8976,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7488,6 +8998,11 @@
             16
           ],
           "element_offset": 256,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7505,6 +9020,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7522,6 +9042,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7539,6 +9064,11 @@
             16
           ],
           "element_offset": 384,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7556,6 +9086,11 @@
             16
           ],
           "element_offset": 64,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -7573,6 +9108,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -7590,6 +9130,11 @@
             16
           ],
           "element_offset": 320,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -7607,6 +9152,11 @@
             16
           ],
           "element_offset": 192,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -7624,6 +9174,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -7641,6 +9196,11 @@
             16
           ],
           "element_offset": 448,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -7658,6 +9218,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 2,
@@ -7675,6 +9240,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 2,
@@ -7692,6 +9262,11 @@
             16
           ],
           "element_offset": 384,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 2,
@@ -7709,6 +9284,11 @@
             16
           ],
           "element_offset": 256,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 2,
@@ -7726,6 +9306,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 2,
@@ -7743,6 +9328,11 @@
             16
           ],
           "element_offset": 512,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 2,
@@ -7865,6 +9455,11 @@
             16
           ],
           "element_offset": 3,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7882,6 +9477,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7899,6 +9499,11 @@
             16
           ],
           "element_offset": 259,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7916,6 +9521,11 @@
             16
           ],
           "element_offset": 67,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7933,6 +9543,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7950,6 +9565,11 @@
             16
           ],
           "element_offset": 323,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 0,
@@ -7967,6 +9587,11 @@
             16
           ],
           "element_offset": 67,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -7984,6 +9609,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -8001,6 +9631,11 @@
             16
           ],
           "element_offset": 323,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -8018,6 +9653,11 @@
             16
           ],
           "element_offset": 131,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -8035,6 +9675,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -8052,6 +9697,11 @@
             16
           ],
           "element_offset": 387,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "14": 1,
@@ -8183,6 +9833,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "15": 0
@@ -8200,6 +9855,11 @@
             16
           ],
           "element_offset": 512,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "15": 0
@@ -8217,6 +9877,11 @@
             16
           ],
           "element_offset": 32,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "15": 1
@@ -8234,6 +9899,11 @@
             16
           ],
           "element_offset": 544,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "15": 1
@@ -8251,6 +9921,11 @@
             16
           ],
           "element_offset": 64,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "15": 2
@@ -8268,6 +9943,11 @@
             16
           ],
           "element_offset": 576,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "15": 2
@@ -8285,6 +9965,11 @@
             16
           ],
           "element_offset": 96,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "15": 3
@@ -8302,6 +9987,11 @@
             16
           ],
           "element_offset": 608,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "15": 3
@@ -8318,6 +10008,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -8332,6 +10027,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -8346,6 +10046,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -8479,6 +10184,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 0,
@@ -8497,6 +10207,11 @@
             16
           ],
           "element_offset": 1024,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 0,
@@ -8515,6 +10230,11 @@
             16
           ],
           "element_offset": 32,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 0,
@@ -8533,6 +10253,11 @@
             16
           ],
           "element_offset": 1056,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 0,
@@ -8551,6 +10276,11 @@
             16
           ],
           "element_offset": 256,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 1,
@@ -8569,6 +10299,11 @@
             16
           ],
           "element_offset": 1280,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 1,
@@ -8587,6 +10322,11 @@
             16
           ],
           "element_offset": 288,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 1,
@@ -8605,6 +10345,11 @@
             16
           ],
           "element_offset": 1312,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 1,
@@ -8623,6 +10368,11 @@
             16
           ],
           "element_offset": 512,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 2,
@@ -8641,6 +10391,11 @@
             16
           ],
           "element_offset": 1536,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 2,
@@ -8659,6 +10414,11 @@
             16
           ],
           "element_offset": 544,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 2,
@@ -8677,6 +10437,11 @@
             16
           ],
           "element_offset": 1568,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {
             "15": 2,
@@ -8792,6 +10557,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_0",
@@ -8806,6 +10576,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_1",
@@ -8820,6 +10595,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "output_view_0",
@@ -8931,6 +10711,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_0",
@@ -8945,6 +10730,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_1",
@@ -8959,6 +10749,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "output_view_0",
@@ -9141,6 +10936,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 0
@@ -9157,6 +10957,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 0
@@ -9173,6 +10978,11 @@
             16
           ],
           "element_offset": 256,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 0
@@ -9189,6 +10999,11 @@
             16
           ],
           "element_offset": 64,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 1
@@ -9205,6 +11020,11 @@
             16
           ],
           "element_offset": 64,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 1
@@ -9221,6 +11041,11 @@
             16
           ],
           "element_offset": 320,
+          "extent": 4,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 1
@@ -9237,6 +11062,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 2
@@ -9253,6 +11083,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 2
@@ -9269,6 +11104,11 @@
             16
           ],
           "element_offset": 384,
+          "extent": 1,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {
             "16": 2
@@ -9438,6 +11278,11 @@
             8
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_0",
@@ -9452,6 +11297,11 @@
             1
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_1",
@@ -9466,6 +11316,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_2",
@@ -9480,6 +11335,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "output_view_0",
@@ -9576,6 +11436,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_0",
@@ -9590,6 +11455,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_1",
@@ -9604,6 +11474,11 @@
             4
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "output_view_0",
@@ -9618,6 +11493,11 @@
             4
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "output_view_1",
@@ -9714,6 +11594,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_0",
@@ -9728,6 +11613,11 @@
             16
           ],
           "element_offset": 32,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_1",
@@ -9742,6 +11632,11 @@
             16
           ],
           "element_offset": 64,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_2",
@@ -9756,6 +11651,11 @@
             16
           ],
           "element_offset": 96,
+          "extent": 2,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_3",
@@ -9770,6 +11670,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "output_view_0",
@@ -9866,6 +11771,11 @@
             4
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_0",
@@ -9880,6 +11790,11 @@
             4
           ],
           "element_offset": 4,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_1",
@@ -9894,6 +11809,11 @@
             4
           ],
           "element_offset": 8,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_2",
@@ -9908,6 +11828,11 @@
             4
           ],
           "element_offset": 12,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_3",
@@ -9922,6 +11847,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "output_view_0",
@@ -10039,6 +11969,1957 @@
       },
       "verifier_errors": [
         "instruction 0 (GROUPED_CONCAT): aux_id_0 names join axis 2; amendment A17 defines 0, 1 and nothing else"
+      ]
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 11,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "653576d1827f636474b54608adedf98dd8dd3207b9a2d878b07ae4095d76ff41",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 7,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 2,
+        "predicated_off": 0,
+        "retired": 7,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 3,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            2,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 2,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            2,
+            4
+          ],
+          "element_offset": 416,
+          "extent": 2,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            2,
+            4
+          ],
+          "element_offset": 16,
+          "extent": 2,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            2,
+            4
+          ],
+          "element_offset": 432,
+          "extent": 2,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 7,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 2,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 7,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 2,
+        "engine.vector.descriptors": 3,
+        "instructions.fetched": 7,
+        "instructions.issued": 3,
+        "instructions.retired": 7
+      },
+      "instruction_count": 5,
+      "name": "a18_group_axis_exact",
+      "note": "16 tokens of 4, blocked 8 at a time: both iterations hold a whole block of two groups, so the group axis stays at two and the unit changes nothing when nothing is partial",
+      "phase": 0,
+      "program_sha256": "aa6e7429d4b1195eeec3412842e690f591df8b3d8edbed3ce1a9e4bd60b89fd7",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 16,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 11,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "653576d1827f636474b54608adedf98dd8dd3207b9a2d878b07ae4095d76ff41",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 7,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 2,
+        "predicated_off": 0,
+        "retired": 7,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 3,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            2,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 2,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            2,
+            4
+          ],
+          "element_offset": 416,
+          "extent": 2,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            1,
+            2,
+            4
+          ],
+          "element_offset": 16,
+          "extent": 1,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            1,
+            2,
+            4
+          ],
+          "element_offset": 432,
+          "extent": 1,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 7,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 2,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 7,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 2,
+        "engine.vector.descriptors": 3,
+        "instructions.fetched": 7,
+        "instructions.issued": 3,
+        "instructions.retired": 7
+      },
+      "instruction_count": 5,
+      "name": "a18_group_axis_partial",
+      "note": "12 tokens of 4, blocked 8: the second iteration has four tokens left, which is one whole group, so axis 1 resolves to 1 and not to 4.  This is the case A13 could not state -- its clamp is in the bound symbol's units, so it would have presented four groups for four tokens, and it clamps dim0, which here is the batch",
+      "phase": 0,
+      "program_sha256": "2c99f6ff27801a2b641f43951a300d7bfb5f54e9bacd5d32c47a3bc434879fa1",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 12,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 11,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "653576d1827f636474b54608adedf98dd8dd3207b9a2d878b07ae4095d76ff41",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 5,
+        "first_fault": 4294967295,
+        "issued": 2,
+        "loop_iterations": 1,
+        "predicated_off": 0,
+        "retired": 5,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 3,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            1,
+            2,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 1,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            1,
+            2,
+            4
+          ],
+          "element_offset": 416,
+          "extent": 1,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 5,
+        "first_fault": 4294967295,
+        "issued": 2,
+        "loop_iterations": 1,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 5,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 1,
+        "engine.vector.descriptors": 2,
+        "instructions.fetched": 5,
+        "instructions.issued": 2,
+        "instructions.retired": 5
+      },
+      "instruction_count": 5,
+      "name": "a18_group_axis_short",
+      "note": "five tokens of 4 in one iteration: one whole group and one token over, so the group axis resolves to one.  The floor is the operator's own rule -- a partial group is not a group",
+      "phase": 0,
+      "program_sha256": "693e86209bfe504d127a1a77f117e31e12d22a901067ef5ca31804e66f8dd44e",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 5,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 11,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "653576d1827f636474b54608adedf98dd8dd3207b9a2d878b07ae4095d76ff41",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 5,
+        "first_fault": 4294967295,
+        "issued": 2,
+        "loop_iterations": 1,
+        "predicated_off": 0,
+        "retired": 5,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 3,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            2,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 2,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            2,
+            2,
+            4
+          ],
+          "element_offset": 416,
+          "extent": 2,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 5,
+        "first_fault": 4294967295,
+        "issued": 2,
+        "loop_iterations": 1,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 5,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 1,
+        "engine.vector.descriptors": 2,
+        "instructions.fetched": 5,
+        "instructions.issued": 2,
+        "instructions.retired": 5
+      },
+      "instruction_count": 5,
+      "name": "a18_group_axis_no_whole_group",
+      "note": "three tokens of 4: the request contains no whole group, the floored extent is zero, and A18 does not clamp to zero.  A view has no zero extent -- the verifier refuses one -- so 'the request has none of this axis' is a predicate question and not a view question, and the operand keeps its declared block while the should-compress predicate keeps the operator from issuing",
+      "phase": 0,
+      "program_sha256": "fe0a253dbf8d54e807d50c4fa15d4fb1007e2400545a92222853e43301935d49",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 3,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 11,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "556d27d7bbb29eb6b5b672168b29a30fc6c9d9728104426582c20fe2a12bcaba",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 7,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 2,
+        "predicated_off": 0,
+        "retired": 7,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 3,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            8,
+            2,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            8,
+            2,
+            4
+          ],
+          "element_offset": 416,
+          "extent": 8,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            1,
+            2,
+            4
+          ],
+          "element_offset": 64,
+          "extent": 1,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            1,
+            2,
+            4
+          ],
+          "element_offset": 480,
+          "extent": 1,
+          "extent_axis": 1,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 7,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 2,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 7,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 2,
+        "engine.vector.descriptors": 3,
+        "instructions.fetched": 7,
+        "instructions.issued": 3,
+        "instructions.retired": 7
+      },
+      "instruction_count": 5,
+      "name": "a18_axis_unit_one",
+      "note": "axis 1 in the symbol's own unit: nine tokens blocked eight at a time, presented as [1, tokens, ...] because the operator groups along the token axis and cannot have the batch there.  A13 clamps dim0 only, so before A18 this operand was the whole declared block on its final iteration",
+      "phase": 0,
+      "program_sha256": "6bc976cc96f7b957393787c12bf13d502d01cc49a068ac7cc0d95d98b1b243d4",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 9,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 11,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "b8ef6c400a893c9c60fa485cf556f8c83499096e4d6b2fed6cb0ece88bc9e99f",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 7,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 2,
+        "predicated_off": 0,
+        "retired": 7,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 3,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            11,
+            2,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 11,
+          "extent_axis": 1,
+          "extent_bias": 3,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            11,
+            2,
+            4
+          ],
+          "element_offset": 416,
+          "extent": 11,
+          "extent_axis": 1,
+          "extent_bias": 3,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            7,
+            2,
+            4
+          ],
+          "element_offset": 64,
+          "extent": 7,
+          "extent_axis": 1,
+          "extent_bias": 3,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            7,
+            2,
+            4
+          ],
+          "element_offset": 480,
+          "extent": 7,
+          "extent_axis": 1,
+          "extent_bias": 3,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 7,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 2,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 7,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 2,
+        "engine.vector.descriptors": 3,
+        "instructions.fetched": 7,
+        "instructions.issued": 3,
+        "instructions.retired": 7
+      },
+      "instruction_count": 5,
+      "name": "a18_biased_extent",
+      "note": "12 tokens blocked eight at a time, joined to a 3-row window: the first iteration holds eight rows and the window and is full at eleven, and the second holds four and the window, so axis 1 resolves to seven.  A13 could state neither number -- its clamp only ever shortens, and span + window is longer than span",
+      "phase": 0,
+      "program_sha256": "703c81e34440650b5b14e9c01afb3dd374605aa147ef5636049b2112732858f8",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 12,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 11,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "b8ef6c400a893c9c60fa485cf556f8c83499096e4d6b2fed6cb0ece88bc9e99f",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 5,
+        "first_fault": 4294967295,
+        "issued": 2,
+        "loop_iterations": 1,
+        "predicated_off": 0,
+        "retired": 5,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 3,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            7,
+            2,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 7,
+          "extent_axis": 1,
+          "extent_bias": 3,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            7,
+            2,
+            4
+          ],
+          "element_offset": 416,
+          "extent": 7,
+          "extent_axis": 1,
+          "extent_bias": 3,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 5,
+        "first_fault": 4294967295,
+        "issued": 2,
+        "loop_iterations": 1,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 5,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 1,
+        "engine.vector.descriptors": 2,
+        "instructions.fetched": 5,
+        "instructions.issued": 2,
+        "instructions.retired": 5
+      },
+      "instruction_count": 5,
+      "name": "a18_biased_extent_single_block",
+      "note": "four tokens in one block of eight, joined to a 3-row window: seven rows, which is what the 104-token DeepSeek prefill needs when it asks for 104 + 128 = 232 of a declared 512 + 128",
+      "phase": 0,
+      "program_sha256": "1b2f6711481365f63f6f634e7908ccf7e2f7c04450f71b1bda787d217cf81db7",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 4,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "declared_retired_work": 11,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "2253da89e36bfbed997ffa206e15cfed72ef458ddef792324c4d406d61ddf83b",
+      "device_executed": true,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 7,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 2,
+        "predicated_off": 0,
+        "retired": 7,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 19,
+          "family": 48,
+          "index": 1,
+          "mnemonic": "VECTOR.COMPRESS",
+          "sub": 8
+        },
+        {
+          "descriptor_id": 20,
+          "family": 48,
+          "index": 3,
+          "mnemonic": "VECTOR.ADD",
+          "sub": 3
+        }
+      ],
+      "expected_views": [
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            13,
+            2,
+            4
+          ],
+          "element_offset": 0,
+          "extent": 13,
+          "extent_axis": 1,
+          "extent_bias": 3,
+          "extent_numerator": 5,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            13,
+            2,
+            4
+          ],
+          "element_offset": 416,
+          "extent": 13,
+          "extent_axis": 1,
+          "extent_bias": 3,
+          "extent_numerator": 5,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 0
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 16,
+          "dim0": 1,
+          "dims": [
+            1,
+            8,
+            2,
+            4
+          ],
+          "element_offset": 80,
+          "extent": 8,
+          "extent_axis": 1,
+          "extent_bias": 3,
+          "extent_numerator": 5,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "input_view_0",
+          "rank": 4,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 17,
+          "dim0": 1,
+          "dims": [
+            1,
+            8,
+            2,
+            4
+          ],
+          "element_offset": 496,
+          "extent": 8,
+          "extent_axis": 1,
+          "extent_bias": 3,
+          "extent_numerator": 5,
+          "extent_unit": 4,
+          "index": 1,
+          "loops": {
+            "15": 1
+          },
+          "operand": "output_view_0",
+          "rank": 4,
+          "slot": 4
+        },
+        {
+          "descriptor_id": 7,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_0",
+          "rank": 2,
+          "slot": 0
+        },
+        {
+          "descriptor_id": 9,
+          "dim0": 16,
+          "dims": [
+            16,
+            16
+          ],
+          "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "input_view_1",
+          "rank": 2,
+          "slot": 1
+        },
+        {
+          "descriptor_id": 8,
+          "dim0": 8,
+          "dims": [
+            8,
+            16
+          ],
+          "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
+          "index": 3,
+          "loops": {},
+          "operand": "output_view_0",
+          "rank": 2,
+          "slot": 4
+        }
+      ],
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 7,
+        "first_fault": 4294967295,
+        "issued": 3,
+        "loop_iterations": 2,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 7,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {
+        "control.loop_iterations": 2,
+        "engine.vector.descriptors": 3,
+        "instructions.fetched": 7,
+        "instructions.issued": 3,
+        "instructions.retired": 7
+      },
+      "instruction_count": 5,
+      "name": "a18_numerator_and_bias",
+      "note": "12 tokens of 4 blocked eight at a time, joined to a 3-row window and a compressed prefix: floor(5 * 12 / 4) + 3 = 18 on the first iteration, which is the whole block, and floor(5 * 4 / 4) + 3 = 8 on the second.  The numerator is what lets one symbol state both the rows and the groups derived from them",
+      "phase": 0,
+      "program_sha256": "9655113ab1d16a03b9aef64d081df6900d6c8763d6400411c0c47b69ba5aee42",
+      "python_rejects_image": null,
+      "runs_program": true,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 12,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": []
+    },
+    {
+      "admitted": false,
+      "declared_retired_work": 10,
+      "descriptor_count": 19,
+      "descriptor_table_sha256": "90aea3670f93ef3f367277599dee3034269af09689ff7bd37a109115efa20f15",
+      "device_executed": false,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": false,
+        "fetched": 0,
+        "first_fault": 4294967295,
+        "issued": 0,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 0,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 1,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [],
+      "expected_views": [],
+      "golden": {
+        "branches": 0,
+        "complete": false,
+        "fetched": 0,
+        "first_fault": 4294967295,
+        "issued": 0,
+        "loop_iterations": 0,
+        "message": "not executable by the golden model",
+        "predicated_off": 0,
+        "retired": 0,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 1,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {},
+      "instruction_count": 4,
+      "name": "a18_axis_beyond_rank",
+      "note": "a rank-2 view declaring extent axis 3: there is no such axis to resolve, so the deployment is refused rather than resolved against an extent that does not exist",
+      "phase": 0,
+      "program_sha256": "4b7a43d5bfd4197734e585217ed12d78514f0e99b41a4473ef41bc3a236abc3c",
+      "python_rejects_image": null,
+      "runs_program": false,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 8,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": [
+        "view 15: amendment A18 extent axis 3 is outside the rank-2 view that declares it",
+        "view 15: amendment A18 declares axis 3 as 1 * symbol / 1 + 0, but no dynamic term walks that axis in that unit, so the request cannot set it and the operand would present its declared maximum"
+      ]
+    },
+    {
+      "admitted": false,
+      "declared_retired_work": 11,
+      "descriptor_count": 22,
+      "descriptor_table_sha256": "babbc9c86035f9e399b5f9fb0d06a0144f6c7e4b18c7f641aaca24da08fd35f4",
+      "device_executed": false,
+      "entrypoint_id": 0,
+      "expected": {
+        "branches": 0,
+        "complete": false,
+        "fetched": 0,
+        "first_fault": 4294967295,
+        "issued": 0,
+        "loop_iterations": 0,
+        "predicated_off": 0,
+        "retired": 0,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 1,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "expected_header_legal": true,
+      "expected_header_trap_class": 0,
+      "expected_issues": [],
+      "expected_views": [],
+      "golden": {
+        "branches": 0,
+        "complete": false,
+        "fetched": 0,
+        "first_fault": 4294967295,
+        "issued": 0,
+        "loop_iterations": 0,
+        "message": "not executable by the golden model",
+        "predicated_off": 0,
+        "retired": 0,
+        "state_commits": 0,
+        "state_commits_applied": 0,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 0,
+        "state_reads": 0,
+        "state_rows_committed": 0,
+        "status": 1,
+        "trap_class": 0,
+        "wait_events": 0
+      },
+      "golden_counters": {},
+      "instruction_count": 5,
+      "name": "a18_unit_does_not_divide_block",
+      "note": "a unit of three against a block of eight: one iteration is not a whole number of that axis's elements, so no term walks the axis and nothing would ever shorten it.  A declaration nothing can resolve is refused, because the alternative is the operand silently presenting its declared maximum -- which is the failure A18 exists to remove",
+      "phase": 0,
+      "program_sha256": "40d4a2f08e858007162ab8b8e19029d277d6b6f0d22d29b7cd30a6df3ae087b3",
+      "python_rejects_image": null,
+      "runs_program": false,
+      "state_descriptor_count": 1,
+      "symbols": {
+        "0": 16,
+        "4": 0,
+        "5": 0
+      },
+      "verifier_errors": [
+        "view 16: amendment A18 declares axis 1 as 1 * symbol / 3 + 0, but no dynamic term walks that axis in that unit, so the request cannot set it and the operand would present its declared maximum",
+        "view 17: amendment A18 declares axis 1 as 1 * symbol / 3 + 0, but no dynamic term walks that axis in that unit, so the request cannot set it and the operand would present its declared maximum"
       ]
     },
     {
@@ -10587,6 +14468,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_0",
@@ -10601,6 +14487,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_1",
@@ -10615,6 +14506,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "output_view_0",
@@ -10890,6 +14786,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_0",
@@ -10904,6 +14805,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "input_view_1",
@@ -10918,6 +14824,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 0,
           "loops": {},
           "operand": "output_view_0",
@@ -10932,6 +14843,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_0",
@@ -10946,6 +14862,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "input_view_1",
@@ -10960,6 +14881,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 1,
           "loops": {},
           "operand": "output_view_0",
@@ -10974,6 +14900,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "input_view_0",
@@ -10988,6 +14919,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "input_view_1",
@@ -11002,6 +14938,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 2,
           "loops": {},
           "operand": "output_view_0",
@@ -11016,6 +14957,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_0",
@@ -11030,6 +14976,11 @@
             16
           ],
           "element_offset": 0,
+          "extent": 16,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "input_view_1",
@@ -11044,6 +14995,11 @@
             16
           ],
           "element_offset": 128,
+          "extent": 8,
+          "extent_axis": 0,
+          "extent_bias": 0,
+          "extent_numerator": 1,
+          "extent_unit": 1,
           "index": 3,
           "loops": {},
           "operand": "output_view_0",
@@ -11503,34 +15459,34 @@
   "engine_stub_policy": "every dispatchable engine operation is a recording no-op: RTL 3.0 implements the control plane, so the comparison is the control plane",
   "geometry": {
     "case_stride": 35,
-    "case_words": 2048,
+    "case_words": 4096,
     "descriptor_prefix_bytes": 192,
-    "descriptor_words": 2048,
+    "descriptor_words": 4096,
     "header_words": 4096,
     "issue_words": 2048,
     "program_words": 2048,
     "symbol_words": 1024,
-    "view_stride": 6,
+    "view_stride": 7,
     "view_words": 8192
   },
-  "header_admission_count": 53,
+  "header_admission_count": 63,
   "image_sha256": {
-    "a3_case.hex": "a56a53f81da3cbdf3a4aec2358093ddd5001c5e7ed614d847fb8b73cab841ec7",
-    "a3_descriptor.hex": "a6b68fb529b93f0d2c0f6ea932adc1dd0a70fe9c4180b3128cabbcb7cef4985f",
-    "a3_header.hex": "a064d7007430875fcdf7c59b9462c9b3dc6fb30c097bbe1cd6434eae90dc8b5e",
-    "a3_issue.hex": "561ef5938a49cd77e408f6a2546579c04ce17880df93e34fde23d378d44e8057",
-    "a3_meta.hex": "92b0c521b1a073fcde0cd466e74cacee0fa7fb844f817ce264862e1df73cafbc",
-    "a3_program.hex": "c7f26eb6d4f32c21de5841d536750a66aed7b902579982f2796a735f4ea3a8f9",
-    "a3_symbol.hex": "5ebb2fbd18cef5f566c20298a3ab3badd533207955220a6f89aa999953089930",
-    "a3_view.hex": "687594b2959938a6cd6c2fbb4e8ec598fe100334293b158bcc73295a565496eb"
+    "a3_case.hex": "a272305ee0c78360cb0eccbd04cfba2d44e8f88db8450c3de419f010b377538a",
+    "a3_descriptor.hex": "4da400560be6e1dc184fe3ca3fc583bf8f4c08814e3e6892539e9a94a129864f",
+    "a3_header.hex": "13548f15220c857c6edcf5bd77b3357388e7df6bf6a6ec4e0c9e39c893b8e37c",
+    "a3_issue.hex": "583155183d104f6132dd408cffbd862cf2ebebd8ef32c872928f2e7666f443ed",
+    "a3_meta.hex": "e8a717f9933fb4c38f24d55d16b144ce5509ba41f541871930f6021dde6a5449",
+    "a3_program.hex": "53351328853d4b27794ab42cf3c2c351f8b3810dac09e87e5408bf8d867ababd",
+    "a3_symbol.hex": "2efddc9c54bd887f0c449433316545d6b9e87431214b2cbfe51e14c47fbb1f31",
+    "a3_view.hex": "4c48f3456e9fb3b3de3581416b36f46877d811bd1d54ac648514c70222620169"
   },
-  "issue_event_count": 156,
+  "issue_event_count": 177,
   "negative_case_count": 17,
-  "positive_case_count": 36,
-  "program_run_count": 43,
-  "required_marker": "PASS: ABI3 RTL microsequencer cases=53 headers=53 programs=43 issues=156 views=401 traps=11",
+  "positive_case_count": 46,
+  "program_run_count": 51,
+  "required_marker": "PASS: ABI3 RTL microsequencer cases=63 headers=63 programs=51 issues=177 views=451 traps=11",
   "schema": "opentallas.rtl.abi3_vectors.v1",
   "trap_count": 11,
-  "view_reference": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms) and A13 (partial final iteration of a block loop)",
-  "view_resolution_count": 401
+  "view_reference": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms), A13 (partial final iteration of a block loop) and A18 (the axis that iteration is partial in, and the unit it counts)",
+  "view_resolution_count": 451
 }

@@ -42,6 +42,7 @@ from runtime.abi3.descriptors import (
     MAX_RANK,
     SelectorKind,
     Symbol,
+    iteration_extent,
 )
 
 
@@ -407,6 +408,13 @@ class ResolvedView:
     #: wire means one, which is the one-dimensional case amendment A8 froze, so
     #: this is resolved to one rather than carried as zero.
     scale_block_rows: int = 1
+    #: Amendment A18: the axis whose extent the request determines, and the
+    #: affine function of the bound symbol that gives it.  Axis 0 with a
+    #: numerator and unit of one and no bias is amendment A13.
+    extent_axis: int = 0
+    extent_unit: int = 1
+    extent_numerator: int = 1
+    extent_bias: int = 0
 
     @property
     def element_count(self) -> int:
@@ -454,6 +462,19 @@ class ViewResolver:
         payload = descriptor.payload
         rank = payload["rank"]
         offset = payload["element_offset"]
+        # Amendment A18: the view says which axis the request determines and
+        # what affine function of the bound symbol gives it.  All four fields
+        # read zero on every view written before the amendment, and that is
+        # axis 0, ``value`` itself, no bias -- amendment A13 exactly.
+        axis = int(payload["extent_axis"])
+        unit = max(int(payload["extent_unit"]), 1)
+        numerator = max(int(payload["extent_numerator"]), 1)
+        bias = int(payload["extent_bias"])
+        if rank and not 0 <= axis < rank:
+            raise MemoryError_(
+                f"view {view_id}: amendment A18 extent axis {axis} is outside "
+                f"the rank-{rank} view that declares it"
+            )
         leading_loop: int | None = None
         for slot in range(payload["dynamic_term_count"]):
             kind = payload[f"term{slot}_kind"]
@@ -476,10 +497,12 @@ class ViewResolver:
             else:
                 raise MemoryError_(f"view {view_id}: bad selector kind {kind}")
             offset += value * stride
-            if kind == SelectorKind.LOOP_INDUCTION and self._indexes_leading_axis(
-                payload, stride, index
+            if kind == SelectorKind.LOOP_INDUCTION and self._walks_extent_axis(
+                payload, stride, index, axis, numerator, unit
             ):
-                leading_loop = self._remaining_rows(index, value, symbols, leading_loop)
+                leading_loop = self._remaining_extent(
+                    index, value, symbols, numerator, unit, bias, leading_loop
+                )
         dims = [payload[f"dim{a}"] for a in range(rank)]
         if leading_loop is not None and dims:
             # A symbol-bounded loop's final iteration is partial: a block of 512
@@ -490,9 +513,18 @@ class ViewResolver:
             # the rows the block could hold.  Without it a backend must emit one
             # token per dispatch to stay correct, which is the retired-work
             # failure ABI 3.0 exists to remove.
+            #
+            # A18 moves the same statement onto the axis the view names and
+            # into that axis's own units.  Three released operands need it and
+            # none of them is a special case of the other two: the compressor's
+            # pool counts *groups* of four tokens behind a batch, so neither the
+            # axis nor the unit A13 assumed is the one it has; the index key
+            # counts committed groups of 128; and the attention KV join is the
+            # request's rows *plus a 128-row sliding window*, which no clamp can
+            # state because a clamp only ever shortens.
             remaining = leading_loop
-            if 0 < remaining < dims[0]:
-                dims[0] = remaining
+            if 0 < remaining < dims[axis]:
+                dims[axis] = remaining
         return ResolvedView(
             descriptor_id=view_id,
             object_id=descriptor.primary_object_id,
@@ -504,18 +536,28 @@ class ViewResolver:
             scale_object_id=payload["scale_object_id"],
             scale_block_elements=payload["scale_block_elements"],
             scale_block_rows=max(int(payload["scale_block_rows"]), 1),
+            extent_axis=axis,
+            extent_unit=unit,
+            extent_numerator=numerator,
+            extent_bias=bias,
         )
 
-    def _indexes_leading_axis(
-        self, payload: Mapping[str, Any], term_stride: int, loop_id: int
+    def _walks_extent_axis(
+        self,
+        payload: Mapping[str, Any],
+        term_stride: int,
+        loop_id: int,
+        axis: int,
+        numerator: int,
+        unit: int,
     ) -> bool:
-        """Does this term step the view along its *leading* axis?
+        """Does this term step the view along the axis the request determines?
 
         A13 clamps the leading extent because a block loop's final iteration
         holds fewer rows than the block.  That is only meaningful when the loop
-        is walking the leading axis, and the arithmetic says when it is: one
-        iteration advances by one whole block of leading rows, so the term's
-        stride is ``stride0 * bound_divisor``.
+        is walking the axis being clamped, and the arithmetic says when it is:
+        one iteration advances by one whole block of that axis, so the term's
+        stride is ``stride[axis] * (numerator * bound_divisor / unit)``.
 
         A view can perfectly well be indexed by a loop along some *other* axis.
         The mHC branch reduction is one: its leading axis is the four
@@ -527,28 +569,51 @@ class ViewResolver:
         Deriving the answer rather than assuming it is the point.  The rule
         originally applied to any loop-induction term in slot zero, which is the
         assumption that the loop indexes the leading axis -- true of every view
-        either model had emitted, and false in general.
+        either model had emitted, and false in general.  A18 keeps the
+        derivation and lets the view say *which* axis the derivation is about,
+        and in what unit; ``axis = 0, unit = 1`` is A13's own test, unchanged.
         """
         divisor = 0
         try:
             loop = self.deployment.table.get(
                 loop_id, ExtendedDescriptorType.LOOP_CONTROL
             )
-        except Exception:  # not a loop descriptor: _remaining_rows says so
+        except Exception:  # not a loop descriptor: _remaining_extent says so
             return True
         if loop.payload["bound_selector_kind"] != SelectorKind.RUNTIME_SYMBOL:
             return False
         divisor = max(int(loop.payload["bound_divisor"]), 1)
-        return int(term_stride) == int(payload["stride0"]) * divisor
+        step = iteration_extent(divisor, numerator, unit)
+        if step is None:
+            # One iteration is not a whole number of this axis's elements, so
+            # the term does not walk it in blocks and bounds nothing.
+            return False
+        return int(term_stride) == int(payload[f"stride{axis}"]) * step
 
-    def _remaining_rows(
+    def _remaining_extent(
         self,
         loop_id: int,
         iteration: int,
         symbols: Mapping[int, int],
+        numerator: int,
+        unit: int,
+        bias: int,
         current: int | None,
     ) -> int | None:
-        """Rows left in a symbol-bounded loop's current iteration, if fewer."""
+        """Elements left on the clamped axis this iteration, if fewer.
+
+        The loop counts the bound symbol's units -- tokens -- and the axis
+        counts its own elements, which are an affine function of them:
+        ``numerator * tokens / unit + bias``.  The division floors, because a
+        partial group is not an element of a group axis -- four tokens of a
+        128-token group are no compressed group at all, which is exactly what
+        the compressor's own should-compress predicate says.  The bias is added
+        after, because it is rows the operand carries whatever the request is:
+        a KV join's 128-row sliding window is there for a span of one.
+
+        With ``numerator = 1, unit = 1, bias = 0`` the function is the identity
+        and this is A13's ``_remaining_rows``.
+        """
         try:
             loop = self.deployment.table.get(
                 loop_id, ExtendedDescriptorType.LOOP_CONTROL
@@ -562,10 +627,19 @@ class ViewResolver:
         if bound is None:
             return current
         divisor = max(int(payload["bound_divisor"]), 1)
-        remaining = int(bound) - int(iteration) * divisor
-        if remaining <= 0 or remaining >= divisor:
+        block = iteration_extent(divisor, numerator, unit)
+        if block is None:
             return current
-        return remaining if current is None else min(current, remaining)
+        tokens = int(bound) - int(iteration) * divisor
+        if tokens <= 0:
+            # An iteration at or past the extent bounds nothing.  Asking for the
+            # affine image of a negative count would answer a question the loop
+            # never poses.
+            return current
+        extent = (int(numerator) * tokens) // unit + int(bias)
+        if extent <= 0 or extent >= block + int(bias):
+            return current
+        return extent if current is None else min(current, extent)
 
     # -- array access ----------------------------------------------------
     def read_array(self, view: ResolvedView) -> np.ndarray:
@@ -673,6 +747,61 @@ class ViewResolver:
             writeable=False,
         )
 
+    def _write_sub_byte(
+        self, view: ResolvedView, values: np.ndarray, obj: MemoryObject
+    ) -> None:
+        """Write a 4-bit view, packing two elements per byte, low nibble first.
+
+        Sub-byte views were read-only because nothing produced one: MXFP4 was a
+        checkpoint format and the engines only consumed it.  The DeepSeek
+        indexer produces one -- ``quantization_fp4_qdq_bf16_quantize_v1`` writes
+        E2M1 codes and their E8M0 scales -- so the destination has to exist.
+
+        Two elements share a byte, so a *strided* destination is not writable at
+        all: a stride that skips elements would have this write read and rewrite
+        nibbles belonging to another view, which is an aliasing write however it
+        is spelled.  The view must therefore be dense and row-major, and must
+        start and span an even number of elements, which is exactly what
+        :meth:`_read_sub_byte` already requires of a read.
+        """
+        dims = tuple(int(d) for d in view.dims)
+        strides = tuple(int(s) for s in view.strides)
+        expected: list[int] = [1] * len(dims)
+        running = 1
+        for axis in range(len(dims) - 1, -1, -1):
+            expected[axis] = running
+            running *= max(dims[axis], 1)
+        if strides != tuple(expected):
+            raise MemoryError_(
+                f"view {view.descriptor_id}: a 4-bit destination must be dense "
+                f"and row-major; strides {strides} are not {tuple(expected)}, "
+                "and two elements of a strided 4-bit view share a byte with "
+                "elements the view does not name"
+            )
+        if values.shape != dims:
+            raise MemoryError_(
+                f"view {view.descriptor_id}: writing shape {values.shape} into "
+                f"{dims}"
+            )
+        span = running
+        if view.element_offset % 2 or span % 2:
+            raise MemoryError_(
+                f"view {view.descriptor_id}: sub-byte views must start and span "
+                "an even number of elements"
+            )
+        flat = np.ascontiguousarray(values).reshape(-1)
+        if flat.dtype != np.uint8:
+            raise MemoryError_(
+                f"view {view.descriptor_id}: writing {flat.dtype} into a 4-bit "
+                "view; one unsigned nibble per element is the storage form"
+            )
+        if flat.size and int(flat.max()) > 0x0F:
+            raise MemoryError_(
+                f"view {view.descriptor_id}: a 4-bit element outside 0..15"
+            )
+        packed = (flat[0::2] | (flat[1::2] << np.uint8(4))).astype(np.uint8)
+        obj.write(view.element_offset // 2, packed.tobytes())
+
     def write_array(self, view: ResolvedView, values: np.ndarray) -> None:
         """Write ``values`` into ``view``, checking permission, shape and dtype."""
         obj = self.memory[view.object_id]
@@ -682,7 +811,8 @@ class ViewResolver:
                 f"({obj.storage_class.name}), which has no write permission"
             )
         if view.is_sub_byte:
-            raise MemoryError_("sub-byte views are read-only in version 3.0")
+            self._write_sub_byte(view, values, obj)
+            return
         dtype = view.numpy_dtype
         if values.shape != view.dims:
             raise MemoryError_(

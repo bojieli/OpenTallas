@@ -183,16 +183,25 @@ def test_the_two_models_share_operation_kinds_where_they_overlap() -> None:
     deepseek = {k["kind"] for k in _ir("deepseek-v4-flash-0731")["kernels"]}
     shared = qwen & deepseek
     # Both are transformers: embedding, normalisation, contraction, rotary
-    # position, residual add and on-device selection must be common ground.
+    # position and on-device selection must be common ground.
+    #
+    # ``VECTOR.ADD`` is deliberately *not* on this list.  Qwen's residual is a
+    # plain elementwise add; DeepSeek has no plain residual at all -- every one
+    # of its blocks joins through the multi-hyper-connection, which is
+    # ``VECTOR.MHC``'s post sub-case, and the only ``ADD`` its graph ever
+    # carried was the compressor's position-embedding add, which the frozen
+    # ``COMPRESS_STATE_UPDATE`` sub-case performs itself.  Requiring the kind
+    # to be shared asserted a coincidence, not an overlap.
     for kind in (
         "EMBEDDING_LOOKUP",
         "RMS_NORM",
         "MATMUL",
         "ROPE",
-        "ADD",
         "ARGMAX",
         "TOKEN_APPEND",
     ):
         assert kind in shared, f"{kind} should be shared by both models"
+    assert "ADD" in qwen
+    assert "HYPER_CONNECT_POST" in deepseek and "ADD" not in deepseek
     assert not (qwen - OPERATION_KINDS)
     assert not (deepseek - OPERATION_KINDS)

@@ -30,7 +30,7 @@
 namespace {
 
 constexpr unsigned kCaseStride = 35;
-constexpr unsigned kViewStride = 6;
+constexpr unsigned kViewStride = 7;
 
 [[noreturn]] void fail(const std::string& message) {
     std::cerr << "FAIL: " << message << "\n";
@@ -201,7 +201,8 @@ int main(int argc, char** argv) {
             const bool view_fire = model.dut.view_valid;
             const uint32_t view_descriptor = model.dut.view_descriptor_id;
             const uint32_t view_slot = model.dut.view_slot;
-            const uint32_t view_dim0 = model.dut.view_dim0;
+            const uint32_t view_extent = model.dut.view_extent;
+            const uint32_t view_extent_axis = model.dut.view_extent_axis;
             const uint64_t view_offset = model.dut.view_element_offset;
             const uint32_t view_rank = model.dut.view_rank;
             model.step();
@@ -213,12 +214,14 @@ int main(int argc, char** argv) {
                     views.data() + (view_base + views_seen) * kViewStride;
                 check.equal("view descriptor", index, view_descriptor, expect[0]);
                 check.equal("view operand slot", index, view_slot, expect[1]);
-                // Amendment A13: the resolved leading extent.
-                check.equal("view leading extent", index, view_dim0, expect[2]);
+                // Amendments A13 and A18: the resolved extent of the axis the
+                // view declares, and that axis.
+                check.equal("view resolved extent", index, view_extent, expect[2]);
                 // Amendment A4: the accumulated element offset.
                 check.equal("view element offset", index, view_offset,
                             (static_cast<uint64_t>(expect[4]) << 32) | expect[3]);
                 check.equal("view rank", index, view_rank, expect[5]);
+                check.equal("view extent axis", index, view_extent_axis, expect[6]);
                 ++views_seen;
                 ++total_views;
             }

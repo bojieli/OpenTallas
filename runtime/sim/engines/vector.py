@@ -76,6 +76,7 @@ from runtime.abi3.constants import (
 )
 from runtime.abi3.descriptors import Descriptor
 from runtime.reference import formats as exact
+from runtime.reference import quantization as exact_quantization
 from runtime.reference.hadamard import (
     HADAMARD_SCALE_BINARY32,
     HADAMARD_STRIDES,
@@ -398,6 +399,106 @@ _E4M3FN_TABLE = np.array(
 )
 _E4M3FN_MIDPOINTS = (_E4M3FN_TABLE[:-1] + _E4M3FN_TABLE[1:]) / np.float64(2.0)
 _E4M3FN_MAXIMUM = np.float64(448.0)
+
+#: The eight non-negative E2M1 magnitudes in ascending encoding order, which is
+#: the table ``runtime.reference.formats.encode_e2m1_rne`` bisects: 0, 0.5, 1,
+#: 1.5, 2, 3, 4, 6.  The sign is nibble bit 3 and zero is canonically positive.
+_E2M1_TABLE = np.array(
+    [float(value) for value in exact._E2M1_MAGNITUDES], dtype=np.float64
+)
+_E2M1_MIDPOINTS = (_E2M1_TABLE[:-1] + _E2M1_TABLE[1:]) / np.float64(2.0)
+_E2M1_MAXIMUM = np.float32(6.0)
+#: ``fast_round_scale`` multiplies the block amax by the *binary32* reciprocal
+#: of six rather than dividing by six, and the two differ.  A binary32 division
+#: is correctly rounded, so this is ``RN(1/6)`` exactly; writing
+#: ``np.float32(1 / 6)`` would round twice, through binary64 first.
+_RECIPROCAL_SIX = np.float32(1.0) / np.float32(6.0)
+#: ``max(amax, 6 * 2**-126)``: the floor the pinned kernel applies before the
+#: scale is derived.  ``1.5 * 2**-124`` is a normal binary32 number.
+_FP4_AMAX_FLOOR = np.float32(np.ldexp(6.0, -126))
+
+
+def _quantize_fp4_qdq_blocks(
+    codes: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, int]:
+    """The pinned ``FP4_QDQ`` BF16 -> E2M1/E8M0 rule, over whole 32-value blocks.
+
+    ``codes`` is ``[blocks, 32]`` of BF16 encodings; the result is the
+    ``[blocks, 32]`` E2M1 nibbles, the ``[blocks]`` E8M0 scale codes and the
+    number of elements the contract's clamp moved.  This is
+    ``runtime.reference.quantization._block_qdq`` step for step, and it is a
+    *different rule* from the block-scaled activation quantiser above rather
+    than a variant of it -- which is the reason the engine needed a second
+    quantiser and not a wider dtype check:
+
+    * the scale is not searched for.  ``fast_round_scale`` multiplies the block
+      amax by the binary32 reciprocal of six and takes ``ceil(log2)`` of the
+      product, so the scale is one multiply and one exponent extraction;
+    * the amax has a floor of ``6 * 2**-126``, so an all-zero block still gets
+      a defined scale instead of a searched one;
+    * the quotient is **clamped** to +/-6 before rounding, so a value beyond the
+      format's range is committed as six rather than raising.  The official
+      kernel clamps; refusing here would refuse the model.
+
+    Exactness, for the same reasons the E4M3FN quantiser is exact: a BF16 value
+    is a binary32 value exactly, the amax and the floor are binary32 values
+    exactly, the multiply and the divide are each one binary32 operation that
+    NumPy performs under the same round-to-nearest-even, the scale is a power of
+    two so the division is exact, and the E2M1 rounding decision compares a
+    binary32 magnitude against the exact midpoint between two adjacent
+    encodings -- both exact in binary64, since a midpoint of two adjacent
+    encodings needs one bit more than an encoding has.  Ties go to the even
+    encoding, which is the retained-significand parity the reference's comment
+    names.
+    """
+    values = widen_bf16(codes)
+    if not bool(np.all(np.isfinite(values))):
+        raise exact.NumericReferenceError("activation BF16 element is NaN or infinity")
+    magnitudes = np.abs(values)
+    amax = np.maximum(magnitudes.max(axis=1), _FP4_AMAX_FLOOR)
+    ratio = np.multiply(amax, _RECIPROCAL_SIX, dtype=np.float32)
+    if not bool(np.all(np.isfinite(ratio) & (ratio > 0))):
+        raise exact.NumericReferenceError("FP4 scale ratio is nonfinite")
+    # ceil(log2(x)).  ``frexp`` gives x = m * 2**e with 0.5 <= m < 1, so
+    # 2**(e-1) <= x < 2**e: the ceiling is ``e`` unless x is itself the power
+    # of two at the bottom of that interval, which is exactly m == 0.5.
+    mantissa, exponent = np.frexp(ratio.astype(np.float64))
+    scale_exponent = np.where(mantissa == 0.5, exponent - 1, exponent).astype(np.int64)
+    scale_codes = scale_exponent + 127
+    if not bool(np.all((scale_codes >= 1) & (scale_codes <= 253))):
+        raise exact.NumericReferenceError(
+            "FP4 QDQ requires an unrepresentable E8M0 scale"
+        )
+    scale = np.ldexp(np.float32(1.0), scale_exponent).astype(np.float32)
+    quotient = np.divide(values, scale[:, None], dtype=np.float32)
+    clamped = np.clip(quotient, -_E2M1_MAXIMUM, _E2M1_MAXIMUM)
+    clamps = int(np.count_nonzero(clamped != quotient))
+
+    magnitude = np.abs(clamped).astype(np.float64)
+    index = np.searchsorted(_E2M1_TABLE, magnitude, side="left")
+    hit = (index < _E2M1_TABLE.size) & (
+        _E2M1_TABLE[np.minimum(index, _E2M1_TABLE.size - 1)] == magnitude
+    )
+    lower_code = np.clip(index - 1, 0, _E2M1_MIDPOINTS.size - 1)
+    midpoint = _E2M1_MIDPOINTS[lower_code]
+    upper_code = lower_code + 1
+    rounded = np.where(
+        magnitude < midpoint,
+        lower_code,
+        np.where(
+            magnitude > midpoint,
+            upper_code,
+            np.where(lower_code % 2 == 0, lower_code, upper_code),
+        ),
+    )
+    selected = np.where(
+        hit, np.minimum(index, _E2M1_TABLE.size - 1), rounded
+    ).astype(np.uint8)
+    # A magnitude that rounds to the zero encoding is canonical positive zero,
+    # exactly as the reference's ``if selected == 0: sign = 0``.
+    negative = (clamped < 0) & (selected != 0)
+    nibbles = np.where(negative, selected | np.uint8(0x8), selected).astype(np.uint8)
+    return nibbles, scale_codes.astype(np.uint8), clamps
 
 
 def _quantize_activation_blocks(
@@ -1128,9 +1229,9 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
         TrapClass.CAPABILITY_OR_RESOURCE,
     )
     _require(
-        code_view.dtype == DType.FP8_E4M3FN,
+        code_view.dtype in (DType.FP8_E4M3FN, DType.MXFP4_E2M1),
         f"QUANTIZE code view {code_view.descriptor_id} stores "
-        f"{DType(code_view.dtype).name}; expected FP8_E4M3FN",
+        f"{DType(code_view.dtype).name}; expected FP8_E4M3FN or MXFP4_E2M1",
     )
     _require(
         scale_view.dtype in (DType.E8M0_SCALE, DType.U8),
@@ -1148,8 +1249,23 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
     )
     block = width // blocks
     source = _read_rows(ctx, source_view, width).reshape(rows * blocks, block)
-    with _numeric_guard("block activation quantisation"):
-        flat_codes, flat_scales, saturations = _quantize_activation_blocks(source)
+    # The E4M3FN quantiser searches for the block scale and refuses to saturate;
+    # the pinned FP4 quantiser derives the scale and clamps by contract.  They
+    # are two rules, not one rule over two formats, so the code output's format
+    # selects between them rather than widening a dtype check.
+    fp4 = code_view.dtype == DType.MXFP4_E2M1
+    if fp4:
+        _require(
+            block == exact_quantization.FP4_QDQ_BLOCK_SIZE,
+            f"QUANTIZE code view {code_view.descriptor_id} is MXFP4_E2M1 with a "
+            f"{block}-element block; the qualified FP4 block is "
+            f"{exact_quantization.FP4_QDQ_BLOCK_SIZE}",
+        )
+        with _numeric_guard("quantization_fp4_qdq_bf16_quantize_v1"):
+            flat_codes, flat_scales, saturations = _quantize_fp4_qdq_blocks(source)
+    else:
+        with _numeric_guard("block activation quantisation"):
+            flat_codes, flat_scales, saturations = _quantize_activation_blocks(source)
     codes = flat_codes.reshape(rows, blocks, block)
     scales = flat_scales.reshape(rows, blocks)
     ctx.write(code_view, codes.reshape(code_view.dims))
@@ -1158,10 +1274,11 @@ def _convert_quantize(ctx: EngineContext, operator: Descriptor) -> None:
     ctx.counters.add("vector.conversions", int(codes.size) + int(scales.size))
     if saturations:
         ctx.counters.add("vector.saturations", int(saturations))
-        raise EngineError(
-            f"QUANTIZE saturated {saturations} E4M3FN block(s)",
-            trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
-        )
+        if not fp4:
+            raise EngineError(
+                f"QUANTIZE saturated {saturations} E4M3FN block(s)",
+                trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
+            )
 
 
 # ---------------------------------------------------------------------------

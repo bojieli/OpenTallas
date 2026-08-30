@@ -80,6 +80,8 @@ class Harness:
     outputs: dict[int, tuple[int, tuple[int, ...], np.dtype]] = field(
         default_factory=dict
     )
+    #: Output views whose storage packs two elements per byte.
+    packed_outputs: set[int] = field(default_factory=set)
 
     @classmethod
     def create(cls, root: Path) -> "Harness":
@@ -162,9 +164,15 @@ class Harness:
             DType.U8: np.dtype(np.uint8),
             DType.E8M0_SCALE: np.dtype(np.uint8),
             DType.FP8_E4M3FN: np.dtype(np.uint8),
+            DType.MXFP4_E2M1: np.dtype(np.uint8),
         }[dtype]
         count = int(np.prod(dims))
-        object_id = self.scratch(count * numpy_dtype.itemsize, storage_class)
+        # A 4-bit view packs two elements per byte, so its object is half the
+        # size its element count would suggest.
+        packed = dtype == DType.MXFP4_E2M1
+        object_id = self.scratch(
+            count // 2 if packed else count * numpy_dtype.itemsize, storage_class
+        )
         view = self.builder.tensor_view(
             object_id=object_id,
             dtype=dtype,
@@ -172,6 +180,8 @@ class Harness:
             permissions=READ_WRITE,
         )
         self.outputs[view] = (object_id, tuple(int(d) for d in dims), numpy_dtype)
+        if packed:
+            self.packed_outputs.add(view)
         return view
 
     def numeric(self, **kwargs: Any) -> int:
@@ -238,9 +248,18 @@ class Harness:
 
     def result(self, view_id: int) -> np.ndarray:
         object_id, dims, numpy_dtype = self.outputs[view_id]
-        payload = self.memory[object_id].read(
-            0, int(np.prod(dims)) * numpy_dtype.itemsize
-        )
+        count = int(np.prod(dims))
+        if view_id in self.packed_outputs:
+            # Unpack a 4-bit result low nibble first, which is the order
+            # ``ViewResolver._read_sub_byte`` reads and ``_write_sub_byte``
+            # writes.
+            payload = self.memory[object_id].read(0, count // 2)
+            packed = np.frombuffer(payload, dtype=np.uint8)
+            nibbles = np.empty(count, dtype=np.uint8)
+            nibbles[0::2] = packed & 0x0F
+            nibbles[1::2] = packed >> 4
+            return nibbles.reshape(dims)
+        payload = self.memory[object_id].read(0, count * numpy_dtype.itemsize)
         return np.frombuffer(payload, dtype=numpy_dtype).reshape(dims)
 
     @property
@@ -775,6 +794,64 @@ def test_routed_matmul_combines_slots_in_ascending_order(harness: Harness) -> No
             expected[row, col] = exact.binary32_bits_to_bf16_rne(accumulator).code
     np.testing.assert_array_equal(harness.result(output), expected)
     assert harness.counters["tensor.routed_launches"] == rows * topk
+
+
+def test_routed_matmul_reads_only_the_experts_it_uses(harness: Harness) -> None:
+    """The expert bank is read one slice at a time, never as a whole.
+
+    ``ViewResolver.read_array`` is zero-copy only while the extent lies inside
+    one mapped segment, and a released expert bank does not: DeepSeek-V4-Flash
+    presents ``[256, 2048, 4096]`` -- 2.147 GB spanning many checkpoint
+    segments -- so reading the *stack* to reach one expert of it fell to the
+    gathering copy path at 14.4 s cold and 2.0-3.6 s warm per issue, to use at
+    most six experts, 8.4 MB of 2,147 MB.  A 43-layer four-token prefill issues
+    516 of them.
+
+    Reading through the slice the engine already builds is a ~256x reduction on
+    that path, and this states it as a property rather than as a timing: the
+    element counts the resolver is asked for are each one expert's ``[N, K]``
+    block, one per distinct expert the routing selected, and never the stack.
+    """
+    rng = np.random.default_rng(0x5241)
+    rows, experts, cols, depth, topk = 3, 8, 2, 8, 2
+    activations = random_bf16(rng, (rows, depth))
+    weights = random_bf16(rng, (experts, cols, depth))
+    identifiers = np.array([[0, 3], [1, 1], [2, 0]], dtype=np.uint32)
+    output = harness.output_view((rows, cols), DType.BF16)
+    operator = harness.operator(
+        engine_family=Major.TENSOR,
+        engine_sub=Tensor.ROUTED_MATMUL,
+        inputs=[
+            harness.const_view(activations, DType.BF16),
+            harness.const_view(weights, DType.BF16),
+            harness.const_view(identifiers, DType.U32),
+        ],
+        outputs=[output],
+        numeric_profile_id=matmul_numeric(harness),
+    )
+    harness.bind()
+    resolver = harness.ctx.views
+    original = resolver.read_array
+    requested: list[int] = []
+
+    def recording(view):
+        requested.append(int(view.element_count))
+        return original(view)
+
+    resolver.read_array = recording          # type: ignore[method-assign]
+    try:
+        harness.run(Major.TENSOR, Tensor.ROUTED_MATMUL, operator)
+    finally:
+        resolver.read_array = original       # type: ignore[method-assign]
+
+    stack_elements = experts * cols * depth
+    slice_elements = cols * depth
+    assert stack_elements not in requested, requested
+    # Five distinct experts are selected across the two slots -- 0, 3, 1, 2 --
+    # and expert 0 twice, so four reads and not five: the per-issue cache means
+    # a second slot selecting an expert does not re-read it.
+    assert requested.count(slice_elements) == 4, requested
+    assert sum(requested) < stack_elements
 
 
 def test_routed_matmul_rejects_an_unknown_expert(harness: Harness) -> None:
@@ -1395,6 +1472,107 @@ def test_convert_quantises_a_bf16_block_exactly(harness: Harness) -> None:
                 produced_codes[row, index * block : (index + 1) * block],
                 np.asarray(expected.value_codes, dtype=np.uint8),
             )
+
+
+def test_convert_quantises_a_bf16_block_into_packed_mxfp4(harness: Harness) -> None:
+    """``quantization_fp4_qdq_bf16_quantize_v1`` end to end, including the write.
+
+    The engine had no MXFP4 quantiser at all -- ``_convert_quantize`` required
+    the code output to be E4M3FN -- and 4-bit views were read-only besides, so
+    even a correct quantiser had nowhere to put its answer.  This exercises
+    both: the codes come out equal to the reference block by block, and they
+    arrive in the object packed two per byte, low nibble first, which is the
+    order the reader already assumed.
+    """
+    rng = np.random.default_rng(0x4D58)
+    width, blocks = 64, 2
+    values = random_bf16(rng, (2, width), scale=3.0)
+    numeric = harness.numeric(
+        contract="quantization_fp4_qdq_bf16_quantize_v1",
+        input_dtype=DType.BF16,
+        output_dtype=DType.MXFP4_E2M1,
+    )
+    codes = harness.output_view((2, width), DType.MXFP4_E2M1)
+    scales = harness.output_view((2, blocks), DType.E8M0_SCALE)
+    operator = harness.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.CONVERT,
+        inputs=[harness.const_view(values, DType.BF16)],
+        outputs=[codes, scales],
+        numeric_profile_id=numeric,
+    )
+    harness.run(Major.VECTOR, Vector.CONVERT, operator)
+
+    from runtime.reference.quantization import (
+        FP4_AMAX_FLOOR,
+        FP4_MAXIMUM,
+        _BINARY32_RECIPROCAL_SIX,
+        _ceil_log2,
+        _finite_bf16_matrix,
+        _power_of_two,
+    )
+
+    produced_codes = harness.result(codes)
+    produced_scales = harness.result(scales)
+    block = width // blocks
+    rows = _finite_bf16_matrix(tuple(tuple(int(c) for c in r) for r in values))
+    for row in range(2):
+        for index in range(blocks):
+            span = rows[row][index * block : (index + 1) * block]
+            maximum = max(max(abs(v) for v in span), FP4_AMAX_FLOOR)
+            ratio = exact.decode_binary32(
+                exact.binary32_multiply(
+                    exact.encode_binary32_rne(maximum), _BINARY32_RECIPROCAL_SIX
+                )
+            )
+            exponent = _ceil_log2(ratio.value)
+            assert int(produced_scales[row, index]) == exponent + 127
+            scale = exact.encode_binary32_rne(_power_of_two(exponent))
+            for offset, value in enumerate(span):
+                quotient = exact.decode_binary32(
+                    exact.binary32_divide(exact.encode_binary32_rne(value), scale)
+                )
+                clamped = max(-FP4_MAXIMUM, min(FP4_MAXIMUM, quotient.value))
+                expected = exact.encode_e2m1_rne(clamped).code
+                assert int(produced_codes[row, index * block + offset]) == expected
+
+    # The nibbles are packed, not one per byte: the object is half the element
+    # count, and reading it as pairs is what the MXFP4 reader already does.
+    object_id, dims, _ = harness.outputs[codes]
+    assert harness.memory[object_id].size_bytes == (2 * width) // 2
+
+
+def test_a_strided_four_bit_destination_is_refused_rather_than_aliased(
+    harness: Harness,
+) -> None:
+    """Two elements share a byte, so a strided 4-bit write is an aliasing write."""
+    from runtime.sim.memory import MemoryError_
+
+    rng = np.random.default_rng(0x4D59)
+    values = random_bf16(rng, (2, 32), scale=1.0)
+    numeric = harness.numeric(
+        contract="quantization_fp4_qdq_bf16_quantize_v1",
+        input_dtype=DType.BF16,
+        output_dtype=DType.MXFP4_E2M1,
+    )
+    object_id = harness.scratch(64)
+    codes = harness.builder.tensor_view(
+        object_id=object_id,
+        dtype=DType.MXFP4_E2M1,
+        dims=[2, 32],
+        strides=[64, 1],          # a row pitch wider than the row
+        permissions=READ_WRITE,
+    )
+    scales = harness.output_view((2, 1), DType.E8M0_SCALE)
+    operator = harness.operator(
+        engine_family=Major.VECTOR,
+        engine_sub=Vector.CONVERT,
+        inputs=[harness.const_view(values, DType.BF16)],
+        outputs=[codes, scales],
+        numeric_profile_id=numeric,
+    )
+    with pytest.raises(MemoryError_, match="dense and row-major"):
+        harness.run(Major.VECTOR, Vector.CONVERT, operator)
 
 
 # ---------------------------------------------------------------------------

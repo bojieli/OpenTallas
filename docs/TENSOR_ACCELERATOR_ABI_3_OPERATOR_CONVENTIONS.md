@@ -522,3 +522,70 @@ per kernel, and a lane that emits transfers where the other lane emits
 trailing-shape agreement rule, which is the `axis = 0` case of the non-join
 extent rule stated in general. No existing program's bytes move, because an
 unnamed `aux0` is `NO_ID` and `NO_ID` is axis 0.
+
+## 18. Amendment A18 — an operand states which extent the request decides
+
+Wire format section 12.8 is normative; this section states what it means for an
+operand row and what it obliges a backend to do.
+
+Every row in this document states extents in symbols — `[B, S, H, D]`,
+`[rows, K]` — and until now exactly one of those symbols could actually follow
+the request: the leading one, through amendment A13, and only by shortening.
+That was enough while the leading axis carried the request's own unit and no
+operand held anything the request did not put there. It stops being enough in
+three places, and they are three different failures rather than one:
+
+| Subopcode | operand | shape | request-dependent extent |
+|---|---|---|---|
+| `VECTOR.COMPRESS`, `aux0 = 2` | `in0` | `[B, S, 2, W]` | `S` at axis 1, `1 * S / 1` |
+| `VECTOR.COMPRESS`, `aux0 = 2` | `out0`, `out1` | `[B, G, P, D]` | `G` at axis 1, `1 * S / ratio` |
+| `VECTOR.INDEX_SCORE` | `in1` | `[B, C, D]` | `C` at axis 1, `1 * S / 128` |
+| `VECTOR.INDEX_SCORE` | `out0` | `[B, S, C]` | `C` at axis 2, `1 * S / 128` |
+| `REDUCTION.GROUPED_CONCAT`, axis 0 | `out0` | `[R, D]` | `R` at axis 0, `1 * S / 1 + 128` |
+
+`COMPRESS_STATE_UPDATE` groups along `S` and its overlap transform reaches
+across `G`, so neither axis can be the batch and neither can be moved to the
+front. `INDEX_SCORE` requires `kv_batch == batch`, so under every assignment of
+`B` at least one of `S` and `C` is a non-leading axis. And the attention KV
+join carries a 128-row sliding window that the request does not supply, so its
+output extent is *longer* than the rows the request has — which a clamp cannot
+state at all, because a clamp only shortens. None of the three is a shape a
+backend chose; all three are what the released model computes.
+
+**What a backend must do.** State the axis, the numerator, the unit and the
+bias on the view. A neutral tensor whose extent is a *derived* symbol lowers to
+the base symbol as the loop's `bound_symbol` and to the affine coefficients on
+the view: `span_groups_ratio4` is `SPAN_TOKENS / 4`, `attention_rows_window` is
+`CONTEXT_LENGTH + 128`, `attention_rows_ratio4` is
+`5 * CONTEXT_LENGTH / 4 + 128`. A backend that states none of them leaves the
+operand at its declared maximum, and the verifier now refuses a view that
+declares one and cannot resolve it, so the failure is an admission refusal
+rather than a wrong answer.
+
+A backend must **not** re-express a join whose output extent it cannot state as
+a stream of movements with a symbol-offset destination window. That is
+mechanically available — the all-gather already offsets a destination by
+`NODE_ID` — and it is exactly the hand-expansion amendment A17 abolished for
+axis 1: one operator with two spellings across two backends. The extent has a
+spelling now; use it.
+
+**What an engine must do.** Nothing new. An engine reads resolved extents and
+they arrive at the request's size, exactly as A13's already did. The DeepSeek
+operators keep their existing shape checks, and those checks are what turn a
+backend that dropped the declaration into a refusal at the operand rather than
+a wrong tensor: `COMPRESS_STATE_UPDATE` refuses a span with no complete group,
+`INDEX_SCORE` refuses a key whose batch is not the query's, and
+`GROUPED_CONCAT` refuses an output that is not the sum of its inputs.
+
+That last one is worth stating plainly, because A17 and A18 meet there and do
+different jobs. **A17 names the axis a join consumes; A18 states the extent the
+join produces.** A17's rule — the output's joined extent is the sum of the
+inputs' — remains a *check*, evaluated against the extents the operands resolve
+to. It is not a derivation: a view's extent is the view's own statement, and no
+operator rewrites one. So a join whose output extent follows the request must
+say so under A18, and A17 then confirms that what it said is the sum.
+
+**What it does not change.** An operand that declares none of the four fields
+behaves exactly as it did. All four are zero on every view written before this
+amendment, and that is axis 0, the bound symbol's own value, and no bias —
+which is amendment A13, unchanged.

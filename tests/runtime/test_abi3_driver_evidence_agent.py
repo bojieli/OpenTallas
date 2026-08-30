@@ -151,6 +151,89 @@ def test_driver_rejects_an_out_of_vocabulary_prompt_token():
         driver.generate([FIXTURE_VOCAB + 991])
 
 
+def test_driver_binds_every_frozen_runtime_symbol():
+    """All fifteen of section 12.2, not the nine a request happens to carry.
+
+    Four registry entries -- ``ACTIVE_EXPERT_COUNT``, ``SPARSE_INDEX_COUNT``,
+    ``LAYER_COUNT`` and ``VOCABULARY_PARTITIONS`` -- were in the frozen
+    registry and bound by nothing, so a loop bound or a view term naming one
+    resolved to "symbol ... is unbound" at the moment it was read.  A frozen
+    registry entry no implementation binds is not a registry entry; it is a
+    trap waiting for the first program that uses it.
+    """
+    from runtime.abi3.descriptors import Symbol
+    from runtime.sim.engines import load_engines
+
+    load_engines()
+    device, _ = _fixture_device()
+    driver = GenerationDriver(device)
+    prompt = [1, 2, 3]
+    result = driver.generate(prompt, max_new_tokens=1)
+    assert result.failure is None, result.failure
+
+    # Every symbol the registry defines is bound before the device sees the
+    # request, and the device adds nothing that was missing.
+    request = dict(driver.deployment_symbols)
+    request.update(
+        {
+            int(Symbol.SPAN_TOKENS): len(prompt),
+            int(Symbol.POSITION_START): 0,
+            int(Symbol.POSITION_END): len(prompt),
+            int(Symbol.CONTEXT_LENGTH): len(prompt),
+            int(Symbol.PHASE): 0,
+            int(Symbol.MAX_NEW_TOKENS): 1,
+            int(Symbol.BATCH): 1,
+            int(Symbol.GENERATION_INDEX): 0,
+            int(Symbol.SPAN_LAST_INDEX): len(prompt) - 1,
+        }
+    )
+    assert set(request) == {int(symbol) for symbol in Symbol}
+    assert len(request) == 15
+
+
+def test_driver_reads_the_deployment_scalars_rather_than_inventing_them():
+    """The six a request does not carry come off the deployment's descriptors.
+
+    The fixture routes nothing, has no sparse attention and no partitioned
+    vocabulary, so the honest values are the ones that say those things do not
+    exist -- not a plausible number the host made up.
+    """
+    from runtime.abi3.descriptors import Symbol
+
+    device, _ = _fixture_device()
+    driver = GenerationDriver(device)
+    bound = driver.deployment_symbols
+    assert bound[int(Symbol.NODE_COUNT)] == device.node_count
+    assert bound[int(Symbol.NODE_ID)] == 0
+    assert bound[int(Symbol.ACTIVE_EXPERT_COUNT)] == 0
+    assert bound[int(Symbol.SPARSE_INDEX_COUNT)] == 0
+    assert bound[int(Symbol.VOCABULARY_PARTITIONS)] == 1
+
+
+def test_driver_refuses_a_symbol_the_program_names_and_the_deployment_omits():
+    """A named symbol nothing defines is a refusal, not a default.
+
+    Binding a made-up value for a symbol the program actually reads is the
+    silent wrong answer this boundary exists to prevent, so the driver says
+    which symbol and why instead.
+    """
+    from runtime.abi3.descriptors import ExtendedDescriptorType, SelectorKind, Symbol
+
+    device, _ = _fixture_device()
+    # Point one loop's bound at a symbol the fixture states no value for.
+    for descriptor in device.deployment.table.descriptors():
+        if descriptor.descriptor_type == ExtendedDescriptorType.LOOP_CONTROL:
+            descriptor.payload["bound_selector_kind"] = int(
+                SelectorKind.RUNTIME_SYMBOL
+            )
+            descriptor.payload["bound_symbol_id"] = int(Symbol.SPARSE_INDEX_COUNT)
+            break
+    else:
+        pytest.skip("the fixture declares no loop to retarget")
+    with pytest.raises(DriverError, match="SPARSE_INDEX_COUNT"):
+        GenerationDriver(device)
+
+
 def test_validate_token_ids_flags_illegal_ids():
     problems = validate_token_ids([0, 5, 40], 16)
     assert len(problems) == 1

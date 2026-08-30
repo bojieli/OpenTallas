@@ -261,6 +261,29 @@ MEMORY_OBJECT_PAYLOAD = Layout(
     ],
 )
 
+def iteration_extent(divisor: int, numerator: int, unit: int) -> int | None:
+    """Amendment A18: elements of the clamped axis one loop iteration covers.
+
+    ``numerator * bound_divisor / unit``, and ``None`` when the unit does not
+    divide it: one iteration is then not a whole number of that axis's
+    elements, so the loop does not block that axis at all and nothing about it
+    is a partial final iteration.
+
+    The bias is deliberately not here.  It is a count every iteration carries
+    rather than one an iteration advances by -- a KV join's 128-row sliding
+    window is present for a span of one -- so it belongs to the extent and not
+    to the step.
+
+    This lives beside the fields it reads because the verifier and the
+    functional resolver must agree about it exactly, and a rule written twice
+    is a rule that can differ once.
+    """
+    product = int(numerator) * int(divisor)
+    if int(unit) <= 0 or product % int(unit):
+        return None
+    return product // int(unit)
+
+
 TENSOR_VIEW_PAYLOAD = Layout(
     "tensor_view",
     128,
@@ -291,7 +314,20 @@ TENSOR_VIEW_PAYLOAD = Layout(
         # written before A15 reads zero here -- which the amendment defines to
         # mean one, the one-dimensional case A8 froze.
         Field("scale_block_rows", 104, 4),
-        Field("reserved", 108, 20, "reserved"),
+        # Amendment A18 (wire format section 12.8): the extent of one named
+        # axis is an affine function of a bound symbol,
+        # ``numerator * value / unit + bias``.  A13 clamped ``dim0`` to the
+        # bound symbol's own remainder, which is the
+        # ``axis = 0, numerator = 1, unit = 1, bias = 0`` case of this rule
+        # exactly.  Reserved bytes must be zero, so every view written before
+        # A18 reads zero in all four -- axis 0, a numerator and a unit both
+        # defined to mean one, and no bias -- which is the behaviour it
+        # already had.
+        Field("extent_unit", 108, 4),
+        Field("extent_numerator", 112, 4),
+        Field("extent_bias", 116, 4),
+        Field("extent_axis", 120, 1),
+        Field("reserved", 121, 7, "reserved"),
     ],
 )
 

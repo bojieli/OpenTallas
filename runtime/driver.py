@@ -22,19 +22,36 @@ from typing import Any, Callable, Iterable, Mapping, Sequence
 import numpy as np
 
 from runtime.abi3.constants import (
+    Attention,
     CompletionStatus,
     HostOpcode,
+    Major,
     NO_ID,
+    Reduction,
+    Route,
     SubmissionFlag,
     TrapClass,
 )
-from runtime.abi3.descriptors import ExtendedDescriptorType, Phase, Symbol
+from runtime.abi3.descriptors import ExtendedDescriptorType, Phase, SelectorKind, Symbol
 from runtime.abi3.records import Completion, EosReason, Submission
 from runtime.sim.device import Device, Session, TransactionResult
 
 
 class DriverError(Exception):
     """Raised when the host boundary itself is misused or a request fails."""
+
+
+#: The six section 12.2 symbols a *request* does not carry.  The other nine are
+#: properties of the submission -- how many tokens, at what position, in which
+#: phase -- and the driver states those from the request itself.
+_DEPLOYMENT_SYMBOLS = (
+    Symbol.NODE_ID,
+    Symbol.NODE_COUNT,
+    Symbol.ACTIVE_EXPERT_COUNT,
+    Symbol.SPARSE_INDEX_COUNT,
+    Symbol.LAYER_COUNT,
+    Symbol.VOCABULARY_PARTITIONS,
+)
 
 
 @dataclass
@@ -102,6 +119,171 @@ class GenerationDriver:
             else self.token_ring_object_id
         )
         self._transaction = 0
+        self.deployment_symbols = self._resolve_deployment_symbols()
+
+    # -- deployment scalars ----------------------------------------------
+    def _resolve_deployment_symbols(self) -> dict[int, int]:
+        """The six section 12.2 symbols a request does not carry.
+
+        Nine of the fifteen frozen symbols are properties of the *submission* --
+        how many tokens, at what position, in which phase -- and this driver
+        has always stated those.  The other six are properties of the
+        *deployment*, and until now four of them were simply never bound, so a
+        loop bound or a view term naming one resolved to ``symbol ... is
+        unbound`` at the moment it was read.  A frozen registry entry no
+        implementation binds is not a registry entry; it is a trap waiting for
+        the first program that uses it.
+
+        Each is read off the descriptors that *define* it, so the value is the
+        deployment's own statement rather than a host's guess:
+
+        ``NODE_ID`` / ``NODE_COUNT``
+            the admitted topology's.  The device rebinds both -- ``NODE_ID`` at
+            every engine issue -- so these are stated only so that no symbol is
+            missing before it does.
+        ``ACTIVE_EXPERT_COUNT``
+            routing slots per token, the expert-ID extent every
+            ``TENSOR.ROUTED_MATMUL`` declares.
+        ``SPARSE_INDEX_COUNT``
+            selected KV rows per query row, the index extent every
+            ``ATTENTION.SPARSE`` declares.
+        ``VOCABULARY_PARTITIONS``
+            declared partitions, the partial-result extent every
+            ``REDUCTION.PARTITION_SUM`` declares.
+        ``LAYER_COUNT``
+            the layer count the deployment's own lowering notes record.  No
+            descriptor states it, so nothing is derived from one.
+
+        A symbol is *stated* only when every operator that defines it declares
+        the same number.  Operators that disagree state nothing: DeepSeek's
+        sparse attention declares 128, 640 and 2,176 selected rows in different
+        layers, and one runtime symbol cannot be all three, so the deployment
+        simply does not define ``SPARSE_INDEX_COUNT`` -- which is the truth, and
+        is why an average or a maximum would be a fabrication.
+
+        A symbol the program actually *names* -- in a loop bound, a predicate
+        operand or a view term -- that the deployment does not state is a
+        **refusal**, because binding a made-up value there is exactly the silent
+        wrong answer this boundary exists to prevent.  An unstated symbol that
+        nothing names is bound to the value meaning the thing does not exist:
+        zero routed experts, zero sparse indices, one vocabulary partition, no
+        declared layer count.  Binding it costs nothing and removes a whole
+        class of "symbol is unbound" faults from programs that never asked.
+        """
+        deployment = self.device.deployment
+        stated: dict[int, int] = {
+            int(Symbol.NODE_ID): 0,
+            int(Symbol.NODE_COUNT): int(self.device.node_count),
+        }
+        witness: dict[int, tuple[str, tuple[int, ...]]] = {}
+        for symbol, where, values in (
+            (
+                Symbol.ACTIVE_EXPERT_COUNT,
+                "ROUTE.TOPK/BIASED_TOPK selected-expert extents",
+                self._operand_extents(
+                    Major.ROUTE,
+                    (int(Route.TOPK), int(Route.BIASED_TOPK)),
+                    "output_view_0",
+                    -1,
+                ),
+            ),
+            (
+                Symbol.SPARSE_INDEX_COUNT,
+                "ATTENTION.SPARSE index extents",
+                self._operand_extents(
+                    Major.ATTENTION, (int(Attention.SPARSE),), "input_view_2", -1
+                ),
+            ),
+            (
+                Symbol.VOCABULARY_PARTITIONS,
+                "REDUCTION.PARTITION_SUM partial extents",
+                self._operand_extents(
+                    Major.REDUCTION,
+                    (int(Reduction.PARTITION_SUM),),
+                    "input_view_0",
+                    0,
+                ),
+            ),
+            (
+                Symbol.LAYER_COUNT,
+                "the deployment's lowering notes",
+                _declared_layer_count(deployment.notes),
+            ),
+        ):
+            witness[int(symbol)] = (where, values)
+            if len(values) == 1:
+                stated[int(symbol)] = int(values[0])
+        named = self._named_symbols()
+        defaults = {
+            int(Symbol.ACTIVE_EXPERT_COUNT): 0,
+            int(Symbol.SPARSE_INDEX_COUNT): 0,
+            int(Symbol.VOCABULARY_PARTITIONS): 1,
+            int(Symbol.LAYER_COUNT): 0,
+        }
+        for symbol in _DEPLOYMENT_SYMBOLS:
+            if int(symbol) in stated:
+                continue
+            if int(symbol) in named:
+                where, values = witness[int(symbol)]
+                detail = (
+                    f"{where} are {list(values)}, which is not one number"
+                    if values
+                    else f"nothing in the deployment states it ({where})"
+                )
+                raise DriverError(
+                    f"the program names runtime symbol {symbol.name} but "
+                    f"{detail}; the host will not invent one"
+                )
+            stated[int(symbol)] = defaults[int(symbol)]
+        return stated
+
+    def _operand_extents(
+        self, family: Major, subs: Sequence[int], slot: str, axis: int
+    ) -> tuple[int, ...]:
+        """The distinct extents every operator of this kind declares there."""
+        table = self.device.deployment.table
+        wanted = {int(sub) for sub in subs}
+        found: set[int] = set()
+        for descriptor in table.descriptors():
+            if descriptor.descriptor_type != ExtendedDescriptorType.OPERATOR:
+                continue
+            payload = descriptor.payload
+            if int(payload["engine_family"]) != int(family):
+                continue
+            if int(payload["engine_sub"]) not in wanted:
+                continue
+            vid = int(payload[slot])
+            if vid == NO_ID:
+                continue
+            try:
+                view = table.get(vid, ExtendedDescriptorType.TENSOR_VIEW)
+            except Exception:
+                continue
+            rank = int(view.payload["rank"])
+            index = axis if axis >= 0 else rank + axis
+            if not 0 <= index < rank:
+                continue
+            found.add(int(view.payload[f"dim{index}"]))
+        return tuple(sorted(found))
+
+    def _named_symbols(self) -> frozenset[int]:
+        """Every runtime symbol this program actually reads."""
+        table = self.device.deployment.table
+        named: set[int] = set()
+        for descriptor in table.descriptors():
+            payload = descriptor.payload
+            kind = descriptor.descriptor_type
+            if kind == ExtendedDescriptorType.LOOP_CONTROL:
+                if payload["bound_selector_kind"] == SelectorKind.RUNTIME_SYMBOL:
+                    named.add(int(payload["bound_symbol_id"]))
+            elif kind == ExtendedDescriptorType.PREDICATE:
+                if payload["selector_kind"] == SelectorKind.RUNTIME_SYMBOL:
+                    named.add(int(payload["selector_index"]))
+            elif kind == ExtendedDescriptorType.TENSOR_VIEW:
+                for slot in range(int(payload["dynamic_term_count"])):
+                    if payload[f"term{slot}_kind"] == SelectorKind.RUNTIME_SYMBOL:
+                        named.add(int(payload[f"term{slot}_index"]))
+        return frozenset(named)
 
     # -- policy ----------------------------------------------------------
     def _resolve_policy(self) -> Mapping[str, Any]:
@@ -267,6 +449,7 @@ class GenerationDriver:
         transactions = 0
 
         symbols = {
+            **self.deployment_symbols,
             int(Symbol.SPAN_TOKENS): len(prompt),
             int(Symbol.POSITION_START): 0,
             int(Symbol.POSITION_END): len(prompt),
@@ -408,6 +591,7 @@ class GenerationDriver:
             # repeating itself after the first decode.
             self._write_input_tokens([generated[-1]], 0)
             symbols = {
+                **self.deployment_symbols,
                 int(Symbol.SPAN_TOKENS): 1,
                 int(Symbol.POSITION_START): position,
                 int(Symbol.POSITION_END): position + 1,
@@ -477,6 +661,40 @@ class GenerationDriver:
             wall_seconds=time.perf_counter() - started,
             failure=failure,
         )
+
+
+def _declared_layer_count(notes: Mapping[str, Any]) -> tuple[int, ...]:
+    """The layer count a deployment's lowering notes record, if any.
+
+    No descriptor states it.  A ROM lowering compresses an identical stack into
+    one loop body, so counting state images or loop descriptors counts bodies,
+    not layers -- the DeepSeek wafer deployment carries nine state images for
+    forty-three layers, and a driver that read nine there would bind a wrong
+    number rather than none.  The lowering's own ``layer_runs`` record says how
+    many source layers each compressed run covers, which is the fact itself; a
+    deployment that records neither that nor a plain ``layer_count`` states no
+    layer count, and this returns nothing rather than a guess.
+    """
+    for key in ("layer_count", "layers"):
+        value = notes.get(key)
+        if isinstance(value, int) and value > 0:
+            return (value,)
+    for value in notes.values():
+        if not isinstance(value, Mapping):
+            continue
+        count = value.get("layer_count")
+        if isinstance(count, int) and count > 0:
+            return (count,)
+        runs = value.get("layer_runs")
+        if isinstance(runs, Sequence) and not isinstance(runs, (str, bytes)):
+            covered = sum(
+                int(run.get("layers_covered", 0))
+                for run in runs
+                if isinstance(run, Mapping)
+            )
+            if covered > 0:
+                return (covered,)
+    return ()
 
 
 def _step_record(

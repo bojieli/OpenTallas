@@ -48,7 +48,13 @@ module ot_a3_event_scoreboard
     output reg  [31:0]  signal_count,
     output reg  [31:0]  wait_count
 );
-    localparam integer EVENT_INDEX_W = 8;   // EVENTS == 256
+    // Derived from EVENTS, not written beside it.  A fixed width and a
+    // parameterised bit vector look identical until someone raises EVENTS:
+    // the range check ``slot_event < EVENTS`` would then admit event 300 and
+    // the truncated index would alias it silently onto event 44.  A parameter
+    // that looks parameterisable and is not is a trap, so the index width is
+    // derived from the parameter it indexes.
+    localparam integer EVENT_INDEX_W = (EVENTS <= 1) ? 1 : $clog2(EVENTS);
 
     reg [EVENTS-1:0] signalled;
     reg [EVENTS-1:0] published;

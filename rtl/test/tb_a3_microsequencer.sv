@@ -18,12 +18,12 @@
 // consumer.
 // ---------------------------------------------------------------------------
 module tb_a3_microsequencer;
-    localparam integer CASE_MEM_WORDS  = 2048;
+    localparam integer CASE_MEM_WORDS  = 4096;
     localparam integer ISSUE_MEM_WORDS = 2048;
     localparam integer VIEW_MEM_WORDS  = 8192;
     localparam integer META_WORDS      = 8;
     localparam integer CASE_STRIDE     = 35;
-    localparam integer VIEW_STRIDE     = 6;
+    localparam integer VIEW_STRIDE     = 7;
 
     reg [31:0] case_mem  [0:CASE_MEM_WORDS-1];
     reg [31:0] issue_mem [0:ISSUE_MEM_WORDS-1];
@@ -73,7 +73,8 @@ module tb_a3_microsequencer;
     wire        view_valid;
     wire [31:0] view_descriptor_id;
     wire [2:0]  view_slot;
-    wire [31:0] view_dim0;
+    wire [31:0] view_extent;
+    wire [7:0]  view_extent_axis;
     wire [63:0] view_element_offset;
     wire [7:0]  view_rank;
     wire [31:0] count_views_resolved;
@@ -136,7 +137,8 @@ module tb_a3_microsequencer;
         .view_valid(view_valid),
         .view_descriptor_id(view_descriptor_id),
         .view_slot(view_slot),
-        .view_dim0(view_dim0),
+        .view_extent(view_extent),
+        .view_extent_axis(view_extent_axis),
         .view_element_offset(view_element_offset),
         .view_rank(view_rank),
         .count_views_resolved(count_views_resolved),
@@ -212,7 +214,7 @@ module tb_a3_microsequencer;
         end
     end
 
-    // -- resolved operand views (amendments A4 and A13) ------------------
+    // -- resolved operand views (amendments A4, A13 and A18) -------------
     // The view port is an observation pulse, not a handshake, so every
     // assertion is one event.  Order is program order, then operand order.
     always @(posedge clk) begin
@@ -232,11 +234,11 @@ module tb_a3_microsequencer;
                          view_slot, view_mem[view_slot_base + 1]);
                 $fatal(1, "view slot mismatch");
             end
-            if (view_dim0 !== view_mem[view_slot_base + 2]) begin
-                $display("FAIL: view %0d (descriptor %0d) leading extent %0d expected %0d",
-                         view_seen, view_descriptor_id, view_dim0,
+            if (view_extent !== view_mem[view_slot_base + 2]) begin
+                $display("FAIL: view %0d (descriptor %0d) resolved extent %0d expected %0d",
+                         view_seen, view_descriptor_id, view_extent,
                          view_mem[view_slot_base + 2]);
-                $fatal(1, "A13 leading extent mismatch");
+                $fatal(1, "A13/A18 resolved extent mismatch");
             end
             if (view_element_offset !== {view_mem[view_slot_base + 4],
                                          view_mem[view_slot_base + 3]}) begin
@@ -250,9 +252,17 @@ module tb_a3_microsequencer;
                          view_rank, view_mem[view_slot_base + 5]);
                 $fatal(1, "view rank mismatch");
             end
+            // Amendment A18: the axis the resolved extent belongs to.  Zero for
+            // every view written before the amendment, which is what A13 always
+            // meant by "the leading extent".
+            if ({24'd0, view_extent_axis} !== view_mem[view_slot_base + 6]) begin
+                $display("FAIL: view %0d extent axis %0d expected %0d", view_seen,
+                         view_extent_axis, view_mem[view_slot_base + 6]);
+                $fatal(1, "A18 extent axis mismatch");
+            end
             view_seen = view_seen + 1;
             total_views = total_views + 1;
-            checks = checks + 5;
+            checks = checks + 6;
         end
     end
 

@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import math
 from collections import Counter
 
 import pytest
@@ -159,13 +160,15 @@ def test_operator_operand_limits(graph):
 UNDERFILLED_OPERANDS = {
     # the released query head norm has no gain vector
     "HEAD_RMS_NORM": (1, 1),
-    # x and one projection; the position weight is added by a separate ADD
-    "COMPRESS_PROJECT": (2, 1),
-    # the routed expert bank cannot be one operand: see IR3-GAP-3
-    "ROUTED_MATMUL": (2, 1),
     # TA-ABI3-OPCONV-1 amendment A8: SWIGLU is (gate, up); the limit is numeric
     "SWIGLU": (2, 1),
-    # the released group split is contiguous and equal, so no group index view
+    # (activations, routed weights, expert IDs); the routing weight is applied
+    # by its own MUL before the down contraction, and the operand convention
+    # makes in3 optional for exactly that reason
+    "ROUTED_MATMUL": (3, 1),
+    # The released split is over *features*, not rows, so there is no per-group
+    # row count to put in in2 and the frozen operator does not do this
+    # operation at all: see IR3-GAP-5 and the GROUPED_OUTPUT_PROJECT comment.
     "GROUPED_MATMUL": (2, 1),
     # mean over the hyper-connection streams needs no base
     "PARTITION_SUM": (1, 1),
@@ -244,30 +247,74 @@ def test_state_effects_name_declared_resources(graph):
 # ---------------------------------------------------------------------------
 # Checkpoint bindings
 # ---------------------------------------------------------------------------
-def test_every_weight_carries_a_checkpoint_binding(graph):
+def checkpoint_ranges(graph):
+    """Every ``(path, offset, bytes, source, tensor)`` the graph binds.
+
+    A binding names one range unless it is *segmented*, in which case its
+    payload is the ordered concatenation of the segments and each of them is
+    the real range.  Two declared tensors may name ranges of the same locked
+    checkpoint tensor -- a feature group of the grouped output projection is one
+    block of its rows -- so provenance is the source name, not the tensor id.
+    """
+    out = []
+    for tensor in graph.tensors:
+        binding = tensor.binding
+        if binding is None:
+            continue
+        if binding.segments:
+            for segment in binding.segments:
+                out.append(
+                    (
+                        segment.path,
+                        segment.offset,
+                        segment.bytes,
+                        segment.source_name,
+                        tensor.tensor_id,
+                        segment.sha256,
+                    )
+                )
+        else:
+            out.append(
+                (
+                    binding.path,
+                    binding.offset,
+                    binding.bytes,
+                    binding.source_name,
+                    tensor.tensor_id,
+                    binding.sha256,
+                )
+            )
+    return out
+
+
+def test_every_weight_carries_a_checkpoint_binding(graph, specs):
+    declared = {spec.name for spec in specs}
     weights = [t for t in graph.tensors if t.role == "weight"]
     assert weights
     for tensor in weights:
         binding = tensor.binding
         assert binding is not None, tensor.tensor_id
-        assert binding.source_name == tensor.tensor_id
-        assert binding.path.endswith(".safetensors")
-        assert "/" not in binding.path
-        assert binding.offset > 0
+        assert binding.source_name in declared or (
+            binding.source_name == tensor.tensor_id
+        )
+        assert binding.transform == "identity"
         assert binding.bytes > 0
         assert len(binding.sha256) == 64
         assert set(binding.sha256) <= set("0123456789abcdef")
-        assert binding.transform == "identity"
+        if binding.segments:
+            assert sum(s.bytes for s in binding.segments) == binding.bytes
+    for path, offset, size, source, tensor_id, digest in checkpoint_ranges(graph):
+        assert path.endswith(".safetensors"), tensor_id
+        assert "/" not in path
+        assert offset > 0 and size > 0
+        assert source in declared, source
+        assert len(digest) == 64
 
 
 def test_binding_ranges_do_not_overlap(graph):
     by_path: dict[str, list[tuple[int, int, str]]] = {}
-    for tensor in graph.tensors:
-        if tensor.binding is None:
-            continue
-        by_path.setdefault(tensor.binding.path, []).append(
-            (tensor.binding.offset, tensor.binding.bytes, tensor.tensor_id)
-        )
+    for path, offset, size, _source, tensor_id, _digest in checkpoint_ranges(graph):
+        by_path.setdefault(path, []).append((offset, size, tensor_id))
     for path, ranges in by_path.items():
         ranges.sort()
         for (start, length, name), (next_start, _, next_name) in zip(
@@ -278,9 +325,9 @@ def test_binding_ranges_do_not_overlap(graph):
 
 def test_bound_weights_cover_the_ordinary_path(graph, specs):
     ordinary = {spec.name for spec in specs if spec.scope in {"main", "global"}}
-    bound = {t.tensor_id for t in graph.tensors if t.binding is not None}
-    assert bound == ordinary
-    total = sum(t.binding.bytes for t in graph.tensors if t.binding is not None)
+    ranges = checkpoint_ranges(graph)
+    assert {record[3] for record in ranges} == ordinary
+    total = sum(record[2] for record in ranges)
     expected = sum(
         spec.size_bytes for spec in specs if spec.scope in {"main", "global"}
     )
@@ -303,7 +350,7 @@ def test_a_sample_of_bindings_reads_back_bit_exact(graph):
 
 def test_block_scaled_weights_link_their_scale_tensor(graph):
     by_id = {t.tensor_id: t for t in graph.tensors}
-    linked = 0
+    mxfp4 = 0
     for tensor in graph.tensors:
         if tensor.dtype == "mxfp4_e2m1" and tensor.role == "weight":
             assert tensor.scale_tensor_id is not None
@@ -311,24 +358,27 @@ def test_block_scaled_weights_link_their_scale_tensor(graph):
             scale = by_id[tensor.scale_tensor_id]
             assert scale.dtype == "e8m0"
             assert scale.binding is not None
-            assert scale.shape[1] * 32 == tensor.shape[1]
-            linked += 1
+            # The block is along the reduction axis, which is the last one, and
+            # every leading axis -- including the expert axis of a stacked
+            # routed weight -- is shared.
+            assert scale.shape[-1] * 32 == tensor.shape[-1]
+            assert tuple(scale.shape[:-1]) == tuple(tensor.shape[:-1])
+            mxfp4 += 1
         elif tensor.dtype == "fp8_e4m3fn" and tensor.role == "weight":
             assert tensor.scale_tensor_id is not None
             assert tensor.scale_block_elements == 128
             scale = by_id[tensor.scale_tensor_id]
             assert scale.dtype == "e8m0"
             assert scale.binding is not None
-            linked += 1
-    # 43 layers x 256 experts x {gate, up, down}
-    assert linked >= LAYERS * 256 * 3
+    # 43 layers x {gate, up, down}, each one stacked [experts, N, K] tensor
+    assert mxfp4 == LAYERS * 3
 
 
 def test_mxfp4_weights_declare_the_architectural_shape(graph):
     for tensor in graph.tensors:
         if tensor.dtype == "mxfp4_e2m1" and tensor.binding is not None:
             # Two E2M1 elements share one stored byte.
-            assert tensor.shape[0] * tensor.shape[1] == tensor.binding.bytes * 2
+            assert math.prod(tensor.shape) == tensor.binding.bytes * 2
 
 
 def test_quantized_activations_link_a_scale_tensor(graph):
@@ -574,23 +624,62 @@ def test_layer_coverage_and_per_layer_census(graph):
     assert by_layer[2] > by_layer[3] > by_layer[0]
 
 
-def test_routed_experts_name_every_expert_weight(graph):
-    declared = {t.tensor_id for t in graph.tensors}
+def test_routed_experts_read_a_stacked_expert_operand(graph):
+    """The expert stack is an operand, not an attribute (IR3-GAP-3, closed).
+
+    ``TENSOR.ROUTED_MATMUL`` reads (activations, routed weights, expert IDs,
+    route weights).  A list of 256 tensor names in an attribute is not an
+    operand: it left the mandatory weight slot empty and put the expert IDs in
+    it.  The stack is one declared ``[E, N, K]`` tensor whose payload is the
+    ordered, individually authenticated checkpoint ranges of the 256 experts.
+    """
+    by_id = {t.tensor_id: t for t in graph.tensors}
     routed = [k for k in graph.kernels if k.kind == "ROUTED_MATMUL"]
     assert len(routed) == LAYERS * 3
+    stacks = set()
     for kernel in routed:
-        family = kernel.attributes["expert_weight_tensors"]
-        assert len(family) == 256
-        assert len(set(family)) == 256
-        assert set(family) <= declared
+        assert "expert_weight_tensors" not in kernel.attributes
+        assert len(kernel.inputs) == 3
+        activation, stack, expert_ids = kernel.inputs
+        assert by_id[activation].role == "activation"
+        assert by_id[expert_ids].dtype == "u32"
+        weight = by_id[stack]
+        assert weight.role == "weight"
+        assert weight.dtype == "mxfp4_e2m1"
+        assert len(weight.shape) == 3
+        assert weight.shape[0] == 256
+        binding = weight.binding
+        assert binding is not None and len(binding.segments) == 256
+        assert len({s.source_name for s in binding.segments}) == 256
+        assert sum(s.bytes for s in binding.segments) == binding.bytes
+        assert kernel.attributes["expert_count"] == 256
         assert kernel.attributes["expert_weight_dtype"] == "mxfp4_e2m1"
+        stacks.add(stack)
+    assert len(stacks) == LAYERS * 3
 
 
 def test_hash_and_biased_routing_split_at_layer_three(graph):
-    hashed = {k.layer for k in graph.kernels if k.kind == "HASH_ROUTE"}
+    """The token-to-expert table is an exact row gather, not a hash route.
+
+    The released routing reads ``tid2eid[token_id]`` over a ``[129280, 6]``
+    table and keeps all six rows.  ``ROUTE.HASH_ROUTE`` computes
+    ``table[mix32(key) % slots]`` and returns one destination, so it named an
+    operator that does not do the operation; ``TENSOR.EMBED_LOOKUP`` does.
+    """
+    hashed = {
+        k.layer
+        for k in graph.kernels
+        if k.attributes.get("source_operation_kind") == "HASH_ROUTE"
+    }
     biased = {k.layer for k in graph.kernels if k.kind == "BIASED_TOPK"}
     assert hashed == {0, 1, 2}
     assert biased == set(range(3, LAYERS))
+    for kernel in graph.kernels:
+        if kernel.attributes.get("source_operation_kind") != "HASH_ROUTE":
+            continue
+        assert kernel.kind == "EMBEDDING_LOOKUP"
+        assert kernel.attributes["table_rows"] == 129_280
+        assert kernel.attributes["table_element_reading"] == "low_u32_of_i64"
 
 
 def test_sparse_attention_and_indexing_per_compression_ratio(graph):
@@ -644,7 +733,15 @@ def test_census_is_stable(graph):
     census = graph_census(graph)
     assert census["kernel_count"] == len(graph.kernels)
     assert census["tensor_count"] == len(graph.tensors)
-    assert census["bound_weight_tensors"] == 67_612
+    # 66,048 routed expert tensors became 129 stacked [E, N, K] operands and
+    # their 129 stacked block-scale tensors, each one segmented binding over the
+    # same authenticated checkpoint ranges; and amendment A17's grouped output
+    # projection replaced 43 ``wo_a`` matrices and their 43 tile scales with the
+    # eight leading-axis ranges each of them is contracted over, +602 declared
+    # tensors naming exactly the same bytes.  The byte total is unchanged in
+    # both cases, which is the property that matters: a tensor may be renamed
+    # or subdivided, but the payload is the locked checkpoint's.
+    assert census["bound_weight_tensors"] == 2_424
     assert census["bound_weight_bytes"] == 156_015_698_140
     assert census["states_by_class"]["kv_window"] == LAYERS
 
@@ -720,7 +817,7 @@ def test_speculative_profile_covers_every_source_kind(
     assert {node_kind[name] for name in covered} == set(OPERATOR_CATALOG)
     assert len(speculative_graph.kernels) > len(graph.kernels)
 
-    bound = {t.tensor_id for t in speculative_graph.tensors if t.binding is not None}
+    bound = {record[3] for record in checkpoint_ranges(speculative_graph)}
     assert bound == {spec.name for spec in specs}
     assert len(bound) == TENSOR_COUNT
     total = sum(

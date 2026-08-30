@@ -589,7 +589,7 @@ def _tensor_grouped_matmul(
         f"activation has {rows} rows",
     )
     activations = ctx.read(activation_view)
-    stack = ctx.views.read_array(weight_view)
+    slices: dict[int, tuple[ResolvedView, np.ndarray]] = {}
 
     codes_path = _uses_bf16_kernel(activation_view, weight_view, output_view.dtype)
     output = np.empty((rows, cols), dtype=np.uint16 if codes_path else np.float32)
@@ -603,12 +603,15 @@ def _tensor_grouped_matmul(
         if span == 0:
             continue
         _account_read(ctx, weight_view, _element_bytes(weight_view, cols * depth))
+        group_view, group_weights = _stack_slice(
+            ctx, weight_view, (cols, depth), group, slices
+        )
         values, group_saturations, group_scale = _contract(
             ctx,
             activation_view,
             np.ascontiguousarray(activations[cursor : cursor + span]),
-            _slice_view(weight_view, (cols, depth), group),
-            stack[group],
+            group_view,
+            group_weights,
             output_view.dtype,
             contract=profile.contract,
         )
@@ -636,21 +639,61 @@ def _slice_view(
     keeps the stack's storage format, scale object and last-axis stride, and
     advances the element offset so that a block-scaled stack indexes its own
     scales per slice.
+
+    The step between slices is the stack's own leading stride when the stack
+    has one, and the slice's element count otherwise.  For a row-major stack --
+    every stack either model emits -- the two are the same number, so nothing
+    changes; where they differ the stride is what the stack's own layout says,
+    and the element count would address the wrong slice.
     """
     span = 1
     for extent in dims:
         span *= int(extent)
+    step = int(view.strides[0]) if len(view.strides) == len(dims) + 1 else span
     return ResolvedView(
         descriptor_id=view.descriptor_id,
         object_id=view.object_id,
         dtype=view.dtype,
         dims=tuple(dims),
         strides=view.strides[-len(dims) :],
-        element_offset=view.element_offset + index * span,
+        element_offset=view.element_offset + index * step,
         writable=view.writable,
         scale_object_id=view.scale_object_id,
         scale_block_elements=view.scale_block_elements,
+        scale_block_rows=view.scale_block_rows,
     )
+
+
+def _stack_slice(
+    ctx: EngineContext,
+    view: ResolvedView,
+    dims: tuple[int, ...],
+    index: int,
+    cache: dict[int, tuple[ResolvedView, np.ndarray]],
+) -> tuple[ResolvedView, np.ndarray]:
+    """Slice ``index`` of a stacked weight view, read through the slice itself.
+
+    Reading the *stack* to reach one slice of it is what this exists to stop.
+    ``ViewResolver.read_array`` is zero-copy only while the extent lies inside
+    one mapped segment, and a released expert bank does not: DeepSeek-V4-Flash
+    presents ``[256, 2048, 4096]`` -- 2.147 GB -- spanning many checkpoint
+    segments, so ``MemoryObject.contiguous_base`` returns ``None`` and the read
+    falls to the gathering copy path.  Measured on the released checkpoint that
+    is 14.4 s cold and 2.0-3.6 s warm *per issue*, to use at most six experts:
+    8.4 MB of 2,147 MB.  A 43-layer four-token prefill issues 516 of them.
+
+    One slice is one expert's ``[N, K]`` block, which does lie inside one
+    segment, so the same call returns the strided ``numpy.memmap`` view and
+    nothing is copied at all.  The cache is per issue and keyed by slice index
+    because two routing slots may select the same expert, and the second
+    selection should not re-read it.
+    """
+    hit = cache.get(int(index))
+    if hit is None:
+        sliced = _slice_view(view, dims, int(index))
+        hit = (sliced, ctx.views.read_array(sliced))
+        cache[int(index)] = hit
+    return hit
 
 
 # ---------------------------------------------------------------------------
@@ -729,7 +772,7 @@ def _tensor_routed_matmul(
             routing = widen(routing_view.dtype, ctx.read(routing_view))
 
     activations = ctx.read(activation_view)
-    stack = ctx.views.read_array(weight_view)
+    slices: dict[int, tuple[ResolvedView, np.ndarray]] = {}
 
     accumulator = np.zeros((rows, cols), dtype=np.float32)
     scale_multiplications = 0
@@ -741,12 +784,15 @@ def _tensor_routed_matmul(
             _account_read(
                 ctx, weight_view, _element_bytes(weight_view, cols * depth)
             )
+            expert_view, expert_weights = _stack_slice(
+                ctx, weight_view, (cols, depth), int(expert), slices
+            )
             values, _, group_scale = _contract(
                 ctx,
                 activation_view,
                 np.ascontiguousarray(activations[selected]),
-                _slice_view(weight_view, (cols, depth), int(expert)),
-                stack[int(expert)],
+                expert_view,
+                expert_weights,
                 DType.FP32,
                 contract=profile.contract,
             )
