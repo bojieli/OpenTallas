@@ -5,9 +5,9 @@
       "compression_ratio": 4,
       "count": 30,
       "entry_bytes": 1024,
-      "evidence": "entry sizes corrected by architectural analogy with DeepSeek-V4-Flash-0731, where the same 583/68 constants were MEASURED wrong against the released implementation (2.72x low at 32,000 tokens, 3.13x at 128,000). The two models share the compressed sparse/dense attention family and the 512-wide KV latent. NOT independently measured: no Pro rung has been executed, so this is a graded assumption, not a measurement, and every Pro KV number inherits that grade",
+      "evidence": "entry sizes corrected by architectural analogy with DeepSeek-V4-Flash-0731, where the same 583/68 constants were MEASURED wrong against the released implementation (2.72x low at 32,000 tokens, 3.13x at 128,000). The two models share the compressed sparse/dense attention family and the 512-wide KV latent. NOT independently measured: no Pro rung has been executed, so this is a graded assumption, not a measurement, and every Pro KV number inherits that grade; index scanning is NOT gated by a threshold: the zero index scans that suggested one were an instrumentation gap in tools/run_deepseek_v4_reference_oracle.py, whose --measure-kv wrapped Attention.forward but left Indexer.forward unwrapped, so an untiled rung counted none. Re-measured with the indexer instrumented, the released implementation scans its index at every context tested: 5,250 (layer, position) index pairs at 1,000 tokens and 42,000 at 8,000, i.e. 21 csa layers x ceil(context/4) compressed entries, exactly as the unconditional model says. With the threshold at 8,001 the profile under-predicted the measured rungs by 1.12x at 1,000 tokens and 1.60x at 8,000; at 0 it matches all five measured rungs to within 0.4%. Evidence: results/abi3/deepseek_v4_reference_oracle_context_ladder.json, index_scan_threshold_retraction",
       "index_entry_bytes": 256.0,
-      "index_scan_min_compressed_entries": 8001,
+      "index_scan_min_compressed_entries": 0,
       "kind": "compressed_sparse",
       "label": "csa",
       "recurrent_state_bytes": 0.0,
@@ -371,10 +371,12 @@
     "index_head_dim": 128,
     "index_heads": 64,
     "index_scan_threshold": {
-      "effect": "Charging the scan below the threshold overstated KV traffic by 1.60x at 8,001 tokens and 1.12x at 1,001. Every context this program makes a claim at -- 200,000 for Flash, 1,000,000 for Pro -- is far above the threshold, so no headline number moves.",
-      "evidence": "The released implementation reads NO sparse index at 1,001 tokens (251 compressed entries) or 8,001 tokens (2,001 entries), and reads exactly one entry per compressed position at 32,001 (8,001 entries), 128,001 and 200,001. The true threshold therefore lies in (2,001, 8,001]; 8,001 is the upper edge, chosen because it is the only value in that bracket that any measurement confirms. A rung at 16,000 or 64,000 tokens would narrow it.",
-      "grade": "assumed_by_analogy",
-      "value_compressed_entries": 8001
+      "corrected_measurement": "Re-instrumented, the index is scanned at every rung and the count is exactly context/4 throughout: 250, 2,000, 8,000, 32,000 and 50,000 entries per csa layer at 1,001 / 8,001 / 32,001 / 128,001 / 200,001 tokens. index_scan_min_compressed_entries is back to 0, which is the unconditional scan the profile always had.",
+      "effect_on_published_numbers": "None. The threshold only ever bit below ~8,001 compressed entries, far under the 200,000 and 1,000,000 contexts this program makes claims at. The roofline studies were re-run against both states and every headline number is byte-identical.",
+      "lesson": "A measurement that disagrees with a model is evidence about one of them, and which one is not decided by whichever is easier to change. Here the model was right and the instrument was incomplete -- and the tell was available at the time: a threshold that happened to fall exactly between the tiled and untiled rungs is a suspicious coincidence, and nobody asked why.",
+      "status": "RETRACTED",
+      "what_was_claimed": "That the released implementation scans no sparse index below ~8,001 compressed entries, recorded in commit 98f2965 as index_scan_min_compressed_entries = 8001.",
+      "why_it_was_wrong": "An instrumentation gap, not a behaviour. The oracle's --measure-kv wrapped Attention.forward but left Indexer.forward unwrapped, so a rung that did not tile its prefill recorded no index reads at all. The 1,001 and 8,001 rungs were untiled and reported zero; the longer rungs tiled and went through the wrapped path. The threshold was the boundary of the instrumentation, not of the model."
     },
     "index_topk": 1024,
     "kv_cache_policy": "FP8 main + BF16 RoPE; FP4 index",

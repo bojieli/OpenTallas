@@ -16,11 +16,11 @@ per user and per generated token. Decimal GB/MB are used.
 
 | Model | Context | B1 active weight | KV read/user/token | KV write/user/token |
 |---|---:|---:|---:|---:|
-| DeepSeek-V4-Flash-0731 | 8,192 | 11.218 GB | 17.957 MB | 0.051 MB |
+| DeepSeek-V4-Flash-0731 | 8,192 | 11.218 GB | 28.967 MB | 0.051 MB |
 | DeepSeek-V4-Flash-0731 | 32,768 | 11.218 GB | 65.929 MB | 0.051 MB |
 | DeepSeek-V4-Flash-0731 | 200,000 | 11.218 GB | 317.456 MB | 0.051 MB |
 | DeepSeek-V4-Flash-0731 | 1,000,000 | 11.218 GB | 1,520.656 MB | 0.051 MB |
-| DeepSeek-V4-Pro-0813 | 8,192 | 39.667 GB | 41.484 MB | 0.072 MB |
+| DeepSeek-V4-Pro-0813 | 8,192 | 39.667 GB | 57.213 MB | 0.072 MB |
 | DeepSeek-V4-Pro-0813 | 32,768 | 39.667 GB | 110.494 MB | 0.072 MB |
 | DeepSeek-V4-Pro-0813 | 200,000 | 39.667 GB | 473.069 MB | 0.072 MB |
 | DeepSeek-V4-Pro-0813 | 1,000,000 | 39.667 GB | 2,207.469 MB | 0.072 MB |
@@ -33,11 +33,11 @@ per user and per generated token. Decimal GB/MB are used.
 
 | Model | Context | B1 | B8 | B32 | B64 |
 |---|---:|---:|---:|---:|---:|
-| DeepSeek-V4-Flash-0731 | 8,192 | 624.70× | 231.12× | 149.73× | 106.75× |
+| DeepSeek-V4-Flash-0731 | 8,192 | 387.25× | 143.28× | 92.82× | 66.18× |
 | DeepSeek-V4-Flash-0731 | 32,768 | 170.15× | 62.95× | 40.78× | 29.08× |
 | DeepSeek-V4-Flash-0731 | 200,000 | 35.34× | 13.07× | 8.47× | 6.04× |
 | DeepSeek-V4-Flash-0731 | 1,000,000 | 7.38× | 2.73× | 1.77× | 1.26× |
-| DeepSeek-V4-Pro-0813 | 8,192 | 956.18× | 374.03× | 265.34× | 206.72× |
+| DeepSeek-V4-Pro-0813 | 8,192 | 693.32× | 271.21× | 192.40× | 149.89× |
 | DeepSeek-V4-Pro-0813 | 32,768 | 358.99× | 140.43× | 99.62× | 77.61× |
 | DeepSeek-V4-Pro-0813 | 200,000 | 83.85× | 32.80× | 23.27× | 18.13× |
 | DeepSeek-V4-Pro-0813 | 1,000,000 | 17.97× | 7.03× | 4.99× | 3.88× |
@@ -50,11 +50,11 @@ per user and per generated token. Decimal GB/MB are used.
 
 | Model | Context | B1 | B8 | B32 | B64 |
 |---|---:|---:|---:|---:|---:|
-| DeepSeek-V4-Flash-0731 | 8,192 | 622.93× | 230.47× | 149.31× | 106.45× |
+| DeepSeek-V4-Flash-0731 | 8,192 | 386.58× | 143.02× | 92.66× | 66.06× |
 | DeepSeek-V4-Flash-0731 | 32,768 | 170.01× | 62.90× | 40.75× | 29.05× |
 | DeepSeek-V4-Flash-0731 | 200,000 | 35.33× | 13.07× | 8.47× | 6.04× |
 | DeepSeek-V4-Flash-0731 | 1,000,000 | 7.38× | 2.73× | 1.77× | 1.26× |
-| DeepSeek-V4-Pro-0813 | 8,192 | 954.52× | 373.38× | 264.88× | 206.36× |
+| DeepSeek-V4-Pro-0813 | 8,192 | 692.44× | 270.86× | 192.15× | 149.70× |
 | DeepSeek-V4-Pro-0813 | 32,768 | 358.76× | 140.34× | 99.56× | 77.56× |
 | DeepSeek-V4-Pro-0813 | 200,000 | 83.84× | 32.79× | 23.26× | 18.12× |
 | DeepSeek-V4-Pro-0813 | 1,000,000 | 17.97× | 7.03× | 4.99× | 3.88× |

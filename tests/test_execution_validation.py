@@ -186,9 +186,9 @@ def test_the_check_fails_on_the_entry_sizes_it_was_built_to_catch(tmp_path) -> N
     """Restore the pre-measurement constants; the check must reject them.
 
     This is the actual historical defect, not an invented one: 583 bytes per KV
-    entry and 68 per index entry, which under-predicted by 2.7x at 32,000 tokens
-    and 3.1x at 128,000 -- growing with context, because the index term carried
-    the larger error and grows fastest.
+    entry and 68 per index entry, which under-predicted by 1.9x at 1,000 tokens,
+    2.7x at 32,000 and 3.2x at 200,000 -- growing with context, because the
+    index term carried the larger error and grows fastest.
     """
 
     profile = json.loads(DS_MODEL.read_text())
@@ -206,18 +206,26 @@ def test_the_check_fails_on_the_entry_sizes_it_was_built_to_catch(tmp_path) -> N
     ratios = {r["context_tokens"]: r["ratio"] for r in body["rungs"]}
 
     # The defect had two components and the five rungs separate them, which two
-    # rungs could not. Below the index-scan threshold only the entry size is
-    # wrong, so the error is exactly 1024/583; above it the index error
-    # compounds and grows with context as the scan does.
-    below = {c: r for c, r in ratios.items() if c < 32_000}
-    above = {c: r for c, r in ratios.items() if c >= 32_000}
-    assert below and above, "the pinned rungs must straddle the index-scan threshold"
-    for ratio in below.values():
-        assert ratio == pytest.approx(1024 / 583, rel=0.005)
-    ordered = [above[c] for c in sorted(above)]
+    # rungs could not. The entry size alone would show up as a constant
+    # 1024/583 at every context. The index size is wrong by a larger factor,
+    # 256/68, and its term grows as ceil(context / 4) while the main term
+    # saturates at top_k + window -- so the combined error rises monotonically
+    # with context and never falls back to the entry-size-only floor.
+    #
+    # An earlier version of this test asserted the floor exactly at the two
+    # short rungs, on the reading that the implementation scanned no index
+    # below 8,001 compressed entries. It does scan; that reading came from a
+    # missing counter in the oracle. See index_scan_threshold_retraction in
+    # results/abi3/deepseek_v4_reference_oracle_context_ladder.json.
+    ordered = [ratios[c] for c in sorted(ratios)]
+    assert len(ordered) >= 3, "two rungs cannot show a trend"
+    assert min(ordered) > 1024 / 583, (
+        "every measured context scans the index, so no rung can show the"
+        " entry-size error alone"
+    )
     assert ordered == sorted(ordered), "the index error must grow with context"
-    assert min(above.values()) > 2.5
-    assert max(above.values()) > max(below.values()) * 1.5
+    assert max(ordered) > 3.0
+    assert max(ordered) > min(ordered) * 1.7
 
 
 @pytest.mark.skipif(not CHAT_HBM.is_file(), reason="no executed record")
