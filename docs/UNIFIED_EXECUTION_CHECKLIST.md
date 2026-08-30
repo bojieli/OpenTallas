@@ -80,7 +80,7 @@
 - [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle**, and **decode reaches a real EOS**. `TA-QW-AGENT-1` ran 112 prompt tokens to the natural stop at token 151645 after 23 tokens (`results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json`), `TA-QW-CHAT-1` ran 24 tokens (`..._ta-qw-chat-1_...`); both agree with the oracle at every position, with no legitimacy problems and all 27 admission checks passing
 - [x] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — **re-verified with evidence in the repository** (`results/abi3/qwen3_rom_ta-qw-chat-1_execution.json`, status pass, 24 tokens, `reference_agreement` true, no divergence index). The 24 tokens are identical to `qwen3_hbm_ta-qw-chat-1_execution.json` position for position, which is the claim this item makes. Both admit at 75 instructions; the ROM lane emits 239 descriptors against HBM's 218 and declares 2,105 retired work against 22,715, because the two lanes block the token loop differently — see [OI-19] — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. Storage-class equivalence re-proved after every change: 18 descriptors differ, all `MEMORY_OBJECT`, all ROM→HBM, none beyond storage class
 - [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **blocked on [OI-28]**: the functional device has no node dimension, so no token is reachable on a 32-node capability however the operands are fixed. The deployment admits (996 instructions, 2,307 descriptors, work 4,587,224 proved exactly) and the cycle model covers it; it cannot run — **no tokens yet, and two of the three remaining blockers are decisions, not bugs.** The deployment admits (996 instructions, 2,307 descriptors, work bound proved exactly) and `HYPER_CONNECT_PRE` now executes against the frozen `VECTOR.MHC` operand row. It stops at the branch reduction the ABI leaves to `REDUCTION.EXPERT_SUM`, which provably cannot carry per-token weights over a token block (**OI-28**). Behind that: the functional simulator binds no `NODE_ID`, so the mandated 32-node capability cannot execute at all (**OI-27**), and the `attention_kv_view` row space needs an extent no view can present (**OI-26**). Landed on the way: the mHC pre/post split, the axis-1 index concatenations (**OI-20**), and one epsilon-encoding defect (**OI-29**)
-- [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence — **this is the reachable DeepSeek execution path**, because a wafer-scale logical device is one node (`max_nodes = 1`) and needs no multi-node simulation; its tile-scoped collectives are what amendment A14 makes expressible
+- [ ] W6.4 DeepSeek-ROM (wafer): identical token sequence — **still zero tokens, but the furthest this lane has ever reached**: `TA-DS-CHAT-1` at 104 prompt tokens now retires **5,883 instructions** (2,974 issued, 2,286 s) against 347 at the previous HEAD, which was not even admitted. The old wall — *"the residual add contract is BF16 in and BF16 out"* — is gone on its own terms rather than relaxed: the exporter emits **zero `ADD` kernels** and the program **zero `VECTOR.ADD` instructions**, because the residual is carried by `VECTOR.MHC`. It now stops at `COMPRESS_PROJECT hidden view 1177 is rank 2; the operand is rank 3`, the same family as the two operand defects fixed alongside it. **This is the reachable DeepSeek execution path**, because a wafer-scale logical device is one node (`max_nodes = 1`) and needs no multi-node simulation; its tile-scoped collectives are what amendment A14 makes expressible
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
 - [~] W6.6 Checkpoint/restart exactness on all four — **Qwen-HBM proven; the other three wait on W6.2-W6.4**. `tools/run_abi3_restart_exactness.py` runs one workload three times in three separate OS processes: uninterrupted; interrupted after N tokens with the device state serialised by `runtime/sim/checkpoint.py`; and finished in a fresh process that loads only that checkpoint. `TA-QW-CHAT-1` on `torch_cpu`, 93 prompt tokens, 6 new tokens split 3+3: both runs give `[1654, 525, 2661, 1447, 12, 3070]`, with identical retired work in every transaction and identical values for all 42 architectural counters (`results/abi3/restart_exactness.json`). Fifteen guards stand between the run and the word *pass* — three distinct PIDs, one deployment digest, one implementation identity, one runtime source digest, and explicit non-emptiness and length checks, because two empty lists are not a match. Two controls make the pass mean something: erasing the KV STATE images from the checkpoint diverges at the first resumed token, and erasing everything **except** the STATE images still reproduces the sequence, so what carries the generation is the STATE resources and the cursor, not activation scratch. The source-digest guard earned itself on its first run, refusing a token-identical result because a concurrent commit changed `runtime/` between two phases
 - [x] W6.7 Fail-closed campaigns — `tools/run_abi3_failclosed_campaign.py`, 8/8 refused against the **real** Qwen deployment: six corruption classes refused at admission, a mid-transaction fault leaving cursor and generation unchanged, and no prepared state left open. Found and fixed a real defect on its first run
@@ -143,6 +143,53 @@ that, the position is:
 Three of these are being worked in parallel. The honest summary is that **one of
 four designs runs the model end to end**, and the performance comparison — W12 —
 currently rests on that one.
+
+## Findings of 2026-08-30 — three defects that passed every check
+
+Three defects landed tonight that share one shape: **the verification was
+self-consistent with the defect**, so nothing failed. They are recorded together
+because the pattern matters more than any of them.
+
+- **Both backends placed only the first segment of a segmented binding.** The
+  256-expert stacked weights are bound as 256 authenticated ranges; both
+  backends read `binding.path/offset/bytes` and ignored `binding.segments`, so
+  each stack was placed as **one 1 GiB range from expert zero's offset** — 255
+  of every 256 experts named by an address holding another expert's bytes. The
+  byte totals reconciled and the digests were computed over what *was* placed
+  rather than over what *should* have been, so every check passed. Fixed: 2,424
+  → **68,214** authenticated ranges, the ROM deployment's 228 regions and
+  156,015,698,140 payload bytes unmoved, and exactly **24 region content digests
+  changed** — the 12 expert banks and their 12 scales.
+
+- **The HBM lowering read a generation-policy key the IR does not emit.** It
+  asked for `max_new_tokens` where the IR emits `maximum_new_tokens`, so the
+  lookup always missed and every HBM deployment silently carried the 512
+  default while the ROM backend read 8,192 from the same IR. **Two backends
+  carrying different generation policies for one IR is the divergence a shared
+  IR exists to prevent**, and it is invisible until a generation runs long
+  enough to hit the smaller cap, where it looks like the model stopping early.
+  Five synthetic test graphs declared the same wrong key, so they passed by
+  agreeing with the defect rather than with the IR — the same shape as the block
+  loop tests that asserted `step == bound_divisor` and pinned [OI-22] in place.
+  Neither backend defaults now: a graph that appends tokens without declaring a
+  budget is a graph whose decode length nobody chose.
+
+- **The cycle model reported zero bytes for every storage class.** `8dfddac`
+  gave the functional device a node dimension, and `_issue_nodes` rebinds
+  `ctx.views` to the uninstrumented node-0 resolver before every engine issue —
+  overwriting the recording resolver `TracingDevice` had installed. It stayed
+  quiet because the *architectural* counters come from a different path
+  (`EngineContext._account_read/_account_write`) and remained correct
+  throughout, so the counter-agreement test stayed green while the memory report
+  read zero. The same commit also made `run_node` time all 32 nodes and call it
+  one: 17,986 per-node compute cycles against 564 for the identical program on
+  one chip, then multiplied by 32 again in the aggregate. **A 32× timing error
+  and a zeroed memory report, in the one component that models time at all.**
+
+The common lesson is in the third: a check that passes because two paths agree
+proves only that they agree. The memory report and the architectural counters
+were never reconciled against each other, and the test that does that now is the
+test that would have caught it on the day.
 
 ## W12 — First-principles roofline model *(the actual deliverable)*
 
@@ -1101,6 +1148,40 @@ lanes are a precondition for it, not the product. These items are the product.
   Re-recording is `python3 tools/rtl_abi3_campaign.py --force`, and it is left
   to the RTL lane rather than done here: `results/rtl/abi3_campaign.json` is
   that lane's evidence, and an evidence file with two writers is OI-26.
+
+  **Closed.** The RTL lane re-recorded it. Three of the thirty bound sources had
+  moved, not one: the A16 index row in the wire format, and `runtime/sim/device.py`
+  and `runtime/sim/memory.py` from the node-dimension commit. None of A13–A16
+  needed an RTL change — A13 was already implemented in `ot_a3_view_resolver.sv`
+  including the `stride0 * bound_divisor` leading-axis test, and A14, A15 and A16
+  all land in fields the ABI 3.0 microsequencer never reads. The re-recording
+  therefore added vectors that *say* so rather than asserting it: the set now
+  issues LINK (it never had), carries a `participant_scope` of 2 and 1 at
+  COMMUNICATION payload offset 80 against an otherwise identical NODE-scoped
+  program, carries a `scale_block_rows` of 2 at TENSOR_VIEW payload offset 104 on
+  a view A13 also clamps, and populates the three operand-multiplexer arms — a
+  third input, a second output, a nonzero `aux_id_0` — that A16's conventions are
+  the first to need and that nothing had ever selected. The marker moved from
+  `cases=43 headers=43 programs=36 issues=143 views=368 traps=11` to
+  `cases=50 headers=50 programs=41 issues=154 views=391 traps=11`, checks from
+  3,017 to 3,282, both simulators identical.
+
+  The same pass re-recorded the other stale retained RTL artifact,
+  `testdata/compiler/tensor_accelerator/qwen3_rtl_rope_vectors.json`, which bound
+  `runtime/tensor_accelerator/rope.py` and went stale on OI-34's
+  `MAX_POSITIONS` 8000 → 8192. Exactly two fields moved — the oracle digest and
+  the derived `vector_set_id`, now
+  `3a792b0dec8dd7277540841409accca66521f2f05f977c1cd6b6d9e5361f4f76` — and every
+  coefficient and output code is byte-identical, because `MAX_POSITIONS` is an
+  input to `coefficient_table_bf16` and not to `rope_bf16`. That the digest could
+  move without anything checking whether the deployed table still followed is now
+  fixed at the source: the builder reproduces the shard's 8,000 rows from
+  `coefficient_table_bf16(8000)` and compares them byte-for-byte, so the bound
+  and the four near-midpoint corrections are load-bearing here rather than
+  merely hashed. Re-derived at 200 decimal digits over the whole extended domain,
+  **8,000..8,191 introduces no fifth correction**; and 8,191 is not a position
+  these vectors can hold, because the deployed coefficient table is 8,000 rows
+  and 7,999 remains its edge.
 
 - **OI-39 — `ATTENTION.SPARSE` has no data-bearing implementation, and that is
   now the DeepSeek wafer lane's wall.** Every other heavy engine in
