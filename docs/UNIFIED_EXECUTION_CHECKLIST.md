@@ -148,6 +148,29 @@ lanes are a precondition for it, not the product. These items are the product.
 - [ ] W12.6 Iso-area studies with the silicon area stated on **both** sides, both
   topologies where viable, and the latency crossover reported rather than a
   topology assumed
+- [x] W12.8 **The model is validated by the executed machine, not asserted.**
+  `tools/validate_model_against_execution.py` checks an analytical prediction
+  against the counters a real token-producing run recorded. On Qwen3-8B at 8,192
+  tokens the analytical weight traffic is 15,136,811,008 B per step; the ROM lane
+  measured **15,244,065,514** (ratio 1.007) and the HBM lane **15,262,287,257**
+  (1.008), and the two lanes performed **identical arithmetic** —
+  820,644,937,728 multiplications each. The 0.7–0.8% excess is the scales, index
+  tables, rotary coefficients and activations the analytical weight model does
+  not count; a *shortfall* would be a failure rather than a tolerance, and the
+  tool treats it that way.
+
+  This is what separates the performance work from arithmetic on a whiteboard. A
+  reviewer is entitled to ask whether a projected speedup accounted for the whole
+  system, and the only answer that settles it is a machine that ran the model end
+  to end and moved the same bytes the projection assumed. It also makes the
+  storage-class thesis a measurement: the two lanes differ only in which memory
+  the bytes came from, and the arithmetic is bit-identical.
+
+  What it does not validate is *time* — the functional device has no clock. It
+  validates the quantities a roofline consumes, so that the time a roofline
+  computes from them is a statement about hardware rather than about unexamined
+  traffic.
+
 - [ ] W12.7 `tools/run_roofline_studies.py` and `results/roofline/` — canonical
   JSON, rendered report, consistency audit
 

@@ -1,0 +1,202 @@
+#!/usr/bin/env python3
+"""Check an analytical prediction against what the accelerator actually did.
+
+This is the join between the two halves of the project, and without it the
+performance work is arithmetic on a whiteboard. An analytical or roofline model
+predicts the traffic and the work a decode step costs. A deployment that
+executed real tokens *counted* them. If the two disagree, the model has not
+accounted for the system; if they agree, the model's traffic terms rest on a
+real implementation and only its hardware terms -- bandwidth, density, latency
+-- remain assumptions, and those are anchored to published parts.
+
+That distinction is the whole argument. A reviewer is entitled to ask whether a
+projected speedup considered every part of the system, and the only answer that
+settles it is a machine that ran the model end to end and produced the same
+byte counts the projection assumed.
+
+What this tool does NOT do: it does not validate time. The functional device has
+no clock. It validates the *quantities* a roofline consumes -- weight bytes, KV
+bytes, arithmetic -- so that the time a roofline computes from them is a
+statement about hardware rather than about unexamined traffic.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
+from typing import Any
+
+REPO = Path(__file__).resolve().parents[1]
+for extra in (REPO, REPO / "src"):
+    if str(extra) not in sys.path:
+        sys.path.insert(0, str(extra))
+
+from opentallas.schema import ModelProfile  # noqa: E402
+from opentallas.workload import kv_traffic, weight_traffic  # noqa: E402
+from runtime.abi3.capability import canonical_json  # noqa: E402
+
+#: A measured quantity may exceed its analytical counterpart, because the model
+#: counts model weights while a real deployment also moves scales, index tables,
+#: rotary coefficients and activations.  It may not fall short: reading fewer
+#: weight bytes than the model has weights means the machine did not do the work.
+TOLERANCE_OVER = 0.15
+TOLERANCE_UNDER = 0.01
+
+
+def _steps(record: dict[str, Any]) -> int:
+    """Decode steps plus the one prefill transaction."""
+    notes = record.get("notes", {})
+    decode = notes.get("decode_steps")
+    if decode is None:
+        decode = max(0, int(record.get("generated_token_count", 1)) - 1)
+    return int(decode) + 1
+
+
+def _positions(record: dict[str, Any], prompt_tokens: int) -> int:
+    """Token positions the machine actually computed: the prompt plus decodes."""
+    return prompt_tokens + max(0, int(record.get("generated_token_count", 1)) - 1)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--execution", type=Path, required=True, action="append",
+                        help="an execution record; repeat to validate several lanes")
+    parser.add_argument("--model", type=Path, required=True)
+    parser.add_argument("--context", type=int, required=True)
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--force", action="store_true")
+    args = parser.parse_args()
+
+    if args.output.exists() and not args.force:
+        print(f"refusing to overwrite {args.output}; pass --force")
+        return 1
+
+    model = ModelProfile.load(args.model)
+    predicted_weight = weight_traffic(model, 1).total_bytes
+    predicted_kv = kv_traffic(model, args.context)
+
+    lanes: list[dict[str, Any]] = []
+    problems: list[str] = []
+    for path in args.execution:
+        body = json.loads(path.read_text())
+        record = body["record"]
+        counters = record["counters"]
+        prompt = int(record["workload"]["prompt_token_count"])
+        steps = _steps(record)
+        positions = _positions(record, prompt)
+
+        measured_weight = int(counters.get("rom.bytes_read", 0)) + int(
+            counters.get("hbm.bytes_read", 0)
+        )
+        per_step = measured_weight / steps if steps else 0.0
+        ratio = per_step / predicted_weight if predicted_weight else 0.0
+
+        lane = {
+            "record": str(path),
+            "status": body.get("status"),
+            "target": record["target"]["target_id"],
+            "backend": record["target"]["backend"],
+            "tokens": record.get("generated_token_count"),
+            "prompt_tokens": prompt,
+            "transactions": steps,
+            "token_positions": positions,
+            "weight_bytes": {
+                "measured_total": measured_weight,
+                "measured_per_step": per_step,
+                "predicted_per_step": predicted_weight,
+                "ratio": ratio,
+            },
+            "by_storage_class": {
+                k: int(counters.get(k, 0))
+                for k in (
+                    "rom.bytes_read",
+                    "hbm.bytes_read",
+                    "hbm.bytes_written",
+                    "sram.bytes_read",
+                    "sram.bytes_written",
+                )
+                if k in counters
+            },
+            "arithmetic": {
+                "tensor_multiplications": int(counters.get("tensor.multiplications", 0)),
+                "per_token_position": (
+                    int(counters.get("tensor.multiplications", 0)) / positions
+                    if positions
+                    else 0.0
+                ),
+            },
+            "attention_context_positions": int(
+                counters.get("attention.context_positions", 0)
+            ),
+        }
+        if ratio < 1.0 - TOLERANCE_UNDER:
+            problems.append(
+                f"{path.name}: measured weight traffic is {ratio:.3f} of predicted; "
+                "reading fewer weight bytes than the model has weights means the "
+                "machine did not do the work"
+            )
+        elif ratio > 1.0 + TOLERANCE_OVER:
+            problems.append(
+                f"{path.name}: measured weight traffic is {ratio:.3f} of predicted, "
+                f"beyond the {TOLERANCE_OVER:.0%} allowance for scales, index "
+                "tables and activations the model does not count"
+            )
+        lanes.append(lane)
+
+    # Two lanes of the same model must perform identical arithmetic; only the
+    # storage class of the bytes may differ.  That is the storage-class thesis,
+    # and here it is a measurement rather than a claim.
+    arithmetic_agreement = None
+    if len(lanes) > 1:
+        values = {lane["arithmetic"]["tensor_multiplications"] for lane in lanes}
+        arithmetic_agreement = len(values) == 1
+        if not arithmetic_agreement:
+            problems.append(
+                f"lanes disagree on arithmetic: {sorted(values)}; two deployments "
+                "of one model must compute the same products"
+            )
+
+    out = {
+        "schema": "opentallas.roofline.execution_validation.v1",
+        "status": "pass" if not problems else "fail",
+        "model": model.name,
+        "context_tokens": args.context,
+        "predicted": {
+            "weight_bytes_per_step": predicted_weight,
+            "kv_read_bytes_per_token": predicted_kv.read_bytes,
+            "kv_storage_bytes_per_user": predicted_kv.storage_bytes_per_user,
+            "weight_to_kv_read_ratio": predicted_weight / predicted_kv.read_bytes,
+        },
+        "lanes": lanes,
+        "arithmetic_agreement_across_lanes": arithmetic_agreement,
+        "problems": problems,
+        "scope": [
+            "Validates the QUANTITIES a roofline consumes: weight bytes, KV bytes,"
+            " arithmetic. Does not validate time; the functional device has no clock.",
+            "A measured excess over prediction is expected and bounded: a real"
+            " deployment also moves scales, index tables, rotary coefficients and"
+            " activations, which the analytical weight model does not count.",
+            "A measured shortfall is a failure, not a tolerance.",
+        ],
+    }
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_bytes(canonical_json(out))
+
+    print(f"model {model.name} @ {args.context:,} tokens")
+    print(f"  predicted weight bytes/step : {predicted_weight:>18,}")
+    for lane in lanes:
+        w = lane["weight_bytes"]
+        print(f"  {lane['backend']:<18} measured/step {w['measured_per_step']:>18,.0f}"
+              f"  ratio {w['ratio']:.3f}")
+    if arithmetic_agreement is not None:
+        print(f"  arithmetic identical across lanes: {arithmetic_agreement}")
+    print(f"  status {out['status']} -> {args.output}")
+    for p in problems:
+        print(f"  PROBLEM {p}")
+    return 0 if not problems else 2
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
