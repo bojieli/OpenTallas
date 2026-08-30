@@ -592,6 +592,14 @@ class OperandPlan:
     #: runtime expert ID inside the view, so the expert is an addressing
     #: dimension and folding it into the rows loses 255 of 256 experts.
     bank: int = 0
+    #: Amendment A18's affine function of the row loop's bound symbol, for an
+    #: operand that carries the ``row`` term.  The default is A13 exactly --
+    #: the symbol's own value, no bias -- and encodes as four zero fields, so
+    #: an operand that needs nothing new is byte-identical to the same operand
+    #: written before the amendment.
+    extent_numerator: int = 1
+    extent_unit: int = 1
+    extent_bias: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -611,6 +619,18 @@ class OperandPlan:
             # deployment manifest by digest, so a field every operand carries
             # would rewrite every existing plan to say "not a bank".
             **({"bank": self.bank} if self.bank else {}),
+            # Same rule for A18: an operand whose extent is the symbol's own
+            # value states nothing, so no pre-amendment plan digest moves.
+            **(
+                {
+                    "extent_numerator": self.extent_numerator,
+                    "extent_unit": self.extent_unit,
+                    "extent_bias": self.extent_bias,
+                }
+                if (self.extent_numerator, self.extent_unit, self.extent_bias)
+                != (1, 1, 0)
+                else {}
+            ),
         }
 
 
@@ -821,6 +841,136 @@ def _extent_value(extent: Any, span_max: int) -> tuple[int, bool]:
             return extent.maximum, True
         return max(span_max * max(extent.multiplier, 1), 1), True
     return int(extent), False
+
+
+@dataclass(frozen=True, slots=True)
+class RequestExtent:
+    """Amendment A18: an extent as ``numerator * S / unit + bias``.
+
+    ``S`` is the token-block loop's bound symbol.  Every neutral extent this
+    program declares is one of these over that one symbol, which is the whole
+    argument A18 makes for coefficients on the view instead of eight more
+    entries in the frozen A5 registry: ``span_groups_ratio4`` is not a symbol,
+    it is ``SPAN_TOKENS / 4``, and the next model's ratio would need a ninth.
+    """
+
+    numerator: int = 1
+    unit: int = 1
+    bias: int = 0
+
+    def step(self, block: int) -> int | None:
+        """Elements of this axis one whole iteration of a block loop covers.
+
+        ``None`` when the unit does not divide ``numerator * block``: one
+        iteration is then not a whole number of this axis's elements, the term
+        walks nothing, and the amendment says so rather than rounding.
+        """
+        scaled = int(self.numerator) * int(block)
+        if self.unit <= 0 or scaled % self.unit:
+            return None
+        return max(scaled // self.unit, 1)
+
+
+#: Neutral extent name -> its affine function of the token-block loop's bound
+#: symbol.  The maxima the exporter declares are the check on this table rather
+#: than a second source of truth for it: at ``S = 262,144`` every function here
+#: reproduces the declared maximum exactly, which :func:`request_extent_of`
+#: asserts on every tensor it reads.
+#:
+#: ``context_*`` names resolve against the *span* deliberately.  In prefill the
+#: two coincide; in decode a compressed layer's join is a sum over two
+#: different symbols, which wire format section 12.8 places outside the
+#: amendment and which the unresolved names below therefore decline to state
+#: rather than approximate.
+REQUEST_EXTENT: Mapping[str, RequestExtent] = {
+    "span_tokens": RequestExtent(),
+    "context_tokens": RequestExtent(),
+    "context_length": RequestExtent(),
+    "span_groups_ratio4": RequestExtent(unit=4),
+    "span_groups_ratio128": RequestExtent(unit=128),
+    "context_groups_ratio4": RequestExtent(unit=4),
+    "context_groups_ratio128": RequestExtent(unit=128),
+    # The joins.  A bias is a count the operand carries whatever the request
+    # is -- a 128-row committed sliding window is present for a span of one --
+    # so it is added after the division and is not part of the step.  This is
+    # the row A13 could not state at all: a clamp only shortens, and these are
+    # longer than the rows the request supplies.
+    "attention_rows_window": RequestExtent(bias=128),
+    "attention_rows_ratio4": RequestExtent(numerator=5, unit=4, bias=128),
+    "attention_rows_ratio128": RequestExtent(numerator=129, unit=128, bias=128),
+    "selected_rows_ratio128": RequestExtent(unit=128, bias=128),
+}
+
+
+def request_extent_of(tensor: Tensor, span_max: int) -> RequestExtent | None:
+    """The A18 function of the leading axis, or ``None`` if it has none.
+
+    An unrecognised symbol returns ``None`` and the operand keeps its declared
+    maximum, which is what this backend did for every extent before the
+    amendment.  That is deliberate: a name whose function nobody has written
+    down is not an invitation to guess one, and A18's own admission rule
+    refuses a declaration no term can resolve.
+    """
+    if not tensor.shape or not isinstance(tensor.shape[0], Symbolic):
+        return None
+    lead = tensor.shape[0]
+    base = REQUEST_EXTENT.get(lead.symbol)
+    if base is None:
+        return None
+    extent = RequestExtent(
+        numerator=base.numerator * max(int(lead.multiplier), 1),
+        unit=base.unit,
+        bias=base.bias,
+    )
+    declared = int(lead.maximum)
+    if declared > 0:
+        # The exporter's declared maximum is this function evaluated at the
+        # capability's context bound.  A disagreement is a coefficient this
+        # table has wrong, and computing a wrong extent silently is the exact
+        # failure A18 exists to remove, so it is refused here.
+        computed = extent.numerator * int(span_max) // extent.unit + extent.bias
+        if computed != declared:
+            raise PlanError(
+                f"tensor {tensor.tensor_id!r} declares maximum {declared} for "
+                f"{lead.symbol!r}, but amendment A18's function "
+                f"{extent.numerator} * {span_max} / {extent.unit} + "
+                f"{extent.bias} gives {computed}; one of the two is wrong and "
+                "an extent that is silently wrong is what A18 exists to stop"
+            )
+    return extent
+
+
+def is_row_gather(kernel: Kernel, tensors: Mapping[str, Tensor]) -> bool:
+    """True when a movement gathers *within* each row rather than across rows.
+
+    ``DMA.GATHER`` names rows: the index array selects whole rows of the source
+    and the result is one row per index.  A router's weight gather is a
+    different operation wearing the same name -- for every token it selects six
+    of that token's own 256 expert scores -- and presenting it as a row gather
+    reads the six expert IDs as row numbers, which the engine refuses the
+    moment one exceeds the request's row count:
+
+    ``DMA index view 907 names row 255, outside the 104 rows of the addressed view``
+
+    The two are told apart by the operands and not by a name: a row gather's
+    index is one-dimensional in the rows it selects, while this one's index
+    leads with the *same* symbolic axis as its source.  A shared leading axis
+    means the index is indexing the trailing one, and the way to say that with
+    an operator that indexes rows is to dispatch one row at a time -- which is
+    what the per-token loop below is for.
+    """
+    if kernel.kind != "GATHER" or len(kernel.inputs) < 2 or not kernel.outputs:
+        return False
+    source = tensors.get(kernel.inputs[0])
+    index = tensors.get(kernel.inputs[1])
+    if source is None or index is None:
+        return False
+    if len(source.shape) < 2 or len(index.shape) < 2:
+        return False
+    lead = source.shape[0]
+    if not isinstance(lead, Symbolic) or not isinstance(index.shape[0], Symbolic):
+        return False
+    return index.shape[0].symbol == lead.symbol
 
 
 def matrix_shape(tensor: Tensor, span_max: int) -> tuple[int, int, bool]:
@@ -2309,6 +2459,22 @@ _ABI_EMPTY_INPUT_SLOTS: Mapping[str, tuple[int, ...]] = {
 
 def _abi_input_slots(kernel: Kernel, order: Sequence[int]) -> list[int | None]:
     """The IR input each ABI input slot carries; ``None`` for a required hole."""
+    base = _expert_sum_base(kernel)
+    if base is not None:
+        # TA-ABI3-OPCONV-1 section 6 reads (contributions, weights, base) and
+        # amendment A10 makes the weights optional: a graph that names a base
+        # operand has already applied its weights, and the released expert
+        # multiplies by the routing weight before its down projection, so
+        # re-applying them at the reduction would square them.  Packing the
+        # operands down put the base where the weights belong and the engine
+        # said so exactly -- ``EXPERT_SUM weight view holds 4,096 weights for 6
+        # contributions``.  Everything else the kernel reads, the routed rows'
+        # expert identity among it, is a dataflow fact this row has no slot
+        # for, so it is dropped rather than left to occupy the base slot with
+        # 32-bit integers.  ``compiler/backends/rom/common/program.py``'s
+        # ``_expert_sum_slots`` states the same convention: one convention,
+        # two backends.
+        return [0, None, base]
     holes = _ABI_EMPTY_INPUT_SLOTS.get(kernel.kind, ())
     if not holes:
         return list(order)
@@ -2319,6 +2485,22 @@ def _abi_input_slots(kernel: Kernel, order: Sequence[int]) -> list[int | None]:
         slots.append(None if position in holes else remaining.pop(0))
         position += 1
     return slots
+
+
+def _expert_sum_base(kernel: Kernel) -> int | None:
+    """The IR input holding an expert reduction's base, when the graph names one."""
+    if kernel.kind != "EXPERT_REDUCE":
+        return None
+    declared = kernel.attributes.get("base_operand_index")
+    if declared is None:
+        return None
+    index = int(declared)
+    if not 0 < index < len(kernel.inputs):
+        raise PlanError(
+            f"kernel {kernel.kernel_id}: base_operand_index {index} names no "
+            f"input of the {len(kernel.inputs)} this kernel reads"
+        )
+    return index
 
 
 #: Trailing input slots TA-ABI3-OPCONV-1 leaves optional, by neutral kind.
@@ -2785,6 +2967,21 @@ def _plan_kernels(
         # descriptor makes the two agree exactly, at every span, with no
         # partial final iteration to clamp.
         kernel_block = 1 if _lead_reduction_axis(kernel, engine) else block
+        if int(engine.family) == int(Major.REDUCTION) and int(engine.sub) == int(
+            Reduction.EXPERT_SUM
+        ):
+            # ``REDUCTION.EXPERT_SUM`` reduces its whole leading axis to one
+            # row -- that is the operation, not a property of any operand -- so
+            # a dispatch covers exactly one output row and the token block is
+            # one.  A 512-token block presented six contributions per token
+            # against a 512-row output and the engine said so plainly:
+            # ``reduction output view holds 425,984 elements, expected 4,096``.
+            kernel_block = 1
+        if is_row_gather(kernel, tensors):
+            # One token per dispatch: the row axis the engine indexes is then
+            # the token's own trailing axis, and the index values are offsets
+            # inside it rather than row numbers of a block.
+            kernel_block = 1
 
         out_name = kernel.outputs[0] if kernel.outputs else None
         if out_name is not None:
@@ -2911,7 +3108,14 @@ def _plan_kernels(
             row_loop = LoopPlan(
                 loop_key=f"k{kernel.index}.block",
                 kind="row",
-                trip=max(rows // kernel_block, 1),
+                # Amendment A18: the loop counts blocks of the *bound symbol*,
+                # not rows of whichever operand happened to be the principal.
+                # Taking it from the output's maximum gave a group axis a
+                # quarter of the iterations it needs, and gave the attention
+                # join one more than it has -- the extra block being exactly
+                # the 128-row window the join carries but the request does not
+                # supply.
+                trip=max(-(-span_max // kernel_block), 1),
                 symbol="span_tokens",
                 divisor=kernel_block,
             )
@@ -3056,6 +3260,16 @@ def _operand_plan(
     terms: list[str] = []
     view_rows, view_cols = rows, cols
     weight_bank = 0
+    # Amendment A18.  The question the token-block loop asks of an operand is
+    # not "is your declared maximum the kernel's?" -- which compares two
+    # numbers that a *join* is entitled to disagree on, and which left the
+    # attention KV join with a clamped output and unclamped inputs -- but "is
+    # your extent a function of the symbol this loop is bound to?".  The
+    # coefficients answer it and travel to the view.
+    extent = request_extent_of(tensor, span_max) if symbolic else None
+    step = extent.step(block) if extent is not None else None
+    if extent is None or step is None:
+        extent, step = RequestExtent(), None
     if contraction and direction == "in" and slot == 1:
         # in1 is the weight, presented n-major as ``[N, K]`` -- or ``[E, N, K]``
         # when it is a routed bank, whose expert axis the engine addresses.
@@ -3069,19 +3283,23 @@ def _operand_plan(
     elif contraction and direction == "out" and slot == 0:
         view_cols = shard_columns
         if row_loop:
-            view_rows = block
+            view_rows = step if step is not None else block
             terms.append("row")
         if sharded:
             terms.append("node")
     else:
         if placement is not None and placement.layer_stride_elements:
             terms.append("layer")
-        if row_loop and symbolic and rows == kernel_rows:
-            # Only an operand whose position axis is the *kernel's* position
-            # axis steps with the token-block loop.  An operand bounded by a
-            # different symbol -- a sparse index count, say -- is presented
-            # whole, because the loop's trip count is not its trip count.
-            view_rows = block
+        if row_loop and step is not None:
+            # One iteration covers ``step`` elements of this axis and the
+            # operand carries ``bias`` of them whatever the request is, so the
+            # view claims exactly that many and never more -- which is the
+            # bound A18 generalises from A13's ``dim0 <= bound_divisor``.  An
+            # extent whose function this backend cannot write down keeps its
+            # declared maximum, as every extent did before the amendment: the
+            # loop's trip count is not its trip count and guessing one is the
+            # silent wrong answer A18 exists to remove.
+            view_rows = step + extent.bias
             terms.append("row")
     return OperandPlan(
         slot=slot,
@@ -3097,6 +3315,11 @@ def _operand_plan(
         transposed=transposed and contraction and direction == "in" and slot == 1,
         terms=tuple(terms),
         bank=weight_bank,
+        # Declared only where a term resolves it: A18's third admission rule
+        # refuses a view that names a function nothing can walk.
+        extent_numerator=extent.numerator if "row" in terms else 1,
+        extent_unit=extent.unit if "row" in terms else 1,
+        extent_bias=extent.bias if "row" in terms else 0,
     )
 
 

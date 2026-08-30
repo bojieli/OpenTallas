@@ -46,6 +46,7 @@ from compiler.ir.v3.lowering import engine_for
 from runtime.abi3.builder import BuildError, DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
+    Attention,
     Control,
     Dma,
     CounterGroup,
@@ -62,7 +63,9 @@ from runtime.abi3.constants import (
     State,
     StateClass,
     StorageClass,
+    Tensor as TensorOp,
     TopologyClass,
+    Vector,
     counter_id,
 )
 from runtime.abi3.crc import sha256
@@ -91,6 +94,7 @@ from .plan import (
     build_plan,
     bytes_for,
     dtype_of,
+    is_row_gather,
     matrix_shape,
     position_inputs,
     ring_modulus,
@@ -164,6 +168,29 @@ _DTYPE_FEATURE: Mapping[int, Feature] = {
     int(DType.FP8_E5M2): Feature.FP8_E4M3FN_TENSOR,
     int(DType.MXFP4_E2M1): Feature.MXFP4_E2M1_E8M0,
     int(DType.E8M0_SCALE): Feature.MXFP4_E2M1_E8M0,
+}
+
+#: Input slots whose rank the operand convention states outright, so they are
+#: never aligned to the principal operand by broadcasting.  ``ATTENTION.SPARSE``
+#: is the case amendment A6 settles: its ``in2`` is a ``[span, slots]`` index
+#: array read once per query row, not a per-head tensor, and the positional
+#: broadcast rule -- one axis fewer than the principal, agreeing on the leading
+#: axis -- describes it exactly and is wrong about it.  A convention that names
+#: an operand's rank outranks a rule that infers one.
+_DECLARED_RANK_SLOTS: Mapping[tuple[int, int], tuple[int, ...]] = {
+    (int(Major.ATTENTION), int(Attention.SPARSE)): (2, 3),
+}
+
+#: A declared reading of a payload wider than the value it carries:
+#: ``(neutral dtype, presented type, presented elements per declared element)``.
+#: The DeepSeek hash-route table is ``i64`` holding expert IDs bounded by 255,
+#: and the graph states ``table_element_reading = low_u32_of_i64`` -- so the
+#: value is the *first* of the two u32 words of each entry, multi-byte integers
+#: being little-endian (wire format section 2).  Presenting it as a ``u32`` view
+#: of stride two is that reading exactly, zero-copy: an engine performs no
+#: conversion and refuses a lookup that asks it to, which is what it should do.
+_ELEMENT_READING: Mapping[str, tuple[str, DType, int]] = {
+    "low_u32_of_i64": ("i64", DType.U32, 2),
 }
 
 #: Cluster traffic class -> (LINK subopcode, collective, route class).
@@ -982,10 +1009,22 @@ class _Emitter:
         scale_object_id: int = NO_ID,
         scale_block_elements: int = 0,
         scale_block_rows: int = 0,
+        extent_axis: int = 0,
+        extent_numerator: int = 1,
+        extent_unit: int = 1,
+        extent_bias: int = 0,
     ) -> int:
         layout = (
             LayoutClass.BLOCK_SCALED if scale_object_id != NO_ID else LayoutClass.DENSE
         )
+        # Amendment A18 encodes a numerator and a unit of one as zero, so a
+        # view that needs nothing the amendment added is byte-identical to the
+        # same view written before it -- and the verifier refuses a literal
+        # one, because that is a value the wire format does not assign.
+        numerator = int(extent_numerator) if extent_numerator > 1 else 0
+        unit = int(extent_unit) if extent_unit > 1 else 0
+        bias = int(extent_bias)
+        axis = int(extent_axis) if (numerator or unit or bias) else 0
         key = (
             object_id,
             int(dtype),
@@ -997,6 +1036,10 @@ class _Emitter:
             scale_object_id,
             scale_block_elements,
             scale_block_rows,
+            axis,
+            numerator,
+            unit,
+            bias,
         )
         if key in self._views:
             return self._views[key]
@@ -1023,6 +1066,10 @@ class _Emitter:
             scale_object_id=scale_object_id,
             scale_block_elements=scale_block_elements,
             scale_block_rows=scale_block_rows,
+            extent_axis=axis,
+            extent_numerator=numerator,
+            extent_unit=unit,
+            extent_bias=bias,
             permissions=int(
                 Permission.READ | Permission.WRITE if writable else Permission.READ
             ),
@@ -1130,6 +1177,9 @@ class _Emitter:
     ) -> int:
         tensor = self.tensors[operand.tensor_id]
         dtype = dtype_of(operand.dtype)
+        reading = self._element_reading(plan, operand)
+        if reading is not None:
+            dtype = reading[0]
         self._require_dtype(dtype)
 
         # TA-ABI3-OPCONV-1 section 8: the ring output carries a dynamic term
@@ -1200,7 +1250,7 @@ class _Emitter:
                 strides = [operand.cols, 1]
                 node_stride = plan.shard_columns
             dims = [max(operand.tile_rows, 1), max(operand.tile_cols, 1)]
-            row_stride = dims[0] * strides[0]
+            row_stride = self._row_step(plan, operand) * strides[0]
             if contraction_weight and operand.bank:
                 # A routed bank is ``[E, N, K]``.  The expert is the outermost
                 # axis, so its stride is the whole matrix each expert holds --
@@ -1217,6 +1267,10 @@ class _Emitter:
             dims, strides, row_stride = self._declared_view(plan, operand)
             node_stride = plan.shard_columns
 
+        numerator = int(operand.extent_numerator)
+        dims, strides, numerator, row_stride = self._row_broadcast(
+            plan, operand, dims, strides, numerator, row_stride
+        )
         terms: list[DynamicTerm] = []
         for term in operand.terms:
             if term == "layer":
@@ -1238,18 +1292,64 @@ class _Emitter:
         # start: the host writes the prompt for a prefill and the one selected
         # token for a decode step at element zero.  Offsetting the read by
         # POSITION_START would look for the token where nothing was written.
+        walks_row = any(t == "row" for t in operand.terms) and any(
+            term.kind == int(SelectorKind.LOOP_INDUCTION) for term in terms
+        )
+        offset = base + self._select_offset(plan, operand)
+        if reading is not None:
+            # Same bytes, narrower element: every stride and the base are
+            # counted in the presented type, so both scale by the number of
+            # presented elements one declared element holds.
+            factor = reading[1]
+            strides = [int(x) * factor for x in strides]
+            offset *= factor
+            terms = [
+                DynamicTerm(term.kind, term.index, int(term.stride) * factor)
+                for term in terms
+            ]
         return self._view(
             object_id=object_id,
             dtype=dtype,
             dims=dims,
             strides=strides,
-            element_offset=base + self._select_offset(plan, operand),
+            element_offset=offset,
             dynamic=terms,
             writable=writable,
             scale_object_id=scale_object,
             scale_block_elements=scale_block,
             scale_block_rows=scale_rows,
+            # A18's third admission rule: the function is declared only where
+            # a term actually walks the axis it describes.  A row term that
+            # was dropped because its loop is not open takes the declaration
+            # with it, rather than leaving an extent nothing can resolve.
+            extent_numerator=numerator if walks_row else 1,
+            extent_unit=operand.extent_unit if walks_row else 1,
+            extent_bias=operand.extent_bias if walks_row else 0,
         )
+
+    def _element_reading(
+        self, plan: KernelPlan, operand: OperandPlan
+    ) -> tuple[DType, int] | None:
+        """The presented element type of a payload the graph reads narrowly.
+
+        Stated by the graph, never inferred: an ``i64`` tensor whose values fit
+        in 32 bits is not automatically a ``u32`` view, because which half of
+        each entry carries the value is a fact about the checkpoint and not
+        about the range of its contents.
+        """
+        kernel = self.kernels[plan.index]
+        name = str(kernel.attributes.get("table_element_reading", "") or "")
+        entry = _ELEMENT_READING.get(name)
+        if entry is None or operand.direction != "in" or operand.slot != 1:
+            return None
+        declared, presented, factor = entry
+        if operand.dtype != declared:
+            raise LoweringError(
+                f"kernel {plan.kernel_id} declares element reading {name!r} for "
+                f"a {declared} payload, but {operand.tensor_id!r} is "
+                f"{operand.dtype}"
+            )
+        return presented, factor
 
     def _position_view(
         self,
@@ -1363,6 +1463,22 @@ class _Emitter:
             dynamic=terms,
         )
 
+    @staticmethod
+    def _row_step(plan: KernelPlan, operand: OperandPlan) -> int:
+        """Elements of the row axis one iteration of the block loop covers.
+
+        Amendment A18: ``numerator * bound_divisor / unit``.  The *bias* is not
+        part of it -- a 128-row committed window is present in every iteration
+        and is not something an iteration advances by -- which is why the term
+        stride and the declared extent are different numbers on a view that
+        carries one, and why taking the stride from ``dim0`` was right only
+        while every extent was the symbol's own value.
+        """
+        block = max(int(plan.block_rows), 1)
+        scaled = int(operand.extent_numerator) * block
+        unit = max(int(operand.extent_unit), 1)
+        return max(scaled // unit, 1)
+
     def _declared_view(
         self, plan: KernelPlan, operand: OperandPlan
     ) -> tuple[list[int], list[int], int]:
@@ -1383,9 +1499,13 @@ class _Emitter:
             strides[axis] = running
             running *= extents[axis]
         dims = list(extents)
-        if lead_symbolic and "row" in operand.terms:
-            dims[0] = plan.block_rows
         row_stride = dims[0] * strides[0]
+        if lead_symbolic and "row" in operand.terms:
+            step = self._row_step(plan, operand)
+            dims[0] = step + int(operand.extent_bias)
+            row_stride = step * strides[0]
+        dims, strides = self._drop_unit_row_axis(plan, operand, dims, strides)
+        dims, strides = self._index_matrix(plan, operand, dims, strides)
         dims, strides = self._insert_broadcast_axis(plan, operand, dims, strides)
         dims, strides = self._drop_selected_axis(plan, operand, dims, strides)
         dims, strides = self._broadcast_to_principal(plan, operand, dims, strides)
@@ -1590,6 +1710,100 @@ class _Emitter:
             return dims, strides
         return [dims[0], 1, *dims[1:]], [strides[0], strides[0], *strides[1:]]
 
+    def _row_broadcast(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        dims: list[int],
+        strides: list[int],
+        numerator: int,
+        row_stride: int,
+    ) -> tuple[list[int], list[int], int, int]:
+        """One factor per row of the value it scales, read once per column.
+
+        ``VECTOR.SCALE``'s elementwise sub-case requires the factor's extents to
+        *equal* the value's trailing extents -- there is no column-vector rule
+        -- so a factor the graph states as one number per row is presented at
+        the value's own shape with a stride of zero on every axis but the
+        first.  Nothing is copied: a zero stride names one location, which is
+        what makes this a broadcast rather than a materialised tensor.
+
+        The routed expert product is the case.  The graph gives the weights as
+        ``[span, k]`` and the values as ``[k * span, W]``, which are the same
+        rows in the same order counted differently, so the folded trailing
+        extent multiplies the operand's A18 numerator: one iteration of the
+        token-block loop covers ``k`` times as many rows of this axis as it
+        covers tokens.
+        """
+        if (
+            int(plan.engine_family),
+            int(plan.engine_sub),
+        ) != (int(Major.VECTOR), int(Vector.SCALE)):
+            return dims, strides, numerator, row_stride
+        if operand.direction != "in" or operand.slot != 1:
+            return dims, strides, numerator, row_stride
+        principal = self._principal_extents(plan)
+        if principal is None or len(principal) < 2 or tuple(dims) == principal[1:]:
+            return dims, strides, numerator, row_stride
+        folded = 1
+        for extent in dims:
+            folded *= max(int(extent), 1)
+        if folded != principal[0]:
+            return dims, strides, numerator, row_stride
+        scale = folded // max(int(dims[0]), 1)
+        out_dims = list(principal)
+        out_strides = [1] + [0] * (len(principal) - 1)
+        return out_dims, out_strides, numerator * scale, folded
+
+    def _index_matrix(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        dims: list[int],
+        strides: list[int],
+    ) -> tuple[list[int], list[int]]:
+        """Present a per-row selector as the ``[rows, k]`` matrix its row states.
+
+        ``TENSOR.ROUTED_MATMUL`` reads ``k`` expert IDs per activation row and
+        states the operand as a rank-2 matrix, so that one row selecting one
+        expert and one row selecting several are the same descriptor with a
+        different ``k``.  The released graph declares one ID per dispatched row
+        and therefore a rank-1 tensor, which is the same numbers at the rank
+        the convention does not use -- so the trailing axis of one is added
+        here rather than the engine being asked to guess which rank it was
+        handed.
+        """
+        if (
+            int(plan.engine_family),
+            int(plan.engine_sub),
+        ) != (int(Major.TENSOR), int(TensorOp.ROUTED_MATMUL)):
+            return dims, strides
+        if operand.direction != "in" or operand.slot != 2 or len(dims) != 1:
+            return dims, strides
+        return [dims[0], 1], [max(strides[0], 1), 1]
+
+    def _drop_unit_row_axis(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        dims: list[int],
+        strides: list[int],
+    ) -> tuple[list[int], list[int]]:
+        """Present one token's row as the rows a within-row gather indexes.
+
+        The per-token loop has already made the leading extent one, so the
+        operand is ``[1, W]`` and the engine would index a single row.  What
+        the operation indexes is ``W``, so the degenerate axis is dropped and
+        the trailing one leads.  Nothing about the addressing changes: the
+        loop term still advances by one whole row, which is what the extent it
+        replaces was worth.
+        """
+        if not is_row_gather(self.kernels[plan.index], self.tensors):
+            return dims, strides
+        if len(dims) < 2 or dims[0] != 1:
+            return dims, strides
+        return dims[1:], strides[1:]
+
     def _broadcast_to_principal(
         self,
         plan: KernelPlan,
@@ -1617,6 +1831,10 @@ class _Emitter:
             # weight is one per reduced index and a base carries the output
             # shape, so neither is a lower-rank operand awaiting broadcast.
             return dims, strides
+        if operand.slot in _DECLARED_RANK_SLOTS.get(
+            (int(plan.engine_family), int(plan.engine_sub)), ()
+        ):
+            return dims, strides
         principal = self._principal_extents(plan)
         if principal is None or len(principal) != len(dims) + 1:
             return dims, strides
@@ -1643,7 +1861,12 @@ class _Emitter:
             value, _ = _static_extent(axis, self.span_max)
             extents.append(max(int(value), 1))
         if isinstance(tensor.shape[0], Symbolic) and "row" in first.terms:
-            extents[0] = plan.block_rows
+            # Amendment A18: the principal's leading extent is what *its* own
+            # affine function makes of one iteration, which is the block only
+            # when that function is the symbol's own value.  Reading the raw
+            # block here made a ``[6 * span, W]`` principal look 512 rows tall
+            # and every alignment against it silently decline to fire.
+            extents[0] = self._row_step(plan, first) + int(first.extent_bias)
         return tuple(extents)
 
     def _selection_view(self, operand: OperandPlan, *, writable: bool) -> int:
@@ -2066,9 +2289,19 @@ class _Emitter:
             second,
             scale_bits=_binary32_bits(
                 kernel.attributes,
+                # Every spelling the released exporters use for "the constant
+                # this operation scales by".  An unrecognised one is not a
+                # missed optimisation: the field stays zero, the engine refuses
+                # an operator whose scale is not a positive finite binary32,
+                # and the refusal names the operator rather than the attribute
+                # that was never read -- so it fails a long way from its cause.
+                # ``head_weight_scale_binary32`` is ``VECTOR.INDEX_SCORE``'s,
+                # and its absence here is the same class of defect as
+                # ``context_length`` missing from a symbol map.
                 (
                     "scale_bits",
                     "score_scale_binary32",
+                    "head_weight_scale_binary32",
                     "scale_bf16_code",
                     "scale",
                 ),
