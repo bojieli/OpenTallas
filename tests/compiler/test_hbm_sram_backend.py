@@ -255,7 +255,7 @@ def dense_graph(
         ),
         generation_policy={
             "eos_token_ids": [vocab - 1],
-            "max_new_tokens": 64,
+            "maximum_new_tokens": 64,
             "vocabulary_size": vocab,
         },
     )
@@ -402,7 +402,7 @@ def moe_graph(
         ),
         generation_policy={
             "eos_token_ids": [vocab - 1],
-            "max_new_tokens": 32,
+            "maximum_new_tokens": 32,
             "vocabulary_size": vocab,
         },
     )
@@ -488,7 +488,7 @@ def alternating_graph(*, pairs: int = 4, hidden: int = 256, span_max: int = 512)
             Entrypoint("prefill", ("tokens",), ("out",), ()),
             Entrypoint("decode", ("tokens",), ("out",), ()),
         ),
-        generation_policy={"eos_token_ids": [511], "max_new_tokens": 8,
+        generation_policy={"eos_token_ids": [511], "maximum_new_tokens": 8,
                            "vocabulary_size": 512},
     )
 
@@ -1413,7 +1413,7 @@ def _broadcast_graph(*, extent: int = 4, result_shape=None) -> KernelGraph:
             Entrypoint("prefill", ("tokens",), ("out",), ()),
             Entrypoint("decode", ("tokens",), ("out",), ()),
         ),
-        generation_policy={"eos_token_ids": [0], "max_new_tokens": 1,
+        generation_policy={"eos_token_ids": [0], "maximum_new_tokens": 1,
                            "vocabulary_size": 8},
     )
 
@@ -1491,7 +1491,7 @@ def _select_graph(*, axis: int = 1, index: int = 1, result_shape=None) -> Kernel
             Entrypoint("prefill", ("tokens",), ("out",), ()),
             Entrypoint("decode", ("tokens",), ("out",), ()),
         ),
-        generation_policy={"eos_token_ids": [0], "max_new_tokens": 1,
+        generation_policy={"eos_token_ids": [0], "maximum_new_tokens": 1,
                            "vocabulary_size": 8},
     )
 
