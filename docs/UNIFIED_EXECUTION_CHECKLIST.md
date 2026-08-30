@@ -120,6 +120,37 @@
 - [x] W10.5 DeepSeek long-context campaign — largest context **actually executed is 8,000 tokens**; 32K/128K/200K exhaust GPU memory in the mHC hyper-connection, not the sparse indexer. A 200,000-token prefill needs a chunked rewrite of the vendor prefill path on any GPU: `hc_post` alone is 48.8 GiB at that context and the indexer term 2.33 TiB, while persistent KV state is only 2.32 GiB
 - [x] W10.6 DeepSeek agentic scenario — 47 tokens to EOS, well-formed DSML tool call, byte-identical across independent process invocations
 
+## W12 — First-principles roofline model *(the actual deliverable)*
+
+The program's purpose is a quantitative ROM-versus-HBM comparison. The functional
+lanes are a precondition for it, not the product. These items are the product.
+
+- [ ] W12.1 `src/opentallas/roofline.py` — area-constrained roofline: a silicon
+  area budget is allocated across ROM array, compute, SRAM, interconnect and HBM
+  PHY, and capacity, bandwidth and compute roof are **derived outputs**. Replaces
+  the placeholder profiles whose capacity and compute roof were independent free
+  parameters with nothing tying either to area
+- [ ] W12.2 `configs/hardware/technology.json` — every density, latency and
+  energy figure graded `measured`/`published`/`derived`/`assumed` with a source
+- [ ] W12.3 Latency model for distributed decode — decode is sequential across
+  tokens *and* layers, and at batch 1 a pipelined array supplies no parallelism
+  at all, so topology is chosen by hop latency against the per-token budget:
+  single chip (0 hops), array with pipeline parallelism (N−1 serial hops), array
+  with tensor parallelism (2 × layers collectives), wafer (on-wafer hops)
+- [ ] W12.4 MoE utilisation term — ROM weights are local to compute, so an
+  unselected expert region contributes neither bandwidth nor compute. Engagement
+  is `1 − (1 − k/N)^B`, not a constant
+- [ ] W12.5 **Validation gate: the model must reproduce Taalas HC1** — an 8B
+  model on 815 mm² at N6 near ~17,000 tok/s per user, as a named test that fails
+  loudly. A model that cannot reproduce a shipping part must not be used to
+  predict one that does not exist. Second gate: an A100 on an 8B model at batch 1
+  must come out weight-bound at ~254 tok/s, which is pure arithmetic
+- [ ] W12.6 Iso-area studies with the silicon area stated on **both** sides, both
+  topologies where viable, and the latency crossover reported rather than a
+  topology assumed
+- [ ] W12.7 `tools/run_roofline_studies.py` and `results/roofline/` — canonical
+  JSON, rendered report, consistency audit
+
 ## W11 — Governed comparison and release
 
 - [~] W11.1 Qwen ROM vs HBM — **produced, and it is the storage-class thesis in executed counters** (`results/abi3/comparison_qwen_rom_vs_hbm.json`). Both lanes decoded 24 tokens matching the oracle, the two token sequences are identical, evidence class `functional_artifact_only`, `depends_on_assumption` false. **Five counters differ and all five are memory traffic**: the ROM target reads 363,485,791,728 B from ROM and the HBM target reads 366,294,894,160 B from HBM, and the ROM target moves 437 MB / 61 MB through SRAM where the HBM target moves none. Nothing else in 115 counters differs. That is the claim — *the two deployments differ only in where the bytes live* — demonstrated on executed counters rather than argued. The DeepSeek half waits on W6.3/W6.4
