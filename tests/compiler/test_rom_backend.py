@@ -41,6 +41,7 @@ from compiler.backends.rom.qwen3 import (
     qwen3_rom_capability,
 )
 from compiler.ir.v3.kernel_ir import (
+    BindingSegment,
     CheckpointBinding,
     Entrypoint,
     Kernel,
@@ -141,6 +142,90 @@ class _GraphBuilder:
                     offset=offset,
                     bytes=size,
                     sha256=hashlib.sha256(payload).hexdigest(),
+                ),
+                scale_tensor_id=scale_id,
+                scale_block_elements=scale_block_elements,
+            )
+        )
+        return tensor_id
+
+    def stacked_weight(
+        self,
+        tensor_id: str,
+        dtype: str,
+        shape: tuple[int, ...],
+        *,
+        experts: int,
+        scale_block_elements: int = 0,
+        scale_dtype: str = "e8m0",
+    ) -> str:
+        """One rank-3 ``[E, N, K]`` bank whose payload is ``E`` named ranges.
+
+        This is the shape the DeepSeek exporter publishes for a routed expert
+        stack: one operand, one declared tensor, and a *segmented* binding whose
+        segments are the individual experts as the checkpoint stores them --
+        each its own source tensor, offset and digest.
+
+        The experts are deliberately laid down out of order, because that is
+        how the released checkpoint stores them: they are interleaved with the
+        other projections and lexicographically ordered, so expert 10 precedes
+        expert 2.  A backend that reduced the binding to its ``(path, offset,
+        bytes)`` totals would still reconcile byte for byte against a
+        contiguous layout, and only an out-of-order one makes the reduction
+        visibly wrong.
+        """
+        elements = 1
+        for dim in shape:
+            elements *= dim
+        size = (elements * DTYPE_BITS_BY_NAME[dtype] + 7) // 8
+        assert size % experts == 0
+        per_expert = size // experts
+        base = len(self.blob)
+        self.blob.extend(bytes(size))
+        head, _, tail = tensor_id.partition(".experts.")
+        segments: list[BindingSegment] = []
+        for expert in range(experts):
+            # A fixed permutation of the slots: co-prime stride, so every slot
+            # is used exactly once and expert ``e`` is not at slot ``e``.
+            slot = (expert * 7 + 3) % experts
+            offset = base + slot * per_expert
+            payload = self._payload(per_expert, dtype)
+            self.blob[offset : offset + per_expert] = payload
+            segments.append(
+                BindingSegment(
+                    source_name=f"{head}.experts.{expert}.{tail}",
+                    path=self.path.name,
+                    offset=offset,
+                    bytes=per_expert,
+                    sha256=hashlib.sha256(payload).hexdigest(),
+                )
+            )
+        scale_id: str | None = None
+        if scale_block_elements:
+            scale_id = f"{head}.experts.{tail.rsplit('.', 1)[0]}.scale"
+            self.stacked_weight(
+                scale_id,
+                scale_dtype,
+                (*shape[:-1], shape[-1] // scale_block_elements),
+                experts=experts,
+            )
+        self.tensors.append(
+            Tensor(
+                tensor_id=tensor_id,
+                dtype=dtype,
+                shape=shape,
+                role="weight",
+                binding=CheckpointBinding(
+                    source_name=tensor_id,
+                    path=self.path.name,
+                    offset=base,
+                    bytes=size,
+                    sha256=hashlib.sha256(
+                        b"".join(
+                            self.blob[s.offset : s.offset + s.bytes] for s in segments
+                        )
+                    ).hexdigest(),
+                    segments=tuple(segments),
                 ),
                 scale_tensor_id=scale_id,
                 scale_block_elements=scale_block_elements,
@@ -950,21 +1035,21 @@ def deepseek_shaped_graph(
             expert_output = builder.value(
                 f"{prefix}.expert_output", "bf16", (span, 2, expert_width), "activation"
             )
-            # The routed bank is named by attribute, exactly as the DeepSeek
-            # front end does: one tensor per expert, ascending logical ID.
-            bank = [
-                builder.weight(
-                    f"{base}.mlp.experts.{expert}.w1.weight",
-                    "mxfp4_e2m1",
-                    (expert_width, hidden),
-                    scale_block_elements=32,
-                )
-                for expert in range(experts)
-            ]
+            # The routed bank is one operand, exactly as the DeepSeek front end
+            # publishes it: a rank-3 ``[E, N, K]`` tensor whose segmented
+            # binding names every expert's checkpoint range in ascending
+            # logical order.
+            bank = builder.stacked_weight(
+                f"{base}.mlp.experts.w1.weight",
+                "mxfp4_e2m1",
+                (experts, expert_width, hidden),
+                experts=experts,
+                scale_block_elements=32,
+            )
             builder.kernel(
                 f"{prefix}.routed_projection",
                 "ROUTED_MATMUL",
-                (dispatched, dispatched_ids),
+                (dispatched, bank, dispatched_ids),
                 (expert_output,),
                 contract="mxfp4_e2m1_fp8_e4m3fn_fp32_blocked_rne_v1",
                 attributes={
@@ -972,7 +1057,6 @@ def deepseek_shaped_graph(
                     "expert_weight_block_elements": 32,
                     "expert_weight_dtype": "mxfp4_e2m1",
                     "expert_weight_order": "ascending_logical_expert_id",
-                    "expert_weight_tensors": bank,
                     "input_dtype": "bf16",
                     "second_input_dtype": "mxfp4_e2m1",
                 },
@@ -2129,6 +2213,23 @@ def test_cli_reads_back_the_ir_it_was_given(tmp_path):
     assert reloaded.graph_id == graph.graph_id
 
 
+def test_both_backends_state_the_same_operand_conventions():
+    """One convention, two backends -- and two tables that must agree.
+
+    ``TA-ABI3-OPCONV-1`` is a property of the ABI, not of a target: the slot an
+    operand occupies and the slot the convention requires to stay ``NO_ID`` are
+    the same on ROM and on HBM.  Each backend states them in its own table so
+    that neither imports the other, which is exactly the arrangement in which
+    they can silently drift apart -- so the agreement is checked rather than
+    assumed.
+    """
+    from compiler.backends.hbm_sram import plan as hbm
+    from compiler.backends.rom.common import program as rom
+
+    assert rom.ABI_EMPTY_INPUT_SLOTS == hbm._ABI_EMPTY_INPUT_SLOTS
+    assert rom._SLOT_PERMUTATION.items() >= hbm._SLOT_PERMUTATION.items()
+
+
 def test_lowering_table_is_complete():
     from compiler.ir.v3.lowering import check_table_complete
 
@@ -2252,11 +2353,9 @@ def test_routed_expert_bank_is_one_region_and_one_view(deepseek_build, deepseek_
     deployment, plan = deepseek_build
     banks = [r for r in plan.regions if r.role == "expert_bank"]
     assert banks
-    routed = [
-        k for k in deepseek_graph.kernels if "expert_weight_tensors" in k.attributes
-    ]
+    routed = [k for k in deepseek_graph.kernels if k.kind == "ROUTED_MATMUL"]
     assert routed
-    experts = len(routed[0].attributes["expert_weight_tensors"])
+    experts = int(routed[0].attributes["expert_count"])
     for region in banks:
         # One slot per loop iteration, holding that layer's whole bank.
         assert len(region.members) == region.slot_count * experts

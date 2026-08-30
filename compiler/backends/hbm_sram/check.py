@@ -31,7 +31,13 @@ from __future__ import annotations
 
 from typing import Any, Iterable, Mapping, Sequence
 
-from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Symbolic, Tensor
+from compiler.ir.v3.kernel_ir import (
+    CheckpointBinding,
+    Kernel,
+    KernelGraph,
+    Symbolic,
+    Tensor,
+)
 from compiler.ir.v3.lowering import engine_for
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
@@ -110,7 +116,9 @@ def check_deployment(
 
     tensors = {t.tensor_id: t for t in graph.tensors}
     bands = _reconstruct_bands(graph, tensors)
-    expected_groups = _reconstruct_weight_groups(graph, tensors, bands)
+    expected_groups, expected_extents = _reconstruct_weight_groups(
+        graph, tensors, bands
+    )
     first_iteration = {
         b["layers"][offset] for b in bands for offset in range(b["period"])
     }
@@ -204,9 +212,10 @@ def check_deployment(
     checks.setdefault("zero_copy_weights", True)
 
     declared = {
-        (t.binding.path, t.binding.offset, t.binding.bytes, t.binding.sha256)
+        rng
         for t in graph.tensors
         if t.binding is not None
+        for rng in _binding_ranges(t.binding)
     }
     materialised = {tuple(seg) for group in actual_groups for seg in group}
     missing = declared - materialised
@@ -233,15 +242,18 @@ def check_deployment(
         f"{len(expected_sets)} objects, the deployment declares {len(actual_sets)}",
     )
 
-    for role_key, segments in expected_groups.items():
-        if not role_key.startswith("role:") or len(segments) < 2:
+    for role_key, extents in expected_extents.items():
+        if len(extents) < 2:
             continue
-        sizes = {seg[2] for seg in segments}
+        # The per-*layer* extent, not the per-segment one: a role whose payload
+        # arrives as many authenticated ranges still has to give the layer loop
+        # one constant stride, and comparing segment sizes would find every
+        # expert the same size and say nothing about the layer.
         require(
             "uniform_layer_stride",
-            len(sizes) == 1,
-            f"role {role_key} has {len(sizes)} distinct per-layer extents, so the "
-            "layer loop cannot carry a constant stride",
+            len(set(extents)) == 1,
+            f"role {role_key} has {len(set(extents))} distinct per-layer extents, "
+            "so the layer loop cannot carry a constant stride",
         )
 
     # -- 4. loop compression ----------------------------------------------
@@ -750,20 +762,44 @@ def _uniform(
     return True
 
 
+#: One authenticated checkpoint range: path, file offset, extent, digest.
+_Range = tuple[str, int, int, str]
+
+
+def _binding_ranges(binding: CheckpointBinding) -> list[_Range]:
+    """The authenticated checkpoint ranges one binding names.
+
+    A segmented binding names one range per segment -- DeepSeek's 256 routed
+    experts per layer -- and the flat ``(path, offset, bytes)`` triple it also
+    carries is the *total*, not a range anything may read: the experts are
+    interleaved in the shard.  Reading the totals would let a placement that
+    covers the wrong bytes reconcile against this checker exactly.
+    """
+    if binding.segments:
+        return [(s.path, s.offset, s.bytes, s.sha256) for s in binding.segments]
+    return [(binding.path, binding.offset, binding.bytes, binding.sha256)]
+
+
 def _reconstruct_weight_groups(
     graph: KernelGraph, tensors: Mapping[str, Tensor], bands: Sequence[Mapping[str, Any]]
-) -> dict[str, list[tuple[str, int, int, str]]]:
+) -> tuple[dict[str, list[_Range]], dict[str, list[int]]]:
     """Independently recompute the expected weight objects.
 
     Rule one: one object per weight role, segments in layer order.  Rule two:
     everything left over grouped by adjacency inside one checkpoint file.
+
+    Returns the ranges each object holds and, for the role objects, the
+    per-layer byte extent of each member -- which is what the layer stride is
+    made of and is not recoverable from the ranges once a segmented binding has
+    been expanded.
     """
     by_layer: dict[int, list[Kernel]] = {}
     for kernel in graph.kernels:
         if kernel.layer is not None:
             by_layer.setdefault(kernel.layer, []).append(kernel)
 
-    groups: dict[str, list[tuple[str, int, int, str]]] = {}
+    groups: dict[str, list[_Range]] = {}
+    extents: dict[str, list[int]] = {}
     claimed: set[str] = set()
     for band in bands:
         period = band["period"]
@@ -799,15 +835,13 @@ def _reconstruct_weight_groups(
                 if not members:
                     continue
                 claimed.update(members)
-                groups[f"role:{band['first_layer']}.{position}.{slot}"] = [
-                    (
-                        tensors[m].binding.path,
-                        tensors[m].binding.offset,
-                        tensors[m].binding.bytes,
-                        tensors[m].binding.sha256,
-                    )
+                role_key = f"role:{band['first_layer']}.{position}.{slot}"
+                groups[role_key] = [
+                    rng
                     for m in members
+                    for rng in _binding_ranges(tensors[m].binding)
                 ]
+                extents[role_key] = [tensors[m].binding.bytes for m in members]
 
     leftovers = sorted(
         (
@@ -828,8 +862,6 @@ def _reconstruct_weight_groups(
         if path != binding.path or not 0 <= binding.offset - end <= _MERGE_SLACK:
             run_index += 1
             path = binding.path
-        groups.setdefault(f"file:{run_index}", []).append(
-            (binding.path, binding.offset, binding.bytes, binding.sha256)
-        )
+        groups.setdefault(f"file:{run_index}", []).extend(_binding_ranges(binding))
         end = binding.offset + binding.bytes
-    return groups
+    return groups, extents

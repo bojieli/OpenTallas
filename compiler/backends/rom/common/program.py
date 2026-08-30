@@ -125,6 +125,17 @@ INDEX_DTYPES = frozenset({"u32", "i32", "u64", "i64"})
 #: reconciliation is a view's element type and stride, not a conversion.
 WIDE_INDEX_DTYPES = frozenset({"u64", "i64"})
 
+#: The readings a kernel may declare for a table whose stored element is wider
+#: than the element every reader of it uses, and the ABI type each names.  A
+#: reading is a property of the *data* -- it says what the bytes mean and how
+#: wide the meaning is -- so a graph declares it on the kernel that reads the
+#: table.  Deriving it from the operator's name instead is how it was lost when
+#: an exporter renamed the operation to the one it had always performed.
+TABLE_ELEMENT_READINGS: Mapping[str, DType] = {
+    "low_u32_of_i64": DType.U32,
+    "low_u32_of_u64": DType.U32,
+}
+
 #: ``TA-ABI3-OPCONV-1`` amendment A7: the sequential contract is the scalar
 #: oracle used for numeric qualification; execution declares the blocked
 #: contract.  The substitution is applied identically for ROM and HBM, so the
@@ -217,10 +228,25 @@ COMPRESS_SUBCASE: Mapping[str, int] = {
 #: ``TENSOR.EMBED_LOOKUP`` is "exact row gather from a table indexed by a 32-bit
 #: ID, no arithmetic and therefore no conversion", which is the operation
 #: exactly, down to the bound check on the ID.  The substitution belongs in the
-#: exporter -- the kernel kind should be ``EMBEDDING_LOOKUP`` -- and is recorded
-#: here because this backend must execute the graph as published.
+#: exporter -- the kernel kind should be ``EMBEDDING_LOOKUP`` -- and the
+#: DeepSeek exporter has since made exactly that substitution, keeping
+#: ``source_operation_kind: HASH_ROUTE`` as the record of what the released
+#: module calls it.  This row therefore no longer fires for the published
+#: graph; it remains so that a graph that still names the old kind lowers to
+#: the operator that performs the operation rather than to one that does not.
 ENGINE_OVERRIDE: Mapping[str, EngineOp] = {
     "HASH_ROUTE": EngineOp(Major.TENSOR, TensorOp.EMBED_LOOKUP, 2, 1),
+}
+
+#: ABI input slots the operand convention requires to be ``NO_ID``, by neutral
+#: kind.  ``VECTOR.COMPRESS`` sub-case 2 is the case: its ``in1`` is the
+#: projection matrix, which a state update has none of, while its ``in2`` is
+#: the position embedding, which is exactly what the APE table is.  The
+#: operands are not renumbered around the hole -- they are placed either side
+#: of it.  This mirrors ``_ABI_EMPTY_INPUT_SLOTS`` in
+#: ``compiler/backends/hbm_sram/plan.py``: one convention, two backends.
+ABI_EMPTY_INPUT_SLOTS: Mapping[str, tuple[int, ...]] = {
+    "COMPRESS_STATE_UPDATE": (1,),
 }
 
 MHC_SUBCASE: Mapping[str, int] = {
@@ -841,11 +867,12 @@ class RomLowering:
         * its block-scale tensor, named by ``Tensor.scale_tensor_id`` -- a scale
           is immutable model content and belongs in ROM beside the weight it
           scales; and
-        * a routed **expert bank**, named by a kernel's
-          ``expert_weight_tensors`` attribute.  One slot of that region is one
-          layer's whole bank in ascending logical expert order, which is what
-          lets one ROUTED_MATMUL descriptor address any runtime-selected expert
-          and what lets expert dispatch enable only the tiles that hold them.
+        * a routed **expert bank**: an ordinary weight operand whose declared
+          rank-3 ``[E, N, K]`` shape and segmented binding make it one.  One
+          slot of that region is one layer's whole bank, one member per expert
+          in ascending logical expert order, which is what lets one
+          ROUTED_MATMUL descriptor address any runtime-selected expert and what
+          lets expert dispatch enable only the tiles that hold them.
         """
         requests: list[RegionRequest] = []
         placed: set[str] = set()
@@ -855,24 +882,35 @@ class RomLowering:
                 return RomCoordinate()
             return self.policy.place_region(key, role, len(requests), size)
 
-        def entry(tensor: Tensor) -> tuple[str, int, str, int, str]:
-            member = self._member(tensor, 0, 0)
-            return (
-                member.tensor_id,
-                member.bytes,
-                member.source_path,
-                member.source_offset,
-                member.source_sha256,
-            )
+        def entries(tensor: Tensor) -> list[tuple[str, int, str, int, str]]:
+            """One placement entry per authenticated range this tensor holds.
+
+            A stacked expert bank contributes one entry per expert, because its
+            binding is segmented and each segment is its own checkpoint tensor.
+            """
+            return [
+                (
+                    member.tensor_id,
+                    member.bytes,
+                    member.source_path,
+                    member.source_offset,
+                    member.source_sha256,
+                )
+                for member in self._members(tensor, 0, 0)
+            ]
 
         def emit(
             key: str,
             role: str,
             dtype: str,
-            slots: list[list[tuple[str, int, str, int, str]]],
+            columns: Sequence[Sequence[Tensor]],
             elements: int,
         ) -> None:
-            names = [entry_[0] for slot in slots for entry_ in slot]
+            # ``placed`` and the region index are keyed by *tensor*: a tensor is
+            # what a kernel names as an operand.  The region's members are the
+            # ranges those tensors are made of, which for a segmented binding is
+            # finer than one per tensor.
+            names = [tensor.tensor_id for column in columns for tensor in column]
             if any(name in placed for name in names):
                 if all(name in placed for name in names):
                     return
@@ -880,7 +918,11 @@ class RomLowering:
                     f"ROM region {key!r} mixes already-placed and unplaced weights"
                 )
             placed.update(names)
-            size = sum(entry_[1] for slot in slots for entry_ in slot)
+            slots = [
+                [entry for tensor in column for entry in entries(tensor)]
+                for column in columns
+            ]
+            size = sum(entry[1] for slot in slots for entry in slot)
             requests.append(
                 RegionRequest.striped(
                     key,
@@ -891,9 +933,9 @@ class RomLowering:
                     coordinate(key, role, size),
                 )
             )
-            for slot_index, slot in enumerate(slots):
-                for entry_ in slot:
-                    self._region_of_tensor[entry_[0]] = (key, slot_index)
+            for slot_index, column in enumerate(columns):
+                for tensor in column:
+                    self._region_of_tensor[tensor.tensor_id] = (key, slot_index)
 
         def place_operand(
             key: str, role: str, columns: Sequence[Sequence[Tensor]]
@@ -916,7 +958,7 @@ class RomLowering:
                 key,
                 role,
                 head.dtype,
-                [[entry(t) for t in column] for column in columns],
+                columns,
                 sum(self._elements(t) for t in columns[0]),
             )
             scales = [
@@ -933,24 +975,13 @@ class RomLowering:
                 f"{key}.scale",
                 f"{role}_scale",
                 scales[0][0].dtype,
-                [[entry(t) for t in column] for column in scales],
+                scales,
                 sum(self._elements(t) for t in scales[0]),
             )
             self._scale_of_region[key] = (
                 f"{key}.scale",
                 int(head.scale_block_elements or 0),
                 self._scale_block_rows(head),
-            )
-
-        def expert_bank(key: str, columns: Sequence[Sequence[Kernel]]) -> None:
-            """Place one routed expert bank per group of a compressed run."""
-            names = [
-                list(kernel.attributes["expert_weight_tensors"]) for kernel in columns
-            ]
-            place_operand(
-                key,
-                "expert_bank",
-                [[self.tensors[n] for n in group] for group in names],
             )
 
         # -- prologue and epilogue weights: one slot each -----------------
@@ -961,11 +992,9 @@ class RomLowering:
                     continue
                 place_operand(
                     f"rom.global.k{kernel.index:05d}.s{slot}",
-                    "global_weight",
+                    self._weight_role(kernel, tensor, "global_weight"),
                     [[tensor]],
                 )
-            if "expert_weight_tensors" in kernel.attributes:
-                expert_bank(f"rom.global.k{kernel.index:05d}.experts", [kernel])
 
         # -- layer-run weights: one region per (run, position, slot) ------
         for run in self.analysis.runs:
@@ -977,12 +1006,8 @@ class RomLowering:
                     columns = [[self.tensors[k.inputs[slot]]] for k in column]
                     place_operand(
                         f"rom.r{run.index}.p{position:03d}.s{slot}",
-                        "layer_weight",
+                        self._weight_role(head, columns[0][0], "layer_weight"),
                         columns,
-                    )
-                if "expert_weight_tensors" in head.attributes:
-                    expert_bank(
-                        f"rom.r{run.index}.p{position:03d}.experts", list(column)
                     )
 
         # A derived constant is placed as its own mask-programmed object on
@@ -1057,7 +1082,85 @@ class RomLowering:
             )
         return max(rows // scale_rows, 1)
 
-    def _member(self, tensor: Tensor, slot: int, offset: int) -> RomMember:
+    def _expert_bank_extent(self, kernel: Kernel, tensor: Tensor) -> int:
+        """The leading expert extent of a routed weight bank, or ``0``.
+
+        A routed contraction reads one weight operand holding every expert's
+        matrix, and the engine resolves the runtime expert ID *inside* that
+        view (TA-ABI3-OPCONV-1 section 2).  The expert axis is therefore an
+        addressing dimension and never a program loop, and the operand is
+        ``[E, N, K]`` rather than the ``[N, K]`` every other contraction weight
+        is.
+
+        The bank is recognised from the data -- the kernel declares how many
+        experts it selects among, and the operand's own leading extent is that
+        many -- rather than from the operator's name.  A name is not a shape:
+        keying this on ``kind == "ROUTED_MATMUL"`` would drop the expert axis
+        the moment an exporter renamed the operation, which is exactly how the
+        route table's narrowing was lost.
+        """
+        declared = int(kernel.attributes.get("expert_count", 0) or 0)
+        if declared <= 1:
+            return 0
+        dims = self._dims(tensor)
+        if len(dims) != 3 or dims[0] != declared:
+            return 0
+        return declared
+
+    def _narrowed_read(self, kernel: Kernel, tensor: Tensor) -> DType | None:
+        """The element type a declared table reading asks this weight be read at.
+
+        A checkpoint may store a table at 64 bits that every reader of it uses
+        at 32 -- DeepSeek's ``tid2eid`` holds expert IDs below 256 in int64.
+        The kernel that reads the table declares the reading, so the backend
+        presents the same bytes through a narrower element type and a doubled
+        stride: a description, never a conversion pass.
+        """
+        declared = str(kernel.attributes.get("table_element_reading", ""))
+        if not declared:
+            return None
+        narrow = TABLE_ELEMENT_READINGS.get(declared)
+        if narrow is None:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares table_element_reading "
+                f"{declared!r}, which names no ABI 3.0 element type"
+            )
+        if tensor.dtype not in WIDE_INDEX_DTYPES:
+            return None
+        # The reading is the *table's*.  When the kernel states the table's row
+        # count, only the operand with that many rows is read through it, so a
+        # second wide operand of the same kernel keeps its own element type.
+        rows = int(kernel.attributes.get("table_rows", 0) or 0)
+        if rows and self._dims(tensor)[0] != rows:
+            return None
+        return narrow
+
+    def _weight_role(self, kernel: Kernel, tensor: Tensor, default: str) -> str:
+        """The ROM region role this weight operand is placed under."""
+        if self._expert_bank_extent(kernel, tensor):
+            return "expert_bank"
+        return default
+
+    def _members(self, tensor: Tensor, slot: int, offset: int) -> list[RomMember]:
+        """The ROM members one weight tensor contributes, in payload order.
+
+        A binding is usually one authenticated checkpoint range and yields one
+        member.  A *segmented* binding is a bank the model addresses as one
+        operand and the checkpoint stores apart -- DeepSeek's 256 routed
+        experts per layer, interleaved and lexicographically ordered in the
+        shards -- and yields one member per segment, each naming its own source
+        tensor, shard file, file offset and digest.
+
+        Collapsing a segmented binding to ``(binding.path, binding.offset,
+        binding.bytes)`` reconciles byte for byte and is nevertheless wrong in
+        every particular: the segments are not contiguous and not even
+        ascending in the file, so a single 1 GiB range starting at expert 0
+        reads 255 other experts' bytes.  Nothing downstream would complain --
+        the totals balance and the digest is the binding's own -- which is
+        exactly why the expansion happens here, where the segments are still
+        named.  It is also what keeps the placement granularity the ROM layout
+        policy works in: an expert, not a whole bank.
+        """
         binding = tensor.binding
         if binding is None:
             if tensor.generator:
@@ -1084,16 +1187,28 @@ class RomLowering:
                 f"{binding.transform!r}; a zero-copy ROM region can only place "
                 "identity-transformed checkpoint bytes"
             )
-        return RomMember(
-            tensor_id=tensor.tensor_id,
-            slot=slot,
-            offset_bytes=offset,
-            bytes=binding.bytes,
-            source_path=binding.path,
-            source_offset=binding.offset,
-            source_sha256=binding.sha256,
-            dtype=tensor.dtype,
-        )
+        members: list[RomMember] = []
+        cursor = offset
+        # An unsegmented binding keeps the tensor's own identity; a segment
+        # names the checkpoint tensor it is, which is what makes an expert
+        # addressable by name in the plan, the manifest and the inverse proof.
+        for source in binding.segments or (binding,):
+            members.append(
+                RomMember(
+                    tensor_id=(
+                        source.source_name if binding.segments else tensor.tensor_id
+                    ),
+                    slot=slot,
+                    offset_bytes=cursor,
+                    bytes=source.bytes,
+                    source_path=source.path,
+                    source_offset=source.offset,
+                    source_sha256=source.sha256,
+                    dtype=tensor.dtype,
+                )
+            )
+            cursor += source.bytes
+        return members
 
     # -- descriptor helpers ----------------------------------------------
     def _engine_spec(self, family: Major) -> Mapping[str, int]:
@@ -2066,9 +2181,6 @@ class RomLowering:
         return widest
 
     def _contraction_weight(self, kernel: Kernel) -> Tensor | None:
-        if "expert_weight_tensors" in kernel.attributes:
-            names = list(kernel.attributes["expert_weight_tensors"])
-            return self.tensors[names[0]] if names else None
         for name in kernel.inputs[1:]:
             tensor = self.tensors[name]
             if tensor.role in WEIGHT_ROLES:
@@ -2893,16 +3005,24 @@ class RomLowering:
         if tensor.role in WEIGHT_ROLES:
             # The route table ships as int64 and every reader of it -- the
             # engine, the result tensor, the released model's own use of it --
-            # is 32-bit.  See ENGINE_OVERRIDE.
-            narrow = (
-                DType.U32
-                if kernel.kind == "HASH_ROUTE"
-                and slot == 1
-                and tensor.dtype in WIDE_INDEX_DTYPES
-                else None
-            )
+            # is 32-bit, so the table is *read* through a U32 view over the
+            # same bytes.  The graph says which tables those are, by name of
+            # the reading, in ``table_element_reading``.
+            #
+            # This was keyed on ``kind == "HASH_ROUTE"`` and the exporter then
+            # correctly renamed that kind to the exact row gather it always
+            # was.  The narrowing silently stopped applying, and the lane
+            # stopped 5,247 instructions short of its retained baseline on an
+            # I64 table written into a U32 result.  A numeric narrowing is a
+            # property of the data, never of the operator's name; keying it on
+            # a different name would only move the same defect.
             return self._weight_view(
-                name, run=run, shape=shape, slot=slot, narrow_dtype=narrow
+                name,
+                run=run,
+                shape=shape,
+                slot=slot,
+                bank=self._expert_bank_extent(kernel, tensor),
+                narrow_dtype=self._narrowed_read(kernel, tensor),
             )
         if kernel.kind == "ROUTED_MATMUL" and tensor.dtype in INDEX_DTYPES:
             # TA-ABI3-OPCONV-1 section 2: the expert-ID operand is
@@ -3079,6 +3199,7 @@ class RomLowering:
         slot: int = 1,
         group_rows: int = 0,
         group: int = 0,
+        bank: int = 0,
         narrow_dtype: DType | None = None,
     ) -> int:
         """One weight operand's view.
@@ -3090,6 +3211,12 @@ class RomLowering:
         on a whole scale block because the group boundary is a multiple of the
         block-scale row tiling -- amendment A15's addressing reads the block
         index straight off ``element_offset``.
+
+        ``bank`` is a routed contraction's expert extent.  Its weight is one
+        operand holding every expert's matrix, so the operand is ``[E, N, K]``
+        and the expert is chosen by the engine inside the view.  Folding it to
+        ``[N, K]`` like every other contraction weight does not lose a
+        description, it loses 255 of the 256 experts.
         """
         if self.plan is None:  # pragma: no cover - programming error
             raise RomLoweringError("plan_regions() must run before lowering")
@@ -3113,6 +3240,18 @@ class RomLowering:
                     )
                 dims = [group_rows, shape.depth]
                 group_offset = group * group_rows * shape.depth
+            if bank:
+                if group_rows:
+                    raise RomLoweringError(
+                        f"weight {tensor_id!r} is a routed expert bank and a "
+                        "feature-grouped operand at once; the leading axis "
+                        "cannot be both the expert and the group"
+                    )
+                # The expert is the outermost axis of the stack, so its stride
+                # is the whole matrix each expert holds -- whichever way that
+                # matrix itself is stored.
+                dims = [bank, *dims]
+                strides = [shape.cols * shape.depth, *strides]
         # A narrowed view reads the *same bytes* through a smaller element
         # type.  The int64 route table holds expert IDs below 256, so each of
         # its little-endian words is a U32 followed by a zero U32, and a view
@@ -3192,48 +3331,6 @@ class RomLowering:
         if not block:
             return NO_ID, 0, 0
         return self.plan.region(scale_key).object_id, block, row_block
-
-    def _expert_bank_view(self, kernel: Kernel, run: LayerRun | None) -> int:
-        """One view over a layer's whole routed expert bank.
-
-        The engine resolves the runtime expert ID inside this view
-        (TA-ABI3-OPCONV-1 section 2), so a routed matmul needs exactly one
-        weight descriptor no matter how many experts the layer has -- and the
-        expert dimension is an addressing dimension, never a program loop.
-        """
-        names = list(kernel.attributes["expert_weight_tensors"])
-        key, _slot = self._region_of_tensor[names[0]]
-        region = self.plan.region(key)  # type: ignore[union-attr]
-        head = self.tensors[names[0]]
-        dims = (len(names), *self._dims(head))
-        dynamic: list[DynamicTerm] = []
-        element_offset = 0
-        if region.slot_count > 1:
-            if run is None:
-                raise RomLoweringError(
-                    f"expert bank {key!r} is read outside a compressed layer body"
-                )
-            stride = region.slot_element_stride
-            if stride > 0xFFFFFFFF:
-                raise RomLoweringError(
-                    f"expert bank {key!r} needs a per-layer element stride of "
-                    f"{stride}, which does not fit the 32-bit dynamic-term stride "
-                    "field of ABI 3.0 tensor views; split the bank"
-                )
-            dynamic.append(DynamicTerm.loop(self._loop_of_run[run.index], stride))
-        scale_object, block, row_block = self._scale_binding(key)
-        return self._view(
-            object_id=region.object_id,
-            dtype=self._dtype(region.dtype),
-            dims=dims,
-            element_offset=element_offset,
-            dynamic=dynamic,
-            permissions=int(Permission.READ),
-            scale_object_id=scale_object,
-            scale_block_elements=block,
-            scale_block_rows=row_block,
-            label="view.experts",
-        )
 
     # -- operand conventions (TA-ABI3-OPCONV-1) --------------------------
     def _aux(self, kernel: Kernel, family: Major, sub: int) -> list[int]:
@@ -3371,6 +3468,13 @@ class RomLowering:
             return []
         if family is Major.REDUCTION and sub == int(Reduction.PARTITION_SUM):
             return [int(Symbol.VOCABULARY_PARTITIONS)]
+        if family is Major.REDUCTION and sub == int(Reduction.GROUPED_CONCAT):
+            # Amendment A17: a concatenation states the axis it joins.  The
+            # graph says which axis, and it is not always zero -- an index
+            # window joined to a compressed-index block joins on the feature
+            # axis, and axis 0 could not express it at all because the two
+            # operands have different widths.
+            return [int(attributes.get("axis", 0))]
         if family is Major.DMA and sub == int(Dma.FILL):
             return [int(attributes.get("fill_code", 0))]
         return []
@@ -3410,6 +3514,34 @@ class RomLowering:
         if index is None or index == 0:
             return order
         return [index] + [slot for slot in order if slot != index]
+
+    def _abi_input_slots(
+        self, kernel: Kernel, order: Sequence[int]
+    ) -> list[int | None]:
+        """The IR input each ABI input slot carries; ``None`` for an empty slot.
+
+        A slot the operand convention requires to be ``NO_ID`` is not a missing
+        operand, it is a stated one: ``VECTOR.COMPRESS`` sub-case 2 reads the
+        projected candidates in ``in0`` and the absolute position embedding in
+        ``in2``, because ``in1`` is the projection matrix that a state update
+        does not have.  The engine refuses an operator that binds anything
+        there, so packing the operands down would put the APE where the
+        projection belongs and the operation would be rejected -- which is what
+        it did.
+        """
+        holes = ABI_EMPTY_INPUT_SLOTS.get(kernel.kind, ())
+        if not holes:
+            return list(order)
+        slots: list[int | None] = []
+        remaining = list(order)
+        position = 0
+        while remaining:
+            if position in holes:
+                slots.append(None)
+            else:
+                slots.append(remaining.pop(0))
+            position += 1
+        return slots
 
     def _movement_views(
         self,
@@ -3733,26 +3865,25 @@ class RomLowering:
             )
         else:
             inputs = [
-                self._operand_view(
-                    kernel,
-                    shape,
-                    slot=abi_slot,
-                    direction="in",
-                    name=kernel.inputs[ir_slot],
-                    run=run,
-                    loop=loop,
-                    family=family,
-                    sub=engine.sub,
+                (
+                    NO_ID
+                    if ir_slot is None
+                    else self._operand_view(
+                        kernel,
+                        shape,
+                        slot=abi_slot,
+                        direction="in",
+                        name=kernel.inputs[ir_slot],
+                        run=run,
+                        loop=loop,
+                        family=family,
+                        sub=engine.sub,
+                    )
                 )
-                for abi_slot, ir_slot in enumerate(order[:MAX_OPERATOR_INPUTS])
+                for abi_slot, ir_slot in enumerate(
+                    self._abi_input_slots(kernel, order)[:MAX_OPERATOR_INPUTS]
+                )
             ]
-            if "expert_weight_tensors" in kernel.attributes:
-                # TA-ABI3-OPCONV-1 section 2: ROUTED_MATMUL reads
-                # (activations, routed weights, expert IDs, route weights).  The
-                # neutral IR names the bank in an attribute rather than an
-                # operand, so the backend places it and binds it to slot 1.
-                inputs.insert(1, self._expert_bank_view(kernel, run))
-                inputs = inputs[:MAX_OPERATOR_INPUTS]
             outputs = [
                 self._operand_view(
                     kernel,

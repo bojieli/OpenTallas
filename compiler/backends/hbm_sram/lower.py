@@ -1165,6 +1165,14 @@ class _Emitter:
                 node_stride = plan.shard_columns
             dims = [max(operand.tile_rows, 1), max(operand.tile_cols, 1)]
             row_stride = dims[0] * strides[0]
+            if contraction_weight and operand.bank:
+                # A routed bank is ``[E, N, K]``.  The expert is the outermost
+                # axis, so its stride is the whole matrix each expert holds --
+                # whichever way that matrix itself is stored -- and the engine
+                # selects along it at runtime rather than the program looping
+                # over it.
+                strides = [operand.rows // operand.bank * operand.cols, *strides]
+                dims = [operand.bank, *dims]
         else:
             # Everything else keeps the rank the graph declared.  An engine that
             # reads ``[.., heads, dim]`` or one gain per reduction element
@@ -1787,11 +1795,16 @@ class _Emitter:
 
         builder = self.builder
         loops = self._open_loops(plan)
-        inputs = [
-            self._operand_view(plan, o, loops, writable=False)
-            for o in plan.operands
-            if o.direction == "in"
-        ]
+        # Positional, not packed: an operand carries the ABI slot the operand
+        # convention gives it, and a slot the convention requires to stay
+        # ``NO_ID`` -- ``VECTOR.COMPRESS`` sub-case 2's projection matrix -- is
+        # a hole its neighbours are placed either side of.
+        in_operands = [o for o in plan.operands if o.direction == "in"]
+        inputs = [NO_ID] * (max((o.slot for o in in_operands), default=-1) + 1)
+        for operand in in_operands:
+            inputs[operand.slot] = self._operand_view(
+                plan, operand, loops, writable=False
+            )
         outputs = [
             self._operand_view(plan, o, loops, writable=True)
             for o in plan.operands

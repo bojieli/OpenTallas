@@ -586,6 +586,11 @@ class OperandPlan:
     tile_cols: int
     transposed: bool
     terms: tuple[str, ...]
+    #: Leading expert extent of a routed weight bank, ``0`` for every other
+    #: operand.  A bank is presented as ``[E, N, K]``: the engine resolves the
+    #: runtime expert ID inside the view, so the expert is an addressing
+    #: dimension and folding it into the rows loses 255 of 256 experts.
+    bank: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -601,6 +606,10 @@ class OperandPlan:
             "tile_cols": self.tile_cols,
             "transposed": self.transposed,
             "terms": list(self.terms),
+            # Stated only where it exists.  The plan document is bound into the
+            # deployment manifest by digest, so a field every operand carries
+            # would rewrite every existing plan to say "not a bank".
+            **({"bank": self.bank} if self.bank else {}),
         }
 
 
@@ -848,6 +857,26 @@ def matrix_shape(tensor: Tensor, span_max: int) -> tuple[int, int, bool]:
         rows *= value
         symbolic = symbolic or is_symbolic
     return max(rows, 1), max(cols, 1), symbolic
+
+
+def expert_bank_extent(kernel: Kernel, tensor: Tensor, span_max: int) -> int:
+    """The leading expert extent of a routed weight bank, or ``0``.
+
+    A routed contraction reads one weight operand holding every expert's
+    matrix, and TA-ABI3-OPCONV-1 section 2 has the engine resolve the runtime
+    expert ID inside that view.  The expert axis is therefore an addressing
+    dimension, and the operand is ``[E, N, K]`` where every other contraction
+    weight is ``[N, K]``.
+
+    The bank is recognised from the data -- the kernel declares how many
+    experts it selects among and the operand's own leading extent is that many
+    -- rather than from the operator's name.  A name is not a shape.
+    """
+    declared = int(kernel.attributes.get("expert_count", 0) or 0)
+    if declared <= 1 or len(tensor.shape) != 3:
+        return 0
+    leading, _ = _extent_value(tensor.shape[0], span_max)
+    return declared if leading == declared else 0
 
 
 # ---------------------------------------------------------------------------
@@ -1300,7 +1329,21 @@ def _place_weights(
     """
     tensors = {t.tensor_id: t for t in graph.tensors}
 
-    def _segment(tensor: Tensor, cursor: int) -> PlacedSegment:
+    def _segments(tensor: Tensor, cursor: int) -> list[PlacedSegment]:
+        """The authenticated ranges one weight tensor contributes, in order.
+
+        A binding is usually one range.  A *segmented* binding is a bank the
+        model addresses as one operand and the checkpoint stores apart --
+        DeepSeek's 256 routed experts per layer -- and contributes one range
+        per segment, each with its own shard file, file offset and digest.
+
+        Flattening it to ``(binding.path, binding.offset, binding.bytes)``
+        balances byte for byte and names the wrong bytes: the experts are
+        interleaved in the shard and not even ascending in it, so one 1 GiB
+        range from expert 0 covers 255 other experts.  Every downstream total
+        still reconciles, which is precisely why the expansion has to happen
+        here, while the segments are still named.
+        """
         binding = tensor.binding
         assert binding is not None
         if binding.transform != "identity":
@@ -1310,33 +1353,50 @@ def _place_weights(
                 "a weight image, so a non-identity transform must be resolved "
                 "in the checkpoint lock"
             )
-        return PlacedSegment(
-            tensor_id=tensor.tensor_id,
-            source_name=binding.source_name,
-            path=binding.path,
-            file_offset=binding.offset,
-            bytes=binding.bytes,
-            sha256=binding.sha256,
-            element_offset=elements_in(cursor, tensor.dtype),
-            elements=elements_in(binding.bytes, tensor.dtype),
-            dtype=tensor.dtype,
-        )
+        placed: list[PlacedSegment] = []
+        offset = cursor
+        for source in binding.segments or (binding,):
+            placed.append(
+                PlacedSegment(
+                    tensor_id=tensor.tensor_id,
+                    source_name=source.source_name,
+                    path=source.path,
+                    file_offset=source.offset,
+                    bytes=source.bytes,
+                    sha256=source.sha256,
+                    element_offset=elements_in(offset, tensor.dtype),
+                    elements=elements_in(source.bytes, tensor.dtype),
+                    dtype=tensor.dtype,
+                )
+            )
+            offset += source.bytes
+        return placed
 
     def _record(
         group_id: str,
-        segment: PlacedSegment,
+        tensor_id: str,
+        element_offset: int,
         layer: int | None,
         role_key: str,
         stride: int,
     ) -> WeightPlacement:
-        tensor = tensors[segment.tensor_id]
+        """Where one *tensor* sits in its object.
+
+        A placement is per tensor even when the payload arrives as many
+        segments: a kernel names the tensor, and the whole tensor is what the
+        view over it addresses.  The segments are the object's source, not its
+        address space.
+        """
+        tensor = tensors[tensor_id]
         rows, cols, _ = matrix_shape(tensor, span_max)
+        binding = tensor.binding
+        assert binding is not None
         return WeightPlacement(
-            tensor_id=segment.tensor_id,
+            tensor_id=tensor_id,
             group_id=group_id,
-            element_offset=segment.element_offset,
-            elements=segment.elements,
-            dtype=segment.dtype,
+            element_offset=element_offset,
+            elements=elements_in(binding.bytes, tensor.dtype),
+            dtype=tensor.dtype,
             rows=rows,
             cols=cols,
             layer=layer,
@@ -1352,12 +1412,14 @@ def _place_weights(
     for role_key, members in weight_roles(graph, bands):
         group_id = f"wr{len(weight_groups):04d}"
         segments: list[PlacedSegment] = []
+        offsets: list[int] = []
         cursor = 0
         for member in members:
             tensor = tensors[member]
-            segments.append(_segment(tensor, cursor))
+            offsets.append(elements_in(cursor, tensor.dtype))
+            segments.extend(_segments(tensor, cursor))
             cursor += tensor.binding.bytes  # type: ignore[union-attr]
-        stride = segments[1].element_offset if len(segments) > 1 else 0
+        stride = offsets[1] if len(offsets) > 1 else 0
         paths = sorted({s.path for s in segments})
         weight_groups.append(
             WeightGroup(
@@ -1369,9 +1431,18 @@ def _place_weights(
                 segments=tuple(segments),
             )
         )
-        for layer_index, segment in enumerate(segments):
-            placements.append(_record(group_id, segment, layer_index, role_key, stride))
-            placed.add(segment.tensor_id)
+        for layer_index, member in enumerate(members):
+            placements.append(
+                _record(
+                    group_id,
+                    member,
+                    offsets[layer_index],
+                    layer_index,
+                    role_key,
+                    stride,
+                )
+            )
+            placed.add(member)
 
     # (2) leftovers, grouped by adjacency inside one checkpoint file.
     leftovers = [
@@ -1399,10 +1470,14 @@ def _place_weights(
                 "file_end": binding.offset,
                 "cursor": 0,
                 "segments": [],
+                "members": [],
             }
             runs.append(current)
         assert current is not None
-        current["segments"].append(_segment(tensor, current["cursor"]))
+        current["members"].append(
+            (tensor.tensor_id, elements_in(current["cursor"], tensor.dtype))
+        )
+        current["segments"].extend(_segments(tensor, current["cursor"]))
         current["cursor"] += binding.bytes
         current["file_end"] = binding.offset + binding.bytes
 
@@ -1418,8 +1493,8 @@ def _place_weights(
                 segments=tuple(body["segments"]),
             )
         )
-        for segment in body["segments"]:
-            placements.append(_record(group_id, segment, None, "", 0))
+        for tensor_id, element_offset in body["members"]:
+            placements.append(_record(group_id, tensor_id, element_offset, None, "", 0))
 
     placements.sort(key=lambda p: p.tensor_id)
     return tuple(weight_groups), tuple(placements)
@@ -2208,6 +2283,33 @@ _SLOT_PERMUTATION: Mapping[str, tuple[int, ...]] = {
     "HYPER_CONNECT_HEAD": (0, 1, 3, 2),
 }
 
+#: ABI input slots the operand convention requires to be ``NO_ID``, by neutral
+#: kind.  ``VECTOR.COMPRESS`` sub-case 2 is the case: its ``in1`` is the
+#: projection matrix, which a state update has none of, while its ``in2`` is
+#: the position embedding -- exactly what the APE table is.  A required hole is
+#: a stated slot, not a missing operand, so the operands are placed either side
+#: of it rather than packed down over it; packing them down put the APE where
+#: the projection belongs and the engine refused the operator outright.  This
+#: mirrors ``ABI_EMPTY_INPUT_SLOTS`` in
+#: ``compiler/backends/rom/common/program.py``: one convention, two backends.
+_ABI_EMPTY_INPUT_SLOTS: Mapping[str, tuple[int, ...]] = {
+    "COMPRESS_STATE_UPDATE": (1,),
+}
+
+
+def _abi_input_slots(kernel: Kernel, order: Sequence[int]) -> list[int | None]:
+    """The IR input each ABI input slot carries; ``None`` for a required hole."""
+    holes = _ABI_EMPTY_INPUT_SLOTS.get(kernel.kind, ())
+    if not holes:
+        return list(order)
+    slots: list[int | None] = []
+    remaining = list(order)
+    position = 0
+    while remaining:
+        slots.append(None if position in holes else remaining.pop(0))
+        position += 1
+    return slots
+
 
 #: Trailing input slots TA-ABI3-OPCONV-1 leaves optional, by neutral kind.
 #: Everything not named here must fill every slot its engine row declares.
@@ -2685,9 +2787,17 @@ def _plan_kernels(
         depth = 0
         groups = 1
         transposed = False
+        bank = 0
         if contraction and len(kernel.inputs) >= 2:
             a_rows, a_cols, _ = matrix_shape(tensors[kernel.inputs[0]], span_max)
             w_rows, w_cols, _ = matrix_shape(tensors[kernel.inputs[1]], span_max)
+            # A routed bank's leading axis is the expert, not an output row.
+            # Folding it in made a 256-expert ``[256, 2048, 4096]`` operand
+            # declare 524,288 output rows against a 2,048-column result, which
+            # is the warning that said so.
+            bank = expert_bank_extent(kernel, tensors[kernel.inputs[1]], span_max)
+            if bank:
+                w_rows //= bank
             # The iteration domain is the authority on contraction geometry when
             # the graph states it.  A grouped projection contracts one group's
             # reduction width at a time, so inferring the depth from the folded
@@ -2780,7 +2890,9 @@ def _plan_kernels(
             )
 
         operands: list[OperandPlan] = []
-        for abi_slot, ir_slot in enumerate(slot_order):
+        for abi_slot, ir_slot in enumerate(_abi_input_slots(kernel, slot_order)):
+            if ir_slot is None:
+                continue  # a slot the convention requires to stay NO_ID
             operands.append(
                 _operand_plan(
                     abi_slot,
@@ -2800,6 +2912,7 @@ def _plan_kernels(
                     shard_columns=shard_columns,
                     sharded=shard_columns != cols,
                     depth=depth,
+                    bank=bank,
                 )
             )
         for abi_slot, name in enumerate(kernel.outputs):
@@ -2822,6 +2935,7 @@ def _plan_kernels(
                     shard_columns=shard_columns,
                     sharded=shard_columns != cols,
                     depth=depth,
+                    bank=bank,
                 )
             )
 
@@ -2892,6 +3006,7 @@ def _operand_plan(
     shard_columns: int,
     sharded: bool,
     depth: int,
+    bank: int = 0,
 ) -> OperandPlan:
     tensor = tensors[name]
     rows, cols, symbolic = matrix_shape(tensor, span_max)
@@ -2913,8 +3028,11 @@ def _operand_plan(
 
     terms: list[str] = []
     view_rows, view_cols = rows, cols
+    weight_bank = 0
     if contraction and direction == "in" and slot == 1:
-        # in1 is the weight, presented n-major as ``[N, K]``.
+        # in1 is the weight, presented n-major as ``[N, K]`` -- or ``[E, N, K]``
+        # when it is a routed bank, whose expert axis the engine addresses.
+        weight_bank = bank
         view_rows = shard_columns
         view_cols = depth or cols
         if placement is not None and placement.layer_stride_elements:
@@ -2951,6 +3069,7 @@ def _operand_plan(
         tile_cols=max(view_cols, 1),
         transposed=transposed and contraction and direction == "in" and slot == 1,
         terms=tuple(terms),
+        bank=weight_bank,
     )
 
 

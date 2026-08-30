@@ -34,6 +34,7 @@ from compiler.backends.hbm_sram.lower import (
 )
 from compiler.backends.hbm_sram.plan import PLAN_SCHEMA, build_plan, read_kernel_graph
 from compiler.ir.v3.kernel_ir import (
+    BindingSegment,
     CheckpointBinding,
     Entrypoint,
     Kernel,
@@ -45,16 +46,25 @@ from compiler.ir.v3.kernel_ir import (
     check_neutral,
 )
 from compiler.ir.v3.lowering import engine_for
-from runtime.abi3.constants import Major, Permission, StorageClass, TopologyClass
+from runtime.abi3.constants import (
+    Major,
+    NO_ID,
+    Permission,
+    StorageClass,
+    TopologyClass,
+)
 from runtime.abi3.descriptors import ExtendedDescriptorType, SelectorKind, Symbol
 from runtime.sim.device import loop_trip_count
 from runtime.sim.memory import ViewResolver
 from runtime.abi3.verifier import require_admitted, verify_deployment
 
+#: The one published IR these tests still read.  A backend property is a
+#: property of the lowering, so it belongs on the smallest graph that has the
+#: shape; what the *published* graph declares is the exporter's own test's
+#: subject.  The Qwen lane is the exception on purpose: it is the control
+#: workload, and "the real 36-layer graph lowers and is admitted" is the claim
+#: itself rather than a way of reaching some other property.
 REAL_QWEN_IR = Path("build/ir-v3/qwen3-8b/kernel_ir.v3.json")
-REAL_DEEPSEEK_IR = Path(
-    "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json"
-)
 
 
 # ---------------------------------------------------------------------------
@@ -82,6 +92,47 @@ class _Checkpoint:
             offset=offset,
             bytes=size,
             sha256=digest,
+        )
+
+    def bind_bank(
+        self, name: str, elements: int, parts: int, dtype: str = "bf16"
+    ) -> CheckpointBinding:
+        """A bank the model addresses as one operand and the file stores apart.
+
+        DeepSeek's routed experts are the case: one declared ``[E, N, K]``
+        tensor whose payload is *E* separately named, separately authenticated
+        checkpoint ranges.  They are laid down out of order here because the
+        released checkpoint stores them that way -- interleaved with the other
+        projections, lexicographically ordered, so expert 10 precedes expert 2 --
+        and a contiguous fixture would let a backend that read only the
+        binding's ``(path, offset, bytes)`` totals reconcile exactly while
+        naming the wrong bytes.
+        """
+        parent = self.bind(name, elements, dtype)
+        per = parent.bytes // parts
+        assert per * parts == parent.bytes
+        segments = []
+        for part in range(parts):
+            slot = (part * 3 + 1) % parts
+            offset = parent.offset + slot * per
+            segments.append(
+                BindingSegment(
+                    source_name=f"{name}.{part}",
+                    path=parent.path,
+                    offset=offset,
+                    bytes=per,
+                    sha256=hashlib.sha256(
+                        f"{name}.{part}:{offset}:{per}".encode()
+                    ).hexdigest(),
+                )
+            )
+        return CheckpointBinding(
+            source_name=parent.source_name,
+            path=parent.path,
+            offset=parent.offset,
+            bytes=parent.bytes,
+            sha256=parent.sha256,
+            segments=tuple(segments),
         )
 
 
@@ -278,17 +329,24 @@ def moe_graph(
     kernels: list[Kernel] = []
     states: list[StateResource] = []
 
-    def weight(name: str, shape: tuple[int, ...], dtype: str = "bf16") -> str:
+    def weight(
+        name: str, shape: tuple[int, ...], dtype: str = "bf16", *, bank: int = 0
+    ) -> str:
         elements = 1
         for dim in shape:
             elements *= dim
+        binding = (
+            ck.bind_bank(name, elements, bank, dtype)
+            if bank
+            else ck.bind(name, elements, dtype)
+        )
         tensors.append(
             Tensor(
                 tensor_id=name,
                 dtype=dtype,
                 shape=shape,
                 role="weight",
-                binding=ck.bind(name, elements, dtype),
+                binding=binding,
             )
         )
         return name
@@ -334,7 +392,7 @@ def moe_graph(
         weight(f"{p}.norm", (hidden,))
         weight(f"{p}.router", (hidden, experts))
         weight(f"{p}.bias", (experts,))
-        weight(f"{p}.experts", (experts, ffn, hidden), "fp8_e4m3fn")
+        weight(f"{p}.experts", (experts, ffn, hidden), "fp8_e4m3fn", bank=experts)
         weight(f"{p}.wdown", (hidden, ffn))
         act(f"{p}.n", (SPAN, hidden))
         act(f"{p}.scores", (SPAN, experts))
@@ -403,6 +461,187 @@ def moe_graph(
         generation_policy={
             "eos_token_ids": [vocab - 1],
             "maximum_new_tokens": 32,
+            "vocabulary_size": vocab,
+        },
+    )
+
+
+def movement_graph(
+    *,
+    hidden: int = 64,
+    mult: int = 4,
+    vocab: int = 64,
+    span_max: int = 64,
+    window: int = 8,
+    selected: int = 16,
+    ratio: int = 4,
+) -> KernelGraph:
+    """A graph carrying the movement shapes, and nothing else.
+
+    Four backend properties are about *movement*: a broadcast that shares one
+    row across an inserted axis, a select that is an offset rather than a
+    gather, a width-axis concatenation that becomes one transfer per column
+    window, and a hyper-connection whose token axis stays leading.  Each is a
+    property of the lowering, not of any model, so each is exercised here on
+    the smallest graph that has the shape -- rather than through a 3,000-kernel
+    published IR, where an unrelated refusal anywhere upstream takes all four
+    down at once and none of them is what failed.
+    """
+    ck = _Checkpoint(1)
+    tensors: list[Tensor] = []
+    kernels: list[Kernel] = []
+
+    def weight(name: str, shape: tuple[int, ...], dtype: str = "bf16") -> str:
+        elements = 1
+        for dim in shape:
+            elements *= dim
+        tensors.append(
+            Tensor(
+                tensor_id=name,
+                dtype=dtype,
+                shape=shape,
+                role="weight",
+                binding=ck.bind(name, elements, dtype),
+            )
+        )
+        return name
+
+    def act(name: str, shape: tuple, dtype: str = "bf16", role: str = "activation") -> str:
+        tensors.append(Tensor(tensor_id=name, dtype=dtype, shape=shape, role=role))
+        return name
+
+    def emit(kind: str, ins, outs, contract: str, **kw) -> None:
+        kernels.append(
+            Kernel(
+                index=len(kernels),
+                kernel_id=f"{kind.lower()}.{len(kernels):02d}",
+                kind=kind,
+                inputs=tuple(ins),
+                outputs=tuple(outs),
+                numeric_contract=contract,
+                **kw,
+            )
+        )
+
+    coefficients = (2 + mult) * mult
+    act("tokens", (SPAN, 1), "u32", role="input")
+    act("position", (1,), "i32", role="input")
+    weight("embed", (vocab, hidden))
+    act("hidden", (SPAN, hidden))
+    emit("EMBEDDING_LOOKUP", ["tokens", "embed"], ["hidden"],
+         "lookup_bf16_token_embedding_v1")
+
+    # -- the broadcast: one embedding read once per stream ----------------
+    act("streams", (SPAN, mult, hidden))
+    emit("BROADCAST", ["hidden"], ["streams"], "structural_hc_expand_bf16_v1",
+         attributes={"axis": 1, "extent": mult})
+
+    # -- the packed coefficient block and its two planes ------------------
+    weight("hc.fn", (coefficients, mult * hidden), "fp32")
+    weight("hc.scale", (3,), "fp32")
+    weight("hc.base", (coefficients,), "fp32")
+    act("hc.weights", (SPAN, 2, mult), "fp32")
+    act("hc.comb", (SPAN, mult, mult), "fp32")
+    emit("HYPER_CONNECT_PRE", ["streams", "hc.fn", "hc.scale", "hc.base"],
+         ["hc.weights", "hc.comb"], "hyper_connection_hc_pre_bf16_v1",
+         attributes={"hc_mult": mult, "sinkhorn_iterations": 20, "epsilon": 1e-06,
+                     "coefficient_layout": "pre_then_post"})
+    act("hc.pre", (SPAN, mult), "fp32")
+    act("hc.post", (SPAN, mult), "fp32")
+    emit("SELECT", ["hc.weights"], ["hc.pre"], "hyper_connection_hc_pre_bf16_v1",
+         attributes={"axis": 1, "index": 0})
+    emit("SELECT", ["hc.weights"], ["hc.post"], "hyper_connection_hc_pre_bf16_v1",
+         attributes={"axis": 1, "index": 1})
+
+    # -- the branch, and the post-combination over the streams ------------
+    weight("branch.w", (hidden, hidden))
+    act("branch", (SPAN, hidden))
+    act("merged", (SPAN, mult, hidden))
+    emit("MATMUL", ["hidden", "branch.w"], ["branch"],
+         "bf16_bf16_fp32_sequential_rne_v1")
+    emit("HYPER_CONNECT_POST", ["branch", "streams", "hc.post", "hc.comb"],
+         ["merged"], "vector_hc_post_bf16_v1",
+         attributes={"hc_mult": mult, "post_width": mult,
+                     "combination_width": mult * mult})
+
+    # -- a state update, whose in1 the convention requires to stay empty --
+    states = (
+        StateResource(
+            state_id="compressor",
+            state_class="compressed_kv",
+            dtype="fp32",
+            row_elements=hidden,
+            capacity_rows=span_max,
+        ),
+    )
+    # The shapes are the ones the published IR declares for this operation:
+    # a packed ``[tokens, 2, W]`` projection, an absolute position table of
+    # ``[ratio, W]``, and two ``[tokens, 2 * ratio, W]`` pools.
+    weight("compress.kv", (hidden, hidden), "fp32")
+    weight("compress.gate", (hidden, hidden), "fp32")
+    weight("ape", (ratio, hidden), "fp32")
+    act("packed", (SPAN, 2, hidden), "fp32")
+    act("pool.kv", (SPAN, 2 * ratio, hidden), "fp32")
+    act("pool.scores", (SPAN, 2 * ratio, hidden), "fp32")
+    emit("STATE_PREPARE", (), (), "bf16_byte_preserving_state_v1",
+         state_writes=("compressor",))
+    emit("COMPRESS_PROJECT", ["hidden", "compress.kv", "compress.gate"], ["packed"],
+         "compression_compress_project_bf16_v1",
+         attributes={"ratio": ratio, "overlap": True})
+    emit("COMPRESS_STATE_UPDATE", ["packed", "ape"], ["pool.kv", "pool.scores"],
+         "compression_state_compress_state_update_f32_raw_window_transaction_v1",
+         attributes={"ratio": ratio, "overlap": True},
+         state_reads=("compressor",), state_writes=("compressor",))
+
+    # -- the width-axis join: two index vectors of different widths -------
+    act("window.a", (SPAN, window), "u32")
+    act("window.b", (SPAN, selected), "u32")
+    act("joined", (SPAN, window + selected), "u32")
+    emit("WINDOW_INDEX", ["position"], ["window.a"], "indexing_window_indices_v1",
+         attributes={"window_size": window, "padding_index": -1})
+    emit("WINDOW_INDEX", ["position"], ["window.b"], "indexing_window_indices_v1",
+         attributes={"window_size": selected, "padding_index": -1})
+    emit("CONCAT", ["window.a", "window.b"], ["joined"],
+         "selection_index_topk_indices_window_then_compressed_indices_v1",
+         attributes={"axis": 1, "segment_widths": [window, selected]})
+
+    # -- an epilogue, so the graph is a program ---------------------------
+    weight("norm.final", (hidden,))
+    weight("last.index", (1, 1), "u32")
+    weight("lm_head", (hidden, vocab))
+    act("final", (SPAN, hidden))
+    act("hidden.last", (1, hidden))
+    act("logits", (1, vocab))
+    act("token", (1, 1), "u32")
+    act("tokens.out", (1, 1), "u32", role="output")
+    emit("RMS_NORM", ["branch", "norm.final"], ["final"],
+         "qwen3_rmsnorm_fp32_bf16_v1")
+    emit("LAST_TOKEN_SELECT", ["final", "last.index"], ["hidden.last"],
+         "lookup_bf16_token_embedding_v1")
+    emit("VOCAB_PROJECT", ["hidden.last", "lm_head"], ["logits"],
+         "lm_head_bf16_vocabulary_projection_v1")
+    emit("ARGMAX", ["logits"], ["token"], "greedy_lowest_token_id_argmax_v1")
+    emit("TOKEN_APPEND", ["token"], ["tokens.out"], "exact_token_append_eos_v1")
+
+    emit("STATE_COMMIT", (), (), "bf16_byte_preserving_state_v1",
+         state_writes=("compressor",))
+
+    return KernelGraph(
+        model_id="synthetic-movement",
+        source={"family": "movement"},
+        symbols=(RuntimeSymbol("span_tokens", 1, span_max, 1),),
+        tensors=tuple(tensors),
+        states=states,
+        kernels=tuple(kernels),
+        entrypoints=(
+            Entrypoint("prefill", ("tokens", "position"), ("tokens.out",),
+                       ("compressor",)),
+            Entrypoint("decode", ("tokens", "position"), ("tokens.out",),
+                       ("compressor",)),
+        ),
+        generation_policy={
+            "eos_token_ids": [vocab - 1],
+            "maximum_new_tokens": 8,
             "vocabulary_size": vocab,
         },
     )
@@ -1054,6 +1293,50 @@ def test_weights_are_zero_copy_views_over_the_checkpoint(dense, single_chip):
     assert len(weight_objects) <= len(bound) // 2
 
 
+def test_a_segmented_binding_is_placed_one_authenticated_range_per_member(
+    moe, single_chip
+):
+    """A bank the checkpoint stores apart is placed as the ranges it is.
+
+    A routed expert stack is one operand and *E* checkpoint tensors.  Its
+    binding carries both: the totals, and the segments those totals are made
+    of.  Reducing it to the totals reconciles byte for byte -- the object is
+    the right size, every byte is accounted for once, the digest is the
+    binding's own -- and names a single contiguous run starting at expert 0,
+    which is not where the other experts are.  Nothing downstream complains,
+    which is exactly why this is checked here.
+    """
+    deployment, _plan = lower_with_plan(moe, single_chip)
+    banks = [
+        t
+        for t in moe.tensors
+        if t.binding is not None and t.binding.segments
+    ]
+    assert banks
+    materialised: dict[tuple[str, int, int], str] = {}
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.MEMORY_OBJECT:
+            continue
+        source = deployment.objects.get(descriptor.descriptor_id)
+        if source is None or source.kind != "segments":
+            continue
+        for segment in source.segments:
+            materialised[(segment.path, segment.offset, segment.bytes)] = segment.sha256
+    for tensor in banks:
+        binding = tensor.binding
+        assert len(binding.segments) > 1
+        for segment in binding.segments:
+            key = (segment.path, segment.offset, segment.bytes)
+            assert key in materialised, f"{segment.source_name} is placed nowhere"
+            assert materialised[key] == segment.sha256
+        # The flattened range is not what the object names: it is the total,
+        # and the segments are not laid down in ascending file order.
+        assert (binding.path, binding.offset, binding.bytes) not in materialised
+        assert [s.offset for s in binding.segments] != sorted(
+            s.offset for s in binding.segments
+        )
+
+
 def test_weight_objects_are_never_writable(dense, single_chip):
     deployment = lower_to_abi3(dense, single_chip)
     for descriptor in deployment.table.descriptors():
@@ -1332,22 +1615,21 @@ def test_a_shared_axis_is_readable_but_never_writable():
     assert not shares_an_axis([3, 1, 5], [5, 0, 1])
 
 
-@pytest.mark.skipif(
-    not REAL_DEEPSEEK_IR.is_file(), reason="the DeepSeek neutral IR is not built"
-)
 def test_the_hyper_connection_expansion_moves_no_duplicate_rows():
-    """``main.hc_expand`` reads one embedding through a stride-zero axis.
+    """A broadcast reads one row through a stride-zero axis.
 
     The mHC expansion is ``unsqueeze(2).repeat(1, 1, hc_mult, 1)``.  Expressed
-    as a ``CONCAT`` it reached ``REDUCTION.GROUPED_CONCAT``, which joins on axis
-    0 and therefore refused a ``[tokens, streams, width]`` result -- correctly,
-    because the join it would have performed puts four consecutive *tokens*
-    where four *streams* belong.  As a ``BROADCAST`` it is one movement whose
-    source names the embedding once per stream through a stride of zero.
+    as a ``CONCAT`` it reached ``REDUCTION.GROUPED_CONCAT``, which joined on
+    axis 0 and therefore refused a ``[tokens, streams, width]`` result --
+    correctly, because the join it would have performed puts four consecutive
+    *tokens* where four *streams* belong.  As a ``BROADCAST`` it is one movement
+    whose source names the row once per stream through a stride of zero.
+
+    That is a property of the movement, not of the model that needs it, so it
+    is checked on the smallest graph that has the shape.
     """
-    graph = read_kernel_graph(REAL_DEEPSEEK_IR)
-    kernel = next(k for k in graph.kernels if k.kernel_id == "main.hc_expand")
-    assert kernel.kind == "BROADCAST"
+    graph = movement_graph()
+    kernel = next(k for k in graph.kernels if k.kind == "BROADCAST")
     assert len(kernel.inputs) == 1
     assert kernel.attributes["axis"] == 1
     extent = kernel.attributes["extent"]
@@ -1535,11 +1817,8 @@ def test_a_select_may_not_drop_a_runtime_symbol():
     assert errors and any("static extent" in e for e in errors)
 
 
-@pytest.mark.skipif(
-    not REAL_DEEPSEEK_IR.is_file(), reason="the DeepSeek neutral IR is not built"
-)
 def test_a_selected_coefficient_plane_is_an_offset_not_a_gather():
-    """The two mHC coefficient planes differ only by an element offset.
+    """Two planes of one packed block differ only by an element offset.
 
     ``HYPER_CONNECT_PRE``'s first output view is the packed
     ``[tokens, 2, streams]`` pre/post block the frozen ``VECTOR.MHC`` row
@@ -1550,15 +1829,15 @@ def test_a_selected_coefficient_plane_is_an_offset_not_a_gather():
     dropped axis, which is what this checks: same object, same strides, offsets
     zero and ``streams``.
     """
-    graph = read_kernel_graph(REAL_DEEPSEEK_IR)
+    graph = movement_graph()
     capability = single_chip_capability()
     deployment = lower_to_abi3(graph, capability)
     require_admitted(deployment, capability)
-    index = {k.kernel_id: k.index for k in graph.kernels}
-    planes = {}
-    for name in ("pre_plane", "post_plane"):
-        kernel = graph.kernels[index[f"main.layer00.hc_attn_pre.{name}"]]
-        assert kernel.kind == "SELECT"
+    selects = [k for k in graph.kernels if k.kind == "SELECT"]
+    assert [k.attributes["index"] for k in selects] == [0, 1]
+    assert len({k.inputs[0] for k in selects}) == 1
+    planes = []
+    for kernel in selects:
         operators = [
             d
             for d in deployment.table.descriptors()
@@ -1568,10 +1847,12 @@ def test_a_selected_coefficient_plane_is_an_offset_not_a_gather():
         assert len(operators) == 1
         payload = operators[0].payload
         assert payload["engine_family"] == int(Major.DMA)
-        planes[name] = deployment.table.get(
-            payload["input_view_0"], ExtendedDescriptorType.TENSOR_VIEW
+        planes.append(
+            deployment.table.get(
+                payload["input_view_0"], ExtendedDescriptorType.TENSOR_VIEW
+            )
         )
-    pre, post = planes["pre_plane"], planes["post_plane"]
+    pre, post = planes
     assert pre.primary_object_id == post.primary_object_id
     assert pre.payload["rank"] == post.payload["rank"] == 2
     for axis in range(2):
@@ -1584,29 +1865,57 @@ def test_a_selected_coefficient_plane_is_an_offset_not_a_gather():
     assert pre.payload["stride0"] == 2 * streams
 
 
-@pytest.mark.skipif(
-    not REAL_DEEPSEEK_IR.is_file(), reason="the DeepSeek neutral IR is not built"
-)
-def test_an_axis_one_concatenation_is_one_movement_per_column_window():
-    """A width-axis join is stated in offsets, not performed by an operator.
+def test_a_state_update_leaves_the_projection_slot_empty():
+    """``VECTOR.COMPRESS`` sub-case 2 binds ``in0`` and ``in2``, never ``in1``.
 
-    ``REDUCTION.GROUPED_CONCAT`` joins on axis 0.  The index concatenations in
-    this graph join on axis 1 -- 128 window indices beside 512 selected indices
-    -- which axis 0 cannot express at all, because the two operands have
-    different widths.  The lowering is the idiom the fused KV append already
-    uses: one ``DMA.TRANSFER`` per input into its own column range of the
-    destination row.
+    The operand convention's ``in1`` is the projection matrix and a state
+    update has none; its ``in2`` is the position embedding, which is exactly
+    what the absolute-position table is.  A required hole is a stated slot, not
+    a missing operand, so packing the two operands down into ``in0`` and
+    ``in1`` puts the position table where the projection belongs -- and the
+    engine refuses that outright, which is what it did.
     """
-    graph = read_kernel_graph(REAL_DEEPSEEK_IR)
+    graph = movement_graph()
     capability = single_chip_capability()
     deployment = lower_to_abi3(graph, capability)
     require_admitted(deployment, capability)
-    kernel = next(
-        k
-        for k in graph.kernels
-        if k.kernel_id == "main.layer02.index_topk.concat"
+    kernel = next(k for k in graph.kernels if k.kind == "COMPRESS_STATE_UPDATE")
+    assert len(kernel.inputs) == 2
+    operator = next(
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and d.payload["source_kernel_id"] == kernel.index
     )
-    assert kernel.kind == "CONCAT" and kernel.attributes["axis"] == 1
+    payload = operator.payload
+    assert payload["engine_family"] == int(Major.VECTOR)
+    assert payload["aux_id_0"] == 2, "the sub-case selector"
+    assert payload["input_view_0"] != NO_ID
+    assert payload["input_view_1"] == NO_ID
+    assert payload["input_view_2"] != NO_ID
+    assert payload["input_view_3"] == NO_ID
+    position = deployment.table.get(
+        payload["input_view_2"], ExtendedDescriptorType.TENSOR_VIEW
+    ).payload
+    ape = next(t for t in graph.tensors if t.tensor_id == "ape")
+    assert [position[f"dim{a}"] for a in range(position["rank"])] == list(ape.shape)
+
+
+def test_an_axis_one_concatenation_is_one_movement_per_column_window():
+    """A width-axis join is stated in offsets, not performed by an operator.
+
+    ``REDUCTION.GROUPED_CONCAT`` joined on axis 0.  A width-axis join puts two
+    operands of *different widths* side by side, which axis 0 cannot express at
+    all.  This backend's lowering is the idiom the fused KV append already
+    uses: one ``DMA.TRANSFER`` per input into its own column range of the
+    destination row.
+    """
+    graph = movement_graph()
+    capability = single_chip_capability()
+    deployment = lower_to_abi3(graph, capability)
+    require_admitted(deployment, capability)
+    kernel = next(k for k in graph.kernels if k.kind == "CONCAT")
+    assert kernel.attributes["axis"] == 1
     operators = [
         d
         for d in deployment.table.descriptors()
@@ -1645,9 +1954,6 @@ def test_an_axis_one_concatenation_is_one_movement_per_column_window():
     assert column == window.payload["stride0"]
 
 
-@pytest.mark.skipif(
-    not REAL_DEEPSEEK_IR.is_file(), reason="the DeepSeek neutral IR is not built"
-)
 def test_the_hyper_connection_post_operands_keep_the_token_axis_leading():
     """A batch axis is inserted after the tokens, never before them.
 
@@ -1657,13 +1963,11 @@ def test_the_hyper_connection_post_operands_keep_the_token_axis_leading():
     A13: a leading extent of one is never the partial final iteration's row
     count, so a 104-token span would be presented as a whole 512-row block.
     """
-    graph = read_kernel_graph(REAL_DEEPSEEK_IR)
+    graph = movement_graph()
     capability = single_chip_capability()
     deployment = lower_to_abi3(graph, capability)
     require_admitted(deployment, capability)
-    kernel = next(
-        k for k in graph.kernels if k.kernel_id == "main.layer00.hc_attn_post"
-    )
+    kernel = next(k for k in graph.kernels if k.kind == "HYPER_CONNECT_POST")
     assert len(kernel.inputs) == 4
     operator = next(
         d
