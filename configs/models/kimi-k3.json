@@ -330,6 +330,11 @@
     "kda_layers": 69,
     "kv_cache_policy": "FP32 KDA recurrent state + optimized FP8 latent MLA",
     "kv_cache_policy_status": "mixed derived/assumed; swept in sensitivity analysis",
+    "kv_precision_assumption": {
+      "note": "The gated-mla entry of 576 bytes assumes an FP8 latent, and the profile has always said so. It is left as it stands, but a related measurement now bears on it: the same FP8 assumption in the DeepSeek-V4 profiles was measured wrong against that vendor's released implementation, which reads the latent at BF16 (1,024 bytes for a 512-wide latent, not 583). See OI-39 and results/roofline/deepseek_v4_kv_model_validation.json. Different vendor and different serving stack, so the DeepSeek measurement does not transfer, but it does mean this assumption should be treated as unverified rather than conservative: if K3 also serves BF16 the KV term here is 2x low.",
+      "status": "explicit and unchanged",
+      "to_verify": "execute Kimi-K3 on the reference oracle and compare with tools/validate_kv_model_against_oracle.py"
+    },
     "weight_traffic_policy": "text decode streamed; embedding and multimodal front end resident-only"
   },
   "name": "Kimi-K3",
@@ -337,8 +342,8 @@
   "num_layers": 93,
   "operations_per_active_parameter": 2.0,
   "resident_only_weight_bytes": 3243528192,
-  "routed_weight_bytes": 1446456066048,
   "routed_compute_format": "mxfp4_e2m1_x_mxfp8_e4m3",
+  "routed_weight_bytes": 1446456066048,
   "router_trace_status": "synthetic; no production activations",
   "source_repo": "moonshotai/Kimi-K3",
   "source_revision": "a590ce090cb049c93a33dfe8c208ec652aa20503",
