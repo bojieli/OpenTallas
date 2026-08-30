@@ -2753,3 +2753,38 @@ def test_the_latency_correction_may_fall_on_either_side_of_one(generated) -> Non
         assert point["aggregate_tokens_s"] == pytest.approx(
             point["pipeline_fill_users"] * point["per_user_tokens_s"], rel=1e-9
         )
+
+
+def test_no_design_stores_weights_at_a_precision_the_release_does_not_have(generated) -> None:
+    """Neither side may be priced at a quantisation the checkpoint does not ship.
+
+    An earlier version offered ROM designs an FP8 re-encoding wherever the
+    release was wider than 8.5 bits, and offered it to the ROM side only. Half
+    of every feasible Qwen comparison was then won by an 8-bit ROM machine
+    competing against a 16-bit GPU -- a free halving of weight traffic for a
+    part no execution has ever validated, since ``rom_qwen3`` declares BF16
+    contracts and no FP8 contract at all.
+
+    The rule this pins is symmetry, not conservatism: a study may price a
+    quantised part, but it must quantise both sides and validate the arithmetic.
+    """
+
+    _, results, _, _ = generated
+    for study_id, result in results.items():
+        by_model: dict[str, set[float]] = {}
+        for design in result["designs"]:
+            bits = design.get("stored_bits_per_parameter")
+            if bits is None:
+                continue
+            by_model.setdefault(design["model"], set()).add(round(float(bits), 6))
+        for model, widths in by_model.items():
+            assert len(widths) == 1, (
+                f"{study_id}: {model} is priced at more than one stored width "
+                f"{sorted(widths)} -- both families must be held at the release's "
+                "own packing, or the comparison is not iso-precision"
+            )
+        for design in result["designs"]:
+            assert design.get("representation") in {"native", "official_packed"}, (
+                f"{study_id}: {design['design']} declares representation "
+                f"{design.get('representation')!r}; only the released packing is priced"
+            )

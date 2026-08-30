@@ -227,19 +227,38 @@ def _finite(value: float) -> float | None:
 def _representations(model: ModelProfile) -> tuple[tuple[str, float | None], ...]:
     """Stored representations offered to a mask-ROM design.
 
-    Mask ROM freezes the representation at manufacture, so it is a design
-    variable rather than an inherited constant.  ``None`` means the released
-    checkpoint's own packing.  An FP8 variant is offered only where it is
-    actually smaller than the release: DeepSeek V4 ships MXFP4 routed experts at
-    roughly 4.5 bits per parameter, so re-encoding it to FP8 would nearly double
-    the ROM array.
+    **The released checkpoint's own packing, and nothing else.**
+
+    An earlier version also offered an FP8 variant wherever the release was
+    wider than 8.5 bits, on the reasoning that mask ROM freezes its
+    representation at manufacture and so the representation is a design variable
+    rather than an inherited constant. That reasoning is defensible in the
+    abstract and it was wrong here, for three reasons that compound:
+
+    * **It was offered to one side only.** Every GPU design is evaluated at
+      ``official_packed``. An 8-bit ROM machine against a 16-bit GPU is not an
+      iso-anything comparison, and it halves the ROM array's weight traffic for
+      free. Half of every feasible Qwen comparison -- 430 of 862 -- was being
+      won by such a design, the best of them at 30.79x.
+    * **No executed lane validates it.** ``rom_qwen3`` declares BF16 contracts
+      and no FP8 contract at all, and the 192 oracle-identical tokens this
+      program rests on were produced at BF16. A projected speedup for a machine
+      nothing has ever run is the kind of claim this program exists to refuse.
+    * **It changes the model's outputs.** Re-encoding BF16 weights to FP8 is a
+      quantisation, not a repacking. It would produce different tokens, and how
+      different is unmeasured.
+
+    Only Qwen3-8B was affected: it ships at 16.0 bits per parameter, while
+    DeepSeek V4 Flash and Pro ship mixed FP8/MXFP4 at 4.70 and 4.46 bits, below
+    the threshold that offered the variant.
+
+    If a future study wants to price a quantised part, it must quantise **both**
+    sides and validate the arithmetic against an execution -- the same rule this
+    program applies to an FP8 KV latent, recorded in the DeepSeek profile's
+    ``kv_precision_sensitivity``.
     """
 
-    native_bits = model.checkpoint_bytes / model.total_parameters * 8.0
-    options: list[tuple[str, float | None]] = [("native", None)]
-    if native_bits > 8.5:
-        options.append(("fp8", 8.0))
-    return tuple(options)
+    return (("native", None),)
 
 
 def _execution_format(technology: Technology, bits: float | None, model: ModelProfile) -> str:
