@@ -120,6 +120,30 @@
 - [x] W10.5 DeepSeek long-context campaign — largest context **actually executed is 8,000 tokens**; 32K/128K/200K exhaust GPU memory in the mHC hyper-connection, not the sparse indexer. A 200,000-token prefill needs a chunked rewrite of the vendor prefill path on any GPU: `hc_post` alone is 48.8 GiB at that context and the indexer term 2.33 TiB, while persistent KV state is only 2.32 GiB
 - [x] W10.6 DeepSeek agentic scenario — 47 tokens to EOS, well-formed DSML tool call, byte-identical across independent process invocations
 
+## W13 — The end-to-end requirement, stated plainly
+
+The stated requirement is that **every** design runs the real model end to end
+and produces validated real tokens, on reasoning *and* agentic tasks. Against
+that, the position is:
+
+- [x] W13.1 Qwen3-8B **HBM** lane — 24 tokens, oracle-identical
+- [x] W13.2 Qwen3-8B **ROM** lane — 24 tokens, oracle-identical, and identical to
+  the HBM lane position for position
+- [ ] W13.3 DeepSeek-V4-Flash **HBM** (32 node) — **zero tokens.** The node
+  dimension now exists and 251 instructions retire, but a static audit puts 21
+  defect groups across 1,173 of 3,230 operators
+- [ ] W13.4 DeepSeek-V4-Flash **ROM** (wafer) — **zero tokens.** Nine blockers
+  climbed; sparse attention is no longer one of them
+- [ ] W13.5 Qwen **reasoning** generation with thinking enabled — the recorded
+  runs are 23 and 24 tokens, which is not a reasoning task
+- [ ] W13.6 Qwen **closed-loop agentic episode** — decode a tool call, execute it
+  in the sandbox, feed the result back, continue. A tool call that is never
+  executed is not an agentic task
+
+Three of these are being worked in parallel. The honest summary is that **one of
+four designs runs the model end to end**, and the performance comparison — W12 —
+currently rests on that one.
+
 ## W12 — First-principles roofline model *(the actual deliverable)*
 
 The program's purpose is a quantitative ROM-versus-HBM comparison. The functional
