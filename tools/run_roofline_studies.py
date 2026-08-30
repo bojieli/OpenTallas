@@ -111,7 +111,11 @@ STUDIES: dict[str, dict[str, Any]] = {
     },
 }
 
-WEIGHT_AMORTIZATIONS = ("batched", "per_stream")
+# The policy list has exactly one definition, in the model.  This file used
+# to keep its own copy, and a second restatement of one list is how the two
+# come apart -- the third policy was added to the model and silently not
+# studied here.
+from opentallas.roofline import WEIGHT_AMORTIZATIONS  # noqa: E402
 """The unresolved architectural fork from docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md.
 ``batched`` is ROM-as-storage feeding a separate MAC array, where one sweep
 serves the whole batch. ``per_stream`` is compute-in-ROM, where a cell both
@@ -684,7 +688,11 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                         devices == 1 and kind == "array"
                     ):
                         continue
-                    suffix = "" if amortization == "batched" else "-perstream"
+                    suffix = {
+                        "batched": "",
+                        "per_stream": "-perstream",
+                        "per_region": "-perregion",
+                    }[amortization]
                     design_id = (
                         f"{_model_tag(model)}/ROM-{node}-{representation}-"
                         f"{kv_store.upper()}KV-{topology_name}-x{devices}{suffix}"
@@ -1024,43 +1032,31 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                     if rows
                     else None
                 )
-            batched, per_stream = pair["batched"], pair["per_stream"]
-            amortization_fork.append(
-                {
-                    "model": model_name,
-                    "context_tokens": context,
-                    "batch_size": batch,
-                    "batched_design": batched["design"] if batched else None,
-                    "batched_per_user_tokens_s": (
-                        batched["per_user_tokens_s"] if batched else None
-                    ),
-                    "batched_aggregate_tokens_s": (
-                        batched["aggregate_tokens_s"] if batched else None
-                    ),
-                    "batched_binding_constraint": (
-                        batched["binding_constraint"] if batched else None
-                    ),
-                    "per_stream_design": per_stream["design"] if per_stream else None,
-                    "per_stream_per_user_tokens_s": (
-                        per_stream["per_user_tokens_s"] if per_stream else None
-                    ),
-                    "per_stream_aggregate_tokens_s": (
-                        per_stream["aggregate_tokens_s"] if per_stream else None
-                    ),
-                    "per_stream_binding_constraint": (
-                        per_stream["binding_constraint"] if per_stream else None
-                    ),
-                    "aggregate_penalty_x": (
-                        batched["aggregate_tokens_s"]
-                        / per_stream["aggregate_tokens_s"]
-                        if batched
-                        and per_stream
-                        and per_stream["aggregate_tokens_s"] > 0
-                        else None
-                    ),
-                }
-            )
-
+            batched = pair.get("batched")
+            record: dict[str, Any] = {
+                "model": model_name,
+                "context_tokens": context,
+                "batch_size": batch,
+            }
+            for policy, point in pair.items():
+                record[f"{policy}_design"] = point["design"] if point else None
+                record[f"{policy}_per_user_tokens_s"] = (
+                    point["per_user_tokens_s"] if point else None
+                )
+                record[f"{policy}_aggregate_tokens_s"] = (
+                    point["aggregate_tokens_s"] if point else None
+                )
+                record[f"{policy}_binding_constraint"] = (
+                    point["binding_constraint"] if point else None
+                )
+                # How much aggregate throughput this policy gives up against
+                # the amortising one.  1.0 means it gives up nothing.
+                record[f"{policy}_aggregate_penalty_x"] = (
+                    batched["aggregate_tokens_s"] / point["aggregate_tokens_s"]
+                    if batched and point and point["aggregate_tokens_s"] > 0
+                    else None
+                )
+            amortization_fork.append(record)
     result: dict[str, Any] = {
         "schema_version": 1,
         "study_id": study_id,
@@ -1244,15 +1240,28 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
             f"engaged bytes exceed {sweeps:g} array sweeps {key}",
         )
         if row["family"] == "rom":
-            expected_sweeps = (
-                row["batch_size"]
-                if row["weight_amortization"] == "per_stream"
-                else 1
-            )
-            check(
-                sweeps == expected_sweeps,
-                f"sweep count does not match the amortisation policy {key}",
-            )
+            # Check the property, not the formula.  Restating the model's
+            # arithmetic here would make this a copy that can drift from it --
+            # which is exactly how the policy list came apart.
+            policy = row["weight_amortization"]
+            batch = row["batch_size"]
+            if policy == "batched":
+                check(sweeps == 1, f"batched must sweep once {key}")
+            elif policy == "per_stream":
+                check(
+                    sweeps == batch,
+                    f"per_stream must sweep once per stream {key}",
+                )
+            elif policy == "per_region":
+                # Disjoint regions run together, so the sweep depth is the
+                # busiest region's queue: never below one, never worse than
+                # every token landing on the same region.
+                check(
+                    1.0 - 1e-9 <= sweeps <= batch + 1e-9,
+                    f"per_region sweep depth outside [1, batch] {key}",
+                )
+            else:
+                check(False, f"unknown amortisation policy {policy!r} {key}")
         check(
             row["resident_kv_bytes"] <= row["kv_capacity_bytes"] + 1.0
             or row["kv_store"] == "hbm",
@@ -1685,7 +1694,8 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "them, and why it must not be used to justify a high-batch claim.",
             "",
             "Every other table in this report uses the batched (ROM-as-storage)",
-            "machine; a design identifier ending `-perstream` is the compute-in-ROM",
+            "machine; `-perstream` is compute-in-ROM with a global activation "
+            "broadcast and `-perregion` gives each expert region its own port",
             "variant.",
             "",
             "| Model | B | Batched user tok/s | Batched aggregate | Per-stream user tok/s | "
@@ -1701,7 +1711,7 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             f"{_fmt(row['batched_aggregate_tokens_s'])} | "
             f"{_fmt(row['per_stream_per_user_tokens_s'])} | "
             f"{_fmt(row['per_stream_aggregate_tokens_s'])} | "
-            f"{_fmt_ratio(row['aggregate_penalty_x'])} | "
+            f"{_fmt_ratio(row.get('per_stream_aggregate_penalty_x'))} | "
             f"{row['batched_binding_constraint'] or '—'} | "
             f"{row['per_stream_binding_constraint'] or '—'} |"
         )
@@ -2022,22 +2032,42 @@ def _findings(result: dict[str, Any]) -> list[str]:
     fork = [
         row
         for row in result.get("amortization_fork", [])
-        if row["aggregate_penalty_x"] is not None
+        if row.get("per_stream_aggregate_penalty_x") is not None
         and row["batch_size"] == max(BATCHES)
     ]
     if fork:
-        worst = max(fork, key=lambda row: row["aggregate_penalty_x"])
+        worst = max(fork, key=lambda row: row["per_stream_aggregate_penalty_x"])
         findings.append(
             "**The largest open question is not in this model's inputs but in the "
             "architecture, and the anchor cannot settle it.** If a ROM cell both "
             "stores and multiplies, each concurrent stream needs its own pass and "
             "aggregate per-die throughput never exceeds the per-user rate. At batch "
             f"{max(BATCHES)} that costs up to "
-            f"{worst['aggregate_penalty_x']:,.1f}x of aggregate throughput "
-            f"({worst['model']}). The two machines are identical at batch 1, which "
-            "is where the published anchor sits, so no amount of validation against "
-            "it resolves the fork."
+            f"{worst['per_stream_aggregate_penalty_x']:,.1f}x of aggregate "
+            f"throughput ({worst['model']}). The machines are identical at batch 1, "
+            "which is where the published anchor sits, so no amount of validation "
+            "against it resolves the fork."
         )
+        regional = [
+            row
+            for row in fork
+            if row.get("per_region_aggregate_penalty_x") is not None
+        ]
+        if regional:
+            best = min(regional, key=lambda row: row["per_region_aggregate_penalty_x"])
+            findings.append(
+                "**A third machine sits between them, and for a sparse model it "
+                "recovers most of what compute-in-ROM gives up.** Give each expert "
+                "region its own activation port and two tokens selecting disjoint "
+                "experts drive disjoint regions at the same time; only the tokens "
+                "landing on one region serialise. At batch "
+                f"{max(BATCHES)} that closes the gap to "
+                f"{best['per_region_aggregate_penalty_x']:,.2f}x of the amortising "
+                f"machine ({best['model']}), against "
+                f"{worst['per_stream_aggregate_penalty_x']:,.1f}x for a global "
+                "activation broadcast. A dense model has one region, so it gains "
+                "nothing — the disjointness is what sparsity buys."
+            )
 
     findings.append(
         "**Every number here is conditional on the assumed inputs listed in the "

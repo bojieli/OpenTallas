@@ -15,9 +15,10 @@ bandwidth and compute roof are derived from it.
 4. **Sparse MoE buys aggregate throughput on a ROM machine, not latency.** DeepSeek-V4-Flash-0731 engages 6.7% of its ROM array at batch 1 and 92.6% at batch 256, while the weight-read time is identical at both. Aggregate throughput rises from 9,457 to 11,585 tok/s on the same machine. An unselected expert's read ports cannot be borrowed, so its idle bandwidth is only recovered by giving the sweep more users.
 5. **Tensor parallelism is a latency argument for wafer-scale, and it is the sharpest one.** Two all-reduces per layer per token cost up to 189 us over NVLink, capping per-user decode at 5,296 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 12.2 us and cap it at 81,966 tok/s.
 6. **Which topology wins depends entirely on what is being maximised, and the study reports both rather than choosing.** On per-user rate at equal area a wafer wins 15 of 15 operating points and an array 0; on tokens per second per square millimetre the same points go 6 to the array and 9 to the wafer. A wafer is not faster per unit silicon -- it is faster because it is more silicon, plus a hop latency an array cannot match.
-7. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 54 of 245 feasible points.
-8. **The largest open question is not in this model's inputs but in the architecture, and the anchor cannot settle it.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 256 that costs up to 28.0x of aggregate throughput (DeepSeek-V4-Flash-0731). The two machines are identical at batch 1, which is where the published anchor sits, so no amount of validation against it resolves the fork.
-9. **Every number here is conditional on the assumed inputs listed in the evidence ledger below.** The ROM cell-area ratio and the ROM read bandwidth density are the two that move the answer most, and neither has been measured at N5.
+7. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 64 of 341 feasible points.
+8. **The largest open question is not in this model's inputs but in the architecture, and the anchor cannot settle it.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 256 that costs up to 28.0x of aggregate throughput (DeepSeek-V4-Flash-0731). The machines are identical at batch 1, which is where the published anchor sits, so no amount of validation against it resolves the fork.
+9. **A third machine sits between them, and for a sparse model it recovers most of what compute-in-ROM gives up.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise. At batch 256 that closes the gap to 1.00x of the amortising machine (DeepSeek-V4-Flash-0731), against 28.0x for a global activation broadcast. A dense model has one region, so it gains nothing — the disjointness is what sparsity buys.
+10. **Every number here is conditional on the assumed inputs listed in the evidence ledger below.** The ROM cell-area ratio and the ROM read bandwidth density are the two that move the answer most, and neither has been measured at N5.
 
 ## The overlap and serialisation rule
 
@@ -229,7 +230,7 @@ precisely why the published 16,960 tok/s figure cannot distinguish
 them, and why it must not be used to justify a high-batch claim.
 
 Every other table in this report uses the batched (ROM-as-storage)
-machine; a design identifier ending `-perstream` is the compute-in-ROM
+machine; `-perstream` is compute-in-ROM with a global activation broadcast and `-perregion` gives each expert region its own port
 variant.
 
 | Model | B | Batched user tok/s | Batched aggregate | Per-stream user tok/s | Per-stream aggregate | Aggregate penalty | Batched binds on | Per-stream binds on |
@@ -286,22 +287,22 @@ reduces the bytes fetched.
 | gpu | infeasible | 2 |
 | gpu | kv_read | 10 |
 | gpu | weight_read | 43 |
-| rom | compute | 34 |
-| rom | infeasible | 128 |
-| rom | kv_read | 44 |
-| rom | link_latency | 20 |
-| rom | weight_read | 94 |
+| rom | compute | 51 |
+| rom | infeasible | 192 |
+| rom | kv_read | 54 |
+| rom | link_latency | 30 |
+| rom | weight_read | 153 |
 
 Why the infeasible points are infeasible:
 
 | Family | Reason class | Points |
 |---|---|---:|
 | gpu | CAPACITY | 2 |
-| rom | CAPACITY | 128 |
+| rom | CAPACITY | 192 |
 
 ## Mechanical consistency audit
 
-**PASS** over 5,126 checks.
+**PASS** over 7,206 checks.
 
 - Generated arithmetic identities, area-accounting identities and the ROM full-array sweep floor only.
 - A passing audit is not evidence for ROM macro timing, array read bandwidth at a leading node, NoC timing, package, power delivery, yield, or model accuracy.
@@ -314,12 +315,13 @@ Why the infeasible points are infeasible:
 | measured | 1 |
 | published | 48 |
 | derived | 21 |
-| assumed | 30 |
+| assumed | 31 |
 
 Every `assumed` input, in full, because an ungraded assumption is the
 failure mode this program exists to prevent:
 
 - `efficiencies.compute`
+- `efficiencies.expert_load_balance`
 - `efficiencies.hbm_bandwidth`
 - `efficiencies.hbm_capacity`
 - `efficiencies.rom_read_bandwidth`

@@ -1242,7 +1242,13 @@ def test_studies_report_both_topologies_and_the_crossover(generated) -> None:
             assert row["array_or_wafer"] in {"array", "wafer", "no feasible ROM design"}
 
 
-def test_studies_report_both_amortization_policies(generated) -> None:
+def test_studies_report_every_amortization_policy(generated) -> None:
+    """All three machines are studied, and they agree exactly at batch 1.
+
+    That agreement is the whole reason the published anchor cannot choose
+    between them: at one concurrent stream there is nothing to amortise and
+    nothing to run in parallel, so the three are the same machine.
+    """
     _, results, _, _ = generated
     for result in results.values():
         policies = {
@@ -1250,22 +1256,42 @@ def test_studies_report_both_amortization_policies(generated) -> None:
             for row in result["points"]
             if row["family"] == "rom"
         }
-        assert policies == {"batched", "per_stream"}
+        assert policies == {"batched", "per_stream", "per_region"}
         assert result["amortization_fork"]
         for row in result["amortization_fork"]:
-            if row["batch_size"] != 1:
+            if row["batch_size"] != 1 or row["batched_aggregate_tokens_s"] is None:
                 continue
-            if row["batched_aggregate_tokens_s"] is None:
-                continue
-            assert row["aggregate_penalty_x"] == pytest.approx(1.0, rel=1e-6)
-        penalties = [
-            row["aggregate_penalty_x"]
+            for policy in ("per_stream", "per_region"):
+                penalty = row.get(f"{policy}_aggregate_penalty_x")
+                if penalty is not None:
+                    assert penalty == pytest.approx(1.0, rel=1e-6)
+        for policy in ("per_stream", "per_region"):
+            penalties = [
+                row[f"{policy}_aggregate_penalty_x"]
+                for row in result["amortization_fork"]
+                if row.get(f"{policy}_aggregate_penalty_x") is not None
+            ]
+            # No policy can beat the amortising machine; that is the definition
+            # of amortising.
+            assert penalties and min(penalties) >= 1.0 - 1e-9
+        broadcast = max(
+            row["per_stream_aggregate_penalty_x"]
             for row in result["amortization_fork"]
-            if row["aggregate_penalty_x"] is not None
+            if row.get("per_stream_aggregate_penalty_x") is not None
+        )
+        assert broadcast > 2.0, "the fork should visibly matter somewhere"
+        # Per-region must be strictly better than a global broadcast somewhere,
+        # otherwise the third machine is not earning its place in the study.
+        gains = [
+            row["per_stream_aggregate_penalty_x"]
+            / row["per_region_aggregate_penalty_x"]
+            for row in result["amortization_fork"]
+            if row.get("per_region_aggregate_penalty_x")
+            and row.get("per_stream_aggregate_penalty_x")
         ]
-        assert penalties and min(penalties) >= 1.0 - 1e-9
-        assert max(penalties) > 2.0, (
-            "the fork should visibly matter somewhere in the study"
+        assert gains and max(gains) > 2.0, (
+            "per-region activation should beat a global broadcast on a sparse "
+            "model; if it never does, either the model or the claim is wrong"
         )
 
 

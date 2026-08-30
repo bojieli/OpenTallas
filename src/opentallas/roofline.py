@@ -128,7 +128,7 @@ WEIGHT_TRAFFIC_POLICIES = ("decode_streamed", "full_checkpoint")
 WEIGHT_STORES = ("rom", "hbm", "sram")
 KV_STORES = ("sram", "hbm")
 PARALLELISMS = ("none", "pipeline", "tensor")
-WEIGHT_AMORTIZATIONS = ("batched", "per_stream")
+WEIGHT_AMORTIZATIONS = ("batched", "per_stream", "per_region")
 
 
 # --------------------------------------------------------------------------
@@ -1169,6 +1169,7 @@ def evaluate(
 
     # -- weight read ------------------------------------------------------
     devices = budget.topology.device_count
+    region_sweeps = 1.0
     if budget.weight_store == "rom":
         # ROM locality: an unselected region's read ports cannot be borrowed, so
         # the engaged bandwidth is the engaged fraction of the array's.  The
@@ -1184,7 +1185,56 @@ def evaluate(
             if effective_weight_bw > 0
             else math.inf
         )
-        if budget.weight_amortization == "per_stream":
+        if budget.weight_amortization == "per_region":
+            # Compute-in-ROM with a per-region activation port.  Compute stays
+            # bound to the weight, so nothing is amortised the way a fetched
+            # weight is -- but two tokens that select *disjoint* experts drive
+            # disjoint regions and proceed at the same time.  What serialises is
+            # only the tokens landing on one region.
+            #
+            # With B tokens each selecting k of N experts, B*k expert
+            # activations spread over the N*coverage regions the batch engages,
+            # so the mean engaged region sees B*k / (N*coverage) of them and the
+            # sweep is that many passes deep.  At B=1 that is exactly one pass,
+            # which is why this and per_stream and batched all agree at batch 1
+            # and the Taalas anchor cannot separate them.
+            #
+            # A dense model has one region by construction, so every token lands
+            # on it and this reduces to per_stream -- correctly, because a dense
+            # model has no disjointness to exploit.  The load-balance derate
+            # carries the gap between the mean region and the busiest one.
+            experts_per_token = max(1, int(model.experts_per_token or 1))
+            num_experts = max(1, int(model.num_experts or 1))
+            engaged_regions = max(1.0, num_experts * coverage)
+            passes = (batch_size * experts_per_token) / engaged_regions
+            # The imbalance derate only means something when there is more than
+            # one region to be imbalanced across.  A dense model has exactly one,
+            # so every token lands on it and this reduces to per_stream exactly.
+            if engaged_regions > 1.0:
+                balance = technology.efficiency("expert_load_balance").value
+                passes = passes / max(balance, 1e-9)
+            # A per-region fabric can never be worse than a global broadcast --
+            # in the limit every token lands on one region, which is per_stream.
+            passes = min(max(1.0, passes), float(batch_size))
+            region_sweeps = passes
+
+            per_stream_traffic = weight_traffic(model, 1)
+            per_stream_bytes = per_stream_traffic.total_bytes * representation_scale
+            if weight_traffic_policy == "full_checkpoint":
+                per_stream_bytes = stored_weight_bytes
+            engaged_weight_bytes = per_stream_bytes * passes
+            engaged_fraction = (
+                per_stream_bytes / stored_weight_bytes
+                if stored_weight_bytes > 0
+                else 1.0
+            )
+            effective_weight_bw = budget.weight_read_bytes_s * engaged_fraction
+            weight_time = (
+                engaged_weight_bytes / effective_weight_bw
+                if effective_weight_bw > 0
+                else math.inf
+            )
+        elif budget.weight_amortization == "per_stream":
             # Compute-in-ROM: a cell both stores its bits and multiplies them,
             # so a second concurrent stream needs a second pass through the
             # fabric.  Every batch member pays its own sweep, aggregate
@@ -1366,7 +1416,14 @@ def evaluate(
         "device_count": float(devices),
     }
     if budget.weight_store == "rom":
-        sweeps = batch_size if budget.weight_amortization == "per_stream" else 1
+        if budget.weight_amortization == "per_stream":
+            sweeps = float(batch_size)
+        elif budget.weight_amortization == "per_region":
+            # The busiest expert region's queue depth, not the batch: disjoint
+            # regions run together and only co-located tokens serialise.
+            sweeps = float(region_sweeps)
+        else:
+            sweeps = 1.0
         metrics["rom_sweeps_per_step"] = float(sweeps)
         metrics["rom_full_array_sweep_time_s"] = (
             sweeps * stored_weight_bytes / budget.weight_read_bytes_s
