@@ -631,21 +631,31 @@ def _rewrite_comparison(
     )
 
 
-#: The index families ``ROUTE.WINDOW_INDEX`` actually produces.
+#: The index families ``ROUTE.WINDOW_INDEX`` actually produces.  A gate, not a
+#: label: a family outside this set is refused at compile time.
 #:
 #: The engine writes ``arange(first, last + 1)`` over *absolute positions* of a
 #: causal window, tail-padded -- that and nothing else.  A graph may name a
 #: different family, and the DeepSeek export does: the ratio-128 layers declare
 #: ``causal_compressed_dense``, whose released form is
 #: ``arange(0, context // ratio) + offset`` -- an enumeration of completed
-#: *compression groups*, in a different unit, rebased onto the joined KV rows.
-#: No frozen operator produces that, and ``index_family`` is read by no engine,
-#: so lowering it to ``WINDOW_INDEX`` emits a second copy of the sliding-window
-#: position list under a name that says otherwise.  That is not a fault
-#: anything can catch -- every index it names is a legal KV row -- so the
-#: mismatch is recorded on the deployment instead of being taken as the
-#: identity.  Adding the operator, or restating the plan, is a change to the
-#: frozen table and to the exporter, not to a backend.
+#: *compression groups*, counted in groups rather than positions, and rebased
+#: onto the joined KV rows.  No frozen operator produces that, and
+#: ``index_family`` is read by no engine, no verifier and no other backend, so
+#: lowering it to ``WINDOW_INDEX`` emits a second copy of the sliding-window
+#: position list under a name that says otherwise.
+#:
+#: Nothing can catch that downstream.  Every index it names is a legal KV row,
+#: so the operand checks pass, the bound checks pass and the numeric checks
+#: pass; twenty layers would attend their sliding window twice and never reach
+#: a compressed group, and the tokens would come out fluent and wrong.  A lane
+#: that does not build is a visible failure and a lane that attends the wrong
+#: rows is an invisible one, so this refuses -- exactly as ``CACHE_ROW_MAPS``
+#: refuses a destination-row map this backend does not implement, "rather than
+#: silently taken as the identity".
+#:
+#: Adding the operator, or restating the plan, is a change to the frozen
+#: lowering table and to the exporter, and neither is a backend's to make.
 IMPLEMENTED_INDEX_FAMILIES = frozenset({"causal_circular_window"})
 
 
@@ -1036,7 +1046,6 @@ class RomLowering:
         self._predicated_operators: dict[str, str] = {}
         self._operand_alternatives: dict[str, str] = {}
         self._unrepresentable_predicates: dict[str, dict[str, str]] = {}
-        self._unimplemented_index_families: dict[str, list[str]] = {}
         self._unify_buffers()
 
     # -- sizes ----------------------------------------------------------
@@ -4024,9 +4033,18 @@ class RomLowering:
             if sub == int(Route.WINDOW_INDEX):
                 family = str(attributes.get("index_family", ""))
                 if family and family not in IMPLEMENTED_INDEX_FAMILIES:
-                    self._unimplemented_index_families.setdefault(
-                        family, []
-                    ).append(kernel.kernel_id)
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r} declares index family "
+                        f"{family!r}, which this backend does not implement.  "
+                        "It lowers to ROUTE.WINDOW_INDEX, and that operator "
+                        "emits arange(first, last + 1) over the absolute "
+                        "positions of a causal window, tail-padded -- a "
+                        "position list, not the enumeration this family names. "
+                        " No engine reads index_family, so the substitution "
+                        "would produce legal KV rows and nothing downstream "
+                        "could refuse them.  The frozen families are "
+                        f"{', '.join(sorted(IMPLEMENTED_INDEX_FAMILIES))}"
+                    )
                 # ``window_size`` is the name both exporters use; ``window``
                 # was read here and is declared by neither, so every window
                 # index fell through to the 128 default and was right only
@@ -5655,23 +5673,6 @@ class RomLowering:
         predicates = self._predicate_report()
         if predicates:
             builder.notes["rom_predicates"] = predicates
-        if self._unimplemented_index_families:
-            # See IMPLEMENTED_INDEX_FAMILIES.  Named on the artifact because an
-            # index family the frozen operator cannot produce is not a fault
-            # any engine can raise: the rows it names are legal.
-            builder.notes["rom_unimplemented_index_families"] = {
-                family: {
-                    "sites": len(sites),
-                    "engine": "ROUTE.WINDOW_INDEX",
-                    "produces": (
-                        "a causal window of absolute positions, tail-padded"
-                    ),
-                    "example": sorted(sites)[0],
-                }
-                for family, sites in sorted(
-                    self._unimplemented_index_families.items()
-                )
-            }
         builder.notes["memory_footprint"] = self._prove_memory_capacity()
         builder.notes["rom_plan"] = plan.to_dict()
         builder.notes["rom_lowering"] = {

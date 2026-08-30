@@ -3497,7 +3497,7 @@ def test_a_reduced_join_states_the_extent_its_remaining_operands_supply(
         )
 
 
-def test_an_index_family_the_frozen_operator_cannot_produce_is_named(
+def test_an_index_family_the_frozen_operator_cannot_produce_is_refused(
     predicated_graph, deepseek_capability
 ):
     """The silent shape: a name the ABI does not read, over an operator that
@@ -3507,12 +3507,19 @@ def test_an_index_family_the_frozen_operator_cannot_produce_is_named(
     positions of a causal window and nothing else.  The DeepSeek export's
     ratio-128 layers declare ``index_family = "causal_compressed_dense"``,
     whose released form is ``arange(0, context // ratio) + offset`` -- an
-    enumeration of completed compression *groups*, in a different unit and
-    rebased onto the joined KV rows.  No engine reads ``index_family``, so the
-    difference produces a second copy of the sliding-window position list and
-    every index in it is a legal KV row: no operand check, no bound check and
-    no numeric check can see it.  A backend cannot add the operator, so it
-    names the mismatch on the artifact instead of taking it as the identity.
+    enumeration of completed compression *groups*, counted in groups rather
+    than positions and rebased onto the joined KV rows.  No engine, verifier or
+    other backend reads ``index_family``, so the substitution emits a second
+    copy of the sliding-window position list and every index in it is a legal
+    KV row: no operand check, no bound check and no numeric check can see it.
+    Twenty layers would attend their window twice and never reach a compressed
+    group.
+
+    A backend cannot add the operator, so it refuses.  A lane that does not
+    build is a visible failure; a lane that attends the wrong rows is an
+    invisible one, and the same reasoning already governs ``CACHE_ROW_MAPS``
+    one screen up: an unimplemented destination-row map is "refused rather than
+    silently taken as the identity".
     """
     from compiler.backends.rom.common.program import IMPLEMENTED_INDEX_FAMILIES
 
@@ -3527,17 +3534,27 @@ def test_an_index_family_the_frozen_operator_cannot_produce_is_named(
         iteration_domain={},
         attributes={"index_family": "causal_compressed_dense"},
     )
-    lowering._aux(kernel, Major.ROUTE, int(Route.WINDOW_INDEX))
-    assert lowering._unimplemented_index_families == {
-        "causal_compressed_dense": ["probe.enumerate"]
-    }
-    # And a family the operator does produce is not reported.
-    lowering._unimplemented_index_families.clear()
-    lowering._aux(
+    with pytest.raises(RomLoweringError) as excinfo:
+        lowering._aux(kernel, Major.ROUTE, int(Route.WINDOW_INDEX))
+    message = str(excinfo.value)
+    # The refusal has to name all three, or it sends the reader looking for a
+    # defect in the wrong layer: the family declared, the operator it was
+    # lowered to, and what that operator actually emits.
+    assert "causal_compressed_dense" in message
+    assert "ROUTE.WINDOW_INDEX" in message
+    assert "absolute" in message and "positions" in message
+    assert "probe.enumerate" in message
+    # A family the operator does produce passes, and states the window the
+    # graph declared rather than a default.
+    aux = lowering._aux(
         dataclasses.replace(
-            kernel, attributes={"index_family": "causal_circular_window"}
+            kernel,
+            attributes={
+                "index_family": "causal_circular_window",
+                "window_size": 64,
+            },
         ),
         Major.ROUTE,
         int(Route.WINDOW_INDEX),
     )
-    assert lowering._unimplemented_index_families == {}
+    assert aux[0] == 64
