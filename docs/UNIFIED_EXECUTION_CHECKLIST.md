@@ -122,7 +122,7 @@
 
 ## W11 — Governed comparison and release
 
-- [ ] W11.1 TA-CMP-7-SKY130: Qwen ROM vs HBM, DeepSeek ROM-wafer vs HBM-32-node
+- [~] W11.1 Qwen ROM vs HBM — **produced, and it is the storage-class thesis in executed counters** (`results/abi3/comparison_qwen_rom_vs_hbm.json`). Both lanes decoded 24 tokens matching the oracle, the two token sequences are identical, evidence class `functional_artifact_only`, `depends_on_assumption` false. **Five counters differ and all five are memory traffic**: the ROM target reads 363,485,791,728 B from ROM and the HBM target reads 366,294,894,160 B from HBM, and the ROM target moves 437 MB / 61 MB through SRAM where the HBM target moves none. Nothing else in 115 counters differs. That is the claim — *the two deployments differ only in where the bytes live* — demonstrated on executed counters rather than argued. The DeepSeek half waits on W6.3/W6.4
 - [ ] W11.2 TA-CMP-7-ASAP7: same, predictive view, no cross-view mixing
 - [~] W11.3 Evidence ledger: every number traced to executed counters or labeled external
 - [ ] W11.4 Final status report and README update
@@ -472,7 +472,7 @@
   should be made against a lane that can execute and prove it.
 
 - **OI-27 — the governed comparison tool cannot produce a comparison. Any
-  comparison.** `tools/build_comparison_report.py` exists to compare Qwen ROM
+  comparison.** *(Fixed; the first comparison now exists — see W11.1.)* `tools/build_comparison_report.py` exists to compare Qwen ROM
   against Qwen HBM and the DeepSeek wafer against the DeepSeek cluster. Run on
   the first pair that has ever had two real records, it refuses on three counts,
   and two of them are structural — no pair of distinct deployments can ever

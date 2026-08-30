@@ -209,9 +209,10 @@ def main() -> int:
             prompt_token_count=len(prompt),
             max_new_tokens=limit,
             generation_policy_digest=digest_of(driver.policy),
+            generation_policy=dict(driver.policy),
             numeric_profile=graph_body.get("numeric_profile", ""),
             graph_id=graph_id,
-            tokenizer_sha256=workload.get("metadata", {}).get("tokenizer_sha256", ""),
+            tokenizer_sha256=_tokenizer_digest(workload, args.reference),
         ),
         target=TargetIdentity(
             target_id=deployment.target_id,
@@ -258,6 +259,26 @@ def main() -> int:
     if result.failure:
         return 4
     return 0 if status == "pass" else 5
+
+
+def _tokenizer_digest(workload: dict[str, Any], reference: Path | None) -> str:
+    """The tokenizer these token ids came from.
+
+    Two evidence writers sourced this differently -- one from the workload's
+    metadata, which the workload files do not carry, and one from the reference
+    oracle, which does -- so one side of a comparison recorded the digest and
+    the other recorded an empty string, and the comparison gate refused the pair
+    for a reason that was really a bookkeeping difference.  The workload is the
+    right source and the oracle is the fallback until the workload files carry
+    it.
+    """
+    stated = workload.get("metadata", {}).get("tokenizer_sha256", "")
+    if stated or reference is None:
+        return str(stated)
+    try:
+        return str(json.loads(reference.read_text()).get("tokenizer_sha256", ""))
+    except Exception:  # a missing oracle must not fail the run
+        return ""
 
 
 def _status(

@@ -106,6 +106,10 @@ class WorkloadIdentity:
     numeric_profile: str
     graph_id: str
     tokenizer_sha256: str
+    #: The generation policy itself, so a comparison can look at what the run
+    #: computes rather than at a digest that also covers which object ids the
+    #: deployment happened to assign.
+    generation_policy: Mapping[str, Any] = dc_field(default_factory=dict)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -115,6 +119,7 @@ class WorkloadIdentity:
             "prompt_token_count": self.prompt_token_count,
             "max_new_tokens": self.max_new_tokens,
             "generation_policy_digest": self.generation_policy_digest,
+            "generation_policy": dict(self.generation_policy),
             "numeric_profile": self.numeric_profile,
             "graph_id": self.graph_id,
             "tokenizer_sha256": self.tokenizer_sha256,
@@ -203,10 +208,58 @@ SHARED_IDENTITY_FIELDS = (
     "workload_digest",
     "prompt_token_count",
     "max_new_tokens",
-    "generation_policy_digest",
     "numeric_profile",
     "graph_id",
     "tokenizer_sha256",
+)
+
+#: Generation-policy fields that are part of *what the run computes*.  The rest
+#: of the policy record is deployment-local or a declared capability bound, and
+#: comparing the whole record's digest refused every pair of distinct
+#: deployments -- forever, since two deployments must number their objects
+#: differently.  Measured on the two Qwen lanes, which are semantically
+#: identical: they differed on ``token_ring_object_id`` (36 against 24), on a
+#: declared ``max_new_tokens`` bound (512 against 8192, which is the capability's
+#: limit and not the run's), and on ``counter_class_id``.
+GENERATION_POLICY_SEMANTIC_FIELDS = (
+    "selection_mode",
+    "tie_rule",
+    "eos_count",
+    "eos_token_0",
+    "eos_token_1",
+    "eos_token_2",
+    "eos_token_3",
+    "eos_token_4",
+    "eos_token_5",
+    "eos_token_6",
+    "eos_token_7",
+    "vocabulary_size",
+    "rng_seed_hi",
+    "rng_seed_lo",
+)
+
+
+def generation_policy_semantics(policy: Mapping[str, Any]) -> dict[str, Any]:
+    """The part of a generation policy two targets must share to be compared."""
+    return {
+        name: policy[name]
+        for name in GENERATION_POLICY_SEMANTIC_FIELDS
+        if name in policy
+    }
+
+
+#: Evidence classes whose numbers are characterised against a technology.  A
+#: comparison may not cross technology views *for these*, which is what "no
+#: number crosses views" was always about.  A functional token comparison
+#: carries no characterised number at all, and gating it on the technology view
+#: forbade the ROM-versus-HBM study this file exists to govern -- memory
+#: technology is that study's independent variable and has to differ.
+PHYSICALLY_CHARACTERISED_CLASSES = frozenset(
+    {
+        EvidenceClass.SYNTHESIS,
+        EvidenceClass.PLACE_AND_ROUTE,
+        EvidenceClass.SPICE,
+    }
 )
 
 
@@ -223,10 +276,37 @@ def check_comparable(left: ExecutionRecord, right: ExecutionRecord) -> list[str]
         b = getattr(right.workload, field)
         if a != b:
             problems.append(f"workload identity differs on {field}: {a!r} vs {b!r}")
-    if left.target.technology_view != right.target.technology_view:
+    if (
+        left.evidence_class in PHYSICALLY_CHARACTERISED_CLASSES
+        and left.target.technology_view != right.target.technology_view
+    ):
         problems.append(
             f"technology views differ: {left.target.technology_view} vs "
-            f"{right.target.technology_view}; no number crosses views"
+            f"{right.target.technology_view}; no characterised number crosses "
+            "views"
+        )
+    left_policy = generation_policy_semantics(left.workload.generation_policy)
+    right_policy = generation_policy_semantics(right.workload.generation_policy)
+    if not left_policy or not right_policy:
+        # Two records that both recorded nothing compare equal, and calling that
+        # agreement is the vacuous pass this file exists to refuse.
+        problems.append(
+            "a record carries no generation policy, so the policies cannot be "
+            f"compared: left has {len(left_policy)} semantic field(s), right "
+            f"has {len(right_policy)}"
+        )
+    elif left_policy != right_policy:
+        differing = sorted(
+            k
+            for k in set(left_policy) | set(right_policy)
+            if left_policy.get(k) != right_policy.get(k)
+        )
+        problems.append(
+            "generation policies differ on "
+            + ", ".join(
+                f"{k} ({left_policy.get(k)!r} vs {right_policy.get(k)!r})"
+                for k in differing
+            )
         )
     if (
         left.implementation_identity
