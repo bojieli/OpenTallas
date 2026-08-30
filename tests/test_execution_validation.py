@@ -204,10 +204,20 @@ def test_the_check_fails_on_the_entry_sizes_it_was_built_to_catch(tmp_path) -> N
     assert body["status"] == "fail"
     assert len(body["problems"]) == len(body["rungs"])
     ratios = {r["context_tokens"]: r["ratio"] for r in body["rungs"]}
-    assert min(ratios.values()) > 2.5
-    # The error grows with context; a pure scale error would not.
-    ordered = [ratios[c] for c in sorted(ratios)]
-    assert ordered == sorted(ordered)
+
+    # The defect had two components and the five rungs separate them, which two
+    # rungs could not. Below the index-scan threshold only the entry size is
+    # wrong, so the error is exactly 1024/583; above it the index error
+    # compounds and grows with context as the scan does.
+    below = {c: r for c, r in ratios.items() if c < 32_000}
+    above = {c: r for c, r in ratios.items() if c >= 32_000}
+    assert below and above, "the pinned rungs must straddle the index-scan threshold"
+    for ratio in below.values():
+        assert ratio == pytest.approx(1024 / 583, rel=0.005)
+    ordered = [above[c] for c in sorted(above)]
+    assert ordered == sorted(ordered), "the index error must grow with context"
+    assert min(above.values()) > 2.5
+    assert max(above.values()) > max(below.values()) * 1.5
 
 
 @pytest.mark.skipif(not CHAT_HBM.is_file(), reason="no executed record")
@@ -281,3 +291,44 @@ def test_the_corrected_constants_predict_a_context_they_were_not_fitted_on(tmp_p
     assert max(by_id[n]["context_tokens"] for n in unseen) > max(
         by_id[n]["context_tokens"] for n in fitted
     )
+
+
+# --- the profile's weight accounting, against the graph that was exported -----
+
+DS_IR = ROOT / "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json"
+
+
+@pytest.mark.skipif(not DS_IR.is_file(), reason="no exported DeepSeek IR")
+def test_the_ir_binds_exactly_the_weights_the_profile_charges_to_decode() -> None:
+    """The other half of the figure of merit, checked the same way as the KV half.
+
+    The profile declares a checkpoint larger than the graph binds, and an
+    unexplained gap there would undermine the weight-to-KV ratio as surely as the
+    KV error did. It is not a gap: the profile's weight_traffic_policy says the
+    multi-token-prediction weights are "charged only under speculation", the
+    exported graph does no speculative decoding, and the difference is those
+    weights to the byte.
+    """
+
+    profile = json.loads(DS_MODEL.read_text())
+    main = profile["dense_weight_bytes"] + profile["routed_weight_bytes"]
+    draft = profile["draft_dense_weight_bytes"] + profile["draft_routed_weight_bytes"]
+    resident = profile["resident_only_weight_bytes"]
+
+    # The declared checkpoint is exactly its three parts, with nothing over.
+    assert profile["checkpoint_bytes"] == main + draft + resident
+
+    ir = json.loads(DS_IR.read_text())
+    bound = 0
+    for tensor in ir.get("tensors", []):
+        binding = tensor.get("binding")
+        if not binding:
+            continue
+        bound += binding.get("bytes") or sum(
+            segment.get("bytes", 0) for segment in binding.get("segments") or []
+        )
+
+    # The graph binds the decode path and the resident tables, and not the
+    # speculative draft. An equality, not a tolerance.
+    assert bound == main + resident
+    assert profile["checkpoint_bytes"] - bound == draft

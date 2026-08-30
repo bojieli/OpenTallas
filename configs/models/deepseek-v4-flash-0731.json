@@ -20,6 +20,7 @@
       "entry_bytes": 1024,
       "evidence": "measured on the released implementation: the reference oracle reports 1,024 bytes per (layer, context position) at both 32,000 and 128,000 tokens, which is the 512-wide latent at BF16. The previous 583 was read off the implementation rather than measured while running it; measured on the released implementation: 256 bytes per scanned index entry at both 32,000 and 128,000 tokens. The previous 68 was read off the implementation rather than measured while running it",
       "index_entry_bytes": 256.0,
+      "index_scan_min_compressed_entries": 8001,
       "kind": "compressed_sparse",
       "label": "csa",
       "recurrent_state_bytes": 0.0,
@@ -292,6 +293,12 @@
     },
     "index_head_dim": 128,
     "index_heads": 64,
+    "index_scan_threshold": {
+      "effect": "Charging the scan below the threshold overstated KV traffic by 1.60x at 8,001 tokens and 1.12x at 1,001. Every context this program makes a claim at -- 200,000 for Flash, 1,000,000 for Pro -- is far above the threshold, so no headline number moves.",
+      "evidence": "The released implementation reads NO sparse index at 1,001 tokens (251 compressed entries) or 8,001 tokens (2,001 entries), and reads exactly one entry per compressed position at 32,001 (8,001 entries), 128,001 and 200,001. The true threshold therefore lies in (2,001, 8,001]; 8,001 is the upper edge, chosen because it is the only value in that bracket that any measurement confirms. A rung at 16,000 or 64,000 tokens would narrow it.",
+      "grade": "measured_bracket",
+      "value_compressed_entries": 8001
+    },
     "index_topk": 512,
     "kv_cache_policy": "FP8 main + BF16 RoPE; FP4 index",
     "kv_cache_policy_status": "published serving recipe plus derived scale overhead",

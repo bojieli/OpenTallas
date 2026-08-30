@@ -50,6 +50,13 @@ class AttentionGroup:
     compression_ratio: int = 1
     top_k: int = 0
     index_entry_bytes: float = 0.0
+    #: Compressed-entry count at or above which the sparse index is actually
+    #: scanned.  Measured, not assumed: the released DeepSeek implementation
+    #: reads no index at 1,001 or 8,001 tokens (251 and 2,001 compressed entries)
+    #: and reads exactly one entry per compressed position at 32,001 and beyond.
+    #: Zero means "always scan", which is the behaviour every profile had before
+    #: the threshold was measured.
+    index_scan_min_compressed_entries: int = 0
     recurrent_state_bytes: float = 0.0
     recurrent_write_bytes: float | None = None
     label: str = ""

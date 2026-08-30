@@ -136,13 +136,22 @@ def _group_traffic(group: AttentionGroup, context_tokens: int) -> tuple[float, f
         main_entries = compressed_entries
         if group.kind == "compressed_sparse":
             main_entries = min(group.top_k, compressed_entries)
-            index_read = count * compressed_entries * group.index_entry_bytes
+            # Below a measured threshold the implementation selects without
+            # scanning the index at all, so charging the scan there overstates
+            # KV traffic -- by 1.60x at 8,001 tokens on DeepSeek-V4-Flash. The
+            # threshold is a property of the released implementation, not of the
+            # architecture, so it is carried in the profile rather than assumed
+            # here, and zero keeps the unconditional behaviour.
+            scans_index = compressed_entries >= group.index_scan_min_compressed_entries
+            scanned = compressed_entries if scans_index else 0
+            index_read = count * scanned * group.index_entry_bytes
             index_write = count * group.index_entry_bytes / group.compression_ratio
             index_storage = count * compressed_entries * group.index_entry_bytes
+            detail["index_scanned"] = scans_index
             read += index_read
             write += index_write
             storage += index_storage
-            detail["index_entries_scanned_per_layer"] = float(compressed_entries)
+            detail["index_entries_scanned_per_layer"] = float(scanned)
             detail["index_read_bytes"] = index_read
         read += count * (window + main_entries) * group.entry_bytes
         # One full-resolution window entry plus an amortized compressed entry.
