@@ -89,7 +89,7 @@ from runtime.abi3.constants import (
     TopologyClass,
     Vector,
 )
-from runtime.abi3.descriptors import Symbol
+from runtime.abi3.descriptors import Comparison, PredicateKind, Symbol
 
 PLAN_SCHEMA = "opentallas.hbm_sram.physical_plan.v3"
 PLAN_VERSION = "3.0.0"
@@ -993,6 +993,310 @@ def context_axis_of(
             )
         found = (axis, resolved)
     return found
+
+
+#: Amendment A3's frozen ``comparisons`` registry, as the exporter's
+#: symbol-comparison grammar spells it.  ``"<symbol> <op> <integer>"`` is the
+#: whole grammar; an operator outside this table is refused rather than guessed
+#: at, because a predicate read wrongly is a predicate that silently enables or
+#: disables an operator.
+#:
+#: Ported from ``compiler/backends/rom/common/program.py`` (commit 48cd6ed):
+#: one convention, two backends, and a predicate is a property of the ABI
+#: rather than of a target.
+PREDICATE_COMPARISONS: Mapping[str, Comparison] = {
+    "==": Comparison.EQ,
+    "!=": Comparison.NE,
+    "<": Comparison.LT,
+    "<=": Comparison.LE,
+    ">": Comparison.GT,
+    ">=": Comparison.GE,
+}
+
+
+def rewrite_comparison(
+    extent: RequestExtent, operator: str, immediate: int
+) -> tuple[Comparison, int]:
+    """State ``f(S) <op> K`` as a comparison on the bound symbol itself.
+
+    A18 makes a declared axis an affine image of a registered symbol,
+    ``numerator * S / unit + bias`` with the division flooring, and A3's
+    ``COMPARE_SYMBOL`` compares the *symbol* against an immediate.  So a
+    condition written over the derived name has to be moved onto the symbol,
+    and moved **exactly**: ``span_groups_ratio128 > 0`` is ``S // 128 > 0`` is
+    ``S >= 128``, not ``S > 0``.  Getting that wrong by one unit is the whole
+    defect class this lowering exists to close -- a predicate that reads true
+    where the source reads false issues the operator the source skips.
+
+    Only ``numerator == 1`` is rewritten.  A numerator above one makes the
+    image non-surjective and an equality over it names a set of symbol values
+    no single comparison states; rather than approximate it, this refuses.
+    """
+    unit = max(int(extent.unit), 1)
+    numerator = int(extent.numerator)
+    bias = int(extent.bias)
+    if numerator != 1:
+        raise PlanError(
+            f"predicate over an axis whose A18 numerator is {numerator}: a "
+            "comparison on the derived value is not a comparison on the "
+            "symbol, and this backend will not approximate one"
+        )
+    # ``S // unit <op> target`` with ``target = immediate - bias``.  ``S`` is a
+    # count and is never negative, which is what makes each rewrite exact.
+    target = int(immediate) - bias
+    if operator == ">":
+        return Comparison.GE, max(unit * (target + 1), 0)
+    if operator == ">=":
+        return Comparison.GE, max(unit * target, 0)
+    if operator == "<":
+        return Comparison.LT, max(unit * target, 0)
+    if operator == "<=":
+        return Comparison.LT, max(unit * (target + 1), 0)
+    if unit == 1:
+        return PREDICATE_COMPARISONS[operator], target
+    raise PlanError(
+        f"predicate {operator!r} against an axis in units of {unit}: an "
+        "equality on a floored quotient names a range of symbol values and "
+        "``COMPARE_SYMBOL`` states one comparison; this backend will not "
+        "approximate it"
+    )
+
+
+def symbol_condition(condition: str) -> tuple[Symbol, Comparison, int]:
+    """Parse one declared condition into an A3 ``COMPARE_SYMBOL`` triple."""
+    parts = str(condition).split()
+    if len(parts) != 3 or parts[1] not in PREDICATE_COMPARISONS:
+        raise PlanError(
+            f"predicate condition {condition!r} is not the declared "
+            "'<symbol> <comparison> <integer>' statement over a runtime "
+            "symbol.  ABI 3.0's frozen predicate kinds state a comparison and "
+            "nothing else: there is no arithmetic in a PREDICATE payload and "
+            "in particular no modulus"
+        )
+    name, operator, literal = parts
+    extent = REQUEST_EXTENT.get(name)
+    if extent is None:
+        raise PlanError(
+            f"predicate condition {condition!r} names {name!r}, which is not "
+            "a runtime symbol this backend resolves; an unrecognised name "
+            "would silently predicate nothing"
+        )
+    try:
+        immediate = int(literal)
+    except ValueError:
+        raise PlanError(
+            f"predicate condition {condition!r} compares against {literal!r}, "
+            "which is not an integer immediate"
+        ) from None
+    comparison, value = rewrite_comparison(extent, operator, immediate)
+    return Symbol[extent.symbol.upper()], comparison, value
+
+
+def predicate_conditions(graph: KernelGraph) -> tuple[
+    dict[str, str], dict[str, dict[str, str]]
+]:
+    """``predicate_output`` value name -> the condition this target states.
+
+    A kernel that computes a boolean names it in ``predicate_output`` and says
+    what it means in ``predicate_condition``, one entry per phase.  No neutral
+    kind produces a ``bool`` and ABI 3.0 has no operator that could write one,
+    so the value itself cannot exist on the device: what a backend can do is
+    state the *condition* the value stands for, and only where a frozen
+    predicate kind states it.
+
+    The released compressor's condition has two phases and only one of them is
+    expressible.  Prefill is ``span_groups_ratioN > 0`` -- a comparison over a
+    declared symbol, which ``COMPARE_SYMBOL`` states exactly.  Decode is
+    ``(start_pos + 1) % ratio == 0``, and the frozen ``comparisons`` registry
+    has no modulus, no masking and no arithmetic; ``BOOLEAN_OBJECT`` reads a
+    *statically* indexed word, so it cannot read ``ring[start_pos]`` either.
+    Inventing a predicate kind for it would be an ABI change and is not a
+    backend's to make, so the decode form is recorded as unrepresentable and
+    reported in the deployment notes rather than approximated.
+    """
+    values: dict[str, str] = {}
+    refused_values: dict[str, dict[str, str]] = {}
+    for kernel in graph.kernels:
+        name = kernel.attributes.get("predicate_output")
+        if not name:
+            continue
+        declared = kernel.attributes.get("predicate_condition")
+        if declared is None:
+            raise PlanError(
+                f"kernel {kernel.kernel_id!r} declares predicate output "
+                f"{name!r} and no ``predicate_condition``; a value no "
+                "instruction can compute and no condition can state is a "
+                "predicate a backend would have to guess"
+            )
+        forms = (
+            {"": str(declared)}
+            if isinstance(declared, str)
+            else {str(k): str(v) for k, v in dict(declared).items()}
+        )
+        usable: dict[str, str] = {}
+        refused: dict[str, str] = {}
+        for phase, condition in forms.items():
+            try:
+                symbol_condition(condition)
+            except PlanError as exc:
+                refused[phase] = f"{condition} -- {exc}"
+            else:
+                usable[phase] = condition
+        if not usable:
+            raise PlanError(
+                f"kernel {kernel.kernel_id!r} declares predicate output "
+                f"{name!r} whose every phase is outside ABI 3.0's frozen "
+                f"predicate kinds: {refused}"
+            )
+        order = [p for p in ("prefill", "", "decode") if p in usable]
+        chosen = usable[order[0] if order else sorted(usable)[0]]
+        if refused:
+            refused_values[str(name)] = {
+                "lowered": chosen,
+                **{f"refused.{phase}": text for phase, text in refused.items()},
+            }
+        values[str(name)] = chosen
+    return values, refused_values
+
+
+def condition_of(conditions: Mapping[str, str], declared: str, where: str) -> str:
+    """One declared predicate, as a condition over a runtime symbol."""
+    if declared in conditions:
+        return conditions[declared]
+    if len(str(declared).split()) != 3:
+        raise PlanError(
+            f"{where}: predicate {declared!r} is neither a symbol comparison "
+            "nor the ``predicate_output`` of a kernel in this graph; a "
+            "predicate a backend cannot resolve is a predicate it would "
+            "silently drop"
+        )
+    return str(declared)
+
+
+def kernel_condition(
+    conditions: Mapping[str, str], kernel: Kernel
+) -> str | None:
+    """The one condition under which this kernel's operator is issued."""
+    declared: list[str] = []
+    attribute = kernel.attributes.get("execution_predicate")
+    if attribute:
+        declared.append(str(attribute))
+    conditional = kernel.attributes.get("conditional_outputs")
+    if conditional:
+        names = {str(v) for v in dict(conditional).values()}
+        # ``COMPRESS_STATE_UPDATE`` is the one kernel that declares this, and
+        # the exporter's reason is that the released ``Compressor.forward``
+        # writes its raw window on every step, so only the two pooled results
+        # are conditional.  On this ABI the raw window is not part of the
+        # operator at all -- ``VECTOR.COMPRESS`` binds no STATE resource in
+        # this sub-case and the engine says so -- so both of the operator's
+        # declared outputs are the pooled ones, there is nothing
+        # unconditional left for it to do, and the whole instruction carries
+        # the predicate.  Checked rather than assumed: an unconditional output
+        # beside a conditional one is refused, because ABI 3.0 has no
+        # per-output predicate and half-lowering one would write a result the
+        # source did not produce.
+        if len(names) != 1 or len(conditional) != len(kernel.outputs):
+            raise PlanError(
+                f"kernel {kernel.kernel_id!r} declares {len(conditional)} "
+                f"conditional outputs of {len(kernel.outputs)} on "
+                f"{len(names)} distinct predicates; ABI 3.0 predicates an "
+                "instruction, not an output, so only an operator whose every "
+                "output is conditional on one value is expressible"
+            )
+        declared.append(next(iter(names)))
+    resolved = {condition_of(conditions, d, kernel.kernel_id) for d in declared}
+    if not resolved:
+        return None
+    if len(resolved) > 1:
+        raise PlanError(
+            f"kernel {kernel.kernel_id!r} names {len(resolved)} distinct "
+            f"predicates {sorted(resolved)}; an ABI 3.0 instruction carries "
+            "one ``predicate_id`` and there is no conjunction"
+        )
+    return next(iter(resolved))
+
+
+def operand_present(
+    conditions: Mapping[str, str], kernel: Kernel
+) -> tuple[int, str] | None:
+    """The operand slot that vanishes, and the condition that keeps it."""
+    declared = kernel.attributes.get("operand_present_predicate")
+    if not declared:
+        return None
+    entries = dict(declared)
+    if len(entries) != 1:
+        raise PlanError(
+            f"kernel {kernel.kernel_id!r} names {len(entries)} operands whose "
+            "presence the request decides; two independent operands need four "
+            "alternative paths and ABI 3.0 gives an instruction one predicate, "
+            "so this backend refuses rather than picking one"
+        )
+    slot, condition = next(iter(entries.items()))
+    index = int(slot)
+    if not 0 <= index < len(kernel.inputs):
+        raise PlanError(
+            f"kernel {kernel.kernel_id!r} names operand {index} as "
+            f"conditionally present; it has {len(kernel.inputs)} inputs"
+        )
+    if kernel_condition(conditions, kernel) is not None:
+        raise PlanError(
+            f"kernel {kernel.kernel_id!r} is both predicated and names a "
+            "conditionally present operand; that is four paths on one "
+            "``predicate_id``"
+        )
+    return index, condition_of(conditions, str(condition), kernel.kernel_id)
+
+
+def join_extent(
+    tensors: Mapping[str, Tensor],
+    names: Sequence[str],
+    axis: int,
+    span_max: int,
+) -> tuple[RequestExtent | None, int]:
+    """The join-axis extent of a set of operands, as one affine statement.
+
+    Amendment A17 makes a join's output extent the sum of its inputs', so the
+    reduced path of a conditionally present operand has an output that is the
+    sum over the operands that remain.  Static extents add into the bias -- a
+    128-row sliding window is there for a span of one -- and symbolic ones add
+    their numerators.  Two symbolic operands counted in *different* units, or
+    over different symbols, have no single affine image and are refused rather
+    than approximated: the full attention join is exactly that case, which is
+    why the exporter states its fused form itself and only the reduced one is
+    derived here.
+    """
+    symbol: str | None = None
+    unit = 1
+    numerator = 0
+    bias = 0
+    for name in names:
+        tensor = tensors[name]
+        entry = tensor.shape[axis] if axis < len(tensor.shape) else None
+        if not isinstance(entry, Symbolic):
+            value, _ = _extent_value(entry if entry is not None else 1, span_max)
+            bias += int(value)
+            continue
+        extent = request_extent_of(tensor, span_max)
+        if extent is None or int(entry.multiplier or 1) != 1:
+            raise PlanError(
+                f"join operand {name!r} leads on axis {axis} with "
+                f"{entry.symbol!r}, which this backend cannot state as an A18 "
+                "affine image; the reduced path's extent would be a guess"
+            )
+        if symbol is None:
+            symbol, unit = extent.symbol, int(extent.unit)
+        elif (symbol, unit) != (extent.symbol, int(extent.unit)):
+            raise PlanError(
+                f"a join of operands counted in different units ({symbol}/"
+                f"{unit} and {extent.symbol}/{extent.unit}) has no single A18 "
+                "extent; this backend refuses to invent one"
+            )
+        numerator += int(extent.numerator)
+        bias += int(extent.bias)
+    if symbol is None:
+        return None, bias
+    return RequestExtent(numerator=numerator, unit=unit, bias=bias, symbol=symbol), 0
 
 
 def request_extent_of(tensor: Tensor, span_max: int) -> RequestExtent | None:
@@ -2791,11 +3095,14 @@ def _aux_ids(
     graph: KernelGraph,
     span_max: int,
     groups: int,
+    undeclared_windows: list[str] | None = None,
 ) -> tuple[int, ...]:
     """Auxiliary IDs required by TA-ABI3-OPCONV-1 for this subopcode."""
     attributes = dict(kernel.attributes)
     family, sub = int(engine.family), int(engine.sub)
     aux: list[int] = []
+    if undeclared_windows is None:
+        undeclared_windows = []
 
     def out_cols(slot: int = 0) -> int:
         if slot >= len(kernel.outputs):
@@ -2876,8 +3183,27 @@ def _aux_ids(
                 int(Symbol.POSITION_START),
             ]
         elif sub == int(Route.WINDOW_INDEX):
+            # The graph declares ``window_size``.  This read ``window``, which
+            # no exporter emits, so the key never hit and the fallback -- the
+            # output's own column count -- was the number every one of these
+            # operators carried.  It happened to be right for the 43 genuine
+            # sliding-window kernels, because a 128-row window is written into
+            # a 128-column output; it was 2,048 for the compressed-group
+            # enumeration, whose output is 2,048 wide and whose window is not
+            # 2,048 anything.  Two lanes read two different wrong keys and both
+            # got 128 by unrelated coincidences, which is why nothing noticed.
+            #
+            # The fallback stays rather than becoming a refusal: a graph that
+            # declares no window is declaring an index family this operator
+            # does not produce, and that is a fact about the family, recorded
+            # once in the deployment notes, not a per-kernel verdict this
+            # function should be issuing.
+            window = attributes.get("window_size")
+            if window is None:
+                undeclared_windows.append(kernel.kernel_id)
+                window = out_cols()
             aux = [
-                int(attributes.get("window", out_cols())),
+                int(window),
                 int(attributes.get("mask_mode", 0)),
                 int(Symbol.CONTEXT_LENGTH),
             ]
@@ -3092,6 +3418,12 @@ def _plan_kernels(
     """
     warnings: list[str] = []
     arity_faults: list[str] = []
+    # ``ROUTE.WINDOW_INDEX`` operators whose kernel declared no ``window_size``.
+    # Recorded rather than refused: a graph that declares no window is naming
+    # an index family this operator does not produce, which is a fact about the
+    # family and belongs in one line of the manifest, not in a per-kernel
+    # verdict from the aux-id builder.
+    undeclared_windows: list[str] = []
     placement_by_tensor = {p.tensor_id: p for p in placements}
     plans: list[KernelPlan] = []
     # The emitted body is the *first iteration* of each band, which spans the
@@ -3420,7 +3752,15 @@ def _plan_kernels(
                 row_loop=row_loop,
                 context_loop=context_loop,
                 operands=tuple(operands),
-                aux=_aux_ids(kernel, engine, tensors, graph, span_max, groups),
+                aux=_aux_ids(
+                    kernel,
+                    engine,
+                    tensors,
+                    graph,
+                    span_max,
+                    groups,
+                    undeclared_windows,
+                ),
                 slot_order=tuple(slot_order),
                 groups=groups,
                 phases=tuple(kernel.phases),
@@ -3439,6 +3779,11 @@ def _plan_kernels(
             "would refuse it at issue time:\n  "
             + "\n  ".join(shown)
             + (f"\n  ... and {more} more" if more else "")
+        )
+    if undeclared_windows:
+        warnings.append(
+            "ROUTE.WINDOW_INDEX operators declaring no window_size: "
+            + ", ".join(sorted(undeclared_windows))
         )
     return tuple(plans), warnings
 

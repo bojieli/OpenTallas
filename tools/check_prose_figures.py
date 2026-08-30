@@ -184,6 +184,46 @@ shape, and the shape decides what would fix them.
 Do not invent a producer for one of these to make it annotatable. Either
 something computes it and writes it down, or the honest annotation is the
 absence of one.
+
+ITS SECOND BLIND SPOT: A FRESH NUMBER THAT MEANS SOMETHING ELSE
+---------------------------------------------------------------
+
+Everything above is about a figure drifting from its artifact. This checker
+closes that. It cannot close the other half, and one class of figure in this
+repository is quoted all night in a way the artifact does not support.
+
+**A retired-instruction count measures reach, not fidelity.** An execution
+record's `instructions.retired` says how far a program got before it trapped:
+`N instructions issued and retired without a trap`. It does not say
+`the first N operations of the model were computed`, and the two are different
+claims about different things. Arithmetic that is wrong but finite does not
+trap -- it produces a number and execution continues -- so a lane can retire
+more instructions *because* a defect let it past a check, and the count will
+rise exactly as it does when a defect is fixed.
+
+That is not hypothetical. On 2026-08-30 the HBM lane was found to be addressing
+791 of 795 block-scaled weights from the wrong codes and dropping all 427
+quantised-activation scales entirely; every retired count it had reported --
+251, 299, 1,896 -- was real as a progress marker and described execution
+through FP8 and MXFP4 contractions that were not computing at the released
+checkpoint's precision. No published figure had to be retracted, because none
+had ever been offered as evidence of correctness; but the distinction was never
+drawn either, and prose that says "the lane computes the first N operations"
+would have been false while every annotation in it resolved.
+
+So, when annotating one of these:
+
+  * `retired`, `retired_work`, `instructions.retired` -- name what they are.
+    `name="DeepSeek HBM retired"` is right; a label implying computation is
+    not. The prose beside them should say `retires N instructions` and not
+    `computes N operations`.
+  * The only figure that carries fidelity is a token compared against a
+    reference: `reference_agreement`, `first_divergence_index`, and the token
+    ids themselves. Annotate those where a correctness claim is being made,
+    and prefer them to any count.
+  * A count rising is evidence a wall moved. It is not evidence the work
+    before the wall was right. Those need separate artifacts and separate
+    annotations, and this checker will not notice if you conflate them.
 """
 
 from __future__ import annotations

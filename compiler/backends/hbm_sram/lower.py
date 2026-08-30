@@ -39,6 +39,7 @@ readable out of the descriptor table either way.
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Any, Iterable, Mapping, Sequence
 
 from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Symbolic, Tensor
@@ -48,6 +49,7 @@ from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
     Attention,
     Control,
+    Reduction,
     Dma,
     CounterGroup,
     DType,
@@ -99,6 +101,13 @@ from .plan import (
     position_inputs,
     ring_modulus,
     round_up as _round_up,
+    _abi_input_slots,
+    condition_of,
+    join_extent,
+    kernel_condition,
+    operand_present,
+    predicate_conditions,
+    symbol_condition,
     value_reads,
     writes_state_plane,
 )
@@ -367,6 +376,26 @@ class _Emitter:
         self.tensors = {t.tensor_id: t for t in graph.tensors}
         self.kernels = {k.index: k for k in graph.kernels}
         self._value_reads = value_reads(graph)
+        # Amendment A3.  The neutral graph states three conditional shapes and
+        # ABI 3.0 states one thing about an instruction -- ``predicate_id``
+        # plus the ``PREDICATED``/``PREDICATE_INVERT`` flags against a
+        # ``PREDICATE`` descriptor -- so each shape is mapped onto that, in the
+        # same words the ROM lane maps them (``compiler/backends/rom/common/
+        # program.py``, commit 48cd6ed): one convention, two backends.
+        #
+        #   ``execution_predicate``        the operator vanishes.
+        #   ``conditional_outputs``        expressible only when *every* output
+        #                                  is conditional on one value, which
+        #                                  is then the operator's own predicate.
+        #   ``operand_present_predicate``  a complementary pair of instructions
+        #                                  and an unpredicated join.
+        self._predicate_values, self._unrepresentable_predicates = (
+            predicate_conditions(graph)
+        )
+        self._predicate_cache: dict[tuple[int, int, int], int] = {}
+        self._predicated_operators: dict[str, str] = {}
+        self._operand_alternatives: dict[str, str] = {}
+        self._emitted_kernels: set[int] = set()
         self.span_max = plan.span_max
         self.builder = DeploymentBuilder(
             target_id=target_id
@@ -419,6 +448,7 @@ class _Emitter:
     # -- entry point -----------------------------------------------------
     def run(self) -> Deployment:
         builder = self.builder
+        self._prove_band_predicates_agree()
         self._declare_topology()
         self._declare_objects()
         self._declare_states()
@@ -476,6 +506,7 @@ class _Emitter:
                 )
 
         builder.emit(Major.CONTROL, Control.COMPLETE)
+        self._prove_predicates_lowered()
         self._declare_entrypoints()
         builder.source_identity = {
             "graph_id": self.graph.graph_id,
@@ -516,7 +547,130 @@ class _Emitter:
                 "token_block_rows": self.plan.proofs.get("token_block_rows", 0),
             }
         )
+        # Amendment A3.  What was predicated, on what condition, and what the
+        # frozen predicate kinds could not state.  Published beside the program
+        # rather than left to be inferred from ``instructions.predicated_off``.
+        # Emitted only when non-empty: notes sit inside the deployment digest,
+        # so a graph that declares no predicate says nothing here and its
+        # manifest is byte-identical to the one it had before predicates
+        # existed -- which is what keeps the Qwen digest a fixed point.
+        predicates = self._predicate_report()
+        if predicates:
+            builder.notes["predicates"] = predicates
         return builder.finish()
+
+    def _predicate_report(self) -> dict[str, Any]:
+        """What this lowering predicated, and what it could not state."""
+        report: dict[str, Any] = {}
+        if self._predicated_operators:
+            report["predicated_operators"] = len(self._predicated_operators)
+            report["predicated_conditions"] = {
+                condition: sum(
+                    1
+                    for value in self._predicated_operators.values()
+                    if value == condition
+                )
+                for condition in sorted(set(self._predicated_operators.values()))
+            }
+        if self._operand_alternatives:
+            report["operand_alternative_paths"] = len(self._operand_alternatives)
+            report["operand_alternative_conditions"] = {
+                condition: sum(
+                    1
+                    for value in self._operand_alternatives.values()
+                    if value == condition
+                )
+                for condition in sorted(set(self._operand_alternatives.values()))
+            }
+        if self._unrepresentable_predicates:
+            report["unrepresentable_predicates"] = dict(
+                sorted(self._unrepresentable_predicates.items())
+            )
+        return report
+
+    def _prove_predicates_lowered(self) -> None:
+        """Nothing the graph declared conditional was issued unconditionally.
+
+        This is the check the whole section exists for.  A predicate that is
+        declared and not lowered leaves no trace at runtime: the instruction
+        issues where the source skips it, and either an engine refuses it or it
+        computes against an operand the request does not have and nothing
+        complains.  So the lowering proves, against the kernels it actually
+        emitted, that every declared condition reached an instruction.
+        """
+        missing: list[str] = []
+        for index in sorted(self._emitted_kernels):
+            kernel = self.kernels[index]
+            attributes = kernel.attributes
+            declares = bool(
+                attributes.get("execution_predicate")
+                or attributes.get("conditional_outputs")
+            )
+            if declares and kernel.kernel_id not in self._predicated_operators:
+                missing.append(f"{kernel.kernel_id} ({kernel.kind}): execution")
+            if (
+                attributes.get("operand_present_predicate")
+                and kernel.kernel_id not in self._operand_alternatives
+            ):
+                missing.append(f"{kernel.kernel_id} ({kernel.kind}): operand")
+        if missing:
+            raise LoweringError(
+                "these kernels declare a condition that reached no "
+                f"instruction: {missing[:8]}.  A declared predicate that is "
+                "not lowered is invisible -- the operator issues where the "
+                "source skips it -- so the lowering refuses rather than "
+                "emitting it"
+            )
+
+    def _prove_band_predicates_agree(self) -> None:
+        """Every layer a band body stands for must state the same predicate.
+
+        A band is emitted once and executed once per layer, so the body carries
+        the *first* layer's kernel at each position.  The fold identity is
+        structural -- kind, contract, operand roles, dtypes, weight extents --
+        and says nothing about attributes, so two layers with different
+        conditions could share a body and one layer's predicate would silently
+        govern the other's execution.  Nothing downstream could see it: the
+        program is admitted, every operand is in bounds, and the wrong layer is
+        simply skipped or issued.  So it is checked here, where the fold is
+        known, rather than assumed from the fact that the released stack
+        alternates in step with its compression ratios.
+        """
+        by_layer: dict[int, list[Kernel]] = {}
+        for kernel in self.graph.kernels:
+            if kernel.layer is not None:
+                by_layer.setdefault(kernel.layer, []).append(kernel)
+        for band in self.plan.bands:
+            if band.layer_count <= 1:
+                continue
+            columns: dict[int, list[Kernel]] = {}
+            for step in range(band.layer_count):
+                layer = band.first_layer + step * band.period
+                for position, kernel in enumerate(by_layer.get(layer, [])):
+                    columns.setdefault(position, []).append(kernel)
+            for position, column in sorted(columns.items()):
+                conditions = {
+                    kernel_condition(self._predicate_values, k) for k in column
+                }
+                if len(conditions) > 1:
+                    raise LoweringError(
+                        f"band {band.band_id} position {position} folds layers "
+                        f"{[k.kernel_id for k in column][:4]} whose execution "
+                        f"predicates differ ({sorted(map(str, conditions))}); a "
+                        "loop body states one predicate and would govern every "
+                        "layer it stands for with it"
+                    )
+                operands = {
+                    (operand_present(self._predicate_values, k) or (None, None))
+                    for k in column
+                }
+                if len(operands) > 1:
+                    raise LoweringError(
+                        f"band {band.band_id} position {position} folds layers "
+                        f"{[k.kernel_id for k in column][:4]} whose "
+                        "conditionally present operands differ; one loop body "
+                        "cannot state two alternative paths"
+                    )
 
     def _address(self, key: str) -> tuple[int, int]:
         """The planned base address and home channel for one object."""
@@ -1013,6 +1167,49 @@ class _Emitter:
         self._waits[unique] = wid
         return wid
 
+    def _predicate_descriptor(self, condition: str) -> int:
+        symbol, comparison, immediate = symbol_condition(condition)
+        key = (int(symbol), int(comparison), int(immediate))
+        cached = self._predicate_cache.get(key)
+        if cached is not None:
+            return cached
+        pid = self.builder.predicate(
+            kind=PredicateKind.COMPARE_SYMBOL,
+            comparison=comparison,
+            selector_kind=SelectorKind.RUNTIME_SYMBOL,
+            selector_index=int(symbol),
+            immediate=int(immediate),
+            key=(
+                f"pred.{symbol.name.lower()}."
+                f"{comparison.name.lower()}.{immediate}"
+            ),
+        )
+        self._predicate_cache[key] = pid
+        return pid
+
+    def _kernel_predicate(self, plan: KernelPlan) -> int:
+        """This kernel's one predicate: its phase, or its declared condition.
+
+        An instruction carries one ``predicate_id``, so a kernel that names a
+        phase *and* a condition is a conjunction the ABI cannot state.  Nothing
+        in either released graph does; a graph that did would be refused here
+        rather than have one of the two silently dropped.
+        """
+        kernel = self.kernels[plan.index]
+        condition = kernel_condition(self._predicate_values, kernel)
+        phase = self._phase_predicate(plan.phases)
+        if condition is None:
+            return phase
+        if phase != NO_ID:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: declares both the phase "
+                f"{plan.phases[0]!r} and the condition {condition!r}; an "
+                "ABI 3.0 instruction carries one predicate_id and there is no "
+                "conjunction"
+            )
+        self._predicated_operators[kernel.kernel_id] = condition
+        return self._predicate_descriptor(condition)
+
     def _phase_predicate(self, phases: Sequence[str]) -> int:
         if len(phases) != 1:
             return NO_ID
@@ -1290,6 +1487,7 @@ class _Emitter:
         loops: Mapping[str, int],
         *,
         writable: bool,
+        narrow: tuple[int, int] | None = None,
     ) -> int:
         tensor = self.tensors[operand.tensor_id]
         dtype = dtype_of(operand.dtype)
@@ -1385,6 +1583,20 @@ class _Emitter:
             dims, strides, row_stride = self._declared_view(plan, operand)
             node_stride = plan.shard_columns
 
+        if narrow is not None:
+            # One axis shortened after the declared shape is built.  A17's
+            # reduced join needs exactly this: the segments the join keeps are
+            # a prefix of the destination's columns, so the reduced path is the
+            # same buffer read with a shorter extent on the join axis and the
+            # buffer's own row stride.
+            axis, extent = narrow
+            if not 0 <= axis < len(dims):
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: narrowing axis {axis} of a "
+                    f"rank-{len(dims)} view"
+                )
+            dims = list(dims)
+            dims[axis] = max(min(int(extent), int(dims[axis])), 1)
         numerator = int(operand.extent_numerator)
         dims, strides, numerator, row_stride = self._row_broadcast(
             plan, operand, dims, strides, numerator, row_stride
@@ -2288,6 +2500,7 @@ class _Emitter:
     # -- kernel emission --------------------------------------------------
     def _emit_kernel(self, plan: KernelPlan) -> None:
         kernel = self.kernels[plan.index]
+        self._emitted_kernels.add(plan.index)
         if kernel.kind in _TRANSACTION_KINDS:
             self._emit_state_kernel(plan, kernel)
             return
@@ -2313,6 +2526,17 @@ class _Emitter:
             for o in plan.operands
             if o.direction == "out"
         ]
+        present = operand_present(self._predicate_values, kernel)
+        if present is not None:
+            event = self._emit_alternative_paths(
+                plan, kernel, loops, inputs, outputs, absent=present[0],
+                condition=present[1],
+            )
+            event = self._maybe_link(plan, event, loops)
+            self._close_loops(loops, ["context", "row"])
+            for name in kernel.outputs:
+                self._event_of_tensor[name] = event
+            return
         operator = builder.operator(
             engine_family=Major(plan.engine_family),
             engine_sub=plan.engine_sub,
@@ -2332,7 +2556,7 @@ class _Emitter:
             descriptor_id=operator,
             wait_set_id=self._wait_set(self._producer_events(kernel)),
             signal_event_id=event,
-            predicate_id=self._phase_predicate(plan.phases),
+            predicate_id=self._kernel_predicate(plan),
             source_operation_id=plan.index,
         )
         # The exchange is *inside* the token-block loop.  A COMMUNICATION
@@ -2344,6 +2568,170 @@ class _Emitter:
         self._close_loops(loops, ["context", "row"])
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
+
+    def _emit_alternative_paths(
+        self,
+        plan: KernelPlan,
+        kernel: Kernel,
+        loops: Mapping[str, int],
+        inputs: Sequence[int],
+        outputs: Sequence[int],
+        *,
+        absent: int,
+        condition: str,
+    ) -> int:
+        """One operator, two complementary paths, one event.
+
+        ``operand_present_predicate`` says the operator issues either way and
+        one *operand* is there only under a condition.  ABI 3.0 predicates an
+        instruction, not an operand, so the pair is the lowering: the full
+        operand row under the condition, the reduced row under its inverse.
+        The two paths cannot share an event -- ABI 3.0 events are
+        single-assignment -- and a consumer cannot wait on the path that did
+        not run, because a wait on an unsignalled event is a device fault.  So
+        the pair is followed by an unpredicated ``CONTROL.NOP`` that publishes
+        the event the *result* is ordered by: it is the join of the two paths,
+        it retires whichever ran, and it keeps the consumer's dependency real
+        rather than dropped.
+
+        Two things change on the reduced path and both matter.  Its wait set
+        drops the vanished operand's producer -- that producer is predicated
+        off by the same condition and will never signal.  And, for a join, the
+        output's extent drops that operand's contribution: A17 makes the
+        output the sum of the inputs, so a path keeping the full extent would
+        declare rows no operand supplies.
+
+        Which slots may actually be emptied is not a guess.
+        ``REDUCTION.GROUPED_CONCAT`` reads its input slots through
+        ``optional_input`` and joins whatever is bound, so an absent operand is
+        ``NO_ID`` there.  Every other frozen operand row is mandatory --
+        ``ROUTE.INDEX_TOPK`` reads its score view's *shape* even where the
+        request completes no candidate and reads no value from it, which is
+        what A19 says the operator does below one compression group -- so on
+        those the reduced path keeps the operand bound and drops only the
+        ordering dependency.  Emptying a mandatory slot would produce a path
+        that cannot execute, which is worse than one that binds a view nothing
+        reads.
+        """
+        builder = self.builder
+        predicate = self._predicate_descriptor(condition)
+        self._operand_alternatives[kernel.kernel_id] = condition
+        slots = _abi_input_slots(kernel, plan.slot_order)
+        abi_slot = next(
+            (index for index, ir in enumerate(slots) if ir == absent), None
+        )
+        optional = (int(plan.engine_family), int(plan.engine_sub)) == (
+            int(Major.REDUCTION),
+            int(Reduction.GROUPED_CONCAT),
+        )
+        reduced_inputs = list(inputs)
+        reduced_outputs = list(outputs)
+        if optional:
+            if abi_slot is None or abi_slot >= len(reduced_inputs):
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: names input {absent} as "
+                    "conditionally present, and no ABI slot carries it"
+                )
+            reduced_inputs[abi_slot] = NO_ID
+            reduced_outputs[0] = self._reduced_join_output(plan, kernel, loops, absent)
+
+        def operator(row_in: Sequence[int], row_out: Sequence[int], key: str) -> int:
+            return builder.operator(
+                engine_family=Major(plan.engine_family),
+                engine_sub=plan.engine_sub,
+                inputs=list(row_in),
+                outputs=list(row_out),
+                aux=list(plan.aux),
+                numeric_profile_id=self._kernel_numeric(plan),
+                schedule_id=self._schedule_for(plan),
+                counter_class_id=self._counter_class(plan.engine_family),
+                source_kernel_id=plan.index,
+                key=key,
+            )
+
+        family, sub = Major(plan.engine_family), plan.engine_sub
+        builder.emit(
+            family,
+            sub,
+            descriptor_id=operator(inputs, outputs, f"op.k{plan.index}"),
+            wait_set_id=self._wait_set(self._producer_events(kernel)),
+            signal_event_id=builder.new_event(),
+            predicate_id=predicate,
+            source_operation_id=plan.index,
+        )
+        kept = [
+            self._event_of_tensor[name]
+            for index, name in enumerate(kernel.inputs)
+            if index != absent and name in self._event_of_tensor
+        ]
+        builder.emit(
+            family,
+            sub,
+            descriptor_id=operator(
+                reduced_inputs, reduced_outputs, f"op.k{plan.index}.absent"
+            ),
+            wait_set_id=self._wait_set(kept),
+            signal_event_id=builder.new_event(),
+            predicate_id=predicate,
+            invert_predicate=True,
+            source_operation_id=plan.index,
+        )
+        join = builder.new_event()
+        builder.emit(
+            Major.CONTROL,
+            Control.NOP,
+            signal_event_id=join,
+            source_operation_id=plan.index,
+        )
+        return join
+
+    def _reduced_join_output(
+        self,
+        plan: KernelPlan,
+        kernel: Kernel,
+        loops: Mapping[str, int],
+        absent: int,
+    ) -> int:
+        """``out0`` of the path where one join operand is absent."""
+        axis = int(kernel.attributes.get("axis", 0))
+        remaining = [
+            name for index, name in enumerate(kernel.inputs) if index != absent
+        ]
+        extent, static = join_extent(self.tensors, remaining, axis, self.span_max)
+        out = next(o for o in plan.operands if o.direction == "out" and o.slot == 0)
+        if axis == 0:
+            if extent is None:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: with operand {absent} absent "
+                    "the join has no request-determined extent, so its output "
+                    "would present its declared maximum"
+                )
+            return self._operand_view(
+                plan,
+                replace(
+                    out,
+                    extent_numerator=extent.numerator,
+                    extent_unit=extent.unit,
+                    extent_bias=extent.bias,
+                ),
+                loops,
+                writable=True,
+            )
+        # A17's feature join.  The kept segments are a prefix of the
+        # destination's columns, so the reduced path is the same buffer with a
+        # shorter extent on that axis.  A width the request still decides has
+        # nowhere to be stated -- A18 gives a view one extent axis and the
+        # token axis already holds it -- so that shape is refused rather than
+        # given a maximum.
+        if extent is not None:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: the reduced feature join still has "
+                "a request-determined width, and amendment A18 gives a view "
+                "one extent axis, which the token axis already holds"
+            )
+        return self._operand_view(
+            plan, out, loops, writable=True, narrow=(axis, static)
+        )
 
     def _is_fused_state_append(self, plan: KernelPlan, kernel: Kernel) -> bool:
         """True when a state write concatenates several sources into one row.
@@ -2475,10 +2863,17 @@ class _Emitter:
         for physical_id in physical:
             if kernel.kind != "STATE_READ" and physical_id in self._hoisted:
                 continue  # hoisted out of the loop; see _state_transaction_sites
+            # A state read is one instruction and no operator descriptor, so
+            # it takes the kernel's predicate directly.  This is the shape A18
+            # names: the compressed-KV valid view leads with
+            # ``context_groups_ratioN``, which is zero until the context holds
+            # one whole group, and a zero-extent view is refused -- so the read
+            # must not be issued rather than issued against nothing.
             self.builder.emit(
                 Major.STATE,
                 sub,
                 descriptor_id=self._state_descriptor[physical_id],
+                predicate_id=self._kernel_predicate(plan),
                 source_operation_id=plan.index,
             )
 

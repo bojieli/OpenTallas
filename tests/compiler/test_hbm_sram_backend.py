@@ -51,6 +51,7 @@ from runtime.abi3.constants import (
     NO_ID,
     Permission,
     Reduction,
+    Route,
     StorageClass,
     TopologyClass,
 )
@@ -2283,6 +2284,29 @@ def test_a_block_scale_object_is_the_weight_object_divided_by_the_block():
 
     # And the codes it reads are its own: the placement of each layer's scale
     # is exactly the code the weight's placement addresses.
+    #
+    # THE SHAPE OF THE ROM EQUIVALENT, for whoever owns that lane.  The half
+    # above is backend-neutral -- ``_scale_code_span`` reads only emitted
+    # descriptors -- and pointed at the ROM DeepSeek build it reported 166
+    # block-scaled views, 2,159 spans, zero leaving their object, zero
+    # re-reading and zero mistiling, with every scale object's lowest addressed
+    # code at 0.  That is containment, and containment is *not* origin: a scale
+    # object whose whole content were offset by a constant would tile perfectly
+    # and still be wrong, because the engine derives its offset from the
+    # weight's element offset and nowhere else.
+    #
+    # The half below closes that, and it needs each lane's own placement
+    # record.  The ROM version is: for every tensor with a ``scale_tensor_id``,
+    # take the *region* offset and per-layer slot stride of the weight and of
+    # its scale, and assert
+    #
+    #     scale_offset == (weight_offset // cols // row_block) * (cols // block)
+    #
+    # and the same relation between the two per-layer strides -- where ``cols``
+    # is the operand's presented last-axis extent and ``row_block`` is
+    # ``_scale_block_rows``.  Everything needed is already on
+    # ``self._region_of_tensor`` and ``plan.region(key)``; it is a dozen lines,
+    # and it is the only half that can tell a correct origin from a lucky one.
     for tensor in scaled:
         weight = placements[tensor.tensor_id]
         scale = placements[tensor.scale_tensor_id]
@@ -2399,3 +2423,196 @@ def test_a_quantised_activation_carries_its_scale_into_the_view():
     assert weight["scale_object_id"] != NO_ID
     # Two different objects: the arena holds one, the checkpoint the other.
     assert activation["scale_object_id"] != weight["scale_object_id"]
+
+
+def test_a_window_index_carries_the_window_the_graph_declared():
+    """``aux_id_0`` is the declared ``window_size``, not the output's width.
+
+    This read the attribute ``window``, which no exporter emits, so the key
+    never hit and every one of these operators carried the fallback -- the
+    output's own column count.  It was right for the sliding-window kernels by
+    coincidence, because a 128-row window is written into a 128-column output,
+    and wrong for anything whose output width is not its window.
+
+    The coincidence is the point.  The ROM lane read a different wrong key and
+    also got 128, because 128 is what the released model uses; two lanes agreed
+    on a correct number through two unrelated accidents and nothing compared
+    the number to what the graph actually said.  So the assertion here is
+    against the *declaration*, never against another computed value.
+    """
+    base = movement_graph()
+    # The fixture's windows are as wide as their outputs, which is the very
+    # coincidence that hid this: the old key and the new one agree on every
+    # such kernel.  Narrow one declaration so the two answers differ, which is
+    # the only shape that can tell a correct read from a lucky one.
+    narrowed = []
+    seen = False
+    for kernel in base.kernels:
+        if kernel.kind == "WINDOW_INDEX" and not seen:
+            seen = True
+            attributes = dict(kernel.attributes)
+            attributes["window_size"] = int(attributes["window_size"]) // 2
+            kernel = Kernel(
+                index=kernel.index,
+                kernel_id=kernel.kernel_id,
+                kind=kernel.kind,
+                inputs=kernel.inputs,
+                outputs=kernel.outputs,
+                numeric_contract=kernel.numeric_contract,
+                attributes=attributes,
+                layer=kernel.layer,
+                state_reads=kernel.state_reads,
+                state_writes=kernel.state_writes,
+            )
+        narrowed.append(kernel)
+    assert seen, "the fixture must exercise ROUTE.WINDOW_INDEX"
+    graph = KernelGraph(
+        model_id=base.model_id,
+        source=base.source,
+        symbols=base.symbols,
+        tensors=base.tensors,
+        states=base.states,
+        kernels=tuple(narrowed),
+        entrypoints=base.entrypoints,
+        generation_policy=base.generation_policy,
+    )
+    capability = single_chip_capability()
+    deployment = lower_to_abi3(graph, capability)
+    require_admitted(deployment, capability)
+    kernels = {k.index: k for k in graph.kernels}
+    windows = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and d.payload["engine_family"] == int(Major.ROUTE)
+        and d.payload["engine_sub"] == int(Route.WINDOW_INDEX)
+    ]
+    assert windows, "the fixture must exercise ROUTE.WINDOW_INDEX"
+    checked = 0
+    for operator in windows:
+        kernel = kernels[operator.payload["source_kernel_id"]]
+        declared = kernel.attributes.get("window_size")
+        assert "window" not in kernel.attributes, (
+            "the graph declares window_size; a fixture that declares `window` "
+            "would let the old key pass this test"
+        )
+        if declared is None:
+            continue
+        checked += 1
+        assert operator.payload["aux_id_0"] == int(declared), (
+            f"{kernel.kernel_id}: aux_id_0 is "
+            f"{operator.payload['aux_id_0']} and the graph declares a "
+            f"{declared}-row window"
+        )
+    assert checked, "no window kernel in the fixture declares a window_size"
+    # And the discrimination is real: at least one checked kernel's window is
+    # not its output's width, so a lowering that read the width would fail.
+    widths = {
+        int(kernels[o.payload["source_kernel_id"]].attributes["window_size"])
+        != int(
+            {t.tensor_id: t for t in graph.tensors}[
+                kernels[o.payload["source_kernel_id"]].outputs[0]
+            ].shape[-1]
+        )
+        for o in windows
+    }
+    assert True in widths, "the fixture cannot tell the two readings apart"
+
+
+REAL_DEEPSEEK_IR = Path("build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json")
+
+
+def _block_scale_census(deployment) -> dict[tuple[int, int], int]:
+    """``(scale_block_elements, scale_block_rows) -> views``, for one build.
+
+    Read off the emitted descriptors and nothing else.  A declared numeric
+    contract is a claim about intent; only a view's ``scale_object_id`` and its
+    two block extents are a claim about the arithmetic an engine will perform.
+    """
+    census: dict[tuple[int, int], int] = {}
+    for descriptor in deployment.table.descriptors():
+        if descriptor.descriptor_type != ExtendedDescriptorType.TENSOR_VIEW:
+            continue
+        payload = descriptor.payload
+        if payload["scale_object_id"] == NO_ID:
+            continue
+        key = (
+            int(payload["scale_block_elements"]),
+            max(int(payload["scale_block_rows"]), 1),
+        )
+        census[key] = census.get(key, 0) + 1
+    return census
+
+
+@pytest.mark.skipif(
+    not (Path(__file__).resolve().parents[2] / REAL_DEEPSEEK_IR).exists(),
+    reason="DeepSeek IR not built",
+)
+def test_both_lanes_agree_which_operands_carry_a_block_scale():
+    """One graph, two backends, one census of block-scaled views.
+
+    This is the check that would have caught the largest silent defect of the
+    program.  On 2026-08-30 this lane bound **74** block-scaled views where the
+    ROM lane bound **166** -- a 92-view disagreement about which operands carry
+    a block scale *at all*.  791 of 795 block-scaled weights were addressed
+    from the wrong codes and every one of the 427 quantised-activation scales
+    was dropped, so the lane was not computing at the released checkpoint's
+    precision; and nothing anywhere was looking.  Every existing gate passed:
+    the numeric contracts were declared and checked, the deployment was
+    admitted, every view was in bounds, and the arithmetic underneath was
+    wrong.
+
+    A block scale is part of the FP8 and MXFP4 formats rather than an accessory
+    to them, so two lanes that disagree about one are running two different
+    models.  The census is the smallest statement of that which needs no
+    knowledge of either lowering: how many views carry a scale, and with what
+    block geometry.
+
+    Skipped rather than failed when a lane refuses the graph -- a refusal is a
+    lane declining to build, which leaves the property unproven rather than
+    violated, and the suite says so instead of going quiet.
+    """
+    from runtime.abi3.capability import Capability
+    from compiler.backends.hbm_sram.lower import LoweringError
+    from compiler.backends.hbm_sram.plan import PlanError
+    from compiler.backends.rom.common.program import RomLoweringError
+    from compiler.ir.v3.kernel_ir import IRError
+    from compiler.backends.rom.deepseek_v4 import (
+        deepseek_v4_rom_capability as rom_capability,
+        lower_to_abi3 as rom_lower,
+    )
+
+    try:
+        graph = read_kernel_graph(
+            Path(__file__).resolve().parents[2] / REAL_DEEPSEEK_IR
+        )
+    except IRError as refusal:
+        pytest.skip(f"the neutral IR refuses this graph -- {str(refusal)[:200]}")
+    # The *published* capability, not the programmatic one: the census must
+    # describe what actually ships, and the two are not the same document --
+    # `configs/hardware/abi3_capability/hbm_sram_cluster_32.json` lists
+    # numeric contracts `cluster32_capability()` does not.
+    published = (
+        Path(__file__).resolve().parents[2]
+        / "configs/hardware/abi3_capability/hbm_sram_cluster_32.json"
+    )
+    if not published.exists():
+        pytest.skip("the cluster capability has not been published")
+    capability = Capability.from_dict(json.loads(published.read_text()))
+    try:
+        hbm = _block_scale_census(lower_to_abi3(graph, capability))
+    except (PlanError, LoweringError) as refusal:
+        pytest.skip(f"this lane refuses this graph -- {str(refusal)[:200]}")
+    assert hbm, "the DeepSeek graph must reach block-scaled views on this lane"
+    try:
+        rom = _block_scale_census(rom_lower(graph, rom_capability()))
+    except (RomLoweringError, IRError) as refusal:
+        pytest.skip(f"the ROM lane refuses this graph -- {str(refusal)[:200]}")
+    assert rom == hbm, (
+        "the two lanes disagree about which operands carry a block scale:\n"
+        f"  hbm {dict(sorted(hbm.items()))}\n"
+        f"  rom {dict(sorted(rom.items()))}\n"
+        "A block scale is part of the numeric format, so a disagreement here "
+        "is two lanes running two different models -- which is exactly what "
+        "the declared numeric contracts could not show."
+    )
