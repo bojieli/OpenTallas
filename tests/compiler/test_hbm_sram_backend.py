@@ -2264,6 +2264,23 @@ def test_a_block_scale_object_is_the_weight_object_divided_by_the_block():
                 f"{offset + count} of a {scale_object['size_bytes']}-code object"
             )
 
+    # A companion object holds bytes that used to sit in an adjacency run, so
+    # the placement has to stay a partition: every bound tensor placed exactly
+    # once, and the objects' bytes still summing to the checkpoint's.
+    placed = [p.tensor_id for p in plan.weight_placements]
+    bound = {
+        t.tensor_id
+        for t in graph.tensors
+        if t.binding is not None and t.role in {"weight", "constant"}
+    }
+    assert len(placed) == len(set(placed)), "a tensor is placed twice"
+    assert set(placed) == bound, "a bound tensor is placed nowhere"
+    assert sum(g.size_bytes for g in plan.weight_groups) == sum(
+        t.binding.bytes
+        for t in graph.tensors
+        if t.binding is not None and t.role in {"weight", "constant"}
+    )
+
     # And the codes it reads are its own: the placement of each layer's scale
     # is exactly the code the weight's placement addresses.
     for tensor in scaled:

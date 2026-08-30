@@ -1389,6 +1389,23 @@ class _Emitter:
         dims, strides, numerator, row_stride = self._row_broadcast(
             plan, operand, dims, strides, numerator, row_stride
         )
+        # The context axis, once a leading batch axis has displaced it.  Its
+        # term steps by one whole block of that axis, which is what makes A18's
+        # walk test recognise it -- the same derivation the row term satisfies,
+        # in the candidate axis's own units.
+        context_axis = -1
+        context_stride = 0
+        if operand.context_axis >= 0 and plan.context_loop is not None:
+            context_axis = operand.context_axis + self._batch_axis(plan, operand)
+            if not 0 <= context_axis < len(strides):
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: operand {operand.tensor_id} "
+                    f"names context axis {operand.context_axis}, which is "
+                    f"outside the rank-{len(strides)} view it is presented as"
+                )
+            context_stride = int(strides[context_axis]) * self._context_step(
+                plan, operand
+            )
         terms: list[DynamicTerm] = []
         for term in operand.terms:
             if term == "layer":
@@ -1402,6 +1419,11 @@ class _Emitter:
                 if loop is None:
                     continue
                 terms.append(DynamicTerm.loop(loop, row_stride))
+            elif term == "context":
+                loop = loops.get("context")
+                if loop is None or context_axis < 0:
+                    continue
+                terms.append(DynamicTerm.loop(loop, context_stride))
             elif term == "node":
                 if self.node_count <= 1:
                     continue
@@ -1413,6 +1435,7 @@ class _Emitter:
         walks_row = any(t == "row" for t in operand.terms) and any(
             term.kind == int(SelectorKind.LOOP_INDUCTION) for term in terms
         )
+        walks_context = context_axis >= 0 and "context" in operand.terms
         offset = base + self._select_offset(plan, operand)
         if reading is not None:
             # Same bytes, narrower element: every stride and the base are
@@ -1440,10 +1463,30 @@ class _Emitter:
             # a term actually walks the axis it describes.  A row term that
             # was dropped because its loop is not open takes the declaration
             # with it, rather than leaving an extent nothing can resolve.
-            extent_axis=self._batch_axis(plan, operand) if walks_row else 0,
-            extent_numerator=numerator if walks_row else 1,
-            extent_unit=operand.extent_unit if walks_row else 1,
-            extent_bias=operand.extent_bias if walks_row else 0,
+            # A18 names one axis.  When the operand has a context axis that is
+            # the one: its kernel runs one token per dispatch, so the token
+            # axis is a static one with nothing for the amendment to say, and
+            # the candidate axis is the only extent the request moves.
+            extent_axis=(
+                context_axis
+                if walks_context
+                else (self._batch_axis(plan, operand) if walks_row else 0)
+            ),
+            extent_numerator=(
+                operand.context_numerator
+                if walks_context
+                else (numerator if walks_row else 1)
+            ),
+            extent_unit=(
+                operand.context_unit
+                if walks_context
+                else (operand.extent_unit if walks_row else 1)
+            ),
+            extent_bias=(
+                operand.context_bias
+                if walks_context
+                else (operand.extent_bias if walks_row else 0)
+            ),
         )
 
     def _element_reading(
@@ -1614,6 +1657,22 @@ class _Emitter:
             extent_unit=unit if (declares and walks) else 1,
             extent_bias=bias if (declares and walks) else 0,
         )
+
+    @staticmethod
+    def _context_step(plan: KernelPlan, operand: OperandPlan) -> int:
+        """Elements of the context axis one iteration of its loop covers.
+
+        The same function ``_row_step`` computes for the token axis, read
+        against the context loop's own divisor: ``numerator * divisor / unit``.
+        With one block over the whole declared capacity that is the capacity,
+        which is what makes the single iteration cover all of it.
+        """
+        context = plan.context_loop
+        if context is None:
+            return 1
+        scaled = int(operand.context_numerator) * int(context.divisor)
+        unit = max(int(operand.context_unit), 1)
+        return max(scaled // unit, 1)
 
     @staticmethod
     def _row_step(plan: KernelPlan, operand: OperandPlan) -> int:
@@ -1878,7 +1937,12 @@ class _Emitter:
             # convention gives them, and prepending a batch to those would
             # present a rank the operator refuses.
             if self._request_sized(operand):
-                return [1, *dims], [strides[0], *strides]
+                # The batch's own stride is the whole operand -- one batch of
+                # everything below it.  With an extent of one nothing addresses
+                # through it, so the number is unreachable either way; writing
+                # the consistent one is what lets the two lanes' descriptors be
+                # compared element for element rather than argued about.
+                return [1, *dims], [int(dims[0]) * int(strides[0]), *strides]
         return dims, strides
 
     def _request_sized(self, operand: OperandPlan) -> bool:
@@ -2277,7 +2341,7 @@ class _Emitter:
         # that a runtime symbol sizes is to exchange it one block at a time, and
         # the block is what the loop already iterates.
         event = self._maybe_link(plan, event, loops)
-        self._close_loops(loops, ["row"])
+        self._close_loops(loops, ["context", "row"])
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
 
@@ -2340,7 +2404,7 @@ class _Emitter:
                 source_operation_id=plan.index,
             )
             column += self._state_row_width(operand.tensor_id)
-        self._close_loops(loops, ["row"])
+        self._close_loops(loops, ["context", "row"])
         for name in kernel.outputs:
             self._event_of_tensor[name] = event
 
@@ -2449,6 +2513,27 @@ class _Emitter:
         )
         self.builder.open_loop(loop)
         loops["row"] = loop
+        context = plan.context_loop
+        if context is not None:
+            # Innermost, and it runs once.  Amendment A18 shortens an axis only
+            # through a loop term that walks it, so an operand whose extent the
+            # request decides needs a loop even when nothing about it iterates
+            # -- one block over the whole declared capacity is that loop, and
+            # the resolution it carries is the point of it.  The token loop
+            # says the same thing about the token axis whenever a single block
+            # covers the span.
+            loop = self.builder.loop_control(
+                lower_bound=0,
+                upper_bound=context.trip,
+                step=1,
+                max_iterations=context.trip,
+                bound_symbol=Symbol[context.symbol.upper()],
+                bound_divisor=context.divisor,
+                counter_class_id=self._counter_class(plan.engine_family),
+                key=f"loop.{context.loop_key}",
+            )
+            self.builder.open_loop(loop)
+            loops["context"] = loop
         return loops
 
     def _close_loops(self, loops: Mapping[str, int], keys: Sequence[str]) -> None:

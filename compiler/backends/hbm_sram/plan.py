@@ -556,7 +556,7 @@ class LoopPlan:
     """One compact bounded loop the emitter will open."""
 
     loop_key: str
-    kind: str  # layer | row | column | depth
+    kind: str  # layer | row | context | column | depth
     trip: int
     symbol: str
     divisor: int
@@ -600,6 +600,15 @@ class OperandPlan:
     extent_numerator: int = 1
     extent_unit: int = 1
     extent_bias: int = 0
+    #: The declared axis a *context* loop resolves, or ``-1``.  An operand that
+    #: has one declares A18 for that axis rather than for the token axis: the
+    #: token axis is static under the per-token dispatch such an operand's
+    #: kernel runs under, so there is nothing there for A18 to say, and the
+    #: candidate axis is the one the request moves.
+    context_axis: int = -1
+    context_numerator: int = 1
+    context_unit: int = 1
+    context_bias: int = 0
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -631,6 +640,18 @@ class OperandPlan:
                 != (1, 1, 0)
                 else {}
             ),
+            # And for the context axis: stated only by an operand that has one,
+            # so no plan written before the context loop existed moves.
+            **(
+                {
+                    "context_axis": self.context_axis,
+                    "context_numerator": self.context_numerator,
+                    "context_unit": self.context_unit,
+                    "context_bias": self.context_bias,
+                }
+                if self.context_axis >= 0
+                else {}
+            ),
         }
 
 
@@ -653,6 +674,12 @@ class KernelPlan:
     tile_cols: int
     tile_depth: int
     row_loop: LoopPlan | None
+    #: A loop whose only job is to resolve a context-sized axis.  It runs once
+    #: over the whole declared capacity; the resolution it carries is the point
+    #: of it, exactly as the token loop's is when a single block covers the
+    #: span.  ``None`` on every kernel that has no such axis, which is all but
+    #: one operator today.
+    context_loop: LoopPlan | None
     operands: tuple[OperandPlan, ...]
     aux: tuple[int, ...]
     slot_order: tuple[int, ...]
@@ -679,6 +706,11 @@ class KernelPlan:
             "tile_cols": self.tile_cols,
             "tile_depth": self.tile_depth,
             "row_loop": self.row_loop.to_dict() if self.row_loop else None,
+            **(
+                {"context_loop": self.context_loop.to_dict()}
+                if self.context_loop
+                else {}
+            ),
             "operands": [o.to_dict() for o in self.operands],
             "aux": list(self.aux),
             "slot_order": list(self.slot_order),
@@ -857,6 +889,15 @@ class RequestExtent:
     numerator: int = 1
     unit: int = 1
     bias: int = 0
+    #: The A5 symbol the function reads.  The token-block loop is bound on
+    #: ``span_tokens`` and every extent it resolves is a function of that; an
+    #: axis the *context* sizes is a function of ``context_length``, and the
+    #: two coincide only in prefill.  Consumed by the context loop, which is
+    #: the only place a loop is bound on an axis's own symbol; the row path
+    #: still resolves a context axis against the span, which is what it has
+    #: always done and what the operands that path serves have been qualified
+    #: against.
+    symbol: str = "span_tokens"
 
     def step(self, block: int) -> int | None:
         """Elements of this axis one whole iteration of a block loop covers.
@@ -884,12 +925,12 @@ class RequestExtent:
 #: rather than approximate.
 REQUEST_EXTENT: Mapping[str, RequestExtent] = {
     "span_tokens": RequestExtent(),
-    "context_tokens": RequestExtent(),
-    "context_length": RequestExtent(),
+    "context_tokens": RequestExtent(symbol="context_length"),
+    "context_length": RequestExtent(symbol="context_length"),
     "span_groups_ratio4": RequestExtent(unit=4),
     "span_groups_ratio128": RequestExtent(unit=128),
-    "context_groups_ratio4": RequestExtent(unit=4),
-    "context_groups_ratio128": RequestExtent(unit=128),
+    "context_groups_ratio4": RequestExtent(unit=4, symbol="context_length"),
+    "context_groups_ratio128": RequestExtent(unit=128, symbol="context_length"),
     # The joins.  A bias is a count the operand carries whatever the request
     # is -- a 128-row committed sliding window is present for a span of one --
     # so it is added after the division and is not part of the step.  This is
@@ -900,6 +941,58 @@ REQUEST_EXTENT: Mapping[str, RequestExtent] = {
     "attention_rows_ratio128": RequestExtent(numerator=129, unit=128, bias=128),
     "selected_rows_ratio128": RequestExtent(unit=128, bias=128),
 }
+
+
+#: Engine operators whose operand row states an axis the *context* sizes
+#: beside one the span sizes.  ``VECTOR.INDEX_SCORE``'s scores are
+#: ``[B, S, C]``: two request-determined extents on one view, which amendment
+#: A18 deliberately does not admit -- it names one axis, resolved from one loop
+#: term.  The resolution is a loop rather than a wider descriptor: a per-token
+#: dispatch makes ``S`` a static one, leaving ``C`` as the only extent the
+#: request moves, and a context loop that runs once carries its resolution.
+#:
+#: This is the set of operators reached so far, not a claim that no other
+#: operator has the shape.  ``ROUTE.INDEX_TOPK`` and the compressed attention
+#: join have it too and will name themselves when they are reached; adopting
+#: them here, unreached, would change operands that are qualified today.
+CONTEXT_LOOP_OPS: frozenset[tuple[int, int]] = frozenset(
+    {(int(Major.VECTOR), int(Vector.INDEX_SCORE))}
+)
+
+
+def context_axis_of(
+    tensor: Tensor, span_max: int
+) -> tuple[int, RequestExtent] | None:
+    """The axis of this operand the *context* sizes, if it has one.
+
+    Derived from the declared shape, never from a name: an axis whose extent is
+    a function of a symbol the token-block loop is not bound to is one that
+    loop cannot resolve, whichever axis it is and whatever the model calls it.
+    A tensor with more than one is refused rather than guessed at -- A18 names
+    one axis and two would need two loops, which is a shape no operand in
+    either released graph has.
+    """
+    found: tuple[int, RequestExtent] | None = None
+    for axis, extent in enumerate(tensor.shape):
+        if not isinstance(extent, Symbolic):
+            continue
+        base = REQUEST_EXTENT.get(extent.symbol)
+        if base is None or base.symbol == "span_tokens":
+            continue
+        resolved = RequestExtent(
+            numerator=base.numerator * max(int(extent.multiplier), 1),
+            unit=base.unit,
+            bias=base.bias,
+            symbol=base.symbol,
+        )
+        if found is not None:
+            raise PlanError(
+                f"tensor {tensor.tensor_id!r} has two context-sized axes "
+                f"({found[0]} and {axis}); amendment A18 names one axis per "
+                "view and resolving two would need two loops"
+            )
+        found = (axis, resolved)
+    return found
 
 
 def request_extent_of(tensor: Tensor, span_max: int) -> RequestExtent | None:
@@ -921,6 +1014,7 @@ def request_extent_of(tensor: Tensor, span_max: int) -> RequestExtent | None:
         numerator=base.numerator * max(int(lead.multiplier), 1),
         unit=base.unit,
         bias=base.bias,
+        symbol=base.symbol,
     )
     declared = int(lead.maximum)
     if declared > 0:
@@ -3066,6 +3160,17 @@ def _plan_kernels(
             # the token's own trailing axis, and the index values are offsets
             # inside it rather than row numbers of a block.
             kernel_block = 1
+        context_op = (int(engine.family), int(engine.sub)) in CONTEXT_LOOP_OPS
+        if context_op:
+            # A18 names one request-determined axis per view and this
+            # operator's row has two.  The token axis is the one that becomes
+            # static: a per-token dispatch makes it a literal one, with no
+            # partial final iteration to clamp, leaving the candidate axis as
+            # the only extent the request moves.  The cost is one dispatch per
+            # token for this operator -- the trade the routed contraction and
+            # the expert reduction already make -- and it is bounded by the
+            # capability's own loop trip rather than by the context.
+            kernel_block = 1
 
         out_name = kernel.outputs[0] if kernel.outputs else None
         if out_name is not None:
@@ -3204,6 +3309,39 @@ def _plan_kernels(
                 divisor=kernel_block,
             )
 
+        context_loop = None
+        if context_op:
+            # One block over the whole declared capacity: the loop runs once at
+            # every request, and what it carries is A18's resolution of the
+            # candidate axis.  The divisor is in the bound symbol's own units,
+            # so it is the capacity times the compression ratio -- 65,536
+            # groups of four is the whole 262,144-position context, and one
+            # iteration covers all of it.
+            axes = [
+                context_axis_of(tensors[name], span_max)
+                for name in (*kernel.inputs, *kernel.outputs)
+            ]
+            named = next((a for a in axes if a is not None), None)
+            if named is None:
+                raise PlanError(
+                    f"kernel {kernel.kernel_id!r} lowers to an operator whose "
+                    "row states a context-sized axis, but no operand declares "
+                    "one; the loop that would resolve it has nothing to bind"
+                )
+            _axis, context_extent = named
+            capacity = context_extent.numerator * span_max // context_extent.unit
+            context_loop = LoopPlan(
+                loop_key=f"k{kernel.index}.context",
+                kind="context",
+                trip=1,
+                symbol=context_extent.symbol,
+                divisor=max(
+                    capacity * context_extent.unit
+                    // max(context_extent.numerator, 1),
+                    1,
+                ),
+            )
+
         operands: list[OperandPlan] = []
         for abi_slot, ir_slot in enumerate(_abi_input_slots(kernel, slot_order)):
             if ir_slot is None:
@@ -3228,6 +3366,7 @@ def _plan_kernels(
                     sharded=shard_columns != cols,
                     depth=depth,
                     bank=bank,
+                    context=context_loop is not None,
                 )
             )
         for abi_slot, name in enumerate(kernel.outputs):
@@ -3251,6 +3390,7 @@ def _plan_kernels(
                     sharded=shard_columns != cols,
                     depth=depth,
                     bank=bank,
+                    context=context_loop is not None,
                 )
             )
 
@@ -3278,6 +3418,7 @@ def _plan_kernels(
                 tile_cols=tile_cols,
                 tile_depth=tile_depth,
                 row_loop=row_loop,
+                context_loop=context_loop,
                 operands=tuple(operands),
                 aux=_aux_ids(kernel, engine, tensors, graph, span_max, groups),
                 slot_order=tuple(slot_order),
@@ -3322,6 +3463,7 @@ def _operand_plan(
     sharded: bool,
     depth: int,
     bank: int = 0,
+    context: bool = False,
 ) -> OperandPlan:
     tensor = tensors[name]
     rows, cols, symbolic = matrix_shape(tensor, span_max)
@@ -3354,6 +3496,17 @@ def _operand_plan(
     step = extent.step(block) if extent is not None else None
     if extent is None or step is None:
         extent, step = RequestExtent(), None
+    # An axis the *context* sizes is one the token loop cannot resolve, so it
+    # takes its own term and its own A18 declaration.  When the leading axis is
+    # that axis there is no token term at all: the operand is not blocked by
+    # the request's rows, it is sized by the context.
+    context_named = context_axis_of(tensor, span_max) if context else None
+    context_axis = context_named[0] if context_named is not None else -1
+    context_extent = (
+        context_named[1] if context_named is not None else RequestExtent()
+    )
+    if context_named is not None and context_axis == 0:
+        extent, step = RequestExtent(), None
     if contraction and direction == "in" and slot == 1:
         # in1 is the weight, presented n-major as ``[N, K]`` -- or ``[E, N, K]``
         # when it is a routed bank, whose expert axis the engine addresses.
@@ -3385,6 +3538,8 @@ def _operand_plan(
             # silent wrong answer A18 exists to remove.
             view_rows = step + extent.bias
             terms.append("row")
+    if context_named is not None:
+        terms.append("context")
     return OperandPlan(
         slot=slot,
         direction=direction,
@@ -3404,6 +3559,10 @@ def _operand_plan(
         extent_numerator=extent.numerator if "row" in terms else 1,
         extent_unit=extent.unit if "row" in terms else 1,
         extent_bias=extent.bias if "row" in terms else 0,
+        context_axis=context_axis,
+        context_numerator=context_extent.numerator,
+        context_unit=context_extent.unit,
+        context_bias=context_extent.bias,
     )
 
 
