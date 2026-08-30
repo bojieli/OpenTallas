@@ -191,6 +191,70 @@ proves only that they agree. The memory report and the architectural counters
 were never reconciled against each other, and the test that does that now is the
 test that would have caught it on the day.
 
+## OI-39 — the sparse KV model was 3x low, in the term the whole argument rests on
+
+**Found by measuring, and it cost us our headline number.** The DeepSeek-V4-Flash
+profile under-predicted KV read traffic by **2.72x at 32,000 tokens and 3.13x at
+128,000**, with the error growing with context. It went unnoticed because
+nothing had ever executed this model far enough to compare — the reference
+oracle's context ladder declared five rungs and had run two.
+
+The profile's **structure was correct and is unchanged**. The engine's per-layer
+pair counts match it exactly at both contexts: `csa` reads `top_k + window` main
+entries and scans `context/4` index entries, `hca` reads `context/128 + window`,
+`window` reads 128. Two per-entry constants were wrong:
+
+| | was | measured | factor |
+|---|---:|---:|---:|
+| `entry_bytes` (all groups) | 583 | **1,024** | 1.756 |
+| `index_entry_bytes` (csa) | 68 | **256** | 3.765 |
+
+Corrected, the profile predicts 64,800,000 B/step where the engine read
+64,774,144 (**0.9996**) and 209,184,000 where it read 209,158,144 (**0.9999**).
+
+**The root cause is a precision disagreement, not a transcription slip.** 583 is
+an FP8 assumption — 576 elements (512 latent + 64 rope) at one byte plus scale
+bytes — and the released implementation reads the 512-wide latent at BF16, which
+is 1,024. A deployment that genuinely stored an FP8 latent *would* read 512
+bytes; that is a design choice, it must then apply to both sides of a
+comparison, and it is recorded in the profile rather than assumed.
+
+**What it cost.** The weight-to-KV read ratio is the figure of merit for the
+entire ROM case, and it was overstated:
+
+| model | context | was | now | overstated |
+|---|---:|---:|---:|---:|
+| Flash | 8,192 | 853.2:1 | 387.3:1 | 2.20x |
+| Flash | 200,000 | **113.2:1** | **35.3:1** | **3.20x** |
+| Pro | 1,000,000 | 58.9:1 | 18.0:1 | 3.27x |
+
+Every DeepSeek roofline number is stale in a known direction: KV is three times
+heavier, so it binds earlier, the weight-bound regime in which a sparse model
+batches for free ends at a lower batch, and the long-context advantage shrinks.
+Qwen is unaffected — its KV term was already exact against executed hardware.
+
+Pro carried the identical constants from the identical derivation and has been
+corrected by analogy, graded `assumed_by_analogy` in the profile because no Pro
+rung has ever been executed. **That grade is load-bearing on one of the three
+headline claims and only a Pro execution retires it.**
+
+`tools/validate_kv_model_against_oracle.py` makes this checkable. It reports
+positions, bytes-per-position and the total *separately*, because a structural
+error and an entry-size error look identical in the total and have completely
+different fixes — that separation is what turned "the model is 3x off" into
+"these two constants are wrong and the structure is right." Two regression
+tests: both rungs within 1%, and the historical 583/68 pair rejected including
+its growth with context, which a pure scale error would not show.
+
+- **OI-40 — the IR binds 6.5% fewer weight bytes than the profile claims.** The
+  neutral IR binds 156,015,698,140 bytes across its weight tensors where
+  `checkpoint_bytes` declares 166,878,536,440, a 10.86 GB gap. This is
+  *conservative* — it would size ROM larger than the executed graph needs — so
+  it is not a flattering error, but it is unexplained, and after OI-39 an
+  unexplained gap in the other half of the same ratio should not be left
+  standing. Likely candidates: multi-token-prediction layers or other tensors
+  the exporter correctly drops. Not yet investigated.
+
 ## W12 — First-principles roofline model *(the actual deliverable)*
 
 The program's purpose is a quantitative ROM-versus-HBM comparison. The functional
