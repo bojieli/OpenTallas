@@ -113,7 +113,7 @@
 
 ## W10 — Mandatory workload campaigns
 
-- [~] W10.1 Qwen exactly 8,000 natural prompt tokens → decode to first EOS (HBM) — **executed**: 8,000 prompt tokens, 193 decoded in 14,982 s (`results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json`). The first **137 tokens are identical to the reference oracle**, and the continuation is coherent Melville pastiche. It did not reach EOS for two separate reasons, both recorded: one argmax flip at index 137 (see [OI-33]) and a hard stop at index 193 (see [OI-34]). ROM side not yet run
+- [~] W10.1 Qwen exactly 8,000 natural prompt tokens → decode to first EOS (HBM) — **executed**: 8,000 prompt tokens, 193 decoded in 14,982 s (`results/abi3/qwen3_hbm_ta-qw-8k-1_execution.json`). The first **137 tokens are identical to the reference oracle**, and the continuation is coherent Melville pastiche. It did not reach EOS for two separate reasons, both recorded: one argmax flip at index 137 (see [OI-33]) and a hard stop at index 193 (see [OI-34]). **The ROM lane is now running the same workload at `max_new_tokens` 192**, which is the largest decode budget an 8,000-token prompt can have inside a declared 8,192-position context — 8,000 + 192 = 8,192 exactly. That gives a lane-to-lane comparison at the sweet spot against the HBM record's first 192 tokens without first having to reopen the specification question in [OI-34]
 - [~] W10.2 Qwen repeated-special-token stress run — **executed, and it diverged**: 8,000 prompt tokens (one distinct id), 32 decoded in 11,942 s, recorded `status: diverged` at index 2 (`results/abi3/qwen3_hbm_ta-qw-stress-1_execution.json`). The run itself is complete and the workload has served its purpose — see [OI-33]. Whether the divergence is acceptable is a numeric-contract question, not an execution one
 - [x] W10.3 Qwen chat workload (pinned template) — `TA-QW-CHAT-1`, 93 prompt tokens, 24 decoded tokens, token-identical to the oracle; the model is mid-derivation at the token cap (`We are given:\n\n- **Ship 1** (from Port A) leaves at **06:00**`), so this record proves token fidelity, not answer correctness, and W10.1 carries the run to EOS
 - [x] W10.4 Qwen agentic workload — `TA-QW-AGENT-1` decoded a **complete, well-formed tool call and stopped at a real EOS** entirely on the accelerator: ```bash / awk -F',' '{sum += $2} END {print sum}' inventory.txt / ```. Token-identical to the oracle. Feeding the result back through the sandbox loop is `tools/run_qwen3_agent_episode.py`
@@ -194,6 +194,40 @@ lanes are a precondition for it, not the product. These items are the product.
   validates the quantities a roofline consumes, so that the time a roofline
   computes from them is a statement about hardware rather than about unexamined
   traffic.
+
+  **The KV term is now checked too, and it comes out exact.** Until tonight the
+  tool predicted KV traffic and never compared it to anything, which left the
+  most important number in the model resting on nothing: at the 8,000-token
+  sweet spot KV is the term that decides the ROM argument. It is checked in two
+  halves because they catch different failures. The count of (layer, position)
+  pairs attention visited is compared against the causal triangle a prompt of
+  *P* tokens and *D* decode steps requires, which catches a machine that
+  recomputes, caches across queries, or attends to a window instead of the whole
+  past. The byte count is then compared against the profile's own entry size,
+  which catches a row read at the wrong precision or width. Unlike weight
+  traffic this term admits no allowance in either direction — nothing rides
+  along with a KV row — so the tolerance is 0.1%, not 15%.
+
+  | run | causal pairs | ratio | KV bytes | ratio | B per layer-position |
+  |---|---:|---:|---:|---:|---:|
+  | `TA-QW-CHAT-1` HBM | 244,296 | 1.0000 | 1,000,636,416 | 1.0000 | 4,096 |
+  | `TA-QW-CHAT-1` ROM | 244,296 | 1.0000 | 1,000,636,416 | 1.0000 | 4,096 |
+  | `TA-QW-8K-1` HBM | 1,208,107,008 | 1.0000 | 4,948,406,304,768 | 1.0000 | 4,096 |
+
+  The 8,000-token row is the one that matters: a machine that generated 193 real
+  tokens at the stated sweet spot moved **4.95 TB of KV** and visited
+  **1,208,107,008** (layer, position) pairs, and both are the analytical formula
+  to the byte. The roofline's own Qwen designs size SRAM for 1,207,959,552 B of
+  resident KV — 100.4 mm² of an 815 mm² die at N6 — from the same 4,096 bytes
+  per layer-position that the machine was just measured reading. The prediction
+  and the measurement are not merely close; they are the same number arrived at
+  from opposite directions.
+
+  The entry size is derived from the profile's traffic model rather than restated
+  in the tool, so editing a profile cannot silently pass the check, and two
+  mutation tests in `tests/test_execution_validation.py` halve the KV bytes and
+  narrow the attention span to prove the check can fail. A validator nobody can
+  fail is decoration.
 
 - [ ] W12.7 `tools/run_roofline_studies.py` and `results/roofline/` — canonical
   JSON, rendered report, consistency audit
