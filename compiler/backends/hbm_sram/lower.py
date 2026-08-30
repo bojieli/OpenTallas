@@ -759,7 +759,7 @@ class _Emitter:
                 )
             policy_id = builder.generation_policy(
                 eos_token_ids=eos,
-                max_new_tokens=int(body.get("max_new_tokens", 512)),
+                max_new_tokens=self._declared_new_token_budget(body),
                 vocabulary_size=vocabulary,
                 token_ring_object_id=self.token_ring_object,
                 selection_mode=SelectionMode.GREEDY_ARGMAX_LOWEST_ID,
@@ -773,6 +773,38 @@ class _Emitter:
                 phase=phase,
                 generation_policy_id=policy_id,
             )
+
+    def _declared_new_token_budget(self, body: dict) -> int:
+        """The decode budget the neutral IR declares, by the name it declares it.
+
+        This read used to name ``max_new_tokens``, which the IR does not emit --
+        it emits ``maximum_new_tokens`` -- so the lookup always missed and the
+        deployment silently carried the 512 default. Nothing failed: the host
+        driver's own budget is usually smaller, so the cap only bites on a long
+        generation, and then it looks like the model stopped early. The ROM
+        backend reads the right key, so the two lanes were also carrying
+        different generation policies for the same IR, which is the divergence
+        this program exists to prevent.
+
+        There is no default now. A graph that appends tokens without declaring a
+        budget is a graph whose decode length nobody chose, and guessing one here
+        is how the first defect survived.
+        """
+
+        declared = body.get("maximum_new_tokens")
+        if declared is None:
+            raise LoweringError(
+                "the generation policy declares no 'maximum_new_tokens'; a decode "
+                "budget must be stated by the IR rather than defaulted by a backend"
+            )
+        budget = int(declared)
+        limit = int(self.capability.limits["max_context_positions"])
+        if budget > limit:
+            raise LoweringError(
+                f"generation policy admits {budget} new tokens but the capability "
+                f"holds {limit} context positions"
+            )
+        return budget
 
     def _vocabulary(self) -> int:
         best = 0

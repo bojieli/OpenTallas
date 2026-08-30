@@ -32,6 +32,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from opentallas.roofline import (  # noqa: E402
+    BITS_PER_BYTE,
     DeviceBudget,
     RooflineStep,
     Technology,
@@ -40,6 +41,7 @@ from opentallas.roofline import (  # noqa: E402
     evaluate,
     gpu_device_budget,
     latency_crossover,
+    layer_fixed_latency,
     max_hbm_stacks_per_device,
     rom_device_budget,
     taalas_hc1_anchor,
@@ -78,7 +80,17 @@ STUDY_MODELS: tuple[tuple[str, Path, int], ...] = (
         1_000_000,
     ),
 )
-BATCHES = (1, 8, 32, 64, 256)
+BATCHES = (1, 2, 4, 8, 16, 32, 64, 256)
+"""Doubling from 1 to 64, then 256.
+
+The coarse grid this replaced -- 1, 8, 32, 64, 256 -- could report the endpoints
+of the batching argument but not the shape between them, and the shape is where
+the argument actually lives.  A dense model's KV read is per-user and never
+amortises, so a ROM design that wins by an order of magnitude at batch 1 gives
+that lead back as batch rises; a sparse model's routed weights engage more of the
+array with every added stream, so it gains.  Both effects are monotone and
+neither is visible at two points.  Powers of two locate the crossing to within a
+factor of two without the sweep growing enough to matter."""
 DESIGN_BATCH = 1
 """SRAM area is silicon area, so an SRAM-KV design is sized at batch 1 -- the
 minimum machine -- and the study then reports the batch at which its KV capacity
@@ -124,6 +136,20 @@ aggregate per-die throughput collapses onto per-user throughput. They are
 identical at batch 1, which is exactly why the Taalas anchor cannot settle the
 question. Both are evaluated; the main tables show ``batched`` and the fork
 section shows the difference."""
+SPARE_AREA_POLICIES: tuple[str, ...] = ("sram", "rom")
+"""What a ROM design does with silicon it does not have to spend on its array.
+
+``sram`` is the previous behaviour: the array is sized to the stored bytes, and
+what is left becomes KV store on a compute-in-ROM part or a MAC array on an
+amortising one.  ``rom`` grows the array into that silicon as **replicated
+copies of the same weights**, which cuts the full-array sweep time by the
+replication factor because each copy carries its own bitlines and sense amps.
+
+Both are emitted for **all three** amortisation policies.  Offering the
+floorplan sweep only to compute-in-ROM would decide the comparison by the
+allocation rule rather than by physics -- which is exactly the failure this
+sweep exists to remove."""
+
 ARRAY_SWEEP_CAP = 400
 SWEEP_PATIENCE = 8
 """Stop the device sweep once eight consecutive larger machines fail to beat the
@@ -280,6 +306,7 @@ def _build_rom_budget(
     kv_store: str,
     hbm_generation: str,
     weight_amortization: str = "batched",
+    spare_area_policy: str = "sram",
 ) -> DeviceBudget:
     stacks = 0
     if kv_store == "hbm":
@@ -311,6 +338,7 @@ def _build_rom_budget(
         hbm_stacks=stacks,
         hbm_generation=hbm_generation,
         weight_amortization=weight_amortization,
+        spare_area_policy=spare_area_policy,
     )
 
 
@@ -329,8 +357,19 @@ def _minimum_devices(
     kind: str,
     wafer_area: float | None,
     reticle_area: float | None,
+    weight_amortization: str = "batched",
+    spare_area_policy: str = "sram",
 ) -> int:
     """Fewest devices that can physically hold the design.
+
+    **Sized on the policy's own floorplan.**  This used to size once on the
+    batched machine and hand the count to all three, on the reasoning that the
+    policies are identical at batch 1.  They stopped being identical when the
+    floorplan started depending on the policy: a compute-in-ROM cell is 1.6x a
+    storage cell, so the same weights need 1.6x the array and can need more
+    dies.  Sizing all three on the batched floorplan denied compute-in-ROM the
+    dies it needs and reported the result as infeasibility -- "it cannot hold
+    this model" when the truth was "we never tried enough dies".
 
     ROM area is fixed by the stored weights and SRAM area by the resident KV, so
     the remainder available for compute is what device count actually buys.  For
@@ -362,6 +401,8 @@ def _minimum_devices(
             kv_transfer_bytes=kv_transfer_bytes,
             kv_store=kv_store,
             hbm_generation=hbm_generation,
+            weight_amortization=weight_amortization,
+            spare_area_policy=spare_area_policy,
         )
         if budget.reasons or budget.split.compute_mm2 <= 0:
             continue
@@ -404,6 +445,8 @@ def _size_array(
     kind: str,
     wafer_area: float | None = None,
     reticle_area: float | None = None,
+    weight_amortization: str = "batched",
+    spare_area_policy: str = "sram",
 ) -> tuple[int, list[dict[str, Any]]]:
     """Choose the device count that minimises per-user token latency at batch 1.
 
@@ -429,6 +472,8 @@ def _size_array(
         kind=kind,
         wafer_area=wafer_area,
         reticle_area=reticle_area,
+        weight_amortization=weight_amortization,
+        spare_area_policy=spare_area_policy,
     )
     if minimum > ARRAY_SWEEP_CAP:
         return minimum, []
@@ -455,6 +500,8 @@ def _size_array(
             kv_transfer_bytes=kv_transfer_bytes,
             kv_store=kv_store,
             hbm_generation=hbm_generation,
+            weight_amortization=weight_amortization,
+            spare_area_policy=spare_area_policy,
         )
         step = evaluate(
             budget,
@@ -525,6 +572,10 @@ def _step_row(
         "weight_store": budget.weight_store,
         "kv_store": budget.kv_store,
         "weight_amortization": budget.weight_amortization,
+        "spare_area_policy": (
+            "rom" if "-romfill" in design_id else "sram"
+        ),
+        "rom_replication_factor": metrics.get("rom_replication_factor"),
         "rom_sweeps_per_step": metrics.get("rom_sweeps_per_step"),
         "silicon_area_mm2": step.silicon_area_mm2,
         "silicon_area_mm2_per_device": budget.silicon_area_mm2_per_device,
@@ -560,6 +611,33 @@ def _step_row(
         "rom_full_array_sweep_time_s": metrics.get("rom_full_array_sweep_time_s"),
         "rom_sweep_ceiling_tokens_s": metrics.get("rom_sweep_ceiling_tokens_s"),
         "overlap_rule": metrics["overlap_rule"],
+        # The four completeness corrections, carried on every point so that a
+        # reader can see what each one cost where it was applied rather than
+        # only in a summary table.
+        "region_sweep_depth_mean_uncorrected": metrics.get(
+            "region_sweep_depth_mean_uncorrected"
+        ),
+        "region_sweep_depth_max_over_mean": metrics.get(
+            "region_sweep_depth_max_over_mean"
+        ),
+        "mean_engaged_devices_uncorrected": metrics["mean_engaged_devices_uncorrected"],
+        "engaged_device_max_over_mean_correction": metrics[
+            "engaged_device_max_over_mean_correction"
+        ],
+        "layer_fixed_latency_s": metrics["layer_fixed_latency_s"],
+        "layer_fixed_latency_fraction_of_step": metrics[
+            "layer_fixed_latency_fraction_of_step"
+        ],
+        "kv_access_granularity_bytes": metrics["kv_access_granularity"][
+            "granularity_bytes"
+        ],
+        "kv_index_layout": metrics["kv_access_granularity"]["layout"],
+        "kv_access_granularity_inflation": metrics["kv_access_granularity_inflation"],
+        "kv_native_transfer_bytes_per_step": metrics["kv_native_transfer_bytes_per_step"],
+        "kv_bank_occupancy": metrics["kv_bank_occupancy"],
+        "kv_read_s_under_bank_locality": _finite(
+            metrics["kv_read_s_under_bank_locality"]
+        ),
     }
 
 
@@ -583,6 +661,105 @@ def _minimum_gpu_count(
     usable = capacity * technology.efficiency("hbm_capacity").value
     needed = stored_weight_bytes + resident_kv_bytes
     return max(1, math.ceil(needed / usable))
+
+
+def _per_region_sizing(
+    technology: Technology, model: ModelProfile, node: str
+) -> dict[str, Any] | None:
+    """How big one expert region is, and what its own pre-compute block costs.
+
+    The per-region design's cost is not the arithmetic: it is a pre-compute
+    block and an activation distribution network per region.  Sizing it needs
+    the compute-in-ROM array density -- the storage density divided by the cell
+    multiplier -- and nothing else, so it is emitted here rather than computed
+    in prose.
+    """
+
+    if model.num_experts <= 1 or model.routed_weight_bytes <= 0:
+        return None
+    density = (
+        technology.rom_bits_per_mm2_for(node, "per_region").value / BITS_PER_BYTE
+    )
+    precompute_fraction = technology.graded(
+        "rom", "cim_precompute_area_fraction"
+    ).value
+    reticle_area = technology.graded("reticle", "area_mm2").value
+    per_expert_bytes = model.routed_weight_bytes / model.num_experts
+    region_mm2 = per_expert_bytes / density
+    checkpoint_mm2 = model.checkpoint_bytes / density
+    return {
+        "num_experts": model.num_experts,
+        "experts_per_token": model.experts_per_token,
+        "compute_in_rom_capacity_density_bytes_mm2": density,
+        "routed_bytes_per_expert": per_expert_bytes,
+        "region_mm2": region_mm2,
+        "precompute_mm2_per_region": precompute_fraction * region_mm2,
+        "all_regions_mm2": region_mm2 * model.num_experts,
+        "all_precompute_mm2": precompute_fraction * region_mm2 * model.num_experts,
+        "precompute_fraction_of_array": precompute_fraction,
+        "whole_checkpoint_mm2": checkpoint_mm2,
+        "whole_checkpoint_reticles": checkpoint_mm2 / reticle_area,
+    }
+
+
+def _floorplan_comparison(
+    technology: Technology, model: ModelProfile, node: str, area_mm2: float
+) -> dict[str, Any]:
+    """The two ROM floorplans on one die, and whether the MAC array can be fed.
+
+    The storage machine spends its leftover silicon on a MAC array.  Whether
+    that array is reachable is a bandwidth question the model can answer
+    directly: at one weight byte per multiply-accumulate, the roof it can
+    sustain is the ROM read rate beside it.
+    """
+
+    stored = model.total_parameters * 3.5 / BITS_PER_BYTE
+    resident = 0.0
+    out: dict[str, Any] = {
+        "die_area_mm2": area_mm2,
+        "stored_weight_bytes": stored,
+        "weight_bits_per_parameter": 3.5,
+    }
+    for policy in ("batched", "per_region"):
+        budget = rom_device_budget(
+            technology,
+            name=f"floorplan-{policy}",
+            node=node,
+            area_mm2_per_device=area_mm2,
+            topology=Topology(
+                kind="single_chip", device_count=1, parallelism="none", link="none"
+            ),
+            stored_weight_bytes=stored,
+            resident_kv_bytes=resident,
+            kv_store="sram",
+            weight_amortization=policy,
+        )
+        # The fp8 roof, because the question is whether an 8-bit-weight MAC
+        # array can be fed at one weight byte per multiply-accumulate, and the
+        # sustained-fraction derate the model charges everywhere else.
+        roof = budget.compute_ops_s.get("fp8", 0.0) * technology.efficiency(
+            "compute"
+        ).value
+        # Two operations per MAC, one weight byte per MAC.
+        demanded = roof / 2.0
+        out[policy] = {
+            "rom_mm2": budget.split.rom_mm2,
+            "compute_mm2": budget.split.compute_mm2,
+            "sram_mm2": budget.split.sram_mm2,
+            "peak_compute_ops_s": roof,
+            "weight_read_bytes_s": budget.weight_read_bytes_s,
+            "weight_bytes_s_demanded_by_the_roof": demanded,
+            "feed_ratio": (
+                budget.weight_read_bytes_s / demanded if demanded > 0 else None
+            ),
+            "full_array_sweep_time_s": budget.provenance[
+                "rom_full_array_sweep_time_s"
+            ].value,
+            "cell_area_multiplier": budget.provenance[
+                "rom_cell_area_multiplier"
+            ].value,
+        }
+    return out
 
 
 def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
@@ -623,6 +800,15 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                     + model.routed_weight_bytes * model.routed_fraction_per_token
                 )
                 / kv.read_bytes,
+                "num_experts": model.num_experts,
+                "experts_per_token": model.experts_per_token,
+                "compressed_sparse_layers": sum(
+                    group.count
+                    for group in model.attention_groups
+                    if group.kind == "compressed_sparse"
+                ),
+                "layer_fixed_latency": layer_fixed_latency(technology, model)[1],
+                "per_region_sizing": _per_region_sizing(technology, model, node),
             }
         )
 
@@ -642,8 +828,8 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                     kind,
                     parallelism,
                     area_per_device,
-                ), amortization in (
-                    (topology, policy)
+                ), amortization, spare_area_policy in (
+                    (topology, policy, spare)
                     for topology in (
                         ("array-pipeline", "array", "pipeline", reticle_area),
                         ("array-tensor", "array", "tensor", reticle_area),
@@ -651,10 +837,20 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                         ("wafer-tensor", "wafer", "tensor", wafer_area),
                     )
                     for policy in WEIGHT_AMORTIZATIONS
+                    # Where a compute-in-ROM design spends the silicon it
+                    # recovers from the MAC array is a design choice, so both
+                    # answers are emitted and the comparison picks between
+                    # them.  The amortising machine has no spare area by
+                    # definition -- the remainder IS its MAC array -- so it has
+                    # only one floorplan.
+                    for spare in SPARE_AREA_POLICIES
                 ):
                     link = "nvlink" if kind == "array" else "on_wafer"
-                    # Sizing is done once, on the batched machine, at batch 1
-                    # where the two policies are identical by construction.
+                    # Sized on this policy's OWN floorplan.  The policies stopped
+                    # being identical at batch 1 when the floorplan started
+                    # depending on the policy; sizing them all on the batched
+                    # machine denied compute-in-ROM the dies its larger cell
+                    # needs and reported that as infeasibility.
                     devices, sweep = _size_array(
                         technology,
                         model,
@@ -673,6 +869,8 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                         kind=kind,
                         wafer_area=wafer_area if kind == "wafer" else None,
                         reticle_area=reticle_area if kind == "wafer" else None,
+                        weight_amortization=amortization,
+                        spare_area_policy=spare_area_policy,
                     )
                     if devices > ARRAY_SWEEP_CAP:
                         continue
@@ -693,6 +891,8 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                         "per_stream": "-perstream",
                         "per_region": "-perregion",
                     }[amortization]
+                    if spare_area_policy == "rom":
+                        suffix += "-romfill"
                     design_id = (
                         f"{_model_tag(model)}/ROM-{node}-{representation}-"
                         f"{kv_store.upper()}KV-{topology_name}-x{devices}{suffix}"
@@ -713,6 +913,7 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                         kv_store=kv_store,
                         hbm_generation=hbm_generation,
                         weight_amortization=amortization,
+                        spare_area_policy=spare_area_policy,
                     )
                     designs.append(
                         {
@@ -730,6 +931,7 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                             "execution_format": execution,
                             "topology": topology_name,
                             "weight_amortization": amortization,
+                            "spare_area_policy": spare_area_policy,
                             "sizing_rule": (
                                 "smallest device count within "
                                 f"{DEVICE_SIZING_TOLERANCE:.0%} of the best per-user "
@@ -746,7 +948,7 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                             **budget.to_dict(),
                         }
                     )
-                    if amortization == "batched":
+                    if amortization == "batched" and spare_area_policy == "sram":
                         # Link latency is a property of the topology, so the two
                         # amortisation policies produce identical crossovers.
                         crossovers.append(
@@ -1015,7 +1217,13 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
 
     amortization_fork: list[dict[str, Any]] = []
     for model_name, _, context in STUDY_MODELS:
+      for spare in SPARE_AREA_POLICIES:
         for batch in BATCHES:
+            # Compared at a MATCHED floorplan.  Picking each policy's best over
+            # both floorplans mixes the amortisation question with the
+            # allocation question and hides both: a per-region machine that
+            # replicated its array would be compared against a broadcast one
+            # that did not.
             pair: dict[str, dict[str, Any] | None] = {}
             for policy in WEIGHT_AMORTIZATIONS:
                 rows = [
@@ -1025,6 +1233,7 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                     and row["family"] == "rom"
                     and row["batch_size"] == batch
                     and row["weight_amortization"] == policy
+                    and row["spare_area_policy"] == spare
                     and row["feasible"]
                 ]
                 pair[policy] = (
@@ -1037,6 +1246,7 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                 "model": model_name,
                 "context_tokens": context,
                 "batch_size": batch,
+                "spare_area_policy": spare,
             }
             for policy, point in pair.items():
                 record[f"{policy}_design"] = point["design"] if point else None
@@ -1056,7 +1266,76 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                     if batched and point and point["aggregate_tokens_s"] > 0
                     else None
                 )
+                record[f"{policy}_silicon_area_mm2"] = (
+                    point["silicon_area_mm2"] if point else None
+                )
             amortization_fork.append(record)
+
+    floorplan_sweep: list[dict[str, Any]] = []
+    for model_name, _, context in STUDY_MODELS:
+        for batch in BATCHES:
+            reference = None
+            for policy in WEIGHT_AMORTIZATIONS:
+                for spare in SPARE_AREA_POLICIES:
+                    rows = [
+                        row
+                        for row in points
+                        if row["model"] == model_name
+                        and row["family"] == "rom"
+                        and row["batch_size"] == batch
+                        and row["weight_amortization"] == policy
+                        and row["spare_area_policy"] == spare
+                        and row["feasible"]
+                    ]
+                    point = (
+                        max(rows, key=lambda row: row["aggregate_tokens_s"])
+                        if rows
+                        else None
+                    )
+                    if policy == "batched" and spare == "sram":
+                        reference = point
+                    floorplan_sweep.append(
+                        {
+                            "model": model_name,
+                            "context_tokens": context,
+                            "batch_size": batch,
+                            "weight_amortization": policy,
+                            "spare_area_policy": spare,
+                            "design": point["design"] if point else None,
+                            "device_count": point["device_count"] if point else None,
+                            "silicon_area_mm2": (
+                                point["silicon_area_mm2"] if point else None
+                            ),
+                            "rom_replication_factor": (
+                                point["rom_replication_factor"] if point else None
+                            ),
+                            "rom_sweeps_per_step": (
+                                point["rom_sweeps_per_step"] if point else None
+                            ),
+                            "per_user_tokens_s": (
+                                point["per_user_tokens_s"] if point else None
+                            ),
+                            "aggregate_tokens_s": (
+                                point["aggregate_tokens_s"] if point else None
+                            ),
+                            "aggregate_tokens_s_per_mm2": (
+                                point["aggregate_tokens_s"] / point["silicon_area_mm2"]
+                                if point and point["silicon_area_mm2"] > 0
+                                else None
+                            ),
+                            "binding_constraint": (
+                                point["binding_constraint"] if point else None
+                            ),
+                            "vs_reference_floorplan_x": (
+                                point["aggregate_tokens_s"]
+                                / reference["aggregate_tokens_s"]
+                                if point
+                                and reference
+                                and reference["aggregate_tokens_s"] > 0
+                                else None
+                            ),
+                        }
+                    )
     result: dict[str, Any] = {
         "schema_version": 1,
         "study_id": study_id,
@@ -1090,11 +1369,18 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
         "technology_derivations": _technology_derivations(technology, node, config),
         "graded_inputs": technology.inputs_by_grade(),
         "model_summaries": model_summaries,
+        "floorplan_comparison": _floorplan_comparison(
+            technology,
+            ModelProfile.load(ANCHOR_MODEL_PATH),
+            node,
+            technology.graded("reticle", "area_mm2").value,
+        ),
         "designs": designs,
         "points": points,
         "comparisons": comparisons,
         "topology_choices": topology_choices,
         "amortization_fork": amortization_fork,
+        "floorplan_sweep": floorplan_sweep,
         "latency_crossovers": crossovers,
     }
     result["consistency_audit"] = _consistency_audit(result)
@@ -1217,8 +1503,19 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
             f"step below link latency {key}",
         )
         check(
+            row["step_time_s"] + 1e-15 >= components["layer_fixed_latency"],
+            f"step below the per-layer fixed latency {key}",
+        )
+        check(
             row["binding_constraint"]
-            in {"weight_read", "kv_read", "compute", "link_latency", "thermal"},
+            in {
+                "weight_read",
+                "kv_read",
+                "compute",
+                "link_latency",
+                "layer_fixed_latency",
+                "thermal",
+            },
             f"unknown binding constraint {key}: {row['binding_constraint']}",
         )
         if row["binding_constraint"] != "thermal":
@@ -1404,6 +1701,181 @@ def _fmt_area(value: float | None) -> str:
     return "—" if value is None else f"{value:,.0f}"
 
 
+def _render_corrections(result: dict[str, Any]) -> list[str]:
+    """What the four completeness corrections cost, from the points themselves.
+
+    A correction that is only described is a correction a reader has to take on
+    trust.  Each block below is computed from the same evaluated points as
+    every other table in this report.
+    """
+
+    points = result["points"]
+    lines = [
+        "",
+        "## What the completeness corrections cost",
+        "",
+        "Four terms the model priced wrongly or not at all. Each row is",
+        "computed from the evaluated points, not restated from prose.",
+        "",
+        "### 1. Per-region sweep depth: the busiest region, not the mean",
+        "",
+        "The compute-in-ROM per-region machine used to charge `batch * k /",
+        "(N * coverage)` -- the load of the AVERAGE engaged region -- and then",
+        "divide it by a flat 0.85 whose own note said the depth is set by the",
+        "busiest region. The busiest region is now computed from the routing",
+        "distribution. The correction is not a constant: it is a function of",
+        "batch.",
+        "",
+        "| Model | B | Mean engaged region | Busiest region | Correction |",
+        "|---|---:|---:|---:|---:|",
+    ]
+    seen: set[tuple[str, int]] = set()
+    for row in points:
+        depth = row.get("region_sweep_depth_max_over_mean")
+        if depth is None or not row["feasible"]:
+            continue
+        key = (row["model"], row["batch_size"])
+        if key in seen:
+            continue
+        seen.add(key)
+        lines.append(
+            f"| {row['model']} | {row['batch_size']} | "
+            f"{row['region_sweep_depth_mean_uncorrected']:,.3f} | "
+            f"{row['rom_sweeps_per_step']:,.3f} | "
+            f"{_fmt_ratio(depth)} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "### 2. Expert-parallel devices: the busiest device, not the mean engaged one",
+            "",
+            "The same error on the GPU side of the comparison. A routed fetch",
+            "finishes when the most loaded device finishes, not when the average",
+            "of the engaged ones does. `opentallas.workload` is shared with",
+            "`opentallas.analytical` and is unchanged; the correction is applied",
+            "in `roofline` and both numbers are carried on every point, because",
+            "correcting only the ROM side would be its own bias.",
+            "",
+            "| Model | B | Devices | Mean engaged | Effective | Correction |",
+            "|---|---:|---:|---:|---:|---:|",
+        ]
+    )
+    gpu_seen: set[tuple[str, int, int]] = set()
+    for row in points:
+        if row["family"] != "gpu" or not row["feasible"]:
+            continue
+        correction = row["engaged_device_max_over_mean_correction"]
+        if correction is None or correction <= 1.0 + 1e-9:
+            continue
+        key = (row["model"], row["batch_size"], row["device_count"])
+        if key in gpu_seen:
+            continue
+        gpu_seen.add(key)
+        lines.append(
+            f"| {row['model']} | {row['batch_size']} | {row['device_count']} | "
+            f"{row['mean_engaged_devices_uncorrected']:,.2f} | "
+            f"{row['engaged_devices']:,.2f} | {_fmt_ratio(correction)} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "### 3. The per-layer serial cost, and who pays it",
+            "",
+            "Before this term the only latency in the model was",
+            "`links.*.hop_latency_s`, charged at inter-partition boundaries -- so",
+            "a `single_chip` design had a decode step with no fixed cost at all.",
+            "**The asymmetry is the finding and it runs against the ROM thesis:**",
+            "a ROM step is tens of microseconds over 32-61 layers while a GPU step",
+            "for the same model is milliseconds, so the same per-layer floor is a",
+            "large fraction of one and a rounding error on the other.",
+            "",
+            "| Family | Model | B | Fixed latency (us) | Share of the fastest step |",
+            "|---|---|---:|---:|---:|",
+        ]
+    )
+    best_share: dict[tuple[str, str, int], dict[str, Any]] = {}
+    for row in points:
+        if not row["feasible"]:
+            continue
+        key = (row["family"], row["model"], row["batch_size"])
+        current = best_share.get(key)
+        if current is None or row["per_user_tokens_s"] > current["per_user_tokens_s"]:
+            best_share[key] = row
+    for key in sorted(best_share, key=lambda item: (item[0], item[1], item[2])):
+        row = best_share[key]
+        if row["batch_size"] != 1:
+            continue
+        lines.append(
+            f"| {row['family']} | {row['model']} | {row['batch_size']} | "
+            f"{_fmt_us(row['layer_fixed_latency_s'])} | "
+            f"{row['layer_fixed_latency_fraction_of_step']:.1%} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "### 4. KV access granularity, which is a layout choice",
+            "",
+            "`workload.kv_traffic` counts the bytes the algorithm needs. A memory",
+            "moves whole granules, and for a sparse-index model most of the KV",
+            "read is a scan of entries far smaller than one granule. Whether that",
+            "costs anything is a **layout** decision, so it is stated as one.",
+            "",
+            "| Model | KV store | Layout | Granule | Inflation |",
+            "|---|---|---|---:|---:|",
+        ]
+    )
+    kv_seen: set[tuple[str, str]] = set()
+    for row in points:
+        key = (row["model"], row["kv_store"])
+        if key in kv_seen:
+            continue
+        kv_seen.add(key)
+        lines.append(
+            f"| {row['model']} | {row['kv_store']} | {row['kv_index_layout']} | "
+            f"{row['kv_access_granularity_bytes']:,.0f} B | "
+            f"{_fmt_ratio(row['kv_access_granularity_inflation'])} |"
+        )
+
+    lines.extend(
+        [
+            "",
+            "### 5. The SRAM KV path, which is still never exercised",
+            "",
+            "A reported bound rather than a correction. The step credits ONE user",
+            "with the whole array's read bandwidth. That is defensible for KV in a",
+            "way it is not for ROM -- KV is written at run time and can be striped",
+            "across every bank, whereas an expert's weights live where they were",
+            "masked -- but it holds only if the design really stripes, and nothing",
+            "in the model checks. The bound below is what the same read costs if a",
+            "user can draw only the banks its own footprint occupies.",
+            "",
+            "| Model | B | Devices | Bank occupancy | KV read as charged (us) | "
+            "Under bank locality (us) |",
+            "|---|---:|---:|---:|---:|---:|",
+        ]
+    )
+    sram_seen: set[tuple[str, int]] = set()
+    for row in points:
+        if row["kv_store"] != "sram" or not row["feasible"]:
+            continue
+        if row["kv_bank_occupancy"] >= 1.0 - 1e-9:
+            continue
+        key = (row["model"], row["batch_size"])
+        if key in sram_seen:
+            continue
+        sram_seen.add(key)
+        lines.append(
+            f"| {row['model']} | {row['batch_size']} | {row['device_count']} | "
+            f"{row['kv_bank_occupancy']:.2%} | "
+            f"{_fmt_us(row['component_times_s']['kv_read'])} | "
+            f"{_fmt_us(row['kv_read_s_under_bank_locality'])} |"
+        )
+    return lines
+
+
 def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
     study_id = result["study_id"]
     derivations = result["technology_derivations"]
@@ -1499,6 +1971,49 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             f"from Cerebras WSE-2 ({derivations['sram_read_bytes_s_per_mm2']['value']:.3e} "
             "B/s/mm2), so it is physically unremarkable. That is a falsifiable",
             "statement about one technology input, which is what a gate is for.",
+            "",
+            "### The per-layer latency band, and why the gate is not fitted",
+            "",
+            "Every term in the per-layer latency block is `assumed` and carries",
+            "a stated range. Reporting the gate at one point inside a wide band",
+            "would invite the point to be read as measured, which is how a gate",
+            "becomes a one-parameter curve fit. The terms are derived from",
+            "primitives independent of this anchor -- SRAM access time,",
+            "sequencer issue and decode, pipeline fill and drain across a",
+            "dependent array-pass boundary, the layer barrier, and an on-die",
+            "wire delay over a distance taken from the floorplan -- and the gate",
+            "is evaluated at both ends.",
+            "",
+            "| Per-layer latency | Value | Per token | Modelled tok/s | Ratio | Binds on |",
+            "|---|---:|---:|---:|---:|---|",
+        ]
+    )
+    band = anchors["taalas_hc1"]["detail"]["layer_fixed_latency_band"]
+    for bound in ("low", "stated", "high"):
+        entry = band[bound]
+        lines.append(
+            f"| range {bound} | "
+            f"{entry['layer_fixed_latency_s_per_layer'] * 1e9:,.1f} ns/layer | "
+            f"{_fmt_us(entry['layer_fixed_latency_s_per_token'])} us | "
+            f"{_fmt(entry['modelled_tokens_s'])} | "
+            f"{_fmt_ratio(entry['ratio_to_published'])} | "
+            f"{entry['binding_constraint']} |"
+        )
+    closing = band["per_layer_cost_that_would_close_the_gap_s"]
+    lines.extend(
+        [
+            "",
+            "The per-layer cost that would land the model exactly on the",
+            f"published figure is **{closing * 1e9:,.1f} ns/layer**. It is"
+            + (
+                " negative, which means the model is already slower than the"
+                " shipping part before any fixed cost is charged: no value of"
+                " this term could have closed the gap, and the residual lies in"
+                " the ROM read-bandwidth density instead."
+                if closing < 0
+                else " reported so the distance between the derived value and"
+                " the fitted one is visible. It is never used as an input."
+            ),
             "",
             "### Anchor sensitivity",
             "",
@@ -1677,6 +2192,96 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             f"{row.get('best_binding_constraint') or '—'} |"
         )
 
+    floorplan = result.get("floorplan_comparison")
+    if floorplan:
+        storage = floorplan["batched"]
+        cim = floorplan["per_region"]
+        lines.extend(
+            [
+                "",
+                "## The two ROM floorplans on one die",
+                "",
+                f"Both machines hold the same {floorplan['stored_weight_bytes']/1e9:,.2f} GB "
+                f"of weights at {floorplan['weight_bits_per_parameter']:g} bits per "
+                f"parameter on the same {floorplan['die_area_mm2']:,.0f} mm2. They are "
+                "different floorplans, not one floorplan with two arithmetics.",
+                "",
+                "| | ROM + MAC array | compute-in-ROM |",
+                "|---|---:|---:|",
+                f"| cell area vs a storage-only bit | {storage['cell_area_multiplier']:.1f}x "
+                f"| {cim['cell_area_multiplier']:.1f}x |",
+                f"| ROM array | {storage['rom_mm2']:,.1f} mm2 | {cim['rom_mm2']:,.1f} mm2 |",
+                f"| compute block | {storage['compute_mm2']:,.1f} mm2 | "
+                f"{cim['compute_mm2']:,.1f} mm2 (pre-compute only) |",
+                f"| SRAM | {storage['sram_mm2']:,.1f} mm2 | {cim['sram_mm2']:,.1f} mm2 |",
+                f"| sustained fp8 compute roof | {storage['peak_compute_ops_s']:.3e} ops/s | "
+                "the array sweep itself |",
+                f"| weight bytes/s the roof wants | "
+                f"{storage['weight_bytes_s_demanded_by_the_roof']:.3e} | n/a |",
+                f"| weight bytes/s the array supplies | "
+                f"{storage['weight_read_bytes_s']:.3e} | "
+                f"{cim['weight_read_bytes_s']:.3e} |",
+                f"| **can the compute block be fed?** | "
+                f"**{storage['feed_ratio']:.2f}x** | there is nothing to feed |",
+                f"| full-array sweep | {_fmt_us(storage['full_array_sweep_time_s'])} us | "
+                f"{_fmt_us(cim['full_array_sweep_time_s'])} us |",
+                "",
+                "**The sweep is identical.** Both the capacity density and the",
+                "read-bandwidth density scale as one over bitcell area, so a larger",
+                "compute-in-ROM cell holds proportionally fewer bits AND delivers",
+                "proportionally fewer bytes per second: the cell size cancels in",
+                "their ratio. What the larger cell costs is capacity -- the same",
+                "weights need a bigger array, and that silicon comes out of the SRAM",
+                "beside it. An earlier version of this model applied the multiplier",
+                "to area alone and credited the result with the storage cell's",
+                "bandwidth density, which handed compute-in-ROM a free "
+                f"{cim['cell_area_multiplier']:.1f}x on throughput.",
+                "",
+                "What compute-in-ROM does buy on this die is that it has no MAC",
+                f"array to starve: the storage machine's {storage['compute_mm2']:,.0f} mm2 "
+                f"of MAC array can be fed at only {storage['feed_ratio']:.2f}x of what it",
+                "wants at one weight byte per multiply-accumulate, so more than half",
+                "the die runs at a fraction of its duty and the step is weight-bound",
+                "anyway.",
+            ]
+        )
+
+    sizing_rows = [
+        summary
+        for summary in result["model_summaries"]
+        if summary.get("per_region_sizing")
+    ]
+    if sizing_rows:
+        lines.extend(
+            [
+                "",
+                "## Sizing one expert region",
+                "",
+                "The per-region machine's cost is not arithmetic; it is a",
+                "pre-compute block and an activation distribution network per",
+                "region. The block is small against the array it serves. The",
+                "distribution network is the real cost and this model does not",
+                "price it.",
+                "",
+                "| Model | Experts | Routed bytes/expert | One region | Pre-compute/region "
+                "| All regions | All pre-compute | Whole checkpoint |",
+                "|---|---:|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for summary in sizing_rows:
+            sizing = summary["per_region_sizing"]
+            lines.append(
+                f"| {summary['model']} | {sizing['num_experts']} | "
+                f"{sizing['routed_bytes_per_expert']/1e6:,.1f} MB | "
+                f"{sizing['region_mm2']:,.1f} mm2 | "
+                f"{sizing['precompute_mm2_per_region']:,.2f} mm2 "
+                f"({sizing['precompute_fraction_of_array']:.1%}) | "
+                f"{sizing['all_regions_mm2']:,.0f} mm2 | "
+                f"{sizing['all_precompute_mm2']:,.0f} mm2 | "
+                f"{sizing['whole_checkpoint_mm2']:,.0f} mm2 = "
+                f"{sizing['whole_checkpoint_reticles']:,.1f} reticles |"
+            )
+
     lines.extend(
         [
             "",
@@ -1698,23 +2303,84 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "broadcast and `-perregion` gives each expert region its own port",
             "variant.",
             "",
-            "| Model | B | Batched user tok/s | Batched aggregate | Per-stream user tok/s | "
-            "Per-stream aggregate | Aggregate penalty | Batched binds on | "
-            "Per-stream binds on |",
-            "|---|---:|---:|---:|---:|---:|---:|---|---|",
+            "The third column set is the per-region machine, which is the whole",
+            "subject of `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md`: its sweep depth",
+            "is the load of the **busiest** expert region, computed from the routing",
+            "distribution rather than from the mean engaged region.",
+            "",
+            "| Model | B | Spare silicon | Batched aggregate | Per-stream aggregate | "
+            "Per-region aggregate | Per-stream penalty | Per-region over broadcast | "
+            "Batched binds on | Per-stream binds on | Per-region binds on |",
+            "|---|---:|---|---:|---:|---:|---:|---:|---|---|---|",
         ]
     )
     for row in result["amortization_fork"]:
+        broadcast = row.get("per_stream_aggregate_tokens_s") or 0.0
+        region = row.get("per_region_aggregate_tokens_s") or 0.0
+        gain = region / broadcast if broadcast > 0 else None
         lines.append(
             f"| {row['model']} | {row['batch_size']} | "
-            f"{_fmt(row['batched_per_user_tokens_s'])} | "
+            f"{row['spare_area_policy']} | "
             f"{_fmt(row['batched_aggregate_tokens_s'])} | "
-            f"{_fmt(row['per_stream_per_user_tokens_s'])} | "
             f"{_fmt(row['per_stream_aggregate_tokens_s'])} | "
+            f"{_fmt(row['per_region_aggregate_tokens_s'])} | "
             f"{_fmt_ratio(row.get('per_stream_aggregate_penalty_x'))} | "
+            f"{_fmt_ratio(gain)} | "
             f"{row['batched_binding_constraint'] or '—'} | "
-            f"{row['per_stream_binding_constraint'] or '—'} |"
+            f"{row['per_stream_binding_constraint'] or '—'} | "
+            f"{row['per_region_binding_constraint'] or '—'} |"
         )
+
+    sweep_rows = [
+        row for row in result.get("floorplan_sweep", []) if row["design"]
+    ]
+    if sweep_rows:
+        lines.extend(
+            [
+                "",
+                "## The floorplan sweep: where the recovered silicon goes",
+                "",
+                "Compute-in-ROM has no MAC array, so it recovers that silicon.",
+                "What it is spent on decides the comparison, so it is swept",
+                "rather than assumed, and **the same sweep is offered to the",
+                "amortising machine** -- offering it to one side only would move",
+                "the artefact rather than remove it.",
+                "",
+                "* `sram` sizes the array to the stored bytes. Compute-in-ROM's",
+                "  spare silicon becomes KV store, which is the split Taalas",
+                "  describes; the amortising machine's becomes MAC array.",
+                "* `rom` grows the array into that silicon as **replicated copies",
+                "  of the same weights**. R copies carry R sets of bitlines and",
+                "  sense amps, so R disjoint slices of the weight set are read at",
+                "  once and the sweep time falls by R. On the amortising machine",
+                "  the MAC array is then sized to consume exactly what the array",
+                "  can read, at one weight byte per multiply-accumulate -- a",
+                "  derived split, not a swept one.",
+                "",
+                "`R` is the replication factor the design ended up with, which is",
+                "`weight_capacity / stored`. **Areas differ down this table**, so",
+                "read `tok/s/mm2` and not only aggregate: a design is allowed to",
+                "buy throughput with silicon here, and the iso-area table above is",
+                "where that is controlled for.",
+                "",
+                "| Model | B | Amortisation | Spare | Design | mm2 | R | Sweeps | Aggregate | tok/s/mm2 | Binds on | vs ROM+MAC/sram |",
+                "|---|---:|---|---|---|---:|---:|---:|---:|---:|---|---:|",
+            ]
+        )
+        for row in sweep_rows:
+            lines.append(
+                f"| {row['model']} | {row['batch_size']} | "
+                f"{row['weight_amortization']} | {row['spare_area_policy']} | "
+                f"{row['design']} | {_fmt_area(row['silicon_area_mm2'])} | "
+                f"{row['rom_replication_factor']:,.2f} | "
+                f"{row['rom_sweeps_per_step']:,.2f} | "
+                f"{_fmt(row['aggregate_tokens_s'])} | "
+                f"{row['aggregate_tokens_s_per_mm2']:,.3f} | "
+                f"{row['binding_constraint']} | "
+                f"{_fmt_ratio(row['vs_reference_floorplan_x'])} |"
+            )
+
+    lines.extend(_render_corrections(result))
 
     lines.extend(
         [
@@ -2048,25 +2714,56 @@ def _findings(result: dict[str, Any]) -> list[str]:
             "which is where the published anchor sits, so no amount of validation "
             "against it resolves the fork."
         )
+        # Scanned over every batch, not only the largest: the per-region gain
+        # peaks in the middle of the range and reporting only batch 256 would
+        # miss it.
         regional = [
             row
-            for row in fork
-            if row.get("per_region_aggregate_penalty_x") is not None
+            for row in result.get("amortization_fork", [])
+            if row.get("per_region_aggregate_tokens_s")
+            and row.get("per_stream_aggregate_tokens_s")
+            and row.get("batched_aggregate_tokens_s")
         ]
         if regional:
-            best = min(regional, key=lambda row: row["per_region_aggregate_penalty_x"])
+            def _gain(row: dict[str, Any]) -> float:
+                return (
+                    row["per_region_aggregate_tokens_s"]
+                    / row["per_stream_aggregate_tokens_s"]
+                )
+
+            best = max(regional, key=_gain)
+            best_depth = max(
+                (
+                    row["region_sweep_depth_max_over_mean"]
+                    for row in result["points"]
+                    if row["model"] == best["model"]
+                    and row["batch_size"] == best["batch_size"]
+                    and row.get("region_sweep_depth_max_over_mean")
+                ),
+                default=1.0,
+            )
+            loses = [
+                row
+                for row in regional
+                if row["per_region_aggregate_tokens_s"]
+                < row["batched_aggregate_tokens_s"] * (1 - 1e-9)
+            ]
             findings.append(
                 "**A third machine sits between them, and for a sparse model it "
-                "recovers most of what compute-in-ROM gives up.** Give each expert "
-                "region its own activation port and two tokens selecting disjoint "
-                "experts drive disjoint regions at the same time; only the tokens "
-                "landing on one region serialise. At batch "
-                f"{max(BATCHES)} that closes the gap to "
-                f"{best['per_region_aggregate_penalty_x']:,.2f}x of the amortising "
-                f"machine ({best['model']}), against "
-                f"{worst['per_stream_aggregate_penalty_x']:,.1f}x for a global "
-                "activation broadcast. A dense model has one region, so it gains "
-                "nothing — the disjointness is what sparsity buys."
+                "recovers part of what compute-in-ROM gives up -- less than the "
+                "mean-region arithmetic used to say.** Give each expert region its "
+                "own activation port and two tokens selecting disjoint experts "
+                "drive disjoint regions at the same time; only the tokens landing "
+                "on one region serialise, and the sweep waits for the BUSIEST "
+                "region rather than the average engaged one. The largest gain over "
+                f"a global broadcast is {_gain(best):,.2f}x, on {best['model']} at "
+                f"batch {best['batch_size']}, where the busiest region carries "
+                f"{best_depth:,.2f}x the load of the mean engaged one. It is not "
+                "free ground: per-region "
+                f"still loses to the amortising ROM-plus-MAC machine at "
+                f"{len(loses)} of {len(regional)} operating points. A dense model "
+                "has one region, so it gains nothing -- the disjointness is what "
+                "sparsity buys."
             )
 
     findings.append(

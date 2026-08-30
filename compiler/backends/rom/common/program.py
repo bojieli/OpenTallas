@@ -135,6 +135,36 @@ EXECUTION_CONTRACT: Mapping[str, str] = {
 
 #: What limits an operator's rate.  The cycle model reads this out of the
 #: SCHEDULE descriptor together with the tile mapping.
+
+def _declared_new_token_budget(policy_body: dict, span_max: int) -> int:
+    """The decode budget the neutral IR declares, refused rather than defaulted.
+
+    Both backends used to supply a default when the key was absent -- 1024 here,
+    512 in the HBM lowering, which additionally spelled the key wrong and so took
+    its default every time. Two backends inventing two different budgets for one
+    IR is precisely the divergence a shared IR exists to prevent, and neither
+    invention is visible in a token stream until a generation runs long enough to
+    hit the smaller cap and looks like an early stop.
+
+    A graph that appends tokens without declaring a budget is a graph whose
+    decode length nobody chose.
+    """
+
+    declared = policy_body.get("maximum_new_tokens")
+    if declared is None:
+        raise ValueError(
+            "the generation policy declares no 'maximum_new_tokens'; a decode "
+            "budget must be stated by the IR rather than defaulted by a backend"
+        )
+    budget = int(declared)
+    if budget > span_max:
+        raise ValueError(
+            f"generation policy admits {budget} new tokens but the capability "
+            f"holds {span_max} context positions"
+        )
+    return budget
+
+
 class ResourceBound:
     ROM_READ = 1
     TENSOR_LANES = 2
@@ -4084,7 +4114,7 @@ class RomLowering:
             )
         policy_body = dict(self.graph.generation_policy)
         span_max = int(self.capability.limits["max_context_positions"])
-        max_new = int(policy_body.get("maximum_new_tokens", 1024))
+        max_new = _declared_new_token_budget(policy_body, span_max)
         # One host window serves both directions: the host stages the prompt
         # into it and on-device selection appends each new token to it.  The
         # graph's token-stream input is a view of that window, not a second
@@ -4112,7 +4142,7 @@ class RomLowering:
             self._substituted_inputs[stream] = "host_input_window"
         generation_policy = builder.generation_policy(
             eos_token_ids=[int(i) for i in policy_body.get("eos_token_ids", [0])][:8],
-            max_new_tokens=int(policy_body.get("maximum_new_tokens", 1024)),
+            max_new_tokens=max_new,
             vocabulary_size=int(policy_body.get("vocabulary_size", 1)),
             token_ring_object_id=token_ring,
             selection_mode=SelectionMode.GREEDY_ARGMAX_LOWEST_ID,
