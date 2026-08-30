@@ -136,12 +136,14 @@ def _group_traffic(group: AttentionGroup, context_tokens: int) -> tuple[float, f
         main_entries = compressed_entries
         if group.kind == "compressed_sparse":
             main_entries = min(group.top_k, compressed_entries)
-            # Below a measured threshold the implementation selects without
-            # scanning the index at all, so charging the scan there overstates
-            # KV traffic -- by 1.60x at 8,001 tokens on DeepSeek-V4-Flash. The
-            # threshold is a property of the released implementation, not of the
-            # architecture, so it is carried in the profile rather than assumed
-            # here, and zero keeps the unconditional behaviour.
+            # A profile may declare a compressed-entry count below which its
+            # implementation skips the index scan. No shipped profile declares
+            # one: the threshold this was written for turned out to be a gap in
+            # the measuring instrument rather than a property of the model, and
+            # the released implementation scans exactly context/4 at every
+            # context measured, 1,001 through 200,001. Zero is the unconditional
+            # scan and is what every profile sets. See the retraction under
+            # metadata.index_scan_threshold in each DeepSeek profile.
             scans_index = compressed_entries >= group.index_scan_min_compressed_entries
             scanned = compressed_entries if scans_index else 0
             index_read = count * scanned * group.index_entry_bytes

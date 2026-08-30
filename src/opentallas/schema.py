@@ -50,12 +50,21 @@ class AttentionGroup:
     compression_ratio: int = 1
     top_k: int = 0
     index_entry_bytes: float = 0.0
-    #: Compressed-entry count at or above which the sparse index is actually
-    #: scanned.  Measured, not assumed: the released DeepSeek implementation
-    #: reads no index at 1,001 or 8,001 tokens (251 and 2,001 compressed entries)
-    #: and reads exactly one entry per compressed position at 32,001 and beyond.
-    #: Zero means "always scan", which is the behaviour every profile had before
-    #: the threshold was measured.
+    #: Compressed-entry count at or above which the sparse index is scanned.
+    #: **Every shipped profile sets this to zero — always scan — and the field
+    #: survives only as a hook.**
+    #:
+    #: It was introduced on the reading that the released DeepSeek implementation
+    #: scans no index below roughly 8,001 compressed entries, and that reading was
+    #: an instrumentation artifact: the oracle wrapped ``Attention.forward`` and
+    #: not ``Indexer.forward``, so a rung whose prefill did not tile counted no
+    #: index at all — and the two short rungs were exactly the untiled ones. The
+    #: threshold measured was the boundary of the instrument. Re-instrumented, the
+    #: scan is exactly ``context / 4`` at every context from 1,001 to 200,001.
+    #:
+    #: The docstring that stood here said "Measured, not assumed", which is the
+    #: grade error this repository has now made three times; the retraction is in
+    #: each DeepSeek profile under ``metadata.index_scan_threshold``.
     index_scan_min_compressed_entries: int = 0
     recurrent_state_bytes: float = 0.0
     recurrent_write_bytes: float | None = None

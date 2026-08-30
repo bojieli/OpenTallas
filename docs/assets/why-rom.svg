@@ -23,7 +23,7 @@
 <text x="230" y="481" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="16" font-weight="400" text-anchor="middle" >11.22 GB / token step</text>
 <rect x="140" y="518" width="180" height="62" rx="10" fill="#5aa7ff" fill-opacity="0.18" stroke="#5aa7ff" stroke-width="1" />
 <text x="230" y="547" fill="#5aa7ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="18" font-weight="700" text-anchor="middle" >KV read</text>
-<text x="230" y="570" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="16" font-weight="400" text-anchor="middle" >99.10 MB / token</text>
+<text x="230" y="570" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="16" font-weight="400" text-anchor="middle" >317.46 MB / token</text>
 <line x1="350" y1="475" x2="485" y2="475" stroke="#ad8cff" stroke-width="13" stroke-opacity="1" stroke-linecap="round" marker-end="url(#arrow)"/>
 <line x1="350" y1="550" x2="485" y2="550" stroke="#5aa7ff" stroke-width="4" stroke-opacity="1" stroke-linecap="round" marker-end="url(#arrow)"/>
 <rect x="485" y="390" width="210" height="175" rx="18" fill="#0b1728" fill-opacity="1" stroke="#35d4c7" stroke-width="2" />
@@ -50,6 +50,6 @@
 <text x="1358" y="536" fill="#edf5ff" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="650" text-anchor="middle" >overlap where legal</text>
 <text x="880" y="674" fill="#9fb3ca" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="start"><tspan x="880" dy="0">What disappears is HBM weight traffic—not computation, KV traffic,</tspan><tspan x="880" dy="22.950000000000003">communication, or heat.</tspan></text>
 <rect x="390" y="776" width="820" height="77" rx="18" fill="url(#cyanGlow)" fill-opacity="1" stroke="#35d4c7" stroke-width="1" />
-<text x="800" y="812" fill="#35d4c7" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="27" font-weight="750" text-anchor="middle" >113.2× more active-weight bytes than KV-read bytes</text>
+<text x="800" y="812" fill="#35d4c7" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="27" font-weight="750" text-anchor="middle" >35.3× more active-weight bytes than KV-read bytes</text>
 <text x="800" y="840" fill="#9fb3ca" fill-opacity="1" font-family="Inter,Segoe UI,Roboto,Helvetica,Arial,sans-serif" font-size="17" font-weight="400" text-anchor="middle" >DeepSeek-V4-Flash · 200K resident context · batch 1 · uniform-routing traffic screen</text>
 </svg>
