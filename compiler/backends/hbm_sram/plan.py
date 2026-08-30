@@ -58,7 +58,7 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field as dc_field
 from pathlib import Path
-from typing import Any, Iterable, Mapping, Sequence
+from typing import Any, Container, Iterable, Mapping, Sequence
 
 from compiler.ir.v3.kernel_ir import (
     CheckpointBinding,
@@ -1470,7 +1470,10 @@ def _place_weights(
        layer ``L`` starts at ``L * per_layer_bytes`` inside the object because
        the object's address space is the manifest's, not the file's.  Each
        layer's payload lies wholly inside one segment, so the window a view
-       takes is a zero-copy range rather than a gather across two.
+       takes is a zero-copy range rather than a gather across two.  A
+       block-scaled role gets a *companion* object holding its scales in the
+       same member order, because a block scale has no descriptor of its own
+       and is addressed by the weight's offset divided by the block.
     2. one object per run of *file-adjacent* leftover bindings -- embeddings,
        final norms, the vocabulary projection -- so the object count stays in
        the low tens.
@@ -1559,9 +1562,8 @@ def _place_weights(
     placements: list[WeightPlacement] = []
     placed: set[str] = set()
 
-    # (1) one object per weight role, segments in layer order.
-    for role_key, members in weight_roles(graph, bands):
-        group_id = f"wr{len(weight_groups):04d}"
+    def _group(group_id: str, members: Sequence[str], role_key: str) -> None:
+        """Concatenate one ordered run of tensors into a single object."""
         segments: list[PlacedSegment] = []
         offsets: list[int] = []
         cursor = 0
@@ -1594,6 +1596,49 @@ def _place_weights(
                 )
             )
             placed.add(member)
+
+    def _scale_run(members: Sequence[str]) -> tuple[str, ...] | None:
+        """The scale tensors of one weight role, in the role's own order.
+
+        A block scale is not addressed by a descriptor of its own.  Amendments
+        A8 and A15 state the code for element ``(row, col)`` as a position in
+        the *weight's* own row-major space -- ``(row // scale_block_rows) *
+        (cols // scale_block_elements) + col // scale_block_elements`` -- so
+        the scale object's address space is the weight object's address space
+        divided by the block, and nothing in the wire format can say otherwise.
+        A role whose members are one tensor per layer therefore forces the
+        layout of its scales exactly: concatenated in the same member order,
+        because layer ``L`` sits at ``L * elements`` in the weight object and
+        the block divides that offset into ``L * codes`` in the scale object.
+
+        Left to the adjacency grouping below, the scales land in *file* order
+        instead, which is neither the same origin nor the same stride.  The
+        engine reads whatever code sits at the offset the weight implies: the
+        first layer silently takes a neighbouring tensor's codes, and a later
+        one walks off the end of the object.
+        """
+        run: list[str] = []
+        for member in members:
+            scale_id = tensors[member].scale_tensor_id
+            if not scale_id:
+                return None
+            scale = tensors.get(scale_id)
+            if scale is None or scale.binding is None or scale_id in placed:
+                return None
+            if scale_id in run:
+                return None
+            run.append(scale_id)
+        return tuple(run) if run else None
+
+    # (1) one object per weight role, segments in layer order -- and, for a
+    # block-scaled role, one companion object holding its scales in the same
+    # order, so that the weight object's address space divided by the block is
+    # the scale object's.
+    for role_key, members in weight_roles(graph, bands):
+        _group(f"wr{len(weight_groups):04d}", members, role_key)
+        scale_run = _scale_run(members)
+        if scale_run is not None:
+            _group(f"ws{len(weight_groups):04d}", scale_run, f"{role_key}.scale")
 
     # (2) leftovers, grouped by adjacency inside one checkpoint file.
     leftovers = [
@@ -2333,6 +2378,40 @@ def _place_states(
     return tuple(placements), state_of_resource, warnings
 
 
+def writes_state_plane(
+    kernel: Kernel,
+    tensors: Mapping[str, Tensor],
+    name: str,
+    value_reads: Container[str],
+) -> bool:
+    """Is this output of a state-writing kernel *the resource*, or a value?
+
+    A kernel that declares a state effect does not thereby make every result it
+    produces a plane of that resource.  ``DMA.CACHE_APPEND``'s destination is
+    the cache and Qwen declares it ``role: activation``, so the role alone
+    cannot decide it.  ``VECTOR.COMPRESS``'s state-update sub-case is the
+    counter-example: it rolls the compressor's raw window -- a real state
+    effect, and one the operand convention binds to no operand at all -- while
+    its two results are the pool operands ``COMPRESS_POOL`` reads next.
+
+    The graph already separates them.  A resource plane is written and not read
+    again as an operand; a value is produced to be consumed.  Routing a
+    consumed value into the state image writes it to a different object from
+    the one its reader addresses, and the reader gets whatever the resource
+    held.
+    """
+    if not kernel.state_writes:
+        return False
+    if tensors[name].role == "state":
+        return True
+    return name not in value_reads
+
+
+def value_reads(graph: KernelGraph) -> frozenset[str]:
+    """Tensors some kernel reads as an ordinary operand."""
+    return frozenset(name for kernel in graph.kernels for name in kernel.inputs)
+
+
 def _bind_state_tensors(
     graph: KernelGraph,
     tensors: Mapping[str, Tensor],
@@ -2356,12 +2435,17 @@ def _bind_state_tensors(
     row_elements = {s.state_id: s.row_elements for s in graph.states}
     cursor: dict[str, int] = {}
     bound: dict[str, list[Any]] = {}
+    consumed = value_reads(graph)
     for kernel in graph.kernels:
         writes = list(kernel.state_writes)
         reads = list(kernel.state_reads) or writes
         outs = [n for n in kernel.outputs if tensors[n].role == "state"]
         if not outs and writes:
-            outs = list(kernel.outputs)
+            outs = [
+                n
+                for n in kernel.outputs
+                if writes_state_plane(kernel, tensors, n, consumed)
+            ]
         for position, name in enumerate(outs):
             if not writes or name in bound:
                 continue

@@ -99,9 +99,37 @@ from .plan import (
     position_inputs,
     ring_modulus,
     round_up as _round_up,
+    value_reads,
+    writes_state_plane,
 )
 
 BACKEND_ID = "hbm-sram-abi3"
+
+#: Neutral kinds whose operator convention states every request-sized operand
+#: with a *leading* batch axis.  ``VECTOR.COMPRESS``'s three sub-cases are the
+#: set: TA-ABI3-OPCONV-1 section 3 writes the projection ``[B,S,K] -> [B,S,2,N]``,
+#: the state update ``[B,S,2,W] -> [B,G,P,D]`` and the pool ``[B,G,P,D] ->
+#: [B,G,D]``.  The neutral IR has no batch -- ADR-003 section 15 makes a batch a
+#: deployment property -- so each of those operands arrives one rank short.
+_BATCH_LEADING = frozenset(
+    {
+        "COMPRESS_PROJECT",
+        "COMPRESS_STATE_UPDATE",
+        "COMPRESS_POOL",
+        # ``VECTOR.INDEX_SCORE`` is the same shape of statement: in0 query
+        # ``[B,S,Hd,D]``, in1 key ``[B,C,D]``, in2 head weights ``[B,S,Hd]``,
+        # out0 scores ``[B,S,C]``.  The batch leads here too and for the same
+        # reason it does in the state update -- the key operand's batch must
+        # match the query's, so a token axis presented as the batch would put
+        # one candidate set against every token.
+        "INDEX_SCORE",
+    }
+)
+
+#: Tensor roles the checkpoint supplies.  A block scale on one of these is a
+#: placed weight; a block scale on anything else is produced at run time and
+#: lives in the activation arena.
+_WEIGHT_ROLES = frozenset({"weight", "constant"})
 
 #: TA-ABI3-OPCONV-1 amendment A7.  The strictly sequential contract is the
 #: scalar oracle used for numeric qualification; execution operators declare the
@@ -179,6 +207,12 @@ _DTYPE_FEATURE: Mapping[int, Feature] = {
 #: an operand's rank outranks a rule that infers one.
 _DECLARED_RANK_SLOTS: Mapping[tuple[int, int], tuple[int, ...]] = {
     (int(Major.ATTENTION), int(Attention.SPARSE)): (2, 3),
+    # ``VECTOR.INDEX_SCORE`` states every operand: in0 query ``[B,S,Hd,D]``,
+    # in1 key ``[B,C,D]``, in2 head weights ``[B,S,Hd]``.  The head weights are
+    # one axis short of the query and agree on the token axis, which is exactly
+    # the shape the broadcast rule fires on -- and it is wrong here, because a
+    # head weight is one number *per head*, not one row read once per head.
+    (int(Major.VECTOR), int(Vector.INDEX_SCORE)): (1, 2),
 }
 
 #: A declared reading of a payload wider than the value it carries:
@@ -332,6 +366,7 @@ class _Emitter:
         self.node_count = plan.topology.node_count
         self.tensors = {t.tensor_id: t for t in graph.tensors}
         self.kernels = {k.index: k for k in graph.kernels}
+        self._value_reads = value_reads(graph)
         self.span_max = plan.span_max
         self.builder = DeploymentBuilder(
             target_id=target_id
@@ -1024,7 +1059,12 @@ class _Emitter:
         numerator = int(extent_numerator) if extent_numerator > 1 else 0
         unit = int(extent_unit) if extent_unit > 1 else 0
         bias = int(extent_bias)
-        axis = int(extent_axis) if (numerator or unit or bias) else 0
+        # The axis is not part of the affine function: a view may state the
+        # identity function on an axis that is not the leading one, which is
+        # exactly the compressor's ``[1, span, ...]`` batch row.  Every view
+        # that needs nothing A18 added passes zero here and still encodes
+        # byte-identically to the same view written before the amendment.
+        axis = int(extent_axis)
         key = (
             object_id,
             int(dtype),
@@ -1110,21 +1150,97 @@ class _Emitter:
         A8 case unchanged.
         """
         tensor = self.tensors[operand.tensor_id]
-        if not tensor.scale_tensor_id:
+        scale_id = tensor.scale_tensor_id
+        if not scale_id or scale_id not in self.tensors:
             return NO_ID, 0, 0
-        placement = self.plan._weight_index.get(tensor.scale_tensor_id)
-        if placement is None:
+        block = int(tensor.scale_block_elements or 0)
+        if block <= 0:
             return NO_ID, 0, 0
-        block = tensor.scale_block_elements
-        if block <= 0 or operand.cols % block:
+        placement = self.plan._weight_index.get(scale_id)
+        if placement is None and self.tensors[scale_id].role in _WEIGHT_ROLES:
+            return NO_ID, 0, 0
+        if operand.cols % block:
             raise LoweringError(
                 f"tensor {operand.tensor_id}: block-scale addressing requires "
                 f"K % scale_block_elements == 0, got {operand.cols} % {block}"
             )
-        return (
-            self._weight_object[placement.group_id],
-            block,
-            self._scale_block_rows(tensor, operand),
+        row_block = self._scale_block_rows(tensor, operand)
+        if placement is not None:
+            self._check_scale_address(operand, placement, block, row_block)
+            return self._weight_object[placement.group_id], block, row_block
+        # A quantised *activation* carries its scale in the arena beside its
+        # codes, and the view is the only place that can say so: the engine
+        # derives the code offset from this view's own element offset, so a
+        # scale nothing binds is a scale nothing applies.  Dropping it is
+        # silent -- FP8 codes read as if every block scaled by one -- which is
+        # why an activation scale the plan does place is bound here rather
+        # than skipped for not being a weight.
+        return self._arena_scale_object(operand, scale_id), block, row_block
+
+    def _arena_scale_object(self, operand: OperandPlan, scale_id: str) -> int:
+        """The arena object holding a quantised activation's block scales."""
+        key = self.plan.activation_keys.get(scale_id)
+        slot = self.plan.arena_of_key.get(key) if key is not None else None
+        if slot is None:
+            raise LoweringError(
+                f"tensor {operand.tensor_id} declares block scale {scale_id}, "
+                "which is neither a placed weight nor an arena activation, so "
+                "no object holds it and the operand would be read as if every "
+                "block scaled by one"
+            )
+        return self._arena_object[slot]
+
+    def _check_scale_address(
+        self,
+        operand: OperandPlan,
+        placement: Any,
+        block: int,
+        row_block: int,
+    ) -> None:
+        """Refuse a scale object the weight's own offset does not address.
+
+        A block scale carries no descriptor.  Amendments A8 and A15 place the
+        code for element ``(row, col)`` at ``(row // row_block) * (cols //
+        block) + col // block`` *of the weight view's own row-major space*, so
+        the engine reads the scale object at an offset it derives from the
+        weight view and nowhere else.  The scale object's address space is
+        therefore the weight object's divided by the block, and a placement
+        that does not satisfy that is not a slower lowering -- it is a
+        different tensor's codes read as this one's.
+
+        The failure is silent by construction: a wrong offset that still lands
+        inside the object decodes to finite E8M0 factors and produces a number.
+        Only a placement far enough out to leave the object traps.  So the
+        relation is checked here, where both placements are known, rather than
+        left to whichever layer walks off the end first.
+        """
+        weight = self.plan._weight_index.get(operand.tensor_id)
+        if weight is None:
+            return
+        cols = max(int(operand.cols), 1)
+        rows_per_tile = max(int(row_block), 1)
+
+        def codes(elements: int) -> int:
+            return (int(elements) // cols // rows_per_tile) * (cols // int(block))
+
+        expected_offset = codes(weight.element_offset)
+        expected_stride = codes(weight.layer_stride_elements)
+        if (
+            placement.element_offset == expected_offset
+            and placement.layer_stride_elements == expected_stride
+        ):
+            return
+        raise LoweringError(
+            f"tensor {operand.tensor_id}: its scale {placement.tensor_id} sits at "
+            f"code {placement.element_offset} with layer stride "
+            f"{placement.layer_stride_elements} in object "
+            f"{placement.group_id}, but the weight sits at element "
+            f"{weight.element_offset} with layer stride "
+            f"{weight.layer_stride_elements} in object {weight.group_id}, which "
+            f"a {rows_per_tile} x {block} block addresses as code "
+            f"{expected_offset} with stride {expected_stride}; a block scale is "
+            "addressed by the weight's own offset, so the two objects must be "
+            "one address space apart by the block"
         )
 
     def _scale_block_rows(self, tensor: Tensor, operand: OperandPlan) -> int:
@@ -1198,7 +1314,9 @@ class _Emitter:
                 writable=True,
             )
         kernel = self.kernels[plan.index]
-        writes_state = operand.direction == "out" and bool(kernel.state_writes)
+        writes_state = operand.direction == "out" and writes_state_plane(
+            kernel, self.tensors, operand.tensor_id, self._value_reads
+        )
         if plan.kind == "SELECT" and operand.direction == "in" and (
             operand.residence != "arena" or writes_state
         ):
@@ -1322,6 +1440,7 @@ class _Emitter:
             # a term actually walks the axis it describes.  A row term that
             # was dropped because its loop is not open takes the declaration
             # with it, rather than leaving an extent nothing can resolve.
+            extent_axis=self._batch_axis(plan, operand) if walks_row else 0,
             extent_numerator=numerator if walks_row else 1,
             extent_unit=operand.extent_unit if walks_row else 1,
             extent_bias=operand.extent_bias if walks_row else 0,
@@ -1408,6 +1527,31 @@ class _Emitter:
         if addressed is not None:
             dims, _, _ = self._declared_view(plan, addressed)
             count = max(dims[0], 1)
+        # How many positions one row of the movement advances.  It is one
+        # wherever a movement touches consecutive rows; a *pooled* row stands
+        # for several positions and the graph declares how many.  The
+        # compressor's rotary gather is the case: one coefficient row per group
+        # of four tokens, at the position of the group's first token.  An
+        # element stride of four reaches exactly those rows of the coefficient
+        # table, so the strided range needs no second table to materialise.
+        position_stride = max(
+            int(self.kernels[plan.index].attributes.get("position_stride", 1) or 1), 1
+        )
+        # Amendment A18: this vector holds one index per row the *addressed*
+        # operand has, so it is clamped in that operand's own axis units -- a
+        # compressor's row is a group of four tokens, and 104 tokens are 26 of
+        # them, not 26 rows of a 128-row block.  Declared only where the loop
+        # term walks the axis in that unit, which is the amendment's third
+        # admission rule and is what ``count == step + bias`` tests: an
+        # addressed operand whose extent is not the block is one no loop
+        # resolves, and A18 refuses a declaration nothing resolves.
+        numerator, unit, bias = 1, 1, 0
+        step = count
+        if addressed is not None:
+            numerator = int(addressed.extent_numerator)
+            unit = int(addressed.extent_unit)
+            bias = int(addressed.extent_bias)
+            step = self._row_step(plan, addressed)
         terms: list[DynamicTerm] = []
         row_loop = loops.get("row") if "row" in operand.terms else None
         if row_loop is None and count > 1 and operand.rows <= 1:
@@ -1421,6 +1565,8 @@ class _Emitter:
             # rows the request has -- without it the index vector would be a
             # whole block wide against a partial final block of rows.
             row_loop = loops.get("row")
+        declares = row_loop is not None and count == step + bias
+        loop_stride = (step if declares else count) * position_stride
         if is_gather and span_domain:
             # Selecting rows of the request itself: the final row is
             # ``SPAN_LAST_INDEX``, which is the reason that symbol exists -- a
@@ -1429,11 +1575,11 @@ class _Emitter:
             if count == 1 and row_loop is None:
                 terms.append(DynamicTerm.symbol(Symbol.SPAN_LAST_INDEX, 1))
             elif row_loop is not None:
-                terms.append(DynamicTerm.loop(row_loop, count))
+                terms.append(DynamicTerm.loop(row_loop, loop_stride))
         else:
             terms.append(DynamicTerm.symbol(Symbol.POSITION_START, 1))
             if row_loop is not None:
-                terms.append(DynamicTerm.loop(row_loop, count))
+                terms.append(DynamicTerm.loop(row_loop, loop_stride))
         # The object under this view is the ``arange_u32_v1`` table the planner
         # materialised, not the host window the graph declared, so its storage
         # type is the generator's.  An exporter that declared the range ``i32``
@@ -1455,12 +1601,18 @@ class _Emitter:
                     "and the plan materialised no ring-index table for it"
                 )
             object_id = ring
+        walks = any(
+            term.kind == int(SelectorKind.LOOP_INDUCTION) for term in terms
+        )
         return self._view(
             object_id=object_id,
             dtype=DType.U32,
             dims=[count],
-            strides=[1],
+            strides=[position_stride],
             dynamic=terms,
+            extent_numerator=numerator if (declares and walks) else 1,
+            extent_unit=unit if (declares and walks) else 1,
+            extent_bias=bias if (declares and walks) else 0,
         )
 
     @staticmethod
@@ -1706,9 +1858,41 @@ class _Emitter:
         one is never clamped and the view would present a whole 512-row block
         for a 104-token span.  Keeping the token axis leading keeps A13 exact.
         """
-        if plan.kind != "HYPER_CONNECT_POST" or not dims:
+        if not dims:
             return dims, strides
-        return [dims[0], 1, *dims[1:]], [strides[0], strides[0], *strides[1:]]
+        if plan.kind == "HYPER_CONNECT_POST":
+            return [dims[0], 1, *dims[1:]], [strides[0], strides[0], *strides[1:]]
+        if plan.kind in _BATCH_LEADING:
+            # ``VECTOR.COMPRESS`` cannot take the axis second.  Its state
+            # update reads ``[B, S, 2, W]`` and forms ``groups = span //
+            # ratio`` across the *span* axis, so a token axis presented as the
+            # batch would leave every group a single token and the operator
+            # would refuse a 104-token span as containing no complete group of
+            # four.  Its pool likewise names the pooling candidates on axis 2.
+            # The batch therefore leads, as the convention writes it, and the
+            # amendment that A13 could not state does the rest: A18 names the
+            # axis the request determines, which is axis 1 here.
+            #
+            # Only an operand the request sizes takes the axis.  A projection
+            # matrix and the position-embedding table are already the rank the
+            # convention gives them, and prepending a batch to those would
+            # present a rank the operator refuses.
+            if self._request_sized(operand):
+                return [1, *dims], [strides[0], *strides]
+        return dims, strides
+
+    def _request_sized(self, operand: OperandPlan) -> bool:
+        """Does the graph size this operand's leading axis by the request?"""
+        tensor = self.tensors.get(operand.tensor_id)
+        if tensor is None or not tensor.shape:
+            return False
+        return isinstance(tensor.shape[0], Symbolic)
+
+    def _batch_axis(self, plan: KernelPlan, operand: OperandPlan) -> int:
+        """The axis A18 declares, once a leading batch axis has displaced it."""
+        if plan.kind in _BATCH_LEADING and self._request_sized(operand):
+            return 1
+        return 0
 
     def _row_broadcast(
         self,

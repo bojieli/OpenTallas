@@ -80,7 +80,13 @@ class _Checkpoint:
         self.index = 0
 
     def bind(self, name: str, elements: int, dtype: str = "bf16") -> CheckpointBinding:
-        width = {"bf16": 2, "fp32": 4, "u32": 4, "fp8_e4m3fn": 1}[dtype]
+        width = {
+            "bf16": 2,
+            "fp32": 4,
+            "u32": 4,
+            "fp8_e4m3fn": 1,
+            "e8m0": 1,
+        }[dtype]
         shard = self.index % self.shards
         self.index += 1
         offset = self.cursor[shard]
@@ -602,8 +608,12 @@ def movement_graph(
          attributes={"window_size": window, "padding_index": -1})
     emit("WINDOW_INDEX", ["position"], ["window.b"], "indexing_window_indices_v1",
          attributes={"window_size": selected, "padding_index": -1})
+    # Amendment A19 folded the index-selection join into ``ROUTE.INDEX_TOPK``,
+    # so the contract that named it is no longer in the graph's union.  The
+    # compressed *dense* index still joins a window block on the feature axis
+    # and still names one, which is what this case is about.
     emit("CONCAT", ["window.a", "window.b"], ["joined"],
-         "selection_index_topk_indices_window_then_compressed_indices_v1",
+         "indexing_compressed_dense_indices_window_then_compressed_indices_v1",
          attributes={"axis": 1, "segment_widths": [window, selected]})
 
     # -- an epilogue, so the graph is a program ---------------------------
@@ -2009,3 +2019,366 @@ def test_the_hyper_connection_post_operands_keep_the_token_axis_leading():
             and view[f"term{s}_index"] in loops
         )
         assert view["dim0"] == row["bound_divisor"]
+
+
+# ---------------------------------------------------------------------------
+# Block scales: the one operand class with no descriptor of its own
+# ---------------------------------------------------------------------------
+def block_scaled_graph(
+    *,
+    layers: int = 3,
+    hidden: int = 256,
+    out: int = 128,
+    block: int = 32,
+    span_max: int = 64,
+    shards: int = 2,
+) -> KernelGraph:
+    """A stack of block-scaled projections, one per layer.
+
+    The point of the fixture is the *pair*: every layer's weight is FP8 with an
+    E8M0 code per ``block`` elements of its row, and the scale is a checkpoint
+    tensor of its own.  Nothing else in this file declares a scale, which is
+    how a scale object laid out in checkpoint order rather than in the weight's
+    order stayed invisible.  ``shards=2`` and the interleaved cursor put the
+    scales somewhere other than beside their weights, exactly as a released
+    checkpoint does.
+    """
+    ck = _Checkpoint(shards)
+    tensors: list[Tensor] = []
+    kernels: list[Kernel] = []
+
+    def act(name: str, shape: tuple, dtype: str = "bf16", role: str = "activation") -> str:
+        tensors.append(Tensor(tensor_id=name, dtype=dtype, shape=shape, role=role))
+        return name
+
+    def scaled_weight(name: str, rows: int, cols: int) -> str:
+        # A scale per ``block`` columns and per whole row: the A8 case, which
+        # is what MXFP4's 32-element blocks along the reduction axis are.
+        scale_id = f"{name}.scale"
+        tensors.append(
+            Tensor(
+                tensor_id=scale_id,
+                dtype="e8m0",
+                shape=(rows, cols // block),
+                role="weight",
+                binding=ck.bind(scale_id, rows * (cols // block), "e8m0"),
+            )
+        )
+        tensors.append(
+            Tensor(
+                tensor_id=name,
+                dtype="fp8_e4m3fn",
+                shape=(rows, cols),
+                role="weight",
+                binding=ck.bind(name, rows * cols, "fp8_e4m3fn"),
+                scale_tensor_id=scale_id,
+                scale_block_elements=block,
+            )
+        )
+        return name
+
+    def emit(kind: str, ins, outs, contract: str, **kw) -> None:
+        kernels.append(
+            Kernel(
+                index=len(kernels),
+                kernel_id=f"k{len(kernels):04d}.{kind.lower()}",
+                kind=kind,
+                inputs=tuple(ins),
+                outputs=tuple(outs),
+                numeric_contract=contract,
+                **kw,
+            )
+        )
+
+    act("tokens", (SPAN, 1), "u32", role="input")
+    tensors.append(
+        Tensor(
+            tensor_id="embed",
+            dtype="bf16",
+            shape=(64, hidden),
+            role="weight",
+            binding=ck.bind("embed", 64 * hidden, "bf16"),
+        )
+    )
+    act("hidden0", (SPAN, hidden))
+    emit("EMBEDDING_LOOKUP", ["tokens", "embed"], ["hidden0"],
+         "lookup_bf16_token_embedding_v1")
+
+    previous = "hidden0"
+    for index in range(layers):
+        p = f"l{index}"
+        scaled_weight(f"{p}.proj", out, hidden)
+        tensors.append(
+            Tensor(
+                tensor_id=f"{p}.back",
+                dtype="bf16",
+                shape=(hidden, out),
+                role="weight",
+                binding=ck.bind(f"{p}.back", hidden * out, "bf16"),
+            )
+        )
+        act(f"{p}.mid", (SPAN, out))
+        act(f"{p}.res", (SPAN, hidden))
+        layer = {"layer": index}
+        emit("MATMUL", [previous, f"{p}.proj"], [f"{p}.mid"],
+             "matrix_dense_fp8_linear_bf16_block_scaled_contraction_v1", **layer)
+        emit("MATMUL", [f"{p}.mid", f"{p}.back"], [f"{p}.res"],
+             "bf16_bf16_fp32_sequential_rne_v1", **layer)
+        previous = f"{p}.res"
+
+    tensors.append(
+        Tensor(
+            tensor_id="last.index",
+            dtype="u32",
+            shape=(1, 1),
+            role="weight",
+            binding=ck.bind("last.index", 1, "u32"),
+        )
+    )
+    tensors.append(
+        Tensor(
+            tensor_id="lm_head",
+            dtype="bf16",
+            shape=(hidden, 64),
+            role="weight",
+            binding=ck.bind("lm_head", hidden * 64, "bf16"),
+        )
+    )
+    act("hidden.last", (1, hidden))
+    act("logits", (1, 64))
+    act("token", (1, 1), "u32")
+    act("tokens.out", (1, 1), "u32", role="output")
+    emit("LAST_TOKEN_SELECT", [previous, "last.index"], ["hidden.last"],
+         "lookup_bf16_token_embedding_v1")
+    emit("VOCAB_PROJECT", ["hidden.last", "lm_head"], ["logits"],
+         "lm_head_bf16_vocabulary_projection_v1")
+    emit("ARGMAX", ["logits"], ["token"], "greedy_lowest_token_id_argmax_v1")
+    emit("TOKEN_APPEND", ["token"], ["tokens.out"], "exact_token_append_eos_v1")
+
+    return KernelGraph(
+        model_id=f"synthetic-block-scaled-{layers}L",
+        source={"family": "block_scaled", "layers": layers},
+        symbols=(RuntimeSymbol("span_tokens", 1, span_max, 1),),
+        tensors=tuple(tensors),
+        states=(),
+        kernels=tuple(kernels),
+        entrypoints=(
+            Entrypoint("prefill", ("tokens",), ("tokens.out",), ()),
+            Entrypoint("decode", ("tokens",), ("tokens.out",), ()),
+        ),
+        generation_policy={
+            "eos_token_ids": [63],
+            "maximum_new_tokens": 8,
+            "vocabulary_size": 64,
+        },
+    )
+
+
+def _scale_code_span(view_payload, block: int, row_block: int) -> tuple[int, int]:
+    """The code offset and count ``_block_scales`` derives from a view.
+
+    Amendments A8 and A15 give a block scale no descriptor: the engine splits
+    the *weight view's* element offset into a row and a column of the view's
+    own row-major space and indexes the scale object with it.  Reproducing that
+    arithmetic here is the point -- the test asserts the placement the engine
+    will actually read, not the placement the planner intended.
+    """
+    rank = int(view_payload["rank"])
+    width = int(view_payload[f"dim{rank - 1}"])
+    rows = 1
+    for axis in range(rank - 1):
+        rows *= int(view_payload[f"dim{axis}"])
+    per_row = width // block
+    row_origin, column_origin = divmod(int(view_payload["element_offset"]), width)
+    offset = (row_origin // row_block) * per_row + column_origin // block
+    return offset, (rows // row_block) * per_row
+
+
+def test_a_block_scale_object_is_the_weight_object_divided_by_the_block():
+    """Every layer's scale lies where its weight's own offset points.
+
+    A block scale is the one operand a view names but does not describe: the
+    engine reads the scale object at ``element_offset // block`` of the weight
+    view and nowhere else.  So a scale object grouped by *checkpoint
+    adjacency*, while its weights are grouped by role in layer order, is not a
+    different layout -- it is a different tensor's codes.  Layer 0 read
+    whatever sat at code zero of the adjacency run and produced a number;
+    layer 1 asked for a code past the end of an object that holds one layer's
+    worth, which is where the DeepSeek MoE lane stopped.
+
+    The property is checked on the emitted views rather than on the plan,
+    because the view is what the engine reads.
+    """
+    layers = 3
+    graph = block_scaled_graph(layers=layers)
+    capability = single_chip_capability()
+    deployment, plan = lower_with_plan(graph, capability)
+    require_admitted(deployment, capability)
+    placements = {p.tensor_id: p for p in plan.weight_placements}
+
+    scaled = [
+        t
+        for t in graph.tensors
+        if t.scale_tensor_id and t.role == "weight"
+    ]
+    assert len(scaled) == layers, "one block-scaled weight per layer"
+
+    objects = {
+        d.descriptor_id: d.payload
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.MEMORY_OBJECT
+    }
+    views = [
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.TENSOR_VIEW
+        and d.payload["scale_object_id"] != NO_ID
+    ]
+    assert views, "the block-scaled weights must reach a block-scaled view"
+
+    loops = {
+        d.descriptor_id: d.payload
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.LOOP_CONTROL
+    }
+    for view in views:
+        payload = dict(view.payload)
+        block = int(payload["scale_block_elements"])
+        row_block = max(int(payload["scale_block_rows"]), 1)
+        scale_object = objects[payload["scale_object_id"]]
+        # A layer band moves the weight window by a loop term, so the last
+        # layer is the furthest read and the one an under-sized scale object
+        # loses.  Walk every iteration the loop can take.
+        strides = [
+            int(payload[f"term{s}_stride"])
+            for s in range(int(payload["dynamic_term_count"]))
+            if payload[f"term{s}_kind"] == int(SelectorKind.LOOP_INDUCTION)
+            and payload[f"term{s}_index"] in loops
+        ]
+        base = int(payload["element_offset"])
+        for iteration in range(layers):
+            payload["element_offset"] = base + iteration * sum(strides)
+            offset, count = _scale_code_span(payload, block, row_block)
+            assert offset + count <= scale_object["size_bytes"], (
+                f"view {view.descriptor_id} iteration {iteration} needs code "
+                f"{offset + count} of a {scale_object['size_bytes']}-code object"
+            )
+
+    # And the codes it reads are its own: the placement of each layer's scale
+    # is exactly the code the weight's placement addresses.
+    for tensor in scaled:
+        weight = placements[tensor.tensor_id]
+        scale = placements[tensor.scale_tensor_id]
+        cols = int(tensor.shape[-1])
+        per_row = cols // int(tensor.scale_block_elements)
+        assert scale.element_offset == (weight.element_offset // cols) * per_row
+        assert scale.layer_stride_elements == (
+            weight.layer_stride_elements // cols
+        ) * per_row
+
+
+def test_a_quantised_activation_carries_its_scale_into_the_view():
+    """A scale the plan holds in the arena is bound, not dropped.
+
+    A weight's scale is a placed checkpoint tensor; a quantised activation's is
+    produced at run time and lives in the activation arena beside its codes.
+    Both are addressed the same way -- the consumer's own element offset
+    divided by the block -- so both must be named on the consumer's view.
+    Binding only the weight case is silent: the FP8 codes are read as though
+    every block scaled by one, which is a number, and a wrong number is the one
+    failure this lane cannot see.
+    """
+    graph = block_scaled_graph(layers=2)
+    tensors = {t.tensor_id: t for t in graph.tensors}
+    # Quantise the layer-0 input and feed the codes to the projection.
+    codes = Tensor(
+        tensor_id="q.codes",
+        dtype="fp8_e4m3fn",
+        shape=(SPAN, 256),
+        role="activation",
+        scale_tensor_id="q.codes.scale",
+        scale_block_elements=32,
+    )
+    scale = Tensor(
+        tensor_id="q.codes.scale",
+        dtype="e8m0",
+        shape=(SPAN, 8),
+        role="activation",
+    )
+    quantise = Kernel(
+        index=len(graph.kernels),
+        kernel_id="k9999.quantize",
+        kind="QUANTIZE",
+        inputs=("hidden0",),
+        outputs=("q.codes", "q.codes.scale"),
+        numeric_contract="matrix_dense_fp8_linear_bf16_activation_quantize_v1",
+        layer=0,
+    )
+    kernels = []
+    for kernel in graph.kernels:
+        if kernel.kind == "MATMUL" and kernel.inputs[0] == "hidden0":
+            kernels.append(quantise)
+            kernel = Kernel(
+                index=kernel.index,
+                kernel_id=kernel.kernel_id,
+                kind=kernel.kind,
+                inputs=("q.codes", kernel.inputs[1]),
+                outputs=kernel.outputs,
+                numeric_contract=kernel.numeric_contract,
+                layer=kernel.layer,
+            )
+        kernels.append(kernel)
+    kernels = tuple(
+        Kernel(
+            index=position,
+            kernel_id=k.kernel_id,
+            kind=k.kind,
+            inputs=k.inputs,
+            outputs=k.outputs,
+            numeric_contract=k.numeric_contract,
+            attributes=k.attributes,
+            layer=k.layer,
+            state_reads=k.state_reads,
+            state_writes=k.state_writes,
+        )
+        for position, k in enumerate(kernels)
+    )
+    graph = KernelGraph(
+        model_id=graph.model_id,
+        source=graph.source,
+        symbols=graph.symbols,
+        tensors=(*graph.tensors, codes, scale),
+        states=graph.states,
+        kernels=kernels,
+        entrypoints=graph.entrypoints,
+        generation_policy=graph.generation_policy,
+    )
+    check_neutral(graph)
+    capability = single_chip_capability()
+    deployment = lower_to_abi3(graph, capability)
+    require_admitted(deployment, capability)
+
+    operator = next(
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and d.payload["source_kernel_id"]
+        == next(
+            k.index
+            for k in graph.kernels
+            if k.kind == "MATMUL" and k.inputs[0] == "q.codes"
+        )
+    )
+    activation = deployment.table.get(
+        operator.payload["input_view_0"], ExtendedDescriptorType.TENSOR_VIEW
+    ).payload
+    assert activation["scale_object_id"] != NO_ID, (
+        "the quantised activation's block scale must reach its consumer's view"
+    )
+    assert activation["scale_block_elements"] == 32
+    weight = deployment.table.get(
+        operator.payload["input_view_1"], ExtendedDescriptorType.TENSOR_VIEW
+    ).payload
+    assert weight["scale_object_id"] != NO_ID
+    # Two different objects: the arena holds one, the checkpoint the other.
+    assert activation["scale_object_id"] != weight["scale_object_id"]
