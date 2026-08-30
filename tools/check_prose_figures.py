@@ -207,7 +207,7 @@ REQUIRED_COVERAGE: dict[str, int] = {
     "README.md": 24,
     "docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md": 22,
     "docs/WAFER_VERSUS_ARRAY_LATENCY.md": 45,
-    "docs/UNIFIED_EXECUTION_CHECKLIST.md": 18,
+    "docs/UNIFIED_EXECUTION_CHECKLIST.md": 108,
 }
 
 ANNOTATION = re.compile(r"<!--\s*figure:\s*(?P<body>.*?)-->", re.S)
