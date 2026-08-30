@@ -13,6 +13,8 @@ import importlib.util
 import json
 import math
 from pathlib import Path
+import random
+import sys
 from types import ModuleType
 
 import pytest
@@ -25,15 +27,23 @@ from opentallas.roofline import (
     a100_weight_bound_anchor,
     balanced_area_split,
     derived,
+    effective_engaged_devices,
     evaluate,
+    expected_max_region_load,
     gpu_device_budget,
+    kv_access_granularity,
     latency_crossover,
+    layer_fixed_latency,
     max_hbm_stacks_per_device,
     rom_device_budget,
     taalas_hc1_anchor,
 )
 from opentallas.schema import ModelProfile, ValidationError
-from opentallas.workload import expected_expert_coverage, kv_traffic
+from opentallas.workload import (
+    expected_engaged_devices,
+    expected_expert_coverage,
+    kv_traffic,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -231,21 +241,89 @@ def test_a_derivation_inherits_the_weakest_input_grade() -> None:
     assert "p" in derived(6.0, (published, assumed), "x*y").source
 
 
+#: Every input in configs/hardware/technology.json that rests on judgement
+#: rather than on a published or measured figure.  This is an EXACT set, not a
+#: subset: the previous version of this test asserted that seven known
+#: assumptions were present, which let eleven new ones be added without the
+#: test noticing.  An assumption that enters the model silently is the failure
+#: mode this program exists to prevent.
+ASSUMED_INPUTS = frozenset(
+    {
+        "efficiencies.compute",
+        "efficiencies.expert_router_imbalance",
+        "efficiencies.hbm_bandwidth",
+        "efficiencies.hbm_capacity",
+        "efficiencies.rom_read_bandwidth",
+        "efficiencies.sram_read_bandwidth",
+        "efficiencies.stage_balance",
+        "energy.mac_energy_j_per_op.bf16",
+        "energy.mac_energy_j_per_op.fp32",
+        "energy.mac_energy_j_per_op.fp4",
+        "energy.mac_energy_j_per_op.fp8",
+        "energy.mac_energy_j_per_op.w4a8",
+        "energy.rom_read_j_per_byte",
+        "energy.sram_read_j_per_byte",
+        "floorplan.interconnect_area_fraction",
+        "floorplan.overhead_area_fraction",
+        "hbm.hbm2e.phy_area_mm2_per_stack",
+        "hbm.hbm2e.stack_beachfront_mm",
+        "hbm.hbm3e.phy_area_mm2_per_stack",
+        "hbm.hbm3e.stack_beachfront_mm",
+        "kv.access_granularity_bytes.hbm",
+        "kv.access_granularity_bytes.sram",
+        "kv.index_layout",
+        "latency.array_pass_boundaries_per_layer",
+        "latency.global_wire_delay_s_per_mm",
+        "latency.layer_barrier_s",
+        "latency.pipeline_fill_drain_s",
+        "latency.sequencer_issue_decode_s",
+        "latency.sparse_index_dependency_s",
+        "latency.sram_access_s",
+        "links.ethernet.bytes_s",
+        "links.ethernet.fabric",
+        "links.ethernet.hop_latency_s",
+        "links.ethernet.switch_radix",
+        # Nobody publishes a wafer-to-wafer link, so every field of one is
+        # assumed. It is the ROM side's most load-bearing assumption after the
+        # bitcell ratio, and it is swept 1-10 us.
+        "links.inter_wafer.domain_size",
+        "links.inter_wafer.fabric",
+        "links.inter_wafer.hop_latency_s",
+        "links.inter_wafer.switch_radix",
+        # NVIDIA publishes no NVLink latency figure of any kind. The bandwidth,
+        # the domain size and the single-tier switch structure ARE published,
+        # which is why only the latency of each NVLink entry is assumed.
+        "links.nvlink.hop_latency_s",
+        "links.nvlink3.hop_latency_s",
+        "links.nvlink5.hop_latency_s",
+        "links.nvlink5_nvl72.hop_latency_s",
+        "links.on_package.fabric",
+        "links.on_package.hop_latency_s",
+        "links.on_wafer.hop_latency_s",
+        "reference_parts.taalas_hc1.batch_size",
+        "reference_parts.taalas_hc1.weight_amortization",
+        "reference_parts.taalas_hc1.weight_bits_per_parameter",
+        "rom.array_efficiency",
+        "rom.cell_to_sram_cell_area_ratio",
+        "rom.cim_cell_area_multiplier",
+        "rom.cim_precompute_area_fraction",
+        "sram.array_efficiency",
+    }
+)
+
+
 def test_the_assumed_inputs_are_the_ones_we_expect(technology) -> None:
     """Pin the assumption surface so a new one cannot be added silently."""
 
     assumed = set(technology.inputs_by_grade()["assumed"])
-    for path in (
-        "rom.cell_to_sram_cell_area_ratio",
-        "rom.array_efficiency",
-        "sram.array_efficiency",
-        "efficiencies.compute",
-        "efficiencies.rom_read_bandwidth",
-        "links.nvlink.hop_latency_s",
-        "links.on_wafer.hop_latency_s",
-    ):
-        assert path in assumed, f"{path} should be graded assumed"
+    added = sorted(assumed - ASSUMED_INPUTS)
+    removed = sorted(ASSUMED_INPUTS - assumed)
+    assert not added, f"new assumed inputs entered the model unannounced: {added}"
+    assert not removed, f"assumed inputs disappeared without being re-graded: {removed}"
     assert "compute.format_roofs_ops_s.bf16" not in assumed
+    # The retired one, by name: it claimed to carry the busiest region and did
+    # not.  ``expected_max_region_load`` carries it now.
+    assert "efficiencies.expert_load_balance" not in assumed
 
 
 # --------------------------------------------------------------------------
@@ -546,10 +624,17 @@ def test_link_latency_is_added_never_overlapped(technology, qwen) -> None:
         execution_format="fp8",
     )
     raw = step.metrics["raw_step_time_before_thermal_s"]
+    # Three serial terms now, not two.  The per-layer fixed cost is added on
+    # exactly the same footing as the hop latency and for the same reason:
+    # layer n+1 cannot start until layer n's activation exists, so neither one
+    # can hide behind bandwidth.
     assert raw == pytest.approx(
-        step.metrics["service_time_s"] + step.component_times_s["link_latency"]
+        step.metrics["service_time_s"]
+        + step.component_times_s["link_latency"]
+        + step.component_times_s["layer_fixed_latency"]
     )
     assert step.component_times_s["link_latency"] > 0
+    assert step.component_times_s["layer_fixed_latency"] > 0
 
 
 def test_batch_one_pipeline_gets_no_parallelism_only_hops(technology, qwen) -> None:
@@ -599,16 +684,174 @@ def test_hop_counts_match_the_topology_semantics() -> None:
     assert Topology(
         kind="array", device_count=10, parallelism="tensor", link="nvlink"
     ).hop_events(layers)[0] == 72.0
-    assert Topology(
+
+
+def test_pipeline_depth_cannot_exceed_the_layer_count() -> None:
+    """A token cannot cross more stage boundaries than the model has layers.
+
+    This is the correction that mattered most at scale.  Charging a 57-region
+    wafer 56 serial hops on a 36-layer model, or a 672-GPU cluster 671 of them
+    on a 61-layer model, invents a critical path the machine does not have.
+    """
+
+    layers = 36
+    wafer = Topology(
         kind="wafer",
         device_count=1,
         parallelism="pipeline",
         link="on_wafer",
         on_wafer_regions=57,
-    ).hop_events(layers)[0] == 56.0
+    )
+    assert wafer.partitions == 57
+    assert wafer.stages_for(layers) == layers
+    assert wafer.hop_events(layers)[0] == float(layers - 1)
+    # And the cap only ever binds downward.
+    assert wafer.stages_for(1000) == 57
+    assert sum(
+        event.count for event in wafer.link_events(layers, stage_cap=False)
+    ) == 56.0
+    small = Topology(
+        kind="array", device_count=8, parallelism="pipeline", link="nvlink"
+    )
+    assert small.stages_for(layers) == 8
+    assert small.hop_events(layers)[0] == 7.0
 
 
-def test_tensor_parallel_is_about_fifteen_times_worse_than_pipeline(
+def test_a_pipeline_is_charged_the_fabric_it_actually_crosses() -> None:
+    """Both link classes, in the right proportion, on one topology.
+
+    93 partitions on 8-GPU NVLink islands is 12 islands: 11 of the 92 stage
+    boundaries leave an island and 81 do not.  Charging all 92 to either link
+    is wrong in a different direction each way.
+    """
+
+    topology = Topology(
+        kind="array",
+        device_count=93,
+        parallelism="pipeline",
+        link="infiniband_hdr",
+        intra_link="nvlink3",
+        intra_domain_size=8,
+    )
+    events = {
+        event.link: event for event in topology.link_events(1_000)
+    }
+    assert set(events) == {"nvlink3", "infiniband_hdr"}
+    assert events["infiniband_hdr"].count == 11.0
+    assert events["nvlink3"].count == 81.0
+    assert (
+        events["nvlink3"].count + events["infiniband_hdr"].count
+        == topology.partitions - 1
+    )
+
+
+def test_hybrid_is_tensor_inside_the_domain_and_pipeline_across_it(
+    technology, qwen
+) -> None:
+    topology = Topology(
+        kind="array",
+        device_count=64,
+        parallelism="hybrid",
+        link="infiniband_hdr",
+        intra_link="nvlink3",
+        intra_domain_size=8,
+        tensor_group_size=8,
+    )
+    assert topology.tensor_group == 8
+    assert topology.pipeline_stages == 8
+    events = topology.link_events(qwen.num_layers)
+    collectives = [event for event in events if event.kind == "all_reduce"]
+    hops = [event for event in events if event.kind == "point_to_point"]
+    assert len(collectives) == 1
+    assert collectives[0].link == "nvlink3"
+    assert collectives[0].span == 8
+    assert collectives[0].count == 2 * qwen.num_layers
+    assert len(hops) == 1
+    assert hops[0].link == "infiniband_hdr"
+    assert hops[0].count == 7.0
+
+
+def test_an_all_reduce_costs_more_the_wider_it_is(technology, qwen) -> None:
+    """Two all-reduces per layer, and the volume scales with span and batch."""
+
+    narrow = Topology(
+        kind="array", device_count=2, parallelism="tensor", link="nvlink"
+    )
+    wide = Topology(
+        kind="array", device_count=8, parallelism="tensor", link="nvlink"
+    )
+    activation = 4096.0 * 2.0
+    narrow_s, _, _ = technology.link_time_s(
+        narrow, qwen.num_layers, activation_bytes=activation
+    )
+    wide_s, _, _ = technology.link_time_s(
+        wide, qwen.num_layers, activation_bytes=activation
+    )
+    # Same latency term inside one switch domain, more payload on the wire.
+    assert wide_s > narrow_s
+    batched_s, _, _ = technology.link_time_s(
+        wide, qwen.num_layers, activation_bytes=activation * 32
+    )
+    assert batched_s > wide_s
+
+
+def test_a_mesh_collective_pays_the_mesh_diameter(technology) -> None:
+    """The ROM-side mirror of the pipeline-hop error, and it is charged.
+
+    A stitched wafer has no switch, so an all-reduce cannot finish before the
+    far corner has answered: Cerebras measured their own at about 1.1 times the
+    mesh diameter.  Charging it the flat two traversals a switched domain gets
+    is what let a 57-region collective cost 0.2 us instead of 1.5 us.
+    """
+
+    assert technology.link_fabric("on_wafer") == "mesh"
+    assert technology.link_fabric("nvlink3") == "switched"
+    # A switched domain is flat in its own radix.
+    assert technology.collective_traversals("nvlink3", 8) == 2.0
+    # A mesh is not.
+    assert technology.collective_traversals("on_wafer", 4) == pytest.approx(2.2)
+    assert technology.collective_traversals("on_wafer", 57) == pytest.approx(15.4)
+    assert technology.collective_traversals("on_wafer", 681) > technology.\
+        collective_traversals("on_wafer", 57)
+
+
+def test_on_wafer_tensor_parallelism_no_longer_reaches_taalas_rates(
+    technology, qwen
+) -> None:
+    """**A retraction, asserted so it cannot come back.**
+
+    The previous model charged an on-wafer all-reduce two flat hops however
+    many reticle fields it spanned, which made wafer-scale tensor parallelism
+    look like a 116,000 tok/s fabric.  With the mesh diameter charged it is
+    not, and the sharpest published argument for wafer-scale weakens with it.
+    """
+
+    on_wafer = latency_crossover(
+        Topology(
+            kind="wafer",
+            device_count=1,
+            parallelism="tensor",
+            link="on_wafer",
+            on_wafer_regions=57,
+        ),
+        qwen,
+        technology,
+    )
+    assert on_wafer.hard_ceiling_tokens_s < 17_000, (
+        "an on-wafer all-reduce over 57 reticle fields costs the mesh "
+        "diameter, and that no longer fits a Taalas-class token budget"
+    )
+    nvlink = latency_crossover(
+        Topology(kind="array", device_count=8, parallelism="tensor", link="nvlink"),
+        qwen,
+        technology,
+    )
+    # The wafer is still much better than NVLink for the same collective --
+    # the retraction is of the absolute claim, not the ordering.
+    assert on_wafer.hard_ceiling_tokens_s > nvlink.hard_ceiling_tokens_s
+
+
+def test_tensor_parallel_is_much_worse_than_pipeline_on_nvlink(
     technology, qwen
 ) -> None:
     """The doc's central latency claim, computed rather than asserted."""
@@ -627,20 +870,6 @@ def test_tensor_parallel_is_about_fifteen_times_worse_than_pipeline(
     assert ratio > 15.0
     assert tensor.hard_ceiling_tokens_s < 17_000, (
         "NVLink tensor parallelism should be unable to reach Taalas-class rates"
-    )
-    on_wafer = latency_crossover(
-        Topology(
-            kind="wafer",
-            device_count=1,
-            parallelism="tensor",
-            link="on_wafer",
-            on_wafer_regions=57,
-        ),
-        qwen,
-        technology,
-    )
-    assert on_wafer.hard_ceiling_tokens_s > 17_000, (
-        "on-wafer tensor parallelism should reach Taalas-class rates"
     )
 
 
@@ -956,15 +1185,32 @@ def test_compute_in_rom_pays_one_array_sweep_per_concurrent_stream(
         assert step.aggregate_tokens_s <= reference.aggregate_tokens_s * (1 + 1e-9)
 
 
-def test_compute_in_rom_aggregate_never_exceeds_its_batch_one_rate(
+def test_compute_in_rom_aggregate_never_exceeds_the_sweep_ceiling(
     technology, flash
 ) -> None:
-    """The doc's claim: aggregate per die collapses onto per-user throughput."""
+    """Compute-in-ROM aggregate is capped by the array, not by its batch-1 rate.
+
+    This test used to assert ``aggregate <= 1.2x the batch-1 aggregate``, and it
+    was asserting the model's arithmetic rather than the physics.  It held only
+    because the step time was *exactly* ``batch x sweep`` -- there was no fixed
+    per-token cost anywhere in the model, so ``batch / (batch x sweep)`` was
+    constant by construction.  With a per-layer serial cost on the critical path
+    the step is ``batch x sweep + fixed``, and the fixed part amortises over the
+    batch exactly as hop latency always has.  Aggregate therefore *rises* toward
+    the ceiling instead of sitting on it from batch 1.
+
+    The invariant that survives is the one that was always the real claim: a
+    machine that pays one array sweep per concurrent stream can never exceed one
+    sweep per token, whatever the batch.
+    """
 
     budget = _flash_wafer(technology, flash, "per_stream")
     base = evaluate(
         budget, flash, context_tokens=200_000, batch_size=1, technology=technology
     )
+    ceiling = base.metrics["rom_sweep_ceiling_tokens_s"]
+    assert base.aggregate_tokens_s < ceiling
+    previous = base.aggregate_tokens_s
     for batch in (8, 32, 64, 256):
         step = evaluate(
             budget,
@@ -975,12 +1221,623 @@ def test_compute_in_rom_aggregate_never_exceeds_its_batch_one_rate(
         )
         if not step.feasible:
             continue
-        assert step.aggregate_tokens_s <= base.aggregate_tokens_s * 1.2
+        assert step.aggregate_tokens_s <= ceiling * (1 + 1e-9)
+        assert step.aggregate_tokens_s >= previous * (1 - 1e-9)
+        previous = step.aggregate_tokens_s
 
 
 def test_an_unknown_amortization_policy_is_rejected(technology, flash) -> None:
     with pytest.raises(ValidationError):
         _flash_wafer(technology, flash, "wishful")
+
+
+# --------------------------------------------------------------------------
+# the busiest unit, not the average one
+# --------------------------------------------------------------------------
+
+
+def _monte_carlo_max_region_load(
+    num_regions: int, batch: int, k: int, *, trials: int = 4000, seed: int = 12345
+) -> float:
+    """Draw the routing directly: B tokens, k distinct experts each, uniform."""
+
+    rng = random.Random(seed)
+    total = 0
+    population = range(num_regions)
+    for _ in range(trials):
+        load = [0] * num_regions
+        for _ in range(batch):
+            for expert in rng.sample(population, k):
+                load[expert] += 1
+        total += max(load)
+    return total / trials
+
+
+@pytest.mark.parametrize("num_experts", (256, 384))
+def test_expected_max_region_load_matches_a_monte_carlo_of_the_routing(
+    num_experts,
+) -> None:
+    """The closed form is checked against the thing it approximates.
+
+    This is the test that decides Correction 1, so it does not check the
+    formula against itself.  It draws the routing 4,000 times and compares.
+    """
+
+    for batch in (1, 2, 4, 8, 16, 32, 64, 128, 256):
+        simulated = _monte_carlo_max_region_load(num_experts, batch, 6)
+        modelled = expected_max_region_load(num_experts, batch, 6)
+        assert modelled == pytest.approx(simulated, rel=0.03), (
+            f"N={num_experts} B={batch}: modelled {modelled:.3f} against "
+            f"simulated {simulated:.3f}"
+        )
+    # At batch 1 the answer is exactly one pass: one token, k distinct regions,
+    # no region drawn twice.  This is what keeps the three amortisation policies
+    # identical at batch 1 and the Taalas anchor unable to separate them.
+    assert expected_max_region_load(num_experts, 1, 6) == 1.0
+
+
+def test_the_mean_engaged_region_understates_the_sweep(technology, flash) -> None:
+    """The correction that had to land: sweep depth is the max, not the mean.
+
+    The model charged ``batch * k / (N * coverage)`` -- the load of the AVERAGE
+    engaged region -- and divided it by a flat 0.85 whose own note in
+    ``technology.json`` said the depth is set by the busiest region.  The gap is
+    not a constant and 0.85 could not have been one: it runs from 1.0x at batch
+    1 to roughly 2.7x in the middle of the range this study covers.
+    """
+
+    budget = _flash_wafer(technology, flash, "per_region")
+    seen = {}
+    for batch in (1, 8, 64, 256):
+        step = evaluate(
+            budget,
+            flash,
+            context_tokens=200_000,
+            batch_size=batch,
+            technology=technology,
+        )
+        charged = step.metrics["rom_sweeps_per_step"]
+        mean = step.metrics["region_sweep_depth_mean_uncorrected"]
+        seen[batch] = step.metrics["region_sweep_depth_max_over_mean"]
+        assert charged == pytest.approx(
+            _monte_carlo_max_region_load(flash.num_experts, batch, 6), rel=0.03
+        )
+        assert charged >= mean * (1 - 1e-9)
+    assert seen[1] == pytest.approx(1.0, abs=1e-9)
+    assert seen[8] > 1.5
+    assert seen[64] > 2.0
+    assert max(seen.values()) < 4.0
+
+
+def test_the_router_derate_no_longer_substitutes_for_the_statistic(
+    technology,
+) -> None:
+    """``expert_load_balance`` is gone; what replaces it multiplies the max."""
+
+    assert "expert_load_balance" not in technology.raw["efficiencies"]
+    imbalance = technology.efficiency("expert_router_imbalance")
+    assert imbalance.grade == "assumed"
+    assert imbalance.value >= 1.0
+
+
+def test_expert_parallel_gpu_waits_for_its_busiest_device(technology, flash) -> None:
+    """Correction 2: the same error, on the GPU side of the comparison.
+
+    ``workload.expected_engaged_devices`` answers 'how many devices hold at
+    least one selected expert'.  The routed fetch does not finish when the
+    average of those finishes.  ``workload.py`` is shared with
+    ``opentallas.analytical`` and is not edited, so the correction lives in
+    ``roofline`` and BOTH numbers are reported at every point -- correcting only
+    the ROM side would be its own bias.
+    """
+
+    for devices, distinct in ((8, 6.0), (16, 20.0), (64, 100.0)):
+        mean = expected_engaged_devices(devices, distinct)
+        effective = effective_engaged_devices(devices, distinct)
+        assert 1.0 <= effective <= mean
+        assert mean / effective > 1.1
+
+    budget = gpu_device_budget(
+        technology,
+        part="b200_sxm",
+        topology=Topology(
+            kind="array", device_count=16, parallelism="pipeline", link="nvlink"
+        ),
+    )
+    step = evaluate(
+        budget, flash, context_tokens=200_000, batch_size=8, technology=technology
+    )
+    assert step.metrics["engaged_device_max_over_mean_correction"] > 1.0
+    assert (
+        step.metrics["engaged_devices"]
+        < step.metrics["mean_engaged_devices_uncorrected"]
+    )
+
+
+# --------------------------------------------------------------------------
+# the compute-in-ROM cell, and what it does and does not buy
+# --------------------------------------------------------------------------
+
+
+def test_the_cim_cell_area_multiplier_cancels_in_the_sweep(technology, llama) -> None:
+    """A bigger cell is not a faster array.
+
+    The multiplier used to be applied to AREA only: a compute-in-ROM design was
+    charged 1.6x the silicon per stored byte and then credited with the
+    storage cell's bandwidth per mm2, so its sweep came out 1.6x faster purely
+    because its cells were bigger.  Both densities carry the multiplier now.
+    The array's pass time is a property of the array, not of the cell; what the
+    cell costs is CAPACITY, and that is where it still shows up.
+    """
+
+    storage = technology.rom_bits_per_mm2_for("N6", "batched")
+    cim = technology.rom_bits_per_mm2_for("N6", "per_stream")
+    multiplier = technology.rom_cell_area_multiplier("per_stream").value
+    assert multiplier > 1.0
+    assert cim.value == pytest.approx(storage.value / multiplier)
+    assert technology.rom_read_bytes_s_per_mm2_for(
+        "N6", "per_stream"
+    ).value == pytest.approx(
+        technology.rom_read_bytes_s_per_mm2_for("N6", "batched").value / multiplier
+    )
+
+    sweeps = {}
+    for policy in ("batched", "per_stream", "per_region"):
+        budget = rom_device_budget(
+            technology,
+            name=f"cell-{policy}",
+            node="N6",
+            area_mm2_per_device=815.0,
+            topology=_single_chip(),
+            stored_weight_bytes=llama.total_parameters * 3.5 / 8.0,
+            resident_kv_bytes=kv_traffic(llama, 2048).storage_bytes_per_user,
+            kv_store="sram",
+            weight_amortization=policy,
+        )
+        sweeps[policy] = budget.provenance["rom_full_array_sweep_time_s"].value
+        # And the capacity check is no longer tautological: the array holds
+        # exactly what it was sized to hold, whatever cell it is built from.
+        assert budget.weight_capacity_bytes == pytest.approx(
+            llama.total_parameters * 3.5 / 8.0, rel=1e-9
+        )
+    assert sweeps["batched"] == pytest.approx(sweeps["per_stream"], rel=1e-12)
+    assert sweeps["batched"] == pytest.approx(sweeps["per_region"], rel=1e-12)
+    # What the larger cell does cost is silicon: the same weights need 1.6x the
+    # array, which comes out of the SRAM beside it.
+    small = balanced_area_split(
+        technology,
+        node="N6",
+        total_mm2=815.0,
+        weight_store="rom",
+        kv_store="sram",
+        stored_weight_bytes=llama.total_parameters * 3.5 / 8.0,
+        resident_kv_bytes=0.0,
+        weight_amortization="batched",
+    )
+    large = balanced_area_split(
+        technology,
+        node="N6",
+        total_mm2=815.0,
+        weight_store="rom",
+        kv_store="sram",
+        stored_weight_bytes=llama.total_parameters * 3.5 / 8.0,
+        resident_kv_bytes=0.0,
+        weight_amortization="per_stream",
+    )
+    assert large.rom_mm2 == pytest.approx(small.rom_mm2 * multiplier)
+
+
+def test_the_rom_capacity_check_can_actually_fail(technology, flash) -> None:
+    """It used to be an identity, so it was not a check.
+
+    ``balanced_area_split`` sizes ROM to the stored bytes, so
+    ``weight_capacity / stored`` was exactly the cell multiplier at every model
+    size, node and area -- 1.6 for compute-in-ROM and 1.0 otherwise. It could
+    not fail.  The array is now clamped to the silicon that is actually left,
+    so a design whose weights do not fit reports a capacity below them and
+    ``evaluate`` refuses it.
+    """
+
+    split = balanced_area_split(
+        technology,
+        node="N6",
+        total_mm2=815.0,
+        weight_store="rom",
+        kv_store="sram",
+        stored_weight_bytes=flash.checkpoint_bytes,
+        resident_kv_bytes=0.0,
+        weight_amortization="per_region",
+    )
+    assert any(reason.startswith("AREA:") for reason in split.reasons)
+    budget = rom_device_budget(
+        technology,
+        name="too-small",
+        node="N6",
+        area_mm2_per_device=815.0,
+        topology=_single_chip(),
+        stored_weight_bytes=flash.checkpoint_bytes,
+        resident_kv_bytes=0.0,
+        kv_store="sram",
+        weight_amortization="per_region",
+    )
+    assert budget.weight_capacity_bytes < flash.checkpoint_bytes
+    step = evaluate(
+        budget, flash, context_tokens=8192, batch_size=1, technology=technology
+    )
+    assert not step.feasible
+    assert any(reason.startswith("CAPACITY:") for reason in step.reasons)
+    assert step.aggregate_tokens_s == 0.0
+
+
+# --------------------------------------------------------------------------
+# the two costs the model used to price at zero
+# --------------------------------------------------------------------------
+
+
+def test_a_single_chip_step_is_no_longer_free_of_fixed_cost(
+    technology, llama
+) -> None:
+    """Before this term, ``single_chip`` had literally no latency anywhere."""
+
+    total, breakdown, _ = layer_fixed_latency(technology, llama)
+    assert total > 0
+    assert breakdown["layers"] == llama.num_layers
+    assert breakdown["compressed_sparse_layers"] == 0
+    assert total == pytest.approx(breakdown["seconds_per_layer"] * llama.num_layers)
+
+    budget = _rom_chip(technology, llama, bits=3.5)
+    step = evaluate(
+        budget, llama, context_tokens=2048, batch_size=1, technology=technology
+    )
+    assert step.component_times_s["link_latency"] == 0.0
+    assert step.component_times_s["layer_fixed_latency"] == pytest.approx(total)
+    assert step.metrics["raw_step_time_before_thermal_s"] == pytest.approx(
+        step.metrics["service_time_s"] + total
+    )
+
+
+def test_the_fixed_cost_falls_on_the_fast_machine_and_not_the_slow_one(
+    technology, flash
+) -> None:
+    """The asymmetry is the finding, and it runs against the ROM thesis.
+
+    A ROM step is tens of microseconds over 32-61 layers; a GPU step for the
+    same model is milliseconds.  The same per-layer floor is therefore a large
+    fraction of the first and a rounding error on the second, which means this
+    correction costs the architecture this program is arguing for and costs the
+    incumbent almost nothing.
+    """
+
+    rom = evaluate(
+        _flash_wafer(technology, flash, "per_region"),
+        flash,
+        context_tokens=200_000,
+        batch_size=1,
+        technology=technology,
+    )
+    gpu = evaluate(
+        gpu_device_budget(
+            technology,
+            part="a100_sxm_80gb",
+            topology=Topology(
+                kind="array", device_count=64, parallelism="pipeline", link="nvlink"
+            ),
+        ),
+        flash,
+        context_tokens=200_000,
+        batch_size=1,
+        technology=technology,
+    )
+    rom_share = rom.metrics["layer_fixed_latency_fraction_of_step"]
+    gpu_share = gpu.metrics["layer_fixed_latency_fraction_of_step"]
+    assert rom_share > 5 * gpu_share
+    # Compressed-sparse layers carry an extra term, so a sparse model pays more
+    # per layer than a dense one.
+    assert (
+        rom.metrics["layer_fixed_latency"]["seconds_per_compressed_sparse_layer"]
+        > rom.metrics["layer_fixed_latency"]["seconds_per_layer"]
+    )
+
+
+def test_the_per_layer_cost_is_a_band_and_the_gate_is_not_fitted(
+    technology, llama
+) -> None:
+    """No parameter in this model takes its value from the answer it produces.
+
+    Every term in the ``latency`` block is ``assumed`` and carries a range, and
+    the anchor is evaluated at both ends of it.  The test that matters is the
+    last one: the per-layer cost that would land the model exactly on the
+    published figure is NEGATIVE, so no value of this term could have closed
+    the gap.  Had it been positive and close to the stated value, that would
+    have been a real result -- and it would still have had to be reported as a
+    coincidence rather than engineered into one.
+    """
+
+    terms = technology.layer_latency_terms()
+    for name, term in terms.items():
+        node = technology.raw["latency"][name]
+        assert term.grade == "assumed", name
+        assert "range_low" in node and "range_high" in node, name
+        assert node["range_low"] <= node["value"] <= node["range_high"], name
+
+    low = layer_fixed_latency(technology.at_layer_latency_bound("low"), llama)[0]
+    stated = layer_fixed_latency(technology, llama)[0]
+    high = layer_fixed_latency(technology.at_layer_latency_bound("high"), llama)[0]
+    assert low < stated < high
+
+    band = taalas_hc1_anchor(technology, llama).detail["layer_fixed_latency_band"]
+    assert band["high"]["ratio_to_published"] < band["stated"]["ratio_to_published"]
+    assert band["stated"]["ratio_to_published"] < band["low"]["ratio_to_published"]
+    for bound in ("low", "stated", "high"):
+        assert 0.5 <= band[bound]["ratio_to_published"] <= 2.0, bound
+    assert band["per_layer_cost_that_would_close_the_gap_s"] < 0.0
+
+
+def test_each_amortisation_policy_is_sized_on_its_own_floorplan(technology) -> None:
+    """A compute-in-ROM cell is 1.6x a storage cell, so it can need more dies.
+
+    Sizing every policy on the batched floorplan denied compute-in-ROM the dies
+    its larger array needs and then reported the shortfall as infeasibility --
+    "it cannot hold this model" when the truth was "we never tried enough dies".
+    """
+
+    flash = ModelProfile.load(
+        ROOT / "configs" / "models" / "deepseek-v4-flash-0731.json"
+    )
+    stored = flash.checkpoint_bytes
+    counts = {}
+    for policy in ("batched", "per_region"):
+        for devices in range(1, 200):
+            budget = rom_device_budget(
+                technology,
+                name=f"probe-{policy}-{devices}",
+                node="N6",
+                area_mm2_per_device=815.0,
+                topology=Topology(
+                    kind="array",
+                    device_count=devices,
+                    parallelism="pipeline",
+                    link="nvlink",
+                ),
+                stored_weight_bytes=stored,
+                resident_kv_bytes=0.0,
+                kv_store="sram",
+                weight_amortization=policy,
+            )
+            if not budget.reasons and budget.weight_capacity_bytes >= stored:
+                counts[policy] = devices
+                break
+    assert counts["per_region"] > counts["batched"], counts
+    # And the study must actually use each policy's own minimum, not the
+    # batched one: the per-region designs it emits carry their own device count.
+    # Roughly the cell-area multiplier, rounded up by the fixed overheads that
+    # do not shrink with device count.
+    ratio = counts["per_region"] / counts["batched"]
+    multiplier = technology.rom_cell_area_multiplier("per_region").value
+    assert multiplier <= ratio <= multiplier * 1.25, (ratio, counts)
+
+
+def test_the_recovered_mac_area_is_swept_rather_than_assumed(
+    technology, llama
+) -> None:
+    """Where compute-in-ROM spends the silicon it recovers decides the answer.
+
+    Handing it to SRAM when the sweep is what binds spends the freed area on
+    the component with a twenty-fold margin, and the study then reports
+    compute-in-ROM as worthless -- an artefact of the allocation rule rather
+    than a result.  Both destinations are now modelled, and the same choice is
+    offered to the amortising machine so the sweep does not decide the
+    comparison by being available to one side only.
+    """
+
+    stored = llama.total_parameters * 3.5 / 8.0
+    made = {}
+    for policy in ("batched", "per_region"):
+        for spare in ("sram", "rom"):
+            budget = rom_device_budget(
+                technology,
+                name=f"{policy}-{spare}",
+                node="N6",
+                area_mm2_per_device=815.0,
+                topology=_single_chip(),
+                stored_weight_bytes=stored,
+                resident_kv_bytes=0.0,
+                kv_store="sram",
+                weight_amortization=policy,
+                spare_area_policy=spare,
+            )
+            made[(policy, spare)] = budget
+    for policy in ("batched", "per_region"):
+        base = made[(policy, "sram")]
+        filled = made[(policy, "rom")]
+        # Replication: more array holding real copies, so more read bandwidth
+        # AND more capacity, in the same proportion.  Bandwidth without
+        # capacity would be buying reads for bits that do not exist.
+        assert filled.split.rom_mm2 > base.split.rom_mm2
+        assert filled.weight_read_bytes_s > base.weight_read_bytes_s
+        assert filled.weight_capacity_bytes / stored > 1.0
+        assert filled.weight_read_bytes_s / base.weight_read_bytes_s == pytest.approx(
+            filled.weight_capacity_bytes / base.weight_capacity_bytes, rel=1e-9
+        )
+    # The amortising machine's filled floorplan is derived, not swept: its MAC
+    # array is sized to consume exactly what the array beside it can read.
+    filled = made[("batched", "rom")]
+    mac_ops_s = filled.compute_ops_s["fp8"] * technology.efficiency("compute").value
+    assert filled.weight_read_bytes_s == pytest.approx(mac_ops_s / 2.0, rel=0.02)
+    with pytest.raises(ValidationError):
+        balanced_area_split(
+            technology,
+            node="N6",
+            total_mm2=815.0,
+            weight_store="rom",
+            kv_store="sram",
+            stored_weight_bytes=stored,
+            resident_kv_bytes=0.0,
+            spare_area_policy="wishful",
+        )
+
+
+def test_the_sparse_index_scan_is_most_of_the_kv_read(technology, flash) -> None:
+    """85% of Flash's KV read at 200K is a scan of 256-byte index entries.
+
+    The entry size was published as 68 bytes, which was read off the
+    implementation rather than measured while running it.  Measured against the
+    reference oracle it is 256, and the share the scan takes of the whole KV
+    read goes UP rather than down: the payload entries grew too.
+    """
+
+    detail = kv_access_granularity(
+        technology, flash, context_tokens=200_000, store="hbm"
+    )[1]
+    scans = [
+        stream for stream in detail["streams"] if stream["stream"] == "sparse_index_scan"
+    ]
+    assert scans
+    index_bytes = sum(stream["bytes"] for stream in scans)
+    native = kv_traffic(flash, 200_000).read_bytes
+    assert index_bytes / native == pytest.approx(0.85, abs=0.02)
+    assert scans[0]["entry_bytes"] == 256.0
+    assert scans[0]["entries_per_layer"] == 50_000
+
+
+def test_kv_granularity_is_a_layout_choice_and_is_stated_as_one(
+    technology, flash
+) -> None:
+    """**A retraction, asserted so it cannot come back.**
+
+    This test used to assert 1.30x on HBM and 1.64x on SRAM for Flash, and the
+    recommendation "pack the index array separately from the payload" was sold
+    as the cheapest 30% in the program.  Both rested on a 68-byte index entry,
+    which was read off the implementation.  Measured, the entry is 256 bytes --
+    larger than both the 32-byte HBM granule and the 128-byte SRAM granule --
+    so an interleaved layout now costs exactly nothing on either store and on
+    either DeepSeek model.
+
+    The mechanism is unchanged and still parameterised, because it is a layout
+    DECISION and a model that silently assumed the cheap one would present a
+    design decision as a fact.  What changed is that this workload no longer
+    exercises it.
+    """
+
+    interleaved = {
+        store: kv_access_granularity(
+            technology, flash, context_tokens=200_000, store=store
+        )[0]
+        for store in ("hbm", "sram")
+    }
+    assert interleaved["hbm"] == pytest.approx(1.0)
+    assert interleaved["sram"] == pytest.approx(1.0)
+
+    contiguous = json.loads(json.dumps(technology.raw))
+    contiguous["kv"]["index_layout"]["value"] = "contiguous"
+    packed = Technology(raw=contiguous)
+    for store in ("hbm", "sram"):
+        inflation = kv_access_granularity(
+            packed, flash, context_tokens=200_000, store=store
+        )[0]
+        assert inflation == pytest.approx(interleaved[store])
+
+    # The mechanism still bites an entry smaller than the granule, which is
+    # what it is for.  Shrink the index entry alone and the penalty returns.
+    small = json.loads(json.dumps(flash.to_dict()))
+    for group in small["attention_groups"]:
+        if group.get("index_entry_bytes"):
+            group["index_entry_bytes"] = 16.0
+    shrunk = ModelProfile.from_dict(small)
+    assert (
+        kv_access_granularity(technology, shrunk, context_tokens=200_000, store="sram")[0]
+        > 1.5
+    )
+
+    # A dense-KV model with a granule-aligned entry pays nothing either way.
+    qwen_profile = ModelProfile.load(ROOT / "configs" / "models" / "qwen3-8b.json")
+    assert kv_access_granularity(
+        technology, qwen_profile, context_tokens=8192, store="sram"
+    )[0] == pytest.approx(1.0)
+
+
+def test_the_sram_kv_credit_is_reported_against_its_locality_bound(
+    technology, flash
+) -> None:
+    """The SRAM KV path is never exercised, and the model now says so.
+
+    At batch 1 the step credits one user with the whole array's read bandwidth.
+    That is defensible for KV in a way it is not for ROM -- KV is written at run
+    time and can be striped across every bank -- but only if the design really
+    stripes, and nothing checks.  The bound is reported at every point so the
+    exposure is visible rather than implicit.
+    """
+
+    budget = rom_device_budget(
+        technology,
+        name="flash-sram-kv",
+        node="N6",
+        area_mm2_per_device=46225.0,
+        topology=Topology(
+            kind="wafer",
+            device_count=1,
+            parallelism="pipeline",
+            link="on_wafer",
+            on_wafer_regions=57,
+        ),
+        stored_weight_bytes=flash.checkpoint_bytes,
+        resident_kv_bytes=kv_traffic(flash, 200_000).storage_bytes_per_user,
+        kv_store="sram",
+        weight_amortization="per_region",
+    )
+    bounds = {}
+    for batch in (1, 8):
+        step = evaluate(
+            budget,
+            flash,
+            context_tokens=200_000,
+            batch_size=batch,
+            technology=technology,
+        )
+        bounds[batch] = step.metrics["kv_read_s_under_bank_locality"]
+        assert step.metrics["kv_bank_occupancy"] < 1.0
+        assert bounds[batch] > step.component_times_s["kv_read"]
+    # The bound is batch-independent while there are idle banks, which is the
+    # ROM locality rule turning up on the SRAM side: an array sized to the KV it
+    # holds delivers a fixed KV sweep, exactly as an array sized to the weights
+    # delivers a fixed weight sweep.
+    assert bounds[1] == pytest.approx(bounds[8], rel=1e-9)
+    step_one = evaluate(
+        budget, flash, context_tokens=200_000, batch_size=1, technology=technology
+    )
+    assert bounds[1] / step_one.component_times_s["kv_read"] > 40
+    # And the reason this was invisible: even the bound is far from binding for
+    # THIS design.  That is a fact about this design, not about the model.
+    assert bounds[1] < step_one.component_times_s["weight_read"]
+
+    # **The batch at which the array saturates has moved down, and that is the
+    # measured KV correction showing up here.** Flash's KV storage at 200K is
+    # 1.38 GB per user against the 705 MB the profile previously claimed, so
+    # this design runs out of idle banks at batch 64 where it used to have them
+    # to spare.  Past that point the striped credit and the locality bound
+    # coincide and there is no exposure left to report, because there is no
+    # slack left to lose.
+    saturated = evaluate(
+        budget, flash, context_tokens=200_000, batch_size=64, technology=technology
+    )
+    assert saturated.metrics["kv_bank_occupancy"] == 1.0
+    assert saturated.metrics["kv_read_s_under_bank_locality"] == pytest.approx(
+        saturated.component_times_s["kv_read"]
+    )
+
+    # An HBM KV store is striped by its own controller, so the bound is the term.
+    hbm = evaluate(
+        _flash_wafer(technology, flash, "per_region"),
+        flash,
+        context_tokens=200_000,
+        batch_size=1,
+        technology=technology,
+    )
+    assert hbm.metrics["kv_bank_occupancy"] == 1.0
+    assert hbm.metrics["kv_read_s_under_bank_locality"] == pytest.approx(
+        hbm.component_times_s["kv_read"]
+    )
+
 
 
 # --------------------------------------------------------------------------
@@ -1169,7 +2026,18 @@ def _load_runner() -> ModuleType:
     if spec is None or spec.loader is None:
         raise RuntimeError(f"cannot import {RUNNER}")
     module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
+    # The module has to be in ``sys.modules`` before it executes: it uses
+    # ``from __future__ import annotations``, so every dataclass annotation is
+    # a string, and ``dataclasses`` resolves those by looking the defining
+    # module up in ``sys.modules``.  Loading it by path without registering it
+    # makes that lookup return ``None`` and every dataclass in the file fails
+    # to construct.
+    sys.modules[spec.name] = module
+    try:
+        spec.loader.exec_module(module)
+    except Exception:
+        sys.modules.pop(spec.name, None)
+        raise
     return module
 
 
@@ -1271,6 +2139,70 @@ def test_studies_report_both_topologies_and_the_crossover(generated) -> None:
             assert row["array_or_wafer"] in {"array", "wafer", "no feasible ROM design"}
 
 
+def test_both_families_get_the_same_topology_sweep(generated) -> None:
+    """**The regression guard for the defect this comparison was built on.**
+
+    The ROM side used to be swept over pipeline AND tensor parallelism with the
+    better reported, while the GPU side was only ever evaluated under pipeline.
+    At 672 devices that charged the GPU 671 serial hops per token at batch 1 and
+    reported the resulting collapse as a property of GPUs.  Whatever
+    parallelisms one family is offered, the other is offered too.
+    """
+
+    _, results, _, _ = generated
+    for result in results.values():
+        multi = [
+            row
+            for row in result["points"]
+            if row["device_count"] > 1 or row["topology_kind"] == "wafer"
+        ]
+        rom = {row["parallelism"] for row in multi if row["family"] == "rom"}
+        gpu = {row["parallelism"] for row in multi if row["family"] == "gpu"}
+        assert rom == gpu, (
+            f"one family was offered topologies the other was not: "
+            f"rom={sorted(rom)} gpu={sorted(gpu)}"
+        )
+        assert {"pipeline", "tensor", "hybrid"} <= rom
+
+        # And both families are charged two link classes, not one.
+        for family in ("rom", "gpu"):
+            links = {
+                (row["intra_link"], row["link"])
+                for row in multi
+                if row["family"] == family
+            }
+            assert any(
+                intra != inter for intra, inter in links
+            ), f"{family} designs are all charged a single link class: {links}"
+
+        # Every iso-area comparison names which parallelism the GPU chose, and
+        # carries what the pipeline-only answer would have been beside it.
+        for row in result["comparisons"]:
+            assert row["iso_area_gpu_parallelism"] in {
+                "none",
+                "pipeline",
+                "tensor",
+                "hybrid",
+            }
+            assert "pipeline_only_gpu_per_user_tokens_s" in row
+            assert "per_user_speed_ratio_without_stage_cap" in row
+
+
+def test_no_design_is_charged_a_pipeline_deeper_than_the_model(generated) -> None:
+    """Serial stages never exceed the layer count, on either family."""
+
+    _, results, _, _ = generated
+    layers = {
+        summary["model"]: summary["num_layers"]
+        for result in results.values()
+        for summary in result["model_summaries"]
+    }
+    for result in results.values():
+        for row in result["points"]:
+            assert row["pipeline_stages"] <= layers[row["model"]], row["design"]
+            assert row["pipeline_stages"] <= row["pipeline_stages_uncapped"]
+
+
 def test_studies_report_every_amortization_policy(generated) -> None:
     """All three machines are studied, and they agree exactly at batch 1.
 
@@ -1351,6 +2283,7 @@ def test_every_point_names_a_binding_constraint(generated) -> None:
         "kv_read",
         "compute",
         "link_latency",
+        "layer_fixed_latency",
         "thermal",
         "capacity_or_format",
     }

@@ -51,11 +51,13 @@
       "source": "carried over from src/opentallas/schema.py ArchitectureProfile default",
       "value": 0.55
     },
-    "expert_load_balance": {
+    "expert_router_imbalance": {
       "grade": "assumed",
-      "note": "fraction of the mean per-region load the busiest region achieves. Only used by weight_amortization='per_region', where tokens landing on one expert region serialise while disjoint regions proceed together, so the sweep depth is set by the busiest region rather than the mean. Routers are trained toward balance, but a measured trace should replace this before any per-region claim is load-bearing.",
+      "note": "Multiplier on the per-region sweep depth, applied ON TOP OF the expected busiest-region load rather than instead of it. This replaces efficiencies.expert_load_balance = 0.85, which was documented as carrying 'the sweep depth is set by the busiest region rather than the mean' while the code divided the MEAN engaged-region load by it. The busiest region is now computed explicitly (roofline.expected_max_region_load), and a single constant cannot stand in for it: the ratio of the busiest region to the mean runs from 1.0 at batch 1 to about 3.0 at batch 64. What is left for this parameter is the residual imbalance of a TRAINED router against the uniform-random draw the busiest-region statistic assumes. It is 1.0 -- the neutral value, which makes it inert -- because no trace exists to set it, and because a parameter must not take its value from the answer it is wanted to produce. The per-region sweep depth is exactly linear in it, so a trace showing a 1.3x hot-expert bias moves every per-region number by 1.3x.",
+      "range_high": 1.5,
+      "range_low": 1.0,
       "source": "no measured routing trace for a per-region compute-in-ROM fabric",
-      "value": 0.85
+      "value": 1.0
     },
     "hbm_bandwidth": {
       "grade": "assumed",
@@ -238,6 +240,88 @@
       }
     }
   },
+  "kv": {
+    "access_granularity_bytes": {
+      "hbm": {
+        "grade": "assumed",
+        "note": "An HBM3 channel is split into two 32-bit pseudo-channels and the minimum burst is 8, so the smallest read that reaches the die is 32 bytes. A 68-byte index entry therefore costs 96 bytes. Graded assumed rather than published because the number is reconstructed from the interface geometry rather than read off a datasheet line.",
+        "source": "HBM3/3E pseudo-channel width times burst length; no vendor erratum consulted for this program",
+        "value": 32.0
+      },
+      "sram": {
+        "grade": "assumed",
+        "note": "The row width a wide on-die SRAM macro delivers per access. 128 bytes is a common leading-node macro word for a bandwidth-optimised array; a narrower 64-byte macro halves the waste on a 68-byte entry only because 68 still spills into a second word. Sweep 64 to 256.",
+        "source": "no vendor macro datasheet for the target on-die arrays",
+        "value": 128.0
+      }
+    },
+    "index_layout": {
+      "grade": "assumed",
+      "note": "Where a compressed-sparse layer's 68-byte index entry sits relative to the 583-byte payload entry it describes. 'interleaved' is the natural result of writing both at generation time and makes every index entry its own access; 'contiguous' packs the index array separately so the scan is one sequential run and granule rounding costs nothing. The two differ by more than 1.6x on DeepSeek-V4-Flash at 200K context, where 72% of the KV read is that scan. Stated as a named choice because a design can simply choose the cheap one -- and because a model that silently assumed the cheap one would be claiming a design decision as a fact.",
+      "source": "layout CHOICE, not a physical constant; no released serving implementation inspected for this program",
+      "value": "interleaved"
+    },
+    "purpose": "How KV bytes are actually moved, as opposed to how many the algorithm needs. workload.kv_traffic counts algorithmic bytes; a memory system moves whole granules, and for a sparse-index model most of the KV read is a scan of entries far smaller than one granule."
+  },
+  "latency": {
+    "array_pass_boundaries_per_layer": {
+      "grade": "assumed",
+      "note": "Serially dependent matrix passes in one decoder layer. Four is the standard block; a fused QKV gives three and a separate router pass gives five. Graded assumed rather than derived because the model profiles do not state a pass structure -- operations.operation_inventory counts arithmetic, not passes.",
+      "range_high": 5.0,
+      "range_low": 3.0,
+      "source": "transformer block structure: QKV, attention output, gate/up, down",
+      "value": 4.0
+    },
+    "global_wire_delay_s_per_mm": {
+      "grade": "assumed",
+      "note": "100-250 ps/mm is the commonly quoted range for an optimally repeatered global interconnect at 7 nm class; it is flat with scaling because repeater insertion linearises RC. The traversal DISTANCE is derived from the floorplan rather than assumed: sqrt(reticle.area_mm2), which is one die edge, taken as the mean distance an activation broadcast covers. Charged once per array-pass boundary and once for the KV round trip.",
+      "range_high": 2.5e-10,
+      "range_low": 1e-10,
+      "source": "repeatered global-wire delay per millimetre at a leading node",
+      "value": 1.5e-10
+    },
+    "layer_barrier_s": {
+      "grade": "assumed",
+      "note": "A layer transition is a barrier: every lane's partial result must be retired and the residual formed before the next layer's activation exists. On a distributed fabric this is a reduction plus a broadcast of the completion signal, on top of the wire delay charged separately. Charged once per layer.",
+      "range_high": 3.2e-08,
+      "range_low": 4e-09,
+      "source": "no published synchronisation cost for this class of part",
+      "value": 8e-09
+    },
+    "pipeline_fill_drain_s": {
+      "grade": "assumed",
+      "note": "Fill and drain across the boundary between two SERIALLY DEPENDENT array passes. The second pass cannot begin until the first has retired, so the boundary costs a full traversal of the pipeline. 32 ns is roughly 32 stages at a 1 GHz fabric clock; the low end is a shallow accumulator tree over 4k lanes (12-16 levels) and the high end is a systolic drain of a 128-deep array. Charged once per array-pass boundary. THIS IS THE LARGEST TERM IN THE BLOCK and the widest band; the anchor is reported at both ends of it.",
+      "range_high": 1.28e-07,
+      "range_low": 1.6e-08,
+      "source": "no published array pipeline depth for this class of part",
+      "value": 3.2e-08
+    },
+    "purpose": "The serial per-layer cost that no amount of bandwidth removes. Before this block the only latency in the model was links.*.hop_latency_s, charged at inter-partition boundaries, so a single_chip design had a decode step with no fixed cost at all. EVERY TERM HERE IS DERIVED FROM A PRIMITIVE THAT EXISTS INDEPENDENTLY OF THE TAALAS HC1 ANCHOR, and each carries range_low/range_high. The anchor gate is evaluated at both ends of that band and reports where it lands as an OUTCOME. No term is chosen to close the anchor gap: doing that would turn a validation gate into a one-parameter curve fit, and the gate is load-bearing (checklist W12.5). Charged per layer: sequencer_issue_decode + layer_barrier + one KV round trip (sram_access + one global traversal) + array_pass_boundaries_per_layer x (pipeline_fill_drain + one global traversal). Compressed-sparse layers additionally pay sparse_index_dependency.",
+    "sequencer_issue_decode_s": {
+      "grade": "assumed",
+      "note": "Instruction fetch, decode and operand setup for one layer's command stream in a statically scheduled sequencer. A few cycles at a ~1 GHz fabric clock; 1-8 ns spans a single-cycle issue to a deeply decoded microcoded one. Charged once per layer.",
+      "range_high": 8e-09,
+      "range_low": 1e-09,
+      "source": "no published sequencer for a mask-ROM or compute-in-ROM inference die",
+      "value": 3e-09
+    },
+    "sparse_index_dependency_s": {
+      "grade": "assumed",
+      "note": "Charged only on layers whose profile says compressed_sparse. The gather address is not known until the index scan's top-k has completed, so the layer pays a selection over tens of thousands of candidates followed by a round trip that cannot be prefetched. 128 ns sits above an SRAM round trip and below a DRAM row cycle, which is the bracket a top-k-then-gather falls in. The bytes of the scan itself are charged against bandwidth, with their access granularity, in the kv block.",
+      "range_high": 2.56e-07,
+      "range_low": 6.4e-08,
+      "source": "no published top-k selection pipeline at this candidate count",
+      "value": 1.28e-07
+    },
+    "sram_access_s": {
+      "grade": "assumed",
+      "note": "Access time of a large on-die SRAM macro: address decode, wordline rise, bitline develop, sense and output latch. 1-4 ns brackets the published range for bandwidth-optimised leading-node macros of the size this model places. Charged once per layer, as the read half of the KV round trip; the KV BYTES are charged separately against bandwidth and this is only the dependency bandwidth cannot overlap.",
+      "range_high": 4e-09,
+      "range_low": 1e-09,
+      "source": "no vendor macro datasheet for the target on-die arrays",
+      "value": 2e-09
+    }
+  },
   "links": {
     "ethernet": {
       "bytes_s": {
@@ -246,11 +330,127 @@
         "source": "400 GbE class NIC per device",
         "value": 50000000000.0
       },
+      "fabric": {
+        "grade": "assumed",
+        "note": "scale-out Ethernet is a switched fat tree",
+        "source": "400 GbE class NIC per device",
+        "value": "switched"
+      },
       "hop_latency_s": {
         "grade": "assumed",
         "note": "InfiniBand/Ethernet class scale-out hop. Not measured.",
+        "range_high": 1e-05,
+        "range_low": 2e-06,
         "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md",
         "value": 5e-06
+      },
+      "switch_radix": {
+        "grade": "assumed",
+        "note": "64-port leaf/spine class switch; not measured",
+        "source": "400 GbE class NIC per device",
+        "value": 64.0
+      }
+    },
+    "infiniband_hdr": {
+      "bytes_s": {
+        "grade": "derived",
+        "note": "DGX A100 carries eight single-port ConnectX-6 HDR adapters at 200 Gb/s for eight GPUs -- \"a one-to-one relationship between the IO cards and the GPUs\" -- so 200 Gb/s = 25 GB/s of payload per GPU in one direction. That is one twelfth of the NVLink 3 rate beside it, which is the whole reason the domain boundary has to be modelled. Achievable RDMA payload is 88-98% of line rate, or 22.0-24.6 GB/s; the line rate is used, which favours the GPU.",
+        "source": "NVIDIA DGX A100 System Architecture WP-10083-001_v01 (July 2020)",
+        "value": 25000000000.0
+      },
+      "domain_size": {
+        "grade": "published",
+        "note": "NVIDIA Quantum QM8700: 40 HDR 200 Gb/s ports per switch",
+        "source": "https://network.nvidia.com/files/doc-2020/pb-qm8700.pdf",
+        "value": 40.0
+      },
+      "fabric": {
+        "grade": "published",
+        "note": "scale-out InfiniBand is a switched fat tree, so a collective spanning more endpoints than one tier reaches has to climb tiers",
+        "source": "https://network.nvidia.com/files/doc-2020/pb-qm8700.pdf",
+        "value": "switched"
+      },
+      "hop_latency_s": {
+        "grade": "published",
+        "note": "GPU-buffer to GPU-buffer inter-node latency, which is what a decode step actually pays -- not the 1.07 us CPU-memory MPI ping-pong, which is the figure usually quoted and is not reachable from a GPU. De Sensi et al. (SC24) measured 3.7-5.7 us across five production supercomputers, and on Leonardo (A100 + HDR InfiniBand) 4.33 us within one switch rising to 5.56 us across switches. The switch silicon is a small part of it: an NVIDIA Quantum HDR switch is published at sub-130 ns port to port and a ConnectX-6 adapter at sub-600 ns, so the remainder is adapter, protocol and software. Stated at 4.5 us and swept 3.7-5.7 us.",
+        "range_high": 5.7e-06,
+        "range_low": 3.7e-06,
+        "source": "De Sensi et al., Exploring GPU-to-GPU Communication: Insights into Supercomputer Interconnects, SC24, arXiv:2408.14090 ; https://network.nvidia.com/files/doc-2020/pb-qm8700.pdf",
+        "value": 4.5e-06
+      },
+      "switch_radix": {
+        "grade": "published",
+        "note": "40 endpoints per HDR switch tier",
+        "source": "https://network.nvidia.com/files/doc-2020/pb-qm8700.pdf",
+        "value": 40.0
+      }
+    },
+    "infiniband_ndr": {
+      "bytes_s": {
+        "grade": "derived",
+        "note": "DGX B200 carries eight ConnectX-7 single-port cards for eight GPUs at up to 400 Gb/s InfiniBand, so 400 Gb/s = 50 GB/s of payload per GPU in one direction. Cross-checks against the HGX B200 networking row of 0.8 TB/s = 8 x 400 Gb/s x 2 directions. Achievable RDMA payload is 44-48 GB/s; the line rate is used, which favours the GPU.",
+        "source": "https://docs.nvidia.com/dgx/dgxb200-user-guide/dgxb200-user-guide.pdf ; https://www.nvidia.com/content/dam/en-zz/Solutions/networking/infiniband-adapters/infiniband-connectx7-data-sheet.pdf",
+        "value": 50000000000.0
+      },
+      "domain_size": {
+        "grade": "published",
+        "note": "NVIDIA Quantum-2 QM9700: 64 NDR 400 Gb/s ports per switch",
+        "source": "https://www.nvidia.com/en-us/networking/quantum2/",
+        "value": 64.0
+      },
+      "fabric": {
+        "grade": "published",
+        "note": "scale-out InfiniBand is a switched fat tree",
+        "source": "https://www.nvidia.com/en-us/networking/quantum2/",
+        "value": "switched"
+      },
+      "hop_latency_s": {
+        "grade": "published",
+        "note": "GPU-buffer to GPU-buffer inter-node latency, which is what a decode step actually pays -- not the 1.07 us CPU-memory MPI ping-pong, which is the figure usually quoted and is not reachable from a GPU. De Sensi et al. (SC24) measured 3.7-5.7 us across five production supercomputers, and on Leonardo (A100 + HDR InfiniBand) 4.33 us within one switch rising to 5.56 us across switches. The switch silicon is a small part of it: an NVIDIA Quantum HDR switch is published at sub-130 ns port to port and a ConnectX-6 adapter at sub-600 ns, so the remainder is adapter, protocol and software. Stated at 4.5 us and swept 3.7-5.7 us.",
+        "range_high": 5.7e-06,
+        "range_low": 3.7e-06,
+        "source": "De Sensi et al., Exploring GPU-to-GPU Communication: Insights into Supercomputer Interconnects, SC24, arXiv:2408.14090 ; https://network.nvidia.com/files/doc-2020/pb-qm8700.pdf",
+        "value": 4.5e-06
+      },
+      "switch_radix": {
+        "grade": "published",
+        "note": "64 endpoints per NDR switch tier",
+        "source": "https://www.nvidia.com/en-us/networking/quantum2/",
+        "value": 64.0
+      }
+    },
+    "inter_wafer": {
+      "bytes_s": {
+        "grade": "derived",
+        "note": "The only shipping multi-wafer machine is a Cerebras cluster, and its off-wafer link is twelve 100 GbE data ports per system: 1.2 Tb/s = 150 GB/s per wafer per direction. Against 26.75 PB/s on-wafer that is a factor of 180,000, and it is the number a multi-wafer ROM design has to live with rather than the on-wafer figure this study used to charge it.",
+        "source": "https://8968533.fs1.hubspotusercontent-na2.net/hubfs/8968533/Cerebras%20Wafer%20Scale%20Cluster%20datasheet%20-%20final.pdf",
+        "value": 150000000000.0
+      },
+      "domain_size": {
+        "grade": "assumed",
+        "note": "sixteen wafers taken as one domain; the study never builds a machine larger than twelve, so the bound is not reached",
+        "source": "Cerebras CS Weight Streaming white paper, section 6.4 (SwarmX)",
+        "value": 16.0
+      },
+      "fabric": {
+        "grade": "assumed",
+        "note": "SwarmX is a broadcast-reduce tree; a rack of wafers is modelled as one switched domain, which is the optimistic reading",
+        "source": "Cerebras CS Weight Streaming white paper, section 6.4 (SwarmX)",
+        "value": "switched"
+      },
+      "hop_latency_s": {
+        "grade": "assumed",
+        "note": "Cerebras publishes no SwarmX latency figure in any form. SwarmX is a broadcast-reduce tree over 100 GbE, so the class of the link is known even where the number is not: 100 GbE RDMA between accelerator buffers is the same 3.7-5.7 us class the InfiniBand measurements give, and 5.0 us is taken as the point. The low end of the sweep, 1.0 us, is a purpose-built wafer-to-wafer link better than anything shipping; the high end, 10.0 us, is a tree with a second level. This is the number that decides whether a twelve-wafer machine is one machine or twelve, and this study previously charged it the on-wafer stitched-mesh hop of 100 ns -- the ROM-side mirror of charging a GPU cluster a 672-way pipeline.",
+        "range_high": 1e-05,
+        "range_low": 1e-06,
+        "source": "Cerebras CS Weight Streaming white paper, section 6.4 (SwarmX) ; De Sensi et al., Exploring GPU-to-GPU Communication: Insights into Supercomputer Interconnects, SC24, arXiv:2408.14090",
+        "value": 5e-06
+      },
+      "switch_radix": {
+        "grade": "assumed",
+        "note": "one tree level reaches the whole rack",
+        "source": "Cerebras CS Weight Streaming white paper, section 6.4 (SwarmX)",
+        "value": 16.0
       }
     },
     "none": {
@@ -274,11 +474,133 @@
         "source": "https://www.nvidia.com/en-us/data-center/nvlink/",
         "value": 900000000000.0
       },
+      "domain_size": {
+        "grade": "published",
+        "note": "eight SXM GPUs in one NVSwitch domain on an HGX baseboard",
+        "source": "https://www.nvidia.com/en-us/data-center/hgx/",
+        "value": 8.0
+      },
+      "fabric": {
+        "grade": "published",
+        "note": "NVSwitch gives a single all-to-all tier, so an in-domain collective costs two traversals however wide the domain is",
+        "source": "NVIDIA DGX A100 System Architecture WP-10083-001_v01 (July 2020)",
+        "value": "switched"
+      },
       "hop_latency_s": {
         "grade": "assumed",
         "note": "NVLink point-to-point sits around 1 us for small messages. A real all-reduce is two phases through a switch plus launch and synchronisation overhead, so 1.5 us is optimistic; 3-10 us is common in practice. Sweep upward, never downward.",
+        "range_high": 5.5e-06,
+        "range_low": 1e-06,
         "source": "https://www.thundercompute.com/blog/what-is-nvlink",
         "value": 1.5e-06
+      },
+      "switch_radix": {
+        "grade": "published",
+        "note": "one NVSwitch tier reaches the whole domain",
+        "source": "https://www.nvidia.com/en-us/data-center/hgx/",
+        "value": 8.0
+      }
+    },
+    "nvlink3": {
+      "bytes_s": {
+        "grade": "derived",
+        "note": "A100 SXM NVLink 3.0: twelve links at 25 GB/s per direction each, published as 600 GB/s bidirectional per GPU, so 300 GB/s of payload in one direction. The n6_vs_a100 study charges this fabric to BOTH sides -- the ROM array and the GPU cluster -- because an iso-node comparison that hands one side a later interconnect is not iso anything, and this study previously gave the ROM array an NVLink-5 rate against an A100.",
+        "source": "https://images.nvidia.com/aem-dam/en-zz/Solutions/data-center/nvidia-ampere-architecture-whitepaper.pdf",
+        "value": 300000000000.0
+      },
+      "domain_size": {
+        "grade": "published",
+        "note": "Eight A100 SXM GPUs on one HGX/DGX A100 baseboard, connected by six second-generation NVSwitches. Past the eighth GPU every byte leaves the baseboard for the scale-out fabric, which is the second link class this study charges.",
+        "source": "https://www.nvidia.com/content/dam/en-zz/Solutions/Data-Center/HGX/pdf/nvidia-hgx-a100-datasheet.pdf ; NVIDIA DGX A100 System Architecture WP-10083-001_v01 (July 2020)",
+        "value": 8.0
+      },
+      "fabric": {
+        "grade": "published",
+        "note": "Single-tier all-to-all, stated verbatim: \"Each A100 GPU uses twelve NVLink interconnects to communicate with all six NVSwitches, which means there are two links from each GPU to each switch.\" Every GPU pair is therefore one switch traversal apart and an in-domain collective has a rank-count-independent latency, which is also what the measured speed-of-light all-reduce floor shows.",
+        "source": "NVIDIA DGX A100 System Architecture WP-10083-001_v01 (July 2020)",
+        "value": "switched"
+      },
+      "hop_latency_s": {
+        "grade": "assumed",
+        "note": "NVIDIA publishes no NVLink or NVSwitch latency figure in any form -- six first-party pages were checked and every one gives bandwidth only -- so this is assumed and swept. It is a per-traversal cost, and the collective model charges two traversals inside a domain, so the stated 1.5 us is a 3.0 us in-domain all-reduce. Measured comparators on GB200: a speed-of-light all-reduce floor of 1.404 us (0.306 us L2 round trip plus 0.792 us remote store), a best low-latency kernel at 2.37 us for a small message, and NCCL's ring at 11.0 us. The 1.0-5.5 us sweep therefore spans a 2.0-11.0 us all-reduce, which brackets the floor at one end and stock NCCL at the other; the STATED value sits near the optimistic end and so favours the GPU.",
+        "range_high": 5.5e-06,
+        "range_low": 1e-06,
+        "source": "https://www.nvidia.com/en-us/data-center/nvlink/ ; Shen, Korzh, Bachan et al., Every us Matters: Achieving Near Speed-of-Light Latency in GPU Collectives, arXiv:2607.16100",
+        "value": 1.5e-06
+      },
+      "switch_radix": {
+        "grade": "published",
+        "note": "one NVSwitch tier reaches the whole eight-GPU domain",
+        "source": "NVIDIA DGX A100 System Architecture WP-10083-001_v01 (July 2020)",
+        "value": 8.0
+      }
+    },
+    "nvlink5": {
+      "bytes_s": {
+        "grade": "derived",
+        "note": "NVLink 5: eighteen links per GPU, published as 1,800 GB/s bidirectional, so 900 GB/s of payload in one direction. Cross-checks against the HGX B200 node aggregate of 14.4 TB/s = 8 x 1.8 TB/s.",
+        "source": "https://www.nvidia.com/en-us/data-center/nvlink/",
+        "value": 900000000000.0
+      },
+      "domain_size": {
+        "grade": "published",
+        "note": "Eight B200 SXM GPUs in one NVLink domain on an HGX/DGX B200 baseboard, 14.4 TB/s aggregate. GB200 NVL72 raises the domain to 72 GPUs in a single tier -- eighteen switch chips, one link from each GPU to each -- but NVL72 is built from GB200 superchips rather than the B200 SXM module this study prices at 1,600 mm2. 72 is reported as a sensitivity rather than taken as the value.",
+        "source": "https://www.nvidia.com/en-us/data-center/hgx/ ; https://docs.nvidia.com/dgx/dgxb200-user-guide/dgxb200-user-guide.pdf",
+        "value": 8.0
+      },
+      "fabric": {
+        "grade": "derived",
+        "note": "Single-tier. DGX B200 carries two fifth-generation NVSwitch chips and each B200 has eighteen NVLinks, so there are nine links from each GPU to each switch and every pair is one traversal apart. NVIDIA states this explicitly for A100 and for NVL72 but not for HGX B200, hence derived rather than published.",
+        "source": "https://docs.nvidia.com/dgx/dgxb200-user-guide/dgxb200-user-guide.pdf",
+        "value": "switched"
+      },
+      "hop_latency_s": {
+        "grade": "assumed",
+        "note": "NVIDIA publishes no NVLink or NVSwitch latency figure in any form -- six first-party pages were checked and every one gives bandwidth only -- so this is assumed and swept. It is a per-traversal cost, and the collective model charges two traversals inside a domain, so the stated 1.5 us is a 3.0 us in-domain all-reduce. Measured comparators on GB200: a speed-of-light all-reduce floor of 1.404 us (0.306 us L2 round trip plus 0.792 us remote store), a best low-latency kernel at 2.37 us for a small message, and NCCL's ring at 11.0 us. The 1.0-5.5 us sweep therefore spans a 2.0-11.0 us all-reduce, which brackets the floor at one end and stock NCCL at the other; the STATED value sits near the optimistic end and so favours the GPU.",
+        "range_high": 5.5e-06,
+        "range_low": 1e-06,
+        "source": "https://www.nvidia.com/en-us/data-center/nvlink/ ; Shen, Korzh, Bachan et al., Every us Matters: Achieving Near Speed-of-Light Latency in GPU Collectives, arXiv:2607.16100",
+        "value": 1.5e-06
+      },
+      "switch_radix": {
+        "grade": "derived",
+        "note": "one NVSwitch tier reaches the whole eight-GPU domain",
+        "source": "https://docs.nvidia.com/dgx/dgxb200-user-guide/dgxb200-user-guide.pdf",
+        "value": 8.0
+      }
+    },
+    "nvlink5_nvl72": {
+      "bytes_s": {
+        "grade": "derived",
+        "note": "same NVLink 5 per-GPU payload rate; only the domain differs",
+        "source": "https://www.nvidia.com/en-us/data-center/nvlink/",
+        "value": 900000000000.0
+      },
+      "domain_size": {
+        "grade": "published",
+        "note": "72 GPUs in one NVLink domain in a GB200 NVL72 rack. Used only as the domain sensitivity on the B200 study, because the part this study prices is a B200 SXM module and not a GB200 superchip.",
+        "source": "https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-gb200/latest/_downloads/238ab33ee345a7241fc2f15eedc2ff6c/RA11338001-DSPGB200-ReferenceArch.pdf",
+        "value": 72.0
+      },
+      "fabric": {
+        "grade": "published",
+        "note": "Single tier over all 72 GPUs, stated verbatim: nine NVLink switch trays of two switch chips each are \"responsible for the full-mesh connectivity between all 72 GPUs within the same rack\", and each GPU has \"one dedicated NVL5 link connectivity to each one of the 18 switch chips\". NVL72 is one hop wide, not two.",
+        "source": "https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-gb200/latest/_downloads/238ab33ee345a7241fc2f15eedc2ff6c/RA11338001-DSPGB200-ReferenceArch.pdf",
+        "value": "switched"
+      },
+      "hop_latency_s": {
+        "grade": "assumed",
+        "note": "NVIDIA publishes no NVLink or NVSwitch latency figure in any form -- six first-party pages were checked and every one gives bandwidth only -- so this is assumed and swept. It is a per-traversal cost, and the collective model charges two traversals inside a domain, so the stated 1.5 us is a 3.0 us in-domain all-reduce. Measured comparators on GB200: a speed-of-light all-reduce floor of 1.404 us (0.306 us L2 round trip plus 0.792 us remote store), a best low-latency kernel at 2.37 us for a small message, and NCCL's ring at 11.0 us. The 1.0-5.5 us sweep therefore spans a 2.0-11.0 us all-reduce, which brackets the floor at one end and stock NCCL at the other; the STATED value sits near the optimistic end and so favours the GPU.",
+        "range_high": 5.5e-06,
+        "range_low": 1e-06,
+        "source": "https://www.nvidia.com/en-us/data-center/nvlink/ ; Shen, Korzh, Bachan et al., Every us Matters: Achieving Near Speed-of-Light Latency in GPU Collectives, arXiv:2607.16100",
+        "value": 1.5e-06
+      },
+      "switch_radix": {
+        "grade": "published",
+        "note": "one NVLink switch tier reaches all 72 GPUs",
+        "source": "https://docs.nvidia.com/dgx-superpod/reference-architecture-scalable-infrastructure-gb200/latest/_downloads/238ab33ee345a7241fc2f15eedc2ff6c/RA11338001-DSPGB200-ReferenceArch.pdf",
+        "value": 72.0
       }
     },
     "on_package": {
@@ -288,9 +610,23 @@
         "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
         "value": 10000000000000.0
       },
+      "domain_size": {
+        "grade": "published",
+        "note": "two reticle-limited dies in one Blackwell package",
+        "source": "https://www.nvidia.com/en-us/data-center/technologies/blackwell-architecture/",
+        "value": 2.0
+      },
+      "fabric": {
+        "grade": "assumed",
+        "note": "A chiplet complex on one substrate is treated as a single all-to-all domain.",
+        "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md",
+        "value": "switched"
+      },
       "hop_latency_s": {
         "grade": "assumed",
         "note": "300 ns per organic/silicon-interposer chiplet hop. Not measured.",
+        "range_high": 1e-06,
+        "range_low": 1e-07,
         "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md",
         "value": 3e-07
       }
@@ -298,14 +634,22 @@
     "on_wafer": {
       "bytes_s": {
         "grade": "published",
-        "note": "Cerebras WSE-3 aggregate fabric bandwidth, 26.75 PB/s, used as the on-wafer payload-serialisation ceiling",
+        "note": "26.75 PB/s. Cerebras' own documents disagree on the unit -- the CS-3 cluster datasheet says 214 PB/s core-to-core and the WSE-2 weight-streaming paper says 220 Pb/s -- and 214 Pb/s is exactly 26.75 PB/s. This model takes the bit reading, which is eight times the more conservative of the two and is therefore the reading that does NOT flatter the wafer.",
         "source": "https://www.cerebras.ai/chip",
         "value": 2.675e+16
       },
+      "fabric": {
+        "grade": "published",
+        "note": "Stated verbatim: \"The CS-1 wafer is an MIMD, distributed-memory machine with a 2D-mesh interconnection fabric... The routers link to the routers of the four neighboring tiles.\" There is no switch, so an all-reduce costs about 1.1 times the mesh diameter -- Cerebras measured their own at \"a cycle count only about 10% greater than the diameter of the system\" -- and not the flat two traversals a switched domain gets.",
+        "source": "Rocki et al., Fast Stencil-Code Computation on a Wafer-Scale Processor, SC20, arXiv:2010.03660",
+        "value": "mesh"
+      },
       "hop_latency_s": {
         "grade": "assumed",
-        "note": "100 ns per on-wafer reticle-to-reticle hop; a stitched on-wafer link has no SerDes, no packet framing and no switch, so it is well under a package hop. Not measured.",
-        "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md",
+        "note": "100 ns per on-wafer reticle-to-reticle hop; a stitched on-wafer link has no SerDes, no packet framing and no switch, so it is well under a package hop. Not measured, but it now has an independent cross-check: Cerebras publishes a single clock cycle per tile hop and roughly 900,000 cores over 46,225 mm2, which is about 73 tiles across one 815 mm2 reticle field, so a reticle crossing is on the order of 73 cycles. Swept 30-500 ns.",
+        "range_high": 5e-07,
+        "range_low": 3e-08,
+        "source": "docs/WAFER_VERSUS_ARRAY_LATENCY.md ; Rocki et al., Fast Stencil-Code Computation on a Wafer-Scale Processor, SC20, arXiv:2010.03660",
         "value": 1e-07
       }
     }

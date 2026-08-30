@@ -53,6 +53,39 @@ derivation, are:
    adding the hops is exactly the balanced-pipeline traversal, and it keeps the
    identity ``aggregate = batch x per_user_rate`` true by construction.
 
+   **This rule is the largest known defect in the model and it is stated here
+   rather than hidden.**  It is right for tensor parallelism, where every
+   partition works on the same layer at once.  It is not right for pipeline
+   parallelism: a token at stage *i* is served by stage *i*'s silicon alone, so
+   a balanced ``S``-stage pipeline's per-user latency is ``S`` times what this
+   computes.  The model therefore gives a pipeline a throughput-view service
+   time and a latency-view hop count.  The bias runs the same way on both
+   families and grows with device count.  Fixing it means separating per-user
+   latency from aggregate throughput, which breaks the identity above.
+
+The fabric model
+----------------
+A cluster is not one link class and a token's serial depth is not its partition
+count.  Both mistakes were in this model and both decided results.
+
+* **Two link classes, from published domain sizes.**  Partitions inside one
+  high-bandwidth domain -- an 8-GPU NVSwitch baseboard, or one wafer's stitched
+  mesh -- talk over ``Topology.intra_link``; everything past the domain edge
+  goes over ``Topology.link``, an order of magnitude slower in latency and more
+  than that in per-device bandwidth.  With ``intra_domain_size = 1`` the model
+  reduces exactly to the single-link behaviour it replaced.
+* **A collective is priced by the published cost model for its fabric.**  On a
+  switch it is ``2 lg p`` traversals in the fabric's own radix (Thakur,
+  Rabenseifner & Gropp 2005), which inside a single all-to-all tier is 2
+  regardless of rank count.  On a mesh it is ``1.1 x`` the mesh diameter, which
+  is what Cerebras measured on their own wafer (Rocki et al., SC20).  The
+  bandwidth term carries the ``(p-1)/p`` factor of the bandwidth-optimal
+  all-reduce, so a 2-way collective is cheaper than a 672-way one.
+* **A token cannot cross more stage boundaries than the model has layers.**
+  672 partitions do not make 671 pipeline stages of a 61-layer model.  Under
+  rule 4 the surplus partitions still contribute their bandwidth, but nothing
+  on the token's path waits for them, so they add no serial event.
+
 The ROM locality rule
 ---------------------
 Mask-ROM weights are physically local to the array that holds them.  An expert
@@ -127,7 +160,18 @@ UM2_PER_MM2 = 1.0e6
 WEIGHT_TRAFFIC_POLICIES = ("decode_streamed", "full_checkpoint")
 WEIGHT_STORES = ("rom", "hbm", "sram")
 KV_STORES = ("sram", "hbm")
-PARALLELISMS = ("none", "pipeline", "tensor")
+PARALLELISMS = ("none", "pipeline", "tensor", "hybrid")
+LINK_FABRICS = ("switched", "mesh")
+MESH_ALLREDUCE_DIAMETER_FACTOR = 1.1
+"""An all-reduce on a 2-D mesh costs about 1.1 times the mesh diameter.
+
+Cerebras measured this on their own wafer: *"The single cycle-per-hop latency
+of the interconnect allows us to implement the AllReduce operation in a cycle
+count only about 10% greater than the diameter of the system"* (Rocki et al.,
+`Fast Stencil-Code Computation on a Wafer-Scale Processor`, SC20,
+arXiv:2010.03660).  It is the one number in the collective model that comes
+from a measurement rather than from an algorithm, and it is on the ROM side.
+"""
 WEIGHT_AMORTIZATIONS = ("batched", "per_stream", "per_region")
 #: Policies where the cell selects a partial product, so the multiply lives
 #: in the array and there is no separate MAC block.
@@ -199,6 +243,132 @@ def derived(
         grade = "derived"
     sources = " ; ".join(dict.fromkeys(item.source for item in materialised))
     return Graded(value=value, grade=grade, source=sources, note=f"{formula}. {note}".strip())
+
+
+# --------------------------------------------------------------------------
+# occupancy statistics: the busiest bin, not the average one
+# --------------------------------------------------------------------------
+#
+# Two places in this model used to divide work by the *mean* number of engaged
+# units when the wall-clock is set by the *busiest* one.  A sweep that has to
+# wait for the deepest queue is not the mean queue deep, and an expert-parallel
+# fetch that has to wait for the most loaded device is not the mean device's
+# share.  Both are the same statistic -- the expected maximum bin load -- and
+# both are computed here, once.
+
+
+def _binomial_max_bin_load(bins: int, trials: int, p: float) -> float:
+    """``E[max]`` over ``bins`` bins whose loads are ``Binomial(trials, p)``.
+
+    Each bin is marked by a given draw with probability ``p``, independently
+    across draws, so one bin's load is exactly ``Binomial(trials, p)``.  Bins
+    are weakly negatively correlated (a draw that marks one bin cannot mark it
+    twice), and treating them as independent for the maximum is the standard
+    approximation::
+
+        P(max >= L) = 1 - (1 - P(Bin(trials, p) >= L))^bins
+        E[max]      = sum_{L>=1} P(max >= L)
+
+    ``tests/test_roofline.py`` checks this against a 4,000-trial Monte Carlo
+    that draws ``k`` distinct experts per token; it agrees to within 2% for
+    every batch from 1 to 256 at both 256 and 384 experts, and returns 1.0 at
+    batch 1 where the true answer is exactly 1.
+    """
+
+    if trials <= 0 or p <= 0.0:
+        return 0.0
+    if p >= 1.0:
+        return float(trials)
+    total = 0.0
+    # pmf[0] = P(X = 0); survival tracks P(X >= L) as L advances.
+    pmf = math.exp(trials * math.log1p(-p))
+    survival = 1.0
+    for level in range(1, trials + 1):
+        survival -= pmf
+        if survival <= 0.0:
+            break
+        # 1 - (1 - survival)^bins, evaluated without cancellation.
+        reached = (
+            1.0
+            if survival >= 1.0
+            else -math.expm1(bins * math.log1p(-survival))
+        )
+        total += reached
+        if reached < 1e-12 and level > trials * p + 1.0:
+            break
+        pmf *= (trials - level + 1) / level * p / (1.0 - p)
+    return total
+
+
+def expected_max_bin_load(bins: int, draws: float, bins_per_draw: float = 1.0) -> float:
+    """Expected load of the BUSIEST of ``bins`` bins.
+
+    ``draws`` independent draws each mark ``bins_per_draw`` distinct bins.  A
+    fractional ``draws`` -- which is what an expected count of distinct experts
+    is -- is interpolated between the two integers that bracket it.
+    """
+
+    bins = max(1, int(bins))
+    if bins == 1:
+        return max(0.0, float(draws))
+    if draws <= 0:
+        return 0.0
+    p = min(1.0, max(0.0, float(bins_per_draw) / bins))
+    low = int(math.floor(draws))
+    frac = draws - low
+    value = _binomial_max_bin_load(bins, low, p)
+    if frac > 0.0:
+        upper = _binomial_max_bin_load(bins, low + 1, p)
+        value += frac * (upper - value)
+    return value
+
+
+def expected_max_region_load(
+    num_regions: int, batch_size: int, regions_per_token: int
+) -> float:
+    """Sweep depth of the busiest expert region, in passes.
+
+    This replaces ``batch * k / (N * coverage)``, which is the load of the
+    *average* engaged region.  The array cannot finish until its deepest queue
+    has drained, so the mean understates the sweep by 1.6x to 2.7x over the
+    batches this study covers -- most severely between batch 4 and batch 32,
+    exactly where the per-region argument is made.
+
+    Never below 1.0: one token still costs one pass.  Never above ``batch``:
+    the worst case is every token landing on one region, which is a global
+    broadcast.
+    """
+
+    depth = expected_max_bin_load(num_regions, float(batch_size), float(regions_per_token))
+    return min(max(1.0, depth), float(max(1, batch_size)))
+
+
+def effective_engaged_devices(device_count: int, distinct_experts: float) -> float:
+    """Devices an expert-parallel routed fetch can *actually* draw on.
+
+    ``workload.expected_engaged_devices`` returns the expected number of devices
+    holding at least one selected expert.  That is the right answer to a
+    question this model is not asking: the routed bytes do not finish when the
+    average engaged device finishes, they finish when the busiest one does.  A
+    device holding twice the mean share takes twice as long, and every other
+    device is idle for the second half of it.
+
+    The effective device count is therefore ``distinct_experts / E[max experts
+    on one device]``, which is at most the engaged count and at least 1.
+
+    ``workload.py`` is shared with ``opentallas.analytical`` and is not changed;
+    this function overrides it for the roofline only, and both numbers are
+    reported in every step's metrics so the correction is visible rather than
+    silent.
+    """
+
+    device_count = max(1, int(device_count))
+    if device_count == 1 or distinct_experts <= 0:
+        return 1.0
+    busiest = expected_max_bin_load(device_count, float(distinct_experts), 1.0)
+    if busiest <= 0:
+        return 1.0
+    return max(1.0, min(float(device_count), distinct_experts / busiest))
 
 
 # --------------------------------------------------------------------------
@@ -278,6 +448,70 @@ class Technology:
             (cell, ratio, eff),
             "1e6 um2/mm2 / (sram_bitcell_um2 * rom_cell_ratio / rom_array_efficiency)",
             f"{node} mask-ROM array capacity density in bits/mm2",
+        )
+
+    def rom_cell_area_multiplier(self, weight_amortization: str) -> Graded:
+        """Area of this policy's ROM bitcell relative to a storage-only bit.
+
+        A compute-in-ROM cell carries a pass transistor and a product-line tap
+        on top of its via programming, so it is larger.  It is *only* larger:
+        it adds no bitline and no sense amp, so the array's access rate per
+        cell is unchanged and its rate per mm2 falls in exactly the proportion
+        its capacity per mm2 falls.  Both densities are therefore divided by
+        this multiplier, and the full-array sweep time -- their ratio -- is
+        invariant to it.  See ``rom_bits_per_mm2_for``.
+        """
+
+        if weight_amortization in COMPUTE_IN_ROM_POLICIES:
+            return self.graded("rom", "cim_cell_area_multiplier")
+        return Graded(
+            value=1.0,
+            grade="derived",
+            source="storage-only mask-ROM bitcell is the reference cell",
+            note="ROM-as-storage feeding a separate MAC array: the cell holds "
+            "bits and nothing else, so it is the reference for the multiplier",
+        )
+
+    def rom_bits_per_mm2_for(self, node: str, weight_amortization: str) -> Graded:
+        """Capacity density of the array this policy actually builds."""
+
+        base = self.rom_bits_per_mm2(node)
+        multiplier = self.rom_cell_area_multiplier(weight_amortization)
+        if multiplier.value == 1.0:
+            return base
+        return derived(
+            base.value / multiplier.value,
+            (base, multiplier),
+            "storage_rom_bits_per_mm2 / cim_cell_area_multiplier",
+            f"{node} compute-in-ROM array capacity density: a larger cell holds "
+            "proportionally fewer bits in the same silicon",
+        )
+
+    def rom_read_bytes_s_per_mm2_for(
+        self, node: str, weight_amortization: str
+    ) -> Graded:
+        """Read-bandwidth density of the array this policy actually builds.
+
+        The correction this carries: a compute-in-ROM cell is larger, so a
+        square millimetre of it contains fewer cells and delivers proportionally
+        fewer bytes per second.  Charging the larger cell against area while
+        crediting it with the storage cell's bandwidth density -- which the
+        model did before -- handed compute-in-ROM a free 1.6x, because the
+        sweep time is capacity density over bandwidth density and only the
+        numerator was being scaled.  With both scaled the cell size cancels and
+        the sweep is the same for either machine.
+        """
+
+        base = self.rom_read_bytes_s_per_mm2(node)
+        multiplier = self.rom_cell_area_multiplier(weight_amortization)
+        if multiplier.value == 1.0:
+            return base
+        return derived(
+            base.value / multiplier.value,
+            (base, multiplier),
+            "storage_rom_read_bytes_s_per_mm2 / cim_cell_area_multiplier",
+            f"{node} compute-in-ROM array read-bandwidth density: a larger cell "
+            "means fewer cells per mm2 and no extra bitlines or sense amps",
         )
 
     def rom_read_bytes_s_per_mm2(self, node: str) -> Graded:
@@ -372,8 +606,240 @@ class Technology:
             self.graded("links", name, "bytes_s"),
         )
 
+    def link_fabric(self, name: str) -> str:
+        """Whether this link is a switch domain or a stitched mesh.
+
+        The distinction is not decorative: it decides how a collective's
+        latency grows with the number of partitions it spans.  Inside a
+        switched all-to-all domain every partition is one traversal from every
+        other, so the depth is 1 however wide the domain is.  On a mesh there
+        is no switch, so the far corner is physically ``2(sqrt(N)-1)``
+        traversals away and a collective cannot be faster than that.
+        """
+
+        block = self.raw["links"].get(name, {})
+        fabric = str(block.get("fabric", {}).get("value", "switched"))
+        if fabric not in LINK_FABRICS:
+            raise ValidationError(
+                f"link {name!r} declares unknown fabric {fabric!r}; "
+                f"expected one of {LINK_FABRICS}"
+            )
+        return fabric
+
+    def link_domain_size(self, name: str) -> Graded:
+        """Partitions reachable over this link without leaving its domain."""
+
+        block = self.raw["links"].get(name, {})
+        if "domain_size" in block:
+            return Graded.from_dict(block["domain_size"])
+        return Graded(
+            value=1.0,
+            grade="derived",
+            source=f"links.{name} declares no domain size",
+            note="treated as a single-partition domain, so no traffic is "
+            "credited to it as intra-domain",
+        )
+
+    def link_switch_radix(self, name: str) -> Graded:
+        """Endpoints one switch tier of this fabric reaches.
+
+        Only meaningful for a ``switched`` fabric, where a collective spanning
+        more endpoints than one tier reaches must climb tiers.
+        """
+
+        block = self.raw["links"].get(name, {})
+        if "switch_radix" in block:
+            return Graded.from_dict(block["switch_radix"])
+        domain = self.link_domain_size(name)
+        return derived(
+            max(2.0, domain.value),
+            (domain,),
+            "max(2, links.<link>.domain_size)",
+            "no switch radix stated, so one tier is taken to reach exactly one "
+            "domain",
+        )
+
+    def collective_traversals(self, name: str, span: int) -> float:
+        """Serial link traversals one whole all-reduce over ``span`` costs.
+
+        Neither branch is a free parameter; each is the published cost model
+        for the fabric it describes.
+
+        **Switched fabric** -- Rabenseifner's algorithm as given by Thakur,
+        Rabenseifner & Gropp, *Optimization of Collective Communication
+        Operations in MPICH*, IJHPCA 19(1):49-66, 2005: reduce-scatter costs
+        ``lg p`` startups and all-gather another ``lg p``, so an all-reduce is
+        ``2 lg p`` traversals.  The ``lg`` is taken in the radix the fabric
+        actually provides rather than always in base 2, which matters because
+        an NVSwitch baseboard is a **single all-to-all tier**: every GPU is one
+        traversal from every other, so a collective inside one domain costs 2
+        traversals however wide the domain is.  That is not a convenience --
+        it is what the hardware does, and it is what the measured
+        speed-of-light all-reduce floor on GB200 NVL72 shows when it comes out
+        "independent of rank count" (Shen et al., arXiv:2607.16100).
+
+        **Mesh fabric** -- a stitched wafer has no switch, so an all-reduce
+        cannot finish before the far corner has been heard from and answered.
+        Cerebras measured their own: *"the AllReduce operation in a cycle count
+        only about 10% greater than the diameter of the system"* (Rocki et al.,
+        SC20, arXiv:2010.03660).  The diameter of an ``N``-region square mesh
+        is ``2(sqrt(N) - 1)``, so the whole collective is ``1.1`` times that.
+        Charging a mesh the flat two traversals a switch gets is the ROM-side
+        mirror of charging a GPU cluster a 672-way pipeline, and this model
+        used to do exactly that.
+        """
+
+        if span <= 1:
+            return 0.0
+        if self.link_fabric(name) == "mesh":
+            diameter = 2.0 * (math.ceil(math.sqrt(span)) - 1)
+            return max(1.0, MESH_ALLREDUCE_DIAMETER_FACTOR * diameter)
+        radix = max(2.0, self.link_switch_radix(name).value)
+        tiers = max(1, math.ceil(math.log(span) / math.log(radix)))
+        return 2.0 * tiers
+
+    def link_event_cost_s(
+        self, event: "LinkEvent", *, activation_bytes: float
+    ) -> tuple[float, dict[str, Any]]:
+        """Seconds one event of this class costs on one token's critical path.
+
+        ``activation_bytes`` is ``batch x hidden_size`` bf16 -- one layer's
+        activation for the whole batch.  Two rules, both stated rather than
+        fitted:
+
+        * **point-to-point**: one hop latency plus the activation serialised
+          onto the link.
+        * **all-reduce over p partitions**: ``2 * depth * alpha`` of latency
+          plus ``(p-1)/p`` of the payload each way -- the bandwidth-optimal
+          collective lower bound.  The payload convention is the one already
+          used throughout this program: the reduction moves in fp32 and the
+          result comes back in bf16, so ``(4 + 2)/2`` times the bf16
+          activation.  The ``(p-1)/p`` factor is what makes a 2-way all-reduce
+          cheaper than a 672-way one at the same hidden size, and it is the
+          reason a collective must know how wide it is.
+        """
+
+        hop_latency, link_bytes_s = self.link(event.link)
+        if event.kind == "point_to_point":
+            payload = activation_bytes
+            latency = hop_latency.value
+            depth = 1.0
+        else:
+            span = max(2, int(event.span))
+            depth = self.collective_traversals(event.link, span)
+            latency = depth * hop_latency.value
+            payload = activation_bytes * 3.0 * (span - 1) / span
+        transfer = payload / max(link_bytes_s.value, 1e-30)
+        detail = {
+            "link": event.link,
+            "kind": event.kind,
+            "count": event.count,
+            "span": event.span,
+            "fabric": self.link_fabric(event.link),
+            "collective_traversals": depth,
+            "hop_latency_s": hop_latency.value,
+            "link_bytes_s": link_bytes_s.value,
+            "payload_bytes_per_event": payload,
+            "latency_s_per_event": latency,
+            "transfer_s_per_event": transfer,
+            "seconds": event.count * (latency + transfer),
+            "description": event.description,
+        }
+        return event.count * (latency + transfer), detail
+
+    def link_time_s(
+        self,
+        topology: "Topology",
+        num_layers: int,
+        *,
+        activation_bytes: float,
+        stage_cap: bool = True,
+    ) -> tuple[float, list[dict[str, Any]], float]:
+        """Total inter-partition time on one token's critical path."""
+
+        total = 0.0
+        payload_total = 0.0
+        breakdown: list[dict[str, Any]] = []
+        for event in topology.link_events(num_layers, stage_cap=stage_cap):
+            seconds, detail = self.link_event_cost_s(
+                event, activation_bytes=activation_bytes
+            )
+            total += seconds
+            payload_total += detail["payload_bytes_per_event"] * event.count
+            breakdown.append(detail)
+        return total, breakdown, payload_total
+
     def hbm(self, generation: str, field_name: str) -> Graded:
         return self.graded("hbm", generation, field_name)
+
+    def kv_access_granularity_bytes(self, store: str) -> Graded:
+        """Smallest number of bytes a KV read of this store actually moves."""
+
+        return self.graded("kv", "access_granularity_bytes", store)
+
+    def kv_index_layout(self) -> tuple[str, str, str]:
+        """How index entries sit relative to their payload entries.
+
+        Returned as ``(value, grade, source)``: it is a categorical layout
+        CHOICE rather than a physical constant, which is why it is stated here
+        and reported in every step rather than buried in a byte count.
+        """
+
+        node = self.raw["kv"]["index_layout"]
+        return str(node["value"]), str(node["grade"]), str(node["source"])
+
+    def layer_latency_terms(self) -> dict[str, Graded]:
+        """The serial per-layer dependency budget."""
+
+        block = self.raw["latency"]
+        return {
+            key: Graded.from_dict(value)
+            for key, value in block.items()
+            if isinstance(value, Mapping) and "grade" in value
+        }
+
+    def at_layer_latency_bound(self, bound: str) -> "Technology":
+        """A copy with every per-layer latency term at one end of its range.
+
+        Every term in the ``latency`` block is ``assumed`` and carries
+        ``range_low``/``range_high``.  A single point value inside a wide band
+        invites the reader to treat it as measured, and inviting that is how a
+        gate becomes a fit.  The anchor is therefore reported at BOTH ends as
+        well as at the stated value, and the band is what the reader is asked
+        to believe rather than the point.
+        """
+
+        if bound not in ("low", "high"):
+            raise ValidationError("layer latency bound must be 'low' or 'high'")
+        key = "range_low" if bound == "low" else "range_high"
+        raw = json.loads(json.dumps(self.raw))
+        for name, node in raw["latency"].items():
+            if isinstance(node, Mapping) and key in node:
+                raw["latency"][name] = {**node, "value": node[key]}
+        return replace(self, raw=raw)
+
+    def at_link_latency_bound(self, bound: str) -> "Technology":
+        """A copy with every assumed link hop latency at one end of its range.
+
+        Not one link -- **every** link, on both sides at once.  Moving only the
+        NVLink band would report a sensitivity that is really a bias: the
+        comparison's whole content is the ratio between two fabrics, and a
+        ratio is only tested by moving both ends of it together.  Links whose
+        latency is graded ``published`` are left where they are.
+        """
+
+        if bound not in ("low", "high"):
+            raise ValidationError("link latency bound must be 'low' or 'high'")
+        key = "range_low" if bound == "low" else "range_high"
+        raw = json.loads(json.dumps(self.raw))
+        for name, node in raw["links"].items():
+            latency = node.get("hop_latency_s")
+            if isinstance(latency, Mapping) and key in latency:
+                raw["links"][name]["hop_latency_s"] = {
+                    **latency,
+                    "value": latency[key],
+                }
+        return replace(self, raw=raw)
 
     def mac_energy_j_per_op(self, canonical_format: str) -> Graded:
         table = self.raw["energy"]["mac_energy_j_per_op"]
@@ -411,6 +877,288 @@ class Technology:
 
         walk(self.raw, ())
         return {grade: sorted(paths) for grade, paths in found.items()}
+
+
+# --------------------------------------------------------------------------
+# the two costs the model used to price at zero
+# --------------------------------------------------------------------------
+
+
+def layer_fixed_latency(
+    technology: Technology, model: ModelProfile
+) -> tuple[float, dict[str, float], dict[str, Graded]]:
+    """Serial per-layer cost that no amount of bandwidth removes.
+
+    Before this term the only latency anywhere in the model was
+    ``links.*.hop_latency_s``, charged at inter-partition boundaries -- so a
+    ``single_chip`` design had a decode step with *literally no fixed cost*.
+    That is not a small omission: it says a layer can be started, executed and
+    retired with nothing but bandwidth, which is false on every architecture.
+
+    **Every term is derived from a primitive that exists independently of the
+    Taalas HC1 anchor**, and each carries a stated range:
+
+    * ``sequencer_issue_decode_s`` -- fetch, decode and operand setup for one
+      layer's command stream.  Once per layer.
+    * ``layer_barrier_s`` -- the layer transition is a barrier: every lane's
+      partial must retire and the residual must be formed before the next
+      layer's activation exists.  Once per layer.
+    * ``sram_access_s`` plus one global traversal -- the KV round trip.  The KV
+      *bytes* are charged against bandwidth elsewhere; this is only the
+      dependency bandwidth cannot overlap.  Once per layer.
+    * ``pipeline_fill_drain_s`` plus one global traversal -- the boundary
+      between two serially dependent array passes, charged
+      ``array_pass_boundaries_per_layer`` times.
+    * ``sparse_index_dependency_s`` -- the index-scan to top-k to gather
+      dependency, on ``compressed_sparse`` layers only.  The gather address is
+      not known until the scan's top-k completes.
+
+    The broadcast *distance* is derived from the floorplan rather than assumed:
+    ``sqrt(reticle.area_mm2)`` is one die edge, taken as the mean distance an
+    activation covers, and multiplied by a graded per-millimetre wire delay.
+
+    **The value is deliberately not fitted to the anchor.**  Choosing it to
+    close the HC1 gap would turn a validation gate into a one-parameter curve
+    fit.  ``taalas_hc1_anchor`` evaluates the gate at both ends of the band and
+    reports where it lands as an outcome.
+
+    The same budget is charged to every architecture, which is conservative for
+    the ROM side: a GPU's real per-layer floor includes kernel launch and tail
+    effects larger than this, and none of that is modelled.
+    """
+
+    terms = technology.layer_latency_terms()
+    sram_access = terms["sram_access_s"]
+    sequencer = terms["sequencer_issue_decode_s"]
+    fill_drain = terms["pipeline_fill_drain_s"]
+    barrier = terms["layer_barrier_s"]
+    wire_per_mm = terms["global_wire_delay_s_per_mm"]
+    boundaries = terms["array_pass_boundaries_per_layer"]
+    sparse = terms["sparse_index_dependency_s"]
+    reticle = technology.graded("reticle", "area_mm2")
+
+    traversal_mm = math.sqrt(reticle.value)
+    traversal_s = traversal_mm * wire_per_mm.value
+
+    sparse_layers = float(
+        sum(
+            group.count
+            for group in model.attention_groups
+            if group.kind == "compressed_sparse"
+        )
+    )
+    layers = float(model.num_layers)
+
+    kv_round_trip_s = sram_access.value + traversal_s
+    boundary_s = fill_drain.value + traversal_s
+    per_layer_s = (
+        sequencer.value
+        + barrier.value
+        + kv_round_trip_s
+        + boundaries.value * boundary_s
+    )
+    total_s = layers * per_layer_s + sparse_layers * sparse.value
+
+    breakdown = {
+        "sequencer_issue_decode_s": sequencer.value,
+        "layer_barrier_s": barrier.value,
+        "kv_round_trip_s": kv_round_trip_s,
+        "array_pass_boundary_s": boundary_s,
+        "array_pass_boundaries_per_layer": boundaries.value,
+        "global_traversal_mm": traversal_mm,
+        "global_traversal_s": traversal_s,
+        "extra_s_on_compressed_sparse_layers": sparse.value,
+        "compressed_sparse_layers": sparse_layers,
+        "layers": layers,
+        "seconds_per_layer": per_layer_s,
+        "seconds_per_compressed_sparse_layer": per_layer_s + sparse.value,
+        "total_s_per_token": total_s,
+    }
+    inputs = (
+        sram_access,
+        sequencer,
+        fill_drain,
+        barrier,
+        wire_per_mm,
+        boundaries,
+        sparse,
+        reticle,
+    )
+    provenance = {
+        "layer_fixed_latency_global_traversal_s": derived(
+            traversal_s,
+            (wire_per_mm, reticle),
+            "sqrt(reticle_area_mm2) * global_wire_delay_s_per_mm",
+            "mean on-die distance an activation broadcast covers, from the "
+            "floorplan rather than assumed",
+        ),
+        "layer_fixed_latency_s_per_layer": derived(
+            per_layer_s,
+            inputs,
+            "sequencer + barrier + (sram_access + traversal) + boundaries * "
+            "(pipeline_fill_drain + traversal)",
+            "serial dependency on one token's critical path through one layer",
+        ),
+        "layer_fixed_latency_s_per_token": derived(
+            total_s,
+            inputs,
+            "layers * per_layer + compressed_sparse_layers * sparse_index",
+            "added to the step, never overlapped: layer n+1 cannot start until "
+            "layer n's activation exists",
+        ),
+    }
+    return total_s, breakdown, provenance
+
+
+def _granule_factor(entry_bytes: float, granularity_bytes: float) -> float:
+    """Cost of one isolated access of ``entry_bytes`` at this granularity."""
+
+    if entry_bytes <= 0 or granularity_bytes <= 0:
+        return 1.0
+    return math.ceil(entry_bytes / granularity_bytes) * granularity_bytes / entry_bytes
+
+
+def kv_access_granularity(
+    technology: Technology,
+    model: ModelProfile,
+    *,
+    context_tokens: int,
+    store: str,
+) -> tuple[float, dict[str, Any], dict[str, Graded]]:
+    """How much more than the algorithmic KV bytes the memory actually moves.
+
+    ``workload.kv_traffic`` counts the bytes the algorithm needs.  A memory
+    system moves whole access granules, and for DeepSeek-V4-Flash at 200K
+    context **72% of the KV read is a scan of 50,000 index entries of 68 bytes
+    each, per compressed-sparse layer**.  Whether that costs anything at all is
+    a *layout* question, not a physical one, and the answer differs by more than
+    1.6x between the two plausible layouts -- which is exactly why it is stated
+    here as a named choice rather than folded into a byte count:
+
+    * ``contiguous`` -- the index array is packed separately from its payload,
+      so the scan is one long sequential run and granule rounding is lost in
+      the noise.  This is the layout a design would choose *if it knew to*.
+    * ``interleaved`` -- each index entry sits beside the 583-byte payload entry
+      it describes, which is the natural layout if the two are written together
+      at generation time.  Every index entry is then its own access and costs a
+      whole granule: 96 of 68 useful bytes at a 32-byte HBM granule, 128 at a
+      128-byte SRAM row.
+
+    Reads that are genuinely sequential for one user -- the sliding window, a
+    full compressed-cache scan -- are charged no rounding.  The top-k gather is,
+    because a gather is a gather.
+    """
+
+    layout, layout_grade, layout_source = technology.kv_index_layout()
+    granularity = technology.kv_access_granularity_bytes(store)
+    grain = granularity.value
+
+    sequential = 0.0
+    random_native = 0.0
+    random_charged = 0.0
+    streams: list[dict[str, Any]] = []
+    for group in model.attention_groups:
+        count = float(group.count)
+        window = (
+            float(min(context_tokens, group.window_tokens))
+            if group.window_tokens
+            else 0.0
+        )
+        entry = float(group.entry_bytes)
+        if group.kind == "window":
+            sequential += count * window * entry
+        elif group.kind in {"compressed_sparse", "compressed_dense"}:
+            compressed = float(math.ceil(context_tokens / group.compression_ratio))
+            sequential += count * window * entry
+            if group.kind == "compressed_sparse":
+                gathered = float(min(group.top_k, compressed))
+                native = count * gathered * entry
+                factor = _granule_factor(entry, grain)
+                random_native += native
+                random_charged += native * factor
+                streams.append(
+                    {
+                        "group": group.label or group.kind,
+                        "stream": "top_k_payload_gather",
+                        "entry_bytes": entry,
+                        "bytes": native,
+                        "granule_factor": factor,
+                    }
+                )
+                index_native = count * compressed * float(group.index_entry_bytes)
+                if layout == "interleaved":
+                    index_factor = _granule_factor(
+                        float(group.index_entry_bytes), grain
+                    )
+                    random_native += index_native
+                    random_charged += index_native * index_factor
+                else:
+                    index_factor = 1.0
+                    sequential += index_native
+                streams.append(
+                    {
+                        "group": group.label or group.kind,
+                        "stream": "sparse_index_scan",
+                        "entry_bytes": float(group.index_entry_bytes),
+                        "entries_per_layer": compressed,
+                        "bytes": index_native,
+                        "granule_factor": index_factor,
+                    }
+                )
+            else:
+                sequential += count * compressed * entry
+        elif group.kind in {"dense_mla", "dense_kv"}:
+            sequential += count * float(context_tokens) * entry
+        elif group.kind == "recurrent":
+            sequential += count * float(group.recurrent_state_bytes)
+        # Writes: one full-resolution entry per layer, plus the amortised
+        # compressed entry, landing wherever the allocator put them.
+        if group.kind == "window":
+            write = count * entry
+        elif group.kind in {"compressed_sparse", "compressed_dense"}:
+            write = count * entry * (1.0 + 1.0 / group.compression_ratio)
+            if group.kind == "compressed_sparse":
+                write += count * float(group.index_entry_bytes) / group.compression_ratio
+        elif group.kind == "recurrent":
+            write = count * float(
+                group.recurrent_state_bytes
+                if group.recurrent_write_bytes is None
+                else group.recurrent_write_bytes
+            )
+        else:
+            write = count * entry
+        factor = _granule_factor(entry, grain)
+        random_native += write
+        random_charged += write * factor
+
+    native = sequential + random_native
+    charged = sequential + random_charged
+    inflation = charged / native if native > 0 else 1.0
+    detail = {
+        "layout": layout,
+        "layout_grade": layout_grade,
+        "layout_source": layout_source,
+        "granularity_bytes": grain,
+        "store": store,
+        "sequential_bytes": sequential,
+        "granule_sensitive_bytes": random_native,
+        "granule_sensitive_bytes_charged": random_charged,
+        "native_transfer_bytes_per_user_token": native,
+        "charged_transfer_bytes_per_user_token": charged,
+        "inflation": inflation,
+        "streams": streams,
+    }
+    provenance = {
+        "kv_access_granularity_bytes": granularity,
+        "kv_access_granularity_inflation": derived(
+            inflation,
+            (granularity,),
+            "sum(bytes * ceil(entry/granule)*granule/entry) / sum(bytes), "
+            "sequential runs charged at 1.0",
+            f"{store} KV under the {layout!r} index layout",
+        ),
+    }
+    return inflation, detail, provenance
 
 
 # --------------------------------------------------------------------------
@@ -519,6 +1267,7 @@ def balanced_area_split(
     hbm_stacks: int = 0,
     hbm_generation: str = "hbm3e",
     weight_amortization: str = "batched",
+    spare_area_policy: str = "sram",
 ) -> AreaSplit:
     """Solve the split from the workload rather than guessing fractions.
 
@@ -547,7 +1296,44 @@ def balanced_area_split(
     Handing a compute-in-ROM design the leftover area as a MAC array, as this
     function did before, gives it arithmetic it does not have and takes silicon
     from the array that is its whole point.
+
+    **What the freed silicon is spent on is a design choice and is swept, not
+    assumed.**  Compute-in-ROM recovers the MAC array's area -- 299 mm2 per
+    device on the Qwen array design.  ``spare_area_policy`` decides where it
+    goes and the study emits both answers as separate designs:
+
+    * ``"sram"`` -- spare silicon becomes KV store.  Taalas describes exactly
+      this split, a mask-ROM recall fabric beside an SRAM recall fabric.  It is
+      the right answer when KV binds.
+    * ``"rom"`` -- spare silicon becomes **more array, holding a replicated
+      copy of the same weights**.  R copies each carry their own bitlines and
+      sense amps, so R disjoint slices of the weight set are read at once and
+      the full-array sweep time falls by R.  It is the right answer when the
+      sweep binds, which at batch 1 it always does.
+
+    ``"rom"`` is offered to the **amortising machine too**, and it has to be:
+    giving compute-in-ROM a floorplan sweep and denying it to ROM-plus-MAC
+    would move the artefact rather than remove it.  For that machine the array
+    cannot simply eat the die, because the MAC array is what executes the
+    arithmetic -- so the split is *derived* rather than swept.  The MAC array
+    is sized so that its sustained fp8 roof consumes exactly what the array
+    beside it can read, at one weight byte per multiply-accumulate.  That is
+    the balanced floorplan, and it is the one a designer would actually draw;
+    the default ``"sram"`` floorplan instead sizes ROM to the stored bytes and
+    gives everything left to MACs, which is why it ends up able to feed only
+    0.41x of them.
+
+    The replication reading matters: crediting a *larger* array with more
+    bandwidth while it holds the *same* bits once would be buying bandwidth for
+    bits that do not exist, and an earlier version of this model did exactly
+    that and made the anchor twice as fast as the shipping part.  Under
+    ``"rom"`` the extra area holds real, addressable copies, and
+    ``weight_capacity_bytes`` divided by the stored bytes reports the
+    replication factor rather than concealing it.
     """
+
+    if spare_area_policy not in ("sram", "rom"):
+        raise ValidationError("spare_area_policy must be 'sram' or 'rom'")
 
     overhead_fraction = technology.graded("floorplan", "overhead_area_fraction")
     interconnect_fraction = technology.graded(
@@ -557,14 +1343,18 @@ def balanced_area_split(
 
     compute_in_rom = weight_amortization in COMPUTE_IN_ROM_POLICIES
     rom_mm2 = 0.0
-    cell_multiplier = 1.0
+    cell_multiplier = technology.rom_cell_area_multiplier(weight_amortization).value
     if weight_store == "rom":
-        density = technology.rom_bits_per_mm2(node).value / BITS_PER_BYTE
-        if compute_in_rom:
-            cell_multiplier = technology.graded(
-                "rom", "cim_cell_area_multiplier"
-            ).value
-        rom_mm2 = stored_weight_bytes * cell_multiplier / density
+        # The policy's OWN capacity density, already divided by its cell-area
+        # multiplier.  The multiplier used to be applied here and nowhere else,
+        # so a compute-in-ROM design was charged for a larger cell and then
+        # credited with the storage cell's bandwidth per mm2 -- a free 1.6x on
+        # the sweep.  Both densities now carry it and it cancels.
+        density = (
+            technology.rom_bits_per_mm2_for(node, weight_amortization).value
+            / BITS_PER_BYTE
+        )
+        rom_mm2 = stored_weight_bytes / density
 
     sram_mm2 = 0.0
     if kv_store == "sram":
@@ -578,6 +1368,53 @@ def balanced_area_split(
 
     overhead_mm2 = overhead_fraction.value * total_mm2
     interconnect_mm2 = interconnect_fraction.value * total_mm2
+
+    # The ROM capacity check used to be tautological.  ROM area was solved from
+    # the stored bytes, so ``weight_capacity / stored`` was whatever the cell
+    # multiplier happened to be -- 1.6 for compute-in-ROM, 1.0 otherwise, at
+    # every model size, every node and every area.  It could not fail, which
+    # means it was not a check.  Clamping the array to the silicon that is
+    # actually left makes it one: a design whose weights do not fit reports a
+    # capacity it cannot reach, and ``evaluate`` refuses it.
+    reserved = sram_mm2 + hbm_phy_mm2 + overhead_mm2 + interconnect_mm2
+    if compute_in_rom and weight_store == "rom":
+        reserved += (
+            technology.graded("rom", "cim_precompute_area_fraction").value * total_mm2
+        )
+    available_for_rom = total_mm2 - reserved
+    if weight_store == "rom" and rom_mm2 > available_for_rom:
+        reasons.append(
+            f"AREA: the array needs {rom_mm2:,.1f} mm2 to hold "
+            f"{stored_weight_bytes:,.0f} B but only {max(0.0, available_for_rom):,.1f} "
+            f"mm2 of {total_mm2:,.0f} mm2 is left after SRAM, HBM PHY, overhead "
+            f"and interconnect"
+        )
+        rom_mm2 = max(0.0, available_for_rom)
+
+    if (
+        spare_area_policy == "rom"
+        and weight_store == "rom"
+        and not compute_in_rom
+        and available_for_rom > rom_mm2
+    ):
+        # Balanced ROM-plus-MAC: size the MAC array to exactly consume the read
+        # rate of the array beside it, at one weight byte per MAC, and give the
+        # array everything else.  Both sides of the ratio are graded densities,
+        # so the split is derived rather than chosen.
+        read_density = (
+            technology.rom_read_bytes_s_per_mm2_for(node, weight_amortization).value
+            * technology.efficiency("rom_read_bandwidth").value
+        )
+        mac_density = (
+            technology.compute_ops_s_per_mm2(node, "fp8").value
+            * technology.efficiency("compute").value
+            / 2.0
+        )
+        if mac_density > 0:
+            mm2_of_mac_per_mm2_of_rom = read_density / mac_density
+            balanced_rom = available_for_rom / (1.0 + mm2_of_mac_per_mm2_of_rom)
+            rom_mm2 = max(rom_mm2, balanced_rom)
+
     fixed = rom_mm2 + sram_mm2 + hbm_phy_mm2 + overhead_mm2 + interconnect_mm2
     if compute_in_rom and weight_store == "rom":
         # No MAC array.  The compute block is only the pre-computation logic;
@@ -589,14 +1426,12 @@ def balanced_area_split(
         compute_mm2 = precompute_fraction * total_mm2
         leftover = total_mm2 - (fixed + compute_mm2)
         if leftover > 0:
-            # Spare area becomes SRAM, not more ROM.  The array is sized by the
-            # weights it holds; making it larger than that would buy read
-            # bandwidth for bits that do not exist, which is how an earlier
-            # version of this function modelled the anchor as twice as fast as
-            # the shipping part.  Taalas describes exactly this split -- a mask
-            # ROM recall fabric beside an SRAM recall fabric for KV and adapters
-            # -- so the spare silicon has a real job.
-            sram_mm2 += leftover
+            # Where the recovered MAC-array silicon goes.  Both answers are
+            # emitted by the study as separate designs; neither is assumed.
+            if spare_area_policy == "rom":
+                rom_mm2 += leftover
+            else:
+                sram_mm2 += leftover
         elif leftover < 0:
             reasons.append(
                 f"AREA: compute-in-ROM needs ROM {rom_mm2:,.0f} + SRAM "
@@ -614,8 +1449,12 @@ def balanced_area_split(
             overhead_mm2=overhead_mm2,
             policy=(
                 f"compute-in-ROM: cells {cell_multiplier:g}x a storage-only bit, "
-                "no MAC array, pre-compute block only, all remaining area to the "
-                "array"
+                "no MAC array, pre-compute block only, spare silicon to "
+                + (
+                    "a replicated array copy"
+                    if spare_area_policy == "rom"
+                    else "SRAM"
+                )
             ),
             reasons=tuple(reasons),
         )
@@ -635,8 +1474,15 @@ def balanced_area_split(
         interconnect_mm2=interconnect_mm2,
         hbm_phy_mm2=hbm_phy_mm2,
         overhead_mm2=overhead_mm2,
-        policy="balanced: ROM sized to stored weights, SRAM sized to resident KV, "
-        "graded fixed fractions for overhead and interconnect, compute takes the rest",
+        policy=(
+            "balanced: ROM sized to the stored weights, SRAM sized to the "
+            "resident KV, graded fixed fractions for overhead and "
+            "interconnect, compute takes the rest"
+            if spare_area_policy == "sram"
+            else "balanced ROM+MAC: the array is grown into the spare silicon "
+            "as replicated copies and the MAC array is sized to consume exactly "
+            "what it can read, at one weight byte per multiply-accumulate"
+        ),
         reasons=tuple(reasons),
     )
 
@@ -647,14 +1493,61 @@ def balanced_area_split(
 
 
 @dataclass(frozen=True)
+class LinkEvent:
+    """One class of inter-partition event on a token's critical path.
+
+    An event is either a **collective** -- an all-reduce over ``span``
+    partitions, which every partition must both contribute to and wait for --
+    or a **point-to-point** hop across a pipeline-stage boundary, which is one
+    send and one receive.  The two are priced differently and on different
+    links, which is the whole reason this is a structure rather than a count.
+    """
+
+    count: float
+    link: str
+    kind: str
+    span: int
+    description: str
+
+    def __post_init__(self) -> None:
+        if self.kind not in ("all_reduce", "point_to_point"):
+            raise ValidationError(
+                "link event kind must be all_reduce or point_to_point"
+            )
+
+    def to_dict(self) -> dict[str, Any]:
+        return asdict(self)
+
+
+@dataclass(frozen=True)
 class Topology:
-    """Where the devices are and how a token gets through them."""
+    """Where the devices are and how a token gets through them.
+
+    Every multi-device topology here is one shape with two knobs: ``G``
+    partitions tensor-parallel inside a stage, ``S = ceil(P / G)`` stages
+    pipelined across.  ``pipeline`` is ``G = 1``, ``tensor`` is ``S = 1``, and
+    ``hybrid`` is what a real deployment does -- tensor-parallel inside a
+    high-bandwidth domain, pipeline-parallel across domains.
+
+    The **domain** is the second half of that.  A fabric is not one link class:
+    an HGX baseboard is an all-to-all NVLink island of ``intra_domain_size``
+    GPUs, and everything past the island edge is a scale-out fabric an order of
+    magnitude slower in both latency and bandwidth.  A wafer is the same shape
+    with different numbers -- an on-wafer mesh inside one wafer, a package-class
+    link between wafers.  ``intra_link`` carries traffic inside a domain and
+    ``link`` carries it between domains.  With ``intra_domain_size = 1`` (the
+    default) every event lands on ``link`` and the model reduces exactly to the
+    single-link behaviour it replaced.
+    """
 
     kind: str
     device_count: int
     parallelism: str
     link: str
     on_wafer_regions: int = 1
+    intra_link: str = ""
+    intra_domain_size: int = 1
+    tensor_group_size: int = 1
 
     def __post_init__(self) -> None:
         if self.device_count < 1:
@@ -665,6 +1558,10 @@ class Topology:
             raise ValidationError("topology kind must be single_chip, array or wafer")
         if self.kind == "single_chip" and self.device_count != 1:
             raise ValidationError("single_chip topology must have one device")
+        if self.intra_domain_size < 1:
+            raise ValidationError("intra_domain_size must be at least 1")
+        if self.tensor_group_size < 1:
+            raise ValidationError("tensor_group_size must be at least 1")
 
     @property
     def partitions(self) -> int:
@@ -679,31 +1576,165 @@ class Topology:
             return max(1, self.on_wafer_regions)
         return self.device_count
 
-    def hop_events(self, num_layers: int) -> tuple[float, str]:
-        """Serial inter-partition events on one token's critical path.
+    @property
+    def inner_link(self) -> str:
+        """The link inside one high-bandwidth domain."""
 
-        Pipeline parallelism crosses one boundary per partition boundary, so
-        N-1 hops per token regardless of batch.  Tensor parallelism needs two
-        all-reduces per layer, every token, *however few partitions it spans* --
-        which is why it is roughly fifteen times more expensive than pipelining
-        and why it is only available on a fabric with sub-microsecond hops.
+        return self.intra_link or self.link
+
+    @property
+    def tensor_group(self) -> int:
+        """Partitions one all-reduce spans.
+
+        ``tensor`` spans the whole machine -- which is exactly why nobody runs
+        it that way at scale.  ``hybrid`` spans a domain.  ``pipeline`` spans
+        nothing.
+        """
+
+        partitions = self.partitions
+        if self.parallelism == "tensor":
+            return partitions
+        if self.parallelism == "hybrid":
+            return max(1, min(self.tensor_group_size, partitions))
+        return 1
+
+    @property
+    def pipeline_stages(self) -> int:
+        """Stages the partitions would form before the layer-count cap.
+
+        ``link_events`` applies the cap, because it is the only place that
+        knows how many layers the model has.
+        """
+
+        group = self.tensor_group
+        if group <= 0:
+            return self.partitions
+        return max(1, math.ceil(self.partitions / group))
+
+    def stages_for(self, num_layers: int) -> int:
+        """Serially dependent stages a token actually traverses."""
+
+        return min(self.pipeline_stages, max(1, int(num_layers)))
+
+    def link_events(
+        self, num_layers: int, *, stage_cap: bool = True
+    ) -> tuple[LinkEvent, ...]:
+        """Every inter-partition event on one token's critical path.
+
+        Tensor parallelism costs **two all-reduces per layer per token** --
+        after the attention output projection and after the MLP down
+        projection -- at every batch size, and the collective is split across
+        the two link classes exactly as a hierarchical all-reduce is: reduce
+        inside each domain, reduce across domains, broadcast back.  Pipeline
+        parallelism costs **one point-to-point hop per stage boundary** and no
+        collective, and those boundaries are charged to the fabric they
+        actually cross: a 672-partition pipeline laid out on 8-GPU islands
+        crosses 588 island-internal boundaries and 83 network boundaries, not
+        671 of either.
         """
 
         partitions = self.partitions
         if partitions <= 1 or self.parallelism == "none":
+            return ()
+
+        domain = max(1, self.intra_domain_size)
+        inner = self.inner_link
+        group = self.tensor_group
+        # **A token cannot cross more stage boundaries than the model has
+        # layers.**  672 partitions do not make 671 pipeline stages of a
+        # 61-layer model; they make at most 61, and the partitions past that
+        # hold another copy of a stage.  Under this model's own service rule
+        # those extra partitions still contribute their bandwidth to the step
+        # -- that rule already credits every device with every token -- but
+        # they add no serial event, because nothing on the token's path waits
+        # for them.  Without this cap a large cluster is charged a serial hop
+        # for silicon that is not on its critical path at all, and that single
+        # miscount was most of the reported iso-area advantage at scale.
+        stages = self.stages_for(num_layers) if stage_cap else self.pipeline_stages
+        events: list[LinkEvent] = []
+
+        if group > 1:
+            inside = min(group, domain)
+            across = math.ceil(group / domain)
+            if inside > 1:
+                events.append(
+                    LinkEvent(
+                        count=2.0 * num_layers,
+                        link=inner,
+                        kind="all_reduce",
+                        span=inside,
+                        description=(
+                            f"two all-reduces per layer per token over {inside} "
+                            f"partitions inside one {inner} domain"
+                        ),
+                    )
+                )
+            if across > 1:
+                events.append(
+                    LinkEvent(
+                        count=2.0 * num_layers,
+                        link=self.link,
+                        kind="all_reduce",
+                        span=across,
+                        description=(
+                            f"two all-reduces per layer per token across {across} "
+                            f"{self.link} domains"
+                        ),
+                    )
+                )
+
+        if stages > 1:
+            stages_per_domain = max(1, domain // group)
+            domains = math.ceil(stages / stages_per_domain)
+            outer_boundaries = domains - 1
+            inner_boundaries = (stages - 1) - outer_boundaries
+            if inner_boundaries > 0:
+                events.append(
+                    LinkEvent(
+                        count=float(inner_boundaries),
+                        link=inner,
+                        kind="point_to_point",
+                        span=2,
+                        description=(
+                            f"{inner_boundaries} pipeline-stage boundaries inside a "
+                            f"{inner} domain"
+                        ),
+                    )
+                )
+            if outer_boundaries > 0:
+                events.append(
+                    LinkEvent(
+                        count=float(outer_boundaries),
+                        link=self.link,
+                        kind="point_to_point",
+                        span=2,
+                        description=(
+                            f"{outer_boundaries} pipeline-stage boundaries across "
+                            f"{self.link}"
+                        ),
+                    )
+                )
+        return tuple(events)
+
+    def hop_events(self, num_layers: int) -> tuple[float, str]:
+        """Total serial inter-partition events, and what they are.
+
+        Kept as a scalar for the reports and the sizing sweep; the priced
+        breakdown is ``link_events``.
+        """
+
+        events = self.link_events(num_layers)
+        if not events:
             return 0.0, "no inter-partition event on one token's critical path"
-        if self.parallelism == "tensor":
-            return (
-                2.0 * num_layers,
-                "two all-reduces per layer per token (tensor parallel)",
-            )
-        return (
-            float(partitions - 1),
-            "one hop per partition boundary per token (pipeline parallel)",
-        )
+        total = sum(event.count for event in events)
+        return total, "; ".join(event.description for event in events)
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        data = asdict(self)
+        data["inner_link"] = self.inner_link
+        data["tensor_group"] = self.tensor_group
+        data["pipeline_stages"] = self.pipeline_stages
+        return data
 
 
 # --------------------------------------------------------------------------
@@ -792,6 +1823,7 @@ def rom_device_budget(
     hbm_stacks: int = 0,
     hbm_generation: str = "hbm3e",
     weight_amortization: str = "batched",
+    spare_area_policy: str = "sram",
     split: AreaSplit | None = None,
 ) -> DeviceBudget:
     """Derive a mask-ROM design's resources from its area.
@@ -818,10 +1850,13 @@ def rom_device_budget(
             hbm_stacks=hbm_stacks,
             hbm_generation=hbm_generation,
             weight_amortization=weight_amortization,
+            spare_area_policy=spare_area_policy,
         )
 
-    rom_capacity_density = technology.rom_bits_per_mm2(node)
-    rom_bandwidth_density = technology.rom_read_bytes_s_per_mm2(node)
+    rom_capacity_density = technology.rom_bits_per_mm2_for(node, weight_amortization)
+    rom_bandwidth_density = technology.rom_read_bytes_s_per_mm2_for(
+        node, weight_amortization
+    )
     sram_capacity_density = technology.sram_bits_per_mm2(node)
     sram_bandwidth_density = technology.sram_read_bytes_s_per_mm2(node)
     rom_eff = technology.efficiency("rom_read_bandwidth")
@@ -895,7 +1930,13 @@ def rom_device_budget(
         "rom_capacity_density_bytes_mm2 / (rom_read_bandwidth_density * "
         "rom_read_efficiency)",
         "time to read every stored weight once; independent of model size, batch "
-        "and expert coverage, so it is a hard per-token ceiling for a ROM design",
+        "and expert coverage, so it is a hard per-token ceiling for a ROM design. "
+        "It is also independent of the CELL, because both densities carry the "
+        "cell-area multiplier: a compute-in-ROM array and a storage-only array "
+        "sweep in the same time and differ only in how much they hold",
+    )
+    provenance["rom_cell_area_multiplier"] = technology.rom_cell_area_multiplier(
+        weight_amortization
     )
 
     return DeviceBudget(
@@ -1215,7 +2256,18 @@ def evaluate(
     )
 
     resident_kv_bytes = kv.storage_bytes_per_user * batch_size
-    kv_transfer_bytes = (kv.read_bytes + kv.write_bytes) * batch_size
+    native_kv_transfer_bytes = (kv.read_bytes + kv.write_bytes) * batch_size
+    kv_inflation, kv_granularity_detail, kv_granularity_provenance = (
+        kv_access_granularity(
+            technology,
+            model,
+            context_tokens=context_tokens,
+            store=budget.kv_store,
+        )
+    )
+    # Granularity inflates what the memory MOVES, not what the cache HOLDS, so
+    # the resident footprint and every capacity check stay on native bytes.
+    kv_transfer_bytes = native_kv_transfer_bytes * kv_inflation
 
     # -- capacity ---------------------------------------------------------
     if stored_weight_bytes > budget.weight_capacity_bytes + 1.0:
@@ -1241,6 +2293,8 @@ def evaluate(
     # -- weight read ------------------------------------------------------
     devices = budget.topology.device_count
     region_sweeps = 1.0
+    mean_region_passes: float | None = None
+    mean_engaged_devices: float | None = None
     if budget.weight_store == "rom":
         # ROM locality: an unselected region's read ports cannot be borrowed, so
         # the engaged bandwidth is the engaged fraction of the array's.  The
@@ -1263,27 +2317,39 @@ def evaluate(
             # disjoint regions and proceed at the same time.  What serialises is
             # only the tokens landing on one region.
             #
-            # With B tokens each selecting k of N experts, B*k expert
-            # activations spread over the N*coverage regions the batch engages,
-            # so the mean engaged region sees B*k / (N*coverage) of them and the
-            # sweep is that many passes deep.  At B=1 that is exactly one pass,
-            # which is why this and per_stream and batched all agree at batch 1
-            # and the Taalas anchor cannot separate them.
+            # With B tokens each selecting k of N experts, the array is not
+            # finished when the AVERAGE engaged region has drained: it is
+            # finished when the BUSIEST one has.  The model used to charge
+            # B*k / (N*coverage) -- the mean engaged region's load -- and then
+            # divide by a flat 0.85 whose own documentation said "the sweep
+            # depth is set by the busiest region rather than the mean".  The
+            # code did not do what its parameter documented, and the gap is not
+            # a constant: it runs from 1.0x at batch 1 to about 2.6x at batch
+            # 32-64 and back toward 2.0x by batch 256.
+            #
+            # ``expected_max_region_load`` computes the busiest region directly.
+            # The router-quality multiplier is what is LEFT for a derate: the
+            # residual imbalance of a trained router against the uniform-random
+            # draw that statistic assumes.
             #
             # A dense model has one region by construction, so every token lands
             # on it and this reduces to per_stream -- correctly, because a dense
-            # model has no disjointness to exploit.  The load-balance derate
-            # carries the gap between the mean region and the busiest one.
+            # model has no disjointness to exploit.
             experts_per_token = max(1, int(model.experts_per_token or 1))
             num_experts = max(1, int(model.num_experts or 1))
-            engaged_regions = max(1.0, num_experts * coverage)
-            passes = (batch_size * experts_per_token) / engaged_regions
-            # The imbalance derate only means something when there is more than
-            # one region to be imbalanced across.  A dense model has exactly one,
-            # so every token lands on it and this reduces to per_stream exactly.
-            if engaged_regions > 1.0:
-                balance = technology.efficiency("expert_load_balance").value
-                passes = passes / max(balance, 1e-9)
+            mean_engaged_regions = max(1.0, num_experts * coverage)
+            mean_region_passes = max(
+                1.0,
+                min(
+                    (batch_size * experts_per_token) / mean_engaged_regions,
+                    float(batch_size),
+                ),
+            )
+            passes = expected_max_region_load(
+                num_experts, batch_size, experts_per_token
+            )
+            router_imbalance = technology.efficiency("expert_router_imbalance").value
+            passes *= max(router_imbalance, 1e-9)
             # A per-region fabric can never be worse than a global broadcast --
             # in the limit every token lands on one region, which is per_stream.
             passes = min(max(1.0, passes), float(batch_size))
@@ -1339,7 +2405,18 @@ def evaluate(
         if weight_traffic_policy == "full_checkpoint":
             dense_bytes = engaged_weight_bytes
             routed_bytes = 0.0
-        engaged_devices = expected_engaged_devices(
+        # The same mean-for-maximum error, on the other side of the comparison.
+        # ``workload.expected_engaged_devices`` returns the expected number of
+        # devices holding at least one selected expert, and the routed fetch was
+        # divided by it -- but the fetch finishes when the BUSIEST device
+        # finishes, not when the average one does.  ``workload.py`` is shared
+        # with ``opentallas.analytical`` and is not edited; the correction lives
+        # here and both numbers are reported, because correcting only the ROM
+        # side would be its own bias.
+        mean_engaged_devices = expected_engaged_devices(
+            devices, traffic.distinct_experts_per_layer
+        )
+        engaged_devices = effective_engaged_devices(
             devices, traffic.distinct_experts_per_layer
         )
         weight_time = dense_bytes / max(budget.weight_read_bytes_s, 1e-30)
@@ -1355,6 +2432,26 @@ def evaluate(
         if budget.kv_read_bytes_s > 0
         else math.inf
     )
+    # A diagnostic, not a term.  The line above credits ONE user with the whole
+    # array's read bandwidth, which at batch 1 on a wafer reads a user's 99 MB
+    # of KV in nanoseconds.  That is defensible for KV and not for ROM: KV is
+    # written at run time and can be striped across every bank, whereas an
+    # expert's weights live where they were masked.  But it is defensible only
+    # if the design actually stripes, and the model never checks.  The bound
+    # below is what the same read costs if a user can only draw the banks its
+    # own footprint occupies -- the ROM locality rule applied to SRAM.  It is
+    # reported at every point so the exposure is visible rather than implicit.
+    # Only for an on-die array.  HBM is striped across channels by construction
+    # -- that is what a memory controller is for -- so the global-bandwidth
+    # credit is not an assumption there, and the bound equals the term.
+    kv_bank_occupancy = (
+        min(1.0, resident_kv_bytes / budget.kv_capacity_bytes)
+        if (budget.kv_store == "sram" and budget.kv_capacity_bytes > 0)
+        else 1.0
+    )
+    kv_time_under_bank_locality = (
+        kv_time / kv_bank_occupancy if kv_bank_occupancy > 0 else math.inf
+    )
 
     # -- compute ----------------------------------------------------------
     compute_time, compute_by_format, compute_reasons = _compute_time(
@@ -1363,15 +2460,36 @@ def evaluate(
     reasons.extend(compute_reasons)
 
     # -- link -------------------------------------------------------------
+    # Every event is priced on the link it actually crosses and, for a
+    # collective, on how many partitions it spans.  Charging one link class and
+    # one flat hop cost for a whole machine is what let a 672-partition
+    # pipeline look like 671 NVLink hops and a 681-region all-reduce look like
+    # two on-wafer hops; neither is a machine anyone builds.
     hops, hop_semantics = budget.topology.hop_events(model.num_layers)
+    activation_bytes = batch_size * model.hidden_size * 2.0
+    link_time, link_breakdown, link_payload_bytes = technology.link_time_s(
+        budget.topology, model.num_layers, activation_bytes=activation_bytes
+    )
+    # What the same machine would be charged if a token were allowed to cross
+    # more stage boundaries than the model has layers -- which is what this
+    # study did before.  Carried on every point because it is the size of the
+    # correction, and the correction is most of the headline.
+    link_time_without_stage_cap, _, _ = technology.link_time_s(
+        budget.topology,
+        model.num_layers,
+        activation_bytes=activation_bytes,
+        stage_cap=False,
+    )
     hop_latency, link_bytes_s = technology.link(budget.topology.link)
-    if budget.topology.parallelism == "tensor":
-        # Reduction payload in fp32, result broadcast in bf16, per the DeepSeek
-        # block convention already used by opentallas.analytical.
-        payload_bytes = batch_size * model.hidden_size * (4 + 2)
-    else:
-        payload_bytes = batch_size * model.hidden_size * 2
-    link_time = hops * (hop_latency.value + payload_bytes / link_bytes_s.value)
+    payload_bytes = link_payload_bytes / hops if hops > 0 else 0.0
+
+    # -- the per-layer serial floor ---------------------------------------
+    # Decode is sequential across layers, and each layer has dependencies that
+    # no bandwidth removes.  Before this term a single_chip design had no fixed
+    # cost whatsoever on its critical path.
+    fixed_latency, fixed_latency_detail, fixed_latency_provenance = (
+        layer_fixed_latency(technology, model)
+    )
 
     # -- the roofline combination ----------------------------------------
     if budget.shared_memory_path:
@@ -1402,7 +2520,7 @@ def evaluate(
     apply_balance = devices > 1 and budget.topology.parallelism != "none"
     if apply_balance:
         service_time /= balance
-    raw_step_time = service_time + link_time
+    raw_step_time = service_time + link_time + fixed_latency
 
     # -- power and thermal ------------------------------------------------
     energy_j = 0.0
@@ -1444,6 +2562,7 @@ def evaluate(
         # The MACs still happen; they take exactly as long as the walk.
         "compute": weight_time if fused_compute else compute_time,
         "link_latency": link_time,
+        "layer_fixed_latency": fixed_latency,
     }
     if reasons:
         binding = "capacity_or_format"
@@ -1468,7 +2587,15 @@ def evaluate(
         "hop_semantics": hop_semantics,
         "hop_latency_s": hop_latency.value,
         "link": budget.topology.link,
+        "intra_link": budget.topology.inner_link,
+        "intra_domain_size": budget.topology.intra_domain_size,
+        "tensor_group": budget.topology.tensor_group,
+        "pipeline_stages": budget.topology.stages_for(model.num_layers),
+        "pipeline_stages_uncapped": budget.topology.pipeline_stages,
+        "link_breakdown": link_breakdown,
+        "link_latency_without_stage_cap_s": link_time_without_stage_cap,
         "link_payload_bytes_per_event": float(payload_bytes),
+        "link_payload_bytes_per_token": float(link_payload_bytes),
         "stored_weight_bytes": stored_weight_bytes,
         "representation_scale_vs_checkpoint": representation_scale,
         "weight_traffic_policy": weight_traffic_policy,
@@ -1481,9 +2608,27 @@ def evaluate(
         "expert_coverage": coverage,
         "distinct_experts_per_layer": traffic.distinct_experts_per_layer,
         "engaged_devices": (
-            expected_engaged_devices(devices, traffic.distinct_experts_per_layer)
-            if budget.weight_store != "rom"
+            engaged_devices
+            if (budget.weight_store != "rom" and mean_engaged_devices is not None)
             else float(devices)
+        ),
+        "mean_engaged_devices_uncorrected": (
+            mean_engaged_devices if mean_engaged_devices is not None else float(devices)
+        ),
+        "engaged_device_max_over_mean_correction": (
+            mean_engaged_devices / engaged_devices
+            if (mean_engaged_devices is not None and engaged_devices > 0)
+            else 1.0
+        ),
+        "kv_native_transfer_bytes_per_step": native_kv_transfer_bytes,
+        "kv_access_granularity": kv_granularity_detail,
+        "kv_access_granularity_inflation": kv_inflation,
+        "kv_bank_occupancy": kv_bank_occupancy,
+        "kv_read_s_under_bank_locality": kv_time_under_bank_locality,
+        "layer_fixed_latency_s": fixed_latency,
+        "layer_fixed_latency": fixed_latency_detail,
+        "layer_fixed_latency_fraction_of_step": (
+            fixed_latency / raw_step_time if raw_step_time > 0 else 0.0
         ),
         "kv_read_bytes_per_user_token": kv.read_bytes,
         "kv_write_bytes_per_user_token": kv.write_bytes,
@@ -1493,6 +2638,13 @@ def evaluate(
         "max_resident_users": float(max_resident_users),
         "weight_capacity_bytes": budget.weight_capacity_bytes,
         "kv_capacity_bytes": budget.kv_capacity_bytes,
+        "graded_derivations": {
+            key: value.to_dict()
+            for key, value in {
+                **fixed_latency_provenance,
+                **kv_granularity_provenance,
+            }.items()
+        },
         "operations_by_canonical_format": dict(operations),
         "compute_times_s_by_format": compute_by_format,
         "compute_roofs_ops_s": dict(budget.compute_ops_s),
@@ -1515,12 +2667,31 @@ def evaluate(
         if budget.weight_amortization == "per_stream":
             sweeps = float(batch_size)
         elif budget.weight_amortization == "per_region":
-            # The busiest expert region's queue depth, not the batch: disjoint
-            # regions run together and only co-located tokens serialise.
+            # The busiest expert region's queue depth, not the batch and not the
+            # mean region: disjoint regions run together, only co-located tokens
+            # serialise, and the array waits for the deepest queue.
             sweeps = float(region_sweeps)
+            metrics["region_sweep_depth_mean_uncorrected"] = (
+                mean_region_passes if mean_region_passes is not None else 1.0
+            )
+            metrics["region_sweep_depth_max_over_mean"] = (
+                region_sweeps / mean_region_passes
+                if mean_region_passes
+                else 1.0
+            )
         else:
             sweeps = 1.0
         metrics["rom_sweeps_per_step"] = float(sweeps)
+        # Under spare_area_policy="rom" the array is grown past the bytes it
+        # must hold and the extra silicon carries replicated copies, so this
+        # is above 1.0 by exactly the replication factor.  Under "sram" it is
+        # 1.0 and the check that used to be tautological is now an identity
+        # only because the array is sized to fit -- and it fails when it cannot.
+        metrics["rom_replication_factor"] = (
+            budget.weight_capacity_bytes / stored_weight_bytes
+            if stored_weight_bytes > 0
+            else 1.0
+        )
         metrics["rom_full_array_sweep_time_s"] = (
             sweeps * stored_weight_bytes / budget.weight_read_bytes_s
             if budget.weight_read_bytes_s > 0
@@ -1576,6 +2747,10 @@ class LatencyCrossover:
     budget_fraction: float
     viable_tokens_s: float
     hard_ceiling_tokens_s: float
+    intra_link: str = ""
+    tensor_group: int = 1
+    pipeline_stages: int = 1
+    breakdown: tuple[str, ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -1597,12 +2772,12 @@ def latency_crossover(
     """
 
     hops, _ = topology.hop_events(model.num_layers)
-    hop_latency, link_bytes_s = technology.link(topology.link)
-    if topology.parallelism == "tensor":
-        payload_bytes = batch_size * model.hidden_size * (4 + 2)
-    else:
-        payload_bytes = batch_size * model.hidden_size * 2
-    per_token = hops * (hop_latency.value + payload_bytes / link_bytes_s.value)
+    hop_latency, _link_bytes_s = technology.link(topology.link)
+    per_token, breakdown, _payload = technology.link_time_s(
+        topology,
+        model.num_layers,
+        activation_bytes=batch_size * model.hidden_size * 2.0,
+    )
     viable = budget_fraction / per_token if per_token > 0 else math.inf
     ceiling = 1.0 / per_token if per_token > 0 else math.inf
     return LatencyCrossover(
@@ -1610,12 +2785,21 @@ def latency_crossover(
         device_count=topology.device_count,
         parallelism=topology.parallelism,
         link=topology.link,
+        intra_link=topology.inner_link,
+        tensor_group=topology.tensor_group,
+        pipeline_stages=topology.stages_for(model.num_layers),
         hop_events_per_token=hops,
         hop_latency_s=hop_latency.value,
         link_latency_s_per_token=per_token,
         budget_fraction=budget_fraction,
         viable_tokens_s=viable,
         hard_ceiling_tokens_s=ceiling,
+        breakdown=tuple(
+            f"{detail['count']:,.0f} x {detail['kind']} span {detail['span']} on "
+            f"{detail['link']} (traversals {detail['collective_traversals']:.1f}) = "
+            f"{detail['seconds'] * 1e6:,.2f} us"
+            for detail in breakdown
+        ),
     )
 
 
@@ -1699,6 +2883,59 @@ def taalas_hc1_anchor(
     )
     ratio = step.per_user_tokens_s / published.value if published.value else math.inf
 
+    # Every term in the per-layer latency block is ``assumed`` and carries a
+    # range.  Reporting the gate at one point inside a wide band invites the
+    # reader to read the point as measured, and that is how a gate turns into a
+    # fit.  The band is what the reader is asked to believe.
+    band: dict[str, Any] = {}
+    for bound in ("low", "stated", "high"):
+        variant = (
+            technology
+            if bound == "stated"
+            else technology.at_layer_latency_bound(bound)
+        )
+        fixed_s, fixed_detail, _ = layer_fixed_latency(variant, model)
+        bound_step = evaluate(
+            budget,
+            model,
+            context_tokens=context_tokens,
+            batch_size=batch,
+            technology=variant,
+            weight_bits_per_parameter=weight_bits_per_parameter,
+            execution_format=str(spec["execution_format_name"]),
+        )
+        band[bound] = {
+            "layer_fixed_latency_s_per_layer": fixed_detail["seconds_per_layer"],
+            "layer_fixed_latency_s_per_token": fixed_s,
+            "modelled_tokens_s": bound_step.per_user_tokens_s,
+            "ratio_to_published": (
+                bound_step.per_user_tokens_s / published.value
+                if published.value
+                else math.inf
+            ),
+            "binding_constraint": bound_step.binding_constraint,
+        }
+    # What a per-layer cost WOULD have to be to close the remaining gap. It is
+    # reported so the reader can see how far the derived value sits from the
+    # fitted one, and it is never used as an input.
+    gap_s = 1.0 / published.value - (
+        step.step_time_s - step.component_times_s["layer_fixed_latency"]
+    )
+    band["per_layer_cost_that_would_close_the_gap_s"] = (
+        gap_s / model.num_layers if model.num_layers else math.inf
+    )
+    band["note"] = (
+        "The per-layer latency terms are derived from primitives independent of "
+        "this anchor -- SRAM access time, sequencer issue and decode, pipeline "
+        "fill and drain across a dependent array-pass boundary, the layer "
+        "barrier, and a floorplan-derived on-die wire delay -- and are reported "
+        "at both ends of their stated range. A negative "
+        "'per_layer_cost_that_would_close_the_gap_s' means the model is already "
+        "slower than the shipping part before any fixed cost is charged, so no "
+        "value of this term could have closed the gap and the residual lies "
+        "elsewhere."
+    )
+
     # Back-derive what each density would have to be for the model to land
     # exactly on the shipping part. Reporting the shortfall as a falsifiable
     # statement about a technology input is the point of the gate; tuning the
@@ -1753,6 +2990,7 @@ def taalas_hc1_anchor(
             "component_times_s": dict(step.component_times_s),
             "area_split_mm2": budget.split.to_dict(),
             "back_derived_requirements": requirements,
+            "layer_fixed_latency_band": band,
             "step": step.to_dict(),
             "budget": budget.to_dict(),
         },

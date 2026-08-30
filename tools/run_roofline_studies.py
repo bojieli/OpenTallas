@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+from dataclasses import dataclass, replace
 import hashlib
 import io
 import json
@@ -104,6 +105,8 @@ STUDIES: dict[str, dict[str, Any]] = {
         "rom_node": "N6",
         "gpu_parts": ("a100_sxm_80gb",),
         "hbm_generation": "hbm2e",
+        "intra_link": "nvlink3",
+        "inter_link": "infiniband_hdr",
         "contract": (
             "Reticle-class mask-ROM silicon at TSMC N6 against NVIDIA A100 80GB at "
             "N7, compared at equal silicon area with the area stated on both sides. "
@@ -115,6 +118,9 @@ STUDIES: dict[str, dict[str, Any]] = {
         "rom_node": "N5",
         "gpu_parts": ("b200_sxm",),
         "hbm_generation": "hbm3e",
+        "intra_link": "nvlink5",
+        "inter_link": "infiniband_ndr",
+        "gpu_domain_sensitivity": "nvlink5_nvl72",
         "contract": (
             "Mask-ROM silicon at TSMC N5 against NVIDIA B200 at 4NP, compared at "
             "equal silicon area. Blackwell is a two-die package, so B200 is counted "
@@ -149,6 +155,19 @@ Both are emitted for **all three** amortisation policies.  Offering the
 floorplan sweep only to compute-in-ROM would decide the comparison by the
 allocation rule rather than by physics -- which is exactly the failure this
 sweep exists to remove."""
+
+ROM_AREA_LADDER: tuple[int, ...] = (1, 2, 3, 4, 6, 8, 12)
+"""Wafer counts the ROM side is emitted at regardless of what the sizing sweep
+chooses, so the iso-area curve is sampled at the same silicon on both sides and
+a correction that moves the sizing optimum cannot silently move the areas the
+comparison is read at.  Seven rungs rather than every integer: they span the
+whole range, they include every area the published headline was read at, and the
+artifact is a checked-in file whose size is a real cost."""
+
+GPU_AREA_LADDER: tuple[int, ...] = ROM_AREA_LADDER
+"""The GPU baseline is evaluated at the same wafer-equivalents of silicon
+whatever the ROM sizing sweep chooses, so the iso-area curve is sampled over the
+whole range this study spans rather than only where a ROM design lands."""
 
 ARRAY_SWEEP_CAP = 400
 SWEEP_PATIENCE = 8
@@ -289,6 +308,105 @@ def _hbm_stacks_for(
 # --------------------------------------------------------------------------
 
 
+def _regions_for(
+    plan: "FabricPlan",
+    devices: int,
+    wafer_area: float | None,
+    reticle_area: float | None,
+) -> int:
+    """Reticle fields a design spans, which is what its hop count is counted in."""
+
+    if plan.kind == "wafer" and wafer_area and reticle_area:
+        return max(1, math.ceil(devices * wafer_area / reticle_area))
+    return 1
+
+
+@dataclass(frozen=True)
+class FabricPlan:
+    """The two link classes a machine actually has, and the domain between them.
+
+    A cluster is not one fabric.  An HGX baseboard is an all-to-all NVLink
+    island of ``intra_domain_size`` devices; past the island edge every byte
+    goes onto a scale-out network an order of magnitude slower in latency and
+    more than an order slower in per-device bandwidth.  A wafer is the same
+    shape with different numbers: an on-wafer stitched mesh inside one wafer,
+    a package-class link between wafers.
+
+    The same plan is handed to the ROM side and to the GPU side of each study,
+    so neither is charged a fabric the other is not.
+    """
+
+    kind: str
+    parallelism: str
+    intra_link: str
+    inter_link: str
+    intra_domain_size: int
+    label: str
+
+    def topology(self, devices: int, regions: int) -> Topology:
+        group = self.intra_domain_size if self.parallelism == "hybrid" else 1
+        return Topology(
+            kind=self.kind,
+            device_count=devices,
+            parallelism=self.parallelism,
+            link=self.inter_link,
+            on_wafer_regions=regions,
+            intra_link=self.intra_link,
+            intra_domain_size=self.intra_domain_size,
+            tensor_group_size=group,
+        )
+
+
+def _fabric_plans(
+    technology: Technology,
+    config: dict[str, Any],
+    *,
+    wafer_area: float,
+    reticle_area: float,
+) -> tuple[tuple[FabricPlan, float], ...]:
+    """Every (topology, area-per-device) pair the ROM side is allowed to choose.
+
+    Three parallelisms on each of two device classes.  ``hybrid`` is the one a
+    real deployment runs -- tensor-parallel inside the high-bandwidth domain,
+    pipeline-parallel across domains -- and it was previously offered to
+    neither side.
+    """
+
+    intra = str(config["intra_link"])
+    inter = str(config["inter_link"])
+    array_domain = max(1, int(technology.link_domain_size(intra).value))
+    regions_per_wafer = max(1, math.ceil(wafer_area / reticle_area))
+    plans: list[tuple[FabricPlan, float]] = []
+    for parallelism in ("pipeline", "tensor", "hybrid"):
+        plans.append(
+            (
+                FabricPlan(
+                    kind="array",
+                    parallelism=parallelism,
+                    intra_link=intra,
+                    inter_link=inter,
+                    intra_domain_size=array_domain,
+                    label=f"array-{parallelism}",
+                ),
+                reticle_area,
+            )
+        )
+        plans.append(
+            (
+                FabricPlan(
+                    kind="wafer",
+                    parallelism=parallelism,
+                    intra_link="on_wafer",
+                    inter_link="inter_wafer",
+                    intra_domain_size=regions_per_wafer,
+                    label=f"wafer-{parallelism}",
+                ),
+                wafer_area,
+            )
+        )
+    return tuple(plans)
+
+
 def _build_rom_budget(
     technology: Technology,
     *,
@@ -296,9 +414,7 @@ def _build_rom_budget(
     node: str,
     area_per_device: float,
     devices: int,
-    parallelism: str,
-    link: str,
-    kind: str,
+    plan: FabricPlan,
     on_wafer_regions: int,
     stored_weight_bytes: float,
     resident_kv_bytes: float,
@@ -319,13 +435,7 @@ def _build_rom_budget(
             die_area_mm2=area_per_device,
             devices=devices,
         )
-    topology = Topology(
-        kind=kind,
-        device_count=devices,
-        parallelism=parallelism,
-        link=link,
-        on_wafer_regions=on_wafer_regions,
-    )
+    topology = plan.topology(devices, on_wafer_regions)
     return rom_device_budget(
         technology,
         name=name,
@@ -352,9 +462,7 @@ def _minimum_devices(
     kv_transfer_bytes: float,
     kv_store: str,
     hbm_generation: str,
-    parallelism: str,
-    link: str,
-    kind: str,
+    plan: FabricPlan,
     wafer_area: float | None,
     reticle_area: float | None,
     weight_amortization: str = "batched",
@@ -383,18 +491,14 @@ def _minimum_devices(
         * technology.efficiency("hbm_capacity").value
     )
     for devices in range(1, ARRAY_SWEEP_CAP + 1):
-        regions = 1
-        if kind == "wafer" and wafer_area and reticle_area:
-            regions = max(1, math.ceil(devices * wafer_area / reticle_area))
+        regions = _regions_for(plan, devices, wafer_area, reticle_area)
         budget = _build_rom_budget(
             technology,
             name="minimum-probe",
             node=node,
             area_per_device=area_per_device,
             devices=devices,
-            parallelism=parallelism,
-            link=link,
-            kind=kind,
+            plan=plan,
             on_wafer_regions=regions,
             stored_weight_bytes=stored_weight_bytes,
             resident_kv_bytes=resident_kv_bytes,
@@ -440,9 +544,7 @@ def _size_array(
     context_tokens: int,
     execution_format: str,
     weight_bits: float | None,
-    parallelism: str,
-    link: str,
-    kind: str,
+    plan: FabricPlan,
     wafer_area: float | None = None,
     reticle_area: float | None = None,
     weight_amortization: str = "batched",
@@ -467,9 +569,7 @@ def _size_array(
         kv_transfer_bytes=kv_transfer_bytes,
         kv_store=kv_store,
         hbm_generation=hbm_generation,
-        parallelism=parallelism,
-        link=link,
-        kind=kind,
+        plan=plan,
         wafer_area=wafer_area,
         reticle_area=reticle_area,
         weight_amortization=weight_amortization,
@@ -482,18 +582,14 @@ def _size_array(
     best_latency = math.inf
     stale = 0
     for devices in range(minimum, upper + 1):
-        regions = 1
-        if kind == "wafer" and wafer_area and reticle_area:
-            regions = max(1, math.ceil(devices * wafer_area / reticle_area))
+        regions = _regions_for(plan, devices, wafer_area, reticle_area)
         budget = _build_rom_budget(
             technology,
             name="sizing-probe",
             node=node,
             area_per_device=area_per_device,
             devices=devices,
-            parallelism=parallelism,
-            link=link,
-            kind=kind,
+            plan=plan,
             on_wafer_regions=regions,
             stored_weight_bytes=stored_weight_bytes,
             resident_kv_bytes=resident_kv_bytes,
@@ -568,6 +664,32 @@ def _step_row(
         "topology_kind": budget.topology.kind,
         "parallelism": budget.topology.parallelism,
         "link": budget.topology.link,
+        "intra_link": budget.topology.inner_link,
+        "intra_domain_size": budget.topology.intra_domain_size,
+        "tensor_group": budget.topology.tensor_group,
+        "pipeline_stages": metrics["pipeline_stages"],
+        "pipeline_stages_uncapped": metrics["pipeline_stages_uncapped"],
+        "hop_breakdown": "; ".join(
+            f"{d['count']:,.0f}x {d['kind']} span {d['span']} on {d['link']} "
+            f"({d['seconds'] * 1e6:,.2f} us)"
+            for d in metrics["link_breakdown"]
+        ),
+        "link_latency_s": step.component_times_s["link_latency"],
+        "link_latency_without_stage_cap_s": metrics[
+            "link_latency_without_stage_cap_s"
+        ],
+        "step_time_without_stage_cap_s": (
+            step.step_time_s
+            - step.component_times_s["link_latency"]
+            + metrics["link_latency_without_stage_cap_s"]
+            if math.isfinite(step.step_time_s)
+            else None
+        ),
+        "link_share_of_step": (
+            step.component_times_s["link_latency"] / step.step_time_s
+            if math.isfinite(step.step_time_s) and step.step_time_s > 0
+            else None
+        ),
         "node": budget.node,
         "weight_store": budget.weight_store,
         "kv_store": budget.kv_store,
@@ -762,12 +884,198 @@ def _floorplan_comparison(
     return out
 
 
-def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
+def _emit_rom_design(
+    technology: Technology,
+    model: ModelProfile,
+    *,
+    designs: list[dict[str, Any]],
+    points: list[dict[str, Any]],
+    crossovers: list[dict[str, Any]],
+    node: str,
+    representation: str,
+    bits: float | None,
+    execution: str,
+    kv_store: str,
+    topology_name: str,
+    suffix: str,
+    plan: FabricPlan,
+    area_per_device: float,
+    devices: int,
+    regions: int,
+    stored: float,
+    design_batch_kv: float,
+    design_batch_kv_transfer: float,
+    hbm_generation: str,
+    amortization: str,
+    spare_area_policy: str,
+    context: int,
+    sweep: list[dict[str, Any]],
+    sized: bool,
+) -> None:
+    """Build one ROM design, its crossover and its whole batch sweep."""
+
+    design_id = (
+        f"{_model_tag(model)}/ROM-{node}-{representation}-"
+        f"{kv_store.upper()}KV-{topology_name}-x{devices}{suffix}"
+    )
+    budget = _build_rom_budget(
+        technology,
+        name=design_id,
+        node=node,
+        area_per_device=area_per_device,
+        devices=devices,
+        plan=plan,
+        on_wafer_regions=regions,
+        stored_weight_bytes=stored,
+        resident_kv_bytes=design_batch_kv,
+        kv_transfer_bytes=design_batch_kv_transfer,
+        kv_store=kv_store,
+        hbm_generation=hbm_generation,
+        weight_amortization=amortization,
+        spare_area_policy=spare_area_policy,
+    )
+    designs.append(
+        {
+            "design": design_id,
+            "family": "rom",
+            "model": model.name,
+            "representation": representation,
+            "stored_bits_per_parameter": (
+                bits
+                if bits is not None
+                else model.checkpoint_bytes / model.total_parameters * 8.0
+            ),
+            "execution_format": execution,
+            "topology": topology_name,
+            "weight_amortization": amortization,
+            "spare_area_policy": spare_area_policy,
+            "sizing_rule": (
+                (
+                    "smallest device count within "
+                    f"{DEVICE_SIZING_TOLERANCE:.0%} of the best per-user "
+                    f"latency at batch {DESIGN_BATCH}, bounded at "
+                    f"{MAX_OVERPROVISION}x the minimum feasible count. "
+                    f"SRAM-KV designs are sized at batch {DESIGN_BATCH} "
+                    "because SRAM is silicon area; HBM-KV designs are "
+                    f"provisioned for batch {PROVISION_BATCH} for both KV "
+                    "capacity and enough KV bandwidth to keep KV off the "
+                    "critical path ahead of the ROM sweep, capped by the "
+                    "die-edge beachfront a shipping GPU achieves"
+                )
+                if sized
+                else (
+                    "area-ladder point: this device count is not the sizing "
+                    "sweep's choice, it is emitted so the iso-area curve is "
+                    "sampled at the same silicon areas on both sides"
+                )
+            ),
+            "device_count_sweep": sweep,
+            **budget.to_dict(),
+        }
+    )
+    if sized and amortization == "batched" and spare_area_policy == "sram":
+        # Link latency is a property of the topology, so the two
+        # amortisation policies produce identical crossovers.
+        crossovers.append(
+            {
+                "design": design_id,
+                "model": model.name,
+                **latency_crossover(budget.topology, model, technology).to_dict(),
+            }
+        )
+    for batch in BATCHES:
+        step = evaluate(
+            budget,
+            model,
+            context_tokens=context,
+            batch_size=batch,
+            technology=technology,
+            weight_bits_per_parameter=bits,
+            execution_format=execution,
+        )
+        points.append(
+            _step_row(
+                step, budget, family="rom", design_id=design_id, model=model
+            )
+        )
+
+
+def _link_latency_sensitivity(
+    study_id: str, technology: Technology
+) -> list[dict[str, Any]]:
+    """The headline table at both ends of every assumed link latency band.
+
+    Every hop latency in this model is `assumed` -- NVIDIA publishes no NVLink
+    latency at all and Cerebras publishes no on-wafer or inter-wafer latency --
+    and the comparison's whole content is the ratio between two fabrics. A
+    single point value inside two wide bands invites the reader to treat the
+    ratio as measured. Both ends are therefore run, on **both** sides at once,
+    and the band is what the reader is asked to believe rather than the point.
+    """
+
+    rows: list[dict[str, Any]] = []
+    for bound in ("low", "high"):
+        bounded = technology.at_link_latency_bound(bound)
+        result = _simulate_study(study_id, bounded, with_sensitivity=False)
+        for row in _headline_rows(result):
+            rows.append(
+                {
+                    "bound": bound,
+                    "model": row["model"],
+                    "rom_silicon_area_mm2": row["rom_silicon_area_mm2"],
+                    "rom_design": row["rom_design"],
+                    "rom_per_user_tokens_s": row["rom_per_user_tokens_s"],
+                    "iso_area_gpu_design": row["iso_area_gpu_design"],
+                    "iso_area_gpu_parallelism": row["iso_area_gpu_parallelism"],
+                    "iso_area_gpu_per_user_tokens_s": (
+                        row["iso_area_gpu_per_user_tokens_s"]
+                    ),
+                    "per_user_speed_ratio": row["per_user_speed_ratio"],
+                }
+            )
+    return rows
+
+
+def _headline_rows(result: dict[str, Any]) -> list[dict[str, Any]]:
+    """The batch-1 iso-area row at each silicon area, best ROM design per area.
+
+    This is the table the program's headline ratios are read off, so it is the
+    table a sensitivity has to be reported on.
+    """
+
+    best: dict[tuple[str, int], dict[str, Any]] = {}
+    for row in result["comparisons"]:
+        if row["batch_size"] != 1 or not row["rom_feasible"]:
+            continue
+        key = (row["model"], int(round(row["rom_silicon_area_mm2"])))
+        current = best.get(key)
+        if current is None or (
+            row["rom_per_user_tokens_s"] > current["rom_per_user_tokens_s"]
+        ):
+            best[key] = row
+    order = {name: index for index, (name, _, _) in enumerate(STUDY_MODELS)}
+    return sorted(
+        best.values(),
+        key=lambda row: (order[row["model"]], row["rom_silicon_area_mm2"]),
+    )
+
+
+def _simulate_study(
+    study_id: str, technology: Technology, *, with_sensitivity: bool = True
+) -> dict[str, Any]:
     config = STUDIES[study_id]
     node = str(config["rom_node"])
     hbm_generation = str(config["hbm_generation"])
     reticle_area = technology.graded("reticle", "area_mm2").value
     wafer_area = technology.graded("wafer", "area_mm2").value
+    fabric_plans = _fabric_plans(
+        technology, config, wafer_area=wafer_area, reticle_area=reticle_area
+    )
+    gpu_plans = tuple(
+        plan for plan, _area in fabric_plans if plan.kind == "array"
+    )
+    domain_sensitivity_link = config.get("gpu_domain_sensitivity")
+    domain_sensitivity: list[dict[str, Any]] = []
 
     points: list[dict[str, Any]] = []
     designs: list[dict[str, Any]] = []
@@ -823,19 +1131,8 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                 design_batch_kv_transfer = (
                     kv.read_bytes + kv.write_bytes
                 ) * provision_batch
-                for (
-                    topology_name,
-                    kind,
-                    parallelism,
-                    area_per_device,
-                ), amortization, spare_area_policy in (
-                    (topology, policy, spare)
-                    for topology in (
-                        ("array-pipeline", "array", "pipeline", reticle_area),
-                        ("array-tensor", "array", "tensor", reticle_area),
-                        ("wafer-pipeline", "wafer", "pipeline", wafer_area),
-                        ("wafer-tensor", "wafer", "tensor", wafer_area),
-                    )
+                for amortization, spare_area_policy in (
+                    (policy, spare)
                     for policy in WEIGHT_AMORTIZATIONS
                     # Where a compute-in-ROM design spends the silicon it
                     # recovers from the MAC array is a design choice, so both
@@ -845,140 +1142,137 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                     # only one floorplan.
                     for spare in SPARE_AREA_POLICIES
                 ):
-                    link = "nvlink" if kind == "array" else "on_wafer"
-                    # Sized on this policy's OWN floorplan.  The policies stopped
-                    # being identical at batch 1 when the floorplan started
-                    # depending on the policy; sizing them all on the batched
-                    # machine denied compute-in-ROM the dies its larger cell
-                    # needs and reported that as infeasibility.
-                    devices, sweep = _size_array(
-                        technology,
-                        model,
-                        node=node,
-                        area_per_device=area_per_device,
-                        stored_weight_bytes=stored,
-                        resident_kv_bytes=design_batch_kv,
-                        kv_transfer_bytes=design_batch_kv_transfer,
-                        kv_store=kv_store,
-                        hbm_generation=hbm_generation,
-                        context_tokens=context,
-                        execution_format=execution,
-                        weight_bits=bits,
-                        parallelism=parallelism,
-                        link=link,
-                        kind=kind,
-                        wafer_area=wafer_area if kind == "wafer" else None,
-                        reticle_area=reticle_area if kind == "wafer" else None,
-                        weight_amortization=amortization,
-                        spare_area_policy=spare_area_policy,
-                    )
-                    if devices > ARRAY_SWEEP_CAP:
-                        continue
-                    regions = 1
-                    if kind == "wafer":
-                        regions = max(
-                            1, math.ceil(devices * wafer_area / reticle_area)
-                        )
-                    # A single device has no partition boundary, so a topology
-                    # that only differs by its parallelism collapses onto the
-                    # pipeline case and is not emitted twice.
-                    if parallelism == "tensor" and (
-                        devices == 1 and kind == "array"
-                    ):
-                        continue
-                    suffix = {
-                        "batched": "",
-                        "per_stream": "-perstream",
-                        "per_region": "-perregion",
-                    }[amortization]
-                    if spare_area_policy == "rom":
-                        suffix += "-romfill"
-                    design_id = (
-                        f"{_model_tag(model)}/ROM-{node}-{representation}-"
-                        f"{kv_store.upper()}KV-{topology_name}-x{devices}{suffix}"
-                    )
-                    budget = _build_rom_budget(
-                        technology,
-                        name=design_id,
-                        node=node,
-                        area_per_device=area_per_device,
-                        devices=devices,
-                        parallelism=parallelism,
-                        link=link,
-                        kind=kind,
-                        on_wafer_regions=regions,
-                        stored_weight_bytes=stored,
-                        resident_kv_bytes=design_batch_kv,
-                        kv_transfer_bytes=design_batch_kv_transfer,
-                        kv_store=kv_store,
-                        hbm_generation=hbm_generation,
-                        weight_amortization=amortization,
-                        spare_area_policy=spare_area_policy,
-                    )
-                    designs.append(
-                        {
-                            "design": design_id,
-                            "family": "rom",
-                            "model": model.name,
-                            "representation": representation,
-                            "stored_bits_per_parameter": (
-                                bits
-                                if bits is not None
-                                else model.checkpoint_bytes
-                                / model.total_parameters
-                                * 8.0
-                            ),
-                            "execution_format": execution,
-                            "topology": topology_name,
-                            "weight_amortization": amortization,
-                            "spare_area_policy": spare_area_policy,
-                            "sizing_rule": (
-                                "smallest device count within "
-                                f"{DEVICE_SIZING_TOLERANCE:.0%} of the best per-user "
-                                f"latency at batch {DESIGN_BATCH}, bounded at "
-                                f"{MAX_OVERPROVISION}x the minimum feasible count. "
-                                f"SRAM-KV designs are sized at batch {DESIGN_BATCH} "
-                                "because SRAM is silicon area; HBM-KV designs are "
-                                f"provisioned for batch {PROVISION_BATCH} for both KV "
-                                "capacity and enough KV bandwidth to keep KV off the "
-                                "critical path ahead of the ROM sweep, capped by the "
-                                "die-edge beachfront a shipping GPU achieves"
-                            ),
-                            "device_count_sweep": sweep,
-                            **budget.to_dict(),
-                        }
-                    )
-                    if amortization == "batched" and spare_area_policy == "sram":
-                        # Link latency is a property of the topology, so the two
-                        # amortisation policies produce identical crossovers.
-                        crossovers.append(
-                            {
-                                "design": design_id,
-                                "model": model.name,
-                                **latency_crossover(
-                                    budget.topology, model, technology
-                                ).to_dict(),
-                            }
-                        )
-                    for batch in BATCHES:
-                        step = evaluate(
-                            budget,
+                    # **Size every parallelism first, then emit every
+                    # parallelism at every size any of them chose.**  Sizing and
+                    # emitting in one pass means a topology only exists at the
+                    # silicon area its own sweep happened to pick, so an
+                    # iso-area row can end up comparing the only design that
+                    # exists at that area rather than the best one -- which is
+                    # the same defect as letting one side pick its topology,
+                    # arrived at through the sizing rule instead.
+                    sized: dict[str, tuple[int, list[dict[str, Any]]]] = {}
+                    for plan, area_per_device in fabric_plans:
+                        devices, sweep = _size_array(
+                            technology,
                             model,
+                            node=node,
+                            area_per_device=area_per_device,
+                            stored_weight_bytes=stored,
+                            resident_kv_bytes=design_batch_kv,
+                            kv_transfer_bytes=design_batch_kv_transfer,
+                            kv_store=kv_store,
+                            hbm_generation=hbm_generation,
                             context_tokens=context,
-                            batch_size=batch,
-                            technology=technology,
-                            weight_bits_per_parameter=bits,
                             execution_format=execution,
+                            weight_bits=bits,
+                            plan=plan,
+                            wafer_area=wafer_area if plan.kind == "wafer" else None,
+                            reticle_area=(
+                                reticle_area if plan.kind == "wafer" else None
+                            ),
+                            weight_amortization=amortization,
+                            spare_area_policy=spare_area_policy,
                         )
-                        points.append(
-                            _step_row(
-                                step,
-                                budget,
-                                family="rom",
-                                design_id=design_id,
-                                model=model,
+                        sized[plan.label] = (devices, sweep)
+                    counts_by_kind: dict[str, set[int]] = {}
+                    for plan, _area in fabric_plans:
+                        devices, plan_sweep = sized[plan.label]
+                        if devices > ARRAY_SWEEP_CAP:
+                            continue
+                        if amortization != "batched":
+                            # Only the batched machine enters the iso-area
+                            # comparison, so only it needs every topology at
+                            # every sized area; the other two policies are read
+                            # from the fork table at their own sizing point.
+                            counts_by_kind.setdefault(plan.kind, set()).add(devices)
+                            continue
+                        floor = (
+                            plan_sweep[0]["device_count"] if plan_sweep else devices
+                        )
+                        bucket = counts_by_kind.setdefault(plan.kind, set())
+                        bucket.add(devices)
+                        # The ladder is anchored at the smallest machine that
+                        # physically holds the design, not at the one the
+                        # latency sweep preferred, so the area grid does not
+                        # move when a latency assumption moves.
+                        if plan.kind == "wafer" and amortization == "batched":
+                            bucket.update(
+                                count for count in ROM_AREA_LADDER if count >= floor
                             )
-                        )
+                    for plan, area_per_device in fabric_plans:
+                        topology_name = plan.label
+                        kind = plan.kind
+                        parallelism = plan.parallelism
+                        chosen, sweep = sized[plan.label]
+                        if chosen > ARRAY_SWEEP_CAP:
+                            continue
+                        # The floor is the smallest count that physically holds
+                        # the design, not the count this plan's own latency
+                        # sweep preferred -- otherwise a topology is absent from
+                        # an area only because a different topology's sweep
+                        # liked a slightly different machine.
+                        minimum = sweep[0]["device_count"] if sweep else chosen
+                        suffix = {
+                            "batched": "",
+                            "per_stream": "-perstream",
+                            "per_region": "-perregion",
+                        }[amortization]
+                        if spare_area_policy == "rom":
+                            suffix += "-romfill"
+                        for devices in sorted(counts_by_kind.get(kind, ())):
+                            if devices < minimum:
+                                # Below this the design does not physically
+                                # hold the model.
+                                continue
+                            regions = _regions_for(
+                                plan,
+                                devices,
+                                wafer_area if kind == "wafer" else None,
+                                reticle_area if kind == "wafer" else None,
+                            )
+                            # A machine with one partition has no
+                            # inter-partition event at all, so every parallelism
+                            # collapses onto the same design and only the
+                            # pipeline label is emitted.  A hybrid whose tensor
+                            # group covers every partition it has is a pure
+                            # tensor machine under another name, and one whose
+                            # group is a single partition is a pure pipeline;
+                            # neither is emitted twice.
+                            probe = plan.topology(devices, regions)
+                            if parallelism != "pipeline" and probe.partitions <= 1:
+                                continue
+                            if parallelism == "hybrid" and (
+                                probe.tensor_group <= 1
+                                or probe.tensor_group >= probe.partitions
+                            ):
+                                continue
+                            _emit_rom_design(
+                                technology,
+                                model,
+                                designs=designs,
+                                points=points,
+                                crossovers=crossovers,
+                                node=node,
+                                representation=representation,
+                                bits=bits,
+                                execution=execution,
+                                kv_store=kv_store,
+                                topology_name=topology_name,
+                                suffix=suffix,
+                                plan=plan,
+                                area_per_device=area_per_device,
+                                devices=devices,
+                                regions=regions,
+                                stored=stored,
+                                design_batch_kv=design_batch_kv,
+                                design_batch_kv_transfer=design_batch_kv_transfer,
+                                hbm_generation=hbm_generation,
+                                amortization=amortization,
+                                spare_area_policy=spare_area_policy,
+                                context=context,
+                                sweep=sweep if devices == chosen else [],
+                                sized=devices == chosen,
+                            )
 
         # --- iso-area GPU baselines --------------------------------------
         rom_areas = sorted(
@@ -998,6 +1292,20 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                     _iso_area_gpu_counts(technology, part, area),
                     f"iso-area with {area:,.0f} mm2 of ROM silicon",
                 )
+            # A fixed area ladder, independent of which ROM design the sizing
+            # sweep happens to pick.  Without it the GPU curve is only sampled
+            # where a ROM design exists, so a correction that makes the ROM
+            # side prefer smaller machines silently truncates the GPU curve
+            # too -- and the question "does the GPU still get slower as it is
+            # given more silicon" then cannot be asked at the areas where the
+            # previous answer was published.
+            for wafers in GPU_AREA_LADDER:
+                area = wafer_area * wafers
+                counts.setdefault(
+                    _iso_area_gpu_counts(technology, part, area),
+                    f"area ladder: {wafers} wafer-equivalent"
+                    f"{'s' if wafers > 1 else ''} of silicon ({area:,.0f} mm2)",
+                )
             minimum = _minimum_gpu_count(
                 technology,
                 part,
@@ -1010,54 +1318,156 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                 f"batch-{PROVISION_BATCH} KV",
             )
             for count, rationale in sorted(counts.items()):
-                topology = Topology(
-                    kind="single_chip" if count == 1 else "array",
-                    device_count=count,
-                    parallelism="none" if count == 1 else "pipeline",
-                    link="none" if count == 1 else "nvlink",
-                )
-                design_id = f"{_model_tag(model)}/{part}-x{count}"
-                budget = gpu_device_budget(
-                    technology, part=part, topology=topology, name=design_id
-                )
-                designs.append(
-                    {
-                        "design": design_id,
-                        "family": "gpu",
-                        "model": model.name,
-                        "representation": "official_packed",
-                        "stored_bits_per_parameter": (
-                            model.checkpoint_bytes / model.total_parameters * 8.0
+                # **The GPU gets the same topology sweep the ROM side gets.**
+                # It previously got one: pipeline, at every cluster size, which
+                # charged a 672-GPU deployment 671 serial hops per token at
+                # batch 1 and reported the resulting collapse as a property of
+                # GPUs.  No such deployment exists.  Every parallelism the ROM
+                # side may choose is now offered here too, priced on the same
+                # two-tier fabric, and the comparison takes the best.
+                if count == 1:
+                    plans_here: tuple[FabricPlan, ...] = (
+                        FabricPlan(
+                            kind="single_chip",
+                            parallelism="none",
+                            intra_link="none",
+                            inter_link="none",
+                            intra_domain_size=1,
+                            label="single",
                         ),
-                        "execution_format": "native where available, else "
-                        + ", ".join(
-                            f"{src}->{dst}"
-                            for src, dst in sorted(budget.emulated_formats.items())
-                        )
-                        or "native",
-                        "topology": "cluster",
-                        "sizing_rule": rationale,
-                        "device_count_sweep": [],
-                        **budget.to_dict(),
-                    }
-                )
-                for batch in BATCHES:
-                    step = evaluate(
-                        budget,
-                        model,
-                        context_tokens=context,
-                        batch_size=batch,
-                        technology=technology,
                     )
-                    points.append(
-                        _step_row(
-                            step,
+                else:
+                    plans_here = gpu_plans
+                for plan in plans_here:
+                    topology = plan.topology(count, 1)
+                    if plan.parallelism == "hybrid" and (
+                        topology.tensor_group <= 1
+                        or topology.tensor_group >= topology.partitions
+                    ):
+                        continue
+                    suffix = (
+                        "" if count == 1 else f"-{plan.parallelism}"
+                    )
+                    design_id = f"{_model_tag(model)}/{part}-x{count}{suffix}"
+                    budget = gpu_device_budget(
+                        technology, part=part, topology=topology, name=design_id
+                    )
+                    designs.append(
+                        {
+                            "design": design_id,
+                            "family": "gpu",
+                            "model": model.name,
+                            "representation": "official_packed",
+                            "stored_bits_per_parameter": (
+                                model.checkpoint_bytes / model.total_parameters * 8.0
+                            ),
+                            "execution_format": "native where available, else "
+                            + ", ".join(
+                                f"{src}->{dst}"
+                                for src, dst in sorted(budget.emulated_formats.items())
+                            )
+                            or "native",
+                            "topology": f"cluster-{plan.parallelism}",
+                            "sizing_rule": rationale,
+                            "device_count_sweep": [],
+                            **budget.to_dict(),
+                        }
+                    )
+                    if count > 1:
+                        crossovers.append(
+                            {
+                                "design": design_id,
+                                "model": model.name,
+                                **latency_crossover(
+                                    topology, model, technology
+                                ).to_dict(),
+                            }
+                        )
+                    for batch in BATCHES:
+                        step = evaluate(
                             budget,
-                            family="gpu",
-                            design_id=design_id,
-                            model=model,
+                            model,
+                            context_tokens=context,
+                            batch_size=batch,
+                            technology=technology,
                         )
-                    )
+                        points.append(
+                            _step_row(
+                                step,
+                                budget,
+                                family="gpu",
+                                design_id=design_id,
+                                model=model,
+                            )
+                        )
+                        # What the same cluster costs on the larger NVLink
+                        # domain the vendor also ships.  The part this study
+                        # prices is an SXM module on an eight-GPU baseboard, so
+                        # eight is the value; 72 is a published fact about a
+                        # different product and is reported rather than
+                        # borrowed.
+                        if (
+                            domain_sensitivity_link
+                            and batch == 1
+                            and step.feasible
+                            and math.isfinite(step.step_time_s)
+                        ):
+                            wide = replace(
+                                topology,
+                                intra_link=domain_sensitivity_link,
+                                intra_domain_size=max(
+                                    1,
+                                    int(
+                                        technology.link_domain_size(
+                                            domain_sensitivity_link
+                                        ).value
+                                    ),
+                                ),
+                                tensor_group_size=(
+                                    max(
+                                        1,
+                                        int(
+                                            technology.link_domain_size(
+                                                domain_sensitivity_link
+                                            ).value
+                                        ),
+                                    )
+                                    if plan.parallelism == "hybrid"
+                                    else topology.tensor_group_size
+                                ),
+                            )
+                            wide_link, _detail, _payload = technology.link_time_s(
+                                wide,
+                                model.num_layers,
+                                activation_bytes=(
+                                    batch * model.hidden_size * 2.0
+                                ),
+                            )
+                            wide_step = (
+                                step.step_time_s
+                                - step.component_times_s["link_latency"]
+                                + wide_link
+                            )
+                            domain_sensitivity.append(
+                                {
+                                    "design": design_id,
+                                    "model": model.name,
+                                    "device_count": count,
+                                    "parallelism": plan.parallelism,
+                                    "silicon_area_mm2": step.silicon_area_mm2,
+                                    "domain_size": topology.intra_domain_size,
+                                    "wide_domain_link": domain_sensitivity_link,
+                                    "wide_domain_size": wide.intra_domain_size,
+                                    "link_latency_s": step.component_times_s[
+                                        "link_latency"
+                                    ],
+                                    "wide_domain_link_latency_s": wide_link,
+                                    "per_user_tokens_s": step.per_user_tokens_s,
+                                    "wide_domain_per_user_tokens_s": (
+                                        1.0 / wide_step if wide_step > 0 else None
+                                    ),
+                                }
+                            )
 
     # --- iso-area comparisons -------------------------------------------
     gpu_rows = [row for row in points if row["family"] == "gpu"]
@@ -1071,11 +1481,32 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
         ]
         if not candidates:
             continue
-        iso = min(
-            candidates,
-            key=lambda gpu: abs(
-                gpu["silicon_area_mm2"] - row["silicon_area_mm2"]
-            ),
+        # **The GPU is allowed to pick its topology, exactly as the ROM side
+        # is.**  Selecting on area alone and then reading off whichever
+        # parallelism happened to be first is how the comparison came to charge
+        # the GPU a 672-way pipeline while the ROM ran tensor-parallel at the
+        # same area.  Among the clusters closest in area, the fastest feasible
+        # one is the comparator; the pipeline-only figure is carried beside it
+        # so the size of the previous error stays visible.
+        closest = min(
+            abs(gpu["silicon_area_mm2"] - row["silicon_area_mm2"])
+            for gpu in candidates
+        )
+        at_area = [
+            gpu
+            for gpu in candidates
+            if abs(gpu["silicon_area_mm2"] - row["silicon_area_mm2"])
+            <= closest + 1e-6
+        ]
+        feasible_at_area = [gpu for gpu in at_area if gpu["feasible"]]
+        iso = (
+            max(feasible_at_area, key=lambda gpu: gpu["per_user_tokens_s"])
+            if feasible_at_area
+            else at_area[0]
+        )
+        pipeline_only = next(
+            (gpu for gpu in at_area if gpu["parallelism"] in ("pipeline", "none")),
+            iso,
         )
         feasible_gpus = [gpu for gpu in candidates if gpu["feasible"]]
         fastest = (
@@ -1109,6 +1540,55 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                 "iso_area_gpu_per_user_tokens_s": iso["per_user_tokens_s"],
                 "iso_area_gpu_aggregate_tokens_s": iso["aggregate_tokens_s"],
                 "iso_area_gpu_binding_constraint": iso["binding_constraint"],
+                "iso_area_gpu_parallelism": iso["parallelism"],
+                "iso_area_gpu_pipeline_stages": iso["pipeline_stages"],
+                "iso_area_gpu_pipeline_stages_uncapped": iso[
+                    "pipeline_stages_uncapped"
+                ],
+                "iso_area_gpu_link_latency_without_stage_cap_s": iso[
+                    "link_latency_without_stage_cap_s"
+                ],
+                "iso_area_gpu_per_user_tokens_s_without_stage_cap": (
+                    1.0 / iso["step_time_without_stage_cap_s"]
+                    if iso.get("step_time_without_stage_cap_s")
+                    else None
+                ),
+                "per_user_speed_ratio_without_stage_cap": (
+                    row["per_user_tokens_s"]
+                    * iso["step_time_without_stage_cap_s"]
+                    if row["feasible"]
+                    and iso["feasible"]
+                    and iso.get("step_time_without_stage_cap_s")
+                    else None
+                ),
+                "iso_area_gpu_hop_events_per_token": iso["hop_events_per_token"],
+                "iso_area_gpu_link_latency_s": iso["component_times_s"][
+                    "link_latency"
+                ],
+                "iso_area_gpu_link_share_of_step": (
+                    iso["component_times_s"]["link_latency"] / iso["step_time_s"]
+                    if iso["step_time_s"]
+                    else None
+                ),
+                "pipeline_only_gpu_design": pipeline_only["design"],
+                "pipeline_only_gpu_per_user_tokens_s": (
+                    pipeline_only["per_user_tokens_s"]
+                ),
+                "pipeline_only_gpu_link_latency_s": (
+                    pipeline_only["component_times_s"]["link_latency"]
+                ),
+                "topology_choice_gain": (
+                    iso["per_user_tokens_s"] / pipeline_only["per_user_tokens_s"]
+                    if pipeline_only["per_user_tokens_s"] > 0
+                    else None
+                ),
+                "per_user_speed_ratio_pipeline_only_gpu": (
+                    row["per_user_tokens_s"] / pipeline_only["per_user_tokens_s"]
+                    if row["feasible"]
+                    and pipeline_only["feasible"]
+                    and pipeline_only["per_user_tokens_s"] > 0
+                    else None
+                ),
                 "per_user_speed_ratio": (
                     row["per_user_tokens_s"] / iso["per_user_tokens_s"]
                     if row["feasible"] and iso["feasible"] and iso["per_user_tokens_s"] > 0
@@ -1128,6 +1608,56 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
                 "fastest_feasible_gpu_per_user_tokens_s": (
                     fastest["per_user_tokens_s"] if fastest else None
                 ),
+            }
+        )
+
+    # --- GPU topology choice ----------------------------------------------
+    # The symmetric half of the table below.  For every cluster size the study
+    # evaluates, this records what each parallelism actually delivered, so the
+    # claim "the GPU was allowed to choose" is checkable rather than asserted.
+    gpu_topology_choices: list[dict[str, Any]] = []
+    gpu_sizes: dict[tuple[str, int, int], list[dict[str, Any]]] = {}
+    for row in points:
+        if row["family"] != "gpu":
+            continue
+        gpu_sizes.setdefault(
+            (row["model"], row["device_count"], row["batch_size"]), []
+        ).append(row)
+    for (model_name, count, batch), rows in sorted(gpu_sizes.items()):
+        by_parallelism = {row["parallelism"]: row for row in rows}
+        feasible = [row for row in rows if row["feasible"]]
+        if not feasible:
+            continue
+        best = max(feasible, key=lambda row: row["per_user_tokens_s"])
+        gpu_topology_choices.append(
+            {
+                "model": model_name,
+                "device_count": count,
+                "batch_size": batch,
+                "silicon_area_mm2": best["silicon_area_mm2"],
+                "best_parallelism": best["parallelism"],
+                "best_per_user_tokens_s": best["per_user_tokens_s"],
+                "best_link_latency_s": best["link_latency_s"],
+                "best_link_share_of_step": best["link_share_of_step"],
+                "best_hop_events_per_token": best["hop_events_per_token"],
+                "best_hop_semantics": best["hop_semantics"],
+                "binding_constraint": best["binding_constraint"],
+                **{
+                    f"{name}_per_user_tokens_s": (
+                        by_parallelism[name]["per_user_tokens_s"]
+                        if name in by_parallelism
+                        else None
+                    )
+                    for name in ("none", "pipeline", "tensor", "hybrid")
+                },
+                **{
+                    f"{name}_link_latency_s": (
+                        by_parallelism[name]["link_latency_s"]
+                        if name in by_parallelism
+                        else None
+                    )
+                    for name in ("none", "pipeline", "tensor", "hybrid")
+                },
             }
         )
 
@@ -1378,7 +1908,14 @@ def _simulate_study(study_id: str, technology: Technology) -> dict[str, Any]:
         "designs": designs,
         "points": points,
         "comparisons": comparisons,
+        "nvlink_domain_sensitivity": domain_sensitivity,
+        "link_latency_sensitivity": (
+            _link_latency_sensitivity(study_id, technology)
+            if with_sensitivity
+            else []
+        ),
         "topology_choices": topology_choices,
+        "gpu_topology_choices": gpu_topology_choices,
         "amortization_fork": amortization_fork,
         "floorplan_sweep": floorplan_sweep,
         "latency_crossovers": crossovers,
@@ -1432,8 +1969,23 @@ def _technology_derivations(
             name: {
                 "hop_latency_s": technology.link(name)[0].to_dict(),
                 "bytes_s": technology.link(name)[1].to_dict(),
+                "fabric": technology.link_fabric(name),
+                "domain_size": technology.link_domain_size(name).to_dict(),
+                "switch_radix": technology.link_switch_radix(name).to_dict(),
             }
-            for name in ("on_wafer", "on_package", "nvlink", "ethernet")
+            for name in sorted(technology.raw["links"])
+            if name != "none"
+        },
+        "link_plan": {
+            "intra": str(config["intra_link"]),
+            "inter": str(config["inter_link"]),
+            "rule": (
+                "Both sides of this study are charged the same two link classes. "
+                "A cluster is tensor-parallel inside one high-bandwidth domain and "
+                "pipeline-parallel across domains; a wafer machine is the same shape "
+                "with the on-wafer mesh inside a wafer and a package-class link "
+                "between wafers."
+            ),
         },
         "hbm": {
             field: technology.hbm(config["hbm_generation"], field).to_dict()
@@ -2108,11 +2660,22 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "cluster of the closest equal silicon area. **The area is stated on both",
             "sides.** Where one row appears, the two coincide.",
             "",
+            "**Both sides choose their own parallelism.** The GPU cluster is",
+            "evaluated under pipeline, tensor and hybrid and the best is reported,",
+            "exactly as the ROM side is. `PP-only ratio` is what the same comparison",
+            "says when the GPU is allowed pipeline and nothing else.",
+            "",
+            "`Ratio without the layer cap` is what the comparison says when a token",
+            "is allowed to cross more stage boundaries than the model has layers --",
+            "which is what this study charged before. That column, not the topology",
+            "sweep, is where the previously published ratios came from.",
+            "",
             "| Model | B | Pick | ROM design | ROM mm2 | ROM user tok/s | "
             "ROM aggregate tok/s | ROM binds on | GPU | GPU mm2 | Area ratio | "
-            "GPU user tok/s | GPU aggregate tok/s | GPU binds on | Per-user ratio | "
-            "Aggregate ratio |",
-            "|---|---:|---|---|---:|---:|---:|---|---|---:|---:|---:|---:|---|---:|---:|",
+            "GPU parallelism | GPU link us | GPU user tok/s | GPU aggregate tok/s | "
+            "GPU binds on | Per-user ratio | Aggregate ratio | PP-only ratio | "
+            "Ratio without the layer cap |",
+            "|---|---:|---|---|---:|---:|---:|---|---|---:|---:|---|---:|---:|---:|---|---:|---:|---:|---:|",
         ]
     )
     best_rows = _best_comparisons(result)
@@ -2126,12 +2689,136 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             f"{row['rom_binding_constraint']} | {row['iso_area_gpu_design']} | "
             f"{_fmt_area(row['iso_area_gpu_silicon_area_mm2'])} | "
             f"{_fmt_ratio(row['iso_area_ratio'])} | "
+            f"{row['iso_area_gpu_parallelism']} | "
+            f"{_fmt_us(row['iso_area_gpu_link_latency_s'])} | "
             f"{_fmt(row['iso_area_gpu_per_user_tokens_s']) if row['iso_area_gpu_feasible'] else 'infeasible'} | "
             f"{_fmt(row['iso_area_gpu_aggregate_tokens_s']) if row['iso_area_gpu_feasible'] else '—'} | "
             f"{row['iso_area_gpu_binding_constraint']} | "
             f"{_fmt_ratio(row['per_user_speed_ratio'])} | "
-            f"{_fmt_ratio(row['aggregate_speed_ratio'])} |"
+            f"{_fmt_ratio(row['aggregate_speed_ratio'])} | "
+            f"{_fmt_ratio(row.get('per_user_speed_ratio_pipeline_only_gpu'))} | "
+            f"{_fmt_ratio(row.get('per_user_speed_ratio_without_stage_cap'))} |"
         )
+
+    sensitivity = result.get("link_latency_sensitivity") or []
+    if sensitivity:
+        stated = {
+            (row["model"], round(row["rom_silicon_area_mm2"])): row
+            for row in _headline_rows(result)
+        }
+        by_bound: dict[tuple[str, int], dict[str, dict[str, Any]]] = {}
+        for row in sensitivity:
+            key = (row["model"], round(row["rom_silicon_area_mm2"]))
+            by_bound.setdefault(key, {})[row["bound"]] = row
+        lines.extend(
+            [
+                "",
+                "## Every hop latency in this model is assumed, so the headline is a "
+                "band",
+                "",
+                "NVIDIA publishes no NVLink or NVSwitch latency figure in any form,",
+                "and Cerebras publishes none for the on-wafer mesh or for SwarmX. The",
+                "table below re-runs the whole study with **every** assumed hop",
+                "latency at the low end of its stated range and again at the high end",
+                "-- on both sides at once, because a ratio is only tested by moving",
+                "both ends of it together. Where the band is wide the ratio is not a",
+                "number, it is an interval.",
+                "",
+                "| Model | ROM mm2 | Ratio at low | Ratio stated | Ratio at high |",
+                "|---|---:|---:|---:|---:|",
+            ]
+        )
+        for key in sorted(by_bound, key=lambda item: (item[0], item[1])):
+            point = stated.get(key)
+            bounds = by_bound[key]
+            if point is None or point["per_user_speed_ratio"] is None:
+                continue
+            lines.append(
+                f"| {key[0]} | {key[1]:,} | "
+                f"{_fmt_ratio((bounds.get('low') or {}).get('per_user_speed_ratio'))} | "
+                f"{_fmt_ratio(point['per_user_speed_ratio'])} | "
+                f"{_fmt_ratio((bounds.get('high') or {}).get('per_user_speed_ratio'))} |"
+            )
+
+    domain_rows = result.get("nvlink_domain_sensitivity") or []
+    if domain_rows:
+        best_by_size: dict[tuple[str, int], dict[str, Any]] = {}
+        for row in domain_rows:
+            key = (row["model"], row["device_count"])
+            current = best_by_size.get(key)
+            if current is None or row["per_user_tokens_s"] > current["per_user_tokens_s"]:
+                best_by_size[key] = row
+        widest = max(
+            domain_rows,
+            key=lambda row: (row["domain_size"], row["wide_domain_size"]),
+        )
+        lines.extend(
+            [
+                "",
+                "## The NVLink domain is a published number, and there are two of them",
+                "",
+                f"This study prices an SXM module on a baseboard whose NVLink domain is "
+                f"{widest['domain_size']} GPUs, which is what the vendor publishes for "
+                "that part. The",
+                f"same vendor also ships a {widest['wide_domain_size']}-GPU single-tier "
+                "NVLink domain in a rack-scale product built",
+                "from a different module. Borrowing the larger domain for this part "
+                "would be",
+                "choosing an input by its answer, so it is reported here instead. "
+                "Batch 1,",
+                "best topology at each cluster size.",
+                "",
+                f"| Model | GPUs | mm2 | Link us at domain {widest['domain_size']} | "
+                f"Link us at domain {widest['wide_domain_size']} | tok/s at "
+                f"{widest['domain_size']} | tok/s at {widest['wide_domain_size']} |",
+                "|---|---:|---:|---:|---:|---:|---:|",
+            ]
+        )
+        for key in sorted(best_by_size, key=lambda item: (item[0], item[1])):
+            row = best_by_size[key]
+            lines.append(
+                f"| {row['model']} | {row['device_count']:,} | "
+                f"{_fmt_area(row['silicon_area_mm2'])} | "
+                f"{_fmt_us(row['link_latency_s'])} | "
+                f"{_fmt_us(row['wide_domain_link_latency_s'])} | "
+                f"{_fmt(row['per_user_tokens_s'])} | "
+                f"{_fmt(row['wide_domain_per_user_tokens_s'])} |"
+            )
+
+    gpu_choices = [
+        row for row in result.get("gpu_topology_choices", []) if row["batch_size"] == 1
+    ]
+    if gpu_choices:
+        lines.extend(
+            [
+                "",
+                "## The GPU's own topology choice, at batch 1",
+                "",
+                "Every cluster size in the study, under each parallelism it can",
+                "actually run. `pipeline` is what this study charged the GPU before,",
+                "at every size; `hybrid` is tensor-parallel inside the NVLink domain",
+                "and pipeline-parallel across it, which is what a real deployment of",
+                "this size runs. A blank cell is a topology that collapses onto",
+                "another at that size and is not emitted twice.",
+                "",
+                "| Model | GPUs | mm2 | Pipeline tok/s | Tensor tok/s | Hybrid tok/s | "
+                "Best | Best link us | Link share | Binds on |",
+                "|---|---:|---:|---:|---:|---:|---|---:|---:|---|",
+            ]
+        )
+        for row in gpu_choices:
+            share = row["best_link_share_of_step"]
+            lines.append(
+                f"| {row['model']} | {row['device_count']} | "
+                f"{_fmt_area(row['silicon_area_mm2'])} | "
+                f"{_fmt(row['pipeline_per_user_tokens_s'])} | "
+                f"{_fmt(row['tensor_per_user_tokens_s'])} | "
+                f"{_fmt(row['hybrid_per_user_tokens_s'])} | "
+                f"{row['best_parallelism']} | "
+                f"{_fmt_us(row['best_link_latency_s'])} | "
+                f"{'—' if share is None else f'{share * 100:.1f}%'} | "
+                f"{row['binding_constraint']} |"
+            )
 
     lines.extend(
         [
@@ -2143,9 +2830,17 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "consume all of it. Below the first number the interconnect is a design",
             "cost; above the second the topology cannot deliver the rate at all.",
             "",
-            "| Design | Model | Devices | Parallelism | Link | Hops/token | "
-            "Link latency/token | Viable to (10% budget) | Hard ceiling |",
-            "|---|---|---:|---|---|---:|---:|---:|---:|",
+            "Each event is priced on the link it actually crosses and, for a",
+            "collective, on how many partitions it spans: an all-reduce costs",
+            "`traversals x hop latency` plus `(p-1)/p` of the payload each way, where",
+            "`traversals` is `2 lg p` in the fabric's own switch radix (Thakur,",
+            "Rabenseifner & Gropp 2005) or 1.1x the mesh diameter on a stitched",
+            "fabric (Rocki et al., SC20). `Events` spells the breakdown out.",
+            "",
+            "| Design | Model | Devices | Parallelism | Intra link | Inter link | "
+            "Hops/token | Link latency/token | Viable to (10% budget) | "
+            "Hard ceiling | Events |",
+            "|---|---|---:|---|---|---|---:|---:|---:|---:|---|",
         ]
     )
     seen_crossovers: set[str] = set()
@@ -2155,10 +2850,12 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
         seen_crossovers.add(row["design"])
         lines.append(
             f"| {row['design']} | {row['model']} | {row['device_count']} | "
-            f"{row['parallelism']} | {row['link']} | {row['hop_events_per_token']:,.0f} | "
+            f"{row['parallelism']} | {row.get('intra_link') or row['link']} | "
+            f"{row['link']} | {row['hop_events_per_token']:,.0f} | "
             f"{_fmt_us(row['link_latency_s_per_token'])} us | "
             f"{_fmt(row['viable_tokens_s'])} tok/s | "
-            f"{_fmt(row['hard_ceiling_tokens_s'])} tok/s |"
+            f"{_fmt(row['hard_ceiling_tokens_s'])} tok/s | "
+            f"{'; '.join(row.get('breakdown') or ()) or '—'} |"
         )
 
     lines.extend(
@@ -2503,8 +3200,24 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "  payload queueing beyond the modelled serialisation, and pipeline fill",
             "  at batch 1. Each of those makes an array worse, never better, so the",
             "  reported array crossovers are upper bounds.",
-            "- Power is a dynamic-activity lower bound: leakage, clock distribution",
-            "  and idle logic are not modelled, so `thermal` binding is under-reported.",
+            "- **Power is wrong by 7-9x and every rate above is independent of it.**",
+            "  The model counts memory bytes and MACs and nothing else, so it gives",
+            "  54.2 W for an A100 at batch 1 against a published 400 W and 27.0 W for",
+            "  Taalas HC1 against a published 200-250 W. It is not an activity-factor",
+            "  error: driven at peak HBM bandwidth AND the peak BF16 roof at once the",
+            "  model still gives 85.3 W. Leakage, clock distribution, operand delivery",
+            "  and control logic are not modelled at all. `thermal_scale` is therefore",
+            "  exactly 1.0 at every feasible point, and since `step_time = raw_step_time",
+            "  x thermal_scale` is the only path from power to any other quantity, no",
+            "  tokens/s in this report depends on the energy model -- and no watt or",
+            "  joule-per-token in it should be quoted.",
+            "- **A pipeline's service time is charged on the machine's aggregate",
+            "  resources, which is the steady-state throughput view, while its hops are",
+            "  charged on the single-token latency view.** A balanced S-stage",
+            "  pipeline's per-user latency is S times what is reported. The bias runs",
+            "  the same way on both families and grows with device count, and it is why",
+            "  the topology sweep above ranks pipeline first at every size. Whether it",
+            "  cancels in the iso-area ratio is not established.",
             "- Prefill, speculative decoding and cost are out of scope for this model.",
             "",
         ]
@@ -2574,6 +3287,87 @@ def _findings(result: dict[str, Any]) -> list[str]:
             f"`{top['rom_binding_constraint']}`."
         )
 
+    symmetry = [
+        row
+        for row in result["comparisons"]
+        if row["batch_size"] == 1
+        and row["rom_feasible"]
+        and row["iso_area_gpu_feasible"]
+        and row.get("per_user_speed_ratio_without_stage_cap") is not None
+        and row.get("per_user_speed_ratio") is not None
+    ]
+    if symmetry:
+        # The largest absolute fall, which is the one a headline is read off,
+        # rather than the largest proportional one, which on this study is a
+        # model where the GPU wins either way and the fall is 1.4x of nothing.
+        worst = max(
+            symmetry,
+            key=lambda row: row["per_user_speed_ratio_without_stage_cap"]
+            - row["per_user_speed_ratio"],
+        )
+        findings.append(
+            "**A token cannot cross more stage boundaries than the model has "
+            "layers, and charging it as though it could was most of the reported "
+            "advantage at scale.** At "
+            f"{worst['rom_silicon_area_mm2']:,.0f} mm2 on {worst['model']} at batch 1, "
+            f"the iso-area GPU cluster is "
+            f"{worst['iso_area_gpu_device_count']:,} devices. Cut as one serial "
+            f"pipeline that is "
+            f"{worst['iso_area_gpu_pipeline_stages_uncapped']:,} stages and "
+            f"{worst['iso_area_gpu_link_latency_without_stage_cap_s'] * 1e6:,.0f} us "
+            "of link latency per token; but the model has "
+            f"{[m for m in result['model_summaries'] if m['model'] == worst['model']][0]['num_layers']} "
+            "layers, so at most "
+            f"{worst['iso_area_gpu_pipeline_stages']} of those boundaries can exist "
+            "and the rest of the silicon is replication, which adds bandwidth and no "
+            f"serial event: {worst['iso_area_gpu_link_latency_s'] * 1e6:,.0f} us. The "
+            "iso-area per-user ratio at that point falls from "
+            f"{worst['per_user_speed_ratio_without_stage_cap']:,.1f}x to "
+            f"{worst['per_user_speed_ratio']:,.1f}x. The same cap is applied to the "
+            "ROM side, where it is worth more still because a twelve-wafer machine "
+            "spans 681 reticle fields."
+        )
+
+    choice = [
+        row
+        for row in result["comparisons"]
+        if row["batch_size"] == 1
+        and row["rom_feasible"]
+        and row["iso_area_gpu_feasible"]
+        and row.get("topology_choice_gain") is not None
+    ]
+    if choice:
+        best_gain = max(choice, key=lambda row: row["topology_choice_gain"])
+        gain = best_gain["topology_choice_gain"]
+        if gain > 1.01:
+            findings.append(
+                "**Letting the GPU choose its own parallelism is worth up to "
+                f"{gain:.2f}x to it.** At "
+                f"{best_gain['rom_silicon_area_mm2']:,.0f} mm2 on "
+                f"{best_gain['model']} the pipeline-only GPU delivers "
+                f"{best_gain['pipeline_only_gpu_per_user_tokens_s']:,.0f} tok/s and "
+                f"the same silicon running "
+                f"{best_gain['iso_area_gpu_parallelism']} delivers "
+                f"{best_gain['iso_area_gpu_per_user_tokens_s']:,.0f} tok/s."
+            )
+        else:
+            findings.append(
+                "**Giving the GPU the same topology sweep the ROM side gets changes "
+                "almost nothing, and that is itself a result about this model.** "
+                "Pipeline, tensor and hybrid are all evaluated at every cluster size "
+                f"and the best is never more than {gain:.2f}x the pipeline-only "
+                "answer. The reason is structural: this model computes the service "
+                "time on the machine's **aggregate** memory bandwidth and compute "
+                "roof whatever the parallelism, so tensor parallelism buys a token "
+                "nothing here and only costs it two all-reduces per layer. The "
+                "asymmetry that mattered was never the choice of topology -- it was "
+                "the serial depth each topology was charged, and that is what the "
+                "layer cap above fixes. A model that priced a pipeline stage's "
+                "service time on that stage's own silicon would rank these "
+                "topologies differently, and this one does not; see the open item on "
+                "the pipeline service-time rule."
+            )
+
     high_batch = [
         row
         for row in result["comparisons"]
@@ -2639,12 +3433,13 @@ def _findings(result: dict[str, Any]) -> list[str]:
     tensor_nvlink = [
         row
         for row in result["latency_crossovers"]
-        if row["parallelism"] == "tensor" and row["link"] == "nvlink"
+        if row["parallelism"] == "tensor"
+        and str(row.get("intra_link", "")).startswith("nvlink")
     ]
     tensor_wafer = [
         row
         for row in result["latency_crossovers"]
-        if row["parallelism"] == "tensor" and row["link"] == "on_wafer"
+        if row["parallelism"] == "tensor" and row.get("intra_link") == "on_wafer"
     ]
     wafer_per_mm2 = sum(
         1
@@ -2657,16 +3452,48 @@ def _findings(result: dict[str, Any]) -> list[str]:
         if row.get("array_or_wafer_per_mm2") == "array"
     )
     if tensor_nvlink and tensor_wafer:
+        wafer_ceiling = min(row["hard_ceiling_tokens_s"] for row in tensor_wafer)
+        nvlink_ceiling = min(row["hard_ceiling_tokens_s"] for row in tensor_nvlink)
+        # Like for like: the same model's collective on one wafer against the
+        # same model's collective on NVLink.  Comparing the two worst cases
+        # would compare different machines.
+        matched: list[float] = []
+        for wafer_row in tensor_wafer:
+            if wafer_row["device_count"] != 1:
+                continue
+            peer = next(
+                (
+                    row
+                    for row in tensor_nvlink
+                    if row["model"] == wafer_row["model"]
+                ),
+                None,
+            )
+            if peer and wafer_row["link_latency_s_per_token"] > 0:
+                matched.append(
+                    peer["link_latency_s_per_token"]
+                    / wafer_row["link_latency_s_per_token"]
+                )
+        advantage = min(matched) if matched else float("nan")
         findings.append(
-            "**Tensor parallelism is a latency argument for wafer-scale, and it is "
-            "the sharpest one.** Two all-reduces per layer per token cost up to "
+            "**Tensor parallelism is better on a wafer than on NVLink and is not "
+            "good anywhere, and the published claim that it reaches Taalas-class "
+            "rates on-wafer is RETRACTED.** Two all-reduces per layer per token "
+            "cost up to "
             f"{max(row['link_latency_s_per_token'] for row in tensor_nvlink) * 1e6:,.0f} us "
             "over NVLink, capping per-user decode at "
-            f"{min(row['hard_ceiling_tokens_s'] for row in tensor_nvlink):,.0f} tok/s "
-            "before any arithmetic happens; the same collectives on-wafer cost at "
-            f"most {max(row['link_latency_s_per_token'] for row in tensor_wafer) * 1e6:,.1f} us "
-            "and cap it at "
-            f"{min(row['hard_ceiling_tokens_s'] for row in tensor_wafer):,.0f} tok/s."
+            f"{nvlink_ceiling:,.0f} tok/s before any arithmetic happens; the same "
+            "collectives on-wafer cost at most "
+            f"{max(row['link_latency_s_per_token'] for row in tensor_wafer) * 1e6:,.1f} us "
+            f"and cap it at {wafer_ceiling:,.0f} tok/s. The ordering survives, and "
+            "on a like-for-like comparison -- the same model's collective on one "
+            f"wafer against the same model's on NVLink -- the wafer is at least "
+            f"{advantage:,.1f}x cheaper. But the previous figures of 116,278 and "
+            "81,966 tok/s came from charging a stitched 2-D mesh one flat hop "
+            "however many reticle fields the collective spanned. A mesh has no "
+            "switch, so an all-reduce costs about 1.1 times its diameter, and the "
+            "model now charges that. Both studies consequently choose pipeline "
+            "over tensor parallelism on the wafer at every operating point."
         )
     findings.append(
         "**Which topology wins depends entirely on what is being maximised, and "
@@ -2855,6 +3682,12 @@ CSV_FIELDS = (
     "topology_kind",
     "parallelism",
     "link",
+    "intra_link",
+    "intra_domain_size",
+    "tensor_group",
+    "pipeline_stages",
+    "link_latency_s",
+    "link_share_of_step",
     "node",
     "weight_store",
     "kv_store",
