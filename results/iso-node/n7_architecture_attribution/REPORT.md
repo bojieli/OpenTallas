@@ -35,20 +35,23 @@ separate. The SRAM-rich control uses a static 70% weight / 30% KV split.
 
 ## Exact model work and deployment storage
 
-| Model | Official checkpoint | Deployment representation | Resident bytes | 200K tensor ops/token | Dense / routed format |
-|---|---:|---|---:|---:|---|
-| DeepSeek-V4-Flash-0731 | 166.9 GB | a100_bf16_expanded | 608.5 GB | 50.0 Gop | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
-| DeepSeek-V4-Flash-0731 | 166.9 GB | a100_packed_hbm_bf16_execute | 166.9 GB | 50.0 Gop | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
-| DeepSeek-V4-Flash-0731 | 166.9 GB | official_packed | 166.9 GB | 50.0 Gop | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
-| DeepSeek-V4-Pro-0813 | 892.7 GB | a100_bf16_expanded | 3,301.2 GB | 145.1 Gop | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
-| DeepSeek-V4-Pro-0813 | 892.7 GB | a100_packed_hbm_bf16_execute | 892.7 GB | 145.1 Gop | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
-| DeepSeek-V4-Pro-0813 | 892.7 GB | official_packed | 892.7 GB | 145.1 Gop | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
+| Model | Official checkpoint | Deployment representation | Resident bytes | Tensor ops/token | At context | Dense / routed format |
+|---|---:|---|---:|---:|---:|---|
+| DeepSeek-V4-Flash-0731 | 166.9 GB | a100_bf16_expanded | 608.5 GB | 135.2 Gop | 1,000,000 | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
+| DeepSeek-V4-Flash-0731 | 166.9 GB | a100_packed_hbm_bf16_execute | 166.9 GB | 135.2 Gop | 1,000,000 | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
+| DeepSeek-V4-Flash-0731 | 166.9 GB | official_packed | 166.9 GB | 135.2 Gop | 1,000,000 | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
+| DeepSeek-V4-Pro-0813 | 892.7 GB | a100_bf16_expanded | 3,301.2 GB | 294.2 Gop | 1,000,000 | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
+| DeepSeek-V4-Pro-0813 | 892.7 GB | a100_packed_hbm_bf16_execute | 892.7 GB | 294.2 Gop | 1,000,000 | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
+| DeepSeek-V4-Pro-0813 | 892.7 GB | official_packed | 892.7 GB | 294.2 Gop | 1,000,000 | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
+| Qwen3-8B | 16.4 GB | a100_bf16_expanded | 16.4 GB | 15.1 Gop | 32,768 | bf16_x_bf16 / None |
+| Qwen3-8B | 16.4 GB | a100_packed_hbm_bf16_execute | 16.4 GB | 15.1 Gop | 32,768 | bf16_x_bf16 / None |
+| Qwen3-8B | 16.4 GB | official_packed | 16.4 GB | 15.1 Gop | 32,768 | bf16_x_bf16 / None |
 
 ## Mechanical consistency audit
 
 | Status | Checks | Max weight/shared-HBM service | Max KV service | Max compute service | Max cooling |
 |---|---:|---:|---:|---:|---:|
-| PASS | 12,091 | 97.5% | 90.4% | 88.4% | 100.0% |
+| PASS | 14,578 | 100.0% | 94.6% | 88.4% | 100.0% |
 
 The service columns are component-time occupancy divided by the final
 thermal-adjusted interval. GPU weight and KV time are added because
@@ -204,6 +207,14 @@ lows are reported only when every envelope is feasible.
 | DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | 3/3 | 123.2–1,929.5 | 0.67×–10.53× | compute_C5 |
 | DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | 3/3 | 33.6–500.4 | 0.34×–5.08× | compute_C5 |
 | DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | 2/3 | infeasible–251.8 | infeasible–3.96× | capacity_C7_C8_C9, compute_C5 |
+| Qwen3-8B | 8,192 | 1 | 3/3 | 967.8–9,327.0 | 1.07×–10.29× | kv_beachfront_C8 |
+| Qwen3-8B | 8,192 | 8 | 3/3 | 212.5–1,311.7 | 0.32×–1.97× | kv_beachfront_C8 |
+| Qwen3-8B | 8,192 | 32 | 3/3 | 57.8–332.4 | 0.15×–0.84× | kv_beachfront_C8 |
+| Qwen3-8B | 8,192 | 64 | 3/3 | 29.3–166.6 | 0.12×–0.65× | kv_beachfront_C8 |
+| Qwen3-8B | 32,768 | 1 | 3/3 | 385.2–2,603.6 | 0.46×–3.09× | kv_beachfront_C8 |
+| Qwen3-8B | 32,768 | 8 | 3/3 | 58.1–335.9 | 0.11×–0.62× | kv_beachfront_C8 |
+| Qwen3-8B | 32,768 | 32 | 3/3 | 14.9–84.3 | 0.06×–0.33× | kv_beachfront_C8 |
+| Qwen3-8B | 32,768 | 64 | 2/3 | infeasible–42.2 | infeasible–0.28× | capacity_C7_C8_C9, kv_beachfront_C8 |
 
 ## SRAM-rich N7 control at 200K
 

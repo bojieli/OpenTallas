@@ -23,6 +23,25 @@ def _positive_int(mapping: dict[str, Any], key: str) -> int:
     return value
 
 
+def _already_execution_format(model: ModelProfile) -> bool:
+    """Is the released checkpoint already in the format the GPU executes?
+
+    Both A100 policies describe expanding a packed checkpoint to BF16 -- offline
+    for the resident policy, at operand consumption for the packed one.  A model
+    released in BF16 has nothing to expand, so both policies are the identity on
+    it rather than being undefined.  Qwen3-8B is such a model: dense, BF16, no
+    routed experts and no packed deployment_storage entry.
+
+    The test is the model's own declared formats, not its adapter name, so a
+    second BF16 model needs no change here.
+    """
+    if model.metadata.get("deployment_storage") is not None:
+        return False
+    if model.routed_weight_bytes:
+        return False
+    return model.dense_compute_format == "bf16_x_bf16"
+
+
 def deployment_model(model: ModelProfile, policy: str) -> ModelProfile:
     """Return the exact resident/traffic representation for ``policy``.
 
@@ -41,6 +60,18 @@ def deployment_model(model: ModelProfile, policy: str) -> ModelProfile:
             metadata={**model.metadata, "deployment_policy": OFFICIAL_PACKED},
         )
     if policy == A100_PACKED_BF16_EXECUTE:
+        if _already_execution_format(model):
+            return replace(
+                model,
+                metadata={
+                    **model.metadata,
+                    "deployment_policy": A100_PACKED_BF16_EXECUTE,
+                    "deployment_storage_policy": (
+                        "released checkpoint is already BF16; the packed-execute "
+                        "policy is the identity and no expansion is charged"
+                    ),
+                },
+            )
         if model.metadata.get("adapter") != "deepseek_v4":
             raise ValidationError(
                 "A100 packed-to-BF16 execution is currently defined only for DeepSeek V4"
@@ -66,6 +97,18 @@ def deployment_model(model: ModelProfile, policy: str) -> ModelProfile:
         )
     if policy != A100_BF16_EXPANDED:
         raise ValidationError(f"unsupported deployment policy {policy!r}")
+    if _already_execution_format(model):
+        return replace(
+            model,
+            metadata={
+                **model.metadata,
+                "deployment_policy": A100_BF16_EXPANDED,
+                "deployment_storage_policy": (
+                    "released checkpoint is already BF16; the expansion policy is "
+                    "the identity and no expansion is charged"
+                ),
+            },
+        )
     if model.metadata.get("adapter") != "deepseek_v4":
         raise ValidationError("A100 BF16 expansion is currently defined only for DeepSeek V4")
 

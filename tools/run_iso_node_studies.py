@@ -55,8 +55,26 @@ MODEL_PATHS = {
     / "configs"
     / "models"
     / "deepseek-v4-pro-0813.json",
+    # Qwen3-8B is the model the ABI 3.0 lane actually executes end to end, on
+    # both the ROM and the HBM/SRAM targets.  Without it here, the study with
+    # current technology numbers covers no model that produces real tokens, and
+    # the lane that produces real tokens has no current performance study --
+    # which is the break in the analytical-to-simulation loop.
+    "Qwen3-8B": ROOT / "configs" / "models" / "qwen3-8b.json",
 }
 CONTEXTS = (8_192, 32_768, 200_000, 1_000_000)
+
+
+def contexts_for(model: "ModelProfile") -> tuple[int, ...]:
+    """The study contexts this model can actually serve.
+
+    ``AnalyticalSimulator.evaluate`` raises above ``max_context_tokens``, so a
+    model with a shorter window contributes fewer points rather than being
+    excluded from the study.  Qwen3-8B tops out at 40,960 tokens and so appears
+    at 8,192 and 32,768 only; its sweet-spot context of 8,192 is the point the
+    executed lane is built around.
+    """
+    return tuple(c for c in CONTEXTS if c <= model.max_context_tokens)
 BATCHES = (1, 8, 32, 64)
 B300_FP32_ROOF_SWEEP_OPS_S_PER_DEVICE = (
     19.5e12,
@@ -479,13 +497,22 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
             f"interval below exposed component floor {key}",
         )
 
-    expected_points = (
-        len(result["model_summaries"])
-        * len(result["inputs"]["contexts"])
+    # The matrix is no longer rectangular: a model with a shorter context window
+    # contributes only the contexts it can serve.  Counting per model keeps this
+    # a real completeness check rather than one that had to be relaxed.
+    contexts_by_model = {
+        summary["model"]: [entry["context_tokens"] for entry in summary["contexts"]]
+        for summary in result["model_summaries"]
+    }
+    expected_points = sum(
+        len(contexts)
         * len(result["inputs"]["required_batches"])
         * len(result["architecture_summaries"])
+        for contexts in contexts_by_model.values()
     )
     check(len(result["points"]) == expected_points, "point matrix is incomplete")
+    for name, contexts in contexts_by_model.items():
+        check(bool(contexts), f"model {name} contributes no context")
     return {
         "status": "pass" if not errors else "fail",
         "checks_evaluated": checks,
@@ -531,6 +558,11 @@ def _b300_fp32_sensitivity(
     }
     rows: list[dict[str, Any]] = []
     for model in models:
+        # This sensitivity is defined at the 200K point.  A model whose window
+        # is shorter has no such point and is skipped rather than evaluated at
+        # some other context under a 200K heading.
+        if 200_000 > model.max_context_tokens:
+            continue
         operations = operation_inventory(model, 200_000)
         fp32_fraction = (
             operations.operations_by_format.get("fp32_x_fp32", 0.0)
@@ -627,7 +659,7 @@ def _simulate_study(study_id: str, config_path: Path) -> dict[str, Any]:
 
     for model in models:
         context_summaries: list[dict[str, Any]] = []
-        for context in CONTEXTS:
+        for context in contexts_for(model):
             packed_kv = kv_traffic(model, context)
             packed_b1_weight = weight_traffic(model, 1).total_bytes
             operations = operation_inventory(model, context)
@@ -769,7 +801,7 @@ def _simulate_study(study_id: str, config_path: Path) -> dict[str, Any]:
                     )
 
         for arch in [*gpus, *wafers]:
-            for context in CONTEXTS:
+            for context in contexts_for(model):
                 base = simulate(model, arch, context, 1)
                 max_batch = int(float(base.metrics["C7_C8_max_batch_per_stage"]))
                 endpoint = (
@@ -817,7 +849,7 @@ def _simulate_study(study_id: str, config_path: Path) -> dict[str, Any]:
 
     uncertainty_bands: list[dict[str, Any]] = []
     for model in models:
-        for context in CONTEXTS:
+        for context in contexts_for(model):
             for batch in BATCHES:
                 rows = [
                     row
@@ -900,6 +932,11 @@ def _simulate_study(study_id: str, config_path: Path) -> dict[str, Any]:
                 for name, path in MODEL_PATHS.items()
             },
             "contexts": list(CONTEXTS),
+            "contexts_note": (
+                "the study contexts; a model whose max_context_tokens is lower "
+                "contributes only the contexts it can serve, so the point "
+                "matrix is not rectangular"
+            ),
             "required_batches": list(BATCHES),
             "counting_convention": "one multiply plus one add equals two operations",
             "cost_scope": "partial TCO only: assumed acquisition/NRE amortization plus active electricity",
@@ -1032,21 +1069,23 @@ def render_report(result: dict[str, Any]) -> str:
             "",
             "## Exact model work and deployment storage",
             "",
-            "| Model | Official checkpoint | Deployment representation | Resident bytes | 200K tensor ops/token | Dense / routed format |",
-            "|---|---:|---|---:|---:|---|",
+            "| Model | Official checkpoint | Deployment representation | Resident bytes | Tensor ops/token | At context | Dense / routed format |",
+            "|---|---:|---|---:|---:|---:|---|",
         ]
     )
     for model in result["model_summaries"]:
-        ops_200k = next(
-            context["tensor_operations_per_token"]
-            for context in model["contexts"]
-            if context["context_tokens"] == 200_000
-        )
+        # Report each model at its own largest studied context rather than at a
+        # fixed 200K.  Qwen3-8B's window is 40,960 tokens, so it has no 200K
+        # point, and quoting one model's ops/token under another's context
+        # heading would be worse than quoting a different context honestly.
+        deepest = max(model["contexts"], key=lambda c: c["context_tokens"])
+        ops = deepest["tensor_operations_per_token"]
+        at_context = deepest["context_tokens"]
         for deployment in model["deployment_representations"]:
             lines.append(
                 f"| {model['model']} | {_fmt_bytes(model['official_checkpoint_bytes'])} | "
                 f"{deployment['policy']} | {_fmt_bytes(deployment['checkpoint_bytes'])} | "
-                f"{ops_200k/1e9:,.1f} Gop | {model['dense_compute_format']} / "
+                f"{ops/1e9:,.1f} Gop | {at_context:,} | {model['dense_compute_format']} / "
                 f"{model['routed_compute_format']} |"
             )
 

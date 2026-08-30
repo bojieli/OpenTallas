@@ -25,16 +25,17 @@ separate. The SRAM-rich control uses a static 70% weight / 30% KV split.
 
 ## Exact model work and deployment storage
 
-| Model | Official checkpoint | Deployment representation | Resident bytes | 200K tensor ops/token | Dense / routed format |
-|---|---:|---|---:|---:|---|
-| DeepSeek-V4-Flash-0731 | 166.9 GB | official_packed | 166.9 GB | 50.0 Gop | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
-| DeepSeek-V4-Pro-0813 | 892.7 GB | official_packed | 892.7 GB | 145.1 Gop | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
+| Model | Official checkpoint | Deployment representation | Resident bytes | Tensor ops/token | At context | Dense / routed format |
+|---|---:|---|---:|---:|---:|---|
+| DeepSeek-V4-Flash-0731 | 166.9 GB | official_packed | 166.9 GB | 135.2 Gop | 1,000,000 | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
+| DeepSeek-V4-Pro-0813 | 892.7 GB | official_packed | 892.7 GB | 294.2 Gop | 1,000,000 | fp8_e4m3_x_fp8_e4m3 / mxfp4_e2m1_x_fp8_e4m3 |
+| Qwen3-8B | 16.4 GB | official_packed | 16.4 GB | 15.1 Gop | 32,768 | bf16_x_bf16 / None |
 
 ## Mechanical consistency audit
 
 | Status | Checks | Max weight/shared-HBM service | Max KV service | Max compute service | Max cooling |
 |---|---:|---:|---:|---:|---:|
-| PASS | 7,881 | 100.0% | 84.9% | 65.1% | 100.0% |
+| PASS | 9,086 | 100.0% | 95.0% | 65.1% | 100.0% |
 
 The service columns are component-time occupancy divided by the final
 thermal-adjusted interval. GPU weight and KV time are added because
@@ -210,6 +211,14 @@ lows are reported only when every envelope is feasible.
 | DeepSeek-V4-Pro-0813 | 1,000,000 | 8 | 3/3 | 612.5–5,116.0 | 1.60×–13.37× | collective_floor_C6, kv_beachfront_C8 |
 | DeepSeek-V4-Pro-0813 | 1,000,000 | 32 | 3/3 | 245.4–1,385.0 | 1.57×–8.89× | kv_beachfront_C8 |
 | DeepSeek-V4-Pro-0813 | 1,000,000 | 64 | 3/3 | 136.4–702.2 | 1.36×–7.03× | kv_beachfront_C8 |
+| Qwen3-8B | 8,192 | 1 | 3/3 | 1,625.2–21,865.9 | 0.91×–12.21× | collective_floor_C6, kv_beachfront_C8 |
+| Qwen3-8B | 8,192 | 8 | 3/3 | 602.2–3,491.8 | 0.42×–2.43× | kv_beachfront_C8 |
+| Qwen3-8B | 8,192 | 32 | 3/3 | 190.7–899.7 | 0.22×–1.05× | kv_beachfront_C8 |
+| Qwen3-8B | 8,192 | 64 | 3/3 | 99.8–452.2 | 0.18×–0.81× | kv_beachfront_C8 |
+| Qwen3-8B | 32,768 | 1 | 3/3 | 948.9–6,866.7 | 0.57×–4.15× | kv_beachfront_C8 |
+| Qwen3-8B | 32,768 | 8 | 3/3 | 193.5–921.2 | 0.21×–0.98× | kv_beachfront_C8 |
+| Qwen3-8B | 32,768 | 32 | 3/3 | 51.9–232.1 | 0.14×–0.61× | kv_beachfront_C8 |
+| Qwen3-8B | 32,768 | 64 | 3/3 | 26.3–116.2 | 0.12×–0.55× | kv_beachfront_C8 |
 
 ## Interpretation boundary
 
