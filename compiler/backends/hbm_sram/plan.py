@@ -1437,7 +1437,6 @@ def build_plan(
     *,
     topology: TopologyClass | int | None = None,
     tile: TileConfig | None = None,
-    validate: bool = True,
     unroll_layers: bool = False,
     reuse_arenas: bool = True,
     span_override: int | None = None,
@@ -1455,8 +1454,12 @@ def build_plan(
     the shipped artifact depends on a debugging mode.
     """
     graph = as_kernel_graph(graph)
-    if validate:
-        require_neutral(graph)
+    # Unconditional, and it used to be optional. An IR gate a backend can skip
+    # is advice rather than a gate: amendment A20 moved index_family's refusal
+    # into neutral admission precisely so one rule covers both lanes, and a
+    # `validate=False` here would have been the hole that rule falls through.
+    # Nothing called it.
+    require_neutral(graph)
     tile = tile or TileConfig()
     warnings: list[str] = []
     topology_class = TopologyClass(
