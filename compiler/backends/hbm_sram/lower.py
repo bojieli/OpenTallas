@@ -130,6 +130,18 @@ EXECUTION_CONTRACT: Mapping[str, str] = {
         "bf16_bf16_fp32_blocked_rne_v1"
     ),
     "routing_router_score_bf16_v1": "bf16_bf16_fp32_blocked_rne_v1",
+    # The SwiGLU family's three contractions, dense and routed.  The name is
+    # provenance, not an operation: the nonlinearity is a *separate* kernel --
+    # the graph carries one ``SWIGLU`` per site declaring
+    # ``*_clamped_silu_product_v1`` -- and what these contracts name is the
+    # plain ``MATMUL`` / ``ROUTED_MATMUL`` that feeds it.  Nothing is folded
+    # into the accumulation, so the two A7 associations are the two choices.
+    "fp8_swiglu_bf16_gate_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
+    "fp8_swiglu_bf16_up_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
+    "fp8_swiglu_bf16_down_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
+    "mxfp4_swiglu_bf16_gate_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
+    "mxfp4_swiglu_bf16_up_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
+    "mxfp4_swiglu_bf16_down_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
 }
 
 #: Which counter namespace observes which engine family.
@@ -2242,13 +2254,14 @@ class _Emitter:
             dynamic=[DynamicTerm.symbol(Symbol.NODE_ID, block * shard)],
             writable=True,
         )
-        # Two events for the site.  An event is a physical resource -- the
-        # scoreboard's ``signalled`` vector is one flop per event and nothing
-        # recycles an ID -- so they are spent where the dependency matters
-        # most: the collective's input and the collective's completion, so
-        # nothing can be scheduled across the transfer itself.  The unpack
-        # signals no event of its own; it is the instruction immediately after
-        # the collective it waits on, and the microsequencer is in order.
+        # Three events for the site, one per step, and none of them is
+        # spare.  ADR-003 section 9 gives each engine a bounded submission and
+        # *completion* queue and says nothing whatever about completion order,
+        # so an engine's completions are unordered unless an event says
+        # otherwise -- the microsequencer being in order sequences *issue*, not
+        # completion.  Each step here therefore waits on its predecessor's
+        # event: the collective on the pack, the unpack on the collective, and
+        # every consumer of the result on the unpack.
         packed = builder.new_event()
         self._emit_move(
             plan, pack_source, pack_destination, numeric, schedule, counter,
@@ -2309,11 +2322,19 @@ class _Emitter:
             dynamic=row_term,
             writable=True,
         )
+        # The unpack is what actually writes the gathered rows into the
+        # activation buffer, so it -- not the collective -- is what a consumer
+        # must wait on.  Returning ``gathered`` here let a consumer on another
+        # queue read the buffer while the unpack was still in flight, because
+        # the collective signals before the unpack runs.  On the functional
+        # device, which retires one instruction at a time, that was invisible;
+        # on a machine with asynchronous engines it is a race.
+        unpacked = builder.new_event()
         self._emit_move(
             plan, unpack_source, unpack_destination, numeric, schedule, counter,
-            predicate, gathered, NO_ID, "unpack",
+            predicate, gathered, unpacked, "unpack",
         )
-        return gathered
+        return unpacked
 
     def _emit_move(
         self,

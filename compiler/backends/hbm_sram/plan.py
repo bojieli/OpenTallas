@@ -2535,7 +2535,15 @@ def _aux_ids(
                 or groups
             ]
     elif family == int(Major.REDUCTION):
-        if sub == int(Reduction.GROUPED_CONCAT):
+        if sub == int(Reduction.PARTITION_SUM):
+            # TA-ABI3-OPCONV-1: this ``aux0`` is a runtime *symbol*, not an
+            # immediate -- the opposite reading to GROUPED_CONCAT's below, and
+            # the operand row is the authority for which.  No published graph
+            # emits a PARTITION_SUM yet; the ROM lane has always stated it and
+            # this lane stated nothing, which is a divergence waiting for the
+            # first exporter to emit one rather than a defect anyone has hit.
+            aux = [int(Symbol.VOCABULARY_PARTITIONS)]
+        elif sub == int(Reduction.GROUPED_CONCAT):
             # Amendment A17: a concatenation states the axis it joins.  The
             # graph carries it as an attribute and ``aux_id_0`` is where the
             # ABI reads it; an unstated axis is read as 0, which is a *row*
