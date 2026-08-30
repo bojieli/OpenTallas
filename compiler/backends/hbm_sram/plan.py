@@ -71,7 +71,11 @@ from compiler.ir.v3.kernel_ir import (
     Tensor,
     require_neutral,
 )
-from compiler.ir.v3.lowering import engine_for
+from compiler.ir.v3.lowering import (
+    ABSENT_OPERANDS,
+    abi_input_slots as _shared_input_slots,
+    engine_for,
+)
 from compiler.ir.v3.numeric import canonical_contract_id
 from runtime.abi3.capability import Capability, canonical_json, digest_of
 from runtime.abi3.constants import (
@@ -2928,22 +2932,71 @@ _SLOT_PERMUTATION: Mapping[str, tuple[int, ...]] = {
     "HYPER_CONNECT_HEAD": (0, 1, 3, 2),
 }
 
-#: ABI input slots the operand convention requires to be ``NO_ID``, by neutral
-#: kind.  ``VECTOR.COMPRESS`` sub-case 2 is the case: its ``in1`` is the
-#: projection matrix, which a state update has none of, while its ``in2`` is
-#: the position embedding -- exactly what the APE table is.  A required hole is
-#: a stated slot, not a missing operand, so the operands are placed either side
-#: of it rather than packed down over it; packing them down put the APE where
-#: the projection belongs and the engine refused the operator outright.  This
-#: mirrors ``ABI_EMPTY_INPUT_SLOTS`` in
-#: ``compiler/backends/rom/common/program.py``: one convention, two backends.
-_ABI_EMPTY_INPUT_SLOTS: Mapping[str, tuple[int, ...]] = {
+#: ABI input slots this backend supplies ``absent_operands`` for, by neutral
+#: kind, because the operand convention requires them empty and no exporter can
+#: yet say so.  ``VECTOR.COMPRESS`` sub-case 2 is the only case: its ``in1`` is
+#: the projection matrix, which a state update has none of, while its ``in2``
+#: is the position embedding -- exactly what the APE table is.
+#:
+#: This is *not* a second hole table.  Amendment A20 makes ``absent_operands``
+#: the one statement of a hole and
+#: ``compiler/ir/v3/lowering.py::abi_input_slots`` the one placement of it, and
+#: both are adopted below; what survives here is a seed for that call, because
+#: ``COMPRESS_STATE_UPDATE`` is not in the frozen ``OPTIONAL_INPUT_SLOTS`` and
+#: a kernel that declared the attribute would be refused at neutral admission.
+#: Adding it there, and emitting it from the exporters, deletes this table
+#: outright and changes nothing else -- the placement is already shared.
+#: ``compiler/backends/rom/common/program.py`` seeds the same row for the same
+#: reason: one convention, two backends.
+_CONVENTION_EMPTY_INPUT_SLOTS: Mapping[str, tuple[int, ...]] = {
     "COMPRESS_STATE_UPDATE": (1,),
 }
 
 
+def _hole_attributes(kernel: Kernel) -> Mapping[str, object]:
+    """``kernel.attributes``, with the convention's own holes seeded in.
+
+    A kernel that declares ``absent_operands`` has already been checked against
+    the frozen ``OPTIONAL_INPUT_SLOTS`` at neutral admission and is authoritative
+    -- the backend adds nothing to it.
+    """
+    if ABSENT_OPERANDS in kernel.attributes:
+        return kernel.attributes
+    convention = _CONVENTION_EMPTY_INPUT_SLOTS.get(kernel.kind)
+    if convention is None:
+        return kernel.attributes
+    return {**kernel.attributes, ABSENT_OPERANDS: list(convention)}
+
+
+def _declared_holes(kernel: Kernel) -> tuple[int, ...]:
+    """The ABI input slots the *graph* states this kernel leaves ``NO_ID``.
+
+    The graph's own declaration only, never the convention seed above: the
+    frozen ``check_operand_slots`` counts a declared hole against the kind's
+    arity in ``KERNEL_TO_ENGINE``, so a slot the table has already admitted is
+    a slot the table has room for.  ``COMPRESS_STATE_UPDATE``'s row has two
+    inputs and uses ``in0`` and ``in2``, so its hole is a third slot the arity
+    does not count -- which is one of the reasons it cannot yet be spelled as
+    ``absent_operands``, and the reason it is not counted here.
+    """
+    declared = kernel.attributes.get(ABSENT_OPERANDS) or ()
+    return tuple(int(slot) for slot in declared)  # type: ignore[union-attr]
+
+
 def _abi_input_slots(kernel: Kernel, order: Sequence[int]) -> list[int | None]:
-    """The IR input each ABI input slot carries; ``None`` for a required hole."""
+    """The IR input each ABI input slot carries; ``None`` for a declared hole.
+
+    Amendment A20: the placement is
+    ``compiler/ir/v3/lowering.py::abi_input_slots`` and nothing else, so a hole
+    is placed identically on both lanes rather than by two private copies of
+    one while-loop.  The operands go *either side* of the hole and are never
+    packed down: ``ROUTE.INDEX_TOPK``'s dense form leaves ``in0`` empty and
+    keeps the window block in ``in1`` and the compression ratio in ``in2``, and
+    a backend that packed them down would hand the engine the one-element ratio
+    constant where the window block belongs -- which is exactly what the engine
+    then said, ``ROUTE.INDEX_TOPK window view 2084 covers 1 query rows,
+    expected 104``.
+    """
     base = _expert_sum_base(kernel)
     if base is not None:
         # TA-ABI3-OPCONV-1 section 6 reads (contributions, weights, base) and
@@ -2956,20 +3009,13 @@ def _abi_input_slots(kernel: Kernel, order: Sequence[int]) -> list[int | None]:
         # contributions``.  Everything else the kernel reads, the routed rows'
         # expert identity among it, is a dataflow fact this row has no slot
         # for, so it is dropped rather than left to occupy the base slot with
-        # 32-bit integers.  ``compiler/backends/rom/common/program.py``'s
-        # ``_expert_sum_slots`` states the same convention: one convention,
-        # two backends.
+        # 32-bit integers.  This hole is *derived* from an attribute naming an
+        # operand rather than declared as a slot, so it is not an
+        # ``absent_operands`` statement and is not spelled as one.
+        # ``compiler/backends/rom/common/program.py``'s ``_expert_sum_slots``
+        # states the same convention: one convention, two backends.
         return [0, None, base]
-    holes = _ABI_EMPTY_INPUT_SLOTS.get(kernel.kind, ())
-    if not holes:
-        return list(order)
-    slots: list[int | None] = []
-    remaining = list(order)
-    position = 0
-    while remaining:
-        slots.append(None if position in holes else remaining.pop(0))
-        position += 1
-    return slots
+    return _shared_input_slots(kernel.kind, list(order), _hole_attributes(kernel))
 
 
 def _expert_sum_base(kernel: Kernel) -> int | None:
@@ -3018,6 +3064,57 @@ _OPTIONAL_INPUTS: Mapping[str, int] = {
 }
 
 
+def _index_topk_capacity(
+    kernel: Kernel, tensors: Mapping[str, Tensor], span_max: int
+) -> int:
+    """``ROUTE.INDEX_TOPK``'s ``aux_id_0``: the compressed segment's width.
+
+    A19's caution, restated by A20 for both operand rows and the one that
+    bites: ``aux0`` is the segment, never the whole joined operand.  A backend
+    that copies the output's last extent into it declares ``W + k`` where ``k``
+    belongs, and the engine refuses -- ``ROUTE.INDEX_TOPK selects 2176
+    positions and joins a 128-slot window into 2176 slots``.  The graph states
+    the number (``top_k`` ranked, ``k`` dense), and the derivation A20 gives
+    for a ``NO_ID`` ``aux0`` -- the output's slots minus the joined window's
+    width -- is what stands in when it does not.
+
+    ``compiler/backends/rom/common/program.py::_index_topk_capacity`` is the
+    same rule.  It was not: this lane read ``top_k`` and that one read ``k``,
+    which agreed on the ranked kernels because they declare both and disagreed
+    on the dense ones, which declare only ``k`` -- so this lane fell back to
+    the output's 2,176 columns, which is exactly the ``W + k`` the amendment
+    says is refused.
+    """
+    slots = (
+        matrix_shape(tensors[kernel.outputs[0]], span_max)[1]
+        if kernel.outputs
+        else 0
+    )
+    slot_map = _abi_input_slots(kernel, list(range(len(kernel.inputs))))
+    window = 0
+    if len(slot_map) > 1 and slot_map[1] is not None:
+        window = matrix_shape(tensors[kernel.inputs[slot_map[1]]], span_max)[1]
+    return index_topk_capacity(kernel, slots, window)
+
+
+def index_topk_capacity(kernel: Kernel, slots: int, window: int) -> int:
+    """``ROUTE.INDEX_TOPK``'s ``aux_id_0`` from the graph, or A20's derivation.
+
+    ``slots`` is ``out0``'s last extent and ``window`` is ``in1``'s; the answer
+    is the *compressed segment's* width, which is neither of them.  Both lanes
+    call this arithmetic with the same two numbers, and a test compares them --
+    they read two different attribute names before, ``top_k`` here and ``k``
+    there, which agreed on every ranked kernel because those declare both and
+    disagreed on every dense one because those declare only ``k``.
+    ``compiler/backends/rom/common/program.py::index_topk_capacity`` is the
+    twin.
+    """
+    declared = kernel.attributes.get("top_k", kernel.attributes.get("k"))
+    if declared is not None:
+        return int(declared)
+    return int(slots) - int(window)
+
+
 def _check_operand_arity(
     kernel: Kernel, engine: Any, bound: Sequence[int]
 ) -> str | None:
@@ -3038,11 +3135,20 @@ def _check_operand_arity(
     backend will really put in the operator, after its own slot permutation and
     after any operand it synthesises, because an operand the backend supplies
     is not missing.
+
+    Amendment A20: a slot the kernel declares in ``absent_operands`` is
+    *accounted for* rather than missing.  It is the static counterpart of
+    ``operand_present_predicate`` -- the graph states that the operator reads
+    nothing there, the frozen ``OPTIONAL_INPUT_SLOTS`` has already agreed the
+    row allows it, and the engine reads the slot through ``optional_input``.
+    Counting it as a shortfall is what made the dense compressed index refuse
+    at plan time with ``binds 2 input views where ROUTE.4 requires 3``, which
+    was this check reading a stated hole as an unfilled mandatory slot.
     """
     limit = int(engine.inputs)
     optional = int(_OPTIONAL_INPUTS.get(kernel.kind, 0))
     required = limit - optional
-    count = len(bound)
+    count = len(bound) + len(_declared_holes(kernel))
     if count > limit:
         return (
             f"{kernel.kernel_id} ({kernel.kind}): binds {count} input views "
@@ -3180,7 +3286,7 @@ def _aux_ids(
             aux = [int(experts)]
         elif sub == int(Route.INDEX_TOPK):
             aux = [
-                int(attributes.get("top_k", out_cols())),
+                _index_topk_capacity(kernel, tensors, span_max),
                 int(attributes.get("mask_mode", 0)),
                 int(Symbol.CONTEXT_LENGTH),
                 int(Symbol.POSITION_START),

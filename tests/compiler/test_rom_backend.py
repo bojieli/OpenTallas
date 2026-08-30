@@ -2575,8 +2575,127 @@ def test_both_backends_state_the_same_operand_conventions():
     from compiler.backends.hbm_sram import plan as hbm
     from compiler.backends.rom.common import program as rom
 
-    assert rom.ABI_EMPTY_INPUT_SLOTS == hbm._ABI_EMPTY_INPUT_SLOTS
+    assert rom.ABI_EMPTY_INPUT_SLOTS == hbm._CONVENTION_EMPTY_INPUT_SLOTS
     assert rom._SLOT_PERMUTATION.items() >= hbm._SLOT_PERMUTATION.items()
+
+
+def test_both_backends_place_a_declared_hole_identically(tmp_path):
+    """Amendment A20's placement is one function, and both lanes call it.
+
+    The tables above are the *seed*; this is the property that matters. A hole
+    one backend places and the other packs down is one operator with two
+    spellings, and it is what stopped both lanes -- the ROM engine refused
+    ``ROUTE.INDEX_TOPK window view 2084 covers 1 query rows, expected 104``
+    with the ratio constant read as the window block, and the HBM planner
+    refused ``binds 2 input views where ROUTE.4 requires 3`` with a stated hole
+    counted as a missing operand.
+    """
+    from compiler.backends.hbm_sram import plan as hbm
+    from compiler.backends.rom.common import program as rom
+    from compiler.ir.v3.lowering import ABSENT_OPERANDS, abi_input_slots
+
+    dense = Kernel(
+        index=0,
+        numeric_contract="",
+        iteration_domain={},
+        kernel_id="k.dense_index",
+        kind="INDEX_TOPK",
+        inputs=["window", "ratio"],
+        outputs=["joined"],
+        attributes={ABSENT_OPERANDS: [0], "k": 2048},
+    )
+    ranked = Kernel(
+        index=1,
+        numeric_contract="",
+        iteration_domain={},
+        kernel_id="k.ranked_index",
+        kind="INDEX_TOPK",
+        inputs=["scores", "window", "ratio"],
+        outputs=["joined"],
+        attributes={"top_k": 512},
+    )
+    state = Kernel(
+        index=2,
+        numeric_contract="",
+        iteration_domain={},
+        kernel_id="k.compress_state",
+        kind="COMPRESS_STATE_UPDATE",
+        inputs=["packed", "ape"],
+        outputs=["keys", "values"],
+        attributes={},
+    )
+    for kernel, expected in (
+        # in0 is the hole; the window block stays in in1 and the ratio in in2.
+        (dense, [None, 0, 1]),
+        (ranked, [0, 1, 2]),
+        # VECTOR.COMPRESS sub-case 2: in1 is the projection matrix a state
+        # update has none of, so the APE stays in in2.
+        (state, [0, None, 1]),
+    ):
+        order = list(range(len(kernel.inputs)))
+        assert rom.abi_input_slots_of(kernel, order) == expected
+        assert hbm._abi_input_slots(kernel, order) == expected
+        assert (
+            abi_input_slots(kernel.kind, order, rom.hole_attributes(kernel))
+            == expected
+        )
+
+
+def test_both_backends_read_the_same_index_topk_capacity():
+    """``aux_id_0`` is the compressed segment, never the joined output.
+
+    A19's caution and the one that bit: a backend that copies the output's last
+    extent declares ``W + k`` where ``k`` belongs, and the engine refuses. The
+    two lanes read two different attribute names -- ``k`` on ROM and ``top_k``
+    on HBM -- which agreed on the ranked kernels, because those declare both,
+    and disagreed on A20's dense ones, which declare only ``k``: HBM fell
+    through to the output's 2,176 columns. The storage-class proof cannot see
+    this, because it builds the ROM backend twice and never compares the two
+    backends to each other.
+    """
+    from compiler.backends.hbm_sram import plan as hbm
+    from compiler.backends.rom.common import program as rom
+    from compiler.ir.v3.lowering import ABSENT_OPERANDS
+
+    dense = Kernel(
+        index=0,
+        numeric_contract="",
+        iteration_domain={},
+        kernel_id="k.dense_index",
+        kind="INDEX_TOPK",
+        inputs=["window", "ratio"],
+        outputs=["joined"],
+        attributes={ABSENT_OPERANDS: [0], "k": 2048},
+    )
+    ranked = Kernel(
+        index=1,
+        numeric_contract="",
+        iteration_domain={},
+        kernel_id="k.ranked_index",
+        kind="INDEX_TOPK",
+        inputs=["scores", "window", "ratio"],
+        outputs=["joined"],
+        attributes={"k": 512, "top_k": 512},
+    )
+    # A20: with ``aux0`` unstated it is the output's slots minus the joined
+    # window -- 2,048, never the 2,176 the output declares.
+    underived = Kernel(
+        index=0,
+        numeric_contract="",
+        iteration_domain={},
+        kernel_id="k.dense_index",
+        kind="INDEX_TOPK",
+        inputs=["window", "ratio"],
+        outputs=["joined"],
+        attributes={ABSENT_OPERANDS: [0]},
+    )
+    for kernel, slots, window, expected in (
+        (dense, 2176, 128, 2048),
+        (ranked, 640, 128, 512),
+        (underived, 2176, 128, 2048),
+    ):
+        assert rom.index_topk_capacity(kernel, slots, window) == expected
+        assert hbm.index_topk_capacity(kernel, slots, window) == expected
 
 
 def test_lowering_table_is_complete():

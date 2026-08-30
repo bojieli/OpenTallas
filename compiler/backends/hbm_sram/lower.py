@@ -2601,17 +2601,27 @@ class _Emitter:
         output the sum of the inputs, so a path keeping the full extent would
         declare rows no operand supplies.
 
-        Which slots may actually be emptied is not a guess.
-        ``REDUCTION.GROUPED_CONCAT`` reads its input slots through
-        ``optional_input`` and joins whatever is bound, so an absent operand is
-        ``NO_ID`` there.  Every other frozen operand row is mandatory --
-        ``ROUTE.INDEX_TOPK`` reads its score view's *shape* even where the
-        request completes no candidate and reads no value from it, which is
-        what A19 says the operator does below one compression group -- so on
-        those the reduced path keeps the operand bound and drops only the
-        ordering dependency.  Emptying a mandatory slot would produce a path
-        that cannot execute, which is worse than one that binds a view nothing
-        reads.
+        Which slots may actually be emptied is not a guess, and it is no longer
+        this function's to decide.  A slot the *graph* declares empty is an
+        ``absent_operands`` statement checked at neutral admission against the
+        frozen ``OPTIONAL_INPUT_SLOTS``, and ``_abi_input_slots`` has already
+        placed it -- there is nothing conditional about it, which is the whole
+        point of the static form.  What is left here is the conditional form,
+        and it empties a slot only where the row reads it through
+        ``optional_input`` and can join what remains:
+        ``REDUCTION.GROUPED_CONCAT``.
+
+        ``ROUTE.INDEX_TOPK``'s ``in0`` is the case that changed and the reduced
+        path keeps binding it anyway.  Amendment A20 makes the slot optional, so
+        A19's "every other frozen operand row is mandatory" no longer covers it
+        and emptying it would now execute; it is still not what this path should
+        do.  A19 defines the zero-candidate case *with* a score view -- the
+        operator reads the view's shape, reads no value from it, and emits the
+        joined window -- and the reduced path is exactly that case, so binding
+        the view is the operand row the amendment describes rather than a second
+        spelling of it. Emptying it would additionally move the span off the
+        score view and onto ``out0``, which is a different derivation for a path
+        whose only difference is meant to be a dropped ordering dependency.
         """
         builder = self.builder
         predicate = self._predicate_descriptor(condition)

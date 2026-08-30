@@ -59,7 +59,12 @@ from compiler.ir.v3.kernel_ir import (
     Tensor,
     require_neutral,
 )
-from compiler.ir.v3.lowering import EngineOp, KERNEL_TO_ENGINE
+from compiler.ir.v3.lowering import (
+    ABSENT_OPERANDS,
+    EngineOp,
+    KERNEL_TO_ENGINE,
+    abi_input_slots as _shared_input_slots,
+)
 from runtime.abi3.builder import DeploymentBuilder, DynamicTerm
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
@@ -246,16 +251,82 @@ ENGINE_OVERRIDE: Mapping[str, EngineOp] = {
     "HASH_ROUTE": EngineOp(Major.TENSOR, TensorOp.EMBED_LOOKUP, 2, 1),
 }
 
-#: ABI input slots the operand convention requires to be ``NO_ID``, by neutral
-#: kind.  ``VECTOR.COMPRESS`` sub-case 2 is the case: its ``in1`` is the
-#: projection matrix, which a state update has none of, while its ``in2`` is
-#: the position embedding, which is exactly what the APE table is.  The
-#: operands are not renumbered around the hole -- they are placed either side
-#: of it.  This mirrors ``_ABI_EMPTY_INPUT_SLOTS`` in
-#: ``compiler/backends/hbm_sram/plan.py``: one convention, two backends.
+#: ABI input slots this backend supplies ``absent_operands`` for, by neutral
+#: kind, because the operand convention requires them empty and no exporter can
+#: yet say so.  ``VECTOR.COMPRESS`` sub-case 2 is the only case: its ``in1`` is
+#: the projection matrix, which a state update has none of, while its ``in2``
+#: is the position embedding, which is exactly what the APE table is.
+#:
+#: This is *not* a second hole table.  Amendment A20 makes ``absent_operands``
+#: the one statement of a hole and
+#: ``compiler/ir/v3/lowering.py::abi_input_slots`` the one placement of it, and
+#: both are adopted below; what survives here is a seed for that call, because
+#: ``COMPRESS_STATE_UPDATE`` is not in the frozen ``OPTIONAL_INPUT_SLOTS`` and
+#: a kernel that declared the attribute would be refused at neutral admission.
+#: Adding it there, and emitting it from the exporters, deletes this table
+#: outright and changes nothing else -- the placement is already shared.
+#: ``compiler/backends/hbm_sram/plan.py`` seeds the same row for the same
+#: reason: one convention, two backends.
 ABI_EMPTY_INPUT_SLOTS: Mapping[str, tuple[int, ...]] = {
     "COMPRESS_STATE_UPDATE": (1,),
 }
+
+
+def index_topk_capacity(kernel: Kernel, slots: int, window: int) -> int:
+    """``ROUTE.INDEX_TOPK``'s ``aux_id_0`` from the graph, or A20's derivation.
+
+    ``slots`` is ``out0``'s last extent and ``window`` is ``in1``'s; the answer
+    is the *compressed segment's* width, which is neither of them.  Both lanes
+    call this arithmetic with the same two numbers, and a test compares them --
+    they read two different attribute names before, ``k`` here and ``top_k``
+    there, which agreed on every ranked kernel because those declare both and
+    disagreed on every dense one because those declare only ``k``.
+    ``compiler/backends/hbm_sram/plan.py::index_topk_capacity`` is the twin.
+    """
+    declared = kernel.attributes.get("top_k", kernel.attributes.get("k"))
+    if declared is not None:
+        return int(declared)
+    return int(slots) - int(window)
+
+
+def abi_input_slots_of(kernel: Kernel, order: Sequence[int]) -> list[int | None]:
+    """The IR input each ABI input slot carries; ``None`` for a declared hole.
+
+    A slot left ``NO_ID`` is not a missing operand, it is a stated one, and the
+    remaining operands go *either side* of it.  ``VECTOR.COMPRESS`` sub-case 2
+    reads the projected candidates in ``in0`` and the absolute position
+    embedding in ``in2``, because ``in1`` is the projection matrix that a state
+    update does not have; amendment A20's dense ``ROUTE.INDEX_TOPK`` leaves
+    ``in0`` empty and keeps the window block in ``in1`` and the compression
+    ratio in ``in2``.  Packing them down put the APE where the projection
+    belongs in the first case and the one-element ratio constant where the
+    window block belongs in the second, and the engine said so exactly:
+    ``ROUTE.INDEX_TOPK window view 2084 covers 1 query rows, expected 104``.
+
+    The placement is ``compiler/ir/v3/lowering.py::abi_input_slots`` and nothing
+    else, so a hole is placed identically on both lanes rather than by two
+    private copies of one while-loop.  It is module-level, not a method, so that
+    the two lanes' placements can be compared against each other directly --
+    ``compiler/backends/hbm_sram/plan.py::_abi_input_slots`` is the same call on
+    the same inputs, and a test says so.
+    """
+    return _shared_input_slots(kernel.kind, list(order), hole_attributes(kernel))
+
+
+def hole_attributes(kernel: Kernel) -> Mapping[str, object]:
+    """``kernel.attributes``, with the convention's own holes seeded in.
+
+    A kernel that declares ``absent_operands`` has already been checked against
+    the frozen ``OPTIONAL_INPUT_SLOTS`` at neutral admission and is
+    authoritative -- the backend adds nothing to it.
+    """
+    if ABSENT_OPERANDS in kernel.attributes:
+        return kernel.attributes
+    convention = ABI_EMPTY_INPUT_SLOTS.get(kernel.kind)
+    if convention is None:
+        return kernel.attributes
+    return {**kernel.attributes, ABSENT_OPERANDS: list(convention)}
+
 
 #: Neutral kinds whose TA-ABI3-OPCONV-1 row states an explicit batch axis that
 #: the neutral IR does not declare.  ADR-003 section 15 gives the neutral IR
@@ -3089,7 +3160,11 @@ class RomLowering:
         )
 
     def _broadcast(
-        self, dims: list[int], shape: KernelShape
+        self,
+        dims: list[int],
+        shape: KernelShape,
+        *,
+        scale_factor: bool = False,
     ) -> tuple[list[int], list[int] | None]:
         """Insert the principal operand's missing middle axes at stride zero.
 
@@ -3107,12 +3182,24 @@ class RomLowering:
         to cover the trailing axes rather than a prefix of them, so the value is
         broadcast along the channels with a zero stride and again nothing is
         copied.
+
+        ``scale_factor`` says the operand is ``VECTOR.SCALE``'s ``input_view_1``,
+        which is the *same* statement without the routed block: the elementwise
+        sub-case requires the factor's extents to equal the value's trailing
+        extents and there is no column-vector rule, so a factor the graph states
+        as one number per row is presented at the value's own shape with a
+        stride of zero on every axis but the first.  DeepSeek's sampling
+        temperature is one number against ``[1, 129280]`` logits and reaches
+        this by that route rather than through a routed block.
+        ``compiler/backends/hbm_sram/lower.py::_row_broadcast`` is the same
+        rule, gated the same way -- on the operator's own row, not on a
+        per-token block.
         """
         principal = list(shape.principal)
         if shape.row_symbolic and principal:
             block = shape.rows if shape.per_token else shape.block
             principal[0] = min(block, principal[0])
-        if shape.per_token and len(principal) > 1:
+        if (shape.per_token or scale_factor) and len(principal) > 1:
             elements = 1
             for extent in dims:
                 elements *= extent
@@ -3677,7 +3764,15 @@ class RomLowering:
             # A6's sparse index is ``[span, slots]`` and stays rank two however
             # many heads the query has.  Widening it produced a rank-three index
             # the attention engine correctly refused.
-            broadcast_dims, broadcast_strides = self._broadcast(dims, shape)
+            broadcast_dims, broadcast_strides = self._broadcast(
+                dims,
+                shape,
+                scale_factor=(
+                    family is Major.VECTOR
+                    and sub == int(Vector.SCALE)
+                    and slot == 1
+                ),
+            )
         else:
             broadcast_dims, broadcast_strides = dims, None
         return self._buffer_view(
@@ -3882,6 +3977,33 @@ class RomLowering:
         return self.plan.region(scale_key).object_id, block, row_block
 
     # -- operand conventions (TA-ABI3-OPCONV-1) --------------------------
+    def _index_topk_capacity(self, kernel: Kernel) -> int:
+        """``ROUTE.INDEX_TOPK``'s ``aux_id_0``: the compressed segment's width.
+
+        A19's caution, restated by A20 for both operand rows and the one that
+        bites: ``aux0`` is the segment, never the whole joined operand.  A
+        backend that copies the output's last extent into it declares ``W + k``
+        where ``k`` belongs, and the engine refuses -- ``ROUTE.INDEX_TOPK
+        selects 2176 positions and joins a 128-slot window into 2176 slots``.
+        The graph states the number (``top_k`` ranked, ``k`` dense), and the
+        derivation A20 gives for a ``NO_ID`` ``aux0`` -- the output's slots
+        minus the joined window's width -- is what stands in when it does not.
+
+        ``compiler/backends/hbm_sram/plan.py::_index_topk_capacity`` is the same
+        rule.  It was not: this lane read ``k`` and that one read ``top_k``,
+        which agreed on the ranked kernels because they declare both and
+        disagreed on the dense ones, which declare only ``k``.
+        """
+        slots = (
+            self._dims(self.tensors[kernel.outputs[0]])[-1] if kernel.outputs else 0
+        )
+        order = self._operand_order(kernel, Major.ROUTE, int(Route.INDEX_TOPK))
+        slot_map = self._abi_input_slots(kernel, order)
+        window = 0
+        if len(slot_map) > 1 and slot_map[1] is not None:
+            window = self._dims(self.tensors[kernel.inputs[slot_map[1]]])[-1]
+        return index_topk_capacity(kernel, slots, window)
+
     def _aux(self, kernel: Kernel, family: Major, sub: int) -> list[int]:
         """The auxiliary IDs the frozen operand convention requires.
 
@@ -3963,6 +4085,22 @@ class RomLowering:
                     int(attributes.get("hc_mult", 1)),
                 ]
             if sub == int(Vector.SCALE):
+                # ``VECTOR.SCALE`` has three sub-cases and the kind name
+                # settles only two of them.  A kernel named ``SCALE`` that
+                # binds a second operand is the elementwise product, not a
+                # constant scale: the engine refuses sub-case 0 with
+                # ``input_view_1`` bound, and it is right to -- the constant is
+                # in the numeric profile and the operand would be ignored.  The
+                # operand map is the authority.  DeepSeek's sampling
+                # temperature is the case: ``main.sample.temperature`` is a
+                # ``SCALE`` reading the logits and the request's temperature,
+                # and the kind-only table sent it to sub-case 0 --
+                # ``VECTOR.SCALE sub-case 0 (multiply by the profile's
+                # scale_bits) does not read input_view_1, but one is bound``.
+                # ``compiler/backends/hbm_sram/plan.py`` states the same rule;
+                # this lane did not, which is why only this lane stopped.
+                if len(kernel.inputs) >= 2:
+                    return [1]
                 return [SCALE_SUBCASE.get(kernel.kind, 0)]
             return []
         if family is Major.ATTENTION:
@@ -4021,11 +4159,7 @@ class RomLowering:
                 return [experts]
             if sub == int(Route.INDEX_TOPK):
                 return [
-                    int(
-                        attributes.get(
-                            "k", dim(outputs[0] if outputs else None, -1, 1)
-                        )
-                    ),
+                    self._index_topk_capacity(kernel),
                     0 if attributes.get("mask_mode", "causal") == "causal" else 1,
                     int(Symbol.CONTEXT_LENGTH),
                     int(Symbol.POSITION_START),
@@ -4115,30 +4249,8 @@ class RomLowering:
     def _abi_input_slots(
         self, kernel: Kernel, order: Sequence[int]
     ) -> list[int | None]:
-        """The IR input each ABI input slot carries; ``None`` for an empty slot.
-
-        A slot the operand convention requires to be ``NO_ID`` is not a missing
-        operand, it is a stated one: ``VECTOR.COMPRESS`` sub-case 2 reads the
-        projected candidates in ``in0`` and the absolute position embedding in
-        ``in2``, because ``in1`` is the projection matrix that a state update
-        does not have.  The engine refuses an operator that binds anything
-        there, so packing the operands down would put the APE where the
-        projection belongs and the operation would be rejected -- which is what
-        it did.
-        """
-        holes = ABI_EMPTY_INPUT_SLOTS.get(kernel.kind, ())
-        if not holes:
-            return list(order)
-        slots: list[int | None] = []
-        remaining = list(order)
-        position = 0
-        while remaining:
-            if position in holes:
-                slots.append(None)
-            else:
-                slots.append(remaining.pop(0))
-            position += 1
-        return slots
+        """The IR input each ABI input slot carries; ``None`` for a declared hole."""
+        return abi_input_slots_of(kernel, order)
 
     def _movement_views(
         self,
@@ -5160,17 +5272,27 @@ class RomLowering:
         the sum of the inputs, so a path that keeps the full extent would
         declare rows no operand supplies.
 
-        Which slots may actually be emptied is not a guess.
-        ``REDUCTION.GROUPED_CONCAT`` reads its four input slots through
-        ``optional_input`` and joins whatever is bound, so an absent operand is
-        ``NO_ID`` there.  Every other frozen operand row is mandatory -- 
-        ``ROUTE.INDEX_TOPK`` reads its score view's *shape* even where the
-        request completes no candidate and it reads no value from it, which is
-        exactly what amendment A19 says the operator does below one compression
-        group -- so on those the reduced path keeps the operand bound and drops
-        only the ordering dependency.  Emptying a mandatory slot would produce
-        a path that cannot execute, which is a worse answer than a path that
-        binds a view nothing reads.
+        Which slots may actually be emptied is not a guess, and it is no longer
+        this function's to decide.  A slot the *graph* declares empty is an
+        ``absent_operands`` statement checked at neutral admission against the
+        frozen ``OPTIONAL_INPUT_SLOTS``, and ``_abi_input_slots`` has already
+        placed it -- there is nothing conditional about it, which is the whole
+        point of the static form.  What is left here is the conditional form,
+        and it empties a slot only where the row reads it through
+        ``optional_input`` and can join what remains:
+        ``REDUCTION.GROUPED_CONCAT``.
+
+        ``ROUTE.INDEX_TOPK``'s ``in0`` is the case that changed and the reduced
+        path keeps binding it anyway.  Amendment A20 makes the slot optional, so
+        A19's "every other frozen operand row is mandatory" no longer covers it
+        and emptying it would now execute; it is still not what this path should
+        do.  A19 defines the zero-candidate case *with* a score view -- the
+        operator reads the view's shape, reads no value from it, and emits the
+        joined window -- and the reduced path is exactly that case, so binding
+        the view is the operand row the amendment describes rather than a second
+        spelling of it. Emptying it would additionally move the span off the
+        score view and onto ``out0``, which is a different derivation for a path
+        whose only difference is meant to be a dropped ordering dependency.
         """
         predicate = self._predicate_descriptor(condition, kernel.kernel_id)
         slots = self._abi_input_slots(kernel, order)
