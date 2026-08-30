@@ -53,6 +53,16 @@
   "device_map": "single-GPU layer streaming from the released HF shards; embed on cpu, lm_head on cpu",
   "dtype": "vendor mixed: FP8-E4M3 dense, MXFP4-E2M1 routed experts, bfloat16 activations, float32 norms/gating/hyper-connections/head",
   "evidence_class": "external_reference_comparator",
+  "out_of_sample": {
+    "fitted_on": [
+      "TA-DS-CTX-32K-1",
+      "TA-DS-CTX-128K-1"
+    ],
+    "note": "The two corrected constants were derived from the 32,000 and 128,000 rungs. The 200,000 rung was measured afterwards and the unchanged profile predicts it to 0.9999 -- 317,461,760 bytes against 317,435,904 measured, at a context 1.56x beyond the largest fitting point. Two constants fitted on two points that then predict a third is a test of the model rather than a restatement of the fit.",
+    "predicted_without_adjustment": [
+      "TA-DS-CTX-200K-1"
+    ]
+  },
   "purpose": "The measurements that justified correcting the DeepSeek-V4 KV entry sizes (entry_bytes 583 -> 1024, index_entry_bytes 68 -> 256) in commit 84577b6. Pinned here because the live context ladder is rebuilt as rungs are added, and a correction must cite evidence that does not move under it. This is a snapshot of the reference oracle's own output, not a re-derivation.",
   "results": {
     "TA-DS-CTX-128K-1": {
@@ -375,18 +385,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 12.144951629193304,
+              "bytes_per_layer_position": 38.00551703538653,
               "index_context_positions": 672021.0,
               "main_context_positions": 36276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 66846336.0
+              "read_bytes": 209184000.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.999804207668166,
+              "format_normalised_byte_ratio": 0.31949502830044363,
               "index_position_ratio": 0.9999687509765319,
               "main_position_ratio": 0.9994486712978278,
-              "raw_byte_ratio": 3.1289395427746407
+              "raw_byte_ratio": 0.99987639590026
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -800,18 +810,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 12.144856748241216,
+              "bytes_per_layer_position": 38.00522012192397,
               "index_context_positions": 672021.0,
               "main_context_positions": 36276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 66846336.0
+              "read_bytes": 209184000.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.999804207668166,
+              "format_normalised_byte_ratio": 0.31949502830044363,
               "index_position_ratio": 0.9999687509765319,
               "main_position_ratio": 0.9994486712978278,
-              "raw_byte_ratio": 3.1289395427746407
+              "raw_byte_ratio": 0.99987639590026
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -1225,18 +1235,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 12.144761868771608,
+              "bytes_per_layer_position": 38.00492321310057,
               "index_context_positions": 672021.0,
               "main_context_positions": 36276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 66846336.0
+              "read_bytes": 209184000.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.999804207668166,
+              "format_normalised_byte_ratio": 0.31949502830044363,
               "index_position_ratio": 0.9999687509765319,
               "main_position_ratio": 0.9994486712978278,
-              "raw_byte_ratio": 3.1289395427746407
+              "raw_byte_ratio": 0.99987639590026
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -1650,18 +1660,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 12.144666990784446,
+              "bytes_per_layer_position": 38.004626308916215,
               "index_context_positions": 672021.0,
               "main_context_positions": 36276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 66846336.0
+              "read_bytes": 209184000.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9998255700955696,
+              "format_normalised_byte_ratio": 0.31950185482637294,
               "index_position_ratio": 1.0,
               "main_position_ratio": 0.9994486712978278,
-              "raw_byte_ratio": 3.1290199660307483
+              "raw_byte_ratio": 0.9999020957625823
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -2075,18 +2085,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 12.144831551819832,
+              "bytes_per_layer_position": 38.00530611540429,
               "index_context_positions": 672042.0,
               "main_context_positions": 36276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 66847764.0
+              "read_bytes": 209189376.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9998042118506761,
+              "format_normalised_byte_ratio": 0.3194936438837123,
               "index_position_ratio": 0.9999687519530029,
               "main_position_ratio": 0.9994486712978278,
-              "raw_byte_ratio": 3.1289531239967876
+              "raw_byte_ratio": 0.9998763990767867
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -2500,18 +2510,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 12.144736674770696,
+              "bytes_per_layer_position": 38.00500921286756,
               "index_context_positions": 672042.0,
               "main_context_positions": 36276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 66847764.0
+              "read_bytes": 209189376.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9998042118506761,
+              "format_normalised_byte_ratio": 0.3194936438837123,
               "index_position_ratio": 0.9999687519530029,
               "main_position_ratio": 0.9994486712978278,
-              "raw_byte_ratio": 3.1289531239967876
+              "raw_byte_ratio": 0.9998763990767867
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -2925,18 +2935,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 12.144641799203931,
+              "bytes_per_layer_position": 38.004712314969694,
               "index_context_positions": 672042.0,
               "main_context_positions": 36276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 66847764.0
+              "read_bytes": 209189376.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9998042118506761,
+              "format_normalised_byte_ratio": 0.3194936438837123,
               "index_position_ratio": 0.9999687519530029,
               "main_position_ratio": 0.9994486712978278,
-              "raw_byte_ratio": 3.1289531239967876
+              "raw_byte_ratio": 0.9998763990767867
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -3363,18 +3373,18 @@
             }
           },
           "predicted": {
-            "bytes_per_layer_position": 12.144951629193304,
+            "bytes_per_layer_position": 38.00551703538653,
             "index_context_positions": 672021.0,
             "main_context_positions": 36276.0,
             "profile_index_entry_bytes": 68,
             "profile_main_entry_bytes": 583,
-            "read_bytes": 66846336.0
+            "read_bytes": 209184000.0
           },
           "ratios": {
-            "format_normalised_byte_ratio": 0.999804207668166,
+            "format_normalised_byte_ratio": 0.31949502830044363,
             "index_position_ratio": 0.9999687509765319,
             "main_position_ratio": 0.9994486712978278,
-            "raw_byte_ratio": 3.1289395427746407
+            "raw_byte_ratio": 0.99987639590026
           },
           "sparsity": {
             "candidate_compressed_positions_per_query": {
@@ -3475,6 +3485,3427 @@
       },
       "prompt_token_count": 128000,
       "workload_digest": "cf968b0d85987f936a2363d12aca6ff272a6b4dde752349efa80db8b74bc8c63"
+    },
+    "TA-DS-CTX-200K-1": {
+      "generated_token_count": 8,
+      "kv_measurement": {
+        "decode_steps": [
+          {
+            "context_tokens": 200001,
+            "measured": {
+              "bytes_per_layer_position": 36.91096707307161,
+              "engine_index_entry_bytes": 256,
+              "engine_main_entry_bytes": 1024,
+              "index_context_positions": 1050000,
+              "index_kv_bytes_read": 268800000,
+              "main_context_positions": 47496,
+              "main_kv_bytes_read": 48635904,
+              "total_kv_bytes_read": 317435904
+            },
+            "per_layer": {
+              "0": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "1": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "10": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "11": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "12": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "13": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "14": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "15": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "16": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "17": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "18": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "19": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "2": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "20": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "21": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "22": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "23": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "24": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "25": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "26": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "27": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "28": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "29": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "3": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "30": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "31": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "32": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "33": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "34": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "35": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "36": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "37": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "38": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "39": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "4": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "40": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "41": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "42": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "5": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "6": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "7": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "8": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "9": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              }
+            },
+            "predicted": {
+              "bytes_per_layer_position": 36.913973569667036,
+              "index_context_positions": 1050021.0,
+              "main_context_positions": 47516.0,
+              "profile_index_entry_bytes": 68,
+              "profile_main_entry_bytes": 583,
+              "read_bytes": 317461760.0
+            },
+            "ratios": {
+              "format_normalised_byte_ratio": 0.3121326108694162,
+              "index_position_ratio": 0.999980000399992,
+              "main_position_ratio": 0.9995790891489182,
+              "raw_byte_ratio": 0.9999185539700908
+            },
+            "sparsity": {
+              "candidate_compressed_positions_per_query": {
+                "10": 50000,
+                "12": 50000,
+                "14": 50000,
+                "16": 50000,
+                "18": 50000,
+                "2": 50000,
+                "20": 50000,
+                "22": 50000,
+                "24": 50000,
+                "26": 50000,
+                "28": 50000,
+                "30": 50000,
+                "32": 50000,
+                "34": 50000,
+                "36": 50000,
+                "38": 50000,
+                "4": 50000,
+                "40": 50000,
+                "42": 50000,
+                "6": 50000,
+                "8": 50000
+              },
+              "fraction_of_context_read_per_layer": {
+                "0": 0.0006399968000159999,
+                "1": 0.0006399968000159999,
+                "10": 0.25319873400633,
+                "11": 0.008449957750211248,
+                "12": 0.25319873400633,
+                "13": 0.008449957750211248,
+                "14": 0.25319873400633,
+                "15": 0.008449957750211248,
+                "16": 0.25319873400633,
+                "17": 0.008449957750211248,
+                "18": 0.25319873400633,
+                "19": 0.008449957750211248,
+                "2": 0.25319873400633,
+                "20": 0.25319873400633,
+                "21": 0.008449957750211248,
+                "22": 0.25319873400633,
+                "23": 0.008449957750211248,
+                "24": 0.25319873400633,
+                "25": 0.008449957750211248,
+                "26": 0.25319873400633,
+                "27": 0.008449957750211248,
+                "28": 0.25319873400633,
+                "29": 0.008449957750211248,
+                "3": 0.008449957750211248,
+                "30": 0.25319873400633,
+                "31": 0.008449957750211248,
+                "32": 0.25319873400633,
+                "33": 0.008449957750211248,
+                "34": 0.25319873400633,
+                "35": 0.008449957750211248,
+                "36": 0.25319873400633,
+                "37": 0.008449957750211248,
+                "38": 0.25319873400633,
+                "39": 0.008449957750211248,
+                "4": 0.25319873400633,
+                "40": 0.25319873400633,
+                "41": 0.008449957750211248,
+                "42": 0.25319873400633,
+                "5": 0.008449957750211248,
+                "6": 0.25319873400633,
+                "7": 0.008449957750211248,
+                "8": 0.25319873400633,
+                "9": 0.008449957750211248
+              },
+              "full_context_positions": 200001,
+              "selected_compressed_positions_per_query": {
+                "10": 512,
+                "12": 512,
+                "14": 512,
+                "16": 512,
+                "18": 512,
+                "2": 512,
+                "20": 512,
+                "22": 512,
+                "24": 512,
+                "26": 512,
+                "28": 512,
+                "30": 512,
+                "32": 512,
+                "34": 512,
+                "36": 512,
+                "38": 512,
+                "4": 512,
+                "40": 512,
+                "42": 512,
+                "6": 512,
+                "8": 512
+              }
+            },
+            "step": 1
+          },
+          {
+            "context_tokens": 200002,
+            "measured": {
+              "bytes_per_layer_position": 36.910782520081774,
+              "engine_index_entry_bytes": 256,
+              "engine_main_entry_bytes": 1024,
+              "index_context_positions": 1050000,
+              "index_kv_bytes_read": 268800000,
+              "main_context_positions": 47496,
+              "main_kv_bytes_read": 48635904,
+              "total_kv_bytes_read": 317435904
+            },
+            "per_layer": {
+              "0": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "1": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "10": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "11": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "12": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "13": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "14": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "15": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "16": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "17": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "18": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "19": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "2": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "20": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "21": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "22": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "23": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "24": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "25": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "26": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "27": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "28": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "29": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "3": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "30": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "31": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "32": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "33": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "34": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "35": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "36": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "37": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "38": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "39": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "4": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "40": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "41": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "42": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "5": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "6": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "7": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "8": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "9": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              }
+            },
+            "predicted": {
+              "bytes_per_layer_position": 36.913789001644865,
+              "index_context_positions": 1050021.0,
+              "main_context_positions": 47516.0,
+              "profile_index_entry_bytes": 68,
+              "profile_main_entry_bytes": 583,
+              "read_bytes": 317461760.0
+            },
+            "ratios": {
+              "format_normalised_byte_ratio": 0.3121326108694162,
+              "index_position_ratio": 0.999980000399992,
+              "main_position_ratio": 0.9995790891489182,
+              "raw_byte_ratio": 0.9999185539700908
+            },
+            "sparsity": {
+              "candidate_compressed_positions_per_query": {
+                "10": 50000,
+                "12": 50000,
+                "14": 50000,
+                "16": 50000,
+                "18": 50000,
+                "2": 50000,
+                "20": 50000,
+                "22": 50000,
+                "24": 50000,
+                "26": 50000,
+                "28": 50000,
+                "30": 50000,
+                "32": 50000,
+                "34": 50000,
+                "36": 50000,
+                "38": 50000,
+                "4": 50000,
+                "40": 50000,
+                "42": 50000,
+                "6": 50000,
+                "8": 50000
+              },
+              "fraction_of_context_read_per_layer": {
+                "0": 0.0006399936000639994,
+                "1": 0.0006399936000639994,
+                "10": 0.2531974680253197,
+                "11": 0.008449915500844991,
+                "12": 0.2531974680253197,
+                "13": 0.008449915500844991,
+                "14": 0.2531974680253197,
+                "15": 0.008449915500844991,
+                "16": 0.2531974680253197,
+                "17": 0.008449915500844991,
+                "18": 0.2531974680253197,
+                "19": 0.008449915500844991,
+                "2": 0.2531974680253197,
+                "20": 0.2531974680253197,
+                "21": 0.008449915500844991,
+                "22": 0.2531974680253197,
+                "23": 0.008449915500844991,
+                "24": 0.2531974680253197,
+                "25": 0.008449915500844991,
+                "26": 0.2531974680253197,
+                "27": 0.008449915500844991,
+                "28": 0.2531974680253197,
+                "29": 0.008449915500844991,
+                "3": 0.008449915500844991,
+                "30": 0.2531974680253197,
+                "31": 0.008449915500844991,
+                "32": 0.2531974680253197,
+                "33": 0.008449915500844991,
+                "34": 0.2531974680253197,
+                "35": 0.008449915500844991,
+                "36": 0.2531974680253197,
+                "37": 0.008449915500844991,
+                "38": 0.2531974680253197,
+                "39": 0.008449915500844991,
+                "4": 0.2531974680253197,
+                "40": 0.2531974680253197,
+                "41": 0.008449915500844991,
+                "42": 0.2531974680253197,
+                "5": 0.008449915500844991,
+                "6": 0.2531974680253197,
+                "7": 0.008449915500844991,
+                "8": 0.2531974680253197,
+                "9": 0.008449915500844991
+              },
+              "full_context_positions": 200002,
+              "selected_compressed_positions_per_query": {
+                "10": 512,
+                "12": 512,
+                "14": 512,
+                "16": 512,
+                "18": 512,
+                "2": 512,
+                "20": 512,
+                "22": 512,
+                "24": 512,
+                "26": 512,
+                "28": 512,
+                "30": 512,
+                "32": 512,
+                "34": 512,
+                "36": 512,
+                "38": 512,
+                "4": 512,
+                "40": 512,
+                "42": 512,
+                "6": 512,
+                "8": 512
+              }
+            },
+            "step": 2
+          },
+          {
+            "context_tokens": 200003,
+            "measured": {
+              "bytes_per_layer_position": 36.910597968937445,
+              "engine_index_entry_bytes": 256,
+              "engine_main_entry_bytes": 1024,
+              "index_context_positions": 1050000,
+              "index_kv_bytes_read": 268800000,
+              "main_context_positions": 47496,
+              "main_kv_bytes_read": 48635904,
+              "total_kv_bytes_read": 317435904
+            },
+            "per_layer": {
+              "0": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "1": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "10": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "11": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "12": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "13": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "14": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "15": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "16": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "17": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "18": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "19": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "2": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "20": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "21": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "22": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "23": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "24": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "25": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "26": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "27": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "28": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "29": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "3": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "30": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "31": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "32": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "33": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "34": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "35": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "36": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "37": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "38": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "39": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "4": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "40": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "41": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "42": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "5": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "6": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "7": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "8": {
+                "index_bytes": 12800000,
+                "index_pairs": 50000,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "9": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              }
+            },
+            "predicted": {
+              "bytes_per_layer_position": 36.91360443546835,
+              "index_context_positions": 1050021.0,
+              "main_context_positions": 47516.0,
+              "profile_index_entry_bytes": 68,
+              "profile_main_entry_bytes": 583,
+              "read_bytes": 317461760.0
+            },
+            "ratios": {
+              "format_normalised_byte_ratio": 0.3121326108694162,
+              "index_position_ratio": 0.999980000399992,
+              "main_position_ratio": 0.9995790891489182,
+              "raw_byte_ratio": 0.9999185539700908
+            },
+            "sparsity": {
+              "candidate_compressed_positions_per_query": {
+                "10": 50000,
+                "12": 50000,
+                "14": 50000,
+                "16": 50000,
+                "18": 50000,
+                "2": 50000,
+                "20": 50000,
+                "22": 50000,
+                "24": 50000,
+                "26": 50000,
+                "28": 50000,
+                "30": 50000,
+                "32": 50000,
+                "34": 50000,
+                "36": 50000,
+                "38": 50000,
+                "4": 50000,
+                "40": 50000,
+                "42": 50000,
+                "6": 50000,
+                "8": 50000
+              },
+              "fraction_of_context_read_per_layer": {
+                "0": 0.0006399904001439978,
+                "1": 0.0006399904001439978,
+                "10": 0.25319620205696913,
+                "11": 0.008449873251901222,
+                "12": 0.25319620205696913,
+                "13": 0.008449873251901222,
+                "14": 0.25319620205696913,
+                "15": 0.008449873251901222,
+                "16": 0.25319620205696913,
+                "17": 0.008449873251901222,
+                "18": 0.25319620205696913,
+                "19": 0.008449873251901222,
+                "2": 0.25319620205696913,
+                "20": 0.25319620205696913,
+                "21": 0.008449873251901222,
+                "22": 0.25319620205696913,
+                "23": 0.008449873251901222,
+                "24": 0.25319620205696913,
+                "25": 0.008449873251901222,
+                "26": 0.25319620205696913,
+                "27": 0.008449873251901222,
+                "28": 0.25319620205696913,
+                "29": 0.008449873251901222,
+                "3": 0.008449873251901222,
+                "30": 0.25319620205696913,
+                "31": 0.008449873251901222,
+                "32": 0.25319620205696913,
+                "33": 0.008449873251901222,
+                "34": 0.25319620205696913,
+                "35": 0.008449873251901222,
+                "36": 0.25319620205696913,
+                "37": 0.008449873251901222,
+                "38": 0.25319620205696913,
+                "39": 0.008449873251901222,
+                "4": 0.25319620205696913,
+                "40": 0.25319620205696913,
+                "41": 0.008449873251901222,
+                "42": 0.25319620205696913,
+                "5": 0.008449873251901222,
+                "6": 0.25319620205696913,
+                "7": 0.008449873251901222,
+                "8": 0.25319620205696913,
+                "9": 0.008449873251901222
+              },
+              "full_context_positions": 200003,
+              "selected_compressed_positions_per_query": {
+                "10": 512,
+                "12": 512,
+                "14": 512,
+                "16": 512,
+                "18": 512,
+                "2": 512,
+                "20": 512,
+                "22": 512,
+                "24": 512,
+                "26": 512,
+                "28": 512,
+                "30": 512,
+                "32": 512,
+                "34": 512,
+                "36": 512,
+                "38": 512,
+                "4": 512,
+                "40": 512,
+                "42": 512,
+                "6": 512,
+                "8": 512
+              }
+            },
+            "step": 3
+          },
+          {
+            "context_tokens": 200004,
+            "measured": {
+              "bytes_per_layer_position": 36.91103852341558,
+              "engine_index_entry_bytes": 256,
+              "engine_main_entry_bytes": 1024,
+              "index_context_positions": 1050021,
+              "index_kv_bytes_read": 268805376,
+              "main_context_positions": 47496,
+              "main_kv_bytes_read": 48635904,
+              "total_kv_bytes_read": 317441280
+            },
+            "per_layer": {
+              "0": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "1": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "10": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "11": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "12": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "13": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "14": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "15": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "16": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "17": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "18": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "19": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "2": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "20": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "21": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "22": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "23": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "24": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "25": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "26": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "27": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "28": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "29": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "3": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "30": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "31": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "32": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "33": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "34": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "35": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "36": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "37": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "38": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "39": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "4": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "40": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "41": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "42": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "5": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "6": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "7": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "8": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "9": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              }
+            },
+            "predicted": {
+              "bytes_per_layer_position": 36.913419871137464,
+              "index_context_positions": 1050021.0,
+              "main_context_positions": 47516.0,
+              "profile_index_entry_bytes": 68,
+              "profile_main_entry_bytes": 583,
+              "read_bytes": 317461760.0
+            },
+            "ratios": {
+              "format_normalised_byte_ratio": 0.31213710904897646,
+              "index_position_ratio": 1.0,
+              "main_position_ratio": 0.9995790891489182,
+              "raw_byte_ratio": 0.9999354882931412
+            },
+            "sparsity": {
+              "candidate_compressed_positions_per_query": {
+                "10": 50001,
+                "12": 50001,
+                "14": 50001,
+                "16": 50001,
+                "18": 50001,
+                "2": 50001,
+                "20": 50001,
+                "22": 50001,
+                "24": 50001,
+                "26": 50001,
+                "28": 50001,
+                "30": 50001,
+                "32": 50001,
+                "34": 50001,
+                "36": 50001,
+                "38": 50001,
+                "4": 50001,
+                "40": 50001,
+                "42": 50001,
+                "6": 50001,
+                "8": 50001
+              },
+              "fraction_of_context_read_per_layer": {
+                "0": 0.0006399872002559949,
+                "1": 0.0006399872002559949,
+                "10": 0.25319993600128,
+                "11": 0.008449831003379933,
+                "12": 0.25319993600128,
+                "13": 0.008449831003379933,
+                "14": 0.25319993600128,
+                "15": 0.008449831003379933,
+                "16": 0.25319993600128,
+                "17": 0.008449831003379933,
+                "18": 0.25319993600128,
+                "19": 0.008449831003379933,
+                "2": 0.25319993600128,
+                "20": 0.25319993600128,
+                "21": 0.008449831003379933,
+                "22": 0.25319993600128,
+                "23": 0.008449831003379933,
+                "24": 0.25319993600128,
+                "25": 0.008449831003379933,
+                "26": 0.25319993600128,
+                "27": 0.008449831003379933,
+                "28": 0.25319993600128,
+                "29": 0.008449831003379933,
+                "3": 0.008449831003379933,
+                "30": 0.25319993600128,
+                "31": 0.008449831003379933,
+                "32": 0.25319993600128,
+                "33": 0.008449831003379933,
+                "34": 0.25319993600128,
+                "35": 0.008449831003379933,
+                "36": 0.25319993600128,
+                "37": 0.008449831003379933,
+                "38": 0.25319993600128,
+                "39": 0.008449831003379933,
+                "4": 0.25319993600128,
+                "40": 0.25319993600128,
+                "41": 0.008449831003379933,
+                "42": 0.25319993600128,
+                "5": 0.008449831003379933,
+                "6": 0.25319993600128,
+                "7": 0.008449831003379933,
+                "8": 0.25319993600128,
+                "9": 0.008449831003379933
+              },
+              "full_context_positions": 200004,
+              "selected_compressed_positions_per_query": {
+                "10": 512,
+                "12": 512,
+                "14": 512,
+                "16": 512,
+                "18": 512,
+                "2": 512,
+                "20": 512,
+                "22": 512,
+                "24": 512,
+                "26": 512,
+                "28": 512,
+                "30": 512,
+                "32": 512,
+                "34": 512,
+                "36": 512,
+                "38": 512,
+                "4": 512,
+                "40": 512,
+                "42": 512,
+                "6": 512,
+                "8": 512
+              }
+            },
+            "step": 4
+          },
+          {
+            "context_tokens": 200005,
+            "measured": {
+              "bytes_per_layer_position": 36.910853972836726,
+              "engine_index_entry_bytes": 256,
+              "engine_main_entry_bytes": 1024,
+              "index_context_positions": 1050021,
+              "index_kv_bytes_read": 268805376,
+              "main_context_positions": 47496,
+              "main_kv_bytes_read": 48635904,
+              "total_kv_bytes_read": 317441280
+            },
+            "per_layer": {
+              "0": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "1": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "10": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "11": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "12": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "13": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "14": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "15": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "16": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "17": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "18": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "19": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "2": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "20": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "21": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "22": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "23": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "24": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "25": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "26": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "27": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "28": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "29": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "3": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "30": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "31": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "32": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "33": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "34": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "35": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "36": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "37": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "38": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "39": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "4": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "40": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "41": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "42": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "5": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "6": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "7": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "8": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "9": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              }
+            },
+            "predicted": {
+              "bytes_per_layer_position": 36.91386040930372,
+              "index_context_positions": 1050042.0,
+              "main_context_positions": 47516.0,
+              "profile_index_entry_bytes": 68,
+              "profile_main_entry_bytes": 583,
+              "read_bytes": 317467136.0
+            },
+            "ratios": {
+              "format_normalised_byte_ratio": 0.3121318233078463,
+              "index_position_ratio": 0.999980000799968,
+              "main_position_ratio": 0.9995790891489182,
+              "raw_byte_ratio": 0.9999185553493007
+            },
+            "sparsity": {
+              "candidate_compressed_positions_per_query": {
+                "10": 50001,
+                "12": 50001,
+                "14": 50001,
+                "16": 50001,
+                "18": 50001,
+                "2": 50001,
+                "20": 50001,
+                "22": 50001,
+                "24": 50001,
+                "26": 50001,
+                "28": 50001,
+                "30": 50001,
+                "32": 50001,
+                "34": 50001,
+                "36": 50001,
+                "38": 50001,
+                "4": 50001,
+                "40": 50001,
+                "42": 50001,
+                "6": 50001,
+                "8": 50001
+              },
+              "fraction_of_context_read_per_layer": {
+                "0": 0.00063998400039999,
+                "1": 0.00063998400039999,
+                "10": 0.2531986700332492,
+                "11": 0.008449788755281119,
+                "12": 0.2531986700332492,
+                "13": 0.008449788755281119,
+                "14": 0.2531986700332492,
+                "15": 0.008449788755281119,
+                "16": 0.2531986700332492,
+                "17": 0.008449788755281119,
+                "18": 0.2531986700332492,
+                "19": 0.008449788755281119,
+                "2": 0.2531986700332492,
+                "20": 0.2531986700332492,
+                "21": 0.008449788755281119,
+                "22": 0.2531986700332492,
+                "23": 0.008449788755281119,
+                "24": 0.2531986700332492,
+                "25": 0.008449788755281119,
+                "26": 0.2531986700332492,
+                "27": 0.008449788755281119,
+                "28": 0.2531986700332492,
+                "29": 0.008449788755281119,
+                "3": 0.008449788755281119,
+                "30": 0.2531986700332492,
+                "31": 0.008449788755281119,
+                "32": 0.2531986700332492,
+                "33": 0.008449788755281119,
+                "34": 0.2531986700332492,
+                "35": 0.008449788755281119,
+                "36": 0.2531986700332492,
+                "37": 0.008449788755281119,
+                "38": 0.2531986700332492,
+                "39": 0.008449788755281119,
+                "4": 0.2531986700332492,
+                "40": 0.2531986700332492,
+                "41": 0.008449788755281119,
+                "42": 0.2531986700332492,
+                "5": 0.008449788755281119,
+                "6": 0.2531986700332492,
+                "7": 0.008449788755281119,
+                "8": 0.2531986700332492,
+                "9": 0.008449788755281119
+              },
+              "full_context_positions": 200005,
+              "selected_compressed_positions_per_query": {
+                "10": 512,
+                "12": 512,
+                "14": 512,
+                "16": 512,
+                "18": 512,
+                "2": 512,
+                "20": 512,
+                "22": 512,
+                "24": 512,
+                "26": 512,
+                "28": 512,
+                "30": 512,
+                "32": 512,
+                "34": 512,
+                "36": 512,
+                "38": 512,
+                "4": 512,
+                "40": 512,
+                "42": 512,
+                "6": 512,
+                "8": 512
+              }
+            },
+            "step": 5
+          },
+          {
+            "context_tokens": 200006,
+            "measured": {
+              "bytes_per_layer_position": 36.910669424103325,
+              "engine_index_entry_bytes": 256,
+              "engine_main_entry_bytes": 1024,
+              "index_context_positions": 1050021,
+              "index_kv_bytes_read": 268805376,
+              "main_context_positions": 47496,
+              "main_kv_bytes_read": 48635904,
+              "total_kv_bytes_read": 317441280
+            },
+            "per_layer": {
+              "0": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "1": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "10": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "11": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "12": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "13": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "14": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "15": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "16": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "17": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "18": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "19": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "2": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "20": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "21": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "22": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "23": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "24": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "25": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "26": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "27": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "28": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "29": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "3": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "30": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "31": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "32": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "33": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "34": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "35": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "36": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "37": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "38": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "39": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "4": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "40": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "41": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "42": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "5": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "6": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "7": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "8": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "9": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              }
+            },
+            "predicted": {
+              "bytes_per_layer_position": 36.913675845538584,
+              "index_context_positions": 1050042.0,
+              "main_context_positions": 47516.0,
+              "profile_index_entry_bytes": 68,
+              "profile_main_entry_bytes": 583,
+              "read_bytes": 317467136.0
+            },
+            "ratios": {
+              "format_normalised_byte_ratio": 0.3121318233078463,
+              "index_position_ratio": 0.999980000799968,
+              "main_position_ratio": 0.9995790891489182,
+              "raw_byte_ratio": 0.9999185553493007
+            },
+            "sparsity": {
+              "candidate_compressed_positions_per_query": {
+                "10": 50001,
+                "12": 50001,
+                "14": 50001,
+                "16": 50001,
+                "18": 50001,
+                "2": 50001,
+                "20": 50001,
+                "22": 50001,
+                "24": 50001,
+                "26": 50001,
+                "28": 50001,
+                "30": 50001,
+                "32": 50001,
+                "34": 50001,
+                "36": 50001,
+                "38": 50001,
+                "4": 50001,
+                "40": 50001,
+                "42": 50001,
+                "6": 50001,
+                "8": 50001
+              },
+              "fraction_of_context_read_per_layer": {
+                "0": 0.0006399808005759827,
+                "1": 0.0006399808005759827,
+                "10": 0.25319740407787766,
+                "11": 0.008449746507604772,
+                "12": 0.25319740407787766,
+                "13": 0.008449746507604772,
+                "14": 0.25319740407787766,
+                "15": 0.008449746507604772,
+                "16": 0.25319740407787766,
+                "17": 0.008449746507604772,
+                "18": 0.25319740407787766,
+                "19": 0.008449746507604772,
+                "2": 0.25319740407787766,
+                "20": 0.25319740407787766,
+                "21": 0.008449746507604772,
+                "22": 0.25319740407787766,
+                "23": 0.008449746507604772,
+                "24": 0.25319740407787766,
+                "25": 0.008449746507604772,
+                "26": 0.25319740407787766,
+                "27": 0.008449746507604772,
+                "28": 0.25319740407787766,
+                "29": 0.008449746507604772,
+                "3": 0.008449746507604772,
+                "30": 0.25319740407787766,
+                "31": 0.008449746507604772,
+                "32": 0.25319740407787766,
+                "33": 0.008449746507604772,
+                "34": 0.25319740407787766,
+                "35": 0.008449746507604772,
+                "36": 0.25319740407787766,
+                "37": 0.008449746507604772,
+                "38": 0.25319740407787766,
+                "39": 0.008449746507604772,
+                "4": 0.25319740407787766,
+                "40": 0.25319740407787766,
+                "41": 0.008449746507604772,
+                "42": 0.25319740407787766,
+                "5": 0.008449746507604772,
+                "6": 0.25319740407787766,
+                "7": 0.008449746507604772,
+                "8": 0.25319740407787766,
+                "9": 0.008449746507604772
+              },
+              "full_context_positions": 200006,
+              "selected_compressed_positions_per_query": {
+                "10": 512,
+                "12": 512,
+                "14": 512,
+                "16": 512,
+                "18": 512,
+                "2": 512,
+                "20": 512,
+                "22": 512,
+                "24": 512,
+                "26": 512,
+                "28": 512,
+                "30": 512,
+                "32": 512,
+                "34": 512,
+                "36": 512,
+                "38": 512,
+                "4": 512,
+                "40": 512,
+                "42": 512,
+                "6": 512,
+                "8": 512
+              }
+            },
+            "step": 6
+          },
+          {
+            "context_tokens": 200007,
+            "measured": {
+              "bytes_per_layer_position": 36.910484877215346,
+              "engine_index_entry_bytes": 256,
+              "engine_main_entry_bytes": 1024,
+              "index_context_positions": 1050021,
+              "index_kv_bytes_read": 268805376,
+              "main_context_positions": 47496,
+              "main_kv_bytes_read": 48635904,
+              "total_kv_bytes_read": 317441280
+            },
+            "per_layer": {
+              "0": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "1": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "window",
+                "main_bytes": 131072,
+                "main_pairs": 128
+              },
+              "10": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "11": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "12": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "13": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "14": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "15": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "16": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "17": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "18": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "19": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "2": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "20": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "21": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "22": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "23": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "24": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "25": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "26": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "27": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "28": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "29": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "3": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "30": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "31": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "32": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "33": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "34": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "35": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "36": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "37": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "38": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "39": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "4": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "40": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "41": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "42": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "5": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "6": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "7": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              },
+              "8": {
+                "index_bytes": 12800256,
+                "index_pairs": 50001,
+                "kind": "csa",
+                "main_bytes": 655360,
+                "main_pairs": 640
+              },
+              "9": {
+                "index_bytes": 0,
+                "index_pairs": 0,
+                "kind": "hca",
+                "main_bytes": 1730560,
+                "main_pairs": 1690
+              }
+            },
+            "predicted": {
+              "bytes_per_layer_position": 36.913491283619024,
+              "index_context_positions": 1050042.0,
+              "main_context_positions": 47516.0,
+              "profile_index_entry_bytes": 68,
+              "profile_main_entry_bytes": 583,
+              "read_bytes": 317467136.0
+            },
+            "ratios": {
+              "format_normalised_byte_ratio": 0.3121318233078463,
+              "index_position_ratio": 0.999980000799968,
+              "main_position_ratio": 0.9995790891489182,
+              "raw_byte_ratio": 0.9999185553493007
+            },
+            "sparsity": {
+              "candidate_compressed_positions_per_query": {
+                "10": 50001,
+                "12": 50001,
+                "14": 50001,
+                "16": 50001,
+                "18": 50001,
+                "2": 50001,
+                "20": 50001,
+                "22": 50001,
+                "24": 50001,
+                "26": 50001,
+                "28": 50001,
+                "30": 50001,
+                "32": 50001,
+                "34": 50001,
+                "36": 50001,
+                "38": 50001,
+                "4": 50001,
+                "40": 50001,
+                "42": 50001,
+                "6": 50001,
+                "8": 50001
+              },
+              "fraction_of_context_read_per_layer": {
+                "0": 0.0006399776007839726,
+                "1": 0.0006399776007839726,
+                "10": 0.2531961381351653,
+                "11": 0.008449704260350887,
+                "12": 0.2531961381351653,
+                "13": 0.008449704260350887,
+                "14": 0.2531961381351653,
+                "15": 0.008449704260350887,
+                "16": 0.2531961381351653,
+                "17": 0.008449704260350887,
+                "18": 0.2531961381351653,
+                "19": 0.008449704260350887,
+                "2": 0.2531961381351653,
+                "20": 0.2531961381351653,
+                "21": 0.008449704260350887,
+                "22": 0.2531961381351653,
+                "23": 0.008449704260350887,
+                "24": 0.2531961381351653,
+                "25": 0.008449704260350887,
+                "26": 0.2531961381351653,
+                "27": 0.008449704260350887,
+                "28": 0.2531961381351653,
+                "29": 0.008449704260350887,
+                "3": 0.008449704260350887,
+                "30": 0.2531961381351653,
+                "31": 0.008449704260350887,
+                "32": 0.2531961381351653,
+                "33": 0.008449704260350887,
+                "34": 0.2531961381351653,
+                "35": 0.008449704260350887,
+                "36": 0.2531961381351653,
+                "37": 0.008449704260350887,
+                "38": 0.2531961381351653,
+                "39": 0.008449704260350887,
+                "4": 0.2531961381351653,
+                "40": 0.2531961381351653,
+                "41": 0.008449704260350887,
+                "42": 0.2531961381351653,
+                "5": 0.008449704260350887,
+                "6": 0.2531961381351653,
+                "7": 0.008449704260350887,
+                "8": 0.2531961381351653,
+                "9": 0.008449704260350887
+              },
+              "full_context_positions": 200007,
+              "selected_compressed_positions_per_query": {
+                "10": 512,
+                "12": 512,
+                "14": 512,
+                "16": 512,
+                "18": 512,
+                "2": 512,
+                "20": 512,
+                "22": 512,
+                "24": 512,
+                "26": 512,
+                "28": 512,
+                "30": 512,
+                "32": 512,
+                "34": 512,
+                "36": 512,
+                "38": 512,
+                "4": 512,
+                "40": 512,
+                "42": 512,
+                "6": 512,
+                "8": 512
+              }
+            },
+            "step": 7
+          }
+        ],
+        "format_note": "the reference engine holds both caches in bfloat16 (1024 B main, 256 B index per entry) while the profile charges the published serving recipe (583 B main, 68 B index). raw_byte_ratio therefore carries that format factor; format_normalised_byte_ratio applies the profile's own widths to the engine's own entry counts and is the number that tests the traffic model",
+        "note": "measured counts come from the sparse-attention kernel's own topk_idxs (a -1 entry is a masked slot nobody reads) and from the indexer's scan width; predicted counts come from src/opentallas/workload.py::kv_traffic on configs/models/deepseek-v4-flash-0731.json",
+        "prefill": {
+          "causal_triangle_pairs_all_layers": 860004300000,
+          "fraction_of_causal_triangle": 0.2515834644733753,
+          "index_context_positions": 210000000000,
+          "index_kv_bytes_read": 53760000000000,
+          "main_context_positions": 6362861256,
+          "main_kv_bytes_read": 6515569926144,
+          "note": "a dense causal model would visit the whole triangle; this model is sparse and the fraction is the measure of it",
+          "queries": 4096
+        },
+        "representative_decode_step": {
+          "context_tokens": 200001,
+          "measured": {
+            "bytes_per_layer_position": 36.91096707307161,
+            "engine_index_entry_bytes": 256,
+            "engine_main_entry_bytes": 1024,
+            "index_context_positions": 1050000,
+            "index_kv_bytes_read": 268800000,
+            "main_context_positions": 47496,
+            "main_kv_bytes_read": 48635904,
+            "total_kv_bytes_read": 317435904
+          },
+          "per_layer": {
+            "0": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "window",
+              "main_bytes": 131072,
+              "main_pairs": 128
+            },
+            "1": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "window",
+              "main_bytes": 131072,
+              "main_pairs": 128
+            },
+            "10": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "11": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "12": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "13": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "14": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "15": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "16": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "17": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "18": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "19": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "2": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "20": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "21": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "22": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "23": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "24": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "25": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "26": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "27": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "28": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "29": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "3": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "30": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "31": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "32": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "33": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "34": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "35": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "36": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "37": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "38": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "39": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "4": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "40": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "41": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "42": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "5": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "6": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "7": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            },
+            "8": {
+              "index_bytes": 12800000,
+              "index_pairs": 50000,
+              "kind": "csa",
+              "main_bytes": 655360,
+              "main_pairs": 640
+            },
+            "9": {
+              "index_bytes": 0,
+              "index_pairs": 0,
+              "kind": "hca",
+              "main_bytes": 1730560,
+              "main_pairs": 1690
+            }
+          },
+          "predicted": {
+            "bytes_per_layer_position": 36.913973569667036,
+            "index_context_positions": 1050021.0,
+            "main_context_positions": 47516.0,
+            "profile_index_entry_bytes": 68,
+            "profile_main_entry_bytes": 583,
+            "read_bytes": 317461760.0
+          },
+          "ratios": {
+            "format_normalised_byte_ratio": 0.3121326108694162,
+            "index_position_ratio": 0.999980000399992,
+            "main_position_ratio": 0.9995790891489182,
+            "raw_byte_ratio": 0.9999185539700908
+          },
+          "sparsity": {
+            "candidate_compressed_positions_per_query": {
+              "10": 50000,
+              "12": 50000,
+              "14": 50000,
+              "16": 50000,
+              "18": 50000,
+              "2": 50000,
+              "20": 50000,
+              "22": 50000,
+              "24": 50000,
+              "26": 50000,
+              "28": 50000,
+              "30": 50000,
+              "32": 50000,
+              "34": 50000,
+              "36": 50000,
+              "38": 50000,
+              "4": 50000,
+              "40": 50000,
+              "42": 50000,
+              "6": 50000,
+              "8": 50000
+            },
+            "fraction_of_context_read_per_layer": {
+              "0": 0.0006399968000159999,
+              "1": 0.0006399968000159999,
+              "10": 0.25319873400633,
+              "11": 0.008449957750211248,
+              "12": 0.25319873400633,
+              "13": 0.008449957750211248,
+              "14": 0.25319873400633,
+              "15": 0.008449957750211248,
+              "16": 0.25319873400633,
+              "17": 0.008449957750211248,
+              "18": 0.25319873400633,
+              "19": 0.008449957750211248,
+              "2": 0.25319873400633,
+              "20": 0.25319873400633,
+              "21": 0.008449957750211248,
+              "22": 0.25319873400633,
+              "23": 0.008449957750211248,
+              "24": 0.25319873400633,
+              "25": 0.008449957750211248,
+              "26": 0.25319873400633,
+              "27": 0.008449957750211248,
+              "28": 0.25319873400633,
+              "29": 0.008449957750211248,
+              "3": 0.008449957750211248,
+              "30": 0.25319873400633,
+              "31": 0.008449957750211248,
+              "32": 0.25319873400633,
+              "33": 0.008449957750211248,
+              "34": 0.25319873400633,
+              "35": 0.008449957750211248,
+              "36": 0.25319873400633,
+              "37": 0.008449957750211248,
+              "38": 0.25319873400633,
+              "39": 0.008449957750211248,
+              "4": 0.25319873400633,
+              "40": 0.25319873400633,
+              "41": 0.008449957750211248,
+              "42": 0.25319873400633,
+              "5": 0.008449957750211248,
+              "6": 0.25319873400633,
+              "7": 0.008449957750211248,
+              "8": 0.25319873400633,
+              "9": 0.008449957750211248
+            },
+            "full_context_positions": 200001,
+            "selected_compressed_positions_per_query": {
+              "10": 512,
+              "12": 512,
+              "14": 512,
+              "16": 512,
+              "18": 512,
+              "2": 512,
+              "20": 512,
+              "22": 512,
+              "24": 512,
+              "26": 512,
+              "28": 512,
+              "30": 512,
+              "32": 512,
+              "34": 512,
+              "36": 512,
+              "38": 512,
+              "4": 512,
+              "40": 512,
+              "42": 512,
+              "6": 512,
+              "8": 512
+            }
+          },
+          "step": 1
+        }
+      },
+      "prompt_token_count": 200000,
+      "workload_digest": "803f0c3a3e9bf7ef68ddff00947576d2fab5703d1f4387df1eb2ec11be2c59bd"
     },
     "TA-DS-CTX-32K-1": {
       "generated_token_count": 8,
@@ -3796,18 +7227,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 17.317290230029148,
+              "bytes_per_layer_position": 47.09155164482505,
               "index_context_positions": 168021.0,
               "main_context_positions": 21276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 23829336.0
+              "read_bytes": 64800000.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9994507610283392,
+              "format_normalised_byte_ratio": 0.3675346913580247,
               "index_position_ratio": 0.9998750156230471,
               "main_position_ratio": 0.999059973679263,
-              "raw_byte_ratio": 2.7182521577605017
+              "raw_byte_ratio": 0.999600987654321
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -4221,18 +7652,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 17.316749098530178,
+              "bytes_per_layer_position": 47.09008012580609,
               "index_context_positions": 168021.0,
               "main_context_positions": 21276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 23829336.0
+              "read_bytes": 64800000.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9994507610283392,
+              "format_normalised_byte_ratio": 0.3675346913580247,
               "index_position_ratio": 0.9998750156230471,
               "main_position_ratio": 0.999059973679263,
-              "raw_byte_ratio": 2.7182521577605017
+              "raw_byte_ratio": 0.999600987654321
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -4646,18 +8077,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 17.316208000848757,
+              "bytes_per_layer_position": 47.088608698748445,
               "index_context_positions": 168021.0,
               "main_context_positions": 21276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 23829336.0
+              "read_bytes": 64800000.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9994507610283392,
+              "format_normalised_byte_ratio": 0.3675346913580247,
               "index_position_ratio": 0.9998750156230471,
               "main_position_ratio": 0.999059973679263,
-              "raw_byte_ratio": 2.7182521577605017
+              "raw_byte_ratio": 0.999600987654321
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -5071,18 +8502,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 17.315666936981714,
+              "bytes_per_layer_position": 47.0871373636435,
               "index_context_positions": 168021.0,
               "main_context_positions": 21276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 23829336.0
+              "read_bytes": 64800000.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9995106871630833,
+              "format_normalised_byte_ratio": 0.3675567283950617,
               "index_position_ratio": 1.0,
               "main_position_ratio": 0.999059973679263,
-              "raw_byte_ratio": 2.71847776203248
+              "raw_byte_ratio": 0.999683950617284
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -5496,18 +8927,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 17.31616353549409,
+              "bytes_per_layer_position": 47.089572486857065,
               "index_context_positions": 168042.0,
               "main_context_positions": 21276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 23830764.0
+              "read_bytes": 64805376.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9994507939401356,
+              "format_normalised_byte_ratio": 0.3675262373294462,
               "index_position_ratio": 0.9998750312421895,
               "main_position_ratio": 0.999059973679263,
-              "raw_byte_ratio": 2.718314863929667
+              "raw_byte_ratio": 0.9996010207548214
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -5921,18 +9352,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 17.315622506826482,
+              "bytes_per_layer_position": 47.08810121358059,
               "index_context_positions": 168042.0,
               "main_context_positions": 21276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 23830764.0
+              "read_bytes": 64805376.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9994507939401356,
+              "format_normalised_byte_ratio": 0.3675262373294462,
               "index_position_ratio": 0.9998750312421895,
               "main_position_ratio": 0.999059973679263,
-              "raw_byte_ratio": 2.718314863929667
+              "raw_byte_ratio": 0.9996010207548214
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -6346,18 +9777,18 @@
               }
             },
             "predicted": {
-              "bytes_per_layer_position": 17.31508151196577,
+              "bytes_per_layer_position": 47.08663003223859,
               "index_context_positions": 168042.0,
               "main_context_positions": 21276.0,
               "profile_index_entry_bytes": 68,
               "profile_main_entry_bytes": 583,
-              "read_bytes": 23830764.0
+              "read_bytes": 64805376.0
             },
             "ratios": {
-              "format_normalised_byte_ratio": 0.9994507939401356,
+              "format_normalised_byte_ratio": 0.3675262373294462,
               "index_position_ratio": 0.9998750312421895,
               "main_position_ratio": 0.999059973679263,
-              "raw_byte_ratio": 2.718314863929667
+              "raw_byte_ratio": 0.9996010207548214
             },
             "sparsity": {
               "candidate_compressed_positions_per_query": {
@@ -6784,18 +10215,18 @@
             }
           },
           "predicted": {
-            "bytes_per_layer_position": 17.317290230029148,
+            "bytes_per_layer_position": 47.09155164482505,
             "index_context_positions": 168021.0,
             "main_context_positions": 21276.0,
             "profile_index_entry_bytes": 68,
             "profile_main_entry_bytes": 583,
-            "read_bytes": 23829336.0
+            "read_bytes": 64800000.0
           },
           "ratios": {
-            "format_normalised_byte_ratio": 0.9994507610283392,
+            "format_normalised_byte_ratio": 0.3675346913580247,
             "index_position_ratio": 0.9998750156230471,
             "main_position_ratio": 0.999059973679263,
-            "raw_byte_ratio": 2.7182521577605017
+            "raw_byte_ratio": 0.999600987654321
           },
           "sparsity": {
             "candidate_compressed_positions_per_query": {

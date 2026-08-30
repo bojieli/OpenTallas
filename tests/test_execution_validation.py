@@ -250,3 +250,34 @@ def test_the_live_ladder_agrees_with_the_profile_wherever_it_has_measured(tmp_pa
     assert code == 0, body.get("problems")
     for rung in body["rungs"]:
         assert rung["ratio"] == pytest.approx(1.0, abs=0.01)
+
+
+@pytest.mark.skipif(not DS_SNAPSHOT.is_file(), reason="no pinned KV snapshot")
+def test_the_corrected_constants_predict_a_context_they_were_not_fitted_on(tmp_path) -> None:
+    """Two constants fitted on two rungs must predict a third, or they are a fit.
+
+    entry_bytes and index_entry_bytes were derived from the 32,000 and 128,000
+    rungs. The 200,000 rung -- Flash's stated sweet spot, and 1.56x beyond the
+    largest fitting point -- was measured afterwards. If the profile only
+    reproduced the contexts it was fitted on, that would be arithmetic; matching
+    an unseen one is evidence the sparsity structure is right.
+    """
+
+    body = json.loads(DS_SNAPSHOT.read_text())
+    fitted = set(body["out_of_sample"]["fitted_on"])
+    unseen = set(body["out_of_sample"]["predicted_without_adjustment"])
+    assert unseen and not (unseen & fitted), "the held-out rung must not be a fitted one"
+    assert unseen <= set(body["results"]), "the held-out rung must be present to check"
+
+    code, result = _run_kv(tmp_path, DS_MODEL, DS_SNAPSHOT)
+    assert code == 0
+    by_id = {r["workload_id"]: r for r in result["rungs"]}
+    for name in unseen:
+        assert by_id[name]["ratio"] == pytest.approx(1.0, abs=0.001), (
+            "the held-out context is held to a tighter bound than the fitted ones,"
+            " because it is the one that tests the model"
+        )
+    # The held-out rung must be the longest context, or it is not an extrapolation.
+    assert max(by_id[n]["context_tokens"] for n in unseen) > max(
+        by_id[n]["context_tokens"] for n in fitted
+    )
