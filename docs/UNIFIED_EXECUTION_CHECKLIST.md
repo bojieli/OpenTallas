@@ -293,6 +293,41 @@
   publish target should be a separate argument defaulting to `build/abi3/<id>/`,
   with the checkpoint root used only for reading.
 
+- **OI-35 — the cluster sharding plan replicates the experts, so a 256-expert
+  MoE produces no expert-dispatch traffic at all.** Under
+  `shard_axis = output_columns` the expert-dispatch (42 sites), sparse-gather
+  (210) and reduction (126) kernels hold identical operands on every node and
+  move nothing, so the lowering emits no collective for them — recorded in
+  `deployment.notes["replicated_link_sites"]`. That is the honest thing to emit:
+  gathering 32 identical buffers into a destination nothing reads would put
+  messages and bytes into the very comparison this program exists to make
+  honest. **But it must be said out loud in any ROM-versus-HBM write-up**, because
+  it flatters the HBM cluster: a real deployment shards experts across nodes and
+  pays dispatch traffic for it. The absence is a property of this sharding plan,
+  not of the model, and the fix is to shard the experts rather than to declare
+  the transfer.
+
+- **OI-36 — `main.lm_head.select` gathers the first token of the span, not the
+  last, and no engine check can catch it.** It selects row `position_offset`
+  where it must select the final position. Every operand check passes: the
+  shapes are right, the dtypes are right, the view is in bounds. It is simply
+  the wrong row. Latent today because the lane fails earlier, and it would
+  produce logits for the wrong token the moment the operands above it are fixed
+  — which is exactly the class of defect that survives to the end and then
+  produces fluent, wrong output. Amendment A12 exists for this
+  (`SPAN_LAST_INDEX`); the exporter has not adopted it here.
+
+- **OI-37 — a static audit found 21 defect groups affecting 1,173 of 3,230
+  DeepSeek operators (36%), none span-dependent.** Roughly 705 sit in the HBM
+  backend, 426 in the shared exporter and neutral IR, and 42 in the engines. Two
+  are cross-cutting and worth more than the individual repairs: **nothing
+  anywhere compares `len(kernel.inputs)` against `engine_for(kind).inputs`**, so
+  four defect groups reach the simulator as `NO_ID` in a mandatory slot instead
+  of failing at compile time; and `lowering.py` declares `EXPERT_DISPATCH` with
+  two outputs while `route.py` never writes `output_view_1`, so a plane the plan
+  believes exists does not. The first of those is a one-off check that would
+  have turned four runtime mysteries into four compile errors.
+
 - **OI-34 — the mandatory Qwen workload does not fit the context the capability
   declares, and the device said so exactly where it should.** `TA-QW-8K-1`
   stopped at decode step 193 with
@@ -889,3 +924,103 @@
   loop-compression change to the HBM lowering), and add a cross-backend program
   comparison that either shows the two agree or reports exactly where they do
   not.
+
+- **OI-35 — the DeepSeek compressor's decode position is off by `ratio - 1`, and
+  the descriptor has no way to say otherwise.** The released compressor pools
+  `ratio` tokens into one row and rotates that row at the position of the
+  *first* token it pooled. In prefill that is `g * ratio` for group `g`, which
+  is exactly what a strided view of the position range yields; in decode the
+  vendor supplies `start_pos + 1 - ratio`, and the same view yields
+  `start_pos`. The compressed KV write has the matching gap: its row is the
+  completed group's ordinal, which prefill gets right as `g` and decode gets
+  wrong as `start_pos`.
+
+  A tensor view offsets by `symbol * stride` and cannot subtract a constant, so
+  the two placements cannot be one descriptor. Three ways out, in order of
+  preference: split the compressor's kernels by phase, which the neutral IR
+  already supports (`phases`) and which no exporter currently uses; add a
+  runtime symbol for the completed-group ordinal; or admit a signed dynamic
+  term. Not reachable by `TA-DS-CHAT-1` at two decoded tokens — `should_compress`
+  is `(start_pos + 1) % ratio == 0` and is false at both steps, so the
+  compressor's rotation and write do not fire — but it will be reachable by any
+  workload that decodes past a ratio boundary, which is every longer one.
+
+- **OI-36 — the two backends disagree about what `VECTOR.ROPE`'s `aux_id_0`
+  holds.** `compiler/backends/rom/common/program.py` falls back to the
+  iteration domain's `head_dim`; `compiler/backends/hbm_sram/plan.py` falls back
+  to the coefficient view's width, which is twice it. Both write the graph's
+  `rotary_width` when it states one, so DeepSeek agrees across backends and
+  Qwen — which states none — does not: 128 from one and 256 from the other, for
+  the same operator of the same model.
+
+  It surfaced the moment amendment A16 made the slot load-bearing: an engine
+  that checked `aux_id_0` against the axis it rotates admitted the ROM
+  deployment and refused the HBM one. The engine now reads the slot only under
+  the partial-rotation contracts, which is correct — the whole-axis contract's
+  result does not depend on it — but that leaves a frozen field carrying two
+  different meanings depending on which backend emitted it, which is the same
+  hazard as OI-32 in a smaller field. One fallback should be deleted, not
+  reconciled: the graph states `rotary_width` or the operator does not rotate
+  partially.
+
+- **OI-37 — the partial quantiser's operand view is narrowed in one backend
+  only.** DeepSeek quantises the 448 non-rotary channels of a 512-wide KV
+  vector, and amendment A16 section 16.2 puts the narrowing in the view: same
+  row stride, fewer elements of it. `compiler/backends/rom/common/program.py`
+  does that; `compiler/backends/hbm_sram/lower.py` does not, so the shared-chip
+  DeepSeek lowering still presents the full row to a code output that is 448
+  wide and the vector engine refuses it. The ROM wafer lane reached this rung
+  first because it is further along; the HBM lane will reach the identical one.
+
+- **OI-38 — amendment A16 invalidated the retained RTL evidence binding, exactly
+  as that binding is designed to.** `tools/rtl_abi3_campaign.py` hashes
+  `docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md` into the campaign artifact
+  "so that a change to the ABI invalidates this evidence instead of silently
+  outdating it". Adding A16's row to the section 14 amendment index changed that
+  document, so `tests/compiler/test_rtl_abi3.py::test_retained_campaign_artifact_is_bound_to_these_sources`
+  now fails on `docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md changed since the
+  campaign was recorded`. The mechanism worked; the evidence needs re-recording.
+
+  The campaign was re-run to confirm the RTL itself is unaffected: **iverilog
+  PASS, verilator PASS**, and the only differences from the retained artifact
+  are that one document digest and the text of Verilator's compile log (a
+  `PINCONNECTEMPTY` warning whose rendering is not byte-stable between runs).
+  Every case, every check count and every correlation figure is identical.
+  Re-recording is `python3 tools/rtl_abi3_campaign.py --force`, and it is left
+  to the RTL lane rather than done here: `results/rtl/abi3_campaign.json` is
+  that lane's evidence, and an evidence file with two writers is OI-26.
+
+- **OI-39 — `ATTENTION.SPARSE` has no data-bearing implementation, and that is
+  now the DeepSeek wafer lane's wall.** Every other heavy engine in
+  `runtime/sim/engines/` executes an *optimised* form of its contract and keeps
+  the scalar oracle for qualification: the contraction goes through
+  `runtime/sim/backend.py`, the rotations and norms through
+  `runtime/tensor_accelerator/`, the compressor and hyper-connections through
+  `runtime/sim/engines/deepseek_vector.py`. `ATTENTION.SPARSE` calls
+  `runtime.reference.sparse_attention.sparse_attention_bf16` directly, which is
+  exact `fractions.Fraction` arithmetic evaluated one scalar at a time.
+
+  Measured on this machine: **12.5 ms per (head, selected row)** at head width
+  512, stable across 64 and 128 selected rows. `TA-DS-CHAT-1` prefills 104
+  tokens over 64 query heads and 43 layers, selecting roughly 160 rows per
+  query, which is **about 159 hours for one prefill**. Two runs were spent
+  confirming it: one hit a 50-minute timeout and one a four-hour timeout, both
+  inside the first layers' attention.
+
+  This is not a bug and nothing above it is wrong — the lane reached this rung
+  by clearing nine others, and the operator's operands, shapes, dtypes, group
+  size, block width and scale are all now accepted. It is missing work: the
+  wafer lane needs a data-bearing sparse attention that reproduces the frozen
+  contract bit-for-bit, in the same relationship to
+  `runtime/reference/sparse_attention.py` that `runtime/tensor_accelerator/rope.py`
+  has to `runtime/reference/rope.py`. The contract is fully specified by the
+  graph's own attributes — ascending 64-slot source blocks, online maximum and
+  denominator in binary32, probabilities rounded to BF16 once before the AV
+  product, the attention sink added to the denominator after all blocks, one
+  BF16 rounding at the output — so what it needs is careful transcription, not
+  a decision.
+
+  Until it exists, no DeepSeek workload can execute end to end on either
+  backend, and `results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json`
+  necessarily records the last rung that *could* complete rather than the
+  current one.
