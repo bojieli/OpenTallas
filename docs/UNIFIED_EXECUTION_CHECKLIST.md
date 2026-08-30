@@ -257,30 +257,74 @@ its growth with context, which a pure scale error would not show.
 
 ## W12 — First-principles roofline model *(the actual deliverable)*
 
+### Where the model stands, 2026-08-30
+
+Every W12 item is built and every published number has been re-derived at least
+once tonight. **Each correction moved the result against us, and each was found
+by measuring rather than by arguing.**
+
+| the claim | was | is | why it moved |
+|---|---:|---:|---|
+| Pro @1M, 554,700 mm², batch 1 | 54.2× → 35.4× | **8.6×** | GPU denied a topology; then per-user latency conflated with throughput |
+| Flash weight:KV @200K | 113.2:1 | **35.3:1** | two KV entry sizes read off the implementation, not measured |
+| Pro weight:KV @1M | 58.9:1 | **18.0:1** | the same two constants, by analogy |
+| on-wafer tensor-parallel | 116,278 tok/s | **5,000–9,000** | an all-reduce charged one flat hop however far it reached |
+| N5 vs B200, Pro @1M | 27.3× | **4.62×** | both of the above |
+| per-region over broadcast @b64 | 27× | **3.57×** | mean engaged-region load where the physics is the busiest |
+
+**Two conclusions inverted rather than shrank**, which matters more than the
+magnitudes:
+
+- *"The ROM advantage erodes with batch"* holds only for the **dense** model.
+  Qwen goes 8.91× at batch 1 to **0.92× at 256** — the GPU wins outright. Both
+  sparse models now **rise**: Flash 9.19× → **36.52×**, because a GPU's per-user
+  rate collapses faster than a ROM machine's once KV dominates. The original
+  thesis — that sparsity is what makes ROM worth building — survives in a
+  stronger form than it was stated.
+- *"Bigger is better"* is false for latency. ROM per-user throughput falls
+  **monotonically** with area, 7,936 tok/s at one wafer to 3,811 at twelve, so
+  the best latency machine is the **smallest one that holds the model**.
+
+**What the gates say.** The A100 gate is arithmetic and holds at 1.000000×
+through every correction. The Taalas HC1 gate now **under**-predicts at 0.72×,
+having over-predicted at 1.23× before the corrections — a reversal, not a
+tuning, and the per-layer fixed cost was deliberately derived from primitives
+rather than fitted to close it. The value that *would* have closed it is
+negative, so no setting of that term could have.
+
+**What is still wrong and is not hidden.** Every watt is 7–9× low against both
+published parts, and the cause is structural rather than a missing multiplier —
+an A100 driven at peak bandwidth *and* peak compute simultaneously still comes
+out 4.7× low. No *rate* depends on it: `thermal_scale` is exactly 1.0 at all
+feasible points, and that is shown structurally rather than asserted. It is
+therefore a gap in what we may claim, not an error in what we do claim, and no
+watt should be quoted until it is fixed.
+
+
 The program's purpose is a quantitative ROM-versus-HBM comparison. The functional
 lanes are a precondition for it, not the product. These items are the product.
 
-- [ ] W12.1 `src/opentallas/roofline.py` — area-constrained roofline: a silicon
+- [x] W12.1 `src/opentallas/roofline.py` — area-constrained roofline: a silicon
   area budget is allocated across ROM array, compute, SRAM, interconnect and HBM
   PHY, and capacity, bandwidth and compute roof are **derived outputs**. Replaces
   the placeholder profiles whose capacity and compute roof were independent free
   parameters with nothing tying either to area
-- [ ] W12.2 `configs/hardware/technology.json` — every density, latency and
+- [x] W12.2 `configs/hardware/technology.json` — every density, latency and
   energy figure graded `measured`/`published`/`derived`/`assumed` with a source
-- [ ] W12.3 Latency model for distributed decode — decode is sequential across
+- [x] W12.3 Latency model for distributed decode — decode is sequential across
   tokens *and* layers, and at batch 1 a pipelined array supplies no parallelism
   at all, so topology is chosen by hop latency against the per-token budget:
   single chip (0 hops), array with pipeline parallelism (N−1 serial hops), array
   with tensor parallelism (2 × layers collectives), wafer (on-wafer hops)
-- [ ] W12.4 MoE utilisation term — ROM weights are local to compute, so an
+- [x] W12.4 MoE utilisation term — ROM weights are local to compute, so an
   unselected expert region contributes neither bandwidth nor compute. Engagement
   is `1 − (1 − k/N)^B`, not a constant
-- [ ] W12.5 **Validation gate: the model must reproduce Taalas HC1** — an 8B
+- [x] W12.5 **Validation gate: the model must reproduce Taalas HC1** — an 8B
   model on 815 mm² at N6 near ~17,000 tok/s per user, as a named test that fails
   loudly. A model that cannot reproduce a shipping part must not be used to
   predict one that does not exist. Second gate: an A100 on an 8B model at batch 1
   must come out weight-bound at ~254 tok/s, which is pure arithmetic
-- [ ] W12.6 Iso-area studies with the silicon area stated on **both** sides, both
+- [x] W12.6 Iso-area studies with the silicon area stated on **both** sides, both
   topologies where viable, and the latency crossover reported rather than a
   topology assumed
 - [x] W12.8 **The model is validated by the executed machine, not asserted.**
@@ -340,7 +384,7 @@ lanes are a precondition for it, not the product. These items are the product.
   narrow the attention span to prove the check can fail. A validator nobody can
   fail is decoration.
 
-- [ ] W12.7 `tools/run_roofline_studies.py` and `results/roofline/` — canonical
+- [x] W12.7 `tools/run_roofline_studies.py` and `results/roofline/` — canonical
   JSON, rendered report, consistency audit
 
 ## W11 — Governed comparison and release
