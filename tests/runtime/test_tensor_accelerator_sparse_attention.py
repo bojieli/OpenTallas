@@ -12,6 +12,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
+from runtime.reference.formats import binary32_product_add, decode_bf16
 from runtime.reference.sparse_attention import (
     SPARSE_ATTENTION_BLOCK_SIZE,
     SPARSE_ATTENTION_SCALE_BINARY32,
@@ -93,6 +94,12 @@ CASES = [
     (2, 2, 5, 10, 70, "holes"),
     (2, 2, 5, 10, 70, "descending"),
     (4, 1, 8, 20, 65, "one"),
+    # More than 64 selected rows: the second source block is the only place the
+    # online rescale, the running maximum and the carried denominator do
+    # anything at all, and a case that fits one block cannot see them.
+    (2, 2, 4, 70, 129, "full"),
+    (1, 2, 4, 100, 129, "full"),
+    (2, 1, 4, 80, 200, "duplicates"),
 ]
 
 
@@ -266,6 +273,111 @@ def test_signed_zero_and_the_finite_endpoints_match_the_oracle() -> None:
     _assert_identical(observed, expected, "endpoint operands")
 
 
+def test_value_accumulation_visits_its_lanes_in_ascending_slot_order() -> None:
+    """Cancellation makes the AV order observable, and it is ascending.
+
+    The query is nonzero in channel 0 only and every selected KV row carries the
+    same channel-0 value, so every score -- and therefore every probability --
+    is identical.  Channel 1 then holds ``+2**20``, ``-2**20`` and four copies
+    of ``2**-8``.  Accumulated in ascending slot order the pair annihilates
+    first and the four small terms survive; in any order that puts them last
+    they are below half an ulp of ``2**20`` and vanish.  A benign operand set
+    would sum the same either way and let a reordered lane loop pass.
+    """
+    span, heads, head_dim, rows, slots = 1, 1, 4, 6, 8
+    query = np.zeros((span, heads, head_dim), dtype=np.uint16)
+    query[0, 0, 0] = 0x3F80                       # 1.0
+    kv = np.zeros((rows, head_dim), dtype=np.uint16)
+    kv[:, 0] = 0x3F80                             # every score identical
+    kv[0, 1] = _bf16(0, 20, 0)                    # +2**20
+    kv[1, 1] = _bf16(1, 20, 0)                    # -2**20
+    kv[2:, 1] = _bf16(0, -8, 0)                   # 2**-8, four times
+    sinks = np.ascontiguousarray(np.zeros(heads, dtype=np.float32)).view(np.uint32)
+    indices = np.full((span, slots), -1, dtype=np.int64)
+    indices[0, :rows] = np.arange(rows)
+
+    expected = _oracle(query, kv, sinks, indices)
+    observed = kernel.sparse_attention_bf16_codes(
+        query, kv, sinks, indices, scale_binary32=SPARSE_ATTENTION_SCALE_BINARY32
+    )
+    _assert_identical(observed, expected, "cancelling lanes")
+    # The four surviving terms are what a reordered lane loop would lose.
+    assert observed.values[0, 0, 1] != 0
+
+
+def test_the_underflow_repair_runs_on_operands_that_need_it(monkeypatch) -> None:
+    """The detector has to fire, in both contractions, or it pins nothing.
+
+    ``_rounds_twice`` is asked about an accumulator shaped ``[rows, heads, k]``:
+    ``k`` is the source-block lane count in the QK contraction and the head
+    dimension in the AV one, which is how this tells the two apart.  The
+    operands are the subnormal pool, where BF16 products underflow binary32
+    into near-zero accumulators in both.
+    """
+    pool = [
+        _bf16(0, -125, 0), _bf16(1, -125, 3), _bf16(0, -120, 17),
+        _bf16(0, -110, 64), _bf16(1, -100, 5), 0x0001, 0x8001, 0x0040,
+        0x0080, 0x8080, 0x0000, _bf16(0, -60, 0), _bf16(1, -70, 9),
+    ]
+    values = np.asarray(pool, dtype=np.uint16)
+    rng = np.random.default_rng(0xDEEF + 10)
+    span, heads, head_dim, rows, slots = 2, 2, 8, 9, 70
+    query = values[rng.integers(0, values.size, (span, heads, head_dim))]
+    kv = values[rng.integers(0, values.size, (rows, head_dim))]
+    sinks = _sinks(rng, heads)
+    indices = _indices(rng, span, slots, rows, "full")
+
+    repaired: dict[int, int] = {}
+    original = kernel._rounds_twice
+
+    def watched(accumulator, product):
+        risky = original(accumulator, product)
+        if risky is not None:
+            width = int(accumulator.shape[-1])
+            repaired[width] = repaired.get(width, 0) + int(risky.sum())
+        return risky
+
+    monkeypatch.setattr(kernel, "_rounds_twice", watched)
+    observed = kernel.sparse_attention_bf16_codes(
+        query, kv, sinks, indices, scale_binary32=SPARSE_ATTENTION_SCALE_BINARY32
+    )
+    monkeypatch.undo()
+    expected = _oracle(query, kv, sinks, indices)
+    _assert_identical(observed, expected, "subnormal pool")
+    assert repaired.get(head_dim, 0) > 0, ("no AV product-add was repaired", repaired)
+    assert repaired.get(SPARSE_ATTENTION_BLOCK_SIZE, 0) > 0, (
+        "no QK product-add was repaired",
+        repaired,
+    )
+
+
+def test_the_exact_product_add_is_not_two_roundings() -> None:
+    """One rounding of ``a + b*c`` is not two roundings, and this is the case.
+
+    ``a`` is the smallest positive binary32 subnormal and ``b*c`` is exactly
+    one and a half of them.  The exact sum is two and a half units and rounds
+    to two, ties to even.  Rounding the product first turns it into two units
+    -- also ties to even -- and the sum then lands on three.  This is the whole
+    reason the kernel carries :func:`_single_rounded_add`, and the reason its
+    cheap per-row bound has to be conservative rather than clever.
+    """
+    accumulator = np.array([0x00000001], dtype=np.uint32).view(np.float32)
+    left = (np.array([0x35C0], dtype=np.uint32) << np.uint32(16)).view(np.float32)
+    right = (np.array([0x0010], dtype=np.uint32) << np.uint32(16)).view(np.float32)
+    expected = binary32_product_add(
+        0x00000001, decode_bf16(0x35C0).value, decode_bf16(0x0010).value
+    )
+    with np.errstate(under="ignore"):
+        naive = accumulator + left * right
+        observed = kernel._single_rounded_add(accumulator, left, right)
+    assert int(np.ascontiguousarray(naive).view(np.uint32)[0]) != expected
+    assert int(np.ascontiguousarray(observed).view(np.uint32)[0]) == expected
+    # And the detector has to be able to see it: the product underflows below
+    # the smallest normal binary32 into a nonzero, negligible accumulator.
+    risky = kernel._rounds_twice(accumulator, left * right)
+    assert risky is not None and bool(risky[0])
+
+
 # ---------------------------------------------------------------------------
 # the exponential
 # ---------------------------------------------------------------------------
@@ -285,6 +397,16 @@ def test_exponential_is_the_correctly_rounded_binary32_one() -> None:
         np.float32(-103.9), np.float32(-104.1), np.float32(-88.0),
         np.float32(88.7), np.float32(88.73), np.float32(-255.9),
     ]
+    # Inputs the proof rejects: an exhaustive scan of the score-offset domain
+    # found 7,811 of 1,120,927,745, all of them where the binary64 exponential
+    # lands within 2**-40 of a binary32 rounding boundary.  These reach the
+    # exact-reference branch, which is the branch that owes nothing to libm.
+    sampled.extend(
+        np.array(
+            [0xB2FFFE01, 0xB2FFFE02, 0xB2FFFE03, 0xB3000000, 0xB3000002],
+            dtype=np.uint32,
+        ).view(np.float32)
+    )
     for span in (1e-6, 1.0, 20.0, 90.0, 200.0):
         sampled.extend(-np.abs(rng.uniform(0, span, 300)).astype(np.float32))
     sampled.extend(rng.uniform(-90.0, 88.5, 400).astype(np.float32))

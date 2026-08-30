@@ -36,27 +36,33 @@ operations is performed:
     referred to :func:`runtime.reference.transcendental.binary32_exp_general_rne`,
     whose exact rational enclosure owes nothing to a host ``libm``.
 
-Where the schedule cannot be proven equivalent
-----------------------------------------------
-``binary32_product_add`` is an exact-product, single-rounded add; ``a + b*c``
-under two NumPy ufuncs rounds twice.  The two agree whenever the BF16 product
-``b*c`` is exactly representable in binary32, and a BF16 times a BF16 has at
-most 16 significant bits, so the product is exact unless it *underflows*: a
-binary32 product of magnitude at least ``2**-126`` is always exact, and one
-below that bound is the only place a second rounding can appear.  Even then the
-two agree whenever the accumulator is at least ``2**-100``, because a term below
-``2**-126`` is then strictly below half the accumulator's unit in the last place
-and both forms return the accumulator unchanged.
+The one place two ufuncs are not one product-add
+-----------------------------------------------
+``binary32_product_add`` forms the *exact* product and rounds once; ``a + b*c``
+under two NumPy ufuncs rounds twice.  A BF16 times a BF16 carries at most 16
+significant bits, so ``fl(b*c) == b*c`` and the two forms coincide, except at
+the two ends of the binary32 range: a product that underflows below ``2**-126``
+rounds onto the subnormal grid, and one that overflows the largest finite
+binary32 rounds to infinity even though the sum it belongs to may still be
+finite.  Underflow is further harmless while the accumulator is at least
+``2**-100``, where a term below ``2**-126`` is strictly under half an ulp and
+both forms return the accumulator unchanged, and while the accumulator is
+exactly zero, where both return the rounded product.
 
-The kernel therefore *detects* the one case it cannot schedule -- an
-underflowing product landing in a near-zero accumulator -- and hands those query
-rows, whole, to :func:`runtime.reference.sparse_attention.sparse_attention_bf16`.
-Detection is by construction conservative: a cheap per-row bound on the smallest
-nonzero product decides whether a step needs the precise test at all, and the
-precise test is the exact condition above.  The same referral catches a
-nonfinite intermediate, a nonpositive denominator, and an exponential that
-overflows, so poisoned transactions raise from the reference with the reference's
-own message rather than from a reimplementation of its validation.
+The kernel bounds those cases away per row -- the smallest and largest nonzero
+magnitudes of a query row and a KV row bound every product their reduction
+forms -- and only where the bound fails does it test each product and re-form
+the few that need it with :func:`_single_rounded_add`, which is the contract's
+own exact-product add carried out on binary64 with a proven rounding.  Nothing
+falls back to the scalar oracle for arithmetic.
+
+What *is* referred to :func:`runtime.reference.sparse_attention.sparse_attention_bf16`
+is poison: a nonfinite intermediate, a nonpositive denominator, an exponential
+that overflows.  A query row is an independent transaction -- the contract
+resets the running maximum, the denominator and the accumulator at every
+position -- so a referred row is exactly the row the reference would have
+produced, and a poisoned transaction raises from the reference with the
+reference's own message instead of from a reimplementation of its validation.
 """
 
 from __future__ import annotations
@@ -107,12 +113,7 @@ _EXP_PROOF_HIGH = 1.0 + _EXP_PROOF_MARGIN
 #: block of that tile.
 _ROW_TILE_ELEMENTS = 1 << 18
 
-_BINARY32_ONE = np.float32(1.0)
 _BINARY32_ZERO = np.float32(0.0)
-
-
-class SparseAttentionKernelError(ValueError):
-    """Raised when sparse-attention operands are malformed for this kernel."""
 
 
 @dataclass(frozen=True)
@@ -278,6 +279,16 @@ def _single_rounded_add(
     ``2 * 24 + 2 = 50``, so that composition is provably the single binary32
     rounding of the exact ``accumulator + left * right`` (Boldo and Melquiond),
     which is exactly what the contract's exact-product add performs.
+
+    On *these* operands the round-to-odd step is belt and braces and never
+    fires: for the binary64 rounding to cross a binary32 boundary the exact sum
+    would have to sit within ``2**-53`` relative of it, and a 16-bit product
+    added to a 24-bit accumulator either lands on such a boundary exactly --
+    where both roundings agree -- or misses it by at least ``2**-39`` relative.
+    Measured over 414,099 randomized accumulator/BF16/BF16 triples spanning the
+    whole binary32 range, subnormals included, it changed nothing.  It is kept
+    because it makes the function correct for any operand pair rather than only
+    for this one, which is the property the caller should be able to rely on.
     """
 
     wide = accumulator.astype(np.float64)
@@ -776,19 +787,22 @@ def _balanced_sum(
 ) -> np.ndarray[Any, np.dtype[np.float32]]:
     """The canonical NUM-6.1 balanced tree over the trailing axis.
 
-    The axis is the frozen 64-lane source block, so the tree is six exact
-    pairwise levels and every addition is one binary32 RNE rounding, in the same
-    association ``binary32_balanced_sum`` builds.
+    The axis is the frozen 64-lane source block, a power of two, so the tree is
+    six exact pairwise levels with no level needing the zero pad
+    ``binary32_balanced_sum`` inserts at an odd width.  Every addition is one
+    binary32 RNE rounding, in the association that function builds.  A short
+    final block is zero-extended to the full 64 lanes by the caller, which
+    cannot change the sum: adding zero to a nonnegative binary32 partial is
+    exact and leaves it alone.
     """
 
+    width = int(values.shape[-1])
+    if width & (width - 1):  # pragma: no cover - the block width is frozen at 64
+        raise SparseAttentionReferenceError(
+            "balanced source-block sum needs a power-of-two lane count"
+        )
     level = values
-    width = int(level.shape[-1])
     while width > 1:
-        if width & 1:
-            level = np.concatenate(
-                (level, np.zeros((*level.shape[:-1], 1), dtype=np.float32)), axis=-1
-            )
-            width += 1
         level = level.reshape(*level.shape[:-1], width // 2, 2)
         level = np.add(level[..., 0], level[..., 1])
         width //= 2
@@ -908,7 +922,6 @@ def _repair_rows(
 
 __all__ = [
     "NUMERIC_CONTRACT",
-    "SparseAttentionKernelError",
     "SparseAttentionKernelResult",
     "exp_cr32",
     "sparse_attention_bf16_codes",

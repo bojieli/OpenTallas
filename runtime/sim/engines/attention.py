@@ -34,13 +34,13 @@ the data-bearing kernel for that contract, exactly as it is over
 
 That kernel schedules the frozen operations differently -- the QK reduction runs
 K-major and the AV accumulation runs lane-major, over a tile of query rows -- and
-schedules nothing else.  Where it cannot prove its schedule equivalent, which is
-an underflowing BF16 product landing in a near-zero accumulator, it refers those
-whole query rows back to
-:func:`runtime.reference.sparse_attention.sparse_attention_bf16`; query rows are
-independent transactions, so a referred row is exactly the row the reference
-would have produced.  A poisoned transaction is referred the same way and raises
-with the reference's own message.
+schedules nothing else.  It carries the contract's exact-product add itself
+where two rounded ufuncs would not do, and refers only *poison* -- a nonfinite
+intermediate, a nonpositive denominator, an exponential that overflows -- back
+to :func:`runtime.reference.sparse_attention.sparse_attention_bf16`.  A query
+row is an independent transaction, so a referred row is exactly the row the
+reference would have produced, and a poisoned transaction raises here with the
+reference's own message.
 
 Operand and attribute convention (ABI 3.0 ``OPERATOR`` payload)
 --------------------------------------------------------------
