@@ -348,6 +348,28 @@ RMS_EPSILON = 1e-6
 HC_MIX = (2 + HC_MULT) * HC_MULT
 HC_COEFFICIENTS = HC_MULT + HC_MULT * HC_MULT
 
+#: The official default sampling temperature, as the released generation
+#: configuration states it: binary32 one.  ABI 3.0's submission record carries
+#: no temperature field (``runtime.abi3.records.Submission``), so a graph that
+#: reads the temperature out of a *request* input reads an object no request
+#: can ever write.  It is a deployment constant, and this is its value.
+OFFICIAL_DEFAULT_TEMPERATURE_BINARY32 = 0x3F800000
+
+
+def binary32_bits(value: float) -> int:
+    """One real number as the binary32 bit pattern a NUMERIC descriptor holds.
+
+    ``VECTOR.SCALE`` sub-case 0 multiplies by the numeric profile's
+    ``scale_bits`` and by nothing else, and both backends fill that field from
+    a fixed list of attribute spellings ending in ``_bits``/``_binary32`` or
+    named ``scale``.  A constant stated under any other name -- ``factor``, as
+    this export once spelled the route scale -- is not a missed optimisation:
+    the field stays zero, the engine multiplies by binary32 zero, and every
+    value the operation produces is zero without a trap.  So a scale this
+    export emits is emitted as ``scale_bits`` and converted here.
+    """
+    return int.from_bytes(struct.pack("<f", float(value)), "little")
+
 
 #: Grammar for ``execution_predicate``.  Two forms, both a plain string so the
 #: attribute keeps one type:
@@ -1320,8 +1342,38 @@ def export_deepseek_v4_kernel_graph(
     token_ids = builder.tensor("input.token_ids", TOKEN_DTYPE, (span,), "input")
     position_offset = builder.tensor("input.position_offset", "i32", (1,), "input")
     session_ids = builder.tensor("input.session_ids", "u32", (1,), "input")
-    temperature = builder.tensor("input.temperature", "fp32", (1,), "input")
     entropy = builder.tensor("input.entropy_stream", "fp32", (1, VOCABULARY), "input")
+
+    # The sampling temperature is *not* a request input.  It was declared as
+    # one -- ``input.temperature`` -- and every backend therefore placed it as
+    # a zero-filled host object, because ABI 3.0's submission record
+    # (``runtime.abi3.records.Submission``) carries no temperature field and
+    # the host driver has nothing to write it with.  ``main.sample.temperature``
+    # then multiplied a healthy 129,280-wide logits vector by binary32 zero,
+    # every logit tied, and ``greedy_lowest_token_id_argmax`` returned token 0
+    # with no trap anywhere.  The released generation configuration pins the
+    # default at binary32 one, so it is a deployment constant with a declared
+    # generator and a bound digest, exactly like the rotary tables.
+    #
+    # The frozen graph contract still names ``request.temperature_binary32`` as
+    # the ``SAMPLE`` node's second input, so this tensor is what that value
+    # resolves to and it states the pinned number where a reader looks for it.
+    # The *operator* does not read it as an operand: a scalar an ABI 3.0
+    # operator scales by lives in the numeric descriptor, and the two backends
+    # disagree about the shape of a scalar operand view -- one broadcasts it to
+    # the logits row and one does not -- so an operand would be lane-dependent
+    # where a numeric constant is not.  Both take the same pattern below.
+    temperature = builder.tensor(
+        "sample.temperature",
+        "fp32",
+        (1,),
+        "constant",
+        generator="constant_binary32_v1",
+        generator_parameters={
+            "bits": OFFICIAL_DEFAULT_TEMPERATURE_BINARY32,
+            "count": 1,
+        },
+    )
 
     # ------------------------------------------------------------------
     # Rotary coefficient rows
@@ -3101,8 +3153,12 @@ def export_deepseek_v4_kernel_graph(
                 (output,),
                 step="route_scale",
                 iteration_domain={"tokens": rows, "top_k": TOP_K},
-                attributes={**attrs, "factor": ROUTE_SCALE,
-                            "factor_dtype": "fp32"},
+                # ``scale_bits``, not ``factor``: see :func:`binary32_bits`.
+                # The frozen reference calls this the ``route_scale_code`` and
+                # refuses a zero, which is exactly the value a backend read
+                # here while the attribute was spelled ``factor``.
+                attributes={**attrs, "scale_bits": binary32_bits(ROUTE_SCALE),
+                            "scale_dtype": "fp32"},
             )
             bind(out0, output)
             context_of[root]["route_weights"] = output
@@ -3368,14 +3424,36 @@ def export_deepseek_v4_kernel_graph(
             logits = operands[0]
             rows = rows_of(logits)
             scaled = act(f"{node_id}.scaled_logits", "fp32", (rows, VOCABULARY))
+            # One operand, and the temperature in the numeric profile.  It used
+            # to be two, the second being ``request.temperature_binary32``
+            # bound to a declared *input* tensor -- and ABI 3.0's submission
+            # record (``runtime.abi3.records.Submission``) has no temperature
+            # field, so no request could ever write it.  Every backend placed
+            # it as a zero-filled object, this operator multiplied a healthy
+            # 129,280-wide logits vector by binary32 zero, all 129,280 logits
+            # tied at zero, and ``greedy_lowest_token_id_argmax`` returned
+            # token 0 -- with no trap, because multiplying by zero is legal.
+            # The temperature is a *deployment* constant pinned at the released
+            # generation configuration's default, and ABI 3.0's home for an
+            # operator's scalar constant is the numeric descriptor's
+            # ``scale_bits``, which ``VECTOR.SCALE`` sub-case 0 reads.
             emit(
                 f"{node_id}.temperature",
                 "SCALE",
-                (logits, ten("request.temperature_binary32")),
+                (logits,),
                 (scaled,),
                 step="temperature",
                 iteration_domain={"rows": rows, "width": VOCABULARY},
-                attributes={**attrs, "operation": "reciprocal_temperature_product"},
+                attributes={
+                    **attrs,
+                    "operation": "reciprocal_temperature_product",
+                    "scale_bits": OFFICIAL_DEFAULT_TEMPERATURE_BINARY32,
+                    "scale_dtype": "fp32",
+                    "temperature_source": (
+                        "deployment_constant_official_default; ABI 3.0 carries "
+                        "no per-request temperature field"
+                    ),
+                },
             )
             token = act(f"{node_id}.argmax", TOKEN_DTYPE, (rows,))
             emit(
@@ -3422,8 +3500,9 @@ def export_deepseek_v4_kernel_graph(
                 (output,),
                 step="hyper_stream_mean",
                 iteration_domain={"tokens": rows, "width": HIDDEN},
-                attributes={**attrs, "factor": 1.0 / HC_MULT,
-                            "factor_dtype": "fp32"},
+                attributes={**attrs,
+                            "scale_bits": binary32_bits(1.0 / HC_MULT),
+                            "scale_dtype": "fp32"},
             )
             bind(out0, output)
 
@@ -3759,7 +3838,9 @@ def export_deepseek_v4_kernel_graph(
                 value_tensor["dspark.confidence.output"],
             )
         )
-    inputs = (token_ids, position_offset, session_ids, temperature, entropy)
+    # ``temperature`` is deliberately absent: it is a declared deployment
+    # constant, not a request field the host can supply.  See its declaration.
+    inputs = (token_ids, position_offset, session_ids, entropy)
     state_ids = tuple(resource.state_id for resource in builder.states)
 
     generation_policy = {

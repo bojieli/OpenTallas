@@ -287,6 +287,36 @@ def constant_u32_v1(parameters: Mapping[str, Any]) -> np.ndarray:
     return np.full(count, value, dtype=np.uint32)
 
 
+@register("constant_binary32_v1")
+def constant_binary32_v1(parameters: Mapping[str, Any]) -> np.ndarray:
+    """``count`` copies of one binary32 value, stated as its bit pattern.
+
+    The companion to :func:`constant_u32_v1` for a *floating-point* deployment
+    constant.  The parameter is a bit pattern rather than a decimal literal so
+    that the declared constant and the bytes the device materialises are the
+    same object: a decimal round-trip through JSON is exact for the values in
+    use, but "the binary32 whose encoding is ``0x3f800000``" is what a frozen
+    generation configuration actually states, and it cannot drift.
+
+    DeepSeek's sampling temperature is the first user.  ABI 3.0's submission
+    record has no temperature field, so a temperature read out of a *request*
+    input is read out of an object no request can write -- it stays zero, and
+    the logits are multiplied by zero.  It is a deployment constant.
+    """
+    bits = int(_require(parameters, "bits"))
+    count = int(parameters.get("count", 1))
+    if count <= 0:
+        raise GeneratorError("count must be positive")
+    if not 0 <= bits <= 0xFFFFFFFF:
+        raise GeneratorError("bits must be an unsigned 32-bit pattern")
+    value = np.array([bits], dtype=np.uint32).view(np.float32)[0]
+    if not np.isfinite(value):
+        raise GeneratorError(
+            f"bit pattern {bits:#010x} is not a finite binary32 value"
+        )
+    return np.full(count, value, dtype=np.float32)
+
+
 def generate(name: str, parameters: Mapping[str, Any]) -> np.ndarray:
     try:
         function = _REGISTRY[name]
