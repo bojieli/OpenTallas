@@ -625,6 +625,15 @@ SYMBOL_BY_NAME: Mapping[str, RequestAxis] = {
     # resolved operands were (262144, 128, 65536) summing to the output's
     # 327,808 when the request had 133 rows.
     #
+    # These are the *prefill* forms, and they are now derived rather than
+    # trusted: ``_check_join_extent`` sums the operands of every axis-0 join
+    # and refuses an output whose declared function is not that sum.  The
+    # decode form is not in this table because it is not one entry -- the sum
+    # is over two symbols and A18 states one -- so it is derived per phase from
+    # the graph's ``phase_symbol_binding`` and emitted as its own path.  The
+    # paragraph below records what this table said before that existed; the
+    # last sentence of it was wrong, and a decode step is where it was wrong.
+    #
     # ``window`` is the span joined to a 128-row sliding window, which is the
     # bias: those rows are there for a span of one.  The compressed layers add
     # ``context / ratio`` more, and in *prefill* the context is the span, so
@@ -652,6 +661,26 @@ PREDICATE_COMPARISONS: Mapping[str, Comparison] = {
     ">": Comparison.GT,
     ">=": Comparison.GE,
 }
+
+
+def _evaluate_comparison(comparison: Comparison, value: int, immediate: int) -> bool:
+    """A frozen A3 comparison against a symbol whose value is known.
+
+    Used to *prove* that two alternative paths of one kernel cannot both issue:
+    each path's condition is evaluated under the other phase's pinned symbols,
+    and a path that could still fire there is refused rather than emitted.
+    """
+    if comparison is Comparison.EQ:
+        return value == immediate
+    if comparison is Comparison.NE:
+        return value != immediate
+    if comparison is Comparison.LT:
+        return value < immediate
+    if comparison is Comparison.LE:
+        return value <= immediate
+    if comparison is Comparison.GT:
+        return value > immediate
+    return value >= immediate
 
 
 def _rewrite_comparison(
@@ -1112,10 +1141,15 @@ class RomLowering:
         self._state_class_aliases: dict[str, str] = {}
         self._state_row_widenings: dict[str, dict[str, int]] = {}
         self._port_cursor = 0
-        self._predicate_cache: dict[tuple[int, int, int], int] = {}
+        self._predicate_cache: dict[tuple[Any, ...], int] = {}
         self._predicate_values: dict[str, str] | None = None
         self._predicated_operators: dict[str, str] = {}
         self._operand_alternatives: dict[str, str] = {}
+        #: Tensor -> phase -> the A18 extent that phase's path writes.  A join
+        #: whose operands sum over two runtime symbols has no single extent,
+        #: and every view of its result -- the producer's and the consumer's --
+        #: has to state the phase's own.
+        self._phase_extent: dict[str, dict[str, RequestAxis]] = {}
         self._unrepresentable_predicates: dict[str, dict[str, str]] = {}
         self._unify_buffers()
 
@@ -4962,11 +4996,188 @@ class RomLowering:
                 )
                 for condition in sorted(set(self._operand_alternatives.values()))
             }
+        if self._phase_extent:
+            # Published beside the program for the same reason the predicate
+            # report is: a join whose row space the *phase* decides is not
+            # visible in any one descriptor, and a reader comparing the two
+            # lanes needs to see that both split the same resource the same
+            # way.  Each entry is the tensor and, per phase, the affine
+            # function that phase's path declares.
+            report["phase_split_extents"] = {
+                name: {
+                    phase: (
+                        f"{extent.numerator}*"
+                        f"{Symbol(int(extent.symbol)).name}/"
+                        f"{extent.unit}+{extent.bias}"
+                    )
+                    for phase, extent in sorted(table.items())
+                }
+                for name, table in sorted(self._phase_extent.items())
+            }
         if self._unrepresentable_predicates:
             report["unrepresentable_predicates"] = dict(
                 sorted(self._unrepresentable_predicates.items())
             )
         return report
+
+    # -- amendment A18 across a phase boundary ---------------------------
+    #
+    # ABI 3.0 section 12.2 fixes one relation between the three request
+    # scalars: ``CONTEXT_LENGTH == POSITION_START + SPAN_TOKENS``.  A graph
+    # that pins one of them in a phase therefore pins a second, and that is
+    # what lets a sum over two symbols collapse onto one *per phase* without
+    # any backend inventing an identity of its own.
+    PHASE_SYMBOL_BY_NAME: Mapping[str, Symbol] = {
+        "span_tokens": Symbol.SPAN_TOKENS,
+        "position_start": Symbol.POSITION_START,
+        "context_length": Symbol.CONTEXT_LENGTH,
+    }
+
+    def _phase_substitution(
+        self, pinned: Mapping[str, Any], where: str
+    ) -> tuple[dict[int, int], dict[int, tuple[int, int]]]:
+        """``(constants, aliases)`` implied by one phase's pinned symbols.
+
+        ``constants`` maps a symbol to the value the phase pins it to.
+        ``aliases`` maps a symbol to ``(base symbol, offset)`` -- the symbol is
+        that base plus a constant.  Everything here follows from the pinned
+        values and section 12.2's relation; nothing is assumed about how a host
+        drives the device.
+        """
+        constants: dict[int, int] = {}
+        for name, value in dict(pinned).items():
+            symbol = self.PHASE_SYMBOL_BY_NAME.get(str(name))
+            if symbol is None:
+                raise RomLoweringError(
+                    f"{where}: phase binding names {name!r}, which is not one "
+                    "of the three request scalars section 12.2 relates; a "
+                    "binding this backend cannot read is one it would drop"
+                )
+            constants[int(symbol)] = int(value)
+        aliases: dict[int, tuple[int, int]] = {}
+        if int(Symbol.CONTEXT_LENGTH) not in constants:
+            start = constants.get(int(Symbol.POSITION_START))
+            span = constants.get(int(Symbol.SPAN_TOKENS))
+            if start is not None:
+                aliases[int(Symbol.CONTEXT_LENGTH)] = (int(Symbol.SPAN_TOKENS), start)
+            elif span is not None:
+                aliases[int(Symbol.CONTEXT_LENGTH)] = (
+                    int(Symbol.POSITION_START),
+                    span,
+                )
+        return constants, aliases
+
+    def _join_extent_under(
+        self,
+        names: Sequence[str],
+        axis: int,
+        constants: Mapping[int, int],
+        aliases: Mapping[int, tuple[int, int]],
+    ) -> tuple[RequestAxis | None, int]:
+        """:meth:`_join_extent`, evaluated under one phase's substitutions.
+
+        A17 makes a join's output the sum of its inputs, and A18 states an
+        extent as an affine image of *one* symbol.  The compressed attention
+        join is a sum over two -- ``span_tokens + 128 + context_length /
+        ratio`` -- so the sum has no A18 image at all and the exporter's own
+        ``attention_rows_ratioN`` was taken on trust.  It was wrong: it names
+        the *span's* group count, which equals the context's only while the
+        span is the context, so it is exact in prefill and short by every
+        committed group at every decode step.
+
+        Under a phase's substitutions the sum does collapse.  A symbol the
+        phase pins to a constant folds into the bias; a symbol the phase makes
+        an offset image of another is rewritten onto that other when the
+        rewrite is exact -- an offset survives a floor only when the divisor is
+        one, so a nonzero offset against a group axis is left alone rather than
+        approximated.
+
+        What remains is a sum of affine images of one symbol, and it is
+        combined only where the combination is exact: ``floor(a*S) +
+        floor(b*S/u) == floor((a*u + b)*S/u)`` because the first term is a
+        whole number of the symbol's units.  Two *floored* terms have no such
+        identity, so this refuses rather than rounding one.
+        """
+        symbol: int | None = None
+        exact = 0
+        floored: RequestAxis | None = None
+        bias = 0
+        for name in names:
+            tensor = self.tensors[name]
+            entry = tensor.shape[axis] if axis < len(tensor.shape) else None
+            if not isinstance(entry, Symbolic):
+                bias += int(self._dims(tensor)[axis])
+                continue
+            request = SYMBOL_BY_NAME.get(entry.symbol)
+            if request is None or int(entry.multiplier or 1) != 1:
+                raise RomLoweringError(
+                    f"join operand {name!r} leads on axis {axis} with "
+                    f"{entry.symbol!r}, which this backend cannot state as an "
+                    "A18 affine image"
+                )
+            unit = max(int(request.unit), 1)
+            numerator = int(request.numerator)
+            bias += int(request.bias)
+            named = int(request.symbol)
+            value = constants.get(named)
+            if value is not None:
+                bias += numerator * int(value) // unit
+                continue
+            alias = aliases.get(named)
+            if alias is not None and (alias[1] == 0 or unit == 1):
+                bias += numerator * int(alias[1]) // unit
+                named = alias[0]
+            if symbol is None:
+                symbol = named
+            elif symbol != named:
+                raise RomLoweringError(
+                    f"a join of operands over {Symbol(symbol).name} and "
+                    f"{Symbol(named).name} has no single A18 extent in this "
+                    "phase; this backend refuses to invent one"
+                )
+            if unit == 1:
+                exact += numerator
+            elif floored is None:
+                floored = RequestAxis(Symbol(named), unit, numerator, 0)
+            else:
+                raise RomLoweringError(
+                    f"a join with two floored operand extents "
+                    f"({floored.numerator}/{floored.unit} and "
+                    f"{numerator}/{unit}) has no exact A18 sum; this backend "
+                    "refuses to round one"
+                )
+        if symbol is None:
+            return None, bias
+        if floored is None:
+            return RequestAxis(Symbol(symbol), 1, exact, bias), 0
+        unit = int(floored.unit)
+        return (
+            RequestAxis(Symbol(symbol), unit, exact * unit + floored.numerator, bias),
+            0,
+        )
+
+    @staticmethod
+    def _substitute_condition(
+        triple: tuple[Symbol, Comparison, int],
+        constants: Mapping[int, int],
+        aliases: Mapping[int, tuple[int, int]],
+    ) -> tuple[Symbol, Comparison, int] | bool:
+        """One ``COMPARE_SYMBOL`` triple under a phase's substitutions.
+
+        Returns the rewritten triple, or ``True``/``False`` when the phase
+        decides the comparison outright.  ``S + offset <op> K`` is
+        ``S <op> K - offset`` for every frozen comparison, which is why moving
+        a condition across the section 12.2 relation is exact where moving an
+        extent across it is not.
+        """
+        symbol, comparison, immediate = triple
+        value = constants.get(int(symbol))
+        if value is not None:
+            return _evaluate_comparison(comparison, int(value), int(immediate))
+        alias = aliases.get(int(symbol))
+        if alias is not None:
+            return Symbol(alias[0]), comparison, int(immediate) - int(alias[1])
+        return symbol, comparison, immediate
 
     def _join_extent(
         self, names: Sequence[str], axis: int
@@ -5015,6 +5226,432 @@ class RomLowering:
         if symbol is None:
             return None, bias
         return RequestAxis(symbol, unit, numerator, bias), 0
+
+    def _phase_present_paths(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        *,
+        condition: str,
+        context_loop: int | None,
+        context_divisor: int,
+        declared_output: int,
+    ) -> list[tuple[str, int, int]] | None:
+        """One path per phase for a join whose sum spans two symbols.
+
+        ``None`` when the kernel declares no phase binding, which is every
+        join but DeepSeek's compressed attention view: the full operand row
+        then keeps the single instruction and the single declared extent it
+        has always had.
+
+        Otherwise the full row is emitted once per phase.  Each path carries
+        that phase's *derived* extent -- ``5 * span / 4 + 128`` in prefill,
+        ``context / 4 + 129`` in decode -- and that phase's rewriting of the
+        operand's own presence condition, which is what keeps exactly one of
+        them issuing per request.  The two are refused unless they are provably
+        disjoint: each is evaluated under the other phase's pinned symbols and
+        must read false there, so "one path per request" is a check rather than
+        a hope.  ABI 3.0 gives an instruction one predicate and has no
+        conjunction, so a pair that overlapped would run twice and write the
+        same rows twice.
+        """
+        declared = kernel.attributes.get("phase_symbol_binding")
+        if not declared:
+            return None
+        if int(kernel.attributes.get("axis", 0)) != 0:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares a phase binding on a "
+                "feature join; A18's extent axis is the token axis and a "
+                "feature join does not move it"
+            )
+        base = self._symbol_condition(condition)
+        names = list(kernel.inputs)
+        output_axis = self._declared_join_axis(kernel.outputs[0], 0)
+        paths: list[tuple[str, int, int]] = []
+        triples: dict[str, tuple[Symbol, Comparison, int]] = {}
+        pinned_by_phase: dict[str, dict[int, int]] = {}
+        for phase, pinned in sorted(dict(declared).items()):
+            constants, aliases = self._phase_substitution(
+                pinned, f"kernel {kernel.kernel_id!r} phase {phase!r}"
+            )
+            pinned_by_phase[phase] = constants
+            moved = self._substitute_condition(base, constants, aliases)
+            if moved is False:
+                continue
+            if moved is True:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: phase {phase!r} decides the "
+                    f"operand condition {condition!r} outright, so the reduced "
+                    "path is unreachable there and the pair is not a pair"
+                )
+            extent, _static = self._join_extent_under(names, 0, constants, aliases)
+            if extent is None:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: in phase {phase!r} the "
+                    "join's operands sum to a static extent, which no A18 "
+                    "term resolves"
+                )
+            triples[phase] = moved
+            if output_axis is not None and (
+                int(extent.symbol),
+                int(extent.unit),
+                int(extent.numerator),
+                int(extent.bias),
+            ) == (
+                int(output_axis.symbol),
+                int(output_axis.unit),
+                int(output_axis.numerator),
+                int(output_axis.bias),
+            ):
+                # The declared symbol *is* this phase's sum, so the path keeps
+                # the view the kernel already built: the prefill instruction is
+                # byte-identical to the one this program emitted before the
+                # phase split existed.
+                view = declared_output
+            elif int(extent.symbol) == int(Symbol.SPAN_TOKENS):
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: phase {phase!r} sums to a "
+                    "span-bound extent the output does not declare"
+                )
+            else:
+                if context_loop is None or context_divisor <= 0:
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r}: phase {phase!r} sums to "
+                        f"a {Symbol(int(extent.symbol)).name}-bound extent and "
+                        "no context loop resolves it"
+                    )
+                view = self._phase_join_output(
+                    kernel,
+                    shape,
+                    extent=extent,
+                    loop=context_loop,
+                    divisor=context_divisor,
+                )
+            paths.append(
+                (
+                    str(phase),
+                    self._predicate_from_triple(moved),
+                    view,
+                )
+            )
+            self._phase_extent.setdefault(kernel.outputs[0], {})[str(phase)] = extent
+        for phase, triple in triples.items():
+            for other, constants in pinned_by_phase.items():
+                if other == phase:
+                    continue
+                value = constants.get(int(triple[0]))
+                if value is None:
+                    continue
+                if _evaluate_comparison(triple[1], int(value), int(triple[2])):
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r}: the {phase!r} path's "
+                        f"condition still reads true under {other!r}'s pinned "
+                        "symbols, so two paths would issue for one request"
+                    )
+        if len(paths) < 2:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} declares a phase binding that "
+                f"leaves {len(paths)} present paths; a split that does not "
+                "split is a declaration nothing checks"
+            )
+        return paths
+
+    def _phase_consumer_paths(
+        self, kernel: Kernel
+    ) -> dict[int, dict[str, RequestAxis]] | None:
+        """Operands of this kernel whose extent the phase decides.
+
+        A tensor produced by a phase-split join has no single A18 extent, and a
+        view of it is a statement of that extent wherever it is read.  So the
+        split does not stop at the producer: every consumer states the same two
+        functions, or it presents rows the producer did not write.  Left
+        unpropagated, DeepSeek's sparse attention read the prefill function at
+        decode -- 129 rows of a 137-row join -- and refused the eight rebased
+        compressed indices its own selector had just produced.
+
+        One hop is the whole propagation for both released graphs: the join's
+        output is read by ``ATTENTION.SPARSE`` and by nothing else, and that
+        operator's own output is span-sized.  A second hop would be refused
+        below rather than followed silently.
+        """
+        if not self._phase_extent or not kernel.inputs:
+            return None
+        found: dict[int, dict[str, RequestAxis]] = {}
+        for index, name in enumerate(kernel.inputs):
+            phases = self._phase_extent.get(name)
+            if phases is not None:
+                found[index] = phases
+        if not found:
+            return None
+        if self._kernel_condition(kernel) is not None:
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r} reads a phase-split extent and "
+                "declares a condition of its own; an ABI 3.0 instruction "
+                "carries one predicate_id and there is no conjunction"
+            )
+        for name in kernel.outputs:
+            if name in self._phase_extent:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r} would propagate a phase-split "
+                    "extent to its own output; this backend follows one hop and "
+                    "refuses to guess the rest"
+                )
+        return found
+
+    def _emit_phase_consumer(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        family: Major,
+        sub: int,
+        inputs: Sequence[int],
+        outputs: Sequence[int],
+        *,
+        order: Sequence[int],
+        paths: Mapping[int, Mapping[str, RequestAxis]],
+        loop: int | None,
+        schedule_rows: int | None,
+        extra_close: int,
+        context_loop: int | None,
+        context_divisor: int,
+    ) -> None:
+        """One instruction per phase, each stating that phase's row space."""
+        slots = self._abi_input_slots(kernel, order)
+        phases = sorted({phase for table in paths.values() for phase in table})
+        for table in paths.values():
+            if sorted(table) != phases:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r} reads two phase-split "
+                    "operands that name different phases"
+                )
+        for phase in phases:
+            row = list(inputs)
+            for ir_slot, table in paths.items():
+                abi_slot = next(
+                    (i for i, ir in enumerate(slots) if ir == ir_slot), None
+                )
+                if abi_slot is None or abi_slot >= len(row):
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r}: no ABI slot carries the "
+                        f"phase-split operand {ir_slot}"
+                    )
+                extent = table[phase]
+                if int(extent.symbol) == int(Symbol.SPAN_TOKENS):
+                    continue  # the declared view already states this phase
+                if context_loop is None or context_divisor <= 0:
+                    raise RomLoweringError(
+                        f"kernel {kernel.kernel_id!r}: phase {phase!r} names a "
+                        f"{Symbol(int(extent.symbol)).name}-bound row space and "
+                        "no loop resolves it"
+                    )
+                row[abi_slot] = self._phase_extent_view(
+                    self.tensors[kernel.inputs[ir_slot]],
+                    shape,
+                    extent=extent,
+                    loop=context_loop,
+                    divisor=context_divisor,
+                    writable=False,
+                )
+            self._emit_operator(
+                kernel,
+                family,
+                sub,
+                row,
+                outputs,
+                loop=None,
+                schedule_rows=schedule_rows,
+                suffix=f".{phase}",
+                predicate_id=self._phase_predicate(phase),
+            )
+        join = self.builder.new_event()
+        self.builder.emit(
+            Major.CONTROL,
+            Control.NOP,
+            signal_event_id=join,
+            source_operation_id=kernel.index,
+        )
+        for name in kernel.outputs:
+            self._event_of_tensor[name] = join
+        if loop is not None:
+            self.builder.close_loop()
+        for _ in range(extra_close):
+            self.builder.close_loop()
+
+    def _phase_predicate(self, phase: str) -> int:
+        value = Phase.PREFILL if str(phase) == "prefill" else Phase.DECODE
+        if str(phase) not in {"prefill", "decode"}:
+            raise RomLoweringError(
+                f"phase {phase!r} is neither prefill nor decode; ABI 3.0's "
+                "PHASE_IS predicate names one of the two"
+            )
+        key = ("phase", int(value))
+        cached = self._predicate_cache.get(key)
+        if cached is not None:
+            return cached
+        descriptor = self.builder.predicate(
+            kind=PredicateKind.PHASE_IS,
+            comparison=Comparison.EQ,
+            selector_kind=SelectorKind.RUNTIME_SYMBOL,
+            selector_index=int(Symbol.PHASE),
+            immediate=int(value),
+            key=f"pred.phase.{value.name.lower()}",
+        )
+        self._predicate_cache[key] = descriptor
+        return descriptor
+
+    def _predicate_from_triple(
+        self, triple: tuple[Symbol, Comparison, int]
+    ) -> int:
+        symbol, comparison, immediate = triple
+        key = (int(symbol), int(comparison), int(immediate))
+        cached = self._predicate_cache.get(key)
+        if cached is not None:
+            return cached
+        descriptor = self.builder.predicate(
+            kind=PredicateKind.COMPARE_SYMBOL,
+            comparison=comparison,
+            selector_kind=SelectorKind.RUNTIME_SYMBOL,
+            selector_index=int(symbol),
+            immediate=int(immediate),
+            key=(
+                f"pred.{symbol.name.lower()}."
+                f"{comparison.name.lower()}.{immediate}"
+            ),
+        )
+        self._predicate_cache[key] = descriptor
+        return descriptor
+
+    def _declared_join_axis(self, name: str, axis: int) -> RequestAxis | None:
+        """The A18 function the graph declares for one tensor's join axis."""
+        tensor = self.tensors[name]
+        entry = tensor.shape[axis] if axis < len(tensor.shape) else None
+        if not isinstance(entry, Symbolic):
+            return None
+        request = SYMBOL_BY_NAME.get(entry.symbol)
+        if request is None or int(entry.multiplier or 1) != 1:
+            return None
+        return request
+
+    def _check_join_extent(self, kernel: Kernel, join_axis: int) -> None:
+        """Refuse a join whose declared output extent is not its operands' sum.
+
+        A17 makes the output of a join the sum of its inputs and the engine
+        checks exactly that, one dispatch after admission.  Until now the
+        *reduced* path of a conditionally present operand was the only extent a
+        backend derived; the full path took whatever symbol the exporter had
+        put on the output tensor, and for DeepSeek's compressed attention join
+        that symbol was ``attention_rows_ratioN`` -- the span's group count
+        where the join carries the context's.  It agreed with the operands in
+        prefill, where the span *is* the context, so every gate this program
+        had ever run passed and the first decode step failed at the engine with
+        ``output view ... differ from the axis-0 concatenation``.
+
+        Deriving it here says the same thing at lowering, in both lanes, for
+        every join and every phase -- and a phase whose sum has no A18 image at
+        all is refused rather than declared, which is what the exporter's
+        untested word amounted to.
+        """
+        if join_axis != 0 or not kernel.outputs or not kernel.inputs:
+            return
+        declared = self._declared_join_axis(kernel.outputs[0], 0)
+        phases = kernel.attributes.get("phase_symbol_binding")
+        names = list(kernel.inputs)
+        if phases:
+            for phase, pinned in sorted(dict(phases).items()):
+                constants, aliases = self._phase_substitution(
+                    pinned, f"kernel {kernel.kernel_id!r} phase {phase!r}"
+                )
+                self._join_extent_under(names, 0, constants, aliases)
+            return
+        derived, static = self._join_extent_under(names, 0, {}, {})
+        if declared is None:
+            if derived is not None:
+                raise RomLoweringError(
+                    f"kernel {kernel.kernel_id!r}: the join's operands sum to a "
+                    "request-determined extent and its output declares a "
+                    "static one"
+                )
+            return
+        if derived is None or (
+            int(derived.symbol),
+            int(derived.unit),
+            int(derived.numerator),
+            int(derived.bias),
+        ) != (
+            int(declared.symbol),
+            int(declared.unit),
+            int(declared.numerator),
+            int(declared.bias),
+        ):
+            raise RomLoweringError(
+                f"kernel {kernel.kernel_id!r}: the output declares extent "
+                f"{declared.numerator}*{Symbol(int(declared.symbol)).name}/"
+                f"{declared.unit}+{declared.bias} and its operands sum to "
+                + (
+                    "a static extent"
+                    if derived is None
+                    else f"{derived.numerator}*{Symbol(int(derived.symbol)).name}/"
+                    f"{derived.unit}+{derived.bias}"
+                )
+                + "; A17 makes the two the same number and the engine checks it"
+            )
+
+    def _phase_join_output(
+        self,
+        kernel: Kernel,
+        shape: KernelShape,
+        *,
+        extent: RequestAxis,
+        loop: int,
+        divisor: int,
+    ) -> int:
+        """``out0`` of one phase's path, with that phase's derived extent."""
+        return self._phase_extent_view(
+            self.tensors[kernel.outputs[0]],
+            shape,
+            extent=extent,
+            loop=loop,
+            divisor=divisor,
+            writable=True,
+        )
+
+    def _phase_extent_view(
+        self,
+        tensor: Tensor,
+        shape: KernelShape,
+        *,
+        extent: RequestAxis,
+        loop: int,
+        divisor: int,
+        writable: bool,
+    ) -> int:
+        """A view of ``tensor`` whose leading axis states ``extent``."""
+        declared = list(self._dims(tensor))
+        dims = self._blocked_dims(tensor, shape)
+        width = 1
+        for element in declared[1:]:
+            width *= int(element)
+        step = iteration_extent(divisor, extent.numerator, extent.unit)
+        if step is None:
+            raise RomLoweringError(
+                f"tensor {tensor.tensor_id!r}: a loop block of {divisor} symbol "
+                f"units is not a whole number of an axis counted as "
+                f"{extent.numerator}/{extent.unit}"
+            )
+        dims[0] = min(step + int(extent.bias), declared[0])
+        return self._buffer_view(
+            tensor,
+            dims=dims,
+            strides=None,
+            shape=shape,
+            loop=loop,
+            writable=writable,
+            term=DynamicTerm.loop(loop, step * width),
+            extent_axis=0,
+            extent_unit=extent.unit,
+            extent_numerator=extent.numerator,
+            extent_bias=extent.bias,
+        )
 
     def _reduced_join_output(
         self,
@@ -5214,12 +5851,35 @@ class RomLowering:
         # refuses a declaration nothing walks, and leaving it undeclared is what
         # let the attention join read its maximum.
         planes = self._request_sized_planes(kernel)
+        consumer_paths = self._phase_consumer_paths(kernel)
         context = None
+        context_divisor = 0
         if planes:
             plane = self.tensors[planes[0]]
             _s, _m, plane_axis = self._leading_symbol(plane)
+            context_divisor = (
+                self._dims(plane)[0]
+                * int(plane_axis.unit)
+                // max(int(plane_axis.numerator), 1)
+            )
             context = self._open_context_loop(
                 kernel, self._dims(plane)[0], plane_axis
+            )
+        elif consumer_paths is not None and any(
+            int(extent.symbol) != int(Symbol.SPAN_TOKENS)
+            for _slot, phases in consumer_paths.items()
+            for extent in phases.values()
+        ):
+            # A consumer of a phase-split join reads a *context*-sized row
+            # space in one phase and a span-sized one in the other, and A18
+            # resolves an extent only through a loop that walks it.  This
+            # kernel binds no request-sized state plane of its own, so the loop
+            # that resolves the context form has to be opened for the operand
+            # rather than for a plane: one block over the whole context, run
+            # once, exactly as ``_open_context_loop`` does for a plane.
+            context_divisor = int(self.capability.limits["max_context_positions"])
+            context = self._open_context_loop(
+                kernel, context_divisor, RequestAxis(Symbol.CONTEXT_LENGTH)
             )
         if kernel.kind == "EXPERT_DISPATCH" and len(kernel.outputs) > 1:
             self._emit_routed_row_identity(kernel, shape, loop)
@@ -5267,7 +5927,26 @@ class RomLowering:
             ]
         innermost = context if context is not None else loop
         closes = 1 if context is not None and loop is not None else 0
+        if family is Major.REDUCTION and engine.sub == int(Reduction.GROUPED_CONCAT):
+            self._check_join_extent(kernel, int(kernel.attributes.get("axis", 0)))
         present = self._operand_present(kernel)
+        if present is None and consumer_paths is not None:
+            self._emit_phase_consumer(
+                kernel,
+                shape,
+                family,
+                engine.sub,
+                inputs,
+                outputs,
+                order=order,
+                paths=consumer_paths,
+                loop=innermost,
+                schedule_rows=schedule_rows,
+                extra_close=closes,
+                context_loop=context,
+                context_divisor=context_divisor,
+            )
+            return
         if present is None:
             self._emit_operator(
                 kernel,
@@ -5294,6 +5973,8 @@ class RomLowering:
             row_loop=loop,
             schedule_rows=schedule_rows,
             extra_close=closes,
+            context_loop=context,
+            context_divisor=context_divisor,
         )
 
     def _emit_alternative_paths(
@@ -5312,6 +5993,8 @@ class RomLowering:
         row_loop: int | None,
         schedule_rows: int | None,
         extra_close: int,
+        context_loop: int | None = None,
+        context_divisor: int = 0,
     ) -> None:
         """One operator, two complementary paths, one event.
 
@@ -5384,16 +6067,38 @@ class RomLowering:
                 ],
             )
         self._operand_alternatives[kernel.kernel_id] = condition
-        self._emit_operator(
+        present_paths = self._phase_present_paths(
             kernel,
-            family,
-            sub,
-            inputs,
-            outputs,
-            loop=None,
-            schedule_rows=schedule_rows,
-            predicate_id=predicate,
+            shape,
+            condition=condition,
+            context_loop=context_loop,
+            context_divisor=context_divisor,
+            declared_output=outputs[0] if outputs else NO_ID,
         )
+        if present_paths is None:
+            self._emit_operator(
+                kernel,
+                family,
+                sub,
+                inputs,
+                outputs,
+                loop=None,
+                schedule_rows=schedule_rows,
+                predicate_id=predicate,
+            )
+        else:
+            for phase, path_predicate, path_output in present_paths:
+                self._emit_operator(
+                    kernel,
+                    family,
+                    sub,
+                    inputs,
+                    [path_output, *outputs[1:]],
+                    loop=None,
+                    schedule_rows=schedule_rows,
+                    suffix=f".{phase}",
+                    predicate_id=path_predicate,
+                )
         self._emit_operator(
             kernel,
             family,

@@ -504,6 +504,12 @@ class StatePlacement:
     capacity_rows: int
     dtype: str
     band_id: int | None
+    #: The graph's initial value for every row of this resource.  It is part of
+    #: a resource's identity, not decoration: two resources that agree on class,
+    #: dtype, row and capacity but disagree on it -- DeepSeek's compressor keeps
+    #: its pooled keys at zero and its pooled scores at negative infinity -- are
+    #: different resources and may not share a descriptor.
+    initialization: str = "zero"
 
     @property
     def size_bytes(self) -> int:
@@ -519,6 +525,7 @@ class StatePlacement:
             "capacity_rows": self.capacity_rows,
             "dtype": self.dtype,
             "band_id": self.band_id,
+            "initialization": self.initialization,
             "size_bytes": self.size_bytes,
         }
 
@@ -927,6 +934,15 @@ class RequestExtent:
 #: different symbols, which wire format section 12.8 places outside the
 #: amendment and which the unresolved names below therefore decline to state
 #: rather than approximate.
+#:
+#: That paragraph described a gap, and the gap was reached: the ``attention_*``
+#: entries here are the *prefill* forms of a sum that has no single A18 image,
+#: and a decode step of DeepSeek's compressed layers binds the two symbols
+#: apart.  They are still the prefill forms, but nothing takes them on trust
+#: any more -- ``_check_join_extent`` derives every axis-0 join's output from
+#: its operands and refuses a declaration that disagrees -- and the decode form
+#: is derived per phase by :func:`join_extent_under` rather than named here,
+#: because it is not one entry.
 REQUEST_EXTENT: Mapping[str, RequestExtent] = {
     "span_tokens": RequestExtent(),
     "context_tokens": RequestExtent(symbol="context_length"),
@@ -1064,6 +1080,191 @@ def rewrite_comparison(
         "``COMPARE_SYMBOL`` states one comparison; this backend will not "
         "approximate it"
     )
+
+
+#: The three request scalars ABI 3.0 section 12.2 relates:
+#: ``CONTEXT_LENGTH == POSITION_START + SPAN_TOKENS``.  A graph that pins one
+#: of them in a phase pins a second, which is what lets an extent that sums
+#: over two symbols collapse onto one *per phase* with no backend inventing an
+#: identity of its own.
+#:
+#: Ported from ``compiler/backends/rom/common/program.py``: one convention, two
+#: backends.  A resource whose extent the two lanes disagree about is not one
+#: resource, and this program has already shipped one such disagreement -- the
+#: attention join, 137 rows on the ROM lane and 257 on this one, for the same
+#: decode step of the same graph.
+PHASE_SYMBOL_BY_NAME: Mapping[str, Symbol] = {
+    "span_tokens": Symbol.SPAN_TOKENS,
+    "position_start": Symbol.POSITION_START,
+    "context_length": Symbol.CONTEXT_LENGTH,
+}
+
+#: A18 request-extent symbol name -> the frozen A5 symbol it reads.
+EXTENT_SYMBOL: Mapping[str, Symbol] = {
+    "span_tokens": Symbol.SPAN_TOKENS,
+    "context_length": Symbol.CONTEXT_LENGTH,
+    "position_start": Symbol.POSITION_START,
+}
+
+
+def evaluate_comparison(comparison: Comparison, value: int, immediate: int) -> bool:
+    """A frozen A3 comparison against a symbol whose value is known.
+
+    Used to *prove* that two alternative paths of one kernel cannot both issue:
+    each path's condition is evaluated under the other phase's pinned symbols,
+    and a path that could still fire there is refused rather than emitted.
+    """
+    if comparison is Comparison.EQ:
+        return value == immediate
+    if comparison is Comparison.NE:
+        return value != immediate
+    if comparison is Comparison.LT:
+        return value < immediate
+    if comparison is Comparison.LE:
+        return value <= immediate
+    if comparison is Comparison.GT:
+        return value > immediate
+    return value >= immediate
+
+
+def phase_substitution(
+    pinned: Mapping[str, Any], where: str
+) -> tuple[dict[int, int], dict[int, tuple[int, int]]]:
+    """``(constants, aliases)`` implied by one phase's pinned symbols."""
+    constants: dict[int, int] = {}
+    for name, value in dict(pinned).items():
+        symbol = PHASE_SYMBOL_BY_NAME.get(str(name))
+        if symbol is None:
+            raise PlanError(
+                f"{where}: phase binding names {name!r}, which is not one of "
+                "the three request scalars section 12.2 relates"
+            )
+        constants[int(symbol)] = int(value)
+    aliases: dict[int, tuple[int, int]] = {}
+    if int(Symbol.CONTEXT_LENGTH) not in constants:
+        start = constants.get(int(Symbol.POSITION_START))
+        span = constants.get(int(Symbol.SPAN_TOKENS))
+        if start is not None:
+            aliases[int(Symbol.CONTEXT_LENGTH)] = (int(Symbol.SPAN_TOKENS), start)
+        elif span is not None:
+            aliases[int(Symbol.CONTEXT_LENGTH)] = (int(Symbol.POSITION_START), span)
+    return constants, aliases
+
+
+def join_extent_under(
+    tensors: Mapping[str, Tensor],
+    names: Sequence[str],
+    axis: int,
+    span_max: int,
+    constants: Mapping[int, int],
+    aliases: Mapping[int, tuple[int, int]],
+) -> tuple[RequestExtent | None, int]:
+    """:func:`join_extent`, evaluated under one phase's substitutions.
+
+    A17 makes a join's output the sum of its inputs and A18 states an extent as
+    an affine image of *one* symbol.  DeepSeek's compressed attention join is a
+    sum over two -- ``span_tokens + 128 + context_length / ratio`` -- so the sum
+    has no A18 image at all and the exporter's ``attention_rows_ratioN`` was
+    taken on trust.  It was wrong: it names the *span's* group count, which is
+    the context's only while the span is the context.
+
+    Under a phase's substitutions the sum does collapse.  A symbol the phase
+    pins folds into the bias; a symbol the phase makes an offset image of
+    another is rewritten onto it only when the rewrite survives the floor, so a
+    nonzero offset against a group axis is left alone rather than approximated.
+    Terms are then combined only where the combination is exact:
+    ``floor(a*S) + floor(b*S/u) == floor((a*u + b)*S/u)`` because the first term
+    is a whole number of the symbol's units; two floored terms have no such
+    identity and are refused.
+    """
+    symbol: str | None = None
+    exact = 0
+    floored: RequestExtent | None = None
+    bias = 0
+    for name in names:
+        tensor = tensors[name]
+        entry = tensor.shape[axis] if axis < len(tensor.shape) else None
+        if not isinstance(entry, Symbolic):
+            value, _ = _extent_value(entry if entry is not None else 1, span_max)
+            bias += int(value)
+            continue
+        extent = request_extent_of(tensor, span_max)
+        if extent is None or int(entry.multiplier or 1) != 1:
+            raise PlanError(
+                f"join operand {name!r} leads on axis {axis} with "
+                f"{entry.symbol!r}, which this backend cannot state as an A18 "
+                "affine image"
+            )
+        unit = max(int(extent.unit), 1)
+        numerator = int(extent.numerator)
+        bias += int(extent.bias)
+        named = EXTENT_SYMBOL.get(extent.symbol)
+        if named is None:
+            raise PlanError(
+                f"join operand {name!r} reads {extent.symbol!r}, which is not "
+                "one of the frozen request scalars"
+            )
+        key = int(named)
+        value = constants.get(key)
+        if value is not None:
+            bias += numerator * int(value) // unit
+            continue
+        alias = aliases.get(key)
+        if alias is not None and (alias[1] == 0 or unit == 1):
+            bias += numerator * int(alias[1]) // unit
+            key = alias[0]
+        name_of = Symbol(key).name.lower()
+        if symbol is None:
+            symbol = name_of
+        elif symbol != name_of:
+            raise PlanError(
+                f"a join of operands over {symbol} and {name_of} has no single "
+                "A18 extent in this phase; this backend refuses to invent one"
+            )
+        if unit == 1:
+            exact += numerator
+        elif floored is None:
+            floored = RequestExtent(numerator=numerator, unit=unit, symbol=name_of)
+        else:
+            raise PlanError(
+                "a join with two floored operand extents has no exact A18 sum; "
+                "this backend refuses to round one"
+            )
+    if symbol is None:
+        return None, bias
+    if floored is None:
+        return RequestExtent(numerator=exact, unit=1, bias=bias, symbol=symbol), 0
+    unit = int(floored.unit)
+    return (
+        RequestExtent(
+            numerator=exact * unit + int(floored.numerator),
+            unit=unit,
+            bias=bias,
+            symbol=symbol,
+        ),
+        0,
+    )
+
+
+def substitute_condition(
+    triple: tuple[Symbol, Comparison, int],
+    constants: Mapping[int, int],
+    aliases: Mapping[int, tuple[int, int]],
+) -> tuple[Symbol, Comparison, int] | bool:
+    """One ``COMPARE_SYMBOL`` triple under a phase's substitutions.
+
+    ``S + offset <op> K`` is ``S <op> K - offset`` for every frozen comparison,
+    which is why moving a *condition* across the section 12.2 relation is exact
+    where moving an *extent* across it is not.
+    """
+    symbol, comparison, immediate = triple
+    value = constants.get(int(symbol))
+    if value is not None:
+        return evaluate_comparison(comparison, int(value), int(immediate))
+    alias = aliases.get(int(symbol))
+    if alias is not None:
+        return Symbol(alias[0]), comparison, int(immediate) - int(alias[1])
+    return symbol, comparison, immediate
 
 
 def symbol_condition(condition: str) -> tuple[Symbol, Comparison, int]:
@@ -2714,6 +2915,7 @@ def _place_states(
                     resources[m].dtype,
                     resources[m].row_elements,
                     _extent_value(resources[m].capacity_rows, span_max)[0],
+                    resources[m].initialization,
                 )
                 for m in members
             }
@@ -2722,8 +2924,8 @@ def _place_states(
             if len(specs) != 1:
                 warnings.append(
                     f"band {band.band_id} role {role}: state resources disagree "
-                    "on class, dtype, row width or capacity; they are placed "
-                    "separately"
+                    "on class, dtype, row width, capacity or initial value; "
+                    "they are placed separately"
                 )
                 for member in members:
                     resource = resources[member]
@@ -2739,6 +2941,7 @@ def _place_states(
                             capacity_rows=cap,
                             dtype=resource.dtype,
                             band_id=band.band_id,
+                            initialization=resource.initialization,
                         )
                     )
                     state_of_resource[member] = [physical_id, 0]
@@ -2755,6 +2958,7 @@ def _place_states(
                     capacity_rows=capacity,
                     dtype=first.dtype,
                     band_id=band.band_id,
+                    initialization=first.initialization,
                 )
             )
             for member_index, member in enumerate(members):
@@ -2776,11 +2980,108 @@ def _place_states(
                 capacity_rows=capacity,
                 dtype=resource.dtype,
                 band_id=None,
+                initialization=resource.initialization,
             )
         )
         state_of_resource[resource.state_id] = [physical_id, 0]
+    placements = _pool_states(placements, state_of_resource)
     placements.sort(key=lambda s: s.physical_id)
     return tuple(placements), state_of_resource, warnings
+
+
+def _pool_states(
+    placements: list[StatePlacement],
+    state_of_resource: dict[str, list[Any]],
+) -> list[StatePlacement]:
+    """Pool one band's resources with the *other bands'* replicas of them.
+
+    Merging per band answers "one loop body can name only one descriptor".  It
+    does not answer "the sequencer holds a slot per declared resource for the
+    life of a transaction", which is what ``max_state_resources`` bounds
+    (amendment A22) and which counts descriptors across the whole deployment.
+    DeepSeek-V4-Flash bands into a two-layer prologue, a single irregular layer
+    and a forty-layer period-two body; the middle band's seven resources are
+    replicas of seven of the body's, and kept apart they are nineteen
+    descriptors against a sixteen-slot file, so the deployment is refused at
+    admission.  The ROM backend compiles the same graph to ten because it groups
+    by shape over the whole graph.
+
+    What may share a descriptor is a *replica*: the same resource that several
+    bands each hold their own copy of.  Two placements of one band are two roles
+    the same iteration needs at once -- a key cache and a value cache -- and
+    stay separate, so a pool holds at most one placement per band.  That is the
+    conservative half of the rule and it is deliberate: one descriptor is one
+    prepare, one commit, one cursor and one generation counter, and giving two
+    independent resources one of each is a loss of meaning that the slot file
+    does not ask for.
+
+    Pooling is legal on the condition the per-band merge already uses -- the
+    members agree on class, dtype, row width, capacity and initial value -- so
+    the descriptor's window is the same size for every member and a member is
+    selected by an element offset.  Each source placement's members stay
+    contiguous and in order inside the pool, so a band's layer induction
+    variable still walks its own members by adding one window per iteration to
+    that placement's base.
+    """
+    pools: dict[tuple[Any, ...], list[StatePlacement]] = {}
+    for placement in placements:
+        key = (
+            placement.state_class,
+            placement.dtype,
+            placement.row_elements,
+            placement.row_bytes,
+            placement.capacity_rows,
+            placement.initialization,
+        )
+        pools.setdefault(key, []).append(placement)
+    out: list[StatePlacement] = []
+    for key in sorted(pools, key=lambda k: str(k)):
+        group = sorted(pools[key], key=lambda p: p.physical_id)
+        lanes: list[list[StatePlacement]] = []
+        for placement in group:
+            for lane in lanes:
+                if all(held.band_id != placement.band_id for held in lane):
+                    lane.append(placement)
+                    break
+            else:
+                lanes.append([placement])
+        merged = [lane for lane in lanes if len(lane) > 1]
+        state_class, dtype, row_elements, row_bytes, capacity_rows, init = key
+        base_id = (
+            f"state.pool.{state_class}.{dtype}.r{row_elements}"
+            f".c{capacity_rows}.{init}"
+        )
+        for index, lane in enumerate(lanes):
+            if len(lane) == 1:
+                # A lane nothing pooled with keeps its name, so a graph that
+                # pools nothing produces the deployment it produced before.
+                out.append(lane[0])
+                continue
+            physical_id = base_id if len(merged) == 1 else f"{base_id}.l{index}"
+            members: list[str] = []
+            for placement in lane:
+                offset_base = len(members)
+                for offset, member in enumerate(placement.members):
+                    state_of_resource[member] = [physical_id, offset_base + offset]
+                members.extend(placement.members)
+            bands = {p.band_id for p in lane}
+            out.append(
+                StatePlacement(
+                    physical_id=physical_id,
+                    state_class=state_class,
+                    members=tuple(members),
+                    row_elements=row_elements,
+                    row_bytes=row_bytes,
+                    capacity_rows=capacity_rows,
+                    dtype=dtype,
+                    # A pool that spans bands belongs to no single one.
+                    # Reporting one of them would name a band that does not own
+                    # most of the members.
+                    band_id=next(iter(bands)) if len(bands) == 1 else None,
+                    initialization=init,
+                )
+            )
+    return out
 
 
 def writes_state_plane(
@@ -3534,6 +3835,18 @@ def _plan_kernels(
     # verdict from the aux-id builder.
     undeclared_windows: list[str] = []
     placement_by_tensor = {p.tensor_id: p for p in placements}
+    # Tensors written by a join whose extent the phase decides.  Every view of
+    # such a tensor states that phase's own function -- the producer's and the
+    # consumer's -- so the kernel that reads one needs the loop that resolves
+    # the context form just as the producer does.  Left unresolved, this lane
+    # read the *span's* group count for a context-sized operand and presented a
+    # whole 128-group block where the request had eight.
+    phase_extent_tensors = {
+        name
+        for kernel in graph.kernels
+        if kernel.attributes.get("phase_symbol_binding")
+        for name in kernel.outputs
+    }
     plans: list[KernelPlan] = []
     # The emitted body is the *first iteration* of each band, which spans the
     # band's period rather than a single layer.
@@ -3602,6 +3915,9 @@ def _plan_kernels(
             # inside it rather than row numbers of a block.
             kernel_block = 1
         context_op = (int(engine.family), int(engine.sub)) in CONTEXT_LOOP_OPS
+        phase_context = bool(kernel.attributes.get("phase_symbol_binding")) or any(
+            name in phase_extent_tensors for name in kernel.inputs
+        )
         if context_op:
             # A18 names one request-determined axis per view and this
             # operator's row has two.  The token axis is the one that becomes
@@ -3751,7 +4067,7 @@ def _plan_kernels(
             )
 
         context_loop = None
-        if context_op:
+        if context_op or phase_context:
             # One block over the whole declared capacity: the loop runs once at
             # every request, and what it carries is A18's resolution of the
             # candidate axis.  The divisor is in the bound symbol's own units,
@@ -3763,24 +4079,34 @@ def _plan_kernels(
                 for name in (*kernel.inputs, *kernel.outputs)
             ]
             named = next((a for a in axes if a is not None), None)
-            if named is None:
+            if named is None and context_op:
                 raise PlanError(
                     f"kernel {kernel.kernel_id!r} lowers to an operator whose "
                     "row states a context-sized axis, but no operand declares "
                     "one; the loop that would resolve it has nothing to bind"
                 )
-            _axis, context_extent = named
-            capacity = context_extent.numerator * span_max // context_extent.unit
+            if named is None:
+                # A consumer of a phase-split join: no operand *declares* a
+                # context-sized axis, because the declared symbol is the
+                # prefill one.  The decode path states the context form on the
+                # view instead, and this is the loop that resolves it -- one
+                # block over the whole context, run once, which is what
+                # ``_open_context_loop`` gives a request-sized plane.
+                divisor = max(int(span_max), 1)
+            else:
+                _axis, context_extent = named
+                capacity = context_extent.numerator * span_max // context_extent.unit
+                divisor = max(
+                    capacity * context_extent.unit
+                    // max(context_extent.numerator, 1),
+                    1,
+                )
             context_loop = LoopPlan(
                 loop_key=f"k{kernel.index}.context",
                 kind="context",
                 trip=1,
-                symbol=context_extent.symbol,
-                divisor=max(
-                    capacity * context_extent.unit
-                    // max(context_extent.numerator, 1),
-                    1,
-                ),
+                symbol="context_length",
+                divisor=divisor,
             )
 
         operands: list[OperandPlan] = []

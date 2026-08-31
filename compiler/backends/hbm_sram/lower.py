@@ -104,6 +104,12 @@ from .plan import (
     _abi_input_slots,
     condition_of,
     join_extent,
+    join_extent_under,
+    evaluate_comparison,
+    phase_substitution,
+    substitute_condition,
+    RequestExtent,
+    request_extent_of,
     kernel_condition,
     operand_present,
     predicate_conditions,
@@ -264,13 +270,34 @@ _ENGINE_REGIONS: Mapping[int, tuple[str, ...]] = {
     int(Major.LINK): ("sram.link_stage",),
 }
 
+#: Neutral state-class name -> the frozen ABI 3.0 :class:`StateClass`.
+#:
+#: This table and ``compiler.backends.rom.common.program.STATE_CLASS_BY_NAME``
+#: must agree: they describe one graph's resources to one wire format, and a
+#: ROM-vs-HBM comparison in which the same resource is a ``KV_CACHE`` on one
+#: side and a ``SCRATCH`` on the other is not a comparison.  It previously did
+#: not: the lookup defaulted to ``SCRATCH`` for any name it did not hold, so
+#: DeepSeek's ``kv_window`` and ``compressor_window`` -- fifteen of its nineteen
+#: HBM state resources -- were declared ``SCRATCH`` while the ROM backend, whose
+#: lookup refuses an unknown name, declared them ``KV_CACHE`` and
+#: ``COMPRESSED_KV``.  Legal values, no trap, nothing refused.
 _STATE_CLASS: Mapping[str, StateClass] = {
     "kv_cache": StateClass.KV_CACHE,
+    "kv_window": StateClass.KV_CACHE,
     "compressed_kv": StateClass.COMPRESSED_KV,
+    "compressor_window": StateClass.COMPRESSED_KV,
     "token_ring": StateClass.TOKEN_RING,
     "position_cursor": StateClass.POSITION_CURSOR,
     "route_history": StateClass.ROUTE_HISTORY,
     "scratch": StateClass.SCRATCH,
+}
+
+#: Neutral names that have no exact frozen class, and the value they borrow.
+#: Recorded in the deployment manifest rather than hidden, because the registry
+#: needs its own values through a versioned change a backend may not make.
+_STATE_CLASS_ALIASES: Mapping[str, str] = {
+    "compressor_window": "COMPRESSED_KV",
+    "kv_window": "KV_CACHE",
 }
 
 _TRANSACTION_KINDS = frozenset({"STATE_PREPARE", "STATE_COMMIT", "STATE_READ"})
@@ -395,6 +422,11 @@ class _Emitter:
         self._predicate_cache: dict[tuple[int, int, int], int] = {}
         self._predicated_operators: dict[str, str] = {}
         self._operand_alternatives: dict[str, str] = {}
+        #: Tensor -> phase -> the A18 extent that phase's path writes.  A join
+        #: whose operands sum over two runtime symbols has no single extent,
+        #: and every view of its result -- the producer's and the consumer's --
+        #: states the phase's own.
+        self._phase_extent: dict[str, dict[str, RequestExtent]] = {}
         self._emitted_kernels: set[int] = set()
         self.span_max = plan.span_max
         self.builder = DeploymentBuilder(
@@ -422,6 +454,8 @@ class _Emitter:
         self._host_object: dict[str, int] = {}
         self._state_objects: dict[str, tuple[int, int]] = {}
         self._state_descriptor: dict[str, int] = {}
+        #: Neutral state-class names this graph borrowed a frozen class for.
+        self._state_class_aliases: dict[str, str] = {}
         self._event_of_tensor: dict[str, int] = {}
         self._substitutions: dict[str, str] = {}
         self._layer_loop: int | None = None
@@ -557,6 +591,13 @@ class _Emitter:
         predicates = self._predicate_report()
         if predicates:
             builder.notes["predicates"] = predicates
+        # Same rule as the predicate report: emitted only when non-empty, so a
+        # graph whose every state class is exact says nothing here and its
+        # manifest is unchanged.
+        if self._state_class_aliases:
+            builder.notes["state_class_aliases"] = dict(
+                sorted(self._state_class_aliases.items())
+            )
         return builder.finish()
 
     def _predicate_report(self) -> dict[str, Any]:
@@ -581,6 +622,24 @@ class _Emitter:
                     if value == condition
                 )
                 for condition in sorted(set(self._operand_alternatives.values()))
+            }
+        if self._phase_extent:
+            # Published beside the program for the same reason the predicate
+            # report is: a join whose row space the *phase* decides is not
+            # visible in any one descriptor, and a reader comparing the two
+            # lanes needs to see that both split the same resource the same
+            # way.  Each entry is the tensor and, per phase, the affine
+            # function that phase's path declares.
+            report["phase_split_extents"] = {
+                name: {
+                    phase: (
+                        f"{extent.numerator}*"
+                        f"{extent.symbol}/"
+                        f"{extent.unit}+{extent.bias}"
+                    )
+                    for phase, extent in sorted(table.items())
+                }
+                for name, table in sorted(self._phase_extent.items())
             }
         if self._unrepresentable_predicates:
             report["unrepresentable_predicates"] = dict(
@@ -925,8 +984,19 @@ class _Emitter:
                 permissions=int(Permission.READ | Permission.WRITE),
                 key=f"view.{state.physical_id}",
             )
+            state_class = _STATE_CLASS.get(state.state_class)
+            if state_class is None:
+                raise LoweringError(
+                    f"state class {state.state_class!r} is not in the frozen "
+                    "ABI 3.0 registry and has no documented alias; extend the "
+                    "registry through a versioned change, never privately"
+                )
+            if state.state_class in _STATE_CLASS_ALIASES:
+                self._state_class_aliases[state.state_class] = _STATE_CLASS_ALIASES[
+                    state.state_class
+                ]
             self._state_descriptor[state.physical_id] = builder.state(
-                state_class=_STATE_CLASS.get(state.state_class, StateClass.SCRATCH),
+                state_class=state_class,
                 committed_object_id=committed,
                 prepared_object_id=prepared,
                 row_bytes=state.row_bytes,
@@ -2406,11 +2476,17 @@ class _Emitter:
             running *= extents[axis]
         strides[0] = state.row_elements
         terms: list[DynamicTerm] = []
+        # The member is the *base* of this operand's own band inside the
+        # resource, and the layer loop steps one window per iteration from
+        # there.  It was previously dropped, which was harmless only while every
+        # merged resource held exactly one band and the base was always zero;
+        # a pooled resource (``_pool_states``) puts a later band at a non-zero
+        # base and dropping it would address the first band's members instead --
+        # legal offsets, no trap, another layer's KV history.
         offset = member * window + column
         loop = loops.get("layer")
         if len(state.members) > 1 and loop is not None:
             terms.append(DynamicTerm.loop(loop, window))
-            offset = column
         # Both reads and writes name the *prepared* image.  A transaction reads
         # what it has just appended -- attention over a prefill span attends the
         # very rows the append wrote -- and the committed image is the durability
@@ -2526,11 +2602,26 @@ class _Emitter:
             for o in plan.operands
             if o.direction == "out"
         ]
+        if (int(plan.engine_family), int(plan.engine_sub)) == (
+            int(Major.REDUCTION),
+            int(Reduction.GROUPED_CONCAT),
+        ):
+            self._check_join_extent(plan, kernel)
         present = operand_present(self._predicate_values, kernel)
         if present is not None:
             event = self._emit_alternative_paths(
                 plan, kernel, loops, inputs, outputs, absent=present[0],
                 condition=present[1],
+            )
+            event = self._maybe_link(plan, event, loops)
+            self._close_loops(loops, ["context", "row"])
+            for name in kernel.outputs:
+                self._event_of_tensor[name] = event
+            return
+        consumer_paths = self._phase_consumer_paths(plan, kernel)
+        if consumer_paths is not None:
+            event = self._emit_phase_consumer(
+                plan, kernel, loops, inputs, outputs, consumer_paths
             )
             event = self._maybe_link(plan, event, loops)
             self._close_loops(loops, ["context", "row"])
@@ -2660,15 +2751,36 @@ class _Emitter:
             )
 
         family, sub = Major(plan.engine_family), plan.engine_sub
-        builder.emit(
-            family,
-            sub,
-            descriptor_id=operator(inputs, outputs, f"op.k{plan.index}"),
-            wait_set_id=self._wait_set(self._producer_events(kernel)),
-            signal_event_id=builder.new_event(),
-            predicate_id=predicate,
-            source_operation_id=plan.index,
+        present_paths = self._phase_present_paths(
+            plan, kernel, loops, condition=condition, declared_output=(
+                outputs[0] if outputs else NO_ID
+            )
         )
+        if present_paths is None:
+            builder.emit(
+                family,
+                sub,
+                descriptor_id=operator(inputs, outputs, f"op.k{plan.index}"),
+                wait_set_id=self._wait_set(self._producer_events(kernel)),
+                signal_event_id=builder.new_event(),
+                predicate_id=predicate,
+                source_operation_id=plan.index,
+            )
+        else:
+            for phase, path_predicate, path_output in present_paths:
+                builder.emit(
+                    family,
+                    sub,
+                    descriptor_id=operator(
+                        inputs,
+                        [path_output, *outputs[1:]],
+                        f"op.k{plan.index}.{phase}",
+                    ),
+                    wait_set_id=self._wait_set(self._producer_events(kernel)),
+                    signal_event_id=builder.new_event(),
+                    predicate_id=path_predicate,
+                    source_operation_id=plan.index,
+                )
         kept = [
             self._event_of_tensor[name]
             for index, name in enumerate(kernel.inputs)
@@ -2686,6 +2798,352 @@ class _Emitter:
             invert_predicate=True,
             source_operation_id=plan.index,
         )
+        join = builder.new_event()
+        builder.emit(
+            Major.CONTROL,
+            Control.NOP,
+            signal_event_id=join,
+            source_operation_id=plan.index,
+        )
+        return join
+
+    def _declared_join_axis(self, name: str) -> RequestExtent | None:
+        """The A18 function the graph declares for one tensor's leading axis."""
+        return request_extent_of(self.tensors[name], self.span_max)
+
+    def _check_join_extent(self, plan: KernelPlan, kernel: Kernel) -> None:
+        """Refuse a join whose declared output extent is not its operands' sum.
+
+        A17 makes the output of a join the sum of its inputs and the engine
+        checks exactly that, one dispatch after admission.  Until now the
+        *reduced* path of a conditionally present operand was the only extent
+        this backend derived; the full path took whatever symbol the exporter
+        had put on the output tensor.  For DeepSeek's compressed attention join
+        that symbol was ``attention_rows_ratioN`` -- the span's group count
+        where the join carries the context's -- and it agreed with the operands
+        in prefill, where the span *is* the context.  Every gate this program
+        had run was a prefill, so nothing refused it and the first decode step
+        failed at the engine instead, differently on each lane.
+        """
+        if int(kernel.attributes.get("axis", 0)) != 0:
+            return
+        if not kernel.outputs or not kernel.inputs:
+            return
+        declared = self._declared_join_axis(kernel.outputs[0])
+        phases = kernel.attributes.get("phase_symbol_binding")
+        names = list(kernel.inputs)
+        if phases:
+            for phase, pinned in sorted(dict(phases).items()):
+                constants, aliases = phase_substitution(
+                    pinned, f"kernel {plan.kernel_id} phase {phase!r}"
+                )
+                join_extent_under(
+                    self.tensors, names, 0, self.span_max, constants, aliases
+                )
+            return
+        derived, _static = join_extent_under(
+            self.tensors, names, 0, self.span_max, {}, {}
+        )
+        if declared is None:
+            if derived is not None:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: the join's operands sum to a "
+                    "request-determined extent and its output declares a "
+                    "static one"
+                )
+            return
+        if derived is None or (
+            derived.symbol,
+            int(derived.unit),
+            int(derived.numerator),
+            int(derived.bias),
+        ) != (
+            declared.symbol,
+            int(declared.unit),
+            int(declared.numerator),
+            int(declared.bias),
+        ):
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: the output declares extent "
+                f"{declared.numerator}*{declared.symbol}/{declared.unit}"
+                f"+{declared.bias} and its operands sum to "
+                + (
+                    "a static extent"
+                    if derived is None
+                    else f"{derived.numerator}*{derived.symbol}/{derived.unit}"
+                    f"+{derived.bias}"
+                )
+                + "; A17 makes the two the same number and the engine checks it"
+            )
+
+    def _phase_extent_view(
+        self,
+        plan: KernelPlan,
+        operand: OperandPlan,
+        loops: Mapping[str, int],
+        extent: RequestExtent,
+        *,
+        writable: bool,
+    ) -> int:
+        """A view of ``operand`` whose leading axis states ``extent``.
+
+        The extent is a function of ``CONTEXT_LENGTH``, so the term that walks
+        it is the context loop's and the declared extent is one whole block of
+        that loop plus the bias -- the same statement ``_declared_view`` makes
+        for a row-blocked axis, in the context axis's own units.
+        """
+        context = plan.context_loop
+        if context is None:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: a phase states a context-bound row "
+                "space and no context loop resolves it"
+            )
+        step = extent.step(int(context.divisor))
+        if step is None:
+            raise LoweringError(
+                f"kernel {plan.kernel_id}: a context block of {context.divisor} "
+                f"symbol units is not a whole number of an axis counted as "
+                f"{extent.numerator}/{extent.unit}"
+            )
+        return self._operand_view(
+            plan,
+            replace(
+                operand,
+                terms=("context",),
+                context_axis=0,
+                context_numerator=int(extent.numerator),
+                context_unit=int(extent.unit),
+                context_bias=int(extent.bias),
+            ),
+            loops,
+            writable=writable,
+            narrow=(0, step + int(extent.bias)),
+        )
+
+    def _phase_present_paths(
+        self,
+        plan: KernelPlan,
+        kernel: Kernel,
+        loops: Mapping[str, int],
+        *,
+        condition: str,
+        declared_output: int,
+    ) -> list[tuple[str, int, int]] | None:
+        """One path per phase for a join whose sum spans two symbols.
+
+        ``None`` when the kernel declares no phase binding, which is every join
+        but DeepSeek's compressed attention view.  Otherwise the full operand
+        row is emitted once per phase, each path carrying that phase's derived
+        extent and that phase's rewriting of the operand's own presence
+        condition.  The two are refused unless provably disjoint: each is
+        evaluated under the other phase's pinned symbols and must read false
+        there, because ABI 3.0 gives an instruction one predicate and a pair
+        that overlapped would run twice over the same rows.
+        """
+        declared = kernel.attributes.get("phase_symbol_binding")
+        if not declared:
+            return None
+        if int(kernel.attributes.get("axis", 0)) != 0:
+            raise LoweringError(
+                f"kernel {plan.kernel_id} declares a phase binding on a feature "
+                "join; A18's extent axis is the token axis and a feature join "
+                "does not move it"
+            )
+        base = symbol_condition(condition)
+        out = next(o for o in plan.operands if o.direction == "out" and o.slot == 0)
+        output_axis = self._declared_join_axis(kernel.outputs[0])
+        names = list(kernel.inputs)
+        paths: list[tuple[str, int, int]] = []
+        triples: dict[str, tuple[Symbol, Comparison, int]] = {}
+        pinned_by_phase: dict[str, dict[int, int]] = {}
+        for phase, pinned in sorted(dict(declared).items()):
+            constants, aliases = phase_substitution(
+                pinned, f"kernel {plan.kernel_id} phase {phase!r}"
+            )
+            pinned_by_phase[phase] = constants
+            moved = substitute_condition(base, constants, aliases)
+            if moved is False:
+                continue
+            if moved is True:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: phase {phase!r} decides the "
+                    f"operand condition {condition!r} outright, so the reduced "
+                    "path is unreachable there and the pair is not a pair"
+                )
+            extent, _static = join_extent_under(
+                self.tensors, names, 0, self.span_max, constants, aliases
+            )
+            if extent is None:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: in phase {phase!r} the join's "
+                    "operands sum to a static extent, which no A18 term "
+                    "resolves"
+                )
+            triples[phase] = moved
+            if output_axis is not None and (
+                extent.symbol,
+                int(extent.unit),
+                int(extent.numerator),
+                int(extent.bias),
+            ) == (
+                output_axis.symbol,
+                int(output_axis.unit),
+                int(output_axis.numerator),
+                int(output_axis.bias),
+            ):
+                # The declared symbol *is* this phase's sum, so the path keeps
+                # the view the kernel already built.
+                view = declared_output
+            elif extent.symbol == "span_tokens":
+                raise LoweringError(
+                    f"kernel {plan.kernel_id}: phase {phase!r} sums to a "
+                    "span-bound extent the output does not declare"
+                )
+            else:
+                view = self._phase_extent_view(
+                    plan, out, loops, extent, writable=True
+                )
+            self._phase_extent.setdefault(kernel.outputs[0], {})[str(phase)] = extent
+            paths.append((str(phase), self._predicate_from_triple(moved), view))
+        for phase, triple in triples.items():
+            for other, constants in pinned_by_phase.items():
+                if other == phase:
+                    continue
+                value = constants.get(int(triple[0]))
+                if value is None:
+                    continue
+                if evaluate_comparison(triple[1], int(value), int(triple[2])):
+                    raise LoweringError(
+                        f"kernel {plan.kernel_id}: the {phase!r} path's "
+                        f"condition still reads true under {other!r}'s pinned "
+                        "symbols, so two paths would issue for one request"
+                    )
+        if len(paths) < 2:
+            raise LoweringError(
+                f"kernel {plan.kernel_id} declares a phase binding that leaves "
+                f"{len(paths)} present paths; a split that does not split is a "
+                "declaration nothing checks"
+            )
+        return paths
+
+    def _predicate_from_triple(
+        self, triple: tuple[Symbol, Comparison, int]
+    ) -> int:
+        symbol, comparison, immediate = triple
+        key = (int(symbol), int(comparison), int(immediate))
+        cached = self._predicate_cache.get(key)
+        if cached is not None:
+            return cached
+        pid = self.builder.predicate(
+            kind=PredicateKind.COMPARE_SYMBOL,
+            comparison=comparison,
+            selector_kind=SelectorKind.RUNTIME_SYMBOL,
+            selector_index=int(symbol),
+            immediate=int(immediate),
+            key=(
+                f"pred.{symbol.name.lower()}."
+                f"{comparison.name.lower()}.{immediate}"
+            ),
+        )
+        self._predicate_cache[key] = pid
+        return pid
+
+    def _phase_consumer_paths(
+        self, plan: KernelPlan, kernel: Kernel
+    ) -> dict[int, dict[str, RequestExtent]] | None:
+        """Operands of this kernel whose extent the phase decides.
+
+        A tensor produced by a phase-split join has no single A18 extent, and a
+        view of it states that extent wherever it is read.  So the split does
+        not stop at the producer: left unpropagated, sparse attention read the
+        prefill function at decode -- 129 rows of a 137-row join -- and refused
+        the rebased compressed indices its own selector had just produced.
+        """
+        if not self._phase_extent or not kernel.inputs:
+            return None
+        found: dict[int, dict[str, RequestExtent]] = {}
+        for index, name in enumerate(kernel.inputs):
+            phases = self._phase_extent.get(name)
+            if phases is not None:
+                found[index] = phases
+        if not found:
+            return None
+        if kernel_condition(self._predicate_values, kernel) is not None:
+            raise LoweringError(
+                f"kernel {plan.kernel_id} reads a phase-split extent and "
+                "declares a condition of its own; an ABI 3.0 instruction "
+                "carries one predicate_id and there is no conjunction"
+            )
+        for name in kernel.outputs:
+            if name in self._phase_extent:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id} would propagate a phase-split "
+                    "extent to its own output; this backend follows one hop "
+                    "and refuses to guess the rest"
+                )
+        return found
+
+    def _emit_phase_consumer(
+        self,
+        plan: KernelPlan,
+        kernel: Kernel,
+        loops: Mapping[str, int],
+        inputs: Sequence[int],
+        outputs: Sequence[int],
+        paths: Mapping[int, Mapping[str, RequestExtent]],
+    ) -> int:
+        """One instruction per phase, each stating that phase's row space."""
+        builder = self.builder
+        slots = _abi_input_slots(kernel, plan.slot_order)
+        phases = sorted({phase for table in paths.values() for phase in table})
+        for table in paths.values():
+            if sorted(table) != phases:
+                raise LoweringError(
+                    f"kernel {plan.kernel_id} reads two phase-split operands "
+                    "that name different phases"
+                )
+        for phase in phases:
+            row = list(inputs)
+            for ir_slot, table in paths.items():
+                abi_slot = next(
+                    (i for i, ir in enumerate(slots) if ir == ir_slot), None
+                )
+                if abi_slot is None or abi_slot >= len(row):
+                    raise LoweringError(
+                        f"kernel {plan.kernel_id}: no ABI slot carries the "
+                        f"phase-split operand {ir_slot}"
+                    )
+                extent = table[phase]
+                if extent.symbol == "span_tokens":
+                    continue  # the declared view already states this phase
+                operand = next(
+                    o
+                    for o in plan.operands
+                    if o.direction == "in" and o.slot == abi_slot
+                )
+                row[abi_slot] = self._phase_extent_view(
+                    plan, operand, loops, extent, writable=False
+                )
+            builder.emit(
+                Major(plan.engine_family),
+                plan.engine_sub,
+                descriptor_id=builder.operator(
+                    engine_family=Major(plan.engine_family),
+                    engine_sub=plan.engine_sub,
+                    inputs=list(row),
+                    outputs=list(outputs),
+                    aux=list(plan.aux),
+                    numeric_profile_id=self._kernel_numeric(plan),
+                    schedule_id=self._schedule_for(plan),
+                    counter_class_id=self._counter_class(plan.engine_family),
+                    source_kernel_id=plan.index,
+                    key=f"op.k{plan.index}.{phase}",
+                ),
+                wait_set_id=self._wait_set(self._producer_events(kernel)),
+                signal_event_id=builder.new_event(),
+                predicate_id=self._phase_predicate((phase,)),
+                source_operation_id=plan.index,
+            )
         join = builder.new_event()
         builder.emit(
             Major.CONTROL,
@@ -2839,11 +3297,17 @@ class _Emitter:
             running *= dims[axis]
         strides[0] = state.row_elements
         terms: list[DynamicTerm] = []
+        # The member is the *base* of this operand's own band inside the
+        # resource, and the layer loop steps one window per iteration from
+        # there.  It was previously dropped, which was harmless only while every
+        # merged resource held exactly one band and the base was always zero;
+        # a pooled resource (``_pool_states``) puts a later band at a non-zero
+        # base and dropping it would address the first band's members instead --
+        # legal offsets, no trap, another layer's KV history.
         offset = member * window + column
         loop = loops.get("layer")
         if len(state.members) > 1 and loop is not None:
             terms.append(DynamicTerm.loop(loop, window))
-            offset = column
         row_loop = loops.get("row")
         if row_loop is not None:
             terms.append(

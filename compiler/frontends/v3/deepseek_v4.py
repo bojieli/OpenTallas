@@ -2713,6 +2713,39 @@ def export_deepseek_v4_kernel_graph(
                 join_attributes["operand_present_predicate"] = {
                     "2": _nonempty(committed_groups[ratio]),
                 }
+                # The compressed join's row space is a sum over *two* runtime
+                # symbols -- ``span_tokens + 128 + context_length / ratio`` --
+                # and amendment A18 states an axis as an affine image of one.
+                # The declared ``attention_rows_ratioN`` above is that sum with
+                # the *span's* group count substituted for the context's, which
+                # is exact in prefill (the span is the context) and wrong at
+                # every decode step: at a span of one it binds to ``1 + 128 +
+                # 0`` where the committed prefix supplies ``1 + 128 +
+                # context/4``.  Nothing refused it because prefill is the only
+                # phase either lane had ever run past the first token.
+                #
+                # A backend cannot fix that by choosing a better single symbol:
+                # there is none.  What it can do is derive the extent per
+                # *phase*, and the two facts that make each phase's sum affine
+                # in one symbol are the released model's own, so they are
+                # stated here rather than assumed there.  ``position_start ==
+                # 0`` in prefill is the qualified reference's "prefill requires
+                # that cursor to equal S"; ``span_tokens == 1`` in decode is the
+                # ``decode_sequence_length`` the KV append already carries.
+                # With ``context_length == position_start + span_tokens`` --
+                # ABI 3.0's own relation between the three, not a model fact --
+                # each phase's sum collapses onto one symbol: ``5 * span / 4 +
+                # 128`` in prefill and ``context / 4 + 129`` in decode.
+                #
+                # The same two facts move the operand's own condition onto the
+                # phase's symbol, which is what keeps one path per request:
+                # ``context_length >= 4`` is ``span_tokens >= 4`` in prefill and
+                # ``position_start >= 3`` in decode, and those two are disjoint
+                # exactly because of the facts stated here.
+                join_attributes["phase_symbol_binding"] = {
+                    "prefill": {"position_start": 0},
+                    "decode": {"span_tokens": 1},
+                }
             emit(
                 node_id,
                 "CONCAT",
