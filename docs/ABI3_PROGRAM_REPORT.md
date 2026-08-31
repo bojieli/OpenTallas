@@ -162,12 +162,13 @@ the deployment campaign records correlating — no others.
 - **No accelerator result at the mandatory contexts.** The Qwen 8,000-token
   campaign and the DeepSeek long-context campaign have not run on the
   accelerator. The reference oracle has reached 8,000 tokens for both models.
-- **No comparison table.** A performance comparison may not precede correct
-  end-to-end execution on both sides of the pair. Three of the four targets have
-  now emitted a validated token — Qwen HBM, Qwen ROM and, newly, DeepSeek ROM
-  (one token, from a 32-token prefix, filed raw and ungraded under
-  `results/abi3/accelerator_tokens/`) — and DeepSeek HBM has not, so the
-  ROM-versus-HBM pair the comparison needs is still one-sided on DeepSeek.
+- **No valid DeepSeek storage-class comparison yet.** The governed Qwen
+  ROM-versus-HBM comparison exists. All four targets have now emitted at least
+  one validated token, and the fresh DeepSeek HBM capture completes four
+  oracle-identical tokens. DeepSeek ROM also executes four transactions but
+  first diverges at generated index 1, so a DeepSeek comparison would still be
+  one correct lane against one divergent lane and is not admissible as a
+  storage-class result.
 - **No silicon, no full-chip place-and-route, no foundry signoff DRC or LVS.**
   The physical evidence covers representative blocks.
 - **RTL coverage of the shipped deployments is a list, and it is the
