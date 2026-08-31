@@ -45,7 +45,6 @@ deployment, exactly as `tools/audit_deepseek_v4_index_selection.py` is.
 from __future__ import annotations
 
 import argparse
-import hashlib
 import importlib.util
 import json
 import platform
@@ -212,7 +211,6 @@ def run_pair(
 
     identical = bool(np.array_equal(got_a, got_b))
     differing_rows = int(np.sum(np.any(got_a != got_b, axis=1)))
-    counter_key = "route.topk_candidates"
     same_counters = counters_a == counters_b
 
     # What the token arm and the counter arm can each see for this case.
