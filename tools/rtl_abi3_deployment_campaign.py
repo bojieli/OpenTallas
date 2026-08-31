@@ -711,7 +711,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "the ABI 3.0 sequencer RTL reproduces runtime.sim.device.Device "
                 "exactly on all three deployments this program ships -- the "
                 "Qwen3-8B ROM single chip c71ee77e, the Qwen3-8B HBM single "
-                "chip fb5c66df and the DeepSeek-V4-Flash ROM wafer f5f21bb2 -- "
+                "chip fb5c66df and the DeepSeek-V4-Flash ROM wafer 27dd5f55 -- "
                 "on both entrypoints, from their own program images, "
                 "descriptor tables and request-bound symbols, with no vector "
                 "written for the occasion",
@@ -719,10 +719,10 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "COMPLETE and not at a bound: 2,105 instructions retired with "
                 "693 engine issues and 2,143 resolved views on each Qwen case, "
                 "inside the bound the program declares (2,105 for the ROM "
-                "build, 22,715 for the HBM one); 29,333 retired with 12,657 "
-                "issues and 39,849 views on the DeepSeek prefill and 11,591 "
+                "build, 22,715 for the HBM one); 29,456 retired with 12,657 "
+                "issues and 39,849 views on the DeepSeek prefill and 11,714 "
                 "retired with 3,600 issues and 10,428 views on its decode, "
-                "inside a declared bound of 4,763,423",
+                "inside a declared bound of 4,764,120",
                 "every engine issue is compared by the instruction index that "
                 "issued it as well as by family, subopcode and descriptor ID, "
                 "so a loop trip or a branch that came out differently is "
@@ -747,7 +747,7 @@ def run(build_root: Path | None = None) -> dict[str, Any]:
                 "no-op engines never touch them, so this run says nothing "
                 "about the weights, the ROM image, or any value in memory",
                 "deepseek_v4_flash_rom_wafer_arithmetic": "the "
-                "DeepSeek-V4-Flash ROM wafer deployment f5f21bb2 now "
+                "DeepSeek-V4-Flash ROM wafer deployment 27dd5f55 now "
                 "correlates at full depth, but on its *control plane* only, "
                 "for the same reason every other case here does: the engines "
                 "are recording no-ops on the golden side and absent on the "

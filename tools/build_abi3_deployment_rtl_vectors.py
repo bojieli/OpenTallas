@@ -9,7 +9,7 @@ deployments themselves --
 
     Qwen3-8B ROM single chip        c71ee77e...  75 instructions, 239 descriptors
     Qwen3-8B HBM single chip        fb5c66df...  75 instructions, 218 descriptors
-    DeepSeek-V4-Flash ROM wafer     f5f21bb2...  1156 instructions, 3387 descriptors
+    DeepSeek-V4-Flash ROM wafer     27dd5f55...  1171 instructions, 3409 descriptors
 
 -- and emitting, for each of them, the same four memory images the RTL
 verification top already reads (the 256-byte program header, the 32-byte
@@ -170,7 +170,7 @@ TARGETS = (
             "~/.cache/huggingface/hub/models--deepseek-ai--DeepSeek-V4-Flash-0731/"
             "snapshots/*"
         ),
-        digest="f5f21bb2421e7c932114c5b13fe0e106206155d9676667eabd567c5ad71ccc96",
+        digest="27dd5f558e8994de344063332a8b767ce3f1a741071e4d7196061c600ba66e17",
         reproduce=(
             "python3 tools/build_rom_deployment.py deepseek-v4-flash --ir "
             "build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json --output "

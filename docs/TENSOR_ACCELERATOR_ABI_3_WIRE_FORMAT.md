@@ -1691,10 +1691,12 @@ Icarus 11.0 and Verilator 5.050, with both simulators printing the same marker:
 PASS: ABI3 RTL deployment co-simulation deployments=3 cases=6 completions=6 issues=19029 views=58849 signal_flag_cases=0 apply_overflow_cases=0 checks=410331
 ```
 
-The DeepSeek-V4-Flash wafer prefill retires 29,333 instructions with 12,657
-engine issues and 39,849 resolved operand views, and its decode 11,591 with
-3,600 and 10,428 — up from 8 retired instructions and 8 engine issues before
-these amendments. What the campaign still does not establish is unchanged and is
+The retained campaign has since moved with A25 and the phase-extent correction:
+the current DeepSeek image is `27dd5f55…`, with 1,171 instructions and 3,409
+descriptors. Its wafer prefill retires 29,456 instructions with 12,657 engine
+issues and 39,849 resolved operand views, and its decode 11,714 with 3,600 and
+10,428 — up from 8 retired instructions and 8 engine issues before these
+amendments. What the campaign still does not establish is unchanged and is
 listed in the artifact: the engines are recording no-ops on both sides, so this
 is the control plane and not the arithmetic.
 

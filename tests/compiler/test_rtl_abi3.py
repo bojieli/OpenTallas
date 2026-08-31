@@ -1021,9 +1021,9 @@ def test_deployment_vector_set_names_the_programs_this_program_ships() -> None:
     assert shipped["qwen3-8b-hbm-single-chip"]["descriptor_count"] == 218
     assert shipped["deepseek-v4-flash-rom-wafer"][
         "deployment_sha256"
-    ].startswith("f5f21bb2")
-    assert shipped["deepseek-v4-flash-rom-wafer"]["instruction_count"] == 1156
-    assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3387
+    ].startswith("27dd5f55")
+    assert shipped["deepseek-v4-flash-rom-wafer"]["instruction_count"] == 1171
+    assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3409
     for entry in shipped.values():
         assert entry["admitted"], (entry["key"], entry["verifier_errors"])
 
