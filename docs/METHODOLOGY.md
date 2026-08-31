@@ -73,9 +73,10 @@ study.
 Where a shipping part exists in the class being modelled, the study evaluates it
 as a gate and reports the ratio without tuning inputs to close it.  Two gates
 are currently in force, both in `results/roofline/*/REPORT.md` → "Validation
-gates": Taalas HC1 (16,960 tok/s per user published, modelled 12,232.4, **0.72×**,
-tolerance within 2×) and NVIDIA A100 80 GB (253.91 tok/s published and modelled,
-**1.00×**, tolerance within 1%).  When a gate fails to close, the study
+gates": Taalas HC1 (16,960 tok/s per user published; the current corrected
+floorplan is capacity-infeasible and admits **zero**, so the gate fails) and
+NVIDIA A100 80 GB (253.91 tok/s published and modelled, **1.00×**, tolerance
+within 1%).  When a gate fails to close, the study
 back-derives what each input would have to be and reports the shortfall rather
 than fitting the input.  The anchor's own source register entry is
 `SRC-TAALAS-HC1` in `docs/SOURCES.md`; a value used as a gate must be in the
@@ -276,16 +277,17 @@ behavior, or overlap; those require measured traces for the exact runtime.
 
 ## 7. Results are bounds until silicon evidence closes the gates
 
-### 7a. No watt is publishable
+### 7a. Power outputs carry both gates
 
-The power model is known to under-report by **7–9×** and is being rebuilt.
-Until a replacement lands, **no watt, joule-per-token, or watts-per-mm² figure
-derived from this repository's power model may appear as a claim** in any
-document, abstract, table or figure.  The watts that remain in generated reports
-sit under "Interpretation boundary" and are disclosures that the model is broken;
-they must be read that way and must not be lifted.  Published vendor TDPs and
-system power envelopes are inputs and stay in `docs/SOURCES.md` where they are
-graded; quoting one as a result of this project is the error this rule forbids.
+The rebuilt power model is checked at two shipping parts: A100 lands at 461.7 W
+against 400 W (1.15×, inside the declared 2× tolerance), while HC1 lands at
+87.6 W against 200–250 W (0.44×–0.35×, outside it). A watt,
+joule-per-token, or watts-per-mm² figure derived here may therefore appear only
+as a **model output** with the gate asymmetry and assumed terms disclosed; it is
+not a measured hardware result. Published vendor TDPs and system envelopes are
+inputs and stay graded in `docs/SOURCES.md`. Because the HC1 throughput
+reconstruction is capacity-infeasible and admits zero tokens, its attempted-step
+energy is not J/token and cannot support a tokens-per-joule comparison.
 
 Conservative, central, and aggressive envelopes are deterministic scenarios,
 not confidence intervals.  No product, wafer-cost, yield, or production

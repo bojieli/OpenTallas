@@ -120,45 +120,49 @@ def _rom_chip(
 # --------------------------------------------------------------------------
 
 
-def test_gate_taalas_hc1_shipping_part_is_reproduced(technology, llama) -> None:
-    """An 8B model on 815 mm2 at N6 with mask-ROM weights must come out near 17,000.
+def test_gate_taalas_hc1_shipping_part_exposes_the_capacity_failure(
+    technology, llama
+) -> None:
+    """The corrected floorplan must retain, not hide, the failed HC1 gate.
 
-    A model that cannot reproduce a shipping part must not be used to predict
-    one that does not exist.  If this fails, the densities or the roofline
-    combination are wrong -- do NOT relax the tolerance.
+    An 8B model on 815 mm2 at N6 with mask-ROM weights should reproduce the
+    shipping part before the model is trusted for extrapolation.  The current
+    evidence-backed ROM density and compute-in-ROM allocation do not fit that
+    model.  Zero throughput is therefore the finding; relaxing capacity until
+    the gate passes would turn this validation check into a fit.
     """
 
     check = taalas_hc1_anchor(technology, llama)
     requirements = check.detail["back_derived_requirements"]
-    assert check.passed, (
-        f"HC1 anchor drifted: modelled {check.modelled_value:,.0f} tok/s against a "
-        f"published {check.published_value:,.0f} tok/s ({check.ratio:.3f}x), binding "
-        f"on {check.detail['binding_constraint']}. To land on the published figure "
-        f"the ROM read bandwidth density would have to be "
-        f"{requirements['rom_density_shortfall_x']:.2f}x the derived value and the "
-        f"compute density {requirements['compute_density_shortfall_x']:.2f}x."
+    assert not check.passed
+    assert check.modelled_value == 0.0
+    assert check.ratio == 0.0
+    assert check.detail["binding_constraint"] == "capacity_or_format"
+    reasons = check.detail["step"]["reasons"]
+    assert any(reason.startswith("AREA:") for reason in reasons)
+    assert any(reason.startswith("CAPACITY:") for reason in reasons)
+    assert (
+        check.detail["budget"]["weight_capacity_bytes"]
+        < check.detail["step"]["metrics"]["stored_weight_bytes"]
     )
-    # The ROM read-bandwidth density is the input a compute-in-ROM part's rate
-    # turns on, and it must stay physically unremarkable: a model that needs an
-    # order of magnitude more of it has stopped being a model.
+    # Capacity fails first, but the independent rate diagnostic remains useful:
+    # the ROM read-bandwidth density is not an order of magnitude short.
     assert requirements["rom_density_shortfall_x"] < 2.0
     # The compute-density requirement is deliberately NOT asserted here. HC1 has
     # no MAC array -- the multiply is the array sweep -- so back-deriving a
     # compute density for it asks what a separate compute unit would have to
-    # deliver, and the answer (22.5x) is the size of a unit the machine does not
-    # contain. It is reported because it is the right question for the
-    # storage-plus-MAC reading, and it is the number that would matter if the
-    # architecture fork resolved the other way.
+    # deliver. It is reported because it is the right question for the
+    # storage-plus-MAC reading, not because it validates compute-in-ROM.
 
 
-def test_gate_taalas_hc1_compute_density_matches_the_shipping_part(
+def test_gate_taalas_hc1_rom_read_density_remains_near_the_shipping_part(
     technology, llama
 ) -> None:
-    """The compute density derived from A100's published roofs should be close.
+    """The ROM read density remains close even though capacity rejects the part.
 
-    This is the strongest single piece of evidence that the area-to-compute
-    chain is right: an independent shipping part, a different vendor and a
-    different node land within a few percent of each other.
+    This is only a rate diagnostic, not a passing gate: an independent shipping
+    part implies a ROM read density near the model's derived value, while the
+    corrected capacity chain rejects the floorplan before that rate can bind.
     """
 
     check = taalas_hc1_anchor(technology, llama)
@@ -203,22 +207,22 @@ def test_gate_a100_bf16_is_half_the_fp8_rate(technology, llama) -> None:
     assert check.modelled_value == pytest.approx(126.96, abs=0.5)
 
 
-def test_the_two_throughput_gates_are_untouched_by_the_power_model(
+def test_the_throughput_gates_report_nonthermal_outcomes(
     technology, llama
 ) -> None:
-    """A power change must not reach a throughput gate, and this pins both.
+    """Neither current throughput result is produced by thermal throttling.
 
     ``step_time = raw_step_time x thermal_scale`` is the only path from power to
-    any rate, so as long as a gate's operating point is not thermally limited
-    its rate is independent of every watt in the model.  Both gates are far
-    below their cooling budgets, so both must be bit-identical to the figures
-    that stood before the power terms existed.  **If either of these moves, the
-    power work has touched something it should not have.**
+    any rate.  HC1 now returns zero because its corrected array capacity does
+    not fit, while A100 remains exact bandwidth arithmetic.  Both must still
+    report an unthrottled operating point so the power model cannot be mistaken
+    for the cause of either result.
     """
 
     hc1 = taalas_hc1_anchor(technology, llama)
-    assert hc1.modelled_value == pytest.approx(12232.4028, abs=1e-3)
-    assert hc1.ratio == pytest.approx(0.721250, abs=1e-6)
+    assert hc1.modelled_value == 0.0
+    assert hc1.ratio == 0.0
+    assert hc1.detail["binding_constraint"] == "capacity_or_format"
     assert hc1.detail["step"]["thermal_scale"] == 1.0
 
     a100 = a100_weight_bound_anchor(technology, llama)
@@ -286,12 +290,26 @@ def test_gate_taalas_hc1_card_power_fails_and_the_failure_is_the_result(
         f"HC1 power gate moved out of its reported range: "
         f"{check.modelled_value:,.1f} W ({check.ratio:.3f}x)"
     )
-    # The ROM array is charged zero leakage, and the study must keep saying so.
-    assert check.detail["rom_array_leakage_charged_w"] == 0.0
-    assert check.detail["rom_array_leakage_if_reconstructed_w"] > 0.0
-    # Even at the top of the refuted companion's bracket it does not close.
+    # ROM leakage is now explicitly charged.  It moves the enumeration just
+    # above the measured whole-device idle floor at the point; adding the
+    # entire range-high ROM term again is therefore a deliberately conservative
+    # upper bound on its effect.
+    rom_mm2 = check.detail["area_split_mm2"]["rom_mm2"]
+    leak = technology.graded(
+        "power", "static_leakage_w_per_mm2", "rom_array"
+    ).value
+    assert check.detail["rom_array_leakage_charged_w"] == pytest.approx(
+        rom_mm2 * leak
+    )
+    assert check.detail["rom_array_leakage_at_range_high_w"] > check.detail[
+        "rom_array_leakage_charged_w"
+    ]
+    assert not check.detail["terms_w"]["static_floor_binds"]
+    assert check.detail["terms_w"]["static_total_charged"] == pytest.approx(
+        check.detail["terms_w"]["static_enumerated"]
+    )
     closed = check.modelled_value + check.detail[
-        "rom_array_leakage_if_reconstructed_w"
+        "rom_array_leakage_at_range_high_w"
     ]
     assert closed < check.detail["published_band_w"][0]
 
@@ -351,7 +369,7 @@ def test_static_power_is_charged_whether_or_not_traffic_flows(
     )
 
 
-def test_leakage_follows_the_area_split_and_a_rom_array_is_charged_none(
+def test_leakage_follows_the_area_split_for_all_region_classes(
     technology, llama
 ) -> None:
     """Leakage is per mm2 of standard-cell region, not per mm2 of die.
@@ -373,14 +391,14 @@ def test_leakage_follows_the_area_split_and_a_rom_array_is_charged_none(
     leak_sram = technology.graded(
         "power", "static_leakage_w_per_mm2", "sram_array"
     ).value
-    assert budget.static_power.leakage_w == pytest.approx(
-        logic * leak_logic + sram * leak_sram
-    )
-    # The ROM array contributes nothing, deliberately, and that is an
-    # under-charge on the side this study is arguing for.
-    assert technology.graded(
+    leak_rom = technology.graded(
         "power", "static_leakage_w_per_mm2", "rom_array"
-    ).value == 0.0
+    ).value
+    assert budget.static_power.leakage_w == pytest.approx(
+        logic * leak_logic + sram * leak_sram + rom * leak_rom
+    )
+    assert leak_rom > 0.0
+    assert leak_rom < leak_logic
     assert budget.static_power.leakage_w < (logic + rom + sram) * leak_logic
 
 
@@ -587,9 +605,8 @@ ASSUMED_INPUTS = frozenset(
         "power.gpu_logic_area_fraction",
         "power.memory_interface_idle_w_per_stack",
         "power.static_leakage_w_per_mm2.logic",
-        # Held at ZERO. The submitted companion was refuted as underived, and
-        # the ROM array is most of a compute-in-ROM die, so this is an
-        # under-charge on the side the study argues for.
+        # The ROM-array term now has an explicit device-count derivation, but
+        # that derivation still rests on assumed leakage and array inputs.
         "power.static_leakage_w_per_mm2.rom_array",
         "power.static_leakage_w_per_mm2.sram_array",
         # NVIDIA publishes no B200 clock in any first-party document.
@@ -598,10 +615,12 @@ ASSUMED_INPUTS = frozenset(
         "hbm.hbm2e.stack_beachfront_mm",
         "hbm.hbm3e.phy_area_mm2_per_stack",
         "hbm.hbm3e.stack_beachfront_mm",
-        "kv.access_granularity_bytes.hbm",
         "kv.access_granularity_bytes.sram",
         "kv.index_layout",
         "latency.array_pass_boundaries_per_layer",
+        "latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4-Flash-0731",
+        "latency.array_pass_boundaries_per_layer_by_model.DeepSeek-V4-Pro-0813",
+        "latency.array_pass_boundaries_per_layer_by_model.Qwen3-8B",
         "latency.global_wire_delay_s_per_mm",
         "latency.layer_barrier_s",
         "latency.pipeline_fill_drain_s",
@@ -616,9 +635,7 @@ ASSUMED_INPUTS = frozenset(
         # assumed. It is the ROM side's most load-bearing assumption after the
         # bitcell ratio, and it is swept 1-10 us.
         "links.inter_wafer.domain_size",
-        "links.inter_wafer.fabric",
         "links.inter_wafer.hop_latency_s",
-        "links.inter_wafer.switch_radix",
         # The generic NVLink entry, kept for the crossover doc's worked
         # examples and exercised by no study. The three entries the studies
         # actually charge -- nvlink3, nvlink5, nvlink5_nvl72 -- are no longer
@@ -629,11 +646,8 @@ ASSUMED_INPUTS = frozenset(
         "links.nvlink.hop_latency_s",
         "links.on_package.fabric",
         "links.on_package.hop_latency_s",
-        "reference_parts.taalas_hc1.batch_size",
         "reference_parts.taalas_hc1.weight_amortization",
         "reference_parts.taalas_hc1.weight_bits_per_parameter",
-        "rom.array_efficiency",
-        "rom.cell_to_sram_cell_area_ratio",
         "rom.cim_cell_area_multiplier",
         "rom.cim_precompute_area_fraction",
         "sram.array_efficiency",
@@ -705,8 +719,10 @@ def test_rom_capacity_density_is_the_scaled_bitcell(technology) -> None:
     )
 
 
-def test_rom_capacity_density_inherits_the_assumed_grade(technology) -> None:
-    assert technology.rom_bits_per_mm2("N6").grade == "assumed"
+def test_rom_capacity_density_inherits_the_corrected_derived_grade(technology) -> None:
+    ratio = technology.graded("rom", "cell_to_sram_cell_area_ratio")
+    assert ratio.grade == "derived"
+    assert technology.rom_bits_per_mm2("N6").grade == "derived"
 
 
 def test_rom_read_bandwidth_scales_by_the_published_bitcell_ratio(
@@ -1239,7 +1255,7 @@ def test_a_link_latency_bound_can_be_taken_on_one_side_at_a_time(
         "high", ("nvlink3", "infiniband_hdr")
     )
     assert cluster_only.link("nvlink3")[0].value == pytest.approx(1.03e-5)
-    assert cluster_only.link("infiniband_hdr")[0].value == pytest.approx(5.7e-6)
+    assert cluster_only.link("infiniband_hdr")[0].value == pytest.approx(2.2e-5)
     assert cluster_only.link("on_wafer")[0].value == technology.link("on_wafer")[0].value
 
     # And the default is still every link, on both sides at once.
@@ -1383,22 +1399,23 @@ def test_the_wafer_split_is_load_bearing(technology) -> None:
 
 
 def test_the_scale_out_link_is_one_number_on_both_sides(technology) -> None:
-    """**The other half of the node audit, and it comes out clean.**
+    """Both studies carry one measured HDR point, with the NDR bias disclosed.
 
     ``inter_wafer`` is charged by BOTH studies, which looks like the same
     defect ``on_wafer`` had.  It is not, because its counterpart on the GPU
     side is the scale-out fabric, and ``infiniband_hdr`` and ``infiniband_ndr``
-    are two entries carrying the SAME measured 4.5 us hop: small-message RDMA
-    latency between accelerator buffers is set by the NIC and the protocol
-    stack rather than by the logic node, so it did not move across those
-    generations either.  One number per side across the two studies is
-    symmetric.  What was asymmetric was one number on one side against two on
-    the other, and that was ``on_wafer``.
+    carry the same 2.03 us GPU-buffer measurement.  It was measured on the HDR
+    machine; carrying it into the NDR study is an explicit conservative bias,
+    not evidence that the generations have identical latency.
     """
 
     hdr = technology.graded("links", "infiniband_hdr", "hop_latency_s")
     ndr = technology.graded("links", "infiniband_ndr", "hop_latency_s")
-    assert hdr.value == ndr.value == pytest.approx(4.5e-06)
+    assert hdr.value == ndr.value == pytest.approx(2.03e-06)
+    assert hdr.grade == ndr.grade == "measured"
+    assert "HDR MEASUREMENT" in technology.raw["links"]["infiniband_ndr"][
+        "hop_latency_s"
+    ]["note"]
     # They are two entries and they DO differ -- on the terms the node moves.
     assert technology.graded(
         "links", "infiniband_hdr", "bytes_s"
@@ -1650,22 +1667,22 @@ def test_pipeline_parallelism_buys_one_user_nothing(technology, llama) -> None:
         )
 
 
-def test_a_rom_pipeline_gives_a_user_less_than_the_same_silicon_undivided(
+def test_a_rom_pipeline_gives_a_user_less_despite_adding_silicon(
     technology, qwen
 ) -> None:
     """The same rule on the other family, where it bites harder still.
 
-    A ROM array is sized to the bytes it holds, so cutting a design into N
-    pipeline stages does not add array bandwidth the way adding GPUs adds HBM
-    channels -- it subdivides the array that was already there.  Each stage
-    then takes a full technology sweep time for its share, and the token pays N
-    of them.  A pipelined ROM machine is therefore *worse* per user than the
-    same silicon undivided, not merely no better.
+    A ROM array is sized to the bytes it holds, so adding N pipeline devices
+    does not reduce the full-array sweep the way adding GPUs adds HBM channels.
+    Each stage takes a technology sweep time for its share, and one token pays
+    all N stages.  Even though this probe adds silicon with every device, its
+    per-user rate therefore falls.
     """
 
     stored = qwen.checkpoint_bytes
     resident = kv_traffic(qwen, 8192).storage_bytes_per_user
     rates: dict[int, float] = {}
+    corrections: dict[int, float] = {}
     for devices in (1, 2, 4, 8, 16):
         topology = (
             _single_chip()
@@ -1681,7 +1698,10 @@ def test_a_rom_pipeline_gives_a_user_less_than_the_same_silicon_undivided(
             technology,
             name=f"rom-x{devices}",
             node="N6",
-            area_mm2_per_device=3_000.0,
+            # Large enough that the corrected ROM capacity density admits the
+            # one-device baseline; otherwise zero-versus-nonzero would test
+            # feasibility rather than pipeline latency.
+            area_mm2_per_device=4_000.0,
             topology=topology,
             stored_weight_bytes=stored,
             resident_kv_bytes=resident,
@@ -1697,12 +1717,16 @@ def test_a_rom_pipeline_gives_a_user_less_than_the_same_silicon_undivided(
         )
         assert step.feasible, step.reasons
         rates[devices] = step.per_user_tokens_s
-        assert step.metrics["latency_correction_x"] == pytest.approx(
-            step.metrics["token_slots"], rel=0.35
-        )
+        corrections[devices] = step.metrics["latency_correction_x"]
+        if devices == 1:
+            assert corrections[devices] == 1.0
+        else:
+            assert 1.0 < corrections[devices] < step.metrics["token_slots"]
     ordered = [rates[devices] for devices in sorted(rates)]
     assert ordered == sorted(ordered, reverse=True)
     assert rates[16] < rates[1] / 10
+    ordered_corrections = [corrections[devices] for devices in sorted(corrections)]
+    assert ordered_corrections == sorted(ordered_corrections)
 
 
 def test_tensor_parallelism_does_reduce_one_users_latency(technology, qwen) -> None:
@@ -2091,9 +2115,9 @@ def test_the_amortization_policies_are_different_machines(technology, llama) -> 
 
     They used to be identical there, and that was an artefact of sharing one
     area split: only the weight-read formula differed.  A compute-in-ROM part
-    has no MAC array and a larger cell, so it is a different machine at every
-    batch -- and the published anchor *can* tell them apart, which is why the
-    anchor is now evaluated as the machine Taalas actually built.
+    has no MAC array, has a larger cell, and reserves the configured fraction
+    for pre-compute and accumulation.  It is a different machine at every
+    batch.
     """
     from opentallas.roofline import balanced_area_split
 
@@ -2104,19 +2128,45 @@ def test_the_amortization_policies_are_different_machines(technology, llama) -> 
             total_mm2=815.0,
             weight_store="rom",
             kv_store="sram",
-            stored_weight_bytes=4.0e9,
+            # Leave both floorplans feasible so their structural difference is
+            # measured rather than comparing one real split with one clamp.
+            stored_weight_bytes=2.0e9,
             resident_kv_bytes=2.0e8,
             weight_amortization=policy,
         )
         for policy in ("batched", "per_stream")
     }
-    assert splits["batched"].compute_mm2 > splits["per_stream"].compute_mm2 * 5, (
-        "a compute-in-ROM part should spend almost no area on a compute block; "
-        "if the two floorplans agree, the split has stopped seeing the policy"
+    assert not splits["batched"].reasons
+    assert not splits["per_stream"].reasons
+    precompute_fraction = technology.graded(
+        "rom", "cim_precompute_area_fraction"
+    ).value
+    assert splits["per_stream"].compute_mm2 == pytest.approx(
+        815.0 * precompute_fraction
     )
-    assert splits["per_stream"].rom_mm2 > splits["batched"].rom_mm2, (
-        "a compute-in-ROM cell carries a select transistor, so it is larger"
+    assert splits["batched"].compute_mm2 > splits["per_stream"].compute_mm2
+    multiplier = technology.rom_cell_area_multiplier("per_stream").value
+    assert splits["per_stream"].rom_mm2 == pytest.approx(
+        splits["batched"].rom_mm2 * multiplier
     )
+
+
+def test_the_floorplan_comparison_reports_capacity_before_rate(
+    technology, llama
+) -> None:
+    """A clamped array must not be narrated as holding the requested weights."""
+
+    runner = _load_runner()
+    comparison = runner._floorplan_comparison(technology, llama, "N6", 815.0)
+    storage = comparison["batched"]
+    cim = comparison["per_region"]
+
+    assert storage["feasible"]
+    assert storage["capacity_ratio"] == pytest.approx(1.0)
+    assert storage["feed_ratio"] > 1.0
+    assert not cim["feasible"]
+    assert cim["capacity_ratio"] < 1.0
+    assert any(reason.startswith("AREA:") for reason in cim["reasons"])
 
 
 def test_compute_in_rom_pays_one_array_sweep_per_concurrent_stream(
@@ -2238,8 +2288,9 @@ def test_expected_max_region_load_matches_a_monte_carlo_of_the_routing(
             f"simulated {simulated:.3f}"
         )
     # At batch 1 the answer is exactly one pass: one token, k distinct regions,
-    # no region drawn twice.  This is what keeps the three amortisation policies
-    # identical at batch 1 and the Taalas anchor unable to separate them.
+    # no region drawn twice.  This makes the per-region sweep-count term equal
+    # to the global-broadcast term; it does not erase the policies' different
+    # cell sizes and floorplans.
     assert expected_max_region_load(num_experts, 1, 6) == 1.0
 
 
@@ -2354,7 +2405,10 @@ def test_the_cim_cell_area_multiplier_cancels_in_the_sweep(technology, llama) ->
             technology,
             name=f"cell-{policy}",
             node="N6",
-            area_mm2_per_device=815.0,
+            # The corrected density no longer fits this 3.5-bit probe in
+            # 815 mm2.  Give every policy enough area so this test isolates the
+            # cell multiplier's capacity/bandwidth coupling.
+            area_mm2_per_device=2_000.0,
             topology=_single_chip(),
             stored_weight_bytes=llama.total_parameters * 3.5 / 8.0,
             resident_kv_bytes=kv_traffic(llama, 2048).storage_bytes_per_user,
@@ -2362,6 +2416,7 @@ def test_the_cim_cell_area_multiplier_cancels_in_the_sweep(technology, llama) ->
             weight_amortization=policy,
         )
         sweeps[policy] = budget.provenance["rom_full_array_sweep_time_s"].value
+        assert not budget.reasons
         # And the capacity check is no longer tautological: the array holds
         # exactly what it was sized to hold, whatever cell it is built from.
         assert budget.weight_capacity_bytes == pytest.approx(
@@ -2374,7 +2429,7 @@ def test_the_cim_cell_area_multiplier_cancels_in_the_sweep(technology, llama) ->
     small = balanced_area_split(
         technology,
         node="N6",
-        total_mm2=815.0,
+        total_mm2=2_000.0,
         weight_store="rom",
         kv_store="sram",
         stored_weight_bytes=llama.total_parameters * 3.5 / 8.0,
@@ -2384,7 +2439,7 @@ def test_the_cim_cell_area_multiplier_cancels_in_the_sweep(technology, llama) ->
     large = balanced_area_split(
         technology,
         node="N6",
-        total_mm2=815.0,
+        total_mm2=2_000.0,
         weight_store="rom",
         kv_store="sram",
         stored_weight_bytes=llama.total_parameters * 3.5 / 8.0,
@@ -2511,13 +2566,11 @@ def test_the_per_layer_cost_is_a_band_and_the_gate_is_not_fitted(
 ) -> None:
     """No parameter in this model takes its value from the answer it produces.
 
-    Every term in the ``latency`` block is ``assumed`` and carries a range, and
-    the anchor is evaluated at both ends of it.  The test that matters is the
-    last one: the per-layer cost that would land the model exactly on the
-    published figure is NEGATIVE, so no value of this term could have closed
-    the gap.  Had it been positive and close to the stated value, that would
-    have been a real result -- and it would still have had to be reported as a
-    coincidence rather than engineered into one.
+    Every scalar term in the ``latency`` block is ``assumed`` and carries a
+    range, and the anchor is evaluated at both ends.  The corrected floorplan
+    fails capacity before latency can bind, so all three throughput values are
+    zero.  The independently computed latency band must remain ordered, and the
+    diagnostic fitted cost remains negative rather than being used as an input.
     """
 
     terms = technology.layer_latency_terms()
@@ -2533,15 +2586,15 @@ def test_the_per_layer_cost_is_a_band_and_the_gate_is_not_fitted(
     assert low < stated < high
 
     band = taalas_hc1_anchor(technology, llama).detail["layer_fixed_latency_band"]
-    assert band["high"]["ratio_to_published"] < band["stated"]["ratio_to_published"]
-    assert band["stated"]["ratio_to_published"] < band["low"]["ratio_to_published"]
     for bound in ("low", "stated", "high"):
-        assert 0.5 <= band[bound]["ratio_to_published"] <= 2.0, bound
+        assert band[bound]["modelled_tokens_s"] == 0.0
+        assert band[bound]["ratio_to_published"] == 0.0
+        assert band[bound]["binding_constraint"] == "capacity_or_format"
     assert band["per_layer_cost_that_would_close_the_gap_s"] < 0.0
 
 
 def test_each_amortisation_policy_is_sized_on_its_own_floorplan(technology) -> None:
-    """A compute-in-ROM cell is 1.6x a storage cell, so it can need more dies.
+    """Cell size and pre-compute reservation both raise compute-in-ROM die count.
 
     Sizing every policy on the batched floorplan denied compute-in-ROM the dies
     its larger array needs and then reported the shortfall as infeasibility --
@@ -2577,11 +2630,41 @@ def test_each_amortisation_policy_is_sized_on_its_own_floorplan(technology) -> N
     assert counts["per_region"] > counts["batched"], counts
     # And the study must actually use each policy's own minimum, not the
     # batched one: the per-region designs it emits carry their own device count.
-    # Roughly the cell-area multiplier, rounded up by the fixed overheads that
-    # do not shrink with device count.
+    # The continuous ratio is the cell multiplier times the loss of usable
+    # array fraction to the compute-in-ROM pre-compute block.  Integer device
+    # counts are the ceiling of each policy's own capacity equation.
     ratio = counts["per_region"] / counts["batched"]
     multiplier = technology.rom_cell_area_multiplier("per_region").value
-    assert multiplier <= ratio <= multiplier * 1.25, (ratio, counts)
+    fixed_fraction = sum(
+        technology.graded("floorplan", name).value
+        for name in ("overhead_area_fraction", "interconnect_area_fraction")
+    )
+    precompute_fraction = technology.graded(
+        "rom", "cim_precompute_area_fraction"
+    ).value
+    density = technology.rom_bits_per_mm2("N6").value / 8.0
+    expected = {
+        "batched": math.ceil(
+            stored / (815.0 * (1.0 - fixed_fraction) * density)
+        ),
+        "per_region": math.ceil(
+            stored
+            / (
+                815.0
+                * (1.0 - fixed_fraction - precompute_fraction)
+                * density
+                / multiplier
+            )
+        ),
+    }
+    assert counts == expected
+    continuous_ratio = (
+        multiplier
+        * (1.0 - fixed_fraction)
+        / (1.0 - fixed_fraction - precompute_fraction)
+    )
+    assert continuous_ratio > multiplier
+    assert ratio == pytest.approx(continuous_ratio, rel=0.03)
 
 
 def test_the_recovered_mac_area_is_swept_rather_than_assumed(
@@ -2597,7 +2680,10 @@ def test_the_recovered_mac_area_is_swept_rather_than_assumed(
     comparison by being available to one side only.
     """
 
-    stored = llama.total_parameters * 3.5 / 8.0
+    # At the current 3.5-bit density the capacity floor consumes every spare
+    # millimetre, so there is nothing for this policy test to allocate.  A
+    # 2-bit representation leaves real spare area on both architectures.
+    stored = llama.total_parameters * 2.0 / 8.0
     made = {}
     for policy in ("batched", "per_region"):
         for spare in ("sram", "rom"):
@@ -2735,6 +2821,7 @@ def test_the_sram_kv_credit_is_reported_against_its_locality_bound(
     exposure is visible rather than implicit.
     """
 
+    weight_bits = 3.0
     budget = rom_device_budget(
         technology,
         name="flash-sram-kv",
@@ -2749,7 +2836,10 @@ def test_the_sram_kv_credit_is_reported_against_its_locality_bound(
             link="on_wafer",
             on_wafer_regions=57,
         ),
-        stored_weight_bytes=flash.checkpoint_bytes,
+        # The corrected ROM density makes the full checkpoint representation
+        # infeasible in this wafer.  The study's 3-bit point fits and leaves
+        # enough SRAM slack to exercise the locality diagnostic at batch 1/8.
+        stored_weight_bytes=flash.total_parameters * weight_bits / 8.0,
         resident_kv_bytes=kv_traffic(flash, 200_000).storage_bytes_per_user,
         kv_store="sram",
         weight_amortization="per_region",
@@ -2762,19 +2852,29 @@ def test_the_sram_kv_credit_is_reported_against_its_locality_bound(
             context_tokens=200_000,
             batch_size=batch,
             technology=technology,
+            weight_bits_per_parameter=weight_bits,
         )
+        assert step.feasible, step.reasons
         bounds[batch] = step.metrics["kv_read_s_under_bank_locality"]
         assert step.metrics["kv_bank_occupancy"] < 1.0
         assert bounds[batch] > step.component_times_s["kv_read"]
+        assert bounds[batch] / step.component_times_s["kv_read"] == pytest.approx(
+            1.0 / step.metrics["kv_bank_occupancy"]
+        )
     # The bound is batch-independent while there are idle banks, which is the
     # ROM locality rule turning up on the SRAM side: an array sized to the KV it
     # holds delivers a fixed KV sweep, exactly as an array sized to the weights
     # delivers a fixed weight sweep.
     assert bounds[1] == pytest.approx(bounds[8], rel=1e-9)
     step_one = evaluate(
-        budget, flash, context_tokens=200_000, batch_size=1, technology=technology
+        budget,
+        flash,
+        context_tokens=200_000,
+        batch_size=1,
+        technology=technology,
+        weight_bits_per_parameter=weight_bits,
     )
-    assert bounds[1] / step_one.component_times_s["kv_read"] > 40
+    assert bounds[1] / step_one.component_times_s["kv_read"] > 10
     # And the reason this was invisible: even the bound is far from binding for
     # THIS design.  That is a fact about this design, not about the model.
     assert bounds[1] < step_one.component_times_s["weight_read"]
@@ -2787,7 +2887,12 @@ def test_the_sram_kv_credit_is_reported_against_its_locality_bound(
     # coincide and there is no exposure left to report, because there is no
     # slack left to lose.
     saturated = evaluate(
-        budget, flash, context_tokens=200_000, batch_size=64, technology=technology
+        budget,
+        flash,
+        context_tokens=200_000,
+        batch_size=64,
+        technology=technology,
+        weight_bits_per_parameter=weight_bits,
     )
     assert saturated.metrics["kv_bank_occupancy"] == 1.0
     assert saturated.metrics["kv_read_s_under_bank_locality"] == pytest.approx(
@@ -3116,7 +3221,11 @@ def test_studies_carry_the_validation_gates(generated) -> None:
     _, results, _, _ = generated
     for result in results.values():
         gates = result["validation_gates"]
-        assert gates["taalas_hc1"]["passed"]
+        assert not gates["taalas_hc1"]["passed"]
+        assert gates["taalas_hc1"]["modelled_value"] == 0.0
+        assert gates["taalas_hc1"]["detail"]["binding_constraint"] == (
+            "capacity_or_format"
+        )
         assert gates["a100_weight_bound"]["passed"]
 
 
@@ -3230,11 +3339,11 @@ def test_no_design_is_charged_a_pipeline_deeper_than_the_model(generated) -> Non
 
 
 def test_studies_report_every_amortization_policy(generated) -> None:
-    """All three machines are studied, and they agree exactly at batch 1.
+    """All three machines are studied under their own floorplans.
 
-    That agreement is the whole reason the published anchor cannot choose
-    between them: at one concurrent stream there is nothing to amortise and
-    nothing to run in parallel, so the three are the same machine.
+    Their sweep-count rules coincide at one stream, but their cell sizes and
+    reserved pre-compute areas do not.  The generated fork must retain each
+    machine rather than equating their batch-1 rates.
     """
     _, results, _, _ = generated
     for result in results.values():
@@ -3353,15 +3462,17 @@ def test_the_thermal_limit_actually_binds_somewhere(generated) -> None:
         assert row["static_power_w"] < row["cooling_limit_w"]
 
 
-def test_dark_silicon_hits_dense_arrays_and_not_wafers(generated) -> None:
-    """The shape of the answer, which is not the intuitive one.
+def test_dark_silicon_hits_dense_rom_arrays_and_not_rom_wafers(generated) -> None:
+    """Distinguish one ROM wafer from an equal-area cluster of GPU packages.
 
-    A wafer is power-SPARSE: a ROM sweep is a fixed cost spread over far more
-    silicon.  The earlier analysis under a uniform multiplier predicted the
-    worst points would be small dense arrays rather than wafers, and that half
-    survives a correct static term.  What does NOT survive is its batch
-    dependence -- static power does not scale with traffic, so batch 1 is
-    throttled too.
+    A ROM wafer is power-SPARSE: a ROM sweep is a fixed cost spread over far
+    more silicon.  An equal-area GPU row is not a wafer; it is a cluster of
+    separately powered packages, and some such clusters are throttled in the
+    N5/B200 study.  The earlier assertion applied the ROM-wafer claim to both
+    families and therefore rejected the very GPU-cluster rows the report
+    distinguishes.  What also does NOT survive the old uniform-multiplier
+    analysis is its batch dependence -- static power does not scale with
+    traffic, so batch 1 is throttled too.
     """
 
     _, results, _, _ = generated
@@ -3372,14 +3483,20 @@ def test_dark_silicon_hits_dense_arrays_and_not_wafers(generated) -> None:
         if row["feasible"] and row["thermal_scale"] > 1.0 + 1e-12
     ]
     assert throttled
-    assert all(row["silicon_area_mm2"] < 40_000 for row in throttled), (
-        "a wafer is now power-limited, which reverses the study's reading that "
-        "wafer-scale is power-sparse. Say why before accepting it."
+    rom_throttled = [row for row in throttled if row["family"] == "rom"]
+    assert rom_throttled
+    assert all(row["silicon_area_mm2"] < 40_000 for row in rom_throttled), (
+        "a ROM wafer is now power-limited, which reverses the study's stated "
+        "power-sparse result. Say why before accepting it."
     )
-    # Scoped to the ROM family: "46,225 mm2" on the GPU side is a 56-die
-    # CLUSTER, not one piece of silicon, and each of those dies is at its own
-    # published TDP by construction. The wafer-is-power-sparse claim is about
-    # wafer-scale silicon.
+    # "46,225 mm2" on the GPU side is a many-package CLUSTER, not one piece of
+    # silicon, and every package carries its own published cooling budget. Keep
+    # a witness so this distinction cannot silently collapse back into an
+    # all-families area assertion.
+    assert any(
+        row["family"] == "gpu" and row["silicon_area_mm2"] >= 40_000
+        for row in throttled
+    )
     wafer_headroom = max(
         row["power_headroom_fraction"] or 0.0
         for result in results.values()
@@ -3393,7 +3510,7 @@ def test_dark_silicon_hits_dense_arrays_and_not_wafers(generated) -> None:
         "cooling budget; the study's wafer-is-power-sparse reading needs "
         "revisiting before it is repeated"
     )
-    assert min(row["batch_size"] for row in throttled) == 1, (
+    assert min(row["batch_size"] for row in rom_throttled) == 1, (
         "no batch-1 point is throttled, which is what a purely "
         "traffic-proportional power model would give. Static power is supposed "
         "to be charged whether or not traffic flows."
@@ -3401,7 +3518,7 @@ def test_dark_silicon_hits_dense_arrays_and_not_wafers(generated) -> None:
 
 
 def test_every_point_reports_energy_per_token_on_both_sides(generated) -> None:
-    """The number that was unpublishable while every watt was 7-9x low."""
+    """Feasible study points retain energy accounting under the two gate bounds."""
 
     _, results, _, _ = generated
     for result in results.values():
@@ -3436,6 +3553,9 @@ def test_json_csv_and_report_are_mutually_consistent(generated) -> None:
         report = (first / study_id / "REPORT.md").read_text()
         assert "Validation gates" in report
         assert "PASS" in report
+        assert "FAIL" in report
+        assert "No tokens-per-joule ratio is admissible" in report
+        assert "machines are identical at batch 1" not in report.lower()
         gate = payload["validation_gates"]["taalas_hc1"]
         assert f"{gate['modelled_value']:,.1f}" in report
 

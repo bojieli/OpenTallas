@@ -340,9 +340,11 @@ from opentallas.roofline import WEIGHT_AMORTIZATIONS  # noqa: E402
 serves the whole batch. ``per_stream`` is compute-in-ROM, where a cell both
 stores and multiplies, so each concurrent stream needs its own pass and
 aggregate per-die throughput collapses onto per-user throughput. They are
-identical at batch 1, which is exactly why the Taalas anchor cannot settle the
-question. Both are evaluated; the main tables show ``batched`` and the fork
-section shows the difference."""
+equal in sweep count at batch 1, but their cell size and pre-compute reservation
+give them different floorplans. The batch-1 anchor can test those physical
+consequences; it cannot establish the high-batch scaling law. Both are
+evaluated; the main tables show ``batched`` and the fork section shows the
+difference."""
 SPARE_AREA_POLICIES: tuple[str, ...] = ("sram", "rom")
 """What a ROM design does with silicon it does not have to spend on its array.
 
@@ -726,13 +728,13 @@ def _minimum_devices(
     """Fewest devices that can physically hold the design.
 
     **Sized on the policy's own floorplan.**  This used to size once on the
-    batched machine and hand the count to all three, on the reasoning that the
-    policies are identical at batch 1.  They stopped being identical when the
-    floorplan started depending on the policy: a compute-in-ROM cell is 1.6x a
-    storage cell, so the same weights need 1.6x the array and can need more
-    dies.  Sizing all three on the batched floorplan denied compute-in-ROM the
-    dies it needs and reported the result as infeasibility -- "it cannot hold
-    this model" when the truth was "we never tried enough dies".
+    batched machine and hand the count to all three, on the reasoning that their
+    sweep-count terms coincide at batch 1.  That reasoning omitted the policy's
+    physical floorplan: a compute-in-ROM cell is 1.6x a storage cell, so the
+    same weights need 1.6x the array and can need more dies.  Sizing all three
+    on the batched floorplan denied compute-in-ROM the dies it needs and
+    reported the result as infeasibility -- "it cannot hold this model" when
+    the truth was "we never tried enough dies".
 
     ROM area is fixed by the stored weights and SRAM area by the resident KV, so
     the remainder available for compute is what device count actually buys.  For
@@ -1178,6 +1180,12 @@ def _floorplan_comparison(
             "rom_mm2": budget.split.rom_mm2,
             "compute_mm2": budget.split.compute_mm2,
             "sram_mm2": budget.split.sram_mm2,
+            "weight_capacity_bytes": budget.weight_capacity_bytes,
+            "capacity_ratio": (
+                budget.weight_capacity_bytes / stored if stored > 0 else None
+            ),
+            "feasible": not budget.reasons and budget.weight_capacity_bytes >= stored,
+            "reasons": list(budget.reasons),
             "peak_compute_ops_s": roof,
             "weight_read_bytes_s": budget.weight_read_bytes_s,
             "weight_bytes_s_demanded_by_the_roof": demanded,
@@ -4562,6 +4570,36 @@ def _render_power_gates(anchors: dict[str, Any]) -> list[str]:
     hc1 = anchors["taalas_hc1_card_power"]
     band = anchors["power_gate_band"]
     low, high = hc1["detail"]["published_band_w"]
+    shortfalls = sorted(hc1["detail"]["shortfall_x_against_band"])
+    if hc1["detail"]["modelled_tokens_s"] > 0:
+        hc1_energy_cell = f"{hc1['detail']['energy_j_per_token']:,.6f} J/token"
+        energy_summary = [
+            "That is a factor of "
+            f"{anchors['a100_weight_bound']['detail']['step']['metrics']['energy_j_per_token'] / hc1['detail']['energy_j_per_token']:,.0f} "
+            "in tokens per joule, and **it is a ceiling on the ROM advantage, not "
+            "a measurement of it**, for three reasons that all point the same way. "
+            "The GPU is at batch 1, which is a GPU's worst operating point -- it "
+            "re-reads the whole checkpoint from DRAM for one token, and the "
+            "batched rows in the table below are the fair comparison. The ROM "
+            "side's read energy is `assumed` over a 17x bracket. And the HC1 "
+            f"power gate says this model's ROM total is {shortfalls[0]:.1f}-"
+            f"{shortfalls[-1]:.1f}x below the shipping part's published card "
+            "power, so the ROM joules here are a lower bound by roughly that factor."
+        ]
+    else:
+        hc1_energy_cell = (
+            f"n/a ({hc1['detail']['energy_j_per_token']:,.6f} J/attempt)"
+        )
+        energy_summary = [
+            "No tokens-per-joule ratio is admissible for this pair: the HC1 "
+            "throughput reconstruction is capacity-infeasible and delivers zero "
+            "modelled tokens. Its energy cell above is the attempted-step energy "
+            "inside the diagnostic power calculation, not the energy of a feasible "
+            "machine. The power gate remains useful as a disclosed component check, "
+            f"and it is {shortfalls[0]:.1f}-{shortfalls[-1]:.1f}x below the "
+            "shipping card's published band, but it cannot support an efficiency "
+            "advantage."
+        ]
     lines = [
         "",
         "### The two power gates, and the residual they leave",
@@ -4680,39 +4718,32 @@ def _render_power_gates(anchors: dict[str, Any]) -> list[str]:
             "no energy at all. **It is the stronger gate and it is the one that",
             "fails.**",
             "",
-            "**Energy per token at the two anchors.** Both parts serve the same "
+            "**Energy accounting at the two anchors.** Both parts serve the same "
             "workload -- Llama-3.1-8B at batch 1 -- so this is the cleanest "
             "statement the model can make about the ROM argument, and it could "
             "not be made at all until the power terms existed:",
             "",
-            "| Part | J/token | W | tok/s |",
+            "| Part | Energy | W | tok/s |",
             "|---|---:|---:|---:|",
             f"| Taalas HC1 (modelled reconstruction) | "
-            f"{hc1['detail']['energy_j_per_token']:,.6f} | "
+            f"{hc1_energy_cell} | "
             f"{_fmt(hc1['modelled_value'])} | "
             f"{_fmt(hc1['detail']['modelled_tokens_s'])} |",
             f"| A100 80GB, weight-bound gate, same model and batch | "
-            f"{anchors['a100_weight_bound']['detail']['step']['metrics']['energy_j_per_token']:,.6f} | "
+            f"{anchors['a100_weight_bound']['detail']['step']['metrics']['energy_j_per_token']:,.6f} J/token | "
             f"{_fmt(anchors['a100_weight_bound']['detail']['step']['power_w'])} | "
             f"{_fmt(anchors['a100_weight_bound']['detail']['step']['per_user_tokens_s'])} |",
             "",
-            "That is a factor of "
-            f"{anchors['a100_weight_bound']['detail']['step']['metrics']['energy_j_per_token'] / hc1['detail']['energy_j_per_token']:,.0f} "
-            "in tokens per joule, and **it is a ceiling on the ROM advantage, not "
-            "a measurement of it**, for three reasons that all point the same way. "
-            "The GPU is at batch 1, which is a GPU's worst operating point -- it "
-            "re-reads the whole checkpoint from DRAM for one token, and the "
-            "batched rows in the table below are the fair comparison. The ROM "
-            "side's read energy is `assumed` over a 17x bracket. And the HC1 "
-            "power gate says this model's ROM total is 2.9-3.6x below the "
-            "shipping part's published card power, so the ROM joules here are a "
-            "lower bound by roughly that factor.",
+            *energy_summary,
             "",
             "**Where the remaining HC1 shortfall could live, none of it fitted.**",
-            "The ROM array is charged **zero** leakage, because the companion term",
-            "for it was refuted as underived; at the top of its reconstructed",
-            f"bracket it would add {_fmt(hc1['detail']['rom_array_leakage_if_reconstructed_w'])} W,",
-            "which does not close the gate either. `energy.rom_read_j_per_byte`",
+            "The ROM array is charged its stated leakage density: "
+            f"{_fmt(hc1['detail']['rom_array_leakage_charged_w'])} W at the point",
+            "and "
+            f"{_fmt(hc1['detail']['rom_array_leakage_at_range_high_w'])} W at the",
+            "top of its range. The point charge moves the enumerated static",
+            "estimate just above the measured clocked-idle floor and is therefore",
+            "included in the charged static total. `energy.rom_read_j_per_byte`",
             "moved from 0.5 to 0.08 pJ/B on the evidence, which made this gate",
             "**worse by about 4x on that term alone** and was adopted anyway. The",
             "honest reading is that a compute-in-ROM part's energy has never been",
@@ -4924,7 +4955,7 @@ def _cell(value: Any, spec: str = ",.0f", dash: str = "--") -> str:
     Deliberately NOT named ``_fmt``.  It was, and being defined later in the
     file it silently shadowed the report's own ``_fmt`` -- whose default is one
     decimal place and whose dash is an em dash -- and quietly reformatted every
-    number in every other table, including the Taalas HC1 gate's 12,232.4 tok/s.
+    number in every other table, including the Taalas HC1 gate's displayed value.
     ``test_json_csv_and_report_are_mutually_consistent`` caught it because it
     asserts the gate's own value appears in the report it is reported in.  The
     two helpers differ in default precision and in dash, so they must not share
@@ -5390,6 +5421,11 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
     study_id = result["study_id"]
     derivations = result["technology_derivations"]
     node = derivations["node"]
+    a100_power = anchors["a100_tdp_power"]
+    hc1_power = anchors["taalas_hc1_card_power"]
+    hc1_power_shortfalls = sorted(
+        hc1_power["detail"]["shortfall_x_against_band"]
+    )
     lines: list[str] = [
         f"# Area-constrained roofline: {study_id}",
         "",
@@ -5514,15 +5550,15 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             f"{requirements['required_compute_density_ops_s_mm2']:.3e} | "
             f"{requirements['compute_density_shortfall_x']:.2f}x |",
             "",
-            "The compute density derived from A100's published dense roofs and die",
-            "area is within "
-            f"{abs(requirements['compute_density_shortfall_x'] - 1) * 100:.1f}% of what the "
-            "shipping part must have. The ROM read-bandwidth density derived from a",
-            "28 nm simulated ROM-CIM macro is the input that is short, and the",
-            "required value is still below the SRAM read-bandwidth density derived",
-            f"from Cerebras WSE-2 ({derivations['sram_read_bytes_s_per_mm2']['value']:.3e} "
-            "B/s/mm2), so it is physically unremarkable. That is a falsifiable",
-            "statement about one technology input, which is what a gate is for.",
+            "The gate fails before either rate density can bind: the corrected",
+            "ROM capacity density and compute-in-ROM floorplan cannot fit the",
+            "published model in 815 mm2. The rate diagnostics remain useful --",
+            f"ROM read density is {requirements['rom_density_shortfall_x']:.2f}x and",
+            f"compute density is {requirements['compute_density_shortfall_x']:.2f}x",
+            "the value implied by the shipping rate -- but neither can rescue a",
+            "capacity failure. The required ROM read density remains below the SRAM",
+            "read-bandwidth density derived from Cerebras WSE-2",
+            f"({derivations['sram_read_bytes_s_per_mm2']['value']:.3e} B/s/mm2).",
             "",
             "### The per-layer latency band, and why the gate is not fitted",
             "",
@@ -5558,10 +5594,9 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "The per-layer cost that would land the model exactly on the",
             f"published figure is **{closing * 1e9:,.1f} ns/layer**. It is"
             + (
-                " negative, which means the model is already slower than the"
-                " shipping part before any fixed cost is charged: no value of"
-                " this term could have closed the gap, and the residual lies in"
-                " the ROM read-bandwidth density instead."
+                " negative, which means no positive latency term could close the"
+                " gate. The current result is decided earlier by the reported"
+                " capacity failure."
                 if closing < 0
                 else " reported so the distance between the derived value and"
                 " the fitted one is visible. It is never used as an input."
@@ -6219,21 +6254,58 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
     if floorplan:
         storage = floorplan["batched"]
         cim = floorplan["per_region"]
+        if storage["feasible"] and cim["feasible"]:
+            capacity_summary = (
+                "Both machines hold the requested weights. They are different "
+                "floorplans, not one floorplan with two arithmetics."
+            )
+        elif storage["feasible"] and not cim["feasible"]:
+            capacity_summary = (
+                "The ROM-plus-MAC floorplan holds the requested weights; the "
+                f"compute-in-ROM floorplan holds only {cim['capacity_ratio']:.1%} "
+                "and is infeasible at this area. The failed floorplan is retained "
+                "so the capacity cost of the larger cell remains visible."
+            )
+        else:
+            capacity_summary = (
+                "At least one floorplan is capacity-infeasible at this area; the "
+                "table reports each capacity ratio instead of treating a clamped "
+                "array as if it held the requested weights."
+            )
+        if storage["feed_ratio"] < 1.0:
+            feed_summary = [
+                "The ROM-plus-MAC machine is bandwidth-starved: its array supplies",
+                f"only {storage['feed_ratio']:.2f}x of the bytes its MAC roof wants,",
+                "so some compute capacity cannot be exercised.",
+            ]
+        else:
+            feed_summary = [
+                "The ROM-plus-MAC machine is not bandwidth-starved at this point:",
+                f"its array supplies {storage['feed_ratio']:.2f}x the bytes its MAC",
+                "roof demands, so the fp8 compute block can be fully fed and the",
+                "remaining array bandwidth is unused.",
+            ]
         lines.extend(
             [
                 "",
                 "## The two ROM floorplans on one die",
                 "",
-                f"Both machines hold the same {floorplan['stored_weight_bytes']/1e9:,.2f} GB "
+                f"This probe requests {floorplan['stored_weight_bytes']/1e9:,.2f} GB "
                 f"of weights at {floorplan['weight_bits_per_parameter']:g} bits per "
-                f"parameter on the same {floorplan['die_area_mm2']:,.0f} mm2. They are "
-                "different floorplans, not one floorplan with two arithmetics.",
+                f"parameter on the same {floorplan['die_area_mm2']:,.0f} mm2. "
+                + capacity_summary,
                 "",
                 "| | ROM + MAC array | compute-in-ROM |",
                 "|---|---:|---:|",
                 f"| cell area vs a storage-only bit | {storage['cell_area_multiplier']:.1f}x "
                 f"| {cim['cell_area_multiplier']:.1f}x |",
                 f"| ROM array | {storage['rom_mm2']:,.1f} mm2 | {cim['rom_mm2']:,.1f} mm2 |",
+                f"| weight capacity | {storage['weight_capacity_bytes']/1e9:,.2f} GB "
+                f"({storage['capacity_ratio']:.1%}) | "
+                f"{cim['weight_capacity_bytes']/1e9:,.2f} GB "
+                f"({cim['capacity_ratio']:.1%}) |",
+                f"| capacity-feasible | {'yes' if storage['feasible'] else '**no**'} | "
+                f"{'yes' if cim['feasible'] else '**no**'} |",
                 f"| compute block | {storage['compute_mm2']:,.1f} mm2 | "
                 f"{cim['compute_mm2']:,.1f} mm2 (pre-compute only) |",
                 f"| SRAM | {storage['sram_mm2']:,.1f} mm2 | {cim['sram_mm2']:,.1f} mm2 |",
@@ -6260,12 +6332,7 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
                 "bandwidth density, which handed compute-in-ROM a free "
                 f"{cim['cell_area_multiplier']:.1f}x on throughput.",
                 "",
-                "What compute-in-ROM does buy on this die is that it has no MAC",
-                f"array to starve: the storage machine's {storage['compute_mm2']:,.0f} mm2 "
-                f"of MAC array can be fed at only {storage['feed_ratio']:.2f}x of what it",
-                "wants at one weight byte per multiply-accumulate, so more than half",
-                "the die runs at a fraction of its duty and the step is weight-bound",
-                "anyway.",
+                *feed_summary,
             ]
         )
 
@@ -6311,15 +6378,17 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "## The batch-amortisation fork, reported rather than resolved",
             "",
             "`docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` names an open",
-            "question the anchor cannot settle. If a ROM cell both stores its bits",
+            "high-batch question the anchor cannot settle. If a ROM cell both stores its bits",
             "and performs the multiply for them -- compute-in-ROM, as Taalas",
             "describes HC1 -- then a second concurrent stream needs a second pass",
             "through the fabric, and **aggregate per-die throughput equals per-user",
             "throughput at every batch**. If instead the ROM is storage feeding a",
             "separate MAC array, one sweep serves the whole batch exactly as one HBM",
-            "fetch does on a GPU. The two are *identical at batch 1*, which is",
-            "precisely why the published 16,960 tok/s figure cannot distinguish",
-            "them, and why it must not be used to justify a high-batch claim.",
+            "fetch does on a GPU. Their sweep counts coincide at batch 1, but",
+            "their cell size and pre-compute reservation give them different",
+            "floorplans; the current compute-in-ROM anchor reconstruction is",
+            "capacity-infeasible. A batch-1 rate therefore cannot validate the",
+            "distinct high-batch scaling laws.",
             "",
             "Every other table in this report uses the batched (ROM-as-storage)",
             "machine; `-perstream` is compute-in-ROM with a global activation "
@@ -6526,13 +6595,13 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             "  payload queueing beyond the modelled serialisation, and pipeline fill",
             "  at batch 1. Each of those makes an array worse, never better, so the",
             "  reported array crossovers are upper bounds.",
-            "- **Power is now enumerated, and it is right on one published part and",
-            "  2.9-3.6x low on the other.** Leakage, clock distribution, operand",
+            "- **Power is now enumerated, and it is close on one published part and",
+            f"  {hc1_power_shortfalls[0]:.1f}-{hc1_power_shortfalls[-1]:.1f}x low on the other.** Leakage, clock distribution, operand",
             "  delivery and a measured clocked-idle floor are charged per mm2 per",
             "  second whether or not a byte moves, and the HBM traffic energy is a",
             "  measured SC 2025 figure rather than an HBM2-era model. The A100 lands",
-            "  at 0.97x of its published TDP under a saturating load; the Taalas HC1",
-            "  lands at 0.28x of its published card power. **The second one FAILS its",
+            f"  at {a100_power['ratio']:.2f}x of its published TDP under a saturating load; the Taalas HC1",
+            f"  lands at {hc1_power['ratio']:.2f}x of its published card power. **The second one FAILS its",
             "  gate and the failure is reported rather than tuned away.** The A100",
             "  gate is also the weaker of the two, because the clock term inside it",
             "  was calibrated as a fraction of a shipping GPU's TDP density -- read",
@@ -6987,14 +7056,15 @@ def _findings(result: dict[str, Any]) -> list[str]:
         worst = max(fork, key=lambda row: row["per_stream_aggregate_penalty_x"])
         findings.append(
             "**The largest open question is not in this model's inputs but in the "
-            "architecture, and the anchor cannot settle it.** If a ROM cell both "
+            "architecture, and a batch-1 anchor cannot settle its scaling law.** If a ROM cell both "
             "stores and multiplies, each concurrent stream needs its own pass and "
             "aggregate per-die throughput never exceeds the per-user rate. At batch "
             f"{max(BATCHES)} that costs up to "
             f"{worst['per_stream_aggregate_penalty_x']:,.1f}x of aggregate "
-            f"throughput ({worst['model']}). The machines are identical at batch 1, "
-            "which is where the published anchor sits, so no amount of validation "
-            "against it resolves the fork."
+            f"throughput ({worst['model']}). Their sweep counts coincide at batch 1, "
+            "but their cell and pre-compute costs make their floorplans different; "
+            "the current compute-in-ROM anchor reconstruction fails capacity. A "
+            "batch-1 validation therefore cannot establish either high-batch law."
         )
         # Scanned over every batch, not only the largest: the per-region gain
         # peaks in the middle of the range and reporting only batch 256 would

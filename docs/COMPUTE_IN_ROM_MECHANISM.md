@@ -10,8 +10,9 @@
 > against A100, and **up to 28.5×** against B200. The per-user side of the
 > comparison (66.8×) survives with both of its terms cited. The paragraph
 > asserting that the activation fraction *"is what makes 200–250 W possible"* is
-> **withdrawn**: it is a power-model inference, and this project's power model is
-> known to be 7–9× low and is being rebuilt.
+> **withdrawn**: it is a power-model inference. The rebuilt HC1 power gate still
+> reaches only 87.6 W against the published 200–250 W band, a 2.3–2.9×
+> shortfall, and the throughput reconstruction is capacity-infeasible.
 >
 > Nothing in the *mechanism* reconstruction changed. §§1–3 stand as written.
 
@@ -129,12 +130,13 @@ resolved").
 | A100 80GB weight-bound, Llama-3.1-8B FP8 batch 1 on 826 mm² | **253.91 tok/s** | same table; modelled = published to 1.00× |
 | ratio | **66.8×** | 16,960 / 253.91, my division of two cited cells |
 
-The model's own HC1 prediction is **12,232.4 tok/s**, a ratio of **0.72×** to the
-published part — it **under**-predicts the shipping silicon by 1.39×, and the
-gate is deliberately not fitted to close that (`n6_vs_a100/REPORT.md` → "The
-per-layer latency band, and why the gate is not fitted"). Quoting 66.8× therefore
-quotes Taalas's own self-run figure against this project's A100 model, and that
-is the honest reading of it.
+The model's own current HC1 reconstruction admits **zero throughput**: after
+the ROM-density and compute-in-ROM floorplan corrections, the 815 mm² die has
+only 432.4 mm² available for an array that needs 770.5 mm². The gate is
+deliberately not fitted to close that (`n6_vs_a100/REPORT.md` → "The per-layer
+latency band, and why the gate is not fitted"). Quoting 66.8× therefore quotes
+Taalas's own self-run figure against this project's A100 model; it is not a
+ratio reproduced by the current HC1 model.
 
 **The aggregate side, replacing the retracted `~2.2×` and `30×`:**
 
@@ -150,18 +152,19 @@ case where compute-in-ROM is *ahead*: the amortising machine binds on `kv_read`
 there and the per-stream machine binds on `weight_read`, so the fork is not a
 uniform penalty.
 
-**The point the previous version was making survives, and is sharper now.** The
-two machines are **identical at batch 1** — which is exactly where the published
-16,960 tok/s anchor sits, and is precisely why no amount of validation against
-that anchor can resolve the fork. The report states this itself: *"The machines
-are identical at batch 1, which is where the published anchor sits, so no amount
-of validation against it resolves the fork."* What is retracted is only the size
-of the gap and the 40%-MFU arithmetic that produced it.
+**The point the previous version was making survives in a narrower form.** The
+two policies have the same sweep count at batch 1, so that one operating point
+cannot validate their distinct high-batch amortisation laws. They are not the
+same physical machine there: the compute-in-ROM cell multiplier and pre-compute
+reservation change capacity and the solved floorplan. The current HC1
+reconstruction demonstrates that distinction by failing capacity. What is
+retracted is both the old claim of machine identity and the 40%-MFU arithmetic
+that produced the earlier gap.
 
-It also still explains why Taalas quotes **per user** everywhere and never states
-a batch size. `technology.json` → `reference_parts.taalas_hc1.batch_size` is
-`assumed` at 1 with the note *"not published by Taalas; checked taalas.com, CNX
-Software, Wavect and Kaitchup"*.
+Taalas's launch-deck footnote now resolves the batch-size question: the quoted
+point is **BS=1 per chip**, and
+`technology.json` → `reference_parts.taalas_hc1.batch_size` is graded
+`published`. That still supplies no evidence for the high-batch scaling law.
 
 ## 5. The design fork this creates
 
@@ -213,8 +216,10 @@ quote, the density and the per-user framing — but it is one analyst's reading 
 a chip whose designers have described it only in sentences.
 
 **This is the highest-value open question in the comparison**, because it is
-worth up to **20.71×** of aggregate throughput at batch 256, and because the
-published anchor sits at batch 1 where the two machines are identical.
+worth up to **20.71×** of aggregate throughput at batch 256, while the published
+anchor sits at batch 1 where the competing sweep-count laws coincide. The
+anchor can test the candidate floorplans at that point; it cannot establish
+their scaling.
 
 ---
 
@@ -233,10 +238,11 @@ Two claims in the previous version are withdrawn rather than corrected.
   exists). It is retained *there*, as a source-register entry, and not quoted
   here as evidence for anything.
 
-**This project's own power model is 7–9× low and is being rebuilt.** Until it
-lands, no watt derived from it is publishable — including the ones in
-`results/roofline/*/REPORT.md` under "Interpretation boundary", which are stated
-there as evidence that the model is broken and must be read that way.
+**This project's power model is bounded, not measured.** Its A100 gate passes at
+1.15× of TDP, while the HC1 gate remains 2.3–2.9× below the published card-power
+band. Watts in `results/roofline/*/REPORT.md` are model outputs whose assumed
+terms and both gate results must travel with them; they are not fabricated-ROM
+power evidence. The infeasible HC1 attempt supports no tokens-per-joule claim.
 
 ## What nothing produces
 

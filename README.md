@@ -167,8 +167,9 @@ targets produced different tokens.
   tok/s per user).
 - **Checking a number against its source?** [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md)
   §0 states the provenance rule every document in `docs/` is held to, and §7a
-  states that **no watt produced by this repository is publishable** while the
-  power model — known to be 7–9× low — is being rebuilt.
+  requires every modelled power or energy figure to carry both power gates:
+  A100 passes at 1.15× of TDP, while HC1 fails at 0.35–0.44× of its published
+  card-power band and its throughput reconstruction is capacity-infeasible.
 - **Implementing or auditing the design?** Start at the governed
   [`executable-system recovery plan`](docs/EXECUTABLE_SYSTEM_RECOVERY_PLAN.md)
   and [`specification index`](spec/README.md), then consult the

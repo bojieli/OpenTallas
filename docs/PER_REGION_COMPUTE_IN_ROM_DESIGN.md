@@ -34,40 +34,42 @@ so scaling only the numerator makes the array look 1.6× faster for no physical
 reason. Both densities are cells-per-mm² quantities: a 1.6× larger cell means
 1.6× fewer bits per mm² **and** 1.6× fewer bytes per second per mm², because the
 extra area is select transistors and product-line taps — it adds no bitline and
-no sense amp. **The cell size cancels.** From the model, on the anchor die:
+no sense amp. **The cell size cancels in sweep time, but not in capacity.** The
+current anchor-die probe makes that distinction explicit:
 
 | | ROM + MAC array | compute-in-ROM |
 |---|---:|---:|
 | cell area vs a storage-only bit | 1.0× | 1.6× |
-| ROM array | 216.8 mm² | 346.9 mm² |
-| compute block | 451.5 mm² | 16.3 mm² (pre-compute only) |
-| SRAM | 0.0 mm² | 305.1 mm² |
-| sustained fp8 compute roof | 2.214e14 ops/s | the array sweep itself |
-| weight bytes/s the roof wants | 1.107e14 | n/a |
-| weight bytes/s the array supplies | 4.589e13 | 4.589e13 |
-| **can the compute block be fed?** | **0.41×** | there is nothing to feed |
-| **full-array sweep** | **76.55 µs** | **76.55 µs** |
+| ROM array | 481.6 mm² | 521.6 mm² |
+| weight capacity | 3.51 GB (100.0%) | 2.38 GB (**67.7%**) |
+| capacity-feasible | yes | **no** |
+| compute block | 186.7 mm² | 146.7 mm² (pre-compute + accumulation) |
+| SRAM | 0.0 mm² | 0.0 mm² |
+| sustained fp8 compute roof | 9.154e13 ops/s | the array sweep itself |
+| weight bytes/s the roof wants | 4.577e13 | n/a |
+| weight bytes/s the array supplies | 1.019e14 | 6.900e13 |
+| **can the compute block be fed?** | **2.23×** | there is nothing separate to feed |
+| **full-array sweep** | **34.47 µs** | **34.47 µs** |
 
 Two further notes on the retraction, because both are instructive.
 
 The retraction had already been written as a banner on this document and on
 `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md`, and the fix had **not been made in
-the code** — the model still contained the error. And the banner's own arithmetic
-was wrong in the same way as the claim it retracted: it gave "the corrected sweep
-is **57.4 µs** either way … 17,400 vs 17,417 tok/s", which is the sweep with
-`efficiencies.rom_read_bandwidth = 0.75` dropped. The model's own numbers are
-57.41 µs / 17,417 tok/s before that derate and **76.55 µs / 13,063 tok/s** after
-it, and only the second enters a result. A hand-computed retraction reproduced
-the failure it was retracting. Both documents are now generated from the model's
-own output for exactly this reason.
+the code** — the model still contained the error. A later hand-computed
+retraction then omitted `efficiencies.rom_read_bandwidth`, reproducing the same
+class of mistake. The current 34.47 µs value is read from the regenerated
+artifact, and the capacity row travels with it so an infeasible clamped array
+cannot be presented as a working design.
 
-### What survives, and it is an area argument
+### What survives, and what the corrected anchor probe now rejects
 
 The intuition "one transistor per weight gives you billions of multipliers" was
-never the reason and is still not. The reason that survives is the 0.41× row
-above: **more than half the storage machine's die is a MAC array that can be fed
-at 0.41× of what it wants** at one weight byte per multiply-accumulate. Compute-
-in-ROM does not spend that silicon.
+never the reason and is still not. On the current probe, however, the storage
+machine's MAC array is **not** starved: the ROM supplies 2.23× the bytes its fp8
+roof demands. The compute-in-ROM alternative avoids that MAC array but cannot
+hold the requested weights in 815 mm² once its 1.6× cell and 18% pre-compute/
+accumulation reservation are charged. The honest anchor-die conclusion is
+therefore a capacity failure, not a throughput win.
 
 The corrected model tests what the recovered silicon is worth rather than
 asserting it. Whatever a compute-in-ROM part does not spend on a MAC array it can
@@ -197,8 +199,10 @@ checked against a Monte Carlo of the routing in `tests/test_roofline.py` — but
 **where a given design sits on it moved, and that is what cut the per-region
 value in section 3.**
 
-At one user per pass the depth is exactly one, which is why all three machines
-agree at batch 1 and why the published anchor cannot choose between them.
+At one user per pass the depth is exactly one, so the per-region and broadcast
+sweep-count terms coincide. The three machines still have different cell sizes,
+pre-compute reservations and floorplans; the batch-1 anchor can test those
+physical consequences but cannot establish their high-batch scaling laws.
 
 `expert_load_balance` is retired. Its replacement,
 `efficiencies.expert_router_imbalance`, is a multiplier applied **on top of** the
@@ -219,22 +223,23 @@ From `Sizing one expert region` in the study, at the compute-in-ROM array densit
 |---|---:|---:|
 | experts / active per token | 256 / 6 | 384 / 6 |
 | routed weights per expert | 574.9 MB | 2,140.8 MB |
-| **one region** | **56.8 mm²** | **211.4 mm²** |
-| pre-compute block per region | 1.14 mm² (**2.0%**) | 4.23 mm² (**2.0%**) |
-| all R blocks | 291 mm² | 1,623 mm² |
-| whole checkpoint | 16,478 mm² = 20.2 reticles | 88,150 mm² = 108.2 reticles |
+| **one region** | **126.1 mm²** | **469.5 mm²** |
+| pre-compute + accumulation per region | 22.70 mm² (**18.0%**) | 84.51 mm² (**18.0%**) |
+| all R blocks | 5,810 mm² | 32,453 mm² |
+| whole checkpoint | 36,600 mm² = 44.9 reticles | 195,796 mm² = 240.2 reticles |
 
-A region is tens to hundreds of mm². Eight shift-add units are negligible against
-that. The real cost is not the pre-compute block; it is the **activation
-distribution network** that must deliver B activations to R regions, plus a small
-activation queue per region. **This model does not price that network's area or
-its latency**, and no number in this document should be read as if it did.
+A region is hundreds of mm², and the model now reserves a material 18% for
+pre-computation and accumulation. The remaining unpriced cost is the
+**activation distribution network** that must deliver B activations to R
+regions, plus an activation queue per region. **This model does not price that
+network's area or its latency**, and no number in this document should be read
+as if it did.
 
 What the model *does* now price, and did not before, is the **energy** of moving
 an operand: `energy.operand_delivery_j_per_byte` at 0.23 pJ/B, built as one
 register-file access (0.091 pJ/B at N7) plus 0.40 pJ/B/mm over a 0.35 mm tile
-pitch. **That constant is explicitly the tile-local floor.** A 56.8 mm² region is
-7.5 mm on a side and a 211.4 mm² region is 14.5 mm — one to two orders of
+pitch. **That constant is explicitly the tile-local floor.** A 126.1 mm² region is
+11.2 mm on a side and a 469.5 mm² region is 21.7 mm — one to two orders of
 magnitude beyond the pitch the constant was built for — so the distribution
 network across a region is *not* in it, and the long-path ladder that would cover
 it (8–10 pJ/B on an A100-class HBM→L2→RF path) is not represented anywhere in the
@@ -337,41 +342,39 @@ for finding.
    compute-in-ROM die gives up and therefore how many dies a model needs. Nothing
    comparable is published at any node.
 2. **Whether per-region activation is realisable at the assumed wiring cost.** A
-   circuit question this analysis cannot answer. The 2.0% is the pre-compute block
-   only, not the distribution network, whose *area* and *latency* the model still
-   prices at zero. Its *energy* is now partly priced, by
+   circuit question this analysis cannot answer. The configured 18% covers the
+   pre-compute and accumulation block, not the distribution network, whose
+   *area* and *latency* the model still prices at zero. Its *energy* is now partly priced, by
    `energy.operand_delivery_j_per_byte` — but that constant is the tile-local
    floor at a 0.35 mm pitch, and a region is 7.5–14.5 mm on a side, so the
    region-crossing part of the network is not in it either.
 3. **`efficiencies.expert_router_imbalance` (assumed 1.0, range 1.0–1.5).** One
    measured routing trace settles it, and every number in section 3 is exactly
    linear in it.
-4. **The per-layer serial cost (`latency.*`, seven assumed inputs, 162.4 ns per
-   dense layer over a 65.4–726.8 ns range).** On the fastest DeepSeek-Flash design
-   at batch 1 it is now the *binding* constraint. Its terms are derived from
+4. **The per-layer serial cost (`latency.*`, including per-model assumed pass
+   depths).** On the fastest DeepSeek-Flash design at batch 1 it can be the
+   *binding* constraint. Its terms are derived from
    primitives independent of the Taalas anchor — SRAM access time, sequencer issue
-   and decode, pipeline fill and drain across a dependent array-pass boundary, the
-   layer barrier, and a floorplan-derived wire delay — and the anchor is reported
-   at both ends of the band (0.75× low, 0.72× stated, 0.59× high). The per-layer
-   cost that would land the model exactly on the published figure is **negative**,
-   so no value of this term could have closed the gap and it cannot have been
-   fitted to it.
-5. **`reference_parts.taalas_hc1.batch_size` (assumed 1).** Published nowhere. If
-   HC1's 16,960 tok/s is not a batch-1 figure, the anchor means something
-   different and every ratio here moves.
-6. **The whole `power` block, and the 2.9–3.6× the HC1 card-power gate leaves
+   and decode, pipeline fill and drain across a dependent array-pass boundary,
+   the layer barrier, and a floorplan-derived wire delay. The HC1 anchor is
+   reported at both ends of the band, but all three rates are currently zero
+   because capacity fails first. The fitted per-layer diagnostic remains
+   negative and is never used as an input.
+5. **`reference_parts.taalas_hc1.batch_size` (published 1).** The launch-deck
+   footnote states “BS=1 per chip,” closing the earlier assumption. Batch remains
+   load-bearing under every amortisation policy.
+6. **The whole `power` block, and the 2.3–2.9× the HC1 card-power gate leaves
    open.** The model now charges leakage, clock distribution, operand delivery
    and a measured clocked-idle floor per mm² per second, and it reproduces an
-   A100's published TDP to 0.97× under a saturating load. On Taalas HC1 it
-   reproduces 70.2 W against a published 200–250 W. **That gate fails and the
+   A100's published TDP to 1.15× under a saturating load. On Taalas HC1 it
+   reproduces 87.6 W against a published 200–250 W. **That gate fails and the
    failure is reported rather than closed.** Two of this document's own
    unpriced terms — the activation-distribution network and the region-crossing
    half of operand delivery — sit inside that residual, and deriving either one
    would move this document from asserting a transport-energy advantage to
-   quantifying it. Note also that the ROM array is charged **zero** leakage,
-   because the companion term for it was refuted as underived: that is an
-   under-charge on the side this document argues for, and at the top of its
-   reconstructed bracket it adds only 10.4 W.
+   quantifying it. The ROM array is now charged 2.90 W at the stated leakage
+   density and 11.24 W at the top of its range; even the conservative
+   range-high amount does not close the card-power gate.
 
 All six are graded `assumed` in `configs/hardware/technology.json` with their
 reasons, alongside the others the study's evidence ledger lists.

@@ -20,7 +20,7 @@ bandwidth and compute roof are derived from it.
 9. **Tensor parallelism is better on a wafer than on NVLink and is not good anywhere, and the published claim that it reaches Taalas-class rates on-wafer is RETRACTED.** Two all-reduces per layer per token cost up to 896 us over NVLink, capping per-user decode at 1,116 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 1,478.2 us and cap it at 677 tok/s. The ordering survives, and on a like-for-like comparison -- the same model's collective on one wafer against the same model's on NVLink -- the wafer is at least 1.3x cheaper. But the previous figures of 116,278 and 81,966 tok/s came from charging a stitched 2-D mesh one flat hop however many reticle fields the collective spanned. A mesh has no switch, so an all-reduce costs about 1.1 times its diameter, and the model now charges that. What the collective buys is what makes it worth paying: with per-user latency separated from aggregate throughput, a tensor group is the only arrangement that puts the whole machine on one token, and the topology tables below show both families choosing one at batch 1 in spite of this cost.
 10. **Which topology wins depends entirely on what is being maximised, and the study reports both rather than choosing.** On per-user rate at equal area a wafer wins 24 of 24 operating points and an array 0; on tokens per second per square millimetre the same points go 9 to the array and 15 to the wafer. A wafer is not faster per unit silicon -- it is faster because it is more silicon, plus a hop latency an array cannot match.
 11. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 217 of 2916 feasible points.
-12. **The largest open question is not in this model's inputs but in the architecture, and the anchor cannot settle it.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 256 that costs up to 16.6x of aggregate throughput (DeepSeek-V4-Flash-0731). The machines are identical at batch 1, which is where the published anchor sits, so no amount of validation against it resolves the fork.
+12. **The largest open question is not in this model's inputs but in the architecture, and a batch-1 anchor cannot settle its scaling law.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 256 that costs up to 16.6x of aggregate throughput (DeepSeek-V4-Flash-0731). Their sweep counts coincide at batch 1, but their cell and pre-compute costs make their floorplans different; the current compute-in-ROM anchor reconstruction fails capacity. A batch-1 validation therefore cannot establish either high-batch law.
 13. **A third machine sits between them, and for a sparse model it recovers part of what compute-in-ROM gives up -- less than the mean-region arithmetic used to say.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise, and the sweep waits for the BUSIEST region rather than the average engaged one. The largest gain over a global broadcast is 5.64x, on DeepSeek-V4-Flash-0731 at batch 256, where the busiest region carries 2.92x the load of the mean engaged one. It is not free ground: per-region still loses to the amortising ROM-plus-MAC machine at 42 of 48 operating points. A dense model has one region, so it gains nothing -- the disjointness is what sparsity buys.
 14. **Every number here is conditional on the assumed inputs listed in the evidence ledger below.** The ROM cell-area ratio and the ROM read bandwidth density are the two that move the answer most, and neither has been measured at N5.
 15. **The cooling limit binds, and not where a uniform correction said it would.** 231 of 2,916 feasible points (7.9%) are power-limited now that leakage, clock distribution and a measured clocked-idle floor are charged per mm2 per second rather than per byte moved. The worst is `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x7` at batch 256 on 5,705 mm2, throttled 1.44x from 92 to 63 tok/s per user. **No wafer is throttled anywhere in this study**: a ROM sweep is a fixed cost spread over far more silicon, so wafer-scale is power-sparse. And HBM KV is what melts the arrays -- the worst point's dynamic energy is 96% kv read against 0.0% weight read. The ROM sweep is not what melts it.
@@ -354,12 +354,15 @@ gate asks:
 | ROM read bandwidth density (B/s/mm2) | 1.764e+11 | 1.837e+11 | 1.04x |
 | Compute density (ops/s/mm2) | 1.261e+12 | 3.155e+12 | 2.50x |
 
-The compute density derived from A100's published dense roofs and die
-area is within 150.3% of what the shipping part must have. The ROM read-bandwidth density derived from a
-28 nm simulated ROM-CIM macro is the input that is short, and the
-required value is still below the SRAM read-bandwidth density derived
-from Cerebras WSE-2 (5.563e+11 B/s/mm2), so it is physically unremarkable. That is a falsifiable
-statement about one technology input, which is what a gate is for.
+The gate fails before either rate density can bind: the corrected
+ROM capacity density and compute-in-ROM floorplan cannot fit the
+published model in 815 mm2. The rate diagnostics remain useful --
+ROM read density is 1.04x and
+compute density is 2.50x
+the value implied by the shipping rate -- but neither can rescue a
+capacity failure. The required ROM read density remains below the SRAM
+read-bandwidth density derived from Cerebras WSE-2
+(5.563e+11 B/s/mm2).
 
 ### The per-layer latency band, and why the gate is not fitted
 
@@ -380,7 +383,7 @@ is evaluated at both ends.
 | range high | 894.8 ns/layer | 28.63 us | 0.0 | 0.00x | capacity_or_format |
 
 The per-layer cost that would land the model exactly on the
-published figure is **-76.7 ns/layer**. It is negative, which means the model is already slower than the shipping part before any fixed cost is charged: no value of this term could have closed the gap, and the residual lies in the ROM read-bandwidth density instead.
+published figure is **-76.7 ns/layer**. It is negative, which means no positive latency term could close the gate. The current result is decided earlier by the reported capacity failure.
 
 ### Anchor sensitivity
 
@@ -467,20 +470,21 @@ on a Taalas figure, because Taalas publishes no microarchitecture and
 no energy at all. **It is the stronger gate and it is the one that
 fails.**
 
-**Energy per token at the two anchors.** Both parts serve the same workload -- Llama-3.1-8B at batch 1 -- so this is the cleanest statement the model can make about the ROM argument, and it could not be made at all until the power terms existed:
+**Energy accounting at the two anchors.** Both parts serve the same workload -- Llama-3.1-8B at batch 1 -- so this is the cleanest statement the model can make about the ROM argument, and it could not be made at all until the power terms existed:
 
-| Part | J/token | W | tok/s |
+| Part | Energy | W | tok/s |
 |---|---:|---:|---:|
-| Taalas HC1 (modelled reconstruction) | 0.005908 | 87.6 | 0.0 |
-| A100 80GB, weight-bound gate, same model and batch | 1.465768 | 359.6 | 245.3 |
+| Taalas HC1 (modelled reconstruction) | n/a (0.005908 J/attempt) | 87.6 | 0.0 |
+| A100 80GB, weight-bound gate, same model and batch | 1.465768 J/token | 359.6 | 245.3 |
 
-That is a factor of 248 in tokens per joule, and **it is a ceiling on the ROM advantage, not a measurement of it**, for three reasons that all point the same way. The GPU is at batch 1, which is a GPU's worst operating point -- it re-reads the whole checkpoint from DRAM for one token, and the batched rows in the table below are the fair comparison. The ROM side's read energy is `assumed` over a 17x bracket. And the HC1 power gate says this model's ROM total is 2.9-3.6x below the shipping part's published card power, so the ROM joules here are a lower bound by roughly that factor.
+No tokens-per-joule ratio is admissible for this pair: the HC1 throughput reconstruction is capacity-infeasible and delivers zero modelled tokens. Its energy cell above is the attempted-step energy inside the diagnostic power calculation, not the energy of a feasible machine. The power gate remains useful as a disclosed component check, and it is 2.3-2.9x below the shipping card's published band, but it cannot support an efficiency advantage.
 
 **Where the remaining HC1 shortfall could live, none of it fitted.**
-The ROM array is charged **zero** leakage, because the companion term
-for it was refuted as underived; at the top of its reconstructed
-bracket it would add 11.2 W,
-which does not close the gate either. `energy.rom_read_j_per_byte`
+The ROM array is charged its stated leakage density: 2.9 W at the point
+and 11.2 W at the
+top of its range. The point charge moves the enumerated static
+estimate just above the measured clocked-idle floor and is therefore
+included in the charged static total. `energy.rom_read_j_per_byte`
 moved from 0.5 to 0.08 pJ/B on the evidence, which made this gate
 **worse by about 4x on that term alone** and was adopted anyway. The
 honest reading is that a compute-in-ROM part's energy has never been
@@ -1156,12 +1160,14 @@ given more silicon.
 
 ## The two ROM floorplans on one die
 
-Both machines hold the same 3.51 GB of weights at 3.5 bits per parameter on the same 815 mm2. They are different floorplans, not one floorplan with two arithmetics.
+This probe requests 3.51 GB of weights at 3.5 bits per parameter on the same 815 mm2. The ROM-plus-MAC floorplan holds the requested weights; the compute-in-ROM floorplan holds only 87.0% and is infeasible at this area. The failed floorplan is retained so the capacity cost of the larger cell remains visible.
 
 | | ROM + MAC array | compute-in-ROM |
 |---|---:|---:|
 | cell area vs a storage-only bit | 1.0x | 1.6x |
 | ROM array | 374.6 mm2 | 521.6 mm2 |
+| weight capacity | 3.51 GB (100.0%) | 3.06 GB (87.0%) |
+| capacity-feasible | yes | **no** |
 | compute block | 293.7 mm2 | 146.7 mm2 (pre-compute only) |
 | SRAM | 0.0 mm2 | 0.0 mm2 |
 | sustained fp8 compute roof | 2.197e+14 ops/s | the array sweep itself |
@@ -1180,11 +1186,9 @@ beside it. An earlier version of this model applied the multiplier
 to area alone and credited the result with the storage cell's
 bandwidth density, which handed compute-in-ROM a free 1.6x on throughput.
 
-What compute-in-ROM does buy on this die is that it has no MAC
-array to starve: the storage machine's 294 mm2 of MAC array can be fed at only 0.93x of what it
-wants at one weight byte per multiply-accumulate, so more than half
-the die runs at a fraction of its duty and the step is weight-bound
-anyway.
+The ROM-plus-MAC machine is bandwidth-starved: its array supplies
+only 0.93x of the bytes its MAC roof wants,
+so some compute capacity cannot be exercised.
 
 ## Sizing one expert region
 
@@ -1202,15 +1206,17 @@ price it.
 ## The batch-amortisation fork, reported rather than resolved
 
 `docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` names an open
-question the anchor cannot settle. If a ROM cell both stores its bits
+high-batch question the anchor cannot settle. If a ROM cell both stores its bits
 and performs the multiply for them -- compute-in-ROM, as Taalas
 describes HC1 -- then a second concurrent stream needs a second pass
 through the fabric, and **aggregate per-die throughput equals per-user
 throughput at every batch**. If instead the ROM is storage feeding a
 separate MAC array, one sweep serves the whole batch exactly as one HBM
-fetch does on a GPU. The two are *identical at batch 1*, which is
-precisely why the published 16,960 tok/s figure cannot distinguish
-them, and why it must not be used to justify a high-batch claim.
+fetch does on a GPU. Their sweep counts coincide at batch 1, but
+their cell size and pre-compute reservation give them different
+floorplans; the current compute-in-ROM anchor reconstruction is
+capacity-infeasible. A batch-1 rate therefore cannot validate the
+distinct high-batch scaling laws.
 
 Every other table in this report uses the batched (ROM-as-storage)
 machine; `-perstream` is compute-in-ROM with a global activation broadcast and `-perregion` gives each expert region its own port
@@ -1946,13 +1952,13 @@ failure mode this program exists to prevent:
   payload queueing beyond the modelled serialisation, and pipeline fill
   at batch 1. Each of those makes an array worse, never better, so the
   reported array crossovers are upper bounds.
-- **Power is now enumerated, and it is right on one published part and
-  2.9-3.6x low on the other.** Leakage, clock distribution, operand
+- **Power is now enumerated, and it is close on one published part and
+  2.3-2.9x low on the other.** Leakage, clock distribution, operand
   delivery and a measured clocked-idle floor are charged per mm2 per
   second whether or not a byte moves, and the HBM traffic energy is a
   measured SC 2025 figure rather than an HBM2-era model. The A100 lands
-  at 0.97x of its published TDP under a saturating load; the Taalas HC1
-  lands at 0.28x of its published card power. **The second one FAILS its
+  at 1.15x of its published TDP under a saturating load; the Taalas HC1
+  lands at 0.35x of its published card power. **The second one FAILS its
   gate and the failure is reported rather than tuned away.** The A100
   gate is also the weaker of the two, because the clock term inside it
   was calibrated as a fraction of a shipping GPU's TDP density -- read

@@ -186,9 +186,9 @@ column `Per-region over broadcast`.
 | Qwen `11,364 / 12,310 / 44,017` and Flash b1 `10,890` | `:247–250` | `:689,695,703,705` = `12,312.6 / 73,121.2 / 133,002.4 / 13,021.5` | `derived` | **NO** (the `1.00×` ratios are right; the magnitudes are not) |
 | floorplan-sweep table: `87,122.5 / 213,473.6 / 1.885 / 1.155` etc. | `:82–85` | `n6_vs_a100/REPORT.md:831–836` — different designs, different rates, different binding terms | `derived` | **NO — every cell** |
 | `43 of 48 operating points` lost | `:274` | `n6_vs_a100/REPORT.md:23` finding 12 | `derived` | **YES** |
-| §1 replacement table `216.8 / 346.9 / 451.5 / 16.3 / 305.1 mm²`, `0.41×`, `76.55 µs` | `:38–48` | `n6_vs_a100/REPORT.md:625–634` | `derived` | **YES** |
-| region sizing `56.8 / 211.4 mm²`, `2.0%`, `16,478 / 88,150 mm²` | `:197–204` | `n6_vs_a100/REPORT.md:660–663` | `derived` | **YES** |
-| `253.91` A100 gate, `0.72×` HC1 gate, `1.0000` KV validation ratio | `:8–14` | `n6_vs_a100/REPORT.md:78–79`; `results/roofline/qwen3_execution_validation.json` → `lanes[*].kv.byte_ratio = 1.0` | `executed` | **YES** |
+| §1 floorplan table `481.6 / 521.6 / 186.7 / 146.7 mm²`, `2.23×`, `34.47 µs`, and compute-in-ROM capacity **67.7%** | `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md` §1 | `n6_vs_a100/REPORT.md` → “The two ROM floorplans on one die” | `derived` | **YES** |
+| region sizing `126.1 / 469.5 mm²`, `18.0%`, `36,600 / 195,796 mm²` | `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md` §3 | `n6_vs_a100/REPORT.md` → “Sizing one expert region” | `derived` | **YES** |
+| `253.91` A100 gate, capacity-infeasible `0.00×` HC1 gate, `1.0000` KV validation ratio | `:8–14` | `n6_vs_a100/REPORT.md` → validation gates; `results/roofline/qwen3_execution_validation.json` → `lanes[*].kv.byte_ratio = 1.0` | `executed` | **YES** |
 
 ## Rank 5 — retracted claims still live in `src/` and in the one config the grade checker enforces
 
@@ -525,19 +525,20 @@ refused in hardware. That is the failure signature the fail-closed design exists
 to prevent, and it was invisible until the RTL was asked to run a real program
 rather than a generated one.
 
-## 7b. The first validated DeepSeek token, and why it is not graded `executed`
+## 7b. Governed DeepSeek token captures
 
 | number / claim | where it is stated | what produces it | grade | current? |
 |---|---|---|---|---|
-| DeepSeek-V4-Flash-0731 on the ROM backend emits token **13806** for a 32-token prefix of `TA-DS-CHAT-1`; the independent oracle emits **13806** for the byte-identical prompt | `README.md`, checklist W6.4 and W13.4, `docs/ABI3_PROGRAM_REPORT.md` §3 | `results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32_raw.json` and `results/abi3/deepseek_v4_reference_oracle_prefix.json` → `results['TA-DS-CHAT-1-P32']` | **`raw`** — *added by this ledger*: the artifact is committed, but no committed tool reproduces it | **YES** |
+| DeepSeek-V4-Flash-0731 HBM emits `[13806, 345, 7472, 55560]`, identical to the independent oracle; ROM emits `[13806, 334, 305, 13806]` and first diverges at index 1 | `results/abi3/accelerator_tokens/README.md`, checklist W6.3/W6.4 and W13.3/W13.4, `docs/ABI3_PROGRAM_REPORT.md` §3 | `tools/run_accelerator_tokens.py`, the two governed `deepseek_v4_flash_{hbm,rom}_p32.json` captures, and `deepseek_v4_reference_oracle_prefix.json` | **`executed`**, functional-simulator and external-comparator evidence only | **YES** |
 
 `executed` in this repository's vocabulary means *obtained by running something
-in this repository, with the artifact committed*. This run was driven by an
-ad-hoc script, so the artifact half holds and the **running-something-in-this-
-repository** half does not. Grading it `executed` would put a number nobody can
-re-derive into the one file `tools/check_evidence_grades.py` guards, which is
-the shape of Rank 5. `results/abi3/accelerator_tokens/README.md` says so at the
-source, and the documents above do not outrun it.
+in this repository, with the artifact committed*. The governed tool lowers the
+pinned graph, admits the deployment, executes prefill and decode, checks token
+legitimacy, and compares only against the byte-matched external oracle. The old
+`deepseek_v4_flash_rom_p32_raw.json` remains as historical evidence but no
+current claim depends on it. Execution does not promote either capture to cycle,
+RTL, physical or silicon evidence, and the ROM divergence remains an open
+functional failure.
 
 **A correction this milestone forces on existing prose.** The 104-token
 `TA-DS-CHAT-1` run has been described as the real gate for DeepSeek execution.

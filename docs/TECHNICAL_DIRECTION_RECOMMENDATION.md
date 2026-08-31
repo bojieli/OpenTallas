@@ -105,17 +105,19 @@ cost* and *The floorplan sweep*.
 stored byte and then credited that larger array with the *storage* cell's
 bandwidth per mm². Sweep time is capacity density over bandwidth density, so
 scaling only the numerator handed compute-in-ROM a free 1.6× on throughput.
-Both densities now carry the multiplier and it cancels — the model reports
-**76.55 µs of full-array sweep for either machine.**
+Both densities now carry the multiplier and it cancels in sweep time. The
+current anchor probe reports **34.47 µs for either array**, while separately
+showing that the compute-in-ROM floorplan holds only 67.7% of the requested
+weights and is therefore infeasible.
 
 This retraction had already been written into the banner at the top of this
 document. It had **not** been made in the code; the model still contained the
 error. And the banner's own numbers were wrong in a second way: it gave the
-corrected sweep as "57.4 µs either way … 17,400 vs 17,417 tok/s", which is the
-sweep with `efficiencies.rom_read_bandwidth = 0.75` omitted. The model's own
-before-derate figure is 57.41 µs and 17,417 tok/s; the figure that enters a
-result is 76.55 µs and 13,063 tok/s. A retraction computed by hand reproduced
-the very failure it was retracting.
+then-corrected sweep as "57.4 µs either way … 17,400 vs 17,417 tok/s", which
+omitted `efficiencies.rom_read_bandwidth = 0.75`. At that intermediate revision
+the charged sweep was 76.55 µs and the rate diagnostic 13,063 tok/s. The later
+density correction moves the current sweep to 34.47 µs, and the corrected
+compute-in-ROM floorplan fails capacity before that rate can be admitted.
 
 ### 0.2 The per-region sweep depth used the mean where the physics is the maximum
 
@@ -254,10 +256,10 @@ and `evaluate` refuses it.
 
 **Every amortisation policy was sized on the batched machine's floorplan.** The
 sizing sweep chose a device count on the storage machine and handed it to all
-three policies, on a comment that said they are identical at batch 1 — true
-before the floorplan started depending on the policy, false after. A
-compute-in-ROM cell is 1.6× a storage cell, so the same weights need 1.6× the
-array and more dies to hold it: the study now sizes DeepSeek-Flash at **26 dies
+three policies because their sweep-count terms coincide at batch 1. That
+reasoning omitted the policy's physical floorplan. A compute-in-ROM cell is 1.6×
+a storage cell, so the same weights need 1.6× the array and more dies to hold
+it: the study now sizes DeepSeek-Flash at **26 dies
 against the batched machine's 18**, and DeepSeek-Pro at **138 against 93**. Every
 compute-in-ROM DeepSeek point was reported infeasible. That was the harness saying *"we never tried enough
 dies"* and the report reading it as *"it cannot hold this model"*. Each policy is
@@ -580,9 +582,9 @@ thesis:
   anyway. The previous version of this section named that input as the single
   competing explanation for the whole HC1 shortfall; the evidence went the
   other way.
-- The ROM array is charged **zero leakage**, because the companion term for it
-  was refuted as underived. At the top of its reconstructed 0.006–0.03 W/mm²
-  bracket it would add 11.2 W — 87.6 → 98.8 W, still short of 200 W.
+- The ROM array is charged **2.90 W** at the stated 0.0067 W/mm² leakage
+  density. Its range-high 0.026 W/mm² contribution is 11.24 W; even adding that
+  whole amount again to 87.6 W remains short of 200 W.
 - Operand delivery is now the **largest** dynamic term on HC1 (12.1 W of <!-- figure: 12.1 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.dynamic_power_w_by_term.operand_delivery_j" name="HC1 operand-delivery power" -->
   35.0 W), which is a direct consequence of the ROM read term collapsing. A
   mask-ROM array reads its weights for almost nothing; getting those bytes to
@@ -648,16 +650,16 @@ and cool.
 
 At the two anchors, on the same workload — Llama-3.1-8B at batch 1:
 
-| part | J/token | W | tok/s |
+| part | energy | W | tok/s |
 |---|---:|---:|---:|
-| Taalas HC1 (nominal component reconstruction) | **0.005908** | 87.6 | **0 admitted** | <!-- figure: 0.005908 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.energy_j_per_token" name="HC1 J/token" -->
-| A100 80GB, weight-bound gate, same model and batch | **1.465768** | 359.6 | 245 | <!-- figure: 1.465768 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_weight_bound.detail.step.metrics.energy_j_per_token" name="A100 J/token at the weight-bound gate" -->
+| Taalas HC1 (nominal component reconstruction) | **n/a** (0.005908 J/attempt) | 87.6 | **0 admitted** | <!-- figure: 0.005908 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.energy_j_per_token" name="HC1 attempted-step energy" -->
+| A100 80GB, weight-bound gate, same model and batch | **1.465768 J/token** | 359.6 | 245 | <!-- figure: 1.465768 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_weight_bound.detail.step.metrics.energy_j_per_token" name="A100 J/token at the weight-bound gate" -->
 
-The component arithmetic alone implies about 248× in nominal tokens per joule,
-but the current HC1 throughput gate admits **zero** because its area allocation
-cannot fit the model. It therefore does not support an achieved tokens-per-joule
-claim. Even as a component lower bound, the ROM read energy is `assumed` over a
-17× bracket and the HC1 power total is 2.3–2.9× below the shipping card's band.
+Dividing the A100's delivered-token energy by the HC1 attempted-step diagnostic
+would print about 248×, but that quotient is inadmissible: the current HC1
+throughput gate admits **zero** because its area allocation cannot fit the
+model. Even the attempted-step term rests on ROM read energy `assumed` over a
+17× bracket, and the HC1 power total is 2.3–2.9× below the shipping card's band.
 
 At equal area, on the study's own best designs, the advantage is far smaller
 and it moves with batch in the direction the architecture predicts:
@@ -685,9 +687,10 @@ not equally well founded and the ratio inherits the weaker of them.**
 the same SC 2025 paper measures at a further 6.30 pJ/bit on an A100 for
 streaming traffic and which this model charges at zero on both sides. The
 long-path operand ladder — the scalar applied here is the *tile-local floor*,
-and HBM→L2→register file is 8–10 pJ/B further. ROM-array leakage, held at zero
-because its companion was refuted. And a fabricated leading-node mask-ROM macro
-reporting read energy at the macro boundary separately from compute, which
+and HBM→L2→register file is 8–10 pJ/B further. ROM-array leakage is now charged
+from the register's explicit derivation rather than left at zero. What remains
+missing is a fabricated leading-node mask-ROM macro reporting read energy at
+the macro boundary separately from compute, which
 would settle the term the HC1 gate is failing on: **no such part exists.**
 
 ---
@@ -1058,14 +1061,11 @@ nothing else. It is invisible at batch 1 and decisive above it.
 The previous recommendation was "build compute-in-ROM, not ROM feeding a MAC
 array — it wins at batch 1 on every model by ~1.5×". That 1.5× was the cell
 multiplier applied to area and not to bandwidth. With the correction the two
-machines are **the same machine at batch 1 for the same budget**: at one user
-per slot each policy sweeps its array once, and `rom_sweeps_per_step` is 1 for
-both. What separates them at batch 1 in the tables above is not the amortisation
-rule but the *floorplan* it forces — a compute-in-ROM cell is 1.6× the area, so
-the two policies solve to different area splits and the sizing sweep can pick
-different machines. On the `sram` floorplan at batch 1 that is worth 6% to
-compute-in-ROM on Qwen (229 against 216 tok/s per user) and nothing on either
-DeepSeek model.
+machines have **the same sweep count at batch 1**, not the same physical
+machine: at one user per slot `rom_sweeps_per_step` is 1 for both, while the
+compute-in-ROM cell is 1.6× the area and reserves 18% of the die for
+pre-compute and accumulation. The policies therefore solve to different area
+splits, capacities and device counts even at one stream.
 
 Do not restate the win as a bandwidth argument. Whatever case exists is about
 **area**: the multiply moves into the array and the MAC array's silicon is
@@ -1074,21 +1074,22 @@ recovered. On the anchor die, from *The two ROM floorplans on one die*:
 | | ROM + MAC array | compute-in-ROM |
 |---|---:|---:|
 | cell area vs a storage-only bit | 1.0× | 1.6× |
-| ROM array | 216.8 mm² | 346.9 mm² |
-| compute block | 451.5 mm² | 16.3 mm² (pre-compute only) |
-| SRAM | 0.0 mm² | 305.1 mm² |
-| sustained fp8 roof | 2.214e14 ops/s | the array sweep itself |
-| weight bytes/s the roof wants | 1.107e14 | n/a |
-| weight bytes/s the array supplies | 4.589e13 | 4.589e13 |
-| **can the compute block be fed?** | **0.41×** | nothing to feed |
-| full-array sweep | **76.55 µs** | **76.55 µs** |
+| ROM array | 481.6 mm² | 521.6 mm² |
+| weight capacity | 3.51 GB (100.0%) | 2.38 GB (**67.7%**) |
+| capacity-feasible | yes | **no** |
+| compute block | 186.7 mm² | 146.7 mm² (pre-compute + accumulation) |
+| SRAM | 0.0 mm² | 0.0 mm² |
+| sustained fp8 roof | 9.154e13 ops/s | the array sweep itself |
+| weight bytes/s the roof wants | 4.577e13 | n/a |
+| weight bytes/s the array supplies | 1.019e14 | 6.900e13 |
+| **can the compute block be fed?** | **2.23×** | nothing separate to feed |
+| full-array sweep | **34.47 µs** | **34.47 µs** |
 
-More than half the storage machine's die is a MAC array that can be fed at 0.41×
-of what it wants at one weight byte per multiply-accumulate. That is the honest
-argument, and the corrected model tests it directly: give both machines the
-option of spending spare silicon on a replicated array instead, and the
-amortising machine's balanced floorplan — MAC array sized to consume exactly
-what the array beside it can read — closes most of the gap.
+The storage machine's MAC array is fully fed at this N6 point. The
+compute-in-ROM alternative removes that block but cannot hold the requested
+weights in the same die after its larger cell and fixed pre-compute reservation
+are charged. The corrected anchor-die result is therefore a capacity rejection,
+not a throughput argument for either floorplan.
 
 **The convergence this section previously claimed is retracted.** It said that
 on Flash at batch 64 with `spare = rom` both machines reach 372,307 tok/s and
@@ -1104,9 +1105,10 @@ therefore burns no transport energy, **this model does not represent at all**:
 its energy term charges `rom_read_j_per_byte` against engaged bytes identically
 for both policies. Do not read that silence as support.
 
-**Where this leaves the decision.** The model does not choose between the two
-machines on throughput; it ties them at batch 1 and splits above it depending on
-the floorplan. If the choice is to be made on energy or on throughput per mm², it
+**Where this leaves the decision.** The model does not validate either
+high-batch scaling law from the batch-1 anchor. It does distinguish their
+floorplans there, and currently rejects the compute-in-ROM reconstruction on
+capacity. If the choice is to be made on energy or on throughput per mm², it
 must be made with an instrument that measures those — and the study already
 reports `tok/s/mm2` in the floorplan sweep, where the replicated-array designs
 are *worse* per unit silicon (Flash at batch 8: 0.554 tok/s/mm² on one wafer
@@ -1146,8 +1148,8 @@ occupy a deep pipeline's slots with users that a compute-in-ROM machine would
 have to sweep for one at a time.
 
 The design and its sizing are in `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md`. The
-pre-compute block is 2.0% of a region; the activation distribution network is the
-real cost and neither document prices it.
+configured pre-compute and accumulation block is 18.0% of a region; the
+activation distribution network remains unpriced in both documents.
 
 ### 2.3 Array or wafer: one rule, and it no longer answers "wafer" three times
 
@@ -1448,9 +1450,9 @@ ledger lists all 43 of them.
   assumes. It is inert at the neutral value because no trace exists to set it, and
   because a parameter must not take its value from the answer it is wanted to
   produce. Every per-region result is exactly linear in it.
-- **`reference_parts.taalas_hc1.batch_size` (1)** — published nowhere. If HC1's
-  16,960 tok/s is not a batch-1 figure, the anchor means something different and
-  every ratio here moves.
+- **`reference_parts.taalas_hc1.batch_size` (1)** — now `published`, from the
+  launch-deck footnote “BS=1 per chip.” This closes the earlier assumption;
+  batch remains load-bearing under every amortisation policy.
 - **The hop latencies (`links.*.hop_latency_s`) — TWO OF THE FOUR WERE RE-GRADED
   ON 2026-08-31 AND ARE NO LONGER ASSUMED.** This bullet previously said that
   *"NVIDIA publishes no NVLink or NVSwitch latency figure of any kind"* and that
@@ -1477,10 +1479,11 @@ ledger lists all 43 of them.
   - Still `assumed`: `links.inter_wafer.hop_latency_s` at 5 µs (swept 1–10 µs) —
     now the largest unmeasured link on the ROM side — plus `ethernet` and
     `on_package`, neither of which any design in either study exercises.
-  - `infiniband_hdr`/`ndr` remain `published`: 4.5 µs GPU-buffer to GPU-buffer,
-    from De Sensi et al.'s SC24 measurements of 3.7–5.7 µs, which is the number
-    a decode step pays rather than the 1.07 µs CPU-memory MPI ping-pong usually
-    quoted.
+  - `infiniband_hdr`/`ndr` are now `measured`: **2.03 µs** GPU-buffer to
+    GPU-buffer at the point, swept **1.9–22 µs** from the measured minimum to
+    the shipped collective-library path. The NDR entry deliberately carries
+    the HDR measurement because no third-party NDR equivalent was found; that
+    is recorded as a pro-ROM bias, not presented as generation invariance.
   - **The band is now reported per side.** The joint band it used to be reported
     as, 24.5–42.5×, concealed which side the width came from; at 554,700 mm² on
     Pro the headline is **5.90×**, the wafer fabric alone spans **7.92×–3.84×**

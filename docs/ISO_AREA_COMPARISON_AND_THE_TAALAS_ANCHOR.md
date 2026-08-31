@@ -574,17 +574,17 @@ one that is slow and cool.
 
 **At the two anchors, same workload -- Llama-3.1-8B at batch 1:**
 
-| part | J/token | W | tok/s |
+| part | energy | W | tok/s |
 |---|---:|---:|---:|
-| Taalas HC1 (nominal component reconstruction) | 0.005908 | 87.6 | **0 admitted** | <!-- figure: 0.005908 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.energy_j_per_token" name="HC1 J/token" -->
-| A100 80GB, weight-bound gate | 1.465768 | 359.6 | 245 | <!-- figure: 1.465768 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_weight_bound.detail.step.metrics.energy_j_per_token" name="A100 J/token at the weight-bound gate" -->
+| Taalas HC1 (nominal component reconstruction) | **n/a** (0.005908 J/attempt) | 87.6 | **0 admitted** | <!-- figure: 0.005908 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.energy_j_per_token" name="HC1 attempted-step energy" -->
+| A100 80GB, weight-bound gate | 1.465768 J/token | 359.6 | 245 | <!-- figure: 1.465768 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.a100_weight_bound.detail.step.metrics.energy_j_per_token" name="A100 J/token at the weight-bound gate" -->
 
-The component arithmetic alone would imply about 248x in nominal tokens per
-joule, but the current HC1 throughput gate admits **zero**: the reconstructed
+Dividing the A100's delivered-token energy by the HC1 attempted-step diagnostic
+would print about 248x, but that quotient is inadmissible: the reconstructed
 815 mm² die cannot fit the required ROM after SRAM, compute, interconnect and
-overhead. It therefore does not support an achieved tokens-per-joule claim.
-Even as a component lower bound, the ROM read energy is `assumed` over a 17x
-bracket and the HC1 power total is 2.3-2.9x below the shipping card's band.
+overhead, so the HC1 throughput gate admits **zero**. Even the attempted-step
+term rests on ROM read energy `assumed` over a 17x bracket, and the HC1 power
+total is 2.3-2.9x below the shipping card's band.
 
 **At equal area, on the study's own best designs, it is far smaller and it moves
 with batch in the direction the architecture predicts:**
@@ -612,9 +612,10 @@ case.**
 SC 2025 measurement puts at a further 6.30 pJ/bit on an A100 for streaming
 traffic. The long-path operand ladder -- the term applied here is the
 *tile-local floor*, and HBM to L2 to register file is 8-10 pJ/B further.
-ROM-array leakage, held at zero because its companion term was refuted as
-underived; at the top of its reconstructed bracket it would add 11.2 W to HC1
-and still not reach 200 W.
+ROM-array leakage is no longer on this list: the model charges 2.90 W at the
+stated point and reports 11.24 W at the top of its range. Even conservatively
+adding that whole range-high term again would not bring the 87.6 W HC1
+reconstruction to the bottom of its published 200–250 W card-power band.
 
 **Every comparison in this program must state the silicon area on both sides.**
 

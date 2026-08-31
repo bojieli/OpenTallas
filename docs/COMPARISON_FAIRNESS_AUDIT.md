@@ -80,15 +80,15 @@ required fixes.
 | A9 | A100 throughput gate is an arithmetic identity that cannot fail | ROM | 0; 100% of GPU throughput validation | artefact |
 | A10 | ABI3 executed lanes: 512- vs 8192-token program block | ROM | 0 here; +6.94% read traffic on the HBM lane | artefact |
 | A11 | iso-node ROM-only efficiency envelope, GPU pinned | ROM | 0 here; 13x span in that study | artefact |
-| A12 | HC1 gate passes only at batch 1; config asserts batch-independence | ROM | 0; falsifies a robustness claim | artefact |
+| A12 | HC1 config asserted batch-independence | ROM | 0; falsified a robustness claim | **resolved after audit:** batch is published and the stale sweep was removed |
 | A13 | SRAM KV capacity carries no allocator/workspace derate | ROM | 0.999x | artefact |
 | A14 | `n5_vs_b200` prints `n6_vs_a100`'s gates; neither of its parts is gated | ROM | 0 | artefact |
 | A15 | Array-kind candidate sets differ per area rung (`counts_by_kind` scope) | GPU | 0 here | artefact |
 | A16 | `balanced_area_split` hard-codes `fp8` for MAC sizing | ROM (mildly) | ~0 | artefact |
-| A17 | HC1's 22.52x compute shortfall rendered as "is within 2152.4%" | ROM | 0 | artefact |
+| A17 | HC1 compute shortfall was rendered as a false “within” claim | ROM | 0 | **resolved after audit** |
 | B5 | GPU credited with zero on-die SRAM (no L2 capacity, no L2 bandwidth) | ROM | ~0 here; up to 1.7x on Qwen rows | legitimate for decode, undisclosed |
 | B6 | N6 vs N7 logic density 1.18x; native w4a8 vs BF16 emulation 3.3x | ROM | ~0 here | legitimate, disclose |
-| B7 | ROM array leakage charged at zero; HC1 power gate fails 2.85–3.56x | ROM | 0 on speed; every tokens/J is an upper bound | legitimate, disclosed in prose only |
+| B7 | ROM array leakage was charged at zero | ROM | 0 on speed; tokens/J was an upper bound | **resolved after audit:** nonzero term charged and reported |
 | B8 | Wafer gross-die utilisation (65% vs ~75%) not charged | ROM | 0 on any rate | legitimate, disclose |
 | B9 | No gate covers the multi-device, multi-slot or wafer regime | neither | 0 | legitimate evidence limit |
 | B10 | The two products in the comparison do not carry the same RTL standing: the Qwen deployments are co-simulated against the golden model, the wafer one is covered only when the campaign says so | ROM | 0 on any rate | legitimate evidence limit, disclose |
@@ -464,19 +464,16 @@ and `clock_efficiency` are legitimately asymmetric and correctly charged against
 the ROM. Fix: give the GPU the same three-point envelope on the two parameters
 assumed on both sides, and pair conservative-ROM with aggressive-GPU.
 
-### A12. The HC1 gate passes only at batch 1, and the config asserts the opposite
+### A12. Resolved: the HC1 batch-independence assertion was removed
 
-`reference_parts.taalas_hc1.batch_size` is graded `assumed` with the note "the
-anchor rate is batch-independent for a dense model, so the assumption does not
-move the anchor", repeated verbatim at `docs/SOURCES.md:224`. Sweeping only that
-field: batch 1 → 0.7213 PASS; batch 2 → 0.3725 FAIL; batch 4+ → infeasible, under
-every one of the three amortization policies. It is self-contradicted two fields
-down by `weight_amortization` = `per_stream`, whose own note says "every batch
-member pays its own sweep". Compounding it, `run_anchors`
-(`tools/run_roofline_studies.py:2699-2720`) publishes sensitivity tables for the
-two axes that are structurally flat and none for the axis that is steep. Fix:
-delete the batch-independence claim from both files and add the batch sweep with
-its FAIL and infeasible rows shown.
+The audit baseline graded `reference_parts.taalas_hc1.batch_size` as `assumed`
+and claimed the dense-model anchor was batch-independent. Its own sweep refuted
+that claim. The launch-deck footnote now grades batch 1 as `published`, and the
+register explains that each amortisation policy carries a different batch cost.
+The intermediate 0.7213× batch-1 PASS is also superseded: the corrected ROM
+density and compute-in-ROM floorplan make the anchor capacity-infeasible at the
+published point, so the current gate reports zero and FAIL rather than using the
+old sweep as a robustness claim.
 
 ### A13–A17, briefly
 
@@ -484,7 +481,11 @@ its FAIL and infeasible rows shown.
 * **A14** `run_all` (`tools/run_roofline_studies.py:4823-4828`) computes anchors once and assigns them into every study, so `results/roofline/n5_vs_b200/REPORT.md` shows a four-row PASS table in which **neither of that study's two parts is gated** -- byte-identical to `n6_vs_a100`'s except one line. `b200_sxm` carries published roofs, HBM3e bandwidth, capacity, power *and* native fp8/fp4, so a real B200 gate is constructible where the A100's fp8 gate is not. The one line that differs is itself wrong: the n5 report checks a fixed N6 ROM read-density requirement against an **N5-scaled** WSE-2 SRAM density, flattering it by 1.29x.
 * **A15** `counts_by_kind` is declared inside the `kv_store` and `(amortization, spare_area_policy)` loops (`tools/run_roofline_studies.py:1238`) and the fixed `ROM_AREA_LADDER` is added only for `plan.kind == 'wafer'` (`:1259`), so array-kind rungs are read off non-overlapping candidate sets. This makes the published ROM curve sawtooth (2927.7, 3212.0, 2621.5, 3687.7, 3782.6, 3088.1) where the full set is monotone (2927.7, 3418.0, 3557.9, 3687.7, 3782.6, 3854.9) -- a modelling artefact a reader would take for physics. Favours GPU; verified to move no published headline (DSV4-Pro's 76,610 mm2 row is unchanged).
 * **A16** `balanced_area_split:1690-1694` hard-codes the literal `'fp8'` for `mac_density` and never receives the design's execution format. Verified largely harmless: the fp8/bf16 density ratio is exactly **2.0**, not 3.3x, and for bf16 the 2x density halving exactly cancels the 2x bytes-per-parameter, so the hard-code returns the format-correct answer. A residual mismatch exists on w4a8 designs and favours **ROM**, not the GPU. Thread `execution_format` through anyway.
-* **A17** `tools/run_roofline_studies.py:3438-3441` renders HC1's 22.52x compute-density shortfall as "is within 2152.4% of what the shipping part must have", and `tests/test_roofline.py:152`, named `test_gate_taalas_hc1_compute_density_matches_the_shipping_part`, asserts on the **ROM** density instead. A reviewer scanning names and prose concludes the area-to-compute chain is gated. It is not.
+* **A17 — resolved after audit.** The renderer now states that capacity fails
+  before either rate density can bind and reports the ROM and compute
+  diagnostics separately. The regression test is named for the ROM-read
+  density it actually checks; it no longer implies that compute density passed
+  a shipping-silicon gate.
 
 ---
 
@@ -672,19 +673,17 @@ an efficiency factor. Worth ~0 here (only 99 of 2,120 feasible ROM points bind
 on compute, and no headline row does), but it would dominate the moment a
 comparison landed in a compute-bound regime.
 
-## B7. ROM array leakage is charged at zero and every tokens/J figure is an upper bound
+## B7. Resolved: ROM-array leakage is now charged and reported
 
-`power.static_leakage_w_per_mm2.rom_array` = 0.0, self-described as "ZERO,
-DELIBERATELY, AND THIS IS AN UNDER-CHARGE ON THE ROM SIDE"; the clock-region
-multiplier is 0.15 for ROM and SRAM against 1.0 for the GPU's whole die at its
-real 1.41 GHz, a 9.4x per-mm2 static-clock gap. The model's own gates measure
-the consequence: `a100_tdp_power` PASSes at 0.975 while `taalas_hc1_card_power`
-**fails** at 0.281 with `shortfall_x_against_band: [3.563, 2.851]`. This moves
-the speed headline not at all, and it is disclosed thoroughly in prose at
-`REPORT.md:211`. What is missing is that no `comparisons` row carries the
-shortfall, so `tokens_per_joule_advantage_x` -- up to 255x in the batch-1
-ceiling row -- is machine-readable with no attached caveat. Fix: carry
-`rom_energy_lower_bound_factor: [2.85, 3.56]` on every row.
+The baseline audited here set
+`power.static_leakage_w_per_mm2.rom_array = 0.0` and correctly called that an
+under-charge. The current register derives 0.0067 W/mm², sweeps
+0.0013–0.026 W/mm², and the power path applies it to the solved ROM area. On
+the HC1 reconstruction that is 2.90 W at the point and 11.24 W at range high;
+the artifact exposes both fields instead of hard-coding “0 W charged.” The
+speed headline is unchanged. The broader evidence boundary remains: the HC1
+card-power gate still fails, and a modelled tokens-per-joule ratio is not a
+measurement of fabricated leading-node ROM silicon.
 
 ## B8. A wafer consumes more 300 mm wafer per usable mm2 than reticle dies do
 

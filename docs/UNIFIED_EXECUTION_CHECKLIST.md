@@ -351,13 +351,14 @@ That failure is reported rather than tuned away: at least one of the ROM cell
 ratio, array efficiency, checkpoint-size reconstruction, or reserved-area
 terms is wrong for the shipping part.
 
-**What is still wrong and is not hidden.** Every watt is 7–9× low against both
-published parts, and the cause is structural rather than a missing multiplier —
-an A100 driven at peak bandwidth *and* peak compute simultaneously still comes
-out 4.7× low. No *rate* depends on it: `thermal_scale` is exactly 1.0 at all
-feasible points, and that is shown structurally rather than asserted. It is
-therefore a gap in what we may claim, not an error in what we do claim, and no
-watt should be quoted until it is fixed.
+**What the power gates say, without smoothing the asymmetry.** The corrected
+A100 saturating-load reconstruction is 461.7 W against 400 W (1.15×), inside
+the declared 2× gate. HC1 is 87.6 W against its published 200–250 W band
+(0.44×–0.35×), so that gate fails by 2.3–2.9× even after ROM-array leakage is
+charged. Static power is paid whether traffic moves or not, and thermal scaling
+now binds where the generated study reports it. The capacity-infeasible HC1
+reconstruction delivers no admitted tokens, so its attempted-step energy cannot
+support a tokens-per-joule claim.
 
 
 The program's purpose is a quantitative ROM-versus-HBM comparison. The functional
@@ -378,11 +379,13 @@ lanes are a precondition for it, not the product. These items are the product.
 - [x] W12.4 MoE utilisation term — ROM weights are local to compute, so an
   unselected expert region contributes neither bandwidth nor compute. Engagement
   is `1 − (1 − k/N)^B`, not a constant
-- [x] W12.5 **Validation gate: the model must reproduce Taalas HC1** — an 8B
-  model on 815 mm² at N6 near ~17,000 tok/s per user, as a named test that fails
-  loudly. A model that cannot reproduce a shipping part must not be used to
-  predict one that does not exist. Second gate: an A100 on an 8B model at batch 1
-  must come out weight-bound at ~254 tok/s, which is pure arithmetic
+- [x] W12.5 **Validation gates that fail loudly rather than fit the answer.** The
+  Taalas HC1 check evaluates an 8B model on 815 mm² at N6 against 16,960 tok/s
+  per user. The corrected reconstruction is capacity-infeasible and returns
+  zero, so the gate FAIL is the result and every extrapolation remains
+  conditional on resolving it. The second gate keeps an A100 on the same model
+  at batch 1 weight-bound at ~254 tok/s; it is an arithmetic identity, not an
+  independent silicon measurement
 - [x] W12.6 Iso-area studies with the silicon area stated on **both** sides, both
   topologies where viable, and the latency crossover reported rather than a
   topology assumed

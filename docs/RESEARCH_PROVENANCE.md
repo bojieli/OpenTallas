@@ -261,11 +261,10 @@ agents' in-flight artifacts. **`tools/check_prose_figures.py` therefore did not
 pass at `HEAD` either**, and this change neither caused that nor fixed it.
 `tools/check_evidence_grades.py` passes, 173 graded entries.
 
-**`tests/test_roofline.py` also fails, and that tripwire fired correctly.** It
-pins the assumption surface and several constants at their *pre-correction*
-settings, which is exactly what it is for, so applying §2 makes it fail by
-design. Three failures were confirmed individually and each is attributable to
-a named §2 item, not to §0.7:
+**At the point §2 was applied, `tests/test_roofline.py` failed, and that tripwire
+fired correctly.** It pinned the assumption surface and several constants at
+their *pre-correction* settings. Three failures were initially confirmed
+individually and each was attributable to a named §2 item, not to §0.7:
 
 | test | attributable to |
 |---|---|
@@ -273,11 +272,15 @@ a named §2 item, not to §0.7:
 | `test_rom_capacity_density_inherits_the_assumed_grade` — `assert 'derived' == 'assumed'` | §2.2, which regraded the ratio and the array efficiency. |
 | `test_the_assumed_inputs_are_the_ones_we_expect` — three `array_pass_boundaries_per_layer_by_model` entries "entered the model unannounced" | §2.5. |
 
-A full enumeration of the file was not obtained: three other agents were running
-the suite concurrently and the run did not finish inside its budget; 14 failures
-were visible in the first 55%. **None of them can come from §0.7**, checked two
-ways: the per-node split and the executed band move no computed number (the
-chosen designs and their rates are identical before and after), and the two new
+A subsequent handoff reproduced all **14** failures in isolation and re-pinned
+them to the corrected contracts: the HC1 capacity failure, the regraded inputs,
+the new latency/link values, and feasible diagnostic floorplans. That repair
+also found and fixed a real reporting defect: the power arithmetic charged
+ROM-array leakage while the HC1 detail schema hard-coded “0 W charged.” The
+corrected 14-test set passes. **None of the original failures came from
+§0.7**, checked two ways: the per-node split and the executed band move no
+computed number (the chosen designs and their rates are identical before and
+after), and the two new
 `by_node` entries land in the `derived` bucket, leaving the `assumed` surface
 that test pins untouched. `test_every_technology_input_is_graded_with_a_source`
 passes against the new structure. **Nothing was weakened to make anything pass**;
@@ -477,15 +480,18 @@ re-derive against HEAD before quoting.
 | `reference_parts.taalas_hc1.batch_size` | 1.0, `assumed`, "not published by Taalas" | 1.0 (unchanged) | `assumed` → **`published`** | Taalas launch deck footnote, verbatim "Taalas Llama 3.1 8B (BS=1 per chip, Run by Taalas Labs)", read at 3200 px on [nextplatform.com slide image 4092506](https://image.nextplatform.com/?imageId=4092506&width=3200), article [The Next Platform 2026-02-19](https://www.nextplatform.com/compute/2026/02/19/taalas-etches-ai-models-onto-transistors-to-rocket-boost-inference/4092140) | — | favours ROM | The batch size **is** published; the register's "stated nowhere" is wrong, and it forecloses the one correction that would have destroyed the gate. |
 | `reference_parts.taalas_hc1.weight_bits_per_parameter` | 3.5, `assumed`, cited to CNX Software | 3.5 (unchanged); **replace the source**; keep range 3.0–6.0 | `assumed` | Ljubisa Bajic, ["The path to ubiquitous AI"](https://taalas.com/the-path-to-ubiquitous-ai/), taalas.com, 2026-02-19: "a custom 3-bit base data type … combining 3-bit and 6-bit parameters". Secondary should be [Wavect](https://wavect.io/blog/taalas-hc1-llm-asic-review/), not CNX | 3.0 – 6.0 | neither | The cited CNX article contains **zero** bit-width statements; the format is primary and first-party, only the 3/6 mix ratio is unpublished. |
 | `reference_parts.taalas_hc1.weight_amortization` | `per_stream`, `assumed`, "Taalas publishes no batch size and no microarchitecture" | `per_stream` (unchanged); **replace the source field** | `assumed` | [US 2025/0123802 A1](https://patents.google.com/patent/US20250123802A1/en) (read via [FreePatentsOnline](https://www.freepatentsonline.com/y2025/0123802.html)) and [US 2025/0225198 A1](https://www.freepatentsonline.com/y2025/0225198.html), both assigned Taalas Inc. | — | neither at the gate | Both halves of the source field are false: the batch size is published and 13 Taalas patents exist, one of which is the architecture patent — and it describes output-parallelism per input and sequential passes, i.e. `per_stream`. |
-| `reference_parts.taalas_hc1.power_w` | 250.0, `published`, cited to Kaitchup | **Do not move the value.** Record Bajic's 200 W as the better-sourced card figure in the note; keep the reported band 200–250 | `published` | Bajic in [The Next Platform 2026-02-19](https://www.nextplatform.com/compute/2026/02/19/taalas-etches-ai-models-onto-transistors-to-rocket-boost-inference/4092140): "The HC1 card burns about 200 watts … a two-socket X86 server with ten HC1 cards in it runs 2,500 watts" | 200 – 250 W | favours ROM if the value moves | `taalas_hc1_power_anchor` (`roofline.py:3957-3980`) reads `range_low` and `value` only; setting value = 200 collapses the reported band to [200, 200] and **deletes** the 0.28× conservative reading from `REPORT.md:82`. See §3. |
+| `reference_parts.taalas_hc1.power_w` | 250.0, `published`, cited to Kaitchup | **Do not move the value.** Record Bajic's 200 W as the better-sourced card figure in the note; keep the reported band 200–250 | `published` | Bajic in [The Next Platform 2026-02-19](https://www.nextplatform.com/compute/2026/02/19/taalas-etches-ai-models-onto-transistors-to-rocket-boost-inference/4092140): "The HC1 card burns about 200 watts … a two-socket X86 server with ten HC1 cards in it runs 2,500 watts" | 200 – 250 W | favours ROM if the value moves | `taalas_hc1_power_anchor` reads `range_low` and `value` only; setting value = 200 collapses the reported band to [200, 200] and deletes the harder endpoint. The historical review value was 0.28×; the current coupled result is 87.6 W, or 0.35× against 250 W. See §3. |
 | `reference_parts.taalas_hc1.clock_frequency_hz` | absent | **leave absent** | `assumed` (negative) | Exhaustive negative: taalas.com (7 sitemap URLs), The Next Platform ("Clock speed information is not disclosed"), The Register, ServeTheHome, CNX, Wavect, Kaitchup, 13 Taalas patents (0 hits for GHz/MHz), [Hot Chips 2026 program](https://hotchips.org/), [ISSCC 2026 advance program](https://submissions.mirasmart.com/ISSCC2026/PDF/ISSCC2026AdvanceProgram.pdf) (`grep -ic taalas` = 0) | — | unknown | No published clock exists and none is derivable from the published set; the negative is already registered under `power.fabric_clock_hz`, which **does** feed the HC1 power gate. |
 | `reference_parts.taalas_hc1.transistors` | 53e9, `published`, "No primary Taalas statement located" | 53e9 (unchanged); **citation repair only** | `published` | [taalas.com/products](https://taalas.com/products/) spec line, verbatim: "TSMC 6nm \| 815mm2 \| 53B Transistor"; corroborated by The Next Platform ("53 billion transistors on the package") | — | neither | A primary statement exists on the same vendor page the register already cites for die area; `docs/SOURCES.md:221` asserts a search failure that is not one. |
 | `reference_parts.taalas_hc1.published_tokens_s_per_user` | 16960.0, `published`, cited to a page whose prose says only "17k" | 16960.0 (unchanged); **cite the chart image and the prose secondary** | `published` | Data label on [taalas.com/h-content/uploads/2026/02/graph.png](https://taalas.com/h-content/uploads/2026/02/graph.png) (H200 230, B200 353, Groq 594, Sambanova 932, Cerebras 1981, Taalas HC1 16960); prose secondary [The Register 2026-08-06](https://www.theregister.com/systems/2026/08/06/amd-acquires-ai-chip-startup-taalas-to-boost-inference-performance-by-etching-models-into-silicon/5284344) "16,960 tokens a second" | — | neither | The four digits are only on the chart image; the current citation points at prose a reader cannot check. Record the 0.0625 ms sibling-slide residual (6%) rather than hiding it. |
 | *(proposed, absent)* multi-chip DeepSeek-R1-671B figure | not present | **do NOT adopt** — record as a named NON-source | `assumed` | Same deck footnote: "DeepSeek R1 (BS=1 per chip, **Simulated** by Taalas Labs)"; bar value 12,382 on [slide 4092480](https://image.nextplatform.com/?imageId=4092480&width=1600) | — | favours ROM if adopted | A vendor's simulation of a machine that does not exist is this repository's model checked against someone else's model, not a validation gate. |
 
-**Gate arithmetic, reproduced twice** (in-memory copy of `technology.json`, no repo
-file touched). Llama-3.1-8B, 2,048 context, 815 mm², published 16,960, tolerance
-floor 0.5:
+**Historical audit-time gate arithmetic, superseded by §0.2.** This table was
+reproduced twice from an in-memory copy of the then-current `technology.json`;
+no repository file was touched. It records why the published batch-size source
+was important at that review point, but it predates the ROM-density,
+pre-compute, and capacity corrections. Llama-3.1-8B, 2,048 context, 815 mm²,
+published 16,960, tolerance floor 0.5:
 
 | batch | `per_stream` | ratio | `batched` | ratio |
 |---:|---:|---:|---:|---:|
@@ -497,7 +503,9 @@ floor 0.5:
 
 `per_region` is bit-identical to `per_stream` at every batch. With an 8-bit KV,
 B=4 becomes feasible at 0.1893× and B=8 is still infeasible — the qualitative
-result survives any KV precision. **The gate's PASS is bought entirely by batch 1.**
+result survived any KV precision in that historical configuration. **That
+intermediate batch-1 PASS is not the current result:** §0.2 and the generated
+reports supersede it with a capacity-infeasible zero-throughput FAIL.
 
 ## 1.2 ROM physical parameters
 
@@ -780,11 +788,14 @@ throughput headline. What it moves is gates, and the movements conflict:
   closes part of a failing gate, which is why it needs saying out loud — but it
   comes from a measured table on a GPU and it pushes the *other* gate away from
   1.0, which is the signature of a real correction rather than a fitted one.
-- **ROM leakage moves the HC1 gate by nothing** (§3): HC1's static is
-  max(enumerated 33.5 W, clocked-idle floor 50.0 W), so +2.3 W leaves the floor
-  binding. It matters on wafer-class designs, where the 50 W-per-device floor
-  cannot bind and 6.7e-3 W/mm² over hundreds of thousands of mm² is thousands of
-  watts.
+- **ROM leakage moved the HC1 gate by nothing in this isolated experiment, but
+  that is no longer the current coupled result** (§3). At this stage HC1's
+  static was max(enumerated 33.5 W, clocked-idle floor 50.0 W), so +2.3 W left
+  the floor binding. After the ROM-density and floorplan corrections, the
+  current 432.4 mm² array contributes 2.90 W and moves the enumeration from
+  49.64 W to 52.54 W, just above the floor. It also matters on wafer-class
+  designs, where the 50 W-per-device floor cannot bind and 6.7e-3 W/mm² over
+  hundreds of thousands of mm² is thousands of watts.
 
 Every watt above is a register input under the `docs/SOURCES.md` power moratorium
 and none of it is quotable as a result.
@@ -964,25 +975,28 @@ The proposal was "keep 250 as `range_high` to preserve the harder end for
 reporting". `taalas_hc1_power_anchor` (`roofline.py:3957-3980`) reads `low =
 spec['power_w'].get('range_low', value)` and reports `published_band_w = [low,
 published.value]`; **`range_high` is never read for power anywhere.** Verified by
-running both: value=250 gives band [200, 250], ratio 0.2807, band-low 0.3508;
-value=200 gives band [200, 200] and 0.3508 at *both* ends. The shipped artifact
-today reads "200.0-250.0 W \| 70.2 W \| 0.28x \| FAIL" (`REPORT.md:82`).
-**Adopting the recommendation as written deletes the 0.28× conservative reading
+running both at the review point: value=250 gave band [200, 250], ratio 0.2807,
+band-low 0.3508; value=200 gave band [200, 200] and 0.3508 at *both* ends.
+**Adopting the recommendation as written would delete the conservative endpoint
 from the report** — an undeclared ROM-favouring side effect inside a
 recommendation that flagged its direction honestly but mis-stated its mechanism.
 *Disposition:* record 200 W as the better-sourced card figure; keep the reported
 band 200–250; either leave value at 250 with a rewritten note, or change the
 anchor to read `range_high` — **a code change the writer must not make silently.**
-Note also that `thermal.cooling_limit_w_per_mm2`'s cross-check ("Taalas HC1 at a
-reported 250 W over 815 mm² is 0.31 W/mm²") becomes 0.245 W/mm² if the value moves.
+The historical artifact at that review point read 70.2 W / 0.28×. The current
+coupled configuration reads 87.6 W / 0.35× and retains the 200–250 W band; the
+range-endpoint mechanism described here is unchanged. Note also that
+`thermal.cooling_limit_w_per_mm2`'s cross-check ("Taalas HC1 at a reported 250 W
+over 815 mm² is 0.31 W/mm²") becomes 0.245 W/mm² if the value moves.
 
-**ROM leakage "moves the HC1 gate from 0.281× to 0.290×": it moves it by nothing.**
-Leakage is static, and HC1's static is charged as max(enumerated, clocked-idle
-floor). `REPORT.md` states the enumerated static is 33.5 W and the floor is 50.0 W,
-so the floor binds and the total reproduces exactly as 3.2 + 3.3 + 10.0 + 3.7 +
-50.0 = 70.2 W. Adding 2.3 W takes the enumeration to 35.8 W, still below 50.0.
-The entry still matters — on wafer-class designs the per-device floor cannot bind —
-but the stated gate movement must not be recorded.
+**Historical isolation result, superseded in the coupled configuration:** ROM
+leakage did not move the then-current HC1 gate. Leakage is static, and HC1's
+static is charged as max(enumerated, clocked-idle floor). At that point the
+enumeration was 33.5 W and the floor 50.0 W, so adding 2.3 W remained hidden.
+The other ready corrections changed the solved floorplan and its static terms:
+the current enumeration is 49.64 W before the 2.90 W ROM term and 52.54 W after
+it, so the term now raises the total. This is why the final artifact, rather
+than an isolated intermediate delta, is the authoritative gate result.
 
 **`efficiencies.stage_balance` direction: the sign is backwards.** Proposed as
 `favours_gpu`, ×0.9427 against ROM. Under `METHODOLOGY` §6a's own derivation stage
@@ -1130,9 +1144,10 @@ pro-ROM inference in the energy domain.** 5.33 W is the **post-gating** figure;
 TOM's Fig. 12 is labelled "Power Breakdown Before and After Applying
 Workload-Aware Dynamic Power Gating" with **Before = 25.813 W**. TOM's ungated
 power density is 0.454 W/mm² — 5.3× the model's HC1 reconstruction and **above**
-the published HC1's 0.25–0.31 W/mm². Read the other way, TOM is independent support
-for `METHODOLOGY` §7a's own statement that the power model under-reports by 7–9×:
-0.454 / 0.086 = 5.3× sits inside that band.
+the published HC1's 0.25–0.31 W/mm². At the historical review point, this was
+independent support for the then-current claim that power was under-reported:
+0.454 / 0.086 = 5.3×. The rebuilt model and current §7a supersede that broad
+7–9× statement with the two explicit power gates.
 
 ## 4.3 Refuted because the range or the grade outran the evidence
 
@@ -1345,8 +1360,8 @@ that the researchers had proposed upgrading. Three of the thirty-six feed nothin
 all (§5.1) and four more are provably inert at the headline operating point (§5.2),
 which leaves roughly **twenty-nine live assumptions under the headline number**.
 
-What genuinely moved off assumption: the Taalas batch size (published, and it is
-the single fact the HC1 gate's PASS depends on), the HC1 transistor count and
+What genuinely moved off assumption: the Taalas batch size (published, and it
+pins the operating point even though the current gate fails capacity), the HC1 transistor count and
 throughput citations, the ROM and SRAM array densities at N6/N7, the GPU
 floorplan's inclusiveness and four of its constants, the HBM beachfront and PHY
 geometry, the HBM sequential bandwidth fraction, the KV access granularity, the

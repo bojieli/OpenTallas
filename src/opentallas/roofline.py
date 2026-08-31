@@ -150,10 +150,11 @@ answer it -- it parameterises it and reports both answers:
   linearly with batch, and **aggregate per-die throughput equals per-user
   throughput at every batch**.
 
-These are different machines with different scaling laws.  The two are identical
-at batch 1 -- which is why the Taalas HC1 anchor cannot distinguish them and why
-the anchor must not be used to justify a high-batch claim.  Both are evaluated
-and both are reported.
+These are different machines with different scaling laws and different
+floorplans.  Their *sweep-count terms* coincide at batch 1, but their cell area,
+pre-compute reservation, capacity and rate need not.  A batch-1 anchor can test
+those physical consequences; it cannot establish how either machine scales at
+high batch.  Both are evaluated and both are reported.
 """
 
 from __future__ import annotations
@@ -1351,10 +1352,9 @@ class StaticPower:
 
     Leakage and the clock network do not care whether a byte moves.  They are
     charged against the AREA SPLIT: leakage per mm2 of standard-cell region and
-    per mm2 of SRAM array, clock energy per mm2 per cycle scaled by a
-    region-class multiplier, times the clock frequency.  A ROM array is charged
-    no leakage at all, which is an under-charge and is documented as one in
-    ``power.static_leakage_w_per_mm2.rom_array``.
+    per mm2 of SRAM and ROM array, clock energy per mm2 per cycle scaled by a
+    region-class multiplier, times the clock frequency.  Each region reads its
+    own graded density from ``power.static_leakage_w_per_mm2``.
 
     ``total_w`` is ``max(enumerated_w, floor_w)`` rather than their sum.  The
     measured clocked-idle floor of a shipping device IS mostly its leakage and
@@ -1630,9 +1630,9 @@ def balanced_area_split(
     lives in the array itself.  Two things follow, and both were missing when
     this function ignored the policy.  The cell is larger, because it carries a
     pass transistor and the product-line wiring on top of its via programming.
-    And the compute block shrinks to the pre-computation logic that forms every
-    product of one activation with the weight alphabet -- a couple of percent of
-    the die, not the remainder of it.
+    And the compute block shrinks to the pre-computation and accumulation logic
+    that forms and sums the products of one activation with the weight alphabet
+    -- a configured fixed fraction of the die, not the remainder of it.
 
     Handing a compute-in-ROM design the leftover area as a MAC array, as this
     function did before, gives it arithmetic it does not have and takes silicon
@@ -1661,8 +1661,9 @@ def balanced_area_split(
     beside it can read, at one weight byte per multiply-accumulate.  That is
     the balanced floorplan, and it is the one a designer would actually draw;
     the default ``"sram"`` floorplan instead sizes ROM to the stored bytes and
-    gives everything left to MACs, which is why it ends up able to feed only
-    0.41x of them.
+    gives everything left to MACs, which can leave more MAC roof than the array
+    bandwidth can feed.  The resulting feed ratio is reported for each node
+    rather than frozen into this contract.
 
     The replication reading matters: crediting a *larger* array with more
     bandwidth while it holds the *same* bits once would be buying bandwidth for
@@ -3990,6 +3991,16 @@ def taalas_hc1_power_anchor(
 
     metrics = step["metrics"]
     static = metrics["static_power"]
+    rom_mm2 = float(throughput.detail["area_split_mm2"]["rom_mm2"])
+    rom_leakage = technology.graded(
+        "power", "static_leakage_w_per_mm2", "rom_array"
+    )
+    rom_leakage_node = technology.raw["power"]["static_leakage_w_per_mm2"][
+        "rom_array"
+    ]
+    rom_leakage_high = float(
+        rom_leakage_node.get("range_high", rom_leakage.value)
+    )
     return AnchorCheck(
         name="taalas_hc1_card_power_w",
         published_value=published.value,
@@ -4042,21 +4053,15 @@ def taalas_hc1_power_anchor(
             "power_density_w_per_mm2": metrics["power_density_w_per_mm2"],
             "cooling_limit_w": metrics["cooling_limit_w"],
             "area_split_mm2": throughput.detail["area_split_mm2"],
-            "rom_array_leakage_charged_w": 0.0,
-            "rom_array_leakage_if_reconstructed_w": (
-                throughput.detail["area_split_mm2"]["rom_mm2"]
-                * float(
-                    technology.raw["power"]["static_leakage_w_per_mm2"]["rom_array"][
-                        "range_high"
-                    ]
-                )
-            ),
+            "rom_array_leakage_charged_w": rom_mm2 * rom_leakage.value,
+            "rom_array_leakage_at_range_high_w": rom_mm2 * rom_leakage_high,
             "note": (
-                "The ROM array is charged ZERO leakage, which is an under-charge "
-                "on this side and is documented as one. At the top of the "
-                "reconstructed bracket it would add the watts reported in "
-                "'rom_array_leakage_if_reconstructed_w', which does not close "
-                "this gate either."
+                "The ROM array is charged its stated leakage density. The "
+                "charge moves the enumerated static estimate just above the "
+                "measured whole-device clocked-idle floor at this point, so it "
+                "is included in static_total_charged. The watts the array would "
+                "contribute at its range-high density are reported in "
+                "'rom_array_leakage_at_range_high_w'."
             ),
         },
     )
