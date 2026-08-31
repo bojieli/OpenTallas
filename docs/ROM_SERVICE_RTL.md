@@ -434,14 +434,17 @@ area over-counts them by an amount the run does not establish.
 The artifact records the SHA-256 of the RTL it was produced from, so whether it
 is a view of the RTL beside it is a question a reader can settle rather than
 assume: compare `source_sha256` in `results/rtl/rom_service_physical.json`
-against `rtl/rom/ot_rom_read_service.sv`. **At this revision it does not
-match** — the RTL changed for §6c and §6d and the open flow's detailed route on
-the resulting netlist had not converged when this was committed, so the physical
-artifact still describes the previous revision and is not evidence about this
-one. Synthesis of the current RTL does complete; it is TritonRoute that is
-outstanding. This is recorded rather than hidden because a physical artifact
-whose sources have moved is exactly the staleness §8 is about, and the same
-sentence is the thing to delete when the re-run lands.
+against `rtl/rom/ot_rom_read_service.sv`. **At this revision all three recorded
+source digests match.** Yosys completes on the Qwen-sized control instance with
+**56,292 cells** and **1,107,017.6796 µm²** of cell area. <!-- figure: 56,292 src="results/rtl/rom_service_physical.json#design.yosys_statistics.cells" name="ROM service synthesis cells" --> <!-- figure: 1,107,017.6796 src="results/rtl/rom_service_physical.json#design.yosys_statistics.cell_area_um2" name="ROM service synthesis cell area" -->
+OpenROAD completes the flow and writes a routed DEF at **1,221,010 µm²** design area. <!-- figure: 1,221,010 src="results/rtl/rom_service_physical.json#metrics.design_area_um2" name="ROM service routed design area" -->
+The placed design reports **33% utilization**. <!-- figure: 33 src="results/rtl/rom_service_physical.json#metrics.utilization_percent" name="ROM service routed utilization" -->
+Detailed routing nevertheless retains **337 DRC violations**. <!-- figure: 337 src="results/rtl/rom_service_physical.json#implementation.detailed_route_drc_violations" name="ROM service route DRC violations" -->
+The raw timing block also reports negative setup and hold slack at the chosen
+10 ns constraint. The artifact therefore remains `fail`, and both routed
+feasibility claim fields remain false. This is evidence that synthesis and the
+whole routing command complete on the current RTL; it is not evidence of a
+DRC-clean or timing-closed implementation.
 
 ## 8. Reproducing
 
