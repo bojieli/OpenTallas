@@ -98,6 +98,25 @@ required fixes.
 
 ## A1. The on-wafer hop latency is assumed with a 16.7x sweep while the GPU's dominant hop is measured with a 1.54x sweep, and the published band moves both sides together, which conceals it
 
+> **RESOLVED 2026-08-31.** Both halves of this artefact are fixed and the
+> finding below is left as written, as the record of what was found. What
+> changed: `links.on_wafer.hop_latency_s` is now **125 ns, graded `derived`,
+> swept 75-250 ns (2.1x)** -- composed from Cerebras' published one-cycle
+> core-to-core hop, published per-die core grid and published clock, corroborated
+> by two measured whole-wafer collectives and by Tesla's published 100 ns
+> reticle-die crossing. `links.nvlink3.hop_latency_s` is now **2.5 us, graded
+> `derived`, swept 1.0-10.3 us** -- half the best measured 8x A100 small-message
+> all-reduce, with stock NCCL's measured 20.6 us at the top of the band; the
+> claim in its old note that "NVIDIA publishes no NVLink or NVSwitch latency
+> figure in any form" is withdrawn, because NCCL's shipping source carries one.
+> And the reports now emit **three** bands rather than one -- wafer fabric alone,
+> cluster fabric alone, both together -- which is the presentation fix this
+> finding asked for. The headline moved 8.63x -> **8.33x**; the one-sided ROM
+> band moved 13.48x-3.26x -> **11.21x-5.41x**, and the GPU side's own band is now
+> 6.92x-12.96x, so the two are comparable in width for the first time. See
+> `docs/WAFER_VERSUS_ARRAY_LATENCY.md` §1 and §6.
+
+
 **What is unequal.** The single largest term in the headline is collective
 latency, and the two sides' dominant constants have completely different
 evidential standing:
@@ -858,7 +877,12 @@ roughly 9%. One unmeasured number moves it by 3.5x. The ranking is not close.
 ## The measurements, in order
 
 **1. A reticle-to-reticle hop latency, and a small-tensor all-reduce latency
-across N reticle fields, on real wafer-scale silicon.**
+across N reticle fields, on real wafer-scale silicon.** *(PARTLY ANSWERED
+2026-08-31 -- the constant is now `derived` at 125 ns from published Cerebras
+geometry and two measured whole-wafer collectives, swept 75-250 ns. What is still
+missing is a direct measurement of the object itself: nobody has published a
+latency for one reticle-field crossing, or a cycle cost for a stitched reticle
+boundary.)*
 This is the number. The model charges **1.54 us per 57-region on-wafer
 all-reduce** (187.88 us / 122 events) at 100 ns per reticle crossing under a
 mesh rule of ~1.1x diameter. The only shipping instance of the physics is a
@@ -870,7 +894,10 @@ band in the study. Nothing in this repository has it;
 `docs/WAFER_VERSUS_ARRAY_LATENCY.md` is the assumption's only source, and it is
 an argument rather than a measurement.
 
-**2. An A100 NVLink/NVSwitch small-message all-reduce at TP=8.**
+**2. An A100 NVLink/NVSwitch small-message all-reduce at TP=8.** *(ANSWERED
+2026-08-31 -- four independent measurements of exactly this experiment exist and
+are now the constant: 20.6 us stock NCCL, 5.0 us best kernel, on 8x A100 over
+NVLink 3.0. The entry is `derived` at 2.5 us per traversal.)*
 `links.nvlink3.hop_latency_s` = 1.5 us is *also* graded `assumed` -- NVIDIA
 publishes no NVLink or NVSwitch latency figure in any form, and the note records
 that six first-party pages were checked. It is swept 1.0–5.5 us, i.e. a 2.0 us

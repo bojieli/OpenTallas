@@ -199,7 +199,7 @@ their work". Wafer = 46,225 mm², reticle = 815 mm² <!-- figure: 46,225 src="co
 > BF16; and re-encoding BF16 to FP8 is a *quantisation*, not a repacking, so it
 > would produce different tokens by an unmeasured amount. Half of every feasible
 > Qwen comparison was being won by such a design, the best at **30.79×**; with
-> the option removed, the best Qwen batch-1 iso-area ratio is **10.89×** <!-- figure: 10.89 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=1;Pick=smallest silicon" name="best Qwen batch-1 iso-area ratio" -->
+> the option removed, the best Qwen batch-1 iso-area ratio is **10.78×** <!-- figure: 10.78 src="results/roofline/n6_vs_a100/REPORT.md#Per-user ratio" table="Iso-area comparison" where="Model=Qwen3-8B;B=1;Pick=smallest silicon" name="best Qwen batch-1 iso-area ratio" -->
 > (`n6_vs_a100/REPORT.md`, iso-area table, row `Qwen3-8B | 1 | smallest silicon`).
 > The rule is pinned by
 > `tests/test_roofline.py::test_no_design_stores_weights_at_a_precision_the_release_does_not_have`.
@@ -259,7 +259,7 @@ finding"*. The finding is intact and the headline is not: **sparsity plus long
 context is the ROM-favourable regime, not the adverse one** remains true, and
 the number attached to it was 3.1× too large for a year of write-ups. A W:KV
 ratio is also not a speedup — the iso-area studies put the batch-1 advantage at
-**8.63×** for Pro and **9.50×** for Flash at 554,700 mm² <!-- figure: 8.63 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after" table="latency separation" where="Model=DeepSeek-V4-Pro-0813;mm2=554700" name="Pro batch-1 iso-area ratio at 554,700 mm2" --> <!-- figure: 9.50 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after" table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" name="Flash batch-1 iso-area ratio at 554,700 mm2" -->
+**8.33×** for Pro and **8.98×** for Flash at 554,700 mm² <!-- figure: 8.33 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after" table="latency separation" where="Model=DeepSeek-V4-Pro-0813;mm2=554700" name="Pro batch-1 iso-area ratio at 554,700 mm2" --> <!-- figure: 8.98 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after" table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" name="Flash batch-1 iso-area ratio at 554,700 mm2" -->
 (`n6_vs_a100/REPORT.md`, "The latency separation, before and after, at batch 1",
 `Ratio after` column), and every one of those is bounded by ROM service, KV
 service, compute, collectives, capacity, power and cooling, none of which a

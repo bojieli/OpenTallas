@@ -102,6 +102,25 @@ HBM-KV design is instead provisioned for the largest study batch, subject to the
 die-edge beachfront check."""
 PROVISION_BATCH = max(BATCHES)
 
+#: **Every link a study charges is named per study, on BOTH sides.**  The GPU
+#: side always was -- ``nvlink3`` for the A100 generation, ``nvlink5`` for
+#: Blackwell -- and until 2026-08-31 the ROM side was not: one ``on_wafer``
+#: constant derived from Cerebras WSE-2, a TSMC **7nm** part, served both.  That
+#: made ``n6_vs_a100`` correctly matched (a 7nm-era wafer fabric against a
+#: 7nm-era GPU) and ``n5_vs_b200`` mismatched: a 7nm-era wafer fabric against a
+#: 4nm-era NVLink, which understates the ROM side in the study where it should
+#: be strongest.  ``rom_intra_link`` closes that.  The N5 entry lands on the
+#: same 125 ns as the N7 one -- see ``links.on_wafer_n5``'s note for the WSE-3
+#: derivation and why it is a null result -- but the two are now separately
+#: stated and separately swept, so either can move without dragging the other.
+#:
+#: ``rom_inter_link`` is ``inter_wafer`` in both, and that is not the same
+#: defect: its GPU counterpart is the scale-out fabric, where ``infiniband_hdr``
+#: and ``infiniband_ndr`` are also two entries carrying the SAME measured 4.5 us
+#: hop, because small-message RDMA latency is set by the NIC and the protocol
+#: stack rather than by the logic node.  Both sides' scale-out latency is one
+#: number across the two studies, so the asymmetry the wafer fabric had does not
+#: arise here.
 STUDIES: dict[str, dict[str, Any]] = {
     "n6_vs_a100": {
         "rom_node": "N6",
@@ -109,6 +128,8 @@ STUDIES: dict[str, dict[str, Any]] = {
         "hbm_generation": "hbm2e",
         "intra_link": "nvlink3",
         "inter_link": "infiniband_hdr",
+        "rom_intra_link": "on_wafer",
+        "rom_inter_link": "inter_wafer",
         "contract": (
             "Reticle-class mask-ROM silicon at TSMC N6 against NVIDIA A100 80GB at "
             "N7, compared at equal silicon area with the area stated on both sides. "
@@ -122,6 +143,8 @@ STUDIES: dict[str, dict[str, Any]] = {
         "hbm_generation": "hbm3e",
         "intra_link": "nvlink5",
         "inter_link": "infiniband_ndr",
+        "rom_intra_link": "on_wafer_n5",
+        "rom_inter_link": "inter_wafer",
         "gpu_domain_sensitivity": "nvlink5_nvl72",
         "contract": (
             "Mask-ROM silicon at TSMC N5 against NVIDIA B200 at 4NP, compared at "
@@ -395,6 +418,10 @@ def _fabric_plans(
 
     intra = str(config["intra_link"])
     inter = str(config["inter_link"])
+    # The wafer fabrics are named by the study, not hard-wired here, so the ROM
+    # side scales with its node exactly as the GPU side does.
+    wafer_intra = str(config["rom_intra_link"])
+    wafer_inter = str(config["rom_inter_link"])
     array_domain = max(1, int(technology.link_domain_size(intra).value))
     regions_per_wafer = max(1, math.ceil(wafer_area / reticle_area))
     plans: list[tuple[FabricPlan, float]] = []
@@ -417,8 +444,8 @@ def _fabric_plans(
                 FabricPlan(
                     kind="wafer",
                     parallelism=parallelism,
-                    intra_link="on_wafer",
-                    inter_link="inter_wafer",
+                    intra_link=wafer_intra,
+                    inter_link=wafer_inter,
                     intra_domain_size=regions_per_wafer,
                     label=f"wafer-{parallelism}",
                 ),
@@ -1061,39 +1088,70 @@ def _emit_rom_design(
         )
 
 
+def _link_latency_scopes(config: dict[str, Any]) -> dict[str, tuple[str, ...]]:
+    """The link bands that belong to each side, and the two together.
+
+    A wafer design's only fabrics are the study's ``rom_intra_link`` inside a
+    wafer and its ``rom_inter_link`` between wafers, and nothing on the GPU
+    side ever touches either.  They are named per study rather than hard-wired
+    so the wafer fabric scales with the ROM node exactly as ``nvlink3`` and
+    ``nvlink5`` scale with the GPU's, which is why this returns the config's
+    values rather than the literals it used to.  The cluster fabrics -- this
+    study's ``intra_link`` and ``inter_link`` -- are charged to **both** sides,
+    because a ROM array is built on the same interconnect the GPUs are; they
+    are grouped as ``gpu`` because the headline GPU design is the only design
+    in either family whose whole link budget is made of them.
+    """
+
+    return {
+        "rom": (str(config["rom_intra_link"]), str(config["rom_inter_link"])),
+        "gpu": (str(config["intra_link"]), str(config["inter_link"])),
+        "joint": None,  # type: ignore[dict-item]
+    }
+
+
 def _link_latency_sensitivity(
     study_id: str, technology: Technology
 ) -> list[dict[str, Any]]:
-    """The headline table at both ends of every assumed link latency band.
+    """The headline table at both ends of every link latency band, per side.
 
-    Every hop latency in this model is `assumed` -- NVIDIA publishes no NVLink
-    latency at all and Cerebras publishes no on-wafer or inter-wafer latency --
-    and the comparison's whole content is the ratio between two fabrics. A
-    single point value inside two wide bands invites the reader to treat the
-    ratio as measured. Both ends are therefore run, on **both** sides at once,
-    and the band is what the reader is asked to believe rather than the point.
+    **Reported three ways, and the reason is an artefact this study used to
+    have.**  The band used to be published jointly only -- every link at its
+    low end, then every link at its high end.  Moving both sides together
+    partly cancels, so the joint band came out *narrower* than the ROM side's
+    own band, and a reader could not see that essentially all of the width came
+    from one side's constants.  A joint band is the right test for a
+    common-mode error and the wrong one for asking how much of the uncertainty
+    is ours.  So the wafer fabrics are now swept alone, the cluster fabrics
+    alone, and both together, and all three are printed.
     """
 
     rows: list[dict[str, Any]] = []
-    for bound in ("low", "high"):
-        bounded = technology.at_link_latency_bound(bound)
-        result = _simulate_study(study_id, bounded, with_sensitivity=False)
-        for row in _headline_rows(result):
-            rows.append(
-                {
-                    "bound": bound,
-                    "model": row["model"],
-                    "rom_silicon_area_mm2": row["rom_silicon_area_mm2"],
-                    "rom_design": row["rom_design"],
-                    "rom_per_user_tokens_s": row["rom_per_user_tokens_s"],
-                    "iso_area_gpu_design": row["iso_area_gpu_design"],
-                    "iso_area_gpu_parallelism": row["iso_area_gpu_parallelism"],
-                    "iso_area_gpu_per_user_tokens_s": (
-                        row["iso_area_gpu_per_user_tokens_s"]
-                    ),
-                    "per_user_speed_ratio": row["per_user_speed_ratio"],
-                }
-            )
+    scopes = _link_latency_scopes(STUDIES[study_id])
+    for scope, links in scopes.items():
+        for bound in ("low", "high"):
+            bounded = technology.at_link_latency_bound(bound, links)
+            result = _simulate_study(study_id, bounded, with_sensitivity=False)
+            for row in _headline_rows(result):
+                rows.append(
+                    {
+                        "scope": scope,
+                        "scope_links": list(links or sorted(technology.raw["links"])),
+                        "bound": bound,
+                        "model": row["model"],
+                        "rom_silicon_area_mm2": row["rom_silicon_area_mm2"],
+                        "rom_design": row["rom_design"],
+                        "rom_per_user_tokens_s": row["rom_per_user_tokens_s"],
+                        "iso_area_gpu_design": row["iso_area_gpu_design"],
+                        "iso_area_gpu_parallelism": (
+                            row["iso_area_gpu_parallelism"]
+                        ),
+                        "iso_area_gpu_per_user_tokens_s": (
+                            row["iso_area_gpu_per_user_tokens_s"]
+                        ),
+                        "per_user_speed_ratio": row["per_user_speed_ratio"],
+                    }
+                )
     return rows
 
 
@@ -2775,8 +2833,11 @@ def run_anchors(technology: Technology) -> dict[str, Any]:
             "array clock multipliers, the clocked-idle floor, the memory-"
             "interface idle floor and the four traffic energies, moved together. "
             "Moving one term at a time would report a sensitivity that is really "
-            "a bias, for the same reason at_link_latency_bound moves every link "
-            "on both sides at once. NOTHING WAS TUNED TO CLOSE EITHER GATE: the "
+            "a bias. The LINK bands are reported differently and deliberately so "
+            "-- each side's fabrics alone and then both together -- because there "
+            "the two sides partly cancel and a joint-only interval hid which "
+            "side's constants the width came from. NOTHING WAS TUNED TO CLOSE "
+            "EITHER GATE: the "
             "A100 gate lands close and the HC1 gate does not, and the asymmetry "
             "between them is the finding rather than an embarrassment. The A100 "
             "gate is also the weaker of the two, because the clock term inside "
@@ -3771,38 +3832,93 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             (row["model"], round(row["rom_silicon_area_mm2"])): row
             for row in _headline_rows(result)
         }
-        by_bound: dict[tuple[str, int], dict[str, dict[str, Any]]] = {}
+        by_scope: dict[
+            tuple[str, int], dict[tuple[str, str], dict[str, Any]]
+        ] = {}
+        scope_links: dict[str, list[str]] = {}
         for row in sensitivity:
             key = (row["model"], round(row["rom_silicon_area_mm2"]))
-            by_bound.setdefault(key, {})[row["bound"]] = row
+            scope = str(row.get("scope", "joint"))
+            by_scope.setdefault(key, {})[(scope, row["bound"])] = row
+            scope_links.setdefault(scope, list(row.get("scope_links") or []))
+
+        def _cell(key: tuple[str, int], scope: str) -> str:
+            bounds = by_scope.get(key, {})
+            low = (bounds.get((scope, "low")) or {}).get("per_user_speed_ratio")
+            high = (bounds.get((scope, "high")) or {}).get(
+                "per_user_speed_ratio"
+            )
+            if low is None or high is None:
+                return "—"
+            return f"{_fmt_ratio(low)} → {_fmt_ratio(high)}"
+
+        def _span(key: tuple[str, int], scope: str) -> float | None:
+            bounds = by_scope.get(key, {})
+            low = (bounds.get((scope, "low")) or {}).get("per_user_speed_ratio")
+            high = (bounds.get((scope, "high")) or {}).get(
+                "per_user_speed_ratio"
+            )
+            if not low or not high:
+                return None
+            return max(low, high) / min(low, high)
+
+        rom_links = ", ".join(f"`{name}`" for name in scope_links.get("rom", []))
+        gpu_links = ", ".join(f"`{name}`" for name in scope_links.get("gpu", []))
         lines.extend(
             [
                 "",
-                "## Every hop latency in this model is assumed, so the headline is a "
-                "band",
+                "## The headline is a band, and each side's share of it is "
+                "reported apart",
                 "",
-                "NVIDIA publishes no NVLink or NVSwitch latency figure in any form,",
-                "and Cerebras publishes none for the on-wafer mesh or for SwarmX. The",
-                "table below re-runs the whole study with **every** assumed hop",
-                "latency at the low end of its stated range and again at the high end",
-                "-- on both sides at once, because a ratio is only tested by moving",
-                "both ends of it together. Where the band is wide the ratio is not a",
-                "number, it is an interval.",
+                "Every hop latency in this model states a range, and the ratio "
+                "moves inside it.",
+                "This table re-runs the whole study at both ends of those "
+                "ranges three ways:",
+                f"the **wafer fabric** alone ({rom_links}), which no GPU design "
+                "touches; the",
+                f"**cluster fabric** alone ({gpu_links}), which is charged to "
+                "both families; and",
+                "both together.",
                 "",
-                "| Model | ROM mm2 | Ratio at low | Ratio stated | Ratio at high |",
-                "|---|---:|---:|---:|---:|",
+                "**Why three and not one.** This study used to publish the "
+                "joint band only. Moving",
+                "both sides at once is the right test for a *common-mode* "
+                "error, and the wrong one",
+                "for asking how much of the uncertainty is ours: the two sides "
+                "partly cancel, so the",
+                "joint band comes out narrower than the wafer side's own band "
+                "and the reader cannot",
+                "see that most of the width sits on the side with the weaker "
+                "evidence. Reading the",
+                "cells: a **low** wafer hop makes the ROM machine faster and "
+                "the ratio larger, and a",
+                "**low** cluster hop makes the GPU faster and the ratio "
+                "smaller, so the two columns",
+                "run in opposite directions by construction.",
+                "",
+                "| Model | ROM mm2 | Ratio stated | Wafer fabric low → high | "
+                "Cluster fabric low → high | Both together | Widest one-sided "
+                "span |",
+                "|---|---:|---:|---:|---:|---:|---:|",
             ]
         )
-        for key in sorted(by_bound, key=lambda item: (item[0], item[1])):
+        for key in sorted(by_scope, key=lambda item: (item[0], item[1])):
             point = stated.get(key)
-            bounds = by_bound[key]
             if point is None or point["per_user_speed_ratio"] is None:
                 continue
+            spans = [
+                span
+                for span in (_span(key, "rom"), _span(key, "gpu"))
+                if span is not None
+            ]
+            widest = f"{max(spans):,.1f}x" if spans else "—"
             lines.append(
                 f"| {key[0]} | {key[1]:,} | "
-                f"{_fmt_ratio((bounds.get('low') or {}).get('per_user_speed_ratio'))} | "
                 f"{_fmt_ratio(point['per_user_speed_ratio'])} | "
-                f"{_fmt_ratio((bounds.get('high') or {}).get('per_user_speed_ratio'))} |"
+                f"{_cell(key, 'rom')} | "
+                f"{_cell(key, 'gpu')} | "
+                f"{_cell(key, 'joint')} | "
+                f"{widest} |"
             )
 
     domain_rows = result.get("nvlink_domain_sensitivity") or []
@@ -4580,7 +4696,8 @@ def _findings(result: dict[str, Any]) -> list[str]:
     tensor_wafer = [
         row
         for row in result["latency_crossovers"]
-        if row["parallelism"] == "tensor" and row.get("intra_link") == "on_wafer"
+        if row["parallelism"] == "tensor"
+        and str(row.get("intra_link", "")).startswith("on_wafer")
     ]
     wafer_per_mm2 = sum(
         1

@@ -211,6 +211,23 @@ count only about 10% greater than the diameter of the system"* (Rocki et al.,
 `Fast Stencil-Code Computation on a Wafer-Scale Processor`, SC20,
 arXiv:2010.03660).  It is the one number in the collective model that comes
 from a measurement rather than from an algorithm, and it is on the ROM side.
+
+**It is also the optimistic end of a measured band, and it has no sweep.**
+Rocki's 1.1x is a *centre-rooted* collective: reduce along rows to the middle
+columns, down them to a central core, then broadcast back, so the path is about
+one diameter.  The collective Cerebras' own SDK ships and that Luczynski et al.
+measured on a CS-2 is *corner-rooted* X-Y -- reduce along X to column 0, along Y
+to PE(0,0), broadcast back -- whose path is about **2x** the diameter, and their
+whole contribution is that the vendor library is up to 3.27x off optimal
+(`Near-Optimal Wafer-Scale Reduce`, HPDC 2024, doi 10.1145/3625549.3658693).  So
+this factor is 1.1 for a hand-written kernel and ~2.0 for the shipped one, a
+1.8x range that would move the ROM side as much as the hop latency it
+multiplies.  It is not swept here because it is a single module constant pinned
+by a test; instead the 1.8x is folded into the top of the stated range of
+BOTH wafer-fabric entries -- ``links.on_wafer.hop_latency_s`` at N7 and
+``links.on_wafer_n5.hop_latency_s`` at N5 -- and both notes say so.
+Naming it is the point: it is the second-largest unswept quantity on the ROM
+side of this comparison.
 """
 WEIGHT_AMORTIZATIONS = ("batched", "per_stream", "per_region")
 #: Policies where the cell selects a partial product, so the multiply lives
@@ -858,21 +875,37 @@ class Technology:
                 raw["latency"][name] = {**node, "value": node[key]}
         return replace(self, raw=raw)
 
-    def at_link_latency_bound(self, bound: str) -> "Technology":
-        """A copy with every assumed link hop latency at one end of its range.
+    def at_link_latency_bound(
+        self, bound: str, links: "Iterable[str] | None" = None
+    ) -> "Technology":
+        """A copy with link hop latencies at one end of their stated range.
 
-        Not one link -- **every** link, on both sides at once.  Moving only the
-        NVLink band would report a sensitivity that is really a bias: the
-        comparison's whole content is the ratio between two fabrics, and a
-        ratio is only tested by moving both ends of it together.  Links whose
-        latency is graded ``published`` are left where they are.
+        ``links`` selects which fabrics move.  Passing ``None`` moves every
+        link that states a range, which is the joint band: the comparison's
+        content is the ratio between two fabrics, and a common-mode error
+        moves both.  But a joint band is *not* a statement of how much of the
+        uncertainty is ours, and when one side's constants are better
+        evidenced than the other's the two partly cancel and the band comes
+        out narrower than either side's own.  So the studies also call this
+        with one side's links at a time and report the three bands separately.
+
+        Every link with a stated range moves, including one graded
+        ``published``.  That is deliberate and it is a change from what this
+        docstring used to claim: a measured spread is a real spread, and
+        freezing the GPU's measured InfiniBand band while sweeping the ROM's
+        would understate the GPU side's own uncertainty.  What must never
+        happen is moving a band without saying so, which is why the per-side
+        tables name the links in each scope.
         """
 
         if bound not in ("low", "high"):
             raise ValidationError("link latency bound must be 'low' or 'high'")
         key = "range_low" if bound == "low" else "range_high"
+        selected = None if links is None else set(links)
         raw = json.loads(json.dumps(self.raw))
         for name, node in raw["links"].items():
+            if selected is not None and name not in selected:
+                continue
             latency = node.get("hop_latency_s")
             if isinstance(latency, Mapping) and key in latency:
                 raw["links"][name]["hop_latency_s"] = {

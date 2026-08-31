@@ -38,7 +38,8 @@ corrections that happen to land across two re-runs.
    area ladder the ratio moves by between 0.24× and 1.51×, and it changes sign.
    Section 0.12.
 2. **The iso-area advantage for DeepSeek-V4-Pro at 554,700 mm², batch 1, was
-   54.2× and became 35.4×** (band 24.5–42.5×) before item 1 took it to 8.6×. The
+   54.2× and became 35.4×** (joint band 24.5–42.5×) before item 1 took it to
+   8.6×, and the 2026-08-31 link re-grading took it to **8.3×**. The
    comparison let the ROM side choose its parallelism and not the GPU, and
    charged both sides a serial pipeline deeper than the model has layers.
    Section 0.9.
@@ -269,8 +270,9 @@ a property of the model.
 ### 0.9 The iso-area comparison let one side choose its topology and not the other
 
 **RETRACTED: 54.2× for DeepSeek-V4-Pro at 1M context, batch 1, at 554,700 mm².
-The model now says 35.4×, with a band of 24.5–42.5× across the assumed hop
-latencies.** Also retracted: *"two all-reduces per layer per token cost 131.35 µs
+The model said 35.4× when this section was written; it says **8.33×** now
+(§0.12 and §3), and the band across the hop latencies is no longer the joint
+24.5–42.5× quoted here — see §3, where each side's band is reported apart.** Also retracted: *"two all-reduces per layer per token cost 131.35 µs
 on NVLink for Flash and 188.83 µs for Pro, against 8.60 µs and 12.20 µs
 on-wafer — hard ceilings of 7,613 and 5,296 tok/s per user against 116,278 and
 81,966."* The on-wafer half of that sentence was wrong by more than an order of
@@ -337,7 +339,8 @@ interval is quoted.
 
 **The N5-versus-B200 study moves the same way and further.** At 554,700 mm² the
 per-user ratio there is **13.1×** against 27.3× under the old serial-depth
-accounting — and **4.62× after the latency separation of section 0.12**, which
+accounting — and **4.01× after the latency separation of section 0.12 and the
+2026-08-31 link re-grading**, which
 supersedes both. The B200's own published NVLink domain sensitivity — 8 GPUs on
 an HGX B200 baseboard against 72 in a GB200 NVL72 rack — is worth a further
 3–4% to the GPU at every cluster size, reported rather than borrowed because the
@@ -354,9 +357,11 @@ weight fetch, not interconnect.
 **The mirror-image faults on our own side were larger.** Two of them:
 
 * The on-wafer collective was charged one flat hop however far it reached. A
-  57-region all-reduce cost 0.20 µs and now costs 1.54 µs; a 681-region one cost
-  0.20 µs and now costs 5.72 µs. Per token at 61 layers that is 24 µs → 188 µs
-  and 24 µs → 698 µs.
+  57-region all-reduce cost 0.20 µs and now costs 1.93 µs; a 681-region one cost
+  0.20 µs and now costs 7.15 µs. Per token at 61 layers that is 24 µs → 235 µs
+  and 24 µs → 872 µs. (Those figures are at the re-graded 125 ns hop; at the
+  100 ns this section was written against they were 1.54 µs / 5.72 µs and
+  188 µs / 698 µs.)
 * A twelve-wafer machine was charged the **on-wafer stitching** for its
   wafer-to-wafer links. The only shipping multi-wafer machine is a Cerebras
   cluster whose off-wafer fabric is twelve 100 GbE ports — 150 GB/s against
@@ -582,11 +587,10 @@ and a part whose leakage and clock alone meet its budget is not slow — **it
 does not exist**, which is dark silicon in its strongest form and which the
 model previously could not express at all.
 
-<!-- figure: 100 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.thermally_throttled_points" name="power-limited points, N5/B200" -->
-**100 of 6,180 feasible points (1.6%) are power-limited.** All 100 are in the
-N5/B200 study; none in N6/A100. 99 are ROM designs and one is a B200 cluster.
-The worst is throttled 1.35×, taking a four-chip 3,260 mm² array from 1,557 to
-1,151 tok/s per user.
+<!-- figure: 105 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.thermally_throttled_points" name="power-limited points, N5/B200" -->
+**105 of 6,108 feasible points (1.7%) are power-limited.** All 105 are in the
+N5/B200 study; none in N6/A100. The worst is throttled 1.35×, taking a four-chip
+3,260 mm² array from 1,560 to 1,151 tok/s per user.
 
 The earlier uniform-multiplier analysis predicted the worst points would be
 small dense arrays rather than wafers. **Half of that survives and half does
@@ -594,7 +598,7 @@ not:**
 
 - **It survives on shape.** Every throttled point is a small or large array
   (1,600–40,000 mm²). **No wafer is throttled in either study, and no
-  wafer-scale ROM design exceeds 46% of its cooling budget**, <!-- figure: 46 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.wafer_scale_rom_max_power_headroom_fraction" scale="100" tol="1%" name="busiest wafer-scale ROM design, N5" -->
+  wafer-scale ROM design exceeds 47% of its cooling budget**, <!-- figure: 47 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.wafer_scale_rom_max_power_headroom_fraction" scale="100" tol="1%" name="busiest wafer-scale ROM design, N5" -->
   against a median of 21%. A ROM sweep is a fixed cost spread over far more silicon, so
   wafer-scale is power-*sparse* — which is an argument for wafer-scale that
   this program had not previously been able to make from a correct power term.
@@ -638,12 +642,12 @@ and it moves with batch in the direction the architecture predicts:
 
 | study | model | batch 1 | batch 256 |
 |---|---|---:|---:|
-| N6 vs A100 | Qwen3-8B (dense) | 21.2× | **1.7×** | <!-- figure: 1.7 src="results/roofline/n6_vs_a100/analytical.json#power_and_energy.energy_per_token[model=Qwen3-8B,batch_size=256].tokens_per_joule_advantage_x" name="Qwen3-8B tokens/joule advantage at batch 256, N6" -->
-| N6 vs A100 | DeepSeek-V4-Flash (sparse) | 18.5× | **57.1×** |
-| N6 vs A100 | DeepSeek-V4-Pro (sparse) | 27.3× | 18.9× |
-| N5 vs B200 | Qwen3-8B (dense) | 6.7× | **2.7×** |
-| N5 vs B200 | DeepSeek-V4-Flash (sparse) | 5.8× | **39.1×** | <!-- figure: 39.1 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.energy_per_token[model=DeepSeek-V4-Flash-0731,batch_size=256].tokens_per_joule_advantage_x" name="Flash tokens/joule advantage at batch 256, N5" -->
-| N5 vs B200 | DeepSeek-V4-Pro (sparse) | 16.6× | 21.4× |
+| N6 vs A100 | Qwen3-8B (dense) | 19.3× | **1.8×** | <!-- figure: 1.8 src="results/roofline/n6_vs_a100/analytical.json#power_and_energy.energy_per_token[model=Qwen3-8B,batch_size=256].tokens_per_joule_advantage_x" name="Qwen3-8B tokens/joule advantage at batch 256, N6" -->
+| N6 vs A100 | DeepSeek-V4-Flash (sparse) | 17.3× | **55.5×** |
+| N6 vs A100 | DeepSeek-V4-Pro (sparse) | 25.9× | 18.8× |
+| N5 vs B200 | Qwen3-8B (dense) | 5.3× | **2.6×** |
+| N5 vs B200 | DeepSeek-V4-Flash (sparse) | 4.6× | **36.9×** | <!-- figure: 36.9 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.energy_per_token[model=DeepSeek-V4-Flash-0731,batch_size=256].tokens_per_joule_advantage_x" name="Flash tokens/joule advantage at batch 256, N5" -->
+| N5 vs B200 | DeepSeek-V4-Pro (sparse) | 14.3× | 20.9× |
 
 **A dense model gives the energy advantage back as batch rises and a sparse one
 does not.** The GPU amortises one weight read over the whole batch, so its
@@ -758,36 +762,36 @@ choice* as well as the previous rate:
 
 | model | mm² | ROM before → after | ROM topology before → after | GPU n | GPU before → after | GPU topology | ratio before | **ratio now** | change |
 |---|---:|---:|---|---:|---:|---|---:|---:|---:|
-| Qwen3-8B | 46,225 | 53,701 → 7,936 | wafer-pipeline → wafer-tensor | 56 | 3,852 → 891 | pipeline → tensor | 13.94× | **8.91×** | 0.64× |
-| Qwen3-8B | 92,450 | 50,885 → 7,023 | wafer-pipeline → wafer-hybrid | 112 | 6,022 → 967 | pipeline → tensor | 8.45× | **7.26×** | 0.86× |
-| Qwen3-8B | 138,675 | 50,885 → 6,339 | wafer-pipeline → wafer-hybrid | 168 | 7,414 → 995 | pipeline → tensor | 6.86× | **6.37×** | 0.93× |
-| Qwen3-8B | 184,900 | 50,885 → 5,777 | wafer-pipeline → wafer-hybrid | 224 | 8,383 → 1,010 | pipeline → tensor | 6.07× | **5.72×** | 0.94× |
-| Qwen3-8B | 277,350 | 50,885 → 4,906 | wafer-pipeline → wafer-hybrid | 336 | 9,644 → 616 | pipeline → tensor | 5.28× | **7.96×** | 1.51× |
-| Qwen3-8B | 369,800 | 50,885 → 4,263 | wafer-pipeline → wafer-hybrid | 448 | 10,428 → 619 | pipeline → tensor | 4.88× | **6.89×** | 1.41× |
-| Qwen3-8B | 554,700 | 59,341 → 3,811 | wafer-pipeline → wafer-hybrid | 672 | 11,351 → 622 | pipeline → tensor | 5.23× | **6.13×** | 1.17× |
-| Flash @200K | 46,225 | 18,841 → 5,515 | wafer-pipeline → wafer-tensor | 56 | 1,572 → 600 | pipeline → tensor | 11.98× | **9.19×** | 0.77× |
-| Flash @200K | 92,450 | 28,141 → 5,249 | wafer-pipeline → wafer-hybrid | 112 | 1,818 → 631 | pipeline → tensor | 15.48× | **8.33×** | 0.54× |
-| Flash @200K | 138,675 | 35,354 → 5,116 | wafer-pipeline → wafer-hybrid | 168 | 1,923 → 642 | pipeline → tensor | 18.39× | **7.97×** | 0.43× |
-| Flash @200K | 184,900 | 40,534 → 4,988 | wafer-pipeline → wafer-hybrid | 224 | 1,981 → 648 | pipeline → tensor | 20.46× | **7.70×** | 0.38× |
-| Flash @200K | 277,350 | 47,475 → 4,750 | wafer-pipeline → wafer-hybrid | 336 | 2,043 → 434 | pipeline → tensor | 23.24× | **10.94×** | 0.47× |
-| Flash @200K | 369,800 | 51,913 → 4,533 | wafer-pipeline → wafer-hybrid | 448 | 2,076 → 436 | pipeline → tensor | 25.00× | **10.41×** | 0.42× |
-| Flash @200K | 554,700 | 57,260 → 4,152 | wafer-pipeline → wafer-hybrid | 672 | 2,111 → 437 | pipeline → tensor | 27.13× | **9.50×** | 0.35× |
-| Pro @1M | 92,450 | 9,107 → 2,654 | wafer-pipeline → wafer-hybrid | 112 | 544 → 295 | pipeline → tensor | 16.73× | **9.01×** | 0.54× |
-| Pro @1M | 138,675 | 9,633 → 2,227 | wafer-pipeline → wafer-hybrid | 168 | 579 → 304 | pipeline → tensor | 16.64× | **7.33×** | 0.44× |
-| Pro @1M | 184,900 | 11,960 → 2,211 | wafer-pipeline → wafer-hybrid | 224 | 598 → 309 | pipeline → tensor | 20.00× | **7.15×** | 0.36× |
-| Pro @1M | 277,350 | 15,728 → 2,173 | wafer-pipeline → wafer-hybrid | 336 | 619 → 234 | pipeline → tensor | 25.41× | **9.30×** | 0.37× |
-| Pro @1M | 369,800 | 18,568 → 2,127 | wafer-pipeline → wafer-hybrid | 448 | 630 → 235 | pipeline → tensor | 29.47× | **9.04×** | 0.31× |
-| Pro @1M | 554,700 | 22,686 → 2,042 | wafer-pipeline → wafer-hybrid | 672 | 642 → 237 | pipeline → tensor | 35.35× | **8.63×** | 0.24× |
+| Qwen3-8B | 46,225 | 51,291.3 → 6,505.3 | wafer-pipeline → wafer-tensor | 56 | 3,440.9 → 789.4 | pipeline → tensor | 14.91× | **8.24×** | 0.55× |
+| Qwen3-8B | 92,450 | 48,716.3 → 5,878.5 | wafer-pipeline → wafer-hybrid | 112 | 5,074.5 → 848.7 | pipeline → tensor | 9.60× | **6.93×** | 0.72× |
+| Qwen3-8B | 138,675 | 48,716.3 → 5,391.7 | wafer-pipeline → wafer-hybrid | 168 | 6,028.6 → 870.5 | pipeline → tensor | 8.08× | **6.19×** | 0.77× |
+| Qwen3-8B | 184,900 | 48,716.3 → 4,979.3 | wafer-pipeline → wafer-hybrid | 224 | 6,654.1 → 881.8 | pipeline → tensor | 7.32× | **5.65×** | 0.77× |
+| Qwen3-8B | 277,350 | 48,716.3 → 4,318.7 | wafer-pipeline → wafer-hybrid | 336 | 7,424.4 → 565.8 | pipeline → tensor | 6.56× | **7.63×** | 1.16× |
+| Qwen3-8B | 369,800 | 48,716.3 → 3,812.9 | wafer-pipeline → wafer-hybrid | 448 | 7,880.6 → 568.2 | pipeline → tensor | 6.18× | **6.71×** | 1.09× |
+| Qwen3-8B | 554,700 | 56,411.9 → 3,447.0 | wafer-pipeline → wafer-hybrid | 672 | 8,396.5 → 570.6 | pipeline → tensor | 6.72× | **6.04×** | 0.90× |
+| Flash @200K | 46,225 | 18,475.6 → 4,663.6 | wafer-pipeline → wafer-tensor | 56 | 1,485.7 → 544.1 | pipeline → tensor | 12.44× | **8.57×** | 0.69× |
+| Flash @200K | 92,450 | 27,333.1 → 4,472.2 | wafer-pipeline → wafer-hybrid | 112 | 1,703.4 → 568.8 | pipeline → tensor | 16.05× | **7.86×** | 0.49× |
+| Flash @200K | 138,675 | 34,088.9 → 4,375.0 | wafer-pipeline → wafer-hybrid | 168 | 1,795.0 → 578.0 | pipeline → tensor | 18.99× | **7.57×** | 0.40× |
+| Flash @200K | 184,900 | 38,879.0 → 4,281.2 | wafer-pipeline → wafer-hybrid | 224 | 1,845.5 → 582.8 | pipeline → tensor | 21.07× | **7.35×** | 0.35× |
+| Flash @200K | 277,350 | 45,220.6 → 4,104.3 | wafer-pipeline → wafer-hybrid | 336 | 1,899.6 → 404.0 | pipeline → tensor | 23.81× | **10.16×** | 0.43× |
+| Flash @200K | 369,800 | 49,229.4 → 3,941.1 | wafer-pipeline → wafer-hybrid | 448 | 1,928.1 → 405.2 | pipeline → tensor | 25.53× | **9.73×** | 0.38× |
+| Flash @200K | 554,700 | 54,012.8 → 3,650.5 | wafer-pipeline → wafer-hybrid | 672 | 1,957.7 → 406.4 | pipeline → tensor | 27.59× | **8.98×** | 0.33× |
+| Pro @1M | 92,450 | 8,986.6 → 2,359.5 | wafer-pipeline → wafer-hybrid | 112 | 529.1 → 274.9 | pipeline → tensor | 16.99× | **8.58×** | 0.51× |
+| Pro @1M | 138,675 | 9,497.6 → 2,016.1 | wafer-pipeline → wafer-hybrid | 168 | 561.6 → 283.0 | pipeline → tensor | 16.91× | **7.12×** | 0.42× |
+| Pro @1M | 184,900 | 11,753.0 → 2,002.6 | wafer-pipeline → wafer-hybrid | 224 | 579.7 → 287.4 | pipeline → tensor | 20.27× | **6.97×** | 0.34× |
+| Pro @1M | 277,350 | 15,371.5 → 1,972.0 | wafer-pipeline → wafer-hybrid | 336 | 599.4 → 221.0 | pipeline → tensor | 25.65× | **8.92×** | 0.35× |
+| Pro @1M | 369,800 | 18,073.4 → 1,933.6 | wafer-pipeline → wafer-hybrid | 448 | 609.8 → 222.4 | pipeline → tensor | 29.64× | **8.70×** | 0.29× |
+| Pro @1M | 554,700 | 21,951.3 → 1,863.2 | wafer-pipeline → wafer-hybrid | 672 | 620.6 → 223.7 | pipeline → tensor | 35.37× | **8.33×** | 0.24× |
 
 The N5-versus-B200 study moves the same way: Pro at 554,700 mm² goes from
-**13.06× to 4.62×**, and every rung of that ladder falls (0.35×–1.03×).
+**13.06× to 4.01×**, and every rung of that ladder falls.
 
 **Three mechanisms put the change where it is, and none of them cancels.**
 
 1. *The two families reach iso-area at very different slot counts.* At
    554,700 mm² the ROM side is twelve wafers spanning 681 reticle fields; the
    GPU side is 672 devices. Charged as pipelines those raw corrections are close
-   — 15.6× against 18.3× on Qwen. But the correction is not applied to a fixed
+   — 16.4× against 14.7× on Qwen. But the correction is not applied to a fixed
    topology, which is mechanism 2.
 2. *It changes which topology wins, and the winner is chosen per design.* **Both
    families abandon pipeline at batch 1.** The GPU goes to `tensor`: one slot,
@@ -802,19 +806,19 @@ The N5-versus-B200 study moves the same way: Pro at 554,700 mm² goes from
    collective is cheap enough to afford a 57-to-84-way tensor group; a GPU
    cluster large enough to hold DeepSeek-Pro spans 84 NVLink islands, so most of
    its all-reduce crosses InfiniBand. Where the GPU's correction exceeds the
-   ROM's the ratio **rises** — Qwen at 277,350 mm², 5.28× to 7.96×. Where the
-   ROM's exceeds the GPU's it falls — Pro at 554,700 mm², 35.35× to 8.63×.
+   ROM's the ratio **rises** — Qwen at 277,350 mm², 6.56× to 7.63×. Where the
+   ROM's exceeds the GPU's it falls — Pro at 554,700 mm², 35.37× to 8.33×.
 
 **The batch curves change shape, and for the sparse models they change sign.**
 Per-user tok/s at equal silicon, best design on each side at each batch:
 
 | batch | Qwen3-8B @8K | DeepSeek-Flash @200K | DeepSeek-Pro @1M |
 |---:|---:|---:|---:|
-| 1 | 8.91× | 9.19× | 9.01× |
-| 8 | 7.04× | 12.61× | 15.73× |
-| 32 | 4.13× | 21.60× | 19.37× |
-| 64 | 2.60× | 26.69× | 18.89× |
-| 256 | **0.92×** | **36.52×** | **17.33×** |
+| 1 | 8.24× | 8.57× | 8.58× |
+| 8 | 6.85× | 11.58× | 14.75× |
+| 32 | 4.19× | 19.76× | 18.48× |
+| 64 | 2.71× | 24.71× | 18.35× |
+| 256 | **0.98×** | **35.13×** | **17.18×** |
 
 Under the old rule every one of these fell with batch — Flash from 27.1× at
 batch 1 to 4.0× at 256 — and "the advantage erodes with batch" was one of this
@@ -1027,15 +1031,15 @@ What the study chooses at batch 1, on per-user rate, after section 0.12:
 
 | model | best design | mm² | per-user tok/s | binds on | best array design | array tok/s | wafer over array |
 |---|---|---:|---:|---|---|---:|---:|
-| Qwen3-8B @8K | `wafer-tensor` ×1 romfill | 46,225 | **7,936** | link_latency | `array-pipeline` ×5 romfill | 6,747 | 1.18× |
-| DeepSeek-Flash @200K | `wafer-tensor` ×1 romfill | 46,225 | **5,515** | link_latency | `array-hybrid` ×18 | 1,856 | 2.97× |
-| DeepSeek-Pro @1M | `wafer-hybrid` ×2 | 92,450 | **2,654** | link_latency | `array-hybrid` ×96 | 680 | 3.90× |
+| Qwen3-8B @8K | `wafer-tensor` ×1 romfill | 46,225 | **6,505** | link_latency | best array, 4,890 mm² | 3,510 | 1.85× |
+| DeepSeek-Flash @200K | `wafer-tensor` ×1 romfill | 46,225 | **4,664** | link_latency | best array, 14,670 mm² | 1,407 | 3.31× |
+| DeepSeek-Pro @1M | `wafer-hybrid` ×2 | 92,450 | **2,360** | link_latency | best array, 78,240 mm² | 583 | 4.05× |
 
 Three things changed and they are worth separating.
 
 **1. Tensor parallelism is now the right choice, and it was the correction that
 made it so.** The previous section dismissed on-wafer tensor parallelism because
-its collective ceiling — 9,019 tok/s on Qwen, 7,551 on Flash, 5,322 on Pro — sat
+its collective ceiling — 7,215 tok/s on Qwen, 6,041 on Flash, 4,258 on Pro — sat
 an order of magnitude below the ~50,000 tok/s a wafer-scale pipeline appeared to
 deliver. That 50,000 was the defect: it was the whole wafer's ROM bandwidth
 credited to a single token that only ever touched one reticle field at a time.
@@ -1051,18 +1055,19 @@ no longer "a hop latency an array cannot match" in a pipeline; it is that a
 stitched mesh can carry a 57-to-84-way all-reduce at 1.1× its diameter while a
 GPU-class or package-class fabric cannot, so **a wafer can afford a tensor group
 wide enough to put the whole machine on one token and an array cannot.** On
-tokens per second per square millimetre the array still wins 20 of 24 points; a
+tokens per second per square millimetre the array still wins 18 of 24 points; a
 wafer is not faster per unit silicon, it is faster because a wafer is one
 collective domain.
 
 **3. More silicon no longer buys per-user speed on either side.** This is the
 inversion. The ROM per-user rate falls monotonically with area at batch 1 —
-7,936 → 3,811 tok/s for Qwen from one wafer to twelve — because past one wafer
+6,505 → 3,447 tok/s for Qwen from one wafer to twelve — because past one wafer
 the only ways to spend silicon are more slots to traverse or a wider collective
 to wait on. **The right latency machine is the smallest one that holds the
 model**: one wafer for Qwen and Flash, two for Pro. Twelve-wafer machines remain
-the right *throughput* machines and the study still reports them as such, at
-133,002 and 273,946 aggregate tokens/s — but at 195 and 402 tokens/s per user.
+the right *throughput* machines and the study still reports them as such —
+Flash's twelve-wafer pipeline delivers 273,831 aggregate tokens/s at 402 tokens/s
+per user.
 The two objectives now select different machines and the study no longer
 pretends otherwise.
 
@@ -1072,15 +1077,18 @@ model's on NVLink plus InfiniBand:
 
 | model | collectives/token | on NVLink 3 | on-wafer (57 regions) | on-wafer ceiling |
 |---|---:|---:|---:|---:|
-| Qwen3-8B | 72 | 220.4 µs | **110.9 µs** | 9,019 tok/s |
-| DeepSeek-V4-Flash | 86 | 1,094.5 µs | **132.4 µs** | 7,551 tok/s |
-| DeepSeek-V4-Pro | 122 | 1,671.7 µs | **187.9 µs** | 5,322 tok/s |
+| Qwen3-8B | 72 | 364.4 µs | **138.6 µs** | 7,215 tok/s |
+| DeepSeek-V4-Flash | 86 | 1,266.5 µs | **165.6 µs** | 6,041 tok/s |
+| DeepSeek-V4-Pro | 122 | 1,915.7 µs | **234.9 µs** | 4,258 tok/s |
 
 The published claim that on-wafer tensor parallelism reaches 82,000–116,000
 tok/s per user remains **retracted**: it came from charging a stitched 2-D mesh
 one flat hop however far the collective reached. What has changed since that
-retraction is only that 5,000–9,000 tok/s is now the number to beat rather than
-a number to dismiss.
+retraction is only that 4,300–7,200 tok/s is now the number to beat rather than
+a number to dismiss. Those ceilings fell a further 20% on 2026-08-31 when
+`links.on_wafer.hop_latency_s` was re-graded from an assumed 100 ns to a derived
+125 ns, and the NVLink 3 column rose 65% when `links.nvlink3.hop_latency_s` was
+re-graded from an assumed 1.5 µs to a derived 2.5 µs; §3 carries both.
 
 ### 2.4 KV in SRAM for the dense small model, HBM for the sparse large ones — unchanged, with one new and cheap action
 
@@ -1174,20 +1182,43 @@ ledger lists all 43 of them.
 - **`reference_parts.taalas_hc1.batch_size` (1)** — published nowhere. If HC1's
   16,960 tok/s is not a batch-1 figure, the anchor means something different and
   every ratio here moves.
-- **Every hop latency in the model (`links.*.hop_latency_s`)** — new to this
-  list and immediately near the top of it. NVIDIA publishes **no** NVLink or
-  NVSwitch latency figure of any kind; six first-party pages were checked and
-  every one gives bandwidth only. Cerebras publishes none for the on-wafer mesh
-  and none at all for SwarmX. The stated values are 1.5 µs for NVLink (swept
-  1.0–5.5 µs, which brackets the measured 1.4 µs speed-of-light all-reduce floor
-  on GB200 at one end and stock NCCL's 11 µs ring at the other), 100 ns per
-  on-wafer reticle hop (swept 30–500 ns), and 5 µs wafer-to-wafer (swept
-  1–10 µs). The InfiniBand figure is the exception and is measured rather than
-  assumed: 4.5 µs GPU-buffer to GPU-buffer, from De Sensi et al.'s SC24
-  measurements of 3.7–5.7 µs across five production supercomputers, which is the
-  number that matters for a decode step and not the 1.07 µs CPU-memory MPI
-  ping-pong usually quoted. **The headline iso-area ratio at 554,700 mm² spans
-  24.5–42.5× across this band**, and the study reports it at both ends.
+- **The hop latencies (`links.*.hop_latency_s`) — TWO OF THE FOUR WERE RE-GRADED
+  ON 2026-08-31 AND ARE NO LONGER ASSUMED.** This bullet previously said that
+  *"NVIDIA publishes no NVLink or NVSwitch latency figure of any kind"* and that
+  Cerebras publishes none for the on-wafer mesh. The first half is **withdrawn**:
+  NCCL's shipping source carries NVIDIA's own per-traversal NVLink constant,
+  `hwLatencies[NVLINK][Ring][LL] = 0.6 µs`. The second half is true as stated but
+  was the wrong question — Cerebras publishes the *primitives* (one clock cycle
+  per core-to-core hop, the per-die core grid, the clock), and composing them
+  gives the reticle-field crossing this model charges.
+  - `links.on_wafer.hop_latency_s`: **125 ns, `derived`, swept 75–250 ns**
+    (was 100 ns assumed, swept 30–500 ns). It is the traversal of one 815 mm²
+    reticle field — *not* a tile hop, which is 1 ns and 125× smaller — at the
+    core pitch and clock of shipping wafer-scale silicon, and it is corroborated
+    by two measured whole-wafer collectives and by Tesla's published 100 ns
+    reticle-die crossing. **The number went up 25%**, against this study.
+  - `links.nvlink3.hop_latency_s`: **2.5 µs, `derived`, swept 1.0–10.3 µs**
+    (was 1.5 µs assumed, swept 1.0–5.5 µs), and `nvlink5`/`nvlink5_nvl72`
+    **1.2 µs, `derived`, swept 0.7–5.5 µs**. Each is half a measured
+    small-message in-domain all-reduce on the fabric it prices: 5.0 µs on
+    8× A100 (MSCCL++, ASPLOS 2026) and 2.37 µs on GB200. The old 1.5 µs was
+    *below every A100 measurement in existence*. **The A100 number went up 67%,
+    which moves the headline up**, and is why the point is pinned to the best
+    measured kernel rather than to stock NCCL's measured 20.6 µs.
+  - Still `assumed`: `links.inter_wafer.hop_latency_s` at 5 µs (swept 1–10 µs) —
+    now the largest unmeasured link on the ROM side — plus `ethernet` and
+    `on_package`, neither of which any design in either study exercises.
+  - `infiniband_hdr`/`ndr` remain `published`: 4.5 µs GPU-buffer to GPU-buffer,
+    from De Sensi et al.'s SC24 measurements of 3.7–5.7 µs, which is the number
+    a decode step pays rather than the 1.07 µs CPU-memory MPI ping-pong usually
+    quoted.
+  - **The band is now reported per side.** The joint band it used to be reported
+    as, 24.5–42.5×, concealed which side the width came from; at 554,700 mm² on
+    Pro the headline is **8.33×**, the wafer fabric alone spans **11.21×–5.41×**
+    and the cluster fabric alone **6.92×–12.96×**, while the two moved together
+    span only 9.31×–8.42× because they cancel. See §3's own table and
+    `n6_vs_a100/REPORT.md` → "The headline is a band, and each side's share of it
+    is reported apart".
 - **The `energy` and `power` blocks — REBUILT, section 0.11, and one gate still
   fails.** Six terms were derived and adversarially verified; all six were
   refuted and all six are applied at their corrected values. The A100 now lands

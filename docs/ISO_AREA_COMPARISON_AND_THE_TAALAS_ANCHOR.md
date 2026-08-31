@@ -95,7 +95,9 @@ not yet chosen between them.
 
 **RETRACTED: the published iso-area ratio of 54.2x for DeepSeek-V4-Pro at 1M
 context, batch 1, at 554,700 mm2. The model said 35.4x when this section was
-written and says 8.6x now; section 2d supersedes every per-user rate below.**
+written and says 8.33x now; section 2d supersedes every per-user rate below, and
+section 2d-bis records the 2026-08-31 link re-grading that took it from 8.63x to
+8.33x.**
 Everything below
 is emitted by `src/opentallas/roofline.py` and read out of
 `results/roofline/n6_vs_a100/analytical.json`.
@@ -155,10 +157,14 @@ what remains is a slow saturation rather than a decline:
 past about eight devices the routed experts of a sparse MoE stop spreading
 further, so extra HBM bandwidth stops buying weight-fetch time.
 
-The ratio band is the study re-run with *every* assumed hop latency at each end
-of its stated range, on both sides at once. NVIDIA publishes no NVLink latency
-figure of any kind and Cerebras publishes none for the on-wafer mesh or for
-SwarmX, so the headline is an interval and not a number.
+The ratio band in that column is the study re-run with *every* hop latency at
+each end of its stated range, **on both sides at once**. That presentation was
+itself an artefact and is superseded: moving both sides partly cancels, so the
+joint interval came out narrower than the wafer side's own and hid where the
+width lived. Section 2d-bis carries the replacement, in which each side's band is
+reported apart. The premise quoted here -- that NVIDIA publishes no NVLink
+latency figure of any kind -- is also **withdrawn**; NCCL's shipping source
+carries one.
 
 ## 2c. The mirror-image problem on the ROM side, and it was worse
 
@@ -172,10 +178,14 @@ measured their own at *"a cycle count only about 10% greater than the diameter
 of the system"* (Rocki et al., SC20), and the diameter of an N-region mesh is
 `2(sqrt(N)-1)`. The model now charges `1.1 x diameter` traversals:
 
-| span | old traversals | new traversals | all-reduce at 100 ns/hop | per token, 61 layers |
+| span | old traversals | new traversals | all-reduce at 125 ns/hop | per token, 61 layers |
 |---:|---:|---:|---:|---:|
-| 57 regions (1 wafer) | 1 | 15.4 | 0.20 -> 1.54 us | 24 -> 188 us |
-| 681 regions (12 wafers) | 1 | 57.2 | 0.20 -> 5.72 us | 24 -> 698 us |
+| 57 regions (1 wafer) | 1 | 15.4 | 0.25 -> 1.93 us | 31 -> 235 us |
+| 681 regions (12 wafers) | 1 | 57.2 | 0.25 -> 7.15 us | 31 -> 872 us |
+
+(At the 100 ns this section was written against, the same rows read
+0.20 -> 1.54 us / 24 -> 188 us and 0.20 -> 5.72 us / 24 -> 698 us. The hop was
+re-graded to 125 ns on 2026-08-31; section 2d-bis.)
 
 **And a twelve-wafer machine was charged the on-wafer stitching for its
 wafer-to-wafer links.** Twelve wafers are twelve manufactured objects; the
@@ -189,11 +199,11 @@ bitcell area ratio.
 The consequence is that **on-wafer tensor parallelism no longer reaches
 Taalas-class rates**, and the previously published claim that it does -- "hard
 ceilings of 116,278 and 81,966 tok/s per user" -- is retracted. It reaches
-5,000-9,000 tok/s. When this section was written that made the model choose
+6,000-7,200 tok/s. When this section was written that made the model choose
 pipeline over tensor parallelism on the wafer at every operating point;
 **section 2d reverses that**, because the pipeline it was being compared against
 was itself overstated by its slot count. Wafer-scale tensor parallelism now wins
-at batch 1 on both families, at those same 5,000-9,000 tok/s.
+at batch 1 on both families, at those same 6,000-7,200 tok/s.
 
 The ordering survives but the margin is smaller than the framing implied. Like
 for like -- the same model's collective on one wafer against the same model's on
@@ -260,26 +270,26 @@ report:
 
 | model | mm2 | ROM before | ROM after | /x | GPU n | GPU before | GPU after | /x | ratio before | **ratio after** | change |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| Qwen3-8B | 46,225 | 53,701 | 7,936 | 6.8x | 56 | 3,852 | 891 | 4.3x | 13.94x | **8.91x** | 0.64x |
-| Qwen3-8B | 92,450 | 50,885 | 7,023 | 7.2x | 112 | 6,022 | 967 | 6.2x | 8.45x | **7.26x** | 0.86x |
-| Qwen3-8B | 138,675 | 50,885 | 6,339 | 8.0x | 168 | 7,414 | 995 | 7.4x | 6.86x | **6.37x** | 0.93x |
-| Qwen3-8B | 184,900 | 50,885 | 5,777 | 8.8x | 224 | 8,383 | 1,010 | 8.3x | 6.07x | **5.72x** | 0.94x |
-| Qwen3-8B | 277,350 | 50,885 | 4,906 | 10.4x | 336 | 9,644 | 616 | 15.7x | 5.28x | **7.96x** | 1.51x |
-| Qwen3-8B | 369,800 | 50,885 | 4,263 | 11.9x | 448 | 10,428 | 619 | 16.9x | 4.88x | **6.89x** | 1.41x |
-| Qwen3-8B | 554,700 | 59,341 | 3,811 | 15.6x | 672 | 11,351 | 622 | 18.3x | 5.23x | **6.13x** | 1.17x |
-| Flash @200K | 46,225 | 18,841 | 5,515 | 3.4x | 56 | 1,572 | 600 | 2.6x | 11.98x | **9.19x** | 0.77x |
-| Flash @200K | 92,450 | 28,141 | 5,249 | 5.4x | 112 | 1,818 | 631 | 2.9x | 15.48x | **8.33x** | 0.54x |
-| Flash @200K | 138,675 | 35,354 | 5,116 | 6.9x | 168 | 1,923 | 642 | 3.0x | 18.39x | **7.97x** | 0.43x |
-| Flash @200K | 184,900 | 40,534 | 4,988 | 8.1x | 224 | 1,981 | 648 | 3.1x | 20.46x | **7.70x** | 0.38x |
-| Flash @200K | 277,350 | 47,475 | 4,750 | 10.0x | 336 | 2,043 | 434 | 4.7x | 23.24x | **10.94x** | 0.47x |
-| Flash @200K | 369,800 | 51,913 | 4,533 | 11.5x | 448 | 2,076 | 436 | 4.8x | 25.00x | **10.41x** | 0.42x |
-| Flash @200K | 554,700 | 57,260 | 4,152 | 13.8x | 672 | 2,111 | 437 | 4.8x | 27.13x | **9.50x** | 0.35x |
-| Pro @1M | 92,450 | 9,107 | 2,654 | 3.4x | 112 | 544 | 295 | 1.8x | 16.73x | **9.01x** | 0.54x |
-| Pro @1M | 138,675 | 9,633 | 2,227 | 4.3x | 168 | 579 | 304 | 1.9x | 16.64x | **7.33x** | 0.44x |
-| Pro @1M | 184,900 | 11,960 | 2,211 | 5.4x | 224 | 598 | 309 | 1.9x | 20.00x | **7.15x** | 0.36x |
-| Pro @1M | 277,350 | 15,728 | 2,173 | 7.2x | 336 | 619 | 234 | 2.6x | 25.41x | **9.30x** | 0.37x |
-| Pro @1M | 369,800 | 18,568 | 2,127 | 8.7x | 448 | 630 | 235 | 2.7x | 29.47x | **9.04x** | 0.31x |
-| Pro @1M | 554,700 | 22,686 | 2,042 | 11.1x | 672 | 642 | 237 | 2.7x | 35.35x | **8.63x** | 0.24x |
+| Qwen3-8B | 46,225 | 51,291.3 | 6,505.3 | 7.88x | 56 | 3,440.9 | 789.4 | 4.36x | 14.91x | **8.24x** | 0.55x |
+| Qwen3-8B | 92,450 | 48,716.3 | 5,878.5 | 8.29x | 112 | 5,074.5 | 848.7 | 5.98x | 9.60x | **6.93x** | 0.72x |
+| Qwen3-8B | 138,675 | 48,716.3 | 5,391.7 | 9.04x | 168 | 6,028.6 | 870.5 | 6.93x | 8.08x | **6.19x** | 0.77x |
+| Qwen3-8B | 184,900 | 48,716.3 | 4,979.3 | 9.78x | 224 | 6,654.1 | 881.8 | 7.55x | 7.32x | **5.65x** | 0.77x |
+| Qwen3-8B | 277,350 | 48,716.3 | 4,318.7 | 11.28x | 336 | 7,424.4 | 565.8 | 13.12x | 6.56x | **7.63x** | 1.16x |
+| Qwen3-8B | 369,800 | 48,716.3 | 3,812.9 | 12.78x | 448 | 7,880.6 | 568.2 | 13.87x | 6.18x | **6.71x** | 1.09x |
+| Qwen3-8B | 554,700 | 56,411.9 | 3,447.0 | 16.37x | 672 | 8,396.5 | 570.6 | 14.72x | 6.72x | **6.04x** | 0.90x |
+| Flash @200K | 46,225 | 18,475.6 | 4,663.6 | 3.96x | 56 | 1,485.7 | 544.1 | 2.73x | 12.44x | **8.57x** | 0.69x |
+| Flash @200K | 92,450 | 27,333.1 | 4,472.2 | 6.11x | 112 | 1,703.4 | 568.8 | 2.99x | 16.05x | **7.86x** | 0.49x |
+| Flash @200K | 138,675 | 34,088.9 | 4,375.0 | 7.79x | 168 | 1,795.0 | 578.0 | 3.11x | 18.99x | **7.57x** | 0.40x |
+| Flash @200K | 184,900 | 38,879.0 | 4,281.2 | 9.08x | 224 | 1,845.5 | 582.8 | 3.17x | 21.07x | **7.35x** | 0.35x |
+| Flash @200K | 277,350 | 45,220.6 | 4,104.3 | 11.02x | 336 | 1,899.6 | 404.0 | 4.70x | 23.81x | **10.16x** | 0.43x |
+| Flash @200K | 369,800 | 49,229.4 | 3,941.1 | 12.49x | 448 | 1,928.1 | 405.2 | 4.76x | 25.53x | **9.73x** | 0.38x |
+| Flash @200K | 554,700 | 54,012.8 | 3,650.5 | 14.80x | 672 | 1,957.7 | 406.4 | 4.82x | 27.59x | **8.98x** | 0.33x |
+| Pro @1M | 92,450 | 8,986.6 | 2,359.5 | 3.81x | 112 | 529.1 | 274.9 | 1.92x | 16.99x | **8.58x** | 0.51x |
+| Pro @1M | 138,675 | 9,497.6 | 2,016.1 | 4.71x | 168 | 561.6 | 283.0 | 1.98x | 16.91x | **7.12x** | 0.42x |
+| Pro @1M | 184,900 | 11,753.0 | 2,002.6 | 5.87x | 224 | 579.7 | 287.4 | 2.02x | 20.27x | **6.97x** | 0.34x |
+| Pro @1M | 277,350 | 15,371.5 | 1,972.0 | 7.79x | 336 | 599.4 | 221.0 | 2.71x | 25.65x | **8.92x** | 0.35x |
+| Pro @1M | 369,800 | 18,073.4 | 1,933.6 | 9.35x | 448 | 609.8 | 222.4 | 2.74x | 29.64x | **8.70x** | 0.29x |
+| Pro @1M | 554,700 | 21,951.3 | 1,863.2 | 11.78x | 672 | 620.6 | 223.7 | 2.77x | 35.37x | **8.33x** | 0.24x |
 
 `before` is not a memory of an earlier run. Every point in the study now carries
 `per_user_tokens_s_throughput_view`, the number the old rule produced, and each
@@ -304,20 +314,20 @@ put it there and none of them cancels:
    collective is cheap enough that a ROM design can afford a 57-way tensor group;
    a GPU cluster large enough to hold DeepSeek-Pro spans 84 NVLink islands, so
    most of its all-reduce crosses InfiniBand. On Qwen at 277,350 mm2 the GPU's
-   correction (15.7x) exceeds the ROM's (10.4x) and the ratio **rises** to
-   7.96x; on Pro at 554,700 mm2 the ROM's (11.1x) exceeds the GPU's (2.7x) and
-   the ratio falls to 8.63x.
+   correction (13.1x) exceeds the ROM's (11.3x) and the ratio **rises** to
+   7.63x; on Pro at 554,700 mm2 the ROM's (11.8x) exceeds the GPU's (2.8x) and
+   the ratio falls to 8.33x.
 
 **The batch curves change shape, and for the sparse models they change sign.**
 Per-user tok/s at equal silicon, best design on each side at each batch:
 
 | batch | Qwen3-8B @8K | DeepSeek-Flash @200K | DeepSeek-Pro @1M |
 |---:|---:|---:|---:|
-| 1 | 8.91x | 9.19x | 9.01x |
-| 8 | 7.04x | 12.61x | 15.73x |
-| 32 | 4.13x | 21.60x | 19.37x |
-| 64 | 2.60x | 26.69x | 18.89x |
-| 256 | **0.92x** | **36.52x** | **17.33x** |
+| 1 | 8.24x | 8.57x | 8.58x |
+| 8 | 6.85x | 11.58x | 14.75x |
+| 32 | 4.19x | 19.76x | 18.48x |
+| 64 | 2.71x | 24.71x | 18.35x |
+| 256 | **0.98x** | **35.13x** | **17.18x** |
 
 Under the old rule every one of these fell with batch, and "the advantage erodes
 with batch" was a standing finding of this document. **It survives only for the
@@ -351,6 +361,60 @@ when the machine has more than one partition, so a **one-wafer** tensor-parallel
 design escapes it while a twelve-wafer one does not -- 1.11x in favour of the
 design that now wins at batch 1 for two of the three models. All three are stated
 in `TECHNICAL_DIRECTION_RECOMMENDATION.md` section 0.12 and none is fixed here.
+
+## 2d-bis. Both binding link constants were re-graded, and the band is now reported per side
+
+**2026-08-31.** The two constants that decide most of this comparison were both
+graded `assumed`. Neither is now.
+
+| constant | was | is | grade | swept | direction |
+|---|---|---|---|---|---|
+| `links.on_wafer.hop_latency_s` | 100 ns | **125 ns** | assumed -> **derived** | 30-500 ns -> **75-250 ns** | **against** this study |
+| `links.nvlink3.hop_latency_s` | 1.5 us | **2.5 us** | assumed -> **derived** | 1.0-5.5 us -> **1.0-10.3 us** | **for** this study |
+| `links.nvlink5` / `nvlink5_nvl72` | 1.5 us | **1.2 us** | assumed -> **derived** | 1.0-5.5 us -> **0.7-5.5 us** | against |
+
+**Granularity is the whole content of the on-wafer row.** The model charges an
+`on_wafer` hop for crossing one 815 mm2 reticle field -- a 28.55 mm square, 57 to
+a wafer. Cerebras publishes a *single clock cycle* per hop, but that hop is
+between adjacent cores about 0.23 mm apart, and there are ~126 of them across one
+of this model's fields. Substituting the published cycle directly would have set
+this constant to about 1.2 ns and taken the headline from 8.33x to 14.7x. What
+transfers is the primitive -- one cycle per router pitch -- plus Cerebras'
+published core grid (Hot Chips 34: die "17mm x 30mm", "66 x 154 Cores") and
+clock, which give 116-150 ns at N7 and 115-148 ns at N5; Tesla's published
+"100ns die-to-die latency" for a 645 mm2 reticle-class die gives ~111 ns for the
+same object built the other way. 125 ns is the middle of those. The withdrawn
+cross-check in the old note -- "about 73 tiles across one 815 mm2 reticle field"
+-- was 1.7x low and ran in this study's favour.
+
+**The NVLink row is the one that flatters us, so it is pinned to the best
+measured kernel rather than to the shipping one.** The model has no
+per-collective software term, so `2 x hop` *is* the whole in-domain all-reduce.
+The best measured small-message all-reduce on 8x A100 over NVLink 3.0 is 5.0 us
+(MSCCL++, ASPLOS 2026); stock NCCL on the same hardware measures 20.6 us across
+four independent runs. 2.5 us is the first of those halved. The old 1.5 us was
+below every A100 measurement in existence.
+
+**And the band is now reported per side.** At 554,700 mm2, batch 1, Pro at 1M:
+
+| | stated | wafer fabric alone | cluster fabric alone | both together |
+|---|---:|---:|---:|---:|
+| N6 vs A100 | **8.33x** | 11.21x -> 5.41x | 6.92x -> 12.96x | 9.31x -> 8.42x |
+| N5 vs B200 | **4.01x** | 5.66x -> 2.48x | 3.33x -> 6.85x | 4.71x -> 4.24x |
+
+The joint column is a 1.1x interval and each side alone is about 2x. Nothing got
+more certain when the two were moved together -- the two uncertainties cancelled,
+and publishing only the joint interval claimed a precision neither constant
+supports. Before the re-grading the same presentation gave a one-sided ROM band
+of 13.48x-3.26x against a published joint band of 11.82x-4.46x: the ROM side's
+own band was *wider than the interval being published*
+(`docs/COMPARISON_FAIRNESS_AUDIT.md` A1).
+
+What is still `assumed` on the ROM side: `links.inter_wafer.hop_latency_s`
+(5 us, swept 1-10 us), which is now the largest unmeasured link in the model and
+84% of the two-wafer Pro design's link budget; and
+`MESH_ALLREDUCE_DIAMETER_FACTOR` = 1.1, which is *measured* but is the optimistic
+end of a measured 1.1-2.0x range and has no sweep of its own.
 
 ## 2e. The DeepSeek KV profiles were read, not run, and they were 3.2x low
 
@@ -465,9 +529,9 @@ now solves `t >= E_dynamic / (cooling_limit - P_static)`, and a part whose
 leakage and clock alone meet its budget does not exist rather than running
 slowly.
 
-<!-- figure: 100 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.thermally_throttled_points" name="power-limited points, N5/B200" -->
-**100 of 6,180 feasible points are power-limited** -- all of them in the
-N5/B200 study, 99 ROM designs and one B200 cluster, the worst throttled 1.35x.
+<!-- figure: 105 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.thermally_throttled_points" name="power-limited points, N5/B200" -->
+**105 of 6,108 feasible points are power-limited** -- all of them in the
+N5/B200 study, the worst throttled 1.35x.
 The prediction this section made under a uniform multiplier half survives:
 
 - **It survives on shape.** Every throttled point is a small or large array.
@@ -512,12 +576,12 @@ with batch in the direction the architecture predicts:**
 
 | study | model | batch 1 | batch 256 |
 |---|---|---:|---:|
-| N6 vs A100 | Qwen3-8B (dense) | 21.2x | **1.7x** | <!-- figure: 21.2 src="results/roofline/n6_vs_a100/analytical.json#power_and_energy.energy_per_token[model=Qwen3-8B,batch_size=1].tokens_per_joule_advantage_x" name="Qwen3-8B tokens/joule advantage at batch 1, N6" -->
-| N6 vs A100 | DeepSeek-V4-Flash (sparse) | 18.5x | **57.1x** |
-| N6 vs A100 | DeepSeek-V4-Pro (sparse) | 27.3x | 18.9x |
-| N5 vs B200 | Qwen3-8B (dense) | 6.7x | **2.7x** |
-| N5 vs B200 | DeepSeek-V4-Flash (sparse) | 5.8x | **39.1x** |
-| N5 vs B200 | DeepSeek-V4-Pro (sparse) | 16.6x | 21.4x | <!-- figure: 21.4 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.energy_per_token[model=DeepSeek-V4-Pro-0813,batch_size=256].tokens_per_joule_advantage_x" name="Pro tokens/joule advantage at batch 256, N5" -->
+| N6 vs A100 | Qwen3-8B (dense) | 19.3x | **1.8x** | <!-- figure: 19.3 src="results/roofline/n6_vs_a100/analytical.json#power_and_energy.energy_per_token[model=Qwen3-8B,batch_size=1].tokens_per_joule_advantage_x" name="Qwen3-8B tokens/joule advantage at batch 1, N6" -->
+| N6 vs A100 | DeepSeek-V4-Flash (sparse) | 17.3x | **55.5x** |
+| N6 vs A100 | DeepSeek-V4-Pro (sparse) | 25.9x | 18.8x |
+| N5 vs B200 | Qwen3-8B (dense) | 5.3x | **2.6x** |
+| N5 vs B200 | DeepSeek-V4-Flash (sparse) | 4.6x | **36.9x** |
+| N5 vs B200 | DeepSeek-V4-Pro (sparse) | 14.3x | 20.9x | <!-- figure: 20.9 src="results/roofline/n5_vs_b200/analytical.json#power_and_energy.energy_per_token[model=DeepSeek-V4-Pro-0813,batch_size=256].tokens_per_joule_advantage_x" name="Pro tokens/joule advantage at batch 256, N5" -->
 
 **A dense model gives the energy advantage back as batch rises; a sparse one
 does not.** A GPU amortises one weight read over the whole batch, so its joules

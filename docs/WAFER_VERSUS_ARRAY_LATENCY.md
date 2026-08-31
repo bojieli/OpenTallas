@@ -4,10 +4,10 @@
 > concluded that on-wafer tensor parallelism costs *"7.2–12.2 µs, or 12–21% of
 > the budget, and fits"*, and called that **"the sharpest argument for
 > wafer-scale"**. That conclusion is **inverted**, not merely mis-stated. The
-> executable model now charges an on-wafer all-reduce **110.88–187.88 µs** for
+> executable model now charges an on-wafer all-reduce **138.60–234.85 µs** for
 > the same three models, which against this document's own 58.8 µs budget is
-> **189–319% of it**. On-wafer tensor parallelism does not fit; it misses by
-> roughly a factor of two to three.
+> **236–399% of it**. On-wafer tensor parallelism does not fit; it misses by
+> roughly a factor of two to four.
 >
 > **The cause is nameable and isolated.** Section 3 charged an on-wafer
 > all-reduce **one** hop traversal regardless of how far it reached. A stitched
@@ -15,13 +15,21 @@
 > diameter** (Rocki et al., SC20, measured on a Cerebras wafer as *"a cycle
 > count only about 10% greater than the diameter of the system"*). For the
 > 57-reticle-region span this study models, that is **15.4 traversals**, not 1.
-> The 100 ns hop input is unchanged and is still this document's contribution to
-> the model; only the traversal count moved.
+> When this retraction was written the 100 ns hop input was unchanged and was
+> still this document's contribution to the model. **On 2026-08-31 it stopped
+> being ours**: `links.on_wafer.hop_latency_s` is now **125 ns, graded
+> `derived`**, from Cerebras' published core grid and clock and Tesla's
+> published reticle-die crossing, swept 75–250 ns instead of 30–500 ns. §1
+> carries the derivation. The re-grading moved the number *up* by 25%, so the
+> figures in this banner are, if anything, understated — they are the ones the
+> retraction was written against and are left as they were so the comparison
+> stays like for like.
 >
 > Two published rates derived from the retracted figures — **116,278 tok/s** and
 > **81,966 tok/s** per user, which are the reciprocals of the 8.6 µs and 12.2 µs
 > in the old §3 table — are **RETRACTED**. Nothing in this repository supports
-> them. The corrected on-wafer hard ceiling is **5,000–9,000 tok/s**.
+> them. The corrected on-wafer hard ceiling is **6,000–7,200 tok/s** at the
+> re-graded 125 ns hop (it was quoted as 5,000–9,000 tok/s at 100 ns).
 >
 > Everything in the old §5 that followed from "15× the latency headroom" is
 > rewritten below. The document's *framing* — that the choice is a crossover to
@@ -80,24 +88,180 @@ conclusion was measured against, so that the comparison is like for like.
 
 | link | `hop_latency_s` | grade | swept range |
 |---|---:|---|---|
-| `on_wafer` | **100 ns** | assumed | 30–500 ns | <!-- figure: 100 src="configs/hardware/technology.json#links.on_wafer.hop_latency_s.value" scale="1e9" name="on_wafer hop latency, ns" -->
-| `nvlink5` | **1.5 µs** | assumed | 1.0–5.5 µs | <!-- figure: 1.5 src="configs/hardware/technology.json#links.nvlink5.hop_latency_s.value" scale="1e6" name="nvlink5 hop latency, us" -->
+| `on_wafer` (N7, WSE-2) | **125 ns** | **derived** | 75–250 ns | <!-- figure: 125 src="configs/hardware/technology.json#links.on_wafer.hop_latency_s.value" scale="1e9" name="on_wafer hop latency, ns" -->
+| `on_wafer_n5` (N5, WSE-3) | **125 ns** | **derived** | 75–250 ns | <!-- figure: 125 src="configs/hardware/technology.json#links.on_wafer_n5.hop_latency_s.value" scale="1e9" name="on_wafer_n5 hop latency, ns" -->
+| `nvlink5` | **1.2 µs** | **derived** | 0.7–5.5 µs | <!-- figure: 1.2 src="configs/hardware/technology.json#links.nvlink5.hop_latency_s.value" scale="1e6" name="nvlink5 hop latency, us" -->
 | `infiniband_ndr` | **4.5 µs** | published | 3.7–5.7 µs | <!-- figure: 4.5 src="configs/hardware/technology.json#links.infiniband_ndr.hop_latency_s.value" scale="1e6" name="infiniband_ndr hop latency, us" -->
 | `inter_wafer` | **5.0 µs** | assumed | 1.0–10.0 µs | <!-- figure: 5.0 src="configs/hardware/technology.json#links.inter_wafer.hop_latency_s.value" scale="1e6" name="inter_wafer hop latency, us" -->
 | `ethernet` | **5.0 µs** | assumed | 2.0–10.0 µs | <!-- figure: 5.0 src="configs/hardware/technology.json#links.ethernet.hop_latency_s.value" scale="1e6" name="ethernet hop latency, us" -->
 
-Two of these rows cite *this document* as their source (`on_wafer` and
-`ethernet`), so its inputs are load-bearing in the model even though its
-arithmetic was not. The `on_wafer` note now carries an independent cross-check
-it did not have before: Cerebras publishes one clock per tile hop and ~900,000
-cores over 46,225 mm², about 73 tiles across an 815 mm² reticle field, so a
-reticle crossing is on the order of 73 cycles.
+**The wafer rows changed on 2026-08-31 and no longer cite this document.**
+`on_wafer` was 100 ns graded `assumed` and swept 30–500 ns; `nvlink5` (and its
+`nvlink3` twin, which the N6/A100 study uses) was 1.5 µs graded `assumed` and
+swept 1.0–5.5 µs. Neither is a judgement any more, and neither re-grading is a
+correction that only flatters us: the wafer hop went **up** 25%, which lowers
+every ratio in this document; `nvlink5` went **down** 20%, which lowers them
+again; and only its A100-generation twin `nvlink3` went up (1.5 → 2.5 µs), which
+raises the N6 ratios. That is why every N5 cell of §5's table falls
+(1.61/2.61/3.39× → 1.31/1.93/2.84×) while the N6 cells move both ways
+(2.15/2.97/3.91× → 1.85/3.31/4.05×): the wafer hop pulls all six down and the
+`nvlink3` correction pushes only the two sparse N6 cells back above where they
+started. `ethernet` and `on_package` still cite this document; `ethernet` is
+exercised by no design in either study.
 
-`nvlink5` is a **per-traversal** cost and a switched all-reduce is charged two
-traversals, so the stated 1.5 µs is a **3.0 µs in-domain all-reduce**. The old
-version of this document charged 1.5 µs for the whole all-reduce, so its NVLink
-column was also 2× low — a smaller error in the same direction as the on-wafer
-one, and it did not change that column's conclusion.
+**`on_wafer_n5` was split out of `on_wafer` later the same day, and it is a
+null result.** Until then one wafer constant served **both** studies while the
+GPU side already had two — `nvlink3` at 2.5 µs for the A100/N7 study,
+`nvlink5` at 1.2 µs for the B200/4NP study. `on_wafer` is derived from Cerebras
+WSE-2, a **TSMC 7 nm** part, so the N6/N7 study was correctly matched and the
+N5/4NP study was not: it charged the ROM side a 7 nm-era wafer fabric against a
+4 nm-era NVLink, which understates the ROM side in the study where it should be
+strongest. The wafer fabric is now node-keyed too, and each study names its own
+(`tools/run_roofline_studies.py` → `STUDIES[…]["rom_intra_link"]`, pinned by
+`tests/test_roofline.py::test_each_study_charges_a_wafer_fabric_of_its_own_node`).
+**The N5 entry lands on the same 125 ns**, and the next subsection derives why
+rather than asserting it. The direction matters and is therefore stated: a
+faster N5 wafer fabric would have *raised* every ratio a wafer design appears
+in — §5's N5 wafer-fabric band runs 5.66× → 2.48× at 554,700 mm², so this
+constant is worth about 2.3× there — and the derivation does not support one.
+It would not have moved the N5 study's own headline point at all, which is an
+`array` design on NVLink that touches no wafer fabric; the null is a null on
+the band, not merely on a number that was already insensitive.
+
+**What the model charges an `on_wafer` hop for, and what the sources measured.**
+The model's hop is one step between adjacent **815 mm² reticle fields** — a
+28.55 mm square, 57 to a wafer. It is *not* a tile-to-tile hop, and getting that
+wrong is a factor of 125 in the ROM side's favour — it would take the headline
+iso-area ratio from 8.33× to 14.7× — because the single clock cycle
+Cerebras publishes is a hop between **adjacent cores about 0.23 mm apart**, and
+there are ~126 of those across one of this model's fields. The transferable
+primitive is "one cycle per router pitch", published for a shipping part (WSE-3
+white paper, *"This design enables single clock cycle latency between nodes"*;
+Hot Chips 34, *"Single cycle latency between cores"*) and independently stated
+on fabricated silicon by four peer-reviewed groups. The field crossing is then
+`(28.55 mm / core pitch) cycles / clock`, and Cerebras publishes the core pitch
+outright at Hot Chips 34 — die "17mm x 30mm", "66 x 154 Cores", core
+"228um x 170um":
+
+| part | node | core pitch | hops across 815 mm² | clock | field crossing |
+|---|---|---:|---:|---|---:|
+| CS-1 / WSE-1 (Rocki Fig. 2, 89 × 51 tiles) | 16 nm | 0.348 mm | 82 | 0.85–1.1 GHz | **75–97 ns** |
+| WSE-2 (HC34 published grid) | N7 | 0.224 mm | 127 | 0.85–1.1 GHz | **116–150 ns** |
+| WSE-3, 46,225 mm² / 900,000 **active** cores | N5 | 0.227 mm | 126 | 0.85–1.1 GHz | **115–148 ns** |
+| WSE-3, 46,225 mm² / 970,000 **physical** cores | N5 | 0.218 mm | 131 | 0.85–1.1 GHz | **119–154 ns** |
+| WSE-3, published core area 38,000 µm² at WSE-2's fill | N5 | 0.222 mm | 129 | 0.85–1.1 GHz | **117–152 ns** |
+| Tesla Dojo D1, bonded reticle die (HC34: *"100ns die-to-die latency"*) | N7 | — | — | 2 GHz | **~111 ns** |
+
+Two **measured** end-to-end results land inside that band and neither was used
+to set it: Rocki et al.'s full-wafer scalar AllReduce over ~380,000 processors
+takes *"under 1.5 microseconds"*, which through this model's own 15.4 traversals
+at span 57 is **≤ 97 ns** per field crossing; and Santos et al. (SC24) state a
+wafer edge-to-edge latency *"of around a microsecond"*, which the published
+geometry reproduces without adjustment (7 × 154 = 1,078 hops at 850 MHz =
+1.27 µs). **125 ns** is the middle of the two routes available at N7 — Cerebras
+stitched, Tesla bonded — and it is 25% *above* the 100 ns this document used to
+supply.
+
+**And the same method at N5 gives the same answer, which is the null result.**
+Cerebras publishes **no** WSE-3 geometry: the Hot Chips 2024 successor to the
+slide that carried "17mm x 30mm", "66 x 154 Cores", "228um x 170um", "12 x 7
+Die" and "215mm x 215mm" carries only three labels — "10.7k Cores", "84 Die",
+"900k Cores" — so the last three rows above are *estimators*, not a published
+pitch, and they bracket the N7 figure of 127 hops at **126–131**. They point
+1–3% the *wrong* way. The reason is physical rather than accidental: latency
+across a fixed 28.55 mm is `(distance / router pitch) × 1 cycle`, so a *smaller*
+core puts **more** routers across the same millimetre and costs **more** cycles.
+Process scaling buys a mesh cores, not distance — and Cerebras spent the
+N7→N5 shrink on the core rather than on the pitch, keeping 48 kB of SRAM,
+110,000 standard cells and a 50/50 logic-to-SRAM split while doubling the FP16
+SIMD from 4-wide to 8-wide.
+
+That leaves the clock, and it did not move either. Cerebras publishes **1.1 GHz**
+for WSE-2 (Hot Chips 34, *"Power efficient design point … 1.1GHz clock
+frequency"*) and publishes **no WSE-3 clock in any document** — not the Hot
+Chips 36 deck, not the 2024 white paper, not the press release, not the product
+page. Two back-derivations from figures Cerebras *does* publish, each calibrated
+on WSE-2 where the answer is known, converge:
+
+| route | WSE-2 (N7) | published WSE-2 | method bias | WSE-3 (N5) | WSE-3 corrected |
+|---|---:|---:|---:|---:|---:|
+| memory BW / cores / 24 B per cycle | 20 PB/s ÷ 850,000 ÷ 24 = 0.98 GHz | 1.1 GHz | 1.12× | 21 PB/s ÷ 900,000 ÷ 24 = 0.97 GHz | **1.09 GHz** |
+| fabric BW / cores / 256 bit per cycle | 220 Pb/s ÷ 850,000 ÷ 256 = 1.01 GHz | 1.1 GHz | 1.09× | 214 Pb/s ÷ 900,000 ÷ 256 = 0.93 GHz | **1.01 GHz** |
+
+(The 24 B per cycle is Cerebras' own *"192-bit access per cycle from two 64-bit
+reads and one 64-bit write"*; the 256 bit is its five-port router's *"32-bit
+bidirectional interfaces in each of the four cardinal directions"*. On the
+21.6 PB/s that the CS-4 datasheet's 43.2 PB/s implies for exactly half a WSE-3
+Turbo, the memory route reads 1.00 GHz and corrects to 1.12.)
+
+1.01–1.12 GHz at N5 against 1.1 GHz published at N7 is flat inside a method
+whose own error on the calibration part is 9–12%. The **1.4 GHz** that 2026
+press reports quote for WSE-3 has no vendor source — it is a journalist's
+explicitly hedged inference (*"I think"*, The Next Platform, 19 August 2026)
+back-read from the CS-4 launch — and it is not used.
+
+The bonded route is offered at **both** nodes. No bonded wafer-scale part has
+been published at N5, and withholding Tesla's 111 ns from the N5 entry would put
+it at the stitched-only midpoint of ~132 ns and make N5 look *worse* than N7 —
+but that would be applying a different method at the two nodes, and two figures
+derived two ways are not comparable, which is the whole reason for splitting the
+entry. A bonded reticle interface is a packaging choice, not a property of the
+logic node.
+
+So the two nodes are stated equal, and the 1.6% the median estimator says the
+N5 hop is *slower* is a credit to this study's own side, recorded so it is not
+mistaken for a correction that went our way. Regenerating both studies with the
+split in place moves **no number in either report** except the evidence-ledger
+counts: same headlines, same per-side bands, same four gates to the digit.
+
+**What the null cost, measured rather than argued.** Driving `on_wafer_n5` to
+the low end of its own band, 75 ns, and re-simulating both studies moves the N5
+study and *only* the N5 study — headline 5.85× → 8.03×, and DeepSeek-V4-Pro at
+554,700 mm² 4.01× → 5.00×, with the N6 study unchanged to four decimals. The
+mirror holds: driving `on_wafer` to 75 ns moves N6 (10.78× → 13.95×, Pro
+8.33× → 10.09×) and leaves N5 untouched. So the split is live, and **an
+N5-specific wafer speed-up was worth up to 1.37× on that study's headline** —
+which is exactly why the derivation had to be done rather than chosen, and
+exactly why the null is worth stating. (This probe is a diagnostic; it is
+listed under "What nothing produces" below, because no committed artifact
+carries it.)
+
+**WITHDRAWN.** The previous version of this section said the `on_wafer` note
+*"now carries an independent cross-check it did not have before: … about 73
+tiles across an 815 mm² reticle field, so a reticle crossing is on the order of
+73 cycles."* That arithmetic does not reproduce. 900,000 cores over 46,225 mm²
+is 15,868 cores in 815 mm², and √15,868 = **126**, not 73. The error was 1.7×
+and it ran in this study's favour: it made 100 ns look like a comfortable
+over-estimate when the same inputs, done correctly, make it a mild
+under-estimate.
+
+**The band, 75–250 ns, and what its ends mean.** The low end is the coarsest
+tile pitch any wafer-scale part has shipped at the fastest clock any vendor has
+published — and it is a live possibility rather than a formality, because a ROM
+region is a mask-ROM array and not a 38,000 µm² processing element, so a
+purpose-built design may put fewer routers across the same millimetres. The high
+end is **not a slower wire**: it is the same wire under the collective Cerebras'
+SDK actually ships. Luczynski et al. measure a corner-rooted X-Y AllReduce whose
+path is ~2× the mesh diameter, against the 1.1× diameter this model charges from
+Rocki's hand-written kernel; 1.8× on the traversal count, folded into the hop
+because the model has no term for the collective algorithm, is ~230 ns. The old
+30–500 ns sweep is retired: 30 ns needs 1.05 ns/mm, three times faster than the
+fastest axis any wafer-scale part has ever shipped, and 500 ns is above every
+measurement in the literature.
+
+**`nvlink5` is a per-traversal cost and a switched all-reduce is charged two
+traversals**, so the stated 1.2 µs is a **2.4 µs in-domain all-reduce** — which
+is the 2.37 µs best device-initiated kernel measured on a GB200 NVL72, halved.
+The band's ends are the measured speed-of-light floor (1.404 µs, halved) and
+stock NCCL's measured ring (11.0 µs, halved). Its A100-generation twin
+`nvlink3`, which the N6 study charges, is set the same way from an 8×A100
+measurement: 2.5 µs stated (best measured kernel 5.0 µs ÷ 2), swept
+1.0–10.3 µs (stock NCCL's measured 20.6 µs ÷ 2). The previous note on all three
+entries claimed *"NVIDIA publishes no NVLink or NVSwitch latency figure in any
+form"*; that is **withdrawn** — NCCL's shipping source carries
+`hwLatencies[NVLINK][Ring][LL] = 0.6 µs` per ring step. The old version of this
+document charged 1.5 µs for the whole all-reduce rather than per traversal, and
+that error stands corrected as before.
 
 ## 2. Pipeline parallel: N−1 serial hops per token, capped by the layer count
 
@@ -112,20 +276,21 @@ Measured rows, B200 pipeline on Qwen3-8B, `nvlink5` inside an 8-GPU domain and
 
 | design | devices | hops/token | link latency/token | % of 58.8 µs | viable to (10% budget) | hard ceiling |
 |---|---:|---:|---:|---:|---:|---:|
-| `Qwen3-8B/b200_sxm-x2-pipeline` | 2 | 1 | 1.51 µs | 3% | 66,264.6 tok/s | 662,645.6 tok/s | <!-- figure: 1.51 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x2-pipeline" name="B200 x2 pipeline link latency/token" --> <!-- figure: 66,264.6 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x2-pipeline" name="B200 x2 pipeline viable to" --> <!-- figure: 662,645.6 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x2-pipeline" name="B200 x2 pipeline hard ceiling" -->
-| `Qwen3-8B/b200_sxm-x4-pipeline` | 4 | 3 | 4.53 µs | 8% | 22,088.2 tok/s | 220,881.9 tok/s | <!-- figure: 4.53 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x4-pipeline" name="B200 x4 pipeline link latency/token" --> <!-- figure: 22,088.2 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x4-pipeline" name="B200 x4 pipeline viable to" --> <!-- figure: 220,881.9 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x4-pipeline" name="B200 x4 pipeline hard ceiling" -->
-| `Qwen3-8B/b200_sxm-x29-pipeline` | 29 | 28 | 51.72 µs | 88% | 1,933.5 tok/s | 19,335.2 tok/s | <!-- figure: 51.72 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x29-pipeline" name="B200 x29 pipeline link latency/token" --> <!-- figure: 1,933.5 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x29-pipeline" name="B200 x29 pipeline viable to" --> <!-- figure: 19,335.2 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x29-pipeline" name="B200 x29 pipeline hard ceiling" -->
-| `Qwen3-8B/b200_sxm-x58-pipeline` | 58 | **35 (capped)** | 65.44 µs | **111%** | 1,528.2 tok/s | 15,281.8 tok/s | <!-- figure: 65.44 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x58-pipeline" name="B200 x58 pipeline link latency/token" --> <!-- figure: 1,528.2 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x58-pipeline" name="B200 x58 pipeline viable to" --> <!-- figure: 15,281.8 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x58-pipeline" name="B200 x58 pipeline hard ceiling" -->
-| `Qwen3-8B/b200_sxm-x347-pipeline` | 347 | **35 (capped)** | 65.44 µs | **111%** | 1,528.2 tok/s | 15,281.8 tok/s | <!-- figure: 65.44 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x347-pipeline" name="B200 x347 pipeline link latency/token" --> <!-- figure: 1,528.2 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x347-pipeline" name="B200 x347 pipeline viable to" --> <!-- figure: 15,281.8 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x347-pipeline" name="B200 x347 pipeline hard ceiling" -->
+| `Qwen3-8B/b200_sxm-x2-pipeline` | 2 | 1 | 1.21 µs | 2% | 82,706.0 tok/s | 827,059.9 tok/s | <!-- figure: 1.21 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x2-pipeline" name="B200 x2 pipeline link latency/token" --> <!-- figure: 82,706.0 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x2-pipeline" name="B200 x2 pipeline viable to" --> <!-- figure: 827,059.9 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x2-pipeline" name="B200 x2 pipeline hard ceiling" -->
+| `Qwen3-8B/b200_sxm-x4-pipeline` | 4 | 3 | 3.63 µs | 6% | 27,568.7 tok/s | 275,686.6 tok/s | <!-- figure: 3.63 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x4-pipeline" name="B200 x4 pipeline link latency/token" --> <!-- figure: 27,568.7 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x4-pipeline" name="B200 x4 pipeline viable to" --> <!-- figure: 275,686.6 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x4-pipeline" name="B200 x4 pipeline hard ceiling" -->
+| `Qwen3-8B/b200_sxm-x29-pipeline` | 29 | 28 | 44.22 µs | 75% | 2,261.5 tok/s | 22,614.7 tok/s | <!-- figure: 44.22 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x29-pipeline" name="B200 x29 pipeline link latency/token" --> <!-- figure: 2,261.5 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x29-pipeline" name="B200 x29 pipeline viable to" --> <!-- figure: 22,614.7 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x29-pipeline" name="B200 x29 pipeline hard ceiling" -->
+| `Qwen3-8B/b200_sxm-x58-pipeline` | 58 | **35 (capped)** | 56.14 µs | **95%** | 1,781.3 tok/s | 17,813.4 tok/s | <!-- figure: 56.14 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x58-pipeline" name="B200 x58 pipeline link latency/token" --> <!-- figure: 1,781.3 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x58-pipeline" name="B200 x58 pipeline viable to" --> <!-- figure: 17,813.4 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x58-pipeline" name="B200 x58 pipeline hard ceiling" -->
+| `Qwen3-8B/b200_sxm-x347-pipeline` | 347 | **35 (capped)** | 56.14 µs | **95%** | 1,781.3 tok/s | 17,813.4 tok/s | <!-- figure: 56.14 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x347-pipeline" name="B200 x347 pipeline link latency/token" --> <!-- figure: 1,781.3 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x347-pipeline" name="B200 x347 pipeline viable to" --> <!-- figure: 17,813.4 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/b200_sxm-x347-pipeline" name="B200 x347 pipeline hard ceiling" -->
 
-The qualitative claim survives and the numbers move. At Taalas-class speed a
-56-chip array is still not available on a pipeline — but the overrun is
-**11%**, not the 40% the old table asserted, and it stops growing at 58 devices
-instead of doubling again at 112. At 3,000 tok/s the same array costs 20% of the
-budget and at 1,000 tok/s it costs 7%, which is a design cost rather than a
-wall. The old table's
-`N=112 → 283%` cell is **retracted**: no array of any size can charge Qwen3-8B
-more than 35 pipeline hops.
+The qualitative claim survives and the numbers move again with the re-graded
+`nvlink5` hop (1.5 → 1.2 µs, §1). At Taalas-class speed a 56-chip array now
+spends **95%** of the budget on its pipeline rather than overrunning it — the
+old table asserted 40% over, the previous version of this table 11% over, and
+the corrected NVLink constant brings it just inside. It stops growing at 58
+devices instead of doubling again at 112. At 3,000 tok/s the same array costs
+**17%** of the budget and at 1,000 tok/s **6%**, which is a design cost rather
+than a wall. The old table's `N=112 → 283%` cell is **retracted**: no array of
+any size can charge Qwen3-8B more than 35 pipeline hops.
 
 ## 3. Tensor parallel: the retracted section
 
@@ -135,9 +300,9 @@ how few devices it is spread over*. That much is unchanged, and it is
 
 | model | layers | collectives/token | **on-wafer** | **NVLink array** | on-wafer as % of 58.8 µs |
 |---|---:|---:|---:|---:|---:|
-| Qwen3-8B | 36 | 72 | **110.88 µs** | **217.31 µs** | **189%** | <!-- figure: 110.88 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Qwen on-wafer tensor link latency/token" --> <!-- figure: 217.31 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-tensor-x3" name="Qwen NVLink tensor link latency/token" -->
-| DeepSeek-V4-Flash | 43 | 86 | **132.44 µs** | **1,055.19 µs** | **225%** | <!-- figure: 132.44 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Flash on-wafer tensor link latency/token" --> <!-- figure: 1,055.19 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-tensor-x14" name="Flash NVLink tensor link latency/token" -->
-| DeepSeek-V4-Pro | 61 | 122 | **187.88 µs** (on-wafer term only) | **1,562.38 µs** | **319%** | <!-- figure: 1,562.38 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-tensor-x72" name="Pro NVLink tensor link latency/token" -->
+| Qwen3-8B | 36 | 72 | **138.60 µs** | **174.11 µs** | **236%** | <!-- figure: 138.60 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Qwen on-wafer tensor link latency/token" --> <!-- figure: 174.11 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-tensor-x3" name="Qwen NVLink tensor link latency/token" -->
+| DeepSeek-V4-Flash | 43 | 86 | **165.55 µs** | **1,003.59 µs** | **282%** | <!-- figure: 165.55 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Flash on-wafer tensor link latency/token" --> <!-- figure: 1,003.59 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-tensor-x14" name="Flash NVLink tensor link latency/token" -->
+| DeepSeek-V4-Pro | 61 | 122 | **234.85 µs** (on-wafer term only) | **1,489.18 µs** | **399%** | <!-- figure: 1,489.18 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-tensor-x72" name="Pro NVLink tensor link latency/token" -->
 
 On-wafer rows: `Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1`,
 `DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1`,
@@ -146,15 +311,18 @@ On-wafer rows: `Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1`,
 `DSV4-Flash/ROM-N5-native-SRAMKV-array-tensor-x14`,
 `DSV4-Pro/ROM-N5-native-SRAMKV-array-tensor-x72`. Each row's `Events` cell
 spells out the arithmetic, e.g. `72 x all_reduce span 57 on on_wafer
-(traversals 15.4) = 110.88 us`.
+(traversals 15.4) = 138.60 us`.
 
 **Pro does not fit on one wafer, and the honest total is worse than the table
 suggests.** Its ROM array is 52.6 reticle fields at N5 (§4), so a tensor group
-spans two wafers and pays `inter_wafer` as well: 187.88 µs on-wafer **plus**
-1,237.49 µs across the wafer boundary = **1,425.37 µs**, a hard ceiling of <!-- figure: 1,425.37 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-wafer-tensor-x2" name="Pro two-wafer tensor link latency/token" -->
-**701.6 tok/s**. Charging that link the on-wafer 100 ns hop — which this study
-previously did — is the ROM-side mirror of charging a GPU cluster a 672-way
-pipeline.
+spans two wafers and pays `inter_wafer` as well: 234.85 µs on-wafer **plus**
+1,237.49 µs across the wafer boundary = **1,472.34 µs**, a hard ceiling of <!-- figure: 1,472.34 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-wafer-tensor-x2" name="Pro two-wafer tensor link latency/token" -->
+**679.2 tok/s**. Charging that link the on-wafer stitched-mesh hop — which this
+study previously did — is the ROM-side mirror of charging a GPU cluster a
+672-way pipeline. Note what the re-grading did here: raising the on-wafer hop by
+25% moved this design's total by only 3%, because 84% of it is the `inter_wafer`
+link, which is still `assumed` at 5.0 µs and is now the largest unmeasured
+number left on the ROM side.
 
 **The corrected conclusion.** On-wafer tensor parallelism is *better than
 NVLink* and is *not good anywhere*. The ordering survives; the fit does not. The
@@ -162,12 +330,14 @@ hard ceilings are:
 
 | | on-wafer hard ceiling | NVLink-array hard ceiling |
 |---|---:|---:|
-| Qwen3-8B | 9,018.8 tok/s | 4,601.7 tok/s | <!-- figure: 9,018.8 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Qwen on-wafer tensor hard ceiling" --> <!-- figure: 4,601.7 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-tensor-x3" name="Qwen NVLink tensor hard ceiling" -->
-| DeepSeek-V4-Flash | 7,550.6 tok/s | 947.7 tok/s | <!-- figure: 7,550.6 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Flash on-wafer tensor hard ceiling" --> <!-- figure: 947.7 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-tensor-x14" name="Flash NVLink tensor hard ceiling" -->
-| DeepSeek-V4-Pro | 701.6 tok/s | 640.0 tok/s | <!-- figure: 701.6 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-wafer-tensor-x2" name="Pro two-wafer tensor hard ceiling" --> <!-- figure: 640.0 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-tensor-x72" name="Pro NVLink tensor hard ceiling" -->
+| Qwen3-8B | 7,215.0 tok/s | 5,743.5 tok/s | <!-- figure: 7,215.0 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Qwen on-wafer tensor hard ceiling" --> <!-- figure: 5,743.5 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-tensor-x3" name="Qwen NVLink tensor hard ceiling" -->
+| DeepSeek-V4-Flash | 6,040.5 tok/s | 996.4 tok/s | <!-- figure: 6,040.5 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1" name="Flash on-wafer tensor hard ceiling" --> <!-- figure: 996.4 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-tensor-x14" name="Flash NVLink tensor hard ceiling" -->
+| DeepSeek-V4-Pro | 679.2 tok/s | 671.5 tok/s | <!-- figure: 679.2 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-wafer-tensor-x2" name="Pro two-wafer tensor hard ceiling" --> <!-- figure: 671.5 src="results/roofline/n5_vs_b200/REPORT.md#Hard ceiling" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-tensor-x72" name="Pro NVLink tensor hard ceiling" -->
 
-That band — **5,000–9,000 tok/s** for the two models that fit on one wafer — is
-the replacement for the retracted 116,278 / 81,966 tok/s. The report states the
+That band — **6,000–7,200 tok/s** for the two models that fit on one wafer — is
+the replacement for the retracted 116,278 / 81,966 tok/s. It narrowed from
+5,000–9,000 tok/s when the on-wafer hop was re-graded upward from 100 to
+125 ns. The report states the
 retraction itself as finding 8 (`n5_vs_b200/REPORT.md`, "What the model says"),
 and a test pins it:
 `tests/test_roofline.py::test_on_wafer_tensor_parallelism_no_longer_reaches_taalas_rates`.
@@ -194,9 +364,9 @@ Checkpoint bytes and bits/parameter are
 
 | model | checkpoint | bits/param | ROM array @N5 | reticles | array design the study builds | array viable to |
 |---|---:|---:|---:|---:|---|---:|
-| Qwen3-8B | 16.4 GB | 16.00 | 786 mm² | **1.0** | `…array-pipeline-x3`, 3 devices, 2 hops, 3.02 µs | **33,132.3 tok/s** | <!-- figure: 16.4 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=Qwen3-8B].checkpoint_bytes" scale="1e-9" name="Qwen checkpoint, GB" --> <!-- figure: 16.00 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=Qwen3-8B].native_bits_per_parameter" name="Qwen bits/param" --> <!-- figure: 3.02 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x3" name="Qwen array pipeline link latency/token" --> <!-- figure: 33,132.3 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x3" name="Qwen array pipeline viable to" -->
-| DeepSeek-V4-Flash | 166.9 GB | 4.70 | 8,010 mm² | **9.8** | `…array-pipeline-x14`, 14 devices, 13 hops, 22.77 µs | **4,391.2 tok/s** | <!-- figure: 166.9 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].checkpoint_bytes" scale="1e-9" name="Flash checkpoint, GB" --> <!-- figure: 4.70 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].native_bits_per_parameter" name="Flash bits/param" --> <!-- figure: 22.77 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-pipeline-x14" name="Flash array pipeline link latency/token" --> <!-- figure: 4,391.2 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-pipeline-x14" name="Flash array pipeline viable to" -->
-| DeepSeek-V4-Pro | 892.7 GB | 4.46 | 42,852 mm² | **52.6** | `…array-pipeline-x74`, 74 devices, 60 hops, 113.85 µs | **878.3 tok/s** | <!-- figure: 892.7 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].checkpoint_bytes" scale="1e-9" name="Pro checkpoint, GB" --> <!-- figure: 4.46 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].native_bits_per_parameter" name="Pro bits/param" --> <!-- figure: 113.85 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-pipeline-x74" name="Pro array pipeline link latency/token" --> <!-- figure: 878.3 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-pipeline-x74" name="Pro array pipeline viable to" -->
+| Qwen3-8B | 16.4 GB | 16.00 | 786 mm² | **1.0** | `…array-pipeline-x3`, 3 devices, 2 hops, 2.42 µs | **41,353.0 tok/s** | <!-- figure: 16.4 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=Qwen3-8B].checkpoint_bytes" scale="1e-9" name="Qwen checkpoint, GB" --> <!-- figure: 16.00 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=Qwen3-8B].native_bits_per_parameter" name="Qwen bits/param" --> <!-- figure: 2.42 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x3" name="Qwen array pipeline link latency/token" --> <!-- figure: 41,353.0 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=Qwen3-8B/ROM-N5-native-SRAMKV-array-pipeline-x3" name="Qwen array pipeline viable to" -->
+| DeepSeek-V4-Flash | 166.9 GB | 4.70 | 8,010 mm² | **9.8** | `…array-pipeline-x14`, 14 devices, 13 hops, 19.17 µs | **5,215.6 tok/s** | <!-- figure: 166.9 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].checkpoint_bytes" scale="1e-9" name="Flash checkpoint, GB" --> <!-- figure: 4.70 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Flash-0731].native_bits_per_parameter" name="Flash bits/param" --> <!-- figure: 19.17 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-pipeline-x14" name="Flash array pipeline link latency/token" --> <!-- figure: 5,215.6 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=DSV4-Flash/ROM-N5-native-SRAMKV-array-pipeline-x14" name="Flash array pipeline viable to" -->
+| DeepSeek-V4-Pro | 892.7 GB | 4.46 | 42,852 mm² | **52.6** | `…array-pipeline-x74`, 74 devices, 60 hops, 97.95 µs | **1,020.9 tok/s** | <!-- figure: 892.7 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].checkpoint_bytes" scale="1e-9" name="Pro checkpoint, GB" --> <!-- figure: 4.46 src="results/roofline/n5_vs_b200/analytical.json#model_summaries[model=DeepSeek-V4-Pro-0813].native_bits_per_parameter" name="Pro bits/param" --> <!-- figure: 97.95 src="results/roofline/n5_vs_b200/REPORT.md#Link latency/token" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-pipeline-x74" name="Pro array pipeline link latency/token" --> <!-- figure: 1,020.9 src="results/roofline/n5_vs_b200/REPORT.md#Viable to (10% budget)" table="Array or wafer" where="Design=DSV4-Pro/ROM-N5-native-SRAMKV-array-pipeline-x74" name="Pro array pipeline viable to" -->
 
 The device counts are larger than the ROM area alone implies because a design
 also has to carry compute, KV store and beachfront; they are the counts the
@@ -204,8 +374,8 @@ study's own design generator produced, not a division I performed.
 
 Three of the old §4 numbers moved and one claim changed shape:
 
-- Flash: **10 chips → 14**, **7,400 tok/s → 4,391.2**;
-- Pro: **53 chips → 74**, **1,280 tok/s → 878.3**;
+- Flash: **10 chips → 14**, **7,400 tok/s → 5,215.6**;
+- Pro: **53 chips → 74**, **1,280 tok/s → 1,020.9**;
 - Qwen3-8B: the old row said **416 mm², one chip, no distribution needed**. That
   416 mm² was an **FP8 re-encoding of a BF16 release** and is retracted. At the
   released BF16 packing Qwen3-8B is **786 mm² of ROM at N5 — still one reticle
@@ -219,8 +389,9 @@ decode rates**, and that part of the old conclusion stands — but the previous
 version measured it against per-model budgets of 308 µs and 926 µs that nothing
 produced, so it is restated against the model's own threshold instead. The
 `Array viable to` column *is* the 10%-of-budget rate: Flash over fourteen chips
-spends 10% of the token budget at 4,391.2 tok/s and all of it at 43,911.5;
-Pro over seventy-four spends 10% at 878.3 tok/s and all of it at 8,783.4. Below
+spends 10% of the token budget at 5,215.6 tok/s and all of it at 52,156.5;
+Pro over seventy-four spends 10% at 1,020.9 tok/s and all of it at 10,209.2.
+Below
 the first number the interconnect is a design cost; above the second the
 topology cannot deliver the rate at all.
 
@@ -233,23 +404,31 @@ per-user ratio directly, at batch 1, each side on its own best design
 
 | | N5 vs B200 | N6 vs A100 |
 |---|---:|---:|
-| Qwen3-8B | **1.61×** | **2.15×** | <!-- figure: 1.61 src="results/roofline/n5_vs_b200/REPORT.md#Wafer/array" table="Topology choice" where="Model=Qwen3-8B;B=1" name="Qwen wafer/array at N5, B=1" --> <!-- figure: 2.15 src="results/roofline/n6_vs_a100/REPORT.md#Wafer/array" table="Topology choice" where="Model=Qwen3-8B;B=1" name="Qwen wafer/array at N6, B=1" -->
-| DeepSeek-V4-Flash | **2.61×** | **2.97×** | <!-- figure: 2.61 src="results/roofline/n5_vs_b200/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Flash-0731;B=1" name="Flash wafer/array at N5, B=1" --> <!-- figure: 2.97 src="results/roofline/n6_vs_a100/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Flash-0731;B=1" name="Flash wafer/array at N6, B=1" -->
-| DeepSeek-V4-Pro | **3.39×** | **3.91×** | <!-- figure: 3.39 src="results/roofline/n5_vs_b200/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Pro-0813;B=1" name="Pro wafer/array at N5, B=1" --> <!-- figure: 3.91 src="results/roofline/n6_vs_a100/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Pro-0813;B=1" name="Pro wafer/array at N6, B=1" -->
+| Qwen3-8B | **1.31×** | **1.85×** | <!-- figure: 1.31 src="results/roofline/n5_vs_b200/REPORT.md#Wafer/array" table="Topology choice" where="Model=Qwen3-8B;B=1" name="Qwen wafer/array at N5, B=1" --> <!-- figure: 1.85 src="results/roofline/n6_vs_a100/REPORT.md#Wafer/array" table="Topology choice" where="Model=Qwen3-8B;B=1" name="Qwen wafer/array at N6, B=1" -->
+| DeepSeek-V4-Flash | **1.93×** | **3.31×** | <!-- figure: 1.93 src="results/roofline/n5_vs_b200/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Flash-0731;B=1" name="Flash wafer/array at N5, B=1" --> <!-- figure: 3.31 src="results/roofline/n6_vs_a100/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Flash-0731;B=1" name="Flash wafer/array at N6, B=1" -->
+| DeepSeek-V4-Pro | **2.84×** | **4.05×** | <!-- figure: 2.84 src="results/roofline/n5_vs_b200/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Pro-0813;B=1" name="Pro wafer/array at N5, B=1" --> <!-- figure: 4.05 src="results/roofline/n6_vs_a100/REPORT.md#Wafer/array" table="Topology choice" where="Model=DeepSeek-V4-Pro-0813;B=1" name="Pro wafer/array at N6, B=1" -->
+
+**The N5 column fell and the N6 column rose, and that is the re-grading, not
+noise.** The N5 study charges `nvlink5`, which got *faster* (1.5 → 1.2 µs), so
+its array side improved; the N6 study charges `nvlink3`, which got *slower*
+(1.5 → 2.5 µs), so its array side worsened. Both columns also carry the 25%
+slower wafer hop. The ordering is unchanged and the wafer still wins every cell,
+but the N5 margin is now as low as **1.31×**.
 
 On collective cost alone, like for like, the report states the wafer is *"at
-least 2.0× cheaper"* (finding 8). The per-model collective ratios follow from
-the §3 table by division — Qwen 217.31/110.88 = **1.96×**, Flash
-1,055.19/132.44 = **7.97×**, Pro 1,562.38/1,425.37 = **1.10×** — and note that
-Pro's is barely better than one, because its wafer machine pays an inter-wafer
-link the array does not have. A claim elsewhere in this repository that the
-wafer is 8.3× cheaper on Flash and 8.9× on Pro has **no producer**; those
-per-model values appear in neither study report.
+least 1.3× cheaper"* (finding 8; it said 2.0× before the re-grading). The
+per-model collective ratios follow from the §3 table by division — Qwen
+174.11/138.60 = **1.26×**, Flash 1,003.59/165.55 = **6.06×**, Pro
+1,489.18/1,472.34 = **1.01×** — and note that Pro's is now barely distinguishable
+from one, because its wafer machine pays an inter-wafer link the array does not
+have. A claim elsewhere in this repository that the wafer is 8.3× cheaper on
+Flash and 8.9× on Pro has **no producer**; those per-model values appear in
+neither study report.
 
 - **Array of reticle chips** — better yield, fault-tolerant to single-chip
   failure, composable, incrementally purchasable. Caps per-user decode at the
-  §4 rates, and forecloses tensor parallelism above ~600–4,600 tok/s.
-- **Wafer** — **1.6–3.9× the per-user rate**, tensor parallelism available but
+  §4 rates, and forecloses tensor parallelism above ~670–5,700 tok/s.
+- **Wafer** — **1.3–4.1× the per-user rate**, tensor parallelism available but
   **not at Taalas-class rates**, and the only route to a per-user rate an array's
   hop count forbids. Costs stitching, yield, repair, and a thermal object in the
   class of a shipping wafer-scale system.<sup>[W]</sup>
@@ -257,8 +436,8 @@ per-model values appear in neither study report.
 **Which one wins depends on what is being maximised, and the study reports both
 rather than choosing.** On per-user rate at equal area the wafer wins **24 of
 24** operating points in both studies. On tokens per second per square
-millimetre the same points split **11 array / 13 wafer** at N5-vs-B200 and
-**20 array / 4 wafer** at N6-vs-A100 (finding 9 in each report). So the old §5's
+millimetre the same points split **12 array / 12 wafer** at N5-vs-B200 and
+**18 array / 6 wafer** at N6-vs-A100 (finding 9 in each report). So the old §5's
 *"the array is the better default for the large models"* is now **half right and
 half inverted**: it is right per unit silicon, and wrong per user, and it was
 stated as though those were the same quantity. They are not — separating them
@@ -267,8 +446,46 @@ was the single largest correction in the study.
 The wafer also has a structural disadvantage the old version of this document
 never mentioned: perimeter grows as the square root of area, so HBM beachfront —
 and therefore KV bandwidth — does not scale with wafer area the way compute and
-ROM capacity do. 318 of 3,016 feasible points at N5 bind on `kv_read` for that
+ROM capacity do. 224 of 3,016 feasible points at N5 bind on `kv_read` for that
 reason (finding 10).
+
+## 6. How much of the uncertainty is ours, reported apart from theirs
+
+The published band used to move every link on both sides at once. That is the
+right test for a *common-mode* error and the wrong one for the question a reader
+actually has, because the two sides partly cancel: the joint band came out
+**narrower than the wafer side's own band**, which hid where the width lived.
+Since 2026-08-31 each report prints three bands instead of one
+(`REPORT.md` → "The headline is a band, and each side's share of it is reported
+apart"). At 554,700 mm², batch 1, DeepSeek-V4-Pro at 1M context:
+
+| study | stated | wafer fabric alone, low → high | cluster fabric alone, low → high | both together |
+|---|---:|---:|---:|---:|
+| N6 vs A100 | **8.33×** | 11.21× → 5.41× | 6.92× → 12.96× | 9.31× → 8.42× | <!-- figure: 8.33 src="results/roofline/n6_vs_a100/REPORT.md#Ratio stated" table="headline is a band" where="Model=DeepSeek-V4-Pro-0813;ROM mm2=554700" name="Pro headline ratio, N6" --> <!-- figure: 11.21 src="results/roofline/n6_vs_a100/REPORT.md#Wafer fabric low → high" table="headline is a band" where="Model=DeepSeek-V4-Pro-0813;ROM mm2=554700" name="Pro wafer-fabric band low, N6" -->
+| N5 vs B200 | **4.01×** | 5.66× → 2.48× | 3.33× → 6.85× | 4.71× → 4.24× | <!-- figure: 4.01 src="results/roofline/n5_vs_b200/REPORT.md#Ratio stated" table="headline is a band" where="Model=DeepSeek-V4-Pro-0813;ROM mm2=554700" name="Pro headline ratio, N5" -->
+
+**The wafer fabric column is ours** (`on_wafer`/`on_wafer_n5` per study, and
+`inter_wafer`); no GPU design in either study touches either link. **The cluster fabric column is charged to both
+families** (`nvlink3`/`nvlink5` and InfiniBand), because a ROM *array* is built
+on the same interconnect the GPUs are — it is grouped as theirs only because the
+headline GPU design is the one machine whose entire link budget is made of it.
+A low wafer hop makes the ROM machine faster and the ratio larger; a low cluster
+hop makes the GPU faster and the ratio smaller, so the two columns run in
+opposite directions by construction and their product is what the joint column
+shows.
+
+Read the N6 row: the joint band is a 1.1× interval and each side alone is about
+2×. **Nothing about the comparison got more certain when the two were moved
+together — the two uncertainties simply cancelled**, and reporting only the
+joint interval would have claimed a precision neither constant supports.
+
+For scale, this is what the same presentation showed before the re-grading, when
+`on_wafer` was 100 ns swept 30–500 ns and `nvlink3` 1.5 µs swept 1.0–5.5 µs
+(`docs/COMPARISON_FAIRNESS_AUDIT.md` A1): wafer fabric alone **13.48× → 3.26×**,
+a 4.1× span, against a published joint band of 11.82× → 4.46×, 2.6×. The
+one-sided ROM band was wider than the band being published. It is now 2.1×,
+and the reason is not a narrower opinion — it is that the constant stopped being
+an opinion.
 
 **Caveat.** These are hop-latency floors plus the model's payload
 serialisation. They ignore switch contention and the pipeline fill cost at batch
@@ -297,7 +514,47 @@ invent a figure.
   to *this document* — and it appears in both roofline reports only inside their
   assumed-inputs ledger, at `links.on_package.hop_latency_s`. **No design row in
   either study exercises it**, so no report line prices it. It is an input with
-  no consumer, and the 300 ns has never been checked against anything.
+  no consumer, and the 300 ns has never been checked against anything. The
+  2026-08-31 node audit therefore leaves it single-valued: a constant no
+  comparator binds on cannot make one study disagree with the other. That it is
+  charged by nothing is asserted, not assumed, by
+  `tests/test_roofline.py::test_on_package_is_charged_by_no_design_in_either_study`.
+- **The one-sided perturbation probe in §1** (`on_wafer_n5` alone at 75 ns →
+  N5 headline 8.03×, N6 unchanged). It is `_simulate_study` called twice on a
+  perturbed `Technology` in memory; no committed artifact carries it, because
+  the studies are generated at the stated values and the per-side *band* in §5
+  is the version of this that is an artifact. `tests/test_roofline.py::test_the_wafer_split_is_load_bearing`
+  pins the property the probe illustrates — that each study moves only with its
+  own wafer fabric — without pinning the numbers.
 - **A per-model "wafer is N× cheaper on the collective" figure** as an artifact
-  field. The reports state only "at least 2.0×"; the per-model ratios in §5 are
+  field. The reports state only "at least 1.3×"; the per-model ratios in §5 are
   my division of two cited cells and are labelled as such.
+- **A measured reticle-field-to-reticle-field latency on a wafer-scale part.**
+  §1's 125 ns is `derived`, not `measured`: it composes a published per-tile
+  cycle, a published tile pitch and a published clock, and it is corroborated by
+  two measured *whole-wafer* collectives. Nobody has published a latency for the
+  object this model actually charges — one crossing of one reticle field — and
+  nobody has published one for a stitched reticle **boundary** in cycles at all.
+- **A wafer-to-wafer (SwarmX-class) latency.** `links.inter_wafer.hop_latency_s`
+  is still `assumed` at 5.0 µs, swept 1–10 µs, and after the re-grading it is the
+  largest unmeasured number left on the ROM side — 84% of the two-wafer Pro
+  design's link budget in §3. The one adjacent figure Cerebras publishes is a
+  Hot Chips 2024 slide bullet, *"CS-3 IO is <5us / 4 hops required"*, which reads
+  per hop as exactly the assumed value and read as a whole path would be 1.25 µs
+  and would move the headline sharply in this study's favour. A slide bullet
+  cannot be disambiguated, so the value is unchanged. **The node audit leaves it
+  single-valued too, and for a reason the GPU side supplies.** `inter_wafer` is
+  charged by both studies, which looks like the defect `on_wafer` had; but its
+  counterpart on the GPU side is the scale-out fabric, where `infiniband_hdr`
+  and `infiniband_ndr` are *two* entries carrying the **same** measured 4.5 µs
+  hop — they differ in bandwidth and domain size, not in latency, because
+  small-message RDMA latency between accelerator buffers is set by the NIC and
+  the protocol stack rather than by the logic node. One scale-out number per
+  side across the two studies is symmetric. What was asymmetric was one number
+  on one side against two on the other, and that was `on_wafer`.
+- **A band on `MESH_ALLREDUCE_DIAMETER_FACTOR` (1.1).** It is measured, and it is
+  the *optimistic* end of a measured range: Rocki's 1.1× is a hand-written
+  centre-rooted collective, while the corner-rooted X-Y collective Cerebras' SDK
+  ships and Luczynski et al. measured costs about 2× the diameter. That 1.8× is
+  currently folded into the top of the `on_wafer` sweep rather than swept in its
+  own right, and it is the second-largest unswept quantity on the ROM side.

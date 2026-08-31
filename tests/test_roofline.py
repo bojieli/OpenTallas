@@ -23,6 +23,7 @@ import pytest
 from opentallas.roofline import (
     GRADES,
     Graded,
+    LinkEvent,
     Technology,
     Topology,
     a100_power_anchor,
@@ -617,16 +618,16 @@ ASSUMED_INPUTS = frozenset(
         "links.inter_wafer.fabric",
         "links.inter_wafer.hop_latency_s",
         "links.inter_wafer.switch_radix",
-        # NVIDIA publishes no NVLink latency figure of any kind. The bandwidth,
-        # the domain size and the single-tier switch structure ARE published,
-        # which is why only the latency of each NVLink entry is assumed.
+        # The generic NVLink entry, kept for the crossover doc's worked
+        # examples and exercised by no study. The three entries the studies
+        # actually charge -- nvlink3, nvlink5, nvlink5_nvl72 -- are no longer
+        # assumed: each is now half a measured small-message all-reduce on the
+        # fabric it prices, and `links.on_wafer.hop_latency_s` is likewise
+        # derived from the published Cerebras core grid and clock. This entry
+        # still rests on a blog and is still swept.
         "links.nvlink.hop_latency_s",
-        "links.nvlink3.hop_latency_s",
-        "links.nvlink5.hop_latency_s",
-        "links.nvlink5_nvl72.hop_latency_s",
         "links.on_package.fabric",
         "links.on_package.hop_latency_s",
-        "links.on_wafer.hop_latency_s",
         "reference_parts.taalas_hc1.batch_size",
         "reference_parts.taalas_hc1.weight_amortization",
         "reference_parts.taalas_hc1.weight_bits_per_parameter",
@@ -1166,6 +1167,270 @@ def test_a_mesh_collective_pays_the_mesh_diameter(technology) -> None:
     assert technology.collective_traversals("on_wafer", 57) == pytest.approx(15.4)
     assert technology.collective_traversals("on_wafer", 681) > technology.\
         collective_traversals("on_wafer", 57)
+
+
+def test_the_two_binding_hop_latencies_are_no_longer_assumed(technology) -> None:
+    """**The re-grading of 2026-08-31, pinned so it cannot silently revert.**
+
+    Both constants that decide most of the headline were graded ``assumed``
+    with sweeps set by judgement: ``on_wafer`` at 100 ns over 30-500 ns (16.7x)
+    and ``nvlink3`` at 1.5 us over 1.0-5.5 us.  Each is now ``derived`` from a
+    published or measured figure at the granularity the model actually charges,
+    and each note has to say what that granularity is -- because the failure
+    this test guards is not a wrong number, it is a *right number for the wrong
+    object*: Cerebras' published one-cycle hop is a 0.23 mm core-to-core step
+    and this model's hop is a 28.5 mm reticle-field crossing, 126 of them, and
+    substituting one for the other moves the headline from 8.3x to 14.7x.
+    """
+
+    wafer = technology.graded("links", "on_wafer", "hop_latency_s")
+    assert wafer.grade == "derived"
+    assert wafer.value == pytest.approx(1.25e-7)
+    block = technology.raw["links"]["on_wafer"]["hop_latency_s"]
+    assert block["range_low"] == pytest.approx(7.5e-8)
+    assert block["range_high"] == pytest.approx(2.5e-7)
+    # The band is now 3.3x rather than 16.7x, and both ends are computed.
+    assert block["range_high"] / block["range_low"] < 4.0
+    assert "reticle field" in block["note"]
+    assert "NOT a tile-to-tile hop" in block["note"]
+
+    nvlink = technology.graded("links", "nvlink3", "hop_latency_s")
+    assert nvlink.grade == "derived"
+    assert nvlink.value == pytest.approx(2.5e-6)
+    # 2 x hop IS the whole in-domain all-reduce, and the note must say so,
+    # because that is the only reading under which the number is defensible.
+    assert technology.collective_traversals("nvlink3", 8) == 2.0
+    assert "all-reduce" in technology.raw["links"]["nvlink3"]["hop_latency_s"]["note"]
+    # The claim this entry used to rest on is withdrawn in the note itself.
+    assert "WITHDRAWN" in technology.raw["links"]["nvlink3"]["hop_latency_s"]["note"]
+
+    # The wafer-to-wafer link is the one that is still a judgement, and it is
+    # now the largest unmeasured link in the model.  If it is ever re-graded,
+    # this assertion should be the thing that fails.
+    assert technology.graded(
+        "links", "inter_wafer", "hop_latency_s"
+    ).grade == "assumed"
+
+
+def test_a_link_latency_bound_can_be_taken_on_one_side_at_a_time(
+    technology,
+) -> None:
+    """**The presentation fix, pinned.**
+
+    The published band used to move every link at once.  Moving both sides
+    together tests a *common-mode* error; it does not answer "how much of this
+    uncertainty is ours", and because the two sides partly cancel the joint
+    interval came out narrower than the wafer side's own.  ``links=`` restricts
+    the sweep to one side's fabrics, and nothing outside that set may move.
+    """
+
+    wafer_only = technology.at_link_latency_bound("low", ("on_wafer", "inter_wafer"))
+    assert wafer_only.link("on_wafer")[0].value == pytest.approx(7.5e-8)
+    assert wafer_only.link("inter_wafer")[0].value == pytest.approx(1e-6)
+    # The cluster fabric is untouched, which is the whole point.
+    assert wafer_only.link("nvlink3")[0].value == technology.link("nvlink3")[0].value
+    assert (
+        wafer_only.link("infiniband_hdr")[0].value
+        == technology.link("infiniband_hdr")[0].value
+    )
+
+    cluster_only = technology.at_link_latency_bound(
+        "high", ("nvlink3", "infiniband_hdr")
+    )
+    assert cluster_only.link("nvlink3")[0].value == pytest.approx(1.03e-5)
+    assert cluster_only.link("infiniband_hdr")[0].value == pytest.approx(5.7e-6)
+    assert cluster_only.link("on_wafer")[0].value == technology.link("on_wafer")[0].value
+
+    # And the default is still every link, on both sides at once.
+    joint = technology.at_link_latency_bound("high")
+    assert joint.link("on_wafer")[0].value == pytest.approx(2.5e-7)
+    assert joint.link("nvlink3")[0].value == pytest.approx(1.03e-5)
+
+
+def test_each_study_charges_a_wafer_fabric_of_its_own_node(technology) -> None:
+    """**The asymmetry this pair of entries exists to remove.**
+
+    The GPU side of these studies always named its link per generation --
+    ``nvlink3`` at 2.5 us for the A100 study, ``nvlink5`` at 1.2 us for the
+    B200 study.  The ROM side did not: one ``on_wafer`` constant, derived from
+    Cerebras WSE-2 at TSMC **7nm**, served both.  That left ``n6_vs_a100``
+    correctly matched and ``n5_vs_b200`` charging a 7nm-era wafer fabric
+    against a 4nm-era NVLink, which understates the ROM side in the study where
+    it should be strongest.
+
+    This asserts the structure rather than the value.  The two figures happen
+    to be equal -- see the test below, which is the null result -- and a test
+    on the values alone would pass just as well if the split were quietly
+    undone.
+    """
+
+    runner = _load_runner()
+    wafer_links = {
+        study_id: config["rom_intra_link"]
+        for study_id, config in runner.STUDIES.items()
+    }
+    assert wafer_links == {
+        "n6_vs_a100": "on_wafer",
+        "n5_vs_b200": "on_wafer_n5",
+    }, "each study must name the wafer fabric of its own node"
+    # Both must exist, and neither study may fall back to the other's.
+    for name in wafer_links.values():
+        assert name in technology.raw["links"]
+        assert technology.link_fabric(name) == "mesh"
+    # The GPU side is the precedent this mirrors: two entries, one per
+    # generation, and they carry different numbers.
+    assert runner.STUDIES["n6_vs_a100"]["intra_link"] == "nvlink3"
+    assert runner.STUDIES["n5_vs_b200"]["intra_link"] == "nvlink5"
+    assert technology.graded(
+        "links", "nvlink3", "hop_latency_s"
+    ).value != technology.graded("links", "nvlink5", "hop_latency_s").value
+
+
+def test_the_two_wafer_fabrics_land_equal_and_say_why(technology) -> None:
+    """**A null result, asserted so it cannot be mistaken for an oversight.**
+
+    Splitting ``on_wafer`` by node did not make the N5 study faster.  The
+    method has two node-dependent terms and neither moved: Cerebras spent the
+    N7-to-N5 shrink on the core (48 kB of SRAM, 110,000 standard cells and a
+    50/50 split unchanged, with the transistors going into a 4-wide to 8-wide
+    FP16 SIMD) rather than on the pitch between cores, and published no clock
+    at all for WSE-3 -- back-derivation from its own memory and fabric
+    bandwidths, calibrated on WSE-2 where the clock IS published at 1.1 GHz,
+    puts it at 1.01-1.12 GHz.  Three published-input pitch estimators put the
+    N5 field crossing at 126-131 hops against the N7 route's 127, i.e. equal to
+    within a method whose N7 input is itself a rounded die dimension, and if
+    anything **slower**.
+
+    So the two are stated equal, and this test pins that both entries carry the
+    derivation that says so.  A future edit that moves one without the other
+    should have to come through here.
+    """
+
+    n7 = technology.graded("links", "on_wafer", "hop_latency_s")
+    n5 = technology.graded("links", "on_wafer_n5", "hop_latency_s")
+    assert n5.value == n7.value == pytest.approx(1.25e-07)
+    for entry in ("on_wafer", "on_wafer_n5"):
+        block = technology.raw["links"][entry]["hop_latency_s"]
+        assert block["range_low"] == pytest.approx(7.5e-08)
+        assert block["range_high"] == pytest.approx(2.5e-07)
+        assert block["grade"] == "derived"
+    # `derived` means the formula is in the note, and it is the SAME formula on
+    # both: two figures derived two ways would not be comparable, which is the
+    # whole reason for splitting the entry.
+    for entry in ("on_wafer", "on_wafer_n5"):
+        note = technology.raw["links"][entry]["hop_latency_s"]["note"]
+        assert "core pitch" in note and "cycles / clock" in note
+    n7_note = technology.raw["links"]["on_wafer"]["hop_latency_s"]["note"]
+    n5_note = technology.raw["links"]["on_wafer_n5"]["hop_latency_s"]["note"]
+    assert "N7" in n7_note and "on_wafer_n5" in n7_note
+    assert "WSE-3" in n5_note and "5 nm" in n5_note
+    # The null is stated as a null, with its direction, rather than left for a
+    # reader to infer from two equal numbers.
+    assert "NULL" in n5_note
+    assert "SLOWER" in n5_note
+
+
+def test_the_wafer_split_is_load_bearing(technology) -> None:
+    """Moving one node's wafer fabric must move that study and only that one.
+
+    Two entries that no study distinguishes are two copies of one number, and
+    the defect would be back without the config ever looking wrong.
+    """
+
+    runner = _load_runner()
+    reticle = technology.graded("reticle", "area_mm2").value
+    wafer = technology.graded("wafer", "area_mm2").value
+    charged = {}
+    for study_id, config in runner.STUDIES.items():
+        plans = runner._fabric_plans(
+            technology, config, wafer_area=wafer, reticle_area=reticle
+        )
+        charged[study_id] = {
+            plan.intra_link for plan, _area in plans if plan.kind == "wafer"
+        }
+    assert charged["n6_vs_a100"] == {"on_wafer"}
+    assert charged["n5_vs_b200"] == {"on_wafer_n5"}
+
+    # And the sensitivity sweeps the entry each study actually charges, so the
+    # per-side band is that side's own band and not a neighbour's.
+    assert runner._link_latency_scopes(runner.STUDIES["n6_vs_a100"])["rom"] == (
+        "on_wafer",
+        "inter_wafer",
+    )
+    assert runner._link_latency_scopes(runner.STUDIES["n5_vs_b200"])["rom"] == (
+        "on_wafer_n5",
+        "inter_wafer",
+    )
+
+    # Perturbing one moves only its own study's collective.
+    raw = json.loads(json.dumps(technology.raw))
+    raw["links"]["on_wafer_n5"]["hop_latency_s"]["value"] = 1e-08
+    perturbed = replace(technology, raw=raw)
+    for name, moved in (("on_wafer_n5", True), ("on_wafer", False)):
+        event = LinkEvent(
+            count=1,
+            link=name,
+            kind="all_reduce",
+            span=57,
+            description=f"probe on {name}",
+        )
+        before, _ = technology.link_event_cost_s(event, activation_bytes=4096)
+        after, _ = perturbed.link_event_cost_s(event, activation_bytes=4096)
+        assert (after < before) is moved, (
+            f"{name} should {'' if moved else 'not '}move when on_wafer_n5 does"
+        )
+
+
+def test_the_scale_out_link_is_one_number_on_both_sides(technology) -> None:
+    """**The other half of the node audit, and it comes out clean.**
+
+    ``inter_wafer`` is charged by BOTH studies, which looks like the same
+    defect ``on_wafer`` had.  It is not, because its counterpart on the GPU
+    side is the scale-out fabric, and ``infiniband_hdr`` and ``infiniband_ndr``
+    are two entries carrying the SAME measured 4.5 us hop: small-message RDMA
+    latency between accelerator buffers is set by the NIC and the protocol
+    stack rather than by the logic node, so it did not move across those
+    generations either.  One number per side across the two studies is
+    symmetric.  What was asymmetric was one number on one side against two on
+    the other, and that was ``on_wafer``.
+    """
+
+    hdr = technology.graded("links", "infiniband_hdr", "hop_latency_s")
+    ndr = technology.graded("links", "infiniband_ndr", "hop_latency_s")
+    assert hdr.value == ndr.value == pytest.approx(4.5e-06)
+    # They are two entries and they DO differ -- on the terms the node moves.
+    assert technology.graded(
+        "links", "infiniband_hdr", "bytes_s"
+    ).value != technology.graded("links", "infiniband_ndr", "bytes_s").value
+
+    runner = _load_runner()
+    for config in runner.STUDIES.values():
+        assert config["rom_inter_link"] == "inter_wafer"
+
+
+def test_on_package_is_charged_by_no_design_in_either_study() -> None:
+    """The third link in the audit, and the reason it needs no split.
+
+    ``links.on_package`` is 300 ns, graded ``assumed``, and a single value --
+    but no design in either study charges it.  The ROM family's fabrics are the
+    wafer mesh and the wafer-to-wafer link; the GPU family's are NVLink and
+    InfiniBand.  A constant no comparator binds on cannot introduce an
+    asymmetry between two studies, so it is reported rather than changed.
+    """
+
+    for study_id in ("n6_vs_a100", "n5_vs_b200"):
+        body = json.loads(
+            (ROOT / "results" / "roofline" / study_id / "analytical.json").read_text()
+        )
+        charged = {
+            (point.get("link"), point.get("intra_link"))
+            for point in body["points"]
+        }
+        flat = {name for pair in charged for name in pair if name}
+        assert "on_package" not in flat, (
+            f"{study_id} now charges on_package; the audit that said no design "
+            "does has to be redone"
+        )
 
 
 def test_on_wafer_tensor_parallelism_no_longer_reaches_taalas_rates(
@@ -2787,6 +3052,44 @@ def test_every_study_audit_passes(generated) -> None:
         audit = result["consistency_audit"]
         assert audit["status"] == "pass", (study_id, audit["errors"][:5])
         assert audit["checks_evaluated"] > 1000
+
+
+def test_the_band_is_reported_per_side_and_not_only_jointly(generated) -> None:
+    """The joint band alone was an artefact, and it hid its own width.
+
+    ``docs/COMPARISON_FAIRNESS_AUDIT.md`` A1: the one-sided ROM band was
+    13.48x-3.26x while the *published* joint band was 11.82x-4.46x, so the
+    interval a reader was given was narrower than the interval one side's own
+    constants produced.  Three scopes are emitted now, and this asserts all
+    three exist rather than asserting a value, because the values move whenever
+    a constant is re-graded and the presentation must not.
+    """
+
+    runner, results, _, _ = generated
+    for study_id, result in results.items():
+        config = runner.STUDIES[study_id]
+        rows = result["link_latency_sensitivity"]
+        assert rows, study_id
+        scopes = {row["scope"] for row in rows}
+        assert scopes == {"rom", "gpu", "joint"}, (study_id, scopes)
+        for row in rows:
+            assert row["bound"] in ("low", "high")
+        # The wafer scope is exactly the fabrics this study's ROM designs
+        # charge, read from the study rather than hard-wired -- the wafer
+        # fabric is node-keyed, so n5_vs_b200's is `on_wafer_n5`.
+        rom_links = {
+            link for row in rows if row["scope"] == "rom" for link in row["scope_links"]
+        }
+        wafer_fabric = {
+            str(config["rom_intra_link"]),
+            str(config["rom_inter_link"]),
+        }
+        assert rom_links == wafer_fabric, study_id
+        # The cluster scope must not smuggle a wafer fabric in with it.
+        gpu_links = {
+            link for row in rows if row["scope"] == "gpu" for link in row["scope_links"]
+        }
+        assert not (gpu_links & wafer_fabric), study_id
 
 
 def test_studies_carry_the_validation_gates(generated) -> None:
