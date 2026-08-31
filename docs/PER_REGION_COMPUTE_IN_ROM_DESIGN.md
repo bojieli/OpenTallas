@@ -6,10 +6,11 @@ recomputed in prose — the previous version of this document said the same thin
 and did not do it, and section 1 is the retraction that resulted.
 
 The model reproduces an A100's weight-bound decode exactly (253.91 tok/s against
-253.91) and the Taalas HC1 at **0.72×** of its published 16,960 tok/s per user,
-within a 2× gate that is not relaxed anywhere in this program. Both gates are
-single-device machines and neither moved when per-user latency was separated
-from aggregate throughput; every *multi-device* number in this document did. The KV accounting
+253.91). Its Taalas HC1 reconstruction is now **infeasible**: the corrected ROM
+density cannot place the checkpoint in the published 815 mm² die, so that gate
+reports 0 tok/s rather than fabricating a rate. Both gates are single-device
+machines; every *multi-device* number in this document additionally changed when
+per-user latency was separated from aggregate throughput. The KV accounting
 is validated against executed hardware to a ratio of exactly 1.0000 on both Qwen
 lanes in `results/roofline/qwen3_execution_validation.json`.
 
@@ -103,7 +104,7 @@ neither favours this document:
   not price the difference, and inventing a discount for the policy this
   document is advocating would be exactly the failure the study exists to avoid.
 - **On a mask-ROM part it is now the LARGEST dynamic energy term.** At the Taalas
-  HC1 anchor it is 10.0 W against 3.2 W of array read, <!-- figure: 10.0 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.dynamic_power_w_by_term.operand_delivery_j" name="HC1 operand-delivery power" -->
+  HC1 anchor it is 12.1 W against 3.9 W of array read, <!-- figure: 12.1 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.detail.dynamic_power_w_by_term.operand_delivery_j" name="HC1 operand-delivery power" -->
   because
   `energy.rom_read_j_per_byte` moved from 0.5 to 0.08 pJ/B on the evidence. So
   transport energy is not a rounding error on a ROM machine that could be waved
@@ -243,8 +244,8 @@ represented either. **The two omissions run in opposite directions and the model
 does not claim to know which is larger.**
 
 **The power gates say how much room there is for this.** The Taalas HC1
-card-power gate lands at 70.2 W against a published 200–250 W — 2.9–3.6× low — <!-- figure: 70.2 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.modelled_value" name="HC1 card power gate" -->
-so there are roughly 130–180 W of unmodelled power on a shipping compute-in-ROM
+card-power gate lands at 87.6 W against a published 200–250 W — 2.3–2.9× low — <!-- figure: 87.6 src="results/roofline/n6_vs_a100/analytical.json#validation_gates.taalas_hc1_card_power.modelled_value" name="HC1 card power gate" -->
+so there are roughly 112–162 W of unmodelled power on a shipping compute-in-ROM
 part at its published operating point. An activation-distribution network is one
 of the few candidates large enough to matter at that scale, and this document is
 the natural place for it to be derived. It has not been.
