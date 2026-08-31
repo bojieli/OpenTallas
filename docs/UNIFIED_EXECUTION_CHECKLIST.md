@@ -4,8 +4,10 @@
 **Owner:** single unified implementation agent (no parallel top-level owners)
 **Baseline commit:** c83e543
 **Issue date:** 2026-08-29
-**Last updated:** 2026-08-30 — every load-bearing figure below re-verified
-against the artifact that produces it (`make check-prose-figures`)
+**Last reconciled:** 2026-08-31 — changed ROM and physical-methodology prose
+passes a targeted figure check. The repository-wide audit still reports 142
+pre-existing figure-reference problems, so this document makes no blanket
+verification claim.
 **Status legend:** `[ ]` not started · `[~]` in progress · `[x]` done and evidenced · `[!]` blocked/deferred with reason
 
 > This checklist is the single source of truth for program progress. It supersedes
@@ -82,8 +84,8 @@ against the artifact that produces it (`make check-prose-figures`)
 
 - [x] W6.1 Qwen-HBM: short prompt → prefill → decode → real tokens — **token-identical to the reference oracle**, and **decode reaches a real EOS**. `TA-QW-AGENT-1` ran 112 prompt tokens to the natural stop at token 151645 after 23 tokens (`results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json`) <!-- figure: 112 src="results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json#record.workload.prompt_token_count" name="TA-QW-AGENT-1 prompt tokens" --> <!-- figure: 23 src="results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json#record.generated_token_count" name="TA-QW-AGENT-1 decoded tokens" --> <!-- figure: 151645 src="results/abi3/qwen3_hbm_ta-qw-agent-1_execution.json#record.generated_token_ids[22]" name="TA-QW-AGENT-1 final token is EOS" -->, `TA-QW-CHAT-1` ran 24 tokens (`..._ta-qw-chat-1_...`); both agree with the oracle at every position, with no legitimacy problems and every admission check passing — 27 of them on the agent record and 29 on the chat record, whose set is the agent's plus `block_extent` and `block_scale`, so it is a check set that grew between the two runs and not a run that skipped two
 - [x] W6.2 Qwen-ROM: identical token sequence from the ROM deployment — **re-verified with evidence in the repository** (`results/abi3/qwen3_rom_ta-qw-chat-1_execution.json`, status pass, 24 tokens, `reference_agreement` true, no divergence index). The 24 tokens are identical to `qwen3_hbm_ta-qw-chat-1_execution.json` position for position, which is the claim this item makes. Both admit at 75 instructions; the ROM lane emits 239 descriptors against HBM's 218 and declares 2,105 retired work against 22,715, because the two lanes block the token loop differently — see [OI-19] — 75 instructions, 239 descriptors, admitted; **24 tokens token-for-token identical to the external oracle and to the HBM target**. All 27 distinct prefill kernels diffed kernel-by-kernel against HBM through the `on_issue` hook: bit-identical, output hash for output hash, including the KV window and the final logits. Storage-class equivalence re-proved after every change: 17 descriptors differ, all `MEMORY_OBJECT`, all 17 ROM→HBM, none beyond storage class <!-- figure: 17 src="results/abi3/storage_class_equivalence_qwen3.json#differing_descriptor_count" name="Qwen storage-class differing descriptors" --> <!-- figure: 17 src="results/abi3/storage_class_equivalence_qwen3.json#storage_class_transitions['ROM->HBM']" name="Qwen ROM to HBM transitions" --> <!-- figure: 75 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.instruction_count" name="Qwen ROM instructions, TA-QW-CHAT-1" --> <!-- figure: 239 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen ROM descriptors" --> <!-- figure: 218 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.notes.verification.descriptor_count" name="Qwen HBM descriptors" --> <!-- figure: 2,105 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.notes.verification.declared_retired_work" name="Qwen ROM declared retired work" --> <!-- figure: 22,715 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.notes.verification.declared_retired_work" name="Qwen HBM declared retired work" -->
-- [ ] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **still zero tokens, and the committed record is superseded.** What the repository holds is `results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json`, last written at `8dfddac`: the deployment **ADMITS** at **11,049 instructions**, **23,297 descriptors**, work **6,177,966**/6,177,966 proved exactly, **zero verifier errors**, all 32 admission checks passing including `event_count_bound`, and an event count of **3,989** against a 4,096 cap; it then retires **251** instructions before failing with `prefill failed: reduction output view 2327 holds 425984 elements, expected 16384`. <!-- figure: 11,049 src="results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json#record.notes.verification.instruction_count" name="DeepSeek HBM instructions, recorded" --> <!-- figure: 23,297 src="results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json#record.notes.verification.descriptor_count" name="DeepSeek HBM descriptors, recorded" --> <!-- figure: 6,177,966 src="results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json#record.notes.verification.declared_retired_work" name="DeepSeek HBM declared work, recorded" --> <!-- figure: 6,177,966 src="results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json#record.notes.verification.proved_retired_work" name="DeepSeek HBM proved work, recorded" --> <!-- figure: 3,989 src="results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json#record.notes.verification.event_count" name="DeepSeek HBM event count, recorded" --> <!-- figure: 251 src="results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json#record.counters['instructions.retired']" name="DeepSeek HBM retired, recorded" --> <!-- figure: "prefill failed: reduction output view 2327 holds 425984 elements, expected 16384" src="results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json#record.failure" name="DeepSeek HBM recorded failure" --> **That record predates amendment A17 and its own check list says so** — there is no `join_axis` entry, which is the check A17 added — so everything after it here is the lane's history as its commits report it, evidenced by commit messages and by no artifact. A17 (`742faa4`) made a feature-axis join expressible, took operand-arity faults 42 → 0 and recorded 12,100 instructions, 25,129 descriptors, work 50,339,327 and 3,863 events, because emitting the amended operator costs 167 events where the hand-expansion into per-column-window `DMA.TRANSFER`s cost 502. Consuming it (`a2cb06a`) then found the event budget was dead loops — 42 bands emitted for 43 layers — and took the same deployment to 1,239 instructions and 434 events of the 4,096 cap, retiring 299. `88b3bcd` cleared seven walls to 1,896 retired and stopped in layer 0's routed MoE gate on a sharded MXFP4 scale object 1,664 codes short. **The program was over-allocating, and the fix made it smaller rather than needing a wider scoreboard** — that conclusion survives all three measurements, and is the one thing here that does not wait on a re-run. **A fresh DeepSeek-HBM execution record is needed; until it lands, no figure after 11,049 is evidence.** Admission is not execution and this lane has still produced no token; the 32-node question below is unchanged. *(Historical note: the entry below described the state before the node dimension landed.)* the functional device had no node dimension, so no token was reachable on a 32-node capability however the operands were fixed. The deployment admits (996 instructions, 2,307 descriptors, work 4,587,224 proved exactly) and the cycle model covers it; it cannot run — **no tokens yet, and two of the three remaining blockers are decisions, not bugs.** The deployment admits (996 instructions, 2,307 descriptors, work bound proved exactly) and `HYPER_CONNECT_PRE` now executes against the frozen `VECTOR.MHC` operand row. It stops at the branch reduction the ABI leaves to `REDUCTION.EXPERT_SUM`, which provably cannot carry per-token weights over a token block (**OI-28**). Behind that: the functional simulator binds no `NODE_ID`, so the mandated 32-node capability cannot execute at all (**OI-27**), and the `attention_kv_view` row space needs an extent no view can present (**OI-26**). Landed on the way: the mHC pre/post split, the axis-1 index concatenations (**OI-20**, whose per-column-window lowering is now **superseded by A17** — a feature-axis join is one operator on both backends instead of two spellings), and one epsilon-encoding defect (**OI-29**)
-- [~] W6.4 DeepSeek-ROM (wafer): identical token sequence — **one validated token, captured raw; the committed execution record is still superseded.** The lane has produced a token that matches an independent oracle: DeepSeek-V4-Flash-0731 on the ROM backend, a **32**-token prefix of `TA-DS-CHAT-1`, generated token **13806** <!-- figure: 32 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32_raw.json#prompt_tokens" name="DeepSeek ROM validated-token prompt length" --> <!-- figure: 13806 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32_raw.json#tokens[0]" name="DeepSeek ROM first validated token" -->, against the oracle's **13806** for the byte-identical prompt <!-- figure: 13806 src="results/abi3/deepseek_v4_reference_oracle_prefix.json#results['TA-DS-CHAT-1-P32'].generated_token_ids[0]" name="DeepSeek oracle first token, P32 prefix" -->, with **47,877** instructions retired and no failure <!-- figure: 47,877 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32_raw.json#counters['instructions.retired']" name="DeepSeek ROM validated-token retired" -->. **It is `[~]` and not `[x]`, deliberately.** The run came from an ad-hoc driver script rather than a committed reproducible tool, so it is filed as a raw capture under `results/abi3/accelerator_tokens/` and **graded nothing**; `results/abi3/accelerator_tokens/README.md` states that boundary and this entry does not outrun it. One token exercises the forward pass and says nothing about the KV transaction across decode steps, and — the correction that matters — **neither this 32-token prefix nor `TA-DS-CHAT-1`'s full 104 tokens reaches any sparse-attention threshold**: `window_size` is 128, `index_topk` is 512, and the 20 `compress_ratio=128` layers hold zero compressed positions below 128 tokens, so the only structural difference between the two prompts is compressed positions in the 21 `compress_ratio=4` layers, 8 against 26. Calling the 104-token run "the real gate" for sparse selection was wrong; sparse attention under pressure is the `TA-DS-CTX-*` ladder's job (W10.5), and the ROM-versus-HBM story at 200K and 1M context rests on exactly the regime neither prompt touches. This is also the golden-model path and says nothing about RTL — see W8.8 for which deployments the sequencer RTL is known to run. The committed execution record is unchanged and still superseded: `results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json`, last written at `61bd0d6`, records `TA-DS-CHAT-1` at **104** prompt tokens retiring **5,789 instructions** (**2,952** issued) from a program admitted at 881 instructions and 2,883 descriptors, and failing with `prefill failed: the residual add contract is BF16 in and BF16 out`. <!-- figure: 5,789 src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.counters['instructions.retired']" name="DeepSeek ROM retired, recorded" --> <!-- figure: 2,952 src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.counters['instructions.issued']" name="DeepSeek ROM issued, recorded" --> <!-- figure: 2,883 src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.notes.verification.descriptor_count" name="DeepSeek ROM descriptors, recorded" --> <!-- figure: 104 src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.workload.prompt_token_count" name="TA-DS-CHAT-1 prompt tokens" --> <!-- figure: "prefill failed: the residual add contract is BF16 in and BF16 out" src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.failure" name="DeepSeek ROM recorded failure" --> **The entry that stood here claimed 5,883 retired and 2,974 issued and declared that same wall gone, while citing the record whose failure text is the wall.** Both statements were true at different moments — the record predates the fix — but an entry that cites evidence contradicting it is precisely the defect this program has spent the session finding in other people's work, so it is corrected here rather than renumbered. What holds now, from an artifact: the exporter emits **no `ADD` kernels at all** — the DeepSeek kind census in `results/abi3/program_status.json` has no `ADD` entry and carries **86** `HYPER_CONNECT_PRE` and 86 `HYPER_CONNECT_POST` instead — because the residual is carried by `VECTOR.MHC`. <!-- figure: 86 src="results/abi3/program_status.json#neutral_ir.deepseek-v4-flash-0731.kind_census.HYPER_CONNECT_PRE" name="DeepSeek HYPER_CONNECT_PRE kernels" --> Where the lane has reached since is recorded in commit messages only: `0f40b8b` 685 → 761 retired, `123a916` 761 → 785, `e466a46` → 793, and amendment A19 (`29e50c2`) **6,393 → 9,189 retired**, stopping on the A18 predicate trap at ratio 128 — a predicate the exporter declares and no backend lowers. **A fresh ROM DeepSeek execution record is needed; until one lands, 9,189 is a commit message and not evidence**, and [OI-41], now closed, is why the record on disk shows the last rung that could complete rather than the current one — sparse attention was the wall when that record was written and has since gone from 12.5 ms per (head, row) to 0.2% of the prefill. **This is still the reachable DeepSeek execution path**, because a wafer-scale logical device is one node (`node_count` **1**, `topology_class` 2 on that record) and needs no multi-node simulation; its tile-scoped collectives are what amendment A14 makes expressible <!-- figure: 1 src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.target.node_count" name="DeepSeek ROM wafer node count" --> <!-- figure: 2 src="results/abi3/deepseek_v4_rom_ta-ds-chat-1_execution.json#record.target.topology_class" name="DeepSeek ROM wafer topology class" -->
+- [~] W6.3 DeepSeek-HBM (32 node): short prompt → real tokens — **one oracle-identical token; multi-token decode still needs a current run.** The reproducible `make abi3-tokens-deepseek-hbm` capture admits the 32-node deployment, executes a **32**-token prompt <!-- figure: 32 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#workload.prompt_token_count" name="DeepSeek HBM token-capture prompt length" -->, and emits token **13806** <!-- figure: 13806 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#generated_token_ids[0]" name="DeepSeek HBM first generated token" -->, identical to the independent oracle. Decode step 1 then retires **636** instructions <!-- figure: 636 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#per_step[step=1].instructions_retired" name="DeepSeek HBM failed-decode retired instructions" --> and fails on the old `GROUPED_CONCAT` phase-extent mismatch. That capture predates `77f847c`, which split prefill and decode extents and has targeted regression coverage; only a fresh governed HBM execution can show whether the fix closes the lane.
+- [~] W6.4 DeepSeek-ROM (wafer): identical token sequence — **four transactions execute, but oracle identity stops after the first token.** The committed `make abi3-tokens-deepseek-rom` capture executes one prefill plus three decode transactions without a functional trap, generates **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_count" name="DeepSeek ROM generated-token count" -->, and retires **83,142** instructions <!-- figure: 83,142 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#counters['instructions.retired']" name="DeepSeek ROM token-capture retired instructions" -->. Token 0 is the oracle's **13806** <!-- figure: 13806 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_ids[0]" name="DeepSeek ROM first generated token" -->; the first divergence is index **1** <!-- figure: 1 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.first_divergence_index" name="DeepSeek ROM first divergence index" -->, accelerator 334 versus oracle 345. This proves reproducible multi-token execution and state updates, not a validated multi-token sequence, so the item remains partial.
 - [x] W6.5 Independent reference oracle per model (from official modeling code) — external oracle: `tools/run_qwen3_reference_oracle.py`— token-level match
 - [~] W6.6 Checkpoint/restart exactness on all four — **Qwen-HBM proven; the other three wait on W6.2-W6.4**. `tools/run_abi3_restart_exactness.py` runs one workload three times in three separate OS processes: uninterrupted; interrupted after N tokens with the device state serialised by `runtime/sim/checkpoint.py`; and finished in a fresh process that loads only that checkpoint. `TA-QW-CHAT-1` on `torch_cpu`, 93 prompt tokens, 6 new tokens split 3+3: both runs give `[1654, 525, 2661, 1447, 12, 3070]`, with identical retired work in every transaction and identical values for all 42 architectural counters (`results/abi3/restart_exactness.json`). Fifteen guards stand between the run and the word *pass* — three distinct PIDs, one deployment digest, one implementation identity, one runtime source digest, and explicit non-emptiness and length checks, because two empty lists are not a match. Two controls make the pass mean something: erasing the KV STATE images from the checkpoint diverges at the first resumed token, and erasing everything **except** the STATE images still reproduces the sequence, so what carries the generation is the STATE resources and the cursor, not activation scratch. The source-digest guard earned itself on its first run, refusing a token-identical result because a concurrent commit changed `runtime/` between two phases
 - [x] W6.7 Fail-closed campaigns — `tools/run_abi3_failclosed_campaign.py`, 8/8 refused against the **real** Qwen deployment: six corruption classes refused at admission, a mid-transaction fault leaving cursor and generation unchanged, and no prepared state left open. Found and fixed a real defect on its first run
@@ -109,55 +111,43 @@ against the artifact that produces it (`make check-prose-figures`)
 - [~] W8.5 ROM service RTL (Qwen chip, DeepSeek wafer tile) — **the read path is implemented and correlated on two simulators, and it contains no ROM array.** `rtl/rom/ot_rom_read_service.sv` turns `(object_id, byte_offset, byte_length)` into a physical access against the compiled region plan the deployment publishes as `notes.rom_plan`: object lookup, shard walk to a placement resource and an address inside it, row-redundancy translation, region masking, fail-closed quarantine and column-repair refusal, row-activation accounting against a persistent row buffer, and the column mux onto the operand bus. Three vector sets, all read back out of real ROM deployments — never hand written — and replayed under Icarus and Verilator through independently written checkers (`results/rtl/rom_service_campaign.json`):
   - `qwen_chip`: the **executed** ROM read stream of the Qwen ROM deployment on `runtime.sim.device.Device`, both accounting sites instrumented and reconciled against the device's own `rom.bytes_read`; **349** requests, **2,499,996** sense beats, **159,997,856** bytes and **39,213** row activations replayed beat by beat <!-- figure: 349 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.requests.count" name="Qwen ROM service requests" --> <!-- figure: 2,499,996 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.totals.beats" name="Qwen ROM service beats" --> <!-- figure: 159,997,856 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.totals.bytes" name="Qwen ROM service bytes" --> <!-- figure: 39,213 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.totals.activations" name="Qwen ROM service activations" -->
   - `qwen_chip_degraded`: the same deployment recompiled against a BIST defect list, so the repair map comes from the real planner, plus a masked region and a quarantined bank as runtime health inputs — **363** requests and **168** refusals <!-- figure: 363 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip_degraded.requests.count" name="Qwen degraded ROM service requests" --> <!-- figure: 168 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip_degraded.totals.faults" name="Qwen degraded ROM service refusals" -->
-  - `deepseek_wafer`: **10,833** requests over **9,527** shards on **9,300** placement resources, every shard boundary the plan declares crossed by one request, and **9,172** of the 9,300 resources entered by a served read -- the 128 that are not are the 127 owned only by the deliberately masked expert bank plus the one deliberately quarantined <!-- figure: 9,172 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.totals.placement_resources_entered" name="DeepSeek wafer resources entered" -->; **88** of its 228 regions are distributed over more than one resource and the largest spans **1,281** <!-- figure: 10,833 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.requests.count" name="DeepSeek wafer ROM service requests" --> <!-- figure: 9,527 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.shard_count" name="DeepSeek wafer ROM shards" --> <!-- figure: 9,300 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.resource_count" name="DeepSeek wafer ROM resources" --> <!-- figure: 88 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.distributed_region_count" name="DeepSeek wafer distributed regions" --> <!-- figure: 1,281 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.max_shards_in_one_region" name="DeepSeek wafer largest region shard count" -->. **This set is derived from the compiled plan, not executed**, because that lane had produced no tokens when it was built (W6.4 — it has since produced one, raw and ungraded, which is a forward pass rather than a recorded read stream), and the artifact says so rather than letting it read as an executed stream.
+  - `deepseek_wafer`: **10,833** requests over **9,527** shards on **9,300** placement resources, every shard boundary the plan declares crossed by one request, and **9,172** of the 9,300 resources entered by a served read -- the 128 that are not are the 127 owned only by the deliberately masked expert bank plus the one deliberately quarantined <!-- figure: 9,172 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.totals.placement_resources_entered" name="DeepSeek wafer resources entered" -->; **88** of its 228 regions are distributed over more than one resource and the largest spans **1,281** <!-- figure: 10,833 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.requests.count" name="DeepSeek wafer ROM service requests" --> <!-- figure: 9,527 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.shard_count" name="DeepSeek wafer ROM shards" --> <!-- figure: 9,300 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.resource_count" name="DeepSeek wafer ROM resources" --> <!-- figure: 88 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.distributed_region_count" name="DeepSeek wafer distributed regions" --> <!-- figure: 1,281 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.max_shards_in_one_region" name="DeepSeek wafer largest region shard count" -->. **This set is derived from the compiled plan, not executed.** The token lane now completes four governed transactions (W6.4), but no request stream from that run is retained in this campaign; plan coverage must not be relabelled as executed traffic.
   - **Why it stays `[~]`:** there is no ROM array in the RTL under test. The array sits behind a sense request/response interface and is supplied by the testbench, so this is a control and addressing claim — it establishes nothing about ROM cell area, read energy, sense margin, wordline or bitline delay, retention or defect rate, and the sense-granule width is a declared parameter of the block rather than a macro property. Column redundancy is refused rather than implemented; the view-to-byte-range walk and descriptor admission are out of scope; a whole decode step reads about fifteen gigabytes and is not replayed beat by beat. `docs/ROM_SERVICE_RTL.md` states the boundary
   - **What it found.** Both products declare ROM-class memory objects that the region plan does not place — generated rotary, `arange`, ring-index and constant tables — carrying `bank_or_tile` 0xFFFF and `base_address` 0 while their traffic is still counted by `rom.bytes_read`. **111** of the **265** replayed executed Qwen reads are to two such objects <!-- figure: 111 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.totals.refusals_by_origin.executed" name="Qwen unplaced-object refusals from the executed stream" --> <!-- figure: 265 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.qwen_chip.requests.by_origin.executed" name="Qwen executed reads replayed" --> and the wafer plan leaves six of them unplaced. The service refuses them rather than inventing a bank. That is a finding about `compiler/backends/rom`, which this item does not own
+  - **Evidence freshness:** all six Icarus/Verilator vector-set cases pass, but the campaign's overall status is deliberately `fail`: the historical Qwen executed streams were recorded before `runtime/abi3/deployment.py`, `runtime/sim/device.py`, and `runtime/sim/engine.py` moved. `python3 tools/rtl_rom_service_campaign.py --verify` proves that the campaign artifact itself is bound to the current 39-source tree; it cannot make the old executed stream current. Re-recording is still owed and currently requires restoring the checkpoint inputs absent from the retained Qwen deployment builds. The hashes are not relaxed to hide that gap.
 - [x] W8.6 Verilator co-simulation vs functional simulator on generated programs — 64 cases, 182 issue events, 454 resolved tensor views (amendments A4, A13 and A18), 11 traps matched on two simulators, 4,383 checks each <!-- figure: 64 src="results/rtl/abi3_campaign.json#correlation.case_count" name="RTL correlation cases" --> <!-- figure: 182 src="results/rtl/abi3_campaign.json#correlation.issue_event_count" name="RTL issue events" --> <!-- figure: 454 src="results/rtl/abi3_campaign.json#correlation.view_resolution_count" name="RTL resolved views" --> <!-- figure: 11 src="results/rtl/abi3_campaign.json#correlation.trap_count" name="RTL traps" --> <!-- figure: 4,383 src="results/rtl/abi3_campaign.json#cases[name=iverilog].checks" name="RTL checks per simulator" --> **These are programs built for the campaign, not programs this repository ships.** The shipped deployment images are covered by W8.8, which is where the boundary between "the RTL runs our test programs" and "the RTL runs the product" is actually drawn
 - [x] W8.7 Fault/stall/backpressure/reset campaigns — 17 negative cases incl. CRC, illegal opcode, loop overrun, mid-transaction trap <!-- figure: 17 src="results/rtl/abi3_campaign.json#correlation.negative_case_count" name="RTL negative cases" -->
-- [~] W8.8 Co-simulation against the **three shipped deployment images**, not programs built for the campaign — `tools/rtl_abi3_deployment_campaign.py` loads each real deployment bundle into the microsequencer and correlates every retirement against `runtime.sim.device.Device`, driven from that program's own image, descriptor table and request-bound symbols, with no vector written for the occasion (`results/rtl/abi3_deployment_campaign.json`). **The two Qwen3-8B deployments this program ships — the ROM single chip and the HBM single chip — correlate exactly**, on both entrypoints, at whole-transaction depth: **2,105** instructions retired <!-- figure: 2,105 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=qwen3-8b-rom-single-chip/prefill].golden_instructions_retired" name="Qwen deployment instructions retired, W8.8" -->, **693** engine issues <!-- figure: 693 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=qwen3-8b-rom-single-chip/prefill].golden_engine_issues" name="Qwen deployment engine issues, W8.8" --> and **2,143** resolved operand views <!-- figure: 2,143 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=qwen3-8b-rom-single-chip/prefill].golden_resolved_views" name="Qwen deployment resolved views, W8.8" --> per case, ending in COMPLETE and not at a work bound. Every engine issue is compared by the instruction index that issued it as well as by family, subopcode and descriptor ID, so a loop trip or a branch that came out differently is caught at the next issue rather than at the end; every resolved view is compared against `runtime.sim.memory.ViewResolver.resolve` at the loop bindings the device recorded — element offset (A4), resolved extent (A13) and the axis that extent belongs to (A18). Two independently written checkers, on Icarus 11.0 and Verilator 5.050, under two different back-pressure patterns, observed the same result on every case. **The DeepSeek-V4-Flash ROM wafer deployment is the open one, and its verdict is the artifact's rather than this line's:** read `status`, `correlated_cases` and `divergences[]` in `results/rtl/abi3_deployment_campaign.json`. It is deliberately not transcribed here — it moves every time a bound behind it is raised and the campaign is re-run, and a prose copy of a moving verdict goes stale silently, which is the exact failure this checklist keeps finding
-  - **What the first run found, and why the number was not the point.** As recorded at commit `518260f`, the wafer deployment did not execute at all: the RTL raised `A3_TRAP_CAPABILITY` after eight retirements of the **29,333** its prefill retires on the golden model <!-- figure: 29,333 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-rom-wafer/prefill].golden_instructions_retired" name="DeepSeek wafer golden instructions retired, W8.8" -->, because `rtl/abi3/ot_a3_pkg.sv` declared `A3_STATE_SLOTS = 8` where that deployment prepares ten. **Nothing expressed that bound anywhere a deployment could be refused for exceeding it** — no capability field named a state-slot count and `runtime.abi3.verifier` had no such check — so a shipped deployment passed every admission gate this program has and was then refused in hardware. That is the failure signature the fail-closed design exists to prevent, and it is the finding; the slot count is an implementation detail. A second bound was latent behind it: `A3_EVENT_COUNT` sizes a scoreboard **indexed by event ID**, so it is bounded by the largest ID plus one, while the capability field then beside it bounded the *number of distinct IDs* a program signals. The two coincide only when IDs are dense from zero. W8.9 is the repair
-  - **The rule this campaign licenses, and the only thing that should be lifted from it.** A claim that rests on this RTL may name exactly the deployments `correlated_cases` records, and no others. That is a restriction on the sentence a number may appear in, not a retraction of any number: the co-simulation is a functional result and establishes **no area, timing or power quantity whatever**
-  - **What it does not establish for any deployment, and may not be implied anywhere.** *Engine arithmetic:* every dispatchable operation is a recording no-op on both the golden and the RTL side, so the instruction stream is verified and the computation is not; `engine_coverage` in the artifact records how many of the **38** distinct `(family, subopcode)` pairs the shipped programs issue <!-- figure: 38 src="results/rtl/abi3_deployment_campaign.json#engine_coverage.distinct_opcodes_the_shipped_programs_issue" name="distinct opcodes the shipped programs issue, W8.8" --> a given run actually reached. *Engine integration:* the datapaths W8.3 correlates arithmetically are not wired to this sequencer, so nothing shows that a resolved view drives the operand addresses an engine reads. *Checkpoint bytes:* none is read — the arenas are mapped so the golden device can be constructed and the no-op engines never touch them, so this says nothing about the weights, the ROM image or any value in memory. *Request shapes:* one per entrypoint, a **16**-token prefill and a one-token decode at position sixteen <!-- figure: 16 src="results/rtl/abi3_deployment_campaign.json#what_ran.prompt_tokens" name="deployment co-simulation prompt tokens, W8.8" -->, and a program's loop trip counts and resolved extents are functions of the span, so a longer prompt runs the same instructions under bindings this campaign has not exercised. *Record integrity:* descriptor record CRC32C and the header's SHA-256 are not checked in RTL; instruction and header CRC32C are. *Physical realisability:* simulation says nothing about area, timing or power, and no block of this control plane has been synthesised or routed at all ([OI-43])
-  - It stays `[~]` while `status` in the artifact is anything but `pass` across all three deployments. W8.9 is what closes it
-- [ ] W8.9 Express every sequencer bound where a deployment can be refused for exceeding it, raise the two W8.8 found, and re-run W8.8 until all three shipped deployments appear in `correlated_cases`. **The repair is the expression, not the number:** raising `A3_STATE_SLOTS` on its own moves the trap to the next deployment that outgrows it and leaves the admission gate as blind as it was. Until the artifact records the wafer deployment correlating, no claim anywhere — physical, performance or narrative — may present the DeepSeek-V4-Flash ROM wafer part as executable in RTL; see the claim boundary at the head of W9
+- [x] W8.8 Co-simulation against the **three shipped deployment images**, not programs built for the campaign — `tools/rtl_abi3_deployment_campaign.py` loads each real deployment bundle into the microsequencer and compares every retirement, engine issue, and resolved operand view with `runtime.sim.device.Device` (`results/rtl/abi3_deployment_campaign.json`). The artifact status is `pass`, `divergences[]` is empty, and both prefill and decode correlate on Icarus and Verilator for Qwen ROM single-chip, Qwen HBM single-chip, and DeepSeek-V4-Flash ROM wafer.
+  - The DeepSeek prefill reaches **29,333** retired instructions <!-- figure: 29,333 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-rom-wafer/prefill].golden_instructions_retired" name="DeepSeek wafer prefill instructions correlated" -->, **12,657** engine issues <!-- figure: 12,657 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-rom-wafer/prefill].golden_engine_issues" name="DeepSeek wafer prefill issues correlated" -->, and **39,849** resolved views <!-- figure: 39,849 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-rom-wafer/prefill].golden_resolved_views" name="DeepSeek wafer prefill views correlated" -->; decode reaches **11,591** retired instructions <!-- figure: 11,591 src="results/rtl/abi3_deployment_campaign.json#what_ran.depth_reached[case=deepseek-v4-flash-rom-wafer/decode].golden_instructions_retired" name="DeepSeek wafer decode instructions correlated" -->. No case lowers its work bound.
+  - **Claim boundary:** this closes control-plane execution for exactly those shipped images and request shapes. Engine arithmetic is a recording no-op on both sides; datapath integration and checkpoint bytes are not exercised; descriptor CRC32C and the header SHA-256 are not checked in RTL; the request is a **16**-token prefill plus decode at position 16 <!-- figure: 16 src="results/rtl/abi3_deployment_campaign.json#what_ran.prompt_tokens" name="deployment co-simulation prompt length" -->; and simulation establishes no area, timing, power, or target-node quantity.
+- [x] W8.9 Express every sequencer bound where a deployment can be refused for exceeding it, raise the two W8.8 found, and re-run W8.8 until all three shipped deployments appear in `correlated_cases` — amendments A22–A24 added `limits.max_state_resources` / verifier `state_resource_bound`, corrected the indexed-scoreboard contract to `limits.max_event_id + 1` / verifier `event_id_bound`, and aligned repeated event signalling with the simulator's level semantics. The current RTL records **16** state slots <!-- figure: 16 src="results/rtl/abi3_deployment_campaign.json#rtl_implementation_bounds.values.A3_STATE_SLOTS" name="RTL state-slot bound" --> and **512** event-ID entries <!-- figure: 512 src="results/rtl/abi3_deployment_campaign.json#rtl_implementation_bounds.values.A3_EVENT_COUNT" name="RTL event-ID storage bound" -->, reports no bound overruns, and W8.8 passes all three shipped deployments.
 
 ## W9 — Physical (SKY130 implementation view, ASAP7 predictive view)
 
 > **Claim boundary for every physical number in this section, and in any
-> document that cites one.** A routed area, period, slack or power figure is a
-> measurement of a netlist, and a netlist only means something once its function
-> is established against something. For the ABI 3.0 blocks that reference is
-> `runtime.sim.device.Device`, and the campaign that establishes it against the
-> programs this repository actually ships is W8.8
-> (`results/rtl/abi3_deployment_campaign.json`).
+> document that cites one.** `results/rtl/abi3_deployment_campaign.json` is
+> currently `pass` for both entrypoints of all three shipped deployment images:
+> Qwen ROM single-chip, Qwen HBM single-chip, and DeepSeek-V4-Flash ROM wafer.
+> A physical number may describe only a design within the artifact's current
+> `correlated_cases`; readers must use the artifact rather than a copied verdict.
 >
-> **The rule.** A physical number here may be cited as the implementation cost
-> of a design that provably runs exactly the deployments that campaign's
-> `correlated_cases` records — and **may not** be cited, scaled or aggregated as
-> the cost of anything that runs a deployment it does not record. Read the
-> verdict there rather than from a sentence: it moves when a bound is raised and
-> the campaign re-run, and this section is precisely where a stale copy of it
-> would do damage. As recorded at commit `518260f` that list is the two Qwen3-8B
-> deployments, the ROM single chip and the HBM single chip, and it does not
-> include the **DeepSeek-V4-Flash ROM wafer** deployment, which the RTL trapped
-> at the eighth retirement on a bound nothing expressed at admission.
+> That correlation establishes control-flow, engine-issue, view-resolution, and
+> state-transition agreement with `runtime.sim.device.Device`. It does **not**
+> establish engine arithmetic, sequencer-to-datapath integration, checkpoint
+> bytes, longer request shapes, area, timing, or power. No physical result may
+> silently inherit any of those claims from W8.8.
 >
-> Nothing below is retracted by this. The co-simulation is a functional result
-> and says nothing whatever about area, timing or power; it bounds *which
-> machine* a number is allowed to describe, not what the number is.
->
-> Two further limits that were already true and are easy to lose. First, **no
-> block of the ABI 3.0 control plane has been synthesised or routed at all** —
-> the routed blocks below are the ABI 2.5 engines, the W8.3 datapaths, the
-> numeric probes, the ROM read service and the W8.4 link endpoint, and the
-> reason the microsequencer is not among them is [OI-43]. Second, no frequency,
-> area or energy from a 130 nm or predictive-7 nm open PDK may be scaled to
+> No ABI 3.0 control-plane block has been synthesized or routed. The routed
+> blocks below are ABI 2.5 engines, W8.3 datapaths and numeric probes, the ROM
+> read service, and the W8.4 link endpoint; [OI-43] records the open sequencer
+> synthesis issue. Finally, no frequency, area, energy, or density measured in
+> IHP SG13G2 (130 nm), SKY130, or predictive ASAP7 may be scaled to
 > N6/N5/N7/N4 (`docs/METHODOLOGY.md` §9).
 
 - [x] W9.1 Inventory available PDKs/tools; record what can actually run offline — `docs/ABI3_PHYSICAL_VIEWS.md`
 - [x] W9.2 SKY130 synthesis + place/route of RTL 3.0 blocks; area/timing/power — SKY130 HD full place-and-route, 0 DRC, 0 antenna
 - [x] W9.3 ASAP7 synthesis (predictive) of the same blocks — ASAP7 full place-and-route; archived case reproduced bit-for-bit
-- [ ] W9.4 SRAM/ROM macro methodology per view
+- [~] W9.4 SRAM/ROM macro methodology per view — the IHP SG13G2 chain now has three passing, source-bound open-PDK artifacts: minimum-pitch ROM/SRAM bitcell geometry (`results/spice/ihp_sg13g2_bitcell/bitcell.json`), routed ROM arrays plus synthesized periphery (`results/spice/ihp_sg13g2_rom_macro/macro_route.json`), and extracted read-energy/PVT sweeps (`results/spice/ihp_sg13g2_rom_read_energy/read_energy.json`), documented in `docs/ROM_PHYSICAL_METHODOLOGY.md`. `docs/ROM_DENSITY_NODE_TRANSFER.md` adds a separate ASAP7 predictive comparison and demonstrates that the 130 nm ratio does not transfer. It remains `[~]` because none of these artifacts characterizes the target N6/N5 view; every artifact explicitly prohibits target-node scaling.
 - [ ] W9.5 Feed characterized capability back into cycle model; recompile; rerun
 
 ## W10 — Mandatory workload campaigns
@@ -178,25 +168,8 @@ that, the position is:
 - [x] W13.1 Qwen3-8B **HBM** lane — 24 tokens, oracle-identical <!-- figure: 24 src="results/abi3/qwen3_hbm_ta-qw-chat-1_execution.json#record.generated_token_count" name="Qwen HBM generated tokens, TA-QW-CHAT-1" -->
 - [x] W13.2 Qwen3-8B **ROM** lane — 24 tokens, oracle-identical, and identical to <!-- figure: 24 src="results/abi3/qwen3_rom_ta-qw-chat-1_execution.json#record.generated_token_count" name="Qwen ROM generated tokens, TA-QW-CHAT-1" -->
   the HBM lane position for position
-- [ ] W13.3 DeepSeek-V4-Flash **HBM** (32 node) — **zero tokens.** The node
-  dimension now exists and the committed record retires **251** instructions <!-- figure: 251 src="results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json#record.counters['instructions.retired']" name="DeepSeek HBM retired, W13.3" -->
-  (`results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json`);
-  `a2cb06a` reports 299 and `88b3bcd` reports 1,896 with no record re-recorded, and
-  the static audit of 21 defect groups across 1,173 of 3,230 operators predates all
-  three. See W6.3 for what here is evidence and what is a commit message
-- [~] W13.4 DeepSeek-V4-Flash **ROM** (wafer) — **one validated token, raw.** The
-  lane produced token **13806** from a 32-token prefix of `TA-DS-CHAT-1` and the
-  oracle produced **13806** for the byte-identical prompt, so the token
-  deliverable now stands at **three of four**: Qwen HBM, Qwen ROM and DeepSeek
-  ROM have each emitted a validated token; DeepSeek HBM (W13.3) has not, and a
-  ROM-versus-HBM comparison needs both sides running the model. The capture is
-  filed raw under `results/abi3/accelerator_tokens/` and carries no evidence
-  grade, because no committed tool reproduces it yet — that, and multi-token
-  decode, are what stand between `[~]` and `[x]`. The committed execution record
-  still stops at the residual-add wall, the commit
-  trail reaches 9,189 retired at `29e50c2` and stops on an A18 predicate at ratio
-  128, and [OI-41] — now closed — named `ATTENTION.SPARSE`'s scalar reference as the standing
-  cost. No artifact republishes any of it — see W6.4
+- [~] W13.3 DeepSeek-V4-Flash **HBM** (32 node) — **one validated token, then a failed decode.** The governed 32-token capture emits **13806** <!-- figure: 13806 src="results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json#generated_token_ids[0]" name="DeepSeek HBM validated token, W13.3" -->, identical to the oracle, then stops at decode step 1 on a phase-extent mismatch. The capture predates the landed phase split, so a fresh multi-token run is the next gate; one prefill token is not the end-to-end requirement.
+- [~] W13.4 DeepSeek-V4-Flash **ROM** (wafer) — **multi-token execution is reproducible; multi-token correctness is not.** One prefill and three decode transactions succeed, producing **4** tokens <!-- figure: 4 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#generated_token_count" name="DeepSeek ROM generated tokens, W13.4" -->. The first matches the oracle and the sequence first diverges at index **1** <!-- figure: 1 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32.json#oracle.first_divergence_index" name="DeepSeek ROM first divergence, W13.4" -->. The committed Make target and capture close the former reproducibility gap, but numeric divergence and the unrun reasoning/agentic accelerator workloads keep this partial.
 - [x] W13.5 Qwen **reasoning** generation with thinking enabled — **closed.**
   `TA-QW-REASON-1` is the chat question rendered with thinking enabled, and the
   accelerator decoded **512** tokens of the model's own `<think>` block on the HBM <!-- figure: 512 src="results/abi3/qwen3_hbm_ta-qw-reason-1_execution.json#record.generated_token_count" name="TA-QW-REASON-1 tokens" -->
@@ -839,48 +812,18 @@ lanes are a precondition for it, not the product. These items are the product.
   commit, and it is the reason a `git add <path>` on a shared file is not
   actually safer than `git add -A` while anyone else is writing.
 
-- **OI-28 — the DeepSeek 32-node HBM lane cannot produce a token, and the
-  reason is upstream of every operand issue: the functional device has no node
-  dimension.** 96 tensor views in the `cluster_32` lowering carry a `NODE_ID`
-  term. `Symbol.NODE_ID` and `Symbol.NODE_COUNT` exist in the registry, and
-  neither `runtime/driver.py` nor `runtime/sim/device.py` mentions either —
-  only the verifier and the cycle model do. Binding `NODE_ID = 0` would not
-  rescue it: one device would compute a thirty-second of every contraction and
-  the LINK all-gather would have no peer.
-
-  **This changes which DeepSeek target is reachable, and the answer is the
-  wafer.** `rom_deepseek_v4` declares `topology_class = 2` with `max_nodes = 1`
-  — a wafer-scale logical device is *one node*, which is the whole content of
-  that topology class — so it needs no multi-node simulation at all. Its
-  collectives are tile-scoped, which is exactly what amendment A14 makes
-  expressible. `hbm_sram_cluster_32` declares 32 nodes and genuinely does need a
-  simulator that has more than one.
-
-  So W6.4 (wafer) is the DeepSeek execution path that can close, and W6.3
-  (32-node) is blocked on functional multi-node execution that does not exist.
-  The 32-node deployment still admits, still proves its work bound, and is still
-  covered by the cycle model; what it cannot do is produce a token. A report must
-  say that in those words rather than let "admitted" stand in for "ran".
-
-- **OI-29 — `REDUCTION.EXPERT_SUM` cannot express the mHC branch reduction.**
-  It reduces the *leading* axis of `in0` and takes one weight per leading index,
-  and the mHC branch weights vary per token **and** per stream. Four framings
-  were tried and each is refused for a different structural reason, including
-  one per-token descriptor, which A13's own admission rule now forbids because
-  `dim0 > bound_divisor`. Two resolutions are on the table: apply the weight
-  before the reduction under amendment A10 — bit-exact, since the reference is
-  four binary32 products reduced by a balanced tree and converted once, not a
-  fused product-add — at the cost of a materialised `[span, 4, 4096]` binary32
-  intermediate and a stream-major view whose leading axis is no longer the token
-  axis, which **silently** defeats A13 when `span mod block` is 1, 2 or 3; or
-  amend the operand row so the weight may match the first two axes.
-
-  **Deliberately not decided.** The lane it would unblock is blocked upstream by
-  OI-28, so choosing now would settle a question whose answer cannot be used or
-  tested yet. The word that decides it is *silently*: a resolution that defeats
-  A13 without saying so is the shape of defect this program has spent its whole
-  effort removing, so the operand-row amendment is the likely answer — but it
-  should be made against a lane that can execute and prove it.
+- **OI-28 — CLOSED: the functional device now has a real node dimension.**
+  Commit `8dfddac` binds node identity, executes peers, and makes collectives
+  data-bearing rather than pretending node 0 is the cluster. The governed
+  32-node HBM capture subsequently admitted, completed prefill, and emitted an
+  oracle-identical token. Its remaining post-prefill gate is W6.3's post-fix
+  decode rerun, not missing multi-node execution.
+- **OI-29 — CLOSED: the mHC branch reduction is executable in both backends.**
+  The later A20 slot mapping and backend lowerings replaced the diagnostic
+  `EXPERT_SUM` dead end. Current ROM and HBM token captures both run the full
+  DeepSeek prefill and emit token 13806; ROM then completes three decode
+  transactions. The old alternative-design discussion remains in Git history,
+  but it is no longer an open ABI decision.
 
 - **OI-27 — the governed comparison tool cannot produce a comparison. Any
   comparison.** *(Fixed; the first comparison now exists — see W11.1.)* `tools/build_comparison_report.py` exists to compare Qwen ROM
@@ -917,22 +860,13 @@ lanes are a precondition for it, not the product. These items are the product.
   good gate, and refused for exactly the reasons a good gate should look at —
   had never been exercised against two real records.
 
-- **OI-26 — two agents worked the DeepSeek lane at once and the evidence file
-  became a moving target.** `results/abi3/deepseek_v4_hbm_ta-ds-chat-1_execution.json`
-  was written at 20:02:11 describing one failure, while the exporter that
-  produced it was edited at 20:03:02 and the IR rebuilt at 20:03:31. The record
-  on disk is therefore stale against the very tree that wrote it, and a second
-  run would have captured a third transient state rather than correcting it. The
-  file currently reads `reduction output view 413 holds 425984 elements, expected
-  16384` — a shape mismatch in the new reduction path, `104 × 4096` against an
-  expected `4 × 4096`.
-
-  This is a coordination failure of mine, not a defect in anyone's code. I gave
-  two agents overlapping ownership of one lane, and the visible cost is a
-  results file that cannot be trusted to describe any state the repository ever
-  had. Evidence files are single-writer artifacts; a lane needs one owner at a
-  time. Their *code* did not conflict — the broadcast work, the slot
-  permutation, the aux ids and the arena fix all survived — only the record did.
+- **OI-26a — CLOSED: the concurrent-writer evidence incident is retained as
+  a process guard.** An earlier DeepSeek record was written while its exporter
+  and IR were still changing, so it never described one stable source tree.
+  Evidence artifacts are now single-writer captures generated by committed
+  tools; W6.3 and W6.4 cite those captures rather than the transient
+  execution file. The old failure remains in Git history, not as current lane
+  evidence.
 
 - **OI-25 — fourteen test files still validate the retired ABI 2.5 lane, and
   one of them fails.** `tests/compiler/test_tensor_accelerator_qwen_rtl_rope.py`
@@ -957,191 +891,20 @@ lanes are a precondition for it, not the product. These items are the product.
   concurrent backend work has settled. Related to [OI-17], which is the same
   lane failing for a different reason.
 
-- **OI-29 — the measured DeepSeek prefill ladder beyond OI-28.** Because
-  OI-28 stops the real graph at the third kernel, the rest of the
-  prefill was walked with a *diagnostic* graph in which the branch reduction is
-  replaced by a `SELECT` of stream 0 — structurally identical, numerically
-  wrong, never published — on the single-chip capability (OI-27 rules out the
-  cluster). It admits (911 instructions, 2,114 descriptors) and fails in this
-  order (steps 1 and 3 were walked with the mismatch patched locally and the
-  patch discarded; only step 2's fix is landed):
 
-  1. `numeric profile 418 names no RMSNorm contract this engine implements` —
-     **open, with the fix identified.** Amendment A8 gives the vector engine two
-     RMSNorm contracts, names them `qwen3_rmsnorm_fp32_bf16_v1` and
-     `deepseek_rmsnorm_binary32_v1`, and makes the engine dispatch on the one
-     the NUMERIC descriptor names. Qwen took its name; the DeepSeek exporter
-     still names `normalization_rms_norm_bf16`, which is not either of them, so
-     the engine refuses all 235 of its RMSNorms rather than guess. The fix is
-     the exporter adopting A8's name — one line in
-     `CONTRACT_BASE_BY_SOURCE_KIND` — plus adding the already-qualified
-     `deepseek_rmsnorm_binary32_v1` to the two HBM capability files and the ROM
-     one, and regenerating `spec/abi3/numeric_contract_union.json`. It is
-     deliberately **not** an `EXECUTION_CONTRACT` substitution in the HBM
-     lowering: that map is executable code, and
-     `test_lowering_never_names_a_model` correctly refuses to let a model name
-     reach it. Tried that way first; the test caught it, which is the test
-     working.
-  2. `numeric profile 456 declares epsilon 0x358637bd; the unweighted head
-     RMSNorm contract requires the BF16 encoding 0x3586` — **closed.** The
-     released *unweighted* head norm is qualified against
-     `head_rms_norm_bf16`, which takes a BF16 epsilon code because the kernel
-     adds it to a BF16 mean. The NUMERIC field is otherwise a binary32 pattern,
-     so the backend now narrows it for that one operand shape. Qwen's head norm
-     passes a gain vector, takes the weighted path, and keeps binary32 — the
-     narrowing is keyed on the operand arity, not on a model.
-  3. `RoPE coefficient view 461 has last axis 1; expected cosine then sine over
-     512` — **open.** This is IR3-GAP-4, which amendment A9 resolved in the
-     schema and the DeepSeek exporter has not yet taken up: `Tensor.generator`
-     now lets a derived constant be declared, so the rotary coefficient rows can
-     fill `VECTOR.ROPE`'s `in1` instead of the position offset the exporter
-     still passes there. Qwen already declares the table this way.
-
-  The ladder was not walked past that point. Its value is the ordering: every
-  step so far has been a *naming* or *encoding* mismatch between the exporter
-  and an engine that refuses to guess, not a missing capability.
-
-- **OI-28 — `REDUCTION.EXPERT_SUM` cannot express the mHC branch reduction, and
-  that is what now blocks the DeepSeek HBM prefill.** *(Found by landing the
-  ABI's own `HYPER_CONNECT_PRE` decomposition.)* The frozen `VECTOR.MHC` row
-  gives `HYPER_CONNECT_PRE` two output views and spends them on the packed
-  `[tokens, 2, streams]` pre/post coefficient block and the
-  `[tokens, streams, streams]` combination matrix, leaving the branch input
-  `y[t,h] = sum_m pre[t,m] * x[t,m,h]` to a separate `REDUCTION.EXPERT_SUM`.
-  The exporter now says exactly that. The operator then fails, and it fails for
-  a reason no exporter can fix:
-
-  > `reduction output view 413 holds 425984 elements, expected 16384`
-
-  `EXPERT_SUM` reduces the **leading** axis of `input_view_0` and takes exactly
-  one weight per leading index (`weight_view.element_count == values_view.dims[0]`).
-  The branch weights vary per token *and* per stream. A descriptor covering a
-  512-token block would need `512 x 4` weights against 4 leading contributions,
-  and there is no view that supplies them. Four framings were checked and all
-  four fail:
-
-  | framing | why it fails |
-  |---|---|
-  | contributions `[tokens, streams, width]` | leading axis is tokens, so out must be `[streams, width]`, not `[tokens, width]` — the measured error |
-  | contributions presented stream-major `[streams, tokens, width]` | shapes agree, but `weight_view.element_count` must then be 4 and the request has `4 x tokens` weights |
-  | one descriptor per token (`bound_divisor = 1`) | A13's admission rule forbids `dim0 > bound_divisor`, so a rank-3 contributions view of `dim0 = 4` is **refused at admission**; a rank-3 view of `dim0 = 1` reduces one stream |
-  | `bound_divisor = streams` | the loop trip count becomes `ceil(span / 4)`, which is not the token count |
-
-  So this is a product decision, not a lowering bug. Two resolutions are
-  available and both cost something:
-
-  - **Apply the weight before the reduction (amendment A10).** A10 already
-    blesses this: an `EXPERT_SUM` that omits `input_view_1` declares the weight
-    was applied earlier, which is exactly what the DeepSeek MoE does. One
-    `VECTOR.SCALE` sub-case 1 with the coefficient read through a trailing
-    zero-stride axis, writing binary32, then `EXPERT_SUM` over a stream-major
-    view. It is bit-exact — the frozen reference is "four binary32 branch
-    products reduced by a balanced tree and converted once to BF16", which is
-    a binary32 product then a `PAIRWISE_TREE` sum, not a fused product-add. It
-    costs a materialised `[span, 4, 4096]` binary32 intermediate (17 GB at the
-    declared 262,144-token context, 537 MB at 8,192) and it needs a stream-major
-    contributions view, whose leading axis is then *not* the token axis, which
-    silently defeats A13 whenever `span mod block` is 1, 2 or 3.
-  - **Amend the operand row** so a weighted reduction can name its axis and take
-    one weight per reduced *element* rather than per reduced *index*. That is an
-    ABI change and therefore not ours to make.
-
-  Until one is chosen the DeepSeek HBM prefill stops at
-  `main.layer00.hc_attn_pre.branch_reduce`. Everything before it now runs, and
-  the counters say so rather than the absence of an error:
-  `vector.mhc_sites = 104` for a 104-token prompt (so `HYPER_CONNECT_PRE`
-  executed over exactly the span, with A13's clamp doing its job on a 512-row
-  block), `dma.transfers = 3` (the hyper-connection expansion plus the two
-  coefficient-plane selects) and `engine.reduction.descriptors = 1` — the one
-  that trapped.
-
-- **OI-27 — no multi-node deployment can execute functionally: `NODE_ID` is
-  never bound.** The 32-node capability makes every large contraction
-  column-sharded (`shard_columns = cols // 32`), and 96 of the resulting tensor
-  views carry a `RUNTIME_SYMBOL` term on `NODE_ID`. `runtime/driver.py` binds `SPAN_TOKENS`,
-  `POSITION_START`, `POSITION_END` and `CONTEXT_LENGTH`; `runtime/sim/device.py`
-  adds `PHASE` and `GENERATION_INDEX`. Nothing binds `NODE_ID` or `NODE_COUNT` —
-  only the verifier and the cycle model do — so the first sharded matmul traps
-  with `view 431: symbol NODE_ID is unbound`. The mandated W6.3 capability is
-  `hbm_sram_cluster_32.json`, so **W6.3 cannot produce a token until the
-  functional simulator has a node dimension**, independently of every operand
-  issue above. Binding `NODE_ID = 0` would not fix it: one device would then
-  compute 1/32 of every contraction's columns and the LINK all-gather has no
-  peer to gather from. The single-chip capability lowers the same graph
-  unsharded and does execute, which is how the ladder below was measured.
-
-- **OI-26 — the `attention_kv_view` row space needs an extent no ABI 3.0 view
-  can present, and the neutral IR states the wrong one.** *(Investigation only;
-  no change landed.)* The 43 axis-0 `CONCAT` kernels resolve to inputs
-  `(span_tokens, 512)`, `(128, 512)` and `(context_groups_ratio_R, 512)` against
-  an output declared as `(attention_rows_ratio_R, 512)` — a derived symbol with
-  no entry in the ABI's frozen registry, so no view can carry it and the backend
-  falls back to a `SPAN_TOKENS` row loop that A13 clamps to 104 rows.
-
-  **What the operand actually needs.** `docs/DEEPSEEK_V4_ATTENTION_KV_VIEW_EVIDENCE.md`
-  is explicit, and it is not one extent but two, one per phase:
-
-  ```text
-  prefill: current_kv[0:S]                   || compressed_valid_prefix[0:floor(S / R)]
-  decode:  physical_window_capacity[0:128]   || compressed_valid_prefix[0:floor((start_pos + 1) / R)]
-  ```
-
-  Prefill has **no** window segment and decode has **no** current segment. The
-  IR's single three-input `CONCAT` with one `attention_rows_*` extent is the
-  union of both layouts, which is a shape neither phase has. That is a defect in
-  the neutral IR independent of the symbol question, and it has to be fixed
-  first: the kernel should be two phase-predicated compositions, which ABI 3.0
-  already supports through instruction predicates and the `PHASE` symbol.
-
-  **What today's symbols can and cannot express**, taking the composition as
-  per-segment movements into row windows (the same idiom as OI-20's column
-  concatenation):
-
-  | quantity | expressible today? |
-  |---|---|
-  | segment offsets `S x 512` and `S x 512 + 128 x 512` | **yes** — one `RUNTIME_SYMBOL` term on `SPAN_TOKENS` plus a static element offset |
-  | the current segment's `S` rows | **yes** — a block loop on `SPAN_TOKENS`, clamped exactly by A13 |
-  | the window segment's 128 rows | **yes** — static |
-  | the compressed prefix's `floor(X / R)` rows | **no** |
-
-  The last one is the whole gap, and it is narrower than "a symbol for
-  `attention_rows_*`". A view's leading extent is a *static* field; the only
-  runtime narrowing in ABI 3.0 is A13, which clamps to `symbol - i x bound_divisor`
-  in the loop's own units. A loop bound comes closer — `bound_symbol = CONTEXT_LENGTH`,
-  `bound_divisor = R`, `step = 1` gives `trip = ceil(context_length / R)` by
-  `runtime.sim.device.loop_trip_count` — but the reference says `floor`, and
-  `ceil` copies one uncommitted group whenever `R` does not divide the context
-  (at `R = 128` and a 104-token prompt, `ceil` is 1 and `floor` is 0). No
-  `lower_bound` makes `ceil` into `floor` at every input.
-
-  **If a symbol is added, this is what it would have to mean.** Not
-  `attention_rows_*`: that is a sum of three things, two of which are already
-  expressible, and it differs per phase and per layer. What is missing is *the
-  number of committed rows of the compressed-KV stream this operand reads*.
-  Three shapes it could take, in increasing generality:
-
-  1. Two request-scoped symbols, `COMPRESSED_ROWS_RATIO_4` and
-     `COMPRESSED_ROWS_RATIO_128`, bound by the host as `floor(context_length / R)`.
-     Exact, trivial to bind — and it puts one model's two compression ratios in
-     a model-neutral registry, which is the objection.
-  2. One symbol `COMMITTED_STATE_ROWS`, meaning the committed row count of the
-     state resource the operand reads. This is the honest quantity: the count is
-     a property of the compressed-KV resource's cursor, which the STATE
-     descriptor already carries. But ABI symbols are request-scoped scalars with
-     no operand context, so this needs a resolution rule ("resolved against the
-     resource this view's object belongs to") that no other symbol has.
-  3. Generalise the extent rule instead of the registry: let a tensor view name
-     a symbol and a divisor for its leading extent, resolving as
-     `dim0 = min(dim0, floor(symbol / divisor) - i x block)`. A13 becomes the
-     special case with `divisor = 1`. Model-neutral, subsumes the case above,
-     and is a wire-format change to `TENSOR_VIEW` rather than a registry
-     addition — so it is the largest of the three and the only one that is not
-     purely additive.
-
-  Recommendation: fix the phase split in the neutral IR first, since it is
-  needed under every option and may narrow the requirement; then choose between
-  (1) and (3). This is TA-ABI3-WIRE-1 amendment territory and is left for
-  decision.
+- **OI-26 — CLOSED: the compressed-attention join now carries an explicit
+  phase binding.** Commit `77f847c` made the frontend publish
+  `phase_symbol_binding` with `position_start = 0` for prefill and
+  `span_tokens = 1` for decode. Those released phase facts collapse the
+  two-symbol row sum onto existing affine ABI symbols: `5 × span / 4 + 128`
+  in ratio-4 prefill and `context / 4 + 129` in ratio-4 decode (with the
+  analogous ratio-128 forms). Both ROM and HBM lower one phase-specific extent,
+  propagate it to the consumer, and refuse a missing or malformed binding.
+  `tests/compiler/test_attention_join_phase_extent.py` exercises both phases
+  and negative mutations. No new request-scoped symbol or wire-format amendment
+  was needed. The ROM token artifact executes three decode steps with this
+  lowering; the HBM artifact predates it, so W6.3 still requires a rerun rather
+  than treating this unit proof as end-to-end evidence.
 
 - **OI-24 — a zero-source memory object committed its whole declared arena on
   activation, and the DeepSeek cluster plan declares 160.4 GiB of it.**
@@ -1364,7 +1127,7 @@ lanes are a precondition for it, not the product. These items are the product.
   Every case, every check count and every correlation figure is identical.
   Re-recording is `python3 tools/rtl_abi3_campaign.py --force`, and it is left
   to the RTL lane rather than done here: `results/rtl/abi3_campaign.json` is
-  that lane's evidence, and an evidence file with two writers is OI-26.
+  that lane's evidence, and an evidence file with two writers is OI-26a.
 
   **Closed.** The RTL lane re-recorded it. Three of the thirty bound sources had
   moved, not one: the A16 index row in the wire format, and `runtime/sim/device.py`
