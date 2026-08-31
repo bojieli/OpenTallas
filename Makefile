@@ -42,7 +42,8 @@ spec-check:
 # 108 load-bearing figures went stale unnoticed (docs/EVIDENCE_LEDGER.md).
 check-evidence-grades:
 	python3 tools/check_evidence_grades.py \
-	  --also results/abi3/deepseek_v4_prefix_workload_pins.json
+	  --also results/abi3/deepseek_v4_prefix_workload_pins.json \
+	  --also results/abi3/deepseek_v4_context_threshold_workload_pins.json
 
 check-prose-figures:
 	python3 tools/check_prose_figures.py

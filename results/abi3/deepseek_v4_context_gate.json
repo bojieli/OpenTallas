@@ -1,0 +1,49 @@
+{
+ "all_pass": false,
+ "counter_model": "min(position + 1, window) + min(top_k or all, (position + 1) // ratio), summed over every layer and every query position; kv_bytes = gathered * 1024",
+ "model": "deepseek-v4-flash-0731",
+ "pins": [
+  "results/abi3/deepseek_v4_context_threshold_workload_pins.json",
+  "results/abi3/deepseek_v4_prefix_workload_pins.json"
+ ],
+ "records_checked": 1,
+ "records_missing": [],
+ "results": [
+  {
+   "counter_excess_over_model": {
+    "attention.context_positions": 18,
+    "attention.heads": 128,
+    "attention.kv_bytes_read": 18432,
+    "attention.sparse_indices": 18
+   },
+   "counters_compared": false,
+   "decode_steps": 0,
+   "expected_counters": {
+    "attention.context_positions": 1674,
+    "attention.heads": 22016,
+    "attention.kv_bytes_read": 1714176,
+    "attention.sparse_indices": 1674
+   },
+   "failure": "decode step 1 failed: GROUPED_CONCAT output view 1417 dims (129, 512) differ from the axis-0 concatenation (131, 512)",
+   "generated_token_ids": [
+    14
+   ],
+   "gold_token_ids": [
+    14
+   ],
+   "observed_counters": {
+    "attention.context_positions": 1692,
+    "attention.heads": 22144,
+    "attention.kv_bytes_read": 1732608,
+    "attention.sparse_indices": 1692
+   },
+   "passes": false,
+   "problems": [],
+   "prompt_token_count": 8,
+   "record": "results/abi3/deepseek_v4_rom_ta-ds-chat-1-p8_decode_execution.json",
+   "status": "failed",
+   "workload_id": "TA-DS-CHAT-1-P8"
+  }
+ ],
+ "schema": "opentallas.deepseek_v4_context_gate.v1"
+}

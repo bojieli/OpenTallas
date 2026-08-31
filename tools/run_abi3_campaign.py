@@ -89,6 +89,18 @@ def main() -> int:
             "normally what you want -- the capability already names it."
         ),
     )
+    parser.add_argument(
+        "--snapshot",
+        type=Path,
+        default=None,
+        help=(
+            "checkpoint root that relative object-source paths resolve "
+            "against.  A backend may name its weight segments by shard file "
+            "name rather than absolute path -- the DeepSeek ROM backend does "
+            "-- and such a deployment cannot be activated without this.  "
+            "Omit it when every object path is absolute."
+        ),
+    )
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--trace", action="store_true")
     args = parser.parse_args()
@@ -159,7 +171,13 @@ def main() -> int:
         return 2
 
     # -- execute ------------------------------------------------------
-    device = Device(deployment, capability, verify=False, trace=args.trace)
+    device = Device(
+        deployment,
+        capability,
+        root=args.snapshot,
+        verify=False,
+        trace=args.trace,
+    )
     driver = GenerationDriver(device)
     prompt = workload["token_ids"]
     limit = args.max_new_tokens or workload["max_new_tokens"]
