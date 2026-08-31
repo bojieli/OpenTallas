@@ -2494,6 +2494,53 @@ def _published_capability_for(deployment: Deployment) -> Capability | None:
     return None
 
 
+def _skip_scratch_prerequisite_or_fail(root: Path, reason: str) -> None:
+    """An ignored build may be incomplete; committed evidence may not be.
+
+    Deployment publication is deliberately zero-copy, so a bundle under the
+    ignored ``build/`` tree can be a valid program without carrying the local
+    checkpoint files needed to execute it.  Old bundles can likewise remain
+    after an ABI amendment.  Neither is repository evidence, and making the
+    full suite depend on whichever scratch bundles happen to remain makes a
+    clean checkout and a worked-in checkout test different source trees.
+
+    A deployment retained under ``results/`` is different: it is committed
+    evidence, so the same missing prerequisite is a failure there.
+    """
+    try:
+        root.relative_to(REPO / "build")
+    except ValueError:
+        pytest.fail(reason)
+    pytest.skip(reason)
+
+
+def _require_runnable_real_deployment(
+    root: Path, deployment: Deployment, capability: Capability
+) -> None:
+    verification = verify_deployment(deployment, capability)
+    if not verification.admitted:
+        _skip_scratch_prerequisite_or_fail(
+            root,
+            f"scratch deployment is stale or inadmissible: {verification.errors}",
+        )
+
+    missing: set[Path] = set()
+    for source in deployment.objects.values():
+        for segment in source.segments:
+            path = Path(segment.path)
+            if not path.is_absolute():
+                path = root / path
+            if not path.is_file():
+                missing.add(path)
+    if missing:
+        first = min(missing, key=str)
+        _skip_scratch_prerequisite_or_fail(
+            root,
+            f"zero-copy deployment has {len(missing)} checkpoint source file(s) "
+            f"absent from its execution root; first missing source: {first}",
+        )
+
+
 @pytest.mark.skipif(
     not REAL_DEPLOYMENTS, reason="no ABI 3.0 deployment exists under build/ or results/"
 )
@@ -2519,6 +2566,7 @@ def test_real_deployment_counter_agreement(root: Path):
                 f"{root} carries no capability.json and no published capability "
                 f"has its digest {deployment.capability_digest}"
             )
+    _require_runnable_real_deployment(root, deployment, capability)
     table = {
         int(TopologyClass.SINGLE_CHIP): BASELINE,
         int(TopologyClass.CLUSTER_32): CLUSTER32,
