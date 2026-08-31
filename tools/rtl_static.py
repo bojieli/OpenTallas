@@ -34,17 +34,55 @@ WAIVER_PATH = ROOT / "spec" / "rtl_waivers.json"
 
 
 def rtl_sources() -> tuple[str, ...]:
-    paths = []
+    paths: list[tuple[int, str]] = []
     for path in RTL.rglob("*.sv"):
         relative = path.relative_to(ROOT)
         if "formal" in relative.parts or "test" in relative.parts or "build" in relative.parts:
             continue
-        paths.append(str(relative))
-    return tuple(sorted(paths))
+        # All three frontends consume one source list.  SystemVerilog packages
+        # must be parsed before modules that import or qualify them; a plain
+        # lexical sort puts, for example, ot_a3_collective_engine.sv before
+        # ot_a3_link_pkg.sv and turns a valid design into a missing-package
+        # failure.  Keep the inventory deterministic while making dependency
+        # order explicit.  The packages in this repository do not import one
+        # another, so their lexical order is sufficient within the first tier.
+        text = path.read_text(encoding="utf-8")
+        is_package = bool(re.search(r"(?m)^\s*package\s+[A-Za-z_]", text))
+        paths.append((0 if is_package else 1, str(relative)))
+    return tuple(path for _tier, path in sorted(paths))
 
 
 SOURCES = rtl_sources()
-YOSYS_SOURCES = tuple(path for path in SOURCES if path != "rtl/lib/ot_crc_pkg.sv")
+
+# The repository now contains several independent RTL products with their own
+# tops and campaigns.  This campaign elaborates ``ot_stage_top``; feeding every
+# inventoried source to that top makes unrelated modules part of the lint unit
+# and turns warnings in, for example, the ABI-3 link into stage-top findings.
+# Keep the elaboration closure explicit and auditable.  A newly introduced
+# dependency still fails each frontend as an unresolved module until it is
+# deliberately added here.  The otherwise-unused CRC package is included in
+# both language frontends so the recorded Yosys 0.9 exclusion remains backed
+# by two independent parsers.
+STAGE_SOURCES = (
+    "rtl/lib/ot_crc_pkg.sv",
+    "rtl/lib/ot_async_fifo.sv",
+    "rtl/lib/ot_cdc_mailbox.sv",
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/lib/ot_sync_bits.sv",
+    "rtl/lib/ot_sync_level.sv",
+    "rtl/ot_cmd_frontend.sv",
+    "rtl/ot_credit_manager.sv",
+    "rtl/ot_csr_block.sv",
+    "rtl/ot_power_reset_controller.sv",
+    "rtl/ot_ras_controller.sv",
+    "rtl/ot_schedule_controller.sv",
+    "rtl/ot_session_table.sv",
+    "rtl/ot_stage_controller.sv",
+    "rtl/ot_stage_top.sv",
+)
+YOSYS_STAGE_SOURCES = tuple(
+    path for path in STAGE_SOURCES if path != "rtl/lib/ot_crc_pkg.sv"
+)
 
 
 def sha256_file(path: Path) -> str:
@@ -121,9 +159,12 @@ def normalize_space(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
-def parse_modules_and_clock_resets(sources: Iterable[str]) -> tuple[list[dict[str, Any]], list[str]]:
+def parse_modules_and_clock_resets(
+    sources: Iterable[str], *, timescale_required: Iterable[str] = ()
+) -> tuple[list[dict[str, Any]], list[str]]:
     inventory: list[dict[str, Any]] = []
     errors: list[str] = []
+    timescale_scope = set(timescale_required)
     module_re = re.compile(r"\bmodule\s+([A-Za-z_][A-Za-z0-9_$]*)")
     port_re = re.compile(
         r"\b(input|output|inout)\s+(?:wire|reg|logic)\s+"
@@ -133,7 +174,7 @@ def parse_modules_and_clock_resets(sources: Iterable[str]) -> tuple[list[dict[st
         path = ROOT / source
         text = path.read_text(encoding="utf-8")
         first_nonblank = next((line.strip() for line in text.splitlines() if line.strip()), "")
-        if first_nonblank != "`timescale 1ns/1ps":
+        if source in timescale_scope and first_nonblank != "`timescale 1ns/1ps":
             errors.append(f"{source}: missing canonical `timescale 1ns/1ps")
         modules = module_re.findall(text)
         is_package = bool(re.search(r"\bpackage\s+[A-Za-z_]", text))
@@ -585,6 +626,7 @@ def render_report(summary: dict[str, Any]) -> str:
             "",
             f"- Synthesizable RTL/package files inventoried: {summary['inventory']['source_count']}",
             f"- Declared modules inventoried: {summary['inventory']['module_count']}",
+            f"- Stage-top frontend source closure: {summary['stage_scope']['source_count']}",
             f"- Stage-top ports classified: {summary['manifest']['classified_port_count']}/"
             f"{summary['manifest']['top_port_count']}",
             f"- Explicit CDC/RDC crossings mapped: {summary['manifest']['crossing_count']}",
@@ -627,6 +669,9 @@ def render_report(summary: dict[str, Any]) -> str:
             "",
             "- Verilator and Icarus are independent parser/elaboration frontends; Yosys is "
             "the independent structural netlist frontend.",
+            "- Every synthesizable source is inventoried. Frontend elaboration in this "
+            "campaign is intentionally limited to the recorded `ot_stage_top` closure; "
+            "independent ABI-3, link, ROM-service, and arithmetic tops have separate campaigns.",
             "- The installed Yosys 0.9 cannot parse package functions. The unused CRC package "
             "is independently parsed by both language frontends, guarded against synthesis "
             "imports, and covered by an expiring waiver.",
@@ -654,7 +699,13 @@ def main() -> int:
 
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     waiver_doc = json.loads(WAIVER_PATH.read_text(encoding="utf-8"))
-    inventory, inventory_errors = parse_modules_and_clock_resets(SOURCES)
+    # Module ownership and source identity cover the whole synthesizable tree.
+    # The canonical-timescale policy is a frontend policy, so it applies to the
+    # stage elaboration closure this campaign actually parses, not to unrelated
+    # products that are only inventoried here and have their own campaigns.
+    inventory, inventory_errors = parse_modules_and_clock_resets(
+        SOURCES, timescale_required=STAGE_SOURCES
+    )
     manifest_record, manifest_errors = check_manifest(manifest)
     structural_records, structural_errors = structural_checks()
     rom_records, rom_errors = rom_read_only_checks()
@@ -668,11 +719,20 @@ def main() -> int:
         "-chparam RSP_FIFO_DEPTH 4 -chparam TELEM_FIFO_DEPTH 4 "
         "-chparam SCHEDULE_SLOTS 4"
     )
-    yosys_read = "read_verilog -sv " + " ".join(YOSYS_SOURCES)
+    missing_stage_sources = sorted(set(STAGE_SOURCES) - set(SOURCES))
+    if missing_stage_sources:
+        print(
+            "stage source closure references missing/non-synthesizable paths: "
+            + ", ".join(missing_stage_sources),
+            file=sys.stderr,
+        )
+        return 2
+
+    yosys_read = "read_verilog -sv " + " ".join(YOSYS_STAGE_SOURCES)
     cases = [
         run_case(
             "verilator_stage_strict",
-            verilator_base + ["--top-module", "ot_stage_top", *SOURCES],
+            verilator_base + ["--top-module", "ot_stage_top", *STAGE_SOURCES],
         ),
         run_case(
             "verilator_legacy_strict",
@@ -688,7 +748,7 @@ def main() -> int:
         ),
         run_case(
             "iverilog_stage_elaboration",
-            iverilog_base + ["-s", "ot_stage_top", *SOURCES],
+            iverilog_base + ["-s", "ot_stage_top", *STAGE_SOURCES],
         ),
         run_case(
             "iverilog_legacy_elaboration",
@@ -772,6 +832,13 @@ def main() -> int:
             "module_count": sum(len(item["modules"]) for item in inventory),
             "sources": inventory,
         },
+        "stage_scope": {
+            "top": "ot_stage_top",
+            "source_count": len(STAGE_SOURCES),
+            "sources": list(STAGE_SOURCES),
+            "yosys_source_count": len(YOSYS_STAGE_SOURCES),
+            "yosys_sources": list(YOSYS_STAGE_SOURCES),
+        },
         "manifest": manifest_record,
         "crossings": manifest["crossings"],
         "resets": manifest["resets"],
@@ -795,6 +862,7 @@ def main() -> int:
         },
         "limitations": [
             "public structural CDC/RDC checks are not target-qualified signoff",
+            "frontend elaboration covers the recorded ot_stage_top source closure, not independent RTL tops",
             "Yosys stage structural elaboration uses explicitly recorded reduced parameters",
             "Yosys 0.9 package-function parsing is covered by an expiring exact waiver",
             "physical synchronizer placement, MTBF, UPF, and PDK timing remain external",
