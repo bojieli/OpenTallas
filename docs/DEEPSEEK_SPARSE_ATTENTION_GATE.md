@@ -433,6 +433,73 @@ no way to ask the question. The selection audit *does* vary scores, but it
 feeds the same synthetic block to both sides and says so in its `not_a_claim`.
 Each artifact was correct about its own scope; the gap was between them.
 
+## What the ladder found: the deployment cannot prefill past its own window
+
+The first rung was run on both lanes. `TA-DS-CTX-129-1` is 129 prompt tokens —
+one more than `window_tokens` — and on the ROM wafer it **failed**, after 9,076
+seconds of prefill, without producing a token.
+
+<!-- figure: "prefill failed: state 353: committing 129 rows at cursor 0 with 0 already staged exceeds capacity 128" src="results/abi3/deepseek_v4_rom_ta-ds-ctx-129_execution.json#record.failure" name="129 commit trap" -->
+The recorded failure is `prefill failed: state 353: committing 129 rows at
+cursor 0 with 0 already staged exceeds capacity 128`, trap class
+`CAPABILITY_OR_RESOURCE`.
+
+**The sparse attention was right.** The run gathered exactly the rows the
+closed-form model requires, on all four counters, before it trapped:
+
+<!-- figure: 403560 src="results/abi3/deepseek_v4_rom_ta-ds-ctx-129_execution.json#record.counters['attention.context_positions']" name="129 gathered positions" -->
+`attention.context_positions` is 403,560, which is what the profile says for a
+129-token prefill — a window that clips for the first time, and the first
+completed `compress_ratio=128` group.
+<!-- figure: 355008 src="results/abi3/deepseek_v4_rom_ta-ds-ctx-129_execution.json#record.counters['attention.heads']" name="129 attention heads" -->
+`attention.heads` is 355,008, which is 129 x 64 x 43. The gate's counter arm
+would have passed. Its token arm has nothing to compare, because there is no
+token.
+
+### Where it breaks
+
+`STATE.COMMIT` asks the resource how many rows a commit publishes, and
+amendment A21 gives exactly two answers. `CommitPolicy.REQUEST_SPAN` takes
+`SPAN_TOKENS`; `CommitPolicy.UNSTAGED` publishes none. A21's own docstring
+states the principle it is enforcing — `SPAN_TOKENS` "is a row count only where
+the resource's row axis is the token axis, which is true of a KV cache and
+false of a fixed recurrent window."
+
+The DeepSeek sliding-window KV state is *both* at once: it is a KV cache, and
+its row axis is a fixed 128-slot circular window. The number of rows its commit
+publishes is `min(span, capacity)` — a prefill of 129 tokens retains the last
+128 — and **no policy says that.** The reference operator already knows it:
+`runtime/reference/kv_window.py` "retains only the final `W` input rows in
+circular slot order". The commit refuses before the operator is ever asked.
+
+The policy is not a backend's to choose. `runtime/abi3/builder.py` derives it
+for every state resource from one binary rule — is the prepared image any
+descriptor's destination — precisely so that "a backend cannot get it wrong and
+two backends cannot disagree about it". That is why this is a property of the
+ABI and not of a lane, and why both lanes are expected to fail identically
+rather than differently as the `GROUPED_CONCAT` decode gap does.
+
+### Why this is the ladder's most important result
+
+Every rung of this ladder is longer than 128 tokens. That is not incidental —
+128 is the sliding window, and a prompt that does not exceed it cannot exercise
+sparsity at all, which is the whole reason the ladder exists. So:
+
+**No prompt that crosses any sparsity threshold can complete a prefill on
+either DeepSeek deployment.** The regime the published ratios are quoted in is
+not merely expensive to reach, as the cost estimates above assumed. It is
+unreachable, at any budget, until a commit policy exists for a saturating
+resource.
+
+It **fails closed**: the ABI's own capacity check refuses the commit rather
+than wrapping silently or truncating, so the recurring silent-defect class did
+not strike here, and no wrong token was produced or published. What was wrong
+was the estimate that the only obstacle was time.
+
+This is the second declared-and-unreached ABI gap the DeepSeek deployment has
+now actually reached, after the `GROUPED_CONCAT` decode extent. Both were
+reached for the first time by running a prompt shape nobody had run before.
+
 ## What is still not established
 
 Stated exhaustively, because the value of a gate is bounded by what it does not
@@ -458,13 +525,14 @@ cover.
   cannot do it.
 - **`ATTENTION.SPARSE`'s arithmetic at long context is not gated here.** The
   audit gates which rows are selected, not the online softmax over them.
-- **Neither lane has produced a DeepSeek token at a length that crosses a
-  sparsity threshold.** Both lanes now produce one below every threshold: ROM
-  and HBM each emit 13806 for the 32-token prefix, which is oracle gold
-  (commit `6f5f5fd`). That is the whole of the DeepSeek end-to-end evidence,
-  and 32 tokens is under the window, under `top_k`, and under one compressed
-  group. The `TA-DS-CTX-129/160/256` runs on both lanes are what change this
-  and are recorded below when they land.
+- **Neither lane can produce a DeepSeek token at a length that crosses a
+  sparsity threshold**, and this is now a defect rather than a budget. Both
+  lanes produce one *below* every threshold: ROM and HBM each emit 13806 for
+  the 32-token prefix, which is oracle gold (commit `6f5f5fd`). That is the
+  whole of the DeepSeek end-to-end evidence, and 32 tokens is under the
+  window, under `top_k`, and under one compressed group. Above the window the
+  prefill traps on the commit-capacity gap above, so the ladder cannot be
+  walked at all until a saturating commit policy exists.
 - **RTL is untouched.** This is the functional-simulator path.
 - **The token at 200,000 and 1,000,000 tokens is not defined by the model**, as
   the BF16 tie argument above shows, so no future run can validate one. Byte
