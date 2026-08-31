@@ -2,7 +2,7 @@
 
 **Checklist item:** W8.3
 **Status:** four datapaths implemented and correlated; the rest of the engine
-surface is not
+surface is not, and none of them is wired to the microsequencer
 **Evidence class:** `public_open_tool_rtl_simulation` (functional), plus a
 separate open-PDK physical view that carries its own boundary
 **Primary artifacts:**
@@ -19,14 +19,34 @@ separate open-PDK physical view that carries its own boundary
 W8.1 and W8.2 built the ABI 3.0 control plane — microsequencer, loop stack,
 view resolver, event scoreboard, state controller — and W8.6 correlated it
 against the functional simulator over 64 generated programs on two simulators.
-That campaign binds **every engine to a recording no-op**, on purpose, and says
-so in its own limitations: *no engine arithmetic is modelled on either side.*
-So until now the sequence was verified and the arithmetic was not.
+W8.8 then re-ran the same control plane on the **shipped deployment images**
+(`results/rtl/abi3_deployment_campaign.json`), where the two Qwen3-8B
+deployments correlate exactly at whole-transaction depth; which shipped
+deployments that campaign covers is its own `correlated_cases` field.
+Both campaigns bind **every engine to a recording no-op**, on purpose, and say
+so in their own limitations: *no engine arithmetic is modelled on either side.*
+So the sequence is verified — on the Qwen deployments, at whole-transaction
+depth — and the arithmetic is not.
 
 This item is the other half. It does not replace the control-plane campaign and
 it is not wired to it: the two are correlated separately, and **nothing here
 shows that a resolved operand view drives the addresses these datapaths read.**
-That integration is still open.
+That integration is still open, and the deployment campaign measures how far
+apart the two halves are: the shipped programs issue 38 distinct
+`(family, subopcode)` pairs, and only a handful of those have datapath RTL here
+at all — none of it driven by the sequencer. That campaign's `engine_coverage`
+field carries the current split.
+
+**What the routed numbers in §7 may and may not claim.** They are the
+implementation cost of these datapath blocks in an open 130-nm PDK, and nothing
+about the sequencer, which has never been synthesised or routed
+(`docs/UNIFIED_EXECUTION_CHECKLIST.md`, [OI-43]). And a number resting on ABI
+3.0 RTL may be presented as the cost of hardware that runs exactly the
+deployments `results/rtl/abi3_deployment_campaign.json` → `correlated_cases`
+records, and no others — as recorded at commit `518260f` that was the two
+Qwen3-8B deployments and not the DeepSeek-V4-Flash ROM wafer one. That is a
+restriction on the sentence a number may appear in, not on the number: every
+measurement below stands exactly as recorded.
 
 ## 2. Which datapaths, and why these
 

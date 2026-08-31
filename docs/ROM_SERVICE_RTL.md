@@ -7,6 +7,11 @@ the operand bus is implemented and correlated on two simulators. **There is no
 ROM array in it.**
 **Evidence class:** `public_open_tool_rtl_simulation` (functional), plus a
 separate open-PDK physical view that carries its own boundary
+**Product scope:** the Qwen chip sets replay an **executed** read stream; the
+DeepSeek wafer set is **derived from the compiled plan**. Whether the wafer
+deployment's program runs in the ABI 3.0 sequencer RTL is a separate question
+about a separate block, answered by `correlated_cases` in
+`results/rtl/abi3_deployment_campaign.json` — see §4
 **Primary artifacts:**
 `results/rtl/rom_service_campaign.json`,
 `results/rtl/rom_service_physical.json`,
@@ -53,8 +58,8 @@ real ABI 3.0 ROM deployment built by `compiler/backends/rom`:
 | object | `MEMORY_OBJECT` descriptors with `storage_class = ROM`, joined to `notes.rom_plan.regions` | which region an object belongs to, its byte offset inside it, its size, and which shard-table entries that region owns |
 | shard | `RomShard` records in `notes.rom_plan.regions[].shards` | the placement resource `(node, reticle, tile, bank)`, the region byte offset the shard starts at, its length, and its address inside the resource |
 | repair | `notes.rom_plan.repair_map.entries` | which logical row is served by which spare |
-| region mask | runtime health input | which regions are masked off |
-| resource mask | runtime health input | which placement resources are quarantined |
+| region mask | runtime health input | which regions are masked off, one bit per region |
+| quarantine list | runtime health input | which placement resources are withdrawn. It is a short comparator list rather than a bit per resource: a wafer plan has 9,300 of them and a flip-flop each would be nine thousand flops in a read path to record a handful of withdrawn tiles |
 
 The generator (`tools/build_rom_service_vectors.py`) cross-checks each value
 against the other place it appears rather than trusting it once — a region's
@@ -122,20 +127,37 @@ so a deployment with a quarantined resource in its own plan cannot be built.
 
 ### `deepseek_wafer` — derived, not executed, and labelled so
 
-The DeepSeek wafer lane has produced no tokens (checklist W6.4), so there is no
-executed read stream to record. Its requests come from the compiled plan's own
+The DeepSeek wafer lane had produced no tokens when this set was built
+(checklist W6.4), so there is no executed read stream to record. It has since
+produced one validated token from a 32-token prefix, filed raw and ungraded
+under `results/abi3/accelerator_tokens/`; that is a single forward pass on the
+golden model, not a recorded ROM read stream, and it does not change what this
+set is. Its requests come from the compiled plan's own
 read unit — a region *slot* is what one iteration of a compressed loop reads —
 and from **every shard boundary the plan declares**, each crossed by one
 request. That is derived evidence about addressing, and the artifact says so
 rather than letting it read as an executed stream.
 
-It is also the set that exercises what the Qwen chip cannot: 88 of its 228
-regions are distributed across more than one placement resource, one across
-1,280 of them, so the shard walk is the thing being tested rather than a
-degenerate single-entry lookup. 9,172 of the plan's 9,300 placement resources
-are entered by a served read; the 128 that are not are the 127 owned only by the
-deliberately masked expert bank plus the one deliberately quarantined tile, and
-that is checked arithmetically rather than asserted.
+It is also the set that exercises what the Qwen chip cannot: **88** of its **228** regions are distributed across more than one placement resource, one across **1,281** of them, so the shard walk is the thing being tested rather than a degenerate single-entry lookup. <!-- figure: 88 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.distributed_region_count" name="DeepSeek wafer distributed regions, ROM service" --> <!-- figure: 228 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.region_count" name="DeepSeek wafer regions, ROM service" --> <!-- figure: 1,281 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.max_shards_in_one_region" name="DeepSeek wafer largest region shard count, ROM service" -->
+**9,172** of the plan's **9,300** placement resources are entered by a served read; the 128 that are not are the 127 owned only by the deliberately masked expert bank plus the one deliberately quarantined tile, and that is checked arithmetically rather than asserted. <!-- figure: 9,172 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.totals.placement_resources_entered" name="DeepSeek wafer resources entered, ROM service" --> <!-- figure: 9,300 src="results/rtl/rom_service_campaign.json#correlation.vector_sets.deepseek_wafer.plan.resource_count" name="DeepSeek wafer placement resources, ROM service" -->
+
+**A second reason this set is not evidence that the wafer product runs.** It was
+already derived rather than executed because that lane had produced no tokens
+when it was built. Since `results/rtl/abi3_deployment_campaign.json` (checklist
+W8.8) there is a second, sharper statement available, about a different block:
+whether the ABI 3.0 microsequencer executes the wafer deployment's *program* at
+all. That campaign's `correlated_cases` field is the authority on which shipped
+deployments the sequencer RTL reproduces; as recorded at commit `518260f` it
+named the two Qwen3-8B builds and not this one, which the RTL trapped after
+eight retirements on a bound (`A3_STATE_SLOTS`) that nothing expressed at
+admission.
+
+Nothing in this document is retracted by that — the addressing evidence in this
+set stands exactly as described, and it is about a different block. What it
+forbids is the inference a reader would otherwise be entitled to make: that a
+wafer part this service can address is a wafer part the rest of the RTL could
+drive. Read the deployment campaign's own field for the current answer rather
+than a copy of it here.
 
 ## 5. What is deliberately not implemented
 

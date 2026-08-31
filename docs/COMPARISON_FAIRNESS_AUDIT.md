@@ -91,6 +91,7 @@ required fixes.
 | B7 | ROM array leakage charged at zero; HC1 power gate fails 2.85–3.56x | ROM | 0 on speed; every tokens/J is an upper bound | legitimate, disclosed in prose only |
 | B8 | Wafer gross-die utilisation (65% vs ~75%) not charged | ROM | 0 on any rate | legitimate, disclose |
 | B9 | No gate covers the multi-device, multi-slot or wafer regime | neither | 0 | legitimate evidence limit |
+| B10 | The two products in the comparison do not carry the same RTL standing: the Qwen deployments are co-simulated against the golden model, the wafer one is covered only when the campaign says so | ROM | 0 on any rate | legitimate evidence limit, disclose |
 
 ---
 
@@ -708,6 +709,38 @@ headline ratios computed on machines the table never touches.
 **Sentence:** *"The validation gates cover a single die at batch 1 with one
 token slot and no collectives. No gate covers the multi-device, multi-slot or
 wafer regime in which every headline in this report is computed."*
+
+## B10. The two products do not carry the same RTL standing, and the wafer one is the headline
+
+This is an asymmetry **inside this repository**, between the two designs it
+builds, rather than between ROM and GPU — and it lands on the side the headline
+is computed on. `results/rtl/abi3_deployment_campaign.json` loads the shipped
+deployment images into the ABI 3.0 microsequencer RTL and correlates every
+retirement against `runtime.sim.device.Device`. Its `correlated_cases` field is
+the list of deployments the RTL is known to reproduce; the two Qwen3-8B builds
+are in it at whole-transaction depth, and the DeepSeek-V4-Flash ROM wafer
+deployment enters it only when a campaign records it doing so. At commit
+`518260f` it did not: the RTL trapped that deployment after eight retirements on
+`A3_STATE_SLOTS`, a bound nothing expressed at admission.
+
+It moves no rate, which is why it sits in Part B. It is worth disclosing anyway
+for two reasons. First, the model this report prices is the **wafer** one, so
+the product carrying the weaker implementation evidence is the product carrying
+the headline. Second, it is easy to launder: this repository does have routed
+ABI 3.0 blocks, and a sentence that puts "routed on an open PDK" next to
+"DeepSeek-V4-Flash wafer" reads as an implementation claim about the wafer part
+that no artifact supports. The rule that prevents it is stated once, at the head
+of W9 in `docs/UNIFIED_EXECUTION_CHECKLIST.md`: **a number resting on this RTL
+may name exactly the deployments `correlated_cases` records, and no others.**
+
+None of this touches the analytical model. `src/opentallas/roofline.py` prices a
+design from technology constants and never reads the RTL, so no ratio in this
+report depends on the RTL at all — which is itself the disclosure, because a
+reader who has seen the RTL work may reasonably assume otherwise.
+
+**Sentence:** *"The ROM wafer design this report prices is not covered by the
+RTL co-simulation that covers the Qwen designs, and no ratio here depends on
+RTL: the roofline model reads technology constants only."*
 
 ---
 

@@ -12,6 +12,35 @@ Driver: `tools/run_abi3_physical.py`
 Results: `results/physical_abi3/`
 Environment test: `tests/test_abi3_physical_env.py`
 
+> **Which design these numbers are about.** A routed area, period, slack or
+> power figure is a measurement of a netlist, and the netlist only means
+> something once its function is established against something. For the ABI 3.0
+> blocks that reference is `runtime.sim.device.Device`, and the campaign that
+> establishes it against the programs this repository actually ships is
+> checklist W8.8, `results/rtl/abi3_deployment_campaign.json`.
+>
+> **The rule.** A number in this document may be cited as the implementation
+> cost of a design that provably runs exactly the deployments that campaign's
+> `correlated_cases` field records — and **none of them may be cited, scaled or
+> aggregated as the cost of anything that runs a deployment it does not
+> record.** Read that field rather than a sentence: it moves whenever a
+> sequencer bound is raised and the campaign is re-run. As recorded at commit
+> `518260f` it named the two Qwen3-8B deployments, the ROM single chip and the
+> HBM single chip, and not the DeepSeek-V4-Flash ROM wafer one, which the RTL
+> trapped after eight retirements on a bound nothing expressed at admission.
+>
+> Nothing here is retracted by that. The co-simulation is a functional result
+> and says nothing whatever about area, timing or power; it bounds which machine
+> a number is allowed to describe, not what the number is.
+>
+> Two further limits, already true and easy to lose. **No block of the ABI 3.0
+> control plane appears below at all** — the routed blocks are the ABI 2.5
+> engines, the four W8.3 ABI 3.0 datapaths and the numeric probes, and the
+> reason the microsequencer is absent is [OI-43] in
+> `docs/UNIFIED_EXECUTION_CHECKLIST.md`. And no frequency, area or energy from a
+> 130 nm or predictive-7 nm open PDK may be scaled to N6/N5/N7/N4
+> (`docs/METHODOLOGY.md` §9).
+
 ## Summary answer: which flows do full place-and-route?
 
 **Both chosen views do full place-and-route. Neither is synthesis+STA only.**

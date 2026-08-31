@@ -337,6 +337,30 @@ points to for *"generated status"*. It states `**Commit:** 3abe9cd3f15e`.
 
 `make abi3-status` regenerates it in one command. Nothing runs it.
 
+**Update 2026-08-31.** It has now been run, and the regeneration confirms every
+row above and adds one the audit did not reach. The RTL line moved from *"63
+cases, 51 programs"* to **64 cases, 52 programs, 182 issue events**; the
+checklist counters moved to the live values; and the DeepSeek IR row moved
+again, to **3,956 / 7,047 / 229 / `fa785d3fd7e3`**, because the exporter changed
+after this audit was written. That third one is worth naming: `build/` is
+`.gitignore`d, so `results/abi3/program_status.json` is the **only committed
+record** of the neutral IR, and both `README.md` and checklist W2.5 were still
+quoting the previous `3,976 / 7,066 / e9b960ffcb19`. The stale value had
+migrated out of the generated file and into two hand-written ones, where nothing
+regenerates it.
+
+The Physical table gained **ten rows it had simply been missing** — 14 rows
+before, 24 after: `asap7/ot_ta_matmul_bf16_sram_engine`, and on `sky130hd` the
+ABI 3.0 datapath and numeric-probe blocks (`ot_a3_dma_index_mover`,
+`ot_a3_mac_lane`, `ot_a3_selection_argmax`, `ot_a3_vector_add` and the four
+`ot_a3_probe_*` runs), all of which post-date the last regeneration. Two of the
+ten do **not** meet timing (`ot_a3_mac_lane/prelayout` at -27.099 ns and
+`ot_a3_probe_fp32_add` at -29.573 ns), so a generated status file was reporting
+a clean physical lane while ten runs, two of them failing, were invisible to it.
+A generated file does not only go stale by stating a wrong number; it goes stale
+by **omitting a row**, and an omitted row reads as "not applicable" when it
+means "not counted".
+
 ---
 
 # 5. Numbers nothing produces
@@ -456,3 +480,84 @@ their own row.
 
 Every "current?" verdict was checked against the artifact that produces it, or
 recomputed from `configs/` through `opentallas.workload`. None was assumed.
+
+---
+
+# 7. Additions of 2026-08-31
+
+Two claims landed after this audit closed. Both are recorded here on the
+audit's own terms — what produces it, what grade it can support, and what it may
+not be used for — rather than left to prose.
+
+## 7a. The ABI 3.0 RTL against the shipped deployment images
+
+| number / claim | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| the ABI 3.0 sequencer RTL reproduces `runtime.sim.device.Device` exactly on the **Qwen3-8B ROM and HBM single-chip deployments**, both entrypoints, at whole-transaction depth — 2,105 instructions retired, 693 engine issues, 2,143 resolved operand views per case | `docs/UNIFIED_EXECUTION_CHECKLIST.md` W8.8, `rtl/RTL_INVENTORY.md` A3-SEQ-001, `docs/ABI3_PROGRAM_REPORT.md` §2.7 | `make abi3-deployment-rtl` → `results/rtl/abi3_deployment_campaign.json` → `what_ran.depth_reached[]`, `correlated_cases` | `executed` | **YES** |
+| **which** shipped deployments that campaign covers | nowhere in prose, deliberately | `results/rtl/abi3_deployment_campaign.json` → `correlated_cases` | `executed` | **by construction** |
+
+The second row is the point. The first run of this campaign refused the
+DeepSeek-V4-Flash ROM wafer deployment after eight retirements, on
+`A3_STATE_SLOTS`; a repair to that bound changes the verdict, and every document
+that had transcribed the verdict would have gone stale in the same silent way
+this ledger was written to catch. So the documents state the **rule** — a claim
+resting on this RTL may name exactly the deployments `correlated_cases` records
+and no others — and point at the field for the list. A rule survives a rerun; a
+transcript of a verdict does not.
+
+**What the campaign does not establish, and no document above may imply.**
+Engine arithmetic: every dispatchable operation is a recording no-op on both
+sides, so the instruction stream is verified and the computation is not, and the
+datapaths `results/rtl/abi3_engine_campaign.json` correlates are not wired to
+this sequencer. No checkpoint byte is read. One request shape per entrypoint, a
+sixteen-token prefill and a one-token decode at position sixteen. Descriptor
+record CRC32C and the header's SHA-256 are unchecked in RTL. And **no area,
+timing or power quantity whatever** — no block of the ABI 3.0 control plane has
+been synthesised or routed at all.
+
+**The finding underneath it, which outlives any rerun.** `A3_STATE_SLOTS` was a
+hardware bound that **nothing expressed at admission**: no capability field
+named a state-slot count and `runtime.abi3.verifier` had no such check, so a
+shipped deployment passed every admission gate this program has and was then
+refused in hardware. That is the failure signature the fail-closed design exists
+to prevent, and it was invisible until the RTL was asked to run a real program
+rather than a generated one.
+
+## 7b. The first validated DeepSeek token, and why it is not graded `executed`
+
+| number / claim | where it is stated | what produces it | grade | current? |
+|---|---|---|---|---|
+| DeepSeek-V4-Flash-0731 on the ROM backend emits token **13806** for a 32-token prefix of `TA-DS-CHAT-1`; the independent oracle emits **13806** for the byte-identical prompt | `README.md`, checklist W6.4 and W13.4, `docs/ABI3_PROGRAM_REPORT.md` §3 | `results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32_raw.json` and `results/abi3/deepseek_v4_reference_oracle_prefix.json` → `results['TA-DS-CHAT-1-P32']` | **`raw`** — *added by this ledger*: the artifact is committed, but no committed tool reproduces it | **YES** |
+
+`executed` in this repository's vocabulary means *obtained by running something
+in this repository, with the artifact committed*. This run was driven by an
+ad-hoc script, so the artifact half holds and the **running-something-in-this-
+repository** half does not. Grading it `executed` would put a number nobody can
+re-derive into the one file `tools/check_evidence_grades.py` guards, which is
+the shape of Rank 5. `results/abi3/accelerator_tokens/README.md` says so at the
+source, and the documents above do not outrun it.
+
+**A correction this milestone forces on existing prose.** The 104-token
+`TA-DS-CHAT-1` run has been described as the real gate for DeepSeek execution.
+It is not a gate for sparse selection, and neither is the 32-token prefix:
+`window_size` is 128, `index_topk` is 512, and the 20 `compress_ratio=128`
+layers hold zero compressed positions below 128 tokens, so **neither prompt
+reaches any of the three thresholds**. The only structural difference between
+them is compressed positions in the 21 `compress_ratio=4` layers, 8 against 26.
+Sparse attention under pressure is the `TA-DS-CTX-*` ladder's job, and the
+ROM-versus-HBM story at 200K and 1M context rests on exactly the regime neither
+prompt touches.
+
+**And it is not an RTL claim.** This is the golden-model/simulator path. Whether
+the RTL runs the DeepSeek wafer deployment is §7a's question, answered by a
+different artifact. A reader must not come away thinking a validated token means
+the RTL runs that design.
+
+## 7c. One line of §6 is now out of date, in the good direction
+
+§6 records that **nothing** enforces `docs/*.md` prose. Since the audit,
+`tools/check_prose_figures.py` does: it reads a machine-resolvable provenance
+annotation beside a figure, re-reads the artifact and fails on disagreement,
+over several hundred annotated figures with a per-document coverage floor. That
+is the "one durable fix" §6 names, built. It remains silent about every figure
+nobody annotated, which is why §5 is still the most durable part of this ledger.

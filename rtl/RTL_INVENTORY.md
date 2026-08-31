@@ -14,6 +14,7 @@ integrity, reset, poison, and test contracts remain equivalent.
 | ROM read service | `rom/ot_rom_pkg.sv`, `rom/ot_rom_read_service.sv` | Deployment-named ROM object to placement resource, row, sense granule and operand bus: object and shard lookup over the compiled region plan, bounds and shard-gap refusal, row-redundancy translation, region masking with no array access at all, fail-closed quarantine and column-repair refusal, row-activation accounting against a persistent row buffer, and the column mux that presents a partial granule from the low lane with the rest zeroed | ROM-SVC-001 |
 | ROM sense-interface array | `rom/ot_rom_bank_array.sv` | The behavioural array standing behind the sense interface: no write port, no write enable, no write data, no bidirectional pin; wordline activation counted separately from sense access; an address outside the built array is a defined miss rather than stale row data. **Not a macro and not a density or energy model** | ROM-SVC-001 |
 | Numeric/DV | `ot_format_decode.sv`, `ot_numeric_dot.sv`, `ot_reduction_tree.sv` | classification, signed exact order, deterministic reduction | DV-NUM-001/002 |
+| ABI 3.0 microsequencer and control plane | `abi3/ot_a3_pkg.sv`, `abi3/ot_a3_program_header.sv`, `abi3/ot_a3_instruction_decoder.sv`, `abi3/ot_a3_loop_stack.sv`, `abi3/ot_a3_view_resolver.sv`, `abi3/ot_a3_event_scoreboard.sv`, `abi3/ot_a3_state_controller.sv`, `abi3/ot_a3_microsequencer.sv` | Program-header admission, instruction fetch and decode, the loop nest, predication, event single-assignment, state prepare/commit/discard/read/advance, trap classification and completion, and operand tensor-view resolution (amendment A4 dynamic index terms, A13 partial final extent, A18 extent axis). The block is bounded by four parameters declared in `ot_a3_pkg.sv` -- `A3_STATE_SLOTS`, `A3_EVENT_COUNT`, `A3_LOOP_DEPTH`, `A3_WAIT_PRODUCERS`. A bound that nothing expresses in a capability or in the frozen ABI cannot be refused at admission, so a deployment that exceeds it is admitted and traps in RTL instead; the deployment campaign's `rtl_implementation_bounds.expressed_by` says, per bound, what expresses it | A3-SEQ-001 |
 | ABI 3.0 storage-format decode | `abi3/ot_a3_format_pkg.sv` | Exact BF16, binary32, FP8 E4M3FN, MXFP4 E2M1 and unsigned E8M0 decode to binary32, canonical positive zero, reserved encodings reported rather than valued | A3-ENG-001 |
 | ABI 3.0 tensor contraction lane | `abi3/ot_a3_mac_lane.sv`, `ot_fp32_rne_pkg.sv` | `bf16_bf16_fp32_sequential_rne_v1`: exact widening, one binary32 RNE block-scale multiply, one binary32 RNE product with canonicalized zero, strictly ascending-K binary32 accumulation, one RNE output rounding with counted saturation, and fail-closed operand/product/accumulation/scale faults | A3-ENG-001 |
 | ABI 3.0 on-device selection | `abi3/ot_a3_selection_argmax.sv` | `greedy_lowest_token_id_argmax`: signed-zero-canonical binary32 ordering, lowest token ID among the maxima by construction, published tie multiplicity, nonfinite logit refused | A3-ENG-001 |
@@ -343,6 +344,92 @@ the ABI 3.0 microsequencer, does not model an SRAM or ROM macro, does not cover
 the blocked contraction contract or any VECTOR operator but `ADD`, and
 establishes no timing or performance quantity. `docs/ABI3_ENGINE_DATAPATH_RTL.md`
 states the full boundary.
+
+A3-SEQ-001 is the two-simulator control-plane correlation, and it is retained
+as two artifacts that answer two different questions.
+
+`results/rtl/abi3_campaign.json` correlates the sequencer against
+`runtime.sim.device.Device` over programs **built for the campaign**: 64 cases,
+52 programs run, 182 engine-issue events, 454 resolved operand views, 11 traps
+and 17 negative cases, 4,383 checks per simulator under Icarus and Verilator.
+
+`results/rtl/abi3_deployment_campaign.json` asks the harder question -- whether
+the same RTL runs the programs this repository actually ships -- by loading the
+three real deployment bundles into the sequencer with no vector written for the
+occasion. **The two Qwen3-8B deployments, the ROM single chip and the HBM
+single chip, correlate exactly**: both entrypoints, whole-transaction depth,
+2,105 instructions retired with 693 engine issues and 2,143 resolved operand
+views per case, ending in COMPLETE and not at a work bound, identical on both
+simulation engines under different back-pressure. Every issue is compared by the
+instruction index that issued it as well as by family, subopcode and descriptor
+ID; every view against `runtime.sim.memory.ViewResolver.resolve` at the loop
+bindings the device recorded.
+
+**Which deployments this evidence covers is the artifact's `correlated_cases`
+field, not a sentence here.** It moves whenever a sequencer bound is raised and
+the campaign re-run, so a prose copy of it goes stale silently. As recorded at
+commit `518260f` it named the two Qwen builds and not the DeepSeek-V4-Flash ROM
+wafer deployment, which the RTL trapped after eight retirements of the 29,333
+its prefill retires on the golden model, because `ot_a3_pkg.sv` declared
+`A3_STATE_SLOTS = 8` where that deployment prepares ten. The finding was never
+the slot count: **nothing expressed that bound anywhere a deployment could be
+refused for exceeding it**, so a shipped deployment passed every admission gate
+and was refused in hardware instead. `A3_EVENT_COUNT` was latent behind it, for
+the related reason that a scoreboard indexed by event ID is bounded by the
+largest ID plus one and the capability field beside it bounded the number of
+distinct IDs.
+
+This evidence covers the instruction stream and the operand addressing, at
+whole-transaction depth, on the deployments the artifact lists. **It does not
+establish engine arithmetic** -- every dispatchable operation is a recording
+no-op on both sides, and the datapaths A3-ENG-001 correlates are not wired to
+this sequencer, so nothing shows that a resolved view drives the operand
+addresses an engine reads. It reads no checkpoint byte, exercises one request
+shape per entrypoint (a sixteen-token prefill and a one-token decode at position
+sixteen), checks neither descriptor record CRC32C nor the header's SHA-256, and
+establishes no area, timing or power quantity of any kind: **no block of this
+control plane has been synthesised or routed** (see [OI-43] in
+`docs/UNIFIED_EXECUTION_CHECKLIST.md`). A physical or performance claim resting
+on this RTL may name exactly the deployments `correlated_cases` records and no
+others.
+
+ROM-SVC-001 is retained as `results/rtl/rom_service_campaign.json`. Three
+vector sets, every table in them read back out of a real ABI 3.0 ROM deployment
+rather than written by hand, replay through `ot_rom_read_service` under Icarus
+and Verilator against a reference decode written from the compiled region plan
+independently of the RTL:
+
+```
+ROM-SERVICE-OK requests=349   beats=2499996 bytes=159997856 activations=39213 masked=0   faults=117 marker=39817fd2c3017914
+ROM-SERVICE-OK requests=363   beats=536110  bytes=34309592  activations=8475  masked=7   faults=168 marker=cded9cf9f877aaed
+ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968  activations=38219 masked=135 faults=13  marker=b6b576c71d05d5f5
+```
+
+The first is the **executed** ROM read stream of the Qwen ROM deployment on
+`runtime.sim.device.Device`, reconciled against that device's own
+`rom.bytes_read`; the second is the same deployment recompiled against a BIST
+defect list so the repair map comes from the real planner, plus a masked region
+and a quarantined bank; the third is the DeepSeek wafer plan, 9,527 shards over
+9,300 placement resources with every shard boundary crossed by one request, and
+is **derived from the compiled plan rather than executed**, because that lane
+had produced no tokens when the set was built and has since produced only a
+single validated token, filed raw and ungraded under
+`results/abi3/accelerator_tokens/` rather than as a recorded read stream. Per request the two checkers require the same completion
+status, refusal class, beat count, byte count, row-activation count, first and
+last beat record, beat-stream digest and operand-data digest; across the run the
+service's own counters, the array's independently kept activation and sense
+counts and an operand-bus observer in the bench must all reconcile.
+
+This evidence covers addressing, ordering, masking, repair translation and
+operand alignment. **There is no ROM array in the block under test**: it sits
+behind the sense request/response interface, the sense granule is a declared
+parameter rather than a macro property, and nothing here establishes ROM cell
+area, read energy, sense margin, wordline or bitline delay, retention or defect
+rate. Column redundancy is refused rather than implemented; the view-to-byte
+range walk and descriptor admission are out of scope; a whole decode step reads
+about fifteen gigabytes and is not replayed beat by beat.
+`docs/ROM_SERVICE_RTL.md` states the full boundary, including the two defects
+the wafer set found in this RTL that the chip set could not.
 
 `rtl/test/ot_a3_numeric_probes.sv` is a characterisation vehicle rather than a
 deliverable block: each module wraps exactly one function of the numeric or

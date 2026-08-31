@@ -131,12 +131,30 @@ state open. All eight refused.
 
 ### 2.7 RTL and physical
 
-RTL 3.0 correlates 30 programs, 99 engine-issue events and 12 traps
-field-for-field against the functional device on two independent simulators,
-with 17 negative cases. Both physical views — SKY130 HD at 130 nm and ASAP7 at
-7 nm — complete synthesis, multi-corner static timing and full place-and-route
-with zero detailed-route DRC and zero antenna violations. The archived ASAP7
-case was reproduced bit-for-bit.
+RTL 3.0 correlates 52 programs over 64 cases, 182 engine-issue events, 454
+resolved operand views and 11 traps field-for-field against the functional
+device on two independent simulators, with 17 negative cases
+(`results/rtl/abi3_campaign.json`). Those are programs built for the campaign.
+Run on the **programs this repository actually ships**
+(`results/rtl/abi3_deployment_campaign.json`), the two Qwen3-8B deployments —
+ROM single chip and HBM single chip — correlate exactly on both entrypoints at
+whole-transaction depth: 2,105 instructions retired, 693 engine issues and 2,143
+resolved operand views per case, ending in COMPLETE and not at a work bound,
+identical on Icarus 11.0 and Verilator 5.050. **Which deployments that campaign
+covers is its own `correlated_cases` field rather than a sentence here**, since
+it moves whenever a sequencer bound is raised and the campaign re-run; as
+recorded at commit `518260f` it did not include the DeepSeek-V4-Flash ROM wafer
+deployment, which the RTL trapped after eight retirements on `A3_STATE_SLOTS`, a
+bound nothing expressed at admission.
+
+Both physical views — SKY130 HD at 130 nm and ASAP7 at 7 nm — complete
+synthesis, multi-corner static timing and full place-and-route with zero
+detailed-route DRC and zero antenna violations. The archived ASAP7 case was
+reproduced bit-for-bit. **The routed blocks are the ABI 2.5 engines, the four
+ABI 3.0 datapaths and the numeric probes; no block of the ABI 3.0 control plane
+has been synthesised or routed at all.** And a physical number resting on this
+RTL may be presented as the cost of hardware that runs exactly the deployments
+the deployment campaign records correlating — no others.
 
 ## 3. What is not established
 
@@ -144,10 +162,24 @@ case was reproduced bit-for-bit.
   campaign and the DeepSeek long-context campaign have not run on the
   accelerator. The reference oracle has reached 8,000 tokens for both models.
 - **No comparison table.** A performance comparison may not precede correct
-  end-to-end execution on both sides of the pair, and the ROM target has not yet
-  produced tokens.
+  end-to-end execution on both sides of the pair. Three of the four targets have
+  now emitted a validated token — Qwen HBM, Qwen ROM and, newly, DeepSeek ROM
+  (one token, from a 32-token prefix, filed raw and ungraded under
+  `results/abi3/accelerator_tokens/`) — and DeepSeek HBM has not, so the
+  ROM-versus-HBM pair the comparison needs is still one-sided on DeepSeek.
 - **No silicon, no full-chip place-and-route, no foundry signoff DRC or LVS.**
   The physical evidence covers representative blocks.
+- **RTL coverage of the shipped deployments is a list, and it is the
+  artifact's.** `results/rtl/abi3_deployment_campaign.json` →
+  `correlated_cases` names the deployments the microsequencer RTL is known to
+  reproduce; at commit `518260f` that was the two Qwen3-8B builds and not the
+  DeepSeek-V4-Flash ROM wafer one, which trapped after eight retirements on a
+  sequencer bound (`A3_STATE_SLOTS`) that nothing expressed at admission — so a
+  shipped deployment passed every admission gate and was refused in hardware
+  instead (checklist W8.8/W8.9).
+- **No engine arithmetic under the sequencer.** Both control-plane campaigns
+  bind every engine to a recording no-op; the four datapaths that are correlated
+  arithmetically are correlated separately and are not wired to the sequencer.
 - **No governed cycle result on a real model.** The cycle model agrees with the
   functional device on every architectural counter, but its machine parameters
   are overwhelmingly `assumed`, and every report says so at the top level.
