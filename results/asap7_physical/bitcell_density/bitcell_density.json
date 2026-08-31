@@ -1,0 +1,286 @@
+{
+  "cases": {
+    "probe_rom_shared_sd_tight_y": {
+      "bbox_nm": [
+        -86.0,
+        -121.5,
+        518.0,
+        300.5
+      ],
+      "case": "probe_rom_shared_sd_tight_y",
+      "cell_area_nm2": 2430.0,
+      "drc_rule_descriptions": {
+        "  ": "M1.S.2 : Min. spacing between two M1' edges, when one edge is > 36 nm : 25nm",
+        "ACTIVE.FIN.EX.1": "ACTIVE.FIN.EX.1 : Min. vertical extension of ACTIVE past FIN : 10nm",
+        "ACTIVE.S.1": "ACTIVE.S.1 : Min. vertical spacing between ACTIVE : 27nm",
+        "LISD.S.2": "LIG.S.2 : Min. spacing between two LIG' edges, when one edge is > 36 nm : 25nm",
+        "LISD.S.3-4": "LISD.S.3-4 : Min. spacing between two LISD' edges, when both edge are =< 36 nm : 27nm",
+        "M1.S.6": "M1.S.6 : Min. corner-to-corner spacing between two M1 : 20nm"
+      },
+      "drc_violation_total": 149,
+      "drc_violations_by_rule": {
+        "  ": 25,
+        "ACTIVE.FIN.EX.1": 4,
+        "ACTIVE.S.1": 5,
+        "LISD.S.2": 45,
+        "LISD.S.3-4": 45,
+        "M1.S.6": 25
+      },
+      "expected_drc_clean": false,
+      "gates": 8,
+      "gds_sha256": "fe66c7e8005bfe8b20d7545cd3dcfa9977fba9ed87e2d5cf8d321763bb041b41",
+      "geometry_sha256": "b4befb12e4ba8d41387f997c571b5540f636ed0e8964bb4659f762e19034e96b",
+      "programming_via1_present": 30,
+      "rows": 6,
+      "shape_count": 267,
+      "sram_rule_relief_applied": false,
+      "status": "pass",
+      "x_pitch_nm": 54.0,
+      "y_pitch_nm": 45.0
+    },
+    "probe_rom_via_sram_rules_tight_x": {
+      "bbox_nm": [
+        -78.0,
+        -155.0,
+        672.0,
+        360.5
+      ],
+      "case": "probe_rom_via_sram_rules_tight_x",
+      "cell_area_nm2": 4374.0,
+      "drc_rule_descriptions": {
+        "ACTIVE.S.2A": "ACTIVE.S.2A : Min. horizontal spacing between ACTIVE layers forming source/drain regions (of different transistors) : 92nm",
+        "GATE.S.1": "GATE.S.1 : Exact horizontal GATE pitch : 54nm"
+      },
+      "drc_violation_total": 60,
+      "drc_violations_by_rule": {
+        "ACTIVE.S.2A": 18,
+        "GATE.S.1": 42
+      },
+      "expected_drc_clean": false,
+      "gates": 8,
+      "gds_sha256": "6c4577335a7fde35d07471bbac89dff8bb570709ec7e05e13cb05ee64635f607",
+      "geometry_sha256": "a67de86bd2696e245bbaebfa0ba70eaf8d2a435cc1dd436ae48a420ec61d0f65",
+      "programming_via1_present": 48,
+      "rows": 6,
+      "shape_count": 378,
+      "sram_rule_relief_applied": true,
+      "status": "pass",
+      "x_pitch_nm": 81.0,
+      "y_pitch_nm": 54.0
+    },
+    "probe_rom_via_tight_x": {
+      "bbox_nm": [
+        -78.0,
+        -121.5,
+        672.0,
+        354.5
+      ],
+      "case": "probe_rom_via_tight_x",
+      "cell_area_nm2": 4374.0,
+      "drc_rule_descriptions": {
+        "ACTIVE.S.2A": "ACTIVE.S.2A : Min. horizontal spacing between ACTIVE layers forming source/drain regions (of different transistors) : 92nm",
+        "GATE.S.1": "GATE.S.1 : Exact horizontal GATE pitch : 54nm"
+      },
+      "drc_violation_total": 60,
+      "drc_violations_by_rule": {
+        "ACTIVE.S.2A": 18,
+        "GATE.S.1": 42
+      },
+      "expected_drc_clean": false,
+      "gates": 8,
+      "gds_sha256": "93e5f406202d1d0dfb90fa7eaf7e518f4ddb3be6d9f29f98a32360a528139d9f",
+      "geometry_sha256": "efc5fb41027050aee2b718cd9ef0ba63ee8f7908607d3ea285bcbff7287c720a",
+      "programming_via1_present": 48,
+      "rows": 6,
+      "shape_count": 377,
+      "sram_rule_relief_applied": false,
+      "status": "pass",
+      "x_pitch_nm": 81.0,
+      "y_pitch_nm": 54.0
+    },
+    "probe_sram_tight_y": {
+      "bbox_nm": [
+        -60.0,
+        -145.0,
+        782.0,
+        630.5
+      ],
+      "case": "probe_sram_tight_y",
+      "cell_area_nm2": 20412.0,
+      "cells_x": 4,
+      "cells_y": 3,
+      "drc_rule_descriptions": {
+        "WELL.S.1": "WELL.S.1 : Min. vertical spacing between WELL : 108nm"
+      },
+      "drc_violation_total": 2,
+      "drc_violations_by_rule": {
+        "WELL.S.1": 2
+      },
+      "expected_drc_clean": false,
+      "gds_sha256": "108910ecb5f3946fe6213d4551e336a0547fe76ed1b18f905b99888fe7824034",
+      "geometry_sha256": "ebda8c57015fb9807c6e29d1829ed3ebfa259a74b029f08cd6038c7134b7480d",
+      "shape_count": 226,
+      "status": "pass",
+      "x_pitch_nm": 108.0,
+      "y_pitch_nm": 189.0
+    },
+    "rom_shared_sd": {
+      "bbox_nm": [
+        -86.0,
+        -121.5,
+        518.0,
+        354.5
+      ],
+      "case": "rom_shared_sd",
+      "cell_area_nm2": 2916.0,
+      "drc_rule_descriptions": {},
+      "drc_violation_total": 0,
+      "drc_violations_by_rule": {},
+      "expected_drc_clean": true,
+      "gates": 8,
+      "gds_sha256": "dcdac9c72b9c17542e46f0e8636c31d9f4616bfd1c9d91f41de2bca585a967cf",
+      "geometry_sha256": "74e8b9adcca01d192d42cfa9199bedd3956eab5bad6e3f6bc4e976a35017a203",
+      "programming_via1_present": 30,
+      "rows": 6,
+      "shape_count": 269,
+      "sram_rule_relief_applied": false,
+      "status": "pass",
+      "x_pitch_nm": 54.0,
+      "y_pitch_nm": 54.0
+    },
+    "rom_via_programmed": {
+      "bbox_nm": [
+        -78.0,
+        -121.5,
+        834.0,
+        354.5
+      ],
+      "case": "rom_via_programmed",
+      "cell_area_nm2": 5832.0,
+      "drc_rule_descriptions": {},
+      "drc_violation_total": 0,
+      "drc_violations_by_rule": {},
+      "expected_drc_clean": true,
+      "gates": 8,
+      "gds_sha256": "f3452b68b398f6fc20a73eefcf87a22c8f492ae4180d182cd970e9a34c8baa84",
+      "geometry_sha256": "2cc6185df6add94a1c89adeb31fe076d9e249fd83df9d25241f4710fe9a6a633",
+      "programming_via1_present": 46,
+      "rows": 6,
+      "shape_count": 375,
+      "sram_rule_relief_applied": false,
+      "status": "pass",
+      "x_pitch_nm": 108.0,
+      "y_pitch_nm": 54.0
+    },
+    "rom_via_sram_rules": {
+      "bbox_nm": [
+        -78.0,
+        -155.0,
+        834.0,
+        360.5
+      ],
+      "case": "rom_via_sram_rules",
+      "cell_area_nm2": 5832.0,
+      "drc_rule_descriptions": {},
+      "drc_violation_total": 0,
+      "drc_violations_by_rule": {},
+      "expected_drc_clean": true,
+      "gates": 8,
+      "gds_sha256": "192216e1d36521cd6c7f9f8a9b9d22444207b3de9fae0b5f62ed3f240c36fe03",
+      "geometry_sha256": "c5b1d07279ed9b703c1f81311c77da0601f5858080c439f9a3f6f3514ef358cb",
+      "programming_via1_present": 48,
+      "rows": 6,
+      "shape_count": 378,
+      "sram_rule_relief_applied": true,
+      "status": "pass",
+      "x_pitch_nm": 108.0,
+      "y_pitch_nm": 54.0
+    },
+    "sram_6t": {
+      "bbox_nm": [
+        -60.0,
+        -145.0,
+        782.0,
+        684.5
+      ],
+      "case": "sram_6t",
+      "cell_area_nm2": 23328.0,
+      "cells_x": 4,
+      "cells_y": 3,
+      "drc_rule_descriptions": {},
+      "drc_violation_total": 0,
+      "drc_violations_by_rule": {},
+      "expected_drc_clean": true,
+      "gds_sha256": "a413bac3082343fff632c441f7c81d8e72a93b3e10c16bf8b55b1c7d296043de",
+      "geometry_sha256": "db1a6dc12a16a9fc9ac4700e323df5686d5910f2254c95b411ca00629f9d49f3",
+      "shape_count": 232,
+      "status": "pass",
+      "x_pitch_nm": 108.0,
+      "y_pitch_nm": 216.0
+    }
+  },
+  "claim_boundary": {
+    "forbidden_inferences": [
+      "this is not a TSMC N7, N6, N5 or N4 number and must never be labelled one",
+      "this must not be averaged, blended or combined with the IHP SG13G2 measurement",
+      "this does not establish ROM read margin, sensing, energy, PVT, yield or cost",
+      "no ASAP7 FakeRAM or synthetic memory collateral was read or used"
+    ]
+  },
+  "cross_node_comparison": {
+    "asap7_node": "ASAP7 predictive 7 nm FinFET",
+    "asap7_ratio": 0.25,
+    "direction": "ASAP7 ratio is HIGHER: the ROM bitcell is relatively LARGER against 6T SRAM at the 7 nm-class node than at 130 nm. This moves against the ROM side of the comparison.",
+    "ihp_experiment_id": "ihp_sg13g2_rom_sram_bitcell_ratio_v1",
+    "ihp_node": "IHP SG13G2, 130 nm planar",
+    "ihp_ratio": 0.12976020221505305,
+    "ihp_rom_bitcell_area_um2": 0.39015,
+    "ihp_source": "results/spice/ihp_sg13g2_bitcell/bitcell.json",
+    "ihp_sram_bitcell_area_um2": 3.0067,
+    "never": "these two ratios must not be averaged, blended or interpolated",
+    "node_stable": false,
+    "ratio_difference_fraction": 0.9266307830321672,
+    "sram_to_rom_multiple_asap7": 4.0,
+    "sram_to_rom_multiple_ihp": 7.706523132128669
+  },
+  "evidence_class": "predictive open-PDK drawn-layout DRC measurement; not a foundry PDK, not TSMC N7/N6/N5, not silicon",
+  "experiment_id": "asap7_rom_sram_bitcell_area_ratio_v1",
+  "generated_at_utc": "2026-08-31T06:11:25.507944+00:00",
+  "measurement": {
+    "ratio_shared_sd_rom_to_sram": 0.125,
+    "ratio_via_programmed_rom_to_sram": 0.25,
+    "rom_shared_area_in_cpp_x_finpitch_units": 2.0,
+    "rom_shared_sd_bitcell_area_nm2": 2916.0,
+    "rom_via_area_in_cpp_x_finpitch_units": 4.0,
+    "rom_via_programmed_bitcell_area_nm2": 5832.0,
+    "sram_6t_bitcell_area_nm2": 23328.0,
+    "sram_area_in_cpp_x_finpitch_units": 16.0
+  },
+  "node": "ASAP7 predictive 7 nm FinFET research PDK",
+  "pdk": {
+    "asap7_upstream_revision": "d24f8b857ff74cf5b21ab18a7e1b11a3954c449b",
+    "asap7_version": "1.7",
+    "container_digest": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+    "fakeram_collateral_present_but_unused": [
+      "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/ram",
+      "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7/fakeram.cfg"
+    ],
+    "platform_root": "/home/ubuntu/.local/opentallas-pdk-asap7-platform/asap7",
+    "verified_files": {
+      "KLayout/asap7.lyt": "c0d9587a636ca54246cdbdbded3919a7e49efcf50904700335432017a6d8fba2",
+      "config.mk": "c5c868f35c7c04365a074aef2d81c72641441a8070a117bcb1a35b696942507c",
+      "drc/asap7.lydrc": "dc78ccd8b2b30498f25ef885c2c28a9c2a565c38cb30a87460282c8a36c7765d",
+      "gds/asap7sc7p5t_28_R_220121a.gds": "f43d5b33df635cf9e66cbca66b6bdd05364f824d8040cd21528b9e12808b9263",
+      "lef/asap7_tech_1x_201209.lef": "7694bf4f8ef2f9745e4579f454788a0cf048e8605320f32d1d83ec540ed4ca41"
+    }
+  },
+  "process_constants_nm": {
+    "contacted_poly_pitch": 54.0,
+    "fin_pitch": 27.0,
+    "gate_width": 20.0,
+    "min_active_height": 27.0,
+    "min_active_vertical_space": 27.0
+  },
+  "schema_version": 1,
+  "status": "pass"
+}
