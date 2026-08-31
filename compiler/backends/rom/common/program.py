@@ -2055,6 +2055,20 @@ class RomLowering:
         A kernel that writes a resource defines the row layout; a kernel that
         reads one addresses the planes those writes produced.  Both are recorded
         so the column assignment can pair them.
+
+        The direction is the kernel's *effect*, not the operand's position.  A
+        ``STATE_READ`` re-presentation -- DeepSeek's ``compress_kv_valid_view``,
+        which narrows the compressed cache to the rows a request has actually
+        filled -- declares ``state_reads`` and no ``state_writes``, and yet
+        names its result in ``outputs`` with ``role: state``.  Counting that
+        result as a *written* plane reserves it a second column beside the
+        append's, so the resource's row is widened to hold two copies of a
+        record there is only one of, the append fills the low half and every
+        reader addresses the high half, which nothing writes.  That is 21
+        all-zero ``INDEX_SCORE`` kernels and a sparse index that selects by
+        tie-break, with no trap anywhere: the rows read are inside the object
+        and legally zero.  A kernel that does not write the resource does not
+        consume a column of it.
         """
         order: dict[str, list[tuple[str, str]]] = {}
         owner: dict[str, str] = {}
@@ -2062,13 +2076,14 @@ class RomLowering:
             state_ids = kernel.state_reads or kernel.state_writes
             if not state_ids:
                 continue
-            for direction, names in (("in", kernel.inputs), ("out", kernel.outputs)):
+            for position, names in (("in", kernel.inputs), ("out", kernel.outputs)):
                 for name in names:
                     tensor = self.tensors[name]
                     declared = tensor.role == "state"
-                    writes = direction == "out" and self._writes_resource(kernel, name)
+                    writes = position == "out" and self._writes_resource(kernel, name)
                     if not (declared or writes) or name in owner:
                         continue
+                    direction = "out" if writes else "in"
                     state_id = (
                         kernel.state_writes[0]
                         if writes and kernel.state_writes
@@ -2133,9 +2148,16 @@ class RomLowering:
                 max((plane_rows.get(m.state_id, 0) for m in members), default=0),
             )
             if row_elements != declared_row:
-                self._state_row_widenings[members[0].state_class] = {
+                # Keyed by class *and* declared row: DeepSeek's index cache and
+                # its attention cache are both ``compressed_kv`` and differ only
+                # in their row, so a key of the class alone lets one group's
+                # record silently replace the other's.
+                self._state_row_widenings[
+                    f"{members[0].state_class}.row{declared_row}"
+                ] = {
                     "declared_row_elements": declared_row,
                     "physical_row_elements": row_elements,
+                    "state_class": members[0].state_class,
                 }
             row_bytes = (row_elements * bits + 7) // 8
             capacity = self._extent(members[0].capacity_rows)
@@ -2204,6 +2226,7 @@ class RomLowering:
                 continue
             row_elements = self._state_group_shape[group_key][2]
             cursor = {"in": 0, "out": 0}
+            spans: dict[str, list[tuple[int, int, str]]] = {"in": [], "out": []}
             for name, direction in names:
                 width = self._plane_width(name)
                 if cursor[direction] + width > row_elements:
@@ -2213,8 +2236,48 @@ class RomLowering:
                         f"{row_elements}"
                     )
                 columns.setdefault(self._state_struct_key(name), cursor[direction])
+                spans[direction].append((cursor[direction], width, name))
                 cursor[direction] += width
+            self._check_read_planes_are_written(state_id, spans)
         self._state_column = columns
+
+    @staticmethod
+    def _check_read_planes_are_written(
+        state_id: str, spans: Mapping[str, Sequence[tuple[int, int, str]]]
+    ) -> None:
+        """Refuse a resource whose readers address columns no writer fills.
+
+        The columns are the whole of what pairs a read with the append that
+        produced it, and a mismatch is silent in every direction that matters:
+        the rows are inside the object, they are legally zero because the image
+        is zero-initialised, and no engine can tell a plane that was never
+        written from one written with zeros.  DeepSeek's compressed caches
+        spent this program's whole history in that state -- the index cache
+        read 128 elements past its own append, which is 21 all-zero
+        ``INDEX_SCORE`` kernels and a learned sparse index that selected by
+        tie-break.  A resource that has writers at all must cover every column
+        its readers name.
+        """
+        written = sorted((start, start + width) for start, width, _ in spans["out"])
+        if not written:
+            return
+        merged: list[list[int]] = []
+        for start, stop in written:
+            if merged and start <= merged[-1][1]:
+                merged[-1][1] = max(merged[-1][1], stop)
+            else:
+                merged.append([start, stop])
+        for start, width, name in spans["in"]:
+            stop = start + width
+            if any(low <= start and stop <= high for low, high in merged):
+                continue
+            raise RomLoweringError(
+                f"state resource {state_id!r} is read at columns "
+                f"[{start}, {stop}) by {name!r}, which no write of the resource "
+                f"covers (writes cover {[tuple(m) for m in merged]}); a reader "
+                "and a writer that disagree about the row layout exchange "
+                "zeros in silence"
+            )
 
     def _request_sized_planes(self, kernel: Kernel) -> list[str]:
         """Operands that are state planes whose leading extent the request sets.

@@ -2881,6 +2881,156 @@ def test_mutable_state_overflow_is_refused(qwen_graph):
         build_qwen3_rom_deployment(qwen_graph, capability=capability)
 
 
+def _state_read_representation(graph):
+    """``graph`` with a ``STATE_READ`` re-presentation between append and read.
+
+    This is the released DeepSeek shape the fixture otherwise lacks: a kernel
+    that declares ``state_reads`` and *no* ``state_writes``, names its result in
+    ``outputs`` with ``role: state``, and hands that result to the kernel that
+    consumes the cache.  It re-presents rows the append already wrote -- the
+    valid prefix of a compressed cache -- rather than writing any of its own.
+    """
+    tensors = list(graph.tensors)
+    kernels = []
+    by_id = {t.tensor_id: t for t in graph.tensors}
+    for kernel in graph.kernels:
+        if kernel.kind == "KV_APPEND" and kernel.outputs[0].endswith(".appended_key"):
+            kernels.append(kernel)
+            prefix = kernel.outputs[0].rsplit(".", 1)[0]
+            # The release gives the append's result ``role: state``: it *is* the
+            # committed rows, and the re-presentation reads it as such.
+            appended = by_id[kernel.outputs[0]]
+            tensors[tensors.index(appended)] = dataclasses.replace(
+                appended, role="state"
+            )
+            history = by_id[f"{prefix}.key_history"]
+            view = dataclasses.replace(
+                history, tensor_id=f"{prefix}.key_history_view"
+            )
+            tensors.append(view)
+            kernels.append(
+                Kernel(
+                    index=0,
+                    kernel_id=f"{prefix}.key_valid_view",
+                    kind="STATE_READ",
+                    inputs=(kernel.outputs[0],),
+                    outputs=(view.tensor_id,),
+                    numeric_contract="bf16_byte_preserving_state_v1",
+                    state_reads=kernel.state_writes,
+                    layer=kernel.layer,
+                )
+            )
+            continue
+        if kernel.kind == "ATTENTION_GQA":
+            prefix = kernel.inputs[1].rsplit(".", 1)[0]
+            kernels.append(
+                dataclasses.replace(
+                    kernel,
+                    inputs=(
+                        kernel.inputs[0],
+                        f"{prefix}.key_history_view",
+                        *kernel.inputs[2:],
+                    ),
+                )
+            )
+            continue
+        kernels.append(kernel)
+    renumbered = tuple(
+        dataclasses.replace(k, index=i) for i, k in enumerate(kernels)
+    )
+    return dataclasses.replace(
+        graph, tensors=tuple(tensors), kernels=renumbered
+    )
+
+
+def test_a_state_read_representation_does_not_reserve_a_second_column(
+    workspace, qwen_capability
+):
+    """A kernel that re-presents a resource does not write a plane of it.
+
+    ``STATE_READ`` names its result in ``outputs`` and gives it ``role: state``,
+    but it declares no ``state_writes``: the rows it presents are the rows the
+    append produced.  Counting it as a write reserves it its own column, which
+    widens the row to hold two copies of a record there is only one of; the
+    append then fills the low half and every reader addresses the high half.
+    Nothing traps -- the rows are inside the object and the image is zeroed --
+    so the whole operator goes quietly inert.  On the released graph that was
+    DeepSeek's learned sparse index: 21 all-zero ``VECTOR.INDEX_SCORE`` kernels
+    and an ``INDEX_TOPK`` selecting by tie-break.
+    """
+    root = workspace / "state-read"
+    root.mkdir(parents=True, exist_ok=True)
+    graph = _state_read_representation(qwen_shaped_graph(root))
+    assert any(k.kind == "STATE_READ" for k in graph.kernels)
+    deployment, _plan = build_qwen3_rom_deployment(graph, capability=qwen_capability)
+
+    declared = {s.state_id: s.row_elements for s in graph.states}
+    state = next(
+        d
+        for d in deployment.table.descriptors()
+        if d.descriptor_type == ExtendedDescriptorType.STATE
+    )
+    row_elements = state.payload["row_bytes"] * 8 // 16
+    assert row_elements == next(iter(declared.values()))
+    assert not deployment.notes.get("state_row_widenings")
+
+    # And the plane the re-presentation hands on is addressed exactly where the
+    # append wrote it: same pitch, same column.
+    def views(kernel_id, field):
+        kernel = next(k for k in graph.kernels if k.kernel_id == kernel_id)
+        operator = next(
+            d
+            for d in deployment.table.descriptors()
+            if d.descriptor_type == ExtendedDescriptorType.OPERATOR
+            and int(d.payload["source_kernel_id"]) == kernel.index
+        )
+        view = deployment.table.get(
+            operator.payload[field], ExtendedDescriptorType.TENSOR_VIEW
+        )
+        rank = view.payload["rank"]
+        return (
+            view.primary_object_id,
+            [view.payload[f"stride{i}"] for i in range(rank)],
+            view.payload["element_offset"],
+        )
+
+    written = views("decoder.0.attention.key_append", "output_view_0")
+    read = views("decoder.0.attention.gqa", "input_view_1")
+    assert written[0] == read[0]
+    assert written[1][0] == read[1][0]
+    assert written[2] == read[2] == 0
+
+
+def test_a_read_plane_no_write_covers_is_refused(workspace, qwen_capability):
+    """The column assignment fails closed rather than exchanging zeros.
+
+    Nothing downstream can tell a plane that was never written from one written
+    with zeros, so the disagreement has to be caught where it is decided.
+    """
+    root = workspace / "unwritten-plane"
+    root.mkdir(parents=True, exist_ok=True)
+    graph = qwen_shaped_graph(root)
+    # Give the value half a reader whose plane the appends do not cover: a
+    # third state-role operand on a resource whose row holds two.
+    tensors = list(graph.tensors)
+    kernels = []
+    for kernel in graph.kernels:
+        if kernel.kind == "ATTENTION_GQA":
+            prefix = kernel.inputs[1].rsplit(".", 1)[0]
+            extra = dataclasses.replace(
+                next(t for t in graph.tensors if t.tensor_id == kernel.inputs[1]),
+                tensor_id=f"{prefix}.sink_history",
+            )
+            tensors.append(extra)
+            kernel = dataclasses.replace(
+                kernel, inputs=(*kernel.inputs[:3], extra.tensor_id, *kernel.inputs[3:])
+            )
+        kernels.append(kernel)
+    graph = dataclasses.replace(graph, tensors=tuple(tensors), kernels=tuple(kernels))
+    with pytest.raises(RomLoweringError, match="no write of the resource covers"):
+        build_qwen3_rom_deployment(graph, capability=qwen_capability)
+
+
 def test_symbolic_extent_uses_the_declared_maximum(qwen_graph, qwen_capability):
     """``Symbolic.maximum`` is the extent's maximum, multiplier included."""
     from compiler.backends.rom.common.program import RomLowering
