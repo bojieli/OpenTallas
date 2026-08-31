@@ -204,7 +204,7 @@ def main() -> int:
         result.generated_token_ids, driver.vocabulary_size
     )
 
-    reference = _load_reference(args.reference, workload["workload_id"])
+    reference = _load_reference(args.reference, workload)
     got = list(result.generated_token_ids)
     agreement, divergence = _compare(got, reference)
     if reference is None:
@@ -323,10 +323,26 @@ def _status(
     return "pass" if agreement else "diverged"
 
 
-def _load_reference(path: Path | None, workload_id: str) -> list[int] | None:
-    """Gold token ids for this workload, or None if no reference was named."""
+def _load_reference(path: Path | None, workload: dict[str, Any]) -> list[int] | None:
+    """Gold token ids for *exactly* this workload, or None if none was named.
+
+    Selecting the oracle result by workload id alone is not enough.  A workload
+    id names a *question*; the prompt that asks it is the workload's digest.
+    Two workload files can legitimately carry the same id and different token
+    ids -- a rebuilt corpus, a different tokenizer revision, a truncation the
+    tokenizer re-merged across -- and scoring a run against the other one's
+    gold compares two different prompts and reports the answer to neither.
+
+    ``tools/run_accelerator_tokens.py`` has refused this since the day an
+    ad-hoc driver scored a 32-token run against a 104-token gold.  This tool,
+    which drives the same deployments against the same oracles, did not: it
+    read ``results[workload_id]`` and returned it.  The digests happened to
+    agree every time it had been run, so nothing ever reported a mismatch --
+    the failure mode is a wrong number, not an error.
+    """
     if path is None:
         return None
+    workload_id = workload["workload_id"]
     body = json.loads(path.read_text())
     results = body.get("results", {})
     if workload_id not in results:
@@ -334,7 +350,15 @@ def _load_reference(path: Path | None, workload_id: str) -> list[int] | None:
             f"reference {path} holds no result for workload {workload_id!r}; "
             f"it has {sorted(results)}"
         )
-    return [int(t) for t in results[workload_id]["generated_token_ids"]]
+    gold = results[workload_id]
+    stated = gold.get("workload_digest")
+    if stated != workload["digest"]:
+        raise SystemExit(
+            f"reference {path} produced {workload_id!r} against workload digest "
+            f"{stated!r}, not {workload['digest']!r}; the comparison would be "
+            "between two different prompts"
+        )
+    return [int(t) for t in gold["generated_token_ids"]]
 
 
 def _compare(
