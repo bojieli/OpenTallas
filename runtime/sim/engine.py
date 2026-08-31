@@ -258,6 +258,28 @@ def implemented() -> frozenset[tuple[int, int]]:
     return frozenset(_REGISTRY)
 
 
+def snapshot_registry() -> dict[tuple[int, int], object]:
+    """A copy of the dispatch table, for a caller that is about to replace it.
+
+    The RTL vector generators bind every dispatchable operation to a recording
+    no-op, because RTL 3.0 implements the control plane and a golden model that
+    *did* compute would trap on data the RTL never sees.  That is correct for
+    those generators and wrong for everyone else: the table is process-global,
+    ``register`` refuses to overwrite so the bindings are written directly, and
+    ``importlib`` caches the engine modules so re-importing them does not put
+    the real handlers back.  An in-process caller that ran afterwards therefore
+    executed no-ops and got empty results with no error -- legal values, no
+    trap, nothing refused.  Pair this with :func:`restore_registry`.
+    """
+    return dict(_REGISTRY)
+
+
+def restore_registry(snapshot: dict[tuple[int, int], object]) -> None:
+    """Put back a table captured by :func:`snapshot_registry`."""
+    _REGISTRY.clear()
+    _REGISTRY.update(snapshot)
+
+
 #: Families the microsequencer executes itself rather than dispatching to an
 #: engine.  Control flow, transactional state, observation and recovery are
 #: sequencer responsibilities under ADR-003 section 5, so they are not engine

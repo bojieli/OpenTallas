@@ -200,6 +200,8 @@ def engine_capability() -> Capability:
             "max_loop_trip": 1 << 20,
             "max_retired_work": 1 << 32,
             "max_events": 256,
+            "max_event_id": 511,
+            "max_state_resources": 16,
             "max_outstanding_per_queue": 8,
             "max_context_positions": 256,
             "max_expert_ids": 1024,
@@ -1719,9 +1721,31 @@ def expectations(
     view it wrote.
     """
     counters = golden["counters"]
+    def require(name: str) -> int:
+        """A counter the real engine must have published for this case.
+
+        Absence does not mean zero.  It means the golden execution did not do
+        the work -- most often because a *different* module bound the dispatch
+        table to recording no-ops and never put it back, which is legal,
+        silent, and yields an empty result rather than an error.  Refuse here,
+        naming the cause, rather than failing later on a bare ``KeyError`` that
+        says nothing about why.  Counters that are genuinely optional (a
+        saturation count that is absent when nothing saturated) are read with
+        ``.get`` and never come through here.
+        """
+        if name not in counters:
+            raise SystemExit(
+                f"{case.name}: the golden execution published no {name!r}; "
+                f"status={golden['status']} trap_class={golden['trap_class']} "
+                f"message={golden['message']!r}. This correlation is against "
+                "the real engines by construction, so a stubbed or "
+                "unimplemented engine may not stand in for one."
+            )
+        return int(counters[name])
+
     if case.family == int(Major.TENSOR):
         return (
-            int(counters["tensor.output_elements"]),
+            require("tensor.output_elements"),
             int(counters.get("tensor.saturations", 0)),
             case.rows * case.cols * case.depth,
             0,
@@ -1729,7 +1753,7 @@ def expectations(
             FLAG_COMPARE_WORK | FLAG_COMPARE_SATURATION,
         )
     if case.family == int(Major.VECTOR):
-        elements = int(counters["vector.elements"])
+        elements = require("vector.elements")
         if elements != written:
             # The engine's element counter and the view it wrote must agree, or
             # one of the two is not describing this operation.
@@ -1754,9 +1778,9 @@ def expectations(
         return (
             written,
             0,
-            int(counters["selection.vocabulary_elements"]),
+            require("selection.vocabulary_elements"),
             int(golden["output"].reshape(-1)[0]),
-            int(counters["selection.tie_multiplicity"]),
+            require("selection.tie_multiplicity"),
             FLAG_COMPARE_WORK | FLAG_COMPARE_TOKEN,
         )
     moved = int(

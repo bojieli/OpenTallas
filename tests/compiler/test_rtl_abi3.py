@@ -21,6 +21,29 @@ import sys
 
 import pytest
 
+from runtime.sim import engine as _engine_module
+
+
+@pytest.fixture(autouse=True)
+def _restore_engine_registry():
+    """Undo this module's engine stubbing before the next test runs.
+
+    ``_install_engine_stubs`` binds every dispatchable operation to a recording
+    no-op in a process-global table.  That is right for generating RTL control-
+    plane vectors and catastrophic for anything that runs afterwards in the
+    same process: ``importlib`` caches the engine modules, so re-importing them
+    does not restore the real handlers, and a later golden execution silently
+    computes nothing.  It did exactly that to
+    ``test_rtl_abi3_engine.py::test_vector_set_is_reproducible``, whose whole
+    purpose is correlating the *real* engines -- it passed alone and failed in
+    the suite.
+    """
+    snapshot = _engine_module.snapshot_registry()
+    try:
+        yield
+    finally:
+        _engine_module.restore_registry(snapshot)
+
 ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -987,18 +1010,18 @@ def test_deployment_vector_set_names_the_programs_this_program_ships() -> None:
         entry["key"]: entry for entry in vectors["deployments"]
     }
     assert shipped["qwen3-8b-rom-single-chip"]["deployment_sha256"].startswith(
-        "a60d8500"
+        "c71ee77e"
     )
     assert shipped["qwen3-8b-rom-single-chip"]["instruction_count"] == 75
     assert shipped["qwen3-8b-rom-single-chip"]["descriptor_count"] == 239
     assert shipped["qwen3-8b-hbm-single-chip"]["deployment_sha256"].startswith(
-        "05bf410b"
+        "fb5c66df"
     )
     assert shipped["qwen3-8b-hbm-single-chip"]["instruction_count"] == 75
     assert shipped["qwen3-8b-hbm-single-chip"]["descriptor_count"] == 218
     assert shipped["deepseek-v4-flash-rom-wafer"][
         "deployment_sha256"
-    ].startswith("507e0b57")
+    ].startswith("f5f21bb2")
     assert shipped["deepseek-v4-flash-rom-wafer"]["instruction_count"] == 1156
     assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3387
     for entry in shipped.values():
