@@ -61,9 +61,11 @@
     },
     "hbm_bandwidth": {
       "grade": "assumed",
-      "note": "applied to both weight and KV traffic on an HBM device",
-      "source": "commonly measured STREAM-class fraction of HBM peak on datacentre GPUs",
-      "value": 0.85
+      "note": "0.90 of peak HBM bandwidth sustained, applied to both weight and KV traffic on ANY device with HBM -- the GPU comparators and the ROM designs whose KV store is HBM alike, which is why this is not a one-sided credit. WAS 0.85 with no cited measurement at all. The two readings behind 0.90 are an A100 PCIe 40GB measured at 90.5% of its 1555 GB/s and an H800 memory controller measured at 91.3% on the same 2039 GB/s HBM2e configuration as the modelled A100 SXM part. NOT IMPLEMENTED, DELIBERATELY: the proposed read-only versus mixed split. Luo's method is already a mixed 5-read-to-1-write coalesced stream, so splitting it would double-count the write penalty. AND THE A100 WEIGHT-BOUND VALIDATION GATE IS NOT EVIDENCE FOR THIS NUMBER: that gate is constructed to reproduce a published rate and would move with any efficiency, so quoting it here would be circular. DIRECTION: favours the GPU, about 0.982x on the headline.",
+      "range_high": 0.92,
+      "range_low": 0.8,
+      "source": "Luo et al., Benchmarking and Dissecting the Nvidia Hopper GPU Architecture, IPDPS 2024, arXiv:2402.13499 (H800 memory controller 91.3% of 2039 GB/s HBM2e) ; NVIDIA A100 PCIe 40GB STREAM-class measurements at 90.5% of 1555 GB/s. No vendor states a sustained fraction for either part.",
+      "value": 0.9
     },
     "hbm_capacity": {
       "grade": "assumed",
@@ -74,7 +76,7 @@
     "no_clock_derate_rationale": {
       "grade": "derived",
       "note": "No separate clock-efficiency derate is applied anywhere in this model. A100's 312 TFLOPS, WSE-2's 20 PB/s and the HBM bandwidths are achieved rates at shipping clocks, not timing-signoff targets, so charging a further clock derate on top would double-count. The only derates applied are the sustained-fraction ones named above.",
-      "source": "every density in this table is derived from an ACHIEVED shipping-silicon figure",
+      "source": "definition of what this model's densities are derived from, WITH THE PREVIOUS CLAIM WITHDRAWN. The previous source field read \"every density in this table is derived from an ACHIEVED shipping-silicon figure\". That is FALSE for the ROM lane -- `rom.read_bandwidth_anchor` is YOLoC, which is SPICE-simulated with another paper's periphery grafted on and was never fabricated -- and UNVERIFIABLE for the SRAM lane, whose Cerebras 20 PB/s citation is dead (cerebras.ai/chip today describes WSE-3 only, at 21 PB/s; the string \"20 PB\" does not appear). The A100 and HBM figures ARE achieved shipping-silicon rates and the rationale holds for them.",
       "value": 1.0
     },
     "rom_read_bandwidth": {
@@ -108,38 +110,48 @@
     "mac_energy_j_per_op": {
       "bf16": {
         "grade": "assumed",
-        "note": "0.1 pJ per operation for a 16-bit multiply-accumulate datapath",
-        "source": "Horowitz, Computing's Energy Problem, ISSCC 2014, scaled to a 7 nm-class node",
-        "value": 1e-13
+        "note": "0.33 pJ per operation for a 16-bit multiply-accumulate datapath. WAS 1e-13, which is 3.3x below the MEASURED datapath plane of a shipping N7 tensor core and 2.1x below Horowitz's 45 nm FP16 MAC -- a 7 nm number below a 45 nm one. Antepara et al., SC'25 Table 3 measures the A100 Matrix-FP16 path at control 0.37 / datapath 0.33 / total 0.70 pJ/FLOP. GRADED `assumed`, NOT `derived`, AND THE REASON IS THE WHOLE POINT: taking the datapath plane and dropping the control plane has no published basis -- a real MAC array pays some of its own instruction issue, operand collection and scheduling -- so this value stands on a BRACKET (1.3e-13 datapath-only at a better node, 7.0e-13 total) and not on a derivation. Sweep 1.3e-13 to 7.0e-13. DIRECTION: raises arithmetic energy on BOTH sides; Qwen3-8B is 100% bf16 in these studies and no other model uses it.",
+        "range_high": 7e-13,
+        "range_low": 1.3e-13,
+        "source": "Antepara, Williams et al., Measuring the Energy of Data Movement on Modern GPU Systems, SC'25, doi:10.1145/3712285.3759815, Table 3 (A100 Matrix-FP16: control 0.37 / datapath 0.33 / total 0.70 pJ/FLOP) ; Horowitz, Computing's Energy Problem, ISSCC 2014, for the 45 nm cross-check",
+        "value": 3.3e-13
       },
       "fp32": {
         "grade": "assumed",
-        "note": "0.4 pJ per operation for a 32-bit floating-point datapath",
-        "source": "Horowitz, Computing's Energy Problem, ISSCC 2014, scaled to a 7 nm-class node",
-        "value": 4e-13
+        "note": "1.09 pJ per operation for a 32-bit floating-point datapath. WAS 4e-13. Same SC'25 table times Horowitz's 45 nm FP32-to-FP16 MAC ratio, and the arithmetic is stated so it can be checked: HOROWITZ'S 45 nm 32-bit float MULT IS 3.7 pJ, NOT 4 -- verified through EIE (arXiv:1602.01528) Table I, on which Horowitz is a co-author -- so the FP32 MAC is 4.6 pJ and the FP32/FP16 ratio is 3.29, giving 3.3e-13 x 3.29 = 1.09e-12. The 1.2e-12 first proposed is 6-14% high on its own formula. Sweep 4e-13 (the incumbent, kept as the floor) to 1.07e-11 (the A100 Vector-FP32 TOTAL in the same table); the gap between 1.09e-12 and 1.07e-11 is the honest measure of how much of a GPU FP32 FLOP is not arithmetic. Carries 0.06% of DeepSeek-V4-Pro's operations and nothing else in either study.",
+        "range_high": 1.07e-11,
+        "range_low": 4e-13,
+        "source": "Antepara, Williams et al., SC'25, doi:10.1145/3712285.3759815, Table 3 ; Horowitz, Computing's Energy Problem, ISSCC 2014, as reproduced in Han et al., EIE, arXiv:1602.01528, Table I (45 nm 32-bit float MULT 3.7 pJ, ADD 0.9 pJ)",
+        "value": 1.09e-12
       },
       "fp4": {
         "grade": "assumed",
-        "note": "0.015 pJ per operation for a 4-bit multiply-accumulate datapath",
-        "source": "Horowitz, Computing's Energy Problem, ISSCC 2014, scaled to a 7 nm-class node",
-        "value": 1.5e-14
+        "note": "0.023 pJ per operation for a 4-bit multiply-accumulate datapath. WAS 1.5e-14. Evidentially the cleanest leg in the ladder: Keller et al. Table 2 measures INT4 at 91.1 TOPS/W against INT8 at 39.1 TOPS/W on ONE FABRICATED DIE, both at 0.46 V, both at 50% density, on two dedicated datapaths -- so process, PVT, leakage and dataflow all cancel and the energy ratio is 0.4292. More conservative than argued: the pure-datapath ratio is nearer 0.38. LIKE fp8, IT MOVES NOTHING -- zero operations at every point in either study. Sweep 1.5e-14 (the incumbent) to 2.9e-14.",
+        "range_high": 2.9e-14,
+        "range_low": 1.5e-14,
+        "source": "Keller et al., 2022 Symposium on VLSI Technology and Circuits, Digest pp. 16-17, Table 2 (fabricated TSMC 5nm: INT4 91.1 and INT8 39.1 TOPS/W at 0.46 V), https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF",
+        "value": 2.3e-14
       },
       "fp8": {
         "grade": "assumed",
-        "note": "0.03 pJ per operation for an 8-bit multiply-accumulate datapath",
-        "source": "Horowitz, Computing's Energy Problem, ISSCC 2014, scaled to a 7 nm-class node",
-        "value": 3e-14
+        "note": "0.054 pJ per operation for an 8-bit multiply-accumulate datapath. WAS 3e-14. Same SC'25 bf16 plane times Horowitz's INT8/FP16 ratio, cross-checked against Keller et al. (2022 Symp. VLSI Tech. & Circuits, Table 2), a FABRICATED TSMC 5nm die measuring INT8 at 39.1 TOPS/W at 0.46 V. Best-sourced rung in the ladder AND IT MOVES NOTHING IN EITHER STUDY: `points[].operations_by_canonical_format` charges fp8 on ZERO operations at every point. Sweep 3e-14 (the incumbent) to 6.8e-14.",
+        "range_high": 6.8e-14,
+        "range_low": 3e-14,
+        "source": "Antepara, Williams et al., SC'25, doi:10.1145/3712285.3759815, Table 3 ; Keller et al., A 95.6-TOPS/W Deep Learning Inference Accelerator with Per-Vector Scaled 4-bit Quantization in 5nm, 2022 Symposium on VLSI Technology and Circuits, Digest pp. 16-17, Table 2, https://d1qx31qr3h6wln.cloudfront.net/publications/C02-1.PDF",
+        "value": 5.4e-14
       },
       "w4a8": {
         "grade": "assumed",
-        "note": "0.02 pJ per operation for a 4-bit-weight by 8-bit-activation datapath",
-        "source": "Horowitz, Computing's Energy Problem, ISSCC 2014, scaled to a 7 nm-class node",
-        "value": 2e-14
+        "note": "0.039 pJ per operation for a 4-bit-weight by 8-bit-activation datapath, AND IT IS AN INTERVAL RATHER THAN A VALUE. THIS RUNG CARRIES 99.9% OF THIS STUDY'S OPERATIONS AND HAS NO SOURCE OF ANY KIND: DeepSeek-V4-Pro-0813 is 99.94% w4a8, DeepSeek-V4-Flash is 99.86% w4a8, and no published or measured mixed 4-bit-weight by 8-bit-activation MAC energy exists at any node. The interval [2.33e-14, 5.42e-14] is bounded below by the fp4 rung and above by the fp8 rung, which share the accumulator; the point 3.9e-14 is their arithmetic mean and is a MIDPOINT, not an estimate. Read the interval and not the point. The evidence in this whole domain was spent almost exactly inversely to where it matters -- fp8 and fp4, the two rungs with fabricated silicon behind them, are charged on zero operations.",
+        "range_high": 5.42e-14,
+        "range_low": 2.33e-14,
+        "source": "no source of any kind exists for a mixed 4-bit-weight x 8-bit-activation MAC energy; the interval is bounded by this file's own fp4 and fp8 rungs, which share the accumulator",
+        "value": 3.9e-14
       }
     },
     "operand_delivery_j_per_byte": {
       "grade": "assumed",
-      "note": "0.23 pJ/byte to get one byte from the array that holds it to the arithmetic that consumes it, at a 7 nm-class node. This is the term docs/TECHNICAL_DIRECTION_RECOMMENDATION.md 0.11 named as missing: a Horowitz-class MAC energy is the ALU, not the cost of delivering its operands, and rom_read_j_per_byte's stated boundary stops at the macro output latch. VERIFIER-CORRECTED, 1.5x DOWN from the submitted 3.43e-13 -- the submitted wire constant used alpha x C x V^2 with alpha = 0.5 transitions/bit, which double-counts the transition: supply energy for one full 0->1->0 cycle is C*V^2, so energy per transition is (1/2)C*V^2 and the correct coefficient for random data is 0.25, not 0.5. The corrected form is anchored, not chosen: 0.25 x 0.2 pF/mm x (0.75 V)^2 x 1.6 repeater overhead = 0.045 pJ/bit/mm, and the same formula run at 45 nm/1.0 V returns 0.080 pJ/bit/mm against Dally's published 45 nm figure of 6 pJ to move 64 bits 1 mm = 0.094 pJ/bit/mm, an 18% agreement the submitted form missed by 1.7x. Point = one register-file/operand-collector access at N7 (0.091 pJ/B, Horowitz 45 nm scaled by 5.49x) + 0.40 pJ/B/mm over a 0.35 mm tile pitch. BOUNDARY, and the writer must not lose it: this scalar is the TILE-LOCAL FLOOR. The long-path ladder -- HBM to L2 to register file on an A100 is 8.3-10.0 pJ/B over 10-14.4 mm -- is NOT represented. Applied uniformly to weight and KV bytes it charges the ROM side ~1.6x on its dominant term and the GPU side ~1.01x on its dominant term, so the single number penalises the ROM side; that is the safe direction and it is why a scalar is shippable. The 5.49x 45nm->N7 node factor is the geometric mean of ratios implied by this file's own mac_energy_j_per_op entries, every one of which is graded `assumed`: an assumption resting on assumptions, and SRAM energy scales worse than logic, so if anything this understates the storage-level terms.",
+      "note": "0.23 pJ/byte to get one byte from the array that holds it to the arithmetic that consumes it, at a 7 nm-class node. This is the term docs/TECHNICAL_DIRECTION_RECOMMENDATION.md 0.11 named as missing: a Horowitz-class MAC energy is the ALU, not the cost of delivering its operands, and rom_read_j_per_byte's stated boundary stops at the macro output latch. VERIFIER-CORRECTED, 1.5x DOWN from the submitted 3.43e-13 -- the submitted wire constant used alpha x C x V^2 with alpha = 0.5 transitions/bit, which double-counts the transition: supply energy for one full 0->1->0 cycle is C*V^2, so energy per transition is (1/2)C*V^2 and the correct coefficient for random data is 0.25, not 0.5. The corrected form is anchored, not chosen: 0.25 x 0.2 pF/mm x (0.75 V)^2 x 1.6 repeater overhead = 0.045 pJ/bit/mm, and the same formula run at 45 nm/1.0 V returns 0.080 pJ/bit/mm against Dally's published 45 nm figure of 6 pJ to move 64 bits 1 mm = 0.094 pJ/bit/mm, an 18% agreement the submitted form missed by 1.7x. Point = one register-file/operand-collector access at N7 (0.091 pJ/B, Horowitz 45 nm scaled by 5.49x) + 0.40 pJ/B/mm over a 0.35 mm tile pitch. BOUNDARY, and the writer must not lose it: this scalar is the TILE-LOCAL FLOOR. The long-path ladder -- HBM to L2 to register file on an A100 is 8.3-10.0 pJ/B over 10-14.4 mm -- is NOT represented. Applied uniformly to weight and KV bytes it charges the ROM side ~1.6x on its dominant term and the GPU side ~1.01x on its dominant term, so the single number penalises the ROM side; that is the safe direction and it is why a scalar is shippable. THE 5.49x 45nm->N7 NODE FACTOR IS NOW UNSOURCED AND THE VALUE IS UNCHANGED ONLY BECAUSE NOTHING BETTER EXISTS. It was derived as \"the geometric mean of ratios implied by this file's own mac_energy_j_per_op entries\"; that ladder has since been re-anchored on a measured SC'25 A100 table and the ratios it implies are different, so the sentence that produced 5.49 is FALSE as written and must not be repeated. The honest interval for that factor is 2.1x-5.5x, which puts this entry at 2.3e-13 (kept, the low end) to 3.8e-13. It is left at the low end rather than raised because the term is applied uniformly to weight and KV bytes and therefore charges the ROM side about 1.6x on its dominant term against about 1.01x on the GPU's -- raising it would be a further charge against the ROM side that no source supports, and lowering the reported band is not on offer either. SRAM energy scales worse than logic, so if anything this understates the storage-level terms.",
       "range_high": 8e-13,
       "range_low": 1.5e-13,
       "source": "Horowitz, Computing's Energy Problem, ISSCC 2014 (register-file and cache access energies at 45 nm) ; Dally, published 45 nm wire energy, 64 bits x 1 mm = 6 pJ ; repeatered global wire C ~= 0.2 pF/mm at a leading node. NOT sourced to Sze et al. arXiv:1703.09039: that paper's Fig. 22 is NORMALISED ONLY (ALU 1x, RF 1x, NoC 2x, buffer 6x, DRAM 200x) and contains no pJ figure, so it cannot support any absolute constant and the earlier citation of it was a misreading.",
@@ -155,9 +167,11 @@
     },
     "sram_read_j_per_byte": {
       "grade": "assumed",
-      "note": "1 pJ/byte for an on-die SRAM array read at a 7 nm-class node",
-      "source": "no vendor macro energy published for the target arrays",
-      "value": 1e-12
+      "note": "2.6 pJ per byte read from an on-die SRAM array, EXPLICITLY A FLOOR. WAS 1e-12 with \"no vendor macro energy published\". SC'25 Table 3 measures the A100 L1 at control 1.26 / datapath 0.33 / total 1.59 pJ/bit, which is 2.64 / 12.72 pJ/B. This entry takes 2.6e-12 -- the datapath plane plus the part of the control plane an SRAM unavoidably pays -- and LABELS IT A FLOOR, because the dropped control plane contains row decode, which a scratchpad does pay. GRADED `assumed`, NOT `derived`: the plane split has no published basis, exactly as for the MAC ladder. WHERE IT IS CHARGED AND WHY THAT MATTERS FOR FAIRNESS: only when `kv_store == 'sram'`, which is the ROM-side designs; the A100's and B200's KV is HBM at 104.88 pJ/B and is untouched by this entry. So raising it charges the ROM side and not the GPU side -- it FAVOURS THE GPU, which is why it is applied at the measured floor rather than at the datapath plane. Sweep 1.44e-12 (the MI250X L1 datapath plane in the same table, the most favourable reading anywhere) to 1.27e-11 (the A100 L1 total).",
+      "range_high": 1.27e-11,
+      "range_low": 1.44e-12,
+      "source": "Antepara, Williams et al., Measuring the Energy of Data Movement on Modern GPU Systems, SC'25, doi:10.1145/3712285.3759815, Table 3 (A100 L1: control 1.26 / datapath 0.33 / total 1.59 pJ/bit; MI250X L1 datapath 0.18 pJ/bit)",
+      "value": 2.6e-12
     }
   },
   "floorplan": {
@@ -256,9 +270,9 @@
   "kv": {
     "access_granularity_bytes": {
       "hbm": {
-        "grade": "assumed",
-        "note": "An HBM3 channel is split into two 32-bit pseudo-channels and the minimum burst is 8, so the smallest read that reaches the die is 32 bytes. A 68-byte index entry therefore costs 96 bytes. Graded assumed rather than published because the number is reconstructed from the interface geometry rather than read off a datasheet line.",
-        "source": "HBM3/3E pseudo-channel width times burst length; no vendor erratum consulted for this program",
+        "grade": "published",
+        "note": "32 bytes, the sector NVIDIA states its memory system moves. WAS `assumed` and reconstructed from HBM3 pseudo-channel geometry (\"a 32-bit pseudo-channel at burst 8\"), which happened to give the same number by a route the vendor does not state. NVIDIA states the 32-byte sector directly, so this is `published`. DELETED: the previous note's \"A 68-byte index entry therefore costs 96 bytes\" -- that example used an index entry size this model does not carry and is retracted along with the 1.6x sensitivity in `kv.index_layout`.",
+        "source": "https://docs.nvidia.com/nsight-compute/ProfilingGuide/index.html#memory-chart -- NVIDIA Nsight Compute Kernel Profiling Guide, memory chart / metrics section, which defines the sector as a 32-byte aligned region of device memory and reports device-memory traffic in those units; cross-checked against https://docs.nvidia.com/cuda/cuda-c-programming-guide/ on coalescing granularity",
         "value": 32.0
       },
       "sram": {
@@ -270,7 +284,7 @@
     },
     "index_layout": {
       "grade": "assumed",
-      "note": "Where a compressed-sparse layer's 68-byte index entry sits relative to the 583-byte payload entry it describes. 'interleaved' is the natural result of writing both at generation time and makes every index entry its own access; 'contiguous' packs the index array separately so the scan is one sequential run and granule rounding costs nothing. The two differ by more than 1.6x on DeepSeek-V4-Flash at 200K context, where 72% of the KV read is that scan. Stated as a named choice because a design can simply choose the cheap one -- and because a model that silently assumed the cheap one would be claiming a design decision as a fact.",
+      "note": "Where a compressed-sparse layer's index entry sits relative to the payload entry it describes. 'interleaved' is the natural result of writing both at generation time and makes every index entry its own access; 'contiguous' packs the index array separately so the scan is one sequential run and granule rounding costs nothing. RETRACTED: the previous note's \"The two differ by more than 1.6x on DeepSeek-V4-Flash at 200K context\". At the entry sizes this model actually carries the two layouts coincide, and the 1.6x was computed against a 68-byte index entry that is not what the profile declares. Stated as a named choice because a design can simply choose the cheap one -- and because a model that silently assumed the cheap one would be claiming a design decision as a fact.",
       "source": "layout CHOICE, not a physical constant; no released serving implementation inspected for this program",
       "value": "interleaved"
     },
@@ -279,11 +293,32 @@
   "latency": {
     "array_pass_boundaries_per_layer": {
       "grade": "assumed",
-      "note": "Serially dependent matrix passes in one decoder layer. Four is the standard block; a fused QKV gives three and a separate router pass gives five. Graded assumed rather than derived because the model profiles do not state a pass structure -- operations.operation_inventory counts arithmetic, not passes.",
+      "note": "Serially dependent matrix passes in one decoder layer, and THE DEFAULT ONLY. This entry is now per model: `latency.array_pass_boundaries_per_layer_by_model` names the value for each model the studies run, and `tools/run_roofline_studies.py` applies it and REFUSES a model that is not named there. A single constant cannot be right for two architectures whose layers have different serial chains, and the previous flat 4.0 undercharged DeepSeek by exactly one pass. This default remains the standard dense block -- QKV, attention output, gate/up, down -- and is what an unlisted model would get if the refusal above did not exist. Graded `assumed` rather than `derived` because the model profiles do not state a pass structure: `operations.operation_inventory` counts arithmetic, not passes. STATE WHICH QUANTITY THIS IS: serial dependency depth, not array occupancy. The same layer honestly yields 4, 5 or 8 depending on which you name -- independent descriptors pipeline rather than each paying a drain -- and 8-9 is the occupancy reading, which is why `range_high` stops at 5.",
       "range_high": 5.0,
       "range_low": 3.0,
       "source": "transformer block structure: QKV, attention output, gate/up, down",
       "value": 4.0
+    },
+    "array_pass_boundaries_per_layer_by_model": {
+      "DeepSeek-V4-Flash-0731": {
+        "grade": "assumed",
+        "note": "5. DeepSeek-V4's decoder layer adds a serially dependent router pass -- the expert scores must exist before the expert matrices can be selected and started -- on top of the four of the standard block. Derived from the graph contract the compiler emits for this model rather than from the profile, which counts arithmetic and not passes; graded `assumed` because a graph reading is a hypothesis about serial depth and not a measurement of one. NOT GRADED `derived`: no committed artifact in this repository counts serially dependent matrix passes for any model, so there is nothing to derive from by a stated formula.",
+        "source": "DeepSeek-V4 decoder graph as compiled by compiler/backends/rom: QKV, attention output, router score, expert gate/up, expert down",
+        "value": 5.0
+      },
+      "DeepSeek-V4-Pro-0813": {
+        "grade": "assumed",
+        "note": "5, by the declared Flash->Pro architectural analogy that the rest of this program already runs on: Pro is the same decoder layer at a larger width and expert count, so its serial chain is Flash's. If that analogy is ever broken this entry must be re-derived rather than inherited.",
+        "source": "DeepSeek-V4-Flash to DeepSeek-V4-Pro architectural analogy, as declared in configs/models",
+        "value": 5.0
+      },
+      "Qwen3-8B": {
+        "grade": "assumed",
+        "note": "4 -- QKV, attention output, gate/up, down. This is the incumbent flat value and it is exactly the incumbent's own enumeration, which is the reason the flat constant looked right for so long: it WAS right, for one of the three models. NOT GRADED `executed`, although a per-model split was recommended with Qwen3 taken from the executed artifacts: `executed` in this repository requires both halves -- something run here AND a committed artifact holding the number -- and no committed artifact counts serially dependent matrix passes. The deployment co-simulation records engine issues and retirements, not pass boundaries.",
+        "source": "Qwen3 decoder block structure: QKV, attention output, gate/up, down",
+        "value": 4.0
+      },
+      "purpose": "Per-model serial matrix-pass depth. Applied by tools/run_roofline_studies.py to BOTH sides of every comparison -- the fixed per-layer latency budget is charged to the GPU designs and the ROM designs identically -- so this is a model property, never a family property."
     },
     "global_wire_delay_s_per_mm": {
       "grade": "assumed",
@@ -295,15 +330,21 @@
     },
     "layer_barrier_s": {
       "grade": "assumed",
-      "note": "A layer transition is a barrier: every lane's partial result must be retired and the residual formed before the next layer's activation exists. On a distributed fabric this is a reduction plus a broadcast of the completion signal, on top of the wire delay charged separately. Charged once per layer.",
-      "range_high": 3.2e-08,
-      "range_low": 4e-09,
-      "source": "no published synchronisation cost for this class of part",
-      "value": 8e-09
+      "note": "35 ns for the layer transition: every lane's partial must retire and the residual must be formed before the next layer's activation exists, which is a reduction PLUS a completion broadcast over the die. WAS 8e-09, AND THE STRONGEST FINDING IN THIS BLOCK IS INTERNAL -- 8 ns IS BELOW THE MODEL'S OWN ARITHMETIC FLOOR. Crossing sqrt(815) = 28.548 mm at this file's own `latency.global_wire_delay_s_per_mm` = 1.5e-10 s/mm is 4.282 ns one way; a reduction plus a completion broadcast is two of those, 8.565 ns of BARE WIRE WITH ZERO LOGIC. Both the old point (8e-09) and the old `range_low` (4e-09) sat under a floor the same file computes. `range_low` is therefore set to that floor and nothing lower is admissible. THE POINT IS A BRACKET, NOT A MEASUREMENT, AND THE BAND CONTAINS NO FABRICATED MEASUREMENT OF THE THING IT PRICES. What exists nearby: Jia et al. (arXiv:1912.03413) SS 4.1.2 on the Graphcore IPU, whose sync phase the earlier reading put at 35 ns by subtracting 98 from 133 -- REFUTED, because that subtracts an AVERAGE (Table 4.1(a), \"average latency value over a large number of experiments\") from a MAXIMUM (SS 4.1.2, \"98 ns (the highest)\"); the like-for-like subtraction puts the IPU's synchronisation phase at about 70-80 ns, so 35 ns is an UNDERSTATEMENT and is conservative, but it must not be sourced to an arithmetic the paper does not support. The same paper's Table 4.16 measures what this entry names most directly -- 1 IPU, all 1,216 tiles, 1 operand per tile = 1.97 us (single-tile baseline 0.44 us) -- which is 56x this point and 250x the incumbent, but it is `popops::reduce` through the Poplar SDK and not a hardware barrier, so it sits OUTSIDE the band as a named non-adoption rather than as `range_high`. `range_high` 2.0e-07 is a barrier over a distributed fabric with one level of tree above the flat wire. DIRECTION: favours the GPU. +12.0% on the fixed per-layer budget, about +1.6 us per token, charged identically to both sides.",
+      "range_high": 2e-07,
+      "range_low": 8.6e-09,
+      "source": "This file's own floor: 2 x sqrt(reticle.area_mm2) x latency.global_wire_delay_s_per_mm ; Jia, Tillman, Maggioni, Scarpazza, Dissecting the Graphcore IPU Architecture via Microbenchmarking, arXiv:1912.03413, SS 4.1.2 and Table 4.16 ; Rocki et al., SC20, arXiv:2010.03660 for the wafer-scale AllReduce comparator. No fabricated measurement of a hardware barrier isolated from its transfer exists for this class of part.",
+      "value": 3.5e-08
     },
     "pipeline_fill_drain_s": {
+      "derived_in_fabric_cycles": {
+        "purpose": "The cycle counts this entry's value and band ARE, at power.fabric_clock_hz. Machine-readable so the derivation in the note is checkable rather than merely stated: tools/run_roofline_studies.py's consistency audit refuses the file if value x fabric_clock_hz stops equalling these counts, which is what silently breaks when the fabric clock is moved on its own.",
+        "range_high": 128.0,
+        "range_low": 16.0,
+        "value": 32.0
+      },
       "grade": "assumed",
-      "note": "Fill and drain across the boundary between two SERIALLY DEPENDENT array passes. The second pass cannot begin until the first has retired, so the boundary costs a full traversal of the pipeline. 32 ns is roughly 32 stages at a 1 GHz fabric clock; the low end is a shallow accumulator tree over 4k lanes (12-16 levels) and the high end is a systolic drain of a 128-deep array. Charged once per array-pass boundary. THIS IS THE LARGEST TERM IN THE BLOCK and the widest band; the anchor is reported at both ends of it.",
+      "note": "Fill and drain across the boundary between two SERIALLY DEPENDENT array passes. The second pass cannot begin until the first has retired, so the boundary costs a full traversal of the pipeline. 32 ns is roughly 32 stages at a 1 GHz fabric clock; the low end is a shallow accumulator tree over 4k lanes (12-16 levels) and the high end is a systolic drain of a 128-deep array. Charged once per array-pass boundary. THIS IS THE LARGEST TERM IN THE BLOCK and the widest band; the anchor is reported at both ends of it. THIS ENTRY IS DERIVED IN FABRIC CYCLES: 32 cycles at `power.fabric_clock_hz`, with the band 16 and 128 cycles at the same clock. It does not READ that key, so moving the clock without moving these three numbers makes this note false; the consistency audit in tools/run_roofline_studies.py refuses that.",
       "range_high": 1.28e-07,
       "range_low": 1.6e-08,
       "source": "no published array pipeline depth for this class of part",
@@ -311,8 +352,14 @@
     },
     "purpose": "The serial per-layer cost that no amount of bandwidth removes. Before this block the only latency in the model was links.*.hop_latency_s, charged at inter-partition boundaries, so a single_chip design had a decode step with no fixed cost at all. EVERY TERM HERE IS DERIVED FROM A PRIMITIVE THAT EXISTS INDEPENDENTLY OF THE TAALAS HC1 ANCHOR, and each carries range_low/range_high. The anchor gate is evaluated at both ends of that band and reports where it lands as an OUTCOME. No term is chosen to close the anchor gap: doing that would turn a validation gate into a one-parameter curve fit, and the gate is load-bearing (checklist W12.5). Charged per layer: sequencer_issue_decode + layer_barrier + one KV round trip (sram_access + one global traversal) + array_pass_boundaries_per_layer x (pipeline_fill_drain + one global traversal). Compressed-sparse layers additionally pay sparse_index_dependency.",
     "sequencer_issue_decode_s": {
+      "derived_in_fabric_cycles": {
+        "purpose": "The cycle counts this entry's value and band ARE, at power.fabric_clock_hz. See the companion field on latency.pipeline_fill_drain_s.",
+        "range_high": 8.0,
+        "range_low": 1.0,
+        "value": 3.0
+      },
       "grade": "assumed",
-      "note": "Instruction fetch, decode and operand setup for one layer's command stream in a statically scheduled sequencer. A few cycles at a ~1 GHz fabric clock; 1-8 ns spans a single-cycle issue to a deeply decoded microcoded one. Charged once per layer.",
+      "note": "Instruction fetch, decode and operand setup for one layer's command stream in a statically scheduled sequencer. A few cycles at a ~1 GHz fabric clock; 1-8 ns spans a single-cycle issue to a deeply decoded microcoded one. Charged once per layer. THIS ENTRY IS DERIVED IN FABRIC CYCLES: 3 cycles at `power.fabric_clock_hz`, with the band 1 and 8 cycles at the same clock. It does not READ that key, so moving the clock without moving these three numbers makes this note false; the consistency audit in tools/run_roofline_studies.py refuses that.",
       "range_high": 8e-09,
       "range_low": 1e-09,
       "source": "no published sequencer for a mask-ROM or compute-in-ROM inference die",
@@ -384,12 +431,12 @@
         "value": "switched"
       },
       "hop_latency_s": {
-        "grade": "published",
-        "note": "GPU-buffer to GPU-buffer inter-node latency, which is what a decode step actually pays -- not the 1.07 us CPU-memory MPI ping-pong, which is the figure usually quoted and is not reachable from a GPU. De Sensi et al. (SC24) measured 3.7-5.7 us across five production supercomputers, and on Leonardo (A100 + HDR InfiniBand) 4.33 us within one switch rising to 5.56 us across switches. The switch silicon is a small part of it: an NVIDIA Quantum HDR switch is published at sub-130 ns port to port and a ConnectX-6 adapter at sub-600 ns, so the remainder is adapter, protocol and software. Stated at 4.5 us and swept 3.7-5.7 us.",
-        "range_high": 5.7e-06,
-        "range_low": 3.7e-06,
-        "source": "De Sensi et al., Exploring GPU-to-GPU Communication: Insights into Supercomputer Interconnects, SC24, arXiv:2408.14090 ; https://network.nvidia.com/files/doc-2020/pb-qm8700.pdf",
-        "value": 4.5e-06
+        "grade": "measured",
+        "note": "GPU-buffer to GPU-buffer inter-node latency, which is what a decode step actually pays -- not the 1.07 us CPU-memory MPI ping-pong, which is the figure usually quoted and is not reachable from a GPU. VERIFIER-CORRECTED ON THE VALUE AND ON TWO VERBATIM DOCUMENTARY ERRORS, both of which were duplicated word for word into `links.infiniband_ndr`. (1) The previous note read \"De Sensi et al. (SC24) measured 3.7-5.7 us across FIVE production supercomputers\"; the abstract reads \"This paper comprehensively characterizes THREE supercomputers -- Alps, Leonardo, and LUMI\" and Table I has three columns. (2) The previous note read \"on LEONARDO (A100 + HDR InfiniBand) 4.33 us within one switch rising to 5.56 us across switches\"; SS V-B.1 reads \"(from 4.33us to 5.56us ON ALPS), whereas ON LEONARDO it increases by 2x (from 2.03us to 4.23us)\". Alps is H100 + HPE Slingshot-11, an ETHERNET Dragonfly. So the entry that prices this study's scale-out fabric was carrying an Ethernet machine's number under an InfiniBand machine's name, and it was 2.13x too slow. STATED AT 2.03 us: Leonardo same-switch, which is the A100 + HDR InfiniBand machine this study actually models, measured on fabricated silicon in a peer-reviewed venue. The band is set by this file's own convention for `nvlink3`/`nvlink5` -- best measured kernel for the point, hardware floor and shipped library for the ends. LOW 1.9 us is the minimum of that same measured distribution; the published silicon floor underneath it is lower still (an NVIDIA Quantum HDR switch is published at sub-130 ns port to port and a ConnectX-6 adapter at sub-600 ns, so roughly 1.3 us of the 2.03 is adapter and switch and the rest is protocol and software). HIGH 22 us is the shipped collective library: the same paper's Observation 5 puts *CCL an order of magnitude above MPI on small inter-node transfers, about 22 us at 1 B on Leonardo (Fig. 7b), and a decode-step all-reduce runs on NCCL rather than on the GPU-Aware MPI 1-byte ping-pong these point values are measured with. That asymmetry is the whole reason the band is now 11.6x wide rather than 1.5x wide, and the honest output of this correction is the BAND and not the point. MEAN-VERSUS-MEDIAN, recorded because it bounds how much the point can be trusted: the annotated Fig. 8a values are outlier-inflated means (LUMI same-switch box about 2.5 us against an annotated 3.71 us mean, Max 184.46 us; Leonardo across-group median about 2.6 us against a 4.23 us mean, Max 132 us -- the paper attributes this to network noise from other jobs). Only Alps same-switch (4.33, min 3.64 / max 5.2) and Leonardo same-switch (2.03, min 1.9 / max 2.4) are tight enough for the mean to stand in for the distribution, and this entry uses the second of those. DIRECTION: this correction makes the GPU side FASTER and moves the headline DOWN by roughly 0.73x, which is the direction that needs the least suspicion and is why it is applied at the point rather than only in the band.",
+        "range_high": 2.2e-05,
+        "range_low": 1.9e-06,
+        "source": "De Sensi, De Matteis, Taranov, Di Girolamo, Rahn, Hoefler, Exploring GPU-to-GPU Communication: Insights into Supercomputer Interconnects, SC24, arXiv:2408.14090, doi:10.1109/SC41406.2024.00039 -- SS V-B.1 verbatim for the 2.03/4.23 us Leonardo pair and Fig. 7b for the ~22 us *CCL 1-byte figure ; https://network.nvidia.com/files/doc-2020/pb-qm8700.pdf for the sub-130 ns switch and sub-600 ns adapter silicon floors",
+        "value": 2.03e-06
       },
       "switch_radix": {
         "grade": "published",
@@ -418,12 +465,12 @@
         "value": "switched"
       },
       "hop_latency_s": {
-        "grade": "published",
-        "note": "GPU-buffer to GPU-buffer inter-node latency, which is what a decode step actually pays -- not the 1.07 us CPU-memory MPI ping-pong, which is the figure usually quoted and is not reachable from a GPU. De Sensi et al. (SC24) measured 3.7-5.7 us across five production supercomputers, and on Leonardo (A100 + HDR InfiniBand) 4.33 us within one switch rising to 5.56 us across switches. The switch silicon is a small part of it: an NVIDIA Quantum HDR switch is published at sub-130 ns port to port and a ConnectX-6 adapter at sub-600 ns, so the remainder is adapter, protocol and software. Stated at 4.5 us and swept 3.7-5.7 us.",
-        "range_high": 5.7e-06,
-        "range_low": 3.7e-06,
-        "source": "De Sensi et al., Exploring GPU-to-GPU Communication: Insights into Supercomputer Interconnects, SC24, arXiv:2408.14090 ; https://network.nvidia.com/files/doc-2020/pb-qm8700.pdf",
-        "value": 4.5e-06
+        "grade": "measured",
+        "note": "GPU-buffer to GPU-buffer inter-node latency, which is what a decode step actually pays -- not the 1.07 us CPU-memory MPI ping-pong, which is the figure usually quoted and is not reachable from a GPU. VERIFIER-CORRECTED ON THE VALUE AND ON TWO VERBATIM DOCUMENTARY ERRORS, both of which were duplicated word for word into `links.infiniband_ndr`. (1) The previous note read \"De Sensi et al. (SC24) measured 3.7-5.7 us across FIVE production supercomputers\"; the abstract reads \"This paper comprehensively characterizes THREE supercomputers -- Alps, Leonardo, and LUMI\" and Table I has three columns. (2) The previous note read \"on LEONARDO (A100 + HDR InfiniBand) 4.33 us within one switch rising to 5.56 us across switches\"; SS V-B.1 reads \"(from 4.33us to 5.56us ON ALPS), whereas ON LEONARDO it increases by 2x (from 2.03us to 4.23us)\". Alps is H100 + HPE Slingshot-11, an ETHERNET Dragonfly. So the entry that prices this study's scale-out fabric was carrying an Ethernet machine's number under an InfiniBand machine's name, and it was 2.13x too slow. STATED AT 2.03 us: Leonardo same-switch, which is the A100 + HDR InfiniBand machine this study actually models, measured on fabricated silicon in a peer-reviewed venue. The band is set by this file's own convention for `nvlink3`/`nvlink5` -- best measured kernel for the point, hardware floor and shipped library for the ends. LOW 1.9 us is the minimum of that same measured distribution; the published silicon floor underneath it is lower still (an NVIDIA Quantum HDR switch is published at sub-130 ns port to port and a ConnectX-6 adapter at sub-600 ns, so roughly 1.3 us of the 2.03 is adapter and switch and the rest is protocol and software). HIGH 22 us is the shipped collective library: the same paper's Observation 5 puts *CCL an order of magnitude above MPI on small inter-node transfers, about 22 us at 1 B on Leonardo (Fig. 7b), and a decode-step all-reduce runs on NCCL rather than on the GPU-Aware MPI 1-byte ping-pong these point values are measured with. That asymmetry is the whole reason the band is now 11.6x wide rather than 1.5x wide, and the honest output of this correction is the BAND and not the point. MEAN-VERSUS-MEDIAN, recorded because it bounds how much the point can be trusted: the annotated Fig. 8a values are outlier-inflated means (LUMI same-switch box about 2.5 us against an annotated 3.71 us mean, Max 184.46 us; Leonardo across-group median about 2.6 us against a 4.23 us mean, Max 132 us -- the paper attributes this to network noise from other jobs). Only Alps same-switch (4.33, min 3.64 / max 5.2) and Leonardo same-switch (2.03, min 1.9 / max 2.4) are tight enough for the mean to stand in for the distribution, and this entry uses the second of those. DIRECTION: this correction makes the GPU side FASTER and moves the headline DOWN by roughly 0.73x, which is the direction that needs the least suspicion and is why it is applied at the point rather than only in the band. THIS IS THE NDR ENTRY AND ITS VALUE IS AN HDR MEASUREMENT, STATED AS A KNOWN BIAS RATHER THAN HIDDEN. De Sensi et al. measure no NDR machine: Leonardo is HDR, Alps and LUMI are Slingshot Ethernet, and no third-party GPU-buffer-to-GPU-buffer NDR inter-node latency was located. Quantum-2 switch silicon is not slower than Quantum-1, so carrying the HDR figure here UNDER-credits the newer fabric and therefore FAVOURS THE ROM SIDE of the n5_vs_b200 study. It is carried anyway because inventing an NDR speed-up would be worse than recording a bias, and because the previous entry had exactly the same structure (one number serving both) with none of it said.",
+        "range_high": 2.2e-05,
+        "range_low": 1.9e-06,
+        "source": "De Sensi, De Matteis, Taranov, Di Girolamo, Rahn, Hoefler, Exploring GPU-to-GPU Communication: Insights into Supercomputer Interconnects, SC24, arXiv:2408.14090, doi:10.1109/SC41406.2024.00039 -- SS V-B.1 verbatim for the 2.03/4.23 us Leonardo pair and Fig. 7b for the ~22 us *CCL 1-byte figure ; https://network.nvidia.com/files/doc-2020/pb-qm8700.pdf for the sub-130 ns switch and sub-600 ns adapter silicon floors",
+        "value": 2.03e-06
       },
       "switch_radix": {
         "grade": "published",
@@ -446,8 +493,8 @@
         "value": 16.0
       },
       "fabric": {
-        "grade": "assumed",
-        "note": "SwarmX is a broadcast-reduce tree; a rack of wafers is modelled as one switched domain, which is the optimistic reading",
+        "grade": "derived",
+        "note": "SwarmX is a broadcast-reduce tree, which is a switched fabric for this model's purposes -- a collective's traversal count is set by the tree's radix and not by the endpoint count. STRUCK: the previous note's \"a rack of wafers is modelled as one switched domain, which is the optimistic reading\". It is not the optimistic reading now that `switch_radix` is 4 rather than 16; the radix is what decides how many tiers a collective climbs, and it is published.",
         "source": "Cerebras CS Weight Streaming white paper, section 6.4 (SwarmX)",
         "value": "switched"
       },
@@ -460,10 +507,10 @@
         "value": 5e-06
       },
       "switch_radix": {
-        "grade": "assumed",
-        "note": "one tree level reaches the whole rack",
-        "source": "Cerebras CS Weight Streaming white paper, section 6.4 (SwarmX)",
-        "value": 16.0
+        "grade": "published",
+        "note": "4. Cerebras' own CS-3 IO slide reads \"Latency: CS-3 IO is <5us / 4 hops required\", so four hops reach the fabric the vendor is describing and 16 was an assumption. WAS 16 `assumed` (\"one tree level reaches the whole rack\"). IT MOVES NOTHING AND THAT IS RECORDED RATHER THAN LEFT TO BE DISCOVERED: re-running both studies at radix 2, 4 and 8 changes NO headline row in either, and the maximum headline ratio anywhere is unchanged. 336 of 4,688 points and 178 non-headline comparison rows move. The reason is structural -- the wafer-hybrid topologies that are actually selected have tensor_group = intra_domain_size = 57, so across = ceil(57/57) = 1 and they emit no `inter_wafer` all-reduce at all. Applied because it is published and conservative, not because it changes an answer.",
+        "source": "Cerebras, Hot Chips 2024 CS-3 IO slide, \"Latency: CS-3 IO is <5us / 4 hops required\"",
+        "value": 4.0
       }
     },
     "none": {
@@ -795,10 +842,10 @@
     },
     "fabric_clock_hz": {
       "grade": "assumed",
-      "note": "1.0 GHz for a modelled design that has no published clock. THIS IS A MANDATORY COMPANION TO THE CLOCK TERM, not an extra: clock_energy_j_per_mm2_per_cycle has units of J per mm2 per CYCLE, there was no clock frequency anywhere in this file or in roofline.py, and applying the term without one is impossible. It is also NOT new to the model, only newly visible -- the latency block already reasons at '32 stages at a 1 GHz fabric clock' and 'a few cycles at a ~1 GHz fabric clock' without ever stating the clock as an input. The modelled ROM side's clock power is exactly linear in this, and it multiplies with clock_region_multiplier to set the W/mm2 asymmetry between the two sides of the comparison, so the two are swept together. Sweep 0.5-2.0 GHz.",
+      "note": "1.0 GHz for a modelled design that has no published clock. WHAT THIS KEY FEEDS, STATED EXHAUSTIVELY, BECAUSE IT HAS BEEN MISREAD AS THE COMPUTE ROOF AND IT IS NOT: it is read in exactly one place, `Technology.clock_frequency_hz`, and consumed in exactly one, the clock leg of `device_static_power` -- clock watts per mm2 = `clock_energy_j_per_mm2_per_cycle` x this. IT SETS NO RATE. The compute roof on both sides comes from `compute.format_roofs_ops_s` divided by the anchor die area and scaled by `nodes.*.logic_density_vs_n7`, and it does not read this key; a published part uses its own `clock_frequency_hz` here and ignores this key entirely. So this constant reaches a rate ONLY through power -> thermal_scale, and only at points where thermal binds. WHERE IT IS NEVERTHELESS LOAD-BEARING FOR LATENCY, WHICH IS THE PART NOTHING ENFORCED: `latency.pipeline_fill_drain_s` and `latency.sequencer_issue_decode_s` are both DERIVED IN FABRIC CYCLES against this key and both bands are exact integer cycle counts at 1 GHz -- fill/drain 16 / 32 / 128 cycles, sequencer 1 / 3 / 8 cycles -- while neither entry reads it. Moving this key without moving those two silently breaks their stated derivations, and those two ARE on the critical path of every token on both sides. `tools/run_roofline_studies.py` now REFUSES that inconsistency: the consistency audit recomputes both entries' cycle counts at this frequency and fails if either point or either band end stops being the cycle count its own note claims. THE ASAP7 EVIDENCE WAS CHECKED AGAINST THIS CONSTANT AND DOES NOT RETIRE IT. This repository holds three routed, timing-PASSING ASAP7 blocks: `results/physical_abi3/asap7/reduction_s8_g2/pnr.json` at a 2.25 ns period (fmax about 455 MHz), `.../add_bf16_sram_engine/pnr.json` at 4.4 ns (about 239 MHz) and `.../matmul_bf16_sram_engine/pnr.json` at 18.0 ns (57.959 MHz). None closes at 1 GHz. FIVE REASONS THEY DO NOT RETIRE THIS KEY, IN DESCENDING ORDER OF FORCE. (1) They are not evidence about this quantity at all: this key sets clock ENERGY, and those are fmax figures for three specific blocks. (2) THE 18 ns PERIOD IS NOT A FABRIC CLOCK. `rtl/ot_ta_matmul_bf16_sram_engine.sv` is a serial reference executor: one 16-bit SRAM read per request/wait pair, and a combinational `fp32_mul_rne` feeding `fp32_add_rne` inside ONE cycle, unpipelined and unretimed. That cycle does ONE multiply-accumulate at most, and the state machine spends two cycles per MAC, so the hypothesis that the block does N MACs per cycle and that 58 MHz x N is consistent with 1 GHz is FALSE IN THE OTHER DIRECTION -- the block is slower than one MAC per cycle, not faster. What 18 ns measures is an unpipelined FP32 fused multiply-add plus a nonfinite check, which is a property of RTL written for arithmetic clarity rather than for frequency. (3) THE RULE. `docs/METHODOLOGY.md` SS 9 and the W9 claim boundary in `docs/UNIFIED_EXECUTION_CHECKLIST.md` both state that no frequency, area or energy from a 130 nm OR PREDICTIVE-7 nm open PDK may be scaled to N6/N5/N7/N4. That is not the SKY130 prohibition in W8.3 being silently extended: it is a separate rule that names predictive-7 nm explicitly, and this repository's own ASAP7 artifact declares its evidence class as \"predictive open-PDK ... not a foundry PDK, not TSMC N7/N6/N5, not silicon\". (4) THE 18 ns IS THE ARITHMETIC PACKAGE, AND THIS REPOSITORY HAS ALREADY MEASURED THAT SEPARATELY AND ATTRIBUTED IT TO A CODING SHAPE. OI-44 in `docs/UNIFIED_EXECUTION_CHECKLIST.md` synthesised each operation alone as one combinational cloud between registers: on SKY130 HD `ot_fp32_rne_pkg::fp32_add_rne` needs a 66.97 ns period (`results/physical_abi3/sky130hd/a3_numeric_probes/fp32_add.json`) and `fp32_mul_rne` needs 29.385 ns (`.../fp32_mul.json`), and the cause is recorded there as a 27-iteration cancellation-normalisation loop -- \"a coding shape rather than a technology limit\". The matmul engine's one cycle chains exactly those two functions, so the ASAP7 period is that package's delay and not a fabric's. Two further facts from the routed artifact itself put the same point beyond argument: `place_and_route.metrics.macro_count` is 0 and `sequential_cell_count` is 8,879, so the 256-entry input buffer and the 64-entry accumulator and auxiliary buffers are synthesised as flip-flop arrays, and every operand in that critical path is read through a combinational 256:1 and 64:1 register-file mux before it reaches the multiplier. No shipping fabric clocks a datapath shaped like that, and the block was never written to be one -- its header says it exists for bounded data-bearing execution and exact arithmetic. (5) ASAP7 IS PESSIMISTIC AND THE DIRECTION IS KNOWN: it is a predictive academic library with no foundry characterisation, no custom datapath cells, no SRAM compiler and conservative wire models, and the three blocks above were synthesised by an open flow from RTL with no pipelining, no retiming and no floorplanning. A predictive-PDK number is not silicon and none of the five reasons above is an argument that 1 GHz is RIGHT -- only that this evidence cannot set it. THE VALUE AND THE BAND ARE THEREFORE UNCHANGED at 1.0 GHz swept 0.5-2.0 GHz, AND THE BAND IS NOT WIDENED DOWNWARD ON THIS EVIDENCE. Note the direction that widening would run: no rate depends on this key, so lowering it buys clock power for free and RAISES the ROM side's thermal headroom, while the GPU comparators' clocks are published and do not move. A band widened to the ASAP7 fmax would be a one-sided credit to the ROM side bought with a number the methodology forbids using. THE SENSITIVITY IS MEASURED RATHER THAN ARGUED: `results/roofline/*/analytical.json -> fabric_clock_sensitivity` re-runs the study at both band ends and at the ASAP7 figures, with the two cycle-derived latency constants moved consistently, and reports what each does to every headline. WHAT THIS KEY IS WORTH ON THE HC1 POWER GATE, and the HC1 clock negative is registered HERE because Taalas publishes none: 0.5 GHz gives 70.16 W, 1.0 GHz gives 70.16 W (the 50 W clocked-idle floor binds below about 1 GHz, so the term is INERT there) and 2.0 GHz gives 75.81 W, moving the gate from 0.2807x to 0.3032x. WHAT WOULD SETTLE IT: a published clock for any mask-ROM or compute-in-ROM inference die, or a foundry-PDK implementation of this program's own datapath at a target node.",
       "range_high": 2000000000.0,
       "range_low": 500000000.0,
-      "source": "no clock published for any mask-ROM or compute-in-ROM inference die; Taalas publishes no microarchitecture and no frequency",
+      "source": "no clock published for any mask-ROM or compute-in-ROM inference die; Taalas publishes no microarchitecture and no frequency (taalas.com, The Next Platform \"Clock speed information is not disclosed\", The Register, ServeTheHome, CNX, Wavect, Kaitchup, 13 Taalas patents with zero GHz/MHz hits, Hot Chips 2026 program, ISSCC 2026 advance program) ; checked against and NOT retired by this repository's routed ASAP7 blocks at results/physical_abi3/asap7/, which docs/METHODOLOGY.md SS 9 and the W9 claim boundary in docs/UNIFIED_EXECUTION_CHECKLIST.md (\"no frequency, area or energy from a 130 nm or predictive-7 nm open PDK may be scaled to N6/N5/N7/N4\") forbid scaling to a target node ; the 18 ns period is attributed to the arithmetic package by this repository's own SKY130 HD per-operation measurements at results/physical_abi3/sky130hd/a3_numeric_probes/",
       "value": 1000000000.0
     },
     "gpu_logic_area_fraction": {
@@ -829,11 +876,11 @@
       },
       "rom_array": {
         "grade": "assumed",
-        "note": "ZERO, DELIBERATELY, AND THIS IS AN UNDER-CHARGE ON THE ROM SIDE. The submitted companion of 0.006 W/mm2 of array was REFUTED AND REJECTED: the paragraph that derived the SRAM companion completely -- bits/mm2, off-device count, per-cell current, a 64 MB cross-check -- gave the ROM companion no cell density, no device count and no current, and 0.006 is the floor of its own reconstructed 0.006-0.03 bracket with nothing shown. Reconstructing it from this file's own primitives (24.07 Mbit/mm2 usable SRAM, rom.cell_to_sram_cell_area_ratio 0.2, rom.array_efficiency 0.70 against sram.array_efficiency 0.65, giving ~130 Mbit/mm2, with one off device per NOR mask-ROM cell against 3-4 in a 6T) gives 0.006-0.03 W/mm2, which is recorded as range_high so a reader can sweep it. It is held at zero rather than at that reconstruction because a companion nobody derived is not evidence. THE DIRECTION IS THE REASON THIS IS SAFE TO SHIP: the ROM array is most of a compute-in-ROM die, so charging it zero leakage makes the modelled ROM power LOWER and the Taalas HC1 power gate's residual LARGER. At the reconstruction's high end it would add roughly 18 W to HC1 -- reported as a sensitivity in the study, never as the value.",
-        "range_high": 0.03,
-        "range_low": 0.0,
-        "source": "no derivation survived verification; bracket reconstructed from rom.cell_to_sram_cell_area_ratio and rom.array_efficiency in this file against the verified SRAM companion",
-        "value": 0.0
+        "note": "6.7e-3 W per mm2 of ROM ARRAY at a 7 nm-class node. WAS ZERO, DELIBERATELY, AND ZERO IS NOT PHYSICAL. The reason zero was defensible is now gone: the previous note held it at zero because the submitted companion of 0.006 W/mm2 had no derivation, and \"a companion nobody derived is not evidence\". A derivation now exists and it is built entirely on this file's own entries, so it can be checked line by line: the verified SRAM companion 0.005 W/mm2 over 24.07e6 usable bits/mm2 at 0.8 V is 0.260 nA per 6T cell; over 4 off devices in a 6T that is 0.065 nA per device; a NOR mask-ROM cell has ONE off device, so at this file's own ROM capacity density of 129.63e6 bits/mm2 (0.027 um2 6T cell x 0.33 ratio / 0.52 array efficiency) the array leaks 0.065 nA x 129.63e6 x 0.8 V = 6.73e-3 W/mm2. It rests on five `assumed` entries and is graded accordingly. THE DERIVATION DECLINES TWO REAL ROM-FAVOURABLE CREDITS, which is why it is safe at the point: an array with no read-stability constraint may use HVT or long-channel devices for free, and roughly half of a via-programmed NOR array's cells have no bitline leakage path at all. Qualitative corroboration that ROM array leakage is not negligible: TOM's entire third contribution is power-gating inactive ROM banks, 25.813 W down to 5.33 W. DIRECTION AND WHERE IT BINDS: this is a straight charge against the ROM side and it favours the GPU. It moves the Taalas HC1 power gate by NOTHING -- HC1's static power is max(enumerated, clocked_idle_floor 50 W) and +2.3 W leaves the floor binding -- and it matters on the wafer-class designs, where a 50 W per-device floor cannot bind and 6.7e-3 W/mm2 over hundreds of thousands of mm2 is thousands of watts. Sweep 1.3e-3 to 2.6e-2; note that `range_high` moves DOWN 13% from the incumbent 0.03, because the band is now a bracket around a derived point rather than the ceiling of an undocumented reconstruction, and that 13% is the only part of this edit that runs in the ROM side's favour.",
+        "range_high": 0.026,
+        "range_low": 0.0013,
+        "source": "derived on this file's own entries: power.static_leakage_w_per_mm2.sram_array, sram.array_efficiency, nodes.N7.sram_hd_bitcell_um2, rom.cell_to_sram_cell_area_ratio and rom.array_efficiency, with one off device per NOR mask-ROM cell against four in a 6T ; qualitative corroboration from Guan et al., TOM, arXiv:2602.20662 (bank power gating 25.813 W -> 5.33 W)",
+        "value": 0.0067
       },
       "sram_array": {
         "grade": "assumed",
@@ -1015,9 +1062,9 @@
     },
     "taalas_hc1": {
       "batch_size": {
-        "grade": "assumed",
-        "note": "The figure is quoted per user, so batch is modelled as 1 for the anchor. On this model's ROM weight path the anchor rate is batch-independent for a dense model, so the assumption does not move the anchor; it does move the aggregate throughput and the SRAM KV area.",
-        "source": "not published by Taalas; checked taalas.com, CNX Software, Wavect and Kaitchup",
+        "grade": "published",
+        "note": "1 per chip, AND IT IS PUBLISHED -- the previous \"not published by Taalas\" was wrong and it forecloses the one correction that would have destroyed this gate. The launch deck footnote reads verbatim \"Taalas Llama 3.1 8B (BS=1 per chip, Run by Taalas Labs)\". STRUCK, IN THIS FILE AND WHEREVER ELSE IT APPEARS: \"On this model's ROM weight path the anchor rate is batch-independent for a dense model, so the assumption does not move the anchor.\" THAT SENTENCE IS FALSE UNDER EVERY POLICY. `src/opentallas/roofline.py` sets `engaged_weight_bytes = per_stream_bytes x effective_batch`, so under `per_stream` the weight path is 76.553 / 153.11 / 229.66 us at batch 1 / 2 / 3; under `batched` the weight path is flat but compute rises 76.553 -> 158.547 us instead. The measured sweep, run on an in-memory copy of this file at 2,048 context and 815 mm2 against the published 16,960 with a 0.5 tolerance floor: batch 1 gives 12,232.4 tok/s = 0.7213x PASS; batch 2 gives 6,317.0 = 0.3725x FAIL (`batched` 6,107.1 = 0.3601x, compute-bound); batch 3 gives 4,257.9 = 0.2511x; batch 4 is INFEASIBLE on area under `per_stream` and 0.0641x under `batched`; batch 8 is infeasible under both. `per_region` is bit-identical to `per_stream` at every batch, and with an 8-bit KV batch 4 becomes feasible at 0.1893x while batch 8 is still infeasible -- the qualitative result survives any KV precision. THE GATE'S PASS IS BOUGHT ENTIRELY BY BATCH 1, and batch 1 is what the vendor publishes, which is why this grade matters.",
+        "source": "Taalas launch deck footnote, verbatim \"Taalas Llama 3.1 8B (BS=1 per chip, Run by Taalas Labs)\", read at 3200 px on https://image.nextplatform.com/?imageId=4092506&width=3200 ; article https://www.nextplatform.com/compute/2026/02/19/taalas-etches-ai-models-onto-transistors-to-rocket-boost-inference/4092140",
         "value": 1.0
       },
       "die_area_mm2": {
@@ -1029,7 +1076,7 @@
       "execution_format": {
         "grade": "derived",
         "note": "canonical execution format 'w4a8'. Taalas publishes a custom 3-bit base type with a 3/6-bit mixture for weights; the activation width is not published and 8 bits is assumed. A model-specific ASIC freezes one datapath at manufacture, so the checkpoint's released BF16 arithmetic is NOT what this part executes and must not be priced at the BF16 roof.",
-        "source": "https://www.cnx-software.com/2026/02/22/taalas-hc1-hardwired-llama-3-1-8b-ai-accelerator-delivers-up-to-17000-tokens-s/",
+        "source": "Ljubisa Bajic, The path to ubiquitous AI, https://taalas.com/the-path-to-ubiquitous-ai/, 2026-02-19 (\"a custom 3-bit base data type ... combining 3-bit and 6-bit parameters\"); the activation width is not published anywhere and 8 bits is assumed",
         "value": 1.0
       },
       "execution_format_name": "w4a8",
@@ -1059,26 +1106,26 @@
       },
       "published_tokens_s_per_user": {
         "grade": "published",
-        "note": "16,960 tokens/s per user on Llama 3.1 8B at 1k input / 1k output. Every figure is self-run by Taalas; there is no MLPerf or third-party measurement, and the batch size is stated nowhere. The rounded '17k' on the product page is the same number.",
-        "source": "https://taalas.com/products/ ; docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md",
+        "note": "16,960 tokens/s per user on Llama 3.1 8B at 1k input / 1k output. THE FOUR DIGITS ARE ONLY ON THE CHART IMAGE: the data label on taalas.com/h-content/uploads/2026/02/graph.png reads 16960 (H200 230, B200 353, Groq 594, Sambanova 932, Cerebras 1981, Taalas HC1 16960); the product page's prose says only \"17k\", which a reader cannot check to four figures. Every figure is self-run by Taalas -- there is no MLPerf and no third-party measurement -- but the batch size IS published and is 1 per chip; see `batch_size`, whose previous \"stated nowhere\" was wrong. RESIDUAL RECORDED RATHER THAN HIDDEN: a sibling slide states 0.0625 ms per token, which is 16,000 tok/s, 6% below this figure.",
+        "source": "https://taalas.com/h-content/uploads/2026/02/graph.png (chart data label) ; prose secondary https://www.theregister.com/systems/2026/08/06/amd-acquires-ai-chip-startup-taalas-to-boost-inference-performance-by-etching-models-into-silicon/5284344 \"16,960 tokens a second\" ; docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md",
         "value": 16960.0
       },
       "transistors": {
         "grade": "published",
-        "note": "53 billion",
-        "source": "https://www.cnx-software.com/2026/02/22/taalas-hc1-hardwired-llama-3-1-8b-ai-accelerator-delivers-up-to-17000-tokens-s/",
+        "note": "53 billion. Primary vendor statement, on the same product page this file already cites for die area: \"TSMC 6nm | 815mm2 | 53B Transistor\". Corroborated by The Next Platform, \"53 billion transistors on the package\".",
+        "source": "https://taalas.com/products/",
         "value": 53000000000.0
       },
       "weight_amortization": {
         "grade": "assumed",
         "note": "HC1 is a compute-in-ROM part: Bajic describes one transistor storing four bits and doing the multiply for them. Llama-3.1-8B is dense, so every token engages the whole array and per_stream and per_region are the same machine here. Evaluating the anchor as 'batched' would model a MAC array the part does not have, which matters now that the floorplan depends on the policy.",
-        "source": "Taalas publishes no batch size and no microarchitecture",
+        "source": "US 2025/0123802 A1 and US 2025/0225198 A1, both assigned Taalas Inc., which describe output-parallelism per input and sequential passes -- i.e. `per_stream`. 13 US patents and applications are assigned to Taalas. REPLACES \"Taalas publishes no batch size and no microarchitecture\", BOTH HALVES OF WHICH ARE FALSE.",
         "value": "per_stream"
       },
       "weight_bits_per_parameter": {
         "grade": "assumed",
-        "note": "Taalas publishes a custom 3-bit base type with a mixture of 3-bit and 6-bit parameters but no mix ratio. 3.5 bits/parameter is the stated point; sweep 3.0 to 6.0.",
-        "source": "https://www.cnx-software.com/2026/02/22/taalas-hc1-hardwired-llama-3-1-8b-ai-accelerator-delivers-up-to-17000-tokens-s/",
+        "note": "Taalas publishes a custom 3-bit base type with a mixture of 3-bit and 6-bit parameters but no mix ratio; only the ratio is unpublished, the format itself is first-party. 3.5 bits/parameter is the stated point; sweep 3.0 to 6.0. CITATION REPAIRED: the CNX Software article previously cited here contains ZERO bit-width statements and could not support this entry.",
+        "source": "Ljubisa Bajic, The path to ubiquitous AI, https://taalas.com/the-path-to-ubiquitous-ai/, 2026-02-19: \"a custom 3-bit base data type ... combining 3-bit and 6-bit parameters\" ; secondary https://wavect.io/blog/taalas-hc1-llm-asic-review/",
         "value": 3.5
       },
       "weight_store": "rom"
@@ -1094,16 +1141,38 @@
   },
   "rom": {
     "array_efficiency": {
-      "grade": "assumed",
-      "note": "Taken above the SRAM array efficiency because a ROM macro carries no write drivers and no write-assist circuitry. Sweep 0.60 to 0.80.",
-      "source": "no published mask-ROM macro floorplan at a leading node",
-      "value": 0.7
+      "grade": "derived",
+      "note": "0.52 -- bit-cell area over macro area for a ROM macro at the depth this model builds. WAS 0.7 `assumed`, ABOVE the SRAM figure, on the rationale that \"a ROM macro carries no write drivers and no write-assist circuitry\". THAT RATIONALE IS BACKWARDS AND THE MEASUREMENT SAYS SO: on ROMA's own compiler figure the ROM array efficiency is BELOW the SRAM's at every instance depth -- 0.194 / 0.310 / 0.424 / 0.520 for ROM against 0.354 / 0.591 / 0.637 / 0.694 for SRAM at 1024 / 2048 / 4096 / 8192 x 64. The structural reason holds at any node: dropping the write path removes a small, dense part of the periphery while the decode, sense and repair budget is unchanged, so the array's fixed overhead is amortised over a SMALLER cell field, not a bigger one. 0.52 is the 8192x64 instance, the deepest ROMA publishes; nothing published reaches it at any smaller instance and depth alone moves ROM density by 1.23x, so this is the OPTIMISTIC end of what the source supports. MUST BE APPLIED IN ONE EDIT WITH `rom.cell_to_sram_cell_area_ratio`: the quotient 0.33 / 0.52 = 0.6408 is what the evidence actually fixes and changing one alone produces a density no source supports. Sweep 0.38-0.70: the low end is ROMA's 4096x64 instance neighbourhood, the high end is the incumbent, kept so a reader can see exactly what the incumbent was worth.",
+      "range_high": 0.7,
+      "range_low": 0.38,
+      "source": "Wang et al., ROMA, ASP-DAC 2026, doi:10.1109/ASP-DAC66049.2026.11420528, preprint arXiv:2503.12988: ROM macro 57.8 Mbit/mm2 at 8192x64 over 111.1 Mbit/mm2 of bare cells, bar values extracted from the figure's own SVG with each reproducing its printed label to three figures",
+      "value": 0.52
     },
     "cell_to_sram_cell_area_ratio": {
-      "grade": "assumed",
-      "note": "A contact/via-programmed NOR mask-ROM bit is one transistor with no write port, no write assist and no write redundancy, against a 6T SRAM bit. 1/6 to 1/4 brackets the plausible cell-area ratio; 1/5 is the stated point. This is the single most load-bearing assumption in the ROM capacity chain and must be swept.",
-      "source": "no fabricated leading-node mask-ROM bitcell has been published for this program",
-      "value": 0.2
+      "grade": "derived",
+      "note": "0.33 -- a via-programmed mask-ROM bit cell against a 6T SRAM bit cell at a 7 nm-class node. WAS 0.2 `assumed` WITH A PROSE-ONLY \"1/6 to 1/4\" SWEEP THAT NOTHING RAN AND THAT EXCLUDED THIS REPOSITORY'S OWN MEASUREMENT. Two defects are fixed together here. FIRST, THE VALUE: the only foundry-compiler statement at the modelled node is ROMA (Wang et al., ASP-DAC 2026) SS II-C, \"the area of the bit cell for the generated ROM is approximately one-third of that of the SRAM bit cell\", on a TSMC 7nm Memory Compiler -- one third, not one fifth. APPLY THIS ENTRY AND `rom.array_efficiency` IN ONE EDIT OR NOT AT ALL: what ROMA's figure actually fixes is the QUOTIENT ratio / array_efficiency = 0.6408, which with this file's published 0.027 um2 N7 6T cell gives ROM capacity density 57.8 Mbit/mm2 = 7.222 MB/mm2 against the 16.204 this file used to derive, a 2.243x correction AGAINST the ROM case. The 0.33 / 0.52 split rests on one sentence; the density does not. Record the instance depth: ROM 0.52 is ROMA's 8192x64 compiler instance and nothing published reaches it at any smaller instance -- depth alone moves ROM density by 1.23x. SECOND, THE SWEEP AND ITS NODE DEPENDENCE. THIS RATIO IS NOT NODE-STABLE AND THIS REPOSITORY HAS MEASURED THAT ITSELF: the via-programmed NOR ROM to 6T SRAM drawn-pitch-area ratio is 0.1298 at 130 nm (IHP SG13G2, `results/spice/ihp_sg13g2_bitcell/bitcell.json` -> `ratio.measured`) and 0.2500 at a predictive 7 nm FinFET node (ASAP7, `results/asap7_physical/bitcell_density/bitcell_density.json` -> `measurement.ratio_via_programmed_rom_to_sram`), which are 92.7% apart. `docs/METHODOLOGY.md` SS 9 forbids averaging, blending or interpolating those two and forbids labelling either an N7/N6/N5/N4 value, so neither is adopted as the point -- but the old 1/6-1/4 bracket EXCLUDED the 130 nm one outright, which meant the model's stated uncertainty did not contain a measurement this repository had already made and committed. THE BAND 0.11-0.33 NOW CONTAINS EVERY ROM-TO-SRAM CELL RATIO THIS REPOSITORY HOLDS: 0.11 (a simulated academic cell two nodes away, the lowest anyone claims), 0.125 (ASAP7 shared-source/drain topology), 0.1298 (IHP 130 nm, measured here), 0.25 (ASAP7 via-programmed, measured here) and 0.33 (ROMA's TSMC 7nm compiler sentence, the point). `tools/run_roofline_studies.py` now REFUSES a band that fails to contain either committed measurement, so this exclusion cannot come back silently. THIRD, THE NODE SPLIT, WHICH IS NOW DONE: `rom.cell_to_sram_cell_area_ratio_by_node` carries one entry per modelled ROM node and `tools/run_roofline_studies.py` substitutes the study's own node before any point is evaluated, refusing a node that is not named. THIS ENTRY IS NOW THE FALLBACK, NOT THE VALUE THE SWEEP USES: it survives because `src/opentallas/roofline.py:rom_bits_per_mm2` still reads it with no node argument and the Taalas HC1 gate path never goes through the substitution, and the audit REFUSES a by-node value that differs from this one until that one call takes the node it already has. FOURTH, THE BAND IS NOW EXECUTED: `rom_cell_ratio_sensitivity` in each study artifact re-runs the whole study at both band ends and at all three ratios this repository has measured. Declaring a range that nothing runs is the same defect as writing the bracket in prose, one field further along. Both 130 nm measurements above say a node-free ratio is wrong; the width of this band is the honest statement of how wrong. DIRECTION: the two ends of the band differ by 3.0x on ROM capacity density and the sign of that on the headline is NOT knowable from the band alone, because a less dense array is more ROM mm2 and therefore more parallel read bandwidth -- it must be settled by a re-run and a binding-constraint census, and it is.",
+      "range_high": 0.33,
+      "range_low": 0.11,
+      "source": "Wang et al., ROMA: a Read-Only-Memory-based Accelerator for QLoRA-based On-Device LLM, ASP-DAC 2026, doi:10.1109/ASP-DAC66049.2026.11420528, preprint arXiv:2503.12988, SS II-C (TSMC 7nm Memory Compiler) ; measured in this repository at two other nodes and reported side by side, never blended: results/spice/ihp_sg13g2_bitcell/bitcell.json (IHP SG13G2 130 nm, 0.1298) and results/asap7_physical/bitcell_density/bitcell_density.json (ASAP7 predictive 7 nm, 0.2500 via-programmed / 0.1250 shared source-drain)",
+      "value": 0.33
+    },
+    "cell_to_sram_cell_area_ratio_by_node": {
+      "N5": {
+        "grade": "derived",
+        "note": "N5 is the ROM node of the n5_vs_b200 study, compared against a B200 at 4NP. WHY THIS KEY IS NODE-ADDRESSED. This repository measured the via-programmed NOR ROM to 6T SRAM drawn-cell-area ratio at two nodes and got 0.1298 at 130 nm (IHP SG13G2, results/spice/ihp_sg13g2_bitcell/bitcell.json) against 0.2500 at a predictive 7 nm FinFET node (ASAP7, results/asap7_physical/bitcell_density/bitcell_density.json) -- 92.7% apart. A single node-free ratio applied at two modelled nodes was therefore a legal value with nothing to refuse it, which is this program's recurring defect shape, and docs/ROM_DENSITY_NODE_TRANSFER.md concluded in as many words that this key \"needs a per-node treatment, exactly as links.on_wafer was split into links.on_wafer and links.on_wafer_n5\". tools/run_roofline_studies.py reads the study's rom_node and substitutes the matching entry here into rom.cell_to_sram_cell_area_ratio before any point is evaluated; A NODE WITH NO ENTRY HERE IS REFUSED, NOT DEFAULTED. WHAT THE SPLIT DOES NOT BUY, STATED PLAINLY SO NOBODY READS PRECISION INTO IT: N6 AND N5 CARRY THE SAME POINT AND THE SAME BAND, AND THE SPLIT MOVES NO NUMBER TODAY. The only foundry-compiler statement at a 7 nm-class node is ROMA's one sentence, and nothing published, and nothing this repository has measured, distinguishes N6 from N5. What the split changes is that the value is now addressed by the node it is for, an unnamed node is refused, and a future N5-specific measurement can never again be applied silently at N6. DIRECTION, KNOWN BUT DELIBERATELY NOT TURNED INTO A NUMBER: this repository's own two measurements say the ratio RISES as the SRAM cell shrinks -- a 6T high-density cell is litho-limited and has largely stopped scaling while a via-programmed NOR cell stays pitch-limited -- so an N5 ratio should sit at or above an N6 one. docs/METHODOLOGY.md SS 9 forbids interpolating, scaling or blending the 130 nm and predictive-7 nm measurements to a target node, so that direction is recorded and is NOT converted into a per-node value. THE HAZARD THIS SPLIT DOES NOT CLOSE, AND THE REFUSAL THAT COVERS IT. src/opentallas/roofline.py:rom_bits_per_mm2 still calls graded(\"rom\", \"cell_to_sram_cell_area_ratio\") with no node argument even though it is already handed the node, and the validation-gate path (run_anchors -> taalas_hc1_anchor) never goes through the study's node substitution at all. So the day two entries here diverge, the sweep would price the ROM side at its node's ratio while the Taalas HC1 gate priced it at the flat one, and NOTHING WOULD SAY SO -- one comparison carrying two ROM densities is exactly the one-sided-correction defect this repository has already shipped once. The consistency audit in tools/run_roofline_studies.py therefore REFUSES any by-node value or band end that differs from the flat rom.cell_to_sram_cell_area_ratio until that one call takes the node it already has. THE BAND IS NOW EXECUTED, NOT MERELY DECLARED. The previous repair turned the prose-only \"1/6 to 1/4\" bracket into real range_low/range_high fields and made the audit refuse a band that excludes either committed measurement -- but nothing ever RE-RAN the study at those ends, so the stated uncertainty was still a claim rather than a result. results/roofline/*/analytical.json -> rom_cell_ratio_sensitivity now re-runs the whole study at both band ends and at all three ratios this repository has measured, reporting the chosen design, the ROM capacity density and the binding constraint on BOTH sides at each.",
+        "range_high": 0.33,
+        "range_low": 0.11,
+        "source": "Wang et al., ROMA: a Read-Only-Memory-based Accelerator for QLoRA-based On-Device LLM, ASP-DAC 2026, doi:10.1109/ASP-DAC66049.2026.11420528, preprint arXiv:2503.12988, SS II-C (TSMC 7nm Memory Compiler) ; measured in this repository at two other nodes and reported side by side, never blended: results/spice/ihp_sg13g2_bitcell/bitcell.json (IHP SG13G2 130 nm, 0.1298) and results/asap7_physical/bitcell_density/bitcell_density.json (ASAP7 predictive 7 nm, 0.2500 via-programmed / 0.1250 shared source-drain)",
+        "value": 0.33
+      },
+      "N6": {
+        "grade": "derived",
+        "note": "N6 is the ROM node of the n6_vs_a100 study and the node the Taalas HC1 anchor is built at, so this entry is also the one the HC1 floorplan gate is priced with. WHY THIS KEY IS NODE-ADDRESSED. This repository measured the via-programmed NOR ROM to 6T SRAM drawn-cell-area ratio at two nodes and got 0.1298 at 130 nm (IHP SG13G2, results/spice/ihp_sg13g2_bitcell/bitcell.json) against 0.2500 at a predictive 7 nm FinFET node (ASAP7, results/asap7_physical/bitcell_density/bitcell_density.json) -- 92.7% apart. A single node-free ratio applied at two modelled nodes was therefore a legal value with nothing to refuse it, which is this program's recurring defect shape, and docs/ROM_DENSITY_NODE_TRANSFER.md concluded in as many words that this key \"needs a per-node treatment, exactly as links.on_wafer was split into links.on_wafer and links.on_wafer_n5\". tools/run_roofline_studies.py reads the study's rom_node and substitutes the matching entry here into rom.cell_to_sram_cell_area_ratio before any point is evaluated; A NODE WITH NO ENTRY HERE IS REFUSED, NOT DEFAULTED. WHAT THE SPLIT DOES NOT BUY, STATED PLAINLY SO NOBODY READS PRECISION INTO IT: N6 AND N5 CARRY THE SAME POINT AND THE SAME BAND, AND THE SPLIT MOVES NO NUMBER TODAY. The only foundry-compiler statement at a 7 nm-class node is ROMA's one sentence, and nothing published, and nothing this repository has measured, distinguishes N6 from N5. What the split changes is that the value is now addressed by the node it is for, an unnamed node is refused, and a future N5-specific measurement can never again be applied silently at N6. DIRECTION, KNOWN BUT DELIBERATELY NOT TURNED INTO A NUMBER: this repository's own two measurements say the ratio RISES as the SRAM cell shrinks -- a 6T high-density cell is litho-limited and has largely stopped scaling while a via-programmed NOR cell stays pitch-limited -- so an N5 ratio should sit at or above an N6 one. docs/METHODOLOGY.md SS 9 forbids interpolating, scaling or blending the 130 nm and predictive-7 nm measurements to a target node, so that direction is recorded and is NOT converted into a per-node value. THE HAZARD THIS SPLIT DOES NOT CLOSE, AND THE REFUSAL THAT COVERS IT. src/opentallas/roofline.py:rom_bits_per_mm2 still calls graded(\"rom\", \"cell_to_sram_cell_area_ratio\") with no node argument even though it is already handed the node, and the validation-gate path (run_anchors -> taalas_hc1_anchor) never goes through the study's node substitution at all. So the day two entries here diverge, the sweep would price the ROM side at its node's ratio while the Taalas HC1 gate priced it at the flat one, and NOTHING WOULD SAY SO -- one comparison carrying two ROM densities is exactly the one-sided-correction defect this repository has already shipped once. The consistency audit in tools/run_roofline_studies.py therefore REFUSES any by-node value or band end that differs from the flat rom.cell_to_sram_cell_area_ratio until that one call takes the node it already has. THE BAND IS NOW EXECUTED, NOT MERELY DECLARED. The previous repair turned the prose-only \"1/6 to 1/4\" bracket into real range_low/range_high fields and made the audit refuse a band that excludes either committed measurement -- but nothing ever RE-RAN the study at those ends, so the stated uncertainty was still a claim rather than a result. results/roofline/*/analytical.json -> rom_cell_ratio_sensitivity now re-runs the whole study at both band ends and at all three ratios this repository has measured, reporting the chosen design, the ROM capacity density and the binding constraint on BOTH sides at each.",
+        "range_high": 0.33,
+        "range_low": 0.11,
+        "source": "Wang et al., ROMA: a Read-Only-Memory-based Accelerator for QLoRA-based On-Device LLM, ASP-DAC 2026, doi:10.1109/ASP-DAC66049.2026.11420528, preprint arXiv:2503.12988, SS II-C (TSMC 7nm Memory Compiler) ; measured in this repository at two other nodes and reported side by side, never blended: results/spice/ihp_sg13g2_bitcell/bitcell.json (IHP SG13G2 130 nm, 0.1298) and results/asap7_physical/bitcell_density/bitcell_density.json (ASAP7 predictive 7 nm, 0.2500 via-programmed / 0.1250 shared source-drain)",
+        "value": 0.33
+      }
     },
     "cim_cell_area_multiplier": {
       "grade": "assumed",
@@ -1113,22 +1182,24 @@
     },
     "cim_precompute_area_fraction": {
       "grade": "assumed",
-      "note": "fraction of die area a compute-in-ROM part spends on the pre-computation block that forms every product of one activation with the small weight alphabet. At 3-bit weights that is 8 values, built from shifts and carry-save adders, and it replaces the dedicated MAC array entirely. Small by construction, which is the point of the architecture.",
-      "source": "derived shape only: 2^b shift-add units per activation-broadcast region",
-      "value": 0.02
+      "note": "0.18 of a compute-in-ROM die spent on the block that forms every product of one activation with the small weight alphabet, and on the accumulation that follows it. WAS 0.02, and THE STRONGEST EVIDENCE AGAINST 0.02 IS INTERNAL AND CHECKABLE: `src/opentallas/roofline.py` sets `compute_mm2 = cim_precompute_area_fraction * total_mm2` and that is the ONLY compute area a compute-in-ROM die is given -- there is no accumulator, adder-tree or partial-product-sum line item anywhere in that branch, and the ROM macro's 30% periphery budget is documented as decoders, sense amps and redundancy. At 0.02 the model charges a compute-in-ROM machine essentially nothing for summing the partial products it selects, which is a floorplan no fabricated compute-in-ROM part is near. The external leg is TOM (Guan et al., arXiv:2602.20662), stated in text: \"The chip's total area is 56.9 mm2, with the majority (58%) allocated to our ... ROM. The on-chip SRAM ... and the distributed compute logic account for 24% and 18% of the area\". Sweep 0.08-0.27. DIRECTION: favours the GPU, and it COMPOUNDS with the 2.243x ROM capacity-density correction -- it moves about 16% of the die from array to compute, cutting ROM from about 68% to about 52% of a compute-in-ROM die, so a compute-in-ROM point that fits today needs roughly 2.9x more ROM silicon under both corrections together.",
+      "range_high": 0.27,
+      "range_low": 0.08,
+      "source": "Guan et al., TOM, arXiv:2602.20662, area breakdown stated in text (58% ROM / 24% SRAM / 18% distributed compute logic on a 56.9 mm2 die) ; and this repository's own compute-in-ROM area branch in src/opentallas/roofline.py, which allocates no accumulator area at all",
+      "value": 0.18
     },
     "cross_checks": [
       {
         "grade": "measured",
         "name": "fabricated 28 nm hybrid SRAM/ROM-CIM macro density",
-        "note": "8.928 Mbit/mm2 at 28 nm on fabricated silicon. It is a compute-in-memory macro, so its density is a lower bound on a pure storage ROM array. Scaled to N6 by the same published bitcell-area ratio this model uses elsewhere (4.70x) it gives 42.0 Mbit/mm2 = 5.2 MB/mm2, against the 16.2 MB/mm2 this model derives for a storage-only array -- consistent with a CIM macro spending most of its area on compute. Cross-check only; not an input.",
+        "note": "8.928 Mbit/mm2 at 28 nm on fabricated silicon. It is a compute-in-memory macro, so its density is a lower bound on a pure storage ROM array. Scaled to N6 by the same published bitcell-area ratio this model uses elsewhere (4.70x) it gives 42.0 Mbit/mm2 = 5.2 MB/mm2, against the 16.2 MB/mm2 this model derives for a storage-only array -- consistent with a CIM macro spending most of its area on compute. MULTI-LEVEL-CELL DISCLOSURE, WHICH THE PREVIOUS NOTE OMITTED: this macro stores 2 bits per cell (BitROM Table III), so its bit density is not a planar 1T-per-bit upper bound and must not be read as one. Cross-check only; not an input.",
         "source": "https://doi.org/10.1109/JSSC.2025.3556008",
         "value": 8928000.0
       },
       {
         "grade": "published",
         "name": "3D-METRO transistorless 3D-metal ROM density",
-        "note": "20.7 MB/mm2 from a simulated evaluation, not fabricated silicon. Upper cross-check on the 16.2 MB/mm2 this model derives at N6 for a planar array. Cross-check only; not an input.",
+        "note": "20.7 MB/mm2 from a simulated evaluation, not fabricated silicon. Upper cross-check on the 16.2 MB/mm2 this model derives at N6 for a planar array. AND IT IS A TRANSISTOR-LESS 3D METAL STACK, NOT A PLANAR ARRAY: its 165.6 Mb/mm2 is a 3D density and places no upper bound on a planar 1T-per-bit mask ROM, which is what this model builds. The A-SSCC 2024 19,660 kb/mm2 macro sometimes quoted alongside it is 4 bits per cell. Cross-check only; not an input.",
         "source": "https://doi.org/10.1145/3658617.3697570",
         "value": 20700000.0
       }
@@ -1169,9 +1240,11 @@
     },
     "read_bandwidth_scaling_rule": {
       "grade": "derived",
-      "note": "Read-bandwidth density is scaled by (anchor-node bitcell area / target-node bitcell area): the same macro throughput in proportionally less area. No clock-frequency bonus is applied on top. For 28 nm -> N6 this ratio is 4.70x, which corresponds to an effective density-scaling exponent of 1.005 on (28/6) -- the wire/periphery-limited CONSERVATIVE end of the 1.0-2.0 bracket documented in src/opentallas/technology.py. src/opentallas/technology.py documents 1.0-2.0 as the plausible exponent bracket; this rule sits at its conservative end.",
+      "note": "Read-bandwidth density is scaled by (anchor-node bitcell area / target-node bitcell area): the same macro throughput in proportionally less area. No clock-frequency bonus is applied on top. For 28 nm -> N6 this ratio is 4.70x, which corresponds to an effective density-scaling exponent of 1.005 on (28/6) -- the wire/periphery-limited CONSERVATIVE end of the 1.0-2.0 bracket documented in src/opentallas/technology.py. src/opentallas/technology.py documents 1.0-2.0 as the plausible exponent bracket; this rule sits at its conservative end. HOW THIS DENSITY COUPLES TO CELL AREA, DECLARED BECAUSE THE MODEL CURRENTLY ANSWERS IT TWO DIFFERENT WAYS ONE FUNCTION APART AND NOTHING COMPARED THEM. `cell_area_coupling` = \"none\": `src/opentallas/roofline.py:rom_read_bytes_s_per_mm2` does not read `rom.cell_to_sram_cell_area_ratio` at all, so moving that ratio scales CAPACITY density and leaves READ-BANDWIDTH density untouched -- measured at N6, 0.33 -> 0.11 takes capacity 7.295 -> 21.886 MB/mm2 while bandwidth stays 282.222 GB/s/mm2, and the full-array sweep therefore moves 25.85 -> 77.55 us, a 3.0x swing on the ROM lane's hard floor. `cim_cell_area_coupling` = \"proportional\": one function away, `rom_read_bytes_s_per_mm2_for` divides bandwidth density by `rom.cim_cell_area_multiplier` exactly as `rom_bits_per_mm2_for` divides capacity, and its own docstring gives the reason -- a larger cell means fewer cells per mm2 and \"no extra bitlines and no sense amps\", so the rate per mm2 falls in the same proportion the capacity does and THE SWEEP IS INVARIANT (25.85 us at both policies, measured). THESE TWO CANNOT BOTH BE RIGHT. Both constants are cell AREA and both sit in the same density chain: if a bigger compute-in-ROM cell costs bandwidth per mm2 because it adds no bitlines, then a bigger storage cell costs it for the same reason, and the sweep should be invariant to `cell_to_sram_cell_area_ratio` too. The opposite reading is defensible -- read bandwidth may be set by sense amps and IO that do not shrink with the bit cell, in which case bandwidth density really is roughly cell-size-independent and only capacity scales -- but the model does not get to hold both readings at once without saying which is which, and until this field existed it held both and said neither. NOTHING IS TUNED HERE AND NEITHER READING IS ADOPTED: the observed coupling of each constant is now MEASURED by the consistency audit in `tools/run_roofline_studies.py`, which refuses the file if either stops matching the string declared here. WHAT WOULD SETTLE IT: a published mask-ROM macro family at one node with two bit-cell pitches and its read bandwidth stated for both, or a routed ROM macro in this repository at two drawn pitches -- `results/spice/ihp_sg13g2_rom_macro/macro_route.json` is one pitch. THE FIX IS NOT IN A FILE THIS CHANGE OWNS: it is `src/opentallas/roofline.py:rom_read_bytes_s_per_mm2`, and it is reported rather than made, because choosing a reading without evidence would move the ROM side's hard floor by 3.0x on nothing.",
       "source": "published 6T HD bitcell areas at 28 nm and at the target node",
-      "value": "sram_hd_bitcell_area_ratio"
+      "value": "sram_hd_bitcell_area_ratio",
+      "cell_area_coupling": "none",
+      "cim_cell_area_coupling": "proportional"
     }
   },
   "schema_version": 1,

@@ -49,11 +49,54 @@ from opentallas.roofline import (  # noqa: E402
     taalas_hc1_anchor,
     taalas_hc1_power_anchor,
 )
-from opentallas.schema import ModelProfile  # noqa: E402
+from opentallas.schema import ModelProfile, ValidationError  # noqa: E402
 from opentallas.workload import kv_traffic  # noqa: E402
 
 
 TECHNOLOGY_PATH = ROOT / "configs" / "hardware" / "technology.json"
+
+#: The routed ASAP7 blocks this repository holds, read for the fabric-clock
+#: sensitivity below.  They are named here rather than transcribed: the
+#: sensitivity reads ``place_and_route.metrics.fmax_hz`` out of each artifact,
+#: so a re-run of the physical flow moves the sensitivity and no number in this
+#: file has to be edited by hand.  **These are predictive-PDK figures and
+#: `docs/METHODOLOGY.md` section 9 forbids scaling them to N6/N5/N7/N4** -- they
+#: appear here as a sensitivity a reader can see the size of, never as a value.
+ASAP7_ROUTED_BLOCKS = (
+    ("asap7_reduction_s8_g2", "results/physical_abi3/asap7/reduction_s8_g2/pnr.json"),
+    (
+        "asap7_add_bf16_sram_engine",
+        "results/physical_abi3/asap7/add_bf16_sram_engine/pnr.json",
+    ),
+    (
+        "asap7_matmul_bf16_sram_engine",
+        "results/physical_abi3/asap7/matmul_bf16_sram_engine/pnr.json",
+    ),
+)
+
+#: The two ROM-to-SRAM bit-cell area ratios this repository has MEASURED, at two
+#: nodes that disagree by 92.7%.  ``rom.cell_to_sram_cell_area_ratio``'s stated
+#: band must contain both: a sweep that excludes a measurement the same
+#: repository made is a sweep that has already been refuted, and the previous
+#: prose-only "1/6 to 1/4" bracket excluded the 130 nm one.  Checked by the
+#: consistency audit, which is the thing that should have refused it.
+MEASURED_ROM_CELL_RATIOS = (
+    (
+        "ihp_sg13g2_130nm",
+        "results/spice/ihp_sg13g2_bitcell/bitcell.json",
+        ("ratio", "measured"),
+    ),
+    (
+        "asap7_7nm_via_programmed",
+        "results/asap7_physical/bitcell_density/bitcell_density.json",
+        ("measurement", "ratio_via_programmed_rom_to_sram"),
+    ),
+    (
+        "asap7_7nm_shared_source_drain",
+        "results/asap7_physical/bitcell_density/bitcell_density.json",
+        ("measurement", "ratio_shared_sd_rom_to_sram"),
+    ),
+)
 OUTPUT_ROOT = ROOT / "results" / "roofline"
 ARTIFACTS = ("analytical.json", "sweep.csv", "REPORT.md")
 VARIANT_ARTIFACTS = ("analytical.json", "REPORT.md")
@@ -1087,12 +1130,27 @@ def _floorplan_comparison(
     sustain is the ROM read rate beside it.
     """
 
-    stored = model.total_parameters * 3.5 / BITS_PER_BYTE
+    # **Read from the register, never hard-coded.**  This was
+    # ``model.total_parameters * 3.5`` with a literal ``3.5`` emitted beside
+    # it, so if ``reference_parts.taalas_hc1.weight_bits_per_parameter`` ever
+    # moved -- and it is `assumed` with a stated 3.0-6.0 sweep, so it is meant
+    # to -- this artifact would silently keep reporting the old packing under
+    # the new entry's name.  That is a config-drift defect of exactly the class
+    # this program keeps finding: legal values, no trap, nothing refused.
+    weight_bits = technology.graded(
+        "reference_parts", "taalas_hc1", "weight_bits_per_parameter"
+    )
+    stored = model.total_parameters * weight_bits.value / BITS_PER_BYTE
     resident = 0.0
     out: dict[str, Any] = {
         "die_area_mm2": area_mm2,
         "stored_weight_bytes": stored,
-        "weight_bits_per_parameter": 3.5,
+        "weight_bits_per_parameter": weight_bits.value,
+        "weight_bits_per_parameter_grade": weight_bits.grade,
+        "weight_bits_per_parameter_source": (
+            "configs/hardware/technology.json#reference_parts.taalas_hc1."
+            "weight_bits_per_parameter"
+        ),
     }
     for policy in ("batched", "per_region"):
         budget = rom_device_budget(
@@ -1312,6 +1370,394 @@ def _link_latency_sensitivity(
                         "per_user_speed_ratio": row["per_user_speed_ratio"],
                     }
                 )
+    return rows
+
+
+def _model_technology(technology: Technology, model_name: str) -> Technology:
+    """This model's own serial matrix-pass depth, applied to BOTH sides.
+
+    ``latency.array_pass_boundaries_per_layer`` used to be one flat number for
+    every architecture, and it was **right for exactly one of the three models
+    in these studies**: Qwen3-8B's decoder layer really does have the four
+    serially dependent matrix passes the constant enumerates, so the constant
+    looked correct wherever anyone checked it.  DeepSeek-V4's layer has five --
+    the router's expert scores must exist before the expert matrices can be
+    selected and started -- and the flat value undercharged it by one pass on
+    every layer of every point.  That is the failure mode this repository keeps
+    finding: a legal value, no trap, nothing refused, and the wrong answer for
+    two of three models.
+
+    The fixed per-layer budget is charged to the GPU designs and the ROM
+    designs identically, so this is a **model** property and never a family
+    property, and returning one technology per model rather than per side is
+    what keeps it that way.
+
+    A model that is not named in the table is refused rather than defaulted:
+    silently falling back on the dense-block value is how the flat constant
+    survived in the first place.
+    """
+
+    block = technology.raw["latency"]
+    table = block.get("array_pass_boundaries_per_layer_by_model")
+    if not isinstance(table, dict):
+        raise ValidationError(
+            "latency.array_pass_boundaries_per_layer_by_model is missing; the "
+            "serial matrix-pass depth is a per-model quantity and this study "
+            "will not fall back on a single number for every architecture"
+        )
+    entry = table.get(model_name)
+    if not isinstance(entry, dict) or "value" not in entry:
+        raise ValidationError(
+            f"no latency.array_pass_boundaries_per_layer_by_model entry for "
+            f"{model_name!r}. Add one -- with its own grade, source and note "
+            f"-- rather than letting this model inherit another "
+            f"architecture's serial depth"
+        )
+    raw = json.loads(json.dumps(technology.raw))
+    raw["latency"]["array_pass_boundaries_per_layer"] = {
+        **raw["latency"]["array_pass_boundaries_per_layer"],
+        **entry,
+    }
+    return replace(technology, raw=raw)
+
+
+def _node_technology(technology: Technology, node: str) -> Technology:
+    """This node's own ROM-to-SRAM bit-cell area ratio, substituted before use.
+
+    ``rom.cell_to_sram_cell_area_ratio`` was ONE node-free number applied at
+    both modelled ROM nodes, and this repository had already measured that the
+    quantity is not node-stable: 0.1298 at 130 nm against 0.2500 at a
+    predictive 7 nm node, 92.7% apart.  ``docs/ROM_DENSITY_NODE_TRANSFER.md``
+    concluded that the key "needs a per-node treatment, exactly as
+    ``links.on_wafer`` was split into ``links.on_wafer`` and
+    ``links.on_wafer_n5``".  This is that treatment, in the shape the sibling
+    split already has: the study names its node, the node names its value, and
+    **a node with no entry is refused rather than defaulted**, because
+    inheriting another node's ratio silently is exactly how the flat one
+    survived.
+
+    It moves no number today and that is stated in the entries themselves: N6
+    and N5 carry the same point and the same band, because nothing published
+    and nothing measured here distinguishes them, and ``docs/METHODOLOGY.md``
+    section 9 forbids interpolating the two measured nodes to a target one.
+    What it changes is that the value is addressed by the node it is for.
+    """
+
+    block = technology.raw["rom"]
+    table = block.get("cell_to_sram_cell_area_ratio_by_node")
+    if not isinstance(table, dict):
+        raise ValidationError(
+            "rom.cell_to_sram_cell_area_ratio_by_node is missing; the "
+            "ROM-to-SRAM cell area ratio is a per-node quantity -- this "
+            "repository measured it 92.7% apart at two nodes -- and this "
+            "study will not fall back on one node-free number"
+        )
+    entry = table.get(node)
+    if not isinstance(entry, dict) or "value" not in entry:
+        raise ValidationError(
+            f"no rom.cell_to_sram_cell_area_ratio_by_node entry for {node!r}. "
+            f"Add one -- with its own grade, source, note and band -- rather "
+            f"than letting this node inherit another node's bit-cell ratio"
+        )
+    raw = json.loads(json.dumps(technology.raw))
+    raw["rom"]["cell_to_sram_cell_area_ratio"] = {
+        **raw["rom"]["cell_to_sram_cell_area_ratio"],
+        **entry,
+    }
+    return replace(technology, raw=raw)
+
+
+def _fabric_clock_variant(technology: Technology, hz: float) -> Technology:
+    """A copy at a different fabric clock, with the cycle-derived terms moved.
+
+    ``power.fabric_clock_hz`` sets no rate: it is read once, in
+    ``Technology.clock_frequency_hz``, and consumed once, in the clock leg of
+    ``device_static_power``.  **But two entries in the ``latency`` block are
+    derived in fabric cycles against it** -- ``pipeline_fill_drain_s`` is 32
+    cycles and ``sequencer_issue_decode_s`` is 3, with both bands exact integer
+    cycle counts -- and neither of them READS it.  Moving the clock on its own
+    therefore leaves two constants asserting a derivation that has stopped
+    being true, and those two are on the critical path of every token on both
+    sides.
+
+    This function moves all three together, which is the only way the question
+    "what is this constant worth" has an answer that means anything.  The
+    consistency audit refuses the committed file if they ever drift apart.
+    """
+
+    raw = json.loads(json.dumps(technology.raw))
+    raw["power"]["fabric_clock_hz"] = {
+        **raw["power"]["fabric_clock_hz"],
+        "value": hz,
+    }
+    for name in ("pipeline_fill_drain_s", "sequencer_issue_decode_s"):
+        entry = raw["latency"][name]
+        cycles = entry["derived_in_fabric_cycles"]
+        raw["latency"][name] = {
+            **entry,
+            "value": cycles["value"] / hz,
+            "range_low": cycles["range_low"] / hz,
+            "range_high": cycles["range_high"] / hz,
+        }
+    return replace(technology, raw=raw)
+
+
+def _fabric_clock_points(technology: Technology) -> list[dict[str, Any]]:
+    """Every clock the sensitivity is evaluated at, and where it comes from."""
+
+    entry = technology.raw["power"]["fabric_clock_hz"]
+    points = [
+        {
+            "label": "band_low",
+            "fabric_clock_hz": float(entry["range_low"]),
+            "provenance": "power.fabric_clock_hz.range_low",
+            "within_stated_band": True,
+        },
+        {
+            "label": "stated",
+            "fabric_clock_hz": float(entry["value"]),
+            "provenance": "power.fabric_clock_hz.value",
+            "within_stated_band": True,
+        },
+        {
+            "label": "band_high",
+            "fabric_clock_hz": float(entry["range_high"]),
+            "provenance": "power.fabric_clock_hz.range_high",
+            "within_stated_band": True,
+        },
+    ]
+    for label, relative in ASAP7_ROUTED_BLOCKS:
+        artifact = ROOT / relative
+        payload = json.loads(artifact.read_text(encoding="utf-8"))
+        hz = float(payload["place_and_route"]["metrics"]["fmax_hz"])
+        points.append(
+            {
+                "label": label,
+                "fabric_clock_hz": hz,
+                "provenance": f"{relative}#place_and_route.metrics.fmax_hz",
+                "within_stated_band": (
+                    float(entry["range_low"]) <= hz <= float(entry["range_high"])
+                ),
+                "claim_boundary": (
+                    "ASAP7 is a PREDICTIVE academic PDK, not a foundry PDK and "
+                    "not silicon, and docs/METHODOLOGY.md section 9 forbids "
+                    "scaling a frequency from it to N6/N5/N7/N4. This row is "
+                    "the size of a question, not a value: it says what the "
+                    "study would do if the fabric clock were as slow as an "
+                    "unpipelined open-flow implementation of one ABI 3.0 "
+                    "engine, and it may not be quoted as a target-node clock."
+                ),
+            }
+        )
+    return points
+
+
+def _fabric_clock_sensitivity(
+    study_id: str, technology: Technology
+) -> list[dict[str, Any]]:
+    """The headline table at every fabric clock, with the cycle terms moved.
+
+    Written because the constant was read as setting the compute roof, which it
+    does not, while the place it *is* load-bearing -- two latency constants
+    stated in fabric cycles that never read it -- had nothing measuring it.
+    """
+
+    rows: list[dict[str, Any]] = []
+    for point in _fabric_clock_points(technology):
+        variant = _fabric_clock_variant(technology, point["fabric_clock_hz"])
+        result = _simulate_study(study_id, variant, with_sensitivity=False)
+        fixed = layer_fixed_latency(
+            variant, ModelProfile.load(STUDY_MODELS[0][1])
+        )[0]
+        for row in _headline_rows(result):
+            rows.append(
+                {
+                    **{
+                        key: point[key]
+                        for key in ("label", "fabric_clock_hz", "provenance",
+                                    "within_stated_band")
+                    },
+                    "qwen3_8b_layer_fixed_latency_s_per_token": fixed,
+                    "model": row["model"],
+                    "rom_silicon_area_mm2": row["rom_silicon_area_mm2"],
+                    "rom_design": row["rom_design"],
+                    "rom_per_user_tokens_s": row["rom_per_user_tokens_s"],
+                    "rom_binding_constraint": row["rom_binding_constraint"],
+                    "iso_area_gpu_design": row["iso_area_gpu_design"],
+                    "iso_area_gpu_per_user_tokens_s": (
+                        row["iso_area_gpu_per_user_tokens_s"]
+                    ),
+                    "iso_area_gpu_binding_constraint": (
+                        row["iso_area_gpu_binding_constraint"]
+                    ),
+                    "per_user_speed_ratio": row["per_user_speed_ratio"],
+                }
+            )
+    return rows
+
+
+def _observed_ratio_coupling(technology: Technology, node: str) -> str:
+    """Does ROM read-bandwidth density actually follow the storage cell ratio?
+
+    Measured, not read off the source: halve the ratio and look at what the
+    model returns.  ``"proportional"`` if bandwidth density tracks capacity
+    density, ``"none"`` if it does not move at all.
+    """
+
+    halved = _rom_cell_ratio_variant(
+        technology,
+        float(technology.raw["rom"]["cell_to_sram_cell_area_ratio"]["value"]) / 2.0,
+    )
+    before = technology.rom_read_bytes_s_per_mm2(node).value
+    after = halved.rom_read_bytes_s_per_mm2(node).value
+    return "none" if math.isclose(before, after, rel_tol=1e-9) else "proportional"
+
+
+def _observed_cim_coupling(technology: Technology, node: str) -> str:
+    """The same question asked of the compute-in-ROM cell multiplier."""
+
+    storage = technology.rom_read_bytes_s_per_mm2_for(node, "native").value
+    cim = technology.rom_read_bytes_s_per_mm2_for(node, "per_region").value
+    return "none" if math.isclose(storage, cim, rel_tol=1e-9) else "proportional"
+
+
+def _rom_cell_ratio_variant(technology: Technology, ratio: float) -> Technology:
+    """A copy at a different ROM-to-SRAM bit-cell area ratio.
+
+    Writes the flat key AND every per-node entry, for two reasons.  The flat
+    key is what ``src/opentallas/roofline.py:rom_bits_per_mm2`` reads and what
+    the Taalas HC1 gate path is priced with; the per-node entries are what
+    ``_node_technology`` substitutes on the way into a study.  Moving one and
+    not the other would price the sweep at one ratio and the anchor at another
+    inside a single artifact, which is the shape of the one-sided correction
+    this repository has already shipped once.
+    """
+
+    raw = json.loads(json.dumps(technology.raw))
+    raw["rom"]["cell_to_sram_cell_area_ratio"] = {
+        **raw["rom"]["cell_to_sram_cell_area_ratio"],
+        "value": ratio,
+    }
+    table = raw["rom"].get("cell_to_sram_cell_area_ratio_by_node")
+    if isinstance(table, dict):
+        for node_name, entry in table.items():
+            table[node_name] = {**entry, "value": ratio}
+    return replace(technology, raw=raw)
+
+
+def _rom_cell_ratio_points(technology: Technology) -> list[dict[str, Any]]:
+    """Every ROM cell ratio the sensitivity is evaluated at, and its provenance.
+
+    Both band ends, the stated point, and **all three ratios this repository
+    has measured itself**, read out of the committed artifacts rather than
+    typed here, so re-running either physical campaign moves this sweep.
+    """
+
+    entry = technology.raw["rom"]["cell_to_sram_cell_area_ratio"]
+    low = float(entry["range_low"])
+    high = float(entry["range_high"])
+    points = [
+        {
+            "label": "band_low",
+            "cell_to_sram_cell_area_ratio": low,
+            "provenance": "rom.cell_to_sram_cell_area_ratio.range_low",
+            "within_stated_band": True,
+        },
+        {
+            "label": "stated",
+            "cell_to_sram_cell_area_ratio": float(entry["value"]),
+            "provenance": "rom.cell_to_sram_cell_area_ratio.value",
+            "within_stated_band": True,
+        },
+        {
+            "label": "band_high",
+            "cell_to_sram_cell_area_ratio": high,
+            "provenance": "rom.cell_to_sram_cell_area_ratio.range_high",
+            "within_stated_band": True,
+        },
+    ]
+    for label, relative, path in MEASURED_ROM_CELL_RATIOS:
+        payload: Any = json.loads((ROOT / relative).read_text(encoding="utf-8"))
+        for key in path:
+            payload = payload[key]
+        ratio = float(payload)
+        points.append(
+            {
+                "label": f"measured_{label}",
+                "cell_to_sram_cell_area_ratio": ratio,
+                "provenance": f"{relative}#{'.'.join(path)}",
+                "within_stated_band": low <= ratio <= high,
+                "claim_boundary": (
+                    "Measured in this repository at a node that is NOT the "
+                    "node this study models. docs/METHODOLOGY.md section 9 "
+                    "forbids scaling, blending or interpolating a 130 nm or "
+                    "predictive-7 nm open-PDK figure to N6/N5/N7/N4, so this "
+                    "row is the size of a question and never a value: it says "
+                    "what the study would do if the ratio at the target node "
+                    "turned out to be the one measured there."
+                ),
+            }
+        )
+    return points
+
+
+def _rom_cell_ratio_sensitivity(
+    study_id: str, technology: Technology
+) -> list[dict[str, Any]]:
+    """The headline table at every ROM bit-cell ratio in the stated band.
+
+    Written because the band was DECLARED and never RUN.  The previous repair
+    turned a prose-only "1/6 to 1/4" bracket into real ``range_low`` /
+    ``range_high`` fields and made the audit refuse a band excluding either
+    committed measurement -- but nothing re-ran the study at those ends, so the
+    stated uncertainty was still a claim about the model rather than a result
+    from it.  A range that nothing executes is the same defect as a bracket in
+    prose, one field further along.
+
+    **This term is one-sided by construction and that is not a fairness
+    breach**: the GPU comparators hold no mask ROM, so the ratio cannot reach
+    them.  What must therefore be read off this table is not a ratio-to-ratio
+    difference but the ROM side's own span, which is reported here alongside
+    the binding constraint on BOTH sides at every point -- a less dense array
+    is more ROM silicon and therefore more parallel read bandwidth, so the sign
+    of this sweep on the headline is not knowable from the band alone.
+    """
+
+    node = str(STUDIES[study_id]["rom_node"])
+    rows: list[dict[str, Any]] = []
+    for point in _rom_cell_ratio_points(technology):
+        variant = _rom_cell_ratio_variant(
+            technology, point["cell_to_sram_cell_area_ratio"]
+        )
+        result = _simulate_study(study_id, variant, with_sensitivity=False)
+        capacity = variant.rom_bits_per_mm2(node).value / BITS_PER_BYTE
+        sweep_s = _rom_sweep_time_s(variant, node)
+        for row in _headline_rows(result):
+            rows.append(
+                {
+                    **{
+                        key: point[key]
+                        for key in ("label", "cell_to_sram_cell_area_ratio",
+                                    "provenance", "within_stated_band")
+                    },
+                    "rom_node": node,
+                    "rom_capacity_bytes_per_mm2": capacity,
+                    "rom_full_array_sweep_s": sweep_s,
+                    "model": row["model"],
+                    "rom_silicon_area_mm2": row["rom_silicon_area_mm2"],
+                    "rom_design": row["rom_design"],
+                    "rom_per_user_tokens_s": row["rom_per_user_tokens_s"],
+                    "rom_binding_constraint": row["rom_binding_constraint"],
+                    "iso_area_gpu_design": row["iso_area_gpu_design"],
+                    "iso_area_gpu_per_user_tokens_s": (
+                        row["iso_area_gpu_per_user_tokens_s"]
+                    ),
+                    "iso_area_gpu_binding_constraint": (
+                        row["iso_area_gpu_binding_constraint"]
+                    ),
+                    "per_user_speed_ratio": row["per_user_speed_ratio"],
+                }
+            )
     return rows
 
 
@@ -1811,6 +2257,11 @@ def _simulate_study(
     )
     representation_override = config.get("representation")
     node = str(config["rom_node"])
+    # The ROM bit-cell ratio is a per-node quantity and this study runs at one
+    # node.  Substituted here, before ANY term is derived, so that the whole
+    # artifact -- densities, designs, sweeps, sensitivities -- is priced at one
+    # ratio.  Refuses a node it has no entry for.
+    technology = _node_technology(technology, node)
     hbm_generation = str(config["hbm_generation"])
     reticle_area = technology.graded("reticle", "area_mm2").value
     wafer_area = technology.graded("wafer", "area_mm2").value
@@ -1831,6 +2282,7 @@ def _simulate_study(
 
     for model_name, model_path, context in study_models:
         model = ModelProfile.load(model_path)
+        model_technology = _model_technology(technology, model.name)
         kv = kv_traffic(model, context)
         model_summaries.append(
             {
@@ -1861,8 +2313,8 @@ def _simulate_study(
                     for group in model.attention_groups
                     if group.kind == "compressed_sparse"
                 ),
-                "layer_fixed_latency": layer_fixed_latency(technology, model)[1],
-                "per_region_sizing": _per_region_sizing(technology, model, node),
+                "layer_fixed_latency": layer_fixed_latency(model_technology, model)[1],
+                "per_region_sizing": _per_region_sizing(model_technology, model, node),
             }
         )
 
@@ -1872,7 +2324,7 @@ def _simulate_study(
             else _representations(model)
         ):
             stored = _rom_stored_bytes(model, bits)
-            execution = _execution_format(technology, bits, model)
+            execution = _execution_format(model_technology, bits, model)
             for kv_store in ("sram", "hbm"):
                 provision_batch = (
                     DESIGN_BATCH if kv_store == "sram" else PROVISION_BATCH
@@ -1903,7 +2355,7 @@ def _simulate_study(
                     sized: dict[str, tuple[int, list[dict[str, Any]]]] = {}
                     for plan, area_per_device in fabric_plans:
                         devices, sweep = _size_array(
-                            technology,
+                            model_technology,
                             model,
                             node=node,
                             area_per_device=area_per_device,
@@ -1997,7 +2449,7 @@ def _simulate_study(
                             ):
                                 continue
                             _emit_rom_design(
-                                technology,
+                                model_technology,
                                 model,
                                 designs=designs,
                                 points=points,
@@ -2039,7 +2491,7 @@ def _simulate_study(
             counts: dict[int, str] = {}
             for area in rom_areas:
                 counts.setdefault(
-                    _iso_area_gpu_counts(technology, part, area),
+                    _iso_area_gpu_counts(model_technology, part, area),
                     f"iso-area with {area:,.0f} mm2 of ROM silicon",
                 )
             # A fixed area ladder, independent of which ROM design the sizing
@@ -2052,7 +2504,7 @@ def _simulate_study(
             for wafers in GPU_AREA_LADDER:
                 area = wafer_area * wafers
                 counts.setdefault(
-                    _iso_area_gpu_counts(technology, part, area),
+                    _iso_area_gpu_counts(model_technology, part, area),
                     f"area ladder: {wafers} wafer-equivalent"
                     f"{'s' if wafers > 1 else ''} of silicon ({area:,.0f} mm2)",
                 )
@@ -2073,13 +2525,13 @@ def _simulate_study(
                 else "official_packed"
             )
             gpu_execution = (
-                _execution_format(technology, gpu_bits, model)
+                _execution_format(model_technology, gpu_bits, model)
                 if gpu_bits is not None
                 else None
             )
             gpu_stored_bytes = _rom_stored_bytes(model, gpu_bits)
             minimum = _minimum_gpu_count(
-                technology,
+                model_technology,
                 part,
                 stored_weight_bytes=gpu_stored_bytes,
                 resident_kv_bytes=kv.storage_bytes_per_user * PROVISION_BATCH,
@@ -2122,7 +2574,7 @@ def _simulate_study(
                     )
                     design_id = f"{_model_tag(model)}/{part}-x{count}{suffix}"
                     budget = gpu_device_budget(
-                        technology, part=part, topology=topology, name=design_id
+                        model_technology, part=part, topology=topology, name=design_id
                     )
                     designs.append(
                         {
@@ -2167,7 +2619,7 @@ def _simulate_study(
                     )
                     if count > 1:
                         crossovers.append(
-                            _crossover_row(design_id, model, topology, technology)
+                            _crossover_row(design_id, model, topology, model_technology)
                         )
                     for batch in BATCHES:
                         step = evaluate(
@@ -2175,7 +2627,7 @@ def _simulate_study(
                             model,
                             context_tokens=context,
                             batch_size=batch,
-                            technology=technology,
+                            technology=model_technology,
                             weight_bits_per_parameter=gpu_bits,
                             execution_format=gpu_execution,
                         )
@@ -2206,7 +2658,7 @@ def _simulate_study(
                                 intra_domain_size=max(
                                     1,
                                     int(
-                                        technology.link_domain_size(
+                                        model_technology.link_domain_size(
                                             domain_sensitivity_link
                                         ).value
                                     ),
@@ -2215,7 +2667,7 @@ def _simulate_study(
                                     max(
                                         1,
                                         int(
-                                            technology.link_domain_size(
+                                            model_technology.link_domain_size(
                                                 domain_sensitivity_link
                                             ).value
                                         ),
@@ -2224,7 +2676,7 @@ def _simulate_study(
                                     else topology.tensor_group_size
                                 ),
                             )
-                            wide_link, _detail, _payload = technology.link_time_s(
+                            wide_link, _detail, _payload = model_technology.link_time_s(
                                 wide,
                                 model.num_layers,
                                 activation_bytes=(
@@ -2756,6 +3208,16 @@ def _simulate_study(
             if with_sensitivity
             else []
         ),
+        "fabric_clock_sensitivity": (
+            _fabric_clock_sensitivity(study_id, technology)
+            if with_sensitivity
+            else []
+        ),
+        "rom_cell_ratio_sensitivity": (
+            _rom_cell_ratio_sensitivity(study_id, technology)
+            if with_sensitivity
+            else []
+        ),
         "topology_choices": topology_choices,
         "gpu_topology_choices": gpu_topology_choices,
         "amortization_fork": amortization_fork,
@@ -2765,7 +3227,7 @@ def _simulate_study(
     result["latency_correction_ladder"] = _latency_correction_ladder(result)
     result["power_and_energy"] = _power_and_energy(result)
     result["design_selection"] = _design_selection(result, study_models)
-    result["consistency_audit"] = _consistency_audit(result)
+    result["consistency_audit"] = _consistency_audit(result, technology)
     return result
 
 
@@ -3160,7 +3622,255 @@ def _latency_correction_ladder(result: dict[str, Any]) -> list[dict[str, Any]]:
     return rows
 
 
-def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
+def _audit_technology(
+    technology: Technology,
+    result: dict[str, Any],
+    check: Any,
+) -> None:
+    """Refusals on the CONFIG, not on the generated arithmetic.
+
+    Everything else in this audit checks that the numbers this file produced
+    are consistent with each other.  These three check that the constants they
+    were produced from are consistent with the evidence and with each other,
+    because that is where this program's silent defects have actually lived: a
+    legal value, no trap, nothing refused, and a wrong answer.
+
+    1. **The fabric clock and the two constants derived in fabric cycles.**
+       ``power.fabric_clock_hz`` is read in exactly one place and consumed in
+       exactly one -- the clock leg of the static-power term -- so it sets no
+       rate and a reader may reasonably conclude it is inert.  It is not:
+       ``latency.pipeline_fill_drain_s`` and
+       ``latency.sequencer_issue_decode_s`` state their values and both band
+       ends as integer fabric-cycle counts against it, and **neither reads
+       it**.  Move the clock alone and those two notes become false while the
+       model keeps running, and those two are on the critical path of every
+       token on both sides.  This refuses that.
+
+    2. **The ROM cell-ratio band against this repository's own measurements.**
+       ``rom.cell_to_sram_cell_area_ratio`` carried a prose-only "1/6 to 1/4"
+       sweep that nothing ran and that *excluded* the 0.1298 this repository
+       measured at 130 nm.  A stated uncertainty that does not contain a
+       measurement the same repository committed has already been refuted; it
+       just had nothing to refuse it.
+
+    3. **Every model the study runs has its own serial matrix-pass depth.**
+       ``_model_technology`` refuses at simulation time; this says so again in
+       the artifact, where a reader looks.
+    """
+
+    latency = technology.raw["latency"]
+    clock = float(technology.raw["power"]["fabric_clock_hz"]["value"])
+    for name in ("pipeline_fill_drain_s", "sequencer_issue_decode_s"):
+        entry = latency.get(name, {})
+        cycles = entry.get("derived_in_fabric_cycles")
+        check(
+            isinstance(cycles, dict),
+            f"latency.{name} states its value in fabric cycles in its note but "
+            f"carries no machine-readable derived_in_fabric_cycles field, so "
+            f"nothing can check it against power.fabric_clock_hz",
+        )
+        if not isinstance(cycles, dict):
+            continue
+        for key in ("value", "range_low", "range_high"):
+            check(
+                math.isclose(
+                    float(entry[key]) * clock, float(cycles[key]), rel_tol=1e-9
+                ),
+                f"latency.{name}.{key} is {entry[key]!r} s, which is "
+                f"{float(entry[key]) * clock:.6g} cycles at the "
+                f"power.fabric_clock_hz of {clock:,.0f} Hz, not the "
+                f"{cycles[key]!r} its own derivation claims. The fabric clock "
+                f"and the terms derived in fabric cycles have drifted apart; "
+                f"move them together or restate the derivation.",
+            )
+
+    ratio = technology.raw["rom"]["cell_to_sram_cell_area_ratio"]
+    low = ratio.get("range_low")
+    high = ratio.get("range_high")
+    check(
+        low is not None and high is not None,
+        "rom.cell_to_sram_cell_area_ratio states no range_low/range_high, so "
+        "its own note's instruction that it 'must be swept' is prose that "
+        "nothing can execute",
+    )
+    for label, relative, path in MEASURED_ROM_CELL_RATIOS:
+        artifact = ROOT / relative
+        check(
+            artifact.is_file(),
+            f"rom.cell_to_sram_cell_area_ratio is checked against {relative}, "
+            f"which is not in the repository",
+        )
+        if not artifact.is_file() or low is None or high is None:
+            continue
+        payload: Any = json.loads(artifact.read_text(encoding="utf-8"))
+        for key in path:
+            payload = payload[key]
+        measured = float(payload)
+        check(
+            float(low) <= measured <= float(high),
+            f"rom.cell_to_sram_cell_area_ratio sweeps "
+            f"{float(low):.4f}-{float(high):.4f}, which EXCLUDES the "
+            f"{measured:.4f} this repository measured itself at {label} "
+            f"({relative}). A sweep that does not contain a measurement we "
+            f"made is not an honest statement of what is unknown.",
+        )
+
+    # -- the per-node split, and the divergence it is not yet allowed to have
+    by_node = technology.raw["rom"].get("cell_to_sram_cell_area_ratio_by_node")
+    check(
+        isinstance(by_node, dict) and bool(by_node),
+        "rom.cell_to_sram_cell_area_ratio_by_node is missing or empty. This "
+        "repository measured the ROM-to-SRAM cell ratio 92.7% apart at two "
+        "nodes, so one node-free number applied at every modelled node is a "
+        "legal value with nothing to refuse it.",
+    )
+    if isinstance(by_node, dict):
+        for study_config in STUDIES.values():
+            rom_node = str(study_config["rom_node"])
+            check(
+                rom_node in by_node,
+                f"no rom.cell_to_sram_cell_area_ratio_by_node entry for "
+                f"{rom_node}, which is a ROM node this program runs a study "
+                f"at. No node may inherit another node's bit-cell ratio.",
+            )
+        for node_name, node_entry in by_node.items():
+            for key in ("value", "range_low", "range_high"):
+                # THE TRAP.  ``src/opentallas/roofline.py:rom_bits_per_mm2``
+                # still reads the FLAT key with no node argument, and the
+                # Taalas HC1 gate path never goes through ``_node_technology``
+                # at all.  So a by-node value that differs from the flat one
+                # would price the sweep at one ROM density and the anchor at
+                # another, inside one artifact, with nothing saying so.  Until
+                # that one call takes the node it is already handed, the split
+                # is allowed to ADDRESS the value by node and not to CHANGE it.
+                check(
+                    math.isclose(
+                        float(node_entry[key]),
+                        float(ratio[key]),
+                        rel_tol=1e-12,
+                    ),
+                    f"rom.cell_to_sram_cell_area_ratio_by_node.{node_name}."
+                    f"{key} is {node_entry[key]!r} but the flat "
+                    f"rom.cell_to_sram_cell_area_ratio.{key} is {ratio[key]!r}. "
+                    f"They may not diverge yet: "
+                    f"src/opentallas/roofline.py:rom_bits_per_mm2 reads the "
+                    f"flat key with no node argument and run_anchors -> "
+                    f"taalas_hc1_anchor never goes through the study's node "
+                    f"substitution, so a divergence would price the sweep and "
+                    f"the HC1 gate at two different ROM densities in one "
+                    f"artifact and nothing would say so. Make that one call "
+                    f"take the node it is already passed, then diverge.",
+                )
+            for label, relative, path in MEASURED_ROM_CELL_RATIOS:
+                artifact = ROOT / relative
+                if not artifact.is_file():
+                    continue
+                payload: Any = json.loads(artifact.read_text(encoding="utf-8"))
+                for key in path:
+                    payload = payload[key]
+                measured = float(payload)
+                check(
+                    float(node_entry["range_low"])
+                    <= measured
+                    <= float(node_entry["range_high"]),
+                    f"rom.cell_to_sram_cell_area_ratio_by_node.{node_name} "
+                    f"sweeps {float(node_entry['range_low']):.4f}-"
+                    f"{float(node_entry['range_high']):.4f}, which EXCLUDES "
+                    f"the {measured:.4f} this repository measured itself at "
+                    f"{label} ({relative}).",
+                )
+
+    # -- the two cell-area constants, and which of them the read bandwidth
+    #    actually follows.  THE DEFECT THIS REFUSES: `rom_bits_per_mm2` scales
+    #    capacity with `rom.cell_to_sram_cell_area_ratio` while
+    #    `rom_read_bytes_s_per_mm2` never reads it, so the ROM lane's hard
+    #    floor -- the full-array sweep -- moves 3.0x across that constant's own
+    #    band.  One function away, `rom_read_bytes_s_per_mm2_for` DOES divide
+    #    bandwidth by `rom.cim_cell_area_multiplier`, on the stated ground that
+    #    a bigger cell adds no bitlines and no sense amps, which makes the sweep
+    #    invariant.  Two cell-area constants in one density chain with opposite
+    #    coupling rules, and until this check existed nothing anywhere compared
+    #    them.  Neither reading is adopted here: what is refused is holding both
+    #    without declaring which is which.
+    rule = technology.raw["rom"].get("read_bandwidth_scaling_rule", {})
+    node = str(result["inputs"]["rom_node"])
+    for field, description, measure in (
+        (
+            "cell_area_coupling",
+            "rom.cell_to_sram_cell_area_ratio",
+            lambda tech: _observed_ratio_coupling(tech, node),
+        ),
+        (
+            "cim_cell_area_coupling",
+            "rom.cim_cell_area_multiplier",
+            lambda tech: _observed_cim_coupling(tech, node),
+        ),
+    ):
+        declared = rule.get(field)
+        check(
+            declared in ("none", "proportional"),
+            f"rom.read_bandwidth_scaling_rule.{field} is {declared!r}. It must "
+            f"declare, as \"none\" or \"proportional\", whether ROM read "
+            f"bandwidth density follows {description}. The model answers this "
+            f"question differently for the two cell-area constants in the same "
+            f"chain, and an undeclared answer is how it held both at once.",
+        )
+        if declared not in ("none", "proportional"):
+            continue
+        observed = measure(technology)
+        check(
+            observed == declared,
+            f"rom.read_bandwidth_scaling_rule.{field} declares {declared!r} but "
+            f"the model MEASURES {observed!r}: moving {description} changes ROM "
+            f"capacity density and "
+            + (
+                "leaves"
+                if observed == "none"
+                else "moves"
+            )
+            + f" read-bandwidth density, so the full-array sweep is "
+            + ("not " if observed == "none" else "")
+            + f"invariant to it. Either src/opentallas/roofline.py and this "
+            f"declaration have drifted apart, or one of them is the fix.",
+        )
+
+    # -- the band is not merely stated, it is executed
+    ratio_rows = result.get("rom_cell_ratio_sensitivity") or []
+    # Nested runs are evaluated with ``with_sensitivity=False`` and legitimately
+    # carry none, so this is gated on the same flag the other sensitivities are.
+    if result.get("fabric_clock_sensitivity"):
+        check(
+            bool(ratio_rows),
+            "the study ran its sensitivities but produced no "
+            "rom_cell_ratio_sensitivity, so rom.cell_to_sram_cell_area_ratio's "
+            "band is once again declared and never executed",
+        )
+        run_at = {
+            round(float(row["cell_to_sram_cell_area_ratio"]), 6)
+            for row in ratio_rows
+        }
+        for key in ("range_low", "value", "range_high"):
+            check(
+                round(float(ratio[key]), 6) in run_at,
+                f"rom.cell_to_sram_cell_area_ratio.{key} = {ratio[key]!r} is "
+                f"declared but the study was never re-run at it. A band that "
+                f"nothing executes is the prose-only bracket again, one field "
+                f"further along.",
+            )
+
+    table = latency.get("array_pass_boundaries_per_layer_by_model", {})
+    for row in result["model_summaries"]:
+        check(
+            isinstance(table, dict) and row["model"] in table,
+            f"no latency.array_pass_boundaries_per_layer_by_model entry for "
+            f"{row['model']}; the serial matrix-pass depth is a per-model "
+            f"quantity and no model may inherit another architecture's",
+        )
+
+
+def _consistency_audit(
+    result: dict[str, Any], technology: Technology | None = None
+) -> dict[str, Any]:
     errors: list[str] = []
     checks = 0
 
@@ -3529,6 +4239,9 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
                 in {row["design"] for row in frontier},
                 f"the recommendation is not on the published frontier {model_name}",
             )
+    if technology is not None:
+        _audit_technology(technology, result, check)
+
     return {
         "status": "pass" if not errors else "fail",
         "checks_evaluated": checks,
@@ -4623,6 +5336,56 @@ def _render_design_selection(result: dict[str, Any]) -> list[str]:
     return lines
 
 
+def _render_hc1_residual(hc1: dict[str, Any]) -> list[str]:
+    """What the HC1 throughput gate did, including refusing to run at all.
+
+    This used to be one sentence that divided by the gate's ratio, which is a
+    line that works right up until the gate says the shipping part cannot
+    exist -- and then crashes rather than reporting the most important result
+    the gate has ever produced.  A gate whose failure mode is a traceback is
+    not a gate.
+
+    ``modelled_value == 0`` means the anchor design was **infeasible**: the
+    model could not place Llama-3.1-8B on 815 mm2 at all, so there is no rate
+    to under-predict and no shortfall to back-derive.  That is a stronger
+    statement than a missed ratio and it is printed as one.
+    """
+
+    ratio = float(hc1["ratio"])
+    if ratio > 0:
+        return [
+            f"The model **under**-predicts the shipping part by "
+            f"{1.0 / ratio:.2f}x. Rather than tune the densities until the anchor",
+            "is hit, the gate back-derives what each input would have to be for the",
+            "model to land exactly on 17,000 tok/s:",
+        ]
+    reasons = hc1["detail"]["area_split_mm2"].get("reasons") or hc1["detail"][
+        "step"
+    ].get("reasons") or []
+    return [
+        "**THE ANCHOR IS INFEASIBLE, AND THAT IS THE RESULT.** The model does not",
+        "under-predict the shipping part here -- it cannot place it. Taalas ships",
+        "this die; this model says the die cannot hold its own weights. At least one",
+        "of the constants below is therefore wrong, and the gate exists to say so",
+        "rather than to be closed:",
+        "",
+        *(f"- {reason}" for reason in reasons),
+        "",
+        "The candidates, in the order they should be attacked: "
+        "`rom.cell_to_sram_cell_area_ratio` and `rom.array_efficiency`, whose",
+        "product is now set by one sentence in one paper about a foundry memory",
+        "compiler and which together cut ROM capacity density by 2.243x;",
+        "`rom.cim_precompute_area_fraction`, taken from a different fabricated part",
+        "with a different architecture; `rom.cim_cell_area_multiplier`, for which no",
+        "published compute-in-ROM cell exists at any node; and",
+        "`reference_parts.taalas_hc1.weight_bits_per_parameter`, whose 3.0-6.0 sweep",
+        "the vendor's own 3-bit base type sits at the bottom of. **Nothing here is",
+        "tuned to make this gate pass.** The back-derivation below is still printed,",
+        "because what each input would have to be is exactly the question a failing",
+        "gate asks:",
+    ]
+
+
 def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
     study_id = result["study_id"]
     derivations = result["technology_derivations"]
@@ -4738,10 +5501,7 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             )
             + ".",
             "",
-            "The model **under**-predicts the shipping part by "
-            f"{1.0 / hc1['ratio']:.2f}x. Rather than tune the densities until the anchor",
-            "is hit, the gate back-derives what each input would have to be for the",
-            "model to land exactly on 17,000 tok/s:",
+            *_render_hc1_residual(hc1),
             "",
             "| Derived input | This model | Required by the shipping part | Shortfall |",
             "|---|---:|---:|---:|",
@@ -5112,6 +5872,191 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
                 f"{_cell(key, 'gpu')} | "
                 f"{_cell(key, 'joint')} | "
                 f"{widest} |"
+            )
+
+    clock_rows = result.get("fabric_clock_sensitivity") or []
+    if clock_rows:
+        # The three CHOSEN designs only -- one column each.  Every area is in
+        # the artifact; a report table with thirty-one ratio columns is a
+        # table nobody reads.
+        chosen = {
+            (
+                str(entry["model"]),
+                round(float(entry["recommended"]["silicon_area_mm2"])),
+            ): entry["recommended"]
+            for entry in result["design_selection"]["models"]
+            if entry.get("recommended")
+        }
+        labels: list[str] = []
+        by_label: dict[str, dict[tuple[str, int], dict[str, Any]]] = {}
+        meta: dict[str, dict[str, Any]] = {}
+        for row in clock_rows:
+            label = str(row["label"])
+            if label not in by_label:
+                labels.append(label)
+                by_label[label] = {}
+                meta[label] = row
+            by_label[label][
+                (row["model"], round(row["rom_silicon_area_mm2"]))
+            ] = row
+        lines.extend(
+            [
+                "",
+                "## What the fabric clock is worth, and what it is not",
+                "",
+                "`power.fabric_clock_hz` is `assumed` at 1.0 GHz and it has been read as "
+                "setting",
+                "the compute roof on both sides. **It does not.** It is read in one place, "
+                "`Technology.clock_frequency_hz`, and consumed in one, the clock leg of the "
+                "static-power",
+                "term; the compute roof comes from `compute.format_roofs_ops_s` over the "
+                "anchor die",
+                "area, scaled by node logic density, and never reads it. Where it *is* "
+                "load-bearing is",
+                "the `latency` block: `pipeline_fill_drain_s` (32 fabric cycles) and "
+                "`sequencer_issue_decode_s`",
+                "(3 fabric cycles) are both derived against it and **neither reads it**, so "
+                "moving the",
+                "clock alone silently falsifies two constants that sit on every token's "
+                "critical path on",
+                "both sides. This table moves all three together, which is the only way the "
+                "question has",
+                "an answer that means anything.",
+                "",
+                "The last rows are this repository's own **routed ASAP7** blocks, at the "
+                "fmax each",
+                "artifact records. ASAP7 is a *predictive* academic PDK -- not a foundry "
+                "PDK, not",
+                "silicon -- and `docs/METHODOLOGY.md` section 9 forbids scaling a frequency "
+                "from it to",
+                "N6/N5/N7/N4, so those rows are **the size of a question and never a "
+                "value**. They are",
+                "here because the slowest of them is 17x below the stated clock and a "
+                "reader is owed",
+                "the measurement of what that would cost rather than an argument about it.",
+                "",
+                "| Fabric clock | GHz | In stated band | Qwen3-8B fixed latency/token |"
+                + "".join(
+                    f" {model} @ {area:,} mm2 |"
+                    for model, area in sorted(chosen, key=lambda k: (k[0], k[1]))
+                    if any(
+                        (model, area) in rows_for for rows_for in by_label.values()
+                    )
+                ),
+                "|---|---:|---|---:|"
+                + "".join(
+                    "---:|"
+                    for model, area in sorted(chosen, key=lambda k: (k[0], k[1]))
+                    if any(
+                        (model, area) in rows_for for rows_for in by_label.values()
+                    )
+                ),
+            ]
+        )
+        columns = [
+            key
+            for key in sorted(chosen, key=lambda k: (k[0], k[1]))
+            if any(key in rows_for for rows_for in by_label.values())
+        ]
+        for label in labels:
+            info = meta[label]
+            cells = "".join(
+                (
+                    f" {_fmt_ratio(by_label[label][key]['per_user_speed_ratio'])} |"
+                    if key in by_label[label]
+                    else " — |"
+                )
+                for key in columns
+            )
+            lines.append(
+                f"| `{label}` | {info['fabric_clock_hz'] / 1e9:,.4f} | "
+                f"{'yes' if info['within_stated_band'] else '**no**'} | "
+                f"{info['qwen3_8b_layer_fixed_latency_s_per_token'] * 1e6:,.2f} us |"
+                + cells
+            )
+
+    ratio_rows = result.get("rom_cell_ratio_sensitivity") or []
+    if ratio_rows:
+        chosen = {
+            (
+                str(entry["model"]),
+                round(float(entry["recommended"]["silicon_area_mm2"])),
+            ): entry["recommended"]
+            for entry in result["design_selection"]["models"]
+            if entry.get("recommended")
+        }
+        labels = []
+        by_label = {}
+        meta = {}
+        for row in ratio_rows:
+            label = str(row["label"])
+            if label not in by_label:
+                labels.append(label)
+                by_label[label] = {}
+                meta[label] = row
+            by_label[label][
+                (row["model"], round(row["rom_silicon_area_mm2"]))
+            ] = row
+        columns = [
+            key
+            for key in sorted(chosen, key=lambda k: (k[0], k[1]))
+            if any(key in rows_for for rows_for in by_label.values())
+        ]
+        lines.extend(
+            [
+                "",
+                "## What the ROM bit-cell ratio is worth, executed rather than declared",
+                "",
+                "`rom.cell_to_sram_cell_area_ratio` decides how much weight fits per mm2, "
+                "which",
+                "decides how many devices a model needs, which decides mesh diameter, "
+                "which is over",
+                "half the step time at batch 1. Its stated uncertainty used to be the "
+                "prose string",
+                "\"1/6 to 1/4\", which nothing ran and which **excluded a measurement this "
+                "repository",
+                "had already committed** -- 0.1298 at 130 nm. The band is now "
+                "0.11-0.33 and every",
+                "row below is a full re-run of this study at one ratio, not an "
+                "extrapolation.",
+                "",
+                "The `measured_*` rows are this repository's own bit-cell measurements at "
+                "nodes that",
+                "are **not** this study's node. `docs/METHODOLOGY.md` section 9 forbids "
+                "scaling or",
+                "blending a 130 nm or predictive-7 nm open-PDK figure to N6/N5/N7/N4, so "
+                "they are the",
+                "size of a question and never a value.",
+                "",
+                "The sign is not obvious and that is why it is run: a **less** dense array "
+                "is more ROM",
+                "silicon for the same weights and therefore more parallel read bandwidth, "
+                "so the",
+                "capacity loss and the bandwidth gain pull opposite ways. The binding "
+                "constraint on",
+                "each side is in the artifact at every point.",
+                "",
+                "| ROM cell ratio | Value | In stated band | ROM capacity | Full-array "
+                "sweep |"
+                + "".join(f" {model} @ {area:,} mm2 |" for model, area in columns),
+                "|---|---:|---|---:|---:|" + "".join("---:|" for _ in columns),
+            ]
+        )
+        for label in labels:
+            info = meta[label]
+            cells = "".join(
+                (
+                    f" {_fmt_ratio(by_label[label][key]['per_user_speed_ratio'])} |"
+                    if key in by_label[label]
+                    else " \u2014 |"
+                )
+                for key in columns
+            )
+            lines.append(
+                f"| `{label}` | {info['cell_to_sram_cell_area_ratio']:.4f} | "
+                f"{'yes' if info['within_stated_band'] else '**no**'} | "
+                f"{info['rom_capacity_bytes_per_mm2'] / 1e6:,.3f} MB/mm2 | "
+                f"{info['rom_full_array_sweep_s'] * 1e6:,.1f} us |" + cells
             )
 
     domain_rows = result.get("nvlink_domain_sensitivity") or []

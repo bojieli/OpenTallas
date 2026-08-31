@@ -1,7 +1,14 @@
 # Research provenance: what the seven-domain source hunt found
 
-**Status:** applicable record — nothing in this document has been applied to
-`configs/`, `src/`, `docs/SOURCES.md` or any results artifact.
+**Status:** §2 (READY TO APPLY) **has been applied** to
+`configs/hardware/technology.json`, `tools/run_roofline_studies.py` and
+`results/roofline/**`, and the studies have been re-run. What it did is
+recorded in §0 below, including the part nobody predicted. §1, §3, §4 and §5
+remain an applicable record; the items §0 lists as *not applied* are still
+outstanding and say why. A second pass then finished the two halves §0.5 left
+undone — the per-node split of `rom.cell_to_sram_cell_area_ratio`, and actually
+*running* the band it had only declared — and running it found a new silent
+defect in the ROM density chain. That is §0.7.
 
 **Written:** 2026-08-31 UTC
 **Scope:** seven research domains covering 60 assumed constants in
@@ -16,6 +23,418 @@ artifacts — written so a coordinator can apply it mechanically later without
 losing anything. Where the researcher and the verifier disagreed, **the
 verifier's finding governs** and the researcher's original is recorded in
 §3 (Refuted) so it is not re-proposed.
+
+---
+
+# 0. WHAT WAS APPLIED, AND WHAT IT DID
+
+Applied in one change, together with two constant-integrity repairs that are not
+from this document (`power.fabric_clock_hz`'s recorded justification and the ROM
+cell-ratio sweep). Every number below is read out of the re-run artifacts under
+`results/roofline/`; none is hand-computed.
+
+## 0.1 The headline moved down, and further than estimated
+
+§2's estimate was 8.328× → roughly 6.0–6.6× **excluding** the ROM
+capacity-density correction, whose sign it declined to guess. Including it, the
+`n6_vs_a100` DeepSeek-V4-Pro / 554,700 mm² / batch-1 headline is **8.3275× →
+5.8987×**, so the density correction's sign is now known: it costs the ROM side
+about a further 2%, on top of the 27% the composable corrections take.
+
+The three chosen designs — the study's own domination-filter-plus-marginal-return
+selection, re-run, not re-picked by hand:
+
+| study | model | design before → after | mm² before → after | ratio before → after |
+|---|---|---|---:|---:|
+| n6_vs_a100 | Qwen3-8B | `SRAMKV-array-pipeline-x3` → `SRAMKV-array-pipeline-x7-romfill` | 2,445 → 5,705 | **10.7813× → 6.2817×** |
+| n6_vs_a100 | DeepSeek-V4-Flash | `HBMKV-wafer-tensor-x1-romfill` → `HBMKV-wafer-tensor-x1` | 46,225 → 46,225 | **8.5720× → 6.5234×** |
+| n6_vs_a100 | DeepSeek-V4-Pro | `SRAMKV-wafer-hybrid-x2` → `SRAMKV-wafer-hybrid-x4` | 92,450 → 184,900 | **8.5833× → 6.6416×** |
+| n5_vs_b200 | Qwen3-8B | `SRAMKV-array-pipeline-x3` → `SRAMKV-array-pipeline-x5-romfill` | 2,445 → 4,075 | 5.7508× → 5.0483× |
+| n5_vs_b200 | DeepSeek-V4-Flash | `SRAMKV-array-hybrid-x14` → `SRAMKV-array-hybrid-x30` | 11,410 → 24,450 | 1.5362× → **1.7934×** |
+| n5_vs_b200 | DeepSeek-V4-Pro | `SRAMKV-wafer-hybrid-x2` → `HBMKV-wafer-hybrid-x3` | 92,450 → 138,675 | 4.7449× → 3.5469× |
+
+Two of those designs changed *node*, in the sense that the machine the selection
+rule picks is now a different and larger one: the ROM array holds less, so the
+selection has to buy more silicon before a model fits at all. DeepSeek-V4-Pro's
+smallest feasible machine in `n6_vs_a100` moves 76,610 mm² → 162,185 mm², and
+Qwen3-8B's 2,445 mm² design becomes infeasible outright. The one ratio that went
+**up** is `n5_vs_b200` DeepSeek-V4-Flash, 1.5362× → 1.7934×, and it went up
+because the machine the rule now picks is 2.1× larger.
+
+The band, measured rather than estimated. §2.1 predicted "~6.1–24.2×" for the
+GPU-scope band once `range_high` rose to the shipped-library figure. Re-run, the
+`n6_vs_a100` DeepSeek-V4-Pro 554,700 mm² row's **cluster-fabric** band is
+**5.10× → 27.45×** and its joint band is 6.85× → 17.87×.
+
+## 0.2 The Taalas HC1 throughput gate now FAILS, and it fails by becoming infeasible
+
+**This was not predicted anywhere in this document and it is the most important
+result of applying it.** The anchor gate goes from **0.7213× PASS to 0.0000×
+FAIL**, and the zero is not a slow answer — it is *no* answer:
+
+> AREA: the array needs 770.5 mm² to hold 3,513,239,296 B but only 432.4 mm² of
+> 815 mm² is left after SRAM, HBM PHY, overhead and interconnect
+
+Taalas ships this die. With §2.2's ROM capacity-density correction (2.243× less
+dense) and §2.3's compute-in-ROM pre-compute area (0.02 → 0.18, taking a further
+130 mm² off the array), this model says the die cannot hold its own weights.
+**At least one of those constants is therefore wrong, and nothing has been tuned
+to make the gate pass** — `METHODOLOGY` §1a requires exactly that. The candidates,
+in the order they should be attacked:
+
+1. `rom.cell_to_sram_cell_area_ratio` × `rom.array_efficiency`. The quotient now
+   rests on one sentence in one paper about a *foundry memory compiler* generating
+   a ROM for a QLoRA accelerator. A purpose-built compute-in-ROM inference die is
+   not that, and ROMA's own array efficiency is an 8192×64 compiler instance.
+2. `rom.cim_precompute_area_fraction` = 0.18, taken from TOM — a different
+   fabricated part with a different architecture and a different weight alphabet.
+3. `rom.cim_cell_area_multiplier` = 1.6, for which no published compute-in-ROM
+   cell exists at any node.
+4. `reference_parts.taalas_hc1.weight_bits_per_parameter` = 3.5, whose 3.0–6.0
+   sweep the vendor's own 3-bit base type sits at the very bottom of.
+
+`tools/run_roofline_studies.py` used to divide by the gate's ratio to print the
+under-prediction factor, so the first thing this failure did was crash the report
+renderer with `ZeroDivisionError`. **A gate whose failure mode is a traceback is
+not a gate**; it now renders the infeasibility and its reason, and still prints
+the back-derivation, because what each input would have to be is what a failing
+gate is for.
+
+The other three gates: `a100_weight_bound` 1.0000× PASS (unchanged, and it is
+constructed to be); `a100_tdp_power` 0.9748× PASS → **1.1542× PASS**, exactly the
+1.15× §2.8 predicted and still inside its 2× tolerance; `taalas_hc1_card_power`
+0.2807× FAIL → **0.3502× FAIL**, against §2.8's ~0.34× estimate.
+
+## 0.3 The binding-constraint census diff §2.2 asked for
+
+Feasible points only. `n6_vs_a100` loses 320 feasible points and `n5_vs_b200`
+loses 100, almost all ROM points that no longer fit.
+
+| study | side | constraint | before → after |
+|---|---|---|---:|
+| n6_vs_a100 | rom | weight_read | 773 → 534 |
+| n6_vs_a100 | rom | link_latency | 762 → 781 |
+| n6_vs_a100 | rom | kv_read | 446 → 399 |
+| n6_vs_a100 | rom | compute | 91 → 106 |
+| n6_vs_a100 | gpu | weight_read | 715 → 667 |
+| n6_vs_a100 | gpu | link_latency | 274 → 267 |
+| n6_vs_a100 | gpu | kv_read | 31 → 18 |
+| n5_vs_b200 | rom | weight_read | 930 → 730 |
+| n5_vs_b200 | rom | link_latency | 805 → 845 |
+| n5_vs_b200 | rom | thermal | 104 → 146 |
+| n5_vs_b200 | rom | compute | 80 → 110 |
+| n5_vs_b200 | rom | kv_read | 203 → 207 |
+| n5_vs_b200 | gpu | weight_read | 585 → 513 |
+| n5_vs_b200 | gpu | link_latency | 287 → 270 |
+| n5_vs_b200 | gpu | **thermal** | **1 → 85** |
+| n5_vs_b200 | gpu | kv_read | 21 → 10 |
+
+Two flips worth naming. **One binding constraint flipped at a headline**: the
+`n6_vs_a100` Qwen3-8B chosen design bound on `compute` before and binds on
+`weight_read` now — a less dense array is more ROM mm² and therefore more parallel
+read bandwidth, which is the offsetting effect §2.2 insisted must not be dropped,
+and it is real but it does not dominate. And **the GPU side became thermally
+bound at 85 points in `n5_vs_b200`, up from 1**, which is the energy ladder (§2.8)
+landing on the B200 rather than anything about ROM.
+
+## 0.4 What was NOT applied, and why
+
+| §2 item | status |
+|---|---|
+| 2.1 InfiniBand HDR/NDR | **applied**; value 4.5 µs → 2.03 µs, band 3.7–5.7 µs → 1.9–22 µs, grade `published` → `measured`, both documentary errors struck. The NDR entry carries an HDR measurement and now says so as a named pro-ROM bias. |
+| 2.2 ROM ratio + array efficiency | **applied atomically**; 0.2 → 0.33 and 0.7 → 0.52, both `derived`, plus a machine-readable sweep (see 0.5). |
+| 2.3 `cim_precompute_area_fraction` | **applied**; 0.02 → 0.18. |
+| 2.4 `efficiencies.hbm_bandwidth` | **applied**; 0.85 → 0.90, with a range added. |
+| 2.5 per-model array-pass depth | **applied, with one deviation.** `latency.array_pass_boundaries_per_layer_by_model` now names Qwen3-8B = 4, DeepSeek-V4-Flash = 5, DeepSeek-V4-Pro = 5, and `tools/run_roofline_studies.py` refuses a model that is not named. **Qwen3-8B is graded `assumed`, not `executed`:** `executed` in this repository requires both halves — something run here *and* a committed artifact holding the number — and no committed artifact counts serially dependent matrix passes for any model. §6's claim that this is "now `executed`" is withdrawn. |
+| 2.6 `latency.layer_barrier_s` | **applied**; 8e-09 → 3.5e-08, `range_low` → 8.6e-09, and `range_high` raised 3.2e-08 → 2.0e-07 because the recommended point was *above* the incumbent ceiling and §2.6 did not say so. |
+| 2.7 `efficiencies.stage_balance` | **NOT APPLIED — blocked on file ownership.** All three parts live in `src/opentallas/roofline.py` (the guard at the `apply_balance = devices > 1 and ...` line; the per-partition derivation; the aggregate-only application), which this change does not own. The guard is a live defect: 998 of the pre-change feasible points paid 1/0.9 with `pipeline_stages == 1`, and 130 ROM points with zero GPU points escaped it entirely. |
+| 2.8 the energy ladder | **applied**; all five MAC rungs, `sram_read_j_per_byte` → 2.6e-12 labelled a floor, `static_leakage_w_per_mm2.rom_array` 0.0 → 6.7e-3, w4a8 recorded as the interval [2.33e-14, 5.42e-14]. `energy.operand_delivery_j_per_byte`'s note, whose 5.49× node factor was derived from the MAC ladder, is corrected in the same edit: that sentence is now false and says so. |
+| 2.9 `inter_wafer.switch_radix` | **applied**; 16 → 4, `fabric` → `derived`, optimistic-reading sentence struck. |
+| 2.10 citation repairs | **applied for `configs/hardware/technology.json` and `tools/run_roofline_studies.py`.** The hard-coded `3.5` in `_floorplan_comparison` now reads `reference_parts.taalas_hc1.weight_bits_per_parameter` from the register. **Not applied for `docs/SOURCES.md`, `docs/COMPARISON_FAIRNESS_AUDIT.md`, `docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` or `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md`** — not owned by this change. The batch-independence sentence is struck in `technology.json` and survives in the other two files. |
+
+## 0.5 The two constant-integrity repairs that are not from this document
+
+**`power.fabric_clock_hz` stays `assumed` at 1.0 GHz, swept 0.5–2.0 GHz, with a
+recorded justification.** It was challenged on the ground that it sets the compute
+roof on both sides and that this repository's routed ASAP7 blocks close at
+57.959 MHz to 455 MHz — 17× below it on the matmul engine. Three things were
+established and all three are in the entry's note.
+
+1. **It does not set the compute roof.** It is read in exactly one place,
+   `Technology.clock_frequency_hz`, and consumed in exactly one, the clock leg of
+   `device_static_power`. The compute roof comes from `compute.format_roofs_ops_s`
+   over the anchor die area scaled by node logic density, and never reads it.
+2. **The ASAP7 comparison is not like-for-like, and not for the reason proposed
+   either.** The hypothesis was that an 18 ns matmul cycle might do N MACs, making
+   58 MHz × N consistent with 1 GHz. It is false *in the other direction*:
+   `rtl/ot_ta_matmul_bf16_sram_engine.sv` is a serial reference executor that
+   issues one 16-bit SRAM read per request/wait pair and chains a combinational
+   `fp32_mul_rne` into `fp32_add_rne` inside one unpipelined, unretimed cycle. That
+   cycle does one MAC at most and the state machine spends two cycles per MAC. What
+   18 ns measures is an unpipelined FP32 fused multiply-add, which is a property of
+   RTL written for arithmetic clarity, not a fabric clock.
+3. **ASAP7 may not retire it, and that is a separate rule from the SKY130 one.**
+   `docs/METHODOLOGY.md` §9 and the W9 claim boundary both forbid scaling a
+   frequency from a 130 nm **or predictive-7 nm** open PDK to N6/N5/N7/N4, and this
+   repository's own ASAP7 artifact declares its evidence class as "predictive
+   open-PDK … not a foundry PDK, not TSMC N7/N6/N5, not silicon". The W8.3 sentence
+   is about SKY130; it is not silently extended, because an independent rule names
+   predictive-7 nm explicitly. ASAP7 is pessimistic and the direction is known —
+   predictive library, no foundry characterisation, no custom cells, open flow, no
+   pipelining or retiming — and none of that argues 1 GHz is *right*, only that this
+   evidence cannot set it.
+
+**Where it IS load-bearing, and the silent defect that was found doing this.**
+`latency.pipeline_fill_drain_s` (32 fabric cycles) and
+`latency.sequencer_issue_decode_s` (3 fabric cycles) state their point *and both
+band ends* as exact integer cycle counts against this key — 16/32/128 and 1/3/8 —
+and **neither of them reads it**. Move the clock alone and two constants on every
+token's critical path, on both sides, keep values that assert a derivation that
+has stopped being true. Both entries now carry a machine-readable
+`derived_in_fabric_cycles` field and the study's consistency audit **refuses the
+file** if `value × fabric_clock_hz` stops equalling it. That is the thing that
+should have refused the original hazard.
+
+Moved together, the constant is measured rather than argued —
+`results/roofline/*/analytical.json → fabric_clock_sensitivity`, and a table in
+each `REPORT.md`. Inside its own 0.5–2.0 GHz band the `n6_vs_a100` chosen designs
+move 6.20→6.33× (Qwen3-8B), 6.35→6.62× (Flash) and 6.51→6.71× (Pro) — about ±1%.
+At the ASAP7 matmul figure of 57.959 MHz the fixed per-layer budget goes
+6.82 µs → 83.47 µs per token and those three fall to 5.16×, 4.60× and 5.08×.
+**So lowering the fabric clock, applied consistently, costs the ROM side.** That
+matters, because applied *inconsistently* — clock down, latency constants left
+alone — it would have been a free power saving and a one-sided credit, since the
+GPU comparators' clocks are published and do not move.
+
+**`rom.cell_to_sram_cell_area_ratio`'s sweep excluded a measurement this
+repository had made.** Its "1/6 to 1/4" bracket lived only in prose, so nothing
+ran it, and 1/6 = 0.1667 is *above* the 0.1298 measured at 130 nm in
+`results/spice/ihp_sg13g2_bitcell/bitcell.json`. The band is now a real
+`range_low`/`range_high` of 0.11–0.33 which contains every ratio this repository
+holds — 0.11, 0.125 (ASAP7 shared source-drain), 0.1298 (IHP 130 nm), 0.25 (ASAP7
+via-programmed) and 0.33 (ROMA) — and the consistency audit **reads the two
+committed artifacts and refuses a band that excludes either**. A per-node *split*
+was left unimplemented at that point; **§0.7 does it**, along with the half of this
+repair that was still missing — the band was *declared* and never *run*.
+
+## 0.6 What this change breaks, and cannot fix
+
+`tools/check_prose_figures.py` binds prose in seven documents to the artifacts
+under `results/roofline/`. Those artifacts have moved. **None of those seven
+documents is owned by this change**, so the annotated figures in `README.md`,
+`docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md`,
+`docs/TECHNICAL_DIRECTION_RECOMMENDATION.md`,
+`docs/WAFER_VERSUS_ARRAY_LATENCY.md`,
+`docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md`,
+`docs/UNIFIED_EXECUTION_CHECKLIST.md` and
+`docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md` are stale until their owners re-read
+them. That is reported, not worked around: the checker is doing exactly what it
+was built to do, and weakening it or leaving the corrections unapplied would both
+be worse than a failing checker with a named cause.
+
+**Measured, so the attribution is not a guess.** `tools/check_prose_figures.py`
+exits 2. It reports **128 figure disagreements**, and every one of them binds to
+an artifact this change regenerated — 127 to `results/roofline/**` and 1 to
+`configs/hardware/technology.json → links.infiniband_ndr.hop_latency_s` — spread
+over exactly the seven documents named above:
+
+| document | stale figures |
+|---|---:|
+| `docs/TECHNICAL_DIRECTION_RECOMMENDATION.md` | 48 |
+| `docs/ISO_AREA_COMPARISON_AND_THE_TAALAS_ANCHOR.md` | 32 |
+| `docs/WAFER_VERSUS_ARRAY_LATENCY.md` | 29 |
+| `docs/UNIFIED_EXECUTION_CHECKLIST.md` | 10 |
+| `docs/FIRST_PRINCIPLES_MEMORY_DESIGN.md` | 5 |
+| `README.md` | 2 |
+| `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md` | 2 |
+
+**The second pass (§0.7) adds none of these.** The per-node split and the
+executed band move no number, so the count is the same before and after it; the
+new `rom_cell_ratio_sensitivity` block is additive and breaks no annotation.
+
+The same run also reports **17 `unresolvable provenance` failures** in six
+*other* documents, none of them from this work: **7 of them reproduce on a clean
+`HEAD` worktree** with none of this change present (`results/rtl/
+rom_service_campaign.json` no longer carries fields
+`docs/UNIFIED_EXECUTION_CHECKLIST.md` cites), and the rest come from other
+agents' in-flight artifacts. **`tools/check_prose_figures.py` therefore did not
+pass at `HEAD` either**, and this change neither caused that nor fixed it.
+`tools/check_evidence_grades.py` passes, 173 graded entries.
+
+**`tests/test_roofline.py` also fails, and that tripwire fired correctly.** It
+pins the assumption surface and several constants at their *pre-correction*
+settings, which is exactly what it is for, so applying §2 makes it fail by
+design. Three failures were confirmed individually and each is attributable to
+a named §2 item, not to §0.7:
+
+| test | attributable to |
+|---|---|
+| `test_the_scale_out_link_is_one_number_on_both_sides` — `assert 2.03e-06 == 4.5e-06` | §2.1. Its docstring also still argues the two InfiniBand entries carry "the SAME measured 4.5 us hop", which §2.1 refuted. |
+| `test_rom_capacity_density_inherits_the_assumed_grade` — `assert 'derived' == 'assumed'` | §2.2, which regraded the ratio and the array efficiency. |
+| `test_the_assumed_inputs_are_the_ones_we_expect` — three `array_pass_boundaries_per_layer_by_model` entries "entered the model unannounced" | §2.5. |
+
+A full enumeration of the file was not obtained: three other agents were running
+the suite concurrently and the run did not finish inside its budget; 14 failures
+were visible in the first 55%. **None of them can come from §0.7**, checked two
+ways: the per-node split and the executed band move no computed number (the
+chosen designs and their rates are identical before and after), and the two new
+`by_node` entries land in the `derived` bucket, leaving the `assumed` surface
+that test pins untouched. `test_every_technology_input_is_graded_with_a_source`
+passes against the new structure. **Nothing was weakened to make anything pass**;
+re-pinning that file belongs to its owner.
+
+
+## 0.7 The second pass: the split, the executed band, and the defect it found
+
+§0.5 left two halves of one repair undone. Both are done here, and doing the
+second one surfaced a new silent defect.
+
+**The per-node split is implemented.**
+`rom.cell_to_sram_cell_area_ratio_by_node` carries one entry per modelled ROM
+node, and `tools/run_roofline_studies.py:_node_technology` substitutes the
+study's own node into the flat key before any term is derived — the same shape
+`_model_technology` already has for per-model array-pass depth, and the same
+shape `links.on_wafer` / `links.on_wafer_n5` already has for the sibling
+question. **A node with no entry is refused rather than defaulted.**
+
+**It moves no number, and that is stated in the entries themselves.** N6 and N5
+carry the same 0.33 and the same 0.11–0.33 band, because the only 7 nm-class
+foundry-compiler statement is ROMA's one sentence and nothing published, and
+nothing measured here, distinguishes N6 from N5. `docs/METHODOLOGY.md` § 9
+forbids interpolating the 130 nm and predictive-7 nm measurements to a target
+node, so the direction the two measurements imply — the ratio *rises* as the
+SRAM cell shrinks, so N5 should sit at or above N6 — is recorded and **not**
+converted into a value. What the split buys is that the number is addressed by
+the node it is for, and that a future N5-only measurement cannot be applied
+silently at N6.
+
+**The hazard the split does not close, and the refusal that covers it.**
+`src/opentallas/roofline.py:rom_bits_per_mm2` still reads the flat key with no
+node argument, and `run_anchors → taalas_hc1_anchor` never goes through the
+substitution at all. So a by-node value that *diverged* from the flat one would
+price the sweep at one ROM density and the Taalas HC1 gate at another, inside a
+single artifact, with nothing saying so — the one-sided-correction shape this
+repository has already shipped once. The audit therefore **refuses any by-node
+value or band end that differs from the flat one** until that one call takes the
+node it is already handed.
+
+**The band is now executed, not merely declared.** Turning the prose bracket
+into `range_low`/`range_high` fields and auditing them for containment was half
+a fix: nothing ever *re-ran* the study at those ends. `rom_cell_ratio_sensitivity`
+in each study artifact is a full re-run at both band ends and at all three ratios
+this repository has measured, read out of the committed physical artifacts rather
+than typed in. The audit refuses a declared band end the study was not run at.
+
+### What the executed band says, at `n6_vs_a100`
+
+| point | ratio | ROM capacity | full-array sweep | Qwen @ 5,705 | Flash @ 46,225 | Pro @ 184,900 |
+|---|---:|---:|---:|---:|---:|---:|
+| `band_low` | 0.1100 | 21.886 MB/mm² | 103.4 µs | 6.28× | 6.38× | **5.56×** |
+| `stated` / `band_high` | 0.3300 | 7.295 MB/mm² | 34.5 µs | 6.28× | 6.52× | **6.64×** |
+| `measured_ihp_sg13g2_130nm` | 0.1298 | 18.553 MB/mm² | 87.7 µs | 6.28× | 6.38× | 5.56× |
+| `measured_asap7_7nm_via_programmed` | 0.2500 | 9.630 MB/mm² | 45.5 µs | 6.28× | 6.38× | 5.95× |
+| `measured_asap7_7nm_shared_source_drain` | 0.1250 | 19.259 MB/mm² | 91.0 µs | 6.28× | 6.38× | 5.56× |
+
+Three results a reader should not miss.
+
+1. **The sign is the opposite of the intuition, and §2.2 was right to forbid
+   guessing it.** The ROM side does *better* at the **less dense** end of its own
+   band: DeepSeek-V4-Pro is 6.64× at 0.33 and 5.56× at 0.11. A less dense array
+   is more ROM mm² for the same weights and therefore more parallel read
+   bandwidth, and at fixed silicon area that outweighs the capacity loss. So the
+   part of §2.2's 2.243× density correction that flows through *this* constant is
+   a credit to the ROM side at fixed area; what actually cost the ROM side was
+   **feasibility** — having to buy more silicon before a model fits at all.
+2. **Feasibility is what the constant really moves.** 23 of 53 headline rows in
+   `n6_vs_a100` and 21 of 52 in `n5_vs_b200` exist at some point in the band and
+   **not at the stated 0.33**. Among them is `Qwen3-8B / 2,445 mm² /
+   ROM-N6-native-SRAMKV-array-pipeline-x3` — *the design that used to be the
+   10.78× headline*. It is infeasible at 0.33 and it runs at **10.29× (0.11),
+   11.64× (0.125) and 12.07× (0.1298)**. The old headline did not turn out to be
+   wrong; it turned out to depend on where in one constant's band you stand, and
+   at the ratio this repository measured at 130 nm it would be higher than it
+   ever was. § 9 forbids adopting that ratio at N6, which is exactly why the row
+   is published as the size of a question and not as a value.
+3. **Two binding constraints flip**, both at the ASAP7 via-programmed 0.25 and
+   both on small Qwen designs: `n6_vs_a100` Qwen @ 4,075 mm² goes
+   `link_latency → compute` (4.54× → 8.00×), and `n5_vs_b200` Qwen @ 3,260 mm²
+   goes `link_latency → weight_read`.
+
+### The defect the executed band found: two cell-area constants, opposite coupling
+
+Running the band exposed something no containment check could see. Measured at
+N6, through the model's own accessors:
+
+| move | capacity density | read-bandwidth density | full-array sweep |
+|---|---:|---:|---:|
+| `cell_to_sram_cell_area_ratio` 0.33 → 0.11 | 7.295 → 21.886 MB/mm² | **282.222 → 282.222 GB/s/mm²** | 25.85 → **77.55 µs** |
+| `cim_cell_area_multiplier` 1.0 → 1.6 | 7.295 → 4.559 MB/mm² | 282.222 → **176.389 GB/s/mm²** | 25.85 → **25.85 µs** |
+
+Two cell-**area** constants, one function apart in the same density chain, with
+**opposite** coupling rules and nothing anywhere comparing them.
+`rom_read_bytes_s_per_mm2_for` divides bandwidth density by the compute-in-ROM
+multiplier on an explicit stated ground — a larger cell means fewer cells per mm²
+and *"no extra bitlines and no sense amps"*, so the rate per mm² falls exactly as
+the capacity does and **the sweep is invariant**. That argument is about cell
+size, so it applies verbatim to the storage cell — but
+`rom_read_bytes_s_per_mm2` never reads `cell_to_sram_cell_area_ratio`, so the
+ROM lane's hard floor swings **3.0×** across that constant's own band.
+
+They cannot both be right. The opposite reading is defensible — read bandwidth
+may be set by sense amps and IO that do not shrink with the bit cell — but the
+model held both readings at once and declared neither.
+
+**Nothing is tuned and neither reading is adopted.** The fix lives in
+`src/opentallas/roofline.py:rom_read_bytes_s_per_mm2`, which this change does not
+own, and choosing a reading without evidence would move the ROM side's hard floor
+by 3.0× on nothing. What is done instead is the thing that should have refused it:
+`rom.read_bandwidth_scaling_rule` now carries `cell_area_coupling` and
+`cim_cell_area_coupling`, and the consistency audit **measures** each constant's
+actual coupling through the model's own accessors and refuses the file if either
+stops matching its declaration. What would settle it: a published mask-ROM macro
+family at one node with two bit-cell pitches and read bandwidth stated for both,
+or a routed ROM macro here at two drawn pitches —
+`results/spice/ihp_sg13g2_rom_macro/macro_route.json` is one pitch.
+
+### The five new refusals, each negative-tested
+
+Every one was checked by breaking the config and confirming it fires:
+
+1. a `by_node` entry missing for a node a study runs at;
+2. a `by_node` value or band end diverging from the flat entry;
+3. a `by_node` band excluding either committed bit-cell measurement;
+4. a declared band end the study was never re-run at;
+5. a `cell_area_coupling` declaration the model's measured behaviour contradicts.
+
+### `power.fabric_clock_hz`: a fifth reason, from this repository's own measurements
+
+§0.5's argument that the 18 ns ASAP7 matmul period is not a fabric clock rested on
+reading the RTL. It is now also *measured here*, and the note says so. OI-44 in
+`docs/UNIFIED_EXECUTION_CHECKLIST.md` synthesised each arithmetic operation alone
+as one combinational cloud between registers on SKY130 HD:
+`ot_fp32_rne_pkg::fp32_add_rne` needs a **66.97 ns** period
+(`results/physical_abi3/sky130hd/a3_numeric_probes/fp32_add.json`) and
+`fp32_mul_rne` needs **29.385 ns**, and OI-44 attributes the adder to a
+27-iteration cancellation-normalisation loop — *"a coding shape rather than a
+technology limit"*. The matmul engine's single cycle chains exactly those two
+functions. Two further facts from the routed artifact close it: `macro_count` is
+**0** and `sequential_cell_count` is **8,879**, so the 256-entry input buffer and
+the 64-entry accumulator and auxiliary buffers are synthesised as flip-flop
+arrays and every operand on that path is read through a combinational 256:1 and
+64:1 register-file mux before it reaches the multiplier. No fabric clocks a
+datapath shaped like that, and the block was never written to be one.
+
+**The fabric-clock sweep's own empirical answer, which §0.5 did not state.**
+Across all six clock points — both band ends and all three routed ASAP7 fmax
+figures — **no binding constraint flips at any of the 61 headline rows** in
+either study. `layer_fixed_latency` is a component of the step time and can bind,
+and it never does. The clock reaches the comparison only as an additive per-token
+term charged **identically to both sides**, which is why lowering it *compresses*
+the ratio toward 1 rather than helping either side: at the ASAP7 matmul figure of
+57.959 MHz the fixed budget goes 6.82 µs → 83.47 µs per token and the three chosen
+designs fall to 5.16×, 4.60× and 5.08×.
+
+---
 
 ## How to read the tables
 
@@ -404,6 +823,20 @@ These change no number and every one of them removes a false statement:
 | Config-drift hazard | `tools/run_roofline_studies.py:926` and `:931` | `stored = model.total_parameters * 3.5 / BITS_PER_BYTE` is **hard-coded** and emits `"weight_bits_per_parameter": 3.5` into the floorplan-comparison artifact without reading the config. If that entry ever moves, this line silently will not. |
 
 ### Net effect of applying everything in §2
+
+**MEASURED, NOT ESTIMATED — see §0.** The estimate below was written before the
+change was applied and is left in place so the estimate can be checked against
+the outcome. The corrections take the DSV4-Pro / 554,700 mm² headline from
+**8.3275× to 5.8987×**, a reduction of 29%, and the three chosen designs from
+10.7813×/8.5720×/8.5833× to 6.2817×/6.5234×/6.6416×. The GPU-scope band on that
+row is **5.10× → 27.45×** against the ~6.1–24.2× estimated. The ROM
+capacity-density correction's sign, which §2.2 declined to guess, is **negative
+for the ROM side by a further ~2% at that row** — the offsetting sweep-floor gain
+is real (one headline's binding constraint flipped `compute` → `weight_read`) but
+does not dominate. `stage_balance` ×1.0118 is **not** in the applied figure: §2.7
+is blocked on a file this change does not own.
+
+The estimate as written before the run:
 
 The composable, sign-known corrections take the DSV4-Pro / 554,700 mm² headline
 from **8.328× to roughly 6.0–6.6×** — the InfiniBand point value doing almost all
@@ -917,8 +1350,11 @@ the single fact the HC1 gate's PASS depends on), the HC1 transistor count and
 throughput citations, the ROM and SRAM array densities at N6/N7, the GPU
 floorplan's inclusiveness and four of its constants, the HBM beachfront and PHY
 geometry, the HBM sequential bandwidth fraction, the KV access granularity, the
-Cerebras SwarmX radix and domain size, and — for Qwen3 only — the per-layer array
-pass count, which is now `executed`.
+Cerebras SwarmX radix and domain size. **Withdrawn:** the per-layer array pass
+count for Qwen3 was described here as "now `executed`". It is not and cannot be:
+no committed artifact in this repository counts serially dependent matrix passes,
+and `executed` requires both halves. It is per-model now (§0.4) and it is
+`assumed`.
 
 **The three that matter most, in order:**
 

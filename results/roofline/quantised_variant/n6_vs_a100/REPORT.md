@@ -21,8 +21,8 @@ DeepSeek profile's `kv_precision_sensitivity`.
 
 | Model | | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area GPU | GPU user tok/s | ratio |
 | --- | --- | --- | ---: | ---: | ---: | ---: | --- | ---: | ---: |
-| Qwen3-8B | PRIMARY (BF16, 16.00 bits) | `ROM-N6-native-SRAMKV-array-pipeline-x3` | 2,445 | 2,791.2 | 1,141.6 | 1 | `a100_sxm_80gb-x3-tensor` | 258.9 | 10.78x |
-| Qwen3-8B | variant (4.25 bits, both sides) | `ROM-N6-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 5,602.5 | 3,437.1 | 1 | `a100_sxm_80gb-x2-tensor` | 489.0 | 11.46x |
+| Qwen3-8B | PRIMARY (BF16, 16.00 bits) | `ROM-N6-native-SRAMKV-array-pipeline-x7-romfill` | 5,705 | 3,517.9 | 616.6 | 1 | `a100_sxm_80gb-x7-tensor` | 560.0 | 6.28x |
+| Qwen3-8B | variant (4.25 bits, both sides) | `ROM-N6-q4p25-SRAMKV-array-pipeline-x3` | 2,445 | 7,889.0 | 3,226.6 | 1 | `a100_sxm_80gb-x3-tensor` | 701.2 | 11.25x |
 
 **Read the ratio column as a pair, never alone.** If the variant's ratio
 is larger than the primary's, quantisation did not level the comparison,
@@ -64,70 +64,70 @@ The GPU comparator at each ROM area is N copies of one unified HBM die, N chosen
 
 ### Qwen3-8B at 8,192 tokens
 
-**Recommended: `ROM-N6-q4p25-SRAMKV-array-pipeline-x2`** -- 2 x 815 mm2 reticle dies, 1,630 mm2 total, `pipeline`-parallel, KV in SRAM, spare silicon to `sram`.
+**Recommended: `ROM-N6-q4p25-SRAMKV-array-pipeline-x3`** -- 3 x 815 mm2 reticle dies, 2,445 mm2 total, `pipeline`-parallel, KV in SRAM, spare silicon to `sram`.
 
-- **5,602.5 tok/s per user** (0.18 ms/token), binding on `weight_read`
-- **3,437.1 tok/s per 1,000 mm2** -- the quantity the rule maximises
-- 5,603 tok/s aggregate with every slot full, over 1 resident session (fill limited by `kv_capacity`)
-- 167 W at 0.102 W/mm2, 29.8 mJ/token, thermal scale 1.000
+- **7,889.0 tok/s per user** (0.13 ms/token), binding on `weight_read`
+- **3,226.6 tok/s per 1,000 mm2** -- the quantity the rule maximises
+- 7,889 tok/s aggregate with every slot full, over 1 resident session (fill limited by `kv_capacity`)
+- 270 W at 0.110 W/mm2, 34.2 mJ/token, thermal scale 1.000
 
-**Iso-area, at the area the rule chose.** The comparator is 2 copies of one unified HBM die -- `a100_sxm_80gb-x2-tensor`, 1,652 mm2, area ratio 0.9867 -- running the `tensor` topology it chose for itself.
+**Iso-area, at the area the rule chose.** The comparator is 3 copies of one unified HBM die -- `a100_sxm_80gb-x3-tensor`, 2,478 mm2, area ratio 0.9867 -- running the `tensor` topology it chose for itself.
 
 | | ROM | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: |
-| silicon mm2 | 1,630 | 1,652 | 0.9867 |
-| user tok/s | 5,602.5 | 489.0 | 11.46x |
-| aggregate tok/s | 5,603 | 489 | 11.46x |
-| resident sessions | 1 | 115 | -- |
-| J/token | 0.0298 | 1.1404 | 38.3x |
+| silicon mm2 | 2,445 | 2,478 | 0.9867 |
+| user tok/s | 7,889.0 | 701.2 | 11.25x |
+| aggregate tok/s | 7,889 | 701 | 11.25x |
+| resident sessions | 1 | 175 | -- |
+| J/token | 0.0342 | 1.1679 | 34.1x |
 
 The areas match to within 2%, so no granularity correction is needed on this row.
 
-**Read the resident-session row before the ratio row.** A per-user rate divided by a per-user rate is a latency claim, and a latency claim taken from a machine that holds 1 session against one that holds 115 is not the trade it looks like. Where those two numbers are far apart the honest reading is the batch-regime table below, not this row.
+**Read the resident-session row before the ratio row.** A per-user rate divided by a per-user rate is a latency claim, and a latency claim taken from a machine that holds 1 session against one that holds 175 is not the trade it looks like. Where those two numbers are far apart the honest reading is the batch-regime table below, not this row.
 
-The GPU's own best machine at **any** area is `a100_sxm_80gb-x8-tensor` at 6,608 mm2 and 1,265.8 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
+The GPU's own best machine at **any** area is `a100_sxm_80gb-x224-tensor` at 185,024 mm2 and 1,339.3 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
 
 **Headline before and after.**
 
 | rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| before -- smallest within 5% of peak rate | `ROM-N6-q4p25-SRAMKV-array-pipeline-x4-romfill` | 3,260 | 9,469.6 | 2,904.8 | 1 | 11.44x |
-| rank on per-user rate alone | `ROM-N6-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 9,525.4 | 2,337.5 | 1 | 9.92x |
-| smallest feasible machine | `ROM-N6-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 5,602.5 | 3,437.1 | 1 | 11.46x |
-| **after -- this report's rule** | `ROM-N6-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 5,602.5 | 3,437.1 | 1 | 11.46x |
+| before -- smallest within 5% of peak rate | `ROM-N6-q4p25-SRAMKV-array-pipeline-x4-romfill` | 3,260 | 9,383.2 | 2,878.3 | 1 | 10.91x |
+| rank on per-user rate alone | `ROM-N6-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 9,438.0 | 2,316.1 | 1 | 9.48x |
+| smallest feasible machine | `ROM-N6-q4p25-SRAMKV-array-pipeline-x3` | 2,445 | 7,889.0 | 3,226.6 | 1 | 11.25x |
+| **after -- this report's rule** | `ROM-N6-q4p25-SRAMKV-array-pipeline-x3` | 2,445 | 7,889.0 | 3,226.6 | 1 | 11.25x |
 
 **The walk, rung by rung.** The number in the `marginal` column is what the next slab of silicon returns; the number in `incumbent average` is what the silicon already bought returns. The walk stops the first time the former is not larger.
 
 | design | mm2 | user tok/s | tok/s per 1,000 mm2 | marginal | incumbent average | verdict |
 | --- | ---: | ---: | ---: | ---: | ---: | --- |
-| `ROM-N6-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 5,602.5 | 3,437.1 | -- | 3,437.1 | ACCEPT |
-| `ROM-N6-q4p25-SRAMKV-array-pipeline-x4-romfill` | 3,260 | 9,469.6 | 2,904.8 | 2,372.4 | 3,437.1 | stop |
-| `ROM-N6-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 9,525.4 | 2,337.5 | 1,604.4 | 3,437.1 | stop |
+| `ROM-N6-q4p25-SRAMKV-array-pipeline-x3` | 2,445 | 7,889.0 | 3,226.6 | -- | 3,226.6 | ACCEPT |
+| `ROM-N6-q4p25-SRAMKV-array-pipeline-x4-romfill` | 3,260 | 9,383.2 | 2,878.3 | 1,833.3 | 3,226.6 | stop |
+| `ROM-N6-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 9,438.0 | 2,316.1 | 950.3 | 3,226.6 | stop |
 
 **The frontier at batch 1, published in full.** Every design here is one that nothing else beats on both axes at once, so a reader with a latency target this report does not know about can read their own point off it. An honest curve beats a false single answer, and the rows above and below the recommendation are the ones that show what the rule is doing.
 
 | design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
-| `ROM-N6-q4p25-SRAMKV-array-pipeline-x2` **<-- recommended** | 1,630 | 2 | 5,602.5 | 5,603 | 3,437.1 | 1 | `weight_read` | 167 | 29.8 | `a100_sxm_80gb-x2-tensor` | 11.46x |
-| `ROM-N6-q4p25-SRAMKV-array-pipeline-x4-romfill` | 3,260 | 4 | 9,469.6 | 9,470 | 2,904.8 | 1 | `compute` | 289 | 30.5 | `a100_sxm_80gb-x4-tensor` | 11.44x |
-| `ROM-N6-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 5 | 9,525.4 | 9,525 | 2,337.5 | 1 | `compute` | 360 | 37.8 | `a100_sxm_80gb-x5-tensor` | 9.92x |
+| `ROM-N6-q4p25-SRAMKV-array-pipeline-x3` **<-- recommended** | 2,445 | 3 | 7,889.0 | 7,889 | 3,226.6 | 1 | `weight_read` | 270 | 34.2 | `a100_sxm_80gb-x3-tensor` | 11.25x |
+| `ROM-N6-q4p25-SRAMKV-array-pipeline-x4-romfill` | 3,260 | 4 | 9,383.2 | 9,383 | 2,878.3 | 1 | `compute` | 318 | 33.9 | `a100_sxm_80gb-x4-tensor` | 10.91x |
+| `ROM-N6-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 5 | 9,438.0 | 9,438 | 2,316.1 | 1 | `compute` | 391 | 41.5 | `a100_sxm_80gb-x5-tensor` | 9.48x |
 
 **Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
 
 | class | designs | pick | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions |
 | --- | ---: | --- | --- | ---: | ---: | ---: | ---: |
-| array | 14 | densest | `ROM-N6-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 5,602.5 | 3,437.1 | 1 |
-| array | 14 | fastest | `ROM-N6-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 9,525.4 | 2,337.5 | 1 |
-| array | 14 | smallest | `ROM-N6-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | 5,602.5 | 3,437.1 | 1 |
-| wafer | 80 | densest | `ROM-N6-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,505.3 | 140.7 | 1 |
-| wafer | 80 | fastest | `ROM-N6-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,505.3 | 140.7 | 1 |
-| wafer | 80 | smallest | `ROM-N6-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,505.3 | 140.7 | 1 |
+| array | 14 | densest | `ROM-N6-q4p25-SRAMKV-array-pipeline-x3` | 2,445 | 7,889.0 | 3,226.6 | 1 |
+| array | 14 | fastest | `ROM-N6-q4p25-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 9,438.0 | 2,316.1 | 1 |
+| array | 14 | smallest | `ROM-N6-q4p25-SRAMKV-array-pipeline-x3` | 2,445 | 7,889.0 | 3,226.6 | 1 |
+| wafer | 80 | densest | `ROM-N6-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,464.4 | 139.8 | 1 |
+| wafer | 80 | fastest | `ROM-N6-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,464.4 | 139.8 | 1 |
+| wafer | 80 | smallest | `ROM-N6-q4p25-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,464.4 | 139.8 | 1 |
 
 **The best design differs by batch, and here is where it changes.**
 
 | batches | design | mm2 | class | KV | resident sessions |
 | --- | --- | ---: | --- | --- | ---: |
-| 1 | `ROM-N6-q4p25-SRAMKV-array-pipeline-x2` | 1,630 | array | SRAM | 1 |
+| 1 | `ROM-N6-q4p25-SRAMKV-array-pipeline-x3` | 2,445 | array | SRAM | 1 |
 | 2 | `ROM-N6-q4p25-HBMKV-array-tensor-x5` | 4,075 | array | HBM | 298 |
 | 4-256 | `ROM-N6-q4p25-HBMKV-array-pipeline-x5` | 4,075 | array | HBM | 298 |
 
@@ -140,7 +140,7 @@ Per-user rate falls as the batch rises on a fixed machine, so `tok/s per 1,000 m
 | Qwen3-8B | HBM | rom | 5, 8 |
 | Qwen3-8B | HBM | sram | 5, 8 |
 | Qwen3-8B | SRAM | rom | 4, 5 |
-| Qwen3-8B | SRAM | sram | 2 |
+| Qwen3-8B | SRAM | sram | 3 |
 
 The omission runs **against** the array class, so the published ROM curve is a lower bound on the ROM curve rather than an upper one.
 
