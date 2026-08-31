@@ -51,6 +51,7 @@ from runtime.abi3.constants import (
     NO_ID,
     Permission,
     Reduction,
+    ReductionOrder,
     Route,
     StorageClass,
     TopologyClass,
@@ -427,8 +428,14 @@ def moe_graph(
              [f"{p}.dispatch", f"{p}.experts", f"{p}.dispatched_ids", f"{p}.gate"],
              [f"{p}.expert"], "matrix_dense_fp8_linear_bf16_block_scaled_contraction_v1",
              attributes={"expert_count": experts}, **layer)
-        emit("EXPERT_REDUCE", [f"{p}.expert", f"{p}.gate", f"{p}.index"],
-             [f"{p}.reduced"], "dispatch_reduce_expert_outputs_bf16_v1", **layer)
+        emit(
+            "EXPERT_REDUCE",
+            [f"{p}.expert", f"{p}.gate", f"{p}.index"],
+            [f"{p}.reduced"],
+            "dispatch_reduce_expert_outputs_bf16_v1",
+            attributes={"reduction_order": "pairwise_tree"},
+            **layer,
+        )
         emit("MATMUL", [f"{p}.reduced", f"{p}.wdown"], [f"{p}.down"],
              "bf16_bf16_fp32_sequential_rne_v1", **layer)
         emit("ADD", [previous, f"{p}.down"], [f"{p}.res"], "bf16_add_rne_v1", **layer)
@@ -886,6 +893,26 @@ def test_moe_deployment_is_admitted_on_one_chip(moe, single_chip):
     deployment = lower_to_abi3(moe, single_chip)
     report = require_admitted(deployment, single_chip)
     assert report.admitted
+
+
+def test_expert_sum_honours_the_graph_declared_pairwise_tree(moe, single_chip):
+    deployment = lower_to_abi3(moe, single_chip)
+    source_ids = {k.index for k in moe.kernels if k.kind == "EXPERT_REDUCE"}
+    operators = [
+        descriptor
+        for descriptor in deployment.table.descriptors()
+        if descriptor.descriptor_type == ExtendedDescriptorType.OPERATOR
+        and descriptor.payload["source_kernel_id"] in source_ids
+        and descriptor.payload["engine_family"] == int(Major.REDUCTION)
+        and descriptor.payload["engine_sub"] == int(Reduction.EXPERT_SUM)
+    ]
+
+    assert operators
+    for operator in operators:
+        numeric = deployment.table[operator.payload["numeric_profile_id"]]
+        assert numeric.payload["reduction_order"] == int(
+            ReductionOrder.PAIRWISE_TREE
+        )
 
 
 def test_moe_deployment_is_admitted_on_the_cluster(moe, cluster):

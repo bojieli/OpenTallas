@@ -51,6 +51,10 @@ from __future__ import annotations
 from dataclasses import dataclass, field as dc_field
 from typing import Any, Callable, Iterable, Mapping, Sequence
 
+from compiler.backends.numeric_contracts import (
+    EXECUTION_CONTRACT,
+    reduction_order_for,
+)
 from compiler.ir.v3.kernel_ir import (
     Kernel,
     KernelGraph,
@@ -147,14 +151,6 @@ WIDE_INDEX_DTYPES = frozenset({"u64", "i64"})
 TABLE_ELEMENT_READINGS: Mapping[str, DType] = {
     "low_u32_of_i64": DType.U32,
     "low_u32_of_u64": DType.U32,
-}
-
-#: ``TA-ABI3-OPCONV-1`` amendment A7: the sequential contract is the scalar
-#: oracle used for numeric qualification; execution declares the blocked
-#: contract.  The substitution is applied identically for ROM and HBM, so the
-#: two deployments stay bit-comparable, and it is recorded in the manifest.
-EXECUTION_CONTRACT: Mapping[str, str] = {
-    "bf16_bf16_fp32_sequential_rne_v1": "bf16_bf16_fp32_blocked_rne_v1",
 }
 
 #: What limits an operator's rate.  The cycle model reads this out of the
@@ -376,22 +372,6 @@ MHC_SUBCASE: Mapping[str, int] = {
     "HYPER_CONNECT_HEAD": 2,
 }
 SCALE_SUBCASE: Mapping[str, int] = {"SCALE": 0, "MUL": 1, "SIGMOID": 2}
-
-#: Neutral kinds whose *whole* content is an ordered sum, and which therefore
-#: state their association in the graph rather than leaving it to a contract
-#: name.
-REDUCTION_KINDS = frozenset({"EXPERT_REDUCE", "ORDERED_SUM", "PARTITION_SUM"})
-
-#: Spellings the exporters use for a reduction association, and the frozen ABI
-#: order each names.  ``canonical_balanced_binary32_tree`` and ``pairwise_tree``
-#: are the same NUM-6.1 tree written by two exporters.
-DECLARED_REDUCTION_ORDER: Mapping[str, ReductionOrder] = {
-    "balanced_tree": ReductionOrder.PAIRWISE_TREE,
-    "canonical_balanced_binary32_tree": ReductionOrder.PAIRWISE_TREE,
-    "pairwise_tree": ReductionOrder.PAIRWISE_TREE,
-    "blocked_ascending": ReductionOrder.BLOCKED_ASCENDING,
-    "sequential_ascending": ReductionOrder.SEQUENTIAL_ASCENDING,
-}
 
 #: Neutral operand orders that differ from TA-ABI3-OPCONV-1's slot order, and
 #: the permutation that reconciles them.  The ``MHC`` row is
@@ -1785,7 +1765,7 @@ class RomLowering:
         )
         if contract != kernel.numeric_contract:
             self._contract_substitutions[kernel.numeric_contract] = contract
-        order = self._reduction_order(contract, kernel.kind, attributes)
+        order = reduction_order_for(contract, kernel.kind, attributes)
         # An engine reads its epsilon and its scale from the numeric
         # descriptor, so a kernel that declares either must have it carried
         # through. Omitting them produced a deployment the verifier admitted
@@ -1855,35 +1835,6 @@ class RomLowering:
         if kernel.kind != "HEAD_RMS_NORM" or not bits or len(kernel.inputs) != 1:
             return bits
         return _narrow_bf16_rne(bits)
-
-    @staticmethod
-    def _reduction_order(
-        contract: str, kind: str, attributes: Mapping[str, Any] = {}
-    ) -> ReductionOrder:
-        """Amendment A8: RMSNorm sums in a balanced tree, not sequentially.
-
-        A reduction operator is the one place where the association is the
-        whole content of the operation rather than an implementation detail of
-        one, and the neutral IR states it: the mHC branch reduction declares
-        ``pairwise_tree`` because its frozen reference reduces four binary32
-        products with the NUM-6.1 balanced tree.  Deriving that from the
-        contract *name* instead would have made it sequential, which is a
-        different number.  The declaration is honoured only for the reduction
-        kinds, because elsewhere the graph states the association of the
-        qualification oracle while execution declares amendment A7's blocked
-        substitute -- two names for a deliberate difference, not a drift.
-        """
-        if kind in REDUCTION_KINDS:
-            declared = DECLARED_REDUCTION_ORDER.get(
-                str(attributes.get("reduction_order", ""))
-            )
-            if declared is not None:
-                return declared
-        if kind in {"RMS_NORM", "HEAD_RMS_NORM"} or "rmsnorm" in contract:
-            return ReductionOrder.PAIRWISE_TREE
-        if "blocked" in contract:
-            return ReductionOrder.BLOCKED_ASCENDING
-        return ReductionOrder.SEQUENTIAL_ASCENDING
 
     def _counter_class(self, kernel_counter: str, family: Major) -> int:
         group = COUNTER_GROUP_BY_FAMILY[int(family)]

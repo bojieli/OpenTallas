@@ -42,6 +42,10 @@ from __future__ import annotations
 from dataclasses import replace
 from typing import Any, Iterable, Mapping, Sequence
 
+from compiler.backends.numeric_contracts import (
+    EXECUTION_CONTRACT,
+    reduction_order_for,
+)
 from compiler.ir.v3.kernel_ir import Kernel, KernelGraph, Symbolic, Tensor
 from compiler.ir.v3.lowering import engine_for
 from runtime.abi3.builder import BuildError, DeploymentBuilder, DynamicTerm
@@ -145,51 +149,6 @@ _BATCH_LEADING = frozenset(
 #: placed weight; a block scale on anything else is produced at run time and
 #: lives in the activation arena.
 _WEIGHT_ROLES = frozenset({"weight", "constant"})
-
-#: TA-ABI3-OPCONV-1 amendment A7.  The strictly sequential contract is the
-#: scalar oracle used for numeric qualification; execution operators declare the
-#: blocked contract, which is what a lane array actually does and what an
-#: implementation can run at model scale.  Every substitution this table makes
-#: is recorded in the deployment notes -- a report that says only "exact" is
-#: incomplete, so the artifact names which contract it means.
-#:
-#: A7 admits *both* associations as contracts, so this is a choice between two
-#: declared associations rather than between right and wrong.  The rule for
-#: entering a key here is narrow and is about the operation, not the model: the
-#: contract must name a **plain contraction** -- a sum of products with nothing
-#: else folded into the accumulation -- because that is the only operation for
-#: which the two associations are the two A7 defines.  An exporter that pins a
-#: reference owner in the name instead of naming an A7 contract gets no library
-#: association by accident (``tensor._execution_contract`` falls back to the
-#: sequential oracle), which is correct as a default and is why the mapping has
-#: to be stated rather than inferred.
-EXECUTION_CONTRACT: Mapping[str, str] = {
-    "bf16_bf16_fp32_sequential_rne_v1": "bf16_bf16_fp32_blocked_rne_v1",
-    # Plain contractions whose names pin a reference owner.  Each is a
-    # ``[rows, K] x [N, K]`` sum of products with no nonlinearity, no gating
-    # and no accumulation-order requirement of its own; the block scaling in
-    # the fourth is applied to the *operands* before the contraction, so it
-    # leaves the association untouched.
-    "matrix_bf16_linear_bf16_v1": "bf16_bf16_fp32_blocked_rne_v1",
-    "grouped_output_project_bf16_v1": "bf16_bf16_fp32_blocked_rne_v1",
-    "lm_head_bf16_vocabulary_projection_v1": "bf16_bf16_fp32_blocked_rne_v1",
-    "matrix_dense_fp8_linear_bf16_block_scaled_contraction_v1": (
-        "bf16_bf16_fp32_blocked_rne_v1"
-    ),
-    "routing_router_score_bf16_v1": "bf16_bf16_fp32_blocked_rne_v1",
-    # The SwiGLU family's three contractions, dense and routed.  The name is
-    # provenance, not an operation: the nonlinearity is a *separate* kernel --
-    # the graph carries one ``SWIGLU`` per site declaring
-    # ``*_clamped_silu_product_v1`` -- and what these contracts name is the
-    # plain ``MATMUL`` / ``ROUTED_MATMUL`` that feeds it.  Nothing is folded
-    # into the accumulation, so the two A7 associations are the two choices.
-    "fp8_swiglu_bf16_gate_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
-    "fp8_swiglu_bf16_up_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
-    "fp8_swiglu_bf16_down_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
-    "mxfp4_swiglu_bf16_gate_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
-    "mxfp4_swiglu_bf16_up_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
-    "mxfp4_swiglu_bf16_down_contraction_v1": "bf16_bf16_fp32_blocked_rne_v1",
-}
 
 #: Which counter namespace observes which engine family.
 _COUNTER_GROUP: Mapping[int, CounterGroup] = {
@@ -1156,10 +1115,19 @@ class _Emitter:
         out_dtype: DType,
         second: DType,
         *,
+        reduction_order: ReductionOrder,
         scale_bits: int = 0,
         epsilon_bits: int = 0,
     ) -> int:
-        key = (contract, int(in_dtype), int(out_dtype), int(second), scale_bits, epsilon_bits)
+        key = (
+            contract,
+            int(in_dtype),
+            int(out_dtype),
+            int(second),
+            int(reduction_order),
+            scale_bits,
+            epsilon_bits,
+        )
         if key in self._numeric:
             return self._numeric[key]
         nid = self.builder.numeric(
@@ -1168,7 +1136,7 @@ class _Emitter:
             output_dtype=out_dtype,
             second_input_dtype=second,
             accumulator_dtype=DType.FP32,
-            reduction_order=_reduction_order(contract),
+            reduction_order=reduction_order,
             scale_bits=scale_bits,
             epsilon_bits=epsilon_bits,
             key=f"num.{len(self._numeric)}",
@@ -3425,6 +3393,9 @@ class _Emitter:
             in_dtype,
             out_dtype,
             second,
+            reduction_order=reduction_order_for(
+                contract, plan.kind, kernel.attributes
+            ),
             scale_bits=_binary32_bits(
                 kernel.attributes,
                 # Every spelling the released exporters use for "the constant
@@ -3843,26 +3814,3 @@ def _narrow_bf16_rne(bits: int) -> int:
     if remainder > 0x8000 or (remainder == 0x8000 and code & 1):
         code = (code + 1) & 0xFFFF
     return code
-
-
-def _reduction_order(contract: str) -> ReductionOrder:
-    """The association a numeric contract's name declares.
-
-    Amendment A8: RMSNorm's row sum is a balanced tree, so declaring the
-    builder's sequential default would contradict the frozen kernel.  Amendment
-    A7: the execution contract is blocked, the qualification contract is
-    strictly ascending.
-    """
-    lowered = contract.lower()
-    if "rmsnorm" in lowered or "rms_norm" in lowered:
-        return ReductionOrder.PAIRWISE_TREE
-    # The frozen hyper-connection reference reduces with a balanced tree at
-    # every stage -- the width-16384 RMS sum, the Sinkhorn row and column sums,
-    # and the four-term branch reduction, which is the one of them a separate
-    # REDUCTION operator performs and therefore the one whose association has to
-    # be declared here rather than lived inside the MHC engine.
-    if "hc_pre" in lowered:
-        return ReductionOrder.PAIRWISE_TREE
-    if "blocked" in lowered:
-        return ReductionOrder.BLOCKED_ASCENDING
-    return ReductionOrder.SEQUENTIAL_ASCENDING
