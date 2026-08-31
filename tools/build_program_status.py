@@ -231,7 +231,7 @@ def main() -> int:
         "artifact on disk; an absent artifact is reported as absent rather than",
         "omitted.",
         "",
-        f"**Commit:** `{status['commit'][:12]}`  ",
+        f"**Commit:** `{status['commit'][:12]}`",
         f"**Checklist:** {status['checklist'].get('done', 0)} done, "
         f"{status['checklist'].get('in_progress', 0)} in progress, "
         f"{status['checklist'].get('not_started', 0)} not started",
