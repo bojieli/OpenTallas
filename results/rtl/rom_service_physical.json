@@ -1,0 +1,104 @@
+{
+ "campaign": "rom_read_service_physical",
+ "canonical_timestamp_policy": "no timestamp in canonical artifact",
+ "claim_boundary": {
+  "activity_derived_power": false,
+  "contains_rom_array_or_macro": false,
+  "enters_iso_node_or_roofline_comparison": false,
+  "feature_size_scaling_permitted": false,
+  "foundry_drc": false,
+  "gds_generated": false,
+  "open_pdk_rtl_to_routed_feasibility": false,
+  "rom_cell_area_or_density": false,
+  "rom_read_energy_or_sense_margin": false,
+  "routed_not_only_synthesised": false,
+  "signoff_drc_or_lvs": false,
+  "tables_are_flip_flops_not_an_sram_macro": true,
+  "target_node_area_or_delay": false
+ },
+ "design": {
+  "instance_note": "sized for the shipped Qwen single-chip ROM plan (16 ROM objects, 14 shards, 14 regions, 14 banks). The DeepSeek wafer plan needs 312 objects, 9,527 shards, 228 regions and 9,300 resources; an instance that held those tables in flip-flops is not what a product would build and is not routed here",
+  "routed_instance": {
+   "OBJECTS": 16,
+   "REGIONS": 16,
+   "REPAIR_ENTRIES": 8,
+   "RESOURCES": 16,
+   "SHARDS": 16
+  },
+  "sources": [
+   "rtl/rom/ot_rom_pkg.sv",
+   "rtl/rom/ot_rom_read_service.sv"
+  ],
+  "top": "ot_rom_read_service",
+  "yosys_statistics": {
+   "cell_area_um2": 1077376.734,
+   "cells": 53446,
+   "sequential_cells": 12329
+  }
+ },
+ "evidence_class": "open_foundry_pdk_digital_implementation",
+ "flow": {
+  "corner": "typ_1p20V_25C",
+  "floorplan_utilization_percent": 30.0,
+  "global_placement_density": 0.55,
+  "maximum_routing_layer": "Metal5",
+  "node_nm": 130,
+  "platform": "ihp-sg13g2",
+  "steps": [
+   "yosys synth + dfflibmap + abc + hilomap",
+   "openroad initialize_floorplan + make_tracks + place_pins",
+   "openroad pdngen (Metal1 followpins, Metal4/Metal5 straps)",
+   "openroad global_placement + repair_design + detailed_placement",
+   "openroad clock_tree_synthesis + repair_clock_nets",
+   "openroad global_route + detailed_route (TritonRoute)",
+   "openroad filler_placement + check_placement"
+  ],
+  "target_clock_period_ns": 10.0
+ },
+ "implementation": {
+  "command": "/usr/bin/openroad -exit /tmp/romsvc-phys-50j0q0k4/pnr.tcl",
+  "detailed_route_drc_violations": null,
+  "log_sha256": "d97b8a05ae6e2b9e33e2760e7c4ebc28426918381919f49b2e7e2a86b2344d4a",
+  "log_tail": "Iter:  410 overflow: 0.137 HPWL: 3670258310\n[NesterovSolve] Iter:  420 overflow: 0.114 HPWL: 3665817924\n[NesterovSolve] Finished with Overflow: 0.099240\n[WARNING RSZ-0018] wire capacitance for corner default is zero. Use the set_wire_rc command to set wire resistance and capacitance.\n[WARNING RSZ-0021] no estimated parasitics. Using wire load models.\n[INFO RSZ-0034] Found 5 slew violations.\n[INFO RSZ-0035] Found 597 fanout violations.\n[INFO RSZ-0038] Inserted 7016 buffers in 600 nets.\n[INFO RSZ-0039] Resized 2 instances.\nPlacement Analysis\n---------------------------------\ntotal displacement     180825.8 u\naverage displacement        3.0 u\nmax displacement           12.6 u\noriginal HPWL         5000700.8 u\nlegalized HPWL        5156107.2 u\ndelta HPWL                    3 %\n\n[WARNING CTS-0104] Clock wire resistance/capacitance values are zero.\nUse set_wire_rc to set them.\n[INFO CTS-0050] Root buffer is sg13g2_buf_16.\n[INFO CTS-0051] Sink buffer is sg13g2_buf_2.\n[INFO CTS-0052] The following clock buffers will be used for CTS:\n                    sg13g2_buf_2\n                    sg13g2_buf_4\n                    sg13g2_buf_8\n[INFO CTS-0049] Characterization buffer is sg13g2_buf_8.\n[INFO CTS-0007] Net \"clk\" found for clock \"clk\".\n[INFO CTS-0010]  Clock net \"clk\" has 12329 sinks.\n[INFO CTS-0008] TritonCTS found 1 clock nets.\n[INFO CTS-0097] Characterization used 3 buffer(s) types.\n[INFO CTS-0200] 0 placement blockages have been identified.\n[INFO CTS-0201] 0 placed hard macros will be treated like blockages.\n[INFO CTS-0027] Generating H-Tree topology for net clk.\n[INFO CTS-0028]  Total number of sinks: 12329.\n[INFO CTS-0029]  Sinks will be clustered in groups of up to 8 and with maximum cluster diameter of 50.0 um.\n[INFO CTS-0030]  Number of static layers: 0.\n[INFO CTS-0020]  Wire segment unit: 18900  dbu (18 um).\n[INFO CTS-0204] A clustering solution was found from clustering size of 8 and clustering diameter of 50.\n[INFO CTS-0205] Better solution may be possible if either -sink_clustering_size, -sink_clustering_max_diameter, or both options are omitted to enable automatic clustering.\n[INFO CTS-0019]  Total number of sinks after clustering: 2058.\n[INFO CTS-0024]  Normalized sink region: [(0.961451, 0.711111), (100.19, 100.089)].\n[INFO CTS-0025]     Width:  99.2290.\n[INFO CTS-0026]     Height: 99.3778.\n Level 1\n    Direction: Vertical\n    Sinks per sub-region: 1029\n    Sub-region size: 99.2290 X 49.6889\n[INFO CTS-0034]     Segment length (rounded): 24.\n Level 2\n    Direction: Horizontal\n    Sinks per sub-region: 515\n    Sub-region size: 49.6145 X 49.6889\n[INFO CTS-0034]     Segment length (rounded): 24.\n Level 3\n    Direction: Vertical\n    Sinks per sub-region: 258\n    Sub-region size: 49.6145 X 24.8444\n[INFO CTS-0034]     Segment length (rounded): 12.\n Level 4\n    Direction: Horizontal\n    Sinks per sub-region: 129\n    Sub-region size: 24.8073 X 24.8444\n[INFO CTS-0034]     Segment length (rounded): 12.\n Level 5\n    Direction: Vertical\n    Sinks per sub-region: 65\n    Sub-region size: 24.8073 X 12.4222\n[INFO CTS-0034]     Segment length (rounded): 6.\n Level 6\n    Direction: Horizontal\n    Sinks per sub-region: 33\n    Sub-region size: 12.4036 X 12.4222\n[INFO CTS-0034]     Segment length (rounded): 6.\n Level 7\n    Direction: Vertical\n    Sinks per sub-region: 17\n    Sub-region size: 12.4036 X 6.2111\n[INFO CTS-0034]     Segment length (rounded): 4.\n Level 8\n    Direction: Horizontal\n    Sinks per sub-region: 9\n    Sub-region size: 6.2018 X 6.2111\n[INFO CTS-0034]     Segment length (rounded): 4.\n Level 9\n    Direction: Vertical\n    Sinks per sub-region: 5\n    Sub-region size: 6.2018 X 3.1056\n[INFO CTS-0034]     Segment length (rounded): 1.\n[INFO CTS-0032]  Stop criterion found. Max number of sinks is 8.\n[INFO CTS-0035]  Number of sinks covered: 2058.\n[INFO CTS-0018]     Created 2606 clock buffers.\n[INFO CTS-0012]     Minimum number of buffers in the clock path: 5.\n[INFO CTS-0013]     Maximum number of buffers in the clock path: 6.\n[INFO CTS-0015]     Created 2606 clock nets.\n[INFO CTS-0016]     Fanout distribution for the current clock = 2:53, 3:129, 4:689, 5:301, 6:424, 7:416, 8:517..\n[INFO CTS-0017]     Max level of the clock tree: 9.\n[INFO CTS-0098] Clock net \"clk\"\n[INFO CTS-0099]  Sinks 13755\n[INFO CTS-0100]  Leaf buffers 2017\n[INFO CTS-0101]  Average sink wire length 2309.34 um\n[INFO CTS-0102]  Path depth 5 - 6\n[INFO CTS-0207]  Leaf load cells 1426\n[WARNING RSZ-0018] wire capacitance for corner default is zero. Use the set_wire_rc command to set wire resistance and capacitance.\n[WARNING RSZ-0021] no estimated parasitics. Using wire load models.\nPlacement Analysis\n---------------------------------\ntotal displacement      21597.1 u\naverage displacement        0.3 u\nmax displacement           12.8 u\noriginal HPWL         5345672.7 u\nlegalized HPWL        5353676.0 u\ndelta HPWL                    0 %\n\n[INFO ORD-0030] Using 12 thread(s).\n[WARNING DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer Cont\n[WARNING DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer Via1\n[WARNING DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer Via1\n[WARNING DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer Via2\n[WARNING DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer Via3\n[WARNING DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer Via4\n[WARNING DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer TopVia1\n[WARNING DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer TopVia1\n[WARNING DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer TopVia2\n[WARNING DRT-0349] LEF58_ENCLOSURE with no CUTCLASS is not supported. Skipping for layer TopVia2\n[INFO DRT-0167] List of default vias:\n  Layer Via1\n    default via: Via1_XY\n  Layer Via2\n    default via: Via2_YX\n  Layer Via3\n    default via: Via3_XY\n  Layer Via4\n    default via: Via4_YX\n  Layer TopVia1\n    default via: TopVia1EWNS\n  Layer TopVia2\n    default via: TopVia2EWNS\n[INFO DRT-0168] Init region query.\n[INFO DRT-0033] GatPoly shape region query size = 0.\n[INFO DRT-0033] Cont shape region query size = 0.\n[INFO DRT-0033] Metal1 shape region query size = 2085505.\n[INFO DRT-0033] Via1 shape region query size = 47094.\n[INFO DRT-0033] Metal2 shape region query size = 48694.\n[INFO DRT-0033] Via2 shape region query size = 47094.\n[INFO DRT-0033] Metal3 shape region query size = 71957.\n[INFO DRT-0033] Via3 shape region query size = 47094.\n[INFO DRT-0033] Metal4 shape region query size = 28059.\n[INFO DRT-0033] Via4 shape region query size = 26508.\n[INFO DRT-0033] Metal5 shape region query size = 4512.\n[INFO DRT-0033] TopVia1 shape region query size = 0.\n[INFO DRT-0033] TopMetal1 shape region query size = 0.\n[INFO DRT-0033] TopVia2 shape region query size = 0.\n[INFO DRT-0033] TopMetal2 shape region query size = 0.\n[INFO DRT-0156] guideIn read 100000 guides.\n[INFO DRT-0156] guideIn read 200000 guides.\n[INFO DRT-0156] guideIn read 300000 guides.\n[INFO DRT-0178] Init guide query.\n[INFO DRT-0036] GatPoly guide region query size = 0.\n[INFO DRT-0036] Cont guide region query size = 0.\n[INFO DRT-0036] Metal1 guide region query size = 157892.\n[INFO DRT-0036] Via1 guide region query size = 0.\n[INFO DRT-0036] Metal2 guide region query size = 69860.\n[INFO DRT-0036] Via2 guide region query size = 0.\n[INFO DRT-0036] Metal3 guide region query size = 14626.\n[INFO DRT-0036] Via3 guide region query size = 0.\n[INFO DRT-0036] Metal4 guide region query size = 1872.\n[INFO DRT-0036] Via4 guide region query size = 0.\n[INFO DRT-0036] Metal5 guide region query size = 258.\n[INFO DRT-0036] TopVia1 guide region query size = 0.\n[INFO DRT-0036] TopMetal1 guide region query size = 0.\n[INFO DRT-0036] TopVia2 guide region query size = 0.\n[INFO DRT-0036] TopMetal2 guide region query size = 0.\n[INFO DRT-0179] Init gr pin query.",
+  "returncode": -15,
+  "routed_def_written": false
+ },
+ "limitations": [
+  "IHP SG13G2 is a 130-nm open foundry PDK. Neither the area nor the timing here may be scaled to N6, N5, N7 or N4 by any feature-size, gate-pitch or density ratio; docs/METHODOLOGY.md section 9 makes that a rule.",
+  "The routed block is the ROM read service, which contains no ROM array. The array is behind the sense request/response interface and in a product is a foundry macro. This says nothing about ROM cell area, read energy or sense margin.",
+  "The object, shard and repair tables are flip-flops here because that is the only storage this open flow can build. A product would hold them in a small SRAM loaded at admission, so this area over-counts them by an amount this run does not establish.",
+  "The clock period is a constraint chosen for this run, not a characterised maximum frequency.",
+  "No parasitic-extracted (SPEF) timing, no signoff DRC against a foundry deck, no LVS, no GDS, no activity-derived power."
+ ],
+ "metrics": {},
+ "pdk_collateral_sha256": {
+  "libs.ref/sg13g2_stdcell/lef/sg13g2_stdcell.lef": "c9bbc02d0c2cba3b15cd89a208750d25de882f02a2927ae78ba6422109fb01d0",
+  "libs.ref/sg13g2_stdcell/lef/sg13g2_tech.lef": "a12fecdead5721dc3bd14fb75bd0915c61afba064e38af8c7b69d59d9da05080",
+  "libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_slow_1p08V_125C.lib": "1ac6a0301184b3a8aa1a4a01910967f624c8e869517777f529985f11f04588c3",
+  "libs.ref/sg13g2_stdcell/lib/sg13g2_stdcell_typ_1p20V_25C.lib": "7677a8918689f452e80405ad16a83e744709342574f2aedcc507c2758986b396"
+ },
+ "schema": "opentallas.rtl.rom_service_physical.v1",
+ "source_sha256": {
+  "rtl/rom/ot_rom_pkg.sv": "09223a30dc40d239f70e75a65a8deb874b95e6c8214e28f0748e589f86761502",
+  "rtl/rom/ot_rom_read_service.sv": "c8fa5bd70167cc5f2e28c7bcecac50c04cc230048d56756f55b5fbfa2d962f81",
+  "tools/run_rom_service_physical.py": "9e038a3d99d273443195c5278eccb419d0827d06c58b0585b4d923c39f0eaafd"
+ },
+ "status": "fail",
+ "synthesis": {
+  "command": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys -q /tmp/romsvc-phys-50j0q0k4/synth.ys",
+  "log": "Warning: Replacing memory \\shard_table with list of registers. See <ROOT>/rtl/rom/ot_rom_read_service.sv:173\nWarning: Replacing memory \\object_table with list of registers. See <ROOT>/rtl/rom/ot_rom_read_service.sv:171\nWarning: Replacing memory \\resource_broken with list of registers. See <ROOT>/rtl/rom/ot_rom_read_service.sv:167\nWarning: Replacing memory \\region_masked with list of registers. See <ROOT>/rtl/rom/ot_rom_read_service.sv:165\nWarning: Replacing memory \\repair_table with list of registers. See <ROOT>/rtl/rom/ot_rom_read_service.sv:163",
+  "returncode": 0
+ },
+ "toolchain": {
+  "openroad": {
+   "executable": "/usr/bin/openroad",
+   "executable_sha256": "93fe61454a52b927602fd6c798c4402214c19e80e7d614636345f0f427ea2f46",
+   "version": "v2.0-17598-ga008522d8"
+  },
+  "yosys": {
+   "executable": "<HOME>/.local/opentallas-tools/yosys-0.68/bin/yosys",
+   "executable_sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50",
+   "version": "Yosys 0.68 (git sha1 38e001a6f, Release, GNU /usr/bin/c++ 11.4.0)"
+  }
+ }
+}

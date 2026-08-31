@@ -117,7 +117,34 @@
     "sha256": "574ee47ede4cfb8c14416ff7ba76f44b8cd3500813d939c5193d9a18176d4247"
   },
   "experiment_id": "ihp_sg13g2_rom_macro_routed_area_v1",
-  "generated_at_utc": "2026-08-31T07:31:33.443634+00:00",
+  "generated_at_utc": "2026-08-31T07:46:26.688582+00:00",
+  "inputs": {
+    "generator": {
+      "path": "spice/ihp_sg13g2/bitcell/rom_bitarray.tcl",
+      "sha256": "0f0cdbfc1b0889f96598f81de67d8b17e7789daacd91d3c0a8862337251c6cef",
+      "size_bytes": 17469
+    },
+    "periphery_rtl": {
+      "path": "rtl/ot_rom_macro_periphery.sv",
+      "sha256": "bec230456fbdb10ef942046e44a9b42be492d90fc7cb5bf13d3fa78372724bb2",
+      "size_bytes": 3915
+    },
+    "route_script": {
+      "path": "physical/ihp_sg13g2_rom_macro/route.tcl.in",
+      "sha256": "9cf24a556c834ecdfb945c190cf608904580cfd77f3e1374e48a8e77c6ee0ccd",
+      "size_bytes": 2097
+    },
+    "sdc": {
+      "path": "physical/ihp_sg13g2_rom_macro/constraint.sdc",
+      "sha256": "64a2ee63f9438052ad180201cd220cfaccd55456d18c9f1d1f4aaed5495bdc80",
+      "size_bytes": 658
+    },
+    "synthesis_script": {
+      "path": "physical/ihp_sg13g2_rom_macro/synth.ys.in",
+      "sha256": "08ab8551bd69b4d58d7cc0fec298afb2f79342b52079346d32817005cd7b3775",
+      "size_bytes": 541
+    }
+  },
   "macros": [
     {
       "array_efficiency": 0.11923239276552909,
@@ -140,7 +167,7 @@
         "die_area_um2": 13402.854400000002,
         "die_height_um": 140.08,
         "die_width_um": 95.68,
-        "log_sha256": "a0d124f5c3a9e6290e36c201445740077c192fd6fe469df37023f013b43e43c1",
+        "log_sha256": "5033e65a93002a23c410934e8f4d98eb8b807f112a9c1acd737cbbd5cf50c1a4",
         "openroad_version": "v2.0-17598-ga008522d8",
         "requested_utilization": 0.42,
         "total_negative_slack_ns": 0.0,
@@ -148,7 +175,7 @@
       },
       "rows": 64,
       "synthesis": {
-        "log_sha256": "17c2d5583f24d126c633154027b1c2328f7f9c80e1ef3a28acd7ee4b3feecf6e",
+        "log_sha256": "eee2abef810b1e581e88af03c53b9aaa53854d40adc23e4e800854ad7198ac25",
         "standard_cell_area_um2": 4369.0752,
         "yosys_commit": "38e001a6f",
         "yosys_version": "0.68"
@@ -167,7 +194,7 @@
         "macro_area_um2": 7415.7644,
         "macro_height_um": 106.84,
         "macro_width_um": 69.41,
-        "magic_log_sha256": "490f7ed11b0a604605367779b658c82b4eb8cc86c3bb6f0be047fcebb36cd4f5"
+        "magic_log_sha256": "e8dae8c260ddcdb67ffcba8aae1a57b3ec079a221b903798911cb8d29480db0d"
       },
       "macro_internal_efficiency": 0.8619768988345962,
       "mux": 4,
@@ -178,7 +205,7 @@
         "die_area_um2": 24395.2,
         "die_height_um": 193.0,
         "die_width_um": 126.4,
-        "log_sha256": "fa812bfc18668d672bdc62f1be44765fa9aaba1204d31ba60fc930b819e69203",
+        "log_sha256": "1f9745ab5f833ee0b0c86d0b3f25c114ec93bc07f9841209364985d38ca98295",
         "openroad_version": "v2.0-17598-ga008522d8",
         "requested_utilization": 0.42,
         "total_negative_slack_ns": 0.0,
@@ -186,7 +213,7 @@
       },
       "rows": 128,
       "synthesis": {
-        "log_sha256": "7d6bb7a06f209e67b4e79ac4c4d9abe0093a1d4ce4e13e98f254d8eb5c929eaa",
+        "log_sha256": "dc07196d6c8045a9b4b7d83baba038488703ae6998bccdb935a4ebd10e7f21e3",
         "standard_cell_area_um2": 6561.4752,
         "yosys_commit": "38e001a6f",
         "yosys_version": "0.68"
@@ -197,7 +224,7 @@
         "latch_up_rules": [
           "N-diff distance to P-tap must be < 20.0um (LU.b)"
         ],
-        "magic_log_sha256": "bbeb5ebde8422fe7e5c9e6996c5db135f3314438f1b52364c7a91ee45cd5d8df",
+        "magic_log_sha256": "fbc04c01c9b6768810fa604a93f102b3016c4df12a8af7862a0ec21f8f7ac26e",
         "tap_every": 0,
         "violated_rules": [
           "N-diff distance to P-tap must be < 20.0um (LU.b)"

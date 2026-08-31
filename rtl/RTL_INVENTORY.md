@@ -11,7 +11,15 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Elastic/CDC/RDC | `lib/ot_skid_buffer.sv`, `lib/ot_async_fifo.sv`, `lib/ot_cdc_mailbox.sv`, `lib/ot_sync_level.sv`, `lib/ot_sync_bits.sv`, `lib/ot_reset_sync.sv` | stable ready/valid, Gray pointers, closed-loop mailbox, qualified levels, coupled flush, synchronous reset release, online rendezvous | DV-RESET-001/DV-STATIC-001 |
 | Route context | `ot_route_mask.sv` | ID/range/CRC checks and duplicate suppression | DV-TILE-001 |
 | Immutable ROM | `ot_rom_wrapper.sv`, `via_mask_rom.sv` | no write path, fixed latency, repair/fault status | DV-TILE-002 |
+| ROM read service | `rom/ot_rom_pkg.sv`, `rom/ot_rom_read_service.sv` | Deployment-named ROM object to placement resource, row, sense granule and operand bus: object and shard lookup over the compiled region plan, bounds and shard-gap refusal, row-redundancy translation, region masking with no array access at all, fail-closed quarantine and column-repair refusal, row-activation accounting against a persistent row buffer, and the column mux that presents a partial granule from the low lane with the rest zeroed | ROM-SVC-001 |
+| ROM sense-interface array | `rom/ot_rom_bank_array.sv` | The behavioural array standing behind the sense interface: no write port, no write enable, no write data, no bidirectional pin; wordline activation counted separately from sense access; an address outside the built array is a defined miss rather than stale row data. **Not a macro and not a density or energy model** | ROM-SVC-001 |
 | Numeric/DV | `ot_format_decode.sv`, `ot_numeric_dot.sv`, `ot_reduction_tree.sv` | classification, signed exact order, deterministic reduction | DV-NUM-001/002 |
+| ABI 3.0 storage-format decode | `abi3/ot_a3_format_pkg.sv` | Exact BF16, binary32, FP8 E4M3FN, MXFP4 E2M1 and unsigned E8M0 decode to binary32, canonical positive zero, reserved encodings reported rather than valued | A3-ENG-001 |
+| ABI 3.0 tensor contraction lane | `abi3/ot_a3_mac_lane.sv`, `ot_fp32_rne_pkg.sv` | `bf16_bf16_fp32_sequential_rne_v1`: exact widening, one binary32 RNE block-scale multiply, one binary32 RNE product with canonicalized zero, strictly ascending-K binary32 accumulation, one RNE output rounding with counted saturation, and fail-closed operand/product/accumulation/scale faults | A3-ENG-001 |
+| ABI 3.0 on-device selection | `abi3/ot_a3_selection_argmax.sv` | `greedy_lowest_token_id_argmax`: signed-zero-canonical binary32 ordering, lowest token ID among the maxima by construction, published tie multiplicity, nonfinite logit refused | A3-ENG-001 |
+| ABI 3.0 indexed movement | `abi3/ot_a3_dma_index_mover.sv` | GATHER/SCATTER of storage codes with every index validated before anything moves, destination read back so unnamed rows survive, and ascending slot order making a repeated index resolve to the later write | A3-ENG-001 |
+| ABI 3.0 residual add | `abi3/ot_a3_vector_add.sv`, `ot_fp32_rne_pkg.sv` | `bf16_add_rne_v1`: exact BF16 widening, one binary32 RNE add, one RNE BF16 conversion with counted saturation, nonfinite and overflow refused | A3-ENG-001 |
+| ABI 3.0 engine dispatch | `abi3/ot_a3_engine_array.sv`, `abi3/ot_a3_engine_pkg.sv` | Fail-closed dispatch on (family, subopcode); an operation the array does not implement is refused rather than routed to another datapath | A3-ENG-001 |
 | Tile | `ot_tile.sv`, `opentallas_tile.sv` | route-before-activation and result alignment | DV-TILE-004 |
 | Static schedule | `ot_schedule_controller.sv`, `static_timeslot_switch.sv` | fully rewritten shadow bank, typed schedule-ID/epoch atomic commit, and slot transport | DV-NOC-001 |
 | Credits | `ot_credit_manager.sv` | atomic reservation and conservation | DV-NOC-004 |
@@ -33,6 +41,10 @@ integrity, reset, poison, and test contracts remain equivalent.
 | Stage/CSR | `ot_stage_controller.sv`, `ot_stage_top.sv`, `ot_csr_block.sv` | ordered validate/reserve/execute/commit/retire, complete service metadata, coherent diagnostic snapshot, lossless RW1C clear, single-dispatch schedule CDC, watchdog escalation, and explicit AON integration sidebands | DV-STAGE-001/DV-FW-001/DV-RESET-001 |
 | HBM boundary | `ot_hbm_frontend.sv` | tagged out-of-order-across-tag, in-order-within-tag | DV-HBM-001 |
 | Stage link | `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` | packet retention, CRC, duplicate/retry/abort | DV-LINK-001 |
+| ABI 3.0 inter-chip endpoint | `abi3/ot_a3_link_pkg.sv`, `abi3/ot_a3_link_channel.sv`, `abi3/ot_a3_link_endpoint.sv` | COMMUNICATION `credit_bound`, `integrity_mode` = CRC32C, `retry_bound` and `timeout_class`: a bounded credit window, a monotone sequence, CRC32C per flit, go-back-N replay to the receiver's own expected sequence, and a credit return that is separate from the acknowledgement because a slot frees when a flit drains and a replay slot frees when a flit is accepted | A3-LINK-001 |
+| ABI 3.0 mesh router | `abi3/ot_a3_mesh_router.sv` | Dimension-ordered (X then Y) routing of single-flit packets over five ports with per-output round-robin arbitration; deadlock-free without virtual channels, and every cycle of a traversal is spent in the link channel rather than the crossbar | A3-LINK-001 |
+| ABI 3.0 collective engine | `abi3/ot_a3_collective_engine.sv`, `ot_fp32_rne_pkg.sv` | SUM/MAX/MIN all-reduce, BROADCAST, ALL_GATHER and barrier over a 2-D mesh under two explicitly selected published algorithms -- recursive doubling (diameter traversals, lg(P) x payload) and Rabenseifner halving/doubling (2 x diameter traversals, 2(P-1)/P x payload). A binary32 SUM is refused with trap class 11 unless the declared `reduction_order` is one the chosen algorithm can actually produce | A3-LINK-001 |
+| ABI 3.0 mesh node and wire | `abi3/ot_a3_link_node.sv` | One node's router, four credit/retry channels and collective engine, plus the declared-occupancy wire and return path between nodes. `HOP_CYCLES` is a parameter of the experiment and no block here measures it | A3-LINK-001 |
 | RAS/telemetry | `ot_ras_controller.sv` | first error, sticky poison, lossless event queue, watchdog | DV-RAS-001/002 |
 | Power/reset | `ot_power_reset_controller.sv` | legal state transitions, isolation, safe shutdown | DV-POWER-001 |
 | DFT/BIST | `ot_dft_controller.sv`, `ot_bist_controller.sv` | quiescent test ownership, bounded signatures and fail-closed result | DV-DFT-001 |
@@ -316,3 +328,27 @@ execution-derived power/IR, thermal, foundry DRC/LVS, package, reliability,
 yield, or silicon claim follows. See
 [`QWEN3_RTL_IHP_PHYSICAL.md`](../docs/QWEN3_RTL_IHP_PHYSICAL.md) for the exact
 flow lock, retained measurements, rejected predecessor, and open gates.
+
+A3-ENG-001 is the two-simulator engine-datapath correlation retained as
+`results/rtl/abi3_engine_campaign.json`. Icarus and Verilator each replay 31
+real ABI 3.0 programs -- built by `runtime.abi3.builder`, admitted by
+`runtime.abi3.verifier`, executed by `runtime.sim.device.Device` with the real
+engines and nothing stubbed -- and compare 10,025 result words element by
+element, 9 refusals by fault class with the destination proved untouched,
+2,576 exhaustive storage-format decode probes, and 3,696 binary32
+add/multiply/round probes against the exact `fractions.Fraction` reference, for
+26,381 checks each.
+This evidence covers datapath arithmetic only: it does not wire these blocks to
+the ABI 3.0 microsequencer, does not model an SRAM or ROM macro, does not cover
+the blocked contraction contract or any VECTOR operator but `ADD`, and
+establishes no timing or performance quantity. `docs/ABI3_ENGINE_DATAPATH_RTL.md`
+states the full boundary.
+
+`rtl/test/ot_a3_numeric_probes.sv` is a characterisation vehicle rather than a
+deliverable block: each module wraps exactly one function of the numeric or
+storage-format package as a single combinational cloud between an input port
+and one register, so that synthesis and static timing attribute delay and area
+to that operation and to nothing else. Its retained measurements are in
+`results/physical_abi3/sky130hd/a3_numeric_probes/`, and they are what showed
+that `ot_fp32_rne_pkg::fp32_add_rne` -- not `fp32_mul_rne` -- sets the
+contraction lane's period ([OI-44]).

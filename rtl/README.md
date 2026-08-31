@@ -13,6 +13,7 @@ compression, package, power-delivery, or thermal macros.
 | stage integration | `ot_stage_top.sv`, `ot_stage_controller.sv`, `ot_tile.sv` |
 | command/session/control | `ot_cmd_frontend.sv`, `ot_session_table.sv`, `ot_schedule_controller.sv`, `ot_credit_manager.sv`, `ot_csr_block.sv` |
 | data and numeric path | `ot_route_mask.sv`, `ot_rom_wrapper.sv`, `via_mask_rom.sv`, `ot_format_decode.sv`, `ot_numeric_dot.sv`, `ot_reduction_tree.sv` |
+| ROM read service | `rom/ot_rom_pkg.sv`, `rom/ot_rom_read_service.sv`, `rom/ot_rom_bank_array.sv` |
 | bounded tensor-accelerator path | `ot_ta_command_decoder.sv`, `ot_ta_dma_hbm_to_sram.sv`, `ot_ta_dma_hbm_indexed_to_sram.sv`, `ot_bf16_add_rne.sv`, `ot_ta_add_bf16_executor.sv`, `ot_ta_add_bf16_sram_engine.sv`, `ot_ta_dma_add_sequencer.sv`, `ot_fp32_rne_pkg.sv`, `ot_fp32_rsqrt_rne.sv`, `ot_ta_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_rmsnorm_sequencer.sv`, `ot_ta_head_rmsnorm_bf16_sram_engine.sv`, `ot_ta_dma_head_rmsnorm_sequencer.sv`, `ot_ta_rope_bf16_sram_engine.sv`, `ot_ta_dma_rope_sequencer.sv`, `ot_ta_matmul_bf16_sram_engine.sv`, `ot_ta_dma_matmul_sequencer.sv` |
 | HBM and stage protocol | `ot_hbm_frontend.sv`, `ot_stage_link_tx.sv`, `ot_stage_link_rx.sv`, `ot_stage_link_endpoint.sv` |
 | RAS, power, and test | `ot_ras_controller.sv`, `ot_power_reset_controller.sv`, `ot_bist_controller.sv`, `ot_dft_controller.sv` |
@@ -95,6 +96,41 @@ individually closed; it still does not connect the separately preloaded
 projection/RMSNorm inputs into one commands-3-through-3,080 RTL program. KV
 preparation, attention, state, vector kernels, complete-layer sequencing,
 physical memories/interconnect, and the remaining physical gates stay open.
+
+## The ROM read service
+
+`rom/ot_rom_read_service.sv` turns a deployment's name for a weight -- an
+`(object_id, byte_offset, byte_length)` triple -- into a physical access: which
+placement resource, which row inside it, which sense granule of that row, in
+what order, and whether the read is allowed at all. Every table it consults is
+the compiled ROM region plan (`compiler/backends/rom/common/image.py`, published
+as `notes.rom_plan` in a ROM deployment), written in over a configuration
+channel.
+
+**There is no ROM array in it.** The array sits behind the sense
+request/response interface; `rom/ot_rom_bank_array.sv` is a behavioural stand-in
+with no write port, and a foundry macro is what replaces it. The service
+therefore establishes addressing, ordering, masking, repair translation and
+operand alignment, and establishes nothing about cell area, read energy, sense
+margin, wordline or bitline delay, retention or defect rate. The sense-granule
+width is a declared parameter of the block, not a macro property; row
+activations and sense accesses are counted and never converted into an energy.
+
+Row redundancy is implemented and exercised. Column redundancy is **refused**: a
+read reaching a resource with an activated column repair fails closed with its
+own class rather than returning the unrepaired column.
+
+The correlation campaign replays real requests through Icarus and Verilator:
+
+```bash
+make rom-service-vectors
+make rom-service
+make rom-service-physical
+```
+
+`docs/ROM_SERVICE_RTL.md` states what each of the three vector sets is evidence
+of, including the one that is derived from the compiled plan rather than
+executed, and the campaign artifact carries the claim boundary.
 
 ## Fault and containment benches
 

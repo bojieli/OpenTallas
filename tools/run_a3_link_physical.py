@@ -212,7 +212,11 @@ def parse_results(log: str) -> dict[str, Any]:
     sections = {}
     current = None
     for line in body.splitlines():
-        marker = re.match(r"^---\s*(.+?)\s*---$", line.strip())
+        # The section name must start with a non-dash: `report_checks`
+        # separates its columns with a rule of dashes, and a looser marker
+        # matched that rule and cut the path report in half -- leaving the
+        # asynchronous path archived under the name of the failing one.
+        marker = re.match(r"^---\s*([^-\s].*?)\s*---$", line.strip())
         if marker:
             current = marker.group(1)
             sections[current] = []

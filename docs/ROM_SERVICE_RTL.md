@@ -37,7 +37,11 @@ two are constantly confused in work like this.
 The sense granule width (`ROM_SENSE_BYTES = 64`) is a **declared parameter of
 this block**, not a macro property read out of any collateral in this
 repository. Row activations and sense accesses are therefore *counted* here and
-never converted into an energy.
+never converted into an energy. The row buffer is one open row for the whole
+array rather than one per bank, which is exact for ascending reads with one
+outstanding sense access and an upper bound for a pattern that alternates
+between placement resources — worth saying because activations are the one
+quantity here an energy model could reach for.
 
 ## 2. Where every table comes from
 
@@ -128,7 +132,10 @@ rather than letting it read as an executed stream.
 It is also the set that exercises what the Qwen chip cannot: 88 of its 228
 regions are distributed across more than one placement resource, one across
 1,280 of them, so the shard walk is the thing being tested rather than a
-degenerate single-entry lookup.
+degenerate single-entry lookup. 9,172 of the plan's 9,300 placement resources
+are entered by a served read; the 128 that are not are the 127 owned only by the
+deliberately masked expert bank plus the one deliberately quarantined tile, and
+that is checked arithmetically rather than asserted.
 
 ## 5. What is deliberately not implemented
 

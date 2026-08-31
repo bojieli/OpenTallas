@@ -1,0 +1,718 @@
+{
+  "campaign": "rtl3_shipped_deployment_cosimulation",
+  "canonical_timestamp_policy": "no timestamp in canonical artifact",
+  "cases": [
+    {
+      "apply_overflow_cases": 0,
+      "checks": 59942,
+      "compile_command": "/usr/bin/iverilog -g2012 -s tb_a3_deployment -o a3_deploy.vvp <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/test/a3_microsequencer_top.sv <ROOT>/rtl/test/tb_a3_deployment.sv",
+      "compile_log": "",
+      "compile_returncode": 0,
+      "log_sha256": "f54e2e244890f1ffec194fa5379dbe4f1253a2eefe90f10ec9791fec356b274e",
+      "marker_present": false,
+      "name": "iverilog",
+      "observed_cases": [
+        {
+          "deployment_index": 0,
+          "divergence_code": 0,
+          "divergence_site": "none",
+          "golden_value": 0,
+          "index": 0,
+          "issues_compared": 693,
+          "issues_expected": 693,
+          "phase": 0,
+          "rtl_event_signal_error": 1,
+          "rtl_fetched": 2105,
+          "rtl_first_fault": 4294967295,
+          "rtl_retired": 2105,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 0,
+          "rtl_value": 0,
+          "tag": "0000",
+          "verdict": "OK",
+          "views_compared": 2143,
+          "views_expected": 2143
+        },
+        {
+          "deployment_index": 0,
+          "divergence_code": 0,
+          "divergence_site": "none",
+          "golden_value": 0,
+          "index": 1,
+          "issues_compared": 693,
+          "issues_expected": 693,
+          "phase": 1,
+          "rtl_event_signal_error": 1,
+          "rtl_fetched": 2105,
+          "rtl_first_fault": 4294967295,
+          "rtl_retired": 2105,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 0,
+          "rtl_value": 0,
+          "tag": "0001",
+          "verdict": "OK",
+          "views_compared": 2143,
+          "views_expected": 2143
+        },
+        {
+          "deployment_index": 1,
+          "divergence_code": 0,
+          "divergence_site": "none",
+          "golden_value": 0,
+          "index": 2,
+          "issues_compared": 693,
+          "issues_expected": 693,
+          "phase": 0,
+          "rtl_event_signal_error": 1,
+          "rtl_fetched": 2105,
+          "rtl_first_fault": 4294967295,
+          "rtl_retired": 2105,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 0,
+          "rtl_value": 0,
+          "tag": "0100",
+          "verdict": "OK",
+          "views_compared": 2143,
+          "views_expected": 2143
+        },
+        {
+          "deployment_index": 1,
+          "divergence_code": 0,
+          "divergence_site": "none",
+          "golden_value": 0,
+          "index": 3,
+          "issues_compared": 693,
+          "issues_expected": 693,
+          "phase": 1,
+          "rtl_event_signal_error": 1,
+          "rtl_fetched": 2105,
+          "rtl_first_fault": 4294967295,
+          "rtl_retired": 2105,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 0,
+          "rtl_value": 0,
+          "tag": "0101",
+          "verdict": "OK",
+          "views_compared": 2143,
+          "views_expected": 2143
+        },
+        {
+          "deployment_index": 2,
+          "divergence_code": 31,
+          "divergence_site": "transaction trap class",
+          "golden_value": 0,
+          "index": 4,
+          "issues_compared": 8,
+          "issues_expected": 12657,
+          "phase": 0,
+          "rtl_event_signal_error": 0,
+          "rtl_fetched": 9,
+          "rtl_first_fault": 8,
+          "rtl_retired": 8,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 4,
+          "rtl_value": 4,
+          "tag": "0200",
+          "verdict": "DIVERGE",
+          "views_compared": 0,
+          "views_expected": 39849
+        },
+        {
+          "deployment_index": 2,
+          "divergence_code": 31,
+          "divergence_site": "transaction trap class",
+          "golden_value": 0,
+          "index": 5,
+          "issues_compared": 8,
+          "issues_expected": 3600,
+          "phase": 1,
+          "rtl_event_signal_error": 0,
+          "rtl_fetched": 9,
+          "rtl_first_fault": 8,
+          "rtl_retired": 8,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 4,
+          "rtl_value": 4,
+          "tag": "0201",
+          "verdict": "DIVERGE",
+          "views_compared": 0,
+          "views_expected": 10428
+        }
+      ],
+      "observed_deployments": [
+        {
+          "cases": 2,
+          "deployment_index": 0,
+          "diverged": 0,
+          "issues_compared": 1386,
+          "views_compared": 4286
+        },
+        {
+          "cases": 2,
+          "deployment_index": 1,
+          "diverged": 0,
+          "issues_compared": 1386,
+          "views_compared": 4286
+        },
+        {
+          "cases": 2,
+          "deployment_index": 2,
+          "diverged": 2,
+          "issues_compared": 16,
+          "views_compared": 0
+        }
+      ],
+      "required_marker": "PASS: ABI3 RTL deployment co-simulation deployments=3 cases=6 completions=6 issues=19029 views=58849",
+      "run_command": "/usr/bin/vvp a3_deploy.vvp",
+      "run_log": "WARNING: <ROOT>/rtl/test/tb_a3_deployment.sv:376: $readmemh(a3_deployment_case.hex): Not enough words in the file for the requested range [0:511].\nWARNING: <ROOT>/rtl/test/tb_a3_deployment.sv:377: $readmemh(a3_deployment_issue.hex): Not enough words in the file for the requested range [0:65535].\nWARNING: <ROOT>/rtl/test/tb_a3_deployment.sv:378: $readmemh(a3_deployment_view.hex): Not enough words in the file for the requested range [0:524287].\nCASE 0 tag=0000 OK code=0 rtl=0 golden=0 issues=693/693 views=2143/2143 fetched=2105 retired=2105 trap=0 fault=4294967295 sigerr=1 applyovf=0\nCASE 1 tag=0001 OK code=0 rtl=0 golden=0 issues=693/693 views=2143/2143 fetched=2105 retired=2105 trap=0 fault=4294967295 sigerr=1 applyovf=0\nDEPLOY 0 cases=2 diverged=0 issues=1386 views=4286\nCASE 2 tag=0100 OK code=0 rtl=0 golden=0 issues=693/693 views=2143/2143 fetched=2105 retired=2105 trap=0 fault=4294967295 sigerr=1 applyovf=0\nCASE 3 tag=0101 OK code=0 rtl=0 golden=0 issues=693/693 views=2143/2143 fetched=2105 retired=2105 trap=0 fault=4294967295 sigerr=1 applyovf=0\nDEPLOY 1 cases=2 diverged=0 issues=1386 views=4286\nCASE 4 tag=0200 DIVERGE code=31 rtl=4 golden=0 issues=8/12657 views=0/39849 fetched=9 retired=8 trap=4 fault=8 sigerr=0 applyovf=0\nCASE 5 tag=0201 DIVERGE code=31 rtl=4 golden=0 issues=8/3600 views=0/10428 fetched=9 retired=8 trap=4 fault=8 sigerr=0 applyovf=0\nDEPLOY 2 cases=2 diverged=2 issues=16 views=0\nFAIL: ABI3 RTL deployment co-simulation diverged_cases=2 of 6 deployments=3 issues=2788 views=8572 signal_flag_cases=4 apply_overflow_cases=0 checks=59942\nFATAL: <ROOT>/rtl/test/tb_a3_deployment.sv:592: the RTL and runtime.sim.device.Device disagree on a shipped program\n       Time: 5397790000 Scope: tb_a3_deployment\n",
+      "run_returncode": 1,
+      "signal_flag_cases": 4,
+      "status": "fail"
+    },
+    {
+      "apply_overflow_cases": 0,
+      "checks": 59942,
+      "compile_command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-fatal -Wno-DECLFILENAME --top-module ot_a3_microsequencer_top --Mdir obj_a3_deploy <ROOT>/rtl/abi3/ot_a3_pkg.sv <ROOT>/rtl/abi3/ot_a3_instruction_decoder.sv <ROOT>/rtl/abi3/ot_a3_program_header.sv <ROOT>/rtl/abi3/ot_a3_loop_stack.sv <ROOT>/rtl/abi3/ot_a3_view_resolver.sv <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv <ROOT>/rtl/abi3/ot_a3_state_controller.sv <ROOT>/rtl/abi3/ot_a3_microsequencer.sv <ROOT>/rtl/test/a3_microsequencer_top.sv <ROOT>/rtl/test/a3_deployment_harness.cpp -CFLAGS -std=c++17",
+      "compile_log": "%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:277:10: Instance pin connected by name with empty reference: 'busy'\n  277 |         .busy(),\n      |          ^~~~\n                          ... For warning description see https://verilator.org/warn/PINCONNECTEMPTY?v=5.050\n                          ... Use \"/* verilator lint_off PINCONNECTEMPTY */\" and lint_on around source to disable this message.\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:315:10: Instance pin connected by name with empty reference: 'wait_busy'\n  315 |         .wait_busy(),\n      |          ^~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:349:10: Instance pin connected by name with empty reference: 'apply_busy'\n  349 |         .apply_busy(),\n      |          ^~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:408:10: Instance pin connected by name with empty reference: 'busy'\n  408 |         .busy(),\n      |          ^~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:416:10: Instance pin connected by name with empty reference: 'out_dtype'\n  416 |         .out_dtype(),\n      |          ^~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:417:10: Instance pin connected by name with empty reference: 'out_term_count'\n  417 |         .out_term_count(),\n      |          ^~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_microsequencer_top.sv:166:10: Instance pin connected by name with empty reference: 'out_abi_major'\n  166 |         .out_abi_major(),\n      |          ^~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_microsequencer_top.sv:167:10: Instance pin connected by name with empty reference: 'out_abi_minor'\n  167 |         .out_abi_minor(),\n      |          ^~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_microsequencer_top.sv:168:10: Instance pin connected by name with empty reference: 'out_flags'\n  168 |         .out_flags(),\n      |          ^~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_microsequencer_top.sv:172:10: Instance pin connected by name with empty reference: 'out_watchdog_class'\n  172 |         .out_watchdog_class(),\n      |          ^~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_microsequencer_top.sv:174:10: Instance pin connected by name with empty reference: 'out_signature_descriptor'\n  174 |         .out_signature_descriptor()\n      |          ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_microsequencer_top.sv:286:10: Instance pin connected by name with empty reference: 'dbg_decode_error'\n  286 |         .dbg_decode_error(),\n      |          ^~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_microsequencer_top.sv:287:10: Instance pin connected by name with empty reference: 'dbg_source_operation_id'\n  287 |         .dbg_source_operation_id(),\n      |          ^~~~~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_microsequencer_top.sv:288:10: Instance pin connected by name with empty reference: 'dbg_wait_fault_event'\n  288 |         .dbg_wait_fault_event(),\n      |          ^~~~~~~~~~~~~~~~~~~~\n%Warning-PINCONNECTEMPTY: <ROOT>/rtl/test/a3_microsequencer_top.sv:289:10: Instance pin connected by name with empty reference: 'dbg_loop_action'\n  289 |         .dbg_loop_action()\n      |          ^~~~~~~~~~~~~~~\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_state_controller.sv:116:23: Operator LT expects 32 bits on the LHS, but LHS's VARREF 's' generates 4 bits.\n                                                                                       : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  116 |         for (s = 0; s < SLOTS; s = s + 1) begin\n      |                       ^\n                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050\n                      ... Use \"/* verilator lint_off WIDTHEXPAND */\" and lint_on around source to disable this message.\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_state_controller.sv:154:33: Operator ASSIGNDLY expects 3 bits on the Assign RHS, but Assign RHS's CONST '4'h0' generates 4 bits.\n                                                                                      : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  154 |                 pending_slot[i] <= 4'd0;\n      |                                 ^~\n                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050\n                     ... Use \"/* verilator lint_off WIDTHTRUNC */\" and lint_on around source to disable this message.\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv:70:42: Bit extraction of var[511:0] requires 9 bit index, not 16 bits.\n                                                                                     : ... note: In instance 'ot_a3_microsequencer_top.sequencer.events'\n   70 |     wire [31:0] slot_event = payload_hold[slot_bit +: 32];\n      |                                          ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:209:44: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  209 |     wire [31:0] top_next_index = loop_index[top] + 32'd1;\n      |                                            ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:317:43: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  317 |                                 loop_index[top] <= top_next_index;\n      |                                           ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:318:43: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  318 |                                 loop_value[top] <= loop_value[top] + loop_step[top];\n      |                                           ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:318:62: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  318 |                                 loop_value[top] <= loop_value[top] + loop_step[top];\n      |                                                              ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:318:79: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  318 |                                 loop_value[top] <= loop_value[top] + loop_step[top];\n      |                                                                               ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:319:54: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  319 |                                 next_pc <= loop_start[top];\n      |                                                      ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:316:68: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  316 |                             end else if (top_next_index < loop_trip[top]) begin\n      |                                                                    ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:312:49: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  312 |                             end else if (loop_id[top] != op_loop_id) begin\n      |                                                 ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:374:36: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  374 |                             loop_id[stack_pointer] <= hold_loop_id;\n      |                                    ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:375:38: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  375 |                             loop_trip[stack_pointer] <= hold_trip;\n      |                                      ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:376:39: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  376 |                             loop_value[stack_pointer] <= hold_lower;\n      |                                       ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:377:39: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  377 |                             loop_index[stack_pointer] <= 32'd0;\n      |                                       ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:378:38: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  378 |                             loop_step[stack_pointer] <= hold_step;\n      |                                      ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:379:39: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  379 |                             loop_start[stack_pointer] <= hold_body_start;\n      |                                       ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:380:42: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  380 |                             loop_symbolic[stack_pointer] <= hold_symbolic;\n      |                                          ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:381:41: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  381 |                             loop_divisor[stack_pointer] <= hold_divisor;\n      |                                         ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:382:39: Bit extraction of array[3:0] requires 2 bit index, not 4 bits.\n                                                                                : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  382 |                             loop_bound[stack_pointer] <= hold_symbol_value;\n      |                                       ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:370:52: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'stack_pointer' generates 4 bits.\n                                                                                 : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  370 |                         end else if (stack_pointer >= DEPTH) begin\n      |                                                    ^~\n%Warning-WIDTHTRUNC: <ROOT>/rtl/test/a3_microsequencer_top.sv:145:42: Bit extraction of array[4095:0] requires 12 bit index, not 20 bits.\n                                                                                     : ... note: In instance 'ot_a3_microsequencer_top'\n  145 |                 header_data <= header_mem[cfg_header_base[19:0]];\n      |                                          ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/test/a3_microsequencer_top.sv:149:42: Bit extraction of array[4095:0] requires 12 bit index, not 20 bits.\n                                                                                     : ... note: In instance 'ot_a3_microsequencer_top'\n  149 |                 header_data <= header_mem[header_next_addr[19:0]];\n      |                                          ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/test/a3_microsequencer_top.sv:190:41: Bit extraction of array[2047:0] requires 11 bit index, not 20 bits.\n                                                                                     : ... note: In instance 'ot_a3_microsequencer_top'\n  190 |                 imem_data <= program_mem[imem_index[19:0]];\n      |                                         ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/test/a3_microsequencer_top.sv:202:53: Operator GTE expects 33 bits on the RHS, but RHS's VARREF 'DESC_WORDS' generates 32 bits.\n                                                                                      : ... note: In instance 'ot_a3_microsequencer_top'\n  202 |                                      (desc_absolute >= DESC_WORDS);\n      |                                                     ^~\n%Warning-WIDTHTRUNC: <ROOT>/rtl/test/a3_microsequencer_top.sv:215:38: Bit extraction of array[4095:0] requires 12 bit index, not 20 bits.\n                                                                                     : ... note: In instance 'ot_a3_microsequencer_top'\n  215 |                            : desc_mem[desc_absolute[19:0]];\n      |                                      ^\n%Warning-WIDTHTRUNC: <ROOT>/rtl/test/a3_microsequencer_top.sv:223:39: Bit extraction of array[1023:0] requires 10 bit index, not 20 bits.\n                                                                                     : ... note: In instance 'ot_a3_microsequencer_top'\n  223 |     wire [31:0] sym_value = symbol_mem[sym_addr[19:0]];\n      |                                       ^\n%Warning-WIDTHEXPAND: <ROOT>/rtl/test/a3_microsequencer_top.sv:224:44: Bit extraction of var[31:0] requires 5 bit index, not 4 bits.\n                                                                                      : ... note: In instance 'ot_a3_microsequencer_top'\n  224 |     wire        sym_bound = cfg_symbol_mask[sym_index];\n      |                                            ^\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_microsequencer_top.sv:126:17: Bits of signal are not used: 'header_next_addr'[31:20]\n                                                                                       : ... note: In instance 'ot_a3_microsequencer_top'\n  126 |     wire [31:0] header_next_addr = header_base + {25'd0, header_word} + 32'd1;\n      |                 ^~~~~~~~~~~~~~~~\n                       ... For warning description see https://verilator.org/warn/UNUSEDSIGNAL?v=5.050\n                       ... Use \"/* verilator lint_off UNUSEDSIGNAL */\" and lint_on around source to disable this message.\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_microsequencer_top.sv:179:18: Bits of signal are not used: 'imem_index'[31:20]\n                                                                                       : ... note: In instance 'ot_a3_microsequencer_top'\n  179 |     wire [31:0]  imem_index;\n      |                  ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/test/a3_microsequencer_top.sv:222:17: Bits of signal are not used: 'sym_addr'[31:20]\n                                                                                       : ... note: In instance 'ot_a3_microsequencer_top'\n  222 |     wire [31:0] sym_addr = cfg_symbol_base + {28'd0, sym_index};\n      |                 ^~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:79:26: Bits of signal are not used: 'desc_data'[511:352,319:56]\n                                                                                     : ... note: In instance 'ot_a3_microsequencer_top.sequencer'\n   79 |     input  wire [1535:0] desc_data,\n      |                          ^~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:184:17: Bits of signal are not used: 'pred_payload'[511:128,31:16]\n                                                                                      : ... note: In instance 'ot_a3_microsequencer_top.sequencer'\n  184 |     reg [511:0] pred_payload;\n      |                 ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:247:18: Bits of signal are not used: 'loop_payload'[511:352,319:288,191:160,31:16,7:0]\n                                                                                      : ... note: In instance 'ot_a3_microsequencer_top.sequencer'\n  247 |     reg  [511:0] loop_payload;\n      |                  ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_microsequencer.sv:365:19: Bits of signal are not used: 'op_payload'[511:384,191:0]\n                                                                                      : ... note: In instance 'ot_a3_microsequencer_top.sequencer'\n  365 |     reg  [511:0]  op_payload;\n      |                   ^~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_pkg.sv:213:19: Bits of function variable are not used: 'bound'[7:0]\n                                                                           : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  213 |         reg [8:0] bound;\n      |                   ^~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:126:17: Bits of signal are not used: 'div_remainder'[33]\n                                                                                  : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  126 |     reg  [33:0] div_remainder;\n      |                 ^~~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:127:17: Bits of signal are not used: 'div_quotient'[33]\n                                                                                  : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  127 |     reg  [33:0] div_quotient;\n      |                 ^~~~~~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_loop_stack.sv:208:16: Bits of signal are not used: 'top'[3:2]\n                                                                                  : ... note: In instance 'ot_a3_microsequencer_top.sequencer.loops'\n  208 |     wire [3:0] top = (stack_pointer == 4'd0) ? 4'd0 : (stack_pointer - 4'd1);\n      |                ^~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_event_scoreboard.sv:69:17: Bits of signal are not used: 'slot_bit'[15:9]\n                                                                                       : ... note: In instance 'ot_a3_microsequencer_top.sequencer.events'\n   69 |     wire [15:0] slot_bit = 16'd64 + ({8'd0, slot} << 5);\n      |                 ^~~~~~~~\n%Warning-UNUSEDSIGNAL: <ROOT>/rtl/abi3/ot_a3_state_controller.sv:55:25: Bits of signal are not used: 'op_payload'[511:288,255:224,191:160,127:16,7:0]\n                                                                                       : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   55 |     input  wire [511:0] op_payload,\n      |                         ^~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:20:24: Parameter is not used: 'A3_INSTRUCTION_BYTES'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   20 |     localparam integer A3_INSTRUCTION_BYTES = 32;\n      |                        ^~~~~~~~~~~~~~~~~~~~\n                      ... For warning description see https://verilator.org/warn/UNUSEDPARAM?v=5.050\n                      ... Use \"/* verilator lint_off UNUSEDPARAM */\" and lint_on around source to disable this message.\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:22:24: Parameter is not used: 'A3_DESCRIPTOR_HEADER_BYTES'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   22 |     localparam integer A3_DESCRIPTOR_HEADER_BYTES = 64;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:23:24: Parameter is not used: 'A3_DESCRIPTOR_PAYLOAD_OFFSET'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   23 |     localparam integer A3_DESCRIPTOR_PAYLOAD_OFFSET = 64;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:32:24: Parameter is not used: 'A3_HEADER_CRC_WORD'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   32 |     localparam integer A3_HEADER_CRC_WORD = A3_HEADER_WORDS - 1;\n      |                        ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:37:23: Parameter is not used: 'A3_TYPE_MINOR'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   37 |     localparam [7:0]  A3_TYPE_MINOR = 8'd0;\n      |                       ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:39:23: Parameter is not used: 'A3_DESC_MEMORY_OBJECT'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   39 |     localparam [15:0] A3_DESC_MEMORY_OBJECT      = 16'h0001;\n      |                       ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:41:23: Parameter is not used: 'A3_DESC_NUMERIC'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   41 |     localparam [15:0] A3_DESC_NUMERIC            = 16'h0003;\n      |                       ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:42:23: Parameter is not used: 'A3_DESC_SCHEDULE'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   42 |     localparam [15:0] A3_DESC_SCHEDULE           = 16'h0004;\n      |                       ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:43:23: Parameter is not used: 'A3_DESC_TOPOLOGY'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   43 |     localparam [15:0] A3_DESC_TOPOLOGY           = 16'h0005;\n      |                       ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:49:23: Parameter is not used: 'A3_DESC_GENERATION_POLICY'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   49 |     localparam [15:0] A3_DESC_GENERATION_POLICY  = 16'h000b;\n      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:51:23: Parameter is not used: 'A3_DESC_ENTRYPOINT_TABLE'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   51 |     localparam [15:0] A3_DESC_ENTRYPOINT_TABLE   = 16'h000d;\n      |                       ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:52:23: Parameter is not used: 'A3_DESC_SIGNATURE_METADATA'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   52 |     localparam [15:0] A3_DESC_SIGNATURE_METADATA = 16'h000e;\n      |                       ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:62:24: Parameter is not used: 'A3_FLAG_TRANSACTION_SCOPED'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   62 |     localparam integer A3_FLAG_TRANSACTION_SCOPED= 4;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:63:24: Parameter is not used: 'A3_FLAG_GLOBAL_SCOPE'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   63 |     localparam integer A3_FLAG_GLOBAL_SCOPE      = 5;\n      |                        ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:64:24: Parameter is not used: 'A3_FLAG_TRACE_BOUNDARY'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   64 |     localparam integer A3_FLAG_TRACE_BOUNDARY    = 6;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:65:24: Parameter is not used: 'A3_FLAG_OPTIONAL_FEATURE'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   65 |     localparam integer A3_FLAG_OPTIONAL_FEATURE  = 7;\n      |                        ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:85:22: Parameter is not used: 'A3_CONTROL_LOOP_NEXT'\n                                                                         : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n   85 |     localparam [7:0] A3_CONTROL_LOOP_NEXT  = 8'h03;\n      |                      ^~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:107:22: Parameter is not used: 'A3_RECOVERY_POISON'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  107 |     localparam [7:0] A3_RECOVERY_POISON = 8'h00;\n      |                      ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:109:22: Parameter is not used: 'A3_RECOVERY_DRAIN'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  109 |     localparam [7:0] A3_RECOVERY_DRAIN  = 8'h02;\n      |                      ^~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:118:23: Parameter is not used: 'A3_TRAP_NUMERIC'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  118 |     localparam [15:0] A3_TRAP_NUMERIC         = 16'd6;\n      |                       ^~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:120:23: Parameter is not used: 'A3_TRAP_ENGINE'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  120 |     localparam [15:0] A3_TRAP_ENGINE          = 16'd8;\n      |                       ^~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:123:23: Parameter is not used: 'A3_TRAP_LINK'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  123 |     localparam [15:0] A3_TRAP_LINK            = 16'd11;\n      |                       ^~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:124:23: Parameter is not used: 'A3_TRAP_POWER'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  124 |     localparam [15:0] A3_TRAP_POWER           = 16'd12;\n      |                       ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:130:22: Parameter is not used: 'A3_SYMBOL_POSITION_START'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  130 |     localparam [3:0] A3_SYMBOL_POSITION_START    = 4'd1;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:131:22: Parameter is not used: 'A3_SYMBOL_POSITION_END'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  131 |     localparam [3:0] A3_SYMBOL_POSITION_END      = 4'd2;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:132:22: Parameter is not used: 'A3_SYMBOL_CONTEXT_LENGTH'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  132 |     localparam [3:0] A3_SYMBOL_CONTEXT_LENGTH    = 4'd3;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:134:22: Parameter is not used: 'A3_SYMBOL_GENERATION_INDEX'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  134 |     localparam [3:0] A3_SYMBOL_GENERATION_INDEX  = 4'd5;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:140:22: Parameter is not used: 'A3_PRED_ENGINE_STATUS'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  140 |     localparam [7:0] A3_PRED_ENGINE_STATUS  = 8'd3;\n      |                      ^~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:141:22: Parameter is not used: 'A3_PRED_ROUTE_VALID'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  141 |     localparam [7:0] A3_PRED_ROUTE_VALID    = 8'd4;\n      |                      ^~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:142:22: Parameter is not used: 'A3_PRED_EOS_MEMBER'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  142 |     localparam [7:0] A3_PRED_EOS_MEMBER     = 8'd5;\n      |                      ^~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:145:22: Parameter is not used: 'A3_PRED_BOOLEAN_OBJECT'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  145 |     localparam [7:0] A3_PRED_BOOLEAN_OBJECT = 8'd8;\n      |                      ^~~~~~~~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:153:22: Parameter is not used: 'A3_CMP_GE'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  153 |     localparam [7:0] A3_CMP_GE = 8'd5;\n      |                      ^~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:160:22: Parameter is not used: 'A3_ORDER_NONE'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  160 |     localparam [7:0] A3_ORDER_NONE            = 8'd0;\n      |                      ^~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:162:22: Parameter is not used: 'A3_ORDER_RELEASE'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  162 |     localparam [7:0] A3_ORDER_RELEASE         = 8'd2;\n      |                      ^~~~~~~~~~~~~~~~\n%Warning-UNUSEDPARAM: <ROOT>/rtl/abi3/ot_a3_pkg.sv:170:24: Parameter is not used: 'A3_WAIT_PRODUCERS'\n                                                                          : ... note: In instance 'ot_a3_microsequencer_top.sequencer.states'\n  170 |     localparam integer A3_WAIT_PRODUCERS = 12;  \n      |                        ^~~~~~~~~~~~~~~~~\nmake: Entering directory '<BUILD>/obj_a3_deploy'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o a3_deployment_harness.o <ROOT>/rtl/test/a3_deployment_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vot_a3_microsequencer_top.cpp Vot_a3_microsequencer_top___024root__0.cpp Vot_a3_microsequencer_top__ConstPool__0__Slow.cpp Vot_a3_microsequencer_top___024root__Slow.cpp Vot_a3_microsequencer_top___024root__0__Slow.cpp Vot_a3_microsequencer_top__Syms__Slow.cpp > Vot_a3_microsequencer_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o Vot_a3_microsequencer_top__ALL.o Vot_a3_microsequencer_top__ALL.cpp\ng++    a3_deployment_harness.o verilated.o verilated_threads.o Vot_a3_microsequencer_top__ALL.a    -pthread -lpthread -latomic   -o Vot_a3_microsequencer_top\nrm Vot_a3_microsequencer_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_a3_deploy'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.692 MB sources in 10 modules, into 0.560 MB in 6 C++ files needing 0.002 MB\n- Verilator: Walltime 12.798 s (elab=0.029, cvt=0.159, bld=12.552); cpu 0.121 s on 1 threads; allocated 42.184 MB\n",
+      "compile_returncode": 0,
+      "log_sha256": "3fcbeb53066f9482a1e2ba42906ee2b2d4f93cfa1ac68a4e5b0e77c3f385794a",
+      "marker_present": false,
+      "name": "verilator",
+      "observed_cases": [
+        {
+          "deployment_index": 0,
+          "divergence_code": 0,
+          "divergence_site": "none",
+          "golden_value": 0,
+          "index": 0,
+          "issues_compared": 693,
+          "issues_expected": 693,
+          "phase": 0,
+          "rtl_event_signal_error": 1,
+          "rtl_fetched": 2105,
+          "rtl_first_fault": 4294967295,
+          "rtl_retired": 2105,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 0,
+          "rtl_value": 0,
+          "tag": "0000",
+          "verdict": "OK",
+          "views_compared": 2143,
+          "views_expected": 2143
+        },
+        {
+          "deployment_index": 0,
+          "divergence_code": 0,
+          "divergence_site": "none",
+          "golden_value": 0,
+          "index": 1,
+          "issues_compared": 693,
+          "issues_expected": 693,
+          "phase": 1,
+          "rtl_event_signal_error": 1,
+          "rtl_fetched": 2105,
+          "rtl_first_fault": 4294967295,
+          "rtl_retired": 2105,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 0,
+          "rtl_value": 0,
+          "tag": "0001",
+          "verdict": "OK",
+          "views_compared": 2143,
+          "views_expected": 2143
+        },
+        {
+          "deployment_index": 1,
+          "divergence_code": 0,
+          "divergence_site": "none",
+          "golden_value": 0,
+          "index": 2,
+          "issues_compared": 693,
+          "issues_expected": 693,
+          "phase": 0,
+          "rtl_event_signal_error": 1,
+          "rtl_fetched": 2105,
+          "rtl_first_fault": 4294967295,
+          "rtl_retired": 2105,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 0,
+          "rtl_value": 0,
+          "tag": "0100",
+          "verdict": "OK",
+          "views_compared": 2143,
+          "views_expected": 2143
+        },
+        {
+          "deployment_index": 1,
+          "divergence_code": 0,
+          "divergence_site": "none",
+          "golden_value": 0,
+          "index": 3,
+          "issues_compared": 693,
+          "issues_expected": 693,
+          "phase": 1,
+          "rtl_event_signal_error": 1,
+          "rtl_fetched": 2105,
+          "rtl_first_fault": 4294967295,
+          "rtl_retired": 2105,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 0,
+          "rtl_value": 0,
+          "tag": "0101",
+          "verdict": "OK",
+          "views_compared": 2143,
+          "views_expected": 2143
+        },
+        {
+          "deployment_index": 2,
+          "divergence_code": 31,
+          "divergence_site": "transaction trap class",
+          "golden_value": 0,
+          "index": 4,
+          "issues_compared": 8,
+          "issues_expected": 12657,
+          "phase": 0,
+          "rtl_event_signal_error": 0,
+          "rtl_fetched": 9,
+          "rtl_first_fault": 8,
+          "rtl_retired": 8,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 4,
+          "rtl_value": 4,
+          "tag": "0200",
+          "verdict": "DIVERGE",
+          "views_compared": 0,
+          "views_expected": 39849
+        },
+        {
+          "deployment_index": 2,
+          "divergence_code": 31,
+          "divergence_site": "transaction trap class",
+          "golden_value": 0,
+          "index": 5,
+          "issues_compared": 8,
+          "issues_expected": 3600,
+          "phase": 1,
+          "rtl_event_signal_error": 0,
+          "rtl_fetched": 9,
+          "rtl_first_fault": 8,
+          "rtl_retired": 8,
+          "rtl_state_apply_overflow": 0,
+          "rtl_trap_class": 4,
+          "rtl_value": 4,
+          "tag": "0201",
+          "verdict": "DIVERGE",
+          "views_compared": 0,
+          "views_expected": 10428
+        }
+      ],
+      "observed_deployments": [
+        {
+          "cases": 2,
+          "deployment_index": 0,
+          "diverged": 0,
+          "issues_compared": 1386,
+          "views_compared": 4286
+        },
+        {
+          "cases": 2,
+          "deployment_index": 1,
+          "diverged": 0,
+          "issues_compared": 1386,
+          "views_compared": 4286
+        },
+        {
+          "cases": 2,
+          "deployment_index": 2,
+          "diverged": 2,
+          "issues_compared": 16,
+          "views_compared": 0
+        }
+      ],
+      "required_marker": "PASS: ABI3 RTL deployment co-simulation deployments=3 cases=6 completions=6 issues=19029 views=58849",
+      "run_command": "./obj_a3_deploy/Vot_a3_microsequencer_top",
+      "run_log": "CASE 0 tag=0000 OK code=0 rtl=0 golden=0 issues=693/693 views=2143/2143 fetched=2105 retired=2105 trap=0 fault=4294967295 sigerr=1 applyovf=0\nCASE 1 tag=0001 OK code=0 rtl=0 golden=0 issues=693/693 views=2143/2143 fetched=2105 retired=2105 trap=0 fault=4294967295 sigerr=1 applyovf=0\nDEPLOY 0 cases=2 diverged=0 issues=1386 views=4286\nCASE 2 tag=0100 OK code=0 rtl=0 golden=0 issues=693/693 views=2143/2143 fetched=2105 retired=2105 trap=0 fault=4294967295 sigerr=1 applyovf=0\nCASE 3 tag=0101 OK code=0 rtl=0 golden=0 issues=693/693 views=2143/2143 fetched=2105 retired=2105 trap=0 fault=4294967295 sigerr=1 applyovf=0\nDEPLOY 1 cases=2 diverged=0 issues=1386 views=4286\nCASE 4 tag=0200 DIVERGE code=31 rtl=4 golden=0 issues=8/12657 views=0/39849 fetched=9 retired=8 trap=4 fault=8 sigerr=0 applyovf=0\nCASE 5 tag=0201 DIVERGE code=31 rtl=4 golden=0 issues=8/3600 views=0/10428 fetched=9 retired=8 trap=4 fault=8 sigerr=0 applyovf=0\nDEPLOY 2 cases=2 diverged=2 issues=16 views=0\nFAIL: ABI3 RTL deployment co-simulation diverged_cases=2 of 6 deployments=3 issues=2788 views=8572 signal_flag_cases=4 apply_overflow_cases=0 checks=59942\nFAIL: the RTL and runtime.sim.device.Device disagree on a shipped program\n",
+      "run_returncode": 1,
+      "signal_flag_cases": 4,
+      "status": "fail"
+    }
+  ],
+  "claim_boundary": {
+    "does_not_establish": {
+      "checkpoint_bytes": "no checkpoint byte is read. The memory arenas are mapped so the golden device can be constructed and no-op engines never touch them, so this run says nothing about the weights, the ROM image, or any value in memory",
+      "deepseek_v4_flash_rom_wafer": "the DeepSeek-V4-Flash ROM wafer deployment 507e0b57 is NOT verified. The RTL stops it at instruction 8 of 1,156, having retired 8 of the 29,333 instructions the golden model retires, because rtl/abi3/ot_a3_pkg.sv declares A3_STATE_SLOTS = 8 and the deployment prepares 10. A second bound, A3_EVENT_COUNT = 256 against 396 event IDs, is latent behind it. No physical result may cite this campaign as evidence about the wafer part",
+      "engine_arithmetic": "every dispatchable engine operation is a recording no-op on the golden side and absent on the RTL side. The instruction stream is verified; the computation is not. See engine_coverage for how much of what these programs issue has a datapath at all",
+      "engine_integration": "the datapaths the sibling engine campaign correlates are not wired to this sequencer. Nothing here shows that a resolved view drives the operand addresses an engine reads",
+      "instruction_granularity": "the comparison is at every engine issue and every resolved operand view, in order, plus the transaction counters at the end. Instructions that issue nothing -- CONTROL, and any instruction predicated off -- are observed through the program-counter sequence they produce and the counters they increment, not individually",
+      "other_request_shapes": "one request shape per entrypoint: a sixteen-token prefill and a one-token decode at position sixteen. A program's instruction stream is fixed but its loop trip counts and resolved extents are functions of the span, so a longer prompt runs the same instructions under bindings this campaign has not exercised",
+      "physical_realisability": "simulation says nothing about area, timing or power",
+      "record_integrity": "descriptor record CRC32C and the header's SHA-256 digests are not checked in RTL; instruction and header CRC32C are",
+      "rtl_status_bits": "event_signal_error and state_apply_overflow have no counterpart in the golden model. They are counted and required to agree between the two simulators; they are not correlated, because there is nothing to correlate them against. The event bit is set on all four cases that ran -- see rtl_status_bits_observed_not_correlated",
+      "view_completeness": "view resolution covers the element offset and the extent of the one axis amendment A18 lets a view name. The view's other extents, its strides and its scale binding are copied from the descriptor unchanged and are not republished"
+    },
+    "establishes": [
+      "the ABI 3.0 sequencer RTL reproduces runtime.sim.device.Device exactly on the two Qwen3-8B deployments this program ships -- the ROM single chip a60d8500 and the HBM single chip 05bf410b -- on both entrypoints, from their own program images, descriptor tables and request-bound symbols, with no vector written for the occasion",
+      "the depth is the whole transaction on each: 2,105 instructions retired, inside the bound the program itself declares -- 2,105 for the ROM build and 22,715 for the HBM one -- with 693 engine issues and 2,143 resolved operand views per case, ending in COMPLETE and not at a bound",
+      "every engine issue is compared by the instruction index that issued it as well as by family, subopcode and descriptor ID, so a loop trip or a branch that came out differently is caught at the next issue rather than at the end",
+      "every resolved operand view is compared against runtime.sim.memory.ViewResolver.resolve at the loop bindings the device recorded: element offset (A4), resolved extent (A13) and the axis that extent belongs to (A18)",
+      "two independently written checkers, on two simulation engines, under two different back-pressure patterns, observed the same result on every case -- the divergence included"
+    ]
+  },
+  "correlated_cases": [
+    "qwen3-8b-rom-single-chip/prefill",
+    "qwen3-8b-rom-single-chip/decode",
+    "qwen3-8b-hbm-single-chip/prefill",
+    "qwen3-8b-hbm-single-chip/decode"
+  ],
+  "cross_simulator_agreement": {
+    "case_count_per_simulator": [
+      6,
+      6
+    ],
+    "compared_fields": [
+      "index",
+      "tag",
+      "verdict",
+      "divergence_code",
+      "rtl_value",
+      "golden_value",
+      "issues_compared",
+      "views_compared",
+      "rtl_fetched",
+      "rtl_retired",
+      "rtl_trap_class",
+      "rtl_first_fault",
+      "rtl_event_signal_error",
+      "rtl_state_apply_overflow"
+    ],
+    "simulators_observed_the_same_cases": true
+  },
+  "divergences": [
+    {
+      "case": "deepseek-v4-flash-rom-wafer/prefill",
+      "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+      "engine_issues_agreeing_before_divergence": 8,
+      "engine_issues_expected": 12657,
+      "golden_instructions_retired": 29333,
+      "golden_value": 0,
+      "rtl_first_fault_instruction": 8,
+      "rtl_instructions_retired": 8,
+      "rtl_value": 4,
+      "site": "transaction trap class",
+      "site_code": 31
+    },
+    {
+      "case": "deepseek-v4-flash-rom-wafer/decode",
+      "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+      "engine_issues_agreeing_before_divergence": 8,
+      "engine_issues_expected": 3600,
+      "golden_instructions_retired": 11591,
+      "golden_value": 0,
+      "rtl_first_fault_instruction": 8,
+      "rtl_instructions_retired": 8,
+      "rtl_value": 4,
+      "site": "transaction trap class",
+      "site_code": 31
+    }
+  ],
+  "engine_coverage": {
+    "distinct_opcodes_the_shipped_programs_issue": 38,
+    "distinct_opcodes_this_run_reached": 14,
+    "note": "an opcode with datapath RTL is still not driven by this sequencer: the two campaigns correlate the control plane and the datapaths separately and nothing wires them together. The STATE family (128) is the exception in the other direction -- it has no engine datapath because the sequencer's own state controller implements it, and this campaign does correlate its prepare, commit, discard, read and advance counts",
+    "opcodes_reached_with_correlated_datapath_rtl": [
+      [
+        16,
+        2
+      ],
+      [
+        16,
+        3
+      ],
+      [
+        32,
+        0
+      ],
+      [
+        48,
+        3
+      ],
+      [
+        112,
+        0
+      ]
+    ],
+    "opcodes_reached_without_correlated_datapath_rtl": [
+      [
+        32,
+        3
+      ],
+      [
+        48,
+        0
+      ],
+      [
+        48,
+        1
+      ],
+      [
+        48,
+        2
+      ],
+      [
+        48,
+        4
+      ],
+      [
+        64,
+        1
+      ],
+      [
+        112,
+        1
+      ],
+      [
+        128,
+        1
+      ],
+      [
+        128,
+        2
+      ]
+    ],
+    "source_of_datapath_list": "results/rtl/abi3_engine_campaign.json",
+    "source_sha256": "004ef5d0ee73ef2a422c0fd6989e4141d9f23bf2c6cac7b0b8e004aef9d5d3d2"
+  },
+  "evidence_class": "public_open_tool_rtl_simulation",
+  "limitations": [
+    "engine datapaths are out of scope: the issue port carries family, subopcode, descriptor ID and instruction index, and the view port carries the resolved extents an engine would read; no engine arithmetic is modelled on either side",
+    "view resolution covers the element offset and the extent of the one axis amendment A18 lets a view name. The view's other extents, its strides and its scale binding are copied from the descriptor unchanged and are not republished",
+    "predicate kinds that require an engine or a memory read (ENGINE_STATUS, ROUTE_VALID, BOOLEAN_OBJECT, EOS_MEMBER) fail closed with trap class 4 instead of being evaluated. None of the three shipped deployments uses one: the only predicates any of them carries are COMPARE_SYMBOL",
+    "the deployment bundles are built outside this repository's tracked tree (build/ is ignored), so the vector set binds them by deployment digest and refuses any other program rather than correlating whatever happens to be on disk"
+  ],
+  "required_marker": "PASS: ABI3 RTL deployment co-simulation deployments=3 cases=6 completions=6 issues=19029 views=58849",
+  "rtl_implementation_bounds": {
+    "expressed_by": {
+      "A3_EVENT_COUNT": "limits.max_events -- but the verifier bounds the *number of distinct event IDs* a program signals, and a scoreboard indexed by event ID is bounded by the largest ID plus one. The two coincide only when IDs are dense from zero. The shipped capabilities also disagree with this parameter numerically: rom_deepseek_v4 admits 512 and hbm_sram_single_chip admits 4096",
+      "A3_LOOP_DEPTH": "limits.max_loop_depth -- expressible, and runtime.abi3.verifier checks it",
+      "A3_STATE_SLOTS": "nothing. No capability field names a state-slot count and runtime.abi3.verifier has no such check, so no deployment can be refused for exceeding it",
+      "A3_WAIT_PRODUCERS": "runtime.abi3.descriptors.MAX_WAIT_PRODUCERS, a frozen ABI constant the wait-set payload is sized by; the two agree at 12"
+    },
+    "note": "these four are the sequencer's own bounds. The RTL package calls them capability fields; expressed_by says, per bound, what in a capability or in the frozen ABI actually expresses it. A bound nothing expresses cannot be refused at admission, so a program that exceeds it is admitted and traps in the RTL instead",
+    "overruns": [
+      {
+        "declared_in": "rtl/abi3/ot_a3_pkg.sv",
+        "deployment": "deepseek-v4-flash-rom-wafer",
+        "deployment_requires": 10,
+        "expressed_by": "nothing. No capability field names a state-slot count and runtime.abi3.verifier has no such check, so no deployment can be refused for exceeding it",
+        "parameter": "A3_STATE_SLOTS",
+        "rtl_bound": 8
+      },
+      {
+        "declared_in": "rtl/abi3/ot_a3_pkg.sv",
+        "deployment": "deepseek-v4-flash-rom-wafer",
+        "deployment_requires": 396,
+        "expressed_by": "limits.max_events -- but the verifier bounds the *number of distinct event IDs* a program signals, and a scoreboard indexed by event ID is bounded by the largest ID plus one. The two coincide only when IDs are dense from zero. The shipped capabilities also disagree with this parameter numerically: rom_deepseek_v4 admits 512 and hbm_sram_single_chip admits 4096",
+        "parameter": "A3_EVENT_COUNT",
+        "rtl_bound": 256
+      }
+    ],
+    "source": "rtl/abi3/ot_a3_pkg.sv",
+    "values": {
+      "A3_EVENT_COUNT": 256,
+      "A3_LOOP_DEPTH": 4,
+      "A3_STATE_SLOTS": 8,
+      "A3_WAIT_PRODUCERS": 12
+    }
+  },
+  "rtl_status_bits_observed_not_correlated": {
+    "event_signal_error_cases": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "event_signal_error_note": "rtl/abi3/ot_a3_event_scoreboard.sv enforces single assignment at run time: a second signal of an event ID that is already set raises a sticky error bit. runtime.abi3.verifier enforces it statically -- at most one *instruction* may name an event ID -- and says nothing about how often that instruction runs. Every engine instruction in the Qwen program sits inside a loop, so its event is signalled once per iteration: 691 signals against 26 distinct event IDs. runtime.sim.device.Device holds its signalled set idempotently and reports nothing. The bit is therefore set on every shipped program the RTL can run, nothing traps on it, and no test compared it until this one",
+    "state_apply_overflow_cases": [],
+    "why_they_are_not_correlated": "event_signal_error and state_apply_overflow are sequencer status outputs. runtime.sim.device.Device publishes no counterpart, so there is nothing to correlate them against and asserting a value would be a hand-written expectation. They are counted, printed by both checkers, and required above to agree between the two simulators"
+  },
+  "schema": "opentallas.rtl.abi3_deployment_campaign.v1",
+  "simulators_counted": [
+    "iverilog_vvp",
+    "verilator_cpp_executable"
+  ],
+  "source_sha256": {
+    "docs/TENSOR_ACCELERATOR_ABI_3_WIRE_FORMAT.md": "e9df6b5ed7cdf39701165c61567ed15d65a4f185ab1cd85ff11d1cff010a4b45",
+    "rtl/abi3/ot_a3_event_scoreboard.sv": "5b207d4c2ff46ce2a64880a6f4d13df48d4bbfe1691d63b12d97b20a33ded7ff",
+    "rtl/abi3/ot_a3_instruction_decoder.sv": "9f2390ce38f9bddf80d47c01931b6fba5dde6c2f15a3f5fd0ae089e0bf27c3e1",
+    "rtl/abi3/ot_a3_loop_stack.sv": "c1750bf4b56787239295e4fbef14ec9a948153f7fb0ad88034942f49adf63ca8",
+    "rtl/abi3/ot_a3_microsequencer.sv": "84cf64fa3774a505529ad49e7616841c4dd2125aa4908eb33d5b0039ca67e1d8",
+    "rtl/abi3/ot_a3_pkg.sv": "20dbf92d236caa2acbddb4d660c97175e37e112100a2c13afa7591b57c2ee6e4",
+    "rtl/abi3/ot_a3_program_header.sv": "50fc89219d5460ab45fed1bf40eda07c1d65fab43b9ebe1d5ac80a4aeccdfb42",
+    "rtl/abi3/ot_a3_state_controller.sv": "6cde1f6c3201fa093d3e0b93bb732eca0c49934dbcfdc4fbe3edb516a129b95b",
+    "rtl/abi3/ot_a3_view_resolver.sv": "fad3a54e6b3e5a65db11546625d76c3c4c9c58ffe06f7c4740dd1a0c88001335",
+    "rtl/test/a3_deployment_harness.cpp": "67ee262a4e35fbb188562854544d4824d63827ae9d5d05be308343b23a8c5727",
+    "rtl/test/a3_microsequencer_top.sv": "6767754576e7275b01094d98148bfa459d7dd6ab47377fc974e358c5a675c1cb",
+    "rtl/test/tb_a3_deployment.sv": "914bf2ec4fe1d7b987e3483f2e276d85e3ab14de5d5dc301b82d44dcda8c1c59",
+    "runtime/abi3/constants.py": "5198b8160e1bb1a0083a3478a67a7f87c19be7fc2ae053c90ccce8bddc8d9119",
+    "runtime/abi3/crc.py": "d47b2c45f250b438d3cbc04eef2dd3c1ab68b771392cbe16de78a1238439e27e",
+    "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
+    "runtime/abi3/records.py": "18140e2a382dd4d515da33ccf2c5a08c203bcb36ae9e3e86747265346d4ad7ca",
+    "runtime/abi3/verifier.py": "b9392ccc35c2142222967722d08c5021a4794d8a4fd0a586fa0b161c4816fa42",
+    "runtime/driver.py": "cf53554f3ac2b706119700929b1c51dce98d720da4dacca42ce59c0859c5e8bf",
+    "runtime/sim/device.py": "8278011c9f5543bffe6d13702ff999053ce3dbfa94934138dd4a6cde9ed8d37a",
+    "runtime/sim/memory.py": "75bd31c2ff724154117eb1303dbdfd1cd7edd9b8f8193e81d31640e277bb0bd5",
+    "testdata/compiler/abi3_deployment/a3_deployment_case.hex": "aa3176c43d63f0650f128bb29193b9e7a22403de39798e50b1bfa394efc5ca3f",
+    "testdata/compiler/abi3_deployment/a3_deployment_issue.hex": "a3447f680e2a9452fae7c1376396283c73b54c61d92fbd7bab4dc10a87a19df9",
+    "testdata/compiler/abi3_deployment/a3_deployment_meta.hex": "77e46a58b0f62e41c801b25d39ee1263b9d6a6df75eeb18a2be45f959882de0f",
+    "testdata/compiler/abi3_deployment/a3_deployment_view.hex": "234f8937964beab4a6d6488871c0047ad8cce4fb09fca0088cf237ee3198203c",
+    "testdata/compiler/abi3_deployment/a3_descriptor.hex": "3459e26b752990061ddffd90a6feb0cb216d8f01b825e32798da860ee0636ce3",
+    "testdata/compiler/abi3_deployment/a3_header.hex": "c855c99310998e6158322616c6b2d5437c8daa9974c7e9a7e12ed2b0fd849348",
+    "testdata/compiler/abi3_deployment/a3_program.hex": "af6e8348f2d8f88ee88f8bd5901546de22ff218c1e690559d8bd03a6e6ecb04a",
+    "testdata/compiler/abi3_deployment/a3_symbol.hex": "d4c9aabe466c84a9aea82681a87b6990e9611049f3b072f116a7edcca6ea9856",
+    "testdata/compiler/abi3_deployment/abi3_deployment_rtl_vectors.json": "07c0d17ca290e35f164262adcea3361a9463ad80037a7d0738ac6ff84efb3a12",
+    "tools/build_abi3_deployment_rtl_vectors.py": "58a438c915d2683dd5acd9f37db86eaa75f3fd4f948292c7f42f1653d28836db",
+    "tools/rtl_abi3_deployment_campaign.py": "250cf2c83b2a00bef5138a67befa8cb15b5eff3ca298cbdd5c6f02117fcc1cc6"
+  },
+  "status": "fail",
+  "tools": {
+    "cxx": {
+      "executable": "/usr/bin/g++",
+      "executable_sha256": "2360901d864cf10bfd6296e261cb2c14053552a80377761ab07146ec9ec9a2c0",
+      "version": "g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0"
+    },
+    "iverilog": {
+      "executable": "/usr/bin/iverilog",
+      "executable_sha256": "1ba67856249142771239573b5d51c7f6e4d67a1e7931a0d0fab56e0d473d2167",
+      "version": "Icarus Verilog version 11.0 (stable) ()"
+    },
+    "verilator": {
+      "executable": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator",
+      "executable_sha256": "fb2cc573b1055cf096c90e1efc9966fe56bdb4b265c83590cf2a49f7a0defcdf",
+      "version": "Verilator 5.050 2026-07-01 rev v5.050"
+    },
+    "vvp": {
+      "executable": "/usr/bin/vvp",
+      "executable_sha256": "075b114070eed3bc72e0e4559decf40520f3b693b1da9c94bba1defe8896966d",
+      "version": "Icarus Verilog runtime version 11.0 (stable) ()"
+    }
+  },
+  "what_ran": {
+    "compared": [
+      "program header admission, trap class, instruction count, entrypoint count and declared maximum retired work",
+      "every engine issue in program order: family, subopcode, descriptor ID and the instruction index that issued it",
+      "every resolved operand tensor view in program order then operand order: descriptor, slot, resolved extent, the axis that extent belongs to (A18), element offset (A4) and rank, against runtime.sim.memory.ViewResolver.resolve",
+      "instructions fetched, retired, predicated off and issued",
+      "loop iterations, branches taken and wait-set evaluations",
+      "state prepare, commit, discard, read and advance counts, commits applied and rows committed",
+      "the completion decision, the trap class and the first faulting instruction"
+    ],
+    "deployments": [
+      {
+        "co_simulable_within_rtl_bounds": true,
+        "deployment_sha256": "a60d8500f0e8ad50c469fa1add1c95b865ca5d35dc7ae2db57c2845fc5c1298e",
+        "descriptor_count": 239,
+        "instruction_count": 75,
+        "key": "qwen3-8b-rom-single-chip",
+        "rtl_bound_overruns": [],
+        "title": "Qwen3-8B ROM single chip"
+      },
+      {
+        "co_simulable_within_rtl_bounds": true,
+        "deployment_sha256": "05bf410b2eb48604cd231c03d56b6d074a35361e47bce0336be74d730f158156",
+        "descriptor_count": 218,
+        "instruction_count": 75,
+        "key": "qwen3-8b-hbm-single-chip",
+        "rtl_bound_overruns": [],
+        "title": "Qwen3-8B HBM single chip"
+      },
+      {
+        "co_simulable_within_rtl_bounds": false,
+        "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+        "descriptor_count": 3387,
+        "instruction_count": 1156,
+        "key": "deepseek-v4-flash-rom-wafer",
+        "rtl_bound_overruns": [
+          {
+            "declared_in": "rtl/abi3/ot_a3_pkg.sv",
+            "deployment_requires": 10,
+            "expressed_by": "nothing. No capability field names a state-slot count and runtime.abi3.verifier has no such check, so no deployment can be refused for exceeding it",
+            "parameter": "A3_STATE_SLOTS",
+            "rtl_bound": 8
+          },
+          {
+            "declared_in": "rtl/abi3/ot_a3_pkg.sv",
+            "deployment_requires": 396,
+            "expressed_by": "limits.max_events -- but the verifier bounds the *number of distinct event IDs* a program signals, and a scoreboard indexed by event ID is bounded by the largest ID plus one. The two coincide only when IDs are dense from zero. The shipped capabilities also disagree with this parameter numerically: rom_deepseek_v4 admits 512 and hbm_sram_single_chip admits 4096",
+            "parameter": "A3_EVENT_COUNT",
+            "rtl_bound": 256
+          }
+        ],
+        "title": "DeepSeek-V4-Flash ROM wafer"
+      }
+    ],
+    "depth_reached": [
+      {
+        "case": "qwen3-8b-rom-single-chip/prefill",
+        "distinct_static_instructions_that_issued": 28,
+        "golden_engine_issues": 693,
+        "golden_instructions_retired": 2105,
+        "golden_resolved_views": 2143,
+        "ran_to_completion_on_the_golden_model": true,
+        "static_instructions_in_program": 75,
+        "work_bound_lowered_for_cosimulation": false
+      },
+      {
+        "case": "qwen3-8b-rom-single-chip/decode",
+        "distinct_static_instructions_that_issued": 28,
+        "golden_engine_issues": 693,
+        "golden_instructions_retired": 2105,
+        "golden_resolved_views": 2143,
+        "ran_to_completion_on_the_golden_model": true,
+        "static_instructions_in_program": 75,
+        "work_bound_lowered_for_cosimulation": false
+      },
+      {
+        "case": "qwen3-8b-hbm-single-chip/prefill",
+        "distinct_static_instructions_that_issued": 28,
+        "golden_engine_issues": 693,
+        "golden_instructions_retired": 2105,
+        "golden_resolved_views": 2143,
+        "ran_to_completion_on_the_golden_model": true,
+        "static_instructions_in_program": 75,
+        "work_bound_lowered_for_cosimulation": false
+      },
+      {
+        "case": "qwen3-8b-hbm-single-chip/decode",
+        "distinct_static_instructions_that_issued": 28,
+        "golden_engine_issues": 693,
+        "golden_instructions_retired": 2105,
+        "golden_resolved_views": 2143,
+        "ran_to_completion_on_the_golden_model": true,
+        "static_instructions_in_program": 75,
+        "work_bound_lowered_for_cosimulation": false
+      },
+      {
+        "case": "deepseek-v4-flash-rom-wafer/prefill",
+        "distinct_static_instructions_that_issued": 401,
+        "golden_engine_issues": 12657,
+        "golden_instructions_retired": 29333,
+        "golden_resolved_views": 39849,
+        "ran_to_completion_on_the_golden_model": true,
+        "static_instructions_in_program": 1156,
+        "work_bound_lowered_for_cosimulation": false
+      },
+      {
+        "case": "deepseek-v4-flash-rom-wafer/decode",
+        "distinct_static_instructions_that_issued": 367,
+        "golden_engine_issues": 3600,
+        "golden_instructions_retired": 11591,
+        "golden_resolved_views": 10428,
+        "ran_to_completion_on_the_golden_model": true,
+        "static_instructions_in_program": 1156,
+        "work_bound_lowered_for_cosimulation": false
+      }
+    ],
+    "prompt_tokens": 16,
+    "reference": "runtime.sim.device.Device"
+  }
+}
