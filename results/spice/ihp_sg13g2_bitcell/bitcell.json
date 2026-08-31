@@ -1,40 +1,46 @@
 {
   "array_efficiency_reference": {
-    "assumed": 0.7,
-    "assumed_grade": "assumed",
+    "assumed": 0.52,
+    "assumed_grade": "derived",
     "assumed_source": "configs/hardware/technology.json#rom.array_efficiency",
     "note": "the measured column is a foundry SRAM macro's own array efficiency at 130 nm, not a ROM macro's; a ROM macro has no write drivers, no write assist and no BIST, so its efficiency at equal capacity should be higher"
   },
   "artifacts": [
     {
+      "hash_stability": "archival identity only; NOT reproducible across runs. See rom_bitcell.canonical_digests for the digests a repeat run must reproduce.",
       "path": "results/spice/ihp_sg13g2_bitcell/artifacts/ihp_rom_bitarray.mag",
-      "sha256": "8a180cf2728c1e5c04385830e7497c772e6febf9f5f8c23a469890f5c0664ec5",
-      "size_bytes": 19467
+      "sha256": "99efe14998085108778a84690285cbc4e310e1a88bd7ad1b57c7404c9d3cb667",
+      "size_bytes": 19710
     },
     {
+      "hash_stability": "archival identity only; NOT reproducible across runs. See rom_bitcell.canonical_digests for the digests a repeat run must reproduce.",
       "path": "results/spice/ihp_sg13g2_bitcell/artifacts/ihp_rom_bitarray.gds",
-      "sha256": "099bb087923b171225332c8f7cb8dc60cd45aed45b67e92184b5b482419809ce",
-      "size_bytes": 14050
+      "sha256": "bd032d0d49d87e4c5f92a9e3f5482a3a78b678e027bec32e6308a627fa88f8d7",
+      "size_bytes": 14282
     },
     {
+      "hash_stability": "archival identity only; NOT reproducible across runs. See rom_bitcell.canonical_digests for the digests a repeat run must reproduce.",
       "path": "results/spice/ihp_sg13g2_bitcell/artifacts/ihp_rom_bitarray.extracted.spice",
-      "sha256": "4ea8462b1e1cf03f744318b04f05476d54c2adbaacad7b634e25b05b3914d8d3",
-      "size_bytes": 3508
+      "sha256": "6b55398ecca53234763caea96bb415ecbc0e3ba0a564360dbacd28596518dd2f",
+      "size_bytes": 2936
     },
     {
+      "hash_stability": "archival identity only; NOT reproducible across runs. See rom_bitcell.canonical_digests for the digests a repeat run must reproduce.",
       "path": "results/spice/ihp_sg13g2_bitcell/artifacts/ihp_rom_bitarray.pex.spice",
-      "sha256": "570479ded540ab788436a1cae109d8bbe998ebceb76147c7b694394dc0eaf801",
-      "size_bytes": 7435
+      "sha256": "73b6b77fea677f9eb88944de09b6e2c841f37562ecfa5ac213dcabfc37b6cfc8",
+      "size_bytes": 6611
     },
     {
+      "hash_stability": "archival identity only; NOT reproducible across runs. See rom_bitcell.canonical_digests for the digests a repeat run must reproduce.",
       "path": "results/spice/ihp_sg13g2_bitcell/artifacts/programmed_bits.txt",
       "sha256": "f3f5e814d4a5fa14352dc340bb9c00d4c0dc360eecf5b3f1d78797f3d45e5b8a",
       "size_bytes": 64
     },
     {
+      "hash_stability": "archival identity only; NOT reproducible across runs. See rom_bitcell.canonical_digests for the digests a repeat run must reproduce.",
       "path": "results/spice/ihp_sg13g2_bitcell/artifacts/magic.log",
-      "sha256": "acf8ccc5e9282abc463948116ae779b71dbbdaa3eea0f196c018f0213abb0a3a",
-      "size_bytes": 2408
+      "sha256": "0a142b137f55eb069c71e1f4a6b4913bac34314838959098aed60182a43c0979",
+      "size_bytes": 2369
     }
   ],
   "claim_boundary": {
@@ -64,7 +70,7 @@
     "sha256": "12e761182fabdaa826a912179fdcec717fc9dcf08433a692593f46d3fcc1c7ae"
   },
   "experiment_id": "ihp_sg13g2_rom_sram_bitcell_ratio_v1",
-  "generated_at_utc": "2026-08-31T07:23:19.331755+00:00",
+  "generated_at_utc": "2026-08-31T11:55:39.789385+00:00",
   "inputs": {
     "gds_reader": {
       "path": "tools/ot_gds_reader.py",
@@ -73,15 +79,105 @@
     },
     "generator": {
       "path": "spice/ihp_sg13g2/bitcell/rom_bitarray.tcl",
-      "sha256": "0f0cdbfc1b0889f96598f81de67d8b17e7789daacd91d3c0a8862337251c6cef",
-      "size_bytes": 17469
+      "sha256": "c4e0d0d67bf6537eeaf9e92a018f14d8bff5dea1cb7562bcab80e69b872ab615",
+      "size_bytes": 18169
     }
   },
   "node_sensitivity": {
+    "admissible_ratio_ladder": {
+      "boundary": "this ladder is a property of the PREDICTIVE 7 nm-class PDK the sibling drew in. It is not a TSMC N7/N6/N5/N4 statement and no rung is a target-node value",
+      "gap_to_next_rung_down": 0.01470588235294118,
+      "gap_to_next_rung_up": 0.016666666666666663,
+      "measured_rung": 0.25,
+      "quantum": "one contacted poly pitch by one fin pitch",
+      "rom_units_measured": 4,
+      "rungs_near_the_measurement": [
+        {
+          "ratio": 0.166666666667,
+          "rom_units": 3,
+          "sram_units": 18
+        },
+        {
+          "ratio": 0.176470588235,
+          "rom_units": 3,
+          "sram_units": 17
+        },
+        {
+          "ratio": 0.1875,
+          "rom_units": 3,
+          "sram_units": 16
+        },
+        {
+          "ratio": 0.2,
+          "rom_units": 3,
+          "sram_units": 15
+        },
+        {
+          "ratio": 0.214285714286,
+          "rom_units": 3,
+          "sram_units": 14
+        },
+        {
+          "ratio": 0.222222222222,
+          "rom_units": 4,
+          "sram_units": 18
+        },
+        {
+          "ratio": 0.235294117647,
+          "rom_units": 4,
+          "sram_units": 17
+        },
+        {
+          "ratio": 0.25,
+          "rom_units": 4,
+          "sram_units": 16
+        },
+        {
+          "ratio": 0.266666666667,
+          "rom_units": 4,
+          "sram_units": 15
+        },
+        {
+          "ratio": 0.277777777778,
+          "rom_units": 5,
+          "sram_units": 18
+        },
+        {
+          "ratio": 0.285714285714,
+          "rom_units": 4,
+          "sram_units": 14
+        },
+        {
+          "ratio": 0.294117647059,
+          "rom_units": 5,
+          "sram_units": 17
+        },
+        {
+          "ratio": 0.3125,
+          "rom_units": 5,
+          "sram_units": 16
+        },
+        {
+          "ratio": 0.333333333333,
+          "rom_units": 5,
+          "sram_units": 15
+        },
+        {
+          "ratio": 0.357142857143,
+          "rom_units": 5,
+          "sram_units": 14
+        }
+      ],
+      "sram_units_measured": 16,
+      "why_a_continuous_sweep_is_wrong": "the constant cannot take a value between two adjacent rungs at this node, so a sweep must sample the rungs. A uniform sweep over an interval reports sensitivity to values no drawn cell can have, and it reports the WRONG spacing: the rungs are not evenly spaced"
+    },
+    "capacity_density_factor_note": "ROM bits/mm2 is inversely proportional to this ratio at a fixed SRAM bitcell area and a fixed array efficiency, so a model built on the 130 nm ratio claims this factor MORE ROM capacity per mm2 than the same model built on the predictive FinFET ratio. It is a quotient of two measured ratios and is exact; it is NOT a statement about any target node's absolute density, and neither input may be labelled an N7/N6/N5/N4 value",
+    "capacity_density_factor_this_node_over_sibling": 1.9266307830321672,
     "evidence_class": "predictive open-PDK drawn-layout DRC measurement; not a foundry PDK, not TSMC N7/N6/N5, not silicon",
     "never": "these two ratios must not be averaged, blended or interpolated",
     "node": "ASAP7 predictive 7 nm FinFET research PDK",
     "ratio": 0.25,
+    "relative_disagreement": 0.9266307830321672,
     "source": "results/asap7_physical/bitcell_density/bitcell_density.json"
   },
   "pdk": {
@@ -100,12 +196,12 @@
     "variant": "ihp-sg13g2"
   },
   "ratio": {
-    "assumed": 0.2,
+    "assumed": 0.33,
     "assumed_source": "configs/hardware/technology.json#rom.cell_to_sram_cell_area_ratio",
     "direction_of_bias": "upper bound: the ROM cell is logic-rule legal, the SRAM cell is not",
     "dual_port_reference_ratio": 0.07176360225140713,
     "measured": 0.12976020221505305,
-    "measured_over_assumed": 0.6488010110752652
+    "measured_over_assumed": 0.3932127339850092
   },
   "reports": {
     "artifacts": "results/spice/ihp_sg13g2_bitcell/artifacts",
@@ -118,12 +214,33 @@
       "rows": 8
     },
     "bitline_connectivity_verified": true,
+    "canonical_digest_note": "order- and clock-independent SHA-256 of the drawn geometry and of the extracted netlists. These are the reproducibility check: two identical runs must produce identical canonical digests, and this runner refuses to record a result unless a repeat run does. The per-file sha256 under `artifacts` is ARCHIVAL IDENTITY ONLY -- magic writes a wall-clock timestamp into the .mag and the GDS header and ext2spice does not order the extracted parasitics, so those hashes change on every run of an unchanged generator and are not a determinism check",
+    "canonical_digests": {
+      "extracted": "dbae693920315810c185f0a3487ed7c73f3c3e82f3a243bdeb27be7d98128144",
+      "layout": "13777fb4a6ae3b714943e7b4ac6717ad1f884c54bc957955db9ecd785058cfe2",
+      "pex": "1c7797b94ec163243ab730727df789d78f9bfed5e4b00f171b5e3b9e550ec55d"
+    },
     "cell_area_um2": 0.39015,
     "column_pitch_nm": 510.0,
     "drawn_via1_shapes": 16,
     "drc_style": "drc(full)",
     "expected_nmos_devices": 32,
     "extracted_nmos_devices": 32,
+    "extracted_ports": [
+      "VSS",
+      "WL0",
+      "WL1",
+      "WL2",
+      "WL3",
+      "WL4",
+      "WL5",
+      "WL6",
+      "WL7",
+      "BL0",
+      "BL1",
+      "BL2",
+      "BL3"
+    ],
     "floor_probes": [
       {
         "dimension": "PX",
@@ -184,7 +301,7 @@
         ]
       }
     ],
-    "magic_log_sha256": "acf8ccc5e9282abc463948116ae779b71dbbdaa3eea0f196c018f0213abb0a3a",
+    "magic_log_sha256": "0a142b137f55eb069c71e1f4a6b4913bac34314838959098aed60182a43c0979",
     "nominal_drc_errors": 0,
     "nominal_nm": {
       "CT": 160,
@@ -196,6 +313,7 @@
       "WD": 300
     },
     "programming_via1_count": 16,
+    "repeat_run_matches": true,
     "row_pitch_nm": 765.0,
     "topology": "via1-programmed NOR mask ROM, one nMOS per bit, one independent programming via1 per bit"
   },

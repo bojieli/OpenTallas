@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 from datetime import datetime, timezone
 import glob
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -138,6 +139,174 @@ def verify_pdk(pdk: Path, lock: dict[str, Any]) -> dict[str, Any]:
 # ROM bitcell: minimum DRC-legal drawn pitch
 # --------------------------------------------------------------------------
 
+SUBCKT_RE = re.compile(r"(?mi)^\.subckt\s+(\S+)\s*(.*)$")
+
+
+def spice_logical_lines(text: str) -> list[str]:
+    """Join SPICE `+` continuations. ext2spice wraps a wide .subckt line, and a
+    checker that reads only the first physical line reports a port list that is
+    short for a formatting reason rather than a real one."""
+    lines: list[str] = []
+    for raw in text.splitlines():
+        stripped = raw.rstrip()
+        if stripped.startswith("+") and lines:
+            lines[-1] = lines[-1] + " " + stripped[1:].strip()
+        else:
+            lines.append(stripped)
+    return lines
+
+
+def expected_ports(rows: int, cols: int) -> list[str]:
+    return ["VSS"] + [f"WL{i}" for i in range(rows)] + [f"BL{i}" for i in range(cols)]
+
+
+def check_ports(netlist: Path, rows: int, cols: int, error: type[Exception]) -> list[str]:
+    """Refuse a netlist whose port list is not exactly what was drawn.
+
+    A label that misses its conductor produces no port, magic writes a shorter
+    `.subckt` line without complaint, and ngspice then binds a longer instance
+    line to it silently. That is how a whole campaign can run on a netlist whose
+    ground is not connected, so the port list is checked rather than trusted.
+    """
+    matches = [
+        SUBCKT_RE.match(line)
+        for line in spice_logical_lines(netlist.read_text(encoding="utf-8"))
+    ]
+    found = [match for match in matches if match is not None]
+    if len(found) != 1:
+        raise error(f"{netlist}: expected one .subckt line, found {len(found)}")
+    observed = found[0].group(2).split()
+    wanted = expected_ports(rows, cols)
+    if observed != wanted:
+        missing = [name for name in wanted if name not in observed]
+        extra = [name for name in observed if name not in wanted]
+        raise error(
+            f"{netlist}: extracted port list is wrong ({len(observed)} of {len(wanted)} ports); "
+            f"missing {missing[:8]}, unexpected {extra[:8]}"
+        )
+    # A name check is not a connectivity check, and the gap between them is
+    # exactly where this defect lives. The ground pin is a drawn pad with a via
+    # down to the tap strip; if that via ever lands on nothing, magic still
+    # names the pad `VSS`, still writes it as the first port, and the netlist
+    # still simulates -- with every transistor source on a node the testbench
+    # is not driving. So require the port to be electrically the same node the
+    # devices sit on, which is the thing the name alone cannot say.
+    devices = [
+        line.split()
+        for line in spice_logical_lines(netlist.read_text(encoding="utf-8"))
+        if line.startswith("X") and "nmos" in line
+    ]
+    if not devices:
+        raise error(f"{netlist}: no transistors in the extracted netlist to check VSS against")
+    # `X<name> drain gate source bulk model ...`. The BULK is deliberately not
+    # accepted: every nMOS in a p-substrate sits in the same well, so a check
+    # that accepted the bulk would pass a netlist whose source rail is broken --
+    # which is a different way to reach the same floating ground. One of drain
+    # or source must be the VSS port; the other is the bitline, or a floating
+    # drain where a bit is not programmed.
+    grounded = sum(1 for fields in devices if "VSS" in (fields[1], fields[3]))
+    if grounded != len(devices):
+        raise error(
+            f"{netlist}: only {grounded} of {len(devices)} row transistors have the VSS port "
+            "on a source or drain terminal. The port exists by name but is not the node the "
+            "array's sources are on, so the array would simulate with a floating ground and "
+            "every energy number taken from it would be wrong without anything failing."
+        )
+    return observed
+
+
+DEVICE_RE = re.compile(r"(?mi)^([XMRCDQ]\S*)\s+(.*)$")
+PARASITIC_RE = re.compile(r"(?mi)^([CR])\d+\s+(\S+)\s+(\S+)\s+(\S+)\s*$")
+MAG_TIMESTAMP_RE = re.compile(r"(?m)^timestamp\s+\d+\s*$")
+
+
+def canonical_layout(mag_text: str) -> str:
+    """A rendering of a Magic layout that two identical runs must agree on.
+
+    Magic stamps wall-clock `timestamp` into every `.mag` it writes, and the
+    GDS carries a write time in its header, so the SHA-256 of either file
+    changes on every run of an unchanged generator.  A recorded hash that can
+    never be reproduced looks exactly like a determinism check and is not one:
+    a reader who re-runs and compares gets a mismatch on a correct run, and a
+    reader who does not compare gets no guarantee at all.  This strips the
+    clock and sorts each layer's rectangles so that what is hashed is the drawn
+    geometry and nothing else.
+    """
+    section = None
+    layers: dict[str, list[str]] = {}
+    header: list[str] = []
+    for line in MAG_TIMESTAMP_RE.sub("", mag_text).splitlines():
+        line = line.rstrip()
+        if not line:
+            continue
+        if line.startswith("<< "):
+            section = line[3:].rsplit(">>", 1)[0].strip()
+            layers.setdefault(section, [])
+        elif section is None:
+            header.append(line)
+        else:
+            layers[section].append(line)
+    out = list(header)
+    for name in sorted(layers):
+        out.append(f"<< {name} >>")
+        out.extend(sorted(layers[name]))
+    return "\n".join(out) + "\n"
+
+
+def canonical_netlist(spice_text: str) -> str:
+    """A rendering of an extracted netlist that two identical runs must agree on.
+
+    `ext2spice` does not emit the extracted parasitics in a stable order: two
+    runs of the same generator produce the same 126 capacitors with the same
+    values under different `C<n>` names and in a different sequence.  The
+    element set is the physics; the ordering is not.  Nodes of a two-terminal
+    parasitic are sorted too, because `C a b` and `C b a` are the same device.
+    """
+    lines = spice_logical_lines(spice_text)
+    subckt: list[str] = []
+    parasitics: list[str] = []
+    devices: list[str] = []
+    for raw in lines:
+        line = raw.strip()
+        if not line or line.startswith("*"):
+            continue
+        if line.lower().startswith(".subckt") or line.lower().startswith(".ends"):
+            subckt.append(line)
+            continue
+        if line.startswith("."):
+            continue
+        match = PARASITIC_RE.match(line)
+        if match is not None:
+            kind, left, right, value = match.groups()
+            a, b = sorted((left, right))
+            parasitics.append(f"{kind} {a} {b} {value}")
+            continue
+        device = DEVICE_RE.match(line)
+        if device is not None:
+            devices.append(line)
+    return "\n".join(subckt + sorted(devices) + sorted(parasitics)) + "\n"
+
+
+def canonical_digests(workdir: Path) -> dict[str, str]:
+    """Order- and clock-independent digests of whatever this run drew."""
+    digests: dict[str, str] = {}
+    mag = workdir / "ihp_rom_bitarray.mag"
+    if mag.is_file():
+        digests["layout"] = hashlib.sha256(
+            canonical_layout(mag.read_text(encoding="utf-8")).encode("utf-8")
+        ).hexdigest()
+    for key, name in (
+        ("extracted", "ihp_rom_bitarray.extracted.spice"),
+        ("pex", "ihp_rom_bitarray.pex.spice"),
+    ):
+        path = workdir / name
+        if path.is_file():
+            digests[key] = hashlib.sha256(
+                canonical_netlist(path.read_text(encoding="utf-8")).encode("utf-8")
+            ).hexdigest()
+    return digests
+
+
 MAGIC_PARAM_RE = re.compile(r"(?m)^OT_PARAM\|([A-Z0-9_]+)\|(.+)$")
 MAGIC_TOTAL_RE = re.compile(r"(?m)^OT_DRC_TOTAL=(\d+)$")
 MAGIC_RULE_RE = re.compile(r"(?m)^OT_DRC_RULE\|(\d+)\|(.+)$")
@@ -227,6 +396,31 @@ def measure_rom_bitcell(
             f"{nominal_run['drc_errors']} errors, {nominal_run['drc_rules']}"
         )
 
+    # Determinism is claimed by the report, so it is measured rather than
+    # asserted: draw and extract the same array a second time and require the
+    # canonical geometry and the canonical netlist to be identical. The raw
+    # file hashes cannot do this job -- magic stamps a clock into the .mag and
+    # the GDS header, and ext2spice reorders the parasitics -- so a runner that
+    # only recorded those hashes would be recording a check that always fails
+    # and is therefore never run.
+    repeat_run = run_generator(
+        magic, variant, pdk, generator, base, build / "rom_nominal_repeat", extract=True
+    )
+    digests = canonical_digests(nominal_run["workdir"])
+    repeat_digests = canonical_digests(repeat_run["workdir"])
+    if not digests:
+        raise BitcellError("the nominal ROM array produced nothing to digest")
+    if digests != repeat_digests:
+        differing = sorted(k for k in digests if digests[k] != repeat_digests.get(k))
+        raise BitcellError(
+            "the ROM array generator is not deterministic: a second identical run "
+            f"produced different {differing}. Every number below is drawn from one run "
+            "and would not survive reproduction."
+        )
+    if repeat_run["drc_errors"] != nominal_run["drc_errors"]:
+        raise BitcellError("two identical runs disagreed on the DRC error count")
+    shutil.rmtree(repeat_run["workdir"], ignore_errors=True)
+
     px = float(nominal_run["params"]["PX"])
     py = float(nominal_run["params"]["PY"])
     cell_area_nm2 = float(nominal_run["params"]["CELL_AREA_NM2"])
@@ -285,16 +479,24 @@ def measure_rom_bitcell(
     if "V1" not in nominal_run["params"]:
         raise BitcellError("the generator did not report its drawn via1 size")
     via_area_nm2 = float(nominal_run["params"]["V1"]) ** 2
-    drawn_vias = via1_area_units * scale_nm * scale_nm / via_area_nm2
+    structural = int(nominal_run["params"].get("STRUCTURAL_VIA1", -1))
+    if structural < 0:
+        raise BitcellError("the generator did not report its structural via1 count")
+    drawn_vias = via1_area_units * scale_nm * scale_nm / via_area_nm2 - structural
     if abs(drawn_vias - programmed) > 1e-9:
         raise BitcellError(
-            f"the layout holds {drawn_vias:g} via1 squares but {programmed} bits are programmed"
+            f"the layout holds {drawn_vias:g} programming via1 squares "
+            f"(after {structural} structural) but {programmed} bits are programmed"
         )
     via1_rects = programmed
 
     extracted = nominal_run["workdir"] / "ihp_rom_bitarray.extracted.spice"
     if not extracted.is_file():
         raise BitcellError("the nominal ROM array did not extract")
+    ports = check_ports(
+        nominal_run["workdir"] / "ihp_rom_bitarray.pex.spice",
+        spec["array_rows"], spec["array_cols"], BitcellError,
+    )
     devices = sum(
         1 for line in extracted.read_text(encoding="utf-8").splitlines()
         if line.startswith("X") and "sg13_lv_nmos" in line
@@ -340,6 +542,19 @@ def measure_rom_bitcell(
         "extracted_nmos_devices": devices,
         "drawn_via1_shapes": via1_rects,
         "bitline_connectivity_verified": True,
+        "extracted_ports": ports,
+        "canonical_digests": digests,
+        "canonical_digest_note": (
+            "order- and clock-independent SHA-256 of the drawn geometry and of the "
+            "extracted netlists. These are the reproducibility check: two identical "
+            "runs must produce identical canonical digests, and this runner refuses "
+            "to record a result unless a repeat run does. The per-file sha256 under "
+            "`artifacts` is ARCHIVAL IDENTITY ONLY -- magic writes a wall-clock "
+            "timestamp into the .mag and the GDS header and ext2spice does not order "
+            "the extracted parasitics, so those hashes change on every run of an "
+            "unchanged generator and are not a determinism check"
+        ),
+        "repeat_run_matches": True,
         "expected_nmos_devices": expected_devices,
         "drc_style": spec["drc_style"],
         "nominal_nm": nominal,
@@ -593,6 +808,67 @@ def sram_bitcell_drc(
     }
 
 
+def finfet_ratio_ladder(
+    rom_units: int, sram_units: int, span: int = 3
+) -> dict[str, Any]:
+    """The values a cell-area ratio is allowed to take at a quantised node.
+
+    At the FinFET node the sibling measured, BOTH cells land on exact integer
+    multiples of one CPP x one fin pitch. A cell cannot be 4.3 quanta; the
+    smallest legal change to either dimension is a whole quantum. So the ratio
+    is a ratio of two small integers and it moves in visible steps -- and a
+    sweep that samples a continuum between two endpoints spends most of its
+    samples on values no layout can have.
+
+    This enumerates the ladder around the measured pair: the ROM at its
+    measured quanta and a few steps either side, over the SRAM at its measured
+    quanta and a few steps either side. It is a statement about the shape of
+    the constant, not a prediction of any one value.
+    """
+    roms = [n for n in range(rom_units - span, rom_units + span + 1) if n > 0]
+    srams = [n for n in range(sram_units - span, sram_units + span + 1) if n > 0]
+    rungs = sorted(
+        {
+            (
+                round(r / s, 12),
+                r,
+                s,
+            )
+            for r in roms
+            for s in srams
+        }
+    )
+    return {
+        "rom_units_measured": rom_units,
+        "sram_units_measured": sram_units,
+        "quantum": "one contacted poly pitch by one fin pitch",
+        "measured_rung": rom_units / sram_units,
+        "rungs_near_the_measurement": [
+            {"ratio": value, "rom_units": r, "sram_units": s}
+            for value, r, s in rungs
+            if abs(r - rom_units) <= 1 and abs(s - sram_units) <= 2
+        ],
+        "gap_to_next_rung_down": (
+            rom_units / sram_units - rom_units / (sram_units + 1)
+        ),
+        "gap_to_next_rung_up": (
+            rom_units / (sram_units - 1) - rom_units / sram_units
+            if sram_units > 1
+            else None
+        ),
+        "why_a_continuous_sweep_is_wrong": (
+            "the constant cannot take a value between two adjacent rungs at this node, "
+            "so a sweep must sample the rungs. A uniform sweep over an interval reports "
+            "sensitivity to values no drawn cell can have, and it reports the WRONG "
+            "spacing: the rungs are not evenly spaced"
+        ),
+        "boundary": (
+            "this ladder is a property of the PREDICTIVE 7 nm-class PDK the sibling drew "
+            "in. It is not a TSMC N7/N6/N5/N4 statement and no rung is a target-node value"
+        ),
+    }
+
+
 # --------------------------------------------------------------------------
 # Reporting
 # --------------------------------------------------------------------------
@@ -625,9 +901,13 @@ def markdown_report(result: dict[str, Any]) -> str:
         f"| Measured ÷ assumed | {ratio['measured'] / ratio['assumed']:.3f}× | |",
         "",
         f"At this node the drawn ROM bitcell is **{1.0 / ratio['measured']:.2f}× smaller** than the",
-        f"foundry 6T cell, against the {1.0 / ratio['assumed']:.0f}× the assumption implies, so the assumed"
-        " 0.20 is *conservative* here — and, for the reason given under \"rule-set asymmetry\" below,",
-        "the true same-rule-set ratio is smaller still.",
+        f"foundry 6T cell, against the {1.0 / ratio['assumed']:.1f}× the model's stated "
+        f"{ratio['assumed']:.4f} implies, so that value is "
+        + ("*conservative*" if ratio["measured"] < ratio["assumed"] else "*optimistic*")
+        + " against this",
+        "130 nm measurement — and, for the reason given under \"rule-set asymmetry\" below,",
+        "the true same-rule-set ratio is smaller still. Neither statement licenses moving a",
+        "leading-node constant: see \"Node honesty\".",
         "",
         "The dual-port 8T bitcell in the same release measures "
         f"{sram['2P']['column_pitch_um']:.4f} × {sram['2P']['row_pitch_um']:.4f} µm = "
@@ -743,11 +1023,32 @@ def markdown_report(result: dict[str, Any]) -> str:
             "",
             f"- Rule-set asymmetry: {boundary['rule_set_asymmetry']}.",
             "",
-            "## Reproduction",
+            "## Reproduction, and what \"reproducible\" means here",
             "",
             "```bash",
             "python3 tools/run_ihp_bitcell_density.py",
             "```",
+            "",
+            "This run draws and extracts the nominal array **twice** and refuses to record a",
+            "result unless both runs produce identical canonical digests:",
+            "",
+            "| Canonical digest | SHA-256 |",
+            "|---|---|",
+        ]
+    )
+    lines.extend(
+        f"| `{name}` | `{digest}` |"
+        for name, digest in sorted(rom["canonical_digests"].items())
+    )
+    lines.extend(
+        [
+            "",
+            "**The per-file `sha256` under `artifacts` is archival identity only and is not a",
+            "reproducibility check.** Magic writes a wall-clock `timestamp` into the `.mag` and",
+            "into the GDS header, and `ext2spice` does not emit the extracted parasitics in a",
+            "stable order, so those hashes differ between two runs that drew exactly the same",
+            "geometry. The canonical digests above strip the clock and sort the elements, so they",
+            "compare the physics and nothing else.",
             "",
         ]
     )
@@ -828,6 +1129,11 @@ def main() -> int:
                         "path": (destination / name).relative_to(ROOT).as_posix(),
                         "sha256": common.sha256_file(destination / name),
                         "size_bytes": (destination / name).stat().st_size,
+                        "hash_stability": (
+                            "archival identity only; NOT reproducible across runs. See "
+                            "rom_bitcell.canonical_digests for the digests a repeat run "
+                            "must reproduce."
+                        ),
                     }
                 )
 
@@ -891,7 +1197,41 @@ def main() -> int:
                     "source": sibling_path.relative_to(ROOT).as_posix(),
                     "evidence_class": sibling.get("evidence_class"),
                     "never": "these two ratios must not be averaged, blended or interpolated",
+                    # What the disagreement costs, in the model's own primitive.
+                    # ROM capacity density is 1e6 / (sram_cell_um2 * ratio /
+                    # array_efficiency), so at a fixed SRAM cell and a fixed
+                    # array efficiency it is inversely proportional to the
+                    # ratio and every other term cancels. This quotient is
+                    # therefore EXACT and needs no node-specific input --
+                    # which is precisely why it is computed here rather than
+                    # written out by hand in a document, where it would be an
+                    # unchecked second derivation of the same arithmetic.
+                    # The headline of docs/ROM_DENSITY_NODE_TRANSFER.md, computed
+                    # rather than written down. It appeared in three documents as
+                    # a hand-arithmetic "92.7%" with nothing able to check it.
+                    "relative_disagreement": (
+                        measurement["ratio_via_programmed_rom_to_sram"] / measured - 1.0
+                    ),
+                    "capacity_density_factor_this_node_over_sibling": (
+                        measurement["ratio_via_programmed_rom_to_sram"]
+                        / measured
+                    ),
+                    "capacity_density_factor_note": (
+                        "ROM bits/mm2 is inversely proportional to this ratio at a fixed "
+                        "SRAM bitcell area and a fixed array efficiency, so a model built "
+                        "on the 130 nm ratio claims this factor MORE ROM capacity per mm2 "
+                        "than the same model built on the predictive FinFET ratio. It is a "
+                        "quotient of two measured ratios and is exact; it is NOT a "
+                        "statement about any target node's absolute density, and neither "
+                        "input may be labelled an N7/N6/N5/N4 value"
+                    ),
                 }
+                rom_units = measurement.get("rom_via_area_in_cpp_x_finpitch_units")
+                sram_units = measurement.get("sram_area_in_cpp_x_finpitch_units")
+                if rom_units and sram_units:
+                    result["node_sensitivity"]["admissible_ratio_ladder"] = (
+                        finfet_ratio_ladder(int(rom_units), int(sram_units))
+                    )
         json_path = repository_path(contract["reports"]["json"])
         json_path.parent.mkdir(parents=True, exist_ok=True)
         json_path.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")

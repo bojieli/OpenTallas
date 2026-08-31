@@ -79,6 +79,10 @@ proc ebox {layer x1 y1 x2 y2} {
     erase $layer
 }
 
+# via1 squares drawn for structure rather than for programming; the runners
+# subtract these before checking that one via equals one stored bit.
+set OT_STRUCTURAL_VIA1 0
+
 load $TOPCELL -silent
 units microns
 snap internal
@@ -277,6 +281,7 @@ if {$WLSTRAP} {
             [expr {$px + $PADSZ/2.0}] [expr {$yc + $PADSZ/2.0}]
         pbox via1 [expr {$px - 100}] [expr {$yc - 100}] \
             [expr {$px + 100}] [expr {$yc + 100}]
+        incr ::OT_STRUCTURAL_VIA1
     }
     # the even-row poly only has to reach its own pad column
     for {set j 0} {$j < $NROW} {incr j 2} {
@@ -337,8 +342,14 @@ proc ot_port {name idx layer x1 y1 x2 y2} {
     port make $idx
 }
 set pidx 1
-ot_port VSS $pidx metal1 [expr {$tl + $TW + 60}] -60 \
-    [expr {$tl + $TW + 260}] 60
+# The ground pin is presented on Metal2, on a pad over the bottom tap strip:
+# Metal1 is reserved for the standard cells, so a Metal1-only ground pin has no
+# routing access. A label that lands on bare substrate silently produces no port
+# at all and the netlist still simulates, so the runners gate the port list.
+pbox metal2 -700 [expr {$tb + 20}] -200 [expr {$tb + 380}]
+pbox via1 -550 [expr {$tb + 100}] -350 [expr {$tb + 300}]
+incr ::OT_STRUCTURAL_VIA1
+ot_port VSS $pidx metal2 -700 [expr {$tb + 20}] -200 [expr {$tb + 380}]
 for {set j 0} {$j < $NROW} {incr j} {
     set p [expr {$j / 2}]
     set y0 [ot_pair_y $p]
@@ -382,6 +393,7 @@ puts "OT_PARAM|CELL_AREA_NM2|[expr {$PX * $PY}]"
 puts "OT_PARAM|PROGRAMMED_VIA1|[llength $PROG]"
 puts "OT_PARAM|PATTERN|$OT_PATTERN"
 puts "OT_PARAM|V1|$V1"
+puts "OT_PARAM|STRUCTURAL_VIA1|$OT_STRUCTURAL_VIA1"
 puts "OT_PARAM|TAP_EVERY|$TAP_EVERY"
 set fh [open programmed_bits.txt w]
 foreach e $PROG { puts $fh "[lindex $e 0] [lindex $e 1]" }

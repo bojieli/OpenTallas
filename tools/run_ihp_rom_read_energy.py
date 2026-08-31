@@ -14,6 +14,7 @@ IHP SG13G2 is a 130 nm process.  Nothing here is scaled to N7/N6/N5/N4.
 from __future__ import annotations
 
 import argparse
+import hashlib
 from datetime import datetime, timezone
 from itertools import product
 import json
@@ -43,8 +44,8 @@ WARNING_RE = re.compile(r"(?mi)^\s*warning:\s*(.+)$")
 # prefix filter here would be the same defect class this program keeps finding:
 # legal values, no trap, nothing refused.
 BENIGN_WARNING_RES = (
-    re.compile(r"^m=xx on \\.subckt line will override multiplier m hierarchy!$"),
-    re.compile(r"^v\\w+: no dc value, transient time 0 value used$"),
+    re.compile(r"^m=xx on \.subckt line will override multiplier m hierarchy!$"),
+    re.compile(r"^v\w+: no dc value, transient time 0 value used$"),
 )
 
 
@@ -119,6 +120,7 @@ def build_array(
     pex = run["workdir"] / "ihp_rom_bitarray.pex.spice"
     if not pex.is_file():
         raise ReadEnergyError(f"{rows}-row array did not produce a PEX netlist")
+    ports = bitcell.check_ports(pex, rows, array["columns"], ReadEnergyError)
     bits_path = run["workdir"] / "programmed_bits.txt"
     programmed = {
         (int(a), int(b))
@@ -143,6 +145,7 @@ def build_array(
         "workdir": run["workdir"],
         "programmed": programmed,
         "devices": devices,
+        "ports": ports,
         "capacitance": bitline_capacitance(pex, array["columns"]),
     }
 
@@ -150,6 +153,7 @@ def build_array(
 def bitline_capacitance(pex: Path, columns: int) -> dict[str, Any]:
     incident: dict[str, float] = {}
     to_bitline: dict[str, float] = {}
+    wordline: dict[str, float] = {}
     elements = 0
     for line in pex.read_text(encoding="utf-8").splitlines():
         match = CAP_RE.match(line.strip())
@@ -159,6 +163,8 @@ def bitline_capacitance(pex: Path, columns: int) -> dict[str, Any]:
         farads = float(value) * SUFFIX.get(suffix.lower(), 1.0)
         elements += 1
         for node, other in ((left, right), (right, left)):
+            if node.upper().startswith("WL"):
+                wordline[node] = wordline.get(node, 0.0) + farads
             if not node.upper().startswith("BL"):
                 continue
             incident[node] = incident.get(node, 0.0) + farads
@@ -177,6 +183,13 @@ def bitline_capacitance(pex: Path, columns: int) -> dict[str, Any]:
         "interior_mean_neighbour_coupled_ff": coupled * 1e15,
         "neighbour_coupled_fraction": coupled / mean,
         "per_bitline_ff": {name: incident[name] * 1e15 for name in sorted(incident)},
+        # Interconnect only. ext2spice writes the wiring parasitics; the row
+        # transistors' gate capacitance is inside the device model and is NOT a
+        # C element here, so this number is a floor on the wordline load and
+        # must never be used as the Liberty pin capacitance.
+        "wordline_interconnect_mean_ff": (
+            sum(wordline.values()) / len(wordline) * 1e15 if wordline else 0.0
+        ),
     }
 
 
@@ -194,6 +207,42 @@ def linear_fit(points: list[tuple[float, float]]) -> dict[str, float]:
     ss_residual = sum((y - (slope * x + intercept)) ** 2 for x, y in points)
     r2 = 1.0 if ss_total == 0 else 1.0 - ss_residual / ss_total
     return {"slope": slope, "intercept": intercept, "r2": r2}
+
+
+ABSOLUTE_PATH_RE = re.compile(r"/\S+")
+
+
+def canonical_deck(text: str) -> str:
+    """The deck with every absolute path reduced to its file name.
+
+    `deck_sha256` looks like a reproducibility anchor and is not one: the deck
+    written for each case carries `.include "<mkdtemp>/array_64/...pex.spice"`
+    and `.lib "<pdk root>/..."`, so its hash changes on every run of an
+    unchanged experiment. That is the same trap the bitcell runner already found
+    in Magic's clock-stamped `.mag` -- a hash a reader cannot reproduce on a
+    correct run, and which therefore proves nothing whether they check it or
+    not.
+
+    Stripping the directories leaves exactly the part of the deck that is the
+    experiment: the models, the sources, the instances and the `.measure`
+    statements. `canonical_deck_sha256` IS reproducible, and the runner refuses
+    to record it unless the canonicalisation actually removed every absolute
+    path -- otherwise the new hash would inherit the old one's defect while
+    looking like the fix.
+    """
+    return ABSOLUTE_PATH_RE.sub(lambda match: Path(match.group(0)).name, text)
+
+
+def canonical_deck_digest(deck: Path, error: type[Exception]) -> str:
+    text = canonical_deck(deck.read_text(encoding="utf-8"))
+    stray = ABSOLUTE_PATH_RE.search(text)
+    if stray is not None:
+        raise error(
+            f"{deck}: the canonical deck still contains the absolute path "
+            f"{stray.group(0)!r}, so its digest would change with the build directory "
+            "and would not be a reproducibility anchor"
+        )
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
 def write_deck(
@@ -265,13 +314,41 @@ def write_deck(
             f".measure tran e_wl INTEG par('-v(WL{selected})*i(VWL{selected})') "
             f"FROM={start:g}n TO={stop:g}n"
         )
+        # Charge delivered by the wordline driver across the RISING edge only.
+        # e_wl above integrates over the whole cycle, so it is a dissipated
+        # energy and NOT 1/2 C V^2: it cannot be inverted for a pin
+        # capacitance.  The macro Liberty needs an input capacitance, so
+        # measure the charge and divide by the rail, which is the definition of
+        # an effective capacitance and does not depend on the gate being
+        # linear.
+        #
+        # TWO windows, because they are not the same number and the difference
+        # is a real effect rather than noise.  `q_wl` closes 50 ps after the
+        # wordline reaches the rail: it is the transition charge and it is what
+        # a Liberty pin capacitance means.  `q_wl_hold` runs on to just before
+        # the wordline falls, so it also contains the charge the DISCHARGING
+        # bitlines pull back out through the row transistors' gate-drain
+        # overlap.  Reporting only the second would understate the wordline
+        # load by that coupling, size the wordline drivers small, and quietly
+        # flatter the macro's array efficiency.
+        rise_open = start + period / 2 + 0.04
+        rise_shut = start + period / 2 + 0.15
+        hold_shut = start + period - 0.15
+        lines.append(
+            f".measure tran q_wl INTEG par('-i(VWL{selected})') "
+            f"FROM={rise_open:g}n TO={rise_shut:g}n"
+        )
+        lines.append(
+            f".measure tran q_wl_hold INTEG par('-i(VWL{selected})') "
+            f"FROM={rise_open:g}n TO={hold_shut:g}n"
+        )
     for column in range(columns):
         lines.append(f".measure tran v_bl{column} FIND v(BL{column}) AT={stop - 0.15:g}n")
     lines.append(".end")
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-MEASURE_RE = re.compile(r"(?m)^\s*(e_cycle|q_cycle|e_wl|v_bl\d+)\s*=\s*([-+0-9.eE]+)")
+MEASURE_RE = re.compile(r"(?m)^\s*(e_cycle|q_cycle|e_wl|q_wl_hold|q_wl|v_bl\d+)\s*=\s*([-+0-9.eE]+)")
 
 
 def run_case(
@@ -329,6 +406,7 @@ def run_case(
         "warnings": warnings,
         "all_warnings": sorted(set(observed_warnings)),
         "deck_sha256": common.sha256_file(deck),
+        "canonical_deck_sha256": canonical_deck_digest(deck, ReadEnergyError),
         "log_sha256": common.sha256_file(log),
     }
 
@@ -377,6 +455,14 @@ def evaluate_case(
         "read_energy_fj_per_bit": energy_fj / columns,
         "read_energy_j_per_byte": (measures["e_cycle"] / columns) * 8.0,
         "wordline_energy_fj": measures.get("e_wl", 0.0) * 1e15,
+        "wordline_charge_fc": measures.get("q_wl", 0.0) * 1e15,
+        "wordline_hold_charge_fc": measures.get("q_wl_hold", 0.0) * 1e15,
+        "wordline_capacitance_ff_per_column": (
+            measures["q_wl"] / vdd / columns * 1e15 if "q_wl" in measures else None
+        ),
+        "wordline_capacitance_hold_ff_per_column": (
+            measures["q_wl_hold"] / vdd / columns * 1e15 if "q_wl_hold" in measures else None
+        ),
         "supply_charge_fc": measures["q_cycle"] * 1e15,
         "programmed_bitline_fraction_max": max(low) if low else None,
         "unprogrammed_bitline_fraction_min": min(high) if high else None,
@@ -384,6 +470,7 @@ def evaluate_case(
         "warnings": observed["warnings"],
         "all_warnings": observed["all_warnings"],
         "deck_sha256": observed["deck_sha256"],
+        "canonical_deck_sha256": observed["canonical_deck_sha256"],
         "log_sha256": observed["log_sha256"],
         "status": "pass" if not failures else "fail",
         "failures": failures,
@@ -427,9 +514,9 @@ def markdown_report(result: dict[str, Any]) -> str:
     lines = [
         "# IHP SG13G2 extracted mask-ROM array read energy",
         "",
-        f"**Status:** **{result['status'].upper()}** ({energy['cases_passed']}/{energy['case_count']} cases)  ",
-        "**Evidence class:** deterministic simulation of an extracted minimum-pitch ROM bit array; **130 nm**; not silicon  ",
-        f"**PDK:** `{result['pdk']['variant']}` / `{result['pdk']['release']}` / `{result['pdk']['commit']}`  ",
+        f"**Status:** **{result['status'].upper()}** ({energy['cases_passed']}/{energy['case_count']} cases)",
+        "**Evidence class:** deterministic simulation of an extracted minimum-pitch ROM bit array; **130 nm**; not silicon",
+        f"**PDK:** `{result['pdk']['variant']}` / `{result['pdk']['release']}` / `{result['pdk']['commit']}`",
         "**Simulator:** ngspice 43 with the pinned official PSP103 OSDI modules",
         "",
         "## What was measured, and what the constant claims",
@@ -442,6 +529,8 @@ def markdown_report(result: dict[str, Any]) -> str:
         f"| Read energy, nominal case | {energy['nominal']['read_energy_fj']:.2f} fJ per access of {result['array']['columns']} bits |",
         f"| Read energy per bit, nominal | **{energy['nominal']['read_energy_fj_per_bit']:.3f} fJ/bit** |",
         f"| Read energy per byte, nominal | **{energy['nominal']['read_energy_j_per_byte']:.3e} J/B** |",
+        f"| Wordline effective input capacitance | **{result['wordline_capacitance']['ff_per_column']:.4f} fF per column** |",
+        f"| Of which extracted interconnect | {result['wordline_capacitance']['extracted_interconnect_only_ff_per_column']:.4f} fF per column |",
         f"| Assumed `energy.rom_read_j_per_byte` | {ref['assumed_j_per_byte']:.3e} J/B, graded `{ref['assumed_grade']}` |",
         f"| Measured ÷ assumed, at {result['array']['rows']} rows | {energy['nominal']['read_energy_j_per_byte'] / ref['assumed_j_per_byte']:.2f}× |",
         "",
@@ -480,9 +569,40 @@ def markdown_report(result: dict[str, Any]) -> str:
             "A single scalar per byte therefore names a column height without saying so. At this",
             f"node, and at the {result['selected_row_ones']}-of-{result['array']['columns']} stored-one density of the",
             f"accessed row, the assumed {ref['assumed_j_per_byte']:.0e} J/B corresponds to a column of about",
-            f"**{result['implied_column_height_rows']:.0f} rows**. Real ROM columns are 256 to 1024 rows, which is why",
+            f"**{result['implied_column_height_rows']:.0f} rows**. That is short: the shipped",
+            "single-port memories in this same PDK are built at column heights up to 512 rows",
+            "(`results/spice/ihp_sg13g2_bitcell/bitcell.json#sram_bitcell.macros[].physical_rows`),",
+            "and an unstated column height is the reason",
             "the model needs a column-height term, not a better scalar. The number is quoted here",
             "to size the gap in the model's *shape*, not to restate a 130 nm energy as an N6 one.",
+            "",
+            "## The wordline load the macro flow is entitled to",
+            "",
+            "`physical/ihp_sg13g2_rom_macro/macro_contract.json` needs one number from this run:",
+            "the wordline load of the bit array, which sizes the wordline drivers the periphery",
+            "synthesises and therefore part of the macro area. It is measured as charge delivered",
+            "by the wordline driver divided by the rail \u2014 an effective capacitance, which does",
+            "not assume the gate is linear \u2014 over two windows:",
+            "",
+            "| Window | Effective capacitance |",
+            "|---|---:|",
+            f"| the wordline transition alone | {result['wordline_capacitance']['ff_per_column_transition_only']:.4f} fF/column |",
+            f"| transition **and** the bitline discharge that follows it | {result['wordline_capacitance']['ff_per_column_including_hold']:.4f} fF/column |",
+            f"| **given to the macro flow** | **{result['wordline_capacitance']['ff_per_column']:.4f} fF/column** |",
+            "",
+            "The two windows differ because the falling bitlines pull charge through the row",
+            "transistors' gate-drain overlap, and the wordline driver really does supply it on",
+            "every access. **The larger of the two is handed to the macro flow.** That sizes the",
+            "wordline drivers up, makes the periphery larger and makes the array efficiency this",
+            "chain reports lower; the smaller number would have improved it, which is exactly why",
+            "it is not the one used.",
+            "",
+            "The extracted interconnect capacitance on the same nets is only",
+            f"{result['wordline_capacitance']['extracted_interconnect_only_ff_per_column']:.4f} fF per column,",
+            "because `ext2spice` writes wiring parasitics and the row transistors' gate capacitance",
+            "lives inside the device model rather than in a `C` element. **Reading the wordline load",
+            "off the parasitic netlist would therefore understate it by design.** That is the reason",
+            "this number is measured in simulation and not counted out of the netlist.",
             "",
             "## The second finding: minimum pitch buys density and loses margin",
             "",
@@ -705,6 +825,18 @@ def main() -> int:
                 f"idle-cycle energy {idle_energy_fj} fJ is not negligible against the read"
             )
 
+        wl_transition = nominal["wordline_capacitance_ff_per_column"]
+        wl_hold = nominal["wordline_capacitance_hold_ff_per_column"]
+        for name, value in (("transition", wl_transition), ("hold", wl_hold)):
+            if value is None or not math.isfinite(value) or value <= 0.0:
+                raise ReadEnergyError(
+                    f"the nominal case produced no usable {name}-window wordline "
+                    "capacitance; the macro Liberty would then be built from a number "
+                    "this run did not measure"
+                )
+        # Deliberately the larger. See `selection_rule` below.
+        wl_cap = max(wl_transition, wl_hold)
+
         technology = common.strict_json(ROOT / "configs" / "hardware" / "technology.json")
         assumed = float(technology["energy"]["rom_read_j_per_byte"]["value"])
         ones_count = next(iter(ones))
@@ -758,6 +890,47 @@ def main() -> int:
                 "extracted_devices": primary["devices"],
                 "precharge_device": contract["array"]["precharge_device"],
                 "precharge_device_note": contract["array"]["precharge_device_note"],
+                "extracted_ports": primary["ports"],
+            },
+            "wordline_capacitance": {
+                "ff_per_column": wl_cap,
+                "ff_per_column_transition_only": wl_transition,
+                "ff_per_column_including_hold": wl_hold,
+                "charge_fc": nominal["wordline_charge_fc"],
+                "hold_charge_fc": nominal["wordline_hold_charge_fc"],
+                "selection_rule": (
+                    "the LARGER of the two windows is the one the macro flow is given. "
+                    "The transition window is what a Liberty pin capacitance means; the "
+                    "hold window additionally contains the charge the discharging "
+                    "bitlines pull through the row transistors' gate-drain overlap, which "
+                    "the wordline driver really does have to supply on every access. "
+                    "Taking the larger sizes the wordline drivers UP, which makes the "
+                    "periphery larger and the macro's array efficiency LOWER. Choosing "
+                    "the smaller would have improved the number this chain reports, which "
+                    "is the reason it is not chosen."
+                ),
+                "from_case": nominal["case_id"],
+                "method": (
+                    "charge delivered by the selected wordline driver, divided by the rail "
+                    "and by the column count. This is an EFFECTIVE capacitance and does "
+                    "not assume the gate is linear; it is not the extracted interconnect "
+                    "capacitance, which omits the row transistors' gate capacitance "
+                    "entirely"
+                ),
+                "extracted_interconnect_only_ff_per_column": (
+                    primary["capacitance"]["wordline_interconnect_mean_ff"] / primary["columns"]
+                ),
+                "consumer": "physical/ihp_sg13g2_rom_macro/macro_contract.json"
+                            "#wordline_capacitance_ff_per_column",
+                "extrapolation_note": (
+                    "measured on this array's column count and consumed by the macro flow as "
+                    "ff_per_column x cols, which on the 128-column macro is a 16x "
+                    "extrapolation. The gate term is exactly linear in columns; the wiring "
+                    "term is linear plus end effects that a narrow array carries a "
+                    "disproportionate share of, so the extrapolation slightly OVERSTATES the "
+                    "load per column on a wide macro. It was not measured at 128 columns"
+                ),
+                "measured_at_columns": primary["columns"],
             },
             "capacitance_model": {
                 "points_ff": {str(rows): value for rows, value in cap_points},
@@ -796,8 +969,48 @@ def main() -> int:
                 "assumed_j_per_byte": assumed,
                 "assumed_grade": technology["energy"]["rom_read_j_per_byte"]["grade"],
                 "assumed_source": "configs/hardware/technology.json#energy.rom_read_j_per_byte",
+                # Recorded rather than left to a reader's arithmetic: it is quoted
+                # in three documents and each one used to compute it by hand from
+                # two numbers that can move independently.
+                "measured_over_assumed_at_this_column_height": (
+                    nominal["read_energy_j_per_byte"] / assumed
+                ),
+                "measured_over_assumed_note": (
+                    "the measured side EXCLUDES address decode, sense amplification and the "
+                    "macro output latch, all three of which this constant's own stated "
+                    "boundary INCLUDES, so the quotient is a LOWER bound on the disagreement "
+                    "-- and it is a 130 nm measurement against a leading-node constant, which "
+                    "is why it must not move that constant"
+                ),
+                "measured_at_column_height_rows": pvt_rows,
             },
             "artifacts": artifacts,
+            # Which simulator warnings this run is willing to see and still pass,
+            # written into the artifact rather than left in the runner's source.
+            # A suppression list that only exists in code is a suppression list
+            # nobody reviewing the result can see. Every warning any case emitted
+            # is recorded per case under `all_warnings` whether it was suppressed
+            # or not, so the filter can be audited against what actually happened.
+            "case_hash_stability": (
+                "`deck_sha256` and `log_sha256` are ARCHIVAL IDENTITY ONLY. Every deck "
+                "carries the absolute path of this run's temporary build directory in its "
+                "`.include` and `.lib` lines, and the log carries the simulator's own "
+                "timings, so both change on every run of an unchanged experiment. "
+                "`canonical_deck_sha256` is the reproducible one: it is the deck with every "
+                "absolute path reduced to its file name, and the run refuses to record it "
+                "unless that canonicalisation removed every absolute path"
+            ),
+            "benign_warnings_allowed": [
+                pattern.pattern for pattern in BENIGN_WARNING_RES
+            ],
+            "benign_warnings_note": (
+                "matched whole and anchored, never by prefix. Anything else fails the case. "
+                "These patterns were dead for a while -- they were written with a doubled "
+                "backslash in a raw string, so they matched nothing and every case would "
+                "have failed on the PSP103 subckt multiplier note. Fixing the escaping made "
+                "two named warnings benign again; it is recorded here so that the widening "
+                "is visible in the result and not only in a diff"
+            ),
             "claim_boundary": contract["claim_boundary"],
             "reports": dict(contract["reports"]),
         }

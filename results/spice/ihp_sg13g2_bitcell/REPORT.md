@@ -14,12 +14,14 @@
 | Foundry 6T SRAM bitcell pitch | 2.8100 × 1.0700 µm | IHP `sg13g2_sram` macro GDS |
 | Foundry 6T SRAM bitcell area | **3.006700 µm²** | pitch product |
 | **Measured area ratio** | **0.1298** | ROM ÷ SRAM, same PDK |
-| Assumed `rom.cell_to_sram_cell_area_ratio` | 0.2000 | `configs/hardware/technology.json` |
-| Measured ÷ assumed | 0.649× | |
+| Assumed `rom.cell_to_sram_cell_area_ratio` | 0.3300 | `configs/hardware/technology.json` |
+| Measured ÷ assumed | 0.393× | |
 
 At this node the drawn ROM bitcell is **7.71× smaller** than the
-foundry 6T cell, against the 5× the assumption implies, so the assumed 0.20 is *conservative* here — and, for the reason given under "rule-set asymmetry" below,
-the true same-rule-set ratio is smaller still.
+foundry 6T cell, against the 3.0× the model's stated 0.3300 implies, so that value is *conservative* against this
+130 nm measurement — and, for the reason given under "rule-set asymmetry" below,
+the true same-rule-set ratio is smaller still. Neither statement licenses moving a
+leading-node constant: see "Node honesty".
 
 The dual-port 8T bitcell in the same release measures 4.4200 × 1.2300 µm = 5.436600 µm², a ratio of 0.0718.
 
@@ -80,7 +82,7 @@ path, control and (where present) BIST.
 
 - single-port lowest: `RM_IHPSG13_1P_64x64_c2_bm_bist` at **24.39%** (4,096 bits)
 - single-port highest: `RM_IHPSG13_1P_8192x32_c4` at **83.86%** (262,144 bits)
-- assumed `rom.array_efficiency` = 0.70, graded `assumed`
+- assumed `rom.array_efficiency` = 0.52, graded `derived`
 
 | Fixed-width family | incremental area per bit | implied asymptotic array efficiency |
 |---|---:|---:|
@@ -122,8 +124,24 @@ be presented as an N6, N5, N4 or N7 value.**
 
 - Rule-set asymmetry: the ROM bitcell is drawn under the public logic-rule deck and is DRC clean; the foundry SRAM bitcell carries the PDK SRAM recognition layer and violates that same deck, so the measured ratio is an upper bound on the ratio that would be obtained with one rule set applied to both.
 
-## Reproduction
+## Reproduction, and what "reproducible" means here
 
 ```bash
 python3 tools/run_ihp_bitcell_density.py
 ```
+
+This run draws and extracts the nominal array **twice** and refuses to record a
+result unless both runs produce identical canonical digests:
+
+| Canonical digest | SHA-256 |
+|---|---|
+| `extracted` | `dbae693920315810c185f0a3487ed7c73f3c3e82f3a243bdeb27be7d98128144` |
+| `layout` | `13777fb4a6ae3b714943e7b4ac6717ad1f884c54bc957955db9ecd785058cfe2` |
+| `pex` | `1c7797b94ec163243ab730727df789d78f9bfed5e4b00f171b5e3b9e550ec55d` |
+
+**The per-file `sha256` under `artifacts` is archival identity only and is not a
+reproducibility check.** Magic writes a wall-clock `timestamp` into the `.mag` and
+into the GDS header, and `ext2spice` does not emit the extracted parasitics in a
+stable order, so those hashes differ between two runs that drew exactly the same
+geometry. The canonical digests above strip the clock and sort the elements, so they
+compare the physics and nothing else.

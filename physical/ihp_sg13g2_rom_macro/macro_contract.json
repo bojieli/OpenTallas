@@ -29,13 +29,14 @@
       "run_tapless_control": true
     }
   ],
-  "wordline_capacitance_ff_per_column": 0.5424,
-  "wordline_capacitance_source": "integrated wordline charge of the extracted 64-row x 8-column array at tt/1.2 V/27 C; see results/spice/ihp_sg13g2_rom_read_energy",
+  "wordline_capacitance_source": "A DECLARED EXPECTATION, cross-checked, not the source of the number. The value used is read at run time from results/spice/ihp_sg13g2_rom_read_energy/read_energy.json#wordline_capacitance.ff_per_column; the run refuses if it disagrees with the value here by more than `wordline_capacitance_tolerance`. This contract used to carry the literal 0.5424 fF/column and cite that directory, which recorded no such quantity at all -- the citation could not be checked and the number was ungrounded. Changing the number here is only legitimate as a response to a new measurement, never to make a run pass.",
   "acceptance": {
     "array_drc_errors_max": 0,
     "route_drc_violations_max": 0,
     "route_must_complete": true,
-    "tapless_control_must_fail_on_latch_up": true
+    "tapless_control_must_fail_on_latch_up": true,
+    "die_floor_probe_ladder_must_be_tighter": true,
+    "die_floor_probe_refusal_must_survive_the_density_ladder": true
   },
   "claim_boundary": {
     "evidence_class": "open_foundry_pdk_synthesised_and_routed_macro_area",
@@ -43,14 +44,17 @@
       "that a via1-programmed mask-ROM bit array drawn at the minimum legal pitch requires periodic substrate tap bands, because without them the array violates the public latch-up rule LU.b",
       "the drawn macro footprint of that array including tap bands, the wordline strap and the bitline escape, measured from the Magic-written LEF",
       "the routed die area of that macro with a synthesised standard-cell periphery, under full OpenROAD place-and-route with zero detailed-route violations",
-      "the resulting array efficiency, measured rather than assumed"
+      "the array efficiency at the contract's requested utilization, and the array efficiency at the tightest die of the same netlist that still closes detailed routing, which is a measured floor rather than a chosen one"
     ],
     "forbidden_inferences": [
       "N7, N6, N5 or N4 macro area, array efficiency, density or timing",
       "that a standard-cell periphery is equivalent to a memory-compiler periphery: it is not, and the measured efficiency is therefore a LOWER bound",
       "sense-amplifier design, read margin, redundancy, BIST or test coverage, none of which is in this periphery",
       "whole-wafer inference throughput or GPU speedup",
-      "silicon correlation or manufacturing sign-off"
+      "silicon correlation or manufacturing sign-off",
+      "the array efficiency of a die smaller than the tightest one probed: the floor probe brackets the die area, it does not minimise it",
+      "a die floor independent of the placer's target placement density: that density is a constant chosen in tools/run_ihp_rom_macro_route.py, the probe escalates it through `die_floor_probe_place_densities` before recording a refusal, and any refusal whose diagnostic still names it is a floor CONDITIONAL ON that ladder",
+      "any power-distribution area or IR-drop behaviour: this flow builds NO power distribution network and connects no straps, and the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so every die area here is signal routing only and is a LOWER bound on that account too"
     ],
     "target_node_scaling_rule": null,
     "target_node_scaling_status": "prohibited"
@@ -59,5 +63,21 @@
     "artifacts": "results/spice/ihp_sg13g2_rom_macro/artifacts",
     "json": "results/spice/ihp_sg13g2_rom_macro/macro_route.json",
     "markdown": "results/spice/ihp_sg13g2_rom_macro/REPORT.md"
-  }
+  },
+  "bit_array_area_source": "MEASURED, not declared here: read at run time from results/spice/ihp_sg13g2_bitcell/bitcell.json#rom_bitcell.cell_area_um2, and refused unless that measurement used the same revision of the layout generator this run draws with.",
+  "die_floor_probe_utilizations": [
+    0.55,
+    0.7,
+    0.85
+  ],
+  "die_floor_probe_place_densities": [
+    0.9,
+    0.95,
+    0.99
+  ],
+  "die_floor_probe_timeout_s": 3600,
+  "die_floor_probe_note": "The nominal die is sized from `utilization`, so `bit array / die` is partly a restatement of a chosen constant. Each probe re-routes the identical netlist on a smaller die; the tightest that closes with zero detailed-route violations is a measured floor and the first that does not brackets it. A probe is allowed to fail: that failure is the measurement.",
+  "die_floor_probe_place_densities_note": "The SECOND chosen constant, and the one the first version of this probe measured by accident. The placer's target density is `min(0.85, utilization + 0.15)`, written in tools/run_ihp_rom_macro_route.py, and every die the probe refused was refused by OpenROAD's global placer with GPL-0302 -- `Use a higher -density or re-floorplan with a larger core area` -- which names that constant as the remedy. The report nonetheless called the result a measured cell-area floor. It was a floor at 0.85. Each rung here is retried, in order, before a refusal is allowed to count; a refusal that survives the top rung while still blaming the density is recorded as conditional on this ladder rather than as a property of the design. Rungs must ascend and must all lie above the runner's 0.85 cap. Widening this ladder is legitimate; deleting it is not, and the run refuses without it.",
+  "wordline_capacitance_ff_per_column": 0.634,
+  "wordline_capacitance_tolerance": 0.05
 }

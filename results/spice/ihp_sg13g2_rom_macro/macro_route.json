@@ -2,8 +2,8 @@
   "artifacts": [
     {
       "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_128x32_c2_ihp_rom_bitarray.lef",
-      "sha256": "ad3c4a4d8da29b5c5282306ca1f72a469e3ac4897354b982196bc6b1522ab02a",
-      "size_bytes": 20220
+      "sha256": "b36c76f93c3d85c6a0b6d2594b0dc16e642abd7341960237b8d7d60d1a939caa",
+      "size_bytes": 20338
     },
     {
       "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_128x32_c2_netlist.v",
@@ -16,9 +16,14 @@
       "size_bytes": 0
     },
     {
+      "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_128x32_c2_route_drc_u055d070.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
       "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_512x32_c4_ihp_rom_bitarray.lef",
-      "sha256": "23282cf81a93b3b7d3e8908aa1458e943fc9176e8de074b78c83e3fe8b0fa133",
-      "size_bytes": 40759
+      "sha256": "6acfb65dd5014f0b4ea07afcbb5dbf16ccfe2dd7a0c7f8486f818a23f22f9e65",
+      "size_bytes": 40877
     },
     {
       "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_512x32_c4_netlist.v",
@@ -29,6 +34,11 @@
       "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_512x32_c4_route_drc.rpt",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
       "size_bytes": 0
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_512x32_c4_route_drc_u055d090.rpt",
+      "sha256": "454f5b577e60638da251cfeeebbd784413a5787809af933c3e2e44f736ee9854",
+      "size_bytes": 15582
     }
   ],
   "claim_boundary": {
@@ -36,7 +46,7 @@
       "that a via1-programmed mask-ROM bit array drawn at the minimum legal pitch requires periodic substrate tap bands, because without them the array violates the public latch-up rule LU.b",
       "the drawn macro footprint of that array including tap bands, the wordline strap and the bitline escape, measured from the Magic-written LEF",
       "the routed die area of that macro with a synthesised standard-cell periphery, under full OpenROAD place-and-route with zero detailed-route violations",
-      "the resulting array efficiency, measured rather than assumed"
+      "the array efficiency at the contract's requested utilization, and the array efficiency at the tightest die of the same netlist that still closes detailed routing, which is a measured floor rather than a chosen one"
     ],
     "evidence_class": "open_foundry_pdk_synthesised_and_routed_macro_area",
     "forbidden_inferences": [
@@ -44,15 +54,25 @@
       "that a standard-cell periphery is equivalent to a memory-compiler periphery: it is not, and the measured efficiency is therefore a LOWER bound",
       "sense-amplifier design, read margin, redundancy, BIST or test coverage, none of which is in this periphery",
       "whole-wafer inference throughput or GPU speedup",
-      "silicon correlation or manufacturing sign-off"
+      "silicon correlation or manufacturing sign-off",
+      "the array efficiency of a die smaller than the tightest one probed: the floor probe brackets the die area, it does not minimise it",
+      "a die floor independent of the placer's target placement density: that density is a constant chosen in tools/run_ihp_rom_macro_route.py, the probe escalates it through `die_floor_probe_place_densities` before recording a refusal, and any refusal whose diagnostic still names it is a floor CONDITIONAL ON that ladder",
+      "any power-distribution area or IR-drop behaviour: this flow builds NO power distribution network and connects no straps, and the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so every die area here is signal routing only and is a LOWER bound on that account too"
     ],
     "target_node_scaling_rule": null,
     "target_node_scaling_status": "prohibited"
   },
   "comparison": {
-    "assumed": 0.7,
-    "assumed_grade": "assumed",
+    "assumed": 0.52,
+    "assumed_grade": "derived",
     "assumed_source": "configs/hardware/technology.json#rom.array_efficiency",
+    "die_floor_bracketed": true,
+    "die_floor_failure_stages": [
+      "detailed placement",
+      "global placement"
+    ],
+    "die_floor_failure_stages_note": "a floor found at placement means the standard cells stopped fitting on the smaller die; a floor found at routing would mean the wires stopped fitting. Every refusal was re-tried at each rung of the contract's placement-density ladder before it was allowed to count, because the placer's target density is a constant this runner chose and GPL-0302 names it as the remedy. These probes fail at detailed placement and global placement \u2014 never at routing \u2014 so what is measured is a CELL-AREA floor for this periphery and not a routability floor. A custom periphery with fewer cells would move it.",
+    "die_floor_limited_by_place_density": false,
     "foundry_sram": [
       {
         "array_efficiency": 0.43784966984158763,
@@ -107,22 +127,34 @@
       0.7942401557333638,
       0.8619768988345962
     ],
+    "place_density_formula": "min(place_density_nominal_cap, utilization + place_density_headroom_over_utilization), then escalated up place_density_ladder for any die-floor probe whose refusal names the target density as its remedy",
+    "place_density_headroom_over_utilization": 0.15,
+    "place_density_ladder": [
+      0.9,
+      0.95,
+      0.99
+    ],
+    "place_density_nominal_cap": 0.85,
     "whole_macro_range": [
       0.11923239276552909,
       0.26202767757591655
+    ],
+    "whole_macro_range_at_measured_floor": [
+      0.1442034982469494,
+      0.308937079198718
     ]
   },
   "contract": {
     "path": "physical/ihp_sg13g2_rom_macro/macro_contract.json",
-    "sha256": "574ee47ede4cfb8c14416ff7ba76f44b8cd3500813d939c5193d9a18176d4247"
+    "sha256": "c650a55691ba267a283ea15569c899af95a310dbe66f57aee35a9c9ea03d97a7"
   },
   "experiment_id": "ihp_sg13g2_rom_macro_routed_area_v1",
-  "generated_at_utc": "2026-08-31T07:46:26.688582+00:00",
+  "generated_at_utc": "2026-08-31T14:18:36.567850+00:00",
   "inputs": {
     "generator": {
       "path": "spice/ihp_sg13g2/bitcell/rom_bitarray.tcl",
-      "sha256": "0f0cdbfc1b0889f96598f81de67d8b17e7789daacd91d3c0a8862337251c6cef",
-      "size_bytes": 17469
+      "sha256": "c4e0d0d67bf6537eeaf9e92a018f14d8bff5dea1cb7562bcab80e69b872ab615",
+      "size_bytes": 18169
     },
     "periphery_rtl": {
       "path": "rtl/ot_rom_macro_periphery.sv",
@@ -148,34 +180,260 @@
   "macros": [
     {
       "array_efficiency": 0.11923239276552909,
+      "array_efficiency_at_measured_floor": 0.1442034982469494,
       "bit_array_area_um2": 1598.0544,
+      "bitcell_area_um2": 0.39015,
       "bits": 4096,
       "cols": 64,
+      "die_floor_probe": {
+        "bracketed": true,
+        "first_failing": {
+          "closed_clean": false,
+          "converged": false,
+          "density_attempts": [
+            {
+              "closed_clean": false,
+              "converged": false,
+              "failure_blames_place_density": true,
+              "failure_reason": [
+                "[ERROR GPL-0302] Use a higher -density or re-floorplan with a larger core area."
+              ],
+              "failure_stage": "global placement",
+              "place_density": 0.85,
+              "tag": "u070d085"
+            },
+            {
+              "closed_clean": false,
+              "converged": false,
+              "failure_blames_place_density": false,
+              "failure_reason": [
+                "[ERROR DPL-0036] Detailed placement failed."
+              ],
+              "failure_stage": "detailed placement",
+              "place_density": 0.9,
+              "tag": "u070d090"
+            }
+          ],
+          "detailed_route_violations": 0,
+          "failure_blames_place_density": false,
+          "failure_reason": [
+            "[ERROR DPL-0036] Detailed placement failed."
+          ],
+          "failure_stage": "detailed placement",
+          "floor_limited_by_place_density": false,
+          "log_sha256": "defb7a4e78347d364d45c5515053b09a80d83629b23211c5464db0e5ba65a846",
+          "openroad_version": "v2.0-17598-ga008522d8",
+          "place_density": 0.9,
+          "place_density_is_a_runner_constant": true,
+          "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
+          "requested_die_area_um2": 9260.511999999999,
+          "requested_utilization": 0.7,
+          "tag": "u070d090",
+          "timed_out": false
+        },
+        "floor_limited_by_place_density": false,
+        "interpretation": "the nominal die is bracketed: a tighter die of the same netlist does not route, and the refusal survives every placement density the contract escalates through",
+        "ladder": [
+          0.55,
+          0.7,
+          0.85
+        ],
+        "place_density_ladder": [
+          0.9,
+          0.95,
+          0.99
+        ],
+        "steps": [
+          {
+            "closed_clean": true,
+            "converged": true,
+            "core_area_um2": 9870.336,
+            "density_attempts": [
+              {
+                "closed_clean": true,
+                "converged": true,
+                "failure_blames_place_density": false,
+                "failure_reason": null,
+                "failure_stage": null,
+                "place_density": 0.7000000000000001,
+                "tag": "u055d070"
+              }
+            ],
+            "detailed_route_violations": 0,
+            "die_area_um2": 11081.9392,
+            "die_height_um": 128.74,
+            "die_width_um": 86.08,
+            "failure_blames_place_density": false,
+            "failure_reason": null,
+            "failure_stage": null,
+            "floor_limited_by_place_density": false,
+            "log_sha256": "5daea9d1bb6ae4ea49fb202c6289f013fa2e0d38873f8569f19b5518c30f3af4",
+            "openroad_version": "v2.0-17598-ga008522d8",
+            "place_density": 0.7000000000000001,
+            "place_density_is_a_runner_constant": true,
+            "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
+            "requested_utilization": 0.55,
+            "tag": "u055d070",
+            "timed_out": false,
+            "total_negative_slack_ns": 0.0,
+            "worst_slack_ns": 7.339738358173279
+          },
+          {
+            "closed_clean": false,
+            "converged": false,
+            "density_attempts": [
+              {
+                "closed_clean": false,
+                "converged": false,
+                "failure_blames_place_density": true,
+                "failure_reason": [
+                  "[ERROR GPL-0302] Use a higher -density or re-floorplan with a larger core area."
+                ],
+                "failure_stage": "global placement",
+                "place_density": 0.85,
+                "tag": "u070d085"
+              },
+              {
+                "closed_clean": false,
+                "converged": false,
+                "failure_blames_place_density": false,
+                "failure_reason": [
+                  "[ERROR DPL-0036] Detailed placement failed."
+                ],
+                "failure_stage": "detailed placement",
+                "place_density": 0.9,
+                "tag": "u070d090"
+              }
+            ],
+            "detailed_route_violations": 0,
+            "failure_blames_place_density": false,
+            "failure_reason": [
+              "[ERROR DPL-0036] Detailed placement failed."
+            ],
+            "failure_stage": "detailed placement",
+            "floor_limited_by_place_density": false,
+            "log_sha256": "defb7a4e78347d364d45c5515053b09a80d83629b23211c5464db0e5ba65a846",
+            "openroad_version": "v2.0-17598-ga008522d8",
+            "place_density": 0.9,
+            "place_density_is_a_runner_constant": true,
+            "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
+            "requested_die_area_um2": 9260.511999999999,
+            "requested_utilization": 0.7,
+            "tag": "u070d090",
+            "timed_out": false
+          },
+          {
+            "closed_clean": false,
+            "converged": false,
+            "density_attempts": [
+              {
+                "closed_clean": false,
+                "converged": false,
+                "failure_blames_place_density": false,
+                "failure_reason": [
+                  "[ERROR GPL-0301] Utilization 105.232 % exceeds 100%."
+                ],
+                "failure_stage": "global placement",
+                "place_density": 0.85,
+                "tag": "u085d085"
+              }
+            ],
+            "detailed_route_violations": 0,
+            "failure_blames_place_density": false,
+            "failure_reason": [
+              "[ERROR GPL-0301] Utilization 105.232 % exceeds 100%."
+            ],
+            "failure_stage": "global placement",
+            "floor_limited_by_place_density": false,
+            "log_sha256": "7d9217ff4bb0a5bd61ace303031f2d2b835c1271faed64792d36a42997994189",
+            "openroad_version": "v2.0-17598-ga008522d8",
+            "place_density": 0.85,
+            "place_density_is_a_runner_constant": true,
+            "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
+            "requested_die_area_um2": 8084.223999999998,
+            "requested_utilization": 0.85,
+            "tag": "u085d085",
+            "timed_out": false
+          }
+        ],
+        "tightest_closing": {
+          "closed_clean": true,
+          "converged": true,
+          "core_area_um2": 9870.336,
+          "density_attempts": [
+            {
+              "closed_clean": true,
+              "converged": true,
+              "failure_blames_place_density": false,
+              "failure_reason": null,
+              "failure_stage": null,
+              "place_density": 0.7000000000000001,
+              "tag": "u055d070"
+            }
+          ],
+          "detailed_route_violations": 0,
+          "die_area_um2": 11081.9392,
+          "die_height_um": 128.74,
+          "die_width_um": 86.08,
+          "failure_blames_place_density": false,
+          "failure_reason": null,
+          "failure_stage": null,
+          "floor_limited_by_place_density": false,
+          "log_sha256": "5daea9d1bb6ae4ea49fb202c6289f013fa2e0d38873f8569f19b5518c30f3af4",
+          "openroad_version": "v2.0-17598-ga008522d8",
+          "place_density": 0.7000000000000001,
+          "place_density_is_a_runner_constant": true,
+          "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
+          "requested_utilization": 0.55,
+          "tag": "u055d070",
+          "timed_out": false,
+          "total_negative_slack_ns": 0.0,
+          "worst_slack_ns": 7.339738358173279
+        },
+        "tightest_closing_is_the_nominal_die": false
+      },
       "drawn": {
+        "cell_column_pitch_nm": 510.0,
+        "cell_row_pitch_nm": 765.0,
         "drc_errors": 0,
         "macro_area_um2": 2012.0544000000002,
         "macro_height_um": 54.72,
         "macro_width_um": 36.77,
-        "magic_log_sha256": "3679bef12533c471cc5904769e59c1c77377e7a9c00c578cc91f597e5ad2aef1"
+        "magic_log_sha256": "d3c626216a540c858b3539a01fed3ceaf7da230e4177108d4b0a0cece615c063",
+        "pin_count": 129
       },
       "macro_internal_efficiency": 0.7942401557333638,
       "mux": 2,
       "name": "rom_128x32_c2",
       "route": {
+        "closed_clean": true,
+        "converged": true,
         "core_area_um2": 12065.76,
         "detailed_route_violations": 0,
         "die_area_um2": 13402.854400000002,
         "die_height_um": 140.08,
         "die_width_um": 95.68,
-        "log_sha256": "5033e65a93002a23c410934e8f4d98eb8b807f112a9c1acd737cbbd5cf50c1a4",
+        "failure_blames_place_density": false,
+        "failure_reason": null,
+        "failure_stage": null,
+        "log_sha256": "38e62a39ed878a614d133e282a2d7dc55940d96596019b436d520af6a9fc67bd",
         "openroad_version": "v2.0-17598-ga008522d8",
+        "place_density": 0.57,
+        "place_density_is_a_runner_constant": true,
+        "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
         "requested_utilization": 0.42,
+        "tag": "",
+        "timed_out": false,
         "total_negative_slack_ns": 0.0,
         "worst_slack_ns": 7.339738358173279
       },
       "rows": 64,
       "synthesis": {
-        "log_sha256": "eee2abef810b1e581e88af03c53b9aaa53854d40adc23e4e800854ad7198ac25",
+        "array_vss_connected_to": "1'b0",
+        "array_vss_note": "a logic constant, tied by insert_tiecells. This flow builds no power distribution network, so the bit array's ground is a signal-level tie and not a rail. A manufacturable macro connects it to the PDN and spends area on straps that are not in any die area reported here.",
+        "log_sha256": "09207f55ab77a6f355b4d1b01476d198ee4be5c4de242a8e03ebc7f80bf9a3e6",
+        "macro_liberty_consumption_note": "the wordline pin capacitance measured by the read-energy run reaches OpenROAD's repair_design and nothing else. yosys maps against the standard-cell Liberty alone and the bit array is a blackbox by then, so that number cannot change standard_cell_area_um2 and cannot change the floorplanned die area. Its only reachable effect is on whether a given die closes routing, i.e. on the die-floor probe.",
+        "macro_liberty_reaches_technology_mapper": false,
         "standard_cell_area_um2": 4369.0752,
         "yosys_commit": "38e001a6f",
         "yosys_version": "0.68"
@@ -186,34 +444,304 @@
     },
     {
       "array_efficiency": 0.26202767757591655,
+      "array_efficiency_at_measured_floor": 0.308937079198718,
       "bit_array_area_um2": 6392.2176,
+      "bitcell_area_um2": 0.39015,
       "bits": 16384,
       "cols": 128,
+      "die_floor_probe": {
+        "bracketed": true,
+        "first_failing": {
+          "closed_clean": false,
+          "converged": false,
+          "density_attempts": [
+            {
+              "closed_clean": false,
+              "converged": false,
+              "failure_blames_place_density": true,
+              "failure_reason": [
+                "[ERROR GPL-0302] Use a higher -density or re-floorplan with a larger core area."
+              ],
+              "failure_stage": "global placement",
+              "place_density": 0.85,
+              "tag": "u070d085"
+            },
+            {
+              "closed_clean": false,
+              "converged": false,
+              "failure_blames_place_density": true,
+              "failure_reason": [
+                "[ERROR GPL-0302] Use a higher -density or re-floorplan with a larger core area."
+              ],
+              "failure_stage": "global placement",
+              "place_density": 0.9,
+              "tag": "u070d090"
+            },
+            {
+              "closed_clean": false,
+              "converged": false,
+              "failure_blames_place_density": false,
+              "failure_reason": [
+                "[ERROR DPL-0036] Detailed placement failed."
+              ],
+              "failure_stage": "detailed placement",
+              "place_density": 0.95,
+              "tag": "u070d095"
+            }
+          ],
+          "detailed_route_violations": 0,
+          "failure_blames_place_density": false,
+          "failure_reason": [
+            "[ERROR DPL-0036] Detailed placement failed."
+          ],
+          "failure_stage": "detailed placement",
+          "floor_limited_by_place_density": false,
+          "log_sha256": "d02361052be7897b8da7c41c0e1df89a2f2fe34f9d1d0649dd891603bf0e9755",
+          "openroad_version": "v2.0-17598-ga008522d8",
+          "place_density": 0.95,
+          "place_density_is_a_runner_constant": true,
+          "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
+          "requested_die_area_um2": 18092.9056,
+          "requested_utilization": 0.7,
+          "tag": "u070d095",
+          "timed_out": false
+        },
+        "floor_limited_by_place_density": false,
+        "interpretation": "the nominal die is bracketed: a tighter die of the same netlist does not route, and the refusal survives every placement density the contract escalates through",
+        "ladder": [
+          0.55,
+          0.7,
+          0.85
+        ],
+        "place_density_ladder": [
+          0.9,
+          0.95,
+          0.99
+        ],
+        "steps": [
+          {
+            "closed_clean": true,
+            "converged": true,
+            "core_area_um2": 19023.983999999997,
+            "density_attempts": [
+              {
+                "closed_clean": false,
+                "converged": false,
+                "failure_blames_place_density": true,
+                "failure_reason": [
+                  "[ERROR GPL-0302] Use a higher -density or re-floorplan with a larger core area."
+                ],
+                "failure_stage": "global placement",
+                "place_density": 0.7000000000000001,
+                "tag": "u055d070"
+              },
+              {
+                "closed_clean": true,
+                "converged": true,
+                "failure_blames_place_density": false,
+                "failure_reason": null,
+                "failure_stage": null,
+                "place_density": 0.9,
+                "tag": "u055d090"
+              }
+            ],
+            "detailed_route_violations": 0,
+            "die_area_um2": 20691.0016,
+            "die_height_um": 177.88,
+            "die_width_um": 116.32,
+            "failure_blames_place_density": false,
+            "failure_reason": null,
+            "failure_stage": null,
+            "floor_limited_by_place_density": false,
+            "log_sha256": "51ce09747c9cdd15778fbd74fc2e04820f026d535f8deb2696b7310cef0b2442",
+            "openroad_version": "v2.0-17598-ga008522d8",
+            "place_density": 0.9,
+            "place_density_is_a_runner_constant": true,
+            "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
+            "requested_utilization": 0.55,
+            "tag": "u055d090",
+            "timed_out": false,
+            "total_negative_slack_ns": 0.0,
+            "worst_slack_ns": 7.339270288132859
+          },
+          {
+            "closed_clean": false,
+            "converged": false,
+            "density_attempts": [
+              {
+                "closed_clean": false,
+                "converged": false,
+                "failure_blames_place_density": true,
+                "failure_reason": [
+                  "[ERROR GPL-0302] Use a higher -density or re-floorplan with a larger core area."
+                ],
+                "failure_stage": "global placement",
+                "place_density": 0.85,
+                "tag": "u070d085"
+              },
+              {
+                "closed_clean": false,
+                "converged": false,
+                "failure_blames_place_density": true,
+                "failure_reason": [
+                  "[ERROR GPL-0302] Use a higher -density or re-floorplan with a larger core area."
+                ],
+                "failure_stage": "global placement",
+                "place_density": 0.9,
+                "tag": "u070d090"
+              },
+              {
+                "closed_clean": false,
+                "converged": false,
+                "failure_blames_place_density": false,
+                "failure_reason": [
+                  "[ERROR DPL-0036] Detailed placement failed."
+                ],
+                "failure_stage": "detailed placement",
+                "place_density": 0.95,
+                "tag": "u070d095"
+              }
+            ],
+            "detailed_route_violations": 0,
+            "failure_blames_place_density": false,
+            "failure_reason": [
+              "[ERROR DPL-0036] Detailed placement failed."
+            ],
+            "failure_stage": "detailed placement",
+            "floor_limited_by_place_density": false,
+            "log_sha256": "d02361052be7897b8da7c41c0e1df89a2f2fe34f9d1d0649dd891603bf0e9755",
+            "openroad_version": "v2.0-17598-ga008522d8",
+            "place_density": 0.95,
+            "place_density_is_a_runner_constant": true,
+            "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
+            "requested_die_area_um2": 18092.9056,
+            "requested_utilization": 0.7,
+            "tag": "u070d095",
+            "timed_out": false
+          },
+          {
+            "closed_clean": false,
+            "converged": false,
+            "density_attempts": [
+              {
+                "closed_clean": false,
+                "converged": false,
+                "failure_blames_place_density": false,
+                "failure_reason": [
+                  "[ERROR GPL-0301] Utilization 115.167 % exceeds 100%."
+                ],
+                "failure_stage": "global placement",
+                "place_density": 0.85,
+                "tag": "u085d085"
+              }
+            ],
+            "detailed_route_violations": 0,
+            "failure_blames_place_density": false,
+            "failure_reason": [
+              "[ERROR GPL-0301] Utilization 115.167 % exceeds 100%."
+            ],
+            "failure_stage": "global placement",
+            "floor_limited_by_place_density": false,
+            "log_sha256": "2f2a3c0c1dbad571ac6449615f77f360f24bad08ac1bdeacfac9715ad64d021b",
+            "openroad_version": "v2.0-17598-ga008522d8",
+            "place_density": 0.85,
+            "place_density_is_a_runner_constant": true,
+            "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
+            "requested_die_area_um2": 16432.1728,
+            "requested_utilization": 0.85,
+            "tag": "u085d085",
+            "timed_out": false
+          }
+        ],
+        "tightest_closing": {
+          "closed_clean": true,
+          "converged": true,
+          "core_area_um2": 19023.983999999997,
+          "density_attempts": [
+            {
+              "closed_clean": false,
+              "converged": false,
+              "failure_blames_place_density": true,
+              "failure_reason": [
+                "[ERROR GPL-0302] Use a higher -density or re-floorplan with a larger core area."
+              ],
+              "failure_stage": "global placement",
+              "place_density": 0.7000000000000001,
+              "tag": "u055d070"
+            },
+            {
+              "closed_clean": true,
+              "converged": true,
+              "failure_blames_place_density": false,
+              "failure_reason": null,
+              "failure_stage": null,
+              "place_density": 0.9,
+              "tag": "u055d090"
+            }
+          ],
+          "detailed_route_violations": 0,
+          "die_area_um2": 20691.0016,
+          "die_height_um": 177.88,
+          "die_width_um": 116.32,
+          "failure_blames_place_density": false,
+          "failure_reason": null,
+          "failure_stage": null,
+          "floor_limited_by_place_density": false,
+          "log_sha256": "51ce09747c9cdd15778fbd74fc2e04820f026d535f8deb2696b7310cef0b2442",
+          "openroad_version": "v2.0-17598-ga008522d8",
+          "place_density": 0.9,
+          "place_density_is_a_runner_constant": true,
+          "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
+          "requested_utilization": 0.55,
+          "tag": "u055d090",
+          "timed_out": false,
+          "total_negative_slack_ns": 0.0,
+          "worst_slack_ns": 7.339270288132859
+        },
+        "tightest_closing_is_the_nominal_die": false
+      },
       "drawn": {
+        "cell_column_pitch_nm": 510.0,
+        "cell_row_pitch_nm": 765.0,
         "drc_errors": 0,
         "macro_area_um2": 7415.7644,
         "macro_height_um": 106.84,
         "macro_width_um": 69.41,
-        "magic_log_sha256": "e8dae8c260ddcdb67ffcba8aae1a57b3ec079a221b903798911cb8d29480db0d"
+        "magic_log_sha256": "861d63a001d5c6663e99af6552c7c0ce5661491fc9f9dc2bda0872f6fe12b49d",
+        "pin_count": 257
       },
       "macro_internal_efficiency": 0.8619768988345962,
       "mux": 4,
       "name": "rom_512x32_c4",
       "route": {
+        "closed_clean": true,
+        "converged": true,
         "core_area_um2": 22582.022399999998,
         "detailed_route_violations": 0,
         "die_area_um2": 24395.2,
         "die_height_um": 193.0,
         "die_width_um": 126.4,
-        "log_sha256": "1f9745ab5f833ee0b0c86d0b3f25c114ec93bc07f9841209364985d38ca98295",
+        "failure_blames_place_density": false,
+        "failure_reason": null,
+        "failure_stage": null,
+        "log_sha256": "61cf23e09fe5abd9725626855a3dd3f23f63f68921c876d4ce289107c05fa8ae",
         "openroad_version": "v2.0-17598-ga008522d8",
+        "place_density": 0.57,
+        "place_density_is_a_runner_constant": true,
+        "power_distribution": "none: signal routing only. No pdngen, no global_connect, no straps; the bit array's VSS pin is tied to a logic constant by insert_tiecells rather than to a rail, so this die area carries no power distribution at all",
         "requested_utilization": 0.42,
+        "tag": "",
+        "timed_out": false,
         "total_negative_slack_ns": 0.0,
         "worst_slack_ns": 7.339270288132859
       },
       "rows": 128,
       "synthesis": {
-        "log_sha256": "dc07196d6c8045a9b4b7d83baba038488703ae6998bccdb935a4ebd10e7f21e3",
+        "array_vss_connected_to": "1'b0",
+        "array_vss_note": "a logic constant, tied by insert_tiecells. This flow builds no power distribution network, so the bit array's ground is a signal-level tie and not a rail. A manufacturable macro connects it to the PDN and spends area on straps that are not in any die area reported here.",
+        "log_sha256": "2896ac871131134d38f05305468839e6a326fa8b2d1c81039fa88e3b1d246154",
+        "macro_liberty_consumption_note": "the wordline pin capacitance measured by the read-energy run reaches OpenROAD's repair_design and nothing else. yosys maps against the standard-cell Liberty alone and the bit array is a blackbox by then, so that number cannot change standard_cell_area_um2 and cannot change the floorplanned die area. Its only reachable effect is on whether a given die closes routing, i.e. on the die-floor probe.",
+        "macro_liberty_reaches_technology_mapper": false,
         "standard_cell_area_um2": 6561.4752,
         "yosys_commit": "38e001a6f",
         "yosys_version": "0.68"
@@ -224,7 +752,7 @@
         "latch_up_rules": [
           "N-diff distance to P-tap must be < 20.0um (LU.b)"
         ],
-        "magic_log_sha256": "fbc04c01c9b6768810fa604a93f102b3016c4df12a8af7862a0ec21f8f7ac26e",
+        "magic_log_sha256": "b368887baef4fb990601e22fea3731cb06db76cc1060e14563d7da3afd013d48",
         "tap_every": 0,
         "violated_rules": [
           "N-diff distance to P-tap must be < 20.0um (LU.b)"
@@ -233,6 +761,22 @@
       "utilization": 0.42
     }
   ],
+  "measured_inputs": {
+    "note": "both are read from the runs that measured them and neither is restated in this runner's source or in its contract",
+    "rom_bitcell_area": {
+      "cell_area_um2": 0.39015,
+      "column_pitch_nm": 510.0,
+      "generator_sha256": "c4e0d0d67bf6537eeaf9e92a018f14d8bff5dea1cb7562bcab80e69b872ab615",
+      "row_pitch_nm": 765.0,
+      "source": "results/spice/ihp_sg13g2_bitcell/bitcell.json#rom_bitcell.cell_area_um2"
+    },
+    "wordline_capacitance": {
+      "ff_per_column": 0.6339718750000001,
+      "from_case": "case_028",
+      "method": "charge delivered by the selected wordline driver, divided by the rail and by the column count. This is an EFFECTIVE capacitance and does not assume the gate is linear; it is not the extracted interconnect capacitance, which omits the row transistors' gate capacitance entirely",
+      "source": "results/spice/ihp_sg13g2_rom_read_energy/read_energy.json#wordline_capacitance.ff_per_column"
+    }
+  },
   "pdk": {
     "commit": "5cccb161f7492697cfa52eb14dc03beb00bdca9e",
     "release": "v0.3.0",

@@ -1,22 +1,50 @@
 # Does the mask-ROM to SRAM bitcell area ratio transfer between nodes?
 
-**Answer: no. It moves by +93% between 130 nm planar and a 7 nm-class FinFET
-node, and it moves against the ROM.** `rom.cell_to_sram_cell_area_ratio` needs a
+**Answer: no. It moves by +93% between 130 nm planar and a 7 nm-class FinFET node, and it moves against the ROM.** <!-- figure: 93 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.relative_disagreement" scale="100" name="headline cross-node move" --> `rom.cell_to_sram_cell_area_ratio` needs a
 per-node treatment, exactly as `links.on_wafer` was split into `links.on_wafer`
 and `links.on_wafer_n5` when the same question was asked of it.
 
 ---
 
+## 0. Where the constant stands now, and where it stood when this ran
+
+This document reports an experiment. **Its "against the assumption" comparisons
+are against the constant as it was when the experiment ran**, which was
+`0.2`, graded `assumed`, with a prose-only "1/6 – 1/4" sweep. That is no longer
+what the model holds, and the difference is not cosmetic, so it is stated here
+once rather than left for a reader to discover in §6.
+
+| | When this ran | Now |
+|---|---:|---:|
+| `rom.cell_to_sram_cell_area_ratio` | 0.20 | **0.33** <!-- figure: 0.33 src="configs/hardware/technology.json#rom.cell_to_sram_cell_area_ratio.value" name="live cell-area ratio" --> |
+| its grade | `assumed` | **`derived`** <!-- figure: "derived" src="configs/hardware/technology.json#rom.cell_to_sram_cell_area_ratio.grade" name="live cell-area ratio grade" --> |
+| its swept band | 1/6 – 1/4 | **0.11** <!-- figure: 0.11 src="configs/hardware/technology.json#rom.cell_to_sram_cell_area_ratio.range_low" name="live band low" --> – **0.33** <!-- figure: 0.33 src="configs/hardware/technology.json#rom.cell_to_sram_cell_area_ratio.range_high" name="live band high" --> |
+| does the band contain both measurements? | **no** | **yes** |
+
+So **the first "Required" item in §11 — widen the band until it contains both
+measurements — has since been done**, and `tools/run_roofline_studies.py` now
+refuses a band that excludes either. The second and third have not: the model
+still applies one node-free ratio at N6 and at N5, and the band is still swept as
+a continuum where §11 says it must be enumerated. §11 marks each one.
+
+The point value moved *away* from both of this repository's own measurements, to
+a foundry-compiler sentence at the modelled node. Nothing in this document argues
+against that: a predictive-PDK measurement and a 130 nm measurement are not
+target-node evidence and this document is the reason we know they are not.
+
 ## 1. Why this had to be tested
 
-`rom.cell_to_sram_cell_area_ratio = 0.2` is graded `assumed` in
-`configs/hardware/technology.json`, and its own note calls it *"the single most
-load-bearing assumption in the ROM capacity chain"*. It decides how much weight
-fits per mm², which decides how many devices a model needs, which decides mesh
-diameter, which is over half the step time at batch 1.
+`rom.cell_to_sram_cell_area_ratio` was `0.2`, graded `assumed`, in
+`configs/hardware/technology.json` when this ran, and its own note called it
+*"the single most load-bearing assumption in the ROM capacity chain"*. It decides
+how much weight fits per mm², which decides how many devices a model needs, which
+decides mesh diameter, which is over half the step time at batch 1.
 
 A sibling experiment measured that ratio at **IHP SG13G2**, the only open PDK in
-this repository with real foundry collateral. IHP SG13G2 is a **130 nm** process.
+this repository with real foundry collateral. That sibling is one of three runs
+that together produce every physical ROM number the model has;
+`docs/ROM_PHYSICAL_METHODOLOGY.md` states what each of them measures, what each
+of them chooses, and what is still assumed after all three. IHP SG13G2 is a **130 nm** process.
 The program targets **N6/N5**. The transfer from one to the other rests on a
 premise nobody had tested: **that the ratio is node-stable.**
 
@@ -111,7 +139,7 @@ whole CPP — which is itself part of the finding (§7).
 
 ## 5. The two cells
 
-### 5.1 NOR mask-ROM, via-programmed — 108 × 54 nm = 5,832 nm²
+### 5.1 NOR mask-ROM, via-programmed — 108 × 54 nm = 5,832 nm² <!-- figure: 5832 src="results/asap7_physical/bitcell_density/bitcell_density.json#measurement.rom_via_programmed_bitcell_area_nm2" name="ASAP7 via-programmed ROM bitcell area" -->
 
 One nMOS per bit. Bits are laid out as mirrored **D-G-S-G-D** islands: two bits
 share a source, each bit keeps a **private drain with its own programming via**,
@@ -133,7 +161,7 @@ Why the pitch cannot shrink:
 | x (bitline direction) | 108 nm = 2 CPP | rebuild at 162 nm period | **60 violations**: `ACTIVE.S.2A` (92 nm S/D spacing), `GATE.S.1` |
 | y (wordline direction) | 54 nm = 2 fin pitches | rebuild at 45 nm row pitch | **149 violations**: `ACTIVE.S.1` (27 nm), `ACTIVE.FIN.EX.1`, `LISD.S.3-4`, `M1.S.2` |
 
-### 5.2 6T SRAM thin cell — 108 × 216 nm = 23,328 nm²
+### 5.2 6T SRAM thin cell — 108 × 216 nm = 23,328 nm² <!-- figure: 23328 src="results/asap7_physical/bitcell_density/bitcell_density.json#measurement.sram_6t_bitcell_area_nm2" name="ASAP7 6T SRAM bitcell area" -->
 
 Two CPP wide, four one-fin device bands tall, in the canonical thin-cell order
 NMOS-A (PG1, PD1) / PMOS-A (PU1) / PMOS-B (PU2) / NMOS-B (PG2, PD2). The wordline
@@ -183,18 +211,20 @@ measured. It is quoted as a floor, never as the comparator.
 
 **They do not agree. The ASAP7 ratio is +92.7% higher — a factor of 1.93.**
 
-In absolute terms the ratio moves from 0.1298 to 0.2500, +12.0 percentage points.
+In absolute terms the ratio moves from 0.1298 <!-- figure: 0.1298 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#ratio.measured" name="130 nm ratio, §6 prose" --> to 0.2500, <!-- figure: 0.2500 src="results/asap7_physical/bitcell_density/bitcell_density.json#measurement.ratio_via_programmed_rom_to_sram" name="ASAP7 ratio, §6 prose" --> +12.0 percentage points.
 Put the other way: at 130 nm a 6T SRAM bitcell costs **7.71×** a mask-ROM bitcell;
 at a 7 nm-class FinFET node it costs only **4.00×**. **The mask ROM loses roughly
 half of its relative density advantage over SRAM in the move from planar 130 nm to
 FinFET 7 nm.**
 
-Against the assumption:
+Against the assumption **as it stood when this ran** (0.20, `assumed`, bracket
+1/6 – 1/4). §0 records what it is now and which of the consequences below have
+since been actioned:
 
-| | Value | vs assumed 0.20 | vs assumed bracket 1/6 – 1/4 |
+| | Value | vs then-assumed 0.20 | vs then-assumed bracket 1/6 – 1/4 |
 |---|---:|---|---|
-| IHP SG13G2, 130 nm | 0.1298 | 0.65× | **below** the 0.1667 floor |
-| ASAP7, 7 nm-class | 0.2500 | 1.25× | exactly **at** the 0.2500 ceiling |
+| IHP SG13G2, 130 nm | 0.1298 | 0.65× | **below** the 0.1667 floor | <!-- figure: 0.1298 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#ratio.measured" name="130 nm ratio, §6 table" -->
+| ASAP7, 7 nm-class | 0.2500 | 1.25× | exactly **at** the 0.2500 ceiling | <!-- figure: 0.2500 src="results/asap7_physical/bitcell_density/bitcell_density.json#measurement.ratio_via_programmed_rom_to_sram" name="ASAP7 ratio, §6 table" -->
 
 The stated bracket does not contain both measurements, and the two nodes span
 1.93× — wider than the bracket's own 1.5× span. The point value 0.20 happens to
@@ -324,7 +354,7 @@ explicitly.
 |---|---|---|
 | ASAP7 ROM and 6T bitcell pitch areas, and their ratio 0.2500 | **measured** (evidence class: *predictive open-PDK drawn geometry*) | Drawn, DRC-clean under the PDK's own hash-verified deck, minimality proved by named-rule failure one quantum down. |
 | "The ratio is **not** node-stable" | **measured** | Falsification needs only that two same-question measurements differ by more than methodological wobble. 93% is far outside any plausible wobble (§8 shows it survives a two-quantum SRAM error). Falsification is far more robust than either point value. |
-| `rom.cell_to_sram_cell_area_ratio` at N6/N5 | **still `assumed`** | Nothing here measures a real 7 nm foundry process. ASAP7 is predictive and excluded as manufacturing evidence. |
+| `rom.cell_to_sram_cell_area_ratio` at N6/N5 | **nothing here raises it** | Nothing in this document measures a real 7 nm foundry process. ASAP7 is predictive and excluded as manufacturing evidence, and 130 nm is two decades away. The entry is now graded `derived` <!-- figure: "derived" src="configs/hardware/technology.json#rom.cell_to_sram_cell_area_ratio.grade" name="live ratio grade, §10" --> on a foundry-compiler sentence at the modelled node — evidence from elsewhere, not from here. What this document contributes to that entry is its *band* and its *shape*, never its value. |
 
 The honest summary of the state of this constant: it has gone from *one assumed
 number with no measurement behind it* to *one assumed number bracketed by two
@@ -345,35 +375,94 @@ it is not a measurement of the target node.
 - Averaging, blending or interpolating the two.
 - Quoting either without naming its node.
 
-**Required:**
+**Required.** Each item is marked with what has since happened to it; see §0.
 
-- **Split `rom.cell_to_sram_cell_area_ratio` into per-node entries**, on the
+- ☐ **Split `rom.cell_to_sram_cell_area_ratio` into per-node entries**, on the
   `links.on_wafer` / `links.on_wafer_n5` precedent — a 130 nm entry carrying the
   measured 0.1298, and N6/N5 entries whose value is chosen against the ASAP7
   measurement rather than against the 130 nm one, still graded `assumed` and
   carrying the predictive caveat. The single node-free scalar is no longer
   defensible: this repository has now measured it twice and got two answers.
-- **Widen the swept bracket.** The current 1/6 – 1/4 does not contain the 130 nm
-  measurement. The measured span across the two nodes is 0.1298 – 0.2500; any
-  sweep that claims to bound this constant must at least cover it.
+- ☑ **widened** / ☐ **still swept continuously** — **Widen the swept bracket, and
+  stop sweeping it continuously.** The band has since become
+  0.11 – 0.33, <!-- figure: 0.11 src="configs/hardware/technology.json#rom.cell_to_sram_cell_area_ratio.range_low" name="live band low, §11" -->
+  which does contain both measurements, and `tools/run_roofline_studies.py`
+  refuses a band that excludes either — so the first half of this item is done and
+  cannot silently regress. The second half is not: the band is still swept as a
+  continuum. The original wording, and the reason it still stands, follows. The
+  then-current
+  1/6 – 1/4 did not contain the 130 nm measurement, so it had to widen: the
+  measured span across the two nodes is 0.1298 – 0.2500 and any sweep that
+  claims to bound this constant must at least cover it. But widening is only
+  half of it. §7.1 measured that at the FinFET node **both** cells land on exact
+  integer multiples of one CPP × one fin pitch, so **the ratio is a quotient of
+  two small integers and cannot take a value between two adjacent rungs.** A
+  uniform sweep over an interval therefore spends most of its samples on values
+  no drawable cell can have, and it gets the *spacing* wrong as well: the rungs
+  are not evenly spaced. The admissible ladder around the measurement, generated
+  from the sibling's own recorded quanta by `tools/run_ihp_bitcell_density.py`
+  and archived at
+  `results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.admissible_ratio_ladder`:
 
-**The stake, in the model's own primitives.** Using the numbers already in
-`results/roofline/*/analytical.json` — 24.07 Mbit/mm² usable SRAM,
-`rom.array_efficiency` 0.70 against `sram.array_efficiency` 0.65:
+  | ROM quanta | SRAM quanta | Ratio |
+  |---:|---:|---:|
+  | 4 | 18 | 0.2222 | <!-- figure: 0.2222 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.admissible_ratio_ladder.rungs_near_the_measurement[rom_units=4,sram_units=18].ratio" name="ladder rung 4/18" -->
+  | 4 | 17 | 0.2353 | <!-- figure: 0.2353 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.admissible_ratio_ladder.rungs_near_the_measurement[rom_units=4,sram_units=17].ratio" name="ladder rung 4/17" -->
+  | **4** | **16** | **0.2500** (measured) | <!-- figure: 0.2500 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.admissible_ratio_ladder.measured_rung" name="ladder rung 4/16, the measurement" -->
+  | 4 | 15 | 0.2667 | <!-- figure: 0.2667 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.admissible_ratio_ladder.rungs_near_the_measurement[rom_units=4,sram_units=15].ratio" name="ladder rung 4/15" -->
+  | 5 | 16 | 0.3125 | <!-- figure: 0.3125 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.admissible_ratio_ladder.rungs_near_the_measurement[rom_units=5,sram_units=16].ratio" name="ladder rung 5/16" -->
+  | 3 | 16 | 0.1875 | <!-- figure: 0.1875 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.admissible_ratio_ladder.rungs_near_the_measurement[rom_units=3,sram_units=16].ratio" name="ladder rung 3/16" -->
 
-| Ratio used | ROM density | vs the assumed 0.20 |
-|---|---:|---|
-| 0.1298 (IHP, 130 nm) | ~200 Mbit/mm² | +54% |
-| **0.20 (currently assumed)** | ~130 Mbit/mm² | — |
-| **0.2500 (ASAP7, node-appropriate)** | ~104 Mbit/mm² | **−20%** |
+  The two steps either side of the measured rung are not the same size, which is
+  the point:
 
-Moving from the assumed 0.20 to the node-appropriate 0.25 costs **20% of ROM
-capacity per mm²**, which needs **25% more devices** for the same model, which —
-if mesh diameter scales as √N as the 2-D mesh model implies — lengthens the mesh
-diameter by about **12%**, on a term that is over half the step time at batch 1.
-Choosing the 130 nm number instead would have moved the same lever **the other
-way by 54%**. That factor-of-two swing on a load-bearing constant, decided purely
-by which node you measured at, is the reason this test was worth running.
+  | Step from the measured rung | Size |
+  |---|---:|
+  | down one SRAM quantum (4/17) | 0.0147 | <!-- figure: 0.0147 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.admissible_ratio_ladder.gap_to_next_rung_down" name="gap down one SRAM quantum" -->
+  | up one SRAM quantum (4/15) | 0.0167 | <!-- figure: 0.0167 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.admissible_ratio_ladder.gap_to_next_rung_up" name="gap up one SRAM quantum" -->
+
+  **A sweep of this constant at a FinFET node must enumerate rungs, not subdivide
+  an interval.** The ladder is a property of the predictive PDK the sibling drew
+  in and no rung on it is a TSMC N7/N6/N5/N4 value.
+
+  This does not apply to the 130 nm entry. At 130 nm the sibling's floor probes
+  move each dimension by 10 nm on cells 510 and 765 nm across, so the ratio there
+  is effectively continuous and a continuous sweep of the **130 nm** entry is
+  fine. The quantisation is a leading-node effect, and that asymmetry is itself
+  part of why one node-free scalar cannot serve both.
+
+**The stake, in the model's own primitives.** The model derives ROM capacity
+density as `1e6 / (sram_bitcell_um2 * ratio / rom.array_efficiency)`, so at a
+fixed SRAM bitcell area and a fixed array efficiency **ROM bits/mm² is inversely
+proportional to this ratio and every other term cancels.** The stake is therefore
+one exact quotient of the two measured ratios, and it does not depend on which
+node's SRAM cell or which array efficiency is used:
+
+> A model built on the **130 nm** ratio claims
+> **1.9266×** <!-- figure: 1.9266 src="results/spice/ihp_sg13g2_bitcell/bitcell.json#node_sensitivity.capacity_density_factor_this_node_over_sibling" name="cross-node ROM capacity density factor" -->
+> the ROM capacity per mm² of the same model built on the predictive **FinFET**
+> ratio.
+
+Nearly a factor of two in weights per mm², which is devices per model, which is
+mesh diameter, which is over half the step time at batch 1. Neither ratio is a
+target-node value and the factor is not a prediction of the target node's density
+— it is the size of the hole a node-free scalar sits in.
+
+A swing of that size on a load-bearing constant, decided purely by which node you
+measured at, is the reason this test was worth running.
+
+*This paragraph used to be a hand-computed table of absolute Mbit/mm² figures
+built on an `array_efficiency` of 0.70 and an assumed ratio of 0.20, and on a
+"24.07 Mbit/mm² usable SRAM" read out of a third artifact. All three inputs have
+since moved — the array efficiency to
+0.52 <!-- figure: 0.52 src="configs/hardware/technology.json#rom.array_efficiency.value" name="live ROM array efficiency" -->
+and the ratio to
+0.33 <!-- figure: 0.33 src="configs/hardware/technology.json#rom.cell_to_sram_cell_area_ratio.value" name="live ratio, §11" -->
+— and every number in that table was silently wrong, because nothing in this
+repository reads a number out of prose. The quotient above is computed by
+`tools/run_ihp_bitcell_density.py`, committed to its artifact and annotated, and
+it is a quotient of two ratios precisely so that neither of those constants can
+reach it.*
 
 ## 12. Reproduction
 

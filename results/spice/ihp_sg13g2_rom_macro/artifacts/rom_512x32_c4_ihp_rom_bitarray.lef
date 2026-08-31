@@ -7,6 +7,13 @@ MACRO ihp_rom_bitarray
   FOREIGN ihp_rom_bitarray ;
   ORIGIN 2.800 0.990 ;
   SIZE 69.410 BY 106.840 ;
+  PIN VSS
+    USE GROUND ;
+    PORT
+      LAYER Metal2 ;
+        RECT -0.700 -0.970 -0.200 -0.610 ;
+    END
+  END VSS
   PIN WL0
     ANTENNAGATEAREA 4.992000 ;
     PORT

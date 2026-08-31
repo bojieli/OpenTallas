@@ -17,7 +17,6 @@ The following types are not handled by extraction and will be treated as non-ele
 Scaled tech values by 2 / 1 to match internal grid scaling
 Loading ihp-sg13g2 Device Generator Menu ...
 Loading "rom_bitarray.tcl" from command line.
-Moving label "VSS" from metal1 to space in cell ihp_rom_bitarray.
 OT_PARAM|PX|510.0
 OT_PARAM|PY|765.0
 OT_PARAM|P2|1530.0
@@ -27,6 +26,7 @@ OT_PARAM|CELL_AREA_NM2|390150.0
 OT_PARAM|PROGRAMMED_VIA1|16
 OT_PARAM|PATTERN|checker
 OT_PARAM|V1|200.0
+OT_PARAM|STRUCTURAL_VIA1|1
 OT_PARAM|TAP_EVERY|0
 Root cell box:
            width x height  (   llx,  lly  ), (   urx,  ury  )  area (units^2)
