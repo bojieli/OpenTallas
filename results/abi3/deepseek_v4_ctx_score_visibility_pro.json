@@ -1,0 +1,179 @@
+{
+  "all_cases_agree_with_the_position_arithmetic": true,
+  "by_prompt_length": {},
+  "case_count": 3,
+  "conclusion": {
+    "counter_arm": "The KV-traffic counter is a function of position arithmetic alone. It has zero discrimination against a wrong index score at every context, including the 200,000 and 1,000,000 the headline ratios are quoted at.",
+    "token_arm": "End-to-end token agreement can only see a wrong index score from the first prompt length at which a ranking layer discards a candidate. Below it the selected set is the whole candidate set and ROUTE.INDEX_TOPK emits it sorted ascending, so neither membership nor order carries score information."
+  },
+  "disagreeing_cases": [],
+  "environment": {
+    "numpy": "2.2.6",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "evidence_class": "operator_experiment",
+  "executed_cases": [
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 1025,
+      "compression_ratio": 4,
+      "context": 4100,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 1025,
+        "sram.bytes_read": 2566,
+        "sram.bytes_written": 4608
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 1025,
+        "sram.bytes_read": 2566,
+        "sram.bytes_written": 4608
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": false,
+      "expected_emitted_rows_identical": false,
+      "index_score_reaches_the_emitted_rows": true,
+      "label": "decode_ratio4_4100",
+      "phase": "decode",
+      "ranks_candidates": true,
+      "rows_that_moved": 1,
+      "score_blocks_differ": true,
+      "selected_per_query": 1024,
+      "selection_prunes": true,
+      "span": 1,
+      "start_pos": 4099,
+      "top_k": 1024,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 50000,
+      "compression_ratio": 4,
+      "context": 200000,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 50000,
+        "sram.bytes_read": 100516,
+        "sram.bytes_written": 4608
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 50000,
+        "sram.bytes_read": 100516,
+        "sram.bytes_written": 4608
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": false,
+      "expected_emitted_rows_identical": false,
+      "index_score_reaches_the_emitted_rows": true,
+      "label": "decode_ratio4_200000",
+      "phase": "decode",
+      "ranks_candidates": true,
+      "rows_that_moved": 1,
+      "score_blocks_differ": true,
+      "selected_per_query": 1024,
+      "selection_prunes": true,
+      "span": 1,
+      "start_pos": 199999,
+      "top_k": 1024,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 262144,
+      "compression_ratio": 4,
+      "context": 1048576,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 262144,
+        "sram.bytes_read": 524804,
+        "sram.bytes_written": 4608
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 262144,
+        "sram.bytes_read": 524804,
+        "sram.bytes_written": 4608
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": false,
+      "expected_emitted_rows_identical": false,
+      "index_score_reaches_the_emitted_rows": true,
+      "label": "decode_ratio4_1048576",
+      "phase": "decode",
+      "ranks_candidates": true,
+      "rows_that_moved": 1,
+      "score_blocks_differ": true,
+      "selected_per_query": 1024,
+      "selection_prunes": true,
+      "span": 1,
+      "start_pos": 1048575,
+      "top_k": 1024,
+      "window": 128
+    }
+  ],
+  "headline_contexts": [
+    200000,
+    1048576
+  ],
+  "inputs": {
+    "executed_by": "runtime/sim/engines/route.py on runtime/sim/device.py",
+    "model_profile": "configs/models/deepseek-v4-pro-0813.json",
+    "operator_under_test": "ROUTE.INDEX_TOPK",
+    "pins": [
+      "/nonexistent.json"
+    ],
+    "reuses": "tools/audit_deepseek_v4_index_selection.py"
+  },
+  "kv_counter_is_blind_to_index_scores_at_every_case": true,
+  "layer_census_by_compression_ratio": {
+    "128": 31,
+    "4": 30
+  },
+  "model_id": "deepseek-v4-pro-0813",
+  "not_a_claim": [
+    "index_score_arithmetic_is_correct",
+    "accelerator_execution_of_the_whole_model",
+    "end_to_end_token_agreement",
+    "timing_or_performance"
+  ],
+  "schema": "opentallas.deepseek_v4_ctx_score_visibility.v1",
+  "seed": 20260831,
+  "thresholds": {
+    "128": {
+      "first_prompt_length_that_prunes": null,
+      "layers": 31,
+      "ranks_candidates": false,
+      "top_k": 0,
+      "why_none": "top_k is 0: the released Attention.__init__ builds no Indexer for this ratio, so it ranks nothing and no prompt length makes it discard"
+    },
+    "4": {
+      "first_prompt_length_that_prunes": 4100,
+      "layers": 30,
+      "ranks_candidates": true,
+      "top_k": 1024,
+      "why_none": null
+    }
+  },
+  "window_tokens": 128
+}

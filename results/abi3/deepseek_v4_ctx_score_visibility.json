@@ -1,0 +1,604 @@
+{
+  "all_cases_agree_with_the_position_arithmetic": true,
+  "by_prompt_length": {
+    "TA-DS-CTX-129-1": {
+      "by_compress_ratio": {
+        "1": {
+          "candidate_groups_at_final_query": 129,
+          "layers": 2,
+          "selected_per_query": 129,
+          "selection_prunes": false
+        },
+        "128": {
+          "candidate_groups_at_final_query": 1,
+          "layers": 20,
+          "selected_per_query": 1,
+          "selection_prunes": false
+        },
+        "4": {
+          "candidate_groups_at_final_query": 32,
+          "layers": 21,
+          "selected_per_query": 32,
+          "selection_prunes": false
+        }
+      },
+      "index_score_can_move_the_kv_counter": false,
+      "index_score_can_move_the_token": false,
+      "prompt_tokens": 129
+    },
+    "TA-DS-CTX-160-1": {
+      "by_compress_ratio": {
+        "1": {
+          "candidate_groups_at_final_query": 160,
+          "layers": 2,
+          "selected_per_query": 160,
+          "selection_prunes": false
+        },
+        "128": {
+          "candidate_groups_at_final_query": 1,
+          "layers": 20,
+          "selected_per_query": 1,
+          "selection_prunes": false
+        },
+        "4": {
+          "candidate_groups_at_final_query": 40,
+          "layers": 21,
+          "selected_per_query": 40,
+          "selection_prunes": false
+        }
+      },
+      "index_score_can_move_the_kv_counter": false,
+      "index_score_can_move_the_token": false,
+      "prompt_tokens": 160
+    },
+    "TA-DS-CTX-2052-1": {
+      "by_compress_ratio": {
+        "1": {
+          "candidate_groups_at_final_query": 2052,
+          "layers": 2,
+          "selected_per_query": 2052,
+          "selection_prunes": false
+        },
+        "128": {
+          "candidate_groups_at_final_query": 16,
+          "layers": 20,
+          "selected_per_query": 16,
+          "selection_prunes": false
+        },
+        "4": {
+          "candidate_groups_at_final_query": 513,
+          "layers": 21,
+          "selected_per_query": 512,
+          "selection_prunes": true
+        }
+      },
+      "index_score_can_move_the_kv_counter": false,
+      "index_score_can_move_the_token": true,
+      "prompt_tokens": 2052
+    },
+    "TA-DS-CTX-256-1": {
+      "by_compress_ratio": {
+        "1": {
+          "candidate_groups_at_final_query": 256,
+          "layers": 2,
+          "selected_per_query": 256,
+          "selection_prunes": false
+        },
+        "128": {
+          "candidate_groups_at_final_query": 2,
+          "layers": 20,
+          "selected_per_query": 2,
+          "selection_prunes": false
+        },
+        "4": {
+          "candidate_groups_at_final_query": 64,
+          "layers": 21,
+          "selected_per_query": 64,
+          "selection_prunes": false
+        }
+      },
+      "index_score_can_move_the_kv_counter": false,
+      "index_score_can_move_the_token": false,
+      "prompt_tokens": 256
+    }
+  },
+  "case_count": 11,
+  "conclusion": {
+    "counter_arm": "The KV-traffic counter is a function of position arithmetic alone. It has zero discrimination against a wrong index score at every context, including the 200,000 and 1,000,000 the headline ratios are quoted at.",
+    "token_arm": "End-to-end token agreement can only see a wrong index score from the first prompt length at which a ranking layer discards a candidate. Below it the selected set is the whole candidate set and ROUTE.INDEX_TOPK emits it sorted ascending, so neither membership nor order carries score information."
+  },
+  "disagreeing_cases": [],
+  "environment": {
+    "numpy": "2.2.6",
+    "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.35",
+    "python": "3.10.12"
+  },
+  "evidence_class": "operator_experiment",
+  "executed_cases": [
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 32,
+      "compression_ratio": 4,
+      "context": 129,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 2048,
+        "sram.bytes_read": 74308,
+        "sram.bytes_written": 330240
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 2048,
+        "sram.bytes_read": 74308,
+        "sram.bytes_written": 330240
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": true,
+      "expected_emitted_rows_identical": true,
+      "index_score_reaches_the_emitted_rows": false,
+      "label": "prefill_ratio4_129",
+      "phase": "prefill",
+      "ranks_candidates": true,
+      "rows_that_moved": 0,
+      "score_blocks_differ": true,
+      "selected_per_query": 32,
+      "selection_prunes": false,
+      "span": 129,
+      "start_pos": 0,
+      "top_k": 512,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 40,
+      "compression_ratio": 4,
+      "context": 160,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 3160,
+        "sram.bytes_read": 94724,
+        "sram.bytes_written": 409600
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 3160,
+        "sram.bytes_read": 94724,
+        "sram.bytes_written": 409600
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": true,
+      "expected_emitted_rows_identical": true,
+      "index_score_reaches_the_emitted_rows": false,
+      "label": "prefill_ratio4_160",
+      "phase": "prefill",
+      "ranks_candidates": true,
+      "rows_that_moved": 0,
+      "score_blocks_differ": true,
+      "selected_per_query": 40,
+      "selection_prunes": false,
+      "span": 160,
+      "start_pos": 0,
+      "top_k": 512,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 64,
+      "compression_ratio": 4,
+      "context": 256,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 8128,
+        "sram.bytes_read": 163844,
+        "sram.bytes_written": 655360
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 8128,
+        "sram.bytes_read": 163844,
+        "sram.bytes_written": 655360
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": true,
+      "expected_emitted_rows_identical": true,
+      "index_score_reaches_the_emitted_rows": false,
+      "label": "prefill_ratio4_256",
+      "phase": "prefill",
+      "ranks_candidates": true,
+      "rows_that_moved": 0,
+      "score_blocks_differ": true,
+      "selected_per_query": 64,
+      "selection_prunes": false,
+      "span": 256,
+      "start_pos": 0,
+      "top_k": 512,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 513,
+      "compression_ratio": 4,
+      "context": 2052,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 525825,
+        "sram.bytes_read": 3155980,
+        "sram.bytes_written": 5253120
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 525825,
+        "sram.bytes_read": 3155980,
+        "sram.bytes_written": 5253120
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": false,
+      "expected_emitted_rows_identical": false,
+      "index_score_reaches_the_emitted_rows": true,
+      "label": "prefill_ratio4_2052",
+      "phase": "prefill",
+      "ranks_candidates": true,
+      "rows_that_moved": 1,
+      "score_blocks_differ": true,
+      "selected_per_query": 512,
+      "selection_prunes": true,
+      "span": 2052,
+      "start_pos": 0,
+      "top_k": 512,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 513,
+      "compression_ratio": 4,
+      "context": 2052,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 513,
+        "sram.bytes_read": 1542,
+        "sram.bytes_written": 2560
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 513,
+        "sram.bytes_read": 1542,
+        "sram.bytes_written": 2560
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": false,
+      "expected_emitted_rows_identical": false,
+      "index_score_reaches_the_emitted_rows": true,
+      "label": "decode_ratio4_2052",
+      "phase": "decode",
+      "ranks_candidates": true,
+      "rows_that_moved": 1,
+      "score_blocks_differ": true,
+      "selected_per_query": 512,
+      "selection_prunes": true,
+      "span": 1,
+      "start_pos": 2051,
+      "top_k": 512,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 250,
+      "compression_ratio": 4,
+      "context": 1000,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 250,
+        "sram.bytes_read": 1016,
+        "sram.bytes_written": 2560
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 250,
+        "sram.bytes_read": 1016,
+        "sram.bytes_written": 2560
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": true,
+      "expected_emitted_rows_identical": true,
+      "index_score_reaches_the_emitted_rows": false,
+      "label": "decode_ratio4_1000",
+      "phase": "decode",
+      "ranks_candidates": true,
+      "rows_that_moved": 0,
+      "score_blocks_differ": true,
+      "selected_per_query": 250,
+      "selection_prunes": false,
+      "span": 1,
+      "start_pos": 999,
+      "top_k": 512,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 2000,
+      "compression_ratio": 4,
+      "context": 8000,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 2000,
+        "sram.bytes_read": 4516,
+        "sram.bytes_written": 2560
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 2000,
+        "sram.bytes_read": 4516,
+        "sram.bytes_written": 2560
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": false,
+      "expected_emitted_rows_identical": false,
+      "index_score_reaches_the_emitted_rows": true,
+      "label": "decode_ratio4_8000",
+      "phase": "decode",
+      "ranks_candidates": true,
+      "rows_that_moved": 1,
+      "score_blocks_differ": true,
+      "selected_per_query": 512,
+      "selection_prunes": true,
+      "span": 1,
+      "start_pos": 7999,
+      "top_k": 512,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 8000,
+      "compression_ratio": 4,
+      "context": 32000,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 8000,
+        "sram.bytes_read": 16516,
+        "sram.bytes_written": 2560
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 8000,
+        "sram.bytes_read": 16516,
+        "sram.bytes_written": 2560
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": false,
+      "expected_emitted_rows_identical": false,
+      "index_score_reaches_the_emitted_rows": true,
+      "label": "decode_ratio4_32000",
+      "phase": "decode",
+      "ranks_candidates": true,
+      "rows_that_moved": 1,
+      "score_blocks_differ": true,
+      "selected_per_query": 512,
+      "selection_prunes": true,
+      "span": 1,
+      "start_pos": 31999,
+      "top_k": 512,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 32000,
+      "compression_ratio": 4,
+      "context": 128000,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 32000,
+        "sram.bytes_read": 64516,
+        "sram.bytes_written": 2560
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 32000,
+        "sram.bytes_read": 64516,
+        "sram.bytes_written": 2560
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": false,
+      "expected_emitted_rows_identical": false,
+      "index_score_reaches_the_emitted_rows": true,
+      "label": "decode_ratio4_128000",
+      "phase": "decode",
+      "ranks_candidates": true,
+      "rows_that_moved": 1,
+      "score_blocks_differ": true,
+      "selected_per_query": 512,
+      "selection_prunes": true,
+      "span": 1,
+      "start_pos": 127999,
+      "top_k": 512,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 50000,
+      "compression_ratio": 4,
+      "context": 200000,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 50000,
+        "sram.bytes_read": 100516,
+        "sram.bytes_written": 2560
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 50000,
+        "sram.bytes_read": 100516,
+        "sram.bytes_written": 2560
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": false,
+      "expected_emitted_rows_identical": false,
+      "index_score_reaches_the_emitted_rows": true,
+      "label": "decode_ratio4_200000",
+      "phase": "decode",
+      "ranks_candidates": true,
+      "rows_that_moved": 1,
+      "score_blocks_differ": true,
+      "selected_per_query": 512,
+      "selection_prunes": true,
+      "span": 1,
+      "start_pos": 199999,
+      "top_k": 512,
+      "window": 128
+    },
+    {
+      "agrees_with_the_position_arithmetic": true,
+      "candidate_groups_at_final_query": 262144,
+      "compression_ratio": 4,
+      "context": 1048576,
+      "counters_a": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 262144,
+        "sram.bytes_read": 524804,
+        "sram.bytes_written": 2560
+      },
+      "counters_b": {
+        "engine.route.descriptors": 1,
+        "instructions.fetched": 2,
+        "instructions.issued": 1,
+        "instructions.retired": 2,
+        "route.topk_candidates": 262144,
+        "sram.bytes_read": 524804,
+        "sram.bytes_written": 2560
+      },
+      "counters_identical_under_different_scores": true,
+      "emitted_rows_identical_under_different_scores": false,
+      "expected_emitted_rows_identical": false,
+      "index_score_reaches_the_emitted_rows": true,
+      "label": "decode_ratio4_1048576",
+      "phase": "decode",
+      "ranks_candidates": true,
+      "rows_that_moved": 1,
+      "score_blocks_differ": true,
+      "selected_per_query": 512,
+      "selection_prunes": true,
+      "span": 1,
+      "start_pos": 1048575,
+      "top_k": 512,
+      "window": 128
+    }
+  ],
+  "headline_contexts": [
+    1000,
+    8000,
+    32000,
+    128000,
+    200000,
+    1048576
+  ],
+  "inputs": {
+    "executed_by": "runtime/sim/engines/route.py on runtime/sim/device.py",
+    "model_profile": "configs/models/deepseek-v4-flash-0731.json",
+    "operator_under_test": "ROUTE.INDEX_TOPK",
+    "pins": [
+      "results/abi3/deepseek_v4_context_threshold_workload_pins.json"
+    ],
+    "reuses": "tools/audit_deepseek_v4_index_selection.py"
+  },
+  "kv_counter_is_blind_to_index_scores_at_every_case": true,
+  "layer_census_by_compression_ratio": {
+    "1": 2,
+    "128": 20,
+    "4": 21
+  },
+  "model_id": "deepseek-v4-flash-0731",
+  "not_a_claim": [
+    "index_score_arithmetic_is_correct",
+    "accelerator_execution_of_the_whole_model",
+    "end_to_end_token_agreement",
+    "timing_or_performance"
+  ],
+  "schema": "opentallas.deepseek_v4_ctx_score_visibility.v1",
+  "seed": 20260831,
+  "thresholds": {
+    "1": {
+      "first_prompt_length_that_prunes": null,
+      "layers": 2,
+      "ranks_candidates": false,
+      "top_k": 0,
+      "why_none": "top_k is 0: the released Attention.__init__ builds no Indexer for this ratio, so it ranks nothing and no prompt length makes it discard"
+    },
+    "128": {
+      "first_prompt_length_that_prunes": null,
+      "layers": 20,
+      "ranks_candidates": false,
+      "top_k": 0,
+      "why_none": "top_k is 0: the released Attention.__init__ builds no Indexer for this ratio, so it ranks nothing and no prompt length makes it discard"
+    },
+    "4": {
+      "first_prompt_length_that_prunes": 2052,
+      "layers": 21,
+      "ranks_candidates": true,
+      "top_k": 512,
+      "why_none": null
+    }
+  },
+  "window_tokens": 128
+}
