@@ -145,7 +145,7 @@ int main(int argc, char** argv) {
         {"objects", model.dut.req_objects, model.dut.cap_objects},
         {"shards", model.dut.req_shards, model.dut.cap_shards},
         {"regions", model.dut.req_regions, model.dut.cap_regions},
-        {"resources", model.dut.req_resources, model.dut.cap_resources},
+        {"quarantine entries", model.dut.req_quarantine_entries, model.dut.cap_quarantine_entries},
         {"repair_entries", model.dut.req_repair_entries,
          model.dut.cap_repair_entries},
         {"requests", model.dut.req_requests, model.dut.cap_requests},
@@ -163,6 +163,17 @@ int main(int argc, char** argv) {
             fail(buffer);
         }
     }
+    // The capacities above are this checker's own arithmetic on the vector
+    // set.  These two are the service's own verdict on the writes it was
+    // given.  Every slot the compiled plan named exists, so the sticky bit is
+    // 0 after the plan is loaded; the bench top then makes it fire, with one
+    // write naming a quarantine slot one past the end of the list that asks to
+    // withdraw placement resource 0.  The marker below is reproduced anyway,
+    // which is what proves the service dropped that write instead of folding
+    // it onto slot 0 -- a fold would withdraw a resource this set reads from,
+    // and no set's marker survives that.
+    check.equal("cfg_error_after_plan", -1, model.dut.cfg_error_plan, 0);
+    check.equal("cfg_error_after_probe", -1, model.dut.cfg_error, 1);
 
     uint64_t sum_beats = 0, sum_bytes = 0, sum_acts = 0;
     uint64_t sum_masked = 0, sum_faults = 0;

@@ -38,7 +38,7 @@ module rom_service_top
     parameter integer OBJECTS        = 512,
     parameter integer SHARDS         = 16384,
     parameter integer REGIONS        = 512,
-    parameter integer RESOURCES      = 16384,
+    parameter integer QUARANTINE_ENTRIES = 32,
     parameter integer REPAIR_ENTRIES = 64,
     parameter integer REQUESTS       = 32768,
     parameter integer WINDOW_ENTRIES = 16384,
@@ -100,7 +100,7 @@ module rom_service_top
     output wire [31:0] cap_objects,
     output wire [31:0] cap_shards,
     output wire [31:0] cap_regions,
-    output wire [31:0] cap_resources,
+    output wire [31:0] cap_quarantine_entries,
     output wire [31:0] cap_repair_entries,
     output wire [31:0] cap_requests,
     output wire [31:0] cap_window_entries,
@@ -108,16 +108,32 @@ module rom_service_top
     output wire [31:0] req_objects,
     output wire [31:0] req_shards,
     output wire [31:0] req_regions,
-    output wire [31:0] req_resources,
+    output wire [31:0] req_quarantine_entries,
     output wire [31:0] req_repair_entries,
     output wire [31:0] req_requests,
     output wire [31:0] req_window_entries,
-    output wire [31:0] req_masks
+    output wire [31:0] req_masks,
+
+    // The service's sticky refusal of a configuration write that named a slot
+    // outside a table, sampled twice.
+    //
+    //   cfg_error_plan  the value after the whole compiled plan has been
+    //                   streamed in and before the negative probe below.  It
+    //                   must be 0: every slot the loader named exists.
+    //   cfg_error       the value after the probe.  It must be 1.
+    //
+    // The probe is one deliberately out-of-range write, described at C_PROBE.
+    // Requiring the marker to be reproduced anyway is what proves the service
+    // DROPPED it rather than folding it onto a legal slot -- a fold would have
+    // quarantined placement resource 0 in every set, and no set's marker
+    // survives that.  A guard that is never made to fire is not evidence.
+    output wire        cfg_error,
+    output reg         cfg_error_plan
 );
     assign cap_objects        = OBJECTS;
     assign cap_shards         = SHARDS;
     assign cap_regions        = REGIONS;
-    assign cap_resources      = RESOURCES;
+    assign cap_quarantine_entries      = QUARANTINE_ENTRIES;
     assign cap_repair_entries = REPAIR_ENTRIES;
     assign cap_requests       = REQUESTS;
     assign cap_window_entries = WINDOW_ENTRIES;
@@ -167,7 +183,12 @@ module rom_service_top
     assign req_objects        = meta_mem[18];
     assign req_shards         = meta_mem[19];
     assign req_regions        = meta_mem[20];
-    assign req_resources      = meta_mem[21];
+    // meta[21] is the number of placement resources the runtime health input
+    // WITHDREW, not the number the plan has.  The port used to be called
+    // req_resources, which is what the field used to carry; a name that has
+    // outlived its meaning is how two different quantities end up quoted for
+    // each other.
+    assign req_quarantine_entries = meta_mem[21];
     assign req_repair_entries = meta_mem[22];
     assign req_requests       = meta_mem[23];
     assign req_window_entries = meta_mem[24];
@@ -177,9 +198,13 @@ module rom_service_top
     // Configuration sequencer: streams the compiled plan into the service.
     // -----------------------------------------------------------------
     localparam [3:0] C_IDLE = 4'd0, C_OBJ = 4'd1, C_SHD = 4'd2, C_REP = 4'd3,
-                     C_MSK = 4'd4, C_CNT = 4'd5, C_CLR = 4'd6, C_DONE = 4'd7;
+                     C_MSK = 4'd4, C_CNT = 4'd5, C_CLR = 4'd6, C_PROBE = 4'd7,
+                     C_DONE = 4'd8;
+    // The quarantine list depth at the width cfg_index is driven at.
+    localparam [31:0] QUARANTINE_SLOTS = QUARANTINE_ENTRIES;
     reg [3:0]  cstate;
     reg [31:0] ccursor;
+    reg [31:0] qslot;
     reg        cfg_valid;
     reg [3:0]  cfg_sel;
     reg [31:0] cfg_index;
@@ -189,17 +214,20 @@ module rom_service_top
         if (!rst_n) begin
             cstate    <= C_IDLE;
             ccursor   <= 32'd0;
+            qslot     <= 32'd0;
             cfg_valid <= 1'b0;
             cfg_sel   <= 4'd0;
             cfg_index <= 32'd0;
             cfg_data  <= 320'd0;
             cfg_done  <= 1'b0;
+            cfg_error_plan <= 1'b0;
         end else begin
             cfg_valid <= 1'b0;
             case (cstate)
             C_IDLE: if (cfg_start) begin
                         cfg_done <= 1'b0;
                         ccursor  <= 32'd0;
+                        qslot    <= 32'd0;
                         cstate   <= C_OBJ;
                     end
             C_OBJ: begin
@@ -263,10 +291,18 @@ module rom_service_top
                     cstate <= C_CNT;
                 end else begin
                     cfg_valid <= 1'b1;
-                    cfg_sel   <= (mask_mem[ccursor*2+0] == 32'd0)
-                                 ? ROM_CFG_REGION_EN : ROM_CFG_RESOURCE;
-                    cfg_index <= mask_mem[ccursor*2+1];
-                    cfg_data  <= {319'd0, 1'b1};
+                    if (mask_mem[ccursor*2+0] == 32'd0) begin
+                        cfg_sel   <= ROM_CFG_REGION_EN;
+                        cfg_index <= mask_mem[ccursor*2+1];
+                        cfg_data  <= {319'd0, 1'b1};
+                    end else begin
+                        // A quarantine list slot: the payload names the
+                        // withdrawn placement resource, the index is the slot.
+                        cfg_sel   <= ROM_CFG_RESOURCE;
+                        cfg_index <= qslot;
+                        cfg_data  <= {287'd0, 1'b1, mask_mem[ccursor*2+1]};
+                        qslot     <= qslot + 32'd1;
+                    end
                     ccursor   <= ccursor + 32'd1;
                 end
             end
@@ -280,6 +316,23 @@ module rom_service_top
                 cfg_valid <= 1'b1;
                 cfg_sel   <= ROM_CFG_CLEAR;
                 cfg_index <= 32'd0;
+                cstate    <= C_PROBE;
+            end
+            // One deliberately out-of-range configuration write, issued after
+            // the whole plan is loaded so that folding it would be visible.
+            // It names quarantine slot QUARANTINE_ENTRIES -- one past the last
+            // slot there is -- and asks to withdraw placement resource 0,
+            // which every plan here places weights on.  If the service folded
+            // the slot index instead of refusing it, slot 0 would now withdraw
+            // resource 0 and the run's marker would not be reproduced.  The
+            // plan-load value of the sticky bit is captured first, because
+            // after this write the bit is 1 by construction.
+            C_PROBE: begin
+                cfg_error_plan <= cfg_error;
+                cfg_valid <= 1'b1;
+                cfg_sel   <= ROM_CFG_RESOURCE;
+                cfg_index <= QUARANTINE_SLOTS;
+                cfg_data  <= {287'd0, 1'b1, 32'd0};
                 cstate    <= C_DONE;
             end
             C_DONE: begin
@@ -497,7 +550,7 @@ module rom_service_top
         .OBJECTS        (OBJECTS),
         .SHARDS         (SHARDS),
         .REGIONS        (REGIONS),
-        .RESOURCES      (RESOURCES),
+        .QUARANTINE_ENTRIES (QUARANTINE_ENTRIES),
         .REPAIR_ENTRIES (REPAIR_ENTRIES),
         .TAG_W          (16)
     ) u_service (
@@ -508,6 +561,7 @@ module rom_service_top
         .cfg_index         (cfg_index),
         .cfg_data          (cfg_data),
         .cfg_ready         (svc_cfg_ready),
+        .cfg_error         (cfg_error),
         .req_valid         (req_valid),
         .req_ready         (req_ready),
         .req_object_id     (req_object_id),

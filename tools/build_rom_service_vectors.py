@@ -1284,7 +1284,9 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
         "objects": len(plan.objects),
         "shards": len(plan.shards),
         "regions": max((r["region_id"] for r in plan.regions), default=-1) + 1,
-        "resources": max((s.resource_index for s in plan.shards), default=-1) + 1,
+        # The service holds a quarantine LIST, so what constrains it is how many
+        # resources are withdrawn, not how many exist.
+        "quarantine_entries": len(broken),
         "repair_entries": len(plan.repair),
         "requests": len(kept),
         "window_entries": len(window),
@@ -1295,7 +1297,7 @@ def build(args: argparse.Namespace) -> dict[str, Any]:
             "objects",
             "shards",
             "regions",
-            "resources",
+            "quarantine_entries",
             "repair_entries",
             "requests",
             "window_entries",

@@ -76,6 +76,21 @@ IMAGE_FILES = (
     "rom_meta.hex",
 )
 
+# The refusal classes ot_rom_pkg names, spelled out.  A bare "1" in an
+# artifact is a number a reader has to look up, and looking it up is how a
+# class total gets quoted as though it were an origin total.
+FAULT_CLASS_NAMES = {
+    0: "none",
+    1: "unplaced_rom_object",
+    2: "out_of_range",
+    3: "shard_gap",
+    4: "quarantined_resource",
+    5: "activated_column_repair",
+    6: "zero_length",
+}
+STATUS_MASKED = 1
+STATUS_FAULT = 2
+
 CHECKS_RE = re.compile(r"checks=(\d+)")
 VERILATOR_VERSION_RE = re.compile(r"Verilator (\d+)\.(\d+)")
 IVERILOG_VERSION_RE = re.compile(r"Icarus Verilog version (\d+)\.(\d+)")
@@ -192,6 +207,123 @@ def load_vector_set(directory: Path) -> dict[str, Any]:
                 drift.append(rel)
     vectors["_runtime_source_drift"] = drift
     return vectors
+
+
+def origin_composition(vectors: dict[str, Any]) -> dict[str, Any]:
+    """Rebuild every published margin from the per-request index, and check it.
+
+    A vector set publishes four summaries of the same 349 (or 363, or 10,833)
+    request records:
+
+      ``requests.by_origin``        how many requests each origin contributed
+      ``totals.masked_by_origin``   how many of those completed MASKED
+      ``totals.fault_classes``      how many refusals carried each fault class
+      ``totals.refusals_by_origin`` how many refusals each origin provoked
+
+    Those are margins of one table, they are of the same order of magnitude,
+    and two of them have already been read as the same number once: on the Qwen
+    chip set the class-1 (unplaced ROM object) total is 114 while the
+    executed-stream origin total is 111, and the difference is three refusals
+    the vector generator constructs on purpose.  Publishing only the margins
+    invites the confusion back, so the joint tables are published and every
+    published margin is required to be a margin OF THEM.  A disagreement is
+    recorded and fails the campaign rather than being repaired here.
+
+    Nothing checked these before.  ``requests.by_origin`` in particular is the
+    denominator the prose uses to bound the 111 -- "111 of the 265 executed
+    reads replayed" -- and it was a number no tool had ever compared with the
+    requests the set actually contains.
+    """
+    index = vectors["request_index"]
+    classes: dict[str, dict[str, Any]] = {}
+    refusal_origins: dict[str, dict[str, Any]] = {}
+    masked_origins: dict[str, int] = {}
+    request_origins: dict[str, int] = {}
+    for record in index:
+        origin = record["origin"]
+        request_origins[origin] = request_origins.get(origin, 0) + 1
+        if record["status"] == STATUS_MASKED:
+            masked_origins[origin] = masked_origins.get(origin, 0) + 1
+        if record["status"] != STATUS_FAULT:
+            continue
+        code = int(record["fault"])
+        name = FAULT_CLASS_NAMES.get(code, f"unnamed_class_{code}")
+        entry = classes.setdefault(
+            name, {"fault_class": code, "total": 0, "by_origin": {}}
+        )
+        entry["total"] += 1
+        entry["by_origin"][origin] = entry["by_origin"].get(origin, 0) + 1
+        seen = refusal_origins.setdefault(origin, {"total": 0, "by_class": {}})
+        seen["total"] += 1
+        seen["by_class"][name] = seen["by_class"].get(name, 0) + 1
+
+    totals = vectors["totals"]
+    disagreements: list[str] = []
+
+    def compare(label: str, built: dict[str, int], published: dict[str, int]) -> None:
+        for key in sorted(set(built) | set(published)):
+            got = built.get(key, 0)
+            want = published.get(key, 0)
+            if got != want:
+                disagreements.append(
+                    f"{label} {key}: the request index holds {got}, "
+                    f"the vector set publishes {want}"
+                )
+
+    published_classes = {
+        FAULT_CLASS_NAMES.get(int(code), f"unnamed_class_{code}"): count
+        for code, count in totals["fault_classes"].items()
+    }
+    compare(
+        "totals.fault_classes",
+        {name: entry["total"] for name, entry in classes.items()},
+        published_classes,
+    )
+    compare(
+        "totals.refusals_by_origin",
+        {name: entry["total"] for name, entry in refusal_origins.items()},
+        totals["refusals_by_origin"],
+    )
+    compare("totals.masked_by_origin", masked_origins, totals["masked_by_origin"])
+    compare("requests.by_origin", request_origins, vectors["requests"]["by_origin"])
+
+    for label, built_total, published_total in (
+        ("totals.faults", sum(e["total"] for e in classes.values()), totals["faults"]),
+        ("totals.masked", sum(masked_origins.values()), totals["masked"]),
+        ("requests.count", len(index), vectors["requests"]["count"]),
+    ):
+        if built_total != published_total:
+            disagreements.append(
+                f"{label}: the request index holds {built_total}, "
+                f"the vector set publishes {published_total}"
+            )
+
+    return {
+        "note": "every published margin, rebuilt from the per-request index. "
+        "refusals.classes and refusals.origins are the two margins of one "
+        "table: they count the same refusals two different ways and are not "
+        "interchangeable. masked and requests are the other two margins the "
+        "set publishes, checked the same way",
+        "refusals": {
+            "classes": {name: classes[name] for name in sorted(classes)},
+            "origins": {
+                name: refusal_origins[name] for name in sorted(refusal_origins)
+            },
+            "total": sum(entry["total"] for entry in classes.values()),
+        },
+        "masked": {
+            "origins": {name: masked_origins[name] for name in sorted(masked_origins)},
+            "total": sum(masked_origins.values()),
+        },
+        "requests": {
+            "origins": {
+                name: request_origins[name] for name in sorted(request_origins)
+            },
+            "total": len(index),
+        },
+        "margins_agree": not disagreements,
+        "disagreements": disagreements,
+    }
 
 
 def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any]:
@@ -363,11 +495,15 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
         for name, vectors in vector_sets.items()
         if vectors.get("_runtime_source_drift")
     }
+    compositions = {
+        name: origin_composition(vectors) for name, vectors in vector_sets.items()
+    }
     passed = (
         compiled
         and bool(cases)
         and all(case["status"] == "pass" for case in cases)
         and not drift
+        and all(entry["margins_agree"] for entry in compositions.values())
     )
 
     correlation = {
@@ -402,6 +538,14 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
                 "plan": vectors["plan"],
                 "requests": vectors["requests"],
                 "totals": vectors["totals"],
+                "origin_composition": compositions[name],
+                # The table depths this set needs, at the names the RTL
+                # parameters carry.  Both checkers compare these against the
+                # depths the top was elaborated with and refuse a set that
+                # outgrew one rather than watch it alias onto a legal wrong
+                # entry; quarantine_entries is a list depth, so it counts the
+                # resources withdrawn, not the resources that exist.
+                "required_capacity": vectors["required_capacity"],
                 "window": vectors["window"],
                 "runtime_health": vectors["runtime_health"],
                 "executed_source": vectors["executed_source"],
@@ -440,6 +584,22 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
             "region_mask_performs_no_array_access": True,
             "quarantined_resource_fails_closed": True,
             "unplaced_rom_object_fails_closed": True,
+            "out_of_range_configuration_slot_refused": True,
+            "out_of_range_configuration_slot_refusal_exercised": True,
+            # The request-extent bounds test is carried out at 65 bits, so a
+            # 64-bit byte offset cannot wrap past it.  It is NOT exercised:
+            # every published set's widest offset is below 2**35 and the wrap
+            # needs one within 2**32 of 2**64.  Recorded as two separate
+            # booleans on purpose -- "the guard exists" and "the guard fired"
+            # are different claims and this repository has confused them.
+            "request_extent_bounds_checked_without_truncation": True,
+            "request_extent_bounds_refusal_exercised": False,
+            # Derived, not asserted: the joint table this campaign builds
+            # from the per-request index, against the two margins the
+            # vector set publishes.
+            "every_published_origin_and_class_margin_reconciled": all(
+                entry["margins_agree"] for entry in compositions.values()
+            ),
             "addressing_correlated_over_the_whole_address_space": True,
             "whole_decode_step_replayed_beat_by_beat": False,
             "operand_data_checked_against_checkpoint_bytes_on_a_window_only": True,
@@ -471,6 +631,16 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
             "only for the granules in the published window. Outside it the "
             "array returns a deterministic function of its own address, so what "
             "is checked there is conveyance and ordering, not weight content",
+            "the request-extent bounds test was evaluated at 64 bits and a "
+            "64-bit sum wraps, so a byte offset within 2**32 of 2**64 passed an "
+            "in-range test and was then served from the middle of the object. "
+            "It is now evaluated at 65 bits and cannot wrap. Nothing here "
+            "exercises the fixed guard: the widest byte offset any published "
+            "vector set carries is below 2**35, which is also why two "
+            "simulators and two checkers never disagreed over it. The Python "
+            "reference computes the same sum in arbitrary precision and was "
+            "always exact, so the fix moved the RTL onto the reference rather "
+            "than the reference onto the RTL",
             "the DeepSeek wafer set has no executed request stream: that lane "
             "has produced no tokens (checklist W6.4). Its requests come from "
             "the compiled plan's own read unit and from every shard boundary "
@@ -485,8 +655,65 @@ def run(build_root: Path | None, sets: list[str], timeout: int) -> dict[str, Any
             "no descriptor CRC, program header or admission check is performed "
             "here; the tables arrive over the configuration channel already "
             "admitted",
+            "quarantine is a comparator list, not a bit per placement resource. "
+            "No published vector set withdraws more than one resource, so the "
+            "list-depth capacity refusal is a guard on a bound nothing here "
+            "approaches: required_capacity.quarantine_entries is 0 or 1 against "
+            "a bench depth of 32. What is exercised is the service's refusal of "
+            "an out-of-range configuration slot -- the bench top issues one "
+            "deliberately out-of-range quarantine write per run, after the plan "
+            "is loaded, and both checkers require the sticky cfg_error to be 0 "
+            "before it, 1 after it, and the marker unchanged, which is what "
+            "shows the write was dropped rather than folded onto slot 0",
+            "the depth at which a comparator list stops being cheaper than a "
+            "bit per resource is not established here. It is chosen for a wafer "
+            "plan of 9,300 placement resources; at the 16-resource instance the "
+            "physical view routes, the list is the larger of the two",
         ],
     }
+
+
+def verify_sources(output: Path) -> int:
+    """Re-hash everything a recorded campaign says it was evidence for.
+
+    Every campaign tool in this repository WRITES source_sha256 and nothing has
+    ever READ one back, so an artifact could be -- and this one was -- committed
+    alongside sources it was not produced from.  At commit 518260f the recorded
+    campaign disagreed with eleven of the thirty-nine files it named, including
+    the RTL under test and both checkers, and the only visible symptom was a
+    check count eight lower than the committed testbench produces.  Nothing
+    refused it.  This is what refuses it.
+    """
+    if not output.exists():
+        print(f"no campaign artifact at {output}", file=sys.stderr)
+        return 2
+    artifact = json.loads(output.read_text(encoding="utf-8"))
+    recorded = artifact.get("source_sha256")
+    if not recorded:
+        print(f"{output} records no source_sha256 to verify", file=sys.stderr)
+        return 2
+    missing: list[str] = []
+    moved: list[str] = []
+    for rel, digest in sorted(recorded.items()):
+        path = ROOT / rel
+        if not path.is_file():
+            missing.append(rel)
+        elif sha256_file(path) != digest:
+            moved.append(rel)
+    if missing or moved:
+        print(
+            f"{output} is not evidence about the tree it sits in:", file=sys.stderr
+        )
+        for rel in missing:
+            print(f"  gone   {rel}", file=sys.stderr)
+        for rel in moved:
+            print(f"  moved  {rel}", file=sys.stderr)
+        print(
+            "re-run the campaign; do not edit the recorded hashes.", file=sys.stderr
+        )
+        return 1
+    print(f"{output}: all {len(recorded)} recorded sources still hash as recorded")
+    return 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -502,7 +729,16 @@ def main(argv: list[str] | None = None) -> int:
         help="vector-set directory name under testdata/compiler/rom_service",
     )
     parser.add_argument("--force", action="store_true")
+    parser.add_argument(
+        "--verify",
+        action="store_true",
+        help="run nothing: re-hash the sources the recorded artifact names and "
+        "fail if any has moved since it was produced",
+    )
     args = parser.parse_args(argv)
+
+    if args.verify:
+        return verify_sources(args.output)
 
     sets = args.sets or sorted(
         path.name for path in VECTOR_ROOT.iterdir() if path.is_dir()

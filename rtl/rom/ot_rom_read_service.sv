@@ -31,8 +31,9 @@
 //                  access at all: no wordline, no sense, no bytes, and the
 //                  completion says MASKED rather than returning zeros a
 //                  consumer could mistake for weights.
-//   resource mask  one bit per placement resource.  A quarantined resource
-//                  fails the read closed; it does not silently serve.
+//   quarantine     a short list of withdrawn placement resources, compared
+//                  against the shard's resource.  A quarantined resource fails
+//                  the read closed; it does not silently serve.
 //
 // WHAT THIS BLOCK IS NOT
 // ----------------------
@@ -73,14 +74,15 @@ module ot_rom_read_service #(
     parameter integer OBJECTS         = 512,
     parameter integer SHARDS          = 16384,
     parameter integer REGIONS         = 256,
-    parameter integer RESOURCES       = 16384,
     parameter integer REPAIR_ENTRIES  = 64,
+    parameter integer QUARANTINE_ENTRIES = 32,
     parameter integer TAG_W           = 16,
     parameter integer OBJ_IDX_W       = (OBJECTS        <= 2) ? 1 : $clog2(OBJECTS),
     parameter integer SHD_IDX_W       = (SHARDS         <= 2) ? 1 : $clog2(SHARDS),
     parameter integer REG_IDX_W       = (REGIONS        <= 2) ? 1 : $clog2(REGIONS),
-    parameter integer RES_IDX_W       = (RESOURCES      <= 2) ? 1 : $clog2(RESOURCES),
-    parameter integer REP_IDX_W       = (REPAIR_ENTRIES <= 2) ? 1 : $clog2(REPAIR_ENTRIES)
+    parameter integer REP_IDX_W       = (REPAIR_ENTRIES <= 2) ? 1 : $clog2(REPAIR_ENTRIES),
+    parameter integer QUA_IDX_W       = (QUARANTINE_ENTRIES <= 2) ? 1
+                                        : $clog2(QUARANTINE_ENTRIES)
 ) (
     input  wire                      clk,
     input  wire                      rst_n,
@@ -91,6 +93,14 @@ module ot_rom_read_service #(
     input  wire [31:0]               cfg_index,
     input  wire [319:0]              cfg_data,
     output wire                      cfg_ready,
+    // Sticky until reset.  A configuration write that named a slot outside the
+    // table it selects, or a selector this block does not implement, is
+    // DROPPED and recorded here.  It is not folded onto a legal slot: a
+    // quarantine entry silently folded onto slot 0 forgets a withdrawn
+    // placement resource, and the read that follows serves it.  That is
+    // fail-open, and it is the failure signature this whole campaign exists to
+    // catch, so the block refuses instead of the loader being trusted to count.
+    output reg                       cfg_error,
 
     // -- request --------------------------------------------------------
     input  wire                      req_valid,
@@ -154,40 +164,101 @@ module ot_rom_read_service #(
     //                [191:128] region_offset  [255:192] bytes
     //                [319:256] resource_address
     // repair entry   [ 31:  0] resource_index [ 63: 32] logical_index
-    //                [ 95: 64] spare_index    [ 96] kind (0 row, 1 column)
-    //                [ 97] valid
+    //                [ 95: 64] spare_index, with the kind (0 row, 1 column)
+    //                and valid bits held in their own packed vectors
     // -----------------------------------------------------------------
+    // The two health masks and the activated-spare valid/kind bits are packed
+    // vectors rather than arrays of one-bit elements, so reset clears them in
+    // one assignment.  An unpacked array cleared in a reset for-loop is not
+    // synthesisable in the older public front end this repository also lints
+    // with, and a block that only elaborates under the newer one is not a
+    // portable implementation.
     reg [255:0] object_table [0:OBJECTS-1];
     reg [319:0] shard_table  [0:SHARDS-1];
-    reg [127:0] repair_table [0:REPAIR_ENTRIES-1];
-    reg         region_masked   [0:REGIONS-1];
-    reg         resource_broken [0:RESOURCES-1];
+    reg [95:0]  repair_table [0:REPAIR_ENTRIES-1];
+    reg [REPAIR_ENTRIES-1:0] repair_valid;
+    reg [REPAIR_ENTRIES-1:0] repair_column;
+    reg [REGIONS-1:0]        region_masked;
+    // Quarantine is a short LIST, not a bit per placement resource.  A wafer
+    // plan has 9,300 of them and a flip-flop each would be nine thousand flops
+    // in a read path to record a handful of withdrawn tiles; a fuse-programmed
+    // comparator list is what a macro periphery uses and what a repair map
+    // actually contains.  A list that overflows is refused by the loader rather
+    // than truncated, which is why the bench publishes the depth it needs.
+    reg [31:0]  quarantine_table [0:QUARANTINE_ENTRIES-1];
+    reg [QUARANTINE_ENTRIES-1:0] quarantine_valid;
     reg [31:0]  object_count;
 
     assign cfg_ready = 1'b1;
 
-    integer ci;
+    // The table depths at the width cfg_index is compared at.  Written once
+    // each, because a bound written twice is a bound that can differ once.
+    localparam [31:0] N_OBJECTS    = OBJECTS;
+    localparam [31:0] N_SHARDS     = SHARDS;
+    localparam [31:0] N_REGIONS    = REGIONS;
+    localparam [31:0] N_REPAIR     = REPAIR_ENTRIES;
+    localparam [31:0] N_QUARANTINE = QUARANTINE_ENTRIES;
+
+    // Every table write below indexes with cfg_index truncated to the table's
+    // address width.  Truncation is silent: an out-of-range slot lands on a
+    // legal wrong entry and nothing says so.  This decides, at full width,
+    // whether the slot exists at all.
+    // An object entry also CARRIES two indices this block truncates: the
+    // region_id it selects the mask bit with, and the shard range its search
+    // walks.  Those are payload, not slot, and an out-of-range one is the same
+    // silent fold by a different door -- a masked region read as an unmasked
+    // one, or a shard search that walks entries belonging to another region.
+    wire [32:0] obj_shard_end = {1'b0, cfg_data[95:64]} + {1'b0, cfg_data[127:96]};
+    wire        obj_payload_bad = (cfg_data[63:32] >= N_REGIONS)
+                                  || (obj_shard_end > {1'b0, N_SHARDS});
+
+    reg cfg_slot_bad;
+    always @* begin
+        case (cfg_sel)
+            ot_rom_pkg::ROM_CFG_OBJECT:    cfg_slot_bad = (cfg_index >= N_OBJECTS)
+                                                          || obj_payload_bad;
+            ot_rom_pkg::ROM_CFG_SHARD:     cfg_slot_bad = (cfg_index >= N_SHARDS);
+            ot_rom_pkg::ROM_CFG_REPAIR:    cfg_slot_bad = (cfg_index >= N_REPAIR);
+            ot_rom_pkg::ROM_CFG_REGION_EN: cfg_slot_bad = (cfg_index >= N_REGIONS);
+            ot_rom_pkg::ROM_CFG_RESOURCE:  cfg_slot_bad = (cfg_index >= N_QUARANTINE);
+            // The populated object count is the binary search's upper bound.
+            // A count past the table depth walks entries that were never
+            // written, so it is a bound, not a slot: equal is legal.
+            ot_rom_pkg::ROM_CFG_OBJECT_N:  cfg_slot_bad = (cfg_index > N_OBJECTS);
+            ot_rom_pkg::ROM_CFG_CLEAR:     cfg_slot_bad = 1'b0;
+            default:                       cfg_slot_bad = 1'b1;
+        endcase
+    end
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            object_count <= 32'd0;
-            for (ci = 0; ci < REPAIR_ENTRIES; ci = ci + 1)
-                repair_table[ci] <= 128'd0;
-            for (ci = 0; ci < REGIONS; ci = ci + 1)
-                region_masked[ci] <= 1'b0;
-            for (ci = 0; ci < RESOURCES; ci = ci + 1)
-                resource_broken[ci] <= 1'b0;
+            object_count    <= 32'd0;
+            repair_valid    <= '0;
+            repair_column   <= '0;
+            region_masked   <= '0;
+            quarantine_valid <= '0;
+            cfg_error       <= 1'b0;
+        end else if (cfg_valid && cfg_slot_bad) begin
+            cfg_error <= 1'b1;
         end else if (cfg_valid) begin
             case (cfg_sel)
                 ot_rom_pkg::ROM_CFG_OBJECT:
                     object_table[cfg_index[OBJ_IDX_W-1:0]] <= cfg_data[255:0];
                 ot_rom_pkg::ROM_CFG_SHARD:
                     shard_table[cfg_index[SHD_IDX_W-1:0]] <= cfg_data;
-                ot_rom_pkg::ROM_CFG_REPAIR:
-                    repair_table[cfg_index[REP_IDX_W-1:0]] <= cfg_data[127:0];
+                ot_rom_pkg::ROM_CFG_REPAIR: begin
+                    repair_table[cfg_index[REP_IDX_W-1:0]]  <= cfg_data[95:0];
+                    repair_column[cfg_index[REP_IDX_W-1:0]] <= cfg_data[96];
+                    repair_valid[cfg_index[REP_IDX_W-1:0]]  <= cfg_data[97];
+                end
                 ot_rom_pkg::ROM_CFG_REGION_EN:
                     region_masked[cfg_index[REG_IDX_W-1:0]] <= cfg_data[0];
-                ot_rom_pkg::ROM_CFG_RESOURCE:
-                    resource_broken[cfg_index[RES_IDX_W-1:0]] <= cfg_data[0];
+                ot_rom_pkg::ROM_CFG_RESOURCE: begin
+                    // cfg_index selects a list slot; the payload names the
+                    // placement resource that slot withdraws.
+                    quarantine_table[cfg_index[QUA_IDX_W-1:0]] <= cfg_data[31:0];
+                    quarantine_valid[cfg_index[QUA_IDX_W-1:0]] <= cfg_data[32];
+                end
                 ot_rom_pkg::ROM_CFG_OBJECT_N:
                     object_count <= cfg_index;
                 default: ;
@@ -199,21 +270,29 @@ module ot_rom_read_service #(
     reg [OBJ_IDX_W-1:0] obj_index;
     reg [SHD_IDX_W-1:0] shd_index;
     reg [REG_IDX_W-1:0] reg_index;
-    reg [RES_IDX_W-1:0] res_index;
 
     // Registered word selects, which is what a table this deep is in a real
     // design and what both simulators elaborate cheaply.  The read costs one
-    // cycle, so every lookup below spends a state waiting for it rather than
-    // assuming a combinational table.
+    // cycle, so every table lookup below spends a state waiting for it rather
+    // than assuming a combinational table.
     reg [255:0] obj_rd;
     reg [319:0] shd_rd;
     reg         mask_rd;
-    reg         broken_rd;
     always @(posedge clk) begin
-        obj_rd    <= object_table[obj_index];
-        shd_rd    <= shard_table[shd_index];
-        mask_rd   <= region_masked[reg_index];
-        broken_rd <= resource_broken[res_index];
+        obj_rd  <= object_table[obj_index];
+        shd_rd  <= shard_table[shd_index];
+        mask_rd <= region_masked[reg_index];
+    end
+
+    // The quarantine list is a comparator sweep, not a table read: it answers
+    // in the same cycle the shard's resource is known.
+    reg     quarantined;
+    integer qi;
+    always @* begin
+        quarantined = 1'b0;
+        for (qi = 0; qi < QUARANTINE_ENTRIES; qi = qi + 1)
+            if (quarantine_valid[qi] && (quarantine_table[qi] == s_resource))
+                quarantined = 1'b1;
     end
 
     // -----------------------------------------------------------------
@@ -245,6 +324,25 @@ module ot_rom_read_service #(
     reg [63:0] r_obj_region_offset;
     reg [31:0] r_shard_first;
     reg [31:0] r_shard_count;
+
+    // The end of the requested extent, at 65 bits.
+    //
+    // req_byte_offset is a 64-bit field the REQUESTER supplies.  The range
+    // check used to be (r_offset + r_length) > r_size at 64 bits, and a 64-bit
+    // sum wraps: an offset within 4 GiB of 2**64 makes the sum small, the
+    // in-range test passes, and region_byte then wraps too and lands in the
+    // middle of the object.  The read is served, the completion says OK, and
+    // the bytes are weights the request did not ask for.  Legal values, no
+    // trap, nothing refused, wrong answer.
+    //
+    // The Python reference this campaign compares against computes the same
+    // sum in arbitrary precision and never wrapped, so the two sides were
+    // never equivalent -- they simply never disagreed, because the widest
+    // offset any published vector set carries is 21 GiB.  This makes the RTL
+    // side exact rather than making the reference wrap.  No vector set reaches
+    // the wrap, so nothing here exercises this guard, and §9 of
+    // docs/ROM_SERVICE_RTL.md says so rather than letting it read as tested.
+    wire [64:0] r_extent_end = {1'b0, r_offset} + {1'b0, r_length};
 
     reg [31:0] lo;
     reg [31:0] hi;
@@ -312,20 +410,27 @@ module ot_rom_read_service #(
     localparam [63:0] SUBWORDS_64     = ot_rom_pkg::ROM_SUBWORDS_PER_ROW_64;
     localparam [7:0]  SENSE_BYTES_8   = ot_rom_pkg::ROM_SENSE_BYTES_8;
 
-    // The comparison is deliberately across two widths -- that is the point of
-    // the check -- so the width lint is turned off for these four lines only.
-    /* verilator lint_off WIDTHEXPAND */
+    // The package writes each of these three numbers twice, once as an integer
+    // and once at the width the address arithmetic needs.  A constant written
+    // twice is a constant that can differ once, so both halves are compared
+    // here -- at equal widths, so no lint pragma is needed and no tool is asked
+    // to ignore anything.
     initial begin
-        if (ROW_BYTES_64 != ot_rom_pkg::ROM_ROW_BYTES)
+        if (ROW_BYTES_64[31:0] != ot_rom_pkg::ROM_ROW_BYTES
+            || ROW_BYTES_64[63:32] != 32'd0)
             $error("ot_rom_pkg row-byte constants disagree");
-        if (SENSE_BYTES_64 != ot_rom_pkg::ROM_SENSE_BYTES)
+        if (SENSE_BYTES_64[31:0] != ot_rom_pkg::ROM_SENSE_BYTES
+            || SENSE_BYTES_64[63:32] != 32'd0)
             $error("ot_rom_pkg sense-byte constants disagree");
-        if (SUBWORDS_64 != ot_rom_pkg::ROM_SUBWORDS_PER_ROW)
+        if (SUBWORDS_64[31:0] != ot_rom_pkg::ROM_SUBWORDS_PER_ROW
+            || SUBWORDS_64[63:32] != 32'd0)
             $error("ot_rom_pkg subword constants disagree");
-        if (SENSE_BYTES_8 != ot_rom_pkg::ROM_SENSE_BYTES)
+        if ({24'd0, SENSE_BYTES_8} != ot_rom_pkg::ROM_SENSE_BYTES)
             $error("ot_rom_pkg sense-byte byte constant disagrees");
+        if (ot_rom_pkg::ROM_SENSE_BYTES * ot_rom_pkg::ROM_SUBWORDS_PER_ROW
+            != ot_rom_pkg::ROM_ROW_BYTES)
+            $error("the sense granule does not tile the ROM row");
     end
-    /* verilator lint_on WIDTHEXPAND */
 
     wire [63:0] g_offset_in_shard  = region_byte - s_region_offset;
     wire [63:0] g_resource_address = s_resource_address + g_offset_in_shard;
@@ -359,9 +464,8 @@ module ot_rom_read_service #(
         rep_row_spare = 32'd0;
         rep_col_hit   = 1'b0;
         for (ri = 0; ri < REPAIR_ENTRIES; ri = ri + 1) begin
-            if (repair_table[ri][97] &&
-                (repair_table[ri][31:0] == s_resource)) begin
-                if (repair_table[ri][96]) begin
+            if (repair_valid[ri] && (repair_table[ri][31:0] == s_resource)) begin
+                if (repair_column[ri]) begin
                     rep_col_hit = 1'b1;
                 end else if (repair_table[ri][63:32] == c_logical_row) begin
                     rep_row_hit   = 1'b1;
@@ -424,13 +528,19 @@ module ot_rom_read_service #(
     end
 
     reg [63:0] next_data_digest;
-    // Fields the tables carry that this block does not consult: the shard's
-    // node/reticle/tile/bank coordinate (it addresses by the flat resource
-    // index the plan assigns) and the high halves of the row and granule
-    // indices, which a legal address cannot reach.  Named so the reader knows
-    // they were considered rather than overlooked.
+    // Fields the tables carry that this block does not fully consult: the
+    // shard's node/reticle/tile/bank coordinate (it addresses by the flat
+    // resource index the plan assigns), the high halves of the row and granule
+    // indices, which a legal address cannot reach, and the object entry's
+    // 32-bit region_id, of which only the low REG_IDX_W bits are read -- how
+    // many that is depends on the REGIONS parameter, so the whole field is
+    // named here rather than a slice that would be right for one elaboration
+    // and wrong for another.  An object entry whose region_id does not fit
+    // REGIONS is refused at configuration by cfg_error, so what reaches this
+    // select is never a truncation.
+    // Named so the reader knows they were considered rather than overlooked.
     wire _unused_ok = &{1'b0,
-                        obj_rd[63:41],
+                        obj_rd[63:32],
                         shd_rd[95:0],
                         g_row64[63:32],
                         g_subword64[63:8],
@@ -482,7 +592,6 @@ module ot_rom_read_service #(
             obj_index          <= {OBJ_IDX_W{1'b0}};
             shd_index          <= {SHD_IDX_W{1'b0}};
             reg_index          <= {REG_IDX_W{1'b0}};
-            res_index          <= {RES_IDX_W{1'b0}};
             r_object_id        <= ot_rom_pkg::ROM_NO_ID;
             r_offset           <= 64'd0;
             r_length           <= 64'd0;
@@ -597,7 +706,7 @@ module ot_rom_read_service #(
                     r_status <= ot_rom_pkg::ROM_STATUS_FAULT;
                     r_fault  <= ot_rom_pkg::ROM_FAULT_ZERO_LENGTH;
                     state    <= S_DONE;
-                end else if ((r_offset + r_length) > r_size) begin
+                end else if (r_extent_end > {1'b0, r_size}) begin
                     r_status <= ot_rom_pkg::ROM_STATUS_FAULT;
                     r_fault  <= ot_rom_pkg::ROM_FAULT_OUT_OF_RANGE;
                     state    <= S_DONE;
@@ -632,7 +741,6 @@ module ot_rom_read_service #(
                         r_fault  <= ot_rom_pkg::ROM_FAULT_SHARD_GAP;
                         state    <= S_DONE;
                     end else begin
-                        res_index <= s_resource[RES_IDX_W-1:0];
                         state     <= S_RES_RD;
                     end
                 end else begin
@@ -657,7 +765,7 @@ module ot_rom_read_service #(
             end
             S_RES_RD: state <= S_RES_WAIT;
             S_RES_WAIT: begin
-                if (broken_rd) begin
+                if (quarantined) begin
                     r_status <= ot_rom_pkg::ROM_STATUS_FAULT;
                     r_fault  <= ot_rom_pkg::ROM_FAULT_QUARANTINED;
                     state    <= S_DONE;

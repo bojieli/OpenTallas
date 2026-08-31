@@ -225,7 +225,7 @@ def main() -> int:
     parser.add_argument("--objects", type=int, default=16)
     parser.add_argument("--shards", type=int, default=16)
     parser.add_argument("--regions", type=int, default=16)
-    parser.add_argument("--resources", type=int, default=16)
+    parser.add_argument("--quarantine-entries", type=int, default=8)
     parser.add_argument("--repair-entries", type=int, default=8)
     parser.add_argument("--keep", default="")
     args = parser.parse_args()
@@ -251,7 +251,7 @@ def main() -> int:
         "OBJECTS": args.objects,
         "SHARDS": args.shards,
         "REGIONS": args.regions,
-        "RESOURCES": args.resources,
+        "QUARANTINE_ENTRIES": args.quarantine_entries,
         "REPAIR_ENTRIES": args.repair_entries,
     }
     chparam = " ".join(f"-chparam {name} {value}" for name, value in instance.items())
@@ -349,10 +349,12 @@ def main() -> int:
             "routed_instance": instance,
             "instance_note": (
                 "sized for the shipped Qwen single-chip ROM plan (16 ROM "
-                "objects, 14 shards, 14 regions, 14 banks). The DeepSeek wafer "
-                "plan needs 312 objects, 9,527 shards, 228 regions and 9,300 "
-                "resources; an instance that held those tables in flip-flops is "
-                "not what a product would build and is not routed here"
+                "objects, 14 shards, 14 regions). The DeepSeek wafer plan needs "
+                "312 objects, 9,527 shards and 228 regions; an instance that "
+                "held those tables in flip-flops is not what a product would "
+                "build and is not routed here. Quarantine is a list, so its "
+                "depth is the number of withdrawn resources, not the number "
+                "that exist"
             ),
             "yosys_statistics": yosys_stat,
         },

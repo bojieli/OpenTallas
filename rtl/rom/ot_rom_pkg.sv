@@ -77,8 +77,14 @@ package ot_rom_pkg;
     localparam [3:0] ROM_CFG_OBJECT     = 4'd0;
     localparam [3:0] ROM_CFG_SHARD      = 4'd1;
     localparam [3:0] ROM_CFG_REPAIR     = 4'd2;
-    localparam [3:0] ROM_CFG_REGION_EN  = 4'd3;  // data[0]=1 disables the region
-    localparam [3:0] ROM_CFG_RESOURCE   = 4'd4;  // data[0]=1 quarantines it
+    localparam [3:0] ROM_CFG_REGION_EN  = 4'd3;  // index = region, data[0]=1 masks it
+    // Quarantine is a LIST, not a bit per placement resource: index selects a
+    // list slot, data[31:0] names the placement resource that slot withdraws
+    // and data[32] is the slot's valid bit.  This comment used to read
+    // "data[0]=1 quarantines it", which was true when the table was a bitmap
+    // indexed by resource; a comment that outlives its field is how a loader
+    // ends up writing the wrong word into the right slot.
+    localparam [3:0] ROM_CFG_RESOURCE   = 4'd4;
     localparam [3:0] ROM_CFG_OBJECT_N   = 4'd5;  // index = populated object count
     localparam [3:0] ROM_CFG_CLEAR      = 4'd6;  // clear counters and row buffer
 

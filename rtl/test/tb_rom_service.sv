@@ -20,7 +20,7 @@ module tb_rom_service;
     localparam integer OBJECTS        = 512;
     localparam integer SHARDS         = 16384;
     localparam integer REGIONS        = 512;
-    localparam integer RESOURCES      = 16384;
+    localparam integer QUARANTINE_ENTRIES = 32;
     localparam integer REPAIR_ENTRIES = 64;
     localparam integer REQUESTS       = 32768;
     localparam integer WINDOW_ENTRIES = 16384;
@@ -72,14 +72,16 @@ module tb_rom_service;
     wire [31:0]  meta_window_count;
     wire [31:0]  meta_marker_lo;
     wire [31:0]  meta_marker_hi;
-    wire [31:0]  cap_objects, cap_shards, cap_regions, cap_resources;
+    wire [31:0]  cap_objects, cap_shards, cap_regions, cap_quarantine_entries;
     wire [31:0]  cap_repair_entries, cap_requests, cap_window_entries, cap_masks;
-    wire [31:0]  req_objects, req_shards, req_regions, req_resources;
+    wire [31:0]  req_objects, req_shards, req_regions, req_quarantine_entries;
     wire [31:0]  req_repair_entries, req_requests, req_window_entries, req_masks;
+    wire         cfg_error;
+    wire         cfg_error_plan;
 
     rom_service_top #(
         .OBJECTS(OBJECTS), .SHARDS(SHARDS), .REGIONS(REGIONS),
-        .RESOURCES(RESOURCES), .REPAIR_ENTRIES(REPAIR_ENTRIES),
+        .QUARANTINE_ENTRIES(QUARANTINE_ENTRIES), .REPAIR_ENTRIES(REPAIR_ENTRIES),
         .REQUESTS(REQUESTS), .WINDOW_ENTRIES(WINDOW_ENTRIES), .MASKS(MASKS)
     ) dut (
         .clk(clk), .rst_n(rst_n),
@@ -112,13 +114,14 @@ module tb_rom_service;
         .meta_window_count(meta_window_count),
         .meta_marker_lo(meta_marker_lo), .meta_marker_hi(meta_marker_hi),
         .cap_objects(cap_objects), .cap_shards(cap_shards),
-        .cap_regions(cap_regions), .cap_resources(cap_resources),
+        .cap_regions(cap_regions), .cap_quarantine_entries(cap_quarantine_entries),
         .cap_repair_entries(cap_repair_entries), .cap_requests(cap_requests),
         .cap_window_entries(cap_window_entries), .cap_masks(cap_masks),
         .req_objects(req_objects), .req_shards(req_shards),
-        .req_regions(req_regions), .req_resources(req_resources),
+        .req_regions(req_regions), .req_quarantine_entries(req_quarantine_entries),
         .req_repair_entries(req_repair_entries), .req_requests(req_requests),
-        .req_window_entries(req_window_entries), .req_masks(req_masks)
+        .req_window_entries(req_window_entries), .req_masks(req_masks),
+        .cfg_error(cfg_error), .cfg_error_plan(cfg_error_plan)
     );
 
     reg [31:0] expect_mem [0:REQUESTS*EXPECT_STRIDE-1];
@@ -220,11 +223,22 @@ module tb_rom_service;
         capacity_ok("objects", req_objects, cap_objects);
         capacity_ok("shards", req_shards, cap_shards);
         capacity_ok("regions", req_regions, cap_regions);
-        capacity_ok("resources", req_resources, cap_resources);
+        capacity_ok("quarantine entries", req_quarantine_entries, cap_quarantine_entries);
         capacity_ok("repair_entries", req_repair_entries, cap_repair_entries);
         capacity_ok("requests", req_requests, cap_requests);
         capacity_ok("window_entries", req_window_entries, cap_window_entries);
         capacity_ok("masks", req_masks, cap_masks);
+        // The capacities above are this bench's own arithmetic on the vector
+        // set.  These two are the service's own verdict on the writes it was
+        // given.  Every slot the compiled plan named exists, so the sticky bit
+        // is 0 after the plan is loaded; the bench then makes it fire, with one
+        // write naming a quarantine slot one past the end of the list that asks
+        // to withdraw placement resource 0.  The marker below is reproduced
+        // anyway, which is what proves the service dropped that write instead
+        // of folding it onto slot 0 -- a fold would withdraw a resource this
+        // set reads from, and no set's marker survives that.
+        expect_eq("cfg_error_after_plan", -1, {63'd0, cfg_error_plan}, 64'd0);
+        expect_eq("cfg_error_after_probe", -1, {63'd0, cfg_error}, 64'd1);
 
         for (i = 0; i < meta_request_count; i = i + 1) begin
             exp_beats = word64(i*EXPECT_STRIDE + 2);

@@ -3,78 +3,78 @@
   "canonical_timestamp_policy": "no timestamp in canonical artifact",
   "cases": [
     {
-      "checks": 108347,
-      "log_sha256": "995db56c48e3717faadab9fc6534835dce1d44f0eed6ba321bc705af29c78dc9",
+      "checks": 108357,
+      "log_sha256": "2b20325b6c75c49ec77684179f059908b7f98f1815affc636901aa023207d02f",
       "marker_present": true,
       "name": "deepseek_wafer.iverilog",
       "required_marker": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5",
-      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-epyija71/rom_service.vvp",
-      "run_log": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5\nchecks=108347\n",
+      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-tj7se4gr/rom_service.vvp",
+      "run_log": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5\nchecks=108357\n",
       "run_returncode": 0,
       "simulator": "iverilog",
       "status": "pass",
       "vector_set": "deepseek_wafer"
     },
     {
-      "checks": 260009,
-      "log_sha256": "4ad7238bb1f0d3797b6bea56b663a20443ef0e67ac523d8e970179698a11c070",
+      "checks": 260019,
+      "log_sha256": "4946ca10d77af03f1280309f706253860b23eb5ca4b2a78e921def1f8c5a5164",
       "marker_present": true,
       "name": "deepseek_wafer.verilator",
       "required_marker": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5",
-      "run_command": "/tmp/opentallas-rom-rtl-epyija71/obj_rom/Vrom_service_top",
-      "run_log": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5\nchecks=260009\n",
+      "run_command": "/tmp/opentallas-rom-rtl-tj7se4gr/obj_rom/Vrom_service_top",
+      "run_log": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5\nchecks=260019\n",
       "run_returncode": 0,
       "simulator": "verilator",
       "status": "pass",
       "vector_set": "deepseek_wafer"
     },
     {
-      "checks": 3507,
-      "log_sha256": "972070e65f37ad25708da05417b7cda91a6a9c2c0efc0ea2ef76417033462526",
+      "checks": 3517,
+      "log_sha256": "57b066097162be0b12998250323d466c99c7ec2642acbff5b48c5bd574abed63",
       "marker_present": true,
       "name": "qwen_chip.iverilog",
       "required_marker": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914",
-      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-epyija71/rom_service.vvp",
-      "run_log": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914\nchecks=3507\n",
+      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-tj7se4gr/rom_service.vvp",
+      "run_log": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914\nchecks=3517\n",
       "run_returncode": 0,
       "simulator": "iverilog",
       "status": "pass",
       "vector_set": "qwen_chip"
     },
     {
-      "checks": 8393,
-      "log_sha256": "dddbc672a5e21da65b5d75775fc86fb7c084a2f6f5cdb7a191c43dadc9041c61",
+      "checks": 8403,
+      "log_sha256": "26921a041e14aeaa191f25edab0081d80f6c5f7ba4b31fb09bc377365a3ec484",
       "marker_present": true,
       "name": "qwen_chip.verilator",
       "required_marker": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914",
-      "run_command": "/tmp/opentallas-rom-rtl-epyija71/obj_rom/Vrom_service_top",
-      "run_log": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914\nchecks=8393\n",
+      "run_command": "/tmp/opentallas-rom-rtl-tj7se4gr/obj_rom/Vrom_service_top",
+      "run_log": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914\nchecks=8403\n",
       "run_returncode": 0,
       "simulator": "verilator",
       "status": "pass",
       "vector_set": "qwen_chip"
     },
     {
-      "checks": 3647,
-      "log_sha256": "c36615ea165927f66e5b29f7a841f9513e4efc1bedd3fa3647f613ac3c1362c2",
+      "checks": 3657,
+      "log_sha256": "33d79e7952bda11211912177cbe12b770007da3b9bcdda6f15f6149f54b49b52",
       "marker_present": true,
       "name": "qwen_chip_degraded.iverilog",
       "required_marker": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed",
-      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-epyija71/rom_service.vvp",
-      "run_log": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed\nchecks=3647\n",
+      "run_command": "/usr/bin/vvp /tmp/opentallas-rom-rtl-tj7se4gr/rom_service.vvp",
+      "run_log": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed\nchecks=3657\n",
       "run_returncode": 0,
       "simulator": "iverilog",
       "status": "pass",
       "vector_set": "qwen_chip_degraded"
     },
     {
-      "checks": 8729,
-      "log_sha256": "d13e5d754601b926b578bf53ca5c527eb724e8fb989868eab2bb5fc5a6ecc509",
+      "checks": 8739,
+      "log_sha256": "692144bc3a073d91603bc427e08dad3b9f7a117ca04d6e74bbf2c3076fed9925",
       "marker_present": true,
       "name": "qwen_chip_degraded.verilator",
       "required_marker": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed",
-      "run_command": "/tmp/opentallas-rom-rtl-epyija71/obj_rom/Vrom_service_top",
-      "run_log": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed\nchecks=8729\n",
+      "run_command": "/tmp/opentallas-rom-rtl-tj7se4gr/obj_rom/Vrom_service_top",
+      "run_log": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed\nchecks=8739\n",
       "run_returncode": 0,
       "simulator": "verilator",
       "status": "pass",
@@ -87,11 +87,16 @@
     "column_redundancy_refused_rather_than_ignored": true,
     "descriptor_or_program_admission_in_scope": false,
     "dual_simulator_agreement": true,
+    "every_published_origin_and_class_margin_reconciled": true,
     "executed_request_stream_for_the_wafer_product": false,
     "operand_data_checked_against_checkpoint_bytes_on_a_window_only": true,
+    "out_of_range_configuration_slot_refusal_exercised": true,
+    "out_of_range_configuration_slot_refused": true,
     "physical_implementation_claimed": false,
     "quarantined_resource_fails_closed": true,
     "region_mask_performs_no_array_access": true,
+    "request_extent_bounds_checked_without_truncation": true,
+    "request_extent_bounds_refusal_exercised": false,
     "rom_cell_area_established": false,
     "rom_macro_instantiated": false,
     "rom_read_energy_established": false,
@@ -114,14 +119,14 @@
     },
     {
       "command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --cc --exe --build -Wall -Wno-DECLFILENAME --top-module rom_service_top --Mdir obj_rom <ROOT>/rtl/rom/ot_rom_pkg.sv <ROOT>/rtl/rom/ot_rom_read_service.sv <ROOT>/rtl/test/rom_service_top.sv <ROOT>/rtl/test/rom_service_harness.cpp -CFLAGS -std=c++17",
-      "log": "make: Entering directory '<BUILD>/obj_rom'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o rom_service_harness.o <ROOT>/rtl/test/rom_service_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vrom_service_top.cpp Vrom_service_top___024root__0.cpp Vrom_service_top__ConstPool__0__Slow.cpp Vrom_service_top___024root__Slow.cpp Vrom_service_top___024root__0__Slow.cpp Vrom_service_top__Syms__Slow.cpp > Vrom_service_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o Vrom_service_top__ALL.o Vrom_service_top__ALL.cpp\ng++    rom_service_harness.o verilated.o verilated_threads.o Vrom_service_top__ALL.a    -pthread -lpthread -latomic   -o Vrom_service_top\nrm Vrom_service_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_rom'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.147 MB sources in 4 modules, into 0.518 MB in 6 C++ files needing 0.001 MB\n- Verilator: Walltime 9.854 s (elab=0.008, cvt=0.100, bld=9.713); cpu 0.097 s on 1 threads; allocated 42.188 MB\n",
+      "log": "make: Entering directory '<BUILD>/obj_rom'\ng++  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -Os  -c -o rom_service_harness.o <ROOT>/rtl/test/rom_service_harness.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o verilated_threads.o <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/verilated_threads.cpp\npython3 <HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/bin/verilator_includer -DVL_INCLUDE_OPT=include Vrom_service_top.cpp Vrom_service_top___024root__0.cpp Vrom_service_top__ConstPool__0__Slow.cpp Vrom_service_top___024root__Slow.cpp Vrom_service_top___024root__0__Slow.cpp Vrom_service_top__Syms__Slow.cpp > Vrom_service_top__ALL.cpp\ng++ -Os  -I.  -MMD -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include -I<HOME>/.local/opentallas-tools/verilator-5.050/share/verilator/include/vltstd -DVERILATOR=1 -DVM_COVERAGE=0 -DVM_SC=0 -DVM_TIMING=0 -DVM_TRACE=0 -DVM_TRACE_FST=0 -DVM_TRACE_VCD=0 -DVM_TRACE_SAIF=0 -DVM_VPI=0 -faligned-new -fcf-protection=none -Wno-bool-operation -Wno-int-in-bool-context -Wno-shadow -Wno-sign-compare -Wno-subobject-linkage -Wno-tautological-compare -Wno-uninitialized -Wno-unused-but-set-parameter -Wno-unused-but-set-variable -Wno-unused-parameter -Wno-unused-variable    -std=c++17   -c -o Vrom_service_top__ALL.o Vrom_service_top__ALL.cpp\ng++    rom_service_harness.o verilated.o verilated_threads.o Vrom_service_top__ALL.a    -pthread -lpthread -latomic   -o Vrom_service_top\nrm Vrom_service_top__ALL.verilator_deplist.tmp\nmake: Leaving directory '<BUILD>/obj_rom'\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.155 MB sources in 4 modules, into 0.554 MB in 6 C++ files needing 0.002 MB\n- Verilator: Walltime 10.465 s (elab=0.011, cvt=0.110, bld=10.315); cpu 0.074 s on 1 threads; allocated 41.191 MB\n",
       "name": "verilator.compile",
       "returncode": 0
     },
     {
       "command": "<HOME>/.local/opentallas-tools/verilator-5.050/bin/verilator --lint-only -Wall -Wno-fatal -Wno-DECLFILENAME -Wno-UNUSEDPARAM --top-module ot_rom_bank_array <ROOT>/rtl/rom/ot_rom_pkg.sv <ROOT>/rtl/rom/ot_rom_bank_array.sv",
       "evidence_present": true,
-      "log": "%Warning-UNDRIVEN: <ROOT>/rtl/rom/ot_rom_bank_array.sv:55:42: Signal is not driven: 'rom_cell'\n                                                                             : ... note: In instance 'ot_rom_bank_array'\n   55 |     reg [ot_rom_pkg::ROM_SENSE_BITS-1:0] rom_cell [0:CELLS-1];\n      |                                          ^~~~~~~~\n                   ... For warning description see https://verilator.org/warn/UNDRIVEN?v=5.050\n                   ... Use \"/* verilator lint_off UNDRIVEN */\" and lint_on around source to disable this message.\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.061 MB sources in 3 modules, into 0.027 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.010 s (elab=0.001, cvt=0.004, bld=0.000); cpu 0.007 s on 1 threads; allocated 33.148 MB\n",
+      "log": "%Warning-UNDRIVEN: <ROOT>/rtl/rom/ot_rom_bank_array.sv:55:42: Signal is not driven: 'rom_cell'\n                                                                             : ... note: In instance 'ot_rom_bank_array'\n   55 |     reg [ot_rom_pkg::ROM_SENSE_BITS-1:0] rom_cell [0:CELLS-1];\n      |                                          ^~~~~~~~\n                   ... For warning description see https://verilator.org/warn/UNDRIVEN?v=5.050\n                   ... Use \"/* verilator lint_off UNDRIVEN */\" and lint_on around source to disable this message.\n- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050\n- Verilator: Built from 0.062 MB sources in 3 modules, into 0.027 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.016 s (elab=0.001, cvt=0.006, bld=0.000); cpu 0.008 s on 1 threads; allocated 33.148 MB\n",
       "name": "verilator.array_lint",
       "other_warnings": [],
       "required_evidence": "Signal is not driven: 'rom_cell'",
@@ -152,6 +157,108 @@
           "target_id": "deepseek-v4-flash-rom-wafer"
         },
         "executed_source": {},
+        "origin_composition": {
+          "disagreements": [],
+          "margins_agree": true,
+          "masked": {
+            "origins": {
+              "masked": 2,
+              "probe": 4,
+              "probe_shard_edge": 128,
+              "probe_unaligned": 1
+            },
+            "total": 135
+          },
+          "note": "every published margin, rebuilt from the per-request index. refusals.classes and refusals.origins are the two margins of one table: they count the same refusals two different ways and are not interchangeable. masked and requests are the other two margins the set publishes, checked the same way",
+          "refusals": {
+            "classes": {
+              "out_of_range": {
+                "by_origin": {
+                  "negative_range": 2
+                },
+                "fault_class": 2,
+                "total": 2
+              },
+              "quarantined_resource": {
+                "by_origin": {
+                  "probe_shard_edge": 2,
+                  "quarantined": 1
+                },
+                "fault_class": 4,
+                "total": 3
+              },
+              "unplaced_rom_object": {
+                "by_origin": {
+                  "negative_unknown": 1,
+                  "negative_unplaced": 6
+                },
+                "fault_class": 1,
+                "total": 7
+              },
+              "zero_length": {
+                "by_origin": {
+                  "negative_zero": 1
+                },
+                "fault_class": 6,
+                "total": 1
+              }
+            },
+            "origins": {
+              "negative_range": {
+                "by_class": {
+                  "out_of_range": 2
+                },
+                "total": 2
+              },
+              "negative_unknown": {
+                "by_class": {
+                  "unplaced_rom_object": 1
+                },
+                "total": 1
+              },
+              "negative_unplaced": {
+                "by_class": {
+                  "unplaced_rom_object": 6
+                },
+                "total": 6
+              },
+              "negative_zero": {
+                "by_class": {
+                  "zero_length": 1
+                },
+                "total": 1
+              },
+              "probe_shard_edge": {
+                "by_class": {
+                  "quarantined_resource": 2
+                },
+                "total": 2
+              },
+              "quarantined": {
+                "by_class": {
+                  "quarantined_resource": 1
+                },
+                "total": 1
+              }
+            },
+            "total": 13
+          },
+          "requests": {
+            "origins": {
+              "masked": 2,
+              "negative_range": 2,
+              "negative_unknown": 1,
+              "negative_unplaced": 6,
+              "negative_zero": 1,
+              "plan_slot": 128,
+              "probe": 1092,
+              "probe_shard_edge": 9299,
+              "probe_unaligned": 301,
+              "quarantined": 1
+            },
+            "total": 10833
+          }
+        },
         "plan": {
           "distributed_region_count": 88,
           "max_shards_in_one_region": 1281,
@@ -236,6 +343,16 @@
           "largest_dropped_request_bytes": 1073741824,
           "windowed_count": 0
         },
+        "required_capacity": {
+          "masks": 2,
+          "objects": 312,
+          "quarantine_entries": 1,
+          "regions": 228,
+          "repair_entries": 0,
+          "requests": 10833,
+          "shards": 9527,
+          "window_entries": 0
+        },
         "required_marker": "ROM-SERVICE-OK requests=10833 beats=1219199 bytes=77408968 activations=38219 masked=135 faults=13 marker=b6b576c71d05d5f5",
         "runtime_health": {
           "masked_region_keys": [
@@ -248,6 +365,7 @@
             4096
           ]
         },
+        "runtime_source_drift": [],
         "scenario": "nominal",
         "totals": {
           "activations": 38219,
@@ -260,7 +378,23 @@
             "6": 1
           },
           "faults": 13,
-          "masked": 135
+          "masked": 135,
+          "masked_by_origin": {
+            "masked": 2,
+            "probe": 4,
+            "probe_shard_edge": 128,
+            "probe_unaligned": 1
+          },
+          "placement_resources_entered": 9172,
+          "placement_resources_in_plan": 9300,
+          "refusals_by_origin": {
+            "negative_range": 2,
+            "negative_unknown": 1,
+            "negative_unplaced": 6,
+            "negative_zero": 1,
+            "probe_shard_edge": 2,
+            "quarantined": 1
+          }
         },
         "window": {
           "checkpoint_available": false,
@@ -300,6 +434,87 @@
             "runtime/sim/memory.py": "75bd31c2ff724154117eb1303dbdfd1cd7edd9b8f8193e81d31640e277bb0bd5"
           },
           "stop_reason": "max_new_tokens"
+        },
+        "origin_composition": {
+          "disagreements": [],
+          "margins_agree": true,
+          "masked": {
+            "origins": {},
+            "total": 0
+          },
+          "note": "every published margin, rebuilt from the per-request index. refusals.classes and refusals.origins are the two margins of one table: they count the same refusals two different ways and are not interchangeable. masked and requests are the other two margins the set publishes, checked the same way",
+          "refusals": {
+            "classes": {
+              "out_of_range": {
+                "by_origin": {
+                  "negative_range": 2
+                },
+                "fault_class": 2,
+                "total": 2
+              },
+              "unplaced_rom_object": {
+                "by_origin": {
+                  "executed": 111,
+                  "negative_unknown": 1,
+                  "negative_unplaced": 2
+                },
+                "fault_class": 1,
+                "total": 114
+              },
+              "zero_length": {
+                "by_origin": {
+                  "negative_zero": 1
+                },
+                "fault_class": 6,
+                "total": 1
+              }
+            },
+            "origins": {
+              "executed": {
+                "by_class": {
+                  "unplaced_rom_object": 111
+                },
+                "total": 111
+              },
+              "negative_range": {
+                "by_class": {
+                  "out_of_range": 2
+                },
+                "total": 2
+              },
+              "negative_unknown": {
+                "by_class": {
+                  "unplaced_rom_object": 1
+                },
+                "total": 1
+              },
+              "negative_unplaced": {
+                "by_class": {
+                  "unplaced_rom_object": 2
+                },
+                "total": 2
+              },
+              "negative_zero": {
+                "by_class": {
+                  "zero_length": 1
+                },
+                "total": 1
+              }
+            },
+            "total": 117
+          },
+          "requests": {
+            "origins": {
+              "executed": 265,
+              "negative_range": 2,
+              "negative_unknown": 1,
+              "negative_unplaced": 2,
+              "negative_zero": 1,
+              "probe": 62,
+              "probe_unaligned": 16
+            },
+            "total": 349
+          }
         },
         "plan": {
           "distributed_region_count": 0,
@@ -350,12 +565,27 @@
           "largest_dropped_request_bytes": 1244659712,
           "windowed_count": 222
         },
+        "required_capacity": {
+          "masks": 0,
+          "objects": 16,
+          "quarantine_entries": 0,
+          "regions": 14,
+          "repair_entries": 0,
+          "requests": 349,
+          "shards": 14,
+          "window_entries": 9329
+        },
         "required_marker": "ROM-SERVICE-OK requests=349 beats=2499996 bytes=159997856 activations=39213 masked=0 faults=117 marker=39817fd2c3017914",
         "runtime_health": {
           "masked_region_keys": [],
           "masked_regions": [],
           "quarantined_resources": []
         },
+        "runtime_source_drift": [
+          "runtime/abi3/deployment.py",
+          "runtime/sim/device.py",
+          "runtime/sim/engine.py"
+        ],
         "scenario": "nominal",
         "totals": {
           "activations": 39213,
@@ -367,7 +597,17 @@
             "6": 1
           },
           "faults": 117,
-          "masked": 0
+          "masked": 0,
+          "masked_by_origin": {},
+          "placement_resources_entered": 14,
+          "placement_resources_in_plan": 14,
+          "refusals_by_origin": {
+            "executed": 111,
+            "negative_range": 2,
+            "negative_unknown": 1,
+            "negative_unplaced": 2,
+            "negative_zero": 1
+          }
         },
         "window": {
           "checkpoint_available": true,
@@ -407,6 +647,133 @@
             "runtime/sim/memory.py": "75bd31c2ff724154117eb1303dbdfd1cd7edd9b8f8193e81d31640e277bb0bd5"
           },
           "stop_reason": "max_new_tokens"
+        },
+        "origin_composition": {
+          "disagreements": [],
+          "margins_agree": true,
+          "masked": {
+            "origins": {
+              "masked": 2,
+              "probe": 4,
+              "probe_unaligned": 1
+            },
+            "total": 7
+          },
+          "note": "every published margin, rebuilt from the per-request index. refusals.classes and refusals.origins are the two margins of one table: they count the same refusals two different ways and are not interchangeable. masked and requests are the other two margins the set publishes, checked the same way",
+          "refusals": {
+            "classes": {
+              "activated_column_repair": {
+                "by_origin": {
+                  "executed": 36,
+                  "probe": 7,
+                  "probe_unaligned": 2
+                },
+                "fault_class": 5,
+                "total": 45
+              },
+              "out_of_range": {
+                "by_origin": {
+                  "negative_range": 2
+                },
+                "fault_class": 2,
+                "total": 2
+              },
+              "quarantined_resource": {
+                "by_origin": {
+                  "probe": 4,
+                  "probe_unaligned": 1,
+                  "quarantined": 1
+                },
+                "fault_class": 4,
+                "total": 6
+              },
+              "unplaced_rom_object": {
+                "by_origin": {
+                  "executed": 111,
+                  "negative_unknown": 1,
+                  "negative_unplaced": 2
+                },
+                "fault_class": 1,
+                "total": 114
+              },
+              "zero_length": {
+                "by_origin": {
+                  "negative_zero": 1
+                },
+                "fault_class": 6,
+                "total": 1
+              }
+            },
+            "origins": {
+              "executed": {
+                "by_class": {
+                  "activated_column_repair": 36,
+                  "unplaced_rom_object": 111
+                },
+                "total": 147
+              },
+              "negative_range": {
+                "by_class": {
+                  "out_of_range": 2
+                },
+                "total": 2
+              },
+              "negative_unknown": {
+                "by_class": {
+                  "unplaced_rom_object": 1
+                },
+                "total": 1
+              },
+              "negative_unplaced": {
+                "by_class": {
+                  "unplaced_rom_object": 2
+                },
+                "total": 2
+              },
+              "negative_zero": {
+                "by_class": {
+                  "zero_length": 1
+                },
+                "total": 1
+              },
+              "probe": {
+                "by_class": {
+                  "activated_column_repair": 7,
+                  "quarantined_resource": 4
+                },
+                "total": 11
+              },
+              "probe_unaligned": {
+                "by_class": {
+                  "activated_column_repair": 2,
+                  "quarantined_resource": 1
+                },
+                "total": 3
+              },
+              "quarantined": {
+                "by_class": {
+                  "quarantined_resource": 1
+                },
+                "total": 1
+              }
+            },
+            "total": 168
+          },
+          "requests": {
+            "origins": {
+              "executed": 273,
+              "masked": 2,
+              "negative_range": 2,
+              "negative_unknown": 1,
+              "negative_unplaced": 2,
+              "negative_zero": 1,
+              "probe": 62,
+              "probe_unaligned": 16,
+              "quarantined": 1,
+              "repaired_row": 3
+            },
+            "total": 363
+          }
         },
         "plan": {
           "distributed_region_count": 0,
@@ -460,6 +827,16 @@
           "largest_dropped_request_bytes": 1244659712,
           "windowed_count": 187
         },
+        "required_capacity": {
+          "masks": 2,
+          "objects": 16,
+          "quarantine_entries": 1,
+          "regions": 14,
+          "repair_entries": 4,
+          "requests": 363,
+          "shards": 14,
+          "window_entries": 11458
+        },
         "required_marker": "ROM-SERVICE-OK requests=363 beats=536110 bytes=34309592 activations=8475 masked=7 faults=168 marker=cded9cf9f877aaed",
         "runtime_health": {
           "masked_region_keys": [
@@ -472,6 +849,11 @@
             12
           ]
         },
+        "runtime_source_drift": [
+          "runtime/abi3/deployment.py",
+          "runtime/sim/device.py",
+          "runtime/sim/engine.py"
+        ],
         "scenario": "degraded",
         "totals": {
           "activations": 8475,
@@ -485,7 +867,24 @@
             "6": 1
           },
           "faults": 168,
-          "masked": 7
+          "masked": 7,
+          "masked_by_origin": {
+            "masked": 2,
+            "probe": 4,
+            "probe_unaligned": 1
+          },
+          "placement_resources_entered": 11,
+          "placement_resources_in_plan": 14,
+          "refusals_by_origin": {
+            "executed": 147,
+            "negative_range": 2,
+            "negative_unknown": 1,
+            "negative_unplaced": 2,
+            "negative_zero": 1,
+            "probe": 11,
+            "probe_unaligned": 3,
+            "quarantined": 1
+          }
         },
         "window": {
           "checkpoint_available": true,
@@ -497,15 +896,30 @@
     }
   },
   "evidence_class": "public_open_tool_rtl_simulation",
+  "executed_stream_source_drift": {
+    "qwen_chip": [
+      "runtime/abi3/deployment.py",
+      "runtime/sim/device.py",
+      "runtime/sim/engine.py"
+    ],
+    "qwen_chip_degraded": [
+      "runtime/abi3/deployment.py",
+      "runtime/sim/device.py",
+      "runtime/sim/engine.py"
+    ]
+  },
   "limitations": [
     "there is no ROM array in the RTL under test. The array sits behind the sense request/response interface and is supplied by the testbench top, so this campaign establishes addressing, ordering, masking, repair translation and operand alignment, and establishes nothing about cell area, read energy, sense margin, wordline or bitline delay, retention or defect rate",
     "the sense granule is a declared parameter of this block (ROM_SENSE_BYTES = 64), not a macro property read out of any collateral in this repository. Row activations and sense accesses are therefore counted, and are never converted into an energy here",
     "a decode step of the Qwen ROM deployment reads about fifteen gigabytes and no open-tool simulator will replay that beat by beat. Each vector set replays real requests up to a published beat budget and covers the rest of the address space with single-granule probes at every object, region, row and placement resource boundary. The requests dropped for budget, and the largest one dropped, are published in the vector set",
     "operand data is checked against authenticated checkpoint bytes only for the granules in the published window. Outside it the array returns a deterministic function of its own address, so what is checked there is conveyance and ordering, not weight content",
+    "the request-extent bounds test was evaluated at 64 bits and a 64-bit sum wraps, so a byte offset within 2**32 of 2**64 passed an in-range test and was then served from the middle of the object. It is now evaluated at 65 bits and cannot wrap. Nothing here exercises the fixed guard: the widest byte offset any published vector set carries is below 2**35, which is also why two simulators and two checkers never disagreed over it. The Python reference computes the same sum in arbitrary precision and was always exact, so the fix moved the RTL onto the reference rather than the reference onto the RTL",
     "the DeepSeek wafer set has no executed request stream: that lane has produced no tokens (checklist W6.4). Its requests come from the compiled plan's own read unit and from every shard boundary the plan declares, which is derived evidence about addressing",
     "column redundancy is refused, not implemented. A read reaching a resource with an activated column repair fails closed with a distinct class rather than returning the unrepaired column",
     "the walk from a resolved tensor view to contiguous byte ranges is not in this block. Requests arrive as contiguous byte ranges and the campaign derives those ranges from the views the functional device resolved",
-    "no descriptor CRC, program header or admission check is performed here; the tables arrive over the configuration channel already admitted"
+    "no descriptor CRC, program header or admission check is performed here; the tables arrive over the configuration channel already admitted",
+    "quarantine is a comparator list, not a bit per placement resource. No published vector set withdraws more than one resource, so the list-depth capacity refusal is a guard on a bound nothing here approaches: required_capacity.quarantine_entries is 0 or 1 against a bench depth of 32. What is exercised is the service's refusal of an out-of-range configuration slot -- the bench top issues one deliberately out-of-range quarantine write per run, after the plan is loaded, and both checkers require the sticky cfg_error to be 0 before it, 1 after it, and the marker unchanged, which is what shows the write was dropped rather than folded onto slot 0",
+    "the depth at which a comparator list stops being cheaper than a bit per resource is not established here. It is chosen for a wafer plan of 9,300 placement resources; at the 16-resource instance the physical view routes, the list is the larger of the two"
   ],
   "schema": "opentallas.rtl.rom_service_campaign.v1",
   "simulators_counted": [
@@ -515,45 +929,45 @@
   "source_sha256": {
     "compiler/backends/rom/common/image.py": "a7aa1f293a4dd98fe72976ca1855cbb2c8d46446fc4d340c8e3a7ef14b53b49c",
     "rtl/rom/ot_rom_bank_array.sv": "69c16973bcfb96a7fefee454773f2bbe37a5815a0c1f21c07cb2f23b9c2e1921",
-    "rtl/rom/ot_rom_pkg.sv": "09223a30dc40d239f70e75a65a8deb874b95e6c8214e28f0748e589f86761502",
-    "rtl/rom/ot_rom_read_service.sv": "e818ccbcff186cadcbe5fe77a047cab3ec89d2937e7e78a4f76b93d2b8e2ac7b",
-    "rtl/test/rom_service_harness.cpp": "e51333d0671bc4676a2fefdd153cc3dc06e732b1fca922141d6f4684732c13d7",
-    "rtl/test/rom_service_top.sv": "fdab2a1553ba77717ccfb30dcce8f14d629d197f669516af9829a38642b3de6e",
-    "rtl/test/tb_rom_service.sv": "f6affe82620db605c140a46d87b51bb106b90abb91a4379e8140ea16441e42ee",
-    "runtime/abi3/constants.py": "5198b8160e1bb1a0083a3478a67a7f87c19be7fc2ae053c90ccce8bddc8d9119",
-    "runtime/abi3/deployment.py": "21dd833051691cad64f34ce422708ad4b11a8c447b123fd513d23e5a9900fb16",
+    "rtl/rom/ot_rom_pkg.sv": "d42315047ec5cdde55b7a81cf50024b97eb59a53f637fa889593ecbf0e8cea3b",
+    "rtl/rom/ot_rom_read_service.sv": "b7f0dedf7e731ff65af2690a33c30dba7e750c981679f8f8432e66a430befb51",
+    "rtl/test/rom_service_harness.cpp": "8da4b0d7094a130454301cf8f8b200029722e06aeae9679ab126fc28e249cb8a",
+    "rtl/test/rom_service_top.sv": "559c0a9383cc064ab147bca54a27527bc5594d0fe819bbf20d49d72789074594",
+    "rtl/test/tb_rom_service.sv": "56c78c82079a94fd3fd6403a659109a0f0cbe10eae97d26678097f6e03ffdb43",
+    "runtime/abi3/constants.py": "a97b329b38a5bfb6438924e34b26c6f70b8e068026c685a29ec9b1ff0b8c1e4a",
+    "runtime/abi3/deployment.py": "5e9c3fd58a6077489cb7409403829130b3f32ec3e89cbd2c333ba943235db98c",
     "runtime/abi3/descriptors.py": "fd60c52ee2117016a8faa644cdaebe1e95ad003535576bec241f7d9c6018993e",
     "testdata/compiler/rom_service/deepseek_wafer/rom_expect.hex": "b3be1967902402aa68950bf6436b7ee10f2f9238a24c14f4c641c7b7055558a3",
     "testdata/compiler/rom_service/deepseek_wafer/rom_mask.hex": "df6bbc678b81527de980bb6bc6b002ac1c7f11c377c9bf2ba223dee51ae55d1f",
-    "testdata/compiler/rom_service/deepseek_wafer/rom_meta.hex": "db6ad65a79124523257887eb8815107ab65a55191c3b0ce817de85ebb025baef",
+    "testdata/compiler/rom_service/deepseek_wafer/rom_meta.hex": "320483c1df13b094bcc847e1e880d9bb261481225b826e009005cdc6185d6390",
     "testdata/compiler/rom_service/deepseek_wafer/rom_object.hex": "8471dfabd503c8554191c8c4dbf706ed966c6794bc81f2a1ca0ef3e583bc73a2",
     "testdata/compiler/rom_service/deepseek_wafer/rom_repair.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "testdata/compiler/rom_service/deepseek_wafer/rom_request.hex": "b59226e0732cff4cbfaaa3a9cc1a42726aa4723c16a3ee676ac19af1307b9503",
-    "testdata/compiler/rom_service/deepseek_wafer/rom_service_vectors.json": "9784b46866609e11adc1082acd7cca3a715e694452db2dc30b2d303187619b96",
+    "testdata/compiler/rom_service/deepseek_wafer/rom_service_vectors.json": "2a0da6bcc181a71b561b7396e844fbd66edc18f8818f05b1d944b3e423680e17",
     "testdata/compiler/rom_service/deepseek_wafer/rom_shard.hex": "236ae4253c90a8633a588a12bb581b3d8fc7a51271b89af2bf3e9a09fe2c6631",
     "testdata/compiler/rom_service/deepseek_wafer/rom_window.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "testdata/compiler/rom_service/qwen_chip/rom_expect.hex": "b5b50be644f61b75b0b3335dc4e5c488f45c8a712cc0080019667e45c4240f22",
     "testdata/compiler/rom_service/qwen_chip/rom_mask.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "testdata/compiler/rom_service/qwen_chip/rom_meta.hex": "84e70320e8c59a9a9d54f3a804c93e1d39afde9fdad795232fb89ec02c514d77",
+    "testdata/compiler/rom_service/qwen_chip/rom_meta.hex": "cd9d6d591b74046db5f73fa0cef8e869cecc08ae326da254ca037f6e556ab56f",
     "testdata/compiler/rom_service/qwen_chip/rom_object.hex": "c56b8e05ab6a26f1a755a975485e8f79a77875e4a5979eb5d2577b56ff223f13",
     "testdata/compiler/rom_service/qwen_chip/rom_repair.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "testdata/compiler/rom_service/qwen_chip/rom_request.hex": "730c5c22be8476c616cd7a5a6ac22e02e527074b116339bdcd2b9664b360861d",
-    "testdata/compiler/rom_service/qwen_chip/rom_service_vectors.json": "8b85b89ff69c14e99184c6de2f2673b6c5a820e0c7b852ed58ce4cb7b9899ee4",
+    "testdata/compiler/rom_service/qwen_chip/rom_service_vectors.json": "87fa3ee1d0770ea06643f69563e462103794c13f31f60a625d6853f066a58fda",
     "testdata/compiler/rom_service/qwen_chip/rom_shard.hex": "e3b3f322071983ad40ee5141b35c11273d6e5c6f9c96bfe3215aeb86ae827290",
     "testdata/compiler/rom_service/qwen_chip/rom_window.hex": "e584ba0f7aedd0c4580fad11f2d63f8210b7b87d5bb866ac4b742f1f651b82a6",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_expect.hex": "66c83ef8131e01f43d9aa3bf3e49cbcc2613c6b0f1e9c2649e17a86bf8ec9c64",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_mask.hex": "cb66babee08f0a7c83be785182b4ecd031a30c6844e3cf58e034bcd14ef81637",
-    "testdata/compiler/rom_service/qwen_chip_degraded/rom_meta.hex": "2e00ad167ff80567b2ffa298342c6931ba5948677db06fd03140e4695bb776b2",
+    "testdata/compiler/rom_service/qwen_chip_degraded/rom_meta.hex": "783683c5a6f1fbce60596093a5ce6c1a884e6a5245d45f2de48b12991eec480c",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_object.hex": "c56b8e05ab6a26f1a755a975485e8f79a77875e4a5979eb5d2577b56ff223f13",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_repair.hex": "1f3f24c7ff6bcf01a175ccf64902175e73223f14789aa7ae729abd2d2ff07f82",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_request.hex": "b431d908eefaee4e6cd6b5cd1409d7005af8a44c71d4899412e3de355facab6a",
-    "testdata/compiler/rom_service/qwen_chip_degraded/rom_service_vectors.json": "18be0a2fdd0911970c86cbba56da0d27e359fdff04d67297eb5dfc26c0fc75ad",
+    "testdata/compiler/rom_service/qwen_chip_degraded/rom_service_vectors.json": "6a098139df0f6367ec3e01671a3485e86c74e228a5f7ac5405be236cf6efabcf",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_shard.hex": "e3b3f322071983ad40ee5141b35c11273d6e5c6f9c96bfe3215aeb86ae827290",
     "testdata/compiler/rom_service/qwen_chip_degraded/rom_window.hex": "9ff0ecdc1157ce4edb19f80f36a4ae0bdd8bb891a9b94c2037155d2e32e5a88f",
-    "tools/build_rom_service_vectors.py": "4b43e45760eedf2f84d41155b0878b5f7af32aefd395195f8992da19393722b0",
-    "tools/rtl_rom_service_campaign.py": "db69909892193b5b4d0b949775f7fc2944af0fa3b72d48e41ea39a5fbacf0f4b"
+    "tools/build_rom_service_vectors.py": "22fe10a8c0bcb6ab6ef2a36f44235f835f3955e10f2dd78ae02d4b9e096ec045",
+    "tools/rtl_rom_service_campaign.py": "febc6e2752517a0819ce9a95e29cf4e513f3dba6356dc13991ece4177924efda"
   },
-  "status": "pass",
+  "status": "fail",
   "tools": {
     "cxx": {
       "executable": "/usr/bin/g++",

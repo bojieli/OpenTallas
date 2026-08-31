@@ -16,7 +16,7 @@
   "image_sha256": {
     "rom_expect.hex": "b3be1967902402aa68950bf6436b7ee10f2f9238a24c14f4c641c7b7055558a3",
     "rom_mask.hex": "df6bbc678b81527de980bb6bc6b002ac1c7f11c377c9bf2ba223dee51ae55d1f",
-    "rom_meta.hex": "32e5b45069d1aee02882a3c876c64bb15b2e6a5c1bfb4bd9718fb07d0d314a85",
+    "rom_meta.hex": "320483c1df13b094bcc847e1e880d9bb261481225b826e009005cdc6185d6390",
     "rom_object.hex": "8471dfabd503c8554191c8c4dbf706ed966c6794bc81f2a1ca0ef3e583bc73a2",
     "rom_repair.hex": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "rom_request.hex": "b59226e0732cff4cbfaaa3a9cc1a42726aa4723c16a3ee676ac19af1307b9503",
@@ -140941,10 +140941,10 @@
   "required_capacity": {
     "masks": 2,
     "objects": 312,
+    "quarantine_entries": 1,
     "regions": 228,
     "repair_entries": 0,
     "requests": 10833,
-    "resources": 9300,
     "shards": 9527,
     "window_entries": 0
   },
