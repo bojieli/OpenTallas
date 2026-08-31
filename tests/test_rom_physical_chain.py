@@ -348,6 +348,19 @@ def _macro_runner():
     return _runner("run_ihp_rom_macro_route")
 
 
+def test_rom_service_physical_uses_the_supported_openroad_database_accessor() -> None:
+    """Keep report extraction compatible with the pinned OpenROAD build.
+
+    ``ord::get_db`` returns an odb::dbDatabase, whose API has no ``getChain``
+    method in the installed toolchain.  The failure occurs only after detailed
+    routing, so a regression here otherwise wastes the entire physical run
+    before refusing to write its DEF.
+    """
+    template = _runner("run_rom_service_physical").PNR_TEMPLATE
+    assert "set block [ord::get_db_block]" in template
+    assert "getChain" not in template
+
+
 def test_the_macro_contract_refuses_a_missing_or_useless_density_ladder() -> None:
     """Demonstrates the refusal rather than asserting it exists.
 
