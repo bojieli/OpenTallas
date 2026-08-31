@@ -5,9 +5,9 @@
 **Baseline commit:** c83e543
 **Issue date:** 2026-08-29
 **Last reconciled:** 2026-08-31 — changed ROM and physical-methodology prose
-passes a targeted figure check. The repository-wide audit still reports 132
+passes a targeted figure check. The repository-wide audit still reports
 pre-existing figure-reference problems, so this document makes no blanket
-verification claim.
+verification claim until that audit is clean.
 **Status legend:** `[ ]` not started · `[~]` in progress · `[x]` done and evidenced · `[!]` blocked/deferred with reason
 
 > This checklist is the single source of truth for program progress. It supersedes

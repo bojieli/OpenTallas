@@ -207,10 +207,12 @@ generation, and there are **four** of them in two pairs:
   the area-constrained pair, in which silicon area is the primary input on both
   sides and each side chooses its own parallelism. Both are gated against a
   shipping mask-ROM part — **Taalas HC1, 16,960 tok/s per user published against <!-- figure: 16,960 src="results/roofline/n6_vs_a100/REPORT.md#Published" table="Validation gates" where="Gate=Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user" name="Taalas HC1 published anchor (input echo)" -->
-  12,232.4 modelled, 0.72×** — and against A100 at 1.00× <!-- figure: 12,232.4 src="results/roofline/n6_vs_a100/REPORT.md#Modelled" table="Validation gates" where="Gate=Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user" name="HC1 gate modelled rate" --> <!-- figure: 0.72 src="results/roofline/n6_vs_a100/REPORT.md#Ratio" table="Validation gates" where="Gate=Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user" name="HC1 gate ratio" -->
+  an infeasible 0.0 tok/s model reconstruction, ratio 0.00×** <!-- figure: 0.0 src="results/roofline/n6_vs_a100/REPORT.md#Modelled" table="Validation gates" where="Gate=Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user" name="HC1 gate modelled rate" --> <!-- figure: 0.00 src="results/roofline/n6_vs_a100/REPORT.md#Ratio" table="Validation gates" where="Gate=Taalas HC1, Llama-3.1-8B on 815 mm2 at N6, per user" name="HC1 gate ratio" --> — and against A100 at 1.00×
   (each report's "Validation gates" table). The anchor is registered at
-  `SRC-TAALAS-HC1` in [`docs/SOURCES.md`](docs/SOURCES.md); it had no register
-  entry at all until 2026-08-30, while serving as the gate for the whole model.
+  `SRC-TAALAS-HC1` in [`docs/SOURCES.md`](docs/SOURCES.md). The HC1 failure is
+  intentionally not tuned away: with the corrected ROM density the reconstructed
+  checkpoint does not fit in the published die, so at least one physical input
+  remains wrong for the shipping part.
 
 The hardware-independent weight/KV matrix is in
 [`results/model-traffic/REPORT.md`](results/model-traffic/REPORT.md), and the
