@@ -512,3 +512,24 @@ class StateClass(enum.IntEnum):
     POSITION_CURSOR = 3
     ROUTE_HISTORY = 4
     SCRATCH = 5
+
+
+class CommitPolicy(enum.IntEnum):
+    """Where a ``STATE.COMMIT``'s row count comes from (amendment A21).
+
+    ``SPAN_TOKENS`` is a *request* symbol.  It is a row count only where the
+    resource's row axis is the token axis, which is true of a KV cache and
+    false of a fixed recurrent window.  The number of rows a commit publishes
+    is therefore a property of the resource, declared here, at STATE payload
+    offset 1 -- a byte the frozen layout has always carried and no reader has
+    ever consulted.
+
+    ``REQUEST_SPAN`` is the rule ABI 3.0 has always executed and the value the
+    byte has always held, so no pre-A21 deployment changes.  ``UNSTAGED`` says
+    the deployment names the resource's prepared image as no descriptor's
+    destination, so no transaction can stage a row into it and its commit
+    publishes none.
+    """
+
+    REQUEST_SPAN = 0
+    UNSTAGED = 1

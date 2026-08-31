@@ -184,7 +184,7 @@ def test_issue_events_are_legal_opcodes_and_counted() -> None:
             if family is not Major.RECOVERY:
                 assert issue["descriptor_id"] != NO_ID
             total += 1
-    assert total == vectors["issue_event_count"] == 177
+    assert total == vectors["issue_event_count"] == 182
     assert vectors["case_count"] == len(vectors["cases"])
     assert vectors["program_run_count"] == sum(
         1 for case in vectors["cases"] if case["runs_program"]
@@ -531,6 +531,11 @@ def test_a18_vector_images_move_no_pre_amendment_extent() -> None:
     401 operand views the 53 pre-A18 cases resolved are all still in the image,
     all with extent axis zero, and all with the extent they had -- the seven new
     cases only add to the set.
+
+    Later amendments that add a non-A18 case add to the non-A18 side of the
+    count, and the number below moves with them: A21's ``a21_unstaged_commit``
+    resolves three, taking 401 to 404.  What the assertion pins is the extent
+    rule, which is checked view by view below and has not moved.
     """
     recorded = _vectors()
     views = [
@@ -547,7 +552,7 @@ def test_a18_vector_images_move_no_pre_amendment_extent() -> None:
         if not case["name"].startswith("a18")
         for view in case["expected_views"]
     ]
-    assert len(legacy) == 401
+    assert len(legacy) == 404
     assert all(view["extent_axis"] == 0 for view in legacy)
     assert all(view["extent"] == view["dim0"] for view in legacy)
     # And the A18 cases are the only place a non-zero axis appears at all.
@@ -918,7 +923,7 @@ def test_campaign_replays_both_simulators(tmp_path: Path) -> None:
         assert "/tmp/" not in case["compile_command"]
     assert "Verilator 5.05" in summary["tools"]["verilator"]["version"]
     assert "version 11.0" in summary["tools"]["iverilog"]["version"]
-    assert summary["correlation"]["issue_event_count"] == 177
+    assert summary["correlation"]["issue_event_count"] == 182
     assert summary["correlation"]["reference"] == "runtime.sim.device.Device"
     # A view comparison that compared nothing would be a vacuous pass.
     assert summary["correlation"]["view_resolution_count"] == (

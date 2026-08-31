@@ -38,6 +38,7 @@ from .constants import (
     DTYPE_BITS,
     ENGINE_FAMILIES,
     NO_ID,
+    CommitPolicy,
     Control,
     DType,
     InstructionFlag,
@@ -51,7 +52,12 @@ from .constants import (
     SUBOPCODES,
     TopologyClass,
 )
-from .deployment import Deployment, DescriptorTable, DeploymentError
+from .deployment import (
+    Deployment,
+    DescriptorTable,
+    DeploymentError,
+    staged_objects,
+)
 from .descriptors import (
     Descriptor,
     ExtendedDescriptorType,
@@ -569,8 +575,58 @@ class Verifier:
                 "commit or discard"
             )
         self._check("state_discipline", not prepared, "unresolved prepared state")
+        self._verify_commit_policies()
         self._state_resources = len(
             self.table.ids_of_type(ExtendedDescriptorType.STATE)
+        )
+
+    def _verify_commit_policies(self) -> None:
+        """Wire format section 12.11: a commit's row count is declared, not assumed.
+
+        ``commit_policy`` says where a ``STATE.COMMIT``'s row count comes from,
+        and it is a fact about the deployment rather than an opinion held by
+        whichever backend emitted it: ``UNSTAGED`` exactly when no descriptor
+        names the resource's prepared image as a destination.  So it is
+        re-derived here from the same shared rule the builder used and the two
+        must agree.  A hand-edited or mis-emitted declaration is refused with
+        the resource named, rather than silently changing how many rows the
+        device publishes.
+        """
+        staged = staged_objects(self.table)
+        agreed = True
+        for state_id in self.table.ids_of_type(ExtendedDescriptorType.STATE):
+            descriptor = self.table[state_id]
+            declared = int(descriptor.payload["commit_policy"])
+            expected = int(
+                CommitPolicy.REQUEST_SPAN
+                if int(descriptor.payload["prepared_object_id"]) in staged
+                else CommitPolicy.UNSTAGED
+            )
+            if declared not in (
+                int(CommitPolicy.REQUEST_SPAN),
+                int(CommitPolicy.UNSTAGED),
+            ):
+                agreed = False
+                self._fail(
+                    f"state {state_id} declares commit policy {declared}, which "
+                    "is not in the amendment A21 registry"
+                )
+            elif declared != expected:
+                agreed = False
+                prepared = descriptor.payload["prepared_object_id"]
+                reached = (
+                    "is named as a destination by at least one descriptor"
+                    if expected == int(CommitPolicy.REQUEST_SPAN)
+                    else "is named as a destination by no descriptor"
+                )
+                self._fail(
+                    f"state {state_id} declares commit policy "
+                    f"{CommitPolicy(declared).name}, but its prepared image "
+                    f"{prepared} {reached}, which is "
+                    f"{CommitPolicy(expected).name}"
+                )
+        self._check(
+            "commit_policy_declared", agreed, "a declared commit policy is wrong"
         )
 
     # -- 9/10. permissions and storage ------------------------------------

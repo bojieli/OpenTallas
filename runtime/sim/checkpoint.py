@@ -237,6 +237,7 @@ def _session_to_dict(session: Session) -> dict[str, Any]:
                 "prepared_object_id": state.prepared_object_id,
                 "row_bytes": state.row_bytes,
                 "capacity_rows": state.capacity_rows,
+                "commit_policy": state.commit_policy,
                 "cursor_rows": state.cursor_rows,
                 "generation": state.generation,
                 "open_prepare": bool(state.open_prepare),
@@ -370,7 +371,12 @@ def _session_from_dict(device: Device, body: Mapping[str, Any]) -> Session:
             "prepared_object_id",
             "row_bytes",
             "capacity_rows",
+            # Amendment A21: the commit policy is a deployment declaration, so
+            # a checkpoint may carry it but may not disagree with it.
+            "commit_policy",
         ):
+            if field not in state:
+                continue
             if int(state[field]) != int(getattr(fresh, field)):
                 raise CheckpointError(
                     f"state {descriptor_id}: checkpoint {field}={state[field]} "
@@ -383,6 +389,9 @@ def _session_from_dict(device: Device, body: Mapping[str, Any]) -> Session:
             prepared_object_id=int(state["prepared_object_id"]),
             row_bytes=int(state["row_bytes"]),
             capacity_rows=int(state["capacity_rows"]),
+            commit_policy=int(
+                state.get("commit_policy", fresh.commit_policy)
+            ),
             cursor_rows=int(state["cursor_rows"]),
             generation=int(state["generation"]),
             open_prepare=bool(state["open_prepare"]),

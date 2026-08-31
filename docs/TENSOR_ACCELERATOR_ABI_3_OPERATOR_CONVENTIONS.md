@@ -755,3 +755,62 @@ abolished for the axis, A18 for the extent and A19 for the join.
 zero-candidate case, and the meaning of every other slot. A ranked
 `INDEX_TOPK` written before this amendment carries a real descriptor ID in
 `in0` and is the operator it always was.
+
+---
+
+## 21. Amendment A21 — a state resource declares its own commit
+
+Wire format section 12.11 defines `commit_policy` at `STATE` payload offset 1.
+This section is what it means for the operators that surround a state
+transaction.
+
+**A state resource has a row axis, and it is not always the token axis.** Three
+kinds appear in the two models lowered so far, and only the first is indexed by
+the request:
+
+| Resource | Row axis | Rows a transaction stages |
+|---|---|---|
+| KV cache (`kv_cache`) | absolute position | `SPAN_TOKENS`, appended at the cursor |
+| compressed cache (`compressed_kv`) | completed compression group | one per `ratio` tokens |
+| compressor raw window, sliding-window ring | a fixed slot count | a constant of the resource, never the span |
+
+`SPAN_TOKENS` was the row count for all three, which is right for the first,
+generous for the second and impossible for the third. A21 states the rule; it
+does not yet make the second exact, and that is recorded below rather than
+implied away.
+
+**`VECTOR.COMPRESS` sub-case 2 writes no raw row, and says so.** The state
+update produces the two pool operands `COMPRESS_POOL` reads next; the raw
+window it names in `state_reads`/`state_writes` is the released decode
+structure — `inference/model.py` line 307, "State buffers for decode-phase
+incremental compression" — and this ABI's compressor is a prefill operator that
+refuses a non-zero start position. So in both DeepSeek deployments the window's
+prepared image is named by no operator view in either direction, which is
+exactly the condition wire format 12.11 derives `UNSTAGED` from. A commit of it
+publishes nothing, which is the true statement; committing a span of it was
+not.
+
+**A resource a program commits should be a resource that program stages.** The
+converse of the rule is the useful one for an exporter and for a vector author:
+if a graph declares `state_writes` on a resource and the operator that lowers
+it writes no plane of that resource, the deployment will declare `UNSTAGED` and
+the commit will publish nothing. That is a fact worth seeing rather than a
+failure — it is how the compressor window's true behaviour surfaced — but a
+resource that *should* carry data and does not will now say so in
+`state.unstaged_commits` instead of moving bytes nothing wrote.
+
+**What it does not change.** The append itself. `KV_APPEND` still lowers to
+`DMA.SCATTER` under A11's operand row and still writes the prepared image at
+the positions the request names; A21 governs only what the transaction's commit
+publishes afterwards. A `REQUEST_SPAN` resource behaves exactly as it did,
+including both of its traps.
+
+**What is still owed.** A `compressed_kv` resource stages one row per completed
+group and its commit still claims `SPAN_TOKENS` of them. At a 104-token prefill
+at ratio 4 that is 104 claimed against 26 staged, and at ratio 128 it is 104
+against none; the resource's capacity — 65,536 groups and 2,048 groups — is far
+above either, so nothing is refused and nothing is corrupted, because the
+committed image is a durability record no operator reads. It is the same defect
+class as the one A21 closes and it is not closed. The policy registry is where
+it would be closed, by a third value naming the group divisor, and that should
+be written when a lane needs it rather than guessed at now.

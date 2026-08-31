@@ -22,6 +22,7 @@ import numpy as np
 
 from runtime.abi3.capability import Capability
 from runtime.abi3.constants import (
+    CommitPolicy,
     Control,
     CompletionStatus,
     DType,
@@ -85,6 +86,8 @@ class StateResource:
     prepared_object_id: int
     row_bytes: int
     capacity_rows: int
+    #: Amendment A21.  Where this resource's commit takes its row count from.
+    commit_policy: int = int(CommitPolicy.REQUEST_SPAN)
     cursor_rows: int = 0
     generation: int = 0
     open_prepare: bool = False
@@ -93,6 +96,7 @@ class StateResource:
         return {
             "descriptor_id": self.descriptor_id,
             "state_class": self.state_class,
+            "commit_policy": self.commit_policy,
             "cursor_rows": self.cursor_rows,
             "generation": self.generation,
             "capacity_rows": self.capacity_rows,
@@ -365,6 +369,7 @@ class Device:
                 prepared_object_id=payload["prepared_object_id"],
                 row_bytes=payload["row_bytes"],
                 capacity_rows=payload["capacity_rows"],
+                commit_policy=payload["commit_policy"],
                 cursor_rows=payload["initial_cursor_rows"],
             )
         self.sessions[session.session_id] = session
@@ -998,6 +1003,19 @@ class Device:
                     f"state {resource.descriptor_id} committed without a prepare",
                     TrapClass.STATE_TRANSACTION,
                 )
+            # Amendment A21 (wire format section 12.11).  How many rows a
+            # commit publishes is the resource's to declare, not the request's
+            # to assume: ``SPAN_TOKENS`` is a token count and is a row count
+            # only where the resource's row axis is the token axis.  A
+            # resource no descriptor of this deployment names as a destination
+            # is one no transaction can stage, and its commit publishes
+            # nothing rather than being asked to absorb a span of rows it does
+            # not have.
+            if resource.commit_policy == int(CommitPolicy.UNSTAGED):
+                pending.append(PendingCommit(resource, 0))
+                ctx.counters.add("state.commits")
+                ctx.counters.add("state.unstaged_commits")
+                return
             rows = int(ctx.symbols.get(int(Symbol.SPAN_TOKENS), 0))
             if rows <= 0:
                 raise DeviceTrap(
@@ -1043,13 +1061,19 @@ class Device:
         resource = commit.resource
         rows = commit.rows
         nbytes = rows * resource.row_bytes
-        for memory in self.node_memories:
-            prepared = memory[resource.prepared_object_id]
-            committed = memory[resource.committed_object_id]
-            payload = prepared.read(0, nbytes)
-            committed.write(resource.cursor_rows * resource.row_bytes, payload)
-            counters.add("state.rows_committed", rows)
-            counters.add("state.bytes_written", nbytes)
+        # Amendment A21: an unstaged resource publishes no bytes and moves no
+        # cursor.  It still closes its prepare and advances its generation,
+        # because ADR-003 8.6 makes the *whole* declared state set one
+        # architectural transition -- a resource this transaction did not
+        # change still took part in the step that happened.
+        if nbytes:
+            for memory in self.node_memories:
+                prepared = memory[resource.prepared_object_id]
+                committed = memory[resource.committed_object_id]
+                payload = prepared.read(0, nbytes)
+                committed.write(resource.cursor_rows * resource.row_bytes, payload)
+                counters.add("state.rows_committed", rows)
+                counters.add("state.bytes_written", nbytes)
         resource.cursor_rows += rows
         resource.generation += 1
         resource.open_prepare = False

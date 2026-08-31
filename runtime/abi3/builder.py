@@ -18,6 +18,7 @@ from typing import Any, Iterable, Mapping, Sequence
 
 from .capability import Capability
 from .constants import (
+    CommitPolicy,
     DType,
     DTYPE_BITS,
     Feature,
@@ -38,7 +39,13 @@ from .constants import (
     feature_vector,
 )
 from .crc import sha256
-from .deployment import Deployment, DescriptorTable, ObjectSource, Segment
+from .deployment import (
+    Deployment,
+    DescriptorTable,
+    ObjectSource,
+    Segment,
+    staged_objects,
+)
 from .descriptors import (
     Comparison,
     CollectiveOp,
@@ -524,7 +531,12 @@ class DeploymentBuilder:
             descriptor_type=ExtendedDescriptorType.STATE,
             payload={
                 "state_class": int(state_class),
-                "commit_policy": 0,
+                # Amendment A21.  A caller does not choose this: the value is
+                # derived from the finished descriptor table in
+                # ``_declare_commit_policies``.  ``REQUEST_SPAN`` is the
+                # pre-A21 value and the pre-A21 rule, so a table that never
+                # reaches the derivation is unchanged.
+                "commit_policy": int(CommitPolicy.REQUEST_SPAN),
                 "element_dtype": int(element_dtype),
                 "session_binding_id": session_binding_id,
                 "committed_object_id": committed_object_id,
@@ -849,6 +861,35 @@ class DeploymentBuilder:
         )
 
     # -- finalisation ----------------------------------------------------
+    def _declare_commit_policies(self) -> None:
+        """Amendment A21: say, per state resource, where its commit's rows come from.
+
+        ``SPAN_TOKENS`` is a request symbol.  It is a row count only where the
+        resource's row axis is the token axis; a fixed recurrent window -- the
+        released DeepSeek compressor's eight-row raw state, the sliding-window
+        ring -- has a row axis the request does not index, and a device that
+        substitutes the span for the count asks such a resource to absorb rows
+        it does not have.
+
+        The policy is not a backend's choice.  It is a fact about the finished
+        descriptor table -- whether any descriptor names the resource's
+        prepared image as a destination -- so it is derived here, in the one
+        builder every backend emits through, and re-derived and checked by the
+        verifier.  A backend cannot get it wrong and two backends cannot
+        disagree about it.
+        """
+        staged = staged_objects(self.table)
+        for state_id in self.table.ids_of_type(int(ExtendedDescriptorType.STATE)):
+            descriptor = self.table[state_id]
+            policy = (
+                CommitPolicy.REQUEST_SPAN
+                if int(descriptor.payload["prepared_object_id"]) in staged
+                else CommitPolicy.UNSTAGED
+            )
+            if int(descriptor.payload["commit_policy"]) != int(policy):
+                descriptor.payload["commit_policy"] = int(policy)
+                self.table.rewrite(state_id)
+
     def finish(
         self, *, watchdog_class: int = 1, max_retired_work: int | None = None
     ) -> Deployment:
@@ -856,6 +897,7 @@ class DeploymentBuilder:
             raise BuildError(f"{len(self._loop_stack)} loop(s) left open")
         if not self.entrypoints:
             raise BuildError("deployment declares no entrypoint")
+        self._declare_commit_policies()
         entry_descriptor = Descriptor(
             descriptor_id=NO_ID,
             descriptor_type=ExtendedDescriptorType.ENTRYPOINT_TABLE,

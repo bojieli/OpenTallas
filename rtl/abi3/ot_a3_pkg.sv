@@ -95,6 +95,15 @@ package ot_a3_pkg;
     localparam [7:0] A3_STATE_DISCARD            = 8'h03;
     localparam [7:0] A3_STATE_GENERATION_ADVANCE = 8'h04;
 
+    // Amendment A21 (wire format section 12.11): where a STATE.COMMIT takes
+    // its row count from, declared at STATE payload byte 1.  REQUEST_SPAN is
+    // SPAN_TOKENS rows at the cursor -- the rule and the value every pre-A21
+    // deployment carried.  UNSTAGED is a resource no descriptor of the
+    // deployment names as a destination: nothing can stage a row into it, so
+    // its commit publishes none.
+    localparam [7:0] A3_COMMIT_POLICY_REQUEST_SPAN = 8'h00;
+    localparam [7:0] A3_COMMIT_POLICY_UNSTAGED     = 8'h01;
+
     localparam [7:0] A3_RECOVERY_POISON = 8'h00;
     localparam [7:0] A3_RECOVERY_ABORT  = 8'h01;
     localparam [7:0] A3_RECOVERY_DRAIN  = 8'h02;

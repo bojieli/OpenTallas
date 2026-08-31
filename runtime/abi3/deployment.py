@@ -186,6 +186,44 @@ class ObjectSource:
 
 
 # ---------------------------------------------------------------------------
+# Amendment A21: which state resources a deployment can stage
+# ---------------------------------------------------------------------------
+def staged_objects(table: "DescriptorTable") -> frozenset[int]:
+    """Every memory object some descriptor in ``table`` names as a destination.
+
+    Wire format section 12.11 (amendment A21).  A ``STATE.COMMIT`` publishes
+    rows the transaction staged into the resource's *prepared* image, and the
+    only ways a program can put a byte there are an operator output view and a
+    remote-write communication endpoint.  A prepared image that appears in
+    neither is one no transaction of this deployment can stage, and its commit
+    therefore has no rows to publish.
+
+    This is a property of the finished descriptor table, not a backend's
+    choice, so it is derived once here and used by both the builder that
+    declares ``commit_policy`` and the verifier that re-derives and checks it.
+    Two backends cannot disagree about a fact neither of them states.
+    """
+    staged: set[int] = set()
+    for descriptor in table.descriptors():
+        kind = descriptor.descriptor_type
+        if kind == int(ExtendedDescriptorType.OPERATOR):
+            for slot in ("output_view_0", "output_view_1"):
+                view_id = int(descriptor.payload[slot])
+                if view_id == NO_ID or not 0 <= view_id < len(table):
+                    continue
+                view = table[view_id]
+                if view.descriptor_type == int(ExtendedDescriptorType.TENSOR_VIEW):
+                    staged.add(int(view.primary_object_id))
+        elif kind == int(ExtendedDescriptorType.COMMUNICATION):
+            # A collective or a remote DMA writes its local endpoint, and a
+            # send writes the peer's; both are destinations.
+            staged.add(int(descriptor.payload["local_object_id"]))
+            staged.add(int(descriptor.payload["remote_object_id"]))
+    staged.discard(NO_ID)
+    return frozenset(staged)
+
+
+# ---------------------------------------------------------------------------
 # Descriptor table
 # ---------------------------------------------------------------------------
 class DescriptorTable:
@@ -207,6 +245,17 @@ class DescriptorTable:
         self._records.append(descriptor.encode())
         self._descriptors.append(descriptor)
         return index
+
+    def rewrite(self, descriptor_id: int) -> None:
+        """Re-encode one descriptor whose payload was amended after insertion.
+
+        The table caches each record's bytes at :meth:`add`, so a field a later
+        pass fills in -- amendment A21's ``commit_policy``, which is a fact
+        about the finished descriptor table and cannot be known while that
+        table is still being built -- would otherwise be present in the
+        in-memory payload and absent from the encoded record the digest binds.
+        """
+        self._records[descriptor_id] = self._descriptors[descriptor_id].encode()
 
     def __getitem__(self, descriptor_id: int) -> Descriptor:
         if not 0 <= descriptor_id < len(self._descriptors):

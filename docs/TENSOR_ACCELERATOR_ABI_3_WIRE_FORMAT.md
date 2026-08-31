@@ -1183,6 +1183,183 @@ specially, and the skip is unconditional on which slot it is. A19 put a real
 descriptor ID where an operator carried `NO_ID`; A20 does the reverse, on the
 same walk, through the same branch.
 
+### 12.11 Amendment A21 — a commit's row count is the resource's, not the request's
+
+A `STATE` descriptor's `commit_policy`, one byte at payload offset 1, is
+defined. It says where a `STATE.COMMIT`'s row count comes from:
+
+| Value | Policy | The commit covers |
+|---:|---|---|
+| 0 | `REQUEST_SPAN` | `SPAN_TOKENS` rows at the cursor, which then advances by them. A non-positive count is trap class 9 and `cursor + rows > capacity_rows` is trap class 4. |
+| 1 | `UNSTAGED` | nothing. No descriptor of the deployment names the resource's prepared image as a destination, so no transaction can put a row there. The cursor does not move and the capacity bound is satisfied by construction. |
+
+Both policies still close the resource's prepare and advance its generation
+when the transaction reaches `CONTROL.COMPLETE`: ADR-003 8.6 makes the whole
+declared state set one architectural transition, and a resource this
+transaction did not change still took part in the step that happened.
+
+`REQUEST_SPAN` is the rule ABI 3.0 has always executed and zero is the value
+the byte has always carried, so no pre-A21 deployment changes and no decoder
+written against the pre-A21 layout misreads one. The field was named in the
+frozen payload from the freeze; what it did not have was a registry, and
+nothing read it.
+
+#### What was wrong
+
+`runtime/sim/device.py` took `rows = SPAN_TOKENS` for every `STATE.COMMIT`, and
+`rtl/abi3/ot_a3_microsequencer.sv` bound the same symbol for every `STATE`
+instruction:
+
+```systemverilog
+end else if (ins_major == A3_MAJOR_STATE) begin
+    state_payload <= desc_payload;
+    sym_index_q <= A3_SYMBOL_SPAN_TOKENS;
+```
+
+`SPAN_TOKENS` is a **request** symbol. It is a row count only where the
+resource's row axis is the token axis — true of a KV cache, which is indexed by
+position, and false of a fixed recurrent window. A state whose `capacity_rows`
+is below the span therefore could not be committed by any backend, however it
+lowered, and both DeepSeek lanes stopped on the same resource at a 104-token
+prefill:
+
+```text
+ROM:  prefill failed: state 329: committing 104 rows at cursor 0 with 0 already staged exceeds capacity 8
+HBM:  prefill failed: state 340: committing 104 rows at cursor 0 with 0 already staged exceeds capacity 8
+```
+
+#### The released source decides that the window is eight rows
+
+The resource is the ratio-4 layer-2 compressor staging window,
+`capacity_rows: 8`, `row_bytes: 4096` — eight rows of 1,024 binary32. In the
+pinned snapshot `inference/model.py`, SHA-256
+`c0c19e6c9fa439bac7fbb1c5bc1868232dfd5aa2f439a548d0e33dcc2a9edd3f`, that is
+exactly what `Compressor.__init__` allocates, at construction and once:
+
+```python
+coff = 1 + self.overlap                                     # line 298
+...
+# State buffers for decode-phase incremental compression.    # line 307
+self.register_buffer("kv_state", torch.zeros(args.max_batch_size, coff * compress_ratio, coff * self.head_dim, dtype=torch.float32), persistent=False)   # line 309
+```
+
+With `compress_ratio = 4`, `overlap = True` (line 296) and `head_dim = 512`,
+`kv_state` is `[max_batch_size, 8, 1024]` binary32. Its row count is
+`coff * compress_ratio` — a constant of the architecture. It is not a function
+of the request, and no request makes it larger.
+
+How much of it a prefill writes is decided in `forward`'s `start_pos == 0` branch:
+
+```python
+if overlap and cutoff >= ratio:
+    self.kv_state[:bsz, :ratio] = kv[:, cutoff-ratio : cutoff]                      # line 337
+...
+if remainder > 0:
+    kv, self.kv_state[:bsz, offset : offset+remainder] = kv.split([cutoff, remainder], dim=1)   # line 340
+```
+
+A prefill writes `ratio` rows and then `seqlen % ratio` more — at most
+`2 * ratio - 1 = 7` rows for any sequence length whatever. At `seqlen = 104`
+the remainder is zero and it writes exactly **four**. The prefill's *results*
+go somewhere else entirely, to the compressed cache at line 380:
+`self.kv_cache[:bsz, :seqlen // ratio] = kv`, which is this ABI's separate
+`compressed_kv` resource with its own capacity of one row per group.
+
+So the exporter is right and the third possibility is closed: the released
+compressor really does keep an eight-row raw window, and a deployment that
+declared 104 rows for it would be describing a different machine.
+
+#### Why the count is declared and cannot be observed
+
+The number a commit needs is how many rows the transaction staged. A device
+cannot read it anywhere:
+
+- A `STATE.COMMIT` instruction carries a descriptor ID, a predicate, a wait
+  set, a signal event and a source-operation ID (section 3). It has no
+  immediate and no operand. There is no room in the instruction for a count.
+- The state engine never sees the staging. A program stages a resource through
+  ordinary operator output views bound to the prepared image; at the state
+  engine those writes are indistinguishable from any other tensor write, and
+  RTL 3.0's control plane does not see device memory at all.
+
+What *is* observable, and is a property of the deployment rather than of any
+backend's opinion, is whether the deployment can stage the resource **at all**:
+whether any descriptor names its prepared image as a destination. Only two can
+— an `OPERATOR`'s `output_view_0`/`output_view_1`, and a `COMMUNICATION`'s
+local or remote endpoint. A prepared image named by neither is one no
+transaction of that deployment can put a byte into.
+
+That derivation is therefore made once, in the shared builder every backend
+emits through (`DeploymentBuilder._declare_commit_policies`), from the finished
+descriptor table, and re-derived and checked by the verifier
+(`_verify_commit_policies`, check `commit_policy_declared`). A backend does not
+choose the value and cannot get it wrong, and two backends cannot disagree
+about a fact neither of them states.
+
+#### What it says about the two lanes
+
+Every ratio-4 and ratio-128 compressor window in both DeepSeek deployments is
+`UNSTAGED`, and the derivation is not a formality — it found that no operator
+in either program names those images in **either** direction:
+
+| lane | state | `capacity_rows` | prepared image named as input | as output |
+|---|---|---:|---:|---:|
+| ROM | 329, 333 — main ratio-4 KV/score | 8 | 0 | 0 |
+| ROM | 337, 341 — indexer ratio-4 | 8 | 0 | 0 |
+| ROM | 345, 349 — main ratio-128 | 128 | 0 | 0 |
+| ROM | 353 — sliding-window KV ring | 128 | 7 | 4 |
+| ROM | 317, 321, 325 — compressed caches | 65,536 / 2,048 | 1–2 | 1–2 |
+| HBM | 340, 344, 388, 392 — main ratio-4 | 8, 160 | 0 | 0 |
+| HBM | 352, 356, 400, 404 — indexer ratio-4 | 8, 160 | 0 | 0 |
+| HBM | 368, 376 — main ratio-128 | 2,560 | 0 | 0 |
+
+The two lanes merge these resources differently — ROM declares a per-slot
+capacity over a twenty-one-slot object, HBM splits the same twenty-one windows
+into one descriptor and a twenty-slot one — and the derivation reaches the same
+answer on both, because it asks about the object rather than about the merge.
+
+`VECTOR.COMPRESS`'s state-update sub-case produces the two pool operands
+`COMPRESS_POOL` reads next and writes no raw row, because this ABI's
+compressor is a prefill operator and the released raw window is a decode
+structure — line 307 says so on itself. The window is declared, prepared and
+committed because the graph declares it, and A21 is what lets a commit of it
+say the true thing rather than a span-shaped one.
+
+Qwen-3 8B is unaffected in every respect: its thirty-six merged KV resources
+are staged by `DMA.SCATTER`, they declare `REQUEST_SPAN`, the byte they carry
+is the byte they carried, and their descriptors, digests, counters and tokens
+are unchanged.
+
+#### RTL 3.0
+
+Involved, and this is the first amendment since A18 that is. A14, A15, A17,
+A19 and A20 all touched bytes the microsequencer never reads; this one changes
+a rule it executes. `ot_a3_state_controller.sv` already latched `row_bytes`,
+`capacity_rows` and `initial_cursor_rows` out of `op_payload` at bits 128, 192
+and 256, so the field A21 needs is one more slice of a payload the block
+already holds — `op_payload[8 +: 8]`, latched into `slot_policy` beside the
+capacity when the slot is claimed. Two rules move with it: `commit_rows` is
+zero under `UNSTAGED` regardless of what the sequencer bound, and the
+zero-count trap becomes conditional, because zero rows is a malformed request
+only where the request is what supplies them. The capacity comparison is
+untouched: `commit_end` is `cursor + 0` under `UNSTAGED` and a cursor never
+exceeds its own capacity.
+
+The vector set gains `a21_unstaged_commit`, one program committing a staged
+resource and an unstaged one whose eight-row capacity is below the
+sixty-four-token span — the shape of the wall, in a vector that would have
+trapped class 4 before the amendment and retires clean after it. Its
+`state_rows_committed` is 64: the span from the staged resource, nothing from
+the unstaged one.
+
+It also repaired the set. Every pre-A21 vector prepared and committed a
+resource whose prepared image no descriptor could write — the workspace
+operator's destination view named a second window of the *activation* object —
+so every commit row count in the set was rows nothing had staged, and under
+A21 all sixty-three would have become `UNSTAGED` and asserted zero. The
+workspace operator now writes the KV resource's prepared image, which is what
+a real lane emits and what makes those commits mean what they claim.
+
 ## 13. Amendments made at the architecture freeze
 
 The draft of this document disagreed with `TA-ADR-003` in five places. All five
@@ -1229,6 +1406,7 @@ remain normative.
 | A18 | an extent may be an affine function of a bound symbol, at a named axis | this document, section 12.8; operator conventions, section 18 |
 | A19 | a sparse index is produced joined, rebased and compacted | this document, section 12.9; operator conventions, section 19 |
 | A20 | a dense index is a selection with the selection removed; an index family is refused where it is not implemented | this document, section 12.10; operator conventions, section 20 |
+| A21 | a state commit's row count is declared by the resource, not taken from the request span | this document, section 12.11; operator conventions, section 21 |
 
 Two of these carry more weight than the rest. **A4** and **A13** together are
 what make a loop-compressed program possible at all: A4 lets a descriptor be a

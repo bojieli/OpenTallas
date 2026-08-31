@@ -249,6 +249,8 @@ def rtl_capability() -> Capability:
 ROWS = 8
 COLS = 16
 CAPACITY_ROWS = 64
+#: Amendment A21: a fixed recurrent window, smaller than any request span.
+A21_WINDOW_ROWS = 8
 
 
 class Workspace:
@@ -319,11 +321,18 @@ class Workspace:
             dims=[ROWS, COLS],
             key="view.in",
         )
+        # Amendment A21: a program that commits a state resource must be a
+        # program that *stages* one.  This view is the workspace operator's
+        # destination and it names the KV resource's prepared image, which is
+        # what a real lane emits -- an engine writes the prepared rows and the
+        # transaction's commit publishes them.  While it pointed at a second
+        # window of the activation object, every vector in this set prepared
+        # and committed a resource no descriptor could ever write, and the
+        # commit row counts they assert were rows nothing had staged.
         self.view_out = b.tensor_view(
-            object_id=self.activations,
+            object_id=self.kv_prepared,
             dtype=DType.BF16,
             dims=[ROWS, COLS],
-            element_offset=ROWS * COLS,
             permissions=int(Permission.READ | Permission.WRITE),
             key="view.out",
         )
@@ -1696,9 +1705,23 @@ def case_a14_link_wafer_scopes(cap: Capability) -> Case:
         object_id=weights, dtype=DType.BF16, dims=[COLS, COLS],
         key="view.weights",
     )
+    # The claim this case makes is that its issue *and view* sequence is the
+    # one ``a14_link_node_scope`` records, so its operator's destination must
+    # resolve to the same numbers as the workspace's.  Since A21 the workspace
+    # writes the KV resource's prepared image at element offset zero -- a
+    # program that commits a state stages it -- so this one writes its own
+    # destination object at offset zero rather than a second window of the
+    # activation object.  This case declares no state resource of its own; what
+    # it pins is the scope byte, not where a matmul lands.
+    destination = b.memory_object(
+        storage_class=StorageClass.SRAM,
+        size_bytes=act_bytes,
+        source=ObjectSource.zeros(act_bytes),
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="obj.destination",
+    )
     view_out = b.tensor_view(
-        object_id=activations, dtype=DType.BF16, dims=[ROWS, COLS],
-        element_offset=ROWS * COLS,
+        object_id=destination, dtype=DType.BF16, dims=[ROWS, COLS],
         permissions=int(Permission.READ | Permission.WRITE),
         key="view.out",
     )
@@ -2323,6 +2346,72 @@ def case_state_discard(cap: Capability) -> Case:
     )
 
 
+def case_a21_unstaged_commit(cap: Capability) -> Case:
+    """Amendment A21: a resource no descriptor stages commits no row.
+
+    The window resource is a fixed eight-row recurrent state -- the shape the
+    released DeepSeek compressor keeps, ``[B, 8, 2D]`` -- and the request's
+    span is sixty-four tokens.  Under the pre-A21 rule the commit would take
+    its row count from ``SPAN_TOKENS`` and refuse with trap class 4, because
+    sixty-four rows do not fit in eight; and the refusal would be wrong,
+    because no descriptor in this deployment names the window's prepared image
+    as a destination, so the transaction stages nothing into it and there are
+    no rows to place.  The KV resource beside it *is* staged and commits its
+    span, so one program exercises both policies.
+    """
+    w = Workspace("a3-a21-unstaged", cap)
+    b = w.builder
+    window_bytes = A21_WINDOW_ROWS * COLS * 2
+    window_committed = b.memory_object(
+        storage_class=StorageClass.STATE,
+        size_bytes=window_bytes,
+        source=ObjectSource.zeros(window_bytes),
+        permissions=int(Permission.READ | Permission.STATE_COMMIT),
+        key="obj.window.committed",
+    )
+    window_prepared = b.memory_object(
+        storage_class=StorageClass.STATE,
+        size_bytes=window_bytes,
+        source=ObjectSource.zeros(window_bytes),
+        permissions=int(Permission.READ | Permission.STATE_PREPARE),
+        key="obj.window.prepared",
+    )
+    window_view = b.tensor_view(
+        object_id=window_prepared,
+        dtype=DType.BF16,
+        dims=[A21_WINDOW_ROWS, COLS],
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.window",
+    )
+    window = b.state(
+        state_class=StateClass.SCRATCH,
+        committed_object_id=window_committed,
+        prepared_object_id=window_prepared,
+        row_bytes=COLS * 2,
+        capacity_rows=A21_WINDOW_ROWS,
+        element_dtype=DType.BF16,
+        view_descriptor_id=window_view,
+        key="state.window",
+    )
+    add = w.op(Major.VECTOR, Vector.ADD, key="op.add")
+    b.emit(Major.STATE, State.PREPARE, descriptor_id=w.state)
+    b.emit(Major.STATE, State.PREPARE, descriptor_id=window)
+    b.emit(Major.VECTOR, Vector.ADD, descriptor_id=add, source_operation_id=0)
+    b.emit(Major.STATE, State.COMMIT, descriptor_id=w.state)
+    b.emit(Major.STATE, State.COMMIT, descriptor_id=window)
+    b.emit(Major.CONTROL, Control.COMPLETE)
+    b.entrypoint(entrypoint_id=0, first_instruction=0, phase=Phase.PREFILL)
+    return Case(
+        name="a21_unstaged_commit",
+        deployment=w.finish(),
+        symbols={int(Symbol.SPAN_TOKENS): CAPACITY_ROWS},
+        note=(
+            "one staged commit of the span beside one unstaged commit of "
+            "nothing, over a resource whose capacity is below the span"
+        ),
+    )
+
+
 def case_observation(cap: Capability) -> Case:
     """Observation and recovery families with control fences."""
     w = Workspace("a3-observation", cap)
@@ -2816,6 +2905,7 @@ def build(argv: list[str] | None = None) -> int:
         case_predicate_decode(capability),
         case_branch(capability),
         case_state_discard(capability),
+        case_a21_unstaged_commit(capability),
         case_observation(capability),
         case_events(capability),
         case_mixed(capability),

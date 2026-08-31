@@ -12,10 +12,23 @@
 //
 //   PREPARE             already open              -> trap class 9
 //   COMMIT              no open prepare           -> trap class 9
-//                       row count not positive    -> trap class 9
+//                       row count not positive    -> trap class 9  (REQUEST_SPAN)
 //                       cursor + rows > capacity  -> trap class 4
 //   DISCARD             always clears the prepare
 //   READ / GENERATION_ADVANCE  accounted, no state change
+//
+// Amendment A21 (wire format section 12.11).  The commit's row count is the
+// resource's to declare, in ``commit_policy`` at STATE payload byte 1, and not
+// the request's to assume: SPAN_TOKENS is a token count and is a row count
+// only where the resource's row axis is the token axis.  Under REQUEST_SPAN --
+// the value every pre-A21 deployment carried, so this block's behaviour on
+// them is unchanged -- the sequencer's bound SPAN_TOKENS is the count and a
+// zero count is still trap class 9.  Under UNSTAGED no descriptor of the
+// deployment names the resource's prepared image as a destination, nothing can
+// stage a row into it, and the commit stages zero rows: it publishes nothing,
+// leaves the cursor where it was, satisfies the capacity bound by
+// construction, and still closes the prepare and advances the generation,
+// because ADR-003 8.6 makes the whole declared state set one transition.
 //
 // Capacity is checked against the committed cursor, exactly as the golden
 // model does.  That check is per commit, not per staged set: two staged
@@ -75,6 +88,7 @@ module ot_a3_state_controller
     reg [31:0] slot_capacity   [0:SLOTS-1];
     reg [31:0] slot_row_bytes  [0:SLOTS-1];
     reg [31:0] slot_generation [0:SLOTS-1];
+    reg [7:0]  slot_policy     [0:SLOTS-1];
     reg [SLOTS-1:0] slot_used;
     reg [SLOTS-1:0] slot_open;
 
@@ -83,7 +97,8 @@ module ot_a3_state_controller
     reg [SLOT_W:0] pending_count;
     reg [SLOT_W-1:0] apply_index;
 
-    // STATE payload fields (byte offsets 16, 24, 32 inside the payload).
+    // STATE payload fields (byte offsets 1, 16, 24, 32 inside the payload).
+    wire [7:0]  payload_policy      = op_payload[8   +: 8];
     wire [31:0] payload_row_bytes   = op_payload[128 +: 32];
     wire [31:0] payload_capacity    = op_payload[192 +: 32];
     wire [31:0] payload_initial_cur = op_payload[256 +: 32];
@@ -115,7 +130,11 @@ module ot_a3_state_controller
     wire [31:0] target_cursor = hit_found ? slot_cursor[target] : payload_initial_cur;
     wire [31:0] target_capacity = hit_found ? slot_capacity[target] : payload_capacity;
     wire        target_open = hit_found ? slot_open[target] : 1'b0;
-    wire [31:0] commit_rows = op_rows_bound ? op_rows : 32'd0;
+    wire [7:0]  target_policy = hit_found ? slot_policy[target] : payload_policy;
+    wire        target_unstaged = (target_policy == A3_COMMIT_POLICY_UNSTAGED);
+    // A21: an unstaged resource stages no row, whatever the request's span is.
+    wire [31:0] commit_rows =
+        target_unstaged ? 32'd0 : (op_rows_bound ? op_rows : 32'd0);
     wire [32:0] commit_end = {1'b0, target_cursor} + {1'b0, commit_rows};
 
     wire [SLOT_W-1:0] apply_slot = pending_slot[apply_index];
@@ -131,6 +150,7 @@ module ot_a3_state_controller
                 slot_capacity[i] <= 32'd0;
                 slot_row_bytes[i] <= 32'd0;
                 slot_generation[i] <= 32'd0;
+                slot_policy[i] <= A3_COMMIT_POLICY_REQUEST_SPAN;
                 pending_slot[i] <= 4'd0;
                 pending_rows[i] <= 32'd0;
             end
@@ -220,6 +240,7 @@ module ot_a3_state_controller
                         slot_cursor[target] <= payload_initial_cur;
                         slot_capacity[target] <= payload_capacity;
                         slot_row_bytes[target] <= payload_row_bytes;
+                        slot_policy[target] <= payload_policy;
                         slot_generation[target] <= 32'd0;
                     end
                     case (op_sub)
@@ -237,7 +258,10 @@ module ot_a3_state_controller
                             if (!target_open) begin
                                 op_ok <= 1'b0;
                                 op_trap_class <= A3_TRAP_STATE;
-                            end else if (commit_rows == 32'd0) begin
+                            end else if (!target_unstaged &&
+                                         (commit_rows == 32'd0)) begin
+                                // A21: zero rows is a malformed request only
+                                // where the request is what supplies them.
                                 op_ok <= 1'b0;
                                 op_trap_class <= A3_TRAP_STATE;
                             end else if (commit_end > {1'b0, target_capacity}) begin

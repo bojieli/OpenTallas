@@ -107,6 +107,9 @@ COUNTERS: dict[int, str] = dict(
         _reg(CounterGroup.STATE, 4, "state.discards"),
         _reg(CounterGroup.STATE, 5, "state.rows_committed"),
         _reg(CounterGroup.STATE, 6, "state.generation_advances"),
+        # Amendment A21: commits that published no row because the
+        # deployment stages nothing into the resource.
+        _reg(CounterGroup.STATE, 7, "state.unstaged_commits"),
         # 0x09 selection and EOS
         _reg(CounterGroup.SELECTION_EOS, 1, "selection.tokens_selected"),
         _reg(CounterGroup.SELECTION_EOS, 2, "selection.tokens_appended"),
