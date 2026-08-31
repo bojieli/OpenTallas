@@ -1,4 +1,4 @@
-.PHONY: check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
+.PHONY: rom-service rom-service-vectors rom-service-physical abi3-rtl-engines check-evidence-grades check-prose-figures check-figures roofline abi3-failclosed abi3-equivalence abi3 abi3-engine-rate abi3-cost-tables abi3-cost-tables-check abi3-spec abi3-test abi3-workloads abi3-oracle abi3-engines abi3-rtl abi3-physical abi3-status abi3-ir profile simulate iso-node model-traffic legacy-sim routing noc sensitivity legacy-sensitivity spec-check formal rtl-sim fault-sim fault-campaign coverage rtl-static rtl pre-synth-verify synth-public spice spice-pdk test verify clean-results
 
 profile:
 	python3 tools/profile_hf.py --all
@@ -131,6 +131,50 @@ abi3-oracle:
 abi3-rtl:
 	PYTHONPATH=. python3 tools/rtl_abi3_campaign.py --output results/rtl/abi3_campaign.json --force
 
+# The three deployments this program ships, co-simulated against
+# runtime.sim.device.Device.  The vector set is built from the deployment
+# bundles under build/ (ignored), so `abi3-rtl-deployment-vectors` needs them
+# built first; the campaign itself reads only the committed vector images.
+abi3-rtl-deployment-vectors:
+	PYTHONPATH=. python3 tools/build_abi3_deployment_rtl_vectors.py
+
+abi3-rtl-deployment:
+	PYTHONPATH=. python3 tools/rtl_abi3_deployment_campaign.py \
+	  --output results/rtl/abi3_deployment_campaign.json --force
+
+abi3-rtl-engines:
+	PYTHONPATH=. python3 tools/build_abi3_engine_vectors.py
+	PYTHONPATH=. python3 tools/rtl_abi3_engine_campaign.py --output results/rtl/abi3_engine_campaign.json --force
+
+rom-service-vectors:
+	PYTHONPATH=. python3 tools/build_rom_service_vectors.py \
+	  --deployment build/abi3/qwen3-8b-rom --product qwen3-chip --scenario nominal \
+	  --output-dir testdata/compiler/rom_service/qwen_chip --beat-budget 2500000 \
+	  --executed --capability configs/hardware/abi3_capability/rom_qwen3.json \
+	  --workload build/workloads/qwen3-8b/TA-QW-CHAT-1.json \
+	  --prompt-tokens 16 --max-new-tokens 1
+	PYTHONPATH=. python3 tools/build_rom_service_vectors.py \
+	  --deployment build/abi3/qwen3-8b-rom-degraded --product qwen3-chip --scenario degraded \
+	  --output-dir testdata/compiler/rom_service/qwen_chip_degraded --beat-budget 600000 \
+	  --executed --capability configs/hardware/abi3_capability/rom_qwen3.json \
+	  --workload build/workloads/qwen3-8b/TA-QW-CHAT-1.json \
+	  --prompt-tokens 16 --max-new-tokens 1 \
+	  --mask-region rom.r0.p003.s1 --quarantine-resource 12
+	PYTHONPATH=. python3 tools/build_rom_service_vectors.py \
+	  --deployment build/abi3/deepseek-v4-flash-rom --product deepseek-wafer \
+	  --scenario nominal \
+	  --output-dir testdata/compiler/rom_service/deepseek_wafer \
+	  --beat-budget 1200000 --plan-slots 1 \
+	  --mask-region rom.r0.p058.s1 --quarantine-resource 4096
+
+rom-service:
+	PYTHONPATH=. python3 tools/rtl_rom_service_campaign.py \
+	  --output results/rtl/rom_service_campaign.json --force
+
+rom-service-physical:
+	PYTHONPATH=. python3 tools/run_rom_service_physical.py \
+	  --output results/rtl/rom_service_physical.json
+
 abi3-physical:
 	PYTHONPATH=. python3 tools/run_abi3_physical.py --view sky130hd --block reduction_endpoint --force
 	PYTHONPATH=. python3 tools/run_abi3_physical.py --view asap7 --block reduction_endpoint --force
@@ -145,7 +189,20 @@ abi3-ir:
 abi3-status:
 	PYTHONPATH=. python3 tools/build_program_status.py
 
-abi3: abi3-spec abi3-test abi3-engines abi3-status
+# W9.5.  The cost tables the cycle model reads are derived from the routed
+# blocks and the executed RTL campaigns, so `--check` is what catches a table
+# that has drifted from the evidence it cites.  `abi3-engine-rate` measures the
+# rate `abi3-cost-tables` then consumes, so it runs first.
+abi3-engine-rate:
+	PYTHONPATH=. python3 tools/run_abi3_engine_rate_campaign.py 	  --output results/rtl/abi3_engine_rate.json --force
+
+abi3-cost-tables:
+	PYTHONPATH=. python3 tools/build_abi3_cost_tables.py
+
+abi3-cost-tables-check:
+	PYTHONPATH=. python3 tools/build_abi3_cost_tables.py --check
+
+abi3: abi3-spec abi3-test abi3-engines abi3-status abi3-cost-tables-check
 
 abi3-equivalence:
 	PYTHONPATH=. python3 tools/prove_storage_class_equivalence.py \

@@ -10,19 +10,270 @@ bandwidth and compute roof are derived from it.
 ## What the model says
 
 1. **The ROM path has a hard per-token ceiling that is a technology constant, not a design choice.** The full-array sweep time is the ROM capacity density divided by its read-bandwidth density, so it does not depend on model size, batch, or expert coverage: 76.6 us, or 13,063 tok/s per user. Under this derivation both densities scale with the same published bitcell-area ratio, so that ceiling is the same at every node: process scaling buys a ROM design capacity, not per-token speed.
-2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 608x (ROM-N5-native-SRAMKV-wafer-pipeline-x12, 681 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate -- runs `tensor` on 1 device. On the GPU side the correction reaches 268x (b200_sxm-x347-pipeline, 347 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate -- runs `hybrid` on 29 devices. Both validation gates are single-slot machines and are unchanged to the digit.
-3. **6x**. The GPU binds on `weight_read` and the ROM part on `link_latency`.
-4. **A token cannot cross more stage boundaries than the model has layers, and charging it as though it could was most of the reported advantage at scale.** At 554,700 mm2 on Qwen3-8B at batch 1, the iso-area GPU cluster is 347 devices. Cut as one serial pipeline that is 44 stages and 375 us of link latency per token; but the model has 36 layers, so at most 36 of those boundaries can exist and the rest of the silicon is replication, which adds bandwidth and no serial event: 338 us. The iso-area per-user ratio at that point falls from 3.0x to 2.9x. The same cap is applied to the ROM side, where it is worth more still because a twelve-wafer machine spans 681 reticle fields.
-5. **Letting the GPU choose its own parallelism is worth up to 69.36x to it.** At 554,700 mm2 on DeepSeek-V4-Pro-0813 the pipeline-only GPU delivers 7.63 tok/s and the same silicon running tensor delivers 529 tok/s.
-6. **The advantage erodes with batch, and the erosion is a KV effect.** At batch 256 the aggregate ratio at equal area spans 0.04x (Qwen3-8B, ROM binding on `weight_read`) to 18.08x (DeepSeek-V4-Flash-0731, ROM binding on `link_latency`). Weight traffic is what ROM removes; KV traffic it does not, and KV traffic is what grows with batch.
-7. **Sparse MoE buys aggregate throughput on a ROM machine, not latency.** DeepSeek-V4-Flash-0731 engages 6.7% of its ROM array at batch 1 and 35.7% at batch 256, while the weight-read time is identical at both. What the machine delivers rises from 810 to 11,593 tok/s, and its rate with every slot occupied from 11,340 to 11,593. The second rises far less than the first because the batch-1 figure is already a full-machine number -- this design has 14 slots -- so most of what batching adds there is coverage rather than occupancy. An unselected expert's read ports cannot be borrowed, so its idle bandwidth is only recovered by giving the sweep more users.
-8. **Tensor parallelism is better on a wafer than on NVLink and is not good anywhere, and the published claim that it reaches Taalas-class rates on-wafer is RETRACTED.** Two all-reduces per layer per token cost up to 1,498 us over NVLink, capping per-user decode at 667 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 1,478.2 us and cap it at 677 tok/s. The ordering survives, and on a like-for-like comparison -- the same model's collective on one wafer against the same model's on NVLink -- the wafer is at least 1.3x cheaper. But the previous figures of 116,278 and 81,966 tok/s came from charging a stitched 2-D mesh one flat hop however many reticle fields the collective spanned. A mesh has no switch, so an all-reduce costs about 1.1 times its diameter, and the model now charges that. What the collective buys is what makes it worth paying: with per-user latency separated from aggregate throughput, a tensor group is the only arrangement that puts the whole machine on one token, and the topology tables below show both families choosing one at batch 1 in spite of this cost.
-9. **Which topology wins depends entirely on what is being maximised, and the study reports both rather than choosing.** On per-user rate at equal area a wafer wins 24 of 24 operating points and an array 0; on tokens per second per square millimetre the same points go 12 to the array and 12 to the wafer. A wafer is not faster per unit silicon -- it is faster because it is more silicon, plus a hop latency an array cannot match.
-10. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 224 of 3016 feasible points.
-11. **The largest open question is not in this model's inputs but in the architecture, and the anchor cannot settle it.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 256 that costs up to 27.2x of aggregate throughput (DeepSeek-V4-Flash-0731). The machines are identical at batch 1, which is where the published anchor sits, so no amount of validation against it resolves the fork.
-12. **A third machine sits between them, and for a sparse model it recovers part of what compute-in-ROM gives up -- less than the mean-region arithmetic used to say.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise, and the sweep waits for the BUSIEST region rather than the average engaged one. The largest gain over a global broadcast is 8.98x, on DeepSeek-V4-Flash-0731 at batch 256, where the busiest region carries 3.02x the load of the mean engaged one. It is not free ground: per-region still loses to the amortising ROM-plus-MAC machine at 44 of 48 operating points. A dense model has one region, so it gains nothing -- the disjointness is what sparsity buys.
-13. **Every number here is conditional on the assumed inputs listed in the evidence ledger below.** The ROM cell-area ratio and the ROM read bandwidth density are the two that move the answer most, and neither has been measured at N5.
-14. **The cooling limit binds, and not where a uniform correction said it would.** 105 of 3,016 feasible points (3.5%) are power-limited now that leakage, clock distribution and a measured clocked-idle floor are charged per mm2 per second rather than per byte moved. The worst is `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4` at batch 8 on 3,260 mm2, throttled 1.35x from 1,560 to 1,151 tok/s per user. **No wafer is throttled anywhere in this study**: a ROM sweep is a fixed cost spread over far more silicon, so wafer-scale is power-sparse. And HBM KV is what melts the arrays -- the worst point's dynamic energy is 97% kv read against 0.5% weight read. The ROM sweep is not what melts it.
+2. **Per-user latency and aggregate throughput are now separate quantities, and separating them is the largest correction in this report.** A token under pipeline parallelism is served by one stage's silicon at a time and must visit every stage, so its latency is the aggregate service time multiplied by `token_slots`, not divided by anything. The two factors cancel exactly: **adding devices under pipeline parallelism buys aggregate throughput and buys one user nothing.** On the ROM side the correction reaches 608x (ROM-N5-native-SRAMKV-wafer-pipeline-x12, 681 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `tensor` on 1 device. On the GPU side the correction reaches 268x (b200_sxm-x347-pipeline, 347 slots), and the batch-1 design that now wins -- the smallest silicon within 5% of the best per-user rate, which is the rule this report has since REPLACED and keeps only to compute the before/after -- runs `hybrid` on 29 devices. Both validation gates are single-slot machines and are unchanged to the digit.
+3. **Each model is recommended one design, by a rule stated in this report, and the answer is not the same class for all three.** The rule keeps every design nothing else beats on BOTH per-user tokens/s and tokens/s per mm2, then walks that frontier from the smallest feasible machine and stops when the next slab of silicon returns less than the silicon already bought. Qwen3-8B takes 3 x 815 mm2 (2,445 mm2, array, KV in SRAM) at 3,796 tok/s per user and 1,553 tok/s per 1,000 mm2, holding 1 session, against 2 copies of one unified HBM die at the same silicon: 5.8x per user. DeepSeek-V4-Flash-0731 takes 14 x 815 mm2 (11,410 mm2, array, KV in SRAM) at 2,545 tok/s per user and 223 tok/s per 1,000 mm2, holding 1 session, against 7 copies of one unified HBM die at the same silicon: 1.5x per user. DeepSeek-V4-Pro-0813 takes 2 x 46,225 mm2 (92,450 mm2, wafer, KV in SRAM) at 2,360 tok/s per user and 26 tok/s per 1,000 mm2, holding 1 session, against 58 copies of one unified HBM die at the same silicon: 4.7x per user. Two granularities come out of one rule, which is the point: the class is chosen per model on evidence rather than assumed. Ranking on per-user rate alone -- which is what this report used to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in three reticle dies.
+4. **The largest ratio anywhere in this study is not the study's result, and it is reported here so nobody has to go looking for it.** The maximum batch-1 per-user ratio is Qwen3-8B on 3,260 mm2 of ROM silicon at 3,860 tok/s per user against 3,200 mm2 of b200_sxm-x2-tensor at 660 tok/s: **5.8x**, ROM binding on `link_latency` and the GPU on `weight_read`. It holds 335 resident sessions against the GPU cluster's 254. A maximum over a sampling grid is a fact about the grid; the recommended-design ratios above are the ones this report stands behind.
+5. **A token cannot cross more stage boundaries than the model has layers, and charging it as though it could was most of the reported advantage at scale.** At 554,700 mm2 on Qwen3-8B at batch 1, the iso-area GPU cluster is 347 devices. Cut as one serial pipeline that is 44 stages and 375 us of link latency per token; but the model has 36 layers, so at most 36 of those boundaries can exist and the rest of the silicon is replication, which adds bandwidth and no serial event: 338 us. The iso-area per-user ratio at that point falls from 3.0x to 2.9x. The same cap is applied to the ROM side, where it is worth more still because a twelve-wafer machine spans 681 reticle fields.
+6. **Letting the GPU choose its own parallelism is worth up to 69.36x to it.** At 554,700 mm2 on DeepSeek-V4-Pro-0813 the pipeline-only GPU delivers 7.63 tok/s and the same silicon running tensor delivers 529 tok/s.
+7. **The advantage erodes with batch, and the erosion is a KV effect.** At batch 256 the aggregate ratio at equal area spans 0.04x (Qwen3-8B, ROM binding on `weight_read`) to 18.08x (DeepSeek-V4-Flash-0731, ROM binding on `link_latency`). Weight traffic is what ROM removes; KV traffic it does not, and KV traffic is what grows with batch.
+8. **Sparse MoE buys aggregate throughput on a ROM machine, not latency.** DeepSeek-V4-Flash-0731 engages 6.7% of its ROM array at batch 1 and 35.7% at batch 256, while the weight-read time is identical at both. What the machine delivers rises from 810 to 11,593 tok/s, and its rate with every slot occupied from 11,340 to 11,593. The second rises far less than the first because the batch-1 figure is already a full-machine number -- this design has 14 slots -- so most of what batching adds there is coverage rather than occupancy. An unselected expert's read ports cannot be borrowed, so its idle bandwidth is only recovered by giving the sweep more users.
+9. **Tensor parallelism is better on a wafer than on NVLink and is not good anywhere, and the published claim that it reaches Taalas-class rates on-wafer is RETRACTED.** Two all-reduces per layer per token cost up to 1,498 us over NVLink, capping per-user decode at 667 tok/s before any arithmetic happens; the same collectives on-wafer cost at most 1,478.2 us and cap it at 677 tok/s. The ordering survives, and on a like-for-like comparison -- the same model's collective on one wafer against the same model's on NVLink -- the wafer is at least 1.3x cheaper. But the previous figures of 116,278 and 81,966 tok/s came from charging a stitched 2-D mesh one flat hop however many reticle fields the collective spanned. A mesh has no switch, so an all-reduce costs about 1.1 times its diameter, and the model now charges that. What the collective buys is what makes it worth paying: with per-user latency separated from aggregate throughput, a tensor group is the only arrangement that puts the whole machine on one token, and the topology tables below show both families choosing one at batch 1 in spite of this cost.
+10. **Which topology wins depends entirely on what is being maximised, and the study reports both rather than choosing.** On per-user rate at equal area a wafer wins 24 of 24 operating points and an array 0; on tokens per second per square millimetre the same points go 12 to the array and 12 to the wafer. A wafer is not faster per unit silicon -- it is faster because it is more silicon, plus a hop latency an array cannot match.
+11. **A wafer has less die edge per unit area than the same area of separate dies, and that is an argument against it.** Perimeter grows as the square root of area, so HBM beachfront -- and therefore KV bandwidth -- does not scale with wafer area the way compute and ROM capacity do. This model charges both sides the same edge utilisation a shipping GPU achieves, and the consequence shows up wherever a design binds on `kv_read`: 224 of 3016 feasible points.
+12. **The largest open question is not in this model's inputs but in the architecture, and the anchor cannot settle it.** If a ROM cell both stores and multiplies, each concurrent stream needs its own pass and aggregate per-die throughput never exceeds the per-user rate. At batch 256 that costs up to 27.2x of aggregate throughput (DeepSeek-V4-Flash-0731). The machines are identical at batch 1, which is where the published anchor sits, so no amount of validation against it resolves the fork.
+13. **A third machine sits between them, and for a sparse model it recovers part of what compute-in-ROM gives up -- less than the mean-region arithmetic used to say.** Give each expert region its own activation port and two tokens selecting disjoint experts drive disjoint regions at the same time; only the tokens landing on one region serialise, and the sweep waits for the BUSIEST region rather than the average engaged one. The largest gain over a global broadcast is 8.98x, on DeepSeek-V4-Flash-0731 at batch 256, where the busiest region carries 3.02x the load of the mean engaged one. It is not free ground: per-region still loses to the amortising ROM-plus-MAC machine at 44 of 48 operating points. A dense model has one region, so it gains nothing -- the disjointness is what sparsity buys.
+14. **Every number here is conditional on the assumed inputs listed in the evidence ledger below.** The ROM cell-area ratio and the ROM read bandwidth density are the two that move the answer most, and neither has been measured at N5.
+15. **The cooling limit binds, and not where a uniform correction said it would.** 105 of 3,016 feasible points (3.5%) are power-limited now that leakage, clock distribution and a measured clocked-idle floor are charged per mm2 per second rather than per byte moved. The worst is `Qwen3-8B/ROM-N5-native-HBMKV-array-pipeline-x4` at batch 8 on 3,260 mm2, throttled 1.35x from 1,560 to 1,151 tok/s per user. **No wafer is throttled anywhere in this study**: a ROM sweep is a fixed cost spread over far more silicon, so wafer-scale is power-sparse. And HBM KV is what melts the arrays -- the worst point's dynamic energy is 97% kv read against 0.5% weight read. The ROM sweep is not what melts it.
+
+
+## The recommended design per model, and the rule that picks it
+
+**The metric, stated here because a recommendation without its rule is an
+opinion.**
+
+> Among the ROM designs feasible for this model at this batch, keep every design that no other feasible design of the same model and batch beats on BOTH per-user tokens/s and tokens/s per 1,000 mm2. That non-dominated set is the reported frontier, and it is published in full. Order it by silicon area, start at the smallest feasible machine, and accept each larger rung only while the per-user tokens/s it adds per added mm2 is strictly greater than the tokens/s per mm2 the incumbent already returns on average; ties go to the smaller machine. The rung the walk stops on is the recommended design. Equivalently: maximise per-user tokens/s per mm2 over the feasible set. The two statements are the same rule -- accepting when (r - r0) / (a - a0) >= r0 / a0 is exactly r / a >= r0 / a0 -- and the marginal form is the one to read, because it is the engineering question: does the next slab of silicon work at least as hard as the slab you have?
+
+Why this rule and not another: Ranking on per-user tokens/s alone hands an 8B model a 46,225 mm2 wafer, because a per-user rate has no area in it and a wafer is always at least as fast as anything cut out of it -- on Qwen3-8B that is 2.33x the rate of the three 815 mm2 reticles that hold the same checkpoint, bought with 18.9x the silicon and an eighth of the throughput density. Ranking on silicon area alone picks the smallest machine that physically holds the checkpoint, whatever it delivers. A 5%-of-peak tolerance does not fix the first: it is a tie-break among near-peak designs and is orthogonal to area, so it shrinks the machine only in the cases nobody was worried about. The domination filter plus the marginal-return walk fixes both, needs no latency target to be stated, and -- because the filter is on (per-user rate, rate per mm2) -- makes it structurally impossible to recommend a design that another feasible design of the same model beats on both axes at once.
+
+The bar is `1` -- parity. The frontier is
+taken over the `batched` machine, which is what the
+main tables show. **The recommendation is not a single number and must not be
+quoted as one:** every row below carries per-user rate, aggregate rate,
+resident sessions, throughput density, power, energy per token and the
+binding constraint together, because a per-user rate published without the
+resident-session count beside it is how a one-session latency device gets
+read as a server.
+
+The GPU comparator at each ROM area is N copies of one unified HBM die, N chosen so the silicon matches, and the cluster is allowed to pick its own parallelism. The comparison is read at the ROM side's CHOSEN area, not at a fixed rung of the area ladder where both sides are past their own optimum.
+
+### Qwen3-8B at 8,192 tokens
+
+**Recommended: `ROM-N5-native-SRAMKV-array-pipeline-x3`** -- 3 x 815 mm2 reticle dies, 2,445 mm2 total, `pipeline`-parallel, KV in SRAM, spare silicon to `sram`.
+
+- **3,795.9 tok/s per user** (0.26 ms/token), binding on `weight_read`
+- **1,552.5 tok/s per 1,000 mm2** -- the quantity the rule maximises
+- 3,796 tok/s aggregate with every slot full, over 1 resident session (fill limited by `kv_capacity`)
+- 240 W at 0.098 W/mm2, 63.2 mJ/token, thermal scale 1.000
+
+**Iso-area, at the area the rule chose.** The comparator is 2 copies of one unified HBM die -- `b200_sxm-x2-tensor`, 3,200 mm2, area ratio 0.7641 -- running the `tensor` topology it chose for itself.
+
+| | ROM | iso-area GPU | ratio |
+| --- | ---: | ---: | ---: |
+| silicon mm2 | 2,445 | 3,200 | 0.7641 |
+| user tok/s | 3,795.9 | 660.1 | 5.75x |
+| aggregate tok/s | 3,796 | 660 | 5.75x |
+| resident sessions | 1 | 254 | -- |
+| J/token | 0.0632 | 2.7814 | 44.0x |
+
+**The areas do not match exactly, and the mismatch is stated rather than rounded away.** A GPU cluster is quantised in whole dies and a ROM design is not, so at 2,445 mm2 the closest whole number of 1,600 mm2 dies is 2, i.e. 3,200 mm2. The ROM side is therefore compared against 31% MORE silicon than it has, which makes the ratio CONSERVATIVE for the ROM side.
+
+**Read the resident-session row before the ratio row.** A per-user rate divided by a per-user rate is a latency claim, and a latency claim taken from a machine that holds 1 session against one that holds 254 is not the trade it looks like. Where those two numbers are far apart the honest reading is the batch-regime table below, not this row.
+
+The GPU's own best machine at **any** area is `b200_sxm-x29-hybrid` at 46,400 mm2 and 1,777.0 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
+
+**Headline before and after.**
+
+| rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| before -- smallest within 5% of peak rate | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,505.3 | 140.7 | 1 | 3.66x |
+| rank on per-user rate alone | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,505.3 | 140.7 | 1 | 3.66x |
+| smallest feasible machine | `ROM-N5-native-SRAMKV-array-pipeline-x3` | 2,445 | 3,795.9 | 1,552.5 | 1 | 5.75x |
+| **after -- this report's rule** | `ROM-N5-native-SRAMKV-array-pipeline-x3` | 2,445 | 3,795.9 | 1,552.5 | 1 | 5.75x |
+
+**The walk, rung by rung.** The number in the `marginal` column is what the next slab of silicon returns; the number in `incumbent average` is what the silicon already bought returns. The walk stops the first time the former is not larger.
+
+| design | mm2 | user tok/s | tok/s per 1,000 mm2 | marginal | incumbent average | verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `ROM-N5-native-SRAMKV-array-pipeline-x3` | 2,445 | 3,795.9 | 1,552.5 | -- | 1,552.5 | ACCEPT |
+| `ROM-N5-native-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 4,964.8 | 1,218.4 | 717.1 | 1,552.5 | stop |
+| `ROM-N5-native-SRAMKV-array-pipeline-x7-romfill` | 5,705 | 5,040.9 | 883.6 | 381.9 | 1,552.5 | stop |
+| `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,505.3 | 140.7 | 61.9 | 1,552.5 | stop |
+
+**The frontier at batch 1, published in full.** Every design here is one that nothing else beats on both axes at once, so a reader with a latency target this report does not know about can read their own point off it. An honest curve beats a false single answer, and the rows above and below the recommendation are the ones that show what the rule is doing.
+
+| design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
+| `ROM-N5-native-SRAMKV-array-pipeline-x3` **<-- recommended** | 2,445 | 3 | 3,795.9 | 3,796 | 1,552.5 | 1 | `weight_read` | 240 | 63.2 | `b200_sxm-x2-tensor` | 5.75x |
+| `ROM-N5-native-SRAMKV-array-pipeline-x5-romfill` | 4,075 | 5 | 4,964.8 | 4,965 | 1,218.4 | 1 | `weight_read` | 357 | 72.0 | `b200_sxm-x3-tensor` | 5.31x |
+| `ROM-N5-native-SRAMKV-array-pipeline-x7-romfill` | 5,705 | 7 | 5,040.9 | 5,041 | 883.6 | 1 | `weight_read` | 492 | 97.6 | `b200_sxm-x4-tensor` | 4.27x |
+| `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 1 | 6,505.3 | 6,505 | 140.7 | 1 | `link_latency` | 3,835 | 589.6 | `b200_sxm-x29-hybrid` | 3.66x |
+
+**Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
+
+| class | designs | pick | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions |
+| --- | ---: | --- | --- | ---: | ---: | ---: | ---: |
+| array | 12 | densest | `ROM-N5-native-SRAMKV-array-pipeline-x3` | 2,445 | 3,795.9 | 1,552.5 | 1 |
+| array | 12 | fastest | `ROM-N5-native-SRAMKV-array-pipeline-x7-romfill` | 5,705 | 5,040.9 | 883.6 | 1 |
+| array | 12 | smallest | `ROM-N5-native-SRAMKV-array-pipeline-x3` | 2,445 | 3,795.9 | 1,552.5 | 1 |
+| wafer | 80 | densest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,505.3 | 140.7 | 1 |
+| wafer | 80 | fastest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,505.3 | 140.7 | 1 |
+| wafer | 80 | smallest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 6,505.3 | 140.7 | 1 |
+
+**The best design differs by batch, and here is where it changes.**
+
+| batches | design | mm2 | class | KV | resident sessions |
+| --- | --- | ---: | --- | --- | ---: |
+| 1 | `ROM-N5-native-SRAMKV-array-pipeline-x3` | 2,445 | array | SRAM | 1 |
+| 2 | `ROM-N5-native-HBMKV-array-tensor-x4` | 3,260 | array | HBM | 335 |
+| 4-8 | `ROM-N5-native-HBMKV-array-pipeline-x4-romfill` | 3,260 | array | HBM | 335 |
+| 16 | `ROM-N5-native-HBMKV-array-tensor-x4-romfill` | 3,260 | array | HBM | 335 |
+| 32-256 | `ROM-N5-native-HBMKV-array-tensor-x8-romfill` | 6,520 | array | HBM | 670 |
+
+Per-user rate falls as the batch rises on a fixed machine, so `tok/s per 1,000 mm2` at batch B is the same ordering as `delivered tok/s per 1,000 mm2` at batch B -- delivered is exactly B times per-user. The rule is therefore the same rule at every batch, and the design moving is the study telling you the answer genuinely depends on the operating point, not the metric changing under it.
+
+### DeepSeek-V4-Flash-0731 at 200,000 tokens
+
+**Recommended: `ROM-N5-native-SRAMKV-array-hybrid-x14`** -- 14 x 815 mm2 reticle dies, 11,410 mm2 total, `hybrid`-parallel, KV in SRAM, spare silicon to `sram`.
+
+- **2,545.1 tok/s per user** (0.39 ms/token), binding on `link_latency`
+- **223.1 tok/s per 1,000 mm2** -- the quantity the rule maximises
+- 2,545 tok/s aggregate with every slot full, over 1 resident session (fill limited by `kv_capacity`)
+- 712 W at 0.062 W/mm2, 279.9 mJ/token, thermal scale 1.000
+
+**Iso-area, at the area the rule chose.** The comparator is 7 copies of one unified HBM die -- `b200_sxm-x7-tensor`, 11,200 mm2, area ratio 1.0188 -- running the `tensor` topology it chose for itself.
+
+| | ROM | iso-area GPU | ratio |
+| --- | ---: | ---: | ---: |
+| silicon mm2 | 11,410 | 11,200 | 1.0188 |
+| user tok/s | 2,545.1 | 1,656.8 | 1.54x |
+| aggregate tok/s | 2,545 | 1,657 | 1.54x |
+| resident sessions | 1 | 699 | -- |
+| J/token | 0.2799 | 2.6944 | 9.6x |
+
+The areas match to within 2%, so no granularity correction is needed on this row.
+
+**Read the resident-session row before the ratio row.** A per-user rate divided by a per-user rate is a latency claim, and a latency claim taken from a machine that holds 1 session against one that holds 699 is not the trade it looks like. Where those two numbers are far apart the honest reading is the batch-regime table below, not this row.
+
+The GPU's own best machine at **any** area is `b200_sxm-x7-tensor` at 11,200 mm2 and 1,656.8 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
+
+**Headline before and after.**
+
+| rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| before -- smallest within 5% of peak rate | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 4,915.5 | 106.3 | 1 | 4.62x |
+| rank on per-user rate alone | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 4,915.5 | 106.3 | 1 | 4.62x |
+| smallest feasible machine | `ROM-N5-native-SRAMKV-array-hybrid-x14` | 11,410 | 2,545.1 | 223.1 | 1 | 1.54x |
+| **after -- this report's rule** | `ROM-N5-native-SRAMKV-array-hybrid-x14` | 11,410 | 2,545.1 | 223.1 | 1 | 1.54x |
+
+**The walk, rung by rung.** The number in the `marginal` column is what the next slab of silicon returns; the number in `incumbent average` is what the silicon already bought returns. The walk stops the first time the former is not larger.
+
+| design | mm2 | user tok/s | tok/s per 1,000 mm2 | marginal | incumbent average | verdict |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `ROM-N5-native-SRAMKV-array-hybrid-x14` | 11,410 | 2,545.1 | 223.1 | -- | 223.1 | ACCEPT |
+| `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 4,915.5 | 106.3 | 68.1 | 223.1 | stop |
+
+**The frontier at batch 1, published in full.** Every design here is one that nothing else beats on both axes at once, so a reader with a latency target this report does not know about can read their own point off it. An honest curve beats a false single answer, and the rows above and below the recommendation are the ones that show what the rule is doing.
+
+| design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
+| `ROM-N5-native-SRAMKV-array-hybrid-x14` **<-- recommended** | 11,410 | 14 | 2,545.1 | 2,545 | 223.1 | 1 | `link_latency` | 712 | 279.9 | `b200_sxm-x7-tensor` | 1.54x |
+| `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 1 | 4,915.5 | 4,915 | 106.3 | 1 | `link_latency` | 3,807 | 774.5 | `b200_sxm-x29-hybrid` | 4.62x |
+
+**Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
+
+| class | designs | pick | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions |
+| --- | ---: | --- | --- | ---: | ---: | ---: | ---: |
+| array | 12 | densest | `ROM-N5-native-SRAMKV-array-hybrid-x14` | 11,410 | 2,545.1 | 223.1 | 1 |
+| array | 12 | fastest | `ROM-N5-native-SRAMKV-array-hybrid-x14` | 11,410 | 2,545.1 | 223.1 | 1 |
+| array | 12 | smallest | `ROM-N5-native-SRAMKV-array-hybrid-x14` | 11,410 | 2,545.1 | 223.1 | 1 |
+| wafer | 80 | densest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 4,915.5 | 106.3 | 1 |
+| wafer | 80 | fastest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 4,915.5 | 106.3 | 1 |
+| wafer | 80 | smallest | `ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill` | 46,225 | 4,915.5 | 106.3 | 1 |
+
+**The best design differs by batch, and here is where it changes.**
+
+| batches | design | mm2 | class | KV | resident sessions |
+| --- | --- | ---: | --- | --- | ---: |
+| 1 | `ROM-N5-native-SRAMKV-array-hybrid-x14` | 11,410 | array | SRAM | 1 |
+| 2-8 | `ROM-N5-native-HBMKV-array-hybrid-x14` | 11,410 | array | HBM | 1,025 |
+| 16-64 | `ROM-N5-native-HBMKV-wafer-tensor-x1` | 46,225 | wafer | HBM | 630 |
+| 256 | `ROM-N5-native-HBMKV-wafer-pipeline-x1-romfill` | 46,225 | wafer | HBM | 630 |
+
+Per-user rate falls as the batch rises on a fixed machine, so `tok/s per 1,000 mm2` at batch B is the same ordering as `delivered tok/s per 1,000 mm2` at batch B -- delivered is exactly B times per-user. The rule is therefore the same rule at every batch, and the design moving is the study telling you the answer genuinely depends on the operating point, not the metric changing under it.
+
+### DeepSeek-V4-Pro-0813 at 1,000,000 tokens
+
+**Recommended: `ROM-N5-native-SRAMKV-wafer-hybrid-x2`** -- 2 x 46,225 mm2 wafers, 92,450 mm2 total, `hybrid`-parallel, KV in SRAM, spare silicon to `sram`.
+
+- **2,359.5 tok/s per user** (0.42 ms/token), binding on `link_latency`
+- **25.5 tok/s per 1,000 mm2** -- the quantity the rule maximises
+- 2,360 tok/s aggregate with every slot full, over 1 resident session (fill limited by `kv_capacity`)
+- 7,464 W at 0.081 W/mm2, 3,163.1 mJ/token, thermal scale 1.000
+
+**Iso-area, at the area the rule chose.** The comparator is 58 copies of one unified HBM die -- `b200_sxm-x58-tensor`, 92,800 mm2, area ratio 0.9962 -- running the `tensor` topology it chose for itself.
+
+| | ROM | iso-area GPU | ratio |
+| --- | ---: | ---: | ---: |
+| silicon mm2 | 92,450 | 92,800 | 0.9962 |
+| user tok/s | 2,359.5 | 497.3 | 4.74x |
+| aggregate tok/s | 2,360 | 497 | 4.74x |
+| resident sessions | 1 | 862 | -- |
+| J/token | 3.1631 | 45.2822 | 14.3x |
+
+The areas match to within 2%, so no granularity correction is needed on this row.
+
+**Read the resident-session row before the ratio row.** A per-user rate divided by a per-user rate is a latency claim, and a latency claim taken from a machine that holds 1 session against one that holds 862 is not the trade it looks like. Where those two numbers are far apart the honest reading is the batch-regime table below, not this row.
+
+The GPU's own best machine at **any** area is `b200_sxm-x347-tensor` at 555,200 mm2 and 529.2 tok/s per user, which is the area-free bound and is quoted so the iso-area row is not the only comparison on the page.
+
+**Headline before and after.**
+
+| rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions | iso-area ratio |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| before -- smallest within 5% of peak rate | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 92,450 | 2,359.5 | 25.5 | 1 | 4.74x |
+| rank on per-user rate alone | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 92,450 | 2,359.5 | 25.5 | 1 | 4.74x |
+| smallest feasible machine | `ROM-N5-native-SRAMKV-array-hybrid-x72` | 58,680 | 715.0 | 12.2 | 1 | 1.49x |
+| **after -- this report's rule** | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 92,450 | 2,359.5 | 25.5 | 1 | 4.74x |
+
+**There is nothing to walk to.** The frontier is a single row, which is what it means for one design to beat every other feasible design of this model on BOTH axes at once. No trade-off has to be argued and no threshold is doing any work here: the recommendation is simply the only non-dominated machine. What it beat is in the class table below.
+
+**The frontier at batch 1, published in full.** Every design here is one that nothing else beats on both axes at once, so a reader with a latency target this report does not know about can read their own point off it. An honest curve beats a false single answer, and the rows above and below the recommendation are the ones that show what the rule is doing.
+
+| design | mm2 | devices | user tok/s | aggregate tok/s | tok/s per 1,000 mm2 | resident sessions | binds on | W | mJ/token | iso-area GPU | ratio |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | --- | ---: |
+| `ROM-N5-native-SRAMKV-wafer-hybrid-x2` **<-- recommended** | 92,450 | 2 | 2,359.5 | 2,360 | 25.5 | 1 | `link_latency` | 7,464 | 3,163.1 | `b200_sxm-x58-tensor` | 4.74x |
+
+**Array or wafer, with the losing class's own best machine on the page.** A frontier can honestly be a single row -- that is what it means for one design to win on both axes at once -- and a single row tells a reader nothing about what it beat. Each class enters at its own optimum, never at its minimum-feasible machine, because comparing against a floor is how a class gets beaten by its own under-provisioning rather than by the other class.
+
+| class | designs | pick | design | mm2 | user tok/s | tok/s per 1,000 mm2 | resident sessions |
+| --- | ---: | --- | --- | ---: | ---: | ---: | ---: |
+| array | 24 | densest | `ROM-N5-native-SRAMKV-array-hybrid-x74` | 60,310 | 829.7 | 13.8 | 1 |
+| array | 24 | fastest | `ROM-N5-native-SRAMKV-array-hybrid-x74` | 60,310 | 829.7 | 13.8 | 1 |
+| array | 24 | smallest | `ROM-N5-native-SRAMKV-array-hybrid-x72` | 58,680 | 715.0 | 12.2 | 1 |
+| wafer | 66 | densest | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 92,450 | 2,359.5 | 25.5 | 1 |
+| wafer | 66 | fastest | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 92,450 | 2,359.5 | 25.5 | 1 |
+| wafer | 66 | smallest | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 92,450 | 2,359.5 | 25.5 | 1 |
+
+**The best design differs by batch, and here is where it changes.**
+
+| batches | design | mm2 | class | KV | resident sessions |
+| --- | --- | ---: | --- | --- | ---: |
+| 1 | `ROM-N5-native-SRAMKV-wafer-hybrid-x2` | 92,450 | wafer | SRAM | 1 |
+| 2-8 | `ROM-N5-native-HBMKV-wafer-hybrid-x3-romfill` | 138,675 | wafer | HBM | 265 |
+| 16-256 | `ROM-N5-native-HBMKV-wafer-hybrid-x3` | 138,675 | wafer | HBM | 265 |
+
+Per-user rate falls as the batch rises on a fixed machine, so `tok/s per 1,000 mm2` at batch B is the same ordering as `delivered tok/s per 1,000 mm2` at batch B -- delivered is exactly B times per-user. The rule is therefore the same rule at every batch, and the design moving is the study telling you the answer genuinely depends on the operating point, not the metric changing under it.
+
+**What this section does not fix, and which recommendations it leaves exposed.** The ROM array class is sampled only at the device counts each floorplan's own sizing sweep chose: `ROM_AREA_LADDER` is applied where `plan.kind == "wafer"` and nowhere else, so a reticle array exists at an area only if some sweep landed there. The counts this study actually emitted, per model and per `(kv_store, spare_area_policy)` combination, are printed below so the holes are visible rather than described:
+
+| model | KV store | spare silicon | reticle counts emitted |
+| --- | --- | --- | --- |
+| DeepSeek-V4-Flash-0731 | HBM | rom | 14 |
+| DeepSeek-V4-Flash-0731 | HBM | sram | 14 |
+| DeepSeek-V4-Flash-0731 | SRAM | rom | 14 |
+| DeepSeek-V4-Flash-0731 | SRAM | sram | 14 |
+| DeepSeek-V4-Pro-0813 | HBM | rom | 74, 76 |
+| DeepSeek-V4-Pro-0813 | HBM | sram | 74, 76 |
+| DeepSeek-V4-Pro-0813 | SRAM | rom | 72, 74 |
+| DeepSeek-V4-Pro-0813 | SRAM | sram | 72, 74 |
+| Qwen3-8B | HBM | rom | 4, 8 |
+| Qwen3-8B | HBM | sram | 4 |
+| Qwen3-8B | SRAM | rom | 5, 7 |
+| Qwen3-8B | SRAM | sram | 3 |
+
+The omission runs **against** the array class, so the published ROM curve is a lower bound on the ROM curve rather than an upper one.
+
+That splits the recommendations above into two kinds, and the split should be stated rather than left for a reader to work out. **Where the winner is the smallest feasible machine, the gap cannot touch it**: no rung exists below the minimum area, so nothing denser can be hiding there. **Where the winner is a wafer chosen over the array class, the gap is live**: the wafer is being compared against an array curve that is sampled at a handful of counts, and a rung the sweep never visited could in principle beat it on throughput density. Those are the weakest results on this page and they should be re-derived once the array class is emitted on the same explicit ladder the wafer class already gets. Either way, the curve BETWEEN rungs is not evidence and must not be read as any.
 
 ## The overlap and serialisation rule
 
@@ -458,7 +709,7 @@ is the error this study made.
 | Qwen3-8B | 256 | fastest | Qwen3-8B/ROM-N5-native-HBMKV-wafer-hybrid-x12-romfill | 554,700 | 1,004.3 | 257,091.2 | kv_read | Qwen3-8B/b200_sxm-x347-hybrid | 555,200 | 1.00x | hybrid | 373.67 | 1,192.2 | 305,206.6 | link_latency | 0.84x | 0.84x | 2.74x | 0.89x |
 | Qwen3-8B | 256 | smallest silicon | Qwen3-8B/ROM-N5-native-HBMKV-array-tensor-x4-romfill | 3,260 | 39.2 | 10,042.4 | thermal | Qwen3-8B/b200_sxm-x2-pipeline | 3,200 | 1.02x | pipeline | 2.37 | infeasible | — | capacity_or_format | — | — | — | — |
 | DeepSeek-V4-Flash-0731 | 1 | fastest | DSV4-Flash/ROM-N5-native-SRAMKV-wafer-tensor-x1-romfill | 46,225 | 4,915.5 | 4,915.5 | link_latency | DSV4-Flash/b200_sxm-x29-hybrid | 46,400 | 1.00x | hybrid | 222.45 | 1,064.0 | 4,256.2 | weight_read | 4.62x | 1.15x | 25.49x | 4.62x |
-| DeepSeek-V4-Flash-0731 | 1 | smallest silicon | DSV4-Flash/ROM-N5-native-SRAMKV-array-hybrid-x14 | 11,410 | 2,545.1 | 5,090.3 | link_latency | DSV4-Flash/b200_sxm-x7-tensor | 11,200 | 1.02x | tensor | 208.41 | 1,656.8 | 1,656.8 | weight_read | 1.54x | 3.07x | 6.91x | 1.54x |
+| DeepSeek-V4-Flash-0731 | 1 | smallest silicon | DSV4-Flash/ROM-N5-native-SRAMKV-array-hybrid-x14 | 11,410 | 2,545.1 | 2,545.1 | link_latency | DSV4-Flash/b200_sxm-x7-tensor | 11,200 | 1.02x | tensor | 208.41 | 1,656.8 | 1,656.8 | weight_read | 1.54x | 1.54x | 6.91x | 1.54x |
 | DeepSeek-V4-Flash-0731 | 2 | fastest | DSV4-Flash/ROM-N5-native-HBMKV-wafer-tensor-x1-romfill | 46,225 | 4,914.2 | 9,828.3 | link_latency | DSV4-Flash/b200_sxm-x29-hybrid | 46,400 | 1.00x | hybrid | 222.45 | 1,064.0 | 4,256.2 | weight_read | 4.62x | 2.31x | 25.48x | 4.62x |
 | DeepSeek-V4-Flash-0731 | 2 | smallest silicon | DSV4-Flash/ROM-N5-native-HBMKV-array-hybrid-x14 | 11,410 | 2,531.4 | 5,062.8 | link_latency | DSV4-Flash/b200_sxm-x7-tensor | 11,200 | 1.02x | tensor | 210.43 | 1,356.4 | 2,712.8 | weight_read | 1.87x | 1.87x | 6.87x | 1.87x |
 | DeepSeek-V4-Flash-0731 | 4 | fastest | DSV4-Flash/ROM-N5-native-HBMKV-wafer-tensor-x1-romfill | 46,225 | 4,762.6 | 19,050.4 | link_latency | DSV4-Flash/b200_sxm-x29-hybrid | 46,400 | 1.00x | hybrid | 222.45 | 1,064.0 | 4,256.2 | weight_read | 4.48x | 4.48x | 24.69x | 4.48x |
@@ -1552,7 +1803,7 @@ Why the infeasible points are infeasible:
 
 ## Mechanical consistency audit
 
-**PASS** over 95,508 checks.
+**PASS** over 95,637 checks.
 
 - Generated arithmetic identities, area-accounting identities and the ROM full-array sweep floor only.
 - A passing audit is not evidence for ROM macro timing, array read bandwidth at a leading node, NoC timing, package, power delivery, yield, or model accuracy.

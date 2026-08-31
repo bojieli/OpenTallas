@@ -1,0 +1,1198 @@
+{
+  "array_efficiency_reference": {
+    "assumed": 0.7,
+    "assumed_grade": "assumed",
+    "assumed_source": "configs/hardware/technology.json#rom.array_efficiency",
+    "note": "the measured column is a foundry SRAM macro's own array efficiency at 130 nm, not a ROM macro's; a ROM macro has no write drivers, no write assist and no BIST, so its efficiency at equal capacity should be higher"
+  },
+  "artifacts": [
+    {
+      "path": "results/spice/ihp_sg13g2_bitcell/artifacts/ihp_rom_bitarray.mag",
+      "sha256": "8a180cf2728c1e5c04385830e7497c772e6febf9f5f8c23a469890f5c0664ec5",
+      "size_bytes": 19467
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_bitcell/artifacts/ihp_rom_bitarray.gds",
+      "sha256": "099bb087923b171225332c8f7cb8dc60cd45aed45b67e92184b5b482419809ce",
+      "size_bytes": 14050
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_bitcell/artifacts/ihp_rom_bitarray.extracted.spice",
+      "sha256": "4ea8462b1e1cf03f744318b04f05476d54c2adbaacad7b634e25b05b3914d8d3",
+      "size_bytes": 3508
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_bitcell/artifacts/ihp_rom_bitarray.pex.spice",
+      "sha256": "570479ded540ab788436a1cae109d8bbe998ebceb76147c7b694394dc0eaf801",
+      "size_bytes": 7435
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_bitcell/artifacts/programmed_bits.txt",
+      "sha256": "f3f5e814d4a5fa14352dc340bb9c00d4c0dc360eecf5b3f1d78797f3d45e5b8a",
+      "size_bytes": 64
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_bitcell/artifacts/magic.log",
+      "sha256": "acf8ccc5e9282abc463948116ae779b71dbbdaa3eea0f196c018f0213abb0a3a",
+      "size_bytes": 2408
+    }
+  ],
+  "claim_boundary": {
+    "establishes": [
+      "the minimum DRC-legal drawn pitch of an independently implemented via1-programmed NOR mask-ROM bitcell under the exact installed public IHP SG13G2 Magic deck",
+      "that every dimension of that bitcell is at a deck floor, because reducing any one of them by 10 nm produces a named rule violation",
+      "the drawn placement pitch of the IHP SG13G2 foundry single-port and dual-port SRAM bitcells, cross-checked by requiring the bitcell instance count to equal the datasheet bit count in every shipped macro",
+      "the ratio of those two measured pitch areas at 130 nm",
+      "that the foundry SRAM bitcell is not legal under the installed public logic-rule deck, and which rules it violates"
+    ],
+    "evidence_class": "open_foundry_pdk_measured_bitcell_geometry",
+    "forbidden_inferences": [
+      "N7, N6, N5 or N4 bitcell area, density, ratio, delay, energy, leakage, yield, or cost",
+      "that the measured 130 nm area ratio transfers unchanged to any other node",
+      "availability or economics of target-foundry late-via ROM personalization",
+      "full-array decoder, wordline, bitline, sense, repair, simultaneous-read, IR-drop, noise, or thermal behavior",
+      "whole-wafer inference throughput or GPU speedup",
+      "silicon correlation or manufacturing sign-off",
+      "that this is the smallest mask-ROM bitcell drawable under this deck: the floor probes vary one dimension at a time and prove each is at a floor given the others, which is local minimality for this topology, not a global minimum over all ROM topologies"
+    ],
+    "rule_set_asymmetry": "the ROM bitcell is drawn under the public logic-rule deck and is DRC clean; the foundry SRAM bitcell carries the PDK SRAM recognition layer and violates that same deck, so the measured ratio is an upper bound on the ratio that would be obtained with one rule set applied to both",
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "contract": {
+    "path": "spice/ihp_sg13g2/bitcell/bitcell_contract.json",
+    "sha256": "12e761182fabdaa826a912179fdcec717fc9dcf08433a692593f46d3fcc1c7ae"
+  },
+  "experiment_id": "ihp_sg13g2_rom_sram_bitcell_ratio_v1",
+  "generated_at_utc": "2026-08-31T07:23:19.331755+00:00",
+  "inputs": {
+    "gds_reader": {
+      "path": "tools/ot_gds_reader.py",
+      "sha256": "b6b1e71ce95e927d42391f5d4cc4f30bbba34f107612a90f3f5d9cae3d5b8d8a",
+      "size_bytes": 7907
+    },
+    "generator": {
+      "path": "spice/ihp_sg13g2/bitcell/rom_bitarray.tcl",
+      "sha256": "0f0cdbfc1b0889f96598f81de67d8b17e7789daacd91d3c0a8862337251c6cef",
+      "size_bytes": 17469
+    }
+  },
+  "node_sensitivity": {
+    "evidence_class": "predictive open-PDK drawn-layout DRC measurement; not a foundry PDK, not TSMC N7/N6/N5, not silicon",
+    "never": "these two ratios must not be averaged, blended or interpolated",
+    "node": "ASAP7 predictive 7 nm FinFET research PDK",
+    "ratio": 0.25,
+    "source": "results/asap7_physical/bitcell_density/bitcell_density.json"
+  },
+  "pdk": {
+    "commit": "5cccb161f7492697cfa52eb14dc03beb00bdca9e",
+    "release": "v0.3.0",
+    "root": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0",
+    "tree": {
+      "gitlinks": 5,
+      "manifest_sha256": "4f68be98efe69635e11b412296e54300f70b5d583cabc4cd0d5a8659e7943ae3",
+      "payload_bytes": 812058771,
+      "payload_entries": 5121,
+      "regular_files": 5120,
+      "semantic_records": 5126,
+      "symlinks": 1
+    },
+    "variant": "ihp-sg13g2"
+  },
+  "ratio": {
+    "assumed": 0.2,
+    "assumed_source": "configs/hardware/technology.json#rom.cell_to_sram_cell_area_ratio",
+    "direction_of_bias": "upper bound: the ROM cell is logic-rule legal, the SRAM cell is not",
+    "dual_port_reference_ratio": 0.07176360225140713,
+    "measured": 0.12976020221505305,
+    "measured_over_assumed": 0.6488010110752652
+  },
+  "reports": {
+    "artifacts": "results/spice/ihp_sg13g2_bitcell/artifacts",
+    "json": "results/spice/ihp_sg13g2_bitcell/bitcell.json",
+    "markdown": "results/spice/ihp_sg13g2_bitcell/REPORT.md"
+  },
+  "rom_bitcell": {
+    "array": {
+      "cols": 4,
+      "rows": 8
+    },
+    "bitline_connectivity_verified": true,
+    "cell_area_um2": 0.39015,
+    "column_pitch_nm": 510.0,
+    "drawn_via1_shapes": 16,
+    "drc_style": "drc(full)",
+    "expected_nmos_devices": 32,
+    "extracted_nmos_devices": 32,
+    "floor_probes": [
+      {
+        "dimension": "PX",
+        "drc_errors": 54,
+        "nominal_nm": 510,
+        "probed_nm": 500,
+        "violated_rules": [
+          "Diffusion spacing < 0.21 (Act.b)",
+          "Metal1 spacing < 0.18 (M1.b)",
+          "Metal2 spacing < 0.21 (M2.b)"
+        ]
+      },
+      {
+        "dimension": "WD",
+        "drc_errors": 158,
+        "nominal_nm": 300,
+        "probed_nm": 290,
+        "violated_rules": [
+          "Metal1 spacing < 0.18 (M1.b)",
+          "Metal2 spacing < 0.21 (M2.b)",
+          "N-diffusion overlap of N-diffusion contact < 0.07 (Cnt.c)"
+        ]
+      },
+      {
+        "dimension": "GS",
+        "drc_errors": 32,
+        "nominal_nm": 380,
+        "probed_nm": 370,
+        "violated_rules": [
+          "Diffusion contact spacing to poly < 0.11 (Cnt.f)"
+        ]
+      },
+      {
+        "dimension": "DA",
+        "drc_errors": 32,
+        "nominal_nm": 340,
+        "probed_nm": 330,
+        "violated_rules": [
+          "N-diffusion overlap of N-diffusion contact < 0.07 (Cnt.c)"
+        ]
+      },
+      {
+        "dimension": "DG",
+        "drc_errors": 16,
+        "nominal_nm": 210,
+        "probed_nm": 200,
+        "violated_rules": [
+          "Diffusion spacing < 0.21 (Act.b)"
+        ]
+      },
+      {
+        "dimension": "PW",
+        "drc_errors": 8,
+        "nominal_nm": 130,
+        "probed_nm": 120,
+        "violated_rules": [
+          "poly width < 0.13 (Gat.a)"
+        ]
+      }
+    ],
+    "magic_log_sha256": "acf8ccc5e9282abc463948116ae779b71dbbdaa3eea0f196c018f0213abb0a3a",
+    "nominal_drc_errors": 0,
+    "nominal_nm": {
+      "CT": 160,
+      "DA": 340,
+      "DG": 210,
+      "GS": 380,
+      "PW": 130,
+      "PX": 510,
+      "WD": 300
+    },
+    "programming_via1_count": 16,
+    "row_pitch_nm": 765.0,
+    "topology": "via1-programmed NOR mask ROM, one nMOS per bit, one independent programming via1 per bit"
+  },
+  "schema_version": 1,
+  "sram_array_efficiency": {
+    "incremental": {
+      "1P_x16": {
+        "asymptotic_array_efficiency": 0.7510589784268742,
+        "incremental_area_per_bit_um2": 4.0032808159722215,
+        "points": [
+          [
+            4096,
+            28127.104000000003
+          ],
+          [
+            8192,
+            45309.312000000005
+          ],
+          [
+            16384,
+            79673.728
+          ],
+          [
+            65536,
+            257608.51199999996
+          ]
+        ],
+        "slope_spread_um2": 0.574782552083335
+      },
+      "1P_x32": {
+        "asymptotic_array_efficiency": 0.8300245943405,
+        "incremental_area_per_bit_um2": 3.622422781808035,
+        "points": [
+          [
+            8192,
+            49488.4992
+          ],
+          [
+            16384,
+            79719.8976
+          ],
+          [
+            32768,
+            140182.69439999998
+          ],
+          [
+            262144,
+            939914.928
+          ]
+        ],
+        "slope_spread_um2": 0.203800404575893
+      },
+      "1P_x64": {
+        "asymptotic_array_efficiency": 0.8654278898165761,
+        "incremental_area_per_bit_um2": 3.47423515625,
+        "points": [
+          [
+            4096,
+            50489.1328
+          ],
+          [
+            16384,
+            93180.5344
+          ],
+          [
+            32768,
+            150102.4032
+          ],
+          [
+            65536,
+            263946.1408
+          ],
+          [
+            131072,
+            491633.61600000004
+          ]
+        ],
+        "slope_spread_um2": 8.881784197001252e-16
+      },
+      "1P_x8": {
+        "asymptotic_array_efficiency": 0.6524257887737289,
+        "incremental_area_per_bit_um2": 4.608493489583332,
+        "points": [
+          [
+            2048,
+            17546.88
+          ],
+          [
+            4096,
+            26137.984
+          ],
+          [
+            8192,
+            49419.24479999999
+          ],
+          [
+            32768,
+            146413.44
+          ]
+        ],
+        "slope_spread_um2": 1.7371976562499976
+      }
+    },
+    "max": {
+      "array_efficiency": 0.8385741531705942,
+      "bitcell_area_um2": 788188.3648,
+      "bits": 262144,
+      "family": "1P",
+      "macro": "RM_IHPSG13_1P_8192x32_c4",
+      "macro_area_um2": 939914.928
+    },
+    "min": {
+      "array_efficiency": 0.21159198317581981,
+      "bitcell_area_um2": 11134.1568,
+      "bits": 2048,
+      "family": "2P",
+      "macro": "RM_IHPSG13_2P_64x32_c2",
+      "macro_area_um2": 52620.88210000001
+    },
+    "per_macro": [
+      {
+        "array_efficiency": 0.21159198317581981,
+        "bitcell_area_um2": 11134.1568,
+        "bits": 2048,
+        "family": "2P",
+        "macro": "RM_IHPSG13_2P_64x32_c2",
+        "macro_area_um2": 52620.88210000001
+      },
+      {
+        "array_efficiency": 0.24392265259901633,
+        "bitcell_area_um2": 12315.4432,
+        "bits": 4096,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_64x64_c2_bm_bist",
+        "macro_area_um2": 50489.1328
+      },
+      {
+        "array_efficiency": 0.29187109271891837,
+        "bitcell_area_um2": 11134.1568,
+        "bits": 2048,
+        "family": "2P",
+        "macro": "RM_IHPSG13_2P_256x8_c2_bm_bist",
+        "macro_area_um2": 38147.5147
+      },
+      {
+        "array_efficiency": 0.3509297151402414,
+        "bitcell_area_um2": 6157.7216,
+        "bits": 2048,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_256x8_c3_bm_bist",
+        "macro_area_um2": 17546.88
+      },
+      {
+        "array_efficiency": 0.38713664975899964,
+        "bitcell_area_um2": 22268.3136,
+        "bits": 4096,
+        "family": "2P",
+        "macro": "RM_IHPSG13_2P_256x16_c2_bm_bist",
+        "macro_area_um2": 57520.5515
+      },
+      {
+        "array_efficiency": 0.3879677547863118,
+        "bitcell_area_um2": 22268.3136,
+        "bits": 4096,
+        "family": "2P",
+        "macro": "RM_IHPSG13_2P_512x8_c2_bm_bist",
+        "macro_area_um2": 57397.33090000001
+      },
+      {
+        "array_efficiency": 0.43784966984158763,
+        "bitcell_area_um2": 12315.4432,
+        "bits": 4096,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_256x16_c2_bm_bist",
+        "macro_area_um2": 28127.104000000003
+      },
+      {
+        "array_efficiency": 0.4626382939438894,
+        "bitcell_area_um2": 44536.6272,
+        "bits": 8192,
+        "family": "2P",
+        "macro": "RM_IHPSG13_2P_256x32_c2_bm_bist",
+        "macro_area_um2": 96266.6251
+      },
+      {
+        "array_efficiency": 0.4711703549898875,
+        "bitcell_area_um2": 12315.4432,
+        "bits": 4096,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_512x8_c3_bm_bist",
+        "macro_area_um2": 26137.984
+      },
+      {
+        "array_efficiency": 0.49770930212407816,
+        "bitcell_area_um2": 24630.8864,
+        "bits": 8192,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_256x32_c2_bm_bist",
+        "macro_area_um2": 49488.4992
+      },
+      {
+        "array_efficiency": 0.4984067745203586,
+        "bitcell_area_um2": 24630.8864,
+        "bits": 8192,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_1024x8_c2_bm_bist",
+        "macro_area_um2": 49419.24479999999
+      },
+      {
+        "array_efficiency": 0.5033433770524381,
+        "bitcell_area_um2": 44536.6272,
+        "bits": 8192,
+        "family": "2P",
+        "macro": "RM_IHPSG13_2P_512x16_c2_bm_bist",
+        "macro_area_um2": 88481.5997
+      },
+      {
+        "array_efficiency": 0.5214733192319337,
+        "bitcell_area_um2": 36946.3296,
+        "bits": 12288,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_256x48_c2_bm_bist",
+        "macro_area_um2": 70849.8944
+      },
+      {
+        "array_efficiency": 0.5286702111895164,
+        "bitcell_area_um2": 49261.7728,
+        "bits": 16384,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_256x64_c2_bm_bist",
+        "macro_area_um2": 93180.5344
+      },
+      {
+        "array_efficiency": 0.5436164292232024,
+        "bitcell_area_um2": 24630.8864,
+        "bits": 8192,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_512x16_c2_bm_bist",
+        "macro_area_um2": 45309.312000000005
+      },
+      {
+        "array_efficiency": 0.5740964474391589,
+        "bitcell_area_um2": 89073.2544,
+        "bits": 16384,
+        "family": "2P",
+        "macro": "RM_IHPSG13_2P_1024x16_c2_bm_bist",
+        "macro_area_um2": 155153.8157
+      },
+      {
+        "array_efficiency": 0.59125903232748,
+        "bitcell_area_um2": 89073.2544,
+        "bits": 16384,
+        "family": "2P",
+        "macro": "RM_IHPSG13_2P_512x32_c2_bm_bist",
+        "macro_area_um2": 150650.1373
+      },
+      {
+        "array_efficiency": 0.6179357259987248,
+        "bitcell_area_um2": 49261.7728,
+        "bits": 16384,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_512x32_c2_bm_bist",
+        "macro_area_um2": 79719.8976
+      },
+      {
+        "array_efficiency": 0.6182938094725529,
+        "bitcell_area_um2": 49261.7728,
+        "bits": 16384,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_1024x16_c2_bm_bist",
+        "macro_area_um2": 79673.728
+      },
+      {
+        "array_efficiency": 0.6563755376302995,
+        "bitcell_area_um2": 98523.5456,
+        "bits": 32768,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_512x64_c2_bm_bist",
+        "macro_area_um2": 150102.4032
+      },
+      {
+        "array_efficiency": 0.6729132626075858,
+        "bitcell_area_um2": 98523.5456,
+        "bits": 32768,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_4096x8_c3_bm_bist",
+        "macro_area_um2": 146413.44
+      },
+      {
+        "array_efficiency": 0.6743700730965579,
+        "bitcell_area_um2": 178146.5088,
+        "bits": 32768,
+        "family": "2P",
+        "macro": "RM_IHPSG13_2P_1024x32_c2_bm_bist",
+        "macro_area_um2": 264167.28130000003
+      },
+      {
+        "array_efficiency": 0.7028224562360816,
+        "bitcell_area_um2": 98523.5456,
+        "bits": 32768,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+        "macro_area_um2": 140182.69439999998
+      },
+      {
+        "array_efficiency": 0.7465428007500536,
+        "bitcell_area_um2": 197047.0912,
+        "bits": 65536,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_1024x64_c2_bm_bist",
+        "macro_area_um2": 263946.1408
+      },
+      {
+        "array_efficiency": 0.7649090849917258,
+        "bitcell_area_um2": 197047.0912,
+        "bits": 65536,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_4096x16_c3_bm_bist",
+        "macro_area_um2": 257608.51199999996
+      },
+      {
+        "array_efficiency": 0.8016013746301676,
+        "bitcell_area_um2": 394094.1824,
+        "bits": 131072,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_2048x64_c2_bm_bist",
+        "macro_area_um2": 491633.61600000004
+      },
+      {
+        "array_efficiency": 0.8385741531705942,
+        "bitcell_area_um2": 788188.3648,
+        "bits": 262144,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_8192x32_c4",
+        "macro_area_um2": 939914.928
+      }
+    ],
+    "single_port_max": {
+      "array_efficiency": 0.8385741531705942,
+      "bitcell_area_um2": 788188.3648,
+      "bits": 262144,
+      "family": "1P",
+      "macro": "RM_IHPSG13_1P_8192x32_c4",
+      "macro_area_um2": 939914.928
+    },
+    "single_port_min": {
+      "array_efficiency": 0.24392265259901633,
+      "bitcell_area_um2": 12315.4432,
+      "bits": 4096,
+      "family": "1P",
+      "macro": "RM_IHPSG13_1P_64x64_c2_bm_bist",
+      "macro_area_um2": 50489.1328
+    }
+  },
+  "sram_bitcell": {
+    "1P": {
+      "cell_area_um2": 3.0067,
+      "column_pitch_um": 2.81,
+      "macro_count": 18,
+      "row_pitch_um": 1.07
+    },
+    "2P": {
+      "cell_area_um2": 5.4366,
+      "column_pitch_um": 4.42,
+      "macro_count": 10,
+      "row_pitch_um": 1.23
+    },
+    "macros": [
+      {
+        "bitcell_instances": 16384,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 79673.73,
+        "datasheet_bit_count": 16384,
+        "datasheet_bits_per_word": 16,
+        "datasheet_words": 1024,
+        "family": "1P",
+        "lef_area_um2": 79673.728,
+        "lef_size_um": [
+          236.8,
+          336.46
+        ],
+        "macro": "RM_IHPSG13_1P_1024x16_c2_bm_bist",
+        "physical_columns": 64,
+        "physical_rows": 256,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 32768,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 140182.69,
+        "datasheet_bit_count": 32768,
+        "datasheet_bits_per_word": 32,
+        "datasheet_words": 1024,
+        "family": "1P",
+        "lef_area_um2": 140182.69439999998,
+        "lef_size_um": [
+          416.64,
+          336.46
+        ],
+        "macro": "RM_IHPSG13_1P_1024x32_c2_bm_bist",
+        "physical_columns": 128,
+        "physical_rows": 256,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 65536,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 263946.14,
+        "datasheet_bit_count": 65536,
+        "datasheet_bits_per_word": 64,
+        "datasheet_words": 1024,
+        "family": "1P",
+        "lef_area_um2": 263946.1408,
+        "lef_size_um": [
+          784.48,
+          336.46
+        ],
+        "macro": "RM_IHPSG13_1P_1024x64_c2_bm_bist",
+        "physical_columns": 256,
+        "physical_rows": 256,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 8192,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 49419.24,
+        "datasheet_bit_count": 8192,
+        "datasheet_bits_per_word": 8,
+        "datasheet_words": 1024,
+        "family": "1P",
+        "lef_area_um2": 49419.24479999999,
+        "lef_size_um": [
+          146.88,
+          336.46
+        ],
+        "macro": "RM_IHPSG13_1P_1024x8_c2_bm_bist",
+        "physical_columns": 32,
+        "physical_rows": 256,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 131072,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 491633.62,
+        "datasheet_bit_count": 131072,
+        "datasheet_bits_per_word": 64,
+        "datasheet_words": 2048,
+        "family": "1P",
+        "lef_area_um2": 491633.61600000004,
+        "lef_size_um": [
+          784.48,
+          626.7
+        ],
+        "macro": "RM_IHPSG13_1P_2048x64_c2_bm_bist",
+        "physical_columns": 256,
+        "physical_rows": 512,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 4096,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 28127.1,
+        "datasheet_bit_count": 4096,
+        "datasheet_bits_per_word": 16,
+        "datasheet_words": 256,
+        "family": "1P",
+        "lef_area_um2": 28127.104000000003,
+        "lef_size_um": [
+          236.8,
+          118.78
+        ],
+        "macro": "RM_IHPSG13_1P_256x16_c2_bm_bist",
+        "physical_columns": 64,
+        "physical_rows": 64,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 8192,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 49488.5,
+        "datasheet_bit_count": 8192,
+        "datasheet_bits_per_word": 32,
+        "datasheet_words": 256,
+        "family": "1P",
+        "lef_area_um2": 49488.4992,
+        "lef_size_um": [
+          416.64,
+          118.78
+        ],
+        "macro": "RM_IHPSG13_1P_256x32_c2_bm_bist",
+        "physical_columns": 128,
+        "physical_rows": 64,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 12288,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 70849.89,
+        "datasheet_bit_count": 12288,
+        "datasheet_bits_per_word": 48,
+        "datasheet_words": 256,
+        "family": "1P",
+        "lef_area_um2": 70849.8944,
+        "lef_size_um": [
+          596.48,
+          118.78
+        ],
+        "macro": "RM_IHPSG13_1P_256x48_c2_bm_bist",
+        "physical_columns": 192,
+        "physical_rows": 64,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 16384,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 93180.53,
+        "datasheet_bit_count": 16384,
+        "datasheet_bits_per_word": 64,
+        "datasheet_words": 256,
+        "family": "1P",
+        "lef_area_um2": 93180.5344,
+        "lef_size_um": [
+          784.48,
+          118.78
+        ],
+        "macro": "RM_IHPSG13_1P_256x64_c2_bm_bist",
+        "physical_columns": 256,
+        "physical_rows": 64,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 2048,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 17546.88,
+        "datasheet_bit_count": 2048,
+        "datasheet_bits_per_word": 8,
+        "datasheet_words": 256,
+        "family": "1P",
+        "lef_area_um2": 17546.88,
+        "lef_size_um": [
+          236.8,
+          74.1
+        ],
+        "macro": "RM_IHPSG13_1P_256x8_c3_bm_bist",
+        "physical_columns": 64,
+        "physical_rows": 32,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 65536,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 257608.51,
+        "datasheet_bit_count": 65536,
+        "datasheet_bits_per_word": 16,
+        "datasheet_words": 4096,
+        "family": "1P",
+        "lef_area_um2": 257608.51199999996,
+        "lef_size_um": [
+          416.64,
+          618.3
+        ],
+        "macro": "RM_IHPSG13_1P_4096x16_c3_bm_bist",
+        "physical_columns": 128,
+        "physical_rows": 512,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 32768,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 146413.44,
+        "datasheet_bit_count": 32768,
+        "datasheet_bits_per_word": 8,
+        "datasheet_words": 4096,
+        "family": "1P",
+        "lef_area_um2": 146413.44,
+        "lef_size_um": [
+          236.8,
+          618.3
+        ],
+        "macro": "RM_IHPSG13_1P_4096x8_c3_bm_bist",
+        "physical_columns": 64,
+        "physical_rows": 512,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 8192,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 45309.31,
+        "datasheet_bit_count": 8192,
+        "datasheet_bits_per_word": 16,
+        "datasheet_words": 512,
+        "family": "1P",
+        "lef_area_um2": 45309.312000000005,
+        "lef_size_um": [
+          236.8,
+          191.34
+        ],
+        "macro": "RM_IHPSG13_1P_512x16_c2_bm_bist",
+        "physical_columns": 64,
+        "physical_rows": 128,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 16384,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 79719.9,
+        "datasheet_bit_count": 16384,
+        "datasheet_bits_per_word": 32,
+        "datasheet_words": 512,
+        "family": "1P",
+        "lef_area_um2": 79719.8976,
+        "lef_size_um": [
+          416.64,
+          191.34
+        ],
+        "macro": "RM_IHPSG13_1P_512x32_c2_bm_bist",
+        "physical_columns": 128,
+        "physical_rows": 128,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 32768,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 150102.4,
+        "datasheet_bit_count": 32768,
+        "datasheet_bits_per_word": 64,
+        "datasheet_words": 512,
+        "family": "1P",
+        "lef_area_um2": 150102.4032,
+        "lef_size_um": [
+          784.48,
+          191.34
+        ],
+        "macro": "RM_IHPSG13_1P_512x64_c2_bm_bist",
+        "physical_columns": 256,
+        "physical_rows": 128,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 4096,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 26137.98,
+        "datasheet_bit_count": 4096,
+        "datasheet_bits_per_word": 8,
+        "datasheet_words": 512,
+        "family": "1P",
+        "lef_area_um2": 26137.984,
+        "lef_size_um": [
+          236.8,
+          110.38
+        ],
+        "macro": "RM_IHPSG13_1P_512x8_c3_bm_bist",
+        "physical_columns": 64,
+        "physical_rows": 64,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 4096,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 50489.13,
+        "datasheet_bit_count": 4096,
+        "datasheet_bits_per_word": 64,
+        "datasheet_words": 64,
+        "family": "1P",
+        "lef_area_um2": 50489.1328,
+        "lef_size_um": [
+          784.48,
+          64.36
+        ],
+        "macro": "RM_IHPSG13_1P_64x64_c2_bm_bist",
+        "physical_columns": 256,
+        "physical_rows": 16,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 262144,
+        "column_pitch_um": 2.81,
+        "datasheet_area_um2": 939914.93,
+        "datasheet_bit_count": 262144,
+        "datasheet_bits_per_word": 32,
+        "datasheet_words": 8192,
+        "family": "1P",
+        "lef_area_um2": 939914.928,
+        "lef_size_um": [
+          1520.16,
+          618.3
+        ],
+        "macro": "RM_IHPSG13_1P_8192x32_c4",
+        "physical_columns": 512,
+        "physical_rows": 512,
+        "row_pitch_um": 1.07
+      },
+      {
+        "bitcell_instances": 16384,
+        "column_pitch_um": 4.42,
+        "datasheet_area_um2": 155153.82,
+        "datasheet_bit_count": 16384,
+        "datasheet_bits_per_word": 16,
+        "datasheet_words": 1024,
+        "family": "2P",
+        "lef_area_um2": 155153.8157,
+        "lef_size_um": [
+          402.61,
+          385.37
+        ],
+        "macro": "RM_IHPSG13_2P_1024x16_c2_bm_bist",
+        "physical_columns": 64,
+        "physical_rows": 256,
+        "row_pitch_um": 1.23
+      },
+      {
+        "bitcell_instances": 32768,
+        "column_pitch_um": 4.42,
+        "datasheet_area_um2": 264167.28,
+        "datasheet_bit_count": 32768,
+        "datasheet_bits_per_word": 32,
+        "datasheet_words": 1024,
+        "family": "2P",
+        "lef_area_um2": 264167.28130000003,
+        "lef_size_um": [
+          685.49,
+          385.37
+        ],
+        "macro": "RM_IHPSG13_2P_1024x32_c2_bm_bist",
+        "physical_columns": 128,
+        "physical_rows": 256,
+        "row_pitch_um": 1.23
+      },
+      {
+        "bitcell_instances": 4096,
+        "column_pitch_um": 4.42,
+        "datasheet_area_um2": 57520.55,
+        "datasheet_bit_count": 4096,
+        "datasheet_bits_per_word": 16,
+        "datasheet_words": 256,
+        "family": "2P",
+        "lef_area_um2": 57520.5515,
+        "lef_size_um": [
+          419.95,
+          136.97
+        ],
+        "macro": "RM_IHPSG13_2P_256x16_c2_bm_bist",
+        "physical_columns": 64,
+        "physical_rows": 64,
+        "row_pitch_um": 1.23
+      },
+      {
+        "bitcell_instances": 8192,
+        "column_pitch_um": 4.42,
+        "datasheet_area_um2": 96266.63,
+        "datasheet_bit_count": 8192,
+        "datasheet_bits_per_word": 32,
+        "datasheet_words": 256,
+        "family": "2P",
+        "lef_area_um2": 96266.6251,
+        "lef_size_um": [
+          702.83,
+          136.97
+        ],
+        "macro": "RM_IHPSG13_2P_256x32_c2_bm_bist",
+        "physical_columns": 128,
+        "physical_rows": 64,
+        "row_pitch_um": 1.23
+      },
+      {
+        "bitcell_instances": 2048,
+        "column_pitch_um": 4.42,
+        "datasheet_area_um2": 38147.51,
+        "datasheet_bit_count": 2048,
+        "datasheet_bits_per_word": 8,
+        "datasheet_words": 256,
+        "family": "2P",
+        "lef_area_um2": 38147.5147,
+        "lef_size_um": [
+          278.51,
+          136.97
+        ],
+        "macro": "RM_IHPSG13_2P_256x8_c2_bm_bist",
+        "physical_columns": 32,
+        "physical_rows": 64,
+        "row_pitch_um": 1.23
+      },
+      {
+        "bitcell_instances": 8192,
+        "column_pitch_um": 4.42,
+        "datasheet_area_um2": 88481.6,
+        "datasheet_bit_count": 8192,
+        "datasheet_bits_per_word": 16,
+        "datasheet_words": 512,
+        "family": "2P",
+        "lef_area_um2": 88481.5997,
+        "lef_size_um": [
+          402.61,
+          219.77
+        ],
+        "macro": "RM_IHPSG13_2P_512x16_c2_bm_bist",
+        "physical_columns": 64,
+        "physical_rows": 128,
+        "row_pitch_um": 1.23
+      },
+      {
+        "bitcell_instances": 16384,
+        "column_pitch_um": 4.42,
+        "datasheet_area_um2": 150650.14,
+        "datasheet_bit_count": 16384,
+        "datasheet_bits_per_word": 32,
+        "datasheet_words": 512,
+        "family": "2P",
+        "lef_area_um2": 150650.1373,
+        "lef_size_um": [
+          685.49,
+          219.77
+        ],
+        "macro": "RM_IHPSG13_2P_512x32_c2_bm_bist",
+        "physical_columns": 128,
+        "physical_rows": 128,
+        "row_pitch_um": 1.23
+      },
+      {
+        "bitcell_instances": 4096,
+        "column_pitch_um": 4.42,
+        "datasheet_area_um2": 57397.33,
+        "datasheet_bit_count": 4096,
+        "datasheet_bits_per_word": 8,
+        "datasheet_words": 512,
+        "family": "2P",
+        "lef_area_um2": 57397.33090000001,
+        "lef_size_um": [
+          261.17,
+          219.77
+        ],
+        "macro": "RM_IHPSG13_2P_512x8_c2_bm_bist",
+        "physical_columns": 32,
+        "physical_rows": 128,
+        "row_pitch_um": 1.23
+      },
+      {
+        "bitcell_instances": 1408,
+        "column_pitch_um": 4.42,
+        "family": "2P",
+        "lef_area_um2": 39383.8661,
+        "lef_size_um": [
+          526.03,
+          74.87
+        ],
+        "macro": "RM_IHPSG13_2P_64x22_c2",
+        "physical_columns": 88,
+        "physical_rows": 16,
+        "row_pitch_um": 1.23
+      },
+      {
+        "bitcell_instances": 2048,
+        "column_pitch_um": 4.42,
+        "datasheet_area_um2": 52620.88,
+        "datasheet_bit_count": 2048,
+        "datasheet_bits_per_word": 32,
+        "datasheet_words": 64,
+        "family": "2P",
+        "lef_area_um2": 52620.88210000001,
+        "lef_size_um": [
+          702.83,
+          74.87
+        ],
+        "macro": "RM_IHPSG13_2P_64x32_c2",
+        "physical_columns": 128,
+        "physical_rows": 16,
+        "row_pitch_um": 1.23
+      }
+    ]
+  },
+  "sram_bitcell_drc": {
+    "array_context_drc_errors": 389,
+    "cells": {
+      "RM_IHPSG13_1P_BITKIT_16x2_SRAM": {
+        "drc_errors": 389,
+        "violated_rules": [
+          {
+            "error_tiles": 128,
+            "rule": "Poly overhang of transistor < 0.18 (Gat.c)"
+          },
+          {
+            "error_tiles": 654,
+            "rule": "N-Diffusion spacing to N-well < 0.31 (NW.d)"
+          },
+          {
+            "error_tiles": 8,
+            "rule": "N-diffusion overlap of N-diffusion contact < 0.07 (Cnt.c)"
+          },
+          {
+            "error_tiles": 104,
+            "rule": "Can't overlap those layers"
+          },
+          {
+            "error_tiles": 120,
+            "rule": "Metal2 minimum area < 0.144 (M2.d)"
+          },
+          {
+            "error_tiles": 324,
+            "rule": "P-diffusion overlap of P-diffusion contact < 0.07 (Cnt.c)"
+          },
+          {
+            "error_tiles": 6,
+            "rule": "Extension of tie diffusion beyond tie contact < 6.0um (LU.d, LU.d1)"
+          },
+          {
+            "error_tiles": 810,
+            "rule": "N-well overlap of P-Diffusion < 0.31 (NW.c)"
+          },
+          {
+            "error_tiles": 2,
+            "rule": "Diffusion minimum area < 0.122um^2 (Act.d)"
+          }
+        ]
+      },
+      "RM_IHPSG13_1P_BITKIT_CELL": {
+        "drc_errors": 29,
+        "violated_rules": [
+          {
+            "error_tiles": 4,
+            "rule": "Poly overhang of transistor < 0.18 (Gat.c)"
+          },
+          {
+            "error_tiles": 27,
+            "rule": "N-Diffusion spacing to N-well < 0.31 (NW.d)"
+          },
+          {
+            "error_tiles": 3,
+            "rule": "Can't overlap those layers"
+          },
+          {
+            "error_tiles": 8,
+            "rule": "Metal2 minimum area < 0.144 (M2.d)"
+          },
+          {
+            "error_tiles": 12,
+            "rule": "P-diffusion overlap of P-diffusion contact < 0.07 (Cnt.c)"
+          },
+          {
+            "error_tiles": 8,
+            "rule": "P-diff distance to N-tap must be < 20.0um (LU.a)"
+          },
+          {
+            "error_tiles": 34,
+            "rule": "N-well overlap of P-Diffusion < 0.31 (NW.c)"
+          },
+          {
+            "error_tiles": 6,
+            "rule": "N-diff distance to P-tap must be < 20.0um (LU.b)"
+          }
+        ]
+      }
+    },
+    "log_sha256": "19c224b883e5984a05b9ac3257b885ba38372284a70320461f141664246a61bb",
+    "single_port_bitcell_drc_errors": 29,
+    "subset_structures": [
+      "M1_GatPoly_CDNS_6861386601448",
+      "RM_IHPSG13_1P_BITKIT_16x2_SRAM",
+      "RM_IHPSG13_1P_BITKIT_CELL",
+      "RM_IHPSG13_1P_BITKIT_CELL_2x1",
+      "RM_IHPSG13_1P_BITKIT_CELL_SUB",
+      "RM_IHPSG13_1P_BITKIT_TAP",
+      "VIA_M1_Activ_db_0x02835b9b",
+      "lvsres_db_0x02834b9a",
+      "lvsres_db_0x0283509a"
+    ]
+  },
+  "status": "pass",
+  "toolchain": {
+    "magic": {
+      "commit": "17ac06a24a952380ade3a7d33cd2f0c3943dfc12",
+      "engine": {
+        "path": "/home/ubuntu/.local/opentallas-tools/magic-17ac06a/lib/magic/tcl/magicdnull",
+        "sha256": "2d4c3604dd2ef95531b2e1337f48d3bf6e1b5fdefc59cacd5600e1067110136f",
+        "size_bytes": 18152
+      },
+      "launcher": {
+        "path": "/home/ubuntu/.local/opentallas-tools/magic-17ac06a/bin/magic",
+        "sha256": "cfd07f3a4e0619aebd6456370d012801593138f513d635a3412efb50c727a2bc",
+        "size_bytes": 2167
+      },
+      "version": "8.3.674"
+    },
+    "netgen": {
+      "compiled_on": "Fri Aug 28 06:53:32 UTC 2026",
+      "engine": {
+        "path": "/home/ubuntu/.local/opentallas-tools/netgen-1.5.322/lib/netgen/tcl/netgenexec",
+        "sha256": "1952bc209e539765d2506b3e60246744353d19ba7797da1a94b4e7da3c824b8f",
+        "size_bytes": 18152
+      },
+      "expected_source_commit": "5e48c4e8762d7b58e296b59392572633ba9b184d",
+      "launcher": {
+        "path": "/home/ubuntu/.local/opentallas-tools/netgen-1.5.322/bin/netgen",
+        "sha256": "f0c3805445f26e7072df58d8dd036ee4c5c0da8e5e52a43738762046df0979be",
+        "size_bytes": 1900
+      },
+      "source_identity_boundary": "Netgen does not embed its Git commit; the version is checked at runtime, the exact executable is hashed, and the governed bootstrap pins this commit",
+      "version": "1.5.322"
+    }
+  }
+}

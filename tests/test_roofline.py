@@ -10,6 +10,7 @@ technology input that turns out to be wrong rather than a broken assertion.
 from __future__ import annotations
 
 from dataclasses import replace
+import hashlib
 import importlib.util
 import json
 import math
@@ -3019,13 +3020,29 @@ def generated(tmp_path_factory: pytest.TempPathFactory):
     return runner, results, first, second
 
 
+def _digest(path: Path) -> str:
+    """SHA-256 of an artifact, for comparisons pytest must not try to diff.
+
+    ``analytical.json`` is 50 MB. Asserting two of them equal as ``bytes``
+    passes when they match and, when they do NOT, hands pytest fifty megabytes
+    to build an assertion diff out of -- which consumes the machine and reports
+    nothing a reader can act on. The digest fails in one line and says which
+    file, which is the whole of what the byte comparison was ever telling us.
+    """
+
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def test_runner_is_byte_deterministic(generated) -> None:
     runner, _, first, second = generated
     for study_id in runner.STUDIES:
         for artifact in ARTIFACTS:
-            assert (first / study_id / artifact).read_bytes() == (
-                second / study_id / artifact
-            ).read_bytes()
+            left = first / study_id / artifact
+            right = second / study_id / artifact
+            assert _digest(left) == _digest(right), (
+                f"{study_id}/{artifact} is not reproducible: two runs of the "
+                "same inputs produced different bytes"
+            )
 
 
 def test_runner_refuses_to_overwrite_without_force(generated, tmp_path) -> None:
@@ -3043,7 +3060,10 @@ def test_checked_in_artifacts_match_the_runner(generated) -> None:
         for artifact in ARTIFACTS:
             checked_in = CHECKED_IN / study_id / artifact
             assert checked_in.exists(), f"missing checked-in {checked_in}"
-            assert checked_in.read_bytes() == (first / study_id / artifact).read_bytes()
+            assert _digest(checked_in) == _digest(first / study_id / artifact), (
+                f"results/roofline/{study_id}/{artifact} is stale -- re-run "
+                "`python3 tools/run_roofline_studies.py --force`"
+            )
 
 
 def test_every_study_audit_passes(generated) -> None:
@@ -3518,3 +3538,629 @@ def test_no_design_stores_weights_at_a_precision_the_release_does_not_have(gener
                 f"{study_id}: {design['design']} declares representation "
                 f"{design.get('representation')!r}; only the released packing is priced"
             )
+
+
+# --------------------------------------------------------------------------
+# design selection
+# --------------------------------------------------------------------------
+
+
+def test_a_recommended_design_is_never_dominated_on_both_axes(generated) -> None:
+    """**The property whose absence let a wafer be recommended for an 8B model.**
+
+    The old rule ranked ROM designs by per-user tokens/s and then took the
+    smallest silicon within 5% of the peak.  A 5% band is a tie-break among
+    near-peak designs and is orthogonal to area, so it engages only when a
+    smaller design is already within 5% of the best rate -- which is precisely
+    the case nobody was worried about.  For Qwen3-8B the best sub-wafer design
+    sits at 54% of the wafer's per-user rate, so the band never fired and the
+    published answer for an 8B checkpoint that holds in three 815 mm2 reticles
+    was one 46,225 mm2 wafer: 2.33x the rate for 18.9x the silicon and an eighth
+    of the throughput density.
+
+    This test does not pin an area, a device count or a topology -- any of those
+    would have to be retyped every time a technology input moves.  It pins the
+    property: **nothing feasible may beat the recommended design on BOTH
+    per-user tokens/s and tokens/s per mm2 at once.**  A design that loses on
+    both axes to something else that is also buildable is not a recommendation
+    under any metric, and a rule that can emit one is the rule that has to
+    change.  It is checked against the raw point list rather than against the
+    frontier the selector built, so a bug in the selector fails here instead of
+    producing a self-consistent wrong answer.
+    """
+
+    _, results, _, _ = generated
+    checked = 0
+    for study_id, result in results.items():
+        selection = result["design_selection"]
+        for entry in selection["models"]:
+            model = entry["model"]
+            for record in entry["batch_regimes"]:
+                batch = record["batch_size"]
+                recommended = record["recommended"]
+                if recommended is None:
+                    continue
+                feasible = [
+                    row
+                    for row in result["points"]
+                    if row["family"] == "rom"
+                    and row["model"] == model
+                    and row["batch_size"] == batch
+                    and row["weight_amortization"]
+                    == selection["amortisation_scope"]
+                    and row["feasible"]
+                    and row["per_user_tokens_s"] > 0
+                    and row["silicon_area_mm2"] > 0
+                ]
+                assert feasible, (
+                    f"{study_id}: {model} at batch {batch} has a recommendation "
+                    "but no feasible designs"
+                )
+                rate = recommended["per_user_tokens_s"]
+                density = recommended["tokens_s_per_1000mm2"]
+                dominators = [
+                    (
+                        row["design"],
+                        row["per_user_tokens_s"],
+                        row["per_user_tokens_s"] / row["silicon_area_mm2"] * 1000.0,
+                    )
+                    for row in feasible
+                    if row["design"] != recommended["design"]
+                    and row["per_user_tokens_s"] >= rate * (1.0 + 1e-9)
+                    and row["per_user_tokens_s"] / row["silicon_area_mm2"] * 1000.0
+                    >= density * (1.0 + 1e-9)
+                ]
+                assert not dominators, (
+                    f"{study_id}: the recommended design for {model} at batch "
+                    f"{batch} is {recommended['design']} at {rate:,.1f} tok/s per "
+                    f"user and {density:,.1f} tok/s per 1,000 mm2, and "
+                    f"{len(dominators)} feasible design(s) of the same model beat "
+                    f"it on BOTH axes at once, e.g. {dominators[:3]}. A "
+                    "recommendation that loses on both axes to something else "
+                    "that is also buildable is not a recommendation."
+                )
+                checked += 1
+    assert checked >= 2 * len(STUDY_MODEL_NAMES), (
+        f"only {checked} recommendations were checked; the selection block is "
+        "not being produced for every model and batch"
+    )
+
+
+STUDY_MODEL_NAMES = (
+    "Qwen3-8B",
+    "DeepSeek-V4-Flash-0731",
+    "DeepSeek-V4-Pro-0813",
+)
+
+
+def test_the_recommendation_is_on_its_own_published_frontier(generated) -> None:
+    """The curve is the result; the pick is one point on it.
+
+    The brief this section answers says an honest curve beats a false single
+    answer, so the frontier is published in full and the recommendation has to
+    be a member of it.  If the pick ever leaves the published curve, the curve
+    is not the evidence for the pick and the section is decoration.
+    """
+
+    _, results, _, _ = generated
+    for study_id, result in results.items():
+        for entry in result["design_selection"]["models"]:
+            frontier = {row["design"] for row in entry["frontier_batch_1"]}
+            best = entry["recommended"]
+            assert best is not None, f"{study_id}: {entry['model']} has no pick"
+            assert best["design"] in frontier, (
+                f"{study_id}: {entry['model']} recommends {best['design']}, "
+                f"which is not on its own published frontier {sorted(frontier)}"
+            )
+            walk = entry["marginal_return_walk"]
+            accepted = [rung for rung in walk if rung["accepted"]]
+            assert accepted and accepted[-1]["design"] == best["design"], (
+                f"{study_id}: {entry['model']}'s walk does not end on its own "
+                "recommendation"
+            )
+
+
+def test_every_published_recommendation_states_its_resident_session_count(
+    generated,
+) -> None:
+    """A per-user rate without a session count beside it is not a server claim.
+
+    The recommended machine for Qwen3-8B at batch 1 holds exactly one 8,192-token
+    session and the iso-area GPU cluster holds 165.  Dividing the first rate by
+    the second and printing the quotient alone is how a single-session latency
+    device gets read as a server, so both counts are required on the row.
+    """
+
+    _, results, _, _ = generated
+    for study_id, result in results.items():
+        for entry in result["design_selection"]["models"]:
+            for record in entry["batch_regimes"]:
+                best = record["recommended"]
+                if best is None:
+                    continue
+                assert best["max_resident_users"] is not None, (
+                    f"{study_id}: {entry['model']} at batch "
+                    f"{record['batch_size']} publishes a rate with no resident "
+                    "session count"
+                )
+                if best.get("per_user_speed_ratio") is not None:
+                    assert (
+                        best.get("iso_area_gpu_max_resident_users") is not None
+                    ), (
+                        f"{study_id}: {entry['model']} at batch "
+                        f"{record['batch_size']} publishes a ratio without the "
+                        "GPU's resident session count"
+                    )
+
+
+def test_the_selection_metric_is_stated_in_the_report_that_applies_it(
+    generated,
+) -> None:
+    """A recommendation without its rule on the same page is an opinion."""
+
+    runner, results, first, _ = generated
+    for study_id, result in results.items():
+        report = (first / study_id / "REPORT.md").read_text(encoding="utf-8")
+        assert result["design_selection"]["metric"] in report, (
+            f"{study_id}: the selection metric is in the JSON but not in the "
+            "report that uses it"
+        )
+        assert "## The recommended design per model" in report
+        for entry in result["design_selection"]["models"]:
+            best = entry["recommended"]
+            assert best["design"].split("/")[-1] in report, (
+                f"{study_id}: {entry['model']}'s recommended design is not named "
+                "in the report"
+            )
+
+
+def test_the_old_rule_and_the_new_rule_are_both_computed_so_the_move_is_visible(
+    generated,
+) -> None:
+    """The before/after is arithmetic in the artifact, not a claim in prose.
+
+    Both rules are evaluated on the same points, so a reader can see what the
+    change bought and a future edit that quietly reverts it fails here.  For
+    Qwen3-8B specifically the old rule must still land on a wafer and the new
+    one must not: that is the whole reason this section exists, and if it ever
+    stops being true the section should be rewritten rather than left standing.
+    """
+
+    _, results, _, _ = generated
+    for study_id, result in results.items():
+        for entry in result["design_selection"]["models"]:
+            previous = entry["previous_rule_choice"]
+            best = entry["recommended"]
+            assert previous is not None and best is not None
+            assert best["tokens_s_per_1000mm2"] >= previous[
+                "tokens_s_per_1000mm2"
+            ] * (1.0 - 1e-9), (
+                f"{study_id}: {entry['model']} -- the new rule is supposed to "
+                "maximise throughput density and it chose a design with less of "
+                "it than the rule it replaced"
+            )
+            if entry["model"] != "Qwen3-8B":
+                continue
+            assert previous["topology_kind"] == "wafer", (
+                f"{study_id}: the rule this report replaced no longer hands "
+                "Qwen3-8B a wafer, so the before/after in the report is stale"
+            )
+            assert best["topology_kind"] == "array", (
+                f"{study_id}: Qwen3-8B is recommended a "
+                f"{best['topology_kind']} at {best['silicon_area_mm2']:,.0f} mm2 "
+                "-- an 8B checkpoint that holds in three reticle dies must not be "
+                "handed a wafer"
+            )
+            assert best["silicon_area_mm2"] < previous["silicon_area_mm2"]
+
+
+def test_the_recommendation_is_read_against_n_copies_of_one_unified_die(
+    generated,
+) -> None:
+    """Iso-area, at the ROM side's chosen area, against a real GPU cluster.
+
+    The comparison used to be read at a fixed rung of the area ladder where both
+    sides are past their own optimum.  It is now read at the area the selection
+    rule picked, and the comparator is N copies of the one unified HBM die the
+    GPU side has always been built from.
+
+    The test does NOT demand a tight area ratio, because a GPU cluster is
+    quantised in whole dies and a ROM design is not: at N5 the B200 package is
+    1,600 mm2 of silicon, so a 2,445 mm2 ROM machine has no exact partner and
+    the honest comparator is two packages, 3,200 mm2 -- the ROM side compared
+    against 31% MORE silicon than it has.  What is pinned instead is that the
+    comparator is a whole number of one unchanging die AND that no other whole
+    number would land closer, so the granularity is visible and never chosen.
+    """
+
+    _, results, _, _ = generated
+    for study_id, result in results.items():
+        gpu_area_per_device = {
+            row["design"]: row["silicon_area_mm2_per_device"]
+            for row in result["points"]
+            if row["family"] == "gpu"
+        }
+        die_areas = set(gpu_area_per_device.values())
+        assert len(die_areas) == 1, (
+            f"{study_id}: the GPU side is built from more than one die area "
+            f"{sorted(die_areas)}; the comparison is not N copies of one die"
+        )
+        die = die_areas.pop()
+        for entry in result["design_selection"]["models"]:
+            best = entry["recommended"]
+            if not best.get("iso_area_gpu_design"):
+                continue
+            count = best["iso_area_gpu_device_count"]
+            assert count == int(count) and count >= 1
+            assert best["iso_area_gpu_silicon_area_mm2"] == pytest.approx(
+                die * count, rel=1e-9
+            ), (
+                f"{study_id}: the GPU comparator for {entry['model']} is not N "
+                "copies of one die"
+            )
+            rom_area = best["silicon_area_mm2"]
+            nearest = min(
+                range(1, 2 * int(rom_area // die) + 3),
+                key=lambda n: (abs(die * n - rom_area), n),
+            )
+            assert abs(die * count - rom_area) <= abs(die * nearest - rom_area) + 1e-6, (
+                f"{study_id}: {entry['model']} is compared against {count} dies "
+                f"({die * count:,.0f} mm2) when {nearest} ({die * nearest:,.0f} "
+                f"mm2) is closer to the ROM side's {rom_area:,.0f} mm2"
+            )
+            assert best["iso_area_ratio"] == pytest.approx(
+                rom_area / best["iso_area_gpu_silicon_area_mm2"], rel=1e-9
+            )
+
+
+def test_a_regime_change_across_batch_is_reported_rather_than_averaged(
+    generated,
+) -> None:
+    """Where the best design differs by batch, the study has to say so.
+
+    The recommendation is recomputed at every studied batch, and the contiguous
+    runs are published as regimes.  This pins that the regime list is a true
+    partition of the batch grid -- a summary that dropped or duplicated a batch
+    would let a reader believe one machine covers an operating point it was
+    never evaluated at.
+    """
+
+    runner, results, _, _ = generated
+    for study_id, result in results.items():
+        for entry in result["design_selection"]["models"]:
+            batches = [
+                record["batch_size"] for record in entry["batch_regimes"]
+            ]
+            assert batches == list(runner.BATCHES)
+            flattened: list[int] = []
+            for regime in entry["regimes"]:
+                flattened.extend(regime["batches"])
+            assert flattened == list(runner.BATCHES), (
+                f"{study_id}: {entry['model']}'s regime summary is not a "
+                "partition of the batch grid"
+            )
+            assert entry["regime_count"] == len(entry["regimes"])
+            assert entry["best_design_differs_by_batch"] == (
+                entry["regime_count"] > 1
+            )
+
+
+# --------------------------------------------------------------------------
+# the quantised variant
+# --------------------------------------------------------------------------
+
+
+def test_the_quantised_variant_is_written_and_is_byte_deterministic(
+    generated,
+) -> None:
+    runner, _, first, second = generated
+    root_a = runner.variant_output_root(first)
+    root_b = runner.variant_output_root(second)
+    for study_id in runner.STUDIES:
+        for artifact in runner.VARIANT_ARTIFACTS:
+            assert (root_a / study_id / artifact).exists()
+            assert _digest(root_a / study_id / artifact) == _digest(
+                root_b / study_id / artifact
+            ), f"quantised_variant/{study_id}/{artifact} is not reproducible"
+    assert not (root_a / "n6_vs_a100" / "sweep.csv").exists(), (
+        "the variant must not ship a sweep.csv: there is no row on that page "
+        "anyone should be pulling into a spreadsheet"
+    )
+
+
+def test_the_checked_in_quantised_variant_matches_the_runner(generated) -> None:
+    runner, _, first, _ = generated
+    for study_id in runner.STUDIES:
+        for artifact in runner.VARIANT_ARTIFACTS:
+            checked_in = runner.variant_output_root(CHECKED_IN) / study_id / artifact
+            assert checked_in.exists(), f"missing checked-in {checked_in}"
+            assert _digest(checked_in) == _digest(
+                runner.variant_output_root(first) / study_id / artifact
+            ), (
+                f"results/roofline/quantised_variant/{study_id}/{artifact} is "
+                "stale -- re-run `python3 tools/run_roofline_studies.py --force`"
+            )
+
+
+def _variants(runner, root: Path) -> dict[str, dict]:
+    return {
+        study_id: json.loads(
+            (runner.variant_output_root(root) / study_id / "analytical.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        for study_id in runner.STUDIES
+    }
+
+
+def test_the_quantisation_is_applied_to_both_sides_or_it_is_not_published(
+    generated,
+) -> None:
+    """**The rule the variant exists to obey.**
+
+    A quantisation is a property of the checkpoint, not of the machine reading
+    it.  A GPU serving 4.25-bit weights reads 3.76x fewer weight bytes exactly as
+    the mask-ROM part does, so a variant that quantised one side would be handing
+    it a free halving of weight traffic -- the same asymmetry the released-packing
+    rule already forbids in the primary studies, and the one this program records
+    for an FP8 KV latent in the DeepSeek profile's ``kv_precision_sensitivity``.
+
+    The check is per model and spans BOTH families: one stored width, or the
+    variant is not iso-precision and must not be published.
+    """
+
+    runner, _, first, _ = generated
+    for study_id, variant in _variants(runner, first).items():
+        declared = float(variant["representation_variant"]["bits_per_parameter"])
+        by_model: dict[str, set[float]] = {}
+        families: dict[str, set[str]] = {}
+        for design in variant["designs"]:
+            bits = design.get("stored_bits_per_parameter")
+            assert bits is not None, design["design"]
+            by_model.setdefault(design["model"], set()).add(round(float(bits), 6))
+            families.setdefault(design["model"], set()).add(design["family"])
+        assert by_model, f"{study_id}: the variant produced no designs"
+        for model, widths in by_model.items():
+            assert widths == {round(declared, 6)}, (
+                f"{study_id}: {model} is priced at {sorted(widths)} bits in the "
+                f"variant, which declares {declared}. Both families must be held "
+                "at one stored width or the variant is not iso-precision."
+            )
+            assert families[model] == {"rom", "gpu"}, (
+                f"{study_id}: {model} is quantised on {sorted(families[model])} "
+                "only -- a quantisation applies to both sides"
+            )
+
+
+def test_the_variant_says_plainly_that_nothing_has_been_executed_at_that_precision(
+    generated,
+) -> None:
+    """It is a projection, and every reader has to hit that before a number."""
+
+    runner, _, first, _ = generated
+    for study_id, variant in _variants(runner, first).items():
+        declared = variant["representation_variant"]
+        assert declared["executed_tokens_at_this_precision"] == 0
+        assert "PROJECTION, NOT A MEASUREMENT" in declared["status"]
+        assert declared["accuracy"]
+        assert declared["known_defect"]
+        report = (
+            runner.variant_output_root(first) / study_id / "REPORT.md"
+        ).read_text(encoding="utf-8")
+        head = report.split("## ", 1)[0]
+        assert "SECONDARY" in head
+        assert "PROJECTION, NOT A MEASUREMENT" in head
+        assert "not the primary result" in head
+        assert (
+            "0 tokens have ever been produced at this precision" in head
+        ), "the variant must state the executed-token count before any figure"
+        for design in variant["designs"]:
+            assert design["representation"] == "q4p25", (
+                f"{study_id}: {design['design']} does not carry the variant tag, "
+                "so a row of it could be pasted into the primary unnoticed"
+            )
+
+
+def test_the_variant_does_not_touch_the_primary_result(generated) -> None:
+    """The primary studies must not know the variant exists.
+
+    ``run_all`` returns the primary results only, the variant is written to its
+    own directory, and no primary design carries the variant's representation.
+    """
+
+    runner, results, first, _ = generated
+    assert set(results) == set(runner.STUDIES), (
+        "run_all's return value is the set of primary studies; a secondary "
+        "projection in that mapping is one loop away from being read as one"
+    )
+    for study_id, result in results.items():
+        for design in result["designs"]:
+            assert design["representation"] in {"native", "official_packed"}
+        assert "representation_variant" not in result
+    for study_id, variant in _variants(runner, first).items():
+        assert variant["primary_study_id"] == study_id
+        assert variant["study_id"] != study_id
+
+
+def test_the_variant_prices_only_models_above_the_production_quantisation_floor(
+    generated,
+) -> None:
+    """Scope, and the reason for it.
+
+    Qwen3-8B ships at 16.00 bits and is above the width production GPU stacks
+    already serve, so re-quantising it is a question a study can ask of both
+    sides.  DeepSeek V4 Flash and Pro ship mixed FP8 dense plus MXFP4 routed at
+    4.70 and 4.46 bits -- they are already at that floor, and re-quantising them
+    would mean pushing the GPU BELOW what any production stack serves, which is
+    the same one-sided offer in the other direction.
+    """
+
+    runner, results, first, _ = generated
+    declared = float(runner.QUANTISED_VARIANT["bits_per_parameter"])
+    native_bits = {
+        summary["model"]: summary["native_bits_per_parameter"]
+        for summary in results["n6_vs_a100"]["model_summaries"]
+    }
+    for study_id, variant in _variants(runner, first).items():
+        priced = {design["model"] for design in variant["designs"]}
+        assert priced == {"Qwen3-8B"}, (
+            f"{study_id}: the variant prices {sorted(priced)}"
+        )
+        for model in priced:
+            assert native_bits[model] > declared, (
+                f"{model} ships at {native_bits[model]} bits, which is not above "
+                f"the variant's {declared}"
+            )
+
+
+def test_the_variant_is_selected_by_the_same_rule_as_the_primary(generated) -> None:
+    """One rule, two artifacts -- or the two cannot be read side by side."""
+
+    runner, results, first, _ = generated
+    for study_id, variant in _variants(runner, first).items():
+        assert (
+            variant["design_selection"]["metric"]
+            == results[study_id]["design_selection"]["metric"]
+        )
+        assert (
+            variant["design_selection"]["marginal_return_bar"]
+            == results[study_id]["design_selection"]["marginal_return_bar"]
+        )
+        assert variant["consistency_audit"]["status"] == "pass"
+
+
+def test_the_variant_report_never_quotes_a_ratio_without_the_primary_one(
+    generated,
+) -> None:
+    """Both rows on the same table, so the pair is the only way to read it."""
+
+    runner, _, first, _ = generated
+    for study_id in runner.STUDIES:
+        report = (
+            runner.variant_output_root(first) / study_id / "REPORT.md"
+        ).read_text(encoding="utf-8")
+        assert "PRIMARY (BF16" in report
+        assert "variant (4.25 bits, both sides)" in report
+
+
+def test_capacity_feasibility_and_the_resident_count_use_one_tolerance(
+    technology, qwen
+) -> None:
+    """A design declared feasible for one session must report room for one.
+
+    Capacities are solved from areas through a chain of float multiplications,
+    so a machine sized to hold exactly one session's KV lands a fraction of a
+    byte short of it: the three-reticle Qwen design's SRAM comes out at
+    1,207,959,551.9999998 B against a session needing 1,207,959,552.0 B.  The
+    feasibility test has always carried a one-byte tolerance.  The resident
+    count did not -- it floored an exact division, returned 0, and because 0 is
+    falsy the pipeline-fill cap that reads it was skipped on exactly those
+    machines.  The design was then published as feasible for one session AND as
+    delivering the aggregate rate of as many sessions as it had pipeline stages.
+
+    Both now read ``CAPACITY_TOLERANCE_BYTES``.  This test builds the shortfall
+    directly rather than hunting for the design that happens to have it, so it
+    keeps working when a technology input moves.
+    """
+
+    kv = kv_traffic(qwen, 8_192)
+    per_user = kv.storage_bytes_per_user
+    topology = _single_chip()
+    density = technology.sram_bits_per_mm2("N6").value / 8.0
+    # SRAM area that lands a hair UNDER one session, which is the case that broke.
+    sram_mm2 = (per_user - 0.25) / density
+    split = balanced_area_split(
+        technology,
+        node="N6",
+        total_mm2=4_000.0,
+        weight_store="rom",
+        kv_store="sram",
+        stored_weight_bytes=qwen.checkpoint_bytes,
+        resident_kv_bytes=per_user,
+    )
+    budget = rom_device_budget(
+        technology,
+        name="tolerance-probe",
+        node="N6",
+        area_mm2_per_device=4_000.0,
+        topology=topology,
+        stored_weight_bytes=qwen.checkpoint_bytes,
+        resident_kv_bytes=per_user,
+        kv_store="sram",
+        split=replace(split, sram_mm2=sram_mm2),
+    )
+    assert budget.kv_capacity_bytes < per_user, (
+        "the probe is meant to sit just under one session; it does not"
+    )
+    step = evaluate(
+        budget,
+        qwen,
+        context_tokens=8_192,
+        batch_size=1,
+        technology=technology,
+    )
+    assert step.feasible, step.reasons
+    assert step.metrics["max_resident_users"] >= 1, (
+        "a design the capacity test calls feasible for one session reports room "
+        "for none; the two are not reading the same tolerance"
+    )
+
+
+def test_a_machine_that_holds_one_session_cannot_claim_a_pipeline_of_them(
+    technology, qwen
+) -> None:
+    """The fill cap has to fire at a resident count of one, not only above it.
+
+    ``if max_resident_users and fill_users > max_resident_users`` is falsy at
+    zero, so the cap was skipped precisely where capacity was tightest.  With the
+    tolerance fixed the count is one there, and one is truthy -- but the guard is
+    now an explicit ``> 0`` so the behaviour does not depend on that coincidence.
+    """
+
+    kv = kv_traffic(qwen, 8_192)
+    per_user = kv.storage_bytes_per_user
+    topology = Topology(
+        kind="array",
+        device_count=3,
+        parallelism="pipeline",
+        link="infiniband_hdr",
+        intra_link="nvlink3",
+        intra_domain_size=8,
+    )
+    split = balanced_area_split(
+        technology,
+        node="N6",
+        total_mm2=815.0,
+        weight_store="rom",
+        kv_store="sram",
+        stored_weight_bytes=qwen.checkpoint_bytes / 3.0,
+        resident_kv_bytes=per_user / 3.0,
+    )
+    budget = rom_device_budget(
+        technology,
+        name="one-session-pipeline",
+        node="N6",
+        area_mm2_per_device=815.0,
+        topology=topology,
+        stored_weight_bytes=qwen.checkpoint_bytes,
+        resident_kv_bytes=per_user,
+        kv_store="sram",
+        split=split,
+    )
+    step = evaluate(
+        budget,
+        qwen,
+        context_tokens=8_192,
+        batch_size=1,
+        technology=technology,
+    )
+    if not step.feasible:
+        pytest.skip(f"probe design is infeasible for other reasons: {step.reasons}")
+    resident = step.metrics["max_resident_users"]
+    assert step.metrics["pipeline_fill_users"] <= max(1.0, float(resident)) + 1e-9, (
+        "a three-stage pipeline that holds one session is claiming the aggregate "
+        "rate of three"
+    )
+    assert step.aggregate_tokens_s == pytest.approx(
+        step.metrics["pipeline_fill_users"] * step.per_user_tokens_s, rel=1e-9
+    )

@@ -321,6 +321,28 @@ def expert_dispatch(ctx: EngineContext, sub: int, descriptor: Descriptor) -> Non
     tokens = np.array(ctx.read(token_view)).reshape(groups, width)
     dispatched = np.repeat(tokens, slots, axis=0)
     ctx.write(out_view, dispatched.reshape(out_view.dims))
+    # ``output_view_1``, when bound, is the expert each dispatched *row* was
+    # routed to -- the same ``(group, slot)`` order the rows are in, which is
+    # the graph's ``ascending_token_then_ascending_selection``.  The routed
+    # contractions downstream read exactly this vector to pick a weight slab,
+    # so leaving it unwritten leaves whatever the backend's allocation put
+    # there: on the ROM lane a second dispatch happens to fill the same object,
+    # and on the HBM lane it is a zero-filled buffer, which routed every row of
+    # every layer to expert 0 with no trap -- the IDs are legal and in bounds.
+    if int(descriptor.payload["output_view_1"]) != NO_ID:
+        id_out_view = ctx.output_view(descriptor, 1)
+        _u32_out(id_out_view, "dispatched expert ID")
+        expected = groups * slots
+        _require(
+            int(np.prod(id_out_view.dims)) == expected,
+            f"ROUTE.EXPERT_DISPATCH expert-ID output view "
+            f"{id_out_view.descriptor_id} dims {id_out_view.dims} hold "
+            f"{int(np.prod(id_out_view.dims))} entries, expected {expected}",
+        )
+        ctx.write(
+            id_out_view,
+            ids.astype(np.uint32).reshape(id_out_view.dims),
+        )
     ctx.counters.add(
         "route.dispatched_bytes", int(dispatched.size) * dispatched.dtype.itemsize
     )

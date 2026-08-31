@@ -395,7 +395,118 @@ Below
 the first number the interconnect is a design cost; above the second the
 topology cannot deliver the rate at all.
 
+## 4b. Which one the study now builds, and why the answer is not the same for all three
+
+**The old §5 below reports the wafer/array *ratio*, which is a fact about the two
+classes. It does not answer the question a reader actually has, which is which
+machine to build, and until 2026-08-31 the study's answer to that was produced by
+a rule that could not see area.**
+
+That rule ranked feasible ROM designs by per-user tokens/s, kept everything
+within 5% of the peak, and reported the smallest silicon in the band. For
+Qwen3-8B at batch 1 the peak *is* the wafer (6,505 tok/s), the 5% floor is 6,180,
+and the best sub-wafer design in the study reaches 3,530 — 54% of the peak — so
+the band never engaged and the published answer for an 8B checkpoint was
+**one 46,225 mm² wafer**. A rate tolerance is orthogonal to area; it can only
+shrink a machine that was already near the peak.
+
+**The rule the reports now state and apply** has two parts. Keep every feasible
+design that no other feasible design of the same model and batch beats on *both*
+per-user tokens/s and tokens/s per 1,000 mm² — that non-dominated set is the
+published frontier. Then walk it by ascending area from the smallest feasible
+machine, accepting a rung only while the per-user tokens/s it adds per added mm²
+is strictly greater than the tokens/s per mm² the incumbent already returns on
+average. The bar is parity and it cannot be tuned to move an answer: accepting
+when `(r − r0)/(a − a0) ≥ r0/a0` is exactly `r/a ≥ r0/a0`.
+
+### The answer, at batch 1
+
+| model | N6 vs A100 | N5 vs B200 |
+|---|---|---|
+| Qwen3-8B @8K | **array**, 3 × 815 mm² = 2,445 mm², 2,791.2 tok/s/user, 1,141.6 per 1,000 mm² | **array**, 3 × 815 mm² = 2,445 mm², 3,795.9 tok/s/user, 1,552.5 per 1,000 mm² | <!-- figure: 2,791.2 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen recommended per-user rate, N6" --> <!-- figure: 1,141.6 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen recommended throughput density, N6" --> <!-- figure: 3,795.9 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen recommended per-user rate, N5" --> <!-- figure: 1,552.5 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen recommended throughput density, N5" -->
+| DeepSeek-V4-Flash @200K | **wafer**, 1 × 46,225 mm², 4,663.6 tok/s/user, 100.9 per 1,000 mm² | **array**, 14 × 815 mm² = 11,410 mm², 2,545.1 tok/s/user, 223.1 per 1,000 mm² | <!-- figure: 4,663.6 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_tokens_s" name="Flash recommended per-user rate, N6" --> <!-- figure: 100.9 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.tokens_s_per_1000mm2" name="Flash recommended throughput density, N6" --> <!-- figure: 2,545.1 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_tokens_s" name="Flash recommended per-user rate, N5" --> <!-- figure: 223.1 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.tokens_s_per_1000mm2" name="Flash recommended throughput density, N5" -->
+| DeepSeek-V4-Pro @1M | **wafer**, 2 × 46,225 mm², 2,359.5 tok/s/user, 25.5 per 1,000 mm² | **wafer**, 2 × 46,225 mm², 2,359.5 tok/s/user, 25.5 per 1,000 mm² | <!-- figure: 2,359.5 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_tokens_s" name="Pro recommended per-user rate, N6" --> <!-- figure: 25.5 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.tokens_s_per_1000mm2" name="Pro recommended throughput density, N6" -->
+
+**Qwen3-8B gets three reticle dies and never should have got a wafer.** The walk
+stops at the first rung because the next one returns 44.6 tok/s per 1,000 mm² of
+added silicon against the 1,141.6 the machine already returns, and the wafer —
+four rungs further on — returns 84.8. Its whole frontier, from the report:
+
+| design | mm² | user tok/s | per 1,000 mm² | sessions | binds on | marginal return |
+|---|---:|---:|---:|---:|---|---:|
+| `…array-pipeline-x3` **← recommended** | 2,445 | 2,791.2 | **1,141.6** | 1 | `compute` | — | <!-- figure: 2,445 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.silicon_area_mm2" name="Qwen recommended area, N6" --> <!-- figure: 1 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.max_resident_users" name="Qwen recommended resident sessions, N6" -->
+| `…array-pipeline-x4` | 3,260 | 2,827.5 | 867.3 | 1 | `weight_read` | 44.6 |
+| `…array-pipeline-x6-romfill` | 4,890 | 3,509.6 | 717.7 | 1 | `weight_read` | 293.8 |
+| `…array-pipeline-x7-romfill` | 5,705 | 3,529.9 | 618.7 | 1 | `weight_read` | 226.6 |
+| `…wafer-tensor-x1-romfill` | 46,225 | 6,505.3 | 140.7 | 1 | `link_latency` | 84.8 |
+
+**For the two DeepSeek models at N6 the frontier is a single row**, and that is a
+stronger statement than any ratio: the wafer beats every reticle array on *both*
+axes at once, so there is no trade-off to argue about. For Pro it is not even a
+preference — 94 reticles of mask ROM exceeds one 57-reticle wafer, so wafer-scale
+is a **capacity floor** and the only question is how many, to which the answer is
+the fewest that hold the model. §2's hop budget is why: Pro's 122 per-token
+all-reduces cannot fit inside an NVLink domain of 8, so a reticle array pays every
+collective twice — once inside a baseboard and once across InfiniBand — while a
+two-wafer machine keeps all 122 inside one 57-region mesh and crosses the wafer
+seam once, as a pipeline hand-off.
+
+**At N5 the same rule gives Flash an array**, and two things move together to do
+it. `nvlink5`'s hop is 1.2 µs against `nvlink3`'s 2.5, so the array's collective
+gets cheaper; and N5's ROM capacity density is 20.833 MB/mm² against N6's 16.204,
+so the same checkpoint needs **14 reticles instead of 18** — less silicon and
+fewer hops at once. The array's throughput density goes from 95.9 tok/s per
+1,000 mm² at N6 to **223.1 at N5** while the wafer's barely moves (100.9 → 106.3),
+and the class flips. Same rule, different node, different answer. That is the
+rule doing its job rather than a result being chosen.
+
+### Where the class flips with batch
+
+The recommendation is recomputed at every studied batch and the contiguous runs
+are published as regimes. At N6:
+
+| model | batch 1 | first change | last regime |
+|---|---|---|---|
+| Qwen3-8B | array ×3, SRAM KV, 2,445 mm², **1 session** | batch 2 → array ×5, HBM KV, 4,075 mm², 298 sessions | unchanged to batch 256 |
+| DeepSeek-Flash | **wafer** ×1, HBM KV, 448 sessions | batch 4 → **array** ×19, 15,485 mm², 990 sessions | array ×19 to batch 256 |
+| DeepSeek-Pro | **wafer** ×2, SRAM KV, **1 session** | batch 2 → wafer ×5, HBM KV, 314 sessions | batch 16 → **array** ×99, 80,685 mm², 723 sessions |
+
+Two of the three models flip class as the batch rises, and every SRAM-KV winner
+is a batch-1 winner that holds exactly one session — `DESIGN_BATCH = 1` sizes the
+SRAM-KV floorplan for a single stream. **So the honest one-line answer to "wafer
+or array" is: wafer for latency on the two large models, array for throughput on
+all three, and array for both on the 8B.** A single recommendation per model
+would have had to suppress that.
+
+### What this section cannot tell you
+
+The reticle-array class is sampled only at the device counts each floorplan's own
+sizing sweep happened to choose: `ROM_AREA_LADDER` is applied where
+`plan.kind == "wafer"` and nowhere else, so an array exists at an area only if
+some sweep landed there. For Qwen3-8B at N6 the emitted batched-array counts are
+SRAM-KV/`spare=sram` at {3, 4}, SRAM-KV/`romfill` at {6, 7} and HBM-KV at {5, 8}
+— no romfill array at 4 or 5 dies, no SRAM-KV array at 5 or 8. **The omission
+runs against the array class**, so the published ROM curve is a lower bound on
+the ROM curve rather than an upper one.
+
+**Which of the six answers above that touches, precisely.** Qwen3-8B at both
+nodes and DeepSeek-Flash at N5 are won by the *smallest feasible machine*, and
+the gap cannot reach those: nothing exists below the minimum area for a denser
+rung to hide in. **The three wafer answers — Flash at N6 and Pro at both nodes —
+are exposed**, because each is a wafer chosen over an array class sampled at a
+handful of device counts, and a rung the sweep never visited could in principle
+beat it on throughput density. Those three are the weakest results on this page
+and should be re-derived once the array class is emitted on the same explicit
+ladder the wafer class already gets. Either way the curve *between* rungs is not
+evidence.
+
 ## 5. What this changes — rewritten
+
+> **Read §4b first.** This section reports the wafer/array *ratio*, which is a
+> property of the two classes and is still correct. It is not the answer to
+> "which do I build" — §4b is, and for Qwen3-8B the two disagree: the wafer wins
+> the ratio here and loses the build there, because winning a ratio by 1.85×
+> while costing 18.9× the silicon is not winning.
 
 The old §5 offered a choice in which the wafer bought *"15× the latency
 headroom"*. **That figure is retracted.** The model reports the wafer/array

@@ -190,6 +190,29 @@ BLOCKS: dict[str, dict[str, Any]] = {
             "Eight-source, two-group tagged deterministic reduction endpoint."
         ),
     },
+    "matmul_bf16_sram_engine": {
+        "top": "ot_ta_matmul_bf16_sram_engine",
+        "sources": [
+            "rtl/ot_fp32_rne_pkg.sv",
+            "rtl/ot_ta_command_decoder.sv",
+            "rtl/ot_ta_matmul_bf16_sram_engine.sv",
+        ],
+        "parameters": {},
+        "clock_port": "clk",
+        "false_path_from_ports": ["rst_n"],
+        "description": (
+            "MATMUL_BF16_TILE stream executor: command decode, exact BF16 "
+            "widening multiply, binary32 RNE accumulate and BF16 conversion, "
+            "with ordered 16-bit SRAM operand and accumulator traffic.  This "
+            "is the block the cycle model's tensor engine actually is, and "
+            "the one every tensor cycle in every study rests on; SRAM arrays "
+            "are external, so it maps to standard cells only.  Its critical "
+            "path is a whole FP32 multiply-add-convert chain in one cycle, so "
+            "it closes far below the other blocks and needs a target period "
+            "chosen for it -- 200 ns on sky130hd, 18 ns on asap7 -- rather "
+            "than the period the smaller blocks use."
+        ),
+    },
     "add_bf16_sram_engine": {
         "top": "ot_ta_add_bf16_sram_engine",
         "sources": [

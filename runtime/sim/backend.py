@@ -103,6 +103,21 @@ CONTRACT_DEEPSEEK_ROPE = "rope_apply_bf16_v1"
 #: The same rotation with the conjugate phasor, which de-rotates.
 CONTRACT_DEEPSEEK_ROPE_INVERSE = "rope_inverse_bf16_v1"
 
+#: SwiGLU, Qwen's: no clamp, and the SiLU activation is materialised in BF16
+#: before it gates the up projection.
+CONTRACT_QWEN_SILU_MUL = "qwen3_silu_mul_bf16_v1"
+#: SwiGLU, the released DeepSeek MoE's: the gate is clamped above at 10 and the
+#: up projection to +/-10 -- ``swiglu_limit`` in the released config -- and the
+#: sigmoid, the SiLU product and the gated product all stay in binary32,
+#: rounding once at the output.  The two are different operations, not two
+#: spellings of one, so the engine dispatches on the name rather than guessing:
+#: running Qwen's on DeepSeek drops the clamp *and* inserts a BF16 rounding the
+#: released kernel does not have.  ``runtime.reference.swiglu`` owns the
+#: arithmetic; the two names are the FP8 dense expert and the MXFP4 routed one,
+#: whose vector stage is the same function.
+CONTRACT_DEEPSEEK_FP8_SWIGLU = "fp8_swiglu_bf16_clamped_silu_product_v1"
+CONTRACT_DEEPSEEK_MXFP4_SWIGLU = "mxfp4_swiglu_bf16_clamped_silu_product_v1"
+
 #: The MoE reduction whose optional base joins *after* the term reduction.
 #: ``runtime.reference.dispatch.reduce_expert_outputs_bf16`` reduces the routed
 #: contributions with the NUM-6.1 balanced tree and then adds the shared expert
@@ -130,6 +145,9 @@ KNOWN_CONTRACTS: frozenset[str] = frozenset(
         CONTRACT_DEEPSEEK_ROPE,
         CONTRACT_DEEPSEEK_ROPE_INVERSE,
         CONTRACT_DEEPSEEK_EXPERT_SUM,
+        CONTRACT_QWEN_SILU_MUL,
+        CONTRACT_DEEPSEEK_FP8_SWIGLU,
+        CONTRACT_DEEPSEEK_MXFP4_SWIGLU,
         *CONTRACT_ALIASES,
     }
 )
@@ -1176,12 +1194,15 @@ __all__ = [
     "BackendError",
     "CONTRACT_ALIASES",
     "CONTRACT_BLOCKED",
+    "CONTRACT_DEEPSEEK_FP8_SWIGLU",
+    "CONTRACT_DEEPSEEK_MXFP4_SWIGLU",
     "CONTRACT_DEEPSEEK_RMSNORM",
     "CONTRACT_DEEPSEEK_ROPE",
     "CONTRACT_DEEPSEEK_EXPERT_SUM",
     "CONTRACT_DEEPSEEK_ROPE_INVERSE",
     "CONTRACT_QWEN_RMSNORM",
     "CONTRACT_QWEN_ROPE",
+    "CONTRACT_QWEN_SILU_MUL",
     "CONTRACT_SEQUENTIAL",
     "DEFAULT_BACKEND",
     "KNOWN_CONTRACTS",

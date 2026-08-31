@@ -56,6 +56,20 @@ from opentallas.workload import kv_traffic  # noqa: E402
 TECHNOLOGY_PATH = ROOT / "configs" / "hardware" / "technology.json"
 OUTPUT_ROOT = ROOT / "results" / "roofline"
 ARTIFACTS = ("analytical.json", "sweep.csv", "REPORT.md")
+VARIANT_ARTIFACTS = ("analytical.json", "REPORT.md")
+"""No ``sweep.csv`` for the variant, and that is a decision rather than an
+omission: there is no row on that page anyone should be pulling into a
+spreadsheet."""
+
+
+def variant_output_root(output_root: Path) -> Path:
+    """Where the secondary quantised variant is written.
+
+    A separate directory, one level down, so a path never resolves to a variant
+    when a reader meant the primary study.
+    """
+
+    return output_root / "quantised_variant"
 
 ANCHOR_MODEL_PATH = (
     ROOT / "configs" / "models" / "anchors" / "llama-3.1-8b.json"
@@ -154,6 +168,125 @@ STUDIES: dict[str, dict[str, Any]] = {
     },
 }
 
+#: ------------------------------------------------------------------------
+#: THE QUANTISED VARIANT.  SECONDARY.  A PROJECTION, NOT A MEASUREMENT.
+#: ------------------------------------------------------------------------
+#: The primary studies price the released checkpoint's own packing on both
+#: sides and nothing else.  This block prices ONE alternative, in its own
+#: artifact directory, under one rule: **the quantisation applies to both
+#: sides.**  A GPU serving 4.25-bit weights reads 3.76x fewer weight bytes too,
+#: and a study that halved the ROM side's weight traffic while leaving the GPU
+#: at BF16 would be running exactly the asymmetry the released-packing rule was
+#: written to stop -- the same rule this program already records for an FP8 KV
+#: latent in the DeepSeek profile's ``kv_precision_sensitivity``.
+#:
+#: **No token has ever been produced at this precision anywhere in this
+#: program, on either backend.**  ``configs/hardware/abi3_capability/
+#: rom_qwen3.json`` declares BF16 numeric contracts and no sub-byte weight
+#: decode and no w4a8 contraction; the 192 oracle-identical tokens this program
+#: rests on were produced at BF16.  Every number the variant emits is therefore
+#: graded ``derived`` and is a projection of a machine nobody has run at a
+#: precision nobody has measured the accuracy of.  It is published so the
+#: question "what would quantisation do to this comparison" has a computed
+#: answer instead of an intuition, and for no other purpose.
+QUANTISED_VARIANT: dict[str, Any] = {
+    "variant_id": "quantised_variant",
+    "status": "SECONDARY -- PROJECTION, NOT A MEASUREMENT",
+    "models": (STUDY_MODELS[0],),
+    "representation": ("q4p25", 4.25),
+    "bits_per_parameter": 4.25,
+    "executed_tokens_at_this_precision": 0,
+    "format": (
+        "4.25 bits per parameter, held identical on both sides. That is MXFP4 "
+        "as the OCP Microscaling specification defines it -- 4-bit E2M1 "
+        "elements in blocks of 32 with one 8-bit E8M0 block scale, "
+        "(32x4 + 8) / 32 = 4.25 -- and it is within a rounding of INT4 "
+        "group-128 with an FP16 scale and an INT4 zero point, "
+        "(128x4 + 16 + 4) / 128 = 4.16, which is how vLLM and TensorRT-LLM "
+        "actually ship 4-bit weights today."
+    ),
+    "arithmetic": (
+        "Both sides declare the w4a8 datapath their stored width implies, and "
+        "each part then executes it or emulates it according to its OWN "
+        "published format table, which is where the two studies stop being "
+        "symmetric. configs/hardware/technology.json gives a100_sxm_80gb "
+        "native_formats [bf16, fp32] and emulates fp4, fp8 and w4a8 to bf16: "
+        "Ampere has no low-precision floating-point tensor core, so an A100 "
+        "serving 4-bit weights gains BYTES and never arithmetic. b200_sxm "
+        "declares w4a8 native. The ROM side takes the arithmetic credit in "
+        "both studies. That asymmetry is a fact about Ampere, not a modelling "
+        "choice, and it is the reason BOTH pairings are published: reporting "
+        "only n6_vs_a100 would be selecting the study in which the GPU is "
+        "architecturally forbidden from taking the credit the ROM side takes."
+    ),
+    "scope": (
+        "Qwen3-8B only. The variant is defined only where the release ships "
+        "ABOVE the width production GPU stacks already serve. Qwen3-8B ships "
+        "at 16.00 bits and qualifies. DeepSeek-V4-Flash-0731 at 4.70 and "
+        "DeepSeek-V4-Pro-0813 at 4.46 bits already ship mixed FP8 dense plus "
+        "MXFP4 routed -- they are at that floor, and re-quantising them would "
+        "mean pushing the GPU below what any production stack serves, which is "
+        "the same one-sided offer in the other direction."
+    ),
+    "unmodelled": (
+        "Four real mask-ROM advantages have no term in this roofline and the "
+        "variant must not be argued on them: zero scale-storage (a GPU pays "
+        "0.25 bits per parameter for an MXFP4 block scale and 0.5 for NVFP4, a "
+        "mask ROM folds it into the datapath at mask time), zero "
+        "dequantisation instructions and energy (QServe measures 20-90% GPU "
+        "runtime overhead for INT4 dequant), free non-byte-aligned widths, and "
+        "free codebook quantisation. One real mask-ROM DISadvantage is equally "
+        "unmodelled: a mask ROM cannot be re-quantised after tape-out, so a bad "
+        "quantisation is a scrapped mask set, a risk with no GPU counterpart. "
+        "A fifth term, the balanced ROM+MAC floorplan rule, IS modelled and is "
+        "modelled wrongly at this width -- see known_defect."
+    ),
+    "known_defect": (
+        "src/opentallas/roofline.py's balanced ROM+MAC rule sizes the MAC "
+        "array at one weight byte per multiply-accumulate against a hard-coded "
+        "fp8 compute density. At 4.25 bits a byte carries 1.88 weights, so the "
+        "MAC array is under-provisioned by that factor and the array is "
+        "correspondingly over-provisioned. The rule is exactly right at 16 "
+        "bits on a bf16 datapath, which is why the BF16 primary is untouched by "
+        "it. It is left as it is here rather than corrected, because "
+        "correcting it would move 1,456 published ROM points in the PRIMARY "
+        "studies -- 728 in each, every batched design with "
+        "spare_area_policy = rom on a w4a8 datapath, all of them DeepSeek, "
+        "which already executes w4a8 at its released packing of 4.70 and 4.46 "
+        "bits -- and the instruction for this revision is that the primary "
+        "result does not move except where the design selection moves it. The "
+        "defect is recorded, its direction is stated on every variant table, "
+        "and it should be fixed on its own, in its own change, where the size "
+        "of the correction is the only thing being read."
+    ),
+    "accuracy": (
+        "ABSENT ENTIRELY, on both sides, and this is the variant's real "
+        "exposure rather than its rate. The published band on 4.25-bit weights "
+        "runs from NVIDIA's vendor-run '1% or less' on one model to the OCP MX "
+        "authors' own direct-cast MXFP4 measurement of a 24% relative Lambada "
+        "drop on LLaMA-7B (0.736 -> 0.557). Nothing in this program has "
+        "measured where a real deployment lands inside that band, on either "
+        "backend. A rate reported without that band beside it is the same class "
+        "of claim as a projected speedup for a machine nobody has run."
+    ),
+    "what_would_make_it_a_measurement": (
+        "(i) Quantise Qwen3-8B to this format and run the existing HBM lane: "
+        "configs/hardware/abi3_capability/hbm_sram_single_chip.json already "
+        "declares mxfp4 and fp8 contracts and an FP4 quantise/reconstruct pair, "
+        "executed for DeepSeek. (ii) Build the ROM lane, where nothing exists: "
+        "rom_qwen3.json needs a sub-byte weight-decode contract, a w4a8 "
+        "contraction contract, backend lowering and a re-exported image. "
+        "(iii) The gate cannot be token identity against the BF16 oracle -- "
+        "quantisation changes tokens by construction. It has to be "
+        "cross-backend identity, the ROM lane and the HBM lane at the SAME "
+        "format producing identical tokens position for position, plus a "
+        "measured accuracy budget with a divergence horizon in the form this "
+        "program already reports. (iv) The w4a8 compute density needs silicon "
+        "behind it at N6; it is currently derived from published A100 INT4/INT8 "
+        "roofs scaled by logic density."
+    ),
+}
+
 # The policy list has exactly one definition, in the model.  This file used
 # to keep its own copy, and a second restatement of one list is how the two
 # come apart -- the third policy was added to the model and silently not
@@ -247,6 +380,37 @@ def _sha256(path: Path) -> str:
 
 def _finite(value: float) -> float | None:
     return value if math.isfinite(value) else None
+
+
+def _crossover_row(
+    design_id: str, model: ModelProfile, topology: Topology, technology: Technology
+) -> dict[str, Any]:
+    """One latency-crossover record, with its infinities written down as such.
+
+    A topology with no inter-partition event at all -- a model that fits on one
+    device -- has zero link time on a token's critical path, so the rate at
+    which hops would consume a tenth of the budget and the rate at which they
+    would consume all of it are both unbounded.  ``math.inf`` is the honest
+    value and is not JSON, so it is emitted as ``null`` and the fact is stated
+    in a field of its own rather than by a reader guessing what a missing number
+    meant.  No design in the primary studies has ever hit this; the quantised
+    variant does, because an 8B checkpoint at 4.25 bits fits on one reticle.
+    """
+
+    record = {
+        "design": design_id,
+        "model": model.name,
+        **latency_crossover(topology, model, technology).to_dict(),
+    }
+    unbounded = [
+        key
+        for key in ("viable_tokens_s", "hard_ceiling_tokens_s")
+        if isinstance(record.get(key), float) and not math.isfinite(record[key])
+    ]
+    for key in unbounded:
+        record[key] = None
+    record["link_latency_unbounded_rate"] = bool(unbounded)
+    return record
 
 
 def _representations(model: ModelProfile) -> tuple[tuple[str, float | None], ...]:
@@ -1065,11 +1229,7 @@ def _emit_rom_design(
         # Link latency is a property of the topology, so the two
         # amortisation policies produce identical crossovers.
         crossovers.append(
-            {
-                "design": design_id,
-                "model": model.name,
-                **latency_crossover(budget.topology, model, technology).to_dict(),
-            }
+            _crossover_row(design_id, model, budget.topology, technology)
         )
     for batch in BATCHES:
         step = evaluate(
@@ -1179,10 +1339,477 @@ def _headline_rows(result: dict[str, Any]) -> list[dict[str, Any]]:
     )
 
 
-def _simulate_study(
-    study_id: str, technology: Technology, *, with_sensitivity: bool = True
+# --------------------------------------------------------------------------
+# design selection
+# --------------------------------------------------------------------------
+
+SELECTION_AMORTIZATION = "batched"
+"""The selection reads the amortising machine, which is what the main tables
+show.  The compute-in-ROM fork is a different machine and is reported in its own
+section; mixing the two into one frontier would let an unexecuted arithmetic
+assumption pick the design."""
+
+MARGINAL_RETURN_BAR = 1.0
+"""Parity, not a tuned fraction.
+
+A larger machine is accepted only when the per-user tokens/s it adds per added
+mm2 beats the tokens/s per mm2 the machine you already have returns on average
+-- you never buy silicon that works less hard than the silicon you have.  The
+bar is 1.0 because parity is the only value that needs no defence; every other
+value is a preference about how much rate a reader may buy with how much area,
+and this study has no standing to set one.  Raising or lowering it cannot be
+used to move an answer, because at 1.0 the walk is algebraically identical to
+maximising per-user tokens/s per mm2: accepting when
+``(r - r0) / (a - a0) >= r0 / a0`` is exactly ``r / a >= r0 / a0``."""
+
+SELECTION_METRIC = (
+    "Among the ROM designs feasible for this model at this batch, keep every "
+    "design that no other feasible design of the same model and batch beats on "
+    "BOTH per-user tokens/s and tokens/s per 1,000 mm2. That non-dominated set "
+    "is the reported frontier, and it is published in full. Order it by silicon "
+    "area, start at the smallest feasible machine, and accept each larger rung "
+    "only while the per-user tokens/s it adds per added mm2 is strictly greater "
+    "than the tokens/s per mm2 the incumbent already returns on average; ties go "
+    "to the smaller machine. The rung the walk stops on is the recommended "
+    "design. Equivalently: maximise per-user tokens/s per mm2 over the feasible "
+    "set. The two statements are the same rule -- accepting when "
+    "(r - r0) / (a - a0) >= r0 / a0 is exactly r / a >= r0 / a0 -- and the "
+    "marginal form is the one to read, because it is the engineering question: "
+    "does the next slab of silicon work at least as hard as the slab you have?"
+)
+
+SELECTION_METRIC_RATIONALE = (
+    "Ranking on per-user tokens/s alone hands an 8B model a 46,225 mm2 wafer, "
+    "because a per-user rate has no area in it and a wafer is always at least as "
+    "fast as anything cut out of it -- on Qwen3-8B that is 2.33x the rate of the "
+    "three 815 mm2 reticles that hold the same checkpoint, bought with 18.9x the "
+    "silicon and an eighth of the throughput density. Ranking on silicon area "
+    "alone picks the smallest machine that "
+    "physically holds the checkpoint, whatever it delivers. A 5%-of-peak "
+    "tolerance does not fix the first: it is a tie-break among near-peak designs "
+    "and is orthogonal to area, so it shrinks the machine only in the cases "
+    "nobody was worried about. The domination filter plus the marginal-return "
+    "walk fixes both, needs no latency target to be stated, and -- because the "
+    "filter is on (per-user rate, rate per mm2) -- makes it structurally "
+    "impossible to recommend a design that another feasible design of the same "
+    "model beats on both axes at once."
+)
+
+
+def _selection_density(row: dict[str, Any]) -> float:
+    """Per-user tokens/s per 1,000 mm2 of silicon."""
+
+    area = row["silicon_area_mm2"]
+    return row["per_user_tokens_s"] / area * 1000.0 if area > 0 else 0.0
+
+
+def _selection_candidates(
+    points: list[dict[str, Any]], model_name: str, batch: int
+) -> list[dict[str, Any]]:
+    return [
+        row
+        for row in points
+        if row["family"] == "rom"
+        and row["model"] == model_name
+        and row["batch_size"] == batch
+        and row["weight_amortization"] == SELECTION_AMORTIZATION
+        and row["feasible"]
+        and row["per_user_tokens_s"] > 0
+        and row["silicon_area_mm2"] > 0
+    ]
+
+
+def _design_frontier(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Designs no other feasible design beats on BOTH axes at once.
+
+    This is the property the recommendation has to have and the one whose
+    absence let a wafer be published as the answer for an 8B model, so it is a
+    filter and not a report: the walk below can only ever choose from this set.
+    """
+
+    scored = [(row["per_user_tokens_s"], _selection_density(row), row) for row in rows]
+    kept: list[tuple[float, float, dict[str, Any]]] = []
+    for rate, density, row in scored:
+        dominated = False
+        for other_rate, other_density, other in scored:
+            if other is row:
+                continue
+            if (
+                other_rate >= rate * (1.0 - 1e-12)
+                and other_density >= density * (1.0 - 1e-12)
+                and (
+                    other_rate > rate * (1.0 + 1e-12)
+                    or other_density > density * (1.0 + 1e-12)
+                )
+            ):
+                dominated = True
+                break
+        if not dominated:
+            kept.append((rate, density, row))
+    # Exact ties -- the same rate on the same silicon under two design labels --
+    # collapse to one row, chosen by name so the artifact is deterministic.
+    unique: dict[tuple[float, float], dict[str, Any]] = {}
+    for rate, density, row in kept:
+        key = (round(rate, 6), round(density, 9))
+        current = unique.get(key)
+        if current is None or row["design"] < current["design"]:
+            unique[key] = row
+    return sorted(
+        unique.values(),
+        key=lambda row: (
+            row["silicon_area_mm2"],
+            -row["per_user_tokens_s"],
+            row["design"],
+        ),
+    )
+
+
+def _marginal_return_walk(frontier: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """The walk, with its arithmetic recorded rung by rung.
+
+    Returned as a ladder rather than a winner so the report can show the reader
+    the number that stopped it.  The last accepted rung is the recommendation.
+    """
+
+    ladder: list[dict[str, Any]] = []
+    if not frontier:
+        return ladder
+    incumbent = frontier[0]
+    ladder.append(
+        {
+            "design": incumbent["design"],
+            "silicon_area_mm2": incumbent["silicon_area_mm2"],
+            "per_user_tokens_s": incumbent["per_user_tokens_s"],
+            "tokens_s_per_1000mm2": _selection_density(incumbent),
+            "marginal_tokens_s_per_1000mm2": None,
+            "incumbent_average_tokens_s_per_1000mm2": _selection_density(incumbent),
+            "verdict": "start: the smallest feasible machine",
+            "accepted": True,
+        }
+    )
+    for row in frontier[1:]:
+        delta_area = row["silicon_area_mm2"] - incumbent["silicon_area_mm2"]
+        if delta_area <= 0:
+            continue
+        marginal = (
+            (row["per_user_tokens_s"] - incumbent["per_user_tokens_s"])
+            / delta_area
+            * 1000.0
+        )
+        average = _selection_density(incumbent)
+        accepted = marginal > average * MARGINAL_RETURN_BAR * (1.0 + 1e-12)
+        ladder.append(
+            {
+                "design": row["design"],
+                "silicon_area_mm2": row["silicon_area_mm2"],
+                "per_user_tokens_s": row["per_user_tokens_s"],
+                "tokens_s_per_1000mm2": _selection_density(row),
+                "marginal_tokens_s_per_1000mm2": marginal,
+                "incumbent_average_tokens_s_per_1000mm2": average,
+                "verdict": (
+                    "accepted: the added silicon works harder than the silicon "
+                    "already bought"
+                    if accepted
+                    else "rejected: the added silicon works less hard than the "
+                    "silicon already bought"
+                ),
+                "accepted": accepted,
+            }
+        )
+        if accepted:
+            incumbent = row
+    return ladder
+
+
+def _selection_row(
+    row: dict[str, Any], comparison: dict[str, Any] | None
 ) -> dict[str, Any]:
-    config = STUDIES[study_id]
+    """One published row: the whole tuple, never a single number.
+
+    Every one of these fields is load-bearing somewhere in the argument, and
+    publishing the per-user rate without the resident-session count beside it is
+    how a one-session latency device gets read as a server.
+    """
+
+    record = {
+        "design": row["design"],
+        "silicon_area_mm2": row["silicon_area_mm2"],
+        "silicon_area_mm2_per_device": row["silicon_area_mm2_per_device"],
+        "device_count": row["device_count"],
+        "topology_kind": row["topology_kind"],
+        "parallelism": row["parallelism"],
+        "kv_store": row["kv_store"],
+        "spare_area_policy": row["spare_area_policy"],
+        "per_user_tokens_s": row["per_user_tokens_s"],
+        "aggregate_tokens_s": row["aggregate_tokens_s"],
+        "delivered_tokens_s": row["delivered_tokens_s"],
+        "tokens_s_per_1000mm2": _selection_density(row),
+        "aggregate_tokens_s_per_1000mm2": (
+            row["aggregate_tokens_s"] / row["silicon_area_mm2"] * 1000.0
+        ),
+        "max_resident_users": row["max_resident_users"],
+        "pipeline_fill_users": row["pipeline_fill_users"],
+        "pipeline_fill_limited_by": row["pipeline_fill_limited_by"],
+        "binding_constraint": row["binding_constraint"],
+        "power_w": row["power_w"],
+        "power_density_w_per_mm2": row["power_density_w_per_mm2"],
+        "energy_j_per_token": row["energy_j_per_token"],
+        "thermal_scale": row["thermal_scale"],
+        "rom_replication_factor": row["rom_replication_factor"],
+    }
+    if comparison is not None:
+        record.update(
+            {
+                "iso_area_gpu_design": comparison["iso_area_gpu_design"],
+                "iso_area_gpu_device_count": comparison["iso_area_gpu_device_count"],
+                "iso_area_gpu_silicon_area_mm2": comparison[
+                    "iso_area_gpu_silicon_area_mm2"
+                ],
+                "iso_area_ratio": comparison["iso_area_ratio"],
+                "iso_area_gpu_feasible": comparison["iso_area_gpu_feasible"],
+                "iso_area_gpu_parallelism": comparison["iso_area_gpu_parallelism"],
+                "iso_area_gpu_per_user_tokens_s": comparison[
+                    "iso_area_gpu_per_user_tokens_s"
+                ],
+                "iso_area_gpu_aggregate_tokens_s": comparison[
+                    "iso_area_gpu_aggregate_tokens_s"
+                ],
+                "iso_area_gpu_max_resident_users": comparison[
+                    "iso_area_gpu_max_resident_users"
+                ],
+                "iso_area_gpu_energy_j_per_token": comparison[
+                    "iso_area_gpu_energy_j_per_token"
+                ],
+                "per_user_speed_ratio": comparison["per_user_speed_ratio"],
+                "aggregate_speed_ratio": comparison["aggregate_speed_ratio"],
+                "tokens_per_joule_advantage_x": comparison[
+                    "tokens_per_joule_advantage_x"
+                ],
+                "fastest_feasible_gpu_design": comparison[
+                    "fastest_feasible_gpu_design"
+                ],
+                "fastest_feasible_gpu_silicon_area_mm2": comparison[
+                    "fastest_feasible_gpu_silicon_area_mm2"
+                ],
+                "fastest_feasible_gpu_per_user_tokens_s": comparison[
+                    "fastest_feasible_gpu_per_user_tokens_s"
+                ],
+            }
+        )
+    return record
+
+
+def _design_selection(
+    result: dict[str, Any], study_models: tuple[tuple[str, Path, int], ...]
+) -> dict[str, Any]:
+    """Pick, and publish, one design per model -- and the curve it sits on.
+
+    The previous rule is evaluated beside the new one on the same data, so the
+    report can state the headline before and after without either being retyped.
+    """
+
+    points = result["points"]
+    comparisons = {
+        (row["rom_design"], row["batch_size"]): row for row in result["comparisons"]
+    }
+    models: list[dict[str, Any]] = []
+    for model_name, _path, context in study_models:
+        per_batch: list[dict[str, Any]] = []
+        headline: dict[str, Any] | None = None
+        frontier_rows: list[dict[str, Any]] = []
+        walk: list[dict[str, Any]] = []
+        for batch in BATCHES:
+            rows = _selection_candidates(points, model_name, batch)
+            frontier = _design_frontier(rows)
+            ladder = _marginal_return_walk(frontier)
+            accepted = [rung for rung in ladder if rung["accepted"]]
+            chosen_id = accepted[-1]["design"] if accepted else None
+            chosen = next(
+                (row for row in frontier if row["design"] == chosen_id), None
+            )
+            record: dict[str, Any] = {
+                "batch_size": batch,
+                "feasible_designs": len(rows),
+                "frontier_size": len(frontier),
+            }
+            if chosen is None:
+                record["recommended"] = None
+                record["reason"] = "no feasible ROM design at this batch"
+            else:
+                record["recommended"] = _selection_row(
+                    chosen, comparisons.get((chosen["design"], batch))
+                )
+            per_batch.append(record)
+            if batch == 1 and chosen is not None:
+                headline = record["recommended"]
+                frontier_rows = [
+                    _selection_row(row, comparisons.get((row["design"], batch)))
+                    for row in frontier
+                ]
+                walk = ladder
+
+        # What ranking on per-user rate alone buys, at batch 1, so the cost of
+        # the rejected rule is a number in the artifact rather than an assertion.
+        batch_one = _selection_candidates(points, model_name, 1)
+        fastest = (
+            max(batch_one, key=lambda row: (row["per_user_tokens_s"], -row["silicon_area_mm2"]))
+            if batch_one
+            else None
+        )
+        previous = (
+            _pick_best(batch_one, "per_user_tokens_s", "silicon_area_mm2")
+            if batch_one
+            else None
+        )
+        smallest = (
+            min(batch_one, key=lambda row: (row["silicon_area_mm2"], -row["per_user_tokens_s"]))
+            if batch_one
+            else None
+        )
+
+        # A frontier can honestly be one row -- when one design wins on both
+        # axes at once there is no trade to report -- and a one-row table tells
+        # the reader nothing about what it beat.  The class contrast is
+        # published beside it so "array or wafer" is answered with the losing
+        # class's own best machine on the page, not by its absence from it.
+        class_comparison: list[dict[str, Any]] = []
+        for kind in ("array", "wafer"):
+            in_class = [row for row in batch_one if row["topology_kind"] == kind]
+            if not in_class:
+                continue
+            densest = max(
+                in_class,
+                key=lambda row: (_selection_density(row), -row["silicon_area_mm2"]),
+            )
+            fastest_in_class = max(
+                in_class,
+                key=lambda row: (row["per_user_tokens_s"], -row["silicon_area_mm2"]),
+            )
+            smallest_in_class = min(
+                in_class,
+                key=lambda row: (row["silicon_area_mm2"], -row["per_user_tokens_s"]),
+            )
+            class_comparison.append(
+                {
+                    "topology_kind": kind,
+                    "designs_evaluated": len(in_class),
+                    "best_by_throughput_density": _selection_row(
+                        densest, comparisons.get((densest["design"], 1))
+                    ),
+                    "best_by_per_user_rate": _selection_row(
+                        fastest_in_class,
+                        comparisons.get((fastest_in_class["design"], 1)),
+                    ),
+                    "smallest_feasible": _selection_row(
+                        smallest_in_class,
+                        comparisons.get((smallest_in_class["design"], 1)),
+                    ),
+                }
+            )
+
+        regimes: list[dict[str, Any]] = []
+        for record in per_batch:
+            design = (
+                record["recommended"]["design"] if record["recommended"] else None
+            )
+            if regimes and regimes[-1]["design"] == design:
+                regimes[-1]["batches"].append(record["batch_size"])
+                continue
+            regimes.append(
+                {
+                    "design": design,
+                    "batches": [record["batch_size"]],
+                    "silicon_area_mm2": (
+                        record["recommended"]["silicon_area_mm2"]
+                        if record["recommended"]
+                        else None
+                    ),
+                    "topology_kind": (
+                        record["recommended"]["topology_kind"]
+                        if record["recommended"]
+                        else None
+                    ),
+                    "kv_store": (
+                        record["recommended"]["kv_store"]
+                        if record["recommended"]
+                        else None
+                    ),
+                    "max_resident_users": (
+                        record["recommended"]["max_resident_users"]
+                        if record["recommended"]
+                        else None
+                    ),
+                }
+            )
+
+        models.append(
+            {
+                "model": model_name,
+                "context_tokens": context,
+                "recommended": headline,
+                "marginal_return_walk": walk,
+                "frontier_batch_1": frontier_rows,
+                "batch_regimes": per_batch,
+                "regimes": regimes,
+                "regime_count": len(regimes),
+                "best_design_differs_by_batch": len(regimes) > 1,
+                "class_comparison": class_comparison,
+                "rejected_per_user_maximum": (
+                    _selection_row(fastest, comparisons.get((fastest["design"], 1)))
+                    if fastest
+                    else None
+                ),
+                "rejected_smallest_feasible": (
+                    _selection_row(smallest, comparisons.get((smallest["design"], 1)))
+                    if smallest
+                    else None
+                ),
+                "previous_rule_choice": (
+                    _selection_row(previous, comparisons.get((previous["design"], 1)))
+                    if previous
+                    else None
+                ),
+            }
+        )
+
+    return {
+        "metric": SELECTION_METRIC,
+        "why_this_metric": SELECTION_METRIC_RATIONALE,
+        "marginal_return_bar": MARGINAL_RETURN_BAR,
+        "amortisation_scope": SELECTION_AMORTIZATION,
+        "previous_rule": (
+            "smallest silicon within "
+            f"{BEST_DESIGN_TOLERANCE:.0%} of the best per-user rate "
+            "(BEST_DESIGN_TOLERANCE), retained here only so the before/after is "
+            "computed rather than asserted"
+        ),
+        "iso_area_convention": (
+            "The GPU comparator at each ROM area is N copies of one unified HBM "
+            "die, N chosen so the silicon matches, and the cluster is allowed to "
+            "pick its own parallelism. The comparison is read at the ROM side's "
+            "CHOSEN area, not at a fixed rung of the area ladder where both "
+            "sides are past their own optimum."
+        ),
+        "models": models,
+    }
+
+
+def _simulate_study(
+    study_id: str,
+    technology: Technology,
+    *,
+    with_sensitivity: bool = True,
+    config: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    config = STUDIES[study_id] if config is None else config
+    # A study may narrow the model list and may name its own stored
+    # representation.  The two primary studies do neither, so they are
+    # unaffected to the byte; the quantised variant does both, which is how it
+    # stays a separate artifact instead of extra rows in this one.
+    study_models: tuple[tuple[str, Path, int], ...] = tuple(
+        config.get("models", STUDY_MODELS)
+    )
+    representation_override = config.get("representation")
     node = str(config["rom_node"])
     hbm_generation = str(config["hbm_generation"])
     reticle_area = technology.graded("reticle", "area_mm2").value
@@ -1202,7 +1829,7 @@ def _simulate_study(
     crossovers: list[dict[str, Any]] = []
     model_summaries: list[dict[str, Any]] = []
 
-    for model_name, model_path, context in STUDY_MODELS:
+    for model_name, model_path, context in study_models:
         model = ModelProfile.load(model_path)
         kv = kv_traffic(model, context)
         model_summaries.append(
@@ -1239,7 +1866,11 @@ def _simulate_study(
             }
         )
 
-        for representation, bits in _representations(model):
+        for representation, bits in (
+            (representation_override,)
+            if representation_override
+            else _representations(model)
+        ):
             stored = _rom_stored_bytes(model, bits)
             execution = _execution_format(technology, bits, model)
             for kv_store in ("sram", "hbm"):
@@ -1425,10 +2056,32 @@ def _simulate_study(
                     f"area ladder: {wafers} wafer-equivalent"
                     f"{'s' if wafers > 1 else ''} of silicon ({area:,.0f} mm2)",
                 )
+            # **Whatever the ROM side is priced at, the GPU is priced at.**  A
+            # quantisation is a property of the checkpoint, not of the machine
+            # reading it: a GPU serving 4.25-bit weights reads 3.8x fewer weight
+            # bytes too, and a study that gave the saving to one side would be
+            # the exact asymmetry the released-packing rule exists to forbid.
+            gpu_bits = (
+                float(representation_override[1])
+                if representation_override
+                and representation_override[1] is not None
+                else None
+            )
+            gpu_representation = (
+                str(representation_override[0])
+                if representation_override
+                else "official_packed"
+            )
+            gpu_execution = (
+                _execution_format(technology, gpu_bits, model)
+                if gpu_bits is not None
+                else None
+            )
+            gpu_stored_bytes = _rom_stored_bytes(model, gpu_bits)
             minimum = _minimum_gpu_count(
                 technology,
                 part,
-                stored_weight_bytes=model.checkpoint_bytes,
+                stored_weight_bytes=gpu_stored_bytes,
                 resident_kv_bytes=kv.storage_bytes_per_user * PROVISION_BATCH,
             )
             counts.setdefault(
@@ -1476,16 +2129,36 @@ def _simulate_study(
                             "design": design_id,
                             "family": "gpu",
                             "model": model.name,
-                            "representation": "official_packed",
+                            "representation": gpu_representation,
                             "stored_bits_per_parameter": (
-                                model.checkpoint_bytes / model.total_parameters * 8.0
+                                gpu_bits
+                                if gpu_bits is not None
+                                else model.checkpoint_bytes
+                                / model.total_parameters
+                                * 8.0
                             ),
-                            "execution_format": "native where available, else "
-                            + ", ".join(
-                                f"{src}->{dst}"
-                                for src, dst in sorted(budget.emulated_formats.items())
-                            )
-                            or "native",
+                            "execution_format": (
+                                (
+                                    f"{gpu_execution} "
+                                    + (
+                                        "native"
+                                        if gpu_execution in budget.native_formats
+                                        else "emulated to "
+                                        + budget.emulated_formats.get(
+                                            gpu_execution, "?"
+                                        )
+                                    )
+                                )
+                                if gpu_execution is not None
+                                else "native where available, else "
+                                + ", ".join(
+                                    f"{src}->{dst}"
+                                    for src, dst in sorted(
+                                        budget.emulated_formats.items()
+                                    )
+                                )
+                                or "native"
+                            ),
                             "topology": f"cluster-{plan.parallelism}",
                             "sizing_rule": rationale,
                             "device_count_sweep": [],
@@ -1494,13 +2167,7 @@ def _simulate_study(
                     )
                     if count > 1:
                         crossovers.append(
-                            {
-                                "design": design_id,
-                                "model": model.name,
-                                **latency_crossover(
-                                    topology, model, technology
-                                ).to_dict(),
-                            }
+                            _crossover_row(design_id, model, topology, technology)
                         )
                     for batch in BATCHES:
                         step = evaluate(
@@ -1509,6 +2176,8 @@ def _simulate_study(
                             context_tokens=context,
                             batch_size=batch,
                             technology=technology,
+                            weight_bits_per_parameter=gpu_bits,
+                            execution_format=gpu_execution,
                         )
                         points.append(
                             _step_row(
@@ -1646,6 +2315,15 @@ def _simulate_study(
                 "rom_per_user_tokens_s": row["per_user_tokens_s"],
                 "rom_aggregate_tokens_s": row["aggregate_tokens_s"],
                 "rom_binding_constraint": row["binding_constraint"],
+                # **How many sessions each side can actually hold, on the same
+                # row as the ratio.**  A per-user rate divided by a per-user
+                # rate is a latency claim, and a latency claim taken from a
+                # machine that holds one session against one that holds
+                # hundreds is not the same trade the reader thinks it is.
+                # Publishing the two counts beside the quotient is the whole
+                # fix; suppressing them is how a single-session part gets read
+                # as a server.
+                "rom_max_resident_users": row["max_resident_users"],
                 # **Energy per token, on both sides, at the same area.**  This
                 # was unpublishable until the power model enumerated anything
                 # beyond memory bytes and MACs, and it is much of the ROM
@@ -1673,6 +2351,7 @@ def _simulate_study(
                 "iso_area_gpu_per_user_tokens_s": iso["per_user_tokens_s"],
                 "iso_area_gpu_aggregate_tokens_s": iso["aggregate_tokens_s"],
                 "iso_area_gpu_binding_constraint": iso["binding_constraint"],
+                "iso_area_gpu_max_resident_users": iso["max_resident_users"],
                 "iso_area_gpu_energy_j_per_token": iso["energy_j_per_token"],
                 "iso_area_gpu_dynamic_energy_j_per_token": iso[
                     "dynamic_energy_j_per_token"
@@ -1822,7 +2501,7 @@ def _simulate_study(
 
     # --- topology choice --------------------------------------------------
     topology_choices: list[dict[str, Any]] = []
-    for model_name, _, context in STUDY_MODELS:
+    for model_name, _, context in study_models:
         for batch in BATCHES:
             rows = [
                 row
@@ -1905,7 +2584,7 @@ def _simulate_study(
             )
 
     amortization_fork: list[dict[str, Any]] = []
-    for model_name, _, context in STUDY_MODELS:
+    for model_name, _, context in study_models:
       for spare in SPARE_AREA_POLICIES:
         for batch in BATCHES:
             # Compared at a MATCHED floorplan.  Picking each policy's best over
@@ -1961,7 +2640,7 @@ def _simulate_study(
             amortization_fork.append(record)
 
     floorplan_sweep: list[dict[str, Any]] = []
-    for model_name, _, context in STUDY_MODELS:
+    for model_name, _, context in study_models:
         for batch in BATCHES:
             reference = None
             for policy in WEIGHT_AMORTIZATIONS:
@@ -2039,7 +2718,7 @@ def _simulate_study(
                     "sha256": _sha256(path),
                     "context_tokens": context,
                 }
-                for name, path, context in STUDY_MODELS
+                for name, path, context in study_models
             },
             "anchor_model": {
                 "path": str(ANCHOR_MODEL_PATH.relative_to(ROOT)),
@@ -2085,6 +2764,7 @@ def _simulate_study(
     }
     result["latency_correction_ladder"] = _latency_correction_ladder(result)
     result["power_and_energy"] = _power_and_energy(result)
+    result["design_selection"] = _design_selection(result, study_models)
     result["consistency_audit"] = _consistency_audit(result)
     return result
 
@@ -2755,6 +3435,100 @@ def _consistency_audit(result: dict[str, Any]) -> dict[str, Any]:
         all(row["silicon_area_mm2"] > 0 for row in result["points"]),
         "a point has no stated silicon area",
     )
+
+    # --- the recommendation is checked, not asserted ---------------------
+    # The property is the one whose absence let a wafer be recommended for an
+    # 8B model: nothing feasible may beat the recommended design on BOTH
+    # per-user rate and rate per mm2 at once.  It is checked here against the
+    # raw point list rather than against the frontier the selector built, so a
+    # bug in the selector shows up as a failing audit rather than as a
+    # self-consistent wrong answer.
+    selection = result.get("design_selection") or {}
+    by_key = {
+        (row["design"], row["model"], row["batch_size"]): row
+        for row in result["points"]
+    }
+    for entry in selection.get("models", []):
+        model_name = entry["model"]
+        for record in entry["batch_regimes"]:
+            batch = record["batch_size"]
+            recommended = record["recommended"]
+            candidates = _selection_candidates(result["points"], model_name, batch)
+            if recommended is None:
+                check(
+                    not candidates,
+                    f"no recommendation offered for {model_name} at batch {batch} "
+                    f"although {len(candidates)} designs are feasible",
+                )
+                continue
+            point = by_key.get((recommended["design"], model_name, batch))
+            check(
+                point is not None and point["feasible"],
+                f"recommended design is not a feasible point {model_name} b{batch}",
+            )
+            if point is None:
+                continue
+            check(
+                close(recommended["per_user_tokens_s"], point["per_user_tokens_s"]),
+                f"recommendation restates a rate the point does not have "
+                f"{model_name} b{batch}",
+            )
+            check(
+                close(
+                    recommended["tokens_s_per_1000mm2"],
+                    point["per_user_tokens_s"] / point["silicon_area_mm2"] * 1000.0,
+                ),
+                f"recommendation density identity {model_name} b{batch}",
+            )
+            rate = point["per_user_tokens_s"]
+            density = _selection_density(point)
+            dominators = [
+                other["design"]
+                for other in candidates
+                if other["design"] != point["design"]
+                and other["per_user_tokens_s"] >= rate * (1.0 + 1e-9)
+                and _selection_density(other) >= density * (1.0 + 1e-9)
+            ]
+            check(
+                not dominators,
+                f"recommended design {point['design']} at batch {batch} is "
+                f"dominated on both axes by {dominators[:3]}",
+            )
+            check(
+                recommended["max_resident_users"] is not None,
+                f"recommendation published without a resident-session count "
+                f"{model_name} b{batch}",
+            )
+        walk = entry.get("marginal_return_walk") or []
+        if walk:
+            accepted = [rung for rung in walk if rung["accepted"]]
+            check(
+                bool(accepted) and accepted[-1]["design"] == entry["recommended"]["design"],
+                f"the walk's last accepted rung is not the recommendation "
+                f"{model_name}",
+            )
+            check(
+                all(
+                    rung["marginal_tokens_s_per_1000mm2"] is None
+                    or rung["accepted"]
+                    == (
+                        rung["marginal_tokens_s_per_1000mm2"]
+                        > rung["incumbent_average_tokens_s_per_1000mm2"]
+                        * MARGINAL_RETURN_BAR
+                        * (1.0 + 1e-12)
+                    )
+                    for rung in walk
+                ),
+                f"a walk rung's verdict does not follow from its own arithmetic "
+                f"{model_name}",
+            )
+        frontier = entry.get("frontier_batch_1") or []
+        if frontier:
+            check(
+                entry["recommended"]["design"]
+                in {row["design"] for row in frontier},
+                f"the recommendation is not on the published frontier {model_name}",
+            )
     return {
         "status": "pass" if not errors else "fail",
         "checks_evaluated": checks,
@@ -3431,6 +4205,424 @@ def _render_power_and_energy(result: dict[str, Any]) -> list[str]:
     return lines
 
 
+def _cell(value: Any, spec: str = ",.0f", dash: str = "--") -> str:
+    """Format a number for a selection table, or a dash where there is none.
+
+    Deliberately NOT named ``_fmt``.  It was, and being defined later in the
+    file it silently shadowed the report's own ``_fmt`` -- whose default is one
+    decimal place and whose dash is an em dash -- and quietly reformatted every
+    number in every other table, including the Taalas HC1 gate's 12,232.4 tok/s.
+    ``test_json_csv_and_report_are_mutually_consistent`` caught it because it
+    asserts the gate's own value appears in the report it is reported in.  The
+    two helpers differ in default precision and in dash, so they must not share
+    a name.
+    """
+
+    if value is None:
+        return dash
+    try:
+        return format(float(value), spec)
+    except (TypeError, ValueError):
+        return str(value)
+
+
+def _array_sampling_lines(result: dict[str, Any]) -> list[str]:
+    """Which reticle-array device counts this study actually emitted.
+
+    Printed rather than described, because the holes in this grid are the one
+    thing the selection section cannot correct for and a reader has to be able
+    to see exactly where they are.
+    """
+
+    grid: dict[tuple[str, str, str], set[int]] = {}
+    for row in result["points"]:
+        if (
+            row["family"] != "rom"
+            or row["batch_size"] != 1
+            or row["weight_amortization"] != SELECTION_AMORTIZATION
+            or row["topology_kind"] != "array"
+        ):
+            continue
+        key = (row["model"], row["kv_store"], row["spare_area_policy"])
+        grid.setdefault(key, set()).add(int(row["device_count"]))
+    if not grid:
+        return ["*No reticle-array design was emitted for this study.*", ""]
+    lines = [
+        "| model | KV store | spare silicon | reticle counts emitted |",
+        "| --- | --- | --- | --- |",
+    ]
+    for (model, kv_store, spare), counts in sorted(grid.items()):
+        lines.append(
+            f"| {model} | {kv_store.upper()} | {spare} | "
+            + ", ".join(str(count) for count in sorted(counts))
+            + " |"
+        )
+    lines.append("")
+    return lines
+
+
+def _render_design_selection(result: dict[str, Any]) -> list[str]:
+    """The recommended design per model, the rule that picks it, and the curve.
+
+    This section exists because the report previously named a "best design" by a
+    rule -- smallest silicon within 5% of the best per-user rate -- that is
+    orthogonal to area and therefore could not stop a 46,225 mm2 wafer being
+    recommended for an 8B model that holds in three 815 mm2 reticles.  The rule
+    below is stated in the report, applied by the study, and checked by the
+    consistency audit.
+    """
+
+    selection = result.get("design_selection")
+    if not selection:
+        return []
+    lines: list[str] = [
+        "",
+        "## The recommended design per model, and the rule that picks it",
+        "",
+        "**The metric, stated here because a recommendation without its rule is an",
+        "opinion.**",
+        "",
+        f"> {selection['metric']}",
+        "",
+        f"Why this rule and not another: {selection['why_this_metric']}",
+        "",
+        f"The bar is `{selection['marginal_return_bar']:g}` -- parity. The frontier is",
+        f"taken over the `{selection['amortisation_scope']}` machine, which is what the",
+        "main tables show. **The recommendation is not a single number and must not be",
+        "quoted as one:** every row below carries per-user rate, aggregate rate,",
+        "resident sessions, throughput density, power, energy per token and the",
+        "binding constraint together, because a per-user rate published without the",
+        "resident-session count beside it is how a one-session latency device gets",
+        "read as a server.",
+        "",
+        f"{selection['iso_area_convention']}",
+        "",
+    ]
+
+    for entry in selection["models"]:
+        model = entry["model"]
+        best = entry["recommended"]
+        lines.extend([f"### {model} at {entry['context_tokens']:,} tokens", ""])
+        if best is None:
+            lines.extend(["No feasible ROM design at batch 1.", ""])
+            continue
+        gpu_count = best.get("iso_area_gpu_device_count")
+        lines.extend(
+            [
+                f"**Recommended: `{best['design'].split('/')[-1]}`** -- "
+                f"{best['device_count']:,} x "
+                f"{best['silicon_area_mm2_per_device']:,.0f} mm2 "
+                f"{'wafer' if best['topology_kind'] == 'wafer' else 'reticle die'}"
+                f"{'s' if best['device_count'] != 1 else ''}, "
+                f"{best['silicon_area_mm2']:,.0f} mm2 total, "
+                f"`{best['parallelism']}`-parallel, KV in "
+                f"{best['kv_store'].upper()}, spare silicon to "
+                f"`{best['spare_area_policy']}`.",
+                "",
+                f"- **{best['per_user_tokens_s']:,.1f} tok/s per user** "
+                f"({1e3 / best['per_user_tokens_s']:,.2f} ms/token), binding on "
+                f"`{best['binding_constraint']}`",
+                f"- **{best['tokens_s_per_1000mm2']:,.1f} tok/s per 1,000 mm2** -- the "
+                "quantity the rule maximises",
+                f"- {best['aggregate_tokens_s']:,.0f} tok/s aggregate with every slot "
+                f"full, over {_cell(best['max_resident_users'])} resident session"
+                f"{'' if best['max_resident_users'] == 1 else 's'} "
+                f"(fill limited by `{best['pipeline_fill_limited_by']}`)",
+                f"- {best['power_w']:,.0f} W at "
+                f"{best['power_density_w_per_mm2']:.3f} W/mm2, "
+                f"{best['energy_j_per_token'] * 1e3:,.1f} mJ/token, thermal scale "
+                f"{best['thermal_scale']:.3f}",
+                "",
+            ]
+        )
+        if best.get("iso_area_gpu_design"):
+            lines.extend(
+                [
+                    "**Iso-area, at the area the rule chose.** The comparator is "
+                    f"{gpu_count:,} copies of one unified HBM die -- "
+                    f"`{best['iso_area_gpu_design'].split('/')[-1]}`, "
+                    f"{best['iso_area_gpu_silicon_area_mm2']:,.0f} mm2, area ratio "
+                    f"{_cell(best.get('iso_area_ratio'), '.4f')} -- running the "
+                    f"`{best['iso_area_gpu_parallelism']}` topology it chose for "
+                    "itself.",
+                    "",
+                    "| | ROM | iso-area GPU | ratio |",
+                    "| --- | ---: | ---: | ---: |",
+                    f"| silicon mm2 | {best['silicon_area_mm2']:,.0f} | "
+                    f"{best['iso_area_gpu_silicon_area_mm2']:,.0f} | "
+                    f"{_cell(best.get('iso_area_ratio'), '.4f')} |",
+                    f"| user tok/s | {best['per_user_tokens_s']:,.1f} | "
+                    f"{_cell(best.get('iso_area_gpu_per_user_tokens_s'), ',.1f')} | "
+                    f"{_cell(best.get('per_user_speed_ratio'), ',.2f')}x |",
+                    f"| aggregate tok/s | {best['aggregate_tokens_s']:,.0f} | "
+                    f"{_cell(best.get('iso_area_gpu_aggregate_tokens_s'), ',.0f')} | "
+                    f"{_cell(best.get('aggregate_speed_ratio'), ',.2f')}x |",
+                    f"| resident sessions | {_cell(best['max_resident_users'])} | "
+                    f"{_cell(best.get('iso_area_gpu_max_resident_users'))} | -- |",
+                    f"| J/token | {best['energy_j_per_token']:,.4f} | "
+                    f"{_cell(best.get('iso_area_gpu_energy_j_per_token'), ',.4f')} | "
+                    f"{_cell(best.get('tokens_per_joule_advantage_x'), ',.1f')}x |",
+                    "",
+                    (
+                        "**The areas do not match exactly, and the mismatch is "
+                        "stated rather than rounded away.** A GPU cluster is "
+                        "quantised in whole dies and a ROM design is not, so at "
+                        f"{best['silicon_area_mm2']:,.0f} mm2 the closest whole "
+                        f"number of {best['iso_area_gpu_silicon_area_mm2'] / max(1, best['iso_area_gpu_device_count']):,.0f} mm2 "
+                        f"dies is {best['iso_area_gpu_device_count']:,}, i.e. "
+                        f"{best['iso_area_gpu_silicon_area_mm2']:,.0f} mm2. The "
+                        "ROM side is therefore compared against "
+                        + (
+                            f"{(1.0 / best['iso_area_ratio'] - 1.0) * 100:,.0f}% MORE "
+                            "silicon than it has, which makes the ratio "
+                            "CONSERVATIVE for the ROM side."
+                            if best["iso_area_ratio"] < 1.0
+                            else f"{(1.0 - 1.0 / best['iso_area_ratio']) * 100:,.0f}% LESS "
+                            "silicon than it has, which makes the ratio "
+                            "GENEROUS to the ROM side and it should be read with "
+                            "that in mind."
+                        )
+                        if abs(best["iso_area_ratio"] - 1.0) > 0.02
+                        else "The areas match to within 2%, so no granularity "
+                        "correction is needed on this row."
+                    ),
+                    "",
+                    "**Read the resident-session row before the ratio row.** A "
+                    "per-user rate divided by a per-user rate is a latency claim, "
+                    "and a latency claim taken from a machine that holds "
+                    f"{_cell(best['max_resident_users'])} session"
+                    f"{'' if best['max_resident_users'] == 1 else 's'} against one "
+                    f"that holds {_cell(best.get('iso_area_gpu_max_resident_users'))} "
+                    "is not the trade it looks like. Where those two numbers are far "
+                    "apart the honest reading is the batch-regime table below, not "
+                    "this row.",
+                    "",
+                    "The GPU's own best machine at **any** area is "
+                    f"`{str(best.get('fastest_feasible_gpu_design') or '--').split('/')[-1]}` "
+                    f"at {_cell(best.get('fastest_feasible_gpu_silicon_area_mm2'))} mm2 "
+                    f"and {_cell(best.get('fastest_feasible_gpu_per_user_tokens_s'), ',.1f')} "
+                    "tok/s per user, which is the area-free bound and is quoted so the "
+                    "iso-area row is not the only comparison on the page.",
+                    "",
+                ]
+            )
+
+        previous = entry.get("previous_rule_choice")
+        rejected = entry.get("rejected_per_user_maximum")
+        lines.extend(["**Headline before and after.**", ""])
+        lines.append(
+            "| rule | design | mm2 | user tok/s | tok/s per 1,000 mm2 | "
+            "resident sessions | iso-area ratio |"
+        )
+        lines.append("| --- | --- | ---: | ---: | ---: | ---: | ---: |")
+        for label, row in (
+            (
+                f"before -- smallest within {BEST_DESIGN_TOLERANCE:.0%} of peak rate",
+                previous,
+            ),
+            ("rank on per-user rate alone", rejected),
+            ("smallest feasible machine", entry.get("rejected_smallest_feasible")),
+            ("**after -- this report's rule**", best),
+        ):
+            if not row:
+                continue
+            lines.append(
+                f"| {label} | `{row['design'].split('/')[-1]}` | "
+                f"{row['silicon_area_mm2']:,.0f} | "
+                f"{row['per_user_tokens_s']:,.1f} | "
+                f"{row['tokens_s_per_1000mm2']:,.1f} | "
+                f"{_cell(row['max_resident_users'])} | "
+                f"{_cell(row.get('per_user_speed_ratio'), ',.2f')}x |"
+            )
+        lines.append("")
+
+        walk = entry.get("marginal_return_walk") or []
+        if len(walk) == 1:
+            lines.extend(
+                [
+                    "**There is nothing to walk to.** The frontier is a single row, "
+                    "which is what it means for one design to beat every other "
+                    "feasible design of this model on BOTH axes at once. No "
+                    "trade-off has to be argued and no threshold is doing any work "
+                    "here: the recommendation is simply the only non-dominated "
+                    "machine. What it beat is in the class table below.",
+                    "",
+                ]
+            )
+        elif walk:
+            lines.extend(
+                [
+                    "**The walk, rung by rung.** The number in the `marginal` column is "
+                    "what the next slab of silicon returns; the number in `incumbent "
+                    "average` is what the silicon already bought returns. The walk stops "
+                    "the first time the former is not larger.",
+                    "",
+                    "| design | mm2 | user tok/s | tok/s per 1,000 mm2 | marginal | "
+                    "incumbent average | verdict |",
+                    "| --- | ---: | ---: | ---: | ---: | ---: | --- |",
+                ]
+            )
+            for rung in walk:
+                lines.append(
+                    f"| `{rung['design'].split('/')[-1]}` | "
+                    f"{rung['silicon_area_mm2']:,.0f} | "
+                    f"{rung['per_user_tokens_s']:,.1f} | "
+                    f"{rung['tokens_s_per_1000mm2']:,.1f} | "
+                    f"{_cell(rung['marginal_tokens_s_per_1000mm2'], ',.1f')} | "
+                    f"{_cell(rung['incumbent_average_tokens_s_per_1000mm2'], ',.1f')} | "
+                    f"{'ACCEPT' if rung['accepted'] else 'stop'} |"
+                )
+            lines.append("")
+
+        frontier = entry.get("frontier_batch_1") or []
+        if frontier:
+            lines.extend(
+                [
+                    "**The frontier at batch 1, published in full.** Every design here "
+                    "is one that nothing else beats on both axes at once, so a reader "
+                    "with a latency target this report does not know about can read "
+                    "their own point off it. An honest curve beats a false single "
+                    "answer, and the rows above and below the recommendation are the "
+                    "ones that show what the rule is doing.",
+                    "",
+                    "| design | mm2 | devices | user tok/s | aggregate tok/s | "
+                    "tok/s per 1,000 mm2 | resident sessions | binds on | W | "
+                    "mJ/token | iso-area GPU | ratio |",
+                    "| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: | "
+                    "---: | --- | ---: |",
+                ]
+            )
+            for row in frontier:
+                mark = " **<-- recommended**" if row["design"] == best["design"] else ""
+                lines.append(
+                    f"| `{row['design'].split('/')[-1]}`{mark} | "
+                    f"{row['silicon_area_mm2']:,.0f} | "
+                    f"{row['device_count']:,} | "
+                    f"{row['per_user_tokens_s']:,.1f} | "
+                    f"{row['aggregate_tokens_s']:,.0f} | "
+                    f"{row['tokens_s_per_1000mm2']:,.1f} | "
+                    f"{_cell(row['max_resident_users'])} | "
+                    f"`{row['binding_constraint']}` | "
+                    f"{row['power_w']:,.0f} | "
+                    f"{row['energy_j_per_token'] * 1e3:,.1f} | "
+                    f"`{str(row.get('iso_area_gpu_design') or '--').split('/')[-1]}` | "
+                    f"{_cell(row.get('per_user_speed_ratio'), ',.2f')}x |"
+                )
+            lines.append("")
+
+        classes = entry.get("class_comparison") or []
+        if classes:
+            lines.extend(
+                [
+                    "**Array or wafer, with the losing class's own best machine on "
+                    "the page.** A frontier can honestly be a single row -- that is "
+                    "what it means for one design to win on both axes at once -- and "
+                    "a single row tells a reader nothing about what it beat. Each "
+                    "class enters at its own optimum, never at its minimum-feasible "
+                    "machine, because comparing against a floor is how a class gets "
+                    "beaten by its own under-provisioning rather than by the other "
+                    "class.",
+                    "",
+                    "| class | designs | pick | design | mm2 | user tok/s | "
+                    "tok/s per 1,000 mm2 | resident sessions |",
+                    "| --- | ---: | --- | --- | ---: | ---: | ---: | ---: |",
+                ]
+            )
+            for record in classes:
+                for label, key in (
+                    ("densest", "best_by_throughput_density"),
+                    ("fastest", "best_by_per_user_rate"),
+                    ("smallest", "smallest_feasible"),
+                ):
+                    row = record[key]
+                    lines.append(
+                        f"| {record['topology_kind']} | "
+                        f"{record['designs_evaluated']:,} | {label} | "
+                        f"`{row['design'].split('/')[-1]}` | "
+                        f"{row['silicon_area_mm2']:,.0f} | "
+                        f"{row['per_user_tokens_s']:,.1f} | "
+                        f"{row['tokens_s_per_1000mm2']:,.1f} | "
+                        f"{_cell(row['max_resident_users'])} |"
+                    )
+            lines.append("")
+
+        regimes = entry.get("regimes") or []
+        lines.extend(
+            [
+                (
+                    "**The best design differs by batch, and here is where it "
+                    "changes.**"
+                    if entry.get("best_design_differs_by_batch")
+                    else "**One design wins at every batch this study evaluates.**"
+                ),
+                "",
+                "| batches | design | mm2 | class | KV | resident sessions |",
+                "| --- | --- | ---: | --- | --- | ---: |",
+            ]
+        )
+        for regime in regimes:
+            batches = regime["batches"]
+            span = (
+                f"{batches[0]}"
+                if len(batches) == 1
+                else f"{batches[0]}-{batches[-1]}"
+            )
+            if regime["design"] is None:
+                lines.append(f"| {span} | *no feasible design* | -- | -- | -- | -- |")
+                continue
+            lines.append(
+                f"| {span} | `{regime['design'].split('/')[-1]}` | "
+                f"{regime['silicon_area_mm2']:,.0f} | {regime['topology_kind']} | "
+                f"{str(regime['kv_store']).upper()} | "
+                f"{_cell(regime['max_resident_users'])} |"
+            )
+        lines.append("")
+        lines.extend(
+            [
+                "Per-user rate falls as the batch rises on a fixed machine, so "
+                "`tok/s per 1,000 mm2` at batch B is the same ordering as "
+                "`delivered tok/s per 1,000 mm2` at batch B -- delivered is exactly "
+                "B times per-user. The rule is therefore the same rule at every "
+                "batch, and the design moving is the study telling you the answer "
+                "genuinely depends on the operating point, not the metric changing "
+                "under it.",
+                "",
+            ]
+        )
+
+    lines.extend(
+        [
+            "**What this section does not fix, and which recommendations it "
+            "leaves exposed.** The ROM array class is sampled only at the device "
+            "counts each floorplan's own sizing sweep chose: `ROM_AREA_LADDER` is "
+            "applied where `plan.kind == \"wafer\"` and nowhere else, so a "
+            "reticle array exists at an area only if some sweep landed there. The "
+            "counts this study actually emitted, per model and per "
+            "`(kv_store, spare_area_policy)` combination, are printed below so the "
+            "holes are visible rather than described:",
+            "",
+            *_array_sampling_lines(result),
+            "The omission runs **against** the array class, so the published ROM "
+            "curve is a lower bound on the ROM curve rather than an upper one.",
+            "",
+            "That splits the recommendations above into two kinds, and the split "
+            "should be stated rather than left for a reader to work out. **Where "
+            "the winner is the smallest feasible machine, the gap cannot touch "
+            "it**: no rung exists below the minimum area, so nothing denser can be "
+            "hiding there. **Where the winner is a wafer chosen over the array "
+            "class, the gap is live**: the wafer is being compared against an "
+            "array curve that is sampled at a handful of counts, and a rung the "
+            "sweep never visited could in principle beat it on throughput density. "
+            "Those are the weakest results on this page and they should be "
+            "re-derived once the array class is emitted on the same explicit "
+            "ladder the wafer class already gets. Either way, the curve BETWEEN "
+            "rungs is not evidence and must not be read as any.",
+            "",
+        ]
+    )
+    return lines
+
+
 def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
     study_id = result["study_id"]
     derivations = result["technology_derivations"]
@@ -3452,6 +4644,7 @@ def render_report(result: dict[str, Any], anchors: dict[str, Any]) -> str:
             for index, item in enumerate(_findings(result), 1)
         ),
         "",
+        *_render_design_selection(result),
         "## The overlap and serialisation rule",
         "",
         "```",
@@ -4481,7 +5674,9 @@ def _findings(result: dict[str, Any]) -> list[str]:
                 f"({worst['design'].split('/')[-1]}, {worst['token_slots']:,.0f} "
                 f"slots), and the batch-1 design that now wins -- the smallest "
                 f"silicon within "
-                f"{BEST_DESIGN_TOLERANCE:.0%} of the best per-user rate -- runs "
+                f"{BEST_DESIGN_TOLERANCE:.0%} of the best per-user rate, which is "
+                "the rule this report has since REPLACED and keeps only to compute "
+                "the before/after -- runs "
                 f"`{winner['parallelism']}` on "
                 f"{winner['device_count']:,} device"
                 f"{'s' if winner['device_count'] != 1 else ''}"
@@ -4498,6 +5693,56 @@ def _findings(result: dict[str, Any]) -> list[str]:
             "single-slot machines and are unchanged to the digit."
         )
 
+    # **The headline is read at the design the study RECOMMENDS, at that
+    # design's own area.**  It used to be read at whichever row in the whole
+    # comparison table happened to carry the largest ratio, which is a number
+    # about the sampling grid rather than about either machine, and at areas
+    # where both sides are past their own optimum.
+    selection = result.get("design_selection") or {}
+    picks = [
+        entry for entry in selection.get("models", []) if entry.get("recommended")
+    ]
+    if picks:
+        sentences = []
+        for entry in picks:
+            best = entry["recommended"]
+            ratio = best.get("per_user_speed_ratio")
+            sentences.append(
+                f"{entry['model']} takes "
+                f"{best['device_count']:,} x "
+                f"{best['silicon_area_mm2_per_device']:,.0f} mm2 "
+                f"({best['silicon_area_mm2']:,.0f} mm2, "
+                f"{best['topology_kind']}, KV in {best['kv_store'].upper()}) at "
+                f"{best['per_user_tokens_s']:,.0f} tok/s per user and "
+                f"{best['tokens_s_per_1000mm2']:,.0f} tok/s per 1,000 mm2, "
+                f"holding {_cell(best['max_resident_users'])} session"
+                f"{'' if best['max_resident_users'] == 1 else 's'}, "
+                f"against {_cell(best.get('iso_area_gpu_device_count'))} copies of "
+                "one unified HBM die at the same silicon: "
+                f"{_cell(ratio, ',.1f')}x per user"
+            )
+        classes = {entry["recommended"]["topology_kind"] for entry in picks}
+        findings.append(
+            "**Each model is recommended one design, by a rule stated in this "
+            "report, and the answer is not the same class for all three.** The "
+            "rule keeps every design nothing else beats on BOTH per-user tokens/s "
+            "and tokens/s per mm2, then walks that frontier from the smallest "
+            "feasible machine and stops when the next slab of silicon returns "
+            "less than the silicon already bought. "
+            + ". ".join(sentences)
+            + ". "
+            + (
+                "Two granularities come out of one rule, which is the point: the "
+                "class is chosen per model on evidence rather than assumed."
+                if len(classes) > 1
+                else "Every model lands in the same class under this rule, which "
+                "is a result rather than an assumption."
+            )
+            + " Ranking on per-user rate alone -- which is what this report used "
+            "to do -- hands Qwen3-8B a whole wafer for a checkpoint that holds in "
+            "three reticle dies."
+        )
+
     batch_one = [
         row
         for row in result["comparisons"]
@@ -4509,21 +5754,23 @@ def _findings(result: dict[str, Any]) -> list[str]:
     if batch_one:
         top = max(batch_one, key=lambda row: row["per_user_speed_ratio"])
         findings.append(
-            "**The ROM advantage is a batch-1, per-user advantage, and it is "
-            f"large.** At equal area the best batch-1 point is {top['model']} on "
+            "**The largest ratio anywhere in this study is not the study's "
+            "result, and it is reported here so nobody has to go looking for "
+            f"it.** The maximum batch-1 per-user ratio is {top['model']} on "
             f"{top['rom_silicon_area_mm2']:,.0f} mm2 of ROM silicon at "
-            f"{top['rom_per_user_tokens_s']:,.0f} tok/s per user, against "
+            f"{top['rom_per_user_tokens_s']:,.0f} tok/s per user against "
             f"{top['iso_area_gpu_silicon_area_mm2']:,.0f} mm2 of "
             f"{top['iso_area_gpu_design'].split('/')[-1]} at "
             f"{top['iso_area_gpu_per_user_tokens_s']:,.0f} tok/s: "
-            f"**{top['per_user_speed_ratio']:,.0f}x**. Both sides bind on "
-            f"`{top['rom_binding_constraint']}`, and the whole difference is that "
-            "one reads its weights from HBM and the other from an on-die array."
-            if top["rom_binding_constraint"]
-            == top["iso_area_gpu_binding_constraint"]
-            else f"**{top['per_user_speed_ratio']:,.0f}x**. The GPU binds on "
-            f"`{top['iso_area_gpu_binding_constraint']}` and the ROM part on "
-            f"`{top['rom_binding_constraint']}`."
+            f"**{top['per_user_speed_ratio']:,.1f}x**, ROM binding on "
+            f"`{top['rom_binding_constraint']}` and the GPU on "
+            f"`{top['iso_area_gpu_binding_constraint']}`. It holds "
+            f"{_cell(top.get('rom_max_resident_users'))} resident session"
+            f"{'' if top.get('rom_max_resident_users') == 1 else 's'} against the "
+            f"GPU cluster's {_cell(top.get('iso_area_gpu_max_resident_users'))}. "
+            "A maximum over a sampling grid is a fact about the grid; the "
+            "recommended-design ratios above are the ones this report stands "
+            "behind."
         )
 
     symmetry = [
@@ -4692,12 +5939,14 @@ def _findings(result: dict[str, Any]) -> list[str]:
         for row in result["latency_crossovers"]
         if row["parallelism"] == "tensor"
         and str(row.get("intra_link", "")).startswith("nvlink")
+        and row["hard_ceiling_tokens_s"] is not None
     ]
     tensor_wafer = [
         row
         for row in result["latency_crossovers"]
         if row["parallelism"] == "tensor"
         and str(row.get("intra_link", "")).startswith("on_wafer")
+        and row["hard_ceiling_tokens_s"] is not None
     ]
     wafer_per_mm2 = sum(
         1
@@ -5034,12 +6283,137 @@ def render_csv(result: dict[str, Any]) -> str:
     return output.getvalue()
 
 
+def render_variant_report(
+    result: dict[str, Any], primary: dict[str, Any]
+) -> str:
+    """The quantised variant's own report, and it opens with what it is not.
+
+    Deliberately short.  The variant exists to answer one question -- what would
+    quantising BOTH sides do to this comparison -- and every additional table
+    would make it look more like a result than it is.
+    """
+
+    variant = result["representation_variant"]
+    selection = result["design_selection"]
+    primary_selection = primary["design_selection"]
+    primary_by_model = {
+        entry["model"]: entry for entry in primary_selection["models"]
+    }
+    primary_id = result.get("primary_study_id", primary["study_id"])
+    lines: list[str] = [
+        f"# SECONDARY: quantised variant of `{primary_id}`",
+        "",
+        f"> **{variant['status']}.** Both sides are re-quantised to "
+        f"{variant['bits_per_parameter']:g} bits per parameter. "
+        f"**{variant['executed_tokens_at_this_precision']} tokens have ever been "
+        "produced at this precision anywhere in this program, on either "
+        "backend**, and no accuracy has been measured on either side. Every "
+        "figure below is `derived`. This is a projection of a machine nobody "
+        "has run.",
+        "",
+        "> **This is not the primary result.** The primary result is "
+        f"`results/roofline/{primary_id}/`, which prices the released "
+        "checkpoint's own packing on both sides and is unchanged by anything "
+        "here. No ratio on this page may be quoted without the primary ratio "
+        "from the same row in the same sentence, and the columns below are laid "
+        "out so that is the natural way to read it.",
+        "",
+        "## The rule the variant follows",
+        "",
+        "**A quantisation applies to both sides.** That is not a courtesy; it is",
+        "arithmetic. A GPU serving 4.25-bit weights reads 3.76x fewer weight bytes",
+        "exactly as the ROM part does, and a study that gave the saving to one side",
+        "would be running the asymmetry the released-packing rule exists to stop --",
+        "the same rule this program already records for an FP8 KV latent in the",
+        "DeepSeek profile's `kv_precision_sensitivity`.",
+        "",
+        f"- **Format.** {variant['format']}",
+        f"- **Arithmetic.** {variant['arithmetic']}",
+        f"- **Scope.** {variant['scope']}",
+        "",
+        "## What it changes, against the primary, row for row",
+        "",
+        "| Model | | design | mm2 | user tok/s | tok/s per 1,000 mm2 | "
+        "resident sessions | iso-area GPU | GPU user tok/s | ratio |",
+        "| --- | --- | --- | ---: | ---: | ---: | ---: | --- | ---: | ---: |",
+    ]
+    for entry in selection["models"]:
+        model = entry["model"]
+        rows = [("PRIMARY (BF16, 16.00 bits)", primary_by_model.get(model))]
+        rows.append(
+            (
+                f"variant ({variant['bits_per_parameter']:g} bits, both sides)",
+                entry,
+            )
+        )
+        for label, record in rows:
+            best = record["recommended"] if record else None
+            if best is None:
+                lines.append(f"| {model} | {label} | *no feasible design* | | | | | | | |")
+                continue
+            lines.append(
+                f"| {model} | {label} | "
+                f"`{best['design'].split('/')[-1]}` | "
+                f"{best['silicon_area_mm2']:,.0f} | "
+                f"{best['per_user_tokens_s']:,.1f} | "
+                f"{best['tokens_s_per_1000mm2']:,.1f} | "
+                f"{_cell(best['max_resident_users'])} | "
+                f"`{str(best.get('iso_area_gpu_design') or '--').split('/')[-1]}` | "
+                f"{_cell(best.get('iso_area_gpu_per_user_tokens_s'), ',.1f')} | "
+                f"{_cell(best.get('per_user_speed_ratio'), ',.2f')}x |"
+            )
+    lines.extend(
+        [
+            "",
+            "**Read the ratio column as a pair, never alone.** If the variant's ratio",
+            "is larger than the primary's, quantisation did not level the comparison,",
+            "and the reason has to be stated rather than banked: on a ROM machine the",
+            "weight term is a full-array sweep whose duration is a technology constant",
+            "independent of the bytes stored, so fewer bits buy the ROM side array area",
+            "and replication rather than sweep time, while the GPU's weight term is",
+            "bytes over bandwidth and falls exactly in proportion. Whichever way the",
+            "number moves, both studies are published, because the A100 pairing is the",
+            "one where the GPU physically cannot follow the ROM side's datapath change",
+            "and the B200 pairing is the one where it can.",
+            "",
+            "**The variant is selected by the same rule as the primary, applied to",
+            "the same code path.** That is not a nicety: if the two artifacts were",
+            "selected by different rules, the row-for-row table above would be",
+            "comparing a rule change and a precision change at once and no reader",
+            "could tell which one moved the number. The rule and the frontier it",
+            "produces follow.",
+            "",
+        ]
+    )
+    lines.extend(_render_design_selection(result)[1:])
+    lines.extend(
+        [
+            "## What is wrong with these numbers, stated before anyone quotes them",
+            "",
+            f"- **Known modelling defect.** {variant['known_defect']}",
+            f"- **Unmodelled on both sides.** {variant['unmodelled']}",
+            f"- **Accuracy.** {variant['accuracy']}",
+            f"- **What would make this a measurement.** "
+            f"{variant['what_would_make_it_a_measurement']}",
+            "- **Everything the primary report's interpretation boundary says still",
+            "  applies here, and one thing more: the primary is a projection of a",
+            "  machine nobody has built running arithmetic this program HAS executed.",
+            "  The variant is a projection of a machine nobody has built running",
+            "  arithmetic nobody has executed. Those are not the same claim and this",
+            "  page is the weaker one.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def run_all(
     output_root: Path = OUTPUT_ROOT, *, force: bool = False
 ) -> dict[str, dict[str, Any]]:
     technology = Technology.load(TECHNOLOGY_PATH)
     anchors = run_anchors(technology)
     results: dict[str, dict[str, Any]] = {}
+    variants: dict[str, dict[str, Any]] = {}
     planned: list[tuple[Path, str]] = []
     for study_id in STUDIES:
         result = _simulate_study(study_id, technology)
@@ -5057,6 +6431,59 @@ def run_all(
             (
                 destination / "REPORT.md",
                 render_report(result, anchors).rstrip() + "\n",
+            )
+        )
+
+    # --- the quantised variant, in its own tree ---------------------------
+    # It is deliberately NOT another entry in ``STUDIES``: a secondary result
+    # that lands in the same directory as the primary, under the same file
+    # names, is one copy-paste away from being quoted as the primary.  It gets
+    # its own directory, its own short report that opens with what it is not,
+    # and no sweep.csv at all -- there is no row here anyone should be reading
+    # into a spreadsheet.
+    for study_id in STUDIES:
+        config = dict(STUDIES[study_id])
+        config.update(QUANTISED_VARIANT)
+        config["contract"] = (
+            f"SECONDARY VARIANT of {study_id}. "
+            + str(STUDIES[study_id]["contract"])
+            + " Both sides re-quantised to "
+            f"{QUANTISED_VARIANT['bits_per_parameter']:g} bits per parameter. "
+            "A projection: no token has been produced at this precision on "
+            "either backend."
+        )
+        variant = _simulate_study(
+            study_id, technology, with_sensitivity=False, config=config
+        )
+        variant["study_id"] = f"{study_id}-{QUANTISED_VARIANT['variant_id']}"
+        variant["primary_study_id"] = study_id
+        variant["representation_variant"] = {
+            key: value
+            for key, value in QUANTISED_VARIANT.items()
+            if key not in ("models", "representation")
+        }
+        variant["representation_variant"]["representation"] = list(
+            QUANTISED_VARIANT["representation"]
+        )
+        variant["validation_gates"] = anchors
+        # Deliberately NOT added to ``results``: every consumer of that mapping
+        # -- the report, the tests, the printed summary -- treats its entries as
+        # the study's result, and a secondary projection sitting in that
+        # mapping is one loop away from being read as one.  The variant is
+        # written, and it is found by path.
+        variants[variant["study_id"]] = variant
+        destination = variant_output_root(output_root) / study_id
+        planned.append(
+            (
+                destination / "analytical.json",
+                json.dumps(variant, indent=2, sort_keys=True, allow_nan=False)
+                + "\n",
+            )
+        )
+        planned.append(
+            (
+                destination / "REPORT.md",
+                render_variant_report(variant, results[study_id]).rstrip() + "\n",
             )
         )
 
@@ -5089,6 +6516,28 @@ def main(argv: list[str] | None = None) -> int:
             f"{audit['status']} ({audit['checks_evaluated']} checks)"
         )
         print((args.output / study_id / "REPORT.md").resolve())
+        selection = result["design_selection"]
+        for entry in selection["models"]:
+            best = entry["recommended"]
+            if best is None:
+                continue
+            print(
+                f"  recommended {entry['model']}: "
+                f"{best['design'].split('/')[-1]} "
+                f"({best['silicon_area_mm2']:,.0f} mm2, "
+                f"{best['per_user_tokens_s']:,.1f} tok/s/user, "
+                f"{best['tokens_s_per_1000mm2']:,.1f} tok/s per 1,000 mm2, "
+                f"{best['max_resident_users']:,.0f} resident)"
+            )
+    for study_id in STUDIES:
+        print(
+            "SECONDARY quantised variant (projection, not a measurement): "
+            + str(
+                (
+                    variant_output_root(args.output) / study_id / "REPORT.md"
+                ).resolve()
+            )
+        )
     gates = next(iter(results.values()))["validation_gates"]
     for name in (
         "taalas_hc1",

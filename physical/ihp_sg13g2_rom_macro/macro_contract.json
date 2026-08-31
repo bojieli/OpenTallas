@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "experiment_id": "ihp_sg13g2_rom_macro_routed_area_v1",
+  "pdk_lock": "configs/pdk/ihp_sg13g2_physical_lock.json",
+  "inputs": {
+    "generator": "spice/ihp_sg13g2/bitcell/rom_bitarray.tcl",
+    "periphery_rtl": "rtl/ot_rom_macro_periphery.sv",
+    "synthesis_script": "physical/ihp_sg13g2_rom_macro/synth.ys.in",
+    "route_script": "physical/ihp_sg13g2_rom_macro/route.tcl.in",
+    "sdc": "physical/ihp_sg13g2_rom_macro/constraint.sdc"
+  },
+  "macros": [
+    {
+      "name": "rom_128x32_c2",
+      "rows": 64,
+      "cols": 64,
+      "mux": 2,
+      "tap_every": 16,
+      "utilization": 0.42,
+      "run_tapless_control": false
+    },
+    {
+      "name": "rom_512x32_c4",
+      "rows": 128,
+      "cols": 128,
+      "mux": 4,
+      "tap_every": 16,
+      "utilization": 0.42,
+      "run_tapless_control": true
+    }
+  ],
+  "wordline_capacitance_ff_per_column": 0.5424,
+  "wordline_capacitance_source": "integrated wordline charge of the extracted 64-row x 8-column array at tt/1.2 V/27 C; see results/spice/ihp_sg13g2_rom_read_energy",
+  "acceptance": {
+    "array_drc_errors_max": 0,
+    "route_drc_violations_max": 0,
+    "route_must_complete": true,
+    "tapless_control_must_fail_on_latch_up": true
+  },
+  "claim_boundary": {
+    "evidence_class": "open_foundry_pdk_synthesised_and_routed_macro_area",
+    "establishes": [
+      "that a via1-programmed mask-ROM bit array drawn at the minimum legal pitch requires periodic substrate tap bands, because without them the array violates the public latch-up rule LU.b",
+      "the drawn macro footprint of that array including tap bands, the wordline strap and the bitline escape, measured from the Magic-written LEF",
+      "the routed die area of that macro with a synthesised standard-cell periphery, under full OpenROAD place-and-route with zero detailed-route violations",
+      "the resulting array efficiency, measured rather than assumed"
+    ],
+    "forbidden_inferences": [
+      "N7, N6, N5 or N4 macro area, array efficiency, density or timing",
+      "that a standard-cell periphery is equivalent to a memory-compiler periphery: it is not, and the measured efficiency is therefore a LOWER bound",
+      "sense-amplifier design, read margin, redundancy, BIST or test coverage, none of which is in this periphery",
+      "whole-wafer inference throughput or GPU speedup",
+      "silicon correlation or manufacturing sign-off"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "reports": {
+    "artifacts": "results/spice/ihp_sg13g2_rom_macro/artifacts",
+    "json": "results/spice/ihp_sg13g2_rom_macro/macro_route.json",
+    "markdown": "results/spice/ihp_sg13g2_rom_macro/REPORT.md"
+  }
+}

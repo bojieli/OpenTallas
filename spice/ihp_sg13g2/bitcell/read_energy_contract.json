@@ -1,0 +1,134 @@
+{
+  "acceptance": {
+    "capacitance_linear_fit_r2_min": 0.9999,
+    "drc_errors_max": 0,
+    "energy_height_fit_note": "the claim is that read energy is affine in column height rather than constant; a straight-line R2 above this floor establishes that, and the per-interval slopes are reported separately because they are not exactly equal",
+    "energy_height_fit_r2_min": 0.99,
+    "idle_cycle_energy_fraction_max": 0.01,
+    "programmed_bitline_fraction_max": 0.1,
+    "read_energy_fj_max": 100000.0,
+    "read_energy_fj_min": 0.0,
+    "read_margin_fraction_min": 0.35,
+    "unexpected_warnings_max": 0
+  },
+  "array": {
+    "columns": 8,
+    "height_sweep_rows": [
+      16,
+      32,
+      64,
+      128
+    ],
+    "pattern": "prand",
+    "pattern_note": "deterministic xorshift keyed by (row, column); no simulator RNG state is used",
+    "precharge_device": "sg13_lv_pmos w=1u l=0.13u",
+    "precharge_device_note": "the precharge transistor is an official PDK model instance in the testbench, not extracted layout; every capacitance it drives is extracted",
+    "pvt_rows": 64
+  },
+  "campaigns": [
+    {
+      "dimensions": [
+        "process_corner",
+        "vdd_v",
+        "temperature_c"
+      ],
+      "fixed": {
+        "selected_row": 32
+      },
+      "name": "full_pvt_middle_row"
+    },
+    {
+      "dimensions": [
+        "selected_row"
+      ],
+      "fixed": {
+        "process_corner": "tt",
+        "temperature_c": 27.0,
+        "vdd_v": 1.2
+      },
+      "name": "row_position_nominal_pvt"
+    },
+    {
+      "dimensions": [
+        "selected_row"
+      ],
+      "fixed": {
+        "process_corner": "ss",
+        "temperature_c": 125.0,
+        "vdd_v": 1.08
+      },
+      "name": "row_position_slow_low_hot"
+    },
+    {
+      "dimensions": [
+        "selected_row"
+      ],
+      "fixed": {
+        "process_corner": "ff",
+        "temperature_c": -40.0,
+        "vdd_v": 1.32
+      },
+      "name": "row_position_fast_high_cold"
+    }
+  ],
+  "claim_boundary": {
+    "boundary_of_the_measured_quantity": "bit-array only: wordline, cell, bitline and precharge device. It excludes address decode, sense amplification and the macro output latch, all of which rom_read_j_per_byte's own stated boundary includes, so the measured value is a LOWER bound on the quantity that constant names.",
+    "establishes": [
+      "extracted bitline capacitance per row of column height for a minimum-pitch via1-programmed NOR mask-ROM array in IHP SG13G2",
+      "the fraction of that capacitance that is coupling to the two neighbouring bitlines at the minimum legal column pitch",
+      "supply energy per read access, and per stored bit, of that exact extracted array over the declared deterministic PVT grid",
+      "that read energy per bit is affine in column height rather than constant, measured over a 16-to-128-row sweep"
+    ],
+    "evidence_class": "capacitance_extracted_open_pdk_array_simulation",
+    "forbidden_inferences": [
+      "N7, N6, N5 or N4 read energy, delay, leakage, bandwidth or power",
+      "that a 130 nm energy per byte may be feature-size-scaled into a target-node energy per byte",
+      "decoder, address, sense-amplifier, output-latch, repair or macro-boundary energy, none of which is in this array",
+      "statistical mismatch, sense offset, yield, aging or electromigration behaviour",
+      "whole-wafer inference throughput, device power or GPU speedup",
+      "silicon correlation or manufacturing sign-off"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "dimensions": {
+    "process_corner": [
+      "ss",
+      "tt",
+      "ff"
+    ],
+    "selected_row": [
+      1,
+      32,
+      62
+    ],
+    "temperature_c": [
+      -40.0,
+      27.0,
+      125.0
+    ],
+    "vdd_v": [
+      1.08,
+      1.2,
+      1.32
+    ]
+  },
+  "experiment_id": "ihp_sg13g2_rom_array_read_energy_v1",
+  "inputs": {
+    "generator": "spice/ihp_sg13g2/bitcell/rom_bitarray.tcl",
+    "spice_init": "spice/ihp_sg13g2/device_smoke/.spiceinit"
+  },
+  "pdk_lock": "configs/pdk/ihp_sg13g2_physical_lock.json",
+  "reports": {
+    "artifacts": "results/spice/ihp_sg13g2_rom_read_energy/artifacts",
+    "json": "results/spice/ihp_sg13g2_rom_read_energy/read_energy.json",
+    "markdown": "results/spice/ihp_sg13g2_rom_read_energy/REPORT.md"
+  },
+  "schema_version": 1,
+  "timing": {
+    "cycles": 3,
+    "measured_cycle": 3,
+    "note": "one precharge half-period followed by one evaluate half-period; the third cycle is measured so the array is in steady state",
+    "period_ns": 2.0
+  }
+}

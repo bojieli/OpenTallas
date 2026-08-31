@@ -219,7 +219,13 @@ def _element_bytes(view: ResolvedView, elements: int) -> int:
 # ---------------------------------------------------------------------------
 # Operand decoding
 # ---------------------------------------------------------------------------
-def _block_scales(ctx: EngineContext, view: ResolvedView, dims: Sequence[int]) -> np.ndarray:
+def _block_scales(
+    ctx: EngineContext,
+    view: ResolvedView,
+    dims: Sequence[int],
+    *,
+    rows: Sequence[int] | None = None,
+) -> np.ndarray:
     """Read the E8M0 block scales of a block-scaled view.
 
     The scale object holds one unsigned E8M0 code per block of the view's own
@@ -242,6 +248,18 @@ def _block_scales(ctx: EngineContext, view: ResolvedView, dims: Sequence[int]) -
 
     The returned array is expanded to one scale per ``(row, block)``, because
     that is what applies the scale; the object is read once per *tile*.
+
+    ``rows`` names which of the *view's* leading positions the caller is
+    scaling, for the operators that contract a row subset of a view against a
+    weight the subset selected: ``GROUPED_MATMUL`` takes one segment at a time
+    and ``ROUTED_MATMUL`` takes the rows one expert won.  Without it the scales
+    are read from the view's origin, so a subset that does not begin at row
+    zero is scaled by the *first* rows' exponents.  That was silent: the codes
+    are legal E8M0, every shape agrees, and the result is a plain power of two
+    away from the truth -- which on the released DeepSeek MoE made every routed
+    expert but the one holding row zero wrong, by up to 2**16 on the down
+    projection, while the gate and up projections stayed exact because their
+    activation rows are one token's vector repeated and so share one exponent.
     """
     block = int(view.scale_block_elements)
     row_block = max(int(view.scale_block_rows), 1)
@@ -260,13 +278,13 @@ def _block_scales(ctx: EngineContext, view: ResolvedView, dims: Sequence[int]) -
         f"view {view.descriptor_id}: a block-scaled view must be contiguous in "
         "its last axis so that block index and element index agree",
     )
-    rows = 1
+    row_count = 1
     for extent in dims[:-1]:
-        rows *= int(extent)
+        row_count *= int(extent)
     _require(
-        rows % row_block == 0,
-        f"view {view.descriptor_id}: leading extent {rows} is not a multiple of "
-        f"its {row_block}-row scale block",
+        row_count % row_block == 0,
+        f"view {view.descriptor_id}: leading extent {row_count} is not a "
+        f"multiple of its {row_block}-row scale block",
     )
     # The element offset is a position in the same row-major space, so it
     # splits into a row and a column exactly as any element does.
@@ -277,19 +295,61 @@ def _block_scales(ctx: EngineContext, view: ResolvedView, dims: Sequence[int]) -
         f"not start on a {row_block} x {block} scale block",
     )
     per_row = width // block
-    tile_rows = rows // row_block
-    count = tile_rows * per_row
     obj = ctx.memory[view.scale_object_id]
-    offset = (row_origin // row_block) * per_row + column_origin // block
-    _require(
-        offset + count <= obj.size_bytes,
-        f"view {view.descriptor_id}: scale object {view.scale_object_id} holds "
-        f"{obj.size_bytes} codes, need {offset + count}",
-        TrapClass.MEMORY_SUBSYSTEM,
-    )
-    payload = obj.read(offset, count)
-    ctx.counters.add(_READ_COUNTER[obj.storage_class.name], count)
-    codes = np.frombuffer(payload, dtype=np.uint8)
+    base = (row_origin // row_block) * per_row + column_origin // block
+    selection: np.ndarray | None = None
+    if rows is not None:
+        selection = np.asarray(rows, dtype=np.int64).reshape(-1)
+        _require(
+            selection.size == row_count,
+            f"view {view.descriptor_id}: {int(selection.size)} rows selected "
+            f"for a {row_count}-row operand",
+        )
+        _require(
+            row_block == 1,
+            f"view {view.descriptor_id}: a row-selected block-scaled operand "
+            f"needs a one-row scale block; this view tiles {row_block} rows",
+            TrapClass.CAPABILITY_OR_RESOURCE,
+        )
+        leading = 1
+        for extent in view.dims[:-1]:
+            leading *= int(extent)
+        _require(
+            bool(np.all((selection >= 0) & (selection < leading))),
+            f"view {view.descriptor_id}: selected row outside [0, {leading})",
+            TrapClass.DESCRIPTOR_OR_ADDRESS,
+        )
+    if selection is None:
+        tile_rows = row_count // row_block
+        count = tile_rows * per_row
+        _require(
+            base + count <= obj.size_bytes,
+            f"view {view.descriptor_id}: scale object {view.scale_object_id} "
+            f"holds {obj.size_bytes} codes, need {base + count}",
+            TrapClass.MEMORY_SUBSYSTEM,
+        )
+        payload = obj.read(base, count)
+        ctx.counters.add(_READ_COUNTER[obj.storage_class.name], count)
+        codes = np.frombuffer(payload, dtype=np.uint8)
+    else:
+        tile_rows = int(selection.size)
+        chunks: list[np.ndarray] = []
+        for tile in selection.tolist():
+            offset = base + int(tile) * per_row
+            _require(
+                offset + per_row <= obj.size_bytes,
+                f"view {view.descriptor_id}: scale object "
+                f"{view.scale_object_id} holds {obj.size_bytes} codes, need "
+                f"{offset + per_row}",
+                TrapClass.MEMORY_SUBSYSTEM,
+            )
+            chunks.append(np.frombuffer(obj.read(offset, per_row), dtype=np.uint8))
+        ctx.counters.add(
+            _READ_COUNTER[obj.storage_class.name], per_row * tile_rows
+        )
+        codes = (
+            np.concatenate(chunks) if chunks else np.empty(0, dtype=np.uint8)
+        )
     with _numeric_guard(f"view {view.descriptor_id} block scales"):
         values = decode_e8m0(codes)
     if np.any(np.isnan(values)):
@@ -307,11 +367,18 @@ def _block_scales(ctx: EngineContext, view: ResolvedView, dims: Sequence[int]) -
 
 
 def _operand(
-    ctx: EngineContext, view: ResolvedView, array: np.ndarray, label: str
+    ctx: EngineContext,
+    view: ResolvedView,
+    array: np.ndarray,
+    label: str,
+    *,
+    rows: Sequence[int] | None = None,
 ) -> tuple[np.ndarray, int]:
     """Widen one operand to binary32, applying block scales when declared.
 
-    Returns the values and the number of scale multiplications performed.
+    ``rows`` names which of ``view``'s leading positions ``array`` holds, for
+    the callers that hand a row subset of a view.  Returns the values and the
+    number of scale multiplications performed.
     """
     with _numeric_guard(f"{label} view {view.descriptor_id}"):
         values = widen(view.dtype, array)
@@ -325,7 +392,7 @@ def _operand(
         )
     if view.scale_object_id == NO_ID:
         return values, 0
-    scales = _block_scales(ctx, view, values.shape)
+    scales = _block_scales(ctx, view, values.shape, rows=rows)
     block = int(view.scale_block_elements)
     flat = values.reshape(scales.shape[0], scales.shape[1], block)
     scaled = np.multiply(flat, scales[:, :, None], dtype=np.float32)
@@ -379,8 +446,13 @@ def _contract(
     output_dtype: int,
     *,
     contract: str,
+    activation_rows: Sequence[int] | None = None,
 ) -> tuple[np.ndarray, int, int]:
     """Execute one contraction under the named numeric contract.
+
+    ``activation_rows`` names which of ``activation_view``'s rows
+    ``activations`` holds when the caller contracts a subset of them, so that
+    a block-scaled activation is scaled by its *own* exponents.
 
     Returns ``(values, saturations, scale_multiplications)``.  ``values`` is
     BF16 codes when the output view is BF16 and the dense BF16 path applied,
@@ -411,7 +483,11 @@ def _contract(
             )
         return codes, narrowed.saturations, 0
     left_values, left_scale = _operand(
-        ctx, activation_view, _host(backend, activations), "activation"
+        ctx,
+        activation_view,
+        _host(backend, activations),
+        "activation",
+        rows=activation_rows,
     )
     right_values, right_scale = _operand(
         ctx, weight_view, _host(backend, weights), "weight"
@@ -614,6 +690,7 @@ def _tensor_grouped_matmul(
             group_weights,
             output_view.dtype,
             contract=profile.contract,
+            activation_rows=np.arange(cursor, cursor + span, dtype=np.int64),
         )
         output[cursor : cursor + span] = values
         saturations += group_saturations
@@ -795,6 +872,7 @@ def _tensor_routed_matmul(
                 expert_weights,
                 DType.FP32,
                 contract=profile.contract,
+                activation_rows=selected,
             )
             partial[selected] = values
             scale_multiplications += group_scale

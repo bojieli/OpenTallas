@@ -370,7 +370,24 @@ The open custom-transistor work has ten deliberately separate levels:
    official PSP103 low-voltage corner sections and pinned OSDI modules;
 10. IHP detailed-resistance extraction under all five public interconnect
     styles, exact semantic replay, resistor-graph programming/body-path checks,
-    and the same 33 deterministic electrical cases per style.
+    and the same 33 deterministic electrical cases per style;
+11. a **measured** mask-ROM to 6T-SRAM bitcell area ratio inside one PDK: the
+    minimum DRC-legal drawn pitch of a via-programmed NOR ROM bitcell, proved
+    minimal by showing that shrinking any one dimension produces a named rule
+    violation, against the foundry's own SRAM bitcell placement pitch taken from
+    the shipped macro GDS and cross-checked against the datasheet bit count
+    (`tools/run_ihp_bitcell_density.py` →
+    `results/spice/ihp_sg13g2_bitcell/bitcell.json`);
+12. **measured** read energy of an extracted minimum-pitch ROM bit array over the
+    same deterministic PVT grid, together with the extracted bitline capacitance
+    per row of column height and the fraction of it that is neighbour coupling
+    (`tools/run_ihp_rom_read_energy.py` →
+    `results/spice/ihp_sg13g2_rom_read_energy/read_energy.json`);
+13. a **routed** ROM macro: the drawn bit array with the periodic substrate tap
+    bands the public latch-up rule requires, plus a synthesised standard-cell
+    periphery placed and fully routed to zero detailed-route violations, giving
+    a measured array efficiency (`tools/run_ihp_rom_macro_route.py` →
+    `results/spice/ihp_sg13g2_rom_macro/macro_route.json`).
 
 Every level records its own evidence class and forbidden inferences. A higher
 level may replace a synthetic local load with extracted local geometry; it may
@@ -394,3 +411,44 @@ are neither compact-array RC models nor N7/N4 timing anchors. Levels 7 through
 10 now close the public IHP device, physical, deterministic-PVT, and detailed-RC
 replication chain. IHP statistical mismatch/yield, a compact/full array, and all
 target-node and silicon gates remain open.
+
+Levels 11 to 13 exist to replace three ASSUMED constants in
+`configs/hardware/technology.json` — `rom.cell_to_sram_cell_area_ratio`,
+`energy.rom_read_j_per_byte` and `rom.array_efficiency` — with measurements, and
+they carry three rules of their own.
+
+**A ratio is not a node-free constant.** Level 11 measures two bitcell areas in
+one 130-nm PDK. A ratio transfers further than either absolute area, but it does
+not transfer unchanged: a sibling predictive-PDK measurement at a 7-nm-class
+FinFET node
+(`results/asap7_physical/bitcell_density/bitcell_density.json` →
+`measurement.ratio_via_programmed_rom_to_sram`) gives a materially different
+ratio in the direction that is worse for the ROM side. **The two ratios may be
+reported side by side and may never be averaged, blended or interpolated**, and
+neither may be labelled an N7/N6/N5/N4 value.
+
+**The two cells are not drawn under the same rules, and the asymmetry has a
+direction.** The ROM bitcell is drawn under the public logic-rule deck and is
+DRC clean; the foundry SRAM bitcell carries the PDK's own SRAM recognition layer
+and violates that same deck. A ROM array allowed the memory cell's relaxations
+would be smaller, so the measured ratio is an **upper bound**, not a floor, and a
+report that presents it as a central estimate is overstating the ROM's cost.
+
+**`energy.rom_read_j_per_byte` is dimensionally under-specified, whatever its
+value.** Level 12 measures read energy that is affine in column height, because
+a read discharges a whole bitline whatever the array stores; a single scalar per
+byte therefore names a column height without saying which. Its measured boundary
+is also narrower than the constant's stated boundary — bit array only, with no
+address decode, no sense amplification and no output latch — so the measured
+value is a **lower bound** on the quantity the constant names. Any future
+replacement must expose a column-height term, and a report quoting a per-byte ROM
+read energy must state the column height it assumes.
+
+**`rom.array_efficiency` does not say which boundary it means.** Level 13
+measures two different efficiencies for the same macro: bit array over the drawn
+custom macro, and bit array over the routed die once a synthesised periphery is
+placed and routed. They differ by more than a factor of two. A standard-cell
+periphery is not a memory-compiler periphery, so the routed figure is a **lower
+bound**; the foundry's own SRAM macros in the same release, measured the same way,
+sit between the two. Until the constant names its boundary and its macro
+geometry, no capacity claim derived from it is auditable.

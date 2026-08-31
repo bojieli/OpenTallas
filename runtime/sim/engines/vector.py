@@ -88,12 +88,20 @@ from runtime.reference.normalization import (
     head_rms_norm_bf16,
 )
 from runtime.reference.sqrt_softplus import binary32_sqrt_softplus_rne
+from runtime.reference.hyper_connection import binary32_sigmoid_rne
+from runtime.reference.swiglu import (
+    OFFICIAL_NEGATIVE_SWIGLU_LIMIT_BINARY32,
+    OFFICIAL_SWIGLU_LIMIT_BINARY32,
+)
 from runtime.sim.backend import (
+    CONTRACT_DEEPSEEK_FP8_SWIGLU,
+    CONTRACT_DEEPSEEK_MXFP4_SWIGLU,
     CONTRACT_DEEPSEEK_RMSNORM,
     CONTRACT_DEEPSEEK_ROPE,
     CONTRACT_DEEPSEEK_ROPE_INVERSE,
     CONTRACT_QWEN_RMSNORM,
     CONTRACT_QWEN_ROPE,
+    CONTRACT_QWEN_SILU_MUL,
     BackendError,
     declared_contract,
     get_backend,
@@ -1035,11 +1043,107 @@ def _vector_add(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
 # ---------------------------------------------------------------------------
 # VECTOR.SILU_MUL
 # ---------------------------------------------------------------------------
+#: The released DeepSeek ``swiglu_limit``, as the binary32 codes the reference
+#: substitutes for a clamped operand.
+_SWIGLU_LIMIT_BINARY32 = np.uint32(OFFICIAL_SWIGLU_LIMIT_BINARY32)
+_NEGATIVE_SWIGLU_LIMIT_BINARY32 = np.uint32(OFFICIAL_NEGATIVE_SWIGLU_LIMIT_BINARY32)
+_SWIGLU_LIMIT = np.uint32(OFFICIAL_SWIGLU_LIMIT_BINARY32).view(np.float32)
+
+#: The two SwiGLU sites of the released DeepSeek MoE -- the FP8 shared expert
+#: and the MXFP4 routed one -- whose vector stage is one function.
+_DEEPSEEK_SWIGLU_CONTRACTS = (
+    CONTRACT_DEEPSEEK_FP8_SWIGLU,
+    CONTRACT_DEEPSEEK_MXFP4_SWIGLU,
+)
+
+
+def deepseek_clamped_silu_product_bf16(
+    gate_codes: np.ndarray, up_codes: np.ndarray
+) -> tuple[np.ndarray, int, int, int]:
+    """``*_swiglu_bf16_clamped_silu_product_v1``: one rounding, at the output.
+
+    The arithmetic is ``runtime.reference.swiglu``'s vector stage with no
+    routing weight, which the graph carries as its own ``MUL``: widen both BF16
+    projections exactly to binary32; substitute the limit code for a gate above
+    ``+10`` and for an up projection outside ``+/-10``; take the correctly
+    rounded binary32 logistic of the *clamped* gate; multiply it by the clamped
+    gate and then by the clamped up projection, each a single binary32
+    rounding; and convert once to BF16.
+
+    Returns ``(codes, saturations, gate_clamps, up_clamps)``.
+    """
+    gate = np.ascontiguousarray(widen_bf16(np.ascontiguousarray(gate_codes, dtype=np.uint16)))
+    up = np.ascontiguousarray(widen_bf16(np.ascontiguousarray(up_codes, dtype=np.uint16)))
+    if not (bool(np.all(np.isfinite(gate))) and bool(np.all(np.isfinite(up)))):
+        raise EngineError(
+            "the clamped SwiGLU contract is defined on finite BF16 projections",
+            trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
+        )
+    gate_bits = gate.view(np.uint32).copy()
+    up_bits = up.view(np.uint32).copy()
+    gate_high = gate > _SWIGLU_LIMIT
+    up_low = up < -_SWIGLU_LIMIT
+    up_high = up > _SWIGLU_LIMIT
+    gate_bits[gate_high] = _SWIGLU_LIMIT_BINARY32
+    up_bits[up_low] = _NEGATIVE_SWIGLU_LIMIT_BINARY32
+    up_bits[up_high] = _SWIGLU_LIMIT_BINARY32
+    clamped_gate = gate_bits.view(np.float32)
+    clamped_up = up_bits.view(np.float32)
+    sigmoid = _map_codes(gate_bits, binary32_sigmoid_rne).view(np.float32)
+    previous = np.seterr(over="ignore", invalid="ignore", under="ignore")
+    try:
+        silu = np.multiply(clamped_gate, sigmoid, dtype=np.float32)
+        gated = np.multiply(silu, clamped_up, dtype=np.float32)
+    finally:
+        np.seterr(**previous)
+    if not bool(np.all(np.isfinite(gated))):
+        raise EngineError(
+            "the clamped SwiGLU product left the binary32 range",
+            trap_class=int(TrapClass.NUMERIC_OR_EXCEPTIONAL_VALUE),
+        )
+    codes, saturations = narrow_bf16_rne(gated)
+    return (
+        np.ascontiguousarray(codes, dtype=np.uint16),
+        int(saturations),
+        int(np.count_nonzero(gate_high)),
+        int(np.count_nonzero(up_low) + np.count_nonzero(up_high)),
+    )
+
+
+def _silu_mul_contract(ctx: EngineContext, profile: NumericProfile) -> str:
+    """Which of the two SwiGLU contracts this descriptor names.
+
+    Fails closed on a digest that names neither.  They are different
+    operations: Qwen's clamps nothing and materialises the SiLU activation in
+    BF16 before it gates the up projection, while the released DeepSeek MoE
+    clamps at ``swiglu_limit`` and stays in binary32 through the gating.  This
+    engine executed Qwen's for both until amendment A22, which is why the
+    DeepSeek graph declared ``*_clamped_silu_product_v1`` at 86 sites a prefill
+    and got the unclamped arithmetic at every one of them.
+    """
+    contract = declared_contract(ctx.table, profile.descriptor_id)
+    _require(
+        contract in (CONTRACT_QWEN_SILU_MUL, *_DEEPSEEK_SWIGLU_CONTRACTS),
+        f"numeric profile {profile.descriptor_id} names no SwiGLU contract this "
+        f"engine implements; expected {CONTRACT_QWEN_SILU_MUL} (no clamp, BF16 "
+        f"activation boundary) or {CONTRACT_DEEPSEEK_FP8_SWIGLU} / "
+        f"{CONTRACT_DEEPSEEK_MXFP4_SWIGLU} (clamped at the released "
+        "swiglu_limit, binary32 through the gating)",
+        TrapClass.CAPABILITY_OR_RESOURCE,
+    )
+    profile.contract = contract
+    return contract
+
+
 @register(Major.VECTOR, Vector.SILU_MUL)
 def _vector_silu_mul(ctx: EngineContext, sub: int, operator: Descriptor) -> None:
-    """SiLU the gate, materialise it in BF16, and multiply the up path.
+    """SiLU the gate and multiply the up path, under the declared contract.
 
-    ``output 1``, when bound, receives the materialised BF16 activation.
+    ``output 1``, when bound, receives the materialised BF16 activation.  Only
+    the Qwen contract has one: the DeepSeek clamped product never leaves
+    binary32 between the SiLU and the gating, so there is no such value to
+    write and a bound slot is refused rather than filled with a number the
+    contract does not define.
     """
     profile = _profile(ctx, operator)
     _require(
@@ -1061,23 +1165,49 @@ def _vector_silu_mul(ctx: EngineContext, sub: int, operator: Descriptor) -> None
     )
     _same_shape(gate_view, up_view, "SILU_MUL operand shape")
     _same_shape(gate_view, output_view, "SILU_MUL output shape")
+    contract = _silu_mul_contract(ctx, profile)
     width = int(gate_view.dims[-1])
     gate = _read_rows(ctx, gate_view, width)
     up = _read_rows(ctx, up_view, width)
-    with _numeric_guard("qwen3_silu_mul_bf16_v1"):
-        result = qwen3_silu_mul_bf16(gate, up)
-    ctx.write(output_view, result.values.reshape(output_view.dims))
-    if operator.payload["output_view_1"] != NO_ID:
-        activation_view = ctx.output_view(operator, 1)
-        _same_shape(gate_view, activation_view, "SILU_MUL activation shape")
-        ctx.write(
-            activation_view,
-            result.activation_values.reshape(activation_view.dims),
+    if contract == CONTRACT_QWEN_SILU_MUL:
+        with _numeric_guard(CONTRACT_QWEN_SILU_MUL):
+            result = qwen3_silu_mul_bf16(gate, up)
+        ctx.write(output_view, result.values.reshape(output_view.dims))
+        if operator.payload["output_view_1"] != NO_ID:
+            activation_view = ctx.output_view(operator, 1)
+            _same_shape(gate_view, activation_view, "SILU_MUL activation shape")
+            ctx.write(
+                activation_view,
+                result.activation_values.reshape(activation_view.dims),
+            )
+    else:
+        _require(
+            operator.payload["output_view_1"] == NO_ID,
+            f"{contract} keeps the SiLU activation in binary32, so it "
+            "materialises no BF16 activation for output 1",
+            TrapClass.CAPABILITY_OR_RESOURCE,
         )
+        with _numeric_guard(contract):
+            codes, saturations, gate_clamps, up_clamps = (
+                deepseek_clamped_silu_product_bf16(gate, up)
+            )
+        ctx.write(output_view, codes.reshape(output_view.dims))
+        ctx.counters.add("vector.saturations", saturations)
+        # ``gate_clamps`` and ``up_clamps`` are returned for callers and tests
+        # but deliberately not counted: the frozen registry has no clamp event,
+        # and a clamp is a value the *contract* replaced, not an exceptional
+        # value or a saturation.  Filing it under either would put a routine,
+        # expected substitution into a counter whose whole meaning is that
+        # something went wrong.
+        del gate_clamps, up_clamps
     ctx.counters.add("vector.activation_elements", int(gate.size))
     ctx.counters.add("vector.elements", 2 * int(gate.size))
-    # The SiLU activation and the gated product each round once.
-    ctx.counters.add("vector.conversions", 2 * int(gate.size))
+    # The SiLU activation and the gated product each round once under the Qwen
+    # contract; the clamped one rounds only at the output.
+    ctx.counters.add(
+        "vector.conversions",
+        (2 if contract == CONTRACT_QWEN_SILU_MUL else 1) * int(gate.size),
+    )
 
 
 # ---------------------------------------------------------------------------

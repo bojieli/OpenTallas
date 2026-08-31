@@ -1,0 +1,271 @@
+{
+  "artifacts": [
+    {
+      "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_128x32_c2_ihp_rom_bitarray.lef",
+      "sha256": "ad3c4a4d8da29b5c5282306ca1f72a469e3ac4897354b982196bc6b1522ab02a",
+      "size_bytes": 20220
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_128x32_c2_netlist.v",
+      "sha256": "678642a61f0b0cca5767f3de4159171cb6d57375ee12fea1facc73f52669c456",
+      "size_bytes": 35386
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_128x32_c2_route_drc.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_512x32_c4_ihp_rom_bitarray.lef",
+      "sha256": "23282cf81a93b3b7d3e8908aa1458e943fc9176e8de074b78c83e3fe8b0fa133",
+      "size_bytes": 40759
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_512x32_c4_netlist.v",
+      "sha256": "c4ec7fdb0adb1c7ae2ebcf0d2dec5756d3e056d8fcbdb745eadbdb4ba6e45203",
+      "size_bytes": 72209
+    },
+    {
+      "path": "results/spice/ihp_sg13g2_rom_macro/artifacts/rom_512x32_c4_route_drc.rpt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0
+    }
+  ],
+  "claim_boundary": {
+    "establishes": [
+      "that a via1-programmed mask-ROM bit array drawn at the minimum legal pitch requires periodic substrate tap bands, because without them the array violates the public latch-up rule LU.b",
+      "the drawn macro footprint of that array including tap bands, the wordline strap and the bitline escape, measured from the Magic-written LEF",
+      "the routed die area of that macro with a synthesised standard-cell periphery, under full OpenROAD place-and-route with zero detailed-route violations",
+      "the resulting array efficiency, measured rather than assumed"
+    ],
+    "evidence_class": "open_foundry_pdk_synthesised_and_routed_macro_area",
+    "forbidden_inferences": [
+      "N7, N6, N5 or N4 macro area, array efficiency, density or timing",
+      "that a standard-cell periphery is equivalent to a memory-compiler periphery: it is not, and the measured efficiency is therefore a LOWER bound",
+      "sense-amplifier design, read margin, redundancy, BIST or test coverage, none of which is in this periphery",
+      "whole-wafer inference throughput or GPU speedup",
+      "silicon correlation or manufacturing sign-off"
+    ],
+    "target_node_scaling_rule": null,
+    "target_node_scaling_status": "prohibited"
+  },
+  "comparison": {
+    "assumed": 0.7,
+    "assumed_grade": "assumed",
+    "assumed_source": "configs/hardware/technology.json#rom.array_efficiency",
+    "foundry_sram": [
+      {
+        "array_efficiency": 0.43784966984158763,
+        "bitcell_area_um2": 12315.4432,
+        "bits": 4096,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_256x16_c2_bm_bist",
+        "macro_area_um2": 28127.104000000003
+      },
+      {
+        "array_efficiency": 0.4711703549898875,
+        "bitcell_area_um2": 12315.4432,
+        "bits": 4096,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_512x8_c3_bm_bist",
+        "macro_area_um2": 26137.984
+      },
+      {
+        "array_efficiency": 0.24392265259901633,
+        "bitcell_area_um2": 12315.4432,
+        "bits": 4096,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_64x64_c2_bm_bist",
+        "macro_area_um2": 50489.1328
+      },
+      {
+        "array_efficiency": 0.6182938094725529,
+        "bitcell_area_um2": 49261.7728,
+        "bits": 16384,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_1024x16_c2_bm_bist",
+        "macro_area_um2": 79673.728
+      },
+      {
+        "array_efficiency": 0.5286702111895164,
+        "bitcell_area_um2": 49261.7728,
+        "bits": 16384,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_256x64_c2_bm_bist",
+        "macro_area_um2": 93180.5344
+      },
+      {
+        "array_efficiency": 0.6179357259987248,
+        "bitcell_area_um2": 49261.7728,
+        "bits": 16384,
+        "family": "1P",
+        "macro": "RM_IHPSG13_1P_512x32_c2_bm_bist",
+        "macro_area_um2": 79719.8976
+      }
+    ],
+    "macro_internal_range": [
+      0.7942401557333638,
+      0.8619768988345962
+    ],
+    "whole_macro_range": [
+      0.11923239276552909,
+      0.26202767757591655
+    ]
+  },
+  "contract": {
+    "path": "physical/ihp_sg13g2_rom_macro/macro_contract.json",
+    "sha256": "574ee47ede4cfb8c14416ff7ba76f44b8cd3500813d939c5193d9a18176d4247"
+  },
+  "experiment_id": "ihp_sg13g2_rom_macro_routed_area_v1",
+  "generated_at_utc": "2026-08-31T07:31:33.443634+00:00",
+  "macros": [
+    {
+      "array_efficiency": 0.11923239276552909,
+      "bit_array_area_um2": 1598.0544,
+      "bits": 4096,
+      "cols": 64,
+      "drawn": {
+        "drc_errors": 0,
+        "macro_area_um2": 2012.0544000000002,
+        "macro_height_um": 54.72,
+        "macro_width_um": 36.77,
+        "magic_log_sha256": "3679bef12533c471cc5904769e59c1c77377e7a9c00c578cc91f597e5ad2aef1"
+      },
+      "macro_internal_efficiency": 0.7942401557333638,
+      "mux": 2,
+      "name": "rom_128x32_c2",
+      "route": {
+        "core_area_um2": 12065.76,
+        "detailed_route_violations": 0,
+        "die_area_um2": 13402.854400000002,
+        "die_height_um": 140.08,
+        "die_width_um": 95.68,
+        "log_sha256": "a0d124f5c3a9e6290e36c201445740077c192fd6fe469df37023f013b43e43c1",
+        "openroad_version": "v2.0-17598-ga008522d8",
+        "requested_utilization": 0.42,
+        "total_negative_slack_ns": 0.0,
+        "worst_slack_ns": 7.339738358173279
+      },
+      "rows": 64,
+      "synthesis": {
+        "log_sha256": "17c2d5583f24d126c633154027b1c2328f7f9c80e1ef3a28acd7ee4b3feecf6e",
+        "standard_cell_area_um2": 4369.0752,
+        "yosys_commit": "38e001a6f",
+        "yosys_version": "0.68"
+      },
+      "tap_every": 16,
+      "tapless_control": null,
+      "utilization": 0.42
+    },
+    {
+      "array_efficiency": 0.26202767757591655,
+      "bit_array_area_um2": 6392.2176,
+      "bits": 16384,
+      "cols": 128,
+      "drawn": {
+        "drc_errors": 0,
+        "macro_area_um2": 7415.7644,
+        "macro_height_um": 106.84,
+        "macro_width_um": 69.41,
+        "magic_log_sha256": "490f7ed11b0a604605367779b658c82b4eb8cc86c3bb6f0be047fcebb36cd4f5"
+      },
+      "macro_internal_efficiency": 0.8619768988345962,
+      "mux": 4,
+      "name": "rom_512x32_c4",
+      "route": {
+        "core_area_um2": 22582.022399999998,
+        "detailed_route_violations": 0,
+        "die_area_um2": 24395.2,
+        "die_height_um": 193.0,
+        "die_width_um": 126.4,
+        "log_sha256": "fa812bfc18668d672bdc62f1be44765fa9aaba1204d31ba60fc930b819e69203",
+        "openroad_version": "v2.0-17598-ga008522d8",
+        "requested_utilization": 0.42,
+        "total_negative_slack_ns": 0.0,
+        "worst_slack_ns": 7.339270288132859
+      },
+      "rows": 128,
+      "synthesis": {
+        "log_sha256": "7d6bb7a06f209e67b4e79ac4c4d9abe0093a1d4ce4e13e98f254d8eb5c929eaa",
+        "standard_cell_area_um2": 6561.4752,
+        "yosys_commit": "38e001a6f",
+        "yosys_version": "0.68"
+      },
+      "tap_every": 16,
+      "tapless_control": {
+        "drc_errors": 6897,
+        "latch_up_rules": [
+          "N-diff distance to P-tap must be < 20.0um (LU.b)"
+        ],
+        "magic_log_sha256": "bbeb5ebde8422fe7e5c9e6996c5db135f3314438f1b52364c7a91ee45cd5d8df",
+        "tap_every": 0,
+        "violated_rules": [
+          "N-diff distance to P-tap must be < 20.0um (LU.b)"
+        ]
+      },
+      "utilization": 0.42
+    }
+  ],
+  "pdk": {
+    "commit": "5cccb161f7492697cfa52eb14dc03beb00bdca9e",
+    "release": "v0.3.0",
+    "root": "/home/ubuntu/.local/opentallas-pdk/ihp-open-pdk-v0.3.0",
+    "tree": {
+      "gitlinks": 5,
+      "manifest_sha256": "4f68be98efe69635e11b412296e54300f70b5d583cabc4cd0d5a8659e7943ae3",
+      "payload_bytes": 812058771,
+      "payload_entries": 5121,
+      "regular_files": 5120,
+      "semantic_records": 5126,
+      "symlinks": 1
+    },
+    "variant": "ihp-sg13g2"
+  },
+  "reports": {
+    "artifacts": "results/spice/ihp_sg13g2_rom_macro/artifacts",
+    "json": "results/spice/ihp_sg13g2_rom_macro/macro_route.json",
+    "markdown": "results/spice/ihp_sg13g2_rom_macro/REPORT.md"
+  },
+  "schema_version": 1,
+  "status": "pass",
+  "toolchain": {
+    "magic": {
+      "commit": "17ac06a24a952380ade3a7d33cd2f0c3943dfc12",
+      "engine": {
+        "path": "/home/ubuntu/.local/opentallas-tools/magic-17ac06a/lib/magic/tcl/magicdnull",
+        "sha256": "2d4c3604dd2ef95531b2e1337f48d3bf6e1b5fdefc59cacd5600e1067110136f",
+        "size_bytes": 18152
+      },
+      "launcher": {
+        "path": "/home/ubuntu/.local/opentallas-tools/magic-17ac06a/bin/magic",
+        "sha256": "cfd07f3a4e0619aebd6456370d012801593138f513d635a3412efb50c727a2bc",
+        "size_bytes": 2167
+      },
+      "version": "8.3.674"
+    },
+    "netgen": {
+      "compiled_on": "Fri Aug 28 06:53:32 UTC 2026",
+      "engine": {
+        "path": "/home/ubuntu/.local/opentallas-tools/netgen-1.5.322/lib/netgen/tcl/netgenexec",
+        "sha256": "1952bc209e539765d2506b3e60246744353d19ba7797da1a94b4e7da3c824b8f",
+        "size_bytes": 18152
+      },
+      "expected_source_commit": "5e48c4e8762d7b58e296b59392572633ba9b184d",
+      "launcher": {
+        "path": "/home/ubuntu/.local/opentallas-tools/netgen-1.5.322/bin/netgen",
+        "sha256": "f0c3805445f26e7072df58d8dd036ee4c5c0da8e5e52a43738762046df0979be",
+        "size_bytes": 1900
+      },
+      "source_identity_boundary": "Netgen does not embed its Git commit; the version is checked at runtime, the exact executable is hashed, and the governed bootstrap pins this commit",
+      "version": "1.5.322"
+    },
+    "openroad": {
+      "path": "/usr/bin/openroad",
+      "sha256": "93fe61454a52b927602fd6c798c4402214c19e80e7d614636345f0f427ea2f46"
+    },
+    "yosys": {
+      "path": "/home/ubuntu/.local/opentallas-tools/yosys-0.68/bin/yosys",
+      "sha256": "44eda4ce93270e581abfb8dd28ab77489bf9e7c43aadbf906faf30f2fffc2e50"
+    }
+  }
+}

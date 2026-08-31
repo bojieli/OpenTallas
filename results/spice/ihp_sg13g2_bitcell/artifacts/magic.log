@@ -1,0 +1,54 @@
+
+Magic 8.3 revision 674 - Compiled on Fri Aug 28 06:53:01 UTC 2026.
+Starting magic under Tcl interpreter
+Using the terminal as the console.
+WARNING: RLIMIT_NOFILE is above 1024 and Tcl_Version<9 this may cause runtime issues [rlim_cur=1048576]
+Using NULL graphics device.
+Processing system .magicrc file
+Switching to WIRING tool.
+Switching to NETLIST tool.
+Switching to PICK tool.
+Switching to BOX tool.
+Sourcing design .magicrc for technology ihp-sg13g2 ...
+2 Magic internal units = 1 Lambda
+Input style sg13g2(): scaleFactor=2, multiplier=2
+The following types are not handled by extraction and will be treated as non-electrical types:
+    pblock sealcont difffill nemitter hvnemitter hvisodiffres sealvia1 sealvia2 sealvia3 sealvia4 sealvia5 sealvia6 pillar solder seal glass thruvia inductor 
+Scaled tech values by 2 / 1 to match internal grid scaling
+Loading ihp-sg13g2 Device Generator Menu ...
+Loading "rom_bitarray.tcl" from command line.
+Moving label "VSS" from metal1 to space in cell ihp_rom_bitarray.
+OT_PARAM|PX|510.0
+OT_PARAM|PY|765.0
+OT_PARAM|P2|1530.0
+OT_PARAM|NROW|8
+OT_PARAM|NCOL|4
+OT_PARAM|CELL_AREA_NM2|390150.0
+OT_PARAM|PROGRAMMED_VIA1|16
+OT_PARAM|PATTERN|checker
+OT_PARAM|V1|200.0
+OT_PARAM|TAP_EVERY|0
+Root cell box:
+           width x height  (   llx,  lly  ), (   urx,  ury  )  area (units^2)
+
+microns:   4.700 x 8.100   (-1.330, -0.990), ( 3.370,  7.110)  38.070    
+lambda:   470.00 x 810.00  (-133.00, -99.00), ( 337.00,  711.00)  380700.00 
+internal:    940 x 1620    (  -266, -198  ), (   674,  1422 )  1522800   
+Root cell box:
+           width x height  (   llx,  lly  ), (   urx,  ury  )  area (units^2)
+
+microns:   4.700 x 8.100   (-1.330, -0.990), ( 3.370,  7.110)  38.070    
+lambda:   470.00 x 810.00  (-133.00, -99.00), ( 337.00,  711.00)  380700.00 
+internal:    940 x 1620    (  -266, -198  ), (   674,  1422 )  1522800   
+DRC style is now "drc(full)"
+Loading DRC CIF style.
+OT_DRC_TOTAL=0
+No errors found.
+   Generating output for cell ihp_rom_bitarray
+The following types are not handled by extraction and will be treated as non-electrical types:
+    pblock sealcont difffill nemitter hvnemitter hvisodiffres sealvia1 sealvia2 sealvia3 sealvia4 sealvia5 sealvia6 pillar solder seal glass thruvia inductor 
+Extraction style is now "ngspice()"
+Extracting ihp_rom_bitarray into ihp_rom_bitarray.ext:
+Processing ihp_rom_bitarray
+exttospice finished.
+exttospice finished.

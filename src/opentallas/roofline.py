@@ -197,6 +197,21 @@ the executed counts held.
 BITS_PER_BYTE = 8.0
 UM2_PER_MM2 = 1.0e6
 
+CAPACITY_TOLERANCE_BYTES = 1.0
+"""One byte of slack on every capacity comparison, and the SAME byte on all of
+them.
+
+Capacities are solved from areas through a chain of float multiplications, so a
+design sized to hold exactly one session's KV lands a fraction of a byte short
+of it -- 1,207,959,551.9999998 B against 1,207,959,552.0 B on the three-reticle
+Qwen machine.  The feasibility tests have always carried this tolerance.
+``max_resident_users`` did not, so it floored to zero on precisely those
+designs, and because zero is falsy the pipeline-fill cap that reads it was
+skipped there too: the machine was declared feasible for one session and then
+published an aggregate rate for as many sessions as it had pipeline stages.
+Both the tests and the count now read this one constant, so they cannot
+disagree about whether a session fits."""
+
 WEIGHT_TRAFFIC_POLICIES = ("decode_streamed", "full_checkpoint")
 WEIGHT_STORES = ("rom", "hbm", "sram")
 KV_STORES = ("sram", "hbm")
@@ -3086,7 +3101,7 @@ def evaluate(
     resident_kv_bytes = kv.storage_bytes_per_user * batch_size
 
     # -- capacity ---------------------------------------------------------
-    if stored_weight_bytes > budget.weight_capacity_bytes + 1.0:
+    if stored_weight_bytes > budget.weight_capacity_bytes + CAPACITY_TOLERANCE_BYTES:
         reasons.append(
             f"CAPACITY: stored weights {stored_weight_bytes:,.0f} B exceed weight "
             f"capacity {budget.weight_capacity_bytes:,.0f} B"
@@ -3095,13 +3110,22 @@ def evaluate(
         remaining = budget.kv_capacity_bytes - stored_weight_bytes
     else:
         remaining = budget.kv_capacity_bytes
-    if resident_kv_bytes > remaining + 1.0:
+    if resident_kv_bytes > remaining + CAPACITY_TOLERANCE_BYTES:
         reasons.append(
             f"CAPACITY: resident KV {resident_kv_bytes:,.0f} B exceeds available KV "
             f"capacity {max(0.0, remaining):,.0f} B at batch {batch_size}"
         )
+    # **The same one-byte tolerance the feasibility test above uses.**  Without
+    # it the two disagree: a design whose remaining capacity is
+    # 1,207,959,551.9999998 B against a session needing 1,207,959,552.0 B is
+    # declared FEASIBLE at batch 1 by the ``+ 1.0`` comparison and then reports
+    # ``max_resident_users = 0`` from an exact floor division.  Zero is falsy,
+    # so the pipeline-fill cap below was skipped exactly on the machines that
+    # needed it most, and their aggregate throughput was published as the
+    # pipeline depth times a rate the machine could not deliver to that many
+    # users.  One rule, stated once, used by both.
     max_resident_users = (
-        int(max(0.0, remaining) // kv.storage_bytes_per_user)
+        int((max(0.0, remaining) + CAPACITY_TOLERANCE_BYTES) // kv.storage_bytes_per_user)
         if kv.storage_bytes_per_user > 0
         else 0
     )
@@ -3191,7 +3215,7 @@ def evaluate(
     # chip ``slots`` and ``fill_users/batch`` are both one and this is exactly
     # the previous expression.
     fill_users = max(float(batch_size), slots * microbatch)
-    if max_resident_users and fill_users > max_resident_users:
+    if max_resident_users > 0 and fill_users > max_resident_users:
         # A slot cannot be occupied by a user whose KV the machine cannot hold.
         fill_users = max(float(batch_size), float(max_resident_users))
         fill_limit = "kv_capacity"

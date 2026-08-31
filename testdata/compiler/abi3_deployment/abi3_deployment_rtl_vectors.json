@@ -1,0 +1,1528 @@
+{
+  "abi": {
+    "major": 3,
+    "minor": 0
+  },
+  "case_count": 6,
+  "cases": [
+    {
+      "declared_max_retired_work": 2105,
+      "deployment": "qwen3-8b-rom-single-chip",
+      "deployment_sha256": "a60d8500f0e8ad50c469fa1add1c95b865ca5d35dc7ae2db57c2845fc5c1298e",
+      "depth": {
+        "distinct_static_instructions_reached": 28,
+        "engine_issues": 693,
+        "instructions_fetched": 2105,
+        "instructions_retired": 2105,
+        "resolved_operand_views": 2143,
+        "static_instructions_in_program": 75
+      },
+      "entrypoint_id": 0,
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2105,
+        "first_fault": 4294967295,
+        "issued": 693,
+        "loop_iterations": 723,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 2105,
+        "state_commits": 1,
+        "state_commits_applied": 1,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 1,
+        "state_reads": 0,
+        "state_rows_committed": 16,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 688
+      },
+      "golden_counters": {
+        "control.loop_iterations": 723,
+        "engine.attention.descriptors": 36,
+        "engine.dma.descriptors": 74,
+        "engine.selection.descriptors": 2,
+        "engine.state.descriptors": 2,
+        "engine.tensor.descriptors": 254,
+        "engine.vector.descriptors": 325,
+        "instructions.fetched": 2105,
+        "instructions.issued": 693,
+        "instructions.retired": 2105,
+        "queue.wait_events": 688,
+        "state.bytes_written": 65536,
+        "state.commits": 1,
+        "state.prepares": 1,
+        "state.rows_committed": 16
+      },
+      "issue_base": 0,
+      "issue_count": 693,
+      "issue_stream_sha256": "e9ed09d0063ef05331a98ef36a343b193a34a9b56d65d35f3ecd64ff1b36056b",
+      "issued_opcodes": [
+        {
+          "family": 16,
+          "issues": 2,
+          "sub": 2
+        },
+        {
+          "family": 16,
+          "issues": 72,
+          "sub": 3
+        },
+        {
+          "family": 32,
+          "issues": 253,
+          "sub": 0
+        },
+        {
+          "family": 32,
+          "issues": 1,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 73,
+          "sub": 0
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 1
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 2
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 36,
+          "sub": 4
+        },
+        {
+          "family": 64,
+          "issues": 36,
+          "sub": 1
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 0
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 1,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 1,
+          "sub": 2
+        }
+      ],
+      "name": "qwen3-8b-rom-single-chip/prefill",
+      "phase": 0,
+      "prompt_tokens": 16,
+      "ran_to_completion": true,
+      "request": "prefill",
+      "symbols": {
+        "0": 16,
+        "1": 0,
+        "10": 0,
+        "11": 0,
+        "12": 36,
+        "13": 1,
+        "14": 15,
+        "2": 16,
+        "3": 16,
+        "4": 0,
+        "5": 0,
+        "6": 1,
+        "7": 1,
+        "8": 0,
+        "9": 1
+      },
+      "view_base": 0,
+      "view_count": 2143,
+      "view_stream_sha256": "dcb43659bc63130b505966cf6c93971de9a0adc84fb9e662d3c63930c50f4dba",
+      "work_bound": 2105,
+      "work_bound_lowered_for_cosimulation": false
+    },
+    {
+      "declared_max_retired_work": 2105,
+      "deployment": "qwen3-8b-rom-single-chip",
+      "deployment_sha256": "a60d8500f0e8ad50c469fa1add1c95b865ca5d35dc7ae2db57c2845fc5c1298e",
+      "depth": {
+        "distinct_static_instructions_reached": 28,
+        "engine_issues": 693,
+        "instructions_fetched": 2105,
+        "instructions_retired": 2105,
+        "resolved_operand_views": 2143,
+        "static_instructions_in_program": 75
+      },
+      "entrypoint_id": 1,
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2105,
+        "first_fault": 4294967295,
+        "issued": 693,
+        "loop_iterations": 723,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 2105,
+        "state_commits": 1,
+        "state_commits_applied": 1,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 1,
+        "state_reads": 0,
+        "state_rows_committed": 1,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 688
+      },
+      "golden_counters": {
+        "control.loop_iterations": 723,
+        "engine.attention.descriptors": 36,
+        "engine.dma.descriptors": 74,
+        "engine.selection.descriptors": 2,
+        "engine.state.descriptors": 2,
+        "engine.tensor.descriptors": 254,
+        "engine.vector.descriptors": 325,
+        "instructions.fetched": 2105,
+        "instructions.issued": 693,
+        "instructions.retired": 2105,
+        "queue.wait_events": 688,
+        "state.bytes_written": 4096,
+        "state.commits": 1,
+        "state.prepares": 1,
+        "state.rows_committed": 1
+      },
+      "issue_base": 693,
+      "issue_count": 693,
+      "issue_stream_sha256": "e9ed09d0063ef05331a98ef36a343b193a34a9b56d65d35f3ecd64ff1b36056b",
+      "issued_opcodes": [
+        {
+          "family": 16,
+          "issues": 2,
+          "sub": 2
+        },
+        {
+          "family": 16,
+          "issues": 72,
+          "sub": 3
+        },
+        {
+          "family": 32,
+          "issues": 253,
+          "sub": 0
+        },
+        {
+          "family": 32,
+          "issues": 1,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 73,
+          "sub": 0
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 1
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 2
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 36,
+          "sub": 4
+        },
+        {
+          "family": 64,
+          "issues": 36,
+          "sub": 1
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 0
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 1,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 1,
+          "sub": 2
+        }
+      ],
+      "name": "qwen3-8b-rom-single-chip/decode",
+      "phase": 1,
+      "prompt_tokens": 16,
+      "ran_to_completion": true,
+      "request": "decode",
+      "symbols": {
+        "0": 1,
+        "1": 16,
+        "10": 0,
+        "11": 0,
+        "12": 36,
+        "13": 1,
+        "14": 0,
+        "2": 17,
+        "3": 17,
+        "4": 1,
+        "5": 0,
+        "6": 1,
+        "7": 1,
+        "8": 0,
+        "9": 1
+      },
+      "view_base": 2143,
+      "view_count": 2143,
+      "view_stream_sha256": "f169293aa2b972d7cc947f080478900b4d4edf450bd4e599a69b2354dd1fa2e6",
+      "work_bound": 2105,
+      "work_bound_lowered_for_cosimulation": false
+    },
+    {
+      "declared_max_retired_work": 22715,
+      "deployment": "qwen3-8b-hbm-single-chip",
+      "deployment_sha256": "05bf410b2eb48604cd231c03d56b6d074a35361e47bce0336be74d730f158156",
+      "depth": {
+        "distinct_static_instructions_reached": 28,
+        "engine_issues": 693,
+        "instructions_fetched": 2105,
+        "instructions_retired": 2105,
+        "resolved_operand_views": 2143,
+        "static_instructions_in_program": 75
+      },
+      "entrypoint_id": 0,
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2105,
+        "first_fault": 4294967295,
+        "issued": 693,
+        "loop_iterations": 723,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 2105,
+        "state_commits": 1,
+        "state_commits_applied": 1,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 1,
+        "state_reads": 0,
+        "state_rows_committed": 16,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 688
+      },
+      "golden_counters": {
+        "control.loop_iterations": 723,
+        "engine.attention.descriptors": 36,
+        "engine.dma.descriptors": 74,
+        "engine.selection.descriptors": 2,
+        "engine.state.descriptors": 2,
+        "engine.tensor.descriptors": 254,
+        "engine.vector.descriptors": 325,
+        "instructions.fetched": 2105,
+        "instructions.issued": 693,
+        "instructions.retired": 2105,
+        "queue.wait_events": 688,
+        "state.bytes_written": 65536,
+        "state.commits": 1,
+        "state.prepares": 1,
+        "state.rows_committed": 16
+      },
+      "issue_base": 1386,
+      "issue_count": 693,
+      "issue_stream_sha256": "a0a73aaee677d96fbc3c85af89599be7fe12506341d859b8dd64a5873e9bb2eb",
+      "issued_opcodes": [
+        {
+          "family": 16,
+          "issues": 2,
+          "sub": 2
+        },
+        {
+          "family": 16,
+          "issues": 72,
+          "sub": 3
+        },
+        {
+          "family": 32,
+          "issues": 253,
+          "sub": 0
+        },
+        {
+          "family": 32,
+          "issues": 1,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 73,
+          "sub": 0
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 1
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 2
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 36,
+          "sub": 4
+        },
+        {
+          "family": 64,
+          "issues": 36,
+          "sub": 1
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 0
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 1,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 1,
+          "sub": 2
+        }
+      ],
+      "name": "qwen3-8b-hbm-single-chip/prefill",
+      "phase": 0,
+      "prompt_tokens": 16,
+      "ran_to_completion": true,
+      "request": "prefill",
+      "symbols": {
+        "0": 16,
+        "1": 0,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 1,
+        "14": 15,
+        "2": 16,
+        "3": 16,
+        "4": 0,
+        "5": 0,
+        "6": 1,
+        "7": 1,
+        "8": 0,
+        "9": 1
+      },
+      "view_base": 4286,
+      "view_count": 2143,
+      "view_stream_sha256": "7c6d334bccd440172f1c11c5530997d90a55e8a9e5dfb6d637e63b9cd5e86d3e",
+      "work_bound": 22715,
+      "work_bound_lowered_for_cosimulation": false
+    },
+    {
+      "declared_max_retired_work": 22715,
+      "deployment": "qwen3-8b-hbm-single-chip",
+      "deployment_sha256": "05bf410b2eb48604cd231c03d56b6d074a35361e47bce0336be74d730f158156",
+      "depth": {
+        "distinct_static_instructions_reached": 28,
+        "engine_issues": 693,
+        "instructions_fetched": 2105,
+        "instructions_retired": 2105,
+        "resolved_operand_views": 2143,
+        "static_instructions_in_program": 75
+      },
+      "entrypoint_id": 1,
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 2105,
+        "first_fault": 4294967295,
+        "issued": 693,
+        "loop_iterations": 723,
+        "message": "",
+        "predicated_off": 0,
+        "retired": 2105,
+        "state_commits": 1,
+        "state_commits_applied": 1,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 1,
+        "state_reads": 0,
+        "state_rows_committed": 1,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 688
+      },
+      "golden_counters": {
+        "control.loop_iterations": 723,
+        "engine.attention.descriptors": 36,
+        "engine.dma.descriptors": 74,
+        "engine.selection.descriptors": 2,
+        "engine.state.descriptors": 2,
+        "engine.tensor.descriptors": 254,
+        "engine.vector.descriptors": 325,
+        "instructions.fetched": 2105,
+        "instructions.issued": 693,
+        "instructions.retired": 2105,
+        "queue.wait_events": 688,
+        "state.bytes_written": 4096,
+        "state.commits": 1,
+        "state.prepares": 1,
+        "state.rows_committed": 1
+      },
+      "issue_base": 2079,
+      "issue_count": 693,
+      "issue_stream_sha256": "a0a73aaee677d96fbc3c85af89599be7fe12506341d859b8dd64a5873e9bb2eb",
+      "issued_opcodes": [
+        {
+          "family": 16,
+          "issues": 2,
+          "sub": 2
+        },
+        {
+          "family": 16,
+          "issues": 72,
+          "sub": 3
+        },
+        {
+          "family": 32,
+          "issues": 253,
+          "sub": 0
+        },
+        {
+          "family": 32,
+          "issues": 1,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 73,
+          "sub": 0
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 1
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 2
+        },
+        {
+          "family": 48,
+          "issues": 72,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 36,
+          "sub": 4
+        },
+        {
+          "family": 64,
+          "issues": 36,
+          "sub": 1
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 0
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 1,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 1,
+          "sub": 2
+        }
+      ],
+      "name": "qwen3-8b-hbm-single-chip/decode",
+      "phase": 1,
+      "prompt_tokens": 16,
+      "ran_to_completion": true,
+      "request": "decode",
+      "symbols": {
+        "0": 1,
+        "1": 16,
+        "10": 0,
+        "11": 0,
+        "12": 0,
+        "13": 1,
+        "14": 0,
+        "2": 17,
+        "3": 17,
+        "4": 1,
+        "5": 0,
+        "6": 1,
+        "7": 1,
+        "8": 0,
+        "9": 1
+      },
+      "view_base": 6429,
+      "view_count": 2143,
+      "view_stream_sha256": "7f9bda3780c76ae4fdfa81571d92563c10da339f7f8613e154b8b6c3822c6e0c",
+      "work_bound": 22715,
+      "work_bound_lowered_for_cosimulation": false
+    },
+    {
+      "declared_max_retired_work": 4763423,
+      "deployment": "deepseek-v4-flash-rom-wafer",
+      "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+      "depth": {
+        "distinct_static_instructions_reached": 401,
+        "engine_issues": 12657,
+        "instructions_fetched": 29595,
+        "instructions_retired": 29333,
+        "resolved_operand_views": 39849,
+        "static_instructions_in_program": 1156
+      },
+      "entrypoint_id": 0,
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 29595,
+        "first_fault": 4294967295,
+        "issued": 12657,
+        "loop_iterations": 12344,
+        "message": "",
+        "predicated_off": 262,
+        "retired": 29333,
+        "state_commits": 10,
+        "state_commits_applied": 10,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 10,
+        "state_reads": 42,
+        "state_rows_committed": 64,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 12385
+      },
+      "golden_counters": {
+        "control.loop_iterations": 12344,
+        "engine.attention.descriptors": 43,
+        "engine.dma.descriptors": 2045,
+        "engine.link.descriptors": 138,
+        "engine.reduction.descriptors": 2236,
+        "engine.route.descriptors": 855,
+        "engine.selection.descriptors": 2,
+        "engine.state.descriptors": 62,
+        "engine.tensor.descriptors": 2799,
+        "engine.vector.descriptors": 4477,
+        "instructions.fetched": 29595,
+        "instructions.issued": 12657,
+        "instructions.predicated_off": 262,
+        "instructions.retired": 29333,
+        "queue.wait_events": 12385,
+        "state.bytes_written": 53248,
+        "state.commits": 10,
+        "state.prepares": 10,
+        "state.reads": 42,
+        "state.rows_committed": 64,
+        "state.unstaged_commits": 6
+      },
+      "issue_base": 2772,
+      "issue_count": 12657,
+      "issue_stream_sha256": "5f1a6a5d07985751b43ac1fe7704f1dce283f0ea3dc0b16cc727455067d6b9cc",
+      "issued_opcodes": [
+        {
+          "family": 16,
+          "issues": 1248,
+          "sub": 0
+        },
+        {
+          "family": 16,
+          "issues": 712,
+          "sub": 2
+        },
+        {
+          "family": 16,
+          "issues": 85,
+          "sub": 3
+        },
+        {
+          "family": 32,
+          "issues": 731,
+          "sub": 0
+        },
+        {
+          "family": 32,
+          "issues": 2064,
+          "sub": 2
+        },
+        {
+          "family": 32,
+          "issues": 4,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 215,
+          "sub": 0
+        },
+        {
+          "family": 48,
+          "issues": 43,
+          "sub": 1
+        },
+        {
+          "family": 48,
+          "issues": 171,
+          "sub": 2
+        },
+        {
+          "family": 48,
+          "issues": 731,
+          "sub": 4
+        },
+        {
+          "family": 48,
+          "issues": 1845,
+          "sub": 5
+        },
+        {
+          "family": 48,
+          "issues": 732,
+          "sub": 6
+        },
+        {
+          "family": 48,
+          "issues": 146,
+          "sub": 8
+        },
+        {
+          "family": 48,
+          "issues": 173,
+          "sub": 9
+        },
+        {
+          "family": 48,
+          "issues": 42,
+          "sub": 10
+        },
+        {
+          "family": 48,
+          "issues": 336,
+          "sub": 11
+        },
+        {
+          "family": 48,
+          "issues": 43,
+          "sub": 12
+        },
+        {
+          "family": 64,
+          "issues": 43,
+          "sub": 2
+        },
+        {
+          "family": 80,
+          "issues": 40,
+          "sub": 1
+        },
+        {
+          "family": 80,
+          "issues": 43,
+          "sub": 2
+        },
+        {
+          "family": 80,
+          "issues": 688,
+          "sub": 3
+        },
+        {
+          "family": 80,
+          "issues": 41,
+          "sub": 4
+        },
+        {
+          "family": 80,
+          "issues": 43,
+          "sub": 6
+        },
+        {
+          "family": 96,
+          "issues": 2064,
+          "sub": 1
+        },
+        {
+          "family": 96,
+          "issues": 172,
+          "sub": 3
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 0
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 42,
+          "sub": 0
+        },
+        {
+          "family": 128,
+          "issues": 10,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 10,
+          "sub": 2
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 0
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 3
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 4
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 5
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 6
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 7
+        }
+      ],
+      "name": "deepseek-v4-flash-rom-wafer/prefill",
+      "phase": 0,
+      "prompt_tokens": 16,
+      "ran_to_completion": true,
+      "request": "prefill",
+      "symbols": {
+        "0": 16,
+        "1": 0,
+        "10": 6,
+        "11": 0,
+        "12": 43,
+        "13": 1,
+        "14": 15,
+        "2": 16,
+        "3": 16,
+        "4": 0,
+        "5": 0,
+        "6": 1,
+        "7": 1,
+        "8": 0,
+        "9": 1
+      },
+      "view_base": 8572,
+      "view_count": 39849,
+      "view_stream_sha256": "c1665aa89b94970030c285605865cebb8be831fd617d1ebe41c7e451aedafbed",
+      "work_bound": 4763423,
+      "work_bound_lowered_for_cosimulation": false
+    },
+    {
+      "declared_max_retired_work": 4763423,
+      "deployment": "deepseek-v4-flash-rom-wafer",
+      "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+      "depth": {
+        "distinct_static_instructions_reached": 367,
+        "engine_issues": 3600,
+        "instructions_fetched": 12210,
+        "instructions_retired": 11591,
+        "resolved_operand_views": 10428,
+        "static_instructions_in_program": 1156
+      },
+      "entrypoint_id": 1,
+      "golden": {
+        "branches": 0,
+        "complete": true,
+        "fetched": 12210,
+        "first_fault": 4294967295,
+        "issued": 3600,
+        "loop_iterations": 3974,
+        "message": "",
+        "predicated_off": 619,
+        "retired": 11591,
+        "state_commits": 10,
+        "state_commits_applied": 10,
+        "state_discards": 0,
+        "state_generation_advances": 0,
+        "state_prepares": 10,
+        "state_reads": 42,
+        "state_rows_committed": 4,
+        "status": 0,
+        "trap_class": 0,
+        "wait_events": 3349
+      },
+      "golden_counters": {
+        "control.loop_iterations": 3974,
+        "engine.attention.descriptors": 43,
+        "engine.dma.descriptors": 692,
+        "engine.link.descriptors": 138,
+        "engine.reduction.descriptors": 301,
+        "engine.route.descriptors": 210,
+        "engine.selection.descriptors": 2,
+        "engine.state.descriptors": 62,
+        "engine.tensor.descriptors": 864,
+        "engine.vector.descriptors": 1288,
+        "instructions.fetched": 12210,
+        "instructions.issued": 3600,
+        "instructions.predicated_off": 619,
+        "instructions.retired": 11591,
+        "queue.wait_events": 3349,
+        "state.bytes_written": 3328,
+        "state.commits": 10,
+        "state.prepares": 10,
+        "state.reads": 42,
+        "state.rows_committed": 4,
+        "state.unstaged_commits": 6
+      },
+      "issue_base": 15429,
+      "issue_count": 3600,
+      "issue_stream_sha256": "aef7db4f9ba3acdfc82e3cd59acef49b3fc3b4f3a6a68e58879dcde02c0d1bb6",
+      "issued_opcodes": [
+        {
+          "family": 16,
+          "issues": 603,
+          "sub": 0
+        },
+        {
+          "family": 16,
+          "issues": 46,
+          "sub": 2
+        },
+        {
+          "family": 16,
+          "issues": 43,
+          "sub": 3
+        },
+        {
+          "family": 32,
+          "issues": 731,
+          "sub": 0
+        },
+        {
+          "family": 32,
+          "issues": 129,
+          "sub": 2
+        },
+        {
+          "family": 32,
+          "issues": 4,
+          "sub": 3
+        },
+        {
+          "family": 48,
+          "issues": 173,
+          "sub": 0
+        },
+        {
+          "family": 48,
+          "issues": 43,
+          "sub": 1
+        },
+        {
+          "family": 48,
+          "issues": 150,
+          "sub": 2
+        },
+        {
+          "family": 48,
+          "issues": 86,
+          "sub": 4
+        },
+        {
+          "family": 48,
+          "issues": 429,
+          "sub": 5
+        },
+        {
+          "family": 48,
+          "issues": 87,
+          "sub": 6
+        },
+        {
+          "family": 48,
+          "issues": 62,
+          "sub": 8
+        },
+        {
+          "family": 48,
+          "issues": 173,
+          "sub": 9
+        },
+        {
+          "family": 48,
+          "issues": 21,
+          "sub": 10
+        },
+        {
+          "family": 48,
+          "issues": 21,
+          "sub": 11
+        },
+        {
+          "family": 48,
+          "issues": 43,
+          "sub": 12
+        },
+        {
+          "family": 64,
+          "issues": 43,
+          "sub": 2
+        },
+        {
+          "family": 80,
+          "issues": 40,
+          "sub": 1
+        },
+        {
+          "family": 80,
+          "issues": 43,
+          "sub": 2
+        },
+        {
+          "family": 80,
+          "issues": 43,
+          "sub": 3
+        },
+        {
+          "family": 80,
+          "issues": 41,
+          "sub": 4
+        },
+        {
+          "family": 80,
+          "issues": 43,
+          "sub": 6
+        },
+        {
+          "family": 96,
+          "issues": 129,
+          "sub": 1
+        },
+        {
+          "family": 96,
+          "issues": 172,
+          "sub": 3
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 0
+        },
+        {
+          "family": 112,
+          "issues": 1,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 42,
+          "sub": 0
+        },
+        {
+          "family": 128,
+          "issues": 10,
+          "sub": 1
+        },
+        {
+          "family": 128,
+          "issues": 10,
+          "sub": 2
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 0
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 3
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 4
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 5
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 6
+        },
+        {
+          "family": 144,
+          "issues": 23,
+          "sub": 7
+        }
+      ],
+      "name": "deepseek-v4-flash-rom-wafer/decode",
+      "phase": 1,
+      "prompt_tokens": 16,
+      "ran_to_completion": true,
+      "request": "decode",
+      "symbols": {
+        "0": 1,
+        "1": 16,
+        "10": 6,
+        "11": 0,
+        "12": 43,
+        "13": 1,
+        "14": 0,
+        "2": 17,
+        "3": 17,
+        "4": 1,
+        "5": 0,
+        "6": 1,
+        "7": 1,
+        "8": 0,
+        "9": 1
+      },
+      "view_base": 48421,
+      "view_count": 10428,
+      "view_stream_sha256": "475d23e61d6e3fc9e7903ae167b6237c409251bdc91baca3f6a826fe0c6eb71c",
+      "work_bound": 4763423,
+      "work_bound_lowered_for_cosimulation": false
+    }
+  ],
+  "completion_count": 6,
+  "deployment_count": 3,
+  "deployments": [
+    {
+      "admitted": true,
+      "capability": "configs/hardware/abi3_capability/rom_qwen3.json",
+      "capability_digest": "717de6c9f00dadcec0ae32ae33b1d827f95b2af62a43b405e94e586fc8f22dc4",
+      "co_simulable_within_rtl_bounds": true,
+      "declared_max_retired_work": 2105,
+      "deployment_dir": "build/abi3/qwen3-8b-rom",
+      "deployment_sha256": "a60d8500f0e8ad50c469fa1add1c95b865ca5d35dc7ae2db57c2845fc5c1298e",
+      "descriptor_count": 239,
+      "descriptor_table_sha256": "637d64f27f3b6b2a133ffcf2a083bcfefd49d4d2cdfc9fe98290321086742623",
+      "entrypoint_count": 2,
+      "instruction_count": 75,
+      "key": "qwen3-8b-rom-single-chip",
+      "model_id": "qwen3-8b",
+      "program_sha256": "9f3026d776001f0700502f0519680add4d5a42edb22586117b8e8645de065d92",
+      "reproduce": "python3 tools/build_rom_deployment.py qwen3-8b --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json --output build/abi3/qwen3-8b-rom",
+      "rtl_bound_demands": {
+        "A3_EVENT_COUNT": 26,
+        "A3_LOOP_DEPTH": 2,
+        "A3_STATE_SLOTS": 1,
+        "A3_WAIT_PRODUCERS": 2
+      },
+      "rtl_bound_overruns": [],
+      "state_descriptor_count": 1,
+      "target_id": "qwen3-8b-rom-single-chip",
+      "title": "Qwen3-8B ROM single chip",
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "capability": "configs/hardware/abi3_capability/hbm_sram_single_chip.json",
+      "capability_digest": "afdb22453043bfc51bb721aea6b69d3f4dec1638888699db8031d75738f5e430",
+      "co_simulable_within_rtl_bounds": true,
+      "declared_max_retired_work": 22715,
+      "deployment_dir": "build/abi3/qwen3-8b-single-chip-w95",
+      "deployment_sha256": "05bf410b2eb48604cd231c03d56b6d074a35361e47bce0336be74d730f158156",
+      "descriptor_count": 218,
+      "descriptor_table_sha256": "fa0b0a65aa9f56f08738d810c706ecfc8d6bb3886d81454577ed254699283b8f",
+      "entrypoint_count": 2,
+      "instruction_count": 75,
+      "key": "qwen3-8b-hbm-single-chip",
+      "model_id": "qwen3-8b",
+      "program_sha256": "498e532e1e135dbab30cf90c49383728395c92ba2595c72fdfdbce293568dc71",
+      "reproduce": "python3 tools/build_hbm_sram_deployment.py --ir build/ir-v3/qwen3-8b/kernel_ir.v3.json --profile single-chip --out build/abi3/qwen3-8b-single-chip-w95",
+      "rtl_bound_demands": {
+        "A3_EVENT_COUNT": 26,
+        "A3_LOOP_DEPTH": 2,
+        "A3_STATE_SLOTS": 1,
+        "A3_WAIT_PRODUCERS": 2
+      },
+      "rtl_bound_overruns": [],
+      "state_descriptor_count": 1,
+      "target_id": "hbm-sram-abi3-single_chip",
+      "title": "Qwen3-8B HBM single chip",
+      "verifier_errors": []
+    },
+    {
+      "admitted": true,
+      "capability": "configs/hardware/abi3_capability/rom_deepseek_v4.json",
+      "capability_digest": "46ba23388738578592901115ed2f2206f8622028edabd30090584323ff211eb5",
+      "co_simulable_within_rtl_bounds": false,
+      "declared_max_retired_work": 4763423,
+      "deployment_dir": "build/abi3/deepseek-v4-flash-rom",
+      "deployment_sha256": "507e0b577cca2aa330c9f49463090458c13eac60f6f29425fa95543fe552a67a",
+      "descriptor_count": 3387,
+      "descriptor_table_sha256": "624fdb17cf11692d5880e6d038fbba9d58e4f7afdfc3aa2ba8afab372f8a7e1e",
+      "entrypoint_count": 2,
+      "instruction_count": 1156,
+      "key": "deepseek-v4-flash-rom-wafer",
+      "model_id": "deepseek-v4-flash-0731",
+      "program_sha256": "2a2a3c8369b37470aad7e6bd1af1439a0249364464622124a18b2147ea341a16",
+      "reproduce": "python3 tools/build_rom_deployment.py deepseek-v4-flash --ir build/ir-v3/deepseek-v4-flash-0731/kernel_ir.v3.json --output build/abi3/deepseek-v4-flash-rom",
+      "rtl_bound_demands": {
+        "A3_EVENT_COUNT": 396,
+        "A3_LOOP_DEPTH": 3,
+        "A3_STATE_SLOTS": 10,
+        "A3_WAIT_PRODUCERS": 4
+      },
+      "rtl_bound_overruns": [
+        {
+          "declared_in": "rtl/abi3/ot_a3_pkg.sv",
+          "deployment_requires": 10,
+          "expressed_by": "nothing. No capability field names a state-slot count and runtime.abi3.verifier has no such check, so no deployment can be refused for exceeding it",
+          "parameter": "A3_STATE_SLOTS",
+          "rtl_bound": 8
+        },
+        {
+          "declared_in": "rtl/abi3/ot_a3_pkg.sv",
+          "deployment_requires": 396,
+          "expressed_by": "limits.max_events -- but the verifier bounds the *number of distinct event IDs* a program signals, and a scoreboard indexed by event ID is bounded by the largest ID plus one. The two coincide only when IDs are dense from zero. The shipped capabilities also disagree with this parameter numerically: rom_deepseek_v4 admits 512 and hbm_sram_single_chip admits 4096",
+          "parameter": "A3_EVENT_COUNT",
+          "rtl_bound": 256
+        }
+      ],
+      "state_descriptor_count": 10,
+      "target_id": "deepseek-v4-flash-rom-wafer",
+      "title": "DeepSeek-V4-Flash ROM wafer",
+      "verifier_errors": []
+    }
+  ],
+  "engine_stub_policy": "every dispatchable engine operation is a recording no-op: RTL 3.0 implements the control plane, so the comparison is the control plane and no checkpoint byte is read on either side",
+  "geometry": {
+    "case_stride": 38,
+    "descriptor_prefix_bytes": 192,
+    "descriptor_words": 4096,
+    "descriptor_words_used": 3844,
+    "header_words": 4096,
+    "header_words_used": 192,
+    "issue_stride": 3,
+    "program_words": 2048,
+    "program_words_used": 1306,
+    "symbol_words": 1024,
+    "symbol_words_used": 96,
+    "view_stride": 7
+  },
+  "image_sha256": {
+    "a3_deployment_case.hex": "aa3176c43d63f0650f128bb29193b9e7a22403de39798e50b1bfa394efc5ca3f",
+    "a3_deployment_issue.hex": "a3447f680e2a9452fae7c1376396283c73b54c61d92fbd7bab4dc10a87a19df9",
+    "a3_deployment_meta.hex": "77e46a58b0f62e41c801b25d39ee1263b9d6a6df75eeb18a2be45f959882de0f",
+    "a3_deployment_view.hex": "234f8937964beab4a6d6488871c0047ad8cce4fb09fca0088cf237ee3198203c",
+    "a3_descriptor.hex": "3459e26b752990061ddffd90a6feb0cb216d8f01b825e32798da860ee0636ce3",
+    "a3_header.hex": "c855c99310998e6158322616c6b2d5437c8daa9974c7e9a7e12ed2b0fd849348",
+    "a3_program.hex": "af6e8348f2d8f88ee88f8bd5901546de22ff218c1e690559d8bd03a6e6ecb04a",
+    "a3_symbol.hex": "d4c9aabe466c84a9aea82681a87b6990e9611049f3b072f116a7edcca6ea9856"
+  },
+  "issue_event_count": 19029,
+  "issue_reference": "runtime.sim.device.Device's own trace: for every engine issue the family, subopcode, descriptor ID and the instruction index that issued it, in program order",
+  "issued_opcodes": [
+    {
+      "family": 16,
+      "issues": 1851,
+      "sub": 0
+    },
+    {
+      "family": 16,
+      "issues": 766,
+      "sub": 2
+    },
+    {
+      "family": 16,
+      "issues": 416,
+      "sub": 3
+    },
+    {
+      "family": 32,
+      "issues": 2474,
+      "sub": 0
+    },
+    {
+      "family": 32,
+      "issues": 2193,
+      "sub": 2
+    },
+    {
+      "family": 32,
+      "issues": 12,
+      "sub": 3
+    },
+    {
+      "family": 48,
+      "issues": 680,
+      "sub": 0
+    },
+    {
+      "family": 48,
+      "issues": 374,
+      "sub": 1
+    },
+    {
+      "family": 48,
+      "issues": 609,
+      "sub": 2
+    },
+    {
+      "family": 48,
+      "issues": 288,
+      "sub": 3
+    },
+    {
+      "family": 48,
+      "issues": 961,
+      "sub": 4
+    },
+    {
+      "family": 48,
+      "issues": 2274,
+      "sub": 5
+    },
+    {
+      "family": 48,
+      "issues": 819,
+      "sub": 6
+    },
+    {
+      "family": 48,
+      "issues": 208,
+      "sub": 8
+    },
+    {
+      "family": 48,
+      "issues": 346,
+      "sub": 9
+    },
+    {
+      "family": 48,
+      "issues": 63,
+      "sub": 10
+    },
+    {
+      "family": 48,
+      "issues": 357,
+      "sub": 11
+    },
+    {
+      "family": 48,
+      "issues": 86,
+      "sub": 12
+    },
+    {
+      "family": 64,
+      "issues": 144,
+      "sub": 1
+    },
+    {
+      "family": 64,
+      "issues": 86,
+      "sub": 2
+    },
+    {
+      "family": 80,
+      "issues": 80,
+      "sub": 1
+    },
+    {
+      "family": 80,
+      "issues": 86,
+      "sub": 2
+    },
+    {
+      "family": 80,
+      "issues": 731,
+      "sub": 3
+    },
+    {
+      "family": 80,
+      "issues": 82,
+      "sub": 4
+    },
+    {
+      "family": 80,
+      "issues": 86,
+      "sub": 6
+    },
+    {
+      "family": 96,
+      "issues": 2193,
+      "sub": 1
+    },
+    {
+      "family": 96,
+      "issues": 344,
+      "sub": 3
+    },
+    {
+      "family": 112,
+      "issues": 6,
+      "sub": 0
+    },
+    {
+      "family": 112,
+      "issues": 6,
+      "sub": 1
+    },
+    {
+      "family": 128,
+      "issues": 84,
+      "sub": 0
+    },
+    {
+      "family": 128,
+      "issues": 24,
+      "sub": 1
+    },
+    {
+      "family": 128,
+      "issues": 24,
+      "sub": 2
+    },
+    {
+      "family": 144,
+      "issues": 46,
+      "sub": 0
+    },
+    {
+      "family": 144,
+      "issues": 46,
+      "sub": 3
+    },
+    {
+      "family": 144,
+      "issues": 46,
+      "sub": 4
+    },
+    {
+      "family": 144,
+      "issues": 46,
+      "sub": 5
+    },
+    {
+      "family": 144,
+      "issues": 46,
+      "sub": 6
+    },
+    {
+      "family": 144,
+      "issues": 46,
+      "sub": 7
+    }
+  ],
+  "prompt_tokens": 16,
+  "requested_max_retired_work": 0,
+  "required_marker": "PASS: ABI3 RTL deployment co-simulation deployments=3 cases=6 completions=6 issues=19029 views=58849",
+  "rtl_implementation_bounds": {
+    "expressed_by": {
+      "A3_EVENT_COUNT": "limits.max_events -- but the verifier bounds the *number of distinct event IDs* a program signals, and a scoreboard indexed by event ID is bounded by the largest ID plus one. The two coincide only when IDs are dense from zero. The shipped capabilities also disagree with this parameter numerically: rom_deepseek_v4 admits 512 and hbm_sram_single_chip admits 4096",
+      "A3_LOOP_DEPTH": "limits.max_loop_depth -- expressible, and runtime.abi3.verifier checks it",
+      "A3_STATE_SLOTS": "nothing. No capability field names a state-slot count and runtime.abi3.verifier has no such check, so no deployment can be refused for exceeding it",
+      "A3_WAIT_PRODUCERS": "runtime.abi3.descriptors.MAX_WAIT_PRODUCERS, a frozen ABI constant the wait-set payload is sized by; the two agree at 12"
+    },
+    "note": "these four are the sequencer's own bounds. The RTL package calls them capability fields; expressed_by says, per bound, what in a capability or in the frozen ABI actually expresses it. A bound nothing expresses cannot be refused at admission, so a program that exceeds it is admitted and traps in the RTL instead",
+    "overruns": [
+      {
+        "declared_in": "rtl/abi3/ot_a3_pkg.sv",
+        "deployment": "deepseek-v4-flash-rom-wafer",
+        "deployment_requires": 10,
+        "expressed_by": "nothing. No capability field names a state-slot count and runtime.abi3.verifier has no such check, so no deployment can be refused for exceeding it",
+        "parameter": "A3_STATE_SLOTS",
+        "rtl_bound": 8
+      },
+      {
+        "declared_in": "rtl/abi3/ot_a3_pkg.sv",
+        "deployment": "deepseek-v4-flash-rom-wafer",
+        "deployment_requires": 396,
+        "expressed_by": "limits.max_events -- but the verifier bounds the *number of distinct event IDs* a program signals, and a scoreboard indexed by event ID is bounded by the largest ID plus one. The two coincide only when IDs are dense from zero. The shipped capabilities also disagree with this parameter numerically: rom_deepseek_v4 admits 512 and hbm_sram_single_chip admits 4096",
+        "parameter": "A3_EVENT_COUNT",
+        "rtl_bound": 256
+      }
+    ],
+    "source": "rtl/abi3/ot_a3_pkg.sv",
+    "values": {
+      "A3_EVENT_COUNT": 256,
+      "A3_LOOP_DEPTH": 4,
+      "A3_STATE_SLOTS": 8,
+      "A3_WAIT_PRODUCERS": 12
+    }
+  },
+  "schema": "opentallas.rtl.abi3_deployment_vectors.v1",
+  "view_reference": "runtime.sim.memory.ViewResolver.resolve, evaluated against the loop bindings runtime.sim.device.Device recorded at each issue; amendments A4 (dynamic index terms), A13 (partial final iteration of a block loop) and A18 (the axis that iteration is partial in)",
+  "view_resolution_count": 58849,
+  "what_is_correlated": "the three deployments this program ships, executed on the RTL control plane and on runtime.sim.device.Device from the same program image, the same descriptor table and the same runtime symbols"
+}

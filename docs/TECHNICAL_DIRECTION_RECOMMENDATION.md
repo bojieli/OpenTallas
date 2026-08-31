@@ -25,6 +25,25 @@ Both are single-device figures, so no topology change can reach them; that they
 are unchanged to the last digit is the check that the rebuild touched only what
 it claimed to touch.
 
+**What this document now recommends, in one table.** Each model gets one design,
+picked by a rule stated in the reports that produce it (§0.13, §2.3), read
+iso-area against N copies of the one unified HBM die the GPU side is built from,
+at the area the rule chose rather than at a rung of an area ladder:
+
+| model | ROM design | mm² | user tok/s | tok/s per 1,000 mm² | resident sessions | iso-area GPU | ratio |
+|---|---|---:|---:|---:|---:|---|---:|
+| Qwen3-8B @8K | **3 × 815 mm² reticle dies**, SRAM KV, pipeline | 2,445 | 2,791.2 | 1,141.6 | 1 | 3 × A100 | 10.78× | <!-- figure: 2,445 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.silicon_area_mm2" name="headline Qwen area" --> <!-- figure: 2,791.2 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="headline Qwen per-user rate" --> <!-- figure: 1,141.6 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="headline Qwen density" --> <!-- figure: 10.78 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="headline Qwen iso-area ratio" -->
+| DeepSeek-V4-Flash @200K | **1 wafer**, HBM KV, tensor | 46,225 | 4,663.6 | 100.9 | 448 | 56 × A100 | 8.57× | <!-- figure: 4,663.6 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_tokens_s" name="headline Flash per-user rate" --> <!-- figure: 100.9 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.tokens_s_per_1000mm2" name="headline Flash density" --> <!-- figure: 8.57 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_speed_ratio" name="headline Flash iso-area ratio" -->
+| DeepSeek-V4-Pro @1M | **2 wafers**, SRAM KV, hybrid | 92,450 | 2,359.5 | 25.5 | 1 | 112 × A100 | 8.58× | <!-- figure: 2,359.5 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_tokens_s" name="headline Pro per-user rate" --> <!-- figure: 25.5 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.tokens_s_per_1000mm2" name="headline Pro density" --> <!-- figure: 8.58 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_speed_ratio" name="headline Pro iso-area ratio" -->
+
+**The 8B model gets three reticle dies.** It used to get a whole wafer, because
+the rule that named a "best design" ranked on per-user tokens/s and could not see
+area (§0.13). Two of these three rows hold **one** 8,192-token or 1M-token
+session and the GPU cluster beside them holds hundreds; the ratio is a latency
+claim and the batch-regime tables in §2.3 are where the serving answer lives. A
+secondary, clearly-labelled quantised variant is published in §2.6, at 4.25 bits
+on **both** sides, as a projection of a machine nobody has run.
+
 **Four published claims fell.** Read them separately; they are four different
 corrections that happen to land across two re-runs.
 
@@ -845,7 +864,115 @@ model.** That inverts section 2.3 as it was written.
 
 ---
 
+### 0.13 The study named a "best design" by a rule that could not see area, and it handed an 8B model a wafer
+
+**This is the correction that moves the recommendation in §2.3, and it moves
+nothing else.** Every per-user rate in this document is unchanged to the digit.
+
+The old rule is `_pick_best` in `tools/run_roofline_studies.py`: rank the
+feasible ROM designs by per-user tokens/s, take the best rate, keep everything
+within `BEST_DESIGN_TOLERANCE = 5%` of it, and report the smallest silicon in
+that band. Its docstring says the tolerance stops an 8B model being handed a
+46,225 mm² wafer. It does not, and the artifact says so: for Qwen3-8B at batch 1
+the wafer's 6,505 tok/s is the per-user peak, the 5% floor is 6,180, and the
+best sub-wafer design in the study reaches 3,530 — 54% of the peak. The band
+never engages. **A 5% rate tolerance is a tie-break among near-peak designs and
+is orthogonal to area**, so it shrinks the machine exactly in the cases nobody
+was worried about and never in the case everybody is.
+
+What it published for Qwen3-8B at N6: **one 46,225 mm² wafer at 6,505 tok/s per
+user and 141 tok/s per 1,000 mm²**, for a checkpoint whose ROM array is 1,011 mm²
+and which the study's own design generator holds in **three 815 mm² reticle
+dies** at 2,791 tok/s per user and 1,142 tok/s per 1,000 mm². That is **2.33× the
+per-user rate for 18.9× the silicon**, at one eighth of the throughput density,
+on a model where — after the fix in §0.13.1 — both machines hold exactly one
+8,192-token session.
+
+**The replacement rule is stated in the reports it governs**, in a section
+called *The recommended design per model, and the rule that picks it*, and it
+has two parts:
+
+1. **Domination filter.** Keep every feasible design that no other feasible
+   design of the same model and batch beats on **both** per-user tokens/s and
+   tokens/s per 1,000 mm². That non-dominated set is the published frontier.
+2. **Marginal-return walk.** Order the frontier by area, start at the smallest
+   feasible machine, and accept each larger rung only while the per-user
+   tokens/s it adds per added mm² is strictly greater than the tokens/s per mm²
+   the incumbent already returns on average. Ties go to the smaller machine.
+
+The bar is parity, not a tuned fraction, and it cannot be used to move an
+answer: at parity the walk is algebraically identical to maximising per-user
+tokens/s per mm², because accepting when `(r − r0)/(a − a0) ≥ r0/a0` is exactly
+`r/a ≥ r0/a0`. The marginal form is the one to read because it is the
+engineering question — *does the next slab of silicon work at least as hard as
+the slab you already bought?*
+
+Three things follow that the old rule could not deliver.
+
+**The class is now chosen per model, on evidence.** One rule gives an array for
+Qwen3-8B and a wafer for both DeepSeek models at N6. The study is no longer
+answering "wafer" three times and calling it a finding.
+
+**The frontier is published, not just the pick.** Where the recommendation is a
+curve rather than a point the whole curve is in the report with per-user rate,
+aggregate rate, resident sessions, throughput density, watts, mJ/token and the
+binding constraint on every row, so a reader with a latency target this study
+does not know about can read their own machine off it. An honest curve beats a
+false single answer.
+
+**The recommendation is recomputed at every batch and the regimes are
+reported.** For Qwen3-8B at N6 the answer changes at batch 2 — from a
+one-session SRAM-KV array to a 298-session HBM-KV array at 4,075 mm² — and
+saying so is the point rather than an embarrassment.
+
+The property is pinned by a test,
+`test_a_recommended_design_is_never_dominated_on_both_axes`, which checks the
+recommendation against the raw point list rather than against the frontier the
+selector built, so a bug in the selector fails the test instead of producing a
+self-consistent wrong answer. It pins the property and not an area, a device
+count or a topology, because those have to be retyped every time a technology
+input moves and the property does not.
+
+### 0.13.1 A one-byte float shortfall was inflating the aggregate throughput of every SRAM-KV design at batch 1
+
+Found while making the recommendation quotable. `evaluate` tested capacity
+feasibility with a one-byte tolerance — `resident_kv > remaining + 1.0` — and
+then computed `max_resident_users` from an **exact** floor division. On a design
+sized to hold precisely one session the two disagree: the three-reticle Qwen
+machine's SRAM comes out at **1,207,959,551.9999998 B** against a session
+needing **1,207,959,552.0 B**, so it was feasible for one user and reported room
+for zero. Zero is falsy, and the pipeline-fill cap that reads it was written
+`if max_resident_users and fill_users > max_resident_users`, so **the cap was
+skipped on exactly the machines that needed it most** and the design published
+the aggregate rate of as many sessions as it had pipeline stages.
+
+Both now read one constant, `CAPACITY_TOLERANCE_BYTES`. The blast radius,
+measured by diffing the artifacts before and after:
+
+| quantity | n6_vs_a100 | n5_vs_b200 |
+|---|---:|---:|
+| points evaluated | 4,688 | 4,592 |
+| `per_user_tokens_s` changed | **0** | **0** |
+| `step_time_s` changed | **0** | **0** |
+| `feasible` changed | **0** | **0** |
+| `binding_constraint` changed | **0** | **0** |
+| `aggregate_tokens_s` changed | 14 | 8 |
+| `max_resident_users` changed | 176 | 96 |
+| `power_w`, `energy_j_per_token`, `pipeline_fill_users` changed | 69 | 24 |
+
+Every changed aggregate is a batch-1 SRAM-KV row and every one of them fell. The
+largest was `Qwen3-8B/ROM-N6-native-SRAMKV-wafer-pipeline-x12-romfill`, which
+claimed **96,897 tok/s aggregate** on a machine that holds one session; it now
+reports **142**. The three-reticle machine this document now recommends fell
+from 8,373 to **2,791**, which is its per-user rate, because one session is all
+it holds. **No latency number in this document moved.**
+
 ## 1. The result
+
+> **The tables in this section are the design space, not the recommendation.**
+> They report the best design *per amortisation policy and floorplan*, which is a
+> different question from "which machine should be built" — §2.3 answers that,
+> by the rule §0.13 states, and the two do not pick the same rows.
 
 **This table now has two halves and they select different machines.** Since
 section 0.12 the study reports per-user latency and aggregate throughput as
@@ -1020,60 +1147,90 @@ The design and its sizing are in `docs/PER_REGION_COMPUTE_IN_ROM_DESIGN.md`. The
 pre-compute block is 2.0% of a region; the activation distribution network is the
 real cost and neither document prices it.
 
-### 2.3 Array or wafer, and pipeline or tensor: both answers change once per-user latency is charged honestly
+### 2.3 Array or wafer: one rule, and it no longer answers "wafer" three times
 
-**The previous version of this section is superseded, and so is the version
-before it.** It said the array case was weaker than reported and that the model
-"chooses pipeline over tensor parallelism on the wafer at every operating point".
-The second half is now false and the first half is true for a different reason.
+**The previous version of this section is superseded and the sentence that has
+to go is its conclusion**: *"The right latency machine is the smallest one that
+holds the model: one wafer for Qwen and Flash, two for Pro."* That was read off a
+rule that ranks by per-user rate and cannot see area (§0.13). Under the rule the
+reports now state and apply — domination on both axes, then a marginal-return
+walk from the smallest feasible machine — the answer splits by model:
 
-What the study chooses at batch 1, on per-user rate, after section 0.12:
+| model | recommended design | mm² | devices | user tok/s | tok/s per 1,000 mm² | resident sessions | binds on |
+|---|---|---:|---:|---:|---:|---:|---|
+| Qwen3-8B @8K | `…SRAMKV-array-pipeline-x3` | **2,445** | 3 × 815 mm² | 2,791.2 | **1,141.6** | 1 | `compute` | <!-- figure: 2,445 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.silicon_area_mm2" name="Qwen recommended area, N6" --> <!-- figure: 2,791.2 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen recommended per-user rate, N6" --> <!-- figure: 1,141.6 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.tokens_s_per_1000mm2" name="Qwen recommended throughput density, N6" -->
+| DeepSeek-Flash @200K | `…HBMKV-wafer-tensor-x1-romfill` | **46,225** | 1 wafer | 4,663.6 | **100.9** | 448 | `link_latency` | <!-- figure: 46,225 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.silicon_area_mm2" name="Flash recommended area, N6" --> <!-- figure: 4,663.6 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_tokens_s" name="Flash recommended per-user rate, N6" --> <!-- figure: 100.9 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.tokens_s_per_1000mm2" name="Flash recommended throughput density, N6" -->
+| DeepSeek-Pro @1M | `…SRAMKV-wafer-hybrid-x2` | **92,450** | 2 wafers | 2,359.5 | **25.5** | 1 | `link_latency` | <!-- figure: 92,450 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.silicon_area_mm2" name="Pro recommended area, N6" --> <!-- figure: 2,359.5 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_tokens_s" name="Pro recommended per-user rate, N6" --> <!-- figure: 25.5 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.tokens_s_per_1000mm2" name="Pro recommended throughput density, N6" -->
 
-| model | best design | mm² | per-user tok/s | binds on | best array design | array tok/s | wafer over array |
-|---|---|---:|---:|---|---|---:|---:|
-| Qwen3-8B @8K | `wafer-tensor` ×1 romfill | 46,225 | **6,505** | link_latency | best array, 4,890 mm² | 3,510 | 1.85× |
-| DeepSeek-Flash @200K | `wafer-tensor` ×1 romfill | 46,225 | **4,664** | link_latency | best array, 14,670 mm² | 1,407 | 3.31× |
-| DeepSeek-Pro @1M | `wafer-hybrid` ×2 | 92,450 | **2,360** | link_latency | best array, 78,240 mm² | 583 | 4.05× |
+**An 8B model gets three reticle dies. It never should have got a wafer.** The
+walk stops at the first rung for Qwen because the next one buys 44.6 tok/s per
+1,000 mm² of added silicon against 1,141.6 the machine already returns — a
+twenty-fold worse return — and the wafer, four rungs further on, buys 84.8. For
+Flash and Pro the walk stops at the first rung too, but for the opposite reason:
+there is nothing else on the frontier at all. **For those two models the wafer
+wins on both axes at once**, which is what a one-row frontier means, and it is a
+stronger result than the old table's ratio because it needs no trade-off to be
+argued. Pro's is not even a preference: 94 reticles of mask ROM exceeds one
+57-reticle wafer, so wafer-scale is a capacity floor there and the question is
+only *how many*, to which the answer is the fewest that hold the model.
 
-Three things changed and they are worth separating.
+**Iso-area, read at the area the rule chose rather than at a ladder rung.** The
+comparator is N copies of the one unified 826 mm² A100 die, N set by the ROM
+side's own area, and the cluster picks its own parallelism:
 
-**1. Tensor parallelism is now the right choice, and it was the correction that
-made it so.** The previous section dismissed on-wafer tensor parallelism because
-its collective ceiling — 7,215 tok/s on Qwen, 6,041 on Flash, 4,258 on Pro — sat
-an order of magnitude below the ~50,000 tok/s a wafer-scale pipeline appeared to
-deliver. That 50,000 was the defect: it was the whole wafer's ROM bandwidth
-credited to a single token that only ever touched one reticle field at a time.
-With the pipeline charged honestly, **the tensor ceiling is the best rate
-available**, and every winning design above sits within 12–50% of it and binds
-on `link_latency`. Wafer-scale tensor parallelism is an argument for wafer-scale
-again — not because the collective got cheaper, but because the alternative
-turned out to be far more expensive than it looked.
+| model | ROM mm² | GPU | GPU mm² | ROM user tok/s | GPU user tok/s | ratio | ROM sessions | GPU sessions |
+|---|---:|---|---:|---:|---:|---:|---:|---:|
+| Qwen3-8B | 2,445 | 3 × A100, tensor | 2,478 | 2,791.2 | 258.9 | **10.78×** | 1 | 165 | <!-- figure: 2,478 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.iso_area_gpu_silicon_area_mm2" name="Qwen iso-area GPU silicon, N6" --> <!-- figure: 258.9 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.iso_area_gpu_per_user_tokens_s" name="Qwen iso-area GPU rate, N6" --> <!-- figure: 10.78 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen recommended-design iso-area ratio, N6" --> <!-- figure: 165 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.iso_area_gpu_max_resident_users" name="Qwen iso-area GPU resident sessions, N6" -->
+| DeepSeek-Flash | 46,225 | 56 × A100, tensor | 46,256 | 4,663.6 | 544.1 | **8.57×** | 448 | 2,797 | <!-- figure: 46,256 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.iso_area_gpu_silicon_area_mm2" name="Flash iso-area GPU silicon, N6" --> <!-- figure: 544.1 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.iso_area_gpu_per_user_tokens_s" name="Flash iso-area GPU rate, N6" --> <!-- figure: 8.57 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.per_user_speed_ratio" name="Flash recommended-design iso-area ratio, N6" --> <!-- figure: 448 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Flash-0731].recommended.max_resident_users" name="Flash recommended resident sessions, N6" -->
+| DeepSeek-Pro | 92,450 | 112 × A100, tensor | 92,512 | 2,359.5 | 274.9 | **8.58×** | 1 | 727 | <!-- figure: 92,512 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.iso_area_gpu_silicon_area_mm2" name="Pro iso-area GPU silicon, N6" --> <!-- figure: 274.9 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.iso_area_gpu_per_user_tokens_s" name="Pro iso-area GPU rate, N6" --> <!-- figure: 8.58 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.per_user_speed_ratio" name="Pro recommended-design iso-area ratio, N6" --> <!-- figure: 727 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=DeepSeek-V4-Pro-0813].recommended.iso_area_gpu_max_resident_users" name="Pro iso-area GPU resident sessions, N6" -->
 
-**2. The wafer still wins on per-user rate, by more than before, and for a
-different reason.** It wins 24 of 24 batch-1 operating points. The mechanism is
-no longer "a hop latency an array cannot match" in a pipeline; it is that a
-stitched mesh can carry a 57-to-84-way all-reduce at 1.1× its diameter while a
-GPU-class or package-class fabric cannot, so **a wafer can afford a tensor group
-wide enough to put the whole machine on one token and an array cannot.** On
-tokens per second per square millimetre the array still wins 18 of 24 points; a
-wafer is not faster per unit silicon, it is faster because a wafer is one
-collective domain.
+**Read the last two columns before the ratio.** Two of these three rows divide a
+one-session machine's rate by a several-hundred-session machine's rate. That is a
+latency claim and it is a real one — the ROM part reaches a rate the cluster
+cannot reach at any batch — but it is not a serving claim, and the batch-regime
+table below is where the serving answer lives. The report prints both counts on
+the same row for exactly this reason.
 
-**3. More silicon no longer buys per-user speed on either side.** This is the
-inversion. The ROM per-user rate falls monotonically with area at batch 1 —
-6,505 → 3,447 tok/s for Qwen from one wafer to twelve — because past one wafer
-the only ways to spend silicon are more slots to traverse or a wider collective
-to wait on. **The right latency machine is the smallest one that holds the
-model**: one wafer for Qwen and Flash, two for Pro. Twelve-wafer machines remain
-the right *throughput* machines and the study still reports them as such —
-Flash's twelve-wafer pipeline delivers 273,831 aggregate tokens/s at 402 tokens/s
-per user.
-The two objectives now select different machines and the study no longer
-pretends otherwise.
+**Headline before and after, by rule, at N6:**
 
-**The tensor-parallelism cost table stands.** Two all-reduces per layer per
-token, like for like — the same model's collective on one wafer against the same
-model's on NVLink plus InfiniBand:
+| model | old rule's design | old mm² | old ratio | new design | new mm² | new ratio |
+|---|---|---:|---:|---|---:|---:|
+| Qwen3-8B | wafer ×1 romfill | 46,225 | 8.24× | array ×3 | **2,445** | **10.78×** | <!-- figure: 46,225 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].previous_rule_choice.silicon_area_mm2" name="Qwen area under the replaced rule, N6" --> <!-- figure: 8.24 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].previous_rule_choice.per_user_speed_ratio" name="Qwen ratio under the replaced rule, N6" -->
+| DeepSeek-Flash | wafer ×1 romfill | 46,225 | 8.57× | *unchanged* | 46,225 | 8.57× |
+| DeepSeek-Pro | wafer ×2 | 92,450 | 8.58× | *unchanged* | 92,450 | 8.58× |
+
+**The Qwen ratio went up, and that has to be said plainly rather than banked.**
+Moving the ROM side from a wafer to three reticles moved the GPU comparator from
+56 A100s to 3, and a 3-GPU tensor group degrades faster than a 3-reticle ROM
+pipeline does, so the quotient rises from 8.24× to 10.78×. The number that
+should be quoted is not the ratio; it is that **the same rate now costs 2,445 mm²
+instead of 46,225**, and that the machine it names is one session wide. At N5 the
+same correction moves the Qwen ratio from 3.66× to 5.75× and moves
+DeepSeek-Flash's the other way, from **4.62× down to 1.54×**, because at N5 the
+walk lands Flash on a 11,410 mm² array whose iso-area B200 comparator is the
+GPU's own best machine anywhere. A rule that only ever moved ratios upward would
+be a rule worth distrusting; this one moves them both ways.
+
+**The best design differs by batch, and the reports say where.** At N6:
+
+| model | batch 1 | batch 2–8 | batch 16–256 |
+|---|---|---|---|
+| Qwen3-8B | array ×3, SRAM KV, 2,445 mm², **1 session** | array ×5, HBM KV, 4,075 mm², 298 sessions | array ×5, HBM KV, 4,075 mm², 298 sessions |
+| DeepSeek-Flash | wafer ×1, HBM KV, 46,225 mm², 448 sessions | array ×19 from batch 4, 15,485 mm², 990 sessions | array ×19, 15,485 mm², 990 sessions |
+| DeepSeek-Pro | wafer ×2, SRAM KV, 92,450 mm², **1 session** | wafer ×5, HBM KV, 231,125 mm², 314 sessions | array ×99, HBM KV, 80,685 mm², 723 sessions |
+
+Every SRAM-KV winner is a batch-1 winner and holds one session, because
+`DESIGN_BATCH = 1` sizes the SRAM-KV floorplan for a single stream. Every serving
+regime is won by an HBM-KV machine, and on two of the three models the class
+flips from wafer to array as the batch rises. **A single "best design" per model
+would have had to suppress that**, which is why the reports publish the regime
+table beside the pick.
+
+**What is unchanged.** Tensor parallelism is still the right choice wherever a
+machine can afford it, for the reason the previous version gave: a stitched mesh
+carries a 57-way all-reduce at 1.1× its diameter and a GPU-class fabric cannot,
+so a wafer can put its whole silicon on one token and an array cannot. The
+tensor-parallelism cost table stands unchanged:
 
 | model | collectives/token | on NVLink 3 | on-wafer (57 regions) | on-wafer ceiling |
 |---|---:|---:|---:|---:|
@@ -1081,14 +1238,29 @@ model's on NVLink plus InfiniBand:
 | DeepSeek-V4-Flash | 86 | 1,266.5 µs | **165.6 µs** | 6,041 tok/s |
 | DeepSeek-V4-Pro | 122 | 1,915.7 µs | **234.9 µs** | 4,258 tok/s |
 
-The published claim that on-wafer tensor parallelism reaches 82,000–116,000
-tok/s per user remains **retracted**: it came from charging a stitched 2-D mesh
-one flat hop however far the collective reached. What has changed since that
-retraction is only that 4,300–7,200 tok/s is now the number to beat rather than
-a number to dismiss. Those ceilings fell a further 20% on 2026-08-31 when
-`links.on_wafer.hop_latency_s` was re-graded from an assumed 100 ns to a derived
-125 ns, and the NVLink 3 column rose 65% when `links.nvlink3.hop_latency_s` was
-re-graded from an assumed 1.5 µs to a derived 2.5 µs; §3 carries both.
+And so does the inversion: more silicon does not buy per-user speed on either
+side past the model's own optimum. The published claim that on-wafer tensor
+parallelism reaches 82,000–116,000 tok/s per user remains **retracted**.
+
+**What this section still cannot tell you.** The reticle-array class is sampled
+only at the device counts each floorplan's own sizing sweep happened to choose:
+`ROM_AREA_LADDER` is applied where `plan.kind == "wafer"` and nowhere else. So a
+reticle array exists at an area only if some sweep landed there. For Qwen3-8B at
+N6 the emitted batched-array counts are SRAM-KV/`spare=sram` at {3, 4},
+SRAM-KV/`romfill` at {6, 7} and HBM-KV at {5, 8} — no romfill array at 4 or 5
+dies, no SRAM-KV array at 5 or 8. The omission runs **against** the array class,
+so the published curve is a lower bound on the ROM curve, not an upper one.
+
+**That splits the three recommendations into two kinds and the split has to be
+stated.** Qwen3-8B's winner *is* the smallest feasible machine, so the gap
+cannot touch it: nothing exists below 2,445 mm² for a missing rung to hide in.
+Both DeepSeek winners are wafers chosen over an array class sampled at a handful
+of counts, and **that** is live: a rung the sweep never visited could in
+principle beat the wafer on throughput density. Those two are the weakest results
+in this section and should be re-derived once the array class is emitted on the
+same explicit ladder the wafer class already gets. Fixing it is a separate
+change and it must be separate, or nobody will be able to tell which correction
+moved the headline.
 
 ### 2.4 KV in SRAM for the dense small model, HBM for the sparse large ones — unchanged, with one new and cheap action
 
@@ -1146,6 +1318,113 @@ sparse long-context model has no cheap topology left: pipeline multiplies its
 per-user latency by the slot count and tensor parallelism costs it 122
 all-reduces that mostly cross InfiniBand. **Sparse plus long context is now the
 ROM-favourable regime at every batch, not only at batch 1.**
+
+### 2.6 The quantised variant is published, it is SECONDARY, and no token has ever been produced at that precision
+
+**BF16 is the primary result and nothing above this heading depends on
+anything below it.** The variant lives in
+`results/roofline/quantised_variant/{n6_vs_a100,n5_vs_b200}/`, never in the
+primary artifacts, and its report opens with what it is not.
+
+**The rule it obeys is the one this repository already records for an FP8 KV
+latent: a quantisation applies to BOTH sides.** A GPU serving 4.25-bit weights
+reads 3.76× fewer weight bytes exactly as a mask-ROM part does. Halving one
+side's weight traffic and not the other's is the asymmetry the released-packing
+rule exists to forbid, and it is the asymmetry that once had half of every
+feasible Qwen comparison won by an 8-bit ROM machine racing a 16-bit GPU.
+
+- **Width.** 4.25 bits per parameter, identical on both sides. That is MXFP4 as
+  the OCP Microscaling specification defines it — 4-bit E2M1 elements in blocks
+  of 32 with one 8-bit E8M0 scale, (32×4 + 8)/32 = 4.25 — and it is within a
+  rounding of INT4 group-128 with an FP16 scale and an INT4 zero point,
+  (128×4 + 16 + 4)/128 = 4.16, which is how vLLM and TensorRT-LLM ship 4-bit
+  weights today. It is **not** the 3-to-6-bit mixture Taalas describes: no mix
+  ratio is published anywhere, so that width is `assumed` and must not be a
+  headline.
+- **Arithmetic, and the asymmetry that is a fact rather than a choice.** Both
+  sides declare the `w4a8` datapath their stored width implies and each part
+  then executes or emulates it by its own published format table.
+  `configs/hardware/technology.json` gives `a100_sxm_80gb` native formats
+  `[bf16, fp32]` and emulates `fp4`, `fp8` and `w4a8` to `bf16` — Ampere has no
+  low-precision floating-point tensor core, so an A100 serving 4-bit weights
+  gains **bytes and never arithmetic**. `b200_sxm` declares `w4a8` native. That
+  is why **both** pairings are published: reporting only the A100 one would be
+  selecting the study in which the GPU is architecturally forbidden from taking
+  the credit the ROM side takes.
+- **Scope: Qwen3-8B only.** The variant is defined only where the release ships
+  *above* the width production GPU stacks already serve. Qwen3-8B ships at 16.00
+  bits and qualifies. DeepSeek V4 Flash (4.70) and Pro (4.46) already ship mixed
+  FP8 dense plus MXFP4 routed; re-quantising them would push the GPU below what
+  any production stack serves, which is the same one-sided offer in the other
+  direction.
+
+What it says, with the primary on the same line so the pair is the only way to
+read it:
+
+| study | | design | mm² | user tok/s | tok/s per 1,000 mm² | iso-area GPU | GPU user tok/s | ratio |
+|---|---|---|---:|---:|---:|---|---:|---:|
+| N6/A100 | PRIMARY, BF16 | array ×3 | 2,445 | 2,791.2 | 1,141.6 | 3 × A100 | 258.9 | **10.78×** | <!-- figure: 2,791.2 src="results/roofline/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen primary per-user rate, N6" -->
+| N6/A100 | variant, 4.25 b | array ×2 | 1,630 | 5,602.5 | 3,437.1 | 2 × A100 | 489.0 | 11.46× | <!-- figure: 1,630 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.silicon_area_mm2" name="Qwen variant area, N6" --> <!-- figure: 5,602.5 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen variant per-user rate, N6" --> <!-- figure: 11.46 src="results/roofline/quantised_variant/n6_vs_a100/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen variant iso-area ratio, N6" -->
+| N5/B200 | PRIMARY, BF16 | array ×3 | 2,445 | 3,795.9 | 1,552.5 | 2 × B200 | 660.1 | **5.75×** | <!-- figure: 3,795.9 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen primary per-user rate, N5" --> <!-- figure: 5.75 src="results/roofline/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen recommended-design iso-area ratio, N5" -->
+| N5/B200 | variant, 4.25 b | array ×1 | 815 | 9,703.7 | 11,906.3 | 1 × B200 | 1,181.2 | 8.21× | <!-- figure: 815 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.silicon_area_mm2" name="Qwen variant area, N5" --> <!-- figure: 9,703.7 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_tokens_s" name="Qwen variant per-user rate, N5" --> <!-- figure: 8.21 src="results/roofline/quantised_variant/n5_vs_b200/analytical.json#design_selection.models[model=Qwen3-8B].recommended.per_user_speed_ratio" name="Qwen variant iso-area ratio, N5" -->
+
+**The ratio widens, and the reason is in the component times rather than in a
+free lunch.** Take the same A100 cluster in both artifacts — 112 devices, tensor
+— and the quantisation does exactly what it should: stored bytes fall by
+16,381,470,720 → 4,351,328,160, precisely 4.25/16, and its weight-read term falls
+78.0 µs → 20.7 µs, 3.76×. Its **compute term does not move at all** (0.788 µs
+either way), because Ampere emulates `w4a8` on the BF16 tensor core. The ROM side
+gains differently and in two places. Its weight term is a full-array sweep whose
+duration is a technology constant independent of the bytes stored — 76.55 µs per
+sweep at any width — so fewer bits do not shorten a sweep; what they buy is a
+machine that needs **two dies instead of three**, hence 153.1 µs of sweep instead
+of 229.7. And its compute term falls **312.6 µs → 65.5 µs**, because the ROM part
+builds the `w4a8` datapath its stored width implies and an A100 cannot. So most
+of the ROM side's gain here is **arithmetic density, not storage**, which is
+worth stating plainly: it rests on the `w4a8` compute density, which is `derived`
+from published A100 INT4/INT8 roofs scaled by logic density and has no silicon
+behind it at N6. Note also that the N5 variant's 815 mm² machine is compared
+against a **1,600 mm² B200 package**, roughly twice its silicon, because a
+cluster is quantised in whole dies and a reticle design is not; the report states
+that on the row.
+
+**What is wrong with these numbers, before anyone quotes them.**
+
+- **Nothing has been executed at this precision, anywhere in this program, on
+  either backend.** `configs/hardware/abi3_capability/rom_qwen3.json` declares
+  BF16 numeric contracts and no sub-byte weight decode and no `w4a8`
+  contraction; the oracle-identical tokens this program rests on were produced
+  at BF16. Every variant figure is graded `derived`.
+- **No accuracy has been measured on either side.** The published band on
+  4.25-bit weights runs from NVIDIA's vendor-run "1% or less" on one model to
+  the OCP MX authors' own direct-cast MXFP4 measurement of a 24% relative
+  Lambada drop on LLaMA-7B (0.736 → 0.557). Where a real deployment lands inside
+  that band is the variant's real exposure, not its rate.
+- **A modelling defect is left in deliberately and is recorded.** The balanced
+  ROM+MAC floorplan rule sizes the MAC array at one weight byte per
+  multiply-accumulate against a hard-coded fp8 compute density. At 4.25 bits a
+  byte carries 1.88 weights, so the MAC array is under-provisioned by that factor
+  and the array over-provisioned. The rule is exactly right at 16 bits on a bf16
+  datapath, which is why the BF16 primary is untouched by it. It is **not** fixed
+  here because fixing it would move **1,456 published ROM points in the *primary*
+  studies** — 728 in each, every `batched` design with `spare_area_policy = rom`
+  on a `w4a8` datapath, all of them DeepSeek, which already executes `w4a8` at
+  its released packing of 4.70 and 4.46 bits — and this revision's rule is that
+  the primary does not move except where the design selection moves it. It should be fixed on its own, where the size of
+  the correction is the only thing being read.
+- **Four genuine mask-ROM advantages have no term in this model** and the variant
+  must not be argued on them: zero scale storage, zero dequantisation
+  instructions and energy, free non-byte-aligned widths, free codebook
+  quantisation. One genuine mask-ROM *dis*advantage is equally unmodelled: a
+  mask ROM cannot be re-quantised after tape-out, so a bad quantisation is a
+  scrapped mask set — a risk with no GPU counterpart.
+
+**What would make it a measurement** is listed in the variant's own report:
+quantise Qwen3-8B and run the existing HBM lane (the FP4 quantise/reconstruct
+contracts already exist and are executed for DeepSeek); build the ROM lane, where
+nothing exists; replace the impossible oracle-identity gate with cross-backend
+identity at the *same* format plus a measured accuracy budget; and put silicon
+behind the `w4a8` compute density at N6.
 
 ---
 

@@ -952,3 +952,297 @@ def test_retained_campaign_artifact_is_bound_to_these_sources() -> None:
     for path, digest in retained["source_sha256"].items():
         actual = campaign.sha256_file(ROOT / path)
         assert actual == digest, f"{path} changed since the campaign was recorded"
+
+
+# ---------------------------------------------------------------------------
+# 4. the deployments this program ships, co-simulated
+# ---------------------------------------------------------------------------
+# The 64 vectors above are real ABI 3.0 programs written *for* the campaign.
+# These bind the separate campaign that replays the three programs the project
+# claims to run.  The deployment bundles live under the ignored build/ tree, so
+# anything that needs one skips; everything that can be checked from the
+# committed vector images and the retained artifact runs unconditionally.
+DEPLOYMENT_VECTOR_DIR = ROOT / "testdata/compiler/abi3_deployment"
+DEPLOYMENT_VECTOR_JSON = DEPLOYMENT_VECTOR_DIR / "abi3_deployment_rtl_vectors.json"
+DEPLOYMENT_CAMPAIGN_JSON = ROOT / "results/rtl/abi3_deployment_campaign.json"
+
+
+def _deployment_vectors() -> dict:
+    return json.loads(DEPLOYMENT_VECTOR_JSON.read_text(encoding="utf-8"))
+
+
+def _deployment_bundles_present() -> bool:
+    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
+
+    return all(
+        (ROOT / target.deployment).exists()
+        for target in deployment_generator.TARGETS
+    )
+
+
+def test_deployment_vector_set_names_the_programs_this_program_ships() -> None:
+    """The digests are the contract: a rebuilt deployment is a different one."""
+    vectors = _deployment_vectors()
+    shipped = {
+        entry["key"]: entry for entry in vectors["deployments"]
+    }
+    assert shipped["qwen3-8b-rom-single-chip"]["deployment_sha256"].startswith(
+        "a60d8500"
+    )
+    assert shipped["qwen3-8b-rom-single-chip"]["instruction_count"] == 75
+    assert shipped["qwen3-8b-rom-single-chip"]["descriptor_count"] == 239
+    assert shipped["qwen3-8b-hbm-single-chip"]["deployment_sha256"].startswith(
+        "05bf410b"
+    )
+    assert shipped["qwen3-8b-hbm-single-chip"]["instruction_count"] == 75
+    assert shipped["qwen3-8b-hbm-single-chip"]["descriptor_count"] == 218
+    assert shipped["deepseek-v4-flash-rom-wafer"][
+        "deployment_sha256"
+    ].startswith("507e0b57")
+    assert shipped["deepseek-v4-flash-rom-wafer"]["instruction_count"] == 1156
+    assert shipped["deepseek-v4-flash-rom-wafer"]["descriptor_count"] == 3387
+    for entry in shipped.values():
+        assert entry["admitted"], (entry["key"], entry["verifier_errors"])
+
+
+def test_deployment_vector_images_match_the_recorded_digests() -> None:
+    vectors = _deployment_vectors()
+    for name, digest in vectors["image_sha256"].items():
+        assert campaign.sha256_file(DEPLOYMENT_VECTOR_DIR / name) == digest, name
+
+
+def test_deployment_vector_set_reads_the_rtl_bounds_from_the_rtl() -> None:
+    """A bound restated in a second place is a bound that will disagree.
+
+    The vector set records the sequencer's implementation bounds as they stand
+    in ``rtl/abi3/ot_a3_pkg.sv``; if that file changes, the record is stale and
+    the campaign has to be re-recorded rather than quietly reinterpreted.
+    """
+    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
+
+    recorded = _deployment_vectors()["rtl_implementation_bounds"]
+    assert recorded["source"] == "rtl/abi3/ot_a3_pkg.sv"
+    assert recorded["values"] == deployment_generator.rtl_bounds()
+
+
+def test_deployment_depth_is_recorded_per_case_not_assumed() -> None:
+    """Every case says how deep it went, in the program's own terms."""
+    vectors = _deployment_vectors()
+    assert vectors["case_count"] == len(vectors["cases"])
+    for record in vectors["cases"]:
+        depth = record["depth"]
+        assert depth["instructions_retired"] > 0
+        assert depth["engine_issues"] > 0
+        assert (
+            depth["distinct_static_instructions_reached"]
+            <= depth["static_instructions_in_program"]
+        )
+        # A prefix that stops early has to say so; these all reach COMPLETE.
+        assert record["ran_to_completion"]
+        assert not record["work_bound_lowered_for_cosimulation"]
+    assert vectors["view_resolution_count"] > 0
+    assert vectors["issue_event_count"] == sum(
+        record["issue_count"] for record in vectors["cases"]
+    )
+
+
+@pytest.mark.skipif(
+    not _deployment_bundles_present(),
+    reason="the deployment bundles are not built (build/ is ignored)",
+)
+def test_deployment_vector_set_is_reproducible(tmp_path: Path) -> None:
+    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
+
+    assert deployment_generator.build(["--output", str(tmp_path)]) == 0
+    for name in sorted(_deployment_vectors()["image_sha256"]):
+        assert (tmp_path / name).read_bytes() == (
+            DEPLOYMENT_VECTOR_DIR / name
+        ).read_bytes(), name
+    rebuilt = json.loads(
+        (tmp_path / "abi3_deployment_rtl_vectors.json").read_text(encoding="utf-8")
+    )
+    assert rebuilt == _deployment_vectors()
+
+
+@pytest.mark.skipif(
+    not _deployment_bundles_present(),
+    reason="the deployment bundles are not built (build/ is ignored)",
+)
+def test_a_lowered_work_bound_bounds_both_sides(tmp_path: Path) -> None:
+    """The knob that would bound a prefix, exercised rather than advertised.
+
+    None of the six cases needs it -- every one reaches COMPLETE inside its own
+    declared bound -- but a bounding mechanism nobody runs is a bounding
+    mechanism nobody knows works.  Lowering it must stop the golden model at
+    the bound, leave the *declared* header bound untouched so header admission
+    still checks the real program, and say so per case.
+    """
+    from tools import build_abi3_deployment_rtl_vectors as deployment_generator
+
+    assert (
+        deployment_generator.build(
+            ["--output", str(tmp_path), "--max-retired-work", "1000"]
+        )
+        == 0
+    )
+    bounded = json.loads(
+        (tmp_path / "abi3_deployment_rtl_vectors.json").read_text(encoding="utf-8")
+    )
+    assert bounded["completion_count"] == 0
+    for record, unbounded in zip(bounded["cases"], _deployment_vectors()["cases"]):
+        assert record["work_bound_lowered_for_cosimulation"]
+        assert record["work_bound"] == 1000
+        assert not record["ran_to_completion"]
+        assert record["depth"]["instructions_retired"] == 1001
+        # The header still declares what the program declares.
+        assert (
+            record["declared_max_retired_work"]
+            == unbounded["declared_max_retired_work"]
+        )
+        # A prefix is a prefix: it is the same issue stream, truncated.
+        assert record["issue_count"] < unbounded["issue_count"]
+
+
+@pytest.mark.skipif(
+    not DEPLOYMENT_CAMPAIGN_JSON.exists(),
+    reason="no retained deployment campaign artifact",
+)
+def test_retained_deployment_campaign_is_bound_to_these_sources() -> None:
+    retained = json.loads(DEPLOYMENT_CAMPAIGN_JSON.read_text(encoding="utf-8"))
+    assert retained["required_marker"] == _deployment_vectors()["required_marker"]
+    assert DEPLOYMENT_CAMPAIGN_JSON.read_bytes() == (
+        json.dumps(retained, indent=2, sort_keys=True) + "\n"
+    ).encode("utf-8")
+    for path, digest in retained["source_sha256"].items():
+        actual = campaign.sha256_file(ROOT / path)
+        assert actual == digest, f"{path} changed since the campaign was recorded"
+    assert retained["simulators_counted"] == [
+        "iverilog_vvp",
+        "verilator_cpp_executable",
+    ]
+    assert retained["cross_simulator_agreement"][
+        "simulators_observed_the_same_cases"
+    ], "the two simulators did not observe the same thing"
+    # A pass and a recorded divergence cannot both be true.
+    assert (retained["status"] == "pass") == (not retained["divergences"])
+
+
+@pytest.mark.skipif(
+    not DEPLOYMENT_CAMPAIGN_JSON.exists(),
+    reason="no retained deployment campaign artifact",
+)
+def test_a_deployment_within_the_rtl_bounds_correlates_exactly() -> None:
+    """The invariant this campaign exists to hold.
+
+    A shipped deployment whose demands fit the bounds ``rtl/abi3/ot_a3_pkg.sv``
+    declares must correlate with ``runtime.sim.device.Device`` on every case; a
+    deployment that exceeds one of those bounds is expected to diverge, and the
+    artifact has to say which bound and where.  Written this way the test holds
+    both today, with DeepSeek-V4-Flash over the state-slot bound, and after the
+    bound is raised and it correlates -- and it fails if a deployment is quietly
+    dropped from the campaign to make it green.
+    """
+    retained = json.loads(DEPLOYMENT_CAMPAIGN_JSON.read_text(encoding="utf-8"))
+    vectors = _deployment_vectors()
+    diverged = {entry["case"] for entry in retained["divergences"]}
+    correlated = set(retained["correlated_cases"])
+    assert diverged | correlated == {record["name"] for record in vectors["cases"]}
+    assert not (diverged & correlated)
+
+    for deployment in retained["what_ran"]["deployments"]:
+        cases = [
+            record["name"]
+            for record in vectors["cases"]
+            if record["deployment"] == deployment["key"]
+        ]
+        assert cases, deployment["key"]
+        if deployment["co_simulable_within_rtl_bounds"]:
+            assert set(cases) <= correlated, (
+                f"{deployment['key']} fits every bound the RTL declares and "
+                "must correlate on every case"
+            )
+        else:
+            assert set(cases) <= diverged, deployment["key"]
+            assert deployment["rtl_bound_overruns"], deployment["key"]
+
+
+@pytest.mark.skipif(
+    not DEPLOYMENT_CAMPAIGN_JSON.exists(),
+    reason="no retained deployment campaign artifact",
+)
+def test_deployment_campaign_states_what_it_does_not_establish() -> None:
+    retained = json.loads(DEPLOYMENT_CAMPAIGN_JSON.read_text(encoding="utf-8"))
+    boundary = retained["claim_boundary"]
+    assert set(boundary) == {"establishes", "does_not_establish"}
+    assert boundary["establishes"]
+    prose = " ".join(boundary["does_not_establish"].values())
+    assert "engine_arithmetic" in boundary["does_not_establish"]
+    assert "no checkpoint byte is read" in prose
+    for deployment in retained["what_ran"]["deployments"]:
+        if not deployment["co_simulable_within_rtl_bounds"]:
+            assert deployment["deployment_sha256"][:8] in prose, (
+                "a deployment the campaign could not run has to be named in "
+                "the claim boundary, not only in the divergence list"
+            )
+    # What the sequencer dispatches to, and how little of it exists.
+    coverage = retained["engine_coverage"]
+    assert coverage["distinct_opcodes_this_run_reached"] > 0
+    assert (
+        coverage["distinct_opcodes_this_run_reached"]
+        <= coverage["distinct_opcodes_the_shipped_programs_issue"]
+    )
+
+
+def test_deployment_campaign_refuses_to_overwrite_an_artifact(
+    tmp_path: Path,
+) -> None:
+    from tools import rtl_abi3_deployment_campaign as deployment_campaign
+
+    target = tmp_path / "abi3_deployment_campaign.json"
+    target.write_text("{}\n", encoding="utf-8")
+    assert deployment_campaign.main(["--output", str(target)]) == 2
+    assert target.read_text(encoding="utf-8") == "{}\n"
+
+
+@pytest.mark.skipif(
+    not TOOLS_AVAILABLE, reason="Icarus, vvp and a C++ compiler are required"
+)
+def test_deployment_campaign_replays_both_simulators(tmp_path: Path) -> None:
+    """Both simulators, on the real programs, seeing the same thing.
+
+    The run is expected to be red while a shipped deployment exceeds an RTL
+    bound, so what is asserted is not a pass: it is that both engines compiled
+    and ran, that they observed the *same* cases -- including the same
+    divergence, at the same instruction, with the same values -- and that the
+    two Qwen deployments correlated in full.
+    """
+    from tools import rtl_abi3_deployment_campaign as deployment_campaign
+
+    summary = deployment_campaign.run(tmp_path / "build")
+    assert [case["name"] for case in summary["cases"]] == ["iverilog", "verilator"]
+    for case in summary["cases"]:
+        assert case["compile_returncode"] == 0, case["compile_log"]
+        assert case["checks"] and case["checks"] > 0
+        assert "/tmp/" not in case["compile_command"]
+    assert "Verilator 5.05" in summary["tools"]["verilator"]["version"]
+    assert "version 11.0" in summary["tools"]["iverilog"]["version"]
+    assert summary["cross_simulator_agreement"][
+        "simulators_observed_the_same_cases"
+    ]
+    assert (
+        summary["cases"][0]["checks"] == summary["cases"][1]["checks"]
+    ), "the two checkers compared a different number of things"
+    assert (
+        summary["cases"][0]["signal_flag_cases"]
+        == summary["cases"][1]["signal_flag_cases"]
+    )
+    correlated = set(summary["correlated_cases"])
+    for record in _deployment_vectors()["cases"]:
+        deployment = next(
+            entry
+            for entry in _deployment_vectors()["deployments"]
+            if entry["key"] == record["deployment"]
+        )
+        if deployment["co_simulable_within_rtl_bounds"]:
+            assert record["name"] in correlated, record["name"]
+    assert (summary["status"] == "pass") == (not summary["divergences"])

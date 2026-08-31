@@ -21,6 +21,7 @@ import pytest
 from runtime.abi3.capability import Capability, canonical_json
 from runtime.abi3.constants import (
     Control,
+    Dma,
     Reduction,
     Selection,
     Tensor,
@@ -92,7 +93,25 @@ SKY130_ROM = HARDWARE / "abi3_cost_sky130_rom_v1.json"
 CLUSTER32 = HARDWARE / "abi3_cost_cluster32_v1.json"
 WAFER = HARDWARE / "abi3_cost_wafer_v1.json"
 
-SHIPPED_TABLES = [BASELINE, ASAP7, SKY130_ROM, CLUSTER32, WAFER]
+#: W9.5.  Derived by ``tools/build_abi3_cost_tables.py`` from the routed blocks
+#: and the executed RTL campaigns, rather than written by hand.
+ASAP7_V2 = HARDWARE / "abi3_cost_asap7_v2.json"
+SKY130_ROM_V2 = HARDWARE / "abi3_cost_sky130_rom_v2.json"
+IHP_SG13G2 = HARDWARE / "abi3_cost_ihp_sg13g2_v1.json"
+CLUSTER32_V2 = HARDWARE / "abi3_cost_cluster32_v2.json"
+WAFER_V2 = HARDWARE / "abi3_cost_wafer_v2.json"
+
+#: Views where a block of the machine has actually been routed, so the clock is
+#: a post-route result rather than an assumption.
+ROUTED_CLOCK_TABLES = [ASAP7_V2, SKY130_ROM_V2, IHP_SG13G2]
+
+#: Every table the generator produces.  The cluster and wafer views get the
+#: measured engine rates -- a rate is the RTL's own cycle behaviour and does not
+#: depend on the node -- but keep an assumed clock, because nothing of a
+#: multi-node or on-wafer machine has been routed.
+DERIVED_TABLES = [*ROUTED_CLOCK_TABLES, CLUSTER32_V2, WAFER_V2]
+
+SHIPPED_TABLES = [BASELINE, ASAP7, SKY130_ROM, CLUSTER32, WAFER, *DERIVED_TABLES]
 
 STATE_ROWS = 64
 ROW_ELEMS = 8
@@ -175,6 +194,44 @@ def synthetic_state_deployment(
         permissions=int(Permission.READ | Permission.WRITE),
         key="view.kv",
     )
+    # Amendment A21 makes the commit policy a fact about the descriptor table:
+    # a prepared image no descriptor names as a destination is UNSTAGED, and
+    # its commit publishes nothing.  Before A21 this fixture's commit wrote
+    # ``ROW_ELEMS * 2`` bytes; afterwards it silently wrote zero, because
+    # nothing here staged a row.  The staging DMA below is what makes the
+    # commit real again, so ``state.bytes_written`` is a measurement rather
+    # than a missing key.
+    stage_source = builder.tensor_view(
+        object_id=scratch,
+        dtype=DType.BF16,
+        dims=[1, ROW_ELEMS],
+        key="view.stage.source",
+    )
+    stage_destination = builder.tensor_view(
+        object_id=prepared,
+        dtype=DType.BF16,
+        dims=[1, ROW_ELEMS],
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.stage.destination",
+    )
+    stage_schedule = builder.schedule(
+        engine_family=Major.DMA,
+        tile_rows=1,
+        tile_cols=ROW_ELEMS,
+        tile_depth=1,
+        max_outstanding=1,
+        issue_window=1,
+        key="sched.stage",
+    )
+    stage_op = builder.operator(
+        engine_family=Major.DMA,
+        engine_sub=Dma.TRANSFER,
+        inputs=[stage_source],
+        outputs=[stage_destination],
+        schedule_id=stage_schedule,
+        source_kernel_id=5,
+        key="op.stage",
+    )
     state = builder.state(
         state_class=StateClass.KV_CACHE,
         committed_object_id=committed,
@@ -220,8 +277,17 @@ def synthetic_state_deployment(
 
     prepare_event = builder.new_event()
     read_event = builder.new_event()
+    stage_event = builder.new_event()
     builder.emit(
         Major.STATE, State.PREPARE, descriptor_id=state, signal_event_id=prepare_event
+    )
+    builder.emit(
+        Major.DMA,
+        Dma.TRANSFER,
+        descriptor_id=stage_op,
+        wait_set_id=builder.wait_set([prepare_event], key="wait.stage"),
+        signal_event_id=stage_event,
+        source_operation_id=5,
     )
     builder.open_loop(loop)
     builder.emit(
@@ -234,7 +300,7 @@ def synthetic_state_deployment(
         Major.STATE,
         State.READ,
         descriptor_id=state,
-        wait_set_id=builder.wait_set([prepare_event], key="wait.prepare"),
+        wait_set_id=builder.wait_set([stage_event], key="wait.prepare"),
         signal_event_id=read_event,
     )
     builder.emit(Major.RECOVERY, Recovery.DRAIN)
@@ -504,6 +570,41 @@ def synthetic_tiled_deployment(
         permissions=int(Permission.READ | Permission.WRITE),
         key="view.kv",
     )
+    # Amendment A21: without a descriptor that names ``kv_prepared`` as a
+    # destination this deployment's STATE.COMMIT is UNSTAGED and moves zero
+    # bytes, which would leave every state-traffic assertion below true of a
+    # machine that did nothing.  One row is staged so the commit is real.
+    kv_stage_source = builder.tensor_view(
+        object_id=activations,
+        dtype=DType.BF16,
+        dims=[1, TILE_DEPTH],
+        key="view.kv.stage.source",
+    )
+    kv_stage_destination = builder.tensor_view(
+        object_id=kv_prepared,
+        dtype=DType.BF16,
+        dims=[1, TILE_DEPTH],
+        permissions=int(Permission.READ | Permission.WRITE),
+        key="view.kv.stage.destination",
+    )
+    kv_stage_schedule = builder.schedule(
+        engine_family=Major.DMA,
+        tile_rows=1,
+        tile_cols=tile_cols,
+        tile_depth=1,
+        max_outstanding=max_outstanding,
+        issue_window=1,
+        key="sched.kv.stage",
+    )
+    kv_stage_op = builder.operator(
+        engine_family=Major.DMA,
+        engine_sub=Dma.TRANSFER,
+        inputs=[kv_stage_source],
+        outputs=[kv_stage_destination],
+        schedule_id=kv_stage_schedule,
+        source_kernel_id=5,
+        key="op.kv.stage",
+    )
 
     matmul_op = builder.operator(
         engine_family=Major.TENSOR,
@@ -635,6 +736,12 @@ def synthetic_tiled_deployment(
         descriptor_id=append_op,
         wait_set_id=builder.wait_set([argmax_event], key="wait.argmax"),
         source_operation_id=4,
+    )
+    builder.emit(
+        Major.DMA,
+        Dma.TRANSFER,
+        descriptor_id=kv_stage_op,
+        source_operation_id=5,
     )
     builder.emit(Major.STATE, State.COMMIT, descriptor_id=kv_state)
     builder.emit(Major.CONTROL, Control.COMPLETE)
@@ -833,6 +940,212 @@ def test_bandwidth_conversion_carries_the_datasheet_source():
     assert resolved.provenance is Provenance.ASSUMED
 
 
+def test_work_over_cycles_shows_its_division_instead_of_a_bare_quotient():
+    """A measured rate arrives as two operands, and the model divides them.
+
+    ``docs/METHODOLOGY.md`` section 0: where a figure is the author's
+    arithmetic on two cited cells, the document shows the division.  A rate
+    pre-divided by hand is a number whose derivation lives only in prose.
+    """
+    table = load_cost_table(ASAP7_V2)
+    entry = table.entry("engine.tensor.work_per_lane_cycle")
+    assert entry["convert"] == "work_over_cycles"
+    assert entry["work_units"] > 0 and entry["cycles"] > 0
+    machine = MachineModel(fixture_capability(), table)
+    tensor = machine.engine("tensor")
+    assert tensor.work_per_lane_cycle == entry["work_units"] / entry["cycles"]
+    resolved = machine.used()["engine.tensor.work_per_lane_cycle"]
+    assert resolved.provenance is Provenance.CHARACTERIZED
+    assert str(entry["work_units"]) in resolved.note
+    assert str(entry["cycles"]) in resolved.note
+
+
+def test_a_measured_rate_that_disagrees_with_its_own_operands_is_refused(
+    tmp_path: Path,
+):
+    """The stated quotient and the stated operands must be the same number.
+
+    This is the defect class this repository keeps finding: a legal value, no
+    trap, nothing refused.  A table that says 1.0 while its operands say 0.34
+    would time the machine at the number nobody measured.
+    """
+    body = json.loads(ASAP7_V2.read_text())
+    body["parameters"]["engine.tensor.work_per_lane_cycle"]["value"] = 1.0
+    path = tmp_path / "abi3_cost_liar.json"
+    path.write_text(json.dumps(body))
+    machine = MachineModel(fixture_capability(), load_cost_table(path))
+    with pytest.raises(MachineError, match="states 1.0 but"):
+        machine.engine("tensor")
+
+
+def test_a_measured_rate_needs_both_operands(tmp_path: Path):
+    body = json.loads(ASAP7_V2.read_text())
+    del body["parameters"]["engine.tensor.work_per_lane_cycle"]["cycles"]
+    path = tmp_path / "abi3_cost_halfmeasured.json"
+    path.write_text(json.dumps(body))
+    machine = MachineModel(fixture_capability(), load_cost_table(path))
+    with pytest.raises(MachineError, match="'work_units' and a 'cycles'"):
+        machine.engine("tensor")
+
+
+def test_a_measured_rate_does_not_borrow_the_clock_s_provenance(tmp_path: Path):
+    """A work-per-cycle rate is the same number at any frequency.
+
+    ``ns_to_cycles`` and the bandwidth conversion both divide by the clock and
+    are therefore no stronger than it.  This one does not, so an assumed clock
+    must not drag a measured rate down with it -- and a characterized clock
+    must not prop a bad one up.
+    """
+    body = json.loads(ASAP7_V2.read_text())
+    body["parameters"]["clock.frequency_hz"] = {
+        "value": 1e9,
+        "unit": "Hz",
+        "provenance": "assumed",
+    }
+    path = tmp_path / "abi3_cost_assumedclock.json"
+    path.write_text(json.dumps(body))
+    machine = MachineModel(fixture_capability(), load_cost_table(path))
+    machine.engine("tensor")
+    assert (
+        machine.used()["engine.tensor.work_per_lane_cycle"].provenance
+        is Provenance.CHARACTERIZED
+    )
+
+
+@pytest.mark.parametrize("path", ROUTED_CLOCK_TABLES, ids=lambda p: p.name)
+def test_a_derived_table_names_the_engines_that_have_no_routed_block(path: Path):
+    """The clock is an upper bound, and the table has to say why.
+
+    A routed view's core clock is the minimum over the blocks routed so far.
+    Families with no routed block can only lower it, so a table that did not
+    name them would read as a measurement of the whole machine.
+    """
+    body = json.loads(path.read_text())
+    derived = body["derived_from"]
+    assert derived["generator"] == "tools/build_abi3_cost_tables.py"
+    assert derived["clock_is_routed"] is True
+    clock = body["parameters"]["clock.frequency_hz"]
+    assert clock["provenance"] == "characterized"
+    uncovered = derived["engine_families_with_no_routed_block"]
+    for family in uncovered:
+        assert family in clock["note"], (
+            f"{family} has no routed block and the clock note does not say so"
+        )
+    if uncovered:
+        assert "upper bound" in clock["note"]
+    else:
+        assert "not an upper bound" in clock["note"]
+    # Whatever is covered must be named too: the note is where a reader learns
+    # which block set the clock and which ones it beat.
+    assert "minimum post-route fmax" in clock["note"]
+
+
+def test_the_asap7_clock_is_the_routed_tensor_engine_not_the_integer_proxy():
+    """The block the machine spends its cycles in is the one that sets the clock.
+
+    ``abi3-cost-asap7-v1`` took its clock from ``ot_numeric_dot``, whose own
+    campaign claim boundary says it implements signed integer DV and *not* the
+    BF16 arithmetic this program targets.  ``ot_ta_matmul_bf16_sram_engine`` is
+    the real tensor engine, it is now routed on the same platform and corner,
+    and it closes several times slower.  A core clock taken from a proxy that
+    is faster than the block it stands in for is the optimistic direction, so
+    this test pins the replacement.
+    """
+    routed = json.loads(
+        (
+            REPO / "results" / "physical_abi3" / "asap7"
+            / "matmul_bf16_sram_engine" / "pnr.json"
+        ).read_text()
+    )
+    metrics = routed["place_and_route"]["metrics"]
+    assert routed["design"]["top"] == "ot_ta_matmul_bf16_sram_engine"
+    assert metrics["drc_errors"] == 0
+    assert metrics["setup_violations"] == 0 and metrics["hold_violations"] == 0
+    table = json.loads(ASAP7_V2.read_text())
+    clock = table["parameters"]["clock.frequency_hz"]
+    assert clock["value"] == metrics["fmax_hz"]
+    assert "matmul_bf16_sram_engine" in clock["source"]
+    hand = json.loads(ASAP7.read_text())["parameters"]["clock.frequency_hz"]
+    assert clock["value"] < hand["value"], (
+        "the routed tensor engine is meant to be the binding, slower block"
+    )
+    assert "tensor" not in table["derived_from"][
+        "engine_families_with_no_routed_block"
+    ]
+
+
+@pytest.mark.parametrize("path", [CLUSTER32_V2, WAFER_V2], ids=lambda p: p.name)
+def test_an_unrouted_view_keeps_its_assumed_clock(path: Path):
+    """A measured rate must not smuggle in a clock from a different view.
+
+    ADR-003 section 3.5 forbids mixing views, and the easiest way to break that
+    rule by accident is to give a table one view's measured rate and another
+    view's routed frequency.  Nothing of a 32-node or wafer machine has been
+    routed, so these tables take the rates and keep the assumption.
+    """
+    body = json.loads(path.read_text())
+    assert body["derived_from"]["clock_is_routed"] is False
+    assert body["parameters"]["clock.frequency_hz"]["provenance"] == "assumed"
+    assert body["parameters"]["engine.tensor.work_per_lane_cycle"][
+        "provenance"
+    ] == "characterized"
+    # Every family is uncovered, because no block of this machine is routed.
+    uncovered = body["derived_from"]["engine_families_with_no_routed_block"]
+    assert set(uncovered) >= {"tensor", "vector", "reduction", "link"}
+    machine = MachineModel(
+        cycle_capability(
+            TopologyClass.CLUSTER_32
+            if "cluster" in path.name
+            else TopologyClass.WAFER_LOGICAL_DEVICE
+        ),
+        load_cost_table(path),
+    )
+    machine.engine("tensor")
+    assert machine.provenance_class() is Provenance.ASSUMED
+
+
+@pytest.mark.parametrize("path", DERIVED_TABLES, ids=lambda p: p.name)
+def test_the_reduction_rate_is_measured_and_matches_its_campaign(path: Path):
+    """An assumption that turns out to be right is still worth measuring.
+
+    ``engine.reduction.work_per_lane_cycle`` was a hand-written 1.0.  The
+    endpoint that implements the family is routed in both physical views, and
+    two simulators now measure its rate directly, so the table carries the
+    measurement.  It lands just under 1.0 -- the assumption was very nearly
+    right, which is a result, and one nobody could have stated before.
+    """
+    campaign = json.loads((REPO / "results" / "rtl" / "abi3_engine_rate.json").read_text())
+    case = next(
+        c for c in campaign["cases"] if c["engine_family"] == "reduction"
+    )
+    assert case["simulators_agree"] is True
+    assert {run["simulator"] for run in case["runs"]} == {"iverilog", "verilator"}
+    entry = json.loads(path.read_text())["parameters"][
+        "engine.reduction.work_per_lane_cycle"
+    ]
+    assert entry["provenance"] == "characterized"
+    assert entry["work_units"] == case["work_units"]
+    assert entry["cycles"] == case["cycles"]
+    machine = MachineModel(fixture_capability(), load_cost_table(path))
+    assert machine.engine("reduction").work_per_lane_cycle == pytest.approx(
+        case["work_units"] / case["cycles"]
+    )
+    # The bench counts the drain, so it cannot overstate the engine.
+    assert entry["value"] <= 1.0
+
+
+def test_the_derived_tables_still_match_the_artifacts_they_cite():
+    """``--check`` is the guard that a cost table did not drift from evidence."""
+    completed = subprocess.run(
+        [sys.executable, str(REPO / "tools" / "build_abi3_cost_tables.py"), "--check"],
+        cwd=REPO,
+        env={"PYTHONPATH": str(REPO), "PATH": "/usr/bin:/bin"},
+        capture_output=True,
+        text=True,
+    )
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+
+
 def test_capability_supplies_structure_and_cost_table_supplies_rates():
     capability = fixture_capability()
     machine = MachineModel(capability, load_cost_table(BASELINE))
@@ -914,7 +1227,12 @@ def test_synthetic_deployment_completes_and_agrees():
     # The transaction really did work: it committed state bytes and iterated.
     assert counters["state.commits"] == 1
     assert counters["state.rows_committed"] == 1
-    assert counters["state.bytes_written"] == ROW_ELEMS * 2
+    # Two writes into the STATE class, not one: the staging DMA puts a row into
+    # the prepared image and the commit publishes that row into the committed
+    # image.  Amendment A21 is what makes the first of those mandatory -- an
+    # unstaged prepared image commits nothing at all.
+    assert counters["state.bytes_written"] == 2 * ROW_ELEMS * 2
+    assert counters.get("state.unstaged_commits", 0) == 0
     assert counters["control.loop_iterations"] == 4
     assert counters["fault.drains"] == 1
 
@@ -954,6 +1272,51 @@ def test_agreement_holds_across_cost_tables():
     second = CycleModel(deployment, capability, load_cost_table(ASAP7)).run(req)
     assert first.architectural == second.architectural
     assert first.to_dict()["timing"]["seconds"] != second.to_dict()["timing"]["seconds"]
+
+
+def test_a_measured_engine_rate_changes_the_timing_and_nothing_else():
+    """W9.5, stated as a property.
+
+    Feeding a characterized rate back in is only legitimate if it moves the
+    clock and leaves the architecture alone.  The tiled deployment contracts,
+    so its tensor time is real work; the derived table must slow it down --
+    the measured engine retires 0.35 work units per cycle where the hand
+    table assumed one -- without moving a single architectural counter.
+    """
+    deployment, capability = synthetic_tiled_deployment()
+    req = request()
+    hand = CycleModel(deployment, capability, load_cost_table(ASAP7)).run(req)
+    measured = CycleModel(deployment, capability, load_cost_table(ASAP7_V2)).run(req)
+    assert hand.architectural == measured.architectural
+    hand_body = hand.to_dict()
+    measured_body = measured.to_dict()
+    hand_tensor = hand_body["engines"]["tensor"]
+    measured_tensor = measured_body["engines"]["tensor"]
+    assert hand_tensor["issued_tile_work"] == measured_tensor["issued_tile_work"]
+    assert measured_tensor["busy_cycles"] > hand_tensor["busy_cycles"]
+    assert measured_body["timing"]["total_cycles"] > hand_body["timing"]["total_cycles"]
+
+
+def test_making_the_clock_characterized_promotes_what_divides_by_it():
+    """A conversion is no stronger than its weakest input -- in both directions.
+
+    The SKY130 view's ROM read latency is a real ngspice measurement that v1
+    had to report as ``assumed``, because turning nanoseconds into cycles
+    needed a clock nobody had measured.  A routed clock does not make the SPICE
+    run better; it removes the assumption that was hiding it.
+    """
+    hand = load_cost_table(SKY130_ROM)
+    derived = load_cost_table(SKY130_ROM_V2)
+    assert hand.resolve("clock.frequency_hz").provenance is Provenance.ASSUMED
+    assert derived.resolve("clock.frequency_hz").provenance is Provenance.CHARACTERIZED
+    # The underlying SPICE figure is the same nanosecond number in both.
+    assert hand.entry("rom.read_latency_cycles")["value"] == (
+        derived.entry("rom.read_latency_cycles")["value"]
+    )
+    for table, expected in ((hand, Provenance.ASSUMED), (derived, Provenance.CHARACTERIZED)):
+        machine = MachineModel(fixture_capability(), table)
+        machine.memory()
+        assert machine.used()["rom.read_latency_cycles"].provenance is expected
 
 
 def test_timing_counters_are_disjoint_from_architectural_counters():
@@ -1001,8 +1364,9 @@ def test_tile_count_follows_the_schedule_not_the_program():
     assert tensor["tiles"] == 2 * 4 * 4
     assert tensor["tile_shapes"][0]["tile_rows"] == 4
     assert body["tiling"]["source"] == "SCHEDULE descriptor"
-    # The program itself contains no tile loop.
-    assert body["execution"]["retired"] == 8
+    # The program itself contains no tile loop: eight operations plus the
+    # amendment-A21 staging DMA that makes the commit publish real rows.
+    assert body["execution"]["retired"] == 9
 
 
 def test_tile_shape_changes_cycles_but_never_architectural_counters():
@@ -1300,7 +1664,7 @@ def test_acyclic_waits_proof_passes_on_an_admitted_program():
     device = Device(deployment, capability)
     proof = prove_acyclic_waits(device)
     assert proof["proved"], proof["violations"]
-    assert proof["dependency_edges"] == 2
+    assert proof["dependency_edges"] == 3
 
 
 def test_acyclic_waits_proof_catches_a_wait_on_a_later_signal():
@@ -1393,10 +1757,12 @@ def test_state_traffic_is_timed_in_its_backing_storage_class():
     ).to_dict()
     memory = body["memory"]
     assert memory["state_backing_storage_class"] == "SRAM"
-    # The atomic commit reads the prepared extent and writes the committed one.
-    assert memory["sram"]["bytes_read"] == ROW_ELEMS * 2
-    assert memory["sram"]["bytes_written"] == ROW_ELEMS * 2
-    assert memory["sram"]["transactions"] >= 2
+    # Two row-sized reads and two row-sized writes reach the backing class: the
+    # staging DMA reads scratch and writes the prepared image, and the atomic
+    # commit reads that prepared extent and writes the committed one.
+    assert memory["sram"]["bytes_read"] == 2 * ROW_ELEMS * 2
+    assert memory["sram"]["bytes_written"] == 2 * ROW_ELEMS * 2
+    assert memory["sram"]["transactions"] >= 4
     assert memory["sram"]["busy_cycles"] > 0
 
 
@@ -1446,9 +1812,12 @@ def test_memory_report_accounts_for_every_byte_the_device_moved():
 
     HBM, ROM and HOST reconcile exactly.  SRAM carries the state resource as
     well, because ADR-003 leaves a STATE object's placement open and the
-    machine model backs it with SRAM: the atomic commit reads the prepared
-    image and writes the committed one, which is ``state.bytes_written`` in
-    each direction and appears in no architectural SRAM counter.
+    machine model backs it with SRAM.  The two sides differ by different
+    amounts and the difference is the point: the atomic commit *reads* the
+    prepared image and *writes* the committed one, but only the write is an
+    architectural STATE byte, so the read side of the SRAM report exceeds the
+    SRAM counters by one commit payload while the write side exceeds them by
+    every STATE byte written -- the staging DMA's row plus the commit's.
     """
     deployment, capability = synthetic_tiled_deployment(storage_class=StorageClass.HBM)
     result = CycleModel(deployment, capability, load_cost_table(BASELINE)).run(request())
@@ -1461,13 +1830,16 @@ def test_memory_report_accounts_for_every_byte_the_device_moved():
         assert block["bytes_read"] == arch.get(f"{klass}.bytes_read", 0), klass
         assert block["bytes_written"] == arch.get(f"{klass}.bytes_written", 0), klass
 
-    state_bytes = arch.get("state.bytes_written", 0)
-    assert state_bytes > 0
-    assert body["memory"]["sram"]["bytes_read"] == arch["sram.bytes_read"] + state_bytes
+    state_written = arch.get("state.bytes_written", 0)
+    assert state_written > 0, "amendment A21 left this commit unstaged"
+    commit_bytes = arch["state.rows_committed"] * TILE_DEPTH * 2
+    assert body["memory"]["sram"]["bytes_read"] == arch["sram.bytes_read"] + commit_bytes
     assert (
         body["memory"]["sram"]["bytes_written"]
-        == arch["sram.bytes_written"] + state_bytes
+        == arch["sram.bytes_written"] + state_written
     )
+    # One row staged and the same row published.
+    assert state_written == 2 * commit_bytes
     # And the weight traffic really is on the wire, not merely in a counter.
     assert body["memory"]["hbm"]["bytes_read"] > 0
     assert body["memory"]["hbm"]["busy_cycles"] > 0
@@ -1936,6 +2308,87 @@ def test_cli_output_is_reproducible(tmp_path: Path):
     assert first.read_bytes() == second.read_bytes()
 
 
+# ---------------------------------------------------------------------------
+# 12. The characterization sweep (W9.5)
+# ---------------------------------------------------------------------------
+def run_sweep(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, str(REPO / "tools" / "run_abi3_cycle_sweep.py"), *args],
+        cwd=REPO,
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_sweep_records_both_timings_and_proves_one_architecture(tmp_path: Path):
+    """A characterization feedback result is a *pair* of timings, or nothing.
+
+    The number the derived table produces means nothing without the number it
+    replaced, so the sweep records both and the ratio between them, and it
+    proves the property that makes the ratio a cost-table effect: one
+    architecture, two clocks.
+    """
+    root = publish(tmp_path)
+    out = tmp_path / "sweep.json"
+    proc = run_sweep(
+        "--deployment", str(root),
+        "--capability", str(root / "capability.json"),
+        "--baseline", str(ASAP7),
+        "--cost-table", str(ASAP7_V2),
+        *SYMBOLS,
+        "--out", str(out),
+    )
+    assert proc.returncode == 0, proc.stderr
+    raw = out.read_bytes()
+    body = json.loads(raw)
+    assert raw == canonical_json(body), "output is not canonical JSON"
+    assert body["schema"] == "opentallas.abi3.cycle_sweep.v1"
+    assert body["architectural_counters_identical_across_tables"] is True
+    assert body["architectural_counters_compared"] > 0
+    assert len(body["runs"]) == 2
+    comparison = body["comparisons"][0]
+    assert comparison["baseline_cost_table_id"] == "abi3-cost-asap7-v1"
+    assert comparison["cost_table_id"] == "abi3-cost-asap7-v2"
+    # The measured tensor rate is 2.89x slower per lane than the hand value,
+    # so the derived table must not come out faster.
+    assert comparison["cycles_ratio"] > 1.0
+    assert "engine.tensor.work_per_lane_cycle" in (
+        comparison["characterized_parameters_gained"]
+    )
+    assert body["claim_boundary"]
+
+
+def test_sweep_refuses_to_report_a_ratio_between_two_architectures(tmp_path: Path):
+    """If the counters move, the timing difference is not the cost table's.
+
+    The sweep is built so that this cannot be reported as a speedup.  A cost
+    table that changed the architecture would make every ratio in the document
+    a comparison of two different machines.
+    """
+    root = publish(tmp_path)
+    # A capability with fewer events makes the *deployment* refuse, not the
+    # counters move, so instead break the invariant the honest way: give the
+    # second table a state backing class that reroutes traffic, and assert the
+    # tool still finds one architecture.  The counters must not care.
+    body = json.loads(ASAP7_V2.read_text())
+    body["parameters"]["state.backing_storage_class"]["value"] = "HBM"
+    other = tmp_path / "abi3_cost_hbm_state.json"
+    other.write_text(json.dumps(body))
+    out = tmp_path / "sweep.json"
+    proc = run_sweep(
+        "--deployment", str(root),
+        "--capability", str(root / "capability.json"),
+        "--baseline", str(ASAP7),
+        "--cost-table", str(other),
+        *SYMBOLS,
+        "--out", str(out),
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(out.read_text())[
+        "architectural_counters_identical_across_tables"
+    ] is True
+
+
 def publish_unmapped(tmp_path: Path) -> Path:
     """A deployment whose REDUCTION operator deliberately has no schedule."""
     deployment, capability = synthetic_tiled_deployment(schedule_reduction=False)
@@ -2015,17 +2468,55 @@ def discover_real_deployments() -> list[Path]:
 
 REAL_DEPLOYMENTS = discover_real_deployments()
 
+CAPABILITY_CONFIGS = HARDWARE / "abi3_capability"
+
+
+def _published_capability_for(deployment: Deployment) -> Capability | None:
+    """The published capability whose digest this deployment was admitted against.
+
+    A deployment records ``capability_digest``; ``tools/publish_abi3_capabilities.py``
+    writes the records themselves.  Matching on the digest is the only safe
+    join: a capability that merely has the right shape is a different machine,
+    and the verifier would refuse it.
+    """
+    if not CAPABILITY_CONFIGS.is_dir():
+        return None
+    wanted = deployment.capability_digest
+    for path in sorted(CAPABILITY_CONFIGS.glob("*.json")):
+        try:
+            candidate = Capability.from_dict(json.loads(path.read_text()))
+        except (json.JSONDecodeError, OSError, KeyError, ValueError):
+            continue
+        if candidate.digest == wanted:
+            return candidate
+    return None
+
 
 @pytest.mark.skipif(
     not REAL_DEPLOYMENTS, reason="no ABI 3.0 deployment exists under build/ or results/"
 )
 @pytest.mark.parametrize("root", REAL_DEPLOYMENTS, ids=lambda p: p.name)
 def test_real_deployment_counter_agreement(root: Path):
+    """The load-bearing property, on a deployment a backend actually emitted.
+
+    This test skipped for the whole life of the deployments under ``build/``,
+    because ``tools/build_hbm_sram_deployment.py`` writes no ``capability.json``
+    into the deployment root -- so the one check that runs the cycle model
+    against the *real* Qwen program never ran.  A deployment binds the digest of
+    the capability it was admitted against, and the published capabilities are
+    on disk, so the record can be found rather than waited for.
+    """
     deployment = Deployment.read(root)
     capability_path = root / "capability.json"
-    if not capability_path.exists():
-        pytest.skip(f"{root} carries no capability.json")
-    capability = Capability.from_dict(json.loads(capability_path.read_text()))
+    if capability_path.exists():
+        capability = Capability.from_dict(json.loads(capability_path.read_text()))
+    else:
+        capability = _published_capability_for(deployment)
+        if capability is None:
+            pytest.skip(
+                f"{root} carries no capability.json and no published capability "
+                f"has its digest {deployment.capability_digest}"
+            )
     table = {
         int(TopologyClass.SINGLE_CHIP): BASELINE,
         int(TopologyClass.CLUSTER_32): CLUSTER32,

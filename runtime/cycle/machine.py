@@ -367,6 +367,8 @@ class MachineModel:
         entry = self.cost_table.entry(name)
         if entry.get("convert") == "bytes_per_second_to_bytes_per_cycle":
             return self._bandwidth_to_rate(name, minimum=minimum)
+        if entry.get("convert") == "work_over_cycles":
+            return self._measured_rate(name, minimum=minimum)
         raw = self.value(name)
         try:
             number = float(raw)
@@ -417,6 +419,77 @@ class MachineModel:
                     "clock; provenance is the weaker of the bandwidth "
                     f"({source.provenance.value}) and the clock "
                     f"({clock.provenance.value})."
+                    + (f"  {source.note}" if source.note else "")
+                ),
+            )
+        )
+        return rate
+
+    def _measured_rate(self, name: str, *, minimum: float) -> float:
+        """Divide a measured work count by a measured cycle count, here.
+
+        A per-lane rate taken from an executed RTL campaign is *two* numbers
+        from that campaign -- how much work the operation declared and how many
+        cycles the engine took to retire it.  Pre-dividing them by hand puts a
+        quotient in the table whose derivation lives only in a note, which is
+        exactly the shape ``docs/METHODOLOGY.md`` section 0 forbids: "where a
+        figure is the author's arithmetic on two cited cells, the document says
+        so and shows the division".  So the table carries ``work_units`` and
+        ``cycles`` and the division happens here, where the recorded parameter
+        can state both operands.
+
+        Unlike :meth:`_ns_to_cycles` and :meth:`_bandwidth_to_rate` this
+        conversion does *not* touch the clock: a work-per-cycle rate is a
+        property of the RTL's own cycle behaviour and is the same number at any
+        frequency.  Its provenance is therefore the campaign's alone.
+        """
+        entry = self.cost_table.entry(name)
+        if str(entry.get("unit", "")) != "work/lane/cycle":
+            raise MachineError(
+                f"parameter {name!r} requests work_over_cycles but is not "
+                "expressed in work/lane/cycle"
+            )
+        try:
+            work = float(entry["work_units"])
+            cycles = float(entry["cycles"])
+        except (KeyError, TypeError, ValueError):
+            raise MachineError(
+                f"parameter {name!r} converts work over cycles but does not "
+                "carry both a 'work_units' and a 'cycles' operand"
+            ) from None
+        if work <= 0 or cycles <= 0:
+            raise MachineError(
+                f"parameter {name!r} declares a non-positive work "
+                f"({work}) or cycle ({cycles}) count"
+            )
+        source = self.cost_table.resolve(name)
+        rate = work / cycles
+        if rate < minimum:
+            raise MachineError(
+                f"parameter {name!r} converts to {rate} work/lane/cycle, "
+                f"below {minimum}"
+            )
+        # A table that also states the quotient must state it correctly.  The
+        # stated value is the one a reader sees; a disagreement between it and
+        # the division is a defect that leaves no trace anywhere else.
+        stated = entry.get("value")
+        if stated is not None:
+            if abs(float(stated) - rate) > 1e-9 * max(1.0, abs(rate)):
+                raise MachineError(
+                    f"parameter {name!r} states {stated} but "
+                    f"{work:g} work over {cycles:g} cycles is {rate!r}"
+                )
+        self._record(
+            ResolvedParameter(
+                name=name,
+                value=rate,
+                unit="work/lane/cycle",
+                provenance=source.provenance,
+                source=source.source,
+                origin="cost_table",
+                note=(
+                    f"{work:.0f} work units retired in {cycles:.0f} measured "
+                    f"cycles by one engine instance."
                     + (f"  {source.note}" if source.note else "")
                 ),
             )
