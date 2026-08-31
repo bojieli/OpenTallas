@@ -272,14 +272,15 @@ def test_an_unresolvable_annotation_is_refused(tmp_path, body: str, expected: st
 def test_an_ambiguous_row_is_disambiguated_by_its_table(tmp_path) -> None:
     # The value is read from a live generated report, so it moves when
     # `make roofline` reruns and this literal has to move with it -- which is
-    # the same discipline the checker imposes on prose. It was 9.50 until the
-    # per-model design rule landed and the report reran to 8.98.
+    # the same discipline the checker imposes on prose. It was 9.50 before the
+    # per-model design rule, 8.98 after it, and 5.76 after the scale-out link
+    # evidence was corrected.
     document = tmp_path / "ok.md"
     document.write_text(
         "# x\n\n"
-        '<!-- figure: 8.98 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
+        '<!-- figure: 5.76 src="results/roofline/n6_vs_a100/REPORT.md#Ratio after"'
         ' table="latency separation" where="Model=DeepSeek-V4-Flash-0731;mm2=554700" -->\n'
-        "The ratio is 8.98x.\n")
+        "The ratio is 5.76x.\n")
     code, out = _run(document)
     assert code == 0, out
 
