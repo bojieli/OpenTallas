@@ -46,13 +46,23 @@ implementation emits, for this prompt.
 Does **not** establish:
 
 - **Multi-token decode.** One token exercises the forward pass; it says
-  nothing about the KV transaction across decode steps.
+  nothing about the KV transaction across decode steps. **There is no decode
+  step to say anything about:** the first DeepSeek decode step ever run trapped
+  (`results/abi3/deepseek_v4_rom_ta-ds-chat-1-p8_decode_execution.json`),
+  because both backends size the attention KV row space's compressed segment
+  from the request span, which is one at decode. See
+  `docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md`.
 - **Sparse attention.** `window_size` is 128 and `index_topk` is 512, and the
   20 `compress_ratio=128` layers hold zero compressed positions below 128
   tokens. At 32 prompt tokens none of the three thresholds is reached — and
   neither is it at TA-DS-CHAT-1's full 104 tokens. Sparse selection under
   pressure is the `TA-DS-CTX-*` ladder's job and neither gate substitutes for
-  it.
+  it. **That ladder now has rungs a backend run can reach** —
+  `TA-DS-CTX-129-1`, `-160-1`, `-256-1` and `-2052-1`, built by
+  `tools/build_deepseek_v4_context_threshold_workloads.py`, with oracle gold in
+  `results/abi3/deepseek_v4_reference_oracle_threshold.json` — and
+  `docs/DEEPSEEK_SPARSE_ATTENTION_GATE.md` records what running against them
+  established and what it did not.
 - **The HBM lane.** Only the ROM backend has produced a validated DeepSeek
   token. A ROM-vs-HBM comparison requires both sides to run the model.
 - **RTL.** This is the golden-model/simulator path. The DeepSeek deployment

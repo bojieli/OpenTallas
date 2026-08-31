@@ -158,6 +158,81 @@ def load_pins(paths: list[Path]) -> tuple[dict, dict]:
     return prompts, gold
 
 
+def oracle_decode_cross_check(oracle_path: Path, profile: Path) -> dict:
+    """Check the model's *decode* arm against the released implementation.
+
+    The accelerator has never executed a DeepSeek decode step, so the model's
+    decode arm has no accelerator run to be checked against.  The reference
+    oracle's ``--measure-kv`` does record one, per layer, from the released
+    implementation: how many (layer, position) pairs its attention actually
+    visited at a decode step.  That is the same quantity
+    :func:`gathered_rows_for_query` states, so the two are compared directly and
+    per layer -- not as a ratio and not in aggregate, where a compensating pair
+    of errors could hide.
+
+    This is the *only* evidence the decode arm has.  It is evidence about the
+    released implementation and the model, and none at all about a backend.
+    """
+
+    if not oracle_path.exists():
+        return {"available": False, "reason": f"no oracle report at {oracle_path}"}
+    window, _heads, layers = layer_table(profile)
+    body = json.loads(oracle_path.read_text())
+    rungs = []
+    for workload_id, entry in sorted(body.get("results", {}).items()):
+        measurement = entry.get("kv_measurement") or {}
+        for step in measurement.get("decode_steps", []):
+            per_layer = step.get("per_layer") or {}
+            if not per_layer:
+                continue
+            context = int(step["context_tokens"])
+            position = context - 1
+            mismatches = []
+            for index, (ratio, top_k) in enumerate(layers):
+                observed = per_layer.get(str(index))
+                if observed is None:
+                    continue
+                want = gathered_rows_for_query(position, window, ratio, top_k)
+                got = int(observed["main_pairs"])
+                if got != want:
+                    mismatches.append(
+                        {"layer": index, "measured": got, "model": want}
+                    )
+            total_model = sum(
+                gathered_rows_for_query(position, window, ratio, top_k)
+                for ratio, top_k in layers
+            )
+            rungs.append(
+                {
+                    "workload_id": workload_id,
+                    "context_tokens": context,
+                    "layers_compared": len(
+                        [i for i in range(len(layers)) if str(i) in per_layer]
+                    ),
+                    "measured_main_context_positions": int(
+                        step["measured"]["main_context_positions"]
+                    ),
+                    "model_main_context_positions": total_model,
+                    "per_layer_mismatches": mismatches[:8],
+                    "per_layer_mismatch_count": len(mismatches),
+                    "agrees": not mismatches
+                    and int(step["measured"]["main_context_positions"]) == total_model,
+                }
+            )
+    contexts = sorted({r["context_tokens"] for r in rungs})
+    return {
+        "available": bool(rungs),
+        "oracle": _relative(oracle_path),
+        "comparator": "released implementation, instrumented by --measure-kv",
+        "decode_steps_compared": len(rungs),
+        "total_layer_comparisons": sum(r["layers_compared"] for r in rungs),
+        "total_layer_mismatches": sum(r["per_layer_mismatch_count"] for r in rungs),
+        "context_range": [contexts[0], contexts[-1]] if contexts else [],
+        "rungs": rungs,
+        "all_agree": bool(rungs) and all(r["agrees"] for r in rungs),
+    }
+
+
 def check_record(
     record_path: Path, prompts: dict, golds: dict, profile: Path
 ) -> dict:
@@ -247,6 +322,19 @@ def main() -> int:
         help="workload pin holding the derived prompts and their gold; repeatable",
     )
     parser.add_argument("--model-profile", type=Path, default=MODEL_PROFILE)
+    parser.add_argument(
+        "--oracle",
+        type=Path,
+        default=REPO
+        / "results"
+        / "abi3"
+        / "deepseek_v4_reference_oracle_threshold.json",
+        help=(
+            "reference-oracle report carrying --measure-kv per-layer decode "
+            "positions, to check the model's decode arm against the released "
+            "implementation"
+        ),
+    )
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args()
 
@@ -282,8 +370,24 @@ def main() -> int:
     for path in missing:
         print(f"MISSING {path}")
 
+    cross = oracle_decode_cross_check(args.oracle, args.model_profile)
+    if cross.get("available"):
+        print(
+            f"decode cross-check against the released implementation: "
+            f"all_agree={cross['all_agree']}"
+        )
+        for rung in cross["rungs"]:
+            print(
+                f"     {rung['workload_id']} context {rung['context_tokens']}: "
+                f"measured {rung['measured_main_context_positions']:,} "
+                f"model {rung['model_main_context_positions']:,} "
+                f"({rung['layers_compared']} layers, "
+                f"{rung['per_layer_mismatch_count']} mismatched)"
+            )
+
     document = {
         "schema": SCHEMA,
+        "decode_arm_cross_check": cross,
         "model": "deepseek-v4-flash-0731",
         "pins": [_relative(p) for p in pins if Path(p).exists()],
         "counter_model": (
@@ -300,6 +404,12 @@ def main() -> int:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(json.dumps(document, indent=1, sort_keys=True) + "\n")
         print(f"wrote {args.output}")
+    if cross.get("available") and not cross["all_agree"]:
+        print(
+            "the decode arm of the traffic model disagrees with the released "
+            "implementation; the model, not the run, is what failed here"
+        )
+        return 1
     return 0 if document["all_pass"] else 1
 
 

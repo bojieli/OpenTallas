@@ -1,6 +1,301 @@
 {
  "all_pass": false,
  "counter_model": "min(position + 1, window) + min(top_k or all, (position + 1) // ratio), summed over every layer and every query position; kv_bytes = gathered * 1024",
+ "decode_arm_cross_check": {
+  "all_agree": true,
+  "available": true,
+  "comparator": "released implementation, instrumented by --measure-kv",
+  "context_range": [
+   130,
+   2059
+  ],
+  "decode_steps_compared": 28,
+  "oracle": "results/abi3/deepseek_v4_reference_oracle_threshold.json",
+  "rungs": [
+   {
+    "agrees": true,
+    "context_tokens": 130,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6196,
+    "model_main_context_positions": 6196,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 131,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6196,
+    "model_main_context_positions": 6196,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 132,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6217,
+    "model_main_context_positions": 6217,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 133,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6217,
+    "model_main_context_positions": 6217,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 134,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6217,
+    "model_main_context_positions": 6217,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 135,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6217,
+    "model_main_context_positions": 6217,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 136,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6238,
+    "model_main_context_positions": 6238,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-129-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 161,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6364,
+    "model_main_context_positions": 6364,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 162,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6364,
+    "model_main_context_positions": 6364,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 163,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6364,
+    "model_main_context_positions": 6364,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 164,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6385,
+    "model_main_context_positions": 6385,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 165,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6385,
+    "model_main_context_positions": 6385,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 166,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6385,
+    "model_main_context_positions": 6385,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 167,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6385,
+    "model_main_context_positions": 6385,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-160-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2053,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2054,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2055,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2056,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2057,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2058,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 2059,
+    "layers_compared": 43,
+    "measured_main_context_positions": 16576,
+    "model_main_context_positions": 16576,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-2052-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 257,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6888,
+    "model_main_context_positions": 6888,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 258,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6888,
+    "model_main_context_positions": 6888,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 259,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6888,
+    "model_main_context_positions": 6888,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 260,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6909,
+    "model_main_context_positions": 6909,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 261,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6909,
+    "model_main_context_positions": 6909,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 262,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6909,
+    "model_main_context_positions": 6909,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   },
+   {
+    "agrees": true,
+    "context_tokens": 263,
+    "layers_compared": 43,
+    "measured_main_context_positions": 6909,
+    "model_main_context_positions": 6909,
+    "per_layer_mismatch_count": 0,
+    "per_layer_mismatches": [],
+    "workload_id": "TA-DS-CTX-256-1"
+   }
+  ],
+  "total_layer_comparisons": 1204,
+  "total_layer_mismatches": 0
+ },
  "model": "deepseek-v4-flash-0731",
  "pins": [
   "results/abi3/deepseek_v4_context_threshold_workload_pins.json",

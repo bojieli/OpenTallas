@@ -121,8 +121,8 @@ rows are `min(p + 1, W) + min(top_k or all, (p + 1) // r)` — and requires the
 executed counters to *equal* it. Not a tolerance: the quantities are integers
 and the model is closed-form, so a disagreement is a defect.
 
-The model was not fitted to anything. It reproduces the one completed DeepSeek
-backend run exactly on all four attention counters.
+The model was not fitted to anything, and it is checked on both arms against
+two independent things.
 
 <!-- figure: 25224 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32_raw.json#counters['attention.context_positions']" name="p32 gathered positions" -->
 The 32-token prefill gathered 25,224 positions, which is what the model says.
@@ -130,6 +130,30 @@ The 32-token prefill gathered 25,224 positions, which is what the model says.
 <!-- figure: 25829376 src="results/abi3/accelerator_tokens/deepseek_v4_flash_rom_p32_raw.json#counters['attention.kv_bytes_read']" name="p32 kv bytes" -->
 It read 25829376 KV bytes, which is that count times the 1,024-byte BF16
 latent row, and is what the model says.
+
+Its **decode** arm has no accelerator run to be checked against, because there
+are none. It is checked against the released implementation instead: the
+reference oracle's `--measure-kv` records, per layer, how many
+(layer, position) pairs its attention actually visited at each decode step, and
+the checker compares the model to that number layer by layer rather than in
+aggregate, where a compensating pair of errors could hide.
+
+<!-- figure: 1204 src="results/abi3/deepseek_v4_context_gate.json#decode_arm_cross_check.total_layer_comparisons" name="decode cross-check comparisons" -->
+<!-- figure: 28 src="results/abi3/deepseek_v4_context_gate.json#decode_arm_cross_check.decode_steps_compared" name="decode cross-check steps" -->
+That is 1204 per-layer comparisons over 28 decode steps, at contexts from 130
+to 2,059 — including 2,053 and above, where the ratio-4 selection is
+discarding.
+
+<!-- figure: 0 src="results/abi3/deepseek_v4_context_gate.json#decode_arm_cross_check.total_layer_mismatches" name="decode cross-check mismatches" -->
+The mismatch count is 0.
+
+<!-- figure: "True" src="results/abi3/deepseek_v4_context_gate.json#decode_arm_cross_check.all_agree" name="decode cross-check verdict" -->
+`decode_arm_cross_check.all_agree` is True.
+
+This says the analytical traffic model is right about what the *released
+implementation* reads per decode step, at the pruning threshold. It says
+nothing about what a backend reads there, because no backend has read anything
+there.
 
 ## What the gate found: DeepSeek decode does not run at all
 
@@ -145,36 +169,62 @@ dims (129, 512) differ from the axis-0 concatenation (131, 512)`, trap class
 Read the two numbers. The KV row space a decode step assembles is the request's
 own row, then the 128-row window, then the committed compressed prefix:
 `1 + 128 + 9 // 4 = 131` rows at a context of nine. The output view it is
-written into presents `129`. 129 is `1 + 128`: **the compressed segment is
-sized from the request's span, and a decode step's span is one.** In prefill
-the span *is* the context and the two agree, which is why every DeepSeek run
-this repository has ever recorded — all of them prefill-only — got past it.
+written into presents `129`. 129 is `1 + 128`: the compressed segment is sized
+from the request's span, and a decode step's span is one. In prefill the span
+*is* the context and the two agree, which is why every DeepSeek run this
+repository has ever recorded — all of them prefill-only — got past it.
 
-The counters localise it exactly. The aborted step left
-`attention.heads` 128 above the model and `attention.context_positions` 18
-above it: two layers of 64 heads, and `2 x min(9, 128) = 18` gathered
-positions. Those are layers 0 and 1, the only two layers that do not compress.
-The trap is in layer 2, the first `compress_ratio=4` layer — the first layer
-whose KV row space has a compressed segment at all.
+The counters localise it exactly. The aborted step left `attention.heads` 128
+above the model and `attention.context_positions` 18 above it: two layers of 64
+heads, and `2 x min(9, 128) = 18` gathered positions. Those are layers 0 and 1,
+the only two layers that do not compress. The trap is in layer 2, the first
+`compress_ratio=4` layer — the first layer whose KV row space has a compressed
+segment at all.
 
-So, stated plainly:
+### This was declared, not undiscovered
 
-- **No DeepSeek decode step has ever executed on either backend**, and none can
-  on the ROM backend as it stands, at any context of four tokens or more —
-  which is every context a decode step is ever reached at.
-- It **fails closed.** This is a trap, not a wrong answer: the engine refuses a
-  view whose extent does not match the concatenation it is given. The recurring
-  silent-defect class did not strike here; the ABI's own shape check caught it.
-- The condition is `span < context`, not "decode" as such. A chunked prefill has
-  the same shape. That is *derived from the failure, not executed*: this session
-  ran no chunked prefill, and the claim is recorded as unvalidated below.
-- **Everything this program says about DeepSeek per-token KV traffic at 200,000
-  and 1,000,000 tokens is a statement about a decode step no accelerator has
-  executed.** The analytical traffic model is untouched by this — it is
-  arithmetic, and the `check_deepseek_v4_context_gate.py` model above
-  reproduces the prefill counters exactly — but "the accelerator moves this
-  many bytes per decode step" is not yet an executed claim and this document
-  does not make it.
+Both backends already say it, in the same place and in the same words. The
+neutral IR declares a dedicated symbol `attention_rows_ratio4` whose maximum is
+`context + 128 + context // 4`, and both backends bind it to the *span*:
+
+- `compiler/backends/rom/common/program.py`, `SYMBOL_BY_NAME`:
+  `"attention_rows_ratio4": RequestAxis(Symbol.SPAN_TOKENS, 4, 5, 128)`, above
+  the comment *"Decode binds the two symbols apart and A18 is exact for an
+  affine function of one, so a decode of a compressed layer needs a phase split
+  that prefill does not; it is not solved here because it is not needed here."*
+- `compiler/backends/hbm_sram/plan.py`, `REQUEST_EXTENT`:
+  `"attention_rows_ratio4": RequestExtent(numerator=5, unit=4, bias=128)`,
+  above *"``context_*`` names resolve against the span deliberately. In prefill
+  the two coincide; in decode a compressed layer's join is a sum over two
+  different symbols, which wire format section 12.8 places outside the
+  amendment."*
+
+So this document does not claim to have found an unknown defect. It claims
+three things the comments do not:
+
+1. **It is reached.** A declared gap and an executed trap are different
+   evidence, and until now nothing had run a DeepSeek decode step to find out
+   which this was. The record above is the first.
+2. **"It is not needed here" is wrong.** Every number this program publishes
+   about DeepSeek KV traffic at 200,000 and 1,000,000 tokens is a *per decode
+   step* number. The decode step is the claim. A gap that only bites in decode
+   bites exactly where the argument lives.
+3. **It is an ABI limitation, not a typo.** The row space is
+   `span + window + context // ratio`, an affine function of *two* request
+   symbols, and amendment A18's extent is an affine function of *one*. No
+   binding of the existing grammar is correct; the fix is a phase split or an
+   amendment, which is why neither backend approximated it.
+
+Both backends carry it identically, so it does not bias the ROM-versus-HBM
+comparison — it disables both sides of it equally.
+
+Stated plainly: **no DeepSeek decode step has ever executed on either backend**,
+and none can at any context of four tokens or more, which is every context a
+decode step is ever reached at. It **fails closed** — the ABI's own shape check
+refuses the view rather than reading wrong rows, so the recurring silent-defect
+class did not strike here. The general condition is `span < context`, not
+"decode" as such, so a chunked prefill has the same shape; that is *derived
+from the failure, not executed*, and is recorded as unvalidated below.
 
 ## The regime no end-to-end run reaches, and what does cover it
 
