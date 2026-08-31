@@ -306,6 +306,8 @@ Result: 24 cases.
 This establishes: for the same index scores, the accelerator's selection
 operators name the same KV rows the released implementation names, at the
 model's real parameters, in the pruning regime, at contexts up to 1,000,001.
+The audit was run twice in separate processes and the artifact reproduces
+byte-identically, so it is a comparator and not one observation.
 
 It does **not** establish that the accelerator computes the same *scores*
 (`INDEX_SCORE` is a different operator), nor end-to-end token agreement at any
