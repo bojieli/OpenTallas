@@ -6,10 +6,11 @@ DeepSeek-V4-Flash's attention is sparse, and the ROM-versus-HBM ratios this
 program publishes are quoted at 200,000 and 1,000,000 context tokens, where
 which KV rows sparse selection picks decides essentially every byte moved.
 
-Until this work, **no correctness gate had ever crossed a sparsity threshold.**
-The two DeepSeek gates that existed were `TA-DS-CHAT-1` at 104 prompt tokens
-and its 32-token prefix, and the model's sparsity has three thresholds that
-both sit under.
+When this work began, **no correctness gate had ever crossed a sparsity
+threshold.** The two DeepSeek gates were `TA-DS-CHAT-1` at 104 prompt tokens and
+its 32-token prefix; both sat below all three of the model's sparsity thresholds.
+Current accelerator captures now include short-context decode, but still
+no successful current capture reaches the first threshold at 129.
 
 Stated exactly, because the loose version is wrong in a way that matters: at 32
 tokens the selection operator *does* execute. The `compress_ratio=4` layers
@@ -29,8 +30,8 @@ At 32 and at 104 tokens the window covers the whole context, the 20
 21 `compress_ratio=4` layers keeps every candidate it ranks, so its order never
 reaches an operand. The committed
 `TA-DS-CTX-*` ladder starts at 1,000 tokens — already about 31x longer than the
-only prompt a backend has ever completed — so the ladder could state the
-problem and not gate it.
+longest prompt a current backend capture has completed — so the ladder could
+state the problem and not gate it.
 
 ## The rungs, and why these lengths
 
@@ -106,10 +107,12 @@ produces no accelerator token.
 
 ## What a backend run costs, stated plainly
 
-The one completed DeepSeek backend run is 32 prompt tokens in 4,353 s. Taking
-that rate as linear in prompt tokens — a floor, because attention is
-superlinear — the ladder costs about 4.9 h at 129 tokens, 6.0 h at 160, 9.7 h
-at 256, 78 h at 2,052, and 315 days at 200,001.
+The ladder's cost projection was calibrated from the first raw DeepSeek backend
+run: 32 prompt tokens in 4,353 s. It is a historical planning rate, not the
+wall time of the current governed captures. Taking it as linear in prompt
+tokens — a floor, because attention is superlinear — the ladder costs about
+4.9 h at 129 tokens, 6.0 h at 160, 9.7 h at 256, 78 h at 2,052, and 315 days at
+200,001.
 
 <!-- figure: 17549.6 src="results/abi3/deepseek_v4_context_threshold_workload_pins.json#rungs.window_and_coarse_first_group.linear_backend_estimate_seconds" name="129 backend floor seconds" --> The 129-token floor is 17,549.6 s.
 
@@ -139,9 +142,31 @@ The 32-token prefill gathered 25,224 positions, which is what the model says.
 It read 25829376 KV bytes, which is that count times the 1,024-byte BF16
 latent row, and is what the model says.
 
-Its **decode** arm has no accelerator run to be checked against, because there
-are none. It is checked against the released implementation instead: the
-reference oracle's `--measure-kv` records, per layer, how many
+The governed HBM capture now checks the model's **short-context decode** arm at
+contexts 33 through 35. Its aggregate counters are cluster totals over 32
+nodes, not a logical single-node count. The v2 gate therefore requires the
+simulator's measured `node_counters`, checks the model against every node, and
+separately checks the aggregate against 32 copies. It never divides a cluster
+total or infers a node count from a target name or capability maximum.
+
+<!-- figure: "True" src="results/abi3/deepseek_v4_context_gate.json#all_pass" name="current DeepSeek context gate verdict" -->
+The retained v2 result is `all_pass: True` and binds **32** measured node sets. <!-- figure: 32 src="results/abi3/deepseek_v4_context_gate.json#results[0].node_count" name="context-gate measured node count" -->
+For `attention.context_positions`, the per-node minimum and maximum are both
+**30,114** <!-- figure: 30114 src="results/abi3/deepseek_v4_context_gate.json#results[0].per_node_counter_summary['attention.context_positions'].minimum_observed" name="context positions per-node minimum" --> <!-- figure: 30114 src="results/abi3/deepseek_v4_context_gate.json#results[0].per_node_counter_summary['attention.context_positions'].maximum_observed" name="context positions per-node maximum" -->,
+the independently retained cluster total is **963,648** <!-- figure: 963648 src="results/abi3/deepseek_v4_context_gate.json#results[0].observed_aggregate_counters['attention.context_positions']" name="context positions cluster total" -->,
+and **0** nodes mismatch the model. <!-- figure: 0 src="results/abi3/deepseek_v4_context_gate.json#results[0].per_node_counter_summary['attention.context_positions'].mismatched_node_count" name="context position mismatched nodes" -->
+For `attention.kv_bytes_read`, every node likewise records **30,836,736** bytes <!-- figure: 30836736 src="results/abi3/deepseek_v4_context_gate.json#results[0].per_node_counter_summary['attention.kv_bytes_read'].minimum_observed" name="KV bytes per-node minimum" --> <!-- figure: 30836736 src="results/abi3/deepseek_v4_context_gate.json#results[0].per_node_counter_summary['attention.kv_bytes_read'].maximum_observed" name="KV bytes per-node maximum" -->,
+the cluster records **986,775,552** bytes <!-- figure: 986775552 src="results/abi3/deepseek_v4_context_gate.json#results[0].observed_aggregate_counters['attention.kv_bytes_read']" name="KV bytes cluster total" -->,
+and again **0** nodes mismatch. <!-- figure: 0 src="results/abi3/deepseek_v4_context_gate.json#results[0].per_node_counter_summary['attention.kv_bytes_read'].mismatched_node_count" name="KV byte mismatched nodes" -->
+
+That pass reaches at most context **35** <!-- figure: 35 src="results/abi3/deepseek_v4_context_gate.json#claim_boundary.maximum_accelerator_context_tokens_checked" name="maximum accelerator context checked" -->.
+`accelerator_window_clipping_executed` and
+`accelerator_index_pruning_executed` are both `False`; <!-- figure: "False" src="results/abi3/deepseek_v4_context_gate.json#claim_boundary.accelerator_window_clipping_executed" name="accelerator window-clipping execution verdict" --> <!-- figure: "False" src="results/abi3/deepseek_v4_context_gate.json#claim_boundary.accelerator_index_pruning_executed" name="accelerator index-pruning execution verdict" -->
+the clean counter result is evidence about short-context execution, not a
+claim that an accelerator crossed either threshold.
+
+The threshold-regime decode arm is checked against the released implementation
+instead: the reference oracle's `--measure-kv` records, per layer, how many
 (layer, position) pairs its attention actually visited at each decode step, and
 the checker compares the model to that number layer by layer rather than in
 aggregate, where a compensating pair of errors could hide.
@@ -183,94 +208,45 @@ are never attended.
 <!-- figure: 0 src="results/abi3/deepseek_v4_context_gate.json#discrimination_ladder.by_workload['TA-DS-CHAT-1-P32'].if_the_window_did_not_clip_margin" name="32-token window discrimination" -->
 **At 32 prompt tokens the margin is 0.** A DeepSeek deployment whose sliding
 window never clipped at all would produce a bit-identical counter at the length
-of the only gate this program had. That is not an argument that the old gate
-was careless; it is arithmetic. A prompt shorter than the window cannot
-distinguish a window from no window, and every DeepSeek gate that existed was
-shorter than the window.
+of the shortest retained accelerator gate. That is arithmetic, not a judgment
+about the gate: a prompt shorter than the window cannot distinguish a window
+from no window, and every current accelerator record remains shorter than the
+window.
 
 <!-- figure: 22704 src="results/abi3/deepseek_v4_context_gate.json#discrimination_ladder.by_workload['TA-DS-CTX-160-1'].if_the_window_did_not_clip_margin" name="160-token window discrimination" -->
 At 160 tokens the same failure moves the counter by 22,704 positions, and the
 checker requires equality.
 
-## What the gate found: DeepSeek decode does not run at all
+## What the gate found first, and why that result is now historical
 
-The first thing run through the new gate was the cheapest possible decode: the
-8-token prefix `TA-DS-CHAT-1-P8`, two new tokens. Its prefill succeeded and
-emitted token 14, which is the oracle's. **Its first decode step trapped.**
+The first thing run through this gate was the cheapest possible decode: the
+8-token prefix `TA-DS-CHAT-1-P8`, two requested new tokens. Its prefill emitted
+the oracle's token 14 and its first decode trapped:
 
-<!-- figure: "decode step 1 failed: GROUPED_CONCAT output view 1417 dims (129, 512) differ from the axis-0 concatenation (131, 512)" src="results/abi3/deepseek_v4_rom_ta-ds-chat-1-p8_decode_execution.json#record.failure" name="DeepSeek decode trap" -->
-The recorded failure is `decode step 1 failed: GROUPED_CONCAT output view 1417
-dims (129, 512) differ from the axis-0 concatenation (131, 512)`, trap class
-`DESCRIPTOR_OR_ADDRESS`.
+<!-- figure: "decode step 1 failed: GROUPED_CONCAT output view 1417 dims (129, 512) differ from the axis-0 concatenation (131, 512)" src="results/abi3/deepseek_v4_rom_ta-ds-chat-1-p8_decode_execution.json#record.failure" name="historical DeepSeek decode trap" -->
+The recorded failure was `decode step 1 failed: GROUPED_CONCAT output view 1417
+dims (129, 512) differ from the axis-0 concatenation (131, 512)`.
+`GROUPED_CONCAT` presented 129 rows where the request row, 128-row window and
+compressed prefix required 131. That retained artifact is valid evidence about
+the deployment it ran, and it localised the first failing compressed layer. It
+is **not** the status of the current deployment.
 
-Read the two numbers. The KV row space a decode step assembles is the request's
-own row, then the 128-row window, then the committed compressed prefix:
-`1 + 128 + 9 // 4 = 131` rows at a context of nine. The output view it is
-written into presents `129`. 129 is `1 + 128`: the compressed segment is sized
-from the request's span, and a decode step's span is one. In prefill the span
-*is* the context and the two agree, which is why every DeepSeek run this
-repository has ever recorded — all of them prefill-only — got past it.
+Commit `77f847c` implemented the repair the failure pointed to, identically in
+both backends. A compressed-attention join is emitted once per phase: prefill
+declares `5 * span / 4 + 128` (or the ratio-128 equivalent), while decode
+declares `context / 4 + 129`; the chosen extent is propagated to the
+`ATTENTION.SPARSE` consumer, and the predicates are proved disjoint rather than
+assumed. No ABI field was approximated and no two-symbol expression was forced
+into A18.
 
-The counters localise it exactly. The aborted step left `attention.heads` 128
-above the model and `attention.context_positions` 18 above it: two layers of 64
-heads, and `2 x min(9, 128) = 18` gathered positions. Those are layers 0 and 1,
-the only two layers that do not compress. The trap is in layer 2, the first
-`compress_ratio=4` layer — the first layer whose KV row space has a compressed
-segment at all.
-
-### This was declared, not undiscovered
-
-Both backends already say it, in the same place and in the same words. The
-neutral IR declares a dedicated symbol `attention_rows_ratio4` whose maximum is
-`context + 128 + context // 4`, and both backends bind it to the *span*:
-
-- `compiler/backends/rom/common/program.py`, `SYMBOL_BY_NAME`:
-  `"attention_rows_ratio4": RequestAxis(Symbol.SPAN_TOKENS, 4, 5, 128)`, above
-  the comment *"Decode binds the two symbols apart and A18 is exact for an
-  affine function of one, so a decode of a compressed layer needs a phase split
-  that prefill does not; it is not solved here because it is not needed here."*
-- `compiler/backends/hbm_sram/plan.py`, `REQUEST_EXTENT`:
-  `"attention_rows_ratio4": RequestExtent(numerator=5, unit=4, bias=128)`,
-  above *"``context_*`` names resolve against the span deliberately. In prefill
-  the two coincide; in decode a compressed layer's join is a sum over two
-  different symbols, which wire format section 12.8 places outside the
-  amendment."*
-
-So this document does not claim to have found an unknown defect. It claims
-three things the comments do not:
-
-1. **It is reached.** A declared gap and an executed trap are different
-   evidence, and until now nothing had run a DeepSeek decode step to find out
-   which this was. The record above is the first.
-2. **"It is not needed here" is wrong.** Every number this program publishes
-   about DeepSeek KV traffic at 200,000 and 1,000,000 tokens is a *per decode
-   step* number. The decode step is the claim. A gap that only bites in decode
-   bites exactly where the argument lives.
-3. **It is an ABI limitation, not a typo.** The row space is
-   `span + window + context // ratio`, an affine function of *two* request
-   symbols, and amendment A18's extent is an affine function of *one*. No
-   binding of the existing grammar is correct; the fix is a phase split or an
-   amendment, which is why neither backend approximated it.
-
-Both backends carry it identically, so it does not bias the ROM-versus-HBM
-comparison — it disables both sides of it equally.
-
-On point 3 there is one thing worth recording, and it is a *suggestion, not a
-result*: nothing here implements it and nothing here validates it. A decode
-step's span is always one, so in decode the row space
-`span + window + context // ratio` is `context // ratio + (window + 1)` — an
-affine function of `context_length` alone, which A18 admits as it stands. The
-gap may therefore be a per-phase binding of `attention_rows_ratioN` rather than
-an amendment. It would have to be made identically in both backends, and
-re-validated by a run, before anyone should believe it.
-
-Stated plainly: **no DeepSeek decode step has ever executed on either backend**,
-and none can at any context of four tokens or more, which is every context a
-decode step is ever reached at. It **fails closed** — the ABI's own shape check
-refuses the view rather than reading wrong rows, so the recurring silent-defect
-class did not strike here. The general condition is `span < context`, not
-"decode" as such, so a chunked prefill has the same shape; that is *derived
-from the failure, not executed*, and is recorded as unvalidated below.
+The current governed HBM capture executes one prefill and three decode
+transactions, all `SUCCESS`/`NONE`, and produces the oracle prefix
+`[13806, 345, 7472, 55560]`. The ROM capture also executes all four
+transactions; it diverges numerically at token index 1, which is a separate
+open correctness defect rather than the old structural trap. Therefore the
+former sentence "DeepSeek decode does not run" is retracted. What remains true
+is narrower and important: these are contexts 32 through 35, still below the
+first window-clipping threshold at 129.
 
 ## The regime no end-to-end run reaches, and what does cover it
 
@@ -433,86 +409,54 @@ no way to ask the question. The selection audit *does* vary scores, but it
 feeds the same synthetic block to both sides and says so in its `not_a_claim`.
 Each artifact was correct about its own scope; the gap was between them.
 
-## What the ladder found: the deployment cannot prefill past its own window
+## What the first threshold run found, and what A25 changed
 
-The first rung was run on both lanes. `TA-DS-CTX-129-1` is 129 prompt tokens —
-one more than `window_tokens` — and on the ROM wafer it **failed**, after 9,076
-seconds of prefill, without producing a token.
+The retained `TA-DS-CTX-129-1` ROM artifact predates amendment A25. It ran
+9,076 seconds, gathered the exact sparse rows, and then failed closed while
+committing 129 rows into a 128-slot window:
 
-<!-- figure: "prefill failed: state 353: committing 129 rows at cursor 0 with 0 already staged exceeds capacity 128" src="results/abi3/deepseek_v4_rom_ta-ds-ctx-129_execution.json#record.failure" name="129 commit trap" -->
-The recorded failure is `prefill failed: state 353: committing 129 rows at
-cursor 0 with 0 already staged exceeds capacity 128`, trap class
-`CAPABILITY_OR_RESOURCE`.
+<!-- figure: "prefill failed: state 353: committing 129 rows at cursor 0 with 0 already staged exceeds capacity 128" src="results/abi3/deepseek_v4_rom_ta-ds-ctx-129_execution.json#record.failure" name="historical 129 commit trap" -->
+Its recorded failure was `prefill failed: state 353: committing 129 rows at
+cursor 0 with 0 already staged exceeds capacity 128`.
 
-**The sparse attention was right.** The run gathered exactly the rows the
-closed-form model requires, on all four counters, before it trapped:
+<!-- figure: 403560 src="results/abi3/deepseek_v4_rom_ta-ds-ctx-129_execution.json#record.counters['attention.context_positions']" name="historical 129 gathered positions" -->
+Its 403,560 gathered positions are the closed-form value for the first clipped
+window, and its 355,008 heads are exactly 129 x 64 x 43. <!-- figure: 355008 src="results/abi3/deepseek_v4_rom_ta-ds-ctx-129_execution.json#record.counters['attention.heads']" name="historical 129 attention heads" -->
+The attention counter arm was right; the state policy had no way to say that a
+ring publishes `min(span, capacity)` rows.
 
-<!-- figure: 403560 src="results/abi3/deepseek_v4_rom_ta-ds-ctx-129_execution.json#record.counters['attention.context_positions']" name="129 gathered positions" -->
-`attention.context_positions` is 403,560, which is what the profile says for a
-129-token prefill — a window that clips for the first time, and the first
-completed `compress_ratio=128` group.
-<!-- figure: 355008 src="results/abi3/deepseek_v4_rom_ta-ds-ctx-129_execution.json#record.counters['attention.heads']" name="129 attention heads" -->
-`attention.heads` is 355,008, which is 129 x 64 x 43. The gate's counter arm
-would have passed. Its token arm has nothing to compare, because there is no
-token.
+A25 adds that exact `SATURATING` policy and derives it from the finished
+deployment's ring-indexed scatter rather than from a backend name. Both
+DeepSeek lanes now declare their sliding-window resources saturating, and the
+functional device and RTL state controller implement the same circular commit.
+The old failure artifact is not rewritten: it remains evidence about the old
+deployment, while the current deployments carry the repair.
 
-### Where it breaks
-
-`STATE.COMMIT` asks the resource how many rows a commit publishes, and
-amendment A21 gives exactly two answers. `CommitPolicy.REQUEST_SPAN` takes
-`SPAN_TOKENS`; `CommitPolicy.UNSTAGED` publishes none. A21's own docstring
-states the principle it is enforcing — `SPAN_TOKENS` "is a row count only where
-the resource's row axis is the token axis, which is true of a KV cache and
-false of a fixed recurrent window."
-
-The DeepSeek sliding-window KV state is *both* at once: it is a KV cache, and
-its row axis is a fixed 128-slot circular window. The number of rows its commit
-publishes is `min(span, capacity)` — a prefill of 129 tokens retains the last
-128 — and **no policy says that.** The reference operator already knows it:
-`runtime/reference/kv_window.py` "retains only the final `W` input rows in
-circular slot order". The commit refuses before the operator is ever asked.
-
-The policy is not a backend's to choose. `runtime/abi3/builder.py` derives it
-for every state resource from one binary rule — is the prepared image any
-descriptor's destination — precisely so that "a backend cannot get it wrong and
-two backends cannot disagree about it". That is why this is a property of the
-ABI and not of a lane, and why both lanes are expected to fail identically
-rather than differently as the `GROUPED_CONCAT` decode gap does.
-
-### Why this is the ladder's most important result
-
-Every rung of this ladder is longer than 128 tokens. That is not incidental —
-128 is the sliding window, and a prompt that does not exceed it cannot exercise
-sparsity at all, which is the whole reason the ladder exists. So:
-
-**No prompt that crosses any sparsity threshold can complete a prefill on
-either DeepSeek deployment.** The regime the published ratios are quoted in is
-not merely expensive to reach, as the cost estimates above assumed. It is
-unreachable, at any budget, until a commit policy exists for a saturating
-resource.
-
-It **fails closed**: the ABI's own capacity check refuses the commit rather
-than wrapping silently or truncating, so the recurring silent-defect class did
-not strike here, and no wrong token was produced or published. What was wrong
-was the estimate that the only obstacle was time.
-
-This is the second declared-and-unreached ABI gap the DeepSeek deployment has
-now actually reached, after the `GROUPED_CONCAT` decode extent. Both were
-reached for the first time by running a prompt shape nobody had run before.
+The repair makes the 129-, 160-, and 256-token rungs reachable in the current
+ABI, but none has been rerun on a current accelerator deployment. The
+2,052-token rung is still structurally unreachable: its compressed KV cache
+has a group row axis, while `REQUEST_SPAN` tries to commit token rows; the ROM
+lane first exceeds that cache at span 2,049. The 200,000- and 1,048,576-token
+regimes remain unreachable by this path for the same class of reason one
+resource later. Thus A25 removes the historical window trap without turning an
+old failed run into current threshold evidence.
 
 ## What is still not established
 
 Stated exhaustively, because the value of a gate is bounded by what it does not
 cover.
 
-- **No accelerator run above 256 prompt tokens.** The 2,052-token rung — the
-  first context at which selection discards — has gold and no accelerator run.
-  At the one measured backend rate it is about 78 hours. The 200,000-token
-  contract is about 315 days at that rate and is not reachable by this route at
-  all; it needs a faster functional path, not a longer session.
-- **No accelerator decode step, at any context.** See above; it traps.
-- **No chunked prefill.** The claim that `span < context` is the general
-  condition is read off the failure, not executed.
+- **No current accelerator run reaches a sparsity threshold.** The successful
+  governed HBM record reaches context 35. The 129- and 160-token artifacts are
+  historical pre-A25 failures, not reruns of the repaired deployment; the
+  256-token rung has no accelerator artifact. The 2,052-token rung — the first
+  context at which selection discards — has gold but is blocked by the
+  compressed-cache commit policy as well as its runtime cost.
+- **Decode is executed only below the window.** Three HBM and three ROM decode
+  transactions now complete at contexts 33 through 35. No accelerator decode
+  has run at 129 or above.
+- **No accelerator chunked prefill.** The phase-specific extent repair covers
+  the shape, but no current accelerator record exercises that path.
 - **The index *scores* are not gated, and no reachable run can gate them.**
   The audit fixes the scores and compares the selection. `INDEX_SCORE` — the
   64-head query-key product, the ReLU, the head-weighted sum, and the BF16
@@ -520,20 +464,21 @@ cover.
   against the released one. Worse than untested: the section above executes
   the demonstration that the KV-counter arm cannot see a score defect at *any*
   context, and the token arm cannot see one below 2,052 prompt tokens, which
-  is every rung a backend has completed. Closing this needs a differential on
+  is every context a current backend record has completed. Closing this needs
+  a differential on
   `INDEX_SCORE` itself, or a 2,052-token backend run; adding rungs below 2,052
   cannot do it.
 - **`ATTENTION.SPARSE`'s arithmetic at long context is not gated here.** The
   audit gates which rows are selected, not the online softmax over them.
-- **Neither lane can produce a DeepSeek token at a length that crosses a
-  sparsity threshold**, and this is now a defect rather than a budget. Both
-  lanes produce one *below* every threshold: ROM and HBM each emit 13806 for
-  the 32-token prefix, which is oracle gold (commit `6f5f5fd`). That is the
-  whole of the DeepSeek end-to-end evidence, and 32 tokens is under the
-  window, under `top_k`, and under one compressed group. Above the window the
-  prefill traps on the commit-capacity gap above, so the ladder cannot be
-  walked at all until a saturating commit policy exists.
-- **RTL is untouched.** This is the functional-simulator path.
+- **Neither current lane has produced a token at a length that crosses a
+  sparsity threshold.** A25 makes the first three rungs reachable, but they
+  have not been rerun; 2,052 and the quoted long contexts remain blocked by
+  the compressed-cache row-count gap. Below the thresholds HBM is
+  oracle-identical for four tokens and ROM diverges at its second.
+- **No RTL vector crosses the window.** RTL implements A25 and the shipped
+  DeepSeek co-simulation executes its policy below the ring, where saturating
+  and request-span commits are byte-identical. The counter evidence here is
+  still the functional simulator.
 - **The token at 200,000 and 1,000,000 tokens is not defined by the model**, as
   the BF16 tie argument above shows, so no future run can validate one. Byte
   traffic can be; token identity cannot.

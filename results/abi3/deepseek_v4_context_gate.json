@@ -1,5 +1,19 @@
 {
- "all_pass": false,
+ "all_pass": true,
+ "claim_boundary": {
+  "accelerator_index_pruning_executed": false,
+  "accelerator_window_clipping_executed": false,
+  "all_checked_records_pass": true,
+  "all_declared_sparsity_thresholds_executed": false,
+  "all_required_records_present": true,
+  "cycles_or_performance": false,
+  "decode_arm_cross_check_pass": true,
+  "first_index_pruning_context_tokens": 2052,
+  "first_window_clipping_context_tokens": 129,
+  "functional_simulator_only": true,
+  "maximum_accelerator_context_tokens_checked": 35,
+  "rtl": false
+ },
  "counter_model": "min(position + 1, window) + min(top_k or all, (position + 1) // ratio), summed over every layer and every query position; kv_bytes = gathered * 1024",
  "decode_arm_cross_check": {
   "all_agree": true,
@@ -347,7 +361,7 @@
     "prompt_token_count": 256
    }
   },
-  "note": "What the gathered-position counter would be if the sparse path were not doing its job, at every pinned prompt length. An equality check is a gate only where the quantity moves. At 32 prompt tokens -- the length of the only DeepSeek gate that existed -- a sliding window that never clipped produces a bit-identical counter, so no run at that length could have detected one."
+  "note": "What the gathered-position counter would be if the sparse path were not doing its job, at every pinned prompt length. An equality check is a gate only where the quantity moves. At 32 prompt tokens -- the length of the shortest retained DeepSeek accelerator gate -- a sliding window that never clipped produces a bit-identical counter, so no run at that length could have detected one."
  },
  "model": "deepseek-v4-flash-0731",
  "pins": [
@@ -358,47 +372,109 @@
  "records_missing": [],
  "results": [
   {
-   "counter_excess_over_model": {
-    "attention.context_positions": 18,
-    "attention.heads": 128,
-    "attention.kv_bytes_read": 18432,
-    "attention.sparse_indices": 18
+   "aggregate_excess_over_model": {
+    "attention.context_positions": 0,
+    "attention.heads": 0,
+    "attention.kv_bytes_read": 0,
+    "attention.sparse_indices": 0
    },
-   "counters_compared": false,
-   "decode_steps": 0,
+   "counter_comparison_scope": "measured_per_node_and_cluster_total",
+   "counters_compared": true,
+   "decode_steps": 3,
    "discrimination": {
-    "correct": 1674,
-    "if_no_compressed_segment_were_attended": 1548,
-    "if_no_compressed_segment_were_attended_margin": -126,
-    "if_the_window_did_not_clip": 1674,
+    "correct": 30114,
+    "if_no_compressed_segment_were_attended": 27090,
+    "if_no_compressed_segment_were_attended_margin": -3024,
+    "if_the_window_did_not_clip": 30114,
     "if_the_window_did_not_clip_margin": 0
    },
-   "expected_counters": {
-    "attention.context_positions": 1674,
-    "attention.heads": 22016,
-    "attention.kv_bytes_read": 1714176,
-    "attention.sparse_indices": 1674
+   "expected_aggregate_counters": {
+    "attention.context_positions": 963648,
+    "attention.heads": 3082240,
+    "attention.kv_bytes_read": 986775552,
+    "attention.sparse_indices": 963648
    },
-   "failure": "decode step 1 failed: GROUPED_CONCAT output view 1417 dims (129, 512) differ from the axis-0 concatenation (131, 512)",
+   "expected_counters_per_node": {
+    "attention.context_positions": 30114,
+    "attention.heads": 96320,
+    "attention.kv_bytes_read": 30836736,
+    "attention.sparse_indices": 30114
+   },
+   "failure": null,
    "generated_token_ids": [
-    14
+    13806,
+    345,
+    7472,
+    55560
    ],
    "gold_token_ids": [
-    14
+    13806,
+    345,
+    7472,
+    55560
    ],
-   "observed_counters": {
-    "attention.context_positions": 1692,
-    "attention.heads": 22144,
-    "attention.kv_bytes_read": 1732608,
-    "attention.sparse_indices": 1692
+   "node_count": 32,
+   "observed_aggregate_counters": {
+    "attention.context_positions": 963648,
+    "attention.heads": 3082240,
+    "attention.kv_bytes_read": 986775552,
+    "attention.sparse_indices": 963648
    },
-   "passes": false,
+   "passes": true,
+   "per_node_counter_summary": {
+    "attention.context_positions": {
+     "expected_each_node": 30114,
+     "first_mismatched_nodes": [],
+     "maximum_observed": 30114,
+     "minimum_observed": 30114,
+     "mismatched_node_count": 0,
+     "nodes_observed": 32,
+     "nodes_with_valid_counter": 32
+    },
+    "attention.heads": {
+     "expected_each_node": 96320,
+     "first_mismatched_nodes": [],
+     "maximum_observed": 96320,
+     "minimum_observed": 96320,
+     "mismatched_node_count": 0,
+     "nodes_observed": 32,
+     "nodes_with_valid_counter": 32
+    },
+    "attention.kv_bytes_read": {
+     "expected_each_node": 30836736,
+     "first_mismatched_nodes": [],
+     "maximum_observed": 30836736,
+     "minimum_observed": 30836736,
+     "mismatched_node_count": 0,
+     "nodes_observed": 32,
+     "nodes_with_valid_counter": 32
+    },
+    "attention.sparse_indices": {
+     "expected_each_node": 30114,
+     "first_mismatched_nodes": [],
+     "maximum_observed": 30114,
+     "minimum_observed": 30114,
+     "mismatched_node_count": 0,
+     "nodes_observed": 32,
+     "nodes_with_valid_counter": 32
+    }
+   },
    "problems": [],
-   "prompt_token_count": 8,
-   "record": "results/abi3/deepseek_v4_rom_ta-ds-chat-1-p8_decode_execution.json",
-   "status": "failed",
-   "workload_id": "TA-DS-CHAT-1-P8"
+   "prompt_token_count": 32,
+   "record": "results/abi3/accelerator_tokens/deepseek_v4_flash_hbm_p32.json",
+   "record_sha256": "c5bb49a0210f7f52ea89083ccf953f772ae4ce42053b50ecefb84cc6e94ca24c",
+   "status": "pass",
+   "workload_id": "TA-DS-CHAT-1-P32"
   }
  ],
- "schema": "opentallas.deepseek_v4_context_gate.v1"
+ "schema": "opentallas.deepseek_v4_context_gate.v2",
+ "source_sha256": {
+  "configs/models/deepseek-v4-flash-0731.json": "7d695ac330850416b6763279fc296420bd9ab0be6765c741a53eaa4a6decf79e",
+  "results/abi3/deepseek_v4_context_threshold_workload_pins.json": "6548f29e8baea90a5c5726e7fefe44c3b69f52432a10edf59e6716d1f2f826f5",
+  "results/abi3/deepseek_v4_prefix_workload_pins.json": "b426a8ca6b884c1c18d715c8224c52d7bb44f3029997472cecce40e296fce007",
+  "results/abi3/deepseek_v4_reference_oracle_threshold.json": "60c5118b6062d04e3ead091439f6f56ade9b2e26d62c43c5b7b971fb86bc15e3",
+  "runtime/sim/device.py": "b5f74f208bd4e247c342abc2d7eb8e71b61e37c58b76ff0913ba3c93edcc6db9",
+  "tools/check_deepseek_v4_context_gate.py": "7cc59339247041ff2f861970f1f924091191642302c1d0d0b9990e0b5f1f34f1",
+  "tools/run_accelerator_tokens.py": "b0a9b6e50222011cf49b1ec73c9aa6d26e282fcc3ed519d2ae30a5b1b0d587b4"
+ }
 }

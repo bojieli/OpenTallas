@@ -29,11 +29,11 @@ count is their sum.  ``r = 0`` layers contribute the window term alone.
 
 This is not a new derivation.  It is the released ``Attention.forward``'s own
 arithmetic -- ``get_window_topk_idxs`` for the first term, ``Indexer.forward``
-or ``get_compress_topk_idxs`` for the second -- and it reproduces the one
-completed DeepSeek backend run exactly: 25,224 gathered positions at a 32-token
-prefill, against the 25,224 that run recorded, and 25,829,376 KV bytes against
-its 25,829,376.  A model that reproduces a measurement it was not fitted to is
-worth more as a checker than as a prediction.
+or ``get_compress_topk_idxs`` for the second -- and it reproduced an independent
+raw 32-token ROM prefill exactly: 25,224 gathered positions and 25,829,376 KV
+bytes.  The governed multi-token records add decode.  A model that reproduces a
+measurement it was not fitted to is worth more as a checker than as a
+prediction.
 
 What is checked
 ---------------
@@ -41,7 +41,12 @@ What is checked
    question the gold answers;
 2. the generated tokens are a prefix of the pinned gold; and
 3. ``attention.context_positions``, ``attention.sparse_indices``,
-   ``attention.kv_bytes_read`` and ``attention.heads`` equal the model.
+   ``attention.kv_bytes_read`` and ``attention.heads`` equal the model on every
+   measured node; and
+4. on a multi-node target, the independently retained cluster totals equal the
+   per-node model times the admitted ``node_count``.  Aggregate division is
+   never accepted in place of the per-node measurements because cluster-only
+   work does not in general divide that way.
 
 A record that fails any of these is reported and the tool exits non-zero.
 """
@@ -49,6 +54,7 @@ A record that fails any of these is reported and the tool exits non-zero.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import sys
@@ -57,7 +63,7 @@ REPO = Path(__file__).resolve().parents[1]
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
-SCHEMA = "opentallas.deepseek_v4_context_gate.v1"
+SCHEMA = "opentallas.deepseek_v4_context_gate.v2"
 MODEL_PROFILE = REPO / "configs" / "models" / "deepseek-v4-flash-0731.json"
 DEFAULT_PIN = (
     REPO / "results" / "abi3" / "deepseek_v4_context_threshold_workload_pins.json"
@@ -75,6 +81,10 @@ def _relative(path: Path) -> str:
         return str(Path(path).resolve().relative_to(REPO))
     except ValueError:
         return str(path)
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def layer_table(profile: Path) -> tuple[int, int, list[tuple[int, int]]]:
@@ -197,17 +207,19 @@ def discrimination(
 def oracle_decode_cross_check(oracle_path: Path, profile: Path) -> dict:
     """Check the model's *decode* arm against the released implementation.
 
-    The accelerator has never executed a DeepSeek decode step, so the model's
-    decode arm has no accelerator run to be checked against.  The reference
-    oracle's ``--measure-kv`` does record one, per layer, from the released
-    implementation: how many (layer, position) pairs its attention actually
-    visited at a decode step.  That is the same quantity
+    The accelerator now executes DeepSeek decode at the short 32-token prefix,
+    below every window/pruning threshold.  It has not executed decode at the
+    threshold rungs.  The reference oracle's ``--measure-kv`` records those
+    rungs per layer from the released implementation: how many (layer,
+    position) pairs its attention actually visited at a decode step.  That is
+    the same quantity
     :func:`gathered_rows_for_query` states, so the two are compared directly and
     per layer -- not as a ratio and not in aggregate, where a compensating pair
     of errors could hide.
 
-    This is the *only* evidence the decode arm has.  It is evidence about the
-    released implementation and the model, and none at all about a backend.
+    This is the threshold-regime evidence for the decode arm.  It is evidence
+    about the released implementation and the model, and none at all about an
+    accelerator backend at those lengths.
     """
 
     if not oracle_path.exists():
@@ -269,6 +281,171 @@ def oracle_decode_cross_check(oracle_path: Path, profile: Path) -> dict:
     }
 
 
+def check_counter_evidence(
+    record: dict, expected_per_node: dict[str, int], *, compared: bool
+) -> dict:
+    """Check logical counters without mistaking a cluster total for one node.
+
+    A multi-node ``Device`` runs each compute instruction at every ``NODE_ID``.
+    Its aggregate counters are therefore cluster totals, while LINK, STATE,
+    control, and host bookkeeping are cluster-only and cannot in general be
+    divided by ``node_count``.  For the four attention-engine counters checked
+    here, require the measured per-node split and compare every node directly.
+    The aggregate must independently equal ``expected_per_node * node_count``.
+    """
+
+    problems: list[str] = []
+    target = record.get("target") or {}
+    if not isinstance(target, dict):
+        problems.append("target is not an object")
+        target = {}
+    raw_node_count = target.get("node_count")
+    node_count = (
+        int(raw_node_count)
+        if isinstance(raw_node_count, int)
+        and not isinstance(raw_node_count, bool)
+        and raw_node_count > 0
+        else 0
+    )
+    if node_count == 0:
+        problems.append(
+            "target.node_count is missing or invalid; counter scope cannot be "
+            "inferred from target_id, topology_class, or capability limits"
+        )
+
+    aggregate_source = record.get("counters") or {}
+    observed_aggregate: dict[str, int] = {}
+    for name in expected_per_node:
+        value = aggregate_source.get(name) if isinstance(aggregate_source, dict) else None
+        if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+            problems.append(
+                f"cluster-total {name} is missing or is not a non-negative integer"
+            )
+            value = -1
+        observed_aggregate[name] = value
+    expected_aggregate: dict[str, int | None] = {
+        name: value * node_count if node_count else None
+        for name, value in expected_per_node.items()
+    }
+
+    scope = record.get("counter_scope") or {}
+    if not isinstance(scope, dict):
+        problems.append("counter_scope is not an object")
+        scope = {}
+    raw_nodes = record.get("node_counters")
+    node_rows: list[dict] = []
+    comparison_scope = "invalid_or_missing"
+    if node_count == 1:
+        if (
+            isinstance(raw_nodes, list)
+            and len(raw_nodes) == 1
+            and isinstance(raw_nodes[0], dict)
+        ):
+            node_rows = raw_nodes
+            comparison_scope = "measured_single_node_and_aggregate"
+        else:
+            # On an explicitly one-node topology, the aggregate is the node's
+            # complete work.  This keeps older single-node records checkable;
+            # there is no ambiguous cluster total to divide.
+            node_rows = [aggregate_source]
+            comparison_scope = "explicit_single_node_aggregate"
+    elif node_count > 1:
+        if scope.get("aggregate") != "cluster_total":
+            problems.append(
+                "multi-node record does not declare counters as cluster_total"
+            )
+        if scope.get("per_node") != "engine_work_by_node_id":
+            problems.append(
+                "multi-node record does not declare node_counters as "
+                "engine_work_by_node_id"
+            )
+        if scope.get("node_count") != node_count:
+            problems.append(
+                f"counter_scope.node_count is {scope.get('node_count')!r}, "
+                f"target.node_count is {node_count}"
+            )
+        if scope.get("node_counters_index") != "NODE_ID":
+            problems.append(
+                "multi-node record does not declare node_counters_index as NODE_ID"
+            )
+        if not isinstance(raw_nodes, list) or len(raw_nodes) != node_count:
+            problems.append(
+                f"multi-node record has "
+                f"{len(raw_nodes) if isinstance(raw_nodes, list) else 0} "
+                f"node counter sets, expected {node_count}; aggregate division "
+                "is not accepted as a substitute"
+            )
+        elif not all(isinstance(row, dict) for row in raw_nodes):
+            problems.append("node_counters contains a non-object entry")
+        else:
+            node_rows = raw_nodes
+            comparison_scope = "measured_per_node_and_cluster_total"
+
+    summaries: dict[str, dict] = {}
+    for name, want in expected_per_node.items():
+        values: list[int | None] = []
+        invalid: list[int] = []
+        for index, row in enumerate(node_rows):
+            value = row.get(name)
+            if not isinstance(value, int) or isinstance(value, bool) or value < 0:
+                values.append(None)
+                invalid.append(index)
+            else:
+                values.append(value)
+        valid_values = [value for value in values if value is not None]
+        mismatched = [
+            index for index, value in enumerate(values) if value != want
+        ]
+        if invalid:
+            problems.append(
+                f"{name} is missing or invalid on {len(invalid)} node(s): "
+                f"{invalid[:8]}"
+            )
+        summaries[name] = {
+            "expected_each_node": want,
+            "minimum_observed": min(valid_values) if valid_values else None,
+            "maximum_observed": max(valid_values) if valid_values else None,
+            "nodes_observed": len(values),
+            "nodes_with_valid_counter": len(valid_values),
+            "mismatched_node_count": len(mismatched),
+            "first_mismatched_nodes": mismatched[:8],
+        }
+
+    if compared and node_count > 0:
+        for name, want in expected_aggregate.items():
+            assert want is not None
+            got = observed_aggregate[name]
+            if got != want:
+                problems.append(
+                    f"cluster-total {name} is {got:,}, expected {want:,} "
+                    f"for {node_count} nodes"
+                )
+        for name, summary in summaries.items():
+            if summary["mismatched_node_count"]:
+                problems.append(
+                    f"{name} disagrees with the logical model on "
+                    f"{summary['mismatched_node_count']} of {node_count} nodes"
+                )
+
+    return {
+        "counter_comparison_scope": comparison_scope,
+        "node_count": node_count or None,
+        "expected_counters_per_node": expected_per_node,
+        "expected_aggregate_counters": expected_aggregate,
+        "observed_aggregate_counters": observed_aggregate,
+        "aggregate_excess_over_model": {
+            name: (
+                observed_aggregate[name] - expected_aggregate[name]
+                if expected_aggregate[name] is not None
+                else None
+            )
+            for name in expected_per_node
+        },
+        "per_node_counter_summary": summaries,
+        "problems": problems,
+    }
+
+
 def check_record(
     record_path: Path, prompts: dict, golds: dict, profile: Path
 ) -> dict:
@@ -311,13 +488,13 @@ def check_record(
             f", gold {gold_ids[first] if first < len(gold_ids) else None}"
         )
 
-    counters = record.get("counters", {})
     expected = predict(
         int(workload["prompt_token_count"]), max(0, len(generated) - 1), profile
     )
-    observed = {name: int(counters.get(name, -1)) for name in expected}
-    excess = {name: observed[name] - expected[name] for name in expected}
     failure = record.get("failure")
+    status = body.get("status")
+    if status != "pass":
+        problems.append(f"record status is {status!r}, expected 'pass'")
     # A run that trapped part-way did work the model does not describe -- the
     # aborted step's completed layers are in the counters and its remaining
     # ones are not.  Such a record already fails, on the trap; comparing its
@@ -325,31 +502,26 @@ def check_record(
     # residual actually tells you, which is *where* it stopped.  The numbers
     # are still recorded, and a completed run is still compared exactly.
     compared = failure is None
-    if compared:
-        for name, want in expected.items():
-            if observed[name] != want:
-                problems.append(
-                    f"{name} is {observed[name]:,}, the profile says {want:,}"
-                )
+    counter_evidence = check_counter_evidence(record, expected, compared=compared)
+    problems.extend(counter_evidence.pop("problems"))
 
     return {
         "record": _relative(record_path),
+        "record_sha256": _sha256(record_path),
         "workload_id": workload_id,
         "prompt_token_count": int(workload["prompt_token_count"]),
         "generated_token_ids": generated,
         "gold_token_ids": gold_ids[: max(1, len(generated))],
         "decode_steps": max(0, len(generated) - 1),
-        "expected_counters": expected,
-        "observed_counters": observed,
+        **counter_evidence,
         "discrimination": discrimination(
             int(workload["prompt_token_count"]),
             max(0, len(generated) - 1),
             profile,
         ),
-        "counter_excess_over_model": excess,
         "counters_compared": compared,
         "failure": failure,
-        "status": body.get("status"),
+        "status": status,
         "problems": problems,
         "passes": not problems and failure is None,
     }
@@ -397,13 +569,34 @@ def main() -> int:
             f"     tokens {row['generated_token_ids']} against gold "
             f"{row['gold_token_ids']}"
         )
-        for name, want in row["expected_counters"].items():
-            got = row["observed_counters"][name]
-            if not row["counters_compared"]:
+        print(
+            f"     counter scope {row['counter_comparison_scope']}, "
+            f"nodes={row['node_count']}"
+        )
+        for name, want in row["expected_aggregate_counters"].items():
+            got = row["observed_aggregate_counters"][name]
+            if want is None:
+                expected = "scope unresolved"
+                flag = "   (node scope unavailable)"
+            elif not row["counters_compared"]:
+                expected = f"{want:,}"
                 flag = "   (partial run, not compared)"
             else:
+                expected = f"{want:,}"
                 flag = "" if got == want else "   <-- DISAGREES"
-            print(f"     {name:34s} {got:>15,} expected {want:>15,}{flag}")
+            print(
+                f"     cluster {name:26s} {got:>15,} "
+                f"expected {expected:>15s}{flag}"
+            )
+            summary = row["per_node_counter_summary"][name]
+            if row["node_count"] and row["node_count"] > 1:
+                print(
+                    f"       per node min/max "
+                    f"{summary['minimum_observed']!s:>15}/"
+                    f"{summary['maximum_observed']!s:<15} "
+                    f"expected {summary['expected_each_node']:,}; "
+                    f"mismatched nodes {summary['mismatched_node_count']}"
+                )
         if row["failure"]:
             print(f"     FAILURE {row['failure']}")
         for problem in row["problems"]:
@@ -434,6 +627,21 @@ def main() -> int:
                 f"{rung['per_layer_mismatch_count']} mismatched)"
             )
 
+    maximum_record_context = max(
+        (
+            row["prompt_token_count"] + row["decode_steps"]
+            for row in results
+        ),
+        default=0,
+    )
+    window, _heads, layers = layer_table(args.model_profile)
+    pruning_thresholds = [
+        ratio * (top_k + 1) for ratio, top_k in layers if ratio and top_k
+    ]
+    first_pruning_context = min(pruning_thresholds) if pruning_thresholds else None
+    checked_records_pass = bool(results) and all(r["passes"] for r in results)
+    cross_check_pass = bool(cross.get("available")) and bool(cross.get("all_agree"))
+    all_pass = checked_records_pass and not missing and cross_check_pass
     document = {
         "schema": SCHEMA,
         "decode_arm_cross_check": cross,
@@ -442,8 +650,9 @@ def main() -> int:
                 "What the gathered-position counter would be if the sparse "
                 "path were not doing its job, at every pinned prompt length. "
                 "An equality check is a gate only where the quantity moves. "
-                "At 32 prompt tokens -- the length of the only DeepSeek gate "
-                "that existed -- a sliding window that never clipped produces "
+                "At 32 prompt tokens -- the length of the shortest retained "
+                "DeepSeek accelerator gate -- a sliding window that never "
+                "clipped produces "
                 "a bit-identical counter, so no run at that length could have "
                 "detected one."
             ),
@@ -451,6 +660,18 @@ def main() -> int:
         },
         "model": "deepseek-v4-flash-0731",
         "pins": [_relative(p) for p in pins if Path(p).exists()],
+        "source_sha256": {
+            _relative(path): _sha256(path)
+            for path in [
+                Path(__file__),
+                REPO / "tools" / "run_accelerator_tokens.py",
+                REPO / "runtime" / "sim" / "device.py",
+                args.model_profile,
+                args.oracle,
+                *[Path(p) for p in pins if Path(p).exists()],
+            ]
+            if path.exists()
+        },
         "counter_model": (
             "min(position + 1, window) + min(top_k or all, (position + 1) // "
             "ratio), summed over every layer and every query position; "
@@ -459,7 +680,30 @@ def main() -> int:
         "records_checked": len(results),
         "records_missing": missing,
         "results": results,
-        "all_pass": bool(results) and all(r["passes"] for r in results),
+        "all_pass": all_pass,
+        "claim_boundary": {
+            "all_checked_records_pass": checked_records_pass,
+            "all_required_records_present": not missing,
+            "decode_arm_cross_check_pass": cross_check_pass,
+            "maximum_accelerator_context_tokens_checked": maximum_record_context,
+            "first_window_clipping_context_tokens": window + 1,
+            "first_index_pruning_context_tokens": first_pruning_context,
+            "accelerator_window_clipping_executed": (
+                maximum_record_context >= window + 1
+            ),
+            "accelerator_index_pruning_executed": (
+                first_pruning_context is not None
+                and maximum_record_context >= first_pruning_context
+            ),
+            "all_declared_sparsity_thresholds_executed": (
+                maximum_record_context >= window + 1
+                and first_pruning_context is not None
+                and maximum_record_context >= first_pruning_context
+            ),
+            "functional_simulator_only": True,
+            "rtl": False,
+            "cycles_or_performance": False,
+        },
     }
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -469,6 +713,12 @@ def main() -> int:
         print(
             "the decode arm of the traffic model disagrees with the released "
             "implementation; the model, not the run, is what failed here"
+        )
+        return 1
+    if not cross.get("available"):
+        print(
+            "the decode-arm oracle cross-check is unavailable; the governed "
+            "context gate fails closed"
         )
         return 1
     return 0 if document["all_pass"] else 1

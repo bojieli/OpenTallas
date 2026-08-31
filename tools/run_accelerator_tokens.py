@@ -230,6 +230,41 @@ def _compare(got: list[int], gold: list[int]) -> dict[str, Any]:
     return body
 
 
+def _counter_evidence(device: Device) -> dict[str, Any]:
+    """Publish cluster totals beside the simulator's measured per-node split.
+
+    ``Device.counters`` is intentionally a cluster total.  Dividing it by the
+    topology size is not a per-node measurement because LINK, STATE, and host
+    bookkeeping run once for the cluster.  The device already keeps the engine
+    work split by ``NODE_ID``; retain that evidence so consumers can compare a
+    logical model to every node without guessing from a target name or a
+    capability maximum.
+    """
+
+    per_node = [
+        dict(sorted(counters.snapshot().items()))
+        for counters in device.node_counters
+    ]
+    if len(per_node) != device.node_count:
+        raise RuntimeError(
+            f"device exposes {len(per_node)} node counter sets for "
+            f"node_count={device.node_count}"
+        )
+    return {
+        "counter_scope": {
+            "aggregate": "cluster_total",
+            "per_node": "engine_work_by_node_id",
+            "node_count": device.node_count,
+            "node_counters_index": "NODE_ID",
+            "reconciliation": (
+                "cluster total equals the sum of per-node engine work plus "
+                "cluster-only LINK, STATE, control, and host bookkeeping"
+            ),
+        },
+        "node_counters": per_node,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--kernel-ir", type=Path, required=True)
@@ -394,6 +429,7 @@ def main() -> int:
             "target_id": deployment.target_id,
             "backend": deployment.backend,
             "topology_class": deployment.topology_class,
+            "node_count": device.node_count,
             "capability": str(args.capability.relative_to(REPO))
             if args.capability.is_absolute()
             else str(args.capability),
@@ -444,6 +480,7 @@ def main() -> int:
             **comparison,
         },
         "counters": dict(sorted(result.counters.items())),
+        **_counter_evidence(device),
         "per_step": result.per_step,
         "lowering_seconds": round(lowering_seconds, 3),
         "wall_seconds": round(result.wall_seconds, 3),

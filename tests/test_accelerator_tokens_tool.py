@@ -106,3 +106,35 @@ def test_a_divergence_names_the_step_and_both_tokens():
         "accelerator_token_id": 999,
         "oracle_token_id": 345,
     }
+
+
+def test_counter_evidence_retains_measured_node_splits_without_division():
+    class Counters:
+        def __init__(self, values):
+            self.values = values
+
+        def snapshot(self):
+            return dict(self.values)
+
+    class Device:
+        node_count = 2
+        node_counters = (
+            Counters({"attention.context_positions": 7, "dma.transfers": 3}),
+            Counters({"attention.context_positions": 7, "dma.transfers": 5}),
+        )
+
+    evidence = tool._counter_evidence(Device())
+    assert evidence["counter_scope"] == {
+        "aggregate": "cluster_total",
+        "per_node": "engine_work_by_node_id",
+        "node_count": 2,
+        "node_counters_index": "NODE_ID",
+        "reconciliation": (
+            "cluster total equals the sum of per-node engine work plus "
+            "cluster-only LINK, STATE, control, and host bookkeeping"
+        ),
+    }
+    assert evidence["node_counters"] == [
+        {"attention.context_positions": 7, "dma.transfers": 3},
+        {"attention.context_positions": 7, "dma.transfers": 5},
+    ]
