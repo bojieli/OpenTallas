@@ -6,10 +6,17 @@ DeepSeek-V4-Flash's attention is sparse, and the ROM-versus-HBM ratios this
 program publishes are quoted at 200,000 and 1,000,000 context tokens, where
 which KV rows sparse selection picks decides essentially every byte moved.
 
-Until this work, **no correctness gate had ever executed a sparse selection.**
+Until this work, **no correctness gate had ever crossed a sparsity threshold.**
 The two DeepSeek gates that existed were `TA-DS-CHAT-1` at 104 prompt tokens
 and its 32-token prefix, and the model's sparsity has three thresholds that
 both sit under.
+
+Stated exactly, because the loose version is wrong in a way that matters: at 32
+tokens the selection operator *does* execute. The `compress_ratio=4` layers
+hold eight compressed groups, `ROUTE.INDEX_TOPK` ranks them, and it keeps all
+eight. What never happened is a selection that *selected* — that clipped a
+window, that read a `compress_ratio=128` compressed group, or that discarded a
+candidate. The operator ran; sparsity did not.
 
 | threshold | value | first crossed at |
 |---|---|---|
@@ -19,7 +26,8 @@ both sit under.
 
 At 32 and at 104 tokens the window covers the whole context, the 20
 `compress_ratio=128` layers hold zero compressed groups, and the ranking in the
-21 `compress_ratio=4` layers keeps every candidate it ranks. The committed
+21 `compress_ratio=4` layers keeps every candidate it ranks, so its order never
+reaches an operand. The committed
 `TA-DS-CTX-*` ladder starts at 1,000 tokens — already about 31x longer than the
 only prompt a backend has ever completed — so the ladder could state the
 problem and not gate it.
@@ -246,6 +254,15 @@ three things the comments do not:
 
 Both backends carry it identically, so it does not bias the ROM-versus-HBM
 comparison — it disables both sides of it equally.
+
+On point 3 there is one thing worth recording, and it is a *suggestion, not a
+result*: nothing here implements it and nothing here validates it. A decode
+step's span is always one, so in decode the row space
+`span + window + context // ratio` is `context // ratio + (window + 1)` — an
+affine function of `context_length` alone, which A18 admits as it stands. The
+gap may therefore be a per-phase binding of `attention_rows_ratioN` rather than
+an amendment. It would have to be made identically in both backends, and
+re-validated by a run, before anyone should believe it.
 
 Stated plainly: **no DeepSeek decode step has ever executed on either backend**,
 and none can at any context of four tokens or more, which is every context a
