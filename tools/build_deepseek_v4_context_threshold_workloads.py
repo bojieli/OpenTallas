@@ -73,9 +73,6 @@ from compiler.frontend.deepseek_v4_tokenizer import (  # noqa: E402
 )
 from compiler.workloads.deepseek_v4 import (  # noqa: E402
     CONTEXT_LADDER,
-    MODEL_ID,
-    OFFICIAL_REPOSITORY,
-    OFFICIAL_REVISION,
     Workload,
     build_context_workload,
     index_document,
