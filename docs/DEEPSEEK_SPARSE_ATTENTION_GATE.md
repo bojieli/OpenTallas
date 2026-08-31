@@ -385,10 +385,14 @@ it was.** They are still worth running — the window discrimination margin abov
 is 43, 22,704 and 355,008 positions, and it was 0 at every gate that existed
 before — but they must not be read as gating sparse selection *end to end*.
 
-The half of this with teeth is the other direction. At 2,052 and above the two
-score blocks produce *different* rows, so the check would fail if
-`ROUTE.INDEX_TOPK` ignored its score input — the only check in this repository
-that would. It passes.
+The other direction is checked too, and passes: at 2,052 and above the two
+score blocks produce *different* rows, so this would fail if
+`ROUTE.INDEX_TOPK` ignored its score input. That is not a new guarantee — the
+selection audit above already compares the operator's choice against the
+released `topk` on the same scores, and would also fail — but it is a cheap
+independent one, and it is what makes the *negative* half meaningful: the
+operator demonstrably reads its scores, so "the rows did not move" below 2,052
+is a fact about the arithmetic and not about a dead input.
 
 ### And the 2,052-token rung would barely be a score gate either
 
