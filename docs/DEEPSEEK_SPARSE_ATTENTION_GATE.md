@@ -331,6 +331,82 @@ token at those contexts, on any implementation including the released one. A
 future 200,000-token token-identity claim would be claiming something the model
 does not define; a byte-traffic claim would not.
 
+## Neither arm of this gate can see a wrong index score
+
+The gate has two arms: the token must equal oracle gold, and the executed
+KV-traffic counters must equal the closed-form model. Neither arm is sensitive
+to the *index scores* at any prompt length a backend has completed, and that is
+not visible from either arm on its own. It is executed in
+`tools/check_deepseek_v4_ctx_score_visibility.py`, which runs
+`ROUTE.INDEX_TOPK` on the functional device **twice per case** with two
+different BF16 score blocks and compares the KV-row array it emits, byte for
+byte.
+
+**The counter arm is blind at every context, without exception.** The rows a
+query gathers are `min(p + 1, W) + min(top_k, (p + 1) // r)`. Every term is
+position arithmetic; no score appears. So a deployment that computed index
+scores by any rule at all — a constant included — gathers the same number of
+rows and records the same counters.
+
+<!-- figure: "True" src="results/abi3/deepseek_v4_ctx_score_visibility.json#kv_counter_is_blind_to_index_scores_at_every_case" name="counter arm blind to scores" -->
+`kv_counter_is_blind_to_index_scores_at_every_case` is True: in every case the
+two runs' counters — `route.topk_candidates`, SRAM bytes read and written,
+instructions retired — are identical, at 200,000 and at 1,048,576 tokens as
+much as at 129. The counter arm gates *how many* rows are read, which is what
+the byte-traffic model needs and is the quantity the published ratios rest on.
+It cannot gate *which* rows, anywhere. That is a property of the quantity, not
+a weakness of the checker, and no stronger counter would fix it.
+
+**The token arm is blind below the pruning threshold.** A ranking layer
+discards a candidate only once it has more than `top_k` of them, so from
+`r * (top_k + 1)` prompt tokens.
+
+<!-- figure: 2052 src="results/abi3/deepseek_v4_ctx_score_visibility.json#thresholds['4'].first_prompt_length_that_prunes" name="flash score visibility threshold" -->
+For Flash at ratio 4 and `top_k` 512 that is 2,052 tokens.
+<!-- figure: 4100 src="results/abi3/deepseek_v4_ctx_score_visibility_pro.json#thresholds['4'].first_prompt_length_that_prunes" name="pro score visibility threshold" -->
+For Pro, whose `top_k` is 1024, it is 4,100.
+
+Below it the ranking keeps every candidate it ranks, and `ROUTE.INDEX_TOPK`
+emits the selection *compacted and sorted ascending* — so neither the
+membership of the set nor its order carries any score information, and the
+token cannot move. Executed, at every rung a backend can reach:
+
+| rung | prompt tokens | `index_score_can_move_the_token` |
+|---|---:|---|
+| `TA-DS-CTX-129-1` | 129 | False <!-- figure: "False" src="results/abi3/deepseek_v4_ctx_score_visibility.json#by_prompt_length['TA-DS-CTX-129-1'].index_score_can_move_the_token" name="129 score visibility" --> |
+| `TA-DS-CTX-160-1` | 160 | False <!-- figure: "False" src="results/abi3/deepseek_v4_ctx_score_visibility.json#by_prompt_length['TA-DS-CTX-160-1'].index_score_can_move_the_token" name="160 score visibility" --> |
+| `TA-DS-CTX-256-1` | 256 | False <!-- figure: "False" src="results/abi3/deepseek_v4_ctx_score_visibility.json#by_prompt_length['TA-DS-CTX-256-1'].index_score_can_move_the_token" name="256 score visibility" --> |
+| `TA-DS-CTX-2052-1` | 2052 | True <!-- figure: "True" src="results/abi3/deepseek_v4_ctx_score_visibility.json#by_prompt_length['TA-DS-CTX-2052-1'].index_score_can_move_the_token" name="2052 score visibility" --> |
+
+At 129, 160 and 256 the emitted KV-row array is byte-identical under two
+different score blocks. **So the three rungs this ladder makes reachable close
+the window and compressed-segment holes and leave the score hole exactly where
+it was.** They are still worth running — the window discrimination margin above
+is 43, 22,704 and 355,008 positions, and it was 0 at every gate that existed
+before — but they must not be read as gating sparse selection *end to end*.
+
+The half of this with teeth is the other direction. At 2,052 and above the two
+score blocks produce *different* rows, so the check would fail if
+`ROUTE.INDEX_TOPK` ignored its score input — the only check in this repository
+that would. It passes.
+
+<!-- figure: 11 src="results/abi3/deepseek_v4_ctx_score_visibility.json#case_count" name="score visibility case count" -->
+<!-- figure: "True" src="results/abi3/deepseek_v4_ctx_score_visibility.json#all_cases_agree_with_the_position_arithmetic" name="score visibility verdict" -->
+11 cases for Flash, spanning 129 to 1,048,576 tokens, and
+`all_cases_agree_with_the_position_arithmetic` is True.
+<!-- figure: 3 src="results/abi3/deepseek_v4_ctx_score_visibility_pro.json#case_count" name="pro score visibility case count" -->
+<!-- figure: "True" src="results/abi3/deepseek_v4_ctx_score_visibility_pro.json#all_cases_agree_with_the_position_arithmetic" name="pro score visibility verdict" -->
+3 cases for Pro, at 4,100, 200,000 and 1,048,576, likewise True.
+
+### Why nothing expressed this before
+
+The discrimination ladder asks what the counter would be under two faults — a
+window that never clips, and compressed segments never attended — and both move
+it. A wrong score moves nothing, so a ladder built out of counter margins had
+no way to ask the question. The selection audit *does* vary scores, but it
+feeds the same synthetic block to both sides and says so in its `not_a_claim`.
+Each artifact was correct about its own scope; the gap was between them.
+
 ## What is still not established
 
 Stated exhaustively, because the value of a gate is bounded by what it does not
@@ -344,15 +420,25 @@ cover.
 - **No accelerator decode step, at any context.** See above; it traps.
 - **No chunked prefill.** The claim that `span < context` is the general
   condition is read off the failure, not executed.
-- **The index *scores* are not gated.** The audit fixes the scores and compares
-  the selection. `INDEX_SCORE` — the 64-head query-key product, the ReLU, the
-  head-weighted sum, and the BF16 roundings in all of it — is a separate
-  operator and nothing here tests it against the released one.
+- **The index *scores* are not gated, and no reachable run can gate them.**
+  The audit fixes the scores and compares the selection. `INDEX_SCORE` — the
+  64-head query-key product, the ReLU, the head-weighted sum, and the BF16
+  roundings in all of it — is a separate operator and nothing here tests it
+  against the released one. Worse than untested: the section above executes
+  the demonstration that the KV-counter arm cannot see a score defect at *any*
+  context, and the token arm cannot see one below 2,052 prompt tokens, which
+  is every rung a backend has completed. Closing this needs a differential on
+  `INDEX_SCORE` itself, or a 2,052-token backend run; adding rungs below 2,052
+  cannot do it.
 - **`ATTENTION.SPARSE`'s arithmetic at long context is not gated here.** The
   audit gates which rows are selected, not the online softmax over them.
-- **The HBM lane has still produced no DeepSeek token**, at any length, so
-  every ROM-versus-HBM DeepSeek statement remains a comparison with one side
-  unexecuted.
+- **Neither lane has produced a DeepSeek token at a length that crosses a
+  sparsity threshold.** Both lanes now produce one below every threshold: ROM
+  and HBM each emit 13806 for the 32-token prefix, which is oracle gold
+  (commit `6f5f5fd`). That is the whole of the DeepSeek end-to-end evidence,
+  and 32 tokens is under the window, under `top_k`, and under one compressed
+  group. The `TA-DS-CTX-129/160/256` runs on both lanes are what change this
+  and are recorded below when they land.
 - **RTL is untouched.** This is the functional-simulator path.
 - **The token at 200,000 and 1,000,000 tokens is not defined by the model**, as
   the BF16 tie argument above shows, so no future run can validate one. Byte
