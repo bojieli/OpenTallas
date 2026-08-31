@@ -103,7 +103,7 @@ against the artifact that produces it (`make check-prose-figures`)
 - [~] W8.3 Representative engine datapaths (DMA, tensor MAC array, vector, selection)
 - [~] W8.4 Inter-chip endpoint RTL (packets, credits, retry, collectives)
 - [~] W8.5 ROM service RTL (Qwen chip, DeepSeek wafer tile)
-- [x] W8.6 Verilator co-simulation vs functional simulator on generated programs — 63 cases, 177 issue events, 451 resolved tensor views (amendments A4, A13 and A18), 11 traps matched on two simulators, 4,331 checks each <!-- figure: 63 src="results/rtl/abi3_campaign.json#correlation.case_count" name="RTL correlation cases" --> <!-- figure: 177 src="results/rtl/abi3_campaign.json#correlation.issue_event_count" name="RTL issue events" --> <!-- figure: 451 src="results/rtl/abi3_campaign.json#correlation.view_resolution_count" name="RTL resolved views" --> <!-- figure: 11 src="results/rtl/abi3_campaign.json#correlation.trap_count" name="RTL traps" --> <!-- figure: 4,331 src="results/rtl/abi3_campaign.json#cases[name=iverilog].checks" name="RTL checks per simulator" -->
+- [x] W8.6 Verilator co-simulation vs functional simulator on generated programs — 64 cases, 182 issue events, 454 resolved tensor views (amendments A4, A13 and A18), 11 traps matched on two simulators, 4,383 checks each <!-- figure: 64 src="results/rtl/abi3_campaign.json#correlation.case_count" name="RTL correlation cases" --> <!-- figure: 182 src="results/rtl/abi3_campaign.json#correlation.issue_event_count" name="RTL issue events" --> <!-- figure: 454 src="results/rtl/abi3_campaign.json#correlation.view_resolution_count" name="RTL resolved views" --> <!-- figure: 11 src="results/rtl/abi3_campaign.json#correlation.trap_count" name="RTL traps" --> <!-- figure: 4,383 src="results/rtl/abi3_campaign.json#cases[name=iverilog].checks" name="RTL checks per simulator" -->
 - [x] W8.7 Fault/stall/backpressure/reset campaigns — 17 negative cases incl. CRC, illegal opcode, loop overrun, mid-transaction trap <!-- figure: 17 src="results/rtl/abi3_campaign.json#correlation.negative_case_count" name="RTL negative cases" -->
 
 ## W9 — Physical (SKY130 implementation view, ASAP7 predictive view)
@@ -555,7 +555,7 @@ lanes are a precondition for it, not the product. These items are the product.
   resolved extent and element offset on a view port. The descriptor image now
   carries 192 bytes per record rather than 128, because a TENSOR_VIEW's dynamic
   terms start at payload offset 72 and a 128-byte prefix stopped one block
-  short. The correlation campaign compares 451 resolved views against <!-- figure: 451 src="results/rtl/abi3_campaign.json#correlation.view_resolution_count" name="RTL resolved views, OI-16" -->
+  short. The correlation campaign compares 454 resolved views against <!-- figure: 454 src="results/rtl/abi3_campaign.json#correlation.view_resolution_count" name="RTL resolved views, OI-16" -->
   `runtime.sim.memory.ViewResolver.resolve` — the functional device's own
   resolver, evaluated against the loop bindings the device recorded at each
   issue — over eleven new vectors covering N divisible by T, N with a partial
