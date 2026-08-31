@@ -41,7 +41,8 @@ spec-check:
 # second existed, nothing anywhere read a figure in prose -- which is how 80 of
 # 108 load-bearing figures went stale unnoticed (docs/EVIDENCE_LEDGER.md).
 check-evidence-grades:
-	python3 tools/check_evidence_grades.py
+	python3 tools/check_evidence_grades.py \
+	  --also results/abi3/deepseek_v4_prefix_workload_pins.json
 
 check-prose-figures:
 	python3 tools/check_prose_figures.py
